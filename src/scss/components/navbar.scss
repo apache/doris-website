@@ -27,6 +27,17 @@
             display: block;
         }
     }
+    &.withoutDoc {
+        .docs-search {
+            display: block;
+        }
+        .custom-navbar-item {
+            display: block;
+        }
+        .custom-navbar-item:nth-child(4) {
+            display: none;
+        }
+    }
     &__inner {
         padding: 0 5rem;
         margin: 0 auto;
@@ -298,12 +309,12 @@
     }
 }
 
-@media screen and (max-width: 996px) {
+@media screen and (max-width: 1366px) {
     .navbar {
         height: 3.75rem;
         &.docs,
         &.community {
-            height: 6.5rem;
+            height: 8.1rem;
             flex-direction: column;
             .navbar__inner {
                 height: 3.75rem;
@@ -316,9 +327,23 @@
                 .docs-nav-version-locale {
                     display: flex;
                     justify-content: flex-end;
+                    align-items: center;
                     .navbar__item {
                         display: block;
                     }
+                }
+                .docs-nav-mobile {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    overflow-x: auto;
+                    white-space: nowrap;
+                    .navbar__item {
+                        display: block;
+                    }
+                }
+                .docs-nav-mobile::-webkit-scrollbar {
+                    display: none;
                 }
                 li {
                     list-style: none;

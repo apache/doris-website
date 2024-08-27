@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Migrating from ClickHouse to Apache Doris: what happened?',
-    'summary': "A user of Apache Doris has written down their migration process from ClickHouse to Doris, including why they need the change, what needs to be taken care of, and how they compare the performance of the two databases in their environment. ",
+    'description': "A user of Apache Doris has written down their migration process from ClickHouse to Doris, including why they need the change, what needs to be taken care of, and how they compare the performance of the two databases in their environment. ",
     'date': '2023-10-11',
     'author': 'Chuang Li',
     'tags': ['Best Practice'],
@@ -50,7 +50,7 @@ The user undergoing this change is an e-commerce SaaS provider. Its data system 
 - **ClickHouse for customer segmentation and Top-N log queries**: This entails high-frequency updates, high QPS, and complicated SQL.
 - **Apache Druid for real-time reporting**: Sellers extract data they need by combining different dimensions, and such real-time reporting requires quick data updates, quick query response, and strong stability of the system. 
 
-![ClickHouse-Druid-Apache-Kylin](../static/images/youzan-1.png)
+![ClickHouse-Druid-Apache-Kylin](/images/youzan-1.png)
 
 The three components have their own sore spots.
 
@@ -60,7 +60,7 @@ The three components have their own sore spots.
 
 As they work together, this architecture might be too demanding to navigate because it requires knowledge of all these components in terms of development, monitoring, and maintenance. Also, every time the user scales a cluster, they must stop the current cluster and migrate all databases and tables, which is not only a big undertaking but also a huge interruption to business.
 
-![Replace-ClickHouse-Druid-Apache-Kylin-with-Apache-Doris](../static/images/youzan-2.png)
+![Replace-ClickHouse-Druid-Apache-Kylin-with-Apache-Doris](/images/youzan-2.png)
 
 Apache Doris fills these gaps.
 
@@ -78,7 +78,7 @@ ClickHouse was the main performance bottleneck in the old data architecture and 
 
 **Table creation statements**
 
-![table-creation-statements-in-ClickHouse-and-Apache-Doris](../static/images/youzan-3.png)
+![table-creation-statements-in-ClickHouse-and-Apache-Doris](/images/youzan-3.png)
 
 The user built their own SQL rewriting tool that can convert a ClickHouse table creation statement into a Doris table creation statement. The tool can automate the following changes:
 
@@ -88,7 +88,7 @@ The user built their own SQL rewriting tool that can convert a ClickHouse table 
 - **Determining TTL**: It decides the time to live of partitions in dynamic partitioning tables.
 - **Setting the import sequence**: For the Unique Key model of Doris, it can specify the data import order based on the Sequence column to ensure orderliness in data ingestion.
 
-![changes-in-table-creation-statements-from-ClickHouse-to-Apache-Doris](../static/images/youzan-4.png)
+![changes-in-table-creation-statements-from-ClickHouse-to-Apache-Doris](/images/youzan-4.png)
 
 **Query statements**
 
@@ -100,7 +100,7 @@ Similarly, they have their own tool to transform the ClickHouse query statements
 
 ### Changes in data ingestion methods
 
-![changes-in-data-ingestion-methods-from-ClickHouse-to-Apache-Doris](../static/images/youzan-5.png)
+![changes-in-data-ingestion-methods-from-ClickHouse-to-Apache-Doris](/images/youzan-5.png)
 
 Apache Doris provides broad options of data writing methods. For the real-time link, the user adopts Stream Load to ingest data from NSQ and Kafka. 
 
@@ -130,7 +130,7 @@ The user compared performance of the two components on their SQL and join query 
 
 Apache Doris outperformed ClickHouse in 10 of the 16 SQL queries, and the biggest performance gap was a ratio of almost 30. Overall, Apache Doris was 2~3 times faster than ClickHouse. 
 
-![SQL-query-performance-ClickHouse-VS-Apache-Doris](../static/images/youzan-6.png)
+![SQL-query-performance-ClickHouse-VS-Apache-Doris](/images/youzan-6.png)
 
 ### Join query performance
 
@@ -159,4 +159,4 @@ In terms of CPU and memory consumption, Apache Doris maintained stable cluster l
 
 ## Future Directions
 
-As the migration goes on, the user works closely with the [Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1t3wfymur-0soNPATWQ~gbU8xutFOLog), and their feedback has contributed to the making of [Apache Doris 2.0.0](https://doris.apache.org/docs/dev/releasenotes/release-2.0.0/). We will continue assisting them in their migration from Kylin and Druid to Doris, and we look forward to see their Doris-based unified data platform come into being.
+As the migration goes on, the user works closely with the [Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA), and their feedback has contributed to the making of [Apache Doris 2.0.0](https://doris.apache.org/docs/dev/releasenotes/release-2.0.0/). We will continue assisting them in their migration from Kylin and Druid to Doris, and we look forward to see their Doris-based unified data platform come into being.

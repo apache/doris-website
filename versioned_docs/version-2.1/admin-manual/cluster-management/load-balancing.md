@@ -1,6 +1,6 @@
 ---
 {
-    "title": "load balancing",
+    "title": "Load Balancing",
     "language": "en"
 }
 
@@ -515,22 +515,22 @@ vim /usr/local/nginx/conf/default.conf
 Then add the following in it
 
 ```bash
-events {
-worker_connections 1024;
-}
-stream {
-  upstream mysqld {
-      hash $remote_addr consistent;
-      server 172.31.7.119:9030 weight=1 max_fails=2 fail_timeout=60s;
-      ##注意这里如果是多个FE，加载这里就行了
-  }
-  ###这里是配置代理的端口，超时时间等
-  server {
-      listen 6030;
-      proxy_connect_timeout 300s;
-      proxy_timeout 300s;
-      proxy_pass mysqld;
-  }
+events {  
+worker_connections 1024;  
+}  
+stream {  
+  upstream mysqld {  
+      hash $remote_addr consistent;  
+      server 172.31.7.119:9030 weight=1 max_fails=2 fail_timeout=60s;  
+      ## Note: If there are multiple FEs, just load them here.  
+  }  
+  ### Configuration for proxy port, timeout, etc.  
+  server {  
+      listen 6030;  
+      proxy_connect_timeout 300s;  
+      proxy_timeout 300s;  
+      proxy_pass mysqld;  
+  }  
 }
 ```
 
@@ -638,3 +638,118 @@ mysql> desc dwd_product_live;
 40 rows in set (0.06 sec)
 ```
 
+
+## Haproxy way
+HAProxy is a free and open source software written in C language that provides high availability, load balancing, and application proxy based on TCP and HTTP.
+
+### Install
+1. Download HAProxy
+
+   download link: https://src.fedoraproject.org/repo/pkgs/haproxy/
+
+2. Unzip
+   ```
+   tar -zxvf haproxy-2.6.15.tar.gz -C /opt/
+   mv haproxy-2.6.15 haproxy
+   ```
+
+3. Compile
+
+   Enter the haproxy directory
+   ```
+   yum install gcc gcc-c++ -y
+
+   make TARGET=linux-glibc PREFIX=/usr/local/haproxy
+
+   make install PREFIX=/usr/local/haproxy
+   ```
+
+### Configuration
+1. Configure the haproxy.conf file
+
+   vim /etc/rsyslog.d/haproxy.conf
+   ```
+   $ModLoad imudp 
+   $UDPServerRun 514
+   local0.* /usr/local/haproxy/logs/haproxy.log
+   &~
+   ```
+
+2. Enable remote logging
+
+   vim /etc/sysconfig/rsyslog
+
+   `SYSLOGD_OPTIONS="-c 2 -r -m 0" `
+
+   Parameter analysis:
+
+    - -c 2 Use compatibility mode, default is -c 5. -r turns on remote logging
+
+    - -m 0 mark timestamp. The unit is minutes. When it is 0, it means the function is disabled.
+
+3. Make changes effective
+
+   `systemctl restart rsyslog`
+
+
+4. Edit load balancing file
+
+   vim /usr/local/haproxy/haproxy.cfg
+
+   ```
+   #
+   # haproxy is deployed on 172.16.0.3, this machine, and is used to proxy 172.16.0.8, 172.16.0.6, 172.16.0.4, the three machines where fe is deployed.
+   #
+   
+   global
+   maxconn         2000
+   ulimit-n        40075
+   log             127.0.0.1 local0 info
+   uid             200
+   gid             200
+   chroot          /var/empty
+   daemon
+   group           haproxy
+   user            haproxy
+   
+   
+   defaults
+   # Global log configuration
+   log global
+   mode http
+   retries 3          # health examination. If the connection fails three times, the server is considered unavailable, mainly through the subsequent check.
+   option redispatch  # Redirect to other healthy servers after service becomes unavailable
+   # Timeout configuration
+   timeout connect 5000
+   timeout client 5000
+   timeout server 5000
+   timeout check 2000
+   
+   frontend agent-front
+   bind *:9030             # Translation port on proxy machine
+   mode tcp
+   default_backend forward-fe
+   
+   backend forward-fe
+   mode tcp
+   balance roundrobin
+   server fe-1 172.16.0.8:9030 weight 1 check inter 3000 rise 2 fall 3
+   server fe-2 172.16.0.4:9030 weight 1 check inter 3000 rise 2 fall 3
+   server fe-3 172.16.0.6:9030 weight 1 check inter 3000 rise 2 fall 3
+   
+   listen http_front              # haproxy client page
+   bind *:8888                    # IP address of HAProxy WEB
+   mode http
+   log 127.0.0.1 local0 err
+   option httplog
+   stats uri /haproxy             # The url of the customized page (that is, the address when accessing is: 172.16.0.3:8888/haproxy)
+   stats auth admin:admin         # Control panel account password Account: admin
+   stats refresh 10s
+   stats enable
+   ```
+
+### Start up
+
+1. Start service
+
+   ` /opt/haproxy/haproxy -f /usr/local/haproxy/haproxy.cfg`

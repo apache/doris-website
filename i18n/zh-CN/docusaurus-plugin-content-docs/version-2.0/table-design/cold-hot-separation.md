@@ -111,7 +111,7 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
         "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
         "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-        "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+        "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
     );
 
     CREATE STORAGE POLICY test_policy PROPERTIES (
@@ -208,8 +208,6 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 另外，对象上的垃圾数据并不会立即清理掉。BE 参数`remove_unused_remote_files_interval_sec`可以设置冷数据的垃圾回收的时间间隔，默认是 21600，单位：秒，即 6 个小时。
 
 ## 未尽事项
-
--   目前暂无方式查询特定 storage policy 关联的表。
 
 -   一些远端占用指标更新获取不够完善
 

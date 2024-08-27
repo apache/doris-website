@@ -67,7 +67,7 @@ Stream load 中，Doris 会选定一个节点作为 Coordinator 节点。该节�
 
 目前 Stream Load 支持数据格式：CSV（文本）、JSON
 
-<version since="1.2"> 1.2+ 支持PARQUET 和 ORC</version>
+<version since="1.2"> 1.2+ 支持 PARQUET 和 ORC</version>
 
 ## 基本操作
 
@@ -90,7 +90,7 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
 curl --location-trusted -u root -T date -H "label:123" http://abc.com:8030/api/test/date/_stream_load
 ```
 
-创建导入的详细语法帮助执行 `HELP STREAM LOAD` 查看, 下面主要介绍创建 Stream Load 的部分参数意义。
+创建导入的详细语法帮助执行 `HELP STREAM LOAD` 查看，下面主要介绍创建 Stream Load 的部分参数意义。
 
 **签名参数**
 
@@ -114,7 +114,7 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 
   用于指定导入文件中的列分隔符，默认为\t。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。
 
-  如hive文件的分隔符\x01，需要指定为-H "column_separator:\x01"。
+  如 hive 文件的分隔符\x01，需要指定为-H "column_separator:\x01"。
 
   可以使用多个字符的组合作为列分隔符。
 
@@ -126,7 +126,7 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 
 - max_filter_ratio
 
-  导入任务的最大容忍率，默认为0容忍，取值范围是0~1。当导入的错误率超过该值，则导入失败。
+  导入任务的最大容忍率，默认为 0 容忍，取值范围是 0~1。当导入的错误率超过该值，则导入失败。
 
   如果用户希望忽略错误的行，可以通过设置这个参数大于 0，来保证导入可以成功。
 
@@ -154,16 +154,16 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 
 - format
 
-  指定导入数据格式，支持csv、json，默认是csv
-  <version since="1.2"> format </version> 1.2 支持csv_with_names(支持csv文件行首过滤)、csv_with_names_and_types(支持csv文件前两行过滤)、parquet、orc
+  指定导入数据格式，支持 csv、json，默认是 csv
+  <version since="1.2"> format </version> 1.2 支持 csv_with_names(支持 csv 文件行首过滤)、csv_with_names_and_types(支持 csv 文件前两行过滤)、parquet、orc
 
   ```text
-  列顺序变换例子：原始数据有三列(src_c1,src_c2,src_c3), 目前doris表也有三列（dst_c1,dst_c2,dst_c3）
+  列顺序变换例子：原始数据有三列 (src_c1,src_c2,src_c3), 目前 doris 表也有三列（dst_c1,dst_c2,dst_c3）
 
-  如果原始表的src_c1列对应目标表dst_c1列，原始表的src_c2列对应目标表dst_c2列，原始表的src_c3列对应目标表dst_c3列，则写法如下：
+  如果原始表的 src_c1 列对应目标表 dst_c1 列，原始表的 src_c2 列对应目标表 dst_c2 列，原始表的 src_c3 列对应目标表 dst_c3 列，则写法如下：
   columns: dst_c1, dst_c2, dst_c3
 
-  如果原始表的src_c1列对应目标表dst_c2列，原始表的src_c2列对应目标表dst_c3列，原始表的src_c3列对应目标表dst_c1列，则写法如下：
+  如果原始表的 src_c1 列对应目标表 dst_c2 列，原始表的 src_c2 列对应目标表 dst_c3 列，原始表的 src_c3 列对应目标表 dst_c1 列，则写法如下：
   columns: dst_c2, dst_c3, dst_c1
 
   表达式变换例子：原始文件有两列，目标表也有两列（c1,c2）但是原始文件的两列均需要经过函数变换才能对应目标表的两列，则写法如下：
@@ -181,25 +181,25 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 
   strict mode 模式的意思是：对于导入过程中的列类型转换进行严格过滤。严格过滤的策略如下：
 
-  1. 对于列类型转换来说，如果 strict mode 为true，则错误的数据将被 filter。这里的错误数据是指：原始数据并不为空值，在参与列类型转换后结果为空值的这一类数据。
+  1. 对于列类型转换来说，如果 strict mode 为 true，则错误的数据将被 filter。这里的错误数据是指：原始数据并不为空值，在参与列类型转换后结果为空值的这一类数据。
   2. 对于导入的某列由函数变换生成时，strict mode 对其不产生影响。
   3. 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict mode 对其也不产生影响。例如：如果类型是 decimal(1,0), 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。
 
-- merge_type 数据的合并类型，一共支持三种类型APPEND、DELETE、MERGE 其中，APPEND是默认值，表示这批数据全部需要追加到现有数据中，DELETE 表示删除与这批数据key相同的所有行，MERGE 语义 需要与delete 条件联合使用，表示满足delete 条件的数据按照DELETE 语义处理其余的按照APPEND 语义处理
+- merge_type 数据的合并类型，一共支持三种类型 APPEND、DELETE、MERGE 其中，APPEND 是默认值，表示这批数据全部需要追加到现有数据中，DELETE 表示删除与这批数据 key 相同的所有行，MERGE 语义 需要与 delete 条件联合使用，表示满足 delete 条件的数据按照 DELETE 语义处理其余的按照 APPEND 语义处理
 
 - two_phase_commit
 
-  Stream load 导入可以开启两阶段事务提交模式：在Stream load过程中，数据写入完成即会返回信息给用户，此时数据不可见，事务状态为`PRECOMMITTED`，用户手动触发commit操作之后，数据才可见。
+  Stream load 导入可以开启两阶段事务提交模式：在 Stream load 过程中，数据写入完成即会返回信息给用户，此时数据不可见，事务状态为`PRECOMMITTED`，用户手动触发 commit 操作之后，数据才可见。
 
 - enable_profile
   <version since="1.2.4">
   </version>
 
-  当 `enable_profile` 为 true 时，Stream Load profile将会打印到日志中。否则不会打印。
+  当 `enable_profile` 为 true 时，Stream Load profile 将会打印到日志中。否则不会打印。
 
   示例：
 
-  1. 发起stream load预提交操作
+  1. 发起 stream load 预提交操作
   ```shell
   curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt http://fe_host:http_port/api/{db}/{table}/_stream_load
   {
@@ -221,9 +221,9 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
       "CommitAndPublishTimeMs": 0
   }
   ```
-  2. 对事务触发commit操作
-  注意1) 请求发往fe或be均可
-  注意2) commit 的时候可以省略 url 中的 `{table}`
+  2. 对事务触发 commit 操作
+  注意 1) 请求发往 fe 或 be 均可
+  注意 2) commit 的时候可以省略 url 中的 `{table}`
   ```shell
   curl -X PUT --location-trusted -u user:passwd  -H "txn_id:18036" -H "txn_operation:commit"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
@@ -231,9 +231,9 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
       "msg": "transaction [18036] commit successfully."
   }
   ```
-  3. 对事务触发abort操作
-  注意1) 请求发往fe或be均可
-  注意2) abort 的时候可以省略 url 中的 `{table}`
+  3. 对事务触发 abort 操作
+  注意 1) 请求发往 fe 或 be 均可
+  注意 2) abort 的时候可以省略 url 中的 `{table}`
   ```shell
   curl -X PUT --location-trusted -u user:passwd  -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
@@ -273,7 +273,7 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 
 下面主要解释了 Stream load 导入结果参数：
 
-- TxnId：导入的事务ID。用户可不感知。
+- TxnId：导入的事务 ID。用户可不感知。
 
 - Label：导入 Label。由用户指定或系统自动生成。
 
@@ -305,15 +305,15 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 
 - LoadTimeMs：导入完成时间。单位毫秒。
 
-- BeginTxnTimeMs：向Fe请求开始一个事务所花费的时间，单位毫秒。
+- BeginTxnTimeMs：向 Fe 请求开始一个事务所花费的时间，单位毫秒。
 
-- StreamLoadPutTimeMs：向Fe请求获取导入数据执行计划所花费的时间，单位毫秒。
+- StreamLoadPutTimeMs：向 Fe 请求获取导入数据执行计划所花费的时间，单位毫秒。
 
 - ReadDataTimeMs：读取数据所花费的时间，单位毫秒。
 
 - WriteDataTimeMs：执行写入数据操作所花费的时间，单位毫秒。
 
-- CommitAndPublishTimeMs：向Fe请求提交并且发布事务所花费的时间，单位毫秒。
+- CommitAndPublishTimeMs：向 Fe 请求提交并且发布事务所花费的时间，单位毫秒。
 
 - ErrorURL：如果有数据质量问题，通过访问这个 URL 查看具体错误行。
 
@@ -331,17 +331,17 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 
 ## 相关系统配置
 
-### FE配置
+### FE 配置
 
 - stream_load_default_timeout_second
 
-  导入任务的超时时间(以秒为单位)，导入任务在设定的 timeout 时间内未完成则会被系统取消，变成 CANCELLED。
+  导入任务的超时时间 (以秒为单位)，导入任务在设定的 timeout 时间内未完成则会被系统取消，变成 CANCELLED。
 
   默认的 timeout 时间为 600 秒。如果导入的源文件无法在规定时间内完成导入，用户可以在 stream load 请求中设置单独的超时时间。
 
   或者调整 FE 的参数`stream_load_default_timeout_second` 来设置全局的默认超时时间。
 
-### BE配置
+### BE 配置
 
 - streaming_load_max_mb
 
@@ -358,25 +358,25 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 由于 Stream load 的原理是由 BE 发起的导入并分发数据，建议的导入数据量在 1G 到 10G 之间。由于默认的最大 Stream load 导入数据量为 10G，所以如果要导入超过 10G 的文件需要修改 BE 的配置 `streaming_load_max_mb`
 
 ```text
-比如：待导入文件大小为15G
+比如：待导入文件大小为 15G
 修改 BE 配置 streaming_load_max_mb 为 16000 即可。
 ```
 
-Stream load 的默认超时为 600秒，按照 Doris 目前最大的导入限速来看，约超过 3G 的文件就需要修改导入任务默认超时时间了。
+Stream load 的默认超时为 600 秒，按照 Doris 目前最大的导入限速来看，约超过 3G 的文件就需要修改导入任务默认超时时间了。
 
 ```text
-导入任务超时时间 = 导入数据量 / 10M/s （具体的平均导入速度需要用户根据自己的集群情况计算）
+导入任务超时时间 = 导入数据量 / 10M/s（具体的平均导入速度需要用户根据自己的集群情况计算）
 例如：导入一个 10G 的文件
 timeout = 1000s 等于 10G / 10M/s
 ```
 
 ### 完整例子
 
-数据情况： 数据在发送导入请求端的本地磁盘路径 /home/store_sales 中，导入的数据量约为 15G，希望导入到数据库 bj_sales 的表 store_sales 中。
+数据情况：数据在发送导入请求端的本地磁盘路径 /home/store_sales 中，导入的数据量约为 15G，希望导入到数据库 bj_sales 的表 store_sales 中。
 
 集群情况：Stream load 的并发数不受集群大小影响。
 
-- step1: 导入文件大小是否超过默认的最大导入大小10G
+- step1: 导入文件大小是否超过默认的最大导入大小 10G
 
   ```text
   修改 BE conf
@@ -411,17 +411,17 @@ timeout = 1000s 等于 10G / 10M/s
 
   2. 是否 Stream load 同一个作业被重复提交了
 
-     由于 Stream load 是 HTTP 协议提交创建导入任务，一般各个语言的 HTTP Client 均会自带请求重试逻辑。Doris 系统在接受到第一个请求后，已经开始操作 Stream load，但是由于没有及时返回给 Client 端结果， Client 端会发生再次重试创建请求的情况。这时候 Doris 系统由于已经在操作第一个请求，所以第二个请求已经就会被报 Label Already Exists 的情况。
+     由于 Stream load 是 HTTP 协议提交创建导入任务，一般各个语言的 HTTP Client 均会自带请求重试逻辑。Doris 系统在接受到第一个请求后，已经开始操作 Stream load，但是由于没有及时返回给 Client 端结果，Client 端会发生再次重试创建请求的情况。这时候 Doris 系统由于已经在操作第一个请求，所以第二个请求已经就会被报 Label Already Exists 的情况。
 
      排查上述可能的方法：使用 Label 搜索 FE Master 的日志，看是否存在同一个 Label 出现了两次 `redirect load action to destination=` 的情况。如果有就说明，请求被 Client 端重复提交了。
 
-     建议用户根据当前请求的数据量，计算出大致导入的时间，并根据导入超时时间，将Client 端的请求超时间改成大于导入超时时间的值，避免请求被 Client 端多次提交。
+     建议用户根据当前请求的数据量，计算出大致导入的时间，并根据导入超时时间，将 Client 端的请求超时间改成大于导入超时时间的值，避免请求被 Client 端多次提交。
 
   3. Connection reset 异常
 
-     在社区版 0.14.0 及之前的版本在启用Http V2之后出现connection reset异常，因为Web 容器内置的是tomcat，Tomcat 在 307 (Temporary Redirect) 是有坑的，对这个协议实现是有问题的，所有在使用Stream load 导入大数据量的情况下会出现connect reset异常，这个是因为tomcat在做307跳转之前就开始了数据传输，这样就造成了BE收到的数据请求的时候缺少了认证信息，之后将内置容器改成了Jetty解决了这个问题，如果你遇到这个问题，请升级你的Doris或者禁用Http V2（`enable_http_server_v2=false`）。
+     在社区版 0.14.0 及之前的版本在启用 Http V2 之后出现 connection reset 异常，因为 Web 容器内置的是 tomcat，Tomcat 在 307 (Temporary Redirect) 是有坑的，对这个协议实现是有问题的，所有在使用 Stream load 导入大数据量的情况下会出现 connect reset 异常，这个是因为 tomcat 在做 307 跳转之前就开始了数据传输，这样就造成了 BE 收到的数据请求的时候缺少了认证信息，之后将内置容器改成了 Jetty 解决了这个问题，如果你遇到这个问题，请升级你的 Doris 或者禁用 Http V2（`enable_http_server_v2=false`）。
 
-     升级以后同时升级你程序的http client 版本到 `4.5.13`，在你的pom.xml文件中引入下面的依赖
+     升级以后同时升级你程序的 http client 版本到 `4.5.13`，在你的 pom.xml 文件中引入下面的依赖
 
      ```xml
          <dependency>
@@ -434,11 +434,11 @@ timeout = 1000s 等于 10G / 10M/s
 
   这是因为拉取速度慢造成的，可以尝试调整下面的参数：
   
-  1. 调大 BE 配置 `stream_load_record_batch_size`，这个配置表示每次从 BE 上最多拉取多少条 Stream load 的记录数，默认值为50条，可以调大到500条。
-  2. 调小 FE 的配置 `fetch_stream_load_record_interval_second`，这个配置表示获取 Stream load 记录间隔，默认每120秒拉取一次，可以调整到60秒。
-  3. 如果要保存更多的 Stream load 记录（不建议，占用 FE 更多的资源）可以将 FE 的配置 `max_stream_load_record_size` 调大，默认是5000条。
+  1. 调大 BE 配置 `stream_load_record_batch_size`，这个配置表示每次从 BE 上最多拉取多少条 Stream load 的记录数，默认值为 50 条，可以调大到 500 条。
+  2. 调小 FE 的配置 `fetch_stream_load_record_interval_second`，这个配置表示获取 Stream load 记录间隔，默认每 120 秒拉取一次，可以调整到 60 秒。
+  3. 如果要保存更多的 Stream load 记录（不建议，占用 FE 更多的资源）可以将 FE 的配置 `max_stream_load_record_size` 调大，默认是 5000 条。
 
 ## 更多帮助
 
-关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP STREAM LOAD` 获取更多帮助信息。
+关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP STREAM LOAD` 获取更多帮助信息。
 

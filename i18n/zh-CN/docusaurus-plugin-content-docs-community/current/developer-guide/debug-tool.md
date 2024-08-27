@@ -223,7 +223,12 @@ Total: 1296.4 MB
 
 ##### JEMALLOC
 
-###### 1. realtime heap dump
+有关 Heap Profile 的原理解析参考 [Heap Profiling 原理解析](https://cn.pingcap.com/blog/an-explanation-of-the-heap-profiling-principle/)，需要注意的是 Heap Profile 记录的是虚拟内存
+
+支持实时和定期两种方式 Dump Heap Profile，然后使用 `jeprof` 解析 Heap Profile。
+
+###### 1. 实时 Heap Dump
+
 将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true` 并重启BE，然后使用jemalloc heap dump http接口，在对应的BE机器上生成heap dump文件。
 
 ```shell
@@ -236,58 +241,62 @@ heap dump文件所在目录可以在 ``be.conf`` 中通过``jeprofile_dir``变�
 
 如果你在做性能测试，保持 `prof:false` 来避免 heap dump 的性能损耗。
 
-###### 2. regular heap dump
-同样要将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true`，同时将 `be.conf` 中 `JEMALLOC_PROF_PRFIX` 修改为任意值并重启BE。
+###### 2. 定期 Heap Dump
 
-heap dump文件所在目录默认为 `${DORIS_HOME}/log`, 文件名前缀是 `JEMALLOC_PROF_PRFIX`。
+首先将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true`，heap dump文件所在目录默认为 `${DORIS_HOME}/log`, 文件名前缀是 `be.conf` 中的 `JEMALLOC_PROF_PRFIX`，默认是 `jemalloc_heap_profile_`。
+
+> 在 Doris 2.1.6 之前，`JEMALLOC_PROF_PRFIX` 为空，需要修改为任意值作为 profile 文件名
 
 1. 内存累计申请一定值时dump:
 
-   默认内存累计申请 4GB 生成一次dump，可以修改 `be.conf` 中 `JEMALLOC_CONF` 的 `lg_prof_interval` 调整dump间隔，默认值 `32` (2^32 B = 4GB)。
+   将 `be.conf` 中 `JEMALLOC_CONF` 的 `lg_prof_interval` 修改为 34，此时内存累计申请 16GB (2^35 B = 16GB) 时 dump 一次 profile，可以修改为任意值来调整dump间隔。
+
+> 在 Doris 2.1.6 之前，`lg_prof_interval` 默认就是32。
+
 2. 内存每次达到新高时dump:
 
    将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof_gdump` 修改为 `true` 并重启BE。
+
 3. 程序退出时dump, 并检测内存泄漏:
 
    将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof_leak` 和 `prof_final` 修改为 `true` 并重启BE。
+
 4. dump内存累计值(growth)，而不是实时值:
 
    将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof_accum` 修改为 `true` 并重启BE。
    使用 `jeprof --alloc_space` 展示 heap dump 累计值。
 
-##### 3. heap dump profiling
+##### 3. `jeprof` 解析 Heap Profile
+
+使用 `jeprof` 解析上面 Dump 的 Heap Profile，如果进程内存太大，解析过程可能需要几分钟，请耐心等待。若系统没有 `jeprof` 命令，可以将 `doris/tools` 目录下的 `jeprof` 这个二进制打包后上传到 Heap Dump 的服务器。
 
 ```
-需要 addr2line 版本为 2.35.2, 见下面的 QA 1.
+需要 addr2line 版本为 2.35.2 及以上, 见下面的 QA-1
+尽可能让 Heap Dump 和执行 `jeprof` 解析 Heap Profile 在同一台服务器上，见下面的 QA-2
 ```
 
-1.  单个heap dump文件生成纯文本分析结果
+1. 分析单个heap dump文件
+
 ```shell
-   jeprof lib/doris_be heap_dump_file_1
+   jeprof --dot lib/doris_be heap_dump_file_1
    ```
 
-2.  分析两个heap dump的diff
-   ```shell
-   jeprof lib/doris_be --base=heap_dump_file_1 heap_dump_file_2
-   ```
-   
-3. 生成调用关系图片
+   执行完上述命令，终端中会输出dot语法的图，将其贴到[在线dot绘图网站](http://www.webgraphviz.com/)，生成内存分配图，然后进行分析。
 
-   安装绘图所需的依赖项
-   ```shell
+   如果服务器方便传输文件，也可以通过如下命令直接生成调用关系图 result.pdf 文件传输到本地后进行查看，需要安装绘图所需的依赖项。
+
+```shell
    yum install ghostscript graphviz
+   jeprof --pdf lib/doris_be heap_dump_file_1 > result.pdf
    ```
-   通过在一短时间内多次运行上述命令可以生成多份dump 文件，可以选取第一份dump 文件作为baseline 进行diff对比分析
-   
-   ```shell
+
+2.  分析两个heap dump文件的diff
+
+```shell
    jeprof --dot lib/doris_be --base=heap_dump_file_1 heap_dump_file_2
    ```
-   执行完上述命令，终端中会输出dot语法的图，将其贴到[在线dot绘图网站](http://www.webgraphviz.com/)，生成内存分配图，然后进行分析，此种方式能够直接通过终端输出结果进行绘图，比较适用于传输文件不是很方便的服务器。
-   
-   也可以通过如下命令直接生成调用关系result.pdf文件传输到本地后进行查看
-   ```shell
-   jeprof --pdf lib/doris_be --base=heap_dump_file_1 heap_dump_file_2 > result.pdf
-   ```
+
+   通过在一段时间内多次运行上述命令可以生成多个 heap 文件，可以选取较早时间的 heap 文件作为 baseline，与较晚时间的 heap 文件对比分析它们的diff，生成调用关系图的方法同上。
 
 ##### 4. QA
 
@@ -322,6 +331,10 @@ cp addr2line /usr/bin/addr2line
 hash -r
 ```
 注意，不能使用 addr2line 2.3.9, 这可能不兼容，导致内存一直增长。
+
+2. 运行 `jeprof` 后出现很多错误: `addr2line: DWARF error: invalid or unhandled FORM value: 0x25`，解析后的 Heap 栈都是代码的内存地址，而不是函数名称
+
+这是因为 Heap Dump 和执行 `jeprof` 解析 Heap Profile 不在同一台服务器上，导致 `jeprof` 使用符号表解析函数名称失败，尽可能在同一台机器上完成 Dump Heap 和 `jeprof` 解析的操作。
 
 #### LSAN
 

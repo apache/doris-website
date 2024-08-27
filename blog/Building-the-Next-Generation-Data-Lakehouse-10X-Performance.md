@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Building the next-generation data lakehouse: 10X performance',
-    'summary': "This article explains how to connect various data sources quickly and ensure high query performance.",
+    'description': "This article explains how to connect various data sources quickly and ensure high query performance.",
     'date': '2023-03-14',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -52,7 +52,7 @@ To turn these visions into reality, a data query engine needs to figure out the 
 
 Apache Doris 1.2.2 supports a wide variety of data lake formats and data access from various external data sources. Besides, via the Table Value Function, users can analyze files in object storage or HDFS directly.
 
-![data-sources-supported-in-data-lakehouse](../static/images/Lakehouse/Lakehouse_1.png)
+![data-sources-supported-in-data-lakehouse](/images/Lakehouse/Lakehouse_1.png)
 
 
 
@@ -74,7 +74,7 @@ Older versions of Doris support a two-tiered metadata structure: database and ta
 1. You can map to the whole external data source and ingest all metadata from it.
 2. You can manage the properties of the specified data source at the catalog level, such as connection, privileges, and data ingestion details, and easily handle multiple data sources.
 
-![metadata-structure](../static/images/Lakehouse/Lakehouse_2.png)
+![metadata-structure](/images/Lakehouse/Lakehouse_2.png)
 
 
 
@@ -115,7 +115,7 @@ This also paves the way for developers who want to connect to more data sources 
 
 Access to external data sources is often hindered by network conditions and data resources. This requires extra efforts of a data query engine to guarantee reliability, stability, and real-timeliness in metadata access.
 
-![metadata-access-Hive-MetaStore](../static/images/Lakehouse/Lakehouse_3.png)
+![metadata-access-Hive-MetaStore](/images/Lakehouse/Lakehouse_3.png)
 
 Doris enables high efficiency in metadata access by **Meta Cache**, which includes Schema Cache, Partition Cache, and File Cache. This means that Doris can respond to metadata queries on thousands of tables in milliseconds. In addition, Doris supports manual refresh of metadata at the Catalog/Database/Table level. Meanwhile, it enables auto synchronization of metadata in Hive Metastore by monitoring Hive Metastore Event, so any changes can be updated within seconds.
 
@@ -123,13 +123,13 @@ Doris enables high efficiency in metadata access by **Meta Cache**, which includ
 
 External data sources usually come with their own privilege management services. Many companies use one single tool (such as Apache Ranger) to provide authorization for their multiple data systems. Doris supports a custom authorization plugin, which can be connected to the user's own privilege management system via the Doris Access Controller interface. As a user, you only need to specify the authorization plugin for a newly created catalog, and then you can readily perform authorization, audit, and data encryption on external data in Doris.
 
-![custom-authorization](../static/images/Lakehouse/Lakehouse_4.png)
+![custom-authorization](/images/Lakehouse/Lakehouse_4.png)
 
 ### Data Access
 
 Doris supports data access to external storage systems, including HDFS and S3-compatible object storage:
 
-![access-to-external-storage-systems](../static/images/Lakehouse/Lakehouse_5.png)
+![access-to-external-storage-systems](/images/Lakehouse/Lakehouse_5.png)
 
 
 
@@ -157,7 +157,7 @@ Doris caches files from remote storage in local high-performance disks as a way 
 1. **Block cache**: Doris supports the block cache of remote files and can automatically adjust the block size from 4KB to 4MB based on the read request. The block cache method reduces read/write amplification and read latency in cold caches.
 2. **Consistent hashing for caching**: Doris applies consistent hashing to manage cache locations and schedule data scanning. By doing so, it prevents cache failures brought about by the online and offlining of nodes. It can also increase cache hit rate and query service stability.
 
-![file-cache](../static/images/Lakehouse/Lakehouse_6.png)
+![file-cache](/images/Lakehouse/Lakehouse_6.png)
 
 #### Execution Engine
 
@@ -166,7 +166,7 @@ Developers surely don't want to rebuild all the general features for every new d
 - **Layer the logic**: All data queries in Doris, including those on internal tables, use the same operators, such as Join, Sort, and Agg. The only difference between queries on internal and external data lies in data access. In Doris, anything above the scan nodes follows the same query logic, while below the scan nodes, the implementation classes will take care of access to different data sources.
 - **Use a general framework for scan operators**: Even for the scan nodes, different data sources have a lot in common, such as task splitting logic, scheduling of sub-tasks and I/O, predicate pushdown, and Runtime Filter. Therefore, Doris uses interfaces to handle them. Then, it implements a unified scheduling logic for all sub-tasks. The scheduler is in charge of all scanning tasks in the node. With global information of the node in hand, the schedular is able to do fine-grained management. Such a general framework makes it easy to connect a new data source to Doris, which will only take a week of work for one developer.
 
-![execution-engine](../static/images/Lakehouse/Lakehouse_7.png)
+![execution-engine](/images/Lakehouse/Lakehouse_7.png)
 
 #### Query Optimizer
 
@@ -176,9 +176,9 @@ Doris supports a range of statistical information from various data sources, inc
 
 We tested Doris and Presto/Trino on HDFS in flat table scenarios (ClickBench) and multi-table scenarios (TPC-H). Here are the results:
 
-![Apache-Doris-VS-Trino-Presto-ClickBench](../static/images/Lakehouse/Lakehouse_8.png)
+![Apache-Doris-VS-Trino-Presto-ClickBench](/images/Lakehouse/Lakehouse_8.png)
 
-![Apache-Doris-VS-Trino-Presto-TPCH](../static/images/Lakehouse/Lakehouse_9.png)
+![Apache-Doris-VS-Trino-Presto-TPCH](/images/Lakehouse/Lakehouse_9.png)
 
 
 
@@ -188,7 +188,7 @@ As is shown, with the same computing resources and on the same dataset, Apache D
 
 Querying external data sources requires no internal storage of Doris. This makes elastic stateless computing nodes possible. Apache Doris 2.0 is going to implement Elastic Compute Node, which is dedicated to supporting query workloads of external data sources.
 
-![stateless-compute-nodes](../static/images/Lakehouse/Lakehouse_10.png)
+![stateless-compute-nodes](/images/Lakehouse/Lakehouse_10.png)
 
 Stateless computing nodes are open for quick scaling so users can easily cope with query workloads during peaks and valleys and strike a balance between performance and cost. In addition, Doris has optimized itself for Kubernetes cluster management and node scheduling. Now Master nodes can automatically manage the onlining and offlining of Elastic Compute Nodes, so users can govern their cluster workloads in cloud-native and hybrid cloud scenarios without difficulty.
 
@@ -200,7 +200,7 @@ Apache Doris has been adopted by a financial institution for risk management. Th
 - Doris makes it possible to perform real-time federated queries using Elasticsearch Catalog and achieve a response time of mere milliseconds.
 - Doris enables the decoupling of daily batch processing and statistical analysis, bringing less resource consumption and higher system stability.
 
-![use-case-of-data-lakehouse](../static/images/Lakehouse/Lakehouse_11.png)
+![use-case-of-data-lakehouse](/images/Lakehouse/Lakehouse_11.png)
 
 
 
@@ -241,10 +241,6 @@ Contact dev@apache.doris.org to join the Lakehouse SIG(Special Interest Group) i
 
 **# Links:**
 
-**SelectDB:**
-
-https://selectdb.com 
-
 **Apache Doris:**
 
 http://doris.apache.org
@@ -253,5 +249,5 @@ http://doris.apache.org
 
 https://github.com/apache/doris
 
-Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1t3wfymur-0soNPATWQ~gbU8xutFOLog).
+Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).
 

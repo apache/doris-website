@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Best practice of Apache Doris in JD',
-    'summary': "This paper mainly discusses how to use Doris for business exploration and practice in the multi-dimensional analysis of real-time and offline data in the large real-time screen of JD customer service in the scenarios of manual consultation, customer event list, after-sales service list, etc.",
+    'description': "This paper mainly discusses how to use Doris for business exploration and practice in the multi-dimensional analysis of real-time and offline data in the large real-time screen of JD customer service in the scenarios of manual consultation, customer event list, after-sales service list, etc.",
     'date': '2022-07-20',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],

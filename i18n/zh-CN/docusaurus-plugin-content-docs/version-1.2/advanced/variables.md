@@ -312,7 +312,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `max_allowed_packet`
 
-  用于兼容 JDBC 连接池 C3P0。 无实际作用。
+  用于兼容 JDBC 连接池 C3P0。对 Doris 本身无实际作用。如遇到 `Packet for query is too large (1,514,085 > 1,048,576). You can change this value on the server by setting the 'max_allowed_packet' variable.` 错误，可使用 `set GLOBAL max_allowed_packet = 1548576` 调大。
 
 - `max_pushdown_conditions_per_column`
 

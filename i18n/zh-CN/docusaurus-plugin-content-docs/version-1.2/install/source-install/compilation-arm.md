@@ -129,7 +129,7 @@ under the License.
   ```shell
   cd /opt/tools
   # wget 工具下载后，直接解压缩配置环境变量使用
-  wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
+  wget https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
   	tar -zxvf apache-maven-3.6.3-bin.tar.gz && \
   	mv apache-maven-3.6.3 /opt/software/maven
   ```

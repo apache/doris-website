@@ -24,11 +24,7 @@ under the License.
 
 ## array_pushback
 
-<version since="2.0">
-
 array_pushback
-
-</version>
 
 ### description
 
@@ -36,17 +32,13 @@ array_pushback
 
 `Array<T> array_pushback(Array<T> arr, T value)`
 
-将value添加到数组的尾部.
+将 value 添加到数组的尾部。
 
 #### Returned value
 
-返回添加value后的数组
+返回添加 value 后的数组
 
-类型: Array.
-
-### notice
-
-`只支持在向量化引擎中使用`
+类型：Array.
 
 ### example
 

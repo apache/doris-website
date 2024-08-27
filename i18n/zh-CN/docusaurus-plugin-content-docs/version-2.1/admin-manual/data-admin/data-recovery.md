@@ -1,6 +1,6 @@
 ---
 {
-    "title": "数据恢复",
+    "title": "主键表数据修复",
     "language": "zh-CN"
 }
 ---
@@ -26,7 +26,7 @@ under the License.
 
 # 数据恢复
 
-对于Unique Key Merge on Write表，在某些Doris的版本中存在bug，可能会导致系统在计算delete bitmap时出现错误，导致出现重复主键，此时可以利用full compaction功能进行数据的修复。本功能对于非Unique Key Merge on Write表无效。
+对于 Unique Key Merge on Write 表，在某些 Doris 的版本中存在 bug，可能会导致系统在计算 delete bitmap 时出现错误，导致出现重复主键，此时可以利用 full compaction 功能进行数据的修复。本功能对于非 Unique Key Merge on Write 表无效。
 
 该功能需要 Doris 版本 2.0+。
 
@@ -34,7 +34,7 @@ under the License.
 
 ## 简要原理说明
 
-执行full compaction后，会对delete bitmap进行重新计算，将错误的delete bitmap数据删除，以完成数据的修复。
+执行 full compaction 后，会对 delete bitmap 进行重新计算，将错误的 delete bitmap 数据删除，以完成数据的修复。
 
 ## 使用说明
 
@@ -44,7 +44,7 @@ under the License.
 
 `POST /api/compaction/run?table_id={int}&compact_type=full`
 
-注意，tablet_id和table_id只能指定一个，不能够同时指定，指定table_id后会自动对此table下所有tablet执行full_compaction。
+注意，tablet_id 和 table_id 只能指定一个，不能够同时指定，指定 table_id 后会自动对此 table 下所有 tablet 执行 full_compaction。
 
 ## 使用例子
 

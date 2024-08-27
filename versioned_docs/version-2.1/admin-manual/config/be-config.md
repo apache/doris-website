@@ -158,8 +158,8 @@ There are two ways to configure BE configuration items:
 
   eg.2: `storage_root_path=/home/disk1/doris,medium:hdd;/home/disk2/doris,medium:ssd`
 
-    - 1./home/disk1/doris,medium:hdd，indicates that the storage medium is HDD;
-    - 2./home/disk2/doris,medium:ssd，indicates that the storage medium is SSD;
+    - 1./home/disk1/doris,medium:hdd, indicates that the storage medium is HDD;
+    - 2./home/disk2/doris,medium:ssd, indicates that the storage medium is SSD;
 
 * Default value: ${DORIS_HOME}/storage
 
@@ -205,8 +205,8 @@ There are two ways to configure BE configuration items:
 
 #### `trash_file_expire_time_sec`
 
-* Description: The interval for cleaning the recycle bin is 72 hours. When the disk space is insufficient, the file retention period under trash may not comply with this parameter
-* Default value: 259200
+* Description: The interval for cleaning the recycle bin is 24 hours. When the disk space is insufficient, the file retention period under trash may not comply with this parameter
+* Default value: 86400
 
 #### `es_http_timeout_ms`
 
@@ -277,6 +277,14 @@ There are two ways to configure BE configuration items:
 
     - If the parameter is `THREAD_POOL`, the model is a blocking I/O model.
 
+#### `thrift_max_message_size`
+
+<version since="2.1.4"></version>
+
+Default: 100MB
+
+The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
+
 #### `txn_commit_rpc_timeout_ms`
 
 * Description:txn submit rpc timeout
@@ -346,7 +354,7 @@ There are two ways to configure BE configuration items:
 #### `doris_max_scan_key_num`
 
 * Type: int
-* Description: Used to limit the maximum number of scan keys that a scan node can split in a query request. When a conditional query request reaches the scan node, the scan node will try to split the conditions related to the key column in the query condition into multiple scan key ranges. After that, these scan key ranges will be assigned to multiple scanner threads for data scanning. A larger value usually means that more scanner threads can be used to increase the parallelism of the scanning operation. However, in high concurrency scenarios, too many threads may bring greater scheduling overhead and system load, and will slow down the query response speed. An empirical value is 50. This configuration can be configured separately at the session level. For details, please refer to the description of `max_scan_key_num` in [Variables](../../advanced/variables.md).
+* Description: Used to limit the maximum number of scan keys that a scan node can split in a query request. When a conditional query request reaches the scan node, the scan node will try to split the conditions related to the key column in the query condition into multiple scan key ranges. After that, these scan key ranges will be assigned to multiple scanner threads for data scanning. A larger value usually means that more scanner threads can be used to increase the parallelism of the scanning operation. However, in high concurrency scenarios, too many threads may bring greater scheduling overhead and system load, and will slow down the query response speed. An empirical value is 50. This configuration can be configured separately at the session level. For details, please refer to the description of `max_scan_key_num` in [Variables](../../query/query-variables/variables.md).
   - When the concurrency cannot be improved in high concurrency scenarios, try to reduce this value and observe the impact.
 * Default value: 48
 
@@ -355,12 +363,6 @@ There are two ways to configure BE configuration items:
 * Type: int32
 * Description: When BE performs data scanning, it will split the same scanning range into multiple ScanRanges. This parameter represents the scan data range of each ScanRange. This parameter can limit the time that a single OlapScanner occupies the io thread.
 * Default value: 524288
-
-#### `doris_scanner_queue_size`
-
-* Type: int32
-* Description: The length of the RowBatch buffer queue between TransferThread and OlapScanner. When Doris performs data scanning, it is performed asynchronously. The Rowbatch scanned by OlapScanner will be placed in the scanner buffer queue, waiting for the upper TransferThread to take it away.
-* Default value: 1024
 
 #### `doris_scanner_row_num`
 
@@ -400,7 +402,7 @@ There are two ways to configure BE configuration items:
 #### `max_pushdown_conditions_per_column`
 
 * Type: int
-* Description: Used to limit the maximum number of conditions that can be pushed down to the storage engine for a single column in a query request. During the execution of the query plan, the filter conditions on some columns can be pushed down to the storage engine, so that the index information in the storage engine can be used for data filtering, reducing the amount of data that needs to be scanned by the query. Such as equivalent conditions, conditions in IN predicates, etc. In most cases, this parameter only affects queries containing IN predicates. Such as `WHERE colA IN (1,2,3,4, ...)`. A larger number means that more conditions in the IN predicate can be pushed to the storage engine, but too many conditions may cause an increase in random reads, and in some cases may reduce query efficiency. This configuration can be individually configured for session level. For details, please refer to the description of `max_pushdown_conditions_per_column` in [Variables](../../advanced/variables.md).
+* Description: Used to limit the maximum number of conditions that can be pushed down to the storage engine for a single column in a query request. During the execution of the query plan, the filter conditions on some columns can be pushed down to the storage engine, so that the index information in the storage engine can be used for data filtering, reducing the amount of data that needs to be scanned by the query. Such as equivalent conditions, conditions in IN predicates, etc. In most cases, this parameter only affects queries containing IN predicates. Such as `WHERE colA IN (1,2,3,4, ...)`. A larger number means that more conditions in the IN predicate can be pushed to the storage engine, but too many conditions may cause an increase in random reads, and in some cases may reduce query efficiency. This configuration can be individually configured for session level. For details, please refer to the description of `max_pushdown_conditions_per_column` in [Variables](../../query/query-variables/variables.md).
 * Default value: 1024
 
 * Example
@@ -1066,18 +1068,18 @@ BaseCompaction:546859:
 #### `generate_cache_cleaner_task_interval_sec`
 
 * Type：int64
-* Description：Cleaning interval of cache files, in seconds
-* Default：43200（12 hours）
+* Description: Cleaning interval of cache files, in seconds
+* Default: 43200 (12 hours)
 
 #### `path_gc_check`
 
 * Type：bool
-* Description：Whether to enable the recycle scan data thread check
+* Description: Whether to enable the recycle scan data thread check
 * Default：true
 
 #### `path_gc_check_interval_second`
 
-* Description：Recycle scan data thread check interval
+* Description: Recycle scan data thread check interval
 * Default：86400 (s)
 
 #### `path_gc_check_step`
@@ -1094,7 +1096,7 @@ BaseCompaction:546859:
 
 #### `scan_context_gc_interval_min`
 
-* Description：This configuration is used for the context gc thread scheduling cycle. Note: The unit is minutes, and the default is 5 minutes
+* Description: This configuration is used for the context gc thread scheduling cycle. Note: The unit is minutes, and the default is 5 minutes
 * Default：5
 
 ### Storage
@@ -1114,7 +1116,7 @@ BaseCompaction:546859:
 #### `disk_stat_monitor_interval`
 
 * Description: Disk status check interval
-* Default value: 5（s）
+* Default value: 5 (s)
 
 #### `max_free_io_buffers`
 
@@ -1165,7 +1167,7 @@ BaseCompaction:546859:
 #### `storage_flood_stage_usage_percent`
 
 * Description: The storage_flood_stage_usage_percent and storage_flood_stage_left_capacity_bytes configurations limit the maximum usage of the capacity of the data directory.
-* Default value: 90 （90%）
+* Default value: 90 (90%)
 
 #### `storage_medium_migrate_count`
 
@@ -1245,7 +1247,7 @@ BaseCompaction:546859:
 
 #### `tablet_meta_checkpoint_min_interval_secs`
 
-* Description: TabletMeta Checkpoint线程轮询的时间间隔
+* Description: TabletMeta Checkpoint 线程轮询的时间间隔
 * Default value: 600 (s)
 
 #### `tablet_meta_checkpoint_min_new_rowsets_num`
@@ -1422,7 +1424,7 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 #### `max_download_speed_kbps`
 
 * Description: Maximum download speed limit
-* Default value: 50000 （kb/s）
+* Default value: 50000 (kb/s)
 
 #### `download_low_speed_time`
 
@@ -1493,15 +1495,10 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 #### `group_commit_memory_rows_for_max_filter_ratio`
 
-* Description: The `max_filter_ratio` limit can only work if the total rows of `group commit` is less than this value. See [Group Commit](../../data-operate/import/import-way/group-commit-manual.md) for more details
+* Description: The `max_filter_ratio` limit can only work if the total rows of `group commit` is less than this value. See [Group Commit](../../data-operate/import/group-commit-manual.md) for more details
 * Default: 10000
 
 #### `default_tzfiles_path`
 
 * Description: Doris comes with its own time zone database. If the time zone file is not found in the system directory, the data in that directory is enabled.
 * Default: "${DORIS_HOME}/zoneinfo"
-
-#### `use_doris_tzfile`
-
-* Description: Whether to use the time zone database that comes with Doris directly. Enabled to stop trying to find in  the system directory.
-* Default: false

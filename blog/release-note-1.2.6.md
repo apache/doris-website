@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris announced the official release of version 1.2.6',
-    'summary': 'Dear community, Apache Doris 1.2.6 is now available, with several enhancements and bug fixes based on 1.2.0，enabling smoother user experience.',
+    'description': 'Dear community, Apache Doris 1.2.6 is now available, with several enhancements and bug fixes based on 1.2.0，enabling smoother user experience.',
     'date': '2023-07-17',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],

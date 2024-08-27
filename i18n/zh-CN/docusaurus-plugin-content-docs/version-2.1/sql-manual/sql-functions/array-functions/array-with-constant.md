@@ -41,15 +41,9 @@ ARRAY<T> array_repeat(T, n)
 ```
 返回一个数组, 包含n个重复的T常量。array_repeat与array_with_constant功能相同，用来兼容hive语法格式。
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_with_constant(2, "hello"), array_repeat("hello", 2);
 +---------------------------------+--------------------------+
 | array_with_constant(2, 'hello') | array_repeat('hello', 2) |

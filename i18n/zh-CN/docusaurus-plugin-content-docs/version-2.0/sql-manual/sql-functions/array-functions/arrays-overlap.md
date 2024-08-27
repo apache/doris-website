@@ -26,11 +26,7 @@ under the License.
 
 ## arrays_overlap
 
-<version since="1.2.0">
-
 arrays_overlap
-
-</version>
 
 ### description
 
@@ -46,15 +42,9 @@ arrays_overlap
 NULL - left或者right数组为NULL；或者left和right数组中，任意元素为NULL；
 ```
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select c_left,c_right,arrays_overlap(c_left,c_right) from array_test;
 +--------------+-----------+-------------------------------------+
 | c_left       | c_right   | arrays_overlap(`c_left`, `c_right`) |

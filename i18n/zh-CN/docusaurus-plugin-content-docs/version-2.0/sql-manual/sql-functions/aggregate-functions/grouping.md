@@ -104,4 +104,4 @@ GROUPING
 
 ### Best Practice
 
-还可参阅 [GROUPING_ID](./grouping_id.md)
+还可参阅 [GROUPING_ID](../aggregate-functions/grouping-id)

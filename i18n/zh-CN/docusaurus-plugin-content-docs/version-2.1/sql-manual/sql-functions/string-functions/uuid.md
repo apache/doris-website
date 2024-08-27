@@ -26,18 +26,14 @@ under the License.
 
 ## uuid
 
-<version since="1.2.0">
-
 uuid
-
-</version>
 
 ### description
 #### Syntax
 
 `VARCHAR uuid()`
 
-返回一个随机的uuid字符串
+返回一个随机的 uuid 字符串
 
 
 ### example

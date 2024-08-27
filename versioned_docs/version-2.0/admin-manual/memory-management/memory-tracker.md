@@ -38,9 +38,11 @@ For detailed design and implementation, please refer to:
 https://cwiki.apache.org/confluence/display/DORIS/DSIP-002%3A+Refactor+memory+tracker+on+BE
 https://shimo.im/docs/DT6JXDRkdTvdyV3G
 
+For more information about Memory Tracker, refer to the following documents: [Say-Goodbye-to-OOM-Crashes-en](https://doris.apache.org/blog/Say-Goodbye-to-OOM-Crashes/), [Say-Goodbye-to-OOM-Crashes-zh-CN](https://mp.weixin.qq.com/s/Z5N-uZrFE3Qhn5zTyEDomQ)
+
 ## View statistics
 
-The real-time memory statistics results can be viewed through Doris BE's Web page http://ip:webserver_port/mem_tracker.(webserver_port default is 8040)
+The real-time memory statistics results can be viewed through Doris BE's Web page http://{be_host}:{be_web_server_port}/mem_tracker.(webserver_port default is 8040)
 For the memory statistics results of historical queries, you can view the `peakMemoryBytes` of each query in `fe/log/fe.audit.log`, or search `Deregister query/load memory tracker, queryId` in `be/log/be.INFO` `View memory peaks per query on a single BE.
 
 ### Home `/mem_tracker`
@@ -51,7 +53,7 @@ For the memory statistics results of historical queries, you can view the `peakM
 - global: Global Memory Tracker with the same life cycle and process, such as each Cache, Tablet Manager, Storage Engine, etc.
 - query: the in-memory sum of all queries.
 - load: Sum of all imported memory.
-- tc/jemalloc_cache: The general memory allocator TCMalloc or Jemalloc cache, you can view the original profile of the memory allocator in real time at http://ip:webserver_port/memz.
+- tc/jemalloc_cache: The general memory allocator TCMalloc or Jemalloc cache, you can view the original profile of the memory allocator in real time at http://{be_host}:{be_web_server_port}/memz.
 - compaction, schema_change, consistency, batch_load, clone: ​​corresponding to the memory sum of all Compaction, Schema Change, Consistency, Batch Load, and Clone tasks respectively.
 
 2. Current Consumption(Bytes): current memory value, unit B.
@@ -71,12 +73,10 @@ For the memory statistics results of historical queries, you can view the `peakM
   - SegCompaction: The memory sum of all SegCompaction tasks, a subset of Orphan.
   - SegmentMeta: memory use by segment meta data such as footer or index page, a subset of Orphan.
   - TabletManager: The memory consumed by the storage engine get, add, and delete Tablet, a subset of Orphan.
-  - BufferAllocator: Only used for memory multiplexing in the non-vectorized Partitioned Agg process, a subset of Orphan.
 
 - DataPageCache: Used to cache data Pages to speed up Scan.
 - IndexPageCache: The index used to cache the data Page, used to speed up Scan.
 - SegmentCache: Used to cache opened Segments, such as index information.
-- DiskIO: Used to cache Disk IO data, only used in non-vectorization.
 - ChunkAllocator: Used to cache power-of-2 memory blocks, and reuse memory at the application layer.
 - LastestSuccessChannelCache: Used to cache the LoadChannel of the import receiver.
 - DeleteBitmap AggCache: Gets aggregated delete_bitmap on rowset_id and version.

@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Data analysis for live streaming: what happens in real time is analyzed in real time',
-    'summary': "As live streaming emerges as a way of doing business, the need for data analysis follows up. This post is about how a live streaming service provider with 800 million end users found the right database to support its analytic solution.",
+    'description': "As live streaming emerges as a way of doing business, the need for data analysis follows up. This post is about how a live streaming service provider with 800 million end users found the right database to support its analytic solution.",
     'date': '2023-10-30',
     'author': 'He Gong',
     'tags': ['Best Practice'],
@@ -49,7 +49,7 @@ In this case, the live streaming data analytic platform adopts the Lambda archit
 - **Batching processing**: The user basic information stored in HDFS is written into HBase to form a table.
 - **Streaming**: Real-time generated data from MySQL, collected via Flink CDC, goes into Apache Kafka. Flink works as the computation engine and then the data is stored in Redis.
 
-![database-for-live-shopping-Elasticsearch-HBase](../static/images/xiaoe-tech-1.png)
+![database-for-live-shopping-Elasticsearch-HBase](/images/xiaoe-tech-1.png)
 
 The real-time metrics will be combined with the user profile information to form a flat table, and Elasticsearch will work as the query engine.
 
@@ -66,7 +66,7 @@ They converge the streaming and the batch processing pipelines at Apache Doris. 
 
 With Apache Doris as the data warehouse, the platform architecture becomes neater.
 
-![database-for-live-shopping-Apache-Doris](../static/images/xiaoe-tech-2.png)
+![database-for-live-shopping-Apache-Doris](/images/xiaoe-tech-2.png)
 
 - **Smooth data writing**: Raw data is processed by Flink and written into Apache Doris in real time. The Doris community provides a [Flink-Doris-Connector](https://github.com/apache/doris-flink-connector) with built-in Flink CDC.
 - **Flexible data update**: For data changes, Apache Doris implements [Merge-on-Write](https://doris.apache.org/docs/data-table/data-model/#merge-on-write). This is especially useful in small-batch real-time writing because you don't have to renew the entire flat table. It also supports partial update of columns, which is another way to make data updates more lightweight. In this case, Apache Doris is able to finish Upsert or Insert Overwrite operations for **200,000 rows per second**, and these are all done in large tables with the biggest ones reaching billions of rows. 
@@ -213,7 +213,7 @@ limit 1,10;
 
 ## Conclusion
 
-Data analysis in live streaming is challenging for the underlying database, but it is also where the key competitiveness of Apache Doris comes to play. First of all, Apache Doris can handle most data processing workloads, so platform builders don't have to worry about putting many components together and consequential maintenance issues. Secondly, it has a lot of query-accelerating features, including but not limited to indexes. After tackling the speed issues, the [Apache Doris developer community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1t3wfymur-0soNPATWQ~gbU8xutFOLog) has been exploring its boundaries, such as introducing a more efficient cost-based query optimizer in version 2.0 and inverted index for text searches, fuzzy queries, and range queries. These features are embraced by the live streaming service provider as they are actively testing them and planning to transfer their log analytic workloads to Apache Doris, too. 
+Data analysis in live streaming is challenging for the underlying database, but it is also where the key competitiveness of Apache Doris comes to play. First of all, Apache Doris can handle most data processing workloads, so platform builders don't have to worry about putting many components together and consequential maintenance issues. Secondly, it has a lot of query-accelerating features, including but not limited to indexes. After tackling the speed issues, the [Apache Doris developer community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) has been exploring its boundaries, such as introducing a more efficient cost-based query optimizer in version 2.0 and inverted index for text searches, fuzzy queries, and range queries. These features are embraced by the live streaming service provider as they are actively testing them and planning to transfer their log analytic workloads to Apache Doris, too. 
 
 
 

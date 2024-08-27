@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Building a log analytics solution 10 times more cost-effective than Elasticsearch',
-    'summary': "Apache Doris has introduced inverted indexes in version 2.0.0 and further optimized it to realize two times faster log query performance than Elasticsearch with 1/5 of the storage space it uses.",
+    'description': "Apache Doris has introduced inverted indexes in version 2.0.0 and further optimized it to realize two times faster log query performance than Elasticsearch with 1/5 of the storage space it uses.",
     'date': '2023-05-26',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -54,7 +54,7 @@ There exist two common log processing solutions within the industry, exemplified
 - **Inverted index (Elasticsearch)**: It is well-embraced due to its support for full-text search and high performance. The downside is the low throughput in real-time writing and the huge resource consumption in index creation.
 - **Lightweight index / no index (Grafana Loki)**: It is the opposite of inverted index because it boasts high real-time write throughput and low storage cost but delivers slow queries.
 
-![Elasticsearch-and-Grafana-Loki](../static/images/Inverted_1.png)
+![Elasticsearch-and-Grafana-Loki](/images/Inverted_1.png)
 
 ## Introduction to Inverted Index
 
@@ -64,7 +64,7 @@ Inverted indexing was originally used to retrieve words or phrases in texts. The
 
 Upon data writing, the system tokenizes texts into **terms**, and stores these terms in a **posting list** which maps terms to the ID of the row where they exist. In text queries, the database finds the corresponding **row ID** of the keyword (term) in the posting list, and fetches the target row based on the row ID. By doing so, the system won't have to traverse the whole dataset and thus improves query speeds by orders of magnitudes. 
 
-![inverted-index](../static/images/Inverted_2.png)
+![inverted-index](/images/Inverted_2.png)
 
 In inverted indexing of Elasticsearch, quick retrieval comes at the cost of writing speed, writing throughput, and storage space. Why? Firstly, tokenization, dictionary sorting, and inverted index creation are all CPU- and memory-intensive operations. Secondly, Elasticssearch has to store the original data, the inverted index, and an extra copy of data stored in columns for query acceleration. That's triple redundancy. 
 
@@ -88,14 +88,14 @@ In [Apache Doris](https://github.com/apache/doris), we opt for the other way. Bu
 
 In Apache Doris, data is arranged in the following format. Indexes are stored in the Index Region:
 
-![index-region-in-Apache-Doris](../static/images/Inverted_3.png)
+![index-region-in-Apache-Doris](/images/Inverted_3.png)
 
 We implement inverted indexes in a non-intrusive manner:
 
 1. **Data ingestion & compaction**: As a segment file is written into Doris, an inverted index file will be written, too. The index file path is determined by the segment ID and the index ID. Rows in segments correspond to the docs in indexes, so are the RowID and the DocID.
 2. **Query**: If the `where` clause includes a column with inverted index, the system will look up in the index file, return a DocID list, and convert the DocID list into a RowID Bitmap. Under the RowID filtering mechanism of Apache Doris, only the target rows will be read. This is how queries are accelerated.
 
-![non-intrusive-inverted-index](../static/images/Inverted_4.png)
+![non-intrusive-inverted-index](/images/Inverted_4.png)
 
 Such non-intrusive method separates the index file from the data files, so you can make any changes to the inverted indexes without worrying about affecting the data files themselves or other indexes. 
 
@@ -166,7 +166,7 @@ For a fair comparison, we ensure uniformity of testing conditions, including ben
   - Storage Usage: **20% that of Elasticsearch**
   - Response Time: **43% that of Elasticsearch**
 
-![Apache-Doris-VS-Elasticsearch](../static/images/Inverted_5.png)
+![Apache-Doris-VS-Elasticsearch](/images/Inverted_5.png)
 
 ### Apache Doris VS ClickHouse
 
@@ -180,7 +180,7 @@ As ClickHouse launched inverted index as an experimental feature in v23.1, we te
 
 **Result**: Apache Doris was **4.7 times, 12 times, 18.5 times** faster than ClickHouse in the three queries, respectively.
 
-![Apache-Doris-VS-ClickHouse](../static/images/Inverted_6.png)
+![Apache-Doris-VS-ClickHouse](/images/Inverted_6.png)
 
 ## Usage & Example
 
@@ -247,4 +247,4 @@ For more feature introduction and usage guide, see documentation: [Inverted Inde
 
 In a word, what contributes to Apache Doris' 10-time higher cost-effectiveness than Elasticsearch is its OLAP-tailored optimizations for inverted indexing, supported by the columnar storage engine, massively parallel processing framework, vectorized query engine, and cost-based optimizer of Apache Doris. 
 
-As proud as we are about our own inverted indexing solution, we understand that self-published benchmarks can be controversial, so we are open to [feedback](https://t.co/KcxAtAJZjZ) from any third-party users and see how [Apache Doris](https://github.com/apache/doris) works in real-world cases.
+As proud as we are about our own inverted indexing solution, we understand that self-published benchmarks can be controversial, so we are open to [feedback](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) from any third-party users and see how [Apache Doris](https://github.com/apache/doris) works in real-world cases.

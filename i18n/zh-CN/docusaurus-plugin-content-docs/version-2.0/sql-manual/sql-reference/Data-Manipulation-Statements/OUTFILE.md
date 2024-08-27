@@ -118,7 +118,7 @@ INTO OUTFILE "file_path"
 
 4. 导出的数据类型
 
-    所有文件类型都支持到处基本数据类型，而对于复杂数据类型（ARRAY/MAP/STRUCT），当前只有csv/orc/csv_with_names/csv_with_names_and_types支持导出复杂类型,且不支持嵌套复杂类型。
+    所有文件类型都支持导出基本数据类型，而对于复杂数据类型（ARRAY/MAP/STRUCT），当前只有csv/orc/csv_with_names/csv_with_names_and_types支持导出复杂类型,且不支持嵌套复杂类型。
 
 5. 并发导出
 
@@ -239,7 +239,7 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
         "broker.dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
         "broker.dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
         "broker.dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-        "broker.dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+        "broker.dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
     );
     ```
 
@@ -403,7 +403,7 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
 
 4. 结果完整性保证
 
-   该命令是一个同步命令，因此有可能在执行过程中任务连接断开了，从而无法活着导出的数据是否正常结束，或是否完整。此时可以使用 `success_file_name` 参数要求任务成功后，在目录下生成一个成功文件标识。用户可以通过这个文件，来判断导出是否正常结束。
+   该命令是一个同步命令，因此有可能在执行过程中任务连接断开了，从而无法获悉导出的数据是否正常结束，或是否完整。此时可以使用 `success_file_name` 参数要求任务成功后，在目录下生成一个成功文件标识。用户可以通过这个文件，来判断导出是否正常结束。
 
 5. 其他注意事项
 

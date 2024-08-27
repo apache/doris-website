@@ -129,7 +129,7 @@ illustrate:
    );
    ```
 
-   If S3 resource is used for [cold hot separation](../../../../../docs/advanced/cold_hot_separation.md), we should add more required fields.
+   If S3 resource is used for [cold hot separation](../../../../table-design/cold-hot-separation), we should add more required fields.
    ```sql
    CREATE RESOURCE "remote_s3"
    PROPERTIES
@@ -189,7 +189,7 @@ illustrate:
       "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
       "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
       "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-      "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+      "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
    );
    ```
 
@@ -203,7 +203,7 @@ illustrate:
 
 6. Create HMS resource
 
-   HMS resource is used to create [hms catalog](../../../../lakehouse/multi-catalog/multi-catalog.md)
+   HMS resource is used to create [hms catalog](../../../../lakehouse/datalake/hive)
    ```sql
    CREATE RESOURCE hms_resource PROPERTIES (
       'type'='hms',

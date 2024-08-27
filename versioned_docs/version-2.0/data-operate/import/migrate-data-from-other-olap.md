@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Migrate data from other OLAP",
+    "title": "Migrating data from other OLAP",
     "language": "en"
 }
 ---
@@ -38,15 +38,15 @@ In addition to the above methods, [VeloDB](https://www.velodb.io), the commercia
 
 ### Support multiple data sources
 
-As a one-stop data migration tool, X2Doris supports Apache Hive, Apache Kudu, ClickHouse, StarRocks, and Apache Doris itself as data source. What's more, there are more data sources such as Greenplum and Druid that are under development and will be released subsequently. Among them, the Hive version already supports Hive 1.x and 2.x, while Doris, StarRocks, Kudu, and other data sources also support multiple different versions.
+As a one-stop data migration tool, X2Doris supports Apache Hive, Apache Kudu, StarRocks, and Apache Doris itself as data source. What's more, there are more data sources such as Greenplum and Druid that are under development and will be released subsequently. Among them, the Hive version already supports Hive 1.x and 2.x, while Doris, StarRocks, Kudu, and other data sources also support multiple different versions.
 
-Now, X2Doris is supported migrating data to Apache Doris and SelectDB, including SelectDB Cloud and SelectDB Enterprise. With X2Doris, users can build a complete database migration link from other OLAP systems to Apache Doris, and can also achieve data backup and recovery between different Doris clusters.
+Now, X2Doris is supported migrating data to Apache Doris and VeloDB, including VeloDB Cloud and VeloDB Enterprise. With X2Doris, users can build a complete database migration link from other OLAP systems to Apache Doris, and can also achieve data backup and recovery between different Doris clusters.
 
 ![x2doris-Support multiple data sources](/images/x2doris.jpg)
 
 ### Auto table creation
 
-One of the biggest challenges in data migration is how to create corresponding target tables in Apache Doris for the source tables that need to be migrated. In real business scenarios, there are often thousands of tables stored in Hive or ClickHouse, and it would be extremely inefficient and impractical for users to manually create tables and convert corresponding DDL statements.
+One of the biggest challenges in data migration is how to create corresponding target tables in Apache Doris for the source tables that need to be migrated. In real business scenarios, there are often thousands of tables stored in Hive, and it would be extremely inefficient and impractical for users to manually create tables and convert corresponding DDL statements.
 
 X2Doris has been adapted for this scenario. Taking Hive table migration as an example, when migrating Hive tables, X2Doris automatically creates Duplicate Key model tables (which can also be manually modified) in Apache Doris and reads the metadata information of Hive tables. It automatically identifies partition fields based on field names and types, and if partitions are detected, it prompts for partition mapping. Finally, it directly generates the corresponding Doris target table DDL.
 

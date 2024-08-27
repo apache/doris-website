@@ -105,4 +105,4 @@ GROUPING
 
 ### Best Practice
 
-See also [GROUPING_ID](./grouping_id.md)
+See also [GROUPING_ID](../aggregate-functions/grouping-id)

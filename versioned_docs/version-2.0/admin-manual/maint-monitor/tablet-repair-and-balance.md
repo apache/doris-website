@@ -28,7 +28,7 @@ under the License.
 
 Beginning with version 0.9.0, Doris introduced an optimized replica management strategy and supported a richer replica status viewing tool. This document focuses on Doris data replica balancing, repair scheduling strategies, and replica management operations and maintenance methods. Help users to more easily master and manage the replica status in the cluster.
 
-> Repairing and balancing copies of tables with Colocation attributes can be referred to [HERE](../../query-acceleration/join-optimization/colocation-join.md)
+> Repairing and balancing copies of tables with Colocation attributes can be referred to [HERE](../../query/join-optimization/colocation-join)
 
 ## Noun Interpretation
 
@@ -568,34 +568,60 @@ We have collected some statistics of Tablet Checker and Tablet Scheduler during 
 | num of balance scheduled                          | 0           |
 +---------------------------------------------------+-------------+
 ```
-
 The meanings of each line are as follows:
 
-* num of tablet check round: Tablet Checker 检查次数
-* cost of tablet check(ms): Tablet Checker 检查总耗时
-* num of tablet checked in tablet checker: Tablet Checker 检查过的 tablet 数量
-* num of unhealthy tablet checked in tablet checker: Tablet Checker 检查过的不健康的 tablet 数量
-* num of tablet being added to tablet scheduler: 被提交到 Tablet Scheduler 中的 tablet 数量
-* num of tablet schedule round: Tablet Scheduler 运行次数
-* cost of tablet schedule(ms): Tablet Scheduler 运行总耗时
-* num of tablet being scheduled: 被调度的 Tablet 总数量
-* num of tablet being scheduled succeeded: 被成功调度的 Tablet 总数量
-* num of tablet being scheduled failed: 调度失败的 Tablet 总数量
-* num of tablet being scheduled discard: 调度失败且被抛弃的 Tablet 总数量
-* num of tablet priority upgraded: 优先级上调次数
-* num of tablet priority downgraded: 优先级下调次数
-* num of clone task: number of clone tasks generated
-* num of clone task succeeded: clone 任务成功的数量
-* num of clone task failed: clone 任务失败的数量
-* num of clone task timeout: clone 任务超时的数量
-* num of replica missing error: the number of tablets whose status is checked is the missing copy
-* num of replica version missing error: 检查的状态为版本缺失的 tablet 的数量（该统计值包括了 num of replica relocating 和 num of replica missing in cluster error）
-*num of replica relocation *29366;* 24577;*replica relocation tablet *
-* num of replica redundant error: Number of tablets whose checked status is replica redundant
-* num of replica missing in cluster error: 检查的状态为不在对应 cluster 的 tablet 的数量
-* num of balance scheduled: 均衡调度的次数
+- num of tablet check round: Number of Tablet Checker inspections
 
-> Note: The above states are only historical accumulative values. We also print these statistics regularly in the FE logs, where the values in parentheses represent the number of changes in each statistical value since the last printing dependence of the statistical information.
+- cost of tablet check(ms): Total time consumed by Tablet Checker inspections (milliseconds)
+
+- num of tablet checked in tablet checker: Number of tablets checked by the Tablet Checker
+
+- num of unhealthy tablet checked in tablet checker: Number of unhealthy tablets checked by the Tablet Checker
+
+- num of tablet being added to tablet scheduler: Number of tablets submitted to the Tablet Scheduler
+
+- num of tablet schedule round: Number of Tablet Scheduler runs
+
+- cost of tablet schedule(ms): Total time consumed by Tablet Scheduler runs (milliseconds)
+
+- num of tablet being scheduled: Total number of tablets scheduled
+
+- num of tablet being scheduled succeeded: Total number of tablets successfully scheduled
+
+- num of tablet being scheduled failed: Total number of tablets that failed scheduling
+
+- num of tablet being scheduled discard: Total number of tablets discarded due to scheduling failures
+
+- num of tablet priority upgraded: Number of tablet priority upgrades
+
+- num of tablet priority downgraded: Number of tablet priority downgrades
+
+- num of clone task: Number of clone tasks generated
+
+- num of clone task succeeded: Number of successful clone tasks
+
+- num of clone task failed: Number of failed clone tasks
+
+- num of clone task timeout: Number of clone tasks that timed out
+
+- num of replica missing error: Number of tablets whose status is checked as missing replicas
+
+- num of replica version missing error: Number of tablets checked with missing version status (this statistic includes num of replica relocating and num of replica missing in cluster error)
+
+- num of replica relocation: Number of replica relocations
+
+- num of replica redundant error: Number of tablets whose checked status is replica redundant
+
+- num of replica missing in cluster error: Number of tablets checked with a status indicating they are missing from the corresponding cluster
+
+- num of balance scheduled: Number of balanced scheduling attempts
+
+:::info Note
+
+The above states are only historical accumulative values. We also print these statistics regularly in the FE logs, where the values in parentheses represent the number of changes in each statistical value since the last printing dependence of the statistical information.
+
+:::
+
 
 ## Relevant configuration instructions
 

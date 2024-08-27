@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Replacing Apache Hive, Elasticsearch and PostgreSQL with Apache Doris',
-    'summary': "How does a data service company build its data warehouse? Simplicity is the best policy. See how a due diligence platform increased data writing efficiency by 75%.",
+    'description': "How does a data service company build its data warehouse? Simplicity is the best policy. See how a due diligence platform increased data writing efficiency by 75%.",
     'date': '2023-07-01',
     'author': 'Tao Wang',
     'tags': ['Best Practice'],
@@ -38,15 +38,15 @@ Our old data warehouse consisted of the most popular components of the time, inc
 
 As you can imagine, a long and complicated data pipeline is high-maintenance and detrimental to development efficiency. Moreover, they are not capable of ad-hoc queries. So as an upgrade to our data warehouse, we replaced most of these components with [Apache Doris](https://github.com/apache/doris), a unified analytic database.
 
-![replace-MySQL-Elasticsearch-PostgreSQL-with-Apache-Doris-before](../static/images/Tianyancha_1.png)
+![replace-MySQL-Elasticsearch-PostgreSQL-with-Apache-Doris-before](/images/Tianyancha_1.png)
 
-![replace-MySQL-Elasticsearch-PostgreSQL-with-Apache-Doris-after](../static/images/Tianyancha_2.png)
+![replace-MySQL-Elasticsearch-PostgreSQL-with-Apache-Doris-after](/images/Tianyancha_2.png)
 
 ## Data Flow
 
 This is a lateral view of our data warehouse, from which you can see how the data flows.
 
-![data-flow](../static/images/Tianyancha_3.png)
+![data-flow](/images/Tianyancha_3.png)
 
 For starters, binlogs from MySQL will be ingested into Kafka via Canal, while user activity logs will be transferred to Kafka via Apache Flume. In Kafka, data will be cleaned and organized into flat tables, which will be later turned into aggregated tables. Then, data will be passed from Kafka to Apache Doris, which serves as the storage and computing engine. 
 
@@ -60,7 +60,7 @@ This is how Apache Doris replaces the roles of Hive, Elasticsearch, and PostgreS
 
 **After**: Since Apache Doris has all the itemized data, whenever it is faced with a new request, it can simply pull the metadata and configure the query conditions. Then it is ready for ad-hoc queries. In short, it only requires low-code configuration to respond to new requests. 
 
-![ad-hoc-queries](../static/images/Tianyancha_4.png)
+![ad-hoc-queries](/images/Tianyancha_4.png)
 
 ## User Segmentation
 
@@ -72,7 +72,7 @@ Tables in Elasticsearch and PostgreSQL were unreusable, making this architecture
 
 In this Doris-centered user segmentation process, we don't have to pre-define new tags. Instead, tags can be auto-generated based on the task conditions. The processing pipeline has the flexibility that can make our user-group-based A/B testing easier. Also, as both the itemized data and user group packets are in Apache Doris, we don't have to attend to the read and write complexity between multiple components.
 
-![user-segmentation-pipeline](../static/images/Tianyancha_5.png)
+![user-segmentation-pipeline](/images/Tianyancha_5.png)
 
 ## Trick to Speed up User Segmentation by 70%
 
@@ -80,9 +80,9 @@ Due to risk aversion reasons, random generation of `user_id` is the choice for m
 
 To solve that, we created consecutive and dense mappings for these user IDs. **In this way, we decreased our user segmentation latency by 70%.**
 
-![user-segmentation-latency-1](../static/images/Tianyancha_6.png)
+![user-segmentation-latency-1](/images/Tianyancha_6.png)
 
-![user-segmentation-latency-2](../static/images/Tianyancha_7.png)
+![user-segmentation-latency-2](/images/Tianyancha_7.png)
 
 ### Example
 
@@ -90,13 +90,13 @@ To solve that, we created consecutive and dense mappings for these user IDs. **I
 
 We adopt the Unique model for user ID mapping tables, where the user ID is the unique key. The mapped consecutive IDs usually start from 1 and are strictly increasing. 
 
-![create-user-ID-mapping-table](../static/images/Tianyancha_8.png)
+![create-user-ID-mapping-table](/images/Tianyancha_8.png)
 
 **Step 2: Create a user group table:**
 
 We adopt the Aggregate model for user group tables, where user tags serve as the aggregation keys. 
 
-![create-user-group-table](../static/images/Tianyancha_9.png)
+![create-user-group-table](/images/Tianyancha_9.png)
 
 Supposing that we need to pick out the users whose IDs are between 0 and 2000000. 
 
@@ -105,15 +105,15 @@ The following snippets use non-consecutive (`tyc_user_id`) and consecutive (`tyc
 - Non-Consecutive User IDs: **1843ms**
 - Consecutive User IDs: **543ms** 
 
-![response-time-of-consecutive-and-non-consecutive-user-IDs](../static/images/Tianyancha_10.png)
+![response-time-of-consecutive-and-non-consecutive-user-IDs](/images/Tianyancha_10.png)
 
 ## Conclusion
 
 We have 2 clusters in Apache Doris accommodating tens of TBs of data, with almost a billion new rows flowing in every day. We used to witness a steep decline in data ingestion speed as data volume expanded. But after upgrading our data warehouse with Apache Doris, we increased our data writing efficiency by 75%. Also, in user segmentation with a result set of less than 5 million, it is able to respond within milliseconds. Most importantly, our data warehouse has been simpler and friendlier to developers and maintainers. 
 
-![user-segmentation-latency-3](../static/images/Tianyancha_11.png)
+![user-segmentation-latency-3](/images/Tianyancha_11.png)
 
-Lastly, I would like to share with you something that interested us most when we first talked to the [Apache Doris community](https://t.co/KcxAtAJZjZ):
+Lastly, I would like to share with you something that interested us most when we first talked to the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA):
 
 - Apache Doris supports data ingestion transactions so it can ensure data is written **exactly once**.
 - It is well-integrated with the data ecosystem and can smoothly interface with most data sources and data formats.

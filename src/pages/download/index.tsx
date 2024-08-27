@@ -53,8 +53,9 @@ export default function Download() {
     const [cpus, setCpus] = useState<any[]>([]);
     const [cpu, setCPU] = useState<string>(CPUEnum.X64);
     const [downloadInfo, setDownloadInfo] = useState<any>({});
+    const [releaseFlag, setReleaseFlag] = useState<boolean>(true)
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
-    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.1.1');
+    const [releaseNote, setReleaseNote] = useState('/docs/2.1/releasenotes/v2.1/release-2.1.5');
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -67,6 +68,28 @@ export default function Download() {
         setDownloadInfo(downloadInfo);
     };
 
+    const getIssueCode = (code: string) => {
+        switch (code) {
+            case '1.2.1':
+                return 15508;
+            case '1.2.2':
+                return 16446;
+            case '1.2.3':
+                return 17748;
+            case '1.2.4':
+                return 18762;
+            case '1.2.5':
+                return 20827;
+            case '1.2.6':
+                return 21805;
+            case '1.2.7':
+                return 23711;
+            case '1.2.8':
+                return 31673;
+            default:
+                return null
+        }
+    }
     function toDocsRelease(version: string) {
         const SUPPORTED_VERSION = '>=1.1.0';
         const versionNumber = version.match(/[0-9].[0-9].[0-9]*/)?.[0] || '0.0.0';
@@ -78,10 +101,14 @@ export default function Download() {
     }
 
     function onValuesChange(values: any) {
+        console.log(values.version,'values.version')
+        setReleaseFlag(values.version[0] === '1.1' ? false : true)
         if (!toDocsRelease(values.version[1])) {
             setReleaseNote('https://github.com/apache/doris/releases');
+        } else if (values.version[0] === '1.2') {
+            setReleaseNote(`https://github.com/apache/doris/issues/${getIssueCode(values.version[1])}`);
         } else {
-            setReleaseNote(`/docs/releasenotes/release-${values.version[1]}`);
+            setReleaseNote(`/docs/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
         }
     }
 
@@ -107,10 +134,10 @@ export default function Download() {
     // }
     return (
         <Layout
-            title={translate({ id: 'download.title', message: 'Download' })}
+            title={translate({ id: 'download.title', message: 'Apache Doris - Download | Easily deploy Doris anywhere' })}
             description={translate({
                 id: 'homepage.banner.subTitle',
-                message: 'An easy-to-use, high-performance and unified analytical database',
+                message: 'Download and explore precompiled binaries of different verisons. Apache Doris connects any device, at any scale, anywhere.',
             })}
             wrapperClassName="download"
         >
@@ -228,6 +255,17 @@ export default function Download() {
                                 )}
                             </div>
                         </div>
+                        <div className="all-download-note" style={{ textAlign: 'center', marginTop: '24px' }}>
+                            Note: For Apache Doris version specifics, please refer to the <Link
+                                to="https://doris.apache.org/community/release-versioning"
+                                style={{
+                                    color: '#444FD9',
+                                    cursor: 'pointer',
+                                    textDecoration: 'underline',
+                                }}
+                            >release versioning.
+                            </Link>
+                        </div>
                     </div>
                 </PageColumn>
             </section>
@@ -252,17 +290,17 @@ export default function Download() {
                                 For more information on the latest release, please refer to the Docs.
                             </div>
                             <div className="mt-[32px]">
-                                Kindly note that older releases (v1.1, v0.x) are provided for archival purposes only,
+                                Kindly note that older releases (v1.2, v1.1, v0.x) are provided for archival purposes only,
                                 and are no longer supported.
                             </div>
                         </div>
-                        <div>
+                        {releaseFlag && <div>
                             <LinkWithArrow to={releaseNote} text="Release note" />
-                        </div>
+                        </div>}
                         <div className="all-download-note">
                             Note: For detailed upgrade precautions, please refer to the{' '}
                             <Link
-                                to="/docs/install/standard-deployment"
+                                to="/docs/install/cluster-deployment/standard-deployment"
                                 style={{
                                     color: '#444FD9',
                                     cursor: 'pointer',
@@ -291,6 +329,7 @@ export default function Download() {
                     </div>
                 </div>
             </PageColumn>
+            <a id="doris-ecosystem" className="scroll-mt-20"></a>
             <PageColumn
                 title={
                     <span
@@ -332,7 +371,7 @@ export default function Download() {
                         <div className="all-download-note">
                             Note: For detailed upgrade precautions, please refer to the{' '}
                             <Link
-                                to="/docs/install/standard-deployment"
+                                to="/docs/install/cluster-deployment/standard-deployment"
                                 style={{
                                     color: '#444FD9',
                                     cursor: 'pointer',

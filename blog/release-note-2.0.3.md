@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris 2.0.3 just released',
-    'summary': 'Thanks to our community users and developers, 1000 improvements and bug fixes have been made in Doris 2.0.3.',
+    'description': 'Thanks to our community users and developers, 1000 improvements and bug fixes have been made in Doris 2.0.3.',
     'date': '2023-12-14',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
@@ -30,7 +30,7 @@ Thanks to our community users and developers, about 1000 improvements and bug fi
 
 
 
-## Behavior change
+## Behavior changes
 
 - The output format of the complex data type array/map/struct has been changed to be consistent to the input format and JSON specification. The main changes from the previous version are that DATE/DATETIME and STRING/VARCHAR are enclosed in double quotes and null values inside ARRAY/MAP are displayed as `null` instead of `NULL`.
   - https://github.com/apache/doris/pull/25946
@@ -44,7 +44,7 @@ Thanks to our community users and developers, about 1000 improvements and bug fi
 
 Collecting statistics helps the optimizer understand the data distribution characteristics and choose a better plan to greatly improve query performance. It is officially supported starting from version 2.0.3 and is enabled all day by default.
 
-see more：https://doris.apache.org/docs/query-acceleration/statistics/
+see more: https://doris.apache.org/docs/2.0/query/nereids/statistics
 
 
 ### 2. Support complex datatypes for more datalake source
@@ -70,9 +70,9 @@ see more：https://doris.apache.org/docs/query-acceleration/statistics/
   - https://github.com/apache/doris/pull/24384
 
 
-## Improvement and optimizations
+## Improvements
 
-### 1. Performance optimizations
+### Performance optimizations
 
 - When the inverted index MATCH WHERE condition with a high filter rate is combined with the common WHERE condition with a low filter rate, the I/O of the index column is greatly reduced. 
 - Optimize the efficiency of random data access after the where filter.
@@ -95,12 +95,12 @@ see more：https://doris.apache.org/docs/query-acceleration/statistics/
 
 
 
-### 2. Distributed replica management improvements
+### Distributed replica management improvements
 
 Distributed replica management improvements include skipping partition deletion, colocate group deletion, balance failure due to continuous write, and hot and cold seperation table balance.
 
 
-### 3. Security enhancement
+### Security enhancement
 - The audit log plug-in uses a token instead of a plaintext password to enhance security
   - https://github.com/apache/doris/pull/26278
 - log4j configures security enhancement
@@ -109,9 +109,9 @@ Distributed replica management improvements include skipping partition deletion,
   - https://github.com/apache/doris/pull/26912
 
 
-## Bugfix and stability
+## Bug fixes
 
-### 1. Complex datatypes
+### Complex datatypes
 - Fix issues that fixed-length CHAR(n) was not truncated correctly in map/struct.
   - https://github.com/apache/doris/pull/25725
 - Fix write failure for struct datatype nested for map/array
@@ -129,7 +129,7 @@ Distributed replica management improvements include skipping partition deletion,
   - https://github.com/apache/doris/pull/25977
   - https://github.com/apache/doris/pull/26633
 
-### 2. Inverted index
+### Inverted index
 - Fix incorrect result for OR NOT combination in WHERE clause were incorrect when disable inverted index query. 
   - https://github.com/apache/doris/pull/26327
 - Fix be crash when write a empty with inverted index
@@ -146,7 +146,7 @@ Distributed replica management improvements include skipping partition deletion,
 - Fix incorrect result due to optimization for skip reading index column
   - https://github.com/apache/doris/pull/28104
 
-### 3. Materialized View
+### Materialized View
 - Fix the problem of BE crash caused by repeated expressions in the group by statement
 - Fix be crash when there are duplicate expressions in `group by` statements.
   - https://github.com/apache/doris/pull/27523
@@ -159,14 +159,14 @@ Distributed replica management improvements include skipping partition deletion,
 - Fix the problem using percentile_approx when creating materialized views 
   - https://github.com/apache/doris/pull/26528
 
-### 4. Table sample
+### Table sample
 - Fix the problem that table sample query can not work on table with partitions.
   - https://github.com/apache/doris/pull/25912  
 - Fix the problem that table sample query can not work when specify tablet.
   - https://github.com/apache/doris/pull/25378 
 
 
-### 5. Unique with merge on write
+### Unique with merge on write
 - Fix null pointer exception in conditional update based on primary key  
   - https://github.com/apache/doris/pull/26881    
 - Fix field name capitalization issues in partial update  
@@ -175,7 +175,7 @@ Distributed replica management improvements include skipping partition deletion,
   - https://github.com/apache/doris/pull/25705
 
 
-### 6. Load and compaction
+### Load and compaction
 - Fix unkown slot descriptor error in routineload for running multiple tables 
   - https://github.com/apache/doris/pull/25762
 - Fix be crash due to concurrent memory access when caculating memory 
@@ -190,7 +190,7 @@ Distributed replica management improvements include skipping partition deletion,
   - https://github.com/apache/doris/pull/25597
 
 
-### 7. Data Lake compatibility
+### Data Lake compatibility
 - Solve the problem that the iceberg table contains special characters that cause query failure 
   - https://github.com/apache/doris/pull/27108 
 - Fix compatibility issues of different hive metastore versions 
@@ -202,7 +202,7 @@ Distributed replica management improvements include skipping partition deletion,
   - https://github.com/apache/doris/pull/25803
 
 
-### 8. JDBC external table compatibility 
+### JDBC external table compatibility 
 
 - Fix Oracle date type format error in jdbc catalog  
   - https://github.com/apache/doris/pull/25487 
@@ -215,7 +215,7 @@ Distributed replica management improvements include skipping partition deletion,
   - https://github.com/apache/doris/pull/26933
 
 
-### 9. SQL Planner and Optimizer
+### SQL Planner and Optimizer
 
 - Fix partition prune error in some scenes
   - https://github.com/apache/doris/pull/27047

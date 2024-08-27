@@ -26,11 +26,9 @@ under the License.
 
 # Data Backup
 
-Doris supports backing up the current data in the form of files to the remote storage system through the broker. Afterwards, you can restore data from the remote storage system to any Doris cluster through the restore command. Through this function, Doris can support periodic snapshot backup of data. You can also use this function to migrate data between different clusters.
+Doris supports backing up the current data in the form of files to the remote storage system like S3 and HDFS. Afterwards, you can restore data from the remote storage system to any Doris cluster through the restore command. Through this function, Doris can support periodic snapshot backup of data. You can also use this function to migrate data between different clusters.
 
 This feature requires Doris version 0.8.2+
-
-To use this function, you need to deploy the broker corresponding to the remote storage. Such as BOS, HDFS, etc. You can view the currently deployed broker through `SHOW BROKER;`.
 
 ## A brief explanation of the principle
 
@@ -56,9 +54,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
 
 ## Start Backup
 
-1. Create a hdfs remote warehouse example_repo:
-
-   **WITH HDFS (Recommended)**
+1. Create a hdfs remote warehouse example_repo (S3 skips step 1):
 
    ```sql
    CREATE REPOSITORY `example_repo`
@@ -71,22 +67,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    );
    ```
 
-   **WITH BROKER**
-
-   This requires starting a broker process first.
-
-   ```sql
-   CREATE REPOSITORY `example_repo`
-   WITH BROKER `broker_name`
-   ON LOCATION "hdfs://hadoop-name-node:54310/path/to/repo/"
-   PROPERTIES
-   (
-      "username" = "user",
-      "password" = "password"
-   );
-   ```
-
-2. Create a remote repository for s3 : s3_repo
+2. Create a remote repository for S3 : s3_repo (HDFS skips step 2)
 
    ```
    CREATE REPOSITORY `s3_repo`
@@ -105,7 +86,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    >
    >ON LOCATION is followed by Bucket Name here
 
-1. Full backup of table example_tbl under example_db to warehouse example_repo:
+3. Full backup of table example_tbl under example_db to warehouse example_repo:
 
    ```sql
    BACKUP SNAPSHOT example_db.snapshot_label1
@@ -114,7 +95,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    PROPERTIES ("type" = "full");
    ```
 
-2. Under the full backup example_db, the p1, p2 partitions of the table example_tbl, and the table example_tbl2 to the warehouse example_repo:
+4. Under the full backup example_db, the p1, p2 partitions of the table example_tbl, and the table example_tbl2 to the warehouse example_repo:
 
    ```sql
    BACKUP SNAPSHOT example_db.snapshot_label2
@@ -126,7 +107,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    );
    ```
 
-4. View the execution of the most recent backup job:
+5. View the execution of the most recent backup job:
 
    ```sql
    mysql> show BACKUP\G;
@@ -148,7 +129,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    1 row in set (0.01 sec)
    ```
 
-5. View existing backups in remote repositories:
+6. View existing backups in remote repositories:
 
    ```sql
    mysql> SHOW SNAPSHOT ON example_repo WHERE SNAPSHOT = "snapshot_label1";
@@ -160,7 +141,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    1 row in set (0.15 sec)
    ```
 
-For the detailed usage of BACKUP, please refer to [here](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/BACKUP.md).
+For the detailed usage of BACKUP, please refer to [here](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md).
 
 ## Best Practices
 
@@ -181,10 +162,7 @@ It is recommended to import the new and old clusters in parallel for a period of
 3. Both backup and recovery support operations at the minimum partition (Partition) level. When the amount of data in the table is large, it is recommended to perform operations by partition to reduce the cost of failed retry.
 4. Because of the backup and restore operations, the operations are the actual data files. Therefore, when a table has too many shards, or a shard has too many small versions, it may take a long time to backup or restore even if the total amount of data is small. Users can use `SHOW PARTITIONS FROM table_name;` and `SHOW TABLETS FROM table_name;` to view the number of shards in each partition and the number of file versions in each shard to estimate job execution time. The number of files has a great impact on the execution time of the job. Therefore, it is recommended to plan partitions and buckets reasonably when creating tables to avoid excessive sharding.
 5. When checking job status via `SHOW BACKUP` or `SHOW RESTORE` command. It is possible to see error messages in the `TaskErrMsg` column. But as long as the `State` column is not `CANCELLED`, the job is still continuing. These tasks may retry successfully. Of course, some Task errors will also directly cause the job to fail.
-   Common `TaskErrMsg` errors are as follows:
-      Q1: Backup to HDFS, the status shows UPLOADING, TaskErrMsg error message: [13333: Close broker writer failed, broker:TNetworkAddress(hostname=10.10.0.0, port=8000) msg:errors while close file output stream, cause by: DataStreamer Exception : ]
-      This is generally a network communication problem. Check the broker log to see if a certain ip or port is blocked. If it is a cloud service, you need to check whether is accessed the intranet. If so, you can add hdfs-site.xml in the broker/conf folder, you need to add dfs.client.use.datanode.hostname=true under the hdfs-site.xml configuration file, and configure the hostname mapping of the HADOOP cluster on the broker node.
-7. If the recovery job is an overwrite operation (specifying the recovery data to an existing table or partition), then from the `COMMIT` phase of the recovery job, the overwritten data on the current cluster may no longer be restored. If the restore job fails or is canceled at this time, the previous data may be damaged and inaccessible. In this case, the only way to do it is to perform the recovery operation again and wait for the job to complete. Therefore, we recommend that if unnecessary, try not to restore data by overwriting unless it is confirmed that the current data is no longer used.
+6. If the recovery job is an overwrite operation (specifying the recovery data to an existing table or partition), then from the `COMMIT` phase of the recovery job, the overwritten data on the current cluster may no longer be restored. If the restore job fails or is canceled at this time, the previous data may be damaged and inaccessible. In this case, the only way to do it is to perform the recovery operation again and wait for the job to complete. Therefore, we recommend that if unnecessary, try not to restore data by overwriting unless it is confirmed that the current data is no longer used.
 
 ## Related Commands
 
@@ -192,59 +170,28 @@ It is recommended to import the new and old clusters in parallel for a period of
 
    1. CREATE REPOSITORY
 
-      Create a remote repository path for backup or restore. This command needs to use the Broker process to access the remote storage. Different brokers need to provide different parameters. For details, please refer to [Broker documentation](../../advanced/broker.md), or you can directly back up to support through the S3 protocol For the remote storage of AWS S3 protocol, or directly back up to HDFS, please refer to [Create Remote Warehouse Documentation](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md )
+      Create a remote repository path for backup or restore. Please refer to [Create Repository Reference](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md).
 
    2. BACKUP
 
-      Perform a backup operation.
+      Perform a backup operation. Please refer to [Backup Reference](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md).
 
    3. SHOW BACKUP
 
-      View the execution of the most recent backup job, including:
-
-      - JobId: The id of this backup job.
-      - SnapshotName: The name (Label) of this backup job specified by the user.
-      - DbName: Database corresponding to the backup job.
-      - State: The current stage of the backup job:
-        - PENDING: The initial status of the job.
-        - SNAPSHOTING: A snapshot operation is in progress.
-        - UPLOAD_SNAPSHOT: The snapshot is over, ready to upload.
-        - UPLOADING: Uploading snapshot.
-        - SAVE_META: The metadata file is being generated locally.
-        - UPLOAD_INFO: Upload metadata files and information about this backup job.
-        - FINISHED: The backup is complete.
-        - CANCELLED: Backup failed or was canceled.
-      - BackupObjs: List of tables and partitions involved in this backup.
-      - CreateTime: Job creation time.
-      - SnapshotFinishedTime: Snapshot completion time.
-      - UploadFinishedTime: Snapshot upload completion time.
-      - FinishedTime: The completion time of this job.
-      - UnfinishedTasks: During `SNAPSHOTTING`, `UPLOADING` and other stages, there will be multiple subtasks going on at the same time. The current stage shown here is the task id of the unfinished subtasks.
-      - TaskErrMsg: If there is an error in the execution of a subtask, the error message of the corresponding subtask will be displayed here.
-      - Status: Used to record some status information that may appear during the entire job process.
-      - Timeout: The timeout period of the job, in seconds.
+      View the execution of the most recent backup job. Please refer to [Show Backup Reference](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/SHOW-BACKUP.md)。
 
    4. SHOW SNAPSHOT
 
-      View existing backups in the remote repository.
-
-      - Snapshot: The name (Label) of the backup specified during backup.
-      - Timestamp: Timestamp of the backup.
-      - Status: Whether the backup is normal.
-
-      More detailed backup information can be displayed if a where clause is specified after `SHOW SNAPSHOT`.
-
-      - Database: The database corresponding to the backup.
-      - Details: Shows the complete data directory structure of the backup.
+      View existing backups in the remote repository. Please refer to [Show Snapshot Reference](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/SHOW-SNAPSHOT.md).
 
    5. CANCEL BACKUP
 
-      Cancel the currently executing backup job.
+      Cancel the currently executing backup job. Please refer to [Cancel Backup Reference] (../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CANCEL-BACKUP.md).
 
    6. DROP REPOSITORY
 
-      Delete the created remote repository. Deleting a warehouse only deletes the mapping of the warehouse in Doris, and does not delete the actual warehouse data.
+      Delete the created remote repository. Deleting a warehouse only deletes the mapping of the warehouse in Doris, and does not delete the actual warehouse data. Please refer to [Drop Repository Reference] (../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/DROP-REPOSITORY.md).
 
 ## More Help
 
- For more detailed syntax and best practices used by BACKUP, please refer to the [BACKUP](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/BACKUP.md) command manual, You can also type `HELP BACKUP` on the MySql client command line for more help.
+ For more detailed syntax and best practices used by BACKUP, please refer to the [BACKUP](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md) command manual, You can also type `HELP BACKUP` on the MySql client command line for more help.

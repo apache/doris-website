@@ -26,11 +26,7 @@ under the License.
 
 ## DATEV2
 
-<version since="1.2.0">
-
 DATEV2
-
-</version>
 
 ### Description
 #### Syntax
@@ -39,7 +35,7 @@ DateV2 type, the current range of values is ['0000-01-01','9999-12-31'], and the
 
 ### note
 DATEV2 type is more efficient than DATE type. During calculation, DATEV2 can save half of the memory usage compared with DATE.
-
+Note that to maintain consistent behavior with MySQL, the date 0000-02-29 does not exist.
 ### example
 ```
 SELECT CAST('2003-12-31 01:02:03' as DATEV2);

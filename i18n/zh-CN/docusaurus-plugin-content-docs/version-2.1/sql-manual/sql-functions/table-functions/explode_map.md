@@ -41,9 +41,7 @@ explode_map_outer(expr)
 
 ### example
 
-```
-mysql> set enable_vectorized_engine = true
-mysql> SET enable_nereids_planner=true
+```mysql> SET enable_nereids_planner=true
 mysql> SET enable_fallback_to_original_planner=false
 
 mysql> CREATE TABLE IF NOT EXISTS `sdu`(

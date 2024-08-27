@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Introduction to Apache Doris: a next-generation real-time data warehouse',
-    'summary': "This is a technical overview of Apache Doris, introducing how it enables fast query performance with its architectural design, features, and mechanisms.",
+    'description': "This is a technical overview of Apache Doris, introducing how it enables fast query performance with its architectural design, features, and mechanisms.",
     'date': '2023-10-03',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -35,7 +35,7 @@ under the License.
 
 Apache Doris supports both batch import and stream writing. It can be well integrated with Apache Spark, Apache Hive, Apache Flink, Airbyte, DBT, and Fivetran. It can also connect to data lakes such as Apache Hive, Apache Hudi, Apache Iceberg, Delta Lake, and Apache Paimon.
 
-![What-Is-Apache-Doris](../static/images/introduction_1.png)
+![What-Is-Apache-Doris](/images/introduction_1.png)
 
 ## Performance
 
@@ -43,7 +43,7 @@ As a real-time OLAP engine, Apache Doris hasn a competitive edge in query speed.
 
 As for its self-volution, it has increased its query speed by over 10 times in the past two years, both in complex queries and flat table analysis.
 
-![Apache-Doris-VS-Presto-Greenplum-ClickHouse](../static/images/introduction_2.png)
+![Apache-Doris-VS-Presto-Greenplum-ClickHouse](/images/introduction_2.png)
 
 ## Architectural Design
 
@@ -57,13 +57,13 @@ Apache Doris is a column-oriented database so it can make data compression and d
 
 To fix that, Apache Doris enables hybrid storage, which means to have row storage and columnar storage at the same time. 
 
-![Hybrid-Columnar-Row-Storage](../static/images/Introduction_3.png)
+![Hybrid-Columnar-Row-Storage](/images/Introduction_3.png)
 
 In addition, since point queries are all simple queries, it will be unnecessary and wasteful to call out the query planner, so Doris executes a short circuit plan for them to reduce overhead. 
 
 Another big source of overheads in high-concurrency point queries is SQL parsing. For that, Doris has prepared statements. The idea is to pre-compute the SQL statement and cache them, so they can be reused for similar queries.
 
-![prepared-statement-and-short-circuit-plan](../static/images/Introduction_4.png)
+![prepared-statement-and-short-circuit-plan](/images/Introduction_4.png)
 
 ## Data Ingestion
 
@@ -101,7 +101,7 @@ Apart from fast performance in queries and data ingestion, Apache Doris also pro
 
 Architecturally, Doris has two processes: frontend and backend. Both of them are easily scalable. The frontend nodes manage the clusters, metadata and handle user requests; the backend nodes execute the queries and are capable of auto data balancing and auto-restoration. It supports cluster upgrading and scaling to avoid interruption to services.
 
-![architecture-design-of-Apache-Doris](../static/images/introduction_5.png)
+![architecture-design-of-Apache-Doris](/images/introduction_5.png)
 
 ## Cross Cluster Replication
 
@@ -113,21 +113,21 @@ Enterprise users, especially those in finance or e-commerce, will need to backup
 
 Tests show that Doris CCR can reach a data latency of minutes. In the best case, it can reach the upper speed limit of the hardware environment.
 
-![Cross-Cluster-Replication-in-Apache-Doris](../static/images/introduction_6.png)
+![Cross-Cluster-Replication-in-Apache-Doris](/images/introduction_6.png)
 
 ## Multi-Tenant Management
 
 Apache Doris has sophisticated Role-Based Access Control, and it allows fine-grained privilege control on the level of databases, tables, rows, and columns. 
 
-![multi-tenant-management-in-Apache-Doris](../static/images/introduction_7.png)
+![multi-tenant-management-in-Apache-Doris](/images/introduction_7.png)
 
 For resource isolation, Doris used to implement a hard isolation plan, which is to divide the backend nodes into resource groups, and assign the Resource Groups to different workloads. This is a hard isolation plan. It was simple and neat. But sometimes users can make the most out of their computing resource because some Resource Groups are idle.
 
-![resource-group-in-Apache-Doris](../static/images/introduction_8.png)
+![resource-group-in-Apache-Doris](/images/introduction_8.png)
 
 Thus, instead of Resource Groups, Doris 2.0 introduces Workload Group. A soft limit is set for a Workload Group about how many resources it can use. When that soft limit is hit, and meanwhile there are some idle resources available. The idle resources will be shared across the workload groups. Users can also prioritize the workload groups in terms of their access to idle resources.
 
-![workload-group-in-Apache-Doris](../static/images/introduction_9.png)
+![workload-group-in-Apache-Doris](/images/introduction_9.png)
 
 ## Easy to Use
 
@@ -141,7 +141,7 @@ Common examples of semi-structure data include logs, observability data, and tim
 
 In text analysis, mostly, people use the LIKE operator, so we put a lot of effort into improving the performance of it, including pushing down the LIKE operator down to the storage layer (to reduce data scanning), and introducing the NGram Bloomfilter, the Hyperscan regex matching library, and the Volnitsky algorithm (for sub-string matching).
 
-![LIKE-operator](../static/images/introduction_10.png)
+![LIKE-operator](/images/introduction_10.png)
 
 We have also introduced inverted index for text tokenization. It is a power tool for fuzzy keyword search, full-text search, equivalence queries, and range queries.
 
@@ -164,10 +164,10 @@ Also, Doris allows you to write the computation results of external tables into 
 
 The main purpose of tiered storage is to save money. [Tiered storage ](https://doris.apache.org/docs/dev/advanced/cold-hot-separation?_highlight=cold)means to separate hot data and cold data into different storage, with hot data being the data that is frequently accessed and cold data that isn't. It allows users to put hot data in the quick but expensive disks (such as SSD and HDD), and cold data in object storage.
 
-![tiered-storage-in-Apache-Doris](../static/images/introduction_11.png)
+![tiered-storage-in-Apache-Doris](/images/introduction_11.png)
 
 Roughly speaking, for a data asset consisting of 80% cold data, tiered storage will reduce your storage cost by 70%.
 
 ## The Apache Doris Community
 
-This is an overview of Apache Doris, an open-source real-time data warehouse. It is actively evolving with an agile release schedule, and the [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1t3wfymur-0soNPATWQ~gbU8xutFOLog) embraces any questions, ideas, and feedback.
+This is an overview of Apache Doris, an open-source real-time data warehouse. It is actively evolving with an agile release schedule, and the [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) embraces any questions, ideas, and feedback.

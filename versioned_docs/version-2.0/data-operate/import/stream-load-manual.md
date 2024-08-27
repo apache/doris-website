@@ -38,7 +38,7 @@ In comparison to single-threaded load using `curl`, Doris Streamloader is a clie
 - **Resilience and continuity:** in case of partial load failures, it can resume data loading from the point of failure.
 - **Automatic retry mechanism:** in case of loading failures, it can automatically retry a default number of times. If the loading remains unsuccessful, it will print the command for manual retry.
 
-See [Doris Streamloader](https://doris.apache.org/docs/ecosystem/doris-streamloader/) for detailed instructions and best practices.
+See [Doris Streamloader](../../ecosystem/doris-streamloader) for detailed instructions and best practices.
 :::
 
 ## User guide
@@ -60,7 +60,7 @@ When using Stream Load, it is necessary to initiate an import job through the HT
 
 The following figure shows the main flow of Stream load, omitting some import details.
 
-![Stream Load 基本原理](/images/stream-load.png)
+![Basic principles](/images/stream-load.png)
 
 1. The client submits a Stream Load import job request to the FE (Frontend).
 2. The FE randomly selects a BE (Backend) as the Coordinator node, which is responsible for scheduling the import job, and then returns an HTTP redirect to the client.
@@ -105,9 +105,9 @@ Stream Load requires `INSERT` privileges on the target table. If there are no `I
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "User ID",
+    name               VARCHAR(20)           COMMENT "User name",
+    age                INT                   COMMENT "User age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -188,9 +188,9 @@ Create a JSON file named `streamload_example.json` . The specific content is as 
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "User ID",
+    name               VARCHAR(20)           COMMENT "User name",
+    age                INT                   COMMENT "User age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -237,7 +237,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### View load job
 
-By default, Stream Load synchronously returns results to the client, so the system does not record Stream Load historical jobs. If recording is required, add the configuration `enable_stream_load_record=true` in `be.conf`. Refer to the [BE configuration options](https://doris.apache.org/zh-CN/docs/admin-manual/config/be-config) for specific details.
+By default, Stream Load synchronously returns results to the client, so the system does not record Stream Load historical jobs. If recording is required, add the configuration `enable_stream_load_record=true` in `be.conf`. Refer to the [BE configuration options](../../admin-manual/config/be-config) for specific details.
 
 After configuring, you can use the `show stream load` command to view completed Stream Load jobs.
 
@@ -304,7 +304,7 @@ Determines whether to enable the Pipeline engine to execute Streamload tasks. Se
 | label                        | Used to specify a label for this Doris import. Data with the same label cannot be imported multiple times. If no label is specified, Doris will automatically generate one. Users can avoid duplicate imports of the same data by specifying a label. Doris retains import job labels for three days by default, but this duration can be adjusted using `label_keep_max_second`. For example, to specify the label for this import as 123, use the command `-H "label:123"`. The use of labels prevents users from importing the same data repeatedly. It is strongly recommended that users use the same label for the same batch of data. This ensures that duplicate requests for the same batch of data are only accepted once, guaranteeing At-Most-Once semantics. When the status of an import job corresponding to a label is CANCELLED, that label can be used again. |
 | column_separator             | Used to specify the column separator in the import file, which defaults to `\t`. If the separator is an invisible character, it needs to be prefixed with `\x` and represented in hexadecimal format. Multiple characters can be combined as a column separator. For example, to specify the separator as `\x01` for a Hive file, use the command `-H "column_separator:\x01"`. |
 | line_delimiter               | Used to specify the line delimiter in the import file, which defaults to `\n`. Multiple characters can be combined as a line delimiter. For example, to specify the line delimiter as `\n`, use the command `-H "line_delimiter:\n"`. |
-| columns                      | Used to specify the correspondence between columns in the import file and columns in the table. If the columns in the source file exactly match the content of the table, this field does not need to be specified. If the schema of the source file does not match the table, this field is required for data transformation. There are two formats: direct column correspondence to fields in the import file, and derived columns represented by expressions. Refer to [Data Transformation](../data-operate/import/load-data-convert) for detailed examples. |
+| columns                      | Used to specify the correspondence between columns in the import file and columns in the table. If the columns in the source file exactly match the content of the table, this field does not need to be specified. If the schema of the source file does not match the table, this field is required for data transformation. There are two formats: direct column correspondence to fields in the import file, and derived columns represented by expressions. Refer to [Data Transformation](../import/load-data-convert) for detailed examples. |
 | where                        | Used to filter out unnecessary data. If users need to exclude certain data, they can achieve this by setting this option. For example, to import only data where the k1 column is equal to 20180601, specify `-H "where: k1 = 20180601"` during the import. |
 | max_filter_ratio             | Used to specify the maximum tolerable ratio of filterable (irregular or otherwise problematic) data, which defaults to zero tolerance. The value range is 0 to 1. If the error rate of the imported data exceeds this value, the import will fail. Irregular data does not include rows filtered out by the where condition. For example, to maximize the import of all correct data (100% tolerance), specify the command `-H "max_filter_ratio:1"`. |
 | partitions                   | Used to specify the partitions involved in this import. If users can determine the corresponding partitions for the data, it is recommended to specify this option. Data that does not meet these partition criteria will be filtered out. For example, to specify importing into partitions p1 and p2, use the command `-H "partitions: p1, p2"`. |
@@ -498,11 +498,13 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Loading data into specific timezone
 
-As Doris currently does not have a built-in time zone for time types, all DATETIME-related types represent absolute time points without timezone information and are not affected by changes in the Doris system timezone. Therefore, for importing data with timezones, our unified approach is to convert it to data in a specific target timezone. In the Doris system, this refers to the timezone represented by the session variable `time_zone`.
+Since Doris currently does not have a built-in time zone time type, all `DATETIME` related types only represent absolute time points, do not contain time zone information, and will not change due to changes in the Doris system time zone. Therefore, for the import of data with time zones, our unified processing method is to convert it into data in a specific target time zone. In the Doris system, it is the time zone represented by the session variable `time_zone`.
 
-During load job, our target timezone is specified through the parameter `timezone`. This variable overrides the session variable `time_zone` when performing timezone conversions or evaluating timezone-sensitive functions. Thus, unless there are special circumstances, the `timezone` should be set consistently with the current Doris cluster's `time_zone` during the import transaction. This means that all time data with timezones will be converted to this timezone. 
+In the import, our target time zone is specified through the parameter `timezone`. This variable will replace the session variable `time_zone` when time zone conversion occurs and time zone sensitive functions are calculated. Therefore, if there are no special circumstances, the `timezone` should be set in the import transaction to be consistent with the `time_zone` of the current Doris cluster. This means that all time data with a time zone will be converted to this time zone.
 
-For example, if the Doris system timezone is "+08:00" and the imported data contains two time entries: "2012-01-01 01:00:00" and "2015-12-12 12:12:12-08:00", specifying the import transaction's timezone as "+08:00" via `-H "timezone: +08:00"` will result in both entries being converted to this timezone, yielding "2012-01-01 09:00:00" and "2015-12-13 04:12:12".
+For example, the Doris system time zone is "+08:00", and the time column in the imported data contains two pieces of data, namely "2012-01-01 01:00:00+00:00" and "2015-12-12 12 :12:12-08:00", then after we specify the time zone of the imported transaction through `-H "timezone: +08:00"` when importing, both pieces of data will be converted to the time zone to obtain the result." 2012-01-01 09:00:00" and "2015-12-13 04:12:12".
+
+For more information on time zone interpretation, please refer to the document [Time Zone](../../query/query-variables/time-zone.md).
 
 ### Streamingly import
 
@@ -781,9 +783,9 @@ For example, if the table is defined as follows:
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "User ID",
+    name               VARCHAR(20)           COMMENT "User name",
+    age                INT                   COMMENT "User age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -906,8 +908,8 @@ Load data into the following table structure:
 ```sql
 CREATE TABLE testdb.test_streamload(
     typ_id     BIGINT          NOT NULL COMMENT "ID",
-    name       VARCHAR(20)     NULL     COMMENT "名称",
-    arr        ARRAY<int(10)>  NULL     COMMENT "数组"
+    name       VARCHAR(20)     NULL     COMMENT "Name",
+    arr        ARRAY<int(10)>  NULL     COMMENT "Array"
 )
 DUPLICATE KEY(typ_id)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;
@@ -948,7 +950,7 @@ Load data into the following table structure:
 ```sql
 CREATE TABLE testdb.test_streamload(
     user_id            BIGINT       NOT NULL COMMENT "ID",
-    namemap            Map<STRING, INT>  NULL     COMMENT "名称"
+    namemap            Map<STRING, INT>  NULL     COMMENT "Name"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -1261,22 +1263,14 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 
 + enable_profile
 
-  <version since="1.2.7">When `enable_profile` is true, the Stream Load profile will be printed to logs (be.INFO).</version>
+  When `enable_profile` is true, the Stream Load profile will be printed to logs (be.INFO).
 
-+ memtable_on_sink_node
-
-  <version since="2.1.0">
-  Whether to enable MemTable on DataSink node when loading data, default is false.
-  </version>
-
-  Build MemTable on DataSink node, and send segments to other backends through brpc streaming.
-  It reduces duplicate work among replicas, and saves time in data serialization & deserialization.
 - partial_columns
-   <version since="2.0">
-   Whether to enable partial column updates，Boolean type, True means that use partial column update, the default value is false, this parameter is only allowed to be set when the table model is Unique and Merge on Write is used.
+
+   Whether to enable partial column updates, Boolean type, True means that use partial column update, the default value is false, this parameter is only allowed to be set when the table model is Unique and Merge on Write is used.
 
    eg: `curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://127.0.0.1:48037/api/db1/user_profile/_stream_load`
-  </version>
+
 
 ### Use stream load with SQL
 
@@ -1377,7 +1371,9 @@ The following main explanations are given for the Stream load import result para
 
 + ErrorURL: If you have data quality problems, visit this URL to see specific error lines.
 
-> Note: Since Stream load is a synchronous import mode, import information will not be recorded in Doris system. Users cannot see Stream load asynchronously by looking at import commands. You need to listen for the return value of the create import request to get the import result.
+:::info Note
+Since Stream load is a synchronous import mode, import information will not be recorded in Doris system. Users cannot see Stream load asynchronously by looking at import commands. You need to listen for the return value of the create import request to get the import result.
+:::
 
 ### Cancel Load
 
@@ -1433,6 +1429,7 @@ Timeout = 1000s -31561;. 20110G / 10M /s
 ```
 
 ### Complete examples
+
 Data situation: In the local disk path /home/store_sales of the sending and importing requester, the imported data is about 15G, and it is hoped to be imported into the table store\_sales of the database bj_sales.
 
 Cluster situation: The concurrency of Stream load is not affected by cluster size.

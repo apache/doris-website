@@ -32,25 +32,25 @@ Doris 提供多种数据导入方案，可以针对不同的数据源进行选�
 
 ### 按场景划分
 
-| 数据源                               | 导入方式                                                     |
-| ------------------------------------ | ------------------------------------------------------------ |
-| 对象存储（s3）,HDFS                  | [使用 Broker 导入数据](../import/broker-load-manual) |
-| 本地文件                             | [Stream Load](../import/stream-load-manual.), [MySQL Load](../import/mysql-load-manual)         |
-| Kafka                                | [订阅 Kafka 数据](https://doris.apache.org/zh-CN/docs/data-operate/import/import-scenes/kafka-load)             |
-| Mysql、PostgreSQL，Oracle，SQLServer | [通过外部表同步数据](https://doris.apache.org/zh-CN/docs/data-operate/import/import-scenes/external-table-load) |
-| 通过 JDBC 导入                         | [使用 JDBC 同步数据](../import-scenes/jdbc-load)           |
-| 导入 JSON 格式数据                     | [JSON 格式数据导入](../import/load-json-format)       |
+| 数据源                               | 导入方式                                                                                   |
+| ------------------------------------ |----------------------------------------------------------------------------------------|
+| 对象存储（s3）,HDFS                  | [使用 Broker 导入数据](../import/broker-load-manual)                                         |
+| 本地文件                             | [Stream Load](../import/stream-load-manual), [MySQL Load](../import/mysql-load-manual) |
+| Kafka                                | [订阅 Kafka 数据](../import/routine-load-manual)                                           |
+| Mysql、PostgreSQL，Oracle，SQLServer | [通过外部表同步数据](../import/insert-into-manual)                                              |
+| 通过 JDBC 导入                         | [使用 JDBC 同步数据](../../lakehouse/database/jdbc)                                          |
+| 导入 JSON 格式数据                     | [JSON 格式数据导入](../import/load-json-format)                                              |
+| AutoMQ                            | [订阅 AutoMQ 数据](../../ecosystem/automq-load.md)                                                |
 
 ### 按导入方式划分
 
 | 导入方式名称 | 使用方式                                                     |
 | ------------ | ------------------------------------------------------------ |
-| Spark Load   | [通过 Spark 导入外部数据](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/spark-load-manual) |
 | Broker Load  | [通过 Broker 导入外部存储数据](../import/broker-load-manual) |
 | Stream Load  | [流式导入数据 (本地文件及内存数据)](../import/stream-load-manual) |
-| Routine Load | [导入 Kafka 数据](https://doris.apache.org/zh-CN/docs/data-operate/import/import-scenes/kafka-load)       |
+| Routine Load | [导入 Kafka 数据](../import/routine-load-manual)       |
 | Insert Into  | [外部表通过 INSERT 方式导入数据](../import/insert-into-manual) |
-| S3 Load      | [S3 协议的对象存储数据导入](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/s3-load-manual) |
+| S3 Load      | [S3 协议的对象存储数据导入](../import/broker-load-manual#s3-load) |
 | MySQL Load   | [MySQL 客户端导入本地数据](../import/mysql-load-manual) |
 
 ## 支持的数据格式
@@ -83,10 +83,6 @@ Label 是用于保证对应的导入作业，仅能成功导入一次。一个�
 导入方式分为同步和异步。对于同步导入方式，返回结果即表示导入成功还是失败。而对于异步导入方式，返回成功仅代表作业提交成功，不代表数据导入成功，需要使用对应的命令查看导入作业的运行状态。
 
 ## 导入 Array 类型
-
-向量化场景才能支持 array 函数，非向量化场景不支持。
-
-如果想要应用 array 函数导入数据，则应先启用向量化功能；然后需要根据 array 函数的参数类型将输入参数列转换为 array 类型；最后，就可以继续使用 array 函数了。
 
 例如以下导入，需要先将列 b14 和列 a13 先 cast 成`array<string>`类型，再运用`array_union`函数。
 

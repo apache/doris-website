@@ -1,7 +1,7 @@
 ---
 {
     'title': 'A/B Testing was a handful, until we found the replacement for Druid',
-    'summary': "The recipe for successful A/B testing is quick computation, no duplication, and no data loss. For that, we used Apache Flink and Apache Doris to build our data platform.",
+    'description': "The recipe for successful A/B testing is quick computation, no duplication, and no data loss. For that, we used Apache Flink and Apache Doris to build our data platform.",
     'date': '2023-06-01',
     'author': 'Heyu Dou, Xinxin Wang',
     'tags': ['Best Practice'],
@@ -40,7 +40,7 @@ Let me show you our long-term struggle with our previous Druid-based data platfo
 
 This was our real-time datawarehouse, where Apache Storm was the real-time data processing engine and Apache Druid pre-aggregated the data. However, Druid did not support certain paging and join queries, so we wrote data from Druid to MySQL regularly, making MySQL the "materialized view" of Druid. But that was only a duct tape solution as it couldn't support our ever enlarging real-time data size. So data timeliness was unattainable.
 
-![Apache-Storm-Apache-Druid-MySQL](../static/images/360_1.png)
+![Apache-Storm-Apache-Druid-MySQL](/images/360_1.png)
 
 ## Platform Architecture 2.0
 
@@ -48,7 +48,7 @@ This was our real-time datawarehouse, where Apache Storm was the real-time data 
 
 This time, we replaced Storm with Flink, and MySQL with TiDB. Flink was more powerful in terms of semantics and features, while TiDB, with its distributed capability, was more maintainable than MySQL. But architecture 2.0 was nowhere near our goal of end-to-end data consistency, either, because when processing huge data, enabling TiDB transactions largely slowed down data writing. Plus, Druid itself did not support standard SQL, so there were some learning costs and frictions in usage.
 
-![Apache-Flink-Apache-Druid-TiDB](../static/images/360_2.png)
+![Apache-Flink-Apache-Druid-TiDB](/images/360_2.png)
 
 ## Platform Architecture 3.0
 
@@ -56,7 +56,7 @@ This time, we replaced Storm with Flink, and MySQL with TiDB. Flink was more pow
 
 We replaced Apache Druid with Apache Doris as the OLAP engine, which could also serve as a unified data serving gateway. So in Architecture 3.0, we only need to maintain one set of query logic. And we layered our real-time datawarehouse to increase reusability of real-time data.
 
-![Apache-Flink-Apache-Doris](../static/images/360_3.png)
+![Apache-Flink-Apache-Doris](/images/360_3.png)
 
 Turns out the combination of Flink and Doris was the answer. We can exploit their features to realize quick computation and data consistency. Keep reading and see how we make it happen.
 
@@ -68,7 +68,7 @@ Then we tried moving part of such workload to the computation engine. So we trie
 
 Our third shot was to aggregate data locally in Flink right after we split it. As is shown below, we create a window in the memory of one operator for local aggregation; then we further aggregate it using the global hash windows. Since two operators chained together are in one thread, transferring data between operators consumes much less network resources. **The two-step aggregation method, combined with the** **[Aggregate model](https://doris.apache.org/docs/dev/data-table/data-model)** **of Apache Doris, can keep data explosion in a manageable range.**
 
-![Apache-Flink-Apache-Doris-2](../static/images/360_4.png)
+![Apache-Flink-Apache-Doris-2](/images/360_4.png)
 
 For convenience in A/B testing, we make the test tag ID the first sorted field in Apache Doris, so we can quickly locate the target data using sorted indexes. To further minimize data processing in queries, we create materialized views with the frequently used dimensions. With constant modification and updates, the materialized views are applicable in 80% of our queries.
 
@@ -84,7 +84,7 @@ To ensure end-to-end data integrity, we developed a Sink-to-Doris component. It 
 
 It is the result of our long-term evolution. We used to ensure data consistency by implementing "one writing for one tag ID". Then we realized we could make good use of the transactions in Apache Doris and the two-stage commit of Apache Flink. 
 
-![idempotent-writing-two-stage-commit](../static/images/360_5.png)
+![idempotent-writing-two-stage-commit](/images/360_5.png)
 
 As is shown above, this is how two-stage commit works to guarantee data consistency:
 
@@ -99,17 +99,17 @@ We make it possible to split a single checkpoint into multiple transactions, so 
 
 This is how we implement Sink-to-Doris. The component has blocked API calls and topology assembly. With simple configuration, we can write data into Apache Doris via Stream Load. 
 
-![Sink-to-Doris](../static/images/360_6.png)
+![Sink-to-Doris](/images/360_6.png)
 
 ### Cluster Monitoring
 
 For cluster and host monitoring, we adopted the metrics templates provided by the Apache Doris community. For data monitoring, in addition to the template metrics, we added Stream Load request numbers and loading rates.
 
-![stream-load-cluster-monitoring](../static/images/360_7.png)
+![stream-load-cluster-monitoring](/images/360_7.png)
 
 Other metrics of our concerns include data writing speed and task processing time. In the case of anomalies, we will receive notifications in the form of phone calls, messages, and emails.
 
-![cluster-monitoring](../static/images/360_8.png)
+![cluster-monitoring](/images/360_8.png)
 
 ## Key Takeaways
 

@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris announced the official release of version 1.1.2',
-    'summary': 'Dear community, Apache Doris team has fixed more than 170 issues or performance improvements in version 1.1.2 compared to previous verisons',
+    'description': 'Dear community, Apache Doris team has fixed more than 170 issues or performance improvements in version 1.1.2 compared to previous verisons',
     'date': '2022-09-13',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],

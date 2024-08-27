@@ -1,7 +1,7 @@
 ---
 {
     'title': 'New milestone: Apache Doris 2.0.0 just released',
-    'summary': 'Dear community, we are excited to announce that Apache Doris 2.0.0 is now production-ready on August 16, 2023',
+    'description': 'Dear community, we are excited to announce that Apache Doris 2.0.0 is now production-ready on August 16, 2023',
     'date': '2023-08-16',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
@@ -189,9 +189,9 @@ To separate storage and computation is a way to realize elastic scaling of resou
 Apache Doris 2.0 provides two solutions to address the needs of the first two types of users.
 
 1. **Compute nodes**. We introduced stateless compute nodes in version 2.0. Unlike the mix nodes, the compute nodes do not save any data and are not involved in workload balancing of data tablets during cluster scaling. Thus, they are able to quickly join the cluster and share the computing pressure during peak times. In addition, in data lakehouse analysis, these nodes will be the first ones to execute queries on remote storage (HDFS/S3) so there will be no resource competition between internal tables and external tables.
-   1.  Doc: https://doris.apache.org/docs/dev/advanced/compute-node
+   1.  [Read more in Docs](https://doris.apache.org/docs/2.0/admin-manual/resource-admin/compute-node/)
 2. **Hot-cold data separation**. Hot/cold data refers to data that is frequently/seldom accessed, respectively. Generally, it makes more sense to store cold data in low-cost storage. Older versions of Apache Doris support lifecycle management of table partitions: As hot data cooled down, it would be moved from SSD to HDD. However, data was stored with multiple replicas on HDD, which was still a waste. Now, in Apache Doris 2.0, cold data can be stored in object storage, which is even cheaper and allows single-copy storage. That reduces the storage costs by 70% and cuts down the computation and network overheads that come with storage.
-   1.  Read more: https://doris.apache.org/blog/Tiered-Storage-for-Hot-and-Cold-Data-What-Why-and-How
+   1. [Read more in Docs](https://doris.apache.org/blog/Tiered-Storage-for-Hot-and-Cold-Data-What-Why-and-How)
 
 For neater separate of computation and storage, the VeloDB team is going to contribute the Cloud Compute-Storage-Separation solution to the Apache Doris project. The performance and stability of it has stood the test of hundreds of companies in their production environment. The merging of code will be finished by October this year, and all Apache Doris users will be able to get an early taste of it in September.
 
@@ -235,5 +235,5 @@ This feature allows for higher availability of data, read/write workload separat
 
 To make Apache Doris 2.0.0 production-ready, we invited hundreds of enterprise users to engage in the testing and optimized it for better performance, stability, and usability. In the next phase, we will continue responding to user needs with agile release planning. We plan to launch 2.0.1 in late August and 2.0.2 in September, as we keep fixing bugs and adding new features. We also plan to release an early version of 2.1 in September to bring a few long-requested capabilities to you. For example, in Doris 2.1, the Variant data type will better serve the schema-free analytic needs of semi-structured data; the multi-table materialized views will be able to simplify the data scheduling and processing link while speeding up queries; more and neater data ingestion methods will be added and nested composite data types will be realized.
 
-If you have any questions or ideas when investigating, testing, and deploying Apache Doris, please find us on [Slack](https://t.co/ZxJuNJHXb2). Our developers will be happy to hear them and provide targeted support.
+If you have any questions or ideas when investigating, testing, and deploying Apache Doris, please find us on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA). Our developers will be happy to hear them and provide targeted support.
 

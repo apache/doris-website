@@ -20,14 +20,14 @@ export default function CustomLayout(props) {
         title,
         description,
         isPage,
+        keywords,
         showAnnouncementBar,
     } = props;
     useKeyboardNavigation();
     const { isTop } = useScrollTop(80);
-
     return (
         <Layout>
-            <PageMetadata title={title} description={description} />
+            <PageMetadata title={title} description={description} keywords={keywords} />
 
             <SkipToContent />
 

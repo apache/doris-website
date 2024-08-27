@@ -24,11 +24,7 @@ under the License.
 
 ## named_struct
 
-<version since="2.0.0">
-
 named_struct
-
-</version>
 
 ### description
 
@@ -39,10 +35,6 @@ named_struct
 根据给定的字符串和值构造并返回struct
 
 参数个数必须为非0偶数，奇数位是field的名字，必须为常量字符串，偶数位是field的值，可以是多列或常量
-
-### notice
-
-`仅支持向量化引擎中使用`
 
 ### example
 

@@ -45,9 +45,7 @@ If the element of array is NULL, it will be placed in the last of the sorted arr
 
 ### example
 
-```
-mysql> set enable_vectorized_engine=true;
-mysql> select k1, k2, array_reverse_sort(k2) from array_test;
+```mysql> select k1, k2, array_reverse_sort(k2) from array_test;
 +------+-----------------------------+-----------------------------+
 | k1   | k2                          | array_reverse_sort(`k2`)    |
 +------+-----------------------------+-----------------------------+

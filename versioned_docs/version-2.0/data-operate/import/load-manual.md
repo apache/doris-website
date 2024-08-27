@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Import Overview",
+    "title": "Loading Overview",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Import Overview
+
 
 ## Supported Data Sources
 
@@ -32,26 +32,24 @@ Doris provides a variety of data import solutions, and you can choose different 
 
 ### By Scene
 
-| Data Source                          | Import Method                                                |
+| Data Source                          | Loading Method                                                |
 | ------------------------------------ | ------------------------------------------------------------ |
-| Object Storage (s3), HDFS            | [Import data using Broker](./import-scenes/external-storage-load.md) |
-| Local file                           | [Import local data](./import-scenes/local-file-load.md)    |
-| Kafka                                | [Subscribe to Kafka data](./import-scenes/kafka-load.md)   |
-| Mysql, PostgreSQL, Oracle, SQLServer | [Sync data via external table](./import-scenes/external-table-load.md) |
-| Import via JDBC                      | [Sync data using JDBC](./import-scenes/jdbc-load.md)       |
-| Import JSON format data              | [JSON format data import](./import-way/load-json-format.md) |
+| Object Storage (s3), HDFS            | [Import data using Broker](./broker-load-manual#s3-load) |
+| Local file                           | [Import local data](./routine-load-manual#supported-data-file-formats)    |
+| MySQL, PostgreSQL, Oracle, SQLServer | [Sync data via external table](./mysql-load-manual) |
+| Loading via JDBC                      | [Sync data using JDBC](../../lakehouse/database/jdbc.md)       |
+| Loading JSON format data              | [JSON format data import](./load-json-format) |
 
-### Divided by Import Method
+### By Loading Method
 
-| Import method name | Use method                                                   |
+| Loading method name | Use method                                                   |
 | ------------------ | ------------------------------------------------------------ |
-| Spark Load         | [Import external data via Spark](./import-way/spark-load-manual.md) |
-| Broker Load        | [Import external storage data via Broker](./import-way/broker-load-manual.md) |
-| Stream Load        | [Stream import data (local file and memory data)](./import-way/stream-load-manual.md) |
-| Routine Load       | [Import Kafka data](./import-way/routine-load-manual.md)   |
-| Insert Into        | [External table imports data through INSERT](./import-way/insert-into-manual.md) |
-| S3 Load            | [Object storage data import of S3 protocol](./import-way/s3-load-manual.md) |
-| MySql Load         | [Local data import of MySql protocol](./import-way/mysql-load-manual.md) |
+| Broker Load        | [Import external storage data via Broker](./broker-load-manual) |
+| Stream Load        | [Stream import data (local file and memory data)](./stream-load-manual.md) |
+| Routine Load       | [Import Kafka data](./stream-load-manual)   |
+| Insert Into        | [External table imports data through INSERT](./insert-into-manual) |
+| S3 Load            | [Object storage data import of S3 protocol](./broker-load-manual#s3-load) |
+| MySQL Load         | [Local data import of MySql protocol](./mysql-load-) |
 
 ## Supported Data Formats
 
@@ -83,9 +81,6 @@ For best practices on atomicity guarantees, see Importing Transactions and Atomi
 Import methods are divided into synchronous and asynchronous. For the synchronous import method, the returned result indicates whether the import succeeds or fails. For the asynchronous import method, a successful return only means that the job was submitted successfully, not that the data was imported successfully. You need to use the corresponding command to check the running status of the import job.
 
 ## Import the Data of Array Types
-
-The array function can only be supported in vectorization scenarios, but non-vectorization scenarios are not supported.
-if you want to apply the array function to import data, you should enable vectorization engine. Then you need to cast the input parameter column into the array type according to the parameter of the array function. Finally, you can continue to use the array function.
 
 For example, in the following import, you need to cast columns b14 and a13 into `array<string>` type, and then use the `array_union` function.
 

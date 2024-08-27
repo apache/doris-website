@@ -24,262 +24,440 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Insert Into
 
-Insert Into 语句的使用方式和 MySQL 等数据库中 Insert Into 语句的使用方式类似。但在 Doris 中，所有的数据写入都是一个独立的导入作业。所以这里将 Insert Into 也作为一种导入方式介绍。
+INSERT INTO 支持将 Doris 查询的结果导入到另一个表中。INSERT INTO 是一个同步导入方式，执行导入后返回导入结果。可以通过请求的返回判断导入是否成功。INSERT INTO 可以保证导入任务的原子性，要么全部导入成功，要么全部导入失败。
 
-主要的 Insert Into 命令包含以下两种；
+主要的 Insert Into 命令包含以下两种：
 
-* INSERT INTO tbl SELECT ...
-* INSERT INTO tbl (col1, col2, ...) VALUES (1, 2, ...), (1,3, ...);
+- INSERT INTO tbl SELECT ...
 
-其中第二种命令仅用于 Demo，不要使用在测试或生产环境中。
+- INSERT INTO tbl (col1, col2, ...) VALUES (1, 2, ...), (1,3, ...)
 
-## 导入操作及返回结果
+## 使用场景
 
-Insert Into 命令需要通过 MySQL 协议提交，创建导入请求会同步返回导入结果。
+1. 用户希望仅导入几条假数据，验证一下 Doris 系统的功能。此时适合使用 INSERT INTO VALUES 的语法，语法和 MySQL 一样。不建议在生产环境中使用 INSERT INTO VALUES。
 
-以下是两个Insert Into的使用示例：
-
-```sql
-INSERT INTO tbl2 WITH LABEL label1 SELECT * FROM tbl3;
-INSERT INTO tbl1 VALUES ("qweasdzxcqweasdzxc"), ("a");
-```
-
-> 注意：当需要使用 `CTE(Common Table Expressions)` 作为 insert 操作中的查询部分时，必须指定 `WITH LABEL` 和 column list 部分或者对`CTE`进行包装。示例：
->
-> ```sql
-> INSERT INTO tbl1 WITH LABEL label1
-> WITH cte1 AS (SELECT * FROM tbl1), cte2 AS (SELECT * FROM tbl2)
-> SELECT k1 FROM cte1 JOIN cte2 WHERE cte1.k1 = 1;
-> 
-> 
-> INSERT INTO tbl1 (k1)
-> WITH cte1 AS (SELECT * FROM tbl1), cte2 AS (SELECT * FROM tbl2)
-> SELECT k1 FROM cte1 JOIN cte2 WHERE cte1.k1 = 1;
->
-> INSERT INTO tbl1 (k1)
-> select * from (
-> WITH cte1 AS (SELECT * FROM tbl1), cte2 AS (SELECT * FROM tbl2)
-> SELECT k1 FROM cte1 JOIN cte2 WHERE cte1.k1 = 1) as ret
-> ```
-
-具体的参数说明，你可以参照 [INSERT INTO](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT.md) 命令或者执行`HELP INSERT` 来查看其帮助文档以便更好的使用这种导入方式。
-
-Insert Into 本身就是一个 SQL 命令，其**返回结果**会根据执行结果的不同，分为以下几种：
-
-1. 结果集为空
-
-   如果 insert 对应 select 语句的结果集为空，则返回如下：
-
-   ```sql
-   mysql> insert into tbl1 select * from empty_tbl;
-   Query OK, 0 rows affected (0.02 sec)
-   ```
-
-   `Query OK` 表示执行成功。`0 rows affected` 表示没有数据被导入。
-
-2. 结果集不为空
-
-   在结果集不为空的情况下。返回结果分为如下几种情况：
-
-   1. Insert 执行成功并可见：
-
-      ```sql
-      mysql> insert into tbl1 select * from tbl2;
-      Query OK, 4 rows affected (0.38 sec)
-      {'label':'insert_8510c568-9eda-4173-9e36-6adc7d35291c', 'status':'visible', 'txnId':'4005'}
-      
-      mysql> insert into tbl1 with label my_label1 select * from tbl2;
-      Query OK, 4 rows affected (0.38 sec)
-      {'label':'my_label1', 'status':'visible', 'txnId':'4005'}
-      
-      mysql> insert into tbl1 select * from tbl2;
-      Query OK, 2 rows affected, 2 warnings (0.31 sec)
-      {'label':'insert_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'visible', 'txnId':'4005'}
-      
-      mysql> insert into tbl1 select * from tbl2;
-      Query OK, 2 rows affected, 2 warnings (0.31 sec)
-      {'label':'insert_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
-      ```
-
-      `Query OK` 表示执行成功。`4 rows affected` 表示总共有4行数据被导入。`2 warnings` 表示被过滤的行数。
-
-      同时会返回一个 json 串：
-
-      ```
-      {'label':'my_label1', 'status':'visible', 'txnId':'4005'}
-      {'label':'insert_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
-      {'label':'my_label1', 'status':'visible', 'txnId':'4005', 'err':'some other error'}
-      ```
-
-      `label` 为用户指定的 label 或自动生成的 label。Label 是该 Insert Into 导入作业的标识。每个导入作业，都有一个在单 database 内部唯一的 Label。
-
-      `status` 表示导入数据是否可见。如果可见，显示 `visible`，如果不可见，显示 `committed`。
-
-      `txnId` 为这个 insert 对应的导入事务的 id。
-
-      `err` 字段会显示一些其他非预期错误。
-
-      当需要查看被过滤的行时，用户可以通过[SHOW LOAD](../../../sql-manual/sql-reference/Show-Statements/SHOW-LOAD.md)语句
-
-      ```sql
-      show load where label="xxx";
-      ```
-
-      返回结果中的 URL 可以用于查询错误的数据，具体见后面 **查看错误行** 小结。
-              
-      **数据不可见是一个临时状态，这批数据最终是一定可见的**
-
-      可以通过[SHOW TRANSACTION](../../../sql-manual/sql-reference/Show-Statements/SHOW-TRANSACTION.md)语句查看这批数据的可见状态：
-
-      ```sql
-      show transaction where id=4005;
-      ```
-
-      返回结果中的 `TransactionStatus` 列如果为 `visible`，则表述数据可见。
-
-   2. Insert 执行失败
-
-      执行失败表示没有任何数据被成功导入，并返回如下：
-
-      ```sql
-      mysql> insert into tbl1 select * from tbl2 where k1 = "a";
-      ERROR 1064 (HY000): all partitions have no load data. url: http://10.74.167.16:8042/api/_load_error_log?file=__shard_2/error_log_insert_stmt_ba8bb9e158e4879-ae8de8507c0bf8a2_ba8bb9e158e4879_ae8de8507c0bf8a2
-      ```
-
-      其中 `ERROR 1064 (HY000): all partitions have no load data` 显示失败原因。后面的 url 可以用于查询错误的数据，具体见后面 **查看错误行** 小结。
-
-**综上，对于 insert 操作返回结果的正确处理逻辑应为：**
-
-1. 如果返回结果为 `ERROR 1064 (HY000)`，则表示导入失败。
-2. 如果返回结果为 `Query OK`，则表示执行成功。
-   1. 如果 `rows affected` 为 0，表示结果集为空，没有数据被导入。
-   2. 如果 `rows affected` 大于 0：
-      1. 如果 `status` 为 `committed`，表示数据还不可见。需要通过 `show transaction` 语句查看状态直到 `visible`
-      2. 如果 `status` 为 `visible`，表示数据导入成功。
-   3. 如果 `warnings` 大于 0，表示有数据被过滤，可以通过 `show load` 语句获取 url 查看被过滤的行。
-
-### SHOW LAST INSERT
-
-在上一小节中我们介绍了如何根据 insert 操作的返回结果进行后续处理。但一些语言的mysql类库中很难获取返回结果的中的 json 字符串。因此，Doris 还提供了 `SHOW LAST INSERT` 命令来显式的获取最近一次 insert 操作的结果。
-
-当执行完一个 insert 操作后，可以在同一 session 连接中执行 `SHOW LAST INSERT`。该命令会返回最近一次insert 操作的结果，如：
-
-```sql
-mysql> show last insert\G
-*************************** 1. row ***************************
-    TransactionId: 64067
-            Label: insert_ba8f33aea9544866-8ed77e2844d0cc9b
-         Database: default_cluster:db1
-            Table: t1
-TransactionStatus: VISIBLE
-       LoadedRows: 2
-     FilteredRows: 0
-```
-
-该命令会返回 insert 以及对应事务的详细信息。因此，用户可以在每次执行完 insert 操作后，继续执行 `show last insert` 命令来获取 insert 的结果。
-
-> 注意：该命令只会返回在同一 session 连接中，最近一次 insert 操作的结果。如果连接断开或更换了新的连接，则将返回空集。
-
-## 相关系统配置
-
-### FE 配置
-
-+ timeout
-
-  导入任务的超时时间(以秒为单位)，导入任务在设定的 timeout 时间内未完成则会被系统取消，变成 CANCELLED。
-
-  目前 Insert Into 并不支持自定义导入的 timeout 时间，所有 Insert Into 导入的超时时间是统一的，默认的 timeout 时间为 4 小时。如果导入的源文件无法在规定时间内完成导入，则需要调整 FE 的参数```insert_load_default_timeout_second```。
-  
-  <version since="dev"></version>
-  同时 Insert Into 语句受到 Session 变量 `insert_timeout` 的限制。可以通过 `SET insert_timeout = xxx;` 来增加超时时间，单位是秒。
-
-### Session 变量
-
-+ enable\_insert\_strict
-
-  Insert Into 导入本身不能控制导入可容忍的错误率。用户只能通过 `enable_insert_strict` 这个 Session 参数用来控制。
-
-  当该参数设置为 false 时，表示至少有一条数据被正确导入，则返回成功。如果有失败数据，则还会返回一个 Label。
-
-  当该参数设置为 true 时，表示如果有一条数据错误，则导入失败。
-
-  默认为 false。可通过 `SET enable_insert_strict = true;` 来设置。 
-
-+ insert\_timeout
-
-  Insert Into 本身也是一个 SQL 命令，Insert Into 语句受到 Session 变量 <version since="dev" type="inline">`insert_timeout`</version> 的限制。可以通过 `SET insert_timeout = xxx;` 来增加超时时间，单位是秒。
-
-+ enable\_nereids\_dml\_with\_pipeline
-
-  设置为 `true` 后，`insert into` 语句将尝试通过 Pipeline 引擎执行。详见[导入](../load-manual)文档。
-
-## 最佳实践
-
-### 应用场景
-
-1. 用户希望仅导入几条假数据，验证一下 Doris 系统的功能。此时适合使用 [INSERT INTO VALUES](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT.md) 的语法，这里语法和MySql语法一样。
 2. 用户希望将已经在 Doris 表中的数据进行 ETL 转换并导入到一个新的 Doris 表中，此时适合使用 INSERT INTO SELECT 语法。
-3. 用户可以创建一种外部表，如 MySQL 外部表映射一张 MySQL 系统中的表。或者创建 [Broker](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/BROKER-LOAD.md) 外部表来映射 HDFS 上的数据文件。然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。
+
+3. 与 Multi-Catalog 外部表机制进行配合，如通过 Multi-Catalog 映射 MySQL 或者 Hive 系统中的表，然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。
+
+4. 通过 Table Value Function（TVF）功能，可以直接将对象存储或 HDFS 上的文件作为 Table 进行查询，并且支持自动的列类型推断。然后，通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。
+
+## 基本原理
+
+在使用 INSERT INTO 时，需要通过 MySQL 协议发起导入作业给 FE 节点，FE 会生成执行计划，执行计划中前部是查询相关的算子，最后一个是 OlapTableSink 算子，用于将查询结果写到目标表中。执行计划会被发送给 BE 节点执行，Doris 会选定一个节点做为 Coordinator 节点，Coordinator 节点负责接受数据并分发数据到其他节点上。
+
+## 快速上手
+
+INSERT INTO 通过 MySQL 协议提交和传输。下例以 MySQL 命令行为例，演示通过 INSERT INTO 提交导入作业。
+
+详细语法可以参见 [INSERT INTO](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT.md)。
+
+### 前置检查
+
+INSERT INTO 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
+
+### 创建导入作业
+
+**INSERT INTO VALUES**
+
+1. 创建源表
+
+```sql
+CREATE TABLE testdb.test_table(
+    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
+    name               VARCHAR(20)           COMMENT "用户姓名",
+    age                INT                   COMMENT "用户年龄"
+)
+DUPLICATE KEY(user_id)
+DISTRIBUTED BY HASH(user_id) BUCKETS 10;
+```
+
+2. 使用 INSERT INTO VALUES 向源表导入数据（不推荐在生产环境中使用）
+
+```sql
+INSERT INTO testdb.test_table (user_id, name, age)
+VALUES (1, "Emily", 25),
+       (2, "Benjamin", 35),
+       (3, "Olivia", 28),
+       (4, "Alexander", 60),
+       (5, "Ava", 17);
+```
+
+INSERT INTO 是一种同步导入方式，导入结果会直接返回给用户。可以打开 [group commit](../import-way/group-commit-manual.md) 达到更高的性能。
+
+```JSON
+Query OK, 5 rows affected (0.308 sec)
+{'label':'label_3e52da787aab4222_9126d2fce8f6d1e5', 'status':'VISIBLE', 'txnId':'9081'}
+```
+
+3. 查看导入数据
+
+```sql
+MySQL> SELECT COUNT(*) FROM testdb.test_table;
++----------+
+| count(*) |
++----------+
+|        5 |
++----------+
+1 row in set (0.179 sec)
+```
+
+**INSERT INTO SELECT**
+
+1. 在上述操作的基础上，创建一个新表作为目标表（其 schema 与源表相同）
+
+```sql
+CREATE TABLE testdb.test_table2 LIKE testdb.test_table;
+```
+
+2. 使用 INSERT INTO SELECT 导入到新表
+
+```sql
+INSERT INTO testdb.test_table2
+SELECT * FROM testdb.test_table WHERE age < 30;
+Query OK, 3 rows affected (0.544 sec)
+{'label':'label_9c2bae970023407d_b2c5b78b368e78a7', 'status':'VISIBLE', 'txnId':'9084'}
+```
+
+3. 查看导入数据
+
+```sql
+MySQL> SELECT COUNT(*) FROM testdb.test_table2;
++----------+
+| count(*) |
++----------+
+|        3 |
++----------+
+1 row in set (0.071 sec)
+```
+
+4. 可以使用 [JOB](../../scheduler/job-scheduler.md) 异步执行 INSERT。
+
+5. 数据源可以是 [tvf](../../../lakehouse/file.md) 或者 [catalog](../../../lakehouse/database) 中的表。
+
+### 查看导入作业
+
+可以通过 show  load 命令查看已完成的 INSERT INTO 任务。
+
+```sql
+MySQL> SHOW LOAD FROM testdb;
++--------+-----------------------------------------+----------+--------------------+--------+---------+----------------------------------------------------------------------+----------+---------------------+---------------------+---------------------+---------------------+---------------------+------+-----------------------------------------------------------------------------------------------------------------------+---------------+--------------+------+---------+
+| JobId  | Label                                   | State    | Progress           | Type   | EtlInfo | TaskInfo                                                             | ErrorMsg | CreateTime          | EtlStartTime        | EtlFinishTime       | LoadStartTime       | LoadFinishTime      | URL  | JobDetails                                                                                                            | TransactionId | ErrorTablets | User | Comment |
++--------+-----------------------------------------+----------+--------------------+--------+---------+----------------------------------------------------------------------+----------+---------------------+---------------------+---------------------+---------------------+---------------------+------+-----------------------------------------------------------------------------------------------------------------------+---------------+--------------+------+---------+
+| 376416 | label_3e52da787aab4222_9126d2fce8f6d1e5 | FINISHED | Unknown id: 376416 | INSERT | NULL    | cluster:N/A; timeout(s):26200; max_filter_ratio:0.0; priority:NORMAL | NULL     | 2024-02-27 01:22:17 | 2024-02-27 01:22:17 | 2024-02-27 01:22:17 | 2024-02-27 01:22:17 | 2024-02-27 01:22:18 |      | {"Unfinished backends":{},"ScannedRows":0,"TaskNumber":0,"LoadBytes":0,"All backends":{},"FileNumber":0,"FileSize":0} | 9081          | {}           | root |         |
+| 376664 | label_9c2bae970023407d_b2c5b78b368e78a7 | FINISHED | Unknown id: 376664 | INSERT | NULL    | cluster:N/A; timeout(s):26200; max_filter_ratio:0.0; priority:NORMAL | NULL     | 2024-02-27 01:39:37 | 2024-02-27 01:39:37 | 2024-02-27 01:39:37 | 2024-02-27 01:39:37 | 2024-02-27 01:39:38 |      | {"Unfinished backends":{},"ScannedRows":0,"TaskNumber":0,"LoadBytes":0,"All backends":{},"FileNumber":0,"FileSize":0} | 9084          | {}           | root |         |
++--------+-----------------------------------------+----------+--------------------+--------+---------+----------------------------------------------------------------------+----------+---------------------+---------------------+---------------------+---------------------+---------------------+------+-----------------------------------------------------------------------------------------------------------------------+---------------+--------------+------+---------+
+```
+
+### 取消导入作业
+
+用户可以通过 Ctrl-C 取消当前正在执行的 INSERT INTO 作业。
+
+## 参考手册
+
+### 导入命令
+
+INSERT INTO 导入语法如下：
+
+1. INSERT INTO SELECT
+
+INSERT INTO SELECT 一般用于将查询结果保存到目标表中。
+
+```sql
+INSERT INTO target_table SELECT ... FROM source_table;
+```
+
+其中 SELECT 语句同一般的 SELECT 查询语句，可以包含 WHERE JOIN 等操作。
+
+2. INSERT INTO VALUES
+
+INSERT INTO VALUES 一般仅用于 Demo，不建议在生产环境使用。
+
+```sql
+INSERT INTO target_table (col1, col2, ...)
+VALUES (val1, val2, ...), (val3, val4, ...), ...;
+```
+
+### 导入配置参数
+
+**01 FE 配置**
+
+**insert_load_default_timeout_second**
+
+- 默认值：14400（4 小时）
+
+- 参数描述：导入任务的超时时间，单位：秒。导入任务在该超时时间内未完成则会被系统取消，变成 CANCELLED。
+
+**02 环境变量**
+
+**insert_timeout**
+
+- 默认值：14400（4 小时）
+
+- 参数描述：INSERT INTO 作为 SQL 语句的的超时时间，单位：秒。
+
+**enable_insert_strict**
+
+- 默认值：true
+
+- 参数描述：如果设置为 true，当 INSERT INTO 遇到不合格数据时导入会失败。如果设置为 false，INSERT INTO 会忽略不合格的行，只要有一条数据被正确导入，导入就会成功。
+
+- 解释：INSERT INTO 无法控制错误率，只能通过该参数设置为严格检查数据质量或完全忽略错误数据。常见的数据不合格的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。
+
+**insert_max_filter_ratio**
+
+- 默认值：1.0
+
+- 参数描述：自 2.1.5 版本。仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。
+
+**enable_nereids_dml_with_pipeline**
+
+  设置为 `true` 后，`insert into` 语句将尝试通过 Pipeline 引擎执行。详见[导入](./load-manual)文档。
+
+### 导入返回值
+
+INSERT INTO 是一个 SQL 语句，其返回结果会根据查询结果的不同，分为以下几种：
+
+**结果集为空**
+
+如果 INSERT INTO 中的 SELECT 语句的查询结果集为空，则返回如下：
+
+```sql
+mysql> INSERT INTO tbl1 SELECT * FROM empty_tbl;
+Query OK, 0 rows affected (0.02 sec)
+```
+
+`Query OK` 表示执行成功。`0 rows affected` 表示没有数据被导入。
+
+**结果集不为空且 INSERT 执行成功**
+
+```sql
+mysql> INSERT INTO tbl1 SELECT * FROM tbl2;
+Query OK, 4 rows affected (0.38 sec)
+{'label':'INSERT_8510c568-9eda-4173-9e36-6adc7d35291c', 'status':'visible', 'txnId':'4005'}
+
+mysql> INSERT INTO tbl1 WITH LABEL my_label1 SELECT * FROM tbl2;
+Query OK, 4 rows affected (0.38 sec)
+{'label':'my_label1', 'status':'visible', 'txnId':'4005'}
+
+mysql> INSERT INTO tbl1 SELECT * FROM tbl2;
+Query OK, 2 rows affected, 2 warnings (0.31 sec)
+{'label':'INSERT_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'visible', 'txnId':'4005'}
+
+mysql> INSERT INTO tbl1 SELECT * FROM tbl2;
+Query OK, 2 rows affected, 2 warnings (0.31 sec)
+{'label':'INSERT_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
+```
+
+`Query OK` 表示执行成功。`4 rows affected` 表示总共有 4 行数据被导入。`2 warnings` 表示被过滤的行数。
+
+同时会返回一个 JSON 串：
+
+```Plain
+{'label':'my_label1', 'status':'visible', 'txnId':'4005'}
+{'label':'INSERT_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
+{'label':'my_label1', 'status':'visible', 'txnId':'4005', 'err':'some other error'}
+```
+
+其中，返回结果参数如下表说明：
+
+| 参数名称 | 说明                                                         |
+| -------- | ------------------------------------------------------------ |
+| TxnId    | 导入事务的 ID                                                |
+| Label    | 导入作业的 label，通过 INSERT INTO tbl WITH LABEL label ... 指定 |
+| Status   | 表示导入数据是否可见。如果可见，显示 `visible`，如果不可见，显示 `committed`<p>- `visible`：表示导入成功，数据可见</p> <p>- `committed`：该状态也表示导入已经完成，只是数据可能会延迟可见，无需重试</p> <p>- Label Already Exists：Label 重复，需要更换 label</p> <p>- Fail：导入失败</p> |
+| Err      | 导入错误信息                                                 |
+
+当需要查看被过滤的行时，用户可以通过[ SHOW LOAD ](../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD)语句
+
+```sql
+SHOW LOAD WHERE label="xxx";
+```
+
+返回结果中的 URL 可以用于查询错误的数据，具体见后面 查看错误行 小结。
+
+数据不可见是一个临时状态，这批数据最终是一定可见的
+
+可以通过[ SHOW TRANSACTION ](../../sql-manual/sql-statements/Show-Statements/SHOW-TRANSACTION)语句查看这批数据的可见状态：
+
+```sql
+SHOW TRANSACTION WHERE id=4005;
+```
+
+返回结果中的 `TransactionStatus` 列如果为 `visible`，则表述数据可见。
+
+```sql
+{'label':'my_label1', 'status':'visible', 'txnId':'4005'}
+{'label':'INSERT_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
+{'label':'my_label1', 'status':'visible', 'txnId':'4005', 'err':'some other error'}
+```
+
+**结果集不为空但 INSERT 执行失败**
+
+执行失败表示没有任何数据被成功导入，并返回如下：
+
+```sql
+mysql> INSERT INTO tbl1 SELECT * FROM tbl2 WHERE k1 = "a";
+ERROR 1064 (HY000): all partitions have no load data. url: http://10.74.167.16:8042/api/_load_error_log?file=_shard_2/error_loginsert_stmt_ba8bb9e158e4879-ae8de8507c0bf8a2_ba8bb9e158e4879_ae8de8507c0bf8a2
+```
+
+其中 `ERROR 1064 (HY000): all partitions have no load data` 显示失败原因。后面的 url 可以用于查询错误的数据，具体见后面 查看错误行 小结。
+
+## 导入最佳实践
 
 ### 数据量
 
-Insert Into 对数据量没有限制，大数据量导入也可以支持。但 Insert Into 有默认的超时时间，用户预估的导入数据量过大，就需要修改系统的 Insert Into 导入超时时间。
+INSERT INTO 对数据量没有限制，大数据量导入也可以支持。但如果导入数据量过大，就需要通过以下配置修改系统的 INSERT INTO 导入超时时间，确保`导入超时 >= 数据量 ``/`` 预估导入速度`。
 
-```
-导入数据量 = 36G 约≤ 3600s * 10M/s 
-其中 10M/s 是最大导入限速，用户需要根据当前集群情况计算出平均的导入速度来替换公式中的 10M/s
-```
+1. FE 配置参数`insert_load_default_timeout_second`。
 
-### 完整例子
+2. 环境变量 `insert_timeout`。
 
-用户有一张表 store\_sales 在数据库 sales 中，用户又创建了一张表叫 bj\_store\_sales 也在数据库 sales 中，用户希望将 store\_sales 中销售记录在 bj 的数据导入到这张新建的表 bj\_store\_sales 中。导入的数据量约为：10G。
+### 查看错误行
+
+当 INSERT INTO 返回结果中提供了 url 字段时，可以通过以下命令查看错误行：
 
 ```sql
-store_sales schema：
-(id, total, user_id, sale_timestamp, region)
-
-bj_store_sales schema:
-(id, total, user_id, sale_timestamp)
+SHOW LOAD WARNINGS ON "url";
 ```
 
-集群情况：用户当前集群的平均导入速度约为 5M/s
+示例：
 
-+ Step1: 判断是否要修改 Insert Into 的默认超时时间
+```sql
+SHOW LOAD WARNINGS ON "http://ip:port/api/_load_error_log?file=_shard_13/error_loginsert_stmt_d2cac0a0a16d482d-9041c949a4b71605_d2cac0a0a16d482d_9041c949a4b71605";
+```
 
-  ```
-  计算导入的大概时间
-  10G / 5M/s = 2000s
-  
-  修改 FE 配置
-  insert_load_default_timeout_second = 2000
-  ```
+常见的错误的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。
 
-+ Step2：创建导入任务
+可以通过环境变量 `enable_insert_strict`来控制 INSERT INTO 是否忽略错误行。
 
-  由于用户是希望将一张表中的数据做 ETL 并导入到目标表中，所以应该使用 Insert into query\_stmt 方式导入。
+## 通过外部表 Multi-Catalog 导入数据
 
-  ```sql
-  INSERT INTO bj_store_sales WITH LABEL `label` SELECT id, total, user_id, sale_timestamp FROM store_sales where region = "bj";
-  ```
+Doris 可以创建外部表。创建完成后，可以通过 `INSERT INTO SELECT` 的方式导入外部表的数据，当然也可以通过 SELECT 语句直接查询外部表的数据，
 
-## 常见问题
+Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon(Incubating)、Elasticsearch、MySQL、Oracle、SQLSserver 等主流数据湖、数据库的连接访问。
 
-* 查看错误行
+Multi-Catalog 相关功能，请查看湖仓一体文档。
 
-  由于 Insert Into 无法控制错误率，只能通过 `enable_insert_strict` 设置为完全容忍错误数据或完全忽略错误数据。因此如果 `enable_insert_strict` 设为 true，则 Insert Into 可能会失败。而如果 `enable_insert_strict` 设为 false，则可能出现仅导入了部分合格数据的情况。
+这里以通过构建 Hive 外部表，导入其数据到 Doris 内部表来举例说明。
 
-  当返回结果中提供了 url 字段时，可以通过以下命令查看错误行：
+### 创建 Hive Catalog
 
-  ```SHOW LOAD WARNINGS ON "url";```
+```sql
+CREATE CATALOG hive PROPERTIES (
+    'type'='hms',
+    'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
+    'hadoop.username' = 'hive',
+    'dfs.nameservices'='your-nameservice',
+    'dfs.ha.namenodes.your-nameservice'='nn1,nn2',
+    'dfs.namenode.rpc-address.your-nameservice.nn1'='172.21.0.2:8088',
+    'dfs.namenode.rpc-address.your-nameservice.nn2'='172.21.0.3:8088',
+    'dfs.client.failover.proxy.provider.your-nameservice'='org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
+);
+```
 
-  示例：
+### 导入数据
 
-  ```SHOW LOAD WARNINGS ON "http://ip:port/api/_load_error_log?file=__shard_13/error_log_insert_stmt_d2cac0a0a16d482d-9041c949a4b71605_d2cac0a0a16d482d_9041c949a4b71605";```
+1. 创建一张 Doris 的导入目标表
 
-  错误的原因通常如：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等等。
+```sql
+CREATE TABLE `target_tbl` (
+  `k1` decimal(9, 3) NOT NULL COMMENT "",
+  `k2` char(10) NOT NULL COMMENT "",
+  `k3` datetime NOT NULL COMMENT "",
+  `k5` varchar(20) NOT NULL COMMENT "",
+  `k6` double NOT NULL COMMENT ""
+)
+COMMENT "Doris Table"
+DISTRIBUTED BY HASH(k1) BUCKETS 2
+PROPERTIES (
+    "replication_num" = "1"
+);
+```
+
+2. 关于创建 Doris 表的详细说明，请参阅 [CREATE-TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) 语法帮助。
+
+3. 导入数据 (从 hive.db1.source_tbl 表导入到 target_tbl 表)
+
+```sql
+INSERT INTO target_tbl SELECT k1,k2,k3 FROM  hive.db1.source_tbl limit 100;
+```
+
+INSERT 命令是同步命令，返回成功，即表示导入成功。
+
+
+### 注意事项
+
+- 必须保证外部数据源与 Doris 集群是可以互通，包括 BE 节点和外部数据源的网络是互通的。
+
+## 通过 TVF 导入数据
+
+通过 Table Value Function 功能，Doris 可以直接将对象存储或 HDFS 上的文件作为 Table 进行查询分析、并且支持自动的列类型推断。详细介绍，请参考 湖仓一体/TVF 文档。
+
+### 自动推断文件列类型
+
+```Plain
+DESC FUNCTION s3 (
+    "URI" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
+    "s3.access_key"= "ak",
+    "s3.secret_key" = "sk",
+    "format" = "parquet",
+    "use_path_style"="true"
+);
++---------------+--------------+------+-------+---------+-------+
+| Field         | Type         | Null | Key   | Default | Extra |
++---------------+--------------+------+-------+---------+-------+
+| p_partkey     | INT          | Yes  | false | NULL    | NONE  |
+| p_name        | TEXT         | Yes  | false | NULL    | NONE  |
+| p_mfgr        | TEXT         | Yes  | false | NULL    | NONE  |
+| p_brand       | TEXT         | Yes  | false | NULL    | NONE  |
+| p_type        | TEXT         | Yes  | false | NULL    | NONE  |
+| p_size        | INT          | Yes  | false | NULL    | NONE  |
+| p_container   | TEXT         | Yes  | false | NULL    | NONE  |
+| p_retailprice | DECIMAL(9,0) | Yes  | false | NULL    | NONE  |
+| p_comment     | TEXT         | Yes  | false | NULL    | NONE  |
++---------------+--------------+------+-------+---------+-------+
+```
+
+这里给出了了一个 s3 TVF 的例子。这个例子中指定了文件的路径、连接信息、认证信息等。
+
+之后，通过 `DESC FUNCTION` 语法可以查看这个文件的 Schema。
+
+可以看到，对于 Parquet 文件，Doris 会根据文件内的元信息自动推断列类型。
+
+目前支持对 Parquet、ORC、CSV、Json 格式进行分析和列类型推断。
+
+配合 `INSERT INTO SELECT` 语法，可以方便将文件导入到 Doris 表中进行更快速的分析：
+
+```Plain
+// 1. 创建doris内部表
+CREATE TABLE IF NOT EXISTS test_table
+(
+    id int,
+    name varchar(50),
+    age int
+)
+DISTRIBUTED BY HASH(id) BUCKETS 4
+PROPERTIES("replication_num" = "1");
+
+// 2. 使用 S3 Table Value Function 插入数据
+INSERT INTO test_table (id,name,age)
+SELECT cast(id as INT) as id, name, cast (age as INT) as age
+FROM s3(
+    "uri" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
+    "s3.access_key"= "ak",
+    "s3.secret_key" = "sk",
+    "format" = "parquet",
+    "use_path_style" = "true");
+```
+
+### 注意事项
+
+- 如果 `S3 / hdfs` TVF 指定的 uri 匹配不到文件，或者匹配到的所有文件都是空文件，那么 `S3 / hdfs` TVF 将会返回空结果集。在这种情况下使用`DESC FUNCTION`查看这个文件的 Schema，会得到一列虚假的列`__dummy_col`，可忽略这一列。
+
+- 如果指定 TVF 的 format 为 CSV `The first line is empty, can not parse column numbers`, 这因为无法通过该文件的第一行解析出 Schema。
 
 ## 更多帮助
 
-关于 **Insert Into** 使用的更多详细语法，请参阅 [INSERT INTO](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT.md) 命令手册，也可以在 Mysql 客户端命令行下输入 `HELP INSERT` 获取更多帮助信息。
+关于 Insert Into 使用的更多详细语法，请参阅 [INSERT INTO](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP INSERT` 获取更多帮助信息。

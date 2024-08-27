@@ -26,7 +26,7 @@ function getDocsVersions() {
 }
 
 function getLatestVersion() {
-    return VERSIONS.includes('2.1') ? '2.1' : VERSIONS[0];
+    return VERSIONS.includes('3.0') ? '3.0' : VERSIONS[0];
 }
 
 /** @type {import('@docusaurus/types').Config} */
@@ -156,11 +156,11 @@ const config = {
                     // /docs/oldDoc -> /docs/newDoc
                     {
                         from: '/docs/dev/summary/basic-summary',
-                        to: '/docs/dev/get-starting/quick-start',
+                        to: '/docs/gettingStarted/quick-start',
                     },
                     {
-                        from: '/docs/dev/get-starting',
-                        to: '/docs/dev/get-starting/quick-start',
+                        from: '/docs/dev/get-starting/',
+                        to: '/docs/gettingStarted/quick-start',
                     },
                 ],
             },
@@ -185,8 +185,9 @@ const config = {
                     showLastUpdateTime: false,
                 },
                 blog: {
-                    blogTitle: 'Blogs',
-                    blogDescription: 'Apache Doris Blog',
+                    blogTitle: 'Apache Doris - Blog | Latest news and events ',
+                    blogDescription:
+                        'Explore how Doris empower lakehouse, adhoc analysis, customer-facing analysis and various scenarios',
                     postsPerPage: 'ALL',
                     blogSidebarCount: 0,
                     showReadingTime: false,
@@ -247,7 +248,8 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/get-starting/quick-start',
+                        to: '/docs/gettingStarted/what-is-new',
+                        target: '_blank',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
                     { to: '/users', label: 'Users', position: 'left' },
@@ -293,6 +295,132 @@ const config = {
                     },
                 ],
             },
+            docNavbarZH: {
+                title: '',
+                logo: {
+                    alt: 'Apache Doris',
+                    src: 'https://cdnd.selectdb.com/images/logo.svg',
+                },
+                items: [
+                    {
+                        label: '快速开始',
+                        position: 'left',
+                        // to: '/docs/gettingStarted/what-is-new',
+                        type: 'doc',
+                        docId: 'gettingStarted/what-is-new',
+                        activeBaseRegex: 'what-is-new|what-is-apache-doris|quick-start|tutorials',
+                    },
+                    {
+                        label: '使用指南',
+                        position: 'left',
+                        // to: '/docs/install/source-install/compilation-with-docker',
+                        type: 'doc',
+                        docId: 'install/source-install/compilation-with-docker',
+                        activeBaseRegex: 'summary|install/cluster-deployment|install/source-install|db-connect|table-design|data-operate|query|lakehouse|compute-storage-decoupled|admin-manual|practical-guide|sql-manual',
+                    },
+                    {
+                        label: '性能测试',
+                        position: 'left',
+                        // to: '/docs/benchmark/ssb',
+                        type: 'doc',
+                        docId: 'benchmark/ssb',
+                        activeBaseRegex: 'benchmark',
+                    },
+                    {
+                        label: '生态工具',
+                        position: 'left',
+                        // to: '/docs/ecosystem/spark-doris-connector',
+                        type: 'doc',
+                        docId: 'ecosystem/spark-doris-connector',
+                        activeBaseRegex: 'ecosystem',
+                    },
+                    {
+                        label: '常见问题',
+                        position: 'left',
+                        // to: '/docs/faq/install-faq',
+                        type: 'doc',
+                        docId: 'faq/install-faq',
+                        activeBaseRegex: 'faq',
+                    },
+                    {
+                        label: '版本发布',
+                        position: 'left',
+                        // to: '/docs/releasenotes/all-release',
+                        type: 'doc',
+                        docId: 'releasenotes/all-release',
+                        activeBaseRegex: 'releasenotes',
+                    },
+                    {
+                        type: 'html',
+                        position: 'left',
+                        value: `<a href="https://ask.selectdb.com/" target="_blank" style="display: flex; align-items: center; justify-content: center; text-decoration: none">技术论坛<img style="width: 1.2rem; height: 1.2rem; margin-left: 0.2rem;font-family: 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;" src="/images/forum-logo.svg">
+                    </a>`,
+                    },
+                ],
+            },
+            docNavbarEN: {
+                title: '',
+                logo: {
+                    alt: 'Apache Doris',
+                    src: 'https://cdnd.selectdb.com/images/logo.svg',
+                },
+                items: [
+                    {
+                        label: 'Getting Started',
+                        position: 'left',
+                        // to: '/docs/gettingStarted/what-is-new',
+                        type: 'doc',
+                        docId: 'gettingStarted/what-is-new',
+                        activeBaseRegex: 'what-is-new|what-is-apache-doris|quick-start|tutorials',
+                    },
+                    {
+                        label: 'Guides',
+                        position: 'left',
+                        // to: '/docs/install/source-install/compilation-with-docker',
+                        type: 'doc',
+                        docId: 'install/source-install/compilation-with-docker',
+                        activeBaseRegex: 'summary|install/cluster-deployment|install/source-install|db-connect|table-design|data-operate|query|lakehouse|compute-storage-decoupled|admin-manual|practical-guide|sql-manual'
+                    },
+                    {
+                        label: 'Benchmark',
+                        position: 'left',
+                        // to: '/docs/benchmark/ssb',
+                        type: 'doc',
+                        docId: 'benchmark/ssb',
+                        activeBaseRegex: 'benchmark',
+                    },
+                    {
+                        label: 'Ecosystem',
+                        position: 'left',
+                        // to: '/docs/ecosystem/spark-doris-connector',
+                        type: 'doc',
+                        docId: 'ecosystem/spark-doris-connector',
+                        activeBaseRegex: 'ecosystem',
+                    },
+                    {
+                        label: 'FAQ',
+                        position: 'left',
+                        // to: '/docs/faq/install-faq',
+                        type: 'doc',
+                        docId: 'faq/install-faq',
+                        activeBaseRegex: 'faq',
+                    },
+                    {
+                        label: 'Releases',
+                        position: 'left',
+                        // to: '/docs/releasenotes/all-release',
+                        type: 'doc',
+                        docId: 'releasenotes/all-release',
+                        activeBaseRegex: 'releasenotes',
+                    },
+                    {
+                        type: 'html',
+                        position: 'left',
+                        value: `<a href="https://github.com/apache/doris/discussions" target="_blank" style="display: flex; align-items: center; justify-content: center; text-decoration: none;">Forum<img style="width: 1.2rem; height: 1.2rem; margin-left: 0.2rem;" src="/images/forum-logo.svg">
+                    </a>`,
+                    },
+                ],
+            },
             footer: {
                 links: [
                     {
@@ -335,10 +463,10 @@ const config = {
                                 label: 'Download',
                                 href: '/download',
                             },
-                            {
-                                label: 'Docs',
-                                href: '/docs/get-starting/quick-start',
-                            },
+                            // {
+                            //     label: 'Docs',
+                            //     href: '/docs/get-starting/quick-start',
+                            // },
                             {
                                 label: 'Blog',
                                 href: '/blog',
@@ -368,11 +496,6 @@ const config = {
                                 label: 'Source code',
                                 href: 'https://github.com/apache/doris/',
                             },
-
-                            {
-                                label: 'Improvement proposal',
-                                href: 'https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals',
-                            },
                             {
                                 label: 'Doris team',
                                 href: '/community/team',
@@ -380,6 +503,10 @@ const config = {
                             {
                                 label: 'Roadmap',
                                 href: 'https://github.com/apache/doris/issues/30669',
+                            },
+                            {
+                                label: 'Improvement proposal',
+                                href: 'https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals',
                             },
                         ],
                     },

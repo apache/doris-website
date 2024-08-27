@@ -288,6 +288,16 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
   - 若该参数为`THREAD_POOL`, 该模型为阻塞式 I/O 模型。
 
+#### `thrift_max_message_size`
+
+:::info 备注
+该参数自 2.0.12 版本起支持。
+:::
+
+默认值：100MB
+
+thrift 服务器接收请求消息的大小（字节数）上限。如果客户端发送的消息大小超过该值，那么 thrift 服务器会拒绝该请求并关闭连接，这种情况下，client 会遇到错误：“connection has been closed by peer”，使用者可以尝试增大该参数以绕过上述限制。
+
 #### `txn_commit_rpc_timeout_ms`
 
 * 描述：txn 提交 rpc 超时
@@ -363,7 +373,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 #### `doris_max_scan_key_num`
 
 * 类型：int
-* 描述：用于限制一个查询请求中，scan node 节点能拆分的最大 scan key 的个数。当一个带有条件的查询请求到达 scan node 节点时，scan node 会尝试将查询条件中 key 列相关的条件拆分成多个 scan key range。之后这些 scan key range 会被分配给多个 scanner 线程进行数据扫描。较大的数值通常意味着可以使用更多的 scanner 线程来提升扫描操作的并行度。但在高并发场景下，过多的线程可能会带来更大的调度开销和系统负载，反而会降低查询响应速度。一个经验数值为 50。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../advanced/variables.md) 中 `max_scan_key_num` 的说明。
+* 描述：用于限制一个查询请求中，scan node 节点能拆分的最大 scan key 的个数。当一个带有条件的查询请求到达 scan node 节点时，scan node 会尝试将查询条件中 key 列相关的条件拆分成多个 scan key range。之后这些 scan key range 会被分配给多个 scanner 线程进行数据扫描。较大的数值通常意味着可以使用更多的 scanner 线程来提升扫描操作的并行度。但在高并发场景下，过多的线程可能会带来更大的调度开销和系统负载，反而会降低查询响应速度。一个经验数值为 50。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../query/query-variables/variables) 中 `max_scan_key_num` 的说明。
   - 当在高并发场景下发下并发度无法提升时，可以尝试降低该数值并观察影响。
 * 默认值：48
 
@@ -372,12 +382,6 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 * 类型：int32
 * 描述：BE 在进行数据扫描时，会将同一个扫描范围拆分为多个 ScanRange。该参数代表了每个 ScanRange 代表扫描数据范围。通过该参数可以限制单个 OlapScanner 占用 io 线程的时间。
 * 默认值：524288
-
-#### `doris_scanner_queue_size`
-
-* 类型：int32
-* 描述：TransferThread 与 OlapScanner 之间 RowBatch 的缓存队列的长度。Doris 进行数据扫描时是异步进行的，OlapScanner 扫描上来的 Rowbatch 会放入缓存队列之中，等待上层 TransferThread 取走。
-* 默认值：1024
 
 #### `doris_scanner_row_num`
 
@@ -429,7 +433,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 #### `max_pushdown_conditions_per_column`
 
 * 类型：int
-* 描述：用于限制一个查询请求中，针对单个列，能够下推到存储引擎的最大条件数量。在查询计划执行的过程中，一些列上的过滤条件可以下推到存储引擎，这样可以利用存储引擎中的索引信息进行数据过滤，减少查询需要扫描的数据量。比如等值条件、IN 谓词中的条件等。这个参数在绝大多数情况下仅影响包含 IN 谓词的查询。如 `WHERE colA IN (1,2,3,4,...)`。较大的数值意味值 IN 谓词中更多的条件可以推送给存储引擎，但过多的条件可能会导致随机读的增加，某些情况下可能会降低查询效率。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../advanced/variables.md) 中 `max_pushdown_conditions_per_column ` 的说明。
+* 描述：用于限制一个查询请求中，针对单个列，能够下推到存储引擎的最大条件数量。在查询计划执行的过程中，一些列上的过滤条件可以下推到存储引擎，这样可以利用存储引擎中的索引信息进行数据过滤，减少查询需要扫描的数据量。比如等值条件、IN 谓词中的条件等。这个参数在绝大多数情况下仅影响包含 IN 谓词的查询。如 `WHERE colA IN (1,2,3,4,...)`。较大的数值意味值 IN 谓词中更多的条件可以推送给存储引擎，但过多的条件可能会导致随机读的增加，某些情况下可能会降低查询效率。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../query/query-variables/variables) 中 `max_pushdown_conditions_per_column ` 的说明。
 * 默认值：1024
 
 * 示例
@@ -1361,15 +1365,11 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：序列化 RowBatch 时是否使用 Snappy 压缩算法进行数据压缩
 * 默认值：true
 
-<version since="1.2">
-
 #### `jvm_max_heap_size`
 
 * 类型：string
 * 描述：BE 使用 JVM 堆内存的最大值，即 JVM 的 -Xmx 参数
 * 默认值：1024M
-
-</version>
 
 ### 日志
 
@@ -1486,8 +1486,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：BlockingPriorityQueue 中剩余任务的优先级频率增加
 * 默认值:512
 
-<version since="1.2">
-
 #### `jdbc_drivers_dir`
 
 * 描述：存放 jdbc driver 的默认目录。
@@ -1502,8 +1500,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 描述：是否在导入 json 数据时用 simdjson 来解析。
 * 默认值：true
-
-</version>
 
 #### `enable_query_memory_overcommit`
 
@@ -1539,8 +1535,3 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 描述：Doris 自带的时区数据库。如果系统目录下未找到时区文件，则启用该目录下的数据。
 * 默认值："${DORIS_HOME}/zoneinfo"
-
-#### `use_doris_tzfile`
-
-* 描述：是否直接使用 Doris 自带的时区数据库。开启后不再尝试查找系统目录。
-* 默认值：false

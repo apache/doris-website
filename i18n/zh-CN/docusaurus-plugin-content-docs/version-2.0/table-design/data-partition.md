@@ -38,7 +38,7 @@ under the License.
 
 -   Column：用于描述一行数据中不同的字段；
 
--   Column 可以分为两大类：Key 和 Value。从业务角度看，Key 和 Value 可以分别对应维度列和指标列。Doris 的 key 列是建表语句中指定的列，建表语句中的关键字'unique key'或'aggregate key'或'duplicate key'后面的列就是 key 列，除了 key 列剩下的就是 value 列。从聚合模型的角度来说，Key 列相同的行，会聚合成一行。其中 Value 列的聚合方式由用户在建表时指定。关于更多聚合模型的介绍，可以参阅 [Doris 数据模型](../table-design/data-model/overview.md)。
+-   Column 可以分为两大类：Key 和 Value。从业务角度看，Key 和 Value 可以分别对应维度列和指标列。Doris 的 key 列是建表语句中指定的列，建表语句中的关键字'unique key'或'aggregate key'或'duplicate key'后面的列就是 key 列，除了 key 列剩下的就是 value 列。从聚合模型的角度来说，Key 列相同的行，会聚合成一行。其中 Value 列的聚合方式由用户在建表时指定。关于更多聚合模型的介绍，可以参阅 [Doris 数据模型](../table-design/data-model/overview)。
 
 ### 分区和分桶（Partition & Tablet）
 
@@ -98,7 +98,7 @@ PROPERTIES
 
 在建表语句的最后 PROPERTIES 中，关于 PROPERTIES 中可以设置的相关参数，可以查看[CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)中的详细介绍。
 
-ENGINE 的类型是 OLAP，即默认的 ENGINE 类型。在 Doris 中，只有这个 ENGINE 类型是由 Doris 负责数据管理和存储的。其他 ENGINE 类型，如 mysql、broker、es 等等，本质上只是对外部其他数据库或系统中的表的映射，以保证 Doris 可以读取这些数据。而 Doris 本身并不创建、管理和存储任何非 OLAP ENGINE 类型的表和数据。
+ENGINE 的类型是 OLAP，即默认的 ENGINE 类型。在 Doris 中，只有这个 ENGINE 类型是由 Doris 负责数据管理和存储的。其他 ENGINE 类型，如 MySQL、 Broker、ES 等等，本质上只是对外部其他数据库或系统中的表的映射，以保证 Doris 可以读取这些数据。而 Doris 本身并不创建、管理和存储任何非 OLAP ENGINE 类型的表和数据。
 
 `IF NOT EXISTS`表示如果没有创建过该表，则创建。注意这里只判断表名是否存在，而不会判断新建表 Schema 是否与已存在的表 Schema 相同。所以如果存在一个同名但不同 Schema 的表，该命令也会返回成功，但并不代表已经创建了新的表和新的 Schema。。
 
@@ -625,7 +625,7 @@ PROPERTIES
 );
 ```
 
-假设当前日期为 2020-05-29。则根于以上规则，tbl1 会产生以下分区：
+假设当前日期为 2020-05-29。则基于以上规则，tbl1 会产生以下分区：
 
 ```Plain
 p202005: ["2020-05-03", "2020-06-03")
@@ -745,63 +745,6 @@ p20200521: ["2020-05-21", "2020-05-22")
 ### 注意事项
 
 动态分区使用过程中，如果因为一些意外情况导致 `dynamic_partition.start` 和 `dynamic_partition.end` 之间的某些分区丢失，那么当前时间与 `dynamic_partition.end` 之间的丢失分区会被重新创建，`dynamic_partition.start`与当前时间之间的丢失分区不会重新创建。
-
-## 自动分区
-
-:::tip
-2.1 版本开始支持自动分区。
-
-这里给出初步介绍，如需使用，请下载 Doris 2.1，并查阅 2.1 的文档。
-
-自动分区功能支持了在导入数据过程中自动检测是否存在对应所属分区。如果不存在，则会自动创建分区并正常进行导入。
-:::
-
-自动分区功能主要解决了用户预期基于某列对表进行分区操作，但该列的数据分布比较零散或者难以预测，在建表或调整表结构时难以准确创建所需分区，或者分区数量过多以至于手动创建过于繁琐的问题。
-
-以时间类型分区列为例，在动态分区功能中，支持了按特定时间周期自动创建新分区以容纳实时数据。对于实时的用户行为日志等场景该功能基本能够满足需求。但在一些更复杂的场景下，例如处理非实时数据时，分区列与当前系统时间无关，且包含大量离散值。此时为提高效率希望依据此列对数据进行分区，但数据实际可能涉及的分区无法预先掌握，或者预期所需分区数量过大。这种情况下动态分区或者手动创建分区无法满足需求，自动分区功能很好地覆盖了此类需求。
-
-假设表 DDL 如下：
-
-```SQL
-CREATE TABLE `DAILY_TRADE_VALUE`
-(
-    `TRADE_DATE`              date NOT NULL COMMENT '交易日期',
-    `TRADE_ID`                varchar(40) NOT NULL COMMENT '交易编号',
-    ......
-)
-UNIQUE KEY(`TRADE_DATE`, `TRADE_ID`)
-PARTITION BY RANGE(`TRADE_DATE`)
-(
-    PARTITION p_2000 VALUES [('2000-01-01'), ('2001-01-01')),
-    PARTITION p_2001 VALUES [('2001-01-01'), ('2002-01-01')),
-    PARTITION p_2002 VALUES [('2002-01-01'), ('2003-01-01')),
-    PARTITION p_2003 VALUES [('2003-01-01'), ('2004-01-01')),
-    PARTITION p_2004 VALUES [('2004-01-01'), ('2005-01-01')),
-    PARTITION p_2005 VALUES [('2005-01-01'), ('2006-01-01')),
-    PARTITION p_2006 VALUES [('2006-01-01'), ('2007-01-01')),
-    PARTITION p_2007 VALUES [('2007-01-01'), ('2008-01-01')),
-    PARTITION p_2008 VALUES [('2008-01-01'), ('2009-01-01')),
-    PARTITION p_2009 VALUES [('2009-01-01'), ('2010-01-01')),
-    PARTITION p_2010 VALUES [('2010-01-01'), ('2011-01-01')),
-    PARTITION p_2011 VALUES [('2011-01-01'), ('2012-01-01')),
-    PARTITION p_2012 VALUES [('2012-01-01'), ('2013-01-01')),
-    PARTITION p_2013 VALUES [('2013-01-01'), ('2014-01-01')),
-    PARTITION p_2014 VALUES [('2014-01-01'), ('2015-01-01')),
-    PARTITION p_2015 VALUES [('2015-01-01'), ('2016-01-01')),
-    PARTITION p_2016 VALUES [('2016-01-01'), ('2017-01-01')),
-    PARTITION p_2017 VALUES [('2017-01-01'), ('2018-01-01')),
-    PARTITION p_2018 VALUES [('2018-01-01'), ('2019-01-01')),
-    PARTITION p_2019 VALUES [('2019-01-01'), ('2020-01-01')),
-    PARTITION p_2020 VALUES [('2020-01-01'), ('2021-01-01')),
-    PARTITION p_2021 VALUES [('2021-01-01'), ('2022-01-01'))
-)
-DISTRIBUTED BY HASH(`TRADE_DATE`) BUCKETS 10
-PROPERTIES (
-  "replication_num" = "1"
-);
-```
-
-该表内存储了大量业务历史数据，依据交易发生的日期进行分区。可以看到在建表时，需要预先手动创建分区。如果分区列的数据范围发生变化，例如上表中增加了 2022 年的数据，则需要通过 [ALTER-TABLE-PARTITION](../../sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION) 对表的分区进行更改。如果这种分区需要变更，或者进行更细粒度的细分，修改起来非常繁琐。此时我们就可以使用 AUTO PARTITION 改写该表 DDL。
 
 ## 手动分桶
 
@@ -1042,4 +985,4 @@ Doris 建表是按照 Partition 粒度依次创建的。当一个 Partition 创�
 
 ## 更多帮助
 
-关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE) 命令手册中查阅，也可以在 Mysql 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。
+关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE) 命令手册中查阅，也可以在 MySQL 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。

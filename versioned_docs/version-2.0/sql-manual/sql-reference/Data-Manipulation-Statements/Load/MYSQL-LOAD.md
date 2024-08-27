@@ -62,12 +62,12 @@ This import method can still guarantee the atomicity of a batch of import tasks,
 6. `COLUMNS TERMINATED BY` specifies the column separator
 7. `LINES TERMINATED BY` specifies the line separator
 8. `IGNORE num LINES` The user skips the header of the CSV and can skip any number of lines. This syntax can also be replaced by'IGNORE num ROWS '
-9. Column mapping syntax, please refer to the column mapping chapter of [Imported Data Transformation](../../../../data-operate/import/import-way/mysql-load-manual.md)
+9. Column mapping syntax, please refer to the column mapping chapter of [Imported Data Transformation](../../../../data-operate/import/mysql-load-manual)
 10. `PROPERTIES` parameter configuration, see below for details
 
 ### PROPERTIES
 
-1. max_filter_ratio：The maximum tolerable data ratio that can be filtered (for reasons such as data irregularity). Zero tolerance by default. Data irregularities do not include rows filtered out by where conditions.
+1. max_filter_ratio: The maximum tolerable data ratio that can be filtered (for reasons such as data irregularity). Zero tolerance by default. Data irregularities do not include rows filtered out by where conditions.
 
 2. timeout: Specify the import timeout. in seconds. The default is 600 seconds. The setting range is from 1 second to 259200 seconds.
 

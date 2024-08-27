@@ -1,12 +1,10 @@
 ---
 {
     'title': 'Apache Doris 2.1.1 just released',
-    'summary': 'Dear community, Apache Doris 2.1.1 is now available, with several enhancements and bug fixes based on 2.1.0, enabling smoother user experience.',
+    'description': 'Dear community, Apache Doris 2.1.1 is now available, with several enhancements and bug fixes based on 2.1.0, enabling smoother user experience.',
     'date': '2024-04-03',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
-    'picked': "true",
-    'order': "1",
     "image": '/images/2.1.1.png'
 }
 ---
@@ -38,7 +36,7 @@ Dear community members, Apache Doris 2.1.1 has been officially released on April
 
 
 
-## Behavior Changed
+## Behavior changes
 
 1. Change float type output format to improve float type serialization performance.
 
@@ -74,7 +72,7 @@ Dear community members, Apache Doris 2.1.1 has been officially released on April
 
 
 
-## New Feature
+## New Features
 
 1. Enable column auth by default.
 
@@ -131,7 +129,7 @@ Dear community members, Apache Doris 2.1.1 has been officially released on April
 
 
 
-## Optimization
+## Improvements
 
 1. Auto resume routine load when be restart or during upgrade. And keep the routine load stable. 
 
@@ -175,7 +173,7 @@ Dear community members, Apache Doris 2.1.1 has been officially released on April
 
 
 
-## Bugfix
+## Bug fixes
 
 
 1. Do not push down topn-filter through right/full outer join if the first orderkey is nulls first. 

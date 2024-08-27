@@ -24,9 +24,6 @@ under the License.
 
 ## split_by_string 
 
-<version since="1.2.2">
-</version>
-
 ### description
 
 #### Syntax
@@ -36,6 +33,7 @@ under the License.
 Splits a string into substrings separated by a string. It uses a constant string separator of multiple characters as the separator. If the string separator is empty, it will split the string s into an array of single characters.
 
 #### Arguments
+
 `separator` — The separator. Type: `String`
 
 `s` — The string to split. Type: `String`
@@ -52,14 +50,9 @@ The original string s is empty.
 
 Type: `Array(String)`
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```
-SELECT split_by_string('1, 2 3, 4,5, abcde', ', ');
 select split_by_string('a1b1c1d','1');
 +---------------------------------+
 | split_by_string('a1b1c1d', '1') |

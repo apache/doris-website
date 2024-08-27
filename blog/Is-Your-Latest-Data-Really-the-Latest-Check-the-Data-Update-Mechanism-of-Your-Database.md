@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Is your latest data really the latest? check the data update mechanism of your database',
-    'summary': "This is about how to support both row update and partial column update in a database in a way that is simple in execution and efficient in data quality guarantee.",
+    'description': "This is about how to support both row update and partial column update in a database in a way that is simple in execution and efficient in data quality guarantee.",
     'date': '2023-07-24',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -37,7 +37,7 @@ As an open source analytic database, Apache Doris supports both Row Update and P
 
 The idea is straightforward, but in real-life implementation, it happens that the latest data does not arrive the last or doesn't even get written at all, so I'm going to show you how Apache Doris implements data update and avoids messups with its Unique Key Model. 
 
-![data-update](../static/images/Dataupdate_1.png)
+![data-update](/images/Dataupdate_1.png)
 
 ## Row Update
 
@@ -135,11 +135,11 @@ The execution of the Update command consists of three steps in the system:
 - Step Two: Modify the order status from "Payment Pending" to "Delivery Pending" (1, 100, 'Delivery Pending')
 - Step Three: Insert the new row into the table
 
-![partial-column-update-1](../static/images/Dataupdate_2.png)
+![partial-column-update-1](/images/Dataupdate_2.png)
 
 The table is in the Unique Key Model, which means for rows of the same Unique Key, only the last inserted one will be reserved, so this is what the table will finally look like:
 
-![partial-column-update-2](../static/images/Dataupdate_3.png)
+![partial-column-update-2](/images/Dataupdate_3.png)
 
 ## Order of Data Updates
 
@@ -223,5 +223,5 @@ mysql> select * from test_table;
 
 ## Conclusion
 
-Congratulations. Now you've gained an overview of how data updates are implemented in Apache Doris. With this knowledge, you can basically guarantee efficiency and accuracy of data updating. But wait, there is so much more about that. As Apache Doris 2.0 is going to provide more powerful Partial Column Update capabilities, with improved execution of the Update statement and the support for more complicated multi-table Join queries, I will show you how to take advantage of them in details in my follow-up writings. [We](https://t.co/ZxJuNJHXb2) are constantly updating our data updates!
+Congratulations. Now you've gained an overview of how data updates are implemented in Apache Doris. With this knowledge, you can basically guarantee efficiency and accuracy of data updating. But wait, there is so much more about that. As Apache Doris 2.0 is going to provide more powerful Partial Column Update capabilities, with improved execution of the Update statement and the support for more complicated multi-table Join queries, I will show you how to take advantage of them in details in my follow-up writings. [We](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) are constantly updating our data updates!
 

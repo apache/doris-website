@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Standard Deployment",
+    "title": "Manual Deployment",
     "language": "en"
 }
 ---
@@ -25,7 +25,6 @@ under the License.
 -->
 
 
-# Standard Deployment
 
 Manually deploying a Doris cluster typically involves four steps:
 
@@ -116,6 +115,14 @@ In a Doris cluster, FE is mainly responsible for metadata storage, including met
 | BE        | Doris uses LZ4 compression by default, with a compression ratio of 0.3~0.5.Disk space needs to be calculated based on the total data volume * 3 (3 data replicas)There is a need to reserve 40% disk space for background data compaction and temporary data storage. |
 | Broker    | If you want to deploy a Broker, you can usually deploy the Broker node on the same machine as the FE /BE nodes. |
 
+### Java version
+
+All Doris processes depend on Java.
+
+Before version 2.1 (inclusive), please use Java 8, recommended version: `openjdk-8u352-b08-linux-x64`.
+
+After version 3.0 (inclusive), please use Java 17, recommended version: `jdk-17.0.10_linux-x64_bin.tar.gz`.
+
 ## 2. Check operating system
 
 ### Disable swap partition
@@ -200,17 +207,17 @@ echo never > /sys/kernel/mm/transparent_hugepage/defrag
 
 Doris instances communicate directly over the network, requiring the following ports for normal operation. Administrators can adjust Doris ports according to their environment:
 
-| Instance | Port                   | Default Port | Communication Direction     | Description                                                  |
-| -------- | ---------------------- | ------------ | --------------------------- | ------------------------------------------------------------ |
-| BE       | be_port                | 9060         | FE --> BE                   | thrift server port on BE, receiving requests from FE         |
-| BE       | webserver_port         | 8040         | BE <--> BE                  | http server port on BE                                       |
-| BE       | heartbeat_service_port | 9050         | FE --> BE                   | heartbeat service port (thrift) on BE, receiving heartbeats from FE |
-| BE       | brpc_port              | 8060         | FE <--> BEBE <--> BE        | brpc port on BE, used for communication between BEs          |
-| FE       | http_port              | 8030         | FE <--> FEClient <--> FE    | http server port on FE                                       |
-| FE       | rpc_port               | 9020         | BE --> FEFE <--> FE         | thrift server port on FE, configuration of each FE should be consistent |
-| FE       | query_port             | 9030         | Client <--> FE              | MySQL server port on FE                                      |
-| FE       | edit_log_port          | 9010         | FE <--> FE                  | port on FE for bdbje communication                           |
-| Broker   | broker_ipc_port        | 8000         | FE --> Broker BE --> Broker | thrift server on Broker, receiving requests                  |
+| Instance | Port                   | Default Port | Communication Direction    | Description                                                  |
+| -------- | ---------------------- | ------------ | -------------------------- | ------------------------------------------------------------ |
+| BE       | be_port                | 9060         | FE --> BE                  | thrift server port on BE, receiving requests from FE         |
+| BE       | webserver_port         | 8040         | BE <--> BE                 | http server port on BE                                       |
+| BE       | heartbeat_service_port | 9050         | FE --> BE                  | heartbeat service port (thrift) on BE, receiving heartbeats from FE |
+| BE       | brpc_port              | 8060         | FE <--> BE，BE <--> BE       | brpc port on BE, used for communication between BEs          |
+| FE       | http_port              | 8030         | FE <--> FE，Client <--> FE   | http server port on FE                                       |
+| FE       | rpc_port               | 9020         | BE --> FE，FE <--> FE        | thrift server port on FE, configuration of each FE should be consistent |
+| FE       | query_port             | 9030         | Client <--> FE             | MySQL server port on FE                                      |
+| FE       | edit_log_port          | 9010         | FE <--> FE                 | port on FE for bdbje communication                           |
+| Broker   | broker_ipc_port        | 8000         | FE --> Broker，BE --> Broker | thrift server on Broker, receiving requests                  |
 
 ### Plan the nodes
 
@@ -223,7 +230,7 @@ For a production cluster, it is generally recommended to deploy at least 3 FE no
 - Follower nodes participate in elections. If the Master node fails, an available Follower node will be selected as the new Master.
 - Observer nodes only synchronize metadata from the Leader node and do not participate in elections. They can be scaled to provide scalable metadata read services.
 
-Typically, it is advised to deploy 3 Follower nodes. In high-concurrency scenarios, you can scale the Observer nodes.。
+Typically, it is advised to deploy 3 Follower nodes. In high-concurrency scenarios, you can scale the Observer nodes..
 
 **Plan the BE nodes**
 
@@ -272,7 +279,7 @@ This is a CIDR representation that specifies the IP used by the FE. In environme
    JAVA_OPTS="-Xmx16384m -XX:+UseMembar -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=7 -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSClassUnloadingEnabled -XX:-CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SoftRefLRUPolicyMSPerMB=0 -Xloggc:$DORIS_HOME/log/fe.gc.log.$DATE"
    ```
 
-6. Modify the case sensitivity parameter `lower_case_table_names` By default, Doris is case-sensitive for table names. If you require case-insensitive table names, you need to set this during cluster initialization. Note that once the cluster initialization is completed, the table name case sensitivity cannot be changed. Please refer to the [variable](https://doris.apache.org/docs/2.0/advanced/variables/) documentation for more details on the `lower_case_table_names` setting.
+6. Modify the case sensitivity parameter `lower_case_table_names` By default, Doris is case-sensitive for table names. If you require case-insensitive table names, you need to set this during cluster initialization. Note that once the cluster initialization is completed, the table name case sensitivity cannot be changed. Please refer to the [variable](../../query/query-variables/variables) documentation for more details on the `lower_case_table_names` setting.
 
 **Start** **FE** **process**
 
@@ -369,7 +376,7 @@ The configuration file for BE is in the "conf" directory under the BE deployment
 1. Configure Java environment Starting from version 1.2, Doris supports Java UDF (User-Defined Function), and BE relies on the Java environment. You need to configure the `JAVA_HOME` environment variable in the operating system beforehand or specify the Java environment variable in the BE configuration file.
 
 ```SQL
-## Modify Java environment variable in be/be.conf
+## Modify Java environment variable in be/conf/be.conf
 JAVA_HOME = <your-java-home-path>
 ```
 
@@ -574,7 +581,7 @@ To access the Web UI, simply enter the URL in a web browser: http://fe_ip:fe_por
 
 The built-in Web console is primarily intended for use by the root account of the cluster. By default, the root account password is empty after installation.
 
-![web-login-username-password](../../../../static/images/web-login-username-password.png)
+![web-login-username-password](/images/web-login-username-password.png)
 
 For example, you can execute the following command in the Playground to add a BE node.
 
@@ -582,7 +589,7 @@ For example, you can execute the following command in the Playground to add a BE
 ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
 ```
 
-![Doris-Web-UI-Playground-en](../../../../static/images/Doris-Web-UI-Playground-en.png)
+![Doris-Web-UI-Playground-en](/images/Doris-Web-UI-Playground-en.png)
 
 :::tip 
 For successful execution of statements that are not related to specific databases/tables in the Playground, it is necessary to randomly select a database from the left-hand database panel. This limitation will be removed later. 

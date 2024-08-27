@@ -98,17 +98,17 @@ The data flow of metadata is as follows:
 
 1. FE starts for the first time. If the startup script does not add any parameters, it will try to start as leader. You will eventually see `transfer from UNKNOWN to MASTER` in the FE startup log.
 
-2. FE starts for the first time. If the `-helper` parameter is specified in the startup script and points to the correct leader FE node, the FE first asks the leader node about its role (ROLE) and cluster_id through http. Then pull up the latest image file. After reading image file and generating metadata image, start bdbje and start bdbje log synchronization. After synchronization is completed, the log after image file in bdbje is replayed, and the final metadata image generation is completed.
+2. FE starts for the first time. If the `--helper` parameter is specified in the startup script and points to the correct leader FE node, the FE first asks the leader node about its role (ROLE) and cluster_id through http. Then pull up the latest image file. After reading image file and generating metadata image, start bdbje and start bdbje log synchronization. After synchronization is completed, the log after image file in bdbje is replayed, and the final metadata image generation is completed.
 
-	> Note 1: When starting with the `-helper` parameter, you need to first add the FE through the leader through the MySQL command, otherwise, the start will report an error.
+	> Note 1: When starting with the `--helper` parameter, you need to first add the FE through the leader through the MySQL command, otherwise, the start will report an error.
 
-	> Note 2: `-helper` can point to any follower node, even if it is not leader.
+	> Note 2: `--helper` can point to any follower node, even if it is not leader.
 
 	> Note 3: In the process of synchronization log, the Fe log will show `xxx detached`. At this time, the log pull is in progress, which is a normal phenomenon.
 
 3. FE is not the first startup. If the startup script does not add any parameters, it will determine its identity according to the ROLE information stored locally. At the same time, according to the cluster information stored in the local bdbje, the leader information is obtained. Then read the local image file and the log in bdbje to complete the metadata image generation. (If the roles recorded in the local ROLE are inconsistent with those recorded in bdbje, an error will be reported.)
 
-4. FE is not the first boot, and the `-helper` parameter is specified in the boot script. Just like the first process started, the leader role is asked first. But it will be compared with the ROLE stored by itself. If they are inconsistent, they will report errors.
+4. FE is not the first boot, and the `--helper` parameter is specified in the boot script. Just like the first process started, the leader role is asked first. But it will be compared with the ROLE stored by itself. If they are inconsistent, they will report errors.
 
 #### Metadata Read-Write and Synchronization
 

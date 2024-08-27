@@ -26,11 +26,7 @@ under the License.
 
 ## RETENTION 
 
-<version since="1.2.0">
-
 RETENTION
-
-</version>
 
 ### Description
 #### Syntax
