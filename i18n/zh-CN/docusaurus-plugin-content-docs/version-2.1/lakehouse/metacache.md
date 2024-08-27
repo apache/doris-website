@@ -336,6 +336,10 @@ max_external_file_cache_num=0    // 关闭文件列表缓存
 
 在 2.1.5 版本中，Catalog 属性中增加了 `use_meta_cache` 属性，默认为 false。
 
+:::warning
+不要在 2.1.6 之前的版本中将 `use_meta_cache` 设置为 true。
+:::
+
 2.1.6 版本中，新建的 Catalog，该属性默认修改为 true，以对应本文档描述的缓存行为。建议用户升级到 2.1.6 版本后，重建已有的 Catalog，以便让默认行为和本文档描述一致。
 
 
