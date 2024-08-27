@@ -32,7 +32,7 @@ SHOW LOAD PROFILE
 
 ### Description
 
-该语句是用来查看导入操作的Profile信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：
+该语句是用来查看导入操作的 Profile 信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：
 
 ```sql
 SET is_report_success=true;
@@ -156,11 +156,11 @@ WaitAndFetchResultTime: N/A
                                     │Fragment: 1      │ │Fragment: 1  │
                                     └─────────────────┘ └─────────────┘
 
-   ```sql
+   ```
 
    这一层会显示子任务的查询树，其中标注了 Fragment id。
 
-4. 查看指定Fragment 的 Instance 概况
+4. 查看指定 Fragment 的 Instance 概况
 
    ```sql
    mysql> show load profile "/980014623046410a-af5d36f23381017f/980014623046410a-af5d36f23381017f/1";
