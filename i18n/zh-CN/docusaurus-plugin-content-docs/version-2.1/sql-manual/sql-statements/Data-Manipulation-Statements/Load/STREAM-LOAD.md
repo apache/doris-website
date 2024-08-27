@@ -99,7 +99,8 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
 
 11. exec_mem_limit: 导入内存限制。默认为 2GB。单位为字节。
 
-12. format: 指定导入数据格式，支持 csv、json、<version since="1.2" type="inline"> csv_with_names(支持 csv 文件行首过滤)、csv_with_names_and_types(支持 csv 文件前两行过滤)、parquet、orc</version>，默认是 csv。
+12. format: 指定导入数据格式，支持 csv、json、csv_with_names(支持 csv 文件行首过滤)、csv_with_names_and_types(支持 csv 文件前两行过滤)、parquet、orc，默认是 csv。该功能自 Apache Doris  1.2 版本起支持
+
 
 13. jsonpaths: 导入 json 方式分为：简单模式和匹配模式。
     
@@ -135,12 +136,13 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
     
 22. send_batch_parallelism: 整型，用于设置发送批处理数据的并行度，如果并行度的值超过 BE 配置中的 `max_send_batch_parallelism_per_job`，那么作为协调点的 BE 将使用 `max_send_batch_parallelism_per_job` 的值。
 
-23. <version since="1.2" type="inline"> hidden_columns: 用于指定导入数据中包含的隐藏列，在 Header 中不包含 columns 时生效，多个 hidden column 用逗号分割。</version>
+23. hidden_columns: 用于指定导入数据中包含的隐藏列，在 Header 中不包含 columns 时生效，多个 hidden column 用逗号分割。该功能自 Apache Doris  1.2 版本起支持。
 
-      ```
-      hidden_columns: __DORIS_DELETE_SIGN__,__DORIS_SEQUENCE_COL__
-      系统会使用用户指定的数据导入数据。在上述用例中，导入数据中最后一列数据为__DORIS_SEQUENCE_COL__。
-      ```
+
+    ```
+    hidden_columns: __DORIS_DELETE_SIGN__,__DORIS_SEQUENCE_COL__
+    系统会使用用户指定的数据导入数据。在上述用例中，导入数据中最后一列数据为__DORIS_SEQUENCE_COL__。
+    ```
 
 24. load_to_single_tablet: 布尔类型，为 true 表示支持一个任务只导入数据到对应分区的一个 tablet，默认值为 false，该参数只允许在对带有 random 分桶的 olap 表导数的时候设置。
 
@@ -150,9 +152,9 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
 
 27. skip_lines:  整数类型，默认值为 0, 含义为跳过 csv 文件的前几行。当设置 format 设置为 `csv_with_names` 或、`csv_with_names_and_types` 时，该参数会失效。
 
-28. comment: <version since="1.2.3" type="inline"> 字符串类型，默认值为空。给任务增加额外的信息。</version>
+28. comment:字符串类型，默认值为空。给任务增加额外的信息。该功能自 Apache Doris 1.2.3 版本起支持。
 
-29. enclose: <version since="dev" type="inline"> 包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。</version>
+29. enclose:   包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。
   
 
 30. escape 转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如`\`，然后将数据修改为 `a,'b,\'c'`。 

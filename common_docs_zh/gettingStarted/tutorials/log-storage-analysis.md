@@ -113,7 +113,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 1.  **评估写入资源**：计算公式如下：
 
   - 日增数据量 / 86400 s = 平均写入吞吐
-  - 平均写入吞吐 \* 写入吞吐峰值 / 均值比 = 峰值写入吞吐
+  - 平均写入吞吐 x 写入吞吐峰值 / 均值比 = 峰值写入吞吐
   - 峰值写入吞吐 / 单核写入吞吐 = 峰值写入所需 CPU 核数
 
 2. **评估存储资源**：计算公式为「日增数据量 / 压缩率 * 副本数 * 数据存储周期 = 所需存储空间」。
@@ -194,13 +194,13 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | Compaction | `max_cumu_compaction_threads = 8`                            | 设置为 CPU 核数 / 4，意味着 CPU 资源的 1/4 用于写入，1/4 用于后台 Compaction，2/1 留给查询和其他操作。 |
 | -          | `inverted_index_compaction_enable = true`                    | 开启索引合并（index compaction），减少 Compaction 时的 CPU 消耗。 |
 | -          | `enable_segcompaction = false` `enable_ordered_data_compaction = false` | 关闭日志场景不需要的两个 Compaction 功能。                   |
-| -          | `enable_compaction_priority_scheduling = false` | 低优先级compaction在一块盘上限制 2 个任务，会影响compaction 速度。 |
+| -          | `enable_compaction_priority_scheduling = false` | 低优先级 compaction 在一块盘上限制 2 个任务，会影响 compaction 速度。 |
 | -          | `total_permits_for_compaction_score = 200000 ` | 该参数用来控制内存，time series 策略下本身可以控制内存。 |
 | 缓存       | `disable_storage_page_cache = true` `inverted_index_searcher_cache_limit = 30%` | 因为日志数据量较大，缓存（cache）作用有限，因此关闭数据缓存，调换为索引缓存（index cache）的方式。 |
 | -          | `inverted_index_cache_stale_sweep_time_sec = 3600` `index_cache_entry_stay_time_after_lookup_s = 3600` | 让索引缓存在内存中尽量保留 1 小时。                          |
 | -          | `enable_inverted_index_cache_on_cooldown = true` <br />`enable_write_index_searcher_cache = false` | 开启索引上传冷数据存储时自动缓存的功能。                     |
 | -          | `tablet_schema_cache_recycle_interval = 3600` `segment_cache_capacity = 20000` | 减少其他缓存对内存的占用。                                   |
-| -          | `inverted_index_ram_dir_enable = true` | 减少写入时索引临时文件带来的IO开销。|
+| -          | `inverted_index_ram_dir_enable = true` | 减少写入时索引临时文件带来的 IO 开销。|
 | 线程       | `pipeline_executor_size = 24` `doris_scanner_thread_pool_thread_num = 48` | 32 核 CPU 的计算线程和 I/O 线程配置，根据核数等比扩缩。      |
 | -          | `scan_thread_nice_value = 5`                                 | 降低查询 I/O 线程的优先级，保证写入性能和时效性。            |
 | 其他       | `string_type_length_soft_limit_bytes = 10485760`             | 将 String 类型数据的长度限制调高至 10 MB。                   |
@@ -244,7 +244,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 - 对于热存储数据，如果使用云盘，可配置 1 副本；如果使用物理盘，则至少配置 2 副本。
 - 配置 `log_s3` 的存储位置，并设置 `log_policy_3day` 冷热数据分层策略，即在超过 3 天后将数据冷却至 `log_s3` 指定的存储位置。可参考以下代码：
 
-```SQL
+```sql
 CREATE DATABASE log_db;
 USE log_db;
 
@@ -312,7 +312,7 @@ Apache Doris 提供开放、通用的 Stream HTTP APIs，通过这些 APIs，你
   
 - 从源码编译，并运行下方命令安装：
 
-``` 
+```sql
 ./bin/logstash-plugin install logstash-output-doris-1.0.0.gem
 ```
 
@@ -320,7 +320,7 @@ Apache Doris 提供开放、通用的 Stream HTTP APIs，通过这些 APIs，你
 
 - `logstash.yml`：配置 Logstash 批处理日志的条数和时间，用于提升数据写入性能。
 
-```
+```sql
 pipeline.batch.size: 1000000  
 pipeline.batch.delay: 10000
 ```
@@ -328,7 +328,7 @@ pipeline.batch.delay: 10000
 
 - `logstash_demo.conf`：配置所采集日志的具体输入路径和输出到 Apache Doris 的设置。
 
-```  
+```sql
 input {  
     file {  
     path => "/path/to/your/log"  
@@ -381,7 +381,7 @@ output {
 
 - `filebeat_demo.yml`：配置所采集日志的具体输入路径和输出到 Apache Doris 的设置。
 
-  ```YAML  
+  ```yaml  
   # input
   filebeat.inputs:
   - type: log
@@ -454,9 +454,9 @@ chmod +x filebeat-doris-1.0.0
 
 可参考如下示例。其中，`property.*` 是 Librdkafka 客户端相关配置，根据实际 Kafka 集群情况配置。
 
-```SQL  
--- 准备好kafka集群和topic log__topic_  
--- 创建routine load，从kafka log__topic_将数据导入log_table表  
+```sql  
+-- 准备好 kafka 集群和 topic log__topic_  
+-- 创建 routine load，从 kafka log__topic_将数据导入 log_table 表  
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table  
 COLUMNS(ts, clientip, request, status, size)  
 PROPERTIES (  
@@ -478,7 +478,7 @@ FROM KAFKA (
 "property.sasl.kerberos.keytab"="/path/to/xxx.keytab",  
 "property.sasl.kerberos.principal"="<xxx@yyy.com>"  
 );  
--- 查看routine的状态  
+-- 查看 routine 的状态  
 SHOW ROUTINE LOAD;
 ```
 

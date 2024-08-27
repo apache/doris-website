@@ -1338,7 +1338,11 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: enable to use Snappy compression algorithm for data compression when serializing RowBatch
 * Default value: true
 
-<version since="1.2">
+
+
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2 version
+:::
 
 #### `jvm_max_heap_size`
 
@@ -1346,7 +1350,7 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: The maximum size of JVM heap memory used by BE, which is the `-Xmx` parameter of JVM
 * Default value: 1024M
 
-</version>
+
 
 ### Log
 
@@ -1463,7 +1467,9 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: the increased frequency of priority for remaining tasks in BlockingPriorityQueue
 * Default value: 512
 
-<version since="1.2">
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2 version
+:::
 
 #### `jdbc_drivers_dir`
 
@@ -1480,7 +1486,7 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: Whether enable simdjson to parse json while stream load
 * Default value: true
 
-</version>
+
 
 #### `enable_query_memory_overcommit`
 

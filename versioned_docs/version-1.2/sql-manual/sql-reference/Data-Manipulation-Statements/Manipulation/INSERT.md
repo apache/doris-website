@@ -214,7 +214,7 @@ Since the previous import methods of Doris are all asynchronous import methods, 
 
 2. Timeout time
 
-   <version since="dev"></version>
+    
    The timeout for INSERT operations is controlled by [session variable](../../../../advanced/variables.md) `insert_timeout`. The default is 4 hours. If it times out, the job will be canceled.
 
 3. Label and atomicity

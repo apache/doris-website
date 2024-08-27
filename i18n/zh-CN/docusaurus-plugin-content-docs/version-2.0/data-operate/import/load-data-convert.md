@@ -171,9 +171,9 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 | 3    | 300  | guangzhou | 1.3  |
 | 4    | `\N`   | chongqing | 1.4  |
 
-:::note
+
 注：`\N` 在源文件中表示 null。
-:::
+
 
 1. 调整映射顺序
 

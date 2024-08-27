@@ -178,7 +178,9 @@ After executing the Query within the same Session, the query id can be obtained 
 }
 ```
 
-<version since="1.2">
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
 
 Admin and Root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
 
@@ -191,7 +193,7 @@ Admin and Root user can view all queries. Ordinary users can only view the Query
 }
 ```
 
-</version>
+
 
 ## Get the sql and text profile for the specified query
 
@@ -239,7 +241,9 @@ Get the sql and profile text for the specified query id.
 }
 ```
 
-<version since="1.2">
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
 
 Admin and Root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
 
@@ -252,7 +256,7 @@ Admin and Root user can view all queries. Ordinary users can only view the Query
 }
 ```
 
-</version>
+
     
 ### Examples
 
@@ -314,7 +318,9 @@ Get the fragment name, instance id, host ip/port and execution time for the spec
 }
 ```
 
-<version since="1.2">
+:::tip Tips
+This feature  is supported since the Apache Doris 1.2 version
+:::
 
 Admin and Root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
 
@@ -327,7 +333,7 @@ Admin and Root user can view all queries. Ordinary users can only view the Query
 }
 ```
 
-</version>
+
     
 ### Examples
 
@@ -417,7 +423,9 @@ Get the tree profile information of the specified query id, same as `show query 
 }
 ```
 
-<version since="1.2">
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
 
 Admin and Root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
 
@@ -430,7 +438,7 @@ Admin and Root user can view all queries. Ordinary users can only view the Query
 }
 ```
 
-</version>
+
 
 ## Current running queries
 

@@ -215,7 +215,7 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 
 2. Timeout time
 
-   <version since="dev"></version>
+    
    The timeout for INSERT operations is controlled by [session variable](../../../../advanced/variables.md) `insert_timeout`. The default is 4 hours. If it times out, the job will be canceled.
 
 3. Label and atomicity

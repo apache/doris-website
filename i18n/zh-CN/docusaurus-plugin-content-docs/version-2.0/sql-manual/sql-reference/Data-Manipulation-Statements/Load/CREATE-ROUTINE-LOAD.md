@@ -47,7 +47,7 @@ CREATE ROUTINE LOAD [db.]job_name [ON tbl_name]
 FROM data_source [data_source_properties]
 [COMMENT "comment"]
 ```
-```
+
 
 - `[db.]job_name`
 
@@ -58,7 +58,7 @@ FROM data_source [data_source_properties]
   指定需要导入的表的名称，可选参数，如果不指定，则采用动态表的方式，这个时候需要 Kafka 中的数据包含表名的信息。
   目前仅支持从 Kafka 的 Value 中获取表名，且需要符合这种格式：以 json 为例：`table_name|{"col1": "val1", "col2": "val2"}`, 
   其中 `tbl_name` 为表名，以 `|` 作为表名和表数据的分隔符。csv 格式的数据也是类似的，如：`table_name|val1,val2,val3`。注意，这里的 
-  `table_name` 必须和 Doris 中的表名一致，否则会导致导入失败.
+  `table_name` 必须和 Doris 中的表名一致，否则会导致导入失败。
   
    tips: 动态表不支持 `columns_mapping` 参数。如果你的表结构和 Doris 中的表结构一致，且存在大量的表信息需要导入，那么这种方式将是不二选择。
 
@@ -71,7 +71,7 @@ FROM data_source [data_source_properties]
 
   用于描述导入数据。组成如下：
 
-  ```SQL
+  ```sql
   [column_separator],
   [columns_mapping],
   [preceding_filter],
@@ -264,7 +264,7 @@ FROM data_source [data_source_properties]
       注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。
 
   15. `escape`
-      转义符。用于转义在csv字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c被作为一个字段解析，则需要指定单字节转义符，例如"\"，然后将数据修改为"a,'b,\'c'"。
+      转义符。用于转义在csv字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c被作为一个字段解析，则需要指定单字节转义符，例如 `\`，然后将数据修改为 `a,'b,\'c'`。
 
 - `FROM data_source [data_source_properties]`
 
@@ -366,8 +366,15 @@ FROM data_source [data_source_properties]
         ```text
         "property.kafka_default_offsets" = "OFFSET_BEGINNING"
         ```
--  <version since="1.2.3" type="inline"> comment </version>
-  - 例行导入任务的注释信息。
+-  comment 
+    
+    例行导入任务的注释信息。
+
+
+    :::tip 提示
+    该功能自 Apache Doris  1.2.3 版本起支持
+    :::
+
 ### Example
 
 1. 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。指定列分隔符和 group.id 和 client.id，并且自动默认消费所有分区，且从有数据的位置（OFFSET_BEGINNING）开始订阅

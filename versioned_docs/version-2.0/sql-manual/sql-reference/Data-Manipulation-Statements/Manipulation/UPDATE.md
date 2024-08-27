@@ -52,7 +52,7 @@ value:
     {expr | DEFAULT}
 ```
 
-<version since="dev">
+
 
 ```sql
 UPDATE target_table [table_alias]
@@ -61,7 +61,7 @@ UPDATE target_table [table_alias]
     WHERE condition
 ```
 
-</version>
+
 
 #### Required Parameters
 
@@ -71,12 +71,12 @@ UPDATE target_table [table_alias]
 
 #### Optional Parameters
 
-<version since="dev">
+
 
 + table_alias: alias of table
 + FROM additional_tables: Specifies one or more tables to use for selecting rows to update or for setting new values. Note that if you want use target table here, you should give it a alias explicitly.
 
-</version>
+
 
 #### Note
 
@@ -98,7 +98,7 @@ UPDATE test SET v1 = 1 WHERE k1=1 and k2=2;
 UPDATE test SET v1 = v1+1 WHERE k1=1;
 ```
 
-<version since="dev">
+
 
 3. use the result of `t2` join `t3` to update `t1`
 
@@ -157,7 +157,7 @@ the expect result is only update the row where id = 1 in table t1
 +----+----+----+--------+------------+
 ```
 
-</version>
+
 
 ### Keywords
 
