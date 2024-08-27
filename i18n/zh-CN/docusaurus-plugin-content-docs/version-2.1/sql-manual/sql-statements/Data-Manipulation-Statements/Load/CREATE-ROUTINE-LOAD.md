@@ -47,7 +47,7 @@ CREATE ROUTINE LOAD [db.]job_name [ON tbl_name]
 FROM data_source [data_source_properties]
 [COMMENT "comment"]
 ```
-```
+
 
 - `[db.]job_name`
 
@@ -58,7 +58,7 @@ FROM data_source [data_source_properties]
   指定需要导入的表的名称，可选参数，如果不指定，则采用动态表的方式，这个时候需要 Kafka 中的数据包含表名的信息。
   目前仅支持从 Kafka 的 Value 中获取表名，且需要符合这种格式：以 json 为例：`table_name|{"col1": "val1", "col2": "val2"}`, 
   其中 `tbl_name` 为表名，以 `|` 作为表名和表数据的分隔符。csv 格式的数据也是类似的，如：`table_name|val1,val2,val3`。注意，这里的 
-  `table_name` 必须和 Doris 中的表名一致，否则会导致导入失败.
+  `table_name` 必须和 Doris 中的表名一致，否则会导致导入失败。
   
    tips: 动态表不支持 `columns_mapping` 参数。如果你的表结构和 Doris 中的表结构一致，且存在大量的表信息需要导入，那么这种方式将是不二选择。
 
@@ -81,13 +81,13 @@ FROM data_source [data_source_properties]
   [ORDER BY]
   ```
 
-  - `column_separator`
+    - `column_separator`
 
     指定列分隔符，默认为 `\t`
 
     `COLUMNS TERMINATED BY ","`
 
-  - `columns_mapping`
+    - `columns_mapping`
 
     用于指定文件列和表中列的映射关系，以及各种列转换等。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤] 文档。
 
@@ -95,29 +95,29 @@ FROM data_source [data_source_properties]
 
     tips: 动态表不支持此参数。
 
-  - `preceding_filter`
+    - `preceding_filter`
 
     过滤原始数据。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤] 文档。
-  
+
     tips: 动态表不支持此参数。  
 
-  - `where_predicates`
+    - `where_predicates`
 
     根据条件对导入的数据进行过滤。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤] 文档。
 
     `WHERE k1 > 100 and k2 = 1000`
- 
-     tips: 当使用动态多表的时候，请注意此参数应该符合每张动态表的列，否则会导致导入失败。通常在使用动态多表的时候，我们仅建议通用公共列使用此参数。  
 
-  - `partitions`
+        tips: 当使用动态多表的时候，请注意此参数应该符合每张动态表的列，否则会导致导入失败。通常在使用动态多表的时候，我们仅建议通用公共列使用此参数。  
+
+    - `partitions`
 
     指定导入目的表的哪些 partition 中。如果不指定，则会自动导入到对应的 partition 中。
 
     `PARTITION(p1, p2, p3)`
-  
-     tips: 当使用动态多表的时候，请注意此参数应该符合每张动态表，否则会导致导入失败。
 
-  - `DELETE ON`
+        tips: 当使用动态多表的时候，请注意此参数应该符合每张动态表，否则会导致导入失败。
+
+    - `DELETE ON`
 
     需配合 MEREGE 导入模式一起使用，仅针对 Unique Key 模型的表。用于指定导入数据中表示 Delete Flag 的列和计算关系。
 
@@ -125,7 +125,7 @@ FROM data_source [data_source_properties]
 
     tips: 当使用动态多表的时候，请注意此参数应该符合每张动态表，否则会导致导入失败。
 
-  - `ORDER BY`
+    - `ORDER BY`
 
     仅针对 Unique Key 模型的表。用于指定导入数据中表示 Sequence Col 的列。主要用于导入时保证数据顺序。
 
@@ -264,7 +264,7 @@ FROM data_source [data_source_properties]
       注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。
 
   15. `escape`
-      转义符。用于转义在csv字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c被作为一个字段解析，则需要指定单字节转义符，例如"\"，然后将数据修改为"a,'b,\'c'"。
+      转义符。用于转义在csv字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c被作为一个字段解析，则需要指定单字节转义符，例如 `\`，然后将数据修改为 `a,'b,\'c'`。
 
 - `FROM data_source [data_source_properties]`
 
