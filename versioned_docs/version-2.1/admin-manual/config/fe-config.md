@@ -2608,6 +2608,18 @@ Default: 10
 
 This configuration is mainly used to control the number of backup/restore tasks recorded in each database.
 
+#### `max_backup_tablets_per_job`
+
+<version since="2.1.7"></version>
+
+Default: 300000
+
+IsMutable：true
+
+MasterOnly：true
+
+Control the max num of tablets per backup job involved, to avoid FE OOM caused by saving too much metadata.
+
 #### `enable_quantile_state_type`
 
 Default：false
