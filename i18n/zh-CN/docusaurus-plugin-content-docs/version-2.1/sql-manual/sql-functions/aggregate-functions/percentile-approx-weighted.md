@@ -31,7 +31,7 @@ under the License.
 `PERCENTILE_APPROX_WEIGHTED(expr, w ,DOUBLE p [, DOUBLE compression])`
 
 
-该函数和PERCENTILE_APPROX类似，唯一的区别是多了一个参数w，用来表示expr出现的次数。
+该函数和 PERCENTILE_APPROX 类似，唯一的区别是多了一个参数 w，用来表示 expr 出现的次数。
 
 ### example
 ```
