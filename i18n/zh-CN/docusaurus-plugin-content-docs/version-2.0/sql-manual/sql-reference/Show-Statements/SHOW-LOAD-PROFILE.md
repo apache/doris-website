@@ -32,7 +32,7 @@ SHOW LOAD PROFILE
 
 ### Description
 
-该语句是用来查看导入操作的Profile信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：
+该语句是用来查看导入操作的 Profile 信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：
 
 ```sql
 SET is_report_success=true;
@@ -66,42 +66,42 @@ show load profile "/[queryId]/[TaskId]/[FragmentId]/[InstanceId]"
 
    ```sql
    mysql> show load profile "/"\G
-*************************** 1. row ***************************
-                 JobId: 20010
+   *************************** 1. row ***************************
+                  JobId: 20010
                QueryId: 980014623046410a-af5d36f23381017f
                   User: root
-             DefaultDb: default_cluster:test
-                   SQL: LOAD LABEL xxx
-             QueryType: Load
-             StartTime: 2023-03-07 19:48:24
+               DefaultDb: default_cluster:test
+                     SQL: LOAD LABEL xxx
+               QueryType: Load
+               StartTime: 2023-03-07 19:48:24
                EndTime: 2023-03-07 19:50:45
-             TotalTime: 2m21s
+               TotalTime: 2m21s
             QueryState: N/A
                TraceId:
-          AnalysisTime: NULL
-              PlanTime: NULL
-          ScheduleTime: NULL
-       FetchResultTime: NULL
-       WriteResultTime: NULL
-WaitAndFetchResultTime: NULL
-*************************** 2. row ***************************
-                 JobId: N/A
+            AnalysisTime: NULL
+               PlanTime: NULL
+            ScheduleTime: NULL
+         FetchResultTime: NULL
+         WriteResultTime: NULL
+   WaitAndFetchResultTime: NULL
+   *************************** 2. row ***************************
+                  JobId: N/A
                QueryId: 7cc2d0282a7a4391-8dd75030185134d8
                   User: root
-             DefaultDb: default_cluster:test
-                   SQL: insert into xxx
-             QueryType: Load
-             StartTime: 2023-03-07 19:49:15
+               DefaultDb: default_cluster:test
+                     SQL: insert into xxx
+               QueryType: Load
+               StartTime: 2023-03-07 19:49:15
                EndTime: 2023-03-07 19:49:15
-             TotalTime: 102ms
+               TotalTime: 102ms
             QueryState: OK
                TraceId:
-          AnalysisTime: 825.277us
-              PlanTime: 4.126ms
-          ScheduleTime: N/A
-       FetchResultTime: 0ns
-       WriteResultTime: 0ns
-WaitAndFetchResultTime: N/A
+            AnalysisTime: 825.277us
+               PlanTime: 4.126ms
+            ScheduleTime: N/A
+         FetchResultTime: 0ns
+         WriteResultTime: 0ns
+   WaitAndFetchResultTime: N/A
    ```
 
 2. 查看有导入作业的子任务概况：
@@ -160,7 +160,7 @@ WaitAndFetchResultTime: N/A
 
    这一层会显示子任务的查询树，其中标注了 Fragment id。
 
-4. 查看指定Fragment 的 Instance 概况
+4. 查看指定 Fragment 的 Instance 概况
 
    ```sql
    mysql> show load profile "/980014623046410a-af5d36f23381017f/980014623046410a-af5d36f23381017f/1";

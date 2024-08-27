@@ -64,7 +64,7 @@ mysql> desc function frontends_disks();
 对 `frontends_disks()` tvf 信息展示进行了鉴权，与 `show frontends disks` 行为保持一致，要求用户具有 ADMIN/OPERATOR 权限。
 
 ### example
-```
+```sql
 mysql> select * from frontends_disk()\G
 *************************** 1. row ***************************
        Name: fe_fe1d5bd9_d1e5_4ccc_9b03_ca79b95c9941

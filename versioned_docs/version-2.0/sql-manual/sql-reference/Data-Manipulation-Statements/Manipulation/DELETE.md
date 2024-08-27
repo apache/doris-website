@@ -46,9 +46,9 @@ WHERE
 column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
 ```
 
-<version since="dev">
 
-Syntax 2：This syntax can only used on UNIQUE KEY model
+
+Syntax 2: This syntax can only used on UNIQUE KEY model
 
 ```sql
 DELETE FROM table_name
@@ -57,7 +57,7 @@ DELETE FROM table_name
     WHERE condition
 ```
 
-</version>
+
 
 #### Required Parameters
 
@@ -66,30 +66,35 @@ DELETE FROM table_name
 + op: Logical comparison operator, The optional types of op include: =, >, <, >=, <=, !=, in, not in
 + value | value_list: value or value list used for logial comparison
 
-<version since="dev">
+
 
 + WHERE condition: Specifies a condition to use to select rows for removal
 
-</version>
+
 
 
 #### Optional Parameters
 
 + PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): Specifies the partition or partitions to select rows for removal
 
-<version since="dev">
+
 
 + table_alias: alias of table
 + USING additional_tables: If you need to refer to additional tables in the WHERE clause to help identify the rows to be removed, then specify those table names in the USING clause. You can also use the USING clause to specify subqueries that identify the rows to be removed.
 
-</version>
+
 
 #### Note
 
 1. Only conditions on the key column can be specified when using AGGREGATE (UNIQUE) model.
 2. When the selected key column does not exist in a rollup, delete cannot be performed.
 3. Wheny you use syntax 1, conditions can only have an "and" relationship. If you want to achieve an "or" relationship, you need to write the conditions in two DELETE statements.
-4. <version since="1.2" type="inline"> In syntax 1, if it is a partitioned table, you can specify a partition. If not specified, Doris will infer partition from the given conditions. In two cases, Doris cannot infer the partition from conditions: 1) the conditions do not contain partition columns; 2) The operator of the partition column is not in. When a partition table does not specify the partition, or the partition cannot be inferred from the conditions, the session variable delete_without_partition needs to be true to make delete statement be applied to all partitions.</version>
+4.  In syntax 1, if it is a partitioned table, you can specify a partition. If not specified, Doris will infer partition from the given conditions. In two cases, Doris cannot infer the partition from conditions: 1) the conditions do not contain partition columns; 2) The operator of the partition column is not in. When a partition table does not specify the partition, or the partition cannot be inferred from the conditions, the session variable delete_without_partition needs to be true to make delete statement be applied to all partitions.
+
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
+
 5. This statement may reduce query efficiency for a period of time after execution. The degree of impact depends on the number of delete conditions specified in the statement. The more conditions you specify, the greater the impact.
 
 ### Example
@@ -115,7 +120,7 @@ DELETE FROM table_name
    WHERE k1 >= 3 AND k2 = "abc";
    ````
 
-<version since="dev">
+
 
 4. use the result of `t2` join `t3` to romve rows from `t1`,delete table only support unique key model
 
@@ -172,7 +177,7 @@ DELETE FROM table_name
    +----+----+----+--------+------------+
    ```
 
-</version>
+
 
 ### Keywords
 

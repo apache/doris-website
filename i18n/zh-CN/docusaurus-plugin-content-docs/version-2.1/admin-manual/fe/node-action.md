@@ -44,13 +44,11 @@ under the License.
 
 `POST /rest/v2/manager/node/set_config/be`
 
-<version since="dev">
 
 `POST /rest/v2/manager/node/{action}/be`
 
 `POST /rest/v2/manager/node/{action}/fe`
 
-</version>
 
 ## 获取 fe, be, broker 节点信息
 

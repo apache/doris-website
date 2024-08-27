@@ -79,7 +79,9 @@ The specific syntax can be viewed through the following command:
 HELP CREATE MATERIALIZED VIEW
 ```
 
-<version since="2.0.0"></version>
+:::tip Tips
+This feature is supported since the Apache Doris 2.0 version
+:::
 
 In `Doris 2.0` we made some enhancements to materialized views (described in `Best Practice 4` of this article). We recommend that users check whether the expected query can hit the desired materialized view in the test environment before using the materialized view in the official production environment.
 
@@ -486,7 +488,9 @@ This problem can be solved by creating a materialized view with k3 as the first 
 
 ## Best Practice 4
 
-<version since="2.0.0"></version>
+:::tip Tips
+This feature is supported since the Apache Doris 2.0 version
+:::
 
 In `Doris 2.0`, we have made some enhancements to the expressions supported by the materialized view. This example will mainly reflect the support and early filtering of the new version of the materialized view for various expressions.
 

@@ -729,7 +729,9 @@ MasterOnly：true
 
 Decide how often to check dynamic partition
 
-<version since="1.2.0">
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2 version
+:::
 
 #### `max_multi_partition_num`
 
@@ -740,7 +742,7 @@ IsMutable：true
 MasterOnly：true
 
 Use this parameter to set the partition name prefix for multi partition,Only multi partition takes effect, not dynamic partitions. The default prefix is "p_".
-</version>
+
 
 #### `multi_partition_name_prefix`
 
@@ -2147,7 +2149,10 @@ After dropping database(table/partition), you can recover it by using RECOVER st
 
 #### `storage_cooldown_second`
 
-<version deprecated="2.0"></version>
+
+:::tip Tips
+This feature is deprecated since the Apache Doris 2.0 version
+:::
 
 Default：`30 * 24 * 3600L`  （30 day）
 
@@ -2699,7 +2704,9 @@ If the compute node number is larger than this value, query on external table wi
 
 #### `infodb_support_ext_catalog`
 
-<version since="1.2.4"></version>
+:::tip Tips
+This configuration is supported since the Apache Doris 2.1.4 version
+:::
 
 Default: false
 
@@ -2714,7 +2721,7 @@ This is to avoid query time when external catalog is not reachable.
 
 #### `enable_query_hit_stats`
 
-<version since="dev"></version>
+ 
 
 Default: false
 
@@ -2725,7 +2732,7 @@ MasterOnly: false
 Controls whether to enable query hit statistics. The default is false.
 
 #### `div_precision_increment`
-<version since="dev"></version>
+ 
 
 Default: 4
 

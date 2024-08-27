@@ -76,9 +76,9 @@ EXPORT
 
   - `label`: 可选参数，指定此次 Export 任务的 label，当不指定时系统会随机生成一个 label。
 
-  - `column_separator`：指定导出的列分隔符，默认为\t，支持多字节。该参数只用于 csv 文件格式。
+  - `column_separator`：指定导出的列分隔符，默认为`\t`，支持多字节。该参数只用于 csv 文件格式。
 
-  - `line_delimiter`：指定导出的行分隔符，默认为\n，支持多字节。该参数只用于 csv 文件格式。
+  - `line_delimiter`：指定导出的行分隔符，默认为`\n`，支持多字节。该参数只用于 csv 文件格式。
 
   - `columns`：指定导出表的某些列。
 
@@ -311,7 +311,7 @@ WITH BROKER "broker_name"
 );
 ```
 
-3. 将 testTbl 表中的所有数据导出到 hdfs 上，以不可见字符 "\x07" 作为列或者行分隔符。
+3. 将 testTbl 表中的所有数据导出到 hdfs 上，以不可见字符 `\x07` 作为列或者行分隔符。
 
 ```sql
 EXPORT TABLE testTbl TO "hdfs://hdfs_host:port/a/b/c" 

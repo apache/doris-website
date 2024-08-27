@@ -28,26 +28,26 @@ under the License.
 
 <version deprecated="1.2.2">
 
-推荐使用 [JDBC Catalog](../multi-catalog/jdbc.md) 访问 JDBC 外表，1.2.2版本后将不再维护该功能。
+推荐使用 [JDBC Catalog](../multi-catalog/jdbc.md) 访问 JDBC 外表，1.2.2 版本后将不再维护该功能。
 
 </version>
 
 <version since="1.2.0">
 
-JDBC External Table Of Doris 提供了Doris通过数据库访问的标准接口(JDBC)来访问外部表，外部表省去了繁琐的数据导入工作，让Doris可以具有了访问各式数据库的能力，并借助Doris本身的OLAP的能力来解决外部表的数据分析问题：
+JDBC External Table Of Doris 提供了 Doris 通过数据库访问的标准接口 (JDBC) 来访问外部表，外部表省去了繁琐的数据导入工作，让 Doris 可以具有了访问各式数据库的能力，并借助 Doris 本身的 OLAP 的能力来解决外部表的数据分析问题：
 
-1. 支持各种数据源接入Doris
-2. 支持Doris与各种数据源中的表联合查询，进行更加复杂的分析操作
+1. 支持各种数据源接入 Doris
+2. 支持 Doris 与各种数据源中的表联合查询，进行更加复杂的分析操作
 
 本文档主要介绍该功能的使用方式等。
 
 </version>
 
-### Doris中创建JDBC的外表
+### Doris 中创建 JDBC 的外表
 
 具体建表语法参照：[CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md)
 
-#### 1. 通过JDBC_Resource来创建JDBC外表 
+#### 1. 通过 JDBC_Resource 来创建 JDBC 外表 
 
 ```sql
 CREATE EXTERNAL RESOURCE jdbc_resource
@@ -81,20 +81,20 @@ PROPERTIES (
 | **type**         | "jdbc", 必填项标志资源类型  |
 | **user**         | 访问外表数据库所使的用户名 |
 | **password**     | 该用户对应的密码信息 |
-| **jdbc_url**     | JDBC的URL协议，包括数据库类型，IP地址，端口号和数据库名，不同数据库协议格式不一样。例如mysql: "jdbc:mysql://127.0.0.1:3306/test?useCursorFetch=true"。|
-| **driver_class** | 访问外表数据库的驱动包类名，例如mysql是:com.mysql.jdbc.Driver. |
-| **driver_url**   | 用于下载访问外部数据库的jar包驱动URL。http://IP:port/mysql-connector-java-5.1.47.jar。本地单机测试时，可将jar包放在本地路径下，"driver_url"="file:///home/disk1/pathTo/mysql-connector-java-5.1.47.jar",多机时需保证具有完全相同的路径信息。 |
-| **resource**     | 在Doris中建立外表时依赖的资源名，对应上步创建资源时的名字。|
-| **table**        | 在Doris中建立外表时，与外部数据库相映射的表名。|
-| **table_type**   | 在Doris中建立外表时，该表来自那个数据库。例如mysql,postgresql,sqlserver,oracle|
+| **jdbc_url**     | JDBC 的 URL 协议，包括数据库类型，IP 地址，端口号和数据库名，不同数据库协议格式不一样。例如 mysql: "jdbc:mysql://127.0.0.1:3306/test?useCursorFetch=true"。|
+| **driver_class** | 访问外表数据库的驱动包类名，例如 mysql 是:com.mysql.jdbc.Driver. |
+| **driver_url**   | 用于下载访问外部数据库的 jar 包驱动 URL。http://IP:port/mysql-connector-java-5.1.47.jar。本地单机测试时，可将 jar 包放在本地路径下，"driver_url"="file:///home/disk1/pathTo/mysql-connector-java-5.1.47.jar",多机时需保证具有完全相同的路径信息。 |
+| **resource**     | 在 Doris 中建立外表时依赖的资源名，对应上步创建资源时的名字。|
+| **table**        | 在 Doris 中建立外表时，与外部数据库相映射的表名。|
+| **table_type**   | 在 Doris 中建立外表时，该表来自那个数据库。例如 mysql,postgresql,sqlserver,oracle|
 
 > **注意：**
 >
-> 如果你是本地路径方式，这里数据库驱动依赖的jar包，FE、BE节点都要放置
+> 如果你是本地路径方式，这里数据库驱动依赖的 jar 包，FE、BE 节点都要放置
 
 <version since="1.2.1">
 
-> 在1.2.1及之后的版本中，可以将 driver 放到 FE/BE 的 `jdbc_drivers` 目录下，并直接指定文件名，如：`"driver_url" = "mysql-connector-java-5.1.47.jar"`。系统会自动在 `jdbc_drivers` 目录寻找文件。
+> 在 1.2.1 及之后的版本中，可以将 driver 放到 FE/BE 的 `jdbc_drivers` 目录下，并直接指定文件名，如：`"driver_url" = "mysql-connector-java-5.1.47.jar"`。系统会自动在 `jdbc_drivers` 目录寻找文件。
 
 </version>
 
@@ -103,11 +103,11 @@ PROPERTIES (
 ```
 select * from mysql_table where k1 > 1000 and k3 ='term';
 ```
-由于可能存在使用数据库内部的关键字作为字段名，为解决这种状况下仍能正确查询，所以在SQL语句中，会根据各个数据库的标准自动在字段名与表名上加上转义符。例如 MYSQL(``)、PostgreSQL("")、SQLServer([])、ORACLE("")，所以此时可能会造成字段名的大小写敏感，具体可以通过explain sql，查看转义后下发到各个数据库的查询语句。
+由于可能存在使用数据库内部的关键字作为字段名，为解决这种状况下仍能正确查询，所以在 SQL 语句中，会根据各个数据库的标准自动在字段名与表名上加上转义符。例如 MYSQL(``)、PostgreSQL("")、SQLServer([])、ORACLE("")，所以此时可能会造成字段名的大小写敏感，具体可以通过 explain sql，查看转义后下发到各个数据库的查询语句。
 
 ### 数据写入
 
-在Doris中建立JDBC外表后，可以通过insert into语句直接写入数据，也可以将Doris执行完查询之后的结果写入JDBC外表，或者是从一个JDBC外表将数据导入另一个JDBC外表。
+在 Doris 中建立 JDBC 外表后，可以通过 insert into 语句直接写入数据，也可以将 Doris 执行完查询之后的结果写入 JDBC 外表，或者是从一个 JDBC 外表将数据导入另一个 JDBC 外表。
 
 
 ```
@@ -116,22 +116,22 @@ insert into mysql_table select * from table;
 ```
 #### 事务
 
-Doris的数据是由一组batch的方式写入外部表的，如果中途导入中断，之前写入数据可能需要回滚。所以JDBC外表支持数据写入时的事务，事务的支持需要通过设置session variable: `enable_odbc_transcation `(ODBC事务也受此变量控制)。
+Doris 的数据是由一组 batch 的方式写入外部表的，如果中途导入中断，之前写入数据可能需要回滚。所以 JDBC 外表支持数据写入时的事务，事务的支持需要通过设置 session variable: `enable_odbc_transcation `(ODBC 事务也受此变量控制)。
 
 ```
 set enable_odbc_transcation = true; 
 ```
 
-事务保证了JDBC外表数据写入的原子性，但是一定程度上会降低数据写入的性能，可以考虑酌情开启该功能。
+事务保证了 JDBC 外表数据写入的原子性，但是一定程度上会降低数据写入的性能，可以考虑酌情开启该功能。
 
-#### 1.Mysql测试
+#### 1.Mysql 测试
 
-| Mysql版本 | Mysql JDBC驱动版本              |
+| Mysql 版本 | Mysql JDBC 驱动版本              |
 | --------- | ------------------------------- |
 | 8.0.30    | mysql-connector-java-5.1.47.jar |
 
-#### 2.PostgreSQL测试
-| PostgreSQL版本 | PostgreSQL JDBC驱动版本 |
+#### 2.PostgreSQL 测试
+| PostgreSQL 版本 | PostgreSQL JDBC 驱动版本 |
 | -------------- | ----------------------- |
 | 14.5           | postgresql-42.5.0.jar   |
 
@@ -156,27 +156,27 @@ PROPERTIES (
 );
 ```
 
-#### 3.SQLServer测试
-| SQLserver版本 | SQLserver JDBC驱动版本     |
+#### 3.SQLServer 测试
+| SQLserver 版本 | SQLserver JDBC 驱动版本     |
 | ------------- | -------------------------- |
 | 2022          | mssql-jdbc-11.2.0.jre8.jar |
 
-#### 4.oracle测试
-| Oracle版本 | Oracle JDBC驱动版本 |
+#### 4.oracle 测试
+| Oracle 版本 | Oracle JDBC 驱动版本 |
 | ---------- | ------------------- |
 | 11         | ojdbc6.jar          |
 
 目前只测试了这一个版本其他版本测试后补充
 
-#### 5.ClickHouse测试
-| ClickHouse版本 | ClickHouse JDBC驱动版本                   |
+#### 5.ClickHouse 测试
+| ClickHouse 版本 | ClickHouse JDBC 驱动版本                   |
 |--------------|---------------------------------------|
 | 22           | clickhouse-jdbc-0.3.2-patch11-all.jar |
 | 22           | clickhouse-jdbc-0.4.1-all.jar         |
 
-#### 6.Sap Hana测试
+#### 6.Sap Hana 测试
 
-| Sap Hana版本 | Sap Hana JDBC驱动版本 |
+| Sap Hana 版本 | Sap Hana JDBC 驱动版本 |
 |------------|-------------------|
 | 2.0        | ngdbc.jar         |
 
@@ -201,9 +201,9 @@ PROPERTIES (
 );
 ```
 
-#### 7.Trino测试
+#### 7.Trino 测试
 
-| Trino版本 | Trino JDBC驱动版本     |
+| Trino 版本 | Trino JDBC 驱动版本     |
 |----------|--------------------|
 | 389      | trino-jdbc-389.jar |
 
@@ -228,9 +228,9 @@ PROPERTIES (
 );
 ```
 
-#### 8.OceanBase测试
+#### 8.OceanBase 测试
 
-| OceanBase 版本 | OceanBase JDBC驱动版本 |
+| OceanBase 版本 | OceanBase JDBC 驱动版本 |
 |--------------|--------------------|
 | 3.2.3        | oceanbase-client-2.4.2.jar |
 
@@ -257,11 +257,11 @@ PROPERTIES (
 ```
 > **注意：**
 >
-> 在创建OceanBase外表时，只需在创建Resource时指定`oceanbase_mode`参数，创建外表的table_type为oceanbase。
+> 在创建 OceanBase 外表时，只需在创建 Resource 时指定`oceanbase_mode`参数，创建外表的 table_type 为 oceanbase。
 
 ## 类型匹配
 
-各个数据库之间数据类型存在不同，这里列出了各个数据库中的类型和Doris之中数据类型匹配的情况。
+各个数据库之间数据类型存在不同，这里列出了各个数据库中的类型和 Doris 之中数据类型匹配的情况。
 
 ### MySQL
 
@@ -344,13 +344,13 @@ PROPERTIES (
 |                  Int256/UInt128/UInt256                  |          STRING          |
 |                         Decimal                          | DECIMAL/DECIMALV3/STRING |
 |                   Enum/IPv4/IPv6/UUID                    |          STRING          |
-| <version since="dev" type="inline"> Array(T)  </version> |        ARRAY\<T\>        |
+|   Array(T)   |        ARRAY\<T\>        |
 
 **注意：**
 
-- <version since="dev" type="inline"> 对于ClickHouse里的Array类型,可用Doris的Array类型来匹配，Array内的基础类型匹配参考基础类型匹配规则即可，不支持嵌套Array </version>
-- 对于ClickHouse里的一些特殊类型，如UUID,IPv4,IPv6,Enum8可以用Doris的Varchar/String类型来匹配,但是在显示上IPv4,IPv6会额外在数据最前面显示一个`/`,需要自己用`split_part`函数处理
-- 对于ClickHouse的Geo类型Point,无法进行匹配
+-   对于 ClickHouse 里的 Array 类型，可用 Doris 的 Array 类型来匹配，Array 内的基础类型匹配参考基础类型匹配规则即可，不支持嵌套 Array 
+- 对于 ClickHouse 里的一些特殊类型，如 UUID,IPv4,IPv6,Enum8 可以用 Doris 的 Varchar/String 类型来匹配，但是在显示上 IPv4,IPv6 会额外在数据最前面显示一个`/`,需要自己用`split_part`函数处理
+- 对于 ClickHouse 的 Geo 类型 Point，无法进行匹配
 
 ### SAP HANA
 
@@ -397,8 +397,8 @@ PROPERTIES (
 
 ### OceanBase
 
-MySQL 模式请参考 [MySQL类型映射](#MySQL)
-Oracle 模式请参考 [Oracle类型映射](#Oracle)
+MySQL 模式请参考 [MySQL 类型映射](#MySQL)
+Oracle 模式请参考 [Oracle 类型映射](#Oracle)
 
 ## Q&A
 
