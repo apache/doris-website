@@ -40,13 +40,13 @@ This statement is used to view the Profile information of the import operation. 
 
 ```sql
 SET is_report_success=true;
-````
+```
 
 Versions 0.15 and later perform the following settings:
 
 ```sql
 SET [GLOBAL] enable_profile=true;
-````
+```
 
 grammar:
 
@@ -106,7 +106,7 @@ WaitAndFetchResultTime: NULL
        FetchResultTime: 0ns
        WriteResultTime: 0ns
 WaitAndFetchResultTime: N/A
-   ````
+   ```
 
 2. View an overview of the subtasks with imported jobs:
 
