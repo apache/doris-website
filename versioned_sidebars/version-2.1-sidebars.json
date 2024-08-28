@@ -1428,7 +1428,6 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CHARSET",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-DATABASE",
-                                "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-LOAD",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-REPOSITORY",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-ROUTINE-LOAD",
