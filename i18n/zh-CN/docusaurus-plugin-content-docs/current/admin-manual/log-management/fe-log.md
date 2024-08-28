@@ -62,7 +62,7 @@ under the License.
 | --- | --- | --- | --- |
 | `LOG_DIR` | `ENV(DORIS_HOME)/log` |  | 所有日志的存放路径。默认为 FE 部署路径的 `log/` 目录下。注意这是一个环境变量，配置名需大写。 |
 | `sys_log_level` | `INFO` | `INFO`, `WARN`, `ERROR`, `FATAL` | `fe.log` 的日志等级。默认为 INFO。不建议修改，INFO 等级包含许多关键日志信息。|
-| `sys_log_roll_num` | 10 |  | 控制 `fe.log` 和 `fe.warn.log` 最大文件数量。默认 10。当因为日志滚动或切分后，日志文件数量大于这个阈值后，老的日志文件将被删除  |
+| `sys_log_roll_num` | 10 |  | 控制 `fe.log` 和 `fe.warn.log` 一天内的最大文件数量。默认 10。当因为日志滚动或切分后，日志文件数量大于这个阈值后，老的日志文件将被删除  |
 |`sys_log_verbose_modules`| | | 可以设置指定的 Java package 下的文件开启 DEBUG 级别日志。请参阅 "开启 DEBUG 日志" 章节 |
 | `sys_log_enable_compress` | false | true, false | 是否开启历史 `fe.log` 和 `fe.warn.log` 日志压缩。默认关闭。开启后，历史审计日志会使用 gzip 压缩归档 |
 | `log_rollover_strategy` | `age` | `age`, `size` | 日志保留策略，默认为 `age`，即根据时间策略保留历史日志。`size` 为按日志大小保留历史日志  |
@@ -81,9 +81,13 @@ under the License.
 | `audit_log_enable_compress` | false | true, false | 是否开启历史 `fe.audit.log` 日志压缩。默认关闭。开启后，历史审计日志会使用 gzip 压缩归档 |
 | `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | FE 日志的输出模式，其中 `NORMAL` 为默认的输出模式，日志同步输出且包含位置信息。`ASYNC` 默认是日志异步输出且包含位置信息。 `BRIEF` 模式是日志异步输出但不包含位置信息。三种日志输出模式的性能依次递增 |
 
-> 注：
->
-> 1. 从 3.0.2 版本开始，`sys_log_mode` 配置默认改为 `AYSNC`。 
+::: note
+从 3.0.2 版本开始，`sys_log_mode` 配置默认改为 `AYSNC`。
+:::
+
+:::tip
+`sys_log_roll_num` 控制的是一天的保留日志数量，而不是总数量，需要配合 `sys_log_delete_age` 共同确定总保留日志数量。
+:::
 
 ## 开启 DEBUG 日志
 
