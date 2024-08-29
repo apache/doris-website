@@ -31,7 +31,7 @@ under the License.
 
 -   选择一个 x86-64 上的主流 Linux 环境，推荐 CentOS 7.1 或者 Ubuntu 16.04 以上版本。更多运行环境请参考安装部署部分。
 
--   Java 8 运行环境（非 Oracle JDK 商业授权用户，建议使用免费的 Oracle JDK 8u202，[立即下载](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox))。
+-   Java 8 运行环境（非 Oracle JDK 商业授权用户，建议使用免费的 Oracle JDK 8u202，[立即下载](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox)）。
 
 -   建议在 Linux 上新建一个 Doris 用户。请避免使用 Root 用户，以防对操作系统误操作。
 
@@ -54,7 +54,7 @@ server1:~ doris$ mv apache-doris-2.0.12-bin-x64 apache-doris
 
 ### 配置 FE
 
-FE 的配置文件为 apache-doris/fe/conf/fe.conf。下面是一些需要关注的核心配置。除了 JAVA_HOME, 需要手动增加，并且指向你的 JDK8 运行环境。其它配置，可以使用默认值，即可支持单机快速体验。
+FE 的配置文件为 `apache-doris/fe/conf/fe.conf`。下面是一些需要关注的核心配置。除了 JAVA_HOME, 需要手动增加，并且指向你的 JDK8 运行环境。其它配置，可以使用默认值，即可支持单机快速体验。
 
 ```Plain
 # 增加 JAVA_HOME 配置，指向 JDK8 的运行环境。假如我们 JDK8 位于 /home/doris/jdk8, 则设置如下
@@ -78,7 +78,7 @@ server1:apache-doris/fe doris$ ./bin/start_fe.sh --daemon
 
 ### 配置 BE
 
-BE 的配置文件为 apache-doris/be/conf/be.conf。下面是一些需要关注的核心配置。除了 JAVA_HOME, 需要手动增加，并且指向你的 JDK8 运行环境。其它配置，可以使用默认值，即可支持我们的快速体验。
+BE 的配置文件为 `apache-doris/be/conf/be.conf`。下面是一些需要关注的核心配置。除了 JAVA_HOME, 需要手动增加，并且指向你的 JDK8 运行环境。其它配置，可以使用默认值，即可支持我们的快速体验。
 
 ```Plain
 # 增加 JAVA_HOME 配置，指向 JDK8 的运行环境。假如我们 JDK8 位于 /home/doris/jdk8, 则设置如下
@@ -205,7 +205,7 @@ curl  --location-trusted -u admin:admin_password -T data.csv -H "column_separato
 
 -   -T data.csv : 要导入的数据文件名
 
--   -u admin:admin_password:  Admin 账户与密码
+-   -u admin:admin_password : Admin 账户与密码
 
 -   127.0.0.1:8030 : 分别是 FE 的 IP 和 http_port
 

@@ -1,7 +1,7 @@
 const transformPathWithoutZhCN = (pathname: string): string => {
     if (pathname.includes('/ecosystem') || pathname.includes('/gettingStarted') ||
         pathname.includes('/benchmark') || pathname.includes('/faq') || pathname.includes('/releasenotes')) {
-        return `${pathname.replace(/^\/docs\/(?:2\.1|2\.0|1\.2|dev)/, '').replace('/docs','')}.md`;
+        return `${pathname.replace(/^\/docs\/(?:2\.1|2\.0|1\.2|dev)/, '').replace('/docs','').replace(/\/$/, '')}.md`;
     } else {
         const pathWithoutDocs = pathname.replace('/docs', '');
         if (pathname.includes('/2.1')) {
