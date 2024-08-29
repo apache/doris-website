@@ -24,8 +24,8 @@ export default function Latest() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href="https://ask.selectdb.com/">
-                        <div className="home-page-hero-button-label"><div>近期事件</div></div>
+                    <a className="latest-button" href="https://hdxu.cn/AfjED">
+                        <div className="home-page-hero-button-label"><div>近期活动</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
                                 <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -33,10 +33,10 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>技术论坛全面升级上线！Ask and Discover</div>
+                            <div style={{ marginBottom: 10 }}>飞轮科技 x 字节跳动开源城市型@北京站 Meetup</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>联合众多 Doris 生态中的开发者、用户以及合作伙伴，共同发起和创建的问答社区。在这里，你可以自由的提出和讨论技术问题、分享和收获技术经验、与社区的小伙伴进行互动和交流。</div>
-                        <div style={{ fontSize: 14, marginBottom: 10 }}>进入论坛</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>抖音集团、飞轮科技、爱玛科技、中国电信、天翼云等多位行业技术专家，将为参会者带来多行业、跨领域的技术分享及落地实践。现场参会名额有限，立即报名！</div>
+                        <div style={{ fontSize: 14, marginBottom: 10 }}>立即报名</div>
                     </a>
                     <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v3.0/release-3.0.1`}>
                         <div className="home-page-hero-button-label"><div>版本发布</div></div>
