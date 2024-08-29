@@ -69,9 +69,13 @@ Scenario 2: If the Workload Group is not used in version 2.0, it is also necessa
 
 Notes:
 
-1 At present, the simultaneous use of CPU's soft and hard limits is not supported. A cluster can only have soft or hard limits at a certain time. The switching method will be described in the following text.
+1. At present, the simultaneous use of CPU's soft and hard limits is not supported. A cluster can only have soft or hard limits at a certain time. The switching method will be described in the following text.
 
-2 All properties are optional, but at least one propety needs to be specified when creating a Workload Group.
+2. All properties are optional, but at least one property needs to be specified when creating a Workload Group.
+
+3. It is important to note that the default CPU soft limit values differ between cgroup v1 and cgroup v2. In cgroup v1, the default CPU soft limit value is 1024, with a range of 2 to 262144. In contrast, cgroup v2 has a default CPU soft limit value of 100, with a range of 1 to 10000.
+
+If a value outside of this range is specified for the soft limit, it can lead to a failure in modifying the CPU soft limit in the backend. Additionally, if you set the default value of 100 in a cgroup v1 environment, it might cause the priority of this workload group to be the lowest on the machine.
 
 ## Grouping Workload Group By Tag
 The Workload Group feature divides the resource usage of a single BE. When a user creates a Workload Group (Group A), its metadata is by default sent to all BEs and threads are started on each BE, leading to the following issues:
@@ -94,9 +98,9 @@ Workload Group and BE Matching Rules:
 If the Workload Group's tag is empty, the Workload Group can be sent to all BEs, regardless of whether the BE has a tag or not.
 If the Workload Group's tag is not empty, the Workload Group will only be sent to BEs with the same tag.
 
-## Configure cgroup v1
+## Configure cgroup
 
-Doris 2.0 version uses Doris scheduling to limit CPU resources, but since version 2.1, Doris defaults to using CGgroup v1 to limit CPU resources (CGgroup v2 is currently not supported). Therefore, if CPU resources are expected to be limited in version 2.1, it is necessary to have CGgroup v1 installed on the node where BE is located.
+Doris 2.0 version uses Doris scheduling to limit CPU resources, but since version 2.1, Doris defaults to using CGgroup v1 to limit CPU resources. Therefore, if CPU resources are expected to be limited in version 2.1, it is necessary to have CGgroup installed on the node where BE is located.
 
 If users use the Workload Group software limit in version 2.0 and upgrade to version 2.1, they also need to configure CGroup, Otherwise, cpu soft limit may not work.
 
@@ -104,13 +108,29 @@ If using CGroup within a container, the container needs to have permission to op
 
 Without configuring cgroup, users can use all functions of the workload group except for CPU limitations.
 
-1 Firstly, confirm that the CGgroup v1 version has been installed on the node where BE is located, and the path ```/sys/fs/cgroup/cpu/``` exists.
+1. Firstly, confirm that the CGgroup has been installed on the node where BE is located.
+```
+cat /proc/filesystems | grep cgroup
+nodev	cgroup
+nodev	cgroup2
+nodev	cgroupfs
+```
 
-2 Create a new directory named doris in the CPU path of cgroup, user can specify their own directory name.
+2. Check the cgroup version.
+```
+If this path exists, it indicates that cgroup v1 is currently active.
+/sys/fs/cgroup/cpu/
+
+
+If this path exists, it indicates that cgroup v2 is currently active.
+/sys/fs/cgroup/cgroup.controllers
+```
+
+3. Create a new directory named doris in the CPU path of cgroup, user can specify their own directory name.
 
 ```mkdir /sys/fs/cgroup/cpu/doris```
 
-3 It is necessary to ensure that Doris's BE process has read/write/execute permissions for this directory
+4. It is necessary to ensure that Doris's BE process has read/write/execute permissions for this directory
 ```
 // Modify the permissions of this directory to read, write, and execute
 chmod 770 /sys/fs/cgroup/cpu/doris
@@ -119,14 +139,24 @@ chmod 770 /sys/fs/cgroup/cpu/doris
 chown -R doris:doris /sys/fs/cgroup/cpu/doris
 ```
 
-4 Modify the configuration of BE and specify the path to cgroup
+5. If cgroup v2 is being used in the current environment, the following actions need to be taken. This is because cgroup v2 has stricter permission controls, requiring write access to the cgroup.procs file in the root directory in order to move processes between groups.
+```
+chmod a+w /sys/fs/cgroup/cgroup.procs
+```
+
+6. Modify the configuration of BE and specify the path to cgroup
 ```
 doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
 ```
 
-5 restart BE, in the log (be. INFO), you can see the words "add thread xxx to group" indicating successful configuration.
+7. restart BE, in the log (be. INFO), you can see the words "add thread xxx to group" indicating successful configuration.
 
-It should be noted that the current workload group does not support the deployment of multiple BE on same machine.
+:::tip
+NOTE:
+
+1. The current workload group does not yet support the deployment of multiple BEs on a single machine.
+2. After the machine is restarted, the above cgroup configurations will be cleared. If you want the above configurations to take effect after a reboot, you can use systemd to set these operations as a custom system service, so that the creation and permission assignments are automatically completed each time the machine restarts.
+:::
 
 ## Note for Using Workload Groups in K8S
 The CPU management for Workloads is implemented based on CGroup. To use Workload Groups within containers, you need to start the containers in privileged mode so that the Doris processes inside the container have permission to read and write CGroup files on the host.
@@ -257,8 +287,8 @@ mysql [information_schema]>desc information_schema.workload_group_privileges;
 Column Description：
 1. grantee, user or role.
 2. workload_group_name, value is the name of Workload Group or '%', where '%' represents all Workload Group.
-3. privilege_type，type of privilege, at present, the value of this column is only Usage_priv。
-4. is_grantable，value is YES or NO, it means whether the user can grant access privilege of Workload Group to other user.Only root/admin user has grant privilege.
+3. privilege_type, type of privilege, at present, the value of this column is only Usage_priv。
+4. is_grantable, value is YES or NO, it means whether the user can grant access privilege of Workload Group to other user.Only root/admin user has grant privilege.
 
 Basic usage：
 1. Search for Workload Group with authorized access based on username.
