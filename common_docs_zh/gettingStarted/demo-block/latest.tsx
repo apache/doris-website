@@ -33,9 +33,9 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>飞轮科技 x 字节跳动开源城市型@北京站 Meetup</div>
+                            <div style={{ marginBottom: 10 }}>飞轮科技 x 字节跳动开源 Meetup@北京站</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>抖音集团、飞轮科技、爱玛科技、中国电信、天翼云等多位行业技术专家，将为参会者带来多行业、跨领域的技术分享及落地实践。现场参会名额有限，立即报名！</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>来自抖音集团、飞轮科技、爱玛科技、中国电信、天翼云等多位行业技术专家，将为参会者带来多行业、跨领域的技术分享及落地实践。</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>立即报名</div>
                     </a>
                     <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v3.0/release-3.0.1`}>

@@ -48,14 +48,9 @@ export default function Latest() {
                             </div> */}
                             <div style={{ marginBottom: 10 }}>Apache Doris 3.0.1 just released</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>In this version, Apache Doris has improvements in compute-storage decoupling, lakehouse, semi-structured data analysis and more.</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>Apache Doris has improvements in compute-storage decoupling, lakehouse, semi-structured data analysis and more.</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>Learn more</div>
                     </a>
-
-
-
-
-
                 </div>
                 {/* <div style={{ fontSize: '1rem', fontWeight: 500, width: 600, marginTop: '1rem', color: '#1d1d1d' }}>学习路径</div> */}
 
