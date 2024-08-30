@@ -2610,7 +2610,7 @@ This configuration is mainly used to control the number of backup/restore tasks 
 
 #### `max_backup_tablets_per_job`
 
-<version since="2.1.7"></version>
+<version since="2.1.6"></version>
 
 Default: 300000
 

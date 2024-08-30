@@ -2586,7 +2586,7 @@ SmallFileMgr 中存储的最大文件数
 
 #### `max_backup_tablets_per_job`
 
-<version since="2.1.7"></version>
+<version since="2.0.15"></version>
 
 默认值：300000
 
