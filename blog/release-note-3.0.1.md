@@ -7,7 +7,7 @@
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/3.0.1.jpg'
 }
 ---
