@@ -136,10 +136,12 @@ To add Backend nodes to your cluster, follow these steps for each Backend:
    Connect to any Frontend using the MySQL client and execute:
 
    ```sql
-   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>";
+   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
    ```
 
    Replace `<ip>` with the IP address of the new Backend and `<heartbeat_service_port>` with its configured heartbeat service port (default is 9050).
+
+   More detailed usage refer to [ADD BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) and [REMOVE BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND.md).
 
 3. Verify the Backend status:
 
@@ -197,3 +199,6 @@ CREATE STORAGE VAULT IF NOT EXISTS s3_vault
 ```
 
 Create storage vaults on other object storage, please refer to [Create Storage Vaults](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md).
+
+### Set Default Storage Vault
+
