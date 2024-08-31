@@ -28,9 +28,9 @@ Doris 存算分离架构部署方式示意图如下，共需要 3 个模块参�
 
 - **FE**：负责接收用户请求，负责存储库表的元数据，目前是有状态的，未来会和 BE 类似，演化为无状态。
 - **BE**：无状态化的 Doris BE 节点，负责具体的计算任务。BE 上会缓存一部分 Tablet 元数据和数据以提高查询性能。
-- **MS**：存算分离模式新增模块，程序名为 `doris_cloud`，可通过启动不同参数来指定为以下两种角色之一
-  - **Meta Service**：元数据管理，提供元数据操作的服务，例如创建 Tablet，新增 Rowset，Tablet 查询以及 Rowset 元数据查询等功能。
-  - **Recycler**：数据回收。通过定期对记录已标记删除的数据的元数据进行扫描，实现对数据的定期异步正向回收（文件实际存储在 S3 或 HDFS 上），而无须列举数据对象进行元数据对比。
+- **MS**：存算分离模式新增模块，Meta Service，程序名为 `doris_cloud`，它主要有两个功能：元数据操作，数据回收。
+  - **元数据操作**：元数据管理，提供元数据操作的服务，例如创建 Tablet，新增 Rowset，Tablet 查询以及 Rowset 元数据查询等功能。
+  - **数据回收**：通过定期对记录已标记删除的数据的元数据进行扫描，实现对数据的定期异步正向回收（文件实际存储在 S3 或 HDFS 上），而无须列举数据对象进行元数据对比。
 
 ![apache-doris-in-compute-storage-decoupled-mode](/images/apache-doris-in-compute-storage-decoupled-mode.png)
 
@@ -49,18 +49,18 @@ Doris 存算分离架构依赖于两个外部开源项目，为确保部署顺�
 Doris 存算分离模式部署按照模块与分工＂自下而上＂部署：
 1. 存算分离模式机器规划，这一步骤在[本文档](./before-deployment.md)介绍。
 2. 部署 FoundationDB 以及运行环境等基础的依赖，这一步骤不需要 Doris 的编译产出即可完成，在[本文档](./before-deployment.md)介绍。
-3. [部署 Meta Service以及 Recycler](./compilation-and-deployment.md)
+3. [部署 Meta Service](./compilation-and-deployment.md)
 4. [部署 FE 以及 BE](./creating-cluster.md)
 
 :::info 备注
-注意：一套 FoundationDB + Meta Service + Recycler 基础环境可以支撑多个存算分离模式的 Doris 实例（即多套 FE + BE ）。
+注意：一套 FoundationDB + Meta Service 基础环境可以支撑多个存算分离模式的 Doris 实例（即多套 FE + BE ）。
 :::
 
 ## 部署规划
 一般来说 Doris 存算分离模式适用于比较大型的集群（多台机器），机器越多，越能发挥存算分离模式的优势。
 Doris存算分离模式推荐的方式是按照模块划分，尽量避免模块间相互影响。推荐的部署方式以及规划：
-* Meta Service，Recycler 以及 FDB 使用同一批机器（前者消耗CPU，后者消耗IO）。要求大于等于3台。
-	* 存算分离模式要正常运行至少要部署一个 Meta Service 进程以及至少一个 Recycler 进程。这两种进程是无状态的，可以按需增加部署数量，一般每种进程部署3个能够满足需求。
+* Meta Service 以及 FDB 使用同一批机器（前者消耗CPU，后者消耗IO）。要求大于等于3台。
+	* 存算分离模式要正常运行至少要部署一个 Meta Service 进程。这两种进程是无状态的，可以按需增加部署数量，一般每种进程部署3个能够满足需求。
 	* 为了保证 FDB 的性能，可靠性以及扩展性，FDB 需要使用多副本部署的方式。
 * FE单独部署，至少1台，可以按需实际查询需要多部署一些
 * BE单独部署，至少1台，可以按需实际查询需要多部署一些
@@ -82,7 +82,6 @@ Doris存算分离模式推荐的方式是按照模块划分，尽量避免模块
                           .------------------.
                           |        FE        |
                           |        BE        |
-                          |     Recycler     |
                           |   Meta Service   |
                           |       FDB        |
                           '------------------'
@@ -93,7 +92,7 @@ Doris存算分离模式推荐的方式是按照模块划分，尽量避免模块
 如果机器数量有限，可以使用全混部的方式，但是最少也要求使用3台机器用于 FDB 的部署，
 然后所有模块部署在同一批机器，如下是一种可行的规划：
 1. 3 台机器部署一个最小规模的 FDB 高可靠高可用集群
-2. 其中 1 台再混部上 FE+BE+Meta Service+Recycler
+2. 其中 1 台再混部上 FE + BE + Meta Service
 3. 另外 2 台再混部上 BE
 
 **注意：这个部署方案，BE 如果有大查询可能会影响到 FDB 的工作, CPU 内存 IO 资源。
@@ -102,9 +101,8 @@ Doris存算分离模式推荐的方式是按照模块划分，尽量避免模块
 ```
               host1                  host2                  host3
       .------------------.   .------------------.   .------------------.
-      |        FE        |   |                  |   |                  |
-      |                  |   |        BE        |   |        BE        |
-      |     Recycler     |   |                  |   |                  |
+      |        FE        |   |        BE        |   |        BE        |
+      |                  |   |                  |   |                  |
       |   Meta Service   |   |                  |   |                  |
       |       FDB        |   |       FDB        |   |       FDB        |
       '------------------'   '------------------'   '------------------'
@@ -115,7 +113,7 @@ Doris存算分离模式推荐的方式是按照模块划分，尽量避免模块
 下图展示了一种比较大规模的部署方案，这个部署方式可以由小规模部署方案逐渐横向扩展形成。
 1. FE 使用 2 台独立机器部署（按需增加机器，可以使用多于 2 台机器，但是一般 2 台足够），保证请求的高可用（互备）。
 2. BE 使用 3 台独立机器部署（按需增加机器，可以使用多于 3 台机器），面对大查询 BE 产生的IO 以及 CPU 影响不会影响到其他模块。
-3. Meta Service，Recycler 以及 FDB 混部在 3 台独立机器（可以使用多于 3 台机器，一般来说 3 台已经足够服务几十台以上的 FE+BE），充分利用这些机器的 CPU 内存 以及 IO 资源。
+3. Meta Service 以及 FDB 混部在 3 台独立机器（可以使用多于 3 台机器，一般来说 3 台已经足够服务几十台以上的 FE+BE），充分利用这些机器的 CPU 内存 以及 IO 资源。
 
 ```
                       host1,2                  host3,4,5
@@ -129,11 +127,13 @@ Doris存算分离模式推荐的方式是按照模块划分，尽量避免模块
 
                host6                 host7                 host8
        .------------------.  .------------------.  .------------------.
-       |     Recycler     |  |     Recycler     |  |     Recycler     |
        |   Meta Service   |  |   Meta Service   |  |   Meta Service   |
        |       FDB        |  |       FDB        |  |       FDB        |
        '------------------'  '------------------'  '------------------'
 ```
+
+注意：大规模生产如果对于 Meta Service 的在线(元数据操作)和离线(数据回收)功能有隔离性的需求可以参考
+[部署 Meta Service](./compilation-and-deployment.md) 的”将数据回收功能作为单独进程部署“ 章节。
 
 ## 安装 FoundationDB
 
@@ -379,7 +379,7 @@ Coordinators changed
 最后，通过 `fdbcli` 中的 `status` 检测模式是否配置成功：
 
 ```Shell
-[root@ip-10-100-3-91 Recycler]# fdbcli
+[root@ip-10-100-3-91 meta-service]# fdbcli
 Using cluster file `/etc/foundationdb/fdb.cluster'.
 
 The database is available.
@@ -434,10 +434,10 @@ OpenJDK 17 需安装到所有的节点上，可通过以下链接获取安装：
 ```Bash
 tar xf openjdk-17.0.1_linux-x64_bin.tar.gz  -C /opt/
 
-# 启动 Meta Service 或者 Recycler 之前
+# 启动 Meta Service 之前
 export JAVA_HOME=/opt/jdk-17.0.1
 ```
 
 ## 注意事项
 
-部署 FoundationDB 的机器同时也可部署 Meta Service 和 Recycler，此为推荐部署方式，可节省机器资源。
+部署 FoundationDB 的机器同时也可部署 Meta Service，此为推荐部署方式，可节省机器资源。

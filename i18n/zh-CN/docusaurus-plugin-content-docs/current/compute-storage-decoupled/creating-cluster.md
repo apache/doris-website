@@ -26,7 +26,7 @@ under the License.
 
 本文档中，创建存算分离集群指的是在存算分离模式下，创建由多个 Doris 节点组成的分布式系统，包含 FE 和 BE 节点。随后，在存算分离模式的 Doris 集群下可创建计算集群，即创建由一个或多个 BE 节点组成的计算资源组。
 
-一套 FoundationDB + Meta Service + Recycler 基础环境可以支撑多个存算分离集群，一个存算分离集群又称为一个数仓实例（Instance）。
+一套 FoundationDB + Meta Service 基础环境可以支撑多个存算分离集群，一个存算分离集群又称为一个数仓实例（Instance）。
 
 存算分离架构下，数仓实例的节点构成信息由 Meta Service 维护（注册 + 变更）。FE、BE 和 Meta Service 交互以实现服务发现和身份验证。
 
@@ -50,7 +50,9 @@ Doris 存算分离模式采用服务发现的机制进行工作，创建存算�
 这一步骤的主要目的是在 Meta Service 注册一个存算分离模式的 Doris 数仓实例（一套 Meta Service 可支持多个不同的 Doris 数仓实例（即多套 FE-BE），
 包括描述该数仓实例所需的存储后端（Storage Vault，即[概览](./overview.md)中所提及的共享存储层），
 可以选择 HDFS 或者 S3（包括支持 S3 协议的对象存储，如 AWS S3、GCS、Azure Blob、阿里云 OSS 以及 MinIO、Ceph 等）。
-存储后端是 Doris 在存算分离模式中所使用的远程共享存储，可配置一个或多个存储后端，可将不同表存储在不同存储后端上。
+存储后端是 Doris 在存算分离模式中所使用的远程共享存储，
+用户可以配置一个或多个存储后端，可将不同表存储在不同存储后端上。
+本章节主要描述创建一个存储后端的实 Doris 数仓实例
 
 此步骤需要调用 Meta Service 的 `create_instance` 接口，主要参数包括：
 
@@ -65,7 +67,7 @@ Doris 存算分离模式采用服务发现的机制进行工作，创建存算�
 
 ### 创建基于 HDFS 的存算分离模式 Doris 集群
 
-创建基于 HDFS 的存算分离模式 Doris 集群，需要正确描述所有信息，并保证所有的节点（包括 FE / BE 节点、Meta Service 和 Recycler) 均有权限访问所指定的 HDFS，包括提前完成机器的 Kerberos 授权配置和连通性检查（可在对应的每个节点上使用 Hadoop Client 进行测试）等。
+创建基于 HDFS 的存算分离模式 Doris 集群，需要正确描述所有信息，并保证所有的节点（包括 FE / BE 节点、Meta Service) 均有权限访问所指定的 HDFS，包括提前完成机器的 Kerberos 授权配置和连通性检查（可在对应的每个节点上使用 Hadoop Client 进行测试）等。
 
 | 参数名                                   | 描述                          | 是否必须 | 备注                                             |
 | ---------------------------------------- | ----------------------------- | -------- | ------------------------------------------------ |
@@ -521,30 +523,29 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
 
 相较于[存算一体模式](../install/cluster-deployment/standard-deployment.md)，存算分离模式下的 FE 和 BE 增加了部分配置，其中：
 
-- `meta_service_endpoint`：Meta Service 的地址，需在 FE 和 BE 中填写。
+- `meta_service_endpoint`：Meta Service 的地址，需在 FE 和 BE 中填写。普通测试一般只需要填一个，生产环境需要填多个的话**通过逗号分隔**
 - `cloud_unique_id`：根据创建存算分离集群发往 Meta Service `add_cluster` 请求中的实际值填写即可；Doris 通过该配置的值确定是否在存算分离模式下工作。
 
 ### fe.conf
 
 ```Shell
-meta_service_endpoint = 127.0.0.1:5000
+meta_service_endpoint = 127.0.0.1:5000,127.0.0.1:5001
 cloud_unique_id = 1:sample_instance_id:cloud_unique_id_sql_server00
 ```
 
 ### be.conf
 
-下述示例中， `meta_service_use_load_balancer` 和 `enable_file_cache` 均可复制，其他配置项需根据实际情况填写。
+下述配置示例中， `meta_service_use_load_balancer` 和 `enable_file_cache` 均可复制，其他配置项需根据实际情况填写。
 
-`file_cache_path` 是一个 JSON 数组（根据实际缓存盘的个数配置），其各个字段含义如下：
-
-- `path`：缓存数据存放路径，类似于存算一体模式下的 `storage_root_path`
-- `total_size`：期望使用的缓存空间上限
-- `query_limit`：单个查询在缓存未命中时最多可淘汰的缓存数据量（为了防止大查询将缓存全部淘汰）；因缓存需要存放数据，所以最好使用 SSD 等高性能磁盘作为缓存存储介质。
+* `enable_file_cache` 是否使用本地盘缓存，存算分离模式强烈建议设置为 `true`，否则查询性能会很差。
+* `file_cache_path` 是一个 JSON 数组（根据实际缓存盘的个数配置），描述的是本地缓存的配置，如果有多个缓存盘，建议使用同构的配置（大小和介质相同），其各个字段含义如下：
+	- `path`：缓存数据存放路径，一般一个缓存盘配置一个路径。因缓存需要存放数据，所以最好使用 SSD 等高性能磁盘作为缓存存储介质。
+	- `total_size`：期望使用的缓存空间上限
+	- `query_limit`：单个查询在缓存未命中时最多可淘汰的缓存数据量（为了防止大查询将缓存全部淘汰）；
 
 ```Shell
-meta_service_endpoint = 127.0.0.1:5000
+meta_service_endpoint = 127.0.0.1:5000,127.0.0.1:5001
 cloud_unique_id = 1:sample_instance_id:cloud_unique_id_compute_node0
-meta_service_use_load_balancer = false
 enable_file_cache = true
 file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":104857600000,"query_limit":10485760000}, {"path":"/mnt/disk2/doris_cloud/file_cache","total_size":104857600000,"query_limit":10485760000}]
 ```
