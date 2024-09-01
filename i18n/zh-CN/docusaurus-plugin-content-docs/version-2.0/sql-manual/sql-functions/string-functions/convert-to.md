@@ -24,18 +24,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<version since="1.2">
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
 ## convert_to
 ### description
 #### Syntax
 
 `VARCHAR convert_to(VARCHAR column, VARCHAR character)`
-在order by子句中使用，例如order by convert(column using gbk), 现在仅支持character转为'gbk'.
-因为当order by column中包含中文时，其排列不是按照汉语拼音的顺序.
-将column的字符编码转为gbk后，可实现按拼音的排列的效果.
+在 order by 子句中使用，例如 order by convert(column using gbk), 现在仅支持 character 转为'gbk'.
+因为当 order by column 中包含中文时，其排列不是按照汉语拼音的顺序。
+将 column 的字符编码转为 gbk 后，可实现按拼音的排列的效果。
 
-</version>
+
 
 ### example
 

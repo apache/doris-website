@@ -26,14 +26,14 @@ under the License.
 
 ## sequence
 
-<version since="dev">
+
 
 sequence
 
-</version>
+
 
 ### description
-函数array_range的别称
+函数 array_range 的别称
 
 #### Syntax
 
@@ -44,12 +44,12 @@ ARRAY<Int> sequence(Int start, Int end, Int step)
 ARRAY<Datetime> sequence(Datetime start_datetime, Datetime end_datetime)
 ARRAY<Datetime> sequence(Datetime start_datetime, Datetime end_datetime, INTERVAL Int interval_step UNIT)
 ```
-1. 生成int数组：
+1. 生成 int 数组：
 参数均为正整数 start 默认为 0, step 默认为 1。
-最终返回一个数组，从start 到 end - 1, 步长为 step。
+最终返回一个数组，从 start 到 end - 1, 步长为 step。
 2. 生成日期时间数组：
 至少取两个参数。
-前两个参数都是datetimev2，第三个是正整数。
+前两个参数都是 datetimev2，第三个是正整数。
 如果缺少第三部分，则`INTERVAL 1 DAY`将为默认值。
 UNIT 支持年/月/周/日/小时/分钟/秒。
 返回 start_datetime 和最接近 end_datetime 之间的 datetimev2 数组（按 Interval_step UNIT 计算）。

@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './demo-block.css';
 export default function PageHero1() {
     const [currentVersion, setCurrentVersion] = useState('')
@@ -22,8 +22,8 @@ export default function PageHero1() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/practical-guide/log-storage-analysis`}>
-                        <div className="home-page-hero-button-label"><div>Use Case</div></div>
+                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/log-storage-analysis`}>
+                        <div className="home-page-hero-button-label"><div>Tutorials</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
                                 <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -31,7 +31,7 @@ export default function PageHero1() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Log Storage and analysis</div>
+                            <div style={{ marginBottom: 10 }}>Building log analysis platform</div>
                         </div>
                         <div style={{ fontSize: 12, marginBottom: 20 }}>To build an open, high-performance, cost-effective and unified log storage and analysis platform.</div>
                     </a>

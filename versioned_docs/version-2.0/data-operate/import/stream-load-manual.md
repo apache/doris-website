@@ -504,7 +504,7 @@ In the import, our target time zone is specified through the parameter `timezone
 
 For example, the Doris system time zone is "+08:00", and the time column in the imported data contains two pieces of data, namely "2012-01-01 01:00:00+00:00" and "2015-12-12 12 :12:12-08:00", then after we specify the time zone of the imported transaction through `-H "timezone: +08:00"` when importing, both pieces of data will be converted to the time zone to obtain the result." 2012-01-01 09:00:00" and "2015-12-13 04:12:12".
 
-For more information on time zone interpretation, please refer to the document [Time Zone](../../query/query-variables/time-zone.md).
+For more information on time zone interpretation, please refer to the document [Time Zone](../../admin-manual/cluster-management/time-zone).
 
 ### Streamingly import
 
@@ -1175,7 +1175,11 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 
   Specify the import data format, support csv, json, the default is csv
 
-  <version since="1.2">supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc</version>
+  :::tip Tips
+  This feature is supported since the Apache Doris 1.2 version
+  :::
+  
+  supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc
 
 + exec\_mem\_limit
 

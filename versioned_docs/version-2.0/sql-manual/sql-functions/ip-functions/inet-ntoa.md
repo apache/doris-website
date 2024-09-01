@@ -24,11 +24,11 @@ under the License.
 
 ## INET_NTOA
 
-<version since="dev">
+
 
 INET_NTOA
 
-</version>
+
 
 ### description
 
@@ -36,7 +36,7 @@ INET_NTOA
 
 `VARCHAR INET_NTOA(BIGINT ipv4_num)`
 
-Takes a Int16、Int32、Int64 number. Interprets it as an IPv4 address in big endian. Returns a string containing the corresponding IPv4 address in the format A.B.C.d (dot-separated numbers in decimal form).
+Takes a Int16, Int32, Int64 number. Interprets it as an IPv4 address in big endian. Returns a string containing the corresponding IPv4 address in the format A.B.C.d (dot-separated numbers in decimal form).
 ### notice
 
 `will return NULL if the input parameter is negative or larger than 4294967295(num value of '255.255.255.255')`

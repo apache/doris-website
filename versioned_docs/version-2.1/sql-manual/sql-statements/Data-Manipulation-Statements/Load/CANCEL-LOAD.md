@@ -60,7 +60,7 @@ Notice: Cancel by State is supported since 1.2.0.
     WHERE LABEL like "example_";
     ````
 
-<version since="1.2.0">
+
 
 3. Cancel all import jobs which state are "LOADING"
 
@@ -70,7 +70,10 @@ Notice: Cancel by State is supported since 1.2.0.
    WHERE STATE = "loading";
    ```
 
-</version>
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
+
 
 ### Keywords
 

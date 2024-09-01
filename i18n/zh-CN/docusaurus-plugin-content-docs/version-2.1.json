@@ -179,6 +179,14 @@
     "message": "内存管理",
     "description": "The label for category Memory Management in sidebar docs"
   },
+  "sidebar.docs.category.Managing Memory Analysis": {
+    "message": "内存分析",
+    "description": "The label for category Managing Memory Analysis in sidebar docs"
+  },
+  "sidebar.docs.category.Managing Memory Feature": {
+    "message": "内存特性",
+    "description": "The label for category Managing Memory Feature in sidebar docs"
+  },
   "sidebar.docs.category.Maintenance": {
     "message": "运维监控",
     "description": "The label for category Maintenance and Monitor in sidebar docs"
@@ -190,6 +198,10 @@
   "sidebar.docs.category.Managing Configuration": {
     "message": "配置管理",
     "description": "The label for category Config in sidebar docs"
+  },
+  "sidebar.docs.category.System Tables": {
+    "message": "系统表",
+    "description": "The label for category System Table in sidebar docs"
   },
   "sidebar.docs.category.FE OPEN API": {
     "message": "FE OPEN API",
@@ -307,6 +319,10 @@
     "message": "表函数",
     "description": "The label for category Table Functions in sidebar docs"
   },
+  "sidebar.docs.category.Table Valued Functions": {
+    "message": "表值函数",
+    "description": "The label for category Table Valued Functions in sidebar docs"
+  },
   "sidebar.docs.category.Analytic(Window) Functions": {
     "message": "分析（窗口）函数",
     "description": "The label for category Analytic(Window) Functions in sidebar docs"
@@ -413,6 +429,10 @@
   },
   "sidebar.get-starting.category.Tutorials": {
     "message": "使用教程",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.get-starting.category.Building lakehouse": {
+    "message": "构建 Lakehouse",
     "description": "The label for category BI and Database IDE in sidebar docs"
   }
 }

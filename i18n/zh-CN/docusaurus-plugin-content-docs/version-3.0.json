@@ -27,6 +27,22 @@
     "message": "K8s 部署",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
+  "sidebar.docs.category.Compute-storage coupled": {
+    "message": "K8s 部署存算一体",
+    "description": "The label for category Deploying on Kubernetes in sidebar docs"
+  },
+  "sidebar.docs.category.Compute-storage decoupled": {
+    "message": "K8s 部署存算分离",
+    "description": "The label for category Deploying on Kubernetes in sidebar docs"
+  },
+  "sidebar.docs.category.Install Metaservice": {
+    "message": "部署 Metaservice",
+    "description": "The label for category Deploying on Kubernetes in sidebar docs"
+  },
+  "sidebar.docs.category.Install Cluster": {
+    "message": "部署 Cluster",
+    "description": "The label for category Deploying on Kubernetes in sidebar docs"
+  },
   "sidebar.docs.category.Database Connection": {
     "message": "数据库连接",
     "description": "The label for category Database Connection in sidebar docs"
@@ -179,6 +195,14 @@
     "message": "内存管理",
     "description": "The label for category Managing Memory in sidebar docs"
   },
+  "sidebar.docs.category.Managing Memory Analysis": {
+    "message": "内存分析",
+    "description": "The label for category Managing Memory Analysis in sidebar docs"
+  },
+  "sidebar.docs.category.Managing Memory Feature": {
+    "message": "内存特性",
+    "description": "The label for category Managing Memory Feature in sidebar docs"
+  },
   "sidebar.docs.category.Log Management": {
     "message": "日志管理",
     "description": "The label for category Log Management in sidebar docs"
@@ -311,6 +335,10 @@
     "message": "表函数",
     "description": "The label for category Table Functions in sidebar docs"
   },
+  "sidebar.docs.category.Table Valued Functions": {
+    "message": "表值函数",
+    "description": "The label for category Table Valued Functions in sidebar docs"
+  },
   "sidebar.docs.category.Analytic(Window) Functions": {
     "message": "分析（窗口）函数",
     "description": "The label for category Analytic(Window) Functions in sidebar docs"
@@ -421,6 +449,10 @@
   },
   "sidebar.get-starting.category.Tutorials": {
     "message": "使用教程",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.get-starting.category.Building lakehouse": {
+    "message": "构建 Lakehouse",
     "description": "The label for category BI and Database IDE in sidebar docs"
   }
 }

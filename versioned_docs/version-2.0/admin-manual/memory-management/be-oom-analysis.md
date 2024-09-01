@@ -26,7 +26,9 @@ under the License.
 
 # BE OOM Analysis
 
-<version since="1.2.0">
+:::tip Tips
+This feature  is supported since the Apache Doris 1.2 version
+:::
 
 Ideally, in [Memory Limit Exceeded Analysis](../memory-management/memory-limit-exceeded-analysis), we regularly detect the remaining available memory of the operating system and respond in time when the memory is insufficient , such as triggering the memory GC to release the cache or cancel the memory overrun query, but because refreshing process memory statistics and memory GC both have a certain lag, and it is difficult for us to completely catch all large memory applications, there are still OOM risk.
 
@@ -81,4 +83,4 @@ Memory Tracker Summary:
 
 8. If `be/log/be.INFO` does not print the `Memory Tracker Summary` log before OOM, it means that BE did not detect the memory limit in time, observe Grafana memory monitoring to confirm the memory growth trend of BE before OOM, if OOM is reproducible, consider adding `memory_debug=true` in `be.conf`, after restarting the cluster, the cluster memory statistics will be printed every second, observe the last `Memory Tracker Summary` log before OOM, and continue to step 3 for analysis;
 
-</version>
+

@@ -178,7 +178,7 @@ MySQL [test]> desc mv_test all;
 
 ### 取消创建物化视图
 
-```text
+```sql
  CANCEL ALTER TABLE MATERIALIZED VIEW FROM db_name.table_name
 ```
 
@@ -241,11 +241,11 @@ SHOW ALTER TABLE MATERIALIZED VIEW FROM db_name; (Version 0.13)
 这个命令中 `db_name` 是一个参数，你需要替换成自己真实的 db 名称。命令的结果是显示这个 db 的所有创建物化视图的任务。结果如下：
 
 ```sql
-+-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+-----------+-------------------------------------------------------------------------------------------------------------------------+----------+---------+
-| JobId | TableName     | CreateTime          | FinishedTime        | BaseIndexName | RollupIndexName | RollupId | TransactionId | State     | Msg                                                                                                                     | Progress | Timeout |
-+-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+-----------+-------------------------------------------------------------------------------------------------------------------------+----------+---------+
-| 22036 | sales_records | 2020-07-30 20:04:28 | 2020-07-30 20:04:57 | sales_records | store_amt       | 22037    | 5008          | FINISHED  |                                                                                                                         | NULL     | 86400   |
-+-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+-----------+-------------------------------------------------------------------------------------------------------------------------+----------+---------+
++-------+---------------+----------------+------------------+---------------+-----------------+----------+---------------+-----------+-----+----------+---------+
+| JobId | TableName     | CreateTime     | FinishedTime     | BaseIndexName | RollupIndexName | RollupId | TransactionId | State     | Msg | Progress | Timeout |
++-------+---------------+----------------+------------------+---------------+-----------------+----------+---------------+-----------+-----+----------+---------+
+| 22036 | sales_records | 2020-07-30 20:04:28 | 2020-07-30 20:04:57 | sales_records | store_amt    | 22037    | 5008     | FINISHED  |     | NULL     | 86400   |
++-------+---------------+----------------+------------------+---------------+-----------------+----------+---------------+-----------+-----+----------+---------+
 ```
 
 其中 TableName 指的是物化视图的数据来自于哪个表，RollupIndexName 指的是物化视图的名称叫什么。其中比较重要的指标是 State。
@@ -266,9 +266,9 @@ SELECT store_id, sum(sale_amt) FROM sales_records GROUP BY store_id;
 
 ```sql
 EXPLAIN SELECT store_id, sum(sale_amt) FROM sales_records GROUP BY store_id;
-+----------------------------------------------------------------------------------------------+
+------------------------------------------------------------------------------------------------
 | Explain String                                                                               |
-+----------------------------------------------------------------------------------------------+
+------------------------------------------------------------------------------------------------
 | PLAN FRAGMENT 0                                                                              |
 |   OUTPUT EXPRS:                                                                              |
 |     <slot 4> `default_cluster:test`.`sales_records`.`mv_store_id`                            |
@@ -314,8 +314,9 @@ EXPLAIN SELECT store_id, sum(sale_amt) FROM sales_records GROUP BY store_id;
 |      TABLE: default_cluster:test.sales_records(store_amt), PREAGGREGATION: ON                |
 |      partitions=1/1, tablets=10/10, tabletList=50028,50030,50032 ...                         |
 |      cardinality=1, avgRowSize=1520.0, numNodes=1                                            |
-+----------------------------------------------------------------------------------------------+
+------------------------------------------------------------------------------------------------
 ```
+
 从最底部的`test.sales_records(store_amt)`可以表明这个查询命中了`store_amt`这个物化视图。值得注意的是，如果表中没有数据，那么可能不会命中物化视图。
 
 ## 最佳实践 2（UV，PV）
@@ -405,56 +406,62 @@ MySQL [test]> desc advertiser_view_record;
 
    ```sql
    mysql [test]>explain SELECT advertiser, channel, count(distinct user_id) FROM  advertiser_view_record GROUP BY advertiser, channel;
-   +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | Explain String                                                                                                                                                                 |
-   +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | PLAN FRAGMENT 0                                                                                                                                                                |
-   |   OUTPUT EXPRS:                                                                                                                                                                |
-   |     <slot 9> `default_cluster:test`.`advertiser_view_record`.`mv_advertiser`                                                                                                   |
-   |     <slot 10> `default_cluster:test`.`advertiser_view_record`.`mv_channel`                                                                                                     |
-   |     <slot 11> bitmap_union_count(`default_cluster:test`.`advertiser_view_record`.`mva_BITMAP_UNION__to_bitmap_with_check(`user_id`)`)                                          |
-   |   PARTITION: UNPARTITIONED                                                                                                                                                     |
-   |                                                                                                                                                                                |
-   |   VRESULT SINK                                                                                                                                                                 |
-   |                                                                                                                                                                                |
-   |   4:VEXCHANGE                                                                                                                                                                  |
-   |      offset: 0                                                                                                                                                                 |
-   |                                                                                                                                                                                |
-   | PLAN FRAGMENT 1                                                                                                                                                                |
-   |                                                                                                                                                                                |
-   |   PARTITION: HASH_PARTITIONED: <slot 6> `default_cluster:test`.`advertiser_view_record`.`mv_advertiser`, <slot 7> `default_cluster:test`.`advertiser_view_record`.`mv_channel` |
-   |                                                                                                                                                                                |
-   |   STREAM DATA SINK                                                                                                                                                             |
-   |     EXCHANGE ID: 04                                                                                                                                                            |
-   |     UNPARTITIONED                                                                                                                                                              |
-   |                                                                                                                                                                                |
-   |   3:VAGGREGATE (merge finalize)                                                                                                                                                |
-   |   |  output: bitmap_union_count(<slot 8> bitmap_union_count(`default_cluster:test`.`advertiser_view_record`.`mva_BITMAP_UNION__to_bitmap_with_check(`user_id`)`))              |
-   |   |  group by: <slot 6> `default_cluster:test`.`advertiser_view_record`.`mv_advertiser`, <slot 7> `default_cluster:test`.`advertiser_view_record`.`mv_channel`                 |
+   -----------------------------------------------------------------------------------------------------------------------------------
+   | Explain String                                                                                                                 |
+   -----------------------------------------------------------------------------------------------------------------------------------
+   | PLAN FRAGMENT 0                                                                                                                |
+   |   OUTPUT EXPRS:                                                                                                                |
+   |     <slot 9> `default_cluster:test`.`advertiser_view_record`.`mv_advertiser`                                                   |
+   |     <slot 10> `default_cluster:test`.`advertiser_view_record`.`mv_channel`                                                     |
+   |     <slot 11> bitmap_union_count(`default_cluster:test`.`advertiser_view_record`.`mva_BITMAP_UNION__to_bitmap_with_check(`user_id`)`)      |
+   |   PARTITION: UNPARTITIONED                                                                                                     |
+   |                                                                                                                                |
+   |   VRESULT SINK                                                                                                                 |
+   |                                                                                                                                |
+   |   4:VEXCHANGE                                                                                                                  |
+   |      offset: 0                                                                                                                 |
+   |                                                                                                                                |
+   | PLAN FRAGMENT 1                                                                                                                |
+   |        |
+   |   PARTITION: HASH_PARTITIONED: 
+         <slot 6> `default_cluster:test`.`advertiser_view_record`.`mv_advertiser`, 
+         <slot 7> `default_cluster:test`.`advertiser_view_record`.`mv_channel`                                                      |
+   |                                                                                                                                |
+   |   STREAM DATA SINK                                                                                                             |
+   |     EXCHANGE ID: 04                                                                                                            |
+   |     UNPARTITIONED                                                                                                              |
+   |                                                                                                                                |
+   |   3:VAGGREGATE (merge finalize)                                                                                                |
+   |   |  output: 
+            bitmap_union_count(<slot 8> bitmap_union_count(`default_cluster:test`.`advertiser_view_record`.`mva_BITMAP_UNION__to_bitmap_with_check(`user_id`)`))  |
+   |   |  
+         group by: <slot 6> `default_cluster:test`.`advertiser_view_record`.`mv_advertiser`, <slot 7> `default_cluster:test`.`advertiser_view_record`.`mv_channel` |
    |   |  cardinality=-1                                                                                                                                                            |
    |   |                                                                                                                                                                            |
-   |   2:VEXCHANGE                                                                                                                                                                  |
-   |      offset: 0                                                                                                                                                                 |
-   |                                                                                                                                                                                |
-   | PLAN FRAGMENT 2                                                                                                                                                                |
-   |                                                                                                                                                                                |
-   |   PARTITION: HASH_PARTITIONED: `default_cluster:test`.`advertiser_view_record`.`time`                                                                                          |
-   |                                                                                                                                                                                |
-   |   STREAM DATA SINK                                                                                                                                                             |
-   |     EXCHANGE ID: 02                                                                                                                                                            |
-   |     HASH_PARTITIONED: <slot 6> `default_cluster:test`.`advertiser_view_record`.`mv_advertiser`, <slot 7> `default_cluster:test`.`advertiser_view_record`.`mv_channel`          |
-   |                                                                                                                                                                                |
-   |   1:VAGGREGATE (update serialize)                                                                                                                                              |
+   |   2:VEXCHANGE                                                                                                                  |
+   |      offset: 0                                                                                                                 |
+   |                                                                                                                                |
+   | PLAN FRAGMENT 2                                                                                                                |
+   |                                                                                                                                |
+   |   PARTITION: HASH_PARTITIONED: `default_cluster:test`.`advertiser_view_record`.`time`                                          |
+   |                                                                                                                                |
+   |   STREAM DATA SINK                                                                                                             |
+   |     EXCHANGE ID: 02                                                                                                            |
+   |     HASH_PARTITIONED: 
+         <slot 6> `default_cluster:test`.`advertiser_view_record`.`mv_advertiser`, 
+         <slot 7> `default_cluster:test`.`advertiser_view_record`.`mv_channel`                                                      |
+   |                                                                                                                                |
+   |   1:VAGGREGATE (update serialize)                                                                                              |
    |   |  STREAMING                                                                                                                                                                 |
-   |   |  output: bitmap_union_count(`default_cluster:test`.`advertiser_view_record`.`mva_BITMAP_UNION__to_bitmap_with_check(`user_id`)`)                                           |
-   |   |  group by: `default_cluster:test`.`advertiser_view_record`.`mv_advertiser`, `default_cluster:test`.`advertiser_view_record`.`mv_channel`                                   |
+   |   |  output: bitmap_union_count(`default_cluster:test`.`advertiser_view_record`.`mva_BITMAP_UNION__to_bitmap_with_check(`user_id`)`)         |
+   |   |  group by: `default_cluster:test`.`advertiser_view_record`.`mv_advertiser`, `default_cluster:test`.`advertiser_view_record`.`mv_channel` |
    |   |  cardinality=-1                                                                                                                                                            |
-   |   |                                                                                                                                                                            |
-   |   0:VOlapScanNode                                                                                                                                                              |
-   |      TABLE: default_cluster:test.advertiser_view_record(advertiser_uv), PREAGGREGATION: ON                                                                                     |
-   |      partitions=1/1, tablets=10/10, tabletList=50075,50077,50079 ...                                                                                                           |
-   |      cardinality=0, avgRowSize=48.0, numNodes=1                                                                                                                                |
-   +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   |   |          |
+   |   0:VOlapScanNode                                                                                                               |
+   |      TABLE: default_cluster:test.advertiser_view_record(advertiser_uv), PREAGGREGATION: ON                                      |
+   |      partitions=1/1, tablets=10/10, tabletList=50075,50077,50079 ...                                                            |
+   |      cardinality=0, avgRowSize=48.0, numNodes=1                                                                                                                        |
+   -----------------------------------------------------------------------------------------------------------------------------------
    ```
 
    在 EXPLAIN 的结果中，首先可以看到 `VOlapScanNode` 命中了 `advertiser_uv`。也就是说，查询会直接扫描物化视图的数据。说明匹配成功。
@@ -507,45 +514,45 @@ MySQL [test]> desc advertiser_view_record;
 ## 最佳实践 4
 
 
-
 在`Doris 2.0`中，我们对物化视图所支持的表达式做了一些增强，本示例将主要体现新版本物化视图对各种表达式的支持和提前过滤。
 
 1. 创建一个 Base 表并插入一些数据。
-```sql
-create table d_table (
-   k1 int null,
-   k2 int not null,
-   k3 bigint null,
-   k4 date null
-)
-duplicate key (k1,k2,k3)
-distributed BY hash(k1) buckets 3
-properties("replication_num" = "1");
 
-insert into d_table select 1,1,1,'2020-02-20';
-insert into d_table select 2,2,2,'2021-02-20';
-insert into d_table select 3,-3,null,'2022-02-20';
-```
+   ```sql
+   create table d_table (
+      k1 int null,
+      k2 int not null,
+      k3 bigint null,
+      k4 date null
+   )
+   duplicate key (k1,k2,k3)
+   distributed BY hash(k1) buckets 3
+   properties("replication_num" = "1");
+
+   insert into d_table select 1,1,1,'2020-02-20';
+   insert into d_table select 2,2,2,'2021-02-20';
+   insert into d_table select 3,-3,null,'2022-02-20';
+   ```
 
 2. 创建一些物化视图。
 
-```sql
-create materialized view k1a2p2ap3ps as select abs(k1)+k2+1,sum(abs(k2+2)+k3+3) from d_table group by abs(k1)+k2+1;
-create materialized view kymd as select year(k4),month(k4) from d_table where year(k4) = 2020; // 提前用where表达式过滤以减少物化视图中的数据量。
-```
+   ```sql
+   create materialized view k1a2p2ap3ps as select abs(k1)+k2+1,sum(abs(k2+2)+k3+3) from d_table group by abs(k1)+k2+1;
+   create materialized view kymd as select year(k4),month(k4) from d_table where year(k4) = 2020; // 提前用 where 表达式过滤以减少物化视图中的数据量。
+   ```
 
 3. 用一些查询测试是否成功命中物化视图。
 
-```sql
-select abs(k1)+k2+1,sum(abs(k2+2)+k3+3) from d_table group by abs(k1)+k2+1; // 命中k1a2p2ap3ps
-select bin(abs(k1)+k2+1),sum(abs(k2+2)+k3+3) from d_table group by bin(abs(k1)+k2+1); // 命中k1a2p2ap3ps
-select year(k4),month(k4) from d_table; // 无法命中物化视图，因为where条件不匹配
-select year(k4)+month(k4) from d_table where year(k4) = 2020; // 命中kymd
-```
+   ```sql
+   select abs(k1)+k2+1,sum(abs(k2+2)+k3+3) from d_table group by abs(k1)+k2+1; // 命中 k1a2p2ap3ps
+   select bin(abs(k1)+k2+1),sum(abs(k2+2)+k3+3) from d_table group by bin(abs(k1)+k2+1); // 命中 k1a2p2ap3ps
+   select year(k4),month(k4) from d_table; // 无法命中物化视图，因为 where 条件不匹配
+   select year(k4)+month(k4) from d_table where year(k4) = 2020; // 命中 kymd
+   ```
 
 ## 局限性
 
-1. 如果删除语句的条件列，在物化视图中不存在，则不能进行删除操作。如果一定要删除数据，则需要先将物化视图删除，然后方可删除数据。
+1. 如果删除语句的条件列，在物化视图中存在，则不能进行删除操作。如果一定要删除数据，则需要先将物化视图删除，然后方可删除数据。
 
 2. 单表上过多的物化视图会影响导入的效率：导入数据时，物化视图和 Base 表数据是同步更新的，如果一张表的物化视图表超过 10 张，则有可能导致导入速度很慢。这就像单次导入需要同时导入 10 张表数据是一样的。
 
@@ -559,8 +566,8 @@ select year(k4)+month(k4) from d_table where year(k4) = 2020; // 命中kymd
 
 由于数据质量问题或者 Schema Change 内存使用超出限制导致物化视图创建失败。如果是内存问题，调大`memory_limitation_per_thread_for_schema_change_bytes`参数即可。
 
-:::caution
-注意：to_bitmap 的参数仅支持正整型，如果原始数据中存在负数，会导致物化视图创建失败。String 类型的字段可使用 bitmap_hash 或 bitmap_hash64 计算 Hash 值，并返回 Hash 值的 bitmap。
+:::caution 注意
+to_bitmap 的参数仅支持正整型，如果原始数据中存在负数，会导致物化视图创建失败。String 类型的字段可使用 bitmap_hash 或 bitmap_hash64 计算 Hash 值，并返回 Hash 值的 bitmap。
 :::
 
 ## 更多帮助

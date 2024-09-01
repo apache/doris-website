@@ -65,6 +65,7 @@
                         "table-design/data-model/tips"
                     ]
                 },
+                "table-design/row-store",
                 "table-design/data-partition",
                 "table-design/schema-change",
                 "table-design/cold-hot-separation",
@@ -209,6 +210,7 @@
                     ]
                 },
                 "query/high-concurrent-point-query",
+                "query/topn-query",
                 {
                     "type": "category",
                     "label": "Analyzing Query",
@@ -454,13 +456,6 @@
         },
         {
             "type": "category",
-            "label": "Use Case",
-            "items": [
-                "practical-guide/log-storage-analysis"
-            ]
-        },
-        {
-            "type": "category",
             "label": "SQL Reference",
             "items": [
                 {
@@ -567,20 +562,20 @@
                                 "sql-manual/sql-functions/date-time-functions/date-trunc",
                                 "sql-manual/sql-functions/date-time-functions/date-format",
                                 "sql-manual/sql-functions/date-time-functions/datediff",
-                                "sql-manual/sql-functions/date-time-functions/date_floor",
-                                "sql-manual/sql-functions/date-time-functions/second_floor",
-                                "sql-manual/sql-functions/date-time-functions/minute_floor",
-                                "sql-manual/sql-functions/date-time-functions/hour_floor",
-                                "sql-manual/sql-functions/date-time-functions/day_floor",
-                                "sql-manual/sql-functions/date-time-functions/month_floor",
-                                "sql-manual/sql-functions/date-time-functions/year_floor",
-                                "sql-manual/sql-functions/date-time-functions/date_ceil",
-                                "sql-manual/sql-functions/date-time-functions/second_ceil",
-                                "sql-manual/sql-functions/date-time-functions/minute_ceil",
-                                "sql-manual/sql-functions/date-time-functions/hour_ceil",
-                                "sql-manual/sql-functions/date-time-functions/day_ceil",
-                                "sql-manual/sql-functions/date-time-functions/month_ceil",
-                                "sql-manual/sql-functions/date-time-functions/year_ceil",
+                                "sql-manual/sql-functions/date-time-functions/date-floor",
+                                "sql-manual/sql-functions/date-time-functions/second-floor",
+                                "sql-manual/sql-functions/date-time-functions/minute-floor",
+                                "sql-manual/sql-functions/date-time-functions/hour-floor",
+                                "sql-manual/sql-functions/date-time-functions/day-floor",
+                                "sql-manual/sql-functions/date-time-functions/month-floor",
+                                "sql-manual/sql-functions/date-time-functions/year-floor",
+                                "sql-manual/sql-functions/date-time-functions/date-ceil",
+                                "sql-manual/sql-functions/date-time-functions/second-ceil",
+                                "sql-manual/sql-functions/date-time-functions/minute-ceil",
+                                "sql-manual/sql-functions/date-time-functions/hour-ceil",
+                                "sql-manual/sql-functions/date-time-functions/day-ceil",
+                                "sql-manual/sql-functions/date-time-functions/month-ceil",
+                                "sql-manual/sql-functions/date-time-functions/year-ceil",
                                 "sql-manual/sql-functions/date-time-functions/microsecond",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-add",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-diff",
@@ -785,7 +780,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/count-by-enum",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/map-agg",
-                                "sql-manual/sql-functions/aggregate-functions/bitmap_agg"
+                                "sql-manual/sql-functions/aggregate-functions/bitmap-agg"
                             ]
                         },
                         {
@@ -933,7 +928,7 @@
                                 "sql-manual/sql-functions/numeric-functions/random",
                                 "sql-manual/sql-functions/numeric-functions/mod",
                                 "sql-manual/sql-functions/numeric-functions/running-difference",
-                                "sql-manual/sql-functions/numeric-functions/uuid_numeric"
+                                "sql-manual/sql-functions/numeric-functions/uuid-numeric"
                             ]
                         },
                         {
@@ -960,17 +955,22 @@
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
                                 "sql-manual/sql-functions/table-functions/numbers",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
-                                "sql-manual/sql-functions/table-functions/explode-numbers-outer",
-                                "sql-manual/sql-functions/table-functions/s3",
-                                "sql-manual/sql-functions/table-functions/hdfs",
-                                "sql-manual/sql-functions/table-functions/local",
-                                "sql-manual/sql-functions/table-functions/iceberg-meta",
-                                "sql-manual/sql-functions/table-functions/backends",
-                                "sql-manual/sql-functions/table-functions/frontends",
-                                "sql-manual/sql-functions/table-functions/workload-group",
-                                "sql-manual/sql-functions/table-functions/catalogs",
-                                "sql-manual/sql-functions/table-functions/frontends_disks",
-                                "sql-manual/sql-functions/table-functions/queries"
+                                "sql-manual/sql-functions/table-functions/explode-numbers-outer"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Table Valued Functions",
+                            "items": [
+                                "sql-manual/sql-functions/table-valued-functions/s3",
+                                "sql-manual/sql-functions/table-valued-functions/hdfs",
+                                "sql-manual/sql-functions/table-valued-functions/local",
+                                "sql-manual/sql-functions/table-valued-functions/iceberg-meta",
+                                "sql-manual/sql-functions/table-valued-functions/backends",
+                                "sql-manual/sql-functions/table-valued-functions/frontends",
+                                "sql-manual/sql-functions/table-valued-functions/frontends-disks",
+                                "sql-manual/sql-functions/table-valued-functions/catalogs",
+                                "sql-manual/sql-functions/table-valued-functions/workload-group"
                             ]
                         },
                         {
@@ -1043,6 +1043,7 @@
                             "items": [
                                 "sql-manual/sql-data-types/date-time/datetime-overview",
                                 "sql-manual/sql-data-types/date-time/DATE",
+                                "sql-manual/sql-data-types/date-time/TIME",
                                 "sql-manual/sql-data-types/date-time/DATETIME"
                             ]
                         },
@@ -1075,8 +1076,8 @@
                                 "sql-manual/sql-data-types/aggregate/aggregate-overview",
                                 "sql-manual/sql-data-types/aggregate/HLL",
                                 "sql-manual/sql-data-types/aggregate/BITMAP",
-                                "sql-manual/sql-data-types/aggregate/QUANTILE_STATE",
-                                "sql-manual/sql-data-types/aggregate/AGG_STATE"
+                                "sql-manual/sql-data-types/aggregate/QUANTILE-STATE",
+                                "sql-manual/sql-data-types/aggregate/AGG-STATE"
                             ]
                         },
                         {
@@ -1317,7 +1318,6 @@
                                 "sql-manual/sql-reference/Show-Statements/SHOW-LOAD-PROFILE",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-LOAD-WARNINGS",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-INDEX",
-                                "sql-manual/sql-reference/Show-Statements/SHOW-MIGRATIONS",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-PARTITION-ID",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-SNAPSHOT",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-SQL-BLOCK-RULE",
@@ -1396,8 +1396,16 @@
             "type": "category",
             "label": "Tutorials",
             "items": [
-                "gettingStarted/tutorials/doris-hudi",
-                "gettingStarted/tutorials/doris-paimon"
+                {
+                    "type": "category",
+                    "label": "Building lakehouse",
+                    "items": [
+                        "gettingStarted/tutorials/building-lakehouse/doris-hudi",
+                        "gettingStarted/tutorials/building-lakehouse/doris-paimon",
+                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
+                    ]
+                },
+                "gettingStarted/tutorials/log-storage-analysis"
             ]
         }
     ],
@@ -1444,6 +1452,13 @@
     ],
     "releasenotes": [
         "releasenotes/all-release",
+        {
+            "type": "category",
+            "label": "v3.0",
+            "items": [
+                "releasenotes/v3.0/release-3.0.1"
+            ]
+        },
         {
             "type": "category",
             "label": "v2.1",

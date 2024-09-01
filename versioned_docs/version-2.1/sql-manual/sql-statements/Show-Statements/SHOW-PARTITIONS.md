@@ -46,12 +46,11 @@ When used in Internal catalog:
 1. Support the filtering of PartitionId, PartitionName, State, Buckets, ReplicationNum, LastConsistencyCheckTime and other columns
 2. TEMPORARY specifies to list temporary partitions
 
-<version since="dev">
 
 when used in Hive Catalog:
 Will return all partitions' name. Support multilevel partition table
 
-</version>
+
 
 ### Example
 

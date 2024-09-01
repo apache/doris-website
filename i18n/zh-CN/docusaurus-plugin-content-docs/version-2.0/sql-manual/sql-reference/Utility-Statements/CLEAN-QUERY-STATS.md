@@ -28,9 +28,9 @@ under the License.
 
 ### Name
 
-<version since="dev">
+
 CLEAN QUERY STATS
-</version>
+
 
 ### Description
 
@@ -44,9 +44,9 @@ CLEAN [ALL| DATABASE | TABLE] QUERY STATS [[FOR db_name]|[FROM|IN] table_name]];
 
 说明：
 
-1. 如果指定 ALL，则清空所有查询统计信息，包括数据库和表的统计信息，需要admin 权限
-2. 如果指定 DATABASE，则清空指定数据库的查询统计信息，需要对应database 的alter 权限
-3. 如果指定 TABLE，则清空指定表的查询统计信息，需要对应表的alter 权限
+1. 如果指定 ALL，则清空所有查询统计信息，包括数据库和表的统计信息，需要 admin 权限
+2. 如果指定 DATABASE，则清空指定数据库的查询统计信息，需要对应 database 的 alter 权限
+3. 如果指定 TABLE，则清空指定表的查询统计信息，需要对应表的 alter 权限
 
 ### Example
 

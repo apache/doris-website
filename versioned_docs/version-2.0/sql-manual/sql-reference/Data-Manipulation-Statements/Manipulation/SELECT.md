@@ -66,7 +66,10 @@ SELECT
 
    4. `ALL | DISTINCT ` : to refresh the result set, all is all, distinct/distinctrow will refresh the duplicate columns, the default is all
    
-   5. <version since="1.2" type="inline"> `ALL EXCEPT`: Filter on the full (all) result set, except specifies the name of one or more columns to be excluded from the full result set. All matching column names will be ignored in the output. </version>
+   5.  `ALL EXCEPT`: Filter on the full (all) result set, except specifies the name of one or more columns to be excluded from the full result set. All matching column names will be ignored in the output.
+
+  This feature  is supported since the Apache Doris 1.2 version
+
 
    6. `INTO OUTFILE 'file_name' ` : save the result to a new file (which did not exist before), the difference lies in the save format.
 

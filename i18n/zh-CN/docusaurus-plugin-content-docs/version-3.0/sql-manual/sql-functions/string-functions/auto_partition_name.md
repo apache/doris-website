@@ -26,11 +26,13 @@ under the License.
 
 ## auto_partition_name
 
-<version since="3.0.1"> 
+:::tip 提示
+该功能自 Apache Doris  3.0.1 版本起支持
+:::
 
 auto_partition_name
 
-</version>
+
 
 ### description
 

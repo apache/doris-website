@@ -290,9 +290,12 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
 #### `thrift_max_message_size`
 
-<version since="2.1.4"></version>
 
-默认值: 100MB
+:::tip 提示
+该功能自 Apache Doris  1.2.4 版本起支持
+:::
+
+默认值：100MB
 
 thrift 服务器接收请求消息的大小（字节数）上限。如果客户端发送的消息大小超过该值，那么 thrift 服务器会拒绝该请求并关闭连接，这种情况下，client 会遇到错误：“connection has been closed by peer”，使用者可以尝试增大该参数以绕过上述限制。
 

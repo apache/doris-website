@@ -143,12 +143,12 @@ WITH BROKER broker_name
 
     指定导入的 format 的一些参数。如导入的文件是`json`格式，则可以在这里指定`json_root`、`jsonpaths`、`fuzzy_parse`等参数。
 
-    - <version since="dev" type="inline"> enclose </version>
+    -   enclose 
   
       包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。
       注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。
 
-    - <version since="dev" type="inline"> escape </version>
+    -   escape 
 
       转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，然后将数据修改为"a,'b,\'c'"。
 
@@ -208,13 +208,18 @@ WITH BROKER broker_name
       
       布尔类型，为 true 表示支持一个任务只导入数据到对应分区的一个 tablet，默认值为 false，作业的任务数取决于整体并发度。该参数只允许在对带有 random 分桶的 olap 表导数的时候设置。
 
-    - <version since="dev" type="inline"> priority </version>
+    -   priority
 
       设置导入任务的优先级，可选 `HIGH/NORMAL/LOW` 三种优先级，默认为 `NORMAL`，对于处在 `PENDING` 状态的导入任务，更高优先级的任务将优先被执行进入 `LOADING` 状态。
 
--  <version since="1.2.3" type="inline"> comment </version>
+-  comment 
 
    指定导入任务的备注信息。可选参数。
+
+
+  :::tip 提示
+  该功能自 Apache Doris  1.2.3 版本起支持
+  :::
 
 ### Example
 

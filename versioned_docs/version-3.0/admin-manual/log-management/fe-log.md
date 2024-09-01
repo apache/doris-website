@@ -62,7 +62,7 @@ The following configuration items are configured in the `fe.conf` file.
 | --- | --- | --- | --- |
 | `LOG_DIR` | `ENV(DORIS_HOME)/log` |  | Storage path for all logs. By default, it is the `log/` directory under the FE deployment path. Note that this is an environment variable, and the configuration name should be in uppercase. |
 | `sys_log_level` | `INFO` | `INFO`, `WARN`, `ERROR`, `FATAL` | Log level of `fe.log`. Default is INFO. Not recommended to change, as INFO level contains many critical log information. |
-| `sys_log_roll_num` | 10 |  | Controls the maximum number of files for `fe.log` and `fe.warn.log`. Default is 10. When the number of log files exceeds this threshold due to log rolling or splitting, older log files will be deleted. |
+| `sys_log_roll_num` | 10 |  | Controls the maximum number of files for `fe.log` and `fe.warn.log` in one day. Default is 10. When the number of log files exceeds this threshold due to log rolling or splitting, older log files will be deleted. |
 | `sys_log_verbose_modules` |  |  | Can set specific Java package files to enable DEBUG level logging. See the "Enable DEBUG Log" section for details. |
 | `sys_log_enable_compress` | false | true, false | Whether to enable compression for historical `fe.log` and `fe.warn.log` logs. Default is off. When enabled, historical audit logs will be archived using gzip compression. |
 | `log_rollover_strategy` | `age` | `age`, `size` | Log retention strategy, default is `age`, which retains historical logs based on time. `size` retains historical logs based on log size. |
@@ -79,8 +79,16 @@ The following configuration items are configured in the `fe.conf` file.
 | `audit_log_modules` | `{"slow_query", "query", "load", "stream_load"}` |  | Module types in `fe.audit.log`. Default includes slow query, query, load, stream load. "Query" includes all DDL, DML, SQL operations. "Slow query" refers to operations that exceed the `qe_slow_log_ms` threshold. "Load" refers to Broker Load. "Stream load" refers to stream load operations. |
 | `qe_slow_log_ms` | 5000 |  | When the execution time of DDL, DML, SQL statements exceeds this threshold, it will be separately recorded in the `slow_query` module of `fe.audit.log`. Default is 5000 ms. |
 | `audit_log_enable_compress` | false | true, false | Whether to enable compression for historical `fe.audit.log` logs. Default is off. When enabled, historical audit logs will be archived using gzip compression. |
-| `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | Output mode of FE logs. `NORMAL` is the default output mode, with synchronous output and location information. `BRIEF` mode is synchronous output without location information. `ASYNC` mode is asynchronous output without location information, with performance increasing in that order. |
+| `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | FE log output mode, where `NORMAL` is the default output mode, log output is synchronous and includes location information. `ASYNC` is the default log output is asynchronous and includes location information. `BRIEF` mode is log output asynchronously but does not include location information. The performance of the three log output modes increases in sequence. |
 
+::: note
+Starting from version 3.0.2, the default value of `sys_log_mode` configuration is changed to `AYSNC`.
+:::
+
+:::tip
+`sys_log_roll_num` 控制的是一天的保留日志数量，而不是总数量，需要配合 `sys_log_delete_age` 共同确定总保留日志数量。
+`sys_log_roll_num` controls the number of retained logs per day, not the total number. It needs to be combined with `sys_log_delete_age` to determine the total number of retained logs.
+:::
 
 ## Enable DEBUG Log
 
@@ -91,13 +99,13 @@ The Debug level log of FE can be enabled by modifying the configuration file or 
    Add the configuration item `sys_log_verbose_modules` in fe.conf. For example:
 
    ```text
-   # 仅开启类 org.apache.doris.catalog.Catalog 的 Debug 日志
+   # Only open DEBUG log for "org.apache.doris.catalog.Catalog"
    sys_log_verbose_modules=org.apache.doris.catalog.Catalog
    
-   # 开启包 org.apache.doris.catalog 下所有类的 Debug 日志
+   # Open DEBUG log for all classes in "org.apache.doris.catalog"
    sys_log_verbose_modules=org.apache.doris.catalog
    
-   # 开启包 org 下所有类的 Debug 日志
+   # Open DEBUG log for all classes in "org"
    sys_log_verbose_modules=org
    ```
 
@@ -152,7 +160,7 @@ The Debug level log of FE can be enabled by modifying the configuration file or 
 
    The `del_verbose` parameter specifies the package name or class name for closing Debug log.
 
-## Container Environment Log Configuration
+## Log Configuration for k8s
 
 In some cases, the FE process is deployed through a container environment (such as k8s). All logs need to be output through standard output stream instead of files.
 
