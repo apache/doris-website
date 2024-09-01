@@ -844,7 +844,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
-                                "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
