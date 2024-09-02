@@ -39,7 +39,7 @@ grammar:
 ```sql
  SHOW BACKUP [FROM db_name]
     [WHERE SnapshotName ( LIKE | = ) 'snapshot name']
-````
+```
 
 illustrate:
 
@@ -72,7 +72,7 @@ illustrate:
 
    ```sql
     SHOW BACKUP FROM example_db;
-   ````
+   ```
 
 ### Keywords
 

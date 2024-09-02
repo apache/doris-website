@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 ALTER SYSTEM ADD OBSERVER "follower_host:edit_log_port"
-````
+```
 
 illustrate:
 
@@ -51,7 +51,7 @@ illustrate:
 
     ```sql
     ALTER SYSTEM ADD OBSERVER "host_ip:9010"
-    ````
+    ```
 
 ### Keywords
 

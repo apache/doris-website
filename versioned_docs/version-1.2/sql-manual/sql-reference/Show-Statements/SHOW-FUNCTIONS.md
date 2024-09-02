@@ -40,7 +40,7 @@ grammar
 
 ```sql
 SHOW [FULL] [BUILTIN] FUNCTIONS [IN|FROM db] [LIKE 'function_pattern']
-````
+```
 
 Parameters
 
@@ -53,7 +53,7 @@ grammar
 
 ```sql
 SHOW GLOBAL [FULL] FUNCTIONS [LIKE 'function_pattern']
-````
+```
 
 Parameters
 
@@ -65,7 +65,7 @@ Parameters
 
 ### Example
 
-````sql
+```sql
 mysql> show full functions in testDb\G
 **************************** 1. row ******************** ******
         Signature: my_add(INT,INT)
@@ -122,7 +122,7 @@ mysql> show global functions ;
 +---------------+
 2 rows in set (0.00 sec)    
     
-````
+```
 
 ### Keywords
 

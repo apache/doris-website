@@ -40,7 +40,7 @@ grammar:
 
 ```sql
 SHOW ENCRYPTKEYS [IN|FROM db] [LIKE 'key_pattern']
-````
+```
 
 parameter
 
@@ -65,7 +65,7 @@ parameter
     | example_db.my_key | ABCD123456789     |
     +-------------------+-------------------+
     1 row in set (0.00 sec)
- ````
+ ```
 
 ### Keywords
 

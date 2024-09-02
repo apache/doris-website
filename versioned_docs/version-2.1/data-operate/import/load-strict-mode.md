@@ -55,16 +55,16 @@ Different import methods set strict mode in different ways.
    (
        "strict_mode" = "true"
    )
-   ````
+   ```
 
 2. [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD)
 
-   ```bash
+   ```shell
    curl --location-trusted -u user:passwd \
    -H "strict_mode: true" \
    -T 1.txt \
    http://host:port/api/example_db/my_table/_stream_load
-   ````
+   ```
 
 3. [ROUTINE LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD)
 
@@ -79,7 +79,7 @@ Different import methods set strict mode in different ways.
        "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
        "kafka_topic" = "my_topic"
    );
-   ````
+   ```
 
 4. [INSERT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT)
 
@@ -88,7 +88,7 @@ Different import methods set strict mode in different ways.
    ```sql
    SET enable_insert_strict = true;
    INSERT INTO my_table ...;
-   ````
+   ```
 
 ## The role of strict mode
 

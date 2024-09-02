@@ -321,7 +321,7 @@ FE 目前有以下几个端口
 
 2. 执行以下命令，从 Master FE 内存中 dump 出元数据：(下面称为 image_mem)
 
-    ```bash
+    ```shell
     curl -u $root_user:$password http://$master_hostname:8030/dump
     ```
 
@@ -330,7 +330,7 @@ FE 目前有以下几个端口
 
     自 1.2.0 版本起，推荐使用以下功能验证 `image_mem` 文件：
 
-    ```bash
+    ```shell
     sh start_fe.sh --image path_to_image_mem
     ```
 

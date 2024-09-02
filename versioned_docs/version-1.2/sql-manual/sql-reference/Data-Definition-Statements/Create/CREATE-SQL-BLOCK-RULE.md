@@ -45,7 +45,7 @@ grammar:
 ```sql
 CREATE SQL_BLOCK_RULE rule_name
 [PROPERTIES ("key"="value", ...)];
-````
+```
 
 Parameter Description:
 
@@ -68,7 +68,7 @@ Parameter Description:
     "global"="false",
     "enable"="true"
     );
-    ````
+    ```
 
     >Notes:
     >
@@ -79,7 +79,7 @@ Parameter Description:
     ```sql
     select * from order_analysis;
     ERROR 1064 (HY000): errCode = 2, detailMessage = sql match regex sql block rule: order_analysis_rule
-    ````
+    ```
 
 
 2. Create test_rule2, limit the maximum number of scanned partitions to 30, and limit the maximum scan base to 10 billion rows. The example is as follows:
@@ -92,7 +92,7 @@ Parameter Description:
     "global" = "false",
     "enable" = "true"
     );
-   ````
+   ```
 3. Create SQL BLOCK RULE with special chars
 
     ```sql
@@ -110,9 +110,9 @@ Parameter Description:
 
 ### Keywords
 
-````text
+```text
 CREATE, SQL_BLCOK_RULE
-````
+```
 
 ### Best Practice
 

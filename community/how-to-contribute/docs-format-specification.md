@@ -123,6 +123,8 @@ The Tab key and the Space key are commonly used for alignment. Therefore, the fo
 
 - Set the tab size to be equivalent to four half-width spaces in Markdown editors, such as Visual Studio Code.
 
+- Indentation may affect document rendering results, **which is subject to correct rendering by rich text editors such as vscode (e.g., code blocks within a multi-level indentation structure sometimes still require 0-level indentation to render correctly)**.
+
 ### 02 Numbered Lists and Bullet Points
 
 Numbered lists typically emphasize the priority order between items. When using numbered lists and bullet points, the following guidelines should be followed:
@@ -155,38 +157,38 @@ Link descriptions are not advisable to repeatedly use phrases such as "see detai
 
 ### 04 Code blocks
 
-- You can create fenced code blocks by placing triple backticks ````` before and after the code block. We recommend placing a blank line before and after code blocks to make the raw formatting easier to read.
+- You can create fenced code blocks by placing triple backticks(\```) before and after the code block. We recommend placing a blank line before and after code blocks to make the raw formatting easier to read.
 
 - You can add an optional language identifier to enable syntax highlighting in your fenced code block: 
 
 | Language   | Syntax Higlighting       |
 | :--------- | :----------------------- |
-| Shell      | ```shell``` or ```bash``` |
-| Python     | ```python```              |
-| JSON       | ```json```                |
-| XML        | ```xml```                 |
-| SQL        | ```sql```                 |
-| YAML       | ```yaml``` or ```yml```      |
-| Markdown   | ```markdown``` or```md```  |
-| JavaScript | ```js``` or ```javascript``` |
-| Java       | ```java```                |
-| C++        | ```cpp```                |
-| C          | ```c```                   |
-| Ruby       | ```ruby```                |
-| HTML       | ```html```                |
-| CSS        | ````css`                 |
-| PHP        | ```php```                 |
+| Shell      | \```shell```             |
+| Python     | \```python```              |
+| JSON       | \```json```                |
+| XML        | \```xml```                 |
+| SQL        | \```sql```                 |
+| YAML       | \```yaml\``` or \```yml```      |
+| Markdown   | \```markdown\``` or\```md```  |
+| JavaScript | \```js\``` or \```javascript``` |
+| Java       | \```java```                |
+| C++        | \```cpp```                |
+| C          | \```c```                   |
+| Ruby       | \```ruby```                |
+| HTML       | \```html```                |
+| CSS        | \```css```                 |
+| PHP        | \```php```                 |
 
-- When using the ```bash` code block, it is recommended to separate the command and the output results. Here is an example:
+- When using the ```shell` code block, it is recommended to separate the command and the output results. Here is an example:
   - Use the following command to view the service
   
-   ```Bash
+   ```shell
     kubectl get pod --namespace doris
     ```
 
   - The output result
   
-   ```Bash
+   ```shell
     NAME                     READY   STATUS    RESTARTS   AGE
     doriscluster-helm-fe-0   1/1     Running   0          1m39s
     doriscluster-helm-fe-1   1/1     Running   0          1m39s

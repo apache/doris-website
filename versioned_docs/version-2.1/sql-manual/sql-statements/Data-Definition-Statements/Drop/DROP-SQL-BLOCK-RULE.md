@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 DROP SQL_BLOCK_RULE test_rule1,...
-````
+```
 
 ### Example
 
@@ -47,12 +47,12 @@ DROP SQL_BLOCK_RULE test_rule1,...
     ```sql
     mysql> DROP SQL_BLOCK_RULE test_rule1,test_rule2;
     Query OK, 0 rows affected (0.00 sec)
-    ````
+    ```
 
 ### Keywords
 
-````text
+```text
 DROP, SQL_BLOCK_RULE
-````
+```
 
 ### Best Practice
