@@ -218,7 +218,7 @@ In order to ensure the safety of your data, please use 3 copies to store your da
 3. Copy the new version of `/bin`, `/lib` directory to the original BE directory
 
     ```shell
-    cp ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
+    cp -r ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
     cp -r ${DORIS_NEW_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib
     ```
 

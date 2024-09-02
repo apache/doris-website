@@ -220,7 +220,7 @@ h. 如果启动成功，则代表兼容性没有问题，停止测试环境的 F
 3. 复制新版本的  `/bin`，`/lib` 目录到原 BE 目录下
 
    ```shell
-   cp ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
+   cp -r ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
    cp -r ${DORIS_NEW_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib
    ```
 
@@ -265,8 +265,8 @@ h. 如果启动成功，则代表兼容性没有问题，停止测试环境的 F
 3. 复制新版本的  `/bin`，`/lib`，`/mysql_ssl_default_certificate` 目录到原 FE 目录下
 
    ```shell
-   cp ${DORIS_NEW_HOME}/fe/bin ${DORIS_OLD_HOME}/fe/bin
-   cp ${DORIS_NEW_HOME}/fe/lib ${DORIS_OLD_HOME}/fe/lib
+   cp -r ${DORIS_NEW_HOME}/fe/bin ${DORIS_OLD_HOME}/fe/bin
+   cp -r ${DORIS_NEW_HOME}/fe/lib ${DORIS_OLD_HOME}/fe/lib
    cp -r ${DORIS_NEW_HOME}/fe/mysql_ssl_default_certificate ${DORIS_OLD_HOME}/fe/mysql_ssl_default_certificate
    ```
 

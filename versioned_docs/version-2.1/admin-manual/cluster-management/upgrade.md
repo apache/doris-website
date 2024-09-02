@@ -218,7 +218,7 @@ In order to ensure the safety of your data, please use 3 copies to store your da
 3. Copy the new version of `/bin`, `/lib` directory to the original BE directory
 
     ```shell
-    cp ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
+    cp -r ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
     cp -r ${DORIS_NEW_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib
     ```
 
@@ -262,8 +262,8 @@ Upgrade the non-Master nodes first, and then upgrade the Master nodes.
 3. Copy the new version of `/bin`, `/lib` directory to the original FE directory
 
     ```shell
-    cp ${DORIS_NEW_HOME}/fe/bin ${DORIS_OLD_HOME}/fe/bin
-    cp ${DORIS_NEW_HOME}/fe/lib ${DORIS_OLD_HOME}/fe/lib
+    cp -r ${DORIS_NEW_HOME}/fe/bin ${DORIS_OLD_HOME}/fe/bin
+    cp -r ${DORIS_NEW_HOME}/fe/lib ${DORIS_OLD_HOME}/fe/lib
     ```
 
 4. Start the FE node
