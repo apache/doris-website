@@ -56,6 +56,8 @@ It may be that the Thread Cache caches a large number of large pages, because th
 
 Consider reducing `lg_tcache_max` in `JEMALLOC_CONF` in `be.conf`. `lg_tcache_max` is the upper limit of the byte size of the page allowed to be cached. The default value is 15, that is, 32 KB (2^15). Pages exceeding this size will not be cached in the Thread Cache. `lg_tcache_max` corresponds to `Maximum thread-cached size class` in the Jemalloc Profile.
 
+> Before Doris 2.1, the default value of `lg_tcache_max` in `JEMALLOC_CONF` in `be.conf` is 20, which will cause the Jemalloc Cache to be too large in some scenarios. After Doris 2.1, it has been changed back to the default value of Jemalloc 15.
+
 This is usually because the query or load in the BE process is applying for a large number of memory pages of large size classes, or after executing a large memory query or load, a large number of memory pages of large size classes are cached in the Thread Cache. There are two times to clean up the Thread Cache. One is to recycle the memory blocks that have not been used for a long time when the memory application and release reach a certain number of times; the other is to recycle all pages when the thread exits. At this time, there is a Bad Case. If the thread has not executed new queries or loads in the future, it will no longer allocate memory and fall into a so-called `idle` state. Users expect that the memory can be released after the query is completed, but in fact, in this scenario, if the thread does not exit, the Thread Cache will not be cleaned.
 
 However, there is usually no need to pay attention to the Thread Cache. When the available memory of the process is insufficient, if the size of the Thread Cache exceeds 1G, Doris will manually flush the Thread Cache.
@@ -81,6 +83,8 @@ extents:        size ind       ndirty        dirty       nmuzzy        muzzy    
 ```
 
 Reduce `dirty_decay_ms` of `JEMALLOC_CONF` in `be.conf` to 2000 ms or less. The default `dirty_decay_ms` in `be.conf` is 5000 ms. Jemalloc will release dirty pages according to a smooth gradient curve within the time specified by `dirty_decay_ms`. For reference, [Jemalloc opt.dirty_decay_ms](https://jemalloc.net/jemalloc.3.html#opt.dirty_decay_ms). When the BE process has insufficient available memory and triggers Minor GC or Full GC, it will actively release all dirty pages according to a certain strategy.
+
+> Before Doris 2.1, the default value of `dirty_decay_ms` in `JEMALLOC_CONF` in `be.conf` is 15000, which will cause the Jemalloc Cache to be too large in some scenarios. After Doris 2.1, the default value is 5000.
 
 `extents` in Jemalloc Profile contains the statistical values ​​of buckets of different page sizes in all Jemalloc `arena`, where `ndirty` is the number of dirty pages and `dirty` is the total memory of dirty pages. Refer to `stats.arenas.<i>.extents.<j>.{extent_type}_bytes` in [Jemalloc](https://jemalloc.net/jemalloc.3.html) and add up the `dirty` of all Page Sizes to get the memory byte size of the Dirty Page in Jemalloc.
 

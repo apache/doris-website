@@ -24,29 +24,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-When `MEM_LIMIT_EXCEEDED` appears in the error message of query or load and contains `Process memory not enough`, it means that the process is canceled due to insufficient available memory.
+When `MEM_LIMIT_EXCEEDED` appears in the error message of the query and contains `Process memory not enough`, it means that the process is canceled due to insufficient available memory.
 
-Analysis steps:
+First, parse the error message to confirm the reason for Cancel, the memory size used by the query itself when Canceled, and the memory status of the process. There are usually three reasons for the Cancel of the query:
 
-1. Analyze the error message and clarify the cause of the error.
+1. The memory of the Canceled Query itself is too large.
 
-2. If the memory of the query or load itself is too large, try to reduce its memory usage.
+2. The memory of the Canceled Query itself is small, and there are other queries with larger memory.
 
-3. If the memory of processes other than query and load is too large, try to analyze the memory log, try to locate the memory location and consider reducing memory usage to reserve more memory for query and load execution.
+3. The memory of the globally shared Cahce, metadata, etc. is too large, or the memory of other tasks other than query and load tasks is too large
 
 ## Error message analysis
 
-There are two situations when the available memory of the process is insufficient. One is that the current memory of the process exceeds the configured memory limit, and the other is that the remaining available memory of the system is lower than the water mark. There are three paths that will cancel tasks such as queries:
+There are two situations when the available memory of the process is insufficient. One is that the current memory of the process exceeds the configured memory limit, and the other is that the remaining available memory of the system is lower than the watermark. There are three paths to cancel tasks such as queries:
 
 - If the error message contains `cancel top memory used`, it means that the task is canceled in the memory Full GC.
 
-- If the error message contains `cancel top memory overcommit`, it means that the task is canceled in the memory Minor GC.
+- If the error message contains `cancel top memory overcommit`, it means that the task was canceled in the memory Minor GC.
 
-- If the error message contains `Allocator sys memory check failed`, it means that the task failed to apply for memory from `Doris Allocator` and was canceled.
+- If the error message contains `Allocator sys memory check failed`, it means that the task was canceled after failing to apply for memory from `Doris Allocator`.
 
 After analyzing the error message below,
 
-- If the memory used by the query and load itself accounts for a large proportion of the process memory, refer to [Query or load own memory is too large] to analyze the memory usage of the query and load, and try to adjust parameters or optimize SQL to reduce the memory required for execution.
+- If the memory used by the query and load itself accounts for a large proportion of the process memory, refer to [Query own memory is too large] to analyze the memory usage of the query and load, and try to adjust parameters or optimize SQL to reduce the memory required for execution.
 
 - If the task itself uses very little memory, refer to [Process memory other than query and load is too large] to try to reduce the memory usage of other locations in the process, so as to reserve more memory for query and other task execution.
 
@@ -80,26 +80,34 @@ Error message analysis: `process memory used 3.12 GB exceed soft limit 6.02 GB o
 
 ### 3 Failed to apply for memory from Allocator
 
-Doris BE's large memory application will be allocated through `Doris Allocator`, and the memory size will be checked during allocation. If the process has insufficient available memory, an exception will be thrown and an attempt will be made to Cancel the current query or load.
+Doris BE's large memory requests will be allocated through `Doris Allocator`, and the memory size will be checked during allocation. If the process has insufficient available memory, an exception will be thrown and the current query will be attempted to be canceled.
 
 ```sql
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED]PreCatch error code:11, [E11] Allocator sys memory check failed: Cannot alloc:4294967296, consuming tracker:<Query#Id=457efb1fdae74d3 b-b4fffdcfd4baaf32>, peak used 405956032, current used 386704704, exec node:<>, process memory used 2.23 GB exceed limit 3.01 GB or sys available memory 181.67 GB less than low water mark 3.20 GB.
 ```
 
-Error message analysis: 1. `consuming tracker:<Query#Id=457efb1fdae74d3b-b4fffdcfd4baaf32>, peak used 405956032, current used 386704704, exec node:VAGGREGATION_NODE (id=7)>`: The queryID currently being canceled, the query currently uses 386704704 Bytes of memory, the query memory peak is 405956032 Bytes, and the operator being executed is `VAGGREGATION_NODE (id=7)>`.
+Error message analysis:
+
+1. `consuming tracker:<Query#Id=457efb1fdae74d3b-b4fffdcfd4baaf32>, peak used 405956032, current used 386704704, exec node:VAGGREGATION_NODE (id=7)>`: The queryID currently being canceled, the query currently uses 386704704 Bytes of memory, the query memory peak is 405956032 Bytes, and the operator being executed is `VAGGREGATION_NODE (id=7)>`.
 
 2. `Cannot alloc:4294967296`: The current application for 4 GB of memory failed because the current process memory of 2.23 GB plus 4 GB will exceed the MemLimit of 3.01 GB.
 
-## Query or load own memory is too large
+## The memory usage of the Canceled Query is too large
 
-Refer to [Query Memory Analysis](./query-memory-analysis.md) or [Load Memory Analysis](./load-memory-analysis.md) to analyze the memory usage of query and load, and try to adjust parameters or optimize SQL to reduce the memory required for execution.
+Refer to [Query Memory Analysis](./query-memory-analysis.md) or [Load Memory Analysis](./load-memory-analysis.md) to analyze the memory usage of queries and loads, and try to adjust parameters or optimize SQL to reduce the memory required for execution.
 
-It should be noted that if the task fails to apply for memory from Allocator and is Canceled, `Cannot alloc` or `try alloc` will show that the memory currently being applied for by Query is too large. At this time, you need to pay attention to whether the memory application here is reasonable. Search `Allocator sys memory check failed` in `be/log/be.INFO` to find the stack of memory application.
+It should be noted that if the task fails to apply for memory from the Allocator and is Canceled, `Cannot alloc` or `try alloc` will show that the memory currently being applied for by the Query is too large. At this time, you need to pay attention to whether the memory application here is reasonable. Search `Allocator sys memory check failed` in `be/log/be.INFO` to find the stack of memory application.
 
-## Process memory other than query and load is too large
+## The Canceled Query itself has a small memory, and there are other queries with larger memory
 
-When the task is Canceled due to insufficient available memory in the process, the process memory statistics log can be found in `be/log/be.INFO`. Refer to [Memory Log Analysis](./memory-log-analysis.md) to find the `Memory Tracker Summary` in the log, and then refer to the [Memory Tracker Statistics Missing] section in [Memory Tracker](./../memory-feature/memory-tracker.md) to analyze whether Memory Tracker has statistics missing.
+Usually, it is because the query with larger memory is stuck in the Cancel stage and cannot release the memory in time. Full GC will first cancel queries in order of memory usage, and then cancel loads in order of memory usage. If a query is canceled in memory Full GC, but there are other queries in the BE process that use more memory than the currently canceled query, you need to pay attention to whether these queries with larger memory usage are stuck during the cancel process.
 
-If Memory Tracker has statistics missing, refer to the [Memory Tracker Statistics Missing] section for further analysis. Otherwise, Memory Tracker has counted most of the memory and there is no statistics missing. Refer to [Overview](./../overview.md) to analyze the reasons why different parts of the Doris BE process occupy too much memory and how to reduce its memory usage.
+First, execute `grep {queryID} be/log/be.INFO` to find the time when the query is canceled, and then search `Memory Tracker Summary` in the context to find the process memory statistics log. If there is a query that uses more memory in `Memory Tracker Summary`. Run `grep {queryID with larger memory} be/log/be.INFO` to check if there is a log with the keyword `Cancel`. The corresponding time point is the time when the query is canceled. If the query is also canceled, and the time point when the query with larger memory is canceled is different from the time point when the current query is canceled, refer to [Query Cancel process stuck] in [Memory Issue FAQ](./memory-issue-faq.md) to analyze whether the query with larger memory is stuck in the cache process. For the analysis of `Memory Tracker Summary`, refer to [Memory Log Analysis](./memory-log-analysis.md).
 
-In addition, pay attention to the problem of Query Cancel stuck. Full GC will first cancel Query according to memory from large to small, and then cancel Load according to memory from large to small. If a query is canceled during a memory Full GC, but there are other queries in the BE process that use more memory than the currently canceled query, you need to pay attention to whether these queries with larger memory are stuck during the Cancel process. Usually, you can run `grep queryID be/log/be.INFO with larger memory` to check whether these queries with larger memory have triggered Cancel, and compare the Cancel time with the current Full GC time. If the interval is long (greater than 3s), then these queries with larger memory stuck during the Cancel process cannot release memory, which will also cause insufficient memory for subsequent query execution.
+## Process memory outside query and load tasks is too large
+
+Try to locate the memory location and consider reducing memory usage to reserve more memory for query and load execution.
+
+The time when the task was canceled due to insufficient available memory can be found in the process memory statistics log in `be/log/be.INFO`. Run `grep queryID be/log/be.INFO` to find the time when the query was canceled, and then search `Memory Tracker Summary` in the context to find the process memory statistics log. Then refer to the [Process Memory Statistics Log Analysis] section in [Memory Log Analysis](./memory-log-analysis.md) for further analysis. Before analysis, refer to the [Memory Tracker Statistics Missing] section in [Memory Tracker](./../memory-feature/memory-tracker.md) to analyze whether the Memory Tracker has statistics missing.
+
+If the Memory Tracker has statistics missing, refer to the [Memory Tracker Statistics Missing] section for further analysis. Otherwise, Memory Tracker counts most of the memory and there is no missing statistics. Refer to [Overview](./../overview.md) to analyze the reasons why different parts of the Doris BE process occupy too much memory and how to reduce its memory usage.
