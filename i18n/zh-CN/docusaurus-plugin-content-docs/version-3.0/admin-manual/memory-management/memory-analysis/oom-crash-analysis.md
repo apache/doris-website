@@ -44,6 +44,8 @@ under the License.
 
 若满足如下现象，那么可以认为是集群内存压力过大，导致在某一时刻进程内存状态没有及时刷新，内存 GC 没能及时释放内存，导致没能有效控制 BE 进程内存。
 
+> Doris 2.1 之前 Memory GC 还不完善，内存持续紧张时往往更容易触发 OOM Killer。
+
 - 对 `Memory Tracker Summary` 的分析发现查询和其他任务、各个Cache、元数据等内存使用都合理。
 
 - 对应时间段的 BE 进程内存监控显示长时间维持在较高的内存使用率，不存在内存泄漏的迹象
@@ -64,9 +66,7 @@ under the License.
 
 ### Query Cancel 过程中卡住
 
-> 常见于 Doris 2.1.3 之前
-
-定位 `be/log/be.INFO` 中 OOM Killer 时间点前的内存日志，自下而上找到最后一次打印的 `tasks is being canceled and has not been completed yet` 关键词，这行日志表示存在 Query 正在被 Cancel 但没有 Cancel 完成。如果其后的 QueryID 列表不为空，执行 `grep queryID be/log/be.INFO` 确认 Query 的开始时间和触发 Cancel 的时间，若触发 Cancel 的时间和 OOM Killer 的时间间隔较长（大于3s），那么说明 Query Cancel 过程中卡住，进一步分析 Query 执行日志。
+再 `be/log/be.INFO` 日志中定位到 OOM Killer 的时间点，然后在上下文搜索 `Memory Tracker Summary` 找到进程内存统计日志，若 `Memory Tracker Summary` 中存在使用内存较大的 Query。执行 `grep {queryID} be/log/be.INFO` 确认是否有 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间，若该 Query 已经被 Cancel，且 Query 被 Cancel 的时间点和触发 OOM Killer 的时间点相隔较久，参考 [内存问题 FAQ](./memory-issue-faq.md) 中对 [Query Cancel 过程中卡住] 的分析。有关 `Memory Tracker Summary` 的分析参考 [内存日志分析](./memory-log-analysis.md)。
 
 ### Jemalloc Metadata 内存占用大
 

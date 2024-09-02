@@ -46,6 +46,8 @@ If there is no error message in `log/be.out` after the BE process crashes, execu
 
 ## 3 Memory Leak
 
+> If you encounter a suspected memory leak, the best solution is to upgrade to the latest three-digit version. If you are using Doris 2.0, upgrade to the latest version of Doris 2.0.x, because it is likely that other people have encountered the same phenomenon, and most memory leaks are fixed in version iterations.
+
 If the following phenomenon is observed, it means that there may be a memory leak:
 
 - Doris Grafana or server monitoring finds that the memory of the Doris BE process has been growing linearly, and the memory does not decrease after the task on the cluster stops.
@@ -89,3 +91,13 @@ It may be the memory occupied by the Column Reader and Index Read opened when re
 If you see the `Segment` and `ColumnReader` fields in the call stack with a large memory share in the Heap Profile, it can be basically confirmed that a large amount of memory is occupied when reading the Segment.
 
 At this time, you can only modify the SQL to reduce the amount of data scanned, or reduce the bucket size specified when creating the table, so as to open fewer segments.
+
+## 8. Query Cancel stuck
+
+> Common before Doris 2.1.3
+
+Most of the memory requested during query execution needs to be released when the query ends. When the process memory is sufficient, there is usually no need to pay attention to how fast or slow the query ends. However, when the process memory is insufficient, some queries are often canceled according to a certain strategy to release their memory and avoid the process triggering OOM Killer. At this time, if the query cancel process is stuck and the memory cannot be released in time, in addition to increasing the risk of triggering OOM Killer, it may also cause more queries to be canceled due to insufficient process memory.
+
+If a query is known to be canceled, the following is to analyze whether it is stuck in the cancel process based on this QueryID. First, execute `grep {queryID} be/log/be.INFO` to find the first log containing the `Cancel` keyword. The corresponding time point is the time when the query is canceled. Find the log containing the keyword `deregister query/load memory tracker`. The corresponding time point is the time when the query cancel is completed. If the OOM Killer is finally triggered, and no log containing the keyword `deregister query/load memory tracker` is found, it means that the query has not been canceled until the OOM Killer occurs. Usually, if the query cancel process takes more than 3s, the query is stuck in the cancel process, and the query execution log needs to be further analyzed.
+
+In addition, after executing `grep {queryID} be/log/be.INFO`, if you see a log containing the keyword `tasks is being canceled and has not been completed yet`, the QueryID list behind it means that when the Memory GC is executed, it is found that these queries are being canceled but not canceled. At this time, these queries will be skipped and memory will continue to be released elsewhere. This can be used to determine whether the behavior of the Memory GC is as expected.
