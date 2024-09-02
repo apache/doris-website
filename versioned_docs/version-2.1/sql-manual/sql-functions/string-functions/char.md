@@ -24,7 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<version since="1.2">
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
 
 ## function char
 ### description
@@ -39,7 +41,7 @@ If the result string is illegal for the given character set, the result from `CH
 Arguments larger than `255` are converted into multiple result bytes. For example, `char(15049882)` is equivalent to `char(229, 164, 154)`.
 
 Currently only `utf8` is supported for `charset_name`.
-</version>
+
 
 ### example
 

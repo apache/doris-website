@@ -226,7 +226,7 @@ UNIQUE KEY(k1, k2)
     )
     ```
 
-3. <version since="1.2" type="inline"> MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间，设定时间单位和步长，时间单位支持年、月、日、周和小时。</version>
+3. MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间，设定时间单位和步长，时间单位支持年、月、日、周和小时。
 
     ```
     PARTITION BY RANGE(col)
@@ -237,6 +237,9 @@ UNIQUE KEY(k1, k2)
        FROM ("2023-01-03") TO ("2023-01-14") INTERVAL 1 DAY
     )
     ```
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
 4. MULTI RANGE：批量创建数字类型的 RANGE 分区，定义分区的左闭右开区间，设定步长。
 
@@ -363,13 +366,12 @@ UNIQUE KEY(k1, k2)
 
 * `enable_unique_key_merge_on_write`
 
-    <version since="1.2" type="inline"> Unique 表是否使用 Merge-on-Write 实现。</version>
-
+    Unique 表是否使用 Merge-on-Write 实现。
     该属性在 2.1 版本之前默认关闭，从 2.1 版本开始默认开启。
 
 * `light_schema_change`
 
-    <version since="1.2" type="inline"> 是否使用 Light Schema Change 优化。</version>
+    是否使用 Light Schema Change 优化。
 
     如果设置成 `true`, 对于值列的加减操作，可以更快地，同步地完成。
 
@@ -740,7 +742,7 @@ UNIQUE KEY(k1, k2)
     ```
 注：需要先创建 s3 resource 和 storage policy，表才能关联迁移策略成功
 
-<version since="1.2.0">
+
 
 13. 批量创建分区
     ```sql
@@ -789,7 +791,10 @@ UNIQUE KEY(k1, k2)
 
 注：批量创建分区可以和常规手动创建分区混用，使用时需要限制分区列只能有一个，批量创建分区实际创建默认最大数量为 4096，这个参数可以在 fe 配置项 `max_multi_partition_num` 调整
 
-</version>
+:::tip 提示
+该功能自 Apache Doris  1.2.3 版本起支持
+:::
+
 
 1.  批量无排序列 Duplicate 表
 
@@ -823,7 +828,7 @@ UNIQUE KEY(k1, k2)
 
 #### 分区和分桶
 
-一个表必须指定分桶列，但可以不指定分区。关于分区和分桶的具体介绍，可参阅 [数据划分](../../../../data-table/data-partition.md) 文档。
+一个表必须指定分桶列，但可以不指定分区。关于分区和分桶的具体介绍，可参阅 [数据划分](../../../../table-design/data-partition.md) 文档。
 
 Doris 中的表可以分为分区表和无分区的表。这个属性在建表时确定，之后不可更改。即对于分区表，可以在之后的使用过程中对分区进行增删操作，而对于无分区的表，之后不能再进行增加分区等操作。
 
@@ -833,11 +838,11 @@ Doris 中的表可以分为分区表和无分区的表。这个属性在建表�
 
 #### 动态分区
 
-动态分区功能主要用于帮助用户自动的管理分区。通过设定一定的规则，Doris 系统定期增加新的分区或删除历史分区。可参阅 [动态分区](../../../../advanced/partition/dynamic-partition) 文档查看更多帮助。
+动态分区功能主要用于帮助用户自动的管理分区。通过设定一定的规则，Doris 系统定期增加新的分区或删除历史分区。可参阅 [动态分区](../../../../table-design/data-partition/#动态分区) 文档查看更多帮助。
 
 #### 自动分区
 
-自动分区功能文档参见 [自动分区](../../../../advanced/partition/auto-partition)。
+自动分区功能文档参见 [自动分区](../../../../table-design/data-partition/#自动分区)。
 
 #### 物化视图
 

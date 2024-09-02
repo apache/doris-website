@@ -73,11 +73,11 @@ WITH BROKER "hdfs"
 
 * `label`：本次导出作业的标识。后续可以使用这个标识查看作业状态。
 
-* `column_separator`：列分隔符。默认为 `\t`。支持不可见字符，比如 '\x07'。
+* `column_separator`：列分隔符。默认为 `\t`。支持不可见字符，比如 `\x07`。
 
 * `columns`：要导出的列，使用英文状态逗号隔开，如果不填这个参数默认是导出表的所有列。
 
-* `line_delimiter`：行分隔符。默认为 `\n`。支持不可见字符，比如 '\x07'。
+* `line_delimiter`：行分隔符。默认为 `\n`。支持不可见字符，比如 `\x07`。
 
 * `parallelusm`：并发 3 个线程去导出。
 
@@ -219,7 +219,7 @@ Export 作业拆分成多个`SELECT INTO OUTFILE`的具体逻辑是：将该表�
 
 - 当所要导出的数据量很大时，可以考虑适当调大`parallelism`参数来增加并发导出。若机器核数紧张，无法再增加`parallelism` 而导出表的 Tablets 又较多 时，可以考虑调大`maximum_tablets_of_outfile_in_export`来增加一个`SELECT INTO OUTFILE`语句负责的 Tablets 数量，也可以加快导出速度。
 
-### exec\_mem\_limit
+### exec_mem_limit
 
 通常一个 Export 作业的查询计划只有 `扫描-导出` 两部分，不涉及需要太多内存的计算逻辑。所以通常 2GB 的默认内存限制可以满足需求。
 

@@ -345,20 +345,20 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 
 ### 查询
 
-#### `fragment_pool_queue_size`
+#### `fragment_mgr_asynic_work_pool_queue_size`
 
-* 描述：单节点上能够处理的查询请求上限
+* 描述：单节点上异步任务的队列上限
 * 默认值：4096
 
-#### `fragment_pool_thread_num_min`
+#### `fragment_mgr_asynic_work_pool_thread_num_min`
 
-* 描述：查询线程数，默认最小启动 64 个线程。
-* 默认值：64
+* 描述：处理异步任务的线程数，默认最小启动 16 个线程。
+* 默认值：16
 
-#### `fragment_pool_thread_num_max`
+#### `fragment_mgr_asynic_work_pool_thread_num_max`
 
-* 描述：后续查询请求动态创建线程，最大创建 512 个线程。
-* 默认值：2048
+* 描述：根据后续任务动态创建线程，最大创建 512 个线程。
+* 默认值：512
 
 #### `doris_max_scan_key_num`
 
@@ -372,12 +372,6 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 * 类型：int32
 * 描述：BE 在进行数据扫描时，会将同一个扫描范围拆分为多个 ScanRange。该参数代表了每个 ScanRange 代表扫描数据范围。通过该参数可以限制单个 OlapScanner 占用 io 线程的时间。
 * 默认值：524288
-
-#### `doris_scanner_queue_size`
-
-* 类型：int32
-* 描述：TransferThread 与 OlapScanner 之间 RowBatch 的缓存队列的长度。Doris、进行数据扫描时是异步进行的，OlapScanner 扫描上来的 Rowbatch 会放入缓存队列之中，等待上层 TransferThread 取走。
-* 默认值：1024
 
 #### `doris_scanner_row_num`
 

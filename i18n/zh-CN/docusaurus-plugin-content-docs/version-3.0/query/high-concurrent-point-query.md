@@ -78,7 +78,7 @@ PROPERTIES (
 
 4. 只支持单表 key 列等值查询不支持 join、嵌套子查询， **where 条件里需要有且仅有 key 列的等值**，可以认为是一种 key value 查询
 
-5. 开启行存会导致空间膨胀，占用更多的磁盘空间，如果只需要查询部分列，在Doris 2.1后建议使用`"row_store_columns"="key,v1,v2"` 类似的方式指定部份列作为行存，查询的时候只查询这部份列，例如
+5. 开启行存会导致空间膨胀，占用更多的磁盘空间，如果只需要查询部分列，在 Doris 2.1 后建议使用`"row_store_columns"="key,v1,v2"` 类似的方式指定部份列作为行存，查询的时候只查询这部份列，例如
 ```
 SELECT key, v1, v2 FROM tbl_point_query WHERE key = 1
 ```
@@ -119,7 +119,7 @@ Doris 中有针对 Page 级别的 Cache，每个 Page 中存的是某一列的�
 
 1. 通常，通过增加 Observer 数量来提升处理 query 能力是有效的
 
-2. query 负载均衡：点查中如果发现接受点查请求的 fe cpu 使用过高，或请求响应变慢，可使用 jdbc load balance 进行负载均衡，将请求分散到多个节点，分担压力（同时也可以使用其他方式进行 query 负载均衡配置，如 Nginx，proxySQL)
+2. query 负载均衡：点查中如果发现接受点查请求的 fe cpu 使用过高，或请求响应变慢，可使用 jdbc load balance 进行负载均衡，将请求分散到多个节点，分担压力（同时也可以使用其他方式进行 query 负载均衡配置，如 Nginx，proxySQL
 
 3. 通过将点查请求定向发送至 Observer 角色来分担高并发点查的请求压力，减少向 fe master 发送点查请求，通常可以解决 Fe Master 节点查询耗时上下浮动问题，以获得更好性能与稳定性
 
@@ -131,33 +131,33 @@ A：explain sql，当执行计划中出现 SHORT-CIRCUIT，证明使用了短路
 
 ```sql
 mysql> explain select * from tbl_point_query where `key` = -2147481418 ;                                                                                                                                
-      +-----------------------------------------------------------------------------------------------+                                                                                                       
-      | Explain String(Old Planner)                                                                   |                                                                                                       
-      +-----------------------------------------------------------------------------------------------+                                                                                                       
-      | PLAN FRAGMENT 0                                                                               |                                                                                                       
-      |   OUTPUT EXPRS:                                                                               |                                                                                                       
-      |     `test`.`tbl_point_query`.`key`                                                            |                                                                                                       
-      |     `test`.`tbl_point_query`.`v1`                                                             |                                                                                                       
-      |     `test`.`tbl_point_query`.`v2`                                                             |                                                                                                       
-      |     `test`.`tbl_point_query`.`v3`                                                             |                                                                                                       
-      |     `test`.`tbl_point_query`.`v4`                                                             |                                                                                                       
-      |     `test`.`tbl_point_query`.`v5`                                                             |                                                                                                       
-      |     `test`.`tbl_point_query`.`v6`                                                             |                                                                                                       
-      |     `test`.`tbl_point_query`.`v7`                                                             |                                                                                                       
-      |   PARTITION: UNPARTITIONED                                                                    |                                                                                                       
-      |                                                                                               |                                                                                                       
-      |   HAS_COLO_PLAN_NODE: false                                                                   |                                                                                                       
-      |                                                                                               |                                                                                                       
-      |   VRESULT SINK                                                                                |                                                                                                       
-      |      MYSQL_PROTOCAL                                                                           |                                                                                                       
-      |                                                                                               |                                                                                                       
-      |   0:VOlapScanNode                                                                             |                                                                                                       
-      |      TABLE: test.tbl_point_query(tbl_point_query), PREAGGREGATION: ON                         |                                                                                                       
-      |      PREDICATES: `key` = -2147481418 AND `test`.`tbl_point_query`.`__DORIS_DELETE_SIGN__` = 0 |                                                                                                       
-      |      partitions=1/1 (tbl_point_query), tablets=1/1, tabletList=360065                         |                                                                                                       
-      |      cardinality=9452868, avgRowSize=833.31323, numNodes=1                                    |                                                                                                       
-      |      pushAggOp=NONE                                                                           |                                                                                                       
-      |      SHORT-CIRCUIT                                                                            |                                                                                                       
+      +---------------------------------------------+ 
+      | Explain String(Old Planner)                 |     
+      +---------------------------------------------+                               
+      | PLAN FRAGMENT 0                             |    
+      |   OUTPUT EXPRS:                             | 
+      |     `test`.`tbl_point_query`.`key`          |  
+      |     `test`.`tbl_point_query`.`v1`           | 
+      |     `test`.`tbl_point_query`.`v2`           |   
+      |     `test`.`tbl_point_query`.`v3`           |
+      |     `test`.`tbl_point_query`.`v4`           |          
+      |     `test`.`tbl_point_query`.`v5`           |     
+      |     `test`.`tbl_point_query`.`v6`           |   
+      |     `test`.`tbl_point_query`.`v7`           |                                                     
+      |   PARTITION: UNPARTITIONED                  |                                
+      |                                             |  
+      |   HAS_COLO_PLAN_NODE: false                 |    
+      |                                             |    
+      |   VRESULT SINK                              |       
+      |   MYSQL_PROTOCAL                            |                                   
+      |                                             |  
+      |   0:VOlapScanNode                           |    
+      |      TABLE: test.tbl_point_query(tbl_point_query), PREAGGREGATION: ON                         |      
+      |      PREDICATES: `key` = -2147481418 AND `test`.`tbl_point_query`.`__DORIS_DELETE_SIGN__` = 0 |  
+      |      partitions=1/1 (tbl_point_query), tablets=1/1, tabletList=360065                         | 
+      |      cardinality=9452868, avgRowSize=833.31323, numNodes=1                                    |   
+      |      pushAggOp=NONE                                                                           |  
+      |     SHORT-CIRCUIT                                                                             |  
       +-----------------------------------------------------------------------------------------------+
    ```
 

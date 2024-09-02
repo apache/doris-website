@@ -37,7 +37,7 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button1">Get started</Translate>,
-            link: '/docs/get-starting/what-is-apache-doris',
+            link: '/docs/gettingStarted/what-is-new',
             type: 'ghost',
         },
         {
@@ -381,7 +381,7 @@ export default function Home(): JSX.Element {
             href: 'https://www.youtube.com/@apachedoris/channels',
         },
     ];
-
+console.log(siteConfig,'siteConfig')
     return (
         <Layout
             title={translate({ id: 'homepage.title', message: 'Apache Doris: Open source data warehouse for real time data analytics' })}
@@ -413,7 +413,7 @@ export default function Home(): JSX.Element {
                     footer={
                         <div className="justify-center flex mt-14">
                             <LinkWithArrow
-                                to="/docs/get-starting/what-is-apache-doris"
+                                to="/docs/gettingStarted/what-is-apache-doris"
                                 text={
                                     <Translate id="homepage.more" description="more link">
                                         Learn more

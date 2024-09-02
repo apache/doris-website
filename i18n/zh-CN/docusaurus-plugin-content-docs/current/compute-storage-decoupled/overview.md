@@ -28,7 +28,7 @@ under the License.
 
 ## 存算一体 VS 存算分离
 
-Doris 的整体架构由两类进程组成：Frontend (FE) 和 Backend (BE)。其中 FE 主要负责用户请求的接入、查询解析规划、元数据的管理、节点管理相关工作；BE 主要负责数据存储、查询计划的执行。（[更多信息](https://doris.apache.org/zh-CN/docs/get-starting/what-is-apache-doris)）
+Doris 的整体架构由两类进程组成：Frontend (FE) 和 Backend (BE)。其中 FE 主要负责用户请求的接入、查询解析规划、元数据的管理、节点管理相关工作；BE 主要负责数据存储、查询计划的执行。（[更多信息](https://doris.apache.org/zh-CN/docs/dev/gettingStarted/what-is-apache-doris/)）
 
 ### 存算一体
 
@@ -56,7 +56,7 @@ Meta Service 是 Doris 存算分离元数据服务，主要负责处理导入事
 
 :::info 备注
 
-存算分离文档中的“计算集群”概念有别于 Doris 【集群部署】以及后文【创建集群】中的“集群”概念。存算分离文档中提及的“计算集群”特指在 Doris 存算分离模式下，由无状态 BE 节点组成的计算资源集合，而非【集群部署】和【创建集群】中所指的由多个 Apache Doris 节点组成的完整分布式系统。
+存算分离文档中的“计算集群”概念有别于 Doris【集群部署】以及后文【创建集群】中的“集群”概念。存算分离文档中提及的“计算集群”特指在 Doris 存算分离模式下，由无状态 BE 节点组成的计算资源集合，而非【集群部署】和【创建集群】中所指的由多个 Apache Doris 节点组成的完整分布式系统。
 
 :::
 

@@ -28,9 +28,9 @@ under the License.
 
 
 ### Name
-<version since="dev">
+
 SHOW QUERY STATS
-</version>
+
 
 ### Description
 
@@ -42,14 +42,14 @@ SHOW QUERY STATS [[FOR db_name]|[FROM table_name]] [ALL] [VERBOSE]];
 
 说明：
 
-1. 支持查询数据库和表的历史查询命中情况，重启fe后数据会重置，每个fe单独统计
-2. 通过 FOR DATABASE 和FROM TABLE 可以指定查询数据库或者表的命中情况，后面分别接数据库名或者表名
-3. ALL 可以指定是否展示所有index的查询命中情况，VERBOSE 可以展示更详细的命中情况， 这两个参数可以单独使用，
+1. 支持查询数据库和表的历史查询命中情况，重启 fe 后数据会重置，每个 fe 单独统计
+2. 通过 FOR DATABASE 和 FROM TABLE 可以指定查询数据库或者表的命中情况，后面分别接数据库名或者表名
+3. ALL 可以指定是否展示所有 index 的查询命中情况，VERBOSE 可以展示更详细的命中情况，这两个参数可以单独使用，
    也可以一起使用，但是必须放在最后 而且只能用在表的查询上
 4. 如果没有 use 任何数据库那么直接执行`SHOW QUERY STATS` 将展示所有数据库的命中情况
 5. 命中结果中可能有两列：
    QueryCount：该列被查询次数
-   FilterCount: 该列作为where 条件被查询的次数
+   FilterCount: 该列作为 where 条件被查询的次数
 ### Example
 
 1. 展示表`baseall` 的查询命中情况
@@ -174,7 +174,7 @@ SHOW QUERY STATS [[FOR db_name]|[FROM table_name]] [ALL] [VERBOSE]];
     9 rows in set (0.005 sec)
    ```
 
-5. 展示所有数据库的命中情况，这时不能use 任何数据库
+5. 展示所有数据库的命中情况，这时不能 use 任何数据库
 
    ```sql
     MySQL [(none)]> show query stats;

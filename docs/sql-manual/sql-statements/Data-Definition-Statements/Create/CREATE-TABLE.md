@@ -483,17 +483,7 @@ Set table properties. The following attributes are currently supported:
 
 * Dynamic partition related
 
-   The relevant parameters of dynamic partition are as follows:
-
-* `dynamic_partition.enable`: Used to specify whether the dynamic partition function at the table level is enabled. The default is true.
-* `dynamic_partition.time_unit:` is used to specify the time unit for dynamically adding partitions, which can be selected as DAY (day), WEEK (week), MONTH (month), YEAR (year), HOUR (hour).
-* `dynamic_partition.start`: Used to specify how many partitions to delete forward. The value must be less than 0. The default is Integer.MIN_VALUE.
-* `dynamic_partition.end`: Used to specify the number of partitions created in advance. The value must be greater than 0.
-* `dynamic_partition.prefix`: Used to specify the partition name prefix to be created. For example, if the partition name prefix is ​​p, the partition name will be automatically created as p20200108.
-* `dynamic_partition.buckets`: Used to specify the number of partition buckets that are automatically created.
-* `dynamic_partition.create_history_partition`: Whether to create a history partition.
-* `dynamic_partition.history_partition_num`: Specify the number of historical partitions to be created.
-* `dynamic_partition.reserved_history_periods`: Used to specify the range of reserved history periods.
+   References related to dynamic partitioning[Data Partitioning-Dynamic partitioning](../../../../table-design/data-partition.md#Dynamic partitioning)
     
 ### Example
 
@@ -829,7 +819,7 @@ NOTE: Multi Partition can be mixed with conventional manual creation of partitio
 
 #### Partitioning and bucketing
 
-A table must specify the bucket column, but it does not need to specify the partition. For the specific introduction of partitioning and bucketing, please refer to the [Data Division](../../../../data-table/data-partition.md) document.
+A table must specify the bucket column, but it does not need to specify the partition. For the specific introduction of partitioning and bucketing, please refer to the [Data Division](../../../../table-design/data-partition.md) document.
 
 Tables in Doris can be divided into partitioned tables and non-partitioned tables. This attribute is determined when the table is created and cannot be changed afterwards. That is, for partitioned tables, you can add or delete partitions in the subsequent use process, and for non-partitioned tables, you can no longer perform operations such as adding partitions afterwards.
 
@@ -839,11 +829,11 @@ Therefore, it is recommended to confirm the usage method to build the table reas
 
 #### Dynamic Partition
 
-The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../advanced/partition/dynamic-partition) document for more help.
+The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../table-design/data-partition/#dynamic-partition) document for more help.
 
 #### Auto Partition
 
-See in [Auto Partition](../../../../advanced/partition/auto-partition).
+See in [Auto Partition](../../../../table-design/data-partition/#auto-partition).
 
 #### Materialized View
 

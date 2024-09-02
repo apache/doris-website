@@ -279,7 +279,9 @@ There are two ways to configure BE configuration items:
 
 #### `thrift_max_message_size`
 
-<version since="2.1.4"></version>
+:::tip Tips
+This configuration is supported since the Apache Doris 2.1.4 version
+:::
 
 Default: 100MB
 
@@ -363,12 +365,6 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 * Type: int32
 * Description: When BE performs data scanning, it will split the same scanning range into multiple ScanRanges. This parameter represents the scan data range of each ScanRange. This parameter can limit the time that a single OlapScanner occupies the io thread.
 * Default value: 524288
-
-#### `doris_scanner_queue_size`
-
-* Type: int32
-* Description: The length of the RowBatch buffer queue between TransferThread and OlapScanner. When Doris performs data scanning, it is performed asynchronously. The Rowbatch scanned by OlapScanner will be placed in the scanner buffer queue, waiting for the upper TransferThread to take it away.
-* Default value: 1024
 
 #### `doris_scanner_row_num`
 
@@ -1452,19 +1448,28 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: the increased frequency of priority for remaining tasks in BlockingPriorityQueue
 * Default value: 512
 
-<version since="1.2">
+
 
 #### `jdbc_drivers_dir`
+
+
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2 version
+:::
 
 * Description: Default dirs to put jdbc drivers.
 * Default value: `${DORIS_HOME}/jdbc_drivers`
 
 #### `enable_simdjson_reader`
 
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2 version
+:::
+
 * Description: Whether enable simdjson to parse json while stream load
 * Default value: true
 
-</version>
+
 
 #### `enable_query_memory_overcommit`
 

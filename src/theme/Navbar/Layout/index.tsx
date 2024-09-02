@@ -14,13 +14,19 @@ export default function NavbarLayout({ children }) {
     } = useThemeConfig();
     const mobileSidebar = useNavbarMobileSidebar();
     const { navbarRef, isNavbarVisible } = useHideableNavbar(hideOnScroll);
+
     const [isDocsPage, setIsDocsPage] = useState(false);
     const [isCommunity, setIsCommunity] = useState(false);
+    const [withoutDoc, setWithoutDoc] = useState(false);
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const pathname = location.pathname.split('/')[1];
+            const tempPath = ['get-starting', 'benchmark', 'ecosystems', 'faq', 'releasenotes']
+            const isDocsPage = tempPath.includes(pathname) || tempPath.some(path => location.pathname.includes(`zh-CN/${path}`))
             const docsPage = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
             setIsDocsPage(docsPage);
+            setWithoutDoc(isDocsPage)
         }
 
         if (typeof window !== 'undefined') {
@@ -42,6 +48,7 @@ export default function NavbarLayout({ children }) {
                 'navbar--fixed-top',
                 isDocsPage && 'docs',
                 isCommunity && 'community',
+                withoutDoc && 'withoutDoc',
                 hideOnScroll && [styles.navbarHideable, !isNavbarVisible && styles.navbarHidden],
                 {
                     'navbar--dark': style === 'dark',

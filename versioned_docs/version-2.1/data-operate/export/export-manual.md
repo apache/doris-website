@@ -34,7 +34,7 @@ For a detailed description of the `EXPORT` command, please refer to: [EXPORT](..
 
 `Export` is an asynchronous command. After the command is successfully executed, it immediately returns the result. Users can use the `Show Export` command to view detailed information about the export task.
 
-For guidance on choosing between `SELECT INTO OUTFILE` and `EXPORT`, please see [Export Overview](./export-view.md).
+For guidance on choosing between `SELECT INTO OUTFILE` and `EXPORT`, please see [Export Overview](../../data-operate/export/export-overview.md).
 
 `EXPORT` currently supports exporting the following types of tables or views:
 
@@ -121,7 +121,7 @@ The meaning of each column in the result returned by the `show export` command i
   - columns: Specified column names to export, empty value represents exporting all columns.
   - format: File format for export
 - Path: Export path on the remote storage.
-- CreateTime/StartTime/FinishTime: Job creation time, scheduling start time, and end time.
+- `CreateTime/StartTime/FinishTime`: Job creation time, scheduling start time, and end time.
 - Timeout: Job timeout time in seconds. This time is calculated from CreateTime.
 - ErrorMsg: If there is an error in the job, the error reason will be displayed here.
 - OutfileInfo: If the job is successfully exported, specific `SELECT INTO OUTFILE` result information will be displayed here.
@@ -134,7 +134,7 @@ CANCEL EXPORT FROM tpch1 WHERE LABEL like "%export_%";
 
 ## Export File Column Type Mapping
 
-`Export` supports exporting data in Parquet and ORC file formats. Parquet and ORC file formats have their own data types. Doris's export function can automatically export Doris's data types to the corresponding data types of Parquet and ORC file formats. For specific mapping relationships, please refer to the "Export File Column Type Mapping" section of the [Export Overview](./export-view.md) document.
+`Export` supports exporting data in Parquet and ORC file formats. Parquet and ORC file formats have their own data types. Doris's export function can automatically export Doris's data types to the corresponding data types of Parquet and ORC file formats. For specific mapping relationships, please refer to the "Export File Column Type Mapping" section of the [Export Overview](../../data-operate/export/export-overview.md) document.
 
 ## Examples
 
@@ -213,7 +213,7 @@ with HDFS (
 
 ### Export to S3
 
-Export all data from the s3_test table to S3, with the export format as csv and using the invisible character "\x07" as the row delimiter.
+Export all data from the s3_test table to S3, with the export format as csv and using the invisible character `\x07` as the row delimiter.
 
 ```sql
 EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 
@@ -325,7 +325,7 @@ Exporting Catalog external table data does not support concurrent exports. Even 
 
 ### Export Consistency
 
-`Export` supports two granularities for export: partition / tablets. The `data_consistency` parameter is used to specify the granularity at which the table to be exported is split. `none` represents Tablets level, and `partition` represents Partition level.
+`Export` supports two granularities for export: `partition / tablets`. The `data_consistency` parameter is used to specify the granularity at which the table to be exported is split. `none` represents Tablets level, and `partition` represents Partition level.
 
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp"

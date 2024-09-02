@@ -199,7 +199,7 @@ FROM data_source [data_source_properties]
 
      | source data | source data example | string to int | strict_mode   | result                 |
      | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-     | null        | \N                  | N/A           | true or false | NULL                   |
+     | null        | `\N`                  | N/A           | true or false | NULL                   |
      | not null    | aaa or 2000         | NULL          | true          | invalid data(filtered) |
      | not null    | aaa                 | NULL          | false         | NULL                   |
      | not null    | 1                   | 1             | true or false | correct data           |
@@ -210,7 +210,7 @@ FROM data_source [data_source_properties]
 
      | source data | source data example | string to int | strict_mode   | result                 |
      | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-     | null        | \N                  | N/A           | true or false | NULL                   |
+     | null        | `\N`                  | N/A           | true or false | NULL                   |
      | not null    | aaa                 | NULL          | true          | invalid data(filtered) |
      | not null    | aaa                 | NULL          | false         | NULL                   |
      | not null    | 1 or 10             | 1             | true or false | correct data           |
@@ -261,10 +261,10 @@ FROM data_source [data_source_properties]
 
   14. `enclose`
       When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field.
-      Note: when the bracket is `"`, trim\_double\_quotes must be set to true.
+      Note: when the bracket is `"`, `trim\_double\_quotes` must be set to true.
 
   15. `escape`
-      Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as "\", and then modify the data to "a,' b,\'c'".
+      Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as `\`, and then modify the data to `a,' b,\'c'`.
   
 - `FROM data_source [data_source_properties]`
 
@@ -366,8 +366,14 @@ FROM data_source [data_source_properties]
         ````text
         "property.kafka_default_offsets" = "OFFSET_BEGINNING"
         ````
-- <version since="1.2.3" type="inline"> comment </version>
+- comment 
+
   Comment for the routine load job.
+
+:::tip Tips
+This feature is supported since the Apache Doris 1.2.3 version
+:::
+
 ### Example
 
 1. Create a Kafka routine import task named test1 for example_tbl of example_db. Specify the column separator and group.id and client.id, and automatically consume all partitions by default, and start subscribing from the location where there is data (OFFSET_BEGINNING)

@@ -97,7 +97,7 @@ Parameter introduction:
 
 10. timezone: Specify the time zone used for this import. The default is Dongba District. This parameter affects the results of all time zone-related functions involved in the import.
 
-11. exec_mem_limit: Import memory limit. Default is 2GB. The unit is bytes.
+11. exec_mem_limit: Load memory limit. Default is 2GB. The unit is bytes.
 
 12. format: Specify load data format, support csv, json, <version since="1.2" type="inline"> csv_with_names(support csv file line header filter), csv_with_names_and_types(support csv file first two lines filter), parquet, orc</version>, default is csv.
 
@@ -137,7 +137,7 @@ Parameter introduction:
 
 21. send_batch_parallelism: Integer, used to set the parallelism of sending batch data. If the value of parallelism exceeds `max_send_batch_parallelism_per_job` in the BE configuration, the BE as a coordination point will use the value of `max_send_batch_parallelism_per_job`.
 
-22. hidden_columns: Specify hidden column when no `columns` in Headers，multi hidden column shoud be
+22. hidden_columns: Specify hidden column when no `columns` in Headers, multi hidden column shoud be
 separated by commas.
 
        ```
@@ -182,7 +182,7 @@ ERRORS:
 
 25. trim_double_quotes: Boolean type, The default value is false. True means that the outermost double quotes of each field in the csv file are trimmed.
 
-26. skip_lines: <version since="dev" type="inline"> Integer type, the default value is 0. It will skip some lines in the head of csv file. It will be disabled when format is `csv_with_names` or `csv_with_names_and_types`. </version>
+26. skip_lines:   Integer type, the default value is 0. It will skip some lines in the head of csv file. It will be disabled when format is `csv_with_names` or `csv_with_names_and_types`. 
 27. comment: <version since="1.2.3" type="inline"> String type, the default value is "". </version>
 
 ### Example

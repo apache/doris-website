@@ -34,7 +34,7 @@ For a detailed description of the `EXPORT` command, please refer to: [EXPORT](..
 
 `Export` is an asynchronous command. After the command is successfully executed, it immediately returns the result. Users can use the `Show Export` command to view detailed information about the export task.
 
-For guidance on choosing between `SELECT INTO OUTFILE` and `EXPORT`, please see [Export Overview](./export-view.md).
+For guidance on choosing between `SELECT INTO OUTFILE` and `EXPORT`, please see [Export Overview](../../data-operate/export/export-overview).
 
 `EXPORT` currently supports exporting the following types of tables or views:
 
@@ -134,7 +134,7 @@ CANCEL EXPORT FROM tpch1 WHERE LABEL like "%export_%";
 
 ## Export File Column Type Mapping
 
-`Export` supports exporting data in Parquet and ORC file formats. Parquet and ORC file formats have their own data types. Doris's export function can automatically export Doris's data types to the corresponding data types of Parquet and ORC file formats. For specific mapping relationships, please refer to the "Export File Column Type Mapping" section of the [Export Overview](./export-view.md) document.
+`Export` supports exporting data in Parquet and ORC file formats. Parquet and ORC file formats have their own data types. Doris's export function can automatically export Doris's data types to the corresponding data types of Parquet and ORC file formats. For specific mapping relationships, please refer to the "Export File Column Type Mapping" section of the [Export Overview](../../data-operate/export/export-overview.md) document.
 
 ## Examples
 
@@ -213,7 +213,7 @@ with HDFS (
 
 ### Export to S3
 
-Export all data from the s3_test table to S3, with the export format as csv and using the invisible character "\x07" as the row delimiter.
+Export all data from the s3_test table to S3, with the export format as csv and using the invisible character `\x07` as the row delimiter.
 
 ```sql
 EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 

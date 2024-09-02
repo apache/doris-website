@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Log Storage and Analysis",
+    "title": "Building log analysis platform",
     "language": "en"
 }
 ---
@@ -171,7 +171,7 @@ Refer to the following table to learn about the values of indicators in the exam
 | Percent of CPU resources reserved for data querying | 50% | Specify the value according to your actual needs. The default value is 50%. |
 | Estimated number of BE servers | 15.2 | Calculation formula: Number of CPU cores for the peak write throughput / Number of CPU cores of a BE server /（1 - Percent of CPU resources reserved for data querying） |
 | Rounded number of BE servers | 15  | Calculation formula: MAX (Number of data copies, Estimated number of BE servers) |
-| Estimated data storage space for each BE server (TB) | 4.03 | Calculation formula: Estimated storage space for hot data / Estimated number of BE servers /（1 - 30%）, where 30% represents the percent of reserved storage space.<br/><br/>It is recommended to mount 4 to 12 data disks on each BE server to enhance I/O capabilities. |
+| Estimated data storage space for each BE server (TB) | 4.03 | Calculation formula: Estimated storage space for hot data / Estimated number of BE servers /（1 - 30%）, where 30% represents the percent of reserved storage space.<br /><br />It is recommended to mount 4 to 12 data disks on each BE server to enhance I/O capabilities. |
 
 ### Step 2: Deploy the cluster
 
@@ -194,7 +194,7 @@ You can find FE configuration fields in `fe/conf/fe.conf`. Refer to the followin
 | Configuration fields to be optimized                         | Description                                                  |
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
 | `max_running_txn_num_per_db = 10000`                         | Increase the parameter value to adapt to high-concurrency import transactions. |
-| `streaming_label_keep_max_second = 3600``label_keep_max_second = 7200` | Increase the retention time to handle high-frequency import transactions with high memory usage. |
+| `streaming_label_keep_max_second = 3600` `label_keep_max_second = 7200` | Increase the retention time to handle high-frequency import transactions with high memory usage. |
 | `enable_round_robin_create_tablet = true`                    | When creating Tablets, use a Round Robin strategy to distribute evenly. |
 | `tablet_rebalancer_type = partition`                         | When balancing Tablets, use a strategy to evenly distribute within each partition. |
 | `enable_single_replica_load = true`                          | Enable single-replica import, where multiple replicas only need to build an index once to reduce CPU consumption. |
@@ -218,10 +218,13 @@ You can find BE configuration fields in `be/conf/be.conf`. Refer to the followin
 | Compaction | `max_cumu_compaction_threads = 8`                            | Set to CPU core count / 4, indicating that 1/4 of CPU resources are used for writing, 1/4 for background compaction, and 2/1 for queries and other operations. |
 | -          | `inverted_index_compaction_enable = true`                    | Enable inverted index compaction to reduce CPU consumption during compaction. |
 | -          | `enable_segcompaction = false` `enable_ordered_data_compaction = false` | Disable two compaction features that are unnecessary for log scenarios. |
+| -          | `enable_compaction_priority_scheduling = false` | Low-priority compaction is limited to 2 tasks on a single disk, which can affect the speed of compaction. |
+| -          | `total_permits_for_compaction_score = 200000 ` | The parameter is used to control memory, under the memory time series strategy, the parameter itself can control memory. |
 | Cache      | `disable_storage_page_cache = true` `inverted_index_searcher_cache_limit = 30%` | Due to the large volume of log data and limited caching effect, switch from data caching to index caching. |
 | -          | `inverted_index_cache_stale_sweep_time_sec = 3600` `index_cache_entry_stay_time_after_lookup_s = 3600` | Maintain index caching in memory for up to 1 hour.           |
 | -          | `enable_inverted_index_cache_on_cooldown = true`<br />`enable_write_index_searcher_cache = false` | Enable automatic caching of cold data storage during index uploading. |
 | -          | `tablet_schema_cache_recycle_interval = 3600` `segment_cache_capacity = 20000` | Reduce memory usage by other caches.                         |
+| -          | `inverted_index_ram_dir_enable = true` | Reduce the IO overhead caused by writing to index files temporarily. |
 | Thread     | `pipeline_executor_size = 24` `doris_scanner_thread_pool_thread_num = 48` | Configure computing threads and I/O threads for a 32-core CPU in proportion to core count. |
 | -          | `scan_thread_nice_value = 5`                                 | Lower the priority of query I/O threads to ensure writing performance and timeliness. |
 | Other      | `string_type_length_soft_limit_bytes = 10485760`             | Increase the length limit of string-type data to 10 MB.      |
@@ -238,7 +241,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
 - For data partitioning:
 
-    - Enable [range partitioning](https://doris.apache.org/docs/2.0/table-design/data-partition#range-partition) with [dynamic partitions](https://doris.apache.org/docs/2.0/table-design/data-partition#dynamic-partition) managed automatically by day.
+    - Enable [range partitioning](https://doris.apache.org/docs/table-design/data-partition#range-partition) with [dynamic partitions](https://doris.apache.org/docs/table-design/data-partition#dynamic-partition) managed automatically by day.
 
     - Use a field in the DATETIME type as the key for accelerated retrieval of the latest N log entries.
 
@@ -274,7 +277,7 @@ Configure storage policies as follows:
 
 - Configure the storage location for log_s3 and set the log_policy_3day policy, where the data is cooled and moved to the specified storage location of log_s3 after 3 days. Refer to the code below.
 
-```Go  
+```SQL
 CREATE DATABASE log_db;
 USE log_db;
 
@@ -311,6 +314,7 @@ DUPLICATE KEY(`ts`)
 PARTITION BY RANGE(`ts`) ()
 DISTRIBUTED BY RANDOM BUCKETS 250
 PROPERTIES (
+"compaction_policy" = "time_series",
 "dynamic_partition.enable" = "true",
 "dynamic_partition.create_history_partition" = "true",
 "dynamic_partition.time_unit" = "DAY",
@@ -318,11 +322,10 @@ PROPERTIES (
 "dynamic_partition.end" = "1",
 "dynamic_partition.prefix" = "p",
 "dynamic_partition.buckets" = "250",
-"dynamic_partition.replication_num" = "1", -- unneccessary for the compute-storage coupled mode
-"replication_num" = "1" -- unneccessary for the compute-storage coupled mode
+"dynamic_partition.replication_num" = "2", -- unneccessary for the compute-storage coupled mode
+"replication_num" = "2" -- unneccessary for the compute-storage coupled mode
 "enable_single_replica_compaction" = "true", -- unneccessary for the compute-storage coupled mode
-"storage_policy" = "log_policy_3day", -- unneccessary for the compute-storage coupled mode
-"compaction_policy" = "time_series"
+"storage_policy" = "log_policy_3day" -- unneccessary for the compute-storage coupled mode
 );
 ```
 
@@ -348,53 +351,56 @@ Follow these steps:
 
 2. Configure Logstash. Specify the following fields:
 
-    - `logstash.yml`: Used to configure Logstash batch processing log sizes and timings for improved data writing performance.
+- `logstash.yml`: Used to configure Logstash batch processing log sizes and timings for improved data writing performance.
 
-    ```Plain Text  
-    pipeline.batch.size: 1000000  
-    pipeline.batch.delay: 10000
-    ```
+```Plain Text  
+pipeline.batch.size: 1000000  
+pipeline.batch.delay: 10000
+```
 
-    - `logstash_demo.conf`: Used to configure the specific input path of the collected logs and the settings for output to Apache Doris.
+- `logstash_demo.conf`: Used to configure the specific input path of the collected logs and the settings for output to Apache Doris.
 
-    ```markdown  
-    input {  
+```  
+input {  
     file {  
     path => "/path/to/your/log"  
-    }  
-    }  
-    <br />output {  
-    doris {  
-    http_hosts => \[ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port"\>]  
+  }  
+}  
+
+output {  
+  doris {  
+    http_hosts => [ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port">]  
     user => "your_username"  
     password => "your_password"  
     db => "your_db"  
     table => "your_table"  
-    \# doris stream load http headers  
+    
+    # doris stream load http headers  
     headers => {  
     "format" => "json"  
     "read_json_by_line" => "true"  
     "load_to_single_tablet" => "true"  
     }  
-    \# field mapping: doris fileld name => logstash field name  
-    \# %{} to get a logstash field, \[\] for nested field such as \[host\]\[name\] for host.name  
+    
+    # field mapping: doris fileld name => logstash field name  
+    # %{} to get a logstash field, [] for nested field such as [host][name] for host.name  
     mapping => {  
     "ts" => "%{@timestamp}"  
-    "host" => "%{\[host\]\[name\]}"  
-    "path" => "%{\[log\]\[file\]\[path\]}"  
+    "host" => "%{[host][name]}"  
+    "path" => "%{[log][file][path]}"  
     "message" => "%{message}"  
     }  
     log_request => true  
     log_speed_interval => 10  
-    }  
-    }
+  }  
+}
     ```
 
 3. Run Logstash according to the command below, collect logs, and output to Apache Doris.
 
-    ```Bash  
-    ./bin/logstash -f logstash_demo.conf
-    ```
+```Bash  
+./bin/logstash -f logstash_demo.conf
+```
 
 For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](../ecosystem/logstash.md).
 
@@ -406,56 +412,56 @@ Follow these steps:
 
 2. Configure Filebeat. Specify the filebeat_demo.yml field that is used to configure the specific input path of the collected logs and the settings for output to Apache Doris.
 
-    ```YAML  
-    # input
-    filebeat.inputs:
-    - type: log
-    enabled: true
-    paths:
-        - /path/to/your/log
-    multiline:
-        type: pattern
-        pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'
-        negate: true
-        match: after
-        skip_newline: true
+```YAML  
+# input
+filebeat.inputs:
+- type: log
+enabled: true
+paths:
+    - /path/to/your/log
+multiline:
+    type: pattern
+    pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'
+    negate: true
+    match: after
+    skip_newline: true
 
-    processors:
-    - script:
-        lang: javascript
-        source: >
-            function process(event) {
-                var msg = event.Get("message");
-                msg = msg.replace(/\t/g, "  ");
-                event.Put("message", msg);
-            }
-    - dissect:
-        # 2024-06-08 18:26:25,481 INFO (report-thread|199) [ReportHandler.cpuReport():617] begin to handle
-        tokenizer: "%{day} %{time} %{log_level} (%{thread}) [%{position}] %{content}"
-        target_prefix: ""
-        ignore_failure: true
-        overwrite_keys: true
+processors:
+- script:
+    lang: javascript
+    source: >
+        function process(event) {
+            var msg = event.Get("message");
+            msg = msg.replace(/\t/g, "  ");
+            event.Put("message", msg);
+        }
+- dissect:
+    # 2024-06-08 18:26:25,481 INFO (report-thread|199) [ReportHandler.cpuReport():617] begin to handle
+    tokenizer: "%{day} %{time} %{log_level} (%{thread}) [%{position}] %{content}"
+    target_prefix: ""
+    ignore_failure: true
+    overwrite_keys: true
 
-    # queue and batch
-    queue.mem:
-    events: 1000000
-    flush.min_events: 100000
-    flush.timeout: 10s
+# queue and batch
+queue.mem:
+events: 1000000
+flush.min_events: 100000
+flush.timeout: 10s
 
-    # output
-    output.doris:
-    fenodes: [ "http://fehost1:http_port", "http://fehost2:http_port", "http://fehost3:http_port" ]
-    user: "your_username"
-    password: "your_password"
-    database: "your_db"
-    table: "your_table"
-    # output string format
-    codec_format_string: '{"ts": "%{[day]} %{[time]}", "host": "%{[agent][hostname]}", "path": "%{[log][file][path]}", "message": "%{[message]}"}'
-    headers:
-        format: "json"
-        read_json_by_line: "true"
-        load_to_single_tablet: "true"
-    ```
+# output
+output.doris:
+fenodes: [ "http://fehost1:http_port", "http://fehost2:http_port", "http://fehost3:http_port" ]
+user: "your_username"
+password: "your_password"
+database: "your_db"
+table: "your_table"
+# output string format
+codec_format_string: '{"ts": "%{[day]} %{[time]}", "host": "%{[agent][hostname]}", "path": "%{[log][file][path]}", "message": "%{[message]}"}'
+headers:
+    format: "json"
+    read_json_by_line: "true"
+    load_to_single_tablet: "true"
+```
 
 3. Run Filebeat according to the command below, collect logs, and output to Apache Doris.
 
@@ -470,7 +476,7 @@ For more information about Filebeat, refer to [Beats Doris Output Plugin](../eco
 
 Write JSON formatted logs to Kafka's message queue, create a Kafka Routine Load, and allow Apache Doris to actively pull data from Kafka.
 
-You can refer to the example below, where `property.\*` represents Librdkafka client-related configurations and needs to be adjusted according to the actual Kafka cluster situation.
+You can refer to the example below, where `property.*` represents Librdkafka client-related configurations and needs to be adjusted according to the actual Kafka cluster situation.
 
 ```SQL  
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table  
@@ -486,7 +492,7 @@ PROPERTIES (
 )  
 FROM KAFKA (  
 "kafka_broker_list" = "host:port",  
-"kafka_topic" = "log_\_topic_",  
+"kafka_topic" = "log__topic_",  
 "property.group.id" = "your_group_id",  
 "property.security.protocol"="SASL_PLAINTEXT",  
 "property.sasl.mechanism"="GSSAPI",  
@@ -494,7 +500,7 @@ FROM KAFKA (
 "property.sasl.kerberos.keytab"="/path/to/xxx.keytab",  
 "property.sasl.kerberos.principal"="<xxx@yyy.com>"  
 );  
-<br/>SHOW ROUTINE LOAD;
+<br />SHOW ROUTINE LOAD;
 ```
 
 For more information about Kafka, see [Routine Load](../data-operate/import/routine-load-manual.md)。
@@ -504,15 +510,15 @@ For more information about Kafka, see [Routine Load](../data-operate/import/rout
 In addition to integrating common log collectors, you can also customize programs to import log data into Apache Doris using the Stream Load HTTP API. Refer to the following code:
 
 ```Bash  
-curl \\  
-\--location-trusted \\  
-\-u username:password \\  
-\-H "format:json" \\  
-\-H "read_json_by_line:true" \\  
-\-H "load_to_single_tablet:true" \\  
-\-H "timeout:600" \\  
-\-T logfile.json \\  
-http://fe_host:fe_http_port/api/log_db/log_table/\_stream_load
+curl   
+--location-trusted   
+-u username:password   
+-H "format:json"   
+-H "read_json_by_line:true"   
+-H "load_to_single_tablet:true"   
+-H "timeout:600"   
+-T logfile.json   
+http://fe_host:fe_http_port/api/log_db/log_table/_stream_load
 ```
 
 When using custom programs, pay attention to the following key points:
@@ -542,33 +548,33 @@ Here are 5 common SQL query commands for reference:
 - View the latest 10 log entries
 
 ```SQL  
-SELECT \* FROM your_table_name ORDER BY ts DESC LIMIT 10;
+SELECT * FROM your_table_name ORDER BY ts DESC LIMIT 10;
 ```
 
 - Query the latest 10 log entries with the host as 8.8.8.8
 
 ```SQL  
-SELECT \* FROM your_table_name WHERE host = '8.8.8.8' ORDER BY ts DESC LIMIT 10;
+SELECT * FROM your_table_name WHERE host = '8.8.8.8' ORDER BY ts DESC LIMIT 10;
 ```
 
 - Retrieve the latest 10 log entries with error or 404 in the request field. In the command below, MATCH_ANY is a full-text search SQL syntax used by Apache Doris for matching any keyword in the fields.
 
 ```SQL  
-SELECT \* FROM your_table_name WHERE message **MATCH_ANY** 'error 404'  
+SELECT * FROM your_table_name WHERE message **MATCH_ANY** 'error 404'  
 ORDER BY ts DESC LIMIT 10;
 ```
 
 - Retrieve the latest 10 log entries with image and faq in the request field. In the command below, MATCH_ALL is a full-text search SQL syntax used by Apache Doris for matching all keywords in the fields.
 
 ```SQL  
-SELECT \* FROM your_table_name WHERE message **MATCH_ALL** 'image faq'  
+SELECT * FROM your_table_name WHERE message **MATCH_ALL** 'image faq'  
 ORDER BY ts DESC LIMIT 10;
 ```
 
 - Retrieve the latest 10 entries with image and faq in the request field. In the following command, MATCH_PHRASE is a full-text search SQL syntax used by Apache Doris for matching all keywords in the fields and requiring consistent order. In the example below, a image faq b can match, but a faq image b cannot match because the order of image and faq does not match the syntax.
 
 ```SQL  
-SELECT \* FROM your_table_name WHERE message **MATCH_PHRASE** 'image faq'  
+SELECT * FROM your_table_name WHERE message **MATCH_PHRASE** 'image faq'  
 ORDER BY ts DESC LIMIT 10;
 ```
 

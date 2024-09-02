@@ -135,7 +135,7 @@ $ USE_AVX2=0 sh build.sh
 $ BUILD_TYPE=Debug sh build.sh
 ```
 
-This script first compiles the third-party libraries and then the Doris components (FE, BE, MS). The compilation output can be found in the `output/` directory. MS stands for Meta Service, which a module of Doris in the compute-storage decoupled mode. For more information about MS, refer to this [doc](../compute-storage-decoupled/compilation-and-deployment.md).
+This script first compiles the third-party libraries and then the Doris components (FE, BE, MS). The compilation output can be found in the `output/` directory. MS stands for Meta Service, which a module of Doris in the compute-storage decoupled mode. For more information about MS, refer to this [doc](../../compute-storage-decoupled/compilation-and-deployment).
 
 ## Pre-compile third-party libraries
 

@@ -31,16 +31,83 @@ jobs:
         runs-on: ubuntu-latest
         environment: Production
         steps:
-            - name: Checkout
-              uses: actions/checkout@master
+            - name: Checkout ${{ github.ref }} ( ${{ github.event.pull_request.head.sha }} )
+              uses: actions/checkout@v3
               with:
-                  persist-credentials: false
-                  submodules: recursive
+                ref: ${{ github.event.pull_request.head.sha }}
 
-            - name: Use Node.js
-              uses: actions/setup-node@v1
+            - name: clone common docs to versioned_docs
+              run: |
+                  cp -rf benchmark versioned_docs/version-3.0
+                  cp -rf ecosystem versioned_docs/version-3.0
+                  cp -rf faq versioned_docs/version-3.0
+                  cp -rf releasenotes versioned_docs/version-3.0
+                  cp -rf gettingStarted versioned_docs/version-3.0
+                  cp -rf benchmark versioned_docs/version-2.1
+                  cp -rf ecosystem versioned_docs/version-2.1
+                  cp -rf faq versioned_docs/version-2.1
+                  cp -rf releasenotes versioned_docs/version-2.1
+                  cp -rf gettingStarted versioned_docs/version-2.1
+                  cp -rf benchmark versioned_docs/version-2.0
+                  cp -rf ecosystem versioned_docs/version-2.0
+                  cp -rf faq versioned_docs/version-2.0
+                  cp -rf releasenotes versioned_docs/version-2.0
+                  cp -rf gettingStarted versioned_docs/version-2.0
+                  cp -rf benchmark versioned_docs/version-1.2
+                  cp -rf ecosystem versioned_docs/version-1.2
+                  cp -rf faq versioned_docs/version-1.2
+                  cp -rf releasenotes versioned_docs/version-1.2
+                  cp -rf gettingStarted versioned_docs/version-1.2
+                  cp -rf benchmark docs
+                  cp -rf ecosystem docs
+                  cp -rf faq docs
+                  cp -rf releasenotes docs
+                  cp -rf gettingStarted docs
+                  cp -rf common_docs_zh/benchmark i18n/zh-CN/docusaurus-plugin-content-docs/current
+                  cp -rf common_docs_zh/ecosystem i18n/zh-CN/docusaurus-plugin-content-docs/current
+                  cp -rf common_docs_zh/faq i18n/zh-CN/docusaurus-plugin-content-docs/current
+                  cp -rf common_docs_zh/releasenotes i18n/zh-CN/docusaurus-plugin-content-docs/current
+                  cp -rf common_docs_zh/gettingStarted i18n/zh-CN/docusaurus-plugin-content-docs/current
+                  cp -rf common_docs_zh/benchmark i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
+                  cp -rf common_docs_zh/ecosystem i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
+                  cp -rf common_docs_zh/faq i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
+                  cp -rf common_docs_zh/releasenotes i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
+                  cp -rf common_docs_zh/gettingStarted i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
+                  cp -rf common_docs_zh/benchmark i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0
+                  cp -rf common_docs_zh/ecosystem i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0
+                  cp -rf common_docs_zh/faq i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0
+                  cp -rf common_docs_zh/releasenotes i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0
+                  cp -rf common_docs_zh/gettingStarted i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0
+                  cp -rf common_docs_zh/benchmark i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1
+                  cp -rf common_docs_zh/ecosystem i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1
+                  cp -rf common_docs_zh/faq i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1
+                  cp -rf common_docs_zh/releasenotes i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1
+                  cp -rf common_docs_zh/gettingStarted i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1
+                  cp -rf common_docs_zh/benchmark i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0
+                  cp -rf common_docs_zh/ecosystem i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0
+                  cp -rf common_docs_zh/faq i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0
+                  cp -rf common_docs_zh/releasenotes i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0
+                  cp -rf common_docs_zh/gettingStarted i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0
+                  
+            - name: Set up Python
+              uses: actions/setup-python@v4
               with:
-                  node-version: 16.14.0
+                python-version: '3.9'
+            
+            - name: Run Python script with all commit SHAs
+              run: python check_move.py "${{ github.event.pull_request.head.sha }}"
+        
+            - name: Check exit code
+              run: |
+                if [ $? -ne 0 ]; then
+                    echo "Have detected not processed link changes, please fix them."
+                    exit 1
+                fi
+            
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 20
 
             - name: Build
               run: |

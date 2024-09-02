@@ -164,7 +164,7 @@ WITH BROKER broker_name
 
   - `exec_mem_limit`
 
-    Import memory limit. Default is 2GB. The unit is bytes.
+    Load memory limit. Default is 2GB. The unit is bytes.
 
   - `strict_mode`
 

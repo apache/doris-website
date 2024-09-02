@@ -79,7 +79,9 @@ The specific syntax can be viewed through the following command:
 HELP CREATE MATERIALIZED VIEW
 ```
 
-<version since="2.0.0"></version>
+:::tip Tips
+This feature is supported since the Apache Doris 2.0 version
+:::
 
 In `Doris 2.0` we made some enhancements to materialized views (described in `Best Practice 4` of this article). We recommend that users check whether the expected query can hit the desired materialized view in the test environment before using the materialized view in the official production environment.
 
@@ -94,7 +96,7 @@ The aggregate functions currently supported by the materialized view function ar
 
 + COUNT, BITMAP\_UNION, HLL\_UNION (Version 0.13)
 
-+ [AGG_STATE](../../sql-manual/sql-types/Data-Types/AGG_STATE) (Version 2.0)
++ [AGG_STATE](../../sql-manual/sql-data-types/aggregate/AGG_STATE) (Version 2.0)
 
   Some aggregation functions that are not originally supported will be converted to the agg_state type to achieve pre-aggregation.
 
@@ -491,7 +493,9 @@ This problem can be solved by creating a materialized view with k3 as the first 
 
 ## Best Practice 4
 
-<version since="2.0.0"></version>
+:::tip Tips
+This feature is supported since the Apache Doris 2.0 version
+:::
 
 In `Doris 2.0`, we have made some enhancements to the expressions supported by the materialized view. This example will mainly reflect the support and early filtering of the new version of the materialized view for various expressions.
 
@@ -528,7 +532,7 @@ In `Doris 2.0`, we have made some enhancements to the expressions supported by t
 
 ## Limitations
 
-1. If the condition column of the delete statement does not exist in the materialized view, the delete operation cannot be performed. If you must delete the data, you need to delete the materialized view before deleting the data.
+1. If the condition column of the delete statement exists in the materialized view, the delete operation cannot be performed. If you must delete the data, you need to delete the materialized view before deleting the data.
 2. Too many materialized views on a single table will affect the efficiency of import: when importing data, the materialized view and Base table data are updated synchronously. If a table has more than 10 materialized views, the import speed may be slow. slow. This is the same as if a single import needs to import 10 table data at the same time.
 3. For the Unique Key data model, the materialized view can only change the order of the columns and cannot perform aggregation. Therefore, it is not possible to perform coarse-grained aggregation operations on the data by creating a materialized view on the Unique Key model.
 4. At present, the rewriting behavior of some optimizers to SQL may cause the materialized view to fail to be hit. For example, k1+1-1 is rewritten as k1, between is rewritten as <= and >=, and day is rewritten as dayofmonth. In this case, you need to manually adjust the statements of the query and materialized view.

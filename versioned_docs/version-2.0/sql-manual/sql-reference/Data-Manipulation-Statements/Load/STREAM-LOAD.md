@@ -97,9 +97,13 @@ Parameter introduction:
 
 10. timezone: Specifies the timezone used for this import. The default is "+08:00". This variable replaces the session variable `time_zone` in this import transaction. See the section "Importing with timezones" in [Best Practice](#best-practice) for more information.
 
-11. exec_mem_limit: Import memory limit. Default is 2GB. The unit is bytes.
+11. exec_mem_limit: Load memory limit. Default is 2GB. The unit is bytes.
 
-12. format: Specify load data format, support csv, json, <version since="1.2" type="inline"> csv_with_names(support csv file line header filter), csv_with_names_and_types(support csv file first two lines filter), parquet, orc</version>, default is csv.
+12. format: Specify load data format, support csv, json,  csv_with_names(support csv file line header filter), csv_with_names_and_types(support csv file first two lines filter), parquet, orc, default is csv.
+
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
 
 13. jsonpaths: The way of importing json is divided into: simple mode and matching mode.
 
@@ -152,13 +156,16 @@ separated by commas.
 
 26. trim_double_quotes: Boolean type, The default value is false. True means that the outermost double quotes of each field in the csv file are trimmed.
 
-27. skip_lines: <version since="dev" type="inline"> Integer type, the default value is 0. It will skip some lines in the head of csv file. It will be disabled when format is `csv_with_names` or `csv_with_names_and_types`. </version>
+27. skip_lines:   Integer type, the default value is 0. It will skip some lines in the head of csv file. It will be disabled when format is `csv_with_names` or `csv_with_names_and_types`. 
 
-28. comment: <version since="1.2.3" type="inline"> String type, the default value is "". </version>
+28. comment: String type, the default value is "". 
+:::tip Tips
+This feature  is supported since the Apache Doris 1.2.3 version
+:::
 
-29. enclose: <version since="dev" type="inline"> When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field. Note: when the bracket is `"`, trim\_double\_quotes must be set to true.</version>
+29. enclose:   When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field. Note: when the bracket is `"`, trim\_double\_quotes must be set to true.
   
-30. escape <version since="dev" type="inline"> Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as "\", and then modify the data to "a,' b,\'c'". </version>
+30. escape   Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as "\", and then modify the data to "a,' b,\'c'". 
 
 ### Example
 

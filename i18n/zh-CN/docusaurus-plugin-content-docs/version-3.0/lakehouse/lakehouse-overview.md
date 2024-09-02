@@ -41,7 +41,7 @@ Doris 在设计湖仓一体时，主要考虑如下四个应用场景：
 
 - 湖仓查询加速：Doris 作为一个非常高效的 OLAP 查询引擎，有着非常好的 MPP 向量化的分布式的查询层，可以直接利用 Doris 非常高效的查询引擎，对湖上数据进行加速分析。
 
-- 统一数据分析网关：提供各类异构数据源的查询和写入能力，用户利用 Doris，可以把这些外部的数据源，统一到 Doris 的源数据的映射结构上，用户在通过 Doris 去查询这些外部数据源的时候，可以提供一致的查询体验。
+- 统一数据分析网关：提供各类异构数据源的查询和写入能力，用户利用 Doris，可以把这些外部的数据源，统一到 Doris 的元数据的映射结构上，用户在通过 Doris 去查询这些外部数据源的时候，可以提供一致的查询体验。
 
 - 统一数据集成：首先通过数据湖的数据源连接能力，能够让多数据源的数据以增量或全量的方式同步到 Doris，并且利用 Doris 的数据处理能力对这些数据进行加工。加工完的数据一方面可以直接通过 Doris 对外提供查询，另一方面也可以通过 Doris 的数据导出能力，继续为下游提供全量或增量数据服务。通过 Doris 可以减少对外部工具的依赖，可以直接将上下游数据，以及包括同步、加工、处理在内的整条链路打通。
 
@@ -185,7 +185,7 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 这里我们通过连接一个 Hive 集群说明如何使用 Catalog 功能。
 
-更多关于 Hive 的说明，请参阅：[Hive Catalog](./datalake-analytics/hive)
+更多关于 Hive 的说明，请参阅：[Hive Catalog](../lakehouse/datalake-analytics/hive)
 
 **1. 创建 Catalog**
 
@@ -375,7 +375,7 @@ select k1, k4 from table;           // Query OK.
 
 使用 Doris 对 External Catalog 中库表进行访问时，默认情况下，依赖 Doris 自身的权限访问管理功能。
 
-Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参阅 [认证和鉴权](../../../admin-manual/auth/authentication-and-authorization.md) 文档。
+Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参阅 [认证和鉴权](../admin-manual/auth/authentication-and-authorization) 文档。
 
 用户也可以通过 `access_controller.class` 属性指定自定义的鉴权类。如通过指定：
 
@@ -383,7 +383,7 @@ Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参�
 "access_controller.class" = "org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"
 ```
 
-则可以使用 Apache Range 对 Hive Catalog 进行鉴权管理。详细信息请参阅：[Hive Catalog](../lakehouse/datalake-analytics/hive)
+则可以使用 Apache Ranger 对 Hive Catalog 进行鉴权管理。详细信息请参阅：[Hive Catalog](../lakehouse/datalake-analytics/hive)
 
 ### 指定需要同步的数据库
 

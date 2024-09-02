@@ -24,7 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Metadata Operations and Maintenance
+:::warning
+
+Avoid using metadata_failure_recovery unless absolutely necessary. Using it may cause metadata truncation, loss, and split-brains. Use cautiously to prevent irreversible data damage from improper operations.
+:::
 
 This document focuses on how to manage Doris metadata in a real production environment. It includes the proposed deployment of FE nodes, some commonly used operational methods, and common error resolution methods.
 

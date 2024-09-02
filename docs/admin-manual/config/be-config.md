@@ -334,20 +334,20 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 
 ### Query
 
-#### `fragment_pool_queue_size`
+#### `fragment_mgr_asynic_work_pool_queue_size`
 
-* Description: The upper limit of query requests that can be processed on a single node
+* Description: The upper limit of asynic work that can be processed on a single node
 * Default value: 4096
 
-#### `fragment_pool_thread_num_min`
+#### `fragment_mgr_asynic_work_pool_thread_num_min`
 
-* Description: Query the number of threads. By default, the minimum number of threads is 64.
-* Default value: 64
+* Description: Number of threads to excute asynic work. By default, the minimum number of threads is 16.
+* Default value: 16
 
-#### `fragment_pool_thread_num_max`
+#### `fragment_mgr_asynic_work_pool_thread_num_max`
 
-* Description: Follow up query requests create threads dynamically, with a maximum of 512 threads created.
-* Default value: 2048
+* Description: Follow up asynic work create threads dynamically, with a maximum of 512 threads created.
+* Default value: 512
 
 #### `doris_max_scan_key_num`
 
@@ -361,12 +361,6 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 * Type: int32
 * Description: When BE performs data scanning, it will split the same scanning range into multiple ScanRanges. This parameter represents the scan data range of each ScanRange. This parameter can limit the time that a single OlapScanner occupies the io thread.
 * Default value: 524288
-
-#### `doris_scanner_queue_size`
-
-* Type: int32
-* Description: The length of the RowBatch buffer queue between TransferThread and OlapScanner. When Doris performs data scanning, it is performed asynchronously. The Rowbatch scanned by OlapScanner will be placed in the scanner buffer queue, waiting for the upper TransferThread to take it away.
-* Default value: 1024
 
 #### `doris_scanner_row_num`
 

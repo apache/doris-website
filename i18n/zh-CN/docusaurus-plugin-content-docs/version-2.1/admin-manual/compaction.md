@@ -128,6 +128,6 @@ Compaction 在后台执行需要消耗 CPU 和 IO 资源，可以通过控制 co
 
 compaction 并发线程数在 BE 的配置文件中配置，包括下面几个：
 - `max_base_compaction_threads`：base compaction 的线程数，默认是 4
-- `max_cumu_compaction_threads`：cumulative compaction 的线程数，默认是 10
+- `max_cumu_compaction_threads`：cumulative compaction 的线程数，默认是 -1，表示每块盘 1 个线程
 - `max_single_replica_compaction_threads`：单副本 compaction 拉取数据文件的线程数，默认是 10
 

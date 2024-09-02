@@ -34,7 +34,7 @@ under the License.
 
 `Export` 是一个异步执行的命令，命令执行成功后，立即返回结果，用户可以通过`Show Export` 命令查看该 Export 任务的详细信息。
 
-关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](./export-view.md)。
+关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](../../data-operate/export/export-overview.md)。
 
 `EXPORT` 当前支持导出以下类型的表或视图
 
@@ -134,7 +134,7 @@ CANCEL EXPORT FROM tpch1 WHERE LABEL like "%export_%";
 
 ## 导出文件列类型映射
 
-`Export`支持导出数据为 Parquet、ORC 文件格式。Parquet、ORC 文件格式拥有自己的数据类型，Doris 的导出功能能够自动将 Doris 的数据类型导出为 Parquet、ORC 文件格式的对应数据类型，具体映射关系请参阅[导出综述](./export-view.md)文档的 "导出文件列类型映射" 部分。
+`Export`支持导出数据为 Parquet、ORC 文件格式。Parquet、ORC 文件格式拥有自己的数据类型，Doris 的导出功能能够自动将 Doris 的数据类型导出为 Parquet、ORC 文件格式的对应数据类型，具体映射关系请参阅[导出综述](../../data-operate/export/export-overview.md)文档的 "导出文件列类型映射" 部分。
 
 ## 示例
 
@@ -213,7 +213,7 @@ with HDFS (
 
 ### 导出到 S3
 
-将 s3_test 表中的所有数据导出到 s3 上，导出格式为 csv，以不可见字符 "\x07" 作为行分隔符。
+将 s3_test 表中的所有数据导出到 s3 上，导出格式为 csv，以不可见字符 `\x07` 作为行分隔符。
 
 ```sql
 EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 

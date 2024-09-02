@@ -38,7 +38,7 @@ In comparison to single-threaded load using `curl`, Doris Streamloader is a clie
 - **Resilience and continuity:** in case of partial load failures, it can resume data loading from the point of failure.
 - **Automatic retry mechanism:** in case of loading failures, it can automatically retry a default number of times. If the loading remains unsuccessful, it will print the command for manual retry.
 
-See [Doris Streamloader](../../ecosystem/doris-streamloader) for detailed instructions and best practices.
+See [Doris Streamloader](/docs/2.1/ecosystem/doris-streamloader) for detailed instructions and best practices.
 :::
 
 ## User guide
@@ -51,7 +51,7 @@ Stream Load supports importing data in CSV, JSON, Parquet, and ORC formats.
 
 When importing CSV files, it is necessary to clearly distinguish between null values and empty strings:
 
-- Null values need to be represented by `\N`. For example, the data "a,\N,b" indicates that the middle column is a null value.
+- Null values need to be represented by `\N`. For example, the data `a,\N,b` indicates that the middle column is a null value.
 - Empty strings can be represented by leaving the data empty. For example, the data "a, ,b" indicates that the middle column is an empty string.
 
 ### Basic principles
@@ -72,11 +72,11 @@ The following figure shows the main flow of Stream load, omitting some import de
 
 Stream Load import data through the HTTP protocol. The following example uses the curl tool to demonstrate submitting an import job through Stream Load.
 
-For detailed syntax, please refer to [STREAM LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD).
+For detailed syntax, please refer to [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD).
 
 ### Prerequisite check
 
-Stream Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../sql-manual/sql-reference/Account-Management-Statements/GRANT) command.
+Stream Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../sql-manual/sql-statements/Account-Management-Statements/GRANT) command.
 
 ### Create load job
 
@@ -509,7 +509,7 @@ In the import, our target time zone is specified through the parameter `timezone
 
 For example, the Doris system time zone is "+08:00", and the time column in the imported data contains two pieces of data, namely "2012-01-01 01:00:00+00:00" and "2015-12-12 12 :12:12-08:00", then after we specify the time zone of the imported transaction through `-H "timezone: +08:00"` when importing, both pieces of data will be converted to the time zone to obtain the result." 2012-01-01 09:00:00" and "2015-12-13 04:12:12".
 
-For more information on time zone interpretation, please refer to the document [Time Zone](../../query/query-variables/time-zone.md).
+For more information on time zone interpretation, please refer to the document [Time Zone](../../admin-manual/cluster-management/time-zone).
 
 ### Streamingly import
 
@@ -1135,7 +1135,7 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 
    You can use a combination of multiple characters as the column separator.
 
-+ max\_filter\_ratio
++ max_filter_ratio
 
   The maximum tolerance rate of the import task is 0 by default, and the range of values is 0-1. When the import error rate exceeds this value, the import fails.
 
@@ -1164,7 +1164,7 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
     The function transformation configuration of data to be imported includes the sequence change of columns and the expression transformation, in which the expression transformation method is consistent with the query statement.
 
     ```
-    Examples of column order transformation: There are three columns of original data (src_c1,src_c2,src_c3), and there are also three columns （dst_c1,dst_c2,dst_c3) in the doris table at present.
+    Examples of column order transformation: There are three columns of original data (src_c1,src_c2,src_c3), and there are also three columns （dst_c1,dst_c2,dst_c3）in the doris table at present.
     when the first column src_c1 of the original file corresponds to the dst_c1 column of the target table, while the second column src_c2 of the original file corresponds to the dst_c2 column of the target table and the third column src_c3 of the original file corresponds to the dst_c3 column of the target table,which is written as follows:
     columns: dst_c1, dst_c2, dst_c3
     
@@ -1180,28 +1180,32 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 
   Specify the import data format, support csv, json, the default is csv
 
-  <version since="1.2">supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc</version>
+  supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc
 
-+ exec\_mem\_limit
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
+
++ exec_mem_limit
 
     Memory limit. Default is 2GB. Unit is Bytes
 
-+ merge\_type
++ merge_type
 
      The type of data merging supports three types: APPEND, DELETE, and MERGE. APPEND is the default value, which means that all this batch of data needs to be appended to the existing data. DELETE means to delete all rows with the same key as this batch of data. MERGE semantics Need to be used in conjunction with the delete condition, which means that the data that meets the delete condition is processed according to DELETE semantics and the rest is processed according to APPEND semantics
 
-+ two\_phase\_commit
++ two_phase_commit
 
   Stream load import can enable two-stage transaction commit mode: in the stream load process, the data is written and the information is returned to the user. At this time, the data is invisible and the transaction status is `PRECOMMITTED`. After the user manually triggers the commit operation, the data is visible.
 
 + enclose
   
   When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field.
-  Note: when the bracket is `"`, trim\_double\_quotes must be set to true.
+  Note: when the bracket is `"`, `trim_double_quotes` must be set to true.
 
 + escape
 
-  Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as "\", and then modify the data to "a,' b,\'c'".
+  Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as `\`, and then modify the data to `a,' b,\'c'`.
 
   Example：
 
@@ -1268,13 +1272,20 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 
 + enable_profile
 
-  <version since="1.2.7">When `enable_profile` is true, the Stream Load profile will be printed to logs (be.INFO).</version>
+:::tip Tips
+This feature is supported since the Apache Doris 1.2.7 version
+:::
+
+  When `enable_profile` is true, the Stream Load profile will be printed to logs (be.INFO).
 
 + memtable_on_sink_node
 
-  <version since="2.1.0">
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
+
   Whether to enable MemTable on DataSink node when loading data, default is false.
-  </version>
+
 
   Build MemTable on DataSink node, and send segments to other backends through brpc streaming.
   It reduces duplicate work among replicas, and saves time in data serialization & deserialization.
@@ -1288,7 +1299,7 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 
 You can add a `sql` parameter to the `Header` to replace the `column_separator`, `line_delimiter`, `where`, `columns` in the previous parameter, which is convenient to use.
 
-```
+```sql
 curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
 
 
@@ -1305,7 +1316,7 @@ curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -
 
 Examples：
 
-```
+```sql
 curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream("format" = "CSV", "column_separator" = "," ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
 ```
 
@@ -1315,7 +1326,7 @@ Since Stream load is a synchronous import method, the result of the import is di
 
 Examples:
 
-```
+```json
 {
     "TxnId": 1003,
     "Label": "b6f3bc78-0d2c-45d9-9e4c-faa0a0149bee",
@@ -1401,19 +1412,19 @@ By default, BE does not record Stream Load records. If you want to view records 
 
 ### FE configuration
 
-+ stream\_load\_default\_timeout\_second
++ stream_load_default_timeout_second
 
   The timeout time of the import task (in seconds) will be cancelled by the system if the import task is not completed within the set timeout time, and will become CANCELLED.
 
   At present, Stream load does not support custom import timeout time. All Stream load import timeout time is uniform. The default timeout time is 600 seconds. If the imported source file can no longer complete the import within the specified time, the FE parameter ```stream_load_default_timeout_second``` needs to be adjusted.
 
-+ enable\_pipeline\_load
++ enable_pipeline_load
 
   Whether or not to enable the Pipeline engine to execute Streamload tasks. See the [Import](./load-manual) documentation.
 
 ### BE configuration
 
-+ streaming\_load\_max\_mb
++ streaming_load_max_mb
 
   The maximum import size of Stream load is 10G by default, in MB. If the user's original file exceeds this value, the BE parameter ```streaming_load_max_mb``` needs to be adjusted.
 
@@ -1448,13 +1459,13 @@ Cluster situation: The concurrency of Stream load is not affected by cluster siz
 
 + Step 1: Does the import file size exceed the default maximum import size of 10G
 
-  ```
+  ```sql
   BE conf
   streaming_load_max_mb = 16000
   ```
 + Step 2: Calculate whether the approximate import time exceeds the default timeout value
 
-  ```
+  ```sql
   Import time 15000/10 = 1500s
   Over the default timeout time, you need to modify the FE configuration
   stream_load_default_timeout_second = 1500
@@ -1462,7 +1473,7 @@ Cluster situation: The concurrency of Stream load is not affected by cluster siz
 
 + Step 3: Create Import Tasks
 
-    ```
+    ```sql
     curl --location-trusted -u user:password -T /home/store_sales -H "label:abc" http://abc.com:8030/api/bj_sales/store_sales/_stream_load
     ```
 

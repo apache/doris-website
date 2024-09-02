@@ -522,7 +522,7 @@ If you need to continue adding more compute clusters, you can simply repeat the 
 
 ## FE/BE configuration
 
-Compared to the [compute-storage coupled mode](../cluster-deployment/standard-deployment.md), the compute-storage decoupled mode requires additional configurations for the FE and BE:
+Compared to the [compute-storage coupled mode](../install/cluster-deployment/standard-deployment), the compute-storage decoupled mode requires additional configurations for the FE and BE:
 
 - `meta_service_endpoint`: The address of Meta Service, which needs to be filled in both the FE and BE.
 - `cloud_unique_id`: This should be filled with the corresponding value from the `add_cluster` request sent to Meta Service when creating the cluster. Doris determines whether it is operating in the compute-storage decoupled mode based on this configuration.
@@ -554,7 +554,7 @@ file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":1048
 
 ## Start/stop FE/BE
 
-In the compute-storage decoupled mode of Doris, the startup and shutdown processes for the FE/BE is the same as those in the [compute-storage coupled mode](../cluster-deployment/standard-deployment.md).
+In the compute-storage decoupled mode of Doris, the startup and shutdown processes for the FE/BE is the same as those in the [compute-storage coupled mode](../install/cluster-deployment/standard-deployment.md).
 
 In the compute-storage decoupled mode, which follows a service discovery model, there is no need to use commands like `alter system add/drop frontend/backend` to manage the nodes.
 
