@@ -256,7 +256,7 @@ Parameter description:
 | Status    | Visibility of the imported data: If it is visible, it will be displayed as "visible." If not, it will be displayed as "committed." In the "committed" state, the import is completed, but the data may be delayed in becoming visible. There is no need to retry in this case.`visible`: The import is successful and the data is visible.`committed`: The import is completed, but the data may be delayed in becoming visible. There is no need to retry in this case.Label Already Exists: The specified label already exists and needs to be changed to a different one.Fail: The import fails. |
 | Err       | Error message                                                |
 
-You can use the [SHOW LOAD](../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD/) statement to view the filtered rows.
+You can use the [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD/) statement to view the filtered rows.
 
 ```SQL
 SHOW LOAD WHERE label="xxx";
@@ -266,7 +266,7 @@ The result of this statement will include a URL that can be used to query the er
 
 The invisible state of data is temporary, and the data will eventually become visible. 
 
-You can check the visibility status of a batch of data using the [SHOW TRANSACTION](../../sql-manual/sql-statements/Show-Statements/SHOW-TRANSACTION/) statement.
+You can check the visibility status of a batch of data using the [SHOW TRANSACTION](../../../sql-manual/sql-statements/Show-Statements/SHOW-TRANSACTION/) statement.
 
 ```SQL
 SHOW TRANSACTION WHERE id=4005;
@@ -324,7 +324,7 @@ Doris supports the creation of external tables. Once created, data from external
 
 With its Multi-Catalog feature, Doris supports connections to various mainstream data lakes and databases including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon (Incubating), Elasticsearch, MySQL, Oracle, and SQL Server.
 
-For more information on Multi-Catalog, please refer to [Lakehouse overview](../../lakehouse/lakehouse-overview/#multi-catalog).
+For more information on Multi-Catalog, please refer to [Lakehouse overview](../../../lakehouse/lakehouse-overview/#multi-catalog).
 
 The followings illustrate importing data from a Hive external table into a Doris internal table.
 
@@ -362,7 +362,7 @@ PROPERTIES (
 );
 ```
 
-2. For detailed instructions on creating Doris tables, please refer to [CREATE TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE/).
+2. For detailed instructions on creating Doris tables, please refer to [CREATE TABLE](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE/).
 
 3. Importing data (from the `hive.db1.source_tbl` table into the `target_tbl` table).
 
@@ -444,4 +444,4 @@ FROM s3(
 
 ## More help
 
-For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT/) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.
+For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT/) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.
