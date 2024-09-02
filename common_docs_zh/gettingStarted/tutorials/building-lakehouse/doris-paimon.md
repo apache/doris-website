@@ -54,7 +54,7 @@ Apache Paimon 是一种数据湖格式，并创新性地将数据湖格式和 LS
 
 本文将会再 Docker 环境中，为读者讲解如何快速搭建 Apache Doris + Apache Paimon 测试 & 演示环境，并展示各功能的使用操作。
 
-关于更多说明，请参阅 [Paimon Catalog](../../lakehouse/datalake-analytics/paimon.md)
+关于更多说明，请参阅 [Paimon Catalog](../../../lakehouse/datalake-analytics/paimon.md)
 
 ## 使用指南
 
@@ -79,7 +79,7 @@ Apache Paimon 是一种数据湖格式，并创新性地将数据湖格式和 LS
 
 2. 启动后，可以使用如下脚本，登陆 Flink 命令行或 Doris 命令行：
 
-	```
+	```sql
 	-- login flink
 	bash ./start_flink_client.sh
 	
@@ -91,7 +91,7 @@ Apache Paimon 是一种数据湖格式，并创新性地将数据湖格式和 LS
 
 首先登陆 Flink 命令行后，可以看到一张预构建的表。表中已经包含一些数据，我们可以通过 Flink SQL 进行查看。
 
-```
+```sql
 Flink SQL> use paimon.db_paimon;
 [INFO] Execute statement succeed.
 
@@ -158,7 +158,7 @@ Flink SQL> select * from customer order by c_custkey limit 4;
 
 如下所示，Doris 集群中已经创建了名为 `paimon` 的 Catalog（可通过 SHOW CATALOGS 查看）。以下为该 Catalog 的创建语句：
 
-```
+```sql
 -- 已创建，无需执行
 CREATE CATALOG `paimon` PROPERTIES (
     "type" = "paimon",
@@ -172,7 +172,7 @@ CREATE CATALOG `paimon` PROPERTIES (
 
 你可登录到 Doris 中查询 Paimon 的数据：
 
-```
+```sql
 mysql> use paimon.db_paimon;
 Reading table information for completion of table and column names
 You can turn off this feature to get a quicker startup with -A
@@ -202,7 +202,7 @@ mysql> select * from customer order by c_custkey limit 4;
 
 我们可以通过 Flink SQL 更新 Paimon 表中的数据：
 
-```
+```sql
 Flink SQL> update customer set c_address='c_address_update' where c_nationkey = 1;
 [INFO] Submitting SQL update statement to the cluster...
 [INFO] SQL update statement has been successfully submitted to the cluster:
@@ -211,7 +211,7 @@ Job ID: ff838b7b778a94396b332b0d93c8f7ac
 
 等 Flink SQL 执行完毕后，在 Doris 中可直接查看到最新的数据：
 
-```
+```sql
 mysql> select * from customer where c_nationkey=1 limit 2;
 +-----------+--------------------+-----------------+-------------+-----------------+-----------+--------------+--------------------------------------------------------------------------------------------------------+
 | c_custkey | c_name             | c_address       | c_nationkey | c_phone         | c_acctbal | c_mktsegment | c_comment                                                                                              |
@@ -235,7 +235,7 @@ mysql> select * from customer where c_nationkey=1 limit 2;
 对于基线数据来说，Apache Paimon 在 0.6 版本中引入 Primary Key Table Read Optimized 功能后，使得查询引擎可以直接访问底层的 Parquet/ORC 文件，大幅提升了基线数据的读取效率。对于尚未合并的增量数据（INSERT、UPDATE 或 DELETE 所产生的数据增量）来说，可以通过 Merge-on-Read 的方式进行读取。此外，Paimon 在 0.8 版本中还引入的 Deletion Vector 功能，能够进一步提升查询引擎对增量数据的读取效率。
 Apache Doris 支持通过原生的 Reader 读取 Deletion Vector 并进行 Merge on Read，我们通过 Doris 的 EXPLAIN 语句，来演示在一个查询中，基线数据和增量数据的查询方式。
 
-```
+```sql
 mysql> explain verbose select * from customer where c_nationkey < 3;
 +------------------------------------------------------------------------------------------------------------------------------------------------+
 | Explain String(Nereids Planner)                                                                                                                |
