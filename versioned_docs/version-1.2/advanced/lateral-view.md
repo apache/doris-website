@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Column to Row",
+    "title": "Column to Row (Lateral View)",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Row to column
+# Column to Row (Lateral View)
 
 Used in conjunction with generator functions such as `EXPLODE`, will generate a virtual table containing one or more rows. `LATERAL VIEW` applies rows to each raw output row.
 
