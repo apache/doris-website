@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Row to column",
+    "title": "Column to Row",
     "language": "en"
 }
 ---
