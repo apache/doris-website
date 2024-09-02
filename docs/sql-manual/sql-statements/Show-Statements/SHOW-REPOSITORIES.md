@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW REPOSITORIES;
-````
+```
 
 illustrate:
 
@@ -57,7 +57,7 @@ illustrate:
 
 ```sql
   SHOW REPOSITORIES;
-````
+```
 
 ### Keywords
 

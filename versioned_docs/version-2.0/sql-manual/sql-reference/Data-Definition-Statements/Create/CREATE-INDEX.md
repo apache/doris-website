@@ -37,7 +37,7 @@ grammar:
 
 ```sql
 CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING INVERTED] [COMMENT 'balabala'];
-````
+```
 Notice:
 - INVERTED indexes are only created on a single column
 
@@ -47,14 +47,14 @@ Notice:
 
     ```sql
     CREATE INDEX [IF NOT EXISTS] index_name ON table1 (siteid) USING INVERTED COMMENT 'balabala';
-    ````
+    ```
 
 
 ### Keywords
 
-````text
+```text
 CREATE, INDEX
-````
+```
 
 ### Best Practice
 

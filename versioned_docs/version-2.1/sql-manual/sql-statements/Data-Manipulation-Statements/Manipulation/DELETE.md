@@ -91,21 +91,21 @@ This feature is supported since the Apache Doris 1.2 version
    ```sql
    DELETE FROM my_table PARTITION p1
        WHERE k1 = 3;
-   ````
+   ```
 
 2. Delete the data rows where the value of column k1 is greater than or equal to 3 and the value of column k2 is "abc" in my_table partition p1
 
    ```sql
    DELETE FROM my_table PARTITION p1
    WHERE k1 >= 3 AND k2 = "abc";
-   ````
+   ```
 
 3. Delete the data rows where the value of column k1 is greater than or equal to 3 and the value of column k2 is "abc" in my_table partition p1, p2
 
    ```sql
    DELETE FROM my_table PARTITIONS (p1, p2)
    WHERE k1 >= 3 AND k2 = "abc";
-   ````
+   ```
 
 4. use the result of `t2` join `t3` to romve rows from `t1`,delete table only support unique key model
 

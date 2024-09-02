@@ -46,7 +46,7 @@ under the License.
 
 执行以下命令开始生成 release tag：
 
-```bash
+```shell
 mvn release:clean
 mvn release:prepare -DpushChanges=false
 ```

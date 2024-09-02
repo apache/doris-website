@@ -72,7 +72,7 @@ Super user privileges:
 
    ```sql
    SET PROPERTY FOR 'jack' 'max_query_instances' = '3000';
-   ````
+   ```
 
 3. Modify the sql block rule of user jack
 
@@ -84,7 +84,7 @@ Super user privileges:
 
     ```sql
     SET PROPERTY FOR 'jack' 'cpu_resource_limit' = '2';
-    ````
+    ```
 
 5. Modify the user's resource tag permissions
 

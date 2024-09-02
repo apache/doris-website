@@ -41,7 +41,7 @@ grammar:
 ```sql
 ADMIN SET REPLICA STATUS
         PROPERTIES ("key" = "value", ...);
-````
+```
 
  The following properties are currently supported:
 
@@ -63,20 +63,20 @@ If the specified replica does not exist, or the status is already bad, it will b
 
        ```sql
     ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "bad");
-       ````
+       ```
 
  2. Set the replica status of tablet 10003 on BE 10001 to drop.
 
        ```sql
     ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "drop");
-       ````
+       ```
 
 
  3. Set the replica status of tablet 10003 on BE 10001 to ok.
 
    ```sql
    ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "ok");
-   ````
+   ```
 
 ### Keywords
 

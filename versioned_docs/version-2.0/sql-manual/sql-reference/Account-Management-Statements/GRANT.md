@@ -47,7 +47,7 @@ GRANT privilege_list ON priv_level TO user_identity [ROLE role_name]
 GRANT privilege_list ON RESOURCE resource_name TO user_identity [ROLE role_name]
 
 GRANT role_list TO user_identity
-````
+```
 
 GRANT privilege_list ON WORKLOAD GROUP workload_group_name TO user_identity [ROLE role_name]
 
@@ -105,37 +105,37 @@ role_list is the list of roles to be assigned, separated by commas,the specified
 
    ```sql
    GRANT SELECT_PRIV ON *.*.* TO 'jack'@'%';
-   ````
+   ```
 
 2. Grant permissions to the specified database table to the user
 
    ```sql
    GRANT SELECT_PRIV,ALTER_PRIV,LOAD_PRIV ON ctl1.db1.tbl1 TO 'jack'@'192.8.%';
-   ````
+   ```
 
 3. Grant permissions to the specified database table to the role
 
    ```sql
    GRANT LOAD_PRIV ON ctl1.db1.* TO ROLE 'my_role';
-   ````
+   ```
 
 4. Grant access to all resources to users
 
    ```sql
    GRANT USAGE_PRIV ON RESOURCE * TO 'jack'@'%';
-   ````
+   ```
 
 5. Grant the user permission to use the specified resource
 
    ```sql
    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO 'jack'@'%';
-   ````
+   ```
 
 6. Grant access to specified resources to roles
 
    ```sql
    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO ROLE 'my_role';
-   ````
+   ```
    
 :::tip Tips
 This feature is supported since the Apache Doris 2.0 version
@@ -145,7 +145,7 @@ This feature is supported since the Apache Doris 2.0 version
 
     ```sql
     GRANT 'role1','role2' TO 'jack'@'%';
-    ````
+    ```
 
  
 
@@ -153,25 +153,25 @@ This feature is supported since the Apache Doris 2.0 version
 
     ```sql
     GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'jack'@'%'.
-    ````
+    ```
 
 9. match all workload groups granted to user jack
 
     ```sql
     GRANT USAGE_PRIV ON WORKLOAD GROUP '%' TO 'jack'@'%'.
-    ````
+    ```
 
 10. grant the workload group 'g1' to the role my_role
 
     ```sql
     GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO ROLE 'my_role'.
-    ````
+    ```
 
 11. Allow jack to view the creation statement of view1 under db1
 
     ```sql
     GRANT SHOW_VIEW_PRIV ON db1.view1 TO 'jack'@'%';
-    ````
+    ```
 
 ### Keywords
 

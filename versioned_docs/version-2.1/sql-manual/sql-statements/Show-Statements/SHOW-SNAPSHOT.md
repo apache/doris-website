@@ -39,7 +39,7 @@ grammar:
 ```sql
 SHOW SNAPSHOT ON `repo_name`
 [WHERE SNAPSHOT = "snapshot" [AND TIMESTAMP = "backup_timestamp"]];
-````
+```
 
 illustrate:
 
@@ -57,20 +57,20 @@ illustrate:
 
    ```sql
    SHOW SNAPSHOT ON example_repo;
-   ````
+   ```
 
 2. View only the backup named backup1 in the repository example_repo:
 
    ```sql
    SHOW SNAPSHOT ON example_repo WHERE SNAPSHOT = "backup1";
-   ````
+   ```
 
 3. View the details of the backup named backup1 in the warehouse example_repo with the time version "2018-05-05-15-34-26":
 
    ```sql
    SHOW SNAPSHOT ON example_repo
    WHERE SNAPSHOT = "backup1" AND TIMESTAMP = "2018-05-05-15-34-26";
-   ````
+   ```
 
 ### Keywords
 

@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 DESC[RIBE] [db_name.]table_name [ALL];
-````
+```
 
 illustrate:
 
@@ -50,13 +50,13 @@ illustrate:
 
     ```sql
     DESC table_name;
-    ````
+    ```
 
 2. Display the schema of all indexes of the table
 
     ```sql
     DESC db1.table_name ALL;
-    ````
+    ```
 
 ### Keywords
 

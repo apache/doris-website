@@ -46,7 +46,7 @@ SHOW STREAM LOAD
 ]
 [ORDER BY...]
 [LIMIT limit][OFFSET offset];
-````
+```
 
 illustrate:
 
@@ -65,32 +65,32 @@ illustrate:
 
    ```sql
      SHOW STREAM LOAD;
-   ````
+   ```
 
 2. Display the Stream Load task of the specified db, the label contains the string "2014_01_02", and display the oldest 10
 
    ```sql
    SHOW STREAM LOAD FROM example_db WHERE LABEL LIKE "2014_01_02" LIMIT 10;
-   ````
+   ```
 
 3. Display the Stream Load task of the specified db and specify the label as "load_example_db_20140102"
 
    ```sql
    SHOW STREAM LOAD FROM example_db WHERE LABEL = "load_example_db_20140102";
-   ````
+   ```
 
 4. Display the Stream Load task of the specified db, specify the status as "success", and sort by StartTime in descending order
 
    ```sql
    SHOW STREAM LOAD FROM example_db WHERE STATUS = "success" ORDER BY StartTime DESC;
-   ````
+   ```
 
 5. Display the import tasks of the specified db and sort them in descending order of StartTime, and display 10 query results starting from offset 5
 
    ```sql
    SHOW STREAM LOAD FROM example_db ORDER BY StartTime DESC limit 5,10;
    SHOW STREAM LOAD FROM example_db ORDER BY StartTime DESC limit 10 offset 5;
-   ````
+   ```
 
 ### Keywords
 

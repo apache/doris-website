@@ -46,7 +46,7 @@ SHOW [FULL] COLUMNS FROM tbl;
 
     ```sql
      SHOW FULL COLUMNS FROM tbl;
-    ````
+    ```
 
 ### Keywords
 

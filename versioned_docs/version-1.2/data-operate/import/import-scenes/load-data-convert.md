@@ -46,11 +46,11 @@ under the License.
   (
       ...
   );
-  ````
+  ```
 
 - [STREAM LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md)
 
-  ```bash
+  ```shell
   curl
   --location-trusted
   -u user:passwd
@@ -58,7 +58,7 @@ under the License.
   -H "where: k1 > k2"
   -T file.txt
   http://host:port/api/testDb/testTbl/_stream_load
-  ````
+  ```
 
 - [ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD.md)
 
@@ -68,33 +68,33 @@ under the License.
   PRECEDING FILTER k1 = 1,
   WHERE k1 > k2
   ...
-  ````
+  ```
 
 The above import methods all support column mapping, transformation and filtering operations on the source data:
 
 - Pre-filtering: filter the read raw data once.
 
-  ````text
+  ```text
   PRECEDING FILTER k1 = 1
-  ````
+  ```
 
 - Mapping: Define the columns in the source data. If the defined column name is the same as the column in the table, it is directly mapped to the column in the table. If different, the defined column can be used for subsequent transformation operations. As in the example above:
 
-  ````text
+  ```text
   (k1, k2, tmpk3)
-  ````
+  ```
 
 - Conversion: Convert the mapped columns in the first step, you can use built-in expressions, functions, and custom functions for conversion, and remap them to the corresponding columns in the table. As in the example above:
 
-  ````text
+  ```text
   k3 = tmpk3 + 1
-  ````
+  ```
 
 - Post filtering: Filter the mapped and transformed columns by expressions. Filtered data rows are not imported into the system. As in the example above:
 
-  ````text
+  ```text
   WHERE k1 > k2
-  ````
+  ```
 
 ## column mapping
 
@@ -115,34 +115,34 @@ Assuming that the source file has 4 columns, the contents are as follows (the he
 
    Suppose there are 4 columns `k1,k2,k3,k4` in the table. The import mapping relationship we want is as follows:
 
-   ````text
+   ```text
    column 1 -> k1
    column 2 -> k3
    column 3 -> k2
    column 4 -> k4
-   ````
+   ```
 
    Then the column mapping should be written in the following order:
 
-   ````text
+   ```text
    (k1, k3, k2, k4)
-   ````
+   ```
 
 2. There are more columns in the source file than in the table
 
    Suppose there are 3 columns `k1,k2,k3` in the table. The import mapping relationship we want is as follows:
 
-   ````text
+   ```text
    column 1 -> k1
    column 2 -> k3
    column 3 -> k2
-   ````
+   ```
 
    Then the column mapping should be written in the following order:
 
-   ````text
+   ```text
    (k1, k3, k2, tmpk4)
-   ````
+   ```
 
    where `tmpk4` is a custom column name that does not exist in the table. Doris ignores this non-existing column name.
 
@@ -150,19 +150,19 @@ Assuming that the source file has 4 columns, the contents are as follows (the he
 
    Suppose there are 5 columns `k1,k2,k3,k4,k5` in the table. The import mapping relationship we want is as follows:
 
-   ````text
+   ```text
    column 1 -> k1
    column 2 -> k3
    column 3 -> k2
-   ````
+   ```
 
    Here we only use the first 3 columns from the source file. The two columns `k4,k5` want to be filled with default values.
 
    Then the column mapping should be written in the following order:
 
-   ````text
+   ```text
    (k1, k3, k2)
-   ````
+   ```
 
    If the `k4,k5` columns have default values, the default values will be populated. Otherwise, if it is a `nullable` column, it will be populated with a `null` value. Otherwise, the import job will report an error.
 
@@ -201,18 +201,18 @@ Assuming that the source file has 4 columns, the contents are as follows (the he
 
    Suppose there are 4 columns `k1,k2,k3,k4` in the table. Our desired import mapping and transformation relationship is as follows:
 
-   ````text
+   ```text
    column 1 -> k1
    column 2 * 100 -> k3
    column 3 -> k2
    column 4 -> k4
-   ````
+   ```
 
    Then the column mapping should be written in the following order:
 
-   ````text
+   ```text
    (k1, tmpk3, k2, k4, k3 = tmpk3 * 100)
-   ````
+   ```
 
    This is equivalent to us naming the second column in the source file `tmpk3`, and specifying that the value of the `k3` column in the table is `tmpk3 * 100`. The data in the final table is as follows:
 
@@ -227,18 +227,18 @@ Assuming that the source file has 4 columns, the contents are as follows (the he
 
    Suppose there are 4 columns `k1,k2,k3,k4` in the table. We hope that `beijing, shanghai, guangzhou, chongqing` in the source data are converted to the corresponding region ids and imported:
 
-   ````text
+   ```text
    column 1 -> k1
    column 2 -> k2
    Column 3 after region id conversion -> k3
    column 4 -> k4
-   ````
+   ```
 
    Then the column mapping should be written in the following order:
 
-   ````text
+   ```text
    (k1, k2, tmpk3, k4, k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
-   ````
+   ```
 
    The data in the final table is as follows:
 
@@ -253,18 +253,18 @@ Assuming that the source file has 4 columns, the contents are as follows (the he
 
    Suppose there are 4 columns `k1,k2,k3,k4` in the table. While converting the region id, we also want to convert the null value of the k1 column in the source data to 0 and import:
 
-   ````text
+   ```text
    Column 1 is converted to 0 if it is null -> k1
    column 2 -> k2
    column 3 -> k3
    column 4 -> k4
-   ````
+   ```
 
    Then the column mapping should be written in the following order:
 
-   ````text
+   ```text
    (tmpk1, k2, tmpk3, k4, k1 = ifnull(tmpk1, 0), k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
-   ````
+   ```
 
    The data in the final table is as follows:
 
@@ -292,9 +292,9 @@ Assuming that the source file has 4 columns, the contents are as follows (the he
 
    Suppose there are 4 columns `k1,k2,k3,k4` in the table. We can define filter conditions directly with default column mapping and transformation. If we want to import only the data rows whose fourth column in the source file is greater than 1.2, the filter conditions are as follows:
 
-   ````text
+   ```text
    where k4 > 1.2
-   ````
+   ```
 
    The data in the final table is as follows:
 
@@ -309,10 +309,10 @@ Assuming that the source file has 4 columns, the contents are as follows (the he
 
    Suppose there are 4 columns `k1,k2,k3,k4` in the table. In the **column conversion** example, we converted province names to ids. Here we want to filter out the data with id 3. Then the conversion and filter conditions are as follows:
 
-   ````text
+   ```text
    (k1, k2, tmpk3, k4, k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
    where k3 != 3
-   ````
+   ```
 
    The data in the final table is as follows:
 
@@ -328,9 +328,9 @@ Assuming that the source file has 4 columns, the contents are as follows (the he
 
    Suppose there are 4 columns `k1,k2,k3,k4` in the table. We want to filter out the data whose `k1` column is `null`, and at the same time filter out the data whose `k4` column is less than 1.2, the filter conditions are as follows:
 
-   ````text
+   ```text
    where k1 is not null and k4 >= 1.2
-   ````
+   ```
 
    The data in the final table is as follows:
 
@@ -359,8 +359,8 @@ Doris's import task allows the user to set a maximum error rate (`max_filter_rat
 
 The error rate is calculated as:
 
-````text
+```text
 #Filtered Rows / (#Filtered Rows + #Loaded Rows)
-````
+```
 
 That is to say, `Unselected Rows` will not participate in the calculation of the error rate.

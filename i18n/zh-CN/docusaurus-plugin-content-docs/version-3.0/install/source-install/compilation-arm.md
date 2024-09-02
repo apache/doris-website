@@ -62,7 +62,7 @@ import TabItem from '@theme/TabItem';
 
 **1.  创建软件下载安装包根目录和软件安装根目录**
 
-```Bash
+```shell
 # 创建软件下载安装包根目录
 mkdir /opt/tools
 
@@ -72,7 +72,7 @@ mkdir /opt/software
 
 **2.  安装依赖项**
 
-```Bash
+```shell
 ### Git ###
 # 省去编译麻烦，直接使用 yum 安装
 yum install -y git
@@ -119,7 +119,7 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
 
 **3.  配置环境变量**
 
-```Bash
+```shell
 # 配置环境变量
 vim /etc/profile.d/doris.sh
 export JAVA_HOME=/opt/software/jdk8
@@ -146,13 +146,13 @@ gcc --version
 
 **1.  更新 apt-get 软件库**
 
-```Bash
+```shell
 apt-get update
 ```
 
 **2.  重新配置 shell**
 
-```Bash
+```shell
 # Ubuntu 的 shell 默认安装的是 dash，而不是 bash，要切换成 bash 才能执行，运行以下命令查看 sh 的详细信息，确认 shell 对应的程序是哪个：
 ls -al /bin/sh
 
@@ -163,7 +163,7 @@ sudo dpkg-reconfigure dash
 
 **3.  创建软件下载安装包根目录和软件安装根目录**
 
-```Bash
+```shell
 # 创建软件下载安装包根目录
 mkdir /opt/tools
 
@@ -173,7 +173,7 @@ mkdir /opt/software
 
 **4.  安装依赖项**
 
-```Bash
+```shell
 ### Git ###
 # 省去编译麻烦，直接使用 apt-get 安装
 apt-get -y install git
@@ -229,7 +229,7 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
 
 **5.  配置环境变量**
 
-```Bash
+```shell
 # 配置环境变量
 vim /etc/profile.d/doris.sh
 export JAVA_HOME=/opt/software/jdk8
@@ -258,7 +258,7 @@ gcc --version
 
 在 ARM 平台编译 Doris 时，请关闭 AVX2 和 LIBUNWIND 三方库：
 
-```Bash
+```shell
 export USE_AVX2=OFF
 export USE_UNWIND=OFF
 ```
@@ -275,7 +275,7 @@ export USE_UNWIND=OFF
 
 解决方案：使用第三方库下载仓库    
 
-```Bash
+```shell
 export REPOSITORY_URL=https://doris-thirdparty-repo.bj.bcebos.com/thirdparty
 sh /opt/doris/thirdparty/build-thirdparty.sh
 ```

@@ -201,7 +201,7 @@ PARTITION BY RANGE(col1[, col2, ...])
 
 示例如下：
 
-```Bash
+```shell
 PARTITION BY RANGE(`date`)
 (
     PARTITION `p201701` VALUES [("2017-01-01"),  ("2017-02-01")),
@@ -249,7 +249,7 @@ PARTITION BY RANGE(date_col)
 
 示例如下：
 
-```Bash
+```shell
 PARTITION BY RANGE(age)
 (
     FROM (1) TO (100) INTERVAL 10
@@ -263,7 +263,7 @@ PARTITION BY RANGE(`date`)
 
 4.MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间。示例如下：
 
-```Bash
+```shell
 PARTITION BY RANGE(col)                                                                                                                                                                                                                
 (                                                                                                                                                                                                                                      
    FROM ("2000-11-14") TO ("2021-11-14") INTERVAL 1 YEAR,                                                                                                                                                                              
@@ -282,7 +282,7 @@ Partition 支持通过 `VALUES IN (...)` 来指定每个分区包含的枚举值
 
 举例如下：
 
-```Bash
+```shell
 PARTITION BY LIST(city)
 (
     PARTITION `p_cn` VALUES IN ("Beijing", "Shanghai", "Hong Kong"),

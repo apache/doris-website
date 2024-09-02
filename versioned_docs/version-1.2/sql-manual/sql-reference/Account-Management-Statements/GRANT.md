@@ -47,7 +47,7 @@ GRANT privilege_list ON priv_level TO user_identity [ROLE role_name]
 GRANT privilege_list ON RESOURCE resource_name TO user_identity [ROLE role_name]
 
 GRANT role_list TO user_identity
-````
+```
 
 privilege_list is a list of privileges to be granted, separated by commas. Currently Doris supports the following permissions:
 
@@ -100,37 +100,37 @@ role_list is the list of roles to be assigned, separated by commas,the specified
 
    ```sql
    GRANT SELECT_PRIV ON *.*.* TO 'jack'@'%';
-   ````
+   ```
 
 2. Grant permissions to the specified database table to the user
 
    ```sql
    GRANT SELECT_PRIV,ALTER_PRIV,LOAD_PRIV ON ctl1.db1.tbl1 TO 'jack'@'192.8.%';
-   ````
+   ```
 
 3. Grant permissions to the specified database table to the role
 
    ```sql
    GRANT LOAD_PRIV ON ctl1.db1.* TO ROLE 'my_role';
-   ````
+   ```
 
 4. Grant access to all resources to users
 
    ```sql
    GRANT USAGE_PRIV ON RESOURCE * TO 'jack'@'%';
-   ````
+   ```
 
 5. Grant the user permission to use the specified resource
 
    ```sql
    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO 'jack'@'%';
-   ````
+   ```
 
 6. Grant access to specified resources to roles
 
    ```sql
    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO ROLE 'my_role';
-   ````
+   ```
 
 7. Grant the specified role to a user
 

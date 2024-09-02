@@ -34,7 +34,7 @@ MULTI LOAD
 
 Users submit multiple import jobs through the HTTP protocol. Multi Load can ensure the atomic effect of multiple import jobs
 
-````
+```
 Syntax:
     curl --location-trusted -u user:passwd -XPOST http://host:port/api/{db}/_multi_start?label=xxx
     curl --location-trusted -u user:passwd -T data.file http://host:port/api/{db}/{table1}/_load?label=xxx\&sub_label=yyy
@@ -91,11 +91,11 @@ NOTE:
 
     3. Supports the use of curl to import data into Doris in a way similar to streaming, but only after the streaming ends Doris
     The real import behavior will occur, and the amount of data in this way cannot be too large.
-````
+```
 
 ### Example
 
-````
+```
 1. Import the data in the local file 'testData1' into the table 'testTbl1' in the database 'testDb', and
 Import the data of 'testData2' into table 'testTbl2' in 'testDb' (user is in defalut_cluster)
     curl --location-trusted -u root -XPOST http://host:port/api/testDb/_multi_start?label=123
@@ -112,7 +112,7 @@ Import the data of 'testData2' into table 'testTbl2' in 'testDb' (user is in def
     curl --location-trusted -u root -XPOST http://host:port/api/testDb/_multi_start?label=123
     curl --location-trusted -u root -T testData1 http://host:port/api/testDb/testTbl1/_load?label=123\&sub_label=1
     curl --location-trusted -u root -XPOST http://host:port/api/testDb/_multi_desc?label=123
-````
+```
 
 ### Keywords
 

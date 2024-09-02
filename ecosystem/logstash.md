@@ -51,11 +51,11 @@ You can download the plugin from the official website or compile it from the sou
 
 - Compile from source code
 
-````
+```
 cd extension/logstash/
 
 gem build logstash-output-doris.gemspec
-````
+```
 
 ### Installing the Plugin
 
@@ -63,13 +63,13 @@ gem build logstash-output-doris.gemspec
 
 `${LOGSTASH_HOME}` is the installation directory of Logstash. Run the `bin/logstash-plugin` command under it to install the plugin.
 
-````
+```
 ${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.0.0.gem
 
 Validating logstash-output-doris-1.0.0.gem
 Installing logstash-output-doris
 Installation successful
-````
+```
 
 The standard installation mode will automatically install the ruby modules that the plugin depends on. In cases where the network is not available, it will get stuck and cannot complete. In such cases, you can download the zip installation package with dependencies for a completely offline installation, noting that you need to use `file://` to specify the local file system.
 
@@ -278,7 +278,7 @@ This example demonstrates JSON log collection using data from the GitHub events 
 
 The GitHub events archive contains archived data of GitHub user actions, formatted as JSON. It can be downloaded from [here](https://data.gharchive.org/), for example, the data for January 1, 2024, at 3 PM.
 
-```bash
+```shell
 wget https://data.gharchive.org/2024-01-01-15.json.gz
 ```
 

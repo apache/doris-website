@@ -38,7 +38,7 @@ Currently, this is not supported in the compute-storage decoupled mode.
 
 In CentOS, execute the following command: 
 
-```Bash
+```shell
 yum install docker
 ```
 
@@ -57,7 +57,7 @@ For different versions of Doris, you need to download different build images. Th
 
 Take Doris 2.0 as an example, download and check the correponding Docker image.
 
-```Bash
+```shell
 # Choose docker.io/apache/doris:build-env-for-2.0
 $ docker pull apache/doris:build-env-for-2.0
 
@@ -75,7 +75,7 @@ apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 - For information about changes in the compilation image, please see [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md).
 - The Docker compilation image includes both JDK 8 and JDK 17. You can check the default JDK version by running `java -version`, and switch between versions using the following commands. For versions earlier than 2.1 (inclusive), please use JDK 8. For versions later than 3.0 (inclusive) or the master branch, please use JDK 17.
 
-```Bash
+```shell
 # Switch to JDK 8
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0
 export PATH=$JAVA_HOME/bin/:$PATH

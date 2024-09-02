@@ -30,7 +30,11 @@ The process memory logs in `be/log/be.INFO` are mainly divided into two categori
 
 The process memory status of Doris BE will be printed in the `log/be.INFO` log every time the process memory increases or decreases by 256 MB. In addition, when the process memory is insufficient, the process memory status will also be printed along with other logs.
 
-``` os physical memory 375.81 GB. process memory used 4.09 GB(= 3.49 GB[vm/rss] - 410.44 MB[tc/jemalloc_cache] + 1 GB[reserved] + 0B[waiting_refresh]), limit 3.01 GB, soft limit 2.71 GB. sys available memory 134.41 GB(= 1 35.41 GB[proc/available] - 1 GB[reserved] - 0B[waiting_refresh]), low water mark 3.20 GB, warning water mark 6.40 GB. ```` 1. `os physical memory 375.81 GB` refers to the system physical memory 375.81 GB.
+```
+os physical memory 375.81 GB. process memory used 4.09 GB(= 3.49 GB[vm/rss] - 410.44 MB[tc/jemalloc_cache] + 1 GB[reserved] + 0B[waiting_refresh]), limit 3.01 GB, soft limit 2.71 GB. sys available memory 134.41 GB(= 1 35.41 GB[proc/available] - 1 GB[reserved] - 0B[waiting_refresh]), low water mark 3.20 GB, warning water mark 6.40 GB.
+```
+
+1. `os physical memory 375.81 GB` refers to the system physical memory 375.81 GB.
 
 2. `process memory used 4.09 GB (= 3.49 GB [vm/rss] - 410.44 MB [tc/jemalloc_cache] + 1 GB [reserved] + 0B [waiting_refresh])`
 - Currently we think that the BE process uses 4.09 GB of memory, and the actual physical memory used by the BE process `vm/rss` is 3.49 GB,

@@ -76,7 +76,7 @@ WITH BROKER broker_name
   [DELETE ON expr]
   [ORDER BY source_sequence]
   [PROPERTIES ("key1"="value1", ...)]
-  ````
+  ```
 
   - `[MERGE|APPEND|DELETE]`
 
@@ -159,13 +159,13 @@ WITH BROKER broker_name
 
   Specifies the information required by the broker. This information is usually used by the broker to be able to access remote storage systems. Such as BOS or HDFS. See the [Broker](../../../../advanced/broker.md) documentation for specific information.
 
-  ````text
+  ```text
   (
       "key1" = "val1",
       "key2" = "val2",
       ...
   )
-  ````
+  ```
 
 - `load_properties`
 
@@ -236,7 +236,7 @@ This feature is supported since the Apache Doris 1.2.3 version
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
    Import the file `file.txt`, separated by commas, into the table `my_table`.
 
@@ -264,7 +264,7 @@ This feature is supported since the Apache Doris 1.2.3 version
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
    Import two batches of files `file-10*` and `file-20*` using wildcard matching. Imported into two tables `my_table1` and `my_table2` respectively. Where `my_table1` specifies to import into partition `p1`, and will import the values of the second and third columns in the source file +1.
 
@@ -288,7 +288,7 @@ This feature is supported since the Apache Doris 1.2.3 version
        "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
        "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
    );
-   ````
+   ```
 
    Specify the delimiter as Hive's default delimiter `\\x01`, and use the wildcard * to specify all files in all directories under the `data` directory. Use simple authentication while configuring namenode HA.
 
@@ -307,7 +307,7 @@ This feature is supported since the Apache Doris 1.2.3 version
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
 5. Import the data and extract the partition field in the file path
 
@@ -325,18 +325,18 @@ This feature is supported since the Apache Doris 1.2.3 version
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
    The columns in the `my_table` table are `k1, k2, k3, city, utc_date`.
 
    The `hdfs://hdfs_host:hdfs_port/user/doris/data/input/dir/city=beijing` directory includes the following files:
 
-   ````text
+   ```text
    hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-01/0000.csv
    hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-02/0000.csv
    hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-03/0000.csv
    hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-04/0000.csv
-   ````
+   ```
 
    The file only contains three columns of `k1, k2, k3`, and the two columns of `city, utc_date` will be extracted from the file path.
 
@@ -359,7 +359,7 @@ This feature is supported since the Apache Doris 1.2.3 version
        "username"="user",
        "password"="pass"
    );
-   ````
+   ```
 
    Only in the original data, k1 = 1, and after transformation, rows with k1 > k2 will be imported.
 
@@ -382,22 +382,22 @@ This feature is supported since the Apache Doris 1.2.3 version
        "username"="user",
        "password"="pass"
    );
-   ````
+   ```
 
    There are the following files in the path:
 
-   ````text
+   ```text
    /user/data/data_time=2020-02-17 00%3A00%3A00/test.txt
    /user/data/data_time=2020-02-18 00%3A00%3A00/test.txt
-   ````
+   ```
 
    The table structure is:
 
-   ````text
+   ```text
    data_time DATETIME,
    k2 INT,
    k3 INT
-   ````
+   ```
 
 8. Import a batch of data from HDFS, specify the timeout and filter ratio. Broker with clear text my_hdfs_broker. Simple authentication. And delete the columns in the original data that match the columns with v2 greater than 100 in the imported data, and other columns are imported normally
 
@@ -419,7 +419,7 @@ This feature is supported since the Apache Doris 1.2.3 version
         "timeout" = "3600",
         "max_filter_ratio" = "0.1"
     );
-    ````
+    ```
 
    Import using the MERGE method. `my_table` must be a table with Unique Key. When the value of the v2 column in the imported data is greater than 100, the row is considered a delete row.
 
@@ -441,7 +441,7 @@ This feature is supported since the Apache Doris 1.2.3 version
         "hadoop.username"="user",
         "password"="pass"
     )
-    ````
+    ```
 
    `my_table` must be an Unique Key model table with Sequence Col specified. The data will be ordered according to the value of the `source_sequence` column in the source data.
 

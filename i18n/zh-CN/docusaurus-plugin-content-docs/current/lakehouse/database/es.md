@@ -124,7 +124,7 @@ Elasticsearch 没有明确的数组类型，但是它的某个字段可以含有
 
 该结构的数组字段可以通过使用以下命令将字段属性定义添加到目标索引映射的`_meta.doris`属性来定义。
 
-```bash
+```shell
 # ES 7.x and above
 curl -X PUT "localhost:9200/doc/_mapping?pretty" -H 'Content-Type:application/json' -d '
 {

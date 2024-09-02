@@ -87,7 +87,7 @@ cd output/fe/bin
 
 可以在 [Apache Doris Third Party Prebuilt](https://github.com/apache/doris-thirdparty/releases/tag/automation) 页面直接下载预编译好的第三方库，省去编译第三方库的过程，参考下面的命令。
 
-```Bash
+```shell
 cd thirdparty
 rm -rf installed
 

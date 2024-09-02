@@ -102,14 +102,14 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   mkdir /opt/tools
   # Create root directory for software installation
   mkdir /opt/software
-  ````
+  ```
 
 - Git
 
   ```shell
   # yum install (save the trouble of compilation)
   yum install -y git
-  ````
+  ```
 
 - JDK8 (2 methods)
 
@@ -122,7 +122,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/jdk-8u291-linux-aarch64.tar.gz && \
   tar -zxvf jdk-8u291-linux-aarch64.tar.gz && \
   mv jdk1.8.0_291 /opt/software/jdk8
-  ````
+  ```
 
 - Maven
 
@@ -132,7 +132,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
   tar -zxvf apache-maven-3.6.3-bin.tar.gz && \
   mv apache-maven-3.6.3 /opt/software/maven
-  ````
+  ```
 
 - NodeJS
 
@@ -142,7 +142,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v16.3.0-linux-arm64.tar.xz && \
   tar -xvf node-v16.3.0-linux-arm64.tar.xz && \
   mv node-v16.3.0-linux-arm64 /opt/software/nodejs
-  ````
+  ```
 
 - ldb-toolchain
 
@@ -151,7 +151,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   # Download ldb-toolchain ARM version
   wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh && \
   sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
-  ````
+  ```
 
 - Configure environment variables
 
@@ -176,7 +176,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   > v16.3.0
   gcc --version
   > gcc-11
-  ````
+  ```
 
 - Install other environments and components
 
@@ -193,7 +193,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
       ./configure && \
       make && \
       make install
-  ````
+  ```
 
 ##### Ubuntu 20.04
 
@@ -201,7 +201,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
 
   ```shell
   apt-get update
-  ````
+  ```
 
 - Check the shell command set
 
@@ -209,13 +209,13 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
 
   ```shell
   ls -al /bin/sh
-  ````
+  ```
 
   The shell can be switched back to bash by:
 
   ```shell
   sudo dpkg-reconfigure dash
-  ````
+  ```
 
   Then select no to confirm.
 
@@ -228,14 +228,14 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   mkdir /opt/tools
   # Create root directory for software installation
   mkdir /opt/software
-  ````
+  ```
 
 - Git
 
   ```shell
   # apt-get install, which can save the trouble of compilation
   apt-get -y install git
-  ````
+  ```
 
 - JDK8
 
@@ -245,7 +245,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/jdk-8u291-linux-aarch64.tar.gz && \
   tar -zxvf jdk-8u291-linux-aarch64.tar.gz && \
   mv jdk1.8.0_291 /opt/software/jdk8
-  ````
+  ```
 
 - Maven
 
@@ -255,7 +255,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
   tar -zxvf apache-maven-3.6.3-bin.tar.gz && \
   mv apache-maven-3.6.3 /opt/software/maven
-  ````
+  ```
 
 - NodeJS
 
@@ -265,7 +265,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v16.3.0-linux-arm64.tar.xz && \
   tar -xvf node-v16.3.0-linux-arm64.tar.xz && \
   mv node-v16.3.0-linux-arm64 /opt/software/nodejs
-  ````
+  ```
 
 - ldb-toolchain
 
@@ -274,7 +274,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   # Download ldb-toolchain ARM version
   wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh && \
   sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
-  ````
+  ```
 
 - Configure environment variables
 
@@ -299,7 +299,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
   > v16.3.0
   gcc --version
      > gcc-11
-     ````
+     ```
 
 - Install other environments and components
 
@@ -327,7 +327,7 @@ Note that you need to download the corresponding aarch64 versions of jdk and nod
       ./configure && \
       make && \
       make install
-  ````
+  ```
 
 #### Download Source Code
 
@@ -344,7 +344,7 @@ If there is data returned, that means AVX2 is supported; otherwise, AVX2 is not 
 
 ```shell
 cat /proc/cpuinfo | grep avx2
-````
+```
 
 ##### Execute compilation
 
@@ -353,7 +353,7 @@ cat /proc/cpuinfo | grep avx2
 sh build.sh
 # For machines that do not support the AVX2 instruction set, use the following command to compile
 USE_AVX2=OFF sh build.sh
-````
+```
 
 ### FAQ
 
@@ -376,7 +376,7 @@ USE_AVX2=OFF sh build.sh
         ```shell
         export REPOSITORY_URL=https://doris-thirdparty-repo.bj.bcebos.com/thirdparty
         sh /opt/doris/thirdparty/build-thirdparty.sh
-        ````
+        ```
 
         REPOSITORY_URL contains all third-party library source packages and their historical versions.
 
@@ -403,7 +403,7 @@ USE_AVX2=OFF sh build.sh
      whereis python
      # Establish soft connection
      sudo ln -s /usr/bin/python2.7 /usr/bin/python
-     ````
+     ```
 
 3. There is no output directory after compilation
 
@@ -419,7 +419,7 @@ USE_AVX2=OFF sh build.sh
 
      ```shell
      sh build.sh --clean
-     ````
+     ```
 
 4. spark-dpp compilation fails
 
@@ -517,7 +517,7 @@ USE_AVX2=OFF sh build.sh
      ```shell
      cp /opt/software/ldb_toolchain/share/aclocal/pkg.m4 /opt/incubator-doris/thirdparty/src/libxml2-v2.9.10/m4
      sh /opt/incubator-doris/thirdparty/build-thirdparty.sh
-     ````
+     ```
    
 9. Failed to execute test CURL_HAS_TLS_PROXY
 
@@ -555,7 +555,7 @@ USE_AVX2=OFF sh build.sh
      # Test
      gcc --version
      > gcc-11
-     ````
+     ```
 
 10. Other problems
 

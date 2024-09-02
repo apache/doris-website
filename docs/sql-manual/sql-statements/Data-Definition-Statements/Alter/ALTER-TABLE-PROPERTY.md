@@ -172,7 +172,7 @@ ALTER TABLE example_db.mysql_table SET ("replication_num" = "2");
 ALTER TABLE example_db.mysql_table SET ("default.replication_num" = "2");
 ALTER TABLE example_db.mysql_table SET ("replication_allocation" = "tag.location.default: 1");
 ALTER TABLE example_db.mysql_table SET ("default.replication_allocation" = "tag.location.default: 1");
-````
+```
 
 Note:
 1. The property with the default prefix indicates the default replica distribution for the modified table. This modification does not modify the current actual replica distribution of the table, but only affects the replica distribution of newly created partitions on the partitioned table.

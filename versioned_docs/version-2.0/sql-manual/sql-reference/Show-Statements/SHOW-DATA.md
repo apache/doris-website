@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW DATA [FROM [db_name.]table_name] [ORDER BY ...];
-````
+```
 
 illustrate:
 
@@ -60,9 +60,9 @@ illustrate:
 
    ```sql
    SHOW DATA;
-   ````
+   ```
 
-   ````
+   ```
    +-----------+-------------+--------------+
    | TableName | Size        | ReplicaCount |
    +-----------+-------------+--------------+
@@ -72,15 +72,15 @@ illustrate:
    | Quota     | 1024.000 GB | 1073741824   |
    | Left      | 1021.921 GB | 1073741815   |
    +-----------+-------------+--------------+
-   ````
+   ```
 
 2. Display the subdivided data volume, the number of replicas and the number of statistical rows of the specified table under the specified db
 
    ```sql
    SHOW DATA FROM example_db.test;
-   ````
+   ```
 
-   ````
+   ```
    +-----------+-----------+-----------+--------------+----------+
    | TableName | IndexName | Size      | ReplicaCount | RowCount |
    +-----------+-----------+-----------+--------------+----------+
@@ -89,15 +89,15 @@ illustrate:
    |           | test2     | 50.000MB  | 30           | 50000    |
    |           | Total     | 80.000    | 90           |          |
    +-----------+-----------+-----------+--------------+----------+
-   ````
+   ```
 
 3. It can be combined and sorted according to the amount of data, the number of copies, the number of statistical rows, etc.
 
    ```sql
    SHOW DATA ORDER BY ReplicaCount desc,Size asc;
-   ````
+   ```
 
-   ````
+   ```
    +-----------+-------------+--------------+
    | TableName | Size        | ReplicaCount |
    +-----------+-------------+--------------+
@@ -109,7 +109,7 @@ illustrate:
    | Quota     | 1024.000 GB | 1073741824   |
    | Left      | 1024.000 GB | 1073741734   |
    +-----------+-------------+--------------+
-   ````
+   ```
 
 ### Keywords
 

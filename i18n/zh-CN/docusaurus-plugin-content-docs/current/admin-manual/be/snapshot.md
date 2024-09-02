@@ -55,7 +55,7 @@ under the License.
 ## Examples
 
 
-    ```bash
+    ```shell
     curl "http://127.0.0.1:8040/api/snapshot?tablet_id=123456&schema_hash=1111111"
 
     ```

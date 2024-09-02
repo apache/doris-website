@@ -32,15 +32,15 @@ Helm Chart makes it easy to deploy Doris clusters and skip difficult configurati
 
 This [Doris repository](https://artifacthub.io/packages/search?ts_query_web=doris&sort=relevance&page=1) have resources about RBAC , deployment ...etc for doris-operator running.
 1. Add the Doris repository
-```Bash
+```shell
 $ helm repo add doris-repo https://charts.selectdb.com
 ```
 2. Update the Chart to the latest version
-```Bash
+```shell
 $ helm repo update doris-repo
 ```
 3. Check the Helm Chart Repo is the latest version
-```Bash
+```shell
 $ helm search repo doris-repo
 NAME                          CHART VERSION    APP VERSION   DESCRIPTION
 doris-repo/doris-operator     1.3.1            1.3.1         Doris-operator for doris creat ...
@@ -51,17 +51,17 @@ doris-repo/doris              1.3.1            2.0.3         Apache Doris is an 
 
 ### 1. Install
 - Install [doris-operator](https://artifacthub.io/packages/helm/doris/doris-operator)，with default config  in a namespace named `doris`
-```Bash
+```shell
 $ helm install operator doris-repo/doris-operator
 ```
 - The repo defines the basic function for running doris-operator, Please use next command to deploy operator, when you have completed customization of [values.yaml](https://artifacthub.io/packages/helm/doris/doris-operator?modal=values)
-```Bash
+```shell
 $ helm install -f values.yaml operator doris-repo/doris-operator 
 ```
 ### 2. Validate installation Status
 Check the deployment status of Pods through the `kubectl get pods` command.
 Observe that the Pod of doris-operator is in the Running state and all containers in the Pod are ready, that means, the deployment is successful.
-```Bash
+```shell
 $ kubectl get pod --namespace doris
 NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
@@ -71,11 +71,11 @@ doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 
 ### 1. Install
 - Use default config for deploying [doriscluster](https://artifacthub.io/packages/helm/doris/doris). This only deploys 3 FE and 3 BE components and using default `storageClass` for providing persistent volume.
-```Bash
+```shell
 $ helm install doriscluster doris-repo/doris
 ```
 - Custom Doris deploying, specify resources or different deployment type, please customize the resource configuration according to the annotations of each resource configuration in [values.yaml](https://artifacthub.io/packages/helm/doris/doris?modal=values) and use next command for deploying.
-```Bash
+```shell
 $ helm install -f values.yaml doriscluster doris-repo/doris 
 ```
 ### 2. Validate installation Status
@@ -83,7 +83,7 @@ After executing the installation command, deployment and distribution, service d
 Check the deployment status of Pods through the `kubectl get pods` command.
 
 Observe that the Pod of `doriscluster` is in the `Running` state and all containers in the Pod are ready, that means, the deployment is successful.
-```Bash
+```shell
 $  kubectl get pod --namespace doris
 NAME                     READY   STATUS    RESTARTS   AGE
 doriscluster-helm-fe-0   1/1     Running   0          1m39s
@@ -98,11 +98,11 @@ doriscluster-helm-be-2   1/1     Running   0          16s
 
 ### Uninstall doriscluster
 Please confirm the Doris is not used, when using next command to uninstall `doriscluster`.
-```bash
+```shell
 $ helm uninstall doriscluster
 ```
 ### Uninstall doris-operator
 Please confirm that Doris is not running in Kubernetes, use next command to uninstall `doris-operator`.
-```bash
+```shell
 $ helm uninstall operator
 ```

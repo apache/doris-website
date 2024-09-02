@@ -37,7 +37,7 @@ grammar:
 
 ```sql
 TRUNCATE TABLE [db.]tbl[ PARTITION(p1, p2, ...)];
-````
+```
 
 illustrate:
 
@@ -53,13 +53,13 @@ illustrate:
 
      ```sql
      TRUNCATE TABLE example_db.tbl;
-     ````
+     ```
 
 2. Empty p1 and p2 partitions of table tbl
 
      ```sql
      TRUNCATE TABLE tbl PARTITION(p1, p2);
-     ````
+     ```
 
 ### Keywords
 

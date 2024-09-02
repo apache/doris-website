@@ -49,9 +49,9 @@ At the end of the document, we give a code example of importing data using Java
 
 The request body of Stream Load is as follows:
 
-````text
+```text
 PUT /api/{db}/{table}/_stream_load
-````
+```
 
 1. Create a table
 
@@ -66,15 +66,15 @@ PUT /api/{db}/{table}/_stream_load
    )
    unique key(id)
    DISTRIBUTED BY HASH(id) BUCKETS 3;
-   ````
+   ```
 
 2. Import data
 
    Execute the following curl command to import the local file:
 
-   ````text
+   ```text
     curl -u user:passwd -H "label:load_local_file_test" -T /path/to/local/demo.txt http://host:port/api/demo/load_local_file_test/_stream_load
-   ````
+   ```
 
    - user:passwd is the user created in Doris. The initial user is admin/root, and the password is blank in the initial state.
    - host:port is the HTTP protocol port of BE, the default is 8040, which can be viewed on the Doris cluster WEB UI page.
@@ -86,7 +86,7 @@ PUT /api/{db}/{table}/_stream_load
 
    The Stream Load command is a synchronous command, and a successful return indicates that the import is successful. If the imported data is large, a longer waiting time may be required. Examples are as follows:
 
-   ````json
+   ```json
    {
        "TxnId": 1003,
        "Label": "load_local_file_test",
@@ -105,7 +105,7 @@ PUT /api/{db}/{table}/_stream_load
        "CommitAndPublishTimeMs": 106,
        "ErrorURL": "http://192.168.1.1:8042/api/_load_error_log?file=__shard_0/error_log_insert_stmt_db18266d4d9b4ee5-abb00ddd64bdf005_db18266d4d9b4ee5_abb00ddd64bdf005"
    }
-   ````
+   ```
 
    - The status of the `Status` field is `Success`, which means the import is successful.
    - For details of other fields, please refer to the [Stream Load](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md) command documentation.
@@ -119,7 +119,7 @@ PUT /api/{db}/{table}/_stream_load
 
 Here is a simple JAVA example to execute Stream Load:
 
-````java
+```java
 package demo.doris;
 
 import org.apache.commons.codec.binary.Base64;
@@ -212,7 +212,7 @@ public class DorisStreamLoader {
         loader.load(file);
     }
 }
-````
+```
 
 > Note: The version of http client here is 4.5.13
 > ```xml

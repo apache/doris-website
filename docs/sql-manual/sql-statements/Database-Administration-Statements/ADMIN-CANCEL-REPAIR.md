@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 ADMIN CANCEL REPAIR TABLE table_name[ PARTITION (p1,...)];
-````
+```
 
 illustrate:
 
@@ -50,7 +50,7 @@ illustrate:
 
      ```sql
       ADMIN CANCEL REPAIR TABLE tbl PARTITION(p1);
-     ````
+     ```
 
 ### Keywords
 

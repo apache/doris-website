@@ -40,7 +40,7 @@ grammar:
 
 ```sql
 SHOW [ALL] CREATE ROUTINE LOAD for load_name;
-````
+```
 
 illustrate:
 
@@ -53,7 +53,7 @@ illustrate:
 
     ```sql
     SHOW CREATE ROUTINE LOAD for test_load
-    ````
+    ```
 
 ### Keywords
 

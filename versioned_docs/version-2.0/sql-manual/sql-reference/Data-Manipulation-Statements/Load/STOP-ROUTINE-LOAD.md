@@ -36,7 +36,7 @@ User stops a Routine Load job. A stopped job cannot be rerun.
 
 ```sql
 STOP ROUTINE LOAD FOR job_name;
-````
+```
 
 ### Example
 
@@ -44,7 +44,7 @@ STOP ROUTINE LOAD FOR job_name;
 
     ```sql
     STOP ROUTINE LOAD FOR test1;
-    ````
+    ```
 
 ### Keywords
 

@@ -77,7 +77,7 @@ Other articles have already explained:
 
 In order to debug, you need to add debugging parameters when fe starts, such as 
 
-```bash
+```shell
 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
 ```
 

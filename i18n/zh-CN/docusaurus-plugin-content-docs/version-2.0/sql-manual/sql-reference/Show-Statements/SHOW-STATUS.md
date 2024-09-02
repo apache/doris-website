@@ -42,7 +42,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 [WHERE]
 [ORDER BY]
 [LIMIT OFFSET]
-````
+```
 
 - database ：查看指定数据库下的作业。 如果未指定，则使用当前数据库。
 - WHERE：您可以过滤结果列，目前仅支持以下列：
@@ -70,7 +70,7 @@ RollupIndexName: r1
        Progress: NULL
         Timeout: 86400
 1 row in set (0.00 sec)
-````
+```
 
 - `JobId`：作业唯一 ID。
 

@@ -36,10 +36,10 @@ This statement is used to display Doris system variables, which can be queried b
 
 grammar:
 
-````sql
+```sql
 SHOW [GLOBAL | SESSION] VARIABLES
      [LIKE 'pattern' | WHERE expr]
-````
+```
 
 illustrate:
 
@@ -54,19 +54,19 @@ illustrate:
 
     ```sql
     show variables like 'max_connections';
-    ````
+    ```
 
 2. Matching through the percent sign (%) wildcard can match multiple items
 
     ```sql
     show variables like '%connec%';
-    ````
+    ```
 
 3. Use the Where clause for matching queries
 
     ```sql
     show variables where variable_name = 'version';
-    ````
+    ```
 
 ### Keywords
 

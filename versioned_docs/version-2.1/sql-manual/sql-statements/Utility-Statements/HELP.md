@@ -36,9 +36,9 @@ The directory of help can be queried by changing the command
 
 grammar:
 
-```` sql
+``` sql
 HELP <item>
-````
+```
 
 All Doris commands can be listed with `help`
 
@@ -72,7 +72,7 @@ nowarning (\w) Don't show warnings after every statement.
 resetconnection(\x) Clean session context.
 
 For server side help, type 'help contents'
-````
+```
 
 Get the Doris SQL help contents via `help contents`
 
@@ -83,7 +83,7 @@ where <item> is one of the following
 categories:
    sql-functions
    sql-statements
-````
+```
 
 ### Example
 
@@ -91,19 +91,19 @@ categories:
 
    ```sql
    help contents
-   ````
+   ```
 
 2. The command to list all function directories of the Doris cluster
 
    ```sql
    help sql-functions
-   ````
+   ```
 
 3. List all functions under the date function
 
    ```sql
    help date-time-functions
-   ````
+   ```
 
 
 ### Keywords

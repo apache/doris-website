@@ -40,7 +40,7 @@ grammar:
 
 ```sql
 SHOW [FULL] PROCESSLIST
-````
+```
 
 illustrate:
 
@@ -70,9 +70,9 @@ Other types can refer to [MySQL official website for explanation](https://dev.my
 
 1. View the threads running by the current user
 
-   ````SQL
+   ```SQL
    SHOW PROCESSLIST
-   ````
+   ```
    return
    ```
    MySQL [test]> show full processlist;

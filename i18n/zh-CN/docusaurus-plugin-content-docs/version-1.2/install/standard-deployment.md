@@ -309,7 +309,7 @@ Broker 以插件的形式，独立于 Doris 部署。如果需要从第三方存
 
    BE 进程启动后，如果之前有数据，则可能有数分钟不等的数据索引加载时间。
 
-   如果是 BE 的第一次启动，或者该 BE 尚未加入任何集群，则 BE 日志会定期滚动 ```waiting to receive first heartbeat from frontend``` 字样。表示 BE 还未通过 FE 的心跳收到 Master 的地址，正在被动等待。这种错误日志，在 FE 中 ADD BACKEND 并发送心跳后，就会消失。如果在接到心跳后，又重复出现 ``````master client, get client from cache failed.host: , port: 0, code: 7`````` 字样，说明 FE 成功连接了 BE，但 BE 无法主动连接 FE。可能需要检查 BE 到 FE 的 rpc_port 的连通性。
+   如果是 BE 的第一次启动，或者该 BE 尚未加入任何集群，则 BE 日志会定期滚动 ```waiting to receive first heartbeat from frontend``` 字样。表示 BE 还未通过 FE 的心跳收到 Master 的地址，正在被动等待。这种错误日志，在 FE 中 ADD BACKEND 并发送心跳后，就会消失。如果在接到心跳后，又重复出现 ```master client, get client from cache failed.host: , port: 0, code: 7``` 字样，说明 FE 成功连接了 BE，但 BE 无法主动连接 FE。可能需要检查 BE 到 FE 的 rpc_port 的连通性。
 
    如果 BE 已经被加入集群，日志中应该每隔 5 秒滚动来自 FE 的心跳日志：```get heartbeat, host: xx.xx.xx.xx, port: 9020, cluster id: xxxxxx```，表示心跳正常。
 

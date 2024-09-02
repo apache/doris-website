@@ -240,7 +240,7 @@ k2 int, k1 int
 
 导入语句 1（以 Stream Load 为例）：
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\"]" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ```
 
@@ -258,7 +258,7 @@ curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", 
 
 导入语句 2：
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\"]" -H "columns: k2, k1" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ```
 
@@ -274,7 +274,7 @@ curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", 
 
 当然，如其他导入一样，可以在 Columns 中进行列的转换操作。示例如下：
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\"]" -H "columns: k2, tmp_k1, k1 = tmp_k1 * 100" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ```
 
@@ -338,7 +338,7 @@ Doris 支持通过 JSON root 抽取 JSON 中指定的数据。
 
 导入语句如下：
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "strip_outer_array: true" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ```
 
@@ -372,7 +372,7 @@ curl -v --location-trusted -u root: -H "format: json" -H "strip_outer_array: tru
 
 这是因为通过导入语句中的信息，Doris 并不知道“缺失的列是表中的 k2 列”。如果要对以上数据按照期望结果导入，则导入语句如下：
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "strip_outer_array: true" -H "jsonpaths: [\"$.k1\", \"$.k2\"]" -H "columns: k1, tmp_k2, k2 = ifnull(tmp_k2, 'x')" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ```
 
@@ -398,7 +398,7 @@ code    INT     NULL
 
 - 不指定 JSON Path
 
-  ```bash
+  ```shell
   curl --location-trusted -u user:passwd -H "format: json" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
   ```
 
@@ -410,7 +410,7 @@ code    INT     NULL
 
 - 指定 JSON Path
 
-  ```bash
+  ```shell
   curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
   ```
 
@@ -428,7 +428,7 @@ code    INT     NULL
 
   - 指定 JSON Path
 
-  ```bash
+  ```shell
   curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.content.city\",\"$.content.code\"]" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
   ```
 
@@ -459,7 +459,7 @@ code    INT     NULL
 
 - 指定 JSON Path
 
-  ```bash
+  ```shell
   curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" -H "strip_outer_array: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
   ```
 
@@ -485,7 +485,7 @@ code    INT     NULL
 
 - StreamLoad 导入：
 
-  ```bash
+  ```shell
   curl --location-trusted -u user:passwd -H "format: json" -H "read_json_by_line: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
   ```
 
@@ -502,7 +502,7 @@ code    INT     NULL
 
 数据依然是示例 3 中的多行数据，现需要对导入数据中的 `code` 列加 1 后导入。
 
-```bash
+```shell
 curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" -H "strip_outer_array: true" -H "columns: id, city, tmpc, code=tmpc+1" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
 ```
 
@@ -528,7 +528,7 @@ curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\
 {"k1": 40, "k2": ["10000000000000000000.1111111222222222"]}
 ```
 
-```bash
+```shell
 curl --location-trusted -u root:  -H "max_filter_ratio:0.01" -H "format:json" -H "timeout:300" -T test_decimal.json http://localhost:8035/api/example_db/array_test_decimal/_stream_load
 ```
 
@@ -548,7 +548,7 @@ MySQL > select * from array_test_decimal;
 {"k1": 999, "k2": ["76959836937749932879763573681792701709", "26017042825937891692910431521038521227"]}
 ```
 
-```bash
+```shell
 curl --location-trusted -u root:  -H "max_filter_ratio:0.01" -H "format:json" -H "timeout:300" -T test_largeint.json http://localhost:8035/api/example_db/array_test_largeint/_stream_load
 ```
 
