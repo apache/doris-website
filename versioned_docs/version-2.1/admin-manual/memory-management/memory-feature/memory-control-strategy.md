@@ -76,11 +76,11 @@ If the BE process memory exceeds MemLimit (90% of the total system memory by def
 
 ## Memory limit and watermark calculation method
 
-- Process memory upper limit MemLimit = `be.conf/mem_limit * PhysicalMemory`, default 90% of the total system memory.
+- Process memory limit MemLimit = `be.conf/mem_limit * PhysicalMemory`, the default is 90% of the total system memory, for details, please refer to .
 
 - Process memory soft limit SoftMemLimit = `be.conf/mem_limit * PhysicalMemory * be.conf/soft_mem_limit_frac`, the default is 81% of the total system memory.
 
-- System remaining available memory low water mark LowWaterMark = `Max(a, b, c)`, on a machine with 64G memory, LowWaterMark defaults to slightly less than 3.2 GB, where `a = PhysicalMemory - MemLimit`; `b = PhysicalMemory * 0.05`; `c = be.conf/max_sys_mem_available_low_water_mark_bytes`, default is 6.4 GB.
+- System remaining available memory low water mark LowWaterMark = `be.conf/max_sys_mem_available_low_water_mark_bytes`, the default is -1, then LowWaterMark = `min(PhysicalMemory - MemLimit, PhysicalMemory * 0.05)`, on a machine with 64G memory, the value of LowWaterMark is slightly less than 3.2 GB (because the actual value of `PhysicalMemory` is often less than 64G).
 
 - System remaining available memory warning water mark WarningWaterMark = `2 * LowWaterMark`, on a machine with 64G memory, `WarningWaterMark` defaults to slightly less than 6.4 GB.
 

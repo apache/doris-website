@@ -154,9 +154,11 @@ Alloc Stacktrace:
 这个时候我们可以利用TCMalloc的[HEAP PROFILE](https://gperftools.github.io/gperftools/heapprofile.html)的功能。如果设置了HEAPPROFILE功能，那么我们可以获得进程整体的内存申请使用情况。使用方式是在启动Doris BE前设置`HEAPPROFILE`环境变量。比如：
 
 ```
-export HEAPPROFILE=/tmp/doris_be.hprof
+export TCMALLOC_SAMPLE_PARAMETER=64000 HEAP_PROFILE_ALLOCATION_INTERVAL=-1 HEAP_PROFILE_INUSE_INTERVAL=-1  HEAP_PROFILE_TIME_INTERVAL=5 HEAPPROFILE=/tmp/doris_be.hprof
 ./bin/start_be.sh --daemon
 ```
+
+> 需要注意，HEAPPROFILE 需要是绝对路径，且已经存在。
 
 这样，当满足HEAPPROFILE的dump条件时，就会将内存的整体使用情况写到指定路径的文件中。后续我们就可以通过使用`pprof`工具来对输出的内容进行分析。
 
@@ -275,7 +277,7 @@ heap dump文件所在目录可以在 ``be.conf`` 中通过``jeprofile_dir``变�
 尽可能让 Heap Dump 和执行 `jeprof` 解析 Heap Profile 在同一台服务器上，见下面的 QA-2
 ```
 
-1. 分析单个heap dump文件
+1. 分析单个 Heap Dump 文件
 
 ```shell
    jeprof --dot lib/doris_be heap_dump_file_1
@@ -290,7 +292,7 @@ heap dump文件所在目录可以在 ``be.conf`` 中通过``jeprofile_dir``变�
    jeprof --pdf lib/doris_be heap_dump_file_1 > result.pdf
    ```
 
-2.  分析两个heap dump文件的diff
+2.  分析两个 Heap Dump 文件的diff
 
 ```shell
    jeprof --dot lib/doris_be --base=heap_dump_file_1 heap_dump_file_2
@@ -335,6 +337,12 @@ hash -r
 2. 运行 `jeprof` 后出现很多错误: `addr2line: DWARF error: invalid or unhandled FORM value: 0x25`，解析后的 Heap 栈都是代码的内存地址，而不是函数名称
 
 这是因为 Heap Dump 和执行 `jeprof` 解析 Heap Profile 不在同一台服务器上，导致 `jeprof` 使用符号表解析函数名称失败，尽可能在同一台机器上完成 Dump Heap 和 `jeprof` 解析的操作。
+
+3. 如果 Heap Dump 和执行 `jeprof` 解析 Heap Profile 在同一台服务器上，但解析后的 Heap 栈依然是代码的内存地址，而不是函数名称
+
+尝试在 Heap Dump 的机器上重新编译 Doris BE，也就是让编译和运行 Doris BE 在一台机器上，并在这台机器上 Heap Dump 和 `jeprof` 解析。
+
+上面的操作后，如果 Heap 栈依然是代码的内存地址，尝试 `USE_JEMALLOC=OFF ./build.sh --be` 编译使用 TCMalloc 的 Doris BE，然后参考上面的章节使用 TCMalloc Heap Profile 分析内存。
 
 #### LSAN
 

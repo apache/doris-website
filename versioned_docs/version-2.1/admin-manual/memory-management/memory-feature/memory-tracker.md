@@ -64,13 +64,15 @@ The phenomenon of Memory Tracker Statistics Missing is different in versions bef
 
 2. Before Doris 2.1, the value of Orphan Memory Tracker is too large, which means that the Memory Tracker statistics are missing.
 
-### Analysis of missing Memory Tracker statistics
+### Memory Tracker Statistics Missing Analysis
 
-If the above phenomenon is observed, if the cluster is easy to restart and the phenomenon can be reproduced, refer to [Heap Profile Memory Analysis](./../memory-analysis/heap-profile-memory-analysis.md) to use Jemalloc Heap Profile to analyze process memory.
+> In versions prior to Doris 2.1.5, if Memory Tracker statistics are missing or BE process memory does not decrease, please refer to [Cache Memory Analysis](./../memory-analysis/doris-cache-memory-analysis.md) to analyze SegmentCache memory usage, and try to close Segment Cache before continuing the test.
 
-Otherwise, you can refer to [Metadata Memory Analysis](./../memory-analysis/metadata-memory-analysis.md) to analyze the metadata memory of Doris BE.
+> In versions prior to Doris 2.1.5, Segment Cache Memory Tacker is inaccurate. This is because some Index memory statistics, including Primary Key Index, are inaccurate, resulting in Segment Cache memory not being effectively limited, often occupying too much memory, especially in large wide tables with hundreds or thousands of columns. Refer to [Metadata Memory Analysis](./../memory-analysis/metadata-memory-analysis.md) If you find that `doris_be_cache_usage{name="SegmentCache"}` in Doris BE Metrics is not large, but `doris_column_reader_num` in Doris BE Bvar is large, you need to suspect the memory usage of Segment Cache. If you see `Segment` and `ColumnReader` fields in the call stack with a large memory usage in Heap Profile, it can be basically confirmed that Segment Cache occupies a large amount of memory.
 
-> In versions prior to Doris 2.1.5, Segment Cache Memory Tacker is inaccurate. When you find that Memory Tracker statistics are missing or BE process memory does not decrease, you can refer to [Doris Cache Memory Analysis](./../memory-analysis/doris-cache-memory-analysis.md) to analyze SegmentCache memory usage and try to close Segment Cache before continuing the test. This is because the memory statistics of some indexes, including the Primary Key Index, are inaccurate, resulting in the Segment Cache memory not being effectively restricted, often occupying too much memory, especially on large wide tables with hundreds or thousands of columns. Refer to [Metadata Memory Analysis](./../memory-analysis/metadata-memory-analysis.md) If you find that `doris_be_cache_usage{name="SegmentCache"}` in Doris BE Metrics is not large, but `doris_column_reader_num` in Doris BE Bvar is large, you need to suspect the memory usage of Segment Cache. If you see `Segment` and `ColumnReader` fields in the call stack with a large memory usage in Heap Profile, it can be basically confirmed that Segment Cache occupies a large amount of memory.
+If the above phenomenon is observed, if the cluster can be easily restarted and the phenomenon can be reproduced, refer to [Heap Profile Memory Analysis](./../memory-analysis/heap-profile-memory-analysis.md) to use Jemalloc Heap Profile to analyze process memory.
+
+Otherwise, you can first refer to [Metadata Memory Analysis](./../memory-analysis/metadata-memory-analysis.md) to analyze the metadata memory of Doris BE.
 
 ### Reasons for missing Memory Tracker statistics
 
