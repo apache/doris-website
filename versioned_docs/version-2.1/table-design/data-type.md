@@ -28,7 +28,7 @@ Apache Doris support standard SQL syntax, using MySQL Network Connection Protoco
 
 The list of data types supported by Doris is as follows:
 
-## [Numeric data type](../sql-manual/sql-data-types/numeric/numeric-overview)
+<!-- ## [Numeric data type](../sql-manual/sql-data-types/numeric/numeric-overview)
 
 | Type name      | Storeage (bytes)| Description                                                  |
 | -------------- | --------------- | ------------------------------------------------------------ |
@@ -73,13 +73,13 @@ The list of data types supported by Doris is as follows:
 | [HLL](../sql-manual/sql-data-types/aggregate/HLL)            | Variable Length | HLL stands for HyperLogLog, is a fuzzy deduplication. It performs better than Count Distinct when dealing with large datasets.   The error rate of HLL is typically around 1%, and sometimes it can reach 2%. HLL cannot be used as a key column, and the aggregation type is HLL_UNION when creating a table.  Users do not need to specify the length or default value as it is internally controlled based on the aggregation level of the data.  HLL columns can only be queried or used through the companion functions such as hll_union_agg, hll_raw_agg, hll_cardinality, and hll_hash. |
 | [BITMAP](../sql-manual/sql-data-types/aggregate/BITMAP)         | Variable Length | BITMAP type can be used in Aggregate tables, Unique tables or Duplicate tables.  - When used in a Unique table or a Duplicate table, BITMAP must be employed as non-key columns.  - When used in an Aggregate table, BITMAP must also serve as non-key columns, and the aggregation type must be set to BITMAP_UNION during table creation.  Users do not need to specify the length or default value as it is internally controlled based on the aggregation level of the data. BITMAP columns can only be queried or used through the companion functions such as bitmap_union_count, bitmap_union, bitmap_hash, and bitmap_hash64. |
 | [QUANTILE_STATE](../sql-manual/sql-data-types/aggregate/QUANTILE_STATE) | Variable Length | A type used to calculate approximate quantile values.  When loading, it performs pre-aggregation for the same keys with different values. When the number of values does not exceed 2048, it records all data in detail. When the number of values is greater than 2048, it employs the TDigest algorithm to aggregate (cluster) the data and store the centroid points after clustering.   QUANTILE_STATE cannot be used as a key column and should be paired with the aggregation type QUANTILE_UNION when creating a table. Users do not need to specify the length or default value as it is internally controlled based on the aggregation level of the data.   QUANTILE_STATE columns can only be queried or used through the companion functions such as QUANTILE_PERCENT, QUANTILE_UNION, and TO_QUANTILE_STATE. |
-| [AGG_STATE](../sql-manual/sql-data-types/aggregate/AGG_STATE)       | Variable Length | Aggregate function can only be used with state/merge/union function combiners.   AGG_STATE cannot be used as a key column. When creating a table, the signature of the aggregate function needs to be declared alongside.   Users do not need to specify the length or default value. The actual data storage size depends on the function's implementation. |
+| [AGG_STATE](../sql-manual/sql-data-types/aggregate/AGG_STATE)       | Variable Length | Aggregate function can only be used with state/merge/union function combiners.   AGG_STATE cannot be used as a key column. When creating a table, the signature of the aggregate function needs to be declared alongside.   Users do not need to specify the length or default value. The actual data storage size depends on the function's implementation. | -->
 
 ## [IP types](../sql-manual/sql-data-types/ip/ip-overview)
 
-| Type name      | Storeage (bytes)| Description                                                  |
+<!-- | Type name      | Storeage (bytes)| Description                                                  |
 | -------------- | --------------- | ------------------------------------------------------------ |
 | [IPv4](../sql-manual/sql-data-types/ip/IPV4)          | 4               | It is used in conjunction with the `ipv4_*` family of functions. |
-| [IPv6](../sql-manual/sql-data-types/ip/IPV6)         | 16               | It is used in conjunction with the `ipv6_*` family of functions. |
+| [IPv6](../sql-manual/sql-data-types/ip/IPV6)         | 16               | It is used in conjunction with the `ipv6_*` family of functions. | -->
 
 You can also view all the data types supported by Doris with the `SHOW DATA TYPES; `statement.

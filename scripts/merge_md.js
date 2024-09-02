@@ -18,8 +18,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const sidebarPath = 'versioned_sidebars/version-3.0-sidebars.json'
-const docsBaseDir = 'i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0'
+const sidebarPath = 'versioned_sidebars/version-2.1-sidebars.json'
+const docsBaseDir = 'i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1'
 const outputPath = 'doc.md'
 
 const fileLinkName = {};
@@ -93,6 +93,7 @@ function processItems(items, level) {
     items.forEach(item => {
         if (typeof item === 'string') {
             const filePath = path.join(docsBaseDir, item + '.md');
+            console.log('Processing filePath');
             if (fs.existsSync(filePath)) {
                 let mdContent = readMarkdownFile(filePath);
                 mdContent = replaceLinkWrap(mdContent);
@@ -108,6 +109,7 @@ function processItems(items, level) {
 
 function adjustHeaders(mdContent, level) {
     const match = mdContent.match(/{[^}]*}/);
+    console.log(`Processing ${match[0]}`);
     const mainTitle = JSON.parse(match[0].replace(/'/g, '"')).title;
     const lines = mdContent.split('\n');
 
@@ -147,13 +149,22 @@ function adjustHeaders(mdContent, level) {
 }
 
 function mergeMarkdownFiles() {
-    const sidebarData = readJSON(sidebarPath);
-    let content = '';
-    sidebarData.docs.forEach(category => {
-        content += `# ${category.label}\n\n`;
-        content += processItems(category.items, 1);
-    });
-    writeMarkdownContent(outputPath, content);
+    try {
+        // console.log(sidebarPath);
+        const sidebarData = readJSON(sidebarPath);
+        let content = '';
+        sidebarData.docs.forEach(category => {
+            // console.log(category);
+            content += `# ${category.label}\n\n`;
+            content += processItems(category.items, 1);
+        });
+        // console.log(content);
+        writeMarkdownContent(outputPath, content);
+    } catch(e) {
+        console.log(e);
+        console.log('sidebarPath', sidebarPath);
+    }
+    
 }
 
 mergeMarkdownFiles();

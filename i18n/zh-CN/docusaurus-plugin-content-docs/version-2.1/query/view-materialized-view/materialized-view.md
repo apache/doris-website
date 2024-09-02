@@ -239,7 +239,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW FROM db_name; (Version 0.13)
 ```
 
 这个命令中 `db_name` 是一个参数，你需要替换成自己真实的 db 名称。命令的结果是显示这个 db 的所有创建物化视图的任务。结果如下：
-
+<!-- 
 ```sql
 +-------+---------------+----------------+------------------+---------------+-----------------+----------+---------------+-----------+-----+----------+---------+
 | JobId | TableName     | CreateTime     | FinishedTime     | BaseIndexName | RollupIndexName | RollupId | TransactionId | State     | Msg | Progress | Timeout |
@@ -572,4 +572,4 @@ to_bitmap 的参数仅支持正整型，如果原始数据中存在负数，会�
 
 ## 更多帮助
 
-关于物化视图使用的更多详细语法及最佳实践，请参阅 [CREATE MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW) 和 [DROP MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP CREATE MATERIALIZED VIEW` 和`HELP DROP MATERIALIZED VIEW`  获取更多帮助信息。
+关于物化视图使用的更多详细语法及最佳实践，请参阅 [CREATE MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW) 和 [DROP MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP CREATE MATERIALIZED VIEW` 和`HELP DROP MATERIALIZED VIEW`  获取更多帮助信息。 -->

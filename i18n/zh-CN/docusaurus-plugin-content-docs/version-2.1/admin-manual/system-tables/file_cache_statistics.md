@@ -39,20 +39,20 @@ under the License.
 `information_schema`
 
 ## 表信息
-
+<!-- 
 | 列名 | 类型 | 说明 |
 |---|---|---|
 | BE_ID | BIGINT  | BE 节点 ID  | 
 | BE_IP | VARCHAR(256)  | BE 节点 IP  | 
 | CACHE_PATH | VARCHAR(256)  | BE 节点缓存路径  | 
 | METRIC_NAME    | VARCHAR(256)   | 指标名称  | 
-| METRIC_VALUE      | DOUBLE   | 指标值  | 
+| METRIC_VALUE      | DOUBLE   | 指标值  |  -->
 
 > 不同 Doris 版本可能包含不同的指标信息。
 
 ### 2.1.x 版本指标说明
 
-> 仅列举重要指标。
+<!-- > 仅列举重要指标。
 
 - `normal_queue_curr_elements`
 
@@ -109,5 +109,5 @@ TODO
 
     ```
     select * from information_schema.file_cache_statistics where METRIC_NAME = "hits_ratio" order by METRIC_VALUE desc;
-    ```
+    ``` -->
 

@@ -64,7 +64,7 @@ show load profile "/[queryId]/[TaskId]/[FragmentId]/[InstanceId]"
 
 这个命令会列出当前保存的所有导入 Profile。每行对应一个导入。其中 QueryId 列为导入作业的 ID。这个 ID 也可以通过 SHOW LOAD 语句查看拿到。我们可以选择我们想看的 Profile 对应的 QueryId，查看具体情况
 
-### Example
+<!-- ### Example
 
 1. 列出所有的 Load Profile
 
@@ -231,5 +231,5 @@ show load profile "/[queryId]/[TaskId]/[FragmentId]/[InstanceId]"
 
     SHOW, LOAD, PROFILE
 
-### Best Practice
+### Best Practice -->
 

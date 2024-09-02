@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_COMPACY",
-    "language": "zh-CN",
+    "language": "zh-CN"
 }
 ---
 
@@ -28,7 +28,7 @@ array_compact
 
 ### description
 
-从数组中删除连续的重复元素,结果值的顺序由源数组中的顺序决定。
+从数组中删除连续的重复元素，结果值的顺序由源数组中的顺序决定。
 
 #### Syntax
 
@@ -36,11 +36,11 @@ array_compact
 
 #### Arguments
 
-`arr` — 需要处理的数组.
+`arr` — 需要处理的数组。
 
 #### Returned value
 
-不存在连续重复元素的数组.
+不存在连续重复元素的数组。
 
 Type: Array.
 

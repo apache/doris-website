@@ -49,7 +49,7 @@ under the License.
 :::tip
 关于表属性的具体减少，请参阅**建表**相关文档。
 :::
-
+<!-- 
 ## 示例
 
 1. 查询所有表属性
@@ -107,5 +107,5 @@ under the License.
     | internal      | __internal_schema    | audit_log            | default.replication_allocation | tag.location.default: 1 |
     | internal      | test_database        | test_table           | default.replication_allocation | tag.location.default: 1 |
     +---------------+----------------------+----------------------+--------------------------------+-------------------------+
-    ```
+    ``` -->
 
