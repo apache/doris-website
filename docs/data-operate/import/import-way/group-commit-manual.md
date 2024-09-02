@@ -148,7 +148,7 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-See [Synchronize Data Using Insert Method](../../data-operate/import/insert-into-manual) for more details about **JDBC**.
+See [Synchronize Data Using Insert Method](../../../data-operate/import/insert-into-manual) for more details about **JDBC**.
 
 ### INSERT INTO VALUES
 
@@ -333,7 +333,7 @@ curl --location-trusted -u {user}:{passwd} -T data.csv  -H "group_commit:sync_mo
 # The retured label is start with 'group_commit', which is the label of the real load job
 ```
 
-See [Stream Load](stream-load-manual.md) for more detailed syntax used by **Http Stream**.
+See [Stream Load](../import-way/stream-load-manual.md) for more detailed syntax used by **Http Stream**.
 
 ## Group commit condition
 
@@ -397,7 +397,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
   * Currently, WAL files are stored only on one disk of one BE. If the BE's disk is damaged or the file is mistakenly deleted, it may result in data loss.
 
-  * When decommissioning a BE node, please use the [`DECOMMISSION`](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) command to safely decommission the node. This prevents potential data loss if the WAL files are not processed before the node is taken offline.
+  * When decommissioning a BE node, please use the [`DECOMMISSION`](../../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) command to safely decommission the node. This prevents potential data loss if the WAL files are not processed before the node is taken offline.
 
   * For async_mode group commit writes, to protect disk space, it switches to sync_mode under the following conditions:
 
@@ -444,7 +444,7 @@ We have separately tested the write performance of group commit in high-concurre
 
 #### Test Tool
 
-* [doris-streamloader](../../ecosystem/doris-streamloader)
+* [doris-streamloader](/ecosystem/doris-streamloader)
 
 #### Test Method
 
