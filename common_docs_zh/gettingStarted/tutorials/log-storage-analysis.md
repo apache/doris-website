@@ -152,7 +152,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 
 ### 第 2 步：部署集群
 
-完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../install/cluster-deployment/standard-deployment.md)。
+完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../../install/cluster-deployment/standard-deployment)。
 
 另，推荐使用 SelectDB Enterprise 推出的 Cluster Manager 工具部署集群，以降低整体部署成本。更多关于 Cluster Manager 的信息，可参考以下文档：
 
@@ -177,7 +177,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | `autobucket_min_buckets = 10`                                | 将自动分桶的最小分桶数从 1 调大到 10，避免日志量增加时分桶不够。 |
 | `max_backend_heartbeat_failure_tolerance_count = 10`         | 日志场景下 BE 服务器压力较大，可能短时间心跳超时，因此将容忍次数从 1 调大到 10。 |
 
-更多关于 FE 配置项的信息，可参考 [FE 配置项](../admin-manual/config/fe-config.md)。
+更多关于 FE 配置项的信息，可参考 [FE 配置项](../../admin-manual/config/fe-config)。
 
 **优化 BE 配置**
 
@@ -206,7 +206,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | 其他       | `string_type_length_soft_limit_bytes = 10485760`             | 将 String 类型数据的长度限制调高至 10 MB。                   |
 | -          | `trash_file_expire_time_sec = 300` `path_gc_check_interval_second  = 900` `path_scan_interval_second = 900` | 调快垃圾文件的回收时间。                                     |
 
-更多关于 BE 配置项的信息，可参考 [BE 配置项](../admin-manual/config/be-config.md)。
+更多关于 BE 配置项的信息，可参考 [BE 配置项](../../admin-manual/config/be-config)。
 
 ### 第 4 步：建表
 
@@ -215,13 +215,13 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 **配置分区分桶参数**
 
 - 分区时，按照以下说明配置：
-- 使用时间字段上的 [Range 分区](https://doris.apache.org/zh-CN/docs/dev/table-design/data-partition/#range-%E5%88%86%E5%8C%BA)，并开启 [动态分区](https://doris.apache.org/zh-CN/docs/dev/table-design/data-partition?_highlight=%E8%87%AA%E5%8A%A8&_highlight=%E5%88%86&_highlight=%E6%A1%B6#%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA)，按天自动管理分区。
+- 使用时间字段上的 [Range 分区](../../table-design/data-partition/#range-%E5%88%86%E5%8C%BA)，并开启 [动态分区](../../table-design/data-partition?_highlight=%E8%87%AA%E5%8A%A8&_highlight=%E5%88%86&_highlight=%E6%A1%B6#%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA)，按天自动管理分区。
 - 使用 Datetime 类型的时间字段作为 Key，在查询最新 N 条日志时有数倍加速。
 - 分桶时，按照以下说明配置：
 - 分桶数量大致为集群磁盘总数的 3 倍。
 - 使用 Random 策略，配合写入时的 Single Tablet 导入，可以提升批量（Batch）写入的效率。
 
-更多关于分区分桶的信息，可参考 [分区分桶](../table-design/data-partition.md)。
+更多关于分区分桶的信息，可参考 [分区分桶](../../table-design/data-partition)。
 
 **配置 Compaction 参数**
 
@@ -370,7 +370,7 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](../ecosystem/logstash.md)。
+更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](../../ecosystem/logstash)。
 
 **对接 Filebeat**
 
@@ -446,7 +446,7 @@ chmod +x filebeat-doris-1.0.0
 ./filebeat-doris-1.0.0 -c filebeat_demo.yml
 ```
 
-更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](../ecosystem/beats.md)。
+更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](../../ecosystem/beats)。
 
 **对接 Kafka**
 
@@ -482,7 +482,7 @@ FROM KAFKA (
 SHOW ROUTINE LOAD;
 ```
 
-更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](../data-operate/import/routine-load-manual.md)。
+更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](../../data-operate/import/routine-load-manual)。
 
 **使用自定义程序采集日志**
 
