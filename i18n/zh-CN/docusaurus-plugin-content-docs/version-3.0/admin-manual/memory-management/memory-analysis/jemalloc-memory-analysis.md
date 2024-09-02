@@ -56,6 +56,8 @@ BE 进程运行过程中，Jemalloc Cache 包括两部分。
 
 考虑减小 `be.conf` 中 `JEMALLOC_CONF` 的 `lg_tcache_max`，`lg_tcache_max` 是允许缓存的 Page 字节大小上限，默认是 15，即 32 KB (2^15)，超过这个大小的 Page 将不会缓存到 Thread Cache 中。`lg_tcache_max` 对应 Jemalloc Profile 中的 `Maximum thread-cached size class`。
 
+> Doris 2.1 之前 `be.conf` 中 `JEMALLOC_CONF` 的 `lg_tcache_max` 默认是 20，在某些场景会导致 Jemalloc Cache 过大，Doris 2.1 之后已经改回了 Jemalloc 的默认值 15。
+
 这通常是 BE 进程中的查询或导入正在申请大量大 Size Class 的内存 Page，或者执行完一个大内存查询或导入后，Thread Cache 中缓存了大量大 Size Class 的内存 Page。Thread Cache 有两个清理时机，一是内存申请和释放到达一定次数时，回收长时间未使用的内存块；二是线程退出时回收全部 Page。此时存在一个 Bad Case，若线程后续一直没有执行新的查询或导入，从此不再分配内存，陷入一种所谓的 `idle` 状态。用户预期是查询结束后，内存是可以释放掉的，但实际上此场景下若线程没有退出，Thread Cache 并不会清理。
 
 不过通常无需关注 Thread Cache，在进程可用内存不足时，若 Thread Cache 的大小超过 1G，Doris 将手动 Flush Thread Cache。
@@ -82,6 +84,8 @@ extents:        size ind       ndirty        dirty       nmuzzy        muzzy    
 ```
 
 减小 `be.conf` 中 `JEMALLOC_CONF` 的 `dirty_decay_ms` 到 2000 ms 或更小，`be.conf` 中默认 `dirty_decay_ms` 为 5000 ms。Jemalloc 会在 `dirty_decay_ms` 指定的时间内依照平滑梯度曲线释放 Dirty Page，参考 [Jemalloc opt.dirty_decay_ms](https://jemalloc.net/jemalloc.3.html#opt.dirty_decay_ms)，当 BE 进程可用内存不足触发 Minor GC 或 Full GC 时会按照一定策略主动释放所有 Dirty Page。
+
+> Doris 2.1 之前 `be.conf` 中 `JEMALLOC_CONF` 的 `dirty_decay_ms` 默认是 15000，在某些场景会导致 Jemalloc Cache 过大，Doris 2.1 之后默认值是 5000。
 
 Jemalloc Profile 中的 `extents` 包含 Jemalloc 所有 `arena` 中不同 Page Size 的 Bucket 的统计值，其中 `ndirty` 是 Dirty Page 的个数，`dirty` 是 Dirty Page 的内存总和。参考 [Jemalloc](https://jemalloc.net/jemalloc.3.html) 中的 `stats.arenas.<i>.extents.<j>.{extent_type}_bytes` 将所有 Page Size 的 `dirty` 相加得到 Jemalloc 中 Dirty Page 的内存字节大小。
 

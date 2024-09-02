@@ -120,6 +120,8 @@ Doris BE 运行时存在各种 Cache，通常无需关注 Cache 内存，因为�
 
 但 Cache 过大会增加内存 GC 的压力，增加查询或导入报错进程可用内存不足的风险，以及 BE 进程 OOM Crash 的风险。所以如果内存持续紧张，可以考虑优先降低 Cache 的上限、关闭 Cache 或降低 Cache entry 的存活时间，更小的 Cache 在某些场景中可能会降低查询性能，但在生产环境中通常可以被容忍，调整后可以观察一段时间的查询和导入的性能。
 
+> Doris 2.1 之前 Memory GC 还不完善，内存不足时可能无法及时释放 Cache，如果内存持续紧张，常常需要考虑手动降低 Cache 上限。
+
 Doris 2.1.6 之后，如果希望在 BE 运行中手动清理所有 Cache，执行 `curl http://{be_host}:{be_web_server_port}/api/clear_cache/all`，将返回释放的内存大小。
 
 下面分析不同 Cache 内存使用多的情况。

@@ -120,6 +120,8 @@ There are various caches when Doris BE is running. Usually, there is no need to 
 
 However, if the cache is too large, it will increase the pressure of memory GC, increase the risk of insufficient available memory for query or load error processes, and increase the risk of BE process OOM Crash. So if the memory is constantly tight, you can consider lowering the upper limit of the cache, closing the cache, or reducing the survival time of the cache entry. A smaller cache may reduce query performance in some scenarios, but it is usually tolerable in a production environment. After adjustment, you can observe the query and load performance for a period of time.
 
+> Before Doris 2.1, Memory GC was not perfect. When the memory was insufficient, the cache might not be released in time. If the memory was constantly tight, you often had to consider manually lowering the cache limit.
+
 After Doris 2.1.6, if you want to manually clean up all caches during BE operation, execute `curl http://{be_host}:{be_web_server_port}/api/clear_cache/all`, and the released memory size will be returned.
 
 The following analyzes the situation where different caches use more memory.

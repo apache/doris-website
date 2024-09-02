@@ -46,6 +46,8 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED
 
 ## 3 内存泄漏
 
+> 如果遇到疑似内存泄漏的现象，最好的解决办法是升级到最新的三位数版本，如果你在用 Doris 2.0，就升级到 Doris 2.0.x 的最新版本，因为大概率其他人也遇到过同样的现象，大部分内存泄漏问题都在版本迭代中被修复。
+
 如果观察到下面的现象，说明可能存在内存泄漏：
 
 - Doris Grafana 或服务器监控发现 Doris BE 进程内存一直线性增长，且集群上任务停止后，内存也不下降。
@@ -89,3 +91,13 @@ Doris 目前仍存在 Doris BE 进程虚拟内存过大的问题，通常是因�
 如果你在 Heap Profile 内存占比大的调用栈中看到 `Segment`，`ColumnReader` 字段，则基本可以确认是读取 Segment 时占用了大量内存。
 
 此时只能通过修改 SQL 降低扫描的数据量，或者降低建表时指定的分桶大小，从而打开更少的 Segment。
+
+## 8. Query Cancel 过程中卡住
+
+> 常见于 Doris 2.1.3 之前
+
+Query 执行期间申请的大部分内存需要等到查询结束时释放，在进程内存充足时通常无需关注查询结束阶段的快或慢，但在进程内存不足时经常会按照一定策略 Cancel 部分 Query，以释放它们的内存，避免进程触发 OOM Killer。此时如果 Query Cancel 过程中卡住，无法及时释放内存，除了会增大触发 OOM Killer 的风险，也可能会导致更多的 Query 因进程内存不足而被 Cancel。
+
+若已知一个 Query 被 Cancel，下面依据这个 QueryID 分析其再 Cancel 过程中是否卡住。首先执行 `grep {queryID} be/log/be.INFO`，找到第一次包含 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间。找到包含 `deregister query/load memory tracker` 关键词的日志，对应的时间点就是 Query Cancel 完成的时间，若最终触发了 OOM Killer，无法找到包含 `deregister query/load memory tracker` 关键词的日志，说明直到 OOM Killer 发生时这个 Query 仍没有 Cancel 完成，通常若 Query Cancel 过程的好时大于 3s，就任务这个 Query 在 Cancel 过程中卡住，需要进一步分析 Query 执行日志。
+
+此外，在执行 `grep {queryID} be/log/be.INFO` 后，若看到包含 `tasks is being canceled and has not been completed yet` 关键词的日志，其后面的 QueryID 列表是表示 Memory GC 时发现这些 Query 正在被 Cancel 但没有 Cancel 完成，此时将跳过这些 Query，继续释放别处的内存，可据此判断 Memory GC 的行为是否符合预期。
