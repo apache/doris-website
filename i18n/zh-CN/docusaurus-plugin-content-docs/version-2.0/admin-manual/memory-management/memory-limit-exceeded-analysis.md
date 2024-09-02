@@ -30,7 +30,7 @@ under the License.
 
 当查询或导入报错`Memory limit exceeded`时，可能的原因：进程内存超限、系统剩余可用内存不足、超过单次查询执行的内存上限。
 
-```bash
+```shell
 ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consuming tracker:<xxx>, xxx. backend 172.1.1.1 process memory used xxx GB, limit xxx GB. If query tracker exceed, `set exec_mem_limit=8G` to change limit, details mem usage see be.INFO.
 ```
 
@@ -74,7 +74,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consumin
 2. 当进程内存超限后，BE 会触发内存 GC。
 :::
 
-```bash
+```shell
 W1127 17:23:16.372572 19896 mem_tracker_limiter.cpp:214] System Mem Exceed Limit Check Failed, Try Alloc: 1062688
 Process Memory Summary:
     process memory used 2.68 GB limit 2.47 GB, sys mem available 50.95 GB min reserve 3.20 GB, tc/jemalloc allocator cache 51.97 MB
@@ -138,7 +138,7 @@ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=34
 
 当返回如下报错时，说明超过单次执行内存限制。
 
-```bash
+```shell
 ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consuming tracker:<Query#Id=f78208b15e064527-a84c5c0b04c04fcf>, failed alloc size 1.03 MB, exceeded tracker:<Query#Id=f78208b15e064527-a84c5c0b04c04fcf>, limit 100.00 MB, peak used 99.29 MB, current used 99.25 MB>, executing msg:<execute:<ExecNode:VHASH_JOIN_NODE (id=4)>>. backend 172.24.47.117 process memory used 1.13 GB, limit 98.92 GB. If query tracker exceed, `set exec_mem_limit=8G` to change limit, details mem usage see log/be.INFO.
 ```
 
@@ -163,7 +163,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consumin
 3. `Memory Tracker Summary`：当前查询的 memory tracker 统计，可以看到查询每个算子当前使用的内存和峰值，具体可参考 [Memory Tracker](../memory-management/memory-tracker)。
 注意：一个查询在内存超限后只会打印一次日志，此时查询的多个线程都会感知，并尝试等待内存释放，或者 cancel 当前查询，如果日志中 Try Alloc 的值很小，则无须关注`Alloc Stacktrace`，直接分析`Memory Tracker Summary`即可。
 
-```bash
+```shell
 W1128 01:34:11.016165 357796 mem_tracker_limiter.cpp:191] Memory limit exceeded:<consuming tracker:<Query#Id=78208b15e064527-a84c5c0b04c04fcf>, failed alloc size 4.00 MB, exceeded tracker:<Query#Id=78208b15e064527-a84c5c0b04c04fcf>, limit 100.00 MB, peak used 98.59 MB,
 current used 96.88 MB>, executing msg:<execute:<ExecNode:VHASH_JOIN_NODE (id=2)>>. backend 172.24.47.117 process memory used 1.13 GB, limit 98.92 GB. If query tracker exceed, `set exec_mem_limit=8G` to change limit, details mem usage see be.INFO.
 Process Memory Summary:    

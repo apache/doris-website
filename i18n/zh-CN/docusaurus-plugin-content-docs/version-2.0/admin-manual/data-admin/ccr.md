@@ -75,7 +75,7 @@ enable_feature_binlog=true
 
 1. 构建 CCR syncer
 
-    ```Bash
+    ```shell
     git clone https://github.com/selectdb/ccr-syncer
 
     cd ccr-syncer
@@ -87,7 +87,7 @@ enable_feature_binlog=true
 
 2. 启动和停止 syncer
 
-    ```Bash
+    ```shell
     # 启动
     cd bin && sh start_syncer.sh --daemon
 
@@ -97,7 +97,7 @@ enable_feature_binlog=true
 
 **5. 打开源集群中同步库/表的 Binlog**
 
-```Bash
+```shell
 -- 如果是整库同步，可以执行如下脚本，使得该库下面所有的表都要打开 binlog.enable
 vim shell/enable_db_binlog.sh
 修改源集群的 host、port、user、password、db
@@ -109,7 +109,7 @@ ALTER TABLE enable_binlog SET ("binlog.enable" = "true");
 
 **6. 向 syncer 发起同步任务**
 
-```Bash
+```shell
 curl -X POST -H "Content-Type: application/json" -d '{
     "name": "ccr_test",
     "src": {
@@ -135,7 +135,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 同步任务的参数说明：
 
-```Bash
+```shell
 name: CCR同步任务的名称，唯一即可
 host、port：对应集群 Master FE的host和mysql(jdbc) 的端口
 user、password：syncer以何种身份去开启事务、拉取数据等
@@ -280,7 +280,7 @@ bash bin/start_syncer.sh --pid_dir /path/to/pids
 
 在编译完成后的输出路径下，文件结构大致如下所示：
 
-```Bash
+```shell
 output_dir
     bin
         ccr_syncer
@@ -316,7 +316,7 @@ output_dir
 
 指定 pid 文件所在目录，上述三种关闭方法都依赖于 pid 文件的所在目录执行
 
-```Bash
+```shell
 bash bin/stop_syncer.sh --pid_dir /path/to/pids
 ```
 
@@ -328,7 +328,7 @@ bash bin/stop_syncer.sh --pid_dir /path/to/pids
 
 关闭 pid_dir 路径下 host:port 对应的 Syncer
 
-```Bash
+```shell
 bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190
 ```
 
@@ -342,7 +342,7 @@ host 与 port 都不为空时**方法 1**才能生效
 
 关闭 pid_dir 路径下指定 pid 文件名对应的 Syncer
 
-```Bash
+```shell
 bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"
 ```
 
@@ -352,7 +352,7 @@ bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"
 
 **请求的通用模板**
 
-```Bash
+```shell
 curl -X POST -H "Content-Type: application/json" -d {json_body} http://ccr_syncer_host:ccr_syncer_port/operator
 ```
 
@@ -376,7 +376,7 @@ or
 
 ​    创建 CCR 任务
 
-    ```Bash
+    ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
         "name": "ccr_test",
         "src": {
@@ -418,7 +418,7 @@ or
 
 ​    查看同步进度
 
-    ```Bash
+    ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
         "name": "job_name"
     }' http://ccr_syncer_host:ccr_syncer_port/get_lag
@@ -430,7 +430,7 @@ or
 
 ​    暂停同步任务
 
-    ```Bash
+    ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
         "name": "job_name"
     }' http://ccr_syncer_host:ccr_syncer_port/pause 
@@ -440,7 +440,7 @@ or
 
 ​    恢复同步任务
 
-    ```Bash
+    ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
         "name": "job_name"
     }' http://ccr_syncer_host:ccr_syncer_port/resume
@@ -450,7 +450,7 @@ or
 
 ​    删除同步任务
 
-    ```Bash
+    ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
         "name": "job_name"
     }' http://ccr_syncer_host:ccr_syncer_port/delete
@@ -460,7 +460,7 @@ or
 
     获取版本信息
 
-    ```Bash
+    ```shell
     curl http://ccr_syncer_host:ccr_syncer_port/version
 
     # > return
@@ -471,7 +471,7 @@ or
 
     查看 job 的状态
 
-    ```Bash
+    ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
         "name": "job_name"
     }' http://ccr_syncer_host:ccr_syncer_port/job_status
@@ -490,7 +490,7 @@ or
 
     不做 sync，此时用户可以将源和目的集群互换
 
-    ```Bash
+    ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
         "name": "job_name"
     }' http://ccr_syncer_host:ccr_syncer_port/desync
@@ -500,7 +500,7 @@ or
 
     展示已经创建的所有任务
 
-    ```Bash
+    ```shell
     curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
 
     {"success":true,"jobs":["ccr_db_table_alias"]}
@@ -512,7 +512,7 @@ or
 
 在编译完成后的输出路径下，文件结构大致如下所示：
 
-```Bash
+```shell
 output_dir
     bin
         ccr_syncer
@@ -530,7 +530,7 @@ output_dir
 
 **使用说明**
 
-```Bash
+```shell
 bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 ```
 
@@ -586,7 +586,7 @@ Syncer 高可用依赖 mysql，如果使用 mysql 作为后端存储，Syncer �
 
 BE 端配置参数
 
-```Bash
+```shell
 download_binlog_rate_limit_kbs=1024 # 这就是限制到1MB，这个是单个be对所有关于binlog 包括local snapshot的配置
 ```
 

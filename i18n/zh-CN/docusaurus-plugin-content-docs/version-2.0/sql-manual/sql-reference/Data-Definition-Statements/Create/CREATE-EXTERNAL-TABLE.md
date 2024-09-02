@@ -119,7 +119,7 @@ CREATE EXTERNAL TABLE
    "hudi.table" = "hudi_table_in_hive_metastore",
    "hudi.hive.metastore.uris" = "thrift://127.0.0.1:9083"
    )
-   ````
+   ```
 
    其中 hudi.database 是 hive 表对应的库名字，hudi.table 是 hive 表的名字，hive.metastore.uris 是 hive metastore 服务地址。
 
@@ -248,7 +248,7 @@ CREATE EXTERNAL TABLE
    "hudi.table" = "hudi_table_in_hive_metastore",
    "hudi.hive.metastore.uris" = "thrift://127.0.0.1:9083"
    );
-   ````
+   ```
 
    创建时指定schema
    ```sql
@@ -262,7 +262,7 @@ CREATE EXTERNAL TABLE
    "hudi.table" = "hudi_table_in_hive_metastore",
    "hudi.hive.metastore.uris" = "thrift://127.0.0.1:9083"
    );
-   ````
+   ```
 
 ### Keywords
 

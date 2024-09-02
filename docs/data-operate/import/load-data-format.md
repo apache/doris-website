@@ -147,21 +147,21 @@ Currently only the following three JSON formats are supported:
 
    JSON format with Array as root node. Each element in the Array represents a row of data to be imported, usually an Object. An example is as follows:
 
-   ````json
+   ```json
    [
        { "id": 123, "city" : "beijing"},
        { "id": 456, "city" : "shanghai"},
        ...
    ]
-   ````
+   ```
 
-   ````json
+   ```json
    [
        { "id": 123, "city" : { "name" : "beijing", "region" : "haidian"}},
        { "id": 456, "city" : { "name" : "beijing", "region" : "chaoyang"}},
        ...
    ]
-   ````
+   ```
 
    This method is typically used for Stream Load import methods to represent multiple rows of data in a batch of imported data.
 
@@ -170,13 +170,13 @@ Currently only the following three JSON formats are supported:
 - A single row of data represented by Object
    JSON format with Object as root node. The entire Object represents a row of data to be imported. An example is as follows:
 
-   ````json
+   ```json
    { "id": 123, "city" : "beijing"}
-   ````
+   ```
  
-   ````json
+   ```json
    { "id": 123, "city" : { "name" : "beijing", "region" : "haidian" }}
-   ````
+   ```
  
    This method is usually used for the Routine Load import method, such as representing a message in Kafka, that is, a row of data.
 
@@ -184,11 +184,11 @@ Currently only the following three JSON formats are supported:
    
    A row of data represented by Object represents a row of data to be imported. The example is as follows:
  
-   ````json
+   ```json
    { "id": 123, "city" : "beijing"}
    { "id": 456, "city" : "shanghai"}
    ...
-   ````
+   ```
  
    This method is typically used for Stream Load import methods to represent multiple rows of data in a batch of imported data.
  
@@ -223,17 +223,17 @@ Doris supports extracting data specified in JSON through JSON Path.
 
   The JSON data is as follows:
 
-  ````json
+  ```json
   { "id": 123, "city" : "beijing"}
-  ````
+  ```
 
   Then Doris will use `id`, `city` for matching, and get the final data `123` and `beijing`.
 
   If the JSON data is as follows:
 
-  ````json
+  ```json
   { "id": 123, "name" : "beijing"}
-  ````
+  ```
 
   Then use `id`, `city` for matching, and get the final data `123` and `null`.
 
@@ -241,13 +241,13 @@ Doris supports extracting data specified in JSON through JSON Path.
 
   Specify a set of JSON Path in the form of a JSON data. Each element in the array represents a column to extract. An example is as follows:
 
-  ````json
+  ```json
   ["$.id", "$.name"]
-  ````
+  ```
 
-  ````json
+  ```json
   ["$.id.sub_id", "$.name[0]", "$.city[0]"]
-  ````
+  ```
 
   Doris will use the specified JSON Path for data matching and extraction.
 
@@ -257,21 +257,21 @@ Doris supports extracting data specified in JSON through JSON Path.
 
   The JSON data is:
 
-  ````json
+  ```json
   { "id": 123, "city" : { "name" : "beijing", "region" : "haidian" }}
-  ````
+  ```
 
   JSON Path is `["$.city"]`. The matched elements are:
 
-  ````json
+  ```json
   { "name" : "beijing", "region" : "haidian" }
-  ````
+  ```
 
   The element will be converted to a string for subsequent import operations:
 
-  ````json
+  ```json
   "{'name':'beijing','region':'haidian'}"
-  ````
+  ```
 
 - match failed
 
@@ -279,41 +279,41 @@ Doris supports extracting data specified in JSON through JSON Path.
 
   The JSON data is:
 
-  ````json
+  ```json
   { "id": 123, "name" : "beijing"}
-  ````
+  ```
 
   JSON Path is `["$.id", "$.info"]`. The matched elements are `123` and `null`.
 
   Doris currently does not distinguish between null values represented in JSON data and null values produced when a match fails. Suppose the JSON data is:
 
-  ````json
+  ```json
   { "id": 123, "name" : null }
-  ````
+  ```
 
   The same result would be obtained with the following two JSON Paths: `123` and `null`.
 
-  ````json
+  ```json
   ["$.id", "$.name"]
-  ````
+  ```
 
-  ````json
+  ```json
   ["$.id", "$.info"]
-  ````
+  ```
 
 - Exact match failed
 
   In order to prevent misoperation caused by some parameter setting errors. When Doris tries to match a row of data, if all columns fail to match, it considers this to be an error row. Suppose the Json data is:
 
-  ````json
+  ```json
   { "id": 123, "city" : "beijing" }
-  ````
+  ```
 
   If the JSON Path is written incorrectly as (or if the JSON Path is not specified, the columns in the table do not contain `id` and `city`):
 
-  ````json
+  ```json
   ["$.ad", "$.infa"]
-  ````
+  ```
 
   would cause the exact match to fail, and the line would be marked as an error line instead of yielding `null, null`.
 
@@ -325,65 +325,65 @@ In other words, it is equivalent to rearranging the columns of a JSON format dat
 
 Data content:
 
-````json
+```json
 {"k1": 1, "k2": 2}
-````
+```
 
 Table Structure:
 
-````
+```
 k2 int, k1 int
-````
+```
 
 Import statement 1 (take Stream Load as an example):
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\"]" -T example.json http:/ /127.0.0.1:8030/api/db1/tbl1/_stream_load
-````
+```
 
 In import statement 1, only JSON Path is specified, and Columns is not specified. The role of JSON Path is to extract the JSON data in the order of the fields in the JSON Path, and then write it in the order of the table structure. The final imported data results are as follows:
 
-````text
+```text
 +------+------+
 | k1   | k2   |
 +------+------+
 | 2    | 1    |
 +------+------+
-````
+```
 
 You can see that the actual k1 column imports the value of the "k2" column in the JSON data. This is because the field name in JSON is not equivalent to the field name in the table structure. We need to explicitly specify the mapping between the two.
 
 Import statement 2:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\"]" -H "columns: k2, k1 " -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
-````
+```
 
 Compared with the import statement 1, the Columns field is added here to describe the mapping relationship of the columns, in the order of `k2, k1`. That is, after extracting in the order of fields in JSON Path, specify the value of column k2 in the table for the first column, and the value of column k1 in the table for the second column. The final imported data results are as follows:
 
-````text
+```text
 +------+------+
 | k1   |  k2  |
 +------+------+
 | 1    | 2    |
 +------+------+
-````
+```
 
 Of course, as with other imports, column transformations can be performed in Columns. An example is as follows:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\"]" -H "columns: k2, tmp_k1 , k1 = tmp_k1 * 100" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
-````
+```
 
 The above example will import the value of k1 multiplied by 100. The final imported data results are as follows:
 
-````text
+```text
 +------+------+
 | k1   | k2   |
 +------+------+
 | 100  | 2    |
 +------+------+
-````
+```
 
 Import statement 3:
 
@@ -396,7 +396,7 @@ k2 int, k1 int, k1_copy int
 
 If you want to assign a column field in JSON to several column fields in the table multiple times, you can specify the column multiple times in jsonPaths and specify the mapping order in sequence. An example is as follows:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\", \"$.k1\"]" -H "columns: k2,k1,k1_copy" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ```
 
@@ -427,7 +427,7 @@ k2 int, k1 int, k1_nested1 int, k1_nested2 int
 ```
 If you want to assign multi-level fields with the same name nested in json to different columns in the table, you can specify the column in jsonPaths and specify the mapping order in turn. An example are as follows:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\",\"$.k3.k1\",\"$.k3.k1_nested.k1\" -H "columns: k2,k1,k1_nested1,k1_nested2" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ```
 
@@ -477,26 +477,26 @@ Doris supports extracting data specified in JSON through JSON root.
 
 Example data is as follows:
 
-````json
+```json
 [
     {"k1": 1, "k2": "a"},
     {"k1": 2},
     {"k1": 3, "k2": "c"}
 ]
-````
+```
 
 
 The table structure is: `k1 int null, k2 varchar(32) null default "x"`
 
 The import statement is as follows:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "strip_outer_array: true" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
-````
+```
 
 The import results that users may expect are as follows, that is, for missing columns, fill in the default values.
 
-````text
+```text
 +------+------+
 | k1 | k2     |
 +------+------+
@@ -506,11 +506,11 @@ The import results that users may expect are as follows, that is, for missing co
 +------+------+
 |3     |c     |
 +------+------+
-````
+```
 
 But the actual import result is as follows, that is, for the missing column, NULL is added.
 
-````text
+```text
 +------+------+
 | k1 | k2     |
 +------+------+
@@ -520,13 +520,13 @@ But the actual import result is as follows, that is, for the missing column, NUL
 +------+------+
 |3     |c     |
 +------+------+
-````
+```
 
 This is because Doris doesn't know "the missing column is column k2 in the table" from the information in the import statement. If you want to import the above data according to the expected result, the import statement is as follows:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "strip_outer_array: true" -H "jsonpaths: [\"$.k1\", \"$.k2\"]" - H "columns: k1, tmp_k2, k2 = ifnull(tmp_k2, 'x')" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
-````
+```
 
 ### Application example
 
@@ -536,63 +536,63 @@ Because of the inseparability of the JSON format, when using Stream Load to impo
 
 Suppose the table structure is:
 
-````text
+```text
 id INT NOT NULL,
 city VARHCAR NULL,
 code INT NULL
-````
+```
 
 1. Import a single row of data 1
 
-````json
+```json
 {"id": 100, "city": "beijing", "code" : 1}
-````
+```
 
 - do not specify JSON Path
 
-```bash
+```shell
 curl --location-trusted -u user:passwd -H "format: json" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-````
+```
 
 Import result:
 
-````text
+```text
 100 beijing 1
-````
+```
 
 - Specify JSON Path
 
-```bash
+```shell
 curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" - T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-````
+```
 
 Import result:
 
-````text
+```text
 100 beijing 1
-````
+```
 
 2. Import a single row of data 2
 
- ````json
+ ```json
 {"id": 100, "content": {"city": "beijing", "code": 1}}
-````
+```
 
 - Specify JSON Path
 
-```bash
+```shell
 curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.content.city\",\"$.content.code\ "]" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-````
+```
 
 Import result:
 
-````text
+```text
 100 beijing 1
-````
+```
 
 3. Import multiple rows of data as Array
 
-````json
+```json
 [
     {"id": 100, "city": "beijing", "code" : 1},
     {"id": 101, "city": "shanghai"},
@@ -607,24 +607,24 @@ Import result:
         "code" : 6
     }
 ]
-````
+```
 
 - Specify JSON Path
 
-```bash
+```shell
 curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" - H "strip_outer_array: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-````
+```
 
 Import result:
 
-````text
+```text
 100 beijing 1
 101 shanghai NULL
 102 tianjin 3
 103 chongqing 4
 104 ["zhejiang","guangzhou"] 5
 105 {"order1":["guangzhou"]} 6
-````
+```
 
 4. Import multi-line data as multi-line Object
 
@@ -637,12 +637,12 @@ Import result:
 
 StreamLoad import:
 
-```bash
+```shell
 curl --location-trusted -u user:passwd -H "format: json" -H "read_json_by_line: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
 ```
 Import result:
 	
-```bash
+```shell
 100     beijing                     1
 101     shanghai                    NULL
 102     tianjin                     3
@@ -653,20 +653,20 @@ Import result:
 
 The data is still the multi-line data in Example 3, and now it is necessary to add 1 to the `code` column in the imported data before importing.
 
-```bash
+```shell
 curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" - H "strip_outer_array: true" -H "columns: id, city, tmpc, code=tmpc+1" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-````
+```
 
 Import result:
 
-````text
+```text
 100 beijing 2
 101 shanghai NULL
 102 tianjin 4
 103 chongqing 5
 104 ["zhejiang","guangzhou"] 6
 105 {"order1":["guangzhou"]} 7
-````
+```
 
 6. Import Array by JSON
 Since the Rapidjson handles decimal and largeint numbers which will cause precision problems, 
@@ -680,7 +680,7 @@ we suggest you to use JSON string to import data to `array<decimal>` or `array<l
 {"k1": 40, "k2": ["10000000000000000000.1111111222222222"]}
 ```
 
-```bash
+```shell
 curl --location-trusted -u root:  -H "max_filter_ratio:0.01" -H "format:json" -H "timeout:300" -T test_decimal.json http://localhost:8035/api/example_db/array_test_decimal/_stream_load
 ```
 
@@ -700,7 +700,7 @@ MySQL > select * from array_test_decimal;
 {"k1": 999, "k2": ["76959836937749932879763573681792701709", "26017042825937891692910431521038521227"]}
 ```
 
-```bash
+```shell
 curl --location-trusted -u root:  -H "max_filter_ratio:0.01" -H "format:json" -H "timeout:300" -T test_largeint.json http://localhost:8035/api/example_db/array_test_largeint/_stream_load
 ```
 

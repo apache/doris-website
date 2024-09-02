@@ -58,10 +58,10 @@ This may be because, in the same batch of imported data, there are data with the
 
 For example, the table is defined as k1, v1. A batch of imported data is as follows:
 
-````text
+```text
 1, "abc"
 1, "def"
-````
+```
 
 Then maybe the result of copy 1 is `1, "abc"`, and the result of copy 2 is `1, "def"`. As a result, the query results are inconsistent.
 

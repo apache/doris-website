@@ -61,13 +61,13 @@ openssl x509 -req -in client-req.pem -days 3600 \
 
 2.验证创建的证书。
 
-```bash
+```shell
 openssl verify -CAfile ca.pem server-cert.pem client-cert.pem
 ```
 
 3.将您的CA密钥和证书和Sever端密钥和证书分别合并到 PKCS#12 (P12) 包中。
 
-```bash
+```shell
 # 打包CA密钥和证书
 openssl pkcs12 -inkey ca-key.pem -in ca.pem -export -out ca_certificate.p12
 

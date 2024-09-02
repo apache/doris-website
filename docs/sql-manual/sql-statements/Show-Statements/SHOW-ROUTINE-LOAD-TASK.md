@@ -39,11 +39,11 @@ View the currently running subtasks of a specified Routine Load job.
 ```sql
 SHOW ROUTINE LOAD TASK
 WHERE JobName = "job_name";
-````
+```
 
 The returned results are as follows:
 
-````text
+```text
               TaskId: d67ce537f1be4b86-abf47530b79ab8e6
                TxnId: 4
            TxnStatus: UNKNOWN
@@ -53,7 +53,7 @@ The returned results are as follows:
              Timeout: 20
                 BeId: 10002
 DataSourceProperties: {"0":19}
-````
+```
 
 - `TaskId`: The unique ID of the subtask.
 - `TxnId`: The import transaction ID corresponding to the subtask.
@@ -71,7 +71,7 @@ DataSourceProperties: {"0":19}
 
    ```sql
    SHOW ROUTINE LOAD TASK WHERE JobName = "test1";
-   ````
+   ```
 
 ### Keywords
 

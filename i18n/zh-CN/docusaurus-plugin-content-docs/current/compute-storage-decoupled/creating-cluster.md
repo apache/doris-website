@@ -84,7 +84,7 @@ Doris 存算分离模式采用服务发现的机制进行工作，创建存算�
 
 **示例**
 
-```Bash
+```shell
 curl -s "127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999" -d \
 '{
   "instance_id": "sample_instance_id",
@@ -357,7 +357,7 @@ GRANT
 
 **示例**
 
-```Bash
+```shell
 grant usage_priv on storage vault my_storage_vault to user1
 ```
 
@@ -376,7 +376,7 @@ REVOKE
 
 **示例**
 
-```Bash
+```shell
 revoke usage_priv on storage vault my_storage_vault from user1
 ```
 
@@ -405,7 +405,7 @@ revoke usage_priv on storage vault my_storage_vault from user1
 
 以下为添加一个 FE 的示例：
 
-```Bash
+```shell
 # 添加 FE
 curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
     "instance_id":"sample_instance_id",
@@ -467,7 +467,7 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
 
 如下是创建包含 1 个 BE 的 计算集群：
 
-```Bash
+```shell
 # 172.19.0.11
 # 添加 BE
 curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{

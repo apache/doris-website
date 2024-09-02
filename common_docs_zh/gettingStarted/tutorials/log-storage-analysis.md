@@ -366,7 +366,7 @@ output {
 
 3. 按照下方命令运行 Logstash，采集日志并输出至 Apache Doris。
 
-```Bash  
+```shell  
 ./bin/logstash -f logstash_demo.conf
 ```
 
@@ -441,7 +441,7 @@ output {
 
 3. 按照下方命令运行 Filebeat，采集日志并输出至 Apache Doris。
 
-```Bash  
+```shell  
 chmod +x filebeat-doris-1.0.0  
 ./filebeat-doris-1.0.0 -c filebeat_demo.yml
 ```
@@ -488,7 +488,7 @@ SHOW ROUTINE LOAD;
 
 除了对接常用的日志采集器以外，你也可以自定义程序，通过 HTTP API Stream Load 将日志数据导入 Apache Doris。参考以下代码：
 
-```Bash  
+```shell
 curl   
 --location-trusted   
 -u username:password   

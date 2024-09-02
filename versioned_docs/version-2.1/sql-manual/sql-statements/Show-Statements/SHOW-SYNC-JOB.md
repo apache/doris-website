@@ -40,7 +40,7 @@ grammar:
 
 ```sql
 SHOW SYNC JOB [FROM db_name]
-````
+```
 
 ### Example
 
@@ -48,13 +48,13 @@ SHOW SYNC JOB [FROM db_name]
 
     ```sql
     SHOW SYNC JOB;
-    ````
+    ```
 
 2. Display the status of all data synchronization jobs under the database `test_db`.
 
     ```sql
     SHOW SYNC JOB FROM `test_db`;
-    ````
+    ```
 
 ### Keywords
 

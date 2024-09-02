@@ -96,9 +96,9 @@ So this problem can be solved in two ways:
 
 When performing operations such as import, query, etc., you may encounter the following errors:
 
-````text
+```text
 failed to initialize storage reader. tablet=63416.1050661139.aa4d304e7a7aff9c-f0fa7579928c85a0, res=-214, backend=192.168.100.10
-````
+```
 
 A -214 error means that the data version for the corresponding tablet is missing. For example, the above error indicates that the data version of the copy of tablet 63416 on the BE of 192.168.100.10 is missing. (There may be other similar error codes, which can be checked and repaired in the following ways).
 
@@ -145,10 +145,10 @@ The reason for this problem may be that when importing data from external storag
 
 Modify the `fe.conf` configuration file to add the following parameters:
 
-````
+```
 broker_timeout_ms = 10000
 ##The default here is 10 seconds, you need to increase this parameter appropriately
-````
+```
 
 Adding parameters here requires restarting the FE service.
 

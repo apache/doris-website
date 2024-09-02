@@ -74,7 +74,7 @@ auditodemo/:
 
 `plugin.properties` 内容示例：
 
-```bash
+```shell
 ### required:
 #
 # the plugin name
@@ -113,13 +113,13 @@ soName = example.so
 
 我们可以通过以下命令在 `fe_plugins` 目录创建一个子模块用户实现创建和创建工程。其中 `doris-fe-test` 为插件名称。
 
-```bash
+```shell
 mvn archetype: generate -DarchetypeCatalog = internal -DgroupId = org.apache -DartifactId = doris-fe-test -DinteractiveMode = false
 ```
 
 这个命令会创建一个新的 maven 工程，并且自动向 `fe_plugins/pom.xml` 中添加一个子模块：
 
-```bash
+```shell
     .....
     <groupId>org.apache</groupId>
     <artifactId>doris-fe-plugins</artifactId>
@@ -135,7 +135,7 @@ mvn archetype: generate -DarchetypeCatalog = internal -DgroupId = org.apache -Da
 
 新的工程目录结构如下：
 
-```bash
+```shell
 -doris-fe-test/
 -pom.xml
 -src/

@@ -41,7 +41,7 @@ INSERT INTO table_name
     [ (column [, ...]) ]
     [ [ hint [, ...] ] ]
     { VALUES ( { expression | DEFAULT } [, ...] ) [, ...] | query }
-````
+```
 
  Parameters
 
@@ -83,7 +83,7 @@ INSERT INTO test VALUES (1, 2);
 INSERT INTO test (c1, c2) VALUES (1, 2);
 INSERT INTO test (c1, c2) VALUES (1, DEFAULT);
 INSERT INTO test (c1) VALUES (1);
-````
+```
 
 The first and second statements have the same effect. When no target column is specified, the column order in the table is used as the default target column.
 The third and fourth statements express the same meaning, use the default value of the `c2` column to complete the data import.
@@ -95,7 +95,7 @@ INSERT INTO test VALUES (1, 2), (3, 2 + 2);
 INSERT INTO test (c1, c2) VALUES (1, 2), (3, 2 * 2);
 INSERT INTO test (c1) VALUES (1), (3);
 INSERT INTO test (c1, c2) VALUES (1, DEFAULT), (3, DEFAULT);
-````
+```
 
 The first and second statements have the same effect, import two pieces of data into the `test` table at one time
 The effect of the third and fourth statements is known, and the default value of the `c2` column is used to import two pieces of data into the `test` table
@@ -105,7 +105,7 @@ The effect of the third and fourth statements is known, and the default value of
 ```sql
 INSERT INTO test SELECT * FROM test2;
 INSERT INTO test (c1, c2) SELECT * from test2;
-````
+```
 
 4. Import a query result into the `test` table, specifying the partition and label
 

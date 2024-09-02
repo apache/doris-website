@@ -104,7 +104,7 @@ under the License.
 ## Examples
 
 
-    ```bash
+    ```shell
     curl "http://127.0.0.1:8040/api/tablet_migration?goal=run&tablet_id=123&schema_hash=333&disk=/disk1"
 
     ```

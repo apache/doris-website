@@ -46,7 +46,7 @@ SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [FROM db]
 
     ```sql
      SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS FROM test;
-    ````
+    ```
 
 2. View the converting process globally
 

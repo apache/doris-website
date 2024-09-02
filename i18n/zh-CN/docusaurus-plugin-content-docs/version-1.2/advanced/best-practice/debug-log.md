@@ -71,7 +71,7 @@ FE 的 Debug 级别日志可以通过修改配置文件开启，也可以通过�
 
    通过以下 API 也可以在运行时修改日志级别。无需重启 FE 节点。
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?add_verbose=org.apache.doris.catalog.Catalog
    ```
 
@@ -94,7 +94,7 @@ FE 的 Debug 级别日志可以通过修改配置文件开启，也可以通过�
 
    也可以通过以下 API 关闭 Debug 日志：
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?del_verbose=org.apache.doris.catalog.Catalog
    ```
 

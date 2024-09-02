@@ -47,7 +47,7 @@ GRANT privilege_list ON priv_level TO user_identity [ROLE role_name]
 GRANT privilege_list ON RESOURCE resource_name TO user_identity [ROLE role_name]
 
 GRANT role_list TO user_identity
-````
+```
 
 GRANT privilege_list ON WORKLOAD GROUP workload_group_name TO user_identity [ROLE role_name]
 

@@ -40,7 +40,7 @@ grammar:
 
 ```sql
 ADMIN CLEAN TRASH [ON ("BackendHost1:BackendHeartBeatPort1", "BackendHost2:BackendHeartBeatPort2", ...)];
-````
+```
 
 illustrate:
 

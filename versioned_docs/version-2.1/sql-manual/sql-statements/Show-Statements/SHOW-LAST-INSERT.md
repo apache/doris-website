@@ -39,11 +39,11 @@ grammar:
 
 ```sql
 SHOW LAST INSERT
-````
+```
 
 Example of returned result:
 
-````
+```
      TransactionId: 64067
              Label: insert_ba8f33aea9544866-8ed77e2844d0cc9b
           Database: default_cluster:db1
@@ -51,7 +51,7 @@ Example of returned result:
 TransactionStatus: VISIBLE
         LoadedRows: 2
       FilteredRows: 0
-````
+```
 
 illustrate:
 

@@ -47,7 +47,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
    "database" = "database_name",
    "table" = "table_name"
    )
-   ````
+   ```
    and there is an optional propertiy "charset" which can set character fom mysql connection, default value is "utf8". You can set another value "utf8mb4" instead of "utf8" when you need.
 
    Notice:
@@ -65,7 +65,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
    "column_separator" = "value_separator"
    "line_delimiter" = "value_delimiter"
    )
-   ````
+   ```
 
    In addition, you need to provide the Property information required by the Broker, and pass it through the BROKER PROPERTIES, for example, HDFS needs to pass in
 
@@ -74,7 +74,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
      "username" = "name",
      "password" = "password"
    )
-   ````
+   ```
 
    According to different Broker types, the content that needs to be passed in is also different.
 
@@ -91,7 +91,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
    "table" = "hive_table_name",
    "hive.metastore.uris" = "thrift://127.0.0.1:9083"
    )
-   ````
+   ```
 
    Where database is the name of the library corresponding to the hive table, table is the name of the hive table, and hive.metastore.uris is the address of the hive metastore service.
 
@@ -104,7 +104,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
    "iceberg.hive.metastore.uris" = "thrift://127.0.0.1:9083",
    "iceberg.catalog.type" = "HIVE_CATALOG"
    )
-   ````
+   ```
 
    Where database is the library name corresponding to Iceberg;
    table is the corresponding table name in Iceberg;
@@ -119,7 +119,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
    "hudi.table" = "hudi_table_in_hive_metastore",
    "hudi.hive.metastore.uris" = "thrift://127.0.0.1:9083"
    )
-   ````
+   ```
 
    Where hudi.database is the corresponding database name in HiveMetaStore;
    hudi.table is the corresponding table name in HiveMetaStore;
@@ -151,7 +151,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
    "table" = "mysql_table_test",
    "charset" = "utf8mb4"
    )
-   ````
+   ```
 
    Create mysql table through External Catalog Resource
 
@@ -183,7 +183,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
    "database" = "mysql_db_test",
    "table" = "mysql_table_test"
    )
-   ````
+   ```
 
 2. Create a broker external table with data files stored on HDFS, the data is split with "|", and "\n" is newline
 
@@ -206,7 +206,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
    "username" = "hdfs_user",
    "password" = "hdfs_password"
    )
-   ````
+   ```
 
 3. Create a hive external table
 
@@ -224,7 +224,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
      "table" = "hive_table_name",
      "hive.metastore.uris" = "thrift://127.0.0.1:9083"
    );
-   ````
+   ```
 
 4. Create an Iceberg skin
 
@@ -237,7 +237,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
    "iceberg.hive.metastore.uris" = "thrift://127.0.0.1:9083",
    "iceberg.catalog.type" = "HIVE_CATALOG"
    );
-   ````
+   ```
 
 5. Create an Hudi external table
 
@@ -250,7 +250,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
    "hudi.table" = "hudi_table_in_hive_metastore",
    "hudi.hive.metastore.uris" = "thrift://127.0.0.1:9083"
    );
-   ````
+   ```
 
    create hudi table with schema
    ```sql
@@ -264,7 +264,7 @@ Which type of external table is mainly identified by the ENGINE type, currently 
    "hudi.table" = "hudi_table_in_hive_metastore",
    "hudi.hive.metastore.uris" = "thrift://127.0.0.1:9083"
    );
-   ````
+   ```
 
 ### Keywords
 

@@ -41,7 +41,7 @@ Delete a user
     
          user@'host'
          user@['domain']
-````
+```
 
   Delete the specified user identitiy.
 
@@ -51,7 +51,7 @@ Delete a user
 
     ```sql
     DROP USER 'jack'@'192.%'
-    ````
+    ```
 
 ### Keywords
 

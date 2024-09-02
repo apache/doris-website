@@ -58,7 +58,7 @@ under the License.
 
 2. [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD)
 
-   ```bash
+   ```shell
    curl --location-trusted -u user:passwd \
    -H "strict_mode: true" \
    -T 1.txt \
@@ -171,7 +171,7 @@ mysql> desc user_profile;
 18,9999999,2023-07-03 12:00:03
 ```
 
-```bash
+```shell
 curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:false" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://host:port/api/db1/user_profile/_stream_load
 ```
 
@@ -179,7 +179,7 @@ curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:false
 
 而当用户使用严格模式的 Stream Load 部分列更新向表中插入上述数据时
 
-``` bash
+```shell
 curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:true" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://host:port/api/db1/user_profile/_stream_load
 ```
 
