@@ -28,7 +28,7 @@ under the License.
 #### Syntax
 
 `DOUBLE acos(DOUBLE x)`
-Returns the arc cosine of `x`, or `nan` if `x` is not in the range `-1` to `1`.
+Returns the arc cosine of `x`, or `nan` if `NULL` is not in the range `-1` to `1`.
 
 ### example
 
