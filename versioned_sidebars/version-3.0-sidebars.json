@@ -980,6 +980,7 @@
                             "type": "category",
                             "label": "Conditional Functions",
                             "items": [
+                                "sql-manual/sql-functions/conditional-functions/assert-true",
                                 "sql-manual/sql-functions/conditional-functions/case",
                                 "sql-manual/sql-functions/conditional-functions/coalesce",
                                 "sql-manual/sql-functions/conditional-functions/if",
