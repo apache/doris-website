@@ -937,6 +937,9 @@
                                 "sql-manual/sql-functions/aggregate-functions/collect-set",
                                 "sql-manual/sql-functions/aggregate-functions/collect-list",
                                 "sql-manual/sql-functions/aggregate-functions/retention",
+                                "sql-manual/sql-functions/aggregate-functions/regr_sxx",
+                                "sql-manual/sql-functions/aggregate-functions/regr_sxy",
+                                "sql-manual/sql-functions/aggregate-functions/regr_syy",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-count"
                             ]
