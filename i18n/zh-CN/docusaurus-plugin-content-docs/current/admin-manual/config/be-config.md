@@ -360,13 +360,6 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 * 描述：根据后续任务动态创建线程，最大创建 512 个线程。
 * 默认值：512
 
-#### `doris_max_scan_key_num`
-
-* 类型：int
-* 描述：用于限制一个查询请求中，scan node 节点能拆分的最大 scan key 的个数。当一个带有条件的查询请求到达 scan node 节点时，scan node 会尝试将查询条件中 key 列相关的条件拆分成多个 scan key range。之后这些 scan key range 会被分配给多个 scanner 线程进行数据扫描。较大的数值通常意味着可以使用更多的 scanner 线程来提升扫描操作的并行度。但在高并发场景下，过多的线程可能会带来更大的调度开销和系统负载，反而会降低查询响应速度。一个经验数值为 50。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../query/query-variables/variables.md) 中 `max_scan_key_num` 的说明。
-  - 当在高并发场景下发下并发度无法提升时，可以尝试降低该数值并观察影响。
-* 默认值：48
-
 #### `doris_scan_range_row_count`
 
 * 类型：int32
@@ -407,24 +400,6 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 * 类型：int32
 * 描述：ExchangeNode 节点 Buffer 队列的大小，单位为 byte。来自 Sender 端发送的数据量大于 ExchangeNode 的 Buffer 大小之后，后续发送的数据将阻塞直到 Buffer 腾出可写入的空间。
 * 默认值：10485760
-
-#### `max_pushdown_conditions_per_column`
-
-* 类型：int
-* 描述：用于限制一个查询请求中，针对单个列，能够下推到存储引擎的最大条件数量。在查询计划执行的过程中，一些列上的过滤条件可以下推到存储引擎，这样可以利用存储引擎中的索引信息进行数据过滤，减少查询需要扫描的数据量。比如等值条件、IN 谓词中的条件等。这个参数在绝大多数情况下仅影响包含 IN 谓词的查询。如 `WHERE colA IN (1,2,3,4,...)`。较大的数值意味值 IN 谓词中更多的条件可以推送给存储引擎，但过多的条件可能会导致随机读的增加，某些情况下可能会降低查询效率。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../query/query-variables/variables.md) 中 `max_pushdown_conditions_per_column ` 的说明。
-* 默认值：1024
-
-* 示例
-
-  - 表结构为 `id INT, col2 INT, col3 varchar(32), ...`。
-  - 查询请求为 `... WHERE id IN (v1, v2, v3, ...)`
-  - 如果 IN 谓词中的条件数量超过了该配置，则可以尝试增加该配置值，观察查询响应是否有所改善。
-
-#### `max_send_batch_parallelism_per_job`
-
-* 类型：int
-* 描述：OlapTableSink 发送批处理数据的最大并行度，用户为 `send_batch_parallelism` 设置的值不允许超过 `max_send_batch_parallelism_per_job` ，如果超过， `send_batch_parallelism` 将被设置为 `max_send_batch_parallelism_per_job` 的值。
-* 默认值：5
 
 #### `doris_scan_range_max_mb`
 
