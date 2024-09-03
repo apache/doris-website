@@ -519,9 +519,10 @@ Translated with www.DeepL.com/Translator (free version)
   ```
 
 * `block_encryption_mode`
-  The block_encryption_mode variable controls the block encryption mode. The default setting is empty, when use AES equal to `AES_128_ECB`, when use SM4 equal to `SM3_128_ECB`
-  available values:
-  
+The block encryption mode can be controlled by this parameter, the default value is empty.
+When empty, using the AES algorithm is equivalent to using `AES_128_ECB`, and when using the SM4 algorithm is equivalent to `SM4_128_ECB`.
+
+Optional values:
   ```
     AES_128_ECB,
     AES_192_ECB,
