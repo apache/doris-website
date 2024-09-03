@@ -28,19 +28,20 @@ Apache Doris support standard SQL syntax, using MySQL Network Connection Protoco
 
 The list of data types supported by Doris is as follows:
 
-## [Numeric data type](../sql-manual/sql-data-types/numeric/numeric-overview)
 
-| Type name      | Storeage (bytes)| Description                                                  |
-| -------------- | --------------- | ------------------------------------------------------------ |
-| [BOOLEAN](../sql-manual/sql-data-types/numeric/BOOLEAN)         | 1               | Boolean data type hat stores only two types of values , 0 represents false, 1 represents true. |
-| [TINYINT](../sql-manual/sql-data-types/numeric/TINYINT)        | 1               | Integer value, signed range is from -128 to 127.             |
-| [SMALLINT](../sql-manual/sql-data-types/numeric/SMALLINT)        | 2               | Integer value, signed range is from -32768, 32767.           |
-| [INT](../sql-manual/sql-data-types/numeric/INT)             | 4               | Integer value, signed range from -2147483648 to 2147483647.  |
-| [BIGINT](../sql-manual/sql-data-types/numeric/BIGINT)           | 8               | Integer value, signed range from -9223372036854775808 to 9223372036854775807. |
-| [LARGEINT](../sql-manual/sql-data-types/numeric/LARGEINT)       | 16              | Integer value, range [-2 ^ 127 + 1~ 2 ^ 127 - 1].            |
-| [FLOAT](../sql-manual/sql-data-types/numeric/FLOAT)           | 4               | Single precision, a floating ponit number, range [-3.4 * 10 ^ 38~ 3.4 * 10 ^ 38]. |
-| [DOUBLE](../sql-manual/sql-data-types/numeric/DOUBLE)          | 8               | Double precision, a floating ponit number, range [-1.79 * 10 ^ 308~ 1.79 * 10 ^ 308] |
-| [DECIMAL](../sql-manual/sql-data-types/numeric/DECIMAL)         | 4/8/16          | An exact fixed-point number, defined by its precision (total number of digits) and scale (number of digits to the right of the decimal point).    Format:DECIMAL(M[,D]), M stands for precision, D stands scale.  The range for the significant digits M is [1, 38], while the range for the decimal digits D is [0, precision]. The storage requirements for different precision values are as follows:  - When 0 < precision <= 9, it occupies 4 bytes. - When 9 < precision <= 18, it occupies 8 bytes. - When 16 < precision <=38, it occupies 16 bytes |
+## [Numeric data type](../sql-manual/sql-data-types/numeric/numeric-overview)  
+  
+| Type Name                                                    | Storage (bytes) | Description                                                  |  
+| ---------------------------------------------------------- | --------------- | ------------------------------------------------------------ |  
+| [BOOLEAN](../sql-manual/sql-data-types/numeric/BOOLEAN)       | 1               | Boolean data type that stores only two values: 0 represents false, 1 represents true. |  
+| [TINYINT](../sql-manual/sql-data-types/numeric/TINYINT)       | 1               | Integer value, signed range is from -128 to 127.                 |  
+| [SMALLINT](../sql-manual/sql-data-types/numeric/SMALLINT)     | 2               | Integer value, signed range is from -32768 to 32767.             |  
+| [INT](../sql-manual/sql-data-types/numeric/INT)               | 4               | Integer value, signed range is from -2147483648 to 2147483647.   |  
+| [BIGINT](../sql-manual/sql-data-types/numeric/BIGINT)         | 8               | Integer value, signed range is from -9223372036854775808 to 9223372036854775807. |  
+| [LARGEINT](../sql-manual/sql-data-types/numeric/LARGEINT)     | 16              | Integer value, range is [-2^127 + 1 to 2^127 - 1].               |  
+| [FLOAT](../sql-manual/sql-data-types/numeric/FLOAT)           | 4               | Single precision floating point number, range is [-3.4 * 10^38 to 3.4 * 10^38]. |  
+| [DOUBLE](../sql-manual/sql-data-types/numeric/DOUBLE)         | 8               | Double precision floating point number, range is [-1.79 * 10^308 to 1.79 * 10^308]. |  
+| [DECIMAL](../sql-manual/sql-data-types/numeric/DECIMAL)       | 4/8/16          | An exact fixed-point number defined by precision (total number of digits) and scale (number of digits to the right of the decimal point). Format: DECIMAL(M[,D]), where M is precision and D is scale. The range for M is [1, 38], and for D is [0, precision]. Storage requirements: - 4 bytes for 0 < precision <= 9, - 8 bytes for 9 < precision <= 18, - 16 bytes for 18 < precision <= 38. |
 
 ## [Datetime data type](../sql-manual/sql-data-types/date-time/datetime-overview)
 
@@ -77,9 +78,9 @@ The list of data types supported by Doris is as follows:
 
 ## [IP types](../sql-manual/sql-data-types/ip/ip-overview)
 
-| Type name      | Storeage (bytes)| Description                                                  |
-| -------------- | --------------- | ------------------------------------------------------------ |
-| [IPv4](../sql-manual/sql-data-types/ip/IPV4)          | 4               | It is used in conjunction with the `ipv4_*` family of functions. |
-| [IPv6](../sql-manual/sql-data-types/ip/IPV6)         | 16               | It is used in conjunction with the `ipv6_*` family of functions. |
+| Type Name                                                    | Storage (bytes) | Description                                                  |  
+| ---------------------------------------------------------- | --------------- | ------------------------------------------------------------ |  
+| [IPv4](../sql-manual/sql-data-types/ip/IPV4)                 | 4               | It is used in conjunction with the `ipv4_*` family of functions. |  
+| [IPv6](../sql-manual/sql-data-types/ip/IPV6)                 | 16              | It is used in conjunction with the `ipv6_*` family of functions. |
 
 You can also view all the data types supported by Doris with the `SHOW DATA TYPES; `statement.

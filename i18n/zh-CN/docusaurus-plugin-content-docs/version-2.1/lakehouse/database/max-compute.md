@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-# 阿里云 MaxCompute
+
 
 MaxCompute 是阿里云上的企业级 SaaS（Software as a Service）模式云数据仓库。
 

@@ -48,7 +48,7 @@ CREATE EXTERNAL TABLE
    	"table" = "table_name"
    )
    ```
-   以及一个可选属性"charset"，可以用来设置mysql连接的字符集, 默认值是"utf8"。如有需要,你可以设置为另外一个字符集"utf8mb4"。
+   以及一个可选属性"charset"，可以用来设置 mysql 连接的字符集，默认值是"utf8"。如有需要，你可以设置为另外一个字符集"utf8mb4"。
 
    注意：
 
@@ -56,7 +56,7 @@ CREATE EXTERNAL TABLE
 
    - 在 Doris 创建 mysql 表的目的是可以通过 Doris 访问 mysql 数据库。而 Doris 本身并不维护、存储任何 mysql 数据。
 
-2. 如果是 broker，表示表的访问需要通过指定的broker, 需要在 properties 提供以下信息：
+2. 如果是 broker，表示表的访问需要通过指定的 broker, 需要在 properties 提供以下信息：
 
    ```sql
    PROPERTIES (
@@ -67,7 +67,7 @@ CREATE EXTERNAL TABLE
    )
    ```
 
-   另外还需要提供Broker需要的Property信息，通过BROKER PROPERTIES来传递，例如HDFS需要传入
+   另外还需要提供 Broker 需要的 Property 信息，通过 BROKER PROPERTIES 来传递，例如 HDFS 需要传入
 
    ```sql
    BROKER PROPERTIES(
@@ -76,12 +76,12 @@ CREATE EXTERNAL TABLE
    )
    ```
 
-   这个根据不同的Broker类型，需要传入的内容也不相同
+   这个根据不同的 Broker 类型，需要传入的内容也不相同
 
    注意：
 
    - "path" 中如果有多个文件，用逗号[,]分割。如果文件名中包含逗号，那么使用 %2c 来替代。如果文件名中包含 %，使用 %25 代替
-   - 现在文件内容格式支持CSV，支持GZ，BZ2，LZ4，LZO(LZOP) 压缩格式。
+   - 现在文件内容格式支持 CSV，支持 GZ，BZ2，LZ4，LZO(LZOP) 压缩格式。
 
 3. 如果是 hive，则需要在 properties 提供以下信息：
 
@@ -125,9 +125,9 @@ CREATE EXTERNAL TABLE
 
 ### Example
 
-1. 创建MYSQL外部表
+1. 创建 MYSQL 外部表
 
-   直接通过外表信息创建mysql表
+   直接通过外表信息创建 mysql 表
 
    ```sql
    CREATE EXTERNAL TABLE example_db.table_mysql
@@ -151,10 +151,10 @@ CREATE EXTERNAL TABLE
    )
    ```
 
-   通过External Catalog Resource创建mysql表
+   通过 External Catalog Resource 创建 mysql 表
 
    ```sql
-   # 先创建Resource
+   # 先创建 Resource
    CREATE EXTERNAL RESOURCE "mysql_resource" 
    PROPERTIES
    (
@@ -165,7 +165,7 @@ CREATE EXTERNAL TABLE
       "port" = "8239"			
    );
    
-   # 再通过Resource创建mysql外部表
+   # 再通过 Resource 创建 mysql 外部表
    CREATE EXTERNAL TABLE example_db.table_mysql
    (
    	k1 DATE,
@@ -183,7 +183,7 @@ CREATE EXTERNAL TABLE
    )
    ```
 
-2. 创建一个数据文件存储在HDFS上的 broker 外部表, 数据使用 "|" 分割，"\n" 换行
+2. 创建一个数据文件存储在 HDFS 上的 broker 外部表，数据使用 "|" 分割，`\n` 换行
 
    ```sql
    CREATE EXTERNAL TABLE example_db.table_broker (
@@ -206,7 +206,7 @@ CREATE EXTERNAL TABLE
    )
    ```
 
-3. 创建一个hive外部表
+3. 创建一个 hive 外部表
 
    ```sql
    CREATE TABLE example_db.table_hive
@@ -239,7 +239,7 @@ CREATE EXTERNAL TABLE
 
 5. 创建一个 Hudi 外表
 
-   创建时不指定schema(推荐)
+   创建时不指定 schema(推荐)
    ```sql
    CREATE TABLE example_db.t_hudi
    ENGINE=HUDI
@@ -250,7 +250,7 @@ CREATE EXTERNAL TABLE
    );
    ```
 
-   创建时指定schema
+   创建时指定 schema
    ```sql
    CREATE TABLE example_db.t_hudi (
       `id` int NOT NULL COMMENT "id number",
