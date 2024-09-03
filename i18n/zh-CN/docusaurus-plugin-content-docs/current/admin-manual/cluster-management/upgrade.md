@@ -220,7 +220,7 @@ h. 如果启动成功，则代表兼容性没有问题，停止测试环境的 F
 3. 复制新版本的  `/bin`，`/lib` 目录到原 BE 目录下
 
    ```shell
-   cp -r${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
+   cp -r ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
    cp -r ${DORIS_NEW_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib
    ```
 
