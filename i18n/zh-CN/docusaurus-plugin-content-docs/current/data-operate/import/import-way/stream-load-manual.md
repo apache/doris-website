@@ -213,6 +213,9 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
         -T streamload_example.json \
         -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
     ```
+    :::info 备注
+    若 JSON 文件内容不是 JSON Array，而是每行一个JSON对象， 添加 Header `-H "strip_outer_array:false"` `-H "read_json_by_line:true"`。
+    :::
 
     Stream Load 是一种同步导入方式，导入结果会直接返回给用户。
 
