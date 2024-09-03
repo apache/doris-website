@@ -41,7 +41,7 @@ This is an overview of their data pipeline. The logs are collected into the data
 ![real-time-data-warehouse-2.0](/images/Unicom-1.png)
 
 - **ODS**: Original logs and alerts from all sources are gathered into Apache Kafka. Meanwhile, a copy of them will be stored in HDFS for data verification or replay.
-- **DWD**: This is where the fact tables are. Apache Flink cleans, standardizes, backfills, and de-identifies the data, and write it back to Kafka. These fact tables will also be put into Apache Doris, so that Doris can trace a certain item or use them for dashboarding and reporting. As logs are not averse to duplication, the fact tables will be arranged in the [Duplicate Key model](https://doris.apache.org/docs/dev/data-table/data-model#duplicate-model) of Apache Doris.  
+- **DWD**: This is where the fact tables are. Apache Flink cleans, standardizes, backfills, and de-identifies the data, and write it back to Kafka. These fact tables will also be put into Apache Doris, so that Doris can trace a certain item or use them for dashboarding and reporting. As logs are not averse to duplication, the fact tables will be arranged in the [Duplicate Key model](https://doris.apache.org/docs/table-design/data-model/duplicate) of Apache Doris.  
 - **DWS**: This layer aggregates data from DWD and lays the foundation for queries and analysis.
 - **ADS**: In this layer, Apache Doris auto-aggregates data with its Aggregate Key model, and auto-updates data with its Unique Key model. 
 
@@ -63,7 +63,7 @@ A lesson learned is that when using Flink for high-frequency writing, you need t
 - **Data Pre-Aggregation**: For data of the same ID but comes from various tables, Flink will pre-aggregate it based on the primary key ID and create a flat table, in order to avoid excessive resource consumption caused by multi-source data writing.
 - **Doris Compaction**: The trick here includes finding the right Doris backend (BE) parameters to allocate the right amount of CPU resources for data compaction, setting the appropriate number of data partitions, buckets, and replicas (too much data tablets will bring huge overheads), and dialing up `max_tablet_version_num` to avoid version accumulation.
 
-These measures together ensure daily ingestion stability. The user has witnessed stable performance and low compaction score in Doris backend. In addition, the combination of data pre-processing in Flink and the [Unique Key model](https://doris.apache.org/docs/dev/data-table/data-model#unique-model) in Doris can ensure quicker data updates.
+These measures together ensure daily ingestion stability. The user has witnessed stable performance and low compaction score in Doris backend. In addition, the combination of data pre-processing in Flink and the [Unique Key model](https://doris.apache.org/docs/table-design/data-model/unique) in Doris can ensure quicker data updates.
 
 ### Storage strategies to reduce costs by 50%
 
@@ -87,7 +87,7 @@ These strategies have shortened the response time of queries. For example, a que
 
 ## Ongoing Plans
 
-The user is now testing with the newly added [inverted index](https://doris.apache.org/docs/dev/data-table/index/inverted-index?_highlight=inverted) in Apache Doris. It is designed to speed up full-text search of strings as well as equivalence and range queries of numerics and datetime. They have also provided their valuable feedback about the auto-bucketing logic in Doris: Currently, Doris decides the number of buckets for a partition  based on the data size of the previous partition. The problem for the user is, most of their new data comes in during daytime, but little at nights. So in their case, Doris creates too many buckets for night data but too few in daylight, which is the opposite of what they need. They hope to add a new auto-bucketing logic, where the reference for Doris to decide the number of buckets is the data size and distribution of the previous day. They've come to the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) and we are now working on this optimization. 
+The user is now testing with the newly added [inverted index](https://doris.apache.org/docs/table-design/index/inverted-index) in Apache Doris. It is designed to speed up full-text search of strings as well as equivalence and range queries of numerics and datetime. They have also provided their valuable feedback about the auto-bucketing logic in Doris: Currently, Doris decides the number of buckets for a partition  based on the data size of the previous partition. The problem for the user is, most of their new data comes in during daytime, but little at nights. So in their case, Doris creates too many buckets for night data but too few in daylight, which is the opposite of what they need. They hope to add a new auto-bucketing logic, where the reference for Doris to decide the number of buckets is the data size and distribution of the previous day. They've come to the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) and we are now working on this optimization. 
 
 
 

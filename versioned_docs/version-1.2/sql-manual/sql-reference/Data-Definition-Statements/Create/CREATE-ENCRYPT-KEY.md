@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 CREATE ENCRYPTKEY key_name AS "key_string"
-````
+```
 
 illustrate:
 
@@ -54,7 +54,7 @@ If `key_name` contains the database name, then the custom key will be created in
 
    ```sql
    CREATE ENCRYPTKEY my_key AS "ABCD123456789";
-   ````
+   ```
 
 2. Use a custom key
 
@@ -76,7 +76,7 @@ If `key_name` contains the database name, then the custom key will be created in
    | Doris is Great |
    +------------------------------------------------- -------------------+
    1 row in set (0.01 sec)
-   ````
+   ```
 
 ### Keywords
 

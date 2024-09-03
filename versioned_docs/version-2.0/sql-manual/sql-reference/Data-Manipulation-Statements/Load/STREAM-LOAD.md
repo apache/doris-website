@@ -34,9 +34,9 @@ STREAM LOAD
 
 stream-load: load data to table in streaming
 
-````
+```
 curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_host:http_port/api/{db}/{table}/_stream_load
-````
+```
 
 This statement is used to import data into the specified table. The difference from ordinary Load is that this import method is synchronous import.
 
@@ -97,28 +97,32 @@ Parameter introduction:
 
 10. timezone: Specifies the timezone used for this import. The default is "+08:00". This variable replaces the session variable `time_zone` in this import transaction. See the section "Importing with timezones" in [Best Practice](#best-practice) for more information.
 
-11. exec_mem_limit: Import memory limit. Default is 2GB. The unit is bytes.
+11. exec_mem_limit: Load memory limit. Default is 2GB. The unit is bytes.
 
-12. format: Specify load data format, support csv, json, <version since="1.2" type="inline"> csv_with_names(support csv file line header filter), csv_with_names_and_types(support csv file first two lines filter), parquet, orc</version>, default is csv.
+12. format: Specify load data format, support csv, json,  csv_with_names(support csv file line header filter), csv_with_names_and_types(support csv file first two lines filter), parquet, orc, default is csv.
+
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
 
 13. jsonpaths: The way of importing json is divided into: simple mode and matching mode.
 
     Simple mode: The simple mode is not set the jsonpaths parameter. In this mode, the json data is required to be an object type, for example:
 
-       ````
+       ```
     {"k1":1, "k2":2, "k3":"hello"}, where k1, k2, k3 are column names.
-       ````
+       ```
 
     Matching mode: It is relatively complex for json data and needs to match the corresponding value through the jsonpaths parameter.
 
 14. strip_outer_array: Boolean type, true indicates that the json data starts with an array object and flattens the array object, the default value is false. E.g:
 
-     ````
+     ```
       [
        {"k1" : 1, "v1" : 2},
        {"k1" : 3, "v1" : 4}
       ]
-    ````
+    ```
     When strip_outer_array is true, the final import into doris will generate two rows of data.
 
 
@@ -152,68 +156,71 @@ separated by commas.
 
 26. trim_double_quotes: Boolean type, The default value is false. True means that the outermost double quotes of each field in the csv file are trimmed.
 
-27. skip_lines: <version since="dev" type="inline"> Integer type, the default value is 0. It will skip some lines in the head of csv file. It will be disabled when format is `csv_with_names` or `csv_with_names_and_types`. </version>
+27. skip_lines:   Integer type, the default value is 0. It will skip some lines in the head of csv file. It will be disabled when format is `csv_with_names` or `csv_with_names_and_types`. 
 
-28. comment: <version since="1.2.3" type="inline"> String type, the default value is "". </version>
+28. comment: String type, the default value is "". 
+:::tip Tips
+This feature  is supported since the Apache Doris 1.2.3 version
+:::
 
-29. enclose: <version since="dev" type="inline"> When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field. Note: when the bracket is `"`, trim\_double\_quotes must be set to true.</version>
+29. enclose:   When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field. Note: when the bracket is `"`, trim\_double\_quotes must be set to true.
   
-30. escape <version since="dev" type="inline"> Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as "\", and then modify the data to "a,' b,\'c'". </version>
+30. escape   Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as "\", and then modify the data to "a,' b,\'c'". 
 
 ### Example
 
 1. Import the data in the local file 'testData' into the table 'testTbl' in the database 'testDb', and use Label for deduplication. Specify a timeout of 100 seconds
 
-   ````
+   ```
        curl --location-trusted -u root -H "label:123" -H "timeout:100" -T testData http://host:port/api/testDb/testTbl/_stream_load
-   ````
+   ```
 
 2. Import the data in the local file 'testData' into the table 'testTbl' in the database 'testDb', use Label for deduplication, and only import data whose k1 is equal to 20180601
 
-   ````
+   ```
    curl --location-trusted -u root -H "label:123" -H "where: k1=20180601" -T testData http://host:port/api/testDb/testTbl/_stream_load
-   ````
+   ```
 
 3. Import the data in the local file 'testData' into the table 'testTbl' in the database 'testDb', allowing a 20% error rate (the user is in the defalut_cluster)
 
-   ````
+   ```
    curl --location-trusted -u root -H "label:123" -H "max_filter_ratio:0.2" -T testData http://host:port/api/testDb/testTbl/_stream_load
-   ````
+   ```
 
 4. Import the data in the local file 'testData' into the table 'testTbl' in the database 'testDb', allow a 20% error rate, and specify the column name of the file (the user is in the defalut_cluster)
 
-   ````
+   ```
    curl --location-trusted -u root -H "label:123" -H "max_filter_ratio:0.2" -H "columns: k2, k1, v1" -T testData http://host:port/api/testDb/testTbl /_stream_load
-   ````
+   ```
 
 5. Import the data in the local file 'testData' into the p1, p2 partitions of the table 'testTbl' in the database 'testDb', allowing a 20% error rate.
 
-   ````
+   ```
    curl --location-trusted -u root -H "label:123" -H "max_filter_ratio:0.2" -H "partitions: p1, p2" -T testData http://host:port/api/testDb/testTbl/_stream_load
-   ````
+   ```
 
 6. Import using streaming (user is in defalut_cluster)
 
-    ````
+    ```
     seq 1 10 | awk '{OFS="\t"}{print $1, $1 * 10}' | curl --location-trusted -u root -T - http://host:port/api/testDb/testTbl/ _stream_load
-    ````
+    ```
 
 7. Import a table containing HLL columns, which can be columns in the table or columns in the data to generate HLL columns, or use hll_empty to supplement columns that are not in the data
 
-   ````
+   ```
    curl --location-trusted -u root -H "columns: k1, k2, v1=hll_hash(k1), v2=hll_empty()" -T testData http://host:port/api/testDb/testTbl/_stream_load
-   ````
+   ```
 
 8. Import data for strict mode filtering and set the time zone to Africa/Abidjan
 
-   ````
+   ```
    curl --location-trusted -u root -H "strict_mode: true" -H "timezone: Africa/Abidjan" -T testData http://host:port/api/testDb/testTbl/_stream_load
-   ````
+   ```
 
 9. Import a table with a BITMAP column, which can be a column in the table or a column in the data to generate a BITMAP column, or use bitmap_empty to fill an empty Bitmap
-   ````
+   ```
     curl --location-trusted -u root -H "columns: k1, k2, v1=to_bitmap(k1), v2=bitmap_empty()" -T testData http://host:port/api/testDb/testTbl/_stream_load
-   ````
+   ```
 
 10. Simple mode, import json data
     Table Structure:
@@ -224,39 +231,39 @@ separated by commas.
     `price` double NULL COMMENT ""
     ```
     json data format:
-    ````
+    ```
     {"category":"C++","author":"avc","title":"C++ primer","price":895}
-    ````
+    ```
     
     Import command:
     
-    ````
+    ```
     curl --location-trusted -u root -H "label:123" -H "format: json" -T testData http://host:port/api/testDb/testTbl/_stream_load
-    ````
+    ```
     
     In order to improve throughput, it supports importing multiple pieces of json data at one time, each line is a json object, and \n is used as a newline by default. You need to set read_json_by_line to true. The json data format is as follows:
 
-    ````
+    ```
     {"category":"C++","author":"avc","title":"C++ primer","price":89.5}
     {"category":"Java","author":"avc","title":"Effective Java","price":95}
     {"category":"Linux","author":"avc","title":"Linux kernel","price":195}
-    ````
+    ```
     
 11. Match pattern, import json data
     json data format:
 
-    ````
+    ```
     [
     {"category":"xuxb111","author":"1avc","title":"SayingsoftheCentury","price":895},{"category":"xuxb222","author":"2avc"," title":"SayingsoftheCentury","price":895},
     {"category":"xuxb333","author":"3avc","title":"SayingsoftheCentury","price":895}
     ]
-    ````
+    ```
 
     Precise import by specifying jsonpath, such as importing only three attributes of category, author, and price
 
-    ````
+    ```
     curl --location-trusted -u root -H "columns: category, price, author" -H "label:123" -H "format: json" -H "jsonpaths: [\"$.category\",\" $.price\",\"$.author\"]" -H "strip_outer_array: true" -T testData http://host:port/api/testDb/testTbl/_stream_load
-    ````
+    ```
 
     illustrate:
         1) If the json data starts with an array, and each object in the array is a record, you need to set strip_outer_array to true, which means flatten the array.
@@ -265,7 +272,7 @@ separated by commas.
 12. User specified json root node
     json data format:
 
-    ````
+    ```
     {
      "RECORDS":[
     {"category":"11","title":"SayingsoftheCentury","price":895,"timestamp":1589191587},
@@ -273,31 +280,31 @@ separated by commas.
     {"category":"33","author":"3avc","title":"SayingsoftheCentury","timestamp":1589191387}
     ]
     }
-    ````
+    ```
 
     Precise import by specifying jsonpath, such as importing only three attributes of category, author, and price
     
-    ````
+    ```
     curl --location-trusted -u root -H "columns: category, price, author" -H "label:123" -H "format: json" -H "jsonpaths: [\"$.category\",\" $.price\",\"$.author\"]" -H "strip_outer_array: true" -H "json_root: $.RECORDS" -T testData http://host:port/api/testDb/testTbl/_stream_load
-    ````
+    ```
     
 13. Delete the data with the same import key as this batch
 
-    ````
+    ```
     curl --location-trusted -u root -H "merge_type: DELETE" -T testData http://host:port/api/testDb/testTbl/_stream_load
-    ````
+    ```
 
 14. Delete the columns in this batch of data that match the data whose flag is listed as true, and append other rows normally
     
-    ````
+    ```
     curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv, flag" -H "merge_type: MERGE" -H "delete: flag=1" -T testData http://host:port/api/testDb/testTbl/_stream_load
-    ````
+    ```
     
 15. Import data into UNIQUE_KEYS table with sequence column
     
-    ````
+    ```
     curl --location-trusted -u root -H "columns: k1,k2,source_sequence,v1,v2" -H "function_column.sequence_col: source_sequence" -T testData http://host:port/api/testDb/testTbl/ _stream_load
-    ````
+    ```
 
 16. csv file line header filter import
 
@@ -345,7 +352,7 @@ separated by commas.
 
    Stream Load is a synchronous import process. The successful execution of the statement means that the data is imported successfully. The imported execution result will be returned synchronously through the HTTP return value. And display it in Json format. An example is as follows:
 
-   ````json
+   ```json
    {
        "TxnId": 17,
        "Label": "707717c0-271a-44c5-be0b-4e71bfeacaa5",
@@ -363,7 +370,7 @@ separated by commas.
        "WriteDataTimeMs": 3,
        "CommitAndPublishTimeMs": 18
    }
-   ````
+   ```
 
    The following main explanations are given for the Stream load import result parameters:
 

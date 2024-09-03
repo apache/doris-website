@@ -36,9 +36,9 @@ This statement is used to view RESTORE tasks
 
 grammar:
 
-````SQL
+```SQL
 SHOW RESTORE [FROM DB_NAME]
-````
+```
 
 illustrate:
         1. Only the most recent RESTORE task is saved in Doris.
@@ -74,7 +74,7 @@ illustrate:
 
    ```sql
    SHOW RESTORE FROM example_db;
-   ````
+   ```
 
 ### Keywords
 

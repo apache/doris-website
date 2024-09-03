@@ -39,7 +39,7 @@ grammar:
 ```sql
 CREATE DATABASE [IF NOT EXISTS] db_name
     [PROPERTIES ("key"="value", ...)];
-````
+```
 
 `PROPERTIES` Additional information about the database, which can be defaulted.
 
@@ -51,7 +51,7 @@ CREATE DATABASE [IF NOT EXISTS] db_name
     "iceberg.hive.metastore.uris" = "thrift://127.0.0.1:9083",
     "iceberg.catalog.type" = "HIVE_CATALOG"
   )
-  ````
+  ```
 
   illustrate:
   
@@ -65,7 +65,7 @@ CREATE DATABASE [IF NOT EXISTS] db_name
 
    ```sql
    CREATE DATABASE db_test;
-   ````
+   ```
 
 2. Create a new Iceberg database iceberg_test
 
@@ -76,13 +76,13 @@ CREATE DATABASE [IF NOT EXISTS] db_name
    "iceberg.hive.metastore.uris" = "thrift://127.0.0.1:9083",
    "iceberg.catalog.type" = "HIVE_CATALOG"
    );
-   ````
+   ```
 
 ### Keywords
 
-````text
+```text
 CREATE, DATABASE
-````
+```
 
 ### Best Practice
 

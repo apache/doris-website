@@ -92,7 +92,7 @@ PROPERTIES (
    - [amazon_reviews_2015](https://datasets-documentation.s3.eu-west-3.amazonaws.com/amazon_reviews/amazon_reviews_2015.snappy.parquet)
 4. Execute the following commands to load the datasets
 
-```Bash
+```shell
 curl --location-trusted -u root: -T amazon_reviews_2010.snappy.parquet -H "format:parquet" http://${BE_IP}:${BE_PORT}/api/${DB}/amazon_reviews/_stream_load
 curl --location-trusted -u root: -T amazon_reviews_2011.snappy.parquet -H "format:parquet" http://${BE_IP}:${BE_PORT}/api/${DB}/amazon_reviews/_stream_load
 curl --location-trusted -u root: -T amazon_reviews_2012.snappy.parquet -H "format:parquet" http://${BE_IP}:${BE_PORT}/api/${DB}/amazon_reviews/_stream_load

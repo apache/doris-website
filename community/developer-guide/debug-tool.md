@@ -220,7 +220,12 @@ The output of this command is the same as the output and view mode of heap profi
 
 ##### JEMALLOC
 
+For the analysis of the principle of Heap Profile, please refer to [Analysis of the Principle of Heap Profiling](https://cn.pingcap.com/blog/an-explanation-of-the-heap-profiling-principle/). It should be noted that Heap Profile records virtual memory
+
+It supports real-time and regular dumping of Heap Profile, and then uses `jeprof` to analyze Heap Profile.
+
 ###### 1. realtime heap dump
+
 Change `prof:false` of `JEMALLOC_CONF` in `be.conf` to `prof:true` and restart BE, then use the jemalloc heap dump http interface to generate a heap dump file on the corresponding BE machine.
 
 ```shell
@@ -234,6 +239,7 @@ The default sampling interval is 512K, usually only 10% of memory is recorded by
 If you are doing profiling, keep `prof:false` to avoid the performance penalty of heap dump.
 
 ###### 2. regular heap dump
+
 First, change `prof:false` of `JEMALLOC_CONF` in `be.conf` to `prof:true`. The default directory of the heap dump file is `${DORIS_HOME}/log`. The file name prefix is ​​`JEMALLOC_PROF_PRFIX` in `be.conf`, which is `jemalloc_heap_profile_` by default.
 
 > Before Doris 2.1.6, `JEMALLOC_PROF_PRFIX` is empty and needs to be changed to any value as the profile file name
@@ -257,10 +263,13 @@ Change `prof_leak` and `prof_final` in `JEMALLOC_CONF` in `be.conf` to `true` an
 Change `prof_accum` in `JEMALLOC_CONF` in `be.conf` to `true` and restart BE.
 Use `jeprof --alloc_space` to display the cumulative value of heap dump.
 
-##### 3. jemalloc heap dump profiling
+##### 3. `jeprof` parses Heap Profile
+
+Use `jeprof` to parse the Heap Profile of the above dump. If the process memory is too large, the parsing process may take several minutes, so please wait patiently. If the system does not have the `jeprof` command, you can package the `jeprof` binary in the `doris/tools` directory and upload it to the Heap Dump server.
 
 ```
-Addr2line version 2.35.2 or above is required, see QA 1 below.
+Addr2line version 2.35.2 or above is required, see QA-1 below
+Try to have Heap Dump and `jeprof` to parse Heap Profile on the same server, see QA-2 below
 ```
 
 1. Analyze a single heap dump file
@@ -320,6 +329,10 @@ hash -r
 ```
 
 Note that you cannot use addr2line 2.3.9, which may be incompatible and cause memory to keep growing.
+
+2. After running `jeprof`, many errors appear: `addr2line: DWARF error: invalid or unhandled FORM value: 0x25`. The parsed Heap stack is the memory address of the code, not the function name
+
+This is because the Heap Dump and the execution of `jeprof` to parse the Heap Profile are not on the same server, which causes `jeprof` to fail to parse the function name using the symbol table. Try to complete the Dump Heap and `jeprof` parsing operations on the same machine.
 
 #### LSAN
 

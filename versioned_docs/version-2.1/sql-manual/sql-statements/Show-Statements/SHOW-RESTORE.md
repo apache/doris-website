@@ -36,9 +36,9 @@ This statement is used to view RESTORE tasks
 
 grammar:
 
-````SQL
+```SQL
 SHOW [BRIEF] RESTORE [FROM DB_NAME]
-````
+```
 
 illustrate:
         1. Only the most recent RESTORE task is saved in Doris.
@@ -68,11 +68,11 @@ illustrate:
             Status: If the job fails, display the failure message
             Timeout: Job timeout, in seconds
 
-<version since="dev">
+
 
         2. brief: only show key information of RESTORE tasks, columns RestoreObjs, Progress, TaskErrMsg will not show
 
-</version>
+
 
 ### Example
 
@@ -80,7 +80,7 @@ illustrate:
 
    ```sql
    SHOW RESTORE FROM example_db;
-   ````
+   ```
 
 ### Keywords
 

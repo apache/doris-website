@@ -252,7 +252,7 @@ mysql DESC test;
 
 4. When the table has the sequence column, delete all data with the same key as the imported data
 
-    ```bash
+    ```shell
     curl --location-trusted -u root: -H "column_separator:," -H "columns: name, gender, age" -H "function_column.sequence_col: age" -H "merge_type: DELETE"  -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
     ```
 

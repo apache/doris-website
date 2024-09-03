@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW CREATE DATABASE db_name;
-````
+```
 
 illustrate:
 
@@ -56,7 +56,7 @@ illustrate:
     | test | CREATE DATABASE `test` |
     +----------+----------------------------+
     1 row in set (0.00 sec)
-    ````
+    ```
 
 ### Keywords
 

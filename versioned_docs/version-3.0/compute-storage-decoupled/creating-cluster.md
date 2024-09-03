@@ -81,7 +81,7 @@ To create a Doris cluster in the compute-storage decoupled mode using HDFS as th
 
 **Example**
 
-```Bash
+```shell
 curl -s "127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999" -d \
 '{
   "instance_id": "sample_instance_id",
@@ -356,7 +356,7 @@ Users/Roles with the `USAGE_PRIV` privilege for a specific storage vault can per
 
 **Example**
 
-```Bash
+```shell
 grant usage_priv on storage vault my_storage_vault to user1
 ```
 
@@ -375,7 +375,7 @@ Only the Admin user has the privilege to execute the `REVOKE` statement, which i
 
 **Example**
 
-```Bash
+```shell
 revoke usage_priv on storage vault my_storage_vault from user1
 ```
 
@@ -404,7 +404,7 @@ The parameter list for the `add_cluster` interface is as follows:
 
 This is an example of adding one FE:
 
-```Bash
+```shell
 # Add FE
 curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
     "instance_id":"sample_instance_id",
@@ -467,7 +467,7 @@ Users can adjust the number of compute clusters and the number of nodes within e
 
 This is an example of adding a compute cluster that consists of 1 BE node.
 
-```Bash
+```shell
 # 172.19.0.11
 # Add BE
 curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{

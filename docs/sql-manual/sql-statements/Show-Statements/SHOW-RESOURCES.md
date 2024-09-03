@@ -45,7 +45,7 @@ SHOW RESOURCES
 ] | [LIKE "pattern"]
 [ORDER BY...]
 [LIMIT limit][OFFSET offset];
-````
+```
 
 illustrate:
 

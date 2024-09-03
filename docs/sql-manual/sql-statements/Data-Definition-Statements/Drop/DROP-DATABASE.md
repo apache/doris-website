@@ -37,7 +37,7 @@ grammar:
 
 ```sql
 DROP DATABASE [IF EXISTS] db_name [FORCE];
-````
+```
 
 illustrate:
 
@@ -50,7 +50,7 @@ illustrate:
    
      ```sql
      DROP DATABASE db_test;
-     ````
+     ```
 
 ### Keywords
 

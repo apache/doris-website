@@ -28,9 +28,9 @@ under the License.
 
 ### Name
 
-<version since="dev">
+
 SHOW QUERY STATS
-</version>
+
 
 ### Description
 

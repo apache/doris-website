@@ -37,7 +37,7 @@ grammar:
 
 ```sql
 DROP RESOURCE 'resource_name'
-````
+```
 
 Note: ODBC/S3 resources in use cannot be deleted.
 
@@ -47,7 +47,7 @@ Note: ODBC/S3 resources in use cannot be deleted.
    
      ```sql
      DROP RESOURCE 'spark0';
-     ````
+     ```
 
 ### Keywords
 

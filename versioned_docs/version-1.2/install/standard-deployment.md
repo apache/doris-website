@@ -55,11 +55,11 @@ Doris, as an open source OLAP database with an MPP architecture, can run on most
 
 **Set the maximum number of open file descriptors in the system**
 
-````
+```
 vi /etc/security/limits.conf
 * soft nofile 65536
 * hard nofile 65536
-````
+```
 
 ##### Clock synchronization
 
@@ -316,7 +316,7 @@ Broker is deployed as a plug-in, which is independent of Doris. If you need to i
 
 	After the BE process starts, if there have been data there before, it might need several minutes for data index loading.
 
-	If BE is started for the first time or the BE has not joined any cluster, the BE log will periodically scroll the words `waiting to receive first heartbeat from frontend`, meaning that BE has not received the Master's address through FE's heartbeat and is waiting passively. Such error log will disappear after sending the heartbeat by ADD BACKEND in FE. If the word `````master client', get client from cache failed. host:, port: 0, code: 7````` appears after receiving the heartbeat, it indicates that FE has successfully connected BE, but BE cannot actively connect FE. You may  need to check the connectivity of rpc_port from BE to FE.
+	If BE is started for the first time or the BE has not joined any cluster, the BE log will periodically scroll the words `waiting to receive first heartbeat from frontend`, meaning that BE has not received the Master's address through FE's heartbeat and is waiting passively. Such error log will disappear after sending the heartbeat by ADD BACKEND in FE. If the word ```master client', get client from cache failed. host:, port: 0, code: 7``` appears after receiving the heartbeat, it indicates that FE has successfully connected BE, but BE cannot actively connect FE. You may  need to check the connectivity of rpc_port from BE to FE.
 
 	If BE has been added to the cluster, the heartbeat log from FE will be scrolled every five seconds: ```get heartbeat, host:xx. xx.xx.xx, port:9020, cluster id:xxxxxxx```, indicating that the heartbeat is normal.
 

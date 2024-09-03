@@ -410,7 +410,7 @@ mysql> SELECT * FROM dt3;
 
 **1. Enable two-phase commit by setting `two_phase_commit:true` in the HTTP Header.**
 
-```Bash
+```shell
 curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt http://fe_host:http_port/api/{db}/{table}/_stream_load
 {
     "TxnId": 18036,
@@ -436,7 +436,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 
 - Specify the transaction using the Transaction ID:
 
-  ```Bash
+  ```shell
   curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/stream_load2pc
   {
       "status": "Success",
@@ -446,7 +446,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 
 - Specify the transaction using the label:
 
-  ```Bash
+  ```shell
   curl -X PUT --location-trusted -u user:passwd -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:commit"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
@@ -458,7 +458,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 
 - Specify the transaction using the Transaction ID:
 
-  ```Bash
+  ```shell
   curl -X PUT --location-trusted -u user:passwd -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
   {
       "status": "Success",
@@ -468,7 +468,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 
 - Specify the transaction using the label:
 
-  ```Bash
+  ```shell
   curl -X PUT --location-trusted -u user:passwd -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
   {
       "status": "Success",

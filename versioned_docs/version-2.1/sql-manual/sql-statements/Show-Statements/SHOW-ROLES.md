@@ -36,17 +36,17 @@ This statement is used to display all created role information, including role n
 
 grammar:
 
-````SQL
+```SQL
 SHOW ROLES
-````
+```
 
 ### Example
 
 1. View created roles
 
-    ````SQL
+    ```SQL
     SHOW ROLES
-    ````
+    ```
 
 ### Keywords
 

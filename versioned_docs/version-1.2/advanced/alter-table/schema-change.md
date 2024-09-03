@@ -196,7 +196,7 @@ The modification statement is as follows, we will change the degree of the k3 co
 
 ```sql
 alter table example_tbl modify column k3 varchar(50) key null comment 'to 50'
-````
+```
 
 When done, the Schema becomes:
 
@@ -215,7 +215,7 @@ Because the Schema Chanage job is an asynchronous operation, only one Schema cha
 
 ```sql
 SHOW ALTER TABLE COLUMN\G;
-````
+```
 
 ## Notice
 

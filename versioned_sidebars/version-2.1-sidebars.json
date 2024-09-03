@@ -66,6 +66,7 @@
                         "table-design/data-model/tips"
                     ]
                 },
+                "table-design/row-store",
                 "table-design/data-partition",
                 "table-design/schema-change",
                 "table-design/cold-hot-separation",
@@ -229,6 +230,7 @@
                     ]
                 },
                 "query/high-concurrent-point-query",
+                "query/topn-query",
                 {
                     "type": "category",
                     "label": "Analyzing Query",
@@ -358,10 +360,33 @@
                     "type": "category",
                     "label": "Managing Memory",
                     "items": [
-                        "admin-manual/memory-management/memory-analyze-manual",
-                        "admin-manual/memory-management/memory-tracker",
-                        "admin-manual/memory-management/memory-limit-exceeded-analysis",
-                        "admin-manual/memory-management/memory-management-feature"
+                        "admin-manual/memory-management/overview",
+                        "admin-manual/memory-management/memory-issue-faq",
+                        {
+                            "type": "category",
+                            "label": "Managing Memory Analysis",
+                            "items": [
+                                "admin-manual/memory-management/memory-analysis/jemalloc-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/global-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/doris-cache-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/metadata-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/query-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/load-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded",
+                                "admin-manual/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded",
+                                "admin-manual/memory-management/memory-analysis/oom-crash-analysis",
+                                "admin-manual/memory-management/memory-analysis/memory-log-analysis",
+                                "admin-manual/memory-management/memory-analysis/heap-profile-memory-analysis"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Managing Memory Feature",
+                            "items": [
+                                "admin-manual/memory-management/memory-feature/memory-tracker",
+                                "admin-manual/memory-management/memory-feature/memory-control-strategy"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -391,7 +416,8 @@
                         "admin-manual/maint-monitor/monitor-alert",
                         "admin-manual/maint-monitor/tablet-local-debug",
                         "admin-manual/maint-monitor/metadata-operation",
-                        "admin-manual/maint-monitor/automatic-service-start"
+                        "admin-manual/maint-monitor/automatic-service-start",
+                        "admin-manual/maint-monitor/frontend-lock-manager"
                     ]
                 },
                 {
@@ -402,6 +428,15 @@
                         "admin-manual/config/fe-config",
                         "admin-manual/config/be-config",
                         "admin-manual/config/user-property"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "System Tables",
+                    "items": [
+                        "admin-manual/system-tables/file_cache_statistics",
+                        "admin-manual/system-tables/tables",
+                        "admin-manual/system-tables/table_properties"
                     ]
                 },
                 "admin-manual/audit-plugin",
@@ -604,20 +639,20 @@
                                 "sql-manual/sql-functions/date-time-functions/date-trunc",
                                 "sql-manual/sql-functions/date-time-functions/date-format",
                                 "sql-manual/sql-functions/date-time-functions/datediff",
-                                "sql-manual/sql-functions/date-time-functions/date_floor",
-                                "sql-manual/sql-functions/date-time-functions/second_floor",
-                                "sql-manual/sql-functions/date-time-functions/minute_floor",
-                                "sql-manual/sql-functions/date-time-functions/hour_floor",
-                                "sql-manual/sql-functions/date-time-functions/day_floor",
-                                "sql-manual/sql-functions/date-time-functions/month_floor",
-                                "sql-manual/sql-functions/date-time-functions/year_floor",
-                                "sql-manual/sql-functions/date-time-functions/date_ceil",
-                                "sql-manual/sql-functions/date-time-functions/second_ceil",
-                                "sql-manual/sql-functions/date-time-functions/minute_ceil",
-                                "sql-manual/sql-functions/date-time-functions/hour_ceil",
-                                "sql-manual/sql-functions/date-time-functions/day_ceil",
-                                "sql-manual/sql-functions/date-time-functions/month_ceil",
-                                "sql-manual/sql-functions/date-time-functions/year_ceil",
+                                "sql-manual/sql-functions/date-time-functions/date-floor",
+                                "sql-manual/sql-functions/date-time-functions/second-floor",
+                                "sql-manual/sql-functions/date-time-functions/minute-floor",
+                                "sql-manual/sql-functions/date-time-functions/hour-floor",
+                                "sql-manual/sql-functions/date-time-functions/day-floor",
+                                "sql-manual/sql-functions/date-time-functions/month-floor",
+                                "sql-manual/sql-functions/date-time-functions/year-floor",
+                                "sql-manual/sql-functions/date-time-functions/date-ceil",
+                                "sql-manual/sql-functions/date-time-functions/second-ceil",
+                                "sql-manual/sql-functions/date-time-functions/minute-ceil",
+                                "sql-manual/sql-functions/date-time-functions/hour-ceil",
+                                "sql-manual/sql-functions/date-time-functions/day-ceil",
+                                "sql-manual/sql-functions/date-time-functions/month-ceil",
+                                "sql-manual/sql-functions/date-time-functions/year-ceil",
                                 "sql-manual/sql-functions/date-time-functions/microsecond",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-add",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-diff",
@@ -677,7 +712,7 @@
                                 "sql-manual/sql-functions/string-functions/to-base64",
                                 "sql-manual/sql-functions/string-functions/from-base64",
                                 "sql-manual/sql-functions/string-functions/ascii",
-                                "sql-manual/sql-functions/string-functions/auto_partition_name",
+                                "sql-manual/sql-functions/string-functions/auto-partition-name",
                                 "sql-manual/sql-functions/string-functions/length",
                                 "sql-manual/sql-functions/string-functions/bit-length",
                                 "sql-manual/sql-functions/string-functions/char-length",
@@ -712,7 +747,7 @@
                                 "sql-manual/sql-functions/string-functions/field",
                                 "sql-manual/sql-functions/string-functions/find-in-set",
                                 "sql-manual/sql-functions/string-functions/replace",
-                                "sql-manual/sql-functions/string-functions/replace_empty",
+                                "sql-manual/sql-functions/string-functions/replace-empty",
                                 "sql-manual/sql-functions/string-functions/strleft",
                                 "sql-manual/sql-functions/string-functions/strright",
                                 "sql-manual/sql-functions/string-functions/split-part",
@@ -727,7 +762,7 @@
                                 "sql-manual/sql-functions/string-functions/uuid",
                                 "sql-manual/sql-functions/string-functions/space",
                                 "sql-manual/sql-functions/string-functions/esquery",
-                                "sql-manual/sql-functions/string-functions/random_bytes",
+                                "sql-manual/sql-functions/string-functions/random-bytes",
                                 {
                                     "type": "category",
                                     "label": "Search in String",
@@ -811,7 +846,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
-                                "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
@@ -991,7 +1025,7 @@
                                 "sql-manual/sql-functions/numeric-functions/random",
                                 "sql-manual/sql-functions/numeric-functions/mod",
                                 "sql-manual/sql-functions/numeric-functions/running-difference",
-                                "sql-manual/sql-functions/numeric-functions/uuid_numeric"
+                                "sql-manual/sql-functions/numeric-functions/uuid-numeric"
                             ]
                         },
                         {
@@ -1015,7 +1049,7 @@
                                 "sql-manual/sql-functions/table-functions/explode-json-array",
                                 "sql-manual/sql-functions/table-functions/explode",
                                 "sql-manual/sql-functions/table-functions/explode-split",
-                                "sql-manual/sql-functions/table-functions/explode_map",
+                                "sql-manual/sql-functions/table-functions/explode-map",
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
                                 "sql-manual/sql-functions/table-functions/numbers",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
@@ -1033,12 +1067,12 @@
                                 "sql-manual/sql-functions/table-valued-functions/iceberg-meta",
                                 "sql-manual/sql-functions/table-valued-functions/backends",
                                 "sql-manual/sql-functions/table-valued-functions/frontends",
-                                "sql-manual/sql-functions/table-valued-functions/frontends_disks",
+                                "sql-manual/sql-functions/table-valued-functions/frontends-disks",
                                 "sql-manual/sql-functions/table-valued-functions/catalogs",
                                 "sql-manual/sql-functions/table-valued-functions/workload-group",
-                                "sql-manual/sql-functions/table-valued-functions/active_queries",
+                                "sql-manual/sql-functions/table-valued-functions/active-queries",
                                 "sql-manual/sql-functions/table-valued-functions/jobs",
-                                "sql-manual/sql-functions/table-valued-functions/mv_infos",
+                                "sql-manual/sql-functions/table-valued-functions/mv-infos",
                                 "sql-manual/sql-functions/table-valued-functions/partitions",
                                 "sql-manual/sql-functions/table-valued-functions/tasks"
                             ]
@@ -1134,6 +1168,7 @@
                             "items": [
                                 "sql-manual/sql-data-types/date-time/datetime-overview",
                                 "sql-manual/sql-data-types/date-time/DATE",
+                                "sql-manual/sql-data-types/date-time/TIME",
                                 "sql-manual/sql-data-types/date-time/DATETIME"
                             ]
                         },
@@ -1166,8 +1201,8 @@
                                 "sql-manual/sql-data-types/aggregate/aggregate-overview",
                                 "sql-manual/sql-data-types/aggregate/HLL",
                                 "sql-manual/sql-data-types/aggregate/BITMAP",
-                                "sql-manual/sql-data-types/aggregate/QUANTILE_STATE",
-                                "sql-manual/sql-data-types/aggregate/AGG_STATE"
+                                "sql-manual/sql-data-types/aggregate/QUANTILE-STATE",
+                                "sql-manual/sql-data-types/aggregate/AGG-STATE"
                             ]
                         },
                         {
@@ -1394,7 +1429,6 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CHARSET",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-DATABASE",
-                                "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-LOAD",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-REPOSITORY",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-ROUTINE-LOAD",
@@ -1422,7 +1456,6 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-LOAD-PROFILE",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-LOAD-WARNINGS",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-INDEX",
-                                "sql-manual/sql-statements/Show-Statements/SHOW-MIGRATIONS",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-PARTITION-ID",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-SNAPSHOT",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-SQL-BLOCK-RULE",
@@ -1564,6 +1597,13 @@
     ],
     "releasenotes": [
         "releasenotes/all-release",
+        {
+            "type": "category",
+            "label": "v3.0",
+            "items": [
+                "releasenotes/v3.0/release-3.0.1"
+            ]
+        },
         {
             "type": "category",
             "label": "v2.1",

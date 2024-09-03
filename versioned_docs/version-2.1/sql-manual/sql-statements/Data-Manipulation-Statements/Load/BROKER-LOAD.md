@@ -76,7 +76,7 @@ WITH BROKER broker_name
   [DELETE ON expr]
   [ORDER BY source_sequence]
   [PROPERTIES ("key1"="value1", ...)]
-  ````
+  ```
 
   - `[MERGE|APPEND|DELETE]`
 
@@ -143,11 +143,11 @@ WITH BROKER broker_name
 
     Specify some parameters of the imported format. For example, if the imported file is in `json` format, you can specify parameters such as `json_root`, `jsonpaths`, `fuzzy parse`, etc.
 
-    - <version since="dev" type="inline"> enclose </version>
+    -   enclose 
     
         When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field. Note: when the bracket is `"`, trim\_double\_quotes must be set to true.
 
-    - <version since="dev" type="inline"> escape </version>
+    -   escape 
 
         Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as "\", and then modify the data to "a,' b,\'c'".
 
@@ -159,13 +159,13 @@ WITH BROKER broker_name
 
   Specifies the information required by the broker. This information is usually used by the broker to be able to access remote storage systems. Such as BOS or HDFS. See the [Broker](../../../../advanced/broker.md) documentation for specific information.
 
-  ````text
+  ```text
   (
       "key1" = "val1",
       "key2" = "val2",
       ...
   )
-  ````
+  ```
 
 - `load_properties`
 
@@ -181,7 +181,7 @@ WITH BROKER broker_name
 
   - `exec_mem_limit`
 
-    Import memory limit. Default is 2GB. The unit is bytes.
+    Load memory limit. Default is 2GB. The unit is bytes.
 
   - `strict_mode`
 
@@ -208,13 +208,17 @@ WITH BROKER broker_name
   
     Boolean type, True means that one task can only load data to one tablet in the corresponding partition at a time. The default value is false. The number of tasks for the job depends on the overall concurrency. This parameter can only be set when loading data into the OLAP table with random bucketing.
     
-  - <version since="dev" type="inline"> priority </version>
+  -   priority 
     
     Set the priority of the load job, there are three options: `HIGH/NORMAL/LOW`, use `NORMAL` priority as default. The pending broker load jobs which have higher priority will be chosen to execute earlier.
 
--  <version since="1.2.3" type="inline"> comment </version>
+-  comment 
     
    Specify the comment for the import job. The comment can be viewed in the `show load` statement.
+
+:::tip Tips
+This feature is supported since the Apache Doris 1.2.3 version
+:::
 
 ### Example
 
@@ -232,7 +236,7 @@ WITH BROKER broker_name
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
    Import the file `file.txt`, separated by commas, into the table `my_table`.
 
@@ -260,7 +264,7 @@ WITH BROKER broker_name
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
    Import two batches of files `file-10*` and `file-20*` using wildcard matching. Imported into two tables `my_table1` and `my_table2` respectively. Where `my_table1` specifies to import into partition `p1`, and will import the values of the second and third columns in the source file +1.
 
@@ -284,7 +288,7 @@ WITH BROKER broker_name
        "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
        "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
    );
-   ````
+   ```
 
    Specify the delimiter as Hive's default delimiter `\\x01`, and use the wildcard * to specify all files in all directories under the `data` directory. Use simple authentication while configuring namenode HA.
 
@@ -303,7 +307,7 @@ WITH BROKER broker_name
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
 5. Import the data and extract the partition field in the file path
 
@@ -321,18 +325,18 @@ WITH BROKER broker_name
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
    The columns in the `my_table` table are `k1, k2, k3, city, utc_date`.
 
    The `hdfs://hdfs_host:hdfs_port/user/doris/data/input/dir/city=beijing` directory includes the following files:
 
-   ````text
+   ```text
    hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-01/0000.csv
    hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-02/0000.csv
    hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-03/0000.csv
    hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-04/0000.csv
-   ````
+   ```
 
    The file only contains three columns of `k1, k2, k3`, and the two columns of `city, utc_date` will be extracted from the file path.
 
@@ -355,7 +359,7 @@ WITH BROKER broker_name
        "username"="user",
        "password"="pass"
    );
-   ````
+   ```
 
    Only in the original data, k1 = 1, and after transformation, rows with k1 > k2 will be imported.
 
@@ -378,22 +382,22 @@ WITH BROKER broker_name
        "username"="user",
        "password"="pass"
    );
-   ````
+   ```
 
    There are the following files in the path:
 
-   ````text
+   ```text
    /user/data/data_time=2020-02-17 00%3A00%3A00/test.txt
    /user/data/data_time=2020-02-18 00%3A00%3A00/test.txt
-   ````
+   ```
 
    The table structure is:
 
-   ````text
+   ```text
    data_time DATETIME,
    k2 INT,
    k3 INT
-   ````
+   ```
 
 8. Import a batch of data from HDFS, specify the timeout and filter ratio. Broker with clear text my_hdfs_broker. Simple authentication. And delete the columns in the original data that match the columns with v2 greater than 100 in the imported data, and other columns are imported normally
 
@@ -415,7 +419,7 @@ WITH BROKER broker_name
         "timeout" = "3600",
         "max_filter_ratio" = "0.1"
     );
-    ````
+    ```
 
    Import using the MERGE method. `my_table` must be a table with Unique Key. When the value of the v2 column in the imported data is greater than 100, the row is considered a delete row.
 
@@ -437,7 +441,7 @@ WITH BROKER broker_name
         "hadoop.username"="user",
         "password"="pass"
     )
-    ````
+    ```
 
    `my_table` must be an Unique Key model table with Sequence Col specified. The data will be ordered according to the value of the `source_sequence` column in the source data.
 

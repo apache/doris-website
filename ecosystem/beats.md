@@ -47,7 +47,7 @@ To use the Beats Doris output plugin, there are three main steps:
 
 Execute the following commands in the `extension/beats/` directory:
 
-````
+```
 cd doris/extension/beats
 
 go build -o filebeat-doris filebeat/filebeat.go
@@ -56,7 +56,7 @@ go build -o winlogbeat-doris winlogbeat/winlogbeat.go
 go build -o packetbeat-doris packetbeat/packetbeat.go
 go build -o auditbeat-doris auditbeat/auditbeat.go
 go build -o heartbeat-doris heartbeat/heartbeat.go
-````
+```
 
 ## Configuration
 
@@ -252,7 +252,7 @@ This example demonstrates JSON log collection using data from the GitHub events 
 
 The GitHub events archive contains archived data of GitHub user actions, formatted as JSON. It can be downloaded from [here](https://data.gharchive.org/), for example, the data for January 1, 2024, at 3 PM.
 
-```bash
+```shell
 wget https://data.gharchive.org/2024-01-01-15.json.gz
 ```
 

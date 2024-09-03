@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 ADMIN REPAIR TABLE table_name[ PARTITION (p1,...)]
-````
+```
 
 illustrate:
 

@@ -45,7 +45,7 @@ SHOW RESOURCES
 ]
 [ORDER BY...]
 [LIMIT limit][OFFSET offset];
-````
+```
 
 illustrate:
 
@@ -62,19 +62,19 @@ illustrate:
 
    ```sql
    SHOW RESOURCES;
-   ````
+   ```
 
 1. Display the specified Resource, the name contains the string "20140102", and display 10 attributes
 
    ```sql
    SHOW RESOURCES WHERE NAME LIKE "2014_01_02" LIMIT 10;
-   ````
+   ```
 
 1. Display the specified Resource, specify the name as "20140102" and sort by KEY in descending order
 
    ```sql
    SHOW RESOURCES WHERE NAME = "20140102" ORDER BY `KEY` DESC;
-   ````
+   ```
 
 ### Keywords
 

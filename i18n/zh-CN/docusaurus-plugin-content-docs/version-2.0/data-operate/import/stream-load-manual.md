@@ -36,7 +36,7 @@ Stream Load 支持通过 HTTP 协议将本地文件或数据流导入到 Doris �
 - 断点续传，在导入过程中可能出现部分失败的情况，支持在失败点处进行继续传输。
 - 自动重传，在导入出现失败的情况后，无需手动重传，工具会自动重传默认的次数，如果仍然不成功，打印出手动重传的命令。
 
-点击 [Doris Streamloader 文档](../../ecosystem/doris-streamloader) 了解使用方法与实践详情。
+点击 [Doris Streamloader 文档](/docs/2.0/ecosystem/doris-streamloader) 了解使用方法与实践详情。
 :::
 
 ## 使用场景
@@ -49,7 +49,7 @@ Stream Load 支持导入 CSV、JSON、Parquet 与 ORC 格式的数据。
 
 在导入 CSV 文件时，需要明确区分空值（null）与空字符串：
 
-- 空值（null）需要用 \N 表示，a,\N,b 数据表示中间列是一个空值（null）
+- 空值（null）需要用 `\N` 表示，`a,\N,b` 数据表示中间列是一个空值（null）
 
 - 空字符串直接将数据置空，a, ,b 数据表示中间列是一个空字符串
 
@@ -120,7 +120,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
     通过 `curl` 命令可以提交 Stream Load 导入作业。
 
-    ```Bash
+    ```shell
     curl --location-trusted -u <doris_user>:<doris_password> \
         -H "Expect:100-continue" \
         -H "column_separator:," \
@@ -203,7 +203,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
     通过 `curl` 命令可以提交 Stream Load 导入作业。
 
-    ```Bash
+    ```shell
     curl --location-trusted -u <doris_user>:<doris_password> \
         -H "label:124" \
         -H "Expect:100-continue" \
@@ -213,6 +213,9 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
         -T streamload_example.json \
         -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
     ```
+    :::info 备注
+    若 JSON 文件内容不是 JSON Array，而是每行一个JSON对象， 添加 Header `-H "strip_outer_array:false"` `-H "read_json_by_line:true"`。
+    :::
 
     Stream Load 是一种同步导入方式，导入结果会直接返回给用户。
 
@@ -264,7 +267,7 @@ mysql> show stream load from testdb;
 
 Stream Load 导入语法如下：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
   -H "Expect:100-continue" [-H ""...] \
   -T <file_path> \
@@ -308,8 +311,8 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | 标签                         | 参数说明                                                     |
 | ---------------------------- | ------------------------------------------------------------ |
 | label                        | 用于指定 Doris 该次导入的标签，标签相同的数据无法多次导入。如果不指定 label，Doris 会自动生成一个标签。用户可以通过指定 label 的方式来避免一份数据重复导入的问题。Doris 默认保留三天内的导入作业标签，可以 `label_keep_max_second` 调整保留时长。例如，指定本次导入 label 为 123，需要指定命令 `-H "label:123"`。label 的使用，可以防止用户重复导入相同的数据。强烈推荐用户同一批次数据使用相同的 label。这样同一批次数据的重复请求只会被接受一次，保证了 At-Most-Once 当 label 对应的导入作业状态为 CANCELLED 时，该 label 可以再次被使用。 |
-| column_separator             | 用于指定导入文件中的列分隔符，默认为\t。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。可以使用多个字符的组合作为列分隔符。例如，hive 文件的分隔符 \x01，需要指定命令 `-H "column_separator:\x01"`。 |
-| line_delimiter               | 用于指定导入文件中的换行符，默认为 \n。可以使用做多个字符的组合作为换行符。例如，指定换行符为 \n，需要指定命令 `-H "line_delimiter:\n"`。 |
+| column_separator             | 用于指定导入文件中的列分隔符，默认为`\t`。如果是不可见字符，则需要加`\x`作为前缀，使用十六进制来表示分隔符。可以使用多个字符的组合作为列分隔符。例如，hive 文件的分隔符 \x01，需要指定命令 `-H "column_separator:\x01"`。 |
+| line_delimiter               | 用于指定导入文件中的换行符，默认为 `\n`。可以使用做多个字符的组合作为换行符。例如，指定换行符为 `\n`，需要指定命令 `-H "line_delimiter:\n"`。 |
 | columns                      | 用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。如果源文件与表 schema 不对应，那么需要这个字段进行一些数据转换。有两种形式 column：直接对应导入文件中的字段，直接使用字段名表示衍生列，语法为 `column_name` = expression 详细案例参考 [导入过程中数据转换](../import/load-data-convert)。 |
 | where                        | 用于抽取部分数据。用户如果有需要将不需要的数据过滤掉，那么可以通过设定这个选项来达到。例如，只导入大于 k1 列等于 20180601 的数据，那么可以在导入时候指定 `-H "where: k1 = 20180601"`。 |
 | max_filter_ratio             | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。例如，最大程度保证所有正确的数据都可以导入（容忍度 100%），需要指定命令 `-H "max_filter_ratio:1"`。 |
@@ -336,7 +339,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | skip_lines                   | 整数类型，默认值为 0，含义为跳过 CSV 文件的前几行。当设置 format 设置为 `csv_with_names`或`csv_with_names_and_types`时，该参数会失效。 |
 | comment                      | 字符串类型，默认值为空。给任务增加额外的信息。               |
 | enclose                      | 指定包围符。当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。 |
-| escape                       | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
+| escape                       | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如 `\`，将数据修改为 `a,'b,\'c'`。 |
 
 ### 导入返回值
 
@@ -407,7 +410,7 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 :::
 
 使用 `curl` 来使用 Stream Load 的 http stream 模式：
-```Bash
+```shell
 curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
 ```
 
@@ -415,7 +418,7 @@ curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -
 
 load_sql 举例：
 
-```Bash
+```shell
 insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
 ```
 
@@ -461,7 +464,7 @@ Doris 的导入任务可以容忍一部分格式错误的数据。容忍率通�
 
 通过以下命令可以指定 max_filter_ratio 容忍度为 0.4 创建 stream load 导入任务：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "max_filter_ratio:0.4" \
@@ -491,7 +494,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 将本地文件中的数据导入到表中的 p1, p2 分区，允许 20% 的错误率。
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "label:123" \
     -H "Expect:100-continue" \
@@ -511,7 +514,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 例如，Doris 系统时区为 "+08:00"，导入数据中的时间列包含两条数据，分别为 "2012-01-01 01:00:00+00:00" 和 "2015-12-12 12:12:12-08:00"，则我们在导入时通过 `-H "timezone: +08:00"` 指定导入事务的时区后，这两条数据都会向该时区发生转换，从而得到结果 "2012-01-01 09:00:00" 和 "2015-12-13 04:12:12"。
 
-更多关于时区解读可参考文档 [时区](../../query/query-variables/time-zone)。
+更多关于时区解读可参考文档 [时区](../../admin-manual/cluster-management/time-zone)。
 
 ### 使用 Streaming 方式导入
 
@@ -519,7 +522,7 @@ Stream Load 是基于 HTTP 的协议进行导入，所以是支持使用程序�
 
 下面通过 `bash` 的命令管道来举例这种使用方式，这种导入的数据就是程序流式生成的，而不是本地文件。
 
-```Bash
+```shell
 seq 1 10 | awk '{OFS="\t"}{print $1, $1 * 10}' | curl --location-trusted -u root -T - http://host:port/api/testDb/testTbl/_stream_load
 ```
 
@@ -543,7 +546,7 @@ curl --location-trusted -u root -T test.csv  -H "label:1" -H "format:csv_with_na
 
 在 Stream Load 中有三种导入类型：APPEND、DELETE 与 MERGE。可以通过指定参数 merge_type 进行调整。如想指定将与导入数据 Key 相同的数据全部删除，可以使用以下命令：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: DELETE" \
@@ -586,7 +589,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 指定 merge_type 为 MERGE，可以将导入的数据 MERGE 到表中。MERGE 语义需要结合 DELETE 条件联合使用，表示满足 DELETE 条件的数据按照 DELETE 语义处理，其余按照 APPEND 语义添加到表中，如下面操作表示删除 siteid 为 1 的行，其余数据添加到表中：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: MERGE" \
@@ -778,7 +781,7 @@ JSON 数据格式：
 
 导入命令：
 
-```Bash
+```shell
 curl --location-trusted -u root -T test.json -H "label:1" -H "format:json" -H 'columns: id, order_code, create_time=CURRENT_TIMESTAMP()' http://host:port/api/testDb/testTbl/_stream_load
 ```
 

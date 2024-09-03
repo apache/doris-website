@@ -116,7 +116,7 @@ Execute the following script to download and compile the [ssb-tools](https://git
 
 ```shell
 sh bin/build-ssb-dbgen.sh
-````
+```
 
 After successful installation, the `dbgen` binary will be generated under the `ssb-dbgen/` directory.
 
@@ -126,7 +126,7 @@ Execute the following script to generate the SSB dataset:
 
 ```shell
 sh bin/gen-ssb-data.sh -s 1000
-````
+```
 
 > Note 1: Check the script help via `sh gen-ssb-data.sh -h`.
 >
@@ -163,7 +163,7 @@ export DB='ssb'
 
 ```shell
 sh bin/create-ssb-tables.sh -s 1000
-````
+```
 
 Or copy the table creation statements in [create-ssb-tables.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-tables-sf1000.sql) and [ create-ssb-flat-table.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-flat-tables-sf1000.sql) and then execute them in the MySQL client.
 

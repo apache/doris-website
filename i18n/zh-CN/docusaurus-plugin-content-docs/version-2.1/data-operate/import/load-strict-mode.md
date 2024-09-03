@@ -58,7 +58,7 @@ under the License.
 
 2. [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD)
 
-   ```bash
+   ```shell
    curl --location-trusted -u user:passwd \
    -H "strict_mode: true" \
    -T 1.txt \
@@ -105,7 +105,7 @@ under the License.
 
 | 原始数据类型 | 原始数据举例  | 转换为 TinyInt 后的值 | 严格模式   | 结果             |
 | ------------ | ------------- | --------------------- | ---------- | ---------------- |
-| 空值         | \N            | NULL                  | 开启或关闭 | NULL             |
+| 空值         | `\N`            | NULL                  | 开启或关闭 | NULL             |
 | 非空值       | "abc" or 2000 | NULL                  | 开启       | 非法值（被过滤） |
 | 非空值       | "abc"         | NULL                  | 关闭       | NULL             |
 | 非空值       | 1             | 1                     | 开启或关闭 | 正确导入         |
@@ -122,7 +122,7 @@ under the License.
 
 | 原始数据类型 | 原始数据举例 | 转换为 Decimal 后的值 | 严格模式   | 结果             |
 | ------------ | ------------ | --------------------- | ---------- | ---------------- |
-| 空值         | \N           | null                  | 开启或关闭 | NULL             |
+| 空值         | `\N`           | null                  | 开启或关闭 | NULL             |
 | 非空值       | aaa          | NULL                  | 开启       | 非法值（被过滤） |
 | 非空值       | aaa          | NULL                  | 关闭       | NULL             |
 | 非空值       | 1 or 10      | 1 or 10               | 开启或关闭 | 正确导入         |
@@ -143,7 +143,8 @@ under the License.
 在严格模式下，部分列更新插入的每一行数据必须满足该行数据的 Key 在表中已经存在。而在而非严格模式下，进行部分列更新时可以更新 Key 已经存在的行，也可以插入 Key 不存在的新行。
 
 例如有表结构如下：
-```
+
+```sql
 mysql> desc user_profile;
 +------------------+-----------------+------+-------+---------+-------+
 | Field            | Type            | Null | Key   | Default | Extra |
@@ -171,7 +172,7 @@ mysql> desc user_profile;
 18,9999999,2023-07-03 12:00:03
 ```
 
-```bash
+```shell
 curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:false" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://host:port/api/db1/user_profile/_stream_load
 ```
 
@@ -179,7 +180,7 @@ curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:false
 
 而当用户使用严格模式的 Stream Load 部分列更新向表中插入上述数据时
 
-``` bash
+```shell
 curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:true" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://host:port/api/db1/user_profile/_stream_load
 ```
 

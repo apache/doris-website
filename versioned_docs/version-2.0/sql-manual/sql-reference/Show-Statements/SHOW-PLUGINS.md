@@ -36,9 +36,9 @@ This statement is used to display installed plugins
 
 grammar:
 
-````SQL
+```SQL
 SHOW PLUGINS
-````
+```
 
 This command will display all user-installed and system built-in plugins
 
@@ -46,9 +46,9 @@ This command will display all user-installed and system built-in plugins
 
 1. Show installed plugins:
 
-    ````SQL
+    ```SQL
     SHOW PLUGINS;
-    ````
+    ```
 
 ### Keywords
 

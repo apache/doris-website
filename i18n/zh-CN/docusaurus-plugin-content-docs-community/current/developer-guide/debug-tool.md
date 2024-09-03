@@ -154,9 +154,11 @@ Alloc Stacktrace:
 这个时候我们可以利用TCMalloc的[HEAP PROFILE](https://gperftools.github.io/gperftools/heapprofile.html)的功能。如果设置了HEAPPROFILE功能，那么我们可以获得进程整体的内存申请使用情况。使用方式是在启动Doris BE前设置`HEAPPROFILE`环境变量。比如：
 
 ```
-export HEAPPROFILE=/tmp/doris_be.hprof
+export TCMALLOC_SAMPLE_PARAMETER=64000 HEAP_PROFILE_ALLOCATION_INTERVAL=-1 HEAP_PROFILE_INUSE_INTERVAL=-1  HEAP_PROFILE_TIME_INTERVAL=5 HEAPPROFILE=/tmp/doris_be.hprof
 ./bin/start_be.sh --daemon
 ```
+
+> 需要注意，HEAPPROFILE 需要是绝对路径，且已经存在。
 
 这样，当满足HEAPPROFILE的dump条件时，就会将内存的整体使用情况写到指定路径的文件中。后续我们就可以通过使用`pprof`工具来对输出的内容进行分析。
 
@@ -225,7 +227,10 @@ Total: 1296.4 MB
 
 有关 Heap Profile 的原理解析参考 [Heap Profiling 原理解析](https://cn.pingcap.com/blog/an-explanation-of-the-heap-profiling-principle/)，需要注意的是 Heap Profile 记录的是虚拟内存
 
-###### 1. realtime heap dump
+支持实时和定期两种方式 Dump Heap Profile，然后使用 `jeprof` 解析 Heap Profile。
+
+###### 1. 实时 Heap Dump
+
 将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true` 并重启BE，然后使用jemalloc heap dump http接口，在对应的BE机器上生成heap dump文件。
 
 ```shell
@@ -238,7 +243,8 @@ heap dump文件所在目录可以在 ``be.conf`` 中通过``jeprofile_dir``变�
 
 如果你在做性能测试，保持 `prof:false` 来避免 heap dump 的性能损耗。
 
-###### 2. regular heap dump
+###### 2. 定期 Heap Dump
+
 首先将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true`，heap dump文件所在目录默认为 `${DORIS_HOME}/log`, 文件名前缀是 `be.conf` 中的 `JEMALLOC_PROF_PRFIX`，默认是 `jemalloc_heap_profile_`。
 
 > 在 Doris 2.1.6 之前，`JEMALLOC_PROF_PRFIX` 为空，需要修改为任意值作为 profile 文件名
@@ -262,13 +268,16 @@ heap dump文件所在目录可以在 ``be.conf`` 中通过``jeprofile_dir``变�
    将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof_accum` 修改为 `true` 并重启BE。
    使用 `jeprof --alloc_space` 展示 heap dump 累计值。
 
-##### 3. heap dump profiling
+##### 3. `jeprof` 解析 Heap Profile
+
+使用 `jeprof` 解析上面 Dump 的 Heap Profile，如果进程内存太大，解析过程可能需要几分钟，请耐心等待。若系统没有 `jeprof` 命令，可以将 `doris/tools` 目录下的 `jeprof` 这个二进制打包后上传到 Heap Dump 的服务器。
 
 ```
-需要 addr2line 版本为 2.35.2 及以上, 见下面的 QA 1.
+需要 addr2line 版本为 2.35.2 及以上, 见下面的 QA-1
+尽可能让 Heap Dump 和执行 `jeprof` 解析 Heap Profile 在同一台服务器上，见下面的 QA-2
 ```
 
-1. 分析单个heap dump文件
+1. 分析单个 Heap Dump 文件
 
 ```shell
    jeprof --dot lib/doris_be heap_dump_file_1
@@ -283,7 +292,7 @@ heap dump文件所在目录可以在 ``be.conf`` 中通过``jeprofile_dir``变�
    jeprof --pdf lib/doris_be heap_dump_file_1 > result.pdf
    ```
 
-2.  分析两个heap dump文件的diff
+2.  分析两个 Heap Dump 文件的diff
 
 ```shell
    jeprof --dot lib/doris_be --base=heap_dump_file_1 heap_dump_file_2
@@ -324,6 +333,16 @@ cp addr2line /usr/bin/addr2line
 hash -r
 ```
 注意，不能使用 addr2line 2.3.9, 这可能不兼容，导致内存一直增长。
+
+2. 运行 `jeprof` 后出现很多错误: `addr2line: DWARF error: invalid or unhandled FORM value: 0x25`，解析后的 Heap 栈都是代码的内存地址，而不是函数名称
+
+这是因为 Heap Dump 和执行 `jeprof` 解析 Heap Profile 不在同一台服务器上，导致 `jeprof` 使用符号表解析函数名称失败，尽可能在同一台机器上完成 Dump Heap 和 `jeprof` 解析的操作。
+
+3. 如果 Heap Dump 和执行 `jeprof` 解析 Heap Profile 在同一台服务器上，但解析后的 Heap 栈依然是代码的内存地址，而不是函数名称
+
+尝试在 Heap Dump 的机器上重新编译 Doris BE，也就是让编译和运行 Doris BE 在一台机器上，并在这台机器上 Heap Dump 和 `jeprof` 解析。
+
+上面的操作后，如果 Heap 栈依然是代码的内存地址，尝试 `USE_JEMALLOC=OFF ./build.sh --be` 编译使用 TCMalloc 的 Doris BE，然后参考上面的章节使用 TCMalloc Heap Profile 分析内存。
 
 #### LSAN
 

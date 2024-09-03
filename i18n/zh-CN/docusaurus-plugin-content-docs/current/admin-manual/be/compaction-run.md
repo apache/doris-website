@@ -135,6 +135,6 @@ under the License.
 
 ### Examples
 
-```bash
+```shell
 curl -X POST "http://127.0.0.1:8040/api/compaction/run?tablet_id=10015&compact_type=cumulative"
 ```

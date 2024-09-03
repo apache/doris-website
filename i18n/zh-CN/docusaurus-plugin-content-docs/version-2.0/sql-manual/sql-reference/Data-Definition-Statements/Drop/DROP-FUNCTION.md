@@ -57,7 +57,7 @@ DROP [GLOBAL] FUNCTION function_name
 
     ```sql
     DROP GLOBAL FUNCTION my_add(INT, INT)
-    ````      
+    ```      
 
 ### Keywords
 

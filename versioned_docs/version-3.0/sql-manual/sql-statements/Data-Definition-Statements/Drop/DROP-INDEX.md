@@ -37,7 +37,7 @@ grammar:
 
 ```sql
 DROP INDEX [IF EXISTS] index_name ON [db_name.]table_name;
-````
+```
 
 ### Example
 
@@ -45,7 +45,7 @@ DROP INDEX [IF EXISTS] index_name ON [db_name.]table_name;
 
     ```sql
     DROP INDEX [IF NOT EXISTS] index_name ON table1 ;
-    ````
+    ```
 
 ### Keywords
 

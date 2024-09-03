@@ -583,19 +583,19 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 	Default password expiration time. The default value is 0, which means no expiration. The unit is days. This parameter is only enabled if the user's password expiration property has a value of DEFAULT. like:
 
-   ````
+   ```
    CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_EXPIRE DEFAULT;
    ALTER USER user1 PASSWORD_EXPIRE DEFAULT;
-   ````
+   ```
 
 * `password_history`
 
 	The default number of historical passwords. The default value is 0, which means no limit. This parameter is enabled only when the user's password history attribute is the DEFAULT value. like:
 
-   ````
+   ```
    CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_HISTORY DEFAULT;
    ALTER USER user1 PASSWORD_HISTORY DEFAULT;
-   ````
+   ```
 
 * `validate_password_policy`
 
@@ -635,19 +635,21 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 * `show_user_default_role`
 
-    <version since="dev"></version>
+     
 
     Controls whether to show each user's implicit roles in the results of `show roles`. Default is false.
 
 * `use_fix_replica`
 
-    <version since="1.2.0"></version>
+    :::tip Tips
+    This configuration is supported since the Apache Doris 1.2 version
+    :::
 
     Use a fixed replica to query. replica starts with 0 and if use_fix_replica is 0, the smallest is used, if use_fix_replica is 1, the second smallest is used, and so on. The default value is -1, indicating that the function is disabled.
 
 * `dry_run_query`
 
-    <version since="dev"></version>
+     
 
     If set to true, for query requests, the actual result set will no longer be returned, but only the number of rows, while for load and insert, the data is discarded by sink node, no writing happens. The default is false.
 

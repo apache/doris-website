@@ -36,7 +36,7 @@ Stream Load 支持通过 HTTP 协议将本地文件或数据流导入到 Doris �
 - 断点续传，在导入过程中可能出现部分失败的情况，支持在失败点处进行继续传输。
 - 自动重传，在导入出现失败的情况后，无需手动重传，工具会自动重传默认的次数，如果仍然不成功，打印出手动重传的命令。
 
-点击 [Doris Streamloader 文档](../../ecosystem/doris-streamloader) 了解使用方法与实践详情。
+点击 [Doris Streamloader 文档](/docs/dev/ecosystem/doris-streamloader) 了解使用方法与实践详情。
 :::
 
 ## 使用场景
@@ -49,7 +49,7 @@ Stream Load 支持导入 CSV、JSON、Parquet 与 ORC 格式的数据。
 
 在导入 CSV 文件时，需要明确区分空值（null）与空字符串：
 
-- 空值（null）需要用 \N 表示，a,\N,b 数据表示中间列是一个空值（null）
+- 空值（null）需要用 `\N` 表示，`a,\N,b` 数据表示中间列是一个空值（null）
 
 - 空字符串直接将数据置空，a, ,b 数据表示中间列是一个空字符串
 
@@ -75,11 +75,11 @@ Stream Load 支持导入 CSV、JSON、Parquet 与 ORC 格式的数据。
 
 Stream Load 通过 HTTP 协议提交和传输。下例以 curl 工具为例，演示通过 Stream Load 提交导入作业。
 
-详细语法可以参见 [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD)
+详细语法可以参见 [STREAM LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD)
 
 ### 前置检查
 
-Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
+Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
 
 ### 创建导入作业
 
@@ -120,7 +120,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
     通过 `curl` 命令可以提交 Stream Load 导入作业。
 
-    ```Bash
+    ```shell
     curl --location-trusted -u <doris_user>:<doris_password> \
         -H "Expect:100-continue" \
         -H "column_separator:," \
@@ -203,7 +203,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
     通过 `curl` 命令可以提交 Stream Load 导入作业。
 
-    ```Bash
+    ```shell
     curl --location-trusted -u <doris_user>:<doris_password> \
         -H "label:124" \
         -H "Expect:100-continue" \
@@ -213,6 +213,9 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
         -T streamload_example.json \
         -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
     ```
+    :::info 备注
+    若 JSON 文件内容不是 JSON Array，而是每行一个JSON对象， 添加 Header `-H "strip_outer_array:false"` `-H "read_json_by_line:true"`。
+    :::
 
     Stream Load 是一种同步导入方式，导入结果会直接返回给用户。
 
@@ -240,7 +243,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
 ### 查看导入作业
 
-默认情况下，Stream Load 是同步返回给 Client，所以系统模式是不记录 Stream Load 历史作业的。如果需要记录，则在 be.conf 中添加配置 enable_stream_load_record=true。具体配置可以参考 [BE 配置项](https://doris.apache.org/zh-CN/docs/admin-manual/config/be-config)。
+默认情况下，Stream Load 是同步返回给 Client，所以系统模式是不记录 Stream Load 历史作业的。如果需要记录，则在 be.conf 中添加配置 enable_stream_load_record=true。具体配置可以参考 [BE 配置项](../../../admin-manual/config/be-config)。
 
 配置后，可以通过 show stream load 命令查看已完成的 Stream Load 任务。
 
@@ -264,7 +267,7 @@ mysql> show stream load from testdb;
 
 Stream Load 导入语法如下：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
   -H "Expect:100-continue" [-H ""...] \
   -T <file_path> \
@@ -289,7 +292,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 
 2. enable_pipeline_load
 
-  是否开启 Pipeline 引擎执行 Streamload 任务。详见[导入](./load-manual)文档。
+  是否开启 Pipeline 引擎执行 Streamload 任务。详见[导入](../load-manual)文档。
 
 **BE 配置**
 
@@ -308,9 +311,9 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | 标签                         | 参数说明                                                     |
 | ---------------------------- | ------------------------------------------------------------ |
 | label                        | 用于指定 Doris 该次导入的标签，标签相同的数据无法多次导入。如果不指定 label，Doris 会自动生成一个标签。用户可以通过指定 label 的方式来避免一份数据重复导入的问题。Doris 默认保留三天内的导入作业标签，可以 `label_keep_max_second` 调整保留时长。例如，指定本次导入 label 为 123，需要指定命令 `-H "label:123"`。label 的使用，可以防止用户重复导入相同的数据。强烈推荐用户同一批次数据使用相同的 label。这样同一批次数据的重复请求只会被接受一次，保证了 At-Most-Once 当 label 对应的导入作业状态为 CANCELLED 时，该 label 可以再次被使用。 |
-| column_separator             | 用于指定导入文件中的列分隔符，默认为\t。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。可以使用多个字符的组合作为列分隔符。例如，hive 文件的分隔符 \x01，需要指定命令 `-H "column_separator:\x01"`。 |
-| line_delimiter               | 用于指定导入文件中的换行符，默认为 \n。可以使用做多个字符的组合作为换行符。例如，指定换行符为 \n，需要指定命令 `-H "line_delimiter:\n"`。 |
-| columns                      | 用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。如果源文件与表 schema 不对应，那么需要这个字段进行一些数据转换。有两种形式 column：直接对应导入文件中的字段，直接使用字段名表示衍生列，语法为 `column_name` = expression 详细案例参考 [导入过程中数据转换](../../data-operate/import/load-data-convert)。 |
+| column_separator             | 用于指定导入文件中的列分隔符，默认为`\t`。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。可以使用多个字符的组合作为列分隔符。例如，hive 文件的分隔符 \x01，需要指定命令 `-H "column_separator:\x01"`。 |
+| line_delimiter               | 用于指定导入文件中的换行符，默认为 `\n`。可以使用做多个字符的组合作为换行符。例如，指定换行符为 `\n`，需要指定命令 `-H "line_delimiter:\n"`。 |
+| columns                      | 用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。如果源文件与表 schema 不对应，那么需要这个字段进行一些数据转换。有两种形式 column：直接对应导入文件中的字段，直接使用字段名表示衍生列，语法为 `column_name` = expression 详细案例参考 [导入过程中数据转换](../../../data-operate/import/load-data-convert)。 |
 | where                        | 用于抽取部分数据。用户如果有需要将不需要的数据过滤掉，那么可以通过设定这个选项来达到。例如，只导入大于 k1 列等于 20180601 的数据，那么可以在导入时候指定 `-H "where: k1 = 20180601"`。 |
 | max_filter_ratio             | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。例如，最大程度保证所有正确的数据都可以导入（容忍度 100%），需要指定命令 `-H "max_filter_ratio:1"`。 |
 | partitions                   | 用于指定这次导入所涉及的 partition。如果用户能够确定数据对应的 partition，推荐指定该项。不满足这些分区的数据将被过滤掉。例如，指定导入到 p1, p2 分区，需要指定命令 `-H "partitions: p1, p2"`。 |
@@ -408,7 +411,7 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 :::
 
 使用 `curl` 来使用 Stream Load 的 http stream 模式：
-```Bash
+```shell
 curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
 ```
 
@@ -416,7 +419,7 @@ curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -
 
 load_sql 举例：
 
-```Bash
+```shell
 insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
 ```
 
@@ -458,11 +461,11 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### 设置导入最大容错率
 
-Doris 的导入任务可以容忍一部分格式错误的数据。容忍率通过 `max_filter_ratio` 设置。默认为 0，即表示当有一条错误数据时，整个导入任务将会失败。如果用户希望忽略部分有问题的数据行，可以将次参数设置为 0~1 之间的数值，Doris 会自动跳过哪些数据格式不正确的行。关于容忍率的一些计算方式，可以参阅 [数据转换](../../data-operate/import/load-data-convert) 文档。
+Doris 的导入任务可以容忍一部分格式错误的数据。容忍率通过 `max_filter_ratio` 设置。默认为 0，即表示当有一条错误数据时，整个导入任务将会失败。如果用户希望忽略部分有问题的数据行，可以将次参数设置为 0~1 之间的数值，Doris 会自动跳过哪些数据格式不正确的行。关于容忍率的一些计算方式，可以参阅 [数据转换](../../../data-operate/import/load-data-convert) 文档。
 
 通过以下命令可以指定 max_filter_ratio 容忍度为 0.4 创建 stream load 导入任务：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "max_filter_ratio:0.4" \
@@ -492,7 +495,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 将本地文件中的数据导入到表中的 p1, p2 分区，允许 20% 的错误率。
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "label:123" \
     -H "Expect:100-continue" \
@@ -512,7 +515,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 例如，Doris 系统时区为 "+08:00"，导入数据中的时间列包含两条数据，分别为 "2012-01-01 01:00:00+00:00" 和 "2015-12-12 12:12:12-08:00"，则我们在导入时通过 `-H "timezone: +08:00"` 指定导入事务的时区后，这两条数据都会向该时区发生转换，从而得到结果 "2012-01-01 09:00:00" 和 "2015-12-13 04:12:12"。
 
-更多关于时区解读可参考文档 [时区](../../../query/query-variables/time-zone)。
+更多关于时区解读可参考文档 [时区](../../../admin-manual/cluster-management/time-zone)。
 
 ### 使用 Streaming 方式导入
 
@@ -520,7 +523,7 @@ Stream Load 是基于 HTTP 的协议进行导入，所以是支持使用程序�
 
 下面通过 `bash` 的命令管道来举例这种使用方式，这种导入的数据就是程序流式生成的，而不是本地文件。
 
-```Bash
+```shell
 seq 1 10 | awk '{OFS="\t"}{print $1, $1 * 10}' | curl --location-trusted -u root -T - http://host:port/api/testDb/testTbl/_stream_load
 ```
 
@@ -544,7 +547,7 @@ curl --location-trusted -u root -T test.csv  -H "label:1" -H "format:csv_with_na
 
 在 Stream Load 中有三种导入类型：APPEND、DELETE 与 MERGE。可以通过指定参数 merge_type 进行调整。如想指定将与导入数据 Key 相同的数据全部删除，可以使用以下命令：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: DELETE" \
@@ -587,7 +590,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 指定 merge_type 为 MERGE，可以将导入的数据 MERGE 到表中。MERGE 语义需要结合 DELETE 条件联合使用，表示满足 DELETE 条件的数据按照 DELETE 语义处理，其余按照 APPEND 语义添加到表中，如下面操作表示删除 siteid 为 1 的行，其余数据添加到表中：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: MERGE" \
@@ -779,7 +782,7 @@ JSON 数据格式：
 
 导入命令：
 
-```Bash
+```shell
 curl --location-trusted -u root -T test.json -H "label:1" -H "format:json" -H 'columns: id, order_code, create_time=CURRENT_TIMESTAMP()' http://host:port/api/testDb/testTbl/_stream_load
 ```
 
@@ -1057,20 +1060,20 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Label、导入事务、多表原子性
 
-Doris 中所有导入任务都是原子生效的。并且在同一个导入任务中对多张表的导入也能够保证原子性。同时，Doris 还可以通过 Label 的机制来保证数据导入的不丢不重。具体说明可以参阅 [导入事务和原子性](../../data-operate/import/load-atomicity) 文档。
+Doris 中所有导入任务都是原子生效的。并且在同一个导入任务中对多张表的导入也能够保证原子性。同时，Doris 还可以通过 Label 的机制来保证数据导入的不丢不重。具体说明可以参阅 [导入事务和原子性](../../../data-operate/import/load-atomicity) 文档。
 
 ### 列映射、衍生列和过滤
 
-Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。支持绝大多数内置函数和 UDF。关于如何正确的使用这个功能，可参阅 [数据转换](../../data-operate/import/load-data-convert) 文档。
+Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。支持绝大多数内置函数和 UDF。关于如何正确的使用这个功能，可参阅 [数据转换](../../../data-operate/import/load-data-convert) 文档。
 
 ### 启用严格模式导入
 
-`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [严格模式](../../data-operate/import/load-strict-mode) 文档。
+`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [严格模式](../../../data-operate/import/load-strict-mode) 文档。
 
 ### 导入时进行部分列更新
 
-关于导入时，如何表达部分列更新，可以参考 [数据操作/数据更新](../) 文档
+关于导入时，如何表达部分列更新，可以参考 [数据操作/数据更新](../../../data-operate/update/unique-update) 文档
 
 ## 更多帮助
 
-关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP STREAM LOAD` 获取更多帮助信息。
+关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP STREAM LOAD` 获取更多帮助信息。

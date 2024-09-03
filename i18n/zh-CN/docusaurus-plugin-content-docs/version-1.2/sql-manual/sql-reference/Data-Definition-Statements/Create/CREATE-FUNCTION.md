@@ -156,13 +156,13 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
    "symbol" = "_ZN9doris_udf6AddUdfEPNS_15FunctionContextERKNS_6IntValES4_",
    "object_file" = "http://host:port/libmyadd.so"
    );
-   ````
+   ```
 
 7. 创建一个全局自定义别名函数
 
    ```sql
    CREATE GLOBAL ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
-   ```` 
+   ``` 
    
 ### Keywords
 

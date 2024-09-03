@@ -35,12 +35,12 @@ This statement is used to export query results to a file using the `SELECT INTO 
     
 grammar:
 
-````
+```
 query_stmt
 INTO OUTFILE "file_path"
 [format_as]
 [properties]
-````
+```
 
 illustrate:
 
@@ -122,7 +122,7 @@ illustrate:
        "line_delimiter" = "\n",
        "max_file_size" = "100MB"
    );
-   ````
+   ```
 
    If the final generated file is not larger than 100MB, it will be: `result_0.csv`.
    If larger than 100MB, it may be `result_0.csv, result_1.csv, ...`.
@@ -141,7 +141,7 @@ illustrate:
        "broker.kerberos_keytab" = "/home/doris/my.keytab",
        "schema"="required,int32,c1;required,byte_array,c2;required,byte_array,c2"
    );
-   ````
+   ```
 
    Exporting query results to parquet files requires explicit `schema`.
 
@@ -166,7 +166,7 @@ illustrate:
        "broker.dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
        "broker.dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
    );
-   ````
+   ```
 
    If the final generated file is not larger than 1GB, it will be: `result_0.csv`.
    If larger than 1GB, it may be `result_0.csv, result_1.csv, ...`.
@@ -186,7 +186,7 @@ illustrate:
        "broker.bos_secret_accesskey" = "yyyyyyyyyyyyyyyyyyyyyyyyy",
        "schema"="required,int32,k1;required,byte_array,k2"
    );
-   ````
+   ```
 
 5. Export the query result of the select statement to the file `s3a://${bucket_name}/path/result.txt`. Specify the export format as csv.
    After the export is complete, an identity file is generated.
@@ -206,7 +206,7 @@ illustrate:
        "max_file_size" = "1024MB",
        "success_file_name" = "SUCCESS"
    )
-   ````
+   ```
 
    If the final generated file is not larger than 1GB, it will be: `my_file_0.csv`.
    If larger than 1GB, it may be `my_file_0.csv, result_1.csv, ...`.
@@ -229,7 +229,7 @@ illustrate:
        "AWS_SECRET_KEY" = "xxx",
        "AWS_REGION" = "bd"
    )
-   ````
+   ```
 
    The resulting file is prefixed with `my_file_{fragment_instance_id}_`.
 
@@ -248,7 +248,7 @@ illustrate:
        "AWS_SECRET_KEY" = "xxx",
        "AWS_REGION" = "bd"
    )
-   ````
+   ```
 
 8. Use hdfs export to export simple query results to the file `hdfs://${host}:${fileSystem_port}/path/to/result.txt`. Specify the export format as CSV and the user name as work. Specify the column separator as `,` and the row separator as `\n`.
 
@@ -305,7 +305,7 @@ illustrate:
        "max_file_size" = "1024MB",
        "success_file_name" = "SUCCESS"
    )
-   ````
+   ```
 
 ### keywords
 

@@ -98,13 +98,13 @@ feSpec:
 
 其中，需要在 ${storageClassName} 指定 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 的名称。可以通过 以下命令查看当前 Kubernetes 集群内支持的 StorageClass：
 
-```bash
+```shell
 kubectl get sc
 ```
 
 返回结果如下：
 
-```bash
+```shell
 NAME                          PROVISIONER                    RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
 openebs-hostpath              openebs.io/local               Delete          WaitForFirstConsumer   false                  212d
 openebs-device                openebs.io/local               Delete          WaitForFirstConsumer   false                  212d
@@ -238,9 +238,11 @@ data:
     rpc_port = 9020
     query_port = 9030
     edit_log_port = 9010
+    enable_fqdn_mode = true
 ```
 
 其中，在 metadata.name 中定义 FE ConfigMap 的名字，在 data 中定义 fe.conf 中的数据库配置。
+自己配置的 `fe.conf` 一定要添加 `enable_fqdn_mode = true`
 
 :::tip 提示
 在 ConfigMap 中使用 data 字段存储键值对。在上述 FE ConfigMap 中：

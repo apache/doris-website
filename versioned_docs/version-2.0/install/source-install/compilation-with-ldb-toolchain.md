@@ -118,7 +118,7 @@ The first step of compiling Doris source code is to first download third-party l
 
 1. **Enter the Doris source code directory and execute the following command to check if the compilation machine supports the AVX2 instruction set.**
 
-```Bash
+```shell
 $ cat /proc/cpuinfo | grep avx2
 ```
 

@@ -45,7 +45,7 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
     [INTERMEDIATE inter_type]
     [WITH PARAMETER(param [,...]) AS origin_function]
     [PROPERTIES ("key" = "value" [, ...]) ]
-````
+```
 
 Parameter Description:
 

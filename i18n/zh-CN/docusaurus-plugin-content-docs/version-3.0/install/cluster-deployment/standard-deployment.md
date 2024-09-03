@@ -308,7 +308,7 @@ FE 的配置文件在 FE 部署路径下的 conf 目录中，启动 FE 节点前
 
 通过以下命令可以启动 FE 进程
 
-```Bash
+```shell
 bin/start_fe.sh --daemon
 ```
 
@@ -377,7 +377,7 @@ ALTER SYSTEM ADD OBSERVER "<fe_ip_address>:<fe_edit_log_port>"
 
 通过以下命令，可以启动 FE Follower 节点，并自动同步元数据。
 
-```Bash
+```shell
 bin/start_fe.sh --helper <helper_fe_ip>:<fe_edit_log_port> --daemon
 ```
 
@@ -605,7 +605,7 @@ Doris 作为一个分布式数据库，一般拥有众多 BE 节点，Doris 采�
 
 可以通过下面的命令来检查 Doris 是否启动成功
 
-```Bash
+```shell
 # 重试执行下面命令，如果返回"msg":"success"，则说明已经启动成功
 server1:apache-doris/fe doris$ curl http://127.0.0.1:8030/api/bootstrap
 {"msg":"success","code":0,"data":{"replayedJournalId":0,"queryPort":0,"rpcPort":0,"version":""},"count":0}

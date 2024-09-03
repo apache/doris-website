@@ -42,11 +42,11 @@ SHOW TRANSACTION
 WHERE
 [id=transaction_id]
 [label = label_name];
-````
+```
 
 Example of returned result:
 
-````
+```
      TransactionId: 4005
              Label: insert_8d807d5d-bcdd-46eb-be6d-3fa87aa4952d
        Coordinator: FE: 10.74.167.16
@@ -59,7 +59,7 @@ Example of returned result:
 ErrorReplicasCount: 0
         ListenerId: -1
          TimeoutMs: 300000
-````
+```
 
 * TransactionId: transaction id
 * Label: the label corresponding to the import task
@@ -84,19 +84,19 @@ ErrorReplicasCount: 0
 
    ```sql
    SHOW TRANSACTION WHERE ID=4005;
-   ````
+   ```
 
 2. In the specified db, view the transaction with id 4005:
 
    ```sql
    SHOW TRANSACTION FROM db WHERE ID=4005;
-   ````
+   ```
 
 3. View the transaction whose label is label_name:
 
    ```sql
    SHOW TRANSACTION WHERE LABEL = 'label_name';
-   ````
+   ```
 
 ### Keywords
 

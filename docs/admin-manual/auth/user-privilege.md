@@ -266,6 +266,8 @@ ADMIN_PRIV and GRANT_PRIV have the authority of **"grant authority"** at the sam
 	For example, suppose the user `user1@'192.%'` is created, and then a user user1 from 192.168.10.1 is logged into the system. At this time, `current_user` is `user1@'192.%'`, and `user` is `user1@'192.168.10.1'`.
 
 	All privileges are given to a `current_user`, and the real user has all the privileges of the corresponding `current_user`.
+        
+        `SELECT session_user()`  is supported , which is having same behaviour as user() function.
 
 10. Password Validation
 

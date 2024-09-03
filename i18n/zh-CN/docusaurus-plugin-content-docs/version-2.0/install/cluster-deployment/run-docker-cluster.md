@@ -85,7 +85,7 @@ Docker Version：20.10 及以后版本
 
 3. 编写 Dockerfile
 
-```Bash
+```shell
 # 选择基础镜像
 FROM openjdk:8u342-jdk
 

@@ -65,7 +65,7 @@ illustrate:
 
   ```sql
   [PROPERTIES ("key"="value", ...)]
-  ````
+  ```
 
   The following parameters can be specified:
 
@@ -82,15 +82,15 @@ illustrate:
 
   ```sql
   WITH BROKER hdfs|s3 ("key"="value"[,...])
-  ````
+  ```
 
  1. If the export is to Amazon S3, you need to provide the following properties
 
-````
+```
 fs.s3a.access.key: AmazonS3 access key
 fs.s3a.secret.key: AmazonS3 secret key
 fs.s3a.endpoint: AmazonS3 endpoint
-````
+```
 
  2. If you use the S3 protocol to directly connect to the remote storage, you need to specify the following properties
 

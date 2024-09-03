@@ -68,7 +68,7 @@ Doris 的监控数据通过 Frontend 和 Backend 的 http 接口向外暴露。�
 
 用户将看到如下监控项结果（示例为 FE 部分监控项）：
 
-```bash
+```shell
 # HELP  jvm_heap_size_bytes jvm heap stat
 # TYPE  jvm_heap_size_bytes gauge
 jvm_heap_size_bytes{type="max"} 8476557312
@@ -111,7 +111,7 @@ jvm_thread{type="terminated_count"} 0
 
 这是一个以 [Prometheus 格式](https://prometheus.io/docs/practices/naming/) 呈现的监控数据。我们以其中一个监控项为例进行说明：
 
-```bash
+```shell
 # HELP  jvm_heap_size_bytes jvm heap stat
 # TYPE  jvm_heap_size_bytes gauge
 jvm_heap_size_bytes{type="max"} 8476557312
@@ -152,7 +152,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
     这里我们使用最简单的静态文件的方式进行监控配置。Prometheus 支持多种 [服务发现](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) 方式，可以动态的感知节点的加入和删除。
  
-    ```bash
+    ```shell
     # my global config
     global:
       scrape_interval:     15s # 全局的采集间隔，默认是 1m，这里设置为 15s
@@ -219,7 +219,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 3. 打开配置文件 conf/defaults.ini。这里我们仅列举需要改动的配置项，其余配置可使用默认。
 
-    ```bash
+    ```shell
     # Path to where grafana can store temp files, sessions, and the sqlite3 db (if that is used)
     data = data
     

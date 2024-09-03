@@ -36,7 +36,7 @@ This statement is used to view the BE nodes in the cluster
 
 ```sql
  SHOW BACKENDS;
-````
+```
 
 illustrate:
 

@@ -38,7 +38,7 @@ grammar:
 
 ```sql
  ADMIN SHOW FRONTEND CONFIG [LIKE "pattern"];
-````
+```
 
 The columns in the results have the following meanings:
 
@@ -59,7 +59,7 @@ The columns in the results have the following meanings:
 
 2. Use the like predicate to search the configuration of the current Fe node
 
-   ````
+   ```
    mysql> ADMIN SHOW FRONTEND CONFIG LIKE '%check_java_version%';
    +--------------------+-------+---------+---------- -+------------+---------+
    | Key | Value | Type | IsMutable | MasterOnly | Comment |
@@ -67,7 +67,7 @@ The columns in the results have the following meanings:
    | check_java_version | true | boolean | false | false | |
    +--------------------+-------+---------+---------- -+------------+---------+
    1 row in set (0.01 sec)
-   ````
+   ```
 
 ### Keywords
 

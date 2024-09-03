@@ -40,7 +40,7 @@ grammar:
 
 ```sql
 KILL [CONNECTION] processlist_id
-````
+```
 
 In addition, you can also use processlist_id or query_id terminates the executing query command
 
@@ -48,7 +48,7 @@ grammar:
 
 ```sql
 KILL QUERY processlist_id | query_id
-````
+```
 
 
 ### Example

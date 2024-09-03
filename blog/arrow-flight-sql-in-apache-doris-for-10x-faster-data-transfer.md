@@ -82,6 +82,11 @@ Import the following module/library to interact with the installed library:
 ```Python
 import adbc_driver_manager
 import adbc_driver_flightsql.dbapi as flight_sql
+
+>>> print(adbc_driver_manager.__version__)
+1.1.0
+>>> print(adbc_driver_flightsql.__version__)
+1.1.0
 ```
 
 ### 02  Connect to Doris
@@ -97,7 +102,7 @@ Configure parameters for Doris frontend (FE) and backend (BE):
 Suppose that the Arrow Flight SQL services for the Doris instance will run on ports 9090 and 9091 for FE and BE respectively, and the Doris username/password is "user" and "pass", the connection process would be:
 
 ```C++
-conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
+conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "user",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "pass",
         })
@@ -246,7 +251,7 @@ import adbc_driver_flightsql.dbapi as flight_sql
 # step 2, create a client that interacts with the Doris Arrow Flight SQL service.
 # Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
 # Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
-conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
+conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",
         })
@@ -401,7 +406,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 Class.forName("org.apache.arrow.driver.jdbc.ArrowFlightJdbcDriver");
-String DB_URL = "jdbc:arrow-flight-sql://0.0.0.0:9090?useServerPrepStmts=false"
+String DB_URL = "jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}?useServerPrepStmts=false"
         + "&cachePrepStmts=true&useSSL=false&useEncryption=false";
 String USER = "root";
 String PASS = "";

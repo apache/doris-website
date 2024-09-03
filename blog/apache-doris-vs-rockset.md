@@ -6,8 +6,6 @@
     'date': '2024-06-24',
     'author': 'Zaki Lu',
     'tags': ['Top News'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/doris-vs-rockset.jpeg'
 }
 

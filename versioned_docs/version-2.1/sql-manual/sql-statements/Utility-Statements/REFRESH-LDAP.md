@@ -28,11 +28,11 @@ under the License.
 
 ### Name
 
-<version since="dev">
+
 
 REFRESH-LDAP
 
-</version>
+
 
 ### Description
 

@@ -24,20 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## PERCENTILE
 ### Description
 #### Syntax
 
 `PERCENTILE(expr, DOUBLE p)`
 
-Calculate the exact percentile, suitable for small data volumes. Sort the specified column in descending order first, and then take the exact p-th percentile. The value of p is between 0 and 1
+Calculates the exact percentile for small amounts of data. The specified columns are sorted in descending order and then the exact `p` percentile is taken. The value of `p` is between `0` and `1`.
+If `p` does not point to an exact position, the linear interpolation of the values adjacent to either side of the pointed position at the position pointed to by `p` is returned. Note that this is not an average of the two numbers.
 
-Parameter Description:
-expr: required. The value is an integer (bigint at most).
-p: The exact percentile is required. The const value is [0.0,1.0]
+Parameters:
+`expr`: required. The value is an integer (`bigint` at most).
+`p`: required. The const value is `[0.0,1.0]`.
 
-### example
-```
+### Example
+
+```sql
 MySQL > select `table`, percentile(cost_time,0.99) from log_statis group by `table`;
 +---------------------+---------------------------+
 | table    |         percentile(`cost_time`, 0.99)|
@@ -51,8 +52,7 @@ MySQL > select percentile(NULL,0.3) from table1;
 +-----------------------+
 |                  NULL |
 +-----------------------+
-
 ```
 
-### keywords
-PERCENTILE
+### Keywords
+    PERCENTILE

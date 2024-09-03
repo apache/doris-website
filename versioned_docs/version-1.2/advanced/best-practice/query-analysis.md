@@ -37,7 +37,7 @@ For example, if the user specifies a Join operator, the query planner needs to d
 
 Doris' query planning process is to first convert an SQL statement into a single-machine execution plan tree.
 
-````text
+```text
      ┌────┐
      │Sort│
      └────┘
@@ -53,11 +53,11 @@ Doris' query planning process is to first convert an SQL statement into a single
 ┌──────┐ ┌──────┐
 │Scan-1│ │Scan-2│
 └──────┘ └──────┘
-````
+```
 
 After that, the query planner will convert the single-machine query plan into a distributed query plan according to the specific operator execution mode and the specific distribution of data. The distributed query plan is composed of multiple fragments, each fragment is responsible for a part of the query plan, and the data is transmitted between the fragments through the ExchangeNode operator.
 
-````text
+```text
         ┌────┐
         │Sort│
         │F1 │
@@ -87,7 +87,7 @@ After that, the query planner will convert the single-machine query plan into a 
             │Scan-2│
             │F2 │
             └──────┘
-````
+```
 
 As shown above, we divided the stand-alone plan into two Fragments: F1 and F2. Data is transmitted between two Fragments through an ExchangeNode.
 
@@ -467,7 +467,7 @@ The user can open the session variable `is_report_success` with the following co
 
 ```sql
 SET is_report_success=true;
-````
+```
 
 Then execute the query, and Doris will generate a Profile of the query. Profile contains the specific execution of a query for each node, which helps us analyze query bottlenecks.
 
@@ -485,7 +485,7 @@ mysql> show query profile "/"\G
    EndTime: 2021-04-08 11:30:50
  TotalTime: 9ms
 QueryState: EOF
-````
+```
 
 This command will list all currently saved profiles. Each row corresponds to a query. We can select the QueryId corresponding to the Profile we want to see to see the specific situation.
 
@@ -664,7 +664,7 @@ This shows the execution nodes and time consumption of all three Instances on Fr
    │ - RowsReturnedRate: 0 │
    │ - SendersBlockedTotalTimer(*): 0ns │
    └────────────────────────────────────────────────────┘
-   ````
+   ```
 
    The above figure shows the specific profiles of each operator of Instance c257c52f93e149ee-ace8ac14e8c9ff03 in Fragment 1.
 

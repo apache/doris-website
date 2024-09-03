@@ -115,7 +115,7 @@ CREATE JOB my_job ON SCHEDULER EVERY 1 DAY STARTS '2025-01-01 00:00:00' ENDS '20
 
 For example, to asynchronously execute data loading from `db2.tbl2` to `db1.tbl1`, simply create a one-time job for it and schedule it at `current_timestamp`.
 
-```Bash
+```shell
 CREATE JOB my_job ON SCHEDULE AT current_timestamp DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
 ```
 
@@ -153,7 +153,7 @@ PROPERTIES (
 
 **Step 2**: Create a catalog in Doris to map to the data in MySQL
 
-```Bash
+```shell
 CREATE CATALOG activity PROPERTIES (
     "type"="jdbc",
     "user"="root",

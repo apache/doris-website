@@ -28,17 +28,20 @@ under the License.
 
 ### Name
 
-<version since="1.2">
+
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
 CLEAN LABEL
 
-</version>
+
 
 ### Description
 
 用于手动清理历史导入作业的 Label。清理后，Label 可以重复使用。
 
-语法:
+语法：
 
 ```sql
 CLEAN LABEL [label] FROM db;

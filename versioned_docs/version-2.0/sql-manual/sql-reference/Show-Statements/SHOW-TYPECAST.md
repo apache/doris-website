@@ -40,7 +40,7 @@ grammar
 
 ```sql
 SHOW TYPE_CAST [IN|FROM db]
-````
+```
 
  Parameters
 
@@ -48,7 +48,7 @@ SHOW TYPE_CAST [IN|FROM db]
 
 ### Example
 
-````sql
+```sql
 mysql> show type_cast in testDb\G
 **************************** 1. row ******************** ******
 Origin Type: TIMEV2
@@ -61,7 +61,7 @@ Origin Type: TIMEV2
   Cast Type: TIMEV2
 
 3 rows in set (0.00 sec)
-````
+```
 
 ### Keywords
 

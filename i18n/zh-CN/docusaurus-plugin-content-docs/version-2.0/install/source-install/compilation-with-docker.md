@@ -30,7 +30,7 @@ under the License.
 
 比如在 CentOS 下，执行命令安装 Docker
 
-```Bash
+```shell
 yum install docker
 ```
 
@@ -49,7 +49,7 @@ yum install docker
 
 下面就以编译 Doris 2.0 版本作为介绍，下载并检查 Docker 镜像
 
-```Bash
+```shell
 # 可以选择 docker.io/apache/doris:build-env-for-2.0
 $ docker pull apache/doris:build-env-for-2.0
 
@@ -69,7 +69,7 @@ apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 
 -   编译镜像变更信息可参考 [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md)。
 
-```Bash
+```shell
 # 切换到 JDK 8
 alternatives --set java java-1.8.0-openjdk.x86_64
 alternatives --set javac java-1.8.0-openjdk.x86_64

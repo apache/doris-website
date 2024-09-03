@@ -311,8 +311,8 @@ FROM KAFKA [data_source_properties]
 | db_name                | 指定创建导入任务的数据库。                                   |
 | job_name               | 指定创建的导入任务名称，同一个 database 不能有名字相同的任务。 |
 | tbl_name               | 指定需要导入的表的名称，可选参数，如果不指定，则采用动态表的方式，这个时候需要 Kafka 中的数据包含表名的信息。 |
-| merge_type             | 数据合并类型。默认值为 APPEND。<p>merge_type 有三种选项：</p> <p>- APPEND：追加导入方式；</p> <p>- MERGE：合并导入方式；</p> <p>- DELETE：导入的数据皆为需要删除的数据。</p> |
-| load_properties        | 导入描述模块，包括以下组成部分：<p>- colum_spearator 子句</p> <p>- columns_mapping 子句</p> <p>- preceding_filter 子句</p> <p>- where_predicates 子句</p> <p>- partitions 子句</p> <p>- delete_on 子句</p> <p>- order_by 子句</p> |
+| merge_type             | 数据合并类型。默认值为 APPEND。<br /> merge_type 有三种选项：<br />- APPEND：追加导入方式；<br />- MERGE：合并导入方式；<br />- DELETE：导入的数据皆为需要删除的数据。|
+| load_properties        | 导入描述模块，包括以下组成部分：<br />- colum_spearator 子句; <br />- columns_mapping 子句; <br />- preceding_filter 子句; <br />- where_predicates 子句; <br />- partitions 子句; <br />- delete_on 子句; <br />- order_by 子句 |
 | job_properties         | 用于指定 Routine Load 的通用导入参数。                       |
 | data_source_properties | 用于描述 Kafka 数据源属性。                                  |
 | comment                | 用于描述导入作业的备注信息。                                 |
@@ -418,8 +418,8 @@ FROM KAFKA [data_source_properties]
 
 | 子模块                | 参数                                                         | 说明                                                         |
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| COLUMNS TERMINATED BY | <column_separator>                                           | 用于指定列分隔符，默认为 `\t`。例如需要指定逗号为分隔符，可以使用以下命令：`COLUMN TERMINATED BY ","`对于空值处理，需要注意以下事项：<p>- 空值（null）需要用 `\n` 表示，`a,\n,b` 数据表示中间列是一个空值（null）</p> <p>- 空字符串（''）直接将数据置空，a,,b 数据表示中间列是一个空字符串（''）</p> |
-| COLUMNS               | <column_name>                                                | 用于指定对应的列名例如需要指定导入列 `(k1, k2, k3)`，可以使用以下命令：`COLUMNS(k1, k2, k3)`在以下情况下可以缺省 COLUMNS 子句：<p>- CSV 中的列与表中的列一一对应</p> <p>- JSON 中的 key 列与表中的列名相同</p> |   
+| COLUMNS TERMINATED BY | <column_separator>                                           | 用于指定列分隔符，默认为 `\t`。例如需要指定逗号为分隔符，可以使用以下命令：`COLUMN TERMINATED BY ","`对于空值处理，需要注意以下事项：<br />- 空值（null）需要用 `\n` 表示，`a,\n,b` 数据表示中间列是一个空值（null）<br />- 空字符串（''）直接将数据置空，a,,b 数据表示中间列是一个空字符串（''）|
+| COLUMNS               | <column_name>                                                | 用于指定对应的列名例如需要指定导入列 `(k1, k2, k3)`，可以使用以下命令：`COLUMNS(k1, k2, k3)`在以下情况下可以缺省 COLUMNS 子句：<br />- CSV 中的列与表中的列一一对应 <br />- JSON 中的 key 列与表中的列名相同 |   
 | &nbsp;&nbsp;               | <column_mapping>      | 在导入过程中，可以通过列映射进行列的过滤和转换。如在导入的过程中，目标列需要基于数据源的某一列进行衍生计算，目标列 k4 基于 k3 列使用公式 k3+1 计算得出，需要可以使用以下命令：`COLUMNS(k1, k2, k3, k4 = k3 + 1)`详细内容可以参考[数据转换](../import/load-data-convert) |                                                              |
 | WHERE                 | <where_expr>                                                 | 指定 where_expr 可以根据条件过滤导入的数据源。如只希望导入 age > 30 的数据源，可以使用以下命令：`WHERE age > 30` |
 | PARTITION             | <partition_name>                                             | 指定导入目标表中的哪些 partition。如果不指定，会自动导入对应的 partition 中。如希望导入目标表 p1 与 p2 分区，可以使用以下命令：`PARTITION(p1, p2)` |
@@ -438,12 +438,12 @@ job_properties 子句具体参数选项如下：
 
 | 参数                      | 说明                                                         |
 | ------------------------- | ------------------------------------------------------------ |
-| desired_concurrent_number | <p>默认值：5 </p> <p>参数描述：单个导入子任务（load task）期望的并发度，修改 Routine Load 导入作业切分的期望导入子任务数量。在导入过程中，期望的子任务并发度可能不等于实际并发度。实际的并发度会根据集群的节点数、负载情况，以及数据源的情况综合考虑，使用公式以下可以计算出实际的导入子任务数：</p> <p>` min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`，其中：</p> <p>- topic_partition_num 表示 Kafka Topic 的 parititon 数量</p> <p>- desired_concurrent_number 表示设置的参数大小</p> <p>- max_routine_load_task_concurrent_num 为 FE 中设置 Routine Load 最大任务并行度的参数</p> |
+| desired_concurrent_number | 默认值：5 <br />参数描述：单个导入子任务（load task）期望的并发度，修改 Routine Load 导入作业切分的期望导入子任务数量。在导入过程中，期望的子任务并发度可能不等于实际并发度。实际的并发度会根据集群的节点数、负载情况，以及数据源的情况综合考虑，使用公式以下可以计算出实际的导入子任务数：<br />` min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`，其中：<br />- topic_partition_num 表示 Kafka Topic 的 parititon 数量 <br />- desired_concurrent_number 表示设置的参数大小 <br />- max_routine_load_task_concurrent_num 为 FE 中设置 Routine Load 最大任务并行度的参数 |
 | max_batch_interval        | 每个子任务的最大运行时间，单位是秒，范围为 1s 到 60s，默认值为 10(s)。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_batch_rows            | 每个子任务最多读取的行数。必须大于等于 200000。默认是 200000。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_batch_size            | 每个子任务最多读取的字节数。单位是字节，范围是 100MB 到 1GB。默认是 100MB。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_error_number          | 采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数大于 `max_error_number`，则会导致例行作业被暂停，需要人工介入检查数据质量问题，通过 [SHOW ROUTINE LOAD](../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) 命令中 `ErrorLogUrls` 检查数据的质量问题。被 where 条件过滤掉的行不算错误行。 |
-| strict_mode               | 是否开启严格模式，默认为关闭。严格模式表示对于导入过程中的列类型转换进行严格过滤。如果开启后，非空原始数据的列类型变换如果结果为 NULL，则会被过滤。<p>严格模式过滤策略如下：</p> <p>- 某衍生列（由函数转换生成而来），Strict Mode 对其不产生影响</p> <p>- 当列类型需要转换，错误的数据类型将被过滤掉，在 [SHOW ROUTINE LOAD](../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) 的 `ErrorLogUrls` 中查看因为数据类型错误而被过滤掉的列</p> <p>- 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict mode 对其也不产生影响。例如：如果类型是 decimal(1,0), 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。详细内容参考[严格模式](../import/load-strict-mode)。</p> |
+| strict_mode               | 是否开启严格模式，默认为关闭。严格模式表示对于导入过程中的列类型转换进行严格过滤。如果开启后，非空原始数据的列类型变换如果结果为 NULL，则会被过滤。<br />严格模式过滤策略如下：<br />- 某衍生列（由函数转换生成而来），Strict Mode 对其不产生影响 <br />- 当列类型需要转换，错误的数据类型将被过滤掉，在 [SHOW ROUTINE LOAD](../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) 的 `ErrorLogUrls` 中查看因为数据类型错误而被过滤掉的列 <br />- 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict mode 对其也不产生影响。例如：如果类型是 decimal(1,0), 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。详细内容参考[严格模式](../import/load-strict-mode)。 |
 | timezone                  | 指定导入作业所使用的时区。默认为使用 Session 的 timezone 参数。该参数会影响所有导入涉及的和时区有关的函数结果。 |
 | format                    | 指定导入数据格式，默认是 csv，支持 json 格式。               |
 | jsonpaths                 | 当导入数据格式为 JSON 时，可以通过 jsonpaths 指定抽取 Json 数据中的字段。例如通过以下命令指定导入 jsonpaths：`"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
@@ -471,7 +471,7 @@ data_source_properties 子句具体参数选项如下：
 | kafka_broker_list | 指定 Kafka 的 broker 连接信息。格式为 `<kafka_broker_ip>:<kafka port>`。多个 broker 之间以逗号分隔。例如在 Kafka Broker 中默认端口号为 9092，可以使用以下命令指定 Broker List：`"kafka_broker_list" = "<broker1_ip>:9092,<broker2_ip>:9092"` |
 | kafka_topic       | 指定要订阅的 Kafka 的 topic。一个导入作业仅能消费一个 Kafka Topic。 |
 | kafka_partitions  | 指定需要订阅的 Kafka Partition。如果不指定，则默认消费所有分区。 |
-| kafka_offsets     | 待销费的 Kakfa Partition 中起始消费点（offset）。如果指定时间，则会从大于等于该时间的最近一个 offset 处开始消费。offset 可以指定从大于等于 0 的具体 offset，也可以使用以下格式：<p>- OFFSET_BEGINNING: 从有数据的位置开始订阅。</p> <p>- OFFSET_END: 从末尾开始订阅。</p> <p>- 时间格式，如："2021-05-22 11:00:00"</p> <p>如果没有指定，则默认从 `OFFSET_END` 开始订阅 topic 下的所有 partition。</p> <p>可以指定多个其实消费点，使用逗号分隔，如：`"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"`或者`"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"`</p> <p>注意，时间格式不能和 OFFSET 格式混用。</p> |
+| kafka_offsets     | 待销费的 Kakfa Partition 中起始消费点（offset）。如果指定时间，则会从大于等于该时间的最近一个 offset 处开始消费。offset 可以指定从大于等于 0 的具体 offset，也可以使用以下格式：<br />- OFFSET_BEGINNING: 从有数据的位置开始订阅。<br />- OFFSET_END: 从末尾开始订阅。<br />- 时间格式，如："2021-05-22 11:00:00" <br />如果没有指定，则默认从 `OFFSET_END` 开始订阅 topic 下的所有 partition。<br />可以指定多个其实消费点，使用逗号分隔，如：`"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"`或者`"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"` <br /> 注意，时间格式不能和 OFFSET 格式混用。|
 | property          | 指定自定义 kafka 参数。功能等同于 kafka shell 中 "--property" 参数。当参数的 Value 为一个文件时，需要在 Value 前加上关键词："FILE:"。创建文件可以参考 [CREATE FILE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FILE) 命令文档。更多支持的自定义参数，可以参考 librdkafka 的官方 [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) 文档中，client 端的配置项。如：`"property.client.id" = "12345"``"property.group.id" = "group_id_0"``"property.ssl.ca.location" = "FILE:ca.pem"` |
 
 通过配置 data_source_properties 中的 kafka property 参数，可以配置安全访问选项。目前 Doris 支持多种 Kafka 安全协议，如 plaintext（默认）、SSL、PLAIN、Kerberos 等。
@@ -554,7 +554,7 @@ ReasonOfStateChanged:
 | DbName               | 对应数据库名称                                               |
 | TableName            | 对应表名称。多表的情况下由于是动态表，因此不显示具体表名，会显示 multi-table。 |
 | IsMultiTbl           | 是是否为多表                                                 |
-| State                | 作业运行状态，有 5 种状态：<p>- NEED_SCHEDULE：作业等待被调度。在 CREATE ROUTINE LOAD 或 RESUME ROUTINE LOAD 后，作业会先进入到 NEED_SCHEDULE 状态；</p> <p>- RUNNING：作业运行中；</p> <p>- PAUSED：作业被暂停，可以通过 RESUME ROUTINE LOAD 恢复导入作业；</p> <p>- STOPPED：作业已结束，无法被重启；</p> <p>- CANCELLED：作业已取消。</p> |
+| State                | 作业运行状态，有 5 种状态：<br /> NEED_SCHEDULE：作业等待被调度。在 CREATE ROUTINE LOAD 或 RESUME ROUTINE LOAD 后，作业会先进入到 NEED_SCHEDULE 状态；<br />- RUNNING：作业运行中；<br />- PAUSED：作业被暂停，可以通过 RESUME ROUTINE LOAD 恢复导入作业；<br />- STOPPED：作业已结束，无法被重启；<br />- CANCELLED：作业已取消。 |
 | DataSourceType       | 数据源类型：KAFKA。                                          |
 | CurrentTaskNum       | 当前子任务数量。                                             |
 | JobProperties        | 作业配置详情。                                               |

@@ -7,7 +7,7 @@
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
    'picked': "true",
-    'order': "1",
+    'order': "3",
     "image": '/images/auto-partition-in-apache-doris.jpg'
 }
 

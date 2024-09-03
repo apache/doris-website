@@ -39,7 +39,7 @@ grammar:
 
 ```sql
 ALTER SYSTEM MODIFY BACKEND "host:heartbeat_port" SET ("key" = "value"[, ...]);
-````
+```
 
   illustrate:
 
@@ -61,19 +61,19 @@ Note:
     ```sql
     ALTER SYSTEM MODIFY BACKEND "host1:heartbeat_port" SET ("tag.location" = "group_a");
     ALTER SYSTEM MODIFY BACKEND "host1:heartbeat_port" SET ("tag.location" = "group_a", "tag.compute" = "c1");
-    ````
+    ```
 
 2. Modify the query disable property of BE
 
     ```sql
     ALTER SYSTEM MODIFY BACKEND "host1:heartbeat_port" SET ("disable_query" = "true");
-    ````
+    ```
 
 3. Modify the import disable property of BE
 
     ```sql
     ALTER SYSTEM MODIFY BACKEND "host1:heartbeat_port" SET ("disable_load" = "true");
-    ````
+    ```
 
 ### Keywords
 

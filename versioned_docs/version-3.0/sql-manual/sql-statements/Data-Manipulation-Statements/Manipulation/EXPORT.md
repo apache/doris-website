@@ -72,7 +72,7 @@ The bottom layer of the `Export` statement actually executes the `select...outfi
 
   ```sql
   [PROPERTIES ("key"="value", ...)]
-  ````
+  ```
 
   The following parameters can be specified:
 
@@ -116,7 +116,7 @@ The bottom layer of the `Export` statement actually executes the `select...outfi
         hadoop.security.authentication: specify the authentication method as kerberos
         kerberos_principal: specifies the principal of kerberos
         kerberos_keytab: specifies the path to the keytab file of kerberos. The file must be the absolute path to the file on the server where the broker process is located. and can be accessed by the Broker process
-  ````
+  ```
 
 - `WITH HDFS`
 

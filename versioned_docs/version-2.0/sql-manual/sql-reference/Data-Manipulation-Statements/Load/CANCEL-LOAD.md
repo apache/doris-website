@@ -50,7 +50,7 @@ Notice: Cancel by State is supported since 1.2.0.
     CANCEL LOAD
     FROM example_db
     WHERE LABEL = "example_db_test_load_label";
-    ````
+    ```
 
 2. Cancel all import jobs containing example* on the database example*db.
 
@@ -58,9 +58,9 @@ Notice: Cancel by State is supported since 1.2.0.
     CANCEL LOAD
     FROM example_db
     WHERE LABEL like "example_";
-    ````
+    ```
 
-<version since="1.2.0">
+
 
 3. Cancel all import jobs which state are "LOADING"
 
@@ -70,7 +70,10 @@ Notice: Cancel by State is supported since 1.2.0.
    WHERE STATE = "loading";
    ```
 
-</version>
+
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
 ### Keywords
 

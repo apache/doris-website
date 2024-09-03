@@ -36,7 +36,7 @@ MySQL Load 主要适用于导入客户端本地 CSV 文件，或通过程序导�
 
 在导入 CSV 文件时，需要明确区分空值（null）与空字符串（''）：
 
-- 空值（null）需要用 \N 表示，`a,\N,b` 数据表示中间列是一个空值（null）
+- 空值（null）需要用 `\N` 表示，`a,\N,b` 数据表示中间列是一个空值（null）
 
 - 空字符串直接将数据置空，a, ,b 数据表示中间列是一个空字符串
 
@@ -170,7 +170,7 @@ INTO TABLE [<db_name>.]<table_name>
 | COLUMNS TERMINATED BY | 指定导入的列分隔符。                                         |
 | LINE TERMINATED BY    | 指定导入的行分隔符。                                         |
 | IGNORE num LINES      | 指定导入的 CSV 跳过行数，通常指定 1 来跳过表头。             |
-| col_name_or_user_var  | 指定列映射语法，数据转换详见[ 列映射 ](../../data-operate/import/load-data-convert#列映射)章节。                     |
+| col_name_or_user_var  | 指定列映射语法，数据转换详见[ 列映射 ](../../../data-operate/import/load-data-convert#列映射)章节。                     |
 | PROPERTIES            | 导入参数。                                                   |
 
 ### 导入参数
@@ -225,7 +225,7 @@ INTO TABLE testDb.testTbl
 
 ### 指定导入列分隔符与行分隔符
 
-通过 COLUMNS TERMINATED BY 与 LINES TERMINATED BY 子句可以指定导入的列与行分隔符。在以下案例中使用逗号（,）与换行符（\n）作为列与行分隔符：
+通过 COLUMNS TERMINATED BY 与 LINES TERMINATED BY 子句可以指定导入的列与行分隔符。在以下案例中使用逗号（,）与换行符（`\n`）作为列与行分隔符：
 
 ```sql
 LOAD DATA LOCAL
@@ -270,4 +270,4 @@ PROPERTIES ("exec_mem_limit"="10737418240");
 
 ## 更多帮助
 
-关于 MySQL Load 使用的更多详细语法及最佳实践，请参阅 [MySQL Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/MYSQL-LOAD) 命令手册。
+关于 MySQL Load 使用的更多详细语法及最佳实践，请参阅 [MySQL Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/MYSQL-LOAD) 命令手册。

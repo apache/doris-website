@@ -114,6 +114,6 @@ under the License.
 
 ## Examples
 
-```bash
+```shell
 curl http://192.168.10.24:8040/api/compaction/show?tablet_id=10015
 ```

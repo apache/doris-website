@@ -92,7 +92,7 @@ After switching to the ES Catalog, you will be in the `dafault_db`  so you don't
 | object           | json        |                                                                         |
 | other            | unsupported |                                                                         |
 
-<version since="dev">
+
 
 ### Array Type
 
@@ -122,7 +122,7 @@ For example, suppose there is an index `doc` containing the following data struc
 The array fields of this structure can be defined by using the following command to add the field property definition 
 to the `_meta.doris` property of the target index mapping.
 
-```bash
+```shell
 # ES 7.x and above
 curl -X PUT "localhost:9200/doc/_mapping?pretty" -H 'Content-Type:application/json' -d '
 {
@@ -158,7 +158,7 @@ curl -X PUT "localhost:9200/doc/_mapping?pretty" -H 'Content-Type: application/j
 
 `array_fields`：Used to indicate a field that is an array type.
 
-</version>
+
 
 ## Best Practice
 

@@ -320,11 +320,11 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 * `max_pushdown_conditions_per_column`
 
-    For the specific meaning of this variable, please refer to the description of `max_pushdown_conditions_per_column` in [BE Configuration](../../admin-manual/config/be-config.md). This variable is set to -1 by default, which means that the configuration value in `be.conf` is used. If the setting is greater than 0, the query in the current session will use the variable value, and ignore the configuration value in `be.conf`.
+   Used to limit the maximum number of conditions for a single column that can be pushed down to the storage engine in a query request. During the execution of a query plan, some filtering conditions on columns can be pushed down to the storage engine. This allows the storage engine to utilize index information for data filtering, reducing the amount of data that needs to be scanned in the query. For example, equality conditions or conditions in an IN predicate. This parameter typically affects queries containing IN predicates, such as WHERE colA IN (1,2,3,4,...). A larger value means that more conditions in the IN predicate can be pushed down to the storage engine, but too many conditions might lead to an increase in random reads, which can potentially decrease query efficiency in some cases. Default value: 1024. If the number of conditions in an IN predicate exceeds this configuration, consider increasing this value and observe if query response improves.
 
 * `max_scan_key_num`
 
-    For the specific meaning of this variable, please refer to the description of `doris_max_scan_key_num` in [BE Configuration](../../admin-manual/config/be-config.md). This variable is set to -1 by default, which means that the configuration value in `be.conf` is used. If the setting is greater than 0, the query in the current session will use the variable value, and ignore the configuration value in `be.conf`.
+  Used to limit the maximum number of scan keys that can be split by a scan node in a query request. When a query request with conditions reaches a scan node, the scan node will attempt to split the key-related conditions in the query into multiple scan key ranges. These scan key ranges are then allocated to multiple scanner threads for data scanning. A larger value typically allows for more scanner threads, enhancing the parallelism of the scanning operation. However, in high-concurrency scenarios, too many threads may lead to increased scheduling overhead and system load, potentially reducing query response speed. A recommended value is 50. When concurrency cannot be improved in high-concurrency scenarios, consider lowering this value and observing the impact. Default value: 48.
 
 * `net_buffer_length`
 
@@ -377,7 +377,7 @@ Note that the comment must start with /*+ and can only follow the SELECT.
     
 * `send_batch_parallelism`
 
-    Used to set the default parallelism for sending batch when execute InsertStmt operation, if the value for parallelism exceed `max_send_batch_parallelism_per_job` in BE config, then the coordinator BE will use the value of `max_send_batch_parallelism_per_job`.
+    The maximum parallelism for sending batch data by the OlapTableSink.
 
 * `sql_mode`
 
@@ -587,19 +587,19 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 	Default password expiration time. The default value is 0, which means no expiration. The unit is days. This parameter is only enabled if the user's password expiration property has a value of DEFAULT. like:
 
-   ````
+   ```
    CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_EXPIRE DEFAULT;
    ALTER USER user1 PASSWORD_EXPIRE DEFAULT;
-   ````
+   ```
 
 * `password_history`
 
 	The default number of historical passwords. The default value is 0, which means no limit. This parameter is enabled only when the user's password history attribute is the DEFAULT value. like:
 
-   ````
+   ```
    CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_HISTORY DEFAULT;
    ALTER USER user1 PASSWORD_HISTORY DEFAULT;
-   ````
+   ```
 
 * `validate_password_policy`
 

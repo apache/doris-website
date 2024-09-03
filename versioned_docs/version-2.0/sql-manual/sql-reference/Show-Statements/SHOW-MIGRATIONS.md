@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW MIGRATIONS
-````
+```
 
 ### Example
 

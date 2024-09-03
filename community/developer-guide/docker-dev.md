@@ -84,7 +84,7 @@ RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -
 
 run build command
 
-```bash
+```shell
 docker build -t doris .
 ```
 
@@ -98,7 +98,7 @@ if you are developing on windows, mounting may cause cross-filesystem access pro
 
 `--cap-add SYS_PTRACE` parameter allows dockers to use ptrace, making it easier for us to use ptrace and gdb remote debugging functions.
 
-```bash
+```shell
 docker run -it --cap-add SYS_PTRACE doris:latest /bin/bash
 ```
 
@@ -110,7 +110,7 @@ plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
 create directory and download doris
 
-```bash
+```shell
 su <your user>
 mkdir code && cd code
 git clone https://github.com/apache/doris.git
@@ -124,7 +124,7 @@ Note:
 
 use the following command first time compiling
 
-```bash
+```shell
 sh build.sh --clean --be --fe --ui
 ```
 
@@ -132,7 +132,7 @@ it is because build-env-for-0.15.0 version image upgraded thrift(0.9 -> 0.13), s
 
 compile Doris
 
-```bash
+```shell
 sh build.sh
 ```
 
@@ -140,26 +140,26 @@ sh build.sh
 
 manually create `meta_dir` metadata storage location, default value is `${DORIS_HOME}/doris-meta`
 
-```bash
+```shell
 mkdir meta_dir
 ```
 
 launch FE
 
-```bash
+```shell
 cd output/fe
 sh bin/start_fe.sh --daemon
 ```
 
 launch BE
 
-```bash
+```shell
 cd output/be
 sh bin/start_be.sh --daemon
 ```
 
 mysql-client connect
 
-```bash
+```shell
 mysql -h 127.0.0.1 -P 9030 -u root
 ```

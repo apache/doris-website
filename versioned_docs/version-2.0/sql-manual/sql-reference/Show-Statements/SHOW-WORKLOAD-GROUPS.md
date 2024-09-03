@@ -30,7 +30,7 @@ under the License.
 
 SHOW workload GROUPS
 
-<version since="dev"></version>
+ 
 
 ### Description
 
