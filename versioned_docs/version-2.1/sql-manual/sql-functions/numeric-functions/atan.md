@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## atan
+## Atan
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE atan(DOUBLE x)`
 Returns the arctangent of `x`, where `x` is in radians.
 
-### example
+### Example
 
 ```
 mysql> select atan(0);
@@ -47,5 +47,5 @@ mysql> select atan(2);
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	ATAN

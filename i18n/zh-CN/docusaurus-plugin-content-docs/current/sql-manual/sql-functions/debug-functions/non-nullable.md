@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## non_nullable
-### description
+## Non_nullable
+### Description
 
 :::tip
 仅供开发者调试用，请勿在生产环境手动调用该函数。
@@ -37,7 +37,7 @@ under the License.
 
 如果 `expr` 为非 nullable 类型，或为 nullable 类型且其中包含 `NULL` 值，则报错。否则返回该列的非 nullable 属性数据列。
 
-### example
+### Example
 
 ```sql
 mysql> select k1, non_nullable(k1) from test_nullable_functions order by k1;
@@ -56,5 +56,5 @@ mysql> select non_nullable(1);
 ERROR 1105 (HY000): errCode = 2, detailMessage = [CANCELLED]Try to use originally non-nullable column Int8 in nullable's non-nullable convertion.
 ```
 
-### keywords
+### Keywords
     non_nullable

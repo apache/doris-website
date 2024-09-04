@@ -25,7 +25,7 @@ under the License.
 -->
 
 # RESTORE TABLET
-## description
+## Description
    
     该功能用于恢复trash目录中被误删的tablet数据。
 
@@ -34,10 +34,10 @@ under the License.
     METHOD: POST
     URI: http://be_host:be_http_port/api/restore_tablet?tablet_id=xxx&schema_hash=xxx
 
-## example
+## Example
 
     curl -X POST "http://hostname:8088/api/restore_tablet?tablet_id=123456\&schema_hash=1111111"
 
-## keyword
+## Keyword
 
     RESTORE,TABLET,RESTORE,TABLET

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitnot
-### description
+## Bitnot
+### Description
 #### Syntax
 
 `BITNOT(Integer-type value)`
@@ -34,7 +34,7 @@ under the License.
 
 整数范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
-### example
+### Example
 
 ```
 mysql> select bitnot(7) ans;
@@ -52,6 +52,6 @@ mysql> select bitxor(-127) ans;
 +------+
 ```
 
-### keywords
+### Keywords
 
     BITNOT

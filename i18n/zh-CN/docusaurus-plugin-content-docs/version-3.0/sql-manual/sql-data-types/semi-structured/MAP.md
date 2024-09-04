@@ -26,11 +26,11 @@ under the License.
 
 ## MAP
 
-### name
+### Name
 
 MAP
 
-### description
+### Description
 
 `MAP<K, V>`
 
@@ -43,7 +43,7 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIM
 DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-### example
+### Example
 
 建表示例如下：
 
@@ -265,6 +265,6 @@ mysql> SELECT id, map_values(m) FROM simple_map ORDER BY id;
 
 ```
 
-### keywords
+### Keywords
 
     MAP

@@ -542,7 +542,7 @@ cd /usr/local/nginx
 /usr/local/nginx/sbin/nginx -c conf.d/default.conf
 ```
 
-### verify
+### Verify
 
 ```
 mysql -uroot -P6030 -h172.31.7.119

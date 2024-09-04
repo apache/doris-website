@@ -24,7 +24,7 @@ under the License.
 
 ## SM4_ENCRYPT
 
-### description
+### Description
 
 #### Syntax
 
@@ -32,7 +32,7 @@ under the License.
 
 return encrypted result
 
-### example
+### Example
 
 ```
 MySQL > select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -55,13 +55,13 @@ MySQL > select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', 
 1 row in set (0.014 sec)
 ```
 
-### keywords
+### Keywords
 
     SM4, SM4_ENCRYPT
 
 ## SM4_DECRYPT
 
-### description
+### Description
 
 #### Syntax
 
@@ -69,7 +69,7 @@ MySQL > select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', 
 
 Return the decrypted result
 
-### example
+### Example
 
 ```
 MySQL [(none)]> select SM4_DECRYPT(FROM_BASE64('aDjwRflBrDjhBZIOFNw3Tg=='),'F3229A0B371ED2D9441B830D21A390C3');
@@ -92,6 +92,6 @@ MySQL > select SM4_DECRYPT(FROM_BASE64('G7yqOKfEyxdagboz6Qf01A=='),'F3229A0B371E
 1 row in set (0.012 sec)
 ```
 
-### keywords
+### Keywords
 
     SM4, SM4_DECRYPT

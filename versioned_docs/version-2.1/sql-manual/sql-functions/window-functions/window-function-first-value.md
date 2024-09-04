@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION FIRST_VALUE
-### description
+### Description
 
 FIRST_VALUE() returns the first value in the window's range , ignore_null determines whether to ignore null values , the ignore_null of default value is false .
 
@@ -20,7 +20,7 @@ FIRST_VALUE() returns the first value in the window's range , ignore_null determ
 FIRST_VALUE(expr[, ignore_null]) OVER(partition_by_clause order_by_clause [window_clause])
 ```
 
-### example
+### Example
 
 
 We have the following data
@@ -69,6 +69,6 @@ from t order by `id`, `myday`, `time_col`;
 |   12 |    24 | 02-24-10-21 |  NULL |        NULL |            NULL |                NULL |
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,FIRST_VALUE

@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_remove
-### description
+## Bitmap_remove
+### Description
 #### Syntax
 
 `BITMAP BITMAP_REMOVE(BITMAP bitmap, BIGINT input)`
 
 从Bitmap列中删除指定的值。
 
-### example
+### Example
 
 ```
 mysql [(none)]>select bitmap_to_string(bitmap_remove(bitmap_from_string('1, 2, 3'), 3)) res; 
@@ -50,6 +50,6 @@ mysql [(none)]>select bitmap_to_string(bitmap_remove(bitmap_from_string('1, 2, 3
 +------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_REMOVE,BITMAP

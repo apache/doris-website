@@ -93,13 +93,13 @@ Currently only the following three JSON formats are supported:
    
    This method must be used with the setting `read_json_by_line=true`, the special delimiter also needs to specify the `line_delimiter` parameter, the default is `\n`. When Doris parses, it will be separated according to the delimiter, and then parse each line of Object as a line of data.
 
-### streaming_load_json_max_mb parameters
+### Streaming_load_json_max_mb parameters
 
 Some data formats, such as JSON, cannot be split. Doris must read all the data into the memory before parsing can begin. Therefore, this value is used to limit the maximum amount of data that can be loaded in a single Stream load.
 
 The default value is 100, The unit is MB, modify this parameter by referring to the [BE configuration](../../admin-manual/config/be-config.md).
 
-### fuzzy_parse parameters
+### Fuzzy_parse parameters
 
 In [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD.md) `fuzzy_parse` parameter can be added to speed up JSON Data import efficiency.
 

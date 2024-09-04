@@ -25,12 +25,12 @@ under the License.
 -->
 
 
-## description
+## Description
 
 CHAR(M)
 
 定长字符串，M 代表的是定长字符串的字节长度。M 的范围是 1-255
 
-## keywords
+## Keywords
 
 CHAR

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## get_json_bigint
+## Get_json_bigint
 ### Description
 #### Syntax
 
@@ -43,7 +43,7 @@ Exception handling is as follows:
 - if the field specified by json_path does not exist, return NULL
 - if datatype of the field specified by json_path is not the same with type of json_extract_t, return t if it can be cast to t else NULL
 
-### example
+### Example
 
 1. Get the value of key as "k1"
 
@@ -76,5 +76,5 @@ mysql> SELECT get_json_bigint('{"k1.key":{"k2":[1678708107000, 2]}}', '$."k1.key
 |                                                               1678708107000 |
 +-----------------------------------------------------------------------------+
 ```
-### keywords
+### Keywords
 GET_JSON_BIGINT,GET,JSON,BIGINT

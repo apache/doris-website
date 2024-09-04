@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## timestampadd
-### description
+## Timestampadd
+### Description
 #### Syntax
 
 `DATETIME TIMESTAMPADD(unit, interval, DATETIME datetime_expr)`
@@ -37,7 +37,7 @@ interval的单位由unit参数给出，它应该是下列值之一:
 
 SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, or YEAR。
 
-### example
+### Example
 
 ```
 
@@ -55,5 +55,5 @@ mysql> SELECT TIMESTAMPADD(WEEK,1,'2019-01-02');
 | 2019-01-09 00:00:00                          |
 +----------------------------------------------+
 ```
-### keywords
+### Keywords
     TIMESTAMPADD

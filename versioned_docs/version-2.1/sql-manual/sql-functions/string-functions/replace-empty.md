@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## replace_empty
-### description
+## Replace_empty
+### Description
 #### Syntax
 
 Since 2.1.5
@@ -40,7 +40,7 @@ Other than that, the other behaviors are exactly the same as the `REPLACE()` fun
 
 This function is mainly used for compatibility with Presto and Trino, and its behavior is exactly the same as the `REPLACE()` function in Presto and Trino.
 
-### example
+### Example
 
 ```
 mysql> select replace_empty("http://www.baidu.com:9090", "9090", "");
@@ -65,6 +65,6 @@ mysql> select replace_empty("", "", "xyz");
 +------------------------------+
 ```
 
-### keywords
+### Keywords
 
     REPLACE_EMPTY

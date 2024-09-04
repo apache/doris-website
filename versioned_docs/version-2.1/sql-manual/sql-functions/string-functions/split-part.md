@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## split_part
+## Split_part
 ### Description
 #### Syntax
 
@@ -35,7 +35,7 @@ Returns the specified partition by splitting the string according to the delimit
 
 `delimiter` and `field` parameter should be constant.
 
-### example
+### Example
 
 ```
 mysql> select split_part("hello world", " ", 1);
@@ -96,5 +96,5 @@ mysql> select split_part("abc##123###234", "##", -2);
 | 123#                                   |
 +----------------------------------------+
 ```
-### keywords
+### Keywords
     SPLIT_PART,SPLIT,PART

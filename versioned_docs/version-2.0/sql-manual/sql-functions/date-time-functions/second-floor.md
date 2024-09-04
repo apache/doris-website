@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## second_floor
-### description
+## Second_floor
+### Description
 #### Syntax
 
 ```sql
@@ -41,7 +41,7 @@ Convert the date to the nearest rounding down time of the specified time interva
 - period: specifies how many seconds each cycle consists of.
 - origin: starting from 0001-01-01T00:00:00.
 
-### example
+### Example
 
 ```
 mysql> select second_floor("2023-07-13 22:28:18", 5);
@@ -53,7 +53,7 @@ mysql> select second_floor("2023-07-13 22:28:18", 5);
 1 row in set (0.10 sec)
 ```
 
-### keywords
+### Keywords
 
     SECOND_FLOOR, SECOND, FLOOR
 

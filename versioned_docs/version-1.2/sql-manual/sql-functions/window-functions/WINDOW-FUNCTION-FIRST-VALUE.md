@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION FIRST_VALUE
-### description
+### Description
 
 FIRST_VALUE() returns the first value in the window's range.
 
@@ -20,7 +20,7 @@ FIRST_VALUE() returns the first value in the window's range.
 FIRST_VALUE(expr) OVER(partition_by_clause order_by_clause [window_clause])
 ```
 
-### example
+### Example
 
 
 We have the following data
@@ -55,6 +55,6 @@ over (partition by country order by name, greeting) as greeting from mail_merge;
 | USA     | Pete    | Hi        |
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,FIRST_VALUE

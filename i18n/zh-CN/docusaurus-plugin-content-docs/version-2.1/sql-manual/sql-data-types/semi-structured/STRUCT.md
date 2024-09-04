@@ -26,11 +26,11 @@ under the License.
 
 ## STRUCT
 
-### name
+### Name
 
 STRUCT
 
-### description
+### Description
 
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >`
 
@@ -56,7 +56,7 @@ DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 TODO:支持嵌套 STRUCT 或其他的复杂类型
 ```
 
-### example
+### Example
 
 建表示例如下：
 
@@ -116,6 +116,6 @@ mysql> select * from struct_test;
 3 rows in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 
     STRUCT

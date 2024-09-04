@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_slice
+## Array_slice
 
 array_slice
 
-### description
+### Description
 
 #### Syntax
 
@@ -41,7 +41,7 @@ An empty array is returned when the off is not within the actual range of the ar
 A negative len will be treated as 0.
 ```
 
-### example
+### Example
 
 
 ```
@@ -146,7 +146,7 @@ mysql> select k2, array_slice(k2, -5) from array_type_table;
 +-----------+----------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,SLICE,ARRAY_SLICE
 

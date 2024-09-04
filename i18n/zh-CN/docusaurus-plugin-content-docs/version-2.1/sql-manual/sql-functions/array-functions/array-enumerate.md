@@ -24,18 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_enumerate
+## Array_enumerate
 
 array_enumerate
 
-### description
+### Description
 #### Syntax
 
 `ARRAY<T> array_enumerate(ARRAY<T> arr)`
 
 返回数组下标, 例如  [1, 2, 3, …, length (arr) ]
 
-### example
+### Example
 
 ```shell
 mysql> create table array_type_table(k1 INT, k2 Array<STRING>) duplicate key (k1)
@@ -54,6 +54,6 @@ mysql> select k2, array_enumerate(k2) from array_type_table;
 5 rows in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
 ARRAY,ENUMERATE,ARRAY_ENUMERATE

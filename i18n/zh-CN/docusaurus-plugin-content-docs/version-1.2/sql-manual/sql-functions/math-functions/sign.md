@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sign
+## Sign
 
-### description
+### Description
 #### Syntax
 
 `TINYINT sign(DOUBLE x)`
 返回`x`的符号.负数，零或正数分别对应-1，0或1.
 
-### example
+### Example
 
 ```
 mysql> select sign(3);
@@ -53,5 +53,5 @@ mysql> select sign(-10.0);
 1 row in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 	SIGN

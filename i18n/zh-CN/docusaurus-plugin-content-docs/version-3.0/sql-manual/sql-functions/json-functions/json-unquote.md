@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_unquote
+## Json_unquote
 ### Description
 #### Syntax
 
@@ -47,7 +47,7 @@ under the License.
 
 
 
-### example
+### Example
 
 ```sql
 mysql> SELECT json_unquote('"doris"');
@@ -82,5 +82,5 @@ mysql> SELECT json_unquote('"\\ttest"');
 +--------------------------+
 ```
 
-### keywords
+### Keywords
 json,unquote,json_unquote

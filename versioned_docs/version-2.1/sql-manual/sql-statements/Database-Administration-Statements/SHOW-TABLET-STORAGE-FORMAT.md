@@ -25,13 +25,13 @@ under the License.
 -->
 
 ## SHOW TABLET STORAGE FORMAT
-### description
+### Description
 
     This statement is used to display tablet storage foramt information (for administrators only)
     Grammar:
         SHOW TABLET STORAGE FORMAT [VERBOSE]
 
-### example
+### Example
 
     ```
     MySQL [(none)]> show tablet storage format;
@@ -53,6 +53,6 @@ under the License.
     4 rows in set (0.034 sec)
     ```
 
-### keywords
+### Keywords
     SHOW, TABLET, STORAGE, FORMAT
 

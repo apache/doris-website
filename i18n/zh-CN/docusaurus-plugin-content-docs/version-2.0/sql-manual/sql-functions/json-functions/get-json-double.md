@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## get_json_double
-### description
+## Get_json_double
+### Description
 #### Syntax
 
 `DOUBLE get_json_double(VARCHAR json_str, VARCHAR json_path)`
@@ -43,7 +43,7 @@ path 的内容不能包含 ", [ 和 ]。
 - 如果 json_path 指定的字段在JSON中不存在，返回NULL
 - 如果 json_path 指定的字段在JSON中的实际类型和json_extract_t指定的类型不一致，如果能无损转换成指定类型返回指定类型t，如果不能则返回NULL
 
-### example
+### Example
 
 1. 获取 key 为 "k1" 的 value
 
@@ -76,5 +76,5 @@ mysql> SELECT get_json_double('{"k1.key":{"k2":[1.1, 2.2]}}', '$."k1.key".k2[0]'
 |                                                                 1.1 |
 +---------------------------------------------------------------------+
 ```
-### keywords
+### Keywords
 GET_JSON_DOUBLE,GET,JSON,DOUBLE

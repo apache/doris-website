@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_intersect
-### description
+## Bitmap_intersect
+### Description
 
 Aggregation function, used to calculate the bitmap intersection after grouping. Common usage scenarios such as: calculating user retention rate.
 
@@ -35,7 +35,7 @@ Aggregation function, used to calculate the bitmap intersection after grouping. 
 
 Enter a set of bitmap values, find the intersection of the set of bitmap values, and return.
 
-### example
+### Example
 
 Table schema
 
@@ -56,6 +56,6 @@ Who are the users retained under different tags between 2020-05-18 and 2020-05-1
 mysql> select tag, bitmap_to_string(bitmap_intersect(user_id)) from (select tag, date, bitmap_union(user_id) user_id from table where date in ('2020-05-18', '2020-05-19') group by tag, date) a group by tag;
 ```
 
-### keywords
+### Keywords
 
     BITMAP_INTERSECT, BITMAP

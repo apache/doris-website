@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## minutes_sub
-### description
+## Minutes_sub
+### Description
 #### Syntax
 
 `DATETIME MINUTES_SUB(DATETIME date, INT minutes)`
@@ -34,7 +34,7 @@ Subtracts a specified number of minutes from a datetime or date
 
 The parameter date can be DATETIME or DATE, and the return type is DATETIME.
 
-### example
+### Example
 
 ```
 mysql> select minutes_sub("2020-02-02 02:02:02", 1);
@@ -45,6 +45,6 @@ mysql> select minutes_sub("2020-02-02 02:02:02", 1);
 +---------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     MINUTES_SUB

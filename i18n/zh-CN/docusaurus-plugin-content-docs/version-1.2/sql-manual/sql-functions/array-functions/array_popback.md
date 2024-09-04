@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_popback
+## Array_popback
 
 array_popback
 
-### description
+### Description
 
 #### Syntax
 
@@ -34,11 +34,11 @@ array_popback
 
 返回移除最后一个元素后的数组，如果输入参数为NULL，则返回NULL
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 mysql> select array_popback(['test', NULL, 'value']);
@@ -49,6 +49,6 @@ mysql> select array_popback(['test', NULL, 'value']);
 +-----------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,POPBACK,ARRAY_POPBACK

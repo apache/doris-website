@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION CUME_DIST
-### description
+### Description
 
 CUME_DIST (Cumulative Distribution) is a window function commonly used to calculate the relative ranking of the current row value within a sorted result set. It returns the percentage ranking of the current row value in the result set, i.e., the ratio of the number of rows less than or equal to the current row value to the total number of rows in the result set after sorting.
 
@@ -20,7 +20,7 @@ CUME_DIST (Cumulative Distribution) is a window function commonly used to calcul
 CUME_DIST() OVER(partition_by_clause order_by_clause)
 ```
 
-### example
+### Example
 Suppose there is a table named sales containing sales data, including salesperson name (sales_person), sales amount (sales_amount), and sales date (sales_date). We want to calculate the cumulative percentage of sales amount for each salesperson on each sales date compared to the total sales amount for that day.
 ```sql
 SELECT 
@@ -65,7 +65,7 @@ After executing the above SQL query, the result will display the sales amount fo
 +--------------+------------+--------------+-----------------------------+
 ```
 In this example, the CUME_DIST() function sorts the sales amount for each sales date and then calculates the cumulative percentage of sales amount for each salesperson on that date compared to the total sales amount for that day. Since we use PARTITION BY sales_date, the calculation is done within each sales date, and the sales amount for salespersons on different dates is calculated separately.
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,CUME_DIST
 

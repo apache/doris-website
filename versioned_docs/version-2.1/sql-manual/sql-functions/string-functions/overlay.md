@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## overlay
+## Overlay
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 Returns the string str and replaces it with the string newstr, a substring of len characters starting at position pos. If pos is not within the length of the string, the original string is returned. If len is not within the length of the rest of the string, the rest of the string is replaced starting at position pos. If any argument is NULL, NULL is returned.
 
-### example
+### Example
 
 ```
 mysql> select overlay('Quadratic', 3, 4, 'What');
@@ -67,5 +67,5 @@ mysql> select overlay('Quadratic', 0, 100, 'What');
 | Quadratic                            |
 +--------------------------------------+
 ```
-### keywords
+### Keywords
     OVERLAY

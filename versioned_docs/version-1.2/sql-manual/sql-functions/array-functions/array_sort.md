@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_sort
+## Array_sort
 
 array_sort
 
-### description
+### Description
 
 #### Syntax
 
@@ -35,11 +35,11 @@ array_sort
 Return the array which has been sorted in ascending order. Return NULL for NULL input.
 If the element of array is NULL, it will be placed in the front of the sorted array.
 
-### notice
+### Notice
 
 `Only supported in vectorized engine`
 
-### example
+### Example
 
 ```mysql> select k1, k2, array_sort(k2) from array_test;
 +------+-----------------------------+-----------------------------+
@@ -71,7 +71,7 @@ mysql> select k1, k2, array_sort(k2) from array_test01;
 +------+------------------------------------------+------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, SORT, ARRAY_SORT
 

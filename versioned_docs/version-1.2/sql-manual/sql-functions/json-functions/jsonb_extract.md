@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## jsonb_extract
+## Jsonb_extract
 
 jsonb_extract
 
-### description
+### Description
 
 #### Syntax
 
@@ -56,8 +56,8 @@ Exception handling is as follows:
 - if datatype of the field specified by json_path is not the same with type of jsonb_extract_t, return t if it can be cast to t else NULL
 
 
-## jsonb_exists_path and jsonb_type
-### description
+## Jsonb_exists_path and jsonb_type
+### Description
 
 #### Syntax
 
@@ -78,10 +78,10 @@ There are two extra functions to check field existence and type
   - double
   - string
 
-### example
+### Example
 
 refer to [jsonb tutorial](../../sql-reference/Data-Types/JSONB.md) for more.
 
 
-### keywords
+### Keywords
 JSONB, JSON, jsonb_extract, jsonb_extract_isnull, jsonb_extract_bool, jsonb_extract_int, jsonb_extract_bigint, jsonb_extract_double, jsonb_extract_string, jsonb_exists_path, jsonb_type

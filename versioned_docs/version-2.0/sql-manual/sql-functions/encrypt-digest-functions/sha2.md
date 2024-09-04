@@ -24,7 +24,7 @@ under the License.
 
 ## SHA2
 
-### description
+### Description
 
 Use SHA2 to digest the message.
 
@@ -37,7 +37,7 @@ Use SHA2 to digest the message.
 - `str`: content to be encrypted
 - `digest_length`: the length of the digest
 
-### example
+### Example
 
 ```SQL
 mysql> select sha2('abc', 224);
@@ -65,6 +65,6 @@ mysql> select sha2(NULL, 512);
 1 row in set (0.09 sec)
 ```
 
-### keywords
+### Keywords
 
     SHA2

@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## VAR_SAMP,VARIANCE_SAMP
-### description
+### Description
 #### Syntax
 
 `VAR_SAMP(expr)`
@@ -33,7 +33,7 @@ under the License.
 
 返回expr表达式的样本方差
 
-### example
+### Example
 ```
 MySQL > select var_samp(scan_rows) from log_statis group by datetime;
 +-----------------------+
@@ -43,5 +43,5 @@ MySQL > select var_samp(scan_rows) from log_statis group by datetime;
 +-----------------------+
 ```
 
-### keywords
+### Keywords
 VAR_SAMP,VARIANCE_SAMP,VAR,SAMP,VARIANCE

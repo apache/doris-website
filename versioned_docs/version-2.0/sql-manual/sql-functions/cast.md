@@ -33,7 +33,7 @@ under the License.
 
 Converts input to the specified type
 
-### example
+### Example
 
 1. Turn constant, or a column in a table
 
@@ -89,5 +89,5 @@ mysql> select cast('2024-12-29-20:40:50.123499' as datetime(3));
 | 2024-12-29 20:40:50.123                             |
 +-----------------------------------------------------+
 ```
-### keywords
+### Keywords
 CAST

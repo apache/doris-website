@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## milliseconds_diff
-### description
+## Milliseconds_diff
+### Description
 #### Syntax
 
 `INT milliseconds_diff(DATETIME enddate, DATETIME startdate)`
 
 How many milliseconds is the difference between the start time and the end time?
 
-### example
+### Example
 
 ```
 mysql> select milliseconds_diff('2020-12-25 21:00:00.623000','2020-12-25 21:00:00.123000');
@@ -44,6 +44,6 @@ mysql> select milliseconds_diff('2020-12-25 21:00:00.623000','2020-12-25 21:00:0
 1 row in set (0.03 sec)
 ```
 
-### keywords
+### Keywords
 
     milliseconds_diff

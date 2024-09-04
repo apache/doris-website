@@ -113,7 +113,7 @@ For details, please refer to the [resource](../sql-manual/sql-reference/Data-Def
 
 2. Through show tables from tableName, you can view the object size occupied by each table, and the RemoteDataSize item.
 
-## cold data cache
+## Cold data cache
 
 As above, cold data introduces the cache in order to optimize query performance. After the first hit after cooling, Doris will reload the cooled data to be's local disk. The cache has the following characteristics:
 - The cache is actually stored on the be local disk and does not occupy memory.

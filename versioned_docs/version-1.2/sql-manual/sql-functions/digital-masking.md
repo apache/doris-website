@@ -26,7 +26,7 @@ under the License.
 
 ## DIGITAL_MASKING
 
-### description
+### Description
 
 #### Syntax
 
@@ -38,7 +38,7 @@ Alias function, the original function is `concat(left(id,3),'****',right(id,4))`
 
 Desensitizes the input `digital_number` and returns the result after masking desensitization. `digital_number` is `BIGINT` data type.
 
-### example
+### Example
 
 1. Desensitize the cell phone number
 
@@ -51,6 +51,6 @@ Desensitizes the input `digital_number` and returns the result after masking des
     +------------------------------+
     ```
 
-### keywords
+### Keywords
 
 DIGITAL_MASKING

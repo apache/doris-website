@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_or_count
-### description
+## Bitmap_or_count
+### Description
 #### Syntax
 
 `BigIntVal bitmap_or_count(BITMAP lhs, BITMAP rhs, ...)`
 
 计算两个及以上输入bitmap的并集，返回并集的个数.
 
-### example
+### Example
 
 ```
 MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'),bitmap_empty());
@@ -72,6 +72,6 @@ MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3
 +-------------------------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_OR_COUNT,BITMAP

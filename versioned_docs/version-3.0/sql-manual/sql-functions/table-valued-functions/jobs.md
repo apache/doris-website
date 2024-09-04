@@ -30,7 +30,7 @@ under the License.
 
 jobs
 
-### description
+### Description
 
 Table function, generating a temporary task table, which can view job information in a certain task type.
 
@@ -38,7 +38,7 @@ This function is used in the from clause.
 
 This function is supported since 2.1.0.
 
-#### syntax
+#### Syntax
 
 `jobs("type"="")`
 
@@ -52,7 +52,7 @@ the **type** supported types
 - insert: insert into type job
 - mv: materialized view job
 
-##### insert job
+##### Insert job
 jobs("type"="insert")Table structure:
 ```
 mysql> desc  function jobs("type"="insert");
@@ -87,7 +87,7 @@ mysql> desc  function jobs("type"="insert");
 * CanceledTaskCount: Number of canceled tasks
 * Comment: job comment
 
-##### matterialized view job
+##### Matterialized view job
 
 jobs("type"="mv")Table structure:
 ```sql
@@ -120,7 +120,7 @@ mysql> desc function jobs("type"="mv");
 * Status: Job status
 * CreateTime: Task creation time
 
-### example
+### Example
 
 1. View jobs in all materialized views
 
@@ -145,6 +145,6 @@ mysql> select * from jobs("type"="insert");
 mysql> select * from jobs("type"="insert") where Name='one_insert_job';
 ```
 
-### keywords
+### Keywords
 
     jobs, job, insert, mv, materialized view, schedule

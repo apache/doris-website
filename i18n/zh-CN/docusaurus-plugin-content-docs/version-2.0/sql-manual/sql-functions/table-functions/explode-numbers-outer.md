@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## outer组合器
+## Outer组合器
 
-### description
+### Description
 
 在table function的函数名后面添加`_outer`后缀使得函数行为从`non-outer`变为`outer`,在表函数生成0行数据时添加一行`Null`数据。
-#### syntax
+#### Syntax
 `explode_numbers(INT x)`
 
-### example
+### Example
 
 ```
 mysql> select e1 from (select 1 k1) as t lateral view explode_numbers(0) tmp1 as e1;
@@ -45,6 +45,6 @@ mysql> select e1 from (select 1 k1) as t lateral view explode_numbers_outer(0) t
 | NULL |
 +------+
 ```
-### keywords
+### Keywords
 
     outer

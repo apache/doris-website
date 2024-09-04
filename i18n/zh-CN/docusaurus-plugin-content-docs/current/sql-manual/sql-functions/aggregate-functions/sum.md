@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## SUM
-### description
+### Description
 #### Syntax
 
 `SUM(expr)`
@@ -33,7 +33,7 @@ under the License.
 
 用于返回选中字段所有值的和
 
-### example
+### Example
 ```
 MySQL > select sum(scan_rows) from log_statis group by datetime;
 +------------------+
@@ -42,5 +42,5 @@ MySQL > select sum(scan_rows) from log_statis group by datetime;
 |       8217360135 |
 +------------------+
 ```
-### keywords
+### Keywords
 SUM

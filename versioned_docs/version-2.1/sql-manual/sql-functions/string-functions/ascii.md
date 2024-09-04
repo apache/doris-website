@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ascii
+## Ascii
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 Returns the ASCII code corresponding to the first character of the string
 
-### example
+### Example
 
 ```
 mysql> select ascii('1');
@@ -50,5 +50,5 @@ mysql> select ascii('234');
 |           50 |
 +--------------+
 ```
-### keywords
+### Keywords
     ASCII

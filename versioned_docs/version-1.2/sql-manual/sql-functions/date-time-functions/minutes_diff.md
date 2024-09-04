@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## minutes_diff
-### description
+## Minutes_diff
+### Description
 #### Syntax
 
 `INT minutes_diff(DATETIME enddate, DATETIME startdate)`
 
 The difference between the start time and the end time is a few minutes
 
-### example
+### Example
 
 ```
 mysql> select minutes_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
@@ -43,6 +43,6 @@ mysql> select minutes_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
 +------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     minutes_diff

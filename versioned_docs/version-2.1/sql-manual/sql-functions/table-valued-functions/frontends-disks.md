@@ -30,13 +30,13 @@ under the License.
 
 frontends
 
-### description
+### Description
 
 Table-Value-Function, generate a temporary table named `frontends_disks`. This tvf is used to view the information of FE nodes 's disks in the doris cluster.
 
 This function is used in `FROM` clauses.
 
-#### syntax
+#### Syntax
 
 `frontends_disks()`
 
@@ -64,7 +64,7 @@ The information displayed by the `frontends_disks` tvf is basically consistent w
 
 The information displayed by the `frontends_disks` tvf is authenticated, which is consistent with the behavior of `show frontends disks`, user must have ADMIN/OPERATOR privelege.
 
-### example
+### Example
 ```
 mysql> select * from frontends_disk()\G
 *************************** 1. row ***************************
@@ -82,6 +82,6 @@ mysql> select * from frontends_disk()\G
 12 row in set (0.03 sec)
 ```
 
-### keywords
+### Keywords
 
     frontends_disks

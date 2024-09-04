@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_length
-### description
+## Bit_length
+### Description
 #### Syntax
 
 `INT bit_length(VARCHAR str)`
@@ -33,7 +33,7 @@ under the License.
 
 返回字符串的位长度。
 
-### example
+### Example
 
 ```
 mysql> select bit_length("abc");
@@ -50,5 +50,5 @@ mysql> select bit_length("中国");
 |                   48 |
 +----------------------+
 ```
-### keywords
+### Keywords
     BIT_LENGTH

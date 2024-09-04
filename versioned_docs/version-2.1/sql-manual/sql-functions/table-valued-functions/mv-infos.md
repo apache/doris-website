@@ -30,7 +30,7 @@ under the License.
 
 mv_infos
 
-### description
+### Description
 
 Table function, generating temporary tables for asynchronous materialized views, which can view information about asynchronous materialized views created in a certain database.
 
@@ -38,7 +38,7 @@ This function is used in the from clause.
 
 This funciton is supported since 2.1.0.
 
-#### syntax
+#### Syntax
 
 `mv_infos("database"="")`
 
@@ -77,7 +77,7 @@ mysql> desc function mv_infos("database"="tpch100");
 * MvPartitionInfo: Partition information of materialized views
 * SyncWithBaseTables：Is it synchronized with the base table data? To see which partition is not synchronized, please use [SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md)
 
-### example
+### Example
 
 1. View all materialized views under db1
 
@@ -97,6 +97,6 @@ mysql> select * from mv_infos("database"="db1") where Name = "mv1";
 mysql> select State from mv_infos("database"="db1") where Name = "mv1";
 ```
 
-### keywords
+### Keywords
 
     mv, infos

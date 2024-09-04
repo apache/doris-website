@@ -128,6 +128,6 @@ The user can control the stop, pause and restart of the job through the `STOP/PA
 
 For specific commands, please refer to [STOP ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STOP-ROUTINE-LOAD.md) , [PAUSE ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/PAUSE-ROUTINE-LOAD.md), [RESUME ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/RESUME-ROUTINE-LOAD.md) command documentation.
 
-## more help
+## More help
 
 For more detailed syntax and best practices for ROUTINE LOAD, see [ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD.md) command manual.

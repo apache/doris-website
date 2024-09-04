@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## makedate
+## Makedate
 ### Description
 #### Syntax
 
@@ -32,7 +32,7 @@ under the License.
 
 Returns a date, given year and day-of-year values. dayofyear must be greater than 0 or the result is NULL.
 
-### example
+### Example
 ```
 mysql> select makedate(2021,1), makedate(2021,100), makedate(2021,400);
 +-------------------+---------------------+---------------------+
@@ -41,5 +41,5 @@ mysql> select makedate(2021,1), makedate(2021,100), makedate(2021,400);
 | 2021-01-01        | 2021-04-10          | 2022-02-04          |
 +-------------------+---------------------+---------------------+
 ```
-### keywords
+### Keywords
     MAKEDATE

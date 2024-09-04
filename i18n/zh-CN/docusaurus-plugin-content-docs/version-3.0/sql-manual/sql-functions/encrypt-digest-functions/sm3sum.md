@@ -24,13 +24,13 @@ under the License.
 
 ## SM3SUM
 
-### description
+### Description
 计算 多个字符串 SM3 256-bit
 #### Syntax
 
 `SM3SUM(str[,str])`
 
-### example
+### Example
 
 ```
 MySQL > select sm3("abcd");
@@ -51,6 +51,6 @@ MySQL > select sm3sum("ab","cd");
 
 ```
 
-### keywords
+### Keywords
 
     SM3SUM

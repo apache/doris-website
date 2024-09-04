@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_reverse_sort
+## Array_reverse_sort
 
 <version since="1.2.3">
 
@@ -30,7 +30,7 @@ array_reverse_sort
 
 </version>
 
-### description
+### Description
 
 #### Syntax
 
@@ -39,11 +39,11 @@ array_reverse_sort
 Return the array which has been sorted in descending order. Return NULL for NULL input.
 If the element of array is NULL, it will be placed in the last of the sorted array.
 
-### notice
+### Notice
 
 `Only supported in vectorized engine`
 
-### example
+### Example
 
 ```mysql> select k1, k2, array_reverse_sort(k2) from array_test;
 +------+-----------------------------+-----------------------------+
@@ -75,6 +75,6 @@ mysql> select k1, k2, array_reverse_sort(k2) from array_test01;
 +------+------------------------------------------+------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, SORT, REVERSE, ARRAY_SORT, ARRAY_REVERSE_SORT

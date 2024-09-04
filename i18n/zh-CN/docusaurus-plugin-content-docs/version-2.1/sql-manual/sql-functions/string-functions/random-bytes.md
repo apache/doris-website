@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## random_bytes
-### description
+## Random_bytes
+### Description
 
 random_bytes函数用于生成随机字节序列。
 
@@ -39,7 +39,7 @@ VARCHAR random_bytes(INT len)
 
 - len: 该参数指定生成的随机字节序列的长度。
 
-### example
+### Example
 
 ```
 mysql> select random_bytes(7);
@@ -50,5 +50,5 @@ mysql> select random_bytes(7);
 +------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     RANDOM BYTES

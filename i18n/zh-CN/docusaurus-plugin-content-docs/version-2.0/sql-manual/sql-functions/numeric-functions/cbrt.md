@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## cbrt
+## Cbrt
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE cbrt(DOUBLE x)`
 返回`x`的立方根.
 
-### example
+### Example
 
 ```
 mysql> select cbrt(8);
@@ -53,5 +53,5 @@ mysql> select cbrt(-1000.0);
 +---------------+
 ```
 
-### keywords
+### Keywords
 	CBRT

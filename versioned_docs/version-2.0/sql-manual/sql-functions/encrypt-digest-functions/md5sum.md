@@ -24,13 +24,13 @@ under the License.
 
 ## MD5SUM
 
-### description
+### Description
 Calculates an MD5 128-bit checksum for the strings
 #### Syntax
 
 `MD5SUM(str[,str])`
 
-### example
+### Example
 
 ```
 MySQL > select md5("abcd");
@@ -51,6 +51,6 @@ MySQL > select md5sum("ab","cd");
 
 ```
 
-### keywords
+### Keywords
 
     MD5SUM

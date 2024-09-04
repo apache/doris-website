@@ -41,7 +41,7 @@ In the above four scenarios, the solution at the application layer puts the quer
 - **Low hit rate**, the entire query result is cached. If the data is written in real time, the cache fails frequently, the hit rate is low and the system load is heavy.
 - **Additional Cost**, introducing external cache components will bring system complexity and increase additional costs.
 
-## solution
+## Solution
 
 This partition cache strategy can solve the above problems, giving priority to ensuring data consistency, and on this basis, refining the cache granularity and improving the hit rate, so it has the following characteristics:
 
@@ -50,7 +50,7 @@ This partition cache strategy can solve the above problems, giving priority to e
 - Implemented two caching strategies, SQLCache and PartitionCache, the latter has a finer cache granularity
 - Use consistent hashing to solve the problem of BE nodes going online and offline. The caching algorithm in BE is an improved LRU
 
-## scenes to be used
+## Scenes to be used
 
 Currently, it supports two methods: SQL Cache and Partition Cache, and supports OlapTable internal table and Hive external table.
 

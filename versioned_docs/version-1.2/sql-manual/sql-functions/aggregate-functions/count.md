@@ -33,7 +33,7 @@ under the License.
 
 Number of rows used to return the required rows
 
-### example
+### Example
 
 ```
 MySQL > select count(*) from log_statis group by datetime;
@@ -57,5 +57,5 @@ MySQL > select count(distinct datetime) from log_statis group by datetime;
 |                       71045   |
 +-------------------------------+
 ```
-### keywords
+### Keywords
 COUNT

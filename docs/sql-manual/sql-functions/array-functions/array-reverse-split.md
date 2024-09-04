@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_sortby
+## Array_sortby
 
 array_reverse_split
 
-### description
+### Description
 
 #### Syntax
 
@@ -38,7 +38,7 @@ ARRAY<ARRAY<T>> array_reverse_split(lambda, ARRAY<T0> arg0...)
 1. pass in two `ARRAY` of equal length, the second of which is an `Array<Boolean>`, and split the `arg` according to the split point to the right of the position in the `cond` that is `true`.
 2. Higher-order functions, passed a lambda expression and at least one `ARRAY arg0`, split `arg0` by the right-hand side of the `true` position in the `cond` of the `Array<Boolean>` result of the operation on the lambda expression.
 
-### example
+### Example
 
 ```
 mysql> select array_reverse_split([1,2,3,4,5], [1,0,1,0,0]);
@@ -74,6 +74,6 @@ mysql> select array_reverse_split(x->(year(x)>2013),["2020-12-12", "2013-12-12",
 1 row in set (0.14 sec)
 ```
 
-### keywords
+### Keywords
 
 ARRAY, REVERSE, SPLIT, ARRAY_REVERSE_SPLIT

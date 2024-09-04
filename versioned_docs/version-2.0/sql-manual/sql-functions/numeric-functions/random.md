@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## random
+## Random
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE random()`
 Returns a random number between 0-1.
 
-### example
+### Example
 
 ```
 mysql> select random();
@@ -41,5 +41,5 @@ mysql> select random();
 +---------------------+
 ```
 
-### keywords
+### Keywords
 	RANDOM

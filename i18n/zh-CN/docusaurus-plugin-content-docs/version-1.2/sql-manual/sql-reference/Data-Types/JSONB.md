@@ -28,16 +28,16 @@ under the License.
 
 JSONB
 
-### description
+### Description
     JSONB(JSON Binary)类型
         二进制JSON类型，采用二进制JSONB格式存储，通过jsonb函数访问JSON内部字段。最大（默认）支持1048576 字节（1MB），JSONB类型还受be配置`jsonb_type_length_soft_limit_bytes`限制
 
-### note
+### Note
     与普通STRING类型存储的JSON字符串相比，JSONB类型有两点优势
     1. 数据写入时进行JSON格式校验
     2. 二进制存储格式更加高效，通过jsonb_extract等函数可以高效访问JSON内部字段，比get_json_xx函数快几倍
 
-### example
+### Example
     用一个从建表、导数据、查询全周期的例子说明JSONB数据类型的功能和用法。
 
 #### 创建库表
@@ -58,7 +58,7 @@ PROPERTIES("replication_num" = "1");
 
 #### 导入数据
 
-##### stream load 导入test_jsonb.csv测试数据
+##### Stream load 导入test_jsonb.csv测试数据
 
 - 测试数据有2列，第一列id，第二列是json
 - 测试数据有25行，其中前18行的json是合法的，后7行的json是非法的
@@ -169,7 +169,7 @@ mysql> SELECT * FROM test_jsonb ORDER BY id;
 
 ```
 
-##### insert into 插入数据
+##### Insert into 插入数据
 
 - insert 1条数据，总数据从18条增加到19条
 ```
@@ -805,5 +805,5 @@ mysql> select id, j, jsonb_type(j, '$.k1') from test_jsonb order by id;
 
 ```
 
-### keywords
+### Keywords
 JSONB, JSON, jsonb_parse, jsonb_parse_error_to_null, jsonb_parse_error_to_value, jsonb_extract, jsonb_extract_isnull, jsonb_extract_bool, jsonb_extract_int, jsonb_extract_bigint, jsonb_extract_double, jsonb_extract_string, jsonb_exists_path, jsonb_type

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## nullif
-### description
+## Nullif
+### Description
 #### Syntax
 
 `nullif(expr1, expr2)`
@@ -40,7 +40,7 @@ CASE
 END
 ```
 
-### example
+### Example
 
 ```
 mysql> select nullif(1,1);
@@ -57,5 +57,5 @@ mysql> select nullif(1,0);
 |            1 |
 +--------------+
 ```
-### keywords
+### Keywords
 NULLIF

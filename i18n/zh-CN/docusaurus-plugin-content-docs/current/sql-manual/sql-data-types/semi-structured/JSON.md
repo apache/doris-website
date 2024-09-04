@@ -101,7 +101,7 @@ PROPERTIES("replication_num" = "1");
 
 #### 导入数据
 
-##### stream load 导入test_json.csv测试数据
+##### Stream load 导入test_json.csv测试数据
 
 - 测试数据有2列，第一列ID，第二列是JSON
 - 测试数据有25行，其中前18行的JSON是合法的，后7行的JSON是非法的
@@ -212,7 +212,7 @@ mysql> SELECT * FROM test_json ORDER BY id;
 
 ```
 
-##### insert into 插入数据
+##### Insert into 插入数据
 
 - insert 1条数据，总数据从18条增加到19条
 ```
@@ -848,5 +848,5 @@ mysql> select id, j, json_type(j, '$.k1') from test_json order by id;
 
 ```
 
-### keywords
+### Keywords
 JSON, json_parse, json_parse_error_to_null, json_parse_error_to_value, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_double, json_extract_String, json_exists_path, json_type

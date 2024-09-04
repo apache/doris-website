@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## GROUP_BITMAP_XOR
-### description
+### Description
 #### Syntax
 
 `BITMAP GROUP_BITMAP_XOR(expr)`
 
 Perform an xor calculation on expr, and return a new bitmap.
 
-### example
+### Example
 
 ```
 mysql>  select page, bitmap_to_string(user_id) from pv_bitmap;
@@ -52,6 +52,6 @@ mysql> select page, bitmap_to_string(group_bitmap_xor(user_id)) from pv_bitmap g
 +------+-----------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     GROUP_BITMAP_XOR,BITMAP

@@ -28,8 +28,8 @@ under the License.
 This feature is supported since the Apache Doris 1.2 version
 :::
 
-## function char
-### description
+## Function char
+### Description
 #### Syntax
 
 `VARCHAR char(INT,..., [USING charset_name])`
@@ -43,7 +43,7 @@ Arguments larger than `255` are converted into multiple result bytes. For exampl
 Currently only `utf8` is supported for `charset_name`.
 
 
-### example
+### Example
 
 ```
 mysql> select char(68, 111, 114, 105, 115);
@@ -67,5 +67,5 @@ mysql> select char(255);
 | NULL              |
 +-------------------+
 ```
-### keywords
+### Keywords
     CHAR

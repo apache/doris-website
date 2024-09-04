@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_extract
+## Json_extract
 
  
 
-### description
+### Description
 
 #### Syntax
 
@@ -68,8 +68,8 @@ Exception handling is as follows:
 - if datatype of the field specified by json_path is not the same with type of json_extract_t, return t if it can be cast to t else NULL
 
 
-## json_exists_path and json_type
-### description
+## Json_exists_path and json_type
+### Description
 
 #### Syntax
 
@@ -91,7 +91,7 @@ There are two extra functions to check field existence and type
   - double
   - string
 
-### example
+### Example
 
 refer to [json tutorial](../../sql-reference/Data-Types/JSON.md) for more.
 
@@ -130,5 +130,5 @@ mysql> SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
 ```
 
 
-### keywords
+### Keywords
 JSONB, JSON, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_largeint,json_extract_double, json_extract_string, json_exists_path, json_type

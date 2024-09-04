@@ -89,7 +89,7 @@ When loading data, vertically cut the bitmap value range of the user. For exampl
 
 Note: The orthogonal bitmap function cannot be used in the partitioned table. Because the partitions of the partitioned table are orthogonal, the data between partitions cannot be guaranteed to be orthogonal, so the calculation result cannot be estimated.
 
-#### orthogonal_bitmap_intersect 
+#### Orthogonal_bitmap_intersect 
 
 The bitmap intersection function
 
@@ -112,7 +112,7 @@ select BITMAP_COUNT(orthogonal_bitmap_intersect(user_id, tag, 13080800, 11110200
 
 ```
 
-#### orthogonal_bitmap_intersect_count 
+#### Orthogonal_bitmap_intersect_count 
 
 To calculate the bitmap intersection count function, the syntax is the same as the original Intersect_Count, but the implementation is different
 
@@ -129,7 +129,7 @@ Explain:
 on the basis of this table schema, the query planning aggregation is divided into two layers. In the first layer, be nodes (update and serialize) first press filter_ Values are used to hash aggregate the keys, and then the intersection of bitmaps of all keys is performed, and then the intersection results are counted. The count values are serialized and sent to the second level be nodes (merge and finalize). In the second level be nodes, the sum of all the count values from the first level nodes is calculated circularly
 
 
-#### orthogonal_bitmap_union_count 
+#### Orthogonal_bitmap_union_count 
 
 Figure out the bitmap union count function, syntax with the original bitmap_union_count, but the implementation is different.
 
@@ -141,7 +141,7 @@ Explain:
 
 on the basis of this table schema, this function is divided into two layers. In the first layer, be nodes (update and serialize) merge all the bitmaps, and then count the resulting bitmaps. The count values are serialized and sent to the second level be nodes (merge and finalize). In the second layer, the be nodes are used to calculate the sum of all the count values from the first level nodes
 
-#### orthogonal_bitmap_expr_calculate
+#### Orthogonal_bitmap_expr_calculate
 
 Compute the function by computing the intersection, union and difference set of the expression bitmap.
 
@@ -159,7 +159,7 @@ Explain:
 
 the aggregation of query planning is divided into two layers. The first layer of be aggregation node calculation includes init, update, and serialize steps. The second layer of be aggregation node calculation includes merge and finalize steps. In the first layer of be node, the input string is parsed in the init phase, which is converted into a suffix expression (inverse Polish), parses the calculated key value, and initializes it in the map<key, bitmap>structure; In the update phase, the underlying kernel scan dimension column (filter_column) calls back the update function, and then aggregates the bitmap in the map structure of the previous step in the unit of computing key; In the serialize stage, the bitmap of the key column is parsed according to the suffix expression, and the bitmap intersection, merge and difference set is calculated using the first in, last out principle of the stack structure. Then the final bitmap is serialized and sent to the aggregation be node in the second layer. Aggregates be nodes in the second layer, finds the union set of all bitmap values from the first layer nodes, and returns the final bitmap results
 
-#### orthogonal_bitmap_expr_calculate_count
+#### Orthogonal_bitmap_expr_calculate_count
 
 Compute the count function by computing the intersection, union and difference set of the expression bitmap. The syntax and parameters is the same as orthogonal_bitmap_expr_calculate
 

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## substring
-### description
+## Substring
+### Description
 #### Syntax
 
 `VARCHAR substring(VARCHAR str, INT pos[, INT len])`
@@ -44,7 +44,7 @@ If len is less than 1, the result is the empty string.
 
 The function have a alias named `substr`.
 
-### example
+### Example
 
 ```
 mysql> select substring('abc1', 2);
@@ -83,5 +83,5 @@ mysql> select substring('abc1def', 2, 2);
 +-----------------------------+
 ```
 
-### keywords
+### Keywords
     SUBSTRING, STRING, SUBSTR

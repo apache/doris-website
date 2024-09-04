@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# import strict mode
+# Import strict mode
 
 Strict mode (strict_mode) is configured as a parameter in the import operation. This parameter affects the import behavior of certain values and the final imported data.
 

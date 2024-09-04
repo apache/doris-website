@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_type
+## Json_type
 
-### description
+### Description
 
 It is used to determine the type of the field specified by json_path in JSON data. If the field does not exist, return NULL. If it exists, return one of the following types
 
@@ -46,11 +46,11 @@ It is used to determine the type of the field specified by json_path in JSON dat
 STRING json_type(JSON j, VARCHAR json_path)
 ```
 
-### example
+### Example
 
 Refer to [json tutorial](../../sql-reference/Data-Types/JSON.md)
 
-### keywords
+### Keywords
 
 json_type
 

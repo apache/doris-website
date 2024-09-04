@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## round
+## Round
 
-### description
+### Description
 #### Syntax
 
 `T round(T x[, d])`
@@ -35,7 +35,7 @@ under the License.
 该函数的另一个别名为 `dround`。
 :::
 
-### example
+### Example
 
 ```
 mysql> select round(2.4);
@@ -76,5 +76,5 @@ mysql> select round(1667.2725, -2);
 +----------------------+
 ```
 
-### keywords
+### Keywords
 	ROUND, DROUND

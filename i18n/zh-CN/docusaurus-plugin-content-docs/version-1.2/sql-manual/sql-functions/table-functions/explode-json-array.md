@@ -24,22 +24,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode_json_array
+## Explode_json_array
 
-### description
+### Description
 
 表函数，需配合 Lateral View 使用。
 
 展开一个 json 数组。根据数组元素类型，有三种函数名称。分别对应整型、浮点和字符串数组。
 
-#### syntax
+#### Syntax
 ```sql
 explode_json_array_int(json_str)
 explode_json_array_double(json_str)
 explode_json_array_string(json_str)
 ```
 
-### example
+### Example
 
 原表数据：
 
@@ -178,6 +178,6 @@ mysql> select k1, e1 from example1 lateral view explode_json_array_string('{"a":
 Empty set
 ```
 
-### keywords
+### Keywords
 
 explode,json,array,json_array,explode_json,explode_json_array

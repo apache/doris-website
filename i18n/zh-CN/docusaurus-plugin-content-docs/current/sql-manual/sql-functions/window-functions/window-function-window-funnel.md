@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION WINDOW_FUNNEL
-### description
+### Description
 
 在滑动时间窗口中搜索事件链，并计算链中发生的最大事件数。
 
@@ -35,9 +35,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 window_funnel(window, mode, timestamp_column, event1, event2, ... , eventN)
 ```
 
-### example
+### Example
 
-#### example1: default 模式
+#### Example1: default 模式
 
 使用默认模式，筛选出不同```user_id```对应的最大连续事件数，时间窗口为```5```分钟：
 
@@ -95,7 +95,7 @@ order BY
 
 对于```uesr_id=100123```，因为```付款```事件发生的时间超出了时间窗口，所以匹配到的事件链是```登陆-访问-下单```。
 
-#### example2: deduplication 模式
+#### Example2: deduplication 模式
 
 使用```deduplication```模式，筛选出不同```user_id```对应的最大连续事件数，时间窗口为```1```小时：
 
@@ -153,7 +153,7 @@ order BY
 ```
 对于```uesr_id=100123```，匹配到```访问```事件后，```登录```事件重复出现，所以匹配到的事件链是```登陆-访问```。
 
-#### example3: fixed 模式
+#### Example3: fixed 模式
 
 使用```fixed```模式，筛选出不同```user_id```对应的最大连续事件数，时间窗口为```1```小时：
 
@@ -211,7 +211,7 @@ order BY
 ```
 对于```uesr_id=100123```，匹配到```下单```事件后，事件链被```登录2```事件打断，所以匹配到的事件链是```登陆-访问-下单```。
 
-#### example4: increase 模式
+#### Example4: increase 模式
 
 使用```increase```模式，筛选出不同```user_id```对应的最大连续事件数，时间窗口为```1```小时：
 
@@ -268,6 +268,6 @@ order BY
 ```
 对于```uesr_id=100123```，```付款```事件的时间戳与```下单```事件的时间戳发生在同一秒，没有递增，所以匹配到的事件链是```登陆-访问-下单```。
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,WINDOW_FUNNEL

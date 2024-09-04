@@ -29,7 +29,7 @@ under the License.
 ANY_VALUE
 
 
-### description
+### Description
 #### Syntax
 
 `ANY_VALUE(expr)`
@@ -38,7 +38,7 @@ ANY_VALUE
 
 别名函数： `ANY(expr)`
 
-### example
+### Example
 ```
 mysql> select id, any_value(name) from cost2 group by id;
 +------+-------------------+
@@ -48,5 +48,5 @@ mysql> select id, any_value(name) from cost2 group by id;
 |    2 | jack              |
 +------+-------------------+
 ```
-### keywords
+### Keywords
 ANY_VALUE, ANY

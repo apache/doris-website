@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## lower
+## Lower
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 Convert all strings in parameters to lowercase. Another alias for this function is [lcase](lcase.md).
 
-### example
+### Example
 
 ```
 mysql> SELECT lower("AbC123");
@@ -43,5 +43,5 @@ mysql> SELECT lower("AbC123");
 | abc123          |
 +-----------------+
 ```
-### keywords
+### Keywords
     LOWER

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## milliseconds_add
-### description
+## Milliseconds_add
+### Description
 #### Syntax
 
 `DATETIMEV2 milliseconds_add(DATETIMEV2 basetime, INT delta)`
@@ -33,7 +33,7 @@ under the License.
 - delta: 从 basetime 起需要相加的毫秒数
 - 返回类型为 DATETIMEV2
 
-### example
+### Example
 ```
 mysql> select milliseconds_add('2023-09-08 16:02:08.435123', 1);
 +--------------------------------------------------------------------------+
@@ -45,7 +45,7 @@ mysql> select milliseconds_add('2023-09-08 16:02:08.435123', 1);
 ```
 
 
-### keywords
+### Keywords
     milliseconds_add
 
     

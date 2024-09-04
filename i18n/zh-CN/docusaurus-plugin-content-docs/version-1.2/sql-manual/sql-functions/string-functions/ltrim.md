@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ltrim
-### description
+## Ltrim
+### Description
 #### Syntax
  
 `VARCHAR ltrim(VARCHAR str[, VARCHAR rhs])`
@@ -33,7 +33,7 @@ under the License.
 
 当没有rhs参数时，将参数 str 中从左侧部分开始部分连续出现的空格去掉，否则去掉rhs
 
-### example
+### Example
 
 ```
 mysql> SELECT ltrim('   ab d') str;
@@ -50,5 +50,5 @@ mysql> SELECT ltrim('ababccaab','ab') str;
 | ccaab |
 +-------+
 ```
-### keywords
+### Keywords
     LTRIM

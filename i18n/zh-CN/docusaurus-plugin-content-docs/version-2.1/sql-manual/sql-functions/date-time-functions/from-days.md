@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_days
-### description
+## From_days
+### Description
 #### Syntax
 
 `DATE FROM_DAYS(INT N)`
@@ -34,7 +34,7 @@ under the License.
 给定一个天数，返回一个DATE。注意，为了和mysql保持一致的行为，不存在0000-02-29这个日期。
 
 
-### example
+### Example
 
 ```
 mysql> select from_days(730669);
@@ -66,6 +66,6 @@ mysql> select from_days (60);
 +---------------+
 ```
 
-### keywords
+### Keywords
 
     FROM_DAYS,FROM,DAYS

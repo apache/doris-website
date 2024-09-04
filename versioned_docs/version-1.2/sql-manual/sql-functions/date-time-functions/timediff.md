@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## timediff
+## Timediff
 ### Description
 #### Syntax
 
@@ -37,7 +37,7 @@ The TIMEDIFF function returns the result of expr1 - expr2 expressed as a time va
 
 The results are limited to TIME values ranging from - 838:59:59 to 838:59:59.
 
-#### example
+#### Example
 
 ```
 mysql> SELECT TIMEDIFF(now(),utc_timestamp());
@@ -61,5 +61,5 @@ mysql> SELECT TIMEDIFF('2019-01-01 00:00:00', NULL);
 | NULL                                  |
 +---------------------------------------+
 ```
-### keywords
+### Keywords
     TIMEDIFF

@@ -28,19 +28,19 @@ under the License.
 
 JSONB
 
-### description
+### Description
     JSONB (JSON Binary) datatype.
         Use binary JSON format for storage and jsonb function to extract field.The maximum (default) support is 1048576 bytes (1MB), and the JSONB type is also limited by the be configuration `jsonb_type_length_soft_limit_bytes`
 
-### note
+### Note
     There are some advantanges for JSONB over plain JSON STRING.
     1. JSON syntax will be validated on write to ensure data quality
     2. JSONB format is more efficient. Using jsonb_extract functions on JSONB format is 2-4 times faster than get_json_xx on JSON STRING format.
 
-### example
+### Example
 A tutorial for JSONB datatype including create table, load data and query.
 
-#### create database and table
+#### Create database and table
 
 ```
 CREATE DATABASE testdb;
@@ -58,7 +58,7 @@ PROPERTIES("replication_num" = "1");
 
 #### Load data
 
-##### stream load test_jsonb.csv test data
+##### Stream load test_jsonb.csv test data
 
 - there are 2 columns, the 1st column is id and the 2nd column is json string
 - there are 25 rows, the first 18 rows are valid json and the last 7 rows are invalid
@@ -171,7 +171,7 @@ mysql> SELECT * FROM test_jsonb ORDER BY id;
 
 ```
 
-##### write data using insert into
+##### Write data using insert into
 
 - total rows increae from 18 to 19 after insert 1 row
 ```
@@ -209,7 +209,7 @@ mysql> SELECT * FROM test_jsonb ORDER BY id;
 
 #### Query
 
-##### extract some filed from json by jsonb_extract functions
+##### Extract some filed from json by jsonb_extract functions
 
 1. extract the whole json, '$' stands for root in json path
 ```
@@ -665,7 +665,7 @@ mysql> SELECT id, j, jsonb_extract_isnull(j, '$') FROM test_jsonb ORDER BY id;
 
 ```
 
-##### check if a field is existed in json by jsonb_exists_path
+##### Check if a field is existed in json by jsonb_exists_path
 
 ```
 mysql> SELECT id, j, jsonb_exists_path(j, '$') FROM test_jsonb ORDER BY id;
@@ -749,7 +749,7 @@ mysql> SELECT id, j, jsonb_exists_path(j, '$[2]') FROM test_jsonb ORDER BY id;
 
 ```
 
-##### get the datatype of a field in json by jsonb_type
+##### Get the datatype of a field in json by jsonb_type
 
 - return the data type of the field specified by json path, NULL if not existed.
 ```
@@ -807,6 +807,6 @@ mysql> select id, j, jsonb_type(j, '$.k1') from test_jsonb order by id;
 
 ```
 
-### keywords
+### Keywords
 JSONB, JSON, jsonb_parse, jsonb_parse_error_to_null, jsonb_parse_error_to_value, jsonb_extract, jsonb_extract_isnull, jsonb_extract_bool, jsonb_extract_int, jsonb_extract_bigint, jsonb_extract_double, jsonb_extract_string, jsonb_exists_path, jsonb_type
 

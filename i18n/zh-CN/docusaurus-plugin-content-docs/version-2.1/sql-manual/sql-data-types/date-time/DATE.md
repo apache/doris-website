@@ -26,15 +26,15 @@ under the License.
 
 ## DATE
 
-### name
+### Name
 
 DATE
 
-### description
+### Description
     DATE类型
         日期类型，目前的取值范围是['0000-01-01', '9999-12-31'], 默认的打印形式是'yyyy-MM-dd'
 
-### example
+### Example
 
 ```sql
 SELECT DATE('2003-12-31 01:02:03');
@@ -45,6 +45,6 @@ SELECT DATE('2003-12-31 01:02:03');
 +-----------------------------+
 ```
 
-### keywords
+### Keywords
 
     DATE

@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## positive
+## Positive
 
-### description
+### Description
 #### Syntax
 
 ```sql
@@ -34,7 +34,7 @@ DECIMAL positive(DECIMAL x)
 ```
 Return `x`.
 
-### example
+### Example
 
 ```
 mysql> SELECT positive(-10);
@@ -51,5 +51,5 @@ mysql> SELECT positive(12);
 +--------------+
 ```
 
-### keywords
+### Keywords
 	POSITIVE

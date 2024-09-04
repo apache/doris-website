@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_unixtime
-### description
-#### syntax
+## From_unixtime
+### Description
+#### Syntax
 
 `DATETIME FROM UNIXTIME (BIGINT unix timestamp [, VARCHAR string format]`
 
@@ -38,7 +38,7 @@ Support `date_format`'s format, and default is `%Y-%m-%d %H:%i:%s`
 
 The current supported range for `unix_timestamp` is `[0, 32536771199]`. `unix_timestamp` values that fall outside of this range will be returned as NULL
 
-### example
+### Example
 
 ```
 mysql> select from_unixtime(1196440219);
@@ -74,6 +74,6 @@ mysql> select from_second(21474836470);
 +--------------------------+
 ```
 
-### keywords
+### Keywords
 
     FROM_UNIXTIME,FROM,UNIXTIME

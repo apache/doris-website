@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## least
+## Least
 
-### description
+### Description
 #### Syntax
 
 `least(col_a, col_b, …, col_n)`  
@@ -33,7 +33,7 @@ under the License.
 
 Compare the size of `n columns` and return the smallest among them. If there is `NULL` in `column`, return `NULL`.
 
-### example
+### Example
 
 ```
 mysql> select least(-1, 0, 5, 8);
@@ -62,5 +62,5 @@ mysql> select least("2022-02-26 20:02:11","2020-01-23 20:02:11","2020-06-22 20:0
 +----------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 	LEAST

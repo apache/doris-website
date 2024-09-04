@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## multi_match_any
+## Multi_match_any
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 Checks whether the string `haystack` matches the regular expressions `patterns` in re2 syntax. returns 0 if none of the regular expressions are matched and 1 if any of the patterns matches.
 
-### example
+### Example
 
 ```
 mysql> select multi_match_any('Hello, World!', ['hello', '!', 'world']);
@@ -50,5 +50,5 @@ mysql> select multi_match_any('abc', ['A', 'bcd']);
 | 0                                    |
 +--------------------------------------+
 ```
-### keywords
+### Keywords
     MULTI_MATCH,MATCH,ANY

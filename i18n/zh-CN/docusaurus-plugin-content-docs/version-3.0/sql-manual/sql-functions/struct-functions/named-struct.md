@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## named_struct
+## Named_struct
 
 named_struct
 
-### description
+### Description
 
 #### Syntax
 
@@ -36,7 +36,7 @@ named_struct
 
 参数个数必须为非0偶数，奇数位是field的名字，必须为常量字符串，偶数位是field的值，可以是多列或常量
 
-### example
+### Example
 
 ```
 mysql> select named_struct('f1', 1, 'f2', 'a', 'f3', "abc");
@@ -64,6 +64,6 @@ mysql> select named_struct('f1', k1, 'f2', k2, 'f3', null) from test_tb;
 1 row in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 
 NAMED, STRUCT, NAMED_STRUCT

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## width_bucket
+## Width_bucket
 
 ### Description
 
@@ -60,7 +60,7 @@ When an expression falls outside the range, the function returns:
 
 `null` if any input is `null`.
 
-### example
+### Example
 
 ```sql
 DROP TABLE IF EXISTS width_bucket_test;
@@ -148,5 +148,5 @@ SELECT k1, v1, v2, v3, width_bucket(v3, 200000, 600000, 4) AS w FROM width_bucke
 +------+------------+-----------+--------+------+
 
 ```
-### keywords
+### Keywords
 WIDTH_BUCKET

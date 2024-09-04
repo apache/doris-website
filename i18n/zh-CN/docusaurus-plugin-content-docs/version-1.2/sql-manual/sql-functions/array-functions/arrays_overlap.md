@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## arrays_overlap
+## Arrays_overlap
 
 arrays_overlap
 
-### description
+### Description
 
 #### Syntax
 
@@ -42,11 +42,11 @@ arrays_overlap
 NULL - left或者right数组为NULL；或者left和right数组中，任意元素为NULL；
 ```
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 mysql> select c_left,c_right,arrays_overlap(c_left,c_right) from array_test;
@@ -61,6 +61,6 @@ mysql> select c_left,c_right,arrays_overlap(c_left,c_right) from array_test;
 +--------------+-----------+-------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,ARRAYS,OVERLAP,ARRAYS_OVERLAP

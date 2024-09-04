@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## jsonb_parse
-### description
+## Jsonb_parse
+### Description
 #### Syntax
 
 ```sql
@@ -41,7 +41,7 @@ jsonb_parse functions parse JSON string to binary format. A series of functions 
   - jsonb_parse_error_to_null will return NULL
   - jsonb_parse_error_to_value will return the value specified by default_json_str
 
-### example
+### Example
 
 1. parse valid JSON string
 
@@ -80,5 +80,5 @@ mysql> SELECT jsonb_parse_error_to_value('invalid json', '{}');
 
 refer to jsonb tutorial for more.
 
-### keywords
+### Keywords
 JSONB, JSON, jsonb_parse, jsonb_parse_error_to_null, jsonb_parse_error_to_value

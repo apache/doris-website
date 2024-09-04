@@ -22,13 +22,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## substring_index
+## Substring_index
 
 ### Name
 
 SUBSTRING_INDEX
 
-### description
+### Description
 
 #### Syntax
 
@@ -43,7 +43,7 @@ if `field` is zero, return an empty string when `content` is not null, else will
 - `delimiter` and `field` parameter should be constant.
 
 
-### example
+### Example
 
 ```
 mysql> select substring_index("hello world", " ", 1);
@@ -83,6 +83,6 @@ mysql> select substring_index("hello world", " ", 0);
 |                                        |
 +----------------------------------------+
 ```
-### keywords
+### Keywords
 
     SUBSTRING_INDEX, SUBSTRING

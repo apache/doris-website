@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## uuid_numeric
-### description
+## Uuid_numeric
+### Description
 #### Syntax
 
 `LARGEINT uuid_numeric()`
@@ -34,7 +34,7 @@ Return a uuid in type `LARGEINT`.
 
 Note that `LARGEINT` has type Int128, so we could get a negative number from `uuid_numeric()`.
 
-### example
+### Example
 
 ```
 
@@ -46,6 +46,6 @@ mysql> select uuid_numeric();
 +----------------------------------------+
 ```
 
-### keywords
+### Keywords
     
     UUID UUID-NUMERIC 

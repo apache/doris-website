@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## QUANTILE_STATE
-### description
+### Description
 
 QUANTILE_STATE
 
@@ -55,7 +55,7 @@ related functions:
        This function converts the intermediate result variable (QUANTILE_STATE) of the quantile calculation into a specific quantile value
 
     
-### notice
+### Notice
 
 Now QUANTILE_STATE can only used in Aggregate Model Tables. We should turn on the switch for the QUANTILE_STATE types feature with the following command before use:
 
@@ -66,10 +66,10 @@ $ mysql-client > admin set frontend config("enable_quantile_state_type"="true");
 In this way the config will be reset after the FE process restarts. For permanent setting, you can add config `enable_quantile_state_type=true` inside fe.conf.
     
 
-### example
+### Example
     select QUANTILE_PERCENT(QUANTILE_UNION(v1), 0.5) from test_table group by k1, k2, k3;
     
 
-### keywords
+### Keywords
 
     QUANTILE_STATE, QUANTILE_UNION, TO_QUANTILE_STATE, QUANTILE_PERCENT

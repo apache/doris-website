@@ -24,12 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_intersect
+## Array_intersect
 
 array_intersect
 
 
-### description
+### Description
 
 #### Syntax
 
@@ -37,7 +37,7 @@ array_intersect
 
 Returns an array of the elements in the intersection of array1 and array2, without duplicates. If the input parameter is null, null is returned.
 
-### example
+### Example
 
 ```
 mysql> select k1,k2,k3,array_intersect(k2,k3) from array_type_table;
@@ -79,7 +79,7 @@ mysql> select k1,k2,k3,array_intersect(k2,k3) from array_type_table_decimal;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,INTERSECT,ARRAY_INTERSECT
 

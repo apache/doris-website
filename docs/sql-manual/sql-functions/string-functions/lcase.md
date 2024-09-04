@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## lcase
+## Lcase
 ### Description
 #### Syntax
 
@@ -32,5 +32,5 @@ under the License.
 
 Convert all strings in parameters to lowercase. Another alias for this function is [lower](./lower.md).
 
-### keywords
+### Keywords
     LCASE

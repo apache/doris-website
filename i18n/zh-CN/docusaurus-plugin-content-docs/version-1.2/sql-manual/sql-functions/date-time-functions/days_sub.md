@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## days_sub
-### description
+## Days_sub
+### Description
 #### Syntax
 
 `DATETIME DAYS_SUB(DATETIME date, INT days)`
@@ -34,7 +34,7 @@ under the License.
 
 参数 date 可以是 DATETIME 或者 DATE 类型，返回类型与参数 date 的类型一致。
 
-### example
+### Example
 
 ```
 mysql> select days_sub("2020-02-02 02:02:02", 1);
@@ -45,6 +45,6 @@ mysql> select days_sub("2020-02-02 02:02:02", 1);
 +------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     DAYS_SUB

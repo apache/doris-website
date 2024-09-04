@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## months_diff
-### description
+## Months_diff
+### Description
 #### Syntax
 
 `INT months_diff(DATETIME enddate, DATETIME startdate)`
 
 开始时间到结束时间相差几个月
 
-### example
+### Example
 
 ```
 mysql> select months_diff('2020-12-25','2020-10-25');
@@ -43,6 +43,6 @@ mysql> select months_diff('2020-12-25','2020-10-25');
 +-----------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     months_diff

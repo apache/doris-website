@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## years_diff
-### description
+## Years_diff
+### Description
 #### Syntax
 
 `INT years_diff(DATETIME enddate, DATETIME startdate)`
 
 The difference between the start time and the end time is several years
 
-### example
+### Example
 
 ```
 mysql> select years_diff('2020-12-25','2019-10-25');
@@ -43,6 +43,6 @@ mysql> select years_diff('2020-12-25','2019-10-25');
 +----------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     years_diff

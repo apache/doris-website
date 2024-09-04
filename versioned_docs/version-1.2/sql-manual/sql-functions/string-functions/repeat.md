@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## repeat
+## Repeat
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 Repeat the str of the string count times, return empty string when count is less than 1, return NULL when str, count is any NULL
 
-### example
+### Example
 
 ```
 mysql> SELECT repeat("a", 3);
@@ -50,5 +50,5 @@ mysql> SELECT repeat("a", -1);
 |                 |
 +-----------------+
 ```
-### keywords
+### Keywords
     REPEAT

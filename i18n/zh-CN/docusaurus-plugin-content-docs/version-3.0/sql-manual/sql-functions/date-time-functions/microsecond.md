@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## microsecond
-### description
+## Microsecond
+### Description
 #### Syntax
 
 `INT MICROSECOND(DATETIMEV2 date)`
@@ -35,7 +35,7 @@ under the License.
 
 参数为 Datetime 类型
 
-### example
+### Example
 
 ```
 mysql> select microsecond(cast('1999-01-02 10:11:12.000123' as datetimev2(6))) as microsecond;
@@ -45,5 +45,5 @@ mysql> select microsecond(cast('1999-01-02 10:11:12.000123' as datetimev2(6))) a
 |         123 |
 +-------------+
 ```
-### keywords
+### Keywords
     MICROSECOND

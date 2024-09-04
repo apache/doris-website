@@ -28,7 +28,7 @@ under the License.
 
 COLLECT_SET
 
-### description
+### Description
 #### Syntax
 
 `ARRAY<T> collect_set(expr[,max_size])`
@@ -36,7 +36,7 @@ COLLECT_SET
 Creates an array containing distinct elements from `expr`,with the optional `max_size` parameter limits the size of the resulting array to `max_size` elements. It has an alias `group_uniq_array`.
 
 
-### example
+### Example
 
 ```
 mysql> select k1,k2,k3 from collect_set_test order by k1;
@@ -71,5 +71,5 @@ mysql> select k1,collect_set(k2),collect_set(k3,1) from collect_set_test group b
 
 ```
 
-### keywords
+### Keywords
 COLLECT_SET,GROUP_UNIQ_ARRAY,COLLECT_LIST,ARRAY

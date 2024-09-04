@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitxor
-### description
+## Bitxor
+### Description
 #### Syntax
 
 `BITXOR(Integer-type lhs, Integer-type rhs)`
@@ -34,7 +34,7 @@ Returns the result of the XOR operation of two integers.
 
 Integer range: TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
-### example
+### Example
 
 ```
 mysql> select bitxor(3,5) ans;
@@ -52,6 +52,6 @@ mysql> select bitxor(1,7) ans;
 +------+
 ```
 
-### keywords
+### Keywords
 
     BITXOR

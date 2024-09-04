@@ -25,20 +25,20 @@ under the License.
 -->
 
 ## COLLECT_LIST
-### description
+### Description
 #### Syntax
 
 `ARRAY<T> collect_list(expr)`
 
 Returns an array consisting of all values in expr within the group, and ,with the optional `max_size` parameter limits the size of the resulting array to `max_size` elements.The order of elements in the array is non-deterministic. NULL values are excluded.
 It has an alias `group_array`.
-### notice
+### Notice
 
 ```
 Only supported in vectorized engine
 ```
 
-### example
+### Example
 
 ```
 mysql> select k1,k2,k3 from collect_list_test order by k1;
@@ -73,5 +73,5 @@ mysql> select k1,collect_list(k2),collect_list(k3,1) from collect_list_test grou
 
 ```
 
-### keywords
+### Keywords
 COLLECT_LIST,GROUP_ARRAY,COLLECT_SET,ARRAY

@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## PERCENTILE_APPROX_WEIGHTED
-### description
+### Description
 #### Syntax
 
 `PERCENTILE_APPROX_WEIGHTED(expr, w ,DOUBLE p [, DOUBLE compression])`
@@ -34,7 +34,7 @@ under the License.
 The function is similar to PERCENTILE_APPROX, with the only difference being an additional parameter w, which represents the number of times expr appears.
 Note that the value of parameter W needs to be greater than 0. If the value of a row is less than or equal to 0 during the calculation process, the current row will be skipped.
 
-### example
+### Example
 ```
 mysql >select * from quantile_weighted_table order by k;
 +------+------+
@@ -55,5 +55,5 @@ mysql >select percentile_approx_weighted(k,w,0.55) from quantile_weighted_table;
 
 ```
 
-### keywords
+### Keywords
 PERCENTILE_APPROX,PERCENTILE,APPROX,PERCENTILE_APPROX_WEIGHTED

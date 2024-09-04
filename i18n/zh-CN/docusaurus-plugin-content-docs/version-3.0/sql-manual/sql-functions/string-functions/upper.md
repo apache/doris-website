@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## upper
-### description
+## Upper
+### Description
 #### Syntax
 
 `VARCHAR upper(VARCHAR str)`
@@ -33,7 +33,7 @@ under the License.
 
 将参数中所有的字符串都转换成大写，此函数的另一个别名为[ucase](./ucase.md)。
 
-### example
+### Example
 
 ```
 mysql> SELECT upper("aBc123");
@@ -43,5 +43,5 @@ mysql> SELECT upper("aBc123");
 | ABC123          |
 +-----------------+
 ```
-### keywords
+### Keywords
     UPPER

@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## uuid_to_int
+## Uuid_to_int
 
-### description
+### Description
 
 `LARGEINT uuid_to_int(VARCHAR uuid)`
 
 对于输入的 uuid 字符串，返回一个 int128 表示。
 
-### example
+### Example
 
 ```sql
 mysql> select uuid_to_int("6ce4766f-6783-4b30-b357-bba1c7600348");
@@ -43,5 +43,5 @@ mysql> select uuid_to_int("6ce4766f-6783-4b30-b357-bba1c7600348");
 +-----------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     UUID_TO_INT

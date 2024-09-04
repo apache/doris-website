@@ -30,7 +30,7 @@ INET_NTOA
 
 
 
-### description
+### Description
 
 #### Syntax
 
@@ -38,11 +38,11 @@ INET_NTOA
 
 接受一个类型为 Int16、Int32、Int64 且大端表示的 IPv4 的地址，返回相应 IPv4 的字符串表现形式，格式为 A.B.C.D（以点分割的十进制数字）。
 
-### notice
+### Notice
 
 `对于负数或超过4294967295 （即 '255.255.255.255'）的入参都返回NULL，表示无效收入`
 
-### example
+### Example
 
 ```
 mysql> select inet_ntoa(3232235521);
@@ -66,6 +66,6 @@ mysql> select num,inet_ntoa(num) from ipv4_bi;
 7 rows in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
 INET_NTOA, IP

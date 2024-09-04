@@ -22,16 +22,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hll_from_base64
+## Hll_from_base64
 
-### description
+### Description
 #### Syntax
 
 `HLL HLL_FROM_BASE64(VARCHAR input)`
 
 将一个base64字符串(`hll_to_base64`函数的结果)转化为一个HLL。当输入字符串不合法时，返回NULL。
 
-### example
+### Example
 
 #### 查询示例
 ```
@@ -82,5 +82,5 @@ insert into doris_hll_table select k1, k2, k3, hll_from_base64(uuid) from hive.h
 ```
 更多导入细节可以参考：[Hive HLL UDF](../../../ecosystem/hive-hll-udf.md)
 
-### keywords
+### Keywords
 HLL_FROM_BASE64,HLL

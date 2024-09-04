@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_concat
+## Array_concat
 
 array_concat
 
-### description
+### Description
 
 将输入的所有数组拼接为一个数组
 
@@ -40,7 +40,7 @@ array_concat
 
 类型: Array.
 
-### example
+### Example
 
 ```
 mysql> select array_concat([1, 2], [7, 8], [5, 6]);
@@ -63,6 +63,6 @@ mysql> select col2, col3, array_concat(col2, col3) from array_test;
 ```
 
 
-### keywords
+### Keywords
 
 ARRAY,CONCAT,ARRAY_CONCAT

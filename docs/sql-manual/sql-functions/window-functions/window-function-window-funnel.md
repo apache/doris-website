@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION WINDOW_FUNNEL
-### description
+### Description
 
 Searches for event chains in a sliding time window and calculates the maximum number of events that occurred from the chain.
 
@@ -35,9 +35,9 @@ The function works according to the algorithm:
 window_funnel(window, mode, timestamp_column, event1, event2, ... , eventN)
 ```
 
-### example
+### Example
 
-#### example1: default mode
+#### Example1: default mode
 
 Using the ```default``` mode, find out the maximum number of consecutive events corresponding to different ```user_id```, with a time window of ```5``` minutes:
 
@@ -95,7 +95,7 @@ order BY
 
 For ```uesr_id=100123```, because the time when the ```payment``` event occurred exceeds the time window, the matched event chain is ```login-visit-order```.
 
-#### example2: deduplication mode
+#### Example2: deduplication mode
 
 Use the ```deduplication``` mode to find out the maximum number of consecutive events corresponding to different user_ids, with a time window of 1 hour:
 
@@ -153,7 +153,7 @@ order BY
 ```
 For ```uesr_id=100123```, after matching the ```visit``` event, the ```login``` event appears repeatedly, so the matched event chain is ```login-visit```.
 
-#### example3: fixed mode
+#### Example3: fixed mode
 
 Use the ```fixed``` mode to find out the maximum number of consecutive events corresponding to different ```user_id```, with a time window of ```1``` hour:
 
@@ -211,7 +211,7 @@ order BY
 ```
 For ```uesr_id=100123```, after matching the ```order``` event, the event chain is interrupted by the ```login2``` event, so the matched event chain is ```login-visit-order```.
 
-#### example4: increase mode
+#### Example4: increase mode
 
 Use the ```increase``` mode to find out the maximum number of consecutive events corresponding to different ```user_id```, with a time window of ```1``` hour:
 
@@ -269,6 +269,6 @@ order BY
 For ```uesr_id=100123```, the timestamp of the ```payment``` event and the timestamp of the ```order``` event occur in the same second and are not incremented, so the matched event chain is ```login-visit-order```.
 
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,WINDOW_FUNNEL

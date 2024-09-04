@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## cosh
+## Cosh
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE cosh(DOUBLE x)`
 Returns the hyperbolic cosine of `x`.
 
-### example
+### Example
 
 ```
 mysql> select cosh(0);
@@ -48,5 +48,5 @@ mysql> select cosh(1);
 +---------------------+
 ```
 
-### keywords
+### Keywords
 	COSH

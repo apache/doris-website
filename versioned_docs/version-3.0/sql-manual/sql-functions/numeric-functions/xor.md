@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## xor
+## Xor
 
-### description
+### Description
 #### Syntax
 
 `BOOLEAN xor BOOLEAN`
 Return the XOR value of two numbers.
 
-### example
+### Example
 
 ```
 mysql >select true xor false,true xor true;
@@ -42,5 +42,5 @@ mysql >select true xor false,true xor true;
 
 ```
 
-### keywords
+### Keywords
 	XOR

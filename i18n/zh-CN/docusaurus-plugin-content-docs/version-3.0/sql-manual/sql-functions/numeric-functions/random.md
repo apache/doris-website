@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## random
+## Random
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE random()`
@@ -40,7 +40,7 @@ under the License.
 
 注意：所有参数必须为常量。
 
-### example
+### Example
 
 ```sql
 mysql> select random();
@@ -75,5 +75,5 @@ mysql> select rand(-20, -10);
 1 row in set (0.10 sec)
 ```
 
-### keywords
+### Keywords
 	RANDOM, RAND

@@ -22,10 +22,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## split_by_regexp
+## Split_by_regexp
 
 
-### description
+### Description
 
 #### Syntax
 
@@ -38,7 +38,7 @@ under the License.
 `pattern` — 正则表达式. 类型: `String`
 `max_limit` — 保留个数，可选参数. 类型: `Int`
 
-### example
+### Example
 
 ```
 mysql [test_query_qa]>select split_by_regexp('abcde',"");
@@ -57,6 +57,6 @@ mysql [test_query_qa]>select split_by_regexp('a12bc23de345f',"\\d+");
 +-----------------------------------------+
 1 row in set (0.01 sec)
 ```
-### keywords
+### Keywords
 
 SPLIT_BY_REGEXP

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## trim
-### description
+## Trim
+### Description
 #### Syntax
 
 `VARCHAR trim(VARCHAR str[, VARCHAR rhs])`
@@ -33,7 +33,7 @@ under the License.
 
 When the 'rhs' parameter is not present, remove the continuous spaces that appear from the starting and ending of the 'str' parameter. Otherwise, remove 'rhs'.
 
-### example
+### Example
 
 ```
 mysql> SELECT trim('   ab d   ') str;
@@ -50,5 +50,5 @@ mysql> SELECT trim('ababccaab','ab') str;
 | cca  |
 +------+
 ```
-### keywords
+### Keywords
     TRIM

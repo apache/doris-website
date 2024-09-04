@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## split_by_regexp
+## Split_by_regexp
 
-### description
+### Description
 
 #### Syntax
 
@@ -38,7 +38,7 @@ Split the string 'str' based on the input regular expression 'pattern', with the
 `Max_imit ` - Reserved number, optional parameter Type: `Int`
 
 
-### example
+### Example
 
 ```
 mysql [test_query_qa]>select split_by_regexp('abcde',"");
@@ -57,6 +57,6 @@ mysql [test_query_qa]>select split_by_regexp('a12bc23de345f',"\\d+");
 +-----------------------------------------+
 1 row in set (0.01 sec)
 ```
-### keywords
+### Keywords
 
 SPLIT_BY_REGEXP,SPLIT

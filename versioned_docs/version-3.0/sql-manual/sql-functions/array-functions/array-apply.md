@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_apply
+## Array_apply
 
 array_apply
 
-### description
+### Description
 
 Filter array to match specific binary condition
 
@@ -48,7 +48,7 @@ The filtered array matched with condition.
 
 Type: Array.
 
-### example
+### Example
 
 ```
 mysql> select array_apply([1, 2, 3, 4, 5], ">=", 2);
@@ -68,6 +68,6 @@ mysql> select array_apply([1000000, 1000001, 1000002], "=", "1000002");
 1 row in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
 ARRAY,APPLY,ARRAY_APPLY

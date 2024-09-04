@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## money_format
+## Money_format
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 The number is output in currency format, the integer part is separated by commas every three bits, and the decimal part is reserved for two bits.
 
-### example
+### Example
 
 ```
 mysql> select money_format(17014116);
@@ -57,5 +57,5 @@ mysql> select money_format(1123.4);
 | 1,123.40             |
 +----------------------+
 ```
-### keywords
+### Keywords
     MONEY_FORMAT,MONEY,FORMAT

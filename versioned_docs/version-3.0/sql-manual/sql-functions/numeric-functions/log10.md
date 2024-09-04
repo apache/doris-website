@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## log10
+## Log10
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE log10(DOUBLE x)`
@@ -34,7 +34,7 @@ Returns the natural logarithm of `x` to base `10`.
 Another alias for this function is `dlog10`.
 :::
 
-### example
+### Example
 
 ```
 mysql> select log10(1);
@@ -57,5 +57,5 @@ mysql> select log10(16);
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	LOG10, DLOG10

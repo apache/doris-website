@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## AGG_STATE
-### description
+### Description
     AGG_STATE不能作为key列使用，建表时需要同时声明聚合函数的签名。
     用户不需要指定长度和默认值。实际存储的数据大小与函数实现有关。
     
@@ -35,7 +35,7 @@ under the License.
   需要注意的是，聚合函数的签名也是类型的一部分，不同签名的 agg_state 无法混合使用。比如如果建表声明的签名为`max_by(int,int)`,那就无法插入`max_by(bigint,int)`或者`group_concat(varchar)`。
   此处 nullable 属性也是签名的一部分，如果能确定不会输入 null 值，可以将参数声明为 not null，这样可以获得更小的存储大小和减少序列化/反序列化开销。
 
-### example
+### Example
 
 建表示例如下：
   ```sql
@@ -87,6 +87,6 @@ under the License.
 
 更多的例子参见[datatype_p0/agg_state](https://github.com/apache/doris/tree/master/regression-test/suites/datatype_p0/agg_state)
 
-### keywords
+### Keywords
 
     AGG_STATE

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_insert
+## Json_insert
 
  
 
@@ -45,7 +45,7 @@ under the License.
 
 否则，对于 JSON 中不存在的某个路径的路径值对将被忽略且不会产生任何影响。
 
-### example
+### Example
 
 ```
 MySQL> select json_insert(null, null, null);
@@ -70,5 +70,5 @@ MySQL> select json_insert('{"k": 1}', "$.j", 2);
 +---------------------------------------+
 ```
 
-### keywords
+### Keywords
 JSON, json_insert

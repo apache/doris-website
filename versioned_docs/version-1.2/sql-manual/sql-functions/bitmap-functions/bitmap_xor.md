@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_xor
-### description
+## Bitmap_xor
+### Description
 #### Syntax
 
 `BITMAP BITMAP_XOR(BITMAP lhs, BITMAP rhs, ...)`
 
 Compute the symmetric union of two or more input bitmaps, return the new bitmap.
 
-### example
+### Example
 
 ```
 mysql> select bitmap_count(bitmap_xor(bitmap_from_string('2,3'),bitmap_from_string('1,2,3,4'))) cnt;
@@ -71,6 +71,6 @@ MySQL> select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'),bitmap_from_
 +---------------------------------------------------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_XOR,BITMAP

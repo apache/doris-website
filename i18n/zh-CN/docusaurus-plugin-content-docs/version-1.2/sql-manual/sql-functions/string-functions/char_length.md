@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## char_length
-### description
+## Char_length
+### Description
 #### Syntax
 
 `INT char_length(VARCHAR str)`
@@ -33,7 +33,7 @@ under the License.
 
 返回字符串的长度，对于多字节字符，返回字符数, 目前仅支持utf8 编码。这个函数还有一个别名 `character_length`。
 
-### example
+### Example
 
 ```
 mysql> select char_length("abc");
@@ -50,5 +50,5 @@ mysql> select char_length("中国");
 |                     2 |
 +-----------------------+
 ```
-### keywords
+### Keywords
     CHAR_LENGTH, CHARACTER_LENGTH

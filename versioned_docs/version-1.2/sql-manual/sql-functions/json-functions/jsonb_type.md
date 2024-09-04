@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## jsonb_type
+## Jsonb_type
 
-### description
+### Description
 
 It is used to determine the type of the field specified by json_path in JSONB data. If the field does not exist, return NULL. If it exists, return one of the following types
 
@@ -45,11 +45,11 @@ It is used to determine the type of the field specified by json_path in JSONB da
 STRING jsonb_type(JSONB j, VARCHAR json_path)
 ```
 
-### example
+### Example
 
 Refer to [jsonb tutorial](../../sql-reference/Data-Types/JSONB.md)
 
-### keywords
+### Keywords
 
 jsonb_type
 

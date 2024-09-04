@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION MIN
-### description
+### Description
 
 LEAD() 方法用来计算窗口内的最小值。
 
@@ -20,7 +20,7 @@ LEAD() 方法用来计算窗口内的最小值。
 MAX([DISTINCT | ALL] expression) [OVER (analytic_clause)]
 ```
 
-### example
+### Example
 
 计算从第一行到当前行之后一行的最小值
 
@@ -43,6 +43,6 @@ from int_t where property in ('prime','square');
 | 1 | square   | 1             |
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,MIN

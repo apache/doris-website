@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_to_array
+## Bitmap_to_array
 
-### description
+### Description
 #### Syntax
 
 `ARRAY_BIGINT bitmap_to_array(BITMAP input)`
@@ -32,7 +32,7 @@ under the License.
 将一个bitmap转化成一个array 数组。
 输入是null的话会返回null。
 
-### example
+### Example
 
 ```
 mysql> select bitmap_to_array(null);
@@ -65,6 +65,6 @@ mysql> select bitmap_to_array(bitmap_from_string('1,2,3,4,5'));
 
 ```
 
-### keywords
+### Keywords
 
     BITMAP_TO_ARRAY,BITMAP

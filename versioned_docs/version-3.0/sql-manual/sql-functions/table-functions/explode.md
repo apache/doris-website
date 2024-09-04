@@ -24,22 +24,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode
+## Explode
 
-### description
+### Description
 
 Table functions must be used in conjunction with Lateral View.
 
 explode array column to rows. `explode_outer` will return NULL, while `array` is NULL or empty.
 `explode` and `explode_outer` both keep the nested NULL elements of array.
 
-#### syntax
+#### Syntax
 ```sql
 explode(expr)
 explode_outer(expr)
 ```
 
-### example
+### Example
 ```
 mysql> select e1 from (select 1 k1) as t lateral view explode([1,2,3]) tmp1 as e1;
 +------+
@@ -79,5 +79,5 @@ mysql> select e1 from (select 1 k1) as t lateral view explode_outer([null,1,null
 +------+
 ```
 
-### keywords
+### Keywords
 EXPLODE,EXPLODE_OUTER,ARRAY

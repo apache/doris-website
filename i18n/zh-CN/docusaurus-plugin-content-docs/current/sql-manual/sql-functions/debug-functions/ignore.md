@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ignore
-### description
+## Ignore
+### Description
 
 :::tip
 仅供开发者调试用，请勿在生产环境手动调用该函数。
@@ -37,7 +37,7 @@ under the License.
 
 对于任意输入，返回 `false`。
 
-### example
+### Example
 
 ```sql
 mysql> select m1, ignore(m1,m2,m1+m2,1) from t_nullable;
@@ -55,5 +55,5 @@ mysql> select ignore();
 +----------+
 ```
 
-### keywords
+### Keywords
     ignore

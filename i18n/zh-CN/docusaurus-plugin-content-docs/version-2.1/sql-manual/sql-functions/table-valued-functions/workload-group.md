@@ -34,13 +34,13 @@ workload_groups
 已废弃。自 2.1.1 起，此表函数移到 information_schema.workload_groups 表。
 :::
 
-### description
+### Description
 
 表函数，生成 workload_groups 临时表，可以查看当前用户具有权限的资源组信息。
 
 该函数用于from子句中。
 
-#### syntax
+#### Syntax
 `workload_groups()`
 
 workload_groups()表结构：
@@ -56,7 +56,7 @@ mysql> desc function workload_groups();
 +-------+-------------+------+-------+---------+-------+
 ```
 
-### example
+### Example
 ```
 mysql> select * from workload_groups()\G
 +-------+--------+--------------+-------+
@@ -67,6 +67,6 @@ mysql> select * from workload_groups()\G
 +-------+--------+--------------+-------+
 ```
 
-### keywords
+### Keywords
 
     workload_groups

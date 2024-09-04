@@ -34,13 +34,13 @@ backends
 
 </version>
 
-### description
+### Description
 
 Table-Value-Function, generate a temporary table named `backends`. This tvf is used to view the information of BE nodes in the doris cluster.
 
 This function is used in `FROM` clauses.
 
-#### syntax
+#### Syntax
 
 `backends()`
 
@@ -82,7 +82,7 @@ mysql> desc function backends();
 
 The information displayed by the `backends` tvf is basically consistent with the information displayed by the `show backends` statement. However, the types of each field in the `backends` tvf are more specific, and you can use the `backends` tvf to perform operations such as filtering and joining.
 
-### example
+### Example
 ```
 mysql> select * from backends()\G
 *************************** 1. row ***************************
@@ -115,6 +115,6 @@ HeartbeatFailureCounter: 0
 1 row in set (0.03 sec)
 ```
 
-### keywords
+### Keywords
 
     backends

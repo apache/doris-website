@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION RANK
-### description
+### Description
 
 The RANK() function is used to represent rankings. Unlike DENSE_RANK(), RANK() will have vacancies. For example, if there are two 1s in a row, the third number in RANK() is 3, not 2.
 
@@ -20,7 +20,7 @@ The RANK() function is used to represent rankings. Unlike DENSE_RANK(), RANK() w
 RANK() OVER(partition_by_clause order_by_clause)
 ```
 
-### example
+### Example
 
 rank by x
 
@@ -40,6 +40,6 @@ select x, y, rank() over(partition by x order by y) as rank from int_t;
 | 3  | 2    | 3        |
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,RANK

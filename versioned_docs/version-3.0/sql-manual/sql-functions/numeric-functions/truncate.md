@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## truncate
+## Truncate
 
-### description
+### Description
 #### Syntax
 `DOUBLE truncate(DOUBLE x, INT d)`  
 
@@ -39,7 +39,7 @@ When `d < 0`: Remove the fractional part of `x`, and replace the integer part wi
 
 Else if `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
 
-### example
+### Example
 
 ```
 mysql> select truncate(124.3867, 2);
@@ -73,5 +73,5 @@ mysql> select cast("123.123456" as Decimal(9,6)), number, truncate(cast ("123.12
 +---------------------------------------+--------+----------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 	TRUNCATE

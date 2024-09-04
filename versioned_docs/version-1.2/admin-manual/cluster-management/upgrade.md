@@ -86,7 +86,7 @@ Doris can upgrade smoothly by rolling upgrades. The following steps are recommen
 1. After data validation, the new version of BE and FE binary files are distributed to their respective directories.
 2. In principle, the version upgrade needs to replace the lib directory and bin directory of FE and BE, and other directories except conf directory, data directory (doris-meta of FE, storage of BE), and log directory.
 
-## rolling upgrade
+## Rolling upgrade
 
 1. Confirm that the new version of the file is deployed. Restart FE and BE instances one by one.
 2. It is suggested that BE be restarted one by one and FE be restarted one by one. Because Doris usually guarantees backward compatibility between FE and BE, that is, the old version of FE can access the new version of BE. However, the old version of BE may not be supported to access the new version of FE.

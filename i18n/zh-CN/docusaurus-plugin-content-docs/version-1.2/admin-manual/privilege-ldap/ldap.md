@@ -40,7 +40,7 @@ LDAP组授权是将LDAP中的group映射到Doris中的Role，如果用户在LDAP
 
 ## 启用LDAP认证
 
-### server端配置
+### Server端配置
 
 需要在fe/conf/ldap.conf文件中配置LDAP基本信息，另有LDAP管理员密码需要使用sql语句进行设置。
 

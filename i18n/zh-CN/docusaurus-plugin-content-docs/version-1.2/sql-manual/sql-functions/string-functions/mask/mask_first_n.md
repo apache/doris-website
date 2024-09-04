@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## mask_first_n
-### description
-#### syntax
+## Mask_first_n
+### Description
+#### Syntax
 
 `VARCHAR mask_first_n(VARCHAR str[, INT n])`
 
 返回带有掩码的前 n 个值的 str 的掩码版本。 大写字母转换为“X”，小写字母转换为“x”，数字转换为“n”。 例如，mask_first_n("1234-5678-8765-4321", 4) 结果为 nnnn-5678-8765-4321。
 
-### example
+### Example
 
 ```
 // table test
@@ -54,5 +54,5 @@ mysql> select mask_first_n(name, 5) from test;
 +-------------------------+
 ```
 
-### keywords
+### Keywords
     mask_first_n

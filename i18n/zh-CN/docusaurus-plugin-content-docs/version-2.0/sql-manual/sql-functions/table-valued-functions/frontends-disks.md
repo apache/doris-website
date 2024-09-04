@@ -30,13 +30,13 @@ under the License.
 
 frontends_disks
 
-### description
+### Description
 
 表函数，生成 frontends_disks 临时表，可以查看当前 doris 集群中的 FE 节点的磁盘信息。
 
 该函数用于 from 子句中。
 
-#### syntax
+#### Syntax
 `frontends_disks()`
 
 frontends_disks() 表结构：
@@ -63,7 +63,7 @@ mysql> desc function frontends_disks();
 
 对 `frontends_disks()` tvf 信息展示进行了鉴权，与 `show frontends disks` 行为保持一致，要求用户具有 ADMIN/OPERATOR 权限。
 
-### example
+### Example
 ```sql
 mysql> select * from frontends_disk()\G
 *************************** 1. row ***************************
@@ -81,6 +81,6 @@ mysql> select * from frontends_disk()\G
 12 row in set (0.03 sec)
 ```
 
-### keywords
+### Keywords
 
     frontends_disks

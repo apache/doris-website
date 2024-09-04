@@ -32,7 +32,7 @@ DECIMALV3
 
 </version>
 
-### description
+### Description
     DECIMALV3(M[,D])
     高精度定点数，M 代表一共有多少个有效数字(precision)，D 代表小数位有多少数字(scale)，
     有效数字 M 的范围是 [1, 38]，小数位数字数量 D 的范围是 [0, precision]。
@@ -82,5 +82,5 @@ Doris中的DECIMALV3是真正意义上的高精度定点数，相比于老版本
 ```
 3. 更完备的精度推演。对于不同的表达式，应用不同的精度推演规则对结果的精度进行推演。
 
-### keywords
+### Keywords
     DECIMALV3

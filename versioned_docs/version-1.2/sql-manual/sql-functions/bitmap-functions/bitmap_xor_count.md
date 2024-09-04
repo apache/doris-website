@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_xor_count
+## Bitmap_xor_count
 
-### description
+### Description
 
 #### Syntax
 
@@ -32,7 +32,7 @@ under the License.
 
 XOR two or more bitmap sets and return the size of the result set.
 
-### example
+### Example
 
 ```
 mysql> select bitmap_xor_count(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5'));
@@ -78,6 +78,6 @@ MySQL> select (bitmap_xor_count(bitmap_from_string('2,3'),bitmap_from_string('1,
 +-----------------------------------------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_XOR_COUNT,BITMAP

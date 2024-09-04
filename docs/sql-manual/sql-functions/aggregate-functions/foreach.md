@@ -26,7 +26,7 @@ under the License.
 
 ## FOREACH
 
-### description
+### Description
 #### Syntax
 
 `AGGREGATE_FUNCTION_FOREACH(arg...)`
@@ -35,7 +35,7 @@ Converts an aggregate function for tables into an aggregate function for arrays 
 
 
 
-### example
+### Example
 ```
 mysql [test]>select a , s from db;
 +-----------+---------------+
@@ -76,5 +76,5 @@ mysql [test]>select map_agg_foreach(a,a) from db;
 | [{1:1, 20:20, 100:100}, {2:2}, {3:3}] |
 +---------------------------------------+
 ```
-### keywords
+### Keywords
 FOREACH

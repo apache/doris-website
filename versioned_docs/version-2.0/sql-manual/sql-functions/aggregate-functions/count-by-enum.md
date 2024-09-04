@@ -81,7 +81,7 @@ Description: The return value is a JSON array string and the order of the intern
 * all: total number, including both null and non-null values.
 
 
-### example
+### Example
 
 ```sql
 DROP TABLE IF EXISTS count_by_enum_test;
@@ -143,6 +143,6 @@ select count_by_enum(f1,f2,f3) from count_by_enum_test;
     
 ```
 
-### keywords
+### Keywords
 
 COUNT_BY_ENUM

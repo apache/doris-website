@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION ROW_NUMBER
-### description
+### Description
 
 Returns a continuously increasing integer starting from 1 for each row of each Partition. Unlike RANK() and DENSE_RANK(), the value returned by ROW_NUMBER() does not repeat or appear vacant, and is continuously incremented.
 
@@ -20,7 +20,7 @@ Returns a continuously increasing integer starting from 1 for each row of each P
 ROW_NUMBER() OVER(partition_by_clause order_by_clause)
 ```
 
-### example
+### Example
 
 ```sql
 select x, y, row_number() over(partition by x order by y) as rank from int_t;
@@ -38,6 +38,6 @@ select x, y, row_number() over(partition by x order by y) as rank from int_t;
 | 3 | 2    | 3        |
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,ROW_NUMBER

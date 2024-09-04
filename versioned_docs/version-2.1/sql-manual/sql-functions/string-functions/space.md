@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## space
+## Space
 ### Description
 #### Syntax
 
@@ -32,7 +32,7 @@ under the License.
 
 Returns a string consisting of num spaces.
 
-### example
+### Example
 
 ```
 mysql> select length(space(10));
@@ -51,5 +51,5 @@ mysql> select length(space(-10));
 +--------------------+
 1 row in set (0.02 sec)
 ```
-### keywords
+### Keywords
     space

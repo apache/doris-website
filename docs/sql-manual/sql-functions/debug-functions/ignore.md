@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ignore
-### description
+## Ignore
+### Description
 
 :::tip
 For developer debugging only, do not call this function manually in the production environment.
@@ -37,7 +37,7 @@ For developer debugging only, do not call this function manually in the producti
 
 Returns `false` for any input.
 
-### example
+### Example
 
 ```sql
 mysql> select m1, ignore(m1,m2,m1+m2,1) from t_nullable;
@@ -55,5 +55,5 @@ mysql> select ignore();
 +----------+
 ```
 
-### keywords
+### Keywords
     ignore

@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## xxhash_64
+## Xxhash_64
 
-### description
+### Description
 #### Syntax
 
 `BIGINT XXHASH_64(VARCHAR input, ...)`
@@ -33,7 +33,7 @@ under the License.
 
 注：在计算hash值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
 
-### example
+### Example
 
 ```
 mysql> select xxhash_64(NULL);
@@ -57,7 +57,7 @@ mysql> select xxhash_64("hello", "world");
 |         7001965798170371843 |
 +-----------------------------+
 ```
-### benchmark
+### Benchmark
 
 通过TPCH Benchmark测试发现，`xxhash_64`相比`murmur_hash3_64`来说性能大幅提升，因此在需要计算hash值的场景下，更推荐使用`xxhash_64`。
 
@@ -79,6 +79,6 @@ mysql> select count(xxhash_64(l_comment)) from lineitem;
 1 row in set (8.41 sec)
 ```
 
-### keywords
+### Keywords
 
 XXHASH_64,HASH

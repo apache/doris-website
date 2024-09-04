@@ -24,7 +24,7 @@ under the License.
 
 ## SHA2
 
-### description
+### Description
 
 使用SHA2对信息进行摘要处理。
 
@@ -37,7 +37,7 @@ under the License.
 - `str`: 待加密的内容
 - `digest_length`: 摘要长度，支持 224, 256, 384, 512
 
-### example
+### Example
 
 ```SQL
 mysql> select sha2('abc', 224);
@@ -65,6 +65,6 @@ mysql> select sha2(NULL, 512);
 1 row in set (0.09 sec)
 ```
 
-### keywords
+### Keywords
 
     SHA2, SHA224, SHA256, SHAA384, SHA512

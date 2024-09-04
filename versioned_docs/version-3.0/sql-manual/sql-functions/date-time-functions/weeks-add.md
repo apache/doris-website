@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weeks_add
-### description
+## Weeks_add
+### Description
 #### Syntax
 
 `DATETIME WEEKS_ADD(DATETIME date, INT weeks)`
@@ -34,7 +34,7 @@ ADD a specified number of weeks from a datetime or date
 
 The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
 
-### example
+### Example
 
 ```
 mysql> select weeks_add("2020-02-02 02:02:02", 1);
@@ -45,6 +45,6 @@ mysql> select weeks_add("2020-02-02 02:02:02", 1);
 +-------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     WEEKS_ADD

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## money_format
-### description
+## Money_format
+### Description
 #### Syntax
 
 `VARCHAR money_format(Number)`
@@ -33,7 +33,7 @@ under the License.
 
 将数字按照货币格式输出，整数部分每隔3位用逗号分隔，小数部分保留2位
 
-### example
+### Example
 
 ```
 mysql> select money_format(17014116);
@@ -57,5 +57,5 @@ mysql> select money_format(1123.4);
 | 1,123.40             |
 +----------------------+
 ```
-### keywords
+### Keywords
     MONEY_FORMAT,MONEY,FORMAT

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## second_timestamp
-### description
+## Second_timestamp
+### Description
 #### Syntax
 
 `BIGINT SECOND_TIMESTAMP(DATETIME date)`
@@ -37,7 +37,7 @@ under the License.
 传入的是DATETIME类型，返回的是整型
 
 
-### example
+### Example
 
 ```
 mysql> select from_millisecond(89417891234789),millisecond_timestamp(from_millisecond(89417891234789));
@@ -62,6 +62,6 @@ mysql> select from_microsecond(89417891234),microsecond_timestamp(from_microseco
 +-------------------------------+------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     SECOND_TIMESTAMP

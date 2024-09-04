@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## starts_with
+## Starts_with
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 It returns true if the string starts with the specified prefix, otherwise it returns false.
 If any parameter is NULL, it returns NULL.
 
-### example
+### Example
 
 ```
 MySQL [(none)]> select starts_with("hello world","hello");
@@ -50,5 +50,5 @@ MySQL [(none)]> select starts_with("hello world","world");
 |                                   0 |
 +-------------------------------------+
 ```
-### keywords
+### Keywords
     STARTS_WITH

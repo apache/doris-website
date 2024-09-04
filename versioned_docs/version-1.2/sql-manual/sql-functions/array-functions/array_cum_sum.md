@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_cum_sum
+## Array_cum_sum
 
 <version since="1.2.3">
 
@@ -30,7 +30,7 @@ array_cum_sum
 
 </version>
 
-### description
+### Description
 
 Get the cumulative sum of an array (`NULL` values are skipped).
 If the array contains `NULL` values, then `NULL` is set at the same position in the result array.
@@ -41,11 +41,11 @@ If the array contains `NULL` values, then `NULL` is set at the same position in 
 Array<T> array_cum_sum(Array<T>)
 ```
 
-### notice
+### Notice
 
 `Only supported in vectorized engine`
 
-### example
+### Example
 
 ```shell
 mysql> create table array_type_table(k1 INT, k2 Array<int>) duplicate key (k1) distributed by hash(k1) buckets 1 properties('replication_num' = '1');
@@ -64,6 +64,6 @@ mysql> select k2, array_cum_sum(k2) from array_type_table;
 Time: 0.122s
 ```
 
-### keywords
+### Keywords
 
 ARRAY,CUM_SUM,ARRAY_CUM_SUM

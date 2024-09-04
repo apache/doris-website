@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_popfront
+## Array_popfront
 
 array_popfront
 
-### description
+### Description
 
 #### Syntax
 
@@ -34,7 +34,7 @@ array_popfront
 
 Remove the first element from array.
 
-### example
+### Example
 
 ```
 mysql> select array_popfront(['test', NULL, 'value']);
@@ -46,7 +46,7 @@ mysql> select array_popfront(['test', NULL, 'value']);
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,POPFRONT,ARRAY_POPFRONT
 

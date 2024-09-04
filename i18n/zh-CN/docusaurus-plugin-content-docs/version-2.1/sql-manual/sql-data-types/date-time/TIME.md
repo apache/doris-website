@@ -26,18 +26,18 @@ under the License.
 
 ## TIME
 
-### name
+### Name
 
 TIME
 
-### description
+### Description
 
 TIME 类型
     时间类型，可以作为查询结果出现，暂时不支持建表存储。表示范围为 `[-838:59:59, 838:59:59]`。
     当前 Doris 中，TIME 作为计算结果的正确性是有保证的（如 `timediff` 等函数），但**不推荐手动 CAST 产生 TIME 类型**。
     TIME 类型不会在常量折叠中进行计算。
 
-### example
+### Example
 
 ```sql
 mysql> select timediff('2020-01-01 12:05:03', '2020-01-01 08:02:15');
@@ -57,6 +57,6 @@ mysql> select timediff('2020-01-01', '2000-01-01');
 1 row in set (0.11 sec)
 ```
 
-### keywords
+### Keywords
 
     TIME

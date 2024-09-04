@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hour_ceil
-### description
+## Hour_ceil
+### Description
 #### Syntax
 
 ```sql
@@ -41,7 +41,7 @@ Convert the date to the nearest rounding up time of the specified time interval 
 - period: specifies how many hours each cycle consists of.
 - origin: starting from 0001-01-01T00:00:00.
 
-### example
+### Example
 
 ```
 mysql> select hour_ceil(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5);
@@ -53,7 +53,7 @@ mysql> select hour_ceil(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5);
 1 row in set (0.03 sec)
 ```
 
-### keywords
+### Keywords
 
     HOUR_CEIL, HOUR, CEIL
 

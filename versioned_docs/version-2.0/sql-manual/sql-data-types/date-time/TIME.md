@@ -26,18 +26,18 @@ under the License.
 
 ## TIME
 
-### name
+### Name
 
 TIME
 
-### description
+### Description
 
 TIME type
     Time type, can appear as a query result, does not support table storage for the time being. The storage range is `[-838:59:59, 838:59:59]`.
     Currently in Doris, the correctness of TIME as a result of calculations is guaranteed (e.g., functions such as `timediff`), but **manual CAST generation of the TIME type is not recommended**.
     The calculation of TIME type in constant folding is prohibited.
 
-### example
+### Example
 
 ```sql
 mysql> select timediff('2020-01-01 12:05:03', '2020-01-01 08:02:15');
@@ -57,6 +57,6 @@ mysql> select timediff('2020-01-01', '2000-01-01');
 1 row in set (0.11 sec)
 ```
 
-### keywords
+### Keywords
 
     TIME

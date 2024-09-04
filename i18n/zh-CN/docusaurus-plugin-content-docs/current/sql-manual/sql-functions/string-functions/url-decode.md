@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## url_decode
-### description
+## Url_decode
+### Description
 
 将URL转换为解码字符串。
 
@@ -39,7 +39,7 @@ VARCHAR url_decode(VARCHAR url)
 
 - url: 待解码的url。
 
-### example
+### Example
 
 ```
 mysql> mysql> select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
@@ -50,5 +50,5 @@ mysql> mysql> select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2
 +------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     URL DECODE

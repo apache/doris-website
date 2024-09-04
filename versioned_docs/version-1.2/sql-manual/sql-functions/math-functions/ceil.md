@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ceil
+## Ceil
 
-### description
+### Description
 #### Syntax
 
 `BIGINT ceil(DOUBLE x)`
@@ -34,7 +34,7 @@ Returns the smallest integer value greater than or equal to `x`.
 The other alias for this function are `dceil` and `ceiling`.
 :::
 
-### example
+### Example
 
 ```
 mysql> select ceil(1);
@@ -57,5 +57,5 @@ mysql> select ceil(-10.3);
 +-------------+
 ```
 
-### keywords
+### Keywords
 	CEIL, DCEIL, CEILING

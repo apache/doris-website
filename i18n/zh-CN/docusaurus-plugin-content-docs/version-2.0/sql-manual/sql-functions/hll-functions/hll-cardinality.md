@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## HLL_CARDINALITY
-### description
+### Description
 #### Syntax
 
 `HLL_CARDINALITY(hll)`
 
 HLL_CARDINALITY 用于计算 HLL 类型值的基数。
 
-### example
+### Example
 ```
 MySQL > select HLL_CARDINALITY(uv_set) from test_uv;
 +---------------------------+
@@ -41,5 +41,5 @@ MySQL > select HLL_CARDINALITY(uv_set) from test_uv;
 |                         3 |
 +---------------------------+
 ```
-### keywords
+### Keywords
 HLL,HLL_CARDINALITY

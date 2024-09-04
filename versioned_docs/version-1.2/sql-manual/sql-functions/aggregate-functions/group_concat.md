@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## GROUP_CONCAT
-### description
+### Description
 #### Syntax
 
 `VARCHAR GROUP_CONCAT([DISTINCT] VARCHAR str[, VARCHAR sep]) [ORDER BY { col_name | expr} [ASC | DESC])`
@@ -39,7 +39,7 @@ Support Order By for sorting multi-row results, sorting and aggregation columns 
 `group_concat` don't support using `distinct` with `order by` together.
 :::
 
-### example
+### Example
 
 ```
 mysql> select value from test;

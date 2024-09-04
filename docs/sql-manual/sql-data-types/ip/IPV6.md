@@ -26,14 +26,14 @@ under the License.
 
 ## IPV6
 
-### description
+### Description
 
 IPv6 type, stored in UInt128 format in 16 bytes, used to represent IPv6 addresses.
 The range of values is ['::', 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'].
 
 `Inputs that exceed the value range or have invalid format will return NULL`
 
-### example
+### Example
 
 Create table example:
 
@@ -71,6 +71,6 @@ mysql> select * from ipv6_test order by id;
 +------+-----------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 IPV6

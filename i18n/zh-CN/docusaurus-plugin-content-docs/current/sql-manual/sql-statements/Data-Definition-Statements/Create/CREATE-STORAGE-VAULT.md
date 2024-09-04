@@ -37,7 +37,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 [properties]
 ```
 
-#### properties
+#### Properties
 
 * `type`
     只允许两种类型的存储库:S3 和 HDFS。-- 必需

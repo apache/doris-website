@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## BITMAP
-### description
+### Description
 BITMAP
 
 BITMAP 类型的列可以在 Aggregate 表、Unique 表或 Duplicate 表中使用。
@@ -37,7 +37,7 @@ BITMAP 类型的列可以在 Aggregate 表、Unique 表或 Duplicate 表中使�
 离线场景下使用 BITMAP 会影响导入速度，在数据量大的情况下查询速度会慢于 HLL，并优于 Count Distinct。
 注意：实时场景下 BITMAP 如果不使用全局字典，使用了 bitmap_hash() 可能会导致有千分之一左右的误差。如果这个误差不可接受，可以使用 bitmap_hash64。
 
-### example
+### Example
 
 建表示例如下：
 
@@ -70,6 +70,6 @@ BITMAP 类型的列可以在 Aggregate 表、Unique 表或 Duplicate 表中使�
 
 在查询时，BITMAP 可配合`return_object_data_as_binary`变量进行使用，详情可查看[变量](../../../advanced/variables.md)章节。
 
-### keywords
+### Keywords
 
     BITMAP

@@ -33,7 +33,7 @@ under the License.
 
 Used to return the sum of all values of the selected field
 
-### example
+### Example
 ```
 MySQL > select sum(scan_rows) from log_statis group by datetime;
 +------------------+
@@ -42,5 +42,5 @@ MySQL > select sum(scan_rows) from log_statis group by datetime;
 |       8217360135 |
 +------------------+
 ```
-### keywords
+### Keywords
 SUM

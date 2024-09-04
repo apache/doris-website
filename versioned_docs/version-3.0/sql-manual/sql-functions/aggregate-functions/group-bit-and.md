@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## group_bit_and
-### description
+## Group_bit_and
+### Description
 #### Syntax
 
 `expr GROUP_BIT_AND(expr)`
@@ -33,7 +33,7 @@ under the License.
 Perform an and calculation on expr, and return a new expr.
 All ints are supported
 
-### example
+### Example
 
 ```
 mysql> select * from group_bit;
@@ -55,6 +55,6 @@ mysql> select group_bit_and(value) from group_bit;
 +------------------------+
 ```
 
-### keywords
+### Keywords
 
     GROUP_BIT_AND,BIT

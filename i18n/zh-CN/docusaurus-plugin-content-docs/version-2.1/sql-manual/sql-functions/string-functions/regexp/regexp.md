@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp
-### description
-#### syntax
+## Regexp
+### Description
+#### Syntax
 
 `BOOLEAN regexp(VARCHAR str, VARCHAR pattern)`
 
@@ -34,7 +34,7 @@ under the License.
 
 字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
 
-### example
+### Example
 
 ```sql
 --- 查找 k1 字段中以 'billie' 为开头的所有数据
@@ -61,5 +61,5 @@ mysql> select regexp('这是一段中文This is a passage in English 1234567', '
 +-----------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     REGEXP

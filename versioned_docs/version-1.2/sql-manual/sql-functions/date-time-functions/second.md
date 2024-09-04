@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## second
-### description
+## Second
+### Description
 #### Syntax
 
 `INT SECOND(DATETIME date)`
@@ -34,7 +34,7 @@ Returns second information in the time type, ranging from 0,59
 
 The parameter is Date or Datetime type
 
-### example
+### Example
 
 ```
 mysql> select second('2018-12-31 23:59:59');
@@ -44,5 +44,5 @@ mysql> select second('2018-12-31 23:59:59');
 |                          59 |
 +-----------------------------+
 ```
-### keywords
+### Keywords
     SECOND

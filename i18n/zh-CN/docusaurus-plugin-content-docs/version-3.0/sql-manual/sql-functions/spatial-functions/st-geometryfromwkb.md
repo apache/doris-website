@@ -34,7 +34,7 @@ under the License.
 
 将一个标准 WKB（Well-known binary）转化为对应的内存的几何形式
 
-### example
+### Example
 
 ```
 mysql> select ST_AsText(ST_GeometryFromWKB(ST_AsBinary(ST_Point(24.7, 56.7))));
@@ -78,5 +78,5 @@ mysql> select ST_AsText(ST_GeomFromWKB(ST_AsBinary(ST_Polygon("POLYGON ((114.104
 1 row in set (0.03 sec)
 
 ```
-### keywords
+### Keywords
 ST_GEOMETRYFROMWKB,ST_GEOMFROMWKB,ST,GEOMETRYFROMWKB,GEOMFROMWKB,WKB

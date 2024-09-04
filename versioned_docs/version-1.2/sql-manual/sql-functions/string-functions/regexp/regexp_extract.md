@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp_extract
+## Regexp_extract
 ### Description
 #### Syntax
 
@@ -34,7 +34,7 @@ The string STR is matched regularly and the POS matching part which conforms to 
 
 Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
 
-### example
+### Example
 
 ```sql
 mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 1);
@@ -59,5 +59,5 @@ mysql> select regexp_extract('这是一段中文This is a passage in English 123
 +-----------------------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     REGEXP_EXTRACT,REGEXP,EXTRACT

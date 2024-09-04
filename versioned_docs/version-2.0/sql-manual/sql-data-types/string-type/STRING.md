@@ -31,5 +31,5 @@ A variable length string. Default support is 1048576 bytes (1M), adjustable up t
 
 Note: Variable length strings are stored in UTF-8 encoding, so usually English characters occupies 1 byte, and Chinese characters occupies 3 bytes.
 
-### keywords
+### Keywords
 STRING

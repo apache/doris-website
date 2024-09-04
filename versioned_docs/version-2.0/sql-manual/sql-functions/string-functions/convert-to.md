@@ -26,8 +26,8 @@ under the License.
 
 
 
-## convert_to
-### description
+## Convert_to
+### Description
 #### Syntax
 
 `VARCHAR convert_to(VARCHAR column, VARCHAR character)`
@@ -38,7 +38,7 @@ After the character encoding of column is converted to gbk, it can be arranged a
 
 
 
-### example
+### Example
 
 ```
 mysql> select * from class_test order by class_name;
@@ -69,5 +69,5 @@ mysql> select * from class_test order by convert(class_name using gbk);
 |        4 | 张         | [4]         |
 +----------+------------+-------------+
 ```
-### keywords
+### Keywords
     convert_to

@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sleep
-### description
+## Sleep
+### Description
 #### Syntax
 
 `BOOLEAN sleep(INT num)`
 
 使当前会话休眠 `num` 秒。
 
-### example
+### Example
 
 ```sql
 mysql> select sleep(10);
@@ -43,5 +43,5 @@ mysql> select sleep(10);
 +-----------+
 ```
 
-### keywords
+### Keywords
     sleep

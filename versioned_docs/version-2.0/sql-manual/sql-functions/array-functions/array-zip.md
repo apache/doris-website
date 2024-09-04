@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_zip
+## Array_zip
 
 array_zip
 
-### description
+### Description
 
 Combines all all arrays into a single array. The resulting array contains the corresponding elements of the source arrays grouped into structs in the listed order of arguments.
 
@@ -38,7 +38,7 @@ Combines all all arrays into a single array. The resulting array contains the co
 
 Array with elements from the source arrays grouped into tuples. Data types in the tuple are the same as types of the input arrays and in the same order as arrays are passed.
 
-### example
+### Example
 
 ```
 mysql> select array_zip(['a', 'b', 'c'], [1, 2, 3]);
@@ -50,6 +50,6 @@ mysql> select array_zip(['a', 'b', 'c'], [1, 2, 3]);
 1 row in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
 ARRAY,ZIP,ARRAY_ZIP
