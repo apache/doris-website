@@ -52,7 +52,7 @@ under the License.
 
 存储策略是使用冷热分离功能的入口，用户只需要在建表或使用doris过程中，给表或分区关联上storage policy，即可以使用冷热分离的功能。
 
-<version since="dev"></version> 创建S3 RESOURCE的时候，会进行S3远端的链接校验，以保证RESOURCE创建的正确。
+  创建S3 RESOURCE的时候，会进行S3远端的链接校验，以保证RESOURCE创建的正确。
 
 此外，需要新增fe配置：`enable_storage_policy=true`
 

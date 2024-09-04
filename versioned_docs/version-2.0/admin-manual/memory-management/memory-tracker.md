@@ -24,9 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Memory Tracker
 
-<version since="1.2.0">
+:::tip Tips
+This feature  is supported since the Apache Doris 1.2 version
+:::
 
 The Memory Tracker records the memory usage of the Doris BE process, including the memory used in the life cycle of tasks such as query, import, Compaction, and Schema Change, as well as various caches for memory control and analysis.
 
@@ -38,9 +39,11 @@ For detailed design and implementation, please refer to:
 https://cwiki.apache.org/confluence/display/DORIS/DSIP-002%3A+Refactor+memory+tracker+on+BE
 https://shimo.im/docs/DT6JXDRkdTvdyV3G
 
+For more information about Memory Tracker, refer to the following documents: [Say-Goodbye-to-OOM-Crashes-en](https://doris.apache.org/blog/Say-Goodbye-to-OOM-Crashes/), [Say-Goodbye-to-OOM-Crashes-zh-CN](https://mp.weixin.qq.com/s/Z5N-uZrFE3Qhn5zTyEDomQ)
+
 ## View statistics
 
-The real-time memory statistics results can be viewed through Doris BE's Web page http://ip:webserver_port/mem_tracker.(webserver_port default is 8040)
+The real-time memory statistics results can be viewed through Doris BE's Web page http://{be_host}:{be_web_server_port}/mem_tracker.(webserver_port default is 8040)
 For the memory statistics results of historical queries, you can view the `peakMemoryBytes` of each query in `fe/log/fe.audit.log`, or search `Deregister query/load memory tracker, queryId` in `be/log/be.INFO` `View memory peaks per query on a single BE.
 
 ### Home `/mem_tracker`
@@ -51,7 +54,7 @@ For the memory statistics results of historical queries, you can view the `peakM
 - global: Global Memory Tracker with the same life cycle and process, such as each Cache, Tablet Manager, Storage Engine, etc.
 - query: the in-memory sum of all queries.
 - load: Sum of all imported memory.
-- tc/jemalloc_cache: The general memory allocator TCMalloc or Jemalloc cache, you can view the original profile of the memory allocator in real time at http://ip:webserver_port/memz.
+- tc/jemalloc_cache: The general memory allocator TCMalloc or Jemalloc cache, you can view the original profile of the memory allocator in real time at http://{be_host}:{be_web_server_port}/memz.
 - compaction, schema_change, consistency, batch_load, clone: ​​corresponding to the memory sum of all Compaction, Schema Change, Consistency, Batch Load, and Clone tasks respectively.
 
 2. Current Consumption(Bytes): current memory value, unit B.
@@ -93,4 +96,4 @@ For the memory statistics results of historical queries, you can view the `peakM
 2. Label: The label naming rule of a single import Scan stage Tracker is `Load#Id=xxx`; the Label naming rule of a single import Segment write disk stage Tracker is `LoadChannel#senderIp=xxx#loadID=xxx`.
 3. Parent Label: Parent is the Tracker of `Load#Id=xxx`, which records the memory used by different operators during the import Scan stage; Parent is the Tracker of `LoadChannelMgrTrackerSet`, which records the Insert and The memory used by the Flush disk process is associated with the last `loadID` of the Label to write to the disk stage Tracker of the Segment.
 
-</version>
+

@@ -339,7 +339,7 @@ In a compute-storage decoupled architecture, the user can specify the database a
 USE { [catalog_name.]database_name[@cluster_name] | @cluster_name }
 ```
 
-If the name of the database or compute cluster contains a reserved keyword, the respective name needs to be enclosed within backticks ```` to denote it as a quoted identifier.
+If the name of the database or compute cluster contains a reserved keyword, the respective name needs to be enclosed within backticks \``` to denote it as a quoted identifier.
 
 **Example**
 

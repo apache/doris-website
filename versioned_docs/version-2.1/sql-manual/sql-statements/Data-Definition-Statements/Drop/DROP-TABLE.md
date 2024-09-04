@@ -37,7 +37,7 @@ grammar:
 
 ```sql
 DROP TABLE [IF EXISTS] [db_name.]table_name [FORCE];
-````
+```
 
 
 illustrate:
@@ -51,13 +51,13 @@ illustrate:
    
      ```sql
      DROP TABLE my_table;
-     ````
+     ```
     
 2. If it exists, delete the table of the specified database
    
      ```sql
      DROP TABLE IF EXISTS example_db.my_table;
-     ````
+     ```
 
 ### Keywords
 

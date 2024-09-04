@@ -117,5 +117,5 @@ Doris 会在下发到 IBM Db2 的查询语句中，自动在字段名与表名�
 
 1. 通过 JDBC Catalog 读取 IBM Db2 数据时出现 `Invalid operation: result set is closed. ERRORCODE=-4470` 异常
 
-   在创建 IBM Db2 Catalog 的 jdbc_url 连接串中添加连接参数：`allowNextOnExhaustedResultSet=1;resultSetHoldability=1`。如：
-   `jdbc:db2://host:port/database:allowNextOnExhaustedResultSet=1;resultSetHoldability=1`。
+   在创建 IBM Db2 Catalog 的 jdbc_url 连接串中添加连接参数：`allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`。如：
+   `jdbc:db2://host:port/database:allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`。

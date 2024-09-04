@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS orders  (
 A materialized view can be considered as a table and can be queried just like a regular table.
 
 The syntax for defining a materialized view, details can be found in
-[CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+[CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)
 
 Materialized view definition:
 ```sql
@@ -842,7 +842,7 @@ GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 statement to check the status of materialized view construction:
 
 ```sql
-   -- 查看物化视图元数据信息,database 为当前数据库, mv_name 为物化视图名称
+   -- 查看物化视图元数据信息，database 为当前数据库，mv_name 为物化视图名称
    select * from mv_infos('database'='db_name') where Name = 'mv_name' \G
 ```
 

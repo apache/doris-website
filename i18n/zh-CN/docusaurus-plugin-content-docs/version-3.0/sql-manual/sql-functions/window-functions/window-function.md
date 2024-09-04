@@ -28,17 +28,17 @@ order_by_clause ::= ORDER BY expr [ASC | DESC] [, expr [ASC | DESC] ...]
 
 目前支持的 Function 包括 AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER() 和 SUM()。
 
-#### PARTITION BY从句
+#### PARTITION BY 从句
 
 Partition By 从句和 Group By 类似。它把输入行按照指定的一列或多列分组，相同值的行会被分到一组。
 
-#### ORDER BY从句
+#### ORDER BY 从句
 
-Order By从句和外层的Order By基本一致。它定义了输入行的排列顺序，如果指定了 Partition By，则 Order By 定义了每个 Partition 分组内的顺序。与外层 Order By 的唯一不同点是，OVER 从句中的 Order By n（n是正整数）相当于不做任何操作，而外层的 Order By n表示按照第n列排序。
+Order By 从句和外层的 Order By 基本一致。它定义了输入行的排列顺序，如果指定了 Partition By，则 Order By 定义了每个 Partition 分组内的顺序。与外层 Order By 的唯一不同点是，OVER 从句中的 Order By n（n 是正整数）相当于不做任何操作，而外层的 Order By n 表示按照第 n 列排序。
 
-举例:
+举例：
 
-这个例子展示了在select列表中增加一个id列，它的值是1，2，3等等，顺序按照events表中的date_and_time列排序。
+这个例子展示了在 select 列表中增加一个 id 列，它的值是 1，2，3 等等，顺序按照 events 表中的 date_and_time 列排序。
 
 ```sql
 SELECT   
@@ -47,11 +47,11 @@ c1, c2, c3, c4
 FROM events;
 ```
 
-#### Window从句
+#### Window 从句
 
 Window 从句用来为分析函数指定一个运算范围，以当前行为准，前后若干行作为分析函数运算的对象。Window 从句支持的方法有：AVG(), COUNT(), FIRST_VALUE(), LAST_VALUE() 和 SUM()。对于 MAX() 和 MIN(), window 从句可以指定开始范围 UNBOUNDED PRECEDING
 
-语法:
+语法：
 
 ```sql
 ROWS BETWEEN [ { m | UNBOUNDED } PRECEDING | CURRENT ROW] [ AND [CURRENT ROW | { UNBOUNDED | n } FOLLOWING] ]
@@ -76,7 +76,7 @@ select * from stock_ticker order by stock_symbol, closing_date
  | JDR          | 13.98         | 2014-10-08 00:00:00 |
 ```
 
-这个查询使用分析函数产生 moving_average 这一列，它的值是3天的股票均价，即前一天、当前以及后一天三天的均价。第一天没有前一天的值，最后一天没有后一天的值，所以这两行只计算了两天的均值。这里 Partition By 没有起到作用，因为所有的数据都是 JDR 的数据，但如果还有其他股票信息，Partition By 会保证分析函数值作用在本 Partition 之内。
+这个查询使用分析函数产生 moving_average 这一列，它的值是 3 天的股票均价，即前一天、当前以及后一天三天的均价。第一天没有前一天的值，最后一天没有后一天的值，所以这两行只计算了两天的均值。这里 Partition By 没有起到作用，因为所有的数据都是 JDR 的数据，但如果还有其他股票信息，Partition By 会保证分析函数值作用在本 Partition 之内。
 
 ```sql
 select stock_symbol, closing_date, closing_price,    

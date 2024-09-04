@@ -49,7 +49,7 @@ Apache Doris supports workload isolation based on Resource Tag and Workload Grou
 
 ## Resource isolation based on Resource Tag
 
-Let's begin with the architecture of Apache Doris. Doris has two [types of nodes](https://doris.apache.org/docs/get-starting/what-is-apache-doris#technical-overview): frontends (FEs) and backends (BEs). FE nodes store metadata, manage clusters, process user requests, and parse query plans, while BE nodes are responsible for computation and data storage. Thus, BE nodes are the major resource consumers. 
+Let's begin with the architecture of Apache Doris. Doris has two [types of nodes](https://doris.apache.org/docs/gettingStarted/what-is-apache-doris): frontends (FEs) and backends (BEs). FE nodes store metadata, manage clusters, process user requests, and parse query plans, while BE nodes are responsible for computation and data storage. Thus, BE nodes are the major resource consumers. 
 
 The main idea of a Resource Tag-based isolation solution is to divide computing resources into groups by assigning tags to BE nodes in a cluster, where BE nodes of the same tag constitute a Resource Group. A Resource Group can be deemed as a unit for data storage and computation. For data ingested into Doris, the system will write data replicas into different Resource Groups according to the configurations. Queries will also be assigned to their corresponding [Resource Groups](https://doris.apache.org/docs/admin-manual/resource-admin/multi-tenant#tag-division-and-cpu-limitation-are-new-features-in-version-015-in-order-to-ensure-a-smooth-upgrade-from-the-old-version-doris-has-made-the-following-forward-compatibility) for execution. 
 

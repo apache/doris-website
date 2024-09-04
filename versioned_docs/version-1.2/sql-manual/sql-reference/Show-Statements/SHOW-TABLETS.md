@@ -42,7 +42,7 @@ SHOW TABLETS FROM [database.]table [PARTITIONS(p1,p2)]
 [WHERE where_condition]
 [ORDER BY col_name]
 [LIMIT [offset,] row_count]
-````
+```
 
 1. **Syntax Description:**
 
@@ -61,19 +61,19 @@ or compound them with operator `AND`.
 
     ```sql
     SHOW TABLETS FROM example_db.table_name;
-    ````
+    ```
 
 2. list all tablets of the specified partitions
 
     ```sql
     SHOW TABLETS FROM example_db.table_name PARTITIONS(p1, p2);
-    ````
+    ```
 
 3. list all DECOMMISSION tablets on the specified backend
 
     ```sql
     SHOW TABLETS FROM example_db.table_name WHERE state="DECOMMISSION" AND BackendId=11003;
-    ````
+    ```
 
 ### Keywords
 

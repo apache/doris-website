@@ -1,7 +1,7 @@
 ---
 {
     "title": "BROKER-LOAD",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -32,7 +32,7 @@ BROKER LOAD
 
 ### Description
 
-This command is mainly used to import data on remote storage (such as S3, HDFS) through the Broker service process.
+该命令主要用于通过 Broker 服务进程读取远端存储（如 S3、HDFS）上的数据导入到 Doris 表里。
 
 ```sql
 LOAD LABEL load_label
@@ -42,18 +42,18 @@ data_desc1[, data_desc2, ...]
 WITH BROKER broker_name
 [broker_properties]
 [load_properties]
-[COMMENT "comment"];
+[COMMENT "comments"];
 ```
 
 - `load_label`
 
-  Each import needs to specify a unique Label. You can use this label to view the progress of the job later.
+  每个导入需要指定一个唯一的 Label。后续可以通过这个 label 来查看作业进度。
 
   `[database.]label_name`
 
 - `data_desc1`
 
-  Used to describe a set of files that need to be imported.
+  用于描述一组需要导入的文件。
 
   ```sql
   [MERGE|APPEND|DELETE]
@@ -80,145 +80,150 @@ WITH BROKER broker_name
 
   - `[MERGE|APPEND|DELETE]`
 
-    Data merge type. The default is APPEND, indicating that this import is a normal append write operation. The MERGE and DELETE types are only available for Unique Key model tables. The MERGE type needs to be used with the `[DELETE ON]` statement to mark the Delete Flag column. The DELETE type indicates that all data imported this time are deleted data.
+    数据合并类型。默认为 APPEND，表示本次导入是普通的追加写操作。MERGE 和 DELETE 类型仅适用于 Unique Key 模型表。其中 MERGE 类型需要配合 `[DELETE ON]` 语句使用，以标注 Delete Flag 列。而 DELETE 类型则表示本次导入的所有数据皆为删除数据。
 
   - `DATA INFILE`
 
-    Specify the file path to be imported. Can be multiple. Wildcards can be used. The path must eventually match to a file, if it only matches a directory the import will fail.
+    指定需要导入的文件路径。可以是多个。可以使用通配符。路径最终必须匹配到文件，如果只匹配到目录则导入会失败。
 
   - `NEGATIVE`
 
-    This keyword is used to indicate that this import is a batch of "negative" imports. This method is only for aggregate data tables with integer SUM aggregate type. This method will reverse the integer value corresponding to the SUM aggregate column in the imported data. Mainly used to offset previously imported wrong data.
+    该关键词用于表示本次导入为一批”负“导入。这种方式仅针对具有整型 SUM 聚合类型的聚合数据表。该方式会将导入数据中，SUM 聚合列对应的整型数值取反。主要用于冲抵之前导入错误的数据。
 
   - `PARTITION(p1, p2, ...)`
 
-    You can specify to import only certain partitions of the table. Data that is no longer in the partition range will be ignored.
+    可以指定仅导入表的某些分区。不在分区范围内的数据将被忽略。
 
   - `COLUMNS TERMINATED BY`
 
-    Specifies the column separator. Only valid in CSV format. Only single-byte delimiters can be specified.
+    指定列分隔符。仅在 CSV 格式下有效。仅能指定单字节分隔符。
 
   - `LINES TERMINATED BY`
 
-    Specifies the line delimiter. Only valid in CSV format. Only single-byte delimiters can be specified.
+    指定行分隔符。仅在 CSV 格式下有效。仅能指定单字节分隔符。
 
   - `FORMAT AS`
 
-    Specifies the file type, CSV, PARQUET and ORC formats are supported. Default is CSV.
+    指定文件类型，支持 CSV、PARQUET 和 ORC 格式。默认为 CSV。
 
   - `COMPRESS_TYPE AS`
-    Specifies the file compress type, GZ/LZO/BZ2/LZ4FRAME/DEFLATE/LZOP
+    指定文件压缩类型，支持 GZ/BZ2/LZ4FRAME。
 
   - `column list`
 
-    Used to specify the column order in the original file. For a detailed introduction to this part, please refer to the [Column Mapping, Conversion and Filtering](../../../../data-operate/import/load-data-convert) document.
+    用于指定原始文件中的列顺序。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/import-scenes/load-data-convert.md) 文档。
 
     `(k1, k2, tmpk1)`
 
   - `COLUMNS FROM PATH AS`
 
-    Specifies the columns to extract from the import file path.
+    指定从导入文件路径中抽取的列。
 
   - `SET (column_mapping)`
 
-    Specifies the conversion function for the column.
-  
+    指定列的转换函数。
+
   - `PRECEDING FILTER predicate`
 
-    Pre-filter conditions. The data is first concatenated into raw data rows in order according to `column list` and `COLUMNS FROM PATH AS`. Then filter according to the pre-filter conditions. For a detailed introduction to this part, please refer to the [Column Mapping, Conversion and Filtering](../../../../data-operate/import/load-data-convert) document.
+    前置过滤条件。数据首先根据 `column list` 和 `COLUMNS FROM PATH AS` 按顺序拼接成原始数据行。然后按照前置过滤条件进行过滤。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/import-scenes/load-data-convert.md) 文档。
 
   - `WHERE predicate`
 
-    Filter imported data based on conditions. For a detailed introduction to this part, please refer to the [Column Mapping, Conversion and Filtering](../../../../data-operate/import/load-data-convert) document.
+    根据条件对导入的数据进行过滤。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/import-scenes/load-data-convert.md) 文档。
 
   - `DELETE ON expr`
 
-    It needs to be used with the MEREGE import mode, only for the table of the Unique Key model. Used to specify the columns and calculated relationships in the imported data that represent the Delete Flag.
+    需配合 MEREGE 导入模式一起使用，仅针对 Unique Key 模型的表。用于指定导入数据中表示 Delete Flag 的列和计算关系。
 
   - `ORDER BY`
 
-    Tables only for the Unique Key model. Used to specify the column in the imported data that represents the Sequence Col. Mainly used to ensure data order when importing.
+    仅针对 Unique Key 模型的表。用于指定导入数据中表示 Sequence Col 的列。主要用于导入时保证数据顺序。
 
   - `PROPERTIES ("key1"="value1", ...)`
 
-    Specify some parameters of the imported format. For example, if the imported file is in `json` format, you can specify parameters such as `json_root`, `jsonpaths`, `fuzzy parse`, etc.
+    指定导入的 format 的一些参数。如导入的文件是`json`格式，则可以在这里指定`json_root`、`jsonpaths`、`fuzzy_parse`等参数。
 
-    - <version since="dev" type="inline"> enclose </version>
-    
-        When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field. Note: when the bracket is `"`, trim\_double\_quotes must be set to true.
+    -   enclose 
+  
+      包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。
+      注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。
 
-    - <version since="dev" type="inline"> escape </version>
+    -   escape
 
-        Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as "\", and then modify the data to "a,' b,\'c'".
+      转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，然后将数据修改为"a,'b,\'c'"。
 
 - `WITH BROKER broker_name`
 
-  Specify the Broker service name to be used. In the public cloud Doris. Broker service name is `bos`
+  指定需要使用的 Broker 服务名称。在公有云 Doris 中。Broker 服务名称为 `bos`
 
 - `broker_properties`
 
-  Specifies the information required by the broker. This information is usually used by the broker to be able to access remote storage systems. Such as BOS or HDFS. See the [Broker](../../../../data-operate/import/broker-load-manual) documentation for specific information.
+  指定 broker 所需的信息。这些信息通常被用于 Broker 能够访问远端存储系统。如 BOS 或 HDFS。关于具体信息，可参阅 [Broker](../../../../advanced/broker.md) 文档。
 
-  ````text
+  ```text
   (
       "key1" = "val1",
       "key2" = "val2",
       ...
   )
-  ````
+  ```
 
-- `load_properties`
+  - `load_properties`
 
-  Specifies import-related parameters. The following parameters are currently supported:
+    指定导入的相关参数。目前支持以下参数：
 
-  - `timeout`
+    - `timeout`
 
-    Import timeout. The default is 4 hours. in seconds.
+      导入超时时间。默认为 4 小时。单位秒。
 
-  - `max_filter_ratio`
+    - `max_filter_ratio`
 
-    The maximum tolerable proportion of data that can be filtered (for reasons such as data irregularity). Zero tolerance by default. The value range is 0 to 1.
+      最大容忍可过滤（数据不规范等原因）的数据比例。默认零容忍。取值范围为 0 到 1。
 
-  - `exec_mem_limit`
+    - `exec_mem_limit`
 
-    Import memory limit. Default is 2GB. The unit is bytes.
+      导入内存限制。默认为 2GB。单位为字节。
 
-  - `strict_mode`
+    - `strict_mode`
 
-    Whether to impose strict restrictions on data. Defaults to false.
+      是否对数据进行严格限制。默认为 false。
 
-  - `partial_columns`
+    - `partial_columns`
 
-    Boolean type, True means that use partial column update, the default value is false, this parameter is only allowed to be set when the table model is Unique and Merge on Write is used.
+      布尔类型，为 true 表示使用部分列更新，默认值为 false，该参数只允许在表模型为 Unique 且采用 Merge on Write 时设置。
 
-  - `timezone`
+    - `timezone`
 
-    Specify the time zone for some functions that are affected by time zones, such as `strftime/alignment_timestamp/from_unixtime`, etc. Please refer to the [timezone](../../../../query/query-variables/time-zone) documentation for details. If not specified, the "Asia/Shanghai" timezone is used
+      指定某些受时区影响的函数的时区，如 `strftime/alignment_timestamp/from_unixtime` 等等，具体请查阅 [时区](../../../../advanced/time-zone.md) 文档。如果不指定，则使用 "Asia/Shanghai" 时区
 
-  - `load_parallelism`
+    - `load_parallelism`
 
-    It allows the user to set the parallelism of the load execution plan
-    on a single node when the broker load is submitted, default value is 1.
+      导入并发度，默认为 1。调大导入并发度会启动多个执行计划同时执行导入任务，加快导入速度。 
 
-  - `send_batch_parallelism`
-  
-    Used to set the default parallelism for sending batch, if the value for parallelism exceed `max_send_batch_parallelism_per_job` in BE config, then the coordinator BE will use the value of `max_send_batch_parallelism_per_job`. 
+    - `send_batch_parallelism`
     
-  - `load_to_single_tablet`
-  
-    Boolean type, True means that one task can only load data to one tablet in the corresponding partition at a time. The default value is false. The number of tasks for the job depends on the overall concurrency. This parameter can only be set when loading data into the OLAP table with random bucketing.
+      用于设置发送批处理数据的并行度，如果并行度的值超过 BE 配置中的 `max_send_batch_parallelism_per_job`，那么作为协调点的 BE 将使用 `max_send_batch_parallelism_per_job` 的值。
     
-  - <version since="dev" type="inline"> priority </version>
-    
-    Set the priority of the load job, there are three options: `HIGH/NORMAL/LOW`, use `NORMAL` priority as default. The pending broker load jobs which have higher priority will be chosen to execute earlier.
+    - `load_to_single_tablet`
+      
+      布尔类型，为 true 表示支持一个任务只导入数据到对应分区的一个 tablet，默认值为 false，作业的任务数取决于整体并发度。该参数只允许在对带有 random 分桶的 olap 表导数的时候设置。
 
--  <version since="1.2.3" type="inline"> comment </version>
-    
-   Specify the comment for the import job. The comment can be viewed in the `show load` statement.
+    -   priority
+
+      设置导入任务的优先级，可选 `HIGH/NORMAL/LOW` 三种优先级，默认为 `NORMAL`，对于处在 `PENDING` 状态的导入任务，更高优先级的任务将优先被执行进入 `LOADING` 状态。
+
+-  comment 
+
+   指定导入任务的备注信息。可选参数。
+
+
+  :::tip 提示
+  该功能自 Apache Doris  1.2 版本起支持
+  :::
 
 ### Example
 
-1. Import a batch of data from HDFS
+1. 从 HDFS 导入一批数据
 
    ```sql
    LOAD LABEL example_db.label1
@@ -232,11 +237,11 @@ WITH BROKER broker_name
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
-   Import the file `file.txt`, separated by commas, into the table `my_table`.
+   导入文件 `file.txt`，按逗号分隔，导入到表 `my_table`。
 
-2. Import data from HDFS, using wildcards to match two batches of files in two batches. into two tables separately.
+2. 从 HDFS 导入数据，使用通配符匹配两批文件。分别导入到两个表中。
 
    ```sql
    LOAD LABEL example_db.label2
@@ -260,11 +265,11 @@ WITH BROKER broker_name
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
-   Import two batches of files `file-10*` and `file-20*` using wildcard matching. Imported into two tables `my_table1` and `my_table2` respectively. Where `my_table1` specifies to import into partition `p1`, and will import the values of the second and third columns in the source file +1.
+   使用通配符匹配导入两批文件 `file-10*` 和 `file-20*`。分别导入到 `my_table1` 和 `my_table2` 两张表中。其中 `my_table1` 指定导入到分区 `p1` 中，并且将导入源文件中第二列和第三列的值 +1 后导入。
 
-3. Import a batch of data from HDFS.
+3. 从 HDFS 导入一批数据。
 
    ```sql
    LOAD LABEL example_db.label3
@@ -284,11 +289,11 @@ WITH BROKER broker_name
        "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
        "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
    );
-   ````
+   ```
 
-   Specify the delimiter as Hive's default delimiter `\\x01`, and use the wildcard * to specify all files in all directories under the `data` directory. Use simple authentication while configuring namenode HA.
+   指定分隔符为 Hive 的默认分隔符 `\\x01`，并使用通配符 * 指定 `data` 目录下所有目录的所有文件。使用简单认证，同时配置 namenode HA。
 
-4. Import data in Parquet format and specify FORMAT as parquet. The default is to judge by the file suffix
+4. 导入 Parquet 格式数据，指定 FORMAT 为 parquet。默认是通过文件后缀判断
 
    ```sql
    LOAD LABEL example_db.label4
@@ -303,9 +308,9 @@ WITH BROKER broker_name
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
-5. Import the data and extract the partition field in the file path
+5. 导入数据，并提取文件路径中的分区字段
 
    ```sql
    LOAD LABEL example_db.label10
@@ -321,22 +326,22 @@ WITH BROKER broker_name
        "username"="hdfs_user",
        "password"="hdfs_password"
    );
-   ````
+   ```
 
-   The columns in the `my_table` table are `k1, k2, k3, city, utc_date`.
+   `my_table` 表中的列为 `k1, k2, k3, city, utc_date`。
 
-   The `hdfs://hdfs_host:hdfs_port/user/doris/data/input/dir/city=beijing` directory includes the following files:
+   其中 `hdfs://hdfs_host:hdfs_port/user/doris/data/input/dir/city=beijing` 目录下包括如下文件：
 
-   ````text
+   ```text
    hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-01/0000.csv
    hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-02/0000.csv
    hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-03/0000.csv
    hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-04/0000.csv
-   ````
+   ```
 
-   The file only contains three columns of `k1, k2, k3`, and the two columns of `city, utc_date` will be extracted from the file path.
+   文件中只包含 `k1, k2, k3` 三列数据，`city, utc_date` 这两列数据会从文件路径中提取。
 
-6. Filter the data to be imported.
+6. 对待导入数据进行过滤。
 
    ```sql
    LOAD LABEL example_db.label6
@@ -355,16 +360,16 @@ WITH BROKER broker_name
        "username"="user",
        "password"="pass"
    );
-   ````
+   ```
 
-   Only in the original data, k1 = 1, and after transformation, rows with k1 > k2 will be imported.
+   只有原始数据中，k1 = 1，并且转换后，k1 > k2 的行才会被导入。
 
-7. Import data, extract the time partition field in the file path, and the time contains %3A (in the hdfs path, ':' is not allowed, all ':' will be replaced by %3A)
+7. 导入数据，提取文件路径中的时间分区字段，并且时间包含 %3A (在 hdfs 路径中，不允许有 ':'，所有 ':' 会由 %3A 替换)
 
    ```sql
    LOAD LABEL example_db.label7
    (
-       DATA INFILE("hdfs://host:port/user/data/*/test.txt")
+       DATA INFILE("hdfs://host:port/user/data/*/test.txt") 
        INTO TABLE `tbl12`
        COLUMNS TERMINATED BY ","
        (k2,k3)
@@ -378,70 +383,70 @@ WITH BROKER broker_name
        "username"="user",
        "password"="pass"
    );
-   ````
+   ```
 
-   There are the following files in the path:
+   路径下有如下文件：
 
-   ````text
+   ```text
    /user/data/data_time=2020-02-17 00%3A00%3A00/test.txt
    /user/data/data_time=2020-02-18 00%3A00%3A00/test.txt
-   ````
+   ```
 
-   The table structure is:
+   表结构为：
 
-   ````text
+   ```text
    data_time DATETIME,
-   k2 INT,
-   k3 INT
-   ````
+   k2        INT,
+   k3        INT
+   ```
 
-8. Import a batch of data from HDFS, specify the timeout and filter ratio. Broker with clear text my_hdfs_broker. Simple authentication. And delete the columns in the original data that match the columns with v2 greater than 100 in the imported data, and other columns are imported normally
+8. 从 HDFS 导入一批数据，指定超时时间和过滤比例。使用明文 my_hdfs_broker 的 broker。简单认证。并且将原有数据中与 导入数据中 v2 大于 100 的列相匹配的列删除，其他列正常导入
 
-    ```sql
-    LOAD LABEL example_db.label8
-    (
-        MERGE DATA INFILE("HDFS://test:802/input/file")
-        INTO TABLE `my_table`
-        (k1, k2, k3, v2, v1)
-        DELETE ON v2 > 100
-    )
-    WITH HDFS
-    (
-        "hadoop.username"="user",
-        "password"="pass"
-    )
-    PROPERTIES
-    (
-        "timeout" = "3600",
-        "max_filter_ratio" = "0.1"
-    );
-    ````
+   ```sql
+   LOAD LABEL example_db.label8
+   (
+       MERGE DATA INFILE("HDFS://test:802/input/file")
+       INTO TABLE `my_table`
+       (k1, k2, k3, v2, v1)
+       DELETE ON v2 > 100
+   )
+   WITH HDFS
+   (
+       "hadoop.username"="user",
+       "password"="pass"
+   )
+   PROPERTIES
+   (
+       "timeout" = "3600",
+       "max_filter_ratio" = "0.1"
+   );
+   ```
 
-   Import using the MERGE method. `my_table` must be a table with Unique Key. When the value of the v2 column in the imported data is greater than 100, the row is considered a delete row.
+   使用 MERGE 方式导入。`my_table` 必须是一张 Unique Key 的表。当导入数据中的 v2 列的值大于 100 时，该行会被认为是一个删除行。
 
-   The import task timeout is 3600 seconds, and the error rate is allowed to be within 10%.
+   导入任务的超时时间是 3600 秒，并且允许错误率在 10% 以内。
 
-9. Specify the source_sequence column when importing to ensure the replacement order in the UNIQUE_KEYS table:
+9. 导入时指定 source_sequence 列，保证 UNIQUE_KEYS 表中的替换顺序：
 
-    ```sql
-    LOAD LABEL example_db.label9
-    (
-        DATA INFILE("HDFS://test:802/input/file")
-        INTO TABLE `my_table`
-        COLUMNS TERMINATED BY ","
-        (k1,k2,source_sequence,v1,v2)
-        ORDER BY source_sequence
-    )
-    WITH HDFS
-    (
-        "hadoop.username"="user",
-        "password"="pass"
-    )
-    ````
+   ```sql
+   LOAD LABEL example_db.label9
+   (
+       DATA INFILE("HDFS://test:802/input/file")
+       INTO TABLE `my_table`
+       COLUMNS TERMINATED BY ","
+       (k1,k2,source_sequence,v1,v2)
+       ORDER BY source_sequence
+   ) 
+   WITH HDFS
+   (
+       "hadoop.username"="user",
+       "password"="pass"
+   )
+   ```
 
-   `my_table` must be an Unique Key model table with Sequence Col specified. The data will be ordered according to the value of the `source_sequence` column in the source data.
+   `my_table` 必须是 Unique Key 模型表，并且指定了 Sequcence Col。数据会按照源数据中 `source_sequence` 列的值来保证顺序性。
 
-10. Import a batch of data from HDFS, specify the file format as `json`, and specify parameters of `json_root` and `jsonpaths`.
+10. 从 HDFS 导入一批数据，指定文件格式为 `json` 并指定 `json_root`、`jsonpaths`
 
     ```sql
     LOAD LABEL example_db.label10
@@ -465,7 +470,7 @@ WITH BROKER broker_name
     );
     ```
 
-    `jsonpaths` can be use with `column list` and `SET(column_mapping)`:
+    `jsonpaths` 可与 `column list` 及 `SET (column_mapping)`配合：
 
     ```sql
     LOAD LABEL example_db.label10
@@ -489,9 +494,8 @@ WITH BROKER broker_name
     "timeout"="1200",
     "max_filter_ratio"="0.1"
     );
-    ```
 
-11. Load data in csv format from cos(Tencent Cloud Object Storage).
+11. 从腾讯云 cos 中以 csv 格式导入数据。
 
     ```SQL
     LOAD LABEL example_db.label10
@@ -508,7 +512,7 @@ WITH BROKER broker_name
     )
     ```
 
-12. Load CSV date and trim double quotes and skip first 5 lines
+12. 导入 CSV 数据时去掉双引号，并跳过前 5 行。
 
     ```SQL
     LOAD LABEL example_db.label12
@@ -532,41 +536,42 @@ WITH BROKER broker_name
 
 ### Best Practice
 
-1. Check the import task status
+1. 查看导入任务状态
 
-   Broker Load is an asynchronous import process. The successful execution of the statement only means that the import task is submitted successfully, and does not mean that the data import is successful. The import status needs to be viewed through the [SHOW LOAD](../../../sql-reference/Show-Statements/SHOW-LOAD) command.
+   Broker Load 是一个异步导入过程，语句执行成功仅代表导入任务提交成功，并不代表数据导入成功。导入状态需要通过 [SHOW LOAD](../../Show-Statements/SHOW-LOAD.md) 命令查看。
 
-2. Cancel the import task
+2. 取消导入任务
 
-   Import tasks that have been submitted but not yet completed can be canceled by the [CANCEL LOAD](../../../sql-reference/Data-Manipulation-Statements/Load/CANCEL-LOAD) command. After cancellation, the written data will also be rolled back and will not take effect.
+   已提交切尚未结束的导入任务可以通过 [CANCEL LOAD](./CANCEL-LOAD.md) 命令取消。取消后，已写入的数据也会回滚，不会生效。
 
-3. Label, import transaction, multi-table atomicity
+3. Label、导入事务、多表原子性
 
-   All import tasks in Doris are atomic. And the import of multiple tables in the same import task can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that the data imported is not lost or heavy. For details, see the [Import Transactions and Atomicity](../../../../data-operate/import/load-atomicity) documentation.
+   Doris 中所有导入任务都是原子生效的。并且在同一个导入任务中对多张表的导入也能够保证原子性。同时，Doris 还可以通过 Label 的机制来保证数据导入的不丢不重。具体说明可以参阅 [导入事务和原子性](../../../../data-operate/import/import-scenes/load-atomicity.md) 文档。
 
-4. Column mapping, derived columns and filtering
+4. 列映射、衍生列和过滤
 
-   Doris can support very rich column transformation and filtering operations in import statements. Most built-in functions and UDFs are supported. For how to use this function correctly, please refer to the [Column Mapping, Conversion and Filtering](../../../../data-operate/import/load-data-convert) document.
+   Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。支持绝大多数内置函数和 UDF。关于如何正确的使用这个功能，可参阅 [列的映射，转换与过滤](../../../../data-operate/import/import-scenes/load-data-convert.md) 文档。
 
-5. Error data filtering
+5. 错误数据过滤
 
-   Doris' import tasks can tolerate a portion of malformed data. Tolerated via `max_filter_ratio` setting. The default is 0, which means that the entire import task will fail when there is an error data. If the user wants to ignore some problematic data rows, the secondary parameter can be set to a value between 0 and 1, and Doris will automatically skip the rows with incorrect data format.
+   Doris 的导入任务可以容忍一部分格式错误的数据。容忍了通过 `max_filter_ratio` 设置。默认为 0，即表示当有一条错误数据时，整个导入任务将会失败。如果用户希望忽略部分有问题的数据行，可以将次参数设置为 0~1 之间的数值，Doris 会自动跳过哪些数据格式不正确的行。
 
-   For some calculation methods of the tolerance rate, please refer to the [Column Mapping, Conversion and Filtering](../../../../data-operate/import/load-data-convert) document.
+   关于容忍率的一些计算方式，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/import-scenes/load-data-convert.md) 文档。
 
-6. Strict Mode
+6. 严格模式
 
-   The `strict_mode` attribute is used to set whether the import task runs in strict mode. The format affects the results of column mapping, transformation, and filtering. For a detailed description of strict mode, see the [strict mode](../../../../data-operate/import/load-strict-mode) documentation.
+   `strict_mode` 属性用于设置导入任务是否运行在严格模式下。该格式会对列映射、转换和过滤的结果产生影响。关于严格模式的具体说明，可参阅 [严格模式](../../../../data-operate/import/import-scenes/load-strict-mode.md) 文档。
 
-7. Timeout
+7. 超时时间
 
-   The default timeout for Broker Load is 4 hours. from the time the task is submitted. If it does not complete within the timeout period, the task fails.
+   Broker Load 的默认超时时间为 4 小时。从任务提交开始算起。如果在超时时间内没有完成，则任务会失败。
 
-8. Limits on data volume and number of tasks
+8. 数据量和任务数限制
 
-   Broker Load is suitable for importing data within 100GB in one import task. Although theoretically there is no upper limit on the amount of data imported in one import task. But committing an import that is too large results in a longer run time, and the cost of retrying after a failure increases.
+   Broker Load 适合在一个导入任务中导入 100GB 以内的数据。虽然理论上在一个导入任务中导入的数据量没有上限。但是提交过大的导入会导致运行时间较长，并且失败后重试的代价也会增加。
 
-   At the same time, limited by the size of the cluster, we limit the maximum amount of imported data to the number of ComputeNode nodes * 3GB. In order to ensure the rational use of system resources. If there is a large amount of data to be imported, it is recommended to divide it into multiple import tasks.
+   同时受限于集群规模，我们限制了导入的最大数据量为 ComputeNode 节点数 * 3GB。以保证系统资源的合理利用。如果有大数据量需要导入，建议分成多个导入任务提交。
 
+   Doris 同时会限制集群内同时运行的导入任务数量，通常在 3-10 个不等。之后提交的导入作业会排队等待。队列最大长度为 100。之后的提交会直接拒绝。注意排队时间也被计算到了作业总时间中。如果超时，则作业会被取消。所以建议通过监控作业运行状态来合理控制作业提交频率。
    Doris also limits the number of import tasks running simultaneously in the cluster, usually ranging from 3 to 10. Import jobs submitted after that are queued. The maximum queue length is 100. Subsequent submissions will be rejected outright. Note that the queue time is also calculated into the total job time. If it times out, the job is canceled. Therefore, it is recommended to reasonably control the frequency of job submission by monitoring the running status of the job.
 

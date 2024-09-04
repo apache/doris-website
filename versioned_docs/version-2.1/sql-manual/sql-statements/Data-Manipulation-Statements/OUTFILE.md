@@ -198,7 +198,7 @@ Parquet and ORC file formats have their own data types. The export function of D
        "line_delimiter" = "\n",
        "max_file_size" = "100MB"
    );
-   ````
+   ```
 
    If the final generated file is not larger than 100MB, it will be: `result_0.csv`.
    If larger than 100MB, it may be `result_0.csv, result_1.csv, ...`.
@@ -216,7 +216,7 @@ Parquet and ORC file formats have their own data types. The export function of D
        "broker.kerberos_principal" = "doris@YOUR.COM",
        "broker.kerberos_keytab" = "/home/doris/my.keytab"
    );
-   ````
+   ```
 
 3. Export the query result of the CTE statement to the file `hdfs://path/to/result.txt`. The default export format is CSV. Use `my_broker` and set hdfs high availability information. Use the default row and column separators.
 
@@ -239,7 +239,7 @@ Parquet and ORC file formats have their own data types. The export function of D
        "broker.dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
        "broker.dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
    );
-   ````
+   ```
 
    If the final generated file is not larger than 1GB, it will be: `result_0.csv`.
    If larger than 1GB, it may be `result_0.csv, result_1.csv, ...`.
@@ -258,7 +258,7 @@ Parquet and ORC file formats have their own data types. The export function of D
        "broker.bos_accesskey" = "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
        "broker.bos_secret_accesskey" = "yyyyyyyyyyyyyyyyyyyyyyyyy"
    );
-   ````
+   ```
 
 5. Export the query result of the select statement to the file `s3a://${bucket_name}/path/result.txt`. Specify the export format as csv.
    After the export is complete, an identity file is generated.
@@ -278,7 +278,7 @@ Parquet and ORC file formats have their own data types. The export function of D
        "max_file_size" = "1024MB",
        "success_file_name" = "SUCCESS"
    )
-   ````
+   ```
 
    If the final generated file is not larger than 1GB, it will be: `my_file_0.csv`.
    If larger than 1GB, it may be `my_file_0.csv, result_1.csv, ...`.
@@ -301,7 +301,7 @@ Parquet and ORC file formats have their own data types. The export function of D
         "s3.secret_key" = "xxx",
         "s3.region" = "bd"
    )
-   ````
+   ```
 
    The resulting file is prefixed with `my_file_{fragment_instance_id}_`.
 
@@ -320,7 +320,7 @@ Parquet and ORC file formats have their own data types. The export function of D
         "s3.secret_key" = "xxx",
         "s3.region" = "bd"
    )
-   ````
+   ```
 
 8. Use hdfs export to export simple query results to the file `hdfs://${host}:${fileSystem_port}/path/to/result.txt`. Specify the export format as CSV and the user name as work. Specify the column separator as `,` and the row separator as `\n`.
 
@@ -377,7 +377,7 @@ Parquet and ORC file formats have their own data types. The export function of D
        "max_file_size" = "1024MB",
        "success_file_name" = "SUCCESS"
    )
-   ````
+   ```
 
 ### keywords
 

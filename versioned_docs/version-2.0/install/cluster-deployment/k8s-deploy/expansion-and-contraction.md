@@ -92,7 +92,7 @@ doriscluster-sample-be-1   1/1     Running   0             12m
 
 ### Service contraction
 
-Regarding the issue of node shrinkage, Doris-Operator currently does not support the safe shutdown of nodes. Here, the purpose of reducing FE or BE can still be achieved by reducing the replicas attribute of the cluster component. Here, the node is directly stopped to achieve node shutdown. line, the current version of Doris-Operator fails to implement [decommission](../../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) and goes offline after safely transferring the copy.  This may cause some problems and precautions as follows:
+Regarding the issue of node shrinkage, Doris-Operator currently does not support the safe shutdown of nodes. Here, the purpose of reducing FE or BE can still be achieved by reducing the replicas attribute of the cluster component. Here, the node is directly stopped to achieve node shutdown. line, the current version of Doris-Operator fails to implement [decommission](../../../sql-manual/sql-reference/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) and goes offline after safely transferring the copy.  This may cause some problems and precautions as follows:
 
 - If the BE node is rashly taken offline when there is a single copy of the table, there will definitely be data loss, so avoid this operation as much as possible.
 - FE Follower nodes try to avoid being offline at will, which may cause metadata damage and affect services.

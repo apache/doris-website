@@ -62,7 +62,7 @@ MySQL Load requires INSERT permission on the target table. You can grant permiss
 
 Create a data file `client_local.csv` containing the following sample data:
 
-```SQL
+```sql
 1,10
 2,20
 3,30
@@ -76,7 +76,7 @@ Create a data file `client_local.csv` containing the following sample data:
 Connect to the MySQL client before executing the LOAD DATA command:
 
 ```Shell
-mysql --local-infile  -h <fe_ip> -P <fe_query_port> -u root -D testdb
+MySQL --local-infile  -h <fe_ip> -P <fe_query_port> -u root -D testdb
 ```
 
 :::caution
@@ -90,7 +90,7 @@ Specific parameter options need to be used during the connection:
 
 Create a table as follows in Doris:
 
-```SQL
+```sql
 CREATE TABLE testdb.t1 (
     pk     INT, 
     v1     INT SUM
@@ -102,7 +102,7 @@ DISTRIBUTED BY hash (pk);
 
 After connecting to the MySQL client, create a Load job. The command is as follows:
 
-```SQL
+```sql
 LOAD DATA LOCAL
 INFILE 'client_local.csv'
 INTO TABLE testdb.t1
@@ -116,20 +116,20 @@ MySQL Load is a synchronous import method, and the results of the import are ret
 
 Below is an example of a successful import result, which returns the number of imported rows:
 
-```SQL
+```sql
 Query OK, 6 row affected (0.17 sec)
 Records: 6  Deleted: 0  Skipped: 0  Warnings: 0
 ```
 
 When there are exceptions during the import, the corresponding error will be displayed on the client:
 
-```SQL
+```sql
 ERROR 1105 (HY000): errCode = 2, detailMessage = [DATA_QUALITY_ERROR]too many filtered rows with load id b612907c-ccf4-4ac2-82fe-107ece655f0f
 ```
 
 The `loadId` is included in the error message, based on which you can view the detailed information via the `show load warnings` command:
 
-```SQL
+```sql
 show load warnings where label='b612907c-ccf4-4ac2-82fe-107ece655f0f';
 ```
 
@@ -143,7 +143,7 @@ Doris does not allow manual cancellation of MySQL Load jobs. In the event of a t
 
 The syntax for LOAD DATA is as follows:
 
-```SQL
+```sql
 LOAD DATA LOCAL
 INFILE '<load_data_file>'
 INTO TABLE [<db_name>.]<table_name>
@@ -166,7 +166,7 @@ Descriptions of modules in the Load job:
 | COLUMNS TERMINATED BY | This specifies the column delimiter.                         |
 | LINE TERMINATED BY    | This specifies the row delimiter.                            |
 | IGNORE num LINES      | This specifies the number of rows to skip in the CSV import, typically specified as 1 to skip the header. |
-| col_name_or_user_var  | This specifies the column mapping syntax. For more information, refer to [Column Mapping](https://doris.apache.org/docs/2.0/data-operate/import/load-data-convert#column-mapping). |
+| col_name_or_user_var  | This specifies the column mapping syntax. For more information, refer to [Column Mapping](../../data-operate/import/load-data-convert#column-mapping). |
 | PROPERTIES            | Parameters for the Load.                                     |
 
 ### Parameters
@@ -190,7 +190,7 @@ By the `PROPERTIES (key1 = value1 [, key2=value2])` syntax, you can configure th
 
 You can adjust the import timeout by specifying `timeout` in PROPERTIES. For example, set it to 100s:
 
-```SQL
+```sql
 LOAD DATA LOCAL
 INFILE 'testData'
 INTO TABLE testDb.testTbl
@@ -201,7 +201,7 @@ PROPERTIES ("timeout"="100");
 
 You can adjust the allowable error rate by specifying `max_filter_ratio` in PROPERTIES. For example, set it to 20%:
 
-```SQL
+```sql
 LOAD DATA LOCAL
 INFILE 'testData'
 INTO TABLE testDb.testTbl
@@ -212,7 +212,7 @@ PROPERTIES ("max_filter_ratio"="0.2");
 
 The following example adjusts the order of columns in the CSV file.
 
-```SQL
+```sql
 LOAD DATA LOCAL
 INFILE 'testData'
 INTO TABLE testDb.testTbl
@@ -223,7 +223,7 @@ INTO TABLE testDb.testTbl
 
 You can specify the column and row delimiters using the `COLUMNS TERMINATED BY` and `LINES TERMINATED BY` clauses. In the following example, (,) and (\n) are used as the column and row delimiters, respectively.
 
-```SQL
+```sql
 LOAD DATA LOCAL
 INFILE 'testData'
 INTO TABLE testDb.testTbl
@@ -235,7 +235,7 @@ LINES TERMINATED BY '\n';
 
 You can specify the target partition for the import using the `PARTITION` clause. In the following example, data will be loaded into the specified partitions 'p1' and 'p2', and any data that does not belong to these two partitions will be filtered out:
 
-```SQL
+```sql
 LOAD DATA LOCAL
 INFILE 'testData'
 INTO TABLE testDb.testTbl
@@ -246,7 +246,7 @@ PARTITION (p1, p2);
 
 You can specify the `timezone` in PROPERTIES. In the following example, the timezone is set to Africa/Abidjan:
 
-```SQL
+```sql
 LOAD DATA LOCAL
 INFILE 'testData'
 INTO TABLE testDb.testTbl
@@ -257,7 +257,7 @@ PROPERTIES ("timezone"="Africa/Abidjan");
 
 You can specify the memory limit for the import by the `exec_mem_limit` parameter in PROPERTIES. In the following example, the memory limit is set to 10G:
 
-```SQL
+```sql
 LOAD DATA LOCAL
 INFILE 'testData'
 INTO TABLE testDb.testTbl
@@ -266,4 +266,4 @@ PROPERTIES ("exec_mem_limit"="10737418240");
 
 ## More help
 
-For more detailed syntax and best practices related to MySQL Load, refer to the [MySQL Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/MYSQL-LOAD/) command manual.
+For more detailed syntax and best practices related to MySQL Load, refer to the [MySQL Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/MYSQL-LOAD) command manual.

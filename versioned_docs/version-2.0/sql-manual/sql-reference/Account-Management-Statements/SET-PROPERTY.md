@@ -36,7 +36,7 @@ Set user attributes, including resources assigned to users, importing clusters, 
 
 ```sql
 SET PROPERTY [FOR 'user'] 'key' = 'value' [, 'key' = 'value']
-````
+```
 
 The user attribute set here is for user, not user_identity. That is, if two users 'jack'@'%' and 'jack'@'192.%' are created through the CREATE USER statement, the SET PROPERTY statement can only be used for the user jack, not 'jack'@'% ' or 'jack'@'192.%'
 
@@ -66,43 +66,43 @@ Super user privileges:
 
    ```sql
    SET PROPERTY FOR 'jack' 'max_user_connections' = '1000';
-   ````
+   ```
 
 2. Modify the number of available instances for user jack's query to 3000
 
    ```sql
    SET PROPERTY FOR 'jack' 'max_query_instances' = '3000';
-   ````
+   ```
 
 3. Modify the sql block rule of user jack
 
    ```sql
    SET PROPERTY FOR 'jack' 'sql_block_rules' = 'rule1, rule2';
-   ````
+   ```
 
 4. Modify the cpu usage limit of user jack
 
     ```sql
     SET PROPERTY FOR 'jack' 'cpu_resource_limit' = '2';
-    ````
+    ```
 
 5. Modify the user's resource tag permissions
 
     ```sql
     SET PROPERTY FOR 'jack' 'resource_tags.location' = 'group_a, group_b';
-    ````
+    ```
 
 6. Modify the user's query memory usage limit, in bytes
 
     ```sql
     SET PROPERTY FOR 'jack' 'exec_mem_limit' = '2147483648';
-    ````
+    ```
 
 7. Modify the user's query timeout limit, in second
 
     ```sql
     SET PROPERTY FOR 'jack' 'query_timeout' = '500';
-    ````
+    ```
 
 ### Keywords
 

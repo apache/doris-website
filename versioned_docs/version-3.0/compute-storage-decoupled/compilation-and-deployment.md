@@ -30,13 +30,13 @@ Compilation in the compute-storage decoupled mode is similar to that in the comp
 
 Similar to the compute-storage coupled mode, you can use the built-in `build.sh` script to compile Doris in the compute-storage decoupled mode. Add the `--cloud` parameter for compilation of the new Meta Service module (The binary name for it is `doris_cloud`). 
 
-```Bash
+```shell
 sh build.sh --fe --be --cloud 
 ```
 
 Unlike the compute-storage coupled mode, you will find an `ms` directory in the `output` directory after compiling in the compute-storage decoupled mode.
 
-```Bash
+```shell
 output
 ├── be
 ├── fe
@@ -61,7 +61,7 @@ The version information of `doris_cloud` can be checked in two ways. If one meth
 - `bin/start.sh --version`
 - `lib/doris_cloud --version`
 
-```Bash
+```shell
 $ lib/doris_cloud --version
 version:{doris_cloud-0.0.0-debug} code_version:{commit=b9c1d057f07dd874ad32501ff43701247179adcb time=2024-03-24 20:44:50 +0800} build_info:{initiator=gavinchou@VM-10-7-centos build_at=2024-03-24 20:44:50 +0800 build_on=NAME="TencentOS Server" VERSION="3.1 (Final)" }
 ```
@@ -85,7 +85,7 @@ The `brpc_listen_port = 5000` above is the default port for Meta Service. `fdb_c
 
 **Example**
 
-```Bash
+```shell
 cat /etc/foundationdb/fdb.cluster
 
 DO NOT EDIT!
@@ -108,7 +108,7 @@ The `brpc_listen_port = 5100` above is the default port for Recycler. `fdb_clust
 
 **Example**
 
-```Bash
+```shell
 cat /etc/foundationdb/fdb.cluster
 
 DO NOT EDIT!

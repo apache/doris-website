@@ -63,7 +63,7 @@ prometheus 监控采集接口
 ## Examples
 
 
-    ```bash
+    ```shell
         curl "http://127.0.0.1:8040/metrics?type=json&with_tablet=true"
     ```
 

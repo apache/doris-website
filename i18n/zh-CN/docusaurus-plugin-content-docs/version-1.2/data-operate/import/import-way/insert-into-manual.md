@@ -39,7 +39,7 @@ Insert Into 语句的使用方式和 MySQL 等数据库中 Insert Into 语句的
 
 Insert Into 命令需要通过 MySQL 协议提交，创建导入请求会同步返回导入结果。
 
-以下是两个Insert Into的使用示例：
+以下是两个 Insert Into 的使用示例：
 
 ```sql
 INSERT INTO tbl2 WITH LABEL label1 SELECT * FROM tbl3;
@@ -103,7 +103,7 @@ Insert Into 本身就是一个 SQL 命令，其**返回结果**会根据执行�
       {'label':'insert_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
       ```
 
-      `Query OK` 表示执行成功。`4 rows affected` 表示总共有4行数据被导入。`2 warnings` 表示被过滤的行数。
+      `Query OK` 表示执行成功。`4 rows affected` 表示总共有 4 行数据被导入。`2 warnings` 表示被过滤的行数。
 
       同时会返回一个 json 串：
 
@@ -162,9 +162,9 @@ Insert Into 本身就是一个 SQL 命令，其**返回结果**会根据执行�
 
 ### SHOW LAST INSERT
 
-在上一小节中我们介绍了如何根据 insert 操作的返回结果进行后续处理。但一些语言的mysql类库中很难获取返回结果的中的 json 字符串。因此，Doris 还提供了 `SHOW LAST INSERT` 命令来显式的获取最近一次 insert 操作的结果。
+在上一小节中我们介绍了如何根据 insert 操作的返回结果进行后续处理。但一些语言的 mysql 类库中很难获取返回结果的中的 json 字符串。因此，Doris 还提供了 `SHOW LAST INSERT` 命令来显式的获取最近一次 insert 操作的结果。
 
-当执行完一个 insert 操作后，可以在同一 session 连接中执行 `SHOW LAST INSERT`。该命令会返回最近一次insert 操作的结果，如：
+当执行完一个 insert 操作后，可以在同一 session 连接中执行 `SHOW LAST INSERT`。该命令会返回最近一次 insert 操作的结果，如：
 
 ```sql
 mysql> show last insert\G
@@ -188,11 +188,11 @@ TransactionStatus: VISIBLE
 
 + timeout
 
-  导入任务的超时时间(以秒为单位)，导入任务在设定的 timeout 时间内未完成则会被系统取消，变成 CANCELLED。
+  导入任务的超时时间 (以秒为单位)，导入任务在设定的 timeout 时间内未完成则会被系统取消，变成 CANCELLED。
 
-  目前 Insert Into 并不支持自定义导入的 timeout 时间，所有 Insert Into 导入的超时时间是统一的，默认的 timeout 时间为1小时。如果导入的源文件无法在规定时间内完成导入，则需要调整 FE 的参数```insert_load_default_timeout_second```。
+  目前 Insert Into 并不支持自定义导入的 timeout 时间，所有 Insert Into 导入的超时时间是统一的，默认的 timeout 时间为 1 小时。如果导入的源文件无法在规定时间内完成导入，则需要调整 FE 的参数```insert_load_default_timeout_second```。
   
-  <version since="dev"></version>
+   
   同时 Insert Into 语句受到 Session 变量 `insert_timeout`的限制。可以通过 `SET insert_timeout = xxx;` 来增加超时时间，单位是秒。
 
 ### Session 变量
@@ -209,13 +209,13 @@ TransactionStatus: VISIBLE
 
 + query\_timeout
 
-  Insert Into 本身也是一个 SQL 命令，Insert Into 语句受到 Session 变量 <version since="dev" type="inline">`insert_timeout`</version> 的限制。可以通过 `SET insert_timeout = xxx;` 来增加超时时间，单位是秒。
+  Insert Into 本身也是一个 SQL 命令，Insert Into 语句受到 Session 变量 `insert_timeout` 的限制。可以通过 `SET insert_timeout = xxx;` 来增加超时时间，单位是秒。
 
 ## 最佳实践
 
 ### 应用场景
 
-1. 用户希望仅导入几条假数据，验证一下 Doris 系统的功能。此时适合使用 [INSERT INTO VALUES](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT.md) 的语法，这里语法和MySql语法一样。
+1. 用户希望仅导入几条假数据，验证一下 Doris 系统的功能。此时适合使用 [INSERT INTO VALUES](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT.md) 的语法，这里语法和 MySql 语法一样。
 2. 用户希望将已经在 Doris 表中的数据进行 ETL 转换并导入到一个新的 Doris 表中，此时适合使用 INSERT INTO SELECT 语法。
 3. 用户可以创建一种外部表，如 MySQL 外部表映射一张 MySQL 系统中的表。或者创建 [Broker](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/BROKER-LOAD.md) 外部表来映射 HDFS 上的数据文件。然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。
 

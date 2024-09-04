@@ -185,7 +185,7 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 这里我们通过连接一个 Hive 集群说明如何使用 Catalog 功能。
 
-更多关于 Hive 的说明，请参阅：[Hive Catalog](./datalake-analytics/hive)
+更多关于 Hive 的说明，请参阅：[Hive Catalog](../lakehouse/datalake-analytics/hive)
 
 **1. 创建 Catalog**
 
@@ -375,7 +375,7 @@ select k1, k4 from table;           // Query OK.
 
 使用 Doris 对 External Catalog 中库表进行访问时，默认情况下，依赖 Doris 自身的权限访问管理功能。
 
-Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参阅 [认证和鉴权](../../../admin-manual/auth/authentication-and-authorization.md) 文档。
+Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参阅 [认证和鉴权](../admin-manual/auth/authentication-and-authorization) 文档。
 
 用户也可以通过 `access_controller.class` 属性指定自定义的鉴权类。如通过指定：
 
@@ -383,7 +383,7 @@ Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参�
 "access_controller.class" = "org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"
 ```
 
-则可以使用 Apache Range 对 Hive Catalog 进行鉴权管理。详细信息请参阅：[Hive Catalog](../lakehouse/datalake-analytics/hive)
+则可以使用 Apache Ranger 对 Hive Catalog 进行鉴权管理。详细信息请参阅：[Hive Catalog](../lakehouse/datalake-analytics/hive)
 
 ### 指定需要同步的数据库
 

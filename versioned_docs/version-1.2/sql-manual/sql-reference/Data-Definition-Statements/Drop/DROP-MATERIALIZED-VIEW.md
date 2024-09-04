@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 DROP MATERIALIZED VIEW [IF EXISTS] mv_name ON table_name;
-````
+```
 
 
 1. IF EXISTS:
@@ -70,17 +70,17 @@ mysql> desc all_type_table all;
 | k1_sumk2 | k1 | TINYINT | Yes | true | N/A | |
 | | k2 | SMALLINT | Yes | false | N/A | SUM |
 +----------------+-------+----------+------+------ -+---------+-------+
-````
+```
 
 1. Drop the materialized view named k1_sumk2 of the table all_type_table
 
    ```sql
    drop materialized view k1_sumk2 on all_type_table;
-   ````
+   ```
 
    The table structure after the materialized view is deleted
 
-   ````text
+   ```text
    +----------------+-------+----------+------+------ -+---------+-------+
    | IndexName | Field | Type | Null | Key | Default | Extra |
    +----------------+-------+----------+------+------ -+---------+-------+
@@ -92,14 +92,14 @@ mysql> desc all_type_table all;
    | | k6 | FLOAT | Yes | false | N/A | NONE |
    | | k7 | DOUBLE | Yes | false | N/A | NONE |
    +----------------+-------+----------+------+------ -+---------+-------+
-   ````
+   ```
 
 2. Drop a non-existent materialized view in the table all_type_table
 
    ```sql
    drop materialized view k1_k2 on all_type_table;
    ERROR 1064 (HY000): errCode = 2, detailMessage = Materialized view [k1_k2] does not exist in table [all_type_table]
-   ````
+   ```
 
    The delete request reports an error directly
 
@@ -108,7 +108,7 @@ mysql> desc all_type_table all;
    ```sql
    drop materialized view if exists k1_k2 on all_type_table;
    Query OK, 0 rows affected (0.00 sec)
-   ````
+   ```
 
     If it exists, delete it, if it does not exist, no error is reported.
 

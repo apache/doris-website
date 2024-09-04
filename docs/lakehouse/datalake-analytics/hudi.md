@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-[Apache Doris & Hudi Quick Start](../../get-starting/quick-start/doris-hudi.md)
+[Apache Doris & Hudi Quick Start](https://doris.apache.org/docs/gettingStarted/tutorials/doris-hudi)
 
 ## Usage
 
@@ -117,7 +117,7 @@ SELECT * from hudi_table@incr('beginTime'='xxx', ['endTime'='xxx'], ['hoodie.rea
 ```
 `beginTime` is required, and the time format is consistent with the hudi official website [hudi_table_changes](https://hudi.apache.org/docs/0.14.0/quick-start-guide/#incremental-query), and supports "earliest". `endTime` is optional, and the default is the latest commitTime. Compatible with [Spark Read Options](https://hudi.apache.org/docs/0.14.0/configurations#Read-Options).
 
-To support Incremental Read, you need to enable the [new optimizer](../../query/nereids/nereids), which is enabled by default. By viewing the execution plan through `desc`, we can find that Doris converts `@incr` into `predicates` and pushes it down to `VHUDI_SCAN_NODE`:
+To support Incremental Read, you need to enable the [new optimizer](../../query/nereids/nereids-new), which is enabled by default. By viewing the execution plan through `desc`, we can find that Doris converts `@incr` into `predicates` and pushes it down to `VHUDI_SCAN_NODE`:
 
 ```
 | 0:VHUDI_SCAN_NODE(113) |

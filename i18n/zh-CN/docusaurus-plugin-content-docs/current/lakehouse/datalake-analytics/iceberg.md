@@ -24,6 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+快速体验 [Apache Doris & Iceberg](https://doris.apache.org/docs/gettingStarted/tutorials/doris-iceberg)
+
 ## 使用限制
 
 1. 支持 Iceberg V1/V2 表格式。

@@ -95,7 +95,7 @@ PROPERTIES(
 If the specified group does not exist, Doris automatically creates a group that contains only the current table. If the Group already exists, Doris checks whether the current table satisfies the Colocation Group Schema. If satisfied, the table is created and added to the Group. At the same time, tables create fragments and replicas based on existing data distribution rules in Groups.
 Group belongs to a database, and its name is unique in a database. Internal storage is the full name of Group `dbId_groupName`, but users only perceive groupName.
 
-<version since="dev">
+
 
 In version 2.0, Doris supports cross-Database Group. When creating a table, you need to use the keyword `__global__` as a prefix of the Group name. like:
 
@@ -112,7 +112,7 @@ The Group prefixed with `__global__` no longer belongs to a Database, and its na
 
 Cross-Database Colocate Join can be realized by creating a Global Group.
 
-</version>
+
 
 ### Delete table
 

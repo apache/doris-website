@@ -1,6 +1,6 @@
 ---
 {
-    "title": 使用 LDB Toolchain 编译（推荐）,
+    "title": "使用 LDB Toolchain 编译（推荐）",
     "language": "zh-CN"
 }
 ---
@@ -118,7 +118,7 @@ Doris 源码编译时首先会下载三方库进行编译，可以参考下文�
 
 **1.  进入 Doris 源码目录，执行如下命令查看编译机器是否支持 AVX2 指令集**
 
-```Bash
+```shell
 $ cat /proc/cpuinfo | grep avx2
 ```
 
@@ -136,7 +136,7 @@ $ BUILD_TYPE=Debug sh build.sh
 ```
 
 该脚本会先编译第三方库，之后再编译 Doris 组件（FE、BE、MS）。编译产出在 `output/` 目录下。
-MS模块是doris存算分离模式依赖的模块, 详细说明请参考[此连接](../compute-storage-decoupled/compilation-and-deployment.md)
+MS 模块是 doris 存算分离模式依赖的模块，详细说明请参考[此连接](../compute-storage-decoupled/compilation-and-deployment.md)
 
 ## 预编译三方库
 

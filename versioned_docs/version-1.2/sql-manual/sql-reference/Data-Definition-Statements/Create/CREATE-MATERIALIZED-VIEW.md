@@ -41,7 +41,7 @@ grammar:
 ```sql
 CREATE MATERIALIZED VIEW [MV name] as [query]
 [PROPERTIES ("key" = "value")]
-````
+```
 
 illustrate:
 
@@ -54,7 +54,7 @@ illustrate:
   FROM [Base view name]
   GROUP BY column_name[, column_name ...]
   ORDER BY column_name[, column_name ...]
-  ````
+  ```
 
   The syntax is the same as the query syntax.
 
@@ -73,16 +73,16 @@ illustrate:
 
   Declare some configuration of the materialized view, optional.
 
-  ````text
+  ```text
   PROPERTIES ("key" = "value", "key" = "value" ...)
-  ````
+  ```
 
   The following configurations can be declared here:
 
-  ````text
+  ```text
    short_key: The number of sorting columns.
    timeout: The timeout for materialized view construction.
-  ````
+  ```
 
 ### Example
 
@@ -98,7 +98,7 @@ mysql> desc duplicate_table;
 | k3 | BIGINT | Yes | true | N/A | |
 | k4 | BIGINT | Yes | true | N/A | |
 +-------+--------+------+------+---------+-------+
-````
+```
 ```sql
 create table duplicate_table(
 	k1 int null,
@@ -117,49 +117,49 @@ attention：If the materialized view contains partitioned and distributed column
    ```sql
    create materialized view k2_k1 as
    select k2, k1 from duplicate_table;
-   ````
+   ```
 
    The schema of the materialized view is as follows, the materialized view contains only two columns k1, k2 without any aggregation
 
-   ````text
+   ```text
    +-------+-------+--------+------+------+ ---------+-------+
    | IndexName | Field | Type | Null | Key | Default | Extra |
    +-------+-------+--------+------+------+ ---------+-------+
    | k2_k1 | k2 | INT | Yes | true | N/A | |
    | | k1 | INT | Yes | true | N/A | |
    +-------+-------+--------+------+------+ ---------+-------+
-   ````
+   ```
 
 2. Create a materialized view with k2 as the sort column
 
    ```sql
    create materialized view k2_order as
    select k2, k1 from duplicate_table order by k2;
-   ````
+   ```
 
    The schema of the materialized view is shown in the figure below. The materialized view contains only two columns k2, k1, where k2 is the sorting column without any aggregation.
 
-   ````text
+   ```text
    +-------+-------+--------+------+------- +---------+-------+
    | IndexName | Field | Type | Null | Key | Default | Extra |
    +-------+-------+--------+------+------- +---------+-------+
    | k2_order | k2 | INT | Yes | true | N/A | |
    | | k1 | INT | Yes | false | N/A | NONE |
    +-------+-------+--------+------+------- +---------+-------+
-   ````
+   ```
 
 3. Create a materialized view with k1, k2 grouping and k3 column aggregated by SUM
 
    ```sql
    create materialized view k1_k2_sumk3 as
    select k1, k2, sum(k3) from duplicate_table group by k1, k2;
-   ````
+   ```
 
    The schema of the materialized view is shown in the figure below. The materialized view contains two columns k1, k2, sum(k3) where k1, k2 are the grouping columns, and sum(k3) is the sum value of the k3 column grouped by k1, k2.
 
    Since the materialized view does not declare a sorting column, and the materialized view has aggregated data, the system defaults to supplement the grouping columns k1 and k2 as sorting columns.
 
-   ````text
+   ```text
    +-------+-------+--------+------+------- +---------+-------+
    | IndexName | Field | Type | Null | Key | Default | Extra |
    +-------+-------+--------+------+------- +---------+-------+
@@ -167,18 +167,18 @@ attention：If the materialized view contains partitioned and distributed column
    | | k2 | INT | Yes | true | N/A | |
    | | k3 | BIGINT | Yes | false | N/A | SUM |
    +-------+-------+--------+------+------- +---------+-------+
-   ````
+   ```
 
 4. Create a materialized view that removes duplicate rows
 
    ```sql
    create materialized view deduplicate as
    select k1, k2, k3, k4 from duplicate_table group by k1, k2, k3, k4;
-   ````
+   ```
 
    The materialized view schema is as shown below. The materialized view contains columns k1, k2, k3, and k4, and there are no duplicate rows.
 
-   ````text
+   ```text
    +-------+-------+--------+------+------- +---------+-------+
    | IndexName | Field | Type | Null | Key | Default | Extra |
    +-------+-------+--------+------+------- +---------+-------+
@@ -187,13 +187,13 @@ attention：If the materialized view contains partitioned and distributed column
    | | k3 | BIGINT | Yes | true | N/A | |
    | | k4 | BIGINT | Yes | true | N/A | |
    +-------+-------+--------+------+------- +---------+-------+
-   ````
+   ```
 
 5. Create a non-aggregate materialized view that does not declare a sort column
 
    The schema of all_type_table is as follows
 
-   ````
+   ```
    +-------+--------------+------+-------+---------+- ------+
    | Field | Type | Null | Key | Default | Extra |
    +-------+--------------+------+-------+---------+- ------+
@@ -205,14 +205,14 @@ attention：If the materialized view contains partitioned and distributed column
    | k6 | DOUBLE | Yes | false | N/A | NONE |
    | k7 | VARCHAR(20) | Yes | false | N/A | NONE |
    +-------+--------------+------+-------+---------+- ------+
-   ````
+   ```
 
    The materialized view contains k3, k4, k5, k6, k7 columns, and does not declare a sort column, the creation statement is as follows:
 
    ```sql
    create materialized view mv_1 as
    select k3, k4, k5, k6, k7 from all_type_table;
-   ````
+   ```
 
    The default added sorting column of the system is k3, k4, k5 three columns. The sum of the bytes of these three column types is 4(INT) + 8(BIGINT) + 16(DECIMAL) = 28 < 36. So the addition is that these three columns are used as sorting columns. The schema of the materialized view is as follows, you can see that the key field of the k3, k4, k5 columns is true, that is, the sorting column. The key field of the k6, k7 columns is false, which is a non-sorted column.
 
@@ -226,7 +226,7 @@ attention：If the materialized view contains partitioned and distributed column
    | | k6 | DOUBLE | Yes | false | N/A | NONE |
    | | k7 | VARCHAR(20) | Yes | false | N/A | NONE |
    +----------------+-------+--------------+------+-- -----+---------+-------+
-   ````
+   ```
 
 ### Keywords
 

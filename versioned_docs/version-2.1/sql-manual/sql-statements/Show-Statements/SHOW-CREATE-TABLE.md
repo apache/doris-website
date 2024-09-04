@@ -38,15 +38,15 @@ grammar:
 
 ```sql
 SHOW [BRIEF] CREATE TABLE [DBNAME.]TABLE_NAME
-````
+```
 
 illustrate:
 
-<version since="dev">
+
 
 1. `BRIEF` : will not show partitions info
 
-</version>
+
 
 2. `DBNAMNE` : database name
 3. `TABLE_NAME` : table name
@@ -57,7 +57,7 @@ illustrate:
 
     ```sql
     SHOW CREATE TABLE demo.tb1
-    ````
+    ```
 
 ### Keywords
 

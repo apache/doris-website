@@ -28,11 +28,13 @@ under the License.
 
 ### Name
 
-<version since="1.2">
+:::tip Tips
+This feature is supported since the Apache Doris 2.0 version
+:::
 
 ALTER CATALOG
 
-</version>
+
 
 ### Description
 

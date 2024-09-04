@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW CREATE REPOSITORY for repository_name;
-````
+```
 
 illustrate:
 -  `repository_name`: repository name
@@ -49,7 +49,7 @@ illustrate:
 
     ```sql
     SHOW CREATE REPOSITORY for test_repository
-    ````
+    ```
 
 ### Keywords
 
