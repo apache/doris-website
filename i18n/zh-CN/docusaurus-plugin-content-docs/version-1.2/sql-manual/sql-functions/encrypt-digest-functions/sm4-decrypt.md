@@ -38,7 +38,7 @@ under the License.
 两参数版本，会无视 session variable `block_encryption_mode`，始终误用 `AES_128_ECB` 算法进行解密。因此强烈不推荐调用。
 :::
 
-### example
+### Example
 
 ```sql
 MySQL [(none)]> select SM4_DECRYPT(FROM_BASE64('aDjwRflBrDjhBZIOFNw3Tg=='),'F3229A0B371ED2D9441B830D21A390C3');
@@ -61,5 +61,5 @@ MySQL > select SM4_DECRYPT(FROM_BASE64('G7yqOKfEyxdagboz6Qf01A=='),'F3229A0B371E
 1 row in set (0.012 sec)
 ```
 
-### keywords
+### Keywords
     SM4_DECRYPT, SM4, DECRYPT

@@ -40,7 +40,7 @@ Until 3.0.2, function with two arguments will ignore session variable `block_enc
 Since 3.0.3, it works as expected.
 :::
 
-### example
+### Example
 
 ```sql
 mysql> set block_encryption_mode='';
@@ -74,5 +74,5 @@ MySQL > select SM4_DECRYPT(FROM_BASE64('G7yqOKfEyxdagboz6Qf01A=='),'F3229A0B371E
 1 row in set (0.012 sec)
 ```
 
-### keywords
+### Keywords
     SM4_DECRYPT, SM4, DECRYPT

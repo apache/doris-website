@@ -38,7 +38,7 @@ Returns the decrypted result, where:
 Function with two arguments will ignore session variable `block_encryption_mode` and always use `SM4_128_ECB` to do decryption. This is different from the 1.2 version behavior and must be taken into account when upgrading or downgrading.
 :::
 
-### example
+### Example
 
 ```sql
 MySQL [(none)]> select SM4_DECRYPT(FROM_BASE64('aDjwRflBrDjhBZIOFNw3Tg=='),'F3229A0B371ED2D9441B830D21A390C3');
@@ -61,5 +61,5 @@ MySQL > select SM4_DECRYPT(FROM_BASE64('G7yqOKfEyxdagboz6Qf01A=='),'F3229A0B371E
 1 row in set (0.012 sec)
 ```
 
-### keywords
+### Keywords
     SM4_DECRYPT, SM4, DECRYPT

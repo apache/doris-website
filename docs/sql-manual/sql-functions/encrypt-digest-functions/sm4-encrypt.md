@@ -34,7 +34,7 @@ Returns the encrypted result, where:
 - `init_vector` is the initial vector to be used in the algorithm, this is only valid for some algorithms, if not specified then Doris will use the built-in value;
 - `encryption_mode` is the encryption algorithm, optionally available in [variable](../../../query/query-variables/variables)。
 
-### example
+### Example
 
 ```sql
 mysql> set block_encryption_mode='';
@@ -68,5 +68,5 @@ MySQL > select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', 
 1 row in set (0.014 sec)
 ```
 
-### keywords
+### Keywords
     SM4_ENCRYPT, SM4, ENCRYPT 

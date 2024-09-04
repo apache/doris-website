@@ -34,7 +34,7 @@ under the License.
 - `init_vector` 为算法中使用到的初始向量，仅在特定算法下生效，如不指定，则 Doris 使用内置向量；
 - `encryption_mode` 为加密算法，可选值见于：[变量](../../../query/query-variables/variables)。
 
-### example
+### Example
 
 ```sql
 mysql> set block_encryption_mode='';
@@ -68,5 +68,5 @@ MySQL > select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', 
 1 row in set (0.014 sec)
 ```
 
-### keywords
+### Keywords
     SM4_ENCRYPT, SM4, ENCRYPT 

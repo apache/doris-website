@@ -40,7 +40,7 @@ under the License.
 2.1.7 起，该行为恢复正常。
 :::
 
-### example
+### Example
 
 ```sql
 mysql> set block_encryption_mode='';
@@ -74,5 +74,5 @@ MySQL > select SM4_DECRYPT(FROM_BASE64('G7yqOKfEyxdagboz6Qf01A=='),'F3229A0B371E
 1 row in set (0.012 sec)
 ```
 
-### keywords
+### Keywords
     SM4_DECRYPT, SM4, DECRYPT

@@ -38,7 +38,7 @@ Returns the encrypted result, where:
 Function with two arguments will ignore session variable `block_encryption_mode` and always use `AES_128_ECB` by mistake to do encryption. So it's strongly not recommended to use it.
 :::
 
-### example
+### Example
 
 ```sql
 MySQL > select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -61,5 +61,5 @@ MySQL > select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', 
 1 row in set (0.014 sec)
 ```
 
-### keywords
+### Keywords
     SM4_ENCRYPT, SM4, ENCRYPT 

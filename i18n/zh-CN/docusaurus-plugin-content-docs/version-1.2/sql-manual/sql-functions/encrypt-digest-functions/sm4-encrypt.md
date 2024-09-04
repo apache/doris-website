@@ -38,7 +38,7 @@ under the License.
 两参数版本，会无视 session variable `block_encryption_mode`，始终误用 `AES_128_ECB` 算法进行加密。因此强烈不推荐调用。
 :::
 
-### example
+### Example
 
 ```sql
 MySQL > select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -61,5 +61,5 @@ MySQL > select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', 
 1 row in set (0.014 sec)
 ```
 
-### keywords
+### Keywords
     SM4_ENCRYPT, SM4, ENCRYPT 
