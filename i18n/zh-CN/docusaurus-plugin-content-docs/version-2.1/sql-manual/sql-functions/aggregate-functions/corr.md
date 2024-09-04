@@ -34,7 +34,7 @@ under the License.
 如果x或y的标准差为0, 将返回0。
 
 
-### example
+### Example
 
 ```
 mysql> select corr(x,y) from baseall;
@@ -46,5 +46,5 @@ mysql> select corr(x,y) from baseall;
 1 row in set (0.21 sec)
 
 ```
-### keywords
+### Keywords
 CORR

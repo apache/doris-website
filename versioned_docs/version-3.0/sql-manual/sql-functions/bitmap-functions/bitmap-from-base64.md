@@ -22,16 +22,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_from_base64
+## Bitmap_from_base64
 
-### description
+### Description
 #### Syntax
 
 `BITMAP BITMAP_FROM_BASE64(VARCHAR input)`
 
 Convert a base64 string(result of function `bitmap_to_base64`) into a bitmap. If input string is invalid, return NULL.
 
-### example
+### Example
 
 ```
 mysql> select bitmap_to_string(bitmap_from_base64("AA=="));
@@ -56,6 +56,6 @@ mysql> select bitmap_to_string(bitmap_from_base64("AjowAAACAAAAAAAAAJgAAAAYAAAAG
 +----------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_FROM_BASE64,BITMAP

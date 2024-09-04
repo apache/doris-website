@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## auto_partition_name
+## Auto_partition_name
 
 :::tip 提示
 该功能自 Apache Doris  3.0.1 版本起支持
@@ -34,7 +34,7 @@ auto_partition_name
 
 
 
-### description
+### Description
 
 :::info 备注
 自 3.0.1 开始支持 auto_partition_name 用法
@@ -54,7 +54,7 @@ datetime 参数是合法的日期表达式。
 
 unit 参数是您希望的时间间隔，可选的值如下：[`second`,`minute`,`hour`,`day`,`month`,`year`]。
 如果 unit 不符合上述可选值，结果将返回语法错误。 
-### example
+### Example
 
 ```
 mysql> select auto_partition_name('range', 'years', '123');
@@ -125,6 +125,6 @@ mysql> select auto_partition_name('list', "你好");
 
 ```
 
-### keywords
+### Keywords
 
     AUTO_PARTITION_NAME,AUTO,PARTITION,NAME

@@ -22,16 +22,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_to_base64
+## Bitmap_to_base64
 
-### description
+### Description
 #### Syntax
 
 `VARCHAR BITMAP_TO_BASE64(BITMAP input)`
 
 将一个bitmap转化成一个base64字符串。输入是null的话返回null。BE配置项`enable_set_in_bitmap_value`会改变bitmap值在内存中的具体格式，因此会影响此函数的结果。
 
-### example
+### Example
 
 ```
 mysql> select bitmap_to_base64(null);
@@ -64,6 +64,6 @@ mysql> select bitmap_to_base64(bitmap_from_string("1,9999999"));
 
 ```
 
-### keywords
+### Keywords
 
     BITMAP_TO_BASE64,BITMAP

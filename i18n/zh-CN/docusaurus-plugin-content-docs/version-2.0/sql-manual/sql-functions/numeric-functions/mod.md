@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## mod
+## Mod
 
-### description
+### Description
 #### Syntax
 
 `mod(col_a, col_b)`  
@@ -33,7 +33,7 @@ under the License.
 
 求a / b的余数。浮点类型请使用fmod函数。
 
-### example
+### Example
 
 ```
 mysql> select mod(10, 3);
@@ -51,5 +51,5 @@ mysql> select fmod(10.1, 3.2);
 +-----------------+
 ```
 
-### keywords
+### Keywords
 	MOD，FMOD

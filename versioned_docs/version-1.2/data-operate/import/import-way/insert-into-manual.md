@@ -259,6 +259,6 @@ Cluster situation: The average import speed of current user cluster is about 5M/
 
   The causes of errors are usually: source data column length exceeds destination data column length, column type mismatch, partition mismatch, column order mismatch, etc. When it's still impossible to check for problems. At present, it is only recommended that the SELECT command in the Insert Into statement be run to export the data to a file, and then import the file through Stream load to see the specific errors.
 
-## more help
+## More help
 
 For more detailed syntax and best practices used by insert into, see [insert](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT.md) command manual, you can also enter `HELP INSERT` in the MySql client command line for more help information.

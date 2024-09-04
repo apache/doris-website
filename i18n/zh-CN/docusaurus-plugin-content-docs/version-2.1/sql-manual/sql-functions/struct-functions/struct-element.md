@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## struct_element
+## Struct_element
 
 struct_element
 
-### description
+### Description
 
 返回 struct 数据列内的某一 field
 
@@ -48,7 +48,7 @@ s - field的名字，仅支持常量
 
 返回指定的 field 列，类型为任意类型
 
-### example
+### Example
 
 ```
 mysql> select struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2');
@@ -80,6 +80,6 @@ mysql> select struct_col, struct_element(struct_col, 'f1') from test_struct;
 9 rows in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
 STRUCT, ELEMENT, STRUCT_ELEMENT

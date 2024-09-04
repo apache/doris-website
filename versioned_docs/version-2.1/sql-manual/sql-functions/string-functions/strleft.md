@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## strleft
+## Strleft
 ### Description
 #### Syntax
 
@@ -34,7 +34,7 @@ under the License.
 It returns the left part of a string of specified length, length is char length not the byte size. Another alias for this function is `left`.
 If the function parameters contain a NULL value, the function will always return NULL. If the integer parameter is less than or equal to 0, it will return an empty value.
 
-### example
+### Example
 
 ```
 mysql> select strleft("Hello doris",5);
@@ -62,5 +62,5 @@ mysql> select strleft(NULL,3);
 | NULL             |
 +------------------+
 ```
-### keywords
+### Keywords
     STRLEFT, LEFT

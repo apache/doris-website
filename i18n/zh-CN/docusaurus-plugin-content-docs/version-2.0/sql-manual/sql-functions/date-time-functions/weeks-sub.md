@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weeks_sub
-### description
+## Weeks_sub
+### Description
 #### Syntax
 
 `DATETIME WEEKS_SUB(DATETIME date, INT weeks)`
@@ -34,7 +34,7 @@ under the License.
 
 参数 date 可以是 DATETIME 或者 DATE 类型，返回类型与参数 date 的类型一致。
 
-### example
+### Example
 
 ```
 mysql> select weeks_sub("2020-02-02 02:02:02", 1);
@@ -45,6 +45,6 @@ mysql> select weeks_sub("2020-02-02 02:02:02", 1);
 +-------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     WEEKS_SUB

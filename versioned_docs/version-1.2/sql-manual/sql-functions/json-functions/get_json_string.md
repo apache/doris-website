@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## get_json_string
-### description
+## Get_json_string
+### Description
 #### Syntax
 
 `VARCHAR get_json_string (VARCHAR json str, VARCHAR json path)`
@@ -43,7 +43,7 @@ Exception handling is as follows:
 - if the field specified by json_path does not exist, return NULL
 - if datatype of the field specified by json_path is not the same with type of json_extract_t, return t if it can be cast to t else NULL
 
-### example
+### Example
 
 1. Get the value of key as "k1"
 
@@ -86,5 +86,5 @@ mysql> SELECT get_json_string('[{"k1":"v1"}, {"k2":"v2"}, {"k1":"v3"}, {"k1":"v4
 | ["v1","v3","v4"]                                                                |
 +---------------------------------------------------------------------------------+
 ```
-### keywords
+### Keywords
 GET_JSON_STRING,GET,JSON,STRING

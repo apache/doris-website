@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION DENSE_RANK
-### description
+### Description
 
 DENSE_RANK() 函数用来表示排名，与RANK()不同的是，DENSE_RANK() 不会出现空缺数字。比如，如果出现了两个并列的1，DENSE_RANK() 的第三个数仍然是2，而RANK()的第三个数是3。
 
@@ -20,7 +20,7 @@ DENSE_RANK() 函数用来表示排名，与RANK()不同的是，DENSE_RANK() 不
 DENSE_RANK() OVER(partition_by_clause order_by_clause)
 ```
 
-### example
+### Example
 
 按照 property 列分组对x列排名：
 
@@ -40,6 +40,6 @@ DENSE_RANK() OVER(partition_by_clause order_by_clause)
  | 3  | 2    | 2        |
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,DENSE_RANK

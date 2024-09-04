@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## dayofyear
-### description
+## Dayofyear
+### Description
 #### Syntax
 
 `INT DAYOFYEAR(DATETIME date)`
@@ -35,7 +35,7 @@ under the License.
 
 参数为Date或者Datetime类型
 
-### example
+### Example
 
 ```
 mysql> select dayofyear('2007-02-03 00:00:00');
@@ -46,6 +46,6 @@ mysql> select dayofyear('2007-02-03 00:00:00');
 +----------------------------------+
 ```
 
-### keywords
+### Keywords
 
     DAYOFYEAR

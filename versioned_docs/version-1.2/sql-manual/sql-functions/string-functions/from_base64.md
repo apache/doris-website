@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_base64
-### description
+## From_base64
+### Description
 #### Syntax
 
 `VARCHAR from_base64(VARCHAR str)`
@@ -33,7 +33,7 @@ under the License.
 
 Returns the result of Base64 decoding the input string
 
-### example
+### Example
 
 ```
 mysql> select from_base64('MQ==');
@@ -50,5 +50,5 @@ mysql> select from_base64('MjM0');
 | 234                 |
 +---------------------+
 ```
-### keywords
+### Keywords
     from_base64

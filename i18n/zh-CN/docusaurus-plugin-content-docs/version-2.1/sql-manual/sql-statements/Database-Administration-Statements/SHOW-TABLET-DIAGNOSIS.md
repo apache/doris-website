@@ -53,6 +53,6 @@ under the License.
 
         SHOW TABLET DIAGNOSIS 10001;
 
-### keywords
+### Keywords
 
     SHOW, DIAGNOSIS, TABLET

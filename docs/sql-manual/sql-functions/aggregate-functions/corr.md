@@ -33,7 +33,7 @@ under the License.
 Calculate the Pearson correlation coefficient, which is returned as the covariance of x and y divided by the product of the standard deviations of x and y. 
 If the standard deviation of x or y is 0, the result will be 0.
 
-### example
+### Example
 
 ```
 mysql> select corr(x,y) from baseall;
@@ -45,5 +45,5 @@ mysql> select corr(x,y) from baseall;
 1 row in set (0.21 sec)
 
 ```
-### keywords
+### Keywords
 CORR

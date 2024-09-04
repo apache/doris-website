@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_and_not,bitmap_andnot
-### description
+## Bitmap_and_not,bitmap_andnot
+### Description
 #### Syntax
 
 `BITMAP BITMAP_AND_NOT(BITMAP lhs, BITMAP rhs)`
 
 Calculate the set after lhs minus intersection of two input bitmaps, return the new bitmap.
 
-### example
+### Example
 
 ```
 mysql> select bitmap_count(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5'))) cnt;
@@ -64,6 +64,6 @@ mysql> select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),NULL))
 +---------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_AND_NOT,BITMAP_ANDNOT,BITMAP

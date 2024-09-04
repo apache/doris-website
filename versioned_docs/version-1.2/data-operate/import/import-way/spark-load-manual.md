@@ -711,7 +711,7 @@ Copy this url to the browser and jump to the web interface of the corresponding 
 
 Sometimes users need to view the detailed logs generated during the spark submission process. The logs are saved in the `log/spark_launcher_log` under the Fe root directory named as `spark_launcher_{load_job_id}_{label}.log`. The log will be saved in this directory for a period of time. When the load information in Fe metadata is cleaned up, the corresponding log will also be cleaned. The default saving log time is 3 days.
 
-### cancel load
+### Cancel load
 
 When the spark load job status is not cancelled or finished, it can be manually cancelled by the user. When canceling, you need to specify the label to cancel the load job. The syntax of the cancel load command can be viewed by executing `help cancel load`. 
 

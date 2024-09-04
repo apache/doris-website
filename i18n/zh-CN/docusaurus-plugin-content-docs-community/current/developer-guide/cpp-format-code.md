@@ -63,7 +63,7 @@ LDB toolchain:
 最新版本的 [LDB toolchain](https://github.com/amosbird/ldb_toolchain_gen/releases)（>= v0.18）已经包含了预编译的clang-format
 16.0.0的二进制文件。
 
-### clang-format插件
+### Clang-format插件
 
 Clion IDE可使用插件"ClangFormat"，`File->Setting->Plugins`搜索下载。不过需要确认其中的 clang-format 版本是否为16。
 

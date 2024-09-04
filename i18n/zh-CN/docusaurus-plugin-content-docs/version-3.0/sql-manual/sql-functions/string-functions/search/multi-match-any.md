@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## multi_match_any
+## Multi_match_any
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 检查字符串 `haystack` 是否与 re2 语法中的正则表达式 `patterns` 相匹配。如果都没有匹配的正则表达式返回 0，否则返回 1。
 
-### example
+### Example
 
 ```
 mysql> select multi_match_any('Hello, World!', ['hello', '!', 'world']);
@@ -50,5 +50,5 @@ mysql> select multi_match_any('abc', ['A', 'bcd']);
 | 0                                    |
 +--------------------------------------+
 ```
-### keywords
+### Keywords
     MULTI_MATCH,MATCH,ANY

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_empty
-### description
+## Bitmap_empty
+### Description
 #### Syntax
 
 `BITMAP BITMAP_EMPTY()`
@@ -36,7 +36,7 @@ under the License.
 cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,v1,v2=bitmap_empty()"   http://host:8410/api/test/testDb/_stream_load
 ```
 
-### example
+### Example
 
 ```
 mysql> select bitmap_count(bitmap_empty());
@@ -55,6 +55,6 @@ mysql> select bitmap_to_string(bitmap_empty());
 
 ```
 
-### keywords
+### Keywords
 
     BITMAP_EMPTY,BITMAP

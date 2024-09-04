@@ -26,13 +26,13 @@ under the License.
 
 ## `numbers`
 
-### description
+### Description
 
 表函数，生成一张只含有一列的临时表，列名为`number`，行的值为[0,n)。
 
 该函数用于from子句中。
 
-#### syntax
+#### Syntax
 ```sql
 numbers(
   "number" = "n",
@@ -44,7 +44,7 @@ numbers(
 - `number`: 代表生成[0,n)的行。
 - `backend_num`: 可选参数,代表`m`个be节点同时执行该函数（需要部署多个be）。
 
-### example
+### Example
 ```
 mysql> select * from numbers("number" = "10");
 +--------+
@@ -63,7 +63,7 @@ mysql> select * from numbers("number" = "10");
 +--------+
 ```
 
-### keywords
+### Keywords
 
     numbers
 

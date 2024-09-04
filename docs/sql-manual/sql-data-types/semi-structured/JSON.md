@@ -78,10 +78,10 @@ SELECT CAST(json_extract(json_column_name, '$.k1') AS INT) FROM table_name;
 The JSON type currently cannot be used for `GROUP BY`, `ORDER BY`, or comparison operations.
 :::
 
-### example
+### Example
 A tutorial for JSON datatype including create table, load data and query.
 
-#### create database and table
+#### Create database and table
 
 ```
 CREATE DATABASE testdb;
@@ -99,7 +99,7 @@ PROPERTIES("replication_num" = "1");
 
 #### Load data
 
-##### stream load test_json.csv test data
+##### Stream load test_json.csv test data
 
 - there are 2 columns, the 1st column is id and the 2nd column is json string
 - there are 25 rows, the first 18 rows are valid json and the last 7 rows are invalid
@@ -212,7 +212,7 @@ mysql> SELECT * FROM test_json ORDER BY id;
 
 ```
 
-##### write data using insert into
+##### Write data using insert into
 
 - total rows increae from 18 to 19 after insert 1 row
 ```
@@ -250,7 +250,7 @@ mysql> SELECT * FROM test_json ORDER BY id;
 
 #### Query
 
-##### extract some filed from json by json_extract functions
+##### Extract some filed from json by json_extract functions
 
 1. extract the whole json, '$' stands for root in json path
 ```
@@ -706,7 +706,7 @@ mysql> SELECT id, j, json_extract_isnull(j, '$') FROM test_json ORDER BY id;
 
 ```
 
-##### check if a field is existed in json by json_exists_path
+##### Check if a field is existed in json by json_exists_path
 
 ```
 mysql> SELECT id, j, json_exists_path(j, '$') FROM test_json ORDER BY id;
@@ -790,7 +790,7 @@ mysql> SELECT id, j, json_exists_path(j, '$[2]') FROM test_json ORDER BY id;
 
 ```
 
-##### get the datatype of a field in json by json_type
+##### Get the datatype of a field in json by json_type
 
 - return the data type of the field specified by json path, NULL if not existed.
 ```
@@ -848,6 +848,6 @@ mysql> select id, j, json_type(j, '$.k1') from test_json order by id;
 
 ```
 
-### keywords
+### Keywords
 JSONB, JSON, json_parse, json_parse_error_to_null, json_parse_error_to_value, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_double, json_extract_string, json_exists_path, json_type
 

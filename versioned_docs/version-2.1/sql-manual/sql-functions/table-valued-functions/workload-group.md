@@ -34,13 +34,13 @@ workload_groups
 Deprecated. Since 2.1.1, this table function has been moved to the information_schema.workload_groups.
 :::
 
-### description
+### Description
 
 Table-Value-Function, generate a temporary table named `workload_groups`. This tvf is used to view information about workload groups for which current user has permission.
 
 This function is used in `FROM` clauses.
 
-#### syntax
+#### Syntax
 
 `workload_groups()`
 
@@ -57,7 +57,7 @@ mysql> desc function workload_groups();
 +-------+-------------+------+-------+---------+-------+
 ```
 
-### example
+### Example
 ```
 mysql> select * from workload_groups()\G
 +-------+--------+--------------+-------+
@@ -68,6 +68,6 @@ mysql> select * from workload_groups()\G
 +-------+--------+--------------+-------+
 ```
 
-### keywords
+### Keywords
 
     workload_groups

@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## mask_last_n
-### description
-#### syntax
+## Mask_last_n
+### Description
+#### Syntax
 
 `VARCHAR mask_last_n(VARCHAR str[, INT n])`
 
 Returns a masked version of str with the last n values masked. Upper case letters are converted to "X", lower case letters are converted to "x" and numbers are converted to "n". For example, mask_last_n("1234-5678-8765-4321", 4) results in 1234-5678-8765-nnnn.
 
-### example
+### Example
 
 ```
 // table test
@@ -54,5 +54,5 @@ mysql> select mask_last_n(name, 5) from test;
 +------------------------+
 ```
 
-### keywords
+### Keywords
     mask_last_n

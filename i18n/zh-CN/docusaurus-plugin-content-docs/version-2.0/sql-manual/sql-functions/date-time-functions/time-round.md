@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## time_round
-### description
+## Time_round
+### Description
 #### Syntax
 
 ```sql
@@ -45,7 +45,7 @@ DATETIME TIME_ROUND(DATETIME expr, INT period, DATETIME origin)
 - `origin` 指定周期的开始时间，默认为 `1970-01-01T00:00:00`，`WEEK` 的默认开始时间为 `1970-01-04T00:00:00`，即周日。可以比 `expr` 大。
 - 请尽量选择常见 `period`，如 3 `MONTH`，90 `MINUTE` 等，如设置了非常用 `period`，请同时指定 `origin`。
 
-### example
+### Example
 
 ```
 
@@ -81,5 +81,5 @@ MySQL> SELECT MONTH_CEIL(CAST('2020-02-02 13:09:20' AS DATETIME), 3, CAST('1970-
 +-------------------------------------------------------------------------------------------------+
 
 ```
-### keywords
+### Keywords
     TIME_ROUND

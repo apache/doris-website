@@ -158,7 +158,7 @@ The bottom layer of the `Export` statement actually executes the `select...outfi
 
 ### Example
 
-#### export to local
+#### Export to local
 
 > Export data to the local file system needs to add `enable_outfile_to_local = true` to the fe.conf and restart the Fe.
 
@@ -263,7 +263,7 @@ PROPERTIES (
 
 Before exporting data, all files and directories in the `/home/user/` directory will be deleted, and then the data will be exported to that directory.
 
-#### export with S3
+#### Export with S3
 
 1. Export all data from the `testTbl` table to S3 using invisible character '\x07' as a delimiter for columns and rows.If you want to export data to minio, you also need to specify use_path_style=true.
 
@@ -282,7 +282,7 @@ Before exporting data, all files and directories in the `/home/user/` directory 
 
 2. Export all data in the test table to HDFS in the format of parquet, limit the size of a single file to 1024MB, and reserve all files in the specified directory.
 
-#### export with HDFS
+#### Export with HDFS
 1. Export all data from the `test` table to HDFS in `Parquet` format, with a limit of 512MB for the size of a single file in the export job, and retain all files under the specified directory.
 
   ```sql
@@ -298,7 +298,7 @@ Before exporting data, all files and directories in the `/home/user/` directory 
   );
   ```
 
-#### export with Broker
+#### Export with Broker
 You need to first start the broker process and add it to the FE before proceeding.
 1. Export the `test` table to hdfs
 
@@ -362,7 +362,7 @@ WITH BROKER "broker_name"
 
   - If a thread is responsible for 14 tablets and `maximum_tablets_of_outfile_in_export = 10`, then the thread will be responsible for two `SELECT INTO OUTFILE` statements. The first `SELECT INTO OUTFILE` statement exports 10 tablets, and the second `SELECT INTO OUTFILE` statement exports 4 tablets. The two `SELECT INTO OUTFILE` statements are executed serially by this thread.
 
-  #### memory limit
+  #### Memory limit
 
   The query plan for an `Export Job` typically involves only `scanning and exporting`, and does not involve compute logic that requires a lot of memory. Therefore, the default memory limit of 2GB is usually sufficient to meet the requirements.
 

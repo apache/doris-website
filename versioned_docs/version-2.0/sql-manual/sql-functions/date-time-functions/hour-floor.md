@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hour_floor
-### description
+## Hour_floor
+### Description
 #### Syntax
 
 ```sql
@@ -41,7 +41,7 @@ Convert the date to the nearest rounding down time of the specified time interva
 - period: specifies how many hours each cycle consists of.
 - origin: starting from 0001-01-01T00:00:00.
 
-### example
+### Example
 
 ```
 mysql> select hour_floor("2023-07-13 22:28:18", 5);
@@ -53,7 +53,7 @@ mysql> select hour_floor("2023-07-13 22:28:18", 5);
 1 row in set (0.23 sec)
 ```
 
-### keywords
+### Keywords
 
     HOUR_FLOOR, HOUR, FLOOR
 

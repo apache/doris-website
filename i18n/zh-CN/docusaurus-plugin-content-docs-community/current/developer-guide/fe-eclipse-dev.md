@@ -36,7 +36,7 @@ under the License.
 
 FE 模块需要部分生成代码，如 Thrift、Protobuf, jflex, cup 等框架的生成代码。这部分需要在 Linux 或者 Mac环境生成。
 
-#### windows下开发获取生成代码步骤
+#### Windows下开发获取生成代码步骤
 
 1. 在 Linux 下， 进入 `fe 目录下执行以下命令：
 
@@ -55,7 +55,7 @@ FE 模块需要部分生成代码，如 Thrift、Protobuf, jflex, cup 等框架�
     cd /path/to/doris/fe/fe-core/target/ && tar xzf java.tar.gz
     ```
 
-#### mac下开发获取生成代码步骤
+#### Mac下开发获取生成代码步骤
 
 mac下可以直接使用maven构建的步骤生成代码, 或者说可以直接编译. 
 
@@ -177,7 +177,7 @@ FE的单元测试会首先启动一个FE服务，然后由测试用例作为客�
 
 ## 代码更新
 
-### eclipse工程
+### Eclipse工程
 
 1. 更新词法、语法文件或者thrift 和proto 文件
 
@@ -197,7 +197,7 @@ FE的单元测试会首先启动一个FE服务，然后由测试用例作为客�
     
     之后在 Eclipse 中刷新工程即可。如无法更新，建议删除工程，并按照该文档重新导入一遍即可。
 
-### maven工程
+### Maven工程
 
 1. 更新词法、语法文件或者thrift 和proto 文件 在fe目录下命令行执行一次
 	```

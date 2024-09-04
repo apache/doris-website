@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ln
+## Ln
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE ln(DOUBLE x)`
@@ -34,7 +34,7 @@ under the License.
 该函数的另一个别名为 `dlog1`。
 :::
 
-### example
+### Example
 
 ```
 mysql> select ln(1);
@@ -57,5 +57,5 @@ mysql> select ln(10);
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	LN, DLOG1

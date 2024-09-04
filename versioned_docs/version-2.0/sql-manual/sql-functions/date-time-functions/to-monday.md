@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## to_monday
+## To_monday
 ### Description
 #### Syntax
 
@@ -31,7 +31,7 @@ under the License.
 Round a date or datetime down to the nearest Monday, return type is Date or DateV2.
 Specially, input 1970-01-01, 1970-01-02, 1970-01-03 and 1970-01-04 will return '1970-01-01'
 
-### example
+### Example
 
 ```
 MySQL [(none)]> select to_monday('2022-09-10');
@@ -42,5 +42,5 @@ MySQL [(none)]> select to_monday('2022-09-10');
 +----------------------------------+
 ```
 
-### keywords
+### Keywords
     MONDAY

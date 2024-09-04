@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## years_add
-### description
+## Years_add
+### Description
 #### Syntax
 
 `DATETIME YEARS_ADD(DATETIME date, INT years)`
@@ -34,7 +34,7 @@ ADD a specified number of years from a datetime or date
 
 The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
 
-### example
+### Example
 
 ```
 mysql> select years_add("2020-01-31 02:02:02", 1);
@@ -45,6 +45,6 @@ mysql> select years_add("2020-01-31 02:02:02", 1);
 +-------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     YEARS_ADD

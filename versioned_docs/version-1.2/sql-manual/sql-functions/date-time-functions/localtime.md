@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## localtime,localtimestamp
-### description
+## Localtime,localtimestamp
+### Description
 #### Syntax
 
 `DATETIME localtime()`
@@ -51,6 +51,6 @@ mysql> select localtimestamp();
 +---------------------+
 ```
 
-### keywords
+### Keywords
 
     localtime,localtimestamp

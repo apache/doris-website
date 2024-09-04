@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## rpad
+## Rpad
 ### Description
 #### Syntax
 
@@ -35,7 +35,7 @@ Returns a string of length len in str, starting with the initials. If len is lon
 
 Except when it contains a NULL in parameters, when pad's length is 0, the return value is the empty string.
 
-### example
+### Example
 
 ```
 mysql> SELECT rpad("hi", 5, "xy");
@@ -60,5 +60,5 @@ mysql> SELECT rpad("", 0, "");
 +-----------------+
 ```
 
-### keywords
+### Keywords
     RPAD

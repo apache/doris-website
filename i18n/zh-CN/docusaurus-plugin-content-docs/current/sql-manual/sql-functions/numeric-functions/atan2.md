@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## atan2
+## Atan2
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE atan2(DOUBLE y, DOUBLE x)`
 返回 'y' / 'x' 的反正切.
 
-### example
+### Example
 
 ```
 mysql> select atan2(0.1, 0.2);
@@ -48,5 +48,5 @@ mysql> select atan2(1.0, 1.0);
 +---------------------+
 ```
 
-### keywords
+### Keywords
 	ATAN2

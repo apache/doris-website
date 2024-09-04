@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## truncate
+## Truncate
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE truncate(DOUBLE x, INT d)`
@@ -35,7 +35,7 @@ under the License.
 当`d = 0`时：将`x`的小数部分去除，只保留整数部分
 当`d < 0`时：将`x`的小数部分去除，整数部分按照 `d`所指定的位数，采用数字`0`进行替换
 
-### example
+### Example
 
 ```
 mysql> select truncate(124.3867, 2);
@@ -58,5 +58,5 @@ mysql> select truncate(-124.3867, -2);
 +-------------------------+
 ```
 
-### keywords
+### Keywords
 	TRUNCATE

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## minute_floor
-### description
+## Minute_floor
+### Description
 #### Syntax
 
 ```sql
@@ -41,7 +41,7 @@ Convert the date to the nearest rounding down time of the specified time interva
 - period: specifies how many minutes each cycle consists of.
 - origin: starting from 0001-01-01T00:00:00.
 
-### example
+### Example
 
 ```
 mysql> select minute_floor("2023-07-13 22:28:18", 5);
@@ -53,6 +53,6 @@ mysql> select minute_floor("2023-07-13 22:28:18", 5);
 1 row in set (0.06 sec)
 ```
 
-### keywords
+### Keywords
 
     MINUTE_FLOOR, MINUTE, FLOOR

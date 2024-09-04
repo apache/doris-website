@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_difference
+## Array_difference
 
 array_difference
 
-### description
+### Description
 
 #### Syntax
 
@@ -38,11 +38,11 @@ Calculates the difference between adjacent array elements.
 Returns an array where the first element will be 0, the second is the difference between a[1] - a[0].
 need notice that NULL will be return NULL
 
-### notice
+### Notice
 
 `Only supported in vectorized engine`
 
-### example
+### Example
 
 ```
 mysql> select *,array_difference(k2) from array_type_table;
@@ -59,7 +59,7 @@ mysql> select *,array_difference(k2) from array_type_table;
 +------+-----------------------------+---------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, DIFFERENCE, ARRAY_DIFFERENCE
 

@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_range
+## Array_range
 
 array_range
 
-### description
+### Description
 
 #### Syntax
 
@@ -40,11 +40,11 @@ ARRAY<Int> array_range(Int start, Int end, Int step)
 参数均为正整数 start 默认为 0, step 默认为 1。
 最终返回一个数组，从start 到 end - 1, 步长为 step。
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 mysql> select array_range(10);
@@ -69,6 +69,6 @@ mysql> select array_range(0,20,2);
 +-------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, RANGE, ARRAY_RANGE

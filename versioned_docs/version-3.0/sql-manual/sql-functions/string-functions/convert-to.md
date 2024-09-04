@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## convert_to
-### description
+## Convert_to
+### Description
 #### Syntax
 
 `VARCHAR convert_to(VARCHAR column, VARCHAR character)`
@@ -34,7 +34,7 @@ It is used in the order by clause. eg: order by convert(column using gbk), Now o
 Because when the order by column contains Chinese, it is not arranged in the order of Pinyin
 After the character encoding of column is converted to gbk, it can be arranged according to pinyin
 
-### example
+### Example
 
 ```
 mysql> select * from class_test order by class_name;
@@ -65,5 +65,5 @@ mysql> select * from class_test order by convert(class_name using gbk);
 |        4 | 张         | [4]         |
 +----------+------------+-------------+
 ```
-### keywords
+### Keywords
     convert_to

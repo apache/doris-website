@@ -268,7 +268,7 @@ mysql> explain shape plan select /*+ leading(t2 t3) */ * from t1 join t2 on t1.c
 +--------------------------------------------------------+
 11 rows in set (0.01 sec)
   ```
-## more cases
+## More cases
 ### Left deep tree
 leading generates a left deep tree by default when we don't use any parentheses
 ```sql
@@ -344,7 +344,7 @@ mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join 
 +-----------------------------------------------+
 17 rows in set (0.02 sec)
   ```
-### zig-zag tree
+### Zig-zag tree
 ```sql
 mysql> explain shape plan select /*+ leading(t1 {t2 t3} t4) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
 +--------------------------------------------------------------------------------------+
@@ -461,7 +461,7 @@ mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join
 +--------------------------------------------------------------------------------------+
 21 rows in set (0.02 sec)
   ```
-## mixed with ordered hint
+## Mixed with ordered hint
 When ordered hint is used together with ordered hint, ordered hint takes effect with a higher priority than leading hint. Example:
 ```sql
 mysql>  explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2 join t1 on t1.c1 = t2.c2 join t3 on c2 = c3;

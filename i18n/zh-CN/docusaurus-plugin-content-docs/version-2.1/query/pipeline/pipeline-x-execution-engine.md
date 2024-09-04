@@ -48,7 +48,7 @@ PipelineX 执行引擎的目标是为了解决 Doris pipeline 引擎的四大问
 
 ### 设置 Session 变量
 
-#### enable_pipeline_x_engine
+#### Enable_pipeline_x_engine
 
 将 session 变量`enable_pipeline_x_engine` 设置为`true`，则 BE 在进行查询执行时就会默认将 SQL 的执行模型转变 PipelineX 的执行方式。如果 Pipeline 和 PipelineX 引擎都设置为开启，Doris 将优先使用 PipelineX 引擎。
 
@@ -56,7 +56,7 @@ PipelineX 执行引擎的目标是为了解决 Doris pipeline 引擎的四大问
 set enable_pipeline_x_engine = true;
 ```
 
-#### enable_local_shuffle
+#### Enable_local_shuffle
 
 设置`enable_local_shuffle`为 true 则打开 local shuffle 优化。local shuffle 将尽可能将数据均匀分布给不同的 pipeline task 从而尽可能避免数据倾斜。
 
@@ -64,7 +64,7 @@ set enable_pipeline_x_engine = true;
 set enable_local_shuffle = true;
 ```
 
-#### ignore_storage_data_distribution
+#### Ignore_storage_data_distribution
 
 设置`ignore_storage_data_distribution`为 true 则表示忽略存储层的数据分布。结合 local shuffle 一起使用，则 pipelineX 引擎的并发能力将不再受到存储层 tablet 数量的制约，从而充分利用机器资源。
 

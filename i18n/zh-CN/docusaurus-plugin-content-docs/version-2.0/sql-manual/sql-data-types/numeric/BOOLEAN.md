@@ -25,10 +25,10 @@ under the License.
 -->
 
 ## BOOLEAN
-### description
+### Description
     BOOL, BOOLEAN
     与TINYINT一样，0代表false，1代表true
 
-### keywords
+### Keywords
 
     BOOLEAN

@@ -58,7 +58,7 @@ under the License.
 
 0，如果模式不匹配。
 
-### example
+### Example
 
 **匹配例子**
 
@@ -251,6 +251,6 @@ SELECT sequence_match('(?1)(?2)', date, number = 1, number = 5, number = 6) FROM
 +------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 SEQUENCE_MATCH

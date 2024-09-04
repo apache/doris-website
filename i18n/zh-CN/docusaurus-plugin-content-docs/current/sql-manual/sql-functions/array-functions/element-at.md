@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## element_at
+## Element_at
 
 element_at
 
-### description
+### Description
 
 #### Syntax
 
@@ -39,7 +39,7 @@ T arr[position]
 
 返回数组中位置为 `position` 的元素。如果该位置上元素不存在，返回NULL。`position` 从1开始，并且支持负数。
 
-### example
+### Example
 
 `position` 为正数使用范例:
 
@@ -69,6 +69,6 @@ mysql> SELECT id,c_array,c_array[-2] FROM `array_test`;
 +------+-----------------+----------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ELEMENT_AT, SUBSCRIPT

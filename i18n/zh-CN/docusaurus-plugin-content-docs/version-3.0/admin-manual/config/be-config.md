@@ -407,7 +407,7 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 * 描述：每个 OlapScanner 读取的最大数据量
 * 默认值：1024
 
-### compaction
+### Compaction
 
 #### `disable_auto_compaction`
 

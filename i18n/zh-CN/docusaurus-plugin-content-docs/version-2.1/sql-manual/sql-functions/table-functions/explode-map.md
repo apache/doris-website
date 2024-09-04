@@ -24,22 +24,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode_map
+## Explode_map
 
-### description
+### Description
 
 表函数，需配合 Lateral View 使用, 可以支持多个 Lateral view, 仅仅支持新优化器。
 
 将 map 列展开成多行。当 map 为NULL或者为空时，`explode_map_outer` 返回NULL。
 `explode_map` 和 `explode_map_outer` 均会返回 map 内部的NULL元素。
 
-#### syntax
+#### Syntax
 ```sql
 explode_map(expr)
 explode_map_outer(expr)
 ```
 
-### example
+### Example
 
 ```mysql> SET enable_nereids_planner=true
 mysql> SET enable_fallback_to_original_planner=false
@@ -126,5 +126,5 @@ mysql> select name, k,v,k1,v1 from sdu lateral view explode_map_outer(score) tmp
 +----------+---------+------+---------+------+
 ```
 
-### keywords
+### Keywords
 EXPLODE_MAP,EXPLODE_MAP_OUTER,MAP

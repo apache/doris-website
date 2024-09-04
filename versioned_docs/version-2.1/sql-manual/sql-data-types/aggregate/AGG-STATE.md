@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## AGG_STATE
-### description
+### Description
       AGG_STATE cannot be used as a key column, and the signature of the aggregation function must be declared at the same time when creating the table.
       User does not need to specify length and default value. The actual stored data size is related to the function implementation.
     
@@ -35,7 +35,7 @@ under the License.
   It should be noted that the signature of the aggregation function is also part of the type, and agg_state with different signatures cannot be mixed. For example, if the signature of the table creation statement is `max_by(int,int)`, then `max_by(bigint,int)` or `group_concat(varchar)` cannot be inserted.
    The nullable attribute here is also part of the signature. If you can confirm that you will not enter a null value, you can declare the parameter as not null, which can obtain a smaller storage size and reduce serialization/deserialization overhead.
 
-### example
+### Example
 
 Create table example:
 ```sql
@@ -94,6 +94,6 @@ If you need to get the actual result, you need to use the corresponding [merge](
 If you want to aggregate only the agg_state without getting the actual result during the process, you can use the [union](../..//sql-functions/combinators/union.md) function.
 
 For more examples, see [datatype_p0/agg_state](https://github.com/apache/doris/tree/master/regression-test/suites/datatype_p0/agg_state)
-### keywords
+### Keywords
 
     AGG_STATE

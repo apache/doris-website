@@ -49,7 +49,7 @@ Its specific design and implementation can be found in [DSIP-035]([DSIP-035: Pip
 
 ### Set session variable
 
-#### enable_pipeline_x_engine
+#### Enable_pipeline_x_engine
 
 Set `enable_pipeline_x_engine ` to `true`, BE will use PipelineX to execute by default.
 
@@ -57,7 +57,7 @@ Set `enable_pipeline_x_engine ` to `true`, BE will use PipelineX to execute by d
 set enable_pipeline_x_engine = true;
 ```
 
-#### enable_local_shuffle
+#### Enable_local_shuffle
 
 Set `enable_local_shuffle` to true will enable local shuffle optimization. Local shuffle will try to evenly distribute data among different pipeline tasks to avoid data skewing as much as possible.
 
@@ -65,7 +65,7 @@ Set `enable_local_shuffle` to true will enable local shuffle optimization. Local
 set enable_local_shuffle = true;
 ```
 
-#### ignore_storage_data_distribution
+#### Ignore_storage_data_distribution
 
 Settings `ignore_storage_data_distribution` is true, it means ignoring the data distribution of the storage layer. When used in conjunction with local shuffle, the concurrency capability of the pipelineX engine will no longer be constrained by the number of storage layer tables, thus fully utilizing machine resources.
 

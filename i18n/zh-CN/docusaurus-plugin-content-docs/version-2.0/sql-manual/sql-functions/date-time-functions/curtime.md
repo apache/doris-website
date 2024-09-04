@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## curtime,current_time
+## Curtime,current_time
 
 ### Syntax
 
@@ -45,6 +45,6 @@ mysql> select current_time();
 +----------------+
 ```
 
-### keywords
+### Keywords
 
     CURTIME,CURRENT_TIME

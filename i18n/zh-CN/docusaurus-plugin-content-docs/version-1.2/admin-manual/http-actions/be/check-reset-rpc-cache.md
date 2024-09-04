@@ -25,7 +25,7 @@ under the License.
 -->
 
 # 检查和重置连接缓存
-## description
+## Description
    
 ### 检查连接缓存
     该功能用于检查brpc的连接缓存。
@@ -40,7 +40,7 @@ under the License.
     说明：重置连接缓存,负载最大10M
     METHOD: GET
     URI: http://be_host:be_http_port/api/reset_rpc_channel/{endpoints}
-## example
+## Example
 
     curl -X GET "http://host:port/api/check_rpc_channel/host2/8060/1024000"
     curl -X GET "http://host:port/api/reset_rpc_channel/all"

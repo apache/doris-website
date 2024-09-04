@@ -28,7 +28,7 @@ under the License.
 
 AES_ENCRYPT
 
-### description
+### Description
 
 Encryption of data using the OpenSSL. This function is consistent with the `AES_ENCRYPT` function in MySQL. Using AES_128_ECB algorithm by default, and the padding mode is PKCS7.
 Reference: https://dev.mysql.com/doc/refman/8.0/en/encryption-functions.html#function_aes-decrypt
@@ -59,7 +59,7 @@ The AES_ENCRYPT function is not used the user secret key directly, but will be f
 2. Then XOR the `i` bit and the `16*k+i` bit of the SECRET KEY entered by the user. If the length of the SECRET KEY less than 16 bytes, 0 will be padded;
 3. Finally, use the newly generated key for encryption;
 
-### example
+### Example
 
 ```sql
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -96,7 +96,7 @@ Here is the result:
 
 For more information about `block_encryption_mode`, see also [variables](../../../query/query-variables/variables).
 
-### keywords
+### Keywords
 
     AES_ENCRYPT
 
@@ -126,7 +126,7 @@ AES_DECRYPT(str,key_str[,init_vector])
 
 VARCHAR(*)
 
-### example
+### Example
 
 ```sql
 select aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='),'F3229A0B371ED2D9441B830D21A390C3');
@@ -163,6 +163,6 @@ Here is the result:
 
 For more information about `block_encryption_mode`, see also [variables](../../../advanced/variables.md).
 
-### keywords
+### Keywords
 
     AES_DECRYPT

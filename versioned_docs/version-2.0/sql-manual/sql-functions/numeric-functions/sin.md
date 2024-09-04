@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sin
+## Sin
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE sin(DOUBLE x)`
 Returns the sine of `x`, where `x` is in radians
 
-### example
+### Example
 
 ```
 mysql> select sin(0);
@@ -53,5 +53,5 @@ mysql> select sin(0.5 * Pi());
 +-----------------+
 ```
 
-### keywords
+### Keywords
 	SIN

@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_apply
+## Array_apply
 
 array_apply
 
-### description
+### Description
 数组以特定的二元条件符过滤元素， 并返回过滤后的结果
 
 #### Syntax
@@ -47,7 +47,7 @@ array_apply(arr, op, val)
 
 类型: Array.
 
-### example
+### Example
 
 ```
 mysql> select array_apply([1, 2, 3, 4, 5], ">=", 2);
@@ -67,6 +67,6 @@ mysql> select array_apply([1000000, 1000001, 1000002], "=", "1000002");
 1 row in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
 ARRAY,APPLY,ARRAY_APPLY

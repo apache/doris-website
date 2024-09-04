@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_compact
+## Array_compact
 
 array_compact
 
-### description
+### Description
 
 Removes consecutive duplicate elements from an array. The order of result values is determined by the order in the source array.
 
@@ -44,11 +44,11 @@ The array without continuous duplicate.
 
 Type: Array.
 
-### notice
+### Notice
 
 `Only supported in vectorized engine`
 
-### example
+### Example
 
 ```
 select array_compact([1, 2, 3, 3, null, null, 4, 4]);
@@ -76,7 +76,7 @@ select array_compact(['2015-03-13','2015-03-13']);
 +--------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,COMPACT,ARRAY_COMPACT
 

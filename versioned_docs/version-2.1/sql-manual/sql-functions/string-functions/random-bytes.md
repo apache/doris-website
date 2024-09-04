@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## random_bytes
-### description
+## Random_bytes
+### Description
 
 The `random_bytes` function generates a sequence of random bytes.
 
@@ -39,7 +39,7 @@ VARCHAR random_bytes(INT len)
 
 - len: The `random_bytes` function takes a single argument, which specifies the length of the generated random byte sequence.
 
-### example
+### Example
 
 ```
 mysql> select random_bytes(7);
@@ -50,5 +50,5 @@ mysql> select random_bytes(7);
 +------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     RANDOM BYTES

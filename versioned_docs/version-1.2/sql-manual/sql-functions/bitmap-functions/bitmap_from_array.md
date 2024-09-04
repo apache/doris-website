@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_from_array
+## Bitmap_from_array
 
-### description
+### Description
 #### Syntax
 
 `BITMAP BITMAP_FROM_ARRAY(ARRAY input)`
@@ -32,7 +32,7 @@ under the License.
 Convert a TINYINT/SMALLINT/INT/BIGINT array to a BITMAP
 When the input field is illegal, the result returns NULL
 
-### example
+### Example
 
 ```
 mysql> select *, bitmap_to_string(bitmap_from_array(c_array)) from array_test;
@@ -48,6 +48,6 @@ mysql> select *, bitmap_to_string(bitmap_from_array(c_array)) from array_test;
 5 rows in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 
     BITMAP_FROM_ARRAY,BITMAP

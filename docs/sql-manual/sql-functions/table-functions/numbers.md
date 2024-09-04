@@ -26,11 +26,11 @@ under the License.
 
 ## `numbers`
 
-### description
+### Description
 
 Table function that generates a temporary table containing only one column with the column name `number` and all element values are `const_value` if `const_value` is specified, otherwise they are [0,`number`) incremented.
 
-#### syntax
+#### Syntax
 ```sql
 numbers(
   "number" = "n"
@@ -42,7 +42,7 @@ parameter：
 - `number`: Line number.
 - `const_value`: the constant value.
 
-### example
+### Example
 ```
 mysql> select * from numbers("number" = "5");
 +--------+
@@ -69,6 +69,6 @@ mysql> select * from numbers("number" = "5", "const_value" = "-123");
 5 rows in set (0.12 sec)
 ```
 
-### keywords
+### Keywords
 
     numbers, const_value

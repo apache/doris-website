@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION PERCENT_RANK
-### description
+### Description
 
 The PERCENT_RANK() is a window function that calculates the percentile rank of a row within a partition or result set.
 
@@ -42,7 +42,7 @@ Similar to other window functions, the PARTITION BY clause distributes the rows 
 
 Both PARTITION BY and ORDER BY clauses are optional. However, the PERCENT_RANK() is an order-sensitive function, therefore, you should always use the ORDER BY clause.
 
-### example
+### Example
 
 ```sql
 // create table
@@ -123,6 +123,6 @@ ORDER BY
 +------------------+-----------+------------+-----------------+
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,PERCENT_RANK

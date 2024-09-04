@@ -34,7 +34,7 @@ under the License.
 Calculate the weighted arithmetic mean, which is the sum of the products of all corresponding values and weights, divided the total weight sum.
 If the sum of all weights equals 0, NaN will be returned.
 
-### example
+### Example
 
 ```
 mysql> select avg_weighted(k2,k1) from baseall;
@@ -46,6 +46,6 @@ mysql> select avg_weighted(k2,k1) from baseall;
 1 row in set (0.02 sec)
 
 ```
-### keywords
+### Keywords
 
 AVG_WEIGHTED

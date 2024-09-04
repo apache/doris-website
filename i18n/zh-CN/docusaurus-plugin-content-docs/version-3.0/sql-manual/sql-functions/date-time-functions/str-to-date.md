@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## str_to_date
-### description
+## Str_to_date
+### Description
 #### Syntax
 
 `DATETIME STR_TO_DATE(VARCHAR str, VARCHAR format)`
@@ -34,7 +34,7 @@ under the License.
 
 支持[date_format](./date-format)中的所有 format 格式，此外对于 '%Y' 和 '%Y-%m'，支持补齐日期剩余部分。
 
-### example
+### Example
 
 ```
 mysql> select str_to_date('2014-12-21 12:34:56', '%Y-%m-%d %H:%i:%s');
@@ -73,6 +73,6 @@ mysql> select str_to_date('2023','%Y');
 +---------------------------+
 ```
 
-### keywords
+### Keywords
 
     STR_TO_DATE,STR,TO,DATE

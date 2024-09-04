@@ -35,9 +35,9 @@ The optional parameter P indicates the time precision and the value range is [0,
 Value range is ['0000-01-01 00:00:00[.000000]','9999-12-31 23:59:59[.999999]'].
 The form of printing is 'yyyy-MM-dd HH:mm:ss.SSSSSS'
 
-### note
+### Note
 
 Compared with the DATETIME type, DATETIMEV2 is more efficient and supports a time precision of up to microseconds.
 
-### keywords
+### Keywords
 DATETIMEV2

@@ -25,7 +25,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# load balancing
+# Load balancing
 
 When deploying multiple FE nodes, users can deploy a load balancing layer on top of multiple FEs to achieve high availability of Doris.
 
@@ -543,7 +543,7 @@ cd /usr/local/nginx
 /usr/local/nginx/sbin/nginx -c conf.d/default.conf
 ```
 
-### verify
+### Verify
 
 ```
 mysql -uroot -P6030 -h172.31.7.119

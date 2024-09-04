@@ -31,7 +31,7 @@ under the License.
 
 SELECT
 
-### description
+### Description
 
 Mainly introduces the use of Select syntax
 
@@ -157,7 +157,7 @@ CTE names can be referenced in other CTEs, allowing CTEs to be defined based on 
 
 A CTE can refer to itself to define a recursive CTE. Common applications of recursive CTEs include sequence generation and traversal of hierarchical or tree-structured data.
 
-### example
+### Example
 
 1. Query the names of students whose ages are 18, 20, 25
 
@@ -299,7 +299,7 @@ A CTE can refer to itself to define a recursive CTE. Common applications of recu
     SELECT * FROM t1 TABLET(10001) TABLESAMPLE(1000 ROWS) REPEATABLE 2 limit 1000;
     ```
 
-### keywords
+### Keywords
 
     SELECT
 

@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bin
+## Bin
 
-### description
+### Description
 #### Syntax
 
 `STRING bin(BIGINT x)`
 将十进制数`x`转换为二进制数.
 
-### example
+### Example
 
 ```
 mysql> select bin(0);
@@ -53,5 +53,5 @@ mysql> select bin(-3);
 +------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 	BIN

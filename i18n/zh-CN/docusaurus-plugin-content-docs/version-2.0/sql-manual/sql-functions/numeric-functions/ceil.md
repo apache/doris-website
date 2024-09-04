@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ceil
+## Ceil
 
-### description
+### Description
 #### Syntax
 
 `BIGINT ceil(DOUBLE x)`
@@ -34,7 +34,7 @@ under the License.
 该函数的其他别名为 `dceil` 和 `ceiling`。
 :::
 
-### example
+### Example
 
 ```
 mysql> select ceil(1);
@@ -57,5 +57,5 @@ mysql> select ceil(-10.3);
 +-------------+
 ```
 
-### keywords
+### Keywords
 	CEIL, DCEIL, CEILING

@@ -26,13 +26,13 @@ under the License.
 
 ## `numbers`
 
-### description
+### Description
 
 Table-Value-Function, generate a temporary table with only one column named 'number', row values are [0,n).
 
 This function is used in FROM clauses.
 
-#### syntax
+#### Syntax
 
 ```sql
 numbers(
@@ -45,7 +45,7 @@ parameter：
 - `number`: It means to generate rows [0, n).
 - `backend_num`: Optional parameters. It means this function is executed simultaneously on `m` be nodes (multiple BEs need to be deployed).
 
-### example
+### Example
 ```
 mysql> select * from numbers("number" = "10");
 +--------+
@@ -64,6 +64,6 @@ mysql> select * from numbers("number" = "10");
 +--------+
 ```
 
-### keywords
+### Keywords
 
     numbers

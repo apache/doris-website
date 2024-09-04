@@ -22,14 +22,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_popfront
+## Array_popfront
 
 <version since="1.2.3">
 
 array_popfront
 </version>
 
-### description
+### Description
 
 #### Syntax
 
@@ -37,11 +37,11 @@ array_popfront
 
 返回移除第一个元素后的数组，如果输入参数为NULL，则返回NULL
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 mysql> select array_popfront(['test', NULL, 'value']);
@@ -52,6 +52,6 @@ mysql> select array_popfront(['test', NULL, 'value']);
 +-----------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,POPFRONT,ARRAY_POPFRONT

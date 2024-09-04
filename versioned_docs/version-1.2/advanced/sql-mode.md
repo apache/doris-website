@@ -27,10 +27,10 @@ under the License.
 # SQL MODE
 
 The sql mode newly supported by Doris refers to the sql mode management mechanism of Mysql. Each client can set its own sql mode, and database administrators with Admin privileges can set the global sql mode.
-## sql mode introduce
+## Sql mode introduce
 
 sql mode enables users to switch between different styles of sql syntax and data validation strictness, making Doris more compatible with other databases. For example, in some databases, the '||' symbol is a string concatenator, but in Doris it is equivalent to 'or', then users only need to use sql mode to switch to the style they want. Each client can set the sql mode, which is valid in the current session. Only users with Admin privileges can set the global sql mode.
-## principle
+## Principle
 
 The sql mode is stored in SessionVariables with a 64-bit Long type. Each bit of this address represents the enable/disable (1 means open, 0 means disable) state of a mode, as long as you know where each mode is. Bit, we can easily and quickly perform checksum operations on sql mode through bit operations.
 
@@ -61,11 +61,11 @@ show global variables
 show session variables
 ```
 
-## mode is supported
+## Mode is supported
 
 1. `PIPES_AS_CONCAT`
 
 In this mode, the '||' symbol is a string concatenation symbol (same as the CONCAT() function), not a synonym for the 'OR' symbol. (e.g., `'a'||'b' = 'ab'`, `1||0 = '10'`)
-## composite mode
+## Composite mode
 
 (subsequent additions)

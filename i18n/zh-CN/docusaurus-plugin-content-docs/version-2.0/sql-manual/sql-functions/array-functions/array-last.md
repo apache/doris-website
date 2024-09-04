@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_last
+## Array_last
 
 array_last
 
-### description
+### Description
 返回数组中的最后一个 func(arr1[i]) 值不为 0 的元素。当数组中所有元素进行 func(arr1[i]) 都为 0 时，结果返回`NULL`值。
 
 #### Syntax
@@ -39,7 +39,7 @@ T array_last(lambda, ARRAY<T>)
 
 使用一个 lambda 表达式和一个 ARRAY 作为输入参数，lambda 表达式为布尔型，用于对 ARRAY 中的每个元素进行判断返回值。
 
-### example
+### Example
 
 ```
 mysql> select array_last(x->x>2, [1,2,3,0]) ;
@@ -60,6 +60,6 @@ mysql> select array_last(x->x>4, [1,2,3,0]) ;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY, LAST, ARRAY_LAST

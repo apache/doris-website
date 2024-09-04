@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_sortby
+## Array_sortby
 
 array_sortby
 
-### description
+### Description
 
 #### Syntax
 
@@ -40,7 +40,7 @@ ARRAY<T> array_sortby(lambda,array....)
 如果输入数组 key 为 NULL，则直接返回 src 数组。
 如果输入数组 key 元素包含 NULL, 则输出的排序数组会将 NULL 放在最前面。
 
-### example
+### Example
 
 ```
 mysql [test]>select array_sortby(['a','b','c'],[3,2,1]);
@@ -82,6 +82,6 @@ mysql [test]>select *, array_map((x,y)->(y+x),c_array1,c_array2) as arr_sum,arra
 +------+-----------------+--------------+----------------+-----------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, SORT, ARRAY_SORTBY

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ucase
-### description
+## Ucase
+### Description
 #### Syntax
 
 `VARCHAR ucase(VARCHAR str)`
@@ -33,5 +33,5 @@ under the License.
 
 将参数中所有的字符串都转换成大写，此函数的另一个别名为[upper](./upper.md)。
 
-### keywords
+### Keywords
     UCASE

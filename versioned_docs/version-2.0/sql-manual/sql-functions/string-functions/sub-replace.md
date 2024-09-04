@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sub_replace
+## Sub_replace
 ### Description
 #### Syntax
 
@@ -32,7 +32,7 @@ Return with new_str replaces the str with length and starting position from star
 When start and len are negative integers, return NULL.
 and the default value of len is the length of new_str.
 
-### example
+### Example
 
 ```
 mysql> select sub_replace("this is origin str","NEW-STR",1);
@@ -49,5 +49,5 @@ mysql> select sub_replace("doris","***",1,2);
 | d***is                            |
 +-----------------------------------+
 ```
-### keywords
+### Keywords
     SUB_REPLACE

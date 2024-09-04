@@ -28,7 +28,7 @@ under the License.
 
 Doris新支持的sql mode参照了 Mysql 的sql mode管理机制，每个客户端都能设置自己的sql mode，拥有Admin权限的数据库管理员可以设置全局sql mode。
 
-## sql mode 介绍
+## Sql mode 介绍
 
 sql mode使用户能在不同风格的sql语法和数据校验严格度间做切换，使Doris对其他数据库有更好的兼容性。例如在一些数据库里，'||'符号是一个字符串连接符，但在Doris里却是与'or'等价的，这时用户只需要使用sql mode切换到自己想要的风格。每个客户端都能设置sql mode，并在当前对话中有效，只有拥有Admin权限的用户可以设置全局sql mode。
 

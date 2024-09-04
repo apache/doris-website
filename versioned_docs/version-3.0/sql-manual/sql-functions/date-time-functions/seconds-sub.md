@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## seconds_sub
-### description
+## Seconds_sub
+### Description
 #### Syntax
 
 `DATETIME SECONDS_SUB(DATETIME date, INT seconds)`
@@ -34,7 +34,7 @@ Subtracts a specified number of seconds from a datetime or date
 
 The parameter date can be DATETIME or DATE, and the return type is DATETIME.
 
-### example
+### Example
 
 ```
 mysql> select seconds_sub("2020-01-01 00:00:00", 1);
@@ -45,6 +45,6 @@ mysql> select seconds_sub("2020-01-01 00:00:00", 1);
 +---------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     SECONDS_SUB

@@ -38,7 +38,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 ```
 
 
-#### properties
+#### Properties
 
 * `type`
 

@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sequence
+## Sequence
 
 sequence
 
-### description
+### Description
 alias of array_range function
 
 #### Syntax
@@ -52,11 +52,11 @@ If the third part is missing, `INTERVAL 1 DAY` will be default value.
 UNIT supports YEAR/MONTH/WEEK/DAY/HOUR/MINUTE/SECOND.
 Return the array of datetimev2 between start_datetime and closest to end_datetime by interval_step UNIT.
 
-### notice
+### Notice
 
 `if the 3rd parameter step/interval_step is negative or zero, the function will return NULL`
 
-### example
+### Example
 
 ```
 mysql> select sequence(10);
@@ -95,6 +95,6 @@ mysql> select sequence(cast('2019-05-15 12:00:00' as datetimev2(0)), cast('2022-
 +------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, RANGE, SEQUENCE

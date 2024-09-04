@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## orthogonal_bitmap_expr_calculate_count
-### description
+## Orthogonal_bitmap_expr_calculate_count
+### Description
 #### Syntax
 
 `BITMAP ORTHOGONAL_BITMAP_EXPR_CALCULATE_COUNT(bitmap_column, column_to_filter, input_string)`
 Calculate the bitmap intersection, union and difference set of expressions to calculate the count function. The first parameter is the Bitmap column, the second parameter is the dimension column used for filtering, that is, the calculated key column, and the third parameter is the calculation expression string, meaning that the bitmap intersection, union and difference set expression is calculated according to the key column
 The calculators supported by the expression:&represents intersection calculation, | represents union calculation, - represents difference calculation, ^ represents XOR calculation, and \ represents escape characters
 
-### example
+### Example
 
 ```
 select orthogonal_bitmap_expr_calculate_count(user_id, tag, '(833736|999777)&(1308083|231207)&(1000|20000-30000)') from user_tag_bitmap where tag in (833736,999777,130808,231207,1000,20000,30000);
@@ -42,6 +42,6 @@ select orthogonal_bitmap_expr_calculate_count(user_id, tag, '(A:a/b|B:2\\-4)&(C:
 Note: 'A:a/b', 'B:2-4', etc. are string types tag, representing different labels of users, where 'B:2-4' needs to be escaped as'B:2\\-4'
 ```
 
-### keywords
+### Keywords
 
    ORTHOGONAL_BITMAP_EXPR_CALCULATE_COUNT,BITMAP

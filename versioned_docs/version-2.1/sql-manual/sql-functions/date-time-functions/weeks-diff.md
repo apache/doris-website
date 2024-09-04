@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weeks_diff
-### description
+## Weeks_diff
+### Description
 #### Syntax
 
 `INT weeks_diff(DATETIME enddate, DATETIME startdate)`
 
 The difference between the start time and the end time is weeks
 
-### example
+### Example
 
 ```
 mysql> select weeks_diff('2020-12-25','2020-10-25');
@@ -43,6 +43,6 @@ mysql> select weeks_diff('2020-12-25','2020-10-25');
 +----------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     weeks_diff

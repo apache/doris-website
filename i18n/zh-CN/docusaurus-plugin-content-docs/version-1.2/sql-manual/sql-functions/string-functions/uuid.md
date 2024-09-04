@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## uuid
+## Uuid
 
 uuid
 
-### description
+### Description
 #### Syntax
 
 `VARCHAR uuid()`
@@ -36,7 +36,7 @@ uuid
 返回一个随机的uuid字符串
 
 
-### example
+### Example
 
 ```
 mysql> select uuid();
@@ -48,5 +48,5 @@ mysql> select uuid();
 
 ```
 
-### keywords
+### Keywords
     UUID

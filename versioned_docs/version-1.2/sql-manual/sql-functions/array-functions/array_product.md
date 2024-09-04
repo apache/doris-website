@@ -23,11 +23,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-## array_product
+## Array_product
 
 array_product
 
-### description
+### Description
 
 #### Syntax
 
@@ -36,7 +36,7 @@ array_product
 Get the product of all elements in an array (`NULL` values are skipped).
 When the array is empty or all elements in the array are `NULL` values, the function returns `NULL`.
 
-### example
+### Example
 
 ```shell
 mysql> create table array_type_table(k1 INT, k2 Array<int>) duplicate key (k1)
@@ -55,7 +55,7 @@ mysql> select k2, array_product(k2) from array_type_table;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,PRODUCT,ARRAY_PRODUCT
 

@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION DENSE_RANK
-### description
+### Description
 
 The DENSE_RANK() function is used to represent rankings. Unlike RANK(), DENSE_RANK() does not have vacancies. For example, if there are two parallel 1s, the third number of DENSE_RANK() is still 2, and the third number of RANK() is 3.
 
@@ -20,7 +20,7 @@ The DENSE_RANK() function is used to represent rankings. Unlike RANK(), DENSE_RA
 DENSE_RANK() OVER(partition_by_clause order_by_clause)
 ```
 
-### example
+### Example
 
 Group by the property column to rank column x:
 
@@ -40,6 +40,6 @@ Group by the property column to rank column x:
  | 3  | 2    | 2        |
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,DENSE_RANK

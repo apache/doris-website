@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## BITMAP_AGG
-### description
+### Description
 #### Syntax
 
 `BITMAP_AGG(expr)`
@@ -33,7 +33,7 @@ under the License.
 聚合 expr 的值（不包括任何空值）得到 bitmap。
 expr 的类型需要为 TINYINT,SMALLINT,INT 和 BIGINT 类型。
 
-### example
+### Example
 ```
 MySQL > select `n_nationkey`, `n_name`, `n_regionkey` from `nation`;
 +-------------+----------------+-------------+
@@ -84,5 +84,5 @@ MySQL > select bitmap_count(bitmap_agg(n_nationkey))  from nation;
 |                                      25 |
 +-----------------------------------------+
 ```
-### keywords
+### Keywords
 BITMAP_AGG

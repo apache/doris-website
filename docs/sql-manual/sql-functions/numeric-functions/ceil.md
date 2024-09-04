@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ceil
+## Ceil
 
-### description
+### Description
 #### Syntax
 
 `T ceil(T x[, d])`
@@ -42,7 +42,7 @@ Else if `d` is a column, and `x` has Decimal type, scale of result Decimal will 
 The other alias for this function are `dceil` and `ceiling`.
 :::
 
-### example
+### Example
 
 ```
 mysql> select ceil(1);
@@ -83,5 +83,5 @@ mysql> SELECT number
 +--------+------------------+-------------------+-----------------+------------------+
 ```
 
-### keywords
+### Keywords
 	CEIL, DCEIL, CEILING

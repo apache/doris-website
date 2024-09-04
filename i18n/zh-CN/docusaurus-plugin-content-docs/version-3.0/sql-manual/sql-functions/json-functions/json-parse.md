@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_parse
-### description
+## Json_parse
+### Description
 #### Syntax
 
 ```sql
@@ -41,7 +41,7 @@ JSON json_parse_error_to_value(VARCHAR json_str, VARCHAR default_json_str)
   - json_parse_error_to_null返回NULL，
   - json_parse_error_to_value返回参数default_json_str指定的默认值
 
-### example
+### Example
 
 1. 正常JSON字符串解析
 
@@ -79,5 +79,5 @@ mysql> SELECT json_parse_error_to_value('invalid json', '{}');
 ```
 
 
-### keywords
+### Keywords
 JSONB, JSON, json_parse, json_parse_error_to_null, json_parse_error_to_value

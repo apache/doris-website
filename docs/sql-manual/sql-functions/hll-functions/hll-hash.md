@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## HLL_HASH
-### description
+### Description
 #### Syntax
 
 `HLL_HASH(value)`
@@ -33,7 +33,7 @@ under the License.
 HLL_HASH converts a value to hll type. 
 Typically used when loading data.
 
-### example
+### Example
 ```
 MySQL > select HLL_CARDINALITY(HLL_HASH('abc'));
 +----------------------------------+
@@ -42,5 +42,5 @@ MySQL > select HLL_CARDINALITY(HLL_HASH('abc'));
 |                                1 |
 +----------------------------------+
 ```
-### keywords
+### Keywords
 HLL,HLL_HASH

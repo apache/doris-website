@@ -56,7 +56,7 @@ under the License.
 
 匹配的非重叠事件链数。
 
-### example
+### Example
 
 **匹配例子**
 
@@ -249,6 +249,6 @@ SELECT sequence_count('(?1)(?2)', date, number = 1, number = 5, number = 6) FROM
 +------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 SEQUENCE_COUNT

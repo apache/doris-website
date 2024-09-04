@@ -26,8 +26,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## extract_url_parameter
-### description
+## Extract_url_parameter
+### Description
 #### Syntax
 
 `VARCHAR  extract_url_parameter(VARCHAR url, VARCHAR  name)`
@@ -48,5 +48,5 @@ mysql> SELECT extract_url_parameter ("http://doris.apache.org?k1=aa&k2=bb&test=c
 
 如果想获取 URL 中的其他部分，可以使用[parse_url](./parse_url.md)。
 
-### keywords
+### Keywords
     EXTRACT URL PARAMETER

@@ -24,13 +24,13 @@ under the License.
 
 ## MD5
 
-### description
+### Description
 计算 MD5 128-bit 
 #### Syntax
 
 `MD5(str)`
 
-### example
+### Example
 
 ```
 MySQL [(none)]> select md5("abc");
@@ -42,6 +42,6 @@ MySQL [(none)]> select md5("abc");
 1 row in set (0.013 sec)
 ```
 
-### keywords
+### Keywords
 
     MD5

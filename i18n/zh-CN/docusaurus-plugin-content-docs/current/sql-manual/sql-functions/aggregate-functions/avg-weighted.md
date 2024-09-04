@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## AVG_WEIGHTED
-### description
+### Description
 #### Syntax
 
 ` double avg_weighted(x, weight)`
@@ -34,7 +34,7 @@ under the License.
 如果所有的权重和等于0, 将返回NaN。
 
 
-### example
+### Example
 
 ```
 mysql> select avg_weighted(k2,k1) from baseall;
@@ -46,5 +46,5 @@ mysql> select avg_weighted(k2,k1) from baseall;
 1 row in set (0.02 sec)
 
 ```
-### keywords
+### Keywords
 AVG_WEIGHTED

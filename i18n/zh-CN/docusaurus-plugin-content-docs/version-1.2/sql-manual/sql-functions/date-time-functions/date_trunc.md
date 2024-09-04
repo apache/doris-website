@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## date_trunc
+## Date_trunc
 
 <version since="1.2.0"> 
 
@@ -32,7 +32,7 @@ date_trunc
 
 </version>
 
-### description
+### Description
 #### Syntax
 
 `DATETIME DATE_TRUNC(DATETIME datetime, VARCHAR unit)`
@@ -44,7 +44,7 @@ datetime 参数是合法的日期表达式。
 
 unit 参数是您希望截断的时间间隔，可选的值如下：[`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`]。
 如果unit 不符合上述可选值，结果将返回NULL。 
-### example
+### Example
 
 ```
 mysql> select date_trunc('2010-12-02 19:28:30', 'second');
@@ -104,6 +104,6 @@ mysql> select date_trunc('2010-12-02 19:28:30', 'year');
 +-------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     DATE_TRUNC,DATE,TRUNC

@@ -25,7 +25,7 @@ under the License.
 -->
 
 # PAD ROWSET
-## description
+## Description
    
     该功能用于使用一个空的rowset填充损坏的副本。
 
@@ -34,10 +34,10 @@ under the License.
     METHOD: POST
     URI: http://be_host:be_http_port/api/pad_rowset?tablet_id=xxx&start_version=xxx&end_version=xxx
 
-## example
+## Example
 
     curl -X POST "http://hostname:8088/api/pad_rowset?tablet_id=123456\&start_version=1111111\&end_version=1111112"
 
-## keyword
+## Keyword
 
     PAD,ROWSET,PAD,ROWSET

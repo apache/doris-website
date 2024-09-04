@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## log2
+## Log2
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE log2(DOUBLE x)`
 返回以`2`为底的`x`的自然对数.
 
-### example
+### Example
 
 ```
 mysql> select log2(1);
@@ -53,5 +53,5 @@ mysql> select log2(10);
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	LOG2

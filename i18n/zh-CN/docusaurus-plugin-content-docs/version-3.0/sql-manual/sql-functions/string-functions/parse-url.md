@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## parse_url
-### description
+## Parse_url
+### Description
 #### Syntax
 
 `VARCHAR  parse_url(VARCHAR url, VARCHAR  name)`
@@ -44,5 +44,5 @@ mysql> SELECT parse_url ('https://doris.apache.org/', 'HOST');
 
 如果想获取 QUERY 中的特定参数，可使用[extract_url_parameter](./extract_url_parameter.md)。
 
-### keywords
+### Keywords
     PARSE URL

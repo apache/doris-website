@@ -30,13 +30,13 @@ under the License.
 
 frontends
 
-### description
+### Description
 
 Table-Value-Function, generate a temporary table named `frontends`. This tvf is used to view the information of BE nodes in the doris cluster.
 
 This function is used in `FROM` clauses.
 
-#### syntax
+#### Syntax
 
 `frontends()`
 
@@ -72,7 +72,7 @@ The information displayed by the `frontends` tvf is basically consistent with th
 
 The information displayed by the `frontends` tvf is authenticated, which is consistent with the behavior of `show frontends`, user must have ADMIN/OPERATOR privelege.
 
-### example
+### Example
 ```
 mysql> select * from frontends()\G
 *************************** 1. row ***************************
@@ -97,6 +97,6 @@ ReplayedJournalId: 186
 1 row in set (0.060 sec)
 ```
 
-### keywords
+### Keywords
 
     frontends

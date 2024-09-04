@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hours_add
-### description
+## Hours_add
+### Description
 #### Syntax
 
 `DATETIME HOURS_ADD(DATETIME date, INT hours)`
@@ -34,7 +34,7 @@ Add specified hours from date time or date
 
 The parameter date can be DATETIME or DATE, and the return type is DATETIME.
 
-### example
+### Example
 
 ```
 mysql> select hours_add("2020-02-02 02:02:02", 1);
@@ -45,6 +45,6 @@ mysql> select hours_add("2020-02-02 02:02:02", 1);
 +-------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     HOURS_ADD

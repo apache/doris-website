@@ -24,7 +24,7 @@ under the License.
 
 ## SHA
 
-### description
+### Description
 
 Use SHA1 to digest the message.
 
@@ -36,7 +36,7 @@ Use SHA1 to digest the message.
 
 - `str`: content to be encrypted
 
-### example
+### Example
 
 ```SQL
 mysql> select sha("123");
@@ -48,6 +48,6 @@ mysql> select sha("123");
 1 row in set (0.13 sec)
 ```
 
-### keywords
+### Keywords
 
     SHA,SHA1

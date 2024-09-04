@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## xxhash_64
+## Xxhash_64
 
-### description
+### Description
 #### Syntax
 
 `BIGINT XXHASH_64(VARCHAR input, ...)`
@@ -33,7 +33,7 @@ Return the 64 bits xxhash of input string.
 
 Note: When calculating hash values, it is more recommended to use `xxhash_64` instead of `murmur_hash3_64`.
 
-### example
+### Example
 
 ```
 mysql> select xxhash_64(NULL);
@@ -58,7 +58,7 @@ mysql> select xxhash_64("hello", "world");
 +-----------------------------+
 ```
 
-### benchmark
+### Benchmark
 
 Through TPCH Benchmark testing, it was found that `xxhash_64` has significantly improved performance compared to `murmur_hash3_64`. Therefore, in scenarios where hash values need to be calculated, it is more recommended to use `xxhash_64`.
 
@@ -80,6 +80,6 @@ mysql> select count(xxhash_64(l_comment)) from lineitem;
 1 row in set (8.41 sec)
 ```
 
-### keywords
+### Keywords
 
 XXHASH_64,HASH

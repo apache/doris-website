@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## greatest
+## Greatest
 
-### description
+### Description
 #### Syntax
 
 `greatest(col_a, col_b, …, col_n)`  
@@ -33,7 +33,7 @@ under the License.
 
 比较`n`个`column`的大小返回其中的最大值.若`column`中有`NULL`，则返回`NULL`.
 
-### example
+### Example
 
 ```
 mysql> select greatest(-1, 0, 5, 8);
@@ -62,5 +62,5 @@ mysql> select greatest("2022-02-26 20:02:11","2020-01-23 20:02:11","2020-06-22 2
 +-------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 	GREATEST

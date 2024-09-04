@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## pmod
+## Pmod
 
-### description
+### Description
 #### Syntax
 
 ```sql
@@ -34,7 +34,7 @@ DOUBLE PMOD(DOUBLE x, DOUBLE y)
 返回在模系下`x mod y`的最小正数解.
 具体地来说, 返回 `(x%y+y)%y`.
 
-### example
+### Example
 
 ```
 MySQL [test]> SELECT PMOD(13,5);
@@ -51,5 +51,5 @@ MySQL [test]> SELECT PMOD(-13,5);
 +-------------+
 ```
 
-### keywords
+### Keywords
 	PMOD

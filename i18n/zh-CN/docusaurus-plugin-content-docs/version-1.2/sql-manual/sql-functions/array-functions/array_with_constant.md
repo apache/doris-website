@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_with_constant
+## Array_with_constant
 
 <version since="1.2.0">
 
@@ -31,7 +31,7 @@ array_repeat
 
 </version>
 
-### description
+### Description
 
 #### Syntax
 
@@ -41,11 +41,11 @@ ARRAY<T> array_repeat(T, n)
 ```
 返回一个数组, 包含n个重复的T常量。array_repeat与array_with_constant功能相同，用来兼容hive语法格式。
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 mysql> select array_with_constant(2, "hello"), array_repeat("hello", 2);
@@ -82,6 +82,6 @@ mysql> select array_with_constant(null, 3), array_repeat(3, null);
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,WITH_CONSTANT,ARRAY_WITH_CONSTANT,ARRAY_REPEAT

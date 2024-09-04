@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hex
-### description
+## Hex
+### Description
 #### Syntax
 
 `VARCHAR hex(VARCHAR str)`
@@ -37,7 +37,7 @@ If the input parameter is a number, the string representation of the hexadecimal
 If the input parameter is a string, each character will be converted into two hexadecimal characters, and all the characters after the conversion will be spliced into a string for output
 
 
-### example
+### Example
 
 ```
 input string
@@ -81,5 +81,5 @@ mysql> select hex(-1);
 | FFFFFFFFFFFFFFFF |
 +------------------+
 ```
-### keywords
+### Keywords
     HEX

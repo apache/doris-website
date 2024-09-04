@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### description
+## Utc_timestamp
+### Description
 #### Syntax
 
 `DATETIME UTC_TIMESTAMP()`
@@ -37,7 +37,7 @@ under the License.
 
 根据该函数是否用在字符串或数字语境中
 
-### example
+### Example
 
 ```
 mysql> select utc_timestamp(),utc_timestamp() + 1;
@@ -48,6 +48,6 @@ mysql> select utc_timestamp(),utc_timestamp() + 1;
 +---------------------+---------------------+
 ```
 
-### keywords
+### Keywords
 
     UTC_TIMESTAMP,UTC,TIMESTAMP

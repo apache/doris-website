@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# sequence 列
+# Sequence 列
 
 Uniq模型主要针对需要唯一主键的场景，可以保证主键唯一性约束，但是由于使用REPLACE聚合方式，在同一批次中导入的数据，替换顺序不做保证，详细介绍可以参考[数据模型](../../data-table/data-model.md)。替换顺序无法保证则无法确定最终导入到表中的具体数据，存在了不确定性。
 

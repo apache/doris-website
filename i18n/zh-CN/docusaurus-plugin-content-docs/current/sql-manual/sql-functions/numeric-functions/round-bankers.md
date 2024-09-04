@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## round_bankers
+## Round_bankers
 
-### description
+### Description
 #### Syntax
 
 `T round_bankers(T x[, d])`
@@ -36,7 +36,7 @@ under the License.
 + 在其他情况下，该函数将数字四舍五入到最接近的整数。
 
 
-### example
+### Example
 
 ```
 mysql> select round_bankers(0.4);
@@ -89,5 +89,5 @@ mysql> SELECT number
 +--------+-------------------+--------------------+------------------+-------------------+
 ```
 
-### keywords
+### Keywords
 	round_bankers

@@ -98,7 +98,7 @@ Segment compaction 有以下特点：
 
 Compaction 策略决定什么时候将哪些小文件合并成大文件。Doris 当前提供了 2种 compaction 策略，通过表属性的 `compaction_policy` 参数指定。
 
-### size_based compaction 策略
+### Size_based compaction 策略
 
 size_based compaction 策略是默认策略，对大多数场景适用。
 
@@ -106,7 +106,7 @@ size_based compaction 策略是默认策略，对大多数场景适用。
 "compaction_policy" = "size_based"
 ```
 
-### time_series compaction 策略
+### Time_series compaction 策略
 
 time_series compaction 策略是为日志、时序等场景优化的策略。它利用时序数据具有时间局部性的特点，将相邻时间写入的小文件合并成大文件，每个文件只会参与一次 compaction 就合并成比较大的文件，减少反复 compaction 带来的写放大。
 

@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## MIN
-### description
+### Description
 #### Syntax
 
 `MIN(expr)`
@@ -33,7 +33,7 @@ under the License.
 
 返回expr表达式的最小值
 
-### example
+### Example
 ```
 MySQL > select min(scan_rows) from log_statis group by datetime;
 +------------------+
@@ -42,5 +42,5 @@ MySQL > select min(scan_rows) from log_statis group by datetime;
 |                0 |
 +------------------+
 ```
-### keywords
+### Keywords
 MIN

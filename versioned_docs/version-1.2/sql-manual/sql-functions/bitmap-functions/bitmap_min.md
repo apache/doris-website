@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_min
-### description
+## Bitmap_min
+### Description
 #### Syntax
 
 `BIGINT BITMAP_MIN(BITMAP input)`
 
 Calculate and return the min values of a bitmap.
 
-### example
+### Example
 
 ```
 mysql> select bitmap_min(bitmap_from_string('')) value;
@@ -50,6 +50,6 @@ mysql> select bitmap_min(bitmap_from_string('1,9999999999')) value;
 +-------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_MIN,BITMAP

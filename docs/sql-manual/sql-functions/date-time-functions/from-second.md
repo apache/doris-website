@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_second
-### description
-#### syntax
+## From_second
+### Description
+#### Syntax
 
 `DATETIME FROM_SECOND(BIGINT unix_timestamp)`
 `DATETIME FROM_MILLISECOND(BIGINT unix_timestamp)`
@@ -34,7 +34,7 @@ under the License.
 
 Converts a timestamp to its DATETIME represent, with argument as an integer and returned as a DATETIME type. Returns `NULL` if `unix_timestamp < 0` or if the function result is greater than `9999-12-31 23:59:59.999999`.
 
-### example
+### Example
 
 ```
 mysql> set time_zone='Asia/Shanghai';
@@ -68,6 +68,6 @@ mysql> select from_microsecond(253402272000000000);
 +--------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     FROM_SECOND,FROM,SECOND,MILLISECOND,MICROSECOND

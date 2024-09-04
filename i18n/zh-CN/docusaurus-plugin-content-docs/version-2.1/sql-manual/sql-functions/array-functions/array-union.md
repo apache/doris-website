@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_union
+## Array_union
 
 array_union
 
-### description
+### Description
 
 #### Syntax
 
@@ -36,7 +36,7 @@ array_union
 
 返回一个数组，包含array1和array2的并集中的所有元素，不包含重复项，如果输入参数为NULL，则返回NULL
 
-### example
+### Example
 
 ```
 mysql> select k1,k2,k3,array_union(k2,k3) from array_type_table;
@@ -78,6 +78,6 @@ mysql> select k1,k2,k3,array_union(k2,k3) from array_type_table_decimal;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,UNION,ARRAY_UNION

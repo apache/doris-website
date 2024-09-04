@@ -39,7 +39,7 @@ All formats in [date_format](./date-format) are supported.
 >
 > Support auto completing the remainder of date part for '%Y' and '%Y-%m'.
 
-### example
+### Example
 
 ```
 mysql> select str_to_date('2014-12-21 12:34:56', '%Y-%m-%d %H:%i:%s');
@@ -77,6 +77,6 @@ mysql> select str_to_date('2023','%Y');
 | 2023-01-01                |
 +---------------------------+
 ```
-### keywords
+### Keywords
 
     STR_TO_DATE,STR,TO,DATE

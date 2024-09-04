@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## seconds_diff
-### description
+## Seconds_diff
+### Description
 #### Syntax
 
 `INT seconds_diff(DATETIME enddate, DATETIME startdate)`
 
 开始时间到结束时间相差几秒
 
-### example
+### Example
 
 ```
 mysql> select seconds_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
@@ -43,6 +43,6 @@ mysql> select seconds_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
 +------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     seconds_diff

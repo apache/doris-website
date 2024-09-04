@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## quote
-### description
+## Quote
+### Description
 #### Syntax
 
 `VARCHAR quote(VARCHAR str)`
 
 Output all the strings in the argument as is and wrap them with ''
 
-### example
+### Example
 
 ```sql
 mysql> select quote('hello world!\\t');
@@ -43,5 +43,5 @@ mysql> select quote('hello world!\\t');
 +-------------------------+
 ```
 
-### keywords
+### Keywords
     QUOTE

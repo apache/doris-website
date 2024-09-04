@@ -30,13 +30,13 @@ under the License.
 
 backends
 
-### description
+### Description
 
 表函数，生成 backends 临时表，可以查看当前 doris 集群中的 BE 节点信息。
 
 该函数用于 from 子句中。
 
-#### syntax
+#### Syntax
 `backends()`
 
 backends() 表结构：
@@ -76,7 +76,7 @@ mysql> desc function backends();
 
 对 `backends()` tvf 信息展示进行了鉴权，与 `show backends` 行为保持一致，要求用户具有 ADMIN/OPERATOR 权限。
 
-### example
+### Example
 ```
 mysql> select * from backends()\G
 *************************** 1. row ***************************
@@ -106,6 +106,6 @@ HeartbeatFailureCounter: 0
 1 row in set (0.038 sec)
 ```
 
-### keywords
+### Keywords
 
     backends

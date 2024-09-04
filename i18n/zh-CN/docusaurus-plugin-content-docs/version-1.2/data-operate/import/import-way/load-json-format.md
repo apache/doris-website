@@ -94,13 +94,13 @@ Doris 支持导入 JSON 格式的数据。本文档主要说明在进行 JSON �
 
    这种方式必须配合设置 `read_json_by_line=true` 使用，特殊分隔符还需要指定`line_delimiter`参数，默认`\n`。Doris 在解析时会按照分隔符分隔，然后解析其中的每一行 Object 作为一行数据。
 
-### streaming_load_json_max_mb 参数
+### Streaming_load_json_max_mb 参数
 
 一些数据格式，如 JSON，无法进行拆分处理，必须读取全部数据到内存后才能开始解析，因此，这个值用于限制此类格式数据单次导入最大数据量。
 
 默认值为 100，单位 MB，可参考[BE 配置项](../../../admin-manual/config/be-config.md)修改这个参数
 
-### fuzzy_parse 参数
+### Fuzzy_parse 参数
 
 在 [STREAM LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md)中，可以添加 `fuzzy_parse` 参数来加速 JSON 数据的导入效率。
 

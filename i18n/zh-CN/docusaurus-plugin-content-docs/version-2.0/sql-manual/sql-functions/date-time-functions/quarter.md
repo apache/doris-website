@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## quarter
-### description
+## Quarter
+### Description
 #### Syntax
 
 `INT quarter(DATETIME date)`
@@ -43,6 +43,6 @@ mysql> select quarter('2022-09-22 17:00:00');
 +--------------------------------+
 ```
 
-### keywords
+### Keywords
 
     quarter

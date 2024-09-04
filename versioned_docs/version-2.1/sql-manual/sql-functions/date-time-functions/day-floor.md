@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## day_floor
+## Day_floor
 ### Description
 **Syntax**
 

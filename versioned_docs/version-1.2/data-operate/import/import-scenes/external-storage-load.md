@@ -33,7 +33,7 @@ The following mainly introduces how to import data stored in an external system.
 
 Upload the files to be imported to HDFS. For specific commands, please refer to [HDFS upload command](https://hadoop.apache.org/docs/r3.3.2/hadoop-project-dist/hadoop-common/FileSystemShell.html#put )
 
-### start import
+### Start import
 
 Hdfs load creates an import statement. The import method is basically the same as [Broker Load](../../../data-operate/import/import-way/broker-load-manual.md), only need to `WITH BROKER broker_name () ` statement with the following
 

@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_split
+## Array_split
 
 array_split
 
-### description
+### Description
 
 #### Syntax
 
@@ -38,7 +38,7 @@ ARRAY<ARRAY<T>> array_split(lambda, ARRAY<T0> arg0...)
 1. 传入两个长度相等的 `ARRAY` 且第二个为 `Array<Boolean>`，则按照 `cond` 中为 `true` 的位置左侧作为分割点，分割 `arg` 。
 2. 高阶函数，传入一个 lambda 表达式和至少一个 `ARRAY arg0`，则按照 lambda 表达式运算得到的 `Array<Boolean>` 结果，其中为 `true` 的位置左侧作为分割点，分割 `arg0` 。
 
-### example
+### Example
 
 ```
 mysql> select array_split([1,2,3,4,5], [1,0,1,0,0]);
@@ -74,6 +74,6 @@ mysql> select array_split(x->(year(x)>2013),["2020-12-12", "2013-12-12", "2015-1
 1 row in set (0.14 sec)
 ```
 
-### keywords
+### Keywords
 
 ARRAY, SPLIT, ARRAY_SPLIT

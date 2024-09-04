@@ -431,7 +431,7 @@ CREATE MATERIALIZED VIEW mv1
     AS
     SELECT * FROM t1;
 ```
-##### range 分区
+##### Range 分区
 如果基表建表语句如下
 ```sql
 CREATE TABLE `t1` (

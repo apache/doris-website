@@ -30,7 +30,7 @@ Doris supports analyzing workloads in the cluster through the Workload system ta
 
 ## Workload Table
 All tables are in the database```information_schema```.
-### active_queries
+### Active_queries
 ```active_queries``` records quereis in FE:
 * query_id, query's id
 * query_start_time, the time when the query starts executing; if the query was queued, it represents the time when execution begins after the queuing ends.

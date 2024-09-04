@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_map
+## Array_map
 
 
 
@@ -32,7 +32,7 @@ array_map(lambda,array1,array2....)
 
 
 
-### description
+### Description
 
 #### Syntax
 `ARRAY<T> array_map(lambda, ARRAY<T> array1, ARRAY<T> array2)`
@@ -51,7 +51,7 @@ array_map((x,y)->(power(x,2)+y), array1, array2);
 array_map((x,y,z)->(abs(x)+y*z), array1, array2, array3);
 ```
 
-### example
+### Example
 
 ```shell
 
@@ -166,7 +166,7 @@ mysql [test]>select array_map(x->cast(x as string), c_array1) from test_array_ma
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,MAP,ARRAY_MAP
 

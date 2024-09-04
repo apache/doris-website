@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_has_all
-### description
+## Bitmap_has_all
+### Description
 #### Syntax
 
 `BOOLEAN BITMAP_HAS_ALL(BITMAP lhs, BITMAP rhs)`
@@ -33,7 +33,7 @@ under the License.
 如果第一个bitmap包含第二个bitmap的全部元素，则返回true。
 如果第二个bitmap包含的元素为空，返回true。
 
-### example
+### Example
 
 ```
 mysql> select bitmap_has_all(bitmap_from_string("0, 1, 2"), bitmap_from_string("1, 2"));
@@ -51,6 +51,6 @@ mysql> select bitmap_has_all(bitmap_empty(), bitmap_from_string("1, 2"));
 +------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_HAS_ALL,BITMAP

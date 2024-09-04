@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## time_to_sec
-### description
+## Time_to_sec
+### Description
 #### Syntax
 
 `INT time_to_sec(TIME datetime)`
@@ -33,7 +33,7 @@ under the License.
 input parameter is the time type
 Convert the specified time value to seconds, returned result is: hours × 3600+ minutes×60 + seconds.
 
-### example
+### Example
 
 ```
 mysql >select current_time(),time_to_sec(current_time());
@@ -44,5 +44,5 @@ mysql >select current_time(),time_to_sec(current_time());
 +----------------+-----------------------------+
 1 row in set (0.01 sec)
 ```
-### keywords
+### Keywords
     TIME_TO_SEC

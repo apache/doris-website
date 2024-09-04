@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## elt
+## Elt
 ### Description
 #### Syntax
 
@@ -30,7 +30,7 @@ under the License.
 
 在指定的索引处返回一个字符串。如果指定的索引处没有字符串，则返回NULL。
 
-### example
+### Example
 
 ```
 mysql> select elt(1, 'aaa', 'bbb');
@@ -58,5 +58,5 @@ mysql> select elt(2, 'aaa', 'bbb');
 | NULL                  |
 +-----------------------+
 ```
-### keywords
+### Keywords
     ELT

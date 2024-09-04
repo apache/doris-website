@@ -24,13 +24,13 @@ under the License.
 
 ## Pi
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE Pi()`
 返回常量`Pi`值.
 
-### example
+### Example
 
 ```
 mysql> select Pi();
@@ -41,5 +41,5 @@ mysql> select Pi();
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	PI

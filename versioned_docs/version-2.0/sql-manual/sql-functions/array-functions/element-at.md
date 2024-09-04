@@ -23,11 +23,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-## element_at
+## Element_at
 
 element_at
 
-### description
+### Description
 
 #### Syntax
 
@@ -40,7 +40,7 @@ Returns an element of an array located at the input position. If there is no ele
 
 `position` is 1-based and support negative number.
 
-### example
+### Example
 
 positive `position` example:
 
@@ -70,7 +70,7 @@ mysql> SELECT id,c_array,c_array[-2] FROM `array_test`;
 +------+-----------------+----------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ELEMENT_AT, SUBSCRIPT
 

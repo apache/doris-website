@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## murmur_hash3_64
+## Murmur_hash3_64
 
-### description
+### Description
 #### Syntax
 
 `BIGINT MURMUR_HASH3_64(VARCHAR input, ...)`
@@ -33,7 +33,7 @@ under the License.
 
 注：在计算hash值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
 
-### example
+### Example
 
 ```
 mysql> select murmur_hash3_64(null);
@@ -58,6 +58,6 @@ mysql> select murmur_hash3_64("hello", "world");
 +-----------------------------------+
 ```
 
-### keywords
+### Keywords
 
     MURMUR_HASH3_64,HASH

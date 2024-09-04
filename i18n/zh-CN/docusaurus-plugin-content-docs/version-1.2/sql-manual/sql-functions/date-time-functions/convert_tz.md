@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## convert_tz
-### description
+## Convert_tz
+### Description
 #### Syntax
 
 `DATETIME CONVERT_TZ(DATETIME dt, VARCHAR from_tz, VARCHAR to_tz)`
@@ -50,6 +50,6 @@ mysql> select convert_tz('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles')
 +--------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     CONVERT_TZ

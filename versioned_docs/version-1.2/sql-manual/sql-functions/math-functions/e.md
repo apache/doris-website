@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## e
+## E
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE e()`
 Returns the constant `e` value.
 
-### example
+### Example
 
 ```
 mysql> select e();
@@ -41,5 +41,5 @@ mysql> select e();
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	E

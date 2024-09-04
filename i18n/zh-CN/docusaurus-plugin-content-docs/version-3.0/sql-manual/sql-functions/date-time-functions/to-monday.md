@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## to_monday
+## To_monday
 ### Description
 #### Syntax
 
@@ -30,7 +30,7 @@ under the License.
 
 将日期或带时间的日期向下舍入到最近的星期一。作为一种特殊情况，日期参数 1970-01-01、1970-01-02、1970-01-03 和 1970-01-04 返回日期 1970-01-01
 
-### example
+### Example
 
 ```
 MySQL [(none)]> select to_monday('2022-09-10');
@@ -41,5 +41,5 @@ MySQL [(none)]> select to_monday('2022-09-10');
 +----------------------------------+
 ```
 
-### keywords
+### Keywords
     MONDAY

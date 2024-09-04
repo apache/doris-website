@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## to_days
-### description
+## To_days
+### Description
 #### Syntax
 
 `INT TO_DAYS(DATETIME date)`
@@ -35,7 +35,7 @@ under the License.
 
 参数为Date或者Datetime类型
 
-### example
+### Example
 
 ```
 mysql> select to_days('2007-10-07');
@@ -46,6 +46,6 @@ mysql> select to_days('2007-10-07');
 +-----------------------+
 ```
 
-### keywords
+### Keywords
 
     TO_DAYS,TO,DAYS

@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_contains
+## Array_contains
 
 array_contains
 
-### description
+### Description
 
 #### Syntax
 
@@ -42,7 +42,7 @@ array_contains
 NULL - arr为NULL时。
 ```
 
-### example
+### Example
 
 ```
 mysql> SELECT id,c_array,array_contains(c_array, 5) FROM `array_test`;
@@ -64,6 +64,6 @@ mysql> select array_contains([null, 1], null);
 1 row in set (0.00 sec)
 ```
 
-### keywords
+### Keywords
 
 ARRAY,CONTAIN,CONTAINS,ARRAY_CONTAINS

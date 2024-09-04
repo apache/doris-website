@@ -22,16 +22,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hll_from_base64
+## Hll_from_base64
 
-### description
+### Description
 #### Syntax
 
 `HLL HLL_FROM_BASE64(VARCHAR input)`
 
 Convert a base64 string(result of function `hll_to_base64`) into a hll. If input string is invalid, return NULL.
 
-### example
+### Example
 
 ```
 mysql> select hll_union_agg(hll_from_base64(hll_to_base64(pv))), hll_union_agg(pv) from test_hll;
@@ -67,5 +67,5 @@ mysql> select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash(NULL))));
 1 row in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 HLL_FROM_BASE64, HLL

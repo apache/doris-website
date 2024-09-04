@@ -33,7 +33,7 @@ under the License.
 
 Returns the variance of the expr expression
 
-### example
+### Example
 ```
 MySQL > select variance(scan_rows) from log_statis group by datetime;
 +-----------------------+
@@ -49,5 +49,5 @@ MySQL > select var_pop(scan_rows) from log_statis group by datetime;
 |   5.6230744719006163 |
 +----------------------+
 ```
-### keywords
+### Keywords
 VARIANCE,VAR_POP,VARIANCE_POP,VAR,POP

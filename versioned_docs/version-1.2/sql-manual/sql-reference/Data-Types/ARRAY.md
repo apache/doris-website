@@ -28,7 +28,7 @@ under the License.
 
 ARRAY
 
-### description
+### Description
 
 `ARRAY<T>`
 
@@ -41,7 +41,7 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE,
 DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-### example
+### Example
 
 Create table example:
 
@@ -81,6 +81,6 @@ mysql> SELECT * FROM `array_test`;
 +------+-----------------+
 ```
 
-### keywords
+### Keywords
 
     ARRAY

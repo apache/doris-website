@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ifnull
-### description
+## Ifnull
+### Description
 #### Syntax
 
 `ifnull(expr1, expr2)`
@@ -33,7 +33,7 @@ under the License.
 
 If the value of expr1 is not null, expr1 is returned, otherwise expr2 is returned
 
-### example
+### Example
 
 ```
 mysql> select ifnull(1,0);
@@ -50,5 +50,5 @@ mysql> select ifnull(null,10);
 |               10 |
 +------------------+
 ```
-### keywords
+### Keywords
 IFNULL

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## monthname
+## Monthname
 ### Description
 #### Syntax
 
@@ -35,7 +35,7 @@ Month name corresponding to return date
 
 The parameter is Date or Datetime type
 
-### example
+### Example
 
 ```
 mysql> select monthname('2008-02-03 00:00:00');
@@ -45,5 +45,5 @@ mysql> select monthname('2008-02-03 00:00:00');
 | February                         |
 +----------------------------------+
 ```
-### keywords
+### Keywords
     MONTHNAME

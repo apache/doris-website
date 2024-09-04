@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_popfront
+## Array_popfront
 
 <version since="1.2.3">
 
@@ -30,7 +30,7 @@ array_popfront
 
 </version>
 
-### description
+### Description
 
 #### Syntax
 
@@ -38,11 +38,11 @@ array_popfront
 
 Remove the first element from array.
 
-### notice
+### Notice
 
 `Only supported in vectorized engine`
 
-### example
+### Example
 
 ```
 mysql> select array_popfront(['test', NULL, 'value']);
@@ -54,7 +54,7 @@ mysql> select array_popfront(['test', NULL, 'value']);
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,POPFRONT,ARRAY_POPFRONT
 

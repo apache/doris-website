@@ -25,13 +25,13 @@ under the License.
 -->
 
 ## SHOW TABLET STORAGE FORMAT
-### description
+### Description
 
     该语句用于显示Backend上的存储格式信息（仅管理员使用）
     语法：
         SHOW TABLET STORAGE FORMAT [VERBOSE]
 
-### example
+### Example
 
     ```
     MySQL [(none)]> show tablet storage format;
@@ -54,6 +54,6 @@ under the License.
     4 rows in set (0.034 sec)
     ```
 
-### keywords
+### Keywords
     SHOW, TABLET, STORAGE, FORMAT
 

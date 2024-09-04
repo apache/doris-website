@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_union
+## Array_union
 
 array_union
 
-### description
+### Description
 
 #### Syntax
 
@@ -36,11 +36,11 @@ array_union
 
 Returns an array of the elements in the union of array1 and array2, without duplicates. If the input parameter is null, null is returned.
 
-### notice
+### Notice
 
 `Only supported in vectorized engine`
 
-### example
+### Example
 
 ```
 mysql> select k1,k2,k3,array_union(k2,k3) from array_type_table;
@@ -82,7 +82,7 @@ mysql> select k1,k2,k3,array_union(k2,k3) from array_type_table_decimal;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,UNION,ARRAY_UNION
 

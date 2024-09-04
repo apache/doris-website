@@ -34,7 +34,7 @@ CREATE ASYNC MATERIALIZED VIEW
 
 This statement is used to create an asynchronous materialized view.
 
-#### syntax
+#### Syntax
 
 ```sql
 CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
@@ -48,9 +48,9 @@ CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
         AS query
 ```
 
-#### illustrate
+#### Illustrate
 
-##### simpleColumnDefs
+##### SimpleColumnDefs
 
 Used to define the materialized view column information, if not defined, it will be automatically derived
 
@@ -70,7 +70,7 @@ CREATE MATERIALIZED VIEW mv1
 (aa comment "name",bb)
 ```
 
-##### buildMode
+##### BuildMode
 
 Used to define whether the materialized view is refreshed immediately after creation, default to IMMEDIATE
 
@@ -91,7 +91,7 @@ CREATE MATERIALIZED VIEW mv1
 BUILD IMMEDIATE
 ```
 
-##### refreshMethod
+##### RefreshMethod
 
 Used to define the refresh method for materialized views, default to AUTO
 
@@ -122,7 +122,7 @@ CREATE MATERIALIZED VIEW mv1
 REFRESH COMPLETE
 ```
 
-##### refreshTrigger
+##### RefreshTrigger
 
 Trigger method for refreshing data in materialized views, default to MANUAL
 
@@ -154,7 +154,7 @@ CREATE MATERIALIZED VIEW mv1
 REFRESH ON SCHEDULE EVERY 2 HOUR STARTS "2023-12-13 21:07:09"
 ```
 
-##### key
+##### Key
 The materialized view is the DUPLICATE KEY model, therefore the specified columns are arranged in sequence
 
 ```sql
@@ -173,7 +173,7 @@ CREATE MATERIALIZED VIEW mv1
 KEY(k1,k2)
 ```
 
-##### partition
+##### Partition
 There are two types of partitioning methods for materialized views. If no partitioning is specified, there will be a default single partition. If a partitioning field is specified, the system will automatically deduce the source base table of that field and synchronize all partitions of the base table (currently supporting `OlapTable` and `hive`). (Limitation: If the base table is an `OlapTable`, it can only have one partition field)
 
 For example, if the base table is a range partition with a partition field of `create_time` and partitioning by day, and `partition by(ct) as select create_time as ct from t1` is specified when creating a materialized view, 
@@ -200,7 +200,7 @@ For example, if the base table is partitioned by day, the materialized view is p
 partition by (date_trunc(`k2`,'month'))
 ```
 
-#### property
+#### Property
 The materialized view can specify both the properties of the table and the properties unique to the materialized view.
 
 The properties unique to materialized views include:

@@ -34,7 +34,7 @@ Users can query this information by submitting SQL, identify the Workload Group 
 
 ## Workload System Table Introduction
 At present, the system tables are in database ```information_schema```.
-### active_queries
+### Active_queries
 The ```active_queries``` table records the execution information of the current query on FE, and the detailed information of the fields is as follows：
 * query_id, query's id
 * query_start_time, the start time of the query execution; If query queues, it represents the time when execution starts after the queue ends
@@ -47,7 +47,7 @@ The ```active_queries``` table records the execution information of the current 
 * query_status, query status, it has two value RUNNING and QUEUED, RUNNIG means query is running; QUEUED means query is queued.
 * sql, sql content
 
-### backend_active_tasks
+### Backend_active_tasks
 A query is usually divided into multiple fragments to be executed on multiple BEs, and ```backend_active_tasks``` table represent the total amount of CPU and memory resources used by a query on a single BE. If this query has multiple concurrency and fragments on a single BE, it will also be summarized into one row of data.
 The detailed information of the fields is as follows:
 * be_id, BE's id

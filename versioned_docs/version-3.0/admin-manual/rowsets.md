@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## rowsets
+## Rowsets
 
 ### Name
 
 rowsets
 
-### description
+### Description
 
 `rowsets` is a built-in system table of doris, which is stored under the information_schema database. You can view the current rowsets information of each `BE` through the `rowsets` system table.
 

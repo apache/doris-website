@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_sortby
+## Array_sortby
 
 array_sortby
 
-### description
+### Description
 
 #### Syntax
 
@@ -39,7 +39,7 @@ Returns NULL if the input array src is NULL.
 If the input array key is NULL, the order in which src is returned remains unchanged.
 If the input array key element contains NULL, the output sorted array will place NULL first.
 
-### example
+### Example
 
 ```
 mysql [test]>select array_sortby(['a','b','c'],[3,2,1]);
@@ -81,7 +81,7 @@ mysql [test]>select *, array_map((x,y)->(y+x),c_array1,c_array2) as arr_sum,arra
 +------+-----------------+--------------+----------------+-----------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, SORT, ARRAY_SORTBY
 

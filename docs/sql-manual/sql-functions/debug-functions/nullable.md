@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## nullable
-### description
+## Nullable
+### Description
 
 :::tip
 For developer debugging only, do not call this function manually in the production environment.
@@ -37,7 +37,7 @@ For developer debugging only, do not call this function manually in the producti
 
 Converts `expr` to nullable, or to itself if `expr` is already nullable.
 
-### example
+### Example
 
 ```sql
 mysql> select k1, nullable(k1), nullable(1) from test_nullable_functions order by k1;
@@ -52,5 +52,5 @@ mysql> select k1, nullable(k1), nullable(1) from test_nullable_functions order b
 +------+--------------+-------------+
 ```
 
-### keywords
+### Keywords
     nullable

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## days_add
-### description
+## Days_add
+### Description
 #### Syntax
 
 `DATETIME DAYS_ADD(DATETIME date, INT days)`
@@ -34,7 +34,7 @@ From date time or date plus specified days
 
 The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
 
-### example
+### Example
 
 ```
 mysql> select days_add(to_date("2020-02-02 02:02:02"), 1);
@@ -45,6 +45,6 @@ mysql> select days_add(to_date("2020-02-02 02:02:02"), 1);
 +---------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     DAYS_ADD

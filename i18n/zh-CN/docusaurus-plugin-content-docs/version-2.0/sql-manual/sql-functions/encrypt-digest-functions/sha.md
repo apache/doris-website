@@ -24,7 +24,7 @@ under the License.
 
 ## SHA
 
-### description
+### Description
 
 使用SHA1算法对信息进行摘要处理。
 
@@ -36,7 +36,7 @@ under the License.
 
 - `str`: 待加密的内容
 
-### example
+### Example
 
 ```SQL
 mysql> select sha("123");
@@ -48,7 +48,7 @@ mysql> select sha("123");
 1 row in set (0.13 sec)
 ```
 
-### keywords
+### Keywords
 
     SHA,SHA1
 

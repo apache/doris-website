@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_or
-### description
+## Bitmap_or
+### Description
 #### Syntax
 
 `BITMAP BITMAP_OR(BITMAP lhs, BITMAP rhs, ...)`
 
 计算两个及以上的输入bitmap的并集，返回新的bitmap.
 
-### example
+### Example
 
 ```
 mysql> select bitmap_count(bitmap_or(to_bitmap(1), to_bitmap(1))) cnt;
@@ -85,6 +85,6 @@ mysql> select bitmap_to_string(bitmap_or(to_bitmap(10), bitmap_from_string('1,2'
 +--------------------------------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_OR,BITMAP

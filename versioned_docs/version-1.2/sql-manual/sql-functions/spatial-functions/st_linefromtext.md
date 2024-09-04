@@ -33,7 +33,7 @@ under the License.
 
 Converting a WKT (Well Known Text) into a Line-style memory representation
 
-### example
+### Example
 
 ```
 mysql> SELECT ST_AsText(ST_LineFromText("LINESTRING (1 1, 2 2)"));
@@ -43,5 +43,5 @@ mysql> SELECT ST_AsText(ST_LineFromText("LINESTRING (1 1, 2 2)"));
 | LINESTRING (1 1, 2 2)                                   |
 +---------------------------------------------------------+
 ```
-### keywords
+### Keywords
 ST_LINEFROMTEXT, ST_LINESTRINGFROMTEXT,ST,LINEFROMTEXT,LINESTRINGFROMTEXT

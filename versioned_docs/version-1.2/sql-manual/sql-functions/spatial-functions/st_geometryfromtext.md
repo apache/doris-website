@@ -33,7 +33,7 @@ under the License.
 
 Converting a WKT (Well Known Text) into a corresponding memory geometry
 
-### example
+### Example
 
 ```
 mysql> SELECT ST_AsText(ST_GeometryFromText("LINESTRING (1 1, 2 2)"));
@@ -43,5 +43,5 @@ mysql> SELECT ST_AsText(ST_GeometryFromText("LINESTRING (1 1, 2 2)"));
 | LINESTRING (1 1, 2 2)                                   |
 +---------------------------------------------------------+
 ```
-### keywords
+### Keywords
 ST_GEOMETRYFROMTEXT,ST_GEOMFROMTEXT,ST,GEOMETRYFROMTEXT,GEOMFROMTEXT

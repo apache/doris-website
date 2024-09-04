@@ -124,7 +124,7 @@ Query OK, 0 rows affected (33.19 sec)
 It should be noted that synchronous collection is affected by the query_timeout session variable. If the collection failed because of timeout, you need to increase the variable value and try again. for example
 `set query_timeout=3600` (This set timeout interval to 1 hour)
 
-#### periodic collection
+#### Periodic collection
 
 Use `with period` to create periodic execution collection job. 
 

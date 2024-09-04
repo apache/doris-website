@@ -33,7 +33,7 @@ under the License.
 
 When point is a valid POINT type, the corresponding Y coordinate value is returned.
 
-### example
+### Example
 
 ```
 mysql> SELECT ST_Y(ST_Point(24.7, 56.7));
@@ -43,5 +43,5 @@ mysql> SELECT ST_Y(ST_Point(24.7, 56.7));
 |                       56.7 |
 +----------------------------+
 ```
-### keywords
+### Keywords
 ST_Y,ST,Y

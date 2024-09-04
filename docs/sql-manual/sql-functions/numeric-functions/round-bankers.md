@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## round_bankers
+## Round_bankers
 
-### description
+### Description
 #### Syntax
 
 `T round_bankers(T x[, d])`
@@ -37,7 +37,7 @@ If `d` is a column, and `x` has Decimal type, scale of result Decimal will alway
 
 
 
-### example
+### Example
 
 ```
 mysql> select round_bankers(0.4);
@@ -90,5 +90,5 @@ mysql> SELECT number
 +--------+-------------------+--------------------+------------------+-------------------+
 ```
 
-### keywords
+### Keywords
 	round_bankers

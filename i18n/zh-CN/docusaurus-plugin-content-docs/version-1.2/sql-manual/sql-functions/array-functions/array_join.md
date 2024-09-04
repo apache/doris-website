@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_join
+## Array_join
 
 array_join
 
-### description
+### Description
 
 #### Syntax
 
@@ -40,11 +40,11 @@ array_join
 若sep为空字符串，则不应用任何分隔符。
 若null_replace为空字符串或者不指定，则直接丢弃数组中的NULL元素。
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 
@@ -97,6 +97,6 @@ mysql> select k1, k2, array_join(k2, '_') from array_test01 order by k1;
 +------+-----------------------------------+----------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, JOIN, ARRAY_JOIN

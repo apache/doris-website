@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## minute_floor
-### description
+## Minute_floor
+### Description
 #### Syntax
 
 ```sql
@@ -41,7 +41,7 @@ DATETIME MINUTE_FLOOR(DATETIME datetime, INT period, DATETIME origin)
 - period：参数是指定每个周期有多少天组成。
 - origin：开始的时间起点，如果不填，默认是 0001-01-01T00:00:00。
 
-### example
+### Example
 
 ```
 mysql> select minute_floor("2023-07-13 22:28:18", 5);
@@ -53,6 +53,6 @@ mysql> select minute_floor("2023-07-13 22:28:18", 5);
 1 row in set (0.06 sec)
 ```
 
-### keywords
+### Keywords
 
     MINUTE_FLOOR, MINUTE, FLOOR

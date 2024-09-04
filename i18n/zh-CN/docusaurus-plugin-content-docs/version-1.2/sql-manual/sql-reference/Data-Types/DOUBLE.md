@@ -25,10 +25,10 @@ under the License.
 -->
 
 ## DOUBLE
-### description
+### Description
     DOUBLE
     8字节浮点数
 
-### keywords
+### Keywords
 
     DOUBLE

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## date_add
+## Date_add
 ### Description
 #### Syntax
 
@@ -39,7 +39,7 @@ The expr parameter is the interval you want to add.
 
 Sweet, sweet, sweet
 
-### example
+### Example
 
 ```
 mysql> select date_add('2010-11-30 23:59:59', INTERVAL 2 DAY);
@@ -49,5 +49,5 @@ mysql> select date_add('2010-11-30 23:59:59', INTERVAL 2 DAY);
 | 2010-12-02 23:59:59                             |
 +-------------------------------------------------+
 ```
-### keywords
+### Keywords
     DATE_ADD,DATE,ADD

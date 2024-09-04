@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sub_bitmap
+## Sub_bitmap
 
 ### Description
 
@@ -32,7 +32,7 @@ under the License.
 
 从 offset 指定位置开始，截取 cardinality_limit 个 bitmap 元素，返回一个 bitmap 子集。
 
-### example
+### Example
 
 ```
 mysql> select bitmap_to_string(sub_bitmap(bitmap_from_string('1,0,1,2,3,1,5'), 0, 3)) value;
@@ -57,6 +57,6 @@ mysql> select bitmap_to_string(sub_bitmap(bitmap_from_string('1,0,1,2,3,1,5'), 2
 +-------+
 ```
 
-### keywords
+### Keywords
 
     SUB_BITMAP,BITMAP_SUBSET,BITMAP

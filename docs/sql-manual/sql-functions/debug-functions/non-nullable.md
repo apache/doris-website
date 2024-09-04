@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## non_nullable
-### description
+## Non_nullable
+### Description
 
 :::tip
 For developer debugging only, do not call this function manually in the production environment.
@@ -37,7 +37,7 @@ For developer debugging only, do not call this function manually in the producti
 
 Raise an error if `expr` is of not nullable, or is of nullable and contains a `NULL` value. Otherwise, returns the non-nullable data column of the input column.
 
-### example
+### Example
 
 ```sql
 mysql> select k1, non_nullable(k1) from test_nullable_functions order by k1;
@@ -56,5 +56,5 @@ mysql> select non_nullable(1);
 ERROR 1105 (HY000): errCode = 2, detailMessage = [CANCELLED]Try to use originally non-nullable column Int8 in nullable's non-nullable convertion.
 ```
 
-### keywords
+### Keywords
     non_nullable
