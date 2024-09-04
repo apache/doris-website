@@ -2593,8 +2593,6 @@ This configuration is mainly used to control the number of backup/restore tasks 
 
 #### `max_backup_tablets_per_job`
 
-<version since="2.0.15"></version>
-
 Default: 300000
 
 IsMutable：true
@@ -2602,6 +2600,10 @@ IsMutable：true
 MasterOnly：true
 
 Control the max num of tablets per backup job involved, to avoid FE OOM caused by saving too much metadata.
+
+:::tips TIPS
+This configuration is supported since the Apache Doris 2.0.15 version
+:::
 
 #### `enable_quantile_state_type`
 
