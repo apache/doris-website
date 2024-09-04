@@ -20,7 +20,7 @@ const path = require('path');
 
 const sidebarPath = 'versioned_sidebars/version-3.0-sidebars.json'
 const docsBaseDir = 'i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0'
-const outputPath = 'doc.md'
+const outputPath = 'doc-3.0.md'
 
 const fileLinkName = {};
 
@@ -45,7 +45,7 @@ function replaceLinkWrap(chapter) {
         if (link.startsWith('http')) {
             return match;
         } else if (/\.(png|jpeg|svg|gif|jpg)$/.test(link)) {
-            const imgLink = link.replace(/images\//, 'static/images/');
+            const imgLink = link.replace(/\/images\//, './static/images/');
             return `[${linkName}](${imgLink})`;
         } else {
             if (link.includes('.md#') && frag) {

@@ -39,14 +39,13 @@ under the License.
 `information_schema`
 
 ## 表信息
-
-| 列名 | 类型 | 说明 |
-|---|---|---|
-| BE_ID | BIGINT  | BE 节点 ID  | 
-| BE_IP | VARCHAR(256)  | BE 节点 IP  | 
-| CACHE_PATH | VARCHAR(256)  | BE 节点缓存路径  | 
-| METRIC_NAME    | VARCHAR(256)   | 指标名称  | 
-| METRIC_VALUE      | DOUBLE   | 指标值  | 
+| 列名            | 类型             | 说明                 |  
+| --------------- | ---------------- | -------------------- |  
+| BE_ID           | BIGINT           | BE 节点 ID           |  
+| BE_IP           | VARCHAR(256)     | BE 节点 IP           |  
+| CACHE_PATH      | VARCHAR(256)     | BE 节点缓存路径      |  
+| METRIC_NAME     | VARCHAR(256)     | 指标名称             |  
+| METRIC_VALUE    | DOUBLE           | 指标值               |
 
 > 不同 Doris 版本可能包含不同的指标信息。
 
@@ -90,7 +89,7 @@ TODO
 
 1. 查询所有缓存指标
 
-    ```
+    ```sql
     mysql> select * from information_schema.file_cache_statistics;
     +-------+---------------+----------------------------+----------------------------+--------------------+
     | BE_ID | BE_IP         | CACHE_PATH                 | METRIC_NAME                | METRIC_VALUE       |
@@ -107,7 +106,7 @@ TODO
 
 2. 查询缓存命中率，并按命中率排序
 
-    ```
+    ```sql
     select * from information_schema.file_cache_statistics where METRIC_NAME = "hits_ratio" order by METRIC_VALUE desc;
     ```
 

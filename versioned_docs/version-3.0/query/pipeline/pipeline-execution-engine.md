@@ -26,7 +26,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Pipeline Execution Engine
+
 
 The goal of pipeline execution engine is to replace the current execution engine of Doris's volcano model, fully release the computing power of multi-core CPUs, and limit the number of Doris's query threads to solve the problem of Doris's execution thread bloat.
 
