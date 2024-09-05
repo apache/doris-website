@@ -38,4 +38,3 @@ WHERE cte1.a = cte2.c;
 
 Within the statement that contains the WITH clause, you can reference each CTE name to access the corresponding CTE result set. CTE names can be referenced in other CTE, allowing you to define CTE based on other CTE.
 
-CTE can also refer to themselves to define recursive CTE. Recursive CTE are commonly used for generating and traversing hierarchical or tree-like structured data.
