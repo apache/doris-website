@@ -1,7 +1,7 @@
 ---
 {
     "title": "Memory Log Analysis",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
