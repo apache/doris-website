@@ -1,7 +1,7 @@
 ---
 {
     "title": "Memory Tracker",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 

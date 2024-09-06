@@ -1,7 +1,7 @@
 ---
 {
     "title": "PERCENTILE_APPROX_WEIGHTED",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
