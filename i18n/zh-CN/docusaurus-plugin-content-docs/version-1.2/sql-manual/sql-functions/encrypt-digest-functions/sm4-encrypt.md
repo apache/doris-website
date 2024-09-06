@@ -1,7 +1,7 @@
 ---
 {
-"title": "SM4",
-"language": "en"
+"title": "SM4_ENCRYPT",
+"language": "zh-CN"
 }
 ---
 
@@ -22,19 +22,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SM4_ENCRYPT
 
-### description
-
+### Description
 #### Syntax
 
-`VARCHAR SM4_ENCRYPT(str,key_str[,init_vector])`
+`VARCHAR SM4_ENCRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHAR encryption_mode])`
 
-return encrypted result
+返回加密后的结果，其中：
+- `str` 为待加密文本；
+- `key_str` 为密钥；
+- `init_vector` 为算法中使用到的初始向量，仅在特定算法下生效，如不指定，则 Doris 使用内置向量；
+- `encryption_mode` 为加密算法，可选值见于：[变量](../../../advanced/variables)。
 
-### example
+:::warning
+两参数版本，会无视 session variable `block_encryption_mode`，始终误用 `AES_128_ECB` 算法进行加密。因此强烈不推荐调用。
+:::
 
-```
+### Example
+
+```sql
 MySQL > select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 +--------------------------------+
 | to_base64(sm4_encrypt('text')) |
@@ -55,43 +61,5 @@ MySQL > select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', 
 1 row in set (0.014 sec)
 ```
 
-### keywords
-
-    SM4, SM4_ENCRYPT
-
-## SM4_DECRYPT
-
-### description
-
-#### Syntax
-
-`VARCHAR SM4_DECRYPT(str,key_str[,init_vector])`
-
-Return the decrypted result
-
-### example
-
-```
-MySQL [(none)]> select SM4_DECRYPT(FROM_BASE64('aDjwRflBrDjhBZIOFNw3Tg=='),'F3229A0B371ED2D9441B830D21A390C3');
-+------------------------------------------------------+
-| sm4_decrypt(from_base64('aDjwRflBrDjhBZIOFNw3Tg==')) |
-+------------------------------------------------------+
-| text                                                 |
-+------------------------------------------------------+
-1 row in set (0.009 sec)
-
-MySQL> set block_encryption_mode="SM4_128_CBC";
-Query OK, 0 rows affected (0.006 sec)
-
-MySQL > select SM4_DECRYPT(FROM_BASE64('G7yqOKfEyxdagboz6Qf01A=='),'F3229A0B371ED2D9441B830D21A390C3', '0123456789');
-+--------------------------------------------------------------------------------------------------------+
-| sm4_decrypt(from_base64('G7yqOKfEyxdagboz6Qf01A=='), 'F3229A0B371ED2D9441B830D21A390C3', '0123456789') |
-+--------------------------------------------------------------------------------------------------------+
-| text                                                                                                   |
-+--------------------------------------------------------------------------------------------------------+
-1 row in set (0.012 sec)
-```
-
-### keywords
-
-    SM4, SM4_DECRYPT
+### Keywords
+    SM4_ENCRYPT, SM4, ENCRYPT 
