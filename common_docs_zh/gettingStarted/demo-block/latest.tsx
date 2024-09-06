@@ -24,7 +24,7 @@ export default function Latest() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href="https://hdxu.cn/AfjED">
+                    <a className="latest-button" href="https://ask.selectdb.com/questions/D1ZI1/">
                         <div className="home-page-hero-button-label"><div>近期活动</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -35,8 +35,8 @@ export default function Latest() {
                             </div> */}
                             <div style={{ marginBottom: 10 }}>飞轮科技 x 字节跳动开源 Meetup@北京站</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>来自抖音集团、飞轮科技、爱玛科技、中国电信、天翼云等多位行业技术专家，将为参会者带来多行业、跨领域的技术分享及落地实践。</div>
-                        <div style={{ fontSize: 14, marginBottom: 10 }}>立即报名</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>北京站 Meetup 圆满落幕，由抖音集团、飞轮科技、爱玛科技、中国电信、天翼云等多位技术专家分享基于 Doris 的最佳实践与调优策略。</div>
+                        <div style={{ fontSize: 14, marginBottom: 10 }}>免费获取资料回顾</div>
                     </a>
                     <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v3.0/release-3.0.1`}>
                         <div className="home-page-hero-button-label"><div>版本发布</div></div>
