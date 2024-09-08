@@ -1,6 +1,6 @@
 ---
 {
-    "title": "审计日志",
+    "title": "审计日志插件",
     "language": "zh-CN"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# 审计日志插件
 
 Doris 的审计日志插件是在 FE 的插件框架基础上开发的。是一个可选插件。用户可以在运行时安装或卸载这个插件。
 
@@ -171,9 +169,7 @@ properties(
 ```
 
 :::caution
-**注意**
-
-- 上面表结构中：stmt string，这个只能在 0.15 及之后版本中使用，之前版本，字段类型使用 varchar
+上面表结构中：stmt string，这个只能在 0.15 及之后版本中使用，之前版本，字段类型使用 varchar
 :::
 
 ### 部署
@@ -188,8 +184,9 @@ properties(
 INSTALL PLUGIN FROM [source] [PROPERTIES ("key"="value", ...)]
 ```
 
-详细命令参考：[INSTALL-PLUGIN.md](../sql-manual/sql-reference/Database-Administration-Statements/INSTALL-PLUGIN)
+详细命令参考：[INSTALL](../sql-manual/sql-reference/Database-Administration-Statements/INSTALL-PLUGIN.md)
 
 安装成功后，可以通过 `SHOW PLUGINS` 看到已经安装的插件，并且状态为 `INSTALLED`。
 
 完成后，插件会不断的以指定的时间间隔将审计日志插入到这个表中。
+
