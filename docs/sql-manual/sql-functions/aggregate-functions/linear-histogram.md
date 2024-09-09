@@ -24,9 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## LINEAR_HISTOGRAM
-### Description
-#### Syntax
+## Description
+### Syntax
 
 `LINEAR_HISTOGRAM(expr, DOUBLE interval[, DOUBLE offset)`
 
@@ -37,7 +36,7 @@ Parameter description:
 - `interval`: Required. The bucket width.
 - `offset`: Optional. Default is 0. It should be in `[0, interval)`.
 
-### example
+## Example
 
 ```
 mysql> select linear_histogram(a, 2) from histogram_test;
@@ -65,6 +64,6 @@ Field description:
   - `acc_count`: Accumulated count.
 
 
-### keywords
+## Keywords
 
 LINEAR_HISTOGRAM
