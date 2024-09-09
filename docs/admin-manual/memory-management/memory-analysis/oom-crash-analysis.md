@@ -1,7 +1,7 @@
 ---
 {
     "title": "OOM Killer Crash Analysis",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 

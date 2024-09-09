@@ -1,7 +1,7 @@
 ---
 {
     "title": "Memory Control Strategy",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
