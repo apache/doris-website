@@ -1399,29 +1399,17 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：_prefetch_size/_batch_size 的比例在 AutoIncIDBuffer 中
 * 默认值：10
 
-#### `base_compaction_dup_key_max_file_size_mbytes`
-* 描述：
-* 默认值：1024
-
-#### `base_compaction_max_compaction_score`
-* 描述：
-* 默认值：20
-
 #### `be_node_role`
 * 描述：BE的角色标签，默认为mix, 会存放数据
 * 默认值：mix
 
 #### `be_proc_monitor_interval_ms`
-* 描述：
+* 描述：多长时间获取一次BE 进程的相关信息
 * 默认值：10000
 
 #### `bitmap_serialize_version`
 * 描述：bitmap 类型序列化时的版本号
 * 默认值：1
-
-#### `broken_storage_path`
-* 描述：
-* 默认值：""
 
 #### `brpc_heavy_work_pool_max_queue_size`
 * 描述： brpc heavy_work_pool 线程池最大的队列数量， 设为-1时取max(10240, CpuInfo::num_cores() * 320)
@@ -1443,21 +1431,9 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：brpc服务器保持空闲连接的时间，将此值设置得太小可能会导致后端之间的rpc失败，默认值设置为-1，这意味着永远不会关闭空闲连接。
 * 默认值：-1
 
-#### `buffered_reader_read_timeout_ms`
-* 描述：
-* 默认值：600000
-
 #### `ca_cert_file_paths`
 * 描述：CA证书的文件路径（一个或多个），splite使用“；”aws s3 lib使用它来初始化s3client
 * 默认值："/etc/pki/tls/certs/ca-bundle.crt;/etc/ssl/certs/ca-certificates.crt;/etc/ssl/ca-bundle.pem"
-
-#### `cache_periodic_prune_stale_sweep_sec`
-* 描述：
-* 默认值：300
-
-#### `cache_prune_interval_sec`
-* 描述：
-* 默认值：10
 
 #### `calc_delete_bitmap_max_thread`
 * 描述：计算delete_bitmap的线程数量
@@ -1483,60 +1459,12 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：是否需要清理file cache
 * 默认值：false
 
-#### `cold_data_compaction_interval_sec`
-* 描述：
-* 默认值：1800
-
-#### `cold_data_compaction_thread_num`
-* 描述：
-* 默认值：2
-
-#### `common_obj_lru_cache_stale_sweep_time_sec`
-* 描述：
-* 默认值：900
-
-#### `compaction_batch_size`
-* 描述：
-* 默认值：-1
-
-#### `compaction_keep_invisible_version_max_count`
-* 描述：
-* 默认值：
-
-#### `compaction_keep_invisible_version_min_count`
-* 描述：
-* 默认值：
-
-#### `compaction_keep_invisible_version_timeout_sec`
-* 描述：
-* 默认值：
-
-#### `compaction_memory_bytes_limit`
-* 描述：
-* 默认值：1073741824
-
-#### `compaction_promotion_version_count`
-* 描述：
-* 默认值：1000
-
-#### `confirm_unused_remote_files_interval_sec`
-* 描述：
-* 默认值：60
-
-#### `cooldown_thread_num`
-* 描述：
-* 默认值：5
-
 #### `crash_in_alloc_large_memory_bytes`
-* 描述：
+* 描述：当分配的内存大于 crash_in_alloc_large_memory_bytes 时将崩溃，默认 -1 表示禁用。如果你需要coredump来分析大内存分配，修改此参数以在发生大内存分配时崩溃会有所帮助
 * 默认值：-1
-
-#### `cumulative_compaction_max_deltas_factor`
-* 描述：
-* 默认值：10
 
 #### `data_page_cache_stale_sweep_time_sec`
-* 描述：
+* 描述：data-page缓存过期清除时间（秒）
 * 默认值：300
 
 #### `debug_inverted_index_compaction`
@@ -1548,12 +1476,8 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 默认值：104857600
 
 #### `delete_bitmap_agg_cache_stale_sweep_time_sec`
-* 描述：
+* 描述：delete_bitmap agg 缓存过期清除时间（秒）
 * 默认值：1800
-
-#### `delete_bitmap_dynamic_agg_cache_limit`
-* 描述：
-* 默认值：0.5%
 
 #### `disable_memory_gc`
 * 描述：gc会释放缓存，取消task，而task会等待gc释放内存，默认gc策略是保守的，如果要排除gc的干扰，就让它为true
@@ -1571,10 +1495,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：是否禁用存储中的行存缓存
 * 默认值：true
 
-#### `doris_cgroup_cpu_path`
-* 描述：
-* 默认值：""
-
 #### `doris_remote_scanner_thread_pool_queue_size`
 * 描述：remote_scanner 扫描线程池队列大小
 * 默认值：102400
@@ -1584,11 +1504,11 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 默认值：48
 
 #### `doris_scanner_min_thread_pool_thread_num`
-* 描述：
+* 描述：doris 中scanner 线程池中的最小线程数量
 * 默认值：8
 
 #### `double_resize_threshold`
-* 描述：哈希表扩容的阈值
+* 描述：哈希表重新扩容的检测增加size的阈值
 * 默认值：23
 
 #### `download_binlog_rate_limit_kbs`
@@ -1596,55 +1516,43 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 默认值：0
 
 #### `dwarf_location_info_mode`
-* 描述：
-* 默认值：
-
-#### `dwarf_location_info_mode`
-* 描述：
+* 描述：DISABLED：不解析位置信息。FAST：使用 .debug_aranges 执行 CU 查找（可能不完整）。FULL：在 .debug_aranges 查找失败时扫描 .debug_info 中的所有 CU（很慢！）。FULL_WITH_INLINE：除了 FULL 之外，还扫描 .debug_info（速度非常慢，请谨慎使用）以查找内联函数。
 * 默认值：FAST
 
 #### `enable_address_sanitizers_with_stack_trace`
-* 描述：
+* 描述：是否开启Address Sanitizer 时输出相关堆栈
 * 默认值：true
 
 #### `enable_all_http_auth`
 * 描述：是否需要开启http权限检测
 * 默认值：false
 
-#### `enable_base_compaction_idle_sched`
-* 描述：
-* 默认值：true
-
 #### `enable_be_proc_monitor`
-* 描述：
+* 描述：是否需要开启BE进程的相关信息采集
 * 默认值： false
 
 #### `enable_brpc_stream_write_background`
-* 描述：enable write background when using brpc stream
+* 描述：使用brpc stream时启用后台写入
 * 默认值：true
 
 #### `enable_bthread_transmit_block`
-* 描述：
+* 描述：是否使用bthread 来传输block
 * 默认值：true
 
 #### `enable_column_type_check`
-* 描述：
+* 描述：是否在读取数据时，开启column 类型一致性检测
 * 默认值：true
 
 #### `enable_compaction_checksum`
 * 描述：是否开启compaction_checksum检测
 * 默认值：false
 
-#### `enable_compaction_priority_scheduling`
-* 描述：
-* 默认值：true
-
 #### `enable_debug_log_timeout_secs`
-* 描述：
+* 描述：用于pipeline task 执行时间超时检测
 * 默认值：0
 
 #### `enable_debug_points`
-* 描述：
+* 描述：是否开启打桩测试
 * 默认值：false
 
 #### `enable_delete_when_cumu_compaction`
@@ -1659,29 +1567,13 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：开启 block file cache
 * 默认值：false
 
-#### `enable_file_cache_query_limit`
-* 描述：
-* 默认值：false
-
-#### `enable_file_logger`
-* 描述：
-* 默认值：true
-
 #### `enable_flush_file_cache_async`
 * 描述：此配置控制 s3 文件写入器是否异步刷新缓存
 * 默认值：true
 
 #### `enable_fuzzy_mode`
-* 描述：
+* 描述：是否开启BE端fuzzy 测试
 * 默认值：false
-
-#### `enable_hdfs_mem_limiter`
-* 描述：
-* 默认值：true
-
-#### `enable_inverted_index_cache_check_timestamp`
-* 描述：
-* 默认值：true
 
 #### `enable_je_purge_dirty_pages`
 * 描述：清除所有 arena 中未使用的脏页
@@ -1692,19 +1584,19 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 默认值：false
 
 #### `enable_low_cardinality_cache_code`
-* 描述：
+* 描述：是否开启low_cardinality的缓存code功能
 * 默认值：true
 
 #### `enable_low_cardinality_optimize`
-* 描述：
+* 描述：是否开启low_cardinality优化的功能
 * 默认值：true
 
 #### `enable_memory_orphan_check`
-* 描述：
+* 描述：默认值为 true。如果任何内存跟踪在 Orphan mem tracker 中都会报错。​​不要修改这个conf!!的默认值，否则不能及时发现内存错误。allocator 的空闲内存不需要检查，因为当线程内存跟踪器标签为 Orphan 时，会使用 Allocator 中保存的跟踪器。
 * 默认值：true
 
 #### `enable_merge_on_write_correctness_check`
-* 描述：
+* 描述：是否开启MOW表unique正确性检测
 * 默认值：true
 
 #### `enable_missing_rows_correctness_check`
@@ -1719,40 +1611,20 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：如果设置为 false，则 parquet reader 将不会使用页面索引来过滤数据，而只会进行调试
 * 默认值：false
 
-#### `enable_query_like_bloom_filter`
-* 描述：
-* 默认值：true
-
-#### `enable_read_cache_file_directly`
-* 描述：
-* 默认值：false
-
 #### `enable_rowid_conversion_correctness_check`
 * 描述：是否在compaction mow表时对rowid转换正确性进行检查
 * 默认值：false
 
-#### `enable_s3_rate_limiter`
-* 描述：
-* 默认值：false
-
 #### `enable_set_in_bitmap_value`
-* 描述：
+* 描述：是否在bitmapValue中利用set集合存储元素
 * 默认值：true
 
 #### `enable_shrink_memory`
 * 描述：启用收缩内存在memory table 做agg时
 * 默认值：false
 
-#### `enable_skip_tablet_compaction`
-* 描述：
-* 默认值：true
-
-#### `enable_snapshot_action`
-* 描述：
-* 默认值：false
-
 #### `enable_stacktrace`
-* 描述：
+* 描述：如果为 false，则关闭所有堆栈跟踪
 * 默认值： true
 
 #### `enable_stream_load_commit_txn_on_be`
@@ -1760,7 +1632,7 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 默认值：false
 
 #### `enable_time_lut`
-* 描述：
+* 描述：datetime 运行时计算的look-up table
 * 默认值：true
 
 #### `enable_ttl_cache_evict_using_lru`
@@ -1776,388 +1648,101 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 默认值：true
 
 #### `enable_workload_group_memory_gc`
-* 描述：
+* 描述：开启workload_group 的内存GC
 * 默认值：true
 
 #### `estimated_mem_per_column_reader`
-* 描述：
+* 描述：估计每一列的内存所占用大小
 * 默认值：1024
 
 #### `exchange_sink_ignore_eovercrowded`
-* 描述：
+* 描述：是否在exchange——sink节点忽略overcrowded的错误
 * 默认值：true
 
 #### `exchg_buffer_queue_capacity_factor`
-* 描述：
+* 描述：exchange-sink buffer中的队列大小
 * 默认值：64
 
 #### `exit_on_exception`
 * 描述：当为true时使用 `LOG(FATAL)` 替换 `throw`
 * 默认值：true
 
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
-
-#### ``
-* 描述：
-* 默认值：
+#### `hash_table_double_grow_degree`
+* 描述：当哈希表容量大于2^double_grow_degree(默认2G)时，当满足75%的容量时进行增长。增加可以减少哈希表resize的次数，但可能会浪费更多内存。
+* 默认值：31
+
+#### `max_depth_of_expr_tree`
+* 描述：允许表达式树的最大深度
+* 默认值：600
+
+#### `num_cores`
+* 描述：Doris 将使用的核心数，仅当它大于 0 时才会生效。否则，Doris 将使用从“/proc/cpuinfo”返回的所有核心。
+* 默认值：0
+
+#### `num_disks`
+* 描述：控制机器上的磁盘数量。如果为 0，则来自系统设置。
+* 默认值：0
+
+#### `pipeline_executor_size`
+* 描述：pipeline调度执行时的可用核数，当此值小于等于0时，取CPU的核数
+* 默认值：0
+
+#### `pipeline_task_leakage_detect_period_secs`
+* 描述：pipeline task残留的检测时间间隔
+* 默认值：60
+
+#### `query_cache_elasticity_size_mb`
+* 描述：当达到 query_cache_max_size_mb + query_cache_elasticity_size_mb 时，缓存内存将被清理
+* 默认值：128
+
+#### `query_cache_max_partition_count`
+* 描述：一条SQL对应的最大缓存分区数
+* 默认值：1024
+
+#### `query_cache_max_size_mb`
+* 描述：设置查询结果的最大缓存大小，单位为M字节
+* 默认值：256
+
+#### `query_statistics_reserve_timeout_ms`
+* 描述：query统计信息报告超时时间
+* 默认值：30000
+
+#### `report_exec_status_thread_num`
+* 描述：query统计报告工作线程数量
+* 默认值：5
+
+#### `report_query_statistics_interval_ms`
+* 描述：query统计信息报告间隔时间
+* 默认值：3000
+
+#### `scan_thread_nice_value`
+* 描述：该配置项用于降低扫描线程的优先级，通常用于保证写操作的CPU调度。默认为0，即线程nice值的默认值，增加该值可以降低扫描线程的优先级
+* 默认值：0
+
+#### `soft_mem_limit_frac`
+* 描述：软内存限制占硬内存限制的比例。
+* 默认值：0.9
+
+#### `stacktrace_in_alloc_large_memory_bytes`
+* 描述：当分配的内存大于 stacktrace_in_alloc_large_memory_bytes（默认 2G）时，如果分配成功，将会打印一个带有 stacktrace 的警告，但是不会阻止内存分配。如果使用 Doris Allocator 分配失败，将会在错误日志中打印 stacktrace。如果为 -1，则在分配大内存时禁用打印 stacktrace。
+* 默认值：2147483648
+
+#### `string_overflow_size`
+* 描述：String 类型中可以存储的最大字符数量
+* 默认值：4294967295
+
+#### `thread_wait_gc_max_milliseconds`
+* 描述：线程等待完整 GC 的最长时间。目前只有查询会等待完整 GC。
+* 默认值：1000
+
+#### `thrift_client_open_num_tries`
+* 描述：打开尝试次数，默认 1 表示只尝试打开一次，重试打开 num_retries 时间，每次重试之间等待 100 毫秒
+* 默认值：1
+
+#### `topn_agg_limit_multiplier`
+* 描述：定义哈希表中的数据百分比大于限制，我们应该执行 agg limit 的优化
+* 默认值：2
+
+#### `wg_weighted_memory_ratio_refresh_interval_ms`
+* 描述：工作负载组加权内存比率刷新迭代之间的休眠时间（以毫秒为单位）
+* 默认值：50

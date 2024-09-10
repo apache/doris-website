@@ -1416,29 +1416,17 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: the ratio of _prefetch_size/_batch_size in AutoIncIDBuffer
 * Default: 10
 
-#### `base_compaction_dup_key_max_file_size_mbytes`
-* Description:
-* Default: 1024
-
-#### `base_compaction_max_compaction_score`
-* Description:
-* Default: 20
-
 #### `be_node_role`
 * Description: Node role tag for backend. Mix role is the default role, and computation role have no any tablet.
 * Default: mix
 
 #### `be_proc_monitor_interval_ms`
-* Description:
+* Description: How often to obtain information about the BE process
 * Default: 10000
 
 #### `bitmap_serialize_version`
 * Description: the version of bitmap type to serialize
 * Default: 1
-
-#### `broken_storage_path`
-* Description:
-* Default: ""
 
 #### `brpc_heavy_work_pool_max_queue_size`
 * Description: brpc heavy_work_pool max queue size， if it's -1, get max(10240, CpuInfo::num_cores() * 320)
@@ -1460,21 +1448,9 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: the time of brpc server keep idle connection, setting this value too small may cause rpc between backends to fail the default value is set to -1, which means never close idle connection.
 * Default: -1
 
-#### `buffered_reader_read_timeout_ms`
-* Description:
-* Default: 600000
-
 #### `ca_cert_file_paths`
 * Description: the file paths(one or more) of CA cert, splite using ";" aws s3 lib use it to init s3client
 * Default: "/etc/pki/tls/certs/ca-bundle.crt;/etc/ssl/certs/ca-certificates.crt;/etc/ssl/ca-bundle.pem"
-
-#### `cache_periodic_prune_stale_sweep_sec`
-* Description:
-* Default: 300
-
-#### `cache_prune_interval_sec`
-* Description:
-* Default: 10
 
 #### `calc_delete_bitmap_max_thread`
 * Description: the count of thread to calc delete bitmap
@@ -1500,60 +1476,12 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: whether need to clean up the file cache
 * Default: false
 
-#### `cold_data_compaction_interval_sec`
-* Description:
-* Default: 1800
-
-#### `cold_data_compaction_thread_num`
-* Description:
-* Default: 2
-
-#### `common_obj_lru_cache_stale_sweep_time_sec`
-* Description: A common object cache depends on an Sharded LRU Cache.
-* Default: 900
-
-#### `compaction_batch_size`
-* Description:
-* Default: -1
-
-#### `compaction_keep_invisible_version_max_count`
-* Description:
-* Default: 500
-
-#### `compaction_keep_invisible_version_min_count`
-* Description:
-* Default:
-
-#### `compaction_keep_invisible_version_timeout_sec`
-* Description:
-* Default:
-
-#### `compaction_memory_bytes_limit`
-* Description:
-* Default: 1073741824
-
-#### `compaction_promotion_version_count`
-* Description:
-* Default: 1000
-
-#### `confirm_unused_remote_files_interval_sec`
-* Description:
-* Default: 60
-
-#### `cooldown_thread_num`
-* Description:
-* Default: 5
-
 #### `crash_in_alloc_large_memory_bytes`
-* Description:
+* Description: when alloc memory larger than crash_in_alloc_large_memory_bytes will crash, default -1 means disabled. if you need a core dump to analyze large memory allocation, modify this parameter to crash when large memory allocation occur will help
 * Default: -1
-
-#### `cumulative_compaction_max_deltas_factor`
-* Description:
-* Default: 10
 
 #### `data_page_cache_stale_sweep_time_sec`
-* Description:
+* Description: data page cache stale sweep time sec
 * Default: 300
 
 #### `debug_inverted_index_compaction`
@@ -1565,12 +1493,8 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Default: 104857600
 
 #### `delete_bitmap_agg_cache_stale_sweep_time_sec`
-* Description:
+* Description: delete_bitmap agg-cache stale sweep time sec
 * Default: 1800
-
-#### `delete_bitmap_dynamic_agg_cache_limit`
-* Description:
-* Default: 0.5%
 
 #### `disable_memory_gc`
 * Description: gc will release cache, cancel task, and task will wait for gc to release memory, default gc strategy is conservative, if you want to exclude the interference of gc, let it be true
@@ -1588,10 +1512,6 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: whether to disable row cache feature in storage
 * Default: true
 
-#### `doris_cgroup_cpu_path`
-* Description:
-* Default: ""
-
 #### `doris_remote_scanner_thread_pool_queue_size`
 * Description: number of remote_scanner thread pool queue size
 * Default: 102400
@@ -1601,11 +1521,11 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Default: 48
 
 #### `doris_scanner_min_thread_pool_thread_num`
-* Description:
+* Description: Minimum number of threads in the scanner thread pool in doris
 * Default: 8
 
 #### `double_resize_threshold`
-* Description: Hash table expansion threshold
+* Description: Increase the size threshold for detecting hash table re-expansion
 * Default: 23
 
 #### `download_binlog_rate_limit_kbs`
@@ -1613,23 +1533,19 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Default: 0
 
 #### `dwarf_location_info_mode`
-* Description:
+* Description: DISABLED: Don't resolve location info. FAST: Perform CU lookup using .debug_aranges (might be incomplete). FULL: Scan all CU in .debug_info (slow!) on .debug_aranges lookup failure. FULL_WITH_INLINE: Scan .debug_info (super slower, use with caution) for inline functions in addition to FULL.
 * Default: FAST
 
 #### `enable_address_sanitizers_with_stack_trace`
-* Description:
+* Description: Whether to output the relevant stack when Address Sanitizer is turned on
 * Default: true
 
 #### `enable_all_http_auth`
 * Description: Whether to check authorization
 * Default: false
 
-#### `enable_base_compaction_idle_sched`
-* Description:
-* Default: true
-
 #### `enable_be_proc_monitor`
-* Description:
+* Description: whether need to enable the collection of relevant information of the BE process
 * Default: false
 
 #### `enable_brpc_stream_write_background`
@@ -1637,27 +1553,23 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Default: true
 
 #### `enable_bthread_transmit_block`
-* Description:
+* Description: Whether to use bthread to transfer blocks
 * Default: true
 
 #### `enable_column_type_check`
-* Description:
+* Description: Whether to enable column type consistency detection when reading data
 * Default: true
 
 #### `enable_compaction_checksum`
 * Description: whether check compaction checksum
 * Default: false
 
-#### `enable_compaction_priority_scheduling`
-* Description:
-* Default: true
-
 #### `enable_debug_log_timeout_secs`
-* Description:
+* Description: Used for pipeline task execution timeout detection
 * Default: 0
 
 #### `enable_debug_points`
-* Description:
+* Description: Whether to enable debug points test
 * Default: false
 
 #### `enable_delete_when_cumu_compaction`
@@ -1672,29 +1584,13 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: enable block file cache
 * Default: false
 
-#### `enable_file_cache_query_limit`
-* Description:
-* Default: false
-
-#### `enable_file_logger`
-* Description:
-* Default: true
-
 #### `enable_flush_file_cache_async`
 * Description: This config controls whether the s3 file writer would flush cache asynchronously
 * Default: true
 
 #### `enable_fuzzy_mode`
-* Description:
+* Description: Whether to enable BE fuzzy test
 * Default: false
-
-#### `enable_hdfs_mem_limiter`
-* Description:
-* Default: true
-
-#### `enable_inverted_index_cache_check_timestamp`
-* Description:
-* Default: true
 
 #### `enable_je_purge_dirty_pages`
 * Description: Purge all unused dirty pages for all arenas
@@ -1705,19 +1601,19 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Default: false
 
 #### `enable_low_cardinality_cache_code`
-* Description:
+* Description: Whether to enable the low_cardinality cache code feature
 * Default: true
 
 #### `enable_low_cardinality_optimize`
-* Description:
+* Description: Whether to enable low_cardinality optimization feature
 * Default: true
 
 #### `enable_memory_orphan_check`
-* Description:
+* Description: default is true. if any memory tracking in Orphan mem tracker will report error. not modify the default value of this conf!! otherwise memory errors cannot be detected in time. allocator free memory not need to check, because when the thread memory tracker label is Orphan, use the tracker saved in Allocator.
 * Default: true
 
 #### `enable_merge_on_write_correctness_check`
-* Description:
+* Description: Whether to enable unique correctness detection of MOW table
 * Default: true
 
 #### `enable_missing_rows_correctness_check`
@@ -1732,40 +1628,20 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: If set to false, the parquet reader will not use page index to filter data, only debug
 * Default: false
 
-#### `enable_query_like_bloom_filter`
-* Description:
-* Default: true
-
-#### `enable_read_cache_file_directly`
-* Description:
-* Default: false
-
 #### `enable_rowid_conversion_correctness_check`
 * Description: rowid conversion correctness check when compaction for mow table
 * Default: false
 
-#### `enable_s3_rate_limiter`
-* Description:
-* Default: false
-
 #### `enable_set_in_bitmap_value`
-* Description:
+* Description: enable set in BitmapValue
 * Default: true
 
 #### `enable_shrink_memory`
 * Description: enable shrink memory at memory table
 * Default: false
 
-#### `enable_skip_tablet_compaction`
-* Description:
-* Default: true
-
-#### `enable_snapshot_action`
-* Description:
-* Default: false
-
 #### `enable_stacktrace`
-* Description:
+* Description: if false, turn off all stacktrace
 * Default: true
 
 #### `enable_stream_load_commit_txn_on_be`
@@ -1773,7 +1649,7 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Default: false
 
 #### `enable_time_lut`
-* Description:
+* Description: Look-up table for datetime runtime calculations
 * Default: true
 
 #### `enable_ttl_cache_evict_using_lru`
@@ -1789,721 +1665,101 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Default: true
 
 #### `enable_workload_group_memory_gc`
-* Description:
+* Description: Enable memory GC for workload_group
 * Default: true
 
 #### `estimated_mem_per_column_reader`
-* Description:
+* Description: Estimate the memory size of each column
 * Default: 1024
 
 #### `exchange_sink_ignore_eovercrowded`
-* Description:
+* Description: Whether to ignore overcrowded errors in exchange-sink nodes
 * Default: true
 
 #### `exchg_buffer_queue_capacity_factor`
-* Description:
+* Description: The queue size in the exchange-sink buffer
 * Default: 64
 
 #### `exit_on_exception`
 * Description: Use `LOG(FATAL)` to replace `throw` when true
 * Default: false
 
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
-
-#### ``
-* Description:
-* Default:
+#### `hash_table_double_grow_degree`
+* Description: When hash table capacity is greater than 2^double_grow_degree(default 2G), grow when 75% of the capacity is satisfied. Increase can reduce the number of hash table resize, but may waste more memory.
+* Default: 31
+
+#### `max_depth_of_expr_tree`
+* Description: max depth of expression tree allowed
+* Default: 600
+
+#### `num_cores`
+* Description: Number of cores Doris will used, this will effect only when it's greater than 0. Otherwise, Doris will use all cores returned from "/proc/cpuinfo".
+* Default: 0
+
+#### `num_disks`
+* Description: Control the number of disks on the machine.  If 0, this comes from the system settings.
+* Default: 0
+
+#### `pipeline_executor_size`
+* Description: The number of available cores when pipeline scheduling is executed. When this value is less than or equal to 0, the number of CPU cores is used.
+* Default: 0
+
+#### `pipeline_task_leakage_detect_period_secs`
+* Description: Pipeline task residual detection interval
+* Default: 60
+
+#### `query_cache_elasticity_size_mb`
+* Description: Cache memory is pruned when reach query_cache_max_size_mb + query_cache_elasticity_size_mb
+* Default: 128
+
+#### `query_cache_max_partition_count`
+* Description: Maximum number of cache partitions corresponding to a SQL
+* Default: 1024
+
+#### `query_cache_max_size_mb`
+* Description: Set max cache's size of query results, the unit is M byte
+* Default: 256
+
+#### `query_statistics_reserve_timeout_ms`
+* Description: Query statistics report timeout
+* Default: 30000
+
+#### `report_exec_status_thread_num`
+* Description: query statistics report the number of worker threads
+* Default: 5
+
+#### `report_query_statistics_interval_ms`
+* Description: Query statistics report interval
+* Default: 3000
+
+#### `scan_thread_nice_value`
+* Description: The configuration item is used to lower the priority of the scanner thread, typically employed to ensure CPU scheduling for write operations. Default is 0, which is default value of thread nice value, increase this value to lower the priority of scan threads
+* Default: 0
+
+#### `soft_mem_limit_frac`
+* Description: Soft memory limit as a fraction of hard memory limit.
+* Default: 0.9
+
+#### `stacktrace_in_alloc_large_memory_bytes`
+* Description: when alloc memory larger than stacktrace_in_alloc_large_memory_bytes, default 2G, if alloc successful, will print a warning with stacktrace, but not prevent memory alloc. if alloc failed using Doris Allocator, will print stacktrace in error log. if is -1, disable print stacktrace when alloc large memory.
+* Default: 2147483648
+
+#### `string_overflow_size`
+* Description: The maximum number of characters that can be stored in a String type
+* Default: 4294967295
+
+#### `thread_wait_gc_max_milliseconds`
+* Description: The maximum time a thread waits for a full GC. Currently only query will wait for full gc.
+* Default: 1000
+
+#### `thrift_client_open_num_tries`
+* Description: Number of open tries, default 1 means only try to open once, Retry the Open num_retries time waiting 100 milliseconds between retries
+* Default: 1
+
+#### `topn_agg_limit_multiplier`
+* Description: Define how many percent data in hashtable bigger than limit, we should do agg limit opt
+* Default: 2
+
+#### `wg_weighted_memory_ratio_refresh_interval_ms`
+* Description: Sleep time in milliseconds between refresh iterations of workload group weighted memory ratio
+* Default: 50
