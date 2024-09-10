@@ -1363,3 +1363,801 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一个条目。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
 
 * 格式： [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+#### `LZ4_HC_compression_level`
+* 描述：使用 LZ4_HC 压缩算法时的压缩等级
+* 默认值：LZ4HC_CLEVEL_DEFAULT
+
+#### `agent_task_trace_threshold_sec`
+* 描述：输出打印 Agent task 轨迹的阈值，单位是秒
+* 默认值：2
+
+#### `allow_invalid_decimalv2_literal`
+* 描述：是否允许非法的decimalv2 类型的数值，为兼容老版本设置的，推荐设置为false
+* 默认值：false
+
+#### `allow_zero_date`
+* 描述：将 date 0000-00-00 转换成 0000-01-01. 推荐设置为false
+* 默认值：false
+
+#### `alter_index_worker_count`
+* 描述：alter index 的工作线程数量
+* 默认值：3
+
+#### `arrow_flight_result_sink_buffer_size_rows`
+* 描述：arrow flight 存放结果集 buffer 的行数大小 
+* 默认值：4096 * 8
+
+#### `auto_inc_fetch_thread_num`
+* 描述：从 FE 拉取 auto-inc 范围的工作线程数量
+* 默认值：3
+
+#### `auto_inc_low_water_level_mark_size_ratio`
+* 描述：_low_level_water_level_mark/_batch_size 的比例在 AutoIncIDBuffer中
+* 默认值：3
+
+#### `auto_inc_prefetch_size_ratio`
+* 描述：_prefetch_size/_batch_size 的比例在 AutoIncIDBuffer 中
+* 默认值：10
+
+#### `base_compaction_dup_key_max_file_size_mbytes`
+* 描述：
+* 默认值：1024
+
+#### `base_compaction_max_compaction_score`
+* 描述：
+* 默认值：20
+
+#### `be_node_role`
+* 描述：BE的角色标签，默认为mix, 会存放数据
+* 默认值：mix
+
+#### `be_proc_monitor_interval_ms`
+* 描述：
+* 默认值：10000
+
+#### `bitmap_serialize_version`
+* 描述：bitmap 类型序列化时的版本号
+* 默认值：1
+
+#### `broken_storage_path`
+* 描述：
+* 默认值：""
+
+#### `brpc_heavy_work_pool_max_queue_size`
+* 描述： brpc heavy_work_pool 线程池最大的队列数量， 设为-1时取max(10240, CpuInfo::num_cores() * 320)
+* 默认值：-1
+
+#### `brpc_heavy_work_pool_threads`
+* 描述：brpc heavy_work_pool 的线程数量，设为-1时取max(128, CpuInfo::num_cores() * 4) 
+* 默认值：-1
+
+#### `brpc_light_work_pool_max_queue_size`
+* 描述： brpc hight_work_pool 线程池最大的队列数量， 设为-1时取max(10240, CpuInfo::num_cores() * 320)
+* 默认值：-1
+
+#### `brpc_light_work_pool_threads`
+* 描述：brpc light_work_pool 的线程数量，设为-1时取max(128, CpuInfo::num_cores() * 4) 
+* 默认值：-1
+
+#### `brpc_idle_timeout_sec`
+* 描述：brpc服务器保持空闲连接的时间，将此值设置得太小可能会导致后端之间的rpc失败，默认值设置为-1，这意味着永远不会关闭空闲连接。
+* 默认值：-1
+
+#### `buffered_reader_read_timeout_ms`
+* 描述：
+* 默认值：600000
+
+#### `ca_cert_file_paths`
+* 描述：CA证书的文件路径（一个或多个），splite使用“；”aws s3 lib使用它来初始化s3client
+* 默认值："/etc/pki/tls/certs/ca-bundle.crt;/etc/ssl/certs/ca-certificates.crt;/etc/ssl/ca-bundle.pem"
+
+#### `cache_periodic_prune_stale_sweep_sec`
+* 描述：
+* 默认值：300
+
+#### `cache_prune_interval_sec`
+* 描述：
+* 默认值：10
+
+#### `calc_delete_bitmap_max_thread`
+* 描述：计算delete_bitmap的线程数量
+* 默认值：32
+
+#### `calc_delete_bitmap_worker_count`
+* 描述：计算delete_bitmap工作线程数，仅用于cloud mode
+* 默认值：8
+
+#### `calc_tablet_delete_bitmap_task_max_thread`
+* 描述：计算tablet delete_bitmap任务的线程数，仅用于cloud mode
+* 默认值：32
+
+#### `check_segment_when_build_rowset_meta`
+* 描述：是否需要检测segment的size在构建rowset meta 时
+* 默认值：false
+
+#### `clean_stream_load_record_interval_secs`
+* 描述：清理过期stream_load记录的时间间隔
+* 默认值：1800
+
+#### `clear_file_cache`
+* 描述：是否需要清理file cache
+* 默认值：false
+
+#### `cold_data_compaction_interval_sec`
+* 描述：
+* 默认值：1800
+
+#### `cold_data_compaction_thread_num`
+* 描述：
+* 默认值：2
+
+#### `common_obj_lru_cache_stale_sweep_time_sec`
+* 描述：
+* 默认值：900
+
+#### `compaction_batch_size`
+* 描述：
+* 默认值：-1
+
+#### `compaction_keep_invisible_version_max_count`
+* 描述：
+* 默认值：
+
+#### `compaction_keep_invisible_version_min_count`
+* 描述：
+* 默认值：
+
+#### `compaction_keep_invisible_version_timeout_sec`
+* 描述：
+* 默认值：
+
+#### `compaction_memory_bytes_limit`
+* 描述：
+* 默认值：1073741824
+
+#### `compaction_promotion_version_count`
+* 描述：
+* 默认值：1000
+
+#### `confirm_unused_remote_files_interval_sec`
+* 描述：
+* 默认值：60
+
+#### `cooldown_thread_num`
+* 描述：
+* 默认值：5
+
+#### `crash_in_alloc_large_memory_bytes`
+* 描述：
+* 默认值：-1
+
+#### `cumulative_compaction_max_deltas_factor`
+* 描述：
+* 默认值：10
+
+#### `data_page_cache_stale_sweep_time_sec`
+* 描述：
+* 默认值：300
+
+#### `debug_inverted_index_compaction`
+* 描述：仅用于调试 inverted_index_compaction，请勿在生产中使用
+* 默认值：false
+
+#### `delete_bitmap_agg_cache_capacity`
+* 描述：聚合缓存的全局delete_bitmap容量，大小以字节为单位
+* 默认值：104857600
+
+#### `delete_bitmap_agg_cache_stale_sweep_time_sec`
+* 描述：
+* 默认值：1800
+
+#### `delete_bitmap_dynamic_agg_cache_limit`
+* 描述：
+* 默认值：0.5%
+
+#### `disable_memory_gc`
+* 描述：gc会释放缓存，取消task，而task会等待gc释放内存，默认gc策略是保守的，如果要排除gc的干扰，就让它为true
+* 默认值：false
+
+#### `disable_pk_storage_page_cache`
+* 描述：是否禁用存储中的 pk page缓存
+* 默认值：false
+
+#### `disable_segment_cache`
+* 描述：是否禁用存储中的 segment 缓存
+* 默认值：false
+
+#### `disable_storage_row_cache`
+* 描述：是否禁用存储中的行存缓存
+* 默认值：true
+
+#### `doris_cgroup_cpu_path`
+* 描述：
+* 默认值：""
+
+#### `doris_remote_scanner_thread_pool_queue_size`
+* 描述：remote_scanner 扫描线程池队列大小
+* 默认值：102400
+
+#### `doris_remote_scanner_thread_pool_thread_num`
+* 描述：remote_scanner 线程池的大小
+* 默认值：48
+
+#### `doris_scanner_min_thread_pool_thread_num`
+* 描述：
+* 默认值：8
+
+#### `double_resize_threshold`
+* 描述：哈希表扩容的阈值
+* 默认值：23
+
+#### `download_binlog_rate_limit_kbs`
+* 描述：下载binlog速率限制，单位为KB/s
+* 默认值：0
+
+#### `dwarf_location_info_mode`
+* 描述：
+* 默认值：
+
+#### `dwarf_location_info_mode`
+* 描述：
+* 默认值：FAST
+
+#### `enable_address_sanitizers_with_stack_trace`
+* 描述：
+* 默认值：true
+
+#### `enable_all_http_auth`
+* 描述：是否需要开启http权限检测
+* 默认值：false
+
+#### `enable_base_compaction_idle_sched`
+* 描述：
+* 默认值：true
+
+#### `enable_be_proc_monitor`
+* 描述：
+* 默认值： false
+
+#### `enable_brpc_stream_write_background`
+* 描述：enable write background when using brpc stream
+* 默认值：true
+
+#### `enable_bthread_transmit_block`
+* 描述：
+* 默认值：true
+
+#### `enable_column_type_check`
+* 描述：
+* 默认值：true
+
+#### `enable_compaction_checksum`
+* 描述：是否开启compaction_checksum检测
+* 默认值：false
+
+#### `enable_compaction_priority_scheduling`
+* 描述：
+* 默认值：true
+
+#### `enable_debug_log_timeout_secs`
+* 描述：
+* 默认值：0
+
+#### `enable_debug_points`
+* 描述：
+* 默认值：false
+
+#### `enable_delete_when_cumu_compaction`
+* 描述：是否应用delete pred 在 cumu compaction中
+* 默认值：false
+
+#### `enable_feature_binlog`
+* 描述：是否开启 binlog 功能
+* 默认值：false
+
+#### `enable_file_cache`
+* 描述：开启 block file cache
+* 默认值：false
+
+#### `enable_file_cache_query_limit`
+* 描述：
+* 默认值：false
+
+#### `enable_file_logger`
+* 描述：
+* 默认值：true
+
+#### `enable_flush_file_cache_async`
+* 描述：此配置控制 s3 文件写入器是否异步刷新缓存
+* 默认值：true
+
+#### `enable_fuzzy_mode`
+* 描述：
+* 默认值：false
+
+#### `enable_hdfs_mem_limiter`
+* 描述：
+* 默认值：true
+
+#### `enable_inverted_index_cache_check_timestamp`
+* 描述：
+* 默认值：true
+
+#### `enable_je_purge_dirty_pages`
+* 描述：清除所有 arena 中未使用的脏页
+* 默认值：true
+
+#### `enable_jvm_monitor`
+* 描述：是否开启JVM指标监控
+* 默认值：false
+
+#### `enable_low_cardinality_cache_code`
+* 描述：
+* 默认值：true
+
+#### `enable_low_cardinality_optimize`
+* 描述：
+* 默认值：true
+
+#### `enable_memory_orphan_check`
+* 描述：
+* 默认值：true
+
+#### `enable_merge_on_write_correctness_check`
+* 描述：
+* 默认值：true
+
+#### `enable_missing_rows_correctness_check`
+* 描述：开启 MOW 表compaction时检查缺失行的正确性
+* 默认值：false
+
+#### `enable_mow_compaction_correctness_check_core`
+* 描述：如果compaction时发现mow表上有重复的键，则直接进行coredump
+* 默认值：false
+
+#### `enable_parquet_page_index`
+* 描述：如果设置为 false，则 parquet reader 将不会使用页面索引来过滤数据，而只会进行调试
+* 默认值：false
+
+#### `enable_query_like_bloom_filter`
+* 描述：
+* 默认值：true
+
+#### `enable_read_cache_file_directly`
+* 描述：
+* 默认值：false
+
+#### `enable_rowid_conversion_correctness_check`
+* 描述：是否在compaction mow表时对rowid转换正确性进行检查
+* 默认值：false
+
+#### `enable_s3_rate_limiter`
+* 描述：
+* 默认值：false
+
+#### `enable_set_in_bitmap_value`
+* 描述：
+* 默认值：true
+
+#### `enable_shrink_memory`
+* 描述：启用收缩内存在memory table 做agg时
+* 默认值：false
+
+#### `enable_skip_tablet_compaction`
+* 描述：
+* 默认值：true
+
+#### `enable_snapshot_action`
+* 描述：
+* 默认值：false
+
+#### `enable_stacktrace`
+* 描述：
+* 默认值： true
+
+#### `enable_stream_load_commit_txn_on_be`
+* 描述：直接在 BE 上启用流加载提交事务，绕过 FE。仅适用于cloud mode。
+* 默认值：false
+
+#### `enable_time_lut`
+* 描述：
+* 默认值：true
+
+#### `enable_ttl_cache_evict_using_lru`
+* 描述：如果为 true，则在缓存已满时使用 LRU 逐出 ttl 缓存。否则，只有过期才能逐出 ttl，并且缓存已满时不会添加新数据。
+* 默认值： true
+
+#### `enable_use_cgroup_memory_info`
+* 描述：如果为 true，则基于 cgroup 内存信息处理内存限制和内存使用情况
+* 默认值：true
+
+#### `enable_vertical_segment_writer`
+* 描述：如果启用，segments将逐列刷新
+* 默认值：true
+
+#### `enable_workload_group_memory_gc`
+* 描述：
+* 默认值：true
+
+#### `estimated_mem_per_column_reader`
+* 描述：
+* 默认值：1024
+
+#### `exchange_sink_ignore_eovercrowded`
+* 描述：
+* 默认值：true
+
+#### `exchg_buffer_queue_capacity_factor`
+* 描述：
+* 默认值：64
+
+#### `exit_on_exception`
+* 描述：当为true时使用 `LOG(FATAL)` 替换 `throw`
+* 默认值：true
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：
+
+#### ``
+* 描述：
+* 默认值：

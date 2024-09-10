@@ -1380,3 +1380,1130 @@ Default: true for cloud mode, false for non-cloud mode.
 Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
 * format: [{"path":"/path/to/file_cache","total_size":21474836480,{"path":"/path/to/file_cache2","total_size":21474836480}]
+#### `LZ4_HC_compression_level`
+* Description: level of compression when using LZ4_HC
+* Default: LZ4HC_CLEVEL_DEFAULT
+
+#### `agent_task_trace_threshold_sec`
+* Description: Threshold to logging agent task trace, in seconds.
+* Default: 2
+
+#### `allow_invalid_decimalv2_literal`
+* Description: Allow invalid decimalv2 literal for compatible with old version. Recommend set it false strongly.
+* Default: false
+
+#### `allow_zero_date`
+* Description: Convert date 0000-00-00 to 0000-01-01. It's recommended to set to false
+* Default: false
+
+#### `alter_index_worker_count`
+* Description: the count of thread to alter index
+* Default: 3
+
+#### `arrow_flight_result_sink_buffer_size_rows`
+* Description: arrow flight result sink buffer rows size 
+* Default: 4096 * 8
+
+#### `auto_inc_fetch_thread_num`
+* Description: number of threads that fetch auto-inc ranges from FE
+* Default: 3
+
+#### `auto_inc_low_water_level_mark_size_ratio`
+* Description: the ratio of _low_level_water_level_mark/_batch_size in AutoIncIDBuffer
+* Default: 3
+
+#### `auto_inc_prefetch_size_ratio`
+* Description: the ratio of _prefetch_size/_batch_size in AutoIncIDBuffer
+* Default: 10
+
+#### `base_compaction_dup_key_max_file_size_mbytes`
+* Description:
+* Default: 1024
+
+#### `base_compaction_max_compaction_score`
+* Description:
+* Default: 20
+
+#### `be_node_role`
+* Description: Node role tag for backend. Mix role is the default role, and computation role have no any tablet.
+* Default: mix
+
+#### `be_proc_monitor_interval_ms`
+* Description:
+* Default: 10000
+
+#### `bitmap_serialize_version`
+* Description: the version of bitmap type to serialize
+* Default: 1
+
+#### `broken_storage_path`
+* Description:
+* Default: ""
+
+#### `brpc_heavy_work_pool_max_queue_size`
+* Description: brpc heavy_work_pool max queue size， if it's -1, get max(10240, CpuInfo::num_cores() * 320)
+* Default: -1
+
+#### `brpc_heavy_work_pool_threads`
+* Description: brpc heavy_work_pool threads num. if it's -1, get max(128, CpuInfo::num_cores() * 4) 
+* Default: -1
+
+#### `brpc_light_work_pool_max_queue_size`
+* Description: brpc light_work_pool max queue size， if it's -1, get max(10240, CpuInfo::num_cores() * 320)
+* Default: -1
+
+#### `brpc_light_work_pool_threads`
+* Description: brpc light_work_pool threads num. if it's -1, get max(128, CpuInfo::num_cores() * 4) 
+* Default: -1
+
+#### `brpc_idle_timeout_sec`
+* Description: the time of brpc server keep idle connection, setting this value too small may cause rpc between backends to fail the default value is set to -1, which means never close idle connection.
+* Default: -1
+
+#### `buffered_reader_read_timeout_ms`
+* Description:
+* Default: 600000
+
+#### `ca_cert_file_paths`
+* Description: the file paths(one or more) of CA cert, splite using ";" aws s3 lib use it to init s3client
+* Default: "/etc/pki/tls/certs/ca-bundle.crt;/etc/ssl/certs/ca-certificates.crt;/etc/ssl/ca-bundle.pem"
+
+#### `cache_periodic_prune_stale_sweep_sec`
+* Description:
+* Default: 300
+
+#### `cache_prune_interval_sec`
+* Description:
+* Default: 10
+
+#### `calc_delete_bitmap_max_thread`
+* Description: the count of thread to calc delete bitmap
+* Default: 32
+
+#### `calc_delete_bitmap_worker_count`
+* Description: the count of thread to calc delete bitmap worker, only used for cloud
+* Default: 8
+
+#### `calc_tablet_delete_bitmap_task_max_thread`
+* Description: the count of thread to calc tablet delete bitmap task, only used for cloud
+* Default: 32
+
+#### `check_segment_when_build_rowset_meta`
+* Description: whether need to check the segment size when building rowset meta
+* Default: false
+
+#### `clean_stream_load_record_interval_secs`
+* Description: time interval to clean expired stream load records
+* Default: 1800
+
+#### `clear_file_cache`
+* Description: whether need to clean up the file cache
+* Default: false
+
+#### `cold_data_compaction_interval_sec`
+* Description:
+* Default: 1800
+
+#### `cold_data_compaction_thread_num`
+* Description:
+* Default: 2
+
+#### `common_obj_lru_cache_stale_sweep_time_sec`
+* Description: A common object cache depends on an Sharded LRU Cache.
+* Default: 900
+
+#### `compaction_batch_size`
+* Description:
+* Default: -1
+
+#### `compaction_keep_invisible_version_max_count`
+* Description:
+* Default: 500
+
+#### `compaction_keep_invisible_version_min_count`
+* Description:
+* Default:
+
+#### `compaction_keep_invisible_version_timeout_sec`
+* Description:
+* Default:
+
+#### `compaction_memory_bytes_limit`
+* Description:
+* Default: 1073741824
+
+#### `compaction_promotion_version_count`
+* Description:
+* Default: 1000
+
+#### `confirm_unused_remote_files_interval_sec`
+* Description:
+* Default: 60
+
+#### `cooldown_thread_num`
+* Description:
+* Default: 5
+
+#### `crash_in_alloc_large_memory_bytes`
+* Description:
+* Default: -1
+
+#### `cumulative_compaction_max_deltas_factor`
+* Description:
+* Default: 10
+
+#### `data_page_cache_stale_sweep_time_sec`
+* Description:
+* Default: 300
+
+#### `debug_inverted_index_compaction`
+* Description: Only for debug inverted_index_compaction, do not use in production
+* Default: false
+
+#### `delete_bitmap_agg_cache_capacity`
+* Description: Global bitmap cache capacity for aggregation cache, size in bytes
+* Default: 104857600
+
+#### `delete_bitmap_agg_cache_stale_sweep_time_sec`
+* Description:
+* Default: 1800
+
+#### `delete_bitmap_dynamic_agg_cache_limit`
+* Description:
+* Default: 0.5%
+
+#### `disable_memory_gc`
+* Description: gc will release cache, cancel task, and task will wait for gc to release memory, default gc strategy is conservative, if you want to exclude the interference of gc, let it be true
+* Default: false
+
+#### `disable_pk_storage_page_cache`
+* Description: whether to disable pk page cache feature in storage
+* Default: false
+
+#### `disable_segment_cache`
+* Description: whether to disable segment cache feature in storage
+* Default: false
+
+#### `disable_storage_row_cache`
+* Description: whether to disable row cache feature in storage
+* Default: true
+
+#### `doris_cgroup_cpu_path`
+* Description:
+* Default: ""
+
+#### `doris_remote_scanner_thread_pool_queue_size`
+* Description: number of remote_scanner thread pool queue size
+* Default: 102400
+
+#### `doris_remote_scanner_thread_pool_thread_num`
+* Description: number of remote_scanner thread pool size
+* Default: 48
+
+#### `doris_scanner_min_thread_pool_thread_num`
+* Description:
+* Default: 8
+
+#### `double_resize_threshold`
+* Description: Hash table expansion threshold
+* Default: 23
+
+#### `download_binlog_rate_limit_kbs`
+* Description: Download binlog rate limit, unit is KB/s
+* Default: 0
+
+#### `dwarf_location_info_mode`
+* Description:
+* Default: FAST
+
+#### `enable_address_sanitizers_with_stack_trace`
+* Description:
+* Default: true
+
+#### `enable_all_http_auth`
+* Description: Whether to check authorization
+* Default: false
+
+#### `enable_base_compaction_idle_sched`
+* Description:
+* Default: true
+
+#### `enable_be_proc_monitor`
+* Description:
+* Default: false
+
+#### `enable_brpc_stream_write_background`
+* Description: enable write background when using brpc stream
+* Default: true
+
+#### `enable_bthread_transmit_block`
+* Description:
+* Default: true
+
+#### `enable_column_type_check`
+* Description:
+* Default: true
+
+#### `enable_compaction_checksum`
+* Description: whether check compaction checksum
+* Default: false
+
+#### `enable_compaction_priority_scheduling`
+* Description:
+* Default: true
+
+#### `enable_debug_log_timeout_secs`
+* Description:
+* Default: 0
+
+#### `enable_debug_points`
+* Description:
+* Default: false
+
+#### `enable_delete_when_cumu_compaction`
+* Description: whether apply delete pred in cumu compaction
+* Default: false
+
+#### `enable_feature_binlog`
+* Description: whether enable binlog
+* Default: false
+
+#### `enable_file_cache`
+* Description: enable block file cache
+* Default: false
+
+#### `enable_file_cache_query_limit`
+* Description:
+* Default: false
+
+#### `enable_file_logger`
+* Description:
+* Default: true
+
+#### `enable_flush_file_cache_async`
+* Description: This config controls whether the s3 file writer would flush cache asynchronously
+* Default: true
+
+#### `enable_fuzzy_mode`
+* Description:
+* Default: false
+
+#### `enable_hdfs_mem_limiter`
+* Description:
+* Default: true
+
+#### `enable_inverted_index_cache_check_timestamp`
+* Description:
+* Default: true
+
+#### `enable_je_purge_dirty_pages`
+* Description: Purge all unused dirty pages for all arenas
+* Default: true
+
+#### `enable_jvm_monitor`
+* Description: whether enable JVM monitoring
+* Default: false
+
+#### `enable_low_cardinality_cache_code`
+* Description:
+* Default: true
+
+#### `enable_low_cardinality_optimize`
+* Description:
+* Default: true
+
+#### `enable_memory_orphan_check`
+* Description:
+* Default: true
+
+#### `enable_merge_on_write_correctness_check`
+* Description:
+* Default: true
+
+#### `enable_missing_rows_correctness_check`
+* Description: missing rows correctness check when compaction for mow table
+* Default: false
+
+#### `enable_mow_compaction_correctness_check_core`
+* Description: coredump directly if the compaction found there's duplicate key on mow table
+* Default: false
+
+#### `enable_parquet_page_index`
+* Description: If set to false, the parquet reader will not use page index to filter data, only debug
+* Default: false
+
+#### `enable_query_like_bloom_filter`
+* Description:
+* Default: true
+
+#### `enable_read_cache_file_directly`
+* Description:
+* Default: false
+
+#### `enable_rowid_conversion_correctness_check`
+* Description: rowid conversion correctness check when compaction for mow table
+* Default: false
+
+#### `enable_s3_rate_limiter`
+* Description:
+* Default: false
+
+#### `enable_set_in_bitmap_value`
+* Description:
+* Default: true
+
+#### `enable_shrink_memory`
+* Description: enable shrink memory at memory table
+* Default: false
+
+#### `enable_skip_tablet_compaction`
+* Description:
+* Default: true
+
+#### `enable_snapshot_action`
+* Description:
+* Default: false
+
+#### `enable_stacktrace`
+* Description:
+* Default: true
+
+#### `enable_stream_load_commit_txn_on_be`
+* Description: enable stream load commit txn on BE directly, bypassing FE. Only for cloud.
+* Default: false
+
+#### `enable_time_lut`
+* Description:
+* Default: true
+
+#### `enable_ttl_cache_evict_using_lru`
+* Description: If true, evict the ttl cache using LRU when full. Otherwise, only expiration can evict ttl and new data won't add to cache when full.
+* Default: true
+
+#### `enable_use_cgroup_memory_info`
+* Description: if true, process memory limit and memory usage based on cgroup memory info
+* Default: true
+
+#### `enable_vertical_segment_writer`
+* Description: If enabled, segments will be flushed column by column
+* Default: true
+
+#### `enable_workload_group_memory_gc`
+* Description:
+* Default: true
+
+#### `estimated_mem_per_column_reader`
+* Description:
+* Default: 1024
+
+#### `exchange_sink_ignore_eovercrowded`
+* Description:
+* Default: true
+
+#### `exchg_buffer_queue_capacity_factor`
+* Description:
+* Default: 64
+
+#### `exit_on_exception`
+* Description: Use `LOG(FATAL)` to replace `throw` when true
+* Default: false
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
+
+#### ``
+* Description:
+* Default:
