@@ -48,6 +48,7 @@ under the License.
 | 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
 | 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
 | 1.6.2             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 |- |
+| 24.0.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
 
 ## 使用
 
@@ -60,7 +61,7 @@ under the License.
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
-  <version>1.6.2</version>
+  <version>24.0.0</version>
 </dependency>  
 ```
 
@@ -74,7 +75,7 @@ under the License.
 
 编译时，可直接运行`sh build.sh`，具体可参考[这里](https://github.com/apache/doris-flink-connector/blob/master/README.md)。
 
-编译成功后，会在 `dist` 目录生成目标 jar 包，如：`flink-doris-connector-1.5.0-SNAPSHOT.jar`。
+编译成功后，会在 `dist` 目录生成目标 jar 包，如：`flink-doris-connector-24.0.0-SNAPSHOT.jar`。
 将此文件复制到 `Flink` 的 `classpath` 中即可使用 `Flink-Doris-Connector` 。例如， `Local` 模式运行的 `Flink` ，将此文件放入 `lib/` 文件夹下。 `Yarn` 集群模式运行的 `Flink` ，则将此文件放入预部署包中。
 
 ## 使用方法
@@ -246,7 +247,11 @@ DataStream<RowData> source = env.fromElements("")
 source.sinkTo(builder.build());
 ```
 
-**SchemaChange 数据流 (JsonDebeziumSchemaSerializer)**
+**CDC 数据流 (JsonDebeziumSchemaSerializer)**
+
+:::info 备注
+上游数据必须符合Debezium数据格式。
+:::
 
 ```java
 // enable checkpoint
@@ -274,7 +279,7 @@ builder.setDorisReadOptions(DorisReadOptions.builder().build())
 env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL Source")
         .sinkTo(builder.build());
 ```
-参考： [CDCSchemaChangeExample](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/CDCSchemaChangeExample.java)
+完整代码参考： [CDCSchemaChangeExample](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/CDCSchemaChangeExample.java)
 
 ### Lookup Join
 
@@ -359,8 +364,8 @@ ON a.city = c.city
 | sink.use-cache              | false         | N        | 异常时，是否使用内存缓存进行恢复，开启后缓存中会保留 Checkpoint 期间的数据                                                                                                                                                                                                                                                                                     |
 | sink.enable.batch-mode      | false         | N        | 是否使用攒批模式写入 Doris，开启后写入时机不依赖 Checkpoint，通过 sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval 参数来控制写入时机。<br />同时开启后将不保证 Exactly-once 语义，可借助 Uniq 模型做到幂等                                                                                                                                           |
 | sink.flush.queue-size       | 2             | N        | 攒批模式下，缓存的队列大小。                                                                                                                                                                                                                                                                                                                  |
-| sink.buffer-flush.max-rows  | 50000         | N        | 攒批模式下，单个批次最多写入的数据行数。                                                                                                                                                                                                                                                                                                            |
-| sink.buffer-flush.max-bytes | 10MB          | N        | 攒批模式下，单个批次最多写入的字节数。                                                                                                                                                                                                                                                                                                             |
+| sink.buffer-flush.max-rows  | 500000         | N        | 攒批模式下，单个批次最多写入的数据行数。                                                                                                                                                                                                                                                                                                            |
+| sink.buffer-flush.max-bytes | 100MB          | N        | 攒批模式下，单个批次最多写入的字节数。                                                                                                                                                                                                                                                                                                             |
 | sink.buffer-flush.interval  | 10s           | N        | 攒批模式下，异步刷新缓存的间隔                                                                                                                                                                                                                                                                                                                 |
 | sink.ignore.update-before   | true          | N        | 是否忽略 update-before 事件，默认忽略。                                                                                                                                                                                                                                                                                                     |
 
@@ -514,7 +519,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 ```shell
 <FLINK_HOME>bin/flink run \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    lib/flink-doris-connector-1.16-1.4.0-SNAPSHOT.jar \
+    lib/flink-doris-connector-1.16-1.6.1.jar \
     <mysql-sync-database|oracle-sync-database|postgres-sync-database|sqlserver-sync-database|mongodb-sync-database> \
     --database <doris-database-name> \
     [--job-name <flink-job-name>] \
@@ -529,7 +534,6 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     --sink-conf <doris-sink-conf> [--table-conf <doris-sink-conf> ...] \
     [--table-conf <doris-table-conf> [--table-conf <doris-table-conf> ...]]
 ```
-
 
 
 | Key                     | Comment                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -557,7 +561,8 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --create-table-only     | 是否只仅仅同步表的结构                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 :::info 备注
-同步时需要在$FLINK_HOME/lib 目录下添加对应的 Flink CDC 依赖，比如 flink-sql-connector-mysql-cdc-${version}.jar，flink-sql-connector-oracle-cdc-${version}.jar ，flink-sql-connector-mongodb-cdc-${version}.jar
+1. 同步时需要在$FLINK_HOME/lib 目录下添加对应的 Flink CDC 依赖，比如 flink-sql-connector-mysql-cdc-${version}.jar，flink-sql-connector-oracle-cdc-${version}.jar ，flink-sql-connector-mongodb-cdc-${version}.jar
+2. Connector24.0.0之后依赖的FlinkCDC版本需要在3.1以上。
 :::
 
 ### MySQL 多表同步示例
@@ -566,7 +571,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    lib/flink-doris-connector-1.16-1.4.0-SNAPSHOT.jar \
+    lib/flink-doris-connector-1.16-1.6.1.jar \
     mysql-sync-database \
     --database test_db \
     --mysql-conf hostname=127.0.0.1 \
@@ -590,7 +595,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
      -Dexecution.checkpointing.interval=10s \
      -Dparallelism.default=1 \
      -c org.apache.doris.flink.tools.cdc.CdcTools \
-     ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     ./lib/flink-doris-connector-1.16-1.6.1.jar \
      oracle-sync-database \
      --database test_db \
      --oracle-conf hostname=127.0.0.1 \
@@ -615,7 +620,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
      -Dexecution.checkpointing.interval=10s \
      -Dparallelism.default=1\
      -c org.apache.doris.flink.tools.cdc.CdcTools \
-     ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     ./lib/flink-doris-connector-1.16-1.6.1.jar \
      postgres-sync-database \
      --database db1\
      --postgres-conf hostname=127.0.0.1 \
@@ -642,7 +647,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
      -Dexecution.checkpointing.interval=10s \
      -Dparallelism.default=1 \
      -c org.apache.doris.flink.tools.cdc.CdcTools \
-     ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     ./lib/flink-doris-connector-1.16-1.6.1.jar \
      sqlserver-sync-database \
      --database db1\
      --sqlserver-conf hostname=127.0.0.1 \
@@ -667,7 +672,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    lib/flink-doris-connector-1.17-SNAPSHOT.jar \
+    lib/flink-doris-connector-1.16-1.6.1.jar \
     db2-sync-database \
     --database db2_test \
     --db2-conf hostname=127.0.0.1 \
@@ -694,7 +699,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    ./lib/flink-doris-connector-1.18-1.6.2-SNAPSHOT.jar \
+    ./lib/flink-doris-connector-1.18-1.6.1.jar \
     mongodb-sync-database \
     --database doris_db \
     --schema-change-mode debezium_structure \
