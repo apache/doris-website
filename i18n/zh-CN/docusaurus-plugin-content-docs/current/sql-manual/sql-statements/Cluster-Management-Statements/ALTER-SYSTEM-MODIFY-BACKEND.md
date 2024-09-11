@@ -47,7 +47,7 @@ ALTER SYSTEM MODIFY BACKEND "host:heartbeat_port" SET ("key" = "value"[, ...]);
 
 ```sql
 ALTER SYSTEM MODIFY BACKEND "id1" SET ("key" = "value"[, ...]);
-````
+```
 
  说明：
 
@@ -74,7 +74,7 @@ ALTER SYSTEM MODIFY BACKEND "id1" SET ("key" = "value"[, ...]);
    ```sql
    ALTER SYSTEM MODIFY BACKEND "id1" SET ("tag.location" = "group_a");
    ALTER SYSTEM MODIFY BACKEND "id1" SET ("tag.location" = "group_a", "tag.compute" = "c1");
-   ````
+   ```
 
 2. 修改 BE 的查询禁用属性
    
@@ -84,7 +84,7 @@ ALTER SYSTEM MODIFY BACKEND "id1" SET ("key" = "value"[, ...]);
 
     ```sql
    ALTER SYSTEM MODIFY BACKEND "id1" SET ("disable_query" = "true");
-    ````   
+    ```   
 
 3. 修改 BE 的导入禁用属性
    
@@ -94,7 +94,7 @@ ALTER SYSTEM MODIFY BACKEND "id1" SET ("key" = "value"[, ...]);
 
     ```sql
    ALTER SYSTEM MODIFY BACKEND "id1" SET ("disable_load" = "true");
-    ````   
+    ```   
 
 ### Keywords
 

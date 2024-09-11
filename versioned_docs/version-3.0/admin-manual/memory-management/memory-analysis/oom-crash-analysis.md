@@ -1,7 +1,7 @@
 ---
 {
     "title": "OOM Killer Crash Analysis",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -44,13 +44,15 @@ When the OOM Killer is triggered, it means that the process has insufficient ava
 
 If the following phenomenon is met, it can be considered that the cluster memory pressure is too high, resulting in the process memory status not being refreshed in time at a certain moment, and the memory GC failing to release the memory in time, resulting in the failure to effectively control the BE process memory.
 
+> Before Doris 2.1, Memory GC was not perfect, and when the memory was constantly tight, it was often easier to trigger the OOM Killer.
+
 - Analysis of `Memory Tracker Summary` found that the memory usage of queries and other tasks, various caches, metadata, etc. is reasonable.
 
 - BE process memory monitoring in the corresponding time period shows that the memory usage rate is maintained at a high level for a long time, and there is no sign of memory leak
 
 - Locate the memory log before the OOM Killer time point in `be/log/be.INFO`, search the `GC` keyword from bottom to top, and find that the BE process frequently executes memory GC.
 
-At this time, refer to [BE Configuration Items](../../admin-manual/config/be-config.md) to reduce `mem_limit` and increase `max_sys_mem_available_low_water_mark_bytes` in `be/conf/be.conf`. For more information about memory limits, watermark calculation methods, and memory GC, see [Memory Control Strategy](./memory-control-strategy.md).
+At this time, refer to [BE Configuration Items](../../../admin-manual/config/be-config.md) to reduce `mem_limit` and increase `max_sys_mem_available_low_water_mark_bytes` in `be/conf/be.conf`. For more information about memory limits, watermark calculation methods, and memory GC, see [Memory Control Strategy](./../memory-feature/memory-control-strategy.md).
 
 In addition, other parameters can be adjusted to control memory status refresh and GC, including `memory_gc_sleep_time_ms`, `soft_mem_limit_frac`, `memory_maintenance_sleep_time_ms`, `process_minor_gc_size`, `process_full_gc_size`, `enable_query_memory_overcommit`, `thread_wait_gc_max_milliseconds`, etc.
 
@@ -60,17 +62,15 @@ If the cluster memory pressure is too high, the memory status may be abnormal at
 
 ### Memory Tracker Statistics Missing
 
-If the difference between `Label=process resident memory` Memory Tracker and `Label=sum of all trackers` Memory Tracker in the log `Memory Tracker Summary` is large, or the Orphan Memory Tracker value is too large, it means that there is a statistical missing in the Memory Tracker. Refer to the [Memory Tracker Statistics Missing] section in [Memory Tracker](./memory-tracker.md) for further analysis.
+If the difference between `Label=process resident memory` Memory Tracker and `Label=sum of all trackers` Memory Tracker in the log `Memory Tracker Summary` is large, or the Orphan Memory Tracker value is too large, it means that there is a statistical missing in the Memory Tracker. Refer to the [Memory Tracker Statistics Missing] section in [Memory Tracker](./../memory-feature/memory-tracker.md) for further analysis.
 
 ### Query Cancel stuck
 
-> Common before Doris 2.1.3
-
-Locate the memory log before the OOM Killer time point in `be/log/be.INFO`, and find the last printed keyword `tasks is being canceled and has not been completed yet` from bottom to top. This line of log indicates that there is a Query being Canceled but not Cancel completed. If the subsequent QueryID list is not empty, execute `grep queryID be/log/be.INFO` to confirm the start time of the Query and the time when Cancel is triggered. If the time interval between the time when Cancel is triggered and the time when OOM Killer is triggered is long (greater than 3s), it means that the Query Cancel process is stuck, and further analyze the Query execution log.
+Locate the time point of OOM Killer in the `be/log/be.INFO` log, and then search `Memory Tracker Summary` in the context to find the process memory statistics log. If there is a query that uses a large amount of memory in the `Memory Tracker Summary`, execute `grep {queryID} be/log/be.INFO` to confirm whether there is a log with the keyword `Cancel`. The corresponding time point is the time when the query was canceled. If the query has been canceled, and the time point when the query was canceled is a long time away from the time point when the OOM Killer was triggered, refer to the analysis of [Query Cancel process stuck] in [Memory Problem FAQ](./memory-issue-faq.md). For analysis of `Memory Tracker Summary`, refer to [Memory Log Analysis](./memory-log-analysis.md).
 
 ### Jemalloc Metadata has a large memory footprint
 
-Memory GC currently cannot release Jemalloc Metadata. Refer to the analysis of `Label=tc/jemalloc_metadata` Memory Tracker in [Memory Tracker](./memory-tracker.md) to reduce memory usage.
+Memory GC currently cannot release Jemalloc Metadata. Refer to the analysis of `Label=tc/jemalloc_metadata` Memory Tracker in [Memory Tracker](./../memory-feature/memory-tracker.md) to reduce memory usage.
 
 ### Jemalloc Cache has a large memory footprint
 

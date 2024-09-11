@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SET variable_assignment [, variable_assignment] ...
-````
+```
 
 illustrate:
 
@@ -58,7 +58,7 @@ Variables that support both the current session and the global effect include:
 - `sql_mode`
 - `enable_profile`
 - `query_timeout`
-- <version since="dev" type="inline">`insert_timeout`</version>
+-  `insert_timeout`
 - `exec_mem_limit`
 - `batch_size`
 - `allow_partition_column_nullable`
@@ -73,15 +73,15 @@ Variables that only support global effects include:
 
 1. Set the time zone to Dongba District
 
-   ````
+   ```
    SET time_zone = "Asia/Shanghai";
-   ````
+   ```
 
 2. Set the global execution memory size
 
-   ````
+   ```
    SET GLOBAL exec_mem_limit = 137438953472
-   ````
+   ```
 
 ### Keywords
 

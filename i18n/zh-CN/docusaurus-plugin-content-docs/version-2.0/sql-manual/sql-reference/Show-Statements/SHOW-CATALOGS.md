@@ -28,11 +28,14 @@ under the License.
 
 ### Name
 
-<version since="1.2">
+
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
 SHOW CATALOGS
 
-</version>
+
 
 ### Description
 
@@ -44,13 +47,13 @@ SHOW CATALOGS
 SHOW CATALOGS [LIKE]
 ```
 
-说明:
+说明：
 
-LIKE：可按照CATALOG名进行模糊查询
+LIKE：可按照 CATALOG 名进行模糊查询
 
 返回结果说明：
 
-* CatalogId：数据目录唯一ID
+* CatalogId：数据目录唯一 ID
 * CatalogName：数据目录名称。其中 internal 是默认内置的 catalog，不可修改。
 * Type：数据目录类型。
 * IsCurrent: 是否为当前正在使用的数据目录。

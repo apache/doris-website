@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 STOP SYNC JOB [db.]job_name
-````
+```
 
 ### Example
 
@@ -46,7 +46,7 @@ STOP SYNC JOB [db.]job_name
 
     ```sql
     STOP SYNC JOB `job_name`;
-    ````
+    ```
 
 ### Keywords
 

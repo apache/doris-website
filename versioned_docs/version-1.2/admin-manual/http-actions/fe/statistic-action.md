@@ -1,7 +1,7 @@
 ---
 {
     "title": "Statistic Action",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 

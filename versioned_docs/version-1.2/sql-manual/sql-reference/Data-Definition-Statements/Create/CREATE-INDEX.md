@@ -37,7 +37,7 @@ grammar:
 
 ```sql
 CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING BITMAP] [COMMENT 'balabala'];
-````
+```
 Notice:
 - Currently only supports bitmap indexes
 - BITMAP indexes are only created on a single column
@@ -48,14 +48,14 @@ Notice:
 
     ```sql
     CREATE INDEX [IF NOT EXISTS] index_name ON table1 (siteid) USING BITMAP COMMENT 'balabala';
-    ````
+    ```
 
 
 ### Keywords
 
-````text
+```text
 CREATE, INDEX
-````
+```
 
 ### Best Practice
 

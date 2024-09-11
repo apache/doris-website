@@ -24,7 +24,7 @@ pandoc -N --toc --smart --latex-engine=xelatex \
 --template=templates/template.tex \
 --listings \
 --columns=80 \
--V title="doris 中文手册" \
+-V title="Apache Doris 中文手册" \
 -V date="${_version_tag}" \
 -V CJKmainfont="${MAINFONT}" \
 -V mainfont="${MAINFONT}" \
@@ -32,4 +32,4 @@ pandoc -N --toc --smart --latex-engine=xelatex \
 -V monofont="${MONOFONT}" \
 -V geometry:margin=1in \
 -V include-after="\\input{templates/copyright.tex}" \
-"doc.md" -s -o "doris.pdf"
+"doc-3.0.md" -s -o "doris-3.0.pdf"

@@ -62,7 +62,7 @@ under the License.
 | --- | --- | --- | --- |
 | `LOG_DIR` | `ENV(DORIS_HOME)/log` |  | 所有日志的存放路径。默认为 FE 部署路径的 `log/` 目录下。注意这是一个环境变量，配置名需大写。 |
 | `sys_log_level` | `INFO` | `INFO`, `WARN`, `ERROR`, `FATAL` | `fe.log` 的日志等级。默认为 INFO。不建议修改，INFO 等级包含许多关键日志信息。|
-| `sys_log_roll_num` | 10 |  | 控制 `fe.log` 和 `fe.warn.log` 最大文件数量。默认 10。当因为日志滚动或切分后，日志文件数量大于这个阈值后，老的日志文件将被删除  |
+| `sys_log_roll_num` | 10 |  | 控制 `fe.log` 和 `fe.warn.log` 一天内的最大文件数量。默认 10。当因为日志滚动或切分后，日志文件数量大于这个阈值后，老的日志文件将被删除  |
 |`sys_log_verbose_modules`| | | 可以设置指定的 Java package 下的文件开启 DEBUG 级别日志。请参阅 "开启 DEBUG 日志" 章节 |
 | `sys_log_enable_compress` | false | true, false | 是否开启历史 `fe.log` 和 `fe.warn.log` 日志压缩。默认关闭。开启后，历史审计日志会使用 gzip 压缩归档 |
 | `log_rollover_strategy` | `age` | `age`, `size` | 日志保留策略，默认为 `age`，即根据时间策略保留历史日志。`size` 为按日志大小保留历史日志  |
@@ -81,9 +81,13 @@ under the License.
 | `audit_log_enable_compress` | false | true, false | 是否开启历史 `fe.audit.log` 日志压缩。默认关闭。开启后，历史审计日志会使用 gzip 压缩归档 |
 | `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | FE 日志的输出模式，其中 `NORMAL` 为默认的输出模式，日志同步输出且包含位置信息。`ASYNC` 默认是日志异步输出且包含位置信息。 `BRIEF` 模式是日志异步输出但不包含位置信息。三种日志输出模式的性能依次递增 |
 
-> 注：
->
-> 1. 从 3.0.2 版本开始，`sys_log_mode` 配置默认改为 `AYSNC`。 
+::: note
+从 3.0.2 版本开始，`sys_log_mode` 配置默认改为 `AYSNC`。
+:::
+
+:::tip
+`sys_log_roll_num` 控制的是一天的保留日志数量，而不是总数量，需要配合 `sys_log_delete_age` 共同确定总保留日志数量。
+:::
 
 ## 开启 DEBUG 日志
 
@@ -110,11 +114,11 @@ FE 的 Debug 级别日志可以通过修改配置文件开启，也可以通过�
 
    通过 UI 界面可以在运行时修改日志级别。无需重启 FE 节点。在浏览器打开 FE 节点的 http 端口（默认为 8030），并登陆 UI 界面。之后点击上方导航栏的 `Log` 标签。
 
-   ![](/images/log_manage/fe_web_log1.png)
+   ![通过 FE UI 界面](/images/log_manage/fe_web_log1.png)
 
    我们在 Add 输入框中可以输入包名或者具体的类名，可以打开对应的 Debug 日志。如输入 `org.apache.doris.catalog.Catalog` 则可以打开 Catalog 类的 Debug 日志：
 
-   ![](/images/log_manage/fe_web_log2.png)
+   ![通过 FE UI 界面](/images/log_manage/fe_web_log2.png)
 
    你也可以在 Delete 输入框中输入包名或者具体的类名，来关闭对应的 Debug 日志。
 
@@ -126,7 +130,7 @@ FE 的 Debug 级别日志可以通过修改配置文件开启，也可以通过�
 
    通过以下 API 也可以在运行时修改日志级别。无需重启 FE 节点。
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?add_verbose=org.apache.doris.catalog.Catalog
    ```
 
@@ -149,7 +153,7 @@ FE 的 Debug 级别日志可以通过修改配置文件开启，也可以通过�
 
    也可以通过以下 API 关闭 Debug 日志：
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?del_verbose=org.apache.doris.catalog.Catalog
    ```
 

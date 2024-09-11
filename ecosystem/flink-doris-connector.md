@@ -46,6 +46,7 @@ under the License.
 | 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
 | 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
 | 1.6.2             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 | - |
+| 24.0.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
 
 ## USE
 
@@ -58,7 +59,7 @@ Add flink-doris-connector
 <dependency>
    <groupId>org.apache.doris</groupId>
    <artifactId>flink-doris-connector-1.16</artifactId>
-   <version>1.6.2</version>
+   <version>24.0.0</version>
 </dependency>
 ```
 

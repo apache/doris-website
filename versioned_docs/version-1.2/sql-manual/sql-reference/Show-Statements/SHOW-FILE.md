@@ -38,18 +38,18 @@ grammar:
 
 ```sql
 SHOW FILE [FROM database];
-````
+```
 
 illustrate:
 
-````text
+```text
 FileId: file ID, globally unique
 DbName: the name of the database to which it belongs
 Catalog: Custom Category
 FileName: file name
 FileSize: file size, in bytes
 MD5: MD5 of the file
-````
+```
 
 ### Example
 
@@ -57,7 +57,7 @@ MD5: MD5 of the file
 
      ```sql
      SHOW FILE FROM my_database;
-     ````
+     ```
 
 ### Keywords
 

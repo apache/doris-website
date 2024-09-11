@@ -24,7 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<version since="2.1.3"></version>
+:::tip Tips
+This feature is supported since the Apache Doris 1.2.3 version
+:::
 
 ## Backgroup
 The Workload Group solves the problem of isolation between different workload, but it cannot solve negative impact of large queries on stability within the same Group. When users encounter large queries that affect cluster stability, they can only manually handle them.
@@ -40,10 +42,10 @@ actions(cancel_query)
 properties('enabled'='true'); 
 ```
 Workload Policy mainly includes the following concepts:
-* policy，user-defined policies，Contains conditions for triggering policies and actions after triggering policies.
-* conditions，represents the triggering conditions of the policy.A policy can have multiple conditions, and there is an AND relationship between multiple conditions.
-* actions，the action works when a policy is triggered, such as canceling a query, currently only a policy can only have one action (except for `set_session_variable`).
-* properties，defined the properties of the current policy, including whether it is enabled and its priority.
+* policy, user-defined policies, Contains conditions for triggering policies and actions after triggering policies.
+* conditions, represents the triggering conditions of the policy.A policy can have multiple conditions, and there is an AND relationship between multiple conditions.
+* actions, the action works when a policy is triggered, such as canceling a query, currently only a policy can only have one action (except for `set_session_variable`).
+* properties, defined the properties of the current policy, including whether it is enabled and its priority.
 
 The meaning of the policy in the above example is to create a policy named test_cancel_policy, which will cancel queries in the cluster that have been running for more than 1 second, and it's enabled.
 CREATE POLICY needs admin_priv.
@@ -53,21 +55,21 @@ Due to the fact that some actions can only take effect in FE and others can only
 
 ### Policy used in FE
 1. Condition
-   * username，When the username of a query is a certain value, the corresponding action will be triggered.
+   * username, When the username of a query is a certain value, the corresponding action will be triggered.
 2. Action
-   * set_session_variable，This action can execute a statement that sets session variable. The same policy can have multiple `set_session_variable`, which means that a policy can execute multiple statements that modify the session variable.
+   * set_session_variable, This action can execute a statement that sets session variable. The same policy can have multiple `set_session_variable`, which means that a policy can execute multiple statements that modify the session variable.
 
 The policy used in FE is mainly used to modify the session variable, and currently does not support the ```set global```.
 
 ### Policy used in BE
 1. Condition
-   * be_scan_rows，The number of rows scanned by an SQL within a single BE process, if the SQL is executed concurrently on the BE, it is the cumulative value of multiple concurrency.
-   * be_scan_bytes，The number of bytes scanned by an SQL within a single BE process, if the SQL is executed concurrently on the BE, it is the cumulative value of multiple concurrency, measured in bytes.
-   * query_time，The running time of an SQL on a single BE process, measured in milliseconds.
+   * be_scan_rows, The number of rows scanned by an SQL within a single BE process, if the SQL is executed concurrently on the BE, it is the cumulative value of multiple concurrency.
+   * be_scan_bytes, The number of bytes scanned by an SQL within a single BE process, if the SQL is executed concurrently on the BE, it is the cumulative value of multiple concurrency, measured in bytes.
+   * query_time, The running time of an SQL on a single BE process, measured in milliseconds.
    * query_be_memory_bytes, supported since version 2.1.5, The memory used by an SQL within a BE process, if the SQL is executed concurrently on the BE, it is the cumulative value of multiple concurrency, measured in bytes.
 
 2. Action
-   * cancel_query，cancel query
+   * cancel_query, cancel query
 
 At present, BE's policy is mainly used for managing BE workload, such as canceling a query when the scan data volume is too large or the query time is too long.
 

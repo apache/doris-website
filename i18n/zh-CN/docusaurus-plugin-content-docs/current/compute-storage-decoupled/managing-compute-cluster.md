@@ -330,7 +330,7 @@ Query OK, 0 rows affected (0.01 sec)
 USE { [catalog_name.]database_name[@cluster_name] | @cluster_name }
 ```
 
-若数据库或计算集群名称包含是保留关键字，需用反引号将相应的名称 ```` 包围。
+若数据库或计算集群名称包含是保留关键字，需用反引号将相应的名称 ``` 包围。
 
 **示例**
 

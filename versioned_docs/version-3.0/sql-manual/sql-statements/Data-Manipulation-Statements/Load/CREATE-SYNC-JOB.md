@@ -48,7 +48,7 @@ CREATE SYNC [db.]job_name
  ...
  )
 binlog_desc
-````
+```
 
 1. `job_name`
 
@@ -63,7 +63,7 @@ binlog_desc
    ```sql
    FROM mysql_db.src_tbl INTO des_tbl
    [columns_mapping]
-   ````
+   ```
    
    1. `mysql_db.src_tbl`
    
@@ -81,7 +81,7 @@ binlog_desc
    
       Example:
    
-      ````
+      ```
       Suppose the target table column is (k1, k2, v1),
       
       Change the order of columns k1 and k2
@@ -89,7 +89,7 @@ binlog_desc
       
       Ignore the fourth column of the source data
       (k2, k1, v1, dummy_column)
-      ````
+      ```
    
 3. `binlog_desc`
 
@@ -103,7 +103,7 @@ binlog_desc
        "key1" = "value1",
        "key2" = "value2"
    )
-   ````
+   ```
 
    1. The properties corresponding to the Canal data source, prefixed with `canal.`
 
@@ -119,7 +119,7 @@ binlog_desc
 
 1. Simply create a data synchronization job named `job1` for `test_tbl` of `test_db`, connect to the local Canal server, corresponding to the Mysql source table `mysql_db1.tbl1`.
 
-   ````SQL
+   ```SQL
    CREATE SYNC `test_db`.`job1`
    (
    FROM `mysql_db1`.`tbl1` INTO `test_tbl`
@@ -133,11 +133,11 @@ binlog_desc
    "canal.username" = "",
    "canal.password" = ""
    );
-   ````
+   ```
 
 2. Create a data synchronization job named `job1` for multiple tables of `test_db`, corresponding to multiple Mysql source tables one-to-one, and explicitly specify the column mapping.
 
-   ````SQL
+   ```SQL
    CREATE SYNC `test_db`.`job1`
    (
    FROM `mysql_db`.`t1` INTO `test1` (k1, k2, v1) ,
@@ -152,7 +152,7 @@ binlog_desc
    "canal.username" = "username",
    "canal.password" = "password"
    );
-   ````
+   ```
 
 ### Keywords
 

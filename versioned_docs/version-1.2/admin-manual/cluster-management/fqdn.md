@@ -28,7 +28,7 @@ under the License.
 
 ## Concept Introduction
 
-<version since="dev"></version>
+ 
 
 A fully qualified domain name (FQDN) is the full domain name of a specific computer or host on the Internet.
 

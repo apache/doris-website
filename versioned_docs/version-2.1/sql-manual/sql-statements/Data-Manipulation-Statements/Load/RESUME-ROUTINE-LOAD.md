@@ -36,7 +36,7 @@ Used to restart a suspended Routine Load job. The restarted job will continue to
 
 ```sql
 RESUME [ALL] ROUTINE LOAD FOR job_name
-````
+```
 
 ### Example
 
@@ -44,13 +44,13 @@ RESUME [ALL] ROUTINE LOAD FOR job_name
 
     ```sql
     RESUME ROUTINE LOAD FOR test1;
-    ````
+    ```
 
 2. Restart all routine import jobs.
 
     ```sql
     RESUME ALL ROUTINE LOAD;
-    ````
+    ```
 
 ### Keywords
 

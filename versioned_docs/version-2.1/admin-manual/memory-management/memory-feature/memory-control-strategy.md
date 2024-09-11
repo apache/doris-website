@@ -1,7 +1,7 @@
 ---
 {
     "title": "Memory Control Strategy",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -60,27 +60,27 @@ PODArray is a dynamic array of POD type. It is different from std::vector in tha
 
 ### Memory reuse
 
-Doris has done a lot of memory reuse in the execution layer, and the visible memory hotspots are basically blocked. For example, the reuse of data blocks Block runs through the execution of Query; for example, the Sender end of Shuffle always keeps one Block to receive data, and one Block is used alternately in RPC transmission; and the storage layer reuses the predicate column to read, filter, copy to the upper layer Block, and Clear when reading a Tablet; when importing the Aggregate Key table, the MemTable of cached data reaches a certain size and then shrinks after pre-aggregation and continues to write, etc.
+Doris has done a lot of memory reuse in the execution layer, and the visible memory hotspots are basically blocked. For example, the reuse of data blocks Block runs through the execution of Query; for example, the Sender end of Shuffle always keeps one Block to receive data, and one Block is used alternately in RPC transmission; and the storage layer reuses the predicate column to read, filter, copy to the upper layer Block, and Clear when reading a Tablet; when load the Aggregate Key table, the MemTable of cached data reaches a certain size and then shrinks after pre-aggregation and continues to write, etc.
 
 In addition, Doris will pre-allocate a batch of Free Blocks based on the number of Scanners and threads before the data Scan starts. Each time the Scanner is scheduled, a Block will be obtained from it and passed to the storage layer to read the data. After the reading is completed, the Block will be placed in the producer queue for consumption by the upper-layer operator and subsequent calculations. After the upper-layer operator copies the data, it will put the Block back into the Free Block for the next Scanner scheduling, thereby realizing memory reuse. After the data Scan is completed, the Free Block will be uniformly released in the previously pre-allocated threads to avoid the extra overhead caused by memory application and release not being in the same thread. The number of Free Blocks also controls the concurrency of data Scan to a certain extent.
 
 ## Memory GC
 
-Doris BE will periodically obtain the physical memory of the process and the current available memory of the system from the system, and collect snapshots of all query, import, and compaction task MemTracker. When the BE process memory exceeds the limit or the system has insufficient available memory, Doris will release the cache and terminate some queries or imports to release memory. This process is executed regularly by a separate GC thread.
+Doris BE will periodically obtain the physical memory of the process and the current available memory of the system from the system, and collect snapshots of all query, load, and compaction task MemTracker. When the BE process memory exceeds the limit or the system has insufficient available memory, Doris will release the cache and terminate some queries or loads to release memory. This process is executed regularly by a separate GC thread.
 
 ![Memory GC](/images/memory-gc.png)
 
-Minor GC is triggered when the Doris BE process memory exceeds SoftMemLimit (81% of the total system memory by default) or the remaining available system memory is lower than the Warning watermark (usually no more than 3.2GB). At this time, the query will be paused when the Allocator allocates memory, and the data in the forced cache will be imported and some Data Page Cache and expired Segment Cache will be released. If the released memory is less than 10% of the process memory, if query memory over-issuance is enabled, the query with a large memory over-issuance ratio will be canceled until 10% of the process memory is released or no query can be canceled, and then the system memory status acquisition interval and GC interval will be lowered. Other queries will continue to execute after the remaining memory is found.
+Minor GC is triggered when the Doris BE process memory exceeds SoftMemLimit (81% of the total system memory by default) or the remaining available system memory is lower than the Warning watermark (usually no more than 3.2GB). At this time, the query will be paused when the Allocator allocates memory, and the data in the forced cache will be load and some Data Page Cache and expired Segment Cache will be released. If the released memory is less than 10% of the process memory, if query memory over-issuance is enabled, the query with a large memory over-issuance ratio will be canceled until 10% of the process memory is released or no query can be canceled, and then the system memory status acquisition interval and GC interval will be lowered. Other queries will continue to execute after the remaining memory is found.
 
-If the BE process memory exceeds MemLimit (90% of the total system memory by default) or the remaining available system memory is lower than the Low watermark (usually no more than 1.6GB), Full GC is triggered. In addition to the above operations, the import will also be paused when the cache data is forced to be flushed, and all Data Page Cache and most other caches will be released. If the released memory is less than 20%, it will start to search in the MemTracker list of all queries and imports according to a certain strategy, and cancel queries with large memory usage, imports with large memory over-issuance ratios, and imports with large memory usage in turn until 20% of the process memory is released. Then, the system memory status acquisition interval and GC interval are increased, and other queries and imports will continue to execute. The GC time is usually between hundreds of us and tens of ms.
+If the BE process memory exceeds MemLimit (90% of the total system memory by default) or the remaining available system memory is lower than the Low watermark (usually no more than 1.6GB), Full GC is triggered. In addition to the above operations, the load will also be paused when the cache data is forced to be flushed, and all Data Page Cache and most other caches will be released. If the released memory is less than 20%, it will start to search in the MemTracker list of all queries and loads according to a certain strategy, and cancel queries with large memory usage, loads with large memory over-issuance ratios, and loads with large memory usage in turn until 20% of the process memory is released. Then, the system memory status acquisition interval and GC interval are increased, and other queries and loads will continue to execute. The GC time is usually between hundreds of us and tens of ms.
 
 ## Memory limit and watermark calculation method
 
-- Process memory upper limit MemLimit = `be.conf/mem_limit * PhysicalMemory`, default 90% of the total system memory.
+- Process memory limit MemLimit = `be.conf/mem_limit * PhysicalMemory`, the default is 90% of the total system memory, for details, please refer to .
 
 - Process memory soft limit SoftMemLimit = `be.conf/mem_limit * PhysicalMemory * be.conf/soft_mem_limit_frac`, the default is 81% of the total system memory.
 
-- System remaining available memory low water mark LowWaterMark = `Max(a, b, c)`, on a machine with 64G memory, LowWaterMark defaults to slightly less than 3.2 GB, where `a = PhysicalMemory - MemLimit`; `b = PhysicalMemory * 0.05`; `c = be.conf/max_sys_mem_available_low_water_mark_bytes`, default is 6.4 GB.
+- System remaining available memory low water mark LowWaterMark = `be.conf/max_sys_mem_available_low_water_mark_bytes`, the default is -1, then LowWaterMark = `min(PhysicalMemory - MemLimit, PhysicalMemory * 0.05)`, on a machine with 64G memory, the value of LowWaterMark is slightly less than 3.2 GB (because the actual value of `PhysicalMemory` is often less than 64G).
 
 - System remaining available memory warning water mark WarningWaterMark = `2 * LowWaterMark`, on a machine with 64G memory, `WarningWaterMark` defaults to slightly less than 6.4 GB.
 

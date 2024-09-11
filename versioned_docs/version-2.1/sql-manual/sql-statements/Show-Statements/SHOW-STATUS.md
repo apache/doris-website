@@ -42,7 +42,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 [WHERE]
 [ORDER BY]
 [LIMIT OFFSET]
-````
+```
 
 - database: View jobs under the specified database. If not specified, the current database is used.
 - WHERE: You can filter the result column, currently only the following columns are supported:
@@ -70,7 +70,7 @@ RollupIndexName: r1
        Progress: NULL
         Timeout: 86400
 1 row in set (0.00 sec)
-````
+```
 
 - `JobId`: Job unique ID.
 

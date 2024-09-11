@@ -24,38 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-SYSTEM-DROP-FOLLOWER
-
-### Name
+## Name
 
 ALTER SYSTEM DROP FOLLOWER
 
-### Description
+## Description
 
 This statement is to delete the node of the FOLLOWER role of FRONTEND, (only for administrators!)
 
-grammar:
+Grammar:
 
 ```sql
 ALTER SYSTEM DROP FOLLOWER "follower_host:edit_log_port"
-````
+```
 
-illustrate:
+Illustration:
 
 1. host can be a hostname or an ip address
+
 2. edit_log_port : edit_log_port in its configuration file fe.conf
 
-### Example
+## Example
 
-1. Add a FOLLOWER node
+1. Delete a FOLLOWER node
 
     ```sql
     ALTER SYSTEM DROP FOLLOWER "host_ip:9010"
-    ````
+    ```
 
-### Keywords
+## Keywords
 
-    ALTER, SYSTEM, DROP, FOLLOWER, ALTER SYSTEM
+ALTER, SYSTEM, DROP, FOLLOWER, ALTER SYSTEM
 
-### Best Practice
 

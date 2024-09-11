@@ -1,7 +1,7 @@
 ---
 {
     "title": "ADMIN-SET-TABLE-STATUS",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 

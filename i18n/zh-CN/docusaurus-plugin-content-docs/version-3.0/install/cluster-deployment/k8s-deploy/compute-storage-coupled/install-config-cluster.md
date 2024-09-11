@@ -98,13 +98,13 @@ feSpec:
 
 其中，需要在 ${storageClassName} 指定 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 的名称。可以通过 以下命令查看当前 Kubernetes 集群内支持的 StorageClass：
 
-```bash
+```shell
 kubectl get sc
 ```
 
 返回结果如下：
 
-```bash
+```shell
 NAME                          PROVISIONER                    RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
 openebs-hostpath              openebs.io/local               Delete          WaitForFirstConsumer   false                  212d
 openebs-device                openebs.io/local               Delete          WaitForFirstConsumer   false                  212d

@@ -40,7 +40,7 @@ grammar:
 ```sql
 CREATE [EXTERNAL] RESOURCE "resource_name"
 PROPERTIES ("key"="value", ...);
-````
+```
 
 illustrate:
 
@@ -69,7 +69,7 @@ illustrate:
      "broker.username" = "user0",
      "broker.password" = "password0"
    );
-   ````
+   ```
 
    Spark related parameters are as follows:
    - spark.master: Required, currently supports yarn, spark://host:port.
@@ -100,7 +100,7 @@ illustrate:
    "odbc_type" = "oracle",
    "driver" = "Oracle 19 ODBC driver"
    );
-   ````
+   ```
 
    The relevant parameters of ODBC are as follows:
    - hosts: IP address of the external database

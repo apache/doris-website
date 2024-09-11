@@ -66,7 +66,7 @@ under the License.
 ## Examples
 
 
-    ```bash
+    ```shell
     curl "http://127.0.0.1:8040/api/meta/header/148193&byte_to_base64=true"
 
     ```

@@ -66,7 +66,7 @@ Doris 支持 LRU 和 TTL 两种缓存管理策略。
 
 - `file_cache_ttl_seconds` : 新导入的数据期望在缓存中保留的时间，单位为秒。
 
-```Bash
+```shell
 CREATE TABLE IF NOT EXISTS customer (
   C_CUSTKEY     INTEGER NOT NULL,
   C_NAME        VARCHAR(25) NOT NULL,
@@ -208,7 +208,7 @@ mysql> show warm up job where id = 13418;
 
 在 LRU 缓存策略下，大表数据如果被查询访问，可能会替换掉需要常驻缓存的小表数据，造成性能波动。为了解决这个问题，用户采取 TTL 缓存策略，将两张表的 TTL 时间分别设置为 1 年和 1 天。
 
-```Bash
+```shell
 ALTER TABLE dimension_table set ("file_cache_ttl_seconds"="31536000");
 
 ALTER TABLE fact_table set ("file_cache_ttl_seconds"="86400");

@@ -103,17 +103,17 @@ CREATE TABLE `ods_demo_detail`(
 PARTITIONED BY (day string)
 row format delimited fields terminated by ','
 lines terminated by '\n'
-````
+```
 
 Then use Hive's Load command to import your data into the Hive table
 
-````
+```
 load data local inpath '/opt/custorm' into table ods_demo_detail;
-````
+```
 
 2. Create a Doris table, refer to the specific table syntax: [CREATE TABLE](../../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md)
 
-````
+```
 CREATE TABLE `doris_ods_test_detail` (
   `rq` date NULL,
   `id` varchar(32) NOT NULL,
@@ -145,7 +145,7 @@ PROPERTIES (
 "in_memory" = "false",
 "storage_format" = "V2"
 );
-````
+```
 
 3. Start importing data
 
@@ -172,7 +172,7 @@ PROPERTIES
     "timeout"="1200",
     "max_filter_ratio"="0.1"
 );
-````
+```
 
 ### Hive partition table import (ORC format)
 1. Create Hive partition table, ORC format
@@ -197,7 +197,7 @@ PARTITIONED BY (day string)
 row format delimited fields terminated by ','
 lines terminated by '\n'
 STORED AS ORC
-````
+```
 
 2. Create a Doris table. The table creation statement here is the same as the Doris table creation statement above. Please refer to the above .
 
@@ -225,7 +225,7 @@ STORED AS ORC
        "timeout"="1200",
        "max_filter_ratio"="0.1"
    );
-   ````
+   ```
 
    **Notice:**
 
@@ -254,7 +254,7 @@ LOAD LABEL demo.label_20220402
             "timeout"="1200",
             "max_filter_ratio"="0.1"
         );
-````
+```
 
 The specific parameters here can refer to: [Broker](../../../advanced/broker.md) and [Broker Load](../../../sql-manual/sql-reference-v2 /Data-Manipulation-Statements/Load/BROKER-LOAD.md) documentation
 
@@ -283,7 +283,7 @@ LoadFinishTime: 2022-04-01 18:59:11
            URL: NULL
     JobDetails: {"Unfinished backends":{"5072bde59b74b65-8d2c0ee5b029adc0":[]},"ScannedRows":27,"TaskNumber":1,"All backends":{"5072bde59b74b65-8d2c0ee5b029adc0":[36728051]},"FileNumber ":1,"FileSize":5540}
 1 row in set (0.01 sec)
-````
+```
 
 ## Cancel import
 
@@ -293,7 +293,7 @@ For example: cancel the import job with the label broker_load_2022_03_23 on the 
 
 ```sql
 CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_03_23";
-````
+```
 ## Relevant system configuration
 
 ### Broker parameters
@@ -308,20 +308,20 @@ The following configurations belong to the system-level configuration of Broker 
 
   The first two configurations limit the minimum and maximum amount of data processed by a single BE. The third configuration limits the maximum number of concurrent imports for a job. The minimum amount of data processed, the maximum number of concurrency, the size of the source file and the number of BEs in the current cluster ** together determine the number of concurrent imports**.
 
-  ````text
+  ```text
   The number of concurrent imports this time = Math.min (source file size/minimum processing capacity, maximum concurrent number, current number of BE nodes)
   The processing volume of a single BE imported this time = the size of the source file / the number of concurrent imports this time
-  ````
+  ```
 
   Usually the maximum amount of data supported by an import job is `max_bytes_per_broker_scanner * number of BE nodes`. If you need to import a larger amount of data, you need to adjust the size of the `max_bytes_per_broker_scanner` parameter appropriately.
 
   default allocation:
 
-  ````text
+  ```text
   Parameter name: min_bytes_per_broker_scanner, the default is 64MB, the unit is bytes.
   Parameter name: max_broker_concurrency, default 10.
   Parameter name: max_bytes_per_broker_scanner, the default is 3G, the unit is bytes.
-  ````
+  ```
 
 ## Best Practices
 
@@ -343,7 +343,7 @@ Only the case of a single BE is discussed here. If the user cluster has multiple
 
   1. Modify the maximum scan amount and maximum concurrent number of a single BE according to the current number of BEs and the size of the original file.
 
-     ````text
+     ```text
      Modify the configuration in fe.conf
      max_broker_concurrency = number of BEs
      The amount of data processed by a single BE of the current import task = original file size / max_broker_concurrency
@@ -352,7 +352,7 @@ Only the case of a single BE is discussed here. If the user cluster has multiple
      For example, for a 100G file, the number of BEs in the cluster is 10
      max_broker_concurrency = 10
      max_bytes_per_broker_scanner >= 10G = 100G / 10
-     ````
+     ```
 
      After modification, all BEs will process the import task concurrently, each BE processing part of the original file.
 
@@ -360,12 +360,12 @@ Only the case of a single BE is discussed here. If the user cluster has multiple
 
   2. Customize the timeout time of the current import task when creating an import
 
-     ````text
+     ```text
      The amount of data processed by a single BE of the current import task / the slowest import speed of the user Doris cluster (MB/s) >= the timeout time of the current import task >= the amount of data processed by a single BE of the current import task / 10M/s
      
      For example, for a 100G file, the number of BEs in the cluster is 10
      timeout >= 1000s = 10G / 10M/s
-     ````
+     ```
 
   3. When the user finds that the timeout time calculated in the second step exceeds the default import timeout time of 4 hours
 
@@ -373,13 +373,13 @@ Only the case of a single BE is discussed here. If the user cluster has multiple
 
      The expected maximum import file data volume of the Doris cluster can be calculated by the following formula:
 
-     ````text
+     ```text
      Expected maximum import file data volume = 14400s * 10M/s * number of BEs
      For example: the number of BEs in the cluster is 10
      Expected maximum import file data volume = 14400s * 10M/s * 10 = 1440000M ≈ 1440G
      
      Note: The average user's environment may not reach the speed of 10M/s, so it is recommended that files over 500G be divided and imported.
-     ````
+     ```
 
 ### Job scheduling
 
@@ -421,14 +421,14 @@ Currently the Profile can only be viewed after the job has been successfully exe
 
   If it is data in PARQUET or ORC format, the column name of the file header needs to be consistent with the column name in the doris table, such as:
 
-  ````text
+  ```text
   (tmp_c1,tmp_c2)
   SET
   (
       id=tmp_c2,
       name=tmp_c1
   )
-  ````
+  ```
 
   Represents getting the column with (tmp_c1, tmp_c2) as the column name in parquet or orc, which is mapped to the (id, name) column in the doris table. If set is not set, the column in column is used as the map.
 

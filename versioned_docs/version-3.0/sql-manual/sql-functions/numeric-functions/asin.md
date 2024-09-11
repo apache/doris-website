@@ -28,7 +28,7 @@ under the License.
 #### Syntax
 
 `DOUBLE asin(DOUBLE x)`
-Returns the arc sine of `x`, or `nan` if `x` is not in the range `-1` to `1`.
+Returns the arc sine of `x`, or `NULL` if `x` is not in the range `-1` to `1`.
 
 ### example
 

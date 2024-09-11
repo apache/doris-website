@@ -120,6 +120,8 @@ Doris BE 运行时存在各种 Cache，通常无需关注 Cache 内存，因为�
 
 但 Cache 过大会增加内存 GC 的压力，增加查询或导入报错进程可用内存不足的风险，以及 BE 进程 OOM Crash 的风险。所以如果内存持续紧张，可以考虑优先降低 Cache 的上限、关闭 Cache 或降低 Cache entry 的存活时间，更小的 Cache 在某些场景中可能会降低查询性能，但在生产环境中通常可以被容忍，调整后可以观察一段时间的查询和导入的性能。
 
+> Doris 2.1 之前 Memory GC 还不完善，内存不足时可能无法及时释放 Cache，如果内存持续紧张，常常需要考虑手动降低 Cache 上限。
+
 Doris 2.1.6 之后，如果希望在 BE 运行中手动清理所有 Cache，执行 `curl http://{be_host}:{be_web_server_port}/api/clear_cache/all`，将返回释放的内存大小。
 
 下面分析不同 Cache 内存使用多的情况。
@@ -130,7 +132,7 @@ Doris 2.1.6 之后，如果希望在 BE 运行中手动清理所有 Cache，执�
 
 - 执行 `curl -X POST http://{be_host}:{be_web_server_port}/api/update_config?disable_storage_page_cache=true` 对正在运行的 BE 禁用 DataPageCache，并默认在最长 10 分钟后清空，但这是临时方法，BE 重启后 DataPageCache 将重新生效。
 
-- 若确认要长期减少 DataPageCache 的内存使用，参考 [BE 配置项](../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调小 `storage_page_cache_limit` 减小 DataPageCache 的容量，或调小 `data_page_cache_stale_sweep_time_sec` 减小 DataPageCache 缓存有效时长，或增加 `disable_storage_page_cache=true` 禁用 DataPageCache，然后重启 BE 进程。
+- 若确认要长期减少 DataPageCache 的内存使用，参考 [BE 配置项](../../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调小 `storage_page_cache_limit` 减小 DataPageCache 的容量，或调小 `data_page_cache_stale_sweep_time_sec` 减小 DataPageCache 缓存有效时长，或增加 `disable_storage_page_cache=true` 禁用 DataPageCache，然后重启 BE 进程。
 
 ### SegmentCache 内存使用多
 
@@ -138,10 +140,10 @@ Doris 2.1.6 之后，如果希望在 BE 运行中手动清理所有 Cache，执�
 
 - 执行 `curl -X POST http:/{be_host}:{be_web_server_port}/api/update_config?disable_segment_cache=true` 对正在运行的 BE 禁用 SegmentCache，并默认在最长 10 分钟后清空，但这是临时方法，BE 重启后 SegmentCache 将重新生效。
 
-- 若确认要长期减少 SegmentCache 的内存使用，参考 [BE 配置项](../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调整 `segment_cache_capacity` 或 `segment_cache_memory_percentage` 减小 SegmentCache 的容量，或调小 `tablet_rowset_stale_sweep_time_sec` 减小 SegmentCache 缓存有效时长，或者在 `conf/be.conf` 中增加 `disable_segment_cache=true` 禁用 SegmentCache 并重启 BE 进程。
+- 若确认要长期减少 SegmentCache 的内存使用，参考 [BE 配置项](../../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调整 `segment_cache_capacity` 或 `segment_cache_memory_percentage` 减小 SegmentCache 的容量，或调小 `tablet_rowset_stale_sweep_time_sec` 减小 SegmentCache 缓存有效时长，或者在 `conf/be.conf` 中增加 `disable_segment_cache=true` 禁用 SegmentCache 并重启 BE 进程。
 
 ### PKIndexPageCache 内存使用多
 
 - Doris 2.1.6 之后，执行 `curl http://{be_host}:{be_web_server_port}/api/clear_cache/PKIndexPageCache` 可以在 BE 运行中手动清理。
 
-- 参考 [BE 配置项](../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调小 `pk_storage_page_cache_limit` 减小 PKIndexPageCache 的容量，或调小 `pk_index_page_cache_stale_sweep_time_sec` 减小 PKIndexPageCache 缓存有效时长，或者在 `conf/be.conf` 中增加 `disable_pk_storage_page_cache=true` 禁用 PKIndexPageCache，然后重启 BE 进程。
+- 参考 [BE 配置项](../../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调小 `pk_storage_page_cache_limit` 减小 PKIndexPageCache 的容量，或调小 `pk_index_page_cache_stale_sweep_time_sec` 减小 PKIndexPageCache 缓存有效时长，或者在 `conf/be.conf` 中增加 `disable_pk_storage_page_cache=true` 禁用 PKIndexPageCache，然后重启 BE 进程。

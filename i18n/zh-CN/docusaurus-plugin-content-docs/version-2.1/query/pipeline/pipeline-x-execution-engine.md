@@ -26,7 +26,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# PipelineX 执行引擎
+
 
 ## 背景
 PipelineX 执行引擎的目标是为了解决 Doris pipeline 引擎的四大问题：

@@ -99,13 +99,13 @@ feSpec:
 
 Among them, the name of [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) needs to be specified in ${storageClassName}. You can use the following command to view the StorageClass supported in the current Kubernetes cluster:
 
-```bash
+```shell
 kubectl get sc
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                          PROVISIONER                    RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
 openebs-hostpath              openebs.io/local               Delete          WaitForFirstConsumer   false                  212d
 openebs-device                openebs.io/local               Delete          WaitForFirstConsumer   false                  212d

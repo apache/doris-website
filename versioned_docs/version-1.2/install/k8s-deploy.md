@@ -26,7 +26,7 @@ under the License.
 
 # K8s Deployment Doris
 
-<version since="dev"></version>
+ 
 
 ## Environmental Preparation
 

@@ -77,7 +77,7 @@ example:
 
 为了进行调试，需要在 fe 启动时，加上调试的参数，比如 
 
-```bash
+```shell
 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
 ```
 

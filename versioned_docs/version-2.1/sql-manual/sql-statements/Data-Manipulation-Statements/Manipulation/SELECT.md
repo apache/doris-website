@@ -66,7 +66,10 @@ SELECT
 
    4. `ALL | DISTINCT ` : to refresh the result set, all is all, distinct/distinctrow will refresh the duplicate columns, the default is all
    
-   5. <version since="1.2" type="inline"> `ALL EXCEPT`: Filter on the full (all) result set, except specifies the name of one or more columns to be excluded from the full result set. All matching column names will be ignored in the output. </version>
+   5. `ALL EXCEPT`: Filter on the full (all) result set, except specifies the name of one or more columns to be excluded from the full result set. All matching column names will be ignored in the output. 
+    
+   This feature  is supported since the Apache Doris 1.2 version
+    
 
    6. `INTO OUTFILE 'file_name' ` : save the result to a new file (which did not exist before), the difference lies in the save format.
 
@@ -126,7 +129,7 @@ join_condition:
     ON conditional_expr
 ```
 
-**UNION Grammar：**
+**UNION Grammar:**
 
 ```sql
 SELECT ...
@@ -323,7 +326,7 @@ Recursive CTE is currently not supported.
      
      SELECT college, region, seed FROM tournament
        ORDER BY 2, 3;
-     ````
+     ```
 
    - If ORDER BY appears in a subquery and also applies to the outer query, the outermost ORDER BY takes precedence.
 
@@ -331,7 +334,7 @@ Recursive CTE is currently not supported.
 
      ```sql
      SELECT a, COUNT(b) FROM test_table GROUP BY a ORDER BY NULL;
-     ````
+     ```
 
      
 
@@ -345,7 +348,7 @@ Recursive CTE is currently not supported.
 
      ```sql
      SELECT COUNT(col1) AS col2 FROM t GROUP BY col2 HAVING col2 = 2;
-     ````
+     ```
 
    - Remember not to use HAVING where WHERE should be used. HAVING is paired with GROUP BY.
 
@@ -354,7 +357,7 @@ Recursive CTE is currently not supported.
      ```sql
      SELECT user, MAX(salary) FROM users
        GROUP BY user HAVING MAX(salary) > 10;
-     ````
+     ```
 
    - The LIMIT clause can be used to constrain the number of rows returned by a SELECT statement. LIMIT can have one or two arguments, both of which must be non-negative integers.
 
@@ -364,7 +367,7 @@ Recursive CTE is currently not supported.
      /*Then if you want to retrieve all rows after a certain offset is set, you can set a very large constant for the second parameter. The following query fetches all data from row 96 onwards */
      SELECT * FROM tbl LIMIT 95,18446744073709551615;
      /*If LIMIT has only one parameter, the parameter specifies the number of rows that should be retrieved, and the offset defaults to 0, that is, starting from the first row*/
-     ````
+     ```
 
    - SELECT...INTO allows query results to be written to a file
 
@@ -405,7 +408,7 @@ Recursive CTE is currently not supported.
        | 21 |
        +-------------+
        4 rows in set (0.01 sec)
-       ````
+       ```
    
 6. JOIN
    

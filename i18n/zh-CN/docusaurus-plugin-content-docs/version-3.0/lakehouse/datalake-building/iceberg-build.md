@@ -36,9 +36,8 @@ under the License.
 使用前，请先设置：
 <br />
 set global enable_nereids_planner = true;
-set global enable_fallback_to_original_planner = false;
 <br />
-从老版本升级上来的集群，这些参数可能有变化。
+set global enable_fallback_to_original_planner = false;
 :::
 
 ## 元数据创建与删除
@@ -60,7 +59,10 @@ set global enable_fallback_to_original_planner = false;
         
     上面主要演示了如何在 Apache Doris 中创建 HMS Iceberg Catalog。Apache Doris 目前支持多种类型的 Iceberg Catalog。更多配置，请参阅 [Iceberg Catalog](../datalake-analytics/iceberg.md)
 
-    注意，如果需要通过 Apache Doris 通过 HMS Catalog 创建 Iceberg 表或写入数据，需要在 Catalog 属性中显式增加 `fs.defaultFS` 属性以及 `warehouse` 属性。如果创建 Catalog 仅用于查询，则这两个参数可以省略。
+    注意：
+
+    - 如果需要通过 Apache Doris 的 Hive Catalog 创建 Iceberg 表或写入数据，需要在 Catalog 属性中显式增加 `fs.defaultFS` 属性以及 `warehouse` 属性。如果创建 Catalog 仅用于查询，则这两个参数可以省略。
+    - Hive Catalog 可以查询 Iceberg 表，但是不能在 Hive Catalog 中创建 Iceberg 表。
 
 - 删除
 
