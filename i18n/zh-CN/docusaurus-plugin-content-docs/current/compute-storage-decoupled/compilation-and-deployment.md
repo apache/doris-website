@@ -24,21 +24,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在存算分离模式下进行 Doris 编译与存算一体模式的编译相似，主要区别在于新增 MS 模块的编译和部署。
-本文档主要介绍相比于3.0.0版本前的新增 MS 模块的编译，配置以及启停。
+# Doris 存算分离模式编译与部署手册
 
-## 获取二进制
+## 1. 概述
 
-存算分离和存算一体模式下的编译方式相似，均使用代码库自带的 `build.sh` 脚本编译，新增的 MS 模块使用参数`--cloud` 即可编出（二进制名为 `doris_cloud`）。
-**已经编译好的二进制（包含所有 Doris 模块）可以直接从 [Doris 下载页面](https://doris.apache.org/download/)下载（选择大于等于3.0.0的版本）**。
+本文档详细介绍了 Doris 存算分离模式下的编译和部署流程，重点说明了与存算一体模式的区别，特别是新增 Meta Service (MS) 模块的编译、配置和管理。
+
+## 2. 获取二进制
+
+### 2.1 直接下载
+
+已编译好的二进制文件（包含所有 Doris 模块）可从 [Doris 下载页面](https://doris.apache.org/download/) 获取（选择 3.0.2 或更高版本）。
+
+### 2.2 编译产出
+
+使用代码库自带的 `build.sh` 脚本进行编译。新增的 MS 模块通过 `--cloud` 参数编译。
 
 ```shell
 sh build.sh --fe --be --cloud 
 ```
 
-相比 3.0.0 之前的版本，编译完成的二进制包中（产出）多了 `ms` 目录。
+编译完成后，在 `output` 目录下会新增 `ms` 目录：
 
-```shell
+```
 output
 ├── be
 ├── fe
@@ -48,18 +56,23 @@ output
     └── lib
 ```
 
-## Meta Service 部署
+## 3. Meta Service 部署
 
-### 配置
+### 3.1 配置
 
-通常情况下，只需在`./conf` 目录下的默认配置文件 `doris_cloud.conf`中修改 `brpc_listen_port` 和 `fdb_cluster` 两个参数。（Meta Service 配置只需一个配置文件。）
+在 `./conf/doris_cloud.conf` 文件中，主要需要修改以下两个参数：
+
+1. `brpc_listen_port`：Meta Service 的监听端口，默认为 5000。
+2. `fdb_cluster`：FoundationDB 集群的连接信息，部署 FoundationDB 时可以获取。
+
+示例配置：
 
 ```Shell
 brpc_listen_port = 5000
 fdb_cluster = xxx:yyy@127.0.0.1:4500
 ```
 
-上述 `brpc_listen_port = 5000` 是 Meta Service 的默认端口。其中，`fdb_cluster` 是 FoundationDB 集群的连接信息，其值是 FoundationDB 所部署机器上的 `/etc/foundationdb/fdb.cluster` 文件内容。
+注意：`fdb_cluster` 的值应与 FoundationDB 部署机器上的 `/etc/foundationdb/fdb.cluster` 文件内容一致。
 
 **示例, 文件的最后一行就是要填到doris_cloud.conf 里 fdb_cluster 字段的值**
 
@@ -71,73 +84,189 @@ cat /etc/foundationdb/fdb.cluster
 cloud_ssb:A83c8Y1S3ZbqHLL4P4HHNTTw0A83CuHj@127.0.0.1:4500
 ```
 
-### 启停
+### 3.2 启动与停止
 
-Meta Service 依赖 JAVA 运行环境，并使用 OpenJDK 17。在启动前这两个服务前，请确保已正确设置 `export JAVA_HOME` 环境变量。
+*环境要求*
 
-`doris_cloud` 部署的 `bin` 目录下提供了启停脚本，调用对应的启停脚本即可完成启停。
+确保已正确设置 `JAVA_HOME` 环境变量，指向 OpenJDK 17，进入 `ms` 目录。
 
-在 `ms` 目录中：
+*启动命令*
 
 ```Shell
 export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --daemon
+```
 
+*停止命令*
+
+``` shell
 bin/stop.sh
 ```
 
-若 Meta Service 进程正常启动，将能在 `doris_cloud.out` 文件中观察到 `successfully started` 的输出信息。以下为一个启动的输出信息示例
+*验证启动*
 
-```
-2024-09-02 21:03:53 try to start doris_cloud
-process working directory: "/mnt/disk1/gavinchou/debug/doris-cloud/ms"
-pid=810125 written to file=./bin/doris_cloud.pid
-version:{doris_cloud-0.0.0-debug} code_version:{commit=7d94417e6ca10f3c77bea07caf4994af155b6e99 time=2024-09-02 21:03:01 +0800} build_info:{initiator=gavinchou@VM-10-11-centos build_at=2024-09-02 21:03:01 +0800 build_on=NAME="TencentOS Se
-rver" VERSION="3.1 (Final)" }
+检查 `doris_cloud.out` 文件中是否有 `successfully started` 的输出信息。
 
-run doris_cloud as meta_service and recycler by default
-meta-service started
-recycler started
-successfully started brpc listening on port=6000 time_elapsed_ms=139
-```
+## 4. 数据回收功能独立部署（可选）
 
-## 将数据回收功能作为单独进程部署
+*准备工作*
 
-在一些场景中为了更好的隔离性以及稳定性，我们需要将元数据操作功能和数据回收功能分开不同的进程部署。
+1. 创建新的工作目录（如 `recycler`）。
+2. 复制 `ms` 目录内容到新目录：
 
-在成功部署并启动 Meta Service 之后，Doris 存算分离模式的底座便已完成搭建。
+   ```shell
+   cp -r ms recycler
+   ```
 
-`ms`目录也可以用于启动为数据回收功能进程，只需使用不同启动参数启动即可。
-需要注意的是，需要单独准备一个独立的工作目录，二进制以及配置文件都是单独的一份。
+*配置*
 
-使用以下命令从`ms`目录中拷贝二进制文件至一个新的 Recycler 工作目录`re`。
-```Shell
-cp -r ms re
-```
+在新目录的配置文件中修改 BRPC 监听端口。
 
-Meta Service 启动脚本可以接受 `--meta-service` 和 `--recycler` 两个参数指定的是当前 Meta Service 进程拥有什么样的能力。
-前者为元数据操作(主要提供一些在线实时元数据操作)， 后者为数据回收功能(离线异步数据回收等流程)。
-
-在 re 目录下对配置文件中的 BRPC 的监听端口号按需进行必要修改，然后使用 `--recycler` 参数启动即可。
+*启动数据回收功能*
 
 ```Shell
 export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --recycler --daemon
-
-bin/stop.sh
 ```
 
-这样我们得到了一个只有数据回收功能的 Meta Service 进程，它不负责元数据的操作，**在 FE BE 的配置中不要将只有回收功能的 Meta Service 进程其作为 `meta_service_endpoint` 配置的目标**。
+*启动仅元数据操作功能*
 
-同理，我们通过控制启动参数，也可以得到一个只有元数据操作功能的 Meta Service 进程
-在 ms 目录下使用以下参数启动
 ```Shell
 export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --meta-service --daemon
-
-bin/stop.sh
 ```
-这样我们得到了一个只有元数据操作功能的 Meta Service 进程，这些进程可以作为 FE BE 的配置 `meta_service_endpoint` 配置的目标。
 
-通过上述操作我们可以将 Meta Service 的离线的任务和在线的任务处理剥离到不同进程处理，大大提高了系统的稳定性。
+## 5. FE 和 BE 的启动流程
 
+本节详细说明了在存算分离架构下启动 FE（Frontend）和 BE（Backend）的步骤。
+
+### 5.1 启动顺序
+
+1. 以 MASTER 角色启动实例的第一个 FE
+2. 向实例中添加其他 FE 和 BE
+3. 添加第一个存储后端
+
+### 5.2 启动 MASTER 角色的 FE
+
+#### 5.2.1 配置 fe.conf
+
+在 `fe.conf` 文件中，需要配置以下关键参数：
+
+1. `cluster_id`
+   - 描述：存算分离架构下集群的唯一标识符
+   - 格式：int 类型
+   - 示例：`12345678`
+
+2. `meta_service_endpoint`
+   - 描述：Meta Service 的地址和端口
+   - 格式：`IP地址:端口号`
+   - 示例：`127.0.0.1:5000`, 可以用逗号分割配置多个meta service。
+
+#### 5.2.2 启动 FE
+
+启动命令示例：
+
+```bash
+bin/start_fe.sh --daemon
+```
+
+### 5.3 添加其他 FE 节点
+
+使用以下 SQL 命令添加额外的 FE 节点：
+
+```sql
+ALTER SYSTEM ADD FOLLOWER "host:port";
+```
+
+将 `host:port` 替换为实际的 FE 节点地址和端口。
+
+### 5.4 添加 BE 节点
+
+要向集群添加 Backend 节点，请对每个 Backend 执行以下步骤：
+
+1. 启动 Backend：
+
+   使用以下命令启动 Backend：
+
+   ```bash
+   bin/start_be.sh --daemon
+   ```
+
+2. 将 Backend 添加到集群：
+
+   使用 MySQL 客户端连接到任意 Frontend，并执行：
+
+   ```sql
+   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
+   ```
+
+   将 `<ip>` 替换为新 Backend 的 IP 地址，将 `<heartbeat_service_port>` 替换为其配置的心跳服务端口（默认为 9050）。
+
+   可以通过 PROPERTIES 设置 BE 所在的 计算组。
+
+   更详细的用法请参考 [ADD BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) 和 [REMOVE BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND.md)。
+
+3. 验证 Backend 状态：
+
+   检查 Backend 日志文件（`be.log`）以确保它已成功启动并加入集群。
+
+   您还可以使用以下 SQL 命令检查 Backend 状态：
+
+   ```sql
+   SHOW BACKENDS;
+   ```
+
+   这将显示集群中所有 Backend 及其当前状态。
+
+## 6. 创建存储库
+
+存储库是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个存储库。首个创建的存储库将成为默认存储库。系统表和未指定存储库的表都将存储在这个默认存储库中。默认存储库不能被删除。以下是为您的 Doris 集群创建存储库的方法：
+
+### 6.1 创建 HDFS 存储库
+
+要使用 SQL 创建存储库，请使用 MySQL 客户端连接到您的 Doris 集群
+
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
+    PROPERTIES (
+    "type"="hdfs",
+    "fs.defaultFS"="hdfs://127.0.0.1:8020"
+    );
+```
+
+### 6.2 创建 S3 存储库
+
+要使用兼容 S3 的对象存储创建存储库，请按照以下步骤操作：
+
+1. 使用 MySQL 客户端连接到您的 Doris 集群。
+
+2. 执行以下 SQL 命令来创建 S3 存储库：
+
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+    PROPERTIES (
+    "type"="S3",
+    "s3.endpoint"="s3.us-east-1.amazonaws.com",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.region" = "us-east-1",
+    "s3.root.path" = "ssb_sf1_p2_s3",
+    "s3.bucket" = "doris-build-1308700295",
+    "provider" = "S3"
+    );
+```
+
+要在其他对象存储上创建存储库，请参考 [创建存储库](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
+
+### 6.3 设置默认存储库
+
+使用如下 SQL 语句设置一个默认存储库。
+
+```sql
+SET <storage_vault_name> AS DEFAULT STORAGE VAULT
+```
+
+## 7. 注意事项
+
+- 仅元数据操作功能的 Meta Service 进程应作为 FE 和 BE 的 `meta_service_endpoint` 配置目标。
+- 数据回收功能进程不应作为 `meta_service_endpoint` 配置目标。
