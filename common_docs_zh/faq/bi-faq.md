@@ -24,21 +24,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 常见BI问题
 
 ## Power BI
 
-### Q1. JDBC拉取表到Desktop Power BI 时报错 Timeout expired. The timeout period elapsed prior to completion of the operation or the server is not responding.
+### Q1. JDBC 拉取表到 Desktop Power BI 时报错 Timeout expired. The timeout period elapsed prior to completion of the operation or the server is not responding.
 
-通常这是Power BI在拉取数据源的时间超时，在填写数据源服务器和数据库时点击高级选项，其中有个超时时间，把该时间配置的较高。
+通常这是 Power BI 在拉取数据源的时间超时，在填写数据源服务器和数据库时点击高级选项，其中有个超时时间，把该时间配置的较高。
 
-### Q2. 2.1.x版本JDBC连接Power BI时报错读取数据时报错，给定的关键字目前不在字典中。
+### Q2. 2.1.x 版本 JDBC 连接 Power BI 时报错读取数据时报错，给定的关键字目前不在字典中。
 
-先在数据库中执行show collation，一般情况下会只有utf8mb4_900_bin，charset为utf8mb4 这一行结果。该报错的主要原因是在连接Power BI时需要找33号ID，即需要该表中有33ID的行，需要升级至2.1.5版本以上。
+先在数据库中执行 show collation，一般情况下会只有 utf8mb4_900_bin，charset 为 utf8mb4 这一行结果。该报错的主要原因是在连接 Power BI 时需要找33号 ID，即需要该表中有33 ID 的行，需要升级至2.1.5版本以上。
 
 ### Q3. 连接时报错从提供程序读取数据时出错：索引和计数必须引用该字符串内的位置。
 
-该问题原因是连接过程会加载全局参数，该SQL出现了列名和values 相同的情况
+该问题原因是连接过程会加载全局参数，该 SQL 出现了列名和 values 相同的情况
 
 ```
 SELECT
@@ -48,9 +47,9 @@ SELECT
 
 可以在当前版本关闭新优化器也可以升级到2.0.7或者2.1.6及以上版本。
 
-### Q4. JDBC连接2.1.x版本报错从提供读取数据时出错："Character set 'utf8mb3' is not supported by .Net.Framework"。
+### Q4. JDBC 连接2.1.x 版本报错从提供读取数据时出错："Character set 'utf8mb3' is not supported by .Net.Framework"。
 
-该问题易在2.1.x版本遇到，如果遇到该问题则需要把JDBC Driver升级到8.0.32。
+该问题易在2.1.x 版本遇到，如果遇到该问题则需要把 JDBC Driver 升级到8.0.32。
 
 ## Tableau
 
@@ -58,10 +57,10 @@ SELECT
 
 在当前版本关闭新优化器或者升级至2.0.7及以上版本。
 
-### Q2. 报错SSL connection error:protocol version mismatch 无法连接到MySQL服务器。
+### Q2. 报错 SSL connection error:protocol version mismatch 无法连接到 MySQL 服务器。
 
-该报错原因是Doris开启了SSL验证，但是连接过程中未使用SSL连接，需要在fe.conf里面关闭enable_ssl变量。
+该报错原因是 Doris 开启了 SSL 验证，但是连接过程中未使用 SSL 连接，需要在 fe.conf 里面关闭 enable_ssl 变量。
 
-### Q3. 连接时报错Unsupported command(COM_STMT_PREPARED)。
+### Q3. 连接时报错 Unsupported command ( COM_STMT_PREPARED )。
 
-MySQL驱动版本安装不恰当，需要改安装为MySQL5.1.x版本的连接驱动。
+MySQL 驱动版本安装不恰当，需要改安装为 MySQL5.1.x 版本的连接驱动。
