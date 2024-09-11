@@ -40,13 +40,13 @@ grammar:
 
 ```sql
 CANCEL DECOMMISSION BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...];
-````
+```
 
 - Find backend through backend_id
 
 ```sql
 CANCEL DECOMMISSION BACKEND "id1","id2","id3...";
-````
+```
 
 ### Example
 
@@ -54,7 +54,7 @@ CANCEL DECOMMISSION BACKEND "id1","id2","id3...";
 
       ```sql
       CANCEL DECOMMISSION BACKEND "host1:port", "host2:port";
-      ````
+      ```
 
  2. Cancel the offline operation of the node with backend_id 1:
     

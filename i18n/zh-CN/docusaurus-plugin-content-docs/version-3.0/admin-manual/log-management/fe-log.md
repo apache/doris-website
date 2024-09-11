@@ -114,11 +114,11 @@ FE 的 Debug 级别日志可以通过修改配置文件开启，也可以通过�
 
    通过 UI 界面可以在运行时修改日志级别。无需重启 FE 节点。在浏览器打开 FE 节点的 http 端口（默认为 8030），并登陆 UI 界面。之后点击上方导航栏的 `Log` 标签。
 
-   ![](/images/log_manage/fe_web_log1.png)
+   ![通过 FE UI 界面](/images/log_manage/fe_web_log1.png)
 
    我们在 Add 输入框中可以输入包名或者具体的类名，可以打开对应的 Debug 日志。如输入 `org.apache.doris.catalog.Catalog` 则可以打开 Catalog 类的 Debug 日志：
 
-   ![](/images/log_manage/fe_web_log2.png)
+   ![通过 FE UI 界面](/images/log_manage/fe_web_log2.png)
 
    你也可以在 Delete 输入框中输入包名或者具体的类名，来关闭对应的 Debug 日志。
 
@@ -130,7 +130,7 @@ FE 的 Debug 级别日志可以通过修改配置文件开启，也可以通过�
 
    通过以下 API 也可以在运行时修改日志级别。无需重启 FE 节点。
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?add_verbose=org.apache.doris.catalog.Catalog
    ```
 
@@ -153,7 +153,7 @@ FE 的 Debug 级别日志可以通过修改配置文件开启，也可以通过�
 
    也可以通过以下 API 关闭 Debug 日志：
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?del_verbose=org.apache.doris.catalog.Catalog
    ```
 

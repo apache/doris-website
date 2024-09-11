@@ -46,7 +46,7 @@ grammar:
 ```sql
 CREATE FILE "file_name" [IN database]
 PROPERTIES("key"="value", ...)
-````
+```
 
 illustrate:
 
@@ -68,7 +68,7 @@ illustrate:
        "url" = "https://test.bj.bcebos.com/kafka-key/ca.pem",
        "catalog" = "kafka"
    );
-   ````
+   ```
 
 2. Create a file client.key, classified as my_catalog
 
@@ -81,13 +81,13 @@ illustrate:
        "catalog" = "my_catalog",
        "md5" = "b5bb901bf10f99205b39a46ac3557dd9"
    );
-   ````
+   ```
 
 ### Keywords
 
-````text
+```text
 CREATE, FILE
-````
+```
 
 ### Best Practice
 

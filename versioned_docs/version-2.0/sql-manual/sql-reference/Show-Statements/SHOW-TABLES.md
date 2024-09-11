@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW [FULL] TABLES [LIKE]
-````
+```
 
 illustrate:
 
@@ -60,7 +60,7 @@ illustrate:
      | left_table                      |
      +---------------------------------+
      5 rows in set (0.00 sec)
-     ````
+     ```
 
 2. Fuzzy query by table name
 
@@ -73,7 +73,7 @@ illustrate:
     | cmy2           |
     +----------------+
     2 rows in set (0.00 sec)
-    ````
+    ```
 
 ### Keywords
 

@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW DYNAMIC PARTITION TABLES [FROM db_name];
-````
+```
 
 ### Example
 
@@ -46,7 +46,7 @@ SHOW DYNAMIC PARTITION TABLES [FROM db_name];
 
      ```sql
      SHOW DYNAMIC PARTITION TABLES FROM database;
-     ````
+     ```
 
 ### Keywords
 

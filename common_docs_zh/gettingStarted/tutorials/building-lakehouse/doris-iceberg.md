@@ -55,7 +55,7 @@ Apache Doris 对 Iceberg 多项核心特性提供了原生支持：
 
 未来，Apache Iceberg 将作为 Apache Doris 的原生表引擎之一，提供更加完善的湖格式数据的分析、管理功能。Apache Doris 也将逐步支持包括 Update/Delete/Merge、写回时排序、增量数据读取、元数据管理等 Apache Iceberg 更多高级特性，共同构建统一、高性能、实时的湖仓平台。
 
-关于更多说明，请参阅 [Iceberg Catalog](../../lakehouse/datalake-analytics/iceberg.md)
+关于更多说明，请参阅 [Iceberg Catalog](../../../lakehouse/datalake-analytics/iceberg.md)
 
 ## 使用指南
 
@@ -81,7 +81,7 @@ Apache Doris 对 Iceberg 多项核心特性提供了原生支持：
 
 2. 启动后，可以使用如下脚本，登陆 Doris 命令行：
 	
-	```
+	```sql
 	-- login doris
 	bash ./start_doris_client.sh
 	```
@@ -90,7 +90,7 @@ Apache Doris 对 Iceberg 多项核心特性提供了原生支持：
 
 首先登陆 Doris 命令行后，Doris 集群中已经创建了名为 Iceberg 的 Catalog（可通过 `SHOW CATALOGS`/`SHOW CREATE CATALOG iceberg` 查看）。以下为该 Catalog 的创建语句：
 
-```
+```sql
 -- 已创建，无需执行
 CREATE CATALOG `iceberg` PROPERTIES (
     "type" = "iceberg",
@@ -105,7 +105,7 @@ CREATE CATALOG `iceberg` PROPERTIES (
 
 在 Iceberg Catalog 创建数据库和 Iceberg 表：
 
-```
+```sql
 mysql> SWITCH iceberg;
 Query OK, 0 rows affected (0.00 sec)
 
@@ -133,7 +133,7 @@ Query OK, 0 rows affected (0.15 sec)
 
 向 Iceberg 表中插入数据：
 
-```
+```sql
 mysql> INSERT INTO iceberg.nyc.taxis
        VALUES
         (1, 1000371, 1.8, 15.32, 'N', '2024-01-01 9:15:23'),
@@ -156,7 +156,7 @@ Query OK, 6 rows affected (0.25 sec)
 
 - 简单查询
 
-	```
+	```sql
 	mysql> SELECT * FROM iceberg.nyc.taxis;
 	+-----------+---------+---------------+-------------+--------------------+----------------------------+
 	| vendor_id | trip_id | trip_distance | fare_amount | store_and_fwd_flag | ts                         |
@@ -182,7 +182,7 @@ Query OK, 6 rows affected (0.25 sec)
 
 - 分区剪裁
 
-	```
+	```sql
 	mysql> SELECT * FROM iceberg.nyc.taxis where vendor_id = 2 and ts >= '2024-01-01' and ts < '2024-01-02';
 	+-----------+---------+---------------+-------------+--------------------+----------------------------+
 	| vendor_id | trip_id | trip_distance | fare_amount | store_and_fwd_flag | ts                         |
@@ -219,7 +219,7 @@ Query OK, 6 rows affected (0.25 sec)
 
 我们先再次插入几行数据：
 
-```
+```sql
 INSERT INTO iceberg.nyc.taxis VALUES (1, 1000375, 8.8, 55.55, 'Y', '2024-01-01 8:10:22'), (3, 1000376, 7.4, 32.35, 'N', '2024-01-02  1:14:45');
 Query OK, 2 rows affected (0.17 sec)
 {'status':'COMMITTED', 'txnId':'10086'}
@@ -240,7 +240,7 @@ mysql> SELECT * FROM iceberg.nyc.taxis;
 
 使用 `iceberg_meta` 表函数查询表的快照信息：
 
-```
+```sql
 mysql> select * from iceberg_meta("table" = "iceberg.nyc.taxis", "query_type" = "snapshots");
 +---------------------+---------------------+---------------------+-----------+-----------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | committed_at        | snapshot_id         | parent_id           | operation | manifest_list                                                                                             | summary                                                                                                                                                                                                                                                        |
@@ -253,7 +253,7 @@ mysql> select * from iceberg_meta("table" = "iceberg.nyc.taxis", "query_type" = 
 
 使用 `FOR VERSION AS OF` 语句查询指定快照：
 
-```
+```sql
 mysql> SELECT * FROM iceberg.nyc.taxis FOR VERSION AS OF 8483933166442433486;
 +-----------+---------+---------------+-------------+--------------------+----------------------------+
 | vendor_id | trip_id | trip_distance | fare_amount | store_and_fwd_flag | ts                         |
@@ -281,7 +281,7 @@ mysql> SELECT * FROM iceberg.nyc.taxis FOR VERSION AS OF 4726331391239920914;
 
 使用 `FOR TIME AS OF` 语句查询指定快照：
 
-```
+```sql
 mysql> SELECT * FROM iceberg.nyc.taxis FOR TIME AS OF "2024-07-29 03:38:23";
 +-----------+---------+---------------+-------------+--------------------+----------------------------+
 | vendor_id | trip_id | trip_distance | fare_amount | store_and_fwd_flag | ts                         |

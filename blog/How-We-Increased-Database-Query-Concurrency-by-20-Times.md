@@ -199,7 +199,7 @@ The following example demonstrates how to use a prepared statement in JDBC:
 
 1. Set a JDBC URL and enable prepared statement at the server end.
 
-```Bash
+```shell
 url = jdbc:mysql://127.0.0.1:9030/ycsb?useServerPrepStmts=true
 ```
 

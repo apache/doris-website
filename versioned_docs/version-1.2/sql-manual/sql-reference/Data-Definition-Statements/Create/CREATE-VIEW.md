@@ -40,7 +40,7 @@ CREATE VIEW [IF NOT EXISTS]
  [db_name.]view_name
  (column1[ COMMENT "col comment"][, column2, ...])
 AS query_stmt
-````
+```
 
 
 illustrate:
@@ -57,7 +57,7 @@ illustrate:
     AS
     SELECT c1 as k1, k2, k3, SUM(v1) FROM example_table
     WHERE k1 = 20160112 GROUP BY k1,k2,k3;
-    ````
+    ```
     
 2. Create a view with a comment
 
@@ -73,7 +73,7 @@ illustrate:
     AS
     SELECT c1 as k1, k2, k3, SUM(v1) FROM example_table
     WHERE k1 = 20160112 GROUP BY k1,k2,k3;
-    ````
+    ```
 
 ### Keywords
 

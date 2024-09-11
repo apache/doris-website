@@ -246,7 +246,7 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
     ```sql
     curl --location-trusted -u root  -H "label:123" -H "format: json" -T testData http://host:port/api/testDb/testTbl/_stream_load
     ```
-    为了提升吞吐量，支持一次性导入多条json数据，每行为一个json对象，默认使用\n作为换行符，需要将read_json_by_line设置为true，json数据格式如下：
+    为了提升吞吐量，支持一次性导入多条json数据，每行为一个json对象，默认使用`\n`作为换行符，需要将`read_json_by_line`设置为true，json数据格式如下：
             
     ```json
     {"category":"C++","author":"avc","title":"C++ primer","price":89.5}

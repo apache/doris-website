@@ -95,7 +95,7 @@ sequence_type用来指定sequence列的类型，可以为整型和时间类型�
 
 stream load 的写法是在header中的`function_column.sequence_col`字段添加隐藏列对应的source_sequence的映射， 示例
 
-```bash
+```shell
 curl --location-trusted -u root -H "columns: k1,k2,source_sequence,v1,v2" -H "function_column.sequence_col: source_sequence" -T testData http://host:port/api/testDb/testTbl/_stream_load
 ```
 
@@ -210,7 +210,7 @@ MySQL > desc test_table;
 
 此处以stream load为例
 
-```bash
+```shell
 curl --location-trusted -u root: -T testData http://host:port/api/test/test_table/_stream_load
 ```
 

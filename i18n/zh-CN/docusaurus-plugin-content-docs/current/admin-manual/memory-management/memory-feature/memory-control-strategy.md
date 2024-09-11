@@ -76,11 +76,11 @@ Doris BE 会定时从系统获取进程的物理内存和系统当前剩余可�
 
 ## 内存限制和水位线计算方法
 
-- 进程内存上限 MemLimit = `be.conf/mem_limit * PhysicalMemory`, 默认系统总内存的 90%。
+- 进程内存上限 MemLimit = `be.conf/mem_limit * PhysicalMemory`, 默认系统总内存的 90%，具体参考 。
 
 - 进程内存软限 SoftMemLimit = `be.conf/mem_limit * PhysicalMemory * be.conf/soft_mem_limit_frac`, 默认系统总内存的 81%。
 
-- 系统剩余可用内存低水位线 LowWaterMark = `Max(a, b, c)`, 在 64G 内存的机器上 LowWaterMark 默认略小于 3.2 GB, 其中 `a = PhysicalMemory - MemLimit`; `b = PhysicalMemory * 0.05`; `c = be.conf/max_sys_mem_available_low_water_mark_bytes`, 默认 6.4 GB。
+- 系统剩余可用内存低水位线 LowWaterMark = `be.conf/max_sys_mem_available_low_water_mark_bytes`，默认等于 -1，此时 LowWaterMark = `min(PhysicalMemory - MemLimit, PhysicalMemory * 0.05)`, 在 64G 内存的机器上 LowWaterMark 的值略小于 3.2 GB（因为 `PhysicalMemory` 的真实值往往小于 64G）。
 
 - 系统剩余可用内存警告水位线 WarningWaterMark = `2 * LowWaterMark` ，在 64G 内存的机器上 `WarningWaterMark` 默认略小于 6.4 GB。
 

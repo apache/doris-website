@@ -32,6 +32,7 @@ under the License.
 
 
 该函数和 PERCENTILE_APPROX 类似，唯一的区别是多了一个参数 w，用来表示 expr 出现的次数。
+注意参数 W 的取值需要大于0，如果计算过程中某一行的取值小于等于0时，则会跳过当前行。
 
 ## Example
 

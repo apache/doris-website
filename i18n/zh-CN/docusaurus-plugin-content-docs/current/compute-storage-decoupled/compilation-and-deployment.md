@@ -32,13 +32,13 @@ under the License.
 存算分离和存算一体模式下的编译方式相似，均使用代码库自带的 `build.sh` 脚本编译，新增的 MS 模块使用参数`--cloud` 即可编出（二进制名为 `doris_cloud`）。
 **已经编译好的二进制（包含所有 Doris 模块）可以直接从 [Doris 下载页面](https://doris.apache.org/download/)下载（选择大于等于3.0.0的版本）**。
 
-```Bash
+```shell
 sh build.sh --fe --be --cloud 
 ```
 
 相比 3.0.0 之前的版本，编译完成的二进制包中（产出）多了 `ms` 目录。
 
-```Bash
+```shell
 output
 ├── be
 ├── fe
@@ -63,7 +63,7 @@ fdb_cluster = xxx:yyy@127.0.0.1:4500
 
 **示例, 文件的最后一行就是要填到doris_cloud.conf 里 fdb_cluster 字段的值**
 
-```Bash
+```shell
 cat /etc/foundationdb/fdb.cluster
 
 # DO NOT EDIT!
@@ -86,15 +86,19 @@ bin/start.sh --daemon
 bin/stop.sh
 ```
 
-若 Meta Service 进程正常启动，将能在 `doris_cloud.out` 文件中观察到 `meta-service started` 的输出信息。同样地，Recycler 进程如果正常启动，则会在该文件中显示 `recycler started` 的输出信息。
+若 Meta Service 进程正常启动，将能在 `doris_cloud.out` 文件中观察到 `successfully started` 的输出信息。以下为一个启动的输出信息示例
 
 ```
-Tue Jun 18 00:46:37 CST 2024
+2024-09-02 21:03:53 try to start doris_cloud
 process working directory: "/mnt/disk1/gavinchou/debug/doris-cloud/ms"
-pid=2682786 written to file=./bin/doris_cloud.pid
-version:{doris_cloud-0.0.0-debug} code_version:{commit=4517faffbf79b48d34a94abb22ee090f2d6e2007 time=2024-06-18 00:40:29 +0800} build_info:{initiator=gavinchou@VM-10-7-centos build_at=2024-06-18 00:40:29 +0800 build_on=NAME="TencentOS Server" VERSION="3.1 (Final)" }
+pid=810125 written to file=./bin/doris_cloud.pid
+version:{doris_cloud-0.0.0-debug} code_version:{commit=7d94417e6ca10f3c77bea07caf4994af155b6e99 time=2024-09-02 21:03:01 +0800} build_info:{initiator=gavinchou@VM-10-11-centos build_at=2024-09-02 21:03:01 +0800 build_on=NAME="TencentOS Se
+rver" VERSION="3.1 (Final)" }
 
+run doris_cloud as meta_service and recycler by default
 meta-service started
+recycler started
+successfully started brpc listening on port=6000 time_elapsed_ms=139
 ```
 
 ## 将数据回收功能作为单独进程部署

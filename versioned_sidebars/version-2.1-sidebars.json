@@ -66,6 +66,7 @@
                         "table-design/data-model/tips"
                     ]
                 },
+                "table-design/row-store",
                 "table-design/data-partition",
                 "table-design/schema-change",
                 "table-design/cold-hot-separation",
@@ -229,6 +230,7 @@
                     ]
                 },
                 "query/high-concurrent-point-query",
+                "query/topn-query",
                 {
                     "type": "category",
                     "label": "Analyzing Query",
@@ -844,7 +846,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
-                                "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
@@ -1031,10 +1032,12 @@
                             "type": "category",
                             "label": "Encryption Functions",
                             "items": [
-                                "sql-manual/sql-functions/encrypt-digest-functions/aes",
+                                "sql-manual/sql-functions/encrypt-digest-functions/aes-encrypt",
+                                "sql-manual/sql-functions/encrypt-digest-functions/aes-decrypt",
                                 "sql-manual/sql-functions/encrypt-digest-functions/md5",
                                 "sql-manual/sql-functions/encrypt-digest-functions/md5sum",
-                                "sql-manual/sql-functions/encrypt-digest-functions/sm4",
+                                "sql-manual/sql-functions/encrypt-digest-functions/sm4-encrypt",
+                                "sql-manual/sql-functions/encrypt-digest-functions/sm4-decrypt",
                                 "sql-manual/sql-functions/encrypt-digest-functions/sm3",
                                 "sql-manual/sql-functions/encrypt-digest-functions/sm3sum",
                                 "sql-manual/sql-functions/encrypt-digest-functions/sha",

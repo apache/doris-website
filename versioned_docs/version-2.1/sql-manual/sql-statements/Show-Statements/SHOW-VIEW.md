@@ -38,7 +38,7 @@ grammar:
 
 ```sql
   SHOW VIEW { FROM | IN } table [ FROM db ]
-````
+```
 
 ### Example
 
@@ -46,7 +46,7 @@ grammar:
 
     ```sql
     SHOW VIEW FROM testTbl;
-    ````
+    ```
 
 ### Keywords
 

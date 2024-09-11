@@ -115,11 +115,11 @@ The Debug level log of FE can be enabled by modifying the configuration file or 
 
    You can modify the log level at runtime through the UI interface. No need to restart the FE node. Open the FE node's http port in the browser (default is 8030) and log in to the UI interface. Then click on the `Log` tab in the top navigation bar.
 
-   ![](/images/log_manage/fe_web_log1.png)
+   ![Enable through FE UI interface](/images/log_manage/fe_web_log1.png)
 
    In the Add input box, you can enter the package name or specific class name to open the corresponding Debug log. For example, entering `org.apache.doris.catalog.Catalog` will open the Debug log of the Catalog class:
 
-   ![](/images/log_manage/fe_web_log2.png)
+   ![Enable through FE UI interface](/images/log_manage/fe_web_log2.png)
 
    You can also enter the package name or specific class name in the Delete input box to close the corresponding Debug log.
 
@@ -131,7 +131,7 @@ The Debug level log of FE can be enabled by modifying the configuration file or 
 
    You can also modify the log level at runtime through the following API. No need to restart the FE node.
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?add_verbose=org.apache.doris.catalog.Catalog
    ```
 
@@ -154,7 +154,7 @@ The Debug level log of FE can be enabled by modifying the configuration file or 
 
    You can also close Debug log through the following API:
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?del_verbose=org.apache.doris.catalog.Catalog
    ```
 

@@ -39,7 +39,7 @@ grammar:
 ```sql
 SHOW REPLICA STATUS FROM [db_name.]tbl_name [PARTITION (p1, ...)]
 [where_clause];
-````
+```
 
 illustrate
 
@@ -59,21 +59,21 @@ illustrate
 
    ```sql
    SHOW REPLICA STATUS FROM db1.tbl1;
-   ````
+   ```
 
 2. View a copy of a table with a partition status of VERSION_ERROR
 
    ```sql
    SHOW REPLICA STATUS FROM tbl1 PARTITION (p1, p2)
    WHERE STATUS = "VERSION_ERROR";
-   ````
+   ```
 
 3. View all unhealthy replicas of the table
 
    ```sql
    SHOW REPLICA STATUS FROM tbl1
    WHERE STATUS != "OK";
-   ````
+   ```
 
 ### Keywords
 

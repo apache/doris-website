@@ -60,7 +60,7 @@ PUT /MetaService/http/v1/create_instance?token=<token> HTTP/1.1
 
 - 创建基于 HDFS 为存储后端的请求语法
 
-```Bash
+```shell
 PUT /MetaService/http/create_instance?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
@@ -140,7 +140,7 @@ Content-Type: text/plain
 
 - 创建基于对象存储为存储后端的请求语法
 
-```Bash
+```shell
 PUT /MetaService/http/create_instance?token=<token HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
@@ -183,7 +183,7 @@ Content-Type: text/plain
 
 - 创建基于对象存储为存储后端的请求示例
 
-```Bash
+```shell
 PUT /MetaService/http/create_instance?token=greedisgood9999 HTTP/1.1
 Content-Length: 441
 Content-Type: text/plain
@@ -248,7 +248,7 @@ Content-Type: text/plain
 
 - 请求语法
 
-```Bash
+```shell
 PUT /MetaService/http/create_instance?token=<token HTTP/1.1
 Content-Length: <ContentLength
 Content-Type: text/plain

@@ -204,7 +204,7 @@ After submitting a job, the job can be canceled by using the  [CANCEL EXPORT](..
 CANCEL EXPORT
 FROM example_db
 WHERE LABEL like "%example%";
-````
+```
 
 ## Best Practices
 

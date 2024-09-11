@@ -52,19 +52,19 @@ illustrate:
 
     ```sql
     SHOW ALL GRANTS;
-    ````
+    ```
 
 2. View the permissions of the specified user
 
     ```sql
     SHOW GRANTS FOR jack@'%';
-    ````
+    ```
 
 3. View the permissions of the current user
 
     ```sql
     SHOW GRANTS;
-    ````
+    ```
 
 ### Keywords
 

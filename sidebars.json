@@ -109,6 +109,7 @@
                         "table-design/data-model/tips"
                     ]
                 },
+                "table-design/row-store",
                 "table-design/data-partition",
                 "table-design/schema-change",
                 {
@@ -274,6 +275,7 @@
                     ]
                 },
                 "query/high-concurrent-point-query",
+                "query/topn-query",
                 {
                     "type": "category",
                     "label": "Analyzing Query",
@@ -935,6 +937,9 @@
                                 "sql-manual/sql-functions/aggregate-functions/collect-set",
                                 "sql-manual/sql-functions/aggregate-functions/collect-list",
                                 "sql-manual/sql-functions/aggregate-functions/retention",
+                                "sql-manual/sql-functions/aggregate-functions/regr_sxx",
+                                "sql-manual/sql-functions/aggregate-functions/regr_sxy",
+                                "sql-manual/sql-functions/aggregate-functions/regr_syy",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-count"
                             ]
@@ -994,6 +999,7 @@
                             "type": "category",
                             "label": "Conditional Functions",
                             "items": [
+                                "sql-manual/sql-functions/conditional-functions/assert-true",
                                 "sql-manual/sql-functions/conditional-functions/case",
                                 "sql-manual/sql-functions/conditional-functions/coalesce",
                                 "sql-manual/sql-functions/conditional-functions/if",
@@ -1098,10 +1104,12 @@
                             "type": "category",
                             "label": "Encryption Functions",
                             "items": [
-                                "sql-manual/sql-functions/encrypt-digest-functions/aes",
+                                "sql-manual/sql-functions/encrypt-digest-functions/aes-encrypt",
+                                "sql-manual/sql-functions/encrypt-digest-functions/aes-decrypt",
                                 "sql-manual/sql-functions/encrypt-digest-functions/md5",
                                 "sql-manual/sql-functions/encrypt-digest-functions/md5sum",
-                                "sql-manual/sql-functions/encrypt-digest-functions/sm4",
+                                "sql-manual/sql-functions/encrypt-digest-functions/sm4-encrypt",
+                                "sql-manual/sql-functions/encrypt-digest-functions/sm4-decrypt",
                                 "sql-manual/sql-functions/encrypt-digest-functions/sm3",
                                 "sql-manual/sql-functions/encrypt-digest-functions/sm3sum",
                                 "sql-manual/sql-functions/encrypt-digest-functions/sha",

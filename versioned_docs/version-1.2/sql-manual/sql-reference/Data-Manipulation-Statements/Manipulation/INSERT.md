@@ -41,7 +41,7 @@ INSERT INTO table_name
     [ (column [, ...]) ]
     [ [ hint [, ...] ] ]
     { VALUES ( { expression | DEFAULT } [, ...] ) [, ...] | query }
-````
+```
 
  Parameters
 
@@ -79,7 +79,7 @@ INSERT INTO test VALUES (1, 2);
 INSERT INTO test (c1, c2) VALUES (1, 2);
 INSERT INTO test (c1, c2) VALUES (1, DEFAULT);
 INSERT INTO test (c1) VALUES (1);
-````
+```
 
 The first and second statements have the same effect. When no target column is specified, the column order in the table is used as the default target column.
 The third and fourth statements express the same meaning, use the default value of the `c2` column to complete the data import.
@@ -91,7 +91,7 @@ INSERT INTO test VALUES (1, 2), (3, 2 + 2);
 INSERT INTO test (c1, c2) VALUES (1, 2), (3, 2 * 2);
 INSERT INTO test (c1) VALUES (1), (3);
 INSERT INTO test (c1, c2) VALUES (1, DEFAULT), (3, DEFAULT);
-````
+```
 
 The first and second statements have the same effect, import two pieces of data into the `test` table at one time
 The effect of the third and fourth statements is known, and the default value of the `c2` column is used to import two pieces of data into the `test` table
@@ -101,14 +101,14 @@ The effect of the third and fourth statements is known, and the default value of
 ```sql
 INSERT INTO test SELECT * FROM test2;
 INSERT INTO test (c1, c2) SELECT * from test2;
-````
+```
 
 4. Import a query result into the `test` table, specifying the partition and label
 
 ```sql
 INSERT INTO test PARTITION(p1, p2) WITH LABEL `label1` SELECT * FROM test2;
 INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
-````
+```
 
 Asynchronous import is actually a synchronous import encapsulated into asynchronous. Filling in streaming and not filling in **execution efficiency is the same**.
 
@@ -157,17 +157,17 @@ Since the previous import methods of Doris are all asynchronous import methods, 
          mysql> insert into tbl1 select * from tbl2;
          Query OK, 2 rows affected, 2 warnings (0.31 sec)
          {'label':'insert_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
-         ````
+         ```
 
          `Query OK` indicates successful execution. `4 rows affected` means that a total of 4 rows of data were imported. `2 warnings` indicates the number of lines to be filtered.
 
          Also returns a json string:
 
-         ````json
+         ```json
          {'label':'my_label1', 'status':'visible', 'txnId':'4005'}
          {'label':'insert_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
          {'label':'my_label1', 'status':'visible', 'txnId':'4005', 'err':'some other error'}
-         ````
+         ```
 
          `label` is a user-specified label or an automatically generated label. Label is the ID of this Insert Into import job. Each import job has a unique Label within a single database.
 
@@ -181,7 +181,7 @@ Since the previous import methods of Doris are all asynchronous import methods, 
 
          ```sql
          show load where label="xxx";
-         ````
+         ```
 
          The URL in the returned result can be used to query the wrong data. For details, see the summary of **Viewing Error Lines** later.
 
@@ -191,7 +191,7 @@ Since the previous import methods of Doris are all asynchronous import methods, 
 
          ```sql
          show transaction where id=4005;
-         ````
+         ```
 
          If the `TransactionStatus` column in the returned result is `visible`, the representation data is visible.
 
@@ -208,7 +208,7 @@ Since the previous import methods of Doris are all asynchronous import methods, 
 
       ```sql
       show load warnings on "url";
-      ````
+      ```
 
       You can view the specific error line.
 
