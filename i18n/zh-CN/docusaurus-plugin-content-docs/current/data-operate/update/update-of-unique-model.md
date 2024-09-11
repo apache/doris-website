@@ -39,6 +39,7 @@ under the License.
 
 1. 2.0 版本仅在 Unique Key 的 Merge-on-Write 实现中支持了部分列更新能力
 2. 从 2.0.2 版本开始，支持使用 INSERT INTO 进行部分列更新
+3. 不支持在有同步物化视图的表上进行部分列更新
 :::
 
 ### 适用场景
@@ -135,8 +136,6 @@ INSERT INTO order_tbl (order_id, order_status) values (1,'待发货');
 +----------+--------------+--------------+
 1 row in set (0.01 sec)
 ```
-
-主键模型的部分列更新
 
 ### 使用注意
 
