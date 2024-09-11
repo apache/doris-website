@@ -81,15 +81,10 @@ Meta Service 依赖 JAVA 运行环境，并使用 OpenJDK 17。在启动前这�
 
 ```Shell
 export JAVA_HOME=${path_to_jdk_17}
-bin/start.sh --meta-service --recycler --daemon
+bin/start.sh --daemon
 
 bin/stop.sh
 ```
-
-其中`--meta-service` 和 `--recycler` 两个参数指定的是当前 Meta Service 进程拥有什么样的能力
-前者为元数据操作(主要提供一些在线实时元数据操作)， 后者为数据回收功能(离线异步数据回收等流程)。
-
-在成功部署并启动 Meta Service 之后，Doris 存算分离模式的底座便已完成搭建。
 
 若 Meta Service 进程正常启动，将能在 `doris_cloud.out` 文件中观察到 `meta-service started` 的输出信息。同样地，Recycler 进程如果正常启动，则会在该文件中显示 `recycler started` 的输出信息。
 
@@ -106,6 +101,8 @@ meta-service started
 
 在一些场景中为了更好的隔离性以及稳定性，我们需要将元数据操作功能和数据回收功能分开不同的进程部署。
 
+在成功部署并启动 Meta Service 之后，Doris 存算分离模式的底座便已完成搭建。
+
 `ms`目录也可以用于启动为数据回收功能进程，只需使用不同启动参数启动即可。
 需要注意的是，需要单独准备一个独立的工作目录，二进制以及配置文件都是单独的一份。
 
@@ -113,6 +110,9 @@ meta-service started
 ```Shell
 cp -r ms re
 ```
+
+Meta Service 启动脚本可以接受 `--meta-service` 和 `--recycler` 两个参数指定的是当前 Meta Service 进程拥有什么样的能力。
+前者为元数据操作(主要提供一些在线实时元数据操作)， 后者为数据回收功能(离线异步数据回收等流程)。
 
 在 re 目录下对配置文件中的 BRPC 的监听端口号按需进行必要修改，然后使用 `--recycler` 参数启动即可。
 
