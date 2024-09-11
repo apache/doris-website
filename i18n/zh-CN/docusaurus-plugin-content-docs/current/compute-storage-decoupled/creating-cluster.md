@@ -535,7 +535,7 @@ cloud_unique_id = 1:sample_instance_id:cloud_unique_id_sql_server00
 
 ### be.conf
 
-下述配置示例中， `meta_service_use_load_balancer` 和 `enable_file_cache` 均可复制，其他配置项需根据实际情况填写。
+下述配置示例中，
 
 * `enable_file_cache` 是否使用本地盘缓存，存算分离模式强烈建议设置为 `true`，否则查询性能会很差。
 * `file_cache_path` 是一个 JSON 数组（根据实际缓存盘的个数配置），描述的是本地缓存的配置，如果有多个缓存盘，建议使用同构的配置（大小和介质相同），其各个字段含义如下：
