@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Pipeline Tracing
+
 
 在 Pipeline 执行引擎中，我们会将每个 Instance 的执行计划树拆分成多个小的 Pipeline Task，并在我们自定义的 Pipeline 调度器调度下执行。因此，在拥有大量 Pipeline Task 的执行环境下，这些 Task 如何在线程和 CPU 核间进行调度，是执行性能的一个重要影响因素。我们开发了一个专门的工具用来观察特定查询或时间段上的调度过程，我们将这个工具称为 "Pipeline Tracing"。
 

@@ -2611,6 +2611,20 @@ SmallFileMgr 中存储的最大文件数
 
 此配置用于控制每个 DB 能够记录的 backup/restore 任务的数量
 
+#### `max_backup_tablets_per_job`
+
+默认值：300000
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+此配置用于控制每个 backup job 最大涉及的 tablets 数量，以避免因保存过多元数据导致 FE OOM。
+
+:::tips 提示
+从 Apache Doris 2.1.6 开始支持该配置
+:::
+
 #### `enable_quantile_state_type`
 
 默认值：false

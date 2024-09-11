@@ -1,7 +1,7 @@
 ---
 {
     "title": "Global Memory Analysis",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 

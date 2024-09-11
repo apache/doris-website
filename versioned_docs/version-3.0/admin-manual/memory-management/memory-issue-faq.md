@@ -1,7 +1,7 @@
 ---
 {
     "title": "Memory Issue FAQ",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 

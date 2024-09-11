@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Security
+
 
 The Apache Software Foundation takes a rigorous stance on eliminating security issues in its software projects. Likewise, Apache Doris is also vigilant and takes security issues related to its features and functionality into the highest consideration.
 
