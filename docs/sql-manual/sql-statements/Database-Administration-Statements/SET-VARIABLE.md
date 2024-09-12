@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SET variable_assignment [, variable_assignment] ...
-````
+```
 
 illustrate:
 
@@ -55,15 +55,15 @@ illustrate:
 
 1. Set the time zone to Dongba District
 
-   ````
+   ```
    SET time_zone = "Asia/Shanghai";
-   ````
+   ```
 
 2. Set the global execution memory size
 
-   ````
+   ```
    SET GLOBAL exec_mem_limit = 137438953472
-   ````
+   ```
 
 ### Keywords
 

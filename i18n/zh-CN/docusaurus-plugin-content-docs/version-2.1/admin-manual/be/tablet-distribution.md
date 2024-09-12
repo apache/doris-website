@@ -85,7 +85,7 @@ under the License.
 ## Examples
 
 
-    ```bash
+    ```shell
     curl "http://127.0.0.1:8040/api/tablets_distribution?group_by=partition&partition_id=123"
 
     ```

@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW SQL_BLOCK_RULE [FOR RULE_NAME];
-````
+```
 
 ### Example
 
@@ -53,7 +53,7 @@ SHOW SQL_BLOCK_RULE [FOR RULE_NAME];
     | test_rule2 | NULL | NULL | 30 | 0 | 10000000000 | false | true |
     +------------+----------------------------+---------+- -------------+------------+-------------+--------+- -------+
     2 rows in set (0.01 sec)
-    ````
+    ```
     
 2. Make a rule name query
 
@@ -66,7 +66,7 @@ SHOW SQL_BLOCK_RULE [FOR RULE_NAME];
     +------------+------+---------+---------------+---- -------+-------------+--------+--------+
     1 row in set (0.00 sec)
     
-    ````
+    ```
     
 
 ### Keywords

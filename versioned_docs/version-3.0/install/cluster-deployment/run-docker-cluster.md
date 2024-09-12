@@ -81,7 +81,7 @@ Download the [official binary package](https://doris.apache.org/zh-CN/download/)
 
 3. Write Dockerfile
 
-```Bash
+```shell
 # Choose a base image
 FROM openjdk:8u342-jdk
 

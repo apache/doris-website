@@ -39,7 +39,7 @@ In addition to the Doris default certificate file, you can also generate a custo
 
 1. Generate the CA, server-side, and client-side keys and certificates:
 
-```bash
+```shell
 # Generate the CA certificate
 openssl genrsa 2048 > ca-key.pem
 openssl req -new -x509 -nodes -days 3600 \
@@ -64,13 +64,13 @@ openssl x509 -req -in client-req.pem -days 3600 \
 
 2. Verify the created certificates:
 
-```bash
+```shell
 openssl verify -CAfile ca.pem server-cert.pem client-cert.pem
 ```
 
 3. Combine your key and certificate in a PKCS#12 (P12) bundle. You can also specify a certificate format (PKCS12 by default). You can modify the conf/fe.conf configuration file and add parameter ssl_trust_store_type to specify the certificate format.
 
-```bash
+```shell
 # Package the CA key and certificate
 openssl pkcs12 -inkey ca-key.pem -in ca.pem -export -out ca_certificate.p12
 

@@ -24,7 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<version since="1.2">
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
 ## function char
 ### description
@@ -39,7 +41,7 @@ under the License.
 大于 `255` 的参数将转换为多个结果字节。例如，`char(15049882)`等价于`char(229, 164, 154)`。
 
 `charset_name`目前只支持`utf8`。
-</version>
+
 
 ### example
 

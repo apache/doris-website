@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Backgroup
 The Workload Group solves the problem of isolation between different workload, but it cannot solve negative impact of large queries on stability within the same Group. When users encounter large queries that affect cluster stability, they can only manually handle them.
 
 Therefore, Doris has implemented Workload Policy, which supports the automation of query load management, such as automatically canceling queries with running time exceeding 5 seconds.

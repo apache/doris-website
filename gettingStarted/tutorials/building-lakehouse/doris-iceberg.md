@@ -53,7 +53,7 @@ Users can quickly build an efficient Data Lakehouse solution based on Apache Dor
 
 In the future, Apache Iceberg will serve as one of the native table engines for Apache Doris, providing more comprehensive analysis and management functions for lake-formatted data. Apache Doris will also gradually support more advanced features of Apache Iceberg, including Update/Delete/Merge, sorting during write-back, incremental data reading, metadata management, etc., to jointly build a unified, high-performance, real-time data lake platform.
 
-For more information, please refer to [Iceberg Catalog](../../lakehouse/datalake-analytics/iceberg.md)
+For more information, please refer to [Iceberg Catalog](../../../lakehouse/datalake-analytics/iceberg)
 
 ## User Guide
 

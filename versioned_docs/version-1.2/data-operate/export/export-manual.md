@@ -196,7 +196,7 @@ FinishTime: 2019-06-25 17:08:34
 
 ### Cancel export job
 
-<version since="dev"></version>
+ 
 
 After submitting a job, the job can be canceled by using the  [CANCEL EXPORT](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md)  command. For example:
 
@@ -204,7 +204,7 @@ After submitting a job, the job can be canceled by using the  [CANCEL EXPORT](..
 CANCEL EXPORT
 FROM example_db
 WHERE LABEL like "%example%";
-````
+```
 
 ## Best Practices
 

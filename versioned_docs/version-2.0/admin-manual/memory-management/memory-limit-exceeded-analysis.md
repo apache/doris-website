@@ -24,9 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Memory Limit Exceeded Analysis
 
-<version since="1.2.0">
+
+:::tip Tips
+This featureis supported since the Apache Doris 1.2 version
+:::
 
 When the query or import error `Memory limit exceeded` is reported, the possible reasons are: the process memory exceeds the limit, the remaining available memory of the system is insufficient, and the memory limit for a single query execution is exceeded.
 ```
@@ -178,4 +180,4 @@ Memory Tracker Summary:
     MemTracker Label=VDataStreamSender:78208b15e064527-a84c5c0b04c04fd0, Parent Label=Query#Id=78208b15e064527-a84c5c0b04c04fcf, Used=2.34 KB(2400 B), Peak=0(0 B)
 ```
 
-</version>
+

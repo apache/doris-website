@@ -51,7 +51,7 @@ Doris 的 FE 进程负责接收用户连接和查询请求，其本身是可以�
 
 ### 安装ProxySQL （yum方式）
 
-```bash
+```shell
 配置yum源
 # vim /etc/yum.repos.d/proxysql.repo
 [proxysql_repo]
@@ -487,7 +487,7 @@ IP: 172.31.7.119
 
 ### 安装依赖
 
-```bash
+```shell
 sudo apt-get install build-essential
 sudo apt-get install libpcre3 libpcre3-dev 
 sudo apt-get install zlib1g-dev
@@ -496,7 +496,7 @@ sudo apt-get install openssl libssl-dev
 
 ### 安装Nginx
 
-```bash
+```shell
 sudo wget http://nginx.org/download/nginx-1.18.0.tar.gz
 sudo tar zxvf nginx-1.18.0.tar.gz
 cd nginx-1.18.0
@@ -508,13 +508,13 @@ sudo make && make install
 
 这里是新建了一个配置文件
 
-```bash
+```shell
 vim /usr/local/nginx/conf/default.conf
 ```
 
 然后在里面加上下面的内容
 
-```bash
+```shell
 events {
 worker_connections 1024;
 }

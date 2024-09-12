@@ -26,7 +26,7 @@ under the License.
 
 亲爱的社区小伙伴们，Apache Doris 2.0.2  版本已于 2023 年 10 月 6 日正式发布，该版本对多个功能进行了更新优化，旨在更好地满足用户的需求。有 92 位贡献者为 Apache Doris 2.0.2 版本提交了功能优化项以及问题修复，进一步提升了系统的稳定性和性能，欢迎大家下载体验。
 
-**GitHub下载**：https://github.com/apache/doris/releases/tag/2.0.2-rc05
+**GitHub 下载**：https://github.com/apache/doris/releases/tag/2.0.2-rc05
 
 **官网下载页**：https://doris.apache.org/download/
 
@@ -42,7 +42,7 @@ under the License.
 
 - https://github.com/apache/doris/pull/24207 
 
-对于普通类型中的 null 值使用 \n 来表示，对于复杂类型或嵌套类型的 null 值，跟 JSON 类型保持一致、采取 null 来表示。
+对于普通类型中的 null 值使用 `\n` 来表示，对于复杂类型或嵌套类型的 null 值，跟 JSON 类型保持一致、采取 null 来表示。
 
 - https://github.com/apache/doris/pull/23795
 - https://github.com/apache/doris/pull/23784 
@@ -115,7 +115,7 @@ under the License.
 
 - https://github.com/apache/doris/pull/22702 
 
-添加 metadata_name_ids 以快速获取 Catalogs、DB、Table，在创建或删除 Catalog 和 Table 时无需 Refresh Catalog， 并添加 Profiling 表从而与 MySQL 兼容。
+添加 metadata_name_ids 以快速获取 Catalogs、DB、Table，在创建或删除 Catalog 和 Table 时无需 Refresh Catalog，并添加 Profiling 表从而与 MySQL 兼容。
 
 ### 倒排索引性能优化
 
@@ -150,7 +150,7 @@ under the License.
 
 支持通过 explode 函数来处理数组嵌套复杂类型；
 
-## Bug修复
+## Bug 修复
 
  修复了之前版本存在的部分 Bug，使系统整体稳定性表现得到大幅提升，完整 BugFix 列表请参考 GitHub Commits 记录；
 

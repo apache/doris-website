@@ -36,7 +36,7 @@ The statement user creates a role
 
 ```sql
   CREATE ROLE role_name [comment];
-````
+```
 
 This statement creates an unprivileged role, which can be subsequently granted with the GRANT command.
 
@@ -46,7 +46,7 @@ This statement creates an unprivileged role, which can be subsequently granted w
 
     ```sql
     CREATE ROLE role1;
-    ````
+    ```
 
 2. Create a role with comment
 

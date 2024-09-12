@@ -474,7 +474,9 @@ The value for thrift_client_timeout_ms is set to be zero to prevent read timeout
 
 #### `thrift_max_message_size`
 
-<version since="2.1.4"></version>
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2.4 version
+:::
 
 Default: 100MB
 
@@ -735,9 +737,13 @@ MasterOnly：true
 
 Decide how often to check dynamic partition
 
-<version since="1.2.0">
+
 
 #### `max_multi_partition_num`
+
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2 version
+:::
 
 Default：4096
 
@@ -746,7 +752,7 @@ IsMutable：true
 MasterOnly：true
 
 Use this parameter to set the partition name prefix for multi partition,Only multi partition takes effect, not dynamic partitions. The default prefix is "p_".
-</version>
+
 
 #### `multi_partition_name_prefix`
 
@@ -2176,7 +2182,9 @@ After dropping database(table/partition), you can recover it by using RECOVER st
 
 #### `storage_cooldown_second`
 
-<version deprecated="2.0"></version>
+:::tip Tips
+This feature is deprecated since the Apache Doris 2.0 version
+:::
 
 Default：`30 * 24 * 3600L`  （30 day）
 
@@ -2600,6 +2608,20 @@ Default: 10
 
 This configuration is mainly used to control the number of backup/restore tasks recorded in each database.
 
+#### `max_backup_tablets_per_job`
+
+Default: 300000
+
+IsMutable：true
+
+MasterOnly：true
+
+Control the max num of tablets per backup job involved, to avoid FE OOM caused by saving too much metadata.
+
+:::tips TIPS
+This configuration is supported since the Apache Doris 2.1.6 version
+:::
+
 #### `enable_quantile_state_type`
 
 Default：false
@@ -2713,7 +2735,9 @@ If the compute node number is larger than this value, query on external table wi
 
 #### `infodb_support_ext_catalog`
 
-<version since="1.2.4"></version>
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2.4 version
+:::
 
 Default: false
 
@@ -2728,7 +2752,7 @@ This is to avoid query time when external catalog is not reachable.
 
 #### `enable_query_hit_stats`
 
-<version since="dev"></version>
+ 
 
 Default: false
 
@@ -2739,7 +2763,7 @@ MasterOnly: false
 Controls whether to enable query hit statistics. The default is false.
 
 #### `div_precision_increment`
-<version since="dev"></version>
+ 
 
 Default: 4
 

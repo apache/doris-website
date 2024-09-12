@@ -38,7 +38,7 @@ In comparison to single-threaded load using `curl`, Doris Streamloader is a clie
 - **Resilience and continuity:** in case of partial load failures, it can resume data loading from the point of failure.
 - **Automatic retry mechanism:** in case of loading failures, it can automatically retry a default number of times. If the loading remains unsuccessful, it will print the command for manual retry.
 
-See [Doris Streamloader](../../ecosystem/doris-streamloader) for detailed instructions and best practices.
+See [Doris Streamloader](/docs/dev/ecosystem/doris-streamloader) for detailed instructions and best practices.
 :::
 
 ## User guide
@@ -117,7 +117,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
    The Stream Load job can be submitted using the `curl` command.
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
@@ -200,7 +200,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
    The Stream Load job can be submitted using the `curl` command.
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "label:124" \
     -H "Expect:100-continue" \
@@ -210,6 +210,10 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
+:::info Note
+
+If the JSON file is not a JSON array but each line is a JSON object, add the headers `-H "strip_outer_array:false"` and `-H "read_json_by_line:true"`.
+:::
 
 ​	Stream Load is a synchronous method, where the result is directly returned to the user.
 
@@ -237,7 +241,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### View load job
 
-By default, Stream Load synchronously returns results to the client, so the system does not record Stream Load historical jobs. If recording is required, add the configuration `enable_stream_load_record=true` in `be.conf`. Refer to the [BE configuration options](../../admin-manual/config/be-config) for specific details.
+By default, Stream Load synchronously returns results to the client, so the system does not record Stream Load historical jobs. If recording is required, add the configuration `enable_stream_load_record=true` in `be.conf`. Refer to the [BE configuration options](../../../admin-manual/config/be-config) for specific details.
 
 After configuring, you can use the `show stream load` command to view completed Stream Load jobs.
 
@@ -261,7 +265,7 @@ Users cannot manually cancel a Stream Load operation. A Stream Load job will be 
 
 The syntax for Stream Load is as follows:
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
   -H "Expect:100-continue" [-H ""...] \
   -T <file_path> \
@@ -285,7 +289,7 @@ Parameter Description: The default timeout for Stream Load. The load job will be
 
 2. `enable_pipeline_load`
 
-Determines whether to enable the Pipeline engine to execute Streamload tasks. See the [import](./load-manual) documentation for more details.
+Determines whether to enable the Pipeline engine to execute Streamload tasks. See the [import](../load-manual) documentation for more details.
 
 #### BE configuration
 
@@ -304,7 +308,7 @@ Determines whether to enable the Pipeline engine to execute Streamload tasks. Se
 | label                        | Used to specify a label for this Doris import. Data with the same label cannot be imported multiple times. If no label is specified, Doris will automatically generate one. Users can avoid duplicate imports of the same data by specifying a label. Doris retains import job labels for three days by default, but this duration can be adjusted using `label_keep_max_second`. For example, to specify the label for this import as 123, use the command `-H "label:123"`. The use of labels prevents users from importing the same data repeatedly. It is strongly recommended that users use the same label for the same batch of data. This ensures that duplicate requests for the same batch of data are only accepted once, guaranteeing At-Most-Once semantics. When the status of an import job corresponding to a label is CANCELLED, that label can be used again. |
 | column_separator             | Used to specify the column separator in the import file, which defaults to `\t`. If the separator is an invisible character, it needs to be prefixed with `\x` and represented in hexadecimal format. Multiple characters can be combined as a column separator. For example, to specify the separator as `\x01` for a Hive file, use the command `-H "column_separator:\x01"`. |
 | line_delimiter               | Used to specify the line delimiter in the import file, which defaults to `\n`. Multiple characters can be combined as a line delimiter. For example, to specify the line delimiter as `\n`, use the command `-H "line_delimiter:\n"`. |
-| columns                      | Used to specify the correspondence between columns in the import file and columns in the table. If the columns in the source file exactly match the content of the table, this field does not need to be specified. If the schema of the source file does not match the table, this field is required for data transformation. There are two formats: direct column correspondence to fields in the import file, and derived columns represented by expressions. Refer to [Data Transformation](../import/load-data-convert) for detailed examples. |
+| columns                      | Used to specify the correspondence between columns in the import file and columns in the table. If the columns in the source file exactly match the content of the table, this field does not need to be specified. If the schema of the source file does not match the table, this field is required for data transformation. There are two formats: direct column correspondence to fields in the import file, and derived columns represented by expressions. Refer to [Data Transformation](../../../data-operate/import/load-data-convert) for detailed examples. |
 | where                        | Used to filter out unnecessary data. If users need to exclude certain data, they can achieve this by setting this option. For example, to import only data where the k1 column is equal to 20180601, specify `-H "where: k1 = 20180601"` during the import. |
 | max_filter_ratio             | Used to specify the maximum tolerable ratio of filterable (irregular or otherwise problematic) data, which defaults to zero tolerance. The value range is 0 to 1. If the error rate of the imported data exceeds this value, the import will fail. Irregular data does not include rows filtered out by the where condition. For example, to maximize the import of all correct data (100% tolerance), specify the command `-H "max_filter_ratio:1"`. |
 | partitions                   | Used to specify the partitions involved in this import. If users can determine the corresponding partitions for the data, it is recommended to specify this option. Data that does not meet these partition criteria will be filtered out. For example, to specify importing into partitions p1 and p2, use the command `-H "partitions: p1, p2"`. |
@@ -400,7 +404,7 @@ When performing Stream Load using the TVF `http_stream`, the Rest API URL differ
 
 Using curl for Stream Load in http_stream Mode:
 
-```Bash
+```shell
 curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
 ```
 
@@ -408,7 +412,7 @@ Adding a SQL parameter in the header to replace the previous parameters such as 
 
 Example of load SQL:
 
-```Bash
+```shell
 insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
 ```
 
@@ -451,11 +455,11 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Setting maximum error tolerance rate 
 
-Load job can tolerate a certain amount of data with formatting errors. The tolerance rate is configured using the `max_filter_ratio` parameter. By default, it is set to 0, meaning that if there is even a single erroneous data row, the entire load job will fail. If users wish to ignore some problematic data rows, they can set this parameter to a value between 0 and 1. Doris will automatically skip rows with incorrect data formats. For more information on calculating the tolerance rate, please refer to the [Data Transformation](../../data-operate/import/load-data-convert) documentation.
+Load job can tolerate a certain amount of data with formatting errors. The tolerance rate is configured using the `max_filter_ratio` parameter. By default, it is set to 0, meaning that if there is even a single erroneous data row, the entire load job will fail. If users wish to ignore some problematic data rows, they can set this parameter to a value between 0 and 1. Doris will automatically skip rows with incorrect data formats. For more information on calculating the tolerance rate, please refer to the [Data Transformation](../../../data-operate/import/load-data-convert) documentation.
 
 You can use the following command to specify a `max_filter_ratio` tolerance of 0.4 for creating a Stream Load job:
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "max_filter_ratio:0.4" \
@@ -485,7 +489,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 Loading data from local files into partitions p1 and p2 of the table, allowing a 20% error rate.
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "label:123" \
     -H "Expect:100-continue" \
@@ -505,7 +509,7 @@ In the import, our target time zone is specified through the parameter `timezone
 
 For example, the Doris system time zone is "+08:00", and the time column in the imported data contains two pieces of data, namely "2012-01-01 01:00:00+00:00" and "2015-12-12 12 :12:12-08:00", then after we specify the time zone of the imported transaction through `-H "timezone: +08:00"` when importing, both pieces of data will be converted to the time zone to obtain the result." 2012-01-01 09:00:00" and "2015-12-13 04:12:12".
 
-For more information on time zone interpretation, please refer to the document [Time Zone](../../../query/query-variables/time-zone.md).
+For more information on time zone interpretation, please refer to the document [Time Zone](../../../admin-manual/cluster-management/time-zone).
 
 ### Streamingly import
 
@@ -513,7 +517,7 @@ Stream Load is based on the HTTP protocol for importing, which supports using pr
 
 The following example demonstrates this usage through a bash command pipeline. The imported data is generated streamingly by the program rather than from a local file.
 
-```Bash
+```shell
 seq 1 10 | awk '{OFS="\t"}{print $1, $1 * 10}' | curl --location-trusted -u root -T - http://host:port/api/testDb/testTbl/_stream_load
 ```
 
@@ -537,7 +541,7 @@ curl --location-trusted -u root -T test.csv  -H "label:1" -H "format:csv_with_na
 
 In stream load, there are three import types: APPEND, DELETE, and MERGE. These can be adjusted by specifying the parameter `merge_type`. If you want to specify that all data with the same key as the imported data should be deleted, you can use the following command:
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: DELETE" \
@@ -580,7 +584,7 @@ After importing, the original table data will be deleted, resulting in the follo
 
 By specifying `merge_type` as MERGE, the imported data can be merged into the table. The MERGE semantics need to be used in combination with the DELETE condition, which means that data satisfying the DELETE condition is processed according to the DELETE semantics, and the rest is added to the table according to the APPEND semantics. The following operation represents deleting the row with `siteid` of 1, and adding the rest of the data to the table:
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: MERGE" \
@@ -772,7 +776,7 @@ JSON data type:
 
 Command:
 
-```Bash
+```shell
 curl --location-trusted -u root -T test.json -H "label:1" -H "format:json" -H 'columns: id, order_code, create_time=CURRENT_TIMESTAMP()' http://host:port/api/testDb/testTbl/_stream_load
 ```
 
@@ -1050,15 +1054,15 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Label, loading transaction, multi-table atomicity
 
-All load jobs in Doris are atomically effective. And multiple tables loading in the same load job can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that data loading is not lost or duplicated. For specific instructions, please refer to the [Import Transactions and Atomicity](../../data-operate/import/load-atomicity) documentation.
+All load jobs in Doris are atomically effective. And multiple tables loading in the same load job can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that data loading is not lost or duplicated. For specific instructions, please refer to the [Import Transactions and Atomicity](../../../data-operate/import/load-atomicity) documentation.
 
 ### Column mapping, derived columns, and filtering
 
-Doris supports a very rich set of column transformations and filtering operations in load statements. Supports most built-in functions and UDFs. For how to use this feature correctly, please refer to the [Data Transformation](../../data-operate/import/load-data-convert) documentation.
+Doris supports a very rich set of column transformations and filtering operations in load statements. Supports most built-in functions and UDFs. For how to use this feature correctly, please refer to the [Data Transformation](../../../data-operate/import/load-data-convert) documentation.
 
 ### Enable strict mode import
 
-The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Strict Mode](../../data-operate/import/load-strict-mode) documentation.
+The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Strict Mode](../../../data-operate/import/load-strict-mode) documentation.
 
 ### Perform partial column updates during import
 
@@ -1066,7 +1070,7 @@ For how to express partial column updates during import, please refer to the Dat
 
 ## More help
 
-For more detailed syntax and best practices on using Stream Load, please refer to the [Stream Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) Command Manual. You can also enter HELP STREAM LOAD in the MySql client command line to get more help information.
+For more detailed syntax and best practices on using Stream Load, please refer to the [Stream Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) Command Manual. You can also enter HELP STREAM LOAD in the MySql client command line to get more help information.
 
 
 
@@ -1388,7 +1392,7 @@ Users can't cancel Stream load manually. Stream load will be cancelled automatic
 
 Users can view completed stream load tasks through `show stream load`.
 
-By default, BE does not record Stream Load records. If you want to view records that need to be enabled on BE, the configuration parameter is: `enable_stream_load_record=true`. For details, please refer to [BE Configuration Items](https://doris.apache. org/zh-CN/docs/admin-manual/config/be-config)
+By default, BE does not record Stream Load records. If you want to view records that need to be enabled on BE, the configuration parameter is: `enable_stream_load_record=true`. For details, please refer to [BE Configuration Items](../../../admin-manual/config/be-config)
 
 ## Relevant System Configuration
 
@@ -1402,7 +1406,7 @@ By default, BE does not record Stream Load records. If you want to view records 
 
 + enable\_pipeline\_load
 
-  Whether or not to enable the Pipeline engine to execute Streamload tasks. See the [Import](./load-manual) documentation.
+  Whether or not to enable the Pipeline engine to execute Streamload tasks. See the [Import](../../../data-operate/import/load-manual) documentation.
 
 ### BE configuration
 

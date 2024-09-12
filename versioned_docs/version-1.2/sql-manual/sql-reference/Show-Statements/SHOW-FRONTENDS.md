@@ -38,7 +38,7 @@ This statement is used to view FE nodes
 
 ```sql
 SHOW FRONTENDS;
-````
+```
 
 illustrate:
 

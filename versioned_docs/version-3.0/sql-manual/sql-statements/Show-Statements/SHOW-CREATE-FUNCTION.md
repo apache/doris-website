@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW CREATE [GLOBAL] FUNCTION function_name(arg_type [, ...]) [FROM db_name]];
-````
+```
 
 illustrate:
 1. `global`: The show function is global 
@@ -54,12 +54,12 @@ illustrate:
 
     ```sql
     SHOW CREATE FUNCTION my_add(INT, INT)
-    ````
+    ```
 2. Show the creation statement of the specified global function
 
     ```sql
     SHOW CREATE GLOBAL FUNCTION my_add(INT, INT)
-    ````
+    ```
 
 ### Keywords
 

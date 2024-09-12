@@ -60,7 +60,7 @@ under the License.
 
 2. [STREAM LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md)
 
-   ```bash
+   ```shell
    curl --location-trusted -u user:passwd \
    -H "strict_mode: true" \
    -T 1.txt \

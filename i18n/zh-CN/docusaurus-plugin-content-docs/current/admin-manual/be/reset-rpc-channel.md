@@ -60,11 +60,11 @@ under the License.
 ## Examples
 
 
-    ```bash
+    ```shell
     curl http://127.0.0.1:8040/api/reset_rpc_channel/all
     ```
     
-    ```bash
+    ```shell
     curl http://127.0.0.1:8040/api/reset_rpc_channel/1.1.1.1:8080,2.2.2.2:8080
     ```
 

@@ -642,10 +642,12 @@
                             "type": "category",
                             "label": "Encryption Functions",
                             "items": [
-                                "sql-manual/sql-functions/encrypt-digest-functions/aes",
+                                "sql-manual/sql-functions/encrypt-digest-functions/aes-encrypt",
+                                "sql-manual/sql-functions/encrypt-digest-functions/aes-decrypt",
                                 "sql-manual/sql-functions/encrypt-digest-functions/md5",
                                 "sql-manual/sql-functions/encrypt-digest-functions/md5sum",
-                                "sql-manual/sql-functions/encrypt-digest-functions/sm4",
+                                "sql-manual/sql-functions/encrypt-digest-functions/sm4-encrypt",
+                                "sql-manual/sql-functions/encrypt-digest-functions/sm4-decrypt",
                                 "sql-manual/sql-functions/encrypt-digest-functions/sm3",
                                 "sql-manual/sql-functions/encrypt-digest-functions/sm3sum"
                             ]
@@ -969,6 +971,7 @@
                                 "sql-manual/sql-reference/Data-Types/DECIMAL",
                                 "sql-manual/sql-reference/Data-Types/DECIMALV3",
                                 "sql-manual/sql-reference/Data-Types/DATE",
+                                "sql-manual/sql-reference/Data-Types/TIME",
                                 "sql-manual/sql-reference/Data-Types/DATETIME",
                                 "sql-manual/sql-reference/Data-Types/DATEV2",
                                 "sql-manual/sql-reference/Data-Types/DATETIMEV2",
@@ -1235,6 +1238,13 @@
     ],
     "releasenotes": [
         "releasenotes/all-release",
+        {
+            "type": "category",
+            "label": "v3.0",
+            "items": [
+                "releasenotes/v3.0/release-3.0.1"
+            ]
+        },
         {
             "type": "category",
             "label": "v2.1",

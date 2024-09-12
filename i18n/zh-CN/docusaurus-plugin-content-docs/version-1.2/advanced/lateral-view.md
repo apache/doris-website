@@ -1,6 +1,6 @@
 ---
 {
-    "title": "行转列",
+    "title": "列转行",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 行转列
+# 列转行
 
 与生成器函数（例如 `EXPLODE`）结合使用，将生成包含一个或多个行的虚拟表。 `LATERAL VIEW` 将行应用于每个原始输出行。
 

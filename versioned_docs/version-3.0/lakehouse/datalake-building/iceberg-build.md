@@ -36,9 +36,8 @@ This is an experimental feature.
 Before using, please set:
 <br />
 set global enable_nereids_planner = true;
-set global enable_fallback_to_original_planner = false;
 <br />
-For clusters upgraded from older versions, these parameters may have changed.
+set global enable_fallback_to_original_planner = false;
 :::
 
 ## Metadata Creation and Deletion
@@ -60,7 +59,7 @@ For clusters upgraded from older versions, these parameters may have changed.
         
     The above mainly demonstrates how to create an HMS Iceberg Catalog in Apache Doris. Apache Doris currently supports multiple types of Iceberg Catalogs. For more configurations, please refer to [Iceberg Catalog](../datalake-analytics/iceberg.md).
 
-    Note that if you need to create Iceberg tables or write data through HMS Catalog in Apache Doris, you need to explicitly add the `fs.defaultFS` property and `warehouse` property in the Catalog attributes. If the Catalog is created only for querying, these two parameters can be omitted.
+    Note that if you need to create Iceberg tables or write data through Hive Catalog in Apache Doris, you need to explicitly add the `fs.defaultFS` property and `warehouse` property in the Catalog attributes. If the Catalog is created only for querying, these two parameters can be omitted.
 
 - Deletion
 

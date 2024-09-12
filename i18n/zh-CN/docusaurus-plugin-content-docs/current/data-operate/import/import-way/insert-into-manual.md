@@ -51,11 +51,11 @@ INSERT INTO 支持将 Doris 查询的结果导入到另一个表中。INSERT INT
 
 INSERT INTO 通过 MySQL 协议提交和传输。下例以 MySQL 命令行为例，演示通过 INSERT INTO 提交导入作业。
 
-详细语法可以参见 [INSERT INTO](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT.md)。
+详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT.md)。
 
 ### 前置检查
 
-INSERT INTO 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
+INSERT INTO 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
 
 ### 创建导入作业
 
@@ -84,7 +84,7 @@ VALUES (1, "Emily", 25),
        (5, "Ava", 17);
 ```
 
-INSERT INTO 是一种同步导入方式，导入结果会直接返回给用户。
+INSERT INTO 是一种同步导入方式，导入结果会直接返回给用户。可以打开 [group commit](../import-way/group-commit-manual.md) 达到更高的性能。
 
 ```JSON
 Query OK, 5 rows affected (0.308 sec)
@@ -131,6 +131,10 @@ MySQL> SELECT COUNT(*) FROM testdb.test_table2;
 +----------+
 1 row in set (0.071 sec)
 ```
+
+4. 可以使用 [JOB](../../scheduler/job-scheduler.md) 异步执行 INSERT。
+
+5. 数据源可以是 [tvf](../../../lakehouse/file.md) 或者 [catalog](../../../lakehouse/database) 中的表。
 
 ### 查看导入作业
 
@@ -209,7 +213,7 @@ VALUES (val1, val2, ...), (val3, val4, ...), ...;
 
 **enable_nereids_dml_with_pipeline**
 
-  设置为 `true` 后，`insert into` 语句将尝试通过 Pipeline 引擎执行。详见[导入](./load-manual)文档。
+  设置为 `true` 后，`insert into` 语句将尝试通过 Pipeline 引擎执行。详见[导入](../load-manual)文档。
 
 ### 导入返回值
 
@@ -265,7 +269,7 @@ Query OK, 2 rows affected, 2 warnings (0.31 sec)
 | Status   | 表示导入数据是否可见。如果可见，显示 `visible`，如果不可见，显示 `committed`<p>- `visible`：表示导入成功，数据可见</p> <p>- `committed`：该状态也表示导入已经完成，只是数据可能会延迟可见，无需重试</p> <p>- Label Already Exists：Label 重复，需要更换 label</p> <p>- Fail：导入失败</p> |
 | Err      | 导入错误信息                                                 |
 
-当需要查看被过滤的行时，用户可以通过[ SHOW LOAD ](../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD)语句
+当需要查看被过滤的行时，用户可以通过[ SHOW LOAD ](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD)语句
 
 ```sql
 SHOW LOAD WHERE label="xxx";
@@ -275,7 +279,7 @@ SHOW LOAD WHERE label="xxx";
 
 数据不可见是一个临时状态，这批数据最终是一定可见的
 
-可以通过[ SHOW TRANSACTION ](../../sql-manual/sql-statements/Show-Statements/SHOW-TRANSACTION)语句查看这批数据的可见状态：
+可以通过[ SHOW TRANSACTION ](../../../sql-manual/sql-statements/Show-Statements/SHOW-TRANSACTION)语句查看这批数据的可见状态：
 
 ```sql
 SHOW TRANSACTION WHERE id=4005;
@@ -372,7 +376,7 @@ PROPERTIES (
 );
 ```
 
-2. 关于创建 Doris 表的详细说明，请参阅 [CREATE-TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) 语法帮助。
+2. 关于创建 Doris 表的详细说明，请参阅 [CREATE-TABLE](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) 语法帮助。
 
 3. 导入数据 (从 hive.db1.source_tbl 表导入到 target_tbl 表)
 
@@ -381,6 +385,7 @@ INSERT INTO target_tbl SELECT k1,k2,k3 FROM  hive.db1.source_tbl limit 100;
 ```
 
 INSERT 命令是同步命令，返回成功，即表示导入成功。
+
 
 ### 注意事项
 
@@ -455,4 +460,4 @@ FROM s3(
 
 ## 更多帮助
 
-关于 Insert Into 使用的更多详细语法，请参阅 [INSERT INTO](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP INSERT` 获取更多帮助信息。
+关于 Insert Into 使用的更多详细语法，请参阅 [INSERT INTO](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP INSERT` 获取更多帮助信息。
