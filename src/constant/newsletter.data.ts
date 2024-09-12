@@ -1,17 +1,17 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Release Note'],
+        title: "Apache Doris version 2.1.6 just released",
+        content: `This version brings continuous upgrades and improvements to the Lakehouse, Async Materialized Views, and Semi-Structured Data Management.`,
+        to: '/blog/release-note-2.1.6',
+        image: '2.1.6.jpg',
+    },
+    {
         tags: ['Top News'],
         title: "How AI unicorn MiniMax migrated from Loki and built a PB-scale logging system with Apache Doris",
         content: `Serving a PB-scale data size with over 99.9% availability, Apache Doris is the vital signs monitor of MiniMax, a generative AI startup backed by Alibaba.`,
         to: '/blog/ai-unicorn-minimax-from-loki-and-built-a-pb-scale-logging-system-with-doris',
         image: 'minimax-migrated-from-loki-to-doris.png',
-    },
-    {
-        tags: ['Release Note'],
-        title: "Apache Doris version 3.0.1 just released",
-        content: `In this version, Apache Doris has improvements in compute-storage decoupling, lakehouse, semi-structured data analysis and more.`,
-        to: '/blog/release-note-3.0.1',
-        image: '3.0.1.jpg',
     },
     {
         tags: ['Tech Sharing'],
