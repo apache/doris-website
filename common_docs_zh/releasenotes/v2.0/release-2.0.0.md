@@ -82,7 +82,7 @@ under the License.
 
 而随着用户规模的极速扩张，越来越多用户开始希望通过 Apache Doris 来简化现有的繁重大数据技术栈，减少多套系统带来的使用及运维成本。因此 Apache Doris 也在不断拓展应用场景的边界，从过去的实时报表和 Ad-hoc 等典型 OLAP 场景到湖仓一体、ELT/ETL、日志检索与分析、高并发 Data Serving 等更多业务场景，而日志检索分析、湖仓一体也是我们在 Apache Doris 最新版本中的重要突破。
 
-### 10倍以上性价比的日志检索分析平台
+### 10 倍以上性价比的日志检索分析平台
 
 在 Apache Doris 2.0.0 版本中，我们提供了原生的半结构化数据支持，在已有的 JSON、Array 基础之上增加了复杂类型 Map，并基于 Light Schema Change 功能实现了 Schema Evolution。与此同时，2.0.0 版本新引入的倒排索引和高性能文本分析算法全面加强了 Apache Doris 在日志检索分析场景的能力，可以支持更高效的任意维度分析和全文检索。结合过去在大规模数据写入和低成本存储等方面的优势，相对于业内常见的日志分析解决方案，基于 Apache Doris 构建的新一代日志检索分析平台实现了 10 倍以上的性价比提升。
 
@@ -100,7 +100,7 @@ under the License.
 
 - 数据导入与集成：基于可扩展的连接框架，增强 Apache Doris 在数据集成方面的能力，让数据更便捷的被消费和处理。用户可以通过 Apache Doris 对上游的多种数据源进行统一的增量、全量同步，并利用 Apache Doris 的数据处理能力对数据进行加工和展示，也可以将加工后的数据写回到数据源，或提供给下游系统进行消费。
 
-- 统一数据分析网关：利用 Apache Doris 构建完善可扩展的数据源连接框架，便于快速接入多类数据源。提供基于各种异构数据源的快速查询和写入能力，将 Apache Doris 打造成统一的数据分析网关。
+- 统一数据分析网关：利用 Apache Doris 构建完善可扩展的数据源连接框架，支持用户将这些外部数据源统一到 Doris 的元数据映射结构上，当用户通过 Doris 查询这些外部数据源时，能够提供一致的查询体验。
 
 # 高效的数据更新
 
@@ -130,7 +130,7 @@ under the License.
 
 ### 数据高频写入更稳定
 
-在高频数据写入过程中，小文件合并和写放大问题以及随之而来的磁盘 I/O和 CPU 资源开销是制约系统稳定性的关键，因此在 2.0 版本中我们引入了 Vertical Compaction 以及 Segment Compaction，用以彻底解决 Compaction 内存问题以及写入过程中的 Segment 文件过多问题，资源消耗降低 90%，速度提升 50%，内存占用仅为原先的 10%。
+在高频数据写入过程中，小文件合并和写放大问题以及随之而来的磁盘 I/O 和 CPU 资源开销是制约系统稳定性的关键，因此在 2.0 版本中我们引入了 Vertical Compaction 以及 Segment Compaction，用以彻底解决 Compaction 内存问题以及写入过程中的 Segment 文件过多问题，资源消耗降低 90%，速度提升 50%，内存占用仅为原先的 10%。
 
 
 ### 数据表结构自动同步
@@ -196,8 +196,8 @@ under the License.
 - 查询优化器开关默认开启 `enable_nereids_planner=true`；
 - 系统中移除了非向量化代码，所以 `enable_vectorized_engine` 参数将不再生效；
 - 新增参数 `enable_single_replica_compaction`；
-- 默认使用 datev2, datetimev2, decimalv3 来创建表，不支持 datev1，datetimev1， decimalv2 创建表；
-- 在 JDBC 和 Iceberg Catalog 中默认使用decimalv3；
+- 默认使用 datev2, datetimev2, decimalv3 来创建表，不支持 datev1，datetimev1，decimalv2 创建表；
+- 在 JDBC 和 Iceberg Catalog 中默认使用 decimalv3；
 - date type 新增 AGG_STATE；
 - backend 表去掉 cluster 列；
 - 为了与 BI 工具更好兼容，在 show create table 时，将 datev2 和 datetimev2 显示为 date 和 datetime。
@@ -206,7 +206,7 @@ under the License.
 - 当系统中存在 Multi-Catalog 时，查询 information schema 的数据默认只显示 internal catalog 的数据；
 - 限制了表达式树的深度，默认为 200；
 - array string 返回值 单引号变双引号；
-- 对 Doris的进程名重命名为 DorisFE 和 DorisBE；
+- 对 Doris 的进程名重命名为 DorisFE 和 DorisBE；
 - AES 和 SM4 加解密函数的两参数版本行为变化，详见[对应函数文档](../../sql-manual/sql-functions/encrypt-digest-functions/sm4-encrypt.md)
 
 # 正式踏上 2.0 之旅
