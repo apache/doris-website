@@ -46,6 +46,7 @@ under the License.
 | 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
 | 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
 | 1.6.2             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 | - |
+| 24.0.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
 
 ## USE
 
@@ -58,7 +59,7 @@ Add flink-doris-connector
 <dependency>
    <groupId>org.apache.doris</groupId>
    <artifactId>flink-doris-connector-1.16</artifactId>
-   <version>1.6.2</version>
+   <version>24.0.0</version>
 </dependency>
 ```
 
@@ -243,7 +244,7 @@ DataStream<RowData> source = env. fromElements("")
 source. sinkTo(builder. build());
 ```
 
-**SchemaChange data stream (JsonDebeziumSchemaSerializer)**
+**CDC data stream (JsonDebeziumSchemaSerializer)**
 
 ```java
 // enable checkpoint
@@ -351,8 +352,8 @@ ON a.city = c.city
 | sink.use-cache              | false         | N        | In case of an exception, whether to use the memory cache for recovery. When enabled, the data during the Checkpoint period will be retained in the cache. |
 | sink.enable.batch-mode      | false         | N        | Whether to use the batch mode to write to Doris. After it is enabled, the writing timing does not depend on Checkpoint. The writing is controlled through the sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval parameter. Enter the opportunity. <br />After being turned on at the same time, Exactly-once semantics will not be guaranteed. Uniq model can be used to achieve idempotence. |
 | sink.flush.queue-size       | 2             | N        | In batch mode, the cached column size.                       |
-| sink.buffer-flush.max-rows  | 50000         | N        | In batch mode, the maximum number of data rows written in a single batch. |
-| sink.buffer-flush.max-bytes | 10MB          | N        | In batch mode, the maximum number of bytes written in a single batch. |
+| sink.buffer-flush.max-rows  | 500000         | N        | In batch mode, the maximum number of data rows written in a single batch. |
+| sink.buffer-flush.max-bytes | 100MB          | N        | In batch mode, the maximum number of bytes written in a single batch. |
 | sink.buffer-flush.interval  | 10s           | N        | In batch mode, the interval for asynchronously refreshing the cache |
 | sink.ignore.update-before   | true          | N        | Whether to ignore the update-before event, ignored by default. |
 
@@ -538,11 +539,8 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --oracle-conf           | Oracle CDCSource configuration, for example --oracle-conf hostname=127.0.0.1, you can find [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/) View all configurations Oracle-CDC, where hostname/username/password/database-name/schema-name is required. |
 | --postgres-conf         | Postgres CDCSource configuration, e.g. --postgres-conf hostname=127.0.0.1, you can find [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/postgres-cdc/) View all configurations Postgres-CDC where hostname/username/password/database-name/schema-name/slot.name is required. |
 | --sqlserver-conf        | SQLServer CDCSource configuration, for example --sqlserver-conf hostname=127.0.0.1, you can find it [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/sqlserver-cdc/) View all configurations SQLServer-CDC, where hostname/username/password/database-name/schema-name is required. |
-<<<<<<< HEAD
 | --db2-conf        | DB2 CDCSource configuration, for example --db2-conf hostname=127.0.0.1, you can find it [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.1/docs/connectors/flink-sources/db2-cdc/) View all configurations DB2-CDC, where hostname/username/password/database-name/schema-name is required. |
-=======
 | --mongodb-conf          | MongoDB CDCSource configuration, for example --mongodb-conf hosts=127.0.0.1:27017, you can find all Mongo-CDC configurations [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/), where hosts/username/password/database are required. The --mongodb-conf schema.sample-percent configuration is for automatically sampling MongoDB data for creating a table in Doris, with a default value of 0.2. |
->>>>>>> 59a26707 (Add a guide related to Mongo CDC to the flink-doris-connector documentation.)
 | --sink-conf             | All configurations of Doris Sink can be found [here](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9) View the complete configuration items. |
 | --table-conf            | The configuration items of the Doris table(The exception is table-buckets, non-properties attributes), that is, the content contained in properties. For example `--table-conf replication_num=1`, and the `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"` option specifies the number of buckets for different tables based on the order of regular expressions. If there is no match, the table is created with the default setting of BUCKETS AUTO. |
 | --ignore-default-value  | Turn off the default value of synchronizing MySQL table structure. It is suitable for synchronizing MySQL data to Doris when the field has a default value but the actual inserted data is null. Reference [here](https://github.com/apache/doris-flink-connector/pull/152) |
@@ -554,7 +552,8 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --create-table-only     | Whether only the table schema should be synchronized                                                                   |
 
 :::info Note
-When synchronizing, you need to add the corresponding Flink CDC dependencies in the $FLINK_HOME/lib directory, such as flink-sql-connector-mysql-cdc-${version}.jar, flink-sql-connector-oracle-cdc-${version}.jar , flink-sql-connector-mongodb-cdc-${version}.jar
+1. When synchronizing, you need to add the corresponding Flink CDC dependencies in the $FLINK_HOME/lib directory, such as flink-sql-connector-mysql-cdc-${version}.jar, flink-sql-connector-oracle-cdc-${version}.jar , flink-sql-connector-mongodb-cdc-${version}.jar
+2. The FlinkCDC version that Connector 24.0.0 depends on must be above 3.1.
 :::
 
 ### MySQL synchronization example

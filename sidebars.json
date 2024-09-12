@@ -603,6 +603,75 @@
             "items": [
                 {
                     "type": "category",
+                    "label": "SQL Types",
+                    "items": [
+                        "sql-manual/sql-data-types/data-type-overview",
+                        {
+                            "type": "category",
+                            "label": "Numeric Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/numeric/BOOLEAN",
+                                "sql-manual/sql-data-types/numeric/TINYINT",
+                                "sql-manual/sql-data-types/numeric/SMALLINT",
+                                "sql-manual/sql-data-types/numeric/INT",
+                                "sql-manual/sql-data-types/numeric/BIGINT",
+                                "sql-manual/sql-data-types/numeric/LARGEINT",
+                                "sql-manual/sql-data-types/numeric/FLOAT",
+                                "sql-manual/sql-data-types/numeric/DOUBLE",
+                                "sql-manual/sql-data-types/numeric/DECIMAL"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Datetime Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/date-time/DATE",
+                                "sql-manual/sql-data-types/date-time/TIME",
+                                "sql-manual/sql-data-types/date-time/DATETIME"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "String Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/string-type/CHAR",
+                                "sql-manual/sql-data-types/string-type/VARCHAR",
+                                "sql-manual/sql-data-types/string-type/STRING"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Semi-Structured Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/semi-structured/ARRAY",
+                                "sql-manual/sql-data-types/semi-structured/MAP",
+                                "sql-manual/sql-data-types/semi-structured/STRUCT",
+                                "sql-manual/sql-data-types/semi-structured/JSON",
+                                "sql-manual/sql-data-types/semi-structured/VARIANT"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Aggregation Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/aggregate/HLL",
+                                "sql-manual/sql-data-types/aggregate/BITMAP",
+                                "sql-manual/sql-data-types/aggregate/QUANTILE-STATE",
+                                "sql-manual/sql-data-types/aggregate/AGG-STATE"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "IP Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/ip/IPV4",
+                                "sql-manual/sql-data-types/ip/IPV6"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "SQL Functions",
                     "items": [
                         {
@@ -1228,80 +1297,6 @@
                 },
                 {
                     "type": "category",
-                    "label": "SQL Types",
-                    "items": [
-                        {
-                            "type": "category",
-                            "label": "Numeric Data Type",
-                            "items": [
-                                "sql-manual/sql-data-types/numeric/numeric-overview",
-                                "sql-manual/sql-data-types/numeric/BOOLEAN",
-                                "sql-manual/sql-data-types/numeric/TINYINT",
-                                "sql-manual/sql-data-types/numeric/SMALLINT",
-                                "sql-manual/sql-data-types/numeric/INT",
-                                "sql-manual/sql-data-types/numeric/BIGINT",
-                                "sql-manual/sql-data-types/numeric/LARGEINT",
-                                "sql-manual/sql-data-types/numeric/FLOAT",
-                                "sql-manual/sql-data-types/numeric/DOUBLE",
-                                "sql-manual/sql-data-types/numeric/DECIMAL"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Datetime Data Type",
-                            "items": [
-                                "sql-manual/sql-data-types/date-time/datetime-overview",
-                                "sql-manual/sql-data-types/date-time/DATE",
-                                "sql-manual/sql-data-types/date-time/TIME",
-                                "sql-manual/sql-data-types/date-time/DATETIME"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "String Data Type",
-                            "items": [
-                                "sql-manual/sql-data-types/string-type/string-overview",
-                                "sql-manual/sql-data-types/string-type/CHAR",
-                                "sql-manual/sql-data-types/string-type/VARCHAR",
-                                "sql-manual/sql-data-types/string-type/STRING"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Semi-Structured Data Type",
-                            "items": [
-                                "sql-manual/sql-data-types/semi-structured/semi-structured-overview",
-                                "sql-manual/sql-data-types/semi-structured/ARRAY",
-                                "sql-manual/sql-data-types/semi-structured/MAP",
-                                "sql-manual/sql-data-types/semi-structured/STRUCT",
-                                "sql-manual/sql-data-types/semi-structured/JSON",
-                                "sql-manual/sql-data-types/semi-structured/VARIANT"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Aggregation Data Type",
-                            "items": [
-                                "sql-manual/sql-data-types/aggregate/aggregate-overview",
-                                "sql-manual/sql-data-types/aggregate/HLL",
-                                "sql-manual/sql-data-types/aggregate/BITMAP",
-                                "sql-manual/sql-data-types/aggregate/QUANTILE_STATE",
-                                "sql-manual/sql-data-types/aggregate/AGG_STATE"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "IP Data Type",
-                            "items": [
-                                "sql-manual/sql-data-types/ip/ip-overview",
-                                "sql-manual/sql-data-types/ip/IPV4",
-                                "sql-manual/sql-data-types/ip/IPV6"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type": "category",
                     "label": "SQL Statements",
                     "items": [
                         {
@@ -1696,6 +1691,7 @@
             "type": "category",
             "label": "v2.1",
             "items": [
+                "releasenotes/v2.1/release-2.1.6",
                 "releasenotes/v2.1/release-2.1.5",
                 "releasenotes/v2.1/release-2.1.4",
                 "releasenotes/v2.1/release-2.1.3",
