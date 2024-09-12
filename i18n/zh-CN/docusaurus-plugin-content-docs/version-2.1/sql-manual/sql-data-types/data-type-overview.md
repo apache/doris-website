@@ -30,37 +30,31 @@ under the License.
 
 包括以下 4 种：
 
-### BOOLEAN 类型
+**1. BOOLEAN 类型：** 
 
-两种取值，0 代表 false，1 代表 true。
+两种取值，0 代表 false，1 代表 true。更多信息参考 [BOOLEAN 文档](../../sql-manual/sql-data-types/numeric/BOOLEAN.md)。
 
-更多信息参考 [BOOLEAN 文档](../../sql-manual/sql-data-types/numeric/BOOLEAN.md)。
-
-### 整数类型
+**2. 整数类型：** 
 
 都是有符号整数，xxINT 的差异是占用字节数和表示范围
 
-1. TINYINT 占 1 字节，范围 [-128, 127], 更多信息参考 [TINYINT 文档](../../sql-manual/sql-data-types/numeric/TINYINT.md)。
+- TINYINT 占 1 字节，范围 [-128, 127], 更多信息参考 [TINYINT 文档](../../sql-manual/sql-data-types/numeric/TINYINT.md)。
 
-2. SMALLINT 占 2 字节，范围 [-32768, 32767], 更多信息参考 [SMALLINT 文档](../../sql-manual/sql-data-types/numeric/SMALLINT.md)。
+- SMALLINT 占 2 字节，范围 [-32768, 32767], 更多信息参考 [SMALLINT 文档](../../sql-manual/sql-data-types/numeric/SMALLINT.md)。
 
-3. INT 占 4 字节，范围 [-2147483648, 2147483647], 更多信息参考 [INT 文档](../../sql-manual/sql-data-types/numeric/INT.md)。
+- INT 占 4 字节，范围 [-2147483648, 2147483647], 更多信息参考 [INT 文档](../../sql-manual/sql-data-types/numeric/INT.md)。
 
-4. BIGINT 占 8 字节，范围 [-9223372036854775808, 9223372036854775807], 更多信息参考 [BIGINT 文档](../../sql-manual/sql-data-types/numeric/BIGINT.md)。
+- BIGINT 占 8 字节，范围 [-9223372036854775808, 9223372036854775807], 更多信息参考 [BIGINT 文档](../../sql-manual/sql-data-types/numeric/BIGINT.md)。
 
-5. LARGEINT 占 16 字节，范围 [-2^127, 2^127 - 1], 更多信息参考 [LARGEINT 文档](../../sql-manual/sql-data-types/numeric/LARGEINT.md)。
+- LARGEINT 占 16 字节，范围 [-2^127, 2^127 - 1], 更多信息参考 [LARGEINT 文档](../../sql-manual/sql-data-types/numeric/LARGEINT.md)。
 
-### 浮点数类型
+**3. 浮点数类型：** 
 
-不精确的浮点数类型 FLOAT 和 DOUBLE，和常见编程语言中的 float 和 double 对应。
+不精确的浮点数类型 FLOAT 和 DOUBLE，和常见编程语言中的 float 和 double 对应。更多信息参考 [FLOAT](../../sql-manual/sql-data-types/numeric/FLOAT.md)、[DOUBLE](../../sql-manual/sql-data-types/numeric/DOUBLE.md) 文档。
 
-更多信息参考 [FLOAT](../../sql-manual/sql-data-types/numeric/FLOAT.md)、[DOUBLE](../../sql-manual/sql-data-types/numeric/DOUBLE.md) 文档。
+**4. 定点数类型：** 
 
-### 定点数类型
-
-精确的定点数类型 DECIMAL，用于金融等精度要求严格准确的场景。
-
-更多信息参考 [DECIMAL](../../sql-manual/sql-data-types/numeric/DECIMAL.md) 文档。
+精确的定点数类型 DECIMAL，用于金融等精度要求严格准确的场景。更多信息参考 [DECIMAL](../../sql-manual/sql-data-types/numeric/DECIMAL.md) 文档。
 
 
 ## 日期类型
