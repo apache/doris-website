@@ -47,8 +47,6 @@ grammar:
 * `PROPERTIES ("key"="value", ...)`: (Optional) A set of key-value pairs that define additional properties for the backend nodes. These properties can be used to customize the configuration of the backends being added. Available properties include:
 
     * tag.location: Specifies the resource group where the backend node belongs. For example, PROPERTIES ("tag.location" = "groupb").
-    * tag.cloud_cluster_name: Indicates the cloud cluster name where the backend node is located. For example, PROPERTIES ("tag.cloud_cluster_name" = "clusterb").
-    If no tag.cloud_cluster_name is specified, the backend nodes will be added to the default cloud cluster.
 
 ### Example
 
@@ -72,14 +70,6 @@ grammar:
     ````
 
     This command adds a single backend node (host3 with port 9020) to the cluster in resource group `groupb`:
-
-3. Adding Backends With Cloud Cluster
-
-    ```sql
-    ALTER SYSTEM ADD BACKEND "host3:9020" PROPERTIES ("tag.cloud_cluster_name" = "clusterb");
-    ````
-
-    This command adds a single backend node (host3 with port 9020) to the cluster in cloud cluster `clusterb`:
 
 ### Keywords
 
