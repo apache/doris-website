@@ -494,7 +494,7 @@
                     "type": "category",
                     "label": "OPEN API",
                     "items": [
-                        "admin-manual/open-api/overviewi",
+                        "admin-manual/open-api/overview",
                         {
                             "type": "category",
                             "label": "FE HTTP API",
