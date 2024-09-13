@@ -147,7 +147,7 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](../../import/insert-into-manual)。
+关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](./insert-into-manual)。
 
 ### INSERT INTO VALUES
 
@@ -279,7 +279,7 @@ private static void groupCommitInsertBatch() throws Exception {
     # 返回的 Label 是 group_commit 开头的，是真正消费数据的导入关联的 label
     ```
 
-    关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../../data-operate/import/stream-load-manual)。
+    关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](./stream-load-manual)。
 
 ### Http Stream
 
@@ -339,7 +339,7 @@ private static void groupCommitInsertBatch() throws Exception {
     # 返回的 Label 是 group_commit 开头的，是真正消费数据的导入关联的 label
     ```
 
-    关于 Http Stream 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../../data-operate/import/stream-load-manual)。
+    关于 Http Stream 使用的更多详细语法及最佳实践，请参阅 [Stream Load](./stream-load-manual)。
 
 ## 自动提交条件
 
@@ -455,7 +455,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **测试工具**
 
-* [doris-streamloader](/ecosystem/spark-doris-connector)
+* [doris-streamloader](/ecosystem/doris-streamloader.md)
 
 **测试方法**
 

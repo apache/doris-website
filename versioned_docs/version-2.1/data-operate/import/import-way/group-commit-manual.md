@@ -148,7 +148,7 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-See [Synchronize Data Using Insert Method](../../../data-operate/import/insert-into-manual) for more details about **JDBC**.
+See [Synchronize Data Using Insert Method](./insert-into-manual) for more details about **JDBC**.
 
 ### INSERT INTO VALUES
 
@@ -275,7 +275,7 @@ curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mod
 # The retured label is start with 'group_commit', which is the label of the real load job
 ```
 
-See [Stream Load](stream-load-manual.md) for more detailed syntax used by **Stream Load**.
+See [Stream Load](./stream-load-manual.md) for more detailed syntax used by **Stream Load**.
 
 ### Http Stream
 
@@ -333,7 +333,7 @@ curl --location-trusted -u {user}:{passwd} -T data.csv  -H "group_commit:sync_mo
 # The retured label is start with 'group_commit', which is the label of the real load job
 ```
 
-See [Stream Load](../import-way/stream-load-manual.md) for more detailed syntax used by **Http Stream**.
+See [Stream Load](./stream-load-manual.md) for more detailed syntax used by **Http Stream**.
 
 ## Group commit condition
 
