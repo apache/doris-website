@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Using Audit Log Plugin",
+    "title": "Audit Log Plugin",
     "language": "en"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# Audit Log Plugin
 
 Doris's audit log plugin was developed based on FE's plugin framework. Is an optional plugin. Users can install or uninstall this plugin at runtime.
 
@@ -156,9 +154,9 @@ properties(
 );
 ```
 
->**Notice**
->
-> In the above table structure: stmt string, this can only be used in 0.15 and later versions, in previous versions, the field type used varchar
+:::caution
+In the above table structure: stmt string, this can only be used in 0.15 and later versions, in previous versions, the field type used varchar
+:::
 
 ### Deployment
 
@@ -172,7 +170,7 @@ You can place the packaged auditloader.zip on an http server, or copy `auditload
 INSTALL PLUGIN FROM [source] [PROPERTIES ("key"="value", ...)]
 ```
 
-Detailed command reference: [INSTALL-PLUGIN.md](../sql-manual/sql-reference/Database-Administration-Statements/INSTALL-PLUGIN)
+Detailed command reference: [INSTALL](../sql-manual/sql-reference/Database-Administration-Statements/INSTALL-PLUGIN.md)
 
 After successful installation, you can see the installed plug-ins through `SHOW PLUGINS`, and the status is `INSTALLED`.
 
