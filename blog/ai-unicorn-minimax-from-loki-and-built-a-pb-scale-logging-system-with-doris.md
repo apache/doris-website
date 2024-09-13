@@ -7,7 +7,7 @@
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "2",
+    'order': "3",
     "image": '/images/minimax-migrated-from-loki-to-doris.png'
 }
 
