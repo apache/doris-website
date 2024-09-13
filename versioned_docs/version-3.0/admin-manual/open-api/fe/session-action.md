@@ -30,11 +30,7 @@ under the License.
 
 `GET /rest/v1/session`
 
-
-
 `GET /rest/v1/session/all`
-
-
 
 ## Description
 
