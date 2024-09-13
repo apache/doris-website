@@ -838,7 +838,7 @@ Connector1.1.0 版本以前，是攒批写入的，写入均是由数据驱动�
 
 9. **tablet writer write failed, tablet_id=190958, txn_id=3505530, err=-235**
 
-通常发生在 Connector1.1.0 之前，是由于写入频率过快，导致版本过多。可以通过设置 sink.batch.size 和 sink.batch.interval 参数来降低 Streamload 的频率。
+通常发生在 Connector1.1.0 之前，是由于写入频率过快，导致版本过多。可以通过设置 sink.batch.size 和 sink.batch.interval 参数来降低 Streamload 的频率。在Connector1.1.0之后，默认写入时机是由Checkpoint控制，可以通过增加Checkpoint间隔来降低写入频率。
 
 10. **Flink 导入有脏数据，如何跳过？**
 
@@ -866,3 +866,7 @@ Flink 在数据导入时，如果有脏数据，比如字段格式、长度等�
 16. **如果使用整库同步 MySQL 数据到 Doris，出现 timestamp 类型与源数据相差多个小时**
 
 整库同步默认 timezone="UTC+8"，如果你同步的数据不是该时区，可以尝试如下设置相对应的时区，例如：`--mysql-conf debezium.date.format.timestamp.zone="UTC+3"来解决。`
+
+17. **攒批写入和流式写入有什么区别**
+
+Connector1.5.0之后支持攒批写入，攒批写入不依赖Checkpoint，将数据缓存在内存中，根据sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval 参数来控制写入时机。流式写入必须开启Checkpoint，在整个Checkpoint期间持续的将上游数据写入到Doris中，不会一直将数据缓存在内存中。
