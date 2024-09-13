@@ -390,35 +390,3 @@ Set `include_database_list` and `exclude_database_list` in Catalog properties to
 >
 > To connect to JDBC data sources, these two properties should work with `only_specified_database`. See [JDBC](../lakehouse/database/jdbc) for more details.
 
-### Metadata refresh
-
-By default, metadata changes in external catalogs, such as creating and dropping tables, adding and dropping columns, etc., will not be synchronized to Doris.
-
-Users can refresh metadata in the following ways.
-
-**Manual refresh**
-
-Users need to manually refresh the metadata through the [REFRESH](../sql-manual/sql-statements/Utility-Statements/REFRESH) command.
-
-**Regular refresh**
-
-When creating the catalog, specify the refresh time parameter `metadata_refresh_interval_sec` in the properties. It is measured in seconds. If this is set when creating the catalog, the FE master node will refresh the catalog regularly accordingly. Currently, Doris supports regular refresh for three types of catalogs:
-
-- hms: Hive MetaStore
-
-- es: Elasticsearch
-
-- Jdbc: standard interface for database access (JDBC)
-
-```Plain
--- Set the catalog refresh interval to 20 seconds
-CREATE CATALOG es PROPERTIES (
-    "type"="es",
-    "hosts"="http://127.0.0.1:9200",
-    "metadata_refresh_interval_sec"="20"
-);
-```
-
-**Auto Refresh**
-
-Currently Doris supports auto-refresh for [Hive](../lakehouse/datalake-analytics/hive) Catalog.
