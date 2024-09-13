@@ -80,6 +80,9 @@ under the License.
 | `aws_log_level` | 0 | | 用于控制 aws sdk 的日志等级。默认为 0，表示关闭 aws sdk 日志。默认情况下，aws sdk 日志已经被 glog 主动捕获，并会正常打印主动捕获的日志。个别情况下，需要开启 aws sdk 日志以查看更多未被捕获的日志。不同数字代表不同日志等级：Off = 0, Fatal = 1, Error = 2, Warn = 3, Info = 4, Debug = 5, Trace = 6 |
 | `s3_file_writer_log_interval_second` | 60 | | 当执行 S3 Upload 操作时，会每隔 60 秒（默认）打印操作进度。 |
 | `enable_debug_log_timeout_secs` | 0 | | 当值大于 0 时，会打印 pipeline 执行引擎的一些详细执行日志。主要用于排查问题。默认情况下关闭 |
+| `sys_log_enable_custom_date_time_format` | false | | 是否允许自定义日志中的日期格式（自 2.1.7 版本支持） |
+| `sys_log_custom_date_time_format` | `%Y-%m-%d %H:%M:%S` | | 默认的日志日期自定义格式，仅当 `sys_log_enable_custom_date_time_format` 为 `true` 时生效（自 2.1.7 版本支持） |
+| `sys_log_custom_date_time_ms_format` | `,{:03d}` | | 默认的日志日期中的时间精度，仅当 `sys_log_enable_custom_date_time_format` 为 `true` 时生效（自 2.1.7 版本支持） |
 
 ## 开启 DEBUG 日志
 
