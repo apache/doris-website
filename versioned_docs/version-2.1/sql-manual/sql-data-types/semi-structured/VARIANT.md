@@ -361,9 +361,9 @@ When the above types cannot be compatible, they will be transformed into JSON ty
 - Not supported as primary or sort keys.
 - Queries with filters or aggregations require casting. The storage layer eliminates cast operations based on storage type and the target type of the cast, speeding up queries. 
 
-### QA
+### FAQ
 1.Streamload Error: [CANCELLED][INTERNAL_ERROR] tablet error: [DATA_QUALITY_ERROR] Reached max column size limit 2048.
-Due to compaction and metadata storage limitations, the VARIANT type imposes a limit on the number of columns, with the default being 2048 columns. You can adjust the BE configuration variant_max_merged_tablet_schema_size accordingly, but it is not recommended to exceed 4096 columns.
+Due to compaction and metadata storage limitations, the VARIANT type imposes a limit on the number of columns, with the default being 2048 columns. You can adjust the BE configuration `variant_max_merged_tablet_schema_size` accordingly, but it is not recommended to exceed 4096 columns.
 
 ### Keywords
 
