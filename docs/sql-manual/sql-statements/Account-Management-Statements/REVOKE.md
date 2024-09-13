@@ -47,6 +47,8 @@ REVOKE privilege_list ON WORKLOAD GROUP workload_group_name FROM user_identity [
 
 REVOKE privilege_list ON COMPUTE GROUP compute_group_name FROM user_identity [ROLE role_name]
 
+REVOKE privilege_list ON STORAGE VAULT storage_vault_name FROM user_identity [ROLE role_name]
+
 REVOKE role_list FROM user_identity
 
 ## Parameters
@@ -136,13 +138,26 @@ A comma-separated list of roles to be revoked. All specified roles must exist.
 
    REVOKE USAGE_PRIV ON COMPUTE GROUP 'group1' FROM ROLE 'my_role';
 
+9. Revoke usage privilege on a storage vault from a user:
+
+   REVOKE USAGE_PRIV ON STORAGE VAULT 'vault1' FROM 'jack'@'%';
+
+10. Revoke usage privilege on a storage vault from a role:
+
+   REVOKE USAGE_PRIV ON STORAGE VAULT 'vault1' FROM ROLE 'my_role';
+
+
 ## Related Commands
 
-- GRANT
-- CREATE USER
-- CREATE ROLE
+- [GRANT](./GRANT.md)
+- [SHOW GRANTS](../Show-Statements/SHOW-GRANTS.md)
+- [CREATE ROLE](./CREATE-ROLE.md)
+- [CREATE WORKLOAD GROUP](../Administration-Statements/CREATE-WORKLOAD-GROUP.md)
+- [CREATE COMPUTE GROUP](../Administration-Statements/CREATE-COMPUTE-GROUP.md)
+- [CREATE RESOURCE](../Administration-Statements/CREATE-RESOURCE.md)
+- [CREATE STORAGE VAULT](../Administration-Statements/CREATE-STORAGE-VAULT.md)
 
 ### Keywords
 
-    REVOKE, WORKLOAD GROUP, COMPUTE GROUP, RESOURCE 
+    REVOKE, WORKLOAD GROUP, COMPUTE GROUP, RESOURCE, STORAGE VAULT
 

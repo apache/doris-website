@@ -32,7 +32,7 @@ SET PROPERTY
 
 ### Description
 
-Set user attributes, including resources assigned to users, importing clusters, etc.
+Set user attributes, including resources assigned to users, importing clusters, compute groups etc.
 
 ```sql
 SET PROPERTY [FOR 'user'] 'key' = 'value' [, 'key' = 'value']
@@ -56,7 +56,7 @@ Super user privileges:
 
  resource_tags: Specifies the user's resource tag permissions.
 
- query_timeout: Specifies the user's query timeout permissions.
+ query_timeout: Specifies the user's query timeout.
 
     Note: If the attributes `cpu_resource_limit`, `exec_mem_limit` are not set, the value in the session variable will be used by default.
 

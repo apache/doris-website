@@ -36,6 +36,8 @@ GRANT privilege_list ON WORKLOAD GROUP workload_group_name TO user_identity [ROL
 
 GRANT privilege_list ON COMPUTE GROUP compute_group_name TO user_identity [ROLE role_name]
 
+GRANT privilege_list ON STORAGE VAULT storage_vault_name TO user_identity [ROLE role_name]
+
 GRANT role_list TO user_identity
 
 ### Description
@@ -164,11 +166,27 @@ A comma-separated list of roles to be assigned. The specified roles must exist.
 
     GRANT USAGE_PRIV ON COMPUTE GROUP '*' TO 'jack'@'%';
 
+15. Grant user permission to use the specified storage vault:
+
+    GRANT USAGE_PRIV ON STORAGE VAULT 'vault1' TO 'jack'@'%';
+
+16. Grant role permission to use the specified storage vault:
+
+    GRANT USAGE_PRIV ON STORAGE VAULT 'vault1' TO ROLE 'my_role';
+
+17. Grant user permission to use all storage vaults:
+
+    GRANT USAGE_PRIV ON STORAGE VAULT '*' TO 'jack'@'%';
+
 ### Related Commands
 
-- REVOKE
-- CREATE USER
-- CREATE ROLE
+- [REVOKE](./REVOKE.md)
+- [SHOW GRANTS](../Show-Statements/SHOW-GRANTS.md)
+- [CREATE ROLE](./CREATE-ROLE.md)
+- [CREATE WORKLOAD GROUP](../Administration-Statements/CREATE-WORKLOAD-GROUP.md)
+- [CREATE COMPUTE GROUP](../Administration-Statements/CREATE-COMPUTE-GROUP.md)
+- [CREATE RESOURCE](../Administration-Statements/CREATE-RESOURCE.md)
+- [CREATE STORAGE VAULT](../Administration-Statements/CREATE-STORAGE-VAULT.md)
 
 ### Keywords
 

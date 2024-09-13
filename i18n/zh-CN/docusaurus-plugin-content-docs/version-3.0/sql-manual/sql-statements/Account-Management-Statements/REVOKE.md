@@ -24,62 +24,120 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## REVOKE
+# REVOKE
 
-### Name
+## 语法
 
-REVOKE
+REVOKE privilege_list ON priv_level FROM user_identity [ROLE role_name]
 
-### Description
+REVOKE privilege_list ON RESOURCE resource_name FROM user_identity [ROLE role_name]
 
-REVOKE 命令有如下功能：
+REVOKE privilege_list ON WORKLOAD GROUP workload_group_name FROM user_identity [ROLE role_name]
+
+REVOKE privilege_list ON COMPUTE GROUP compute_group_name FROM user_identity [ROLE role_name]
+
+REVOKE role_list FROM user_identity
+
+## 描述
+
+REVOKE 命令用于：
 
 1. 撤销某用户或某角色的指定权限。
 2. 撤销先前授予某用户的指定角色。
 
->注意：
->
->2.0及之后版本支持"撤销先前授予某用户的指定角色"
+## 参数
 
-```sql
-REVOKE privilege_list ON db_name[.tbl_name] FROM user_identity [ROLE role_name]
+### privilege_list
 
-REVOKE privilege_list ON RESOURCE resource_name FROM user_identity [ROLE role_name]
+需要撤销的权限列表，以逗号分隔。支持的权限包括：
 
-REVOKE role_list FROM user_identity
-```
+- NODE_PRIV：集群节点操作权限
+- ADMIN_PRIV：管理员权限
+- GRANT_PRIV：授权权限
+- SELECT_PRIV：查询权限
+- LOAD_PRIV：数据导入权限
+- ALTER_PRIV：修改权限
+- CREATE_PRIV：创建权限
+- DROP_PRIV：删除权限
+- USAGE_PRIV：使用权限
+- SHOW_VIEW_PRIV：查看视图定义权限
 
-user_identity：
+### priv_level
 
-这里的 user_identity 语法同 CREATE USER。且必须为使用 CREATE USER 创建过的 user_identity。user_identity 中的host可以是域名，如果是域名的话，权限的撤销时间可能会有1分钟左右的延迟。
+指定权限的作用范围。支持以下格式：
 
-也可以撤销指定的 ROLE 的权限，执行的 ROLE 必须存在。
+- *.*.*：所有 catalog、数据库和表
+- catalog_name.*.*：指定 catalog 中的所有数据库和表
+- catalog_name.db.*：指定数据库中的所有表
+- catalog_name.db.tbl：指定数据库中的特定表
 
-role_list 是需要撤销的角色列表，以逗号分隔，指定的角色必须存在。
+### resource_name
 
-### Example
+指定资源范围。支持以下格式：
 
-1. 撤销用户 jack 数据库 testDb 的权限
-   
-    ```sql
-    REVOKE SELECT_PRIV ON db1.* FROM 'jack'@'192.%';
-    ```
-    
-2. 撤销用户 jack 资源 spark_resource 的使用权限
-   
-    ```sql
-    REVOKE USAGE_PRIV ON RESOURCE 'spark_resource' FROM 'jack'@'192.%';
-    ```
+- *：所有资源
+- resource：特定资源
 
-3. 撤销先前授予jack的角色role1和role2
+### workload_group_name
 
-    ```sql
-    REVOKE 'role1','role2' FROM 'jack'@'192.%';
-    ```
+指定工作负载组名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
+
+### compute_group_name
+
+指定计算组名称。
+
+### user_identity
+
+指定要撤销权限的用户。必须是使用 CREATE USER 创建的用户。user_identity 中的 host 可以是域名，如果是域名，权限的撤销时间可能会有 1 分钟左右的延迟。
+
+### role_name
+
+指定要撤销权限的角色。该角色必须存在。
+
+### role_list
+
+需要撤销的角色列表，以逗号分隔。指定的所有角色必须存在。
+
+## 示例
+
+1. 撤销用户在特定数据库上的 SELECT 权限：
+
+   REVOKE SELECT_PRIV ON db1.* FROM 'jack'@'192.%';
+
+2. 撤销用户对资源的使用权限：
+
+   REVOKE USAGE_PRIV ON RESOURCE 'spark_resource' FROM 'jack'@'192.%';
+
+3. 撤销用户的角色：
+
+   REVOKE 'role1','role2' FROM 'jack'@'192.%';
+
+4. 撤销用户对工作负载组的使用权限：
+
+   REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'jack'@'%';
+
+5. 撤销用户对所有工作负载组的使用权限：
+
+   REVOKE USAGE_PRIV ON WORKLOAD GROUP '%' FROM 'jack'@'%';
+
+6. 撤销角色对工作负载组的使用权限：
+
+   REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM ROLE 'test_role';
+
+7. 撤销用户对计算组的使用权限：
+
+   REVOKE USAGE_PRIV ON COMPUTE GROUP 'group1' FROM 'jack'@'%';
+
+8. 撤销角色对计算组的使用权限：
+
+   REVOKE USAGE_PRIV ON COMPUTE GROUP 'group1' FROM ROLE 'my_role';
+
+## 相关命令
+
+- GRANT
+- CREATE USER
+- CREATE ROLE
 
 ### Keywords
 
-    REVOKE
-
-### Best Practice
-
+    REVOKE, WORKLOAD GROUP, COMPUTE GROUP, RESOURCE 
