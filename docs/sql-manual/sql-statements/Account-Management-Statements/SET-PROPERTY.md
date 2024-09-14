@@ -104,9 +104,14 @@ Super user privileges:
     SET PROPERTY FOR 'jack' 'query_timeout' = '500';
     ```
 
+### 相关命令
+
+- [CREATE USER](./CREATE-USER.md)
+- [SHOW PROPERTY](../Show-Statements/SHOW-PROPERTY.md)
+
 ### Keywords
 
-    SET, PROPERTY
+    SET, PROPERTY, COMPUTE GROUP, WORKLOAD GROUP
 
 ### Best Practice
 

@@ -81,12 +81,7 @@ Note: The catalog_name, database, or table specified here can be non-existent da
 
 #### resource_name
 
-Supports the following two forms:
-
-- *: Privileges apply to all resources.
-- resource: Privileges apply to the specified resource.
-
-Note: The resource specified here can be a non-existent resource.
+Specifies the resource name, supports % and _ wildcards, % can match any string and _ matches any single character.
 
 #### workload_group_name
 
@@ -94,7 +89,12 @@ Specifies the workload group name, supports % and _ wildcards, % can match any s
 
 #### compute_group_name
 
-Specifies the compute group name.
+Specifies the compute group name, supports % and _ wildcards, % can match any string and _ matches any single character.
+
+#### storage_vault_name
+
+Specifies the storage vault name, supports % and _ wildcards, % can match any string and _ matches any single character.
+
 
 #### user_identity
 

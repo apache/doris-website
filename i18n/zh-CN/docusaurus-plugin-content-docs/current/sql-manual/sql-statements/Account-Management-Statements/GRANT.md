@@ -34,6 +34,8 @@ GRANT privilege_list ON WORKLOAD GROUP workload_group_name TO user_identity [ROL
 
 GRANT privilege_list ON COMPUTE GROUP compute_group_name TO user_identity [ROLE role_name]
 
+GRANT privilege_list ON STORAGE VAULT storage_vault_name TO user_identity [ROLE role_name]
+
 GRANT role_list TO user_identity
 
 ## 描述
@@ -77,20 +79,19 @@ GRANT 命令用于：
 
 ### resource_name
 
-支持以下两种形式：
-
-- *：权限应用于所有资源。
-- resource：权限应用于指定资源。
-
-注意：这里指定的资源可以是不存在的资源。
+指定 resource 名，支持 % 和 _ 匹配符，% 可匹配任意字符串，_ 匹配任意单个字符。
 
 ### workload_group_name
 
-可指定 workload group 名，支持 % 和 _ 匹配符，% 可匹配任意字符串，_ 匹配任意单个字符。
+指定 workload group 名，支持 % 和 _ 匹配符，% 可匹配任意字符串，_ 匹配任意单个字符。
 
 ### compute_group_name
 
-指定计算组名称。
+指定 compute group 名称，支持 % 和 _ 匹配符，% 可匹配任意字符串，_ 匹配任意单个字符。
+
+### storage_vault_name
+
+指定 storage vault 名称，支持 % 和 _ 匹配符，% 可匹配任意字符串，_ 匹配任意单个字符。
 
 ### user_identity
 
@@ -118,19 +119,19 @@ GRANT 命令用于：
 
    GRANT LOAD_PRIV ON ctl1.db1.* TO ROLE 'my_role';
 
-4. 授予所有资源的使用权限给用户：
+4. 授予所有 resource 的使用权限给用户：
 
    GRANT USAGE_PRIV ON RESOURCE * TO 'jack'@'%';
 
-5. 授予指定资源的使用权限给用户：
+5. 授予指定 resource 的使用权限给用户：
 
    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO 'jack'@'%';
 
-6. 授予指定资源的使用权限给角色：
+6. 授予指定 resource 的使用权限给角色：
 
    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO ROLE 'my_role';
 
-7. 将指定角色授予某用户：
+7. 将指定 role 授予某用户：
 
    GRANT 'role1','role2' TO 'jack'@'%';
 
@@ -150,24 +151,40 @@ GRANT 命令用于：
 
     GRANT SHOW_VIEW_PRIV ON db1.view1 TO 'jack'@'%';
 
-12. 授予用户对指定计算组的使用权限：
+12. 授予用户对指定 compute group 的使用权限：
 
     GRANT USAGE_PRIV ON COMPUTE GROUP 'group1' TO 'jack'@'%';
 
-13. 授予角色对指定计算组的使用权限：
+13. 授予角色对指定 compute group 的使用权限：
 
     GRANT USAGE_PRIV ON COMPUTE GROUP 'group1' TO ROLE 'my_role';
 
-14. 授予用户对所有计算组的使用权限：
+14. 授予用户对所有 compute group 的使用权限：
 
     GRANT USAGE_PRIV ON COMPUTE GROUP '*' TO 'jack'@'%';
 
+15. 授予用户对指定 storage vault 的使用权限：
+
+    GRANT USAGE_PRIV ON STORAGE VAULT 'vault1' TO 'jack'@'%';
+
+16. 授予角色对指定 storage vault 的使用权限：
+
+    GRANT USAGE_PRIV ON STORAGE VAULT 'vault1' TO ROLE 'my_role';
+
+17. 授予用户对所有 storage vault 的使用权限：
+
+    GRANT USAGE_PRIV ON STORAGE VAULT '*' TO 'jack'@'%';
+
 ## 相关命令
 
-- [REVOKE](../REVOKE.md)
-- [CREATE USER](../CREATE-USER.md)
-- [CREATE ROLE](../CREATE-ROLE.md)
+- [REVOKE](./REVOKE.md)
+- [SHOW GRANTS](../Show-Statements/SHOW-GRANTS.md)
+- [CREATE ROLE](./CREATE-ROLE.md)
+- [CREATE WORKLOAD GROUP](../Administration-Statements/CREATE-WORKLOAD-GROUP.md)
+- [CREATE COMPUTE GROUP](../Administration-Statements/CREATE-COMPUTE-GROUP.md)
+- [CREATE RESOURCE](../Administration-Statements/CREATE-RESOURCE.md)
+- [CREATE STORAGE VAULT](../Administration-Statements/CREATE-STORAGE-VAULT.md)
 
 ### Keywords
 
-    GRANT, WORKLOAD GROUP, COMPUTE GROUP, RESOURCE 
+    GRANT, WORKLOAD GROUP, COMPUTE GROUP, STORAGE VAULT, RESOURCE 

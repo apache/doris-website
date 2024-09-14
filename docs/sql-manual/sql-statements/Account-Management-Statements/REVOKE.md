@@ -79,10 +79,7 @@ Specifies the scope of the privileges. Supported formats:
 
 ### resource_name
 
-Specifies the resource scope. Supported formats:
-
-- *: All resources
-- resource: A specific resource
+Specifies the resource scope. Supports % (matches any string) and _ (matches any single character) wildcards.
 
 ### workload_group_name
 
@@ -90,7 +87,11 @@ Specifies the workload group name. Supports % (matches any string) and _ (matche
 
 ### compute_group_name
 
-Specifies the compute group name.
+Specifies the compute group name. Supports % (matches any string) and _ (matches any single character) wildcards.
+
+### storage_vault_name
+
+Specifies the storage vault name. Supports % (matches any string) and _ (matches any single character) wildcards.
 
 ### user_identity
 

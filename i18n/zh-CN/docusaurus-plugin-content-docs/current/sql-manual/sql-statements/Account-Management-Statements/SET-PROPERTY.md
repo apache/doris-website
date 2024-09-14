@@ -116,17 +116,10 @@ SET PROPERTY 语句用于设置用户属性，包括分配给用户的资源和�
    SET PROPERTY FOR 'jack' 'default_compute_group' = 'compute_group1';
    ```
 
-## 相关命令
+### 相关命令
 
-- CREATE USER
-- SHOW PROPERTY
-
-## 另请参阅
-
-- 会话变量
-- 资源管理
-- 工作负载组管理
-- 计算组管理
+- [CREATE USER](./CREATE-USER.md)
+- [SHOW PROPERTY](../Show-Statements/SHOW-PROPERTY.md)
 
 ### Keywords
 

@@ -75,22 +75,19 @@ REVOKE 命令用于：
 
 #### resource_name
 
-指定资源范围。支持以下格式：
-
-- *：所有资源
-- resource：特定资源
+指定 resource 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
 #### workload_group_name
 
-指定工作负载组名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
+指定 workload group 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
 #### compute_group_name
 
-指定计算组名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
+指定 compute group 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
 #### storage_vault_name
 
-指定存储库名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
+指定 storage vault 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
 
 #### user_identity
@@ -119,35 +116,35 @@ REVOKE 命令用于：
 
    REVOKE 'role1','role2' FROM 'jack'@'192.%';
 
-4. 撤销用户对工作负载组的使用权限：
+4. 撤销用户对 workload group  的使用权限：
 
    REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'jack'@'%';
 
-5. 撤销用户对所有工作负载组的使用权限：
+5. 撤销用户对所有 workload group  的使用权限：
 
    REVOKE USAGE_PRIV ON WORKLOAD GROUP '%' FROM 'jack'@'%';
 
-6. 撤销角色对工作负载组的使用权限：
+6. 撤销角色对 workload group  的使用权限：
 
    REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM ROLE 'test_role';
 
-7. 撤销用户对计算组的使用权限：
+7. 撤销用户对 compute group  的使用权限：
 
    REVOKE USAGE_PRIV ON COMPUTE GROUP 'group1' FROM 'jack'@'%';
 
-8. 撤销角色对计算组的使用权限：
+8. 撤销角色对 compute group  的使用权限：
 
    REVOKE USAGE_PRIV ON COMPUTE GROUP 'group1' FROM ROLE 'my_role';
 
-9. 撤销用户对存储库的使用权限：
+9. 撤销用户对 storage vault 的使用权限：
 
    REVOKE USAGE_PRIV ON STORAGE VAULT 'vault1' FROM 'jack'@'%';
 
-10. 撤销角色对存储库的使用权限：
+10. 撤销角色对 storage vault 的使用权限：
 
    REVOKE USAGE_PRIV ON STORAGE VAULT 'vault1' FROM ROLE 'my_role';
 
-11. 撤销用户对所有存储库的使用权限：
+11. 撤销用户对所有 storage vault 的使用权限：
 
    REVOKE USAGE_PRIV ON STORAGE VAULT '%' FROM 'jack'@'%';
 
