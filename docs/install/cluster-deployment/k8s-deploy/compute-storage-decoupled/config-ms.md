@@ -1,7 +1,7 @@
 ---
 {
-"title": "Config and install MS",
-"language": "en"
+  "title": "Config Metaservice",
+  "language": "en"
 }
 ---
 
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-MS is the abbreviation of Meta Service, the Compute-storage decoupled component of Doris, which provides metadata management and query services. The configuration field in `DorisDisaggregatedMetaService` is MS.
+MS is the abbreviation of MetaService, the storage and computing separation component of Doris, which provides metadata management and query services. The configuration field in `DorisDisaggregatedClulster` is ms.
 
 ## Simplest configuration
 
@@ -56,11 +56,13 @@ spec:
       memory: 4Gi
 ```
 
-Update the modified configuration to the [metadata management resources](../install-quickstart.md#Install DorisDisaggregatedMetaService). for Compute-storage decoupled that need to be deployed.
+Update the modified configuration to the [metadata management resources for storage and computing separation that need to be deployed](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
 
 ## Customized configuration file
 
-Configuration files are mounted on K8s through ConfigMap. Doris-Operator automates the configuration of mutual perception between Compute-storage decoupled components. When deploying MS services using customized configuration files, please do not configure [FDB related configuration](../../../../../compute-storage-decoupled/compilation-and-deployment#deploy-meta-service).
+ConfigMap is used to mount the configuration file on K8s. Doris-Operator automates the configuration of mutual perception between storage and computing separation components. When deploying MS services using customized configuration files, please do not configure [FDB related configuration](https://doris.apache.org/zh-CN/docs/compute-storage-decoupled/compilation-and-deployment/#meta-service-%E9%85%8D%E7%BD%AE).
+
+Use ConfigMap to mount the configuration file to deploy MS services:
 
 **ConfigMap**:
 
@@ -106,8 +108,8 @@ spec:
       mountPath: /etc/doris
 ```
 
-In actual deployment, configure the name and namespace of ConfigMap as needed, and configure the configuration information in the [Compute-storage decoupled metadata management resource](../install-quickstart.md#Install DorisDisaggregatedMetaService) to be deployed according to the above sample format. The startup configuration file used by the MS service is named `doris_cloud.conf`, so the key of the ConfigMap for mounting the startup configuration must also be `doris_cloud.conf`. The startup configuration must be mounted to the `/etc/doris` directory, that is, the mountPath is `/etc/doris`.
+In actual deployment, configure the name and namespace of ConfigMap as needed, and configure the configuration information in the [storage-and-computing-separation metadata management resource](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster) to be deployed according to the above sample format. The startup configuration file used by the MS service is named `doris_cloud.conf`, so the key of the ConfigMap for mounting the startup configuration must also be `doris_cloud.conf`. The startup configuration must be mounted to the `/etc/doris` directory, that is, the mountPath is `/etc/doris`.
 
 :::tip Tip
-MS service needs to use FDB as the backend metadata storage, and the FDB service must be deployed when deploying MS service.
-:::
+MS services need to use FDB as the backend metadata storage. FDB services must be deployed when deploying MS services.
+::: 

@@ -31,6 +31,7 @@
                                     "type": "category",
                                     "label": "Compute-storage coupled",
                                     "items": [
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-quickstart",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-operator",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
@@ -46,24 +47,10 @@
                                     "label": "Compute-storage decoupled",
                                     "items": [
                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart",
-                                        {
-                                            "type": "category",
-                                            "label": "Install Metaservice",
-                                            "items": [
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-metaservice/config-fdb",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-metaservice/config-ms",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-metaservice/config-recycler"
-                                            ]
-                                        },
-                                        {
-                                            "type": "category",
-                                            "label": "Install Cluster",
-                                            "items": [
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-cluster/config-relation",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-cluster/config-fe",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-cluster/config-cc"
-                                            ]
-                                        }
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-cg"
                                     ]
                                 }
                             ]

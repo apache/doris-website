@@ -1,6 +1,6 @@
 ---
 {
-"title": "Config and install FE",
+"title": "Config FE",
 "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-In the Compute-storage decoupled mode, FE is mainly responsible for SQL parsing related work and is also responsible for interacting with the metadata management component MS. FE usually only needs to deploy 2 services and set the replicas to 2. The simplest deployment mode is as follows:
+In the storage-and-computing separation mode, FE is mainly responsible for SQL parsing related work and is also responsible for interacting with the metadata management component MS. FE usually only needs to deploy 2 services, and the replicas are set to 2. The simplest deployment mode is as follows:
 
 ```yaml
 spec:
@@ -33,13 +33,13 @@ spec:
     replicas: 2
 ```
 
-Configure the FE service image to be used, and update the configuration to the [Compute-storage decoupled resources to be deployed](../install-quickstart.md#Install DorisDisaggregatedCluster).
+Configure the FE service image to be used, and update the configuration to the [storage-and-computing separation resources to be deployed](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
 
 ## Configure resources
 
 ### Configure computing resources for services
 
-Add computing resource configuration for FE services. `DorisDisaggregatedCluster` reuses K8s requests and limits to configure resource usage for each component. The following is how to configure FE services using 4c 4Gi:
+Add computing resource configuration for the FE service. `DorisDisaggregatedCluster` reuses K8s requests and limits to configure the resource usage of each component. The following is to configure the FE service using 4c 4Gi:
 
 ```yaml
 spec:
@@ -52,14 +52,13 @@ spec:
       memory: 4Gi
 ```
 
-The above example shows how to configure the computing resources of the FE service to 4c 4Gi mode. After configuring the resources that FE wants to use, update the configuration information to [Compute-storage decoupled resources to be deployed](../install-quickstart.md#Install DorisDisaggregatedCluster).
+The above example shows how to configure the computing resources of the FE service to 4c 4Gi mode. After configuring the resources that FE wants to use, update the configuration information to [storage-and-computing separation resources to be deployed](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
 
 ### Configure service storage resources
 
-The Compute-storage decoupled cluster FE service is a stateful service. In the K8s deployment mode, the corresponding disk needs to be mounted to store the storage information that the FE service needs to persist.
+The storage-and-computing separation cluster FE service is a stateful service. In the K8s deployment mode, the corresponding disk needs to be mounted to store the storage information that the FE service needs to persist.
 
-The following is an example of using the default [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) to provide storage services for FE configuration:
-
+The following is an example of using the default [StorageClass](https://kubernetes.io/zh-cn/docs/concepts/storage/storage-classes/) to provide storage services for FE configuration:
 ```yaml
 spec:
   feSpec:
@@ -73,11 +72,11 @@ spec:
             storage: 200Gi
 ```
 
-The above example shows how to add 200Gi storage to the FE service. `{storageClassName}` is the name of the StorageClass to be used. If it is not filled in, the default StorageClass of the cluster will be used. After configuring the storage information required by the FE service according to the above mode, update the configuration to [Compute-storage decoupled resources to be deployed](../install-quickstart.md#Install DorisDisaggregatedCluster).
+The above example shows how to add 200Gi storage to the FE service. `{storageClassName}` is the name of the StorageClass to be used. If it is not filled in, the default StorageClass of the cluster will be used. After configuring the storage information required by the FE service according to the above mode, update the configuration to [Storage and computing separation resources to be deployed](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
 
 ## Customized configuration file
 
-In K8s deployment, you can use ConfigMap to mount customized configuration for the FE service to start the FE service. Assume that the following configuration is used to start the FE service:
+In K8s deployment, you can use ConfigMap to mount customized configuration for the FE service to start the FE service. Assume that the FE service is started with the following configuration:
 
 ```yaml
 apiVersion: v1
@@ -119,7 +118,7 @@ spec:
 
 In the `DorisDisaggregatedCluster` resource, the configMaps for mounting ConfigMap is an array. The name of each element represents the ConfigMap name of the current namespace.
 
-Configure the ConfigMap information required by the FE service according to the above mode, and update the configuration to [Compute-storage decoupled resources to be deployed](../install-quickstart.md#Install DorisDisaggregatedCluster).
+Configure the ConfigMap information required by the FE service according to the above mode, and update the configuration to [Storage and computing separation resources to be deployed](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
 
 :::tip Tip
 In K8s deployment, when using ConfigMap to mount customized configuration files, there is no need to add `meta_service_endpoint` and `cloud_unique_id` configurations, and Doris-Operator related services will be added automatically.
