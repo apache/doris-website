@@ -25,6 +25,7 @@ under the License.
 -->
 
 
+
 ## Request
 
 `GET /rest/v2/manager/node/frontends`
@@ -47,8 +48,6 @@ under the License.
 
 `POST /rest/v2/manager/node/{action}/fe`
 
-
-
 ## Get information about fe, be, broker nodes
 
 `GET /rest/v2/manager/node/frontends`
@@ -63,7 +62,7 @@ Used to get cluster to get fe, be, broker node information.
 
 ### Response
 
-```json
+```
 frontends:
 {
     "msg": "success",
@@ -99,7 +98,7 @@ frontends:
 }
 ```
 
-```json
+```
 backends:
 {
     "msg": "success",
@@ -139,7 +138,7 @@ backends:
 }
 ```
 
-```json
+```
 brokers:
 {
     "msg": "success",
@@ -189,8 +188,7 @@ none
 `POST /rest/v2/manager/node/configuration_info`
 
 * type 
-
-The value is fe or be, which specifies to get the configuration information of fe or the configuration information of be.
+  The value is fe or be, which specifies to get the configuration information of fe or the configuration information of be.
 
 ### Request body
 
@@ -201,8 +199,7 @@ none
 none
 
 `POST /rest/v2/manager/node/configuration_info`
-
-```json
+```
 {
 	"conf_name": [
 		""
@@ -281,8 +278,7 @@ node is used to specify which node's configuration information is returned, the 
 ```
 
 `POST /rest/v2/manager/node/configuration_info?type=be`
-
-```json
+```
 {
     "msg": "success",
     "code": 0,
@@ -382,7 +378,6 @@ persist is true for permanent modification and false for temporary modification.
 ```
 
 ### Response
-
 `GET /rest/v2/manager/node/configuration_name`  
 
 ``` json
