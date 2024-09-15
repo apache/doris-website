@@ -290,15 +290,13 @@ under the License.
 CREATE CATALOG hive PROPERTIES (
     'type'='hms',
     'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-    'metadata_refresh_interval_sec' = '600'
+    'metadata_refresh_interval_sec' = '3600'
 );
 ```
 
-在上例中，`metadata_refresh_interval_sec` 表示每 600 秒刷新一次 Catalog。相当于每隔 600 秒，自动执行一次：
+在上例中，`metadata_refresh_interval_sec` 表示每 3600 秒刷新一次 Catalog。相当于每隔 3600 秒，自动执行一次：
 
 `REFRESH CATALOG ctl1 PROPERTIES("invalid_cache" = "true");`
-
-定时刷新间隔不得小于 5 秒。
 
 ## 最佳实践
 

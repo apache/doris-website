@@ -71,7 +71,7 @@ under the License.
 
 ### Response
 
-```
+```json
 {
     "msg": "success",
     "code": 0,
@@ -98,16 +98,11 @@ under the License.
 }
 ```
 
-
-
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。
 
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
-
 ### Examples
-```
+
+```json
 GET /rest/v2/manager/query/query_info
 
 {
@@ -155,7 +150,7 @@ GET /rest/v2/manager/query/query_info
 
 在执行一个 Query 前，先设置一个唯一的 trace id:
 
-`set session_context="trace_id:your_trace_id";`
+`set session_context="trace_id:your_trace_id"`;
 
 在同一个 Session 链接内执行 Query 后，可以通过 trace id 获取 query id。
     
@@ -169,7 +164,7 @@ GET /rest/v2/manager/query/query_info
 
 ### Response
 
-```
+```json
 {
     "msg": "success", 
     "code": 0, 
@@ -178,11 +173,9 @@ GET /rest/v2/manager/query/query_info
 }
 ```
 
-
-
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 trace id 不存在或无权限，则返回 Bad Request：
 
-```
+```json
 {
     "msg": "Bad Request", 
     "code": 403, 
@@ -190,11 +183,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
-
-
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
 
 ## 获取指定查询的 sql 和文本 profile
 
@@ -204,7 +192,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 
 ### Description
 
-用于获取指定 query id 的 sql 和 profile 文本。
+用于获取指定 Query ID 的 SQL 和 profile 文本。
     
 ### Path parameters
 
@@ -216,7 +204,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 
 * `is_all_node`
   
-    可选，若为 true 则在所有 fe 节点中查询指定 query id 的信息，若为 false 则在当前连接的 fe 节点中查询指定 query id 的信息。默认为 true。
+    可选，若为 true 则在所有 FE 节点中查询指定 query id 的信息，若为 false 则在当前连接的 FE 节点中查询指定 query id 的信息。默认为 true。
 
 ### Response
 
@@ -254,11 +242,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
-
-
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
     
 ### Examples
 
@@ -324,8 +307,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 }
 ```
 
-
-
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 query id 不存在或无权限，则返回 Bad Request：
 
 ```
@@ -336,10 +317,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
-
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
     
 ### Examples
 
@@ -429,8 +406,6 @@ Response:
 }
 ```
 
-
-
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 query id 不存在或无权限，则返回 Bad Request：
 
 ```
@@ -441,10 +416,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
-
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
 
 ## 正在执行的 query
 
@@ -464,7 +435,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 
 ### Response
 
-```
+```json
 {
 	"msg": "success",
 	"code": 0,
@@ -497,7 +468,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 
 ### Response
 
-```
+```json
 {
     "msg": "success",
     "code": 0,

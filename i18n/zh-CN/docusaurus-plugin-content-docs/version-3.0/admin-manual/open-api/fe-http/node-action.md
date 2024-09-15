@@ -44,11 +44,9 @@ under the License.
 
 `POST /rest/v2/manager/node/set_config/be`
 
-
 `POST /rest/v2/manager/node/{action}/be`
 
 `POST /rest/v2/manager/node/{action}/fe`
-
 
 ## 获取 fe, be, broker 节点信息
 
