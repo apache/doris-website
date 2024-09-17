@@ -24,19 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW STORAGE VAULTS
+## 描述
 
-### 语法
+SHOW STORAGE VAULTS 命令用于显示系统中配置的所有storage vault的信息。storage vault用于管理数据外部存储位置。
+
+## 语法
 
 ```sql
     SHOW STORAGE VAULTS
 ```
 
-### Description
-
-SHOW STORAGE VAULTS 命令用于显示系统中配置的所有storage vault的信息。storage vault用于管理数据外部存储位置。
-
-### Return Values
+## 返回值
 
 此命令返回一个结果集，包含以下列：
 
@@ -45,13 +43,13 @@ SHOW STORAGE VAULTS 命令用于显示系统中配置的所有storage vault的�
 - `Properties`: 包含 storage vault 配置属性的JSON字符串。
 - `IsDefault`: 指示该 storage vault 是否设置为默认值（TRUE或FALSE）。
 
-### Related Commands
+## 相关命令
 
 - [CREATE STORAGE VAULT](../Data-Definition-Statements/CREATE-STORAGE-VAULT.md)
 - [GRANT](../Account-Management-Statements/GRANT.md)
 - [REVOKE](../Account-Management-Statements/REVOKE.md)
 - [SET DEFAULT STORAGE VAULT](../Data-Definition-Statements/SET-DEFAULT-STORAGE-VAULT.md)
 
-### Keywords
+## Keywords
 
     SHOW, STORAGE VAULTS

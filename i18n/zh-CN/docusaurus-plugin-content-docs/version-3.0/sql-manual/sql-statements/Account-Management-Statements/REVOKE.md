@@ -24,9 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## REVOKE
+## 描述
 
-### 语法
+REVOKE 命令用于：
+
+1. 撤销某用户或某角色的指定权限。
+2. 撤销先前授予某用户的指定角色。
+
+## 语法
 
 REVOKE privilege_list ON priv_level FROM user_identity [ROLE role_name]
 
@@ -40,16 +45,9 @@ REVOKE privilege_list ON STORAGE VAULT storage_vault_name FROM user_identity [RO
 
 REVOKE role_list FROM user_identity
 
-### 描述
+## 参数
 
-REVOKE 命令用于：
-
-1. 撤销某用户或某角色的指定权限。
-2. 撤销先前授予某用户的指定角色。
-
-### 参数
-
-#### privilege_list
+### privilege_list
 
 需要撤销的权限列表，以逗号分隔。支持的权限包括：
 
@@ -64,7 +62,7 @@ REVOKE 命令用于：
 - USAGE_PRIV：使用权限
 - SHOW_VIEW_PRIV：查看视图定义权限
 
-#### priv_level
+### priv_level
 
 指定权限的作用范围。支持以下格式：
 
@@ -73,36 +71,36 @@ REVOKE 命令用于：
 - catalog_name.db.*：指定数据库中的所有表
 - catalog_name.db.tbl：指定数据库中的特定表
 
-#### resource_name
+### resource_name
 
 指定 resource 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
-#### workload_group_name
+### workload_group_name
 
 指定 workload group 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
-#### compute_group_name
+### compute_group_name
 
 指定 compute group 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
-#### storage_vault_name
+### storage_vault_name
 
 指定 storage vault 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
 
-#### user_identity
+### user_identity
 
 指定要撤销权限的用户。必须是使用 CREATE USER 创建的用户。user_identity 中的 host 可以是域名，如果是域名，权限的撤销时间可能会有 1 分钟左右的延迟。
 
-#### role_name
+### role_name
 
 指定要撤销权限的角色。该角色必须存在。
 
-#### role_list
+### role_list
 
 需要撤销的角色列表，以逗号分隔。指定的所有角色必须存在。
 
-### 示例
+## 示例
 
 1. 撤销用户在特定数据库上的 SELECT 权限：
 
@@ -148,7 +146,7 @@ REVOKE 命令用于：
 
    REVOKE USAGE_PRIV ON STORAGE VAULT '%' FROM 'jack'@'%';
 
-### 相关命令
+## 相关命令
 
 - [GRANT](./GRANT.md)
 - [SHOW GRANTS](../Show-Statements/SHOW-GRANTS.md)
@@ -158,6 +156,6 @@ REVOKE 命令用于：
 - [CREATE RESOURCE](../Administration-Statements/CREATE-RESOURCE.md)
 - [CREATE STORAGE VAULT](../Administration-Statements/CREATE-STORAGE-VAULT.md)
 
-### Keywords
+## Keywords
 
     REVOKE, WORKLOAD GROUP, COMPUTE GROUP, RESOURCE 

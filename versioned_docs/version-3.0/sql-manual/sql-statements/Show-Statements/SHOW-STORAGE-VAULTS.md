@@ -24,19 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW STORAGE VAULTS
+## Description
 
-### Syntax
+The SHOW STORAGE VAULTS command is used to display information about all storage vaults configured in the system. Storage vaults are used to manage external storage locations for data.
+
+## Syntax
 
 ```sql
     SHOW STORAGE VAULTS
 ```
 
-### Description
-
-The SHOW STORAGE VAULTS command is used to display information about all storage vaults configured in the system. Storage vaults are used to manage external storage locations for data.
-
-### Return Values
+## Return Values
 
 This command returns a result set with the following columns:
 
@@ -45,13 +43,13 @@ This command returns a result set with the following columns:
 - `Properties`: A JSON string containing the configuration properties of the vault.
 - `IsDefault`: Indicates whether this vault is set as the default (TRUE or FALSE).
 
-### Related Commands
+## Related Commands
 
 - [CREATE STORAGE VAULT](../Data-Definition-Statements/CREATE-STORAGE-VAULT.md)
 - [GRANT](../Account-Management-Statements/GRANT.md)
 - [REVOKE](../Account-Management-Statements/REVOKE.md)
 - [SET DEFAULT STORAGE VAULT](../Data-Definition-Statements/SET-DEFAULT-STORAGE-VAULT.md)
 
-### Keywords
+## Keywords
 
     SHOW, STORAGE VAULTS

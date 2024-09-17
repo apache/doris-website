@@ -24,23 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## USE
-
-### Name
-
-USE
-
-### Description
+## Description
 
 The USE command allows us to switch to a specific database or compute group in your SQL environment.
 
-### Syntax
+## Syntax
 
 ```SQL
 USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 ```
 
-### Example
+## Example
 
 1. If the demo database exists in current catalog, try accessing it:
 
@@ -69,9 +63,9 @@ USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
     Database changed
     ```
 
-### Relate Commands
+## Relate Commands
 
-### Keywords
+## Keywords
 
     USE, DATABASE, USER, COMPUTE GROUP
 

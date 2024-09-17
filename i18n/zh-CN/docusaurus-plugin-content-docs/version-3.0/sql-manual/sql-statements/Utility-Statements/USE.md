@@ -24,19 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## USE
-
-### 描述
+## 描述
 
 USE 命令允许我们在 SQL 环境中切换到特定的数据库或计算组。
 
-### 语法
+## 语法
 
 ```SQL
 USE <[CATALOG_NAME].DATABASE_NAME>
 ```
 
-### 举例
+## 示例
 
 1. 如果 demo 数据库存在，尝试使用它：
 
@@ -65,8 +63,8 @@ USE <[CATALOG_NAME].DATABASE_NAME>
     Database changed
     ```
 
-### Relate Commands
+## Relate Commands
 
-### Keywords
+## Keywords
 
     USE, DATABASE, USER, COMPUTE GROUP

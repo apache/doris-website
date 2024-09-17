@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## REVOKE
-
-### Name
-
-REVOKE
-
-### Description
+## Description
 
 The REVOKE command is used to:
 
@@ -147,7 +141,6 @@ A comma-separated list of roles to be revoked. All specified roles must exist.
 
    REVOKE USAGE_PRIV ON STORAGE VAULT 'vault1' FROM ROLE 'my_role';
 
-
 ## Related Commands
 
 - [GRANT](./GRANT.md)
@@ -158,7 +151,6 @@ A comma-separated list of roles to be revoked. All specified roles must exist.
 - [CREATE RESOURCE](../Administration-Statements/CREATE-RESOURCE.md)
 - [CREATE STORAGE VAULT](../Administration-Statements/CREATE-STORAGE-VAULT.md)
 
-### Keywords
+## Keywords
 
     REVOKE, WORKLOAD GROUP, COMPUTE GROUP, RESOURCE, STORAGE VAULT
-

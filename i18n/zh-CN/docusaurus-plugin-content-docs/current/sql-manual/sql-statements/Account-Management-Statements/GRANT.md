@@ -24,6 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 描述
+
+GRANT 命令用于：
+
+1. 将指定的权限授予某用户或角色。
+2. 将指定角色授予某用户。
+
 ## 语法
 
 GRANT privilege_list ON priv_level TO user_identity [ROLE role_name]
@@ -37,13 +44,6 @@ GRANT privilege_list ON COMPUTE GROUP compute_group_name TO user_identity [ROLE 
 GRANT privilege_list ON STORAGE VAULT storage_vault_name TO user_identity [ROLE role_name]
 
 GRANT role_list TO user_identity
-
-## 描述
-
-GRANT 命令用于：
-
-1. 将指定的权限授予某用户或角色。
-2. 将指定角色授予某用户。
 
 ## 参数
 

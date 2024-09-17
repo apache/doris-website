@@ -24,21 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW COMPUTE GROUPS
-
-### 语法
-
-```sql
-    SHOW COMPUTE GROUPS
-```
-
-### Description
+## Description
 
 The SHOW COMPUTE GROUPS command is used to display information about all configured compute groups in the system. Compute groups are logical units used to manage and organize computational resources, helping users allocate and utilize system resources more effectively.
 
 This command assists administrators and users in quickly understanding the existing compute group configurations in the system, including the name, attributes, and other relevant information for each compute group. This is particularly useful for resource management, performance optimization, and system monitoring.
 
-### Return Values
+## Syntax
+
+```sql
+    SHOW COMPUTE GROUPS
+```
+
+## Return Values
 
 This command returns a result set containing the following columns:
 
@@ -47,13 +45,13 @@ This command returns a result set containing the following columns:
 - `Users`: Displays the list of users who have permission to use this compute group.
 - `BackendNum`: Shows the number of backends (compute nodes) currently allocated to this compute group.
 
-### Related Commands
+## Related Commands
 
 - [ALTER SYSTEM ADD BACKEND](../Administration-Statements/ALTER-SYSTEM-ADD-BACKEND.md)
 - [GRANT](../Account-Management-Statements/GRANT.md)
 - [REVOKE](../Account-Management-Statements/REVOKE.md)
 - [SET DEFAULT COMPUTE GROUP](../Administration-Statements/SET-DEFAULT-COMPUTE-GROUP.md)
 
-### Keywords
+## Keywords
 
     SHOW, COMPUTE GROUPS

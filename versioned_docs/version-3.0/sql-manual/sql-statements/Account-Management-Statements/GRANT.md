@@ -24,9 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## GRANT
+## Description
 
-### Syntax
+The GRANT command is used to:
+
+1. Grant specified privileges to a user or role.
+2. Grant specified roles to a user.
+
+## Syntax
 
 GRANT privilege_list ON priv_level TO user_identity [ROLE role_name]
 
@@ -40,16 +45,9 @@ GRANT privilege_list ON STORAGE VAULT storage_vault_name TO user_identity [ROLE 
 
 GRANT role_list TO user_identity
 
-### Description
+## Parameters
 
-The GRANT command is used to:
-
-1. Grant specified privileges to a user or role.
-2. Grant specified roles to a user.
-
-### Parameters
-
-#### privilege_list
+### privilege_list
 
 A comma-separated list of privileges to be granted. Currently supported privileges include:
 
@@ -68,7 +66,7 @@ Legacy privilege conversion:
 - ALL and READ_WRITE will be converted to: SELECT_PRIV, LOAD_PRIV, ALTER_PRIV, CREATE_PRIV, DROP_PRIV.
 - READ_ONLY is converted to SELECT_PRIV.
 
-#### priv_level
+### priv_level
 
 Supports the following four forms:
 
@@ -79,36 +77,36 @@ Supports the following four forms:
 
 Note: The catalog_name, database, or table specified here can be non-existent databases and tables.
 
-#### resource_name
+### resource_name
 
 Specifies the resource name, supports % and _ wildcards, % can match any string and _ matches any single character.
 
-#### workload_group_name
+### workload_group_name
 
 Specifies the workload group name, supports % and _ wildcards, % can match any string and _ matches any single character.
 
-#### compute_group_name
+### compute_group_name
 
 Specifies the compute group name, supports % and _ wildcards, % can match any string and _ matches any single character.
 
-#### storage_vault_name
+### storage_vault_name
 
 Specifies the storage vault name, supports % and _ wildcards, % can match any string and _ matches any single character.
 
 
-#### user_identity
+### user_identity
 
 Specifies the user to receive the privileges. Must be a user_identity created with CREATE USER. The host in user_identity can be a domain name. If it is a domain name, the effective time of the authority may be delayed by about 1 minute.
 
-#### role_name
+### role_name
 
 Specifies the role to receive the privileges. If the specified role does not exist, it will be created automatically.
 
-#### role_list
+### role_list
 
 A comma-separated list of roles to be assigned. The specified roles must exist.
 
-### Examples
+## Examples
 
 1. Grant permissions to all catalogs and databases and tables to the user:
 
@@ -178,7 +176,7 @@ A comma-separated list of roles to be assigned. The specified roles must exist.
 
     GRANT USAGE_PRIV ON STORAGE VAULT '*' TO 'jack'@'%';
 
-### Related Commands
+## Related Commands
 
 - [REVOKE](./REVOKE.md)
 - [SHOW GRANTS](../Show-Statements/SHOW-GRANTS.md)
@@ -188,6 +186,6 @@ A comma-separated list of roles to be assigned. The specified roles must exist.
 - [CREATE RESOURCE](../Administration-Statements/CREATE-RESOURCE.md)
 - [CREATE STORAGE VAULT](../Administration-Statements/CREATE-STORAGE-VAULT.md)
 
-### Keywords
+## Keywords
 
     GRANT, WORKLOAD GROUP, COMPUTE GROUP, RESOURCE 

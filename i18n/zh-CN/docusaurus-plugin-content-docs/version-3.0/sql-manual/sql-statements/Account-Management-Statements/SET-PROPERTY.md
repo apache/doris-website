@@ -24,23 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SET PROPERTY
-
-### Name
-
-SET PROPERTY
-
-### Description
+## 描述
 
 SET PROPERTY 语句用于设置用户属性，包括分配给用户的资源和导入集群设置。这里设置的用户属性是针对用户的，而不是针对 user_identity。例如，如果通过 CREATE USER 语句创建了两个用户 'jack'@'%' 和 'jack'@'192.%'，则使用 SET PROPERTY 语句只能针对用户 'jack'，而不是 'jack'@'%' 或 'jack'@'192.%'。
 
-### Parameters
+## 参数
 
-#### user
+### user
 
 要设置属性的用户名。如果省略，则为当前用户设置属性。
 
-#### key
+### key
 
 要设置的属性键。可用的键包括：
 
@@ -56,11 +50,11 @@ SET PROPERTY 语句用于设置用户属性，包括分配给用户的资源和�
 
 注：如果未设置 `cpu_resource_limit` 和 `exec_mem_limit`，则默认使用会话变量中的值。
 
-#### value
+### value
 
 为指定键设置的值。
 
-### Example
+## 示例
 
 1. 设置用户 'jack' 的最大连接数为 1000：
 
@@ -116,14 +110,11 @@ SET PROPERTY 语句用于设置用户属性，包括分配给用户的资源和�
    SET PROPERTY FOR 'jack' 'default_compute_group' = 'compute_group1';
    ```
 
-### 相关命令
+## 相关命令
 
 - [CREATE USER](./CREATE-USER.md)
 - [SHOW PROPERTY](../Show-Statements/SHOW-PROPERTY.md)
 
-### Keywords
+## Keywords
 
     SET, PROPERTY, WORKLOAD GROUP, COMPUTE GROUP
-
-### Best Practice
-
