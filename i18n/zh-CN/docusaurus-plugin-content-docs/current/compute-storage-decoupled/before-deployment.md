@@ -28,7 +28,7 @@ under the License.
 
 ## 1. 概述
 
-本文档详细介绍了 Apache Doris 存算分离模式的部署准备工作。存算分离架构旨在提高系统的可扩展性和性能，适用于大规模数据处理场景。
+本文档介绍了 Apache Doris 存算分离模式的部署准备工作。存算分离架构旨在提高系统的可扩展性和性能，适用于大规模数据处理场景。
 
 ## 2. 架构组件
 
@@ -120,7 +120,7 @@ FDB 集群部署完成后，您可以使用 `fdb_ctl.sh` 脚本启动 FDB 服务
 ### 5.5 安装 OpenJDK 17
 
 1. 下载 [OpenJDK 17](https://download.java.net/java/GA/jdk17.0.1/2a2082e5a09d4267845be086888add4f/12/GPL/openjdk-17.0.1_linux-x64_bin.tar.gz)
-2. 解压并设置环境变量
+2. 解压并设置环境变量 JAVA_HOME.
 
 ## 6. 后续步骤
 
