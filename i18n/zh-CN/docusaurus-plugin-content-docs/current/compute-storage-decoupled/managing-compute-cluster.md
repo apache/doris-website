@@ -124,6 +124,6 @@ USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 
 若数据库或计算组名称包含是保留关键字，需用反引号将相应的名称 ``` 包围。
 
-## 算组扩缩容
+## 计算组扩缩容
 
 通过 `ALTER SYSTEM ADD BACKEND` 以及 `ALTER SYSTEM DECOMMISION BACKEND` 添加或者删除 BE 实现计算组的扩缩容。
