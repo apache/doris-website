@@ -144,7 +144,7 @@ bin/start.sh --meta-service --daemon
 
 1. 以 MASTER 角色启动实例的第一个 FE
 2. 向实例中添加其他 FE 和 BE
-3. 添加第一个存储后端
+3. 添加第一个 Storage Vault
 
 ### 5.2 启动 MASTER 角色的 FE
 
@@ -218,13 +218,13 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
    这将显示集群中所有 Backend 及其当前状态。
 
-## 6. 创建存储库
+## 6. 创建 Storage Vault 
 
-存储库是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个存储库。首个创建的存储库将成为默认存储库。系统表和未指定存储库的表都将存储在这个默认存储库中。默认存储库不能被删除。以下是为您的 Doris 集群创建存储库的方法：
+ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个 Storage Vault 。首个创建的 Storage Vault 将成为默认 Storage Vault 。系统表和未指定 Storage Vault 的表都将存储在这个默认 Storage Vault 中。默认 Storage Vault 不能被删除。以下是为您的 Doris 集群创建 Storage Vault 的方法：
 
-### 6.1 创建 HDFS 存储库
+### 6.1 创建 HDFS  Storage Vault 
 
-要使用 SQL 创建存储库，请使用 MySQL 客户端连接到您的 Doris 集群
+要使用 SQL 创建 Storage Vault ，请使用 MySQL 客户端连接到您的 Doris 集群
 
 ```sql
 CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
@@ -234,13 +234,13 @@ CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
     );
 ```
 
-### 6.2 创建 S3 存储库
+### 6.2 创建 S3  Storage Vault 
 
-要使用兼容 S3 的对象存储创建存储库，请按照以下步骤操作：
+要使用兼容 S3 的对象存储创建 Storage Vault ，请按照以下步骤操作：
 
 1. 使用 MySQL 客户端连接到您的 Doris 集群。
 
-2. 执行以下 SQL 命令来创建 S3 存储库：
+2. 执行以下 SQL 命令来创建 S3  Storage Vault ：
 
 ```sql
 CREATE STORAGE VAULT IF NOT EXISTS s3_vault
@@ -256,11 +256,11 @@ CREATE STORAGE VAULT IF NOT EXISTS s3_vault
     );
 ```
 
-要在其他对象存储上创建存储库，请参考 [创建存储库](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
+要在其他对象存储上创建 Storage Vault ，请参考 [创建 Storage Vault ](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
 
-### 6.3 设置默认存储库
+### 6.3 设置默认 Storage Vault 
 
-使用如下 SQL 语句设置一个默认存储库。
+使用如下 SQL 语句设置一个默认 Storage Vault 。
 
 ```sql
 SET <storage_vault_name> AS DEFAULT STORAGE VAULT
