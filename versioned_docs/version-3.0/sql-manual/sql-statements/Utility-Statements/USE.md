@@ -32,16 +32,13 @@ USE
 
 ### Description
 
-The USE command allows us to use the database
+The USE command allows us to switch to a specific database or compute group in your SQL environment.
 
-grammar:
+### Syntax
 
 ```SQL
-USE <[CATALOG_NAME].DATABASE_NAME>
+USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 ```
-
-illustrate:
-1. `USE CATALOG_NAME.DATABASE_NAME` will switch the current catalog into `CATALOG_NAME` and then change the current database into `DATABASE_NAME`
 
 ### Example
 
@@ -58,9 +55,24 @@ illustrate:
     Database changed
     ```
 
+3. If the demo database exists in current catalog and you want to use the compute group named 'cg1', try accessing it:
+
+    ```sql
+    mysql> use demo@cg1;
+    Database changed
+    ```
+
+4. If you want to use only the compute group named 'cg1', try accessing it:
+
+    ```sql
+    mysql> use @cg1;
+    Database changed
+    ```
+
+### Relate Commands
+
 ### Keywords
 
-    USE
+    USE, DATABASE, USER, COMPUTE GROUP
 
-### Best Practice
 
