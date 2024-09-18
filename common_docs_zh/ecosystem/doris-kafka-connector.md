@@ -381,3 +381,5 @@ org.apache.kafka.clients.consumer.CommitFailedException: Offset commit cannot be
 - 如果是 Standalone 模式启动，则在 config/connect-standalone.properties 的配置文件中增加 `max.poll.interval.ms` 和 `consumer.max.poll.interval.ms` 参数，并配置参数值。
 - 如果是 Distributed 模式启动，则在  config/connect-distributed.properties  的配置文件增加 `max.poll.interval.ms` 和 `consumer.max.poll.interval.ms` 参数，并配置参数值。
 
+调整参数后，重启kafka-connect
+
