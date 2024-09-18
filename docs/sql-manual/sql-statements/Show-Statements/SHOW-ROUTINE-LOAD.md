@@ -122,6 +122,11 @@ ReasonOfStateChanged: The reason for the job state change
    SHOW ALL ROUTINE LOAD FOR example_db.test1;
    ```
 
+7. Displays the routine import job with the largest ID in the example_db database. The result will return the job with the highest ID (sorted by default on create time if no specific ID sorting).
+   ```sql 
+    SHOW ROUTINE LOAD FROM example_db ORDER BY Id DESC LIMIT 1;   
+   ```
+
 ### Keywords
 
     SHOW, ROUTINE, LOAD
