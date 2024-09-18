@@ -30,6 +30,9 @@ under the License.
 - 计算组授权
 - 在用户级别绑定计算组 (`default_compute_group`) 以达到用户级别的隔离效果
 
+*注意*
+3.0.2 之前的版本中叫做计算集群（Compute Cluster）。
+
 ## 查看所有计算组
 
 可通过 `SHOW COMPUTE GROUPS` 查看当前仓库拥有的所有计算组。
