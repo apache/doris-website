@@ -157,7 +157,7 @@ properties("replication_num" = "1");
 Load the `gh_2022-11-07-3.json` file, which is Github Events records of an hour. One formatted row of it looks like this: 
 
 ```JSON
-wget http://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/variant/gh_2022-11-07-3.json
+wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/variant/gh_2022-11-07-3.json
 
 curl --location-trusted -u root:  -T gh_2022-11-07-3.json -H "read_json_by_line:true" -H "format:json"  http://127.0.0.1:18148/api/test_variant/github_events/_strea
 m_load
@@ -286,9 +286,10 @@ mysql> SELECT
 2. Count the number of events containing the keyword `doris`.
 
 ```sql
+-- implicit cast `payload['comment']['body']` to string type
 mysql> SELECT
     ->     count() FROM github_events
-    ->     WHERE cast(payload['comment']['body'] as text) MATCH 'doris';
+    ->     WHERE payload['comment']['body'] MATCH 'doris';
 +---------+
 | count() |
 +---------+
