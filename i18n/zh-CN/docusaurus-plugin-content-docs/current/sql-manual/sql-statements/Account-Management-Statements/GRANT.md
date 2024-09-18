@@ -75,8 +75,6 @@ GRANT role_list TO user_identity
 - catalog_name.db.*：权限可以应用于指定库下的所有表。
 - catalog_name.db.tbl：权限可以应用于指定库下的指定表。
 
-注意：这里指定的 catalog_name 或库或表可以是不存在的库和表。
-
 ### resource_name
 
 指定 resource 名，支持 % 和 _ 匹配符，% 可匹配任意字符串，_ 匹配任意单个字符。

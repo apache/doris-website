@@ -75,8 +75,6 @@ Supports the following four forms:
 - catalog_name.db.*: Privileges can be applied to all tables under the specified database.
 - catalog_name.db.tbl: Privileges can be applied to the specified table under the specified database.
 
-Note: The catalog_name, database, or table specified here can be non-existent databases and tables.
-
 ### resource_name
 
 Specifies the resource name, supports % and _ wildcards, % can match any string and _ matches any single character.
