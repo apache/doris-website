@@ -27,7 +27,7 @@ under the License.
 
 为了提升访问外部数据源的性能，Apache Doris 会对外部数据源的**元数据**进行缓存。
 
-元数据包括库、表、列信息、分区信息、快照信息、文件列名等。 
+元数据包括库、表、列信息、分区信息、快照信息、文件列名等。
 
 本文详细介绍缓存的元数据的种类、策略和相关参数配置。
 
@@ -290,15 +290,13 @@ under the License.
 CREATE CATALOG hive PROPERTIES (
     'type'='hms',
     'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-    'metadata_refresh_interval_sec' = '600'
+    'metadata_refresh_interval_sec' = '3600'
 );
 ```
 
-在上例中，`metadata_refresh_interval_sec` 表示每 600 秒刷新一次 Catalog。相当于每隔 600 秒，自动执行一次：
+在上例中，`metadata_refresh_interval_sec` 表示每 3600 秒刷新一次 Catalog。相当于每隔 3600 秒，自动执行一次：
 
 `REFRESH CATALOG ctl1 PROPERTIES("invalid_cache" = "true");`
-
-定时刷新间隔不得小于 5 秒。
 
 ## 最佳实践
 

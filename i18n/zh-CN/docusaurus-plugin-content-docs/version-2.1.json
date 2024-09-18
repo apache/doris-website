@@ -203,13 +203,17 @@
     "message": "系统表",
     "description": "The label for category System Table in sidebar docs"
   },
-  "sidebar.docs.category.FE OPEN API": {
-    "message": "FE OPEN API",
-    "description": "The label for category FE OPEN API in sidebar docs"
+  "sidebar.docs.category.OPEN API": {
+    "message": "OPEN API",
+    "description": "The label for category OPEN API in sidebar docs"
   },
-  "sidebar.docs.category.BE OPEN API": {
-    "message": "BE OPEN API",
-    "description": "The label for category BE OPEN API in sidebar docs"
+  "sidebar.docs.category.FE HTTP API": {
+    "message": "FE HTTP API",
+    "description": "The label for category FE HTTP API in sidebar docs"
+  },
+  "sidebar.docs.category.BE HTTP API": {
+    "message": "BE HTTP API",
+    "description": "The label for category BE HTTP API in sidebar docs"
   },
   "sidebar.docs.category.Monitor Metrics": {
     "message": "监控指标",

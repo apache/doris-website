@@ -171,7 +171,7 @@ properties("replication_num" = "1");
 导入 gh_2022-11-07-3.json，这是 github events 一个小时的数据
 
 ``` shell
-wget http://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/variant/gh_2022-11-07-3.json
+wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/variant/gh_2022-11-07-3.json
 
 curl --location-trusted -u root:  -T gh_2022-11-07-3.json -H "read_json_by_line:true" -H "format:json"  http://127.0.0.1:18148/api/test_variant/github_events/_strea
 m_load
@@ -304,6 +304,7 @@ mysql> SELECT
 2. 获取评论中包含 doris 的数量
 
 ``` sql
+-- implicit cast `payload['comment']['body']` to string type
 mysql> SELECT
     ->     count() FROM github_events
     ->     WHERE cast(payload['comment']['body'] as text) MATCH 'doris';
@@ -363,6 +364,10 @@ VARIANT 动态列与预定义静态列几乎一样高效。处理诸如日志之
 - 2 维及其以上的数组列存化会被存成 JSONB 编码，性能不如原生数组
 - 不支持作为主键或者排序键
 - 查询过滤、聚合需要带 cast，存储层会根据存储类型和 cast 目标类型来消除 cast 操作，加速查询。
+
+### FAQ
+1. Stream Load 报错： [CANCELLED][INTERNAL_ERROR]tablet error: [DATA_QUALITY_ERROR]Reached max column size limit 2048。
+由于 Compaction 和元信息存储限制， VARIANT 类型会限制列数，默认 2048 列，可以适当调整 BE 配置 `variant_max_merged_tablet_schema_size` ， 但是不建议超过 4096
 
 ### Keywords
 
