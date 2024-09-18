@@ -47,7 +47,7 @@ export const VariousAnalyticsData = [
         backgroundClassName: 'cases-bg-ad-hoc',
     },
     {
-        title: 'Data lake analytics',
+        title: 'Data lakehouse',
         content: `Doris as a high-performance federated query engine provides a powerful way to directly map external data lakes and databases to Doris' databases and tables. This combination of the openness of data lakes and the high performance of data warehouses offers enterprises a unified and efficient way to access, analyze, and manage their data.`,
         links: [
             {
@@ -129,8 +129,8 @@ export const VariousAnalyticsData = [
         links: [
             { content: 'Deep dive', to: '/blog/log-analysis-elasticsearch-vs-apache-doris' },
             {
-                content: 'Read China Unicom story',
-                to: '/blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second',
+                content: 'Read NetEase story',
+                to: '/blog/apache-doris-for-log-and-time-series-data-analysis-in-netease',
             },
         ],
         backgroundClassName: 'cases-bg-log',

@@ -1,7 +1,7 @@
 ---
 {
     'title': 'LLM-powered OLAP: the Tencent application with Apache Doris',
-    'summary': "The exploration of a LLM+OLAP solution is a bumpy journey, but phew, it now works well for the Tencent case, and they're writing down every lesson learned to share with you.",
+    'description': "The exploration of a LLM+OLAP solution is a bumpy journey, but phew, it now works well for the Tencent case, and they're writing down every lesson learned to share with you.",
     'date': '2023-08-29',
     'author': 'Jun Zhang & Lei Luo',
     'tags': ['Best Practice'],
@@ -116,7 +116,7 @@ We have drawn two main takeaways for you from our architectural optimization exp
 
 Before we adopted Apache Doris, we used to have ClickHouse to accelerate the computation of tags and metrics, and Elasticsearch to process dimensional data. That's two analytic engines and requires us to adapt the query statements to both of them. It was high-maintenance.
 
-Thus, we replaced ClickHouse with Apache Doris, and utilized the [Elasticsearch Catalog](https://doris.apache.org/docs/dev/lakehouse/multi-catalog/es) functionality to connect Elasticsearch data to Doris. In this way, we make Doris our unified query gateway. 
+Thus, we replaced ClickHouse with Apache Doris, and utilized the [Elasticsearch Catalog](https://doris.apache.org/docs/lakehouse/database/es) functionality to connect Elasticsearch data to Doris. In this way, we make Doris our unified query gateway. 
 
 **2. Split the flat tables**
 

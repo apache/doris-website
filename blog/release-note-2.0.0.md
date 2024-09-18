@@ -1,7 +1,7 @@
 ---
 {
     'title': 'New milestone: Apache Doris 2.0.0 just released',
-    'summary': 'Dear community, we are excited to announce that Apache Doris 2.0.0 is now production-ready on August 16, 2023',
+    'description': 'Dear community, we are excited to announce that Apache Doris 2.0.0 is now production-ready on August 16, 2023',
     'date': '2023-08-16',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
@@ -235,5 +235,5 @@ This feature allows for higher availability of data, read/write workload separat
 
 To make Apache Doris 2.0.0 production-ready, we invited hundreds of enterprise users to engage in the testing and optimized it for better performance, stability, and usability. In the next phase, we will continue responding to user needs with agile release planning. We plan to launch 2.0.1 in late August and 2.0.2 in September, as we keep fixing bugs and adding new features. We also plan to release an early version of 2.1 in September to bring a few long-requested capabilities to you. For example, in Doris 2.1, the Variant data type will better serve the schema-free analytic needs of semi-structured data; the multi-table materialized views will be able to simplify the data scheduling and processing link while speeding up queries; more and neater data ingestion methods will be added and nested composite data types will be realized.
 
-If you have any questions or ideas when investigating, testing, and deploying Apache Doris, please find us on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ). Our developers will be happy to hear them and provide targeted support.
+If you have any questions or ideas when investigating, testing, and deploying Apache Doris, please find us on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA). Our developers will be happy to hear them and provide targeted support.
 

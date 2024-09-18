@@ -416,7 +416,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 
 - Only one schema change job can run on a table at a time.
 
-- Schema change operations do not block import and query operations.
+- Schema change operations do not block import and query operations. Unless the operation affects the table's metadata (e.g., a partition is created during an auto partition table's import)
 
 - Partition and bucket columns cannot be modified.
 

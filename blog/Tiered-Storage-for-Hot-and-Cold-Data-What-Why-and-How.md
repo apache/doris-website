@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Tiered storage for hot and cold data: what, why, and how?',
-    'summary': "Hot data is the frequently accessed data, while cold data is the one you seldom visit but still need. Separating them is for higher efficiency in computation and storage.",
+    'description': "Hot data is the frequently accessed data, while cold data is the one you seldom visit but still need. Separating them is for higher efficiency in computation and storage.",
     'date': '2023-06-23',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -353,7 +353,7 @@ Apache Doris 2.0 has been optimized for cold data queries. Only the first-time a
 
 In Apache Doris, each data ingestion leads to the generation of a new  Rowset, so the update of historical data will be put in a Rowset that is separated from those of newly loaded data. That’s how it makes sure the updating of cold data does not interfere with the ingestion of hot  data. Once the rowsets cool down, they will be moved to S3 and deleted  locally, and the updated historical data will go to the partition where  it belongs.
 
-If you any questions, come find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ). We will be happy to provide targeted support.
+If you any questions, come find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA). We will be happy to provide targeted support.
 
 
 

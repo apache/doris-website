@@ -23,13 +23,7 @@ under the License.
 -->
 
 ## array()
-
-<version since="1.2.0">
-
 array()
-
-</version>
-
 ### description
 
 #### Syntax
@@ -37,15 +31,9 @@ array()
 `ARRAY<T> array(T, ...)`
 根据参数构造并返回array, 参数可以是多列或者常量
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array("1", 2, 1.1);
 +----------------------+
 | array('1', 2, '1.1') |

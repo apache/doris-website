@@ -42,7 +42,7 @@ Dashboard 模板会不定期更新。更新模板的方式见最后一小节。
 
 Doris 使用 [Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.com/) 进行监控项的采集和展示。
 
-![](/images/dashboard_overview.png)
+![组件](/images/dashboard_overview.png)
 
 1. Prometheus
     
@@ -68,7 +68,7 @@ Doris 的监控数据通过 Frontend 和 Backend 的 http 接口向外暴露。�
 
 用户将看到如下监控项结果（示例为 FE 部分监控项）：
 
-```bash
+```shell
 # HELP  jvm_heap_size_bytes jvm heap stat
 # TYPE  jvm_heap_size_bytes gauge
 jvm_heap_size_bytes{type="max"} 8476557312
@@ -111,7 +111,7 @@ jvm_thread{type="terminated_count"} 0
 
 这是一个以 [Prometheus 格式](https://prometheus.io/docs/practices/naming/) 呈现的监控数据。我们以其中一个监控项为例进行说明：
 
-```bash
+```shell
 # HELP  jvm_heap_size_bytes jvm heap stat
 # TYPE  jvm_heap_size_bytes gauge
 jvm_heap_size_bytes{type="max"} 8476557312
@@ -129,7 +129,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 整个监控架构如下图所示：
 
-![](/images/monitor_arch.png)
+![监控架构](/images/monitor_arch.png)
 
 1. 黄色部分为 Prometheus 相关组件。Prometheus Server 为 Prometheus 的主进程，目前 Prometheus 通过 Pull 的方式访问 Doris 节点的监控接口，然后将时序数据存入时序数据库 TSDB 中（TSDB 包含在 Prometheus 进程中，无需单独部署）。Prometheus 也支持通过搭建 [Push Gateway](https://github.com/prometheus/pushgateway) 的方式，允许被监控系统将监控数据通过 Push 的方式推到 Push Gateway, 再由 Prometheus Server 通过 Pull 的方式从 Push Gateway 中获取数据。
 
@@ -152,7 +152,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
     这里我们使用最简单的静态文件的方式进行监控配置。Prometheus 支持多种 [服务发现](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) 方式，可以动态的感知节点的加入和删除。
  
-    ```bash
+    ```shell
     # my global config
     global:
       scrape_interval:     15s # 全局的采集间隔，默认是 1m，这里设置为 15s
@@ -219,7 +219,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 3. 打开配置文件 conf/defaults.ini。这里我们仅列举需要改动的配置项，其余配置可使用默认。
 
-    ```bash
+    ```shell
     # Path to where grafana can store temp files, sessions, and the sqlite3 db (if that is used)
     data = data
     
@@ -285,7 +285,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 1. 顶栏
 
-    ![](/images/dashboard_navibar.png)
+    ![顶栏](/images/dashboard_navibar.png)
     
     * 左上角为 Dashboard 名称。
     
@@ -303,7 +303,7 @@ jvm_heap_size_bytes{type="used"} 156375280
     
 2. Row
 
-    ![](/images/dashboard_row.png)
+    ![Row](/images/dashboard_row.png)
 
     Grafana 中，Row 的概念，即一组图表的集合。如上图中的 Overview、Cluster Overview 即两个不同的 Row。可以通过点击 Row，对 Row 进行折叠。当前 Dashboard 有如下 Rows（持续更新中）：
     
@@ -321,7 +321,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 3. 图表
 
-    ![](/images/dashboard_panel.png)
+    ![图表](/images/dashboard_panel.png)
 
     一个典型的图标分为以下几部分：
     

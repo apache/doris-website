@@ -164,8 +164,6 @@ set runtime_filter_type=7;
 
   - 当前仅当[in subquery](../../sql-manual/sql-reference/Operators/in.md)操作中的子查询返回 bitmap 列时会使用 bitmap filter.
 
-  - 当前仅在向量化引擎中支持 bitmap filter.
-
 **2. runtime_filter_mode**
 
 用于控制 Runtime Filter 在 instance 之间传输的范围。

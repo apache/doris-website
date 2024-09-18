@@ -26,11 +26,7 @@ under the License.
 
 ## element_at
 
-<version since="1.2.0">
-
 element_at
-
-</version>
 
 ### description
 
@@ -52,8 +48,6 @@ T arr[position]
 `position` 为正数使用范例:
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> SELECT id,c_array,element_at(c_array, 5) FROM `array_test`;
 +------+-----------------+--------------------------+
 | id   | c_array         | element_at(`c_array`, 5) |
@@ -68,8 +62,6 @@ mysql> SELECT id,c_array,element_at(c_array, 5) FROM `array_test`;
 `position` 为负数使用范例:
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> SELECT id,c_array,c_array[-2] FROM `array_test`;
 +------+-----------------+----------------------------------+
 | id   | c_array         | %element_extract%(`c_array`, -2) |

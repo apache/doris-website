@@ -27,11 +27,7 @@ under the License.
 
 ## arrays_overlap
 
-<version since="1.2.0">
-
 arrays_overlap
-
-</version>
 
 ### description
 
@@ -47,15 +43,9 @@ Check if there is any common element for left and right array. Return below valu
 NULL - when left or right array is NULL; OR any element inside left and right array is NULL;
 ```
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select c_left,c_right,arrays_overlap(c_left,c_right) from array_test;
 +--------------+-----------+-------------------------------------+
 | c_left       | c_right   | arrays_overlap(`c_left`, `c_right`) |

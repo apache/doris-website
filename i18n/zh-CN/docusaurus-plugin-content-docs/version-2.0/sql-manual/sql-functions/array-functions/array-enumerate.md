@@ -26,11 +26,7 @@ under the License.
 
 ## array_enumerate
 
-<version since="1.2.0">
-
 array_enumerate
-
-</version>
 
 ### description
 #### Syntax
@@ -45,7 +41,6 @@ array_enumerate
 mysql> create table array_type_table(k1 INT, k2 Array<STRING>) duplicate key (k1)
     -> distributed by hash(k1) buckets 1 properties('replication_num' = '1');
 mysql> insert into array_type_table values (0, []), ("1", [NULL]), ("2", ["1", "2", "3"]), ("3", ["1", NULL, "3"]), ("4", NULL);
-mysql> set enable_vectorized_engine = true;    # enable vectorized engine
 mysql> select k2, array_enumerate(k2) from array_type_table;
 +------------------+-----------------------+
 | k2               | array_enumerate(`k2`) |

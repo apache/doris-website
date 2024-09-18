@@ -24,13 +24,9 @@ under the License.
 
 ## IS_IPV6_STRING
 
-<version since="dev">
-
 IS_IPV6_STRING
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,13 @@ IS_IPV6_STRING
 
 Receive an IPv6 address in the form of a string as a parameter, and return true if it is a properly formatted and valid IPv6 address; On the contrary, return false.
 
-### notice
+#### Notice
 
 `If the input parameter is NULL, return NULL, indicating invalid input`
 
-### example
+### Example
 
-```
+```sql
 mysql> select is_ipv6_string(NULL);
 +----------------------+
 | is_ipv6_string(NULL) |
@@ -75,6 +71,6 @@ mysql> select id, is_ipv6_string(ip_v6) from test_is_ipv6_string order by id;
 +------+-----------------------+
 ```
 
-### keywords
+### Keywords
 
 IS_IPV6_STRING, IP

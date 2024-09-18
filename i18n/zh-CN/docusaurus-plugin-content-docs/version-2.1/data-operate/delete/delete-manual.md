@@ -54,7 +54,7 @@ DELETE FROM table_name [table_alias]
 
 ### 注意事项
 
-- 使用表模型 AGGREGATE、UNIQUE 时，只能指定 Key 列上的条件。
+- 使用表模型 Aggregate 时，只能指定 Key 列上的条件。
 
 - 当选定的 Key 列不存在于某个 Rollup 中时，无法进行 Delete。
 

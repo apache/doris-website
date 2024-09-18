@@ -26,10 +26,6 @@ under the License.
 
 ## FOREACH
 
-<version since="2.1.0">
-</version>
-
-
 ### description
 #### Syntax
 

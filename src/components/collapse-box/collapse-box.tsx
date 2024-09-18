@@ -4,6 +4,7 @@ import { CollapseBoxHeader } from './collapse-box-header';
 
 interface CollapseBoxProps {
     title: string;
+    popTrue?: boolean;
     description: string | React.ReactNode;
     characteristic?: string[];
     rightContent?: ReactNode;
@@ -18,6 +19,7 @@ interface CollapseBoxProps {
 
 export default function CollapseBox({
     title,
+    popTrue,
     description,
     characteristic = [],
     rightContent,
@@ -29,9 +31,10 @@ export default function CollapseBox({
     className,
     disabledExpand = false,
 }: CollapseBoxProps) {
+    console.log(popTrue,'poptrue')
     return (
         <div className={`mt-[5.5rem] w-full rounded-lg border border-[#DFE5F0]  ${className}`}>
-            <CollapseBoxHeader title={title} defaultExpand={expand} disabled={disabledExpand} />
+            <CollapseBoxHeader title={title} defaultExpand={expand} disabled={disabledExpand} popTrue={popTrue}/>
             <div className="grid grid-rows-[0fr] overflow-hidden transition-all peer-[.expand]:grid-rows-[1fr]">
                 <div className="min-h-0 ">
                     <div className="flex flex-col flex-wrap items-center justify-between p-4 sm:p-[3rem] lg:flex-row lg:items-start">

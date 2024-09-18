@@ -1,6 +1,6 @@
 ---
 {
-    "title": 使用 LDB Toolchain 编译（推荐）,
+    "title": "使用 LDB Toolchain 编译（推荐）",
     "language": "zh-CN"
 }
 ---
@@ -65,6 +65,8 @@ sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 
 -   下载 [Java8](https://doris-thirdparty-1308700295.cos.ap-beijing.myqcloud.com/tools/jdk-8u391-linux-x64.tar.gz)，安装到 /path/to/java
 
+    > 3.0（含）之后的版本，或 master 分支，请使用 [Java 17](https://download.oracle.com/java/17/archive/jdk-17.0.10_linux-x64_bin.tar.gz)。
+
 -   下载 [Apache Maven 3.6.3](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/apache-maven-3.6.3-bin.tar.gz)，安装到 /path/to/maven
 
 -   下载 [Node v12.13.0](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz)，安装到 /path/to/node
@@ -116,7 +118,7 @@ Doris 源码编译时首先会下载三方库进行编译，可以参考下文�
 
 **1.  进入 Doris 源码目录，执行如下命令查看编译机器是否支持 AVX2 指令集**
 
-```Bash
+```shell
 $ cat /proc/cpuinfo | grep avx2
 ```
 

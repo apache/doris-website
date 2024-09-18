@@ -24,13 +24,9 @@ under the License.
 
 ## IS_IPV4_COMPAT
 
-<version since="dev">
-
 IS_IPV4_COMPAT
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -40,9 +36,9 @@ This function takes an IPv6 address represented in numeric form as a binary stri
 It returns 1 if the argument is a valid IPv4-compatible IPv6 address, 0 otherwise (unless expr is NULL, in which case the function returns NULL). 
 IPv4-compatible addresses have the form ::ipv4_address.
 
-### example
+### Example
 
-```
+```sql
 mysql> SELECT IS_IPV4_COMPAT(INET6_ATON('::ffff:10.0.5.9')) AS is_result;
 +-----------+
 | is_result |
@@ -60,6 +56,6 @@ mysql> SELECT IS_IPV4_COMPAT(INET6_ATON('::10.0.5.9')) AS is_result;
 1 row in set (0.03 sec)
 ```
 
-### keywords
+### Keywords
 
 IS_IPV4_COMPAT, IP

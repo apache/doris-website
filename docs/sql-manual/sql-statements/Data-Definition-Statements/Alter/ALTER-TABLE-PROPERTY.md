@@ -30,6 +30,17 @@ under the License.
 
 ALTER TABLE PROPERTY
 
+:::caution
+Differences between Partition Attributes and Table Attributes
+- Partition attributes generally focus on the number of buckets (buckets), storage medium (storage_medium), replication num (replication_num), and hot/cold data separation policies (storage_policy).
+  - For existing partitions, you can use ALTER TABLE {tableName} MODIFY PARTITION ({partitionName}) SET ({key}={value}) to modify them, but the number of buckets (buckets) cannot be changed.
+  - For not-created dynamic partitions, you can use ALTER TABLE {tableName} SET (dynamic_partition.{key} = {value}) to modify their attributes.
+  - For not-created auto partitions, you can use ALTER TABLE {tableName} SET ({key} = {value}) to modify their attributes.
+  - If users want to modify partition attributes, they need to modify the attributes of the already created partitions, as well as the attributes of not-created partitions.
+- Aside from the above attributes, all others are at the table level.
+- For the specific attributes, please refer to [create table attributes](../../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties)
+:::
+
 ### Description
 
 This statement is used to modify the properties of an existing table. This operation is synchronous, and the return of the command indicates the completion of the execution.
@@ -161,7 +172,7 @@ ALTER TABLE example_db.mysql_table SET ("replication_num" = "2");
 ALTER TABLE example_db.mysql_table SET ("default.replication_num" = "2");
 ALTER TABLE example_db.mysql_table SET ("replication_allocation" = "tag.location.default: 1");
 ALTER TABLE example_db.mysql_table SET ("default.replication_allocation" = "tag.location.default: 1");
-````
+```
 
 Note:
 1. The property with the default prefix indicates the default replica distribution for the modified table. This modification does not modify the current actual replica distribution of the table, but only affects the replica distribution of newly created partitions on the partitioned table.

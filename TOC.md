@@ -1,0 +1,32 @@
+<!-- markdownlint-disable MD007 -->
+<!-- markdownlint-disable MD041 -->
+
+- [doris 在线文档](https://doris.apache.org/zh-CN/docs/get-starting/quick-start/)
+- 快速开始
+  - [Apache Doris 简介](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/get-starting/what-is-apache-doris.md)
+  - [快速体验 Apache Doris](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/get-starting/quick-start.md)
+- 安装部署
+  - 源码编译
+    - [使用 Docker 开发镜像编译（推荐）](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/source-install/compilation-with-docker.md)
+    - [使用 LDB Toolchain 编译（推荐）](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/source-install/compilation-with-ldb-toolchain.md)
+    - [Linux 平台直接编译](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/source-install/compilation-linux.md)
+    - [Arm 平台上编译](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/source-install/compilation-arm.md)
+    - [Windows 平台上编译](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/source-install/compilation-win.md)
+    - [在 MacOS 平台上编译](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/source-install/compilation-mac.md)
+  - 集群部署
+    - [手动部署](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/standard-deployment.md)
+    - [Docker 部署](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/run-docker-cluster.md)
+    - K8s 部署
+      - [集群环境要求](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/install-env.md)
+      - [部署 Doris Operator](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/install-operator.md)
+      - [配置 Doris 集群](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/install-config-cluster.md)
+      - [部署 Doris 集群](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/install-doris-cluster.md)
+      - [访问 Doris 集群](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/install-access-cluster.md)
+      - [升级基于 Doris Operator 部署的 Apache Doris 集群](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/doris-cluster-upgrade.md)
+      - [Root 用户使用](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/root-user-use.md)
+      - [服务扩缩容](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/expansion-and-contraction.md)
+      - [服务 Crash 情况下如何进入容器](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/debug-crash.md)
+    - [Doris on AWS](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/doris-on-aws.md)
+- 数据库连接
+  - [数据库连接](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/db-connect/database-connect.md)
+  - [基于 Arrow Flight SQL 的高速数据传输链路](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/db-connect/arrow-flight-sql-connect.md)

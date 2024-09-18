@@ -25,13 +25,7 @@ under the License.
 -->
 
 ## array_size (size, cardinality)
-
-<version since="1.2.0">
-
 array_size (size, cardinality)
-
-</version>
-
 ### description
 
 #### Syntax
@@ -44,15 +38,9 @@ BIGINT cardinality(ARRAY<T> arr)
 
 返回数组中元素数量，如果输入数组为NULL，则返回NULL
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1,k2,size(k2) from array_test;
 +------+-----------+------------+
 | k1   | k2        | size(`k2`) |

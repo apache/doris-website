@@ -34,7 +34,7 @@ Get the current date and return it in Time type
 
 ### Examples
 
-```
+```sql
 mysql> select current_time();
 +----------------+
 | current_time() |

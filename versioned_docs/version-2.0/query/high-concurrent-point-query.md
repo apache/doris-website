@@ -26,7 +26,11 @@ under the License.
 
 # High-Concurrency Point Query
 
-<version since="2.0.0"></version>
+:::info Note
+
+This feature is supported since version 2.0.0.
+
+:::
 
 ## Background 
 

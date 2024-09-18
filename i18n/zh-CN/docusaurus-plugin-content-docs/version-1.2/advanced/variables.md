@@ -71,7 +71,7 @@ SET GLOBAL exec_mem_limit = 137438953472
 - `sql_mode`
 - `enable_profile`
 - `query_timeout`
-- `insert_timeout`<version since="dev"></version>
+- `insert_timeout` 
 - `exec_mem_limit`
 - `batch_size`
 - `allow_partition_column_nullable`
@@ -363,7 +363,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
   用于设置查询超时。该变量会作用于当前连接中所有的查询语句，对于 INSERT 语句推荐使用insert_timeout。默认为 5 分钟，单位为秒。
 
 - `insert_timeout`
-  <version since="dev"></version>用于设置针对 INSERT 语句的超时。该变量仅作用于 INSERT 语句，建议在 INSERT 行为易持续较长时间的场景下设置。默认为 4 小时，单位为秒。由于旧版本用户会通过延长 query_timeout 来防止 INSERT 语句超时，insert_timeout 在 query_timeout 大于自身的情况下将会失效, 以兼容旧版本用户的习惯。
+   用于设置针对 INSERT 语句的超时。该变量仅作用于 INSERT 语句，建议在 INSERT 行为易持续较长时间的场景下设置。默认为 4 小时，单位为秒。由于旧版本用户会通过延长 query_timeout 来防止 INSERT 语句超时，insert_timeout 在 query_timeout 大于自身的情况下将会失效, 以兼容旧版本用户的习惯。
 
 - `resource_group`
 
@@ -507,7 +507,11 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 }
 ```
 
-- `block_encryption_mode` 可以通过block_encryption_mode参数，控制块加密模式，默认值为：空。当使用AES算法加密时相当于`AES_128_ECB`, 当时用SM3算法加密时相当于`SM3_128_ECB` 可选值：
+- `block_encryption_mode`
+可以通过该参数控制块加密模式，默认值为空。
+当为空时，使用 AES 算法加密相当于使用 `AES_128_ECB`, 当使用 SM4 算法加密时相当于 `SM4_128_ECB`。
+
+可选值：
 
 ```text
   AES_128_ECB,
@@ -612,7 +616,7 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * `show_user_default_role`
 
-    <version since="dev"></version>
+     
 
     控制是否在 `show roles` 的结果里显示每个用户隐式对应的角色。默认为 false。
 
@@ -622,7 +626,7 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * `dry_run_query`
 
-    <version since="dev"></version>
+     
 
     如果设置为true，对于查询请求，将不再返回实际结果集，而仅返回行数。默认为 false。
 

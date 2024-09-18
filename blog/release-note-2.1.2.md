@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris 2.1.2 just released',
-    'summary': 'Dear community, Apache Doris 2.1.2 has been officially released on April 12, 2024. This version submits several enhancements and bug fixes to further improve the performance and stability.',
+    'description': 'Dear community, Apache Doris 2.1.2 has been officially released on April 12, 2024. This version submits several enhancements and bug fixes to further improve the performance and stability.',
     'date': '2024-04-12',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
@@ -32,7 +32,7 @@ Dear community, Apache Doris 2.1.2 has been officially released on April 12, 202
 
 **GitHub Release:** https://github.com/apache/doris/releases
 
-## Behavior Changed
+## Behavior changes
 
 1. Set the default value of the `data_consistence` property of EXPORT to partition to make export more stable during load. 
 
@@ -52,13 +52,13 @@ Dear community, Apache Doris 2.1.2 has been officially released on April 12, 202
 
 - https://github.com/apache/doris/pull/33736
 
-## Upgrade Problem
+## Upgrade problem
 
 1. Normal workload group is not created when upgrade from 2.0 or other old versions. 
 
   - https://github.com/apache/doris/pull/33197
 
-##  New Feature
+##  New features
 
 
 1. Add processlist table in information_schema database, users could use this table to query active connections. 
@@ -70,7 +70,7 @@ Dear community, Apache Doris 2.1.2 has been officially released on April 12, 202
   - https://github.com/apache/doris-website/pull/494
 
 
-## Optimization
+## Improvements
 
 1. Skip some useless process to make graceful stop more quickly in K8s env. 
 
@@ -93,7 +93,7 @@ Dear community, Apache Doris 2.1.2 has been officially released on April 12, 202
   - https://github.com/apache/doris/pull/32997
 
 
-## Bugfix
+## Bug fixes
 
 
 1. Fix Iceberg Catalog of HMS and Hadoop do not support Iceberg properties like "io.manifest.cache-enabled" to enable manifest cache in Iceberg. 

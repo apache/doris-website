@@ -78,6 +78,11 @@ PROPERTIES (
 
 4. 只支持单表 key 列等值查询不支持 join、嵌套子查询， **where 条件里需要有且仅有 key 列的等值**，可以认为是一种 key value 查询
 
+5. 开启行存会导致空间膨胀，占用更多的磁盘空间，如果只需要查询部分列，在Doris 2.1后建议使用`"row_store_columns"="key,v1,v2"` 类似的方式指定部份列作为行存，查询的时候只查询这部份列，例如
+```
+SELECT key, v1, v2 FROM tbl_point_query WHERE key = 1
+```
+
 ## 使用 `PreparedStatement`
 
 为了减少 SQL 解析和表达式计算的开销，我们在 FE 端提供了与 MySQL 协议完全兼容的`PreparedStatement`特性（目前只支持主键点查）。当`PreparedStatement`在 FE 开启，SQL 和其表达式将被提前计算并缓存到 Session 级别的内存缓存中，后续的查询直接使用缓存对象即可。当 CPU 成为主键点查的瓶颈，在开启 `PreparedStatement` 后，将会有 4 倍 + 的性能提升。下面是在 JDBC 中使用 `PreparedStatement` 的例子

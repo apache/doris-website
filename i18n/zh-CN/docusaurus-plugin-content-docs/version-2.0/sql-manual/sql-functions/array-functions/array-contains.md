@@ -26,11 +26,7 @@ under the License.
 
 ## array_contains
 
-<version since="1.2.0">
-
 array_contains
-
-</version>
 
 ### description
 
@@ -46,15 +42,9 @@ array_contains
 NULL - arr为NULL时。
 ```
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> SELECT id,c_array,array_contains(c_array, 5) FROM `array_test`;
 +------+-----------------+------------------------------+
 | id   | c_array         | array_contains(`c_array`, 5) |

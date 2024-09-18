@@ -26,11 +26,7 @@ under the License.
 
 ## array_distinct
 
-<version since="1.2.0">
-
 array_distinct
-
-</version>
 
 ### description
 
@@ -48,8 +44,6 @@ Return NULL for NULL input.
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1, k2, array_distinct(k2) from array_test;
 +------+-----------------------------+---------------------------+
 | k1   | k2                          | array_distinct(k2)        |

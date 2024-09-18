@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris announced the official release of version 1.1.0',
-    'summary': 'Dear community, we are pleased to announce that we have officially released Apache Doris 1.1 on July 14, 2022! This is the first release version after Apache Doris graduated from the Apache incubator and became an Apache Top-Level Project.',
+    'description': 'Dear community, we are pleased to announce that we have officially released Apache Doris 1.1 on July 14, 2022! This is the first release version after Apache Doris graduated from the Apache incubator and became an Apache Top-Level Project.',
     'date': '2022-07-14',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],

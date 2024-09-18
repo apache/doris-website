@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 自增列
 
-<version since="2.1">
-
-</version>
 
 在导入数据时，Doris 会为在自增列上没有指定值的数据行分配一个表内唯一的值。
 

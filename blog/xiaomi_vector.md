@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Practice and optimization of Apache Doris in Xiaomi',
-    'summary': "Xiaomi Group introduced Apache Doris in 2019. At present, Apache Doris has been widely used in dozens of business departments within Xiaomi. A set of data ecology with Apache Doris has been formed. This article is transcribed from an online meetup speech of the Doris community, aiming to share the practice of Apache Doris in Xiaomi.",
+    'description': "Xiaomi Group introduced Apache Doris in 2019. At present, Apache Doris has been widely used in dozens of business departments within Xiaomi. A set of data ecology with Apache Doris has been formed. This article is transcribed from an online meetup speech of the Doris community, aiming to share the practice of Apache Doris in Xiaomi.",
     'date': '2022-12-08',
     'author': 'ZuoWei',
     'tags': ['Best Practice'],

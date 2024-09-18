@@ -90,6 +90,13 @@ TO example_repo
 EXCLUDE (example_tbl);
 ```
 
+4. 全量备份 example_db 下的表到仓库 example_repo 中：
+
+```sql
+BACKUP SNAPSHOT example_db.snapshot_label3
+TO example_repo;
+```
+
 ### Keywords
 
 ```text
@@ -100,7 +107,7 @@ BACKUP
 
 1. 同一个数据库下只能进行一个备份操作。
 
-2. 备份操作会备份指定表或分区的基础表及 [物化视图](../../../../query/view-materialized-view/materialized-view)，并且仅备份一副本。
+2. 备份操作会备份指定表或分区的基础表及同步物化视图[物化视图](../../../../query/view-materialized-view/materialized-view.md)，并且仅备份一副本，异步物化视图(../../../../query/view-materialized-view/async-materialized-view.md)当前未支持。
 
 3. 备份操作的效率
 

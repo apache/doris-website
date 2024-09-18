@@ -1,7 +1,7 @@
 ---
 {
     'title': "Cross-cluster replication for read-write separation: story of a grocery store brand",
-    'summary': "Cross-cluster replication (CCR) in Apache Doris is proven to be fast, stable, and easy to use. It secures a real-time data synchronization latency of 1 second.",
+    'description': "Cross-cluster replication (CCR) in Apache Doris is proven to be fast, stable, and easy to use. It secures a real-time data synchronization latency of 1 second.",
     'date': '2024-04-25',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
@@ -111,6 +111,6 @@ In the grocery store brand's case, they need to synchronize a few tables from th
 
 Using CCR in Apache Doris, the grocery store brand separates reading and writing workloads into different clusters and thus improves overall system stability. This solution delivers a real-time data synchronization latency of about 1 second. To further ensure normal functioning, it has a real-time monitoring and alerting mechanism so any issue will be notified and attended to instantly, and a contingency plan to guarantee uninterrupted query services. It also supports partition-based data synchronization (e.g. `ALTER TABLE tbl1 REPLACE PARTITION`). With demonstrated effectiveness of CCR, they are planning to replicate more of their data assets for efficient and secure data usage.
 
-CCR is also applicable when you need to build multiple data centers or derive a test dataset from your production environment. For further guidance on CCR, join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
+CCR is also applicable when you need to build multiple data centers or derive a test dataset from your production environment. For further guidance on CCR, join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).
 
   

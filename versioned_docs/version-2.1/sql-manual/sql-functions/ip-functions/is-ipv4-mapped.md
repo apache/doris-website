@@ -24,13 +24,9 @@ under the License.
 
 ## IS_IPV4_MAPPED
 
-<version since="dev">
-
 IS_IPV4_MAPPED
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -40,13 +36,13 @@ This function takes an IPv6 address represented in numeric form as a binary stri
 It returns 1 if the argument is a valid IPv4-mapped IPv6 address, 0 otherwise, unless expr is NULL, in which case the function returns NULL. 
 IPv4-mapped addresses have the form ::ffff:ipv4_address. 
 
-### notice
+#### Notice
 
 `When the source input doesn't have a prefix of '::ffff:', but if it's still a valid ipv4 address, this result will also be 1 for the reason that the INET6_ATON() automatically adds the prefix for it.`
 
-### example
+### Example
 
-```
+```sql
 mysql> SELECT IS_IPV4_MAPPED(INET6_ATON('::ffff:10.0.5.9')) AS is_result;
 +-----------+
 | is_result |
@@ -64,6 +60,6 @@ mysql> SELECT IS_IPV4_MAPPED(INET6_ATON('::10.0.5.9')) AS is_result;
 1 row in set (0.03 sec)
 ```
 
-### keywords
+### Keywords
 
 IS_IPV4_MAPPED, IP

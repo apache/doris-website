@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-MATERIALIZED-VIEW",
+    "title": "DROP-POLICY",
     "language": "en"
 }
 ---
@@ -24,23 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-POLICY
-
-### Name
+## Name
 
 DROP POLICY
 
-### Description
+## Description
 
 drop policy for row or storage
 
-#### ROW POLICY
+### ROW POLICY
 
 Grammar：
 
 1. Drop row policy
 ```sql
-DROP ROW POLICY test_row_policy_1 on table1 [FOR user];
+DROP ROW POLICY test_row_policy_1 on table1 [FOR user| ROLE role];
 ```
 
 2. Drop storage policy
@@ -48,7 +46,7 @@ DROP ROW POLICY test_row_policy_1 on table1 [FOR user];
 DROP STORAGE POLICY policy_name1
 ```
 
-### Example
+## Example
 
 1. Drop the row policy for table1 named test_row_policy_1
 
@@ -61,15 +59,21 @@ DROP STORAGE POLICY policy_name1
    ```sql
    DROP ROW POLICY test_row_policy_1 on table1 for test
    ```
+   
+3. Drop the row policy for table1 using by role1
 
-3. Drop the storage policy named policy_name1
+   ```sql
+   DROP ROW POLICY test_row_policy_1 on table1 for role role1
+   ```
+
+4. Drop the storage policy named policy_name1
 ```sql
 DROP STORAGE POLICY policy_name1
 ```
 
-### Keywords
+## Keywords
 
     DROP, POLICY
 
-### Best Practice
+## Best Practice
 

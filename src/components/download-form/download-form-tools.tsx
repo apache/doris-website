@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import { Form, message } from 'antd';
-import { Option } from '@site/src/constant/download.data';
 import FormSelect from '../form-select/form-select';
 import copy from 'copy-to-clipboard';
+import { DownloadTypeEnum, Option } from '@site/src/constant/download.data';
 import { ToolsEnum } from '@site/src/constant/download.data';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import { DownloadIcon } from '../Icons/download-icon';
@@ -16,6 +16,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
     const tool = useWatch('tool', form);
     const architecture = useWatch('architecture', form);
     const version = useWatch('version', form);
+    const tarBall = useWatch('tarBall', form);
 
     const getOptions = useMemo(() => {
         if (!tool) return [];
@@ -28,18 +29,35 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
         return current.find(item => version === item.value).children;
     }, [version]);
 
-    const getDownloadLinkByCard = (source?: boolean) => {
+    // const getDownloadLinkByCard = (source?: boolean) => {
+    //     const currentTool = data.find(item => tool === item.value).children;
+    //     console.log(currentTool,'currentTool')
+    //     console.log(source,'source')
+    //     if (!architecture) {
+    //         return currentTool.find(item => version === item.value).gz;
+    //     } else {
+    //         if (source) {
+    //             return currentTool.find(item => version === item.value).source;
+    //         } else {
+    //             const currentVersion = currentTool.find(item => version === item.value).children;
+    //             return currentVersion.find(item => architecture === item.value).gz;
+    //         }
+    //     }
+    // };
+    const getDownloadLinkByCard = (params: { version: string[]; cpu: string; tarBall: string; type: string }) => {
         const currentTool = data.find(item => tool === item.value).children;
-        if (!architecture) {
-            return currentTool.find(item => version === item.value).gz;
-        } else {
-            if (source) {
-                return currentTool.find(item => version === item.value).source;
+        if (tool === 'Doris Streamloader') {
+            if (params.tarBall === 'Source') {
+                return !params.type ? `${currentTool[0].source}` : `${currentTool[0].source}.${params.type}`
             } else {
-                const currentVersion = currentTool.find(item => version === item.value).children;
-                return currentVersion.find(item => architecture === item.value).gz;
+                return architecture === 'ARM64' ? `${currentTool[0].children[1]}.${params.type}` : `${currentTool[0].children[0]}.${params.type}`
             }
+        } else {
+            const currentVersion = currentTool.find(item => version === item.value)
+            const tempType = (params.type === 'sha512' ? 'sha1' : params.type)
+            return !params.type ? `${currentVersion[params.tarBall]}` : `${currentVersion[params.tarBall]}.${tempType}`
         }
+
     };
 
     useEffect(() => {
@@ -60,13 +78,19 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
             <Form
                 form={form}
                 onFinish={val => {
-                    const url = getDownloadLinkByCard();
+                    const url = getDownloadLinkByCard({
+                        version: version,
+                        cpu: architecture,
+                        tarBall: tarBall,
+                        type: '',
+                    });
                     window.open(url, '_blank');
                 }}
                 initialValues={{
                     tool: data[0]?.value,
                     version: '',
                     architecture: '',
+                    tarBall: DownloadTypeEnum.Binary,
                 }}
             >
                 <Form.Item name="tool" rules={[{ required: true }]}>
@@ -105,6 +129,27 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         )
                     }
                 </Form.Item>
+                <Form.Item noStyle shouldUpdate>
+                    {({ getFieldValue }) => (
+                        <Form.Item name="tarBall" rules={[{ required: true }]}>
+                            <FormSelect
+                                placeholder="Tarball"
+                                label="Tarball"
+                                isCascader={false}
+                                options={[
+                                    {
+                                        label: DownloadTypeEnum.Binary,
+                                        value: DownloadTypeEnum.Binary,
+                                    },
+                                    {
+                                        label: DownloadTypeEnum.Source,
+                                        value: DownloadTypeEnum.Source,
+                                    },
+                                ]}
+                            />
+                        </Form.Item>
+                    )}
+                </Form.Item>
                 <Form.Item style={{ marginBottom: 0 }} colon={false}>
                     <button type="submit" className="button-primary w-full text-lg">
                         Download
@@ -113,7 +158,12 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                 <div
                     className="flex cursor-pointer text-[#444FD9] items-center mt-4 justify-center"
                     onClick={() => {
-                        const url = getDownloadLinkByCard();
+                        const url = getDownloadLinkByCard({
+                            version: version,
+                            cpu: architecture,
+                            tarBall: tarBall,
+                            type: '',
+                        });
                         copy(url);
                         message.success('Copy Successfully!');
                     }}
@@ -129,22 +179,57 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         />
                     </svg>
                 </div>
-                {tool === ToolsEnum.StreamLoader && (
-                    <div className="flex justify-center mt-4 hover:text-[#444FD9]">
-                        <div
-                            className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-[#444FD9]"
-                            onClick={() => {
-                                const url = getDownloadLinkByCard(true);
-                                window.open(url, '_blank');
-                            }}
-                        >
-                            Source code
-                            <div className="ml-1">
-                                <DownloadIcon style={{ fontSize: 14 }} />
-                            </div>
+                <div className="flex justify-center mt-4">
+                    <div
+                        className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-[#444FD9]"
+                        onClick={() => {
+                            const url = getDownloadLinkByCard({
+                                version: version,
+                                cpu: architecture,
+                                tarBall: tarBall,
+                                type: 'asc',
+                            });
+                            window.open(url, '_blank');
+                        }}
+                    >
+                        ASC
+                    </div>
+                    <div
+                        className="inline-flex items-center ml-4 text-[#8592A6] hover:text-[#444FD9] cursor-pointer hover:underline"
+                        onClick={() => {
+                            const url = getDownloadLinkByCard({
+                                version: version,
+                                cpu: architecture,
+                                tarBall: tarBall,
+                                type: 'sha512',
+                            });
+                            window.open(url, '_blank');
+                        }}
+                    >
+                        SHA-512
+                    </div>
+                </div>
+                {/* {tool === ToolsEnum.StreamLoader && ( */}
+                {/* <div className="flex justify-center mt-4 hover:text-[#444FD9]">
+                    <div
+                        className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-[#444FD9]"
+                        onClick={() => {
+                            const url = getDownloadLinkByCard({
+                                version: version,
+                                cpu: architecture,
+                                tarBall: tarBall,
+                                type: 'gz',
+                            });
+                            window.open(url, '_blank');
+                        }}
+                    >
+                        Source code
+                        <div className="ml-1">
+                            <DownloadIcon style={{ fontSize: 14 }} />
                         </div>
                     </div>
-                )}
+                </div> */}
+                {/* )} */}
             </Form>
         </div>
     );

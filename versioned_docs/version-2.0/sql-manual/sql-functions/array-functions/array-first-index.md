@@ -24,11 +24,7 @@ under the License.
 
 ## array_first_index
 
-<version since="2.0">
-
 array_first_index
-
-</version>
 
 ### description
 

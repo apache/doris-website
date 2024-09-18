@@ -226,9 +226,9 @@ You can specify the column and row delimiters using the `COLUMNS TERMINATED BY` 
 ```SQL
 LOAD DATA LOCAL
 INFILE 'testData'
+INTO TABLE testDb.testTbl
 COLUMNS TERMINATED BY ','
-LINES TERMINATED BY '\n'
-INTO TABLE testDb.testTbl;
+LINES TERMINATED BY '\n';
 ```
 
 ### Specify target partition

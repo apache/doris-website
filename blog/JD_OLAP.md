@@ -1,7 +1,7 @@
 ---
 {
     'title': "JD.com's exploration and practice with Apache Doris in real time OLAP",
-    'summary': "This article discusses the exploration and practice of the search engine team in JD.com  using Apache Flink and Apache Doris in real-time data analysis. The popularity of stream computing is increasing day by day: More papers are published on Google Dataflow; Apache Flink has become the one of the most popular engine in the world; There is wide application of real-time analytical databases more than ever before, such as Apache Doris; Stream computing engines are really flourishing. However, no engine is perfect enough to solve every problem. It is important to find a  suitable OLAP engine for the business. We hope that JD.com's practice in  real-time OLAP and stream computing may give you some inspiration.",
+    'description': "This article discusses the exploration and practice of the search engine team in JD.com  using Apache Flink and Apache Doris in real-time data analysis. The popularity of stream computing is increasing day by day: More papers are published on Google Dataflow; Apache Flink has become the one of the most popular engine in the world; There is wide application of real-time analytical databases more than ever before, such as Apache Doris; Stream computing engines are really flourishing. However, no engine is perfect enough to solve every problem. It is important to find a  suitable OLAP engine for the business. We hope that JD.com's practice in  real-time OLAP and stream computing may give you some inspiration.",
     'date': '2022-12-02',
     'author': 'Li Zhe',
     'tags': ['Best Practice'],

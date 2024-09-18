@@ -108,7 +108,7 @@ Client-side LDAP authentication requires the mysql client-side explicit authenti
 
 * Set the environment variable LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN to value 1.
   For example, in a linux or max environment you can use the command:
-  ```bash
+  ```shell
   echo "export LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1" >> ～/.bash_profile && source ～/.bash_profile
   ```
 
@@ -168,12 +168,12 @@ For example:
 Doris account exists: jack@'172.10.1.10', password: 123456  
 LDAP user node presence attribute: uid: jack user password: abcdef  
 The jack@'172.10.1.10' account can be logged into by logging into Doris using the following command:
-```bash
+```shell
 mysql -hDoris_HOST -PDoris_PORT -ujack -p abcdef
 ```
 
 Login will fail with the following command:  
-```bash
+```shell
 mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
 ```
 
@@ -181,7 +181,7 @@ mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
 
 LDAP user node presence attribute: uid: jack User password: abcdef  
 Use the following command to create a temporary user and log in to jack@'%', the temporary user has basic privileges DatabasePrivs: Select_priv, Doris will delete the temporary user after the user logs out and logs in:  
-```bash
+```shell
 mysql -hDoris_HOST -PDoris_PORT -ujack -p abcdef
 ```
 
@@ -189,13 +189,13 @@ mysql -hDoris_HOST -PDoris_PORT -ujack -p abcdef
 
 Doris account exists: jack@'172.10.1.10', password: 123456  
 Login to the account using the Doris password, successfully:  
-```bash
+```shell
 mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
 ```
 
 ### LDAP group authorization details
 
-If a DLAP user dn is the "member" attribute of an LDAP group node, Doris assumes that the user belongs to the group. Doris will revoke the corresponding role privileges after the user logs out. Before using LDAP group authorization, you should create the corresponding role pairs in Doris and authorize the roles.
+If a LDAP user dn is the "member" attribute of an LDAP group node, Doris assumes that the user belongs to the group. Doris will revoke the corresponding role privileges after the user logs out. Before using LDAP group authorization, you should create the corresponding role pairs in Doris and authorize the roles.
 
 Login user Privileges are related to Doris user and group Privileges, as shown in the following table:  
 |LDAP Users|Doris Users|Login User Privileges|

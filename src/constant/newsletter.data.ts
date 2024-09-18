@@ -1,30 +1,32 @@
 export const NEWSLETTER_DATA = [
     {
-        tags: ['Best Practice'],
-        title: "Apache Doris for log and time series data analysis in NetEase, why not Elasticsearch and InfluxDB?",
-        content: `NetEase has replaced Elasticsearch and InfluxDB with Apache Doris in its monitoring and time series data analysis platforms, respectively, achieving 11X query performance and saving 70% of resources.`,
-        to: '/blog/apache-doris-for-log-and-time-series-data-analysis-in-netease',
-        image: 'doris-for-log-and-time-series-data-analysis-in-netease.jpg',
-    },
-    {
         tags: ['Release Note'],
-        title: "Apache Doris version 2.1.3 just released",
-        content: `This version has updated several improvements, including writing data back to Hive, materialized view, permission management and bug fixes. It further enhances the performance and stability of the system.`,
-        to: '/blog/release-note-2.1.3',
-        image: '2.1.3.jpg',
+        title: "Apache Doris version 2.1.6 just released",
+        content: `This version brings continuous upgrades and improvements to the Lakehouse, Async Materialized Views, and Semi-Structured Data Management.`,
+        to: '/blog/release-note-2.1.6',
+        image: '2.1.6.jpg',
+    },
+    {
+        tags: ['Best Practice'],
+        title: "Real-time data warehouse in TikTok based on Apache Doris",
+        content: `We are excited to invite the data platform team of TikTok to talk about how they use Apache Doris in their real-time data architecture and how they benefit from it, which could serve as a model for effective real-time data warehousing.`,
+        to: '/blog/real-time-data-warehouse-in-TikTok-based-on-doris',
+        image: 'real-time-data-warehouse-in-tiktok-based-on-apache-doris.png',
+    },
+    {
+        tags: ['Top News'],
+        title: "How AI unicorn MiniMax migrated from Loki and built a PB-scale logging system with Apache Doris",
+        content: `Serving a PB-scale data size with over 99.9% availability, Apache Doris is the vital signs monitor of MiniMax, a generative AI startup backed by Alibaba.`,
+        to: '/blog/ai-unicorn-minimax-from-loki-and-built-a-pb-scale-logging-system-with-doris',
+        image: 'minimax-migrated-from-loki-to-doris.png',
     },
     {
         tags: ['Tech Sharing'],
-        title: "Multi-tenant workload isolation: a better balance between isolation and utilization",
-        content: `Apache Doris supports workload isolation based on Resource Tag and Workload Group. It provides solutions for different tradeoffs among the level of isolation, resource utilization, and stable performance.`,
-        to: '/blog/multi-tenant-workload-isolation-in-apache-doris',
-        image: 'multi-tenant-workload-group.jpg',
+        title: "Automatic and flexible data sharding: Auto Partition in Apache Doris",
+        content: `Apache Doris 2.1.0 introduces Auto Partition. It supports partitioning data by RANGE or by LIST and further enhances flexibility on top of automatic partitioning.`,
+        to: '/blog/auto-partition-in-apache-doris',
+        image: 'auto-partition-in-apache-doris.jpg',
     },
-    {
-        tags: ['Tech Sharing'],
-        title: "From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration",
-        content: `Users can execute queries with their old SQL syntaxes directly in Doris or batch convert their existing SQL statements on the visual SQL conversion interface.`,
-        to: '/blog/from-presto-trino-clickhouse-and-hive-to-apache-doris-sql-convertor-for-easy-migration',
-        image: 'sql-convertor-feature.jpeg',
-    },
+
+
 ];

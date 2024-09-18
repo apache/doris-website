@@ -30,7 +30,7 @@ under the License.
 
 用户在使用 Doris 的过程中，可能会发生因为一些误操作或者线上 bug，导致一些有效的 tablet 被删除（包括元数据和数据）。为了防止在这些异常情况出现数据丢失，Doris 提供了回收站机制，来保护用户数据。用户删除的 tablet 数据不会被直接删除，会被放在回收站中存储一段时间，在一段时间之后会有定时清理机制将过期的数据删除。回收站中的数据包括：tablet 的 data 文件 (.dat)，tablet 的索引文件 (.idx) 和 tablet 的元数据文件 (.hdr)。数据将会存放在如下格式的路径：
 
-```bash
+```shell
 /root_path/trash/time_label/tablet_id/schema_hash/
 ```
 
@@ -56,7 +56,7 @@ BE 提供 http 接口和 `restore_tablet_tool.sh` 脚本实现这个功能，支
 
     BE 中提供单个 tablet 数据恢复的 http 接口，接口如下：
     
-    ```bash
+    ```shell
     curl -X POST "http://be_host:be_webserver_port/api/restore_tablet?tablet_id=11111\&schema_hash=12345"
     ```
     
@@ -112,7 +112,7 @@ sh restore_tablet_tool.sh --backend "http://127.0.0.1:8040" --file tablets.txt
 
     如果出现数据丢失的情况，则日志中会有类似如下日志：
     
-    ```bash
+    ```shell
     backend [10001] invalid situation. tablet[20000] has few replica[1], replica num setting is [3]
     ```
 
@@ -122,7 +122,7 @@ sh restore_tablet_tool.sh --backend "http://127.0.0.1:8040" --file tablets.txt
 
     当确认数据已经无法恢复后，可以通过执行以下命令，生成空白副本。
     
-    ```bash
+    ```shell
     ADMIN SET FRONTEND CONFIG ("recover_with_empty_tablet" = "true");
     ```
 
@@ -130,7 +130,7 @@ sh restore_tablet_tool.sh --backend "http://127.0.0.1:8040" --file tablets.txt
 
 3. 设置完成几分钟后，应该会在 Master FE 日志 `fe.log` 中看到如下日志：
 
-    ```bash
+    ```shell
     tablet 20000 has only one replica 20001 on backend 10001 and it is lost. create an empty replica to recover it.
     ```
 
@@ -140,6 +140,6 @@ sh restore_tablet_tool.sh --backend "http://127.0.0.1:8040" --file tablets.txt
 
 5. 全部修复成功后，通过以下命令关闭 `recover_with_empty_tablet` 参数：
 
-    ```bash
+    ```shell
     ADMIN SET FRONTEND CONFIG ("recover_with_empty_tablet" = "false");
     ```

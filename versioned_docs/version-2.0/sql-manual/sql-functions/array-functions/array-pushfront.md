@@ -24,11 +24,7 @@ under the License.
 
 ## array_pushfront
 
-<version since="2.0">
-
 array_pushfront
-
-</version>
 
 ### description
 
@@ -43,10 +39,6 @@ Add the value to the beginning of the array.
 The array after adding the value.
 
 Type: Array.
-
-### notice
-
-`Only supported in vectorized engine`
 
 ### example
 

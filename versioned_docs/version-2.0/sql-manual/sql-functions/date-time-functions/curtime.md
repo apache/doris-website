@@ -34,13 +34,13 @@ Get the current date and return it in Time type
 
 ### Examples
 
-```
+```sql
 mysql> select current_time();
-+---------------------+
-| current_time()      |
-+---------------------+
-| 2023-08-01 17:32:24 |
-+---------------------+
++----------------+
+| current_time() |
++----------------+
+| 15:25:47       |
++----------------+
 ```
 
 ### keywords

@@ -25,13 +25,7 @@ under the License.
 ## ADMIN-REBALANCE-DISK
 
 ### Name
-
-<version since="1.2.0">
-
 ADMIN REBALANCE DISK
-
-</version>
-
 ### Description
 
 该语句用于尝试优先均衡指定的BE磁盘数据

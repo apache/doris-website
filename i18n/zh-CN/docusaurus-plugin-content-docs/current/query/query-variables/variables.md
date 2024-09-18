@@ -71,7 +71,7 @@ SET GLOBAL exec_mem_limit = 137438953472
 - `sql_mode`
 - `enable_profile`
 - `query_timeout`
-- <version since="dev" type="inline">`insert_timeout`</version>
+- `insert_timeout`
 - `exec_mem_limit`
 - `batch_size`
 - `allow_partition_column_nullable`
@@ -318,11 +318,11 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `max_pushdown_conditions_per_column`
 
-  该变量的具体含义请参阅 [BE 配置项](../../admin-manual/config/be-config) 中 `max_pushdown_conditions_per_column` 的说明。该变量默认置为 -1，表示使用 `be.conf` 中的配置值。如果设置大于 0，则当前会话中的查询会使用该变量值，而忽略 `be.conf` 中的配置值。
+  用于限制一个查询请求中，针对单个列，能够下推到存储引擎的最大条件数量。在查询计划执行的过程中，一些列上的过滤条件可以下推到存储引擎，这样可以利用存储引擎中的索引信息进行数据过滤，减少查询需要扫描的数据量。比如等值条件、IN 谓词中的条件等。这个参数在绝大多数情况下仅影响包含 IN 谓词的查询。如 `WHERE colA IN (1,2,3,4,...)`。较大的数值意味值 IN 谓词中更多的条件可以推送给存储引擎，但过多的条件可能会导致随机读的增加，某些情况下可能会降低查询效率。 默认值：1024。如果 IN 谓词中的条件数量超过了该配置，则可以尝试增加该配置值，观察查询响应是否有所改善。
 
 - `max_scan_key_num`
 
-  该变量的具体含义请参阅 [BE 配置项](../../admin-manual/config/be-config) 中 `doris_max_scan_key_num` 的说明。该变量默认置为 -1，表示使用 `be.conf` 中的配置值。如果设置大于 0，则当前会话中的查询会使用该变量值，而忽略 `be.conf` 中的配置值。
+  用于限制一个查询请求中，scan node 节点能拆分的最大 scan key 的个数。当一个带有条件的查询请求到达 scan node 节点时，scan node 会尝试将查询条件中 key 列相关的条件拆分成多个 scan key range。之后这些 scan key range 会被分配给多个 scanner 线程进行数据扫描。较大的数值通常意味着可以使用更多的 scanner 线程来提升扫描操作的并行度。但在高并发场景下，过多的线程可能会带来更大的调度开销和系统负载，反而会降低查询响应速度。一个经验数值为 50。当在高并发场景下发下并发度无法提升时，可以尝试降低该数值并观察影响。默认值：48。
 
 - `net_buffer_length`
 
@@ -365,7 +365,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
   用于设置查询超时。该变量会作用于当前连接中所有的查询语句，对于 INSERT 语句推荐使用 insert_timeout。默认为 15 分钟，单位为秒。
 
 - `insert_timeout`
-  <version since="dev"></version>用于设置针对 INSERT 语句的超时。该变量仅作用于 INSERT 语句，建议在 INSERT 行为易持续较长时间的场景下设置。默认为 4 小时，单位为秒。由于旧版本用户会通过延长 query_timeout 来防止 INSERT 语句超时，insert_timeout 在 query_timeout 大于自身的情况下将会失效，以兼容旧版本用户的习惯。
+  用于设置针对 INSERT 语句的超时。该变量仅作用于 INSERT 语句，建议在 INSERT 行为易持续较长时间的场景下设置。默认为 4 小时，单位为秒。由于旧版本用户会通过延长 query_timeout 来防止 INSERT 语句超时，insert_timeout 在 query_timeout 大于自身的情况下将会失效，以兼容旧版本用户的习惯。
 
 - `resource_group`
 
@@ -373,7 +373,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `send_batch_parallelism`
 
-  用于设置执行 InsertStmt 操作时发送批处理数据的默认并行度，如果并行度的值超过 BE 配置中的 `max_send_batch_parallelism_per_job`，那么作为协调点的 BE 将使用 `max_send_batch_parallelism_per_job` 的值。
+  OlapTableSink 发送批处理数据的最大并行度。  
 
 - `sql_mode`
 
@@ -393,7 +393,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `time_zone`
 
-  用于设置当前会话的时区。默认值为 `system_time_zone` 的值。时区会对某些时间函数的结果产生影响。关于时区，可以参阅 [时区](./time-zone)文档。
+  用于设置当前会话的时区。默认值为 `system_time_zone` 的值。时区会对某些时间函数的结果产生影响。关于时区，可以参阅 [时区](../../admin-manual/cluster-management/time-zone)文档。
 
 - `tx_isolation`
 
@@ -509,7 +509,11 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 }
 ```
 
-- `block_encryption_mode` 可以通过 block_encryption_mode 参数，控制块加密模式，默认值为：空。当使用 AES 算法加密时相当于`AES_128_ECB`, 当时用 SM3 算法加密时相当于`SM3_128_ECB` 可选值：
+- `block_encryption_mode`
+可以通过该参数控制块加密模式，默认值为空。
+当为空时，使用 AES 算法加密相当于使用 `AES_128_ECB`, 当使用 SM4 算法加密时相当于 `SM4_128_ECB`。
+
+可选值：
 
 ```text
   AES_128_ECB,
@@ -627,19 +631,13 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * `show_user_default_role`
 
-    <version since="dev"></version>
-
     控制是否在 `show roles` 的结果里显示每个用户隐式对应的角色。默认为 false。
 
 * `use_fix_replica`
 
-    <version since="1.2.0"></version>
-
     使用固定 replica 进行查询。replica 从 0 开始，如果 use_fix_replica 为 0，则使用最小的，如果 use_fix_replica 为 1，则使用第二个最小的，依此类推。默认值为 -1，表示未启用。
 
 * `dry_run_query`
-
-    <version since="dev"></version>
 
     如果设置为 true，对于查询请求，将不再返回实际结果集，而仅返回行数。对于导入和 insert，Sink 丢掉了数据，不会有实际的写发生。额默认为 false。
 
@@ -679,19 +677,15 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
   用于 ClickHouse 的 ReplacingMergeTree 表引擎查询去重
 
 * `enable_memtable_on_sink_node`
-
-  <version since="2.1.0">
+  
   是否在数据导入中启用 MemTable 前移，默认为 true
-  </version>
 
   在 DataSink 节点上构建 MemTable，并通过 brpc streaming 发送 segment 到其他 BE。
   该方法减少了多副本之间的重复工作，并且节省了数据序列化和反序列化的时间。
 
 * `enable_unique_key_partial_update`
 
-  <version since="2.0.2">
   是否在对 insert into 语句启用部分列更新的语义，默认为 false。需要注意的是，控制 insert 语句是否开启严格模式的会话变量`enable_insert_strict`的默认值为 true，即 insert 语句默认开启严格模式，而在严格模式下进行部分列更新不允许更新不存在的 key。所以，在使用 insert 语句进行部分列更新的时候如果希望能插入不存在的 key，需要在`enable_unique_key_partial_update`设置为 true 的基础上同时将`enable_insert_strict`设置为 false。
-  </version>
 
 * `describe_extend_variant_column`
 

@@ -35,10 +35,6 @@ ARRAY<T> reverse(ARRAY<T> arr)
 
 The REVERSE() function reverses a string or array and returns the result.
 
-### notice
-
-`For the array type, only supported in vectorized engine`
-
 ### example
 
 ```
@@ -57,8 +53,6 @@ mysql> SELECT REVERSE('你好');
 | 好你              |
 +------------------+
 1 row in set (0.00 sec)
-
-mysql> set enable_vectorized_engine=true;
 
 mysql> select k1, k2, reverse(k2) from array_test order by k1;
 +------+-----------------------------+-----------------------------+

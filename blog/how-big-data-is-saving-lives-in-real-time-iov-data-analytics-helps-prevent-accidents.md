@@ -1,7 +1,7 @@
 ---
 {
     'title': 'How big data is saving lives in real time: IoV data analytics helps prevent accidents',
-    'summary': "What needs to be taken care of in IoV data analysis? What's the difference between a near real-time analytic data platform and an actual real-time analytic data platform?",
+    'description': "What needs to be taken care of in IoV data analysis? What's the difference between a near real-time analytic data platform and an actual real-time analytic data platform?",
     'date': '2023-11-29',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
@@ -109,5 +109,5 @@ Building a data platform to suit your use case is not easy, I hope this post hel
 
 Apache Doris [GitHub repo](https://github.com/apache/doris)
 
-Find Apache Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ)
+Find Apache Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA)
 

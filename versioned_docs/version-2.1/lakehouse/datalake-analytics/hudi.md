@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Hudi",
+    "title": "Hudi Catalog",
     "language": "en"
 }
 ---
@@ -24,8 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-# Hudi
+[Apache Doris & Hudi Quick Start](https://doris.apache.org/docs/gettingStarted/tutorials/doris-hudi)
 
 ## Usage
 
@@ -107,3 +106,22 @@ You can use the `FOR TIME AS OF` statement, based on the time of the snapshot to
 `SELECT * FROM hudi_tbl FOR TIME AS OF "20221007172037";`
 
 Hudi table does not support the `FOR VERSION AS OF` statement. Using this syntax to query the Hudi table will throw an error.
+
+## Incremental Read
+
+Incremental Read can query the data changed between startTime and endTime, and the returned result set is the final state of the data at endTime.
+
+Doris provides `@incr` syntax support Incremental Read:
+```
+SELECT * from hudi_table@incr('beginTime'='xxx', ['endTime'='xxx'], ['hoodie.read.timeline.holes.resolution.policy'='FAIL'], ...);
+```
+`beginTime` is required, and the time format is consistent with the hudi official website [hudi_table_changes](https://hudi.apache.org/docs/0.14.0/quick-start-guide/#incremental-query), and supports "earliest". `endTime` is optional, and the default is the latest commitTime. Compatible with [Spark Read Options](https://hudi.apache.org/docs/0.14.0/configurations#Read-Options).
+
+To support Incremental Read, you need to enable the [new optimizer](../../query/nereids/nereids-new), which is enabled by default. By viewing the execution plan through `desc`, we can find that Doris converts `@incr` into `predicates` and pushes it down to `VHUDI_SCAN_NODE`:
+
+```
+| 0:VHUDI_SCAN_NODE(113) |
+| table: lineitem_mor |
+| predicates: (_hoodie_commit_time[#0] >= '20240311151019723'), (_hoodie_commit_time[#0] <= '20240311151606605') |
+| inputSplitNum=1, totalFileSize=13099711, scanRanges=1 |
+```

@@ -26,11 +26,7 @@ under the License.
 
 ## array_distinct
 
-<version since="1.2.0">
-
 array_distinct
-
-</version>
 
 ### description
 
@@ -40,15 +36,9 @@ array_distinct
 
 返回去除了重复元素的数组，如果输入数组为NULL，则返回NULL。
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1, k2, array_distinct(k2) from array_test;
 +------+-----------------------------+---------------------------+
 | k1   | k2                          | array_distinct(k2)        |

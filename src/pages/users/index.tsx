@@ -60,10 +60,10 @@ export default function Users(): JSX.Element {
 
     return (
         <Layout
-            title={translate({ id: 'users.title', message: 'User Stories' })}
+            title={translate({ id: 'users.title', message: 'Apache Doris- User Storeis | Start real-time journey with innovators' })}
             description={translate({
                 id: 'homepage.banner.subTitle',
-                message: 'An easy-to-use, high-performance and unified analytical database',
+                message: 'over 4000 global leaders and enterprises are powered by Apache Doris, using OLAP DMBS to drive real-world application, from lakehouse, adhoc analytics to user behavior analytics and more other big data analytics.',
             })}
         >
             <PageHeader

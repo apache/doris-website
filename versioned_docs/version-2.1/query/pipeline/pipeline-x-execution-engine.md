@@ -26,9 +26,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# PipelineX Execution Engine
 
-<version since="2.1.0"></version>
 
 ## Background
 

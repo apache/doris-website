@@ -26,11 +26,7 @@ under the License.
 
 ## array_size (size, cardinality)
 
-<version since="1.2.0">
-
 array_size (size, cardinality)
-
-</version>
 
 ### description
 
@@ -51,8 +47,6 @@ BIGINT cardinality(ARRAY<T> arr)
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1,k2,size(k2) from array_test;
 +------+-----------+------------+
 | k1   | k2        | size(`k2`) |

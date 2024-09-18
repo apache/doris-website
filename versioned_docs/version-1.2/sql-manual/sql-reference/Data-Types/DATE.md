@@ -40,10 +40,11 @@ If you use version 1.2 and above, it is strongly recommended that you use the DA
 We intend to delete this type in 2024. At this stage, Doris prohibits creating tables containing the `DATE` type by default. If you need to use it, you need to add `disable_datev1 = false` in the FE's config and restart the FE.
 
 ### example
-```
+
+```sql
 SELECT DATE('2003-12-31 01:02:03');
 +-----------------------------+
-| date('2003-12-31 01:02:03') |
+| DATE('2003-12-31 01:02:03') |
 +-----------------------------+
 | 2003-12-31                  |
 +-----------------------------+

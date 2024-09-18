@@ -57,7 +57,7 @@ USE <[CATALOG_NAME].DATABASE_NAME>
     ```sql
     mysql> use hms_catalog.demo;
     Database changed
-    ````
+    ```
 ### Keywords
 
     USE

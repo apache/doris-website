@@ -34,11 +34,13 @@ SHOW PROCESSLIST
 
 Display the running threads of the user. It should be noted that except the root user who can see all running threads, other users can only see their own running threads, and cannot see the running threads of other users.
 
+Only display current connected FE's connection list by default, you can set session variable ```set show_all_fe_connection = true``` to show all FE's connection.
+
 grammar:
 
 ```sql
 SHOW [FULL] PROCESSLIST
-````
+```
 
 illustrate:
 
@@ -68,9 +70,9 @@ Other types can refer to [MySQL official website for explanation](https://dev.my
 
 1. View the threads running by the current user
 
-   ````SQL
+   ```SQL
    SHOW PROCESSLIST
-   ````
+   ```
    return
    ```
    MySQL [test]> show full processlist;

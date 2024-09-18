@@ -26,11 +26,7 @@ under the License.
 
 ## array_union
 
-<version since="1.2.0">
-
 array_union
-
-</version>
 
 ### description
 
@@ -40,15 +36,9 @@ array_union
 
 Returns an array of the elements in the union of array1 and array2, without duplicates. If the input parameter is null, null is returned.
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1,k2,k3,array_union(k2,k3) from array_type_table;
 +------+-----------------+--------------+-------------------------+
 | k1   | k2              | k3           | array_union(`k2`, `k3`) |

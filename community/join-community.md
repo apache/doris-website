@@ -99,7 +99,7 @@ We have graduated from Apache incubator successfully and become an Top-Level Pro
 Learn our latest techniques, get inspirations from our rich use cases, and see what the community has been up to !
 
 
-- ### Join our heated discussions -  💬 [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1x7x8fger-F7NoshFQn~djlvGdnEtxUQ) 📇 [Github](https://github.com/apache/doris) 
+- ### Join our heated discussions -  💬 [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) 📇 [Github](https://github.com/apache/doris) 
 
 - ### Use cases and tech insight -  📭 [Twitter](https://twitter.com/doris_apache) 
 

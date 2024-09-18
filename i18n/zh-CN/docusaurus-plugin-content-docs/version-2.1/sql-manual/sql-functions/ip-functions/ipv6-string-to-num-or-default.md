@@ -24,13 +24,9 @@ under the License.
 
 ## IPV6_STRING_TO_NUM_OR_DEFAULT
 
-<version since="dev">
-
 IPV6_STRING_TO_NUM_OR_DEFAULT
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -39,12 +35,12 @@ IPV6_STRING_TO_NUM_OR_DEFAULT
 IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二进制格式的 IPv6 地址。
 如果输入字符串包含有效的 IPv4 地址，则返回其等效的 IPv6 地址。
 
-### notice
+#### Notice
 
-`如果输入非法的IP地址，会返回0`
+如果输入非法的IP地址，会返回 `0`
 
-### example
-```
+### Example
+```sql
 mysql> select hex(ipv6_string_to_num_or_default('1111::ffff'));
 +--------------------------------------------------+
 | hex(ipv6_string_to_num_or_default('1111::ffff')) |
@@ -70,6 +66,6 @@ mysql> select hex(ipv6_string_to_num_or_default('notaaddress'));
 1 row in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 
 IPV6_STRING_TO_NUM_OR_DEFAULT, IP

@@ -24,11 +24,7 @@ under the License.
 
 ## struct()
 
-<version since="2.0.0">
-
 struct()
-
-</version>
 
 ### description
 
@@ -37,10 +33,6 @@ struct()
 `STRUCT<T1, T2, T3, ...> struct(T1, T2, T3, ...)`
 
 根据给定的值构造并返回struct，参数可以是多列或常量
-
-### notice
-
-`仅支持向量化引擎中使用`
 
 ### example
 

@@ -28,8 +28,6 @@ under the License.
 
 ### Name
 
-<version since="2.0"></version>
-
 SHOW TABLE STATS
 
 ### Description
@@ -50,7 +48,7 @@ SHOW TABLE STATS table_name;
 
 | 列名                | 说明                   |
 | :------------------ | :--------------------- |
-|`updated_rows`|自上次ANALYZE以来该表的更新行数|
+|`updated_rows`|自上次 ANALYZE 以来该表的更新行数|
 |`query_times`|保留列，后续版本用以记录该表查询次数|
 |`row_count`| 行数（不反映命令执行时的准确行数）|
 |`updated_time`| 上次更新时间|

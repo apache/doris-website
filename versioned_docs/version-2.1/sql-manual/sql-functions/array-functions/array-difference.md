@@ -26,11 +26,7 @@ under the License.
 
 ## array_difference
 
-<version since="1.2.0">
-
 array_difference
-
-</version>
 
 ### description
 
@@ -42,15 +38,9 @@ Calculates the difference between adjacent array elements.
 Returns an array where the first element will be 0, the second is the difference between a[1] - a[0].
 need notice that NULL will be return NULL
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select *,array_difference(k2) from array_type_table;
 +------+-----------------------------+---------------------------------+
 | k1   | k2                          | array_difference(`k2`)          |

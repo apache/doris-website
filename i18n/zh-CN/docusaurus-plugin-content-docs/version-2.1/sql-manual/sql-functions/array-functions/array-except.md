@@ -26,11 +26,7 @@ under the License.
 
 ## array_except
 
-<version since="1.2.0">
-
 array_except
-
-</version>
 
 ### description
 
@@ -40,15 +36,9 @@ array_except
 
 返回一个数组，包含所有在array1内但不在array2内的元素，不包含重复项，如果输入参数为NULL，则返回NULL
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table;
 +------+-----------------+--------------+--------------------------+
 | k1   | k2              | k3           | array_except(`k2`, `k3`) |

@@ -26,11 +26,7 @@ under the License.
 
 ## DATETIMEV2
 
-<version since="1.2.0">
-
 DATETIMEV2
-
-</version>
 
 ### description
 

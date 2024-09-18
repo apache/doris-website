@@ -69,7 +69,7 @@ Variables that support both session-level and global-level setting include:
 * `sql_mode`
 * `enable_profile`
 * `query_timeout`
-* <version since="dev" type="inline">`insert_timeout`</version>
+* `insert_timeout`
 * `exec_mem_limit`
 * `batch_size`
 * `parallel_fragment_exec_instance_num`
@@ -319,12 +319,12 @@ Note that the comment must start with /*+ and can only follow the SELECT.
   For compatibility with JDBC connection pool C3P0. Has no real effect on Doris itself. If you encounter the error `Packet for query is too large (1,514,085 > 1,048,576). You can change this value on the server by setting the 'max_allowed_packet' variable.`, you can use `set GLOBAL max_allowed_packet = 1548576` to increase the value.
 
 * `max_pushdown_conditions_per_column`
-
-    For the specific meaning of this variable, please refer to the description of `max_pushdown_conditions_per_column` in [BE Configuration](../../admin-manual/config/be-config.md). This variable is set to -1 by default, which means that the configuration value in `be.conf` is used. If the setting is greater than 0, the query in the current session will use the variable value, and ignore the configuration value in `be.conf`.
+  
+    Used to limit the maximum number of conditions for a single column that can be pushed down to the storage engine in a query request. During the execution of a query plan, some filtering conditions on columns can be pushed down to the storage engine. This allows the storage engine to utilize index information for data filtering, reducing the amount of data that needs to be scanned in the query. For example, equality conditions or conditions in an IN predicate. This parameter typically affects queries containing IN predicates, such as WHERE colA IN (1,2,3,4,...). A larger value means that more conditions in the IN predicate can be pushed down to the storage engine, but too many conditions might lead to an increase in random reads, which can potentially decrease query efficiency in some cases. Default value: 1024. If the number of conditions in an IN predicate exceeds this configuration, consider increasing this value and observe if query response improves.
 
 * `max_scan_key_num`
 
-    For the specific meaning of this variable, please refer to the description of `doris_max_scan_key_num` in [BE Configuration](../../admin-manual/config/be-config.md). This variable is set to -1 by default, which means that the configuration value in `be.conf` is used. If the setting is greater than 0, the query in the current session will use the variable value, and ignore the configuration value in `be.conf`.
+    Used to limit the maximum number of scan keys that can be split by a scan node in a query request. When a query request with conditions reaches a scan node, the scan node will attempt to split the key-related conditions in the query into multiple scan key ranges. These scan key ranges are then allocated to multiple scanner threads for data scanning. A larger value typically allows for more scanner threads, enhancing the parallelism of the scanning operation. However, in high-concurrency scenarios, too many threads may lead to increased scheduling overhead and system load, potentially reducing query response speed. A recommended value is 50. When concurrency cannot be improved in high-concurrency scenarios, consider lowering this value and observing the impact. Default value: 48.
 
 * `net_buffer_length`
 
@@ -368,7 +368,7 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 * `insert_timeout`
 
-  <version since="dev"></version>Used to set the insert timeout. This variable applies to INSERT statements particularly in the current connection, and is recommended to manage long-duration INSERT action. The default is 4 hours, in seconds. It will lose effect when query_timeout is
+    Used to set the insert timeout. This variable applies to INSERT statements particularly in the current connection, and is recommended to manage long-duration INSERT action. The default is 4 hours, in seconds. It will lose effect when query_timeout is
     greater than itself to make it compatible with the habits of older version users to use query_timeout to control the timeout of INSERT statements.
 
 * `resource_group`
@@ -377,7 +377,7 @@ Note that the comment must start with /*+ and can only follow the SELECT.
     
 * `send_batch_parallelism`
 
-    Used to set the default parallelism for sending batch when execute InsertStmt operation, if the value for parallelism exceed `max_send_batch_parallelism_per_job` in BE config, then the coordinator BE will use the value of `max_send_batch_parallelism_per_job`.
+    The maximum parallelism for sending batch data by the OlapTableSink.
 
 * `sql_mode`
 
@@ -397,7 +397,7 @@ Note that the comment must start with /*+ and can only follow the SELECT.
     
 * `time_zone`
 
-    Used to set the time zone for the current session. Defaults to the value of `system_time_zone`. It affects the results of certain time functions. For more information, see the [time zone](./time-zone) documentation.
+    Used to set the time zone for the current session. Defaults to the value of `system_time_zone`. It affects the results of certain time functions. For more information, see the [time zone](../../admin-manual/cluster-management/time-zone) documentation.
     
 * `tx_isolation`
 
@@ -520,9 +520,10 @@ Note that the comment must start with /*+ and can only follow the SELECT.
   ```
 
 * `block_encryption_mode`
-  The block_encryption_mode variable controls the block encryption mode. The default setting is empty, when use AES equal to `AES_128_ECB`, when use SM4 equal to `SM3_128_ECB`
-  available values:
-  
+The block encryption mode can be controlled by this parameter, the default value is empty.
+When empty, using the AES algorithm is equivalent to using `AES_128_ECB`, and when using the SM4 algorithm is equivalent to `SM4_128_ECB`.
+
+Optional values:
   ```
     AES_128_ECB,
     AES_192_ECB,
@@ -587,19 +588,19 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 	Default password expiration time. The default value is 0, which means no expiration. The unit is days. This parameter is only enabled if the user's password expiration property has a value of DEFAULT. like:
 
-   ````
+   ```
    CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_EXPIRE DEFAULT;
    ALTER USER user1 PASSWORD_EXPIRE DEFAULT;
-   ````
+   ```
 
 * `password_history`
 
 	The default number of historical passwords. The default value is 0, which means no limit. This parameter is enabled only when the user's password history attribute is the DEFAULT value. like:
 
-   ````
+   ```
    CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_HISTORY DEFAULT;
    ALTER USER user1 PASSWORD_HISTORY DEFAULT;
-   ````
+   ```
 
 * `validate_password_policy`
 
@@ -639,19 +640,13 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 * `show_user_default_role`
 
-    <version since="dev"></version>
-
     Controls whether to show each user's implicit roles in the results of `show roles`. Default is false.
 
 * `use_fix_replica`
 
-    <version since="1.2.0"></version>
-
     Use a fixed replica to query. replica starts with 0 and if use_fix_replica is 0, the smallest is used, if use_fix_replica is 1, the second smallest is used, and so on. The default value is -1, indicating that the function is disabled.
 
 * `dry_run_query`
-
-    <version since="dev"></version>
 
     If set to true, for query requests, the actual result set will no longer be returned, but only the number of rows, while for load and insert, the data is discarded by sink node, no writing happens. The default is false.
 
@@ -692,18 +687,14 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 * `enable_memtable_on_sink_node`
 
-  <version since="2.1.0">
   Whether to enable MemTable on DataSink node when loading data, default is true.
-  </version>
 
   Build MemTable on DataSink node, and send segments to other backends through brpc streaming.
   It reduces duplicate work among replicas, and saves time in data serialization & deserialization.
 
 * `enable_unique_key_partial_update`
 
-  <version since="2.0.2">
   Whether to enable partial columns update semantics for native insert into statement, default is false. Please note that the default value of the session variable `enable_insert_strict`, which controls whether the insert statement operates in strict mode, is true. In other words, the insert statement is in strict mode by default, and in this mode, updating non-existing keys in partial column updates is not allowed. Therefore, when using the insert statement for partial columns update and wishing to insert non-existing keys, you need to set `enable_unique_key_partial_update` to true and simultaneously set `enable_insert_strict` to false.
-  </version>
 
 * `describe_extend_variant_column`
 

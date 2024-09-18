@@ -1,7 +1,7 @@
 ---
 {
     'title': "Auto-increment columns in databases: a simple magic that makes a big difference",
-    'summary': "Auto-increment columns in Apache Doris accelerates dictionary encoding and pagination without damaging data writing performance. This is an introduction to its usage, applicable scenarios, and implementation details.",
+    'description': "Auto-increment columns in Apache Doris accelerates dictionary encoding and pagination without damaging data writing performance. This is an introduction to its usage, applicable scenarios, and implementation details.",
     'date': '2024-04-08',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -49,7 +49,7 @@ To give AUTO_INCREMENT column a spin, follow this quick [demo](https://www.youtu
 
 ## Syntax & usage
 
-To enable an auto-increment column in Doris, add `AUTO_INCREMENT` property to the column in the table creation statement ([CREAT-TABLE](https://doris.apache.org/docs/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE/)). You can specify a starting value for the auto-increment column via `AUTO_INCREMENT(start_value)`; if not, the default starting value is 1.
+To enable an auto-increment column in Doris, add `AUTO_INCREMENT` property to the column in the table creation statement ([CREAT-TABLE](https://doris.apache.org/zh-CN/docs/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)). You can specify a starting value for the auto-increment column via `AUTO_INCREMENT(start_value)`; if not, the default starting value is 1.
 
 For example, you can create a table in the [Duplicate Key model](https://doris.apache.org/docs/data-table/data-model#duplicate-model), with one of the key columns being an auto-increment column. 
 
@@ -407,5 +407,5 @@ Attention is required regarding:
 
 ## Conclusion
 
-AUTO_INCREMENT brings higher stability and reliability for Doris in large-scale data processing. If it sounds like something you need, download [Apache Doris](https://doris.apache.org/download/) and try it out. For issues you come across along the way, join us in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) and we are happy to help. 
+AUTO_INCREMENT brings higher stability and reliability for Doris in large-scale data processing. If it sounds like something you need, download [Apache Doris](https://doris.apache.org/download/) and try it out. For issues you come across along the way, join us in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) and we are happy to help. 
 

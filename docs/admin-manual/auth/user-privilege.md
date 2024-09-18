@@ -105,7 +105,7 @@ The default role cannot be deleted or assigned to others. When a user is deleted
 10. View the created roles: [SHOW ROLES](../../sql-manual/sql-reference/Show-Statements/SHOW-ROLES.md)
 11. Set user properties: [SET PROPERTY](../../sql-manual/sql-reference/Account-Management-Statements/SET-PROPERTY.md)
 12. View user properties: [SHOW PROPERTY](../../sql-manual/sql-reference/Show-Statements/SHOW-PROPERTY.md)
-13. Change password ：[SET PASSWORD](../../sql-manual/sql-reference/Account-Management-Statements/SET-PASSWORD.md)
+13. Change password :[SET PASSWORD](../../sql-manual/sql-reference/Account-Management-Statements/SET-PASSWORD.md)
 
 For detailed help with the above commands, you can use help + command to get help after connecting Doris through the MySQL client. For example `HELP CREATE USER`.
 
@@ -151,7 +151,7 @@ Doris currently supports the following permissions
 
 8. Usage_priv
 
-   Use of resources <version since="dev" type="inline" >and workload groups</version>.
+   Use of resources and workload groups.
 
 ## Permission hierarchy
 
@@ -167,10 +167,8 @@ The privileges of the resources are divided into two levels as follows:
 1. GLOBAL LEVEL: Global privileges. That is, the privileges granted on `*` by the GRANT statement. The privileges granted apply to the resource.
 2. RESOURCE LEVEL: Resource-level privileges. This is the permission on `resource_name` granted by the GRANT statement. The privilege granted applies to the specified resource.
 
-<version since="dev">
 The workload group has only one level:
 1. WORKLOAD GROUP LEVEL: privileges on `workload_group_name` that can be granted with the GRANT statement. The privileges granted apply to the specified workload group. workload_group_name supports `%` and `_` match characters, `%` can match any string and `_` matches any single character.
-</version>
 
 ## ADMIN /GRANT
 
@@ -268,6 +266,8 @@ ADMIN_PRIV and GRANT_PRIV have the authority of **"grant authority"** at the sam
 	For example, suppose the user `user1@'192.%'` is created, and then a user user1 from 192.168.10.1 is logged into the system. At this time, `current_user` is `user1@'192.%'`, and `user` is `user1@'192.168.10.1'`.
 
 	All privileges are given to a `current_user`, and the real user has all the privileges of the corresponding `current_user`.
+        
+        `SELECT session_user()`  is supported , which is having same behaviour as user() function.
 
 10. Password Validation
 

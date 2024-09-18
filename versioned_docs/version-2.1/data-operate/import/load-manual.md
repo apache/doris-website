@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Loading Overview",
+    "title": "Overview",
     "language": "en"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Import Overview
+# Overview
 
-## Supported Data Sources
+## Supported data sources
 
-Doris provides a variety of data import solutions, and you can choose different data import methods for different data sources.
+Apache Doris provides a variety of data import solutions, and you can choose different data loading methods for different data sources.
 
-### By Scene
+### By scene
 | Data Source                          | Loading Method                                                |
 | ------------------------------------ | ------------------------------------------------------------ |
 | Object Storage (s3), HDFS            | [Loading data using Broker](./broker-load-manual) |
@@ -40,9 +40,9 @@ Doris provides a variety of data import solutions, and you can choose different 
 | Loading via JDBC                      | [Sync data using JDBC](../../lakehouse/database/jdbc)       |
 | Loading JSON format data              | [JSON format data Loading](./load-json-format) |
 
-### By Loading Method
+### By loading method
 
-| Loading method name | Use method                                                   |
+| Loading method | Description                                                   |
 | ------------------ | ------------------------------------------------------------ |
 | Broker Load        | [Import external storage data via Broker](./broker-load-manual) |
 | Stream Load        | [Stream import data (local file and memory data)](./stream-load-manual) |
@@ -62,11 +62,11 @@ Different import methods support slightly different data formats.
 | Routine Load   | csv, json               |
 | MySql Load     | csv                     |
 
-## Import Instructions
+## Import instructions
 
 The data import implementation of Apache Doris has the following common features, which are introduced here to help you better use the data import function
 
-## Import Atomicity Guarantees
+### Atomicity
 
 Each import job of Doris, whether it is batch import using Broker Load or single import using INSERT statement, is a complete transaction operation. The import transaction can ensure that the data in a batch takes effect atomically, and there will be no partial data writing.
 
@@ -74,18 +74,18 @@ At the same time, an import job will have a Label. This Label is unique under a 
 
 Label is used to ensure that the corresponding import job can only be successfully imported once. A successfully imported Label, when used again, will be rejected with the error `Label already used`. Through this mechanism, `At-Most-Once` semantics can be implemented in Doris. If combined with the `At-Least-Once` semantics of the upstream system, the `Exactly-Once` semantics of imported data can be achieved.
 
-For best practices on atomicity guarantees, see Importing Transactions and Atomicity.
+For best practices on atomicity, see [Loading Transactions and Atomicity](https://doris.apache.org/docs/data-operate/import/load-atomicity/).
 
-## Synchronous and Asynchronous Imports
+## Synchronous and asynchronous loading
 
-Import methods are divided into synchronous and asynchronous. For the synchronous import method, the returned result indicates whether the import succeeds or fails. For the asynchronous import method, a successful return only means that the job was submitted successfully, not that the data was imported successfully. You need to use the corresponding command to check the running status of the import job.
+Loading methods are divided into synchronous and asynchronous methods. For the synchronous loading method, the returned result indicates whether the loading succeeds or fails. For the asynchronous loading method, a successful result only means that the job was submitted successfully, but not that the data was loaded successfully. You need to use the corresponding command to check the running status of the loading job.
 
-## Import the Data of Array Types
+## Load the array-type data
 
 The array function can only be supported in vectorization scenarios, but non-vectorization scenarios are not supported.
-if you want to apply the array function to import data, you should enable vectorization engine. Then you need to cast the input parameter column into the array type according to the parameter of the array function. Finally, you can continue to use the array function.
+If you want to apply the array function to load data, enable vectorization engine, and then cast the input parameter column into the array type according to the parameter of the array function. Finally, you can continue to use the array function.
 
-For example, in the following import, you need to cast columns b14 and a13 into `array<string>` type, and then use the `array_union` function.
+For example, in the following loading job, you need to cast columns b14 and a13 into `array<string>` type, and then use the `array_union` function.
 
 ```sql
 LOAD LABEL label_03_14_49_34_898986_19090452100 ( 
@@ -101,8 +101,8 @@ LOAD LABEL label_03_14_49_34_898986_19090452100 (
 
 The Pipeline engine is turned off by default on import, and is enabled by the following two variables:
 
-1. `enable_pipeline_load` in [FE CONFIG](../../admin-manual/config/fe-config) `enable_pipeline_load`. When enabled, import tasks such as Streamload will try to use the Pipeline engine.
+1. `enable_pipeline_load` in the [FE configuration](../../admin-manual/config/fe-config) file. When enabled, import tasks such as Streamload will try to use the Pipeline engine.
 
 2. `enable_nereids_dml_with_pipeline` in Session Variable to enable insert into to try to use the Pipeline engine.
 
-When the above variables are turned on, whether and which set of Pipeline engine is used still depends on the settings of the other two Session Variables `enable_pipeline_engine` and `enable_pipeline_x_engine`. When both are enabled, PipelineX is selected in preference to the Pipeline Engine. If neither is enabled, the import will not be executed using the Pipeline engine even if the above variables are set to `true`.
+When the above variables are turned on, whether and which set of Pipeline engine is used still depends on the settings of the other two Session Variables `enable_pipeline_engine` and `enable_pipeline_x_engine`. When both are enabled, PipelineX is selected in preference to the Pipeline Engine. If neither is enabled, the loading job will not be executed using the Pipeline engine even if the above variables are set to `true`.

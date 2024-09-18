@@ -34,6 +34,8 @@ SHOW PROCESSLIST
 
 显示用户正在运行的线程，需要注意的是，除了 root 用户能看到所有正在运行的线程外，其他用户都只能看到自己正在运行的线程，看不到其它用户正在运行的线程
 
+默认只限制当前连接的FE的连接列表，可以通过设置session变量```set show_all_fe_connection = true```来查看所有FE的连接
+
 语法：
 
 ```sql

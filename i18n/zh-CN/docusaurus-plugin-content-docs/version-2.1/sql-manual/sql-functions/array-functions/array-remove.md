@@ -24,11 +24,7 @@ under the License.
 
 ## array_remove
 
-<version since="1.2.0">
-
 array_remove
-
-</version>
 
 ### description
 
@@ -38,15 +34,9 @@ array_remove
 
 返回移除所有的指定元素后的数组，如果输入参数为NULL，则返回NULL
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_remove(['test', NULL, 'value'], 'value');
 +-----------------------------------------------------+
 | array_remove(ARRAY('test', NULL, 'value'), 'value') |

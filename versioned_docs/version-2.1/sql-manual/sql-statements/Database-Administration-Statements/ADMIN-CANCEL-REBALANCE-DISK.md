@@ -24,7 +24,9 @@ under the License.
 
 ## ADMIN-CANCEL-REBALANCE-DISK
 
-<version since="1.2.0">
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
 
 ### Name
 
@@ -58,5 +60,5 @@ ADMIN,CANCEL,REBALANCE DISK
 
 ### Best Practice
 
-</version>
+
 

@@ -26,11 +26,7 @@ under the License.
 
 ## array_distinct
 
-<version since="1.2.0">
-
 array_distinct
-
-</version>
 
 ### description
 
@@ -41,15 +37,9 @@ array_distinct
 Return the array which has been removed duplicate values.
 Return NULL for NULL input.
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1, k2, array_distinct(k2) from array_test;
 +------+-----------------------------+---------------------------+
 | k1   | k2                          | array_distinct(k2)        |

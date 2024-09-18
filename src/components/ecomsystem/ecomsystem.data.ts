@@ -3,4 +3,5 @@ export enum EcomsystemCategoryEnum {
     Connectors = 'connectors',
     DistributionsAndPackaging = 'distributions-and-packaging',
     DataLoading = 'data-loading',
+    DataMigration = 'data-migration'
 }

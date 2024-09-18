@@ -123,7 +123,7 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
 
    ```sql
    CREATE GLOBAL ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
-   ```` 
+   ``` 
    
 ### Keywords
 

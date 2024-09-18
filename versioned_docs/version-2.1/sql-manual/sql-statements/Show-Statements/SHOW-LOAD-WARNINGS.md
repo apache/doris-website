@@ -44,7 +44,7 @@ SHOW LOAD WARNINGS
     [LABEL[="your_label"]]
     [LOAD_JOB_ID = ["job id"]]
 ]
-````
+```
 
 1) If db_name is not specified, the current default db is used
 1) If LABEL = is used, it matches the specified label exactly
@@ -56,7 +56,7 @@ SHOW LOAD WARNINGS
 
     ```sql
     SHOW LOAD WARNINGS FROM demo WHERE LABEL = "load_demo_20210112"
-    ````
+    ```
 
 ### Keywords
 

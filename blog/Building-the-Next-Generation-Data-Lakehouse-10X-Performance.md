@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Building the next-generation data lakehouse: 10X performance',
-    'summary': "This article explains how to connect various data sources quickly and ensure high query performance.",
+    'description': "This article explains how to connect various data sources quickly and ensure high query performance.",
     'date': '2023-03-14',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -249,5 +249,5 @@ http://doris.apache.org
 
 https://github.com/apache/doris
 
-Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
+Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).
 

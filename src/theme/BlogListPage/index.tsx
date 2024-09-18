@@ -22,7 +22,7 @@ function BlogListPageMetadata(props) {
     const title = isBlogOnlyMode ? siteTitle : blogTitle;
     return (
         <>
-            <PageMetadata title={title} description={blogDescription} />
+            <PageMetadata title={title} description={blogDescription} keywords="lakehouse, adhoc analysis" />
         </>
     );
 }

@@ -24,13 +24,9 @@ under the License.
 
 ## TO_IPV4_OR_NULL
 
-<version since="dev">
-
 TO_IPV4_OR_NULL
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,13 @@ TO_IPV4_OR_NULL
 
 Same as to_ipv4, but if the IPv4 address has an invalid format, it returns NULL.
 
-### notice
+#### Notice
 
 `If input is NULL, return NULL.`
 
-### example
+### Example
 
-```
+```sql
 mysql> select to_ipv4_or_null('.');
 +----------------------+
 | to_ipv4_or_null('.') |
@@ -60,6 +56,6 @@ mysql> select to_ipv4_or_null(NULL);
 +-----------------------+
 ```
 
-### keywords
+### Keywords
 
 TO_IPV4_OR_NULL, IP

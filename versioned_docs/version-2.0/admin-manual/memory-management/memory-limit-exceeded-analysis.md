@@ -24,14 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Memory Limit Exceeded Analysis
 
-<version since="1.2.0">
+
+:::tip Tips
+This featureis supported since the Apache Doris 1.2 version
+:::
 
 When the query or import error `Memory limit exceeded` is reported, the possible reasons are: the process memory exceeds the limit, the remaining available memory of the system is insufficient, and the memory limit for a single query execution is exceeded.
 ```
 ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consuming tracker:<xxx>, xxx. backend 172.1.1.1 process memory used xxx GB, limit xxx GB. If query tracker exceeded, `set exec_mem_limit=8G ` to change limit, details mem usage see be. INFO.
 ```
+
+For more information about memory management, refer to the following documents: [Say-Goodbye-to-OOM-Crashes-en](https://doris.apache.org/blog/Say-Goodbye-to-OOM-Crashes/), [Say-Goodbye-to-OOM-Crashes-zh-CN](https://mp.weixin.qq.com/s/Z5N-uZrFE3Qhn5zTyEDomQ)
 
 ## The process memory exceeds the limit OR the remaining available memory of the system is insufficient
 When the following error is returned, it means that the process memory exceeds the limit, or the remaining available memory of the system is insufficient. The specific reason depends on the memory statistics.
@@ -176,4 +180,4 @@ Memory Tracker Summary:
     MemTracker Label=VDataStreamSender:78208b15e064527-a84c5c0b04c04fd0, Parent Label=Query#Id=78208b15e064527-a84c5c0b04c04fcf, Used=2.34 KB(2400 B), Peak=0(0 B)
 ```
 
-</version>
+

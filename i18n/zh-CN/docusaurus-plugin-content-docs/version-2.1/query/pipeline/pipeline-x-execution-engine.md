@@ -26,11 +26,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# PipelineX 执行引擎
 
-:::info 备注
-PipelineX 执行引擎 是 Doris 在 2.1 版本加入的实验性功能。
-:::
 
 ## 背景
 PipelineX 执行引擎的目标是为了解决 Doris pipeline 引擎的四大问题：

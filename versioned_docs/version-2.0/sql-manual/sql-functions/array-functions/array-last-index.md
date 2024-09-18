@@ -24,11 +24,7 @@ under the License.
 
 ## array_last_index
 
-<version since="2.0">
-
 array_last_index
-
-</version>
 
 ### description
 

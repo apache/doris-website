@@ -24,13 +24,9 @@ under the License.
 
 ## IPV4_STRING_TO_NUM
 
-<version since="dev">
-
 IPV4_STRING_TO_NUM
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,12 +34,12 @@ IPV4_STRING_TO_NUM
 
 Takes a string containing an IPv4 address in the format A.B.C.D (dot-separated numbers in decimal form). Returns a BIGINT number representing the corresponding IPv4 address in big endian.
 
-### notice
+#### Notice
 
-`will return an error if the input string is not a valid IPv4 address or NULL`
+If the input string is not a valid IPv4 address or `NULL`, an error is returned
 
-### example
-```
+### Example
+```sql
 mysql> select ipv4_string_to_num('192.168.0.1'); 
 +-----------------------------------+ 
 | ipv4_string_to_num('192.168.0.1') | 
@@ -59,6 +55,6 @@ mysql> select addr_src, ipv4_string_to_num(addr_src) from ipv4_string_test where
 ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][E33] Null Input, you may consider convert it to a valid default IPv4 value like '0.0.0.0' first
 ```
 
-### keywords
+### Keywords
 
 IPV4_STRING_TO_NUM, IP

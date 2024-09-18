@@ -1,4 +1,5 @@
-import React from 'react';
+import React,{useState} from 'react';
+import Link from '@docusaurus/Link';
 import EcomsystemLayout from '@site/src/components/ecomsystem/ecomsystem-layout/ecomsystem-layout';
 import ExternalLink from '@site/src/components/external-link/external-link';
 import CollapseBox from '@site/src/components/collapse-box/collapse-box';
@@ -6,11 +7,13 @@ import '../index.scss';
 import { ExternalLinkArrowIcon } from '@site/src/components/Icons/external-link-arrow-icon';
 
 export default function ClusterManagement() {
+    const [flag,setFlag] = useState(true)
     return (
         <EcomsystemLayout>
             <div className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row">
                 <CollapseBox
                     title="Cluster Manager for Apache Doris"
+                    popTrue={flag}
                     description="One-stop database cluster management tool, developed by VeloDB."
                     characteristic={[
                         'Create, start, stop, upgrade, and scale clusters',
@@ -36,8 +39,9 @@ export default function ClusterManagement() {
                     }
                 />
                 <CollapseBox
-                    title="Doris Operator"
-                    description="Run Apache Doris on K8s, developed by VeloDB."
+                    title="K8s Operator for Apache Doris"
+                    popTrue={flag}
+                    description="One-stop Doris cluster management tool on kubernetes, developed by VeloDB."
                     characteristic={[
                         'Diverse PV management',
                         'Pod deployment configuration ',
@@ -56,7 +60,6 @@ export default function ClusterManagement() {
                                 href="https://doris.apache.org/docs/install/cluster-deployment/k8s-deploy/install-env"
                                 className="sub-btn"
                                 label="Docs"
-                                linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>
                         </>
                     }

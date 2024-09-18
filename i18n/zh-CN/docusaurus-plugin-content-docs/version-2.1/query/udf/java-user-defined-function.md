@@ -40,7 +40,7 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 
 否则将会返回错误状态信息 `Couldn't open file ......`。
 
-更多语法帮助可参阅 [CREATE FUNCTION](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
 
 ### UDF
 
@@ -89,7 +89,7 @@ UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函�
 
 ## 删除 UDF
 
-当你不再需要 UDF 函数时，你可以通过下述命令来删除一个 UDF 函数，可以参考 [DROP FUNCTION](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION.md)
+当你不再需要 UDF 函数时，你可以通过下述命令来删除一个 UDF 函数，可以参考 [DROP FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION.md)
 
 ## 类型对应关系
 
@@ -354,7 +354,7 @@ public class MedianUDAF {
 
 UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法， 但是 UDTF 函数的返回值必须是 Array 类型。
 
-另外Doris中表函数会因为 `_outer` 后缀有不同的表现，可查看[OUTER 组合器](../sql-manual/sql-functions/table-functions/explode-numbers-outer.md)
+另外Doris中表函数会因为 `_outer` 后缀有不同的表现，可查看[OUTER 组合器](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md)
 
 ```JAVA
 public class UDTFStringTest {
@@ -385,17 +385,6 @@ public class UDTFStringTest {
     javac   ./DictLibrary.java
     jar -cf ./DictLibrary.jar ./DictLibrary.class
     ```
-
-2. 然后编译 FunctionUdf 文件，可以直接引用上一步的到的资源包, 这样可以得到 udf 的 FunctionUdf.jar包。
-
-    ```shell
-    javac -cp ./DictLibrary.jar  ./FunctionUdf.java
-    jar  -cvf ./FunctionUdf.jar  ./FunctionUdf.class
-    ```
-
-3. 经过上面两步之后，会得到两个 jar 包，由于想让资源 jar 包被所有的并发引用，所以需要将它放到 BE 的部署路径 `be/lib/java_extensions/java-udf `下面，BE重启之后就可以随着 JVM 的启动加载进来。
-
-4. 最后利用 `create function` 语句创建一个 UDF 函数，其中 file 的路径指向 FunctionUdf.jar 包, 这样资源包会随着 BE 启动而加载，停止而释放。FunctionUdf.jar 的加载与释放则是跟随 SQL 的执行周期。
 
     ```java
     public class DictLibrary {
@@ -428,6 +417,29 @@ public class UDTFStringTest {
         }
     }
     ```
+
+2. 然后编译 FunctionUdf 文件，可以直接引用上一步的到的资源包, 这样可以得到 udf 的 FunctionUdf.jar包。
+
+    ```shell
+    javac -cp ./DictLibrary.jar  ./FunctionUdf.java
+    jar  -cvf ./FunctionUdf.jar  ./FunctionUdf.class
+    ```
+
+3. 经过上面两步之后，会得到两个 jar 包，由于想让资源 jar 包被所有的并发引用，所以需要将它放到指定路径 `fe/custom_lib` 和 `be/custom_lib` 下面，服务重启之后就可以随着 JVM 的启动加载进来。
+
+4. 最后利用 `create function` 语句创建一个 UDF 函数
+
+   ```sql
+   CREATE FUNCTION java_udf_dict(string) RETURNS string PROPERTIES (
+    "symbol"="org.apache.doris.udf.FunctionUdf",
+    "always_nullable"="true",
+    "type"="JAVA_UDF"
+   );
+   ```
+
+使用该加载方式时，FunctionUdf.jar和DictLibrary.jar都在FE和BE的custom_lib路径下，因此都会随着服务启动而加载，停止而释放，不再需要指定file 的路径。
+
+也可以使用 file:/// 方式自定义FunctionUdf.jar的路径，但是DictLibrary.jar 只能放在custom_lib下。
 
 ## 使用须知
 

@@ -26,11 +26,7 @@ under the License.
 
 ## array_range
 
-<version since="1.2.0">
-
 array_range
-
-</version>
 
 ### description
 
@@ -51,8 +47,6 @@ ARRAY<Int> array_range(Int start, Int end, Int step)
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_range(10);
 +--------------------------------+
 | array_range(10)                |

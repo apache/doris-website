@@ -24,26 +24,24 @@ under the License.
 
 ## IPV4_STRING_TO_NUM_OR_NULL
 
-<version since="dev">
-
 IPV4_STRING_TO_NUM_OR_NULL
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
 `BIGINT IPV4_STRING_TO_NUM_OR_NULL(VARCHAR ipv4_string)`
 
+`BIGINT INET_ATON(VARCHAR ipv4_string)`
+
 Takes a string containing an IPv4 address in the format A.B.C.D (dot-separated numbers in decimal form). Returns a BIGINT number representing the corresponding IPv4 address in big endian.
 
-### notice
+#### Notice
 
-`will return null if the input parameter is invalid ipv4 value`
+If the input string is not a valid IPv4 address, `NULL` is returned. This function has an alias of `INET_ATON`.
 
-### example
-```
+### Example
+```sql
 mysql> select ipv4_string_to_num_or_null('192.168.0.1'); 
 +-------------------------------------------+ 
 | ipv4_string_to_num_or_null('192.168.0.1') | 
@@ -64,6 +62,6 @@ mysql> select str, ipv4_string_to_num_or_null(str) from ipv4_str;
 4 rows in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
-IPV4_STRING_TO_NUM_OR_NULL, IP
+IPV4_STRING_TO_NUM_OR_NULL, INET_ATON, IP

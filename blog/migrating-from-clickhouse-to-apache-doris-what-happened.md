@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Migrating from ClickHouse to Apache Doris: what happened?',
-    'summary': "A user of Apache Doris has written down their migration process from ClickHouse to Doris, including why they need the change, what needs to be taken care of, and how they compare the performance of the two databases in their environment. ",
+    'description': "A user of Apache Doris has written down their migration process from ClickHouse to Doris, including why they need the change, what needs to be taken care of, and how they compare the performance of the two databases in their environment. ",
     'date': '2023-10-11',
     'author': 'Chuang Li',
     'tags': ['Best Practice'],
@@ -159,4 +159,4 @@ In terms of CPU and memory consumption, Apache Doris maintained stable cluster l
 
 ## Future Directions
 
-As the migration goes on, the user works closely with the [Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ), and their feedback has contributed to the making of [Apache Doris 2.0.0](https://doris.apache.org/docs/dev/releasenotes/release-2.0.0/). We will continue assisting them in their migration from Kylin and Druid to Doris, and we look forward to see their Doris-based unified data platform come into being.
+As the migration goes on, the user works closely with the [Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA), and their feedback has contributed to the making of [Apache Doris 2.0.0](https://doris.apache.org/docs/dev/releasenotes/release-2.0.0/). We will continue assisting them in their migration from Kylin and Druid to Doris, and we look forward to see their Doris-based unified data platform come into being.

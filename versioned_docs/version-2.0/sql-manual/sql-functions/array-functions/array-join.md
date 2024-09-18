@@ -26,11 +26,7 @@ under the License.
 
 ## array_join
 
-<version since="1.2.0">
-
 array_join
-
-</version>
 
 
 ### description
@@ -46,15 +42,9 @@ If null_replace is NULL, return NULL.
 If sep is an empty string, no delimiter is applied.
 If null_replace is an empty string or not specified, the NULL elements in the array are discarded directly.
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1, k2, array_join(k2, '_', 'null') from array_test order by k1;
 +------+-----------------------------+------------------------------------+
 | k1   | k2                          | array_join(`k2`, '_', 'null')      |

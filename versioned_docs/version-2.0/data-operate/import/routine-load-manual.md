@@ -311,7 +311,7 @@ The modules for creating a loading job are explained as follows:
 
 **max_routine_load_task_concurrent_num**
 
-- Default Value: 5
+- Default Value: 256
 
 - Dynamic Configuration: Yes
 
@@ -321,7 +321,7 @@ The modules for creating a loading job are explained as follows:
 
 **max_routine_load_task_num_per_be**
 
-- Default Value: 5
+- Default Value: 1024
 
 - Dynamic Configuration: Yes
 
@@ -574,7 +574,7 @@ The columns in the result set provide the following information:
 | ErrorLogUrls         | The URL(s) to view the filtered low-quality data.            |
 | OtherMsg             | Other error messages.                                        |
 
-## Best Practices for Loading Data
+## Load example
 
 ### Loading CSV Format
 
@@ -1914,6 +1914,8 @@ FROM KAFKA
     "property.kafka_default_offsets" = "OFFSET_BEGINNING"
 );
 ```
+
+Currently, only extracting the table name from the Value field of Kafka is supported. The format should be as follows, using JSON as an example: `table_name|{"col1": "val1", "col2": "val2"}`, where `tbl_name` is the table name and `|` is used as the separator between the table name and the table data. The same format applies to CSV data, such as `table_name|val1,val2,val3`. Note that the `table_name` here must be consistent with the table name in Doris, otherwise the load will fail. Note that dynamic tables do not support the column_mapping configuration described later.
 
 ### Strict Mode Load
 

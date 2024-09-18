@@ -1,7 +1,7 @@
 ---
 {
   'title': 'Doris analysis: Doris SQL principle analysis',
-  'summary': "This article mainly introduces the principle of Doris SQL parsing.Since there are many types of SQL, this article focuses on the analysis of query SQL. Doris's SQL analysis will be explained deeply in the algorithm principle and code implementation.",
+  'description': "This article mainly introduces the principle of Doris SQL parsing.Since there are many types of SQL, this article focuses on the analysis of query SQL. Doris's SQL analysis will be explained deeply in the algorithm principle and code implementation.",
   'date': '2022-08-25',
   'author': 'Apache Doris',
   'tags': ['Tech Sharing'],

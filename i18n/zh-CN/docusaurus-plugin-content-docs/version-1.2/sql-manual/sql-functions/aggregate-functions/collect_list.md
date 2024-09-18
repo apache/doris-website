@@ -43,8 +43,6 @@ under the License.
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1,k2,k3 from collect_list_test order by k1;
 +------+------------+-------+
 | k1   | k2         | k3    |

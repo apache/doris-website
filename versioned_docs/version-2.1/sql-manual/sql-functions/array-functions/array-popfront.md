@@ -24,11 +24,7 @@ under the License.
 
 ## array_popfront
 
-<version since="2.0">
-
 array_popfront
-
-</version>
 
 ### description
 
@@ -38,15 +34,9 @@ array_popfront
 
 Remove the first element from array.
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_popfront(['test', NULL, 'value']);
 +-----------------------------------------------------+
 | array_popfront(ARRAY('test', NULL, 'value'))        |

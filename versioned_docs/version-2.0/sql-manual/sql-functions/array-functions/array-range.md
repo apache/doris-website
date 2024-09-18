@@ -26,11 +26,7 @@ under the License.
 
 ## array_range
 
-<version since="1.2.0">
-
 array_range
-
-</version>
 
 ### description
 
@@ -46,15 +42,9 @@ start default value is 0, and step default value is 1.
 Return the array which numbers from start to end - 1 by step.
 
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_range(10);
 +--------------------------------+
 | array_range(10)                |

@@ -1,11 +1,9 @@
 ---
 {
     'title': "From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration",
-    'summary': "Users can execute queries with their old SQL syntaxes directly in Doris or batch convert their existing SQL statements on the visual SQL conversion interface.",
+    'description': "Users can execute queries with their old SQL syntaxes directly in Doris or batch convert their existing SQL statements on the visual SQL conversion interface.",
     'date': '2024-05-06',
     'author': 'Apache Doris',
-    'picked': "true",
-    'order': "4",
     'tags': ['Tech Sharing'],
     "image": '/images/sql-convertor-feature.jpeg'
 }
@@ -137,13 +135,13 @@ Follow these steps to deploy the visual conversion interface:
 
 3. Create a network for the image
 
-```Bash
+```shell
 docker network create app_network
 ```
 
 4. Decompress the package
 
-```Bash
+```shell
 tar xzvf doris-sql-convertor-1.0.1.tar.gz
 
 cd doris-sql-convertor
@@ -151,7 +149,7 @@ cd doris-sql-convertor
 
 5. Edit the environment variables
    
-```Bash
+```shell
 FLASK_APP=server/app.py
 FLASK_DEBUG=1
 API_HOST=http://doris-sql-convertor-api:5000
@@ -163,7 +161,7 @@ WEB_TAG=latest
 
 6. Start it up
 
-```Bash
+```shell
 sh start.sh
 ```
 
@@ -175,7 +173,7 @@ After deployment, you can access the service by `ip:8080` via your local browser
 2. The Doris SQL Convertor supports 239 UNION ALL conversions at most.
 :::
 
-Join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) to seek guidance from the Doris makers or provide your feedback!
+Join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) to seek guidance from the Doris makers or provide your feedback!
 
 
 

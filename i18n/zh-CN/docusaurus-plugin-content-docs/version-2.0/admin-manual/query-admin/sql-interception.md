@@ -1,6 +1,6 @@
 ---
 {
-    "title": "高危 SQL 限制",
+    "title": "SQL 拦截",
     "language": "zh-CN"
 }
 ---

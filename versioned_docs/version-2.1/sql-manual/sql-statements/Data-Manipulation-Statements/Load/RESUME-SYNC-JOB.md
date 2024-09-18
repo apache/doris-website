@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 RESUME SYNC JOB [db.]job_name
-````
+```
 
 ### Example
 
@@ -46,7 +46,7 @@ RESUME SYNC JOB [db.]job_name
 
     ```sql
     RESUME SYNC JOB `job_name`;
-    ````
+    ```
 
 ### Keywords
 

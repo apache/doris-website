@@ -24,13 +24,9 @@ under the License.
 
 ## IS_IPV4_STRING
 
-<version since="dev">
-
 IS_IPV4_STRING
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,13 @@ IS_IPV4_STRING
 
 Receive an IPv4 address in the form of a string as a parameter. If it is a correctly formatted and valid IPv4 address, return true; On the contrary, return false.
 
-### notice
+#### Notice
 
 `If the input parameter is NULL, return NULL, indicating invalid input`
 
-### example
+### Example
 
-```
+```sql
 mysql> select is_ipv4_string(NULL);
 +----------------------+
 | is_ipv4_string(NULL) |
@@ -75,6 +71,6 @@ mysql> select id, is_ipv4_string(ip_v4) from test_is_ipv4_string order by id;
 +------+-----------------------+
 ```
 
-### keywords
+### Keywords
 
 IS_IPV4_STRING, IP

@@ -42,14 +42,14 @@ DROP REPOSITORY `repo_name`;
 
 illustrate:
 
-- Deleting a warehouse just deletes the warehouse's mapping in Palo, not the actual warehouse data. Once deleted, it can be mapped to the repository again by specifying the same broker and LOCATION.
+- Deleting a warehouse just deletes the warehouse's mapping in Doris, not the actual warehouse data. Once deleted, it can be mapped to the repository again by specifying the same LOCATION.
 
 ### Example
 
-1. Delete the repository named bos_repo:
+1. Delete the repository named example_repo:
 
 ```sql
-DROP REPOSITORY `bos_repo`;
+DROP REPOSITORY `example_repo`;
 ```
 
 ### Keywords

@@ -26,11 +26,7 @@ under the License.
 
 ## array_count
 
-<version since="2.0">
-
 array_count
-
-</version>
 
 ### description
 
@@ -39,9 +35,9 @@ array_count(lambda, array1, ...)
 ```
 
 
-使用lambda表达式作为输入参数，对其他输入ARRAY参数的内部数据进行相应的表达式计算。 返回使得 `lambda(array1[i], ...)` 返回值不为 0 的元素数量。如果找不到到满足此条件的元素，则返回 0。
+使用 lambda 表达式作为输入参数，对其他输入 ARRAY 参数的内部数据进行相应的表达式计算。返回使得 `lambda(array1[i], ...)` 返回值不为 0 的元素数量。如果找不到到满足此条件的元素，则返回 0。
 
-lambda表达式中输入的参数为1个或多个，必须和后面输入的数组列数一致，且所有输入的array的元素个数必须相同。在lambda中可以执行合法的标量函数，不支持聚合函数等。
+lambda 表达式中输入的参数为 1 个或多个，必须和后面输入的数组列数一致，且所有输入的 array 的元素个数必须相同。在 lambda 中可以执行合法的标量函数，不支持聚合函数等。
 
 ```
 array_count(x->x, array1);

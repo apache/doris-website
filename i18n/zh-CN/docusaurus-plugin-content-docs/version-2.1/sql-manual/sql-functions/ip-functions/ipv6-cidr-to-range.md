@@ -24,13 +24,9 @@ under the License.
 
 ## IPV6_CIDR_TO_RANGE
 
-<version since="dev">
-
 IPV6_CIDR_TO_RANGE
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,9 @@ IPV6_CIDR_TO_RANGE
 
 接收一个IPv6和一个包含CIDR的Int16值。返回一个结构体，其中包含两个IPv6字段分别表示子网的较低范围（min）和较高范围（max）。
 
-### notice
+### Example
 
-`如果入参为NULL，则返回NULL，表示无效输入`
-
-### example
-
-```
+```sql
 mysql> SELECT ipv6_cidr_to_range(ipv6_string_to_num('2001:0db8:0000:85a3:0000:0000:ac1f:8001'), 32);
 +---------------------------------------------------------------------------------------+
 | ipv6_cidr_to_range(ipv6_string_to_num('2001:0db8:0000:85a3:0000:0000:ac1f:8001'), 32) |
@@ -67,6 +59,6 @@ mysql> SELECT ipv6_cidr_to_range(NULL, NULL);
 +--------------------------------+
 ```
 
-### keywords
+### Keywords
 
 IPV6_CIDR_TO_RANGE, IP

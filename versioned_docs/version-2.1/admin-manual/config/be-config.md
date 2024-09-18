@@ -205,8 +205,8 @@ There are two ways to configure BE configuration items:
 
 #### `trash_file_expire_time_sec`
 
-* Description: The interval for cleaning the recycle bin is 72 hours. When the disk space is insufficient, the file retention period under trash may not comply with this parameter
-* Default value: 259200
+* Description: The interval for cleaning the recycle bin is 24 hours. When the disk space is insufficient, the file retention period under trash may not comply with this parameter
+* Default value: 86400
 
 #### `es_http_timeout_ms`
 
@@ -276,6 +276,16 @@ There are two ways to configure BE configuration items:
     - If the parameter is `THREADED`, the model is a non-blocking I/O model.
 
     - If the parameter is `THREAD_POOL`, the model is a blocking I/O model.
+
+#### `thrift_max_message_size`
+
+:::tip Tips
+This configuration is supported since the Apache Doris 2.1.4 version
+:::
+
+Default: 100MB
+
+The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
 
 #### `txn_commit_rpc_timeout_ms`
 
@@ -355,12 +365,6 @@ There are two ways to configure BE configuration items:
 * Type: int32
 * Description: When BE performs data scanning, it will split the same scanning range into multiple ScanRanges. This parameter represents the scan data range of each ScanRange. This parameter can limit the time that a single OlapScanner occupies the io thread.
 * Default value: 524288
-
-#### `doris_scanner_queue_size`
-
-* Type: int32
-* Description: The length of the RowBatch buffer queue between TransferThread and OlapScanner. When Doris performs data scanning, it is performed asynchronously. The Rowbatch scanned by OlapScanner will be placed in the scanner buffer queue, waiting for the upper TransferThread to take it away.
-* Default value: 1024
 
 #### `doris_scanner_row_num`
 
@@ -1444,19 +1448,28 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: the increased frequency of priority for remaining tasks in BlockingPriorityQueue
 * Default value: 512
 
-<version since="1.2">
+
 
 #### `jdbc_drivers_dir`
+
+
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2 version
+:::
 
 * Description: Default dirs to put jdbc drivers.
 * Default value: `${DORIS_HOME}/jdbc_drivers`
 
 #### `enable_simdjson_reader`
 
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2 version
+:::
+
 * Description: Whether enable simdjson to parse json while stream load
 * Default value: true
 
-</version>
+
 
 #### `enable_query_memory_overcommit`
 
@@ -1500,8 +1513,3 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 * Description: Doris comes with its own time zone database. If the time zone file is not found in the system directory, the data in that directory is enabled.
 * Default: "${DORIS_HOME}/zoneinfo"
-
-#### `use_doris_tzfile`
-
-* Description: Whether to use the time zone database that comes with Doris directly. Enabled to stop trying to find in  the system directory.
-* Default: false

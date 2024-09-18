@@ -32,29 +32,33 @@ ADMIN SET CONFIG
 
 ### Description
 
-该语句用于设置集群的配置项（当前仅支持设置FE的配置项）。
+该语句用于设置集群的配置项（当前仅支持设置 FE 的配置项）。
+
 可设置的配置项，可以通过 `SHOW FRONTEND CONFIG;` 命令查看。
 
 语法：
 
 ```sql
-  ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
-  ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
+ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
+-- or
+ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
 ```
 
-说明：  
+:::tip 提示   
   
-    1. 使用ALL关键字后配置参数将应用于所有FE(除 master_only 参数外)
-    
+- 2.0.11 和 2.1.5 版本开始支持 `ALL` 关键词。使用 `ALL` 关键字后配置参数将应用于所有 FE(除 `master_only` 参数外)。
+- 该语法不会持久化修改的配置，FE 重启后，修改的配置失效。如需持久化，需要在 fe.conf 中同步添加配置项。
+
+:::
+
 ### Example
 
-1. 设置 'disable_balance' 为 true
+1. 设置 `disable_balance` 为 true
 
-        ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
+    `ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");`
 
 ### Keywords
 
     ADMIN, SET, CONFIG
 
 ### Best Practice
-

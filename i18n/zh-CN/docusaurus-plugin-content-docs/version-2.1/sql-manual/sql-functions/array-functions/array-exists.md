@@ -26,12 +26,8 @@ under the License.
 
 ## array_exists
 
-<version since="2.0">
-
 array_exists(lambda,array1,array2....)
 array_exists(array1)
-
-</version>
 
 ### description
 
@@ -41,9 +37,9 @@ BOOLEAN array_exists(lambda, ARRAY<T> arr1, ARRAY<T> arr2, ... )
 BOOLEAN array_exists(ARRAY<T> arr)
 ```
 
-使用一个可选lambda表达式作为输入参数，对其他的输入ARRAY参数的内部数据做对应表达式计算。当计算返回非0时，返回1；否则返回0。
-在lambda表达式中输入的参数为1个或多个，必须和后面的输入array列数量一致。在lambda中可以执行合法的标量函数，不支持聚合函数等。
-在没有使用lambda作为参数时，array1作为计算结果。
+使用一个可选 lambda 表达式作为输入参数，对其他的输入 ARRAY 参数的内部数据做对应表达式计算。当计算返回非 0 时，返回 1；否则返回 0。
+在 lambda 表达式中输入的参数为 1 个或多个，必须和后面的输入 array 列数量一致。在 lambda 中可以执行合法的标量函数，不支持聚合函数等。
+在没有使用 lambda 作为参数时，array1 作为计算结果。
 
 ```
 array_exists(x->x, array1);

@@ -24,27 +24,25 @@ under the License.
 
 ## IPV6_STRING_TO_NUM_OR_NULL
 
-<version since="dev">
-
 IPV6_STRING_TO_NUM_OR_NULL
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
 `VARCHAR IPV6_STRING_TO_NUM_OR_NULL(VARCHAR ipv6_string)`
 
+`VARCHAR INET6_ATON(VARCHAR ipv6_string)`
+
 The reverse function of IPv6NumToString, it takes an IP address String and returns an IPv6 address in binary format. 
 If the input string contains a valid IPv4 address, returns its IPv6 equivalent.
 
-### notice
+#### Notice
 
-`will return NULL if the input string is not a valid IP address`
+If an illegal IP address is entered, `NULL` is returned. This function has an alias `INET6_ATON`.
 
-### example
-```
+### Example
+```sql
 mysql> select hex(ipv6_string_to_num_or_null('1111::ffff'));
 +-----------------------------------------------+
 | hex(ipv6_string_to_num_or_null('1111::ffff')) |
@@ -70,6 +68,6 @@ mysql> select hex(ipv6_string_to_num_or_null('notaaddress'));
 1 row in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 
-IPV6_STRING_TO_NUM_OR_NULL, IP
+IPV6_STRING_TO_NUM_OR_NULL, INET6_ATON, IP

@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_COMPACY",
-    "language": "zh-CN",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,15 +24,11 @@ under the License.
 
 ## array_compact
 
-<version since="1.2.0">
-
 array_compact
-
-</version>
 
 ### description
 
-从数组中删除连续的重复元素,结果值的顺序由源数组中的顺序决定。
+从数组中删除连续的重复元素，结果值的顺序由源数组中的顺序决定。
 
 #### Syntax
 
@@ -40,17 +36,13 @@ array_compact
 
 #### Arguments
 
-`arr` — 需要处理的数组.
+`arr` — 需要处理的数组。
 
 #### Returned value
 
-不存在连续重复元素的数组.
+不存在连续重复元素的数组。
 
 Type: Array.
-
-### notice
-
-`只支持在向量化引擎中使用。`
 
 ### example
 

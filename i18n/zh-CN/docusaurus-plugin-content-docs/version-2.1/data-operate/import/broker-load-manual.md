@@ -28,7 +28,7 @@ under the License.
 
 Stream Load 是一种推的方式，即导入的数据依靠客户端读取，并推送到 Doris。Broker Load 则是将导入请求发送给 Doris，有 Doris 主动拉取数据，所以如果数据存储在类似 HDFS 或者 对象存储中，则使用 Broker Load 是最方便的。这样，数据就不需要经过客户端，而有 Doris 直接读取导入。
 
-从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF](../../lakehouse/file) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
+从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF](../../lakehouse/file.md) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
 
 Broker Load 适合源数据存储在远程存储系统，比如 HDFS，并且数据量比较大的场景。
 
@@ -163,7 +163,7 @@ username 配置为要访问的用户，密码置空即可。
 
 - `dfs.namenode.rpc-address.xxx.nn`：指定 namenode 的 rpc 地址信息。其中 nn 表示 `dfs.ha.namenodes.xxx` 中配置的 namenode 的名字，如："dfs.namenode.rpc-address.my_ha.my_nn" = "host:port"。
 
-- `dfs.client.failover.proxy.provider`：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider。
+- `dfs.client.failover.proxy.provider.[nameservice ID]`：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider。
 
 示例如下：
 
@@ -174,7 +174,7 @@ username 配置为要访问的用户，密码置空即可。
     "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
     "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
     "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-    "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+    "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
 )
 ```
 
@@ -189,7 +189,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
     "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
     "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
     "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-    "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+    "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
 )
 ```
 

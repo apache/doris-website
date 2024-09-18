@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Tencent data engineer: why we went from ClickHouse to Apache Doris?',
-    'summary': "Evolution of the data processing architecture of Tencent Music Entertainment towards better performance and simpler maintenance.",
+    'description': "Evolution of the data processing architecture of Tencent Music Entertainment towards better performance and simpler maintenance.",
     'date': '2023-03-07',
     'author': 'Jun Zhang & Kai Dai',
     'tags': ['Best Practice'],
@@ -255,4 +255,4 @@ http://doris.apache.org
 
 https://github.com/apache/doris
 
-Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ)
+Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA)

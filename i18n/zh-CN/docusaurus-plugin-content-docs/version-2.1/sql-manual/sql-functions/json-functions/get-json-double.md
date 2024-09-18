@@ -39,6 +39,10 @@ path 的内容不能包含 ", [ 和 ]。
 
 另外，推荐使用jsonb类型和jsonb_extract_XXX函数实现同样的功能。
 
+特殊情况处理如下：
+- 如果 json_path 指定的字段在JSON中不存在，返回NULL
+- 如果 json_path 指定的字段在JSON中的实际类型和json_extract_t指定的类型不一致，如果能无损转换成指定类型返回指定类型t，如果不能则返回NULL
+
 ### example
 
 1. 获取 key 为 "k1" 的 value

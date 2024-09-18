@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Building a log analytics solution 10 times more cost-effective than Elasticsearch',
-    'summary': "Apache Doris has introduced inverted indexes in version 2.0.0 and further optimized it to realize two times faster log query performance than Elasticsearch with 1/5 of the storage space it uses.",
+    'description': "Apache Doris has introduced inverted indexes in version 2.0.0 and further optimized it to realize two times faster log query performance than Elasticsearch with 1/5 of the storage space it uses.",
     'date': '2023-05-26',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -247,4 +247,4 @@ For more feature introduction and usage guide, see documentation: [Inverted Inde
 
 In a word, what contributes to Apache Doris' 10-time higher cost-effectiveness than Elasticsearch is its OLAP-tailored optimizations for inverted indexing, supported by the columnar storage engine, massively parallel processing framework, vectorized query engine, and cost-based optimizer of Apache Doris. 
 
-As proud as we are about our own inverted indexing solution, we understand that self-published benchmarks can be controversial, so we are open to [feedback](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) from any third-party users and see how [Apache Doris](https://github.com/apache/doris) works in real-world cases.
+As proud as we are about our own inverted indexing solution, we understand that self-published benchmarks can be controversial, so we are open to [feedback](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) from any third-party users and see how [Apache Doris](https://github.com/apache/doris) works in real-world cases.

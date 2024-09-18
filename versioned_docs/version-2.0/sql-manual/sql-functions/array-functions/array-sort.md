@@ -24,11 +24,7 @@ under the License.
 
 ## array_sort
 
-<version since="1.2.0">
-
 array_sort
-
-</version>
 
 ### description
 
@@ -39,15 +35,9 @@ array_sort
 Return the array which has been sorted in ascending order. Return NULL for NULL input.
 If the element of array is NULL, it will be placed in the front of the sorted array.
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
-```
-mysql> set enable_vectorized_engine=true;
-mysql> select k1, k2, array_sort(k2) from array_test;
+```mysql> select k1, k2, array_sort(k2) from array_test;
 +------+-----------------------------+-----------------------------+
 | k1   | k2                          | array_sort(`k2`)            |
 +------+-----------------------------+-----------------------------+

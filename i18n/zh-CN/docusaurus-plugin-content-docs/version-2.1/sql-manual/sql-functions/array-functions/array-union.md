@@ -26,11 +26,7 @@ under the License.
 
 ## array_union
 
-<version since="1.2.0">
-
 array_union
-
-</version>
 
 ### description
 
@@ -40,15 +36,9 @@ array_union
 
 返回一个数组，包含array1和array2的并集中的所有元素，不包含重复项，如果输入参数为NULL，则返回NULL
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1,k2,k3,array_union(k2,k3) from array_type_table;
 +------+-----------------+--------------+-------------------------+
 | k1   | k2              | k3           | array_union(`k2`, `k3`) |

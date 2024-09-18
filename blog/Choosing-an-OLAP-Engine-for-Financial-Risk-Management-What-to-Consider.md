@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Choosing an OLAP engine for financial risk management: what to consider?',
-    'summary': "This post provides reference for what you should take into account when choosing an OLAP engine in a financial scenario.",
+    'description': "This post provides reference for what you should take into account when choosing an OLAP engine in a financial scenario.",
     'date': '2023-08-17',
     'author': 'Jianbo Liu',
     'tags': ['Best Practice'],

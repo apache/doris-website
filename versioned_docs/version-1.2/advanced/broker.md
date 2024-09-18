@@ -174,7 +174,7 @@ Authentication information is usually provided as a Key-Value in the Property Ma
     * `dfs.nameservices`: Specify the name of the hdfs service, custom, such as "dfs.nameservices" = "my_ha".
     * `dfs.ha.namenodes.xxx`:  Custom namenode names. Multiple names are separated by commas, where xxx is the custom name in `dfs.nameservices`, such as" dfs.ha.namenodes.my_ha "=" my_nn ".
     * `dfs.namenode.rpc-address.xxx.nn`: Specify the rpc address information of namenode, Where nn represents the name of the namenode configured in `dfs.ha.namenodes.xxx`, such as: "dfs.namenode.rpc-address.my_ha.my_nn" = "host:port".
-    * `dfs.client.failover.proxy.provider`: Specify the provider for the client to connect to the namenode. The default is: org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider.
+    * `dfs.client.failover.proxy.provider.[nameservice ID]`: Specify the provider for the client to connect to the namenode. The default is: org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider.
 
     Examples are as follows:
     
@@ -184,7 +184,7 @@ Authentication information is usually provided as a Key-Value in the Property Ma
         "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
         "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
         "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-        "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+        "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
     )
     ```
     
@@ -198,7 +198,7 @@ Authentication information is usually provided as a Key-Value in the Property Ma
         "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
         "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
         "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-        "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+        "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
     )
     ```
    The configuration for accessing the HDFS cluster can be written to the hdfs-site.xml file. When users use the Broker process to read data from the HDFS cluster, they only need to fill in the cluster file path and authentication information.

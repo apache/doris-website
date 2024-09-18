@@ -56,7 +56,7 @@ distribution_desc
 * `column_definition`
     列定义：
 
-    `column_name column_type [KEY] [aggr_type] [NULL] [AUTO_INCREMENT] [default_value] [column_comment]`
+    `column_name column_type [KEY] [aggr_type] [NULL] [default_value] [column_comment]`
     * `column_type`
         列类型，支持以下类型：
         ```
@@ -106,11 +106,6 @@ distribution_desc
         HLL_UNION：HLL 类型的列的聚合方式，通过 HyperLogLog 算法聚合。
         BITMAP_UNION：BIMTAP 类型的列的聚合方式，进行位图的并集聚合。
         ```
-    * `AUTO_INCREMENT`(仅在 master 分支可用)
-            
-        是否为自增列，自增列可以用来为新插入的行生成一个唯一标识。在插入表数据时如果没有指定自增列的值，则会自动生成一个合法的值。当自增列被显示地插入 NULL 时，其值也会被替换为生成的合法值。需要注意的是，处于性能考虑，BE 会在内存中缓存部分自增列的值，所以自增列自动生成的值只能保证单调性和唯一性，无法保证严格的连续性。
-        一张表中至多有一个列是自增列，自增列必须是 BIGINT 类型，且必须为 NOT NULL。
-        Duplicate 模型表和 Unique 模型表均支持自增列。
 
   * `default_value`
         列默认值，当导入数据未指定该列的值时，系统将赋予该列 default_value。
@@ -182,9 +177,7 @@ distribution_desc
 * AGGREGATE KEY：其后指定的列为维度列。
 * UNIQUE KEY：其后指定的列为主键列。
 
-<version since="2.0">
 注：当表属性`enable_duplicate_without_keys_by_default = true`时，默认创建没有排序列的 DUPLICATE 表。
-</version>
 
 示例：
 
@@ -226,7 +219,8 @@ UNIQUE KEY(k1, k2)
     )
     ```
 
-3. <version since="1.2" type="inline"> MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间，设定时间单位和步长，时间单位支持年、月、日、周和小时。</version>
+
+3.  MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间，设定时间单位和步长，时间单位支持年、月、日、周和小时。
 
     ```
     PARTITION BY RANGE(col)
@@ -237,6 +231,9 @@ UNIQUE KEY(k1, k2)
        FROM ("2023-01-03") TO ("2023-01-14") INTERVAL 1 DAY
     )
     ```
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
 4. MULTI RANGE：批量创建数字类型的 RANGE 分区，定义分区的左闭右开区间，设定步长。
 
@@ -359,7 +356,8 @@ UNIQUE KEY(k1, k2)
 
 * `light_schema_change`
 
-    <version since="1.2" type="inline"> 是否使用 light schema change 优化。</version>
+    
+    是否使用 light schema change 优化。
 
     如果设置成 `true`, 对于值列的加减操作，可以更快地，同步地完成。
 
@@ -704,7 +702,7 @@ UNIQUE KEY(k1, k2)
     ```
 注：需要先创建 s3 resource 和 storage policy，表才能关联迁移策略成功
 
-<version since="1.2.0">
+
 
 13. 批量创建分区
     ```sql
@@ -753,11 +751,12 @@ UNIQUE KEY(k1, k2)
 
 注：批量创建分区可以和常规手动创建分区混用，使用时需要限制分区列只能有一个，批量创建分区实际创建默认最大数量为 4096，这个参数可以在 fe 配置项 `max_multi_partition_num` 调整
 
-</version>
 
-<version since="2.0">
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
-14. 批量无排序列 Duplicate 表
+1.  批量无排序列 Duplicate 表
 
     ```sql
     CREATE TABLE example_db.table_hash
@@ -780,8 +779,6 @@ UNIQUE KEY(k1, k2)
         "enable_duplicate_without_keys_by_default" = "true"
     );
     ```
-
-</version>
 
 ### Keywords
 

@@ -246,7 +246,7 @@ Parameter description:
 | Status    | Visibility of the imported data: If it is visible, it will be displayed as "visible." If not, it will be displayed as "committed." In the "committed" state, the import is completed, but the data may be delayed in becoming visible. There is no need to retry in this case.`visible`: The import is successful and the data is visible.`committed`: The import is completed, but the data may be delayed in becoming visible. There is no need to retry in this case.Label Already Exists: The specified label already exists and needs to be changed to a different one.Fail: The import fails. |
 | Err       | Error message                                                |
 
-You can use the [SHOW LOAD](https://doris.apache.org/docs/sql-manual/sql-reference/Show-Statements/SHOW-LOAD/) statement to view the filtered rows.
+You can use the [SHOW LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-LOAD.md) statement to view the filtered rows.
 
 ```SQL
 SHOW LOAD WHERE label="xxx";
@@ -256,7 +256,7 @@ The result of this statement will include a URL that can be used to query the er
 
 The invisible state of data is temporary, and the data will eventually become visible. 
 
-You can check the visibility status of a batch of data using the [SHOW TRANSACTION](https://doris.apache.org/docs/sql-manual/sql-reference/Show-Statements/SHOW-TRANSACTION/) statement.
+You can check the visibility status of a batch of data using the [SHOW TRANSACTION](../../sql-manual/sql-reference/Show-Statements/SHOW-TRANSACTION.md) statement.
 
 ```SQL
 SHOW TRANSACTION WHERE id=4005;
@@ -352,9 +352,9 @@ PROPERTIES (
 );
 ```
 
-2. For detailed instructions on creating Doris tables, please refer to [CREATE TABLE](https://doris.apache.org/docs/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE/).
+1. For detailed instructions on creating Doris tables, please refer to [CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md).
 
-3. Importing data (from the `hive.db1.source_tbl` table into the `target_tbl` table).
+2. Importing data (from the `hive.db1.source_tbl` table into the `target_tbl` table).
 
 ```SQL
 INSERT INTO target_tbl SELECT k1,k2,k3 FROM  hive.db1.source_tbl limit 100;
@@ -434,4 +434,4 @@ FROM s3(
 
 ## More help
 
-For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](https://doris.apache.org/docs/sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT/) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.
+For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT.md) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.

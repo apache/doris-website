@@ -51,7 +51,8 @@ INSERT OVERWRITE table table_name
 > partitions: 需要重写的目标分区，支持两种形式：
 >
 >> 1. 分区名。必须是 `table_name` 中存在的分区，多个分区名称用逗号分隔。
->> 2. 星号(*)。开启[自动检测分区](#overwrite-auto-detect-partition)功能。写入操作将会自动检测数据所涉及的分区，并覆写这些分区。
+>> 2. 星号(*)。开启[自动检测分区](#overwrite-auto-detect-partition)功能。写入操作将会自动检测数据所涉及的分区，并覆写这些分区。该功能自 Apache Doris 2.1.3 版本开始支持。
+>>     
 >
 > label: 为 Insert 任务指定一个 label
 >
@@ -87,8 +88,8 @@ CREATE TABLE IF NOT EXISTS test (
 UNIQUE KEY(`c1`)
 PARTITION BY LIST (`c1`)
 (
-PARTITION p1 VALUES IN ("1","2","3"),# 分区p1只允许1 2 3存在
-PARTITION p2 VALUES IN ("4","5","6") # 分区p2只允许1 5 6存在
+PARTITION p1 VALUES IN ("1","2","3"),
+PARTITION p2 VALUES IN ("4","5","6")
 )
 DISTRIBUTED BY HASH(`c1`) BUCKETS 3
 PROPERTIES (
@@ -137,7 +138,7 @@ PROPERTIES (
     INSERT OVERWRITE table test WITH LABEL `label2` (c1, c2) SELECT * from test2;
     ```
 
-- 使用label会将此任务封装成一个**异步任务**，执行语句之后，相关操作都会异步执行，用户可以通过`SHOW LOAD;`命令查看此`label`导入作业的状态。需要注意的是label具有唯一性。
+- 用户可以通过`SHOW LOAD;`命令查看此`label`导入作业的状态。需要注意的是label具有唯一性。
 
 
 #### Overwrite Table Partition

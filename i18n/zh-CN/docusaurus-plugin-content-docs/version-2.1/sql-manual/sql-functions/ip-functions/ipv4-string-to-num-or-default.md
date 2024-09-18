@@ -24,13 +24,9 @@ under the License.
 
 ## IPV4_STRING_TO_NUM_OR_DEFAULT
 
-<version since="dev">
-
 IPV4_STRING_TO_NUM_OR_DEFAULT
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,12 +34,12 @@ IPV4_STRING_TO_NUM_OR_DEFAULT
 
 获取包含 IPv4 地址的字符串，格式为 A.B.C.D（点分隔的十进制数字）。返回一个 BIGINT 数字，表示相应的大端 IPv4 地址。
 
-### notice
+#### Notice
 
-`如果输入字符串不是有效的 IPv4 地址或者NULL，将返回0`
+如果输入字符串不是有效的 IPv4 地址或者 `NULL`，将返回 `0`
 
-### example
-```
+### Example
+```sql
 mysql> select ipv4_string_to_num_or_default('192.168.0.1'); 
 +----------------------------------------------+ 
 | ipv4_string_to_num_or_default('192.168.0.1') | 
@@ -72,6 +68,6 @@ mysql> select addr_src, ipv4_string_to_num_or_default(addr_src) from ipv4_string
 1 row in set (0.09 sec)
 ```
 
-### keywords
+### Keywords
 
 IPV4_STRING_TO_NUM_OR_DEFAULT, IP

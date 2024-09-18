@@ -45,8 +45,8 @@ export default function LocaleDropdownNavbarItem({ mobile, dropdownItemsBefore, 
               description: 'The label for the mobile language switcher dropdown',
           })
         : localeConfigs[currentLocale].label;
-
-    if (!location.pathname.includes('docs') && !location.pathname.includes('community')) {
+    const tempPath = ['get-starting', 'benchmark', 'ecosystem', 'faq', 'docs','releasenotes']
+    if (!tempPath.some(path => location.pathname.includes(path)) && !location.pathname.includes('community')) { //location.pathname.includes('docs')
         return <></>;
     }
 

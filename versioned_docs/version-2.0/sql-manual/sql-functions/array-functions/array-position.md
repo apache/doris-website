@@ -26,11 +26,7 @@ under the License.
 
 ## array_position
 
-<version since="1.2.0">
-
 array_position
-
-</version>
 
 ### description
 
@@ -46,15 +42,9 @@ position - value position in array (starts with 1);
 NULL     - when array is NULL.
 ```
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> SELECT id,c_array,array_position(c_array, 5) FROM `array_test`;
 +------+-----------------+------------------------------+
 | id   | c_array         | array_position(`c_array`, 5) |

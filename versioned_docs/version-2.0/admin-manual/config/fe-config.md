@@ -331,25 +331,6 @@ The multi cluster feature will be deprecated in version 0.12 , set this config t
 3. change the backends num of cluster
 4. link/migration db
 
-#### `enable_deploy_manager`
-
-Default：disable
-
-Set to true if you deploy Doris using thirdparty deploy manager
-
-Valid options are:
-
-- disable:    no deploy manager
--  k8s:        Kubernetes
-- ambari:     Ambari
-- local:      Local File (for test or Boxer2 BCC version)
-
-#### `with_k8s_certs`
-
-Default：false
-
-If use k8s deploy manager locally, set this to true and prepare the certs files
-
 #### `enable_fqdn_mode`
 
 This configuration is mainly used in the k8s cluster environment. When enable_fqdn_mode is true, the name of the pod where the be is located will remain unchanged after reconstruction, while the ip can be changed.
@@ -490,6 +471,18 @@ Default：0
 The connection timeout and socket timeout config for thrift server.
 
 The value for thrift_client_timeout_ms is set to be zero to prevent read timeout.
+
+#### `thrift_max_message_size`
+
+:::info Note
+
+This field is supported since version 2.0.12.
+
+:::
+
+Default: 100MB
+
+The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
 
 #### `use_compact_thrift_rpc`
 
@@ -700,7 +693,7 @@ The default value is -1
 
 #### `max_query_retry_time`
 
-Default：1
+Default：3
 
 IsMutable：true
 
@@ -736,7 +729,9 @@ MasterOnly：true
 
 Decide how often to check dynamic partition
 
-<version since="1.2.0">
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2 version
+:::
 
 #### `max_multi_partition_num`
 
@@ -747,7 +742,7 @@ IsMutable：true
 MasterOnly：true
 
 Use this parameter to set the partition name prefix for multi partition,Only multi partition takes effect, not dynamic partitions. The default prefix is "p_".
-</version>
+
 
 #### `multi_partition_name_prefix`
 
@@ -2154,7 +2149,10 @@ After dropping database(table/partition), you can recover it by using RECOVER st
 
 #### `storage_cooldown_second`
 
-<version deprecated="2.0"></version>
+
+:::tip Tips
+This feature is deprecated since the Apache Doris 2.0 version
+:::
 
 Default：`30 * 24 * 3600L`  （30 day）
 
@@ -2593,6 +2591,20 @@ Default: 10
 
 This configuration is mainly used to control the number of backup/restore tasks recorded in each database.
 
+#### `max_backup_tablets_per_job`
+
+Default: 300000
+
+IsMutable：true
+
+MasterOnly：true
+
+Control the max num of tablets per backup job involved, to avoid FE OOM caused by saving too much metadata.
+
+:::tips TIPS
+This configuration is supported since the Apache Doris 2.0.15 version
+:::
+
 #### `enable_quantile_state_type`
 
 Default：false
@@ -2706,7 +2718,9 @@ If the compute node number is larger than this value, query on external table wi
 
 #### `infodb_support_ext_catalog`
 
-<version since="1.2.4"></version>
+:::tip Tips
+This configuration is supported since the Apache Doris 2.1.4 version
+:::
 
 Default: false
 
@@ -2721,7 +2735,7 @@ This is to avoid query time when external catalog is not reachable.
 
 #### `enable_query_hit_stats`
 
-<version since="dev"></version>
+ 
 
 Default: false
 
@@ -2732,7 +2746,7 @@ MasterOnly: false
 Controls whether to enable query hit statistics. The default is false.
 
 #### `div_precision_increment`
-<version since="dev"></version>
+ 
 
 Default: 4
 

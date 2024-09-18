@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris(Incubating) annoucned 0.15.0 release',
-    'summary': “Dear Community, we are pleased to announce the release of Apache Doris(Incubating) on November 29, 2021! Nearly 700 optimizations and fixes have been submitted by 99 contributors to Apache Doris, and we'd like to express our sincere gratitude to all of them!”,
+    'description': “Dear Community, we are pleased to announce the release of Apache Doris(Incubating) on November 29, 2021! Nearly 700 optimizations and fixes have been submitted by 99 contributors to Apache Doris, and we'd like to express our sincere gratitude to all of them!”,
     'date': '2021-11-29',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],

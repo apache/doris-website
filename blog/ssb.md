@@ -1,7 +1,7 @@
 ---
 {
     'title': "Apache Doris 1.2 star-schema-benchmark performance test report",
-    'summary': "On the SSB flat wide table, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 4 times compared with Apache Doris 1.1.3, and nearly 10 times compared with Apache Doris 0.15.0 RC04. On the SQL test with standard SSB, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 2 times compared with Apache Doris 1.1.3, and nearly 31 times compared with Apache Doris 0.15.0 RC04.",
+    'description': "On the SSB flat wide table, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 4 times compared with Apache Doris 1.1.3, and nearly 10 times compared with Apache Doris 0.15.0 RC04. On the SQL test with standard SSB, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 2 times compared with Apache Doris 1.1.3, and nearly 31 times compared with Apache Doris 0.15.0 RC04.",
     'date': '2022-11-22',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -145,7 +145,7 @@ Execute the following script to download and compile the [ssb-dbgen](https://git
 
 ```shell
 sh build-ssb-dbgen.sh
-````
+```
 
 After successful installation, the `dbgen` binary will be generated under the `ssb-dbgen/` directory.
 
@@ -155,7 +155,7 @@ Execute the following script to generate the SSB dataset:
 
 ```shell
 sh gen-ssb-data.sh -s 100 -c 100
-````
+```
 
 > Note 1: Check the script help via `sh gen-ssb-data.sh -h`.
 >
@@ -196,7 +196,7 @@ export DB="ssb"
 
 ```shell
 sh create-ssb-tables.sh
-````
+```
 
 Or copy the table creation statements in [create-ssb-tables.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-tables.sql) and [ create-ssb-flat-table.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-flat-table.sql) and then execute them in the MySQL client.
 

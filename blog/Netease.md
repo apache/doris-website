@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris helped Netease create a refined operation DMP system',
-    'summary': "Better data analysis enables users to get better experience. Currently, the normal analysis method is to build a user tags system to accurately generate user portraits and improve user experience. The topic we shared today is the practice of Netease DMP tags system.",
+    'description': "Better data analysis enables users to get better experience. Currently, the normal analysis method is to build a user tags system to accurately generate user portraits and improve user experience. The topic we shared today is the practice of Netease DMP tags system.",
     'date': '2022-11-30',
     'author': 'Xiaodong Liu',
     'tags': ['Best Practice'],

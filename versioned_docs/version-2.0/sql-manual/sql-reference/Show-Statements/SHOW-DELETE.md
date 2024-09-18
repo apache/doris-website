@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW DELETE [FROM db_name]
-````
+```
 
 ### Example
 
@@ -46,7 +46,7 @@ SHOW DELETE [FROM db_name]
 
       ```sql
       SHOW DELETE FROM database;
-      ````
+      ```
 
 ### Keywords
 

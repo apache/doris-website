@@ -24,28 +24,20 @@ under the License.
 
 ## array_pushfront
 
-<version since="2.0">
-
 array_pushfront
-
-</version>
 
 ### description
 
 #### Syntax
 
 `Array<T> array_pushfront(Array<T> arr, T value)`
-将value添加到数组的开头.
+将 value 添加到数组的开头。
 
 #### Returned value
 
-返回添加value后的数组
+返回添加 value 后的数组
 
-类型: Array.
-
-### notice
-
-`只支持在向量化引擎中使用`
+类型：Array.
 
 ### example
 

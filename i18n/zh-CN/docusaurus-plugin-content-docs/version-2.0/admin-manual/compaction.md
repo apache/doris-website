@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Compaction 调整",
+    "title": "Compaction 优化",
     "language": "zh-CN"
 }
 ---
@@ -27,7 +27,7 @@ under the License.
 
 
 Doris 通过类似 LSM-Tree 的结构写入数据，在后台通过 Compaction 机制不断将小文件合并成有序的大文件，同时也会处理数据的删除、更新等操作。适当的调整 Compaction 的策略，可以极大地提升导入效率和查询效率。
-Doris 提供如下 2 种 compaction 方式进行调优：
+Doris 提供如下几种 compaction 方式进行调优：
 
 
 ## Vertical compaction
@@ -84,3 +84,50 @@ Segment compaction 有以下特点：
 - 导入操作本身已经耗尽了内存资源时，不建议使用 segment compaction 以免进一步增加内存压力使导入失败。
 
 关于 segment compaction 的实现和测试结果可以查阅[此链接](https://github.com/apache/doris/pull/12866)。
+
+
+## 单副本 compaction
+
+默认情况下，多个副本的 compaction 是独立进行的，每个副本在都需要消耗 CPU 和 IO 资源。开启单副本 compaction 后，在一个副本进行 compaction 后，其他几个副本拉取 compaction 后的文件，因此 CPU 资源只需要消耗 1次，节省了 N - 1 倍 CPU 消耗（ N 是副本数）。
+
+单副本 compaction 在表的 PROPERTIES 中通过参数 `enable_single_replica_compaction` 指定，默认为 false 不开启，设置为 true 开启。
+
+该参数可以在建表时指定，或者通过 `ALTER TABLE table_name SET("enable_single_replica_compaction" = "true")` 来修改。
+
+## Compaction 策略
+
+Compaction 策略决定什么时候将哪些小文件合并成大文件。Doris 当前提供了 2种 compaction 策略，通过表属性的 `compaction_policy` 参数指定。
+
+### size_based compaction 策略
+
+size_based compaction 策略是默认策略，对大多数场景适用。
+
+```
+"compaction_policy" = "size_based"
+```
+
+### time_series compaction 策略
+
+time_series compaction 策略是为日志、时序等场景优化的策略。它利用时序数据具有时间局部性的特点，将相邻时间写入的小文件合并成大文件，每个文件只会参与一次 compaction 就合并成比较大的文件，减少反复 compaction 带来的写放大。
+
+```
+"compaction_policy" = "time_series"
+```
+
+time_series compaction 策略在下面 3 个条件任意一个满足的时候触发小文件合并：
+- 未合并的文件大小超过 `time_series_compaction_goal_size_mbytes` (默认 1GB)
+- 未合并的文件个数超过 `time_series_compaction_file_count_threshold` (默认 2000)
+- 距离上次合并的时间超过 `time_series_compaction_time_threshold_seconds` (默认 1小时)
+
+上述参数在表的 PROPERTIES 中设置，可以在建表时指定，或者通过 `ALTER TABLE table_name SET("name" = "value")` 修改。
+
+
+## Compaction 并发控制
+
+Compaction 在后台执行需要消耗 CPU 和 IO 资源，可以通过控制 compaction 并发线程数来控制资源消耗。
+
+compaction 并发线程数在 BE 的配置文件中配置，包括下面几个：
+- `max_base_compaction_threads`：base compaction 的线程数，默认是 4
+- `max_cumu_compaction_threads`：cumulative compaction 的线程数，默认是 10
+- `max_single_replica_compaction_threads`：单副本 compaction 拉取数据文件的线程数，默认是 10
+

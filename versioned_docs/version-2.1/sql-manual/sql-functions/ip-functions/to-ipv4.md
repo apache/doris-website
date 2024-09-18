@@ -24,13 +24,9 @@ under the License.
 
 ## TO_IPV4
 
-<version since="dev">
-
 TO_IPV4
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -40,13 +36,13 @@ This function like ipv4_string_to_num that takes a string form of IPv4 address a
 which is binary equal to value returned by ipv4_string_to_num.
 If the IPv4 address has an invalid format, throw an exception.
 
-### notice
+#### Notice
 
 `Input cannot be NULL. If it is NULL, an exception will be thrown.`
 
-### example
+### Example
 
-```
+```sql
 mysql> select to_ipv4('255.255.255.255');
 +----------------------------+
 | to_ipv4('255.255.255.255') |
@@ -55,6 +51,6 @@ mysql> select to_ipv4('255.255.255.255');
 +----------------------------+
 ```
 
-### keywords
+### Keywords
 
 TO_IPV4, IP

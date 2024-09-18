@@ -38,10 +38,8 @@ Updating partial columns mainly refers to directly updating certain field values
 Note:
 
 1. Partial updates are only supported in the Merge-on-Write implementation of the Unique Key starting from version 2.0.
-
 2. Starting from version 2.0.2, partial updates are supported using INSERT INTO.
-
-3. Version 2.1.0 will support more flexible column updates.
+3. Partial updates are not supported on tables with materialized views.
 :::
 
 ### Use Cases
@@ -125,7 +123,7 @@ If you are using `INSERT INTO`, you can update as following methods:
 
 ```sql
 set enable_unique_key_partial_update=true;
-INSERT INTO order_tbl (order_id, order_status) values (1,'待发货');
+INSERT INTO order_tbl (order_id, order_status) values (1,'To be shipped');
 ```
 
 The translated version in English:
@@ -141,8 +139,6 @@ After the update, the result is as follows:
 1 row in set (0.01 sec)
 ```
 
-Partial Column Updates in the Primary Key Model
-
 ### Notes
 
 Due to the Merge-on-Write implementation requiring data completion during data writing to ensure optimal query performance, performing partial column updates using the Merge-on-Write implementation may result in a decrease in load performance.
@@ -157,6 +153,6 @@ Suggestions for improving load performance:
 "store_row_column" = "true"
 ```
 
-In version 2.0, all rows in a batch write task (whether it is an load task or `INSERT INTO`) can only update the same columns. If you need to update different columns, you will need to perform separate batch writes.
+Now, all rows in a batch write task (whether it is an load task or `INSERT INTO`) can only update the same columns. If you need to update different columns, you will need to perform separate batch writes.
 
-In version 2.1, flexible column updates will be supported, allowing users to update different columns for each row within the same batch load.
+In the future, flexible column updates will be supported, allowing users to update different columns for each row within the same batch load.

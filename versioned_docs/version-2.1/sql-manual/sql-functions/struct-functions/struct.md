@@ -24,11 +24,7 @@ under the License.
 
 ## struct()
 
-<version since="2.0.0">
-
 struct()
-
-</version>
 
 ### description
 
@@ -37,10 +33,6 @@ struct()
 `STRUCT<T1, T2, T3, ...> struct(T1, T2, T3, ...)`
 
 construct an struct with variadic elements and return it, Tn could be column or literal
-
-### notice
-
-`Only supported in vectorized engine`
 
 ### example
 

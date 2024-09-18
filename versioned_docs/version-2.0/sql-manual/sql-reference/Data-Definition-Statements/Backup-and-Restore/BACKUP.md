@@ -88,6 +88,13 @@ TO example_repo
 EXCLUDE (example_tbl);
 ```
 
+4. Fully back up tables under example_db to the repository example_repo:
+
+```sql
+BACKUP SNAPSHOT example_db.snapshot_label3
+TO example_repo;
+```
+
 ### Keywords
 
 BACKUP
@@ -96,7 +103,7 @@ BACKUP
 
 1. Only one backup operation can be performed under the same database.
 
-2. The backup operation will back up the underlying table and [materialized view](../../../../query/view-materialized-view/materialized-view) of the specified table or partition, and only one copy will be backed up.
+2. The backup operation will back up the underlying table and [Synchronous materialized view](../../../../query/view-materialized-view/materialized-view.md) of the specified table or partition, and only one replica will be backed up. [Asynchronous materialized view](../../../../query/view-materialized-view/async-materialized-view.md) is not supported.
 
 3. Efficiency of backup operations
 

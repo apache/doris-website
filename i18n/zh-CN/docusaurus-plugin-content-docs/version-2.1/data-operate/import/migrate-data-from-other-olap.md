@@ -41,16 +41,16 @@ X2Doris 是 SelectDB 开发的，专门用于将各种离线数据迁移到 Apac
 
 ### 多源支持
 
-定位于一站式数据迁移工具，X2Doris 目前已支持了 Apache Hive、Apache Kudu、ClickHouse、StarRocks 以及 Apache Doris 自身作为数据源端，Greenplum、Druid 等更多数据源正在开发中，后续将陆续发布。其中 Hive 版本已支持 Hive 1.x 和 2.x 版本，Doris、StarRocks、Kudu 等数据源也同时支持了多个不同版本。
+定位于一站式数据迁移工具，X2Doris 目前已支持了 Apache Hive、Apache Kudu、StarRocks 以及 Apache Doris 自身作为数据源端，Greenplum、Druid 等更多数据源正在开发中，后续将陆续发布。其中 Hive 版本已支持 Hive 1.x 和 2.x 版本，Doris、StarRocks、Kudu 等数据源也同时支持了多个不同版本。
 
 目标端已支持 Apache Doris 和 SelectDB，包含 SelectDB Cloud 和 SelectDB Enterprise。基于 X2Doris 用户可以构建从其他 OLAP 系统到 Apache Doris 的整库迁移链路，并可以实现不同 Doris 集群间的数据备份和恢复。
 
 
-![X2Doris 核心特性](/images/x2doris-core-features.png)
+![X2Doris 核心特性](/images/x2doris.jpg)
 
 ### 自动建表
 
-数据迁移中最大的痛点，首当其冲的是如何将待迁移的源表在 Apache Doris 中创建对应的目标表。在实际业务场景中，存储在 Hive 或 ClickHouse 中动辄上千张表，让用户手动创建目标表并转换对应的 DDL 语句效率显得过于低下，不具备实际操作可能性。
+数据迁移中最大的痛点，首当其冲的是如何将待迁移的源表在 Apache Doris 中创建对应的目标表。在实际业务场景中，存储在 Hive 中动辄上千张表，让用户手动创建目标表并转换对应的 DDL 语句效率显得过于低下，不具备实际操作可能性。
 
 X2Doris 为此场景做了适配，在此以 Hive 表迁移为例。在迁移 Hive 表的时候，X2Doris 会在 Apache Doris 中自动创建 Duplicate Key 模型表（也可手动修改）并读取 Hive 表的元数据信息，通过字段名和字段类型自动识别分区字段，如果识别到分区则会提示进行分区映射，最后会直接生成对应的 Doris 目标表 DDL。
 

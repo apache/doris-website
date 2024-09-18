@@ -19,6 +19,7 @@
                 "how-to-contribute/trino-connector-developer-guide"
             ]
         },
+        "release-versioning",
         {
             "type": "category",
             "label": "Release Process & Verification",
@@ -52,6 +53,7 @@
                 "developer-guide/benchmark-tool",
                 "developer-guide/pipeline-tracing",
                 "developer-guide/fe-eclipse-dev",
+                "developer-guide/fe-profiler",
                 "developer-guide/fe-idea-dev",
                 "developer-guide/fe-vscode-dev",
                 "developer-guide/be-vscode-dev",

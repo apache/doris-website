@@ -37,12 +37,12 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button1">Get started</Translate>,
-            link: '/docs/get-starting/what-is-apache-doris',
+            link: '/docs/gettingStarted/what-is-new',
             type: 'ghost',
         },
         {
             label: <Translate id="homepage.banner.button2">Join Slack</Translate>,
-            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-28il1o2wk-DD6LsLOz3v4aD92Mu0S0aQ',
+            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA',
             type: 'ghost',
         },
     ];
@@ -268,7 +268,7 @@ export default function Home(): JSX.Element {
                     </defs>
                 </svg>
             ),
-            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-28il1o2wk-DD6LsLOz3v4aD92Mu0S0aQ',
+            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA',
         },
         {
             title: <Translate id="community.title.c4">Twitter</Translate>,
@@ -381,16 +381,20 @@ export default function Home(): JSX.Element {
             href: 'https://www.youtube.com/@apachedoris/channels',
         },
     ];
-
+console.log(siteConfig,'siteConfig')
     return (
         <Layout
-            title={translate({ id: 'homepage.title', message: 'Apache Doris: Open-Source Real-Time Data Warehouse' })}
+            title={translate({ id: 'homepage.title', message: 'Apache Doris: Open source data warehouse for real time data analytics' })}
             description={translate({
                 id: 'homepage.banner.subTitle',
                 message:
-                    'Apache Doris is a next-generation open-source real-time data warehouse  based on MPP architecture, with easier use and higher performance for big data analytics.',
+                    'Apache Doris is an open-source database based on MPP architecture,with easier use and higher performance.  As a modern data warehouse, apache doris empowers your Olap query and database analytics.',
             })}
             showAnnouncementBar={true}
+            keywords={translate({
+                id: 'homepage.keywords',
+                message: 'Open Source database, OLAP, data warehouse, database analytics'
+            })}
         >
             <PageBanner {...banner}></PageBanner>
             <AchievementBanner />
@@ -409,7 +413,7 @@ export default function Home(): JSX.Element {
                     footer={
                         <div className="justify-center flex mt-14">
                             <LinkWithArrow
-                                to="/docs/get-starting/what-is-apache-doris"
+                                to="/docs/gettingStarted/what-is-apache-doris"
                                 text={
                                     <Translate id="homepage.more" description="more link">
                                         Learn more

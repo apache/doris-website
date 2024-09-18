@@ -24,11 +24,7 @@ under the License.
 
 ## array_sortby
 
-<version since="2.0">
-
 array_sortby
-
-</version>
 
 ### description
 
@@ -42,10 +38,6 @@ First, arrange the key column in ascending order, and then return the correspond
 Returns NULL if the input array src is NULL.
 If the input array key is NULL, the order in which src is returned remains unchanged.
 If the input array key element contains NULL, the output sorted array will place NULL first.
-
-### notice
-
-`Only supported in vectorized engine`
 
 ### example
 

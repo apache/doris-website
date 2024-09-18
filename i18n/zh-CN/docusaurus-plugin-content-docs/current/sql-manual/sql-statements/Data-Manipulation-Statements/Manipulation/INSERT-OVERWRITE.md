@@ -87,8 +87,8 @@ CREATE TABLE IF NOT EXISTS test (
 UNIQUE KEY(`c1`)
 PARTITION BY LIST (`c1`)
 (
-PARTITION p1 VALUES IN ("1","2","3"),# 分区p1只允许1 2 3存在
-PARTITION p2 VALUES IN ("4","5","6") # 分区p2只允许1 5 6存在
+PARTITION p1 VALUES IN ("1","2","3"),
+PARTITION p2 VALUES IN ("4","5","6")
 )
 DISTRIBUTED BY HASH(`c1`) BUCKETS 3
 PROPERTIES (
@@ -137,7 +137,7 @@ PROPERTIES (
     INSERT OVERWRITE table test WITH LABEL `label2` (c1, c2) SELECT * from test2;
     ```
 
-- 使用label会将此任务封装成一个**异步任务**，执行语句之后，相关操作都会异步执行，用户可以通过`SHOW LOAD;`命令查看此`label`导入作业的状态。需要注意的是label具有唯一性。
+- 用户可以通过`SHOW LOAD;`命令查看此`label`导入作业的状态。需要注意的是label具有唯一性。
 
 
 #### Overwrite Table Partition

@@ -39,7 +39,7 @@ grammar:
 ```sql
 -- Add nodes (add this method if you do not use the multi-tenancy function)
    ALTER SYSTEM ADD BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...];
-````
+```
 
  illustrate:
 
@@ -53,7 +53,7 @@ grammar:
 
     ```sql
     ALTER SYSTEM ADD BACKEND "host:port";
-    ````
+    ```
 
 ### Keywords
 

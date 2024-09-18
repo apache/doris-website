@@ -24,11 +24,7 @@ under the License.
 
 ## array_apply
 
-<version since="1.2.3">
-
 array_apply
-
-</version>
 
 ### description
 
@@ -51,10 +47,6 @@ array_apply(arr, op, val)
 The filtered array matched with condition.
 
 Type: Array.
-
-### notice
-
-`Only supported in vectorized engine`
 
 ### example
 
