@@ -184,8 +184,6 @@ ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
 
 如果在建表时没有设置 TTL，用户同样可以通过执行 ALTER 语句来修改表的 TTL 属性。
 
-:::
-
 ### 缓存预热
 
 目前支持三种缓存预热模式：

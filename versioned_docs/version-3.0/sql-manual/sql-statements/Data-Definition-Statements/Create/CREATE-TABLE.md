@@ -494,7 +494,11 @@ Set table properties. The following attributes are currently supported:
 * `dynamic_partition.create_history_partition`: Whether to create a history partition.
 * `dynamic_partition.history_partition_num`: Specify the number of historical partitions to be created.
 * `dynamic_partition.reserved_history_periods`: Used to specify the range of reserved history periods.
-    
+
+* `file_cache_ttl_seconds`: 
+
+   Expiration time of TTL Cache in compute-storage decoupled mode.
+
 ### Example
 
 1. Create a detailed model table
