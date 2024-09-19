@@ -39,6 +39,7 @@ Note:
 
 1. Partial updates are only supported in the Merge-on-Write implementation of the Unique Key starting from version 2.0.
 2. Starting from version 2.0.2, partial updates are supported using INSERT INTO.
+3. Partial updates are not supported on tables with materialized views.
 :::
 
 ### Use Cases
@@ -137,8 +138,6 @@ After the update, the result is as follows:
 +----------+--------------+--------------+
 1 row in set (0.01 sec)
 ```
-
-Partial Column Updates in the Primary Key Model
 
 ### Notes
 
