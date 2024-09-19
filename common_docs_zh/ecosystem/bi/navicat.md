@@ -41,17 +41,17 @@ Apache Doris 高度兼容 MySQL 协议，可以使用 Navicat 的 MySQL 连接�
 
    ![add connection 1](/images/bi-navicat-en-1.png)
 
-3. 配置Doris连接信息与测试连接
+3. 配置 Doris 连接信息与测试连接
 
    在 Connection Settings 窗口的 main 标签页，配置以下连接信息：
 
  - Connection Name: 本次连接的连接名。
- - Host: Doris集群的 FE主机IP地址。
+ - Host: Doris 集群的 FE 主机 IP 地址。
  - Port: Doris 集群的 FE 查询端口。
  - User name: Doris 集群登陆的用户名。
  - Password: Doris 集群中该用户的登录密码。
 
-   填写对应的Doris连接信息后点击测试连接，若填写信息无误且网络连通会提示连接成功
+   填写对应的 Doris 连接信息后点击测试连接，若填写信息无误且网络连通会提示连接成功
 
    ![test connection](/images/bi-navicat-en-2.png)
 
