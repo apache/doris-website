@@ -1,6 +1,6 @@
 ---
 {
-    "title": "USE",
+    "title": "SET-DEFAULT-STORAGE-VAULT",
     "language": "zh-CN"
 }
 ---
@@ -26,45 +26,28 @@ under the License.
 
 ## 描述
 
-USE 命令允许我们在 SQL 环境中切换到特定的数据库或计算组。
+该语句用于在Doris中设置默认存储库。默认存储库用于存储内部或系统表的数据。如果未设置默认存储库，Doris将无法正常运行。一旦设置了默认存储库，就无法移除它。
 
 ## 语法
 
-```SQL
-USE <[CATALOG_NAME].DATABASE_NAME>
+```sql
+SET vault_name DEFAULT STORAGE VAULT
 ```
+
+> 注意：
+>
+> 1. 只有ADMIN用户可以设置默认存储库
 
 ## 示例
 
-1. 如果 demo 数据库存在，尝试使用它：
+1. 将名为s3_vault的存储库设置为默认存储库
 
    ```sql
-   mysql> use demo;
-   Database changed
+   SET s3_vault AS DEFAULT STORAGE VAULT;
    ```
 
-2. 如果 demo 数据库在hms_catalog的Catalog下存在，尝试切换到hms_catalog, 并使用它：
+## 相关命令
 
-    ```sql
-    mysql> use hms_catalog.demo;
-    Database changed
-    ```
-3. 如果 demo 数据库在当前目录中存在，并且您想使用名为 'cg1' 的计算组，请尝试访问它：
+## 关键词
 
-    ```sql
-    mysql> use demo@cg1;
-    Database changed
-    ```
-
-4. 如果您只想使用名为 'cg1' 的计算组，请尝试访问它：
-
-    ```sql
-    mysql> use @cg1;
-    Database changed
-    ```
-
-## Relate Commands
-
-## Keywords
-
-    USE, DATABASE, USER, COMPUTE GROUP
+    SET, DEFAULT, STORAGE, VAULT
