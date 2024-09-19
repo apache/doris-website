@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-快速体验 [Apache Doris & Iceberg](https://doris.apache.org/docs/gettingStarted/tutorials/doris-iceberg)
+快速体验 [Apache Doris & Iceberg](https://doris.apache.org/zh-CN/docs/gettingStarted/tutorials/building-lakehouse/doris-iceberg/)
 
 ## 使用限制
 
@@ -270,5 +270,4 @@ CREATE CATALOG `iceberg` PROPERTIES (
 
 `SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;`
 
-另外，可以使用 [iceberg_meta](../../sql-manual/sql-functions/table-functions/iceberg-meta.md) 表函数查询指定表的 snapshot 信息。
-
+另外，可以使用 [iceberg_meta](../../sql-manual/sql-functions/table-valued-functions/iceberg-meta.md) 表函数查询指定表的 snapshot 信息。

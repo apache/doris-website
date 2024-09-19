@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-快速体验 [Apache Doris & Hudi](https://doris.apache.org/docs/gettingStarted/tutorials/doris-hudi)
+快速体验 [Apache Doris & Hudi](https://doris.apache.org/zh-CN/docs/gettingStarted/tutorials/building-lakehouse/doris-hudi/)
 
 ## 使用限制
 

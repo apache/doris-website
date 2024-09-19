@@ -48,7 +48,7 @@ Most caches have the following three policy metrics:
 
 	After a certain period of time, an object written to the cache will be automatically removed from the cache. Upon the next access, the cache will fetch the latest information from the data source and update the cache.
 
-	For example, if a user accesses table A for the first time at 08:00 and it is cached, with an eviction time of 4 hours, between 08:00 and 14:00 without being evicted due to capacity issues, the user will directly access table A from the cache. After 14:00, the cache is evicted. If the user accesses table A again, the cache will be updated with the latest information from the data source.
+	For example, if a user accesses table A for the first time at 08:00 and it is cached, with an eviction time of 6 hours, between 08:00 and 14:00 without being evicted due to capacity issues, the user will directly access table A from the cache. After 14:00, the cache is evicted. If the user accesses table A again, the cache will be updated with the latest information from the data source.
 
 	This policy is mainly used to automatically remove objects from the cache that are no longer accessed, reducing cache space usage.
 
