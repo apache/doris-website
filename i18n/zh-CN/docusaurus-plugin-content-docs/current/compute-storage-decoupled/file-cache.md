@@ -110,23 +110,27 @@ Doris 每 10 分钟收集各个计算组的缓存热点信息到内部系统表�
 
 Doris BE 节点通过 `curl {be_ip}:{brpc_port}/vars ( brpc_port 默认为 8060 ) 获取 cache 统计信息，指标项的名称开始为磁盘路径。
 
-磁盘路径 | 指标名称 | 语义 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_cache_size | 当前 file cache 使用大小 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_cache_size | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_disposable_queue_cache_size | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_disposable_queue_element_count | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_disposable_queue_evict_size | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_index_queue_cache_size | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_index_queue_element_count | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_index_queue_evict_size | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_normal_queue_cache_size | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_normal_queue_element_count | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_normal_queue_evict_size | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_total_evict_size | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_ttl_cache_evict_size | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_ttl_cache_lru_queue_element_count | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_ttl_cache_lru_queue_size | 0 |
-|/opt/apache/dpris/be/storage/file_cache | file_cache_ttl_cache_size | 0 |
+上述例子中指标前缀为 File Cache 的路径, 例如前缀 "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" 表示 "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
+去掉前缀的部分为统计指标, 比如 "file_cache_cache_size" 表示当前 路径的 File Cache 大小为 26111 字节
+
+下表为全部的指标意义 (一下表示size大小单位均为字节)
+
+指标名称(不包含路径前缀) | 语义
+-----|------
+file_cache_cache_size | 当前 File Cache 的总大小
+file_cache_disposable_queue_cache_size | 当前 disposable 队列的大小
+file_cache_disposable_queue_element_count | 当前 disposable 队列里的元素个数
+file_cache_disposable_queue_evict_size | 从启动到当前 disposable 队列总共淘汰的数据量大小
+file_cache_index_queue_cache_size | 当前 index 队列的大小
+file_cache_index_queue_element_count | 当前 index 队列里的元素个数
+file_cache_index_queue_evict_size | 从启动到当前 index 队列总共淘汰的数据量大小
+file_cache_normal_queue_cache_size | 当前 normal 队列的大小
+file_cache_normal_queue_element_count | 当前 normal 队列里的元素个数
+file_cache_normal_queue_evict_size | 从启动到当前 normal 队列总共淘汰的数据量大小
+file_cache_total_evict_size | 从启动到当前, 整个 File Cache 总共淘汰的数据量大小
+file_cache_ttl_cache_evict_size | 从启动到当前 TTL 队列总共淘汰的数据量大小
+file_cache_ttl_cache_lru_queue_element_count | 当前 TTL 队列里的元素个数
+file_cache_ttl_cache_size | 当前 TTL 队列的大小
 
 ### SQL profile
 

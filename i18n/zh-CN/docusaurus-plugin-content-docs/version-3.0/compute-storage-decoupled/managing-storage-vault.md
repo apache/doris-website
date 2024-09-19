@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Managing Storage Vault",
-    "language": "en"
+    "title": "管理 Storage Vault",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The Storage Vault is a remote shared storage used by Doris in a decoupled storage-compute model. You can configure one or more Storage Vaults to store different tables in different Storage Vaults.
+Storage Vault 是 Doris 在存算分离模式中所使用的远程共享存储，可配置一个或多个 Storage Vault，可将不同表存储在不同 Storage Vault 上。
 
-## Creating a Storage Vault
+## 创建 Storage Vault
 
-**Syntax**
+**语法**
 
 ```SQL
 CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name>
@@ -36,20 +36,20 @@ PROPERTIES
 ("key" = "value",...)
 ```
 
-<vault_name> is the user-defined name of the Storage Vault, which serves as the identifier for accessing the Storage Vault.
+<vault_name> 是用户定义的 Storage Vault 名称，是用户接口用于访问 Storage Vault 的标识。
 
-**Example**
+**示例**
 
-**Creating an HDFS Storage Vault**
+**创建 HDFS  Storage Vault **
 
-To create an HDFS-based decoupled storage-compute Doris cluster, ensure that all nodes (including FE/BE nodes, Meta Service) have permission to access the specified HDFS, including completing Kerberos authorization configuration and connectivity checks in advance (which can be tested using Hadoop Client on each corresponding node).
+创建基于 HDFS 的存算分离模式 Doris 集群，需要确保所有的节点（包括 FE / BE 节点、Meta Service) 均有权限访问所指定的 HDFS，包括提前完成机器的 Kerberos 授权配置和连通性检查（可在对应的每个节点上使用 Hadoop Client 进行测试）等。
 
 ```SQL
 CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     PROPERTIES (
         "type"="hdfs",                                     -- required
         "fs.defaultFS"="hdfs://127.0.0.1:8020",            -- required
-        "path_prefix"="big/data",                          -- optional, generally filled in according to business name
+        "path_prefix"="big/data",                          -- optional,  一般按照业务名称填写
         "hadoop.username"="user"                           -- optional
         "hadoop.security.authentication"="kerberos"        -- optional
         "hadoop.kerberos.principal"="hadoop/127.0.0.1@XXX" -- optional
@@ -57,7 +57,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     );
 ```
 
-**Creating an S3 Storage Vault**
+**创建 S3  Storage Vault **
 
 ```SQL
 CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
@@ -72,29 +72,29 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
     );
 ```
 
-### Viewing Storage Vaults
+### 查看 Storage Vault 
 
-**Syntax**
+**语法**
 
-```
+```Plain
 SHOW STORAGE VAULTS
 ```
 
-The returned result includes 4 columns: the Storage Vault name, Storage Vault ID, properties, and whether it is the default Storage Vault.
+返回结果包含 4 列，分别为 Storage Vault 名称、 Storage Vault  ID、属性以及是否为默认 Storage Vault 。
 
-### Setting the Default Storage Vault
+### 设置默认 Storage Vault 
 
-**Syntax**
+**语法**
 
 ```SQL
 SET <vault_name> AS DEFAULT STORAGE VAULT
 ```
 
-### Specifying Storage Vault When Creating a Table
+### 建表时指定 Storage Vault 
 
-When creating a table, specify `storage_vault_name` in `PROPERTIES`, and the data will be stored in the Storage Vault corresponding to the specified `vault name`. Once the table is successfully created, the `storage_vault` cannot be modified, meaning changing the Storage Vault is not supported.
+建表时在 `PROPERTIES` 中指定 `storage_vault_name`，则数据会存储在指定 `vault name` 所对应的 Storage Vault 上。建表成功后，该表不允许再修改 `storage_vault`，即不支持更换 Storage Vault 。
 
-**Example**
+**示例**
 
 ```SQL
 CREATE TABLE IF NOT EXISTS supplier (
@@ -114,23 +114,23 @@ PROPERTIES (
 );
 ```
 
-### Changing Storage Vault
+### 更改 Storage Vault 
 
-Used to update modifiable properties of the Storage Vault configuration.
-
-Coming soon
-
-### Deleting a Storage Vault
-
-Only non-default Storage Vaults that are not referenced by any tables can be deleted.
+用于更新 Storage Vault 配置的可修改属性。
 
 Coming soon
 
-### Storage Vault Permissions
+### 删除 Storage Vault 
 
-Grant a specified MySQL user the usage permission for a certain Storage Vault, allowing the user to specify that Storage Vault when creating tables or viewing Storage Vaults.
+只有非默认 Storage Vault 且没有被任何表引用的 Storage Vault 才可被删除。
 
-**Syntax**
+Coming soon
+
+###  Storage Vault 权限
+
+向指定的 MySQL 用户授予某个 Storage Vault 的使用权限，使该用户可以进行建表时指定该 Storage Vault 或查看 Storage Vault 等操作。
+
+**语法**
 
 ```SQL
 GRANT
@@ -139,20 +139,20 @@ GRANT
     TO { ROLE | USER } {<role> | <user>}
 ```
 
-Only Admin users have the authority to execute the `GRANT` statement, which is used to grant specified Storage Vault permissions to User/Role. Users/Roles with `USAGE_PRIV` permission for a certain Storage Vault can perform the following operations:
+仅 Admin 用户有权限执行 `GRANT` 语句，该语句用于向 User / Role 授予指定 Storage Vault 的权限。拥有某个 Storage Vault 的 `USAGE_PRIV` 权限的 User / Role 可进行以下操作：
 
-- View the information of that Storage Vault through `SHOW STORAGE VAULT`;
-- Specify the use of that Storage Vault in `PROPERTIES` when creating tables.
+- 通过 `SHOW STORAGE VAULT` 查看该 Storage Vault 的信息；
+- 建表时在 `PROPERTIES` 中指定使用该 Storage Vault 。
 
-**Example**
+**示例**
 
 ```SQL
 grant usage_priv on storage vault my_storage_vault to user1
 ```
 
-Revoke the Storage Vault permissions of a specified MySQL user.
+撤销指定的 MySQL 用户的 Storage Vault 权限。
 
-**Syntax**
+**语法**
 
 ```SQL
 REVOKE 
@@ -161,9 +161,9 @@ REVOKE
     FROM { ROLE | USER } {<role> | <user>}
 ```
 
-Only Admin users have the authority to execute the `REVOKE` statement, which is used to revoke the permissions of User/Role for the specified Storage Vault.
+仅 Admin 用户有权限执行 `REVOKE` 语句，用于撤销 User / Role 拥有的对指定 Storage Vault 的权限。
 
-**Example**
+**示例**
 
 ```SQL
 revoke usage_priv on storage vault my_storage_vault from user1
