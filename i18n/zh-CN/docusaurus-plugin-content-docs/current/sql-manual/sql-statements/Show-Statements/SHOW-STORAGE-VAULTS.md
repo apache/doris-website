@@ -1,6 +1,6 @@
 ---
 {
-    "title": "USE",
+    "title": "SHOW STORAGE VAULTS",
     "language": "zh-CN"
 }
 ---
@@ -26,45 +26,30 @@ under the License.
 
 ## 描述
 
-USE 命令允许我们在 SQL 环境中切换到特定的数据库或计算组。
+SHOW STORAGE VAULTS 命令用于显示系统中配置的所有storage vault的信息。storage vault用于管理数据外部存储位置。
 
 ## 语法
 
-```SQL
-USE <[CATALOG_NAME].DATABASE_NAME>
+```sql
+    SHOW STORAGE VAULTS
 ```
 
-## 示例
+## 返回值
 
-1. 如果 demo 数据库存在，尝试使用它：
+此命令返回一个结果集，包含以下列：
 
-   ```sql
-   mysql> use demo;
-   Database changed
-   ```
+- `StorageVaultName`: storage vault 的名称。
+- `StorageVaultId`: storage vault 的ID。
+- `Properties`: 包含 storage vault 配置属性的JSON字符串。
+- `IsDefault`: 指示该 storage vault 是否设置为默认值（TRUE或FALSE）。
 
-2. 如果 demo 数据库在hms_catalog的Catalog下存在，尝试切换到hms_catalog, 并使用它：
+## 相关命令
 
-    ```sql
-    mysql> use hms_catalog.demo;
-    Database changed
-    ```
-3. 如果 demo 数据库在当前目录中存在，并且您想使用名为 'cg1' 的计算组，请尝试访问它：
-
-    ```sql
-    mysql> use demo@cg1;
-    Database changed
-    ```
-
-4. 如果您只想使用名为 'cg1' 的计算组，请尝试访问它：
-
-    ```sql
-    mysql> use @cg1;
-    Database changed
-    ```
-
-## Relate Commands
+- [CREATE STORAGE VAULT](../Data-Definition-Statements/CREATE-STORAGE-VAULT.md)
+- [GRANT](../Account-Management-Statements/GRANT.md)
+- [REVOKE](../Account-Management-Statements/REVOKE.md)
+- [SET DEFAULT STORAGE VAULT](../Data-Definition-Statements/SET-DEFAULT-STORAGE-VAULT.md)
 
 ## Keywords
 
-    USE, DATABASE, USER, COMPUTE GROUP
+    SHOW, STORAGE VAULTS
