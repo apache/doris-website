@@ -32,6 +32,7 @@
                                     "label": "Compute-storage coupled",
                                     "items": [
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-operator",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-quickstart",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-access-cluster",
