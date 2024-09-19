@@ -77,19 +77,19 @@ GRANT role_list TO user_identity
 
 ### resource_name
 
-指定 resource 名，支持 % 和 _ 匹配符，% 可匹配任意字符串，_ 匹配任意单个字符。
+指定 resource 名，支持 % 和 * 匹配所有资源，不支持通配符，比如 res*。
 
 ### workload_group_name
 
-指定 workload group 名，支持 % 和 _ 匹配符，% 可匹配任意字符串，_ 匹配任意单个字符。
+指定 workload group 名，支持 % 和 * 匹配所有 workload group，不支持通配符。
 
 ### compute_group_name
 
-指定 compute group 名称，支持 % 和 _ 匹配符，% 可匹配任意字符串，_ 匹配任意单个字符。
+指定 compute group 名称，支持 % 和 * 匹配所有 compute group，不支持通配符。
 
 ### storage_vault_name
 
-指定 storage vault 名称，支持 % 和 _ 匹配符，% 可匹配任意字符串，_ 匹配任意单个字符。
+指定 storage vault 名称，支持 % 和 * 匹配所有 storage vault，不支持通配符。
 
 ### user_identity
 

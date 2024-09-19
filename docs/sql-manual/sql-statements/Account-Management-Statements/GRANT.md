@@ -77,20 +77,19 @@ Supports the following four forms:
 
 ### resource_name
 
-Specifies the resource name, supports % and _ wildcards, % can match any string and _ matches any single character.
+Specifies the resource name, supporting `%` and `*` to match all resources, but does not support wildcards, such as res*.
 
 ### workload_group_name
 
-Specifies the workload group name, supports % and _ wildcards, % can match any string and _ matches any single character.
+Specifies the workload group name, supporting `%` and `*` to match all workload groups, but does not support wildcards.
 
 ### compute_group_name
 
-Specifies the compute group name, supports % and _ wildcards, % can match any string and _ matches any single character.
+Specifies the compute group name, supporting `%` and `*` to match all compute groups, but does not support wildcards.
 
 ### storage_vault_name
 
-Specifies the storage vault name, supports % and _ wildcards, % can match any string and _ matches any single character.
-
+Specifies the storage vault name, supporting `%` and `*` to match all storage vaults, but does not support wildcards.
 
 ### user_identity
 
