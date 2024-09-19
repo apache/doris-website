@@ -124,8 +124,9 @@ This command starts the FDB service, making the cluster operational and obtainin
 
 After completing the above preparations, please refer to the following documents to continue the deployment:
 
-1. [Deploy Meta Service](./compilation-and-deployment.md)
-2. [Deploy FE and BE](./creating-cluster.md)
+1. [Deployment](./compilation-and-deployment.md)
+2. [Managing Compute Group](./managing-compute-cluster.md)
+3. [Managing Storage Vault](./manaing-storage-vault.md)
 
 ## 7. Notes
 

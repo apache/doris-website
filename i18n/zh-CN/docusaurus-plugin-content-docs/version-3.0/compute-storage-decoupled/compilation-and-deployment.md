@@ -1,7 +1,7 @@
 ---
 {
-    "title": "编译部署",
-    "language": "zh-CN"
+    "title": "Compilation and Deployment",
+    "language": "en"
 }
 ---
 
@@ -24,19 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在存算分离模式下进行 Doris 编译与存算一体模式的编译相似，主要区别在于新增 Meta Service 模块的编译和部署。
+## 1. Overview
 
-## 编译
+This document details the compilation and deployment process of Doris in a decoupled storage-compute model, highlighting the differences from the integrated storage-compute model, especially the compilation, configuration, and management of the newly added Meta Service (MS) module.
 
-存算分离和存算一体模式下的编译方式相似，均使用代码库自带的 `build.sh` 脚本编译，新增的 Meta Service 模块使用参数`--cloud` 即可编出（二进制名为 `doris_cloud`）。
+## 2. Obtaining Binaries
+
+### 2.1 Direct Download
+
+Compiled binaries (including all Doris modules) can be obtained from the [Doris Download Page](https://doris.apache.org/download/) (select version 3.0.2 or higher).
+
+### 2.2 Compilation Output
+
+Compile using the `build.sh` script provided in the codebase. The new MS module is compiled with the `--cloud` parameter.
 
 ```shell
 sh build.sh --fe --be --cloud 
 ```
 
-不同于存算一体模式，存算分离模式编译后，可在 `output` 目录下发现一个 `ms` 目录。
+After compilation, a new `ms` directory will be added in the `output` directory:
 
-```shell
+```
 output
 ├── be
 ├── fe
@@ -46,113 +54,233 @@ output
     └── lib
 ```
 
-`ms`目录作为编译产出，将同时服务于 Meta Service 和 Recycler。需要注意的是，尽管 Meta Service 和 Recycler 在本质上属于同一程序，但目前需要分别为它们准备独立的二进制文件。Meta Service 和 Recycler 两个目录完全一致，只是启动参数不同。
+## 3. Meta Service Deployment
 
-准备两份二进制文件，只需使用以下命令从`ms`目录中拷贝二进制文件至一个新的 Recycler 工作目录`re`，然后在`ms`和`re`的`conf`子目录下，对端口号等参数按需进行必要修改即可。
+### 3.1 Configuration
 
-```Shell
-cp -r ms re
-```
+In the `./conf/doris_cloud.conf` file, you mainly need to modify the following two parameters:
 
-## 版本信息
+1. `brpc_listen_port`: The listening port for the Meta Service, default is 5000.
+2. `fdb_cluster`: Connection information for the FoundationDB cluster, which can be obtained when deploying FoundationDB.
 
-可通过两种方式检查`doris_cloud` 的版本信息，若其中一种方式无法正确执行，可尝试另一方式，在`ms`或者`re`目录下：
-
-- `bin/start.sh --version`
-- `lib/doris_cloud --version`
-
-```shell
-$ lib/doris_cloud --version
-version:{doris_cloud-0.0.0-debug} code_version:{commit=b9c1d057f07dd874ad32501ff43701247179adcb time=2024-03-24 20:44:50 +0800} build_info:{initiator=gavinchou@VM-10-7-centos build_at=2024-03-24 20:44:50 +0800 build_on=NAME="TencentOS Server" VERSION="3.1 (Final)" }
-```
-
-## Meta Service 和 Recycler 部署
-
-Meta Service 和 Recycler 是同一程序的不同进程，通过启动不同参数来分别运行。
-
-这两个进程依赖 FoundationDB，关于 FoundationDB 的部署可参考“部署前准备”页的 FoundationDB 安装指引）。
-
-### Meta Service 配置
-
-通常情况下，只需在`./conf` 目录下的默认配置文件 `doris_cloud.conf`中修改 `brpc_listen_port` 和 `fdb_cluster` 两个参数。（Meta Service 配置只需一个配置文件。）
+Example configuration:
 
 ```Shell
 brpc_listen_port = 5000
 fdb_cluster = xxx:yyy@127.0.0.1:4500
 ```
 
-上述 `brpc_listen_port = 5000` 是 Meta Service 的默认端口。其中，`fdb_cluster` 是 FoundationDB 集群的连接信息，通常可从 FoundationDB 所部署机器上的 `/etc/foundationdb/fdb.cluster` 文件中获得。
+Note: The value of `fdb_cluster` should match the content of the `/etc/foundationdb/fdb.cluster` file on the FoundationDB deployment machine.
 
-**示例**
-
-```shell
-cat /etc/foundationdb/fdb.cluster
-
-DO NOT EDIT!
-This file is auto-generated, it is not to be edited by hand.
-cloud_ssb:A83c8Y1S3ZbqHLL4P4HHNTTw0A83CuHj@127.0.0.1:4500
-```
-
-### Recycler 配置
-
-除了端口外，Recycler 的其他默认配置均与 Meta Service 相同。Recycler 的 bRPC 端口一般采用 5100。
-
-通常情况下，只需在`./conf` 目录下的默认配置文件 `doris_cloud.conf`中修改 `brpc_listen_port` 和 `fdb_cluster` 两个参数。（Recycler 配置只需一个配置文件。）
-
-```Shell
-brpc_listen_port = 5100
-fdb_cluster = xxx:yyy@127.0.0.1:4500
-```
-
-上述 `brpc_listen_port = 5100` 是 Recycler 的默认端口。其中，`fdb_cluster` 是 FoundationDB 集群的连接信息，通常可从 FoundationDB 所部署机器上的 `/etc/foundationdb/fdb.cluster` 文件中获得。
-
-**示例**
+**Example: The last line of the file is the value to fill in the doris_cloud.conf for the fdb_cluster field**
 
 ```shell
 cat /etc/foundationdb/fdb.cluster
 
-DO NOT EDIT!
-This file is auto-generated, it is not to be edited by hand.
+# DO NOT EDIT!
+# This file is auto-generated, it is not to be edited by hand.
 cloud_ssb:A83c8Y1S3ZbqHLL4P4HHNTTw0A83CuHj@127.0.0.1:4500
 ```
 
-### 模块启停
+### 3.2 Start and Stop
 
-Meta Service 和 Recycler 依赖 JAVA 运行环境，并使用 OpenJDK 17。在启动前这两个服务前，请确保已正确设置 `export JAVA_HOME` 环境变量。
+*Environment Requirements*
 
-`doris_cloud` 部署的 `bin` 目录下提供了启停脚本，调用对应的启停脚本即可完成启停。
+Ensure that the `JAVA_HOME` environment variable is correctly set to point to OpenJDK 17, and navigate to the `ms` directory.
 
-### 启停 Meta Service
-
-在 `ms` 目录中：
+*Start Command*
 
 ```Shell
 export JAVA_HOME=${path_to_jdk_17}
-bin/start.sh --meta-service --daemonized
+bin/start.sh --daemon
+```
 
+*Stop Command*
+
+``` shell
 bin/stop.sh
 ```
 
-### 启停 Recycler
+*Verify Start*
 
-在 `re` 目录中：
+Check the `doris_cloud.out` file for the output message `successfully started`.
+
+## 4. Independent Deployment of Data Recycling Function (Optional)
+
+*Preparation Work*
+
+1. Create a new working directory (e.g., `recycler`).
+2. Copy the contents of the `ms` directory to the new directory:
+
+   ```shell
+   cp -r ms recycler
+   ```
+
+*Configuration*
+
+Modify the BRPC listening port in the configuration file of the new directory.
+
+*Start Data Recycling Function*
 
 ```Shell
 export JAVA_HOME=${path_to_jdk_17}
-bin/start.sh --recycler --daemonized
-
-bin/stop.sh
+bin/start.sh --recycler --daemon
 ```
 
-在成功部署并启动 Meta Service 和 Recycler 之后，Doris 存算分离模式的底座便已完成搭建。
+*Start Only Metadata Operation Function*
 
-若 Meta Service 进程正常启动，将能在 `doris_cloud.out` 文件中观察到 `meta-service started` 的输出信息。同样地，Recycler 进程如果正常启动，则会在该文件中显示 `recycler started` 的输出信息。
-
+```Shell
+export JAVA_HOME=${path_to_jdk_17}
+bin/start.sh --meta-service --daemon
 ```
-Tue Jun 18 00:46:37 CST 2024
-process working directory: "/mnt/disk1/gavinchou/debug/doris-cloud/ms"
-pid=2682786 written to file=./bin/doris_cloud.pid
-version:{doris_cloud-0.0.0-debug} code_version:{commit=4517faffbf79b48d34a94abb22ee090f2d6e2007 time=2024-06-18 00:40:29 +0800} build_info:{initiator=gavinchou@VM-10-7-centos build_at=2024-06-18 00:40:29 +0800 build_on=NAME="TencentOS Server" VERSION="3.1 (Final)" }
 
-meta-service started
+## 5. Startup Process for FE and BE
+
+This section details the steps to start FE (Frontend) and BE (Backend) in a decoupled storage-compute architecture.
+
+### 5.1 Startup Order
+
+1. Start the first FE instance with the MASTER role.
+2. Add other FE and BE instances to the cluster.
+3. Add the first Storage Vault.
+
+### 5.2 Start the MASTER Role FE
+
+#### 5.2.1 Configure fe.conf
+
+In the `fe.conf` file, the following key parameters need to be configured:
+
+1. `deploy_mode`
+   - Description: Specifies the Doris startup mode.
+   - Format: `cloud` indicates the decoupled storage-compute mode; others indicate the integrated storage-compute mode.
+   - Example: `cloud`
+
+2. `cluster_id`
+   - Description: A unique identifier for the cluster in the decoupled storage-compute architecture; different clusters must set different cluster_ids.
+   - Format: int type.
+   - Example: `12345678`
+
+3. `meta_service_endpoint`
+   - Description: The address and port of the Meta Service.
+   - Format: `IP address:port number`.
+   - Example: `127.0.0.1:5000`, multiple meta services can be configured separated by commas.
+
+#### 5.2.2 Start FE
+
+Example start command:
+
+```bash
+bin/start_fe.sh --daemon
 ```
+
+### 5.3 Add Other FE Nodes
+
+Use the following SQL command to add additional FE nodes:
+
+```sql
+ALTER SYSTEM ADD FOLLOWER "host:port";
+```
+
+Replace `host:port` with the actual address and port of the FE node.
+
+### 5.4 Add BE Nodes
+
+To add Backend nodes to the cluster, perform the following steps for each Backend:
+
+#### 5.4.1 Configure be.conf
+
+In the `be.conf` file, the following key parameters need to be configured:
+
+1. `deploy_mode`
+   - Description: Specifies the Doris startup mode.
+   - Format: `cloud` indicates the decoupled storage-compute mode; others indicate the integrated storage-compute mode.
+   - Example: `cloud`
+
+#### 5.4.1 Start and Add BE
+
+1. Start the Backend:
+
+   Use the following command to start the Backend:
+
+   ```bash
+   bin/start_be.sh --daemon
+   ```
+
+2. Add the Backend to the cluster:
+
+   Connect to any Frontend using a MySQL client and execute:
+
+   ```sql
+   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROPERTIES properties];
+   ```
+
+   Replace `<ip>` with the IP address of the new Backend and `<heartbeat_service_port>` with its configured heartbeat service port (default is 9050).
+
+   You can set the computing group for the BE using PROPERTIES.
+
+   For more detailed usage, please refer to [ADD BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) and [REMOVE BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND.md).
+
+3. Verify Backend Status:
+
+   Check the Backend log file (`be.log`) to ensure it has successfully started and joined the cluster.
+
+   You can also use the following SQL command to check the Backend status:
+
+   ```sql
+   SHOW BACKENDS;
+   ```
+
+   This will display all Backends in the cluster and their current status.
+
+## 6. Create Storage Vault
+
+The Storage Vault is an important component in the Doris decoupled storage-compute architecture. They represent the shared storage layer for storing data. You can create one or more Storage Vaults using HDFS or S3-compatible object storage. The first created Storage Vault will become the default Storage Vault. System tables and tables not specified with a Storage Vault will be stored in this default Storage Vault. The default Storage Vault cannot be deleted. Here's how to create a Storage Vault for your Doris cluster:
+
+### 6.1 Create HDFS Storage Vault 
+
+To create a Storage Vault using SQL, connect to your Doris cluster using a MySQL client.
+
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
+    PROPERTIES (
+    "type"="hdfs",
+    "fs.defaultFS"="hdfs://127.0.0.1:8020"
+    );
+```
+
+### 6.2 Create S3 Storage Vault 
+
+To create a Storage Vault using S3-compatible object storage, follow these steps:
+
+1. Connect to your Doris cluster using a MySQL client.
+
+2. Execute the following SQL command to create an S3 Storage Vault:
+
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+    PROPERTIES (
+    "type"="S3",
+    "s3.endpoint"="s3.us-east-1.amazonaws.com",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.region" = "us-east-1",
+    "s3.root.path" = "ssb_sf1_p2_s3",
+    "s3.bucket" = "doris-build-1308700295",
+    "provider" = "S3"
+    );
+```
+
+To create a Storage Vault on other object storage, please refer to [Create Storage Vault](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md).
+
+### 6.3 Set Default Storage Vault 
+
+Use the following SQL statement to set a default Storage Vault.
+
+```sql
+SET <storage_vault_name> AS DEFAULT STORAGE VAULT
+```
+
+## 7. Notes
+
+- Only the Meta Service process for metadata operations should be configured as the `meta_service_endpoint` target for FE and BE.
+- The data recycling function process should not be configured as the `meta_service_endpoint` target.

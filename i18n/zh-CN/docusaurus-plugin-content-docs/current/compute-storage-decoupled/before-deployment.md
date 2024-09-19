@@ -126,8 +126,9 @@ FDB 集群部署完成后，您可以使用 `fdb_ctl.sh` 脚本启动 FDB 服务
 
 完成上述准备工作后，请参考以下文档继续部署：
 
-1. [部署 Meta Service](./compilation-and-deployment.md)
-2. [部署 FE 和 BE](./creating-cluster.md)
+1. [部署](./compilation-and-deployment.md)
+2. [管理 Compute Group](./managing-compute-cluster.md)
+3. [管理 Storage Vault](./manaing-storage-vault.md)
 
 ## 7. 注意事项
 

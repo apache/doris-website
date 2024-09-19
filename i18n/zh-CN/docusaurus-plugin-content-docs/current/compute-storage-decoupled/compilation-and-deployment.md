@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Doris 存算分离模式编译与部署手册
-
 ## 1. 概述
 
 本文档详细介绍了 Doris 存算分离模式下的编译和部署流程，重点说明了与存算一体模式的区别，特别是新增 Meta Service (MS) 模块的编译、配置和管理。
@@ -152,12 +150,17 @@ bin/start.sh --meta-service --daemon
 
 在 `fe.conf` 文件中，需要配置以下关键参数：
 
-1. `cluster_id`
-   - 描述：存算分离架构下集群的唯一标识符
+1. `deploy_mode`
+   - 描述：指定 doris 启动模式
+   - 格式：cloud 表示存算分离模式，其它存算一体模式
+   - 示例：`cloud`
+
+2. `cluster_id`
+   - 描述：存算分离架构下集群的唯一标识符，不同的集群必须设置不同的 cluster_id
    - 格式：int 类型
    - 示例：`12345678`
 
-2. `meta_service_endpoint`
+3. `meta_service_endpoint`
    - 描述：Meta Service 的地址和端口
    - 格式：`IP地址:端口号`
    - 示例：`127.0.0.1:5000`, 可以用逗号分割配置多个meta service。
@@ -183,6 +186,17 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 ### 5.4 添加 BE 节点
 
 要向集群添加 Backend 节点，请对每个 Backend 执行以下步骤：
+
+#### 5.4.1 配置 be.conf
+
+在 `be.conf` 文件中，需要配置以下关键参数：
+
+1. `deploy_mode`
+   - 描述：指定 doris 启动模式
+   - 格式：cloud 表示存算分离模式，其它存算一体模式
+   - 示例：`cloud`
+
+#### 5.4.1 启动和添加 BE
 
 1. 启动 Backend：
 
@@ -218,7 +232,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
    这将显示集群中所有 Backend 及其当前状态。
 
-## 6. 创建 Storage Vault 
+## 6. 创建 Storage Vault
 
  Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个 Storage Vault 。首个创建的 Storage Vault 将成为默认 Storage Vault 。系统表和未指定 Storage Vault 的表都将存储在这个默认 Storage Vault 中。默认 Storage Vault 不能被删除。以下是为您的 Doris 集群创建 Storage Vault 的方法：
 
