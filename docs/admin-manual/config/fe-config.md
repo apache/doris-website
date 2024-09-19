@@ -300,7 +300,7 @@ Is it a configuration item unique to the Master FE node: true
 
 Default：-1
 
-node(FE or BE) will be considered belonging to the same Palo cluster if they have same cluster id.  Cluster id is usually a random integer generated when master FE start at first time. You can also specify one.
+node(FE or BE) will be considered belonging to the same Doris cluster if they have same cluster id.  Cluster id is usually a random integer generated when master FE start at first time. You can also specify one.
 
 #### `heartbeat_mgr_blocking_queue_size`
 
@@ -2758,3 +2758,23 @@ To ensure compatibility with the MySQL ecosystem, Doris includes a built-in data
 Default value: 2000
 
 For auto-partitioned tables to prevent users from accidentally creating a large number of partitions, the number of partitions allowed per OLAP table is `max_auto_partition_num`. Default 2000.
+
+### Compute and Storage Disaggregated Mode
+
+#### `cluster_id`
+
+Default：-1
+
+node(FE or BE) will be considered belonging to the same Doris cluster if they have same cluster id. You should specify one random int in compute and storage disaggregated mode.
+
+#### `deploy_mode`
+
+Default: ""
+
+Description:  The mode in which FE runs. `cloud` indicates the decoupled storage-compute mode.
+
+#### `meta_service_endpoint`
+
+Default: ""
+
+Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This configuration is necessary for the storage and compute disaggregated mode.

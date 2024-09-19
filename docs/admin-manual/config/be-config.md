@@ -103,6 +103,12 @@ There are two ways to configure BE configuration items:
 
 ### Services
 
+#### `deploy_mode`
+
+* Type: string
+* Description:  The mode in which BE runs. `cloud` indicates the decoupled storage-compute mode.
+* Default value: ""
+
 #### `be_port`
 
 * Type: int32
@@ -430,7 +436,7 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 * Default value: 10485760
 
 #### `max_base_compaction_threads`
-git 
+
 * Type: int32
 * Description: The maximum of thread number in base compaction thread pool, -1 means one thread per disk.
 * Default value: 4
@@ -1110,7 +1116,7 @@ BaseCompaction:546859:
 #### `tablet_rowset_stale_sweep_time_sec`
 
 * Type: int64
-* Description: It is used to control the expiration time of cleaning up the merged rowset version. When the current time now() minus the max created rowset‘s create time in a version path is greater than tablet_rowset_stale_sweep_time_sec, the current path is cleaned up and these merged rowsets are deleted, the unit is second.
+* Description: It is used to control the expiration time of cleaning up the merged rowset version. When the current time now() minus the max created rowset's create time in a version path is greater than tablet_rowset_stale_sweep_time_sec, the current path is cleaned up and these merged rowsets are deleted, the unit is second.
   - When writing is too frequent, Fe may not be able to query the merged version, resulting in a query -230 error. This problem can be avoided by increasing this parameter.
 * Default value: 300
 
@@ -1225,7 +1231,7 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: The log flushing strategy is kept in memory by default
 * Default value: empty
 
-### Else
+### Others
 
 #### `report_tablet_interval_seconds`
 
@@ -1330,3 +1336,17 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 * Description: The `max_filter_ratio` limit can only work if the total rows of `group commit` is less than this value. See [Group Commit](../../data-operate/import/group-commit-manual.md) for more details
 * Default: 10000
+
+### Compute and Storage Disaggregated Mode
+
+#### `deploy_mode`
+
+* Default: ""
+
+* Description:  The mode in which BE runs. `cloud` indicates the decoupled storage-compute mode.
+
+#### `meta_service_endpoint`
+
+Default: ""
+
+* Description: Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This value is usually delivered by the FE to the BE by the heartbeat, no need to configure.

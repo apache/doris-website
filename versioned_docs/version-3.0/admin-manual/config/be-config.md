@@ -1475,3 +1475,17 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 * Description: Doris comes with its own time zone database. If the time zone file is not found in the system directory, the data in that directory is enabled.
 * Default: "${DORIS_HOME}/zoneinfo"
+
+### Compute and Storage Disaggregated Mode
+
+#### `deploy_mode`
+
+* Default: ""
+
+* Description:  The mode in which BE runs. `cloud` indicates the decoupled storage-compute mode.
+
+#### `meta_service_endpoint`
+
+Default: ""
+
+* Description: Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This value is usually delivered by the FE to the BE by the heartbeat, no need to configure.

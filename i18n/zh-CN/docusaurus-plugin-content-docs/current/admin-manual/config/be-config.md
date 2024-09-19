@@ -1219,7 +1219,7 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：日志刷盘的策略，默认保持在内存中
 * 默认值：空
 
-### 其他
+### 其它
 
 #### `report_tablet_interval_seconds`
 
@@ -1319,3 +1319,16 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：当 Group Commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
 * 默认值：10000
 
+### 存算分离模式
+
+#### `deploy_mode`
+
+* 默认值: ""
+
+* 描述: BE 运行的模式。`cloud` 表示算分离模式。
+
+#### `meta_service_endpoint`
+
+* 默认值: ""
+
+* 描述: Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。该值通常由 FE 通过心跳传递给 BE，无需配置。
