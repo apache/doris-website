@@ -830,7 +830,7 @@ Before Connector1.1.0, it was written in batches, and the writing was driven by 
 
 9. **tablet writer write failed, tablet_id=190958, txn_id=3505530, err=-235**
 
-It usually occurs before Connector1.1.0, because the writing frequency is too fast, resulting in too many versions. The frequency of Streamload can be reduced by setting the sink.batch.size and sink.batch.interval parameters.
+It usually occurs before Connector1.1.0, because the writing frequency is too fast, resulting in too many versions. The frequency of Streamload can be reduced by setting the sink.batch.size and sink.batch.interval parameters. After Connector 1.1.0, the default write timing is controlled by Checkpoint, and the write frequency can be reduced by increasing the Checkpoint interval.
 
 10. **Flink imports dirty data, how to skip it? **
 
@@ -858,3 +858,7 @@ The issue may have occurred due to configuring the IP address of `be`, which is 
 16. **When using Flink-connector to synchronize MySQL data to Doris, there is a time difference of several hours between the timestamp.**
 
 Flink  Connector synchronizes the entire database from MySQL with a default timezone of UTC+8. If your data resides in a different timezone, you can adjust it using the following configuration, for example: `--mysql-conf debezium.date.format.timestamp.zone="UTC+3"`.
+
+17. **What is the difference between batch writing and streaming writing**
+
+Connector 1.5.0 and later support batch writing. Batch writing does not rely on Checkpoint. Data is cached in memory and the writing timing is controlled according to the parameters sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval. Checkpoint must be enabled for streaming writing. During the entire Checkpoint period, upstream data is continuously written to Doris, and data is not cached in memory all the time.
