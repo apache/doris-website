@@ -177,16 +177,26 @@ properties (
     "enable_memory_overcommit"="true"
 );
 ```
-This is soft CPU limit. Since version 2.1, the system will automatically create a group named ` ` normal ` `, which cannot be deleted.
+This is soft CPU limit. Since version 2.1, the system will automatically create a group named ```normal```, which cannot be deleted.
+For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP).
 
-For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP), and to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP); to view the workload group, you can visit doris system table ```information_schema.workload_groups``` or [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS).
+2. show/alter/drop workload group statement as follows:
+```
+show workload groups;
 
-2. Bind the workload group.
-* Bind the user to the workload group by default by setting the user property to ``normal``.
+alter workload group g1 properties('memory_limit'='10%');
+
+drop workload group g1;
+```
+to view the workload group, you can visit doris system table ```information_schema.workload_groups``` or [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS);to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP).
+
+3. Bind the workload group.
+* Bind the user to the workload group by default by setting the user property to ```normal```.Note that the value here cannot be left blank, otherwise the statement will fail to execute. If you're unsure which group to set, you can set it to ```normal```, as ```normal``` is the global default group.
 ```
 set property 'default_workload_group' = 'g1'.
 ```
-The current user's query will use 'g1' by default.
+After executing this statement, the current user's query will use 'g1' by default.
+
 * Specify the workload group via the session variable, which defaults to null.
 ```
 set workload_group = 'g1'.
@@ -195,7 +205,7 @@ session variable `workload_group` takes precedence over user property `default_w
 
 If you are a non-admin user, you need to execute [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) to check if the current user can see the workload group, if not, the workload group may not exist or the current user does not have permission to execute the query. If you cannot see the workload group, the workload group may not exist or the current user does not have privileges. To authorize the workload group, refer to: [grant statement](../../sql-manual/sql-statements/Account-Management-Statements/GRANT).
 
-6. Execute the query, which will be associated with the g1 workload group.
+4. Execute the query, which will be associated with the g1 workload group.
 
 ### Query Queue
 ```
@@ -208,11 +218,16 @@ properties (
     "queue_timeout" = "3000"
 );
 ```
-It should be noted that the current queuing design is not aware of the number of FEs, and the queuing parameters only works in a single FE, for example:
+1. It should be noted that the current queuing design is not aware of the number of FEs, and the queuing parameters only works in a single FE, for example:
 
 A Doris cluster is configured with a work load group and set max_concurrency=1,
 If there is only 1 FE in the cluster, then this workload group will only run one SQL at the same time from the Doris cluster perspective,
 If there are 3 FEs, the maximum number of query that can be run in Doris cluster is 3.
+
+2. In some operational scenarios, the administrator needs to bypass the queuing. This can be achieved by setting a session variable:
+```
+set bypass_workload_group = true;
+```
 
 ### Configure CPU hard limits
 At present, Doris defaults to running the CPU's soft limit. If you want to use Workload Group's hard limit, you can do as follows.
