@@ -275,7 +275,7 @@ curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mod
 # The retured label is start with 'group_commit', which is the label of the real load job
 ```
 
-See [Stream Load](stream-load-manual.md) for more detailed syntax used by **Stream Load**.
+See [Stream Load](./stream-load-manual.md) for more detailed syntax used by **Stream Load**.
 
 ### Http Stream
 
