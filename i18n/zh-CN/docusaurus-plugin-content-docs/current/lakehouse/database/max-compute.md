@@ -32,9 +32,7 @@ MaxCompute 是阿里云上的企业级 SaaS（Software as a Service）模式云�
 > [什么是 MaxCompute](https://help.aliyun.com/zh/MaxCompute/product-overview/what-is-MaxCompute?spm=a2c4g.11174283.0.i1)
 
 
-
 ## 连接 MaxCompute
-
 
 ### 示例
 
@@ -50,7 +48,6 @@ CREATE CATALOG mc PROPERTIES (
 
 
 ### 基本属性 
-
 
 |参数           | 说明    | 
 |:-------------:|:-------:|
@@ -76,7 +73,6 @@ CREATE CATALOG mc PROPERTIES (
 
 ## 列类型映射
 
-
 |MaxCompute               |Doris                    |备注     | 
 |:-----------------------:|:-----------------------:|:------:|
 |TINYINT                  |TINYINT                  |        |
@@ -92,7 +88,7 @@ CREATE CATALOG mc PROPERTIES (
 |CHAR(n)                  |CHAR(n)                  |        |
 |STRING                   |STRING                   |        |
 |DATE                     |DATE                     |        |
-|DATETIME                 |DATETIME(3)              |        |
+|DATETIME                 |DATETIME(3)              | DATETIME读取出来结果是按照当前系统的默认时区，如果您想使用其他时区，请在be 的jvm中增加-Duser.timezone=xx 参数来指定时区 |
 |TIMESTAMP                |不支持                    |        |
 |TIMESTAMP_NTZ            |DATETIME(6)              |MaxCompute 的 TIMESTAMP_NTZ 精度为9, Doris 的 DATETIME 最大精度只有6，故读取数据时会将多的部分直接截断。 |
 |BOOLEAN                  |BOOLEAN                  |        |
