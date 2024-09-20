@@ -664,7 +664,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    lib/flink-doris-connector-1.16-SNAPSHOT.jar \
+    lib/flink-doris-connector-1.16-24.0.0.jar \
     db2-sync-database \
     --database db2_test \
     --db2-conf hostname=127.0.0.1 \
