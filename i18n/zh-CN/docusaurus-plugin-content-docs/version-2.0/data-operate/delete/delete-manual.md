@@ -242,7 +242,7 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = failed to delete replicas from 
 总体来说，Doris 的删除作业的超时时间计算规则为如下（单位：秒）：
 
 ```Plain
-TIMEOUT = MIN(load_straggler_wait_second, MAX(30, tablet_delete_timeout_second * tablet_num))
+TIMEOUT = MIN(delete_job_max_timeout_second, MAX(30, tablet_delete_timeout_second * tablet_num))
 ```
 
 - tablet_delete_timeout_second
@@ -250,10 +250,6 @@ TIMEOUT = MIN(load_straggler_wait_second, MAX(30, tablet_delete_timeout_second *
   Delete 自身的超时时间是受指定分区下 Tablet 的数量弹性改变的，此项配置为平均一个 Tablet 所贡献的 `timeout` 时间，默认值为 2。
 
   假设此次删除所指定分区下有 5 个 tablet，那么可提供给 delete 的 timeout 时间为 10 秒，由于低于最低超时时间 30 秒，因此最终超时时间为 30 秒。
-
-- load_straggler_wait_second
-
-  如果用户预估的数据量确实比较大，使得 5 分钟的上限不足时，用户可以通过此项调整 `timeout` 上限，默认值为 300。
 
 - query_timeout
 
