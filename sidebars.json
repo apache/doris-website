@@ -149,7 +149,7 @@
                         "data-operate/import/load-data-format",
                         "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
-                        "data-operate/import/load-availability",
+                        "data-operate/import/load-high-availability",
                         "data-operate/import/migrate-data-from-other-olap"
                     ]
                 },

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "导入可用性",
+    "title": "导入高可用性",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 导入可用性
+# 导入高可用性
 
 ## 概述
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Load Availability",
+    "title": "Load High Availability",
     "language": "en-US"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Load Availability
+# Load High Availability
 
 ## Overview
 
