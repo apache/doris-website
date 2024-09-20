@@ -162,20 +162,20 @@ doris   ALL=(ALL)       NOPASSWD:DORISCTL
 
     添加或修改配置文件后，需要重新加载
 
-    ```bash
+    ```shell
     systemctl daemon-reload
     ```
 
     设置自启动，实质就是在 /etc/systemd/system/multi-user.target.wants/ 添加服务文件的链接
 
-    ```bash
+    ```shell
     systemctl enable doris-fe
     systemctl enable doris-be
     ```
 
 8. 服务启动
 
-    ```bash
+    ```shell
     systemctl start doris-fe
     systemctl start doris-be
     ```
@@ -190,14 +190,14 @@ Supervisor 配置自动拉起可以使用 yum 命令直接安装，也可以通�
 
 1. yum 安装 supervisor
     
-    ```bash
+    ```shell
     yum install epel-release
     yum install -y supervisor
     ```
 
 2. 启动服务并查看状态
 
-    ```bash
+    ```shell
     systemctl enable supervisord # 开机自启动
     systemctl start supervisord # 启动 supervisord 服务
     systemctl status supervisord # 查看 supervisord 服务状态
@@ -206,7 +206,7 @@ Supervisor 配置自动拉起可以使用 yum 命令直接安装，也可以通�
 
 3. 配置 BE 进程管理
 
-    ```bash
+    ```shell
     修改 start_be.sh 脚本，去掉最后的 & 符号
 
     vim /path/doris/be/bin/start_be.sh
@@ -216,7 +216,7 @@ Supervisor 配置自动拉起可以使用 yum 命令直接安装，也可以通�
 
     创建 BE 的 supervisor 进程管理配置文件
 
-    ```bash
+    ```shell
     vim /etc/supervisord.d/doris-be.ini
 
     [program:doris_be]      
@@ -239,7 +239,7 @@ Supervisor 配置自动拉起可以使用 yum 命令直接安装，也可以通�
 
 4. 配置 FE 进程管理
 
-    ```bash
+    ```shell
     修改 start_fe.sh 脚本，去掉最后的 & 符号
 
     vim /path/doris/fe/bin/start_fe.sh 
@@ -249,7 +249,7 @@ Supervisor 配置自动拉起可以使用 yum 命令直接安装，也可以通�
 
     创建 FE 的 supervisor 进程管理配置文件
 
-    ```bash
+    ```shell
     vim /etc/supervisord.d/doris-fe.ini
 
     [program:PaloFe]
@@ -273,7 +273,7 @@ Supervisor 配置自动拉起可以使用 yum 命令直接安装，也可以通�
 
 5. 配置 Broker 进程管理
 
-    ```bash
+    ```shell
     修改 start_broker.sh 脚本，去掉最后的 & 符号
 
     vim /path/apache_hdfs_broker/bin/start_broker.sh
@@ -283,7 +283,7 @@ Supervisor 配置自动拉起可以使用 yum 命令直接安装，也可以通�
 
     创建 Broker 的 supervisor 进程管理配置文件
 
-    ```bash
+    ```shell
     vim /etc/supervisord.d/doris-broker.ini
 
     [program:BrokerBootstrap]
@@ -307,7 +307,7 @@ Supervisor 配置自动拉起可以使用 yum 命令直接安装，也可以通�
 
 6. 首先确定 Doris 服务是停止状态，然后使用 supervisor 将 Doris 自动拉起，然后确定进程是否正常启动
     
-    ```bash
+    ```shell
     supervisorctl reload # 重新加载 Supervisor 中的所有配置文件
     supervisorctl status # 查看 supervisor 状态，验证 Doris 服务进程是否正常启动
 
@@ -321,7 +321,7 @@ Supervisor 配置自动拉起可以使用 yum 命令直接安装，也可以通�
 
 - 如果使用 yum 安装的 supervisor 启动报错 :  pkg_resources.DistributionNotFound: The 'supervisor==3.4.0' distribution was not found
 
-    ```bash
+    ```shell
     这个是 python 版本不兼容问题，通过 yum 命令直接安装的 supervisor 只支持 python2 版本，所以需要将 /usr/bin/supervisord 和 /usr/bin/supervisorctl 中文件内容开头 #!/usr/bin/python 改为 #!/usr/bin/python2，前提是要装 python2 版本
     ```
 

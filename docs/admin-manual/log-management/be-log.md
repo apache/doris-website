@@ -80,6 +80,9 @@ The following configuration items are configured in the `be.conf` file.
 | `aws_log_level` | 0 | | Controls the log level for the AWS SDK. Default is 0, indicating AWS SDK logs are turned off. By default, AWS SDK logs are actively captured by glog and will be printed normally. In some cases, you may need to enable AWS SDK logs to view more uncaptured logs. Different numbers represent different log levels: Off = 0, Fatal = 1, Error = 2, Warn = 3, Info = 4, Debug = 5, Trace = 6. |
 | `s3_file_writer_log_interval_second` | 60 | | When performing S3 Upload operations, the progress of operations is printed every 60 seconds by default. |
 | `enable_debug_log_timeout_secs` | 0 | | When the value is greater than 0, some detailed execution logs of the pipeline execution engine will be printed. Mainly used for troubleshooting. By default, this is turned off. |
+| `sys_log_enable_custom_date_time_format` | false | | Whether to allow custom date format in logs (supported since version 2.1.7) |
+| `sys_log_custom_date_time_format` | `%Y-%m-%d %H:%M:%S` | | The default custom format for log date, only effective when `sys_log_enable_custom_date_time_forma` is `true` (supported since version 2.1.7) |
+| `sys_log_custom_date_time_ms_format` | `,{:03d}` | | The default time precision in the log date. This is only effective when `sys_log_enable_custom_date_time_format` is `true` (supported since version 2.1.7) |
 
 
 ## Enable DEBUG Log

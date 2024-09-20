@@ -38,7 +38,7 @@ This statement is used to view FE nodes's important paths' disk information, suc
 
 ```sql
 SHOW FRONTENDS DISKS;
-````
+```
 
 illustrate:
 

@@ -290,15 +290,13 @@ Users can set a scheduled refresh for a Catalog when creating it.
 CREATE CATALOG hive PROPERTIES (
     'type'='hms',
     'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-    'metadata_refresh_interval_sec' = '600'
+    'metadata_refresh_interval_sec' = '3600'
 );
 ```
 
-In the above example, `metadata_refresh_interval_sec` indicates refreshing the Catalog every 600 seconds. This is equivalent to automatically executing:
+In the above example, `metadata_refresh_interval_sec` indicates refreshing the Catalog every 3600 seconds. This is equivalent to automatically executing:
 
-`REFRESH CATALOG ctl1 PROPERTIES("invalid_cache" = "true");` every 600 seconds.
-
-The refresh interval must not be less than 5 seconds.
+`REFRESH CATALOG ctl1 PROPERTIES("invalid_cache" = "true");` every 3600 seconds.
 
 ## Best Practices
 
@@ -335,6 +333,10 @@ However, this may increase the access pressure on external data sources (such as
 ## Version Behavior Changes
 
 In version 2.1.5, the `use_meta_cache` attribute was added to the Catalog properties, defaulting to false.
+
+:::warning
+Do not set `use_meta_cache` to true before 2.1.6.
+:::
 
 In version 2.1.6, for newly created Catalogs, this attribute is default changed to true to correspond to the caching behavior described in this document. It is recommended that users upgrade to version 2.1.6 and rebuild existing Catalogs to align the default behavior with the description in this document.
 

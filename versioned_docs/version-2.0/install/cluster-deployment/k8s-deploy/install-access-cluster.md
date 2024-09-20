@@ -35,13 +35,13 @@ Doris provides ClusterIP access mode by default on Kubernetes. No modification i
 
 After deploying the cluster, you can view the services exposed by Doris Operator through the following command:
 
-```bash
+```shell
 kubectl -n doris get svc
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                              TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)                               AGE
 doriscluster-sample-be-internal   ClusterIP   None          <none>        9050/TCP                              9m
 doriscluster-sample-be-service    ClusterIP   10.1.68.128   <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   9m
@@ -58,13 +58,13 @@ In the above results, FE and BE have two types of Services, with the suffixes in
 
 Use the following command to create a pod containing the mysql client in the current Kubernetes cluster:
 
-```bash
+```shell
 kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=doris -- /bin/bash
 ```
 
 In the container in the cluster, you can use the externally exposed service name with the suffix `service` to access the Doris cluster:
 
-```bash
+```shell
 ## Use service type pod name to access the Doris cluster
 mysql -uroot -P9030 -hdoriscluster-sample-fe-service
 ```
@@ -143,13 +143,13 @@ spec:
 
 After deploying the cluster, you can view the services exposed by Doris Operator through the following command:
 
-```bash
+```shell
 kubectl get service
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE
 kubernetes ClusterIP 10.152.183.1 <none> 443/TCP 169d
 doriscluster-sample-fe-internal ClusterIP None <none> 9030/TCP 2d
@@ -160,13 +160,13 @@ doriscluster-sample-be-service NodePort 10.152.183.244 <none> 9060:30940/TCP,804
 
 Doris's Query Port defaults to 9030, which is mapped to local port 31545 locally. When accessing the Doris cluster, you need to obtain the corresponding IP address, which can be viewed with the following command:
 
-```bash
+```shell
 kubectl get nodes -owide
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME   STATUS   ROLES           AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE          KERNEL-VERSION          CONTAINER-RUNTIME
 r60    Ready    control-plane   14d   v1.28.2   192.168.88.60   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
 r61    Ready    <none>          14d   v1.28.2   192.168.88.61   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
@@ -176,7 +176,7 @@ r63    Ready    <none>          14d   v1.28.2   192.168.88.63   <none>        Ce
 
 In NodePort mode, you can access services in the Kubernetes cluster based on the host IP and port mapping of any node. In this example, you can use any node IP, 192.168.88.61, 192.168.88.62, 192.168.88.63, to access the Doris service. For example, in the following example, the node node 192.168.88.62 and the mapped query port port 31545 are used to access the cluster:
 
-```bash
+```shell
 mysql -h 192.168.88.62 -P 31545 -uroot
 ```
 
@@ -192,7 +192,7 @@ If you perform Stream Load inside Kubernetes, you can directly use the error add
 
 In the return result of the above example, you can directly obtain the return result through the curl command in the Pod in the same Kubernetes cluster:
 
-```bash
+```shell
 curl http://doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluster.local:8040/api/_load_error_log?file=__shard_1/error_log_insert_stmt_af474190276a2e9c-49bb9d175b8e968e_af474190276a2e9c_49bb9d175b8e968e
 ```
 
@@ -243,7 +243,7 @@ Since the pod name returned by each stream load may be different, please delete 
 
 Follow the service in the above example, replace ${podName} in CR with doriscluster-sample-be-2, and replace ${ServiceType} with NodePort. Use the kubectl apply command to create the service service in the same namespace of the doris cluster.
 
-```bash
+```shell
 kubectl -n {namespace} apply -f strem_load_get_error.yaml
 ```
 
@@ -251,13 +251,13 @@ kubectl -n {namespace} apply -f strem_load_get_error.yaml
 
 Use the following command to view the NodePort assigned by the above deployment Service:
 
-```bash
+```shell
 kubectl get service -n doris doriscluster-detail-error
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)            AGE
 doriscluster-detail-error         NodePort    10.152.183.35    <none>        8040:31201/TCP     32s
 ```
@@ -266,13 +266,13 @@ The BE port accessed by `Stream Load` is 8040, and the host port (NodePort) corr
 
 Get the host address controlled by K8s:
 
-```bash
+```shell
 kubectl get node -owide
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME             STATUS   ROLES    AGE    VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION       CONTAINER-RUNTIME
 vm-10-8-centos   Ready    <none>   226d   v1.28.7   10.16.10.8    <none>        TencentOS Server 3.1 (Final)   5.4.119-19-0009.3    containerd://1.6.28
 vm-10-7-centos   Ready    <none>   19d    v1.28.7   10.16.10.7    <none>        TencentOS Server 3.1 (Final)   5.4.119-19.0009.25   containerd://1.6.28
@@ -298,7 +298,7 @@ http://doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluste
 
 The domain name address of the above address is `doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluster.local`. Among the domain names used by pods deployed by `Doris Operator` on `Kubernetes`, the third level The domain name is the name of the pod. Replace {podName} in the above template with the real `pod` name, replace {serviceType} with `LoadBalancer`, and save the changes to the newly created `stream_load_get_error.yaml` file. Use the following command to deploy service:
 
-```bash
+```shell
 kubectl -n {namespace} apply -f strem_load_get_error.yaml
 ```
 
@@ -306,13 +306,13 @@ kubectl -n {namespace} apply -f strem_load_get_error.yaml
 
 Use the following command to view the LoadBalaner address EXTERNAL-IP assigned by the above deployment Service. The following is a test instance in aws eks:
 
-```bash
+```shell
 kubectl get service -n doris doriscluster-detail-error
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                         TYPE          CLUSTER-IP       EXTERNAL-IP                                                              PORT(S)           AGE
 doriscluster-detail-error    LoadBalancer  172.20.183.136   ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com  8040:32003/TCP    14s
 ```

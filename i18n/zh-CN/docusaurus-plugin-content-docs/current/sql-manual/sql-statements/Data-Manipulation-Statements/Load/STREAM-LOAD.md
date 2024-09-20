@@ -229,7 +229,7 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
     ```
     curl --location-trusted -u root  -H "label:123" -H "format: json" -T testData http://host:port/api/testDb/testTbl/_stream_load
     ```
-    为了提升吞吐量，支持一次性导入多条json数据，每行为一个json对象，默认使用\n作为换行符，需要将read_json_by_line设置为true，json数据格式如下：
+    为了提升吞吐量，支持一次性导入多条json数据，每行为一个json对象，默认使用`\n`作为换行符，需要将`read_json_by_line`设置为true，json数据格式如下：
             
     ```
     {"category":"C++","author":"avc","title":"C++ primer","price":89.5}
@@ -454,7 +454,7 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
     而在导入中，我们的目标时区通过参数 `timezone` 指定，该变量在发生时区转换、运算时区敏感函数时将会替代 session variable `time_zone`。因此，如果没有特殊情况，在导入事务中应当设定 `timezone` 与当前 Doris 集群的 `time_zone` 一致。此时意味着所有带时区的时间数据，均会发生向该时区的转换。
     例如，Doris 系统时区为 "+08:00"，导入数据中的时间列包含两条数据，分别为 "2012-01-01 01:00:00Z" 和 "2015-12-12 12:12:12-08:00"，则我们在导入时通过 `-H "timezone: +08:00"` 指定导入事务的时区后，这两条数据都会向该时区发生转换，从而得到结果 "2012-01-01 09:00:00" 和 "2015-12-13 04:12:12"。
 
-    更详细的理解，请参阅[时区](../../../../advanced/time-zone)文档。
+    更详细的理解，请参阅[时区](../../../../admin-manual/cluster-management/time-zone)文档。
 
 11. 导入的执行引擎使用
 

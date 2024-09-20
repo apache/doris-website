@@ -474,9 +474,12 @@ thrift_client_timeout_ms 的默认值设置为零以防止读取超时
 
 #### `thrift_max_message_size`
 
-<version since="2.1.4"></version>
 
-默认值: 100MB
+:::tip 提示
+该功能自 Apache Doris  1.2.4 版本起支持
+:::
+
+默认值：100MB
 
 thrift 服务器接收请求消息的大小（字节数）上限。如果客户端发送的消息大小超过该值，那么 thrift 服务器会拒绝该请求并关闭连接，这种情况下，client 会遇到错误：“connection has been closed by peer”，使用者可以尝试增大该参数以绕过上述限制。
 
@@ -735,9 +738,13 @@ http 请求处理/api/upload 任务的最大线程池
 
 检查动态分区的频率
 
-<version since="1.2.0">
 
 #### `max_multi_partition_num`
+
+
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
 默认值：4096
 
@@ -747,7 +754,7 @@ http 请求处理/api/upload 任务的最大线程池
 
 用于限制批量创建分区表时可以创建的最大分区数，避免一次创建过多分区。
 
-</version>
+
 
 #### `multi_partition_name_prefix`
 
@@ -2176,7 +2183,10 @@ tablet 状态更新间隔
 
 #### `storage_cooldown_second`
 
-<version deprecated="2.0"></version>
+
+:::tip 提示
+该功能自 Apache Doris  2.0 版本起支持
+:::
 
 默认值：`30 * 24 * 3600L`  （30 天）
 
@@ -2601,6 +2611,20 @@ SmallFileMgr 中存储的最大文件数
 
 此配置用于控制每个 DB 能够记录的 backup/restore 任务的数量
 
+#### `max_backup_tablets_per_job`
+
+默认值：300000
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+此配置用于控制每个 backup job 最大涉及的 tablets 数量，以避免因保存过多元数据导致 FE OOM。
+
+:::tips 提示
+从 Apache Doris 2.1.6 开始支持该配置
+:::
+
 #### `enable_quantile_state_type`
 
 默认值：false
@@ -2713,7 +2737,10 @@ show data （其他用法：HELP SHOW DATA）
 
 #### `infodb_support_ext_catalog`
 
-<version since="1.2.4"></version>
+
+:::tip 提示
+该功能自 Apache Doris  1.2.4 版本起支持
+:::
 
 默认值：false
 
@@ -2727,7 +2754,7 @@ show data （其他用法：HELP SHOW DATA）
 
 #### `enable_query_hit_stats`
 
-<version since="dev"></version>
+ 
 
 默认值：false
 
@@ -2738,7 +2765,7 @@ show data （其他用法：HELP SHOW DATA）
 控制是否启用查询命中率统计。默认为 false。
 
 #### `div_precision_increment`
-<version since="dev"></version>
+ 
 
 默认值：4
 

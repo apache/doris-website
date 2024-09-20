@@ -1,7 +1,7 @@
 ---
 {
-"title": "Use Workload CPU Limit",
-"language": "zh-CN"
+"title": "Use Workload Group limit CPU",
+"language": "en"
 }
 ---
 
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# Use Workload Group limit CPU
 
 The workloads in Doris can generally be divided into three categories:
 

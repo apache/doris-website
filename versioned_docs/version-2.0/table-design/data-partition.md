@@ -472,7 +472,9 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
 
 - `dynamic_partition.storage_medium`
 
-  <version since="1.2.3"></version>
+:::tip Tips
+This configuration is supported since the Apache Doris 1.2.3 version
+:::
 
   Specifies the default storage medium for the created dynamic partition. HDD is the default, SSD can be selected.
 
@@ -813,7 +815,7 @@ PROPERTIES (
 );
 ```
 
-The table stores a large amount of business history data, partitioned based on the date the transaction occurred. As you can see when building the table, we need to manually create the partitions in advance. If the data range of the partitioned columns changes, for example, 2022 is added to the above table, we need to create a partition by [ALTER-TABLE-PARTITION](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION) to make changes to the table partition. If such partitions need to be changed, or subdivided at a finer level of granularity, it is very tedious to modify them. At this point we can rewrite the table DDL using AUTO PARTITION.
+The table stores a large amount of business history data, partitioned based on the date the transaction occurred. As you can see when building the table, we need to manually create the partitions in advance. If the data range of the partitioned columns changes, for example, 2022 is added to the above table, we need to create a partition by [ALTER-TABLE-PARTITION](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION) to make changes to the table partition. If such partitions need to be changed, or subdivided at a finer level of granularity, it is very tedious to modify them. At this point we can rewrite the table DDL using AUTO PARTITION.
 
 ## Manual bucketing
 

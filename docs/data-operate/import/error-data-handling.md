@@ -112,7 +112,7 @@ When users use non-strict mode of Stream Load for partial column updates to inse
 18,9999999,2023-07-03 12:00:03
 ```
 
-```bash
+```shell
 curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:false" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://host:port/api/db1/user_profile/_stream_load
 ```
 
@@ -120,7 +120,7 @@ One existing data record in the table will be updated, and two new data records 
 
 When users use strict mode of Stream Load for partial column updates to insert the above data into the table, the import will fail because strict mode is enabled and the keys (`(3)`, `(18)`) of the second and third rows are not present in the original table.
 
-``` bash
+```shell
 curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:true" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://host:port/api/db1/user_profile/_stream_load
 ```
 
@@ -129,7 +129,7 @@ By default, strict mode is set to False, which means it is disabled. The method 
 
 [STREAM LOAD](./import-way/stream-load-manual.md)
 
-   ```bash
+   ```shell
    curl --location-trusted -u user:passwd \
    -H "strict_mode: true" \
    -T 1.txt \
@@ -217,7 +217,7 @@ The default value of `max_filter_ratio` is 0, which means that if there is any e
 
 [Stream Load](./import-way/stream-load-manual.md)
 
-   ```bash
+   ```shell
    curl --location-trusted -u user:passwd \
    -H "max_filter_ratio: 0.1" \
    -T 1.txt \

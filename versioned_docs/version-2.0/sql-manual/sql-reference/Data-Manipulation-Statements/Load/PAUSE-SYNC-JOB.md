@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 PAUSE SYNC JOB [db.]job_name
-````
+```
 
 ### Example
 
@@ -46,7 +46,7 @@ PAUSE SYNC JOB [db.]job_name
 
     ```sql
     PAUSE SYNC JOB `job_name`;
-    ````
+    ```
 
 ### Keywords
 

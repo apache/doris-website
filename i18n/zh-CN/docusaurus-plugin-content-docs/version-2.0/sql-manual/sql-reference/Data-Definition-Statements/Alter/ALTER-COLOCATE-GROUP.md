@@ -30,7 +30,7 @@ under the License.
 
 ALTER COLOCATE GROUP 
 
-<version since="dev"></version>
+ 
 
 ### Description
 

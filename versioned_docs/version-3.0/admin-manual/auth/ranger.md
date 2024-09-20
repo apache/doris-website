@@ -114,11 +114,11 @@ In version 2.1.0, Doris supports unified permission management by integrating Ap
 
 After the installation is complete, open the Ranger WebUI and you can see the Apache Doris plug-in in the Service Manger interface:
 
-![](/images/ranger/ranger1.png)
+![ranger1](/images/ranger/ranger1.png)
 
 Click the `+` button next to the plugin to add a Doris service:
 
-![](/images/ranger/ranger2.png)
+![ranger2](/images/ranger/ranger2.png)
 
 The meaning of some parameters of Config Properties is as follows:
 
@@ -245,12 +245,12 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 3. Create `user1` in Ranger.
 4. Add a Policy in Ranger named `show_hive_catalog`
 
-    ![](/images/ranger/ranger3.png)
+    ![ranger3](/images/ranger/ranger3.png)
 
 5. Log in to Doris as `user1` and execute `show catalogs`; only the `hive` catalog should be visible.
 6. Add a Policy in Ranger named `select_hive_catalog`
 
-    ![](/images/ranger/ranger4.png)
+    ![ranger4](/images/ranger/ranger4.png)
 
 7. Log in to Doris as `user1`. This user can now view or query all tables under any database starting with `tpch` in the `hive` catalog.
 
@@ -261,7 +261,7 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 1. Refer to Configuring Permissions to assign select permissions for the table internal.db1.user to user1.
 2. Add a Row Level Filter policy in Ranger
 
-    ![](/images/ranger/ranger-row-policy.jpeg)
+    ![Row Policy Example](/images/ranger/ranger-row-policy.jpeg)
 
 3. Log in to Doris as user1. Execute `select * from internal.db1.user` and only see data that satisfies `id > 3` and `age = 2`.
 
@@ -272,7 +272,7 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 1. Refer to Configuring Permissions to assign select permissions for the table internal.db1.user to user1.
 2. Add a Masking policy in Ranger
 
-    ![](/images/ranger/ranger-data-mask.png)
+    ![Data Mask Example](/images/ranger/ranger-data-mask.png)
 
 3. Log in to Doris as user1. Execute `select * from internal.db1.user` and observe that the phone numbers are masked according to the specified rules.
 

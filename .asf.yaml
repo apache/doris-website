@@ -50,6 +50,11 @@ github:
           - Build Check
   features:
     issues: true
+
+  collaborators:
+    - jeffreys-cat
+    - KassieZ
+
 notifications:
     commits:              commits@doris.apache.org
     issues:               commits@doris.apache.org

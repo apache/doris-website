@@ -31,7 +31,7 @@ under the License.
 返回`x`的平方根，要求x大于或等于0.
 
 :::tip
-该函数的另一个别名为 `dfloor`。
+该函数的另一个别名为 `dsqrt`。
 :::
 
 ### example

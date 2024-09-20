@@ -47,7 +47,7 @@ REVOKE privilege_list ON db_name[.tbl_name] FROM user_identity [ROLE role_name]
 REVOKE privilege_list ON RESOURCE resource_name FROM user_identity [ROLE role_name]
 
 REVOKE role_list FROM user_identity
-````
+```
 
 user_identity:
 
@@ -63,13 +63,13 @@ role_list is the list of roles to be revoked, separated by commas. The specified
 
     ```sql
     REVOKE SELECT_PRIV ON db1.* FROM 'jack'@'192.%';
-    ````
+    ```
 
 2. Revoke user jack resource spark_resource permission
 
     ```sql
     REVOKE USAGE_PRIV ON RESOURCE 'spark_resource' FROM 'jack'@'192.%';
-    ````
+    ```
 3. Revoke the roles role1 and role2 previously granted to jack
 
     ```sql

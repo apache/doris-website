@@ -6,8 +6,6 @@
     'date': '2024-07-19',
     'author': 'Dien, Tran Thanh',
     'tags': ['Best Practice'],
-    'picked': "true",
-    'order': "3",
     "image": '/images/migrate-lakehouse-from-bigquery-to-apache-doris.jpg'
 }
 

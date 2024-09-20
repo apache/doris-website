@@ -32,7 +32,7 @@ Doris JDBC Catalog 支持通过标准 JDBC 接口连接 OceanBase 数据库。�
 
 - OceanBase 3.1.0 或更高版本
 
-- OceanBase 数据库的 JDBC 驱动程序，您可以从 [Maven 仓库](https://mvnrepository.com/artifact/com.oceanbase/oceanbase-client)下载最新或指定版本的 ClickHouse JDBC 驱动程序。**推荐使用 OceanBase Connector/J 2.4.8 或以上版本。**
+- OceanBase 数据库的 JDBC 驱动程序，您可以从 [Maven 仓库](https://mvnrepository.com/artifact/com.oceanbase/oceanbase-client)下载最新或指定版本的 OceanBase JDBC 驱动程序。**推荐使用 OceanBase Connector/J 2.4.8 或以上版本。**
 
 - Doris 每个 FE 和 BE 节点和 OceanBase 服务器之间的网络连接。
 

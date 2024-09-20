@@ -40,13 +40,13 @@ This statement is used to view the Profile information of the import operation. 
 
 ```sql
 SET is_report_success=true;
-````
+```
 
 Versions 0.15 and later perform the following settings:
 
 ```sql
 SET [GLOBAL] enable_profile=true;
-````
+```
 
 grammar:
 
@@ -60,7 +60,7 @@ show load profile "/[queryId]/[TaskId]"
 show load profile "/[queryId]/[TaskId]/[FragmentId]/"
 
 show load profile "/[queryId]/[TaskId]/[FragmentId]/[InstanceId]"
-````
+```
 
 This command will list all currently saved import profiles. Each line corresponds to one import. where the QueryId column is the ID of the import job. This ID can also be viewed through the SHOW LOAD statement. We can select the QueryId corresponding to the Profile we want to see to see the specific situation
 
@@ -106,7 +106,7 @@ WaitAndFetchResultTime: NULL
        FetchResultTime: 0ns
        WriteResultTime: 0ns
 WaitAndFetchResultTime: N/A
-   ````
+   ```
 
 2. View an overview of the subtasks with imported jobs:
 
@@ -117,7 +117,7 @@ WaitAndFetchResultTime: N/A
    +-----------------------------------+------------+
    | 980014623046410a-af5d36f23381017f | 3m14s      |
    +-----------------------------------+------------+
-   ````
+   ```
    
 3. View the plan tree of the specified subtask
 
@@ -177,7 +177,7 @@ WaitAndFetchResultTime: N/A
    | 980014623046410a-88e260f0c43031f4 | 10.81.85.89:9067 | 3m10s      |
    | 980014623046410a-88e260f0c43031f5 | 10.81.85.89:9067 | 3m14s      |
    +-----------------------------------+------------------+------------+
-   ````
+   ```
 
 4. Continue to view the detailed Profile of each operator on a specific Instance
 
@@ -225,7 +225,7 @@ WaitAndFetchResultTime: N/A
    │      - TotalReadThroughput: 30.39858627319336 MB/sec│
    │      - WaitScannerTime: 56s528ms                    │
    └-----------------------------------------------------┘
-   ````
+   ```
 
 ### Keywords
 

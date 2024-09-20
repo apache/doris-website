@@ -67,13 +67,7 @@ RENAME PARTITION old_partition_name new_partition_name;
 ```
 
 4.  修改 column 名称
-
-<version since="1.2">
   
-修改 column 名称
-
-</version>
-
 语法：
 
 ```sql
@@ -81,8 +75,11 @@ RENAME COLUMN old_column_name new_column_name;
 ```
 
 注意：
-- 建表时需要在property中设置light_schema_change=true
+- 建表时需要在 property 中设置 light_schema_change=true
 
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
 ### Example
 

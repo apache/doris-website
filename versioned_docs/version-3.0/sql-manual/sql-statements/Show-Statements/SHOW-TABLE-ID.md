@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW TABLE [table_id]
-````
+```
 
 ### Example
 
@@ -46,7 +46,7 @@ SHOW TABLE [table_id]
 
      ```sql
      SHOW TABLE 10001;
-     ````
+     ```
 
 ### Keywords
 

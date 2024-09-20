@@ -100,9 +100,9 @@ In many cases, we need to troubleshoot problems through logs. The format and vie
 
    A typical FE log is as follows:
 
-   ````text
+   ```text
    2021-09-16 23:13:22,502 INFO (tablet scheduler|43) [BeLoadRebalancer.selectAlternativeTabletsForCluster():85] cluster is balance: default_cluster with medium: HDD.skip
-   ````
+   ```
 
    - `2021-09-16 23:13:22,502`: log time.
    - `INFO: log level, default is INFO`.
@@ -122,9 +122,9 @@ In many cases, we need to troubleshoot problems through logs. The format and vie
 
    A typical BE log is as follows:
 
-   ````text
+   ```text
    I0916 23:21:22.038795 28087 task_worker_pool.cpp:1594] finish report TASK. master host: 10.10.10.10, port: 9222
-   ````
+   ```
 
    - `I0916 23:21:22.038795`: log level and datetime. The capital letter I means INFO, W means WARN, and F means FATAL.
    - `28087`: thread id. Through the thread id, you can view the context information of this thread and check what happened in this thread.
@@ -175,18 +175,18 @@ In other words, ".HDD" and ".SSD" are only used to identify the "relative" "low 
 
 Doris can deploy multiple FEs. When accessing the Web UI, if Nginx is used for load balancing, there will be a constant prompt to log in again because of the session problem. This problem is actually a problem of session sharing. Nginx provides centralized session sharing. The solution, here we use the ip_hash technology in nginx, ip_hash can direct the request of an ip to the same backend, so that a client and a backend under this ip can establish a stable session, ip_hash is defined in the upstream configuration:
 
-````text
+```text
 upstream doris.com {
    server 172.22.197.238:8030 weight=3;
    server 172.22.197.239:8030 weight=4;
    server 172.22.197.240:8030 weight=4;
    ip_hash;
 }
-````
+```
 
 The complete Nginx example configuration is as follows:
 
-````text
+```text
 user nginx;
 worker_processes auto;
 error_log /var/log/nginx/error.log;
@@ -244,7 +244,7 @@ http {
         }
     }
  }
-````
+```
 
 ### Q9. FE fails to start, "wait catalog to be ready. FE type UNKNOWN" keeps scrolling in fe.log
 

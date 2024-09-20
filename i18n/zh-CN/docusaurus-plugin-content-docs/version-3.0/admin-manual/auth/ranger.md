@@ -114,11 +114,11 @@ Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，�
 
 安装完毕后，打开 Ranger WebUI，可以再 Service Manger 界面中看到 Apache Doris 插件：
 
-![](/images/ranger/ranger1.png)
+![ranger1](/images/ranger/ranger1.png)
 
 点击插件旁边的 `+` 号添加一个  Doris 服务：
 
-![](/images/ranger/ranger2.png)
+![ranger2](/images/ranger/ranger2.png)
 
 Config Properties 部分参数含义如下：
 
@@ -245,12 +245,12 @@ Config Properties 部分参数含义如下：
 3. 在 Ranger 中创建 `user1`。
 4. 在 Ranger 中添加一个 Policy：`show_hive_catalog`
 
-	![](/images/ranger/ranger3.png)
+	![ranger3](/images/ranger/ranger3.png)
 
 5. 使用 `user1` 登录 Doris，执行 `show catalogs`，只能看到 `hive` catalog。
 6. 在 Ranger 中添加一个 Policy：`select_hive_catalog`
 
-	![](/images/ranger/ranger4.png)
+	![ranger4](/images/ranger/ranger4.png)
 
 7. 使用 `user1` 登录 Doris。该用户可以查看或查询 `hive` catalog 下，所有以 `tpch` 开头的 database 下的所有表。
 
@@ -261,7 +261,7 @@ Config Properties 部分参数含义如下：
 1. 参考 配置权限 给 user1 分配 internal.db1.user 表的 select 权限。
 2. 在 Ranger 中添加一个 Row Level Filter policy
 
-    ![](/images/ranger/ranger-row-policy.jpeg)
+    ![Row Policy 示例](/images/ranger/ranger-row-policy.jpeg)
 
 3. 使用 user1 登录 Doris。执行 `select * from internal.db1.user`，只能看到满足 `id > 3` 且 `age = 2` 的数据。
 
@@ -272,6 +272,6 @@ Config Properties 部分参数含义如下：
 1. 参考 配置权限 给 user1 分配 internal.db1.user 表的 select 权限。
 2. 在 Ranger 中添加一个 Masking policy
 
-    ![](/images/ranger/ranger-data-mask.png)
+    ![Data Mask 示例](/images/ranger/ranger-data-mask.png)
 
 3. 使用 user1 登录 Doris。执行 `select * from internal.db1.user`，看到的 phone 是按照指定规则脱敏后的数据。

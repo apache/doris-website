@@ -1,7 +1,7 @@
 ---
 {
-"title": "Asynchronous materialized view",
-"language": "en"
+    "title": "Asynchronous materialized view",
+    "language": "en"
 }
 ---
 
@@ -35,9 +35,9 @@ Prepare two tables and data
 use tpch;
 
 CREATE TABLE IF NOT EXISTS orders  (
-                                       o_orderkey       integer not null,
-                                       o_custkey        integer not null,
-                                       o_orderstatus    char(1) not null,
+    o_orderkey       integer not null,
+    o_custkey        integer not null,
+    o_orderstatus    char(1) not null,
     o_totalprice     decimalv3(15,2) not null,
     o_orderdate      date not null,
     o_orderpriority  char(15) not null,
@@ -52,16 +52,16 @@ CREATE TABLE IF NOT EXISTS orders  (
     PROPERTIES ("replication_num" = "1");
 
 insert into orders values
-                       (1, 1, 'ok', 99.5, '2023-10-17', 'a', 'b', 1, 'yy'),
-                       (2, 2, 'ok', 109.2, '2023-10-18', 'c','d',2, 'mm'),
-                       (3, 3, 'ok', 99.5, '2023-10-19', 'a', 'b', 1, 'yy');
+   (1, 1, 'ok', 99.5, '2023-10-17', 'a', 'b', 1, 'yy'),
+   (2, 2, 'ok', 109.2, '2023-10-18', 'c','d',2, 'mm'),
+   (3, 3, 'ok', 99.5, '2023-10-19', 'a', 'b', 1, 'yy');
 
 CREATE TABLE IF NOT EXISTS lineitem (
-                                        l_orderkey    integer not null,
-                                        l_partkey     integer not null,
-                                        l_suppkey     integer not null,
-                                        l_linenumber  integer not null,
-                                        l_quantity    decimalv3(15,2) not null,
+    l_orderkey    integer not null,
+    l_partkey     integer not null,
+    l_suppkey     integer not null,
+    l_linenumber  integer not null,
+    l_quantity    decimalv3(15,2) not null,
     l_extendedprice  decimalv3(15,2) not null,
     l_discount    decimalv3(15,2) not null,
     l_tax         decimalv3(15,2) not null,
@@ -76,14 +76,14 @@ CREATE TABLE IF NOT EXISTS lineitem (
     )
     DUPLICATE KEY(l_orderkey, l_partkey, l_suppkey, l_linenumber)
     PARTITION BY RANGE(l_shipdate)
-(FROM ('2023-10-17') TO ('2023-10-20') INTERVAL 1 DAY)
+    (FROM ('2023-10-17') TO ('2023-10-20') INTERVAL 1 DAY)
     DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3
     PROPERTIES ("replication_num" = "1");
 
 insert into lineitem values
-                         (1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-17', '2023-10-17', '2023-10-17', 'a', 'b', 'yyyyyyyyy'),
-                         (2, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-18', '2023-10-18', '2023-10-18', 'a', 'b', 'yyyyyyyyy'),
-                         (3, 2, 3, 6, 7.5, 8.5, 9.5, 10.5, 'k', 'o', '2023-10-19', '2023-10-19', '2023-10-19', 'c', 'd', 'xxxxxxxxx');
+ (1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-17', '2023-10-17', '2023-10-17', 'a', 'b', 'yyyyyyyyy'),
+ (2, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-18', '2023-10-18', '2023-10-18', 'a', 'b', 'yyyyyyyyy'),
+ (3, 2, 3, 6, 7.5, 8.5, 9.5, 10.5, 'k', 'o', '2023-10-19', '2023-10-19', '2023-10-19', 'c', 'd', 'xxxxxxxxx');
 ```
 Create materialized views
 ```sql
@@ -92,15 +92,15 @@ CREATE MATERIALIZED VIEW mv1
         partition by(l_shipdate)
         DISTRIBUTED BY RANDOM BUCKETS 2
         PROPERTIES ('replication_num' = '1') 
-        AS
-select l_shipdate, o_orderdate, l_partkey, l_suppkey, sum(o_totalprice) as sum_total
-from lineitem
-         left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
-group by
-    l_shipdate,
-    o_orderdate,
-    l_partkey,
-    l_suppkey;
+        AS 
+        select l_shipdate, o_orderdate, l_partkey, l_suppkey, sum(o_totalprice) as sum_total
+            from lineitem
+            left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
+            group by
+            l_shipdate,
+            o_orderdate,
+            l_partkey,
+            l_suppkey;
 ```
 
 Specific syntax can be viewed [CREATE ASYNC MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
@@ -338,7 +338,7 @@ AS
 SELECT k1,year,region FROM hive1;
 ```
 
-#### Only using a subset of the base table partitions.
+#### Only using a subset of the base table partitions
 Note: Supported from version 2.1.1
 
 If some base tables have many partitions, but the materialized view only focuses on the recent "hot" data, this feature can be used.
@@ -379,6 +379,104 @@ SELECT * FROM t1;
 If another day has passed and the current time is 2024-03-29 xx: xx: xx, t1 adds a partition [("2024-03-29"), ("2024-03-30")]. If the materialized view is refreshed at this time, after the refresh is completed, the materialized view will only have one partition [("2024-03-29"), ("2024-03-30")]
 
 If the partition field is of string type, you can set the materialized view property 'partition_date_format', for example, '%Y-%m-%d'.
+
+#### Partition rolling up
+
+Partition rolling up can be used when the data in each partition of the base table becomes very small after aggregation. This can reduce the number of partitions in the materialized view.
+
+##### List partition
+Note: Hive partitions correspond to Doris list partitions.
+
+If the base table creation statement is as follows
+```sql
+CREATE TABLE `t1` (
+  `k1` INT NOT NULL,
+  `k2` DATE NOT NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`k1`)
+COMMENT 'OLAP'
+PARTITION BY list(`k2`)
+(
+PARTITION p_20200101 VALUES IN ("2020-01-01"),
+PARTITION p_20200102 VALUES IN ("2020-01-02"),
+PARTITION p_20200201 VALUES IN ("2020-02-01")
+)
+DISTRIBUTED BY HASH(`k1`) BUCKETS 2
+PROPERTIES ('replication_num' = '1') ;
+```
+If the materialized view creation statement is as follows, then the materialized view will have two partitions:
+- ("2020-01-01","2020-01-02")
+- ("2020-02-01")
+```sql
+CREATE MATERIALIZED VIEW mv1
+    BUILD DEFERRED REFRESH AUTO ON MANUAL
+    partition by (date_trunc(`k2`,'month'))
+    DISTRIBUTED BY RANDOM BUCKETS 2
+    PROPERTIES (
+    'replication_num' = '1'
+    )
+    AS
+    SELECT * FROM t1;
+```
+If the materialized view creation statement is as follows, then the materialized view will have one partition:
+- ("2020-01-01","2020-01-02","2020-02-01")
+```sql
+CREATE MATERIALIZED VIEW mv1
+    BUILD DEFERRED REFRESH AUTO ON MANUAL
+    partition by (date_trunc(`k2`,'year'))
+    DISTRIBUTED BY RANDOM BUCKETS 2
+    PROPERTIES (
+    'replication_num' = '1'
+    )
+    AS
+    SELECT * FROM t1;
+```
+##### Range partition
+If the base table creation statement is as follows:
+```sql
+CREATE TABLE `t1` (
+  `k1` LARGEINT NOT NULL,
+  `k2` DATE NOT NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`k1`)
+COMMENT 'OLAP'
+PARTITION BY range(`k2`)
+(
+PARTITION p_20200101 VALUES [("2020-01-01"),("2020-01-02")),
+PARTITION p_20200102 VALUES [("2020-01-02"),("2020-01-03")),
+PARTITION p_20200201 VALUES [("2020-02-01"),("2020-02-02"))
+)
+DISTRIBUTED BY HASH(`k1`) BUCKETS 2
+PROPERTIES ('replication_num' = '1') ;
+```
+If the materialized view creation statement is as follows, then the materialized view will have two partitions:
+- [("2020-01-01","2020-02-01"))
+- [("2020-02-01","2020-03-01"))
+```sql
+CREATE MATERIALIZED VIEW mv1
+    BUILD DEFERRED REFRESH AUTO ON MANUAL
+    partition by (date_trunc(`k2`,'month'))
+    DISTRIBUTED BY RANDOM BUCKETS 2
+    PROPERTIES (
+    'replication_num' = '1'
+    )
+    AS
+    SELECT * FROM t1;
+```
+If the materialized view creation statement is as follows, then the materialized view will have one partition:
+- [("2020-01-01","2021-01-01"))
+```sql
+CREATE MATERIALIZED VIEW mv1
+    BUILD DEFERRED REFRESH AUTO ON MANUAL
+    partition by (date_trunc(`k2`,'year'))
+    DISTRIBUTED BY RANDOM BUCKETS 2
+    PROPERTIES (
+    'replication_num' = '1'
+    )
+    AS
+    SELECT * FROM t1;
+```
+Note: When the partition is a string, the way it is rolled up is still being designed. The current behavior may change, it is best not to use it
 
 ## Data refreshing
 ### Refresh principle
@@ -431,6 +529,23 @@ partition by(`xxx`)
 AS
 select ... from t1;
 ```
+
+## Data Lake Support Status
+| Catalog type | COMPLETE REFRESH | PARTITION REFRESH | TRIGGER REFRESH
+|--------------| -- | --- | --- |
+| Internal     | 2.1 | 2.1 | 2.1.4
+| Hive         | 2.1 | 2.1 | N/A
+| Iceberg      | 2.1 | N/A | N/A
+| Paimon       | 2.1 | N/A | N/A
+| Hudi         | 2.1 | N/A | N/A
+| JDBC         | 2.1 | N/A | N/A
+| ES           | 2.1 | N/A | N/A
+
+## Permission Description
+- Create a materialized view : Create permissions for materialized views (similar to table creation) and query permissions for creating materialized view query statements (similar to SELECT)
+- Drop a materialized view : Drop permission for materialized views (same as deleting tables)
+- Alter a materialized view : Alter permission for materialized views (same as deleting tables)
+- Pause/Resume/Cancel/Refresh: Create permissions for materialized views
 
 ## Problem localization
 ### Localization means
@@ -526,7 +641,7 @@ Materialized views are effective in accelerating repetitive and regular queries.
 
 Use the pre computed results of materialized views to respond to queries. Greatly reduces the resources used for table connections and aggregation operations, and reduces query response time.
 
-### Data Lake Acceleration
+### Data lake acceleration
 #### Background of demand
 Many users have a need for federated data queries based on Doris. Doris's Multi Catalog feature makes this task very convenient. As long as a catalog is created, there is no need to migrate data to Doris, and external data can be queried through Doris
 #### Pain points

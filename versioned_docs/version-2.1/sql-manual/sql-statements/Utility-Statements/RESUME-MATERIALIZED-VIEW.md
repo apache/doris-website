@@ -45,7 +45,7 @@ RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 1. Timed scheduling for restoring materialized view mv1
 
     ```sql
-    RESUME MATERIALIZED VIEW mv1;
+    RESUME MATERIALIZED VIEW JOB ON mv1;
     ```
    
 ### Keywords

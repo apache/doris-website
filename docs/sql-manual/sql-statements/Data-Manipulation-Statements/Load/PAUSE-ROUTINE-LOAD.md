@@ -36,7 +36,7 @@ Used to pause a Routine Load job. A suspended job can be rerun with the RESUME c
 
 ```sql
 PAUSE [ALL] ROUTINE LOAD FOR job_name
-````
+```
 
 ### Example
 
@@ -44,13 +44,13 @@ PAUSE [ALL] ROUTINE LOAD FOR job_name
 
     ```sql
     PAUSE ROUTINE LOAD FOR test1;
-    ````
+    ```
 
 2. Pause all routine import jobs.
 
     ```sql
     PAUSE ALL ROUTINE LOAD;
-    ````
+    ```
 
 ### Keywords
 

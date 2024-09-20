@@ -36,13 +36,13 @@ Deploying a cluster online requires the following steps:
 
 1. Create namespace:
 
-```bash
+```shell
 kubectl create namespace ${namespace}
 ```
 
 2. Deploy Doris cluster
 
-```bash
+```shell
 kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
 ```
 
@@ -61,7 +61,7 @@ selectdb/doris.be-ubuntu:2.0.2
 
 Download the image locally and package it into a tar file
 
-```bash
+```shell
 ## download docker image
 docker pull selectdb/doris.fe-ubuntu:2.0.2
 docker pull selectdb/doris.be-ubuntu:2.0.2
@@ -73,7 +73,7 @@ docker save -o doris.be-ubuntu-v2.0.2.tar docker pull selectdb/doris.be-ubuntu:2
 
 Upload the image tar package to the server and execute the docker load command:
 
-```bash
+```shell
 ## load docker image
 docker load -i doris.fe-ubuntu-v2.0.2.tar
 docker load -i doris.be-ubuntu-v2.0.2.tar
@@ -81,13 +81,13 @@ docker load -i doris.be-ubuntu-v2.0.2.tar
 
 2. Create namespace:
 
-```bash
+```shell
 kubectl create namespace ${namespace}
 ```
 
 3. Deploy Doris cluster
 
-```bash
+```shell
 kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
 ```
 
@@ -101,13 +101,13 @@ Before installation, you need to add a deployment warehouse. If it has been adde
 
 Install [doriscluster](https://artifacthub.io/packages/helm/doris/doris), using the default configuration this deployment only deploys 3 FE and 3 BE components, using the default `storageClass` to implement PV dynamic provisioning.
 
-```bash
+```shell
 helm install doriscluster doris-repo/doris
 ```
 
 If you need to customize resources and cluster shapes, please customize the resource configuration according to the annotations of each resource configuration in [values.yaml](https://artifacthub.io/packages/helm/doris/doris?modal=values) and execute The following command:
 
-```bash
+```shell
 helm install -f values.yaml doriscluster doris-repo/doris
 ```
 
@@ -115,13 +115,13 @@ helm install -f values.yaml doriscluster doris-repo/doris
 
 You can check the pod deployment status through the `kubectl get pods` command. When the Pod of `doriscluster` is in `Running` state and all containers in the Pod are ready, the deployment is successful.
 
-```bash
+```shell
 kubectl get pod --namespace doris
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                     READY   STATUS    RESTARTS   AGE
 doriscluster-helm-fe-0   1/1     Running   0          1m39s
 doriscluster-helm-fe-1   1/1     Running   0          1m39s
@@ -137,7 +137,7 @@ doriscluster-helm-be-2   1/1     Running   0          16s
 
 Download `doris-{chart_version}.tgz` to install Doris Cluster chart. If you need to download the 2.0.6 version of the Doris cluster, you can use the following command:
 
-```bash
+```shell
 wget https://charts.selectdb.com/doris-2.0.6.tgz
 ```
 
@@ -145,13 +145,13 @@ wget https://charts.selectdb.com/doris-2.0.6.tgz
 
 Doris cluster can be installed through the `helm install` command.
 
-```bash
+```shell
 helm install doriscluster doris-1.4.0.tgz
 ```
 
 If you need to customize the assembly [values.yaml](https://artifacthub.io/packages/helm/doris/doris?modal=values), you can refer to the following command:
 
-```bash
+```shell
 helm install -f values.yaml doriscluster doris-1.4.0.tgz
 ```
 
@@ -159,13 +159,13 @@ helm install -f values.yaml doriscluster doris-1.4.0.tgz
 
 You can check the pod deployment status through the `kubectl get pods` command. When the Pod of `doriscluster` is in `Running` state and all containers in the Pod are ready, the deployment is successful.
 
-```bash
+```shell
 kubectl get pod --namespace doris
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                     READY   STATUS    RESTARTS   AGE
 doriscluster-helm-fe-0   1/1     Running   0          1m39s
 doriscluster-helm-fe-1   1/1     Running   0          1m39s
@@ -181,13 +181,13 @@ doriscluster-helm-be-2   1/1     Running   0          16s
 
 After the cluster deployment resources are delivered, you can check the cluster status by running the following command.
 
-```bash
+```shell
 kubectl get pods -n ${namespace}
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                       READY   STATUS    RESTARTS   AGE
 doriscluster-sample-fe-0   1/1     Running   0          20m
 doriscluster-sample-be-0   1/1     Running   0          19m
@@ -199,13 +199,13 @@ When the `STATUS` of all pods is in the `Running` state, and all containers in t
 
 Doris Operator will collect the status of cluster services and display them in the distributed resources. Doris Operator defines the abbreviation `dcr` for the `DorisCluster` type resource name, which can be replaced by the abbreviation when using the resource type to view the cluster status.
 
-```bash
+```shell
 kubectl get dcr
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                  FESTATUS    BESTATUS    CNSTATUS   BROKERSTATUS
 doriscluster-sample   available   available
 ```

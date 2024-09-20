@@ -29,32 +29,32 @@ Doris Operator extends Kubernetes with Custom Resource Definition (CRD). The CRD
 
 Doris Cluster CRD can be deployed in a Kubernetes environment with the following command:
 
-```bash
+```shell
 kubectl create -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
 ```
 
 If there is no external network, download the CRD file to your local computer first:
 
-```bash
+```shell
 wget https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
 kubectl create -f ./doris.selectdb.com_dorisclusters.yaml
 ```
 
 The following is the expected output:
 
-```bash
+```shell
 customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
 ```
 
 After the Doris Cluster CRD is created, you can view the created CRD with the following command.
 
-```bash
+```shell
 kubectl get crd | grep doris
 ```
 
 The following is the expected output:
 
-```bash
+```shell
 dorisclusters.doris.selectdb.com                      2024-02-22T16:23:13Z
 ```
 
@@ -66,13 +66,13 @@ You can directly pull the Doris Operator template in the warehouse for quick dep
 
 Doris Operator can be deployed in a Kubernetes cluster using the following command:
 
-```bash
+```shell
 kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/operator/operator.yaml
 ```
 
 The following is the expected output:
 
-```bash
+```shell
 namespace/doris created
 role.rbac.authorization.k8s.io/leader-election-role created
 rolebinding.rbac.authorization.k8s.io/leader-election-rolebinding created
@@ -91,13 +91,13 @@ The minimum requirements for deploying operator services are specified in the op
 
 After modifying the operator.yaml file, you can deploy the Doris Operator service using the following command:
 
-```bash
+```shell
 kubectl apply -f ./operator.yaml
 ```
 
 The following is the expected output:
 
-```bash
+```shell
 namespace/doris created
 role.rbac.authorization.k8s.io/leader-election-role created
 rolebinding.rbac.authorization.k8s.io/leader-election-rolebinding created
@@ -113,13 +113,13 @@ deployment.apps/doris-operator created
 
 If the server is not connected to the external network, you need to download the corresponding operator image file first. Doris Operator uses the following images:
 
-```bash
+```shell
 selectdb/doris.k8s-operator:latest
 ```
 
 Run the following command on a server that can connect to the external network to download the image:
 
-```bash
+```shell
 ## download doris operator image
 docker pull selectdb/doris.k8s-operator:latest
 ## save the doris operator image as a tar package
@@ -128,7 +128,7 @@ docker save -o doris.k8s-operator-latest.tar selectdb/doris.k8s-operator:latest
 
 Place the packaged tar file into all Kubernetes nodes and run the following command to upload the image:
 
-```bash
+```shell
 docker load -i doris.k8s-operator-latest.tar
 ```
 
@@ -138,7 +138,7 @@ After downloading the operator.yaml file, you can modify the template according 
 
 Doris Operator is a stateless Deployment in the Kubernetes cluster. Items such as `limits`, `replica`, `label`, `namespace` and other items can be modified according to needs. If you need to specify a certain version of the doirs operator image, you can make the following modifications to the operator.yaml file after uploading the image:
 
-```bash
+```shell
 ...
 containers:
   - command:
@@ -158,13 +158,13 @@ containers:
 
 After modifying the Doris Operator template, you can use the apply command to deploy the Operator:
 
-```bash
+```shell
 kubectl apply -f ./operator.yaml
 ```
 
 The following is the expected output:
 
-```bash
+```shell
 namespace/doris created
 role.rbac.authorization.k8s.io/leader-election-role created
 rolebinding.rbac.authorization.k8s.io/leader-election-rolebinding created
@@ -184,13 +184,13 @@ Helm Chart is an encapsulation of a series of YAML files that describe Kubernete
 
 Add the remote repository through the `repo add` command
 
-```bash
+```shell
 helm repo add doris-repo https://charts.selectdb.com
 ```
 
 Update the latest version of the chart through the `repo update` command
 
-```bash
+```shell
 helm repo update doris-repo
 ```
 
@@ -198,25 +198,25 @@ helm repo update doris-repo
 
 Doris Operator can be installed in the doris namespace using the default configuration through the `helm install` command.
 
-```bash
+```shell
 helm install operator doris-repo/doris-operator
 ```
 
 If you need to customize the assembly [values.yaml](https://artifacthub.io/packages/helm/doris/doris-operator?modal=values), you can refer to the following command:
 
-```bash
+```shell
 helm install -f values.yaml operator doris-repo/doris-operator
 ```
 
 Check the deployment status of Pods through the `kubectl get pods` command. When the Doris Operator's Pod is in the Running state and all containers in the Pod are ready, the deployment is successful.
 
-```bash
+```shell
 kubectl get pod --namespace doris
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 ```
@@ -229,7 +229,7 @@ If the server cannot connect to the external network, you need to download the c
 
 Download `doris-operator-{chart_version}.tgz` to install Doris Operator chart. If you need to download version 1.4.0 of Doris Operator, you can use the following command:
 
-```bash
+```shell
 wget https://charts.selectdb.com/doris-operator-1.4.0.tgz
 ```
 
@@ -237,25 +237,25 @@ wget https://charts.selectdb.com/doris-operator-1.4.0.tgz
 
 Doris Operator can be installed through the `helm install` command.
 
-```bash
+```shell
 helm install operator doris-operator-1.4.0.tgz
 ```
 
 If you need to customize the assembly [values.yaml](https://artifacthub.io/packages/helm/doris/doris-operator?modal=values), you can refer to the following command:
 
-```bash
+```shell
 helm install -f values.yaml operator doris-operator-1.4.0.tgz
 ```
 
 Check the deployment status of Pods through the `kubectl get pods` command. When the Doris Operator's Pod is in the Running state and all containers in the Pod are ready, the deployment is successful.
 
-```bash
+```shell
 kubectl get pod --namespace doris
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 ```
@@ -264,13 +264,13 @@ doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 
 After deploying the Operator service, you can check the service status through the following command.
 
-```bash
+```shell
 kubectl get pod -n doris
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-6f47594455-p5tp7   1/1     Running   0          11s
 ```

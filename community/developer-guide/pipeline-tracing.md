@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Pipeline Tracing
+
 
 In the Pipeline execution engine, we split the execution plan tree of each Instance into multiple small Pipeline Tasks and execute them under our custom Pipeline scheduler. Therefore, in an environment with a large number of Pipeline Tasks executing, how these Tasks are scheduled across threads and CPU cores is an important factor for execution performance. We have developed a specialised tool to observe the scheduling process on a particular query or time period, which we call "Pipeline Tracing".
 

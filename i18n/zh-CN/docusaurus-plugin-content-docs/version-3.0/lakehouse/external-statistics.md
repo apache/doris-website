@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 外表统计信息
+
 
 外表统计信息的收集方式和收集内容与内表基本一致，详细信息可以参考[统计信息](../query/nereids/statistics)。
 2.0.3 版本之后，Hive 外表支持了自动和采样收集。

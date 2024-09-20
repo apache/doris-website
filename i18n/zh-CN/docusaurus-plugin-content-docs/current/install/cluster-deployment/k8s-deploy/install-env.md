@@ -39,7 +39,7 @@ under the License.
 
 在 Kubernetes 上部署 Doris 集群，建议关闭防火墙配置：
 
-```bash
+```shell
 systemctl stop firewalld
 systemctl disable firewalld
 ```
@@ -56,7 +56,7 @@ systemctl disable firewalld
 
 通过以下命令可以永久关闭 swap 分区。
 
-```bash
+```shell
 echo "vm.swappiness = 0">> /etc/sysctl.conf
 swapoff -a && swapon -a
 sysctl -p
@@ -64,7 +64,7 @@ sysctl -p
 
 ### 设置系统最大打开文件句柄数
 
-```bash
+```shell
 vi /etc/security/limits.conf 
 * soft nofile 65536
 * hard nofile 65536
@@ -74,7 +74,7 @@ vi /etc/security/limits.conf
 
 修改虚拟内存区域至少 2000000
 
-```bash
+```shell
 sysctl -w vm.max_map_count=2000000
 ```
 
@@ -82,7 +82,7 @@ sysctl -w vm.max_map_count=2000000
 
 在部署 Doris 时，建议关闭透明大页。
 
-```bash
+```shell
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
 echo never > /sys/kernel/mm/transparent_hugepage/defrag
 ```

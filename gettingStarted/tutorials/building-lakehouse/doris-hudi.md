@@ -55,7 +55,7 @@ With Apache Doris' high-performance query execution and Apache Hudi's real-time 
 
 This article will introduce readers to how to quickly set up a test and demonstration environment for Apache Doris + Apache Hudi in a Docker environment, and demonstrate various operations to help readers get started quickly.
 
-For more information, please refer to [Hudi Catalog](../../lakehouse/datalake-analytics/hudi.md)
+For more information, please refer to [Hudi Catalog](../../../lakehouse/datalake-analytics/hudi)
 
 ## User Guide
 

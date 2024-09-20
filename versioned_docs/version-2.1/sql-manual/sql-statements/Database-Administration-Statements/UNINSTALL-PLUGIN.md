@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 UNINSTALL PLUGIN plugin_name;
-````
+```
 
   plugin_name can be viewed with the `SHOW PLUGINS;` command.
 
@@ -50,7 +50,7 @@ Only non-builtin plugins can be uninstalled.
 
     ```sql
     UNINSTALL PLUGIN auditdemo;
-    ````
+    ```
 
 ### Keywords
 

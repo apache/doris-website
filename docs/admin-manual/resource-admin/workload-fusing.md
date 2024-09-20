@@ -1,7 +1,7 @@
 ---
 {
 "title": "Workload Fusing",
-"language": "zh-CN"
+"language": "en"
 }
 ---
 
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# Workload Fusing
 
 Workload Fusing is typically applied in scenarios where certain queries excessively consume resources, leading to a decline in the overall availability of the online cluster. In such cases, the cluster can be restored to normal operation by detecting and blocking the abnormal big queries during runtime.
 

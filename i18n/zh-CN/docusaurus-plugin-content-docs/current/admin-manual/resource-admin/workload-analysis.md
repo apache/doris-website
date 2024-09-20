@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 背景
 Doris支持通过Workload系统表对集群中的工作负载进行分析，可以解决以下问题：
 1. 帮助用户了解每个Workload Group的资源利用率，合理的设置资源上限，避免资源的浪费。
 2. 当集群由于资源不足导致可用性下降时，可以使用系统表快速定位出目前资源使用的分布情况，从做出相应的资源管控决策，恢复集群的可用性。
@@ -85,6 +84,12 @@ Doris支持通过Workload系统表对集群中的工作负载进行分析，可�
 6. 可以使用```backend_active_tasks```结合```active_queries```找出目前集群中资源用量比较异常的SQL，然后通过kill语句杀死这些SQL释放资源。
 
 ## 常用SQL
+:::tip
+需要注意的是，active_queries表记录了在FE运行的query，backend_active_tasks记录了在BE运行的query，并非所有query运行时在FE注册，比如stream load就并未在FE注册。
+因此使用backend_active_tasks表left join active_queries如果没有匹配的结果属于正常情况。
+当一个Query是select查询时，那么active_queries和backend_active_tasks中记录的queryId是一致的。当一个Query是stream load时，那么在active_queries表中的queryId为空，backend_active_tasks的queryId是该stream load的Id。
+:::
+
 1. 查看目前所有的Workload Group并依次按照内存/CPU/IO降序显示。
 ```
 select be_id,workload_group_id,memory_usage_bytes,cpu_usage_percent,local_scan_bytes_per_second 
@@ -95,13 +100,15 @@ order by  memory_usage_bytes,cpu_usage_percent,local_scan_bytes_per_second desc
 2. CPU使用topN的sql
     ```
     select 
+            t1.query_id as be_query_id,
+            t1.query_type,
             t2.query_id,
             t2.workload_group_id,
             t2.`database`,
             t1.cpu_time,
             t2.`sql`
     from
-    (select query_id, sum(task_cpu_time_ms) as cpu_time from backend_active_tasks group by query_id) 
+    (select query_id, query_type,sum(task_cpu_time_ms) as cpu_time from backend_active_tasks group by query_id, query_type) 
             t1 left join active_queries t2
     on t1.query_id = t2.query_id
     order by cpu_time desc limit 10;
@@ -110,11 +117,13 @@ order by  memory_usage_bytes,cpu_usage_percent,local_scan_bytes_per_second desc
 3. 内存使用topN的sql
     ```
     select 
+            t1.query_id as be_query_id,
+            t1.query_type,
             t2.query_id,
             t2.workload_group_id,
             t1.mem_used
     from
-    (select query_id, sum(current_used_memory_bytes) as mem_used from backend_active_tasks group by query_id) 
+    (select query_id, query_type, sum(current_used_memory_bytes) as mem_used from backend_active_tasks group by query_id, query_type) 
             t1 left join active_queries t2
     on t1.query_id = t2.query_id 
     order by mem_used desc limit 10;
@@ -123,12 +132,14 @@ order by  memory_usage_bytes,cpu_usage_percent,local_scan_bytes_per_second desc
 4. 扫描数据量topN的sql
     ```
     select 
+            t1.query_id as be_query_id,
+            t1.query_type,
             t2.query_id,
             t2.workload_group_id,
             t1.scan_rows,
             t1.scan_bytes
     from
-    (select query_id, sum(scan_rows) as scan_rows,sum(scan_bytes) as scan_bytes from backend_active_tasks group by query_id) 
+    (select query_id, query_type, sum(scan_rows) as scan_rows,sum(scan_bytes) as scan_bytes from backend_active_tasks group by query_id,query_type) 
             t1 left join active_queries t2
     on t1.query_id = t2.query_id 
     order by scan_rows desc,scan_bytes desc limit 10;

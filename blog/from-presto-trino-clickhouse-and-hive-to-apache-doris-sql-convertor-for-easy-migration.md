@@ -135,13 +135,13 @@ Follow these steps to deploy the visual conversion interface:
 
 3. Create a network for the image
 
-```Bash
+```shell
 docker network create app_network
 ```
 
 4. Decompress the package
 
-```Bash
+```shell
 tar xzvf doris-sql-convertor-1.0.1.tar.gz
 
 cd doris-sql-convertor
@@ -149,7 +149,7 @@ cd doris-sql-convertor
 
 5. Edit the environment variables
    
-```Bash
+```shell
 FLASK_APP=server/app.py
 FLASK_DEBUG=1
 API_HOST=http://doris-sql-convertor-api:5000
@@ -161,7 +161,7 @@ WEB_TAG=latest
 
 6. Start it up
 
-```Bash
+```shell
 sh start.sh
 ```
 

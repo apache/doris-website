@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './demo-block.css';
 
 
@@ -24,8 +24,8 @@ export default function Latest() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href="https://ask.selectdb.com/">
-                        <div className="home-page-hero-button-label"><div>近期事件</div></div>
+                    <a className="latest-button" href="https://ask.selectdb.com/questions/D1ZI1/">
+                        <div className="home-page-hero-button-label"><div>近期活动</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
                                 <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -33,12 +33,12 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>技术论坛全面升级上线！Ask and Discover</div>
+                            <div style={{ marginBottom: 10 }}>飞轮科技 x 字节跳动开源 Meetup@北京站</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>联合众多 Doris 生态中的开发者、用户以及合作伙伴，共同发起和创建的问答社区。在这里，你可以自由的提出和讨论技术问题、分享和收获技术经验、与社区的小伙伴进行互动和交流。</div>
-                        <div style={{ fontSize: 14, marginBottom: 10 }}>进入论坛</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>北京站 Meetup 圆满落幕，由抖音集团、飞轮科技、爱玛科技、中国电信、天翼云等多位技术专家分享基于 Doris 的最佳实践与调优策略。</div>
+                        <div style={{ fontSize: 14, marginBottom: 10 }}>免费获取资料回顾</div>
                     </a>
-                    <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v2.1/release-2.1.5`}>
+                    <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v2.1/release-2.1.6`}>
                         <div className="home-page-hero-button-label"><div>版本发布</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -47,9 +47,9 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Apache Doris 2.1.5 正式发布</div>
+                            <div style={{ marginBottom: 10 }}>Apache Doris 2.1.6 正式发布</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>2.1.5 版本在湖仓一体、多表物化视图、半结构化数据分析等方面进行了全面更新及改进，同时在倒排索引、查询优化器、查询引擎、存储管理等 10 余方向上完成了若干问题修复。</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>Apache Doris 2.1.6 版本已于 2024 年 9 月 10 日正式发布，在湖仓一体、异步物化视图、半结构化数据管理持续升级改进。</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>查看详情</div>
                     </a>
 

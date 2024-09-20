@@ -47,7 +47,8 @@ under the License.
 | 1.3.0             | 1.16                | 1.0+   | 8    | -         |
 | 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
 | 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
-| 1.6.1             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 |- |
+| 1.6.2             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 |- |
+| 24.0.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
 
 ## 使用
 
@@ -60,7 +61,7 @@ under the License.
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
-  <version>1.6.0</version>
+  <version>24.0.0</version>
 </dependency>  
 ```
 
@@ -74,7 +75,7 @@ under the License.
 
 编译时，可直接运行`sh build.sh`，具体可参考[这里](https://github.com/apache/doris-flink-connector/blob/master/README.md)。
 
-编译成功后，会在 `dist` 目录生成目标 jar 包，如：`flink-doris-connector-1.5.0-SNAPSHOT.jar`。
+编译成功后，会在 `dist` 目录生成目标 jar 包，如：`flink-doris-connector-24.0.0-SNAPSHOT.jar`。
 将此文件复制到 `Flink` 的 `classpath` 中即可使用 `Flink-Doris-Connector` 。例如， `Local` 模式运行的 `Flink` ，将此文件放入 `lib/` 文件夹下。 `Yarn` 集群模式运行的 `Flink` ，则将此文件放入预部署包中。
 
 ## 使用方法
@@ -246,7 +247,11 @@ DataStream<RowData> source = env.fromElements("")
 source.sinkTo(builder.build());
 ```
 
-**SchemaChange 数据流 (JsonDebeziumSchemaSerializer)**
+**CDC 数据流 (JsonDebeziumSchemaSerializer)**
+
+:::info 备注
+上游数据必须符合Debezium数据格式。
+:::
 
 ```java
 // enable checkpoint
@@ -274,7 +279,7 @@ builder.setDorisReadOptions(DorisReadOptions.builder().build())
 env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL Source")
         .sinkTo(builder.build());
 ```
-参考： [CDCSchemaChangeExample](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/CDCSchemaChangeExample.java)
+完整代码参考： [CDCSchemaChangeExample](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/CDCSchemaChangeExample.java)
 
 ### Lookup Join
 
@@ -350,7 +355,7 @@ ON a.city = c.city
 | Key                         | Default Value | Required | Comment                                                                                                                                                                                                                                                                                                                         |
 | --------------------------- | ------------- | -------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | sink.label-prefix           | --            | Y        | Stream load 导入使用的 label 前缀。2pc 场景下要求全局唯一，用来保证 Flink 的 EOS 语义。                                                                                                                                                                                                                                                                   |
-| sink.properties.*           | --            | N        | Stream Load 的导入参数。<br/>例如： 'sink.properties.column_separator' = ', ' 定义列分隔符，  'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，'\x01'会被转换为二进制的 0x01  <br/><br/>JSON 格式导入<br/>'sink.properties.format' = 'json' 'sink.properties.read_json_by_line' = 'true'<br/>详细参数参考[这里](../data-operate/import/stream-load-manual.md)。 |
+| sink.properties.*           | --            | N        | Stream Load 的导入参数。<br/>例如： 'sink.properties.column_separator' = ', ' 定义列分隔符，  'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，`\x01`会被转换为二进制的 0x01  <br/><br/>JSON 格式导入<br/>'sink.properties.format' = 'json' 'sink.properties.read_json_by_line' = 'true'<br/>详细参数参考[这里](../data-operate/import/stream-load-manual.md)。 |
 | sink.enable-delete          | TRUE          | N        | 是否启用删除。此选项需要 Doris 表开启批量删除功能 (Doris0.15+ 版本默认开启)，只支持 Unique 模型。                                                                                                                                                                                                                                                                 |
 | sink.enable-2pc             | TRUE          | N        | 是否开启两阶段提交 (2pc)，默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考[这里](../data-operate/import/stream-load-manual.md)。                                                                                                                                                                                                                       |
 | sink.buffer-size            | 1MB           | N        | 写数据缓存 buffer 大小，单位字节。不建议修改，默认配置即可                                                                                                                                                                                                                                                                                               |
@@ -359,8 +364,8 @@ ON a.city = c.city
 | sink.use-cache              | false         | N        | 异常时，是否使用内存缓存进行恢复，开启后缓存中会保留 Checkpoint 期间的数据                                                                                                                                                                                                                                                                                     |
 | sink.enable.batch-mode      | false         | N        | 是否使用攒批模式写入 Doris，开启后写入时机不依赖 Checkpoint，通过 sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval 参数来控制写入时机。<br />同时开启后将不保证 Exactly-once 语义，可借助 Uniq 模型做到幂等                                                                                                                                           |
 | sink.flush.queue-size       | 2             | N        | 攒批模式下，缓存的队列大小。                                                                                                                                                                                                                                                                                                                  |
-| sink.buffer-flush.max-rows  | 50000         | N        | 攒批模式下，单个批次最多写入的数据行数。                                                                                                                                                                                                                                                                                                            |
-| sink.buffer-flush.max-bytes | 10MB          | N        | 攒批模式下，单个批次最多写入的字节数。                                                                                                                                                                                                                                                                                                             |
+| sink.buffer-flush.max-rows  | 500000         | N        | 攒批模式下，单个批次最多写入的数据行数。                                                                                                                                                                                                                                                                                                            |
+| sink.buffer-flush.max-bytes | 100MB          | N        | 攒批模式下，单个批次最多写入的字节数。                                                                                                                                                                                                                                                                                                             |
 | sink.buffer-flush.interval  | 10s           | N        | 攒批模式下，异步刷新缓存的间隔                                                                                                                                                                                                                                                                                                                 |
 | sink.ignore.update-before   | true          | N        | 是否忽略 update-before 事件，默认忽略。                                                                                                                                                                                                                                                                                                     |
 
@@ -403,7 +408,7 @@ ON a.city = c.city
 | IPV4       | STRING |
 | IPV6       | STRING |
 
-> 自connector-1.6.1开始支持读取Variant,IPV6,IPV4三种数据类型，其中读取IPV6，Variant 需Doris版本2.1.1及以上。
+> 自 connector-1.6.1 开始支持读取 Variant,IPV6,IPV4 三种数据类型，其中读取 IPV6，Variant 需 Doris 版本 2.1.1 及以上。
 
 
 ## Flink 写入指标
@@ -514,7 +519,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 ```shell
 <FLINK_HOME>bin/flink run \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    lib/flink-doris-connector-1.16-1.4.0-SNAPSHOT.jar \
+    lib/flink-doris-connector-1.16-1.6.1.jar \
     <mysql-sync-database|oracle-sync-database|postgres-sync-database|sqlserver-sync-database|mongodb-sync-database> \
     --database <doris-database-name> \
     [--job-name <flink-job-name>] \
@@ -531,14 +536,13 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 ```
 
 
-
 | Key                     | Comment                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 |-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | --job-name              | Flink 任务名称，非必需                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | --database              | 同步到 Doris 的数据库名                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | --table-prefix          | Doris 表前缀名，例如 --table-prefix ods_。                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | --table-suffix          | 同上，Doris 表的后缀名。                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| --including-tables      | 需要同步的 MySQL 表，可以使用"\|" 分隔多个表，并支持正则表达式。比如--including-tables table1                                                                                                                                                                                                                                                                                                                                                                                   |
+| --including-tables      | 需要同步的 MySQL 表，可以使用 `\|` 分隔多个表，并支持正则表达式。比如--including-tables table1                                                                                                                                                                                                                                                                                                                                                                                   |
 | --excluding-tables      | 不需要同步的表，用法同上。                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | --mysql-conf            | MySQL CDCSource 配置，例如--mysql-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/mysql-cdc/)查看所有配置 MySQL-CDC，其中 hostname/username/password/database-name 是必需的。同步的库表中含有非主键表时，必须设置 `scan.incremental.snapshot.chunk.key-column`，且只能选择非空类型的一个字段。<br/>例如：`scan.incremental.snapshot.chunk.key-column=database.table:column,database.table1:column...`，不同的库表列之间用`,`隔开。 |
 | --oracle-conf           | Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/)查看所有配置 Oracle-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。                                                                                                                                                                                  |
@@ -546,18 +550,19 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --sqlserver-conf        | SQLServer CDCSource 配置，例如--sqlserver-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/sqlserver-cdc/)查看所有配置 SQLServer-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。                                                                                                                                                                      |
 | --db2-conf        | SQLServer CDCSource 配置，例如--db2-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.1/docs/connectors/flink-sources/db2-cdc/)查看所有配置 DB2-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。｜
 | --sink-conf             | Doris Sink 的所有配置，可以在[这里](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9)查看完整的配置项。                                                                                                                                                                                                                                                                                           |
-| --mongodb-conf          | MongoDB CDCSource 配置，例如 --mongodb-conf hosts=127.0.0.1:27017，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/)查看所有配置 Mongo-CDC，其中 hosts/username/password/database 是必须的。其中 --mongodb-conf schema.sample-percent 为自动采样mongodb 数据为Doris建表的配置，默认为0.2|
+| --mongodb-conf          | MongoDB CDCSource 配置，例如 --mongodb-conf hosts=127.0.0.1:27017，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/)查看所有配置 Mongo-CDC，其中 hosts/username/password/database 是必须的。其中 --mongodb-conf schema.sample-percent 为自动采样 mongodb 数据为 Doris 建表的配置，默认为 0.2|
 | --table-conf            | Doris 表的配置项，即 properties 中包含的内容（其中 table-buckets 例外，非 properties 属性）。例如 `--table-conf replication_num=1`，而 `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"`表示按照正则表达式顺序指定不同表的 buckets 数量，如果没有匹配到则采用 BUCKETS AUTO 建表。                                                                                                                                                                                                               |
 | --ignore-default-value  | 关闭同步 MySQL 表结构的默认值。适用于同步 MySQL 数据到 Doris 时，字段有默认值，但实际插入数据为 null 情况。参考[#152](https://github.com/apache/doris-flink-connector/pull/152)                                                                                                                                                                                                                                                                                                               |
-| --use-new-schema-change | 是否使用新的 schema change，支持同步 MySQL 多列变更、默认值，1.6.0 开始该参数默认为true。参考[#167](https://github.com/apache/doris-flink-connector/pull/167)                                                                                                                                                                                                                                                                                                                      |
+| --use-new-schema-change | 是否使用新的 schema change，支持同步 MySQL 多列变更、默认值，1.6.0 开始该参数默认为 true。参考[#167](https://github.com/apache/doris-flink-connector/pull/167)                                                                                                                                                                                                                                                                                                                      |
 | --schema-change-mode    | 解析 schema change 的模式，支持 `debezium_structure`、`sql_parser` 两种解析模式，默认采用 `debezium_structure` 模式。<br/><br/> `debezium_structure` 解析上游 CDC 同步数据时所使用的数据结构，通过解析该结构判断 DDL 变更操作。 <br/> `sql_parser` 通过解析上游 CDC 同步数据时的 DDL 语句，从而判断 DDL 变更操作，因此该解析模式更加准确。<br/> 使用例子：`--schema-change-mode debezium_structure`<br/> 本功能将在 1.6.2.1 后的版本中提供                                                                                                                       |
 | --single-sink           | 是否使用单个 Sink 同步所有表，开启后也可自动识别上游新创建的表，自动创建表。                                                                                                                                                                                                                                                                                                                                                                                                           |
-| --multi-to-one-origin   | 将上游多张表写入同一张表时，源表的配置，比如：--multi-to-one-origin="a\_.\*\|b_.\*"，具体参考[#208](https://github.com/apache/doris-flink-connector/pull/208)                                                                                                                                                                                                                                                                                                                   |
-| --multi-to-one-target   | 与 multi-to-one-origin 搭配使用，目标表的配置，比如：--multi-to-one-target="a\|b"                                                                                                                                                                                                                                                                                                                                                                                   |
+| --multi-to-one-origin   | 将上游多张表写入同一张表时，源表的配置，比如：`--multi-to-one-origin="a\_.\*\|b_.\*"`，具体参考[#208](https://github.com/apache/doris-flink-connector/pull/208)                                                                                                                                                                                                                                                                                                                   |
+| --multi-to-one-target   | 与 multi-to-one-origin 搭配使用，目标表的配置，比如：`--multi-to-one-target="a\`|b"                                                                                                                                                                                                                                                                                                                                                                                   |
 | --create-table-only     | 是否只仅仅同步表的结构                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 :::info 备注
-同步时需要在$FLINK_HOME/lib 目录下添加对应的 Flink CDC 依赖，比如 flink-sql-connector-mysql-cdc-${version}.jar，flink-sql-connector-oracle-cdc-${version}.jar ，flink-sql-connector-mongodb-cdc-${version}.jar
+1. 同步时需要在$FLINK_HOME/lib 目录下添加对应的 Flink CDC 依赖，比如 flink-sql-connector-mysql-cdc-${version}.jar，flink-sql-connector-oracle-cdc-${version}.jar ，flink-sql-connector-mongodb-cdc-${version}.jar
+2. Connector24.0.0之后依赖的FlinkCDC版本需要在3.1以上。
 :::
 
 ### MySQL 多表同步示例
@@ -566,7 +571,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    lib/flink-doris-connector-1.16-1.4.0-SNAPSHOT.jar \
+    lib/flink-doris-connector-1.16-1.6.1.jar \
     mysql-sync-database \
     --database test_db \
     --mysql-conf hostname=127.0.0.1 \
@@ -590,7 +595,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
      -Dexecution.checkpointing.interval=10s \
      -Dparallelism.default=1 \
      -c org.apache.doris.flink.tools.cdc.CdcTools \
-     ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     ./lib/flink-doris-connector-1.16-1.6.1.jar \
      oracle-sync-database \
      --database test_db \
      --oracle-conf hostname=127.0.0.1 \
@@ -615,7 +620,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
      -Dexecution.checkpointing.interval=10s \
      -Dparallelism.default=1\
      -c org.apache.doris.flink.tools.cdc.CdcTools \
-     ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     ./lib/flink-doris-connector-1.16-1.6.1.jar \
      postgres-sync-database \
      --database db1\
      --postgres-conf hostname=127.0.0.1 \
@@ -642,7 +647,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
      -Dexecution.checkpointing.interval=10s \
      -Dparallelism.default=1 \
      -c org.apache.doris.flink.tools.cdc.CdcTools \
-     ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     ./lib/flink-doris-connector-1.16-1.6.1.jar \
      sqlserver-sync-database \
      --database db1\
      --sqlserver-conf hostname=127.0.0.1 \
@@ -667,7 +672,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    lib/flink-doris-connector-1.17-SNAPSHOT.jar \
+    lib/flink-doris-connector-1.16-1.6.1.jar \
     db2-sync-database \
     --database db2_test \
     --db2-conf hostname=127.0.0.1 \
@@ -694,7 +699,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    ./lib/flink-doris-connector-1.18-1.6.2-SNAPSHOT.jar \
+    ./lib/flink-doris-connector-1.18-1.6.1.jar \
     mongodb-sync-database \
     --database doris_db \
     --schema-change-mode debezium_structure \

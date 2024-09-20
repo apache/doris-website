@@ -24,11 +24,13 @@ under the License.
 
 ## struct()
 
-<version since="2.0.0">
+:::tip Tips
+This function is supported since the Apache Doris 2.0 version
+:::
 
 struct()
 
-</version>
+
 
 ### description
 

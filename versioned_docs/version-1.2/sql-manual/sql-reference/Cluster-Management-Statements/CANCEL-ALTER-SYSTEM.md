@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 CANCEL DECOMMISSION BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...];
-````
+```
 
 ### Example
 
@@ -46,7 +46,7 @@ CANCEL DECOMMISSION BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...];
 
       ```sql
       CANCEL DECOMMISSION BACKEND "host1:port", "host2:port";
-      ````
+      ```
 
 ### Keywords
 

@@ -60,7 +60,7 @@ WITH BROKER bos
 
 ### STREAM LOAD
 
-```bash
+```shell
 curl
 --location-trusted
 -u user:passwd
@@ -96,7 +96,7 @@ Stream load does not support preceding filtering.
 
 Example:
 
-```bash
+```shell
 curl
 --location-trusted
 -u user:passwd
@@ -170,7 +170,7 @@ Suppose the source file has 4 columns with the following contents (the column na
 | 1        | 100      | beijing    | 1.1      |
 | 2        | 200      | shanghai   | 1.2      |
 | 3        | 300      | guangzhou  | 1.3      |
-| 4        | \N       | chongqing  | 1.4      |
+| 4        | `\N`       | chongqing  | 1.4      |
 
 :::note
 Note: `\N` represents null in the source file.
@@ -260,7 +260,7 @@ Assume that the source file has 4 columns with the following content (the column
 | 1        | 100      | beijing     | 1.1      |
 | 2        | 200      | shanghai    | 1.2      |
 | 3        | 300      | guangzhou   | 1.3      |
-| \N       | 400      | chongqing   | 1.4      |
+| `\N`       | 400      | chongqing   | 1.4      |
 
 1. Load the transformed column values into the table from the source file.
 

@@ -39,7 +39,7 @@ grammar:
 ```sql
 CREATE DATABASE [IF NOT EXISTS] db_name
     [PROPERTIES ("key"="value", ...)];
-````
+```
 
 `PROPERTIES` Additional information about the database, which can be defaulted.
 
@@ -57,7 +57,7 @@ CREATE DATABASE [IF NOT EXISTS] db_name
 
    ```sql
    CREATE DATABASE db_test;
-   ````
+   ```
 
 2. Create a new database with default replica distribution:
 
@@ -66,13 +66,13 @@ CREATE DATABASE [IF NOT EXISTS] db_name
    PROPERTIES (
        "replication_allocation" = "tag.location.group_1:3"
    );
-   ````
+   ```
 
 ### Keywords
 
-````text
+```text
 CREATE, DATABASE
-````
+```
 
 ### Best Practice
 

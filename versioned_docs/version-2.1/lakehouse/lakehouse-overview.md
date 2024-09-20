@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Data Lakehouse Overview",
     "language": "en"
 }
 ---
@@ -27,31 +27,40 @@ under the License.
 Before the integration of data lake and data warehouse, the history of data analysis went through three eras: database, data warehouse, and data lake analytics.
 
 - Database, the fundamental concept, was primarily responsible for online transaction processing and providing basic data analysis capabilities.
+
 - As data volumes grew, data warehouses emerged. They store valuable data that has been cleansed, processed, and modeled, providing analytics capabilities for business.
+
 - The advent of data lakes was to serve the needs of enterprises for storing, managing, and reprocessing raw data. They required low-cost storage for structured, semi-structured, and even unstructured data, and they also needed an integrated solution encompassing data processing, data management, and data governance.
 
 Data warehouses addresses the need for fast data analysis, while data lakes are good at data storage and management. The integration of them, known as "lakehouse", is to facilitate the seamless integration and free flow of data between the data lake and data warehouse. It enables users to leverage the analytic capabilities of the data warehouse while harnessing the data management power of the data lake.
 
 ## Applicable scenarios
 
-We design the Doris lakehouse solution for the following four applicable scenarios:
+We design the Doris Data Lakehouse solution for the following four applicable scenarios:
 
 - Lakehouse query acceleration: As a highly efficient OLAP query engine, Doris has excellent MPP-based vectorized distributed query capabilities. Data lake analysis with Doris will benefit from the efficient query engine.
+
 - Unified data analysis gateway: Doris provides data query and writing capabilities for various and heterogeneous data sources. Users can unify these external data sources onto Doris' data mapping structure, allowing for a consistent query experience when accessing external data sources through Doris.
+
 - Unified data integration: Doris, through its data lake integration capabilities, enables incremental or full data synchronization from multiple data sources to Doris. Doris processes the synchronized data and makes it available for querying. The processed data can also be exported to downstream systems as full or incremental data services. Using Doris, you can have less reliance on external tools and enable end-to-end connectivity from ata synchronization to data processing.
+
+
 - More open data platform: Many data warehouses have their own storage formats. They require external data to be imported into themselve before the data queryable. This creates a closed ecosystem where data in the data warehouse can only be accessed by the data warehouse itself. In this case, users might concern if data will be locked into a specific data warehouse or wonder if there are any other easy way for data export. The Doris lakehouse solution provides open data formats, such as Parquet/ORC, to allow data access by various external systems. Additionally, just like Iceberg and Hudi providing open metadata management capabilities, metadata, whether stored in Doris, Hive Metastore, or other unified metadata centers, can be accessed through publicly available APIs. An open data ecosystem makes it easy for enterprises to migrate to new data management systems and reduces the costs and risks in this process.
 
 ## Doris-based data lakehouse architecture
 
-Apache Doris can work as a data lakehouse with its [Multi Catalog](../lakehouse/lakehouse-overview#multi-catalog) feature. It can access databases and data lakes including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon (incubating), Elasticsearch, MySQL, Oracle, and SQLServer. It also supports Apache Ranger for privilege management.
+Apache Doris can work as a data lakehouse with its [Multi Catalog](../lakehouse/lakehouse-overview#multi-catalog) feature. It can access databases and data lakes including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon, LakeSoul, Elasticsearch, MySQL, Oracle, and SQLServer. It also supports Apache Ranger for privilege management.
 
 ![doris-based-data-lakehouse-architecture](/images/doris-based-data-lakehouse-architecture.png)
 
 **Data access steps:**
 
 1. Create metadata mapping: Apache Doris fetches metadata via Catalog and caches it for metadata management. For metadata mapping, it supports JDBC username-password authentication, Kerberos/Ranger-based authentication, and KMS-based data encryption. 
+
 2. Launch query request: When the user launches a query request from the Doris frontend (FE), Doris generates a query plan based on its cached metadata. Then, it utilizes the Native Reader to fetch data from external storage (HDFS, S3) for data computation and analysis. During query execution, it caches the hot data to prepare for similar queries in the future.
+
 3. Return result: When a query is finished, it returns the query result on the frontend.
+
 4. Write result to data lake: For users who need to write the result back to the data lake instead of returning it on the frontend, Doris supports result writeback in CSV, Parquet, and ORC formats via the export method to the data lake. 
 
 ## Core technologies
@@ -63,6 +72,7 @@ Apache Doris empowers data lake analytics with its extensible connection framewo
 The data connection framework in Apache Doris includes metadata connection and data reading.
 
 - Metadata connection: Metadata connection is conducted in the frontend of Doris. The MetaData Manager in the frontend can access and manage metadata from Hive Metastore, JDBC, and data files.
+
 - Data reading: Apache Doris has a NativeReader for efficient data reading from HDFS and object storage. It supports Parquet, ORC, and text data. You can also connect Apache Doris to the Java big data ecosystem via its JNI Connector.
 
 ![extensible-connection-framework](/images/extensible-connection-framework.png)
@@ -80,7 +90,9 @@ Apache Doris supports metadata synchronization by three methods: auto synchroniz
 **Data caching**
 
 - File caching: Apache Doris caches hot data from the data lake onto its local disks to reduce data transfer via the network and increase data access efficiency.
+
 - Cache distribution: Apache Doris distributes the cached data across all backend nodes via consistent hashing to avoid cache expiration caused by cluster scaling.
+
 - Cache eviction(update): When Apache Doris detects changes in the metadata of a data file, it promptly updates its cached data to ensure data consistency.
 
 ![data-caching](/images/data-caching.png)
@@ -88,6 +100,7 @@ Apache Doris supports metadata synchronization by three methods: auto synchroniz
 **Query result caching & partition caching**
 
 - Query result caching: Apache Doris caches the results of previous SQL queries, so it can reuse them when similar queries are launched. It will read the corresponding result from the cache directly and return it to the client. This increases query efficiency and concurrency.
+
 - Partition caching: Apache Doris allows you to cache part of your data partitions in the backend to increase query efficiency. For example, if you need the data from the past 7 days (counting today), you can cache the data from the previous 6 days and merge it with today's data. This can largely reduce real-time computation burden and increase speed.
 
 ![query-result-caching-and-partition-caching](/images/query-result-caching-and-partition-caching.png)
@@ -95,6 +108,7 @@ Apache Doris supports metadata synchronization by three methods: auto synchroniz
 ### Native Reader
 
 - Self-developed Native Reader to avoid data conversion: Apache Doris has its own columnar storage format, which is different from Parquet and ORC. To avoid overheads caused by data format conversion, we have built our own Native Reader for Parquet and ORC files.
+
 - Lazy materialization: The Native Reader can utilize indexes and filters to improve data reading. For example, when the user needs to do filtering based on the ID column, what the Native Reader does is to read and filter the ID column, take note of the relevant row numbers, and then read the corresponding rows of the other columns based on the row numbers recorded. This reduces data scanning and speeds up data reading.
 
 ![native-reader](/images/native-reader.png)
@@ -168,7 +182,7 @@ You cand delete an External Catalog via the [DROP CATALOG](../sql-manual/sql-sta
 
 The following is the instruction on how to connect to a Hive catalog using the Catalog feature.
 
-For more information about connecting to Hive, please see [Hive Catalog](./datalake-analytics/hive).
+For more information about connecting to Hive, please see [Hive](../lakehouse/datalake-analytics/hive).
 
 1. Create Catalog
 
@@ -181,8 +195,9 @@ CREATE CATALOG hive PROPERTIES (
 
 Syntax help: [CREATE CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG/)
 
-1. View Catalog
-2. View existing Catalogs via the `SHOW CATALOGS` command:
+2. View Catalog
+
+3. View existing Catalogs via the `SHOW CATALOGS` command:
 
 ```Plain
 mysql> SHOW CATALOGS;
@@ -195,10 +210,12 @@ mysql> SHOW CATALOGS;
 ```
 
 - [SHOW CATALOGS](../sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS/)
+
 - You can view the CREATE CATALOG statement via [SHOW CREATE CATALOG](../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG).
+
 - You can modify the Catalog PROPERTIES via [ALTER CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-CATALOG).
 
-1. Switch Catalog
+4. Switch Catalog
 
 Switch to the Hive Catalog using the `SWITCH` command, and view the databases in it:
 
@@ -221,7 +238,7 @@ mysql> SHOW DATABASES;
 
 Syntax help: [SWITCH](../sql-manual/sql-statements/Utility-Statements/SWITCH/)
 
-1. Use the Catalog
+5. Use the Catalog
 
 After switching to the Hive Catalog, you can use the relevant features.
 
@@ -313,7 +330,9 @@ mysql> SELECT l.l_shipdate FROM hive.tpch100.lineitem l WHERE l.l_partkey IN (SE
 ```
 
 - The table is identified in the format of `catalog.database.table`. For example, `internal.db1.part` in the above snippet.
+
 - If the target table is in the current Database of the current Catalog, `catalog` and `database` in the format can be omitted.
+
 - You can use the `INSERT INTO` command to insert table data from the Hive Catalog into a table in the Internal Catalog. This is how you can import data from External Catalogs to the Internal Catalog:
 
 ```Plain
@@ -357,7 +376,7 @@ Along with the new Multi-Catalog feature, we also added privilege management at 
 
 Users can also specify a custom authentication class through `access_controller.class`. For example, if you specify it as
 
-`"access_controller.class"="org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"`, then you can use Apache Ranger to perform authentication management on Hive Catalog. For more information see: [Hive](../lakehouse/datalake-analytics/hive)
+`"access_controller.class"="org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"`, then you can use Apache Ranger to perform authentication management on Hive Catalog. For more information see: [Hive Catalog](../lakehouse/datalake-analytics/hive)
 
 ### Database synchronization management
 
@@ -371,33 +390,3 @@ Set `include_database_list` and `exclude_database_list` in Catalog properties to
 >
 > To connect to JDBC data sources, these two properties should work with `only_specified_database`. See [JDBC](../lakehouse/database/jdbc) for more details.
 
-### Metadata refresh
-
-By default, metadata changes in external catalogs, such as creating and dropping tables, adding and dropping columns, etc., will not be synchronized to Doris.
-
-Users can refresh metadata in the following ways.
-
-#### Manual refresh
-
-Users need to manually refresh the metadata through the [REFRESH](../sql-manual/sql-statements/Utility-Statements/REFRESH) command.
-
-#### Regular refresh
-
-When creating the catalog, specify the refresh time parameter `metadata_refresh_interval_sec` in the properties. It is measured in seconds. If this is set when creating the catalog, the FE master node will refresh the catalog regularly accordingly. Currently, Doris supports regular refresh for three types of catalogs:
-
-- hms: Hive MetaStore
-- es: Elasticsearch
-- Jdbc: standard interface for database access (JDBC)
-
-```Plain
--- Set the catalog refresh interval to 20 seconds
-CREATE CATALOG es PROPERTIES (
-    "type"="es",
-    "hosts"="http://127.0.0.1:9200",
-    "metadata_refresh_interval_sec"="20"
-);
-```
-
-#### Auto Refresh
-
-Currently Doris supports auto-refresh for [Hive](../lakehouse/datalake-analytics/hive) Catalog.

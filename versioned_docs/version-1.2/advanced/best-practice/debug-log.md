@@ -41,7 +41,7 @@ The Debug level log of FE can be turned on by modifying the configuration file, 
 
    Add the configuration item `sys_log_verbose_modules` to fe.conf. An example is as follows:
 
-   ````text
+   ```text
    # Only enable Debug log for class org.apache.doris.catalog.Catalog
    sys_log_verbose_modules=org.apache.doris.catalog.Catalog
    
@@ -50,7 +50,7 @@ The Debug level log of FE can be turned on by modifying the configuration file, 
    
    # Enable Debug logs for all classes under package org
    sys_log_verbose_modules=org
-   ````
+   ```
 
    Add configuration items and restart the FE node to take effect.
 
@@ -72,13 +72,13 @@ The Debug level log of FE can be turned on by modifying the configuration file, 
 
    The log level can also be modified at runtime via the following API. There is no need to restart the FE node.
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?add_verbose=org.apache.doris.catalog.Catalog
-   ````
+   ```
 
    The username and password are the root or admin users who log in to Doris. The `add_verbose` parameter specifies the package or class name to enable Debug logging. Returns if successful:
 
-   ````json
+   ```json
    {
        "msg": "success",
        "code": 0,
@@ -91,13 +91,13 @@ The Debug level log of FE can be turned on by modifying the configuration file, 
        },
        "count": 0
    }
-   ````
+   ```
 
    Debug logging can also be turned off via the following API:
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?del_verbose=org.apache.doris.catalog.Catalog
-   ````
+   ```
 
    The `del_verbose` parameter specifies the package or class name for which to turn off Debug logging.
 
@@ -105,16 +105,16 @@ The Debug level log of FE can be turned on by modifying the configuration file, 
 
 BE's Debug log currently only supports modifying and restarting the BE node through the configuration file to take effect.
 
-````text
+```text
 sys_log_verbose_modules=plan_fragment_executor,olap_scan_node
 sys_log_verbose_level=3
-````
+```
 
 `sys_log_verbose_modules` specifies the file name to be opened, which can be specified by the wildcard *. for example:
 
-````text
+```text
 sys_log_verbose_modules=*
-````
+```
 
 Indicates that all DEBUG logs are enabled.
 

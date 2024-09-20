@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW BROKER;
-````
+```
 
 illustrate:
 
