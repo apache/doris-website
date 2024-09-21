@@ -664,7 +664,7 @@ mysql> DESC table1;
 
 The original table data is:
 
-```SQL
+```sql
 +-------+--------+------+
 | name  | gender | age  |
 +-------+--------+------+
@@ -678,13 +678,13 @@ The original table data is:
 
    loading data as:
 
-```SQL
+```sql
 li,male,10
 ```
 
 Since `function_column.sequence_col` is specified as `age`, and the `age` value is larger than or equal to the existing column in the table, the original table data is deleted. The table data becomes:
 
-```SQL
+```sql
 +-------+--------+------+
 | name  | gender | age  |
 +-------+--------+------+
@@ -697,7 +697,7 @@ Since `function_column.sequence_col` is specified as `age`, and the `age` value 
 
    loading data as:
 
-```SQL
+```sql
 li,male,9
 ```
 
@@ -935,7 +935,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 When the imported data contains a map type, as in the following example:
 
-```SQL
+```sql
 [
 {"user_id":1,"namemap":{"Emily":101,"age":25}},
 {"user_id":2,"namemap":{"Benjamin":102,"age":35}},
@@ -978,7 +978,7 @@ During the import process, when encountering Bitmap type data, you can use to_bi
 
 For example, with the following data:
 
-```SQL
+```sql
 1|koga|17723
 2|nijg|146285
 3|lojn|347890
@@ -1017,7 +1017,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 You can use the hll_hash function to convert data into the hll type, as in the following example:
 
-```SQL
+```sql
 1001|koga
 1002|nijg
 1003|lojn

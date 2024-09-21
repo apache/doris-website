@@ -147,7 +147,7 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](./insert-into-manual)。
+关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](./insert-into-manual.md)。
 
 ### INSERT INTO VALUES
 
@@ -339,7 +339,7 @@ private static void groupCommitInsertBatch() throws Exception {
     # 返回的 Label 是 group_commit 开头的，是真正消费数据的导入关联的 label
     ```
 
-    关于 Http Stream 使用的更多详细语法及最佳实践，请参阅 [Stream Load](./stream-load-manual)。
+    关于 Http Stream 使用的更多详细语法及最佳实践，请参阅 [Stream Load](./stream-load-manual.md#tvf-在-stream-load-中的应用---http_stream-模式)。
 
 ## 自动提交条件
 

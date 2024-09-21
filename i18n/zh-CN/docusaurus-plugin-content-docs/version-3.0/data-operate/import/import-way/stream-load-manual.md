@@ -670,7 +670,7 @@ mysql> DESC table1;
 
 假设原表中数据为：
 
-```SQL
+```sql
 +-------+--------+------+
 | name  | gender | age  |
 +-------+--------+------+
@@ -684,13 +684,13 @@ mysql> DESC table1;
 
 导入数据为：
 
-```SQL
+```sql
 li,male,10
 ```
 
 由于指定了 function_column.sequence_col: age，并且 age 大于等于表中原有的列，原表数据被删除，表中数据变为：
 
-```SQL
+```sql
 +-------+--------+------+
 | name  | gender | age  |
 +-------+--------+------+
@@ -703,7 +703,7 @@ li,male,10
 
 导入数据为：
 
-```SQL
+```sql
 li,male,9
 ```
 
@@ -941,7 +941,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 当导入数据中包含 map 类型，如以下的例子中：
 
-```SQL
+```sql
 [
 {"user_id":1,"namemap":{"Emily":101,"age":25}},
 {"user_id":2,"namemap":{"Benjamin":102,"age":35}},
@@ -984,7 +984,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 如导入数据如下：
 
-```SQL
+```sql
 1|koga|17723
 2|nijg|146285
 3|lojn|347890
@@ -1023,7 +1023,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 通过 hll_hash 函数可以将数据转换成 hll 类型，如下数据：
 
-```SQL
+```sql
 1001|koga
 1002|nijg
 1003|lojn
