@@ -184,7 +184,6 @@ Spark 用于 ETL 时需要指定 working_dir 和 broker。说明如下：
    CREATE RESOURCE hdfs_resource PROPERTIES (
       "type"="hdfs",
       "hadoop.username"="user",
-      "password"="passwd",
       "dfs.nameservices" = "my_ha",
       "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
       "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",

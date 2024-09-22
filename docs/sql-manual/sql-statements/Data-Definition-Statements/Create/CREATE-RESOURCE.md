@@ -184,7 +184,6 @@ illustrate:
    CREATE RESOURCE hdfs_resource PROPERTIES (
       "type"="hdfs",
       "hadoop.username"="user",
-      "password"="passwd",
       "root_path"="your_path",
       "dfs.nameservices" = "my_ha",
       "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
