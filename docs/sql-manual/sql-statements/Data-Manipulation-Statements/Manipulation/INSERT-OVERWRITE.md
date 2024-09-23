@@ -68,6 +68,7 @@ INSERT OVERWRITE table table_name
 > 1. STREAMING: At present, it has no practical effect and is only reserved for compatibility with previous versions. (In the previous version, adding this hint would return a label, but now it defaults to returning a label)
 > 2. SHUFFLE: When the target table is a partition table, enabling this hint will do repartiiton.
 > 3. NOSHUFFLE: Even if the target table is a partition table, repartiiton will not be performed, but some other operations will be performed to ensure that the data is correctly dropped into each partition.
+> 4. It is not allowed to initiate multiple insert rewrites to a table simultaneously
 
 Notice:
 
