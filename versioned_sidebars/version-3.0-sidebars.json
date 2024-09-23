@@ -203,8 +203,7 @@
                     "type": "category",
                     "label": "Pipeline Execution Engine",
                     "items": [
-                        "query/pipeline/pipeline-execution-engine",
-                        "query/pipeline/pipeline-x-execution-engine"
+                        "query/pipeline/pipeline-execution-engine"
                     ]
                 },
                 {
