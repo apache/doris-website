@@ -114,6 +114,7 @@
                     ]
                 },
                 "table-design/auto-increment",
+		temporary-table/temporary-table",
                 "table-design/best-practice"
             ]
         },

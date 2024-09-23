@@ -37,7 +37,7 @@ This statement is used to create an empty table with the exact same table struct
 grammar:
 
 ```sql
-CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]table_name [WITH ROLLUP (r1,r2,r3,...)]
+CREATE [TEMPORARY | TEMP | EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]table_name [WITH ROLLUP (r1,r2,r3,...)]
 ```
 
 illustrate: 
@@ -46,6 +46,7 @@ illustrate:
 - The user needs to have `SELECT` permission on the copied original table
 - Support for copying external tables such as MySQL
 - Support the rollup of copying OLAP Table
+- Temporary tables can only be internal tables. And they can only be created based on internal tables.
 
 ### Example
 

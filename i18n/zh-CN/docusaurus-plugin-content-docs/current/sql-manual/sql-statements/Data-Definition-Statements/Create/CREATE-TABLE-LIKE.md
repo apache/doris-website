@@ -37,7 +37,7 @@ CREATE TABLE LIKE
 语法：
 
 ```sql
-CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]table_name [WITH ROLLUP (r1,r2,r3,...)]
+CREATE [TEMPORARY | TEMP | EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]table_name [WITH ROLLUP (r1,r2,r3,...)]
 ```
 
 说明: 
@@ -46,6 +46,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]ta
 - 用户需要对复制的原表有`SELECT`权限 
 - 支持复制MySQL等外表 
 - 支持复制OLAP Table的rollup
+- 临时表只能是内表。只能基于内表创建
 
 ### Example
 

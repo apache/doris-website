@@ -37,7 +37,7 @@ This statement creates the table structure by returning the results from the Sel
 grammar：
 
 ```sql
-CREATE TABLE table_name [( column_name_list )]
+CREATE [TEMPORARY | TEMP] TABLE table_name [( column_name_list )]
     opt_engine:engineName
     opt_keys:keys
     opt_comment:tableComment
