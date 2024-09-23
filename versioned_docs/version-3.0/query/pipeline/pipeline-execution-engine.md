@@ -27,6 +27,7 @@ under the License.
 -->
 
 
+The Pipeline Execution Engine is an experimental feature in Apache Doris 2.0, which was later optimized and upgraded in version 2.1 (i.e., PipelineX). In versions 3.0 and later, PipelineX is used as the only execution engine in Doris and renamed to Pipeline Execution Engine.
 
 The goal of pipeline execution engine is to replace the current execution engine of Doris's volcano model, fully release the computing power of multi-core CPUs, and limit the number of Doris's query threads to solve the problem of Doris's execution thread bloat.
 
@@ -100,4 +101,4 @@ set ignore_storage_data_distribution = true;
 
 ### Load
 
-The engine selected for import are detailed in the [Import](../../data-operate/import/load-manual) documentation.
+The engine selected for import are detailed in the [Load](../../data-operate/import/load-manual) documentation.

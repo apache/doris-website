@@ -57,10 +57,10 @@ Pipeline 执行引擎的主要目标是为了替换之前 Doris 基于火山模�
 1. 将传统 Pull 拉取的逻辑驱动的执行流程改造为 Push 模型的数据驱动的执行引擎
 2. 阻塞操作异步化，减少了线程切换，线程阻塞导致的执行开销，对于 CPU 的利用更为高效
 3. 控制了执行线程的数目，通过时间片的切换的控制，在混合负载的场景中，减少大查询对于小查询的资源挤占问题
-4. 执行并发上，依赖 local exchange 使 pipeline 充分并发，可以让数据被均匀分布到不同的 task 中，尽可能减少数据倾斜，此外，pipeline 也将不再受存储层 tablet 数量的制约。
-5. 执行逻辑上，多个 pipeline task 共享同一个 pipeline 的全部共享状态，例如表达式和一些 const 变量，消除了额外的初始化开销。
-6. 调度逻辑上，所有 pipeline task 的阻塞条件都使用 Dependency 进行了封装，通过外部事件（例如 rpc 完成）触发 task 的执行逻辑进入 runnable 队列，从而消除了阻塞轮询线程的开销。
-7. profile：为用户提供简单易懂的指标。
+4. 执行并发上，依赖 Local Exchange 使 Pipeline 充分并发，可以让数据被均匀分布到不同的 Task 中，尽可能减少数据倾斜，此外，Pipeline 也将不再受存储层 Tablet 数量的制约。
+5. 执行逻辑上，多个 Pipeline Task 共享同一个 Pipeline 的全部共享状态，例如表达式和一些 Const 变量，消除了额外的初始化开销。
+6. 调度逻辑上，所有 Pipeline Task 的阻塞条件都使用 Dependency 进行了封装，通过外部事件（例如 RPC 完成）触发 task 的执行逻辑进入 Runnable 队列，从而消除了阻塞轮询线程的开销。
+7. Profile：为用户提供简单易懂的指标。
 
 从而提高了 CPU 在混合负载 SQL 上执行时的效率，提升了 SQL 查询的性能。
 
@@ -70,9 +70,9 @@ Pipeline 执行引擎的主要目标是为了替换之前 Doris 基于火山模�
 
 1. enable_pipeline_engine
 
-将 session 变量 `enable_pipeline_engine` 设置为 `true`，则 BE 在进行查询执行时将会使用 Pipeline 执行引擎。
+将 Session 变量 `enable_pipeline_engine` 设置为 `true`，则 BE 在进行查询执行时将会使用 Pipeline 执行引擎。
 
-```sql
+```SQL
 set enable_pipeline_engine = true;
 ```
 
@@ -80,7 +80,7 @@ set enable_pipeline_engine = true;
 
 `parallel_pipeline_task_num` 代表了 SQL 查询进行查询并发的 Pipeline Task 数目。Doris 默认的配置为 `0`，此时 Pipeline Task 数目将自动设置为当前集群机器中最少的 CPU 数量的一半。用户也可以根据自己的实际情况进行调整。
 
-```sql
+```SQL
 set parallel_pipeline_task_num = 0;
 ```
 
@@ -88,17 +88,17 @@ set parallel_pipeline_task_num = 0;
 
 3. enable_local_shuffle
 
-设置`enable_local_shuffle`为 true 则打开 local shuffle 优化。local shuffle 将尽可能将数据均匀分布给不同的 pipeline task 从而尽可能避免数据倾斜。
+设置`enable_local_shuffle`为 True 则打开 Local Shuffle 优化。Local Shuffle 将尽可能将数据均匀分布给不同的 Pipeline Task 从而尽可能避免数据倾斜。
 
-```
+```SQL
 set enable_local_shuffle = true;
 ```
 
 4. ignore_storage_data_distribution
 
-设置`ignore_storage_data_distribution`为 true 则表示忽略存储层的数据分布。结合 local shuffle 一起使用，则 pipeline 引擎的并发能力将不再受到存储层 tablet 数量的制约，从而充分利用机器资源。
+设置`ignore_storage_data_distribution`为 True 则表示忽略存储层的数据分布。结合 Local Shuffle 一起使用，则 Pipeline 引擎的并发能力将不再受到存储层 Tablet 数量的制约，从而充分利用机器资源。
 
-```
+```SQL
 set ignore_storage_data_distribution = true;
 ```
 
