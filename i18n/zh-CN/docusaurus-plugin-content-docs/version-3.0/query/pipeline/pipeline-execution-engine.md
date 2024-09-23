@@ -30,12 +30,12 @@ under the License.
 
 
 :::info 备注
-Pipeline 执行引擎 是 Doris 在 2.0 版本加入的实验性功能。
+Pipeline 执行引擎 是 Doris 在 2.0 版本加入的实验性功能，随后在 2.1 版本进行了优化与升级 （即 PipelineX）。在 3.0 以及之后的版本中，Doris只使用PipelineX作为唯一执行引擎，并且更名为Pipeline执行引擎。
 :::
 
-Pipeline 执行引擎的目标是为了替换当前 Doris 的火山模型的执行引擎，充分释放多核 CPU 的计算能力，并对 Doris 的查询线程的数目进行限制，解决 Doris 的执行线程膨胀的问题。
+Pipeline 执行引擎的主要目标是为了替换之前 Doris 基于火山模型的执行引擎，充分释放多核 CPU 的计算能力，并对 Doris 的查询线程的数目进行限制，解决 Doris 的执行线程膨胀的问题。
 
-它的具体设计、实现和效果可以参阅 [DSIP-027]([DSIP-027: Support Pipeline Exec Engine - DORIS - Apache Software Foundation](https://cwiki.apache.org/confluence/display/DORIS/DSIP-027%3A+Support+Pipeline+Exec+Engine))。
+它的具体设计、实现和效果可以参阅 [DSIP-027]([DSIP-027: Support Pipeline Exec Engine - DORIS - Apache Software Foundation](https://cwiki.apache.org/confluence/display/DORIS/DSIP-027%3A+Support+Pipeline+Exec+Engine)) 以及 [DSIP-035]([DSIP-035: PipelineX Execution Engine - DORIS - Apache Software Foundation](https://cwiki.apache.org/confluence/display/DORIS/DSIP-035%3A+PipelineX+Execution+Engine))。
 
 ## 原理
 
@@ -57,6 +57,10 @@ Pipeline 执行引擎的目标是为了替换当前 Doris 的火山模型的执�
 1. 将传统 Pull 拉取的逻辑驱动的执行流程改造为 Push 模型的数据驱动的执行引擎
 2. 阻塞操作异步化，减少了线程切换，线程阻塞导致的执行开销，对于 CPU 的利用更为高效
 3. 控制了执行线程的数目，通过时间片的切换的控制，在混合负载的场景中，减少大查询对于小查询的资源挤占问题
+4. 执行并发上，依赖 local exchange 使 pipeline 充分并发，可以让数据被均匀分布到不同的 task 中，尽可能减少数据倾斜，此外，pipeline 也将不再受存储层 tablet 数量的制约。
+5. 执行逻辑上，多个 pipeline task 共享同一个 pipeline 的全部共享状态，例如表达式和一些 const 变量，消除了额外的初始化开销。
+6. 调度逻辑上，所有 pipeline task 的阻塞条件都使用 Dependency 进行了封装，通过外部事件（例如 rpc 完成）触发 task 的执行逻辑进入 runnable 队列，从而消除了阻塞轮询线程的开销。
+7. profile：为用户提供简单易懂的指标。
 
 从而提高了 CPU 在混合负载 SQL 上执行时的效率，提升了 SQL 查询的性能。
 
@@ -81,6 +85,22 @@ set parallel_pipeline_task_num = 0;
 ```
 
 可以通过设置 `max_instance_num` 来限制自动设置的并发数 (默认为 64)
+
+3. enable_local_shuffle
+
+设置`enable_local_shuffle`为 true 则打开 local shuffle 优化。local shuffle 将尽可能将数据均匀分布给不同的 pipeline task 从而尽可能避免数据倾斜。
+
+```
+set enable_local_shuffle = true;
+```
+
+4. ignore_storage_data_distribution
+
+设置`ignore_storage_data_distribution`为 true 则表示忽略存储层的数据分布。结合 local shuffle 一起使用，则 pipeline 引擎的并发能力将不再受到存储层 tablet 数量的制约，从而充分利用机器资源。
+
+```
+set ignore_storage_data_distribution = true;
+```
 
 ### 导入
 
