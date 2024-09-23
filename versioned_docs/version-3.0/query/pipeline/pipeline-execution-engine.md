@@ -87,7 +87,7 @@ You can limit the automatically configured concurrency by setting `max_instance_
 
 Set `enable_local_shuffle` to true will enable local shuffle optimization. Local shuffle will try to evenly distribute data among different pipeline tasks to avoid data skewing as much as possible.
 
-```
+```sql
 set enable_local_shuffle = true;
 ```
 
@@ -95,7 +95,7 @@ set enable_local_shuffle = true;
 
 Settings `ignore_storage_data_distribution` is true, it means ignoring the data distribution of the storage layer. When used in conjunction with local shuffle, the concurrency capability of the pipelineX engine will no longer be constrained by the number of storage layer tables, thus fully utilizing machine resources.
 
-```
+```sql
 set ignore_storage_data_distribution = true;
 ```
 

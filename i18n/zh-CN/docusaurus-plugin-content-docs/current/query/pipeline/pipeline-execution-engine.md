@@ -72,7 +72,7 @@ Pipeline 执行引擎的主要目标是为了替换之前 Doris 基于火山模�
 
 将 Session 变量 `enable_pipeline_engine` 设置为 `true`，则 BE 在进行查询执行时将会使用 Pipeline 执行引擎。
 
-```SQL
+```sql
 set enable_pipeline_engine = true;
 ```
 
@@ -80,7 +80,7 @@ set enable_pipeline_engine = true;
 
 `parallel_pipeline_task_num` 代表了 SQL 查询进行查询并发的 Pipeline Task 数目。Doris 默认的配置为 `0`，此时 Pipeline Task 数目将自动设置为当前集群机器中最少的 CPU 数量的一半。用户也可以根据自己的实际情况进行调整。
 
-```SQL
+```sql
 set parallel_pipeline_task_num = 0;
 ```
 
@@ -90,7 +90,7 @@ set parallel_pipeline_task_num = 0;
 
 设置`enable_local_shuffle`为 True 则打开 Local Shuffle 优化。Local Shuffle 将尽可能将数据均匀分布给不同的 Pipeline Task 从而尽可能避免数据倾斜。
 
-```SQL
+```sql
 set enable_local_shuffle = true;
 ```
 
@@ -98,7 +98,7 @@ set enable_local_shuffle = true;
 
 设置`ignore_storage_data_distribution`为 True 则表示忽略存储层的数据分布。结合 Local Shuffle 一起使用，则 Pipeline 引擎的并发能力将不再受到存储层 Tablet 数量的制约，从而充分利用机器资源。
 
-```SQL
+```sql
 set ignore_storage_data_distribution = true;
 ```
 
