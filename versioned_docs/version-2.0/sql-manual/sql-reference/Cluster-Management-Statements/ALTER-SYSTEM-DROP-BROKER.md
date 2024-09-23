@@ -42,7 +42,7 @@ grammar:
 ALTER SYSTEM DROP ALL BROKER broker_name
 -- Delete a Broker node
 ALTER SYSTEM DROP BROKER broker_name "host:port"[,"host:port"...];
-````
+```
 
 ### Example
 
@@ -50,13 +50,13 @@ ALTER SYSTEM DROP BROKER broker_name "host:port"[,"host:port"...];
 
     ```sql
     ALTER SYSTEM DROP ALL BROKER broker_name
-    ````
+    ```
 
 2. Delete a Broker node
 
     ```sql
     ALTER SYSTEM DROP BROKER broker_name "host:port"[,"host:port"...];
-    ````
+    ```
 
 ### Keywords
 

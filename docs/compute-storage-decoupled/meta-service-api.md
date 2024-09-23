@@ -60,7 +60,7 @@ This API is used to create an instance, which supports one or more storage vault
 
 - Syntax for a `create_instance` request using HDFS as the storage vault
 
-```Bash
+```shell
 PUT /MetaService/http/create_instance?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
@@ -140,7 +140,7 @@ Content-Type: text/plain
 
 - Syntax for a `create_instance` request using object storage as the storage vault
 
-```Bash
+```shell
 PUT /MetaService/http/create_instance?token=<token HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
@@ -183,7 +183,7 @@ Content-Type: text/plain
 
 - Example of a `create_instance` request using object storage as the storage vault
 
-```Bash
+```shell
 PUT /MetaService/http/create_instance?token=greedisgood9999 HTTP/1.1
 Content-Length: 441
 Content-Type: text/plain
@@ -248,7 +248,7 @@ This API is used to create an instance, which only supports one storage vault (m
 
 - Syntax
 
-```Bash
+```shell
 PUT /MetaService/http/create_instance?token=<token HTTP/1.1
 Content-Length: <ContentLength
 Content-Type: text/plain

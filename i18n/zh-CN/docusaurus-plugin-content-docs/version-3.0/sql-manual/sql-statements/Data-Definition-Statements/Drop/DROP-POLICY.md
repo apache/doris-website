@@ -24,58 +24,56 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-POLICY
-
-### Name
+## Name
 
 DROP POLICY
 
-### Description
+## Description
 
-删除安全策略
+drop policy for row or storage
 
-#### 行安全策略
+### ROW POLICY
 
-语法：
+Grammar：
 
-1. 删除行安全策略
+1. Drop row policy
 ```sql
 DROP ROW POLICY test_row_policy_1 on table1 [FOR user| ROLE role];
 ```
 
-2. 删除存储策略
+2. Drop storage policy
 ```sql
 DROP STORAGE POLICY policy_name1
 ```
 
-### Example
+## Example
 
-1. 删除 table1 的 test_row_policy_1
+1. Drop the row policy for table1 named test_row_policy_1
 
    ```sql
    DROP ROW POLICY test_row_policy_1 on table1
    ```
 
-2. 删除 table1 作用于 test 的 test_row_policy_1 行安全策略
+2. Drop the row policy for table1 using by user test
 
    ```sql
    DROP ROW POLICY test_row_policy_1 on table1 for test
    ```
-
-3. 删除 table1 作用于 role1 的 test_row_policy_1 行安全策略
+   
+3. Drop the row policy for table1 using by role1
 
    ```sql
    DROP ROW POLICY test_row_policy_1 on table1 for role role1
    ```
 
-4. 删除名字为policy_name1的存储策略
+4. Drop the storage policy named policy_name1
 ```sql
 DROP STORAGE POLICY policy_name1
 ```
 
-### Keywords
+## Keywords
 
     DROP, POLICY
 
-### Best Practice
+## Best Practice
 

@@ -38,6 +38,8 @@ Returns a random number between a and b. a must be less than b.
 
 Alias: `rand`.
 
+Note: All parameters must be constants.
+
 ### example
 
 ```sql

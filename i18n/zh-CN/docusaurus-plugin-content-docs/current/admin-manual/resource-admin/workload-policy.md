@@ -1,7 +1,7 @@
 ---
 {
-"title": "Workload Policy",
-"language": "zh-CN"
+   "title": "Workload Policy",
+   "language": "zh-CN"
 }
 ---
 
@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 功能背景
 Workload Group功能解决了不同负载间的隔离问题，但无法解决同一个Group内的大查询熔断的问题， 用户遇到大查询影响集群稳定性时只能手动处理。
 
 因此Doris实现了Workload Policy的功能，支持查询负载管理的自动化，比如实现自动取消运行时间超过5s的查询这样的功能。

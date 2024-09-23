@@ -196,7 +196,7 @@ FROM data_source [data_source_properties]
 
      | source data | source data example | string to int | strict_mode   | result                 |
      | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-     | 空值        | \N                  | N/A           | true or false | NULL                   |
+     | 空值        | `\N`                  | N/A           | true or false | NULL                   |
      | not null    | aaa or 2000         | NULL          | true          | invalid data(filtered) |
      | not null    | aaa                 | NULL          | false         | NULL                   |
      | not null    | 1                   | 1             | true or false | correct data           |
@@ -207,7 +207,7 @@ FROM data_source [data_source_properties]
 
      | source data | source data example | string to int | strict_mode   | result                 |
      | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-     | 空值        | \N                  | N/A           | true or false | NULL                   |
+     | 空值        | `\N`                  | N/A           | true or false | NULL                   |
      | not null    | aaa                 | NULL          | true          | invalid data(filtered) |
      | not null    | aaa                 | NULL          | false         | NULL                   |
      | not null    | 1 or 10             | 1             | true or false | correct data           |
@@ -264,7 +264,7 @@ FROM data_source [data_source_properties]
       注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。
 
   15. `escape`
-      转义符。用于转义在csv字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c被作为一个字段解析，则需要指定单字节转义符，例如"\"，然后将数据修改为"a,'b,\'c'"。
+      转义符。用于转义在csv字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c被作为一个字段解析，则需要指定单字节转义符，例如 `\`，然后将数据修改为 `a,'b,\'c'`。
 
 - `FROM data_source [data_source_properties]`
 

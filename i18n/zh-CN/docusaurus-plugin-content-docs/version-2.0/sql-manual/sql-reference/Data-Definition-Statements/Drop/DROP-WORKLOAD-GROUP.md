@@ -32,7 +32,7 @@ DROP WORKLOAD GROUP
 
 ### Description
 
-<version since="dev"></version>
+ 
 
 该语句用于删除资源组。
 

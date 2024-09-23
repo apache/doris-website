@@ -62,7 +62,7 @@ Here is just an example of how to use it.
        "odbc_type" = "oracle",
        "driver" = "Oracle"
    );
-   ````
+   ```
 
 Here we have created a Resource named `oracle_test_odbc`, whose type is `odbc_catalog`, indicating that this is a Resource used to store ODBC information. `odbc_type` is `oracle`, indicating that this OBDC Resource is used to connect to the Oracle database. For other types of resources, see the [resource management](../../../advanced/resource.md) documentation for details.
 
@@ -82,7 +82,7 @@ PROPERTIES (
     "database" = "oracle",
     "table" = "baseall"
 );
-````
+```
 
 Here we create an `ext_oracle_demo` external table and reference the `oracle_test_odbc` Resource created earlier
 
@@ -105,7 +105,7 @@ Here we create an `ext_oracle_demo` external table and reference the `oracle_tes
    PROPERTIES (
        "replication_num" = "1"
    );
-   ````
+   ```
 
    For detailed instructions on creating Doris tables, see [CREATE-TABLE](../../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md) syntax help.
 
@@ -113,7 +113,7 @@ Here we create an `ext_oracle_demo` external table and reference the `oracle_tes
 
    ```sql
    INSERT INTO doris_oralce_tbl SELECT k1,k2,k3 FROM ext_oracle_demo limit 200
-   ````
+   ```
    
    The INSERT command is a synchronous command, and a successful return indicates that the import was successful.
 

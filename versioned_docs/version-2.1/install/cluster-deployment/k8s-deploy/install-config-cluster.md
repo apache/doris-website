@@ -99,13 +99,13 @@ feSpec:
 
 Among them, the name of [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) needs to be specified in ${storageClassName}. You can use the following command to view the StorageClass supported in the current Kubernetes cluster:
 
-```bash
+```shell
 kubectl get sc
 ```
 
 The return result is as follows:
 
-```bash
+```shell
 NAME                          PROVISIONER                    RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
 openebs-hostpath              openebs.io/local               Delete          WaitForFirstConsumer   false                  212d
 openebs-device                openebs.io/local               Delete          WaitForFirstConsumer   false                  212d
@@ -238,9 +238,11 @@ data:
     rpc_port = 9020
     query_port = 9030
     edit_log_port = 9010
+    enable_fqdn_mode = true
 ```
 
 Among them, the name of FE ConfigMap is defined in metadata.name, and the database configuration in fe.conf is defined in data.
+Be sure to add `enable_fqdn_mode = true` to your self-configured `fe.conf`
 
 :::tip Tip
 Use the data field in ConfigMap to store key-value pairs. In the above FE ConfigMap:

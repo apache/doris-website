@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import EcomsystemLayout from '@site/src/components/ecomsystem/ecomsystem-layout/ecomsystem-layout';
 import ExternalLink from '@site/src/components/external-link/external-link';
 import CollapseBox from '@site/src/components/collapse-box/collapse-box';
@@ -6,7 +6,7 @@ import '../index.scss';
 import { ExternalLinkArrowIcon } from '@site/src/components/Icons/external-link-arrow-icon';
 
 export default function Connectors() {
-    const [flag,setFlag] = useState(true)
+    const [flag, setFlag] = useState(true)
     return (
         <EcomsystemLayout>
             <div className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row">
@@ -23,7 +23,7 @@ export default function Connectors() {
                     moreLink={
                         <>
                             <ExternalLink
-                                href="https://doris.apache.org/docs/download#doris-ecosystem"
+                                href="https://doris.apache.org/download#doris-ecosystem"
                                 label="Download"
                                 linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>
@@ -47,7 +47,7 @@ export default function Connectors() {
                     moreLink={
                         <>
                             <ExternalLink
-                                href="https://doris.apache.org/docs/download#doris-ecosystem"
+                                href="https://doris.apache.org/download#doris-ecosystem"
                                 label="Download"
                                 linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>
@@ -74,7 +74,7 @@ export default function Connectors() {
                     moreLink={
                         <>
                             <ExternalLink
-                                href="https://doris.apache.org/docs/download#doris-ecosystem"
+                                href="https://doris.apache.org/download#doris-ecosystem"
                                 label="Download"
                                 linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>

@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW TRASH [ON BackendHost:BackendHeartBeatPort];
-````
+```
 
 illustrate:
 
@@ -51,13 +51,13 @@ illustrate:
 
    ```sql
     SHOW TRASH;
-   ````
+   ```
 
 2. View the space occupied by garbage data of '192.168.0.1:9050' (specific disk information will be displayed).
 
    ```sql
    SHOW TRASH ON "192.168.0.1:9050";
-   ````
+   ```
 
 ### Keywords
 

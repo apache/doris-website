@@ -163,6 +163,41 @@ Doris 会在 Catalog 中维护表的统计信息，以便在执行查询时能�
 
 Doris 会在下发到 MySQL 的查询语句中，自动在字段名与表名上加上转义符：(``)，以避免字段名与表名与 MySQL 内部关键字冲突。
 
+## 连接异常排查
+
+* Communications link failure The last packet successfully received from the server was 7 milliseconds ago.
+  * 原因：
+    * 网络问题：
+      * 网络不稳定或连接中断。
+      * 客户端和服务器之间的网络延迟过高。
+    * MySQL 服务器设置
+      * MySQL 服务器可能配置了连接超时参数，例如 wait_timeout 或 interactive_timeout，导致连接超时被关闭。
+    * 防火墙设置
+      * 防火墙规则可能阻止了客户端与服务器之间的通信。
+    * 连接池设置
+      * 连接池中的配置 connection_pool_max_life_time 可能导致连接被关闭或回收，或者未及时探活
+    * 服务器资源问题
+      * MySQL 服务器可能资源不足，无法处理新的连接请求。
+    * 客户端配置
+        * 客户端 JDBC 驱动配置错误，例如 autoReconnect 参数未设置或设置不当。
+  * 解决
+    * 检查网络连接：
+        * 确认客户端和服务器之间的网络连接稳定，避免网络延迟过高。
+    * 检查 MySQL 服务器配置：
+        * 查看并调整 MySQL 服务器的 wait_timeout 和 interactive_timeout 参数，确保它们设置合理。
+    * 检查防火墙配置：
+        * 确认防火墙规则允许客户端与服务器之间的通信。
+    * 调整连接池设置：
+        * 检查并调整连接池的配置参数 connection_pool_max_life_time,确保小于 MySQL 的wait_timeout 和 interactive_timeout 参数并大于执行时间最长的 SQL
+    * 监控服务器资源：
+        *  监控 MySQL 服务器的资源使用情况，确保有足够的资源处理连接请求。
+    * 优化客户端配置：
+        * 确认 JDBC 驱动的配置参数正确，例如 autoReconnect=true，确保连接能在中断后自动重连。
+
+* java.io.EOFException MESSAGE: Can not read response from server. Expected to read 819 bytes, read 686 bytes before connection was unexpectedly lost.
+  * 原因：连接被 MySQL Kill 或者 MySQL 宕机
+  * 解决：检查 MySQL 是否有主动 kill 连接的机制，或者是否因为查询过大查崩 MySQL
+
 ## 常见问题
 
 1. 读写 MySQL 的 emoji 表情出现乱码
@@ -284,3 +319,14 @@ Doris 会在下发到 MySQL 的查询语句中，自动在字段名与表名上�
     ```
 
 7. 查询 MySQL 的时候，出现长时间卡住没有返回结果，或着卡住很长时间并且 fe.warn.log 中出现出现大量 write lock 日志，可以尝试在 URL 添加 socketTimeout ，例如：`jdbc:mysql://host:port/database?socketTimeout=30000`，防止 JDBC 客户端 在被 MySQL 关闭连接后无限等待。
+
+8. 在使用 MySQL Catalog 的过程中发现 FE 的 JVM 内存或 Threads 数持续增长不减少，并可能同时出现 Forward to master connection timed out 报错
+
+   打印 FE 线程堆栈 `jstack fe_pid > fe.js`，如果出现大量 `mysql-cj-abandoned-connection-cleanup` 线程，说明是 MySQL JDBC 驱动的问题。
+
+   按照如下方式处理：
+
+   1. 升级 MySQL JDBC 驱动到 8.0.31 及以上版本
+   2. 在 FE 和 BE conf 文件的 JAVA_OPTS 中增加 `-Dcom.mysql.cj.disableAbandonedConnectionCleanup=true` 参数，禁用 MySQL JDBC 驱动的连接清理功能，并重启集群
+
+   **注意：** 如果 Doris 的版本在 2.0.13 及以上（2.0 Release），或 2.1.5 及以上（2.1 Release）则无需增加该参数，因为 Doris 已经默认禁用了 MySQL JDBC 驱动的连接清理功能。只需更换 MySQL JDBC 驱动版本即可。但是需要重启 Doris 集群来清理掉之前的 Threads。

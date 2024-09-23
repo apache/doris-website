@@ -26,7 +26,9 @@ under the License.
 
 
 
-<version since="2.0.4"></version> 
+:::tip 提示
+该功能自 Apache Doris  2.0.4 版本起支持
+:::
 
 # 背景
 在数据库中，"Hint" 是一种用于指导查询优化器执行计划的指令。通过在 SQL 语句中嵌入 Hint，可以影响优化器的决策，以选中期望的执行路径。以下是一个使用 Hint 的背景示例：

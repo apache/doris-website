@@ -301,7 +301,7 @@ Notes:
 - `http header "load_to_single_tablet:true"`: write to one tablet each time
 - For the data writing clients, we recommend a batch size of 100MB~1GB. Future versions will enable Group Commit at the server end and reduce batch size from clients.
 
-```Bash
+```shell
 curl \
 --location-trusted \
 -u username:password \

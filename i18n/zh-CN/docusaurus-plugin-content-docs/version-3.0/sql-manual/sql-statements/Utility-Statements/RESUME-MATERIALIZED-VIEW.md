@@ -45,7 +45,7 @@ RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 1. 恢复物化视图mv1的定时调度
 
     ```sql
-    RESUME MATERIALIZED VIEW mv1;
+    RESUME MATERIALIZED VIEW JOB ON mv1;
     ```
    
 ### Keywords

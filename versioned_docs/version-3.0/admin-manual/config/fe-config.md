@@ -331,25 +331,6 @@ The multi cluster feature will be deprecated in version 0.12 , set this config t
 3. change the backends num of cluster
 4. link/migration db
 
-#### `enable_deploy_manager`
-
-Default：disable
-
-Set to true if you deploy Doris using thirdparty deploy manager
-
-Valid options are:
-
-- disable:    no deploy manager
--  k8s:        Kubernetes
-- ambari:     Ambari
-- local:      Local File (for test or Boxer2 BCC version)
-
-#### `with_k8s_certs`
-
-Default：false
-
-If use k8s deploy manager locally, set this to true and prepare the certs files
-
 #### `enable_fqdn_mode`
 
 This configuration is mainly used in the k8s cluster environment. When enable_fqdn_mode is true, the name of the pod where the be is located will remain unchanged after reconstruction, while the ip can be changed.
@@ -2602,6 +2583,16 @@ The max number of download tasks assigned to each be during the restore process,
 Default: 10
 
 This configuration is mainly used to control the number of backup/restore tasks recorded in each database.
+
+#### `max_backup_tablets_per_job`
+
+Default: 300000
+
+IsMutable：true
+
+MasterOnly：true
+
+Control the max num of tablets per backup job involved, to avoid FE OOM caused by saving too much metadata.
 
 #### `enable_quantile_state_type`
 

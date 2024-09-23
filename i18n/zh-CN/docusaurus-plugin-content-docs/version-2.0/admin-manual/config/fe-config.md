@@ -339,28 +339,6 @@ heartbeat_mgr 中处理心跳事件的线程数。
 
 4. 链接/迁移数据库
 
-**`enable_deploy_manager`**
-
-默认值：disable
-
-如果使用第三方部署管理器部署 Doris，则设置为 true
-
-有效的选项是：
-
-- disable：没有部署管理器
-
-- k8s：Kubernetes
-
-- ambari：Ambari
-
-- local：本地文件（用于测试或 Boxer2 BCC 版本）
-
-**`with_k8s_certs`**
-
-默认值：false
-
-如果在本地使用 k8s 部署管理器，请将其设置为 true 并准备证书文件
-
 **`enable_fqdn_mode`**
 
 此配置用于 k8s 部署环境。当 enable_fqdn_mode 为 true 时，将允许更改 be 的重建 pod 的 ip。
@@ -2605,6 +2583,20 @@ SmallFileMgr 中存储的最大文件数
 默认值：10
 
 此配置用于控制每个 DB 能够记录的 backup/restore 任务的数量
+
+#### `max_backup_tablets_per_job`
+
+默认值：300000
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+此配置用于控制每个 backup job 最大涉及的 tablets 数量，以避免因保存过多元数据导致 FE OOM。
+
+:::tips 提示
+从 Apache Doris 2.0.15 开始支持该配置
+:::
 
 #### `enable_quantile_state_type`
 

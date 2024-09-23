@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 INSTALL PLUGIN FROM [source] [PROPERTIES ("key"="value", ...)]
-````
+```
 
 source supports three types:
 
@@ -52,19 +52,19 @@ source supports three types:
 
     ```sql
     INSTALL PLUGIN FROM "/home/users/doris/auditdemo.zip";
-    ````
+    ```
 
 2. Install the plugin in a local directory:
 
     ```sql
     INSTALL PLUGIN FROM "/home/users/doris/auditdemo/";
-    ````
+    ```
 
 3. Download and install a plugin:
 
     ```sql
     INSTALL PLUGIN FROM "http://mywebsite.com/plugin.zip";
-    ````
+    ```
 
     Note than an md5 file with the same name as the `.zip` file needs to be placed, such as `http://mywebsite.com/plugin.zip.md5` . 
     The content is the MD5 value of the .zip file.
@@ -73,7 +73,7 @@ source supports three types:
 
     ```sql
     INSTALL PLUGIN FROM "http://mywebsite.com/plugin.zip" PROPERTIES("md5sum" = "73877f6029216f4314d712086a146570");
-    ````
+    ```
 
 ### Keywords
 

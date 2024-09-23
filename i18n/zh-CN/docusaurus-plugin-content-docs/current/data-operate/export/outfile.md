@@ -66,7 +66,7 @@ mysql> SELECT * FROM tbl1 LIMIT 10 INTO OUTFILE "file:///home/work/path/result_"
 
 ## 导出文件列类型映射
 
-`SELECT INTO OUTFILE` 支持导出为 Parquet、ORC 文件格式。Parquet、ORC 文件格式拥有自己的数据类型，Doris 的导出功能能够自动将 Doris 的数据类型导出为 Parquet、ORC 文件格式的对应数据类型，具体映射关系请参阅[导出综述](./export-view.md)文档的 "导出文件列类型映射" 部分。
+`SELECT INTO OUTFILE` 支持导出为 Parquet、ORC 文件格式。Parquet、ORC 文件格式拥有自己的数据类型，Doris 的导出功能能够自动将 Doris 的数据类型导出为 Parquet、ORC 文件格式的对应数据类型，具体映射关系请参阅[导出综述](../../data-operate/export/export-overview.md)文档的 "导出文件列类型映射" 部分。
 
 ## 示例
 

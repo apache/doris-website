@@ -188,7 +188,7 @@ Empty set (0.019 sec)
 
 **1. 在 HTTP Header 中设置 `two_phase_commit:true` 启用两阶段提交。**
 
-```Bash
+```shell
 curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt http://fe_host:http_port/api/{db}/{table}/_stream_load
 {
     "TxnId": 18036,
@@ -214,7 +214,7 @@ curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt h
 
 - 可以使用事务 id 指定事务
 
-  ```Bash
+  ```shell
   curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/stream_load2pc
   {
       "status": "Success",
@@ -224,7 +224,7 @@ curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt h
 
 - 也可以使用 label 指定事务
 
-  ```Bash
+  ```shell
   curl -X PUT --location-trusted -u user:passwd  -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:commit"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
@@ -236,7 +236,7 @@ curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt h
 
 - 可以使用事务 id 指定事务
 
-  ```Bash
+  ```shell
   curl -X PUT --location-trusted -u user:passwd  -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
   {
       "status": "Success",
@@ -246,7 +246,7 @@ curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt h
 
 - 也可以使用 label 指定事务
 
-  ```Bash
+  ```shell
   curl -X PUT --location-trusted -u user:passwd  -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
   {
       "status": "Success",

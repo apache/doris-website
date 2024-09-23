@@ -30,7 +30,9 @@ The configuration file directory for FE and BE is `conf/`. In addition to storin
 
 Users can store some configuration files in it, and the system will automatically read them.
 
-<version since="1.2.0">
+:::tip Tips
+This features is supported since the Apache Doris 1.2 version
+:::
 
 ## hdfs-site.xml and hive-site.xml
 
@@ -46,4 +48,4 @@ The configuration that the user fills in the command will overwrite the configur
 
 In this way, users only need to fill in a small amount of configuration to complete the access to HDFS/Hive.
 
-</version>
+

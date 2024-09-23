@@ -171,7 +171,7 @@ Adjust the FoundationDB configurations based on different hardware specification
 
 This is an example `foundationdb.conf` configuration file for a machine with 8 CPU cores, 32 GB of memory, and a 500 GB SSD data disk. Ensure that the `datadir` and `logdir` paths are set correctly. The data disk is typically mounted at `/mnt`:
 
-```Bash
+```shell
 # foundationdb.conf
 ##
 ## Configuration file for FoundationDB server processes
@@ -257,7 +257,7 @@ On the primary machine, update the `ip` in the `/etc/foundationdb/fdb.cluster` f
 
 Then, restart the FoundationDB service to apply the changes:
 
-```Bash
+```shell
 # for service
 user@host$ sudo service foundationdb restart
 
@@ -306,7 +306,7 @@ Replace `/etc/foundationdb/foundationdb.conf` and `/etc/foundationdb/fdb.cluster
 
 Then, restart FoundationDB service on the local machine.
 
-```Bash
+```shell
 # for service
 user@host$ sudo service foundationdb restart
 
@@ -395,7 +395,7 @@ All nodes must have OpenJDK 17 installed. You can download the installation pack
 
 Then, simply extract the downloaded OpenJDK package directly to the installation path:
 
-```Bash
+```shell
 tar xf openjdk-17.0.1_linux-x64_bin.tar.gz  -C /opt/
 
 # Before starting Meta Service or Recycler

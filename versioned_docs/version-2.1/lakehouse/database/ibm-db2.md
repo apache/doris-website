@@ -117,5 +117,5 @@ Doris will automatically add the escape character ("") to the field names and ta
 
 1. `Invalid operation: result set is closed. ERRORCODE=-4470` exception occurs when reading IBM Db2 data through JDBC Catalog
 
-   Add connection parameters in the jdbc_url connection string when creating the IBM Db2 Catalog: `allowNextOnExhaustedResultSet=1;resultSetHoldability=1`. like:
-   `jdbc:db2://host:port/database:allowNextOnExhaustedResultSet=1;resultSetHoldability=1`.
+   Add connection parameters in the jdbc_url connection string when creating the IBM Db2 Catalog: `allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`. like:
+   `jdbc:db2://host:port/database:allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`.

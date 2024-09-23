@@ -74,7 +74,7 @@ FROM data_source [data_source_properties]
 
   Used to describe imported data. The composition is as follows:
 
-  ````SQL
+  ```SQL
   [column_separator],
   [columns_mapping],
   [preceding_filter],
@@ -82,7 +82,7 @@ FROM data_source [data_source_properties]
   [partitions],
   [DELETE ON],
   [ORDER BY]
-  ````
+  ```
 
   - `column_separator`
 
@@ -138,12 +138,12 @@ FROM data_source [data_source_properties]
 
   Common parameters for specifying routine import jobs.
 
-  ````text
+  ```text
   PROPERTIES (
       "key1" = "val1",
       "key2" = "val2"
   )
-  ````
+  ```
 
   Currently we support the following parameters:
 
@@ -165,11 +165,11 @@ FROM data_source [data_source_properties]
 
      These three parameters are used to control the execution time and processing volume of a subtask. When either one reaches the threshold, the task ends.
 
-     ````text
+     ```text
      "max_batch_interval" = "20",
      "max_batch_rows" = "300000",
      "max_batch_size" = "209715200"
-     ````
+     ```
 
   3. `max_error_number`
 
@@ -270,13 +270,13 @@ FROM data_source [data_source_properties]
 
   The type of data source. Currently supports:
 
-  ````text
+  ```text
   FROM KAFKA
   (
       "key1" = "val1",
       "key2" = "val2"
   )
-  ````
+  ```
 
   `data_source_properties` supports the following data source properties:
 
@@ -304,15 +304,15 @@ FROM data_source [data_source_properties]
 
      If not specified, all partitions under topic will be subscribed from `OFFSET_END` by default.
 
-     ````text
+     ```text
      "kafka_partitions" = "0,1,2,3",
      "kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"
-     ````
+     ```
 
-     ````text
+     ```text
      "kafka_partitions" = "0,1,2,3",
      "kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00,2021-05-22 11:00:00"
-     ````
+     ```
 
      Note that the time format cannot be mixed with the OFFSET format.
 
@@ -326,20 +326,20 @@ FROM data_source [data_source_properties]
 
      For more supported custom parameters, please refer to the configuration items on the client side in the official CONFIGURATION document of librdkafka. Such as:
 
-     ````text
+     ```text
      "property.client.id" = "12345",
      "property.ssl.ca.location" = "FILE:ca.pem"
-     ````
+     ```
 
      1. When connecting to Kafka using SSL, you need to specify the following parameters:
 
-        ````text
+        ```text
         "property.security.protocol" = "ssl",
         "property.ssl.ca.location" = "FILE:ca.pem",
         "property.ssl.certificate.location" = "FILE:client.pem",
         "property.ssl.key.location" = "FILE:client.key",
         "property.ssl.key.password" = "abcdefg"
-        ````
+        ```
 
         in:
 
@@ -347,11 +347,11 @@ FROM data_source [data_source_properties]
 
         If client authentication is enabled on the Kafka server side, thenAlso set:
 
-        ````text
+        ```text
         "property.ssl.certificate.location"
         "property.ssl.key.location"
         "property.ssl.key.password"
-        ````
+        ```
 
         They are used to specify the client's public key, private key, and password for the private key, respectively.
 
@@ -363,11 +363,15 @@ FROM data_source [data_source_properties]
 
         Example:
 
-        ````text
+        ```text
         "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        ````
-- <version since="1.2.3" type="inline"> comment </version>
+        ```
+- comment
   Comment for the routine load job.
+
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
 ### Example
 
 1. Create a Kafka routine import task named test1 for example_tbl of example_db. Specify the column separator and group.id and client.id, and automatically consume all partitions by default, and start subscribing from the location where there is data (OFFSET_BEGINNING)
@@ -394,7 +398,7 @@ FROM data_source [data_source_properties]
        "property.client.id" = "xxx",
        "property.kafka_default_offsets" = "OFFSET_BEGINNING"
    );
-   ````
+   ```
 
 2. Create a Kafka routine dynamic multiple tables import task named "test1" for the "example_db". Specify the column delimiter, group.id, and client.id, and automatically consume all partitions, subscribing from the position with data (OFFSET_BEGINNING).
 
@@ -444,7 +448,7 @@ Assuming that we need to import data from Kafka into tables "test1" and "test2" 
        "kafka_partitions" = "0,1,2,3",
        "kafka_offsets" = "101,0,0,200"
    );
-   ````
+   ```
 
 4. Import data from the Kafka cluster through SSL authentication. Also set the client.id parameter. The import task is in non-strict mode and the time zone is Africa/Abidjan
 
@@ -474,7 +478,7 @@ Assuming that we need to import data from Kafka into tables "test1" and "test2" 
        "property.ssl.key.password" = "abcdefg",
        "property.client.id" = "my_client_id"
    );
-   ````
+   ```
 
 5. Import data in Json format. By default, the field name in Json is used as the column name mapping. Specify to import three partitions 0, 1, and 2, and the starting offsets are all 0
 
@@ -499,7 +503,7 @@ Assuming that we need to import data from Kafka into tables "test1" and "test2" 
        "kafka_partitions" = "0,1,2",
        "kafka_offsets" = "0,0,0"
    );
-   ````
+   ```
 
 6. Import Json data, extract fields through Jsonpaths, and specify the root node of the Json document
 
@@ -527,7 +531,7 @@ Assuming that we need to import data from Kafka into tables "test1" and "test2" 
        "kafka_partitions" = "0,1,2",
        "kafka_offsets" = "0,0,0"
    );
-   ````
+   ```
 
 7. Create a Kafka routine import task named test1 for example_tbl of example_db. And use conditional filtering.
 
@@ -554,7 +558,7 @@ Assuming that we need to import data from Kafka into tables "test1" and "test2" 
        "kafka_partitions" = "0,1,2,3",
        "kafka_offsets" = "101,0,0,200"
    );
-   ````
+   ```
 
 8. Import data to Unique with sequence column Key model table
 
@@ -578,7 +582,7 @@ Assuming that we need to import data from Kafka into tables "test1" and "test2" 
        "kafka_partitions" = "0,1,2,3",
        "kafka_offsets" = "101,0,0,200"
    );
-   ````
+   ```
 
 9. Consume from a specified point in time
 
@@ -598,7 +602,7 @@ Assuming that we need to import data from Kafka into tables "test1" and "test2" 
        "kafka_topic" = "my_topic",
        "kafka_default_offsets" = "2021-05-21 10:00:00"
    );
-   ````
+   ```
 
 ### Keywords
 

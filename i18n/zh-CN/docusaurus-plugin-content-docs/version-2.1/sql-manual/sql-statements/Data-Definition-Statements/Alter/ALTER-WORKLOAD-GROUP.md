@@ -30,7 +30,7 @@ under the License.
 
 ALTER WORKLOAD GROUP 
 
-<version since="dev"></version>
+ 
 
 ### Description
 

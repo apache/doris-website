@@ -311,7 +311,7 @@ The modules for creating a loading job are explained as follows:
 
 **max_routine_load_task_concurrent_num**
 
-- Default Value: 5
+- Default Value: 256
 
 - Dynamic Configuration: Yes
 
@@ -321,7 +321,7 @@ The modules for creating a loading job are explained as follows:
 
 **max_routine_load_task_num_per_be**
 
-- Default Value: 5
+- Default Value: 1024
 
 - Dynamic Configuration: Yes
 
@@ -574,7 +574,7 @@ The columns in the result set provide the following information:
 | ErrorLogUrls         | The URL(s) to view the filtered low-quality data.            |
 | OtherMsg             | Other error messages.                                        |
 
-## Best Practices for Loading Data
+## Load example
 
 ### Loading CSV Format
 

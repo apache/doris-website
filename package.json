@@ -6,7 +6,7 @@
         "docusaurus": "docusaurus",
         "start": "docusaurus start",
         "start:zh-CN": "docusaurus start --locale zh-CN",
-        "build": "PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js docusaurus build",
+        "build": "NODE_OPTIONS=--max_old_space_size=8192 PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js docusaurus build",
         "build:version": "docusaurus set-versions && docusaurus build",
         "swizzle": "docusaurus swizzle",
         "deploy": "docusaurus deploy",
@@ -45,6 +45,9 @@
         "@docusaurus/module-type-aliases": "^2.4.1",
         "@tsconfig/docusaurus": "^1.0.7",
         "typescript": "^4.7.4"
+    },
+    "resolutions": {
+        "cheerio": "1.0.0-rc.3"
     },
     "browserslist": {
         "production": [

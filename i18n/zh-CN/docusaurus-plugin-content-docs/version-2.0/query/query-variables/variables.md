@@ -409,7 +409,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `time_zone`
 
-  用于设置当前会话的时区。默认值为 `system_time_zone` 的值。时区会对某些时间函数的结果产生影响。关于时区，可以参阅 [时区](../query-variables/time-zone)文档。
+  用于设置当前会话的时区。默认值为 `system_time_zone` 的值。时区会对某些时间函数的结果产生影响。关于时区，可以参阅 [时区](../../admin-manual/cluster-management/time-zone)文档。
 
 - `tx_isolation`
 
@@ -525,7 +525,11 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 }
 ```
 
-- `block_encryption_mode` 可以通过 block_encryption_mode 参数，控制块加密模式，默认值为：空。当使用 AES 算法加密时相当于`AES_128_ECB`, 当时用 SM3 算法加密时相当于`SM3_128_ECB` 可选值：
+- `block_encryption_mode`
+可以通过该参数控制块加密模式，默认值为空。
+当为空时，使用 AES 算法加密相当于使用 `AES_128_ECB`, 当使用 SM4 算法加密时相当于 `SM4_128_ECB`。
+
+可选值：
 
 ```text
   AES_128_ECB,

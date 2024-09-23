@@ -38,7 +38,7 @@ grammar:
 
 ```sql
  SHOW BACKUP [FROM db_name]
-````
+```
 
 illustrate:
 
@@ -71,7 +71,7 @@ illustrate:
 
    ```sql
     SHOW BACKUP FROM example_db;
-   ````
+   ```
 
 ### Keywords
 

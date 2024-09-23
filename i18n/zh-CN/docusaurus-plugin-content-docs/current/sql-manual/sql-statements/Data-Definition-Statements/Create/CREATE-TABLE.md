@@ -482,17 +482,7 @@ UNIQUE KEY(k1, k2)
 
 * 动态分区相关
 
-    动态分区相关参数如下：
-
-    * `dynamic_partition.enable`: 用于指定表级别的动态分区功能是否开启。默认为 true。
-    * `dynamic_partition.time_unit:` 用于指定动态添加分区的时间单位，可选择为 DAY（天），WEEK(周)，MONTH（月），YEAR（年），HOUR（时）。
-    * `dynamic_partition.start`: 用于指定向前删除多少个分区。值必须小于 0。默认为 Integer.MIN_VALUE。
-    * `dynamic_partition.end`: 用于指定提前创建的分区数量。值必须大于 0。
-    * `dynamic_partition.prefix`: 用于指定创建的分区名前缀，例如分区名前缀为 p，则自动创建分区名为 p20200108。
-    * `dynamic_partition.buckets`: 用于指定自动创建的分区分桶数量。
-    * `dynamic_partition.create_history_partition`: 是否创建历史分区。
-    * `dynamic_partition.history_partition_num`: 指定创建历史分区的数量。
-    * `dynamic_partition.reserved_history_periods`: 用于指定保留的历史分区的时间段。
+    动态分区相关参考[分区分桶 - 动态分区](../../../../table-design/data-partition.md#动态分区)
 
 ### Example
 
@@ -826,9 +816,10 @@ UNIQUE KEY(k1, k2)
 
 ### Best Practice
 
+
 #### 分区和分桶
 
-一个表必须指定分桶列，但可以不指定分区。关于分区和分桶的具体介绍，可参阅 [数据划分](../../../../data-table/data-partition.md) 文档。
+一个表必须指定分桶列，但可以不指定分区。关于分区和分桶的具体介绍，可参阅 [数据划分](../../../../table-design/data-partition) 文档。
 
 Doris 中的表可以分为分区表和无分区的表。这个属性在建表时确定，之后不可更改。即对于分区表，可以在之后的使用过程中对分区进行增删操作，而对于无分区的表，之后不能再进行增加分区等操作。
 
@@ -838,11 +829,11 @@ Doris 中的表可以分为分区表和无分区的表。这个属性在建表�
 
 #### 动态分区
 
-动态分区功能主要用于帮助用户自动的管理分区。通过设定一定的规则，Doris 系统定期增加新的分区或删除历史分区。可参阅 [动态分区](../../../../advanced/partition/dynamic-partition) 文档查看更多帮助。
+动态分区功能主要用于帮助用户自动的管理分区。通过设定一定的规则，Doris 系统定期增加新的分区或删除历史分区。可参阅 [动态分区](../../../../table-design/data-partition#dynamic-partitioning) 文档查看更多帮助。
 
 #### 自动分区
 
-自动分区功能文档参见 [自动分区](../../../../advanced/partition/auto-partition)。
+自动分区功能文档参见 [自动分区](../../../../table-design/data-partition#auto-partitioning)。
 
 #### 物化视图
 
@@ -853,6 +844,7 @@ Doris 中的表可以分为分区表和无分区的表。这个属性在建表�
 如果在之后的使用过程中添加物化视图，如果表中已有数据，则物化视图的创建时间取决于当前数据量大小。
 
 关于物化视图的介绍，请参阅文档 [同步物化视图](../../../../query/view-materialized-view/materialized-view)。
+
 
 #### 索引
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "File Caches",
+    "title": "Data Cache",
     "language": "en"
 }
 ---
@@ -24,33 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# File Cache
-
-File Cache accelerates queries that read the same data by caching the data files of recently accessed from remote storage system (HDFS or Object Storage). In Ad Hoc scenarios where the same data is frequently accessed, File Cache can avoid repeated remote data access costs and improve the query analysis performance and stability of hot data.
+Data cache accelerates queries that read the same data by caching the data files of recently accessed from remote storage system (HDFS or Object Storage). In Ad Hoc scenarios where the same data is frequently accessed, Data cache can avoid repeated remote data access costs and improve the query analysis performance and stability of hot data.
 
 ## How it works
 
-File Cache caches the accessed remote data in the local BE node. The original data file will be divided into blocks according to the read IO size, and the block will be stored in file `cache_path/hash(filepath).substr(0, 3)/hash(filepath)/offset`, and save the block meta information in the BE node. When accessing the same remote file, doris will check whether the cached data of the file exists in the local cache, and according to the offset and size of the block, confirm which data is read from the local block, which data is pulled from the remote, and cache the new data pulled from the remote. When the BE node restarts, scan `cache_path` directory, recover the meta information of the block. When the cache size reaches the upper threshold, the blocks that have not been accessed for a long time shall be cleaned according to the LRU principle.
+Data Cache caches the accessed remote data in the local BE node. The original data file will be divided into blocks according to the read IO size, and the block will be stored in file `cache_path/hash(filepath).substr(0, 3)/hash(filepath)/offset`, and save the block meta information in the BE node. When accessing the same remote file, doris will check whether the cached data of the file exists in the local cache, and according to the offset and size of the block, confirm which data is read from the local block, which data is pulled from the remote, and cache the new data pulled from the remote. When the BE node restarts, scan `cache_path` directory, recover the meta information of the block. When the cache size reaches the upper threshold, the blocks that have not been accessed for a long time shall be cleaned according to the LRU principle.
 
 ## Usage
 
-File Cache is disabled by default. You need to set the relevant configuration in FE and BE to enable it.
+Data cache is disabled by default. You need to set the relevant configuration in FE and BE to enable it.
 
 ### Configurations for FE
 
-Enable File Cache for a given session:
+Enable Data cache for a given session:
 
 ```
 SET enable_file_cache = true;
 ```
 
-Enable File Cache globally:
+Enable Data cache globally:
 
 ```
 SET GLOBAL enable_file_cache = true;
 ```
 
-> The File Cache is only applicable to external queries for files (such as Hive, Hudi). It has no effect on internal table queries, or non-file external queries (such as JDBC, Elasticsearch), etc.
+> The Data cache is only applicable to external queries for files (such as Hive, Hudi). It has no effect on internal table queries, or non-file external queries (such as JDBC, Elasticsearch), etc.
 
 ### Configurations for BE
 
@@ -58,16 +56,18 @@ Add settings to the BE node's configuration file `conf/be.conf`, and restart the
 
 |  Parameter | Required  | Description  |
 |  ---  | ---  | --- |
-| `enable_file_cache` | Yes | Whether to enable File Cache, default false |
+| `enable_file_cache` | Yes | Whether to enable Data cache, default false |
 | `file_cache_path` | Yes | Parameters about cache path, json format, for exmaple: `[{"path": "/path/to/file_cache1", "total_size":53687091200,"query_limit": 10737418240},{"path": "/path/to/file_cache2", "total_size":53687091200,"query_limit": 10737418240},{"path": "/path/to/file_cache3", "total_size":53687091200,"query_limit": 10737418240, "normal_percent":85, "disposable_percent":10, "index_percent":5}]`. `path` is the path to save cached data; `total_size` is the max size of cached data; `query_limit` is the max size of cached data for a single query; `normal_percent, disposable_percent, index_percent` Three cache queues' percentages, their sum equals 100. |
 | `file_cache_min_file_segment_size` | No | Min size of a single cached block, default 1MB, should greater than 4096 |
 | `file_cache_max_file_segment_size` | No | Max size of a single cached block, default 4MB, should greater than 4096 |
 | `enable_file_cache_query_limit` | No | Whether to limit the cache size used by a single query, default false |
 | `clear_file_cache` | No | Whether to delete the previous cache data when the BE restarts, default false |
 
-## Check whether a query hits cache
+## Cache Observability
 
-Execute `set enable_profile = true` to enable the session variable, and you can view the query profile in the Queris tab of FE's web page. The metrics related to File Cache are as follows:
+### Check whether a query hits cache
+
+Execute `set enable_profile = true` to enable the session variable, and you can view the query profile in the Queris tab of FE's web page. The metrics related to Data cache are as follows:
 
 ```
 -  FileCache:  0ns
@@ -92,4 +92,10 @@ Execute `set enable_profile = true` to enable the session variable, and you can 
 - `WriteCacheIOUseTimer`: IO time to write cache.
 
 If `BytesScannedFromRemote` is 0, it means all caches are hit.
+
+### Metrics
+
+User can query system table [file_cache_statistics](../admin-manual/system-tables/file_cache_statistics.md) to view the cache stats of each Backends.
+
+
 

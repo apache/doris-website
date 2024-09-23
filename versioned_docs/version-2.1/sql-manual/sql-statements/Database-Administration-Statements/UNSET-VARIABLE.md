@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<version since="dev">
+
 
 ## UNSET-VARIABLE
 
-</version>
+
 
 ### Name
 
@@ -42,7 +42,7 @@ grammar:
 
 ```sql
 UNSET [SESSION|GLOBAL] VARIABLE (variable_name | ALL)
-````
+```
 
 illustrate:
 
@@ -57,15 +57,15 @@ illustrate:
 
 1. Restore value of the time zone
 
-   ````
+   ```
    UNSET VARIABLE time_zone;
-   ````
+   ```
 
 2. Restore the global execution memory size
 
-   ````
+   ```
    UNSET GLOBAL VARIABLE exec_mem_limit;
-   ````
+   ```
 3. Restore all variables globally
 
    ```
