@@ -183,8 +183,7 @@ PROPERTIES ("key"="value", ...);
    ```sql
    CREATE RESOURCE hdfs_resource PROPERTIES (
       "type"="hdfs",
-      "username"="user",
-      "password"="passwd",
+      "hadoop.username"="user",
       "dfs.nameservices" = "my_ha",
       "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
       "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
@@ -195,7 +194,7 @@ PROPERTIES ("key"="value", ...);
 
    HDFS 相关参数如下:
    - fs.defaultFS: namenode 地址和端口
-   - username: hdfs 用户名
+   - hadoop.username: hdfs 用户名
    - dfs.nameservices: name service名称，与hdfs-site.xml保持一致
    - dfs.ha.namenodes.[nameservice ID]: namenode的id列表，与hdfs-site.xml保持一致
    - dfs.namenode.rpc-address.[nameservice ID].[name node ID]: Name node的rpc地址，数量与namenode数量相同，与hdfs-site.xml保持一致
