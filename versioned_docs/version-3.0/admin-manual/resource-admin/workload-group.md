@@ -153,10 +153,9 @@ doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
 
 :::tip
 NOTE:
-
 1. The current workload group does not yet support the deployment of multiple BEs on a single machine.
 2. After the machine is restarted, the above cgroup configurations will be cleared. If you want the above configurations to take effect after a reboot, you can use systemd to set these operations as a custom system service, so that the creation and permission assignments are automatically completed each time the machine restarts.
-   :::
+:::
 
 ## Note for Using Workload Groups in K8S
 The CPU management for Workloads is implemented based on CGroup. To use Workload Groups within containers, you need to start the containers in privileged mode so that the Doris processes inside the container have permission to read and write CGroup files on the host.
