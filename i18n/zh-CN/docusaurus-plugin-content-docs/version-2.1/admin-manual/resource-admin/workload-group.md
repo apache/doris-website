@@ -158,7 +158,7 @@ doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
 注意事项：
 1. 目前的 workload group 暂时不支持一个机器多个 BE 的部署方式。
 2. 当机器重启之后，上面的cgroup配置就会清空。如果期望上述配置重启之后可以也可以生效，可以使用systemd把以上操作设置成系统的自定义服务，这样在每次机器重启的时候，自动完成创建和授权操作。
-   :::
+:::
 
 ## 在K8S中使用Workload Group的注意事项
 Workload的CPU管理是基于CGroup实现的，如果期望在容器中使用Workload Group，那么需要以特权模式启动容器，容器内的Doris进程才能具备读写宿主机CGroup文件的权限。
