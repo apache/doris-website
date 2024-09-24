@@ -46,12 +46,12 @@ under the License.
 
 2.  在任意 FE 节点，通过以下命令启动服务：
 
-    ```
+    ```shell
     # 配置服务端口
     vim apiserver/conf/config.conf
-    # 启动sql-converter转换服务
+    # 启动 SQL Converter for Apache Doris 转换服务
     sh apiserver/bin/start.sh
-    # 如需前端界面, 可在webserver中配置相应的端口并启动, 不需要前端则可以忽略以下操作
+    # 如需前端界面, 可在 webserver 中配置相应的端口并启动, 不需要前端则可以忽略以下操作
     vim webserver/conf/config.conf
     # 启动前端界面
     sh webserver/bin/start.sh
@@ -61,11 +61,11 @@ under the License.
 
     1. 该服务是一个无状态的服务, 可随时启停
 
-    2. 在apiserver/conf/config.conf中配置port来指定任意一个可用端口, 配置workers来指定启动的线程数量. 在并发场景中, 可以根据需要调整, 默认为1
+    2. 在 `apiserver/conf/config.conf` 中配置 port 来指定任意一个可用端口, 配置 workers 来指定启动的线程数量. 在并发场景中, 可以根据需要调整, 默认为 1
 
     3. 建议在每个 FE 节点都单独启动一个服务
 
-    4. 如需启动前端界面, 可以在webserver/conf/config.conf中配置sql-converter转换服务地址, 默认是API_HOST=http://127.0.0.1:5001
+    4. 如需启动前端界面, 可以在 `webserver/conf/config.conf` 中配置 SQL Converter for Apache Doris 转换服务地址, 默认是 `API_HOST=http://127.0.0.1:5001`
     :::
 
 3. 启动 Doris 集群（2.1 或更高版本）

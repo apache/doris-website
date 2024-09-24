@@ -45,10 +45,10 @@ Starting from version 2.1, Doris can support multiple SQL dialects, such as Pres
 
 2. On any FE node, start the service through the following command:
 
-	```
+	```shell
     # Configuring the service port
     vim apiserver/conf/config.conf
-    # Start the sql-converter conversion service
+    # Start the SQL Converter for Apache Doris conversion service
     sh apiserver/bin/start.sh
     # If you need a front-end interface, you can configure the corresponding port in the webserver and start it. If you don't need a front-end, you can ignore the following operations.
     vim webserver/conf/config.conf
@@ -59,11 +59,11 @@ Starting from version 2.1, Doris can support multiple SQL dialects, such as Pres
     :::tip
 	1. This service is a stateless service and can be started and stopped at any time.
 	
-	2. Configure port in apiserver/conf/config.conf to specify any available port, and configure workers to specify the number of threads to start. In concurrent scenarios, you can adjust as needed, the default is 1.
+	2. Configure port in `apiserver/conf/config.conf` to specify any available port, and configure workers to specify the number of threads to start. In concurrent scenarios, you can adjust as needed, the default is 1.
 	
 	3. It is recommended to start a separate service on each FE node.
 
-    4. If you need to start the front-end interface, you can configure the sql-converter conversion service address in webserver/conf/config.conf. The default is API_HOST=http://127.0.0.1:5001
+    4. If you need to start the front-end interface, you can configure the SQL Converter for Apache Doris conversion service address in `webserver/conf/config`.conf. The default is `API_HOST=http://127.0.0.1:5001`
     :::
 
 3. Start the Doris cluster (version 2.1 or higher)
