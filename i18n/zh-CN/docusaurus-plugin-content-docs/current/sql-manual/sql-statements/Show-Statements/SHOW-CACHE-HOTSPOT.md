@@ -49,11 +49,11 @@ under the License.
 
 ## 相关命令
 
- - [WARMUP CACHE]
+ - [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
 
 ## 参考
 
- - [管理文件缓存]
+ - [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
 
 ## 关键词
 

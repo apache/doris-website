@@ -49,11 +49,11 @@ This statement is used to display the hotspot information of file cache.
 
 ## Related Commands
 
- - [WARMUP CACHE]
+ - [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
 
 ## References
 
- - [MANAGING FILE CACHE]
+ - [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
 
 ## Keywords
 
