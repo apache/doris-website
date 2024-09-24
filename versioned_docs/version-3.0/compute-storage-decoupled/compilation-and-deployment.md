@@ -105,6 +105,8 @@ bin/stop.sh
 
 Check the `doris_cloud.out` file for the output message `successfully started`.
 
+For production environment, please ensure that the total number of Meta Serivie is at least three.
+
 ## 4. Independent Deployment of Data Recycling Function (Optional)
 
 *Preparation Work*
@@ -184,7 +186,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
 Replace `host:port` with the actual address and editlog port of the FE node. More information refer to [ADD FOLLOWER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER.md) and [ADD OBSERVER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER.md).
 
-Please ensure that the total number of Frontend (FE) nodes in the FOLLOWER role, including the first FE, remains an odd number. In general, three FOLLOWERS are sufficient. Frontend nodes in the OBSERVER role can be any number.
+For production environment, please ensure that the total number of Frontend (FE) nodes in the FOLLOWER role, including the first FE, remains an odd number. In general, three FOLLOWERS are sufficient. Frontend nodes in the OBSERVER role can be any number.
 
 ### 5.4 Add BE Nodes
 

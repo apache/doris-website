@@ -105,6 +105,8 @@ bin/stop.sh
 
 检查 `doris_cloud.out` 文件中是否有 `successfully started` 的输出信息。
 
+生产环境中请确保至少有 3 个 Meta Service 节点。
+
 ## 4. 数据回收功能独立部署（可选）
 
 *准备工作*
@@ -184,7 +186,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
 将 `host:port` 替换为 FE 节点的实际地址和编辑日志端口。更多信息请参见 [ADD FOLLOWER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER.md) 和 [ADD OBSERVER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER.md)。
 
-请确保在 FOLLOWER 角色中的前端 (FE) 节点总数，包括第一个 FE，保持为奇数。一般来说，三个 FOLLOWER 就足够了。OBSERVER 角色的前端节点可以是任意数量。
+生产环境中请确保在 FOLLOWER 角色中的前端 (FE) 节点总数，包括第一个 FE，保持为奇数。一般来说，三个 FOLLOWER 就足够了。OBSERVER 角色的前端节点可以是任意数量。
 
 ### 5.4 添加 BE 节点
 
