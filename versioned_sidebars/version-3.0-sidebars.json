@@ -224,14 +224,6 @@
                 },
                 {
                     "type": "category",
-                    "label": "Pipeline Execution Engine",
-                    "items": [
-                        "query/pipeline/pipeline-execution-engine",
-                        "query/pipeline/pipeline-x-execution-engine"
-                    ]
-                },
-                {
-                    "type": "category",
                     "label": "Caches",
                     "items": [
                         "query/query-cache/query-cache",
@@ -267,6 +259,7 @@
                         "query/duplicate/using-hll"
                     ]
                 },
+                "query/pipeline/pipeline-execution-engine",
                 "query/high-concurrent-point-query",
                 "query/topn-query",
                 {
