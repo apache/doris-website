@@ -62,7 +62,7 @@ warm_up_item ::= TABLE <table_name> [PARTITION <partition_name>];
 1. Warm up a compute group named destination_group_name with a compute group named source_group_name.
 
 ```sql
-   WARM UP COMPUTE GROUP destination_group_name WITH COMPUTE GROUP source_group_name.
+   WARM UP COMPUTE GROUP destination_group_name WITH COMPUTE GROUP source_group_name;
 
 ```
 

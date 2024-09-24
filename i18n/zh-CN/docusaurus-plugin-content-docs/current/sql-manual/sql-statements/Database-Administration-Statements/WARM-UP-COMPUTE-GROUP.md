@@ -63,7 +63,7 @@ warm_up_item ::= TABLE <table_name> [PARTITION <partition_name>];
 1. 使用名为source_group_name的计算组预热名为destination_group_name的计算组。
 
 ```sql
-   WARM UP COMPUTE GROUP destination_group_name WITH COMPUTE GROUP source_group_name.
+   WARM UP COMPUTE GROUP destination_group_name WITH COMPUTE GROUP source_group_name;
 
 ```
 
