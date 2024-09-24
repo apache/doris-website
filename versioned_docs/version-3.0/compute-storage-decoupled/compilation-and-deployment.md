@@ -247,7 +247,7 @@ In the `be.conf` file, the following key parameters need to be configured:
 
 ## 6. Create Storage Vault
 
-The Storage Vault is an important component in the Doris decoupled storage-compute architecture. They represent the shared storage layer for storing data. You can create one or more Storage Vaults using HDFS or S3-compatible object storage. The first created Storage Vault will become the default Storage Vault. System tables and tables not specified with a Storage Vault will be stored in this default Storage Vault. The default Storage Vault cannot be deleted. Here's how to create a Storage Vault for your Doris cluster:
+Storage Vault is an important component in the Doris decoupled storage and computing architecture. They represent a shared storage layer for storing data. You can create one or more Storage Vaults using HDFS or S3-compatible object storage. One Storage Vault can be set as the default Storage Vault, and system tables and tables without a specified Storage Vault will be stored in this default Storage Vault. The default Storage Vault cannot be deleted. Here are the methods to create a Storage Vault for your Doris cluster:
 
 ### 6.1 Create HDFS Storage Vault 
 
