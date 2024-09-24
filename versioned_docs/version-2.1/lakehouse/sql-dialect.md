@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SQL Dialect Converter",
+    "title": "SQL Converter for Apache Doris",
     "language": "en"
 }
 ---
