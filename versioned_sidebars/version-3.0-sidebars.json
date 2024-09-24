@@ -32,6 +32,7 @@
                                     "label": "Compute-storage coupled",
                                     "items": [
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-operator",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-quickstart",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-access-cluster",
@@ -125,18 +126,23 @@
                     "label": "Loading Data",
                     "items": [
                         "data-operate/import/load-manual",
-                        "data-operate/import/stream-load-manual",
-                        "data-operate/import/broker-load-manual",
-                        "data-operate/import/routine-load-manual",
-                        "data-operate/import/insert-into-manual",
-                        "data-operate/import/mysql-load-manual",
-                        "data-operate/import/load-json-format",
-                        "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-atomicity",
+                        {
+                            "type": "category",
+                            "label": "Import Way",
+                            "items": [
+                                "data-operate/import/import-way/stream-load-manual",
+                                "data-operate/import/import-way/broker-load-manual",
+                                "data-operate/import/import-way/routine-load-manual",
+                                "data-operate/import/import-way/insert-into-manual",
+                                "data-operate/import/import-way/mysql-load-manual",
+                                "data-operate/import/import-way/group-commit-manual"
+                            ]
+                        },
+                        "data-operate/import/load-data-format",
+                        "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
-                        "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode"
+                        "data-operate/import/load-high-availability",
+                        "data-operate/import/migrate-data-from-other-olap"
                     ]
                 },
                 {
@@ -218,14 +224,6 @@
                 },
                 {
                     "type": "category",
-                    "label": "Pipeline Execution Engine",
-                    "items": [
-                        "query/pipeline/pipeline-execution-engine",
-                        "query/pipeline/pipeline-x-execution-engine"
-                    ]
-                },
-                {
-                    "type": "category",
                     "label": "Caches",
                     "items": [
                         "query/query-cache/query-cache",
@@ -261,6 +259,7 @@
                         "query/duplicate/using-hll"
                     ]
                 },
+                "query/pipeline/pipeline-execution-engine",
                 "query/high-concurrent-point-query",
                 "query/topn-query",
                 {
@@ -383,8 +382,13 @@
                     "items": [
                         "admin-manual/resource-admin/workload-group",
                         "admin-manual/resource-admin/workload-policy",
-                        "admin-manual/resource-admin/workload-system-table",
-                        "admin-manual/resource-admin/multi-tenant"
+                        "admin-manual/resource-admin/workload-analysis",
+                        "admin-manual/resource-admin/multi-tenant",
+                        "admin-manual/resource-admin/workload-fusing",
+                        "admin-manual/resource-admin/use-workload-mem-limit",
+                        "admin-manual/resource-admin/use-workload-cpu-limit",
+                        "admin-manual/resource-admin/use-workload-local-io-limit",
+                        "admin-manual/resource-admin/use-workload-remote-io-limit"
                     ]
                 },
                 {

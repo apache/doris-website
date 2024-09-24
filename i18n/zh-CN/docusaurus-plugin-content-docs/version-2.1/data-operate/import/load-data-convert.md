@@ -1,6 +1,6 @@
 ---
 {
-    "title": "数据转化",
+    "title": "数据转换",
     "language": "zh-CN"
 }
 ---
@@ -171,15 +171,15 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 | 3    | 300  | guangzhou | 1.3  |
 | 4    | `\N`   | chongqing | 1.4  |
 
-
+:::note
 注：`\N` 在源文件中表示 null。
-
+:::
 
 1. 调整映射顺序
 
 2. 假设表中有 `k1,k2,k3,k4` 4 列。我们希望的导入映射关系如下：
 
-```sql
+```Plain
 列1 -> k1
 列2 -> k3
 列3 -> k2
@@ -188,7 +188,7 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 
 3. 则列映射的书写顺序应如下：
 
-```sql
+```Plain
 (k1, k3, k2, k4)
 ```
 
@@ -196,7 +196,7 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 
 5. 假设表中有 `k1,k2,k3` 3 列。我们希望的导入映射关系如下：
 
-```sql
+```Plain
 列1 -> k1
 列2 -> k3
 列3 -> k2
@@ -204,7 +204,7 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 
 6. 则列映射的书写顺序应如下：
 
-```sql
+```Plain
 (k1, k3, k2, tmpk4)
 ```
 
@@ -214,7 +214,7 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 
 9. 假设表中有 `k1,k2,k3,k4,k5` 5 列。我们希望的导入映射关系如下：
 
-```sql
+```Plain
 列1 -> k1
 列2 -> k3
 列3 -> k2
@@ -224,7 +224,7 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 
 11. 则列映射的书写顺序应如下：
 
-```sql
+```Plain
 (k1, k3, k2)
 ```
 
@@ -261,14 +261,13 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 | 1    | 100  | beijing   | 1.1  |
 | 2    | 200  | shanghai  | 1.2  |
 | 3    | 300  | guangzhou | 1.3  |
-| `\N`   | 400  | chongqing | 1.4  |
-
+|`\N`   | 400  | chongqing | 1.4  |
 
 1. 将源文件中的列值经转换后导入表中
 
 2. 假设表中有 `k1,k2,k3,k4` 4 列。我们希望的导入映射和转换关系如下：
 
-```sql
+```Plain
 列1       -> k1
 列2 * 100 -> k3
 列3       -> k2
@@ -277,7 +276,7 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 
 3. 则列映射的书写顺序应如下：
 
-```sql
+```Plain
 (k1, tmpk3, k2, k4, k3 = tmpk3 * 100)
 ```
 
@@ -376,7 +375,7 @@ where k4 > 1.2
 
 6. 假设表中有 `k1,k2,k3,k4` 4 列。在 列转换 示例中，我们将省份名称转换成了 id。这里我们想过滤掉 id 为 3 的数据。则转换、过滤条件如下：
 
-```sql
+```Plain
 (k1, k2, tmpk3, k4, k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
 where k3 != 3
 ```
@@ -395,7 +394,7 @@ where k3 != 3
 
 10. 假设表中有 `k1,k2,k3,k4` 4 列。我们想过滤掉 `k1` 列为 `null` 的数据，同时过滤掉 `k4` 列小于 1.2 的数据，则过滤条件如下：
 
-```sql
+```Plain
 where k1 is not null and k4 >= 1.2
 ```
 
@@ -405,27 +404,3 @@ where k1 is not null and k4 >= 1.2
 | ---- | ---- | ---- | ---- |
 | 2    | 200  | 2    | 1.2  |
 | 3    | 300  | 3    | 1.3  |
-
-## 最佳实践
-
-### 数据质量问题和过滤阈值
-
-导入作业中被处理的数据行可以分为如下三种：
-
-- Filtered Rows 因数据质量不合格而被过滤掉的数据。数据质量不合格包括类型错误、精度错误、字符串长度超长、文件列数不匹配等数据格式问题，以及因没有对应的分区而被过滤掉的数据行。
-
-- Unselected Rows 这部分为因 `preceding filter` 或 `where` 列过滤条件而被过滤掉的数据行。
-
-- Loaded Rows 被正确导入的数据行。
-
-Doris 的导入任务允许用户设置最大错误率（`max_filter_ratio`）。如果导入的数据的错误率低于阈值，则这些错误行将被忽略，其他正确的数据将被导入。
-
-错误率的计算方式为：
-
-```sql
-
-#Filtered Rows / (#Filtered Rows + #Loaded Rows)
-
-```
-
-也就是说 `Unselected Rows` 不会参与错误率的计算。
