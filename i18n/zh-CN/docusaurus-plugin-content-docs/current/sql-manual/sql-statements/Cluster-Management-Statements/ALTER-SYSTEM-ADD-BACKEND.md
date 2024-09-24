@@ -53,31 +53,31 @@ ADD BACKEND 命令用于向 Doris OLAP 数据库集群添加一个或多个后�
 1. 不带附加属性添加后端
 
     ```sql
-    ALTER SYSTEM ADD BACKEND "host1:9020,host2:9020";
+    ALTER SYSTEM ADD BACKEND "host1:9050,host2:9050";
     ```
 
     此命令向集群添加两个后端节点：
 
-    * host1，端口 9020
-    * host2，端口 9020
+    * host1，端口 9050
+    * host2，端口 9050
 
     未指定附加属性，因此将应用默认设置。
 
 2. 添加带有资源组的后端
 
     ```sql
-    ALTER SYSTEM ADD BACKEND "host3:9020" PROPERTIES ("tag.location" = "groupb");
+    ALTER SYSTEM ADD BACKEND "host3:9050" PROPERTIES ("tag.location" = "groupb");
     ```
 
-    此命令将单个后端节点（host3，端口 9020）添加到集群中的资源组 `groupb`：
+    此命令将单个后端节点（host3，端口 9050）添加到集群中的资源组 `groupb`：
 
 3. 添加带有计算组的后端
 
     ```sql
-    ALTER SYSTEM ADD BACKEND "host3:9020" PROPERTIES ("tag.compute_group_name" = "groupb");
+    ALTER SYSTEM ADD BACKEND "host3:9050" PROPERTIES ("tag.compute_group_name" = "groupb");
     ```
 
-    此命令将单个后端节点（host3，端口 9020）添加到集群中的计算组 `groupb`：
+    此命令将单个后端节点（host3，端口 9050）添加到集群中的计算组 `groupb`：
 
 ### 关键词
 
