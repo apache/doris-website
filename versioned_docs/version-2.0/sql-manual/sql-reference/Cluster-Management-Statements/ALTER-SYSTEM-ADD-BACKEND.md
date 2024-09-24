@@ -53,23 +53,23 @@ grammar:
  1. Adding Backends Without Additional Properties 
 
     ```sql
-    ALTER SYSTEM ADD BACKEND "host1:9020,host2:9020";
+    ALTER SYSTEM ADD BACKEND "host1:9050,host2:9050";
     ````
 
     This command adds two backend nodes to the cluster:
 
-    * host1 with port 9020
-    * host2 with port 9020
+    * host1 with port 9050
+    * host2 with port 9050
 
     No additional properties are specified, so the default settings will apply to these backends.
 
 2. Adding Backends With Resource Group
 
     ```sql
-    ALTER SYSTEM ADD BACKEND "host3:9020" PROPERTIES ("tag.location" = "groupb");
+    ALTER SYSTEM ADD BACKEND "host3:9050" PROPERTIES ("tag.location" = "groupb");
     ````
 
-    This command adds a single backend node (host3 with port 9020) to the cluster in resource group `groupb`:
+    This command adds a single backend node (host3 with port 9050) to the cluster in resource group `groupb`:
 
 ### Keywords
 
