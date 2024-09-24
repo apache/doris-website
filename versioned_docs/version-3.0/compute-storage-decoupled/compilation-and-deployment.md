@@ -34,7 +34,7 @@ This document details the compilation and deployment process of Doris in a decou
 
 Compiled binaries (including all Doris modules) can be obtained from the [Doris Download Page](https://doris.apache.org/download/) (select version 3.0.2 or higher).
 
-### 2.2 Compilation Output
+### 2.2 Compilation Output (Optional)
 
 Compile using the `build.sh` script provided in the codebase. The new MS module is compiled with the `--cloud` parameter.
 

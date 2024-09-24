@@ -34,7 +34,7 @@ under the License.
 
 已编译好的二进制文件（包含所有 Doris 模块）可从 [Doris 下载页面](https://doris.apache.org/download/) 获取（选择 3.0.2 或更高版本）。
 
-### 2.2 编译产出
+### 2.2 编译产出 (可选)
 
 使用代码库自带的 `build.sh` 脚本进行编译。新增的 MS 模块通过 `--cloud` 参数编译。
 
