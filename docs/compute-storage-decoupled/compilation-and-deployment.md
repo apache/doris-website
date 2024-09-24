@@ -173,6 +173,8 @@ Example start command:
 bin/start_fe.sh --daemon
 ```
 
+The first FE process initializes the cluster and work in FOLLOWER role.
+
 ### 5.3 Add Other FE Nodes
 
 Use the following SQL command to add additional FE nodes:
@@ -181,7 +183,9 @@ Use the following SQL command to add additional FE nodes:
 ALTER SYSTEM ADD FOLLOWER "host:port";
 ```
 
-Replace `host:port` with the actual address and port of the FE node.
+Replace `host:port` with the actual address and editlog port of the FE node. More information refer to [ADD FOLLOWER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER.md) and [ADD OBSERVER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER.md).
+
+Please ensure that the total number of Frontend (FE) nodes in the FOLLOWER role, including the first FE, remains an odd number. In general, three FOLLOWERS are sufficient. Frontend nodes in the OBSERVER role can be any number.
 
 ### 5.4 Add BE Nodes
 

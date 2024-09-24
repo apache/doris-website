@@ -173,6 +173,8 @@ bin/start.sh --meta-service --daemon
 bin/start_fe.sh --daemon
 ```
 
+第一个 FE 进程初始化集群并以 FOLLOWER 角色工作。
+
 ### 5.3 添加其他 FE 节点
 
 使用以下 SQL 命令添加额外的 FE 节点：
@@ -181,7 +183,9 @@ bin/start_fe.sh --daemon
 ALTER SYSTEM ADD FOLLOWER "host:port";
 ```
 
-将 `host:port` 替换为实际的 FE 节点地址和端口。
+将 `host:port` 替换为 FE 节点的实际地址和编辑日志端口。更多信息请参见 [ADD FOLLOWER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER.md) 和 [ADD OBSERVER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER.md)。
+
+请确保在 FOLLOWER 角色中的前端 (FE) 节点总数，包括第一个 FE，保持为奇数。一般来说，三个 FOLLOWER 就足够了。观察者角色的前端节点可以是任意数量。
 
 ### 5.4 添加 BE 节点
 
