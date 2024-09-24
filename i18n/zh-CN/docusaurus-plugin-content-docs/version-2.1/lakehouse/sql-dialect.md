@@ -37,24 +37,35 @@ under the License.
 
 ## 部署服务
 
-**1. 下载最新版本的 [SQL 方言转换工具](https://www.selectdb.com/tools/doris-sql-convertor)**
+1. 下载最新版本的 [SQL 方言转换工具](https://www.selectdb.com/tools/doris-sql-convertor)
 
-    > 注：
-    >
-    > SQL 方言转换工具基于开源的 [SQLGlot](https://github.com/tobymao/sqlglot) 二次开发，关于 SQLGlot 可参阅 [SQLGlot 官网](https://sqlglot.com/sqlglot.html)
+    :::info 备注
+    - SQL 方言转换工具基于开源的 [SQLGlot](https://github.com/tobymao/sqlglot) 二次开发，关于 SQLGlot 可参阅 [SQLGlot 官网](https://sqlglot.com/sqlglot.html)
+    :::
 
 
 2.  在任意 FE 节点，通过以下命令启动服务：
 
-    `sh bin/start.sh`
+    ```
+    # 配置服务端口
+    vim apiserver/conf/config.conf
+    # 启动sql-converter转换服务
+    sh apiserver/bin/start.sh
+    # 如需前端界面, 可在webserver中配置相应的端口并启动, 不需要前端则可以忽略以下操作
+    vim webserver/conf/config.conf
+    # 启动前端界面
+    sh webserver/bin/start.sh
+    ```
 
     :::tip
 
-    **1. 该服务是一个无状态的服务，可随时启停。**
+    1. 该服务是一个无状态的服务, 可随时启停
 
-    2. 默认启动端口是`5001`，可在`conf/config.conf`中配置指定端口。
+    2. 在apiserver/conf/config.conf中配置port来指定任意一个可用端口, 配置workers来指定启动的线程数量. 在并发场景中, 可以根据需要调整, 默认为1
 
-    3. 建议在每个 FE 节点都单独启动一个服务。
+    3. 建议在每个 FE 节点都单独启动一个服务
+
+    4. 如需启动前端界面, 可以在webserver/conf/config.conf中配置sql-converter转换服务地址, 默认是API_HOST=http://127.0.0.1:5001
     :::
 
 3. 启动 Doris 集群（2.1 或更高版本）
@@ -75,13 +86,15 @@ under the License.
 
 - `trino`
 
+- `clickhouse`
+
 - `hive`
 
 - `spark`
 
 - `postgres`
 
-- `clickhouse`
+
 
 示例：
 
