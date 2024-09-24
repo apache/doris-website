@@ -65,10 +65,11 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
         "type"="S3",                                   -- required
         "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
         "s3.region" = "bj",                            -- required
+        "s3.bucket" = "bucket",                        -- required
         "s3.root.path" = "big/data/prefix",            -- required
         "s3.access_key" = "ak",                        -- required
         "s3.secret_key" = "sk",                        -- required
-        "provider" = "cos",                            -- required
+        "provider" = "cos"                             -- required
     );
 ```
 
