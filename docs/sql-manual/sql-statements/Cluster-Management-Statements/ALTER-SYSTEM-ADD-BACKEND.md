@@ -24,32 +24,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-SYSTEM-ADD-BACKEND
-
-### Name
-
-ALTER SYSTEM ADD BACKEND
-
-### Description
+## Description
 
 The ADD BACKEND command is used to add one or more backend nodes to a Doris OLAP database cluster. This command allows administrators to specify the host and port of the new backend nodes, along with optional properties that configure their behavior.
 
-grammar:
+## Syntax
 
 ```sql
 -- Add nodes (add this method if you do not use the multi-tenancy function)
    ALTER SYSTEM ADD BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...] [PROPERTIES ("key"="value", ...)];
-````
+```
 
-### Parameters
+## Parameters
 
 * `host` can be a hostname or an ip address of the backend node while `heartbeat_port` is the heartbeat port of the node
 * `PROPERTIES ("key"="value", ...)`: (Optional) A set of key-value pairs that define additional properties for the backend nodes. These properties can be used to customize the configuration of the backends being added. Available properties include:
 
     * tag.location: Specifies the resource group where the backend node belongs. For example, PROPERTIES ("tag.location" = "groupb").
-    * tag.location: Specifies the resource group where the backend node belongs. For example, PROPERTIES ("tag.compute_group_name" = "groupb").
+    * tag.compute_group_name: Specifies the resource group where the backend node belongs. For example, PROPERTIES ("tag.compute_group_name" = "groupb").
 
-### Example
+## Example
 
  1. Adding Backends Without Additional Properties 
 
@@ -80,8 +74,8 @@ grammar:
 
     This command adds a single backend node (host3 with port 9050) to the cluster in compute group `groupb`:
 
-### Keywords
+## Keywords
 
     ALTER, SYSTEM, ADD, BACKEND, PROPERTIES
 
-### Best Practice
+## Best Practice

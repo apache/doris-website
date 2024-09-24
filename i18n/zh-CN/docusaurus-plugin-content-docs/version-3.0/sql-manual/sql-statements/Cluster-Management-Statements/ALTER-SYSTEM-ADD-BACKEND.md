@@ -24,31 +24,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER SYSTEM ADD BACKEND
-
-### 名称
-
-ALTER SYSTEM ADD BACKEND
-
-### 描述
+## 描述
 
 ADD BACKEND 命令用于向 Doris OLAP 数据库集群添加一个或多个后端节点。此命令允许管理员指定新后端节点的主机和端口，以及可选的属性来配置它们的行为。
 
-grammar:
+## 语法
 
 ```sql
    ALTER SYSTEM ADD BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...] [PROPERTIES ("key"="value", ...)];
-````
+```
 
-### 参数
+## 参数
 
 * `host`：可以是后端节点的主机名或 IP 地址
 * `heartbeat_port`：节点的心跳端口
 * `PROPERTIES ("key"="value", ...)`：（可选）一组键值对，用于定义后端节点的附加属性。这些属性可用于自定义正在添加的后端的配置。可用属性包括：
 
     * tag.location：指定后端节点所属的资源组。例如，PROPERTIES ("tag.location" = "groupb")。
+    * tag.compute_group_name：指定后端节点所属的计算组。例如，PROPERTIES ("tag.compute_group_name" = "groupb")。
 
-### 示例
+## 示例
 
 1. 不带附加属性添加后端
 
@@ -70,11 +65,11 @@ grammar:
 
     此命令将单个后端节点（host3，端口 9050）添加到集群中的资源组 `groupb`。
 
-### 关键词
+## 关键词
 
     ALTER, SYSTEM, ADD, BACKEND, PROPERTIES
 
-### 最佳实践
+## 最佳实践
 
 1. 在添加新的后端节点之前，确保节点已正确配置并运行。
 
