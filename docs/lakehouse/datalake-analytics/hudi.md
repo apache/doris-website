@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-[Apache Doris & Hudi Quick Start](https://doris.apache.org/docs/gettingStarted/tutorials/building-lakehouse/doris-hudi)
+[Apache Doris & Hudi Quick Start](../..//gettingStarted/tutorials/building-lakehouse/doris-hudi)
 
 ## Usage
 

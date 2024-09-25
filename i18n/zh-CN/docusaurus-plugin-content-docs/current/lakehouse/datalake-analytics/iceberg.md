@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-快速体验 [Apache Doris & Iceberg](https://doris.apache.org/zh-CN/docs/gettingStarted/tutorials/building-lakehouse/doris-iceberg/)
+快速体验 [Apache Doris & Iceberg](../../gettingStarted/tutorials/building-lakehouse/doris-iceberg/)
 
 ## 使用限制
 

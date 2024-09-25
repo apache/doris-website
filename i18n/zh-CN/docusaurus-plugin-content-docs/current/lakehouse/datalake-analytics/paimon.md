@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-快速体验 [Apache Doris & Paimon](https://doris.apache.org/zh-CN/docs/gettingStarted/tutorials/building-lakehouse/doris-paimon)
+快速体验 [Apache Doris & Paimon](../../gettingStarted/tutorials/building-lakehouse/doris-paimon)
 
 ## 使用须知
 
@@ -190,5 +190,3 @@ CREATE CATALOG `paimon_kerberos` PROPERTIES (
     - 访问其他对象存储：[paimon-s3-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-s3/0.6.0-incubating/paimon-s3-0.6.0-incubating.jar)
 
     2.0.6 之后的版本不再需要用户手动放置。
-
-
