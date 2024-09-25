@@ -1226,7 +1226,8 @@
                 "ecosystem/bi/powerbi",
                 "ecosystem/bi/tableau",
                 "ecosystem/bi/quicksight",
-                "ecosystem/bi/quickbi"
+                "ecosystem/bi/quickbi",
+                "ecosystem/bi/smartbi"
             ]
         }
     ],
