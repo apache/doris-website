@@ -557,8 +557,12 @@ Minimum required version: V2.0.3
 BE-side configuration parameter
 
 ```shell
-download_binlog_rate_limit_kbs=1024 # This configuration limits the size to 1MB. It applies to all binlogs, including local snapshots, in a single BE.
+download_binlog_rate_limit_kbs=1024 # Limits the download speed of Binlog (including Local Snapshot) from the source cluster to 1 MB/s in a single BE node
 ```
+
+1. The `download_binlog_rate_limit_kbs` parameter is configured on the BE nodes of the source cluster. By setting this parameter, the data pull rate can be effectively limited.
+
+2. The `download_binlog_rate_limit_kbs` parameter primarily controls the speed of data transfer for each single BE node. To calculate the overall cluster rate, one would multiply the parameter value by the number of nodes in the cluster.
 
 ## IS_BEING_SYNCED
 
