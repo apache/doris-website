@@ -48,8 +48,8 @@ Refer to the official Microsoft [WSL installation documentation](https://learn.m
 
 Once you have WSL2 up and running, you can choose any of the available compilation methods for Doris on Linux:
 
-- [Compile with LDB Toolchain (Recommended)](https://selectdb.feishu.cn/wiki/IjA4w6tXZibnAXkyWTqcVzScn7b)
-- [Docker Deployment (Recommended)](https://selectdb.feishu.cn/wiki/P2riwmN8hiqcfukBt1Pc4AKXnXc)
+- [Compile with LDB Toolchain (Recommended)](../../install/source-install/compilation-with-ldb-toolchain)
+- [Docker Deployment (Recommended)](../../install/source-install/compilation-with-docker)
 
 ## Note
 
