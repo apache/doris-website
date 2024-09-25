@@ -26,13 +26,12 @@ under the License.
 
 This document presents a summary of Apache Doris versions released within one year, listed in reverse chronological order.
 
-
-
 :::tip Latest Release
 
-🔥 Apache Doris 2.0.15 is released !
+🔥 Apache Doris 2.1.6 is released !
 
-- [Release Note](/releasenotes/v2.0/release-2.0.15.md)
+- [Release Note](/releasenotes/v2.1/release-2.1.6.md)
+
 
 - [Quick Download](https://doris.apache.org/download)
 
@@ -40,8 +39,6 @@ This document presents a summary of Apache Doris versions released within one ye
 
 
 <br />
-
-- [2024-09-19, Apache Doris 2.0.15 is released](../releasenotes/v2.0/release-2.0.15.md)
 
 - [2024-09-10, Apache Doris 2.1.6 is released](../releasenotes/v2.1/release-2.1.6.md)
 

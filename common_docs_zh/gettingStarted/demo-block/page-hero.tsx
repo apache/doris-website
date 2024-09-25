@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './demo-block.css';
 export default function PageHero1() {
     const [currentVersion, setCurrentVersion] = useState('')
@@ -22,7 +22,7 @@ export default function PageHero1() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/doris-hudi`}>
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/building-lakehouse/doris-hudi`}>
                         <div className="home-page-hero-button-label"><div>使用教程</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -35,7 +35,7 @@ export default function PageHero1() {
                         </div>
                         <div style={{ fontSize: 12, marginBottom: 20 }}>如何快速搭建 Apache Doris 与 Hudi 测试及演示环境，并对各功能操作进行演示。</div>
                     </a>
-                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/doris-paimon`}>
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/building-lakehouse/doris-paimon`}>
                         <div className="latest-button-title">
                             <div className="home-page-hero-button-label"><div>使用教程</div></div>
                             {/* <div className="home-page-hero-button-icon">
