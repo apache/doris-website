@@ -30,9 +30,9 @@ under the License.
 
 :::tip 最新发布
 
-🔥 Apache Doris 2.0.15 版本发布！
+🔥 Apache Doris 2.1.6 版本发布！
 
-- [了解详情](../releasenotes/v2.0/release-2.0.15.md)
+- [了解详情](../releasenotes/v2.1/release-2.1.6.md)
 
 - [立即下载](https://doris.apache.org/download)
 
