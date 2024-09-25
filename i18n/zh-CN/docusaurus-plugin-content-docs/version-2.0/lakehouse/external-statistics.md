@@ -204,7 +204,7 @@ under the License.
 **表统计信息**
 
 ```sql
-SHOW TALBE [cached] stats TABLE_NAME;
+SHOW TABLE [cached] stats TABLE_NAME;
 ```
 
 查看 statistics 表中指定 table 的行数，如果指定 cached 参数，则展示的是指定表已加载到缓存中的行数信息。
