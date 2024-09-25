@@ -584,11 +584,17 @@ Syncer 高可用依赖 mysql，如果使用 mysql 作为后端存储，Syncer �
 
 ### 限速
 
-BE 端配置参数
+BE 端配置参数：
 
 ```shell
-download_binlog_rate_limit_kbs=1024 # 这就是限制到1MB，这个是单个be对所有关于binlog 包括local snapshot的配置
+download_binlog_rate_limit_kbs=1024 # 限制单个 BE 节点从源集群拉取 Binlog（包括 Local Snapshot）的速度为 1 MB/s
 ```
+
+详细参数加说明：
+
+1. `download_binlog_rate_limit_kbs` 参数在源集群 BE 节点配置，通过设置该参数能够有效限制数据拉取速度。
+
+2. `download_binlog_rate_limit_kbs` 参数主要用于设置单个 BE 节点的速度，若计算集群整体速率一般需要参数值乘以集群个数。
 
 ## IS_BEING_SYNCED 属性
 
