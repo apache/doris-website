@@ -122,6 +122,12 @@ ReasonOfStateChanged: 作业状态变更的原因
     SHOW ALL ROUTINE LOAD FOR example_db.test1;
     ```
 
+7. 显示 example_db 下，ID最大的例行导入作业。结果将返回具有最大 ID 的作业 (如果没有指定排序，默认为创建时间排序)。
+   
+   ```sql 
+    SHOW ROUTINE LOAD FROM example_db ORDER BY Id DESC LIMIT 1;   
+   ```
+
 ### Keywords
 
     SHOW, ROUTINE, LOAD
