@@ -32,13 +32,13 @@ This document presents a summary of Apache Doris versions released within one ye
 
 - [Release Note](/releasenotes/v2.1/release-2.1.6.md)
 
+
 - [Quick Download](https://doris.apache.org/download)
 
 :::
 
 
 <br />
-
 
 - [2024-09-10, Apache Doris 2.1.6 is released](../releasenotes/v2.1/release-2.1.6.md)
 
