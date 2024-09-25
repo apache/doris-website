@@ -60,7 +60,7 @@ under the License.
 经过 Benchmark 测试及生产验证，基于 Apache Doris 构建的日志存储与分析平台，性价比相对于 Elasticsearch 具有 5～10 倍的提升。Apache Doris 的性能优势，主要得益于全球领先的高性能存储和查询引擎，以及下面一些针对日志场景的专门优化：
 
 - **写入吞吐提升**：Elasticsearch 写入的性能瓶颈在于解析数据和构建倒排索引的 CPU 消耗。相比之下，Apache Doris 进行了两方面的写入优化：一方面利用 SIMD 等 CPU 向量化指令提升了 JSON 数据解析速度和索引构建性能；另一方面针对日志场景简化倒了排索引结构，去掉日志场景不需要的正排等数据结构，有效降低了索引构建的复杂度。同样的资源，Apache Doris 的写入性能是 Elasticsearch 的 3～5 倍。
-- **存储成本降低**：Elasticsearch 存储瓶颈在于正排、倒排、Docvalue 列存多份存储和通用压缩算法压缩率较低。相比之下，Apache Doris 在存储上进行了以下优化：去掉正排，缩减了 30% 的索引数据量；采用列式存储和 Zstandard 压缩算法，压缩比可达到 5～10 倍，远高于 Elasticsearch 的 1.5 倍；日志数据中冷数据访问频率很低，Apache Doris 冷热分层功能可以将超过定义时间段的日志自动存储到更低的对象存储中，冷数据的存储成本可降低 70% 以上。同样的原始数据，SelectDB 的存储成本只需要 Elasticsearch 的 20% 左右。
+- **存储成本降低**：Elasticsearch 存储瓶颈在于正排、倒排、Docvalue 列存多份存储和通用压缩算法压缩率较低。相比之下，Apache Doris 在存储上进行了以下优化：去掉正排，缩减了 30% 的索引数据量；采用列式存储和 Zstandard 压缩算法，压缩比可达到 5～10 倍，远高于 Elasticsearch 的 1.5 倍；日志数据中冷数据访问频率很低，Apache Doris 冷热分层功能可以将超过定义时间段的日志自动存储到更低的对象存储中，冷数据的存储成本可降低 70% 以上。同样的原始数据，Doris 的存储成本只需要 Elasticsearch 的 20% 左右。
 - **查询性能提升**：Apache Doris 将全文检索的流程简化，跳过了相关性打分等日志场景不需要的算法，加速基础的检索性能。同时针对日志场景常见的查询，比如查询包含某个关键字的最新 100 条日志，在查询规划和执行上做专门的 TopN 动态剪枝等优化。
 
 ### 分析能力强
@@ -153,11 +153,6 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 ### 第 2 步：部署集群
 
 完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../../install/cluster-deployment/standard-deployment)。
-
-另，推荐使用 SelectDB Enterprise 推出的 Cluster Manager 工具部署集群，以降低整体部署成本。更多关于 Cluster Manager 的信息，可参考以下文档：
-
-- [Cluster Manager for Apache Doris 24.x 安装手册](https://docs.selectdb.com/docs/enterprise/cluster-manager-guide/deployment-guide/deployment-guide-24.x)
-- [Cluster Manager for Apache Doris 24.x 使用手册](https://docs.selectdb.com/docs/enterprise/cluster-manager-guide/management-guide/management-guide-24.x)
 
 ### 第 3 步：优化 FE 和 BE 配置
 
@@ -555,11 +550,9 @@ ORDER BY ts DESC LIMIT 10;
 
 **可视化日志分析**
 
-基于 Apache Doris 构建的 SelectDB Enterprise Core 提供了名为 Doris WebUI 的数据开发平台，Doris WebUI 包含了类 Kibana Discover 的日志检索分析界面，提供直观、易用的探索式日志分析交互，如下图所示：
+一些第三方厂商提供了基于 Apache Doris 的可视化日志分析开发平台，包含类 Kibana Discover 的日志检索分析界面，提供直观、易用的探索式日志分析交互。
 
 ![WebUI](/images/WebUI-CN.jpeg)
-
-在此界面上，Doris WebUI 主要支持以下功能：
 
 - 支持全文检索和 SQL 两种模式
 - 支持时间框和直方图上选择查询日志的时间段
@@ -567,4 +560,5 @@ ORDER BY ts DESC LIMIT 10;
 - 在日志数据上下文交互式点击增加和删除筛选条件
 - 搜索结果的字段 Top 值展示，便于发现异常值和进一步下钻分析
 
-你可以 [点此下载 SelectDB Enterprise Core](https://www.selectdb.com/download/enterprise#core)，完成 [安装](https://docs.selectdb.com/docs/enterprise/enterprise-core-guide/selectdb-distribution-doris-core-deployment-guide) 后，即可使用 Doris WebUI 登录数据库。更多关于如何使用 Doris WebUI 的信息，可参考 [WebUI](https://docs.selectdb.com/docs/enterprise/enterprise-core-guide/selectdb-webui-guide)。
+您可以联系 dev@doris.apache.org 获得更多帮助。
+
