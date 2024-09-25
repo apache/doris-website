@@ -1264,7 +1264,6 @@
             "type": "category",
             "label": "v2.0",
             "items": [
-                "releasenotes/v2.0/release-2.0.15",
                 "releasenotes/v2.0/release-2.0.14",
                 "releasenotes/v2.0/release-2.0.13",
                 "releasenotes/v2.0/release-2.0.12",
