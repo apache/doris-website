@@ -24,24 +24,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## kurtosis,kurt,kurt_pop
-### 描述
+## 描述
 
 kurtosis 返回 expr 表达式的[峰度值](https://en.wikipedia.org/wiki/Kurtosis)。此函数使用的公式为 第四阶中心矩 / (方差的平方) - 3，当方差为零时，kurtosis 将返回 NULL。
 
-### 语法
+## 语法
 
 `kurtosis(expr)`
 
-### 参数说明
+## 参数说明
 
 TinyInt/SmallInt/Integer/BigInt/Float/Double, Decimal 会被 cast 成浮点数参与运算。
 
-### 返回值说明
+## 返回值说明
 
 `Double`
 
-#### 举例
+## 举例
 ```sql
 create table statistic_test(tag int, val1 double not null, val2 double null) distributed by hash(tag) properties("replication_num"="1");
 
@@ -74,6 +73,6 @@ select kurt(val1), kurt(val2) from statistic_test group by tag;
 5 rows in set (0.02 sec)
 ```
 
-### 相关命令
+## 相关命令
 
 [skew](./skew.md)

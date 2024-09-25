@@ -942,8 +942,8 @@
                                 "sql-manual/sql-functions/aggregate-functions/regr_syy",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-count",
-                                "sql-manual/sql-functions/aggregate-functions/kurtosis",
-                                "sql-manual/sql-functions/aggregate-functions/skewness"
+                                "sql-manual/sql-functions/aggregate-functions/kurt",
+                                "sql-manual/sql-functions/aggregate-functions/skew"
                             ]
                         },
                         {

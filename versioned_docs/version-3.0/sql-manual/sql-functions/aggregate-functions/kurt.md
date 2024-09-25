@@ -24,25 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## kurtosis,kurt,kurt_pop
-### Description
+## Description
 
 Returns the [kurtosis](https://en.wikipedia.org/wiki/Kurtosis) of the expr expression.
 The forumula used for this function is `4-th centrol moment / ((variance)^2) - 3`, when variance is zero, `kurtosis` will return `NULL`.
 
-### Syntax
+## Syntax
 
 `kurtosis(expr)`
 
-### Arguments
+## Arguments
 
 TinyInt/SmallInt/Integer/BigInt/Float/Double, Decimal will be casted to a float number.
 
-### Return value
+## Return value
 
 `Double`
 
-### Example
+## Example
 ```sql
 create table statistic_test(tag int, val1 double not null, val2 double null) distributed by hash(tag) properties("replication_num"="1")
 
@@ -75,6 +74,6 @@ select kurt(val1), kurt(val2) from statistic_test group by tag
 5 rows in set (0.02 sec)
 ```
 
-### Related Commands
+## Related Commands
 
 [skew](./skew.md)
