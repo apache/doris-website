@@ -35,18 +35,18 @@ export default function PageHero() {
                         </div>
                         <div style={{ fontSize: 12, marginBottom: 20 }}>如何基于 Apache Doris 构建开放、高性能低成本、统一的日志存储分析平台。</div>
                     </a>
-                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/lakehouse/datalake-analytics/hive`}>
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/admin-manual/resource-admin/workload-group`}>
                         <div className="latest-button-title">
-                            <div className="home-page-hero-button-label"><div>湖仓一体</div></div>
+                            <div className="home-page-hero-button-label"><div>资源管理</div></div>
                             {/* <div className="home-page-hero-button-icon">
                                 <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path className="icon-svg" d="M18.19 11.13l-6.02 8.68c-.13.17-.4.08-.4-.13v-5.73c0-.43-.35-.77-.77-.77H5.97c-.18 0-.28-.2-.18-.35l6.01-8.69c.12-.18.39-.09.39.12V9.98c0 .42.34.76.76.76h5.02c.17 0 .27.19.17.34Zm1.26.87c.8-1.17-.03-2.76-1.45-2.76h-5.03l.76.76V4.277c0-1.73-2.22-2.42-3.2-1.01l-6.02 8.68c-.81 1.16.02 2.75 1.44 2.75h5.02l-.77-.77v5.72c0 1.72 2.21 2.41 3.19 1l6.01-8.69Z"></path>
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Hive Catalog</div>
+                            <div style={{ marginBottom: 10 }}>Workload Group</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>Doris 可通过连接或兼容 Hive Metastore，自动获取库表信息并进行数据查询。</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>使用 Workload Group 管理 Doris 集群中查询和导入负载所使用的 CPU/内存/IO 资源用量，控制集群中查询的最大并发。</div>
                     </a>
                 </div>
                 {/* <div style={{ fontSize: '1rem', fontWeight: 500, width: 600, marginTop: '1rem', color: '#1d1d1d' }}>学习路径</div> */}

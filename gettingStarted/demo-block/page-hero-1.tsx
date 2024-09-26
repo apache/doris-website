@@ -35,18 +35,18 @@ export default function PageHero1() {
                         </div>
                         <div style={{ fontSize: 12, marginBottom: 20 }}>To build an open, high-performance, cost-effective and unified log storage and analysis platform.</div>
                     </a>
-                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/lakehouse/datalake-analytics/hive`}>
+                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/admin-manual/resource-admin/workload-group`}>
                         <div className="latest-button-title">
-                            <div className="home-page-hero-button-label"><div>Lakehouse</div></div>
+                            <div className="home-page-hero-button-label"><div>Managing Resource</div></div>
                             {/* <div className="home-page-hero-button-icon">
                                 <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path className="icon-svg" d="M18.19 11.13l-6.02 8.68c-.13.17-.4.08-.4-.13v-5.73c0-.43-.35-.77-.77-.77H5.97c-.18 0-.28-.2-.18-.35l6.01-8.69c.12-.18.39-.09.39.12V9.98c0 .42.34.76.76.76h5.02c.17 0 .27.19.17.34Zm1.26.87c.8-1.17-.03-2.76-1.45-2.76h-5.03l.76.76V4.277c0-1.73-2.22-2.42-3.2-1.01l-6.02 8.68c-.81 1.16.02 2.75 1.44 2.75h5.02l-.77-.77v5.72c0 1.72 2.21 2.41 3.19 1l6.01-8.69Z"></path>
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Hive Catalog</div>
+                            <div style={{ marginBottom: 10 }}>Workload Group</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>Doris can automatically obtain table info and query data by connecting to or compatible with Hive Metastore.</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>Using Workload Groups to manage the CPU, memory and I/O resources used by queries and load in the Doris cluster.</div>
                     </a>
                 </div>
                 {/* <div style={{ fontSize: '1rem', fontWeight: 500, width: 600, marginTop: '1rem', color: '#1d1d1d' }}>学习路径</div> */}

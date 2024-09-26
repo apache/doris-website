@@ -60,4 +60,4 @@ As an open-source real-time data warehouse, Apache Doris is trusted by over 4000
 
 As a Top-Level Project of the Apache Software Foundation, Apache Doris is supported by a robust and fast-growing community. It has accumulated over 11.8K GitHub stars and 636 contributors so far.
 
-If you are seeking a fully managed solution instead of an open source product, you might want to look into [VeloDB](https://www.velodb.io). As the commercial service provider of Apache Doris, VeloDB offers a wider range of products that are more tailored to the needs of enterprises. [VeloDB Cloud](https://www.velodb.io/cloud) decouples compute and storage on the basis of Apache Doris, thus realizing higher elastic scalability and cost efficiency. Like cloud-based Rockset, it frees users from tedious database operations and maintenance and redirects their focus to what drives their business growth.
+Apache Doris is the best open-source alternative to Rockset. Feel free to contact dev@doris.apache.org for more assistance.
