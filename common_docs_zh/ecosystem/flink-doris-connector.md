@@ -562,7 +562,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 
 :::info 备注
 1. 同步时需要在 `$FLINK_HOME/lib` 目录下添加对应的 Flink CDC 依赖，比如 flink-sql-connector-mysql-cdc-${version}.jar，flink-sql-connector-oracle-cdc-${version}.jar ，flink-sql-connector-mongodb-cdc-${version}.jar
-2. Connector 24.0.0 之后依赖的 FlinkCDC 版本需要在 3.1 以上，如果需使用 Flink CDC 同步 MySQL 和 Oracle，还需要在 `$FLINK_HOME/lib` 下增加相关的 JDBC 驱动。
+2. Connector 24.0.0 之后依赖的 FlinkCDC 版本需要在 3.1 以上，如果需使用 FlinkCDC 同步 MySQL 和 Oracle，还需要在 `$FLINK_HOME/lib` 下增加相关的 JDBC 驱动。
 :::
 
 ### MySQL 多表同步示例
