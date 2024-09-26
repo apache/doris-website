@@ -369,6 +369,16 @@ Is it possible to dynamically configure: false
 
 Is it a configuration item unique to the Master FE node: true
 
+#### `enable_cooldown_replica_affinity`
+
+Users can choose whether to use the cooled copy for scanning first, which defaults to true
+
+Default: true
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: false
+
 ### Service
 
 #### `query_port`
