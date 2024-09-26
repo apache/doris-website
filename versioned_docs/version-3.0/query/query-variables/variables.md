@@ -700,9 +700,11 @@ Optional values:
 
   Controls whether to extend variant column in desc table_name. The default value is false.
 
-***
+* `enable_auto_create_when_overwrite`
 
-#### Supplementary instructions on statement execution timeout control
+  Whether or not to support the creation of new partitions at the same time when using `insert overwrite` to overwrite an Auto Partition table, defaults to `false`.
+
+### Supplementary instructions on statement execution timeout control
 
 * Means of control
 
