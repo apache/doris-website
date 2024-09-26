@@ -32,7 +32,7 @@ under the License.
 
 Returns minute information in the time type, ranging from 0,59
 
-The parameter is Date or Datetime type
+The parameter is Date or Datetime or Time type
 
 ### example
 
