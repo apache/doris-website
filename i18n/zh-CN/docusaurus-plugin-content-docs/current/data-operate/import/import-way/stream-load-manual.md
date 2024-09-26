@@ -341,6 +341,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | enclose                      | 指定包围符。当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。 |
 | escape                       | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
 | memtable_on_sink_node        | 导入数据的时候是否开启 MemTable 前移，默认为 false。 |
+| unique_key_update_mode       | Unique 表上的更新模式，目前仅对 Merge-On-Write Unique 表有效，一共支持三种类型 `UPSERT`, `UPDATE_FIXED_COLUMNS`, `UPDATE_FLEXIBLE_COLUMNS`。 `UPSERT`: 表示以 upsert 语义导入数据; `UPDATE_FIXED_COLUMNS`: 表示以[部分列更新](../../../data-operate/update/update-of-unique-model)的方式导入数据; `UPDATE_FLEXIBLE_COLUMNS`: 表示以[灵活部分列更新](../../../data-operate/update/update-of-unique-model)的方式导入数据|
 
 ### 导入返回值
 
@@ -1070,9 +1071,9 @@ Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。�
 
 `strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [严格模式](../../../data-operate/import/load-strict-mode) 文档。
 
-### 导入时进行部分列更新
+### 导入时进行部分列更新/灵活部分列更新
 
-关于导入时，如何表达部分列更新，可以参考 [数据操作/数据更新](../../../data-operate/update/unique-update) 文档
+关于导入时，如何表达部分列更新，可以参考 [数据更新/主键模型的导入更新](../../../data-operate/update/update-of-unique-model) 文档
 
 ## 更多帮助
 

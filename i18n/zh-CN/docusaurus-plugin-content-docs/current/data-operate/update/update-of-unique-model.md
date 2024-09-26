@@ -154,7 +154,7 @@ INSERT INTO order_tbl (order_id, order_status) values (1,'待发货');
 目前，同一批次数据写入任务（无论是导入任务还是`INSERT INTO`）的所有行只能更新相同的列，如果需要更新不同列的数据，则需要分不同的批次进行写入。
 
 
-## 灵活列更新
+## 灵活部分列更新
 
 在 x.x.x 版本之前，doris 支持的部分列更新功能限制了一次导入中每一行必须更新相同的列，从 x.x.x 版本开始，doris 支持一种更加灵活的更新方式，它使得一次导入中的每一行可以更新不同的列。
 
@@ -416,6 +416,10 @@ PROPERTIES(
     - 不能指定 `jsonpaths` 参数
     - 不能指定 `hidden_columns` 参数
     - 不能指定 `function_column.sequence_col` 参数
+    - 不能指定 `sql` 参数
+    - 不能开启 `memtable_on_sink_node` 前移
+    - 不能指定 `group_commit` 参数
+    - 不能指定 `where` 参数
 
 6. 不支持在有 Variant 列的表上进行灵活列更新。
 
