@@ -154,11 +154,6 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 
 完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../../install/cluster-deployment/standard-deployment)。
 
-另，推荐使用 SelectDB Enterprise 推出的 Cluster Manager 工具部署集群，以降低整体部署成本。更多关于 Cluster Manager 的信息，可参考以下文档：
-
-- [Cluster Manager for Apache Doris 24.x 安装手册](https://docs.selectdb.com/docs/enterprise/cluster-manager-guide/deployment-guide/deployment-guide-24.x)
-- [Cluster Manager for Apache Doris 24.x 使用手册](https://docs.selectdb.com/docs/enterprise/cluster-manager-guide/management-guide/management-guide-24.x)
-
 ### 第 3 步：优化 FE 和 BE 配置
 
 完成集群部署后，需分别优化 FE 和 BE 配置参数，以更加契合日志存储与分析的场景。
@@ -555,11 +550,9 @@ ORDER BY ts DESC LIMIT 10;
 
 **可视化日志分析**
 
-基于 Apache Doris 构建的 SelectDB Enterprise Core 提供了名为 Doris WebUI 的数据开发平台，Doris WebUI 包含了类 Kibana Discover 的日志检索分析界面，提供直观、易用的探索式日志分析交互，如下图所示：
+一些第三方厂商提供了基于 Apache Doris 的可视化日志分析开发平台，包含类 Kibana Discover 的日志检索分析界面，提供直观、易用的探索式日志分析交互。
 
 ![WebUI](/images/WebUI-CN.jpeg)
-
-在此界面上，Doris WebUI 主要支持以下功能：
 
 - 支持全文检索和 SQL 两种模式
 - 支持时间框和直方图上选择查询日志的时间段
@@ -567,4 +560,5 @@ ORDER BY ts DESC LIMIT 10;
 - 在日志数据上下文交互式点击增加和删除筛选条件
 - 搜索结果的字段 Top 值展示，便于发现异常值和进一步下钻分析
 
-你可以 [点此下载 SelectDB Enterprise Core](https://www.selectdb.com/download/enterprise#core)，完成 [安装](https://docs.selectdb.com/docs/enterprise/enterprise-core-guide/selectdb-distribution-doris-core-deployment-guide) 后，即可使用 Doris WebUI 登录数据库。更多关于如何使用 Doris WebUI 的信息，可参考 [WebUI](https://docs.selectdb.com/docs/enterprise/enterprise-core-guide/selectdb-webui-guide)。
+您可以联系 dev@doris.apache.org 获得更多帮助。
+

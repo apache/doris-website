@@ -31,31 +31,27 @@ under the License.
 :::
 
 :::caution
-1. 该功能目前是实验性功能，您在使用过程中如遇到任何问题，欢迎通过邮件组、[GitHub Issue](https://github.com/apache/doris/issues) 等方式进行反馈。
-
+该功能目前是实验性功能，您在使用过程中如遇到任何问题，欢迎通过邮件组、[GitHub Issue](https://github.com/apache/doris/issues) 等方式进行反馈。
 :::
 
 ## 部署服务
 
-**1. 下载最新版本的 [SQL 方言转换工具](https://www.selectdb.com/tools/doris-sql-convertor)**
+1. 下载最新版本的 [SQL 方言转换工具](https://www.selectdb.com/tools/doris-sql-convertor)
 
-    > 注：
-    >
-    > SQL 方言转换工具基于开源的 [SQLGlot](https://github.com/tobymao/sqlglot) 二次开发，关于 SQLGlot 可参阅 [SQLGlot 官网](https://sqlglot.com/sqlglot.html)
-
+    :::info NOTE
+    SQL 方言转换工具基于开源的 [SQLGlot](https://github.com/tobymao/sqlglot) ，由 SelectDB 进行二次开发，关于 SQLGlot 可参阅 [SQLGlot 官网](https://sqlglot.com/sqlglot.html)。  
+    SQL Convertor 并非由 Apache Doris 维护或认可，这些工作由 Committers 和 Doris PMC 监督。使用这些资源和服务完全由您自行决定，社区不负责验证这些工具的许可或有效性。 
+    ::: 
 
 2.  在任意 FE 节点，通过以下命令启动服务：
 
     `sh bin/start.sh`
 
-    :::tip
+    - 该服务是一个无状态的服务，可随时启停。
 
-    **1. 该服务是一个无状态的服务，可随时启停。**
+    - 默认启动端口是`5001`，可在`conf/config.conf`中配置指定端口。
 
-    2. 默认启动端口是`5001`，可在`conf/config.conf`中配置指定端口。
-
-    3. 建议在每个 FE 节点都单独启动一个服务。
-    :::
+    - 建议在每个 FE 节点都单独启动一个服务。
 
 3. 启动 Doris 集群（2.1 或更高版本）
 
@@ -63,9 +59,7 @@ under the License.
 
 	`MySQL> set global sql_converter_service_url = "http://127.0.0.1:5001/api/v1/convert"`
 
-    :::tip
-    `127.0.0.1:5001` 是 SQL 方言转换服务的部署节点 ip 和端口。
-    :::
+    - `127.0.0.1:5001` 是 SQL 方言转换服务的部署节点 ip 和端口。
 	
 ## 使用 SQL 方言
 

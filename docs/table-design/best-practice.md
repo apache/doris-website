@@ -420,15 +420,7 @@ PROPERTIES (
 show partitions from tbl_unique_merge_on_write_p;
 ```
 
-:::tip
-**Recommendations**
 
-1. The database name should be in lowercase, separated by underscores (_) with a maximum length of 62 bytes.
-2. Table names are case-sensitive and should be in lowercase, separated by underscores (_) with a maximum length of 64 bytes.
-3. Manual bucketing is preferred over auto bucketing. It is recommended to partition and bucket your data based on your specific data volume, as this can improve data writing and query performance. Auto bucketing can result in a large number of tablets and an abundance of small files.
-4. For data volumes ranging from 10 million to 200 million rows, you can directly set a bucketing strategy and skip the partition configurations. (Doris internally has default partitions for the table).
-5. In **time-series scenarios**, it is recommended to include `compaction_policy" = "time_series` in the table properties when creating the table. This effectively reduces the write amplification of compaction, especially in continuous data ingestion scenarios. Note that it should be used in conjunction with inverted indexes.
-:::
 
 
 :::caution
@@ -440,6 +432,7 @@ show partitions from tbl_unique_merge_on_write_p;
    1. If the data volume of an individual tablet is too small, it can result in poor data aggregation performance and increased metadata management overhead.
    2. If the data volume is too large, it hinders replica migration, synchronization, and increases the cost of schema changes or materialization operations (these operations are retried at the granularity of a tablet).
 4. For data exceeding 500 million records, **partitioning and bucketing** strategies must be implemented:
+   
    1. **Recommendations for bucketing:**
       1. For large tables, each tablet should be in the range of 1 GB to 10 GB to prevent the generation of too many small files.
       2. For dimension tables of approximately 100 megabytes, the number of tablets should be controlled within the range of 3 to 5. This ensures a certain level of concurrency without generating excessive small files.
@@ -451,27 +444,26 @@ show partitions from tbl_unique_merge_on_write_p;
       3. If an OLAP table has a random distribution of data, setting the `load_to_single_tablet` parameter to true during data ingestion allows each task to write to a single tablet. This improves concurrency and throughput during large-scale data ingestion. It can also reduce the write amplification caused by data ingestion and compaction and ensure cluster stability.
    5. Dimension tables, which grow slowly, can use a single partition and apply bucketing based on commonly used query conditions (where the data distribution of the bucketing field is relatively even).
    6. Fact tables.
-5. If the bucketing field exhibits more than 30% data skew, it is recommended to avoid using the Hash bucketing strategy and instead use the RANDOM bucketing strategy.
-6. Dynamic partitioning should not be used for tables of a data size less than 20 million rows. Because the dynamic partitioning method automatically creates partitions, and for small tables, it might unnecessarily create lots of partitions and buckets).
-7. For scenarios where there is a large amount of historical partitioned data but the historical data is relatively small, unbalanced, or queried infrequently, you can use the following approach to place the data in special partitions. You can create historical partitions for historical data of small sizes (e.g., yearly partitions, monthly partitions). For example, you can create historical partitions for data `FROM ("2000-01-01") TO ("2022-01-01") INTERVAL 1 YEAR`:
-   1. ( 
 
-   2.   PARTITION p00010101_1899 VALUES [('0001-01-01'), ('1900-01-01')), 
 
-   3.   PARTITION p19000101 VALUES [('1900-01-01'), ('1900-01-02')), 
+5. For scenarios where there is a large amount of historical partitioned data but the historical data is relatively small, unbalanced, or queried infrequently, you can use the following approach to place the data in special partitions. You can create historical partitions for historical data of small sizes (e.g., yearly partitions, monthly partitions). For example, you can create historical partitions for data `FROM ("2000-01-01") TO ("2022-01-01") INTERVAL 1 YEAR`:
+  
+   ```sql
 
-   4.   ... 
+   PARTITION p00010101_1899 VALUES [('0001-01-01'), ('1900-01-01')), 
 
-   5.   PARTITION p19000104_1999 VALUES [('1900-01-04'), ('2000-01-01')),
+   PARTITION p19000101 VALUES [('1900-01-01'), ('1900-01-02')), 
 
-   6.   FROM ("2000-01-01") TO ("2022-01-01") INTERVAL 1 YEAR, 
+   ...
 
-   7.   PARTITION p30001231 VALUES [('3000-12-31'), ('3001-01-01')), 
+   PARTITION p19000104_1999 VALUES [('1900-01-04'), ('2000-01-01')),
 
-   8.   PARTITION p99991231 VALUES [('9999-12-31'), (MAXVALUE)) 
+   FROM ("2000-01-01") TO ("2022-01-01") INTERVAL 1 YEAR, 
 
-   9.  )
-8. The number of single-table materialized views should not exceed 6:
-   1. Single-table materialized views are built in real time.
-   2. On the Unique Key model, materialized views can only be used to reorder keys and cannot be used for data aggregation, as the aggregation model for the Unique Key model is Replace.
+   PARTITION p30001231 VALUES [('3000-12-31'), ('3001-01-01')), 
+
+   PARTITION p99991231 VALUES [('9999-12-31'), (MAXVALUE)) 
+
+   ```
+
 :::
