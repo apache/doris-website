@@ -989,6 +989,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
+                                "sql-manual/sql-functions/aggregate-functions/linear-histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-and",
@@ -1011,7 +1012,9 @@
                                 "sql-manual/sql-functions/aggregate-functions/regr_sxy",
                                 "sql-manual/sql-functions/aggregate-functions/regr_syy",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
-                                "sql-manual/sql-functions/aggregate-functions/sequence-count"
+                                "sql-manual/sql-functions/aggregate-functions/sequence-count",
+                                "sql-manual/sql-functions/aggregate-functions/kurt",
+                                "sql-manual/sql-functions/aggregate-functions/skew"
                             ]
                         },
                         {
@@ -1669,7 +1672,8 @@
                 "ecosystem/bi/powerbi",
                 "ecosystem/bi/tableau",
                 "ecosystem/bi/quicksight",
-                "ecosystem/bi/quickbi"
+                "ecosystem/bi/quickbi",
+                "ecosystem/bi/smartbi"
             ]
         }
     ],
@@ -1677,7 +1681,8 @@
         "faq/install-faq",
         "faq/data-faq",
         "faq/sql-faq",
-        "faq/lakehouse-faq"
+        "faq/lakehouse-faq",
+        "faq/bi-faq"
     ],
     "releasenotes": [
         "releasenotes/all-release",

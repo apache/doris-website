@@ -68,7 +68,7 @@ After Benchmark testing and production validation, the log storage and analysis 
 
 - **Improved write throughput**: Elasticsearch's write performance bottleneck lies in CPU consumption for parsing data and building inverted indexes. In comparison, Apache Doris has optimized writes in two aspects: using SIMD and other CPU vector instructions to improve JSON data parsing speed and index-building performance and simplifying the inverted index structure for log scenarios by removing unnecessary data structures like forward indexes, effectively reducing index build complexity. With the same resources, Apache Doris's write performance is 3 to 5 times higher than Elasticsearch.
 
-- **Reduced storage costs**: Elasticsearch's storage bottleneck comes from multiple storage of forward, inverted, Docvalue columns, and lower compression ratios with general compression algorithms. Conversely, Apache Doris has optimized storage by eliminating forward indexes, reducing index data volume by 30%; adopting columnar storage and Zstandard compression algorithm, achieving compression ratios 5-10 times higher than Elasticsearch's 1.5 times; with low access frequency of cold data in log data, Apache Doris's cold-hot tiering feature can automatically store logs older than defined period in lower-cost object storage, reducing cold data storage costs by over 70%. For the same original data, Select
+- **Reduced Storage Costs**: The storage bottleneck in Elasticsearch lies in the multiple storage formats for forward indexes, inverted indexes, and Docvalue columns, as well as the relatively low compression ratio of its general compression algorithms. In contrast, Apache Doris has made the following optimizations in storage: it removes the forward index, reducing the index data size by 30%; it uses columnar storage and the Zstandard compression algorithm, achieving a compression ratio of 5 to 10 times, which is significantly higher than Elasticsearch's 1.5 times; in log data, cold data is accessed very infrequently, and Apache Doris's hot and cold data tiering feature can automatically store logs that exceed a defined time period into lower-cost object storage, reducing the storage cost of cold data by more than 70%. For the same raw data, Doris's storage costs are only about 20% of those of Elasticsearch.
 
 ### Strong analytical capabilities
 
@@ -175,13 +175,7 @@ Refer to the following table to learn about the values of indicators in the exam
 
 ### Step 2: Deploy the cluster
 
-After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](../../install/cluster-deployment/standard-deployment).
-
-Alternatively, it is recommended to use VeloDB Manager provided by VeloDB Enterprise to deploy the cluster, reducing overall deployment costs. For more information about the VeloDB Manager, please refer to the following documents:
-
-- [VeloDB Manager 24.x Installation Manual](https://docs.velodb.io/enterprise/velodb-manager-guide/deployment-guide/deployment-guide-24.x)
-
-- [VeloDB Manager 24.x User Guide](https://docs.velodb.io/enterprise/velodb-manager-guide/management-guide/management-guide-24.x)
+After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](../install/cluster-deployment/standard-deployment.md).
 
 ### Step 3: Optimize FE and BE configurations
 
@@ -201,7 +195,7 @@ You can find FE configuration fields in `fe/conf/fe.conf`. Refer to the followin
 | `autobucket_min_buckets = 10`                                | Increase the minimum number of automatically bucketed buckets from 1 to 10 to avoid insufficient buckets when the log volume increases. |
 | `max_backend_heartbeat_failure_tolerance_count = 10`         | In log scenarios, the BE server may experience high pressure, leading to short-term timeouts, so increase the tolerance count from 1 to 10. |
 
-For more information, refer to [FE Configuration](../../admin-manual/config/fe-config).
+For more information, refer to [FE Configuration](../admin-manual/config/fe-config.md).
 
 **Optimize BE configurations**
 
@@ -231,7 +225,7 @@ You can find BE configuration fields in `be/conf/be.conf`. Refer to the followin
 | -          | `trash_file_expire_time_sec = 300` `path_gc_check_interval_second  = 900` `path_scan_interval_second = 900` | Accelerate the recycling of trash files.                     |
 
 
-For more information, refer to [BE Configuration](../../admin-manual/config/be-config).
+For more information, refer to [BE Configuration](../admin-manual/config/be-config.md).
 
 ### Step 4: Create tables
 
@@ -241,7 +235,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
 - For data partitioning:
 
-    - Enable [range partitioning](../../table-design/data-partition#range-partition) with [dynamic partitions](../../table-design/data-partition#dynamic-partition) managed automatically by day.
+    - Enable [range partitioning](https://doris.apache.org/docs/table-design/data-partition#range-partition) with [dynamic partitions](https://doris.apache.org/docs/table-design/data-partition#dynamic-partition) managed automatically by day.
 
     - Use a field in the DATETIME type as the key for accelerated retrieval of the latest N log entries.
 
@@ -251,7 +245,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
     - Use the Random strategy to optimize batch writing efficiency when paired with single tablet imports.
 
-For more information, refer to [Data Partitioning](../../table-design/data-partition).
+For more information, refer to [Data Partitioning](../table-design/data-partition.md).
 
 **Configure compaction fileds**
 
@@ -402,7 +396,7 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](../../ecosystem/logstash).
+For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](../ecosystem/logstash.md).
 
 **Integrating Filebeat**
 
@@ -470,7 +464,7 @@ headers:
     ./filebeat-doris-1.0.0 -c filebeat_demo.yml
     ```
 
-For more information about Filebeat, refer to [Beats Doris Output Plugin](../../ecosystem/beats).
+For more information about Filebeat, refer to [Beats Doris Output Plugin](../ecosystem/beats.md).
 
 **Integrating Kafka**
 
@@ -478,7 +472,7 @@ Write JSON formatted logs to Kafka's message queue, create a Kafka Routine Load,
 
 You can refer to the example below, where `property.*` represents Librdkafka client-related configurations and needs to be adjusted according to the actual Kafka cluster situation.
 
-```sql  
+```SQL  
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table  
 COLUMNS(ts, clientip, request, status, size)  
 PROPERTIES (  
@@ -503,13 +497,13 @@ FROM KAFKA (
 <br />SHOW ROUTINE LOAD;
 ```
 
-For more information about Kafka, see [Routine Load](../../data-operate/import/routine-load-manual)。
+For more information about Kafka, see [Routine Load](../data-operate/import/routine-load-manual.md)。
 
 **Using customized programs to collect logs**
 
 In addition to integrating common log collectors, you can also customize programs to import log data into Apache Doris using the Stream Load HTTP API. Refer to the following code:
 
-```shell
+```shell  
 curl   
 --location-trusted   
 -u username:password   
@@ -580,11 +574,9 @@ ORDER BY ts DESC LIMIT 10;
 
 **Analyze logs visually**
 
-VeloDB Enterprise Core, built on Apache Doris, provides a data development platform called VeloDB Enterprise WebUI ("WebUI"), featuring a Kibana Discover-like log retrieval and analysis interface for intuitive and easy exploratory log analysis interaction as shown in the image below:
+Some third-party vendors offer visual log analysis development platforms based on Apache Doris, which include a log search and analysis interface similar to Kibana Discover. These platforms provide an intuitive and user-friendly exploratory log analysis interaction.
 
 ![WebUI](/images/WebUI-EN.jpeg)
-
-On this interface, WebUI supports the following operations:
 
 - Support for full-text search and SQL modes
 
@@ -596,4 +588,4 @@ On this interface, WebUI supports the following operations:
 
 - Display of top field values in search results for finding anomalies and further drilling down for analysis
 
-You can [click to download VeloDB Enterprise Core](https://www.velodb.io/download/enterprise) and [install it](https://docs.velodb.io/enterprise/enterprise-core-guide/velodb-distribution-doris-core-deployment-guide) to use WebUI. For more information about the main functions and how to use WebUI, see [WebUI](https://docs.velodb.io/enterprise/enterprise-core-guide/velodb-webui-guide).
+Please contact dev@doris.apache.org to find more.

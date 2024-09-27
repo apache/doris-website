@@ -25,8 +25,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-The DELETE statement conditionally deletes data from a specified table or partition using the MySQL protocol.The Delete operation differs from import-based bulk deletion in that it is similar to the INSERT INTO statement, which is a synchronous process.All Delete operations are a separate import job in Doris. 
+The DELETE statement conditionally deletes data from a specified table or partition using the MySQL protocol.The Delete operation differs from import-based bulk deletion in that it is similar to the INSERT INTO statement, which is a synchronous process.All Delete operations are a separate import job in Doris.
 
 The DELETE statement generally requires the specification of tables and partitions as well as deletion conditions to filter the data to be deleted, and will delete data from both the base and rollup tables.
 
@@ -50,7 +49,6 @@ DELETE FROM table_name [table_alias]
 
 - value | value_list: Values or lists of values for logical comparisons
 
-
 ### Optional Parameters
 
 - PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): Specify the name of the partition in which the deletion is to be performed. If the partition does not exist in the table, an error will be reported.
@@ -65,7 +63,7 @@ DELETE FROM table_name [table_alias]
 
 - Conditions can only be related to each other by "and". If you want an "or" relationship, you need to write the conditions in two separate DELETE statements;
 
-- If the table is partitioned, you need to specify the partition. If not, doris will infer the partition from the condition.In two cases, doris cannot infer the partition from the condition: 
+- If the table is partitioned, you need to specify the partition. If not, doris will infer the partition from the condition.In two cases, doris cannot infer the partition from the condition:
 
   - The condition does not contain a partition column
 
@@ -255,7 +253,7 @@ The correct logic for handling the results returned by Delete is:
 Overall, the timeout calculation rules for Doris Delete jobs are as follows (in seconds):
 
 ```Plain
-TIMEOUT = MIN(load_straggler_wait_second, MAX(30, tablet_delete_timeout_second * tablet_num))
+TIMEOUT = MIN(delete_job_max_timeout_second, MAX(30, tablet_delete_timeout_second * tablet_num))
 ```
 
 - `tablet_delete_timeout_second`
@@ -263,10 +261,6 @@ TIMEOUT = MIN(load_straggler_wait_second, MAX(30, tablet_delete_timeout_second *
 The delete timeout time is elastically changed by the number of tablets under the specified partition. This item is configured so that the default value of the timeout time contributed by one tablet on average is 2.
 
 Assuming that there are 5 tablets under the partition specified for this deletion, the timeout time available for delete is 10 seconds, and since it is less than the minimum timeout time of 30 seconds, the final timeout time is 30 seconds.
-
-- `load_straggler_wait_second`
-
-If the user predicts a large amount of data, making the 5-minute limit insufficient, the user can adjust the timeout limit via load_straggler_wait_second, with a default value of 300.
 
 - `query_timeout`
 
