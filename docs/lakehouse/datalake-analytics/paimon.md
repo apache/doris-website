@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-[Apache Doris & Paimon Quick Start](../..//gettingStarted/tutorials/building-lakehouse/doris-paimon)
+[Apache Doris & Paimon Quick Start](../../gettingStarted/tutorials/building-lakehouse/doris-paimon)
 
 ## Instructions for use
 

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-[Apache Doris & Iceberg Quick Start](../../../gettingStarted/tutorials/building-lakehouse/doris-iceberg.md)
+[Apache Doris & Iceberg Quick Start](../../gettingStarted/tutorials/building-lakehouse/doris-iceberg.md)
 
 ## Limitations
 
