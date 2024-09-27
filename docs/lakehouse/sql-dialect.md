@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SQL Dialect Convertor",
+    "title": "SQL Converter for Apache Doris",
     "language": "en"
 }
 ---
@@ -36,7 +36,8 @@ This function is currently an experimental function. If you encounter any proble
 
 ## Deploy service
 
-1. Download latest [Doris SQL Convertor](https://www.selectdb.com/tools/doris-sql-convertor)
+1. Download latest [SQL Converter for Apache Doris](https://www.selectdb.com/tools/doris-sql-convertor)
+
 
     :::info NOTE
     The SQL dialect conversion tool is based on the open-source [SQLGlot](https://github.com/tobymao/sqlglot) and has been further developed by SelectDB. For more information about SQLGlot, please refer to the [SQLGlot official website](https://sqlglot.com/sqlglot.html).
@@ -45,11 +46,28 @@ The SQL Convertor is not maintained or endorsed by Apache Doris; these efforts a
 
 2. On any FE node, start the service through the following command:
 
-	`sh bin/start.sh`
+	```shell
+    # Configuring the service port
+    vim apiserver/conf/config.conf
+    # Start the SQL Converter for Apache Doris conversion service
+    sh apiserver/bin/start.sh
+    # If you need a front-end interface, you can configure the corresponding port in the webserver and start it. If you don't need a front-end, you can ignore the following operations.
+    vim webserver/conf/config.conf
+    # Start the front-end interface
+    sh webserver/bin/start.sh
+    ```
 	
-	- This service is a stateless service and can be started and stopped at any time.
-	- The default startup port is `5001`, and the specified port can be configured in `conf/config.conf`.
-	- It is recommended to start a separate service on each FE node.
+
+    :::tip
+	  1. This service is a stateless service and can be started and stopped at any time.
+	
+	  2. Configure port in `apiserver/conf/config.conf` to specify any available port, and configure workers to specify the number of threads to start. In concurrent scenarios, you can adjust as needed, the default is 1.
+	
+	  3. It is recommended to start a separate service on each FE node.
+
+    4. If you need to start the front-end interface, you can configure the SQL Converter for Apache Doris conversion service address in `webserver/conf/config`.conf. The default is `API_HOST=http://127.0.0.1:5001`
+    :::
+
 
 3. Start the Doris cluster (version 2.1 or higher)
 4. Set the URL of the SQL Dialect Conversion Service with the following command in Doris:
@@ -64,10 +82,10 @@ Currently supported dialect types include:
 
 - `presto`
 - `trino`
+- `clickhouse`
 - `hive`
 - `spark`
 - `postgres`
-- `clickhouse`
 - `oracle`
 
 example:
