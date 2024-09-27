@@ -59,7 +59,7 @@ under the License.
 
 经过 Benchmark 测试及生产验证，基于 Apache Doris 构建的日志存储与分析平台，性价比相对于 Elasticsearch 具有 5～10 倍的提升。Apache Doris 的性能优势，主要得益于全球领先的高性能存储和查询引擎，以及下面一些针对日志场景的专门优化：
 
-- **写入吞吐提升**：Elasticsearch 写入的性能瓶颈在于解析数据和构建倒排索引的 CPU 消耗。相比之下，Apache Doris 进行了两方面的写入优化：一方面利用 SIMD 等 CPU 向量化指令提升了 JSON 数据解析速度和索引构建性能；另一方面针对日志场景简化倒了排索引结构，去掉日志场景不需要的正排等数据结构，有效降低了索引构建的复杂度。同样的资源，Apache Doris 的写入性能是 Elasticsearch 的 3～5 倍。
+- **写入吞吐提升**：Elasticsearch 写入的性能瓶颈在于解析数据和构建倒排索引的 CPU 消耗。相比之下，Apache Doris 进行了两方面的写入优化：一方面利用 SIMD 等 CPU 向量化指令提升了 JSON 数据解析速度和索引构建性能；另一方面针对日志场景简化了倒排索引结构，去掉日志场景不需要的正排等数据结构，有效降低了索引构建的复杂度。同样的资源，Apache Doris 的写入性能是 Elasticsearch 的 3～5 倍。
 - **存储成本降低**：Elasticsearch 存储瓶颈在于正排、倒排、Docvalue 列存多份存储和通用压缩算法压缩率较低。相比之下，Apache Doris 在存储上进行了以下优化：去掉正排，缩减了 30% 的索引数据量；采用列式存储和 Zstandard 压缩算法，压缩比可达到 5～10 倍，远高于 Elasticsearch 的 1.5 倍；日志数据中冷数据访问频率很低，Apache Doris 冷热分层功能可以将超过定义时间段的日志自动存储到更低的对象存储中，冷数据的存储成本可降低 70% 以上。同样的原始数据，Doris 的存储成本只需要 Elasticsearch 的 20% 左右。
 - **查询性能提升**：Apache Doris 将全文检索的流程简化，跳过了相关性打分等日志场景不需要的算法，加速基础的检索性能。同时针对日志场景常见的查询，比如查询包含某个关键字的最新 100 条日志，在查询规划和执行上做专门的 TopN 动态剪枝等优化。
 
@@ -73,7 +73,7 @@ Apache Doris 支持标准 SQL、兼容 MySQL 协议和语法，因此基于 Apac
 
 ### Flexible Schema
 
-下面是一个典型的 JSON 格式半结构化日志样例。顶层字段是一些比较固定的字段，比如日志时间戳（`timestamp`），日志来源（`source`），志所在机器（`node`），打日志的模块（`component`），日志级别（`level`），客户端请求标识（`clientRequestId`），日志内容（`message`），日志扩展属性（`properties`），基本上每条日志都会有。而扩展属性 `properties` 的内部嵌套字段 `properties.size`、`properties.format` 等是比较动态的，每条日志的字段可能不一样。
+下面是一个典型的 JSON 格式半结构化日志样例。顶层字段是一些比较固定的字段，比如日志时间戳（`timestamp`），日志来源（`source`），日志所在机器（`node`），打日志的模块（`component`），日志级别（`level`），客户端请求标识（`clientRequestId`），日志内容（`message`），日志扩展属性（`properties`），基本上每条日志都会有。而扩展属性 `properties` 的内部嵌套字段 `properties.size`、`properties.format` 等是比较动态的，每条日志的字段可能不一样。
 
 ```JSON  
 {  
