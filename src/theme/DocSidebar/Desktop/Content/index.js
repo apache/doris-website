@@ -50,6 +50,10 @@ export default function DocSidebarDesktopContent({ path, sidebar, className }) {
     const [isHover, setIshover] = useState(false)
     const DEFAULT_VERSION = '2.1';
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
+    const {
+        i18n: { currentLocale, locales, localeConfigs },
+    } = useDocusaurusContext();
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const tempPath = ['gettingStarted', 'benchmark', 'ecosystem', 'faq', 'releasenotes', 'community'];
@@ -84,6 +88,7 @@ export default function DocSidebarDesktopContent({ path, sidebar, className }) {
                 {showVersion && <div className={styles.currentVersion}>
                     {isEN ? 'Version:' : '当前版本:'} {currentVersion}
                     {
+                        currentLocale !== 'en' && 
                         ['3.0', '2.0', '2.1'].includes(currentVersion) && (
                             <div onMouseLeave={() => setIshover(false)} onMouseEnter={() => setIshover(true)} className="cursor-pointer" onClick={() => {
                                 const pdfInfo = DOWNLOAD_PDFS.find(item => item.version === currentVersion);
