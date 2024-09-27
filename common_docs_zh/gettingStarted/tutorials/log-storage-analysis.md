@@ -73,7 +73,7 @@ Apache Doris 支持标准 SQL、兼容 MySQL 协议和语法，因此基于 Apac
 
 ### Flexible Schema
 
-下面是一个典型的 JSON 格式半结构化日志样例。顶层字段是一些比较固定的字段，比如日志时间戳（`timestamp`），日志来源（`source`），志所在机器（`node`），打日志的模块（`component`），日志级别（`level`），客户端请求标识（`clientRequestId`），日志内容（`message`），日志扩展属性（`properties`），基本上每条日志都会有。而扩展属性 `properties` 的内部嵌套字段 `properties.size`、`properties.format` 等是比较动态的，每条日志的字段可能不一样。
+下面是一个典型的 JSON 格式半结构化日志样例。顶层字段是一些比较固定的字段，比如日志时间戳（`timestamp`），日志来源（`source`），日志所在机器（`node`），打日志的模块（`component`），日志级别（`level`），客户端请求标识（`clientRequestId`），日志内容（`message`），日志扩展属性（`properties`），基本上每条日志都会有。而扩展属性 `properties` 的内部嵌套字段 `properties.size`、`properties.format` 等是比较动态的，每条日志的字段可能不一样。
 
 ```JSON  
 {  
