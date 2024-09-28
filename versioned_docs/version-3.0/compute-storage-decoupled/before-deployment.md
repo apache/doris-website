@@ -86,7 +86,7 @@ If only for development/testing purposes, a single machine is sufficient.
 | `FDB_CLUSTER_IPS` | Define cluster IPs | String (comma-separated IP addresses) | `172.200.0.2,172.200.0.3,172.200.0.4` | - At least 3 IP addresses for production clusters<br>- The first IP will be used as the coordinator<br>- For high availability, place machines in different racks |
 | `FDB_HOME` | Define the main directory for FoundationDB | Absolute path | `/fdbhome` | - Default path is /fdbhome<br>- Ensure this path is absolute |
 | `FDB_CLUSTER_ID` | Define the cluster ID | String | `SAQESzbh` | - Each cluster ID must be unique<br>- Can be generated using `mktemp -u XXXXXXXX` |
-| `FDB_CLUSTER_DESC` | Define the description of the FDB cluster | String | `doris-fdb` | - It is recommended to change this to something meaningful for the deployment |
+| `FDB_CLUSTER_DESC` | Define the description of the FDB cluster | String | `dorisfdb` | - It is recommended to change this to something meaningful for the deployment |
 
 ##### Optional Custom Settings
 
@@ -126,7 +126,7 @@ After completing the above preparations, please refer to the following documents
 
 1. [Deployment](./compilation-and-deployment.md)
 2. [Managing Compute Group](./managing-compute-cluster.md)
-3. [Managing Storage Vault](./manaing-storage-vault.md)
+3. [Managing Storage Vault](./managing-storage-vault.md)
 
 ## 7. Notes
 

@@ -61,7 +61,7 @@ output
 在 `./conf/doris_cloud.conf` 文件中，主要需要修改以下两个参数：
 
 1. `brpc_listen_port`：Meta Service 的监听端口，默认为 5000。
-2. `fdb_cluster`：FoundationDB 集群的连接信息，部署 FoundationDB 时可以获取。
+2. `fdb_cluster`：FoundationDB 集群的连接信息，部署 FoundationDB 时可以获取。(如果使用 Doris 提供的 fdb_ctl.sh 部署的话，可在 `$FDB_HOME/conf/fdb.cluster` 文件里获取该值)。
 
 示例配置：
 
@@ -70,7 +70,7 @@ brpc_listen_port = 5000
 fdb_cluster = xxx:yyy@127.0.0.1:4500
 ```
 
-注意：`fdb_cluster` 的值应与 FoundationDB 部署机器上的 `/etc/foundationdb/fdb.cluster` 文件内容一致。
+注意：`fdb_cluster` 的值应与 FoundationDB 部署机器上的 `/etc/foundationdb/fdb.cluster` 文件内容一致 (如果使用 Doris 提供的 fdb_ctl.sh 部署的话，可在 `$FDB_HOME/conf/fdb.cluster` 文件里获取该值)。
 
 **示例, 文件的最后一行就是要填到doris_cloud.conf 里 fdb_cluster 字段的值**
 
@@ -109,6 +109,10 @@ bin/stop.sh
 
 ## 4. 数据回收功能独立部署（可选）
 
+:::info
+Meta Service 本身具备了元数据管理和回收功能，这两个功能可以独立部署，如果你想独立部署，可以参考这一节。
+:::
+
 *准备工作*
 
 1. 创建新的工作目录（如 `recycler`）。
@@ -120,7 +124,7 @@ bin/stop.sh
 
 *配置*
 
-在新目录的配置文件中修改 BRPC 监听端口。
+在新目录的配置文件中修改 BRPC 监听端口 `brpc_listen_port` 和 `fdb_cluster` 的值。
 
 *启动数据回收功能*
 
@@ -175,11 +179,11 @@ bin/start.sh --meta-service --daemon
 bin/start_fe.sh --daemon
 ```
 
-第一个 FE 进程初始化集群并以 FOLLOWER 角色工作。
+第一个 FE 进程初始化集群并以 FOLLOWER 角色工作。使用 mysql 客户端连接 FE 使用 `show frontends` 确认刚才启动的 FE 是 master。
 
 ### 5.3 添加其他 FE 节点
 
-使用以下 SQL 命令添加额外的 FE 节点：
+其他节点同样根据上述步骤修改配置文件并启动，使用 mysql 客户端连接 Master 角色的 FE，并用以下 SQL 命令添加额外的 FE 节点：
 
 ```sql
 ALTER SYSTEM ADD FOLLOWER "host:port";

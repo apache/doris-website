@@ -61,7 +61,7 @@ output
 In the `./conf/doris_cloud.conf` file, you mainly need to modify the following two parameters:
 
 1. `brpc_listen_port`: The listening port for the Meta Service, default is 5000.
-2. `fdb_cluster`: Connection information for the FoundationDB cluster, which can be obtained when deploying FoundationDB.
+2. `fdb_cluster`: Connection information for the FoundationDB cluster, which can be obtained when deploying FoundationDB. (If using the `fdb_ctl.sh` provided by Doris for deployment, this value can be found in the `$FDB_HOME/conf/fdb.cluster` file.)
 
 Example configuration:
 
@@ -70,7 +70,7 @@ brpc_listen_port = 5000
 fdb_cluster = xxx:yyy@127.0.0.1:4500
 ```
 
-Note: The value of `fdb_cluster` should match the content of the `/etc/foundationdb/fdb.cluster` file on the FoundationDB deployment machine.
+Note: The value of `fdb_cluster` should match the content of the `/etc/foundationdb/fdb.cluster` file on the FoundationDB deployment machine. (If using the `fdb_ctl.sh` provided by Doris for deployment, this value can be found in the `$FDB_HOME/conf/fdb.cluster` file.)
 
 **Example: The last line of the file is the value to fill in the doris_cloud.conf for the fdb_cluster field**
 
@@ -109,6 +109,10 @@ For production environment, please ensure that the total number of Meta Serivie 
 
 ## 4. Independent Deployment of Data Recycling Function (Optional)
 
+:::info
+The Meta Service itself has metadata management and recycling functions, which can be deployed independently. If you want to deploy them independently, you can refer to this section.
+:::
+
 *Preparation Work*
 
 1. Create a new working directory (e.g., `recycler`).
@@ -120,7 +124,7 @@ For production environment, please ensure that the total number of Meta Serivie 
 
 *Configuration*
 
-Modify the BRPC listening port in the configuration file of the new directory.
+Modify the BRPC listening port `brpc_listen_port` and the value of `fdb_cluster` in the configuration file of the new directory.
 
 *Start Data Recycling Function*
 
@@ -175,11 +179,11 @@ Example start command:
 bin/start_fe.sh --daemon
 ```
 
-The first FE process initializes the cluster and work in FOLLOWER role.
+The first FE process initializes the cluster and operates in the FOLLOWER role. Use a MySQL client to connect to the FE and use `show frontends` to confirm that the recently started FE is the master.
 
 ### 5.3 Add Other FE Nodes
 
-Use the following SQL command to add additional FE nodes:
+Other nodes should also modify the configuration file and start according to the above steps. Use a MySQL client to connect to the FE with the MASTER role and use the following SQL command to add additional FE nodes:
 
 ```sql
 ALTER SYSTEM ADD FOLLOWER "host:port";

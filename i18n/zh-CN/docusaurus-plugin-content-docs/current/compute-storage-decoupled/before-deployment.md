@@ -68,7 +68,7 @@ Doris 存算分离架构包含三个主要模块：
 
 ### 5.1. 安装 FoundationDB
 
-本节提供了使用提供的脚本 `fdb_vars.sh` 和 `fdb_ctl.sh` 配置、部署和启动 FDB（FoundationDB）服务的分步指南。
+本节提供了脚本 `fdb_vars.sh` 和 `fdb_ctl.sh` 配置、部署和启动 FDB（FoundationDB）服务的分步指南。
 
 #### 5.1 机器要求
 
@@ -88,7 +88,7 @@ Doris 存算分离架构包含三个主要模块：
 | `FDB_CLUSTER_IPS` | 定义集群 IP | 字符串（以逗号分隔的 IP 地址） | `172.200.0.2,172.200.0.3,172.200.0.4` | - 生产集群至少应有 3 个 IP 地址<br>- 第一个 IP 地址将用作协调器<br>- 为高可用性，将机器放置在不同机架上 |
 | `FDB_HOME` | 定义 FoundationDB 主目录 | 绝对路径 | `/fdbhome` | - 默认路径为 /fdbhome<br>- 确保此路径是绝对路径 |
 | `FDB_CLUSTER_ID` | 定义集群 ID | 字符串 | `SAQESzbh` | - 每个集群的 ID 必须唯一<br>- 可使用 `mktemp -u XXXXXXXX` 生成 |
-| `FDB_CLUSTER_DESC` | 定义 FDB 集群的描述 | 字符串 | `doris-fdb` | - 建议更改为对部署有意义的内容 |
+| `FDB_CLUSTER_DESC` | 定义 FDB 集群的描述 | 字符串 | `dorisfdb` | - 建议更改为对部署有意义的内容 |
 
 ##### 可选的自定义设置
 
@@ -128,7 +128,7 @@ FDB 集群部署完成后，您可以使用 `fdb_ctl.sh` 脚本启动 FDB 服务
 
 1. [部署](./compilation-and-deployment.md)
 2. [管理 Compute Group](./managing-compute-cluster.md)
-3. [管理 Storage Vault](./manaing-storage-vault.md)
+3. [管理 Storage Vault](./managing-storage-vault.md)
 
 ## 7. 注意事项
 
