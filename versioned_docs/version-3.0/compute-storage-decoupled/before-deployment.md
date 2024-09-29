@@ -82,10 +82,10 @@ If only for development/testing purposes, a single machine is sufficient.
 
 | Parameter | Description | Type | Example | Notes |
 |-----------|-------------|------|---------|-------|
-| `DATA_DIRS` | Specify the data directory for FoundationDB storage | Comma-separated list of absolute paths | `/mnt/foundationdb/data1,/mnt/foundationdb/data2,/mnt/foundationdb/data3` | - Ensure directories are created before running the script<br>- SSD and separate directories are recommended for production environments |
-| `FDB_CLUSTER_IPS` | Define cluster IPs | String (comma-separated IP addresses) | `172.200.0.2,172.200.0.3,172.200.0.4` | - At least 3 IP addresses for production clusters<br>- The first IP will be used as the coordinator<br>- For high availability, place machines in different racks |
-| `FDB_HOME` | Define the main directory for FoundationDB | Absolute path | `/fdbhome` | - Default path is /fdbhome<br>- Ensure this path is absolute |
-| `FDB_CLUSTER_ID` | Define the cluster ID | String | `SAQESzbh` | - Each cluster ID must be unique<br>- Can be generated using `mktemp -u XXXXXXXX` |
+| `DATA_DIRS` | Specify the data directory for FoundationDB storage | Comma-separated list of absolute paths | `/mnt/foundationdb/data1,/mnt/foundationdb/data2,/mnt/foundationdb/data3` | - Ensure directories are created before running the script<br/>- SSD and separate directories are recommended for production environments |
+| `FDB_CLUSTER_IPS` | Define cluster IPs | String (comma-separated IP addresses) | `172.200.0.2,172.200.0.3,172.200.0.4` | - At least 3 IP addresses for production clusters<br/>- The first IP will be used as the coordinator<br/>- For high availability, place machines in different racks |
+| `FDB_HOME` | Define the main directory for FoundationDB | Absolute path | `/fdbhome` | - Default path is /fdbhome<br/>- Ensure this path is absolute |
+| `FDB_CLUSTER_ID` | Define the cluster ID | String | `SAQESzbh` | - Each cluster ID must be unique<br/>- Can be generated using `mktemp -u XXXXXXXX` |
 | `FDB_CLUSTER_DESC` | Define the description of the FDB cluster | String | `dorisfdb` | - It is recommended to change this to something meaningful for the deployment |
 
 ##### Optional Custom Settings
