@@ -178,12 +178,12 @@ INSERT INTO order_tbl (order_id, order_status) values (1,'待发货');
 
 **新建表使用灵活列更新功能**
 
-对于新建的表，如果需要使用灵活列更新功能，建表时需要指定如下表属性，以开启 Merge-on-Write 实现，开启 light-schema-change，同时使得表具有灵活列更新所需要的 `bitmap` 隐藏列。(这3个表属性的默认值均为 `true`)
+对于新建的表，如果需要使用灵活列更新功能，建表时需要指定如下表属性，以开启 Merge-on-Write 实现，开启 light-schema-change，同时使得表具有灵活列更新所需要的 `bitmap` 隐藏列。
 
 ```Plain
+"enable_light_schema_change" = "true"
 "enable_unique_key_merge_on_write" = "true"
 "enable_unique_key_skip_bitmap_column" = "true"
-"enable_light_schema_change" = "true"
 ```
 
 **StreamLoad**
