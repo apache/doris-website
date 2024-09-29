@@ -277,10 +277,6 @@ PROPERTIES (
 AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 ```
 
-## Exception Data and Data Transformation
-
-TODO
-
 ## Transaction Mechanism
 
 Write operations to Hive are placed in a separate transaction. Until the transaction is committed, the data is not visible externally. Only after committing the transaction do the table's related operations become visible to others.
@@ -371,10 +367,6 @@ Below, we describe the file operations in various cases.
         3. The temporary partition directory is deleted.
 
 ## Relevant Parameters
-
-### FE
-
-TODO
 
 ### BE
 
