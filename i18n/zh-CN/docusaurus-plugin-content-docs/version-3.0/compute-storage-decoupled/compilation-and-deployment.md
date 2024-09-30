@@ -205,15 +205,11 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
    - 格式：cloud 表示存算分离模式，其它存算一体模式
    - 示例：`cloud`
 
-2. `enable_file_cache`
-   - 描述: 启用文件缓存以加速查询。
-   - 格式: `true` 启用文件缓存，而 `false` 禁用文件缓存。
-   - 示例: `true`
-
-3. `file_cache_path`
+2. `file_cache_path`
    - 描述: 用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
    - 格式: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
    - 示例: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+   - 默认: [{"path":"${DORIS_HOME}/file_cache"}]
 
 #### 5.4.1 启动和添加 BE
 

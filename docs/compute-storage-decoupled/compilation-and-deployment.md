@@ -206,15 +206,11 @@ In the `be.conf` file, the following key parameters need to be configured:
    - Format: `cloud` indicates the decoupled storage-compute mode; others indicate the integrated storage-compute mode.
    - Example: `cloud`
 
-2. `enable_file_cache`
-   - Description: Enables file cache to accelerate query.
-   - Format: `true` enables file cache while `false` disables file cache.
-   - Example: `true`
-
-3. `file_cache_path`
+2. `file_cache_path`
    - Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
    - format: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
    - Example: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+   - Default: [{"path":"${DORIS_HOME}/file_cache"}]
 
 #### 5.4.1 Start and Add BE
 

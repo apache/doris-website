@@ -1492,11 +1492,14 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 #### `enable_file_cache`
 
-默认值: false
-* 描述: 是否使用文件缓存。
+* 默认值：在存算分离模式下为 true，在非存算分离模式下为 false。
+
+* 描述：是否使用文件缓存。
 
 #### `file_cache_path`
 
-默认值: ""
-* 描述: 用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
-* 格式: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+* 默认值： [{"path":"${DORIS_HOME}/file_cache"}]
+
+* 描述：用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一个条目。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
+
+* 格式： [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
