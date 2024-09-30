@@ -5,40 +5,34 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
-#### Syntax
+REGR_INTERCEPT is used to calculate the y-intercept of the least squares-fit linear equation for a set of number pairs.
 
-` Float64 regr_intercept(y, x)`
+## Syntax
+```
+REGR_INTERCEPT(y, x)
+```
 
-x, y support basic numeric types.
+## Parameters
+- `y` (Numeric): The dependent variable.
+- `x` (Numeric): The independent variable.
 
-calculate the intercept of the least squares-fit linear equation
+Both `x` and `y` support basic numeric types.
 
-## EXAMPLE
+## Returned values
+Returned data type: FLOAT64
 
-We have the following data
+The function returns the y-intercept of the linear regression line.
 
+If there are no rows, or only rows with null values, the function returns NULL.
+
+## Examples
 ```sql
-mysql> select * from test;
+-- Example 1: Basic Usage
+SELECT regr_intercept(y, x) FROM test;
+
+-- Example 2: Usage in a query with sample data
+SELECT * FROM test;
 +------+------+------+
 | id   | x    | y    |
 +------+------+------+
@@ -48,15 +42,21 @@ mysql> select * from test;
 |    2 |   14 |   27 |
 |    4 |    5 |    6 |
 +------+------+------+
-```
 
-```sql
-mysql> select regr_intercept(y,x) from test;
+SELECT regr_intercept(y, x) FROM test;
 +----------------------+
 | regr_intercept(y, x) |
 +----------------------+
 |    5.512931034482759 |
 +----------------------+
 ```
-## KEYWORDS
-REGR_INTERCEPT
+
+## Usage notes
+- This function ignores any pair where either value is null.
+- In cases where the calculation would result in a division by zero, the function will return NULL.
+
+## Related functions
+REGR_SLOPE, REGR_R2, REGR_COUNT, REGR_AVGX, REGR_AVGY
+
+## References
+For more details about linear regression functions, please refer to the SQL standard documentation on aggregate functions.
