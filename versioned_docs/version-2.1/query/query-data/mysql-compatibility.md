@@ -117,13 +117,13 @@ Doris has several unique data types. Here are the details:
 
   The supported types for fields are `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `DECIMAL`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR`, and `STRING`.
 
-- Agg_State
+- **Agg_State**
 
  AGG_STATE is a data type in Doris that cannot be used as a key column. During table creation, the signature of the aggregation function needs to be declared. 
 
   The length and default value do not need to be specified, and the actual storage size depends on the implementation of the function.
 
-  AGG_STATE can only be used in combination with [state](../../sql-manual/sql-functions/combinators/state) /[merge](../../sql-manual/sql-functions/combinators/merge)/[union](../../sql-manual/sql-functions/combinators/union) functions from the SQL manual for aggregators.
+  AGG_STATE can only be used in combination with [state](../../sql-manual/sql-functions/combinators/state)/[merge](../../sql-manual/sql-functions/combinators/merge)/[union](../../sql-manual/sql-functions/combinators/union) functions from the SQL manual for aggregators.
 
 ## Syntax
 
@@ -270,11 +270,11 @@ CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
 
 The syntax of Doris ALTER is basically the same as that of MySQL.
 
-### **Drop-Table/Drop-Index**
+### Drop-Table/Drop-Index
 
 The syntax of Doris DROP is basically the same as MySQL.
 
-### **DML**
+### DML
 
 **Insert**
 
@@ -327,7 +327,7 @@ DELETE FROM table_name [table_alias]
 
 This syntax can only be used on the UNIQUE KEY model table.
 
-The Doris DELTE syntax is basically the same as MySQL. Due to Doris is an analytical database, deletions can't be too frequent.
+The Doris DELETE syntax is basically the same as MySQL. Due to Doris is an analytical database, deletions can't be too frequent.
 
 **Select**
 
