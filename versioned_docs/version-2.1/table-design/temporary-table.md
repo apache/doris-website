@@ -23,7 +23,7 @@ under the License.
 -->
 
 :::note
-Supported since Doris version 2.1.7 / 3.0.2
+Supported since Doris version 2.1.8 / 3.0.3
 :::
 
 When handling complex data processing, saving intermediate calculation results as physical tables is a great method to significantly reduce SQL complexity and improve data debuggability. However, such tables need to be manually cleaned up after use. Currently, Doris only supports defining non-physical temporary tables through the WITH clause.
@@ -52,5 +52,9 @@ The other uses of temporary tables are basically the same as regular internal ta
 ## Notes
 
 - Temporary tables can only be created in the Internal Catalog.
-- The `ENGINE` must be `OLAP` when creating the table.
+- The ENGINE must be set to OLAP when creating a table.
+- Alter statements are not supported for modifying temporary tables.
 - Due to their temporary nature, creating views and materialized views based on temporary tables is not supported.
+- Temporary tables cannot be backed up and are not supported for synchronization using CCR/Sync Job.
+- Export, Stream Load, Broker Load, S3 Load, MySQL Load, Routine Load, and Spark Load are not supported.
+- When a temporary table is deleted, it does not go to the recycle bin but is permanently deleted immediately.

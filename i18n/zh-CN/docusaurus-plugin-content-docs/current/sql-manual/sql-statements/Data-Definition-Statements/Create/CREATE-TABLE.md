@@ -49,7 +49,7 @@ distribution_desc
 ```
 
 #### TEMPORARY
-创建临时表。临时表仅在当前session 可见，会话结束自动删除
+创建临时表。临时表仅在当前 Session 可见，会话结束自动删除
 
 #### column_definition_list
 
