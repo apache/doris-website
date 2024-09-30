@@ -37,7 +37,7 @@ This statement is used to create an empty table with the exact same table struct
 grammar:
 
 ```sql
-CREATE [TEMPORARY | TEMP | EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]table_name [WITH ROLLUP (r1,r2,r3,...)]
+CREATE [TEMPORARY | EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]table_name [WITH ROLLUP (r1,r2,r3,...)]
 ```
 
 illustrate: 

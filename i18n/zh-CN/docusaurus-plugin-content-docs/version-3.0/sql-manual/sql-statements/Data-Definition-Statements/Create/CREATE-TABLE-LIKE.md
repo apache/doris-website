@@ -37,7 +37,7 @@ CREATE TABLE LIKE
 语法：
 
 ```sql
-CREATE [TEMPORARY | TEMP | EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]table_name [WITH ROLLUP (r1,r2,r3,...)]
+CREATE [TEMPORARY | EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]table_name [WITH ROLLUP (r1,r2,r3,...)]
 ```
 
 说明: 

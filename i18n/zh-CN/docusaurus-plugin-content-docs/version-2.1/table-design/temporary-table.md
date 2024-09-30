@@ -41,12 +41,12 @@ Supported since Doris version 2.1.7 / 3.0.2
 ## 用法
 
 ### 创建临时表
-各种模型的表都可以被定义为临时表， 不论是Unique、Aggregate 或是 Duplicate模型。可以在下列 SQL 中添加 TEMPORARY 或 TEMP 关键字创建临时表：
+各种模型的表都可以被定义为临时表， 不论是Unique、Aggregate 或是 Duplicate模型。可以在下列 SQL 中添加 TEMPORARY 关键字创建临时表：
 -  [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)
 -  [CREATE TABLE AS SELECT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AS-SELECT)
 -  [CREATE TABLE LIKE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE)
 
-临时表的其它用法基本和普通内表相同。除上述 Create 语句外， 其它 DDL 及 DML 语句无需添加TEMPORARY 或 TEMP 关键字。  
+临时表的其它用法基本和普通内表相同。除上述 Create 语句外， 其它 DDL 及 DML 语句无需添加 TEMPORARY 关键字。  
 
 ## 注意事项
 

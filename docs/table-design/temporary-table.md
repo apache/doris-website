@@ -42,12 +42,12 @@ If a temporary table and a non-temporary table with the same name exist simultan
 
 ### Creating a Temporay Table
 
-Tables of various models can be defined as temporary tables, whether they are Unique, Aggregate, or Duplicate models. You can create temporary tables by adding the TEMPORARY or TEMP keyword in the following SQL statements:
+Tables of various models can be defined as temporary tables, whether they are Unique, Aggregate, or Duplicate models. You can create temporary tables by adding the TEMPORARY keyword in the following SQL statements:
 -  [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)
 -  [CREATE TABLE AS SELECT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AS-SELECT)
 -  [CREATE TABLE LIKE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE)
 
-The other uses of temporary tables are basically the same as regular internal tables. Except for the above-mentioned Create statement, other DDL and DML statements do not require adding the TEMPORARY or TEMP keyword.
+The other uses of temporary tables are basically the same as regular internal tables. Except for the above-mentioned Create statement, other DDL and DML statements do not require adding the TEMPORARY keyword.
 
 ## Notes
 

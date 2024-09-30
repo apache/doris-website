@@ -33,7 +33,7 @@ under the License.
 该命令用于创建一张表。
 
 ```sql
-CREATE [TEMPORARY | TEMP] TABLE [IF NOT EXISTS] [database.]table
+CREATE [TEMPORARY] TABLE [IF NOT EXISTS] [database.]table
 (
     column_definition_list
     [, index_definition_list]
@@ -48,7 +48,7 @@ distribution_desc
 [extra_properties]
 ```
 
-#### TEMPORARY 或 TEMP
+#### TEMPORARY
 创建临时表。临时表仅在当前session 可见，会话结束自动删除
 
 #### column_definition_list
