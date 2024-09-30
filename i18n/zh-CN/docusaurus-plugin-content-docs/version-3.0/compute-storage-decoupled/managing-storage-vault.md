@@ -69,7 +69,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
         "s3.root.path" = "big/data/prefix",            -- required
         "s3.access_key" = "ak",                        -- required
         "s3.secret_key" = "sk",                        -- required
-        "provider" = "cos"                             -- required
+        "provider" = "OSS"                             -- required
     );
 ```
 
