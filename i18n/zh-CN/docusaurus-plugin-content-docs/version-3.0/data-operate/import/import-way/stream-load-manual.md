@@ -259,7 +259,7 @@ mysql> show stream load from testdb;
 
 ### 取消导入作业
 
-用户无法手动取消 Stream Load，Stream Load 在超时 0 或者导入错误后会被系统自动取消。
+用户无法手动取消 Stream Load，Stream Load 在超时或者导入错误后会被系统自动取消。
 
 ## 参考手册
 
@@ -325,7 +325,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | jsonpaths                    | 导入 JSON 数据格式有两种方式：简单模式：没有指定 jsonpaths 为简单模式，这种模式要求 JSON 数据是对象类型匹配模式：用于 JSON 数据相对复杂，需要通过 jsonpaths 参数匹配对应的 value 在简单模式下，要求 JSON 中的 key 列与表中的列名是一一对应的，如 JSON 数据 {"k1":1, "k2":2, "k3":"hello"}，其中 k1、k2 及 k3 分别对应表中的列。 |
 | strip_outer_array            | 指定 strip_outer_array 为 true 时表示 JSON 数据以数组对象开始且将数组对象中进行展平，默认为 false。在 JSON 数据的最外层是 [] 表示的数组时，需要设置 strip_outer_array 为 true。如以下示例数据，在设置 strip_outer_array 为 true 后，导入 Doris 中生成两行数据`    [{"k1" : 1, "v1" : 2},{"k1" : 3, "v1" : 4}]` |
 | json_root                    | json_root 为合法的 jsonpath 字符串，用于指定 json document 的根节点，默认值为 ""。 |
-| merge_type                   | 数据的合并类型，一共支持三种类型 APPEND、DELETE、MERGE:APPEND 是默认值，表示这批数据全部需要追加到现有数据中 DELETE 表示删除与这批数据 key 相同的所有行 MERGE 语义 需要与 delete 条件联合使用，表示满足 delete 条件的数据按照 DELETE 语义处理其余的按照 APPEND 语义处理例如，指定合并模式为 MERGE，需要指定命令`-H "merge_type: MERGE" -H "delete: flag=1"`。 |
+| merge_type                   | 数据的合并类型，一共支持三种类型 APPEND、DELETE、MERGE；APPEND 是默认值，表示这批数据全部需要追加到现有数据中；DELETE 表示删除与这批数据 key 相同的所有行 MERGE 语义 需要与 DELETE  条件联合使用，表示满足 DELETE 条件的数据按照 DELETE 语义处理其余的按照 APPEND 语义处理例如，指定合并模式为 MERGE，需要指定命令`-H "merge_type: MERGE" -H "delete: flag=1"`。 |
 | delete                       | 仅在 MERGE 下有意义，表示数据的删除条件                      |
 | function_column.sequence_col | 只适用于 UNIQUE KEYS 模型，相同 Key 列下，保证 Value 列按照 source_sequence 列进行 REPLACE。source_sequence 可以是数据源中的列，也可以是表结构中的一列。 |
 | fuzzy_parse                  | 布尔类型，为 true 表示 JSON 将以第一行为 schema 进行解析。开启这个选项可以提高 json 导入效率，但是要求所有 json 对象的 key 的顺序和第一行一致，默认为 false，仅用于 JSON 格式 |
