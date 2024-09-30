@@ -31,12 +31,12 @@ When handling complex data processing, saving intermediate calculation results a
 To address this issue, Doris introduces the concept of temporary tables. A temporary table is a materialized internal table that exists temporarily and is primarily different from internal tables in that it only exists in the session that created it. Its lifecycle is bound to the current session, and the temporary table will be automatically deleted when the session ends. Moreover, the visibility of a temporary table is restricted to the session in which it was created, meaning it is not visible to another session of the same user at the same time.
 
 
-::: note
+:::note
 
 Similar to internal tables, temporary tables must be created under a Database within the Internal Catalog. However, since temporary tables are session-based, their naming is not subject to uniqueness constraints. You can create temporary tables with the same name in different sessions or create temporary tables with the same names as other internal tables.
 
 If a temporary table and a non-temporary table with the same name exist simultaneously in the same Database, the temporary table has the highest access priority. Within that session, all queries and operations on the table with the same name will only affect the temporary table (except for creating materialized views).
-::::
+:::
 
 ## Usage
 

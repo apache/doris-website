@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::note
+:::info 备注
 Supported since Doris version 2.1.7 / 3.0.2
 :::
 
@@ -31,12 +31,12 @@ Supported since Doris version 2.1.7 / 3.0.2
 为了解决上述问题，Doris 引入临时表类型。临时表是一种临时存在的物化内表，和内表的主要区别是其仅存在于创建它的 Session 中，它的生命周期和当前 Session 绑定。当会话结束时，在其中创建的临时表会被自动删除。从另一方面讲，临时表的可见性也仅在创建它的会话中，即使同一时间同一个用户的另一个会话也不可见。
 
 
-::: note
+:::info 备注
 
 与内表类似，临时表必须在 Internal Catalog 内的某个 Database 下创建。但由于临时表基于 Session，因此其命名不受唯一性约束。您可以在不同 Session 中创建同名临时表，或创建与其他内表同名的临时表。
 
 如果同一 Database 中同时存在同名的临时表和非临时表，临时表具有最高访问优先级。在该 Session 内，所有针对同名表的查询和操作仅对临时表生效（除创建物化视图外）。
-::::
+:::
 
 ## 用法
 
