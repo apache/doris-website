@@ -5,40 +5,34 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
-#### Syntax
+REGR_SLOPE 用于计算一组数值对的最小二乘拟合线性方程的斜率。
 
-` Float64 regr_slope(y, x)`
+## Syntax
+```
+REGR_SLOPE(y, x)
+```
 
-x, y 支持基本数字类型
+## Parameters
+- `y` (数值类型)：因变量。
+- `x` (数值类型)：自变量。
 
-计算线性回归拟合直线的斜率
+x 和 y 都支持基本数值类型。
 
-## EXAMPLE
+## Returned values
+返回数据类型：FLOAT64
 
-我们有如下数据
+函数返回线性回归直线的斜率。
 
+如果没有行，或者只有包含空值的行，函数返回 NULL。
+
+## Examples
 ```sql
-mysql> select * from test;
+-- 示例 1：基本用法
+SELECT regr_slope(y, x) FROM test;
+
+-- 示例 2：在查询中使用示例数据
+SELECT * FROM test;
 +------+------+------+
 | id   | x    | y    |
 +------+------+------+
@@ -48,15 +42,21 @@ mysql> select * from test;
 |    2 |   14 |   27 |
 |    4 |    5 |    6 |
 +------+------+------+
-```
 
-```sql
-mysql> select regr_slope(y,x) from test;
+SELECT regr_slope(y, x) FROM test;
 +--------------------+
 | regr_slope(y, x)   |
 +--------------------+
 | 0.6853448275862069 |
 +--------------------+
 ```
-## KEYWORDS
-REGR_SLOPE
+
+## Usage notes
+- 此函数会忽略任何包含空值的数值对。
+- 在计算结果会导致除以零的情况下，函数将返回 NULL。
+
+## Related functions
+REGR_INTERCEPT, REGR_R2, REGR_COUNT, REGR_AVGX, REGR_AVGY
+
+## References
+有关线性回归函数的更多详细信息，请参阅 SQL 标准文档中关于聚合函数的部分。
