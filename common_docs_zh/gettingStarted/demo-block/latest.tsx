@@ -38,7 +38,7 @@ export default function Latest() {
                         <div style={{ fontSize: 12, marginBottom: 20 }}>在这里，你可以自由的提出和讨论技术问题、分享和收获技术经验、与 Apache Doris 社区的小伙伴进行互动和交流。</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>立即加入</div>
                     </a>
-                    <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v2.1/release-2.1.6`}>
+                    <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v2.0/release-2.0.15`}>
                         <div className="home-page-hero-button-label"><div>版本发布</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -47,9 +47,9 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Apache Doris 2.1.6 正式发布</div>
+                            <div style={{ marginBottom: 10 }}>Apache Doris 2.0.15 正式发布</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>Apache Doris 2.1.6 版本已于 2024 年 9 月 10 日正式发布，在湖仓一体、异步物化视图、半结构化数据管理持续升级改进。</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>Apache Doris 2.0.15 版本提交了 157 个改进项以及问题修复，进一步提升了系统的性能及稳定性，欢迎大家下载体验。</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>查看详情</div>
                     </a>
 
