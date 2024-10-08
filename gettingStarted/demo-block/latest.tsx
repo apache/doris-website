@@ -37,7 +37,7 @@ export default function Latest() {
                         <div style={{ fontSize: 12, marginBottom: 20 }}>A platform to fostering connects within the community for addressing technical inquiries and providing support.</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>Learn more</div>
                     </a>
-                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v2.1/release-2.1.6`}>
+                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v2.0/release-2.0.15`}>
                         <div className="home-page-hero-button-label"><div>Release</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -46,9 +46,9 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Apache Doris 2.1.6 just released</div>
+                            <div style={{ marginBottom: 10 }}>Apache Doris 2.0.15 just released</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>This version brings continuous upgrades and improvements to the Lakehouse, Async Materialized Views and etc.</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>Thanks to our community users and developers, about 157 improvements and bug fixes have been made in Doris 2.0.15 version.</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>Learn more</div>
                     </a>
                 </div>
