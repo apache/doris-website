@@ -55,8 +55,8 @@ bootstrap.servers=127.0.0.1:9092
 # Note: Please fill in the direct path to Kafka here. For example: plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
 
-# It is recommended to increase the max.poll.interval.ms time of kafka to more than 30 minutes, the default is 5 minutes
-# Avoid stream load import data consumption timeout and consumers being kicked out of the consumer group
+# It is recommended to increase the max.poll.interval.ms time of Kafka to more than 30 minutes, the default is 5 minutes
+# Avoid Stream Load import data consumption timeout and consumers being kicked out of the consumer group
 max.poll.interval.ms=1800000
 consumer.max.poll.interval.ms=1800000
 ```
@@ -108,8 +108,8 @@ group.id=connect-cluster
 # Note: Please fill in the direct path to Kafka here. For example: plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
 
-# It is recommended to increase the max.poll.interval.ms time of kafka to more than 30 minutes, the default is 5 minutes
-# Avoid stream load import data consumption timeout and consumers being kicked out of the consumer group
+# It is recommended to increase the max.poll.interval.ms time of Kafka to more than 30 minutes, the default is 5 minutes
+# Avoid Stream Load import data consumption timeout and consumers being kicked out of the consumer group
 max.poll.interval.ms=1800000
 consumer.max.poll.interval.ms=1800000
 ```
