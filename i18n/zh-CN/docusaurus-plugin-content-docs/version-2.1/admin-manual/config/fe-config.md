@@ -2765,3 +2765,10 @@ Doris 为了兼用 mysql 周边工具生态，会内置一个名为 mysql 的数
 默认值：2000
 
 对于自动分区表，防止用户意外创建大量分区，每个 OLAP 表允许的分区数量为`max_auto_partition_num`。默认 2000。
+
+
+#### `profile_manager_gc_interval_seconds`
+
+默认值：1
+
+用于控制 ProfileManager 进行 Profile 垃圾回收的间隔时间，垃圾回收期间 ProfileManager 会把多余的以及过期的 profile 从内存和磁盘中清理掉，节省内存。
