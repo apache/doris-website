@@ -1227,7 +1227,8 @@
                 "ecosystem/bi/tableau",
                 "ecosystem/bi/quicksight",
                 "ecosystem/bi/quickbi",
-                "ecosystem/bi/navicat"
+                "ecosystem/bi/navicat",
+                "ecosystem/bi/smartbi"
             ]
         }
     ],
@@ -1235,7 +1236,8 @@
         "faq/install-faq",
         "faq/data-faq",
         "faq/sql-faq",
-        "faq/lakehouse-faq"
+        "faq/lakehouse-faq",
+        "faq/bi-faq"
     ],
     "releasenotes": [
         "releasenotes/all-release",

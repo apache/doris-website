@@ -70,15 +70,6 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 UDTF is supported starting from Doris version 3.0.
 :::
 
-```sql
-CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
-    "file"="file:///pathTo/java-udaf.jar",
-    "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
-    "always_nullable"="true",
-    "type"="JAVA_UDF"
-);
-```
-
 ## Using UDF
 
 To utilize UDFs, users must possess the `SELECT` privilege for the corresponding database.
@@ -347,25 +338,6 @@ public class MedianUDAF {
     // Executed after each execution unit completes  
     public void destroy(State state) {  
     }  
-}
-```
-
-
-### UDTF
-
-Similar to UDFs, UDTFs require users to implement an `evaluate` method. However, the return value of a UDTF must be of the Array type.
-
-Additionally, table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md).
-
-```JAVA
-public class UDTFStringTest {
-    public ArrayList<String> evaluate(String value, String separator) {
-        if (value == null || separator == null) {
-            return null;
-        } else {
-            return new ArrayList<>(Arrays.asList(value.split(separator)));
-        }
-    }
 }
 ```
 

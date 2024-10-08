@@ -24,26 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## USE
+## 描述
 
-### Name
+USE 命令允许我们在 SQL 环境中切换到特定的数据库或计算组。
 
-USE
-
-### Description
-
-USE 命令可以让我们来使用数据库
-
-语法：
+## 语法
 
 ```SQL
 USE <[CATALOG_NAME].DATABASE_NAME>
 ```
 
-说明:
-1. 使用`USE CATALOG_NAME.DATABASE_NAME`, 会先将当前的Catalog切换为`CATALOG_NAME`, 然后再讲当前的Database切换为`DATABASE_NAME`
-
-### Example
+## 示例
 
 1. 如果 demo 数据库存在，尝试使用它：
 
@@ -58,9 +49,22 @@ USE <[CATALOG_NAME].DATABASE_NAME>
     mysql> use hms_catalog.demo;
     Database changed
     ```
-### Keywords
+3. 如果 demo 数据库在当前目录中存在，并且您想使用名为 'cg1' 的计算组，请尝试访问它：
 
-    USE
+    ```sql
+    mysql> use demo@cg1;
+    Database changed
+    ```
 
-### Best Practice
+4. 如果您只想使用名为 'cg1' 的计算组，请尝试访问它：
 
+    ```sql
+    mysql> use @cg1;
+    Database changed
+    ```
+
+## Relate Commands
+
+## Keywords
+
+    USE, DATABASE, USER, COMPUTE GROUP

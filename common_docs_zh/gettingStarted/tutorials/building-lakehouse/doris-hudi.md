@@ -133,7 +133,7 @@ AS SELECT * FROM customer;
 
 ```sql
 -- 已经创建，无需再次执行
-CREATE CATALOG `hive` PROPERTIES (
+CREATE CATALOG `hudi` PROPERTIES (
     "type"="hms",
     'hive.metastore.uris' = 'thrift://hive-metastore:9083',
     "s3.access_key" = "minio",
@@ -148,7 +148,7 @@ CREATE CATALOG `hive` PROPERTIES (
 
 	```sql
 	-- ./login-doris.sh
-	doris> REFRESH CATALOG hive;
+	doris> REFRESH CATALOG hudi;
 	```
 
 2. 使用 Spark 操作 Hudi 中的数据，都可以在 Doris 中实时可见，不需要再次刷新 Catalog。我们通过 Spark 分别给 COW 和 MOR 表插入一行数据：
@@ -161,7 +161,7 @@ CREATE CATALOG `hive` PROPERTIES (
 3. 通过 Doris 可以直接查询到最新插入的数据：
 
 	```sql
-	doris> use hive.default;
+	doris> use hudi.default;
 	doris> select * from customer_cow where c_custkey = 100;
 	doris> select * from customer_mor where c_custkey = 100;
 	```

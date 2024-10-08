@@ -24,61 +24,135 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## REVOKE
+## Description
 
-### Name
+The REVOKE command is used to:
 
-REVOKE
+1. Revoke specified privileges from a user or role.
+2. Revoke specified roles previously granted to a user.
 
-### Description
+## Syntax
 
-The REVOKE command has the following functions:
-
-1. Revoke the specified permission of a user or a role.
-2. Revoke the specified role previously granted to a user.
-
->Note that.
->
->"Revoke the specified roles previously granted to a user" is supported in versions 2.0 and later
-
-```sql
-REVOKE privilege_list ON db_name[.tbl_name] FROM user_identity [ROLE role_name]
+REVOKE privilege_list ON priv_level FROM user_identity [ROLE role_name]
 
 REVOKE privilege_list ON RESOURCE resource_name FROM user_identity [ROLE role_name]
 
+REVOKE privilege_list ON WORKLOAD GROUP workload_group_name FROM user_identity [ROLE role_name]
+
+REVOKE privilege_list ON COMPUTE GROUP compute_group_name FROM user_identity [ROLE role_name]
+
+REVOKE privilege_list ON STORAGE VAULT storage_vault_name FROM user_identity [ROLE role_name]
+
 REVOKE role_list FROM user_identity
-```
 
-user_identity:
+## Parameters
 
-The user_identity syntax here is the same as CREATE USER. And must be a user_identity created with CREATE USER. The host in user_identity can be a domain name. If it is a domain name, the revocation time of permissions may be delayed by about 1 minute.
+### privilege_list
 
-It is also possible to revoke the permissions of the specified ROLE, the executed ROLE must exist.
+A comma-separated list of privileges to be revoked. Supported privileges include:
 
-role_list is the list of roles to be revoked, separated by commas. The specified roles must exist.
+- NODE_PRIV: Cluster node operation permissions
+- ADMIN_PRIV: Administrator privileges
+- GRANT_PRIV: Authorization privileges
+- SELECT_PRIV: Query privileges
+- LOAD_PRIV: Data import privileges
+- ALTER_PRIV: Modification privileges
+- CREATE_PRIV: Creation privileges
+- DROP_PRIV: Deletion privileges
+- USAGE_PRIV: Usage privileges
+- SHOW_VIEW_PRIV: Privileges to view view definitions
 
-### Example
+### priv_level
 
-1. Revoke the permission of user jack database testDb
+Specifies the scope of the privileges. Supported formats:
 
-    ```sql
-    REVOKE SELECT_PRIV ON db1.* FROM 'jack'@'192.%';
-    ```
+- *.*.*: All catalogs, databases, and tables
+- catalog_name.*.*: All databases and tables in the specified catalog
+- catalog_name.db.*: All tables in the specified database
+- catalog_name.db.tbl: Specific table in the specified database
 
-2. Revoke user jack resource spark_resource permission
+### resource_name
 
-    ```sql
-    REVOKE USAGE_PRIV ON RESOURCE 'spark_resource' FROM 'jack'@'192.%';
-    ```
-3. Revoke the roles role1 and role2 previously granted to jack
+Specifies the resource scope. Supports % (matches any string) and _ (matches any single character) wildcards.
 
-    ```sql
-    REVOKE 'role1','role2' FROM 'jack'@'192.%';
-    ```
+### workload_group_name
 
-### Keywords
+Specifies the workload group name. Supports % (matches any string) and _ (matches any single character) wildcards.
 
-    REVOKE
+### compute_group_name
 
-### Best Practice
+Specifies the compute group name. Supports % (matches any string) and _ (matches any single character) wildcards.
+
+### storage_vault_name
+
+Specifies the storage vault name. Supports % (matches any string) and _ (matches any single character) wildcards.
+
+### user_identity
+
+Specifies the user from whom privileges are being revoked. Must be a user created with CREATE USER. The host in user_identity can be a domain name. If it's a domain name, the revocation of privileges may be delayed by about 1 minute.
+
+### role_name
+
+Specifies the role from which privileges are being revoked. The role must exist.
+
+### role_list
+
+A comma-separated list of roles to be revoked. All specified roles must exist.
+
+## Examples
+
+1. Revoke SELECT privilege on a specific database from a user:
+
+   REVOKE SELECT_PRIV ON db1.* FROM 'jack'@'192.%';
+
+2. Revoke usage privilege on a resource from a user:
+
+   REVOKE USAGE_PRIV ON RESOURCE 'spark_resource' FROM 'jack'@'192.%';
+
+3. Revoke roles from a user:
+
+   REVOKE 'role1','role2' FROM 'jack'@'192.%';
+
+4. Revoke usage privilege on a workload group from a user:
+
+   REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'jack'@'%';
+
+5. Revoke usage privilege on all workload groups from a user:
+
+   REVOKE USAGE_PRIV ON WORKLOAD GROUP '%' FROM 'jack'@'%';
+
+6. Revoke usage privilege on a workload group from a role:
+
+   REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM ROLE 'test_role';
+
+7. Revoke usage privilege on a compute group from a user:
+
+   REVOKE USAGE_PRIV ON COMPUTE GROUP 'group1' FROM 'jack'@'%';
+
+8. Revoke usage privilege on a compute group from a role:
+
+   REVOKE USAGE_PRIV ON COMPUTE GROUP 'group1' FROM ROLE 'my_role';
+
+9. Revoke usage privilege on a storage vault from a user:
+
+   REVOKE USAGE_PRIV ON STORAGE VAULT 'vault1' FROM 'jack'@'%';
+
+10. Revoke usage privilege on a storage vault from a role:
+
+   REVOKE USAGE_PRIV ON STORAGE VAULT 'vault1' FROM ROLE 'my_role';
+
+
+## Related Commands
+
+- [GRANT](./GRANT.md)
+- [SHOW GRANTS](../Show-Statements/SHOW-GRANTS.md)
+- [CREATE ROLE](./CREATE-ROLE.md)
+- [CREATE WORKLOAD GROUP](../Administration-Statements/CREATE-WORKLOAD-GROUP.md)
+- [CREATE COMPUTE GROUP](../Administration-Statements/CREATE-COMPUTE-GROUP.md)
+- [CREATE RESOURCE](../Administration-Statements/CREATE-RESOURCE.md)
+- [CREATE STORAGE VAULT](../Administration-Statements/CREATE-STORAGE-VAULT.md)
+
+## Keywords
+
+    REVOKE, WORKLOAD GROUP, COMPUTE GROUP, RESOURCE, STORAGE VAULT
 

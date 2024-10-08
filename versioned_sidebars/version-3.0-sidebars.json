@@ -32,6 +32,7 @@
                                     "label": "Compute-storage coupled",
                                     "items": [
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-operator",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-quickstart",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-access-cluster",
@@ -125,18 +126,23 @@
                     "label": "Loading Data",
                     "items": [
                         "data-operate/import/load-manual",
-                        "data-operate/import/stream-load-manual",
-                        "data-operate/import/broker-load-manual",
-                        "data-operate/import/routine-load-manual",
-                        "data-operate/import/insert-into-manual",
-                        "data-operate/import/mysql-load-manual",
-                        "data-operate/import/load-json-format",
-                        "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-atomicity",
+                        {
+                            "type": "category",
+                            "label": "Import Way",
+                            "items": [
+                                "data-operate/import/import-way/stream-load-manual",
+                                "data-operate/import/import-way/broker-load-manual",
+                                "data-operate/import/import-way/routine-load-manual",
+                                "data-operate/import/import-way/insert-into-manual",
+                                "data-operate/import/import-way/mysql-load-manual",
+                                "data-operate/import/import-way/group-commit-manual"
+                            ]
+                        },
+                        "data-operate/import/load-data-format",
+                        "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
-                        "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode"
+                        "data-operate/import/load-high-availability",
+                        "data-operate/import/migrate-data-from-other-olap"
                     ]
                 },
                 {
@@ -218,14 +224,6 @@
                 },
                 {
                     "type": "category",
-                    "label": "Pipeline Execution Engine",
-                    "items": [
-                        "query/pipeline/pipeline-execution-engine",
-                        "query/pipeline/pipeline-x-execution-engine"
-                    ]
-                },
-                {
-                    "type": "category",
                     "label": "Caches",
                     "items": [
                         "query/query-cache/query-cache",
@@ -261,6 +259,7 @@
                         "query/duplicate/using-hll"
                     ]
                 },
+                "query/pipeline/pipeline-execution-engine",
                 "query/high-concurrent-point-query",
                 "query/topn-query",
                 {
@@ -383,8 +382,13 @@
                     "items": [
                         "admin-manual/resource-admin/workload-group",
                         "admin-manual/resource-admin/workload-policy",
-                        "admin-manual/resource-admin/workload-system-table",
-                        "admin-manual/resource-admin/multi-tenant"
+                        "admin-manual/resource-admin/workload-analysis",
+                        "admin-manual/resource-admin/multi-tenant",
+                        "admin-manual/resource-admin/workload-fusing",
+                        "admin-manual/resource-admin/use-workload-mem-limit",
+                        "admin-manual/resource-admin/use-workload-cpu-limit",
+                        "admin-manual/resource-admin/use-workload-local-io-limit",
+                        "admin-manual/resource-admin/use-workload-remote-io-limit"
                     ]
                 },
                 {
@@ -881,6 +885,7 @@
                                 "sql-manual/sql-functions/string-functions/split-by-string",
                                 "sql-manual/sql-functions/string-functions/substring-index",
                                 "sql-manual/sql-functions/string-functions/money-format",
+                                "sql-manual/sql-functions/string-functions/ngram-search",
                                 "sql-manual/sql-functions/string-functions/parse-url",
                                 "sql-manual/sql-functions/string-functions/quote",
                                 "sql-manual/sql-functions/string-functions/url-decode",
@@ -975,6 +980,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
+                                "sql-manual/sql-functions/aggregate-functions/linear-histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-and",
@@ -997,7 +1003,9 @@
                                 "sql-manual/sql-functions/aggregate-functions/regr_sxy",
                                 "sql-manual/sql-functions/aggregate-functions/regr_syy",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
-                                "sql-manual/sql-functions/aggregate-functions/sequence-count"
+                                "sql-manual/sql-functions/aggregate-functions/sequence-count",
+                                "sql-manual/sql-functions/aggregate-functions/kurt",
+                                "sql-manual/sql-functions/aggregate-functions/skew"
                             ]
                         },
                         {
@@ -1646,7 +1654,8 @@
                 "ecosystem/bi/tableau",
                 "ecosystem/bi/quicksight",
                 "ecosystem/bi/quickbi",
-                "ecosystem/bi/navicat"
+                "ecosystem/bi/navicat",
+                "ecosystem/bi/smartbi"
             ]
         }
     ],
@@ -1654,7 +1663,8 @@
         "faq/install-faq",
         "faq/data-faq",
         "faq/sql-faq",
-        "faq/lakehouse-faq"
+        "faq/lakehouse-faq",
+        "faq/bi-faq"
     ],
     "releasenotes": [
         "releasenotes/all-release",
