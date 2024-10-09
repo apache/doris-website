@@ -484,6 +484,10 @@ UNIQUE KEY(k1, k2)
 
     动态分区相关参考[分区分桶 - 动态分区](../../../../table-design/data-partition.md#动态分区)
 
+* `file_cache_ttl_seconds`:
+
+    存算分离模式下 TTL 类型 File Cache 的过期时间。
+
 ### Example
 
 1. 创建一个明细模型的表

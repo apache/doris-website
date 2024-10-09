@@ -344,7 +344,7 @@
                 "compute-storage-decoupled/overview",
                 "compute-storage-decoupled/before-deployment",
                 "compute-storage-decoupled/compilation-and-deployment",
-                "compute-storage-decoupled/creating-cluster",
+                "compute-storage-decoupled/managing-storage-vault",
                 "compute-storage-decoupled/managing-compute-cluster",
                 "compute-storage-decoupled/file-cache",
                 "compute-storage-decoupled/meta-service-api"

@@ -2735,3 +2735,23 @@ Doris 为了兼用 mysql 周边工具生态，会内置一个名为 mysql 的数
 默认值：2000
 
 对于自动分区表，防止用户意外创建大量分区，每个 OLAP 表允许的分区数量为`max_auto_partition_num`。默认 2000。
+
+### 计算与存储分离模式
+
+#### `cluster_id`
+
+默认值：-1
+
+如果节点（FE 或 BE）具有相同的集群 ID，则将认为它们属于同一个 Doris 集群。您应该在计算和存储分离模式中指定一个随机整数。
+
+#### `deploy_mode`
+
+默认值： ""
+
+描述：FE 运行的模式。`cloud` 表示解耦的存储-计算模式。
+
+#### `meta_service_endpoint`
+
+默认值： ""
+
+Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。此配置对于存储和计算分离模式是必要的。
