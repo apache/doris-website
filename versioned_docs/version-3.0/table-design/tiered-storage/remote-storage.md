@@ -1,6 +1,6 @@
 ---
 {
-"title": "Tiered Storage",
+"title": "Remote Storage",
 "language": "en"
 }
 ---
