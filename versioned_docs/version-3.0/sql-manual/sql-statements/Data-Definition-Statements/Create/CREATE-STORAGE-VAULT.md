@@ -40,65 +40,32 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 
 #### properties
 
-* `type`
-
-   Only two types of vaults are allowed: S3 and HDFS. -- Required
+| param  | is required | desc                                                   |
+|:-------|:------------|:-------------------------------------------------------|
+| `type` | required    | Only two types of vaults are allowed: `S3` and `HDFS`. |
 
 ##### S3 Vault
 
-* `s3.endpoint`
-
-   The endpoint used for object storage. **Notice**, please don't provide the endpoint with any `http://` or `https://`. And for Azure Blob Storage, the endpoint should be like `${ak}.blob.core.windows.net/`. -- Required
-
-* `s3.region`
-
-   The region of your bucket.(Not required when you'r using GCP or AZURE). -- Required
-
-* `s3.root.path`
-
-   The path where the data would be stored. -- Required
-
-* `s3.bucket`
-
-    The bucket of your object storage account. (StorageAccount if you're using Azure). -- Required
-
-* `s3.access_key`
-
-   The access key of your object storage account. (AccountName if you're using Azure). -- Required
-
-* `s3.secret_key`
-
-   The secret key of your object storage account. (AccountKey if you're using Azure). -- Required
-
-* `provider`
-
-   The cloud vendor which provides the object storage service. -- Required 
+| param           | is required | desc                                                                                                                                                                                                               |
+|:----------------|:------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `s3.endpoint`   | required    | The endpoint used for object storage. <br/>**Notice**, please don't provide the endpoint with any `http://` or `https://`. And for Azure Blob Storage, the endpoint should be like `${ak}.blob.core.windows.net/`. |
+| `s3.region`     | required    | The region of your bucket.(Not required when you'r using GCP or AZURE).                                                                                                                               |
+| `s3.root.path`  | required    | The path where the data would be stored.                                                                                                                                |
+| `s3.bucket`     | required    | The bucket of your object storage account. (StorageAccount if you're using Azure).                                                                                                                                |
+| `s3.access_key` | required    | The access key of your object storage account. (AccountName if you're using Azure).                                                                                                                                |
+| `s3.secret_key` | required    | The secret key of your object storage account. (AccountKey if you're using Azure).                                                                                                                                |
+| `provider`      | required    | The cloud vendor which provides the object storage service. The supported values include `COS`, `OSS`, `S3`, `OBS`, `BOS`, `AZURE`, `GCP`                                                                                                                                |
 
 ##### HDFS Vault
 
-* `fs.defaultFS`
-
-   Hadoop configuration property that specifies the default file system to use. -- Required
-
-* `path_prefix`
-
-   The path prefix to where the data would be stored. -- optional. It would be the root_path of your Hadoop user if you don't provide any prefix.
-
-* `hadoop.username`
-
-   Hadoop configuration property that specifies the user accessing the file system. -- optional. It would be the user starting Hadoop process if you don't provide any user.
-
-* `hadoop.security.authentication`
-
-   The authentication way used for hadoop. -- optional. If you'd like to use kerberos you can provide with `kerboros`.
-
-* `hadoop.kerberos.principal`
-
-   The path to your kerberos principal. -- optional
-
-* `hadoop.kerberos.keytab`
-
-   The path to your kerberos keytab. -- optional
+| param                            | is required | desc                                                                                                                                                         |
+|:---------------------------------|:------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `fs.defaultFS`                   | required    | Hadoop configuration property that specifies the default file system to use.                                                                                 |
+| `path_prefix`                    | optional    | The path prefix to where the data would be stored. It would be the root_path of your Hadoop user if you don't provide any prefix.                            |
+| `hadoop.username`                | optional    | Hadoop configuration property that specifies the user accessing the file system. It would be the user starting Hadoop process if you don't provide any user. |
+| `hadoop.security.authentication` | optional    | The authentication way used for hadoop. If you'd like to use kerberos you can provide with `kerboros`.                                                       |
+| `hadoop.kerberos.principal`      | optional    | The path to your kerberos principal.                                                       |
+| `hadoop.kerberos.keytab`         | optional    | The path to your kerberos keytab.                                                       |
 
 
 ### Example
@@ -185,6 +152,20 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "provider" = "S3"
         );
     ```
+7. create a S3 storage vault using MinIO.
+   ```sql
+    CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+        PROPERTIES (
+        "type"="S3",
+        "s3.endpoint"="127.0.0.1:9000",
+        "s3.access_key" = "ak",
+        "s3.secret_key" = "sk",
+        "s3.region" = "us-east-1",
+        "s3.root.path" = "ssb_sf1_p2_s3",
+        "s3.bucket" = "doris-build-1308700295",
+        "provider" = "S3"
+        );
+   ```
 
 ### Keywords
 
