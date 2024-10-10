@@ -54,6 +54,11 @@ bootstrap.servers=127.0.0.1:9092
 # 修改为创建的 plugins 目录
 # 注意：此处请填写 Kafka 的直接路径。例如：plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
+
+# 建议将 Kafka 的 max.poll.interval.ms 时间调大到 30 分钟以上，默认 5 分钟
+# 避免 Stream Load 导入数据消费超时，消费者被踢出消费群组
+max.poll.interval.ms=1800000
+consumer.max.poll.interval.ms=1800000
 ```
 
 配置 doris-connector-sink.properties
@@ -103,6 +108,11 @@ group.id=connect-cluster
 # 修改为创建的 plugins 目录
 # 注意：此处请填写 Kafka 的直接路径。例如：plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
+
+# 建议将 Kafka 的 max.poll.interval.ms 时间调大到 30 分钟以上，默认 5 分钟
+# 避免 Stream Load 导入数据消费超时，消费者被踢出消费群组
+max.poll.interval.ms=1800000
+consumer.max.poll.interval.ms=1800000
 ```
 
 
