@@ -100,12 +100,6 @@ JDBC 驱动程序以及连接器自动使用传输层安全性 (TLS) 加密和�
 
 ## 查询优化
 
-### 统计信息
-
-Doris 会在 Catalog 中维护表的统计信息，以便在执行查询时能够更好地优化查询计划。
-
-可以查看 [外表统计信息](../external-statistics) 了解如何收集统计信息。
-
 ### 谓词下推
 
 当执行类似于 `where dt = '2022-01-01'` 这样的查询时，Doris 能够将这些过滤条件下推到外部数据源，从而直接在数据源层面排除不符合条件的数据，减少了不必要的数据获取和传输。这大大提高了查询性能，同时也降低了对外部数据源的负载。
@@ -120,13 +114,37 @@ Doris 会在下发到 SQL Server 的查询语句中，自动在字段名与表�
 
 ## 常见问题
 
-1. 读取 SQLServer 出现通信链路异常
+1. 连接 SQL Server 出现证书认证异常
 
     ```
-    ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[CANCELLED][INTERNAL_ERROR]UdfRuntimeException: Initialize datasource failed:
-    CAUSED BY: SQLServerException: The driver could not establish a secure connection to SQL Server by using Secure Sockets Layer (SSL) encryption.
+    SQLServerException: The driver could not establish a secure connection to SQL Server by using Secure Sockets Layer (SSL) encryption.
     Error: "sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException:
     unable to find valid certification path to requested target". ClientConnectionId:a92f3817-e8e6-4311-bc21-7c66
     ```
 
    可在创建 Catalog 的 `jdbc_url` 把JDBC连接串最后增加 `encrypt=false` ，如 `"jdbc_url" = "jdbc:sqlserver://127.0.0.1:1433;DataBaseName=doris_test;encrypt=false"`
+
+2. 连接 SQL Server 出现 TLS 异常
+
+   ```
+   The server selected protocol version TLS10 is not accepted by client preferences [TLS13, TLS12]
+   ```
+
+   这是因为 SQL Server 与 JDBC 客户端之间的 TLS 协议版本不匹配。连接的 SQL Server 仅支持 TLS 1.0，而 JDBC 客户端所在 JAVA 环境默认禁用了 TLS 1.0。
+
+   解决方式如下：
+   1. 在 SQL Server 上启用 TLS 1.2。
+      参考：[SQL Server TLS 1.2 支持](https://learn.microsoft.com/zh-cn/troubleshoot/sql/database-engine/connect/tls-1-2-support-microsoft-sql-server)
+   2. 启用 JDK 的 TLS 1.0。
+      ```shell
+      vim ${JAVA_HOME}/lib/security/java.security
+      #找到这段
+      jdk.tls.disabledAlgorithms=SSLv3, TLSv1, TLSv1.1, RC4, DES, MD5withRSA, \
+      DH keySize < 1024, EC keySize < 224, 3DES_EDE_CBC, anon, NULL, \
+      include jdk.disabled.namedCurves
+      
+      #删掉其中的TLSv1, TLSv1.1 , 改成下面这样即可
+      jdk.tls.disabledAlgorithms=SSLv3, RC4, DES, MD5withRSA, \
+      DH keySize < 1024, EC keySize < 224, anon, NULL, \
+      include jdk.disabled.namedCurves
+      ```

@@ -4,8 +4,8 @@ const transformPathWithoutZhCN = (pathname: string): string => {
         return `${pathname.replace(/^\/docs\/(?:2\.1|2\.0|1\.2|dev)/, '').replace('/docs','').replace(/\/$/, '')}.md`;
     } else {
         const pathWithoutDocs = pathname.replace('/docs', '');
-        if (pathname.includes('/2.1')) {
-            return `/versioned_docs/version-2.1${pathWithoutDocs.replace('/2.1', '')}.md`;
+        if (pathname.includes('/3.0')) {
+            return `/versioned_docs/version-2.1${pathWithoutDocs.replace('/3.0', '')}.md`;
         } else if (pathname.includes('/2.0')) {
             return `/versioned_docs/version-2.0${pathWithoutDocs.replace('/2.0', '')}.md`;
         } else if (pathname.includes('/1.2')) {
@@ -13,7 +13,7 @@ const transformPathWithoutZhCN = (pathname: string): string => {
         } else if (pathname.includes('/dev')) {
             return `/docs${pathWithoutDocs.replace('/dev', '')}.md`;
         } else {
-            return `/versioned_docs/version-3.0${pathWithoutDocs}.md`;
+            return `/versioned_docs/version-2.1${pathWithoutDocs}.md`;
         }
     }
 };
@@ -30,8 +30,8 @@ const transformPathWithZhCN = (pathname: string): string => {
     } else if (pathname.includes('/releasenotes')) {
         return `/common_docs_zh/releasenotes/${pathname.replace(/^\/zh-CN\/docs(?:\/(?:2\.1|2\.0|1\.2|dev))?\/releasenotes\//,'')}.md`;
     } else if (pathname.includes('/docs')) {
-        if (pathname.includes('/2.1')) {
-            return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1${pathname.replace('/zh-CN/docs/2.1', '')}.md`;
+        if (pathname.includes('/3.0')) {
+            return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0${pathname.replace('/zh-CN/docs/3.0', '')}.md`;
         } else if (pathname.includes('/2.0')) {
             return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0${pathname.replace('/zh-CN/docs/2.0', '')}.md`;
         } else if (pathname.includes('/1.2')) {
@@ -39,7 +39,7 @@ const transformPathWithZhCN = (pathname: string): string => {
         } else if (pathname.includes('/dev')) {
             return `/i18n/zh-CN/docusaurus-plugin-content-docs/current${pathname.replace('/zh-CN/docs/dev', '')}.md`;
         } else {
-            return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0${pathname.replace('/zh-CN/docs', '')}.md`;;
+            return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1${pathname.replace('/zh-CN/docs', '')}.md`;;
         }
     } else {
         return pathname;

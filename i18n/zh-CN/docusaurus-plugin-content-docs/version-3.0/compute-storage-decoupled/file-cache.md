@@ -24,39 +24,102 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在存算分离架构下，数据存储在远端存储上。为了加速数据访问，Doris 实现了一个基于本地硬盘的缓存机制，并提供两种高效的缓存管理策略：LRU 策略和 TTL 策略，对索引相关的数据进行了优化，旨在最大程度上缓存用户常用数据。
+在存算分离的架构中，数据被存储在远程存储。Doris数据库通过利用本地硬盘上的缓存来加速数据访问，并采用了一种先进的多队列LRU（Least Recently Used）策略来高效管理缓存空间。这种策略特别优化了索引和元数据的访问路径，旨在最大化地缓存用户频繁访问的数据。针对多计算组（Compute Group）的应用场景，Doris还提供了缓存预热功能，以便在新计算组建立时，能够迅速加载特定数据（如表或分区）到缓存中，从而提升查询性能。
 
-在涉及多计算集群（Compute Cluster）的应用场景中，Doris 提供缓存预热功能。当新计算集群建立时，用户可以选择对特定的数据（如表或分区）进行预热，以提高查询效率。
+## 多队列 LRU
 
-## 缓存空间管理
+### LRU
 
-### 缓存数据
+ * LRU通过维护一个数据访问队列来管理缓存。当数据被访问时，该数据会被移动到队列的前端。新加入缓存的数据同样会被置于队列前端，以防止其过早被淘汰。当缓存空间达到上限时，队列尾部的数据将优先被移除。
 
-数据主要通过以下三种方式进入缓存：
+### TTL (Time-To-Live)
 
-- **导入**：新导入的数据将异步写入缓存，以加速数据的首次访问。
-- **查询**：如果查询所需数据不在缓存中，系统将从远端存储读取该数据至内存，并同时写入缓存，以便后续查询。
-- **主动预热**：尽管远端存储的数据可实现多计算集群共享，但缓存数据并不会共享。当新计算集群创建时，缓存为空，此时可主动预热，使集群迅速从远端存储拉取所需数据至本地缓存。
+  * TTL策略确保新导入的数据在缓存中保留一段时间不被淘汰。在这段时间内，数据具有最高优先级，且所有TTL数据之间地位平等。当缓存空间不足时，系统会优先淘汰其它队列中的数据，以确保TTL数据能够被写入缓存。
 
-### 缓存淘汰
+  * 应用场景：TTL策略特别适用于希望在本地持久化的小规模数据表。对于常驻表，可以设置较长的TTL值来保护其数据；对于动态分区的数据表，可以根据Hot Partition的活跃时间设定相应的TTL值。
 
-Doris 支持 LRU 和 TTL 两种缓存管理策略。
+  * 注意事项：目前系统不支持直接查看TTL数据在缓存中的占比。
 
-- **LRU 策略**：作为默认策略，LRU 通过维护一个队列来管理数据。当队列中某块数据被访问时，该数据将被移至队列前端。新写入缓存的数据同样置于队列前端，以避免过早被淘汰。当缓存空间已满时，队列尾部的数据将被优先淘汰。
-- **TTL 策略**：旨在确保新导入的数据在缓存中保留一段时间不被淘汰（过期时间 = 导入时间 + 设定的超时时间）。TTL 策略下的数据在缓存中具有最高地位，且 TTL 数据之间互相平等。当缓存已满时，系统会通过淘汰 LRU 队列中的数据来确保 TTL 数据能够写入缓存。同时，所有 TTL 策略下的数据并不会因过期时间差异而被区别对待。当 TTL 数据占据全部缓存空间时，新导入的数据（无论是否设置 TTL）或从远端存储拉取的冷数据，均不会被写入缓存。
-  -  TTL 策略可以应用于期望在本地持久化的小规模数据表。对于此类常驻表，可设置一个相对较大的 TTL 值，以确保其在缓存中的数据不会因其他大型数据表的查询操作而被过早淘汰。
+### 多队列
 
-  -  此外，对于采用动态分区策略的数据表，可以根据分区中 Hot Partition 的活跃时间，针对性地设定相应的 TTL 值，从而保障 Hot Partition 的数据在缓存中的留存，避免其被 Cold Partition 的查询操作所影响。
+ * Doris采用基于LRU的多队列策略，根据TTL属性和数据属性将数据分为四类，并分别置于TTL队列、Index队列、NormalData队列和Disposable队列中。设置了TTL属性的数据被放置到TTL队列，没有设置TTL属性的索引数据被放置到Index队列，没有设置TTL属性的索引数据被放置到NormalData队列，临时使用的数据被放置到Disposable队列中。
 
-  -  目前，系统暂不支持直接查看 TTL 数据在缓存中的占比。
+* 在数据读取和写入过程中，Doris会地选择填充和读取的队列，以最大化缓存利用率。具体机制如下：
 
-### 缓存预热
+| 操作          | 未命中时填充的队列 | 写入数据时填充的队列    |
+| ------------- | ----------------------| ---------- |
+| 导入          | TTL / Index / NormalData  | TTL / Index / NormalData    |
+| 查询          | TTL / Index / NormalData              | N/A        |
+| schema change | Disposable            | TTL / Index / NormalData     |
+| compaction    | Disposable            | TTL / Index / NormalData    |
+| 预热          | N/A                    | TTL / Index / NormalData     |
 
-在存算分离模式下，Doris 支持多计算集群部署，各计算集群间共享数据但不共享缓存。当新计算集群创建时，其缓存处于空置状态，此时查询性能可能受到影响。为此，Doris 提供缓存预热功能，允许用户主动从远端存储拉取数据至本地缓存。目前，该功能支持以下三种模式：
 
-- **计算集群间预热**：将计算集群 A 的缓存数据预热至计算集群 B 中。Doris 会定期收集各计算集群在一段时间内被访问的表/分区的热点信息，并作为内部表存储下来，预热时根据这些信息选择性地预热某些表/分区。
-- **表数据预热**：指定将表 A 的数据预热至新计算集群。
-- **分区数据预热**：指定将表 A 的分区`p1`的数据预热至新集群。
+### 淘汰
+
+为了最大化利用缓存空间对数据访问的加速，Doris 会尽可能多的利用缓存的可用空间，缓存的淘汰有两种触发时机：删除远程存储数据或者写入缓存空间不足。删除远程存储数据时直接删除了缓存中对应的数据，写入缓存空间不足时，会按照 Disposable 、 Normal Data、Index、TTL 的顺序淘汰。TTL 队列的数据过期时会被移动到 Normal Data 队列。
+
+## 缓存预热
+
+在存算分离模式下，Doris 支持多计算组部署，各计算组间共享数据但不共享缓存。新计算组创建时，其缓存为空，可能影响查询性能。为此，Doris 提供缓存预热功能，允许用户从远端存储主动拉取数据至本地缓存。该功能支持以下三种模式：
+
+- **计算组间预热**：将计算组 A 的缓存数据预热至计算组 B。Doris 定期收集各计算组在一段时间内被访问的表/分区的热点信息，并根据这些信息选择性地预热某些表/分区。
+- **表数据预热**：指定将表 A 的数据预热至新计算组。
+- **分区数据预热**：指定将表 A 的分区 `p1` 的数据预热至新计算组。
+
+## Compute Group 扩缩容
+
+Compute Group 扩缩容时，为了避免 Cache 波动，Doris 会首先对受影响的 Tablet 重新映射并预热数据。
+
+## 缓存观测
+
+### 热点信息
+
+Doris 每 10 分钟收集各个计算组的缓存热点信息到内部系统表，您可以通过 `SHOW CACHE HOTSPOT '/'` 命令查看热点信息。
+
+### Cache 空间以及命中率
+
+Doris BE 节点通过 `curl {be_ip}:{brpc_port}/vars ( brpc_port 默认为 8060 ) 获取 cache 统计信息，指标项的名称开始为磁盘路径。
+
+上述例子中指标前缀为 File Cache 的路径, 例如前缀 "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" 表示 "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
+去掉前缀的部分为统计指标, 比如 "file_cache_cache_size" 表示当前 路径的 File Cache 大小为 26111 字节
+
+下表为全部的指标意义 (一下表示size大小单位均为字节)
+
+指标名称(不包含路径前缀) | 语义
+-----|------
+file_cache_cache_size | 当前 File Cache 的总大小
+file_cache_disposable_queue_cache_size | 当前 disposable 队列的大小
+file_cache_disposable_queue_element_count | 当前 disposable 队列里的元素个数
+file_cache_disposable_queue_evict_size | 从启动到当前 disposable 队列总共淘汰的数据量大小
+file_cache_index_queue_cache_size | 当前 index 队列的大小
+file_cache_index_queue_element_count | 当前 index 队列里的元素个数
+file_cache_index_queue_evict_size | 从启动到当前 index 队列总共淘汰的数据量大小
+file_cache_normal_queue_cache_size | 当前 normal 队列的大小
+file_cache_normal_queue_element_count | 当前 normal 队列里的元素个数
+file_cache_normal_queue_evict_size | 从启动到当前 normal 队列总共淘汰的数据量大小
+file_cache_total_evict_size | 从启动到当前, 整个 File Cache 总共淘汰的数据量大小
+file_cache_ttl_cache_evict_size | 从启动到当前 TTL 队列总共淘汰的数据量大小
+file_cache_ttl_cache_lru_queue_element_count | 当前 TTL 队列里的元素个数
+file_cache_ttl_cache_size | 当前 TTL 队列的大小
+
+### SQL profile
+
+SQL profile 中 cache 相关的指标在 SegmentIterator 下，包括
+
+| 指标名称                     | 语义      |
+|------------------------------|---------|
+| BytesScannedFromCache        | 从 File Cache 读取的数据量    |
+| BytesScannedFromRemote       | 从远程存储读取的数据量    |
+| BytesWriteIntoCache          | 写入 File Cache 的数据量    |
+| LocalIOUseTimer              | 读取 File Cache 的耗时     |
+| NumLocalIOTotal              | 读取 File Cache 的次数       |
+| NumRemoteIOTotal             | 读取远程存储的次数       |
+| NumSkipCacheIOTotal          | 从远程存储读取并没有进入 File Cache 的次数       |
+| RemoteIOUseTimer             | 读取远程存储的耗时     |
+| WriteCacheIOUseTimer         | 写 File Cache 的耗时     |
+
+您可以通过 [查询性能分析](../query/query-analysis/query-analytics) 查看查询性能分析。
 
 ## 使用方法
 
@@ -95,111 +158,66 @@ ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
 修改后的 TTL 值并不会立即生效，而会存在一定的延迟。
 
 如果在建表时没有设置 TTL，用户同样可以通过执行 ALTER 语句来修改表的 TTL 属性。
-
 :::
 
 ### 缓存预热
 
 目前支持三种缓存预热模式：
 
-- 将 `cluster_name0` 的缓存数据预热到 `cluster_name1` 。 
+- 将 `compute_group_name0` 的缓存数据预热到 `compute_group_name1` 。
 
-当执行以下 SQL 时，`cluster_name1` 计算集群会获取 `cluster_name0` 计算集群的访问信息，来尽可能还原出与 `cluster_name0` 集群一致的缓存。
+当执行以下 SQL 时，`compute_group_name1` 计算组会获取 `compute_group_name0` 计算组的访问信息，来尽可能还原出与 `compute_group_name0` 计算组一致的缓存。
 
-```Plain
-warm up cluster cluster_name1 with cluster cluster_name0
+```sql
+WARM UP COMPUTE GROUP compute_group_name1 WITH COMPUTE GROUP compute_group_name0
 ```
 
-查看当前所有计算集群中最频繁访问的表。
+查看当前所有计算组中最频繁访问的表。
 
-```Plain
-show cache hotspot '/';
-+------------------------+-----------------------+----------------------------------------+
-| cluster_name           | total_file_cache_size | top_table_name                         |
-+------------------------+-----------------------+----------------------------------------+
-| cluster_name0          |          751620511367 | regression_test.doris_cache_hotspot    |
-+------------------------+-----------------------+----------------------------------------+
+```sql
+SHOW CACHE HOTSPOT '/';
 ```
 
-查看 `cluster_name0` 下的所有表中最频繁访问的 Partition 。
+查看 `compute_group_name0` 下的所有表中最频繁访问的 Partition 。
 
-```Plain
-mysql> show cache hotspot '/cluster_name0';
-+-----------------------------------------------------------+---------------------+--------------------+
-| table_name                                                | last_access_time    | top_partition_name |
-+-----------------------------------------------------------+---------------------+--------------------+
-| regression_test.doris_cache_hotspot                       | 2023-05-29 12:38:02 | p20230529          |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.customer | 2023-06-06 10:56:12 | customer           |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.nation   | 2023-06-06 10:56:12 | nation             |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.orders   | 2023-06-06 10:56:12 | orders             |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.part     | 2023-06-06 10:56:12 | part               |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.partsupp | 2023-06-06 10:56:12 | partsupp           |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.region   | 2023-06-06 10:56:12 | region             |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.supplier | 2023-06-06 10:56:12 | supplier           |
-+-----------------------------------------------------------+---------------------+--------------------+
+```sql
+SHOW CACHE HOTSPOT '/compute_group_name0';
 ```
 
-查看 `cluster_name0` 下，表`regression_test_cloud_load_copy_into_tpch_sf1_p1.customer` 的访问信息。
+查看 `compute_group_name0` 下，表`regression_test_cloud_load_copy_into_tpch_sf1_p1.customer` 的访问信息。
 
-```Plain
-show cache hotspot '/cluster_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer';
-+----------------+---------------------+
-| partition_name | last_access_time    |
-+----------------+---------------------+
-| supplier       | 2023-06-06 10:56:12 |
-+----------------+---------------------+
+```sql
+SHOW CACHE HOTSPOT '/compute_group_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer';
 ```
 
-- 将表 `customer` 的数据预热到 `cluster_name1`。执行以下 SQL ，可以将该表在远端存储上的数据全部拉取到本地。
+- 将表 `customer` 的数据预热到 `compute_group_name1`。执行以下 SQL ，可以将该表在远端存储上的数据全部拉取到本地。
 
-```Plain
-warm up cluster cluster_name1 with table customer
+```sql
+WARM UP COMPUTE GROUP compute_group_name1 WITH TABLE customer
 ```
 
-- 将表 `customer` 的分区 `p1` 的数据预热到 `cluster_name1`。执行以下 SQL ，可以将该分区在远端存储上的数据全部拉取到本地。
+- 将表 `customer` 的分区 `p1` 的数据预热到 `compute_group_name1`。执行以下 SQL ，可以将该分区在远端存储上的数据全部拉取到本地。
 
-```Plain
-warm up cluster cluster_name1 with table customer partition p1
+```sql
+WARM UP COMPUTE GROUP compute_group_name1 with TABLE customer PARTITION p1
 ```
 
 上述三条缓存预热 SQL 均会返回一个 JobID 结果。例如：
 
-```Plain
-mysql> warm up cluster cloud_warm_up with table test_warm_up;
-+-------+
-| JobId |
-+-------+
-| 13418 |
-+-------+
-1 row in set (0.01 sec)
+```sql
+WARM UP COMPUTE GROUP cloud_warm_up WITH TABLE test_warm_up;
 ```
 
 然后可以通过以下 SQL 查看缓存预热进度。
 
-```Plain
-SHOW WARM UP JOB; // 获取 Job 信息
-SHOW WARM UP JOB WHERE ID = 13418; // 指定 JobID
-+-------+-------------------+---------+-------+-------------------------+-------------+----------+------------+
-| JobId | ClusterName       | Status  | Type  | CreateTime              | FinishBatch | AllBatch | FinishTime |
-+-------+-------------------+---------+-------+-------------------------+-------------+----------+------------+
-| 13418 | cloud_warm_up     | RUNNING | TABLE | 2023-05-30 20:19:34.059 | 0           | 1        | NULL       |
-+-------+-------------------+---------+-------+-------------------------+-------------+----------+------------+
-1 row in set (0.02 sec)
+```sql
+SHOW WARM UP JOB WHERE ID = 13418; 
 ```
 
-可根据 `FinishBatch` 和 `AllBatch` 判断当前任务进度，每个 Batch 的数据大小约为 10GB。 目前，一个计算集群中，同一时间内只支持执行一个预热 Job 。用户可以停止正在进行的预热 Job 。
+可根据 `FinishBatch` 和 `AllBatch` 判断当前任务进度，每个 Batch 的数据大小约为 10GB。 目前，一个计算组中，同一时间内只支持执行一个预热 Job 。用户可以停止正在进行的预热 Job 。
 
-```Plain
-mysql> cancel warm up job where id = 13418;
-Query OK, 0 rows affected (0.02 sec)
-
-mysql> show warm up job where id = 13418;
-+-------+-------------------+-----------+-------+-------------------------+-------------+----------+-------------------------+
-| JobId | ClusterName       | Status    | Type  | CreateTime              | FinishBatch | AllBatch | FinishTime              |
-+-------+-------------------+-----------+-------+-------------------------+-------------+----------+-------------------------+
-| 13418 | cloud_warm_up     | CANCELLED | TABLE | 2023-05-30 20:19:34.059 | 0           | 1        | 2023-05-30 20:27:14.186 |
-+-------+-------------------+-----------+-------+-------------------------+-------------+----------+-------------------------+
-1 row in set (0.00 sec)
+```sql
+CANCEL WARM UP JOB WHERE id = 13418;
 ```
 
 ## 实践案例
@@ -214,4 +232,4 @@ ALTER TABLE dimension_table set ("file_cache_ttl_seconds"="31536000");
 ALTER TABLE fact_table set ("file_cache_ttl_seconds"="86400");
 ```
 
-对于维度表，由于其数据量较小且变动不大，用户设置了长达 1 年的 TTL 时间，以确保其数据在一年内都能被快速访问；对于事实表，用户每天需要进行一次表备份，然后进行全量导入，因此将其 TTL 时间设置为 1 天。
+对于维度表，由于其数据量较小且变动不大，用户设置 1 年的 TTL 时间，以确保其数据在一年内都能被快速访问；对于事实表，用户每天需要进行一次表备份，然后进行全量导入，因此将其 TTL 时间设置为 1 天。

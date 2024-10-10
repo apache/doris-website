@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SQL Dialect Convertor",
+    "title": "SQL Converter for Apache Doris",
     "language": "en"
 }
 ---
@@ -31,38 +31,50 @@ Starting from version 2.1, Doris can support multiple SQL dialects, such as Pres
 :::
 
 :::caution
- 1. This function is currently an experimental function. If you encounter any problems during use, you are welcome to provide feedback through the mail group, [GitHub issue](https://github.com/apache/doris/issues), etc. .
-
+This function is currently an experimental function. If you encounter any problems during use, you are welcome to provide feedback through the mail group, [GitHub issue](https://github.com/apache/doris/issues)
 :::
 
 ## Deploy service
 
-1. Download latest [Doris SQL Convertor](https://www.selectdb.com/tools/doris-sql-convertor)
+1. Download latest [SQL Converter for Apache Doris](https://www.selectdb.com/tools/doris-sql-convertor)
 
-    > Note:
-    >
-    > The SQL convertor tool is based on the open source [SQLGlot](https://github.com/tobymao/sqlglot). For more information about SQLGlot, please refer to [SQLGlot official website](https://sqlglot.com/sqlglot.html)
+
+    :::info NOTE
+    The SQL dialect conversion tool is based on the open-source [SQLGlot](https://github.com/tobymao/sqlglot) and has been further developed by SelectDB. For more information about SQLGlot, please refer to the [SQLGlot official website](https://sqlglot.com/sqlglot.html).
+The SQL Convertor is not maintained or endorsed by Apache Doris; these efforts are supervised by Committers and the Doris PMC. The use of these resources and services is entirely at your own discretion, and the community does not verify the licensing or validity of these tools.
+    :::
 
 2. On any FE node, start the service through the following command:
 
-	`sh bin/start.sh`
+	```shell
+    # Configuring the service port
+    vim apiserver/conf/config.conf
+    # Start the SQL Converter for Apache Doris conversion service
+    sh apiserver/bin/start.sh
+    # If you need a front-end interface, you can configure the corresponding port in the webserver and start it. If you don't need a front-end, you can ignore the following operations.
+    vim webserver/conf/config.conf
+    # Start the front-end interface
+    sh webserver/bin/start.sh
+    ```
 	
+
     :::tip
-	1. This service is a stateless service and can be started and stopped at any time.
+	  1. This service is a stateless service and can be started and stopped at any time.
 	
-	2. The default startup port is `5001`, and the specified port can be configured in `conf/config.conf`.
+	  2. Configure port in `apiserver/conf/config.conf` to specify any available port, and configure workers to specify the number of threads to start. In concurrent scenarios, you can adjust as needed, the default is 1.
 	
-	3. It is recommended to start a separate service on each FE node.
+	  3. It is recommended to start a separate service on each FE node.
+
+    4. If you need to start the front-end interface, you can configure the SQL Converter for Apache Doris conversion service address in `webserver/conf/config`.conf. The default is `API_HOST=http://127.0.0.1:5001`
     :::
+
 
 3. Start the Doris cluster (version 2.1 or higher)
 4. Set the URL of the SQL Dialect Conversion Service with the following command in Doris:
 
 	`MySQL> set global sql_converter_service_url = "http://127.0.0.1:5001/api/v1/convert"`
 
-	:::tip
-	1. `127.0.0.1:5001` is the deployment node IP and port of the SQL dialect conversion service.
-    :::
+	- `127.0.0.1:5001` is the deployment node IP and port of the SQL dialect conversion service.
 	
 ## Use SQL dialect
 
@@ -70,10 +82,10 @@ Currently supported dialect types include:
 
 - `presto`
 - `trino`
+- `clickhouse`
 - `hive`
 - `spark`
 - `postgres`
-- `clickhouse`
 - `oracle`
 
 example:

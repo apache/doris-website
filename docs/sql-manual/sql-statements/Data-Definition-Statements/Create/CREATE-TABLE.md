@@ -484,7 +484,11 @@ Set table properties. The following attributes are currently supported:
 * Dynamic partition related
 
    References related to dynamic partitioning[Data Partitioning-Dynamic partitioning](../../../../table-design/data-partition.md#Dynamic partitioning)
-    
+
+* `file_cache_ttl_seconds`:
+
+    Expiration time of TTL Cache in compute-storage decoupled mode.
+
 ### Example
 
 1. Create a detailed model table

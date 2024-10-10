@@ -183,8 +183,7 @@ Spark 用于 ETL 时需要指定 working_dir 和 broker。说明如下：
    ```sql
    CREATE RESOURCE hdfs_resource PROPERTIES (
       "type"="hdfs",
-      "username"="user",
-      "password"="passwd",
+      "hadoop.username"="user",
       "dfs.nameservices" = "my_ha",
       "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
       "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
@@ -195,7 +194,7 @@ Spark 用于 ETL 时需要指定 working_dir 和 broker。说明如下：
 
    HDFS 相关参数如下：
     - fs.defaultFS: namenode 地址和端口
-    - username: hdfs 用户名
+    - hadoop.username: hdfs 用户名
     - dfs.nameservices: name service 名称，与 hdfs-site.xml 保持一致
     - dfs.ha.namenodes.[nameservice ID]: namenode 的 id 列表，与 hdfs-site.xml 保持一致
     - dfs.namenode.rpc-address.[nameservice ID].[name node ID]: Name node 的 rpc 地址，数量与 namenode 数量相同，与 hdfs-site.xml 保持一致

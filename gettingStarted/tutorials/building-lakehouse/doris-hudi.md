@@ -132,7 +132,7 @@ As shown below, a Catalog named `hudi` has been created in the Doris cluster (ca
 
 ```
 -- Already created, no need to execute again
-CREATE CATALOG `hive` PROPERTIES (
+CREATE CATALOG `hudi` PROPERTIES (
     "type"="hms",
     'hive.metastore.uris' = 'thrift://hive-metastore:9083',
     "s3.access_key" = "minio",
@@ -147,7 +147,7 @@ CREATE CATALOG `hive` PROPERTIES (
 
 	```
 	-- ./login-doris.sh
-	doris> REFRESH CATALOG hive;
+	doris> REFRESH CATALOG hudi;
 	```
 
 2. Operations on data in Hudi using Spark are immediately visible in Doris without the need to refresh the Catalog. We insert a row of data into both COW and MOR tables using Spark:
@@ -160,7 +160,7 @@ CREATE CATALOG `hive` PROPERTIES (
 3. Through Doris, you can directly query the latest inserted data:
 
 	```
-	doris> use hive.default;
+	doris> use hudi.default;
 	doris> select * from customer_cow where c_custkey = 100;
 	doris> select * from customer_mor where c_custkey = 100;
 	```

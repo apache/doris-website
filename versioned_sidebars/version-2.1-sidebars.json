@@ -95,18 +95,23 @@
                     "label": "Loading Data",
                     "items": [
                         "data-operate/import/load-manual",
-                        "data-operate/import/stream-load-manual",
-                        "data-operate/import/broker-load-manual",
-                        "data-operate/import/routine-load-manual",
-                        "data-operate/import/insert-into-manual",
-                        "data-operate/import/mysql-load-manual",
-                        "data-operate/import/load-json-format",
-                        "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-atomicity",
+                        {
+                            "type": "category",
+                            "label": "Import Way",
+                            "items": [
+                                "data-operate/import/import-way/stream-load-manual",
+                                "data-operate/import/import-way/broker-load-manual",
+                                "data-operate/import/import-way/routine-load-manual",
+                                "data-operate/import/import-way/insert-into-manual",
+                                "data-operate/import/import-way/mysql-load-manual",
+                                "data-operate/import/import-way/group-commit-manual"
+                            ]
+                        },
+                        "data-operate/import/load-data-format",
+                        "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
-                        "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode"
+                        "data-operate/import/load-high-availability",
+                        "data-operate/import/migrate-data-from-other-olap"
                     ]
                 },
                 {
@@ -334,8 +339,13 @@
                     "items": [
                         "admin-manual/resource-admin/workload-group",
                         "admin-manual/resource-admin/workload-policy",
-                        "admin-manual/resource-admin/workload-system-table",
-                        "admin-manual/resource-admin/multi-tenant"
+                        "admin-manual/resource-admin/workload-analysis",
+                        "admin-manual/resource-admin/multi-tenant",
+                        "admin-manual/resource-admin/workload-fusing",
+                        "admin-manual/resource-admin/use-workload-mem-limit",
+                        "admin-manual/resource-admin/use-workload-cpu-limit",
+                        "admin-manual/resource-admin/use-workload-local-io-limit",
+                        "admin-manual/resource-admin/use-workload-remote-io-limit"
                     ]
                 },
                 {
@@ -830,6 +840,7 @@
                                 "sql-manual/sql-functions/string-functions/split-by-string",
                                 "sql-manual/sql-functions/string-functions/substring-index",
                                 "sql-manual/sql-functions/string-functions/money-format",
+                                "sql-manual/sql-functions/string-functions/ngram-search",
                                 "sql-manual/sql-functions/string-functions/parse-url",
                                 "sql-manual/sql-functions/string-functions/quote",
                                 "sql-manual/sql-functions/string-functions/url-decode",
@@ -1588,7 +1599,8 @@
                 "ecosystem/bi/powerbi",
                 "ecosystem/bi/tableau",
                 "ecosystem/bi/quicksight",
-                "ecosystem/bi/quickbi"
+                "ecosystem/bi/quickbi",
+                "ecosystem/bi/smartbi"
             ]
         }
     ],
@@ -1596,7 +1608,8 @@
         "faq/install-faq",
         "faq/data-faq",
         "faq/sql-faq",
-        "faq/lakehouse-faq"
+        "faq/lakehouse-faq",
+        "faq/bi-faq"
     ],
     "releasenotes": [
         "releasenotes/all-release",
@@ -1624,6 +1637,7 @@
             "type": "category",
             "label": "v2.0",
             "items": [
+                "releasenotes/v2.0/release-2.0.15",
                 "releasenotes/v2.0/release-2.0.14",
                 "releasenotes/v2.0/release-2.0.13",
                 "releasenotes/v2.0/release-2.0.12",

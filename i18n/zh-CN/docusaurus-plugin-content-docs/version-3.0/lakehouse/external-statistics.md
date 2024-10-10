@@ -35,9 +35,9 @@ under the License.
 
 2. 外表默认关闭自动统计信息收集功能，需要在创建 Catalog 的时候添加属性来打开，或者通过设置 Catalog 属性来开启或关闭。
 
-### 创建 Catalog 时打开自动收集的属性 (默认是 false）：
+### 创建 Catalog 时打开自动收集的属性 (默认是 false)：
 
-```SQL
+```sql
 'enable.auto.analyze' = 'true'
 ```
 

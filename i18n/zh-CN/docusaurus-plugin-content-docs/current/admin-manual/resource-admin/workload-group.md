@@ -179,16 +179,26 @@ properties (
     "enable_memory_overcommit"="true"
 );
 ```
-此时配置的 CPU 限制为软限。自 2.1 版本起，系统会自动创建一个名为```normal```的 group，不可删除。
+此时配置的 CPU 限制为软限。自 2.1 版本起，系统会自动创建一个名为```normal```的 group，不可删除。创建 workload group 详细使用可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，
 
-创建 workload group 详细可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)；查看 workload group 可访问 Doris 系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。
+2. 查看/修改/删除 workload group语句如下：
+```
+show workload groups;
 
-2. 绑定 workload group。
-* 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`:
+alter workload group g1 properties('memory_limit'='10%');
+
+drop workload group g1;
+
+```
+查看 workload group 可访问 Doris 系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。 删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)。
+
+3. 绑定 workload group。
+* 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`，需要注意的这里的value不能填空，否则语句会执行失败，如果不知道要设置哪些group，可以设置为`normal`，`normal`为全局默认的group。
 ```
 set property 'default_workload_group' = 'g1';
 ```
-当前用户的查询将默认使用'g1'。
+执行完该语句后，当前用户的查询将默认使用'g1'。
+
 * 通过 session 变量指定 workload group, 默认为空：
 ```
 set workload_group = 'g1';
@@ -197,7 +207,7 @@ session 变量`workload_group`优先于 user property `default_workload_group`, 
 
 如果是非 admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 workload group 授权参考：[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
 
-6. 执行查询，查询将关联到指定的 workload group。
+4. 执行查询，查询将关联到指定的 workload group。
 
 ### 查询排队功能
 ```
@@ -211,11 +221,16 @@ properties (
 );
 ```
 
-需要注意的是，目前的排队设计是不感知 FE 的个数的，排队的参数只在单 FE 粒度生效，例如：
+1. 需要注意的是，目前的排队设计是不感知 FE 的个数的，排队的参数只在单 FE 粒度生效，例如：
 
 一个 Doris 集群配置了一个 work load group，设置 max_concurrency = 1
 如果集群中有 1FE，那么这个 workload group 在 Doris 集群视角看同时只会运行一个 SQL
 如果有 3 台 FE，那么在 Doris 集群视角看最大可运行的 SQL 个数为 3
+
+2. 在有些运维情况下，管理员账户需要绕开排队的逻辑，那么可以通过设置session变量：
+```
+set bypass_workload_group = true;
+```
 
 ### 配置 CPU 的硬限
 目前 Doris 默认运行 CPU 的软限，如果期望使用 Workload Group 的硬限功能，可以按照如下流程操作。

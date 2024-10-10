@@ -232,14 +232,6 @@
                 },
                 {
                     "type": "category",
-                    "label": "Pipeline Execution Engine",
-                    "items": [
-                        "query/pipeline/pipeline-execution-engine",
-                        "query/pipeline/pipeline-x-execution-engine"
-                    ]
-                },
-                {
-                    "type": "category",
                     "label": "Caches",
                     "items": [
                         "query/query-cache/query-cache",
@@ -275,6 +267,7 @@
                         "query/duplicate/using-hll"
                     ]
                 },
+                "query/pipeline/pipeline-execution-engine",
                 "query/high-concurrent-point-query",
                 "query/topn-query",
                 {
@@ -359,7 +352,7 @@
                 "compute-storage-decoupled/overview",
                 "compute-storage-decoupled/before-deployment",
                 "compute-storage-decoupled/compilation-and-deployment",
-                "compute-storage-decoupled/creating-cluster",
+                "compute-storage-decoupled/managing-storage-vault",
                 "compute-storage-decoupled/managing-compute-cluster",
                 "compute-storage-decoupled/file-cache",
                 "compute-storage-decoupled/meta-service-api"
@@ -902,6 +895,7 @@
                                 "sql-manual/sql-functions/string-functions/split-by-regexp",
                                 "sql-manual/sql-functions/string-functions/substring-index",
                                 "sql-manual/sql-functions/string-functions/money-format",
+                                "sql-manual/sql-functions/string-functions/ngram-search",
                                 "sql-manual/sql-functions/string-functions/parse-url",
                                 "sql-manual/sql-functions/string-functions/quote",
                                 "sql-manual/sql-functions/string-functions/url-decode",
@@ -996,6 +990,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
+                                "sql-manual/sql-functions/aggregate-functions/linear-histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-and",
@@ -1018,7 +1013,9 @@
                                 "sql-manual/sql-functions/aggregate-functions/regr_sxy",
                                 "sql-manual/sql-functions/aggregate-functions/regr_syy",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
-                                "sql-manual/sql-functions/aggregate-functions/sequence-count"
+                                "sql-manual/sql-functions/aggregate-functions/sequence-count",
+                                "sql-manual/sql-functions/aggregate-functions/kurt",
+                                "sql-manual/sql-functions/aggregate-functions/skew"
                             ]
                         },
                         {
@@ -1676,7 +1673,8 @@
                 "ecosystem/bi/powerbi",
                 "ecosystem/bi/tableau",
                 "ecosystem/bi/quicksight",
-                "ecosystem/bi/quickbi"
+                "ecosystem/bi/quickbi",
+                "ecosystem/bi/smartbi"
             ]
         }
     ],
@@ -1684,7 +1682,8 @@
         "faq/install-faq",
         "faq/data-faq",
         "faq/sql-faq",
-        "faq/lakehouse-faq"
+        "faq/lakehouse-faq",
+        "faq/bi-faq"
     ],
     "releasenotes": [
         "releasenotes/all-release",
@@ -1712,6 +1711,7 @@
             "type": "category",
             "label": "v2.0",
             "items": [
+                "releasenotes/v2.0/release-2.0.15",
                 "releasenotes/v2.0/release-2.0.14",
                 "releasenotes/v2.0/release-2.0.13",
                 "releasenotes/v2.0/release-2.0.12",

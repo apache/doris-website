@@ -97,7 +97,7 @@ The shared storage layer stores the data files, including segment files and the 
 
 ## Workload isolation across compute clusters
 
-As mentioned earlier, a compute cluster is formed by one or more stateless BE nodes. By using the compute cluster specification statement (`use @<cluster_name>`), you can direct specific workloads to specific compute clusters, thus realizing physical isolation of data import and query workloads.
+As mentioned earlier, a compute cluster is formed by one or more stateless BE nodes. By using the compute cluster specification statement (`use @<compute_group_name>`), you can direct specific workloads to specific compute clusters, thus realizing physical isolation of data import and query workloads.
 
 Assuming there are 2 compute clusters: C1 and C2.
 

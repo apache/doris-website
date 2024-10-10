@@ -1226,7 +1226,8 @@
                 "ecosystem/bi/powerbi",
                 "ecosystem/bi/tableau",
                 "ecosystem/bi/quicksight",
-                "ecosystem/bi/quickbi"
+                "ecosystem/bi/quickbi",
+                "ecosystem/bi/smartbi"
             ]
         }
     ],
@@ -1234,7 +1235,8 @@
         "faq/install-faq",
         "faq/data-faq",
         "faq/sql-faq",
-        "faq/lakehouse-faq"
+        "faq/lakehouse-faq",
+        "faq/bi-faq"
     ],
     "releasenotes": [
         "releasenotes/all-release",
@@ -1262,6 +1264,7 @@
             "type": "category",
             "label": "v2.0",
             "items": [
+                "releasenotes/v2.0/release-2.0.15",
                 "releasenotes/v2.0/release-2.0.14",
                 "releasenotes/v2.0/release-2.0.13",
                 "releasenotes/v2.0/release-2.0.12",

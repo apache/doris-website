@@ -7,64 +7,126 @@
 
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
+or more contributor license agreements. See the NOTICE file
 distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
+regarding copyright ownership. The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+with the License. You may obtain a copy of the License at
 
   http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
+KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
 
-In the compute-storage decoupled mode, data is stored on remote storage. To accelerate data access, Doris implements a cache mechanism based on local disks and provides two efficient cache management strategies: the LRU (Least Recently Used) strategy and the TTL (Time-to-Live) strategy. It optimizes the index-related data, aiming to cache the data most commonly used by users as much as possible.
+In a decoupled architecture, data is stored in remote storage. The Doris database accelerates data access by utilizing a cache on local disks and employs an advanced multi-queue LRU (Least Recently Used) strategy to efficiently manage cache space. This strategy particularly optimizes the access paths for indexes and metadata, aiming to maximize the caching of frequently accessed user data. For multi-compute group (Compute Group) scenarios, Doris also provides a cache warming feature to quickly load specific data (such as tables or partitions) into the cache when a new compute group is established, thereby enhancing query performance.
 
-In use cases involving multiple compute clusters, Doris provides cache warmup. When a new compute cluster is established, users can choose to warm up specific data (such as tables or partitions) to improve query efficiency.
+## Multi-Queue LRU
 
-## Cache space management
+### LRU
 
-### Data cache
+* LRU manages the cache by maintaining a data access queue. When data is accessed, it is moved to the front of the queue. Newly added data to the cache is also placed at the front of the queue to prevent it from being evicted too early. When the cache space reaches its limit, data at the tail of the queue will be removed first.
 
-Data enters the cache in the following three ways:
+### TTL (Time-To-Live)
 
-- **Import**: Newly imported data will be asynchronously written to the cache to accelerate first-time access.
-- **Query**: If the data requested by a query is not in the cache, the system will read the data from the remote storage into memory and write it to the cache simultaneously to speed up subsequent queries.
-- **Warmup**: Although the data in the remote storage can be shared across multiple compute clusters, the cached data is not shared. When a new compute cluster is created, the cache for it is empty. In this case, users can manually warm up the cache, which means pulling the required data from the remote storage to the local cache.
+* The TTL strategy ensures that newly imported data remains in the cache for a certain period without being evicted. During this time, the data has the highest priority, and all TTL data are treated equally. When cache space is insufficient, the system will prioritize evicting data from other queues to ensure that TTL data can be written to the cache.
 
-### Cache eviction
+* Application scenarios: The TTL strategy is particularly suitable for small-scale data tables that require local persistence. For resident tables, a longer TTL value can be set to protect their data; for dynamically partitioned tables, the TTL value can be set according to the active time of Hot Partitions.
 
-Doris supports two cache management strategies: LRU and TTL.
+* Note: Currently, the system does not support directly viewing the proportion of TTL data in the cache.
 
-- **LRU (Least Recently Used)**: As the default strategy, LRU manages data by maintaining a queue. If certain data in the queue is accessed, that piece of data will be moved to the front of the queue. New data written to the cache will also be placed at the front of the queue to avoid being evicted too early. If the cache space is full, the data at the tail of the queue will be prioritized for eviction.
-- **TTL (Time-to-Live)**: The TTL strategy is to ensure that newly imported data is retained in the cache for a certain period of time. The time when such data is evicted from the cache depends on its import time and the TTL value set by the user. Data under TTL has the highest priority in the cache and is treated equally. When the cache is full, the system will evict data from the LRU queue to ensure that new TTL data can be written to the cache. Additionally, all data set with TTL will be treated equally despite differences in eviction time. When TTL data occupies the entire cache space, neither newly imported data (whether set with TTL or not) nor cold data pulled from the remote storage will be written to the cache.
-  -  The TTL strategy can be applied to small data tables that are supposed to be persisted locally. It is recommended to set a relatively large TTL value for such tables to ensure that their data in the cache will not be evicted prematurely due to query operations on other large data tables.
+### Multi-Queue
 
-  -  For tables using a dynamic partitioning strategy, it is recommended to set a TTL value based on how long their hot partitions remain active. This can ensure the retention of hot partition data in the cache and avoid it being affected by queries on cold partitions.
+* Doris adopts a multi-queue strategy based on LRU, categorizing data into four types based on TTL attributes and data properties, and placing them in TTL queues, Index queues, NormalData queues, and Disposable queues. Data with a TTL attribute is placed in the TTL queue, index data without a TTL attribute is placed in the Index queue, normal data without a TTL attribute is placed in the NormalData queue, and temporary data is placed in the Disposable queue.
 
-  -  Currently, the system does not support directly viewing the proportion of TTL data in the cache.
+* During data read and write processes, Doris selects the queues to fill and read from to maximize cache utilization. The specific mechanism is as follows:
 
-### Cache warmup
+| Operation      | Queue Filled on Miss | Queue Filled on Write    |
+| -------------- | --------------------- | ------------------------- |
+| Import         | TTL / Index / NormalData | TTL / Index / NormalData    |
+| Query          | TTL / Index / NormalData | N/A                       |
+| Schema Change   | Disposable            | TTL / Index / NormalData   |
+| Compaction     | Disposable            | TTL / Index / NormalData   |
+| Warm-up        | N/A                   | TTL / Index / NormalData   |
 
-In the compute-storage decoupled mode, Doris supports multiple compute clusters, with the stored data shared across the clusters but not the cache. When a new compute cluster is created, its cache is initially empty, which may impact query performance. To address this, Doris provides cache warmup that allows users to actively pull data from the remote storage to the local cache. Currently, it supports cache warmup from:
+### Eviction
 
-- **Compute cluster**: Warm up the cache of compute cluster B with the cached data from compute cluster A. Doris periodically collects information of the hot tables/partitions accessed by each compute cluster over a period of time and stores it as an internal table. Based on such information, it selectively pulls data from certain tables/partitions to the cache during cache warmup.
-- **Table**: Warm up the cache of a new compute cluster with data from table A.
-- **Partition**: Warm up the cache of a new compute cluster with data from partition `p1` of table A.
+To maximize the use of cache space for data access acceleration, Doris will utilize available cache space as much as possible. Cache eviction can be triggered in two scenarios: deleting remote storage data or writing when cache space is insufficient. When remote storage data is deleted, the corresponding data in the cache is directly removed. When writing when cache space is insufficient, eviction occurs in the order of Disposable, Normal Data, Index, and TTL. Data in the TTL queue will be moved to the Normal Data queue when it expires.
+
+## Cache Warming
+
+In a decoupled mode, Doris supports multi-compute group deployment, where compute groups share data but do not share cache. When a new compute group is created, its cache is empty, which may affect query performance. Therefore, Doris provides a cache warming feature that allows users to actively pull data from remote storage to local cache. This feature supports the following three modes:
+
+- **Inter-Compute Group Warming**: Warm the cache data of Compute Group A to Compute Group B. Doris periodically collects hotspot information of tables/partitions accessed in each compute group over a period and selectively warms certain tables/partitions based on this information.
+- **Table Data Warming**: Specify to warm the data of Table A to the new compute group.
+- **Partition Data Warming**: Specify to warm the data of partition `p1` of Table A to the new compute group.
+
+## Compute Group Scaling
+
+When scaling Compute Groups, to avoid cache fluctuations, Doris will first remap the affected tablets and warm the data.
+
+## Cache Observation
+
+### Hotspot Information
+
+Doris collects cache hotspot information from each compute group every 10 minutes into an internal system table. You can view hotspot information using the `SHOW CACHE HOTSPOT '/'` command.
+
+### Cache Space and Hit Rate
+
+Doris BE nodes can obtain cache statistics by using `curl {be_ip}:{brpc_port}/vars` (where brpc_port defaults to 8060), and the names of the metrics start with the disk path.
+
+In the above example, the metric prefix for File Cache is the path, for example, the prefix "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" indicates "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
+The part after the prefix is the statistical metric, for example, "file_cache_cache_size" indicates that the current size of the File Cache at this path is 26111 bytes.
+
+The following table lists the meanings of all metrics (all size units are in bytes):
+
+Metric Name (excluding path prefix) | Meaning
+-----|------
+file_cache_cache_size | Current total size of the File Cache
+file_cache_disposable_queue_cache_size | Current size of the disposable queue
+file_cache_disposable_queue_element_count | Current number of elements in the disposable queue
+file_cache_disposable_queue_evict_size | Total amount of data evicted from the disposable queue since startup
+file_cache_index_queue_cache_size | Current size of the index queue
+file_cache_index_queue_element_count | Current number of elements in the index queue
+file_cache_index_queue_evict_size | Total amount of data evicted from the index queue since startup
+file_cache_normal_queue_cache_size | Current size of the normal queue
+file_cache_normal_queue_element_count | Current number of elements in the normal queue
+file_cache_normal_queue_evict_size | Total amount of data evicted from the normal queue since startup
+file_cache_total_evict_size | Total amount of data evicted from the entire File Cache since startup
+file_cache_ttl_cache_evict_size | Total amount of data evicted from the TTL queue since startup
+file_cache_ttl_cache_lru_queue_element_count | Current number of elements in the TTL queue
+file_cache_ttl_cache_size | Current size of the TTL queue
+
+### SQL Profile
+
+Cache-related metrics in the SQL profile are found under SegmentIterator, including:
+
+| Metric Name                     | Meaning      |
+|----------------------------------|-------------|
+| BytesScannedFromCache            | Amount of data read from the File Cache    |
+| BytesScannedFromRemote           | Amount of data read from remote storage     |
+| BytesWriteIntoCache              | Amount of data written into the File Cache   |
+| LocalIOUseTimer                  | Time taken to read from the File Cache      |
+| NumLocalIOTotal                  | Number of times the File Cache was read     |
+| NumRemoteIOTotal                 | Number of times remote storage was read      |
+| NumSkipCacheIOTotal              | Number of times data read from remote storage did not enter the File Cache |
+| RemoteIOUseTimer                 | Time taken to read from remote storage       |
+| WriteCacheIOUseTimer             | Time taken to write to the File Cache        |
+
+You can view query performance analysis through [Query Performance Analysis](../query/query-analysis/query-analytics).
 
 ## Usage
 
-### Set TTL strategy
+### Setting TTL Strategy
 
-To apply the TTL strategy for a table, set the TTL strategy in the PROPERTIES of the table creation statement. 
+When creating a table, set the corresponding PROPERTY to use the TTL strategy for caching that table's data.
 
-- `file_cache_ttl_seconds`: The expected time (measured in seconds) for newly imported data to be retained in the cache.
+- `file_cache_ttl_seconds`: The expected time for newly imported data to remain in the cache, in seconds.
 
 ```shell
 CREATE TABLE IF NOT EXISTS customer (
@@ -84,129 +146,84 @@ PROPERTIES(
 )
 ```
 
-All newly imported data into this table will be retained in the cache for 300 seconds. Users can modify the TTL time of a table based on their needs. 
+In the above table, all newly imported data will be retained in the cache for 300 seconds. The system currently supports modifying the TTL time of the table, and users can extend or shorten the TTL time based on actual needs.
 
 ```SQL
 ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
 ```
 
-:::info 
+:::info Note
 
-There is a certain delay before the modified TTL value takes effect.
+The modified TTL value will not take effect immediately and will have a certain delay.
 
-For tables that are not set with a TTL strategy upon creation, users can still modify their TTL properties by executing the ALTER statement.
-
+If no TTL is set when creating the table, users can also modify the table's TTL attribute by executing the ALTER statement.
 :::
 
-### Cache warmup
+### Cache Warming
 
-The system currently supports three types of cache warmup:
+Currently, three cache warming modes are supported:
 
-- Warm up the cache of compute cluster `cluster_name1` with the cached data from compute cluster `cluster_name0`.
+- Warm the cache data of `compute_group_name0` to `compute_group_name1`.
 
-When the following SQL is executed, `cluster_name1` will retrieve the access information from `cluster_name0` to recreate a cache as consistent as possible with `cluster_name0`.
+When executing the following SQL, the `compute_group_name1` compute group will obtain the access information of the `compute_group_name0` compute group to restore the cache as closely as possible to that of `compute_group_name0`.
 
-```Plain
-warm up cluster cluster_name1 with cluster cluster_name0
+```sql
+WARM UP COMPUTE GROUP compute_group_name1 WITH COMPUTE GROUP compute_group_name0
 ```
 
-View the most frequently accessed tables across all compute clusters.
+View the most frequently accessed tables in all current compute groups.
 
-```Plain
-show cache hotspot '/';
-+------------------------+-----------------------+----------------------------------------+
-| cluster_name           | total_file_cache_size | top_table_name                         |
-+------------------------+-----------------------+----------------------------------------+
-| cluster_name0          |          751620511367 | regression_test.doris_cache_hotspot    |
-+------------------------+-----------------------+----------------------------------------+
+```sql
+SHOW CACHE HOTSPOT '/';
 ```
 
-View the most frequently accessed partitions within the compute cluster `cluster_name0`.
+View the most frequently accessed partitions among all tables under `compute_group_name0`.
 
-```Plain
-mysql> show cache hotspot '/cluster_name0';
-+-----------------------------------------------------------+---------------------+--------------------+
-| table_name                                                | last_access_time    | top_partition_name |
-+-----------------------------------------------------------+---------------------+--------------------+
-| regression_test.doris_cache_hotspot                       | 2023-05-29 12:38:02 | p20230529          |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.customer | 2023-06-06 10:56:12 | customer           |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.nation   | 2023-06-06 10:56:12 | nation             |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.orders   | 2023-06-06 10:56:12 | orders             |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.part     | 2023-06-06 10:56:12 | part               |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.partsupp | 2023-06-06 10:56:12 | partsupp           |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.region   | 2023-06-06 10:56:12 | region             |
-| regression_test_cloud_load_copy_into_tpch_sf1_p1.supplier | 2023-06-06 10:56:12 | supplier           |
-+-----------------------------------------------------------+---------------------+--------------------+
+```sql
+SHOW CACHE HOTSPOT '/compute_group_name0';
 ```
 
-View the access information of table `regression_test_cloud_load_copy_into_tpch_sf1_p1.customer`) in `cluster_name0`.
+View the access information of the table `regression_test_cloud_load_copy_into_tpch_sf1_p1.customer` under `compute_group_name0`.
 
-```Plain
-show cache hotspot '/cluster_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer';
-+----------------+---------------------+
-| partition_name | last_access_time    |
-+----------------+---------------------+
-| supplier       | 2023-06-06 10:56:12 |
-+----------------+---------------------+
+```sql
+SHOW CACHE HOTSPOT '/compute_group_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer';
 ```
 
-- Warm up the cache of `cluster_name1` with data from table `customer`. Execute the following SQL statement to pull all the data of this table from the remote storage to the local cache:
+- Warm the data of the table `customer` to `compute_group_name1`. Executing the following SQL will pull all data of that table from remote storage to local.
 
-```Plain
-warm up cluster cluster_name1 with table customer
+```sql
+WARM UP COMPUTE GROUP compute_group_name1 WITH TABLE customer
 ```
 
-- Warm up the cache of `cluster_name1` with data from partition `p1` of table `customer`. Execute the following SQL statement to pull all the data of this partition from the remote storage to the local cache:
+- Warm the data of partition `p1` of the table `customer` to `compute_group_name1`. Executing the following SQL will pull all data of that partition from remote storage to local.
 
-```Plain
-warm up cluster cluster_name1 with table customer partition p1
+```sql
+WARM UP COMPUTE GROUP compute_group_name1 with TABLE customer PARTITION p1
 ```
 
-All three of the above cache warmup SQL statements will return a `JobID` result. For example:
+The above three cache warming SQL statements will return a JobID result. For example:
 
-```Plain
-mysql> warm up cluster cloud_warm_up with table test_warm_up;
-+-------+
-| JobId |
-+-------+
-| 13418 |
-+-------+
-1 row in set (0.01 sec)
+```sql
+WARM UP COMPUTE GROUP cloud_warm_up WITH TABLE test_warm_up;
 ```
 
-Check the progress of the cache warmup using the following SQL:
+You can then check the cache warming progress with the following SQL.
 
-```Plain
-SHOW WARM UP JOB;
-SHOW WARM UP JOB WHERE ID = 13418;
-+-------+-------------------+---------+-------+-------------------------+-------------+----------+------------+
-| JobId | ClusterName       | Status  | Type  | CreateTime              | FinishBatch | AllBatch | FinishTime |
-+-------+-------------------+---------+-------+-------------------------+-------------+----------+------------+
-| 13418 | cloud_warm_up     | RUNNING | TABLE | 2023-05-30 20:19:34.059 | 0           | 1        | NULL       |
-+-------+-------------------+---------+-------+-------------------------+-------------+----------+------------+
-1 row in set (0.02 sec)
+```sql
+SHOW WARM UP JOB WHERE ID = 13418; 
 ```
 
-The cache warmup progress can be shown by `FinishBatch` and `AllBatch`. Each batch of data is approximately 10GB in size. Currently, within a single compute cluster, only one cache warmup job can be executed at a time. Users can stop an ongoing cache warmup job if needed.
+You can determine the current task progress based on `FinishBatch` and `AllBatch`, with each Batch's data size being approximately 10GB. Currently, only one warming job is supported to run at a time within a compute group. Users can stop an ongoing warming job.
 
-```Plain
-mysql> cancel warm up job where id = 13418;
-Query OK, 0 rows affected (0.02 sec)
-
-mysql> show warm up job where id = 13418;
-+-------+-------------------+-----------+-------+-------------------------+-------------+----------+-------------------------+
-| JobId | ClusterName       | Status    | Type  | CreateTime              | FinishBatch | AllBatch | FinishTime              |
-+-------+-------------------+-----------+-------+-------------------------+-------------+----------+-------------------------+
-| 13418 | cloud_warm_up     | CANCELLED | TABLE | 2023-05-30 20:19:34.059 | 0           | 1        | 2023-05-30 20:27:14.186 |
-+-------+-------------------+-----------+-------+-------------------------+-------------+----------+-------------------------+
-1 row in set (0.00 sec)
+```sql
+CANCEL WARM UP JOB WHERE id = 13418;
 ```
 
-## Best practice
+## Practical Case
 
-A user has a total data volume of over 3TB, but the available cache capacity is only 1.2TB. Two of the tables are frequently accessed: one is a 200MB dimension table, the other is a 100GB fact table. The latter has new data imported every day and is queried on a daily basis. Additionally, the user has other large tables that are queried from time to time.
+A user has a series of data tables with a total data volume exceeding 3TB, while the available cache capacity is only 1.2TB. Among them, there are two tables with high access frequency: one is a dimension table of size 200MB (`dimension_table`), and the other is a fact table of size 100GB (`fact_table`), which has new data imported daily and requires T+1 query operations. Additionally, other large tables have low access frequency.
 
-Under the LRU strategy, if a large table is queried and accessed, its data will replace that of the small table in the cache, causing performance fluctuations. To solve this, the user adopts a TTL strategy, setting the TTL time of the dimension table and fact table to 1 year and 1 day, respectively. 
+Under the LRU caching strategy, if large table data is queried, it may replace the small table data that needs to remain in the cache, causing performance fluctuations. To solve this problem, the user adopts a TTL caching strategy, setting the TTL times for the two tables to 1 year and 1 day, respectively.
 
 ```shell
 ALTER TABLE dimension_table set ("file_cache_ttl_seconds"="31536000");
@@ -214,4 +231,4 @@ ALTER TABLE dimension_table set ("file_cache_ttl_seconds"="31536000");
 ALTER TABLE fact_table set ("file_cache_ttl_seconds"="86400");
 ```
 
-For the dimension table, due to its small data volume and infrequent data changes, the user sets a TTL time of up to 1 year to ensure that its data can be accessed quickly within a long time. For the fact table, the user needs to perform a daily table backup and then a full import, so its TTL time is set to 1 day.
+For the dimension table, due to its smaller size and less variability, the user sets a TTL time of 1 year to ensure that its data can be accessed quickly within a year; for the fact table, the user needs to perform a table backup daily and then conduct a full import, so the TTL time is set to 1 day.

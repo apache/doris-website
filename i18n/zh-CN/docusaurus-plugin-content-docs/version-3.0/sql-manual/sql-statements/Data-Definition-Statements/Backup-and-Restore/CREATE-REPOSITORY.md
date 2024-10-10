@@ -139,7 +139,7 @@ PROPERTIES
 
 7. 使用临时秘钥创建名为 minio_repo 的仓库
 
-```
+```sql
 CREATE REPOSITORY `minio_repo`
 WITH S3
 ON LOCATION "s3://minio_repo"
@@ -153,9 +153,9 @@ PROPERTIES
 )
 ```
 
-1. 使用腾讯云 COS 创建仓库
+8. 使用腾讯云 COS 创建仓库
 
-```
+```sql
 CREATE REPOSITORY `cos_repo`
 WITH S3
 ON LOCATION "s3://backet1/"
