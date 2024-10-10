@@ -176,7 +176,7 @@ mvn archetype: generate -DarchetypeCatalog = internal -DgroupId = org.apache -Da
             <directory>target</directory>
             <includes>
                 <include>*.jar</include>
-            </ ncludes>
+            </includes>
             <outputDirectory>/</outputDirectory>
         </fileSet>
 
