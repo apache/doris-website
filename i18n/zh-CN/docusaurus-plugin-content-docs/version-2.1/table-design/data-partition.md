@@ -386,7 +386,7 @@ ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 
 动态分区只支持在 DATE/DATETIME 列上进行 Range 类型的分区。
 
-动态分区适用于分区列的时间数据随现实世界同步增长的情况。此时可以灵活的按照与现实世界同步的时间维度对数据进行分区，自动地根据设置对数据进行冷热分层或者回收。
+动态分区适用于分区列的时间数据随现实世界同步增长的情况。此时可以灵活的按照与现实世界同步的时间维度对数据进行分区。
 
 对于更为灵活，适用场景更多的数据入库分区，请参阅[自动分区](#自动分区)功能。
 
@@ -454,6 +454,10 @@ ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 
   动态分区的起始偏移，为负数。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，分区范围在此偏移之前的分区将会被删除。如果不填写，则默认为 `-2147483648`，即不删除历史分区。此偏移之后至当前时间的历史分区如不存在，是否创建取决于 `dynamic_partition.create_history_partition`。
 
+:::caution
+  注意，若用户设置了history_partition_num（>0），创建动态分区的起始分区就会用max(start, -history_partition_num)，删除历史分区的时候仍然会保留到start的范围，其中start < 0。
+:::
+
 - `dynamic_partition.end`**（必选参数）**
 
   动态分区的结束偏移，为正数。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，提前创建对应范围的分区。
@@ -478,6 +482,8 @@ ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 
   当 `time_unit` 为 `MONTH` 时，该参数用于指定每月的起始日期。取值为 1 到 28。其中 1 表示每月 1 号，28 表示每月 28 号。默认为 1，即表示每月以 1 号为起始点。暂不支持以 29、30、31 号为起始日，以避免因闰年或闰月带来的歧义。
 
+- doris支持SSD和HDD层级存储，可参考[分层存储](./tiered-storage/diff-disk-medium-migration.md)
+
 - `dynamic_partition.create_history_partition`
 
   默认为 false。当置为 true 时，Doris 会自动创建所有分区，具体创建规则见下文。同时，FE 的参数 `max_dynamic_partition_num` 会限制总分区数量，以避免一次性创建过多分区。当期望创建的分区个数大于 `max_dynamic_partition_num` 值时，操作将被禁止。
@@ -487,26 +493,6 @@ ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 - `dynamic_partition.history_partition_num`
 
   当`create_history_partition` 为 `true` 时，该参数用于指定创建历史分区数量。默认值为 -1，即未设置。**该变量与 `dynamic_partition.start` 作用相同，建议同时只设置一个。**
-
--  `dynamic_partition.hot_partition_num`
-
-  指定最新的多少个分区为热分区。对于热分区，系统会自动设置其 `storage_medium` 参数为 SSD，并且设置 `storage_cooldown_time`。
-
-  注意：若存储路径下没有 SSD 磁盘路径，配置该参数会导致动态分区创建失败。
-
-  `hot_partition_num` 是往前 n 天和未来所有分区
-
-  我们举例说明。假设今天是 2021-05-20，按天分区，动态分区的属性设置为：hot_partition_num=2, end=3, start=-3。则系统会自动创建以下分区，并且设置 `storage_medium` 和 `storage_cooldown_time` 参数：
-
-  ```Plain
-  p20210517：["2021-05-17", "2021-05-18") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
-  p20210518：["2021-05-18", "2021-05-19") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
-  p20210519：["2021-05-19", "2021-05-20") storage_medium=SSD storage_cooldown_time=2021-05-21 00:00:00
-  p20210520：["2021-05-20", "2021-05-21") storage_medium=SSD storage_cooldown_time=2021-05-22 00:00:00
-  p20210521：["2021-05-21", "2021-05-22") storage_medium=SSD storage_cooldown_time=2021-05-23 00:00:00
-  p20210522：["2021-05-22", "2021-05-23") storage_medium=SSD storage_cooldown_time=2021-05-24 00:00:00
-  p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
-  ```
 
 -   `dynamic_partition.reserved_history_periods`
 
@@ -534,12 +520,6 @@ ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
   ```
 
   这两个时间段的分区。其中，`reserved_history_periods` 的每一个 `[...,...]` 是一对设置项，两者需要同时被设置，且第一个时间不能大于第二个时间。
-
--   `dynamic_partition.storage_medium`
-
-  指定创建的动态分区的默认存储介质。默认是 HDD，可选择 SSD。
-
-  注意，当设置为 SSD 时，`hot_partition_num` 属性将不再生效，所有分区将默认为 SSD 存储介质并且冷却时间为 9999-12-31 23:59:59。
 
 ### 创建历史分区规则
 

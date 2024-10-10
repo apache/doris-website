@@ -82,6 +82,14 @@
                         "table-design/index/ngram-bloomfilter-index"
                     ]
                 },
+                {
+                    "type": "category",
+                    "label": "Tiered Storage",
+                    "items": [
+                        "table-design/tiered-storage/diff-disk-medium-migration",
+                        "table-design/tiered-storage/remote-storage"
+                    ]
+                },
                 "table-design/auto-increment",
                 "table-design/best-practice"
             ]
