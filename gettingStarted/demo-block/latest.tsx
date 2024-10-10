@@ -23,7 +23,7 @@ export default function Latest() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href="https://github.com/apache/doris/discussions">
+                    <a className="latest-button" href="https://www.meetup.com/apache-doris-meetup/events/303712793/?utm_medium=referral&utm_campaign=share-btn_savedevents_share_modal&utm_source=link">
                         <div className="home-page-hero-button-label"><div>Event</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -32,10 +32,10 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Join Doris Discussion</div>
+                            <div style={{ marginBottom: 10 }}>Apache Doris Meetup @ Singapore on Oct 24</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>A platform to fostering connects within the community for addressing technical inquiries and providing support.</div>
-                        <div style={{ fontSize: 14, marginBottom: 10 }}>Learn more</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>This meetup brings together our main developers, users, and friends to discuss various topics, including technology introductions and user experiences.</div>
+                        <div style={{ fontSize: 14, marginBottom: 10 }}>Join us</div>
                     </a>
                     <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v2.0/release-2.0.15`}>
                         <div className="home-page-hero-button-label"><div>Release</div></div>
