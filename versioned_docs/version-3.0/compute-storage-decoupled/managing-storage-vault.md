@@ -30,7 +30,7 @@ The Storage Vault is a remote shared storage used by Doris in a decoupled storag
 
 **Syntax**
 
-```SQL
+```sql
 CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name>
 PROPERTIES
 ("key" = "value",...)
@@ -44,7 +44,7 @@ PROPERTIES
 
 To create an HDFS-based decoupled storage-compute Doris cluster, ensure that all nodes (including FE/BE nodes, Meta Service) have permission to access the specified HDFS, including completing Kerberos authorization configuration and connectivity checks in advance (which can be tested using Hadoop Client on each corresponding node).
 
-```SQL
+```sql
 CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     PROPERTIES (
         "type"="hdfs",                                     -- required
@@ -59,7 +59,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
 
 **Creating an S3 Storage Vault**
 
-```SQL
+```sql
 CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
     PROPERTIES (
         "type"="S3",                                   -- required
@@ -72,6 +72,8 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
         "provider" = "OSS"                             -- required
     );
 ```
+
+More parameter explanations and examples can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md).
 
 ### Viewing Storage Vaults
 
@@ -87,7 +89,7 @@ The returned result includes 4 columns: the Storage Vault name, Storage Vault ID
 
 **Syntax**
 
-```SQL
+```sql
 SET <vault_name> AS DEFAULT STORAGE VAULT
 ```
 
@@ -97,7 +99,7 @@ When creating a table, specify `storage_vault_name` in `PROPERTIES`, and the dat
 
 **Example**
 
-```SQL
+```sql
 CREATE TABLE IF NOT EXISTS supplier (
   s_suppkey int(11) NOT NULL COMMENT "",
   s_name varchar(26) NOT NULL COMMENT "",
@@ -133,7 +135,7 @@ Grant a specified MySQL user the usage permission for a certain Storage Vault, a
 
 **Syntax**
 
-```SQL
+```sql
 GRANT
     USAGE_PRIV
     ON STORAGE VAULT <vault_name>
@@ -147,7 +149,7 @@ Only Admin users have the authority to execute the `GRANT` statement, which is u
 
 **Example**
 
-```SQL
+```sql
 grant usage_priv on storage vault my_storage_vault to user1
 ```
 
@@ -155,7 +157,7 @@ Revoke the Storage Vault permissions of a specified MySQL user.
 
 **Syntax**
 
-```SQL
+```sql
 REVOKE 
     USAGE_PRIV
     ON STORAGE VAULT <vault_name>
@@ -166,6 +168,6 @@ Only Admin users have the authority to execute the `REVOKE` statement, which is 
 
 **Example**
 
-```SQL
+```sql
 revoke usage_priv on storage vault my_storage_vault from user1
 ```

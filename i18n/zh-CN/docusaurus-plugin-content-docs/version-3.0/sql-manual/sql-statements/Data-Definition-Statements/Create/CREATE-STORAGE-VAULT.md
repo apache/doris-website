@@ -1,7 +1,7 @@
 ---
 {
     "title": "CREATE-STORAGE-VAULT",
-    "language": "en",
+    "language": "zh-CN",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4
 }
@@ -39,57 +39,36 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 
 #### properties
 
-* `type`
-    只允许两种类型的存储库:S3 和 HDFS。-- 必需
+| 参数     | 是否必需 | 描述                     |
+|:-------|:-----|:-----------------------|
+| `type` | 必需   | 只允许两种类型的存储库:S3 和 HDFS。 |
 
 ##### S3 Vault
 
-`s3.endpoint` 
-    用于对象存储的端点。注意,请不要提供带有 http:// 或 https:// 的端点。对于 Azure Blob 存储,端点应该像 ${ak}.blob.core.windows.net/。-- 必需
-
-`s3.region` 
-    您的存储桶的区域。(如果您使用 GCP 或 AZURE,则不需要)。-- 必需
-
-`s3.root.path` 
-    存储数据的路径。-- 必需
-
-`s3.bucket` 
-    您的对象存储账户的存储桶。(如果您使用 Azure,则为 StorageAccount)。-- 必需
-
-`s3.access_key` 
-    您的对象存储账户的访问密钥。(如果您使用 Azure,则为 AccountName)。-- 必需
-
-`s3.secret_key` 
-    您的对象存储账户的秘密密钥。(如果您使用 Azure,则为 AccountKey)。-- 必需
-
-`provider` 
-    提供对象存储服务的云供应商。-- 必需
-
+| 参数              | 是否必需 | 描述                                                                                                      |
+|:----------------|:-----|:--------------------------------------------------------------------------------------------------------|
+| `s3.endpoint`   | 必需   | 用于对象存储的端点。<br/>注意，请不要提供带有 http:// 或 https:// 开头的链接。对于 Azure Blob 存储，链接应该像 ${ak}.blob.core.windows.net/。 |
+| `s3.region`     | 必需   | 您的存储桶的区域。(如果您使用 GCP 或 AZURE,则不需要)。 |
+| `s3.root.path`  | 必需   | 存储数据的路径。 |
+| `s3.bucket`     | 必需   | 您的对象存储账户的存储桶。(如果您使用 Azure,则为 StorageAccount)。 |
+| `s3.access_key` | 必需   | 您的对象存储账户的访问密钥。(如果您使用 Azure,则为 AccountName)。 |
+| `s3.secret_key` | 必需   | 您的对象存储账户的秘密密钥。(如果您使用 Azure,则为 AccountKey)。 |
+| `provider`      | 必需   | 提供对象存储服务的云供应商。支持的值有`COS`，`OSS`，`S3`，`OBS`，`BOS`，`AZURE`，`GCP` |
 
 ##### HDFS vault
 
-`fs.defaultFS` 
-    Hadoop 配置属性,指定要使用的默认文件系统。-- 必需
-
-`path_prefix` 
-    存储数据的路径前缀。-- 可选. 如果没有指定则会使用user账户下的默认路径。
-
-`hadoop.username` 
-    Hadoop 配置属性,指定访问文件系统的用户。-- 可选. 如果没有指定则会使用启动hadoop进程的user.
-
-`hadoop.security.authentication` 
-    用于 hadoop 的认证方式。-- 可选. 如果希望使用kerberos则可以填写`kerberos`.
-
-`hadoop.kerberos.principal` 
-    您的 kerberos 主体的路径。-- 可选
-
-`hadoop.kerberos.keytab` 
-    您的 kerberos keytab 的路径。-- 可选
-
+| 参数                               | 是否必需 | 描述                                                    |
+|:---------------------------------|:-----|:------------------------------------------------------|
+| `fs.defaultFS`                   |必需| Hadoop 配置属性,指定要使用的默认文件系统。                             |
+| `path_prefix`                    |可选| 存储数据的路径前缀。如果没有指定则会使用 user 账户下的默认路径。                   |
+| `hadoop.username`                |可选| Hadoop 配置属性，指定访问文件系统的用户。如果没有指定则会使用启动 hadoop 进程的 user。 |
+| `hadoop.security.authentication` |可选| 用于 hadoop 的认证方式。如果希望使用 kerberos 则可以填写`kerberos`。      |
+| `hadoop.kerberos.principal`      |可选| 您的 kerberos 主体的路径。      |
+| `hadoop.kerberos.keytab`         |可选|  您的 kerberos keytab 的路径。      |
 
 ### 示例
 
-1. create a HDFS storage vault.
+1. 创建 HDFS storage vault。
     ```sql
     CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
         PROPERTIES (
@@ -98,7 +77,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         );
     ```
 
-2. create a S3 storage vault using azure.
+2. 创建微软 azure S3 storage vault。
     ```sql
     CREATE STORAGE VAULT IF NOT EXISTS s3_vault
         PROPERTIES (
@@ -112,7 +91,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         );
     ```
 
-3. create a S3 storage vault using OSS.
+3. 创建阿里云 OSS S3 storage vault。
     ```sql
     CREATE STORAGE VAULT IF NOT EXISTS s3_vault
         PROPERTIES (
@@ -127,7 +106,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         );
     ```
 
-4. create a S3 storage vault using COS.
+4. 创建腾讯云 COS S3 storage vault。
     ```sql
     CREATE STORAGE VAULT IF NOT EXISTS s3_vault
         PROPERTIES (
@@ -142,7 +121,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         );
     ```
 
-5. create a S3 storage vault using OBS.
+5. 创建华为云 OBS S3 storage vault。
     ```sql
     CREATE STORAGE VAULT IF NOT EXISTS s3_vault
         PROPERTIES (
@@ -157,7 +136,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         );
     ```
 
-6. create a S3 storage vault using AWS.
+6. 创建亚马逊云 S3 storage vault。
     ```sql
     CREATE STORAGE VAULT IF NOT EXISTS s3_vault
         PROPERTIES (
@@ -171,6 +150,20 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "provider" = "S3"
         );
     ```
+7. 创建 MinIO S3 storage vault。
+   ```sql
+    CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+        PROPERTIES (
+        "type"="S3",
+        "s3.endpoint"="127.0.0.1:9000",
+        "s3.access_key" = "ak",
+        "s3.secret_key" = "sk",
+        "s3.region" = "us-east-1",
+        "s3.root.path" = "ssb_sf1_p2_s3",
+        "s3.bucket" = "doris-build-1308700295",
+        "provider" = "S3"
+        );
+   ```
 
 ### 关键词
 
