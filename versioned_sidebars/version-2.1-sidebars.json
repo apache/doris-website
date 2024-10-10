@@ -152,7 +152,8 @@
                     "items": [
                         "data-operate/scheduler/job-scheduler"
                     ]
-                }
+                },
+                "data-operate/transaction"
             ]
         },
         {
