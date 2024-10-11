@@ -105,7 +105,7 @@ bin/stop.sh
 
 Check the `doris_cloud.out` file for the output message `successfully started`.
 
-For production environment, please ensure that the total number of Meta Serivie is at least three.
+For production environment, please ensure that the total number of Meta Service is at least three.
 
 ## 4. Independent Deployment of Data Recycling Function (Optional)
 
