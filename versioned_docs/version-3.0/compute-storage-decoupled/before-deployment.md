@@ -66,7 +66,7 @@ When machine configurations are high, consider mixing FDB, FE, and Meta Service,
 
 ### 5.1. Install FoundationDB
 
-This section provides a step-by-step guide to configure, deploy, and start the FoundationDB (FDB) service using the provided scripts `fdb_vars.sh` and `fdb_ctl.sh`. You can download [doris tools](http://apache-doris-releases/apache-doris-3.0.2-tools.tar.gz) and get `fdb_vars.sh` and `fdb_ctl.sh` from `fdb` directory.
+This section provides a step-by-step guide to configure, deploy, and start the FoundationDB (FDB) service using the provided scripts `fdb_vars.sh` and `fdb_ctl.sh`. You can download [doris tools](http://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-3.0.2-tools.tar.gz) and get `fdb_vars.sh` and `fdb_ctl.sh` from `fdb` directory.
 
 #### 5.1 Machine Requirements
 
