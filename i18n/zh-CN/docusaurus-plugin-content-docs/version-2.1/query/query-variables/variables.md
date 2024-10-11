@@ -709,7 +709,7 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * `adaptive_pipeline_task_serial_read_on_limit`
 
-  当 enable_adaptive_pipeline_task_serial_read_on_limit 开启时，scan 的并行度将会被设置为 1 的行数阈值。
+  当 enable_adaptive_pipeline_task_serial_read_on_limit 开启时，scan 的并行度将会被设置为 1 的行数阈值。默认值是 `10000`。
 
 ***
 

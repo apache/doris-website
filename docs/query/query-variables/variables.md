@@ -705,7 +705,8 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 * `adaptive_pipeline_task_serial_read_on_limit`
 
-    When `enable_adaptive_pipeline_task_serial_read_on_limit` is enabled, the number of rows at which the parallelism of the scan will be set to 1.
+    When `enable_adaptive_pipeline_task_serial_read_on_limit` is enabled, the number of rows at which the parallelism of the scan will be set to 1. 
+    Default value is `10000`
 
 ***
 
