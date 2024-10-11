@@ -332,6 +332,7 @@
                         "lakehouse/database/clickhouse",
                         "lakehouse/database/sap-hana",
                         "lakehouse/database/oceanbase",
+                        "lakehouse/database/gbase-8a",
                         "lakehouse/database/es",
                         "lakehouse/database/max-compute"
                     ]
