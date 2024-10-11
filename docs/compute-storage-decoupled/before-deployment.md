@@ -143,9 +143,9 @@ The Apache Doris (cloud mode) stores data on S3 or HDFS services. If you already
    ```
 5. verify if it is working properly
    ```bash
-   # 上传一个文件
+   # upload a file
    ./mc mv test_file myminio/doris
-   # 查看这个文件
+   # list files
    ./mc ls myminio/doris
    ```
 
