@@ -29,7 +29,7 @@ Doris 内置了如下加密和脱敏函数。详细使用，请参考 SQL 手册
 
 ## AES_ENCRYPT
 
-Aes 加密函数。该函数与 MySQL 中的 `AES_ENCRYPT` 函数行为一致。默认采用 AES_128_ECB 算法，padding 模式为 PKCS7。底层使用 OpenSSL 库进行加密。Reference: https://dev.mysql.com/doc/refman/8.0/en/encryption-functions.html#function_aes-decrypt
+AES 加密函数。该函数与 MySQL 中的 `AES_ENCRYPT` 函数行为一致。默认采用 AES_128_ECB 算法，Padding 模式为 PKCS7。底层使用 OpenSSL 库进行加密。详情可参考 [MySQL 官方文档](https://dev.mysql.com/doc/refman/8.0/en/encryption-functions.html#function_aes-decrypt)
 
 ```sql
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -44,7 +44,7 @@ select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
 
 ## AES_DECRYPT
 
-Aes 解密函数。该函数与 MySQL 中的 `AES_DECRYPT` 函数行为一致。默认采用 AES_128_ECB 算法，padding 模式为 PKCS7。底层使用 OpenSSL 库进行加密。
+AES 解密函数。该函数与 MySQL 中的 `AES_DECRYPT` 函数行为一致。默认采用 AES_128_ECB 算法，Padding 模式为 PKCS7。底层使用 OpenSSL 库进行加密。
 
 ```sql
 select aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='),'F3229A0B371ED2D9441B830D21A390C3');
@@ -60,7 +60,7 @@ select aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='),'F3229A0B371ED2D9441B
 
 计算 MD5 128-bit
 
-```Plain
+```sql
 MySQL [(none)]> select md5("abc");
 +----------------------------------+
 | md5('abc')                       |
@@ -74,7 +74,7 @@ MySQL [(none)]> select md5("abc");
 
 计算多个字符串 MD5 128-bit
 
-```Plain
+```sql
 MySQL > select md5("abcd");
 +----------------------------------+
 | md5('abcd')                      |
@@ -96,7 +96,7 @@ MySQL > select md5sum("ab","cd");
 
 SM4 加密函数
 
-```Plain
+```sql
 MySQL > select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 +--------------------------------+
 | to_base64(sm4_encrypt('text')) |
@@ -121,7 +121,7 @@ MySQL > select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', 
 
 计算 SM3 256-bit
 
-```Plain
+```sql
 MySQL > select sm3("abcd");
 +------------------------------------------------------------------+
 | sm3('abcd')                                                      |
@@ -135,7 +135,7 @@ MySQL > select sm3("abcd");
 
 计算多个字符串 SM3 256-bit
 
-```Plain
+```sql
 MySQL > select sm3("abcd");
 +------------------------------------------------------------------+
 | sm3('abcd')                                                      |

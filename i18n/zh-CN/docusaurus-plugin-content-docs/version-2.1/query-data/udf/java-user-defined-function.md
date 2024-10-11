@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip
-Java UDF 功能自 Doris 1.2 版本开始支持
-:::
 
 ## Java UDF 介绍
 
@@ -40,7 +37,7 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 
 否则将会返回错误状态信息 `Couldn't open file ......`。
 
-更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION).
 
 ### UDF
 
@@ -60,7 +57,7 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
     "file"="file:///pathTo/java-udaf.jar",
     "symbol"="org.apache.doris.udf.demo.MiddleNumberUDAF",
     "always_nullable"="true",
-    "type"="JAVA_UDF"
+    "type"="JAVA_UDAF"
 );
 ```
 
@@ -76,7 +73,7 @@ UDTF 自 Doris 3.0 版本开始支持
 
 UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函数的作用域是全局的，而 UDF 的作用域是 DB 内部。
 
-当链接 session 位于数据内部时，直接使用 UDF 名字会在当前 DB 内部查找对应的 UDF。否则用户需要显示的指定 UDF 的数据库名字，例如 `dbName.funcName`。
+当链接 Session 位于数据内部时，直接使用 UDF 名字会在当前 DB 内部查找对应的 UDF。否则用户需要显示的指定 UDF 的数据库名字，例如 `dbName.funcName`。
 
 ## 删除 UDF
 
@@ -84,41 +81,43 @@ UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函�
 
 ## 类型对应关系
 
-|Type|UDF Argument Type|
-|----|---------|
-|Bool|Boolean|
-|TinyInt|Byte|
-|SmallInt|Short|
-|Int|Integer|
-|BigInt|Long|
-|LargeInt|BigInteger|
-|Float|Float|
-|Double|Double|
-|Date|LocalDate|
-|Datetime|LocalDateTime|
-|String|String|
-|Decimal|BigDecimal|
-|```array<Type>```|```ArrayList<Type>``` 支持嵌套 |
-|```map<Type1,Type2>```|```HashMap<Type1,Type2>``` 支持嵌套 |
-|```struct<Type...>```|```ArrayList<Object>``` 3.0.0 版本开始支持 |
 
-:::tip
-`array/map/struct` 类型可以嵌套其它类型，例如 Doris: ```array<array<int>>```对应 JAVA UDF Argument Type: ```ArrayList<ArrayList<Integer>>```, 其他依此类推
+| Doris 数据类型   | Java UDF 参数类型                          |
+| ---------------- | ------------------------------------------ |
+| Bool             | Boolean                                    |
+| TinyInt          | Byte                                       |
+| SmallInt         | Short                                      |
+| Int              | Integer                                    |
+| BigInt           | Long                                       |
+| LargeInt         | BigInteger                                 |
+| Float            | Float                                      |
+| Double           | Double                                     |
+| Date             | LocalDate                                  |
+| Datetime         | LocalDateTime                              |
+| String           | String                                     |
+| Decimal          | BigDecimal                                 |
+| array<Type>      | `ArrayList<Type>`（支持嵌套）              |
+| map<Type1,Type2> | `HashMap<Type1,Type2>`（支持嵌套）         |
+| struct<Type...>  | `ArrayList<Object>`（从 3.0.0 版本开始支持） |
+
+
+:::tip 提示
+`array`、`map`、`struct` 类型可以嵌套其它类型。例如，Doris 中的 `array<array<int>>` 对应 Java UDF 参数类型为 `ArrayList<ArrayList<Integer>>`，其他类型依此类推。
 :::
 
-:::caution Warning
-在创建函数的时候，不要使用 `varchar` 代替 `string`，否则函数可能执行失败。
+:::caution 注意
+在创建函数时，请务必使用 `string` 类型而不是 `varchar`，否则可能会导致函数执行失败。
 :::
 
 ## UDF 的编写
 
-本小节主要介绍如何开发一个 Java UDF。在 `samples/doris-demo/java-udf-demo/` 下提供了示例，可供参考，查看点击[这里](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo)
+本小节主要介绍如何开发一个 Java UDF。在 `samples/doris-demo/java-udf-demo/` 下提供示例，可点击查看[参考示例](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo)
 
 使用 Java 代码编写 UDF，UDF 的主入口必须为 `evaluate` 函数。这一点与 Hive 等其他引擎保持一致。在本示例中，我们编写了 `AddOne` UDF 来完成对整型输入进行加一的操作。
 
 值得一提的是，本例不只是 Doris 支持的 Java UDF，同时还是 Hive 支持的 UDF，也就是说，对于用户来讲，Hive UDF 是可以直接迁移至 Doris 的。
 
-另外，如果定义的 UDF 中需要加载很大的资源文件，或者希望可以定义全局的 static 变量，可以参照文档下方的 static 变量加载方式。
+另外，如果定义的 UDF 中需要加载很大的资源文件，或者希望可以定义全局的 Static 变量，可以参照文档下方的 Static 变量加载方式。
 
 
 ### UDF
@@ -133,11 +132,11 @@ public class AddOne extends UDF {
 
 ### UDAF
 
-在使用 Java 代码编写 UDAF 时，有一些必须实现的函数 (标记 required) 和一个内部类 State，下面将以一个具体的实例来说明。
+在使用 Java 代码编写 UDAF 时，有一些必须实现的函数 (标记 `required`) 和一个内部类 State，下面将以一个具体的实例来说明。
 
-#### 示例1
+**示例 1**
 
-下面的 SimpleDemo 将实现一个类似的 sum 的简单函数，输入参数 INT，输出参数是 INT。
+下面的 SimpleDemo 将实现一个类似的 SUM 的简单函数，输入参数 INT，输出参数是 INT。
 
 ```java
 package org.apache.doris.udf.demo;
@@ -225,7 +224,7 @@ public class SimpleDemo  {
 
 ```
 
-#### 示例2
+**示例 2**
 
 ```java
 package org.apache.doris.udf.demo;
@@ -343,16 +342,17 @@ public class MedianUDAF {
 
 ## 最佳实践
 
-### static 变量加载
+### Static 变量加载
 
-当前在 Doris 中，执行一个 UDF 函数，eg: `select udf(col) from table`, 每一个并发instance会加载一次udf.jar包，在该instance结束时卸载掉udf.jar包。
-所以当 udf.jar 文件中需要加载一个几百 MB的文件时，会因为并发的原因，使得占据的内存急剧增大，容易OOM。
+当前在 Doris 中，执行一个 UDF 函数，例如 `select udf(col) from table`, 每一个并发 Instance 会加载一次 udf.jar 包，在该 instance 结束时卸载掉 udf.jar 包。
 
-解决方法是可以将资源加载代码拆分开，单独生成一个 jar 包文件，其他包直接引用该资源jar包.  
+所以当 udf.jar 文件中需要加载一个几百 MB 的文件时，会因为并发的原因，使得占据的内存急剧增大，容易 OOM。
+
+解决方法是可以将资源加载代码拆分开，单独生成一个 jar 包文件，其他包直接引用该资源 jar 包。 
 
 假设已经拆分为了 DictLibrary 和 FunctionUdf 两个文件。
 
-1. 单独编译 DictLibrary 文件，使其生成一个独立的 jar 包,这样可以得到一个资源文件 DictLibrary.jar: 
+1. 单独编译 DictLibrary 文件，使其生成一个独立的 jar 包，这样可以得到一个资源文件 DictLibrary.jar: 
 
     ```shell
     javac   ./DictLibrary.java
@@ -391,7 +391,7 @@ public class MedianUDAF {
     }
     ```
 
-2. 然后编译 FunctionUdf 文件，可以直接引用上一步的到的资源包, 这样可以得到 udf 的 FunctionUdf.jar包。
+2. 然后编译 FunctionUdf 文件，可以直接引用上一步的到的资源包，这样可以得到 UDF 的 FunctionUdf.jar 包。
 
     ```shell
     javac -cp ./DictLibrary.jar  ./FunctionUdf.java
@@ -400,7 +400,7 @@ public class MedianUDAF {
 
 3. 经过上面两步之后，会得到两个 jar 包，由于想让资源 jar 包被所有的并发引用，所以需要将它放到指定路径 `fe/custom_lib` 和 `be/custom_lib` 下面，服务重启之后就可以随着 JVM 的启动加载进来。
 
-4. 最后利用 `create function` 语句创建一个 UDF 函数
+4. 最后利用 `CREATE FUNCTION` 语句创建一个 UDF 函数
 
    ```sql
    CREATE FUNCTION java_udf_dict(string) RETURNS string PROPERTIES (
@@ -410,17 +410,17 @@ public class MedianUDAF {
    );
    ```
 
-使用该加载方式时，FunctionUdf.jar和DictLibrary.jar都在FE和BE的custom_lib路径下，因此都会随着服务启动而加载，停止而释放，不再需要指定file 的路径。
+使用该加载方式时，FunctionUdf.jar 和 DictLibrary.jar 都在 FE 和 BE 的 custom_lib 路径下，因此都会随着服务启动而加载，停止而释放，不再需要指定 File 的路径。
 
-也可以使用 file:/// 方式自定义FunctionUdf.jar的路径，但是DictLibrary.jar 只能放在custom_lib下。
+也可以使用 file:/// 方式自定义 FunctionUdf.jar 的路径，但是 DictLibrary.jar 只能放在 custom_lib 下。
 
 ## 使用须知
 
 1. 不支持复杂数据类型（HLL，Bitmap）。
 
-2. 当前允许用户自己指定JVM最大堆大小，配置项是 be.conf 中的 `JAVA_OPTS` 的 -Xmx 部分。默认 1024m，如果需要聚合数据，建议调大一些，增加性能，减少内存溢出风险。
+2. 当前允许用户自己指定 JVM 最大堆大小，配置项是 be.conf 中的 `JAVA_OPTS` 的 -Xmx 部分。默认 1024m，如果需要聚合数据，建议调大一些，增加性能，减少内存溢出风险。
 
-3. Char 类型的 UDF 在 create function 时需要使用 String 类型。
+3. Char 类型的 UDF 在 `CREATE FUNCTION` 时需要使用 String 类型。
 
-4. 由于 jvm 加载同名类的问题，不要同时使用多个同名类作为 udf 实现，如果想更新某个同名类的 udf，需要重启 be 重新加载 classpath。
+4. 由于 JVM 加载同名类的问题，不要同时使用多个同名类作为 UDF 实现，如果想更新某个同名类的 UDF，需要重启 BE 重新加载 Classpath。
 

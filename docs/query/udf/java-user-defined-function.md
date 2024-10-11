@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip
-Java UDF is supported starting from Doris version 1.2.
-:::
 
 ## Introduction to Java UDF
 
@@ -62,7 +59,7 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
     "file"="file:///pathTo/java-udaf.jar",
     "symbol"="org.apache.doris.udf.demo.MiddleNumberUDAF",
     "always_nullable"="true",
-    "type"="JAVA_UDF"
+    "type"="JAVA_UDAF"
 );
 ```
 
@@ -72,14 +69,7 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 UDTF is supported starting from Doris version 3.0.
 :::
 
-```sql
-CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
-    "file"="file:///pathTo/java-udaf.jar",
-    "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
-    "always_nullable"="true",
-    "type"="JAVA_UDF"
-);
-```
+
 
 ## Using UDF
 
