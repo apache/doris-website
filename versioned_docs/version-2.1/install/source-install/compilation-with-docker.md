@@ -118,7 +118,7 @@ docker run -it --network=host --name mydocker -v ~/.m2:/root/.m2 -v ~/doris-bran
 
 ### 3. Execute the build
 
-```Plain
+```Plain 
 # By default, it builds the AVX2 version.
 $ sh build.sh
 
