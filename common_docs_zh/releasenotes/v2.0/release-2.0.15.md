@@ -84,4 +84,8 @@ under the License.
 
 - ARRAY MAP STRUCT 类型现在支持 `REPLACE_IF_NOT_NULL`。[#38304](https://github.com/apache/doris/pull/38304)
 
-- 对非 `DELETE_INVALID_XXX `失败的删除作业进行重试。[#37834](
+- 对非 `DELETE_INVALID_XXX `失败的删除作业进行重试。[#37834](https://github.com/apache/doris/pull/37834)
+
+## 致谢
+
+@924060929、@BePPPower、@BiteTheDDDDt、@CalvinKirs、@GoGoWen、@HappenLee、@Jibing-Li、@Johnnyssc、@LiBinfeng-01、@Mryange、@SWJTU-ZhangLei、@TangSiyang2001、@Toms1999、@Vallishp、@Yukang-Lian、@airborne12、@amorynan、@bobhan1、@cambyzju、@csun5285、@dataroaring、@eldenmoon、@englefly、@feiniaofeiafei、@hello-stephen、@htyoung、@hubgeter、@justfortaste、@liaoxin01、@liugddx、@liutang123、@luwei16、@mongo360、@morrySnow、@qidaye、@smallx、@sollhui、@starocean999、@w41ter、@xiaokang、@xzj7019、@yujun777、@zclllyybb、@zddr、@zhangstar333、@zhannngchen、@zy-kkk、@zzzxl1993
