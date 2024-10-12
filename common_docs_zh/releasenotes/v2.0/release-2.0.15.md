@@ -30,6 +30,7 @@ under the License.
 
 - GitHub 下载：https://github.com/apache/doris/releases/tag/2.0.15
 
+
 ## 行为变更
 
 无
@@ -56,23 +57,27 @@ under the License.
 
 - 为防止 FE 内存不足，限制备份任务中的表块数量，默认值为 300,000。[#39987](https://github.com/apache/doris/pull/39987)
 
+- ARRAY MAP STRUCT 类型支持 `REPLACE_IF_NOT_NULL`。[#38304](https://github.com/apache/doris/pull/38304)
+
+- 对非 `DELETE_INVALID_XXX `失败的删除作业进行重试。[#37834](https://github.com/apache/doris/pull/37834)
+
 ### 查询性能
 
-- 优化由并发列更新和压缩引起的慢速列更新问题。[#38487](https://github.com/apache/doris/pull/38487)
+- 优化由并发列更新和 compaction 引起的慢速列更新问题。[#38487](https://github.com/apache/doris/pull/38487)
 
-- 当过滤条件中存在 NullLiteral 时，现在可以将其折叠为 False 并进一步转换为 EmptySet，以减少不必要的数据扫描和计算。[#38135](https://github.com/apache/doris/pull/38135)
+- 当过滤条件中存在 NullLiteral 时，可以将其折叠为 false 并进一步转换为 EmptySet，以减少不必要的数据扫描和计算。[#38135](https://github.com/apache/doris/pull/38135)
 
-- 提高 `ORDER BY` 排列的性能。[#38985](https://github.com/apache/doris/pull/38985)
+- 提高 `ORDER BY` 全排序的性能。[#38985](https://github.com/apache/doris/pull/38985)
 
 - 提高倒排索引中字符串处理的性能。[#37395](https://github.com/apache/doris/pull/37395)
 
 ### 查询优化器
 
-- 增加了对以分号开头的语句的支持。[#39399](https://github.com/apache/doris/pull/39399)
+- 增加了对以分号开头的语句的支持以兼容老优化器。[#39399](https://github.com/apache/doris/pull/39399)
 
-- 完善了聚合函数签名匹配。[#39352](https://github.com/apache/doris/pull/39352)
+- 完善了一些聚合函数签名匹配。[#39352](https://github.com/apache/doris/pull/39352)
 
-- 在模式变更后删除列统计信息并触发自动分析。[#39101](https://github.com/apache/doris/pull/39101)
+- 在 Schema 变更后删除列统计信息并触发自动分析。[#39101](https://github.com/apache/doris/pull/39101)
 
 - 支持使用 `DROP CACHED STATS table_name` 删除缓存的统计信息。[#39367](https://github.com/apache/doris/pull/39367)
 
@@ -82,10 +87,6 @@ under the License.
 
 - 修复 JDBC Catalog 在某些条件下存在的线程泄漏问题。[#39423](https://github.com/apache/doris/pull/39423) 
 
-- ARRAY MAP STRUCT 类型现在支持 `REPLACE_IF_NOT_NULL`。[#38304](https://github.com/apache/doris/pull/38304)
-
-- 对非 `DELETE_INVALID_XXX `失败的删除作业进行重试。[#37834](https://github.com/apache/doris/pull/37834)
-
-## 致谢
+**致谢**
 
 @924060929、@BePPPower、@BiteTheDDDDt、@CalvinKirs、@GoGoWen、@HappenLee、@Jibing-Li、@Johnnyssc、@LiBinfeng-01、@Mryange、@SWJTU-ZhangLei、@TangSiyang2001、@Toms1999、@Vallishp、@Yukang-Lian、@airborne12、@amorynan、@bobhan1、@cambyzju、@csun5285、@dataroaring、@eldenmoon、@englefly、@feiniaofeiafei、@hello-stephen、@htyoung、@hubgeter、@justfortaste、@liaoxin01、@liugddx、@liutang123、@luwei16、@mongo360、@morrySnow、@qidaye、@smallx、@sollhui、@starocean999、@w41ter、@xiaokang、@xzj7019、@yujun777、@zclllyybb、@zddr、@zhangstar333、@zhannngchen、@zy-kkk、@zzzxl1993

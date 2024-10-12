@@ -56,7 +56,7 @@ NA
 
 - To prevent FE OOM, limit the number of tablets in backup tasks, with a default value of 300,000. [#39987](https://github.com/apache/doris/pull/39987)
 
-## Performance
+### Performance
 
 - Optimize slow column updates caused by concurrent column updates and compactions. [#38487](https://github.com/apache/doris/pull/38487)
 
@@ -66,7 +66,7 @@ NA
 
 - Improve the performance of string processing in inverted indexes. [#37395](https://github.com/apache/doris/pull/37395)
 
-## Optimizer and Statistics
+### Optimizer and Statistics
 
 - Added support for statements beginning with a semicolon. [#39399](https://github.com/apache/doris/pull/39399)
 
@@ -76,7 +76,7 @@ NA
 
 - Support dropping cached stats using `DROP CACHED STATS table_name`. [#39367](https://github.com/apache/doris/pull/39367)
 
-## Multi Catalog and Others
+### Multi Catalog and Others
 
 - Optimize JDBC Catalog refresh to reduce the frequency of client creation. [#40261](https://github.com/apache/doris/pull/40261)
 
@@ -86,6 +86,6 @@ NA
 
 - Retry delete jobs for failures that are not `DELETE_INVALID_XXX`. [#37834](https://github.com/apache/doris/pull/37834)
 
-## 4 Credits
+**Credits**
 
 @924060929, @BePPPower, @BiteTheDDDDt, @CalvinKirs, @GoGoWen, @HappenLee, @Jibing-Li, @Johnnyssc, @LiBinfeng-01, @Mryange, @SWJTU-ZhangLei, @TangSiyang2001, @Toms1999, @Vallishp, @Yukang-Lian, @airborne12, @amorynan, @bobhan1, @cambyzju, @csun5285, @dataroaring, @eldenmoon, @englefly, @feiniaofeiafei, @hello-stephen, @htyoung, @hubgeter, @justfortaste, @liaoxin01, @liugddx, @liutang123, @luwei16, @mongo360, @morrySnow, @qidaye, @smallx, @sollhui, @starocean999, @w41ter, @xiaokang, @xzj7019, @yujun777, @zclllyybb, @zddr, @zhangstar333, @zhannngchen, @zy-kkk, @zzzxl1993
