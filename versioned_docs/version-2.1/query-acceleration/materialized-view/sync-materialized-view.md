@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Materialized View",
+    "title": "Sync-Materialized View",
     "language": "en"
 }
 ---

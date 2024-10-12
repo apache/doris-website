@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Window function
+
 
 Window functions are a special type of built-in functions in databases. Similar to aggregate functions, window functions perform calculations on multiple input rows to obtain a single data value. However, the difference lies in the fact that window functions process the input data within a specific window, rather than grouping and calculating based on the `GROUP BY` clause. The data within each window can be sorted and grouped using the `OVER()` clause. Window functions calculate a separate value for each row of the result set, rather than a single value for each `GROUP BY`. This flexible approach allows users to add additional columns in the `SELECT` clause, providing more opportunities to reorganize and filter the result set. Window functions can only appear in the select list and the outermost `ORDER BY` clause. During the query process, window functions take effect at the end, meaning they are executed after operations such as `JOIN`, `WHERE`, and `GROUP BY`. Window functions are often used in finance and scientific computing to analyze trends, calculate outliers, and perform bucket analysis on large amounts of data.
 
@@ -36,15 +36,15 @@ partition_by_clause ::= PARTITION BY expr [, expr ...]
 order_by_clause ::= ORDER BY expr [ASC | DESC] [, expr [ASC | DESC] ...]
 ```
 
-#### Function
+### Function
 
 The currently supported functions include `AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER(), SUM().`
 
-#### PARTITION BY clause
+### PARTITION BY clause
 
 The `Partition By` clause is similar to `Group By`. It groups input rows based on the specified one or more columns, where rows with the same values are placed in the same group.
 
-#### ORDER BY clause
+### ORDER BY clause
 
 The `Order By` clause within a window function behaves similarly to the outer-level `Order By`. It defines the arrangement of input rows, and when `Partition By` is specified, the `Order By` determines the order within each partition. The only difference from the outer `Order By` is that within the `OVER` clause, using `Order By n` (where n is a positive integer) effectively does nothing, whereas in the outer context, `Order By n` signifies sorting based on the nth column.
 
@@ -57,7 +57,7 @@ c1, c2, c3, c4
 FROM events;
 ```
 
-#### Window clause
+### Window clause
 
 The Window clause is used to specify a computational range for window functions. It considers the current row and a specified number of rows before and after it as the target for the window function's operation. The methods supported by the Window clause include: AVG(), COUNT(), FIRST_VALUE(), LAST_VALUE(), and SUM(). For MAX() and MIN(), the Window clause can specify a starting range of UNBOUNDED PRECEDING.
 
@@ -65,7 +65,7 @@ The Window clause is used to specify a computational range for window functions.
 ROWS BETWEEN [ { m | UNBOUNDED } PRECEDING | CURRENT ROW] [ AND [CURRENT ROW | { UNBOUNDED | n } FOLLOWING] ]
 ```
 
-#### Example 
+### Example 
 
 Taking the following stock data as an example, the stock code is JDR, and the "closing price" refers to the daily closing quotation.
 
@@ -102,6 +102,6 @@ from stock_ticker;
  | JDR          | 2014-10-08 00:00:00 | 13.98         | 14.36          |
 ```
 
-#### See more
+### See more
 
 For more window functions, refer to [Window Functions](../../sql-manual/sql-functions/window-functions/window-function).

@@ -34,7 +34,7 @@ Doris is highly compatible with MySQL syntax and supports standard SQL. However,
 | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Boolean      | <p>- Supported</p>  <p>- Range: 0 represents false, 1 represents true</p>  | <p>- Supported</p>  <p>- Keyword: Boolean</p>  <p>- Range: 0 represents false, 1 represents true</p> |
 | Bit          | <p>- Supported</p>  <p>- Range: 1 to 64</p>                                | Not supported                                                |
-| Tinyint      | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -128 to 127, unsigned range from 0 to 255 | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -128 to 127</p>    |
+| Tinyint      | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -128 to 127, unsigned range from 0 to 255 </p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -128 to 127</p>    |
 | Smallint     | <p>- Supported</p> <p>- Supports signed and unsigned</p> <p> - Range: signed range from -2^15 to 2^15-1, unsigned range from 0 to 2^16-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -32768 to 32767</p> |
 | Mediumint    | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^23 to 2^23-1, unsigned range from 0 to -2^24-1</p> | - Not supported                                              |
 | Int          | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^31 to 2^31-1, unsigned range from 0 to -2^32-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2147483648 to 2147483647</p> |

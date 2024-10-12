@@ -1,5 +1,5 @@
 ---
-{ 'title': 'Doris Join Optimization Principle', 'language': 'en' }
+{ 'title': 'Join', 'language': 'en' }
 ---
 
 <!--
