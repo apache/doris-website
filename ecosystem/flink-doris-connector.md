@@ -552,8 +552,8 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --create-table-only     | Whether only the table schema should be synchronized                                                                   |
 
 :::info Note
-1. When synchronizing, you need to add the corresponding Flink CDC dependencies in the $FLINK_HOME/lib directory, such as flink-sql-connector-mysql-cdc-${version}.jar, flink-sql-connector-oracle-cdc-${version}.jar , flink-sql-connector-mongodb-cdc-${version}.jar
-2. The FlinkCDC version that Connector 24.0.0 depends on must be above 3.1.
+1. When synchronizing, you need to add the corresponding Flink CDC dependencies in the `$FLINK_HOME/lib` directory, such as flink-sql-connector-mysql-cdc-${version}.jar, flink-sql-connector-oracle-cdc-${version}.jar , flink-sql-connector-mongodb-cdc-${version}.jar
+2. The Flink CDC version that Connector 24.0.0 depends on must be above 3.1 . If Flink CDC is to be used for synchronizing data from MySQL or Oracle, relevant JDBC drivers also need to be added under `$FLINK_HOME/lib`.
 :::
 
 ### MySQL synchronization example
@@ -664,7 +664,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    lib/flink-doris-connector-1.16-SNAPSHOT.jar \
+    lib/flink-doris-connector-1.16-24.0.0.jar \
     db2-sync-database \
     --database db2_test \
     --db2-conf hostname=127.0.0.1 \
