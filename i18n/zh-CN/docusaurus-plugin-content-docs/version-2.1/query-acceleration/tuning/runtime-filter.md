@@ -24,284 +24,406 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Runtime Filter
+Runtime Filter 主要分为两种，Join Runtime Filter 与 TopN Runtime Filter。本文将详细介绍两类 Runtime Filter 的工作原理、使用指南与调优方法。
 
-Runtime Filter 旨在为某些 Join 查询在运行时动态生成过滤条件，来减少扫描的数据量，避免不必要的 I/O 和计算，从而加速查询。
+## Join Runtime Filter
 
-## 名词解释
+Join Runtime Filter (以下简称 JRF) 是一种优化技术，它根据运行时数据在 Join 节点通过 Join 条件动态生成 Filter。此技术不仅能降低 Join Probe 的规模，还能有效减少数据 IO 和网络传输。
 
-- 左表：Join 查询时，左边的表。进行 Probe 操作。可被 Join Reorder 调整顺序。
+### 工作原理
 
-- 右表：Join 查询时，右边的表。进行 Build 操作。可被 Join Reorder 调整顺序。
+我们以一个类似 TPC-H Schema 上的 Join 为例，来说明 JRF 的工作原理。
 
-- Fragment：FE 会将具体的 SQL 语句的执行转化为对应的 Fragment 并下发到 BE 进行执行。BE 上执行对应 Fragment，并将结果汇聚返回给 FE。
+假设数据库中有两张表：
 
-- Join on clause: `A join B on A.a=B.b`中的`A.a=B.b`，在查询规划时基于此生成 join conjuncts，包含 join Build 和 Probe 使用的 expr，其中 Build expr 在 Runtime Filter 中称为 src expr，Probe expr 在 Runtime Filter 中称为 target expr。
+- 订单表（orders），包含 1 亿行数据，记录订单号 (o_orderkey)、客户编号 (o_custkey) 以及订单的其它信息。
 
-- rf: Runtime Filter的缩写。
+- 客户表（customer），包含 10 万行数据，记录客户编号 (c_custkey)、客户国籍 (c_nation) 以及客户的其它信息。该表共记录了 25 个国家的客户，每个国家约有 4 千客户。
 
-## 原理
-
-Runtime Filter 在查询规划时生成，在 HashJoinNode 中构建，在 ScanNode 中应用。
-
-举个例子，当前存在 T1 表与 T2 表的 Join 查询，它的 Join 方式为 HashJoin，T1 是一张事实表，数据行数为 100000，T2 是一张维度表，数据行数为 2000，Doris join 的实际情况是：
-
-```text
-|          >      HashJoinNode     <
-|         |                         |
-|         | 100000                  | 2000
-|         |                         |
-|   OlapScanNode              OlapScanNode
-|         ^                         ^   
-|         | 100000                  | 2000
-|        T1                        T2
-|
-```
-
-显而易见对 T2 扫描数据要远远快于 T1，如果我们主动等待一段时间再扫描 T1，等 T2 将扫描的数据记录交给 HashJoinNode 后，HashJoinNode 根据 T2 的数据计算出一个过滤条件，比如 T2 数据的最大和最小值，或者构建一个 Bloom Filter，接着将这个过滤条件发给等待扫描 T1 的 ScanNode，后者应用这个过滤条件，将过滤后的数据交给 HashJoinNode，从而减少 probe hash table 的次数和网络开销，这个过滤条件就是 Runtime Filter，效果如下：
-
-```text
-|          >      HashJoinNode     <
-|         |                         |
-|         | 6000                    | 2000
-|         |                         |
-|   OlapScanNode              OlapScanNode
-|         ^                         ^   
-|         | 100000                  | 2000
-|        T1                        T2
-|
-```
-
-如果能将过滤条件（Runtime Filter）下推到存储引擎，则某些情况下可以利用索引来直接减少扫描的数据量，从而大大减少扫描耗时，效果如下：
-
-```text
-|          >      HashJoinNode     <
-|         |                         |
-|         | 6000                    | 2000
-|         |                         |
-|   OlapScanNode              OlapScanNode
-|         ^                         ^   
-|         | 6000                    | 2000
-|        T1                        T2
-|
-```
-
-可见，和谓词下推、分区裁剪不同，Runtime Filter 是在运行时动态生成的过滤条件，即在查询运行时解析 join on clause 确定过滤表达式，并将表达式广播给正在读取左表的 ScanNode，从而减少扫描的数据量，进而减少 probe hash table 的次数，避免不必要的 I/O 和计算。
-
-Runtime Filter 主要用于大表 join 小表的优化。如果左表的数据量太小，rf的提前过滤效果可能不大。如果右表的数据量太大，则在构建和传输rf时会有比较大的成本。
-
-## 使用方式
-
-### Runtime Filter 配置项
-
-默认的配置已经尽可能的适配了大多数场景。仅在某些特定场景下，才需进一步调整以达到最优效果。通常只在性能测试后，针对资源密集型、运行耗时足够长且频率足够高的查询进行优化。
-与 Runtime Filter 相关的配置选项，请参阅以下部分：
-  - `enable_sync_runtime_filter_size`: 在优化器无法准确估计基数时，令执行器在生成rf之前同步并获取全局的Build端大小总和，根据这个实际大小来决定 IN Or Bloom Filter 的最终类型和 Bloom Filter 的大小。如果设置为 false 则不做同步操作获取全局大小，该变量默认值为 true 。
-
-  - `runtime_filter_max_in_num`: 如果Build端大小大于这个值，我们将不生成 IN predicate。该变量默认值为 1024 。
-
-  - `runtime_filter_mode`: 用于调整 rf 的生成策略，包括 OFF、LOCAL、GLOBAL 三种策略。如果设置为 OFF 则不会生成rf。该变量默认值为 GLOBAL 。
-
-  - `runtime_filter_type`: 允许生成的rf类型，包括 Bloom Filter、MinMax Filter、IN predicate、IN Or Bloom Filter、Bitmap Filter。该变量默认值为 IN_OR_BLOOM_FILTER,MIN_MAX 。
-
-  - `runtime_filter_wait_infinitely`: 如果设置为 true，那么左表的 scan 节点将会一直等待直到接收到 rf 或者查询超超时，相当于 runtime_filter_wait_time_ms 被设置为无限大。该变量默认值为 false 。
-
-  - `runtime_filter_wait_time_ms`: 左表的 ScanNode 等待 rf 的时间。如果超过了等待时间仍然没有收到 rf，则 ScanNode 会先开始扫描数据，后续收到的rf会对此时刻该 ScanNode 还没有返回的数据生效。该变量默认值为 1000 。
-
-  - `runtime_bloom_filter_min_size`: 优化器预估的 rf 中 Bloom Filter 的最小长度，该变量默认值为 1048576（1M）。
-
-  - `runtime_bloom_filter_max_size`: 优化器预估的 rf 中 Bloom Filter 的最大长度，该变量默认值为 16777216（16M）。
-
-  - `runtime_bloom_filter_size`: 优化器预估的 rf 中 Bloom Filter 的默认长度，该变量默认值为 2097152（2M）。
-
-  
-
-下面对查询选项做进一步说明。
-
-**1. runtime_filter_type**
-
-使用的 Runtime Filter 类型。
-
-**类型**: 数字 (1, 2, 4, 8, 16) 或者相对应的助记符字符串 (IN, BLOOM_FILTER, MIN_MAX, IN_OR_BLOOM_FILTER, BITMAP_FILTER)，默认 12(MIN_MAX,IN_OR_BLOOM_FILTER)，使用多个时用逗号分隔，注意需要加引号，或者将任意多个类型的数字相加，例如：
+统计客户来自中国的订单数量，查询语句如下：
 
 ```sql
-set runtime_filter_type="BLOOM_FILTER,IN,MIN_MAX";
+select count(*)
+from orders join customer on o_custkey = c_custkey
+where c_nation = "china"
 ```
 
-等价于：
+此查询的执行计划主体是一个 Join，如下图所示：
+
+![Join Runtime Filter](/images/join-runtime-filter-1.jpg)
+
+在没有 JRF 的情况下，Scan 节点会扫描 orders 表，读入 1 亿行数据，Join 节点则对这 1 亿行数据进行 Hash Probe，最后生成 Join 结果。
+
+**1. 优化思路**
+
+过滤条件 `c_nation = "china"` 会过滤掉所有非中国的客户，因此参与 Join 的 customer 只是 customer 表的一部分（约 1/25）。后续的 Join 条件为 `o_custkey = c_custkey`，所以我们需要关注过滤结果中 `c_custkey` 列有哪些被选中的 custkey。将过滤后的 `c_custkey` 记为集合 A。**在下文中，我们用集合 A 专门指代参与 Join 的** **`c_custkey`** **集合。**
+
+如果将集合 A 作为一个 in 条件推给 orders 表，那么 orders 表的 Scan 节点就可以对 orders 进行过滤。这就类似增加了一个过滤条件 `c_custkey in (c001, c003)`。
+
+基于以上的优化思路，SQL 可以优化为：
 
 ```sql
-set runtime_filter_type=7;
+select count(*)
+from orders join customer on o_custkey = c_custkey
+where c_nation = "china" and o_custkey in (c001, c003)
 ```
 
-**使用注意事项**
+优化后的执行计划如下图所示：
 
-- **IN or Bloom Filter**: 根据右表在执行过程中的真实行数，由系统自动判断使用 IN predicate 还是 Bloom Filter
-  
-  - 默认在右表数据行数少于 runtime_filter_max_in_num 时会使用 IN predicate，否则使用 Bloom filter。
+![join-runtime-filter-2](/images/join-runtime-filter-2.jpg)
 
-- **Bloom Filter**: 有一定的误判率，导致过滤的数据比预期少一点，但不会导致最终结果不准确，在大部分情况下 Bloom Filter 都可以提升性能或对性能没有显著影响，但在部分情况下会导致性能降低。
+可以看到，通过增加 Orders 表上的过滤条件，实际参与 Join 的 Orders 行数从 1 亿下降到 40 万，查询速度得到大幅提升。
 
-  - Bloom Filter 构建和应用的开销较高，所以当过滤率较低时，或者左表数据量较少时，Bloom Filter 可能会导致性能降低。
-  - Bloom Filter 过大，可能会导致构建/传输/过滤耗时较大。
-  
+**2. 实现方法**
 
-- **MinMax Filter**: 包含最大值和最小值，从而过滤小于最小值和大于最大值的数据，MinMax Filter 的过滤效果与 join on clause 中 Key 列的类型和左右表数据分布有关。
+上述优化效果显著，但优化器并不知道实际被选中的 `c_custkey`，即集合 A。因此，优化器无法在优化阶段静态分析生成一个固定的 in-predicate 过滤算子。
 
-  - 当 join on clause 中 Key 列的类型为 int/bigint/double 等时，极端情况下，如果左右表的最大最小值相同则没有效果，反之右表最大值小于左表最小值，或右表最小值大于左表最大值，则效果最好。
+在实际应用中，我们会在 Join 节点收集右侧数据后，运行时生成集合 A，并将集合 A 下推给 orders 表的 scan 节点。我们通常将这个 JRF 记为：`RF(c_custkey -> [o_custkey])`。
 
-  - 当 join on clause 中 Key 列的类型为 varchar 等时，应用 MinMax Filter 往往会导致性能降低。
+Doris 是一个分布式数据库，为了满足分布式场景的需求，JRF 还需要进行一次合并。假设上述例子中的 Join 是一个 Shuffle Join，那么这个 Join 有多个 Instance，每个 Join 只处理 orders 和 customer 表的一个分片。因此，每个 Join Instance 都只得到了集合 A 的一部分。
 
-- **IN predicate**: 根据 join on clause 中 Key 列在右表上的所有值构建 IN predicate，使用构建的 IN predicate 在左表上过滤，相比 Bloom Filter 构建和应用的开销更低，在右表数据量较少时往往性能更高。
+在当前 Doris 的版本中，我们会选出一个节点作为 Runtime Filter Manager。每个 Join Instance 根据各自分片中的 `c_custkey` 生成 Partial JRF，并发送给 Manager。Manager 收集所有 Partial JRF 后，合并生成 Global JRF，再将 Global JRF 发送给 orders 表的所有 Scan Instance。
 
-  - 当同时指定 In predicate 和其他 filter，并且 in 的过滤数值没达到 runtime_filter_max_in_num 时，会尝试把其他 filter 去除掉。原因是 In predicate 是精确的过滤条件，即使没有其他 filter 也可以高效过滤，如果同时使用则其他 filter 会做无用功。
+生成 Global JRF 的流程如下图所示：
 
-- **Bitmap Filter**:
+![Global JRF](/images/global-JRF.jpg)
 
-  - 当前仅当[in subquery](../../sql-manual/sql-statements/Operators/in)操作中的子查询返回 bitmap 列时会使用 bitmap filter.
+### Filter 类型
 
-**2. runtime_filter_mode**
+有多种数据结构均可用于实现 JRF，但它们在生成、合并、传输、应用等方面效率各异，因此各自适用于不同的场景。
 
-用于控制 Runtime Filter 在 instance 之间传输的范围。
+**1. In Filter**
 
-**类型**: 数字 (0, 1, 2) 或者相对应的助记符字符串 (OFF, LOCAL, GLOBAL)，默认 2(GLOBAL)。
+这是实现 JRF 的最简单方式。以之前的例子为例，使用 In Filter 时，执行引擎会在左表上生成谓词 `o_custkey in (...A 中元素列表...)`。通过这个 In 过滤条件，可以对 orders 表进行过滤。当集合 A 中元素数量较少时，In Filter 的效率较高。
 
-**使用注意事项**
+然而，当集合 A 中元素数量过大时，使用 In Filter 会带来性能问题：
 
-LOCAL：相对保守，构建的 Runtime Filter 只能在同一个 instance（查询执行的最小单元）上同一个 Fragment 中使用，即 Runtime Filter 生产者（构建 Filter 的 HashJoinNode）和消费者（使用 RuntimeFilter 的 ScanNode）在同一个 Fragment，比如 broadcast join 的一般场景；
+1. 首先，生成 In Filter 的成本较高，尤其是在需要进行 JRF 合并的情况下。因为从不同数据分片对应的 Join 节点中收集的值可能会有重复，例如，如果 `c_custkey` 不是表的主键，那么 `c001`、`c003` 这样的 `c_custkey` 可能出现多次，这时就需要进行去重操作，而这个过程比较耗时。
 
-GLOBAL：相对激进，除满足 LOCAL 策略的场景外，还可以将 Runtime Filter 合并后通过网络传输到不同 instance 上的不同 Fragment 中使用，比如 Runtime Filter 生产者和消费者在不同 Fragment，比如 shuffle join。
+2. 其次，当集合 A 元素较多时，Join 节点与 orders 表的 Scan 节点之间传输数据的代价也较高。
 
-大多数情况下 GLOBAL 策略可以在更广泛的场景对查询进行优化，但在有些 shuffle join 中生成和合并 Runtime Filter 的开销超过给查询带来的性能优势，可以考虑更改为 LOCAL 策略。
+3. 最后，orders 表的 Scan 节点执行 In 谓词也会消耗时间。
 
-如果集群中涉及的 join 查询不会因为 Runtime Filter 而提高性能，您可以将设置更改为 OFF，从而完全关闭该功能。
+基于上述考虑，我们引入了 Bloom Filter。
 
-在不同 Fragment 上构建和应用 Runtime Filter 时，需要合并 Runtime Filter 的原因和策略可参阅 [ISSUE 6116(opens new window)](https://github.com/apache/incubator-doris/issues/6116)
+**2. Bloom Filter**
 
-**3. runtime_filter_wait_time_ms**
+如果对 Bloom Filter 不太了解，可以将其理解为一个哈希表。简单来说，Bloom Filter 就是一组叠加的哈希表。使用 Bloom Filter（或哈希表）进行过滤，利用了以下性质：
 
-Runtime Filter 的等待耗时。
+- 基于集合 A 生成哈希表 T，如果一个元素**不在**哈希表 T 中，那么可以断定这个元素也不在集合 A 中。反之，则不成立。
 
-**类型**: 整数，默认 1000，单位 ms
+  因此，如果一个 `o_orderkey` 被 Bloom Filter 过滤掉，那么可以断定在 Join 的右侧没有相等的 `c_custkey`。但由于哈希碰撞，一些 `o_custkey` 即使没有相等的 `c_custkey`，也可能通过 Bloom Filter。
 
-**使用注意事项**
+  所以，虽然 Bloom Filter 不能实现精准过滤，但仍然能达到一定的过滤效果。
 
-在开启 Runtime Filter 后，左表的 ScanNode 会为分配给自己的 Runtime Filter 等待一段时间再扫描数据。
+- 哈希表的桶数量决定了过滤的准确率。桶数量越大，Filter 的大小越大，准确性越高，但生成、传输、使用的计算代价也越大。
 
-因为 Runtime Filter 的构建和合并均需要时间，ScanNode 会尝试将等待时间内到达的 Runtime Filter 下推到存储引擎，如果超过等待时间后，ScanNode 会使用已经到达的 Runtime Filter 直接开始扫描数据。
+  因此，Bloom Filter 的大小也需要在过滤效果和使用代价之间取得平衡。基于此，我们设置了一组可配参数来约束 Bloom Filter 的最大和最小值，分别是 `RUNTIME_BLOOM_FILTER_MIN_SIZE` 和 `RUNTIME_BLOOM_FILTER_MAX_SIZE`。
 
-如果 Runtime Filter 在 ScanNode 开始扫描之后到达，则 ScanNode 不会将该 Runtime Filter 下推到存储引擎，而是对已经从存储引擎扫描上来的数据，在 ScanNode 上基于该 Runtime Filter 使用表达式过滤，之前已经扫描的数据则不会应用该 Runtime Filter，这样得到的中间数据规模会大于最优解，但可以避免严重的劣化。
+**3. Min/Max Filter**
 
-如果集群比较繁忙，并且集群上有许多资源密集型或长耗时的查询，可以考虑增加等待时间，以避免复杂查询错过优化机会。如果集群负载较轻，并且集群上有许多只需要几秒的小查询，可以考虑减少等待时间，以避免每个查询增加 1s 的延迟。
+除了 Bloom Filter 外，还有 Min-Max Filter 可用于进行模糊过滤。如果数据列是有序的，那么 Min-Max Filter 会有很好的过滤效果。此外，生成、合并、使用 Min-Max Filter 的代价也远低于 In Filter 和 Bloom Filter。
 
-**4. Bloom Filter 长度相关参数**
-
-包括`runtime_bloom_filter_min_size`、`runtime_bloom_filter_max_size`、`runtime_bloom_filter_size`，用于确定 Runtime Filter 使用的 Bloom Filter 数据结构的大小（以字节为单位）。
-
-**类型**: 整数
-
-**使用注意事项** 因为需要保证每个 HashJoinNode 构建的 Bloom Filter 长度相同才能合并，所以目前在 FE 查询规划时计算 Bloom Filter 的长度。
-
-如果能拿到 join 右表统计信息中的数据行数 (Cardinality)，则会尝试根据 Cardinality 估计 Bloom Filter 的最佳大小，并四舍五入到最接近的 2 的幂 (以 2 为底的 log 值)。如果没有准确的统计信息，但是打开了 enable_sync_runtime_filter_size ，会根据实际运行时的数据行数来估计 Bloom Filter 的最佳大小，但是会有一些运行时统计带来的性能开销。
-最后如果仍无法拿到右表的 Cardinality，则会使用默认的 Bloom Filter 长度`runtime_bloom_filter_size`。`runtime_bloom_filter_min_size`和`runtime_bloom_filter_max_size`用于限制最终使用的 Bloom Filter 长度最小和最大值。
-
-更大的 Bloom Filter 在处理高基数的输入集时更有效，但需要消耗更多的内存。假如查询中需要过滤高基数列（比如含有数百万个不同的取值），可以考虑增加`runtime_bloom_filter_size`的值进行一些基准测试，这有助于使 Bloom Filter 过滤的更加精准，从而获得预期的性能提升。
-
-Bloom Filter 的有效性取决于查询的数据分布，因此通常仅对一些特定查询额外调整其 Bloom Filter 长度，而不是全局修改，一般仅在对涉及大表间 join 的某些长耗时查询进行调优时，才需要调整此查询选项。
-
-### 查看 query 生成的 Runtime Filter
-
-`explain`命令可以显示的查询计划中包括每个 Fragment 使用的 join on clause 信息，以及 Fragment 生成和使用 Runtime Filter 的注释，从而确认是否将 Runtime Filter 应用到了期望的 join on clause 上。
-
-- 生成 Runtime Filter 的 Fragment 包含的注释例如`runtime filters: filter_id[type] <- table.column`。
-
-- 使用 Runtime Filter 的 Fragment 包含的注释例如`runtime filters: filter_id[type] -> table.column`。
-
-下面例子中的查询使用了一个 ID 为 RF000 的 Runtime Filter。
+对于非等值的 Join，In Filter 和 Bloom Filter 都无法工作，但 Min-Max Filter 仍然可以继续发挥作用。假设我们将上例中的查询修改为：
 
 ```sql
-CREATE TABLE test (t1 INT) DISTRIBUTED BY HASH (t1) BUCKETS 2 PROPERTIES("replication_num" = "1");
-INSERT INTO test VALUES (1), (2), (3), (4);
+select count(*)
+from orders join customer on o_custkey > c_custkey
+where c_name = "China"
+```
 
-CREATE TABLE test2 (t2 INT) DISTRIBUTED BY HASH (t2) BUCKETS 2 PROPERTIES("replication_num" = "1");
-INSERT INTO test2 VALUES (3), (4), (5);
+那么可以选出过滤后最大的 `c_custkey`，记为 n，并将 n 传给 orders 表的 scan 节点。scan 节点则会只输出 `o_custkey > n` 的行。
 
-EXPLAIN SELECT t1 FROM test JOIN test2 where test.t1 = test2.t2;
-+--------------------------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                                  |
-+--------------------------------------------------------------------------------------------------+
-| PLAN FRAGMENT 0                                                                                  |
-|   OUTPUT EXPRS:                                                                                  |
-|     t1[#4]                                                                                       |
-|   PARTITION: HASH_PARTITIONED: t1[#1]                                                            |
-|                                                                                                  |
-|   HAS_COLO_PLAN_NODE: false                                                                      |
-|                                                                                                  |
-|   VRESULT SINK                                                                                   |
-|      MYSQL_PROTOCAL                                                                              |
-|                                                                                                  |
-|   3:VHASH JOIN(157)                                                                              |
-|   |  join op: INNER JOIN(BUCKET_SHUFFLE)[]                                                       |
-|   |  equal join conjunct: (t1[#1] = t2[#0])                                                      |
-|   |  runtime filters: RF000[min_max] <- t2[#0](3/4/2048), RF001[in_or_bloom] <- t2[#0](3/4/2048) |
-|   |  cardinality=3                                                                               |
-|   |  vec output tuple id: 3                                                                      |
-|   |  output tuple id: 3                                                                          |
-|   |  vIntermediate tuple ids: 2                                                                  |
-|   |  hash output slot ids: 1                                                                     |
-|   |  final projections: t1[#2]                                                                   |
-|   |  final project output tuple id: 3                                                            |
-|   |  distribute expr lists: t1[#1]                                                               |
-|   |  distribute expr lists: t2[#0]                                                               |
-|   |                                                                                              |
-|   |----1:VEXCHANGE                                                                               |
-|   |       offset: 0                                                                              |
-|   |       distribute expr lists: t2[#0]                                                          |
-|   |                                                                                              |
-|   2:VOlapScanNode(150)                                                                           |
-|      TABLE: test.test(test), PREAGGREGATION: ON                                                  |
-|      runtime filters: RF000[min_max] -> t1[#1], RF001[in_or_bloom] -> t1[#1]                     |
-|      partitions=1/1 (test)                                                                       |
-|      tablets=2/2, tabletList=61032,61034                                                         |
-|      cardinality=4, avgRowSize=0.0, numNodes=1                                                   |
-|      pushAggOp=NONE                                                                              |
-|                                                                                                  |
-| PLAN FRAGMENT 1                                                                                  |
-|                                                                                                  |
-|   PARTITION: HASH_PARTITIONED: t2[#0]                                                            |
-|                                                                                                  |
-|   HAS_COLO_PLAN_NODE: false                                                                      |
-|                                                                                                  |
-|   STREAM DATA SINK                                                                               |
-|     EXCHANGE ID: 01                                                                              |
-|     BUCKET_SHFFULE_HASH_PARTITIONED: t2[#0]                                                      |
-|                                                                                                  |
-|   0:VOlapScanNode(151)                                                                           |
-|      TABLE: test.test2(test2), PREAGGREGATION: ON                                                |
-|      partitions=1/1 (test2)                                                                      |
-|      tablets=2/2, tabletList=61041,61043                                                         |
-|      cardinality=3, avgRowSize=0.0, numNodes=1                                                   |
-|      pushAggOp=NONE                                                                              |
-+--------------------------------------------------------------------------------------------------+
--- 上面`runtime filters`的行显示了`PLAN FRAGMENT 1`的`2:HASH JOIN`生成了 ID 为 RF000 的 min_max 和 RF001 的 in_or_bloom，
--- 在`2:VOlapScanNode(150)`使用了 RF000/RF001 用于在读取`test`.`t1`时过滤不必要的数据。
+### 查看 Join Runtime Filter
 
-SELECT t1 FROM test JOIN test2 where test.t1 = test2.t2; 
--- 返回 2 行结果 [3, 4];
+查看一个 Query 上生成了哪些 JRF，可以通过 `explain` / `explain shape plan` / `explain physical plan` 命令来查看。
 
--- 通过 query 的 profile（set enable_profile=true;）可以查看查询内部工作的详细信息，
--- 包括每个 Runtime Filter 是否下推、等待耗时、以及 OLAP_SCAN_NODE 从 prepare 到接收到 Runtime Filter 的总时长。
-RuntimeFilter:  (id  =  1,  type  =  in_or_bloomfilter):
-      -  Info:  [IsPushDown  =  true,  RuntimeFilterState  =  READY,  HasRemoteTarget  =  false,  HasLocalTarget  =  true,  Ignored  =  false]
-      -  RealRuntimeFilterType:  in
-      -  InFilterSize:  3
-      -  always_true:  0
-      -  expr_filtered_rows:  0
-      -  expr_input_rows:  0
--- 这里的 expr_input_rows 和 expr_filtered_rows 均为 0 是因为 in filter 根据 key range 直接提前过滤了数据，没有经过逐行计算。
+我们以 TPC-H Schema 为例，详细说明通过这三个命令如何查看 JRF。
 
+```sql
+select count(*) from orders join customer on o_custkey=c_custkey;
+```
 
--- 此外，在 profile 的 OLAP_SCAN_NODE 中还可以查看 Runtime Filter 下推后的过滤效果和耗时。
-    -  RowsVectorPredFiltered:  9.320008M  (9320008)
-    -  VectorPredEvalTime:  364.39ms
+**1. Explain**
+
+在传统 Explain 文本中，JRF（Join Reference File）的信息分布通常出现在 Join 节点和 Scan 节点中，具体展示如下图所示：
+
+```sql
+4: VHASH JOIN(258)  
+| join op: INNER JOIN(PARTITIONED)[]  
+|  equal join conjunct: (o_custkey[#10] = c_custkey[#0])  
+|  runtime filters: RF000[bloom] <- c_custkey[#0] (150000000/134217728/16777216)  
+|  cardinality=1,500,000,000  
+|  vec output tuple id: 3  
+|  output tuple id: 3  
+|  vIntermediate tuple ids: 2  
+|  hash output slot ids: 10  
+|  final projections: o_custkey[#17]  
+|  final project output tuple id: 3  
+|  distribute expr lists: o_custkey[#10]
+|  distribute expr lists: c_custkey[#0]  
+|  
+|---1: VEXCHANGE  
+|      offset: 0  
+|      distribute expr lists: c_custkey[#0]   
+3: VEXCHANGE  
+|  offset: 0  
+|  distribute expr lists:  
+  
+PLAN FRAGMENT 2  
+| PARTITION: HASH_PARTITIONED: o_orderkey[#8]  
+| HAS_COLO_PLAN_NODE: false  
+| STREAM DATA SINK  
+|   EXCHANGE ID: 03  
+|   HASH_PARTITIONED: o_custkey[#10]  
+  
+2: VOlapScanNode(242)  
+|  TABLE: regression_test_nereids_tpch_shape_sf1000_p0.orders(orders)  
+|  PREAGGREGATION: ON  
+|  runtime filters: RF000[bloom] -> o_custkey[#10]  
+|  partitions=1/1 (orders)  
+|  tablets=96/96, tabletList=54990,54992,54994 ...  
+|  cardinality=0, avgRowSize=0.0, numNodes=1  
+|  pushAggOp=NONE
+```
+
+- Join 端：`runtime filters: RF000[bloom] <- c_custkey[#0] (150000000/134217728/16777216)`
+
+  这表示生成了一个 Bloom Filter，编号 000，它以 `c_custkey` 字段作为输入生成 JRF。后面的三个数字和 Bloom Filter Size 计算相关，我们可以暂时忽略。
+
+- Scan 端：`runtime filters: RF000[bloom] -> o_custkey[#10]`
+
+  这表示 000 号 JRF 将作用在 orders 表的 Scan 节点上，我们用 JRF 对 `o_custkey` 字段进行过滤。
+
+**2. Explain Shape Plan**
+
+在 Explain Plan 系列中，我们以 Shape Plan 为例说明如何查看 JRF。
+
+```sql
+mysql> explain shape plan select count(*) from orders join customer on o_custkey=c_custkey where c_nationkey=5;  
++--------------------------------------------------------------------------------------------------------------------------+
+Explain String(Nereids Planner)                                                                                            ｜
++--------------------------------------------------------------------------------------------------------------------------+
+PhysicalResultSink                                                                                                         ｜  
+--hashAgg[GLOBAL]                                                                                                          ｜  
+----PhysicalDistribute[DistributionSpecGather]                                                                             ｜   
+------hashAgg[LOCAL]                                                                                                       ｜ 
+--------PhysicalProject                                                                                                    ｜
+----------hashJoin[INNER_JOIN shuffle]                                                                                     ｜
+------------hashCondition=((orders.o_custkey=customer.c_custkey)) otherCondition=() buildRFs:RF0 c_custkey->[o_custkey]    ｜  
+--------------PhysicalProject                                                                                              ｜  
+----------------Physical0lapScan[orders] apply RFs: RF0                                                                    ｜
+--------------PhysicalProject                                                                                              ｜ 
+----------------filter((customer.c_nationkey=5))                                                                           ｜ 
+------------------Physical0lapScan[customer]                                                                               ｜
++--------------------------------------------------------------------------------------------------------------------------+
+11 rows in set (0.02 sec)
+```
+
+如上图所示：
+
+- Join 端：`build RFs: RF0 c_custkey -> [o_custkey] `表示我们以 `c_custkey` 列的数据作为输入，生成一个作用到 `o_custkey` 的 JRF，编号 0。
+- scan 端：`PhysicalOlapScan[orders] apply RFs`：RF0 表示 orders 表被 RF0 过滤。
+
+**3. Profile**
+
+在实际执行中，BE 会将 JRF 的使用情况输出到 Profile（需要 `set enable_profile=true`）。我们仍然以上面的 SQL 为例，在 Profile 中查看 JRF 执行的实际情况。
+
+- Join 端
+
+  ```sql
+  HASH_JOIN_SINK_OPERATOR  (id=3  ,  nereids_id=367):(ExecTime:  703.905us)
+      -  JoinType:  INNER_JOIN
+      。。。
+      -  BuildRows:  617
+      。。。
+      -  RuntimeFilterComputeTime:  70.741us
+      -  RuntimeFilterInitTime:  10.882us
+  ```
+
+  这是 Join 的 Build 侧 Profile。在这个例子中，生成 JRF 耗时 70.741us，JRF 有 617 行数据作为输入。JRF 的 Size 和类型由 Scan 端展示。
+
+- Scan 端
+
+  ```sql
+  OLAP_SCAN_OPERATOR  (id=2.  nereids_id=351.  table  name  =  orders(orders)):(ExecTime:  13.32ms)
+                -  RuntimeFilters:  :  RuntimeFilter:  (id  =  0,  type  =  bloomfilter,  need_local_merge:  false,  is_broadcast:  true,  build_bf_cardinality:  false,  
+                。。。
+                -  RuntimeFilterInfo:  
+                    -  filter  id  =  0  filtered:  714.761K  (714761)
+                    -  filter  id  =  0  input:  747.862K  (747862)
+                。。。
+                -  WaitForRuntimeFilter:  6.317ms
+              RuntimeFilter:  (id  =  0,  type  =  bloomfilter):
+                    -  Info:  [IsPushDown  =  true,  RuntimeFilterState  =  READY,  HasRemoteTarget  =  false,  HasLocalTarget  =  true,  Ignored  =  false]
+                    -  RealRuntimeFilterType:  bloomfilter
+                    -  BloomFilterSize:  1024
+  ```
+
+  在这个部分，我们需要关注以下几点信息：
+
+  1. 第 5/6 行，显示这个 JRF 的输入和过滤掉的行数。如果 Filtered 行数越大，那么这个 JRF 的效果越好。
+
+  2. 第 10 行，`IsPushDown = true`，表示 JRF 计算已经下推到存储层。如果下推到存储层，那么有利于存储层实现延迟物化，可以减少 IO。
+
+  3. 第 10 行，`RuntimeFilterState = READY`，表示 Scan 节点是否应用了 JRF。因为 JRF 采用 Try-best 机制，如果 JRF 生成需要很长时间，那么 Scan 节点在等待一段时间后开始扫描数据，这样输出的数据可能没有经过 JRF 的过滤。
+
+  4. 第 12 行，`BloomFilterSize: 1024`，这是一个 Bloom Filter，它的 size 是 1024 字节。
+
+### 调优
+
+关于 Join Runtime Filter 调优，在绝大多数情况下功能为自适应，用户不需要手动调优。
+
+**1. 开关 JRF**
+
+Session 变量 `runtime_filter_mode` 可以控制是否生成 JRF。
+
+- 打开 JRF：`set runtime_filter_mode = GLOBAL`
+
+- 关闭 JRF：`set runtime_filter_mode = OFF`
+
+**2. 设定 JRF Type**
+
+Session 变量 `runtime_filter_type` 可以控制 JRF 的类型，包括：
+
+- `IN(1)`
+
+- `BLOOM(2)`
+
+- `MIN_MAX(4)`
+
+- `IN_OR_BLOOM(8)`
+
+`IN_OR_BLOOM` Filter 可以让 BE 根据实际数据行数自适应选择生成 `IN` Filter 还是 `BLOOM` Filter。
+
+JRF type 可以叠加，即根据一个 Join 条件生成多个类型的 JRF。括号中的整数表示 Runtime Filter Type 的枚举值。如果希望生成多个 Type 的 JRF，那么将 `runtime_filter_type` 设置为对应枚举值之和。
+
+例如，`set runtime_filter_type = 6`，那么将同时为每个 Join 条件生成 `BLOOM` Filter 和 `MIN_MAX` Filter。
+
+再比如，在 2.1 版本中，`runtime_filter_type` 的默认值是 12，即同时生成 `MIN_MAX` Filter 和 `IN_OR_BLOOM`Filter。
+
+**3. 设定等待时间**
+
+前面提到 JRF 使用的是 Try-best 机制，Scan 节点启动前会等待 JRF。Doris 系统根据运行时状态计算等待时间。但在一些特殊情况下，可能等待时间不够，导致 JRF 没有生效，那么 Scan 节点的输出数据行数会比预期多。前面我们已经在 Profile 部分介绍了如何判断是否等到了 JRF。如果 Profile 中 Scan 节点 `RuntimeFilterState = false`，那么用户可以手动设置一个更长的等待时间。
+
+Session 变量 `runtime_filter_wait_time_ms` 可以控制 Scan 节点等待 JRF 的时间。默认值是 1000 毫秒。
+
+**4. 裁剪 JRF**
+
+在某些情况下，JRF 可能没有过滤性。比如 `orders` 表和 `customer` 表存在主外键关系，但 `customer` 表上没有过滤条件，那么 JRF 的输入是全体 `custkey`，那么 `orders` 表中的所有行都能通过 JRF 过滤。优化器会根据列统计信息判断 JRF 的有效性进行裁剪。
+
+Session 变量 `enable_runtime_filter_prune = true/false` 可以控制是否进行裁剪。默认值为 `true`。
+
+## TopN Runtime Filter
+
+### 工作原理
+
+在 Doris 中，数据是以分块流式的方式进行处理的。因此，当 SQL 语句中包含 `topN` 算子时，Doris 并不会计算所有结果，而是会生成一个动态的 Filter 来提前对数据进行过滤。
+
+以下面 SQL 语句举例：
+
+```sql
+select o_orderkey from orders order by o_orderdate limit 5;
+```
+
+此 SQL 语句的执行计划如下图所示：
+
+```sql
+mysql> explain select o_orderkey from orders order by o_orderdate limit 5;
++-----------------------------------------------------+
+| Explain String(Nereids Planner)                     |
++-----------------------------------------------------+
+| PLAN FRAGMENT 0                                     |
+|   OUTPUT EXPRS:                                     |
+|     o_orderkey[#11]                                 |
+|   PARTITION: UNPARTITIONED                          |
+|                                                     |
+|   HAS_COLO_PLAN_NODE: false                         |
+|                                                     |
+|   VRESULT SINK                                      |
+|      MYSQL_PROTOCAL                                 |
+|                                                     |
+|   2:VMERGING-EXCHANGE                               |
+|      offset: 0                                      |
+|      limit: 5                                       |
+|      final projections: o_orderkey[#9]              |
+|      final project output tuple id: 2               |
+|      distribute expr lists:                         |
+|                                                     |
+| PLAN FRAGMENT 1                                     |
+|                                                     |
+|   PARTITION: HASH_PARTITIONED: O_ORDERKEY[#0]       |
+|                                                     |
+|   HAS_COLO_PLAN_NODE: false                         |
+|                                                     |
+|   STREAM DATA SINK                                  |
+|     EXCHANGE ID: 02                                 |
+|     UNPARTITIONED                                   |
+|                                                     |
+|   1:VTOP-N(119)                                     |
+|   |  order by: o_orderdate[#10] ASC                 |
+|   |  TOPN OPT                                       |
+|   |  offset: 0                                      |
+|   |  limit: 5                                       |
+|   |  distribute expr lists: O_ORDERKEY[#0]          |
+|   |                                                 |
+|   0:VOlapScanNode(113)                              |
+|      TABLE: tpch.orders(orders), PREAGGREGATION: ON |
+|      TOPN OPT:1                                     |
+|      partitions=1/1 (orders)                        |
+|      tablets=3/3, tabletList=135112,135114,135116   |
+|      cardinality=150000, avgRowSize=0.0, numNodes=1 |
+|      pushAggOp=NONE                                 |
++-----------------------------------------------------+
+41 rows in set (0.06 sec)
+```
+
+在没有 `topn filter` 的情况下，scan 节点会依次读入 `orders` 表的每个数据块，并将这些数据块传递给 TopN 节点。TopN 节点通过堆排序维护着当前已扫描数据 `orders` 表中排名前 5 行。
+
+由于一个数据 Block 大约包含 1024 行数据，因此在 TopN 处理了第一个数据块后，就能找到该数据块中排名第 5 的行。
+
+假设这个 `o_orderdate` 是 `1995-01-01`，那么 scan 节点在输出第二个数据块时，就可以使用 `1995-01-01` 作为过滤条件，`o_orderdate` 大于 `1995-01-01` 的行则不需要再发送给 TopN 节点进行计算。
+
+这个阈值会进行动态更新，例如，TopN 在处理第二个经过此阈值过滤的数据块时，如果发现了更小的 `o_orderdate`，那么 TopN 会将阈值更新为第一个和第二个数据块中排名第 5 的 `o_orderdate`。
+
+### 查看 TopN Runtime Filter
+
+通过 Explain 命令，我们可以查看优化器规划的 TopN runtime filter。
+
+```sql
+1:VTOP-N(119)
+| order by: o_orderdate[#10] ASC  
+| TOPN OPT  
+| offset: 0
+| limit: 5  
+| distribute expr lists: O_ORDERKEY[#0]  
+|
+ 
+0:VLapScanNode[113]  
+    TABLE: regression_test_nereids_tpch_p0.(orders), PREAGGREGATION: ON  
+    TOPN OPT: 1  
+    partitions=1/1 (orders)  
+    tablets=3/3, tabletList=135112,135114,135116  
+    cardinality=150000, avgRowSize=0.0, numNodes=1  
+    pushAggOp: NONE
+```
+
+如上述例子所示：
+
+1. TopN 节点上会显示 `TOPN OPT`，表示这个 TopN 节点会产生一个 TopN Runtime Filter。
+
+2. Scan 节点上会标注它使用的 TopN Runtime Filter 是由哪个 TopN 节点产生的。比如，例子中 11 行，表示 `orders` 表的 Scan 节点将使用编号为 1 的 TopN 节点生成的 Runtime Filter，因此在 Plan 中显示为 `TOPN OPT: 1`。
+
+作为一个分布式数据库，Doris 还需要考虑 TopN 节点和 Scan 节点实际运行的物理机器。因为跨 BE 通信的代价比较高，所以 BE 会**自适应地**决定是否使用 TopN Runtime Filter，以及使用的范围。当前，我们实现了 BE 级别的 TopN Runtime Filter，即 TopN 和 Scan 在同一个 BE 里。这是因为 TopN Runtime Filter 阈值的更新只需要线程间通信，代价比较低。
+
+### 调优
+
+Session 变量 `topn_opt_limit_threshold` 可以控制是否生成 TopN Runtime Filter。
+
+如果 SQL 中 `limit` 的数量越少，那么 TopN Runtime Filter 的过滤性就越强。因此，系统默认情况下，只有在 `limit` 数量小于 1024 时，才会启用生成对应的 TopN Runtime Filter。
+
+例如，如果设置 `set topn_opt_limit_threshold=10`，那么执行以下查询就不会生成 TopN Runtime Filter。
+
+```sql
+select o_orderkey from orders order by o_orderdate limit 20;
 ```

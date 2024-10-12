@@ -90,7 +90,7 @@ HLL 是基于 HyperLogLog 算法的工程实现，用于保存 HyperLogLog 计�
 
 3. 用户不需要指定长度及默认值，长度根据数据聚合程度系统内控制
 
-### 创建一张含有 hll 列的表
+### 创建一张含有 HLL 列的表
 
 ```sql
 create table test_hll(
@@ -113,7 +113,7 @@ PROPERTIES(
 
 1. Stream load 导入
 
-   ```
+   ```sql
    curl --location-trusted -u root: -H "label:label_test_hll_load" \
        -H "column_separator:," \
        -H "columns:dt,id,name,province,os, pv=hll_hash(id)" -T test_hll.csv http://fe_IP:8030/api/demo/test_hll/_stream_load
@@ -121,7 +121,7 @@ PROPERTIES(
 
    示例数据如下（test_hll.csv）：
 
-   ```
+   ```sql
    2022-05-05,10001，测试 01，北京，windows
    2022-05-05,10002，测试 01，北京，linux
    2022-05-05,10003，测试 01，北京，macos
@@ -134,7 +134,7 @@ PROPERTIES(
 
    导入结果如下
 
-   ```
+   ```sql
    # curl --location-trusted -u root: -H "label:label_test_hll_load"     -H "column_separator:,"     -H "columns:dt,id,name,province,os, pv=hll_hash(id)" -T test_hll.csv http://127.0.0.1:8030/api/demo/test_hll/_stream_load
    
    {
@@ -159,18 +159,18 @@ PROPERTIES(
 
 2. Broker Load
 
-```
-LOAD LABEL demo.test_hlllabel
- (
-    DATA INFILE("hdfs://hdfs_host:hdfs_port/user/doris_test_hll/data/input/file")
-    INTO TABLE `test_hll`
-    COLUMNS TERMINATED BY ","
-    (dt,id,name,province,os)
-    SET (
-      pv = HLL_HASH(id)
-    )
- );
-```
+   ```sql
+   LOAD LABEL demo.test_hlllabel
+   (
+      DATA INFILE("hdfs://hdfs_host:hdfs_port/user/doris_test_hll/data/input/file")
+      INTO TABLE `test_hll`
+      COLUMNS TERMINATED BY ","
+      (dt,id,name,province,os)
+      SET (
+         pv = HLL_HASH(id)
+      )
+   );
+   ```
 
 ## 查询数据
 

@@ -24,263 +24,411 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Runtime Filter
+Runtime Filter mainly consists of two types: Join Runtime Filter and TopN Runtime Filter. This article will provide a detailed introduction to the working principles, usage guidelines, and tuning methods of these two types of Runtime Filters.
 
-Runtime Filter is designed to dynamically generate filter conditions for certain Join queries at runtime to reduce the amount of data scanned, avoid unnecessary I/O and calculations, and thereby speed up queries.
-## Noun Interpretation
+## Join Runtime Filter
 
-* Left table: the table on the left during Join query. Perform Probe operation. The order can be adjusted by Join Reorder.
-* Right table: the table on the right during Join query. Perform the Build operation. The order can be adjusted by Join Reorder.
-* Fragment: FE will convert the execution of specific SQL statements into corresponding fragments and send them to BE for execution. The corresponding Fragment is executed on the BE, and the results are aggregated and returned to the FE.
-* Join on clause: `Aa=Bb` in `A join B on Aa=Bb`, based on this to generate join conjuncts during query planning, including expr used by join Build and Probe, where Build expr is called in Runtime Filter src expr, Probe expr are called target expr in Runtime Filter.
-- rf: Abbreviation of Runtime Filter.
-## Principle
+Join Runtime Filter (hereinafter referred to as JRF) is an optimization technique that dynamically generates filters at the Join node based on runtime data, leveraging the Join condition. This technique not only reduces the size of the Join Probe but also effectively minimizes data I/O and network transmission.
 
-Runtime Filter is generated during query planning, constructed in HashJoinNode, and applied in ScanNode.
+### Principles
 
-For example, there is currently a Join query between the T1 table and the T2 table. Its Join mode is HashJoin. T1 is a fact table with 100,000 rows of data. T2 is a dimension table with 2000 rows of data. Doris join The actual situation is:
+Let's illustrate the working principle of JRF using a Join operation similar to that found in the TPC-H Schema.
+
+Assume there are two tables in the database:
+
+- Orders Table: Contains 100 million rows of data, recording order keys (`o_orderkey`), customer keys (`o_custkey`), and other order information.
+
+- Customer Table: Contains 100,000 rows of data, recording customer keys (`c_custkey`), customer nations (`c_nation`), and other customer information. This table records customers from 25 countries, with approximately 4,000 customers per country.
+
+To count the number of orders from customers in China, the query statement would be:
+
+```sql
+select count(*)
+from orders join customer on o_custkey = c_custkey
+where c_nation = "china"
 ```
-|          >      HashJoinNode     <
-|         |                         |
-|         | 100000                  | 2000
-|         |                         |
-|   OlapScanNode              OlapScanNode
-|         ^                         ^   
-|         | 100000                  | 2000
-|        T1                        T2
+
+The main component of the execution plan for this query is a Join, as illustrated below:
+
+![Join Runtime Filter](/images/join-runtime-filter-1.jpg)
+
+Without JRF: The Scan node scans the orders table, reading 100 million rows of data. The Join node then performs a Hash Probe on these 100 million rows to generate the Join result.
+
+**1. Optimization**
+
+The filter condition `c_nation = 'china'` filters out all non-Chinese customers, so only a portion (approximately 1/25) of the customer table is involved in the Join. Given the subsequent Join condition `o_custkey = c_custkey`, we need to focus on the `c_custkey` values selected in the filtered result. Let's denote the filtered `c_custkey` values as set A. In the following text, we use set A specifically to refer to the `c_custkey` set participating in the Join.
+
+If set A is pushed down to the orders table as an IN condition, the Scan node for the orders table can filter the orders accordingly. This is similar to adding a filter condition `o_custkey IN (c001, c003)`.
+
+Based on this optimization concept, SQL can be optimized to:
+
+```sql
+select count(*)
+from orders join customer on o_custkey = c_custkey
+where c_nation = "china" and o_custkey in (c001, c003)
+```
+
+The optimized execution plan is illustrated below:
+
+![img](https://selectdb.feishu.cn/space/api/box/stream/download/asynccode/?code=YWI5M2IwOTZkYjg5MjVmMjU0ZGI2ODJmN2NiYjdhZGFfVFhOa25xVkR5ZG9meXNBWjQyT1RlMGZGWHNqb1RjQUxfVG9rZW46WXFNa2JqUnRabzlFQm54cDBacWNGZUpzbk1nXzE3Mjg3MjIzMTI6MTcyODcyNTkxMl9WNA)
+
+By adding a filter condition on the orders table, the actual number of orders participating in the Join is reduced from 100 million to 400,000, significantly improving query speed.
+
+**2. Implementation**
+
+While the optimization described above is significant, the optimizer does not know the actual `c_custkey` values selected (set A) and thus cannot statically generate a fixed in-predicate filter operator during the optimization phase.
+
+In practical applications, we collect the right-side data at the Join node, generate set A at runtime, and push down set A to the Scan node of the orders table. We typically denote this JRF as: `RF(c_custkey -> [o_custkey])`.
+
+As Doris is a distributed database, JRF requires an additional merging step to cater to distributed scenarios. Assuming the Join in the example is a Shuffle Join, multiple instances of this Join handle individual shards of the orders and customer tables. Consequently, each Join instance only obtains a portion of set A.
+
+In the current version of Doris, we select a node to serve as the Runtime Filter Manager. Each Join instance generates a Partial JRF based on the `c_custkey` values in its shard and sends it to the Manager. The Manager collects all Partial JRFs, merges them into a Global JRF, and then sends the Global JRF to all Scan instances of the orders table.
+
+The process of generating the Global JRF is illustrated below:
+
+![Global JRF](/images/global-JRF.jpg)
+
+### Filter Types
+
+There are various data structures that can be employed to implement JRF (Join Runtime Filter), each with varying efficiencies in generation, merging, transmission, and application, making them suitable for different scenarios.
+
+**1. In Filter**
+
+The simplest approach to implementing JRF is through the use of an In Filter. Taking the previous example, when using an In Filter, the execution engine generates a predicate `o_custkey in (...list of elements in Set A...)` on the left table. This In filter condition can then be applied to filter the orders table. When the number of elements in Set A is small, the In Filter is efficient.
+
+However, using an In Filter becomes problematic when the number of elements in Set A is large:
+
+1. Firstly, the cost of generating an In Filter is high, especially when JRF merging is required. Values collected from Join nodes corresponding to different data partitions may contain duplicates. For instance, if `c_custkey` is not the primary key of the table, values like `c001` and `c003` could appear multiple times, necessitating a time-consuming deduplication process.
+
+2. Secondly, when Set A contains many elements, the cost of transmitting data between the Join node and the Scan node of the orders table is significant.
+
+3. Lastly, executing the In predicate at the Scan node of the orders table also takes time.
+
+Considering these factors, we introduce the Bloom Filter.
+
+**2. Bloom Filter**
+
+For those unfamiliar with Bloom Filters, they can be thought of as a set of superimposed hash tables. Using a Bloom Filter (or hash table) for filtering leverages the following property:
+
+- A hash table T is generated based on Set A. If an element is not in hash table T, it can be definitively concluded that the element is not in Set A. However, the reverse is not true.
+
+  Therefore, if an `o_orderkey` is filtered out by the Bloom Filter, it can be concluded that there is no matching `c_custkey` on the right side of the Join. Nevertheless, due to hash collisions, some `o_custkey`s may pass through the Bloom Filter even if there is no matching `c_custkey`.
+
+  While a Bloom Filter cannot achieve precise filtering, it still provides a certain level of filtering effectiveness.
+
+- The number of buckets in the hash table determines the accuracy of filtering. The larger the number of buckets, the larger and more accurate the Filter becomes, but at the cost of increased computational overhead in generation, transmission, and usage.
+
+  Therefore, the size of the Bloom Filter must strike a balance between filtering effectiveness and usage costs. To this end, we have set a configurable range for the Bloom Filter's size, defined by `RUNTIME_BLOOM_FILTER_MIN_SIZE` and `RUNTIME_BLOOM_FILTER_MAX_SIZE`.
+
+**3. Min/Max Filter**
+
+Apart from the Bloom Filter, the Min-Max Filter can also be used for approximate filtering. If the data column is ordered, the Min-Max Filter can achieve excellent filtering results. Additionally, the costs of generating, merging, and using a Min-Max Filter are significantly lower than those of an In Filter or Bloom Filter.
+
+For non-equi Joins, both In Filters and Bloom Filters become ineffective, but the Min-Max Filter can still function. Suppose we modify the query from the previous example to:
+
+```sql
+select count(*)
+from orders join customer on o_custkey > c_custkey
+where c_name = "China"
+```
+
+In this case, we can select the maximum filtered `c_custkey`, denote it as n, and pass it to the Scan node of the orders table. The Scan node will then only output rows where `o_custkey > n`.
+
+### Viewing Join Runtime Filter
+
+To see which JRFs (Join Runtime Filters) have been generated for a specific query, you can use the `explain`, `explain shape plan`, or `explain physical plan` commands.
+
+Using the TPC-H Schema as an example, we will detail how to view JRFs using these three commands.
+
+```sql
+select count(*) from orders join customer on o_custkey=c_custkey;
+```
+
+**1. Explain**
+
+In traditional Explain output, JRF information is typically displayed in Join and Scan nodes, as shown in the following example:
+
+```sql
+4: VHASH JOIN(258)  
+| join op: INNER JOIN(PARTITIONED)[]  
+|  equal join conjunct: (o_custkey[#10] = c_custkey[#0])  
+|  runtime filters: RF000[bloom] <- c_custkey[#0] (150000000/134217728/16777216)  
+|  cardinality=1,500,000,000  
+|  vec output tuple id: 3  
+|  output tuple id: 3  
+|  vIntermediate tuple ids: 2  
+|  hash output slot ids: 10  
+|  final projections: o_custkey[#17]  
+|  final project output tuple id: 3  
+|  distribute expr lists: o_custkey[#10]
+|  distribute expr lists: c_custkey[#0]  
+|  
+|---1: VEXCHANGE  
+|      offset: 0  
+|      distribute expr lists: c_custkey[#0]   
+3: VEXCHANGE  
+|  offset: 0  
+|  distribute expr lists:  
+  
+PLAN FRAGMENT 2  
+| PARTITION: HASH_PARTITIONED: o_orderkey[#8]  
+| HAS_COLO_PLAN_NODE: false  
+| STREAM DATA SINK  
+|   EXCHANGE ID: 03  
+|   HASH_PARTITIONED: o_custkey[#10]  
+  
+2: VOlapScanNode(242)  
+|  TABLE: regression_test_nereids_tpch_shape_sf1000_p0.orders(orders)  
+|  PREAGGREGATION: ON  
+|  runtime filters: RF000[bloom] -> o_custkey[#10]  
+|  partitions=1/1 (orders)  
+|  tablets=96/96, tabletList=54990,54992,54994 ...  
+|  cardinality=0, avgRowSize=0.0, numNodes=1  
+|  pushAggOp=NONE
+```
+
+- Join Side: `runtime filters: RF000[bloom] <- c_custkey[#0] (150000000/134217728/16777216)`
+
+  This indicates that a Bloom Filter with ID 000 has been generated, using `c_custkey` as input to create the JRF. The three numbers following are related to Bloom Filter size calculations and can be ignored for now.
+
+- Scan Side: `runtime filters: RF000[bloom] -> o_custkey[#10]`
+
+  This indicates that JRF 000 will be applied to the Scan node of the orders table, filtering the `o_custkey` field.
+
+**2. Explain Shape Plan**
+
+In the Explain Plan series, we'll use Shape Plan as an example to show how to view JRFs.
+
+```sql
+mysql> explain shape plan select count(*) from orders join customer on o_custkey=c_custkey where c_nationkey=5;  
++--------------------------------------------------------------------------------------------------------------------------+
+Explain String(Nereids Planner)                                                                                            ｜
++--------------------------------------------------------------------------------------------------------------------------+
+PhysicalResultSink                                                                                                         ｜  
+--hashAgg[GLOBAL]                                                                                                          ｜  
+----PhysicalDistribute[DistributionSpecGather]                                                                             ｜   
+------hashAgg[LOCAL]                                                                                                       ｜ 
+--------PhysicalProject                                                                                                    ｜
+----------hashJoin[INNER_JOIN shuffle]                                                                                     ｜
+------------hashCondition=((orders.o_custkey=customer.c_custkey)) otherCondition=() buildRFs:RF0 c_custkey->[o_custkey]    ｜  
+--------------PhysicalProject                                                                                              ｜  
+----------------Physical0lapScan[orders] apply RFs: RF0                                                                    ｜
+--------------PhysicalProject                                                                                              ｜ 
+----------------filter((customer.c_nationkey=5))                                                                           ｜ 
+------------------Physical0lapScan[customer]                                                                               ｜
++--------------------------------------------------------------------------------------------------------------------------+
+11 rows in set (0.02 sec)
+```
+
+As shown above:
+
+- Join Side: `build RFs: RF0 c_custkey -> [o_custkey]` indicates that JRF 0 is generated using `c_custkey` data and applied to `o_custkey`.
+
+- Scan Side: `PhysicalOlapScan[orders] apply RFs: RF0` indicates that orders table is filtered by JRF 0.
+
+**3. Profile**
+
+During actual execution, BE outputs JRF usage details to the Profile (requires `set enable_profile=true`). Using the same SQL query as an example, we can view JRF execution details in the Profile.
+
+- Join Side
+
+  ```sql
+  HASH_JOIN_SINK_OPERATOR  (id=3  ,  nereids_id=367):(ExecTime:  703.905us)
+        -  JoinType:  INNER_JOIN
+        。。。
+        -  BuildRows:  617
+        。。。
+        -  RuntimeFilterComputeTime:  70.741us
+        -  RuntimeFilterInitTime:  10.882us
+  ```
+
+  This is the Build side Profile for the Join. In this example, generating the JRF took 70.741us with 617 rows of input data. The JRF size and type are shown on the Scan side.
+
+- Scan Side
+
+  ```sql
+  OLAP_SCAN_OPERATOR  (id=2.  nereids_id=351.  table  name  =  orders(orders)):(ExecTime:  13.32ms)
+              -  RuntimeFilters:  :  RuntimeFilter:  (id  =  0,  type  =  bloomfilter,  need_local_merge:  false,  is_broadcast:  true,  build_bf_cardinality:  false,  
+              。。。
+              -  RuntimeFilterInfo:  
+                  -  filter  id  =  0  filtered:  714.761K  (714761)
+                  -  filter  id  =  0  input:  747.862K  (747862)
+              。。。
+              -  WaitForRuntimeFilter:  6.317ms
+            RuntimeFilter:  (id  =  0,  type  =  bloomfilter):
+                  -  Info:  [IsPushDown  =  true,  RuntimeFilterState  =  READY,  HasRemoteTarget  =  false,  HasLocalTarget  =  true,  Ignored  =  false]
+                  -  RealRuntimeFilterType:  bloomfilter
+                  -  BloomFilterSize:  1024
+  ```
+
+  Note:
+
+  1. Lines 5-6 show the input rows and the number of filtered rows. A higher number of filtered rows indicates better JRF effectiveness.
+  
+  2. Line 10, `IsPushDown = true`, indicates that JRF computation has been pushed down to the storage layer, which can help reduce IO through delayed materialization.
+  
+  3. Line 10, `RuntimeFilterState = READY`, indicates whether the Scan node has applied the JRF. Since JRF uses a try-best mechanism, if JRF generation takes too long, the Scan node may start scanning data after a waiting period, potentially outputting unfiltered data.
+  
+  4. Line 12, `BloomFilterSize: 1024`, shows the size of the Bloom Filter in bytes.
+
+### Tuning
+
+For Join Runtime Filter tuning, in most cases, the function is adaptive, and users do not need to manually tune it. However, there are a few adjustments that can be made to optimize performance.
+
+**1. Enable or Disable JRF**
+
+The session variable `runtime_filter_mode` controls whether JRFs are generated.
+
+- To enable JRF: `set runtime_filter_mode = GLOBAL`
+
+- To disable JRF: `set runtime_filter_mode = OFF`
+
+**2. Set JRF Type**
+
+The session variable `runtime_filter_type` controls the type of JRFs, including:
+
+- `IN(1)`
+
+- `BLOOM(2)`
+
+- `MIN_MAX(4)`
+
+- `IN_OR_BLOOM(8)`
+
+The `IN_OR_BLOOM` Filter allows BE to adaptively choose between generating an `IN` Filter or a `BLOOM` Filter based on the actual number of rows of data.
+
+Multiple JRF types can be generated for a single Join condition by setting `runtime_filter_type` to the sum of the corresponding enumeration values. 
+
+For example:
+
+- To generate both a `BLOOM` Filter and a `MIN_MAX` Filter for each Join condition: `set runtime_filter_type = 6`
+
+- In version 2.1, the default value of `runtime_filter_type` is 12, which generates both a `MIN_MAX` Filter and an `IN_OR_BLOOM` Filter.
+
+The integers in parentheses represent the enumeration values for Runtime Filter Types.
+
+**3. Set Wait Time**
+
+As mentioned earlier, JRF uses a Try-best mechanism, where Scan nodes wait for JRFs before starting. Doris calculates the wait time based on runtime conditions. However, in some cases, the calculated wait time may not be sufficient, resulting in JRFs not being fully effective, and the Scan nodes may output more rows than expected. As discussed in the Profile section, if `RuntimeFilterState = false` in the Scan node's Profile, users can manually set a longer wait time.
+
+The session variable `runtime_filter_wait_time_ms` controls the wait time for Scan nodes to wait for JRFs. The default value is 1000 milliseconds.
+
+**4. Pruning JRF**
+
+In some cases, JRFs may not provide filtering benefits. For example, if the `orders` and `customer` tables have a primary-foreign key relationship, but there are no filtering conditions on the `customer` table, the input to the JRF would be all `custkeys`, allowing all rows in the `orders` table to pass through the JRF. The optimizer prunes ineffective JRFs based on column statistics.
+
+The session variable `enable_runtime_filter_prune = true/false` controls whether pruning is performed. The default value is `true`.
+
+## TopN Runtime Filter
+
+### Principles
+
+In Doris, data is processed in a block-streaming manner. Therefore, when an SQL statement includes a `topN` operator, Doris does not compute all results but instead generates a dynamic filter to pre-filter the data early on.
+
+Consider the following SQL statement as an example:
+
+```sql
+select o_orderkey from orders order by o_orderdate limit 5;
+```
+
+The execution plan for this SQL statement is illustrated below:
+
+```sql
+mysql> explain select o_orderkey from orders order by o_orderdate limit 5;
++-----------------------------------------------------+
+| Explain String(Nereids Planner)                     |
++-----------------------------------------------------+
+| PLAN FRAGMENT 0                                     |
+|   OUTPUT EXPRS:                                     |
+|     o_orderkey[#11]                                 |
+|   PARTITION: UNPARTITIONED                          |
+|                                                     |
+|   HAS_COLO_PLAN_NODE: false                         |
+|                                                     |
+|   VRESULT SINK                                      |
+|      MYSQL_PROTOCAL                                 |
+|                                                     |
+|   2:VMERGING-EXCHANGE                               |
+|      offset: 0                                      |
+|      limit: 5                                       |
+|      final projections: o_orderkey[#9]              |
+|      final project output tuple id: 2               |
+|      distribute expr lists:                         |
+|                                                     |
+| PLAN FRAGMENT 1                                     |
+|                                                     |
+|   PARTITION: HASH_PARTITIONED: O_ORDERKEY[#0]       |
+|                                                     |
+|   HAS_COLO_PLAN_NODE: false                         |
+|                                                     |
+|   STREAM DATA SINK                                  |
+|     EXCHANGE ID: 02                                 |
+|     UNPARTITIONED                                   |
+|                                                     |
+|   1:VTOP-N(119)                                     |
+|   |  order by: o_orderdate[#10] ASC                 |
+|   |  TOPN OPT                                       |
+|   |  offset: 0                                      |
+|   |  limit: 5                                       |
+|   |  distribute expr lists: O_ORDERKEY[#0]          |
+|   |                                                 |
+|   0:VOlapScanNode(113)                              |
+|      TABLE: tpch.orders(orders), PREAGGREGATION: ON |
+|      TOPN OPT:1                                     |
+|      partitions=1/1 (orders)                        |
+|      tablets=3/3, tabletList=135112,135114,135116   |
+|      cardinality=150000, avgRowSize=0.0, numNodes=1 |
+|      pushAggOp=NONE                                 |
++-----------------------------------------------------+
+41 rows in set (0.06 sec)
+```
+
+Without a `topn filter`, the scan node would sequentially read each data block from the `orders` table and pass them to the TopN node. The TopN node maintains the current top 5 rows from the `orders` table through heap sorting.
+
+Since a data block typically contains around 1024 rows, the TopN node can identify the 5th ranked row within the first data block after processing it.
+
+Assuming this `o_orderdate` is `1995-01-01`, the scan node can then use `1995-01-01` as a filter condition when outputting the second data block, eliminating the need to send rows with `o_orderdate` greater than `1995-01-01` to the TopN node for further processing.
+
+This threshold is dynamically updated. For instance, if the TopN node discovers a smaller `o_orderdate` when processing the second filtered data block, it updates the threshold to the fifth-ranked `o_orderdate` among the first two data blocks.
+
+### Viewing TopN Runtime Filter
+
+Using the Explain command, we can inspect the TopN Runtime Filter planned by the optimizer.
+
+```sql
+1:VTOP-N(119)
+| order by: o_orderdate[#10] ASC  
+| TOPN OPT  
+| offset: 0
+| limit: 5  
+| distribute expr lists: O_ORDERKEY[#0]  
 |
-```
-Obviously, scanning data for T2 is much faster than T1. If we take the initiative to wait for a while and then scan T1, after T2 sends the scanned data record to HashJoinNode, HashJoinNode calculates a filter condition based on the data of T2, such as the maximum value of T2 data And the minimum value, or build a Bloom Filter, and then send this filter condition to ScanNode waiting to scan T1, the latter applies this filter condition and delivers the filtered data to HashJoinNode, thereby reducing the number of probe hash tables and network overhead. This filter condition is Runtime Filter, and the effect is as follows:
-```
-|          >      HashJoinNode     <
-|         |                         |
-|         | 6000                    | 2000
-|         |                         |
-|   OlapScanNode              OlapScanNode
-|         ^                         ^   
-|         | 100000                  | 2000
-|        T1                        T2
-|
-```
-If the filter condition (Runtime Filter) can be pushed down to the storage engine, in some cases, the index can be used to directly reduce the amount of scanned data, thereby greatly reducing the scanning time. The effect is as follows:
-```
-|          >      HashJoinNode     <
-|         |                         |
-|         | 6000                    | 2000
-|         |                         |
-|   OlapScanNode              OlapScanNode
-|         ^                         ^   
-|         | 6000                    | 2000
-|        T1                        T2
-|
-```
-It can be seen that, unlike predicate pushdown and partition pruning, Runtime Filter is a filter condition dynamically generated at runtime, that is the join on clause is parsed to determine the filter expression when the query is running, and the expression is broadcast to the ScanNode that is reading the left table , thereby reducing the amount of data scanned, thereby reducing the number of probe hash tables and avoiding unnecessary I/O and calculations.
-
-Runtime Filter is mainly used to optimize the join of large tables and small tables. If the amount of data in the left table is too small, the effect of rf's early filtering may not be great. If the amount of data in the right table is too large, there will be a relatively large cost when building and transmitting rf.
-
-## Usage
-
-### Runtime Filter query options
-
-The default configuration has been adapted to most scenarios as much as possible. Only in some specific scenarios, further adjustments are required to achieve the best results. Usually, optimization is only performed for resource-intensive queries that take a long enough time to run and are frequent enough after performance testing.
-
-For configuration options related to Runtime Filter, please refer to the following section:
-
-- `enable_sync_runtime_filter_size`: When the optimizer cannot accurately estimate the cardinality, the executor is required to synchronize and obtain the global Build end size before generating rf, and determine the final type of IN Or Bloom Filter and the size of Bloom Filter based on this actual size. If set to false, no synchronization operation is performed to obtain the global size. The default value of this variable is true.
-
-- `runtime_filter_max_in_num`: If the Build-side size is larger than this value, we will not generate IN predicate. The default value of this variable is 1024.
-
-- `runtime_filter_mode`: Used to adjust the generation strategy of rf, including OFF, LOCAL, and GLOBAL. If set to OFF, rf will not be generated. The default value of this variable is GLOBAL.
-
-- `runtime_filter_type`: The types of rf allowed to be generated, including Bloom Filter, MinMax Filter, IN predicate, IN Or Bloom Filter, and Bitmap Filter. The default value of this variable is IN_OR_BLOOM_FILTER,MIN_MAX.
-
-- `runtime_filter_wait_infinitely`: If set to true, the scan node of the left table will wait until rf is received or the query times out, which is equivalent to runtime_filter_wait_time_ms being set to infinity. The default value of this variable is false.
-
-- `runtime_filter_wait_time_ms`: The time the ScanNode of the left table waits for rf. If the waiting time has passed and no rf is received, the ScanNode will start scanning the data first, and the rf received later will take effect on the data that the ScanNode has not returned at this moment. The default value of this variable is 1000.
-
-- `runtime_bloom_filter_min_size`: The minimum length of the Bloom Filter in the rf estimated by the optimizer. The default value of this variable is 1048576 (1M).
-
-- `runtime_bloom_filter_max_size`: The maximum length of the Bloom Filter in the rf estimated by the optimizer. The default value of this variable is 16777216 (16M).
-
-- `runtime_bloom_filter_size`: The default length of the Bloom Filter in the rf estimated by the optimizer. The default value of this variable is 2097152 (2M).
-
-The query options are further explained below.
-
-#### 1.runtime_filter_type
-Type of Runtime Filter used.
-
-**Type**: Number (1, 2, 4, 8, 16) or the corresponding mnemonic string (IN, BLOOM_FILTER, MIN_MAX, IN_OR_BLOOM_FILTER, BITMAP_FILTER), the default is 8 (IN_OR_BLOOM FILTER), use multiple commas to separate, pay attention to the need to add quotation marks , Or add any number of types, for example:
-```
-set runtime_filter_type="BLOOM_FILTER,IN,MIN_MAX";
-```
-Equivalent to:
-```
-set runtime_filter_type=7;
+ 
+0:VLapScanNode[113]  
+    TABLE: regression_test_nereids_tpch_p0.(orders), PREAGGREGATION: ON  
+    TOPN OPT: 1  
+    partitions=1/1 (orders)  
+    tablets=3/3, tabletList=135112,135114,135116  
+    cardinality=150000, avgRowSize=0.0, numNodes=1  
+    pushAggOp: NONE
 ```
 
-**Precautions for use**
+As shown in the example above:
 
-- **IN or Bloom Filter**: Based on the actual number of rows in the right table during execution, the system automatically determines whether to use IN predicate or Bloom Filter.
+1. The TopN node displays `TOPN OPT`, indicating that this TopN node generates a TopN Runtime Filter.
 
- - By default, IN predicate will be used when the number of data rows in the right table is less than runtime_filter_max_in_num, otherwise Bloom filter will be used.
+2. The Scan node indicates which TopN node generates the TopN Runtime Filter it uses. For instance, in the example, line 11 indicates that the Scan node for the `orders` table will use the Runtime Filter generated by TopN node 1, shown as `TOPN OPT: 1` in the plan.
 
-- **Bloom Filter**: There is a certain misjudgment rate, resulting in a little less filtered data than expected, but it will not cause the final result to be inaccurate. In most cases, Bloom Filter can improve performance or have no significant impact on performance. Impact, but may result in reduced performance in some cases.
+As a distributed database, Doris considers the physical machines where TopN and Scan nodes actually run. Due to the high cost of cross-BE communication, BEs adaptively decide whether and to what extent to use TopN Runtime Filters. Currently, we have implemented BE-level TopN Runtime Filters, where TopN and Scan reside on the same BE. This is because updating TopN Runtime Filter thresholds only requires inter-thread communication, which is relatively inexpensive.
 
- - Bloom Filter construction and application overhead is high, so when the filtering rate is low, or when the amount of data in the left table is small, Bloom Filter may cause performance degradation.
- - If the Bloom Filter is too large, it may take longer to build/transmit/filter.
+### Tuning
 
+The session variable `topn_opt_limit_threshold` controls whether to generate a TopN Runtime Filter.
 
-- **MinMax Filter**: Contains the maximum value and the minimum value, thereby filtering data smaller than the minimum value and larger than the maximum value. The filtering effect of MinMax Filter is related to the type of the Key column in the join on clause and the data distribution of the left and right tables.
+The fewer rows specified in the SQL's `limit` clause, the stronger the filtering effect of the TopN Runtime Filter. Therefore, by default, Doris enables the generation of corresponding TopN Runtime Filters only when the `limit` number is less than 1024.
 
- - When the type of the Key column in the join on clause is int/bigint/double, etc., in extreme cases, if the maximum and minimum values ​​of the left and right tables are the same, there will be no effect. Otherwise, the maximum value of the right table is smaller than the minimum value of the left table, or the right table is the smallest. If the value is greater than the maximum value in the left table, the effect will be best.
+For example, setting `set topn_opt_limit_threshold=10` would prevent the generation of a TopN Runtime Filter for the following query:
 
- - When the type of the Key column in the join on clause is varchar, etc., applying MinMax Filter will often lead to performance degradation.
-
-- **IN predicate**: Construct an IN predicate based on all the values ​​of the Key column in the join on clause on the right table, and use the constructed IN predicate to filter on the left table. Compared with Bloom Filter, the construction and application overhead is lower. Performance is often higher when the amount of data in the right table is smaller.
-
- - When In predicate and other filters are specified at the same time, and the filter value of in does not reach runtime_filter_max_in_num, other filters will be tried to be removed. The reason is that In predicate is a precise filtering condition, which can filter efficiently even without other filters. If used at the same time, other filters will do useless work.
-
-- **Bitmap Filter**:
- - Bitmap filter is currently only used when the subquery in the [in subquery](../../sql-manual/sql-statements/Operators/in) operation returns a bitmap column.
-
-#### 2.runtime_filter_mode
-Used to control the transmission range of Runtime Filter between instances.
-
-**Type**: Number (0, 1, 2) or corresponding mnemonic string (OFF, LOCAL, GLOBAL), default 2 (GLOBAL).
-
-**Precautions for use**
-
-LOCAL: Relatively conservative, the constructed Runtime Filter can only be used in the same Fragment on the same instance (the smallest unit of query execution), that is, the Runtime Filter producer (the HashJoinNode that constructs the Filter) and the consumer (the ScanNode that uses the RuntimeFilter) The same Fragment, such as the general scene of broadcast join;
-
-GLOBAL: Relatively radical. In addition to satisfying the scenario of the LOCAL strategy, the Runtime Filter can also be combined and transmitted to different Fragments on different instances via the network. For example, the Runtime Filter producer and consumer are in different Fragments, such as shuffle join.
-
-In most cases, the GLOBAL strategy can optimize queries in a wider range of scenarios, but in some shuffle joins, the cost of generating and merging Runtime Filters exceeds the performance advantage brought to the query, and you can consider changing to the LOCAL strategy.
-
-If the join query involved in the cluster does not improve performance due to Runtime Filter, you can change the setting to OFF to completely turn off the function.
-
-When building and applying Runtime Filters on different Fragments, the reasons and strategies for merging Runtime Filters can be found in [ISSUE 6116](https://github.com/apache/incubator-doris/issues/6116)
-
-#### 3.runtime_filter_wait_time_ms
-Waiting for Runtime Filter is time consuming.
-
-**Type**: integer, default 1000, unit ms
-
-**Precautions for use**
-
-After the Runtime Filter is turned on, the ScanNode of the left table will wait for a while for the Runtime Filter assigned to it before scanning the data.
-
-Because it takes time to build and merge the Runtime Filter, ScanNode will try to push down the Runtime Filter that arrives within the waiting time to the storage engine. If the waiting time is exceeded, ScanNode will directly start scanning data using the Runtime Filter that has arrived.
-
-If the Runtime Filter arrives after the ScanNode starts scanning, the ScanNode will not push the Runtime Filter down to the storage engine. Instead, the ScanNode will use an expression to filter the data that has been scanned from the storage engine based on the Runtime Filter. The Runtime Filter will not be applied to the data that has been scanned before. The size of the intermediate data obtained in this way will be larger than the optimal solution, but serious degradation can be avoided.
-
-If the cluster is busy and there are many resource-intensive or long-time-consuming queries on the cluster, consider increasing the waiting time to avoid missing optimization opportunities for complex queries. If the cluster load is light, and there are many small queries on the cluster that only take a few seconds, you can consider reducing the waiting time to avoid an increase of 1s for each query.
-
-#### 4. Bloom Filter length related parameters
-Including `runtime_bloom_filter_min_size`, `runtime_bloom_filter_max_size`, `runtime_bloom_filter_size`, used to determine the size (in bytes) of the Bloom Filter data structure used by the Runtime Filter.
-
-**Type**: Integer
-
-**Precautions for use**
-Because it is necessary to ensure that the length of the Bloom Filter constructed by each HashJoinNode is the same to be merged, the length of the Bloom Filter is currently calculated in the FE query planning.
-
-If the number of data rows (Cardinality) in the statistics of the right table of the join can be obtained, the optimal size of the Bloom Filter will be estimated based on the Cardinality and rounded to the nearest power of 2 (log value with base 2). If there is no accurate statistics, but enable_sync_runtime_filter_size is turned on, the optimal size of the Bloom Filter will be estimated based on the actual number of data rows at runtime, but there will be some performance overhead caused by runtime statistics.
-Finally, if the Cardinality of the right table is still not available, the default Bloom Filter length `runtime_bloom_filter_size` will be used. `runtime_bloom_filter_min_size` and `runtime_bloom_filter_max_size` are used to limit the minimum and maximum lengths of the Bloom Filter that are ultimately used.
-
-Larger Bloom Filters are more effective when processing high-cardinality input sets, but require more memory. If the query needs to filter high cardinality columns (for example, containing millions of different values), you can consider increasing the value of `runtime_bloom_filter_size` for some benchmark tests, which will help make the Bloom Filter filter more accurate, so as to obtain the expected Performance improvement.
-
-The effectiveness of Bloom Filter depends on the data distribution of the query, so it is usually only for some specific queries to additionally adjust the length of the Bloom Filter, rather than global modification, generally only for some long time-consuming queries involving joins between large tables. Only when you need to adjust this query option.
-
-### View Runtime Filter generated by query
-
-The query plan that can be displayed by the `explain` command includes the join on clause information used by each Fragment, as well as comments on the generation and use of the Runtime Filter by the Fragment, so as to confirm whether the Runtime Filter is applied to the desired join on clause.
-- The comment contained in the Fragment that generates the Runtime Filter, such as `runtime filters: filter_id[type] <- table.column`.
-- Use the comment contained in the fragment of Runtime Filter such as `runtime filters: filter_id[type] -> table.column`.
-
-The query in the following example uses a Runtime Filter with ID RF000.
-```
-CREATE TABLE test (t1 INT) DISTRIBUTED BY HASH (t1) BUCKETS 2 PROPERTIES("replication_num" = "1");
-INSERT INTO test VALUES (1), (2), (3), (4);
-
-CREATE TABLE test2 (t2 INT) DISTRIBUTED BY HASH (t2) BUCKETS 2 PROPERTIES("replication_num" = "1");
-INSERT INTO test2 VALUES (3), (4), (5);
-
-EXPLAIN SELECT t1 FROM test JOIN test2 where test.t1 = test2.t2;
-+--------------------------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                                  |
-+--------------------------------------------------------------------------------------------------+
-| PLAN FRAGMENT 0                                                                                  |
-|   OUTPUT EXPRS:                                                                                  |
-|     t1[#4]                                                                                       |
-|   PARTITION: HASH_PARTITIONED: t1[#1]                                                            |
-|                                                                                                  |
-|   HAS_COLO_PLAN_NODE: false                                                                      |
-|                                                                                                  |
-|   VRESULT SINK                                                                                   |
-|      MYSQL_PROTOCAL                                                                              |
-|                                                                                                  |
-|   3:VHASH JOIN(157)                                                                              |
-|   |  join op: INNER JOIN(BUCKET_SHUFFLE)[]                                                       |
-|   |  equal join conjunct: (t1[#1] = t2[#0])                                                      |
-|   |  runtime filters: RF000[min_max] <- t2[#0](3/4/2048), RF001[in_or_bloom] <- t2[#0](3/4/2048) |
-|   |  cardinality=3                                                                               |
-|   |  vec output tuple id: 3                                                                      |
-|   |  output tuple id: 3                                                                          |
-|   |  vIntermediate tuple ids: 2                                                                  |
-|   |  hash output slot ids: 1                                                                     |
-|   |  final projections: t1[#2]                                                                   |
-|   |  final project output tuple id: 3                                                            |
-|   |  distribute expr lists: t1[#1]                                                               |
-|   |  distribute expr lists: t2[#0]                                                               |
-|   |                                                                                              |
-|   |----1:VEXCHANGE                                                                               |
-|   |       offset: 0                                                                              |
-|   |       distribute expr lists: t2[#0]                                                          |
-|   |                                                                                              |
-|   2:VOlapScanNode(150)                                                                           |
-|      TABLE: test.test(test), PREAGGREGATION: ON                                                  |
-|      runtime filters: RF000[min_max] -> t1[#1], RF001[in_or_bloom] -> t1[#1]                     |
-|      partitions=1/1 (test)                                                                       |
-|      tablets=2/2, tabletList=61032,61034                                                         |
-|      cardinality=4, avgRowSize=0.0, numNodes=1                                                   |
-|      pushAggOp=NONE                                                                              |
-|                                                                                                  |
-| PLAN FRAGMENT 1                                                                                  |
-|                                                                                                  |
-|   PARTITION: HASH_PARTITIONED: t2[#0]                                                            |
-|                                                                                                  |
-|   HAS_COLO_PLAN_NODE: false                                                                      |
-|                                                                                                  |
-|   STREAM DATA SINK                                                                               |
-|     EXCHANGE ID: 01                                                                              |
-|     BUCKET_SHFFULE_HASH_PARTITIONED: t2[#0]                                                      |
-|                                                                                                  |
-|   0:VOlapScanNode(151)                                                                           |
-|      TABLE: test.test2(test2), PREAGGREGATION: ON                                                |
-|      partitions=1/1 (test2)                                                                      |
-|      tablets=2/2, tabletList=61041,61043                                                         |
-|      cardinality=3, avgRowSize=0.0, numNodes=1                                                   |
-|      pushAggOp=NONE                                                                              |
-+--------------------------------------------------------------------------------------------------+
--- The line of `runtime filters` above shows that `2:HASH JOIN` of `PLAN FRAGMENT 1` generates min_max with ID RF000 and in_or_bloom with ID RF001,
--- RF000/RF001 are used in `2:VOlapScanNode(150)` to filter unnecessary data when reading `test`.`t1`.
-
-SELECT t1 FROM test JOIN test2 where test.t1 = test2.t2; 
--- Return 2 rows of results [3, 4];
-
--- Through the query profile (set enable_profile=true;) you can view the detailed information of the internal work of the query,
--- Including whether each Runtime Filter is pushed down, waiting time, 
--- and the total time from prepare to receiving Runtime Filter for OLAP_SCAN_NODE.
-RuntimeFilter:  (id  =  1,  type  =  in_or_bloomfilter):
-      -  Info:  [IsPushDown  =  true,  RuntimeFilterState  =  READY,  HasRemoteTarget  =  false,  HasLocalTarget  =  true,  Ignored  =  false]
-      -  RealRuntimeFilterType:  in
-      -  InFilterSize:  3
-      -  always_true:  0
-      -  expr_filtered_rows:  0
-      -  expr_input_rows:  0
--- expr_input_rows and expr_filtered_rows are both 0 because in filter directly filters the data in advance according to the key range without calculating it row by row.
-
--- In addition, in the OLAP_SCAN_NODE of the profile, you can also view the filtering effect 
--- and time consumption after the Runtime Filter is pushed down.
-    -  RowsVectorPredFiltered:  9.320008M  (9320008)
-    -  VectorPredEvalTime:  364.39ms
+```sql
+select o_orderkey from orders order by o_orderdate limit 20;
 ```

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Join Hint using Document",
+    "title": "Hint",
     "language": "en"
 }
 ---
@@ -24,15 +24,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip Tips
-This feature is supported since the Apache Doris 2.0.4 version
-:::
+Database Hint is a database query optimization technique used to guide the database query optimizer on how to execute specific queries. By providing hints, users can fine-tune the default behavior of the query optimizer in the hope of achieving better performance or meeting specific needs.
 
-In the database, "Hint" is an instruction that instructs the query optimizer to execute a plan. By embedding hints in SQL statements, you can influence the optimizer's decision to select the desired execution path. Here is a background example using Hint:
+Role of Hints:
 
-Suppose you have a table that contains a large amount of data, and you know that in some specific circumstances, the join order of the tables in a query may affect query performance. Leading Hint allows you to specify the order of table joins that you want the optimizer to follow.
+- Performance Optimization: Hints can influence the execution plan of the query optimizer, thereby enhancing query performance.
 
-For example, consider the following SQL query:
+- Control of Execution Plan: They can specify the use of join methods, sorting methods, etc.
+
+- Debugging and Testing: When debugging and testing query performance, hints can help identify the root cause of issues.
+
+## Overview of Hints
+
+In databases, a "Hint" is an instruction used to guide the query optimizer in formulating an execution plan. By embedding Hints in SQL statements, users can influence the optimizer's decisions and thereby select the desired execution path.
+
+Here is a background example of using hints:
+
+Suppose there is a table with a large amount of data, and in certain specific situations, you understand that the join order of the tables in a query may affect query performance. In such cases, the Leading Hint allows you to specify the table join order you hope the optimizer will follow.
+
+Take the following SQL query as an example: If the execution efficiency is not ideal, we want to adjust the join order without changing the original SQL, so as not to affect the user's original scenario and achieve the purpose of optimization.
+
 ```sql
 mysql> explain shape plan select * from t1 join t2 on t1.c1 = c2;
 +-------------------------------------------+
@@ -49,7 +60,8 @@ mysql> explain shape plan select * from t1 join t2 on t1.c1 = c2;
 7 rows in set (0.06 sec)
 ```
 
-In the above example, when the execution efficiency is not ideal, we want to adjust the join order without changing the original sql so as to avoid affecting the user's original scene and achieve the purpose of tuning. We can use leading to arbitrarily change the join order of tableA and tableB. For example, it could be written like:
+At this point, we can use the Leading Hint to arbitrarily change the join order of tableA and tableB. For example:
+
 ```sql
 mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 = c2;
 +-----------------------------------------------------------------------------------------------------+
@@ -70,14 +82,49 @@ mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 =
 +-----------------------------------------------------------------------------------------------------+
 12 rows in set (0.06 sec)
 ```
-In this example, the Hint /*+ leading(t2 t1) */ is used. This Hint tells the optimizer to use the specified table (t2) as the driver table in the execution plan, before (t1).
 
-This document mainly describes how to use join related hints in Doris: leading hint, ordered hint and distribute hint
+In this example, the Hint `/*+ leading(t2 t1) */` is used. This type of Hint informs the optimizer to use the specified table (t2) as the driving table in the execution plan and place it before (t1).
 
-## Leading hint
-Leading Hint is used to guide the optimizer in determining the join order of the query plan. In a query, the join order of the tables can affect query performance. Leading Hint allows you to specify the order of table joins that you want the optimizer to follow.
+Currently, Doris mainly supports hints related to joins to specify the order or manner of join operations, including:
 
-In doris, the syntax is /*+LEADING(tablespec [tablespec]... ) */,leading is surrounded by "/*+" and "*/" and placed directly behind the select in the select statement. Note that the '/' after leading and the selectlist need to be separated by at least one separator such as a space. At least two more tables need to be written before the leadinghint is justified. And any join can be bracketed to explicitly specify the shape of the joinTree. Example:
+- LeadingHint: Primarily used to control the order of join operations.
+
+- OrderedHint: Mainly used to fix the order of join operations, which can directly generate join operations based on the textual sequence of SQL writing.
+
+- DistributeHint: Mainly used to fix the distribution properties of the right table in join operations.
+
+- SetVarHint: Mainly used to set `sessionVariables` used within a single SQL statement, with effects lasting only during the lifecycle of that SQL statement.
+
+Next, we will elaborate on how to use the above four types of JoinHints in Doris.
+
+## How to use LeadingHint
+
+Leading Hint is a powerful query optimization technique that allows users to guide the Doris optimizer in determining the join order of tables in a query plan. Correct usage of Leading Hint can significantly improve the performance of complex queries. This document will provide a detailed guide on how to use Leading Hint in Doris to control the join order.
+
+### Syntax
+
+Leading Hint allows you to specify the desired table join order for the optimizer to follow. In Doris, the basic syntax for Leading Hint is as follows:
+
+```sql
+SELECT /*+ LEADING(tablespec [tablespec]...) */ ...
+```
+
+Note:
+
+1. Leading Hint is enclosed by `/*+` and `*/` and placed immediately after the `SELECT` keyword in the SQL statement.
+
+2. `tablespec` refers to the table name or table alias, and at least two tables must be specified.
+
+3. Multiple tables are separated by spaces.
+
+4. Curly braces `{}` can be used to explicitly specify the shape of the Join Tree.
+
+:::caution
+There must be at least one space between the `/` at the end of Leading Hint and the SELECT list. Additionally, at least two tables must be specified for the Leading Hint to be considered valid. Curly braces can be used around any Join to explicitly define the shape of the Join Tree.
+:::
+
+Example:
+
 ```sql
 mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 = c2;
 +------------------------------------------------------------------------------+
@@ -98,15 +145,25 @@ mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 =
 +------------------------------------------------------------------------------+
 12 rows in set (0.01 sec)
 ```
-- If the leadinghint fails to take effect, the explain process will be used to generate the leadinghint. The EXPLAIN process will display whether the Leadinghint takes effect. There are three types of hints:
 
-  - Used: leading hint takes effect normally
+**1. When Leading Hint does not take effect, the query plan is generated through the normal process. EXPLAIN will show whether the Hint was used, indicated in three ways:**
 
-  - Unused: Unsupported cases include the feature that the leading specified join order is not equivalent to the original sql or is not supported in this version (see restrictions).
+- Used: Leading Hint takes effect normally.
 
-  - SyntaxError: indicates leading hint syntax errors, such as failure to find the corresponding table
+- Unused: This includes scenarios where the specified join order in Leading Hint is not equivalent to the original SQL or is not supported in this version (see Limitations for details).
 
-- The leading hint syntax creates a left deep tree by default. For example, select /*+ leading(t1 t2 t3) */ * from t1 join t2 on... Specify by default
+- SyntaxError: Indicates a syntax error in Leading Hint, such as an unrecognized table.
+
+**2. Leading Hint syntax defaults to constructing a left-deep tree:**
+
+Query statement:
+
+```sql
+select /leading(t1 t2 t3)/ * from t1 join t2 on... 
+```
+
+Result:
+
 ```sql
       join
      /    \
@@ -136,14 +193,10 @@ mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on c
 +--------------------------------------------------------------------------------+
 15 rows in set (0.00 sec)
 ```
-The join tree shape is also allowed to be specified using braces. For example: /*+ leading(t1 {t2 t3}) */  
-```sql
-      join
-     /    \
-    t1    join
-  /    \
-  t2    t3
 
+**3. Curly braces are also allowed to specify the shape of the Join tree:**
+
+```sql
 mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on c1 = c2 join t3 on c2=c3;
 +----------------------------------------------------------------------------------+
 | Explain String(Nereids Planner)                                                  |
@@ -167,7 +220,10 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on
 15 rows in set (0.02 sec)
 ```
 
-- When a view is used as an alias in joinReorder, the corresponding view can be specified as the leading parameter. Example:
+**4. When a View is used as an alias in JoinReorder, the corresponding View can be specified as a parameter for Leading Hint.** 
+
+For example:
+
 ```sql
 mysql> explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
   +--------------------------------------------------------------------------------------+
@@ -197,8 +253,15 @@ mysql> explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join 
   +--------------------------------------------------------------------------------------+
   21 rows in set (0.06 sec)
 ```
-## Basic cases
-  （Note that the column name is related to the table name, for example: only t1 has c1 field, the following example will write t1.c1 directly to c1 for simplicity）
+
+### Basic Use Cases
+
+:::tip
+In the following examples, column and table naming conventions are followed, e.g., when only t1 contains the c1 field, t1.c1 is simplified to c1 for brevity.
+:::
+
+Table creation statements:
+
 ```sql
 CREATE DATABASE testleading;
 USE testleading;
@@ -207,11 +270,10 @@ create table t1 (c1 int, c11 int) distributed by hash(c1) buckets 3 properties('
 create table t2 (c2 int, c22 int) distributed by hash(c2) buckets 3 properties('replication_num' = '1');
 create table t3 (c3 int, c33 int) distributed by hash(c3) buckets 3 properties('replication_num' = '1');
 create table t4 (c4 int, c44 int) distributed by hash(c4) buckets 3 properties('replication_num' = '1');
+```
 
-```  
-For a simple example, when we need to exchange the join order of t1 and t2, we only need to add leading(t2 t1) before it, which will be used in the explain
-Shows whether the hint is used.
-original plan
+Original plan:
+
 ```sql
 mysql> explain shape plan select * from t1 join t2 on t1.c1 = c2;
 +-------------------------------------------+
@@ -226,8 +288,10 @@ mysql> explain shape plan select * from t1 join t2 on t1.c1 = c2;
 | ----------PhysicalOlapScan[t1]            |
 +-------------------------------------------+
 7 rows in set (0.06 sec)
-  ```
-Leading plan
+```
+
+To swap the join order of t1 and t2, simply add `leading(t2 t1)` at the beginning. When executing `explain`, it will show whether the hint was used. Here, `Used` indicates the hint took effect normally.
+
 ```sql
 mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 = c2;
 +------------------------------------------------------------------------------+
@@ -247,10 +311,10 @@ mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 =
 | SyntaxError:                                                                 |
 +------------------------------------------------------------------------------+
 12 rows in set (0.00 sec)
-  ```
-hint effect display
-（Used unused）
-If the leading hint has a syntax error, the corresponding information is displayed in the syntax Error when explaining, but the plan is generated as usual, just without leading
+```
+
+If there's a syntax error in Leading Hint, `explain` will show the error in `SyntaxError`, but the plan will still be generated normally without using the hint. For example:
+
 ```sql
 mysql> explain shape plan select /*+ leading(t2 t3) */ * from t1 join t2 on t1.c1 = c2;
 +--------------------------------------------------------+
@@ -269,10 +333,14 @@ mysql> explain shape plan select /*+ leading(t2 t3) */ * from t1 join t2 on t1.c
 | SyntaxError: leading(t2 t3) Msg:can not find table: t3 |
 +--------------------------------------------------------+
 11 rows in set (0.01 sec)
-  ```
-## more cases
-### Left deep tree
-leading generates a left deep tree by default when we don't use any parentheses
+```
+
+### Advanced Scenarios
+
+**1. Left-Deep Tree**
+
+As mentioned earlier, Doris will default to generating a left-deep tree when no parentheses are used in the query statement with Leading Hint.
+
 ```sql
 mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3;
 +--------------------------------------------------------------------------------+
@@ -295,9 +363,12 @@ mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on t
 | SyntaxError:                                                                   |
 +--------------------------------------------------------------------------------+
 15 rows in set (0.10 sec)
-  ```
-### Right deep tree
-When we want to make the shape of the plan into a right deep tree, bushy tree or zigzag tree, we only need to add curly brackets to limit the shape of the plan, instead of using swap to adjust from the left deep tree step by step like oracle.
+```
+
+**2. Right-Deep Tree**
+
+When shaping the plan into a right-deep tree, Bushy tree, or zig-zag tree, simply add curly braces to constrain the shape of the plan. There's no need to adjust step by step from a left-deep tree using swap, as in Oracle.
+
 ```sql
 mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3;
 +-----------------------------------------------+
@@ -319,8 +390,10 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on
 | SyntaxError:                                  |
 +-----------------------------------------------+
 14 rows in set (0.02 sec)
-  ```
-### Bushy tree
+```
+
+**3. Bushy Tree**
+
 ```sql
 mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
 +-----------------------------------------------+
@@ -345,8 +418,10 @@ mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join 
 | SyntaxError:                                  |
 +-----------------------------------------------+
 17 rows in set (0.02 sec)
-  ```
-### zig-zag tree
+```
+
+**4. Zig-Zag Tree**
+
 ```sql
 mysql> explain shape plan select /*+ leading(t1 {t2 t3} t4) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
 +--------------------------------------------------------------------------------------+
@@ -373,14 +448,17 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3} t4) */ * from t1 join t2
 | SyntaxError:                                                                         |
 +--------------------------------------------------------------------------------------+
 19 rows in set (0.02 sec)
-  ```
-## Non-inner join:
-When non-inner-joins are encountered, such as Outer join or semi/anti join, leading hint automatically deduces the join mode of each join according to the original sql semantics. If leading hints that differ from the original sql semantics or cannot be generated, they are placed in unused, but do not affect the generation of the normal flow of the plan.
+```
 
-Here are examples of things that can't be exchanged:   
--------- test outer join which can not swap  
---  t1 leftjoin (t2 join t3 on (P23)) on (P12) != (t1 leftjoin t2 on (P12)) join t3 on (P23)
+**5. Non-inner Join**
+
+When encountering non-inner joins (such as Outer Join or Semi/Anti Join), Leading Hint automatically derives the join method based on the original SQL semantics. If the Leading Hint differs from the original SQL semantics or cannot be generated, it will be placed in `UnUsed`, but this does not affect the normal plan generation process.
+
+Here's an example where swapping is not possible:
+
 ```sql
+-------- test outer join which can not swap
+-- t1 leftjoin (t2 join t3 on (P23)) on (P12) != (t1 leftjoin t2 on (P12)) join t3 on (P23)
 mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
 +--------------------------------------------------------------------------------+
 | Explain String(Nereids Planner)                                                |
@@ -402,8 +480,10 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join 
 | SyntaxError:                                                                   |
 +--------------------------------------------------------------------------------+
 15 rows in set (0.01 sec)
-  ```
-Below are some examples that can be exchanged and examples that cannot be exchanged, which readers can verify for themselves
+```
+
+Below are some examples of swappable and non-swappable outer joins. Readers can verify them for themselves.
+
 ```sql
 -------- test outer join which can swap
 -- (t1 leftjoin t2  on (P12)) innerjoin t3 on (P13) = (t1 innerjoin t3 on (P13)) leftjoin t2  on (P12)
@@ -432,8 +512,11 @@ explain shape plan select /*+ leading(t2 t1) */ * from t1 where c1 in (select c2
 -- test anti join
 explain shape plan select * from t1 where exists (select c2 from t2);
 ```
-## View
-In the case of aliases, you can specify the alias as a complete subtree with joinOrder generated from text order.
+
+**6. View**
+
+In cases involving aliases, the alias can be specified as a complete and independent subtree, and the join order within these subtrees can be generated based on the textual order.
+
 ```sql
 mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
 +--------------------------------------------------------------------------------------+
@@ -462,77 +545,17 @@ mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join
 | SyntaxError:                                                                         |
 +--------------------------------------------------------------------------------------+
 21 rows in set (0.02 sec)
-  ```
-## mixed with ordered hint
-When ordered hint is used together with ordered hint, ordered hint takes effect with a higher priority than leading hint. Example:
-```sql
-mysql>  explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2 join t1 on t1.c1 = t2.c2 join t3 on c2 = c3;
-+--------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                |
-+--------------------------------------------------------------------------------+
-| PhysicalResultSink                                                             |
-| --PhysicalDistribute[DistributionSpecGather]                                   |
-| ----PhysicalProject                                                            |
-| ------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()   |
-| --------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
-| ----------PhysicalProject                                                      |
-| ------------PhysicalOlapScan[t2]                                               |
-| ----------PhysicalDistribute[DistributionSpecHash]                             |
-| ------------PhysicalProject                                                    |
-| --------------PhysicalOlapScan[t1]                                             |
-| --------PhysicalDistribute[DistributionSpecHash]                               |
-| ----------PhysicalProject                                                      |
-| ------------PhysicalOlapScan[t3]                                               |
-|                                                                                |
-| Hint log:                                                                      |
-| Used: ORDERED                                                                  |
-| UnUsed: leading(t1 t2 t3)                                                      |
-| SyntaxError:                                                                   |
-+--------------------------------------------------------------------------------+
-18 rows in set (0.02 sec)
-  ```
-## Limitation
-- The current version supports only one leadingHint. If leadinghint is used with a subquery, the query will report an error. Example (This example explain will report an error, but will follow the normal path generation plan) :
-```sql
-mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select /*+ leading(t3 t2) */ c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
-  +----------------------------------------------------------------------------------------+
-  | Explain String(Nereids Planner)                                                        |
-  +----------------------------------------------------------------------------------------+
-  | PhysicalResultSink                                                                     |
-  | --hashAgg[GLOBAL]                                                                      |
-  | ----PhysicalDistribute[DistributionSpecGather]                                         |
-  | ------hashAgg[LOCAL]                                                                   |
-  | --------PhysicalProject                                                                |
-  | ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = alias.c2)) otherCondition=()    |
-  | ------------PhysicalProject                                                            |
-  | --------------PhysicalOlapScan[t1]                                                     |
-  | ------------PhysicalDistribute[DistributionSpecHash]                                   |
-  | --------------PhysicalProject                                                          |
-  | ----------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
-  | ------------------PhysicalProject                                                      |
-  | --------------------PhysicalOlapScan[t2]                                               |
-  | ------------------PhysicalDistribute[DistributionSpecHash]                             |
-  | --------------------PhysicalProject                                                    |
-  | ----------------------PhysicalOlapScan[t3]                                             |
-  |                                                                                        |
-  | Hint log:                                                                              |
-  | Used:                                                                                  |
-  | UnUsed: leading(alias t1)                                                              |
-  | SyntaxError: leading(t3 t2) Msg:one query block can only have one leading clause       |
-  +----------------------------------------------------------------------------------------+
-  21 rows in set (0.01 sec)
 ```
- # OrderedHint
-- Using ordered hint causes the join tree to be fixed in shape and displayed in text order
-- The syntax is /*+ ORDERED */,leading is surrounded by "/*+" and "*/" and placed directly behind the select in the select statement, for example:
-```sql
-  explain shape plan select /*+ ORDERED */ t1.c1 from t2 join t1 on t1.c1 = t2.c2 join t3 on c2 = c3;
-     join
-    /    \
-   join    t3
-  /    \
-  t2    t1
 
+## How to use OrderedHint
+
+OrderedHint is used to fix the shape of the Join Tree, causing it to be displayed and executed in the textual order of the tables specified in the query. This is particularly useful when precise control over the query plan is required.
+
+The syntax for OrderedHint is `/*+ ORDERED */`, which should be placed immediately after the `SELECT` keyword in the `SELECT` statement, followed by the rest of the query.
+
+Here's an example of using OrderedHint:
+
+```sql
 mysql> explain shape plan select /*+ ORDERED */ t1.c1 from t2 join t1 on t1.c1 = t2.c2 join t3 on c2 = c3;
 +--------------------------------------------------------------------------------+
 | Explain String(Nereids Planner)                                                |
@@ -557,8 +580,14 @@ mysql> explain shape plan select /*+ ORDERED */ t1.c1 from t2 join t1 on t1.c1 =
 | SyntaxError:                                                                   |
 +--------------------------------------------------------------------------------+
 18 rows in set (0.02 sec)
-  ```
-- When ordered hint and leading hint are used at the same time, the ordered hint prevails and the leading hint becomes invalid
+```
+
+**Relationship with LeadingHint**
+
+When OrderedHint and LeadingHint are used simultaneously, OrderedHint takes precedence over LeadingHint. This means that even if LeadingHint is specified, if OrderedHint is also present, the query plan will be executed according to the rules of OrderedHint, and LeadingHint will be ignored.
+
+Here's an example showing how the two hints behave when used together:
+
 ```sql
 mysql> explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2 join t1 on t1.c1 = t2.c2 join t3 on c2 = c3;
   +--------------------------------------------------------------------------------+
@@ -584,19 +613,20 @@ mysql> explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2 
   | SyntaxError:                                                                   |
   +--------------------------------------------------------------------------------+
   18 rows in set (0.02 sec)
-  ```
-# DistributeHint
-- Currently, only the distribute Type of the right table can be specified, and only two types are available: [shuffle] and [broadcast]. They are written before the right join table. Brackets and /*+ */ are allowed
+```
 
-- Currently you can use any DistributeHint
+## How to use DistributeHint 
 
-- When a DistributeHint whose plan cannot be correctly generated is not displayed, it takes effect based on maximum effort. Finally, the distribute mode that is displayed is mainly explained
+- Currently, only the Distribute Type for the right table in a Join can be specified, and only `[shuffle]` and `[broadcast]` are supported. It should be written before the right table of the Join, and both bracket `[]` and `/`*`+`*`/` notations are allowed.
+- Any number of DistributeHints can be used.
+- When encountering a DistributeHint that cannot properly generate a plan, the system will not display an error. Instead, it will apply the hint to the best of its ability, with the final Distribution method shown in EXPLAIN being the definitive version.
 
-- The current distribute version is not combined with leading. It takes effect only when the table specified in DISTRIBUTE is on the right of join.
+**1. Mixed Use with OrderedHint**
 
-- Mixed with ordered, the text order is used to set the join order and then specify the expected distribute mode in the corresponding join. Example:
+Fix the Join order using the textual sequence and then specify the expected Distribution method for the corresponding Join. For example:
 
-Before use distribute hint:
+Before use:
+
 ```sql
 mysql> explain shape plan select count(*) from t1 join t2 on t1.c1 = t2.c2;
   +----------------------------------------------------------------------------------+
@@ -615,37 +645,101 @@ mysql> explain shape plan select count(*) from t1 join t2 on t1.c1 = t2.c2;
   | ----------------PhysicalOlapScan[t2]                                             |
   +----------------------------------------------------------------------------------+
   11 rows in set (0.01 sec)
-  ```
+```
 
-  after use distribute hint:
-  ```sql
+After use:
+
+```sql
 mysql> explain shape plan select /*+ ordered */ count(*) from t2 join[broadcast] t1 on t1.c1 = t2.c2;
-  +----------------------------------------------------------------------------------+
-  | Explain String(Nereids Planner)                                                  |
-  +----------------------------------------------------------------------------------+
-  | PhysicalResultSink                                                               |
-  | --hashAgg[GLOBAL]                                                                |
-  | ----PhysicalDistribute[DistributionSpecGather]                                   |
-  | ------hashAgg[LOCAL]                                                             |
-  | --------PhysicalProject                                                          |
-  | ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
-  | ------------PhysicalProject                                                      |
-  | --------------PhysicalOlapScan[t2]                                               |
-  | ------------PhysicalDistribute[DistributionSpecReplicated]                       |
-  | --------------PhysicalProject                                                    |
-  | ----------------PhysicalOlapScan[t1]                                             |
-  |                                                                                  |
-  | Hint log:                                                                        |
-  | Used: ORDERED                                                                    |
-  | UnUsed:                                                                          |
-  | SyntaxError:                                                                     |
-  +----------------------------------------------------------------------------------+
-  16 rows in set (0.01 sec)
-  ```
-- the Explain shape plan will display inside distribute operator related information, including DistributionSpecReplicated said the operator will be corresponding data into a copy of all be node, DistributionSpecGather indicates that data is gathered to fe nodes, and DistributionSpecHash indicates that data is dispersed to different be nodes according to a specific hashKey and algorithm.
-# To be supported
-- leadingHint indicates that the current query cannot be mixed with the subquery after it is promoted. A hint is required to control whether the subquery can be unnested
++----------------------------------------------------------------------------------+
+| Explain String(Nereids Planner)                                                  |
++----------------------------------------------------------------------------------+
+| PhysicalResultSink                                                               |
+| --hashAgg[GLOBAL]                                                                |
+| ----PhysicalDistribute[DistributionSpecGather]                                   |
+| ------hashAgg[LOCAL]                                                             |
+| --------PhysicalProject                                                          |
+| ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+| ------------PhysicalProject                                                      |
+| --------------PhysicalOlapScan[t2]                                               |
+| ------------PhysicalDistribute[DistributionSpecReplicated]                       |
+| --------------PhysicalProject                                                    |
+| ----------------PhysicalOlapScan[t1]                                             |
+|                                                                                  |
+| Hint log:                                                                        |
+| Used: ORDERED                                                                    |
+| UnUsed:                                                                          |
+| SyntaxError:                                                                     |
++----------------------------------------------------------------------------------+
+16 rows in set (0.01 sec)
+```
 
-- A new distributeHint is needed for better and more complete control of the distribute operator
+The Explain Shape Plan will display information related to the Distribute operator. Specifically:
 
-- Use leadingHint and distributeHint together to determine the shape of a join
+- DistributionSpecReplicated indicates that the corresponding data is replicated to all BE nodes.
+
+- DistributionSpecGather indicates that data is gathered to the FE node.
+
+- DistributionSpecHash indicates that data is distributed to different BE nodes based on a specific hashKey and algorithm.
+
+**2. Mixed Use with LeadingHint**
+
+When writing SQL queries, we can specify the corresponding `DISTRIBUTE` method for each `JOIN` operation while using the `LEADING` hint. The following is a specific example showing how to mix `DistributeHint` and `LeadingHint` in an SQL query.
+
+```sql
+explain shape plan
+    select 
+        nation,
+        o_year,
+        sum(amount) as sum_profit
+    from
+        (
+            select
+                /*+ leading(orders shuffle {lineitem shuffle part} shuffle {supplier broadcast nation} shuffle partsupp) */
+                n_name as nation,
+                extract(year from o_orderdate) as o_year,
+                l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
+            from
+                part,
+                supplier,
+                lineitem,
+                partsupp,
+                orders,
+                nation
+            where
+                s_suppkey = l_suppkey
+                and ps_suppkey = l_suppkey
+                and ps_partkey = l_partkey
+                and p_partkey = l_partkey
+                and o_orderkey = l_orderkey
+                and s_nationkey = n_nationkey
+                and p_name like '%green%'
+        ) as profit
+    group by
+        nation,
+        o_year
+    order by
+        nation,
+        o_year desc;
+```
+
+## Reference
+
+### 1 Hint Log
+
+The Hint Log is primarily used to indicate whether a hint has taken effect during the execution of an `EXPLAIN` statement. It is typically displayed at the bottom of the `EXPLAIN` output.
+
+The Hint Log has three states:
+
+```sql
++---------------------------------+
+| Hint log:                       |
+| Used:                           |
+| UnUsed:                         |
+| SyntaxError:                    |
++---------------------------------+
+```
+
+- `Used`: Indicates that the hint has taken effect.
+
+- `UnUsed` and `SyntaxError`: Both indicate that the hint has not taken effect. However, `SyntaxError` specifically denotes that there is an error in the syntax used for the hint or the syntax is not supported, and it is often accompanied by information about the reason for the unsupported operation.

@@ -32,15 +32,18 @@ TOPN queries refer to queries that involve ORDER BY LIMIT operations, which are 
 SELECT * FROM tablex WHERE xxx ORDER BY c1,c2 ... LIMIT n
 ```
 
-## Optimization Points
+## Advantages of TOPN
 
 1. During execution, dynamic range filters are built for the sorting columns (e.g., c1 >= 1000), which automatically apply the preceding conditions when reading data, leveraging zonemap indexes to filter out some rows or even entire files.
+
 2. If the sorting fields c1, c2 are exactly the prefix of the table key, further optimization is applied. When reading data, only the header or tail of the data files is read, reducing the amount of data read to just the n rows needed.
+
 3. SELECT * deferred materialization, during the data reading and sorting process, only the sorting columns are read, not the other columns. After obtaining the row numbers that meet the conditions, the entire data of those n rows needed is read, significantly reducing the amount of data read and sorted.
 
 ## Limitations
 
 1. It only applies to DUP and MOW tables, not to MOR and AGG tables.
+
 2. Due to the high memory consumption on very large `n`, it will not take effect if n is greater than `topn_opt_limit_threshold`.
 
 ## Configuration and Query Analysis
@@ -56,7 +59,9 @@ The following two parameters are session variables that can be set for a specifi
 To confirm if TOPN query optimization is enabled for a particular SQL, you can use the `EXPLAIN` statement to get the query plan. An example is as follows:
 
 - `TOPN OPT` indicates that optimization point 1 is applied.
+
 - `VOlapScanNode` with `SORT LIMIT` indicates optimization point 2 is applied.
+
 - `OPT TWO PHASE` indicates optimization point 3 is applied.
 
 ```sql
@@ -92,7 +97,7 @@ After enabling TOPN query optimization, search for `RuntimePredicate` in the que
 
 Before version 2.0.3, the `RuntimePredicate` metrics were not separated out, and the `Zonemap` metrics can be used as a rough guide.
 
-```
+```sql
     SegmentIterator:
           -  BitmapIndexFilterTimer:  46.54us
           -  BlockConditionsFilteredBloomFilterTime:  10.352us

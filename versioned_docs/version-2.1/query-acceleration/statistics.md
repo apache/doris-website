@@ -24,312 +24,484 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Statistics
+Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO, and their accuracy directly determines the accuracy of cost estimation, which is crucial for selecting the optimal execution plan. This document serves as a guide to statistical usage in Doris 2.1, focusing on the collection and management methods, relevant configuration options, and frequently asked questions.
 
-Collecting statistics helps the optimizer understand data distribution characteristics. When performing Cost-Based Optimization (CBO), the optimizer uses these statistics to calculate the selectivity of predicates and estimate the cost of each execution plan. This allows for the selection of more optimal plans, significantly improving query efficiency.
+## Collection of Statistics
 
-Currently, the following information is collected for each column:
+Starting from the current version, Doris collects statistics at the column level for each table. The information collected includes:
 
-| Information        | Description                    |
-| :----------------- | :------------------------------ |
-| `row_count`        | Total number of rows           |
-| `data_size`        | Total data size                |
-| `avg_size_byte`    | Average length of values       |
-| `ndv`              | Number of distinct values      |
-| `min`              | Minimum value                  |
-| `max`              | Maximum value                  |
-| `null_count`       | Number of null values          |
+| Info of Statistics | Description                              |
+| ------------------ | ---------------------------------------- |
+| row_count          | Total number of rows                     |
+| data_size          | Total data size of the column            |
+| avg_size_byte      | Average data size per row for the column |
+| ndv                | Number of distinct values                |
+| min                | Minimum value                            |
+| max                | Maximum value                            |
+| null_count         | Number of null values                    |
 
+Currently, the system only supports collecting statistics for columns of basic data types, including BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DATE, DATETIME, STRING, VARCHAR, TEXT, among others.
 
-## 1. Collecting Statistics
+Columns of complex types, such as JSONB, VARIANT, MAP, STRUCT, ARRAY, HLL, BITMAP, TIME, TIMEV2, are skipped.
 
----
+Statistics can be collected manually or automatically, and the results are stored in the `internal.__internal_schema.column_statistics` table. The following sections detail these two collection methods.
 
-### 1.1 Manual Collection Using ANALYZE Statement
+### Manual Collection
 
-Doris allows users to manually trigger the collection and update of statistics by submitting the ANALYZE statement.
+Doris allows users to manually trigger the collection and update of statistics by submitting an ANALYZE statement.
 
-Syntax:
+**1. Syntax**
 
-```SQL
-ANALYZE < TABLE table_name | DATABASE db_name >
+```sql
+ANALYZE < TABLE table_name > | < DATABASE db_name > 
     [ (column_name [, ...]) ]
     [ [ WITH SYNC ] [ WITH SAMPLE PERCENT | ROWS ] ];
 ```
 
-Where:
+Parameters Explanation:
 
-- `table_name`: The specified target table. It can be in the format `db_name.table_name`.
-- `column_name`: The specified target column. It must be an existing column in `table_name`. You can specify multiple column names separated by commas.
-- `sync`: Collect statistics synchronously. Returns after collection. If not specified, it executes asynchronously and returns a JOB ID.
-- `sample percent | rows`: Collect statistics with sampling. You can specify a sampling percentage or a number of sampling rows.
+- `table_name`: Specifies the target table for which statistics will be collected.
 
-By default (WITH SAMPLE is not specified), a table will be fully analyzed. For relatively large tables (e.g. above 5GiB), from the perspective of system resources, we recommend sampling analyze, and the number of sampled rows is recommended to be no less than 4 million rows. Here are some examples:
+- `column_name`: Specifies the target columns for which statistics will be collected. These columns must exist in `table_name`, and multiple column names are separated by commas. If no column names are specified, statistics will be collected for all columns in the table.
 
-Collect statistics for a table with full analyze:
+- `sync`: Optional parameter to collect statistics synchronously. If specified, the result will be returned after collection is complete; if not specified, the operation will be performed asynchronously, and a JOB ID will be returned, which can be used to check the status of the collection task.
+
+- `sample percent | rows`: Optional parameter for sampling during statistics collection. Allows specifying a sampling percentage or number of rows. If `WITH SAMPLE` is not specified, a full table scan will be performed. For large tables (e.g., over 5 GiB), sampling is generally recommended from a cluster resource utilization perspective. To ensure the accuracy of statistics, it is recommended to sample at least 4 million rows.
+
+**2. Examples**
+
+Collect statistics for all columns in the `lineitem` table:
 
 ```sql
 ANALYZE TABLE lineitem;
 ```
 
-Collect statistics for a table with a 10% sampling rate:
+Collect statistics for all columns in all tables in the `tpch100` database:
 
 ```sql
-ANALYZE TABLE lineitem WITH SAMPLE PERCENT 10;
+ANALYZE DATABASE tpch100;
 ```
 
-Collect statistics for a table with a sample of 100,000 rows:
+Collect statistics for the `l_orderkey` and `l_linenumber` columns in the `lineitem` table by sampling 100,000 rows (note: the correct syntax should be used `WITH SAMPLE ROWS` or `WITH SAMPLE PERCENT`):
 
 ```sql
 ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;
 ```
 
-<br />
+### Automatic Collection
 
-### 1.2 Automatic Collection
-
-This feature has been officially supported since 2.0.3 and is enabled by default. The basic operation logic is described below. After each import transaction commit, Doris records the number of rows updated by the import transaction to estimate the health of the existing table's statistics data (for tables that have not collected statistics, their health is 0). When the health of a table is below 60 (adjustable through the `table_stats_health_threshold` parameter), Doris considers the statistics for that table outdated and triggers statistics collection jobs for that table in subsequent operations. For tables with a health value above 60, no repeated collection is performed.
-
-The collection jobs for statistics themselves consume a certain amount of system resources. To minimize the overhead, Doris automatically uses sampling to collect statistics. Automatic sampling defaults to sample 4,194,304 (2^22) rows to reduce the system's burden and complete the collection job as quickly as possible. If you want to sample more rows to obtain a more accurate data distribution, you can increase the sampling row count by adjusting the `huge_table_default_sample_rows` parameter. You can also control the full collection of small tables and the collection interval of large tables through session variables. For detailed configuration, please refer to [3.1](statistics.md#31-session-variables).
-
-If you are concerned about automatic collection jobs interfering with your business, you can specify a time frame for the automatic collection jobs to run during low business loads by setting the `auto_analyze_start_time` and `auto_analyze_end_time` parameters according to your needs. You can also completely disable this feature by setting the `enable_auto_analyze` parameter to `false`.
-
-External catalogs do not participate in automatic collection by default. Because external catalogs often contain massive historical data, if they participate in automatic collection, it may occupy too many resources. You can turn on and off the automatic collection of external catalogs by setting the catalog's properties.
+Automatic collection is supported from version 2.0.3 onwards and is enabled by default throughout the day. Users can control the feature's activation or deactivation by setting the `ENABLE_AUTO_ANALYZE` variable:
 
 ```sql
-ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='true'); // Turn on
-ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='false'); // Turn off
+SET GLOBAL ENABLE_AUTO_ANALYZE = TRUE; // Enable automatic collection  
+SET GLOBAL ENABLE_AUTO_ANALYZE = FALSE; // Disable automatic collection
 ```
 
-<br />
+When enabled, a background thread periodically scans all tables in the `InternalCatalog` within the cluster. For tables requiring statistics collection, the system automatically creates and executes collection jobs without manual intervention.
 
+To avoid excessive resource usage for wide tables, tables with more than 100 columns are not automatically collected by default. Users can adjust this threshold by modifying the session variable `auto_analyze_table_width_threshold`:
 
+```sql
+SET GLOBAL auto_analyze_table_width_threshold = 120;
+```
 
-## 2. Job Management
+The default polling interval for automatic collection is 5 minutes (adjustable via the `auto_check_statistics_in_minutes` configuration in `fe.conf`). The first iteration starts 5 minutes after cluster startup. After all tables requiring collection are processed, the background thread sleeps for 5 minutes before starting the next iteration. Therefore, there is no guarantee that a table will have its statistics collected within 5 minutes, as the time to iterate through all tables can vary based on the number and size of tables.
 
----
+When a table is polled, the system first determines if statistical collection is required. If so, a collection job is created and executed; otherwise, the table is skipped. Statistics collection is required if:
 
-### 2.1 View Analyze Jobs
+1. The table has columns without statistics.
 
-Use `SHOW ANALYZE` to view information about statistics collection jobs.
+2. The table's health is below the threshold (default 60, adjustable via `table_stats_health_threshold`). Health indicates the percentage of data that has remained unchanged since the last statistics collection: 100 indicates no change; 0 indicates all changes; a health below 60 indicates significant deviation in current statistics, necessitating re-collection.
 
-Syntax:
+To reduce background job overhead and improve collection speed, automatic collection uses sampling by default, sampling 4,194,304 (`2^22`) rows. Users can adjust the sampling size by modifying `huge_table_default_sample_rows` for more accurate data distribution information.
 
-```SQL
+To prevent automatic collection jobs from interfering with business operations, users can specify the execution window for automatic collection based on their requirements by setting `auto_analyze_start_time` and `auto_analyze_end_time`:
+
+```sql
+SET GLOBAL auto_analyze_start_time = "03:00:00"; // Set the start time to 3 AM  
+SET GLOBAL auto_analyze_end_time = "14:00:00"; // Set the end time to 2 PM
+```
+
+### External Table Collection
+
+External tables typically include Hive, Iceberg, JDBC, and other types.
+
+- Manual Collection: Hive, Iceberg, and JDBC tables support manual statistics collection. Hive tables support both full and sampled collection, while Iceberg and JDBC tables only support full collection. Other external table types do not support manual collection.
+
+- Automatic Collection: Currently, only Hive tables are supported.
+
+External Catalogs do not participate in automatic collection by default because they often contain large amounts of historical data, which could consume excessive resources during automatic collection. However, you can enable or disable automatic collection for an external Catalog by setting its properties:
+
+```sql
+ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='true'); // Enable automatic collection  
+ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='false'); // Disable automatic collection
+```
+
+External tables do not have the concept of health. When automatic collection is enabled for a Catalog, the system defaults to collecting statistics for an external table only once every 24 hours to avoid frequent collection. You can adjust the minimum collection interval for external tables using the `external_table_auto_analyze_interval_in_millis` variable.
+
+By default, external tables do not collect statistics, but for Hive and Iceberg tables, the system attempts to obtain row count information through the Hive Metastore and Iceberg API.
+
+**1. For Hive Tables:**
+
+The system first attempts to retrieve `numRows` or `totalSize` information from the Hive table's Parameters:
+
+- If `numRows` is found, its value is used as the table's row count.
+
+- If `numRows` is not found but `totalSize` is available, the row count is estimated based on the table's schema and `totalSize`.
+
+- If neither `numRows` nor `totalSize` is available, the row count cannot be obtained by default. Users can enable row count estimation by setting the following variable (default is `false`):
+
+  ```sql
+  SET GLOBAL enable_get_row_count_from_file_list = TRUE
+  ```
+
+In versions after 2.1.5, the default value of this parameter changes to `true`, but it does not automatically update after upgrading from an older version. If needed, it can be manually changed. When enabled, the system estimates the row count based on the file sizes and schema of the Hive table. Due to the heavy operation of obtaining all file sizes, this feature is disabled by default to avoid excessive resource usage.
+
+**2. For Iceberg Tables:**
+
+The system calls the Iceberg snapshot API to retrieve `total-records` and `total-position-deletes` information to calculate the table's row count.
+
+**3. For Other External Tables:**
+
+Automatic row count acquisition and estimation are currently not supported.
+
+Users can view the estimated row count for external tables using the following command (see Section 2.4 for viewing table statistics):
+
+```sql
+SHOW table stats table_name;
+```
+
+- If `row_count` displays as `-1`, row count information could not be obtained.
+
+- If `row_count` displays as `0` but the table is not empty, users can execute the command multiple times to obtain the final result, as the operation retrieves values from a cache. If the cache is empty, the estimation logic for Hive and Iceberg tables is executed asynchronously. Before the estimation completes, `row_count` will display as `0`.
+
+## Statistics Job Management
+
+### Viewing Statistics Jobs
+
+Use `SHOW ANALYZE` to view information about statistics collection jobs. Currently, the system retains information for only 20,000 historical jobs. Note that only information for asynchronous jobs can be viewed using this command; synchronous jobs (using `WITH SYNC`) do not retain historical job information.
+
+**1. Syntax**:
+
+```sql
 SHOW [AUTO] ANALYZE < table_name | job_id >
-    [ WHERE [ STATE = [ "PENDING" | "RUNNING" | "FINISHED" | "FAILED" ] ] ];
+    [ WHERE STATE = < "PENDING" | "RUNNING" | "FINISHED" | "FAILED" > ];
 ```
 
-- AUTO: Show historical information for automatic collection jobs only. Note that, by default, the status of only the last 20,000 completed automatic collection jobs is retained.
-- table_name: Table name, specify to view statistics job information for that table. It can be in the format `db_name.table_name`. When not specified, it returns information for all statistics jobs.
-- job_id: Job ID for statistics collection, obtained when executing `ANALYZE`. When not specified, this command returns information for all statistics jobs.
+- `AUTO`: Displays information about historical automatic collection jobs. If unspecified, displays information about manual `ANALYZE` historical jobs.
 
-Output:
+- `table_name`: Table name, specifying which allows you to view statistics job information for that table. Can be in the form `db_name.table_name`. If unspecified, returns information about all statistics jobs.
 
-| Column Name           | Description      |
-| :--------------------- | :--------------- |
-| `job_id`               | Job ID           |
-| `catalog_name`         | Catalog Name     |
-| `db_name`              | Database Name    |
-| `tbl_name`             | Table Name       |
-| `col_name`             | Column Name List |
-| `job_type`             | Job Type         |
-| `analysis_type`        | Analysis Type    |
-| `message`              | Job Information  |
-| `last_exec_time_in_ms` | Last Execution Time |
-| `state`                | Job Status       |
-| `schedule_type`        | Scheduling Method |
+- `job_id`: Statistics job ID, obtained when executing an asynchronous `ANALYZE` collection. If unspecified, the command returns information about all statistics jobs.
 
-Here's an example:
+**2. Output**:
+
+Includes the following columns:
+
+| Column Name   | Description                                   |
+| ------------- | --------------------------------------------- |
+| job_id        | Statistics job ID                             |
+| catalog_name  | Catalog name                                  |
+| db_name       | Database name                                 |
+| tbl_name      | Table name                                    |
+| col_name      | List of column names (index_name:column_name) |
+| job_type      | Job type                                      |
+| analysis_type | Statistics type                               |
+| message       | Job information                               |
+| state         | Job state                                     |
+| progress      | Job progress                                  |
+| schedule_type | Scheduling type                               |
+| start_time    | Job start time                                |
+| end_time      | Job end time                                  |
+
+**3. Example:**
 
 ```sql
-mysql> show analyze 245073\G;
+mysql show analyze 245073\G;
 *************************** 1. row ***************************
-              job_id: 245073
+              job_id: 93021
         catalog_name: internal
-             db_name: default_cluster:tpch
-            tbl_name: lineitem
-            col_name: [l_returnflag,l_receiptdate,l_tax,l_shipmode,l_suppkey,l_shipdate,l_commitdate,l_partkey,l_orderkey,l_quantity,l_linestatus,l_comment,l_extendedprice,l_linenumber,l_discount,l_shipinstruct]
+             db_name: tpch
+            tbl_name: region
+            col_name: [region:r_regionkey,region:r_comment,region:r_name]
             job_type: MANUAL
        analysis_type: FUNDAMENTALS
-             message:
-last_exec_time_in_ms: 2023-11-07 11:00:52
+             message: 
                state: FINISHED
-            progress: 16 Finished  |  0 Failed  |  0 In Progress  |  16 Total
+            progress: 3 Finished  |  0 Failed  |  0 In Progress  |  3 Total
        schedule_type: ONCE
+          start_time: 2024-07-11 15:15:00
+            end_time: 2024-07-11 15:15:33
 ```
 
-<br/>
+### Viewing Statistics Tasks
 
-### 2.2 View Column Statistics Collection Status
+Each collection job can contain one or more tasks, with each task corresponding to the collection of a single column. Users can view the completion status of statistics collection for each column using the following command.
 
-Each collection job can contain one or more tasks, with each task corresponding to the collection of a column. Users can use the following command to view the completion status of statistics collection for each column.
-
-Syntax:
+**1. Syntax:**
 
 ```sql
 SHOW ANALYZE TASK STATUS [job_id]
 ```
 
-Here's an example:
+**2. Example:**
 
+```sql
+mysql> show analyze task status 93021;
++---------+-------------+------------+---------+------------------------+-----------------+----------+
+| task_id | col_name    | index_name | message | last_state_change_time | time_cost_in_ms | state    |
++---------+-------------+------------+---------+------------------------+-----------------+----------+
+| 93022   | r_regionkey | region     |         | 2024-07-11 15:15:33    | 32883           | FINISHED |
+| 93023   | r_comment   | region     |         | 2024-07-11 15:15:33    | 32883           | FINISHED |
+| 93024   | r_name      | region     |         | 2024-07-11 15:15:33    | 32883           | FINISHED |
++---------+-------------+------------+---------+------------------------+-----------------+----------+
 ```
-mysql> show analyze task status 20038 ;
-+---------+----------+---------+----------------------+----------+
-| task_id | col_name | message | last_exec_time_in_ms | state    |
-+---------+----------+---------+----------------------+----------+
-| 20039   | col4     |         | 2023-06-01 17:22:15  | FINISHED |
-| 20040   | col2     |         | 2023-06-01 17:22:15  | FINISHED |
-| 20041   | col3     |         | 2023-06-01 17:22:15  | FINISHED |
-| 20042   | col1     |         | 2023-06-01 17:22:15  | FINISHED |
-+---------+----------+---------+----------------------+----------+
-```
 
-<br/>
+### Viewing Statistics
 
-### 2.3 View Column Statistics
+Users can view collected column statistics using the `SHOW COLUMN STATS` command.
 
-Use `SHOW COLUMN STATS` to view various statistics data for columns.
+**1. Syntax:**
 
-Syntax:
-
-```SQL
+```sql
 SHOW COLUMN [cached] STATS table_name [ (column_name [, ...]) ];
 ```
 
 Where:
 
-- cached: Show statistics information in the current FE memory cache.
-- table_name: The target table for collecting statistics. It can be in the format `db_name.table_name`.
-- column_name: Specifies the target column, which must be an existing column in `table_name`. You can specify multiple column names separated by commas.
+- `cached`: Displays statistics currently cached in the FE memory.
 
-Here's an example:
+- `table_name`: Target table for which statistics were collected, can be in the form `db_name.table_name`.
+
+- `column_name`: Specified target column, must exist in `table_name`, multiple column names separated by commas. If unspecified, displays information for all columns.
+
+**2. Example:**
 
 ```sql
-mysql> show column stats lineitem(l_tax)\G;
+mysql> show column stats region (r_regionkey)\G
 *************************** 1. row ***************************
-  column_name: l_tax
-        count: 6001215.0
-          ndv: 9.0
+  column_name: r_regionkey
+   index_name: region
+        count: 5.0
+          ndv: 5.0
      num_null: 0.0
-    data_size: 4.800972E7
-avg_size_byte: 8.0
-          min: 0.00
-          max: 0.08
+    data_size: 20.0
+avg_size_byte: 4.0
+          min: 0
+          max: 4
        method: FULL
          type: FUNDAMENTALS
       trigger: MANUAL
   query_times: 0
- updated_time: 2023-11-07 11:00:46
+ updated_time: 2024-07-11 15:15:33
+1 row in set (0.36 sec)
 ```
 
-<br/>
+### Viewing Table Statistics Overview
 
-### 2.4 Table Collection Overview
+Use `SHOW TABLE STATS` to view an overview of table statistics collection.
 
-Use `SHOW TABLE STATS` to view an overview of statistics collection for a table.
+**1. Syntax:**
 
-Syntax:
-
-```SQL
+```sql
 SHOW TABLE STATS table_name;
 ```
 
-Where:
+Where: `table_name`: Target table name, can be in the form `db_name.table_name`.
 
-- table_name: The target table name. It can be in the format `db_name.table_name`.
+**2. Output:**
 
-Output:
+Includes the following columns:
 
-| Column Name           | Description      |
-| :--------------------- | :--------------- |
-| `updated_rows`        | Updated rows since the last ANALYZE |
-| `query_times`         | Reserved column for recording the number of times the table was queried in future versions |
-| `row_count`           | Number of rows (does not reflect the exact number of rows at the time of command execution) |
-| `updated_time`        | Last update time |
-| `columns`             | Columns for which statistics information has been collected |
+| Column Name   | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| updated_rows  | Number of rows updated in the table since the last ANALYZE   |
+| query_times   | Reserved column, for recording the number of queries on the table in future versions |
+| row_count     | Number of rows in the table (may not reflect the exact count at command execution) |
+| updated_time  | Time of the last statistics update                           |
+| columns       | Columns for which statistics have been collected             |
+| trigger       | Method by which statistics were triggered                    |
+| new_partition | Whether there are new partitions with first-time data imports |
+| user_inject   | Whether statistics were manually injected by the user        |
 
-Here's an example:
+**3. Example:**
 
 ```sql
-mysql> show table stats lineitem \G;
+mysql> show column stats region (r_regionkey)\G
 *************************** 1. row ***************************
-updated_rows: 0
- query_times: 0
-   row_count: 6001215
-updated_time: 2023-11-07
-     columns: [l_returnflag, l_receiptdate, l_tax, l_shipmode, l_suppkey, l_shipdate, l_commitdate, l_partkey, l_orderkey, l_quantity, l_linestatus, l_comment, l_extendedprice, l_linenumber, l_discount, l_shipinstruct]
-     trigger: MANUAL
+  column_name: r_regionkey
+   index_name: region
+        count: 5.0
+          ndv: 5.0
+     num_null: 0.0
+    data_size: 20.0
+avg_size_byte: 4.0
+          min: 0
+          max: 4
+       method: FULL
+         type: FUNDAMENTALS
+      trigger: MANUAL
+  query_times: 0
+ updated_time: 2024-07-11 15:15:33
+1 row in set (0.36 sec)
 ```
 
-<br/>
+### Killing Statistics Jobs
 
-### 2.5 Terminate Statistics Jobs
+Use `KILL ANALYZE` to terminate a currently running asynchronous statistics job.
 
-Use `KILL ANALYZE` to terminate running statistics jobs.
+**1. Syntax:**
 
-Syntax:
-
-```SQL
+```sql
 KILL ANALYZE job_id;
 ```
 
-Where:
+Where: `job_id`: The ID of the statistics job. This is the value returned when executing an asynchronous statistics collection with `ANALYZE` or obtained using the `SHOW ANALYZE` statement.
 
-- job_id: Job ID for statistics collection. Obtained when performing asynchronous statistics collection using the `ANALYZE` statement, and it can also be obtained through the `SHOW ANALYZE` statement.
+**2. Example:**
 
-Example:
+Terminate the statistics job with ID 52357.
 
-- Terminate statistics job with ID 52357.
-
-```SQL
+```sql
 mysql> KILL ANALYZE 52357;
 ```
 
-<br/>
+### Deleting Statistics
 
+If a Catalog, Database, or Table is deleted, users do not need to manually delete its statistics as the background process will periodically clean up this information.
 
-## 3. Session Variables and Configuration Options
+However, for tables that still exist, the system does not automatically clear their statistics. In this case, users need to manually delete them using the following syntax:
 
----
+```sql
+DROP STATS table_name
+```
 
-### 3.1 Session Variables
+## Session Variables and Configuration Options
 
-|Session Variable|Description|Default Value|
-|---|---|---|
-|auto_analyze_start_time|Start time for automatic statistics collection|00:00:00|
-|auto_analyze_end_time|End time for automatic statistics collection|23:59:59|
-|enable_auto_analyze|Enable automatic collection functionality|true|
-|huge_table_default_sample_rows|Sampling rows for large tables|4194304|
-|huge_table_lower_bound_size_in_bytes|Tables with size greater than this value will be automatically sampled during collection of statistics|0|
-|huge_table_auto_analyze_interval_in_millis|Controls the minimum time interval for automatic ANALYZE on large tables. Tables with sizes greater than `huge_table_lower_bound_size_in_bytes * 5` will be ANALYZEed only once within this time interval.|0|
-|table_stats_health_threshold|Ranges from 0 to 100. If data updates since the last statistics collection exceed `(100 - table_stats_health_threshold)%`, the table's statistics are considered outdated.|60|
-|analyze_timeout|Controls the timeout for synchronous ANALYZE in seconds|43200|
-|auto_analyze_table_width_threshold|Controls the maximum width of table that will be auto analyzed. Table with more columns than this value will not be auto analyzed.|100|
+### Session Variables
 
-<br/>
+| Session Variable                    | Description                                                  | Default Value                       |
+| ----------------------------------- | ------------------------------------------------------------ | ----------------------------------- |
+| auto_analyze_start_time             | Start time for automatic statistics collection               | 0:00:00                             |
+| auto_analyze_end_time               | End time for automatic statistics collection                 | 23:59:59                            |
+| enable_auto_analyze                 | Whether to enable automatic collection functionality         | TRUE                                |
+| huge_table_default_sample_rows      | Number of rows to sample for large tables                    | 4194304                             |
+| table_stats_health_threshold        | Value range 0-100, indicating the percentage of data updated since the last statistics collection (100 - table_stats_health_threshold)% at which statistics are considered outdated | 60                                  |
+| auto_analyze_table_width_threshold  | Controls the maximum table width for automatic statistics collection, tables exceeding this column count do not participate in automatic statistics collection | 100                                 |
+| enable_get_row_count_from_file_list | Whether to estimate row counts for Hive tables based on file sizes | FALSE (TRUE by default after 2.1.5) |
 
-### 3.2 FE Configuration Options
+### FE Configuration
 
-The following FE configuration options are typically not a major concern:
+:::info Note
 
-|FE Configuration Option|Description|Default Value|
-|---|---|---|
-|analyze_record_limit|Controls the persistence of statistics job execution records|20000|
-|stats_cache_size|FE-side statistics cache entries|500,000|
-|statistics_simultaneously_running_task_num|Number of asynchronous jobs that can run simultaneously|3|
-|statistics_sql_mem_limit_in_bytes|Controls the amount of BE memory each statistics SQL can use|2,147,483,648 bytes (2 GiB)|
+The following FE configuration options typically do not require special attention.
 
-<br/>
+:::
 
-## 4. Common Issues
+| FE Configuration Option                    | Description                                                  | Default Value           |
+| ------------------------------------------ | ------------------------------------------------------------ | ----------------------- |
+| analyze_record_limit                       | Controls the number of persistent rows for statistics job execution records | 20000                   |
+| stats_cache_size                           | Number of statistics entries cached on the FE side           | 500000                  |
+| statistics_simultaneously_running_task_num | Number of asynchronous statistics jobs that can run simultaneously | 3                       |
+| statistics_sql_mem_limit_in_bytes          | Controls the amount of BE memory each statistics SQL can occupy | 2L * 1024 * 1024 (2GiB) |
 
-### 4.1 ANALYZE Submission Error: Stats table not available...
+## FAQs
 
-When ANALYZE is executed, statistics data is written to the internal table `__internal_schema.column_statistics`. FE checks the tablet status of this table before executing ANALYZE. If there are unavailable tablets, the task is rejected. Please check the BE cluster status if this error occurs.
+### Q1: How can I check if statistics have been collected for a table and if the content is correct?
 
-Users can use `SHOW BACKENDS\G` to verify the BE (Backend) status. If the BE status is normal, you can use the command `SHOW REPLICA STATUS FROM __internal_schema.[tbl_in_this_db]` to check the tablet status within this database, ensuring that the tablet status is also normal.
+First, execute `show column stats table_name` to see if there are any statistical outputs.
 
-### 4.2 Failure of ANALYZE on Large Tables
+Next, execute `show column cached stats table_name` to check if the statistics for the table are loaded into the cache.
 
-Due to resource limitations, ANALYZE on some large tables may timeout or exceed BE memory limits. In such cases, it is recommended to use `ANALYZE ... WITH SAMPLE...`.
+```sql
+mysql> show column stats test_table\G
+Empty set (0.02 sec)
+
+mysql> show column cached stats test_table\G
+Empty set (0.00 sec)
+```
+
+The empty result indicates that there are currently no statistics for the `test_table`. If statistics exist, the result will be similar to the following:
+
+```sql
+mysql> show column cached stats mvTestDup;
++-------------+------------+-------+------+----------+-----------+---------------+------+------+--------+--------------+---------+-------------+---------------------+
+| column_name | index_name | count | ndv  | num_null | data_size | avg_size_byte | min  | max  | method | type         | trigger | query_times | updated_time        |
++-------------+------------+-------+------+----------+-----------+---------------+------+------+--------+--------------+---------+-------------+---------------------+
+| key1        | mvTestDup  | 6.0   | 4.0  | 0.0      | 48.0      | 8.0           | 1    | 1001 | FULL   | FUNDAMENTALS | MANUAL  | 0           | 2024-07-22 10:53:25 |
+| key2        | mvTestDup  | 6.0   | 4.0  | 0.0      | 48.0      | 8.0           | 2    | 2001 | FULL   | FUNDAMENTALS | MANUAL  | 0           | 2024-07-22 10:53:25 |
+| value2      | mvTestDup  | 6.0   | 4.0  | 0.0      | 24.0      | 4.0           | 4    | 4001 | FULL   | FUNDAMENTALS | MANUAL  | 0           | 2024-07-22 10:53:25 |
+| value1      | mvTestDup  | 6.0   | 4.0  | 0.0      | 24.0      | 4.0           | 3    | 3001 | FULL   | FUNDAMENTALS | MANUAL  | 0           | 2024-07-22 10:53:25 |
+| mv_key1     | mv1        | 6.0   | 4.0  | 0.0      | 48.0      | 8.0           | 1    | 1001 | FULL   | FUNDAMENTALS | MANUAL  | 0           | 2024-07-22 10:53:25 |
+| value3      | mvTestDup  | 6.0   | 4.0  | 0.0      | 24.0      | 4.0           | 5    | 5001 | FULL   | FUNDAMENTALS | MANUAL  | 0           | 2024-07-22 10:53:25 |
++-------------+------------+-------+------+----------+-----------+---------------+------+------+--------+--------------+---------+-------------+---------------------+
+6 rows in set (0.00 sec)
+```
+
+If statistics exist, you can manually execute SQL queries to verify their accuracy.
+
+```sql
+Select count(1), ndv(col1), min(col1), max(col1) from table
+```
+
+If the errors in `count` and `ndv` are within an order of magnitude, the accuracy is generally acceptable.
+
+### Q2: Why are statistics not being automatically collected for a table?
+
+First, check if automatic collection is enabled:
+
+```sql
+Show variables like "enable_auto_analyze";  // If false, set it to true:  
+
+Set global enable_auto_analyze = true
+```
+
+If it's already true, check the number of columns in the table. If it exceeds the `auto_analyze_table_width_threshold`, the table will not participate in automatic collection. Modify this value to be greater than the current number of columns in the table:
+
+```sql
+Show variables like "auto_analyze_table_width_threshold"  
+
+// If the value is less than the width of the table, you can modify it:
+
+Set global auto_analyze_table_width_threshold=200
+```
+
+If the number of columns does not exceed the threshold, execute `show auto analyze` to check if there are other collection tasks running (in the running state). Since automatic collection is executed serially by a single thread, the execution cycle may be long as it polls all databases and tables.
+
+### Q3: Why are statistics not available for some columns?
+
+Currently, the system only supports collecting statistics for columns of basic data types. For complex types such as JSONV, VARIANT, MAP, STRUCT, ARRAY, HLL, BITMAP, TIME, and TIMEV2, the system skips them.
+
+### Q4: Error: "Stats table not available, please make sure your cluster status is normal"
+
+This error typically indicates that the internal statistics table is in an unhealthy state.
+
+First, check if all BEs (Backend) in the cluster are in a normal state and ensure they are all functioning correctly.
+
+Next, execute the following statement to retrieve all `tabletId`s (first column of the output):
+
+```sql
+show tablets from internal.__internal_schema.column_statistics;
+```
+
+Then, check each tablet's status using its `tablet_id`:
+
+```sql
+ADMIN DIAGNOSE TABLET tablet_id
+```
+
+If any tablets are found to be abnormal, repair them first before re-collecting statistics.
+
+### Q5: How can I address the issue of untimely statistics collection?
+
+The interval for automatic collection is uncertain and depends on the number and size of tables in the system. In urgent cases, manually execute an `analyze` operation on the table.
+
+If automatic collection is not triggered after importing large amounts of data, consider adjusting the `table_stats_health_threshold` parameter. Its default value is 60, meaning that automatic collection is triggered when more than 40% (100 - 60) of the table's data changes. You can increase this value, for example, to 80, so that statistics are recollected when more than 20% of the table's data changes.
+
+### Q6: How can I address excessive resource usage during automatic collection?
+
+Automatic collection uses sampling and does not require full table scans, and the tasks are executed serially by a single thread. Usually, system resource usage is manageable and does not impact normal query tasks.
+
+For some special tables, such as those with many partitions or large individual tablets, memory usage may be higher.
+
+It is recommended to plan the number of tablets reasonably when creating tables to avoid creating oversized tablets. If the tablet structure is not easily adjustable, consider enabling automatic collection or manually collecting statistics for large tables during off-peak hours to avoid impacting business operations. In the Doris 3.x series, we will optimize for such scenarios.
