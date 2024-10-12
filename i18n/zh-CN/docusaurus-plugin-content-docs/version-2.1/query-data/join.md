@@ -99,7 +99,7 @@ Doris 支持两种 JOIN 的物理实现方式：**Hash Join** 和 **Nest Loop Jo
 当 Doris 在建表时指定为 DISTRIBUTED BY HASH，那么在数据导入时，系统会根据 Hash 分布键进行数据分发。如果两张表的 Hash 分布键恰好与 Join 条件列一致，那么可以认为这两张表的数据已经按照 Join 的需求进行了预分布，即无需额外的 Shuffle 操作。因此，在实际查询时，可以直接在这两张表上执行 Join 计算。
 
 :::caution 注意
-对于直接 Scan 数据后执行 Join 的场景，建表时需要满足一定的条件，具体请参考后续关于两张物理表进行 Colocate Join 的限制说明。
+对于直接 Scan 数据后执行 Join 的场景，建表时需要满足一定的条件，具体请参考后续关于两张物理表进行 [Colocate Join 的限制说明](#colocate-join-的限制)。
 :::
 
 ![Colocate Join](/images/colocate-join.png)

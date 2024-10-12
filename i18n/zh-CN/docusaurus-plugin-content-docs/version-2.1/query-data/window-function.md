@@ -88,7 +88,7 @@ FROM
 
 查询的处理顺序如图所示：
 
-![img](https://selectdb.feishu.cn/space/api/box/stream/download/asynccode/?code=ODY4NDA2OGJlZTA1NGU5Yjk3MWU5MzJkMDQyMzYzNGZfczQxQmwwaTF0a1dLRzlORVJXeUhKeGl5QWJPY09tcVVfVG9rZW46VkhaeWIza2NUbzVhTk94VmhEbmNpUEhGbk1SXzE3MjU5Mzc5NDg6MTcyNTk0MTU0OF9WNA)
+![基本概念介绍](/images/window-function-order.png)
 
 ### 结果集分区
 
@@ -112,7 +112,7 @@ FROM
 
 例如，可以使用一个窗口来定义中心移动平均值计算，该窗口包含当前行、当前行之前的 6 行以及当前行之后的 6 行。这样就创建了一个包含 13 行的滑动窗口。
 
-![img](https://selectdb.feishu.cn/space/api/box/stream/download/asynccode/?code=YWFhNTA3NjM3NWYyOWQ4NjZlOTA3NzA5YWNjZDQ5OThfaklzZ1Q4eXoyeHcxcGFIeFpFTHBuUzJGb0VZMmZNRk5fVG9rZW46UEM3Z2JyR1lVb3BNYmd4eEpDdmNsVmNqbnlkXzE3MjU5Mzc5NDg6MTcyNTk0MTU0OF9WNA)
+![当前行](/images/window-function-rows.jpg)
 
 ## 排序函数
 

@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip
-Java UDF is supported starting from Doris version 1.2.
-:::
 
 ## Introduction to Java UDF
 
@@ -60,7 +57,7 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
     "file"="file:///pathTo/java-udaf.jar",
     "symbol"="org.apache.doris.udf.demo.MiddleNumberUDAF",
     "always_nullable"="true",
-    "type"="JAVA_UDF"
+    "type"="JAVA_UDAF"
 );
 ```
 
@@ -112,7 +109,7 @@ When creating functions, avoid using `varchar` in place of `string`, as this may
 
 ## Writing UDF
 
-This section mainly introduces how to develop a Java UDF. Examples are provided in `samples/doris-demo/java-udf-demo/` for reference. Click [here](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo) to view them.
+This section mainly introduces how to develop a Java UDF. Examples are provided in `samples/doris-demo/java-udf-demo/` for reference. Click [here](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo) to view details.
 
 When writing a UDF in Java, the main entry point must be the `evaluate` function. This is consistent with other engines like Hive. In this example, we write an `AddOne` UDF to perform an increment operation on integer inputs.
 

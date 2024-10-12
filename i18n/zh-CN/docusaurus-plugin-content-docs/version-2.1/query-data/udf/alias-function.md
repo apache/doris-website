@@ -73,4 +73,4 @@ CREATE ALIAS FUNCTION func(INT, INT) WITH PARAMETER(foo, bar) AS foo + bar;
 
 ## 更多内容
 
-除别名函数外，Doris 支持 Java UDF、UDTF 功能，详细信息可参考文档 [Java UDF](../../query-data/udf/alias-function)。
+除别名函数外，Doris 支持 Java UDF、UDTF 功能，详细信息可参考文档 [Java UDF](../../query-data/udf/java-user-defined-function)。

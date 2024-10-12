@@ -83,37 +83,37 @@ PROPERTIES (
     SELECT key, v1, v2 FROM tbl_point_query WHERE key = 1
     ```
 
-## 使用 `PreparedStatement`
+## 使用 PreparedStatement
 
 为了减少 SQL 解析和表达式计算的开销，我们在 FE 端提供了与 MySQL 协议完全兼容的`PreparedStatement`特性（目前只支持主键点查）。当`PreparedStatement`在 FE 开启，SQL 和其表达式将被提前计算并缓存到 Session 级别的内存缓存中，后续的查询直接使用缓存对象即可。当 CPU 成为主键点查的瓶颈，在开启 `PreparedStatement` 后，将会有 4 倍 + 的性能提升。下面是在 JDBC 中使用 `PreparedStatement` 的例子
 
 1. 设置 JDBC url 并在 Server 端开启 prepared statement
 
-```
-url = jdbc:mysql://127.0.0.1:9030/ycsb?useServerPrepStmts=true
-```
+    ```
+    url = jdbc:mysql://127.0.0.1:9030/ycsb?useServerPrepStmts=true
+    ```
 
 2. 使用 `PreparedStatement`
 
-```java
-// use `?` for placement holders, readStatement should be reused
-PreparedStatement readStatement = conn.prepareStatement("select * from tbl_point_query where key = ?");
-...
-readStatement.setInt(1,1234);
-ResultSet resultSet = readStatement.executeQuery();
-...
-readStatement.setInt(1,1235);
-resultSet = readStatement.executeQuery();
-...
-```
+    ```java
+    // use `?` for placement holders, readStatement should be reused
+    PreparedStatement readStatement = conn.prepareStatement("select * from tbl_point_query where key = ?");
+    ...
+    readStatement.setInt(1,1234);
+    ResultSet resultSet = readStatement.executeQuery();
+    ...
+    readStatement.setInt(1,1235);
+    resultSet = readStatement.executeQuery();
+    ...
+    ```
 
 ## 开启行缓存
 
 Doris 中有针对 Page 级别的 Cache，每个 Page 中存的是某一列的数据，所以 Page cache 是针对列的缓存，对于前面提到的行存，一行里包括了多列数据，缓存可能被大查询给刷掉，为了增加行缓存命中率，单独引入了行存缓存，行缓存复用了 Doris 中的 LRU Cache 机制来保障内存的使用，通过指定下面的的 BE 配置来开启
 
-- `disable_storage_row_cache`是否开启行缓存，默认不开启
+- `disable_storage_row_cache` 是否开启行缓存，默认不开启
 
-- `row_cache_mem_limit`指定 Row cache 占用内存的百分比，默认 20% 内存
+- `row_cache_mem_limit` 指定 Row cache 占用内存的百分比，默认 20% 内存
 
 ## 性能优化
 
@@ -125,7 +125,7 @@ Doris 中有针对 Page 级别的 Cache，每个 Page 中存的是某一列的�
 
 ## FAQ
 
-**Q1. 如何确定配置无误使用了并发点查的短路径优化**
+### Q1. 如何确定配置无误使用了并发点查的短路径优化
 
 A：explain sql，当执行计划中出现 SHORT-CIRCUIT，证明使用了短路径优化
 
@@ -161,7 +161,7 @@ mysql> explain select * from tbl_point_query where `key` = -2147481418 ;
 +-----------------------------------------------------------------------------------------------+
    ```
 
-**Q2. 如何确定 prepared statement 生效**
+### Q2. 如何确定 prepared statement 生效
 
 A：当发送请求到 Doris 之后，在 fe.audit.log 中找到相应的 query 请求，发现 Stmt=EXECUTE() ，说明 prepared statement 生效
 
@@ -171,14 +171,14 @@ A：当发送请求到 Doris 之后，在 fe.audit.log 中找到相应的 query 
    bles=
 ```
    
-**Q3. 非主键查询能否使用到高并发点查的特殊优化**
+### Q3. 非主键查询能否使用到高并发点查的特殊优化
 
 A：不能，高并发点查只针对于 key 列的等值查询，且查询中不能包含 join，嵌套子查询
 
-**Q4. useServerPrepStmts 在普通查询中是否有用**
+### Q4. useServerPrepStmts 在普通查询中是否有用
 
 A：Prepared Statement 目前只在主键点查的情况下生效
 
-**Q5. 优化器选择需要进行全局设置吗**
+### Q5. 优化器选择需要进行全局设置吗
 
 A：在使用 prepared statement 进行查询时，Doris 会选择性能最好的查询方式，不需要手动设置优化器
