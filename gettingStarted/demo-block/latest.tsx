@@ -34,7 +34,7 @@ export default function Latest() {
                             </div> */}
                             <div style={{ marginBottom: 10 }}>Apache Doris Meetup @ Singapore on Oct 24</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>This meetup brings together our main developers, users, and friends to discuss various topics, including technology introductions and user experiences.</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>This meetup brings together our main developers, users to discuss various topics, including technology introductions and user experiences.</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>Join us</div>
                     </a>
                     <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v2.0/release-2.0.15`}>
