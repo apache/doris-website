@@ -76,6 +76,12 @@ LOAD LABEL example_db.exmpale_label_1
     INTO TABLE load_test
     COLUMNS TERMINATED BY "|"
     LINES TERMINATED BY "\n"
+    PROPERTIES
+    (
+        "enclose" = "'",
+        "escape" = "\\",
+        "skip_lines = "2"
+    )
 )
 WITH S3
 (
@@ -83,12 +89,6 @@ WITH S3
     "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
     "AWS_SECRET_KEY"="AWS_SECRET_KEY",
     "AWS_REGION" = "AWS_REGION"
-)
-PROPERTIES
-(
-    "enclose" = "'",
-    "escape" = "\",
-    "skip_lines = "2"
 );
 ```
 
@@ -100,7 +100,7 @@ CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
      PROPERTIES
      (
          "enclose" = "'",
-         "escape" = "\"
+         "escape" = "\\"
      )
      FROM KAFKA
      (
@@ -121,7 +121,7 @@ LINES TERMINATED BY "\n"
 PROPERTIES
 (
     "enclose" = "'",
-    "escape" = "\"
+    "escape" = "\\"
 );
 ```
 
