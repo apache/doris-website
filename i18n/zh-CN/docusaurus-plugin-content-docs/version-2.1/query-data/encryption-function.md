@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-Doris 内置了如下加密和脱敏函数。详细使用，请参考 SQL 手册。
+Doris 内置了如下加密和脱敏函数。详细使用，请参考 [SQL 手册](../sql-manual/sql-functions/encrypt-digest-functions/aes-encrypt)。
 
 ## AES_ENCRYPT
 

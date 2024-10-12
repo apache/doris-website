@@ -403,7 +403,7 @@ SELECT … GROUP BY GROUPING SETS(grouping_column_reference_list)
 
 - 每年度每个州每个产品的销售额小计
 
-那么您可以使用 `GROUPING SETS` 来指定这些维度并进行汇总。以下是一个示例：
+那么你可以使用 `GROUPING SETS` 来指定这些维度并进行汇总。以下是一个示例：
 
 ```sql
 SELECT  
@@ -484,7 +484,7 @@ HAVING grouping_id(YEAR(d_date), ca_state, i_category) = 0
 ```
 
 :::info 备注
-使用 `CUBE` 会计算所有可能的聚合层级（在这个例子中是八种），但实际上您可能只对其中的几种感兴趣。
+使用 `CUBE` 会计算所有可能的聚合层级（在这个例子中是八种），但实际上你可能只对其中的几种感兴趣。
 :::
 
 **3. 语义等价**

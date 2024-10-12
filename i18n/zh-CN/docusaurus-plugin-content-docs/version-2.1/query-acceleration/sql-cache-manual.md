@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SQL Cache",
+    "title": "查询缓存",
     "language": "zh-CN"
 }
 ---

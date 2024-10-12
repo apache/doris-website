@@ -96,9 +96,9 @@ UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函�
 | Datetime         | LocalDateTime                              |
 | String           | String                                     |
 | Decimal          | BigDecimal                                 |
-| array<Type>      | `ArrayList<Type>`（支持嵌套）              |
-| map<Type1,Type2> | `HashMap<Type1,Type2>`（支持嵌套）         |
-| struct<Type...>  | `ArrayList<Object>`（从 3.0.0 版本开始支持） |
+| `array<Type>`      | `ArrayList<Type>`（支持嵌套）                  |
+| `map<Type1,Type2>` | `HashMap<Type1,Type2>`（支持嵌套）             |
+| `struct<Type...>`  | `ArrayList<Object>`（从 3.0.0 版本开始支持） |
 
 
 :::tip 提示
@@ -391,7 +391,7 @@ public class MedianUDAF {
     }
     ```
 
-2. 然后编译 FunctionUdf 文件，可以直接引用上一步的到的资源包，这样可以得到 UDF 的 FunctionUdf.jar 包。
+2. 编译 FunctionUdf 文件，可以直接引用上一步的到的资源包，这样可以得到 UDF 的 FunctionUdf.jar 包。
 
     ```shell
     javac -cp ./DictLibrary.jar  ./FunctionUdf.java

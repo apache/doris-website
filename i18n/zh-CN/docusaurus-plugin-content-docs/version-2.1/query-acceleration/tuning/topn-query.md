@@ -35,16 +35,16 @@ SELECT * FROM tablex WHERE xxx ORDER BY c1,c2 ... LIMIT n
 
 1. 执行过程中动态对排序列构建范围过滤条件（比如 c1 >= 10000），读数据时自动带上前面的条件，利用 Zonemap 索引过滤到一些数据甚至文件。
 
-2. 如果排序字段 c1,c2 正好是 table key 的前缀，则更进一步优化，读数据的时候只用读数据文件的头部或者尾部 n 行。
+2. 如果排序字段 c1,c2 正好是 Table Key 的前缀，则更进一步优化，读数据的时候只用读数据文件的头部或者尾部 n 行。
 
 3. SELECT * 延迟物化，读数据和排序过程中只读排序列不读其它列，得到符合条件的行号后，再去读那 n 行需要的全部列数据，大幅减少读取和排序的列。
 
 
 ## TOPN 查询优化的限制
 
-1. 只能用于 Duplicate 表和 Unique MOW 表，因为 mor 表用这个优化可能有结果错误。
+1. 只能用于 Duplicate 表和 Unique MOW 表，因为 MOR 表用这个优化可能有结果错误。
 
-2. 对于过大的 `n`，优化内存消耗会很大，所以超过 topn_opt_limit_threshold session 变量的 `n` 不会使用优化。
+2. 对于过大的 `n`，优化内存消耗会很大，所以超过 `topn_opt_limit_threshold` Session 变量的 `n` 不会使用优化。
 
 
 ## 配置参数和查询分析
@@ -98,7 +98,7 @@ explain SQL 拿到 query plan 可以确认这个 sql 是否启用 TOPN 查询优
 
 - `BlockConditionsFilteredZonemapRuntimePredicateTime` 代表过滤数据的耗时，越小越好
 
-2.0.3 之前的版本 RuntimePredicate 的指标没有独立出来，可以通过 Zonamap 指标大致观察。
+注意，2.0.3 之前的版本中 RuntimePredicate 的指标未独立，可以通过 Zonamap 指标大致观察。
 
 ```sql
     SegmentIterator:

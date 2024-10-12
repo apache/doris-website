@@ -1,7 +1,7 @@
 ---
 {
     "title": "Use Guide",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 

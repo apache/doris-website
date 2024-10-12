@@ -161,100 +161,91 @@
             "type": "category",
             "label": "Data Queries",
             "items": [
-                {
-                    "type": "category",
-                    "label": "Quering Data",
-                    "items": [
-                        "query/query-data/mysql-compatibility",
-                        "query/query-data/select",
-                        "query/query-data/complex-type",
-                        "query/query-data/subquery",
-                        "query/query-data/cte",
-                        "query/query-data/lateral-view",
-                        "query/query-data/window-function",
-                        "query/query-data/encryption-function"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Quering Variables",
-                    "items": [
-                        "query/query-variables/variables",
-                        "query/query-variables/sql-mode",
-                        "query/query-variables/user-defined-variables"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Cost-Based Optimizer",
-                    "items": [
-                        "query/nereids/nereids-new",
-                        "query/nereids/statistics"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Pipeline Execution Engine",
-                    "items": [
-                        "query/pipeline/pipeline-execution-engine",
-                        "query/pipeline/pipeline-x-execution-engine"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Caches",
-                    "items": [
-                        "query/query-cache/query-cache",
-                        "query/query-cache/sql-cache-manual"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "View and Materialize View",
-                    "items": [
-                        "query/view-materialized-view/create-view",
-                        "query/view-materialized-view/materialized-view",
-                        "query/view-materialized-view/async-materialized-view",
-                        "query/view-materialized-view/query-async-materialized-view"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Join Optimization",
-                    "items": [
-                        "query/join-optimization/doris-join-optimization",
-                        "query/join-optimization/bucket-shuffle-join",
-                        "query/join-optimization/colocation-join",
-                        "query/join-optimization/runtime-filter",
-                        "query/join-optimization/join-hint"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Distincting Counts",
-                    "items": [
-                        "query/duplicate/orthogonal-bitmap-manual",
-                        "query/duplicate/using-hll"
-                    ]
-                },
-                "query/high-concurrent-point-query",
-                "query/topn-query",
-                {
-                    "type": "category",
-                    "label": "Analyzing Query",
-                    "items": [
-                        "query/query-analysis/get-profile",
-                        "query/query-analysis/query-profile",
-                        "query/query-analysis/query-analytics",
-                        "query/query-analysis/import-analysis"
-                    ]
-                },
+                "query-data/mysql-compatibility",
+                "query-data/join",
+                "query-data/subquery",
+                "query-data/multi-dimensional-analytics",
+                "query-data/window-function",
+                "query-data/cte",
                 {
                     "type": "category",
                     "label": "User Defined Functions",
                     "items": [
-                        "query/udf/java-user-defined-function",
-                        "query/udf/remote-user-defined-function"
+                        "query-data/udf/alias-function",
+                        "query-data/udf/java-user-defined-function"
+                    ]
+                },
+                "query-data/complex-type",
+                "query-data/lateral-view",
+                "query-data/encryption-function"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Queries Acceleration",
+            "items": [
+                {
+                    "type": "category",
+                    "label": "Materialize View",
+                    "items": [
+                        "query-acceleration/materialized-view/overview",
+                        "query-acceleration/materialized-view/sync-materialized-view",
+                        {
+                            "type": "category",
+                            "label": "Async-Materialize View",
+                            "items": [
+                                "query-acceleration/materialized-view/async-materialized-view/overview",
+                                "query-acceleration/materialized-view/async-materialized-view/functions-and-demands",
+                                "query-acceleration/materialized-view/async-materialized-view/use-guide",
+                                "query-acceleration/materialized-view/async-materialized-view/faq"
+                            ]
+                        }
+                    ]
+                },
+                "query-acceleration/sql-cache-manual",
+                "query-acceleration/high-concurrent-point-query",
+                {
+                    "type": "category",
+                    "label": "Distincting Counts",
+                    "items": [
+                        "query-acceleration/distinct-counts/orthogonal-bitmap-manual",
+                        "query-acceleration/distinct-counts/using-hll"
+                    ]
+                },
+                "query-acceleration/query-optimizer",
+                "query-acceleration/pipeline-execution-engine",
+                "query-acceleration/statistics",
+                {
+                    "type": "category",
+                    "label": "Tuning",
+                    "items": [
+                        "query-acceleration/tuning/overview",
+                        "query-acceleration/tuning/query-profile",
+                        {
+                            "type": "category",
+                            "label": "Tuning Plan",
+                            "items": [
+                                "query-acceleration/tuning/tuning-plan/optimizing-table-schema",
+                                "query-acceleration/tuning/tuning-plan/optimizing-table-index",
+                                "query-acceleration/tuning/tuning-plan/accelerating-point-query",
+                                "query-acceleration/tuning/tuning-plan/optimizing-table-scanning",
+                                "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv",
+                                "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv",
+                                "query-acceleration/tuning/tuning-plan/tuning-plan-with-statistics",
+                                "query-acceleration/tuning/tuning-plan/optimizing-join-with-colocate-group",
+                                "query-acceleration/tuning/tuning-plan/adjusting-join-shuffle",
+                                "query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule",
+                                "query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint",
+                                "query-acceleration/tuning/tuning-plan/accelerating-queries-with-sql-cache",
+                                "query-acceleration/tuning/tuning-plan/accelerating-queries-with-runtime-filter",
+                                "query-acceleration/tuning/tuning-plan/solving-unevenly-data-distribution",
+                                "query-acceleration/tuning/tuning-plan/dml-tuning-plan"
+                            ]
+                        },
+                        "query-acceleration/tuning/faq",
+                        "query-acceleration/tuning/join-hint",
+                        "query-acceleration/tuning/runtime-filter",
+                        "query-acceleration/tuning/topn-query"
                     ]
                 }
             ]

@@ -269,7 +269,7 @@ SELECT * FROM t1;
         SELECT * FROM t1;
     ```
 
-- range 分区
+- Range 分区
 
     假设基表的建表语句如下：
 
@@ -348,7 +348,7 @@ SELECT * FROM t1;
     REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
     ```
 
-::: tip 提示 
+:::tip 提示 
 `partitionName` 可以通过 `SHOW PARTITIONS FROM mvName` 获取。
 :::
 

@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-公用表表达式（Common Table Expression）定义一个临时结果集，您可以在 SQL 语句的范围内多次引用。CTE 主要用于 SELECT 语句中。
+公用表表达式（Common Table Expression）定义一个临时结果集，你可以在 SQL 语句的范围内多次引用。CTE 主要用于 SELECT 语句中。
 
 要指定公用表表达式，请使用 `WITH` 具有一个或多个逗号分隔子句的子句。每个子条款都提供一个子查询，用于生成结果集，并将名称与子查询相关联。下面的示例定义名为的 CTE `cte1` 和 `cte2` 中 `WITH` 子句，并且是指在它们的顶层 `SELECT` 下面的 `WITH` 子句：
 

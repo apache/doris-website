@@ -64,11 +64,11 @@ HLL 的特点是具有非常优异的空间复杂度 O(mloglogn) , 时间复杂�
 
 ## Doris HLL 函数
 
-HLL 是基于 HyperLogLog 算法的工程实现，用于保存 HyperLogLog 计算过程的中间结果，它只能作为表的 value 列类型、通过聚合来不断的减少数据量，以此
+HLL 是基于 HyperLogLog 算法的工程实现，用于保存 HyperLogLog 计算过程的中间结果，它只能作为表的 Value 列类型、通过聚合来不断的减少数据量，以此
 
-来实现加快查询的目的，基于它得到的是一个估算结果，误差大概在 1% 左右，hll 列是通过其它列或者导入数据里面的数据生成的，导入的时候通过 hll_hash 函数
+来实现加快查询的目的，基于它得到的是一个估算结果，误差大概在 1% 左右，HLL 列是通过其它列或者导入数据里面的数据生成的，导入的时候通过 hll_hash 函数
 
-来指定数据中哪一列用于生成 hll 列，它常用于替代 count distinct，通过结合 rollup 在业务上用于快速计算 uv 等
+来指定数据中哪一列用于生成 HLL 列，它常用于替代 Count Distinct，通过结合 Rollup 在业务上用于快速计算 UV 等
 
 **HLL_UNION_AGG(hll)**
 
@@ -76,11 +76,11 @@ HLL 是基于 HyperLogLog 算法的工程实现，用于保存 HyperLogLog 计�
 
 **HLL_CARDINALITY(hll)**
 
-此函数用于计算单条 hll 列的基数估算
+此函数用于计算单条 HLL 列的基数估算
 
 **HLL_HASH(column_name)**
 
-生成 HLL 列类型，用于 insert 或导入的时候，导入的使用见相关说明
+生成 HLL 列类型，用于 Insert 或导入的时候，导入的使用见相关说明
 
 ## 如何使用 Doris HLL
 

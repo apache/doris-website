@@ -367,7 +367,7 @@ mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on t
 
 **2. Right-Deep Tree**
 
-When shaping the plan into a right-deep tree, Bushy tree, or zig-zag tree, simply add curly braces to constrain the shape of the plan. There's no need to adjust step by step from a left-deep tree using swap, as in Oracle.
+When shaping the plan into a right-deep tree, bushy tree, or zig-zag tree, simply add curly braces to constrain the shape of the plan. There's no need to adjust step by step from a left-deep tree using swap, as in Oracle.
 
 ```sql
 mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3;

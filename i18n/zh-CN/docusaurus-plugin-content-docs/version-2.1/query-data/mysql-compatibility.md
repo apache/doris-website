@@ -72,7 +72,7 @@ Doris 是高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL �
 
 | 类型 | MySQL  | Doris  |
 | ---- | ------ | ------ |
-| JSON | - 支持 | - 支持 |
+| JSON | 支持 | 支持 |
 
 ### Doris 特有的数据类型
 
@@ -85,7 +85,6 @@ Doris 是高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL �
 - **BITMAP**
 
   BITMAP 类型的列可以在 Aggregate 表、Unique 表或 Duplicate 表中使用，但必须作为非 Key 列。在 Unique 表或 Duplicate 表中使用时，同样需遵循此规则。在 Aggregate 表中使用时，还需配合 BITMAP_UNION 聚合类型。用户无需指定长度和默认值，长度会根据数据的聚合程度由系统内部控制。并且，BITMAP 列只能通过配套的 BITMAP_UNION_COUNT、BITMAP_UNION、BITMAP_HASH、BITMAP_HASH64 等函数进行查询或使用。
-
 
   离线场景下使用 BITMAP 可能会影响导入速度，在数据量大的情况下，其查询速度会慢于 HLL，但优于 Count Distinct。注意：在实时场景下，如果 BITMAP 不使用全局字典，而使用了 BITMAP_HASH()，可能会导致约千分之一的误差。如果此误差不可接受，可以使用 BITMAP_HASH64。
 
@@ -125,7 +124,7 @@ Doris 是高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL �
 
   用户不需要指定长度和默认值。实际存储的数据大小与函数实现有关。
 
-  AGG_STATE 只能配合[STATE](../sql-manual/sql-functions/combinators/state) /[MERGE](../sql-manual/sql-functions/combinators/merge)/[UNION](../sql-manual/sql-functions/combinators/union)函数组合器使用。 
+  AGG_STATE 只能配合[STATE](../sql-manual/sql-functions/combinators/state) / [MERGE](../sql-manual/sql-functions/combinators/merge) / [UNION](../sql-manual/sql-functions/combinators/union)函数组合器使用。 
 
 ## 语法区别
 
@@ -133,39 +132,37 @@ Doris 是高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL �
 
 **1 CREATE TABLE**
 
-1. Doris 建表语法
+Doris 建表语法：
 
-  ```sql
-  CREATE TABLE [IF NOT EXISTS] [database.]table
-  (
-      column_definition_list
-      [, index_definition_list]
-  )
-  [engine_type]
-  [keys_type]
-  [table_comment]
-  [partition_info]
-  distribution_desc
-  [rollup_list]
-  [properties]
-  [extra_properties]
-  ```
+```sql
+CREATE TABLE [IF NOT EXISTS] [database.]table
+(
+    column_definition_list
+    [, index_definition_list]
+)
+[engine_type]
+[keys_type]
+[table_comment]
+[partition_info]
+distribution_desc
+[rollup_list]
+[properties]
+[extra_properties]
+```
 
-2. 与 MySQL 的不同之处
+与 MySQL 的不同之处：
 
-  | 参数                   | 与 MySQL 不同之处                                            |
-  | ---------------------- | ------------------------------------------------------------ |
-  | column_definition_list | - 字段列表定义，其基本语法与 MySQL 类似，但会额外包含一个聚合类型的操作。<br />- 该聚合类型的操作，主要支持的数据模型为 Aggregate 和 Duplicate。<br />- 在创建表时，MySQL 允许在字段列表定义后添加 Index 等约束，如 Primary Key、Unique Key 等；而 Doris 则是通过定义数据模型来实现对这些约束和计算的支持。 |
-  | index_definition_list  | - 索引列表定义，基本语法与 MySQL 类似，支持位图索引、倒排索引和 N-Gram 索引，但是布隆过滤器索引是通过属性设置。<br />- 而 MySQL 支持的 index 有 B+Tree，Hash。 |
-  | engine_type            | - 表引擎类型，可选。<br />- 目前支持的表引擎主要是 OLAP 原生引擎。<br />- MySQL 支持的存储引擎有：Innodb，MyISAM 等 |
-  | keys_type              | - 数据模型，可选。<br />- 支持的类型包括：1）DUPLICATE KEY（默认）：其后指定的列为排序列。2）AGGREGATE KEY：其后指定的列为维度列。3）UNIQUE KEY：其后指定的列为主键列。<br />- MySQL 则没有数据模型的概念。 |
-  | table_comment          | 表注释                                                       |
-  | partition_info         | - 分区算法，可选。支持的分区算法，包括：<br /> LESS THAN：仅定义分区上界。下界由上一个分区的上界决定。FIXED RANGE：定义分区的左闭右开区间。<br />- MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间，设定时间单位和步长，时间单位支持年、月、日、周和小时。<br /> MULTI RANGE：批量创建数字类型的 RANGE 分区，定义分区的左闭右开区间，设定步长。<br />- MySQL 支持的算法：Hash，Range，List，并且还支持子分区，子分区支持的算法只有 Hash。 |
-  | distribution_desc      | - 分桶算法，必选，包括：1）Hash 分桶语法：DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num\|auto] 说明：使用指定的 key 列进行哈希分桶。2）Random 分桶语法：DISTRIBUTED BY RANDOM [BUCKETS num\|auto] 说明：使用随机数进行分桶。<br />- MySQL 没有分桶算法。 |
-  | rollup_list            | - 建表的同时可以创建多个物化视图。 <br />- 语法：`rollup_name (col1[, col2, ...]) [DUPLICATE KEY(col1[, col2, ...])][PROPERTIES("key" = "value")]` <br />- MySQL 不支持 |
-  | properties             | 表属性，与 MySQL 的表属性不一致，定义表属性的语法也与 MySQL 不一致 |
-
-
+| 参数                   | 与 MySQL 不同之处                                            |
+| ---------------------- | ------------------------------------------------------------ |
+| column_definition_list | - 字段列表定义，其基本语法与 MySQL 类似，但会额外包含一个聚合类型的操作。<br />- 该聚合类型的操作，主要支持的数据模型为 Aggregate 和 Duplicate。<br />- 在创建表时，MySQL 允许在字段列表定义后添加 Index 等约束，如 Primary Key、Unique Key 等；而 Doris 则是通过定义数据模型来实现对这些约束和计算的支持。 |
+| index_definition_list  | - 索引列表定义，基本语法与 MySQL 类似，支持位图索引、倒排索引和 N-Gram 索引，但是布隆过滤器索引是通过属性设置。<br />- 而 MySQL 支持的 index 有 B+Tree，Hash。 |
+| engine_type            | - 表引擎类型，可选。<br />- 目前支持的表引擎主要是 OLAP 原生引擎。<br />- MySQL 支持的存储引擎有：Innodb，MyISAM 等 |
+| keys_type              | - 数据模型，可选。<br />- 支持的类型包括：1）DUPLICATE KEY（默认）：其后指定的列为排序列。2）AGGREGATE KEY：其后指定的列为维度列。3）UNIQUE KEY：其后指定的列为主键列。<br />- MySQL 则没有数据模型的概念。 |
+| table_comment          | 表注释                                                       |
+| partition_info         | - 分区算法，可选。支持的分区算法，包括：<br /> LESS THAN：仅定义分区上界。下界由上一个分区的上界决定。FIXED RANGE：定义分区的左闭右开区间。<br />- MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间，设定时间单位和步长，时间单位支持年、月、日、周和小时。<br /> MULTI RANGE：批量创建数字类型的 RANGE 分区，定义分区的左闭右开区间，设定步长。<br />- MySQL 支持的算法：Hash，Range，List，并且还支持子分区，子分区支持的算法只有 Hash。 |
+| distribution_desc      | - 分桶算法，必选，包括：1）Hash 分桶语法：DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num\|auto] 说明：使用指定的 key 列进行哈希分桶。2）Random 分桶语法：DISTRIBUTED BY RANDOM [BUCKETS num\|auto] 说明：使用随机数进行分桶。<br />- MySQL 没有分桶算法。 |
+| rollup_list            | - 建表的同时可以创建多个物化视图。 <br />- 语法：`rollup_name (col1[, col2, ...]) [DUPLICATE KEY(col1[, col2, ...])][PROPERTIES("key" = "value")]` <br />- MySQL 不支持 |
+| properties             | 表属性，与 MySQL 的表属性不一致，定义表属性的语法也与 MySQL 不一致 |
 
 
 **2 CREATE INDEX**

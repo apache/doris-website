@@ -91,45 +91,33 @@
     "message": "数据查询",
     "description": "The label for category Data Queries in sidebar docs"
   },
-  "sidebar.docs.category.Quering Data": {
-    "message": "数据查询",
-    "description": "The label for category Quering Data in sidebar docs"
+  "sidebar.docs.category.User Defined Functions": {
+    "message": "自定义函数",
+    "description": "The label for category User Defined Functions in sidebar docs"
   },
-  "sidebar.docs.category.Quering Variables": {
-    "message": "查询变量",
-    "description": "The label for category Quering Variables in sidebar docs"
+  "sidebar.docs.category.Queries Acceleration": {
+    "message": "查询加速",
+    "description": "The label for category Queries Acceleration in sidebar docs"
   },
-  "sidebar.docs.category.Cost-Based Optimizer": {
-    "message": "全新优化器",
-    "description": "The label for category Cost-Based Optimizer in sidebar docs"
-  },
-  "sidebar.docs.category.Pipeline Execution Engine": {
-    "message": "Pipeline 执行引擎",
-    "description": "The label for category Pipeline Execution Engine in sidebar docs"
-  },
-  "sidebar.docs.category.Caches": {
-    "message": "查询缓存",
-    "description": "The label for category Caches in sidebar docs"
-  },
-  "sidebar.docs.category.View and Materialize View": {
-    "message": "视图与物化视图",
+  "sidebar.docs.category.Materialize View": {
+    "message": "物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },
-  "sidebar.docs.category.Join Optimization": {
-    "message": "Join 优化",
-    "description": "The label for category Join Optimization in sidebar docs"
+  "sidebar.docs.category.Async-Materialize View": {
+    "message": "异步物化视图",
+    "description": "The label for category View and Materialize View in sidebar docs"
   },
   "sidebar.docs.category.Distincting Counts": {
     "message": "高效去重",
     "description": "The label for category Distincting Counts in sidebar docs"
   },
-  "sidebar.docs.category.Analyzing Query": {
-    "message": "查询分析",
-    "description": "The label for category Analyzing Query in sidebar docs"
+  "sidebar.docs.category.Tuning": {
+    "message": "查询调优原理与实践",
+    "description": "The label for category Tuning in sidebar docs"
   },
-  "sidebar.docs.category.User Defined Functions": {
-    "message": "自定义函数",
-    "description": "The label for category User Defined Functions in sidebar docs"
+  "sidebar.docs.category.Tuning Plan": {
+    "message": "计划调优",
+    "description": "The label for category Tuning in sidebar docs"
   },
   "sidebar.docs.category.Alter Table": {
     "message": "表结构变更",

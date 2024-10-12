@@ -30,7 +30,7 @@ under the License.
 
 ## DDL 和基础运维
 
-### 1 物化视图创建
+### 物化视图创建
 
 **1. 详情参考** **[CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)**
 
@@ -76,27 +76,27 @@ FROM
   LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-### 2 物化视图修改
+### 物化视图修改
 
 详情参考 [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW)
 
-### 3 物化视图删除
+### 物化视图删除
 
 详情参考 [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW)
 
-### 4 刷新物化视图
+### 刷新物化视图
 
 详情参考 [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/REFRESH-MATERIALIZED-VIEW/)
 
-### 5 暂停物化视图
+### 暂停物化视图
 
 详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/PAUSE-MATERIALIZED-VIEW)
 
-### 6 启用物化视图
+### 启用物化视图
 
 详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/RESUME-MATERIALIZED-VIEW)
 
-### 7 取消物化视图刷新任务
+### 取消物化视图刷新任务
 
 详情参考 [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK)
 

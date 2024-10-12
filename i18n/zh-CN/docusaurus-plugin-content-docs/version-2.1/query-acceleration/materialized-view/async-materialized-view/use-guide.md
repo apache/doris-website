@@ -612,7 +612,7 @@ SELECT
 
 为了解决这个问题，可以基于外部 Catalog 创建异步物化视图。由于物化视图本身的数据是存储在 Doris 内部的，所以查询物化视图的速度会很快。因此，对于响应速度要求比较高的场景，我们可以考虑基于外部 Catalog 创建一个物化视图。
 
-::: tip 提示
+:::tip 提示
 在湖仓一体场景下，使用外表透明改写之前需要打开 `materialized_view_rewrite_enable_contain_external_table` 开关，详情可参考[异步物化视图功能描述](../async-materialized-view/functions-and-demands)。
 :::
 

@@ -129,11 +129,11 @@ For detailed tuning cases, refer to the [Plan Tuning](../../query-acceleration/t
 
 After reviewing and optimizing the business Schema, the main tuning work begins with plan tuning and execution tuning. As mentioned earlier, the primary task at this stage is to systematically analyze the execution plans of slow SQL queries using Doris's various levels of Explain tools to identify critical optimization points for targeted optimization.
 
-- For single-table queries and analysis scenarios, analyze the execution plan, check if partition pruning is working correctly, and explore the possibility of building materialized views for query acceleration.
+- For single-table queries and analysis scenarios, analyze the execution plan, [check if partition pruning is working correctly](../../query-acceleration/tuning/tuning-plan/optimizing-table-scanning), and explore the possibility of [building materialized views for query acceleration](../../query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv).
 
-- For complex multi-table analysis scenarios, analyze whether statistical information is normal, evaluate Join Order rationality, and verify Runtime Filter planning. This helps locate specific performance bottlenecks. If unexpected situations arise, such as irrational Join Orders, observe the Explain results, manually specify Join Hints to bind execution plans, control Join order and Shuffle methods, and manipulate cost-based rewrites to achieve plan optimization.
+- For complex multi-table analysis scenarios, analyze whether statistical information is normal, evaluate Join Order rationality, and verify Runtime Filter planning. This helps locate specific performance bottlenecks. If unexpected situations arise, such as [irrational Join Orders](../../query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint), observe the Explain results, manually specify Join Hints to bind execution plans, c[ontrol Join order and Shuffle methods](../../query-acceleration/tuning/tuning-plan/adjusting-join-shuffle), and [manipulate cost-based rewrites](../../query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule) to achieve plan optimization.
 
-- For specific scenarios, accelerate queries using advanced Doris features such as asynchronous materialized view rewrites and SQL Cache.
+- For specific scenarios, accelerate queries using advanced Doris features such as [asynchronous materialized view rewrites](../../query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv) and [SQL Cache](../../query-acceleration/tuning/tuning-plan/accelerating-queries-with-sql-cache).
 
 For detailed tuning cases, refer to the [Plan Tuning](../../query-acceleration/tuning/tuning-plan/) documentation.
 
@@ -147,7 +147,7 @@ When analyzing specific performance issues, it is recommended to prioritize usin
 
 At this stage, validate the effectiveness of previous tuning steps based on the actual SQL runtime performance or identify new bottlenecks in slow SQL queries. Then, follow the clues to find corresponding performance optimization solutions.
 
-For multi-table analysis queries, analyze the Query Profile to check the rationality of Join order, the effectiveness of Runtime Filters, and the appropriateness of wait times. Often, execution tuning serves to corroborate the effectiveness of previous Schema and plan tuning. Additionally, the Query Profile can provide insights into BE or machine load issues, such as high CPU utilization or network latency. When tuning these issues, consider optimizing at the operating system level beyond Doris itself. For detailed tuning cases, refer to the "Query Profile Analysis" section.
+For multi-table analysis queries, analyze the Query Profile to check the rationality of Join order, the effectiveness of Runtime Filters, and the appropriateness of wait times. Often, execution tuning serves to corroborate the effectiveness of previous Schema and plan tuning. Additionally, the Query Profile can provide insights into BE or machine load issues, such as high CPU utilization or network latency. When tuning these issues, consider optimizing at the operating system level beyond Doris itself. For detailed tuning cases, refer to the [Query Profile Analysis](../../query-acceleration/tuning/query-profile) section.
 
 ## Conclusion
 
