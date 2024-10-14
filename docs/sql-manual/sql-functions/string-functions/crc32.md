@@ -24,9 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CRC32
 ### Description
-#### Syntax
+
+Use CRC32 to compute the result.
+
+### Syntax
 
 `BIGINT crc32 (VARCHAR str)`
 
@@ -35,7 +37,7 @@ Returns the Cyclic Redundancy Check value of this string.
 
 ### Example
 
-```
+```sql
 mysql> select crc32("abc");
 +--------------+
 | crc32('abc') |
@@ -43,12 +45,7 @@ mysql> select crc32("abc");
 |    891568578 |
 +--------------+
 
-mysql> select crc32("中国");
-+-----------------+
-| crc32('中国')   |
-+-----------------+
-|       737014929 |
-+-----------------+
 ```
+
 ### Keywords
     CRC32

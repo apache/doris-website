@@ -24,18 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CRC32
 ### Description
-#### Syntax
+
+使用CRC32算法计算结果。
+
+### Syntax
 
 `BIGINT crc32(VARCHAR str)`
-
 
 返回字符串的CRC值。
 
 ### Example
 
-```
+```sql
 mysql> select crc32("abc");
 +--------------+
 | crc32('abc') |
@@ -50,5 +51,6 @@ mysql> select crc32("中国");
 |       737014929 |
 +-----------------+
 ```
+
 ### Keywords
     CRC32
