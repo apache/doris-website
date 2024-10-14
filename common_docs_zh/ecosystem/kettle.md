@@ -32,7 +32,7 @@ under the License.
 
 ## 关于 Kettle
 
-Kettle 是一款开源的ETL（Extract, Transform, Load）工具，最早由 Pentaho 公司开发，现已被 Hitachi Vantara 收购，成为 Pentaho Data Integration（PDI）的一部分。Kettle 是 Pentaho 产品套件中的核心组件之一，主要用于数据集成和数据处理，能够轻松完成从各种来源提取数据、对数据进行清洗和转换，并将其加载到目标系统中的任务。
+Kettle 是一款开源的ETL（Extract, Transform, Load）工具，最早由 Pentaho 公司开发，Kettle 是 Pentaho 产品套件中的核心组件之一，主要用于数据集成和数据处理，能够轻松完成从各种来源提取数据、对数据进行清洗和转换，并将其加载到目标系统中的任务。
 
 
 更多信息请参阅：`https://pentaho.com/`

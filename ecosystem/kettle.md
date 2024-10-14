@@ -32,7 +32,7 @@ This plug-in uses the Stream Load function of Doris to import data. It needs to 
 
 ## About Kettle
 
-Kettle is an open source ETL (Extract, Transform, Load) tool, first developed by Pentaho, and has now been acquired by Hitachi Vantara and become part of Pentaho Data Integration (PDI). Kettle is one of the core components of the Pentaho product suite, mainly used for data integration and data processing, and can easily complete the tasks of extracting data from various sources, cleaning and transforming data, and loading it into the target system.
+Kettle is an open source ETL (Extract, Transform, Load) tool, first developed by Pentaho, Kettle is one of the core components of the Pentaho product suite, mainly used for data integration and data processing, and can easily complete the tasks of extracting data from various sources, cleaning and transforming data, and loading it into the target system.
 
 For more information, please refer to: `https://pentaho.com/`
 
