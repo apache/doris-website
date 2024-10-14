@@ -67,7 +67,7 @@ Doris JDBC Catalog supports connecting to the following databases:
 | Parameter                       | Default value  | Description                                                                                                                                                                                                                                                                                                             |
 |---------------------------------|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `connection_pool_min_size`      | 1              | Defines the minimum number of connections in the connection pool, which is used to initialize the connection pool and ensure that at least this number of connections are active when the keep-alive mechanism is enabled.                                                                                              |
-| `connection_pool_max_size`      | 10             | Defines the maximum number of connections in the connection pool. Each FE or BE node corresponding to each Catalog can hold up to this number of connections.                                                                                                                                                           |
+| `connection_pool_max_size`      | 30             | Defines the maximum number of connections in the connection pool. Each FE or BE node corresponding to each Catalog can hold up to this number of connections.                                                                                                                                                           |
 | `connection_pool_max_wait_time` | 5000           | Defines the maximum number of milliseconds the client will wait for a connection if there is no available connection in the connection pool.                                                                                                                                                                            |
 | `connection_pool_max_life_time` | 1800000        | Set the maximum time (in milliseconds) that a connection remains active in the connection pool. Timed out connections will be recycled. At the same time, half of this value will serve as the minimum eviction idle time of the connection pool, and connections that reach this time will become eviction candidates. |
 | `connection_pool_keep_alive`    | false          | Only valid on BE nodes, used to decide whether to keep connections that have reached the minimum eviction idle time but have not reached the maximum lifetime active. Turned off by default to reduce unnecessary resource usage.                                                                                       |
@@ -272,25 +272,44 @@ Through the `CALL EXECUTE_STMT()` command, Doris will directly send the SQL stat
 2. In versions 2.0.5 and later, connection pool related configurations can be configured in the Catalog properties, refer to [Connection Pool Properties](#Connection Pool Properties).
 3. The connection pool used by Doris was changed from Druid to HikariCP starting from 2.0.10 (2.0 Release) and 2.1.3 (2.1 Release), so the connection pool related errors and troubleshooting methods are different, refer to the following
 
-* Druid connection pool version
-   * Initialize datasource failed: CAUSED BY: GetConnectionTimeoutException: wait millis 5006, active 10, maxActive 10, creating 1
-      * Reason 1: Too many queries cause the number of connections to exceed the configuration
-      * Reason 2: The connection pool count is abnormal and the active count does not decrease.
-      * Solution
-         * alter catalog <catalog_name> set properties ('connection_pool_max_size' = '100'); Temporarily increase the connection pool capacity by adjusting the number of connections, and the connection pool cache can be refreshed in this way
-         * Upgrade to replace the connection pool to Hikari version
-      * Initialize datasource failed: CAUSED BY: GetConnectionTimeoutException: wait millis 5006, active 10, maxActive 0, creating 1
-         * Reason 1: Network failure
-         * Reason 2: The network latency is high, causing the connection creation to take more than 5s
-         * Solution
-            * Check network
-            * alter catalog <catalog_name> set properties ('connection_pool_max_wait' = '10000'); Increase the timeout
-* HikariCP connection pool version
-   * HikariPool-2 - Connection is not available, request timed out after 5000ms
-      * Reason 1: Network failure
-      * Reason 2: The network delay is high, causing the connection creation to take more than 5s
-      * Reason 3: Too many queries cause the number of connections to exceed the configuration
-      * Solution
-         * Check network
-         * alter catalog <catalog_name> set properties ('connection_pool_max_size' = '100'); Increase the number of connections
-         * alter catalog <catalog_name> set properties ('connection_pool_max_wait_time' = '10000'); Increase the timeout
+### Druid connection pool version
+**Initialize datasource failed: CAUSED BY: GetConnectionTimeoutException: wait millis 5006, active 10, maxActive 10, creating 1**
+* Reason 1: Too many queries cause the number of connections to exceed the configuration
+* Reason 2: The connection pool count is abnormal and the active count does not decrease.
+* Solution
+   * alter catalog <catalog_name> set properties ('connection_pool_max_size' = '100'); Temporarily increase the connection pool capacity by adjusting the number of connections, and the connection pool cache can be refreshed in this way
+   * Upgrade to replace the connection pool to Hikari version
+
+**Initialize datasource failed: CAUSED BY: GetConnectionTimeoutException: wait millis 5006, active 10, maxActive 0, creating 1**
+* Reason 1: Network failure
+* Reason 2: The network delay is high, causing the connection creation to take more than 5s
+* Solution
+   * Check network
+   * alter catalog <catalog_name> set properties ('connection_pool_max_wait' = '10000'); Increase the timeout
+
+### HikariCP connection pool version
+
+`Connection is not available, request timed out after 5000ms`
+
+#### Possible reasons:
+- **Cause 1**: Network problem (e.g. server unreachable)
+- **Cause 2**: Authentication issues, such as invalid username or password
+- **Cause 3**: The network latency is too high, causing the connection creation to exceed the 5 second timeout
+- **Cause 4**: Too many concurrent queries, exceeding the maximum number of connections configured in the connection pool
+
+#### Solution:
+- **If there are only "Connection is not available, request timed out after 5000ms" errors**, please check **Cause 3** and **Cause 4**:
+   - Check for high network latency or resource exhaustion.
+   - Increase the maximum number of connections in the connection pool:
+     ```sql
+     ALTER CATALOG <catalog_name> SET PROPERTIES ('connection_pool_max_size' = '100');
+     ```
+   - Increase the connection timeout:
+     ```sql
+     ALTER CATALOG <catalog_name> SET PROPERTIES ('connection_pool_max_wait_time' = '10000');
+     ```
+
+- **If there are other error messages besides "Connection is not available, request timed out after 5000ms"**, please check these additional errors:
+   - **Network problems** (e.g. server unreachable) may cause connection failure. Please check whether the network connection is normal.
+   - **Authentication issues** (e.g. invalid username or password) may also cause connection failure. Please check the database credentials used in the configuration to ensure that the username and password are correct.
+   - Based on specific error messages, investigate network, database, or authentication-related issues to identify the root cause.
