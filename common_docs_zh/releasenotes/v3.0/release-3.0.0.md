@@ -72,7 +72,6 @@ under the License.
 
 - **共享存储层**：数据持久化到共享存储层，目前支持 HDFS 以及 S3、OSS、GCS、Azure Blob、COS、BOS、MinIO 等各类云上兼容 S3 协议的对象存储系统。
 
-![从存算一体到存算分离](/images/storage-compute-decoupled-2.JPEG)
 
 ### 1-2 设计亮点
 
@@ -150,9 +149,11 @@ under the License.
 
 - 暂不支持从 2.1 版本原地升级至 3.0 存算分离模式，需要在存算分离集群部署完成后通过诸如 x2Doris 等工具进行数据迁移，后续也会支持通过 CCR 能力实现不停服迁移。
 
-> 参考文档：
->
-> [存算分离](https://doris.apache.org/zh-CN/docs/3.0/compute-storage-decoupled/overview)
+:::info 备注
+
+参考文档：[存算分离](https://doris.apache.org/zh-CN/docs/3.0/compute-storage-decoupled/overview)
+
+:::
 
 ## 2. 湖仓一体再进化
 
@@ -176,7 +177,7 @@ under the License.
 
 - **存算分离资源能效提升：** 从 3.0 版本中支持了存算分离模式，进一步提升了资源效率和可扩展性。
 
-### 1-1 湖仓查询加速
+### 2-1 湖仓查询加速
 
 查询加速是湖仓一体化进程中的重要一环。借助 Apache Doris 强大的分布式查询引擎，可以帮助用户对湖仓数据进行快速分析。在 TPC-H 和 TPC-DS 标准测试集上，Apache Doris 的平均查询性能是 Trino/Presto 的 3-5 倍。
 
@@ -188,28 +189,39 @@ under the License.
 
 后续我们将进一步针对性的提升真实业务场景下的查询加速性能，提升用户实际感受，构建业界领先的湖仓查询加速引擎。
 
-### 1-2 联邦分析 - 更丰富的数据源连接器
+### 2-2 联邦分析 - 更丰富的数据源连接器
 
 在之前的版本中，Apache Doris 已经支持了 10 余种主流湖、仓、关系型数据库的连接器。在 3.0 版本中，我们引入了 Trino Connector 兼容框架，极大扩展了 Apache Doris 可连接的数据源。借助该框架，仅需简单适配，用户即可通过 Doris 访问对应的数据源，并利用 Doris 的极速计算引擎进行数据分析。
 
 目前 Doris 已完成 Delta Lake、Kudu、BigQuery、Kafka、TPCH、TPCDS 等多种 Connector 的适配，也欢迎所有开发者参考开发指南，为 Apache Doris 适配更多数据源。
 
-> 参考文档：
->
-> - [接入 Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide)
-> - [TPC-H](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/tpch/)
-> - [TPC-DS](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/tpcds/)
-> - [Delta Lake](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/deltalake)
-> - [Kudu](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/kudu)
-> - [BigQuery](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/bigquery)
+:::info 备注
+参考文档：
 
-### 1-3 数据湖构建
+- [接入 Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide)
+
+- [TPC-H](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/tpch/)
+
+- [TPC-DS](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/tpcds/)
+
+- [Delta Lake](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/deltalake)
+
+- [Kudu](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/kudu)
+
+- [BigQuery](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/bigquery)
+:::
+
+### 2-3 数据湖构建
 
 在 3.0 版本中，Apache Doris 增加了 Hive、Iceberg 数据写回功能。写回功能支持用户直接通过 Doris 创建 Hive、Iceberg 表，并将数据写入到表中。该功能使得 Apache Doris 在湖仓数据处理能力上形成闭环，用户可以在 Apache Doris 中完成多个数据源之间的数据分析、共享、处理、存储操作。
 
 在后续的迭代版本中，Apache Doris 将进一步完善对数据湖表格式的支持以及存储 API 开放性。
 
-> 参考文档：[数据湖构建](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-building/hive-build/)
+:::info 备注
+
+参考文档：[数据湖构建](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-building/hive-build/)
+
+:::
 
 ## 3. 半结构化分析全面增强
 
@@ -261,11 +273,14 @@ Variant 数据类型在经过大规模生产打磨后，已具备充分的稳定
   COMMIT;
   ```
 
-> 参考文档：
->
-> [事务](https://doris.apache.org/zh-CN/docs/3.0/data-operate/transaction/)
->
-> 目前 CCR 暂未支持显示事务同步。
+:::info 备注
+
+参考文档：
+
+- [事务](https://doris.apache.org/zh-CN/docs/3.0/data-operate/transaction/)
+
+- 目前 CCR 暂未支持显示事务同步。
+:::
 
 ### 4-2 可观测性增强
 
@@ -311,12 +326,13 @@ Variant 数据类型在经过大规模生产打磨后，已具备充分的稳定
 
 - 持续优化了透明改写的性能，透明改写性能是 2.1.0 版本的两倍。
 
-> 参考文档：
->
-> [异步物化视图概览](https://doris.apache.org/zh-CN/docs/query/view-materialized-view/async-materialized-view)
->
-> [查询异步物化视图](https://doris.apache.org/zh-CN/docs/3.0/query/view-materialized-view/query-async-materialized-view/)
+:::info 备注
+参考文档：
 
+- [异步物化视图概览](https://doris.apache.org/zh-CN/docs/query/view-materialized-view/async-materialized-view)
+
+- [查询异步物化视图](https://doris.apache.org/zh-CN/docs/3.0/query/view-materialized-view/query-async-materialized-view/)
+:::
 
 ## 6. 性能提升
 
@@ -383,7 +399,9 @@ Runtime Filter 是否能够准确生成对查询性能的影响至关重要，�
   );
   ```
 
-> 参考文档： [Java UDF - UDTF](https://doris.apache.org/zh-CN/docs/query/udf/java-user-defined-function#udtf-1)
+:::info 备注
+参考文档： [Java UDF - UDTF](https://doris.apache.org/zh-CN/docs/query/udf/java-user-defined-function#udtf-1)
+:::
 
 ### 7-2 生成列
 
@@ -393,9 +411,12 @@ Runtime Filter 是否能够准确生成对查询性能的影响至关重要，�
 
 从 3.0 版本开始 Apache Doris 支持生成列功能，创建表时可以指定列为 Generated 列。Generated 列可在写入时，根据定义的表达式，自动获取计算结果。相比于 Default value，可以定义更为复杂的表达式，但不可以显式写入指定的值。
 
-> 参考文档：
->
-> [CREATE TABLE AND GENERATED COLUMN](https://doris.apache.org/zh-CN/docs/3.0/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AND-GENERATED-COLUMN/)
+:::info 备注
+
+参考文档：
+
+[CREATE TABLE AND GENERATED COLUMN](https://doris.apache.org/zh-CN/docs/3.0/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AND-GENERATED-COLUMN/)
+:::
 
 ## 8. 功能改进
 
