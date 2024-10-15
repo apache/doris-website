@@ -30,7 +30,7 @@ Storage Vault 是 Doris 在存算分离模式中所使用的远程共享存储�
 
 **语法**
 
-```SQL
+```sql
 CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name>
 PROPERTIES
 ("key" = "value",...)
@@ -44,7 +44,7 @@ PROPERTIES
 
 创建基于 HDFS 的存算分离模式 Doris 集群，需要确保所有的节点（包括 FE / BE 节点、Meta Service) 均有权限访问所指定的 HDFS，包括提前完成机器的 Kerberos 授权配置和连通性检查（可在对应的每个节点上使用 Hadoop Client 进行测试）等。
 
-```SQL
+```sql
 CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     PROPERTIES (
         "type"="hdfs",                                     -- required
@@ -73,11 +73,13 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
     );
 ```
 
+更多参数说明及示例可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
+
 ### 查看 Storage Vault 
 
 **语法**
 
-```Plain
+```sql
 SHOW STORAGE VAULTS
 ```
 
@@ -87,7 +89,7 @@ SHOW STORAGE VAULTS
 
 **语法**
 
-```SQL
+```sql
 SET <vault_name> AS DEFAULT STORAGE VAULT
 ```
 
@@ -97,7 +99,7 @@ SET <vault_name> AS DEFAULT STORAGE VAULT
 
 **示例**
 
-```SQL
+```sql
 CREATE TABLE IF NOT EXISTS supplier (
   s_suppkey int(11) NOT NULL COMMENT "",
   s_name varchar(26) NOT NULL COMMENT "",
@@ -133,7 +135,7 @@ Coming soon
 
 **语法**
 
-```SQL
+```sql
 GRANT
     USAGE_PRIV
     ON STORAGE VAULT <vault_name>
@@ -147,7 +149,7 @@ GRANT
 
 **示例**
 
-```SQL
+```sql
 grant usage_priv on storage vault my_storage_vault to user1
 ```
 
@@ -155,7 +157,7 @@ grant usage_priv on storage vault my_storage_vault to user1
 
 **语法**
 
-```SQL
+```sql
 REVOKE 
     USAGE_PRIV
     ON STORAGE VAULT <vault_name>
@@ -166,6 +168,6 @@ REVOKE
 
 **示例**
 
-```SQL
+```sql
 revoke usage_priv on storage vault my_storage_vault from user1
 ```
