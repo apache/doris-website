@@ -229,7 +229,7 @@ const config = {
                 jsLoader: 'matomo.js',
             },
             announcementBar: {
-                id: 'support_us',
+                id: 'apache_doris_meetup_singapore',
                 content: `<a href="https://www.meetup.com/apache-doris-meetup/events/303712793/?utm_medium=referral&utm_campaign=share-btn_savedevents_share_modal&utm_source=link" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Apache Doris Meetup @ Singapore on October 24 - Connect, share and explore innovative use cases!
                         <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;">
                     </a>`,
