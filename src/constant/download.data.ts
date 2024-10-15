@@ -182,15 +182,6 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                         source: 'https://downloads.apache.org/doris/3.0/3.0.0-rc11/',
                         version: '3.0.0',
                     },
-                    {
-                        label: CPUEnum.ARM64,
-                        value: CPUEnum.ARM64,
-                        gz: `${ORIGIN}apache-doris-3.0.0-bin-arm64.tar.gz`,
-                        asc: `${ORIGIN}apache-doris-3.0.0-bin-arm64.tar.gz.asc`,
-                        sha512: `${ORIGIN}apache-doris-3.0.0-bin-arm64.tar.gz.sha512`,
-                        source: 'https://downloads.apache.org/doris/3.0/3.0.0-rc11/',
-                        version: '3.0.0',
-                    },
                 ],
             },
             {
