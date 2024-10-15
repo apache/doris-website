@@ -47,7 +47,7 @@ const CPU = [
 ];
 
 export default function Download() {
-    const [version, setVersion] = useState<string>(VersionEnum.Latest);
+    const [version, setVersion] = useState<string>(VersionEnum.Prev);
     const [currentVersionInfo, setCurrentVersionInfo] = useState(() => {
         return DORIS_VERSIONS.find(doris_version => doris_version.value === version);
     });
