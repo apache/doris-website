@@ -7,7 +7,7 @@
     'author': 'Data Platform Team of TikTok',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/real-time-data-warehouse-in-tiktok-based-on-apache-doris.png'
 }
 
