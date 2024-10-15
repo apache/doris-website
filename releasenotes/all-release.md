@@ -28,9 +28,9 @@ This document presents a summary of Apache Doris versions released within one ye
 
 :::tip Latest Release
 
-🔥 Apache Doris 2.0.15 is released !
+🔥 Apache Doris 3.0.2 is released !
 
-- [Release Note](/releasenotes/v2.0/release-2.0.15.md)
+- [Release Note](/releasenotes/v3.0/release-3.0.2.md)
 
 
 - [Quick Download](https://doris.apache.org/download)
@@ -39,6 +39,8 @@ This document presents a summary of Apache Doris versions released within one ye
 
 
 <br />
+
+- [2024-10-15, Apache Doris 3.0.2 is released](../releasenotes/v3.0/release-3.0.2.md)
 
 - [2024-09-30, Apache Doris 2.0.15 is released](../releasenotes/v2.0/release-2.0.15.md)
 

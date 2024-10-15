@@ -1,10 +1,10 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Release Note'],
-        title: "Apache Doris version 2.0.15 just released",
-        content: `Thanks to our community users and developers, about 157 improvements and bug fixes have been made in Doris 2.0.15 version`,
-        to: '/blog/release-note-2.1.5',
-        image: '2.1.5.jpg',
+        title: "New milestone: Apache Doris 3.0 has been released",
+        content: `Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode inaddition to the compute-storage mode for cluster deployment. `,
+        to: '/blog/release-note-3.0.0',
+        image: '3.0.0.jpeg',
     },
     {
         tags: ['Best Practice'],
