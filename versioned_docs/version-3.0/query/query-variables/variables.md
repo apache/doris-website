@@ -700,6 +700,15 @@ Optional values:
 
   Controls whether to extend variant column in desc table_name. The default value is false.
 
+* `enable_adaptive_pipeline_task_serial_read_on_limit`
+
+    When enabled, the pipeline task concurrency will be adjusted automatically. When the scan node has no filter conditions and the limit parameter is less than the number of rows specified in `adaptive_pipeline_task_serial_read_on_limit`, the parallelism of the scan will be set to 1.
+
+* `adaptive_pipeline_task_serial_read_on_limit`
+
+    When `enable_adaptive_pipeline_task_serial_read_on_limit` is enabled, the number of rows at which the parallelism of the scan will be set to 1.
+    Default value is `10000`
+
 ***
 
 #### Supplementary instructions on statement execution timeout control

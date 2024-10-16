@@ -691,6 +691,14 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
   是否展示 variant 的拆解列。默认为 false。
 
+* `enable_adaptive_pipeline_task_serial_read_on_limit`
+
+  开启后将会允许自动调整 pipeline task 的并发数。当 scan 节点没有过滤条件，且 limit 参数小于 `adaptive_pipeline_task_serial_read_on_limit` 中指定的行数时，scan 的并行度将会被设置为 1。
+
+* `adaptive_pipeline_task_serial_read_on_limit`
+
+  当 enable_adaptive_pipeline_task_serial_read_on_limit 开启时，scan 的并行度将会被设置为 1 的行数阈值。默认值是 `10000`。
+
 ***
 
 #### 关于语句执行超时控制的补充说明
