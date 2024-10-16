@@ -244,27 +244,13 @@ The correct logic for handling the results returned by Delete is:
 
   - If `STATUS` is `VISIBLE`, the deletion is successful.
 
-## FE Configurations
+## Configurations
 
 **TIMEOUT Configurations**
 
-总体来说，Doris 的删除作业的超时时间计算规则为如下（单位：秒）：
+- `insert_timeout`
 
-Overall, the timeout calculation rules for Doris Delete jobs are as follows (in seconds):
-
-```Plain
-TIMEOUT = MIN(delete_job_max_timeout_second, MAX(30, tablet_delete_timeout_second * tablet_num))
-```
-
-- `tablet_delete_timeout_second`
-
-The delete timeout time is elastically changed by the number of tablets under the specified partition. This item is configured so that the default value of the timeout time contributed by one tablet on average is 2.
-
-Assuming that there are 5 tablets under the partition specified for this deletion, the timeout time available for delete is 10 seconds, and since it is less than the minimum timeout time of 30 seconds, the final timeout time is 30 seconds.
-
-- `query_timeout`
-
-Because delete itself is a SQL command, the delete statement is also subject to session limitations. Timeout is also affected by the `query_timeout` value in the session, which can be increased in seconds by `SET query_timeout = xxx`.
+Because delete itself is a SQL command and treated as a special kind of insert, the delete statement also subject to session limitations. Timeout is determined by the `insert_timeout` value in the session, which can be increased in seconds by `SET insert_timeout = xxx`.
 
 **IN Predicate Configuration**
 

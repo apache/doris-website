@@ -235,25 +235,13 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = failed to delete replicas from 
 
   - 如果`status`为`VISIBLE`，表示数据删除成功。
 
-## 相关 FE 配置
+## 相关配置
 
 **TIMEOUT 配置**
 
-总体来说，Doris 的删除作业的超时时间计算规则为如下（单位：秒）：
+- insert_timeout
 
-```Plain
-TIMEOUT = MIN(delete_job_max_timeout_second, MAX(30, tablet_delete_timeout_second * tablet_num))
-```
-
-- tablet_delete_timeout_second
-
-  Delete 自身的超时时间是受指定分区下 Tablet 的数量弹性改变的，此项配置为平均一个 Tablet 所贡献的 `timeout` 时间，默认值为 2。
-
-  假设此次删除所指定分区下有 5 个 tablet，那么可提供给 delete 的 timeout 时间为 10 秒，由于低于最低超时时间 30 秒，因此最终超时时间为 30 秒。
-
-- query_timeout
-
-  因为 Delete 本身是一个 SQL 命令，因此删除语句也会受 Session 限制，`timeout` 还受 Session 中的`query_timeout`值影响，可以通过`SET query_timeout = xxx`来增加超时时间，单位是秒。
+  因为 Delete 本身是一个 SQL 命令且被视为一种特殊的导入，因此删除语句会受 Session 中的`insert_timeout`值影响，可以通过`SET insert_timeout = xxx`来增加超时时间，单位是秒。
 
 **IN 谓词配置**
 
