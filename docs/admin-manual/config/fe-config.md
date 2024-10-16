@@ -2737,6 +2737,12 @@ Default value: 2000
 
 For auto-partitioned tables to prevent users from accidentally creating a large number of partitions, the number of partitions allowed per OLAP table is `max_auto_partition_num`. Default 2000.
 
+#### `profile_manager_gc_interval_seconds`
+
+Default value: 1
+
+Used to control the interval at which ProfileManager performs profile garbage collection. During garbage collection, ProfileManager purges excess and expired profiles from memory and disk to save memory.
+
 ### Compute and Storage Disaggregated Mode
 
 #### `cluster_id`
