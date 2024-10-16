@@ -426,21 +426,49 @@ Assume the files have been split into DictLibrary and FunctionUdf.
     jar -cvf ./FunctionUdf.jar ./FunctionUdf.class
     ```
 
-3. After the above two steps, you will get two jar packages. To allow the resource jar package to be referenced by all concurrent instances, place it in the deployment path `fe/custom_lib` 和 `be/custom_lib`. After the restarting, it will be loaded with the JVM startup.
+3. After the above two steps, you will get two jar packages. To allow the resource jar package to be referenced by all concurrent instances, place it in the deployment path `be/custom_lib`. After the restarting, it will be loaded with the JVM startup.
 
 4. Finally, use the `create function` statement to create a UDF function
 
    ```sql
    CREATE FUNCTION java_udf_dict(string) RETURNS string PROPERTIES (
+    "file" = "file:///mnt/ava-udf-demo-jar-with-dependencies.jar",
     "symbol"="org.apache.doris.udf.FunctionUdf",
     "always_nullable"="true",
     "type"="JAVA_UDF"
    );
    ```
 
-In this loading mode, both FunctionUdf.jar and DictLibrary.jar are in the custom_lib path of FE and BE. This way, the packages will be loaded and released with the service startup and shutdown.
+ With the file path pointing to the FunctionUdf.jar package. This way, the resource package will be loaded and released with the BE startup and shutdown. The FunctionUdf.jar will be loaded and released with the SQL execution cycle.
 
 You can also customize the path to FunctionUdf.jar using file:///, but only under custom_lib.
+
+:::tip
+cache is supported starting from Doris version 3.0.
+:::
+
+
+Solution 2: Global Cache for JAR Files with Custom Expiration
+
+In this solution, a global cache is implemented for JAR files with a customizable expiration policy. When creating the function, two additional attributes are introduced:
+
+static_load: Defines whether to use a static cache loading approach.
+expiration_time: Specifies the expiration time of the JAR file in minutes.
+If the static cache loading method is used, upon the first invocation of the UDF function, after initialization, the relevant properties of the UDF will be cached. On subsequent calls to the UDF, the system will first attempt to find the properties in the cache. If they are not found, the initialization process will be executed again.
+
+In the background, a thread regularly checks the cache, and if a cached UDF has not been called within the configured expiration time, it will be evicted from the cache.
+
+    ```sql
+        CREATE FUNCTION print_12() RETURNS int 
+        PROPERTIES (
+            "file" = "file:///mnt/ava-udf-demo-jar-with-dependencies.jar",
+            "symbol" = "org.apache.doris.udf.AddOne", 
+            "always_nullable"="true",
+            "type" = "JAVA_UDF",
+            "static_load" = "true", // default value is false
+            "expiration_time" = "60" // default value is 360 minutes
+        );
+    ```
 
 ## Usage Notes
 
