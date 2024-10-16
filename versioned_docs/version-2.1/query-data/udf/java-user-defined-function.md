@@ -408,7 +408,7 @@ Assume the files have been split into DictLibrary and FunctionUdf.
 
 In this loading mode, both FunctionUdf.jar and DictLibrary.jar are in the custom_lib path of FE and BE. This way, the packages will be loaded and released with the service startup and shutdown. 
 
-You can also customize the path to FunctionUdf.jar using file:///, but only under custom_lib.
+You can also customize the path to `FunctionUdf.jar` using `file:///`, but only under `custom_lib`.
 
 ## Usage Notes
 

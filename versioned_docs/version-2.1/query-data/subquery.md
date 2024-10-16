@@ -29,8 +29,11 @@ A Subquery is an SQL query nested within another query (usually a SELECT stateme
 Some important features of subqueries are as follows:
 
 1. Position of Subqueries: Subqueries can be placed in multiple SQL clauses, such as the WHERE clause, HAVING clause, and FROM clause. They can be used with SELECT, UPDATE, INSERT, DELETE statements, and expression operators (such as comparison operators =, >, <, <=, as well as IN, EXISTS, etc.).
+
 2. Relationship between Main Query and Subquery: A subquery is a query nested inside another query. The outer query is referred to as the main query, while the inner query is referred to as the subquery.
+
 3. Execution Order: When there is no correlation between the subquery and the main query, the subquery is usually executed first. When there is a correlation, the parser decides which query to execute first in real-time as needed and uses the output of the subquery accordingly.
+
 4. Use of Parentheses: Subqueries must be enclosed in parentheses to distinguish them as nested within another query.
 
 Below, we will use tables t1 and t2 and related SQL to introduce the basic features and usage of subqueries. The table creation statements are as follows:
@@ -104,8 +107,11 @@ select * from t1 where t1.c1 in (select t2.c1 from tt2);
 Doris supports all non-correlated subqueries and provides partial support for correlated subqueries as follows:
 
 - Supports correlated scalar subqueries in the `WHERE` and `HAVING` clauses.
+
 - Supports correlated `IN`, `NOT IN`, `EXISTS`,`NOT EXISTS` non-scalar subqueries in the `WHERE` and `HAVING` clauses.
+
 - Supports correlated scalar subqueries in the `SELECT` list.
+
 - For nested subqueries, Doris only supports subqueries correlated to their immediate parent query and does not support cross-level correlation to outer queries beyond the parent.
 
 ## Limitations of Correlated Subqueries
@@ -113,6 +119,7 @@ Doris supports all non-correlated subqueries and provides partial support for co
 ### Limitations of Correlated Scalar Subqueries
 
 - The correlation condition must be an equality condition.
+
 - The output of the subquery must be the result of a single aggregate function without a GROUP BY clause.
 
 ```sql
@@ -150,7 +157,9 @@ select * from t1 where exists (select t2.c1 from t2 where t1.c2 = t2.c2 limit 2,
 ### Limitations of Correlated (NOT) IN Subqueries
 
 - The output of the subquery must be a single column.
+
 - The subquery cannot have LIMIT.
+
 - The subquery cannot have aggregate functions or GROUP BY clauses.
 
 ```sql
@@ -190,28 +199,31 @@ PROPERTIES ("replication_num" = "1");
 ```
 
 - Supported when the subquery only uses columns from its immediate parent query:
-  - ```sql
-    select   
-        t1.c1   
-    from   
-        t1   
-    where not exists (  
-        select   
-            t2.c1   
-        from   
-            t2   
-        where not exists (  
-            select   
-                t3.c1   
-            from   
-                t3   
-            where   
-                t3.c2 = t2.c2  
-        ) and t2.c2 = t1.c2  
-    );
-    ```
+
+  ```sql
+  select   
+      t1.c1   
+  from   
+      t1   
+  where not exists (  
+      select   
+          t2.c1   
+      from   
+          t2   
+      where not exists (  
+          select   
+              t3.c1   
+          from   
+              t3   
+          where   
+              t3.c2 = t2.c2  
+      ) and t2.c2 = t1.c2  
+  );
+  ```
+
 - Not supported when the innermost subquery uses columns from its immediate parent query `t2.c2` and also columns from the outermost query `t1.c1`:
-  - ```sql
+
+  ```sql
     select   
         t1.c1   
     from   

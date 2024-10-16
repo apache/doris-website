@@ -618,7 +618,9 @@ mysql> explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2 
 ## How to use DistributeHint 
 
 - Currently, only the Distribute Type for the right table in a Join can be specified, and only `[shuffle]` and `[broadcast]` are supported. It should be written before the right table of the Join, and both bracket `[]` and `/`*`+`*`/` notations are allowed.
+
 - Any number of DistributeHints can be used.
+
 - When encountering a DistributeHint that cannot properly generate a plan, the system will not display an error. Instead, it will apply the hint to the best of its ability, with the final Distribution method shown in EXPLAIN being the definitive version.
 
 **1. Mixed Use with OrderedHint**

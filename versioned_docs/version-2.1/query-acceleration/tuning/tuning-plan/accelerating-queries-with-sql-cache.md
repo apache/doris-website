@@ -76,9 +76,9 @@ The following case illustrates how to enable and use SQL Cache in Doris:
     After the initial query, the query results will be cached if the following three conditions are met:
 
     - (Current time - last update time of the query partition) is greater than `cache_last_version_interval_second` in `fe.conf`.
-    
+
     - The number of query result rows is less than `cache_result_max_row_count` in `fe.conf`.
-    
+
     - The number of bytes in the query results is less than `cache_result_max_data_size` in `fe.conf`.
 
 ## Summary

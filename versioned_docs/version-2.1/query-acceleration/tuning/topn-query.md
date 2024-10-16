@@ -92,7 +92,9 @@ First, set `topn_opt_limit_threshold` to 0 to disable TOPN query optimization an
 After enabling TOPN query optimization, search for `RuntimePredicate` in the query profile and focus on the following metrics:
 
 - `RowsZonemapRuntimePredicateFiltered`: The number of rows filtered out, the higher the better.
+
 - `NumSegmentFiltered`: The number of data files filtered out, the higher the better.
+
 - `BlockConditionsFilteredZonemapRuntimePredicateTime`: The time taken to filter data, the lower the better.
 
 Before version 2.0.3, the `RuntimePredicate` metrics were not separated out, and the `Zonemap` metrics can be used as a rough guide.

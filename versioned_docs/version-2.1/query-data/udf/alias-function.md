@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Remote User Defined Function Service",
+    "title": "Alias Function",
     "language": "en"
 }
 ---

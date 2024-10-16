@@ -70,7 +70,7 @@ where c_nation = "china" and o_custkey in (c001, c003)
 
 The optimized execution plan is illustrated below:
 
-![img](https://selectdb.feishu.cn/space/api/box/stream/download/asynccode/?code=YWI5M2IwOTZkYjg5MjVmMjU0ZGI2ODJmN2NiYjdhZGFfVFhOa25xVkR5ZG9meXNBWjQyT1RlMGZGWHNqb1RjQUxfVG9rZW46WXFNa2JqUnRabzlFQm54cDBacWNGZUpzbk1nXzE3Mjg3MjIzMTI6MTcyODcyNTkxMl9WNA)
+![join-runtime-filter-2](/images/join-runtime-filter-2.jpg)
 
 By adding a filter condition on the orders table, the actual number of orders participating in the Join is reduced from 100 million to 400,000, significantly improving query speed.
 
