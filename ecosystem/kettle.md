@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Kettle Plugin",
+    "title": "Kettle Doris Plugin",
     "language": "en"
 }
 ---
@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Kettle Doris Plugin
+## Kettle Doris Plugin
 
-[Kettle](https://pentaho.com/) doris stream load plug-in is used to write data from other data sources to Doris through Stream Load in Kettle.
+[Kettle](https://pentaho.com/) Doris Plugin is used to write data from other data sources to Doris through Stream Load in Kettle.
 
 This plug-in uses the Stream Load function of Doris to import data. It needs to be used in conjunction with the Kettle service.
 
@@ -43,7 +43,7 @@ Kettle download address: https://pentaho.com/download/#download-pentaho
 After downloading, unzip it and run spoon.sh to start kettle
 You can also compile it yourself, refer to the [Compilation Chapter](https://github.com/pentaho/pentaho-kettle?tab=readme-ov-file#how-to-build)
 
-### Compile Doris's stream load plug-in
+### Compile Kettle Doris Plugin
 ```shell
 cd doris/extension/kettle
 mvn clean package -DskipTests

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Kettle Plugin",
+    "title": "Kettle Doris Plugin",
     "language": "zh-CN"
 }
 ---
@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Kettle doris stream load插件
+## Kettle Doris Plugin
 
-[Kettle](https://pentaho.com/) doris stream load 插件，用于在Kettle中通过 Stream Load 将其他数据源的数据写入到 Doris 中。
+[Kettle](https://pentaho.com/) Doris的插件，用于在Kettle中通过 Stream Load 将其他数据源的数据写入到 Doris 中。
 
 这个插件是利用 Doris 的 Stream Load 功能进行数据导入的。需要配合 Kettle 服务一起使用。
 
@@ -44,7 +44,7 @@ Kettle 下载地址： https://pentaho.com/download/#download-pentaho
 下载后解压，运行spoon.sh即可启动kettle
 也可以自行编译，参考[编译章节](https://github.com/pentaho/pentaho-kettle?tab=readme-ov-file#how-to-build)
 
-### 编译Doris的stream load插件
+### 编译Kettle Doris Plugin
 ```shell
 cd doris/extension/kettle
 mvn clean package -DskipTests
