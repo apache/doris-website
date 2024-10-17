@@ -531,7 +531,7 @@ FE 向 BE 的 BackendService 发送 rpc 请求时的超时时间，单位：毫�
 
 #### `drop_backend_after_decommission`
 
-默认值：false
+默认值：true
 
 是否可以动态配置：true
 
