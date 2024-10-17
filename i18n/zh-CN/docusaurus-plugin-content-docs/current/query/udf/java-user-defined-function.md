@@ -377,7 +377,7 @@ public class UDTFStringTest {
 当前在 Doris 中，执行一个 UDF 函数，eg: `select udf(col) from table`, 每一个并发instance会加载一次udf.jar包，在该instance结束时卸载掉udf.jar包。
 所以当 udf.jar 文件中需要加载一个几百 MB的文件时，会因为并发的原因，使得占据的内存急剧增大，容易OOM。
 
-解决方法是可以将资源加载代码拆分开，单独生成一个 jar 包文件，其他包直接引用该资源jar包.  
+解决方法一: 是可以将资源加载代码拆分开，单独生成一个 jar 包文件，其他包直接引用该资源jar包.  
 
 假设已经拆分为了 DictLibrary 和 FunctionUdf 两个文件。
 
@@ -427,21 +427,44 @@ public class UDTFStringTest {
     jar  -cvf ./FunctionUdf.jar  ./FunctionUdf.class
     ```
 
-3. 经过上面两步之后，会得到两个 jar 包，由于想让资源 jar 包被所有的并发引用，所以需要将它放到指定路径 `fe/custom_lib` 和 `be/custom_lib` 下面，服务重启之后就可以随着 JVM 的启动加载进来。
+3. 经过上面两步之后，会得到两个 jar 包，由于想让资源 jar 包被所有的并发引用，所以需要将它放到指定路径`be/custom_lib` 下面，BE 重启之后就可以随着BE 的 JVM 的启动加载进来。
 
 4. 最后利用 `create function` 语句创建一个 UDF 函数
    
    ```sql
    CREATE FUNCTION java_udf_dict(string) RETURNS string PROPERTIES (
+    "file" = "file:///mnt/FunctionUdf.jar",
     "symbol"="org.apache.doris.udf.FunctionUdf",
     "always_nullable"="true",
     "type"="JAVA_UDF"
    );
    ```
 
-使用该加载方式时，FunctionUdf.jar和DictLibrary.jar都在FE和BE的custom_lib路径下，因此都会随着服务启动而加载，停止而释放，不再需要指定file 的路径。
+使用该加载方式时，这样资源包会随着 BE 启动而加载，停止而释放。FunctionUdf.jar 的加载与释放则是跟随 SQL 的执行周期。
 
-也可以使用 file:/// 方式自定义FunctionUdf.jar的路径，但是DictLibrary.jar 只能放在custom_lib下。
+其中 file:/// 方式指向自定义FunctionUdf.jar的路径，但是DictLibrary.jar 只能放在custom_lib下。
+
+:::tip
+自 Doris 3.0 版本开始支持缓存jar包的能力
+:::
+
+解决方法二: 全局缓存jar包，自定义过期淘汰时间，在create function时增加两个属性字段，其中
+static_load: 用于定义是否使用静态cache加载的方式，
+expiration_time: 用于定义jar 包的过期时间，单位为分钟。
+若使用静态cache 加载方式，则在第一次调用该UDF 函数时，在初始化之后会将该UDF 的相关属性缓存起来，在下次调用该UDF 时，首先会在cache 中进行查找，在如果没有找到，则会进行相关初始化操作。
+并且后台有线程定期检查，如果在配置的过期淘汰时间内，一直没有被调用过，则会从缓存cache 中清理掉。
+
+    ```sql
+        CREATE FUNCTION print_12() RETURNS int 
+        PROPERTIES (
+            "file" = "file:///mnt/ava-udf-demo-jar-with-dependencies.jar",
+            "symbol" = "org.apache.doris.udf.AddOne", 
+            "always_nullable"="true",
+            "type" = "JAVA_UDF",
+            "static_load" = "true", // default value is false
+            "expiration_time" = "60" // default value is 360 minutes
+        );
+    ```
 
 ## 使用须知
 
