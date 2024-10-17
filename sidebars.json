@@ -871,6 +871,7 @@
                                 "sql-manual/sql-functions/string-functions/concat",
                                 "sql-manual/sql-functions/string-functions/concat-ws",
                                 "sql-manual/sql-functions/string-functions/substring",
+                                "sql-manual/sql-functions/string-functions/count_substrings",
                                 "sql-manual/sql-functions/string-functions/sub-replace",
                                 "sql-manual/sql-functions/string-functions/append-trailing-char-if-absent",
                                 "sql-manual/sql-functions/string-functions/ends-with",
