@@ -35,14 +35,6 @@
     "message": "K8s 部署存算分离",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
-  "sidebar.docs.category.Install Metaservice": {
-    "message": "部署 Metaservice",
-    "description": "The label for category Deploying on Kubernetes in sidebar docs"
-  },
-  "sidebar.docs.category.Install Cluster": {
-    "message": "部署 Cluster",
-    "description": "The label for category Deploying on Kubernetes in sidebar docs"
-  },
   "sidebar.docs.category.Database Connection": {
     "message": "数据库连接",
     "description": "The label for category Database Connection in sidebar docs"
