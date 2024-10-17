@@ -237,47 +237,6 @@ PARTITION BY RANGE(`date`)
 )
 ```
 
-3. BATCH RANGE：批量创建数字类型和时间类型的 RANGE 分区，定义分区的左闭右开区间，设定步长。 
-
-```Plain
-PARTITION BY RANGE(int_col)                                                                                                                                                                                                            
-(                                                                                                                                                                                                                                      
-    FROM (start_num) TO (end_num) INTERVAL interval_value                                                                                                                                                                                                   
-)
-
-PARTITION BY RANGE(date_col)                                                                                                                                                                                                            
-(                                                                                                                                                                                                                                      
-    FROM ("start_date") TO ("end_date") INTERVAL num YEAR | num MONTH | num WEEK | num DAY ｜ 1 HOUR                                                                                                                                                                                                   
-)                                                                                                                                                                                                                                    
-```
-
-示例如下：
-
-```shell
-PARTITION BY RANGE(age)
-(
-    FROM (1) TO (100) INTERVAL 10
-)
-
-PARTITION BY RANGE(`date`)
-(
-    FROM ("2000-11-14") TO ("2021-11-14") INTERVAL 2 YEAR
-)
-```
-
-4.MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间。示例如下：
-
-```shell
-PARTITION BY RANGE(col)                                                                                                                                                                                                                
-(                                                                                                                                                                                                                                      
-   FROM ("2000-11-14") TO ("2021-11-14") INTERVAL 1 YEAR,                                                                                                                                                                              
-   FROM ("2021-11-14") TO ("2022-11-14") INTERVAL 1 MONTH,                                                                                                                                                                             
-   FROM ("2022-11-14") TO ("2023-01-03") INTERVAL 1 WEEK,                                                                                                                                                                              
-   FROM ("2023-01-03") TO ("2023-01-14") INTERVAL 1 DAY,
-   PARTITION p_20230114 VALUES [('2023-01-14'), ('2023-01-15'))                                                                                                                                                                                
-)                                                                                                                                                                                                                                      
-```
-
 ### List 分区
 
 分区列支持 `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME, CHAR, VARCHAR` 数据类型，分区值为枚举值。只有当数据为目标分区枚举值其中之一时，才可以命中分区。
