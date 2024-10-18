@@ -57,7 +57,7 @@ wget https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main
   The doris-operator repository has a deployment example based on the fdb-kuberentes-operator 1.46.0 version, which can be used directly to deploy the fdb cluster.
 
 ```
-wget https://raw.githubusercontent.com/selectdb/doris-operator/blob/master/config/operator/fdb-operator.yaml
+wget https://raw.githubusercontent.com/apache/doris-operator/blob/master/config/operator/fdb-operator.yaml
 ```
 2. Deploy the fdb-kubernetes-operator service:
    After customizing the deployment yaml of `fdb-kubernetes-operator`, use the following command to deploy fdb-kubernetes-operator:

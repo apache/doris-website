@@ -44,7 +44,7 @@ kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-o
 customresourcedefinition.apiextensions.k8s.io/foundationdbrestores.apps.foundationdb.org created
 ```
 ## 部署 fdb-kubernetes-operator 服务
-fdb-kubernetes-operator 仓库提供了以 IP 模式部署 fdb 集群的部署样例，。在 doris-operator 仓库中提供了以 fqdn 模式部署的 fdb 集群样例，可以按需下载。
+fdb-kubernetes-operator 仓库提供了以 IP 模式部署 fdb 集群的部署样例。在 doris-operator 仓库中提供了以 fqdn 模式部署的 fdb 集群样例，可以按需下载。
 1. 下载部署样例:
 - 从 fdb-kubernetes-operator 官方仓库下载:
 fdb-kuberentes-operator 默认情况下使用 IP 模式部署 FDB Cluster，可以下载 [fdb-kubernetes-operator 默认部署](https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml) yaml。如果使用 fqdn 部署模式，请按照官方文档[使用 DNS 部分](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#using-dns)进行定制化使用域名模式。
@@ -54,7 +54,7 @@ wget https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main
 - 从 doris-operator 仓库下载:
 doris-operator 仓库中制定化了以 fdb-kuberentes-operator 1.46.0 版本为基础的部署示例，可直接使用部署 fdb cluster 。
 ```
-wget https://raw.githubusercontent.com/selectdb/doris-operator/blob/master/config/operator/fdb-operator.yaml
+wget https://raw.githubusercontent.com/apache/doris-operator/blob/master/config/operator/fdb-operator.yaml
 ```
 2. 部署 fdb-kubernetes-operator 服务:
 定制化 `fdb-kubernetes-operator` 的部署 yaml 后，使用如下命令部署 fdb-kubernetes-operator ：
