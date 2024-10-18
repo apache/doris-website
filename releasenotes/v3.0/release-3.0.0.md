@@ -27,7 +27,7 @@ under the License.
 
 We are excited to announce the release of Apache Doris 3.0! 
 
-**Starting with version 3.X, Apache Doris supports a compute-storage decoupled mode inaddition to the compute-storage mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. Additionally, users can take advantage of low-cost shared storage systems such as object storage or HDFS to significantly reduce storage costs.**
+**Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. Additionally, users can take advantage of low-cost shared storage systems such as object storage or HDFS to significantly reduce storage costs.**
 
 Version 3.0 marks a milestone in the evolution of Apache Doris towards a unified data lake and data warehouse architecture. This version introduces the ability to write data back to data lakes, allowing users to perform data analysis, sharing, processing, and storage operations across multiple data sources within Apache Doris. With capabilities such as asynchronous materialized views, Apache Doris can serve as a unified data processing engine for enterprises, helping users better manage data across lakes, warehouses, and databases. Also, Apache Doris 3.0 introduces the Trino Connector. It allows users to quickly connect or adapt to more data sources, and leverage the high-performance compute engine of Doris to deliver faster query results than Trino.
 
@@ -84,7 +84,7 @@ In the compute-storage decoupled mode, the Apache Doris architecture consists of
 
 The design of the compute-storage decoupled mode of Apache Doris highlights the transformation of the FE's in-memory metadata model into a shared metadata service. This approach offers a globally consistent state view, allowing any node to directly submit writes without needing to go through the FE for publishing. During write operations, data is stored in shared storage, while metadata is managed by the metadata service. **This effectively controls the number of small files in shared storage. Meanwhile, the real-time write performance for individual tables is nearly on par with that in the compute-storage coupled mode. The system's overall write capacity is no longer limited by the processing power of a single FE node.**
 
-![Design highlight](/images/storage-compute-decoupled-highlight-3.PNG)
+![Design highlight](/images/design-hightlight.PNG)
 
 Based on the globally consistent state view, for data garbage collection, we have adopted a design approach for data deletion that is easier to prove correct and more efficient.
 
@@ -98,7 +98,7 @@ Another design of decoupling compute and storage in the industry is to store the
 
 - **Inability to support real-time writes**: During data writes, the data is mapped to tablets based on the partitioning and bucketing rules, generating segment files and rowset meta data. During the write process, a two-phase commit (Publish) is performed through the FE. When a BE node receives the Publish request, it then sets the rowset as visible. The Publish operation must not fail. If the rowset meta data is stored in the shared storage, the total small file data during the real-time write process would triple the size of the actual data files - one replica of data files, one for rowset meta data, and another for rowset meta data changes during Publish. The Publish operation is driven by a single FE node, so the write capacity of a single table or even the entire system is limited by the FE node's capabilities.
   
-  ![Comparison with alternative solutions](/images/storage-compute-decoupled-comparison-5.png)
+  ![Comparison with alternative solutions](/images/comparison-with-alternative-solutions.png)
 
   We compared the real-time data write performance of Apache Doris 3.0 with the above-described solution. We simulated 500 concurrent tasks writing 10,000 data files with 500 rows each, and 50 concurrent tasks writing 250 data files with 20,000 rows each, using the same computational resources. 
 
@@ -106,7 +106,7 @@ Another design of decoupling compute and storage in the industry is to store the
 
   At 500 concurrent tasks, the performance of Apache Doris in the compute-storage decoupled mode showed slight degradation, but it still maintained an 11X advantage over the industry solution. To ensure a fair test, Apache Doris did not enable the Group Commit feature (which the industry solution lacks). Enabling Group Commit would further enhance real-time write performance.
 
-  ![Comparison with alternative solutions](/images/storage-compute-decoupled-comparison-5.png)
+  ![Comparison with alternative solutions](/images/real-time-write-performance..png)
 
   Additionally, the industry solution also faces stability and cost issues in terms of real-time data ingestion:
 
@@ -138,7 +138,7 @@ In this context, we have conducted performance tests with different caching stra
 
 - When the cache is completely missed (i.e., the cache is cleared before every SQL execution, simulating an extreme case), the performance loss is around 35%. **Even so, Apache Doris in the compute-storage decoupled mode delivers much higher performance than its alternative solutions.**
 
-![Query performance comparison](/images/storage-compute-decoupled-query-performance-6.png)
+![Query performance comparison](/images/query-performance-comparison.png)
 
 ### 1-5 Write speed comparison
 
@@ -148,7 +148,7 @@ In terms of write performance, we have simulated two test cases under the same c
 
 - **High-concurrency real-time import**: as described in the "Comparison with alternative solutions" section.
 
-![Write speed comparison](/images/storage-compute-decoupled-loading-performance-7.png)
+![Write speed comparison](/images/write-speed-comparison.png)
 
 ### 1-6 Tips for production environment
 
@@ -377,7 +377,7 @@ In V3.0, Doris implements a self-adaptive Runtime Filter calculation approach. I
 
 Our blind tests on V3.0 and V2.1 show that the new version is 7.3% and 6.2% faster in TPC-DS and TPC-H benchmark tests, respectively.
 
-![Blind test performance improvement](/images/tpc-ds-and-tpc-h.png)
+![Blind test performance improvement](/images/blind-test-performance-improvement.png)
 
 ## 7. New features
 

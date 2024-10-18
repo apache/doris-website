@@ -68,7 +68,7 @@ According to TPC-DS benchmark tests (1TB) of Doris V2.1 against Trino,
 
 ### SQL dialects compatibility
 
-To facilitate migration to Doris and increase its compatibility with other DBMS, we have enabled SQL dialect conversion in V2.1. ([read more](https://doris.apache.org/docs/lakehouse/sql-dialect/)) For example, by set sql_dialect = "trino" in Doris, you can use the Trino SQL dialect as you're used to, without modifying your current business logic, and Doris will execute the corresponding queries for you. Tests in user production environment show that Doris V2.1 is compatible with 99% of Trino SQL.
+To facilitate migration to Doris and increase its compatibility with other DBMS, we have enabled SQL dialect conversion in V2.1. ([read more](../../lakehouse/sql-dialect)) For example, by set sql_dialect = "trino" in Doris, you can use the Trino SQL dialect as you're used to, without modifying your current business logic, and Doris will execute the corresponding queries for you. Tests in user production environment show that Doris V2.1 is compatible with 99% of Trino SQL.
 
 ### Arrow Flight SQL protocol
 
@@ -95,7 +95,7 @@ To further release burden on operation and maintenance, V2.1 allows auto data pa
 
 ### High-concurrency real-time data ingestion
 
-For data writing, a back pressure mechanism is in place to avoid execessive data versions, so as to reduce resource consumption by data version merging. In addition, V2.1 supports group commit ([read more](https://doris.apache.org/docs/data-operate/import/group-commit-manual)), which means to accumulate multiple writing and commit them as one. Benchmark tests on group commit with JDBC ingestion and the Stream Load method present great results.
+For data writing, a back pressure mechanism is in place to avoid execessive data versions, so as to reduce resource consumption by data version merging. In addition, V2.1 supports group commit ([read more](../../data-operate/import/import-way/group-commit-manual)), which means to accumulate multiple writing and commit them as one. Benchmark tests on group commit with JDBC ingestion and the Stream Load method present great results.
 
 ## Semi-structured data analysis
 
@@ -150,7 +150,7 @@ Please note that this version is only suitable for quick experience and function
 - Audit log plug-in
   - Since V2.1.0, Doris has a built-in audit log plug-in. Users can simply enable or disable it by setting the enable_audit_plugin parameter.
   - If you have already installed your own audit log plug-in, you can either continue using it after upgrading to Doris V2.1, or uninstall it and use the one in Doris. Please note that the audit log table will be relocated after switching plug-in.
-  - For more details, please see the [docs](https://doris.apache.org/docs/admin-manual/audit-plugin).
+  - For more details, please see the [docs](../../admin-manual/audit-plugin).
 
 
 ## Credits
