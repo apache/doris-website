@@ -36,15 +36,15 @@ under the License.
 
 1. 创建 namespace：
 
-```shell
-kubectl create namespace ${namespace}
-```
+  ```shell
+  kubectl create namespace ${namespace}
+  ```
 
 2. 部署 Doris 集群
 
-```shell
-kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
-```
+  ```shell
+  kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
+  ```
 
 **离线部署**
 
@@ -52,44 +52,44 @@ kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
 
 1. 下载所需的镜像
 
-部署 Doris 集群需要以下镜像：
+  部署 Doris 集群需要以下镜像：
 
-```text
-selectdb/doris.fe-ubuntu:2.0.2
-selectdb/doris.be-ubuntu:2.0.2
-```
+  ```shell
+  selectdb/doris.fe-ubuntu:2.0.2
+  selectdb/doris.be-ubuntu:2.0.2
+  ```
 
-将镜像下载到本地后打包成 tar 文件
+  将镜像下载到本地后打包成 tar 文件
 
-```shell
-## download docker image
-docker pull selectdb/doris.fe-ubuntu:2.0.2
-docker pull selectdb/doris.be-ubuntu:2.0.2
+  ```shell
+  ## download docker image
+  docker pull selectdb/doris.fe-ubuntu:2.0.2
+  docker pull selectdb/doris.be-ubuntu:2.0.2
 
-## save docker image as a tar package
-docker save -o doris.fe-ubuntu-v2.0.2.tar selectdb/doris.fe-ubuntu:2.0.2
-docker save -o doris.be-ubuntu-v2.0.2.tar docker pull selectdb/doris.be-ubuntu:2.0.2
-```
+  ## save docker image as a tar package
+  docker save -o doris.fe-ubuntu-v2.0.2.tar selectdb/doris.fe-ubuntu:2.0.2
+  docker save -o doris.be-ubuntu-v2.0.2.tar docker pull selectdb/doris.be-ubuntu:2.0.2
+  ```
 
-将 image tar 包上传到服务器上，执行 docker load 命令：
+  将 Image Tar 包上传到服务器上，执行 Docker Load 命令：
 
-```shell
-## load docker image
-docker load -i doris.fe-ubuntu-v2.0.2.tar
-docker load -i doris.be-ubuntu-v2.0.2.tar
-```
+  ```shell
+  ## load docker image
+  docker load -i doris.fe-ubuntu-v2.0.2.tar
+  docker load -i doris.be-ubuntu-v2.0.2.tar
+  ```
 
 2. 创建 namespace：
 
-```shell
-kubectl create namespace ${namespace}
-```
+  ```shell
+  kubectl create namespace ${namespace}
+  ```
 
 3. 部署 Doris 集群
 
-```shell
-kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
-```
+  ```shell
+  kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
+  ```
 
 ### 使用 Helm 部署
 
@@ -105,7 +105,7 @@ kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
 helm install doriscluster doris-repo/doris
 ```
 
-如果需要自定义资源和集群形态，请根据 [values.yaml](https://artifacthub.io/packages/helm/doris/doris?modal=values) 的各个资源配置的注解自定义资源配置，并执行如下命令:
+如果需要自定义资源和集群形态，请根据 [values.yaml](https://artifacthub.io/packages/helm/doris/doris?modal=values) 的各个资源配置的注解自定义资源配置，并执行如下命令：
 
 ```shell
 helm install -f values.yaml doriscluster doris-repo/doris
@@ -149,7 +149,7 @@ wget https://charts.selectdb.com/doris-2.0.6.tgz
 helm install doriscluster doris-1.4.0.tgz
 ```
 
-如果需要自定义装配 [values.yaml](https://artifacthub.io/packages/helm/doris/doris?modal=values) ，可以参考如下命令:
+如果需要自定义装配 [values.yaml](https://artifacthub.io/packages/helm/doris/doris?modal=values) ，可以参考如下命令：
 
 ```shell
 helm install -f values.yaml doriscluster doris-1.4.0.tgz
@@ -193,7 +193,7 @@ doriscluster-sample-fe-0   1/1     Running   0          20m
 doriscluster-sample-be-0   1/1     Running   0          19m
 ```
 
-当所有 pod 的 `STATUS` 都是 `Running` 状态， 且所有组件的 pod 中所有容器都 `READY` 表示整个集群部署正常。
+当所有 pod 的 `STATUS` 都是 `Running` 状态，且所有组件的 pod 中所有容器都 `READY` 表示整个集群部署正常。
 
 ### 检查部署资源状态
 
