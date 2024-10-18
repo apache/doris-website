@@ -45,7 +45,7 @@ None
 ## Response
 
     ```
-    {"status": "OK","msg": "To Be Added"}
+    {"status": "OK","msg": ""}
     ```
 
 ## Examples

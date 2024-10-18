@@ -43,7 +43,7 @@ under the License.
 ## Response
 
     ```json
-    {"status": "OK","msg": "To Be Added"}
+    {"status": "OK","msg": ""}
     ```
 
 ## Examples
