@@ -33,7 +33,7 @@ under the License.
 ```yaml
 spec:
   computeGroups:
-  - name: cg1
+  - uniqueId: cg1
     image: {beImage}
     replicas: 1
 ```
@@ -56,10 +56,10 @@ cg1 为计算组的名称，执行 sql 的过程中可通过计算组名称选�
 ```yaml
 spec:
   computeGroups:
-  - name: cg1
+  - uniqueId: cg1
     image: {beImage}
     replicas: 3
-  - name: cg2
+  - uniqueId: cg2
     image: {beImage}
     replicas: 2
 ```
@@ -79,7 +79,7 @@ spec:
 ```yaml
 spec:
   computeGroups:
-  - name: cg1
+  - uniqueId: cg1
     image: {beImage}
     requests:
       cpu: 4
@@ -98,7 +98,7 @@ spec:
 ```yaml
 spec:
   computeGroups:
-  - name: cg1
+  - uniqueId: cg1
     persistentVolume:
       persistentVolumeClaimSpec:
         #storageClassName：{storageClassName}
@@ -158,7 +158,7 @@ data:
 ```yaml
 spec:
   computeGroups:
-  - name: cg1
+  - uniqueId: cg1
     image: {beImage}
     configMaps:
     - name: be-configmap

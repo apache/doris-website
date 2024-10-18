@@ -33,7 +33,7 @@ The following configuration deploys a minimal Compute Group:
 ```yaml
 spec:
   computeGroups:
-  - name: cg1
+  - uniqueId: cg1
     image: {beImage}
     replicas: 1
 ```
@@ -55,10 +55,10 @@ The simplest deployment of two Compute Groups is as follows:
 ```yaml
 spec:
   computeGroups:
-  - name: cg1
+  - uniqueId: cg1
     image: {beImage}
     replicas: 3
-  - name: cg2
+  - uniqueId: cg2
     image: {beImage}
     replicas: 2
 ```
@@ -78,7 +78,7 @@ Set the CPU and Memory resource usage available to the BE (Compute Service) cont
 ```yaml
 spec:
   computeGroups:
-  - name: cg1
+  - uniqueId: cg1
     image: {beImage}
     requests:
       cpu: 4
@@ -97,7 +97,7 @@ By default, each BE service uses the EmptyDir storage mode to cache data. In rea
 ```yaml
 spec:
   computeGroups:
-  - name: cg1
+  - uniqueId: cg1
     persistentVolume:
       persistentVolumeClaimSpec:
         #storageClassName：{storageClassName}
@@ -156,7 +156,7 @@ The configuration that specifies the Compute Group to use the above ConfigMap is
 ```yaml
 spec:
   computeGroups:
-  - name: cg1
+  - uniqueId: cg1
     image: {beImage}
     configMaps:
     - name: be-configmap
