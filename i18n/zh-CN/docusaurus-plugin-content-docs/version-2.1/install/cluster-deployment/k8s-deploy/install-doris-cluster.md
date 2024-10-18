@@ -32,7 +32,7 @@ under the License.
 
 **在线部署**
 
-在线署集群需要经过以下步骤：
+在线部署集群需要经过以下步骤：
 
 1. 创建 namespace：
 
@@ -48,7 +48,7 @@ under the License.
 
 **离线部署**
 
-离线部署 Doris 集群需要在有外网的机器上将 Doris 集群用到的 docker 镜像，上传到所有的 node 节点上。然后使用 docker load 将镜像安装到服务器上。离线部署需要经历以下步骤：
+离线部署 Doris 集群需要在有外网的机器上将 Doris 集群用到的 Docker 镜像，上传到所有的 Node 节点上。然后使用 Docker Load 将镜像安装到服务器上。离线部署需要经历以下步骤：
 
 1. 下载所需的镜像
 
