@@ -23,6 +23,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
 ## 配置数据及持久化存储
 
 在 Doris 集群中，包括 FE、BE、CN 和监控组件在内的组件都需要将数据持久化到物理存储中。Kubernetes 提供了 [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) 的能力将数据持久化到物理存储中。在 Kubernetes 环境中，主要存在两种类型的 Persistent Volumes：

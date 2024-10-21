@@ -95,85 +95,85 @@ under the License.
 
 **在线部署**
 
-在安装开始前，需要添加部署仓库，若已经添加则可直接进行 Doris Cluster 的安装，否则请参考添加[部署 Doris Operator](./install-operator.md#%E6%96%B9%E6%A1%88%E4%B8%89helm-%E9%83%A8%E7%BD%B2-doris-operator) 时 **添加部署仓库** 的操作
+在安装开始前，需要添加部署仓库，若已经添加则可直接进行 Doris Cluster 的安装，否则请参考添加[部署 Doris Operator](./install-operator#方案一快速部署-doris-operator) 时 **添加部署仓库** 的操作
 
 1. 安装 Doris Cluster
 
-安装 [doriscluster](https://artifacthub.io/packages/helm/doris/doris)，使用默认配置此部署仅部署 3 个 FE 和 3 个 BE 组件，使用默认 `storageClass` 实现 PV 动态供给。
+  安装 [doriscluster](https://artifacthub.io/packages/helm/doris/doris)，使用默认配置此部署仅部署 3 个 FE 和 3 个 BE 组件，使用默认 `storageClass` 实现 PV 动态供给。
 
-```shell
-helm install doriscluster doris-repo/doris
-```
+  ```shell
+  helm install doriscluster doris-repo/doris
+  ```
 
-如果需要自定义资源和集群形态，请根据 [values.yaml](https://artifacthub.io/packages/helm/doris/doris?modal=values) 的各个资源配置的注解自定义资源配置，并执行如下命令：
+  如果需要自定义资源和集群形态，请根据 [values.yaml](https://artifacthub.io/packages/helm/doris/doris?modal=values) 的各个资源配置的注解自定义资源配置，并执行如下命令：
 
-```shell
-helm install -f values.yaml doriscluster doris-repo/doris
-```
+  ```shell
+  helm install -f values.yaml doriscluster doris-repo/doris
+  ```
 
-2. 验证 doris 集群安装结果
+2. 验证 Doris 集群安装结果
 
-通过 `kubectl get pods` 命令可以查看 pod 部署状态。当 `doriscluster` 的 Pod 处于 `Running` 状态且 Pod 内所有容器都已经就绪，即部署成功。
+  通过 `kubectl get pods` 命令可以查看 pod 部署状态。当 `doriscluster` 的 Pod 处于 `Running` 状态且 Pod 内所有容器都已经就绪，即部署成功。
 
-```shell
-kubectl get pod --namespace doris
-```
+  ```shell
+  kubectl get pod --namespace doris
+  ```
 
-返回结果如下：
+  返回结果如下：
 
-```shell
-NAME                     READY   STATUS    RESTARTS   AGE
-doriscluster-helm-fe-0   1/1     Running   0          1m39s
-doriscluster-helm-fe-1   1/1     Running   0          1m39s
-doriscluster-helm-fe-2   1/1     Running   0          1m39s
-doriscluster-helm-be-0   1/1     Running   0          16s
-doriscluster-helm-be-1   1/1     Running   0          16s
-doriscluster-helm-be-2   1/1     Running   0          16s
-```
+  ```shell
+  NAME                     READY   STATUS    RESTARTS   AGE
+  doriscluster-helm-fe-0   1/1     Running   0          1m39s
+  doriscluster-helm-fe-1   1/1     Running   0          1m39s
+  doriscluster-helm-fe-2   1/1     Running   0          1m39s
+  doriscluster-helm-be-0   1/1     Running   0          16s
+  doriscluster-helm-be-1   1/1     Running   0          16s
+  doriscluster-helm-be-2   1/1     Running   0          16s
+  ```
 
 **离线部署**
 
 1. 下载 Doris Cluster Chart 资源
 
-下载 `doris-{chart_version}.tgz` 安装 Doris Cluster chart。如需要下载 2.0.6 版本的 Doris 集群可以使用以下命令：
+  下载 `doris-{chart_version}.tgz` 安装 Doris Cluster chart。如需要下载 2.0.6 版本的 Doris 集群可以使用以下命令：
 
-```shell
-wget https://charts.selectdb.com/doris-2.0.6.tgz
-```
+  ```shell
+  wget https://charts.selectdb.com/doris-2.0.6.tgz
+  ```
 
 2. 安装 Doris 集群
 
-通过 `helm install` 命令可以安装 Doris 集群。
+  通过 `helm install` 命令可以安装 Doris 集群。
 
-```shell
-helm install doriscluster doris-1.4.0.tgz
-```
+  ```shell
+  helm install doriscluster doris-1.4.0.tgz
+  ```
 
-如果需要自定义装配 [values.yaml](https://artifacthub.io/packages/helm/doris/doris?modal=values) ，可以参考如下命令：
+  如果需要自定义装配 [values.yaml](https://artifacthub.io/packages/helm/doris/doris?modal=values) ，可以参考如下命令：
 
-```shell
-helm install -f values.yaml doriscluster doris-1.4.0.tgz
-```
+  ```shell
+  helm install -f values.yaml doriscluster doris-1.4.0.tgz
+  ```
 
 3. 验证 doris 集群安装结果
 
-通过 `kubectl get pods` 命令可以查看 pod 部署状态。当 `doriscluster` 的 Pod 处于 `Running` 状态且 Pod 内所有容器都已经就绪，即部署成功。
+  通过 `kubectl get pods` 命令可以查看 pod 部署状态。当 `doriscluster` 的 Pod 处于 `Running` 状态且 Pod 内所有容器都已经就绪，即部署成功。
 
-```shell
-kubectl get pod --namespace doris
-```
+  ```shell
+  kubectl get pod --namespace doris
+  ```
 
-返回结果如下：
+  返回结果如下：
 
-```shell
-NAME                     READY   STATUS    RESTARTS   AGE
-doriscluster-helm-fe-0   1/1     Running   0          1m39s
-doriscluster-helm-fe-1   1/1     Running   0          1m39s
-doriscluster-helm-fe-2   1/1     Running   0          1m39s
-doriscluster-helm-be-0   1/1     Running   0          16s
-doriscluster-helm-be-1   1/1     Running   0          16s
-doriscluster-helm-be-2   1/1     Running   0          16s
-```
+  ```shell
+  NAME                     READY   STATUS    RESTARTS   AGE
+  doriscluster-helm-fe-0   1/1     Running   0          1m39s
+  doriscluster-helm-fe-1   1/1     Running   0          1m39s
+  doriscluster-helm-fe-2   1/1     Running   0          1m39s
+  doriscluster-helm-be-0   1/1     Running   0          16s
+  doriscluster-helm-be-1   1/1     Running   0          16s
+  doriscluster-helm-be-2   1/1     Running   0          16s
+  ```
 
 ## 查看集群状态
 
@@ -193,7 +193,8 @@ doriscluster-sample-fe-0   1/1     Running   0          20m
 doriscluster-sample-be-0   1/1     Running   0          19m
 ```
 
-当所有 pod 的 `STATUS` 都是 `Running` 状态，且所有组件的 pod 中所有容器都 `READY` 表示整个集群部署正常。
+
+当所有 pod 的 `STATUS` 都是 `Running`，且 READY 列为 `1/1` 时，表示整个集群部署正常。
 
 ### 检查部署资源状态
 
