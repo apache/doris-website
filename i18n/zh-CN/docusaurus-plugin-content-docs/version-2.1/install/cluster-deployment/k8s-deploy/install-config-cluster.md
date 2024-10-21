@@ -28,7 +28,8 @@ under the License.
 
 在 Doris 集群中，包括 FE、BE、CN 和监控组件在内的组件都需要将数据持久化到物理存储中。Kubernetes 提供了 [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) 的能力将数据持久化到物理存储中。在 Kubernetes 环境中，主要存在两种类型的 Persistent Volumes：
 
-- 本地 PV 存储（Local Persistent Volumes）：本地 PV 是 Kubernetes 直接使用宿主机的本地磁盘目录来持久化存储容器的数据。本地 PV 提供更小的网络延迟，在使用 SSD 等高性能硬盘时，可以提供更好的读写能力。由于本地 PV 与宿主机绑定，在宿主机出现故障时，本地 PV 进行故障漂移。
+- 本地 PV 存储（Local Persistent Volumes）：本地 PV 是 Kubernetes 直接使用宿主机的本地磁盘目录来持久化存储容器的数据。本地 PV 提供更小的网络延迟，在使用 SSD 等高性能硬盘时，可以提供更好的读写能力。由于本地 PV 与宿主机绑定，在宿主机出现故障时，本地 PV 的数据可能无法访问，因为它与宿主机绑定。
+
 - 网络 PV 存储（Network Persistent Volumes）：网络 PV 是通过网络访问的存储资源。网络 PV 可以被集群中的任一节点访问，在宿主机出现故障时，网络 PV 可以挂载到其他节点继续使用。
 
 StorageClass 可以用于定义 PV 的类型和行为，通过 StorageClass 可以将磁盘资源与容器解耦，从而实现数据的持久性与可靠性。在 Doris Operator 中，在 Kubernetes 上部署 Doris，可以支持本地 PV 与网络 PV，可以根据业务需求进行选择。
@@ -43,8 +44,11 @@ StorageClass 可以用于定义 PV 的类型和行为，通过 StorageClass 可�
 在 Doris 中，建议持久化存储以下目录：
 
 - FE 节点：doris-meta、log
+
 - BE 节点：storage、log
+
 - CN 节点：storage、log
+
 - Broker 节点：log
 
 在 Doris 中存在多种日志类型，如 INFO 日志、OUT 日志、GC 日志以及审计日志。Doris Operator 可以将日志同时输出到 console 与指定目录下。如果用户的 Kubernetes 有完整的日志收集能力，可以通过 console 输出来收集 Doris 的 INFO 日志。建议将 Doris 的所有日志通过 PVC 配置持久化到指定存储中，这将有助于问题的定位与排查。
@@ -54,7 +58,7 @@ StorageClass 可以用于定义 PV 的类型和行为，通过 StorageClass 可�
 Doris Operator 使用 Kubernetes 默认的 StorageClass 来支持 FE 与 BE 的存储。在 DorisCluster 的 CR 中，通修改 StorageClass 指定 `persistentVolumeClaimSpec.storageClassName`，可以配置指定的网络 PV。
 
 ```yaml
-persistentVolumes:
+  persistentVolumes:
     - mountPath: /opt/apache-doris/fe/doris-meta
       name: storage0
       persistentVolumeClaimSpec:
@@ -70,7 +74,7 @@ persistentVolumes:
  
 **FE 配置持久化存储**
 
-在部署集群时，建议对 FE 中的 doris-meta 与 log 目录做持久化存储。doris-meta 用户存放元数据，一般在几百 MB 到几十 GB，建议预留 100GB。log 目录用来存放 FE 日志，一般建议预留 50GB。
+在部署集群时，建议对 FE 中的 doris-meta 与 Log 目录做持久化存储。doris-meta 用户存放元数据，一般在几百 MB 到几十 GB，建议预留 100GB。Log 目录用来存放 FE 日志，一般建议预留 50GB。
 
 下例中 FE 使用 StorageClass 挂载了元数据存储与日志存储：
 
@@ -116,14 +120,14 @@ doris-storage                 openebs.io/local               Delete          Wai
 ```
 
 :::tip 提示
-可以通过配置 [ConfigMap](<#FE ConfigMap>) 修改默认的元数据路径与日志路径：
-1. fe-meta 的 mounthPath 配置需要与 ConfigMap 中的 meta_dir 变量配置路径一致，默认情况下元数据会写入  /opt/apache-doris/fe/doris-meta 目录下；
-2. fe-log 的 mounthPath 配置需要与 ConfigMap 中的 LOG_DIR 变量路径一致，默认情况下日志数据会写入到 /opt/apache-doris/fe/log 目录下。
+可以通过配置 [ConfigMap](#fe-configmap) 修改默认的元数据路径与日志路径：
+1. fe-meta 的 mountPath 配置需要与 ConfigMap 中的 meta_dir 变量配置路径一致，默认情况下元数据会写入  `/opt/apache-doris/fe/doris-meta` 目录下；
+2. fe-log 的 mountPath 配置需要与 ConfigMap 中的 LOG_DIR 变量路径一致，默认情况下日志数据会写入到 `/opt/apache-doris/fe/log` 目录下。
 :::
 
 **BE 配置持久化存储**
 
-在部署集群时，建议对 BE 中的 storage 与 log 目录做持久化存储。storage 用户存放数据，需要根据业务数据量衡量。log 目录用来存放 FE 日志，一般建议预留 50GB。
+在部署集群时，建议对 BE 中的 Storage 与 Log 目录做持久化存储。Storage 用户存放数据，需要根据业务数据量衡量。Log 目录用来存放 BE 日志，一般建议预留 50GB。
 
 下例中 BE 使用 StorageClass 挂载了数据存储与日志存储：
 
@@ -133,7 +137,7 @@ beSpec:
   - mountPath: /opt/apache-doris/be/storage
     name: be-storage
     persistentVolumeClaimSpec:
-      storageClassName: {storageClassName}
+      storageClassName: ${storageClassName}
       accessModes:
         - ReadWriteOnce
       resources:
@@ -142,7 +146,7 @@ beSpec:
   - mountPath: /opt/apache-doris/be/log
     name: belog
     persistentVolumeClaimSpec:
-      storageClassName: {storageClassName}
+      storageClassName: ${storageClassName}
       accessModes:
       - ReadWriteOnce
       resources:
@@ -154,7 +158,7 @@ beSpec:
 
 ### 集群名称
 
-可以通过修改 DorisCluster Custom Resource 中的 metadata.name 来配置集群名称。
+可以通过修改 DorisCluster Custom Resource 中的 `metadata.name` 来配置集群名称。  
 
 ### 镜像版本
 
@@ -162,19 +166,20 @@ beSpec:
 
 ### 集群拓扑
 
-在部署 Doris 集群前，需要根据业务规划集群的拓扑结构。可以通过修改 spec.{feSpec|beSpec}.replicas 配置各个组件的节点数。基于生产节点的数据高可用原则，Doris Operator 规定集群中 Kubernetes 集群中至少有 3 个节点。同时，为了保证集群的可用性，建议至少部署 3 个 FE 与 BE 节点。
+在部署 Doris 集群前，需要根据业务规划集群的拓扑结构。可以通过修改 `spec.{feSpec|beSpec}.replicas` 配置各个组件的节点数。为了高可用性和容错性，建议至少部署 3 个 FE 与 BE 节点，但具体节点数取决于业务需求和资源限制。  
 
 ### 服务配置
 
-Kubernetes 提供不同的 Serivce 方式暴露 Doris 的对外访问接口，如 `ClusterIP`、`NodePort`、`LoadBalancer` 等。
+Kubernetes 提供不同的 Service 方式暴露 Doris 的对外访问接口，如 `ClusterIP`、`NodePort`、`LoadBalancer` 等。
 
 **ClusterIP**
 
-ClusterIP 类型的 service 会在集群内部创建虚拟 IP。通过 ClusterIP 只能在 Kubernetes 集群内访问，对外不可见。在 Doris Custom Resource 中，默认使用 ClusterIP 类型的 Service。
+ClusterIP 类型的 Service 会在集群内部创建虚拟 IP。通过 ClusterIP 只能在 Kubernetes 集群内访问，对外不可见。在 Doris Custom Resource 中，默认使用 ClusterIP 类型的 Service。
 
 **NodePort**
 
-在没有 LoadBalancer 时，可以通过 NodePort 暴露。NodePort 是通过节点的 IP 和静态端口暴露服务。通过请求 `NodeIP + NodePort`，可以从集群的外部访问一个 NodePort 服务。
+在没有 LoadBalancer 时，可以通过 NodePort 暴露服务。NodePort 是通过节点的 IP 和静态端口暴露服务。通过请求 `NodeIP + NodePort`，可以从集群的外部访问一个 NodePort 服务。  
+
 
 ```yaml
 ...
@@ -197,6 +202,7 @@ Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。Dori
 在 Doris Cluster 的 CR 中，提供 ConfigMapInfo 定义给各个组件挂载配置信息。ConfigMapInfo 包含两个变量：
 
 - ConfigMapName 表示想要使用的 ConfigMap 的名称
+
 - ResolveKey 表示对应的配置文件，FE 配置选择 fe.conf，BE 配置选择 be.conf
 
 ### FE ConfigMap
@@ -247,8 +253,11 @@ data:
 
 :::tip 提示
 在 ConfigMap 中使用 data 字段存储键值对。在上述 FE ConfigMap 中：
+
 - fe.conf 是键值对中的 key，使用 `|` 表示将保留后续字符串中的换行符和缩进
+
 - 后续配置为键值对中的 value，与 fe.conf 文件中的配置相同
+  
   在 data 字段中，由于使用了 `|` 符号保留后续字符串格式，后续的配置中需要保持两个空格缩进。
 :::
 
@@ -320,7 +329,9 @@ data:
 
 :::tip 提示
 在 ConfigMap 中使用 data 字段存储键值对。在上述 BE ConfigMap 中：
+
 - be.conf 是键值对中的 key，使用 `|` 表示将保留后续字符串中的换行符和缩进
+
 - 后续配置为键值对中的 value，与 be.conf 文件中的配置相同
   在 data 字段中，由于使用了 `|` 符号保留后续字符串格式，后续的配置中需要保持两个空格缩进。
 :::
@@ -376,9 +387,9 @@ data:
     ...
 ```
 
-其中，在 data 字段中存储了配置的键值对，在上例中存储了 key 分别为 be.conf 与 core-site.xml 的键值对。
+其中，在 Data 字段中存储了配置的键值对，在上例中存储了 Key 分别为 be.conf 与 core-site.xml 的键值对。
 
-在 data 字段中，需要满足以下的键值结构映射：
+在 Data 字段中，需要满足以下的键值结构映射：
 
 ```yaml
 data:
@@ -392,7 +403,7 @@ data:
 
 ### 为 BE 配置多盘存储
 
-Doris 支持为 BE 挂载多块 PV。通过配置 BE 参数 `storage_root_path` 可以指定 BE 使用多盘存储。在 Kubernetes 环境中，可以在 DorisCluster CR 中对 pv 进行映射，通过 ConfigMap 为 BE 配置 `storage_root_path` 参数。
+Doris 支持为 BE 挂载多块 PV。通过配置 BE 参数 `storage_root_path` 可以指定 BE 使用多盘存储。在 Kubernetes 环境中，可以在 DorisCluster CR 中对 PV 进行映射，通过 ConfigMap 为 BE 配置 `storage_root_path` 参数。
 
 **为 BE 多盘存储配置 pv 映射**
 
@@ -401,7 +412,7 @@ Doris 支持为 BE 挂载多块 PV。通过配置 BE 参数 `storage_root_path` 
 - 通过 `configMapInfo` 配置可以标识使用相同 namespace 下的指定 ConfigMap，resolveKey 固定为 be.conf
 - 通过 `persistentVolumeClaimSpec` 可以为 BE 存储目录配置多个 pv 映射
 
-下例中为 BE 配置了两块盘的 pv  映射：
+下例中为 BE 配置了两块盘的 PV  映射：
 
 ```yaml
 ...
@@ -453,6 +464,7 @@ Doris 支持为 BE 挂载多块 PV。通过配置 BE 参数 `storage_root_path` 
 在上例中 Doris 集群指定了多盘存储
 
 - beSpec.persistentVolumes 以数组的方式指定了多块 pv，映射了 `/opt/apache-doris/be/storage{1,2}` 两个数据存储 pv
+
 - beSpec.configMapInfo 中指定了需要挂载名为 `be-configmap` 的 ConfigMap
 
 **配置 BE ConfigMap 指定 storage_root_path 参数**
@@ -500,7 +512,10 @@ data:
 ```
 
 :::caution 注意
+
 在创建 BE ConfigMap 时，需要注意以下事项：
+
 1. metadata.name 需要与 DorisCluster CR 中 beSpec.configMapInfo.configMapName 相同，表示该集群使用指定的 ConfigMap；
-2. ConfigMap 中的 storage_root_path 参数要与 DorisCluster CR 中的 persistentVolume 数据盘一一对应。
+
+2. ConfigMap 中的 `storage_root_path` 参数要与 DorisCluster CR 中的 persistentVolume 数据盘一一对应。
 :::

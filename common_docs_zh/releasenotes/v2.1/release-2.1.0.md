@@ -103,7 +103,7 @@ under the License.
 
 ![Local Shuffle Clickbench and TPCH-100](/images/2.1-doris-clickbench-tpch.png)
 
-:::note
+:::note 备注
 参考文档：[Pipeline X 执行引擎](https://doris.apache.org/zh-CN/docs/query-acceleration/pipeline-execution-engine)
 :::
 
@@ -144,6 +144,7 @@ under the License.
 - 演示 Demo: https://www.bilibili.com/video/BV1cS421A7kA/?spm_id_from=333.999.0.0
 
 - 参考文档：[SQL 方言兼容](https://doris.apache.org/zh-CN/docs/lakehouse/sql-dialect.md)
+
 :::
 
 ### 高速数据读取，数据传输效率提升 100 倍
@@ -301,7 +302,6 @@ CREATE MATERIALIZED VIEW mv1
 
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV1s2421T71z/?spm_id_from=333.999.0.0
-
 - 参考文档：[异步物化视图](https://doris.apache.org/zh-CN/docs/query-acceleration/materialized-view/async-materialized-view/overview)
 :::
 
@@ -407,6 +407,7 @@ PROPERTIES (
 :::
 
 :::note
+
 参考文档：[分区分桶](https://doris.apache.org/zh-CN/docs/table-design/data-partition)
 :::
 
@@ -470,6 +471,7 @@ MemTable 前移在 2.1 版本中默认开启，用户无需修改原有的导入
 - 演示 Demo：https://www.bilibili.com/video/BV1um411o7Ha/?spm_id_from=333.999.0.0
 
 - 参考文档和完整测试报告：[Group Commit](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/group-commit-manual)
+
 :::
 
 ## 半结构化数据分析
@@ -541,6 +543,7 @@ SELECT v["properties"]["title"] from ${table_name}
 - 演示 Demo: https://www.bilibili.com/video/BV13u4m1g7ra/?spm_id_from=333.999.0.0
 
 - 参考文档：[VARIANT](https://doris.apache.org/zh-CN/docs/sql-manual/sql-data-types/semi-structured/VARIANT.md)
+
 :::
 
 ### IP 数据类型 
@@ -555,6 +558,7 @@ SELECT v["properties"]["title"] from ${table_name}
 
 :::note
 参考文档：[IPV6](https://doris.apache.org/zh-CN/docs/sql-manual/sql-data-types/ip/IPV6)
+
 :::
 
 ### 复杂数据类型分析函数完善
@@ -695,8 +699,8 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1Fz421X7XE/?spm_id_from=333.999.0.0
-
 - 参考文档：[Workload Group](https://doris.apache.org/zh-CN/docs/admin-manual/resource-admin/workload-group.md)
+
 :::
 
 ### TopSQL
@@ -852,10 +856,10 @@ JOB e_daily
         FROM site_activity.sessions where create_time >=  days_add(now(),-1) ;
 ```
 
-:::caution
-注意事项
+:::caution 注意事项
 
 当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](https://doris.apache.org/zh-CN/docs/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+
 :::
 
 ## Behavior Changed
@@ -875,6 +879,7 @@ JOB e_daily
   - 对于之前已经安装过审计日志插件的用户，升级后可以继续使用原有插件，也可以通过 uninstall 命令卸载原有插件后，使用新的插件。但注意，切换插件后，审计日志表也将切换到新的表中。
 
   - 具体可参阅：[审计日志插件](https://doris.apache.org/zh-CN/docs/admin-manual/audit-plugin.md)
+
 
 
 
