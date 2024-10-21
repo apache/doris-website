@@ -32,7 +32,8 @@ under the License.
 
 将value的值转换为二进制的形式，返回指定位置pos的值，pos从0开始，从右到左。
 如果pos 有多个值，则将多个pos位置上的值用与运算符结合起来，返回最终结果。
-整数范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
+如果pos 的取值为负数或者超过value的bit位总数，则会返回结果为0.
+整数value范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
 ### example
 
@@ -42,6 +43,13 @@ mysql [(none)]>SELECT bit_test(43, 1);
 +-----------------+
 |               1 |
 +-----------------+
+
+mysql [(none)]>select bit_test(43,-1);
++------------------+
+| bit_test(43, -1) |
++------------------+
+|                0 |
++------------------+
 
 mysql [(none)]>SELECT bit_test(43, 0, 1, 3, 5,2);
 +-----------------------------+

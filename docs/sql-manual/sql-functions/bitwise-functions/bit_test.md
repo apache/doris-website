@@ -28,9 +28,11 @@ under the License.
 ### description
 #### Syntax
 
-`bit_test(Integer-type lhs, Integer-type rhs, '......')`
+`bit_test(Integer-type value, Integer-type pos, '......')`
 
-"Convert the value of 'value' into binary form and return the value at the specified position 'pos', where 'pos' starts from 0 and goes from right to left. If there are multiple values for 'pos', combine the values at multiple 'pos' positions using the AND operator and return the final result. Integer ranges: TINYINT, SMALLINT, INT, BIGINT, LARGEINT."
+"Convert the value of 'value' into binary form and return the value at the specified position 'pos', where 'pos' starts from 0 and goes from right to left. If there are multiple values for 'pos', combine the values at multiple 'pos' positions using the AND operator and return the final result. 
+If the value of pos is negative or exceeds the total number of bits in value, the result will be 0.
+Integer value ranges: TINYINT, SMALLINT, INT, BIGINT, LARGEINT."
 
 ### example
 
@@ -42,6 +44,13 @@ mysql [(none)]>SELECT bit_test(43, 1);
 +-----------------+
 |               1 |
 +-----------------+
+
+mysql [(none)]>select bit_test(43,-1);
++------------------+
+| bit_test(43, -1) |
++------------------+
+|                0 |
++------------------+
 
 mysql [(none)]>SELECT bit_test(43, 0, 1, 3, 5,2);
 +-----------------------------+
