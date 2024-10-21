@@ -243,47 +243,6 @@ PARTITION BY RANGE(`date`)
 )
 ```
 
-- `BATCH RANGE`: This method batch creates partitions based on ranges of number or time, defining the partitions as left-closed, right-open intervals and setting the step size.
-
-```sql
-PARTITION BY RANGE(int_col)                                                                                                                                                                                                            
-(                                                                                                                                                                                                                                      
-    FROM (start_num) TO (end_num) INTERVAL interval_value                                                                                                                                                                                                   
-)
-
-PARTITION BY RANGE(date_col)                                                                                                                                                                                                            
-(                                                                                                                                                                                                                                      
-    FROM ("start_date") TO ("end_date") INTERVAL num YEAR | num MONTH | num WEEK | num DAY ｜ 1 HOUR                                                                                                                                                                                                   
-)                                                                                                                                                                                                                                    
-```
-
-For example: 
-
-```sql
-PARTITION BY RANGE(age)
-(
-    FROM (1) TO (100) INTERVAL 10
-)
-
-PARTITION BY RANGE(`date`)
-(
-    FROM ("2000-11-14") TO ("2021-11-14") INTERVAL 2 YEAR
-)
-```
-
-- `MULTI RANGE`: This method batch creates partitions based on range partitioning, defining the partitions as left-closed, right-open intervals. For example:
-
-```sql
-PARTITION BY RANGE(col)                                                                                                                                                                                                                
-(                                                                                                                                                                                                                                      
-   FROM ("2000-11-14") TO ("2021-11-14") INTERVAL 1 YEAR,                                                                                                                                                                              
-   FROM ("2021-11-14") TO ("2022-11-14") INTERVAL 1 MONTH,                                                                                                                                                                             
-   FROM ("2022-11-14") TO ("2023-01-03") INTERVAL 1 WEEK,                                                                                                                                                                              
-   FROM ("2023-01-03") TO ("2023-01-14") INTERVAL 1 DAY,
-   PARTITION p_20230114 VALUES [('2023-01-14'), ('2023-01-15'))                                                                                                                                                                                
-)                                                                                                                                                                                                                                      
-```
-
 ### LIST partitioning
 
 Partition columns based on LIST partitioning support data types such as `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, and `VARCHAR`. Partition values are enumerated values. Only when the data is one of the enumerated values of the target partition, the partition can be hit.
