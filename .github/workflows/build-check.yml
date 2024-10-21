@@ -95,7 +95,7 @@ jobs:
                 python-version: '3.9'
             
             - name: Run Python script with all commit SHAs
-              run: python check_move.py "${{ github.event.pull_request.head.sha }}"
+              run: python check_move.py "${{ github.sha }}"
         
             - name: Check exit code
               run: |
