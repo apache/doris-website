@@ -30,9 +30,11 @@ under the License.
 
 `INT HOUR(DATETIME date)`
 
-Returns hour information in the time type, ranging from 0,23
+Retrieves the hour information from a date.
 
-The parameter is Date or Datetime type
+The parameter can be of type Date, DateTime, or Time.
+
+When the parameter is of type Date or DateTime, the return value ranges from 0 to 23. When the parameter is of type Time, the return value can exceed 24.
 
 ### example
 
@@ -43,6 +45,12 @@ mysql> select hour('2018-12-31 23:59:59');
 +-----------------------------+
 |                          23 |
 +-----------------------------+
+mysql> select cast(4562632 as time),hour(cast(4562632 as time)), minute(cast(4562632 as time)),second(cast(4562632 as time));
++-----------------------+-----------------------------+-------------------------------+-------------------------------+
+| cast(4562632 as TIME) | hour(cast(4562632 as TIME)) | minute(cast(4562632 as TIME)) | second(cast(4562632 as TIME)) |
++-----------------------+-----------------------------+-------------------------------+-------------------------------+
+| 456:26:32             |                         456 |                            26 |                            32 |
++-----------------------+-----------------------------+-------------------------------+-------------------------------+
 ```
 ### keywords
     HOUR
