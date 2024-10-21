@@ -45,6 +45,7 @@ Flag 值说明如下：
 | 2    | BITMAP32，32 位bitmap 对应java 中类型为 `org.roaringbitmap.RoaringBitmap` C++ 中类型为`roaring::Roaring`， 后面data 为roaring::Roaring 序列后的结构， 可以使用java 中的 `org.roaringbitmap.RoaringBitmap`  或c++中`roaring::Roaring` 直接反序列化 |
 | 3    | SINGLE64 ,bitmap 中只有一个64位无符号整型值，后面8个字节表示64位无符号整型值 |
 | 4    | BITMAP64, 64 位bitmap 对应java 中类型为 `org.roaringbitmap.RoaringBitmap;` c++ 中类型为doris 中的`Roaring64Map`，数据结构和 roaring 库中的结果一致，但是序列化和反序列话方法有所不同，后面会有1-8个字节的变长编码的uint64 的表述bitmap 中size。后面的数据是各式是多个 4个字节的高位表示和32位 roaring bitmap 序列化数据重复而成 |
+| 5    | SET, 当 bitmap 的值的个数在1和32之间时, 实际的存储类型是 hashset. 数据结构是: 一个字节代表值的个数, 后面跟着所有值（每个值的长度是8字节）。 |
 
 c++ 序列化和反序列化的示例 在 `be/src/util/bitmap_value.h` 的`BitmapValue::write()`   `BitmapValue::deserialize()`  方法中, Java示例在 `fe/fe-common/src/main/java/org/apache/doris/common/io/BitmapValue.java` 中的`serialize()` `deserialize()` 方法中。
 

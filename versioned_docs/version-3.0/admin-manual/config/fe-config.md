@@ -132,8 +132,8 @@ Default：DORIS_HOME_DIR + "/doris-meta"
 
 Type: string Description: Doris meta data will be saved here.The storage of this dir is highly recommended as to be:
 
-- High write performance (SSD)
-- Safe (RAID）
+* High write performance (SSD)
+* Safe (RAID）
 
 #### `catalog_try_lock_timeout_ms`
 
@@ -197,7 +197,7 @@ Default：SIMPLE_MAJORITY
 
 OPTION: ALL, NONE, SIMPLE_MAJORITY
 
-Replica ack policy of bdbje. more info, see: http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.ReplicaAckPolicy.html
+Replica ack policy of bdbje. more info, see: <http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.ReplicaAckPolicy.html>
 
 #### `replica_sync_policy`
 
@@ -213,7 +213,7 @@ Default：SYNC
 
 选项：SYNC, NO_SYNC, WRITE_NO_SYNC
 
-Master FE sync policy of bdbje. If you only deploy one Follower FE, set this to 'SYNC'. If you deploy more than 3 Follower FE,  you can set this and the following 'replica_sync_policy' to WRITE_NO_SYNC.  more info, see: http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.SyncPolicy.html
+Master FE sync policy of bdbje. If you only deploy one Follower FE, set this to 'SYNC'. If you deploy more than 3 Follower FE,  you can set this and the following 'replica_sync_policy' to WRITE_NO_SYNC.  more info, see: <http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.SyncPolicy.html>
 
 #### `bdbje_reserved_disk_bytes`
 
@@ -300,7 +300,7 @@ Is it a configuration item unique to the Master FE node: true
 
 Default：-1
 
-node(FE or BE) will be considered belonging to the same Palo cluster if they have same cluster id.  Cluster id is usually a random integer generated when master FE start at first time. You can also specify one.
+node(FE or BE) will be considered belonging to the same Doris cluster if they have same cluster id.  Cluster id is usually a random integer generated when master FE start at first time. You can also specify one.
 
 #### `heartbeat_mgr_blocking_queue_size`
 
@@ -885,7 +885,7 @@ MasterOnly：false
 
 This will limit the max recursion depth of hash distribution pruner.
 eg: where a in (5 elements) and b in (4 elements) and c in (3 elements) and d in (2 elements).
-a/b/c/d are distribution columns, so the recursion depth will be 5 * 4 * 3 * 2 = 120, larger than 100,
+a/b/c/d are distribution columns, so the recursion depth will be 5 *4* 3 * 2 = 120, larger than 100,
 So that distribution pruner will no work and just return all buckets.
 Increase the depth can support distribution pruning for more elements, but may cost more CPU.
 
@@ -898,11 +898,11 @@ IsMutable：true
 If set to true, Planner will try to select replica of tablet on same host as this Frontend.
 This may reduce network transmission in following case:
 
--  N hosts with N Backends and N Frontends deployed.
+* N hosts with N Backends and N Frontends deployed.
 
--  The data has N replicas.
+* The data has N replicas.
 
--  High concurrency queries are evenly sent to all Frontends evenly
+* High concurrency queries are evenly sent to all Frontends evenly
 
 In this case, all Frontends can only use local replicas to do the query. If you want to allow fallback to non-local replicas when no local replicas available, set enable_local_replica_selection_fallback to true.
 
@@ -937,7 +937,6 @@ Used to define the serialization format for passing blocks between fragments.
 Sometimes some of our code changes will change the data format of the block. In order to make the BE compatible with each other during the rolling upgrade process, we need to issue a data version from the FE to decide what format to send the data in.
 
 Specifically, for example, there are 2 BEs in the cluster, one of which can support the latest $v_1$ after being upgraded, while the other only supports $v_0$. At this time, since the FE has not been upgraded yet, $v_0 is issued uniformly. $, BE interact in the old data format. After all BEs are upgraded, we will upgrade FE. At this time, the new FE will issue $v_1$, and the cluster will be uniformly switched to the new data format.
-
 
 The default value is `max_be_exec_version`. If there are special needs, we can manually set the format version to lower, but it should not be lower than `min_be_exec_version`.
 
@@ -991,8 +990,8 @@ Default: true
 
 This variable is a session variable, and the session level takes effect.
 
-- Type: boolean
-- Description: **Only for the table of the AGG model**, when the variable is true, when the user query contains aggregate functions such as count(distinct c1), if the type of the c1 column itself is bitmap, count distinct will be rewritten It is bitmap_union_count(c1). When the type of the c1 column itself is hll, count distinct will be rewritten as hll_union_agg(c1) If the variable is false, no overwriting occurs..
+* Type: boolean
+* Description: **Only for the table of the AGG model**, when the variable is true, when the user query contains aggregate functions such as count(distinct c1), if the type of the c1 column itself is bitmap, count distinct will be rewritten It is bitmap_union_count(c1). When the type of the c1 column itself is hll, count distinct will be rewritten as hll_union_agg(c1) If the variable is false, no overwriting occurs..
 
 ### Load And Export
 
@@ -1066,9 +1065,9 @@ MasterOnly：true
 
 if this is set to true
 
-- all pending load job will failed when call begin txn api
-- all prepare load job will failed when call commit txn api
-- all committed load job will waiting to be published
+* all pending load job will failed when call begin txn api
+* all prepare load job will failed when call commit txn api
+* all committed load job will waiting to be published
 
 #### `commit_timeout_second`
 
@@ -1468,25 +1467,6 @@ Default：5 （s）
 
 The load scheduler running interval. A load job will transfer its state from PENDING to LOADING to FINISHED.  The load scheduler will transfer load job from PENDING to LOADING while the txn callback will transfer load job from LOADING to FINISHED.  So a load job will cost at most one interval to finish when the concurrency has not reached the upper limit.
 
-#### `load_straggler_wait_second`
-
-Default：300
-
-IsMutable：true
-
-MasterOnly：true
-
-Maximal wait seconds for straggler node in load
-   eg.
-      there are 3 replicas A, B, C
-      load is already quorum finished(A,B) at t1 and C is not finished
-      if (current_time - t1) > 300s, then palo will treat C as a failure node
-      will call transaction manager to commit the transaction and tell transaction manager that C is failed
-
-This is also used when waiting for publish tasks
-
-**Note:** this parameter is the default value for all job and the DBA could specify it for separate job
-
 #### `label_keep_max_second`
 
 Default：`3 * 24 * 3600`  (3 day)
@@ -1663,8 +1643,8 @@ Default：DAY
 
 sys_log_roll_interval:
 
-- DAY:  log suffix is  yyyyMMdd
-- HOUR: log suffix is  yyyyMMddHH
+* DAY:  log suffix is  yyyyMMdd
+* HOUR: log suffix is  yyyyMMddHH
 
 #### `sys_log_delete_age`
 
@@ -1674,10 +1654,10 @@ default is 7 days, if log's last modify time is 7 days ago, it will be deleted.
 
 support format:
 
-- 7d      7 day
-- 10h     10 hours
-- 60m     60 min
-- 120s    120 seconds
+* 7d      7 day
+* 10h     10 hours
+* 60m     60 min
+* 120s    120 seconds
 
 #### `sys_log_roll_mode`
 
@@ -1731,10 +1711,10 @@ Default：30d
 default is 30 days, if log's last modify time is 30 days ago, it will be deleted.
 
 support format:
-- 7d      7 day
-- 10h     10 hours
-- 60m     60 min
-- 120s    120 seconds
+* 7d      7 day
+* 10h     10 hours
+* 60m     60 min
+* 120s    120 seconds
 
 #### `audit_log_enable_compress`
 
@@ -2016,7 +1996,7 @@ Only for Master FE: true
 The relocation of a colocation group may involve a large number of tablets moving within the cluster. Therefore, we should use a more conservative strategy to avoid relocation of colocation groups as much as possible.
 Relocation usually occurs after a BE node goes offline or goes down. This parameter is used to delay the determination of BE node unavailability. The default is 30 minutes, i.e., if a BE node recovers within 30 minutes, relocation of the colocation group will not be triggered.
 
-####` allow_replica_on_same_host`
+#### `allow_replica_on_same_host`
 
 Default: false
 
@@ -2098,10 +2078,10 @@ MasterOnly：true
 
 the factor of delay time before deciding to repair tablet.
 
--  if priority is VERY_HIGH, repair it immediately.
--  HIGH, delay tablet_repair_delay_factor_second * 1;
--  NORMAL: delay tablet_repair_delay_factor_second * 2;
--  LOW: delay tablet_repair_delay_factor_second * 3;
+* if priority is VERY_HIGH, repair it immediately.
+* HIGH, delay tablet_repair_delay_factor_second * 1;
+* NORMAL: delay tablet_repair_delay_factor_second * 2;
+* LOW: delay tablet_repair_delay_factor_second * 3;
 
 #### `tablet_stat_update_interval_second`
 
@@ -2161,7 +2141,6 @@ After dropping database(table/partition), you can recover it by using RECOVER st
 
 #### `storage_cooldown_second`
 
-
 Default：`30 * 24 * 3600L`  （30 day）
 
 When create a table(or partition), you can specify its storage medium(HDD or SSD). If set to SSD, this specifies the default duration that tablets will stay on SSD.  After that, tablets will be moved to HDD automatically.  You can set storage cooldown time in CREATE TABLE stmt.
@@ -2174,7 +2153,7 @@ When create a table(or partition), you can specify its storage medium(HDD or SSD
 
 #### `enable_storage_policy`
 
-- Whether to enable the Storage Policy feature. This config allows users to separate hot and cold data.
+* Whether to enable the Storage Policy feature. This config allows users to separate hot and cold data.
 Default: false
 
 Is it possible to dynamically configure: true
@@ -2241,7 +2220,7 @@ Maximal waiting time for creating a single replica.
 
 eg.
    if you create a table with #m tablets and #n replicas for each tablet,
-   the create table request will run at most (m * n * tablet_create_timeout_second) before timeout.
+   the create table request will run at most (m *n* tablet_create_timeout_second) before timeout.
 
 #### `tablet_delete_timeout_second`
 
@@ -2717,7 +2696,6 @@ If false, when select from tables in information_schema database,
 the result will not contain the information of the table in external catalog.
 This is to avoid query time when external catalog is not reachable.
 
-
 #### `enable_query_hit_stats`
 
 Default: false
@@ -2758,3 +2736,29 @@ To ensure compatibility with the MySQL ecosystem, Doris includes a built-in data
 Default value: 2000
 
 For auto-partitioned tables to prevent users from accidentally creating a large number of partitions, the number of partitions allowed per OLAP table is `max_auto_partition_num`. Default 2000.
+
+#### `profile_manager_gc_interval_seconds`
+
+Default value: 1
+
+Used to control the interval at which ProfileManager performs profile garbage collection. During garbage collection, ProfileManager purges excess and expired profiles from memory and disk to save memory.
+
+### Compute and Storage Disaggregated Mode
+
+#### `cluster_id`
+
+Default：-1
+
+node(FE or BE) will be considered belonging to the same Doris cluster if they have same cluster id. You should specify one random int in compute and storage disaggregated mode.
+
+#### `deploy_mode`
+
+Default: ""
+
+Description:  The mode in which FE runs. `cloud` indicates the decoupled storage-compute mode.
+
+#### `meta_service_endpoint`
+
+Default: ""
+
+Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This configuration is necessary for the storage and compute disaggregated mode.

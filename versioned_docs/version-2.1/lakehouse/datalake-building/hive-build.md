@@ -154,7 +154,6 @@ For clusters upgraded from old versions, these variables may change.
 
     :::tip
 
-    对于某些默认开启 ACID 事务特性的 Hive 集群，使用 Doris 建表后，表属性 `transactional` 会为 true。而 Doris 只支持部分 Hive 事务表的特性，因此可能会导致 Doris 创建的 Hive，Doris 本身无法读取的问题。因此，需要在建表的属性中，显式增加：`"transactional" = "false"`，来创建非事务的 Hive 表：
     For some Hive clusters that enable ACID transaction features by default, after using Doris to create a table, the table attribute `transactional` will be true. However, Doris only supports some features of Hive transaction tables, which may cause the problem that Doris itself cannot read the Hive created by Doris. Therefore, it is necessary to explicitly add: `"transactional" = "false"` in the table creation properties to create a non-transactional Hive table:
 
     ```
@@ -215,8 +214,8 @@ For clusters upgraded from old versions, these variables may change.
 
 - Compression Formats
 
-    - Parquet: snappy(default), zlib, zstd
-    - ORC: snappy, zlib(default), zstd
+    - Parquet: snappy(default), zstd, plain. (plain means no compression is used.)
+    - ORC: snappy, zlib(default), zstd, plain. (plain means no compression is used.)
 
 - Storage Medium
 
@@ -273,14 +272,10 @@ CREATE TABLE hive.hive_db.hive_ctas (col1,col2,pt1) ENGINE=hive
 PARTITION BY LIST (pt1) ()
 PROPERTIES (
 "file_format"="parquet",
-"parquet.compression"="zstd"
+"compression"="zstd"
 )
 AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 ```
-
-## Exception Data and Data Transformation
-
-TODO
 
 ## Transaction Mechanism
 
@@ -372,10 +367,6 @@ Below, we describe the file operations in various cases.
         3. The temporary partition directory is deleted.
 
 ## Relevant Parameters
-
-### FE
-
-TODO
 
 ### BE
 

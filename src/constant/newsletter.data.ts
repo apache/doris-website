@@ -1,10 +1,10 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Release Note'],
-        title: "Apache Doris version 2.1.6 just released",
-        content: `This version brings continuous upgrades and improvements to the Lakehouse, Async Materialized Views, and Semi-Structured Data Management.`,
-        to: '/blog/release-note-2.1.6',
-        image: '2.1.6.jpg',
+        title: "New milestone: Apache Doris 3.0 has been released",
+        content: `Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode inaddition to the compute-storage mode for cluster deployment. `,
+        to: '/blog/release-note-3.0.0',
+        image: '3.0.0.jpeg',
     },
     {
         tags: ['Best Practice'],
@@ -13,6 +13,7 @@ export const NEWSLETTER_DATA = [
         to: '/blog/real-time-data-warehouse-in-TikTok-based-on-doris',
         image: 'real-time-data-warehouse-in-tiktok-based-on-apache-doris.png',
     },
+
     {
         tags: ['Top News'],
         title: "How AI unicorn MiniMax migrated from Loki and built a PB-scale logging system with Apache Doris",

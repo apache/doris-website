@@ -171,7 +171,7 @@ properties("replication_num" = "1");
 Importing gh_2022-11-07-3.json, which contains one hour's worth of GitHub events data.
 
 ``` shell
-wget http://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/variant/gh_2022-11-07-3.json
+wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/variant/gh_2022-11-07-3.json
 
 curl --location-trusted -u root:  -T gh_2022-11-07-3.json -H "read_json_by_line:true" -H "format:json"  http://127.0.0.1:18148/api/test_variant/github_events/_strea
 m_load
@@ -300,9 +300,10 @@ mysql> SELECT
 2. Retrieve the count of comments containing "doris".
 
 ``` sql
+-- implicit cast `payload['comment']['body']` to string type
 mysql> SELECT
     ->     count() FROM github_events
-    ->     WHERE cast(payload['comment']['body'] as text) MATCH 'doris';
+    ->     WHERE payload['comment']['body'] MATCH 'doris';
 +---------+
 | count() |
 +---------+
@@ -359,6 +360,10 @@ When the above types cannot be compatible, they will be transformed into JSON ty
 - Arrays with dimensions of 2 or higher will be stored as JSONB encoding, which might perform less efficiently than native arrays.
 - Not supported as primary or sort keys.
 - Queries with filters or aggregations require casting. The storage layer eliminates cast operations based on storage type and the target type of the cast, speeding up queries. 
+
+### FAQ
+1.Streamload Error: [CANCELLED][INTERNAL_ERROR] tablet error: [DATA_QUALITY_ERROR] Reached max column size limit 2048.
+Due to compaction and metadata storage limitations, the VARIANT type imposes a limit on the number of columns, with the default being 2048 columns. You can adjust the BE configuration `variant_max_merged_tablet_schema_size` accordingly, but it is not recommended to exceed 4096 columns.
 
 ### Keywords
 

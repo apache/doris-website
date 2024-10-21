@@ -29,13 +29,17 @@ under the License.
 
 - Hive/Iceberg/Hudi等，可以使用Multi-Catalog来映射为外表，然后使用Insert Into，来将数据导入
 
-- 也可以从原来 AP 系统中到处数据为 CSV 等数据格式，然后再将导出的数据导入到 Doris
+- 也可以从原来 AP 系统中导出数据为 CSV 等数据格式，然后再将导出的数据导入到 Doris
 
 - 可以使用 Spark / Flink 系统，利用 AP 系统的 Connector 来读取数据，然后调用 Doris Connector 写入 Doris
 
 除了以上三种方式，[SelectDB](https://www.selectdb.com/tools/x2doris) 提供了免费的可视化的数据迁移工具 X2Doris。
 
-X2Doris 是 SelectDB 开发的，专门用于将各种离线数据迁移到 Apache Doris 中的核心工具，该工具集 `自动建 Doris 表` 和 `数据迁移` 为一体，目前支持了 Apache Doris/Hive/Kudu、StarRocks 数据库往 Doris 迁移的工作，整个过程可视化的平台操作，非常简单易用，减轻数据同步到 Doris 中的门槛。
+X2Doris 专门用于将各种离线数据迁移到 Apache Doris 中的核心工具，该工具集 `自动建 Doris 表` 和 `数据迁移` 为一体，目前支持了 Apache Doris/Hive/Kudu、StarRocks 数据库往 Doris 迁移的工作，整个过程可视化的平台操作，非常简单易用，减轻数据同步到 Doris 中的门槛。
+
+:::info NOTE
+X2Doris 并非由 Apache Doris 维护或认可，这些工作由 Committers 和 Doris PMC 监督。使用这些资源和服务完全由您自行决定，社区不负责验证这些工具的许可或有效性。
+:::
 
 ## X2Doris 核心特性
 
@@ -43,8 +47,7 @@ X2Doris 是 SelectDB 开发的，专门用于将各种离线数据迁移到 Apac
 
 定位于一站式数据迁移工具，X2Doris 目前已支持了 Apache Hive、Apache Kudu、StarRocks 以及 Apache Doris 自身作为数据源端，Greenplum、Druid 等更多数据源正在开发中，后续将陆续发布。其中 Hive 版本已支持 Hive 1.x 和 2.x 版本，Doris、StarRocks、Kudu 等数据源也同时支持了多个不同版本。
 
-目标端已支持 Apache Doris 和 SelectDB，包含 SelectDB Cloud 和 SelectDB Enterprise。基于 X2Doris 用户可以构建从其他 OLAP 系统到 Apache Doris 的整库迁移链路，并可以实现不同 Doris 集群间的数据备份和恢复。
-
+基于 X2Doris 用户可以构建从其他 OLAP 系统到 Apache Doris 的整库迁移链路，并可以实现不同 Doris 集群间的数据备份和恢复。
 
 ![X2Doris 核心特性](/images/x2doris.jpg)
 

@@ -134,12 +134,6 @@ When reading MySQL's TIMESTAMP type, add parameters to the JDBC URL: `connection
 
 ## Query optimization
 
-### Statistics
-
-Doris maintains table statistics in the Catalog so that it can better optimize query plans when executing queries.
-
-See [external-statistics](../external-statistics) to learn how to collect statistics.
-
 ### Predicate pushdown
 
 1. When executing a query like `where dt = '2022-01-01'`, Doris can push these filtering conditions down to the external data source, thereby directly excluding data that does not meet the conditions at the data source level, reducing unnecessary data acquisition and transmission. This greatly improves query performance while also reducing the load on external data sources.

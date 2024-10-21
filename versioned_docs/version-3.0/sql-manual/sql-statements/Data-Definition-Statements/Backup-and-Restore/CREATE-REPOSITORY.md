@@ -126,7 +126,7 @@ PROPERTIES
 ```
 6. Create a repository named minio_repo to link minio storage directly through the s3 protocol.
 
-```
+```sql
 CREATE REPOSITORY `minio_repo`
 WITH S3
 ON LOCATION "s3://minio_repo"
@@ -135,7 +135,7 @@ PROPERTIES
     "s3.endpoint" = "http://minio.com",
     "s3.access_key" = "MINIO_USER",
     "s3.secret_key"="MINIO_PASSWORD",
-    "s3.region" = "REGION"
+    "s3.region" = "REGION",
     "use_path_style" = "true"
 );
 ```
@@ -143,7 +143,7 @@ PROPERTIES
 
 7. Create a repository named minio_repo via temporary security credentials.
 
-```
+```sql
 CREATE REPOSITORY `minio_repo`
 WITH S3
 ON LOCATION "s3://minio_repo"
@@ -157,9 +157,9 @@ PROPERTIES
 )
 ```
 
-1. Create repository using Tencent COS
+8. Create repository using Tencent COS
 
-```
+```sql
 CREATE REPOSITORY `cos_repo`
 WITH S3
 ON LOCATION "s3://backet1/"
@@ -174,7 +174,7 @@ PROPERTIES
 
 ### Keywords
 
-    CREATE, REPOSITORY
+CREATE, REPOSITORY
 
 ### Best Practice
 

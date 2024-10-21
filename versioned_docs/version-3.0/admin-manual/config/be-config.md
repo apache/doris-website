@@ -103,6 +103,12 @@ There are two ways to configure BE configuration items:
 
 ### Services
 
+#### `deploy_mode`
+
+* Type: string
+* Description:  The mode in which BE runs. `cloud` indicates the decoupled storage-compute mode.
+* Default value: ""
+
 #### `be_port`
 
 * Type: int32
@@ -224,7 +230,7 @@ There are two ways to configure BE configuration items:
 * Description: The timeout when establishing connection with external table such as ODBC table.
 * Default value: 5 seconds
 
-#### `status_report_interval`
+#### `pipeline_status_report_interval`
 
 * Description: Interval between profile reports
 * Default value: 5 seconds
@@ -326,34 +332,22 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 * Description:  When using the odbc external table, if a column type of the odbc source table is not HLL, CHAR or VARCHAR, and the length of the column value exceeds this value, the query will report an error 'column value length longer than buffer length'. You can increase this value
 * Default value: 100
 
-#### `jsonb_type_length_soft_limit_bytes`
-
-* Type: int32
-* Description: The soft limit of the maximum length of JSONB type.
-* Default value: 1,048,576
-
 ### Query
 
-#### `fragment_pool_queue_size`
+#### `fragment_mgr_asynic_work_pool_queue_size`
 
-* Description: The upper limit of query requests that can be processed on a single node
+* Description: The upper limit of asynic work that can be processed on a single node
 * Default value: 4096
 
-#### `fragment_pool_thread_num_min`
+#### `fragment_mgr_asynic_work_pool_thread_num_min`
 
-* Description: Query the number of threads. By default, the minimum number of threads is 64.
-* Default value: 64
+* Description: Number of threads to excute asynic work. By default, the minimum number of threads is 16.
+* Default value: 16
 
-#### `fragment_pool_thread_num_max`
+#### `fragment_mgr_asynic_work_pool_thread_num_max`
 
-* Description: Follow up query requests create threads dynamically, with a maximum of 512 threads created.
-* Default value: 2048
-
-#### `doris_scan_range_row_count`
-
-* Type: int32
-* Description: When BE performs data scanning, it will split the same scanning range into multiple ScanRanges. This parameter represents the scan data range of each ScanRange. This parameter can limit the time that a single OlapScanner occupies the io thread.
-* Default value: 524288
+* Description: Follow up asynic work create threads dynamically, with a maximum of 512 threads created.
+* Default value: 512
 
 #### `doris_scanner_row_num`
 
@@ -442,7 +436,7 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 * Default value: 10485760
 
 #### `max_base_compaction_threads`
-git 
+
 * Type: int32
 * Description: The maximum of thread number in base compaction thread pool, -1 means one thread per disk.
 * Default value: 4
@@ -575,13 +569,6 @@ BaseCompaction:546859:
 * Description: How many rounds of cumulative compaction for each round of base compaction when compaction tasks generation.
 * Default value: 9
 
-#### `cumulative_compaction_policy`
-
-* Type: string
-* Description: Configure the merge strategy in the cumulative compression phase. Currently, two merge strategies are implemented, num_based and size_based
-  - For details, "ordinary" is the initial version of the cumulative compression consolidation policy. After a cumulative compression, the base compression process is directly performed. size_The general policy is the optimized version of the ordinary policy. Version merging can only be performed when the disk volume of the rowset is the same order of magnitude. After merging, qualified rowsets are promoted to the base compaction stage. In the case of a large number of small batch imports, it can reduce the write magnification of base compact, balance the read magnification and space magnification, and reduce the data of file versions.
-* Default value: size_based
-
 #### `max_cumu_compaction_threads`
 
 * Type: int32
@@ -703,11 +690,6 @@ BaseCompaction:546859:
 
 * Description: The soft limit refers to the proportion of the load memory limit of a single node. For example, the load memory limit for all load tasks is 20GB, and the soft limit defaults to 50% of this value, that is, 10GB. When the load memory usage exceeds the soft limit, the job with the largest memory consumption will be selected to be flushed to release the memory space, the default is 50%
 * Default value: 50 (%)
-
-#### `routine_load_thread_pool_size`
-
-* Description: The thread pool size of the routine load task. This should be greater than the FE configuration'max_concurrent_task_num_per_be'
-* Default value: 10
 
 #### `slave_replica_writer_rpc_timeout_sec`
 
@@ -843,21 +825,6 @@ BaseCompaction:546859:
 * Description: The number of threads used to refresh the memory table per store
 * Default value: 2
 
-#### `num_threads_per_core`
-
-* Description: Control the number of threads that each core runs. Usually choose 2 times or 3 times the number of cores. This keeps the core busy without causing excessive jitter
-* Default value: 3
-
-#### `num_threads_per_disk`
-
-* Description: The maximum number of threads per disk is also the maximum queue depth of each disk
-* Default value: 0
-
-#### `number_slave_replica_download_threads`
-
-* Description: Number of threads for slave replica synchronize data, used for single replica load.
-* Default value: 64
-
 #### `publish_version_worker_count`
 
 * Description: the count of thread to publish version
@@ -897,29 +864,6 @@ BaseCompaction:546859:
 
 ### Memory
 
-#### `disable_mem_pools`
-
-* Type: bool
-* Description: Whether to disable the memory cache pool.
-* Default value: false
-
-#### `buffer_pool_clean_pages_limit`
-
-* Description: Clean up pages that may be saved by the buffer pool
-* Default value: 50%
-
-#### `buffer_pool_limit`
-
-* Type: string
-* Description: The largest allocatable memory of the buffer pool
-  - The maximum amount of memory available in the BE buffer pool. The buffer pool is a new memory management structure of BE, which manages the memory by the buffer page and enables spill data to disk. The memory for all concurrent queries will be allocated from the buffer pool. The current buffer pool only works on **AggregationNode** and **ExchangeNode**.
-* Default value: 20%
-
-#### `chunk_reserved_bytes_limit`
-
-* Description: The reserved bytes limit of Chunk Allocator, usually set as a percentage of mem_limit. defaults to bytes if no unit is given, the number of bytes must be a multiple of 2. must larger than 0. and if larger than physical memory size, it will be set to physical memory size. increase this variable can improve performance, but will acquire more free memory which can not be used by other modules.
-* Default value: 20%
-
 #### `madvise_huge_pages`
 
 * Type: bool
@@ -952,12 +896,6 @@ BaseCompaction:546859:
 * Description: If the number of rows in a page is less than this value, no zonemap will be created to reduce data expansion
 * Default value: 20
 
-#### `enable_tcmalloc_hook`
-
-* Type: bool
-* Description: Whether Hook TCmalloc new/delete, currently consume/release tls mem tracker in Hook.
-* Default value: true
-
 #### `memory_mode`
 
 * Type: string
@@ -980,11 +918,6 @@ BaseCompaction:546859:
 * Type: int32
 * Description: The minimum length of TCMalloc Hook when consume/release MemTracker. Consume size smaller than this value will continue to accumulate to avoid frequent calls to consume/release of MemTracker. Decreasing this value will increase the frequency of consume/release. Increasing this value will cause MemTracker statistics to be inaccurate. Theoretically, the statistical value of a MemTracker differs from the true value = ( mem_tracker_consume_min_size_bytes * the number of BE threads where the MemTracker is located).
 * Default value: 1,048,576
-
-#### `cache_clean_interval`
-
-* Description: File handle cache cleaning interval, used to clean up file handles that have not been used for a long time.Also the clean interval of Segment Cache.
-* Default value: 1800 (s)
 
 #### `min_buffer_size`
 
@@ -1010,43 +943,6 @@ BaseCompaction:546859:
 * Description: Type of cache file.`whole_file_cache`: download the entire segment file, `sub_file_cache`: the segment file is divided into multiple files by size. if set "", no cache, please set this parameter when caching is required.
 * Default value: ""
 
-#### `file_cache_alive_time_sec`
-
-* Type: int64
-* Description: Save time of cache file
-* Default value: 604800 (1 week)
-
-#### `file_cache_max_size_per_disk`
-
-* Type: int64
-* Description: The cache occupies the disk size. Once this setting is exceeded, the cache that has not been accessed for the longest time will be deleted. If it is 0, the size is not limited. unit is bytes.
-* Default value: 0
-
-#### `max_sub_cache_file_size`
-
-* Type: int64
-* Description: Cache files using sub_ file_ The maximum size of the split file during cache
-* Default value: 104857600 (100MB)
-
-#### `download_cache_thread_pool_thread_num`
-
-* Type: int32
-* Description: The number of threads in the DownloadCache thread pool. In the download cache task of FileCache, the download cache operation will be submitted to the thread pool as a thread task and wait to be scheduled. This parameter determines the size of the DownloadCache thread pool.
-* Default value: 48
-
-
-#### `download_cache_thread_pool_queue_size`
-
-* Type: int32
-* Description: The number of threads in the DownloadCache thread pool. In the download cache task of FileCache, the download cache operation will be submitted to the thread pool as a thread task and wait to be scheduled. After the number of submitted tasks exceeds the length of the thread pool queue, subsequent submitted tasks will be blocked until there is a empty slot in the queue.
-* Default value: 102400
-
-#### `generate_cache_cleaner_task_interval_sec`
-
-* Type：int64
-* Description: Cleaning interval of cache files, in seconds
-* Default: 43200 (12 hours)
-
 #### `path_gc_check`
 
 * Type：bool
@@ -1065,10 +961,6 @@ BaseCompaction:546859:
 #### `path_gc_check_step_interval_ms`
 
 * Default：10 (ms)
-
-#### `path_scan_interval_second`
-
-* Default：86400
 
 #### `scan_context_gc_interval_min`
 
@@ -1109,11 +1001,6 @@ BaseCompaction:546859:
 * Type: int32
 * Description: The storage engine allows the percentage of damaged hard disks to exist. After the damaged hard disk exceeds the changed ratio, BE will automatically exit.
 * Default value: 0
-
-#### `read_size`
-
-* Description: The read size is the read size sent to the os. There is a trade-off between latency and the whole process, getting to keep the disk busy but not introducing seeks. For 8 MB reads, random io and sequential io have similar performance.
-* Default value: 8388608
 
 #### `min_garbage_sweep_interval`
 
@@ -1211,11 +1098,6 @@ BaseCompaction:546859:
 * Description: Limit the number of versions of a single tablet. It is used to prevent a large number of version accumulation problems caused by too frequent import or untimely compaction. When the limit is exceeded, the import task will be rejected.
 * Default value: 2000
 
-#### `number_tablet_writer_threads`
-
-* Description: Number of tablet write threads
-* Default value: 16
-
 #### `tablet_map_shard_size`
 
 * Description: tablet_map_lock fragment size, the value is 2^n, n=0,1,2,3,4, this is for better tablet management
@@ -1231,15 +1113,10 @@ BaseCompaction:546859:
 * Description: The minimum number of Rowsets for storing TabletMeta Checkpoints
 * Default value: 10
 
-#### `tablet_stat_cache_update_interval_second`
-
-* Description: Update interval of tablet state cache
-* Default value:300 (s)
-
 #### `tablet_rowset_stale_sweep_time_sec`
 
 * Type: int64
-* Description: It is used to control the expiration time of cleaning up the merged rowset version. When the current time now() minus the max created rowset‘s create time in a version path is greater than tablet_rowset_stale_sweep_time_sec, the current path is cleaned up and these merged rowsets are deleted, the unit is second.
+* Description: It is used to control the expiration time of cleaning up the merged rowset version. When the current time now() minus the max created rowset's create time in a version path is greater than tablet_rowset_stale_sweep_time_sec, the current path is cleaned up and these merged rowsets are deleted, the unit is second.
   - When writing is too frequent, Fe may not be able to query the merged version, resulting in a query -230 error. This problem can be avoided by increasing this parameter.
 * Default value: 300
 
@@ -1301,12 +1178,6 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: Snapshot file cleaning interval.
 * Default value:172800 (48 hours)
 
-#### `compress_rowbatches`
-
-* Type: bool
-* Description: enable to use Snappy compression algorithm for data compression when serializing RowBatch
-* Default value: true
-
 ### Log
 
 #### `sys_log_dir`
@@ -1360,7 +1231,7 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: The log flushing strategy is kept in memory by default
 * Default value: empty
 
-### Else
+### Others
 
 #### `report_tablet_interval_seconds`
 
@@ -1411,11 +1282,6 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 * Description: Minimum download speed
 * Default value: 50 (KB/s)
-
-#### `doris_cgroups`
-
-* Description: Cgroups assigned to doris
-* Default value: empty
 
 #### `priority_queue_remaining_tasks_increased_frequency`
 
@@ -1471,7 +1337,27 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: The `max_filter_ratio` limit can only work if the total rows of `group commit` is less than this value. See [Group Commit](../../data-operate/import/group-commit-manual.md) for more details
 * Default: 10000
 
-#### `default_tzfiles_path`
+### Compute and Storage Disaggregated Mode
 
-* Description: Doris comes with its own time zone database. If the time zone file is not found in the system directory, the data in that directory is enabled.
-* Default: "${DORIS_HOME}/zoneinfo"
+#### `deploy_mode`
+
+* Default: ""
+
+* Description:  The mode in which BE runs. `cloud` indicates the decoupled storage-compute mode.
+
+#### `meta_service_endpoint`
+
+Default: ""
+
+* Description: Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This value is usually delivered by the FE to the BE by the heartbeat, no need to configure.
+
+#### `enable_file_cache`
+
+Default: true for cloud mode, false for non-cloud mode.
+* Description: Whether to use file cache.
+
+#### `file_cache_path`
+
+Default: [{"path":"${DORIS_HOME}/file_cache"}]
+* Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
+* format: [{"path":"/path/to/file_cache","total_size":21474836480,{"path":"/path/to/file_cache2","total_size":21474836480}]

@@ -32,7 +32,19 @@ To migrate data from other OLAP systems to Doris, you have a variety of options:
 
 - You can also leverage the connectors of the OLAP systems, use tools like Spark / Flink, and then call the corresponding Doris Connector to write data into Doris.
 
-In addition to the above methods, [VeloDB](https://www.velodb.io), the commercial supporter of Apache Doris, provides a free visual data migration tool: X2Doris. Developed by VeloDB, X2Doris is designed to migrate various offline data into Apache Doris. It combines the funtionalities of automatic table creation and data migration. Currently, it supports migrating data to Doris from databases including Apache Doris/Hive/Kudu and StarRocks. The entire process is performed through a visual platform, making data migration simple and easy.
+The following third-party migration tools are also available:
+
+- [X2Doris](https://www.velodb.io/download/tools).
+
+    X2Doris is a core tool specifically for migrating various offline data to Apache Doris. This tool integrates `automatic Doris table creation` and `data migration`. Currently, it supports the migration of data from Apache Doris/Hive/Kudu, and StarRocks databases to Doris. The entire process is visualized on a platform, making it very simple and easy to use, thereby lowering the threshold for synchronizing data to Doris.
+
+:::info NOTE
+All third-party tools are not maintained or endorsed by the Apache Doris, which is overseen by the Committers and the Doris PMC. Their use is entirely at your discretion, and the community is not responsible for verifying the licenses or validity of these tools.
+:::
+
+:::info NOTE
+If you know of the third-party migration tool for Doris that should be added to this list, please let us know at dev@doris.apache.org
+:::
 
 ## X2Doris
 
@@ -40,7 +52,7 @@ In addition to the above methods, [VeloDB](https://www.velodb.io), the commercia
 
 As a one-stop data migration tool, X2Doris supports Apache Hive, Apache Kudu, StarRocks, and Apache Doris itself as data source. What's more, there are more data sources such as Greenplum and Druid that are under development and will be released subsequently. Among them, the Hive version already supports Hive 1.x and 2.x, while Doris, StarRocks, Kudu, and other data sources also support multiple different versions.
 
-Now, X2Doris is supported migrating data to Apache Doris and VeloDB, including VeloDB Cloud and VeloDB Enterprise. With X2Doris, users can build a complete database migration link from other OLAP systems to Apache Doris, and can also achieve data backup and recovery between different Doris clusters.
+With X2Doris, users can build a complete database migration link from other OLAP systems to Apache Doris, and can also achieve data backup and recovery between different Doris clusters.
 
 ![x2doris-Support multiple data sources](/images/x2doris.jpg)
 

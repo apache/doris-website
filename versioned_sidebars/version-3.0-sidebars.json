@@ -32,6 +32,7 @@
                                     "label": "Compute-storage coupled",
                                     "items": [
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-operator",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-quickstart",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-access-cluster",
@@ -85,7 +86,19 @@
             "type": "category",
             "label": "Data Table Design",
             "items": [
+                "table-design/overview",
                 "table-design/data-type",
+                {
+                    "type": "category",
+                    "label": "Table Indexes",
+                    "items": [
+                        "table-design/index/index-overview",
+                        "table-design/index/prefix-index",
+                        "table-design/index/inverted-index",
+                        "table-design/index/bloomfilter",
+                        "table-design/index/ngram-bloomfilter-index"
+                    ]
+                },
                 {
                     "type": "category",
                     "label": "Data Models",
@@ -101,17 +114,6 @@
                 "table-design/data-partition",
                 "table-design/schema-change",
                 "table-design/cold-hot-separation",
-                {
-                    "type": "category",
-                    "label": "Table Indexes",
-                    "items": [
-                        "table-design/index/index-overview",
-                        "table-design/index/prefix-index",
-                        "table-design/index/inverted-index",
-                        "table-design/index/bloomfilter",
-                        "table-design/index/ngram-bloomfilter-index"
-                    ]
-                },
                 "table-design/auto-increment",
                 "table-design/best-practice"
             ]
@@ -125,18 +127,23 @@
                     "label": "Loading Data",
                     "items": [
                         "data-operate/import/load-manual",
-                        "data-operate/import/stream-load-manual",
-                        "data-operate/import/broker-load-manual",
-                        "data-operate/import/routine-load-manual",
-                        "data-operate/import/insert-into-manual",
-                        "data-operate/import/mysql-load-manual",
-                        "data-operate/import/load-json-format",
-                        "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-atomicity",
+                        {
+                            "type": "category",
+                            "label": "Import Way",
+                            "items": [
+                                "data-operate/import/import-way/stream-load-manual",
+                                "data-operate/import/import-way/broker-load-manual",
+                                "data-operate/import/import-way/routine-load-manual",
+                                "data-operate/import/import-way/insert-into-manual",
+                                "data-operate/import/import-way/mysql-load-manual",
+                                "data-operate/import/import-way/group-commit-manual"
+                            ]
+                        },
+                        "data-operate/import/load-data-format",
+                        "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
-                        "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode"
+                        "data-operate/import/load-high-availability",
+                        "data-operate/import/migrate-data-from-other-olap"
                     ]
                 },
                 {
@@ -218,14 +225,6 @@
                 },
                 {
                     "type": "category",
-                    "label": "Pipeline Execution Engine",
-                    "items": [
-                        "query/pipeline/pipeline-execution-engine",
-                        "query/pipeline/pipeline-x-execution-engine"
-                    ]
-                },
-                {
-                    "type": "category",
                     "label": "Caches",
                     "items": [
                         "query/query-cache/query-cache",
@@ -261,6 +260,7 @@
                         "query/duplicate/using-hll"
                     ]
                 },
+                "query/pipeline/pipeline-execution-engine",
                 "query/high-concurrent-point-query",
                 "query/topn-query",
                 {
@@ -345,7 +345,7 @@
                 "compute-storage-decoupled/overview",
                 "compute-storage-decoupled/before-deployment",
                 "compute-storage-decoupled/compilation-and-deployment",
-                "compute-storage-decoupled/creating-cluster",
+                "compute-storage-decoupled/managing-storage-vault",
                 "compute-storage-decoupled/managing-compute-cluster",
                 "compute-storage-decoupled/file-cache",
                 "compute-storage-decoupled/meta-service-api"
@@ -383,8 +383,13 @@
                     "items": [
                         "admin-manual/resource-admin/workload-group",
                         "admin-manual/resource-admin/workload-policy",
-                        "admin-manual/resource-admin/workload-system-table",
-                        "admin-manual/resource-admin/multi-tenant"
+                        "admin-manual/resource-admin/workload-analysis",
+                        "admin-manual/resource-admin/multi-tenant",
+                        "admin-manual/resource-admin/workload-fusing",
+                        "admin-manual/resource-admin/use-workload-mem-limit",
+                        "admin-manual/resource-admin/use-workload-cpu-limit",
+                        "admin-manual/resource-admin/use-workload-local-io-limit",
+                        "admin-manual/resource-admin/use-workload-remote-io-limit"
                     ]
                 },
                 {
@@ -492,86 +497,92 @@
                 "admin-manual/audit-plugin",
                 {
                     "type": "category",
-                    "label": "FE OPEN API",
+                    "label": "OPEN API",
                     "items": [
-                        "admin-manual/fe/config-action",
-                        "admin-manual/fe/ha-action",
-                        "admin-manual/fe/hardware-info-action",
-                        "admin-manual/fe/help-action",
-                        "admin-manual/fe/log-action",
-                        "admin-manual/fe/login-action",
-                        "admin-manual/fe/logout-action",
-                        "admin-manual/fe/query-profile-action-controller",
-                        "admin-manual/fe/session-action",
-                        "admin-manual/fe/system-action",
-                        "admin-manual/fe/colocate-meta-action",
-                        "admin-manual/fe/meta-action",
-                        "admin-manual/fe/cluster-action",
-                        "admin-manual/fe/node-action",
-                        "admin-manual/fe/query-profile-action",
-                        "admin-manual/fe/backends-action",
-                        "admin-manual/fe/bootstrap-action",
-                        "admin-manual/fe/cancel-load-action",
-                        "admin-manual/fe/check-decommission-action",
-                        "admin-manual/fe/check-storage-type-action",
-                        "admin-manual/fe/connection-action",
-                        "admin-manual/fe/extra-basepath-action",
-                        "admin-manual/fe/fe-version-info-action",
-                        "admin-manual/fe/get-ddl-stmt-action",
-                        "admin-manual/fe/get-load-info-action",
-                        "admin-manual/fe/get-load-state",
-                        "admin-manual/fe/get-log-file-action",
-                        "admin-manual/fe/get-small-file",
-                        "admin-manual/fe/get-wal-size-action",
-                        "admin-manual/fe/health-action",
-                        "admin-manual/fe/meta-info-action",
-                        "admin-manual/fe/meta-replay-state-action",
-                        "admin-manual/fe/metrics-action",
-                        "admin-manual/fe/profile-action",
-                        "admin-manual/fe/query-detail-action",
-                        "admin-manual/fe/query-schema-action",
-                        "admin-manual/fe/query-stats-action",
-                        "admin-manual/fe/row-count-action",
-                        "admin-manual/fe/set-config-action",
-                        "admin-manual/fe/show-data-action",
-                        "admin-manual/fe/show-meta-info-action",
-                        "admin-manual/fe/show-proc-action",
-                        "admin-manual/fe/show-runtime-info-action",
-                        "admin-manual/fe/show-table-data-action",
-                        "admin-manual/fe/statement-execution-action",
-                        "admin-manual/fe/table-query-plan-action",
-                        "admin-manual/fe/table-row-count-action",
-                        "admin-manual/fe/table-schema-action",
-                        "admin-manual/fe/upload-action",
-                        "admin-manual/fe/import-action",
-                        "admin-manual/fe/meta-info-action-V2",
-                        "admin-manual/fe/debug-point-action",
-                        "admin-manual/fe/statistic-action"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "BE OPEN API",
-                    "items": [
-                        "admin-manual/be/check-rpc-channel",
-                        "admin-manual/be/reset-rpc-channel",
-                        "admin-manual/be/compaction-status",
-                        "admin-manual/be/compaction-run",
-                        "admin-manual/be/meta",
-                        "admin-manual/be/snapshot",
-                        "admin-manual/be/check-tablet-segment",
-                        "admin-manual/be/config",
-                        "admin-manual/be/metrics",
-                        "admin-manual/be/tablet-distribution",
-                        "admin-manual/be/tablet-migration",
-                        "admin-manual/be/tablet-info",
-                        "admin-manual/be/checksum",
-                        "admin-manual/be/download",
-                        "admin-manual/be/pad-rowset",
-                        "admin-manual/be/version-info",
-                        "admin-manual/be/health",
-                        "admin-manual/be/tablet-reload",
-                        "admin-manual/be/tablet-restore"
+                        "admin-manual/open-api/overview",
+                        {
+                            "type": "category",
+                            "label": "FE HTTP API",
+                            "items": [
+                                "admin-manual/open-api/fe-http/config-action",
+                                "admin-manual/open-api/fe-http/ha-action",
+                                "admin-manual/open-api/fe-http/hardware-info-action",
+                                "admin-manual/open-api/fe-http/help-action",
+                                "admin-manual/open-api/fe-http/log-action",
+                                "admin-manual/open-api/fe-http/login-action",
+                                "admin-manual/open-api/fe-http/logout-action",
+                                "admin-manual/open-api/fe-http/query-profile-action-controller",
+                                "admin-manual/open-api/fe-http/session-action",
+                                "admin-manual/open-api/fe-http/system-action",
+                                "admin-manual/open-api/fe-http/colocate-meta-action",
+                                "admin-manual/open-api/fe-http/meta-action",
+                                "admin-manual/open-api/fe-http/cluster-action",
+                                "admin-manual/open-api/fe-http/node-action",
+                                "admin-manual/open-api/fe-http/query-profile-action",
+                                "admin-manual/open-api/fe-http/backends-action",
+                                "admin-manual/open-api/fe-http/bootstrap-action",
+                                "admin-manual/open-api/fe-http/cancel-load-action",
+                                "admin-manual/open-api/fe-http/check-decommission-action",
+                                "admin-manual/open-api/fe-http/check-storage-type-action",
+                                "admin-manual/open-api/fe-http/connection-action",
+                                "admin-manual/open-api/fe-http/extra-basepath-action",
+                                "admin-manual/open-api/fe-http/fe-version-info-action",
+                                "admin-manual/open-api/fe-http/get-ddl-stmt-action",
+                                "admin-manual/open-api/fe-http/get-load-info-action",
+                                "admin-manual/open-api/fe-http/get-load-state",
+                                "admin-manual/open-api/fe-http/get-log-file-action",
+                                "admin-manual/open-api/fe-http/get-small-file",
+                                "admin-manual/open-api/fe-http/health-action",
+                                "admin-manual/open-api/fe-http/meta-info-action",
+                                "admin-manual/open-api/fe-http/meta-replay-state-action",
+                                "admin-manual/open-api/fe-http/metrics-action",
+                                "admin-manual/open-api/fe-http/profile-action",
+                                "admin-manual/open-api/fe-http/query-detail-action",
+                                "admin-manual/open-api/fe-http/query-schema-action",
+                                "admin-manual/open-api/fe-http/query-stats-action",
+                                "admin-manual/open-api/fe-http/row-count-action",
+                                "admin-manual/open-api/fe-http/set-config-action",
+                                "admin-manual/open-api/fe-http/show-data-action",
+                                "admin-manual/open-api/fe-http/show-meta-info-action",
+                                "admin-manual/open-api/fe-http/show-proc-action",
+                                "admin-manual/open-api/fe-http/show-runtime-info-action",
+                                "admin-manual/open-api/fe-http/show-table-data-action",
+                                "admin-manual/open-api/fe-http/statement-execution-action",
+                                "admin-manual/open-api/fe-http/table-query-plan-action",
+                                "admin-manual/open-api/fe-http/table-row-count-action",
+                                "admin-manual/open-api/fe-http/table-schema-action",
+                                "admin-manual/open-api/fe-http/upload-action",
+                                "admin-manual/open-api/fe-http/import-action",
+                                "admin-manual/open-api/fe-http/meta-info-action-V2",
+                                "admin-manual/open-api/fe-http/debug-point-action",
+                                "admin-manual/open-api/fe-http/statistic-action"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "BE HTTP API",
+                            "items": [
+                                "admin-manual/open-api/be-http/check-rpc-channel",
+                                "admin-manual/open-api/be-http/reset-rpc-channel",
+                                "admin-manual/open-api/be-http/compaction-status",
+                                "admin-manual/open-api/be-http/compaction-run",
+                                "admin-manual/open-api/be-http/meta",
+                                "admin-manual/open-api/be-http/snapshot",
+                                "admin-manual/open-api/be-http/check-tablet-segment",
+                                "admin-manual/open-api/be-http/config",
+                                "admin-manual/open-api/be-http/metrics",
+                                "admin-manual/open-api/be-http/tablet-distribution",
+                                "admin-manual/open-api/be-http/tablet-migration",
+                                "admin-manual/open-api/be-http/tablet-info",
+                                "admin-manual/open-api/be-http/checksum",
+                                "admin-manual/open-api/be-http/download",
+                                "admin-manual/open-api/be-http/pad-rowset",
+                                "admin-manual/open-api/be-http/version-info",
+                                "admin-manual/open-api/be-http/health",
+                                "admin-manual/open-api/be-http/tablet-reload",
+                                "admin-manual/open-api/be-http/tablet-restore"
+                            ]
+                        }
                     ]
                 },
                 "admin-manual/plugin-development-manual",
@@ -834,6 +845,7 @@
                                 "sql-manual/sql-functions/string-functions/from-base64",
                                 "sql-manual/sql-functions/string-functions/ascii",
                                 "sql-manual/sql-functions/string-functions/auto-partition-name",
+                                "sql-manual/sql-functions/string-functions/crc32",
                                 "sql-manual/sql-functions/string-functions/length",
                                 "sql-manual/sql-functions/string-functions/bit-length",
                                 "sql-manual/sql-functions/string-functions/char-length",
@@ -875,6 +887,7 @@
                                 "sql-manual/sql-functions/string-functions/split-by-string",
                                 "sql-manual/sql-functions/string-functions/substring-index",
                                 "sql-manual/sql-functions/string-functions/money-format",
+                                "sql-manual/sql-functions/string-functions/ngram-search",
                                 "sql-manual/sql-functions/string-functions/parse-url",
                                 "sql-manual/sql-functions/string-functions/quote",
                                 "sql-manual/sql-functions/string-functions/url-decode",
@@ -969,6 +982,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
+                                "sql-manual/sql-functions/aggregate-functions/linear-histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-and",
@@ -991,7 +1005,9 @@
                                 "sql-manual/sql-functions/aggregate-functions/regr_sxy",
                                 "sql-manual/sql-functions/aggregate-functions/regr_syy",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
-                                "sql-manual/sql-functions/aggregate-functions/sequence-count"
+                                "sql-manual/sql-functions/aggregate-functions/sequence-count",
+                                "sql-manual/sql-functions/aggregate-functions/kurt",
+                                "sql-manual/sql-functions/aggregate-functions/skew"
                             ]
                         },
                         {
@@ -1639,7 +1655,8 @@
                 "ecosystem/bi/powerbi",
                 "ecosystem/bi/tableau",
                 "ecosystem/bi/quicksight",
-                "ecosystem/bi/quickbi"
+                "ecosystem/bi/quickbi",
+                "ecosystem/bi/smartbi"
             ]
         }
     ],
@@ -1647,7 +1664,8 @@
         "faq/install-faq",
         "faq/data-faq",
         "faq/sql-faq",
-        "faq/lakehouse-faq"
+        "faq/lakehouse-faq",
+        "faq/bi-faq"
     ],
     "releasenotes": [
         "releasenotes/all-release",
@@ -1655,7 +1673,9 @@
             "type": "category",
             "label": "v3.0",
             "items": [
-                "releasenotes/v3.0/release-3.0.1"
+                "releasenotes/v3.0/release-3.0.0",
+                "releasenotes/v3.0/release-3.0.1",
+                "releasenotes/v3.0/release-3.0.2"
             ]
         },
         {
@@ -1675,6 +1695,7 @@
             "type": "category",
             "label": "v2.0",
             "items": [
+                "releasenotes/v2.0/release-2.0.15",
                 "releasenotes/v2.0/release-2.0.14",
                 "releasenotes/v2.0/release-2.0.13",
                 "releasenotes/v2.0/release-2.0.12",

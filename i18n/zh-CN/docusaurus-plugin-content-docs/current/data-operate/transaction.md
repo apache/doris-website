@@ -44,7 +44,7 @@ under the License.
 
 隐式事务是指用户在所执行的一条或多条SQL语句的前后，没有显式添加开启事务和提交事务的语句。
 
-在 Doris 中，除[Group Commit](import/group-commit-manual.md)外，每个导入语句在开始执行时都会开启一个事务，并且在该语句执行完成之后，自动提交该事务；或执行失败后，自动回滚该事务。每个查询或者 DDL 也是一个隐藏事务。
+在 Doris 中，除[Group Commit](import/import-way/group-commit-manual.md)外，每个导入语句在开始执行时都会开启一个事务，并且在该语句执行完成之后，自动提交该事务；或执行失败后，自动回滚该事务。每个查询或者 DDL 也是一个隐藏事务。
 
 ### 隔离级别
 Doris 当前支持的唯一隔离级别是 READ COMMITTED。在 READ COMMITTED 隔离级别下，语句只能看到在该语句开始执行之前已经提交的数据，它不会看到未提交的数据。
@@ -146,8 +146,6 @@ Query OK, 0 rows affected (1.02 sec)
 这种写入方式不仅可以实现写入的原子性，而且在 Doris 中，能提升 `INSERT INTO VALUES` 的写入性能。
 
 如果用户同时开启了 `Group Commit` 和事务写，事务写生效。
-
-也可以参考 [Insert Into](import/load-atomicity.md#insert-into)获取更多信息。 
 
 ### 多表多次`INSERT INTO SELECT`, `UPDATE`, `DELETE`写入
 

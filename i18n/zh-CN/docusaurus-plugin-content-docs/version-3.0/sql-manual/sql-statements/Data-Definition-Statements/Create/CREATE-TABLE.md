@@ -494,6 +494,10 @@ UNIQUE KEY(k1, k2)
     * `dynamic_partition.history_partition_num`: 指定创建历史分区的数量。
     * `dynamic_partition.reserved_history_periods`: 用于指定保留的历史分区的时间段。
 
+* `file_cache_ttl_seconds`:
+
+    TTL 在计算存储分离模式下的过期时间。
+
 ### Example
 
 1. 创建一个明细模型的表

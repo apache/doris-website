@@ -276,10 +276,6 @@ PROPERTIES (
 AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 ```
 
-## 异常数据和数据转换
-
-TODO
-
 ## 事务机制
 
 对 Hive 的写入操作会被放在一个单独的事务里，在事务提交前，数据对外不可见。只有当提交该事务后，表的相关操作才对其他人可见。
@@ -369,15 +365,7 @@ TODO
         2. 临时分区目录重命名为目标表分区目录。
         3. 删除目标表临时分区目。
     
-### 对象存储文件操作
-
-TODO
-
 ## 相关参数
-
-### FE
-
-TODO
 
 ### BE
 

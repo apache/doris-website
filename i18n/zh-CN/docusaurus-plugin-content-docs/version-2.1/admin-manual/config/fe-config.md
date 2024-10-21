@@ -197,7 +197,7 @@ master 和 follower 之间 bdbje 的心跳超时。默认为 30 秒，与 bdbje 
 
 选项：ALL, NONE, SIMPLE_MAJORITY
 
-bdbje 的副本 ack 策略。更多信息，请参见：http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.ReplicaAckPolicy.html
+bdbje 的副本 ack 策略。更多信息，请参见：<http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.ReplicaAckPolicy.html>
 
 #### `replica_sync_policy`
 
@@ -213,7 +213,7 @@ bdbje 的 Follower FE 同步策略。
 
 选项：SYNC, NO_SYNC, WRITE_NO_SYNC
 
-Master FE 的 bdbje 同步策略。如果您只部署一个 Follower FE，请将其设置为“SYNC”。如果你部署了超过 3 个 Follower FE，你可以将这个和下面的 `replica_sync_policy ` 设置为 WRITE_NO_SYNC。更多信息，参见：http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.SyncPolicy.html
+Master FE 的 bdbje 同步策略。如果您只部署一个 Follower FE，请将其设置为“SYNC”。如果你部署了超过 3 个 Follower FE，你可以将这个和下面的 `replica_sync_policy` 设置为 WRITE_NO_SYNC。更多信息，参见：<http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.SyncPolicy.html>
 
 #### `bdbje_reserved_disk_bytes`
 
@@ -238,7 +238,7 @@ Master FE 的 bdbje 同步策略。如果您只部署一个 Follower FE，请将
 
 默认值：300（5 分钟）
 
-如果元数据延迟间隔超过  `meta_delay_toleration_second `，非主 FE 将停止提供服务
+如果元数据延迟间隔超过  `meta_delay_toleration_second`，非主 FE 将停止提供服务
 
 #### `edit_log_port`
 
@@ -262,7 +262,7 @@ LOCAL：已弃用。
 
 是否为 Master FE 节点独有的配置项：true
 
-Master FE will save image every  `edit_log_roll_num ` meta journals.
+Master FE will save image every  `edit_log_roll_num` meta journals.
 
 #### `force_do_metadata_checkpoint`
 
@@ -473,7 +473,6 @@ thrift 服务器的连接超时和套接字超时配置
 thrift_client_timeout_ms 的默认值设置为零以防止读取超时
 
 #### `thrift_max_message_size`
-
 
 :::tip 提示
 该功能自 Apache Doris  1.2.4 版本起支持
@@ -738,9 +737,7 @@ http 请求处理/api/upload 任务的最大线程池
 
 检查动态分区的频率
 
-
 #### `max_multi_partition_num`
-
 
 :::tip 提示
 该功能自 Apache Doris  1.2 版本起支持
@@ -753,8 +750,6 @@ http 请求处理/api/upload 任务的最大线程池
 是否为 Master FE 节点独有的配置项：true
 
 用于限制批量创建分区表时可以创建的最大分区数，避免一次创建过多分区。
-
-
 
 #### `multi_partition_name_prefix`
 
@@ -906,7 +901,7 @@ http 请求处理/api/upload 任务的最大线程池
 
 是否为 Master FE 节点独有的配置项：false
 
-这将限制哈希分布修剪器的最大递归深度。例如：其中 a  in（5 个元素）和 b in（4 个元素）和 c in（3 个元素）和 d in（2 个元素）。a/b/c/d 是分布式列，所以递归深度为 5 * 4 * 3 * 2 = 120，大于 100，因此该分发修剪器将不起作用，只会返回所有 buckets。增加深度可以支持更多元素的分布修剪，但可能会消耗更多的 CPU
+这将限制哈希分布修剪器的最大递归深度。例如：其中 a  in（5 个元素）和 b in（4 个元素）和 c in（3 个元素）和 d in（2 个元素）。a/b/c/d 是分布式列，所以递归深度为 5 *4* 3 * 2 = 120，大于 100，因此该分发修剪器将不起作用，只会返回所有 buckets。增加深度可以支持更多元素的分布修剪，但可能会消耗更多的 CPU
 
 通过 `SHOW FRONTEND CONFIG;` 可以查看到该配置项可以动态配置（`IsMutable` 为 true）。并且不是 Master FE 独有配置。
 
@@ -960,7 +955,6 @@ http 请求处理/api/upload 任务的最大线程池
 有时我们的一些代码改动会改变 block 的数据格式，为了使得 BE 在滚动升级的过程中能够相互兼容数据格式，我们需要从 FE 下发一个数据版本来决定以什么格式发送数据。
 
 具体的来说，例如集群中有 2 个 BE，其中一台经过升级能够支持最新的$v_1$，而另一台只支持$v_0$，此时由于 FE 还未升级，所以统一下发$v_0$，BE 之间以旧的数据格式进行交互。待 BE 都升级完成，我们再升级 FE，此时新的 FE 会下发$v_1$，集群统一切换到新的数据格式。
-
 
 默认值为`max_be_exec_version`，如果有特殊需要，我们可以手动设置将格式版本降低，但不应低于`min_be_exec_version`。
 
@@ -1254,7 +1248,7 @@ broker scanner 的最大并发数。
 
 是否为 Master FE 节点独有的配置项：true
 
-routine load V2 版本加载的默认等待作业数，这是一个理想的数字。在某些情况下，例如切换 master，当前数量可能超过` desired_max_waiting_jobs`
+routine load V2 版本加载的默认等待作业数，这是一个理想的数字。在某些情况下，例如切换 master，当前数量可能超过`desired_max_waiting_jobs`
 
 #### `disable_hadoop_load`
 
@@ -1490,25 +1484,6 @@ NORMAL 优先级挂起加载作业的并发数。
 
 负载调度器运行间隔。加载作业将其状态从 PENDING 转移到 LOADING 到 FINISHED。加载调度程序将加载作业从 PENDING 转移到 LOADING  而 txn 回调会将加载作业从 LOADING 转移到 FINISHED。因此，当并发未达到上限时，加载作业最多需要一个时间间隔才能完成。
 
-#### `load_straggler_wait_second`
-
-默认值：300
-
-是否可以动态配置：true
-
-是否为 Master FE 节点独有的配置项：true
-
-负载中落后节点的最大等待秒数
-   例如：
-      有 3 个副本 A, B, C
-      load 已经在 t1 时仲裁完成 (A,B) 并且 C 没有完成，
-      如果 (current_time-t1)> 300s，那么 doris 会将 C 视为故障节点，
-      将调用事务管理器提交事务并告诉事务管理器 C 失败。
-
-这也用于等待发布任务时
-
-**注意：** 这个参数是所有作业的默认值，DBA 可以为单独的作业指定它
-
 #### `label_keep_max_second`
 
 默认值：`3 * 24 * 3600`  (3 天)
@@ -1517,7 +1492,7 @@ NORMAL 优先级挂起加载作业的并发数。
 
 是否为 Master FE 节点独有的配置项：true
 
-`label_keep_max_second  `后将删除已完成或取消的加载作业的标签，
+`label_keep_max_second`后将删除已完成或取消的加载作业的标签，
 
 1. 去除的标签可以重复使用。
 2. 设置较短的时间会降低 FE 内存使用量（因为所有加载作业的信息在被删除之前都保存在内存中）
@@ -1570,7 +1545,7 @@ load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清�
 
 #### `min_sync_commit_size`
 
-提交事务需满足的最小 event 数量。若 Fe 接收到的 event 数量小于它，会继续等待下一批数据直到时间超过了 `sync_commit_interval_second ` 为止。默认值是 10000 个 events，如果你想修改此配置，请确保此值小于 canal 端的 `canal.instance.memory.buffer.size` 配置（默认 16384），否则在 ack 前 Fe 会尝试获取比 store 队列长度更多的 event，导致 store 队列阻塞至超时为止。
+提交事务需满足的最小 event 数量。若 Fe 接收到的 event 数量小于它，会继续等待下一批数据直到时间超过了 `sync_commit_interval_second` 为止。默认值是 10000 个 events，如果你想修改此配置，请确保此值小于 canal 端的 `canal.instance.memory.buffer.size` 配置（默认 16384），否则在 ack 前 Fe 会尝试获取比 store 队列长度更多的 event，导致 store 队列阻塞至超时为止。
 
 默认值：10000
 
@@ -1667,7 +1642,7 @@ load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清�
 
 默认值：10
 
-要保存在  `sys_log_roll_interval ` 内的最大 FE 日志文件。默认为 10，表示一天最多有 10 个日志文件
+要保存在  `sys_log_roll_interval` 内的最大 FE 日志文件。默认为 10，表示一天最多有 10 个日志文件
 
 #### `sys_log_verbose_modules`
 
@@ -1719,13 +1694,13 @@ load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清�
 
 审计日志目录：
 这指定了 FE 审计日志目录。
-审计日志 fe.audit.log 包含所有请求以及相关信息，如  `user, host, cost, status ` 等。
+审计日志 fe.audit.log 包含所有请求以及相关信息，如  `user, host, cost, status` 等。
 
 #### `audit_log_roll_num`
 
 默认值：90
 
-保留在  `audit_log_roll_interval ` 内的最大 FE 审计日志文件。
+保留在  `audit_log_roll_interval` 内的最大 FE 审计日志文件。
 
 #### `audit_log_modules`
 
@@ -1753,6 +1728,7 @@ HOUR: log 前缀是：yyyyMMddHH
 默认为 30 天，如果日志的最后修改时间为 30 天前，则将其删除。
 
 支持格式：
+
 - 7d     7 天
 - 10 小时  10 小时
 - 60m    60 分钟
@@ -1968,7 +1944,7 @@ BE 副本数的平衡阈值。
 
 是否为 Master FE 节点独有的配置项：true
 
-* BE 中数据大小的平衡阈值。
+- BE 中数据大小的平衡阈值。
 
   平衡算法为：
 
@@ -2183,7 +2159,6 @@ tablet 状态更新间隔
 
 #### `storage_cooldown_second`
 
-
 :::tip 提示
 该功能自 Apache Doris  2.0 版本起支持
 :::
@@ -2268,7 +2243,7 @@ tablet 状态更新间隔
 
 例如。
    如果您为每个表创建一个包含 m 个 tablet 和 n 个副本的表，
-   创建表请求将在超时前最多运行 (m * n * tablet_create_timeout_second)。
+   创建表请求将在超时前最多运行 (m *n* tablet_create_timeout_second)。
 
 #### `tablet_delete_timeout_second`
 
@@ -2737,7 +2712,6 @@ show data （其他用法：HELP SHOW DATA）
 
 #### `infodb_support_ext_catalog`
 
-
 :::tip 提示
 该功能自 Apache Doris  1.2.4 版本起支持
 :::
@@ -2754,8 +2728,6 @@ show data （其他用法：HELP SHOW DATA）
 
 #### `enable_query_hit_stats`
 
- 
-
 默认值：false
 
 是否可以动态配置：true
@@ -2765,7 +2737,6 @@ show data （其他用法：HELP SHOW DATA）
 控制是否启用查询命中率统计。默认为 false。
 
 #### `div_precision_increment`
- 
 
 默认值：4
 
@@ -2794,3 +2765,10 @@ Doris 为了兼用 mysql 周边工具生态，会内置一个名为 mysql 的数
 默认值：2000
 
 对于自动分区表，防止用户意外创建大量分区，每个 OLAP 表允许的分区数量为`max_auto_partition_num`。默认 2000。
+
+
+#### `profile_manager_gc_interval_seconds`
+
+默认值：1
+
+用于控制 ProfileManager 进行 Profile 垃圾回收的间隔时间，垃圾回收期间 ProfileManager 会把多余的以及过期的 profile 从内存和磁盘中清理掉，节省内存。

@@ -51,7 +51,7 @@ PROPERTIES ("key"="value", ...);
 
 ### Example
 
-1. 创建名为 s3_repo 的仓库.
+1. 创建名为 s3_repo 的仓库。
 
 ```sql
 CREATE REPOSITORY `s3_repo`
@@ -66,7 +66,7 @@ PROPERTIES
 );
 ```
 
-2. 创建名为 hdfs_repo 的仓库.
+2. 创建名为 hdfs_repo 的仓库。
 
 ```sql
 CREATE REPOSITORY `hdfs_repo`
@@ -79,7 +79,7 @@ PROPERTIES
 );
 ```
 
-3. 创建名为 minio_repo 的仓库.
+3. 创建名为 minio_repo 的仓库。
 
 ```sql
 CREATE REPOSITORY `minio_repo`
@@ -90,14 +90,14 @@ PROPERTIES
     "s3.endpoint" = "http://minio.com",
     "s3.access_key" = "MINIO_USER",
     "s3.secret_key"="MINIO_PASSWORD",
-    "s3.region" = "REGION"
+    "s3.region" = "REGION",
     "use_path_style" = "true"
 );
 ```
 
 4. 使用临时秘钥创建名为 minio_repo 的仓库
 
-```
+```sql
 CREATE REPOSITORY `minio_repo`
 WITH S3
 ON LOCATION "s3://minio_repo"
@@ -113,7 +113,7 @@ PROPERTIES
 
 5. 使用腾讯云 COS 创建仓库
 
-```
+```sql
 CREATE REPOSITORY `cos_repo`
 WITH S3
 ON LOCATION "s3://backet1/"
