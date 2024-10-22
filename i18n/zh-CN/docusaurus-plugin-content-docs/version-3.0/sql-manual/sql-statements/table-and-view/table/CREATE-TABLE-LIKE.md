@@ -33,7 +33,7 @@ under the License.
 语法：
 
 ```sql
-CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]table_name [WITH ROLLUP (r1,r2,r3,...)]
+CREATE [TEMPORARY | EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]table_name [WITH ROLLUP (r1,r2,r3,...)]
 ```
 
 说明：
@@ -42,6 +42,8 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]ta
 - 用户需要对复制的原表有`SELECT`权限 
 - 支持复制 MySQL 等外表 
 - 支持复制 OLAP Table 的 rollup
+- 指定 TEMPORARY 关键字时将会创建临时表
+- 未指定 TEMPORARY 关键字时将会创建普通内表，无论源表是否是临时表
 
 ## 示例
 

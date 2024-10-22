@@ -31,7 +31,7 @@ under the License.
 语法：
 
 ```sql
-CREATE TABLE table_name [( column_name_list )]
+CREATE [TEMPORARY] TABLE table_name [( column_name_list )]
     opt_engine:engineName
     opt_keys:keys
     opt_comment:tableComment
