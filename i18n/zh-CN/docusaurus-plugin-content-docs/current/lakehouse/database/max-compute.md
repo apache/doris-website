@@ -36,7 +36,8 @@ MaxCompute 是阿里云上的企业级 SaaS（Software as a Service）模式云�
 
 ### 示例
 
-``` 
+``` sql 
+-- 1. 创建Catalog。
 CREATE CATALOG mc PROPERTIES (
   "type" = "max_compute",
   "mc.default.project" = "xxx",
@@ -44,22 +45,39 @@ CREATE CATALOG mc PROPERTIES (
   "mc.secret_key" = "xxx",
   "mc.endpoint" = "http://service.cn-beijing-vpc.MaxCompute.aliyun-inc.com/api"
 );
+
+-- 2. 切换到新创建的Catalog下。
+SWITCH mc;
+
+-- 下面的步骤就和使用Mysql一样了。
+
+-- 3. 查看该Catalog下所有的数据库。
+SHOW DATABASES;
+
+-- 4. 使用数据库, 这里的xxx为第三步展示出来结果的任意一个数据库。
+USE xxx;
+
+-- 5. 查看该数据库下所有的表。
+SHOW TABLES;
+
+-- 6. 进行SQL查询。
+select * from tb  limit 10;
 ```
 
 
-### 基本属性 
+### 创建Catalog的基本属性 
 
 |参数           | 说明    | 
 |:-------------:|:-------:|
 |   type       | 固定为 `max_compute`. |
-|mc.default.project | MaxCompute 项目。可以在 [MaxCompute 项目列表](https://MaxCompute.console.aliyun.com/cn-beijing/project-list) 中创建和管理。 | 
+|mc.default.project | 想要访问的 MaxCompute 项目名称。可以在 [MaxCompute 项目列表](https://MaxCompute.console.aliyun.com/cn-beijing/project-list) 中创建和管理。 | 
 | mc.access_key | AccessKey。可以在 [阿里云控制台](https://ram.console.aliyun.com/manage/ak) 中创建和管理。| 
 | mc.secret_key | SecretKey。可以在 [阿里云控制台](https://ram.console.aliyun.com/manage/ak) 中创建和管理。 | 
 |mc.endpoint | MaxCompute 开通的地域。请参照下文的`如何获取Endpoint 和 Quota`来配置。 | 
 
 
 
-### 可选属性 
+### 创建Catalog的可选属性 
 
 | 参数     |  默认值  | 说明 | 
 |---|---|---|
@@ -88,7 +106,7 @@ CREATE CATALOG mc PROPERTIES (
 |CHAR(n)                  |CHAR(n)                  |        |
 |STRING                   |STRING                   |        |
 |DATE                     |DATE                     |        |
-|DATETIME                 |DATETIME(3)              | DATETIME读取出来结果是按照当前系统的默认时区，如果您想使用其他时区，请在be 的jvm中增加-Duser.timezone=xx 参数来指定时区 |
+|DATETIME                 |DATETIME(3)              | 可以通过`SET [global] time_zone = 'Asia/Shanghai'`来指定时区 |
 |TIMESTAMP                |不支持                    |        |
 |TIMESTAMP_NTZ            |DATETIME(6)              |MaxCompute 的 TIMESTAMP_NTZ 精度为9, Doris 的 DATETIME 最大精度只有6，故读取数据时会将多的部分直接截断。 |
 |BOOLEAN                  |BOOLEAN                  |        |
@@ -100,18 +118,18 @@ CREATE CATALOG mc PROPERTIES (
 
 ## 使用须知
 
-1. MaxCompute Catalog 基于 [开放存储SDK](https://help.aliyun.com/zh/MaxCompute/user-guide/open-storage-sample-java-sdk) 开发。
-2. 开放存储SDK的使用有一定的限制，请参照该 [文档](https://help.aliyun.com/zh/MaxCompute/user-guide/overview-1) 中 `使用限制` 的章节。
-3. 开放存储SDK中的谓词下推过滤是按照 Aliorc 里的 Row Group 概念过滤的，只有这个一个 Row Group 所有的行满足过滤条件才会过滤。
-4. MaxCompute 中的 Project 相当于 Doris 中的 DataBase 。 如果您想访问 MaxCompute Catalog 中不同与 `mc.default.project` 的 Project ，您需要建立一个新的MaxCompute Catalog。
+1. MaxCompute Catalog 基于 [开放存储SDK](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 开发。
+2. 开放存储SDK的使用有一定的限制，请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 中 `使用限制` 的章节。
+3. MaxCompute 中的 Project 相当于 Doris 中的 DataBase 。 
 
 
 ## 如何获取 Endpoint 和 Quota
 
-1. 如果您使用数据传输服务独享资源组, 请参照该 [文档](https://help.aliyun.com/zh/MaxCompute/user-guide/purchase-and-use-exclusive-resource-groups-for-dts) 中 `使用独享数据服务资源组` 章节中的 `2.授权` 来开启相应的权限，并在 `配额（Quota）管理` 列表中，查看并复制对应的QuotaName，指定 `"mc.quota" = "QuotaName"`。此时您可以选择 VPC / 公网来访问 MaxCompute，但是建议您最好别走公网，公网带宽会受到限制，走 VPC 的带宽有保障，公网带宽资源小。
 
-2. 如果您使用按量付费，请参照该 [文档](https://help.aliyun.com/zh/MaxCompute/user-guide/overview-1#cabfa502c288o)
+1. 如果您使用数据传输服务独享资源组, 请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/purchase-and-use-exclusive-resource-groups-for-dts) 中 `使用独享数据服务资源组` 章节中的 `2.授权` 来开启相应的权限，并在 `配额（Quota）管理` 列表中，查看并复制对应的QuotaName，指定 `"mc.quota" = "QuotaName"`。此时您可以选择 VPC / 公网来访问 MaxCompute，但是公网带宽会受到限制，走 VPC 的带宽有保障，公网带宽资源小。
+
+2. 如果您使用按量付费，请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1)
 中 `使用开放存储（按量付费）` 的章节，来开启开放存储(Storage API)开关，并给 Ak,SK 对应的用户赋予权限。此时您的 `mc.quota` 为默认值 `pay-as-you-go`，不需要额外指定该值。此时您只能使用 VPC 来访问 MaxCompute。
 
-3. 通过第 1/2 步，您已经知道该如何访问 MaxCompute，下面需要根据 [阿里云 Endpoints 文档](https://help.aliyun.com/zh/MaxCompute/user-guide/endpoints) 中的 `地域Endpoint对照表` 来配置 `mc.endpoint` 。使用 VPC 访问的用户，需要根据 `各地域Endpoint对照表（阿里云VPC网络连接方式）` 表中的 `VPC网络Endpoint` 列来配置 `mc.endpoint` 。使用公网访问的用户，可以选择 `各地域Endpoint对照表（阿里云经典网络连接方式）` 表中的 `经典网络Endpoint` 列、或者选择 `各地域Endpoint对照表（外网连接方式` 表中的 `外网Endpoint` 列来配置 `mc.endpoint`。
+3. 通过第 1/2 步，您已经知道该如何访问 MaxCompute，下面需要根据 [阿里云 Endpoints 文档](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints) 中的 `地域Endpoint对照表` 来配置 `mc.endpoint` 。使用 VPC 访问的用户，需要根据 `各地域Endpoint对照表（阿里云VPC网络连接方式）` 表中的 `VPC网络Endpoint` 列来配置 `mc.endpoint` 。使用公网访问的用户，可以选择 `各地域Endpoint对照表（阿里云经典网络连接方式）` 表中的 `经典网络Endpoint` 列、或者选择 `各地域Endpoint对照表（外网连接方式)` 表中的 `外网Endpoint` 列来配置 `mc.endpoint`。
 
