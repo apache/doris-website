@@ -48,7 +48,7 @@ under the License.
 ## 语法
 
 ```sql
-CREATE [ EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
+CREATE [ TEMPORARY | EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
     (<columns_definition> [ <indexes_definition> ])
     [ ENGINE = <table_engine_type> ]
     [ <key_type> KEY (<key_cols>)
@@ -67,8 +67,6 @@ CREATE [ EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
           [ , ... ]) 
     ]
 ```
-
-其中：
 
 ```sql
 columns_definition
@@ -154,7 +152,7 @@ roll_up_definition
 
 ```sql
 CREATE
-    [ EXTERNAL ]
+    [ TEMPORARY | EXTERNAL ]
   TABLE [ IF NOT EXISTS ] <table_name>
     [(<col_name> [ , <col_name> [ ... ] ] )]
     [ <indexesDefinition> ]

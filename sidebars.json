@@ -136,6 +136,15 @@
                         "table-design/best-practice"
                     ]
                 },
+                "table-design/auto-increment",
+                "table-design/temporary-table",
+                "table-design/best-practice"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Data Manipulation",
+            "items": [
                 {
                     "type": "category",
                     "label": "Loading Data",
