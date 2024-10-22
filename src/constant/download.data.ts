@@ -1494,25 +1494,6 @@ export const TOOL_VERSIONS = [
         value: ToolsEnum.StreamLoader,
         children: [
             {
-                label: '1.0.1',
-                value: '1.0.1',
-                children: [
-                    {
-                        label: CPUEnum.X64,
-                        value: CPUEnum.X64,
-                        gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
-                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz'
-                    },
-                    {
-                        label: CPUEnum.ARM64,
-                        value: CPUEnum.ARM64,
-                        gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
-                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz'
-                    },
-                ],
-                source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.1/apache-doris-streamloader-1.0.1-src.tar.gz',
-            },
-            {
                 label: '1.0.2',
                 value: '1.0.2',
                 children: [
@@ -1530,6 +1511,25 @@ export const TOOL_VERSIONS = [
                     },
                 ],
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.2/apache-doris-streamloader-1.0.2-src.tar.gz',
+            },
+            {
+                label: '1.0.1',
+                value: '1.0.1',
+                children: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
+                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz'
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
+                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz'
+                    },
+                ],
+                source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.1/apache-doris-streamloader-1.0.1-src.tar.gz',
             },
         ],
     },
