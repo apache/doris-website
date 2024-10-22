@@ -96,10 +96,14 @@ jobs:
 
             - name: Check exit code
               run: |
-                git show "${{ github.sha }}"
+                git log --oneline -n 10
+                echo "${{ github.event.pull_request.head.sha }}"
+                echo "${{ github.event.pull_request.merge_commit_sha }}"
+                git show "${{ github.event.pull_request.head.sha }}"
+                git show "${{ github.event.pull_request.merge_commit_sha }}"
             
             - name: Run Python script with all commit SHAs
-              run: python check_move.py "${{ github.sha }}"
+              run: python check_move.py "${{ github.event.pull_request.merge_commit_sha }}"
         
             - name: Check exit code
               run: |
