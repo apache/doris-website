@@ -30,6 +30,8 @@ under the License.
 
 `int count_substrings(STRING str, STRING pattern)`
 Returns the total number of occurrences of the substring pattern in the string str.
+Note: The current implementation shifts by the length of the pattern after each match in the string.
+Therefore, when str: ccc and pattern: cc, the result returned is 1.
 
 #### Arguments
 
@@ -58,6 +60,12 @@ mysql [(none)]>select count_substrings(',,a,b,c,',',');
 |                                 5 |
 +-----------------------------------+
 
+mysql [(none)]>select count_substrings('ccc','cc');
++--------------------------------+
+| count_substrings('ccc', 'cc')  |
++--------------------------------+
+|                              1 |
++--------------------------------+
 
 mysql [(none)]>SELECT count_substrings(NULL,',');
 +-----------------------------+

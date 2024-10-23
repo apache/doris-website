@@ -30,6 +30,8 @@ under the License.
 
 `int count_substrings(STRING str, STRING pattern)`
 返回字符串str中包含子串pattern的总个数。
+注意: 当前实现为在str 中每匹配到子串时，就会偏移一个子串长度继续寻找
+所以当`str:ccc, pattern:cc` 时，返回结果为1
 
 #### Arguments
 
@@ -57,6 +59,13 @@ mysql [(none)]>select count_substrings(',,a,b,c,',',');
 +-----------------------------------+
 |                                 5 |
 +-----------------------------------+
+
+mysql [(none)]>select count_substrings('ccc','cc');
++--------------------------------+
+| count_substrings('ccc', 'cc')  |
++--------------------------------+
+|                              1 |
++--------------------------------+
 
 
 mysql [(none)]>SELECT count_substrings(NULL,',');
