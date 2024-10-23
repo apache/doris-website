@@ -37,7 +37,7 @@ In versions prior to 3.0.2, this was referred to as a Compute Cluster.
 
 You can view all compute groups owned by the current repository using `SHOW COMPUTE GROUPS`.
 
-```SQL
+```sql
 SHOW COMPUTE GROUPS;
 ```
 
@@ -58,13 +58,13 @@ ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new
 
 ## Granting Compute Group Access
 
-```SQL
+```sql
 GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user}
 ```
 
 ## Revoking Compute Group Access
 
-```SQL
+```sql
 REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user}
 ```
 
@@ -72,31 +72,31 @@ REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user}
 
 To set the default compute group for the current user:
 
-```SQL
+```sql
 SET PROPERTY 'default_compute_group' = '{clusterName}';
 ```
 
 To set the default compute group for other users (this operation requires Admin privileges):
 
-```SQL
+```sql
 SET PROPERTY FOR {user} 'default_compute_group' = '{clusterName}';
 ```
 
 To view the current user's default compute group, the value of `default_compute_group` in the returned result is the default compute group:
 
-```SQL
+```sql
 SHOW PROPERTY;
 ```
 
 To view the default compute group of other users, this operation requires the current user to have relevant permissions, and the value of `default_compute_group` in the returned result is the default compute group:
 
-```SQL
+```sql
 SHOW PROPERTY FOR {user};
 ```
 
 To view all available compute groups in the current repository:
 
-```SQL
+```sql
 SHOW COMPUTE GROUPS;
 ```
 
