@@ -438,6 +438,7 @@
                     "type": "category",
                     "label": "System Tables",
                     "items": [
+                        "admin-manual/system-tables/overview",
                         {
                             "type": "category",
                             "label": "Database: information_schema",
