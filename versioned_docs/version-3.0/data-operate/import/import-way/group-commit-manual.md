@@ -562,7 +562,7 @@ We have separately tested the write performance of group commit in high-concurre
 | group_commit     | 1 MB        | 30     | 178       | 1,385,148       | 182.5            |
 | group_commit     | 10 MB       | 10     | 177       | 1,396,887       | 184.0            |
 | non group_commit   | 1 MB        | 10     | 2824      | 87,536          | 11.5             |
-| 非group_commit   | 10 MB       | 10     | 450       | 549,442         | 68.9             |
+| non group_commit   | 10 MB       | 10     | 450       | 549,442         | 68.9             |
 | non group_commit   | 10 MB       | 30     | 177       | 1,396,887       | 184.0            |
 
 In the above test, the CPU usage of BE fluctuates between 10-40%.
