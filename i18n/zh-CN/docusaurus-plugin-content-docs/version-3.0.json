@@ -223,6 +223,18 @@
     "message": "系统表",
     "description": "The label for category System Table in sidebar docs"
   },
+  "sidebar.docs.category.Database: information_schema": {
+    "message": "所属数据库：information_schema",
+    "description": "The label for category System Table in sidebar docs"
+  },
+  "sidebar.docs.category.Database: MySQL": {
+    "message": "所属数据库：MySQL",
+    "description": "The label for category System Table in sidebar docs"
+  },
+  "sidebar.docs.category.Database: __internal_schema": {
+    "message": "所属数据库：__internal_schema",
+    "description": "The label for category System Table in sidebar docs"
+  },
   "sidebar.docs.category.OPEN API": {
     "message": "OPEN API",
     "description": "The label for category OPEN API in sidebar docs"
