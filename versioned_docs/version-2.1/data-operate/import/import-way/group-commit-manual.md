@@ -134,7 +134,7 @@ private static void groupCommitInsertBatch() throws Exception {
 set enable_prepared_stmt_audit_log=true;
 ```
 
-For more usage on **JDBC**, refer to [Using Insert to Synchronize Data](../insert-into-manual).
+For more usage on **JDBC**, refer to [Using Insert to Synchronize Data](./insert-into-manual).
 
 ### Using Golang for Group Commit
 
