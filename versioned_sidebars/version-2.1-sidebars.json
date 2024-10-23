@@ -438,9 +438,66 @@
                     "type": "category",
                     "label": "System Tables",
                     "items": [
-                        "admin-manual/system-tables/file_cache_statistics",
-                        "admin-manual/system-tables/tables",
-                        "admin-manual/system-tables/table_properties"
+                        {
+                            "type": "category",
+                            "label": "Database: information_schema",
+                            "items": [
+                                "admin-manual/system-tables/information_schema/active_queries",
+                                "admin-manual/system-tables/information_schema/backend_active_tasks",
+                                "admin-manual/system-tables/information_schema/catalog_meta_cache_statistics",
+                                "admin-manual/system-tables/information_schema/character_sets",
+                                "admin-manual/system-tables/information_schema/collations",
+                                "admin-manual/system-tables/information_schema/column_privileges",
+                                "admin-manual/system-tables/information_schema/column_statistics",
+                                "admin-manual/system-tables/information_schema/columns",
+                                "admin-manual/system-tables/information_schema/engines",
+                                "admin-manual/system-tables/information_schema/events",
+                                "admin-manual/system-tables/information_schema/files",
+                                "admin-manual/system-tables/information_schema/global_variables",
+                                "admin-manual/system-tables/information_schema/key_column_usage",
+                                "admin-manual/system-tables/information_schema/metadata_name_ids",
+                                "admin-manual/system-tables/information_schema/parameters",
+                                "admin-manual/system-tables/information_schema/partitions",
+                                "admin-manual/system-tables/information_schema/processlist",
+                                "admin-manual/system-tables/information_schema/profiling",
+                                "admin-manual/system-tables/information_schema/referential_constraints",
+                                "admin-manual/system-tables/information_schema/routines",
+                                "admin-manual/system-tables/information_schema/rowsets",
+                                "admin-manual/system-tables/information_schema/schema_privileges",
+                                "admin-manual/system-tables/information_schema/schemata",
+                                "admin-manual/system-tables/information_schema/session_variables",
+                                "admin-manual/system-tables/information_schema/statistics",
+                                "admin-manual/system-tables/information_schema/table_constraints",
+                                "admin-manual/system-tables/information_schema/table_options",
+                                "admin-manual/system-tables/information_schema/table_privileges",
+                                "admin-manual/system-tables/information_schema/table_properties",
+                                "admin-manual/system-tables/information_schema/tables",
+                                "admin-manual/system-tables/information_schema/triggers",
+                                "admin-manual/system-tables/information_schema/user_privileges",
+                                "admin-manual/system-tables/information_schema/views",
+                                "admin-manual/system-tables/information_schema/workload_group_privileges",
+                                "admin-manual/system-tables/information_schema/workload_group_resource_usage",
+                                "admin-manual/system-tables/information_schema/workload_groups",
+                                "admin-manual/system-tables/information_schema/workload_policy"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Database: MySQL",
+                            "items": [
+                                "admin-manual/system-tables/mysql/props_priv",
+                                "admin-manual/system-tables/mysql/user"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Database: __internal_schema",
+                            "items": [
+                                "admin-manual/system-tables/internal_schema/audit_log",
+                                "admin-manual/system-tables/internal_schema/column_statistics",
+                                "admin-manual/system-tables/internal_schema/partition_statistics"
+                            ]
+                        }
                     ]
                 },
                 "admin-manual/audit-plugin",
@@ -536,8 +593,7 @@
                 },
                 "admin-manual/plugin-development-manual",
                 "admin-manual/small-file-mgr",
-                "admin-manual/compaction",
-                "admin-manual/rowsets"
+                "admin-manual/compaction"
             ]
         },
         {
