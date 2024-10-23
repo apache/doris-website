@@ -43,17 +43,16 @@ SHOW COMPUTE GROUPS;
 
 ## Adding Compute Groups
 
-When [adding a BE](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md), a compute group will be automatically added.
-
-
-```sql
-ALTER SYSTEM ADD BACKEND 'host:9050';
-```
-
-It will be added to the group `default_computate_group` by default. You can use the following command if you want to specify a different compute group:
+Using [Add BE ](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) to add a BE into a compute group, for example:
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");
+```
+
+The above sql will add `host:9050` to compute group `new_group`. The BE will be added to compute group `default_compute_group` if you omit PROPERTIES statement, for example:
+
+```sql
+ALTER SYSTEM ADD BACKEND 'host:9050';
 ```
 
 ## Granting Compute Group Access

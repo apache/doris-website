@@ -43,16 +43,16 @@ SHOW COMPUTE GROUPS;
 
 ## 添加计算组
 
-在[添加 BE ](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md)时，会自动添加计算组。
-
-```sql
-ALTER SYSTEM ADD BACKEND 'host:9050';
-```
-
-默认会添加到 default_compute_group 组，如果想指定其他计算组，可使用如下命令：
+使用[Add BE ](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md)命令添加 BE 并为 BE 指定计算组，示例：
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");
+```
+
+上面命令会将`host:9050`这台节点添加到`new_group`这个计算组中，您也可以不指定计算组，默认会添加到`default_compute_group`组里，示例：
+
+```sql
+ALTER SYSTEM ADD BACKEND 'host:9050';
 ```
 
 ## 授予计算组访问权限
