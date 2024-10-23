@@ -649,12 +649,12 @@ PROPERTIES (
 
 **Testing Tool**
 
-* [Jemeter](https://jmeter.apache.org/)
+* [Jmeter](https://jmeter.apache.org/)
 
 JMeter Parameter Settings as Shown in the Images
 
-![jemeter1](/images/group-commit/jemeter1.jpg)
-![jemeter2](/images/group-commit/jemeter2.jpg)
+![jmeter1](/images/group-commit/jmeter1.jpg)
+![jmeter2](/images/group-commit/jmeter2.jpg)
 
 1. Set the Init Statement Before Testing:
 set group_commit=async_mode and set enable_nereids_planner=false.
@@ -716,7 +716,7 @@ Ensure that the imported values match the data types one by one.
 
 **Testing Tool**
 
-* [Jemeter](https://jmeter.apache.org/)
+* [Jmeter](https://jmeter.apache.org/)
 
 **Testing Methodology**
 

@@ -657,12 +657,12 @@ PROPERTIES (
 
 **测试工具**
 
-* [Jemeter](https://jmeter.apache.org/)
+* [Jmeter](https://jmeter.apache.org/)
 
-需要设置的jemeter参数如下图所示
+需要设置的jmeter参数如下图所示
 
-![jemeter1](/images/group-commit/jemeter1.jpg)
-![jemeter2](/images/group-commit/jemeter2.jpg)
+![jmeter1](/images/group-commit/jmeter1.jpg)
+![jmeter2](/images/group-commit/jmeter2.jpg)
 
 1. 设置测试前的init语句，`set group_commit=async_mode`以及`set enable_nereids_planner=false`。
 2. 开启jdbc的prepared statement，完整的url为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false`。
@@ -672,7 +672,7 @@ PROPERTIES (
 
 **测试方法**
 
-* 通过 `Jemeter` 向`Doris`写数据。每个并发每次通过insert into写入1行数据。
+* 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过insert into写入1行数据。
 
 **测试结果**
 
@@ -744,11 +744,11 @@ PROPERTIES (
 
 **测试工具**
 
-* [Jemeter](https://jmeter.apache.org/)
+* [Jmeter](https://jmeter.apache.org/)
 
 **测试方法**
 
-* 通过 `Jemeter` 向`Doris`写数据。每个并发每次通过insert into写入1000行数据。
+* 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过insert into写入1000行数据。
 
 **测试结果**
 
