@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Form, message } from 'antd';
 import FormSelect from '../form-select/form-select';
 import copy from 'copy-to-clipboard';
-import { DownloadTypeEnum, Option } from '@site/src/constant/download.data';
+import { CPUEnum, DownloadTypeEnum, Option } from '@site/src/constant/download.data';
 import { ToolsEnum } from '@site/src/constant/download.data';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import { DownloadIcon } from '../Icons/download-icon';
@@ -47,17 +47,18 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
     const getDownloadLinkByCard = (params: { version: string[]; cpu: string; tarBall: string; type: string }) => {
         const currentTool = data.find(item => tool === item.value).children;
         if (tool === 'Doris Streamloader') {
+            const currentVersion = currentTool.find(item => version === item.value);
             if (params.tarBall === 'Source') {
                 return !params.type ? `${currentTool[0].source}` : `${currentTool[0].source}.${params.type}`
             } else {
-                return architecture === 'ARM64' ? `${currentTool[0].children[1]}.${params.type}` : `${currentTool[0].children[0]}.${params.type}`
+                const currentCPU: any = currentVersion.children.find(item => params.cpu === item.value);
+                return currentCPU.Binary;
             }
         } else {
             const currentVersion = currentTool.find(item => version === item.value)
             const tempType = (params.type === 'sha512' ? 'sha1' : params.type)
             return !params.type ? `${currentVersion[params.tarBall]}` : `${currentVersion[params.tarBall]}.${tempType}`
         }
-
     };
 
     useEffect(() => {
