@@ -41,8 +41,8 @@ spec:
 ```
 
 Among them, `{msImage}` is the version of the MS service you want to deploy.
-`{foundationdbConfigmap}` 为 k8s 部署的 FDB 服务提供的访问 configmap 。
-`{namespace}` 为 k8s 部署的 FDB 服务所在的 Namespace。
+`{foundationdbConfigmap}` is the access configmap provided by the FDB service deployed by K8s.
+`{namespace}` is the Namespace where the FDB service deployed in K8s is located.
 
 ## Configure resources
 
@@ -63,9 +63,9 @@ spec:
 
 Update the modified configuration to the [metadata management resources for storage and computing separation that need to be deployed](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
 
-## 配置 FDB
+## Configure FDB
 
-FDB 集群在同一套 k8s 集群上搭建，并且能够获取其所在的 namespace 和 configmap，则使用如下配置：
+The FDB cluster is built on the same K8s cluster and can obtain its namespace and configmap. Use the following configuration:
 ```yaml
 spec:
   metaService:
@@ -76,8 +76,8 @@ spec:
         namespace: {namespace}
 ```
 
-若 上述 FDB 的访问方式不可获取，或 FDB 是物理机部署，则可以通过为 metaService 配置 FDB endpoint（FDB 的访问字符串）的方式来实现 FDB 的访问。
-配置如下：
+If the above FDB access method is not available, or the FDB is deployed on a physical machine, you can access the FDB by configuring the FDB endpoint (FDB access string) for the metaService.
+The configuration is as follows:
 
 ```yaml
 spec:

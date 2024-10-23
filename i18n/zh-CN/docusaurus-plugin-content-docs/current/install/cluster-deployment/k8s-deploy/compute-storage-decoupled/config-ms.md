@@ -41,8 +41,8 @@ spec:
 ```
 
 其中 `{msImage}` 为想要部署的 MS 服务的版本。
- `{foundationdbConfigmap}` 为 k8s 部署的 FDB 服务提供的访问 configmap 。
- `{namespace}` 为 k8s 部署的 FDB 服务所在的 Namespace。
+ `{foundationdbConfigmap}` 为 K8s 部署的 FDB 服务提供的访问 configmap 。
+ `{namespace}` 为 K8s 部署的 FDB 服务所在的 Namespace。
 
 ## 配置资源
 
@@ -65,7 +65,7 @@ spec:
 
 ## 配置 FDB
 
-FDB 集群在同一套 k8s 集群上搭建，并且能够获取其所在的 namespace 和 configmap，则使用如下配置：
+FDB 集群在同一套 K8s 集群上搭建，并且能够获取其所在的 namespace 和 configmap，则使用如下配置：
 ```yaml
 spec:
   metaService:
