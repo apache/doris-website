@@ -33,7 +33,7 @@ under the License.
 
 获得日期中的秒的信息，返回值范围从0-59。
 
-参数为Date或者Datetime类型
+参数为Date或者Datetime，Time类型
 
 ### example
 
