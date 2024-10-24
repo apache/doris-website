@@ -462,6 +462,10 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
 
   The starting offset of the dynamic partition, usually a negative number. Depending on the `time_unit` attribute, based on the current day (week / month), the partitions with a partition range before this offset will be deleted. If not filled, the default is `-2147483648`, that is, the history partition will not be  deleted.
 
+:::caution
+Note that if the user sets history_partition_num (> 0), the starting partition for creating dynamic partitions will use max(start, -history_partition_num), and when deleting historical partitions, the range up to start will still be retained, where start < 0.
+:::
+
 - `dynamic_partition.end`(required parameters)
 
   The end offset of the dynamic partition, usually a positive number. According to the difference of the `time_unit` attribute, the partition of the corresponding range is created in advance based on the current day (week / month).
@@ -489,6 +493,7 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
 
   When `time_unit` is` MONTH`, this parameter is used to specify the start date of each month. The value ranges from 1 to 28. 1 means the 1st of every month, and 28 means the 28th of every month. The default is 1, which means that every month starts at 1st. The 29, 30 and 31 are not supported at the moment to avoid ambiguity caused by lunar years or months.
 
+- Doris supports multi-level storage with SSD and HDD tiers. For more details, please refer to [tiered-storage](./tiered-storage/diff-disk-medium-migration.md)
 
 - `dynamic_partition.create_history_partition`
 
@@ -499,31 +504,6 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
 - `dynamic_partition.history_partition_num`
 
   When `create_history_partition` is `true`, this parameter is used to specify the number of history partitions. The default value is -1, which means it is not set.
-
-- `dynamic_partition.hot_partition_num`
-
-  Specify how many of the latest partitions are hot partitions. For hot partition, the system will automatically set its `storage_medium` parameter to SSD, and set `storage_cooldown_time`.
-
-  :::tip
-
-  If there is no SSD disk path under the storage path, configuring this parameter will cause dynamic partition creation to fail.
-
-  :::
-
-  `hot_partition_num` is all partitions in the previous n days and in the future.
-
-  Let us give an example. Suppose today is 2021-05-20, partition by day, and the properties of dynamic partition are set to: hot_partition_num=2, end=3, start=-3. Then the system will automatically create the following partitions, and set the `storage_medium` and `storage_cooldown_time` properties:
-
-  ```sql
-  p20210517: ["2021-05-17", "2021-05-18") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
-  p20210518: ["2021-05-18", "2021-05-19") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
-  p20210519: ["2021-05-19", "2021-05-20") storage_medium=SSD storage_cooldown_time=2021-05-21 00:00:00
-  p20210520: ["2021-05-20", "2021-05-21") storage_medium=SSD storage_cooldown_time=2021-05-22 00:00:00
-  p20210521: ["2021-05-21", "2021-05-22") storage_medium=SSD storage_cooldown_time=2021-05-23 00:00:00
-  p20210522: ["2021-05-22", "2021-05-23") storage_medium=SSD storage_cooldown_time=2021-05-24 00:00:00
-  p20210523: ["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
-  ```
-
 
 - `dynamic_partition.reserved_history_periods`
 
@@ -552,17 +532,6 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
 
   Otherwise, every `[...,...]` in `reserved_history_periods` is a couple of properties, and they should be set at the same time. And the first date can't be larger than the second one.
 
-
-- `dynamic_partition.storage_medium`
-
-  
-  :::info Note
-  This parameteres is supported since Doris version 1.2.3
-  :::
-
-  Specifies the default storage medium for the created dynamic partition. HDD is the default, SSD can be selected.
-
-  Note that when set to SSD, the `hot_partition_num` property will no longer take effect, all partitions will default to SSD storage media and the cooldown time will be 9999-12-31 23:59:59.
 
 ### Create history partition rules
 
