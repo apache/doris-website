@@ -37,23 +37,33 @@ under the License.
 
 可通过 `SHOW COMPUTE GROUPS` 查看当前仓库拥有的所有计算组。
 
-```SQL
+```sql
 SHOW COMPUTE GROUPS;
 ```
 
 ## 添加计算组
 
-在添加 BE 时，会自动添加计算组。
+使用[Add BE ](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md)命令添加 BE 并为 BE 指定计算组，示例：
+
+```sql
+ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");
+```
+
+上面命令会将`host:9050`这台节点添加到`new_group`这个计算组中，您也可以不指定计算组，默认会添加到`default_compute_group`组里，示例：
+
+```sql
+ALTER SYSTEM ADD BACKEND 'host:9050';
+```
 
 ## 授予计算组访问权限
 
-```SQL
+```sql
 GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user}
 ```
 
 ## 撤销计算组访问权限
 
-```SQL
+```sql
 REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user}
 ```
 
@@ -61,31 +71,31 @@ REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user}
 
 为当前用户设置默认计算组：
 
-```SQL
+```sql
 SET PROPERTY 'default_compute_group' = '{clusterName}';
 ```
 
 为其他用户设置默认计算组（此操作需要 Admin 权限）：
 
-```SQL
+```sql
 SET PROPERTY FOR {user} 'default_compute_group' = '{clusterName}';
 ```
 
 查看当前用户默认计算组，返回结果中`default_compute_group` 的值即为默认计算组：
 
-```SQL
+```sql
 SHOW PROPERTY;
 ```
 
 查看其他用户默认计算组，此操作需要当前用户具备相关权限，返回结果中`default_compute_group` 的值即为默认计算组：
 
-```SQL
+```sql
 SHOW PROPERTY FOR {user};
 ```
 
 查看当前仓库下所有可用的计算组：
 
-```SQL
+```sql
 SHOW COMPUTE GROUPS;
 ```
 
@@ -121,7 +131,7 @@ SHOW COMPUTE GROUPS;
 
 **语法**
 
-```SQL
+```sql
 USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 ```
 
