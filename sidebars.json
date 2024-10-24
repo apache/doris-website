@@ -122,6 +122,7 @@
                     ]
                 },
                 "table-design/auto-increment",
+                "table-design/temporary-table",
                 "table-design/best-practice"
             ]
         },
