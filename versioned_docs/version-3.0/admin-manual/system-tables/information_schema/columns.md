@@ -23,41 +23,44 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-## 概述
 
-查看所有的列信息
 
-## 所属数据库
+
+## Overview
+
+View all column information.
+
+## Database
 
 
 `information_schema`
 
 
-## 表信息
+## Table Information
 
-| 列名                     | 类型          | 说明                                                         |
-| :----------------------- | :------------ | :----------------------------------------------------------- |
-| TABLE_CATALOG            | varchar(512)  | Catalog 名称                                                 |
-| TABLE_SCHEMA             | varchar(64)   | Database 名称                                                |
-| TABLE_NAME               | varchar(64)   | 表名称                                                       |
-| COLUMN_NAME              | varchar(64)   | 列名称                                                       |
-| ORDINAL_POSITION         | bigint        | 列在表中所处的位置                                           |
-| COLUMN_DEFAULT           | varchar(1024) | 列的默认值                                                   |
-| IS_NULLABLE              | varchar(3)    | 是否允许为 NULL                                              |
-| DATA_TYPE                | varchar(64)   | 数据类型                                                     |
-| CHARACTER_MAXIMUM_LENGTH | bigint        | 字符类型允许的最大字符数                                     |
-| CHARACTER_OCTET_LENGTH   | bigint        | 字符类型允许的最大字节数                                     |
-| NUMERIC_PRECISION        | bigint        | 数值类型的 Precision                                         |
-| NUMERIC_SCALE            | bigint        | 数值类型的 Scale                                             |
-| DATETIME_PRECISION       | bigint        | datetime 类型的 Precision                                    |
-| CHARACTER_SET_NAME       | varchar(32)   | 字符类型的字符集名称，永远为 NULL                            |
-| COLLATION_NAME           | varchar(32)   | 字符类型的排序算法名称，永远为 NULL                          |
-| COLUMN_TYPE              | varchar(32)   | 列的类型                                                     |
-| COLUMN_KEY               | varchar(3)    | 如果是 UNI，则表示当前列是 Unique Key 列                      |
-| EXTRA                    | varchar(27)   | 列的一些额外信息。包括展示是否为自增列，是否为 Generated 列等 |
-| PRIVILEGES               | varchar(80)   | 永远为空                                                     |
-| COLUMN_COMMENT           | varchar(255)  | 列的备注信息                                                 |
-| COLUMN_SIZE              | bigint        | 列的宽度                                                     |
-| DECIMAL_DIGITS           | bigint        | 数值类型的小数位数                                           |
-| GENERATION_EXPRESSION    | varchar(64)   | 永远为 NULL                                                  |
-| SRS_ID                   | bigint        | 永远为 NULL                                                  |
+| Column Name              | Type          | Description                                                  |
+| ------------------------ | ------------- | ------------------------------------------------------------ |
+| TABLE_CATALOG            | varchar(512)  | Catalog name                                                 |
+| TABLE_SCHEMA             | varchar(64)   | Database name                                                |
+| TABLE_NAME               | varchar(64)   | Table name                                                   |
+| COLUMN_NAME              | varchar(64)   | Column name                                                  |
+| ORDINAL_POSITION         | bigint        | The position of the column in the table                      |
+| COLUMN_DEFAULT           | varchar(1024) | Default value of the column                                  |
+| IS_NULLABLE              | varchar(3)    | Whether NULL is allowed                                      |
+| DATA_TYPE                | varchar(64)   | Data type                                                    |
+| CHARACTER_MAXIMUM_LENGTH | bigint        | Maximum number of characters allowed for character types     |
+| CHARACTER_OCTET_LENGTH   | bigint        | Maximum number of bytes allowed for character types          |
+| NUMERIC_PRECISION        | bigint        | Precision for numeric types                                  |
+| NUMERIC_SCALE            | bigint        | Scale for numeric types                                      |
+| DATETIME_PRECISION       | bigint        | Precision for datetime types                                 |
+| CHARACTER_SET_NAME       | varchar(32)   | Character set name for character types, always NULL          |
+| COLLATION_NAME           | varchar(32)   | Collation algorithm name for character types, always NULL    |
+| COLUMN_TYPE              | varchar(32)   | Column type                                                  |
+| COLUMN_KEY               | varchar(3)    | If 'UNI', it indicates that the column is a Unique Key column |
+| EXTRA                    | varchar(27)   | Additional information about the column, including whether it is an auto-increment column, a generated column, etc. |
+| PRIVILEGES               | varchar(80)   | Always empty                                                 |
+| COLUMN_COMMENT           | varchar(255)  | Comment information for the column                           |
+| COLUMN_SIZE              | bigint        | Width of the column                                          |
+| DECIMAL_DIGITS           | bigint        | Number of decimal places for numeric types                   |
+| GENERATION_EXPRESSION    | varchar(64)   | Always NULL                                                  |
+| SRS_ID                   | bigint        | Always NULL                                                  |
