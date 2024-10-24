@@ -68,6 +68,10 @@ CREATE DATABASE [IF NOT EXISTS] db_name
    );
    ```
 
+:::caution
+If the create table statement has attributes replication_allocation or replication_num, then the default replica distribution policy of the database will not take effect.
+:::
+
 ### Keywords
 
 ```text

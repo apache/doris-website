@@ -483,17 +483,7 @@ Set table properties. The following attributes are currently supported:
 
 * Dynamic partition related
 
-   The relevant parameters of dynamic partition are as follows:
-
-* `dynamic_partition.enable`: Used to specify whether the dynamic partition function at the table level is enabled. The default is true.
-* `dynamic_partition.time_unit:` is used to specify the time unit for dynamically adding partitions, which can be selected as DAY (day), WEEK (week), MONTH (month), YEAR (year), HOUR (hour).
-* `dynamic_partition.start`: Used to specify how many partitions to delete forward. The value must be less than 0. The default is Integer.MIN_VALUE.
-* `dynamic_partition.end`: Used to specify the number of partitions created in advance. The value must be greater than 0.
-* `dynamic_partition.prefix`: Used to specify the partition name prefix to be created. For example, if the partition name prefix is ​​p, the partition name will be automatically created as p20200108.
-* `dynamic_partition.buckets`: Used to specify the number of partition buckets that are automatically created.
-* `dynamic_partition.create_history_partition`: Whether to create a history partition.
-* `dynamic_partition.history_partition_num`: Specify the number of historical partitions to be created.
-* `dynamic_partition.reserved_history_periods`: Used to specify the range of reserved history periods.
+References related to dynamic partitioning[Data Partitioning-Dynamic partitioning](../../../../table-design/data-partition.md#Dynamic partitioning)
 
 * `file_cache_ttl_seconds`: 
 

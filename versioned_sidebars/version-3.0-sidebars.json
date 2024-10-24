@@ -101,6 +101,14 @@
                 },
                 {
                     "type": "category",
+                    "label": "Tiered Storage",
+                    "items": [
+                        "table-design/tiered-storage/diff-disk-medium-migration",
+                        "table-design/tiered-storage/remote-storage"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Data Models",
                     "items": [
                         "table-design/data-model/overview",
