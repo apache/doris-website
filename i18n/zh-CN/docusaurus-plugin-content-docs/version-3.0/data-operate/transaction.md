@@ -433,7 +433,7 @@ curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt h
 - 可以使用事务 id 指定事务
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/_stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
       "msg": "transaction [18036] commit successfully."
