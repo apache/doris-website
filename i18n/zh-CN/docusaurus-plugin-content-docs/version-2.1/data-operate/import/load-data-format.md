@@ -33,8 +33,8 @@ Doris 支持对csv、json、parquet、orc格式的数据文件进行导入。本
 - [Broker Load](./import-way/broker-load-manual.md)
 - [Routine Load](./import-way/routine-load-manual.md)
 - [MySQL Load](./import-way/mysql-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ### 支持的CSV格式
 - csv: 文件不带 header 和 type
@@ -56,20 +56,20 @@ Doris 支持对csv、json、parquet、orc格式的数据文件进行导入。本
 
 [Stream Load](./import-way/stream-load-manual.md) 
 
-```
-curl --location-trusted -u <doris_user>:<doris_password>
-    -H "Expect:100-continue"
-    -H "line_delimiter:\n"
-    -H "columns_delimiter:|"
-    -H "enclose:'"
-    -H "escape:\"
-    -H "skip_lines:2"
-    -T streamload_example.csv 
+```shell
+curl --location-trusted -u <doris_user>:<doris_password> \
+    -H "Expect:100-continue" \
+    -H "line_delimiter:\n" \
+    -H "columns_delimiter:|" \
+    -H "enclose:'" \
+    -H "escape:\" \
+    -H "skip_lines:2" \
+    -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
 [Broker Load](./import-way/broker-load-manual.md)
-```
+```sql
 LOAD LABEL example_db.exmpale_label_1
 (
     DATA INFILE("s3://your_bucket_name/your_file.txt")
@@ -93,7 +93,7 @@ WITH S3
 ```
 
 [Routine Load](./import-way/routine-load-manual.md)
-```
+```sql
 CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
      COLUMNS TERMINATED BY "|",
      COLUMNS(id, name, age)
@@ -112,7 +112,7 @@ CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
 ```
 
 [MySQL Load](./import-way/mysql-load-manual.md)
-```
+```sql
 LOAD DATA LOCAL
 INFILE "testData"
 INTO TABLE testDb.testTbl
@@ -136,8 +136,8 @@ Doris 支持导入 JSON 格式的数据。本文档主要说明在进行 JSON �
 - [Stream Load](./import-way/stream-load-manual.md)
 - [Broker Load](./import-way/broker-load-manual.md)
 - [Routine Load](./import-way/routine-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ### 支持的 JSON 格式
 
@@ -332,7 +332,7 @@ JSON Path 用于指定如何对 JSON 格式中的数据进行抽取，而 Column
 
 表结构：
 
-```
+```sql
 k2 int, k1 int
 ```
 
@@ -391,7 +391,7 @@ curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", 
 相比于导入语句 1 和导入语句 2 的表结构，这里增加`k1_copy`列。
 表结构：
 
-```
+```sql
 k2 int, k1 int, k1_copy int
 ```
 如果你想将 json 中的某一字段多次赋予给表中几列，那么可以在 jsonPaths 中多次指定该列，并且依次指定映射顺序。示例如下：
@@ -421,13 +421,13 @@ curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", 
 相比于导入语句 1 和导入语句 2 的表结构，这里增加`k1_nested1`,`k1_nested2`列。
 表结构：
 
-```
+```text
 k2 int, k1 int, k1_nested1 int, k1_nested2 int
 ```
 如果你想将 json 中嵌套的多级同名字段赋予给表中不同的列，那么可以在 jsonPaths 中指定该列，并且依次指定映射顺序。示例如下：
 
 ```shell
-curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\",\"$.k3.k1\",\"$.k3.k1_nested.k1\" -H "columns: k2,k1,k1_nested1,k1_nested2" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
+curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\",\"$.k3.k1\",\"$.k3.k1_nested.k1\"]" -H "columns: k2,k1,k1_nested1,k1_nested2" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ```
 
 上述示例会按 JSON Path 中字段的顺序抽取后，指定第一列为表中 k2 列的值，而第二列为表中 k1 列的值，第三列嵌套类型中的 k1 列为表中 k1_nested1 列的值，由此可知 k3.k1_nested.k1 列为表中 k1_nested2 列的值。最终导入的数据结果如下：
@@ -537,7 +537,7 @@ curl -v --location-trusted -u root: -H "format: json" -H "strip_outer_array: tru
 
 ```text
 id      INT     NOT NULL,
-city    VARHCAR NULL,
+city    VARCHAR NULL,
 code    INT     NULL
 ```
 
@@ -642,7 +642,7 @@ StreamLoad 导入：
 
 导入结果：
 
-```
+```text
 100     beijing                     1
 101     shanghai                    NULL
 102     tianjin                     3
@@ -680,11 +680,11 @@ curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\
 ```
 
 ```shell
-curl --location-trusted -u root:  -H ":0.01" -H "format:json" -H "timeout:300" -T test_decimal.json http://localhost:8035/api/example_db/array_test_decimal/_stream_load
+curl --location-trusted -u root:  -H "max_filter_ratio:0.01" -H "format:json" -H "timeout:300" -T test_decimal.json http://localhost:8030/api/example_db/array_test_decimal/_stream_load
 ```
 
 导入结果：
-```
+```shell
 MySQL > select * from array_test_decimal;
 +------+----------------------------------+
 | k1   | k2                               |
@@ -700,11 +700,11 @@ MySQL > select * from array_test_decimal;
 ```
 
 ```shell
-curl --location-trusted -u root:  -H "max_filter_ratio:0.01" -H "format:json" -H "timeout:300" -T test_largeint.json http://localhost:8035/api/example_db/array_test_largeint/_stream_load
+curl --location-trusted -u root:  -H "max_filter_ratio:0.01" -H "format:json" -H "timeout:300" -T test_largeint.json http://localhost:8030/api/example_db/array_test_largeint/_stream_load
 ```
 
 导入结果：
-```
+```shell
 MySQL > select * from array_test_largeint;
 +------+------------------------------------------------------------------------------------+
 | k1   | k2                                                                                 |
@@ -724,23 +724,23 @@ Routine Load 对 JSON 数据的处理原理和 Stream Load 相同。在此不再
 以下导入方式支持 CSV 格式的数据导入：
 - [Stream Load](./import-way/stream-load-manual.md)
 - [Broker Load](./import-way/broker-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ### 导入示例
 
 [Stream Load](./import-way/stream-load-manual.md) 
 
-```
-curl --location-trusted -u <doris_user>:<doris_password>
-    -H "Expect:100-continue"
-    -H "format:parquet"
-    -T streamload_example.parquet
+```shell
+curl --location-trusted -u <doris_user>:<doris_password> \
+    -H "Expect:100-continue" \
+    -H "format:parquet" \
+    -T streamload_example.parquet \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
 [Broker Load](./import-way/broker-load-manual.md)
-```
+```sql
 LOAD LABEL example_db.exmpale_label_1
 (
     DATA INFILE("s3://your_bucket_name/your_file.parquet")
@@ -761,23 +761,23 @@ WITH S3
 以下导入方式支持 CSV 格式的数据导入：
 - [Stream Load](./import-way/stream-load-manual.md)
 - [Broker Load](./import-way/broker-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ### 导入示例
 
 [Stream Load](./import-way/stream-load-manual.md) 
 
-```
-curl --location-trusted -u <doris_user>:<doris_password>
-    -H "Expect:100-continue"
-    -H "format:orc"
-    -T streamload_example.orc
+```shell
+curl --location-trusted -u <doris_user>:<doris_password> \
+    -H "Expect:100-continue" \
+    -H "format:orc" \
+    -T streamload_example.orc \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
 [Broker Load](./import-way/broker-load-manual.md)
-```
+```sql
 LOAD LABEL example_db.exmpale_label_1
 (
     DATA INFILE("s3://your_bucket_name/your_file.orc")
