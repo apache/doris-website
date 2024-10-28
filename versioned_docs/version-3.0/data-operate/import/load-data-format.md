@@ -62,7 +62,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "line_delimiter:\n" \
     -H "columns_delimiter:|" \
     -H "enclose:'" \
-    -H "escape:\" \
+    -H 'escape:\' \
     -H "skip_lines:2" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -70,7 +70,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 [Broker Load](./import-way/broker-load-manual.md)
 ```sql
-LOAD LABEL example_db.exmpale_label_1
+LOAD LABEL example_db.example_label_1
 (
     DATA INFILE("s3://your_bucket_name/your_file.txt")
     INTO TABLE load_test
@@ -742,7 +742,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 [Broker Load](./import-way/broker-load-manual.md)
 ```sql
-LOAD LABEL example_db.exmpale_label_1
+LOAD LABEL example_db.example_label_1
 (
     DATA INFILE("s3://your_bucket_name/your_file.parquet")
     INTO TABLE load_test
@@ -779,7 +779,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 [Broker Load](./import-way/broker-load-manual.md)
 ```sql
-LOAD LABEL example_db.exmpale_label_1
+LOAD LABEL example_db.example_label_1
 (
     DATA INFILE("s3://your_bucket_name/your_file.orc")
     INTO TABLE load_test

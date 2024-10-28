@@ -420,7 +420,7 @@ http_stream parameter:
 
 - "column_separator" = ","
 
-- "format" = "CSV"
+- "format" = "CSV" (column name must be "col, ...")
 - ...
 
 For example:
@@ -636,9 +636,9 @@ When a table with a Unique Key has a Sequence column, the value of the Sequence 
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: DELETE" \
-    -H "function_column.sequence_col: age" 
+    -H "function_column.sequence_col: age" \
     -H "column_separator:," \
-    -H "columns: name, gender, age" 
+    -H "columns: name, gender, age" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
@@ -732,7 +732,6 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
-    -H "escape:\" \
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -751,6 +750,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
+    -H 'escape:\' \
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -763,15 +763,19 @@ Here's an example of loading data into a table that contains a field with the DE
 Table schema:
 
 ```sql
-`id` bigint(30) NOT NULL,
-`order_code` varchar(30) DEFAULT NULL COMMENT '',
-`create_time` datetimev2(3) DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE testDb.testTbl (
+    `id` BIGINT(30) NOT NULL,
+    `order_code` VARCHAR(30) DEFAULT NULL COMMENT '',
+    `create_time` DATETIMEv2(3) DEFAULT CURRENT_TIMESTAMP
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 10;
 ```
 
 JSON data type:
 
 ```Plain
-{"id":1,"order_Code":"avc"}
+{"id":1,"order_code":"avc"}
 ```
 
 Command:
@@ -820,7 +824,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "format:json" \
     -H "strip_outer_array:true" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -852,7 +856,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "strip_outer_array:true" \
     -H "jsonpaths:[\"$.userid\", \"$.username\", \"$.userage\"]" \
     -H "columns:user_id,name,age" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -997,7 +1001,7 @@ Load data into the following table containing the Bitmap type:
 CREATE TABLE testdb.test_streamload(
     typ_id     BIGINT                NULL   COMMENT "ID",
     hou        VARCHAR(10)           NULL   COMMENT "one",
-    arr        BITMAP  BITMAP_UNION  NULL   COMMENT "two"
+    arr        BITMAP  BITMAP_UNION  NOT NULL   COMMENT "two"
 )
 AGGREGATE KEY(typ_id,hou)
 DISTRIBUTED BY HASH(typ_id,hou) BUCKETS 10;
@@ -1008,7 +1012,7 @@ And use to_bitmap to convert the data into the Bitmap type.
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
-    -H "columns:typ_id,hou,arr,arr=to_bitmap(arr)"
+    -H "columns:typ_id,hou,arr,arr=to_bitmap(arr)" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
@@ -1036,7 +1040,7 @@ Load data into the following table:
 CREATE TABLE testdb.test_streamload(
     typ_id           BIGINT          NULL   COMMENT "ID",
     typ_name         VARCHAR(10)     NULL   COMMENT "NAME",
-    pv               hll hll_union   NULL   COMMENT "hll"
+    pv               hll hll_union   NOT NULL   COMMENT "hll"
 )
 AGGREGATE KEY(typ_id,typ_name)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;

@@ -59,7 +59,7 @@ under the License.
 完整示例如下
 
 ```sql
-    LOAD LABEL example_db.exmpale_label_1
+    LOAD LABEL example_db.example_label_1
     (
         DATA INFILE("s3://your_bucket_name/your_file.txt")
         INTO TABLE load_test

@@ -147,7 +147,7 @@ Hdfs load 创建导入语句，导入方式和[Broker Load](../../../data-operat
 
 完整示例如下
 ```
-    LOAD LABEL example_db.exmpale_label_1
+    LOAD LABEL example_db.example_label_1
     (
         DATA INFILE("s3://your_bucket_name/your_file.txt")
         INTO TABLE load_test
