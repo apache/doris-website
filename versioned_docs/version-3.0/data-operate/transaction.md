@@ -437,7 +437,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 - Specify the transaction using the Transaction ID:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/_stream_load2pc
   {
       "status": "Success",
       "msg": "transaction [18036] commit successfully."
@@ -459,7 +459,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 - Specify the transaction using the Transaction ID:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load2pc
   {
       "status": "Success",
       "msg": "transaction [18037] abort successfully."
@@ -469,7 +469,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 - Specify the transaction using the label:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load2pc
   {
       "status": "Success",
       "msg": "label [55c8ffc9-1c40-4d51-b75e-f2265b3602ef] abort successfully."

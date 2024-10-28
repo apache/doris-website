@@ -176,7 +176,7 @@ curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt h
 - 可以使用事务 id 指定事务
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/_stream_load2pc
   {
       "status": "Success",
       "msg": "transaction [18036] commit successfully."
@@ -198,7 +198,7 @@ curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt h
 - 可以使用事务 id 指定事务
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd  -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd  -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load2pc
   {
       "status": "Success",
       "msg": "transaction [18037] abort successfully."
@@ -208,7 +208,7 @@ curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt h
 - 也可以使用 label 指定事务
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd  -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd  -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load2pc
   {
       "status": "Success",
       "msg": "label [55c8ffc9-1c40-4d51-b75e-f2265b3602ef] abort successfully."
