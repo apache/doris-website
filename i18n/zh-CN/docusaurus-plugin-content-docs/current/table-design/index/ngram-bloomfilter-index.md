@@ -151,6 +151,14 @@ curl --location-trusted -u root: -T amazon_reviews_2014.snappy.parquet -H "forma
 curl --location-trusted -u root: -T amazon_reviews_2015.snappy.parquet -H "format:parquet" http://127.0.0.1:8030/api/${DB}/amazon_reviews/_stream_load
 ```
 
+:::info
+上面的文件可能超过 10 GB，您可能需要调整 be.conf 的 streaming_load_max_mb 防止超过 stream load 文件上传大小的限制，可以通过下面方式动态调整
+```bash
+curl -X POST http://{be_ip}:{be_http_port}/api/update_config?streaming_load_max_mb=32768
+```
+需要每台 be 都执行上述命令。
+:::
+
 **SQL 运行 count() 确认导入数据成功**
 ```
 mysql> SELECT COUNT() FROM amazon_reviews;
