@@ -482,17 +482,7 @@ UNIQUE KEY(k1, k2)
 
 * 动态分区相关
 
-    动态分区相关参数如下：
-
-    * `dynamic_partition.enable`: 用于指定表级别的动态分区功能是否开启。默认为 true。
-    * `dynamic_partition.time_unit:` 用于指定动态添加分区的时间单位，可选择为 DAY（天），WEEK(周)，MONTH（月），YEAR（年），HOUR（时）。
-    * `dynamic_partition.start`: 用于指定向前删除多少个分区。值必须小于 0。默认为 Integer.MIN_VALUE。
-    * `dynamic_partition.end`: 用于指定提前创建的分区数量。值必须大于 0。
-    * `dynamic_partition.prefix`: 用于指定创建的分区名前缀，例如分区名前缀为 p，则自动创建分区名为 p20200108。
-    * `dynamic_partition.buckets`: 用于指定自动创建的分区分桶数量。
-    * `dynamic_partition.create_history_partition`: 是否创建历史分区。
-    * `dynamic_partition.history_partition_num`: 指定创建历史分区的数量。
-    * `dynamic_partition.reserved_history_periods`: 用于指定保留的历史分区的时间段。
+    动态分区相关参考[分区分桶-动态分区](../../../../table-design/data-partition.md#动态分区)
 
 * `file_cache_ttl_seconds`:
 
