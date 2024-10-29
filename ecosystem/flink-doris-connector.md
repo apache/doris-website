@@ -98,6 +98,24 @@ CREATE TABLE flink_doris_source (
        'password' = 'password'
 );
 ```
+:::info Note
+Flink Connector 24.0.0 and later versions support using [Arrow Flight SQL](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/) to read data
+:::
+```sql
+CREATE TABLE doris_source (
+name STRING,
+age int
+) 
+WITH (
+  'connector' = 'doris',
+  'fenodes' = 'FE_IP:HTTP_PORT',
+  'table.identifier' = 'database.table',
+  'source.use-flight-sql' = 'true',
+  'source.flight-sql-port' = '{fe.conf:arrow_flight_sql_port}',
+  'username' = 'root',
+  'password' = ''
+)
+```
 
 **DataStream**
 
@@ -335,8 +353,15 @@ ON a.city = c.city
 | doris.exec.mem.limit          | 2147483648         | N        | Memory limit for a single query. The default is 2GB, in bytes |
 | doris.deserialize.arrow.async | FALSE              | N        | Whether to support asynchronous conversion of Arrow format to RowBatch needed for flink-doris-connector iterations |
 | doris.deserialize.queue.size  | 64                 | N        | Asynchronous conversion of internal processing queue in Arrow format, effective when doris.deserialize.arrow.async is true |
+| source.use-flight-sql | FALSE              | N        | Whether to use Arrow Flight SQL to read |
+| source.flight-sql-port  | -                 | N        | When using ArrowFlightSQL to read, FE's arrow_flight_sql_port |
+
+#### Datastream-specific configuration items
+| Key                           | Default Value      | Required | Comment                                                      |
+| ----------------------------- | ------------------ | -------- | ------------------------------------------------------------ |
 | doris.read.field              | --                 | N        | Read the list of column names of the Doris table, separated by commas |
 | doris.filter.query            | --                 | N        | The expression to filter the read data, this expression is transparently passed to Doris. Doris uses this expression to complete source-side data filtering. For example age=18. |
+
 
 ### Sink configuration items
 
