@@ -157,7 +157,7 @@ WITH BROKER broker_name
 
 - `broker_properties`
 
-  Specifies the information required by the broker. This information is usually used by the broker to be able to access remote storage systems. Such as BOS or HDFS. See the [Broker](../../../../advanced/broker.md) documentation for specific information.<!-- FIXME: fix link -->
+  Specifies the information required by the broker. This information is usually used by the broker to be able to access remote storage systems. Such as BOS or HDFS. See the [Broker Load](../../../../data-operate/import/broker-load-manual) documentation for specific information.
 
   ```text
   (

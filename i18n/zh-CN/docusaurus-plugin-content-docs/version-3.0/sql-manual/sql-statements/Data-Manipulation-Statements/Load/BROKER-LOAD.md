@@ -158,7 +158,7 @@ WITH BROKER broker_name
 
 - `broker_properties`
 
-  指定 broker 所需的信息。这些信息通常被用于 Broker 能够访问远端存储系统。如 BOS 或 HDFS。关于具体信息，可参阅 [Broker](../../../../advanced/broker.md) 文档。<!-- FIXME: fix link -->
+  指定 broker 所需的信息。这些信息通常被用于 Broker 能够访问远端存储系统。如 BOS 或 HDFS。关于具体信息，可参阅 [Broker Load](../../../../data-operate/import/broker-load-manual) 文档。
 
   ```text
   (

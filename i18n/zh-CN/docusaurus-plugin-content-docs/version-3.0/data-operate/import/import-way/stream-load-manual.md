@@ -1064,15 +1064,15 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Label、导入事务、多表原子性
 
-Doris 中所有导入任务都是原子生效的。并且在同一个导入任务中对多张表的导入也能够保证原子性。同时，Doris 还可以通过 Label 的机制来保证数据导入的不丢不重。具体说明可以参阅 [导入事务和原子性](../../../data-operate/import/load-atomicity) 文档。<!-- FIXME: fix link -->
+Doris 中所有导入任务都是原子生效的。并且在同一个导入任务中对多张表的导入也能够保证原子性。同时，Doris 还可以通过 Label 的机制来保证数据导入的不丢不重。具体说明可以参阅 [导入事务和原子性](../../../data-operate/transaction) 文档。
 
 ### 列映射、衍生列和过滤
 
-Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。支持绝大多数内置函数和 UDF。关于如何正确的使用这个功能，可参阅 [数据转换](../../../data-operate/import/load-data-convert) 文档。<!-- FIXME: fix link -->
+Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。支持绝大多数内置函数和 UDF。关于如何正确的使用这个功能，可参阅 [数据转换](../../../data-operate/import/load-data-convert) 文档。
 
 ### 启用严格模式导入
 
-`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [严格模式](../../../data-operate/import/load-strict-mode) 文档。
+`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [错误数据处理](../../../data-operate/import/error-data-handling) 文档。
 
 ### 导入时进行部分列更新
 
