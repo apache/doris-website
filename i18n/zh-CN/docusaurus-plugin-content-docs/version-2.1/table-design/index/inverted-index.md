@@ -190,6 +190,14 @@ table_properties;
   <p>- 从 2.1.2 版本开始默认为 true，自动转小写，之前的版本默认为 false</p>
 </details>
 
+<details>
+  <summary>stopwords</summary>
+
+  **指明分词器是否使用停用词，会影响分词器的行为**
+  <p>停用词包含一些无意义的词，比如 'is'、'the'、'a' 等。默认情况下，在写入或者查询时，分词器会忽略这些词。</p>
+  <p>- none: 不要忽略这些停用词</p>
+</details>
+
 **4. `COMMENT` 是可选的，用于指定索引注释**
 
 

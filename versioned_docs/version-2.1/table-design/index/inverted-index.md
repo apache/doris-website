@@ -187,6 +187,14 @@ Syntax explanation:
   <p>- From version 2.1.2, the default is true, automatically converting to lowercase. Earlier versions default to false.</p>
 </details>
 
+<details>
+  <summary>stopwords</summary>
+
+  **Specifying whether the tokenizer uses stop words will affect the tokenizer's behavior**
+  <p>- Stop words include meaningless words such as 'is', 'the', 'a', etc. By default, the tokenizer ignores these words during indexing or querying.</p>
+  <p>- none: do not ignore these stop words</p>
+</details>
+
 **4. `COMMENT` is optional for specifying index comments**
 
 ### Adding Inverted Indexes to Existing Tables
