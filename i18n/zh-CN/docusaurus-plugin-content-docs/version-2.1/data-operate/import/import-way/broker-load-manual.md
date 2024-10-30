@@ -502,7 +502,7 @@ Doris 支持通过 S3 协议直接从支持 S3 协议的对象存储系统导入
 ### 导入示例
 
 ```sql
-    LOAD LABEL example_db.exmpale_label_1
+    LOAD LABEL example_db.example_label_1
     (
         DATA INFILE("s3://your_bucket_name/your_file.txt")
         INTO TABLE load_test

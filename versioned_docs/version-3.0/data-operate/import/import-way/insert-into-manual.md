@@ -129,7 +129,7 @@ MySQL> SELECT COUNT(*) FROM testdb.test_table2;
 
 4. You can use [JOB](../../scheduler/job-scheduler.md) make the INSERT operation execute asynchronously.
 
-5. Sources can be [tvf](../../../lakehouse/file.md) or tables in a [catalog](../../../lakehouse/database).
+5. Sources can be [tvf](../../../lakehouse/file.md) or tables in a [catalog](../../../lakehouse/database/jdbc).
 
 ### View INSERT INTO jobs
 

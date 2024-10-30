@@ -1055,7 +1055,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Label, loading transaction, multi-table atomicity
 
-All load jobs in Doris are atomically effective. And multiple tables loading in the same load job can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that data loading is not lost or duplicated. For specific instructions, please refer to the [Import Transactions and Atomicity](../../../data-operate/import/load-atomicity) documentation.
+All load jobs in Doris are atomically effective. And multiple tables loading in the same load job can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that data loading is not lost or duplicated. For specific instructions, please refer to the [Import Transactions and Atomicity](../../../data-operate/transaction) documentation.
 
 ### Column mapping, derived columns, and filtering
 
@@ -1063,7 +1063,7 @@ Doris supports a very rich set of column transformations and filtering operation
 
 ### Enable strict mode import
 
-The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Strict Mode](../../../data-operate/import/load-strict-mode) documentation.
+The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Error Data Handling](../../../data-operate/import/error-data-handling) documentation.
 
 ### Perform partial column updates/flexible partial update during import
 

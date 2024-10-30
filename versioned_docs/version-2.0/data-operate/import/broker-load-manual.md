@@ -501,7 +501,7 @@ Doris supports importing data directly from object storage systems that support 
 ### Import example
 
 ```sql
-    LOAD LABEL example_db.exmpale_label_1
+    LOAD LABEL example_db.example_label_1
     (
         DATA INFILE("s3://your_bucket_name/your_file.txt")
         INTO TABLE load_test

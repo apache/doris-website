@@ -420,12 +420,14 @@ curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -
 load_sql 举例：
 
 ```shell
-insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
+insert into db.table (col1, col2, ...) select c1, c2, ... from http_stream("property1"="value1");
 ```
 
 http_stream 支持的参数：
 
 "column_separator" = ",", "format" = "CSV",
+
+导入 CSV 文件时，`select ... from http_stream` 子句中的列名格式必须为 `c1, c2, c3, ...`，见下方示例
 
 ...
 
@@ -642,9 +644,9 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: DELETE" \
-    -H "function_column.sequence_col: age" 
+    -H "function_column.sequence_col: age" \
     -H "column_separator:," \
-    -H "columns: name, gender, age" 
+    -H "columns: name, gender, age" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
@@ -728,26 +730,25 @@ li,male,9
 如下列数据中，列中包含了分隔符 `,`：
 
 ```sql
-张三,30,'上海市，黄浦区，大沽路'
+张三,30,'上海市,黄浦区,大沽路'
 ```
 
-通过制定包围符`'`，可以将“上海市，黄浦区，大沽路”指定为一个字段：
+通过制定包围符`'`，可以将“上海市,黄浦区,大沽路”指定为一个字段：
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
-    -H "escape:\" \
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-如果包围字符也出现在字段中，如希望将“上海市，黄浦区，'大沽路”作为一个字段，需要先在列中进行字符串转义：
+如果包围字符也出现在字段中，如希望将“上海市,黄浦区,'大沽路”作为一个字段，需要先在列中进行字符串转义：
 
 ```sql
-张三,30,'上海市，黄浦区，\'大沽路'
+张三,30,'上海市,黄浦区,\'大沽路'
 ```
 
 可以通过 escape 参数可以指定单字节转义字符，如下例中 `\`:
@@ -757,6 +758,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
+    -H 'escape:\' \
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -769,15 +771,19 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 表结构：
 
 ```sql
-`id` bigint(30) NOT NULL,
-`order_code` varchar(30) DEFAULT NULL COMMENT '',
-`create_time` datetimev2(3) DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE testDb.testTbl (
+    `id` BIGINT(30) NOT NULL,
+    `order_code` VARCHAR(30) DEFAULT NULL COMMENT '',
+    `create_time` DATETIMEv2(3) DEFAULT CURRENT_TIMESTAMP
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 10;
 ```
 
 JSON 数据格式：
 
 ```Plain
-{"id":1,"order_Code":"avc"}
+{"id":1,"order_code":"avc"}
 ```
 
 导入命令：
@@ -826,7 +832,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "format:json" \
     -H "strip_outer_array:true" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -858,7 +864,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "strip_outer_array:true" \
     -H "jsonpaths:[\"$.userid\", \"$.username\", \"$.userage\"]" \
     -H "columns:user_id,name,age" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -1003,7 +1009,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 CREATE TABLE testdb.test_streamload(
     typ_id     BIGINT                NULL   COMMENT "ID",
     hou        VARCHAR(10)           NULL   COMMENT "one",
-    arr        BITMAP  BITMAP_UNION  NULL   COMMENT "two"
+    arr        BITMAP  BITMAP_UNION  NOT NULL   COMMENT "two"
 )
 AGGREGATE KEY(typ_id,hou)
 DISTRIBUTED BY HASH(typ_id,hou) BUCKETS 10;
@@ -1014,7 +1020,7 @@ DISTRIBUTED BY HASH(typ_id,hou) BUCKETS 10;
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
-    -H "columns:typ_id,hou,arr,arr=to_bitmap(arr)"
+    -H "columns:typ_id,hou,arr,arr=to_bitmap(arr)" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
@@ -1042,7 +1048,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 CREATE TABLE testdb.test_streamload(
     typ_id           BIGINT          NULL   COMMENT "ID",
     typ_name         VARCHAR(10)     NULL   COMMENT "NAME",
-    pv               hll hll_union   NULL   COMMENT "hll"
+    pv               hll hll_union   NOT NULL   COMMENT "hll"
 )
 AGGREGATE KEY(typ_id,typ_name)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;
@@ -1060,7 +1066,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Label、导入事务、多表原子性
 
-Doris 中所有导入任务都是原子生效的。并且在同一个导入任务中对多张表的导入也能够保证原子性。同时，Doris 还可以通过 Label 的机制来保证数据导入的不丢不重。具体说明可以参阅 [导入事务和原子性](../../../data-operate/import/load-atomicity) 文档。
+Doris 中所有导入任务都是原子生效的。并且在同一个导入任务中对多张表的导入也能够保证原子性。同时，Doris 还可以通过 Label 的机制来保证数据导入的不丢不重。具体说明可以参阅 [导入事务和原子性](../../../data-operate/transaction) 文档。
 
 ### 列映射、衍生列和过滤
 
@@ -1068,7 +1074,7 @@ Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。�
 
 ### 启用严格模式导入
 
-`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [严格模式](../../../data-operate/import/load-strict-mode) 文档。
+`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [错误数据处理](../../../data-operate/import/error-data-handling) 文档。
 
 ### 导入时进行部分列更新
 

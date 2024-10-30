@@ -158,7 +158,7 @@ WITH BROKER broker_name
 
 - `broker_properties`
 
-  指定 broker 所需的信息。这些信息通常被用于 Broker 能够访问远端存储系统。如 BOS 或 HDFS。关于具体信息，可参阅 [Broker](../../../../advanced/broker.md) 文档。
+  指定 broker 所需的信息。这些信息通常被用于 Broker 能够访问远端存储系统。如 BOS 或 HDFS。关于具体信息，可参阅 [Broker Load](../../../../data-operate/import/broker-load-manual) 文档。
 
   ```text
   (
@@ -249,7 +249,7 @@ WITH BROKER broker_name
        SET (
            k2 = tmp_k2 + 1,
            k3 = tmp_k3 + 1
-       )
+       ),
        DATA INFILE("hdfs://hdfs_host:hdfs_port/input/file-20*")
        INTO TABLE `my_table2`
        COLUMNS TERMINATED BY ","
@@ -451,7 +451,7 @@ WITH BROKER broker_name
         FORMAT AS "json"
         PROPERTIES(
           "json_root" = "$.item",
-          "jsonpaths" = "[$.id, $.city, $.code]"
+          "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
         )       
     )
     with HDFS (
@@ -477,7 +477,7 @@ WITH BROKER broker_name
         SET (id = id * 10)
         PROPERTIES(
           "json_root" = "$.item",
-          "jsonpaths" = "[$.id, $.code, $.city]"
+          "jsonpaths" = "[\"$.id\", \"$.code\", \"$.city\"]"
         )       
     )
     with HDFS (

@@ -139,7 +139,7 @@ curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:true"
 [BROKER LOAD](./import-way/broker-load-manual.md)
 
    ```sql
-   LOAD LABEL example_db.exmpale_label_1
+   LOAD LABEL example_db.example_label_1
    (
        DATA INFILE("s3://your_bucket_name/your_file.txt")
        INTO TABLE load_test
@@ -227,7 +227,7 @@ curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:true"
 [Broker Load](./import-way/broker-load-manual.md)
 
    ```sql
-   LOAD LABEL example_db.exmpale_label_1
+   LOAD LABEL example_db.example_label_1
    (
         DATA INFILE("s3://your_bucket_name/your_file.txt")
         INTO TABLE load_test

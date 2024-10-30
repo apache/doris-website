@@ -59,7 +59,7 @@ Like Broker Load just replace `WITH BROKER broker_name ()` with
 example:
 
 ```sql
-    LOAD LABEL example_db.exmpale_label_1
+    LOAD LABEL example_db.example_label_1
     (
         DATA INFILE("s3://your_bucket_name/your_file.txt")
         INTO TABLE load_test
