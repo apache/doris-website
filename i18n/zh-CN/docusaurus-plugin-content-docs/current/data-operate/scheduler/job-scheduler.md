@@ -84,7 +84,7 @@ CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2025-01-01 00:00:00' DO INSERT
 ```
 创建周期性的 Job，指定结束时间：在 2025-01-01 00:00:00 时开始每天执行 1 次，将 db2.tbl2 中的数据导入到 db1.tbl1 中，在 2026-01-01 00:10:00 时结束。
 ```sql
-CREATE JOB my_job ON SCHEDULER EVERY 1 DAY STARTS '2025-01-01 00:00:00' ENDS '2026-01-01 00:10:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2 create_time >=  days_add(now(),-1);
+CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2025-01-01 00:00:00' ENDS '2026-01-01 00:10:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2 WHERE create_time >=  days_add(now(),-1);
 ```
 借助 Job 实现异步执行：由于 Job 在 Doris 中是以同步任务的形式创建的，但其执行过程却是异步进行的，这一特性使得 Job 非常适合用于实现异步任务，例如常见的 insert into select 任务。
 
@@ -96,6 +96,27 @@ CREATE JOB my_job ON SCHEDULE AT current_timestamp DO INSERT INTO db1.tbl1 SELEC
 ## 基于 Catalog 与 Job Scheduler 的数据自动同步
 以某电商场景为例，用户常常需要从 MySQL 中提取业务数据，并将这些数据同步到 Doris 中进行数据分析，从而支持精准的营销活动。而 Job Scheduler 可与数据湖能力 Multi Catalog 配合，高效完成跨数据源的定期数据同步。
 
+```sql
+CREATE TABLE IF NOT EXISTS user.activity (
+    `user_id` INT NOT NULL,
+    `date` DATE NOT NULL,
+    `city` VARCHAR(20),
+    `age` SMALLINT,
+    `sex` TINYINT,
+    `last_visit_date` DATETIME DEFAULT '1970-01-01 00:00:00',
+    `cost` BIGINT DEFAULT '0',
+    `max_dwell_time` INT DEFAULT '0',
+    `min_dwell_time` INT DEFAULT '99999'
+);
+INSERT INTO user.activity VALUES
+    (10000, '2017-10-01', '北京', 20, 0, '2017-10-01 06:00:00', 20, 10, 10),
+    (10000, '2017-10-01', '北京', 20, 0, '2017-10-01 07:00:00', 15, 2, 2),
+    (10001, '2017-10-01', '北京', 30, 1, '2017-10-01 17:05:00', 2, 22, 22),
+    (10002, '2017-10-02', '上海', 20, 1, '2017-10-02 12:59:00', 200, 5, 5),
+    (10003, '2017-10-02', '广州', 32, 0, '2017-10-02 11:20:00', 30, 11, 11),
+    (10004, '2017-10-01', '深圳', 35, 0, '2017-10-01 10:00:00', 100, 3, 3),
+    (10004, '2017-10-03', '深圳', 35, 0, '2017-10-03 10:20:00', 11, 6, 6);
+```
 
 | user_id | date      | city | age  | sex  | last_visit_date | cost | max_dwell_time | min_dwell_time |
 | ------- | --------- | ---- | ---- | ---- | --------------- | ---- | -------------- | -------------- |
@@ -134,7 +155,8 @@ CREATE JOB my_job ON SCHEDULE AT current_timestamp DO INSERT INTO db1.tbl1 SELEC
 CREATE CATALOG activity PROPERTIES (
    "type"="jdbc",
    "user"="root",
-   "jdbc_url" = "jdbc:mysql://127.0.0.1:9734/user?useSSL=false",
+   "password"="123456",
+   "jdbc_url" = "jdbc:mysql://127.0.0.1:3306/user?useSSL=false",
    "driver_url" = "mysql-connector-java-5.1.49.jar",
    "driver_class" = "com.mysql.jdbc.Driver"
    );
@@ -147,14 +169,14 @@ CREATE JOB one_time_load_job
   ON SCHEDULE
   AT '2024-8-10 03:00:00'
   DO
-  INSERT INTO user_activity FROM SELECT * FROM activity.user.activity
+  INSERT INTO user_activity SELECT * FROM activity.user.activity
 ```  
 - 周期调度：用户也可以创建一个周期性的调度任务，定期更新最新的数据。
 ```sql    
 CREATE JOB schedule_load
   ON SCHEDULE EVERY 1 DAY
   DO
-  INSERT INTO user_activity FROM SELECT * FROM activity.user.activity where create_time >=  days_add(now(),-1)
+  INSERT INTO user_activity SELECT * FROM activity.user.activity where last_visit_date >=  days_add(now(),-1)
 ```  
 ## 设计与实现
 高效的调度通常伴随着大量的资源消耗，高精度的调度更是如此。传统的实现方式是直接使用 Java 内置的定时调度能力——定时调度线程周期访问，或采用一些定时调度的工具类库，但其在精度以及内存占用上存在较大的问题。为更好保障性能的前提下降低资源的占用，我们选择 TimingWheel 算法与 Disruptor 结合，实现秒级别的任务调度。
