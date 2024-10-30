@@ -413,15 +413,17 @@ Adding a SQL parameter in the header to replace the previous parameters such as 
 Example of load SQL:
 
 ```shell
-insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
+insert into db.table (col1, col2, ...) select c1, c2, ... from http_stream("property1"="value1");
 ```
 
 http_stream parameter:
 
 - "column_separator" = ","
-
-- "format" = "CSV" (column name must be "col, ...")
+- "format" = "CSV"
 - ...
+
+When loading CSV data from http_stream, the column name in `select ... from http_stream` must be in format of `c1, c2, ...`.
+See the example below.
 
 For example:
 
@@ -1294,7 +1296,7 @@ curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -
 
 
 # -- load_sql
-# insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
+# insert into db.table (col1, col2, ...) select c1, c2, ... from http_stream("property1"="value1");
 
 # http_stream
 # (

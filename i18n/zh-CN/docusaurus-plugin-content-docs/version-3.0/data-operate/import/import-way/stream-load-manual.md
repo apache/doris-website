@@ -420,12 +420,14 @@ curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -
 load_sql 举例：
 
 ```shell
-insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
+insert into db.table (col1, col2, ...) select c1, c2, ... from http_stream("property1"="value1");
 ```
 
 http_stream 支持的参数：
 
-"column_separator" = ",", "format" = "CSV", （使用此方式导入 csv 文件时，列名必须为 "col, ..."）
+"column_separator" = ",", "format" = "CSV",
+
+导入 CSV 文件时，`select ... from http_stream` 子句中的列名格式必须为 `c1, c2, c3, ...`，见下方示例
 
 ...
 
