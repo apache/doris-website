@@ -95,13 +95,16 @@ Workload Group功能是对单台BE资源用量的划分。当用户创建了一�
 create workload group tag_wg properties('tag'='cn1');
 ```
 2. 修改集群中一个BE的标签为cn1，此时tag_wg这个Workload Group就只会发送到这个BE以及标签为空的BE上。tag.workload_group属性可以指定多个，使用英文逗号分隔。
+需要注意的是，alter接口目前不支持增量更新，每次修改BE的属性都需要增加全量的属性，因此下面语句中添加了tag.location属性，default为系统默认值，实际修改时需要按照BE原有属性指定。
 ```
-alter system modify backend "localhost:9050" set ("tag.workload_group" = "cn1");
+alter system modify backend "localhost:9050" set ("tag.workload_group" = "cn1", "tag.location"="default");
 ```
 
 Workload Group和BE的匹配规则说明:
 1. 当Workload Group的Tag为空，那么这个Workload Group可以发送给所有的BE，不管该BE是否指定了tag。
 2. 当Workload Group的Tag不为空，那么Workload Group只会发送给具有相同标签的BE。
+
+推荐用法可以参考:[Workload Group分组功能](./group-workload-groups.md)
 
 ## 配置 cgroup 的环境
 Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但是从 2.1 版本起，Doris 默认使用基于 CGroup v1 版本对 CPU 资源进行限制，因此如果期望在 2.1 版本对 CPU 资源进行约束，那么需要 BE 所在的节点上已经安装好 CGroup 的环境。
