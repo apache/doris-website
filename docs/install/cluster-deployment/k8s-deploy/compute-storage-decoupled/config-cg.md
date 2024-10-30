@@ -109,7 +109,7 @@ spec:
 ```
 Configure 200Gi of persistent storage for the Compute Group named cg1, and use the default StorageClass in the K8s cluster to automatically create storage. If you need to specify a StorageClass, uncomment storageClassName and set it to the name of the StorageClass you want to use.
 
-The default Cache configuration of the BE service is `file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]` The total available storage capacity is 100Gi, and the maximum available query capacity is 100Gi. In K8s deployment mode, Doris-Operator mounts customized persistent storage for each path. If you need to specify multiple paths to mount multiple disks as data cache, please refer to [Customized configuration file](config-cg.md#Service storage configuration).
+The default Cache configuration of the BE service is `file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]` The total available storage capacity is 100Gi, and the maximum available query capacity is 100Gi. In K8s deployment mode, Doris-Operator mounts customized persistent storage for each path. If you need to specify multiple paths to mount multiple disks as data cache, please refer to [Customized configuration file](config-cg.md#Service-storage-configuration).
 
 :::tip Tip
 The value of file_cache_path must be a JSON array.
@@ -125,11 +125,11 @@ Under storage-computing separation, please refer to [Storage-computing separatio
 
 ### Service storage configuration
 
-BE service customized configuration startup configuration in storage and computing mode, must specify `file_cache_path` according to [storage and computing separation document](../../../../compute-storage-decoupled/compilation-and-deployment). In K8s deployment, related services will automatically mount persistent storage according to [persistence-related configuration](config-cg.md#Configure persistent storage).
+BE service customized configuration startup configuration in storage and computing mode, must specify `file_cache_path` according to [storage and computing separation document](../../../../compute-storage-decoupled/compilation-and-deployment). In K8s deployment, related services will automatically mount persistent storage according to [persistence-related configuration](config-cg.md#Configure-persistent-storage).
 
 For example: `file_cache_path` is configured as `file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]`, Doris-Operator related services automatically add storage configuration information for computing services, which can apply for a disk with a mount point of `/opt/apache-doris/be/file_cache` and a capacity of 100Gi.
 
-When total_size in file_cache_path is greater than the storage capacity of [persistence configuration](config-cg.md#Configure persistent storage), Doris-Operator will change the persistence configuration to the size of total_size to prevent unexpected service failures.
+When total_size in file_cache_path is greater than the storage capacity of [persistence configuration](config-cg.md#Configure-persistent-storage), Doris-Operator will change the persistence configuration to the size of total_size to prevent unexpected service failures.
 
 ### Mount customized ConfigMap
 

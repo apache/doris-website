@@ -119,7 +119,7 @@ spec:
 
 在 `DorisDisaggregatedCluster` 资源中，配置挂载 ConfigMap 的 configMaps 是一个数组。每一个元素的 name 表示当前命名空间的 ConfigMap 名称。
 
-按上述模式配置好 FE 服务需要使用的 ConfigMap 信息，将配置更新到[需要部署的存算分离资源](install-quickstart.md#第二步：快速部署存算分离集群)中。
+按上述模式配置好 FE 服务需要使用的 ConfigMap 信息，将配置更新到[需要部署的存算分离资源](install-quickstart.md)中。
 
 :::tip 提示
 1. K8s 部署中，使用 ConfigMap 挂载定制化配置文件时，无需添加 `meta_service_endpoint`、`deploy_mode` 以及 `cluster_id` 配置，Doris-Operator 相关服务会自动添加。
