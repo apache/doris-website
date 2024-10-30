@@ -46,7 +46,7 @@ under the License.
 | 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
 | 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
 | 1.6.2             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 | - |
-| 24.0.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
+| 24.0.1            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
 
 ## USE
 
@@ -59,7 +59,7 @@ Add flink-doris-connector
 <dependency>
    <groupId>org.apache.doris</groupId>
    <artifactId>flink-doris-connector-1.16</artifactId>
-   <version>24.0.0</version>
+   <version>24.0.1</version>
 </dependency>
 ```
 
@@ -563,7 +563,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
      -Dexecution.checkpointing.interval=10s\
      -Dparallelism.default=1\
      -c org.apache.doris.flink.tools.cdc.CdcTools\
-     lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     lib/flink-doris-connector-1.18-24.0.1.jar \
      mysql-sync-database\
      --database test_db \
      --mysql-conf hostname=127.0.0.1 \
@@ -587,7 +587,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
       -Dexecution.checkpointing.interval=10s \
       -Dparallelism.default=1 \
       -c org.apache.doris.flink.tools.cdc.CdcTools \
-      ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar\
+      ./lib/flink-doris-connector-1.18-24.0.1.jar \
       oracle-sync-database \
       --database test_db \
       --oracle-conf hostname=127.0.0.1 \
@@ -612,7 +612,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
      -Dexecution.checkpointing.interval=10s \
      -Dparallelism.default=1\
      -c org.apache.doris.flink.tools.cdc.CdcTools \
-     ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     ./lib/flink-doris-connector-1.18-24.0.1.jar \
      postgres-sync-database \
      --database db1\
      --postgres-conf hostname=127.0.0.1 \
@@ -639,7 +639,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
      -Dexecution.checkpointing.interval=10s \
      -Dparallelism.default=1 \
      -c org.apache.doris.flink.tools.cdc.CdcTools \
-     ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     ./lib/flink-doris-connector-1.18-24.0.1.jar \
      sqlserver-sync-database \
      --database db1\
      --sqlserver-conf hostname=127.0.0.1 \
@@ -664,7 +664,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    lib/flink-doris-connector-1.16-24.0.0.jar \
+    lib/flink-doris-connector-1.16-24.0.1.jar \
     db2-sync-database \
     --database db2_test \
     --db2-conf hostname=127.0.0.1 \
@@ -691,7 +691,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    ./lib/flink-doris-connector-1.18-1.6.2-SNAPSHOT.jar \
+    ./lib/flink-doris-connector-1.18-24.0.1.jar \
     mongodb-sync-database \
     --database doris_db \
     --schema-change-mode debezium_structure \
