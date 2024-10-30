@@ -70,13 +70,13 @@ under the License.
 当我们的查询条件，是**前缀索引的前缀**时，可以极大的加快查询速度。比如在第一个例子中，我们执行如下查询：
 
 ```sql
-SELECT * FROM table WHERE user_id=1829239 and age=20；
+SELECT * FROM table WHERE user_id=1829239 and age=20;
 ```
 
 该查询的效率会**远高于**如下查询：
 
 ```sql
-SELECT * FROM table WHERE age=20；
+SELECT * FROM table WHERE age=20;
 ```
 
 所以在建表时，**正确的选择列顺序，能够极大地提高查询效率**。

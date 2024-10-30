@@ -76,7 +76,7 @@ The basic process of executing schema change is to generate a new schema table f
 
 Before starting to convert historical data, Doris will obtain a latest transaction ID and wait for all import transactions before this transaction ID to complete. This transaction ID becomes a watershed. This means that Doris ensures that all import tasks after the watershed will generate data for the original table  /Index  and the new table  /Index  at the same time. This way, when the historical data conversion is completed, the data in the new table can be guaranteed to be complete.
 
-The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
+The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
 
 ## Adding a column at a specified position to a specified index
 
@@ -97,7 +97,27 @@ ALTER TABLE table_name ADD COLUMN column_name column_type [KEY | agg_type] [DEFA
 
 ### Examples
 
-**1. Adding a key column `new_col` (non-aggregate model) after col1 to `example_rollup_index`**
+#### non-aggregate model
+
+table's DDL:
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col1 int,
+    col2 int,
+    col3 int,
+    col4 int,
+    col5 int
+) DUPLICATE KEY(col1, col2, col3)
+DISTRIBUTED BY RANDOM BUCKETS 1
+ROLLUP (
+   example_rollup_index (col1, col3, col4, col5)
+)
+PROPERTIES (
+   "replication_num" = "1"
+)
+```
+
+**1. Adding a key column `new_col` after col1 to `example_rollup_index`**
 
 ```sql
 ALTER TABLE example_db.my_table
@@ -105,7 +125,7 @@ ADD COLUMN new_col INT KEY DEFAULT "0" AFTER col1
 TO example_rollup_index;
 ```
 
-**2. Adding a value column `new_col` (non-aggregate model) with a default value of 0 after col1 to `example_rollup_index`**
+**2. Adding a value column `new_col` with a default value of 0 after col1 to `example_rollup_index`**
 
 ```sql
 ALTER TABLE example_db.my_table   
@@ -113,7 +133,27 @@ ADD COLUMN new_col INT DEFAULT "0" AFTER col1
 TO example_rollup_index;
 ```
 
-**3. Adding a Key column `new_col` (aggregate model) after col1 to `example_rollup_index`**
+#### aggregate model
+
+table's DDL:
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col1 int,
+    col2 int,
+    col3 int,
+    col4 int SUM,
+    col5 varchar(32) REPLACE DEFAULT "abc"
+) AGGREGATE KEY(col1, col2, col3)
+DISTRIBUTED BY HASH(col1) BUCKETS 1
+ROLLUP (
+    example_rollup_index (col1, col3, col4, col5)
+)
+PROPERTIES (
+    "replication_num" = "1"
+)
+```
+
+**3. Adding a Key column `new_col` after col1 to `example_rollup_index`**
 
 ```sql
 ALTER TABLE example_db.my_table   
@@ -121,7 +161,7 @@ ADD COLUMN new_col INT DEFAULT "0" AFTER col1
 TO example_rollup_index;
 ```
 
-**4. Adding a value column `new_col` with SUM aggregation type (aggregate model) after col1 to `example_rollup_index`**
+**4. Adding a value column `new_col` with SUM aggregation type after col1 to `example_rollup_index`**
 
 ```sql
 ALTER TABLE example_db.my_table   
@@ -151,7 +191,7 @@ Adding multiple columns (aggregate model) to `example_rollup_index`:
 
 ```sql
 ALTER TABLE example_db.my_table
-ADD COLUMN (col1 INT DEFAULT "1", col2 FLOAT SUM DEFAULT "2.3")
+ADD COLUMN (c1 INT DEFAULT "1", c2 FLOAT SUM DEFAULT "0")
 TO example_rollup_index;
 ```
 
@@ -174,7 +214,7 @@ Removing column col2 from `example_rollup_index`:
 
 ```sql
 ALTER TABLE example_db.my_table
-DROP COLUMN col2
+DROP COLUMN col3
 FROM example_rollup_index;
 ```
 
@@ -221,6 +261,22 @@ ALTER TABLE table_name MODIFY COLUMN column_name column_type [KEY | agg_type] [N
 
 ### Examples
 
+table's DDL:
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col0 int,
+    col1 int DEFAULT "1",
+    col2 int,
+    col3 varchar(32),
+    col4 int SUM,
+    col5 varchar(32) REPLACE DEFAULT "abc"
+) AGGREGATE KEY(col0, col1, col2, col3)
+DISTRIBUTED BY HASH(col0) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+)
+```
+
 **1. Modifying the column type of Key column col1 to BIGINT in the base index and moving it after column col2**
 
 ```sql
@@ -233,8 +289,8 @@ Note: whether modifying a key column or a value column, the complete column info
 **2. Modifying the maximum length of column val1 in the Base Index. The original val1 is (val1 VARCHAR(32) REPLACE DEFAULT "abc")**
 
 ```sql
-ALTER TABLE example_db.my_table 
-MODIFY COLUMN val1 VARCHAR(64) REPLACE DEFAULT "abc"
+ALTER TABLE example_db.my_table
+MODIFY COLUMN col5 VARCHAR(64) REPLACE DEFAULT "abc";
 ```
 
 Note: only the column type can be modified while keeping the other properties of the column unchanged.
@@ -242,7 +298,8 @@ Note: only the column type can be modified while keeping the other properties of
 **3. Modifying the length of a field in the key column of a duplicate key table**
 
 ```sql
-alter table example_tbl modify column k3 varchar(50) key null comment 'to 50'
+ALTER TABLE example_db.my_table
+MODIFY COLUMN col3 varchar(50) KEY NULL comment 'to 50'
 ```
 
 ## Reorder columns for a specified index
@@ -261,6 +318,24 @@ ALTER TABLE table_name ORDER BY (column_name1, column_name2, ...)
 
 ### Example
 
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    k1 int DEFAULT "1",
+    k2 int,
+    k3 varchar(32),
+    k4 date,
+    v1 int SUM,
+    v2 int MAX,
+) AGGREGATE KEY(k1, k2, k3, k4)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+ROLLUP (
+   example_rollup_index(k1, k2, k3, v1, v2)
+)
+PROPERTIES (
+    "replication_num" = "1"
+)
+```
+
 Reorder columns in the index `example_rollup_index` (assuming the original column order is: k1, k2, k3, v1, v2).
 
 ```sql
@@ -277,19 +352,20 @@ Schema change can modify multiple indexes in a single job.
 
 Source Schema:
 
-```Plain
-+-----------+-------+------+------+------+---------+-------+
-| IndexName | Field | Type | Null | Key  | Default | Extra |
-+-----------+-------+------+------+------+---------+-------+
-| tbl1      | k1    | INT  | No   | true | N/A     |       |
-|           | k2    | INT  | No   | true | N/A     |       |
-|           | k3    | INT  | No   | true | N/A     |       |
-|           |       |      |      |      |         |       |
-| rollup2   | k2    | INT  | No   | true | N/A     |       |
-|           |       |      |      |      |         |       |
-| rollup1   | k1    | INT  | No   | true | N/A     |       |
-|           | k2    | INT  | No   | true | N/A     |       |
-+-----------+-------+------+------+------+---------+-------+
+```sql
+CREATE TABLE IF NOT EXISTS example_db.tbl1(
+    k1 int,
+    k2 int,
+    k3 int
+) AGGREGATE KEY(k1, k2, k3)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+ROLLUP (
+   rollup1 (k1, k2),
+   rollup2 (k2)
+)
+PROPERTIES (
+    "replication_num" = "1"
+)
 ```
 
 You can use the following command to add a column k4 to rollup1 and rollup2, and add an additional column k5 to rollup2:
@@ -329,9 +405,27 @@ Additionally, it is not allowed to add columns to a rollup that already exist in
 
 ### Example 2
 
+table's DDL
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    k1 int DEFAULT "1",
+    k2 int,
+    k3 varchar(32),
+    k4 date,
+    v1 int SUM,
+) AGGREGATE KEY(k1, k2, k3, k4)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+ROLLUP (
+   example_rollup_index(k1, k3, k2, v1)
+)
+PROPERTIES (
+   "replication_num" = "1"
+)
+```
+
 ```sql
 ALTER TABLE example_db.my_table
-ADD COLUMN v2 INT MAX DEFAULT "0" AFTER k2 TO example_rollup_index,
+ADD COLUMN v2 INT MAX DEFAULT "0" TO example_rollup_index,
 ORDER BY (k3,k1,k2,v2,v1) FROM example_rollup_index;
 ```
 
@@ -350,7 +444,7 @@ The creation of a schema change is an asynchronous process. After a job is succe
 `SHOW ALTER TABLE COLUMN ` allows you to view the currently executing or completed schema Change jobs. When a schema change job involves multiple indexes, the command will display multiple rows, with each row corresponding to an index. For example:
 
 ```sql
-mysql SHOW ALTER TABLE COLUMN\G;
+mysql > SHOW ALTER TABLE COLUMN\G;
 *************************** 1. row ***************************
         JobId: 20021
     TableName: tbl1
