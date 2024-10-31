@@ -133,11 +133,11 @@ Before deploying the cluster, you need to estimate the hardware resources requir
 
     3. Allocate the storage space required for each BE server to 4 to 12 data disks, and you can get the storage capacity required for a single data disk.
 
-For example, suppose that the daily data increment is 100 TB, the data compression ratio is 7, the number of data copies is 1, the storage duration of hot data is 3 days, the storage duration of cold data is 30 days, the ratio of the peak write throughput to the average write throughput is 200%, the write throughput of a single-core CUP is 10 MB/s, and 50% of CPU resources are reserved for data querying, one can estimate that:
+For example, suppose that the daily data increment is 100 TB, the data compression ratio is 5, the number of data copies is 1, the storage duration of hot data is 3 days, the storage duration of cold data is 30 days, the ratio of the peak write throughput to the average write throughput is 200%, the write throughput of a single-core CUP is 10 MB/s, and 50% of CPU resources are reserved for data querying, one can estimate that:
 
-- 3 FE servers are required, each configured with a 16-core CPU, 64 GB memory, and an 1100 GB SSD disk.
+- 3 FE servers are required, each configured with a 16-core CPU, 64 GB memory, and an 1 100 GB SSD disk.
 
-- 15 BE servers are required, each configured with a 32-core CPU, 256 GB memory, and 8 500 GB SSD disks.
+- 15 BE servers are required, each configured with a 32-core CPU, 256 GB memory, and 10 600 GB SSD disks.
 
 - S3:430 TB
 
@@ -146,13 +146,13 @@ Refer to the following table to learn about the values of indicators in the exam
 | Indicator (Unit) | Value | Description |
 | --- | --- | --- |
 | Daily data increment (TB) | 100 | Specify the value according to your actual needs. |
-| Data compression ratio | 7   | Specify the value according to your actual needs, which is often between 5 to 10. Note that the data contains index data. |
+| Data compression ratio | 5   | Specify the value according to your actual needs, which is often between 3 to 10. Note that the data contains index data. |
 | Number of data copies | 1   | Specify the value according to your actual needs, which can be 1, 2, or 3. The default value is 1. |
 | Storage duration of hot data (day) | 3   | Specify the value according to your actual needs. |
 | Storage duration of cold data (day) | 30  | Specify the value according to your actual needs. |
 | Data storage duration | 33  | Calculation formula: `Storage duration of hot data + Storage duration of cold data` |
-| Estimated storage space for hot data (TB) | 42.9 | Calculation formula: `Daily data increment / Data compression ratios * Number of data copies * Storage duration of hot data` |
-| Estimated storage space for cold data (TB) | 428.6 | Calculation formula: `Daily data increment / Data compression ratios * Number of data copies * Storage duration of cold data` |
+| Estimated storage space for hot data (TB) | 60 | Calculation formula: `Daily data increment / Data compression ratios * Number of data copies * Storage duration of hot data` |
+| Estimated storage space for cold data (TB) | 600 | Calculation formula: `Daily data increment / Data compression ratios * Number of data copies * Storage duration of cold data` |
 | Ratio of the peak write throughput to the average write throughput | 200% | Specify the value according to your actual needs. The default value is 200%. |
 | Number of CPU cores of a BE server | 32  | Specify the value according to your actual needs. The default value is 32. |
 | Average write throughput (MB/s) | 1214 | Calculation formula: `Daily data increment / 86400 s` |
@@ -161,7 +161,7 @@ Refer to the following table to learn about the values of indicators in the exam
 | Percent of CPU resources reserved for data querying | 50% | Specify the value according to your actual needs. The default value is 50%. |
 | Estimated number of BE servers | 15.2 | Calculation formula: `Number of CPU cores for the peak write throughput / Number of CPU cores of a BE server /(1 - Percent of CPU resources reserved for data querying)` |
 | Rounded number of BE servers | 15  | Calculation formula: `MAX (Number of data copies, Estimated number of BE servers)` |
-| Estimated data storage space for each BE server (TB) | 4.03 | Calculation formula: `Estimated storage space for hot data / Estimated number of BE servers /(1 - 30%)`, where 30% represents the percent of reserved storage space.<br /><br />It is recommended to mount 4 to 12 data disks on each BE server to enhance I/O capabilities. |
+| Estimated data storage space for each BE server (TB) | 5.7 | Calculation formula: `Estimated storage space for hot data / Estimated number of BE servers /(1 - 30%)`, where 30% represents the percent of reserved storage space.<br /><br />It is recommended to mount 4 to 12 data disks on each BE server to enhance I/O capabilities. |
 
 ### Step 2: Deploy the cluster
 

@@ -145,7 +145,7 @@ Before deploying the cluster, you need to estimate the hardware resources requir
 
 For example, suppose that the daily data increment is 100 TB, the data compression ratio is 5, the number of data copies is 1, the storage duration of hot data is 3 days, the storage duration of cold data is 30 days, the ratio of the peak write throughput to the average write throughput is 200%, the write throughput of a single-core CUP is 10 MB/s, and 50% of CPU resources are reserved for data querying, one can estimate that:
 
-- 3 FE servers are required, each configured with a 16-core CPU, 64 GB memory, and an 1100 GB SSD disk.
+- 3 FE servers are required, each configured with a 16-core CPU, 64 GB memory, and an 1 100 GB SSD disk.
 
 - 15 BE servers are required, each configured with a 32-core CPU, 256 GB memory, and 10 600 GB SSD disks.
 
