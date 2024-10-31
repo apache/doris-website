@@ -36,11 +36,11 @@ Queries and DDL single statements are implicit transactions and are not supporte
 
 Explicit transactions require users to actively start, commit transactions. Only insert into values statement is supported in 2.1.
 
-    ```sql
-    BEGIN;
-    [INSERT INTO VALUES]
-    COMMIT;
-    ```
+```sql
+BEGIN;
+[INSERT INTO VALUES]
+COMMIT;
+```
 Rollback is not supported in 2.1.
 
 ### Implicit Transactions
