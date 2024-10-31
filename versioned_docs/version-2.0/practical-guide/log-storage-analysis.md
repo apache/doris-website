@@ -86,36 +86,26 @@ Here is a typical example of a semi-structured log in JSON format. The top-level
 
 ```JSON  
 {  
-"timestamp": "2014-03-08T00:50:03.8432810Z",  
-"source": "ADOPTIONCUSTOMERS81",  
-"node": "Engine000000000405",  
-"level": "Information",  
-"component": "DOWNLOADER",  
-"clientRequestId": "671db15d-abad-94f6-dd93-b3a2e6000672",  
-"message": "Downloading file path: benchmark/2014/ADOPTIONCUSTOMERS81_94_0.parquet.gz",  
-"properties": {  
-"size": 1495636750,  
-"format": "parquet",  
-"rowCount": 855138,  
-"downloadDuration": "00:01:58.3520561"  
-}  
+  "timestamp": "2014-03-08T00:50:03.8432810Z",
+  "source": "ADOPTIONCUSTOMERS81",
+  "node": "Engine000000000405",
+  "level": "Information",
+  "component": "DOWNLOADER",
+  "clientRequestId": "671db15d-abad-94f6-dd93-b3a2e6000672",
+  "message": "Downloading file path: benchmark/2014/ADOPTIONCUSTOMERS81_94_0.parquet.gz",
+  "properties": {
+    "size": 1495636750,
+    "format": "parquet",
+    "rowCount": 855138,
+    "downloadDuration": "00:01:58.3520561"
+  }
 }
 ```
 
 
 Apache Doris provides several aspects of support for Flexible Schema log data:
 
-- For minor changes to top-level fields, Light Schema Change can be used to add or remove columns and to add or remove indexes, enabling schema changes to be completed in seconds. When planning a log platform, users only need to consider which fields need to be indexed.
-
-- For extension fields similar to properties, the native semi-structured data type `VARIANT` is provided, which can write any JSON data, automatically recognize field names and types in JSON, and automatically split frequently occurring fields for columnar storage for subsequent analysis. Additionally, `VARIANT` can create inverted indexes to accelerate internal field queries and retrievals.
-
-Compared to Elasticsearch's Dynamic Mapping, Apache Doris's Flexible Schema has the following advantages:
-
-- Allows a field to have multiple types, `VARIANT` automatically handles conflicts and type promotion for fields, better adapting to iterative changes in log data.
-
-- `VARIANT` automatically merges infrequently occurring fields into a column store to avoid performance issues caused by excessive fields, metadata, or columns.
-
-- Not only can columns be dynamically added, but they can also be dynamically deleted, and indexes can be dynamically added or removed, eliminating the need to index all fields at the beginning like Elasticsearch, reducing unnecessary costs.
+- For changes to top-level fields, Light Schema Change can be used to add or remove columns and to add or remove indexes, enabling schema changes to be completed in seconds. When planning a log platform, users only need to consider which fields need to be indexed.
 
 ## Operational guide
 
@@ -125,17 +115,17 @@ Before deploying the cluster, you need to estimate the hardware resources requir
 
 1. Estimate the resources for data writing by the following calculation formulas:
 
-- Daily data increment / 86400 s = Average write throughput
+- `Average write throughput = Daily data increment / 86400 s`
 
-- Average write throughput \* Ratio of the peak write throughput to the average write throughput = Peak write throughput
+- `Peak write throughput = Average write throughput \* Ratio of the peak write throughput to the average write throughput`
 
-- Peak write throughput / Write throughput of a single-core CPU = Number of CPU cores for the peak write throughput
+- `Number of CPU cores for the peak write throughput = Peak write throughput / Write throughput of a single-core CPU`
 
-2. Estimate the resources for data storage by the calculation formula: Daily data increment / Data compression ratio \* Number of data copies \* Data storage duration = Data storage space.
+1. Estimate the resources for data storage by the calculation formula: `Storage space = Daily data increment / Data compression ratio * Number of data copies * Data storage duration`.
 
-3. Estimate the resources for data querying. The resources for data querying depend on the query volume and complexity. It is recommended to reserve 50% of CPU resources for data query initially and then adjust according to the actual test results.
+2. Estimate the resources for data querying. The resources for data querying depend on the query volume and complexity. It is recommended to reserve 50% of CPU resources for data query initially and then adjust according to the actual test results.
 
-4. Integrate the calculation results as follows:
+3. Integrate the calculation results as follows:
 
     1. Divide the number of CPU cores calculated in Step 1 and Step 3 by the number of CPU cores of a BE server, and you can get the number of BE servers.
 
@@ -160,18 +150,18 @@ Refer to the following table to learn about the values of indicators in the exam
 | Number of data copies | 1   | Specify the value according to your actual needs, which can be 1, 2, or 3. The default value is 1. |
 | Storage duration of hot data (day) | 3   | Specify the value according to your actual needs. |
 | Storage duration of cold data (day) | 30  | Specify the value according to your actual needs. |
-| Data storage duration | 33  | Calculation formula: Storage duration of hot data + Storage duration of cold data |
-| Estimated storage space for hot data (TB) | 42.9 | Calculation formula: Daily data increment / Data compression ratios \* Number of data copies \* Storage duration of hot data |
-| Estimated storage space for cold data (TB) | 428.6 | Calculation formula: Daily data increment / Data compression ratios \* Number of data copies \* Storage duration of cold data |
+| Data storage duration | 33  | Calculation formula: `Storage duration of hot data + Storage duration of cold data` |
+| Estimated storage space for hot data (TB) | 42.9 | Calculation formula: `Daily data increment / Data compression ratios * Number of data copies * Storage duration of hot data` |
+| Estimated storage space for cold data (TB) | 428.6 | Calculation formula: `Daily data increment / Data compression ratios * Number of data copies * Storage duration of cold data` |
 | Ratio of the peak write throughput to the average write throughput | 200% | Specify the value according to your actual needs. The default value is 200%. |
 | Number of CPU cores of a BE server | 32  | Specify the value according to your actual needs. The default value is 32. |
-| Average write throughput (MB/s) | 1214 | Calculation formula: Daily data increment / 86400 s |
-| Peak write throughput (MB/s) | 2427 | Calculation formula: Average write throughput \* Ratio of the peak write throughput to the average write throughput |
-| Number of CPU cores for the peak write throughput | 242.7 | Calculation formula: Peak write throughput / Write throughput of a single-core CPU |
+| Average write throughput (MB/s) | 1214 | Calculation formula: `Daily data increment / 86400 s` |
+| Peak write throughput (MB/s) | 2427 | Calculation formula: `Average write throughput * Ratio of the peak write throughput to the average write throughput` |
+| Number of CPU cores for the peak write throughput | 242.7 | Calculation formula: `Peak write throughput / Write throughput of a single-core CPU` |
 | Percent of CPU resources reserved for data querying | 50% | Specify the value according to your actual needs. The default value is 50%. |
-| Estimated number of BE servers | 15.2 | Calculation formula: Number of CPU cores for the peak write throughput / Number of CPU cores of a BE server /（1 - Percent of CPU resources reserved for data querying） |
-| Rounded number of BE servers | 15  | Calculation formula: MAX (Number of data copies, Estimated number of BE servers) |
-| Estimated data storage space for each BE server (TB) | 4.03 | Calculation formula: Estimated storage space for hot data / Estimated number of BE servers /（1 - 30%）, where 30% represents the percent of reserved storage space.<br /><br />It is recommended to mount 4 to 12 data disks on each BE server to enhance I/O capabilities. |
+| Estimated number of BE servers | 15.2 | Calculation formula: `Number of CPU cores for the peak write throughput / Number of CPU cores of a BE server /(1 - Percent of CPU resources reserved for data querying)` |
+| Rounded number of BE servers | 15  | Calculation formula: `MAX (Number of data copies, Estimated number of BE servers)` |
+| Estimated data storage space for each BE server (TB) | 4.03 | Calculation formula: `Estimated storage space for hot data / Estimated number of BE servers /(1 - 30%)`, where 30% represents the percent of reserved storage space.<br /><br />It is recommended to mount 4 to 12 data disks on each BE server to enhance I/O capabilities. |
 
 ### Step 2: Deploy the cluster
 
@@ -191,7 +181,6 @@ You can find FE configuration fields in `fe/conf/fe.conf`. Refer to the followin
 | `streaming_label_keep_max_second = 3600` `label_keep_max_second = 7200` | Increase the retention time to handle high-frequency import transactions with high memory usage. |
 | `enable_round_robin_create_tablet = true`                    | When creating Tablets, use a Round Robin strategy to distribute evenly. |
 | `tablet_rebalancer_type = partition`                         | When balancing Tablets, use a strategy to evenly distribute within each partition. |
-| `enable_single_replica_load = true`                          | Enable single-replica import, where multiple replicas only need to build an index once to reduce CPU consumption. |
 | `autobucket_min_buckets = 10`                                | Increase the minimum number of automatically bucketed buckets from 1 to 10 to avoid insufficient buckets when the log volume increases. |
 | `max_backend_heartbeat_failure_tolerance_count = 10`         | In log scenarios, the BE server may experience high pressure, leading to short-term timeouts, so increase the tolerance count from 1 to 10. |
 
@@ -208,7 +197,6 @@ You can find BE configuration fields in `be/conf/be.conf`. Refer to the followin
 | -          | `file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]` | Configure the cache path and related settings for cold data with the following specific configurations:<br/>`path`: cache path<br/>`total_size`: total size of the cache path in bytes, where 53687091200 bytes equals 50 GB<br/>`query_limit`: maximum amount of data that can be queried from the cache path in one query in bytes, where 10737418240 bytes equals 10 GB |
 | Write      | `write_buffer_size = 1073741824`                             | Increase the file size of the write buffer to reduce small files and random I/O operations, improving performance. |
 | -          | `max_tablet_version_num = 20000`                             | In coordination with the time_series compaction strategy for table creation, allow more versions to remain temporarily unmerged |
-| -          | `enable_single_replica_load = true`                          | Enable single replica import to reduce CPU consumption, consistent with FE configuration. |
 | Compaction | `max_cumu_compaction_threads = 8`                            | Set to CPU core count / 4, indicating that 1/4 of CPU resources are used for writing, 1/4 for background compaction, and 2/1 for queries and other operations. |
 | -          | `inverted_index_compaction_enable = true`                    | Enable inverted index compaction to reduce CPU consumption during compaction. |
 | -          | `enable_segcompaction = false` `enable_ordered_data_compaction = false` | Disable two compaction features that are unnecessary for log scenarios. |
@@ -235,41 +223,43 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
 - For data partitioning:
 
-    - Enable [range partitioning](https://doris.apache.org/docs/table-design/data-partition#range-partition) with [dynamic partitions](https://doris.apache.org/docs/table-design/data-partition#dynamic-partition) managed automatically by day.
+    - Enable [range partitioning](https://doris.apache.org/docs/table-design/data-partition#range-partition) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](https://doris.apache.org/docs/table-design/data-partition#dynamic-partition)  (`"dynamic_partition.enable" = "true"`) managed automatically by day .
 
-    - Use a field in the DATETIME type as the key for accelerated retrieval of the latest N log entries.
+    - Use a field in the DATETIME type as the key (`DUPLICATE KEY(ts)`) for accelerated retrieval of the latest N log entries.
 
 - For data bucketing:
 
-    - Configure the number of buckets to be roughly three times the total number of disks in the cluster.
+    - Configure the number of buckets to be roughly three times the total number of disks in the cluster, with each bucket containing approximately 5GB of data after compression.
 
-    - Use the Random strategy to optimize batch writing efficiency when paired with single tablet imports.
+    - Use the Random strategy (`DISTRIBUTED BY RANDOM BUCKETS 60`) to optimize batch writing efficiency when paired with single tablet imports.
 
 For more information, refer to [Data Partitioning](../table-design/data-partition.md).
 
-**Configure compaction fileds**
+**Configure compression parameters**
+
+Use the zstd compression algorithm ("compression" = "zstd") to improve data compression efficiency.
+
+**Configure compaction parameters**
 
 Configure compaction fields as follows:
 
-- Use the time_series strategy to reduce write amplification, which is crucial for high-throughput log writes.
+- Use the time_series strategy (`"compaction_policy" = "time_series"`) to reduce write amplification, which is crucial for high-throughput log writes.
 
-- Use single-replica compaction to minimize the overhead of multi-replica compaction.
-
-**Configure index fields**
+**Configure index parameters**
 
 Configuring index fields as follows:
 
-- Create indexes for fields that are frequently queried.
+- Create indexes for fields that are frequently queried (`USING INVERTED`).
 
 - For fields that require full-text search, specify the parser field as unicode, which satisfies most requirements. If there is a need to support phrase queries, set the support_phrase field to true; if not needed, set it to false to reduce storage space.
 
-**Configure storage policies**
+**Configure storage parameters**
 
 Configure storage policies as follows:
 
-- For storage of hot data, if using cloud storage, configure the number of data copies as 1; if using physical disks, configure the number of data copies as at least 2.
+- For storage of hot data, if using cloud storage, configure the number of data copies as 1; if using physical disks, configure the number of data copies as at least 2 (`"replication_num" = "2"`).
 
-- Configure the storage location for log_s3 and set the log_policy_3day policy, where the data is cooled and moved to the specified storage location of log_s3 after 3 days. Refer to the code below.
+- Configure the storage location for log_s3 (`CREATE RESOURCE "log_s3"`) and set the log_policy_3day policy (`CREATE STORAGE POLICY log_policy_3day`), where the data is cooled and moved to the specified storage location of log_s3 after 3 days. Refer to the code below.
 
 ```SQL
 CREATE DATABASE log_db;
@@ -306,20 +296,20 @@ CREATE TABLE log_table
 ENGINE = OLAP
 DUPLICATE KEY(`ts`)
 PARTITION BY RANGE(`ts`) ()
-DISTRIBUTED BY RANDOM BUCKETS 250
+DISTRIBUTED BY RANDOM BUCKETS 60
 PROPERTIES (
-"compaction_policy" = "time_series",
-"dynamic_partition.enable" = "true",
-"dynamic_partition.create_history_partition" = "true",
-"dynamic_partition.time_unit" = "DAY",
-"dynamic_partition.start" = "-30",
-"dynamic_partition.end" = "1",
-"dynamic_partition.prefix" = "p",
-"dynamic_partition.buckets" = "250",
-"dynamic_partition.replication_num" = "2", -- unneccessary for the compute-storage coupled mode
-"replication_num" = "2" -- unneccessary for the compute-storage coupled mode
-"enable_single_replica_compaction" = "true", -- unneccessary for the compute-storage coupled mode
-"storage_policy" = "log_policy_3day" -- unneccessary for the compute-storage coupled mode
+  "compression" = "zstd",
+  "compaction_policy" = "time_series",
+  "dynamic_partition.enable" = "true",
+  "dynamic_partition.create_history_partition" = "true",
+  "dynamic_partition.time_unit" = "DAY",
+  "dynamic_partition.start" = "-30",
+  "dynamic_partition.end" = "1",
+  "dynamic_partition.prefix" = "p",
+  "dynamic_partition.buckets" = "60",
+  "dynamic_partition.replication_num" = "2", -- unneccessary for the compute-storage coupled mode
+  "replication_num" = "2", -- unneccessary for the compute-storage coupled mode
+  "storage_policy" = "log_policy_3day" -- unneccessary for the compute-storage coupled mode
 );
 ```
 
