@@ -1643,6 +1643,7 @@
         "ecosystem/kyuubi",
         "ecosystem/logstash",
         "ecosystem/beats",
+        "ecosystem/fluentbit",
         "ecosystem/automq-load",
         "ecosystem/doris-streamloader",
         "ecosystem/hive-bitmap-udf",
