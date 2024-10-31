@@ -146,6 +146,7 @@ doris_log.conf:
 [INPUT]
     name tail
     path /path/to/your/log
+    # add log file name to the record, key is 'path'
     path_key path
     # set multiline parser
     multiline.parser multiline_java 
@@ -162,6 +163,7 @@ doris_log.conf:
 [FILTER]
     name sysinfo
     match *
+    # add hostname to the record, key is 'host'
     hostname_key host
 
 # output to doris
@@ -174,7 +176,9 @@ doris_log.conf:
     password your_password
     database your_db
     table your_table
+    # add 'collect_time' to the record
     time_key collect_time
+    # 'collect_time' is timestamp, change it to datatime
     header columns collect_time=from_unixtime(collect_time)
     log_request true
     log_progress_interval 10
@@ -203,6 +207,7 @@ parsers.conf
 [PARSER]
     name        fe_log
     format      regex
+    # parse and add 'log_time', 'level', 'thread', 'position', 'message' to the record
     regex       ^(?<log_time>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}) (?<level>[^ ]+) \((?<thread>[^\)]+)\) \[(?<position>[^\]]+)\] (?<message>(\n|.)*)\n$
 ```
 
@@ -249,7 +254,6 @@ github events archive 是 github 用户操作事件的归档数据，格式是 J
 
 ```
 wget https://data.gharchive.org/2024-01-01-15.json.gz
-
 ```
 
 下面是一条数据样例，实际一条数据一行，这里为了方便展示进行了格式化。
