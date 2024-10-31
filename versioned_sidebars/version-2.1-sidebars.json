@@ -596,7 +596,8 @@
                                 "admin-manual/open-api/be-http/version-info",
                                 "admin-manual/open-api/be-http/health",
                                 "admin-manual/open-api/be-http/tablet-reload",
-                                "admin-manual/open-api/be-http/tablet-restore"
+                                "admin-manual/open-api/be-http/tablet-restore",
+                                "admin-manual/open-api/be-http/be-vlog"
                             ]
                         }
                     ]
