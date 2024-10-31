@@ -100,6 +100,25 @@ CREATE TABLE flink_doris_source (
       'password' = 'password'
 );
 ```
+:::info 备注
+Flink Connector 24.0.0 版本之后支持使用[Arrow Flight SQL](https://doris.apache.org/zh-CN/docs/dev/db-connect/arrow-flight-sql-connect/) 读取数据
+:::
+```sql
+CREATE TABLE doris_source (
+name STRING,
+age int
+) 
+WITH (
+  'connector' = 'doris',
+  'fenodes' = 'FE_IP:HTTP_PORT',
+  'table.identifier' = 'database.table',
+  'source.use-flight-sql' = 'true',
+  'source.flight-sql-port' = '{fe.conf:arrow_flight_sql_port}',
+  'username' = 'root',
+  'password' = ''
+)
+```
+
 
 #### DataStream
 
@@ -342,6 +361,8 @@ ON a.city = c.city
 | doris.exec.mem.limit          | 8192mb         | N        | 单个查询的内存限制。默认为 8GB，单位为字节                   |
 | doris.deserialize.arrow.async | FALSE              | N        | 是否支持异步转换 Arrow 格式到 flink-doris-connector 迭代所需的 RowBatch |
 | doris.deserialize.queue.size  | 64                 | N        | 异步转换 Arrow 格式的内部处理队列，当 doris.deserialize.arrow.async 为 true 时生效 |
+| source.use-flight-sql | FALSE              | N        | 是否使用 Arrow Flight SQL 读取 |
+| source.flight-sql-port  | -                 | N        | 使用 Arrow Flight SQL 读取时，FE 的 arrow_flight_sql_port |
 
 #### DataStream 专有配置项
 | Key                           | Default Value      | Required | Comment                                                      |
