@@ -478,7 +478,7 @@ FROM KAFKA (
 SHOW ROUTINE LOAD;
 ```
 
-更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](../../data-operate/import/routine-load-manual)。
+更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](../../data-operate/import/import-way/routine-load-manual)。
 
 **使用自定义程序采集日志**
 
