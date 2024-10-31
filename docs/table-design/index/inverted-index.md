@@ -190,9 +190,9 @@ Syntax explanation:
 <details>
   <summary>stopwords</summary>
 
-  **Specifying whether the tokenizer uses stop words will affect the tokenizer's behavior**
-  <p>- Stop words include meaningless words such as 'is', 'the', 'a', etc. By default, the tokenizer ignores these words during indexing or querying.</p>
-  <p>- none: do not ignore these stop words</p>
+  **Specifying the stopword list to use, which will affect the behavior of the tokenizer**
+  <p>- The default built-in stopword list includes meaningless words such as 'is,' 'the,' 'a,' etc. When writing or querying, the tokenizer will ignore words that are in the stopword list.</p>
+  <p>- none: Use an empty stopword list</p>
 </details>
 
 **4. `COMMENT` is optional for specifying index comments**
