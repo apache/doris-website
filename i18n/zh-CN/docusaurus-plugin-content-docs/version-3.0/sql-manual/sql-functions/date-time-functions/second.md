@@ -24,20 +24,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## second
-### description
-#### Syntax
+## Description
+
+
+获得日期中的秒的信息，返回值范围从 0-59。
+
+参数为 Date 或者 Datetime，Time 类型
+
+## Syntax
 
 `INT SECOND(DATETIME date)`
 
+## Example
 
-获得日期中的秒的信息，返回值范围从0-59。
-
-参数为Date或者Datetime类型
-
-### example
-
-```
+```sql
 mysql> select second('2018-12-31 23:59:59');
 +-----------------------------+
 | second('2018-12-31 23:59:59') |
@@ -45,5 +45,5 @@ mysql> select second('2018-12-31 23:59:59');
 |                          59 |
 +-----------------------------+
 ```
-### keywords
+## Keywords
     SECOND

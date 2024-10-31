@@ -24,19 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## minute
-### description
-#### Syntax
 
-`INT MINUTE(DATETIME date)`
+## Description
 
 Returns minute information in the time type, ranging from 0,59
 
-The parameter is Date or Datetime type
+The parameter is Date or Datetime or Time type
+## Syntax
+`INT MINUTE(DATETIME date)`
 
-### example
+## Example
 
-```
+```sql
 mysql> select minute('2018-12-31 23:59:59');
 +-----------------------------+
 | minute('2018-12-31 23:59:59') |
@@ -44,5 +43,5 @@ mysql> select minute('2018-12-31 23:59:59');
 |                          59 |
 +-----------------------------+
 ```
-### keywords
+## Keywords
     MINUTE
