@@ -90,7 +90,6 @@
                 "table-design/row-store",
                 "table-design/data-partition",
                 "table-design/schema-change",
-                "table-design/cold-hot-separation",
                 "table-design/auto-increment",
                 "table-design/best-practice"
             ]
