@@ -115,6 +115,28 @@ Since jobs in Doris are created as synchronous tasks but executed asynchronously
 ## Automated Data Synchronization with Job Scheduler and Catalog
 For instance, in an e-commerce scenario, users often need to extract business data from MySQL and synchronize it to Doris for data analysis, supporting precise marketing activities. The Job Scheduler, combined with Multi Catalog capabilities, can efficiently accomplish periodic data synchronization across data sources.
 
+```sql
+CREATE TABLE IF NOT EXISTS user.activity (
+     `user_id` INT NOT NULL,
+     `date` DATE NOT NULL,
+     `city` VARCHAR(20),
+    `age` SMALLINT,
+    `sex` TINYINT,
+    `last_visit_date` DATETIME DEFAULT '1970-01-01 00:00:00',
+    `cost` BIGINT DEFAULT '0',
+    `max_dwell_time` INT DEFAULT '0',
+    `min_dwell_time` INT DEFAULT '99999'
+);
+INSERT INTO user.activity VALUES
+    (10000, '2017-10-01', 'Beijing', 20, 0, '2017-10-01 06:00:00', 20, 10, 10),
+    (10000, '2017-10-01', 'Beijing', 20, 0, '2017-10-01 07:00:00', 15, 2, 2),
+    (10001, '2017-10-01', 'Beijing', 30, 1, '2017-10-01 17:05:00', 2, 22, 22),
+    (10002, '2017-10-02', 'Shanghai', 20, 1, '2017-10-02 12:59:00', 200, 5, 5),
+    (10003, '2017-10-02', 'Guangzhou', 32, 0, '2017-10-02 11:20:00', 30, 11, 11),
+    (10004, '2017-10-01', 'Shenzhen', 35, 0, '2017-10-01 10:00:00', 100, 3, 3),
+    (10004, '2017-10-03', 'Shenzhen', 35, 0, '2017-10-03 10:20:00', 11, 6, 6);
+```
+
 | user\_id | date       | city      | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
 | -------- | ---------- | --------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
 | 10000    | 2017-10-01 | Beijing   | 20   | 0    | 2017-10-01 06:00    | 20   | 10               | 10               |
@@ -152,7 +174,8 @@ PROPERTIES (
 CREATE CATALOG activity PROPERTIES (
   "type"="jdbc",
   "user"="root",
-  "jdbc_url" = "jdbc:mysql://127.0.0.1:9734/user?useSSL=false",
+  "password"="123456",
+  "jdbc_url" = "jdbc:mysql://127.0.0.1:3306/user?useSSL=false",
   "driver_url" = "mysql-connector-java-5.1.49.jar",
   "driver_class" = "com.mysql.jdbc.Driver"
 );
@@ -166,7 +189,7 @@ CREATE JOB one_time_load_job ON SCHEDULE AT '2024-08-10 03:00:00' DO INSERT INTO
 ```
 - Periodic Scheduling:
 ```sql
-CREATE JOB schedule_load ON SCHEDULE EVERY 1 DAY DO INSERT INTO user_activity SELECT * FROM activity.user_activity WHERE create_time >= days_add(now(), -1);
+CREATE JOB schedule_load ON SCHEDULE EVERY 1 DAY DO INSERT INTO user_activity SELECT * FROM activity.user_activity WHERE last_visit_date >= days_add(now(), -1);
 ```
 ## Design and Implementation
 Efficient scheduling often entails substantial resource consumption, especially with high-precision scheduling. Traditional implementations using Java's built-in scheduling capabilities or other libraries may have significant issues with precision and memory usage. To ensure performance while minimizing resource usage, the TimingWheel algorithm is combined with Disruptor to achieve second-level task scheduling.
