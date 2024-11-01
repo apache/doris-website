@@ -36,7 +36,7 @@ Stream Load 支持通过 HTTP 协议将本地文件或数据流导入到 Doris �
 - 断点续传，在导入过程中可能出现部分失败的情况，支持在失败点处进行继续传输。
 - 自动重传，在导入出现失败的情况后，无需手动重传，工具会自动重传默认的次数，如果仍然不成功，打印出手动重传的命令。
 
-点击 [Doris Streamloader 文档](../../ecosystem/doris-streamloader) 了解使用方法与实践详情。
+点击 [Doris Streamloader 文档](../../../ecosystem/doris-streamloader) 了解使用方法与实践详情。
 :::
 
 ## 使用场景
@@ -730,10 +730,10 @@ li,male,9
 如下列数据中，列中包含了分隔符 `,`：
 
 ```sql
-张三,30,'上海市,黄浦区,大沽路'
+张三,30,'上海市，黄浦区，大沽路'
 ```
 
-通过制定包围符`'`，可以将“上海市,黄浦区,大沽路”指定为一个字段：
+通过制定包围符`'`，可以将“上海市，黄浦区，大沽路”指定为一个字段：
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -745,10 +745,10 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-如果包围字符也出现在字段中，如希望将“上海市,黄浦区,'大沽路”作为一个字段，需要先在列中进行字符串转义：
+如果包围字符也出现在字段中，如希望将“上海市，黄浦区，'大沽路”作为一个字段，需要先在列中进行字符串转义：
 
 ```sql
-张三,30,'上海市,黄浦区,\'大沽路'
+张三,30,'上海市，黄浦区，\'大沽路'
 ```
 
 可以通过 escape 参数可以指定单字节转义字符，如下例中 `\`:
