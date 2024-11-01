@@ -38,7 +38,7 @@ Paimon Catalog Currently supports two types of Metastore creation catalogs:
 * filesystem(default),Store both metadata and data in the file system.
 * hive metastore,It also stores metadata in Hive metastore. Users can access these tables directly from Hive.
 
-### Creating a Catalog Based on FileSystem
+### Creating a Catalog based on FileSystem
 
 #### HDFS
 
@@ -116,7 +116,7 @@ CREATE CATALOG `paimon_oss` PROPERTIES (
 );
 ```
 
-### Creating a Catalog Based on Hive Metastore
+### Creating a Catalog based on Hive Metastore
 
 ```sql
 CREATE CATALOG `paimon_hms` PROPERTIES (
@@ -147,6 +147,26 @@ CREATE CATALOG `paimon_kerberos` PROPERTIES (
     "hadoop.security.authentication" = "kerberos",
     "hadoop.kerberos.principal" = "hdfs@HADOOP.COM",
     "hadoop.kerberos.keytab" = "/doris/hdfs.keytab"
+);
+```
+
+### Create a Catalog based on Aliyun DLF
+
+This feature is supported since version 2.1.7 and 3.0.3.
+
+```
+CREATE CATALOG `paimon_dlf` PROPERTIES (
+    "type" = "paimon",
+    "paimon.catalog.type" = "dlf",
+    "warehouse" = "oss://xx/yy/",
+    "dlf.proxy.mode" = "DLF_ONLY",
+    "dlf.uid" = "xxxxx",
+    "dlf.region" = "cn-beijing",
+    "dlf.access_key" = "ak",
+    "dlf.secret_key" = "sk"
+    
+    -- "dlf.endpoint" = "dlf.cn-beijing.aliyuncs.com", -- optional
+    -- "dlf.catalog.id" = "xxxx", -- optional
 );
 ```
 

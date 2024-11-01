@@ -146,6 +146,21 @@ For clusters upgraded from old versions, these variables may change.
       'file_format'='orc',
       'compression'='zlib'
     );
+
+    -- Create text format table(Since 2.1.7 & 3.0.3)
+    CREATE TABLE text_table (
+        `id` INT,
+        `name` STRING
+    ) PROPERTIES (
+        'file_format'='text',
+        'compression'='gzip',
+        'field.delim'='\t',
+        'line.delim'='\n',
+        'collection.delim'=';',
+        'mapkey.delim'=':',
+        'serialization.null.format'='\\N',
+        'escape.delim'='\\'
+    );
     ```
 
     After creation, you can view the Hive table creation statement using the `SHOW CREATE TABLE` command.
@@ -209,13 +224,24 @@ For clusters upgraded from old versions, these variables may change.
 
 - File Formats
 
-    - Parquet
     - ORC (default)
-
+    - Parquet
+    - Text (supported since version 2.1.7 & 3.0.3)
+    
+        The Text format also supports the following table properties:
+        
+        - `field.delim`: column delimiter. Default `\1`.
+        - `line.delim`: row delimiter. Default `\n`.
+        - `collection.delim`: delimiter between elements in complex types. Default `\2`.
+        - `mapkey.delim`: key value delimiter of Map type. Default `\3`
+        - `serialization.null.format`: storage format of NULL values. Default `\N`.
+        - `escape.delim`: escape character. Default `\`.
+    
 - Compression Formats
 
-    - Parquet: snappy(default), zstd, plain. (plain means no compression is used.)
-    - ORC: snappy, zlib(default), zstd, plain. (plain means no compression is used.)
+    - Parquet: snappy(default), zstd, plain. (plain means no compression)
+    - ORC: snappy, zlib(default), zstd, plain. (plain means no compression)
+    - Text: gzip, defalte, bzip2, zstd, lz4, lzo, snappy, plain (default). (plain means no compression)
 
 - Storage Medium
 
@@ -234,7 +260,7 @@ Currently, writing to specific partitions is not supported.
 
 ### INSERT
 
-The INSERT operation appends data to the target table.
+The INSERT operation appends data to the target table. Currently, writing to a specific partition is not supported.
 
 ```
 INSERT INTO hive_tbl values (val1, val2, val3, val4);
@@ -246,12 +272,18 @@ INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) values (1, 2, "
 
 ### INSERT OVERWRITE
 
-The INSERT OVERWRITE operation completely overwrites the existing data in the table with new data.
+The INSERT OVERWRITE operation completely overwrites the existing data in the table with new data. Currently, writing to a specific partition is not supported.
 
 ```
 INSERT OVERWRITE TABLE VALUES(val1, val2, val3, val4)
 INSERT OVERWRITE TABLE hive.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
 ```
+
+The semantics of INSERT OVERWRITE is consistent with Hive, and has the following behaviors:
+
+- When the target table is a partitioned table and the source table is empty, the operation will not have any effect. The target table data will not change.
+- When the target table is a non-partitioned table and the source table is empty, the target table will be cleared.
+- Currently, writing to a specified partition is not supported, so INSERT OVERWRITE automatically processes the corresponding target table partition according to the value in the source table. If the target table is a partitioned table, only the partitions involved will be overwritten, and the data of the partitions not involved will not change.
 
 ### CTAS (CREATE TABLE AS SELECT)
 

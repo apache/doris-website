@@ -147,8 +147,23 @@ set global enable_fallback_to_original_planner = false;
       'file_format'='orc',
       'compression'='zlib'
     );
+
+    -- Create text format table(Since 2.1.7 & 3.0.3)
+    CREATE TABLE text_table (
+        `id` INT,
+        `name` STRING
+    ) PROPERTIES (
+        'file_format'='text',
+        'compression'='gzip',
+        'field.delim'='\t',
+        'line.delim'='\n',
+        'collection.delim'=';',
+        'mapkey.delim'=':',
+        'serialization.null.format'='\\N',
+        'escape.delim'='\\'
+    );
     ```
-    
+
     创建后，可以通过 `SHOW CREATE TABLE` 命令查看 Hive 的建表语句。
     
     注意，不同于 Hive 中的建表语句。在 Apache Doris 中创建 Hive 分区表时，分区列也必须写到 Table 的 Schema 中。同时，分区列必须在所有 Schema 的最后，且顺序保持一致。
@@ -208,13 +223,24 @@ set global enable_fallback_to_original_planner = false;
     
 - 文件格式
 
-    - Parquet
     - ORC（默认）
+    - Parquet
+    - Text （自 2.1.7 和 3.0.3 版本开始支持）
+
+        Text 格式还支持以下表属性：
+
+        - `field.delim`：列分隔符。默认 `\1`。
+        - `line.delim`：行分隔符。默认 `\n`。
+        - `collection.delim`：复杂类型中各元素之间的分隔符。默认 `\2`。
+        - `mapkey.delim`：Map 类型的键值分割符。默认 `\3`
+        - `serialization.null.format`：NULL 值的存储格式。默认 `\N`。
+        - `escape.delim`：转移字符。默认 `\`。
 
 - 压缩格式
 
-    - Parquet：snappy（默认），zstd，plain。（Plain 就是不采用压缩）
-    - ORC：snappy，zlib（默认），zstd，plain。（Plain 就是不采用压缩）
+    - Parquet：snappy（默认）、zstd、plain。（Plain 就是不采用压缩）
+    - ORC：snappy、zlib（默认）、zstd、plain。（Plain 就是不采用压缩）
+    - Text：gzipm、defalte、bzip2、zstd、lz4、lzo、snappy、plain（默认）。（Plain 就是不采用压缩）
 
 - 存储介质
 
@@ -233,7 +259,7 @@ set global enable_fallback_to_original_planner = false;
 
 ### INSERT
 
-INSERT 操作会数据以追加的方式写入到目标表中。
+INSERT 操作会数据以追加的方式写入到目标表中。当前不支持指定分区写入。
 
 ```
 INSERT INTO hive_tbl values (val1, val2, val3, val4);
@@ -245,12 +271,18 @@ INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) values (1, 2, "
 
 ### INSERT OVERWRITE
 
-INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。
+INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。当前不支持指定分区写入。
 
 ```
 INSERT OVERWRITE TABLE VALUES(val1, val2, val3, val4)
 INSERT OVERWRITE TABLE hive.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
 ```
+
+INSERT OVERWRITE 的语义与 Hive 一致，有如下行为：
+
+- 当目的表是分区表，而源表为空表时，操作不会产生任何影响。目的表数据无变化。
+- 当目的表是非分区表，而源表是空表是，目的表会被清空。
+- 当前不支持指定分区写入，因此 INSERT OVERWRITE 为根据源表中的数值，自动处理对应的目的表分区。如果目的表是分区表，则只会覆盖涉及到的分区，不涉及的分区，数据无变化。
 
 ### CTAS(CREATE TABLE AS SELECT)
     
