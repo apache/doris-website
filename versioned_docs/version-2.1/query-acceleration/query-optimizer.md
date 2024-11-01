@@ -62,7 +62,7 @@ The execution process of the optimizer is divided into the following steps:
 
 ## Session Variables
 
-**1. Set Planning Timeout** **`enable_nereids_timeout_second`**
+**1. Set Planning Timeout** **`nereids_timeout_second`**
 
 - This variable is used to set the maximum allowed time for query planning. When the planning time exceeds this set value, query planning will be terminated, and an error message will be returned. During the process of planning query statements, the system obtains read locks for all tables involved in the SQL, primarily to maintain cluster stability and prevent excessive resource occupation and lock conflicts caused by excessively long planning times.
 
