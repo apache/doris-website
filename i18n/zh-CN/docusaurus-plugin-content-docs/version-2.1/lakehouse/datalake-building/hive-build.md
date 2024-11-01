@@ -259,7 +259,7 @@ set global enable_fallback_to_original_planner = false;
 
 ### INSERT
 
-INSERT 操作会数据以追加的方式写入到目标表中。
+INSERT 操作会数据以追加的方式写入到目标表中。当前不支持指定分区写入。
 
 ```
 INSERT INTO hive_tbl values (val1, val2, val3, val4);
@@ -271,12 +271,18 @@ INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) values (1, 2, "
 
 ### INSERT OVERWRITE
 
-INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。
+INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。当前不支持指定分区写入。
 
 ```
 INSERT OVERWRITE TABLE VALUES(val1, val2, val3, val4)
 INSERT OVERWRITE TABLE hive.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
 ```
+
+INSERT OVERWRITE 的语义与 Hive 一致，有如下行为：
+
+- 当目的表是分区表，而源表为空表时，操作不会产生任何影响。目的表数据无变化。
+- 当目的表是非分区表，而源表是空表是，目的表会被清空。
+- 当前不支持指定分区写入，因此 INSERT OVERWRITE 为根据源表中的数值，自动处理对应的目的表分区。如果目的表是分区表，则只会覆盖涉及到的分区，不涉及的分区，数据无变化。
 
 ### CTAS(CREATE TABLE AS SELECT)
     

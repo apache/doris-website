@@ -260,7 +260,7 @@ Currently, writing to specific partitions is not supported.
 
 ### INSERT
 
-The INSERT operation appends data to the target table.
+The INSERT operation appends data to the target table. Currently, writing to a specific partition is not supported.
 
 ```
 INSERT INTO hive_tbl values (val1, val2, val3, val4);
@@ -272,12 +272,18 @@ INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) values (1, 2, "
 
 ### INSERT OVERWRITE
 
-The INSERT OVERWRITE operation completely overwrites the existing data in the table with new data.
+The INSERT OVERWRITE operation completely overwrites the existing data in the table with new data. Currently, writing to a specific partition is not supported.
 
 ```
 INSERT OVERWRITE TABLE VALUES(val1, val2, val3, val4)
 INSERT OVERWRITE TABLE hive.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
 ```
+
+The semantics of INSERT OVERWRITE is consistent with Hive, and has the following behaviors:
+
+- When the target table is a partitioned table and the source table is empty, the operation will not have any effect. The target table data will not change.
+- When the target table is a non-partitioned table and the source table is empty, the target table will be cleared.
+- Currently, writing to a specified partition is not supported, so INSERT OVERWRITE automatically processes the corresponding target table partition according to the value in the source table. If the target table is a partitioned table, only the partitions involved will be overwritten, and the data of the partitions not involved will not change.
 
 ### CTAS (CREATE TABLE AS SELECT)
 
