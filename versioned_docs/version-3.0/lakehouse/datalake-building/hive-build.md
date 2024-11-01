@@ -146,6 +146,21 @@ For clusters upgraded from old versions, these variables may change.
       'file_format'='orc',
       'compression'='zlib'
     );
+
+    -- Create text format table(Since 2.1.7 & 3.0.3)
+    CREATE TABLE text_table (
+        `id` INT,
+        `name` STRING
+    ) PROPERTIES (
+        'file_format'='text',
+        'compression'='gzip',
+        'field.delim'='\t',
+        'line.delim'='\n',
+        'collection.delim'=';',
+        'mapkey.delim'=':',
+        'serialization.null.format'='\\N',
+        'escape.delim'='\\'
+    );
     ```
 
     After creation, you can view the Hive table creation statement using the `SHOW CREATE TABLE` command.
@@ -209,13 +224,24 @@ For clusters upgraded from old versions, these variables may change.
 
 - File Formats
 
-    - Parquet
     - ORC (default)
-
+    - Parquet
+    - Text (supported since version 2.1.7 & 3.0.3)
+    
+        The Text format also supports the following table properties:
+        
+        - `field.delim`: column delimiter. Default `\1`.
+        - `line.delim`: row delimiter. Default `\n`.
+        - `collection.delim`: delimiter between elements in complex types. Default `\2`.
+        - `mapkey.delim`: key value delimiter of Map type. Default `\3`
+        - `serialization.null.format`: storage format of NULL values. Default `\N`.
+        - `escape.delim`: escape character. Default `\`.
+    
 - Compression Formats
 
-    - Parquet: snappy(default), zstd, plain. (plain means no compression is used.)
-    - ORC: snappy, zlib(default), zstd, plain. (plain means no compression is used.)
+    - Parquet: snappy(default), zstd, plain. (plain means no compression)
+    - ORC: snappy, zlib(default), zstd, plain. (plain means no compression)
+    - Text: gzip, defalte, bzip2, zstd, lz4, lzo, snappy, plain (default). (plain means no compression)
 
 - Storage Medium
 
