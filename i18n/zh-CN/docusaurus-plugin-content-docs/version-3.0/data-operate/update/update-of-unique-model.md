@@ -112,11 +112,11 @@ set enable_unique_key_partial_update=true
 若使用 StreamLoad 可以通过如下方式进行更新：
 
 ```sql
-$cat update.csv
+$ cat update.csv
 
 1,待发货
 
-$ curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:48037/api/db1/order_tbl/_stream_load
+$ curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
 
 若使用`INSRT INTO`可以通过如下方式进行更新：

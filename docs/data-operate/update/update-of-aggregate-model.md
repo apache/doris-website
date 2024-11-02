@@ -68,8 +68,12 @@ For Stream Load, Broker Load, Routine Load, or INSERT INTO, you can directly wri
 
 Using the same example as above, the corresponding Stream Load command would be (no additional headers required):
 
-```Plain
-curl  --location-trusted -u root: -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:48037/api/db1/order_tbl/_stream_load
+```shell
+$ cat update.csv
+
+1,To be shipped
+
+$ curl  --location-trusted -u root: -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
 
 The corresponding `INSERT INTO` statement would be (no additional session variables required):
