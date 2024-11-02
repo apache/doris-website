@@ -740,6 +740,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
+    -H "escape:\" \
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -758,7 +759,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
-    -H 'escape:\' \
+    -H "escape:\" \
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -899,7 +900,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "json_root: $.comment" \
     -H "jsonpaths:[\"$.userid\", \"$.username\", \"$.userage\"]" \
     -H "columns:user_id,name,age" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -980,7 +981,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "format: json" \
     -H "strip_outer_array:true" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
