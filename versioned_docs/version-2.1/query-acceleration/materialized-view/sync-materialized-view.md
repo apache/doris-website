@@ -395,37 +395,82 @@ Business Scenario: Pre-filtering data or accelerating expression computation.
 Create a table and materialized views for pre-filtering and expression computation:
 
 ```sql
-create table d_table (  
-   k1 int null,  
-   k2 int not null,  
-   k3 bigint null,  
-   k4 date null  
-)  
-duplicate key (k1,k2,k3)  
-distributed BY hash(k1) buckets 3  
-properties("replication_num" = "1");  
-  
--- Insert data...  
-  
--- Pre-compute expressions  
-create materialized view mv1 as   
-select   
-    abs(k1)+k2+1,          
-    sum(abs(k2+2)+k3+3)   
-from   
-    d_table   
-group by   
-    abs(k1)+k2+1;  
-  
--- Pre-filter data  
-create materialized view mv2 as   
-select   
-    year(k4),  
-    month(k4)   
-from   
-    d_table   
-where   
+create table d_table (
+   k1 int null,
+   k2 int not null,
+   k3 bigint null,
+   k4 date null
+)
+duplicate key (k1,k2,k3)
+distributed BY hash(k1) buckets 3
+properties("replication_num" = "1");
+
+insert into d_table select 1,1,1,'2020-02-20';
+insert into d_table select 2,2,2,'2021-02-20';
+insert into d_table select 3,-3,null,'2022-02-20';
+```
+
+Create some materialized views:
+
+```sql
+-- mv1 Perform expression calculations ahead of time
+create materialized view mv1 as 
+select 
+    abs(k1)+k2+1,        
+    sum(abs(k2+2)+k3+3) 
+from 
+    d_table 
+group by 
+    abs(k1)+k2+1;
+
+-- mv2 Use where expressions to filter in advance to reduce the amount of data in materialized views
+create materialized view mv2 as 
+select 
+    year(k4),
+    month(k4) 
+from 
+    d_table 
+where 
     year(k4) = 2020;
+```
+
+Testing Whether the Materialized Views Are Successfully Hit with Some Queries:
+
+
+```sql
+-- Hit mv1
+select 
+    abs(k1)+k2+1,
+    sum(abs(k2+2)+k3+3) 
+from 
+    d_table 
+group by 
+    abs(k1)+k2+1;
+    
+-- Hit mv1
+select 
+    bin(abs(k1)+k2+1),
+    sum(abs(k2+2)+k3+3) 
+from 
+    d_table 
+group by 
+    bin(abs(k1)+k2+1);
+
+-- Hit mv2
+select 
+    year(k4) + month(k4) 
+from 
+    d_table 
+where 
+    year(k4) = 2020;
+
+-- Hit table d_table but not hit mv2，because where condition does match
+select 
+    year(k4),
+    month(k4) 
+from 
+    d_table;
+
 ```
 
 ## FAQ

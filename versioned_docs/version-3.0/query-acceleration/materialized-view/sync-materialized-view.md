@@ -512,7 +512,7 @@ insert into d_table select 2,2,2,'2021-02-20';
 insert into d_table select 3,-3,null,'2022-02-20';
 ```
 
-Creating Some Materialized Views:
+Creating some materialized views:
 
 ```sql
 -- mv1 Perform expression calculations ahead of time
