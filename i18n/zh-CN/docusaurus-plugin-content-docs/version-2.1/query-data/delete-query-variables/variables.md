@@ -715,6 +715,10 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
   当 enable_adaptive_pipeline_task_serial_read_on_limit 开启时，scan 的并行度将会被设置为 1 的行数阈值。默认值是 `10000`。
 
+* `enable_cooldown_replica_affinity`
+
+  用户可以选择是否首先使用冷却副本进行扫描,默认为true
+
 ***
 
 #### 关于语句执行超时控制的补充说明
