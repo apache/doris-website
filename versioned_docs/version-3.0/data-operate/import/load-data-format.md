@@ -62,7 +62,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "line_delimiter:\n" \
     -H "columns_delimiter:|" \
     -H "enclose:'" \
-    -H 'escape:\' \
+    -H "escape:\\" \
     -H "skip_lines:2" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
