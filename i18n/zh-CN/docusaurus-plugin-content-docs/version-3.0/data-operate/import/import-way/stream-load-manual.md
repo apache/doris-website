@@ -740,7 +740,6 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
-    -H "escape:\" \
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -759,7 +758,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
-    -H "escape:\" \
+    -H "escape:\\" \    
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
