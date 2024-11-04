@@ -73,7 +73,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
 1. 安装 Doris Operator CRD
    通过以下命令添加 Doris Operator 的自定义资源（CRD）：
    ```
-   kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+   kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
    ```
    期望输出结果:
    ```
@@ -82,7 +82,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
 2. 安装 Doris Operator
    通过以下命令安装 Doris Operator ：
    ```
-   kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/operator/operator.yaml
+   kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
    ```
    期望输出结果：
    ```

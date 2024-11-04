@@ -94,7 +94,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
    通过以下命令添加 Doris Operator 的自定义资源（CRD）：
 
    ```shell
-   kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+   kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
    ```
    期望输出结果：
 
@@ -107,7 +107,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
    通过以下命令安装 Doris Operator：
 
    ```shell
-   kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/operator/operator.yaml
+   kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
    ```
    期望输出结果：
 
@@ -135,7 +135,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
    doris-operator-7f578c86cb-nz6jn   1/1     Running   0          19m
    ```
    
-   Doris Operator 相关配置以及其他部署方式可参考[部署 operator 部分](./install-operator)。
+   Doris Operator 相关配置以及其他部署方式可参考[部署 operator 部分](./install-operator.md)。
 
 ## 第 3 步：部署 Doris 集群
 
@@ -145,7 +145,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
    curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
    ```
 
-2. 根据[集群配置章节](./install-doris-cluster)按需进行定制化配置，配置完成后通过如下命令部署：
+2. 根据[集群配置章节](./install-doris-cluster.md)按需进行定制化配置，配置完成后通过如下命令部署：
 
    ```shell
    kubectl apply -f doriscluster-sample.yaml
@@ -182,7 +182,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
 
 ## 第 4 步：连接访问 Doris 集群
 
-在测试环境中快速部署的 Doris 集群，可以进入容器 FE 内部使用 MySQL Client 链接 Doris 进行测试操作。其他访问方式可参考[集群访问章节](./install-access-cluster)配置使用。
+在测试环境中快速部署的 Doris 集群，可以进入容器 FE 内部使用 MySQL Client 链接 Doris 进行测试操作。其他访问方式可参考[集群访问章节](./install-access-cluster.md)配置使用。
 
 1. 获取 FE 容器名称：
 
