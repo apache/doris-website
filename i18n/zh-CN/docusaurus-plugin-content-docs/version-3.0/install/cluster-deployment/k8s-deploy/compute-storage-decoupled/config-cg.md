@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-存算分离计算组（ Compute Group ）负责数据导入并缓存对象存储中的数据。计算组之间相互隔离。
+存算分离计算组（ Compute Group ）负责数据导入并缓存对象存储中的数据，计算组之间相互隔离。
 
 ## 指定计算组名称
 
@@ -104,7 +104,7 @@ BE 在存算分离模式下必须指定 Cache 配置，请按照[存算分离文
 
 比如： `file_cache_path` 配置为 `file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]`，Doris-Operator 相关服务自动为计算服务添加存储配置信息，这些信息能够申请到挂载点为 `/opt/apache-doris/be/file_cache` 且容量为 100Gi 的磁盘。
 
-当 file_cache_path 中 total_size 大于[持久化配置](#4-配置持久化存储模板)中设置的存储容量，Doris-Operator 会将持久化配置改为 total_size 的大小，防止服务出现非预期故障。
+当 file_cache_path 中 total_size 大于[持久化配置模版](#4-配置持久化存储模板)中设置的存储容量，Doris-Operator 会将持久化配置改为 total_size 的大小，防止服务出现非预期故障。
 
 ### 3.挂载定制化 ConfigMap
 

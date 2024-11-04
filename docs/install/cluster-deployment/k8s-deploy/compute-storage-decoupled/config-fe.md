@@ -33,7 +33,7 @@ spec:
     replicas: 2
 ```
 
-Configure the FE service image to be used, and update the configuration to the [storage-and-computing separation resources to be deployed](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
+Replace {felmage} with the image version >=3.0.2, that wants to deploy, and update the configuration to the [storage-and-computing separation resources to be deployed](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
 
 ## Configure resources
 
@@ -52,7 +52,7 @@ spec:
       memory: 4Gi
 ```
 
-The above example shows how to configure the computing resources of the FE service to 4c 4Gi mode. After configuring the resources that FE wants to use, update the configuration information to [storage-and-computing separation resources to be deployed](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
+The above example shows how to configure the computing resources of the FE service to 4c 4Gi mode. After configuring the resources that FE wants to use, update the configuration information to [DorisDisaggregatedCluster resources to be deployed](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
 
 ### Configure service storage resources
 

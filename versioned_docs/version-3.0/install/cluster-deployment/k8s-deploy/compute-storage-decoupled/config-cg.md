@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The Compute Group (BEs) is responsible for data import and caching data in storage-computing separation mode. Compute Groups are isolated from each other.
+The Compute Group (BEs) is responsible for data import and caching data in storage-computing separation mode, Compute Groups are isolated from each other.
 
 ## Specify the name of compute group
 
@@ -63,7 +63,7 @@ spec:
     replicas: 2
 ```
 
-The above is a simple configuration of two Compute Groups, with the cluster name are cg1 and cg2 respectively. When using a storage-computing separation cluster, you can select which Compute Group to use by the name. In actual use, you can specify the cluster name according to the business category.
+The above is a simple configuration of two Compute Groups, with the cluster name are cg1 and cg2 respectively. When using a storage-computing separation cluster, you can select which Compute Group to use by the name. In actual use, you can specify the compute group name according to the business category.
 
 Modify the following configuration to the `DorisDisaggregatedCluster` resource when [Deploy storage-computing separation cluster](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster) to deploy 2 Compute Groups, one of which can deploy 3 pods containing BE services, and the other can deploy 2 pods containing BE services. `{beImage}` specifies the image of the BE service you want to use.
 
@@ -137,7 +137,7 @@ spec:
       mountPath: "/etc/doris"
 ```
 
-Update the configuration information to the needed to deployed [DorisDisaggregatedCluster](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster) resource.
+Update the configuration to the Doris [DorisDisaggregatedCluster](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster) resource that to be deployed. 
 
 ### 4.Config the persistent volume template
 ```yaml

@@ -88,7 +88,7 @@ spec:
 
 ## Customized configuration file
 
-ConfigMap is used to mount the configuration file on K8s. Doris-Operator automates the configuration of mutual perception between storage and computing separation components. When deploying MS services using customized configuration files, please do not configure FDB related configuration.
+ConfigMap is used to mount the configuration file on K8s. Doris-Operator automates add the configuration of mutual perception between storage and computing separation components. When deploying MS services using customized configuration files, please do not configure FDB related configuration.
 
 Use ConfigMap to mount the configuration file to deploy MS services:
 

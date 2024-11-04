@@ -76,7 +76,7 @@ spec:
         namespace: {namespace}
 ```
 
-若上述 FDB 的访问方式不可获取，或 FDB 是物理机部署，则可以通过为 metaService 配置 FDB endpoint（FDB 的访问字符串）的方式来实现 FDB 的访问。
+若 FDB 是物理机部署，则可以通过为 metaService 配置 FDB endpoint（FDB 的访问字符串）的方式来实现 FDB 的访问。
 配置如下：
 
 ```yaml
