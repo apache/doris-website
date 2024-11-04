@@ -100,6 +100,25 @@ CREATE TABLE flink_doris_source (
       'password' = 'password'
 );
 ```
+:::info 备注
+Flink Connector 24.0.0 版本之后支持使用[Arrow Flight SQL](https://doris.apache.org/zh-CN/docs/dev/db-connect/arrow-flight-sql-connect/) 读取数据
+:::
+```sql
+CREATE TABLE doris_source (
+name STRING,
+age int
+) 
+WITH (
+  'connector' = 'doris',
+  'fenodes' = 'FE_IP:HTTP_PORT',
+  'table.identifier' = 'database.table',
+  'source.use-flight-sql' = 'true',
+  'source.flight-sql-port' = '{fe.conf:arrow_flight_sql_port}',
+  'username' = 'root',
+  'password' = ''
+)
+```
+
 
 #### DataStream
 
@@ -342,6 +361,8 @@ ON a.city = c.city
 | doris.exec.mem.limit          | 8192mb         | N        | 单个查询的内存限制。默认为 8GB，单位为字节                   |
 | doris.deserialize.arrow.async | FALSE              | N        | 是否支持异步转换 Arrow 格式到 flink-doris-connector 迭代所需的 RowBatch |
 | doris.deserialize.queue.size  | 64                 | N        | 异步转换 Arrow 格式的内部处理队列，当 doris.deserialize.arrow.async 为 true 时生效 |
+| source.use-flight-sql | FALSE              | N        | 是否使用 Arrow Flight SQL 读取 |
+| source.flight-sql-port  | -                 | N        | 使用 Arrow Flight SQL 读取时，FE 的 arrow_flight_sql_port |
 
 #### DataStream 专有配置项
 | Key                           | Default Value      | Required | Comment                                                      |
@@ -355,7 +376,7 @@ ON a.city = c.city
 | Key                         | Default Value | Required | Comment                                                                                                                                                                                                                                                                                                                         |
 | --------------------------- | ------------- | -------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | sink.label-prefix           | --            | Y        | Stream load 导入使用的 label 前缀。2pc 场景下要求全局唯一，用来保证 Flink 的 EOS 语义。                                                                                                                                                                                                                                                                   |
-| sink.properties.*           | --            | N        | Stream Load 的导入参数。<br/>例如： 'sink.properties.column_separator' = ', ' 定义列分隔符，  'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，`\x01`会被转换为二进制的 0x01  <br/><br/>JSON 格式导入<br/>'sink.properties.format' = 'json' 'sink.properties.read_json_by_line' = 'true'<br/>详细参数参考[这里](../data-operate/import/stream-load-manual.md)。 |
+| sink.properties.*           | --            | N        | Stream Load 的导入参数。<br />例如： 'sink.properties.column_separator' = ', ' 定义列分隔符，  'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，`\x01`会被转换为二进制的 0x01 。  <br /><br />JSON 格式导入<br />'sink.properties.format' = 'json' 'sink.properties.read_json_by_line' = 'true'<br />详细参数参考[这里](../data-operate/import/stream-load-manual.md)。<br /><br />Group Commit 模式 <br /> 例如：'sink.properties.group_commit' = 'sync_mode' 设置 group commit 为同步模式。flink connector 从 1.6.2 开始支持导入配置 group commit ，详细使用和限制参考 [group commit](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/group-commit-manual/) 。 
 | sink.enable-delete          | TRUE          | N        | 是否启用删除。此选项需要 Doris 表开启批量删除功能 (Doris0.15+ 版本默认开启)，只支持 Unique 模型。                                                                                                                                                                                                                                                                 |
 | sink.enable-2pc             | TRUE          | N        | 是否开启两阶段提交 (2pc)，默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考[这里](../data-operate/import/stream-load-manual.md)。                                                                                                                                                                                                                       |
 | sink.buffer-size            | 1MB           | N        | 写数据缓存 buffer 大小，单位字节。不建议修改，默认配置即可                                                                                                                                                                                                                                                                                               |
@@ -556,8 +577,8 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --use-new-schema-change | 是否使用新的 schema change，支持同步 MySQL 多列变更、默认值，1.6.0 开始该参数默认为 true。参考[#167](https://github.com/apache/doris-flink-connector/pull/167)                                                                                                                                                                                                                                                                                                                      |
 | --schema-change-mode    | 解析 schema change 的模式，支持 `debezium_structure`、`sql_parser` 两种解析模式，默认采用 `debezium_structure` 模式。<br/><br/> `debezium_structure` 解析上游 CDC 同步数据时所使用的数据结构，通过解析该结构判断 DDL 变更操作。 <br/> `sql_parser` 通过解析上游 CDC 同步数据时的 DDL 语句，从而判断 DDL 变更操作，因此该解析模式更加准确。<br/> 使用例子：`--schema-change-mode debezium_structure`<br/> 本功能将在 1.6.2.1 后的版本中提供                                                                                                                       |
 | --single-sink           | 是否使用单个 Sink 同步所有表，开启后也可自动识别上游新创建的表，自动创建表。                                                                                                                                                                                                                                                                                                                                                                                                           |
-| --multi-to-one-origin   | 将上游多张表写入同一张表时，源表的配置，比如：`--multi-to-one-origin="a\_.\*\|b_.\*"`，具体参考[#208](https://github.com/apache/doris-flink-connector/pull/208)                                                                                                                                                                                                                                                                                                                   |
-| --multi-to-one-target   | 与 multi-to-one-origin 搭配使用，目标表的配置，比如：`--multi-to-one-target="a\`|b"                                                                                                                                                                                                                                                                                                                                                                                   |
+| --multi-to-one-origin   | 将上游多张表写入同一张表时，源表的配置，比如：`--multi-to-one-origin "a\_.\*\|b_.\*"`，具体参考[#208](https://github.com/apache/doris-flink-connector/pull/208)                                                                                                                                                                                                                                                                                                                   |
+| --multi-to-one-target   | 与 multi-to-one-origin 搭配使用，目标表的配置，比如：`--multi-to-one-target "a\`|b"                                                                                                                                                                                                                                                                                                                                                                                   |
 | --create-table-only     | 是否只仅仅同步表的结构                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 :::info 备注
@@ -838,7 +859,7 @@ Connector1.1.0 版本以前，是攒批写入的，写入均是由数据驱动�
 
 9. **tablet writer write failed, tablet_id=190958, txn_id=3505530, err=-235**
 
-通常发生在 Connector1.1.0 之前，是由于写入频率过快，导致版本过多。可以通过设置 sink.batch.size 和 sink.batch.interval 参数来降低 Streamload 的频率。
+通常发生在 Connector1.1.0 之前，是由于写入频率过快，导致版本过多。可以通过设置 sink.batch.size 和 sink.batch.interval 参数来降低 Streamload 的频率。在Connector1.1.0之后，默认写入时机是由Checkpoint控制，可以通过增加Checkpoint间隔来降低写入频率。
 
 10. **Flink 导入有脏数据，如何跳过？**
 
@@ -865,6 +886,9 @@ Flink 在数据导入时，如果有脏数据，比如字段格式、长度等�
 
 16. **如果使用整库同步 MySQL 数据到 Doris，出现 timestamp 类型与源数据相差多个小时**
 
-
 整库同步默认 timezone="UTC+8"，如果你同步的数据不是该时区，可以尝试如下设置相对应的时区，例如：`--mysql-conf debezium.date.format.timestamp.zone="UTC+3"` 来解决。
+
+17. **攒批写入和流式写入有什么区别**
+
+Connector1.5.0 之后支持攒批写入，攒批写入不依赖 Checkpoint，将数据缓存在内存中，根据 sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval 参数来控制写入时机。流式写入必须开启 Checkpoint，在整个 Checkpoint 期间持续的将上游数据写入到 Doris 中，不会一直将数据缓存在内存中。
 

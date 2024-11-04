@@ -98,6 +98,24 @@ CREATE TABLE flink_doris_source (
        'password' = 'password'
 );
 ```
+:::info Note
+Flink Connector 24.0.0 and later versions support using [Arrow Flight SQL](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/) to read data
+:::
+```sql
+CREATE TABLE doris_source (
+name STRING,
+age int
+) 
+WITH (
+  'connector' = 'doris',
+  'fenodes' = 'FE_IP:HTTP_PORT',
+  'table.identifier' = 'database.table',
+  'source.use-flight-sql' = 'true',
+  'source.flight-sql-port' = '{fe.conf:arrow_flight_sql_port}',
+  'username' = 'root',
+  'password' = ''
+)
+```
 
 **DataStream**
 
@@ -335,15 +353,22 @@ ON a.city = c.city
 | doris.exec.mem.limit          | 2147483648         | N        | Memory limit for a single query. The default is 2GB, in bytes |
 | doris.deserialize.arrow.async | FALSE              | N        | Whether to support asynchronous conversion of Arrow format to RowBatch needed for flink-doris-connector iterations |
 | doris.deserialize.queue.size  | 64                 | N        | Asynchronous conversion of internal processing queue in Arrow format, effective when doris.deserialize.arrow.async is true |
+| source.use-flight-sql | FALSE              | N        | Whether to use Arrow Flight SQL to read |
+| source.flight-sql-port  | -                 | N        | When using ArrowFlightSQL to read, FE's arrow_flight_sql_port |
+
+#### Datastream-specific configuration items
+| Key                           | Default Value      | Required | Comment                                                      |
+| ----------------------------- | ------------------ | -------- | ------------------------------------------------------------ |
 | doris.read.field              | --                 | N        | Read the list of column names of the Doris table, separated by commas |
 | doris.filter.query            | --                 | N        | The expression to filter the read data, this expression is transparently passed to Doris. Doris uses this expression to complete source-side data filtering. For example age=18. |
+
 
 ### Sink configuration items
 
 | Key                         | Default Value | Required | Comment                                                      |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------ |
 | sink.label-prefix           | --            | Y        | The label prefix used by Stream load import. In the 2pc scenario, global uniqueness is required to ensure Flink's EOS semantics. |
-| sink.properties.*           | --            | N        | Import parameters for Stream Load. <br/>For example: 'sink.properties.column_separator' = ', ' defines column delimiters, 'sink.properties.escape_delimiters' = 'true' special characters as delimiters, '\x01' will be converted to binary 0x01 <br/><br/>JSON format import<br/>'sink.properties.format' = 'json' 'sink.properties. read_json_by_line' = 'true'<br/>Detailed parameters refer to [here](../data-operate/import/stream-load-manual.md). |
+| sink.properties.*           | --            | N        | Import parameters for Stream Load. <br />For example: 'sink.properties.column_separator' = ', ' defines column delimiters, 'sink.properties.escape_delimiters' = 'true' special characters as delimiters, '\x01' will be converted to binary 0x01 <br /><br />JSON format import<br />'sink.properties.format' = 'json' 'sink.properties. read_json_by_line' = 'true'<br />Detailed parameters refer to [here](../data-operate/import/stream-load-manual.md).<br /><br />Group Commit mode<br />'sink.properties.group_commit' = 'sync_mode'<br /> Starting from version 1.6.2, we have introduced support for load data with group commit functionality. For a comprehensive understanding of the available parameters, please refer to the Group Commit Manual [group commit](https://doris.apache.org/docs/data-operate/import/import-way/group-commit-manual/). |
 | sink.enable-delete          | TRUE          | N        | Whether to enable delete. This option requires the Doris table to enable the batch delete function (Doris 0.15+ version is enabled by default), and only supports the Unique model. |
 | sink.enable-2pc             | TRUE          | N        | Whether to enable two-phase commit (2pc), the default is true, to ensure Exactly-Once semantics. For two-phase commit, please refer to [here](../data-operate/import/stream-load-manual.md). |
 | sink.buffer-size            | 1MB           | N        | The size of the write data cache buffer, in bytes. It is not recommended to modify, the default configuration is enough |
@@ -547,8 +572,8 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --use-new-schema-change | Whether to use the new schema change to support synchronization of MySQL multi-column changes and default values. since version 1.6.0, the default value has been set to true. Reference [here](https://github.com/apache/doris-flink-connector/pull/167) |
 | --schema-change-mode    | The mode for parsing schema change supports two parsing modes: `debezium_structure` and `sql_parser`. The default mode is `debezium_structure`. <br/><br/> `debezium_structure` parses the data structure used when upstream CDC synchronizes data, and determines DDL change operations by parsing this structure. <br/> `sql_parser` determines the DDL change operation by parsing the DDL statement when the upstream CDC synchronizes data, so this parsing mode is more accurate. <br/> Usage example: `--schema-change-mode debezium_structure`<br/> This feature will be available in versions after 1.6.2.1|
 | --single-sink           | Whether to use a single Sink to synchronize all tables. When turned on, newly created tables in the upstream can also be automatically recognized and tables automatically created. |
-| --multi-to-one-origin   | When writing multiple upstream tables into the same table, the configuration of the source table, for example: --multi-to-one-origin="a\_.\*｜b_.\*"， Reference [here](https://github.com/apache/doris-flink-connector/pull/208) |
-| --multi-to-one-target   | Used with multi-to-one-origin, the configuration of the target table, such as: --multi-to-one-target="a\|b" |
+| --multi-to-one-origin   | When writing multiple upstream tables into the same table, the configuration of the source table, for example: --multi-to-one-origin "a\_.\*｜b_.\*"， Reference [here](https://github.com/apache/doris-flink-connector/pull/208) |
+| --multi-to-one-target   | Used with multi-to-one-origin, the configuration of the target table, such as: --multi-to-one-target "a\|b" |
 | --create-table-only     | Whether only the table schema should be synchronized                                                                   |
 
 :::info Note
@@ -830,7 +855,7 @@ Before Connector1.1.0, it was written in batches, and the writing was driven by 
 
 9. **tablet writer write failed, tablet_id=190958, txn_id=3505530, err=-235**
 
-It usually occurs before Connector1.1.0, because the writing frequency is too fast, resulting in too many versions. The frequency of Streamload can be reduced by setting the sink.batch.size and sink.batch.interval parameters.
+It usually occurs before Connector1.1.0, because the writing frequency is too fast, resulting in too many versions. The frequency of Streamload can be reduced by setting the sink.batch.size and sink.batch.interval parameters. After Connector 1.1.0, the default write timing is controlled by Checkpoint, and the write frequency can be reduced by increasing the Checkpoint interval.
 
 10. **Flink imports dirty data, how to skip it? **
 
@@ -858,3 +883,7 @@ The issue may have occurred due to configuring the IP address of `be`, which is 
 16. **When using Flink-connector to synchronize MySQL data to Doris, there is a time difference of several hours between the timestamp.**
 
 Flink  Connector synchronizes the entire database from MySQL with a default timezone of UTC+8. If your data resides in a different timezone, you can adjust it using the following configuration, for example: `--mysql-conf debezium.date.format.timestamp.zone="UTC+3"`.
+
+17. **What is the difference between batch writing and streaming writing**
+
+Connector 1.5.0 and later support batch writing. Batch writing does not rely on Checkpoint. Data is cached in memory and the writing timing is controlled according to the parameters sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval. Checkpoint must be enabled for streaming writing. During the entire Checkpoint period, upstream data is continuously written to Doris, and data is not cached in memory all the time.

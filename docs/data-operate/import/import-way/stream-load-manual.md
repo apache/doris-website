@@ -336,6 +336,7 @@ Determines whether to enable the Pipeline engine to execute Streamload tasks. Se
 | enclose                      | Specify the enclosure character. When a CSV data field contains a row delimiter or column delimiter, to prevent unexpected truncation, you can specify a single-byte character as the enclosure for protection. For example, if the column delimiter is "," and the enclosure is "'", the data "a,'b,c'" will have "b,c" parsed as a single field. Note: When the enclosure is set to a double quote ("), make sure to set `trim_double_quotes` to true. |
 | escape                       | Specify the escape character. It is used to escape characters that are the same as the enclosure character within a field. For example, if the data is "a,'b,'c'", and the enclosure is "'", and you want "b,'c" to be parsed as a single field, you need to specify a single-byte escape character, such as "", and modify the data to "a,'b','c'". |
 | memtable_on_sink_node        | Whether to enable MemTable on DataSink node when loading data, default is false. |
+|unique_key_update_mode        | The update modes on Unique tables, currently are only effective for Merge-On-Write Unique tables. Supporting three types: `UPSERT`, `UPDATE_FIXED_COLUMNS`, and `UPDATE_FLEXIBLE_COLUMNS`. `UPSERT`: Indicates that data is loaded with upsert semantics; `UPDATE_FIXED_COLUMNS`: Indicates that data is loaded through partial updates; `UPDATE_FLEXIBLE_COLUMNS`: Indicates that data is loaded through flexible partial updates.|
 
 ### Load return value
 
@@ -751,6 +752,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
+    -H "escape:\" \
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -820,7 +822,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "format:json" \
     -H "strip_outer_array:true" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -852,7 +854,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "strip_outer_array:true" \
     -H "jsonpaths:[\"$.userid\", \"$.username\", \"$.userage\"]" \
     -H "columns:user_id,name,age" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -887,7 +889,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "json_root: $.comment" \
     -H "jsonpaths:[\"$.userid\", \"$.username\", \"$.userage\"]" \
     -H "columns:user_id,name,age" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -968,7 +970,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "format: json" \
     -H "strip_outer_array:true" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -997,7 +999,7 @@ Load data into the following table containing the Bitmap type:
 CREATE TABLE testdb.test_streamload(
     typ_id     BIGINT                NULL   COMMENT "ID",
     hou        VARCHAR(10)           NULL   COMMENT "one",
-    arr        BITMAP  BITMAP_UNION  NULL   COMMENT "two"
+    arr        BITMAP  BITMAP_UNION  NOT NULL   COMMENT "two"
 )
 AGGREGATE KEY(typ_id,hou)
 DISTRIBUTED BY HASH(typ_id,hou) BUCKETS 10;
@@ -1036,7 +1038,7 @@ Load data into the following table:
 CREATE TABLE testdb.test_streamload(
     typ_id           BIGINT          NULL   COMMENT "ID",
     typ_name         VARCHAR(10)     NULL   COMMENT "NAME",
-    pv               hll hll_union   NULL   COMMENT "hll"
+    pv               hll hll_union   NOT NULL   COMMENT "hll"
 )
 AGGREGATE KEY(typ_id,typ_name)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;
@@ -1054,7 +1056,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Label, loading transaction, multi-table atomicity
 
-All load jobs in Doris are atomically effective. And multiple tables loading in the same load job can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that data loading is not lost or duplicated. For specific instructions, please refer to the [Import Transactions and Atomicity](../../../data-operate/import/load-atomicity) documentation.
+All load jobs in Doris are atomically effective. And multiple tables loading in the same load job can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that data loading is not lost or duplicated. For specific instructions, please refer to the [Import Transactions and Atomicity](../../../data-operate/transaction) documentation.
 
 ### Column mapping, derived columns, and filtering
 
@@ -1062,9 +1064,9 @@ Doris supports a very rich set of column transformations and filtering operation
 
 ### Enable strict mode import
 
-The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Strict Mode](../../../data-operate/import/load-strict-mode) documentation.
+The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Error Data Handling](../../../data-operate/import/error-data-handling) documentation.
 
-### Perform partial column updates during import
+### Perform partial column updates/flexible partial update during import
 
 For how to express partial column updates during import, please refer to the Data Manipulation/Data Update documentation.
 

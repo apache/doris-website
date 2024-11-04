@@ -40,10 +40,12 @@ Doris JDBC Catalog 支持通过标准 JDBC 接口连接 GBase 8a 数据库。本
 
 - Doris 每个 FE 和 BE 节点和 GBase 8a 服务器之间的网络连接，默认端口为 5258。
 
-::: warning 注意
+:::warning 注意
 此 Catalog 对接测试 GBase 8a 时，使用的版本如下：
+
 - GBase 8a: GBase8a_MPP_Cluster-NoLicense-FREE-9.5.3.28.12-redhat7-x86_64
 - JDBC 驱动程序: gbase-connector-java-9.5.0.7-build1-bin.jar
+
 其他版本未经测试，可能会有兼容性问题。
 :::
 

@@ -87,22 +87,38 @@ The following configuration items are configured in the `be.conf` file.
 
 ## Enable DEBUG Log
 
-BE's Debug log currently only supports modification through configuration files and restarting the BE node to take effect.
+### Static Configuration
+
+Set `sys_log_verbose_modules` and `sys_log_verbose_level` in `be.conf`:
 
 ```text
 sys_log_verbose_modules=plan_fragment_executor,olap_scan_node
 sys_log_verbose_level=3
 ```
 
-`sys_log_verbose_modules` specifies the file names to be enabled, and wildcards (*) can be used. For example:
+`sys_log_verbose_modules` Specifies the names of the files to be opened, which can be specified by the wildcard `*`. For example:
 
 ```text
 sys_log_verbose_modules=*
 ```
 
-indicates enabling all DEBUG logs.
+will turn on all BE verbose log.
 
-`sys_log_verbose_level` indicates the level of DEBUG. The larger the number, the more detailed the DEBUG log. The value range is from 1 to 10.
+`sys_log_verbose_level` Indicates the level of DEBUG. The higher the number, the more detailed the DEBUG log. The value ranges from 1 to 10.
+
+### Dynamic Modification
+
+Since 2.1, the DEBUG log of BE supports dynamic modification via the following RESTful API:
+
+```bash
+curl -X POST "http://<be_host>:<webport>/api/glog/adjust?module=<module_name>&level=<level_number>"
+```
+
+The dynamic adjustment method also supports wildcards, e.g. using `module=*&level=10` will turn on all BE vlogs, but wildcards are not attached to individual module names. e.g. adjusting the vlog level of `moduleA` to `10`, then using `module=*&level=-1` will **NOT** turn off the vlog of `moduleA`'s vlog.
+
+Note: Dynamically adjusted configurations are not persisted and will expire after a BE reboot.
+
+In addition, GLOG will create the corresponding log module if the module does not exist (no real effect) and will not return an error, regardless of the method.
 
 ## Container Environment Log Configuration
 

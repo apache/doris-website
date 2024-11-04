@@ -1,6 +1,6 @@
 ---
 {
-    "title": "冷热数据分层",
+    "title": "远程存储",
     "language": "zh-CN"
 }
 ---

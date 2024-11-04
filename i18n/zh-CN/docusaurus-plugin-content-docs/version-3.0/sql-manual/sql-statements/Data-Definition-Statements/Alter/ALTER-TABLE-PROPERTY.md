@@ -30,6 +30,17 @@ under the License.
 
 ALTER TABLE PROPERTY
 
+:::caution
+分区属性与表属性的一些区别
+- 分区属性一般主要关注分桶数(buckets)、存储介质(storage_medium)、副本数(replication)、冷热分离存储策略(storage_policy)；
+  - 对于已经创建的分区，可以使用alter table {tableName} modify partition({partitionName}) set ({key}={value}) 来修改，但是分桶数(buckets)不能修改；
+  - 对于未创建的动态分区(dynamic partition)，可以使用alter table {tableName} set (dynamic_partition.{key} = {value}) 来修改其属性；
+  - 对于未创建的自动分区(auto partition)，可以使用alter table {tableName} set ({key} = {value}) 来修改其属性；
+  - 若用户想修改分区的属性，需要修改已经创建分区的属性，同时也要修改未创建分区的属性
+- 除了上面几个属性，其他均为表级别属性
+- 具体属性可以参考[建表属性](../../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties)
+:::
+
 ### Description
 
 该语句用于对已有 table 的 property 进行修改操作。这个操作是同步的，命令返回表示执行完毕。

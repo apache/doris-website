@@ -76,7 +76,7 @@ under the License.
 
 在开始转换历史数据之前，Doris 会获取一个最新的 Transaction ID。并等待这个 Transaction ID 之前的所有导入事务完成。这个 Transaction ID 成为分水岭。意思是，Doris 保证在分水岭之后的所有导入任务，都会同时为原表 /Index 和新表 /Index 生成数据。这样当历史数据转换完成后，可以保证新的表中的数据是完整的。
 
-创建 Schema Change 的具体语法可以查看帮助 [ALTER TABLE COLUMN](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 中 Schema Change 部分的说明。
+创建 Schema Change 的具体语法可以查看帮助 [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 中 Schema Change 部分的说明。
 
 ## 向指定 Index 的指定位置添加一列
 
@@ -97,7 +97,27 @@ ALTER TABLE table_name ADD COLUMN column_name column_type [KEY | agg_type] [DEFA
 
 ### 示例
 
-**1. 向 `example_rollup_index ` 的 col1 后添加一个 Key 列 `new_col` (非聚合模型)**
+#### 非聚合模型
+
+建表语句：
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col1 int,
+    col2 int,
+    col3 int,
+    col4 int,
+    col5 int
+) DUPLICATE KEY(col1, col2, col3)
+DISTRIBUTED BY RANDOM BUCKETS 1
+ROLLUP (
+   example_rollup_index (col1, col3, col4, col5)
+)
+PROPERTIES (
+   "replication_num" = "1"
+)
+```
+
+**1. 向 `example_rollup_index ` 的 col1 后添加一个 Key 列 `new_col`**
 
 ```sql
 ALTER TABLE example_db.my_table
@@ -105,7 +125,7 @@ ADD COLUMN new_col INT KEY DEFAULT "0" AFTER col1
 TO example_rollup_index;
 ```
 
-**2. 向 `example_rollup_index` 的 col1 后添加一个 Value 列 `new_col` (非聚合模型)**
+**2. 向 `example_rollup_index` 的 col1 后添加一个 Value 列 `new_col`**
 
 ```sql
 ALTER TABLE example_db.my_table   
@@ -113,7 +133,27 @@ ADD COLUMN new_col INT DEFAULT "0" AFTER col1
 TO example_rollup_index;
 ```
 
-**3. 向 `example_rollup_index` 的 col1 后添加一个 Key 列 `new_col` (聚合模型)**
+#### 聚合模型
+
+建表语句：
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col1 int,
+    col2 int,
+    col3 int,
+    col4 int SUM,
+    col5 varchar(32) REPLACE DEFAULT "abc"
+) AGGREGATE KEY(col1, col2, col3)
+DISTRIBUTED BY HASH(col1) BUCKETS 1
+ROLLUP (
+    example_rollup_index (col1, col3, col4, col5)
+)
+PROPERTIES (
+    "replication_num" = "1"
+)
+```
+
+**3. 向 `example_rollup_index` 的 col1 后添加一个 Key 列 `new_col`**
 
 ```sql
 ALTER TABLE example_db.my_table   
@@ -121,7 +161,7 @@ ADD COLUMN new_col INT DEFAULT "0" AFTER col1
 TO example_rollup_index;
 ```
 
-**4. 向 `example_rollup_index` 的 col1 后添加一个 Value 列 `new_co``l` SUM 聚合类型 (聚合模型)**
+**4. 向 `example_rollup_index` 的 col1 后添加一个 Value 列 `new_co``l` SUM 聚合类型**
 
 ```sql
 ALTER TABLE example_db.my_table   
@@ -151,7 +191,7 @@ ALTER TABLE table_name ADD COLUMN (column_name1 column_type [KEY | agg_type] DEF
 
 ```sql
 ALTER TABLE example_db.my_table
-ADD COLUMN (col1 INT DEFAULT "1", col2 FLOAT SUM DEFAULT "2.3")
+ADD COLUMN (c1 INT DEFAULT "1", c2 FLOAT SUM DEFAULT "0")
 TO example_rollup_index;
 ```
 
@@ -174,7 +214,7 @@ ALTER TABLE table_name DROP COLUMN column_name
 
 ```sql
 ALTER TABLE example_db.my_table
-DROP COLUMN col2
+DROP COLUMN col3
 FROM example_rollup_index;
 ```
 
@@ -221,6 +261,22 @@ ALTER TABLE table_name MODIFY COLUMN column_name column_type [KEY | agg_type] [N
 
 ### 示例
 
+建表语句：
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col0 int,
+    col1 int DEFAULT "1",
+    col2 int,
+    col3 varchar(32),
+    col4 int SUM,
+    col5 varchar(32) REPLACE DEFAULT "abc"
+) AGGREGATE KEY(col0, col1, col2, col3)
+DISTRIBUTED BY HASH(col0) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+)
+```
+
 **1.  修改 Base Index 的 Key 列 col1 的类型为 BIGINT，并移动到 col2 列后面。**
 
 ```sql
@@ -234,7 +290,7 @@ MODIFY COLUMN col1 BIGINT KEY DEFAULT "1" AFTER col2;
 
 ```sql
 ALTER TABLE example_db.my_table 
-MODIFY COLUMN val1 VARCHAR(64) REPLACE DEFAULT "abc";
+MODIFY COLUMN col5 VARCHAR(64) REPLACE DEFAULT "abc";
 ```
 
 注意：只能修改列的类型，列的其他属性维持原样
@@ -242,7 +298,8 @@ MODIFY COLUMN val1 VARCHAR(64) REPLACE DEFAULT "abc";
 **3. 修改 Duplicate Key 表 Key 列的某个字段的长度**
 
 ```sql
-alter table example_tbl modify column k3 varchar(50) key null comment 'to 50'
+ALTER TABLE example_db.my_table
+MODIFY COLUMN col3 varchar(50) KEY NULL comment 'to 50'
 ```
 
 ## 对指定 Index 的列进行重新排序
@@ -261,6 +318,24 @@ ALTER TABLE table_name ORDER BY (column_name1, column_name2, ...)
 
 ### 示例
 
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    k1 int DEFAULT "1",
+    k2 int,
+    k3 varchar(32),
+    k4 date,
+    v1 int SUM,
+    v2 int MAX,
+) AGGREGATE KEY(k1, k2, k3, k4)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+ROLLUP (
+   example_rollup_index(k1, k2, k3, v1, v2)
+)
+PROPERTIES (
+    "replication_num" = "1"
+)
+```
+
 重新排序 `example_rollup_index` 中的列（设原列顺序为：k1, k2, k3, v1, v2）
 
 ```sql
@@ -277,19 +352,20 @@ Schema Change 可以在一个作业中，对多个 Index 进行不同的修改�
 
 源 Schema：
 
-```Plain
-+-----------+-------+------+------+------+---------+-------+
-| IndexName | Field | Type | Null | Key  | Default | Extra |
-+-----------+-------+------+------+------+---------+-------+
-| tbl1      | k1    | INT  | No   | true | N/A     |       |
-|           | k2    | INT  | No   | true | N/A     |       |
-|           | k3    | INT  | No   | true | N/A     |       |
-|           |       |      |      |      |         |       |
-| rollup2   | k2    | INT  | No   | true | N/A     |       |
-|           |       |      |      |      |         |       |
-| rollup1   | k1    | INT  | No   | true | N/A     |       |
-|           | k2    | INT  | No   | true | N/A     |       |
-+-----------+-------+------+------+------+---------+-------+
+```sql
+CREATE TABLE IF NOT EXISTS example_db.tbl1(
+    k1 int,
+    k2 int,
+    k3 int
+) AGGREGATE KEY(k1, k2, k3)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+ROLLUP (
+   rollup1 (k1, k2),
+   rollup2 (k2)
+)
+PROPERTIES (
+    "replication_num" = "1"
+)
 ```
 
 可以通过以下命令给 rollup1 和 rollup2 都加入一列 k4，并且再给 rollup2 加入一列 k5：
@@ -329,9 +405,27 @@ ADD COLUMN k5 INT default "1" to rollup2;
 
 ### 示例 2
 
+建表语句
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    k1 int DEFAULT "1",
+    k2 int,
+    k3 varchar(32),
+    k4 date,
+    v1 int SUM,
+) AGGREGATE KEY(k1, k2, k3, k4)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+ROLLUP (
+   example_rollup_index(k1, k3, k2, v1)
+)
+PROPERTIES (
+   "replication_num" = "1"
+)
+```
+
 ```sql
 ALTER TABLE example_db.my_table
-ADD COLUMN v2 INT MAX DEFAULT "0" AFTER k2 TO example_rollup_index,
+ADD COLUMN v2 INT MAX DEFAULT "0" TO example_rollup_index,
 ORDER BY (k3,k1,k2,v2,v1) FROM example_rollup_index;
 ```
 
@@ -350,7 +444,7 @@ Schema Change 的创建是一个异步过程，作业提交成功后，用户需
 `SHOW ALTER TABLE COLUMN` 可以查看当前正在执行或已经完成的 Schema Change 作业。当一次 Schema Change 作业涉及到多个 Index 时，该命令会显示多行，每行对应一个 Index。举例如下：
 
 ```sql
-mysql SHOW ALTER TABLE COLUMN\G;
+mysql > SHOW ALTER TABLE COLUMN\G;
 *************************** 1. row ***************************
         JobId: 20021
     TableName: tbl1

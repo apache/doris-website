@@ -326,6 +326,22 @@ For Hive/Iceberge/Hudi
 
 > The variable default is false.
 
+## Query Hive partitions
+
+You can query Hive partition information in the following two ways.
+
+- `SHOW PARTITIONS FROM hive_table`
+
+    This statement can list all partitions and partition value information of the specified Hive table.
+
+- Use `table$partitions` metadata table
+
+    Since versions 2.1.7 and 3.0.3, users can query Hive partition information through the `table$partitions` metadata table. `table$partitions` is essentially a relational table, so it can be used in any SELECT statement.
+
+    ```
+    SELECT * FROM hive_table$partitions;
+    ```
+
 ## Access HMS with broker
 
 Add following setting when creating an HMS catalog, file splitting and scanning for Hive external table will be completed by broker named `test_broker`

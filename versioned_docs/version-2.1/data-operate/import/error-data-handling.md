@@ -139,7 +139,7 @@ By default, strict mode is set to False, which means it is disabled. The method 
 [BROKER LOAD](./import-way/broker-load-manual.md)
 
    ```sql
-   LOAD LABEL example_db.exmpale_label_1
+   LOAD LABEL example_db.example_label_1
    (
        DATA INFILE("s3://your_bucket_name/your_file.txt")
        INTO TABLE load_test
@@ -227,7 +227,7 @@ The default value of `max_filter_ratio` is 0, which means that if there is any e
 [Broker Load](./import-way/broker-load-manual.md)
 
    ```sql
-   LOAD LABEL example_db.exmpale_label_1
+   LOAD LABEL example_db.example_label_1
    (
         DATA INFILE("s3://your_bucket_name/your_file.txt")
         INTO TABLE load_test

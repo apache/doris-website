@@ -134,7 +134,7 @@ MySQL> SELECT COUNT(*) FROM testdb.test_table2;
 
 4. 可以使用 [JOB](../../scheduler/job-scheduler.md) 异步执行 INSERT。
 
-5. 数据源可以是 [tvf](../../../lakehouse/file.md) 或者 [catalog](../../../lakehouse/database) 中的表。
+5. 数据源可以是 [tvf](../../../lakehouse/file.md) 或者 [catalog](../../../lakehouse/database/jdbc) 中的表。
 
 ### 查看导入作业
 

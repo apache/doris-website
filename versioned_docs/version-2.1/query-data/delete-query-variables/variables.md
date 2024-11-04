@@ -727,13 +727,16 @@ This feature is supported since the Apache Doris 2.0.2 version
     When `enable_adaptive_pipeline_task_serial_read_on_limit` is enabled, the number of rows at which the parallelism of the scan will be set to 1.
     Default value is `10000`
 
+* `enable_auto_create_when_overwrite`
 * `enable_cooldown_replica_affinity`
 
   Users can choose whether to use the cooled copy for scanning first, which defaults to true
 
 ***
 
-#### Supplementary instructions on statement execution timeout control
+  Whether or not to support the creation of new partitions at the same time when using `insert overwrite` to overwrite an Auto Partition table, defaults to `false`.
+
+### Supplementary instructions on statement execution timeout control
 
 * Means of control
 

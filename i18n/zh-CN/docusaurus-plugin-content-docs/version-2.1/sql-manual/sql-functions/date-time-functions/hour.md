@@ -24,26 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hour
-### description
-#### Syntax
+## Description
+
+
+
+
+获得日期中的小时的信息。
+
+参数为 Date 或者 Datetime，Time 类型
+
+当参数为 Date 或者 Datetime，返回值范围从 0-23。当参数为 Time，返回值可以大于 24
+
+## Syntax
 
 `INT HOUR(DATETIME date)`
 
+## Example
 
-获得日期中的小时的信息，返回值范围从0-23。
-
-参数为Date或者Datetime类型
-
-### example
-
-```
+```sql
 mysql> select hour('2018-12-31 23:59:59');
 +-----------------------------+
 | hour('2018-12-31 23:59:59') |
 +-----------------------------+
 |                          23 |
 +-----------------------------+
+mysql> select cast(4562632 as time),hour(cast(4562632 as time)), minute(cast(4562632 as time)),second(cast(4562632 as time));
++-----------------------+-----------------------------+-------------------------------+-------------------------------+
+| cast(4562632 as TIME) | hour(cast(4562632 as TIME)) | minute(cast(4562632 as TIME)) | second(cast(4562632 as TIME)) |
++-----------------------+-----------------------------+-------------------------------+-------------------------------+
+| 456:26:32             |                         456 |                            26 |                            32 |
++-----------------------+-----------------------------+-------------------------------+-------------------------------+
 ```
-### keywords
+## Keywords
     HOUR

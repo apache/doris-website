@@ -90,13 +90,17 @@ Example:
 create workload group tag_wg properties('tag'='cn1');
 ```
 2. Modify the tag of a BE in the cluster to cn1. At this point, the tag_wg Workload Group will only be sent to this BE and any BE with no tag. The tag.workload_group attribute can specify multiple values, separated by commas.
+It is important to note that the alter interface currently does not support incremental updates. Each time the BE attributes are modified, the entire set of attributes needs to be provided. Therefore, in the statements below, the tag.location attribute is added, with 'default' as the system default value. In practice, the existing attributes of the BE should be specified accordingly.
 ```
-alter system modify backend "localhost:9050" set ("tag.workload_group" = "cn1");
+alter system modify backend "localhost:9050" set ("tag.workload_group" = "cn1", "tag.location"="default");
 ```
 
 Workload Group and BE Matching Rules:
 If the Workload Group's tag is empty, the Workload Group can be sent to all BEs, regardless of whether the BE has a tag or not.
 If the Workload Group's tag is not empty, the Workload Group will only be sent to BEs with the same tag.
+
+You can refer to the recommended usage:[group-workload-groups](./group-workload-groups.md)
+
 
 ## Configure cgroup
 

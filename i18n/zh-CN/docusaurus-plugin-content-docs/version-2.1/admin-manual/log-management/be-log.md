@@ -86,14 +86,16 @@ under the License.
 
 ## 开启 DEBUG 日志
 
-BE 的 Debug 日志目前仅支持通过配置文件修改并重启 BE 节点以生效。
+### 静态配置
+
+在 `be.conf` 中设置 `sys_log_verbose_modules` 与 `sys_log_verbose_level`。
 
 ```text
 sys_log_verbose_modules=plan_fragment_executor,olap_scan_node
 sys_log_verbose_level=3
 ```
 
-`sys_log_verbose_modules` 指定要开启的文件名，可以通过通配符 * 指定。比如：
+`sys_log_verbose_modules` 指定要开启的文件名，可以通过通配符 `*` 指定。比如：
 
 ```text
 sys_log_verbose_modules=*
@@ -102,6 +104,20 @@ sys_log_verbose_modules=*
 表示开启所有 DEBUG 日志。
 
 `sys_log_verbose_level` 表示 DEBUG 的级别。数字越大，则 DEBUG 日志越详细。取值范围在 1-10。
+
+### 动态调整
+
+通过以下 RESTful API 即可：
+
+```bash
+curl -X POST "http://<be_host>:<webport>/api/glog/adjust?module=<module_name>&level=<level_number>"
+```
+
+动态调整方式同样支持通配符，例如使用 `module=*&level=10` 将打开所有 BE vlog。但通配符与单独的模块名互不隶属，例如将 `moduleA` 的 vlog 级别调整为 `10`，再使用 `module=*&level=-1`，并**不会**关闭 `moduleA` 的 vlog。
+
+注意：动态调整的配置不会被持久化，BE 重启后将会失效。
+
+另外无论通过何种方式，只要模块不存在，GLOG 将会创建对应日志模块（没有实际影响），并不会返回错误。
 
 ## 容器环境日志配置
 

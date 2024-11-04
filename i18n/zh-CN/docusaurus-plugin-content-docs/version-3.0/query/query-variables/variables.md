@@ -88,7 +88,7 @@ SET GLOBAL exec_mem_limit = 137438953472
 同时，变量设置也支持常量表达式。如：
 
 ```sql
-SET exec_mem_limit = 10 * 1024 * 1024 * 1024;
+SET exec_mem_limit = 10 - 1024 - 1024 - 1024;
 SET forward_to_master = concat('tr', 'u', 'e');
 ```
 
@@ -296,7 +296,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
   | cost             |
   +------------------+
   
-  mysql> select * from COST where COst.id < 100 order by cost.id;
+  mysql> select - from COST where COst.id < 100 order by cost.id;
   ```
 
   缺点是建表后无法获得建表语句中指定的表名，`show tables` 查看的表名为指定表名的小写。
@@ -305,7 +305,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
   缺点是同一语句中只能使用表名的一种大小写形式，例如对`cost` 表使用表名 `COST` 进行查询：
 
   ```sql
-  mysql> select * from COST where COST.id < 100 order by COST.id;
+  mysql> select - from COST where COST.id < 100 order by COST.id;
   ```
 
   该变量兼容 MySQL。需在集群初始化时通过 fe.conf 指定 `lower_case_table_names=`进行配置，集群初始化完成后无法通过`set` 语句修改该变量，也无法通过重启、升级集群修改该变量。
@@ -555,27 +555,27 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
     用于控制查询 Hive 外表时是否过滤掉字段末尾的空格。默认为 false。
 
-* `skip_storage_engine_merge`
+- `skip_storage_engine_merge`
 
     用于调试目的。在向量化执行引擎中，当发现读取 Aggregate Key 模型或者 Unique Key 模型的数据结果有问题的时候，把此变量的值设置为`true`，将会把 Aggregate Key 模型或者 Unique Key 模型的数据当成 Duplicate Key 模型读取。
 
-* `skip_delete_predicate`
+- `skip_delete_predicate`
 
 	用于调试目的。在向量化执行引擎中，当发现读取表的数据结果有误的时候，把此变量的值设置为`true`，将会把被删除的数据当成正常数据读取。
 
-* `skip_delete_bitmap`
+- `skip_delete_bitmap`
 
     用于调试目的。在 Unique Key MoW 表中，当发现读取表的数据结果有误的时候，把此变量的值设置为`true`，将会把被 delete bitmap 标记删除的数据当成正常数据读取。
 
-* `skip_missing_version`
+- `skip_missing_version`
 
     有些极端场景下，表的 Tablet 下的所有的所有副本都有版本缺失，使得这些 Tablet 没有办法被恢复，导致整张表都不能查询。这个变量可以用来控制查询的行为，当设置为`true`时，查询会忽略 FE partition 中记录的 visibleVersion，使用 replica version。如果 Be 上的 Replica 有缺失的版本，则查询会直接跳过这些缺失的版本，只返回仍存在版本的数据。此外，查询将会总是选择所有存活的 BE 中所有 Replica 里 lastSuccessVersion 最大的那一个，这样可以尽可能的恢复更多的数据。这个变量应该只在上述紧急情况下才被设置为`true`，仅用于临时让表恢复查询。注意，此变量与 use_fix_replica 变量冲突，当 use_fix_replica 变量不等于 -1 时，此变量会不起作用
 
-* `skip_bad_tablet`
+- `skip_bad_tablet`
 
     在某些情况下，用户某张单副本表中有大量数据，如果其中某个 Tablet 损坏，将导致整张表无法查询。如果用户不关心数据的完整性，他们可以使用此变量暂时跳过坏的 Tablet 进行查询，并将剩余数据导入到新表中。
 
-* `default_password_lifetime`
+- `default_password_lifetime`
 
  	默认的密码过期时间。默认值为 0，即表示不过期。单位为天。该参数只有当用户的密码过期属性为 DEFAULT 值时，才启用。如：
  	
@@ -583,111 +583,111 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
  	CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_EXPIRE DEFAULT;
  	ALTER USER user1 PASSWORD_EXPIRE DEFAULT;
 	```
-* `password_history`
+- `password_history`
 
 	默认的历史密码次数。默认值为0，即不做限制。该参数只有当用户的历史密码次数属性为 DEFAULT 值时，才启用。如：
 
-	```
+```sql
  	CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_HISTORY DEFAULT;
  	ALTER USER user1 PASSWORD_HISTORY DEFAULT;
-	```
+```
 
-* `validate_password_policy`
+- `validate_password_policy`
 
 	密码强度校验策略。默认为 `NONE` 或 `0`，即不做校验。可以设置为 `STRONG` 或 `2`。当设置为 `STRONG` 或 `2` 时，通过 `ALTER USER` 或 `SET PASSWORD` 命令设置密码时，密码必须包含“大写字母”，“小写字母”，“数字”和“特殊字符”中的 3 项，并且长度必须大于等于 8。特殊字符包括：`~!@#$%^&*()_+|<>,.?/:;'[]{}"`。
 
-* `group_concat_max_len`
+- `group_concat_max_len`
 
     为了兼容某些 BI 工具能正确获取和设置该变量，变量值实际并没有作用。
 
-* `rewrite_or_to_in_predicate_threshold`
+- `rewrite_or_to_in_predicate_threshold`
 
     默认的改写 OR to IN 的 OR 数量阈值。默认值为 2，即表示有 2 个 OR 的时候，如果可以合并，则会改写成 IN。
 
-*   `group_by_and_having_use_alias_first`
+-   `group_by_and_having_use_alias_first`
 
     指定 group by 和 having 语句是否优先使用列的别名，而非从 From 语句里寻找列的名字。默认为 false。
 
-* `enable_file_cache`
+- `enable_file_cache`
 
     控制是否启用 block file cache，默认 false。该变量只有在 be.conf 中 enable_file_cache=true 时才有效，如果 be.conf 中 enable_file_cache=false，该 BE 节点的 block file cache 处于禁用状态。
 
-* `file_cache_base_path`
+- `file_cache_base_path`
 
     指定 block file cache 在 BE 上的存储路径，默认 'random'，随机选择 BE 配置的存储路径。
 
-* `enable_inverted_index_query`
+- `enable_inverted_index_query`
 
     控制是否启用 inverted index query，默认 true.
 
 	
-* `topn_opt_limit_threshold`
+- `topn_opt_limit_threshold`
 
-    设置 topn 优化的 limit 阈值 (例如：SELECT * FROM t ORDER BY k LIMIT n). 如果 limit 的 n 小于等于阈值，topn 相关优化（动态过滤下推、两阶段获取结果、按 key 的顺序读数据）会自动启用，否则会禁用。默认值是 1024。
+    设置 topn 优化的 limit 阈值 (例如：SELECT - FROM t ORDER BY k LIMIT n). 如果 limit 的 n 小于等于阈值，topn 相关优化（动态过滤下推、两阶段获取结果、按 key 的顺序读数据）会自动启用，否则会禁用。默认值是 1024。
 
-* `drop_table_if_ctas_failed`
+- `drop_table_if_ctas_failed`
 
     控制 create table as select 在写入发生错误时是否删除已创建的表，默认为 true。
 
-* `show_user_default_role`
+- `show_user_default_role`
 
     控制是否在 `show roles` 的结果里显示每个用户隐式对应的角色。默认为 false。
 
-* `use_fix_replica`
+- `use_fix_replica`
 
     使用固定 replica 进行查询。replica 从 0 开始，如果 use_fix_replica 为 0，则使用最小的，如果 use_fix_replica 为 1，则使用第二个最小的，依此类推。默认值为 -1，表示未启用。
 
-* `dry_run_query`
+- `dry_run_query`
 
     如果设置为 true，对于查询请求，将不再返回实际结果集，而仅返回行数。对于导入和 insert，Sink 丢掉了数据，不会有实际的写发生。额默认为 false。
 
     该参数可以用于测试返回大量数据集时，规避结果集传输的耗时，重点关注底层查询执行的耗时。
 
-    ```
-    mysql> select * from bigtable;
+  ```sql
+    mysql> select - from bigtable;
     +--------------+
     | ReturnedRows |
     +--------------+
     | 10000000     |
     +--------------+
-    ```
+  ```
   
-* `enable_parquet_lazy_materialization`
+- `enable_parquet_lazy_materialization`
 
   控制 parquet reader 是否启用延迟物化技术。默认为 true。
 
-* `enable_orc_lazy_materialization`
+- `enable_orc_lazy_materialization`
 
   控制 orc reader 是否启用延迟物化技术。默认为 true。
 
-* `enable_strong_consistency_read`
+- `enable_strong_consistency_read`
 
   用以开启强一致读。Doris 默认支持同一个会话内的强一致性，即同一个会话内对数据的变更操作是实时可见的。如需要会话间的强一致读，则需将此变量设置为 true。
 
-* `truncate_char_or_varchar_columns`
+- `truncate_char_or_varchar_columns`
 
   是否按照表的 schema 来截断 char 或者 varchar 列。默认为 false。
 
   因为外表会存在表的 schema 中 char 或者 varchar 列的最大长度和底层 parquet 或者 orc 文件中的 schema 不一致的情况。此时开启改选项，会按照表的 schema 中的最大长度进行截断。
 
-* `jdbc_clickhouse_query_final`
+- `jdbc_clickhouse_query_final`
 
   是否在使用 JDBC Catalog 功能查询 ClickHouse 时增加 final 关键字，默认为 false
 
   用于 ClickHouse 的 ReplacingMergeTree 表引擎查询去重
 
-* `enable_memtable_on_sink_node`
+- `enable_memtable_on_sink_node`
   
   是否在数据导入中启用 MemTable 前移，默认为 true
 
   在 DataSink 节点上构建 MemTable，并通过 brpc streaming 发送 segment 到其他 BE。
   该方法减少了多副本之间的重复工作，并且节省了数据序列化和反序列化的时间。
 
-* `enable_unique_key_partial_update`
+- `enable_unique_key_partial_update`
 
   是否在对 insert into 语句启用部分列更新的语义，默认为 false。需要注意的是，控制 insert 语句是否开启严格模式的会话变量`enable_insert_strict`的默认值为 true，即 insert 语句默认开启严格模式，而在严格模式下进行部分列更新不允许更新不存在的 key。所以，在使用 insert 语句进行部分列更新的时候如果希望能插入不存在的 key，需要在`enable_unique_key_partial_update`设置为 true 的基础上同时将`enable_insert_strict`设置为 false。
 
-* `describe_extend_variant_column`
+- `describe_extend_variant_column`
 
   是否展示 variant 的拆解列。默认为 false。
 
@@ -699,25 +699,29 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
   当 enable_adaptive_pipeline_task_serial_read_on_limit 开启时，scan 的并行度将会被设置为 1 的行数阈值。默认值是 `10000`。
 
+* `enable_auto_create_when_overwrite`
+
+  使用 `insert overwrite` 覆写自动分区表时，是否同时支持创建新分区，默认为 `false`。
+
 * `enable_cooldown_replica_affinity`
 
   用户可以选择是否首先使用冷却副本进行扫描,默认为true
 
 ***
 
-#### 关于语句执行超时控制的补充说明
+### 关于语句执行超时控制的补充说明
 
-* 控制手段
+- 控制手段
 
     目前 doris 支持通过`variable`和`user property`两种体系来进行超时控制。其中均包含`qeury_timeout`和`insert_timeout`。
 
-* 优先次序
+- 优先次序
 
     超时生效的优先级次序是：`session variable` > `user property` > `global variable` > `default value`
 
     较高优先级的变量未设置时，会自动采用下一个优先级的数值。
 
-* 相关语义
+- 相关语义
 
     `query_timeout`用于控制所有语句的超时，`insert_timeout`特定用于控制 INSERT 语句的超时，在执行 INSERT 语句时，超时时间会取
     
@@ -727,6 +731,6 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
     
     并且不具备`quota`语义。
 
-* 注意事项
+- 注意事项
 
     `user property`设置的超时时间需要客户端重连后触发。

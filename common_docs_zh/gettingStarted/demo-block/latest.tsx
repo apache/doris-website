@@ -24,8 +24,8 @@ export default function Latest() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href="https://hdxu.cn/vUrpH">
-                        <div className="home-page-hero-button-label"><div>近期活动</div></div>
+                    <a className="latest-button" href="https://ask.selectdb.com">
+                        <div className="home-page-hero-button-label"><div>近期事件</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
                                 <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -33,12 +33,12 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Apache Doris x 阿里云城市行@杭州站</div>
+                            <div style={{ marginBottom: 10 }}>技术论坛全面升级上线！</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>10 月 26 日，由飞轮科技与阿里云联手发起的 Apache Doris 杭州站 Meetup 限时免费参与！</div>
-                        <div style={{ fontSize: 14, marginBottom: 10 }}>立即报名</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>在这里，你可以自由的提出和讨论技术问题、分享和收获技术经验、与 Apache Doris 社区的小伙伴进行互动和交流。</div>
+                        <div style={{ fontSize: 14, marginBottom: 10 }}>立即加入</div>
                     </a>
-                    <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v2.0/release-2.0.15`}>
+                    <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v3.0/release-3.0.2`}>
                         <div className="home-page-hero-button-label"><div>版本发布</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -47,9 +47,9 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Apache Doris 2.0.15 正式发布</div>
+                            <div style={{ marginBottom: 10 }}>Apache Doris 3.0.2 正式发布</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>Apache Doris 2.0.15 版本提交了 157 个改进项以及问题修复，进一步提升了系统的性能及稳定性，欢迎大家下载体验。</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>3.0.2 版本在存算分离、存储、湖仓一体、查询优化器以及执行引擎持续升级改进，欢迎大家下载使用。</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>查看详情</div>
                     </a>
 
