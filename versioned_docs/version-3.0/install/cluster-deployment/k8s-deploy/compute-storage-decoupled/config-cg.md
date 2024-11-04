@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The Compute Group with storage and computing separation is responsible for data import and caching data in object storage. Compute Groups are isolated from each other.
+The Compute Group (BEs) is responsible for data import and caching data in storage-computing separation mode. Compute Groups are isolated from each other.
 
-## Specify the name of the Compute Group
+## Specify the name of compute group
 
 The following configuration deploys a minimal Compute Group:
 
@@ -38,15 +38,15 @@ spec:
     replicas: 1
 ```
 
-The above configuration deploys a Compute Group named cg1. The deployment of the Compute Group depends on the deployment of the FE service. The storage and computing separation cluster depends on the deployment of the metadata service. The above sample variables are explained as follows:
+The above configuration deploys a Compute Group uniqueId is cg1. The deployment of the Compute Group depends on the FE service is available. The above sample variables are explained as follows:
 
 `{beImage}` is the image for deploying the BE service.
 
-:::tip Tip
-cg1 is the name of the Compute Group. During the execution of SQL, you can select the cluster you want to use by the name of the Compute Group.
+:::tip Tip  
+cg1 is the uniqueId of the Compute Group, also as the name of compute group. Please use the uniqueId as compute group's name, During the execution of SQL.     
 :::
 
-## Configure multiple Compute Groups
+## Configure multiple compute groups
 
 A `DorisDisaggregatedCluster` resource can deploy multiple Compute Groups. Each Compute Group is independent of each other and operates independently.
 
@@ -63,17 +63,17 @@ spec:
     replicas: 2
 ```
 
-The above is a simple configuration of two Compute Groups, with the cluster names cg1 and cg2 respectively. When using a storage-computing separation cluster, you can select which Compute Group to use by the name of the Compute Group. In actual use, you can specify the cluster name according to the business category.
+The above is a simple configuration of two Compute Groups, with the cluster name are cg1 and cg2 respectively. When using a storage-computing separation cluster, you can select which Compute Group to use by the name. In actual use, you can specify the cluster name according to the business category.
 
-Modify the following configuration to the `DorisDisaggregatedCluster` resource that needs to [Deploy storage-computing separation](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster) to deploy 2 Compute Groups, one of which can deploy 3 pods containing BE services, and the other can deploy 2 pods containing BE services. `{beImage}` specifies the image of the BE service you want to use.
+Modify the following configuration to the `DorisDisaggregatedCluster` resource when [Deploy storage-computing separation cluster](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster) to deploy 2 Compute Groups, one of which can deploy 3 pods containing BE services, and the other can deploy 2 pods containing BE services. `{beImage}` specifies the image of the BE service you want to use.
 
-:::tip Tip
-Keeping the image used by multiple Compute Groups consistent.
+:::tip Tip  
+Keeping the image used by multiple Compute Groups consistent.  
 :::
 
-## Configure service computing resources
+## Configure computing resources
 
-Set the CPU and Memory resource usage available to the BE (Compute Service) container in each pod. Specify the CPU and Memory usage in [resources.requests and resources.limits].
+Set the CPU and Memory resource usage available to the BE (Compute Service) container in each pod. Specify the CPU and Memory usage in [resources.requests and resources.limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits).
 
 ```yaml
 spec:
@@ -88,52 +88,26 @@ spec:
       memory: 8Gi
 ```
 
-The above configuration specifies the computing resources available to the Compute Group named cg1. You can fill in as needed and configure it in the [Deploy storage and computing separation](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster) `DorisDisaggregatedCluster` resource. `{beImage}` is the BE image you want to use.
+The above configuration specifies 4c,8Gi computing resources to the Compute Group "cg1". You can config as need when [eploy storage and computing separation cluster](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster). `{beImage}` is the BE image you want to use.
 
-## Configure persistent storage
+## Configure cache persistent storage
 
-By default, each BE service uses the EmptyDir storage mode to cache data. In real usage scenarios, you need to define the required storage size and the StorageClass you want to use according to actual needs.
+By default, each BE service uses the [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) to cache. In real usage scenarios, please config the Cache with persistent storage.
 
-```yaml
-spec:
-  computeGroups:
-  - uniqueId: cg1
-    persistentVolume:
-      persistentVolumeClaimSpec:
-        #storageClassName：{storageClassName}
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: "200Gi"
-```
-Configure 200Gi of persistent storage for the Compute Group named cg1, and use the default StorageClass in the K8s cluster to automatically create storage. If you need to specify a StorageClass, uncomment storageClassName and set it to the name of the StorageClass you want to use.
+### 1.Custom start configuration
+In default, BE using the configuration file in the image to start. In K8s deployment, please use the ConfigMap resource to specify the BE startup configuration. In [Mount Customized ConfigMap](#3mount-customized-configmap) shows a example format of Configmap, refer to [Storage-computing separation document](../../../../compute-storage-decoupled/compilation-and-deployment.md#541-configure-beconf) to configure the startup parameters on ConfigMap. `deploy_mode`is not needed be filled in.
 
-The default Cache configuration of the BE service is `file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]` The total available storage capacity is 100Gi, and the maximum available query capacity is 100Gi. In K8s deployment mode, Doris-Operator mounts customized persistent storage for each path. If you need to specify multiple paths to mount multiple disks as data cache, please refer to [Customized configuration file](config-cg.md#Service-storage-configuration).
+### 2.Custom storage configuration
 
-:::tip Tip
-The value of file_cache_path must be a JSON array.
-:::
-
-## Customized configuration file
-
-Under storage-computing separation, the BE service of each Compute Group is started by default using the configuration file in the image. In K8s deployment, the ConfigMap resource can be used to specify the BE startup configuration.
-
-### Automatically add configuration
-
-Under storage-computing separation, please refer to [Storage-computing separation document](../../../../compute-storage-decoupled/compilation-and-deployment) for relevant configuration of BE service startup. In K8s deployment, `deploy_mode`, do not need to be filled in.
-
-### Service storage configuration
-
-BE service customized configuration startup configuration in storage and computing mode, must specify `file_cache_path` according to [storage and computing separation document](../../../../compute-storage-decoupled/compilation-and-deployment). In K8s deployment, related services will automatically mount persistent storage according to [persistence-related configuration](config-cg.md#Configure-persistent-storage).
+Config Cache is required in storage-computing separation mode of start BE, please specify `file_cache_path` according to [storage and computing separation start configuration document](../../../../compute-storage-decoupled/compilation-and-deployment.md#541-configure-beconf). Doris-Operator will automatically mount persistent storage according to [persistent volume template](#4config-the-persistent-volume-template).
 
 For example: `file_cache_path` is configured as `file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]`, Doris-Operator related services automatically add storage configuration information for computing services, which can apply for a disk with a mount point of `/opt/apache-doris/be/file_cache` and a capacity of 100Gi.
 
-When total_size in file_cache_path is greater than the storage capacity of [persistence configuration](config-cg.md#Configure-persistent-storage), Doris-Operator will change the persistence configuration to the size of total_size to prevent unexpected service failures.
+When total_size in file_cache_path is greater than the storage capacity of [persistent volume template](#4config-the-persistent-volume-template), Doris-Operator will use the max size to the mount persistent volume.
 
-### Mount customized ConfigMap
+### 3.Mount customized configMap
 
-After the configuration file is prepared according to the above rules, deploy it to the namespace of the `DorisDisaggregatedCluster` deployment, and modify the `DorisDisaggregatedCluster` resource to be deployed to specify which Compute Group to start with the customized configuration.
+After the configuration file is prepared according to the above rules, deploy it to the namespace of the `DorisDisaggregatedCluster` deployment, after deployed configmap, please config the compute group described in `DorisDisaggregatedCluster` resource to start with the customized configuration.
 
 For example, the startup configuration is as follows:
 
@@ -151,7 +125,7 @@ data:
     file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":104857600000,"query_limit":10485760000}, {"path":"/mnt/disk2/doris_cloud/file_cache","total_size":104857600000,"query_limit":10485760000}]
 ```
 
-The configuration that specifies the Compute Group to use the above ConfigMap is as follows:
+The below describe "cg1" Compute Group to use the above ConfigMap to start:
 
 ```yaml
 spec:
@@ -163,8 +137,26 @@ spec:
       mountPath: "/etc/doris"
 ```
 
-After modifying the configuration, update the configuration information to the deployed [DorisDisaggregatedCluster](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster) resource.
+Update the configuration information to the needed to deployed [DorisDisaggregatedCluster](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster) resource.
+
+### 4.Config the persistent volume template
+```yaml
+spec:
+  computeGroups:
+  - uniqueId: cg1
+    persistentVolume:
+      persistentVolumeClaimSpec:
+        #storageClassName：{storageClassName}
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: "100Gi"
+```
+Above, Describe cg1 compute group use 100Gi persistent storage and the persistent storage will create by default [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/).
+In K8s deployment mode, Doris-Operator mounts customized persistent storage for each path. If you need to specify multiple paths to mount multiple disks as data cache, please refer to [Custom Storage Configuration](#2custom-storage-configuration).
 
 :::tip Tip
-All startup configurations must be mounted in the /etc/doris directory.
-::: 
+- The value of file_cache_path must be a JSON array.
+- All startup configurations must be mounted in the /etc/doris directory.  
+  ::: 

@@ -1,7 +1,7 @@
 ---
 {
-  "title": "Config Metaservice",
-  "language": "en"
+"title": "Config Metaservice",
+"language": "en"
 }
 ---
 
@@ -64,8 +64,8 @@ spec:
 Update the modified configuration to the [metadata management resources for storage and computing separation that need to be deployed](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
 
 ## Configure FDB
-
-The FDB cluster is built on the same K8s cluster and can obtain its namespace and configmap. Use the following configuration:
+- Use ConfigMap  
+  The FDB cluster is built on the same K8s cluster and can obtain its namespace and configmap. Use the following configuration:
 ```yaml
 spec:
   metaService:
@@ -75,9 +75,8 @@ spec:
         name: {foundationdbConfigmap}
         namespace: {namespace}
 ```
-
-If the above FDB access method is not available, or the FDB is deployed on a physical machine, you can access the FDB by configuring the FDB endpoint (FDB access string) for the metaService.
-The configuration is as follows:
+- Directly Endpoint
+  The FDB is deployed on a physical machine, Please configure the FDB endpoint (FDB access string) for the metaService. The configuration is as follows:
 
 ```yaml
 spec:
@@ -133,8 +132,8 @@ spec:
   metaService:
     image: {msImage}
     configMaps:
-    - name: doris-metaservice
-      mountPath: /etc/doris
+      - name: doris-metaservice
+        mountPath: /etc/doris
 ```
 
 In actual deployment, configure the name and namespace of ConfigMap as needed, and configure the configuration information in the [storage-and-computing-separation metadata management resource](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster) to be deployed according to the above sample format. The startup configuration file used by the MS service is named `doris_cloud.conf`, so the key of the ConfigMap for mounting the startup configuration must also be `doris_cloud.conf`. The startup configuration must be mounted to the `/etc/doris` directory, that is, the mountPath is `/etc/doris`.

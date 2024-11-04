@@ -33,12 +33,12 @@ under the License.
 ```yaml
 spec:
   computeGroups:
-  - uniqueId: cg1
-    image: {beImage}
-    replicas: 1
+    - uniqueId: cg1
+      image: {beImage}
+      replicas: 1
 ```
 
-上述配置部署一套名称为 cg1 的计算组。计算组的部署依赖 FE 服务部署完成。存算分离集群依赖元数据服务部署完成。上述样例变量解释如下：
+上述配置部署一套名称为 cg1 的计算组。上述样例变量解释如下：
 
 `{beImage}` 为部署 BE 服务的 image 。
 
@@ -91,49 +91,22 @@ spec:
 
 上述配置指定了名称 cg1 的计算组可使用的计算资源。可根据需要填写，并配置到[部署存算分离](install-quickstart.md) `DorisDisaggregatedCluster` 资源中。`{beImage}` 为想使用的 BE 镜像。
 
-## 配置持久化存储
+## 配置 Cache 持久化存储
 
 默认情况下，每个 BE 服务会使用 EmptyDir 存储模式来缓存数据，在真实使用场景下需要根据实际需要定义需要的存储大小以及希望使用的 StorageClass 。
 
-```yaml
-spec:
-  computeGroups:
-  - uniqueId: cg1
-    persistentVolume:
-      persistentVolumeClaimSpec:
-        #storageClassName：{storageClassName}
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: "200Gi"
-```
+### 1.定制化配置文件
+存算分离下，每个计算组的 BE 服务默认使用镜像内的配置文件启动，在 K8s 部署中可使用 ConfigMap 资源自定义 BE 启动配置，在[挂载定制化 ConfigMap 中](#3挂载定制化-configmap)，展示了一个 ConfigMap 配置样例。请根据[存算分离文档](../../../../compute-storage-decoupled/compilation-and-deployment.md)进行 BE 的相关启动配置，`deploy_mode` 在 K8s 部署中相关服务自动添加，可无需指定。
 
-为名称 cg1 的计算组配置 200Gi 的持久化存储，使用 K8s 集群中默认的 StorageClass 来自动创建存储。如果需要指定 StorageClass ，请取消注释将 storageClassName 设置为想要使用的 StorageClass 的名称。
+### 2.设置服务储存配置
 
-BE 服务默认 Cache 配置为 `file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]` 存储容量总可使用容量为 100Gi ，查询可使用的最大容量为 100Gi 。K8s 部署模式下，Doris-Operator 会为每个路径挂载定制的持久化存储。如果需要指定多个路径挂载多盘作为数据缓存，请参考[定制化配置文件](config-cg.md)。
-
-:::tip 提示
-file_cache_path 的值必须是一个 JSON 数组。
-:::
-
-## 定制化配置文件
-
-存算分离下，每个计算组的 BE 服务默认使用镜像内的配置文件启动，在 K8s 部署中可使用 ConfigMap 资源指定 BE 启动配置。
-
-### 自动添加配置
-
-存算分离下，BE 服务的启动请参考[存算分离文档](../../../../compute-storage-decoupled/compilation-and-deployment.md)进行相关配置，`deploy_mode` 在 K8s 部署中相关服务自动添加，无需指定。
-
-### 服务储存配置
-
-BE 服务在存算模式下定制化配置启动配置，必须按照[存算分离文档](../../../../compute-storage-decoupled/compilation-and-deployment.md)指定 `file_cache_path`。在 K8s 部署中，相关服务会自动根据[持久化相关配置](config-cg.md)挂载持久化存储。
+BE 在存算分离模式下必须指定 Cache 配置，请按照[存算分离文档](../../../../compute-storage-decoupled/compilation-and-deployment.md#541-配置-beconf)的 `file_cache_path` 相关介绍配置 Cache 存储。服务在部署时，Doris-Operator 会自动根据[持久化相关配置模板](#4-配置持久化存储模板)挂载持久化存储。
 
 比如： `file_cache_path` 配置为 `file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]`，Doris-Operator 相关服务自动为计算服务添加存储配置信息，这些信息能够申请到挂载点为 `/opt/apache-doris/be/file_cache` 且容量为 100Gi 的磁盘。
 
-当 file_cache_path 中 total_size 大于[持久化配置](config-cg.md)的存储容量，Doris-Operator 会将持久化配置改为 total_size 的大小，防止服务出现非预期故障。
+当 file_cache_path 中 total_size 大于[持久化配置](#4-配置持久化存储模板)中设置的存储容量，Doris-Operator 会将持久化配置改为 total_size 的大小，防止服务出现非预期故障。
 
-### 挂载定制化 ConfigMap
+### 3.挂载定制化 ConfigMap
 
 通过上述规则制定好配置文件后，部署到 `DorisDisaggregatedCluster` 部署的命名空间，并修改需要部署的 `DorisDisaggregatedCluster` 资源指定哪一个计算组使用定制化配置启动。
 
@@ -167,6 +140,26 @@ spec:
 
 修改好配置后，将配置信息更新到部署的 [DorisDisaggregatedCluster](install-quickstart.md)  资源中。
 
+### 4. 配置持久化存储模板
+```yaml
+spec:
+  computeGroups:
+  - uniqueId: cg1
+    persistentVolume:
+      persistentVolumeClaimSpec:
+        #storageClassName：{storageClassName}
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: "200Gi"
+```
+
+以上为名称 cg1 的计算组配置 200Gi 的持久化存储，使用 K8s 集群中默认的 StorageClass 来自动创建存储。如果需要指定 StorageClass ，请取消注释将 storageClassName 设置为想要使用的 StorageClass 的名称。
+
+BE 服务默认 Cache 配置为 `file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]` 存储容量总可使用容量为 100Gi ，查询可使用的最大容量为 100Gi 。K8s 部署模式下，Doris-Operator 会为每个路径挂载定制的持久化存储。如果需要指定多个路径挂载多盘作为数据缓存，请参考[定制化配置文件](../../../../compute-storage-decoupled/compilation-and-deployment.md#54-添加-be-节点)。
+
 :::tip 提示
-所有的启动配置必须挂载到 /etc/doris 目录下。
-::: 
+- file_cache_path 的值必须是一个 JSON 数组。
+- 所有的启动配置必须挂载到 /etc/doris 目录下。   
+  ::: 

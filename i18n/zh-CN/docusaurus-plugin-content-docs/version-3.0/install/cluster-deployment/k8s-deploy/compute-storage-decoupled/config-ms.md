@@ -1,7 +1,7 @@
 ---
 {
-  "title": "配置部署 Metaservice",
-  "language": "zh-CN"
+"title": "配置部署 Metaservice",
+"language": "zh-CN"
 }
 ---
 
@@ -41,8 +41,8 @@ spec:
 ```
 
 其中 `{msImage}` 为想要部署的 MS 服务的版本。
- `{foundationdbConfigmap}` 为 K8s 部署的 FDB 服务提供的访问 configmap 。
- `{namespace}` 为 K8s 部署的 FDB 服务所在的 Namespace。
+`{foundationdbConfigmap}` 为 K8s 部署的 FDB 服务提供的访问 configmap 。
+`{namespace}` 为 K8s 部署的 FDB 服务所在的 Namespace。
 
 ## 配置资源
 
@@ -61,7 +61,7 @@ spec:
       memory: 4Gi
 ```
 
-将修改后的配置更新到需要[部署的存算分离元数据管理资源](install-quickstart.md)中。
+将修改后的配置更新到需要[部署的存算分离元数据管理资源](install-quickstart.md#第二步快速部署存算分离集群)中。
 
 ## 配置 FDB
 
@@ -76,7 +76,7 @@ spec:
         namespace: {namespace}
 ```
 
-若 上述 FDB 的访问方式不可获取，或 FDB 是物理机部署，则可以通过为 metaService 配置 FDB endpoint（FDB 的访问字符串）的方式来实现 FDB 的访问。
+若上述 FDB 的访问方式不可获取，或 FDB 是物理机部署，则可以通过为 metaService 配置 FDB endpoint（FDB 的访问字符串）的方式来实现 FDB 的访问。
 配置如下：
 
 ```yaml
@@ -137,7 +137,7 @@ spec:
       mountPath: /etc/doris
 ```
 
-实际部署中，按照需要配置 ConfigMap 的名称以及命名空间，并将配置信息按照上述样例格式配置到需要部署的[存算分离元数据管理资源](install-quickstart.md)中。MS 服务使用的启动配置文件名称 `doris_cloud.conf` ， 因此挂载启动配置的 ConfigMap 的 key 也必须是 `doris_cloud.conf` 。启动配置必须挂载到 `/etc/doris` 目录下，即 mountPath 为 `/etc/doris` 。
+实际部署中，按照需要配置 ConfigMap 的名称以及命名空间，并将配置信息按照上述样例格式配置到需要部署的[存算分离元数据管理资源](install-quickstart.md#第二步快速部署存算分离集群)中。MS 服务使用的启动配置文件名称 `doris_cloud.conf` ， 因此挂载启动配置的 ConfigMap 的 key 也必须是 `doris_cloud.conf` 。启动配置必须挂载到 `/etc/doris` 目录下，即 mountPath 为 `/etc/doris` 。
 
 :::tip 提示
 MS 服务需要使用 FDB 作为后端元数据存储，部署 MS 服务必须部署 FDB 服务。

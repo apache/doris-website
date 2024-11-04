@@ -66,7 +66,7 @@ spec:
       persistentVolumeClaimSpec:
         #storageClassName：{storageClassName}
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           requests:
             storage: 200Gi
@@ -113,7 +113,7 @@ spec:
   feSpec:
     replicas: 2
     configMaps:
-    - name: fe-configmap
+      - name: fe-configmap
 ```
 
 In the `DorisDisaggregatedCluster` resource, the configMaps for mounting ConfigMap is an array. The name of each element represents the ConfigMap name of the current namespace.
@@ -121,6 +121,6 @@ In the `DorisDisaggregatedCluster` resource, the configMaps for mounting ConfigM
 Configure the ConfigMap information required by the FE service according to the above mode, and update the configuration to [Storage and computing separation resources to be deployed](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
 
 :::tip Tip
-1. In K8s deployment, when using ConfigMap to mount customized configuration files, there is no need to add `meta_service_endpoint`、`deploy_mode` 以及 `cluster_id` configurations, and Doris-Operator related services will be added automatically.
-2. In K8s deployment, when using ConfigMap to mount customized configuration files, must to add `enable_fqdn_mode=true`.
-:::
+- In K8s deployment, when using ConfigMap to mount customized configuration files, there is no need to add `meta_service_endpoint`、`deploy_mode` 以及 `cluster_id` configurations, and Doris-Operator related services will be added automatically.
+- In K8s deployment, when using ConfigMap to mount customized configuration files, must to add `enable_fqdn_mode=true`.  
+  :::
