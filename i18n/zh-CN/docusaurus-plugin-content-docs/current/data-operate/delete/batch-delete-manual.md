@@ -154,10 +154,10 @@ mysql> CREATE TABLE IF NOT EXISTS table1 (
     -> );
 Query OK, 0 rows affected (0.34 sec)
 
-mysql > SET show_hidden_columns=true;
+mysql> SET show_hidden_columns=true;
 Query OK, 0 rows affected (0.00 sec)
 
-mysql > DESC table1;
+mysql> DESC table1;
 +-----------------------+-------------+------+-------+---------+-------+
 | Field                 | Type        | Null | Key   | Default | Extra |
 +-----------------------+-------------+------+-------+---------+-------+
