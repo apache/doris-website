@@ -200,7 +200,7 @@ PROPERTIES(
 表结构如下：
 
 ```sql
-MySQL  desc test_table;
+MySQL>  desc test_table;
 +-------------+--------------+------+-------+---------+---------+
 | Field       | Type         | Null | Key   | Default | Extra   |
 +-------------+--------------+------+-------+---------+---------+
@@ -234,7 +234,7 @@ curl --location-trusted -u root: -T testData http://host:port/api/test/test_tabl
 结果为
 
 ```sql
-MySQL > select * from test_table;
+MySQL> select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
@@ -256,7 +256,7 @@ MySQL > select * from test_table;
 查询数据
 
 ```sql
-MySQL [test] > select * from test_table;
+MySQL [test]> select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
@@ -276,7 +276,7 @@ MySQL [test] > select * from test_table;
 查询数据
 
 ```sql
-MySQL [test] > select * from test_table;
+MySQL [test]> select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
