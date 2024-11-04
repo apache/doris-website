@@ -369,6 +369,17 @@ heartbeat_mgr 中处理心跳事件的线程数。
 
 是否为 Master FE 节点独有的配置项：true
 
+#### `enable_cooldown_replica_affinity`
+
+用户可以选择是否首先使用冷却副本进行扫描,默认为true
+
+默认值：true
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：false
+
+
 ### 服务
 
 #### `query_port`
