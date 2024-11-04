@@ -709,10 +709,6 @@ Optional values:
     When `enable_adaptive_pipeline_task_serial_read_on_limit` is enabled, the number of rows at which the parallelism of the scan will be set to 1.
     Default value is `10000`
 
-* `enable_cooldown_replica_affinity`
-
-  Users can choose whether to use the cooled copy for scanning first, which defaults to true
-
 ***
 
 #### Supplementary instructions on statement execution timeout control
