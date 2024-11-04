@@ -29,7 +29,7 @@ under the License.
 
 MaxCompute 是阿里云上的企业级 SaaS（Software as a Service）模式云数据仓库。
 
-> [什么是 MaxCompute](https://help.aliyun.com/zh/MaxCompute/product-overview/what-is-MaxCompute?spm=a2c4g.11174283.0.i1)
+> [什么是 MaxCompute](https://help.aliyun.com/zh/MaxCompute/product-overview/what-is-MaxCompute)
 
 
 ## 连接 MaxCompute
@@ -126,7 +126,7 @@ select * from tb  limit 10;
 ## 如何获取 Endpoint 和 Quota
 
 
-1. 如果您使用数据传输服务独享资源组, 请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/purchase-and-use-exclusive-resource-groups-for-dts) 中 `使用独享数据服务资源组` 章节中的 `2.授权` 来开启相应的权限，并在 `配额（Quota）管理` 列表中，查看并复制对应的QuotaName，指定 `"mc.quota" = "QuotaName"`。此时您可以选择 VPC / 公网来访问 MaxCompute，但是公网带宽会受到限制，走 VPC 的带宽有保障，公网带宽资源小。
+1. 如果您使用数据传输服务独享资源组, 请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/purchase-and-use-exclusive-resource-groups-for-dts) 中 `使用独享数据服务资源组` 章节中的 `2.授权` 来开启相应的权限，并在 `配额（Quota）管理` 列表中，查看并复制对应的QuotaName，指定 `"mc.quota" = "QuotaName"`。此时您可以选择 VPC / 公网来访问 MaxCompute，但是走 VPC 的带宽有保障，公网带宽资源小。
 
 2. 如果您使用按量付费，请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1)
 中 `使用开放存储（按量付费）` 的章节，来开启开放存储(Storage API)开关，并给 Ak,SK 对应的用户赋予权限。此时您的 `mc.quota` 为默认值 `pay-as-you-go`，不需要额外指定该值。此时您只能使用 VPC 来访问 MaxCompute。
