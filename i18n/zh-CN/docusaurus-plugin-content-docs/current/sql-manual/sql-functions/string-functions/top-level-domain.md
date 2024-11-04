@@ -25,13 +25,13 @@ under the License.
 -->
 
 ## top_level_domain
-### description
-#### Syntax
+## description
+## Syntax
 
 `VARCHAR  top_level_domain(VARCHAR url)`
 
 
-在url中提取出顶级域名返回，若为不合发的url，则返回空字符串
+在url中提取出顶级域名返回，若为不合法的url，则返回空字符串
 
 ```
 mysql [(none)]>select top_level_domain("www.baidu.com");

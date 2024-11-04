@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## top_level_domain
-### description
-#### Syntax
+## description
+## Syntax
 
 `VARCHAR  top_level_domain(VARCHAR url)`
 
 
 Extract the top-level domain from a URL and return it. If the URL is invalid, return an empty string.
 
-### example
+## example
 
 ```
 mysql [(none)]>select top_level_domain("www.baidu.com");

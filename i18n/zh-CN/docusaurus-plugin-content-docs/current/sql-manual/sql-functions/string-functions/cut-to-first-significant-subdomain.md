@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cut_To_First_Significant_Subdomain",
+    "title": "CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN",
     "language": "zh-CN"
 }
 ---
@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## cut_to_first_significant_subdomain
-### description
-#### Syntax
+## description
+## Syntax
 
 `VARCHAR  cut_to_first_significant_subdomain(VARCHAR url)`
 
@@ -57,4 +57,4 @@ mysql [(none)]>select cut_to_first_significant_subdomain("wwwwwwww");
 ```
 
 ### keywords
-    Cut_To_First_Significant_Subdomain
+    CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN

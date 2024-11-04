@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cut_To_First_Significant_Subdomain",
+    "title": "CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN",
     "language": "en"
 }
 ---
@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## cut_to_first_significant_subdomain
-### description
-#### Syntax
+## description
+## Syntax
 
 `VARCHAR  cut_to_first_significant_subdomain(VARCHAR url)`
 
 Extract the part of the domain in the URL from the top-level subdomain down to the "first valid subdomain." If invalid, return an empty string.
 
-### example
+## example
 
 ```
 mysql [(none)]>select cut_to_first_significant_subdomain("www.baidu.com");
@@ -58,4 +58,4 @@ mysql [(none)]>select cut_to_first_significant_subdomain("wwwwwwww");
 ```
 
 ### keywords
-    Cut_To_First_Significant_Subdomain
+    CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN

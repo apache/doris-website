@@ -1,6 +1,6 @@
 ---
 {
-    "title": "First_Significant_Subdomain",
+    "title": "FIRST_SIGNIFICANT_SUBDOMAIN",
     "language": "en"
 }
 ---
@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## first_significant_subdomain
-### description
-#### Syntax
+## description
+## Syntax
 
 `VARCHAR  first_significant_subdomain(VARCHAR url)`
 
 
 Extract the "first valid subdomain" from a URL and return it. If the URL is invalid, return an empty string.
 
-### example
+## example
 
 ```
 mysql [(none)]>select first_significant_subdomain("www.baidu.com");
@@ -59,4 +59,4 @@ mysql [(none)]>select first_significant_subdomain("wwwwwwww");
 ```
 
 ### keywords
-    First_Significant_Subdomain
+    FIRST_SIGNIFICANT_SUBDOMAIN
