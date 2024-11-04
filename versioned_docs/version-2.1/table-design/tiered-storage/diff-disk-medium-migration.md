@@ -24,7 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-It is possible to set parameters to create dynamic partitions on the corresponding disk types, while supporting data migration between (HDD, SSD) disk types based on the data's hot and cold characteristics, which can accelerate the read and write performance of Doris.
+You can set parameters for dynamic partitions across different disk types, facilitating data migration from SSDs to HDDs based on the hot and cold characteristics of the data. This strategy improves read and write performance in Doris while lowering costs.
+
+For parameters of dynamic partitions, please refer to [Data Partitioning - Dynamic Partitioning](../../table-design/data-partition.md#Dynamic partitioning).
 
 - `dynamic_partition.hot_partition_num`
 
