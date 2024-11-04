@@ -1198,6 +1198,7 @@
                             "items": [
                                 "sql-manual/sql-functions/table-functions/explode-json-array",
                                 "sql-manual/sql-functions/table-functions/explode",
+                                "sql-manual/sql-functions/table-functions/posexplode",
                                 "sql-manual/sql-functions/table-functions/explode-split",
                                 "sql-manual/sql-functions/table-functions/explode_map",
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
