@@ -40,7 +40,7 @@ To connect to a GBase 8a database you need
 
 - Doris Network connection between each FE and BE node and the GBase 8a server, default port is 5258.
 
-::: warning Notice
+:::warning Notice
 When this Catalog is tested against GBase 8a, the versions used are as follows:
 - GBase 8a: GBase8a_MPP_Cluster-NoLicense-FREE-9.5.3.28.12-redhat7-x86_64
 - JDBC driver: gbase-connector-java-9.5.0.7-build1-bin.jar

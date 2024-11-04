@@ -25,6 +25,11 @@ under the License.
 -->
 
 ## sleep
+
+:::warning 警告
+此函数不能在生产环境使用，将产生严重影响。
+:::
+
 ### description
 #### Syntax
 

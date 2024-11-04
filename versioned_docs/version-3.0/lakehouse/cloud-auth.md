@@ -34,19 +34,17 @@ Now Doris support two types of authentication to access AWS service.
 
 ### Catalog Credentials
 
-The Catalog supports filling in basic Credentials properties, such as:
-1. For S3: `s3.endpoint`，`s3.access_key`，`s3.secret_key`。
-2. For Glue: `glue.endpoint`，`glue.access_key`，`glue.secret_key`。
-
 When access Glue though Iceberg Catalog, we can access tables on Glue by filling in the following properties:
 
 ```sql
-CREATE CATALOG glue PROPERTIES (
+-- Using access key and secret key
+CREATE CATALOG glue2 PROPERTIES (
     "type"="iceberg",
     "iceberg.catalog.type" = "glue",
-    "glue.endpoint" = "https://glue.us-east-1.amazonaws.com",
-    "glue.access_key" = "ak",
-    "glue.secret_key" = "sk"
+    "glue.endpoint" = "https://glue.us-east-1.amazonaws.com/",
+    "client.credentials-provider" = "com.amazonaws.glue.catalog.credentials.ConfigAWSProvider",
+    "client.credentials-provider.glue.access_key" = "ak",
+    "client.credentials-provider.glue.secret_key" = "sk"
 );
 ```
 

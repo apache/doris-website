@@ -90,7 +90,6 @@
                 "table-design/row-store",
                 "table-design/data-partition",
                 "table-design/schema-change",
-                "table-design/cold-hot-separation",
                 "table-design/auto-increment",
                 "table-design/best-practice"
             ]
@@ -339,6 +338,7 @@
                     "label": "Managing Resource",
                     "items": [
                         "admin-manual/resource-admin/workload-group",
+                        "admin-manual/resource-admin/group-workload-groups",
                         "admin-manual/resource-admin/workload-policy",
                         "admin-manual/resource-admin/workload-analysis",
                         "admin-manual/resource-admin/multi-tenant",
@@ -595,7 +595,8 @@
                                 "admin-manual/open-api/be-http/version-info",
                                 "admin-manual/open-api/be-http/health",
                                 "admin-manual/open-api/be-http/tablet-reload",
-                                "admin-manual/open-api/be-http/tablet-restore"
+                                "admin-manual/open-api/be-http/tablet-restore",
+                                "admin-manual/open-api/be-http/be-vlog"
                             ]
                         }
                     ]
@@ -1642,7 +1643,6 @@
         "ecosystem/kyuubi",
         "ecosystem/logstash",
         "ecosystem/beats",
-        "ecosystem/cloudcanal",
         "ecosystem/automq-load",
         "ecosystem/doris-streamloader",
         "ecosystem/hive-bitmap-udf",

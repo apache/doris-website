@@ -115,20 +115,23 @@ CREATE CATALOG iceberg PROPERTIES (
 #### AWS Glue
 
 > 连接 Glue 时，如果是在非 EC2 环境，需要将 EC2 环境里的 `~/.aws` 目录拷贝到当前环境里。也可以下载[AWS Cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)工具进行配置，这种方式也会在当前用户目录下创建`.aws`目录。
+> 请升级到 Doris 2.1.7 或 3.0.3 之后的版本使用该功能。
 
 ```sql
-CREATE CATALOG glue PROPERTIES (
+-- Using access key and secret key
+CREATE CATALOG glue2 PROPERTIES (
     "type"="iceberg",
     "iceberg.catalog.type" = "glue",
-    "glue.endpoint" = "https://glue.us-east-1.amazonaws.com",
-    "glue.access_key" = "ak",
-    "glue.secret_key" = "sk"
+    "glue.endpoint" = "https://glue.us-east-1.amazonaws.com/",
+    "client.credentials-provider" = "com.amazonaws.glue.catalog.credentials.ConfigAWSProvider",
+    "client.credentials-provider.glue.access_key" = "ak",
+    "client.credentials-provider.glue.secret_key" = "sk"
 );
 ```
 
 1. Iceberg 属性详情参见 [Iceberg Glue Catalog](https://iceberg.apache.org/docs/latest/aws/#glue-catalog)
 
-2. 如果在 AWS 服务（如 EC2）中，不填写 Credentials 相关信息（`glue.access_key`和`glue.secret_key`），Doris 就会使用默认的 DefaultAWSCredentialsProviderChain，它会读取系统环境变量或者 InstanceProfile 中配置的属性。
+2. 如果不指定 `client.credentials-provider`，Doris 就会使用默认的 DefaultAWSCredentialsProviderChain，它会读取系统环境变量或者 InstanceProfile 中配置的属性。
 
 #### 阿里云 DLF
 

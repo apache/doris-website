@@ -752,6 +752,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
+    -H "escape:\" \
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -821,7 +822,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "format:json" \
     -H "strip_outer_array:true" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -853,7 +854,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "strip_outer_array:true" \
     -H "jsonpaths:[\"$.userid\", \"$.username\", \"$.userage\"]" \
     -H "columns:user_id,name,age" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -888,7 +889,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "json_root: $.comment" \
     -H "jsonpaths:[\"$.userid\", \"$.username\", \"$.userage\"]" \
     -H "columns:user_id,name,age" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -969,7 +970,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "format: json" \
     -H "strip_outer_array:true" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -998,7 +999,7 @@ Load data into the following table containing the Bitmap type:
 CREATE TABLE testdb.test_streamload(
     typ_id     BIGINT                NULL   COMMENT "ID",
     hou        VARCHAR(10)           NULL   COMMENT "one",
-    arr        BITMAP  BITMAP_UNION  NULL   COMMENT "two"
+    arr        BITMAP  BITMAP_UNION  NOT NULL   COMMENT "two"
 )
 AGGREGATE KEY(typ_id,hou)
 DISTRIBUTED BY HASH(typ_id,hou) BUCKETS 10;
@@ -1037,7 +1038,7 @@ Load data into the following table:
 CREATE TABLE testdb.test_streamload(
     typ_id           BIGINT          NULL   COMMENT "ID",
     typ_name         VARCHAR(10)     NULL   COMMENT "NAME",
-    pv               hll hll_union   NULL   COMMENT "hll"
+    pv               hll hll_union   NOT NULL   COMMENT "hll"
 )
 AGGREGATE KEY(typ_id,typ_name)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;
@@ -1055,7 +1056,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Label, loading transaction, multi-table atomicity
 
-All load jobs in Doris are atomically effective. And multiple tables loading in the same load job can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that data loading is not lost or duplicated. For specific instructions, please refer to the [Import Transactions and Atomicity](../../../data-operate/import/load-atomicity) documentation.
+All load jobs in Doris are atomically effective. And multiple tables loading in the same load job can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that data loading is not lost or duplicated. For specific instructions, please refer to the [Import Transactions and Atomicity](../../../data-operate/transaction) documentation.
 
 ### Column mapping, derived columns, and filtering
 
@@ -1063,7 +1064,7 @@ Doris supports a very rich set of column transformations and filtering operation
 
 ### Enable strict mode import
 
-The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Strict Mode](../../../data-operate/import/load-strict-mode) documentation.
+The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Error Data Handling](../../../data-operate/import/error-data-handling) documentation.
 
 ### Perform partial column updates/flexible partial update during import
 

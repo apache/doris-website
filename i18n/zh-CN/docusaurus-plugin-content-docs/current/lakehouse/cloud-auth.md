@@ -34,19 +34,17 @@ under the License.
 
 ### 使用Catalog属性认证
 
-Catalog支持填写基本的Credentials属性，比如：
-1. 访问S3时，可以使用s3.endpoint，s3.access_key，s3.secret_key。
-2. 访问Glue时，可以使用glue.endpoint，glue.access_key，glue.secret_key。
-
 以Iceberg Catalog访问Glue为例，我们可以填写以下属性访问在Glue上托管的表：
 
 ```sql
-CREATE CATALOG glue PROPERTIES (
+-- Using access key and secret key
+CREATE CATALOG glue2 PROPERTIES (
     "type"="iceberg",
     "iceberg.catalog.type" = "glue",
-    "glue.endpoint" = "https://glue.us-east-1.amazonaws.com",
-    "glue.access_key" = "ak",
-    "glue.secret_key" = "sk"
+    "glue.endpoint" = "https://glue.us-east-1.amazonaws.com/",
+    "client.credentials-provider" = "com.amazonaws.glue.catalog.credentials.ConfigAWSProvider",
+    "client.credentials-provider.glue.access_key" = "ak",
+    "client.credentials-provider.glue.secret_key" = "sk"
 );
 ```
 

@@ -142,6 +142,14 @@ curl --location-trusted -u root: -T amazon_reviews_2014.snappy.parquet -H "forma
 curl --location-trusted -u root: -T amazon_reviews_2015.snappy.parquet -H "format:parquet" http://127.0.0.1:8030/api/${DB}/amazon_reviews/_stream_load
 ```
 
+:::info
+The data file may exceed 10 GB, and you may need to adjust the streaming_road_max_mb in be.conf to prevent exceeding the upload size limit of the stream load. You can dynamically adjust it by following the steps below:
+```bash
+curl -X POST http://{be_ip}:{be_http_port}/api/update_config?streaming_load_max_mb=32768
+```
+Every BE needs to execute the above command.
+:::
+
 **Run a count query to confirm successful data import:**
 
 ```sql
