@@ -99,11 +99,11 @@ You can refer to the following configuration to add private repository image con
 spec:
   mainContainer:
     imageConfigs:
-    - baseImage: selectdb/foundationdb
+    - baseImage: foundationdb/foundationdb
       tag: 7.1.38
   sidecarContainer:
     imageConfigs:
-    - baseImage: selectdb/foundationdb-kubernetes-sidecar
+    - baseImage: foundationdb/foundationdb-kubernetes-sidecar
       tag: 7.1.36-1
   version: 7.1.38
 ```

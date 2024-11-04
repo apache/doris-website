@@ -96,11 +96,11 @@ doris-operator 的官方仓库中提供了使用 [FQDN 部署 FDB 的部署样�
 spec:
   mainContainer:
     imageConfigs:
-    - baseImage: selectdb/foundationdb
+    - baseImage: foundationdb/foundationdb
       tag: 7.1.38
   sidecarContainer:
     imageConfigs:
-    - baseImage: selectdb/foundationdb-kubernetes-sidecar
+    - baseImage: foundationdb/foundationdb-kubernetes-sidecar
       tag: 7.1.36-1
   version: 7.1.38
 ```
