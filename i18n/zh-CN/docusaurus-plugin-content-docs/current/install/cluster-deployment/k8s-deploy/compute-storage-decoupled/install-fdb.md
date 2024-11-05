@@ -54,7 +54,7 @@ wget -O fdb-operator.yaml https://raw.githubusercontent.com/foundationdb/fdb-kub
 - 从 doris-operator 仓库下载:  
   doris-operator 仓库中制定化了以 fdb-kuberentes-operator 1.46.0 版本为基础的部署示例，可直接使用部署 FDB cluster 。
 ```bash
-wget https://raw.githubusercontent.com/apache/doris-operator/blob/master/config/operator/fdb-operator.yaml
+wget https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/fdb-operator.yaml
 ```
 2. 部署 fdb-kubernetes-operator 服务:  
    定制化 `fdb-kubernetes-operator` 的部署 yaml 后，使用如下命令部署 fdb-kubernetes-operator ：
