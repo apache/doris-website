@@ -304,57 +304,6 @@ kafkaSource.selectExpr("CAST(value as STRING)")
 | doris.request.auth.password | --            | 访问 Doris 的密码                                   |
 | doris.filter.query          | --            | 过滤读取数据的表达式，此表达式透传给 Doris。Doris 使用此表达式完成源端数据过滤。 |
 
-:::tip
-
-1. 在 Spark SQL 中，通过 insert into 方式写入数据时，如果 doris 的目标表中包含 `BITMAP` 或 `HLL` 类型的数据时，需要设置参数 `doris.ignore-type` 为对应类型，并通过 `doris.write.fields` 对列进行映射转换，使用方式如下：
-> BITMAP
-> ```sql
-> CREATE TEMPORARY VIEW spark_doris
-> USING doris
-> OPTIONS(
-> "table.identifier"="$YOUR_DORIS_DATABASE_NAME.$YOUR_DORIS_TABLE_NAME",
-> "fenodes"="$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT",
-> "user"="$YOUR_DORIS_USERNAME",
-> "password"="$YOUR_DORIS_PASSWORD"
-> "doris.ignore-type"="bitmap",
-> "doris.write.fields"="col1,col2,col3,bitmap_col2=to_bitmap(col2),bitmap_col3=bitmap_hash(col3)"
-> );
-> ```
-> HLL
-> ```sql
-> CREATE TEMPORARY VIEW spark_doris
-> USING doris
-> OPTIONS(
-> "table.identifier"="$YOUR_DORIS_DATABASE_NAME.$YOUR_DORIS_TABLE_NAME",
-> "fenodes"="$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT",
-> "user"="$YOUR_DORIS_USERNAME",
-> "password"="$YOUR_DORIS_PASSWORD"
-> "doris.ignore-type"="hll",
-> "doris.write.fields"="col1,hll_col1=hll_hash(col1)"
-> );
-> ```
-
-
-2. 从 1.3.0 版本开始， `doris.sink.max-retries` 配置项的默认值为 0，即默认不进行重试。
-   当设置该参数大于 0 时，会进行批次级别的失败重试，会在 Spark Executor 内存中缓存 `doris.sink.batch.size` 所配置大小的数据，可能需要适当增大内存分配。
-
-3. 从 1.3.0 版本开始，支持 overwrite 模式写入（只支持全表级别的数据覆盖），具体使用方式如下
-> DataFrame
-> ```scala
-> resultDf.format("doris")
->   .option("doris.fenodes","$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT")
->   // your own options
->   .option("save_mode", SaveMode.Overwrite)
->   .save()
-> ```
->
-> SQL
-> ```sql
-> INSERT OVERWRITE your_target_table
-> SELECT * FROM your_source_table
-> ```
-
-:::
 
 ## Doris 和 Spark 列类型映射关系
 
