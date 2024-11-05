@@ -191,7 +191,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `disable_colocate_join`
 
-  控制是否启用 [Colocation Join](../../query/join-optimization/colocation-join) 功能。默认为 false，表示启用该功能。true 表示禁用该功能。当该功能被禁用后，查询规划将不会尝试执行 Colocation Join。
+  控制是否启用 [Colocation Join](../../query-data/join#colocate-join) 功能。默认为 false，表示启用该功能。true 表示禁用该功能。当该功能被禁用后，查询规划将不会尝试执行 Colocation Join。
 
 - `enable_bucket_shuffle_join`
 
