@@ -54,9 +54,9 @@ CREATE TABLE IF NOT EXISTS example_tbl_duplicate
     `op_time` DATETIME COMMENT "处理时间"
 )
 DUPLICATE KEY(`timestamp`, `type`, `error_code`)
-DISTRIBUTED BY HASH(`type`) BUCKETS 1
+DISTRIBUTED BY HASH(`type`) BUCKETS 10
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
+"replication_allocation" = "tag.location.default: 3"
 );
 
 MySQL> desc example_tbl_duplicate; 
@@ -86,9 +86,9 @@ CREATE TABLE IF NOT EXISTS example_tbl_by_default
     `op_id` BIGINT COMMENT "负责人id",
     `op_time` DATETIME COMMENT "处理时间"
 )
-DISTRIBUTED BY HASH(`type`) BUCKETS 1
+DISTRIBUTED BY HASH(`type`) BUCKETS 10
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
+"replication_allocation" = "tag.location.default: 3"
 );
 
 MySQL> desc example_tbl_by_default; 
