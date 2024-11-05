@@ -55,7 +55,7 @@ under the License.
 写时合并建表语句为：
 
 ```sql
-CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
+CREATE TABLE IF NOT EXISTS example_tbl_unique
 (
     `user_id` LARGEINT NOT NULL COMMENT "用户id",
     `username` VARCHAR(50) NOT NULL COMMENT "用户昵称",

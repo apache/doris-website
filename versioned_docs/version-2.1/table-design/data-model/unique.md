@@ -52,10 +52,10 @@ Let's look at how to create a Unique model table with merge-on-read and merge-on
 
 ## Merge-on-Write
 
-The table creation statement for Merge-on-write is as follows:
+The table creation statement for Merge-on-Write is as follows:
 
 ```
-CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
+CREATE TABLE IF NOT EXISTS example_tbl_unique
 (
     `user_id` LARGEINT NOT NULL COMMENT "User ID",
     `username` VARCHAR(50) NOT NULL COMMENT "Username",
@@ -75,7 +75,7 @@ PROPERTIES (
 
 ## Merge-on-Read
 
-The table creation statement for Merge-on-read is as follows:
+The table creation statement for Merge-on-Read is as follows:
 
 ```
 CREATE TABLE IF NOT EXISTS example_tbl_unique
