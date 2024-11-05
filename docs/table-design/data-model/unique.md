@@ -30,8 +30,8 @@ When users have data update requirements, they can choose to use the Unique data
 
 The Unique data model provides two implementation methods:
 
+- Merge-on-write. In version 1.2, we introduced the merge-on-write implementation, which completes all data deduplication tasks during the data writing phase, thus providing excellent query performance. Since version 2.1, merge-on-write has become very mature and stable. Due to its excellent query performance, it has become the default implementation for the Unique model.
 - Merge-on-read. In the merge-on-read implementation, users will not trigger any data deduplication-related operations when writing data. All data deduplication operations are performed during queries or compaction. Therefore, the write performance of merge-on-read is better, the query performance is poor, and the memory consumption is also higher.
-- Merge-on-write. In version 1.2, we introduced the merge-on-write implementation, which completes all data deduplication tasks during the data writing phase, thus providing excellent query performance. Since version 2.0, merge-on-write has become very mature and stable. Due to its excellent query performance, we recommend most users to choose this implementation. Since version 2.1, merge-on-write has become the default implementation for the Unique model.
 
 The default update semantics of the Unique model is a **full-row UPSERT**, which stands for UPDATE OR INSERT. If the key of the row data exists, an update will be performed; if it does not exist, new data will be inserted. Under the full-row UPSERT semantics, even if the user uses INSERT INTO to specify partial columns for writing, Doris will fill the unprovided columns with NULL values or default values in the Planner.
 
@@ -49,29 +49,6 @@ Let's look at how to create a Unique model table with merge-on-read and merge-on
 | phone         | LARGEINT      | No    | User phone number      |
 | address       | VARCHAR (500) | No    | User address           |
 | register_time | DATETIME      | No    | User registration time |
-
-## Merge-on-Read
-
-The table creation statement for Merge-on-read is as follows:
-
-```
-CREATE TABLE IF NOT EXISTS example_tbl_unique
-(
-    `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `username` VARCHAR(50) NOT NULL COMMENT "Username",
-    `city` VARCHAR(20) COMMENT "User location city",
-    `age` SMALLINT COMMENT "User age",
-    `sex` TINYINT COMMENT "User gender",
-    `phone` LARGEINT COMMENT "User phone number",
-    `address` VARCHAR(500) COMMENT "User address",
-    `register_time` DATETIME COMMENT "User registration time"
-)
-UNIQUE KEY(`user_id`, `username`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
-);
-```
 
 ## Merge-on-Write
 
@@ -92,15 +69,38 @@ CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
 UNIQUE KEY(`user_id`, `username`)
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1",
-"enable_unique_key_merge_on_write" = "true"
+"replication_allocation" = "tag.location.default: 3"
 );
 ```
 
-Users need to add the property with **enable_unique_key_merge_on_write" = "true"** when creating the table to enable Merge-on-write.
+## Merge-on-Read
+
+The table creation statement for Merge-on-read is as follows:
 
 ```
-"enable_unique_key_merge_on_write" = "true"
+CREATE TABLE IF NOT EXISTS example_tbl_unique
+(
+    `user_id` LARGEINT NOT NULL COMMENT "User ID",
+    `username` VARCHAR(50) NOT NULL COMMENT "Username",
+    `city` VARCHAR(20) COMMENT "User location city",
+    `age` SMALLINT COMMENT "User age",
+    `sex` TINYINT COMMENT "User gender",
+    `phone` LARGEINT COMMENT "User phone number",
+    `address` VARCHAR(500) COMMENT "User address",
+    `register_time` DATETIME COMMENT "User registration time"
+)
+UNIQUE KEY(`user_id`, `username`)
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 3",
+"enable_unique_key_merge_on_write" = "false"
+);
+```
+
+Users need to add the property with **enable_unique_key_merge_on_write" = "false"** when creating the table to enable Merge-on-read.
+
+```
+"enable_unique_key_merge_on_write" = "false"
 ```
 
 :::caution

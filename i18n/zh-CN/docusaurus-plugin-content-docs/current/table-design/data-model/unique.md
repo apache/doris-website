@@ -29,8 +29,8 @@ under the License.
 
 **主键模型提供了两种实现方式：**
 
+- 写时合并 (merge-on-write)。在 1.2 版本中，我们引入了写时合并实现，该实现会在数据写入阶段完成所有数据去重的工作，因此能够提供非常好的查询性能。自 2.1 版本起，写时合并经过两个大版本的打磨，已经非常成熟稳定，由于其优秀的查询性能，写时合并成为 Unique 模型的默认实现。
 - 读时合并 (merge-on-read)。在读时合并实现中，用户在进行数据写入时不会触发任何数据去重相关的操作，所有数据去重的操作都在查询或者 compaction 时进行。因此，读时合并的写入性能较好，查询性能较差，同时内存消耗也较高。
-- 写时合并 (merge-on-write)。在 1.2 版本中，我们引入了写时合并实现，该实现会在数据写入阶段完成所有数据去重的工作，因此能够提供非常好的查询性能。自 2.0 版本起，写时合并已经非常成熟稳定，由于其优秀的查询性能，我们推荐大部分用户选择该实现。自 2.1 版本，写时合并成为 Unique 模型的默认实现。
 
 **数据更新的语意**
 
@@ -50,28 +50,6 @@ under the License.
 | address       | VARCHAR(500) | No    | 用户住址     |
 | register_time | DATETIME     | No    | 用户注册时间 |
 
-## 读时合并
-
-读时合并的建表语句如下：
-
-```sql
-CREATE TABLE IF NOT EXISTS example_tbl_unique
-(
-    `user_id` LARGEINT NOT NULL COMMENT "用户id",
-    `username` VARCHAR(50) NOT NULL COMMENT "用户昵称",
-    `city` VARCHAR(20) COMMENT "用户所在城市",
-    `age` SMALLINT COMMENT "用户年龄",
-    `sex` TINYINT COMMENT "用户性别",
-    `phone` LARGEINT COMMENT "用户电话",
-    `address` VARCHAR(500) COMMENT "用户地址",
-    `register_time` DATETIME COMMENT "用户注册时间"
-)
-UNIQUE KEY(`user_id`, `username`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
-);
-```
 
 ## 写时合并
 
@@ -92,15 +70,37 @@ CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
 UNIQUE KEY(`user_id`, `username`)
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1",
-"enable_unique_key_merge_on_write" = "true"
+"replication_allocation" = "tag.location.default: 3"
+);
+```
+## 读时合并
+
+读时合并的建表语句如下：
+
+```sql
+CREATE TABLE IF NOT EXISTS example_tbl_unique
+(
+    `user_id` LARGEINT NOT NULL COMMENT "用户id",
+    `username` VARCHAR(50) NOT NULL COMMENT "用户昵称",
+    `city` VARCHAR(20) COMMENT "用户所在城市",
+    `age` SMALLINT COMMENT "用户年龄",
+    `sex` TINYINT COMMENT "用户性别",
+    `phone` LARGEINT COMMENT "用户电话",
+    `address` VARCHAR(500) COMMENT "用户地址",
+    `register_time` DATETIME COMMENT "用户注册时间"
+)
+UNIQUE KEY(`user_id`, `username`)
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 3",
+"enable_unique_key_merge_on_write" = "false"
 );
 ```
 
-用户需要在建表时添加下面的 property 来开启写时合并。
+用户需要在建表时添加下面的 property 来开启读时合并。
 
 ```Plain
-"enable_unique_key_merge_on_write" = "true"
+"enable_unique_key_merge_on_write" = "false"
 ```
 :::caution
 在 2.1 版本中，写时合并将会是主键模型的默认方式。
