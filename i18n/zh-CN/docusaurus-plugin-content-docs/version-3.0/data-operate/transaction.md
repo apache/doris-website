@@ -34,11 +34,11 @@ under the License.
 
 显式事务需要用户主动开启、提交或回滚事务，目前不支持 DDL 和查询语句。
 
-    ```sql
-    BEGIN; 
-    [INSERT, UPDATE, DELETE statement]
-    COMMIT; / ROLLBACK;
-    ```
+```sql
+BEGIN; 
+[INSERT, UPDATE, DELETE statement]
+COMMIT; / ROLLBACK;
+```
 
 ### 隐式事务
 
