@@ -195,7 +195,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `enable_bucket_shuffle_join`
 
-  控制是否启用 [Bucket Shuffle Join](../../query/join-optimization/bucket-shuffle-join) 功能。默认为 true，表示启用该功能。false 表示禁用该功能。当该功能被禁用后，查询规划将不会尝试执行 Bucket Shuffle Join。
+  控制是否启用 [Bucket Shuffle Join](../../query-data/join#bucket-shuffle-join) 功能。默认为 true，表示启用该功能。false 表示禁用该功能。当该功能被禁用后，查询规划将不会尝试执行 Bucket Shuffle Join。
 
 - `disable_streaming_preaggregations`
 
