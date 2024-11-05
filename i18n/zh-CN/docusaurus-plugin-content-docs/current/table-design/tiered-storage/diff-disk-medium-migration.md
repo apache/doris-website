@@ -24,21 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-可以配置动态分区参数，在不同的磁盘类型上创建动态分区，Doris 根据数据的热度和冷度特性实现从SSD到HDD的数据迁移。这样的做法在降低成本的同时，也提升了Doris的读写性能。
+可以配置动态分区参数，在不同的磁盘类型上创建动态分区，Doris 会根据配置参数将冷数据从SSD迁移到HDD。这样的做法在降低成本的同时，也提升了Doris的读写性能。
 
 动态分区参数可以参考[分区分桶-动态分区](../../table-design/data-partition.md#动态分区)
 
 `dynamic_partition.hot_partition_num`
 
 :::caution
-  注意，dynamic_partition.storage_medium必须设置为HDD，否则hot_partition_num将不会生效
+  注意，dynamic_partition.storage_medium 必须设置为HDD，否则 hot_partition_num 将不会生效
 :::
 
   指定最新的多少个分区为热分区。对于热分区，系统会自动设置其 `storage_medium` 参数为 SSD，并且设置 `storage_cooldown_time`。
 
   注意：若存储路径下没有 SSD 磁盘路径，配置该参数会导致动态分区创建失败。
 
-  `hot_partition_num` 是往前 n 天和未来所有分区
+  `hot_partition_num` 表示当前时间所在分区及之前的 hot_partition_num - 1 个分区，以及所有未来的分区，将被存储在 SSD 介质上。
 
   我们举例说明。假设今天是 2021-05-20，按天分区，动态分区的属性设置为：hot_partition_num=2, end=3, start=-3。则系统会自动创建以下分区，并且设置 `storage_medium` 和 `storage_cooldown_time` 参数：
 
@@ -51,7 +51,6 @@ under the License.
   p20210522：["2021-05-22", "2021-05-23") storage_medium=SSD storage_cooldown_time=2021-05-24 00:00:00
   p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
   ```
-
 
 -   `dynamic_partition.storage_medium`
 

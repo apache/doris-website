@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+The aggregate data model, also known as the Aggregate model, aggregates data based on key columns. The Doris storage layer retains the aggregated data, which helps reduce storage space and improve query performance. This model is typically used in scenarios where summarization or aggregation of information (such as totals or averages) is required.
 
-
-The following are practical examples to illustrate what an aggregated model is and how to use it correctly.
+The following example illustrates what the aggregate model is and how to use it correctly.
 
 ### Importing Data Aggregation
 
@@ -62,9 +62,9 @@ CREATE TABLE IF NOT EXISTS example_db.example_tbl_agg1
     `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "user min dwell time"
 )
 AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 10
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
+"replication_allocation" = "tag.location.default: 3"
 );
 ```
 
