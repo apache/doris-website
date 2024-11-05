@@ -25,18 +25,18 @@ under the License.
 -->
 ## Add Doris Cluster resource definition
 
-Doris Operator extends Kubernetes with Custom Resource Definition (CRD). The CRD of Doris Cluster encapsulates the description of Doris objects, such as the description of FE or BE. For details, please refer to [doris-operator-api](https://github.com/selectdb/doris-operator/blob/master /doc/api.md). Before deploying Doris, you need to create the CRD of Doris Cluster.
+Doris Operator extends Kubernetes with Custom Resource Definition (CRD). The CRD of Doris Cluster encapsulates the description of Doris objects, such as the description of FE or BE. For details, please refer to [doris-operator-api](https://github.com/apache/doris-operator/blob/master/doc/api.md). Before deploying Doris, you need to create the CRD of Doris Cluster.
 
 Doris Cluster CRD can be deployed in a Kubernetes environment with the following command:
 
 ```shell
-kubectl create -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
 ```
 
 If there is no external network, download the CRD file to your local computer first:
 
 ```shell
-wget https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+wget https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
 kubectl create -f ./doris.selectdb.com_dorisclusters.yaml
 ```
 
@@ -67,7 +67,7 @@ You can directly pull the Doris Operator template in the warehouse for quick dep
 Doris Operator can be deployed in a Kubernetes cluster using the following command:
 
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/operator/operator.yaml
+kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
 ```
 
 The following is the expected output:

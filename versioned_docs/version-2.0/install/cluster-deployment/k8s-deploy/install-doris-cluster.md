@@ -95,7 +95,7 @@ kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
 
 **Online Deployment**
 
-Before installation, you need to add a deployment warehouse. If it has been added, you can directly install Doris Cluster. Otherwise, please refer to the operation of **Add Deployment Warehouse** when adding [Deploy Doris Operator](<./install-operator.md#Option 3: Helm deploys Doris Operator>)
+Before installation, you need to add a deployment warehouse. If it has been added, you can directly install Doris Cluster. Otherwise, please refer to the operation of **Add Deployment Warehouse** when adding [Deploy Doris Operator](install-operator.md#option-3-helm-deploys-doris-operator)
 
 1. Install Doris Cluster
 
