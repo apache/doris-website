@@ -376,7 +376,7 @@ public class UDTFStringTest {
 
 Currently, in Doris, executing a UDF function, e.g., `select udf(col) from table`, will load the udf.jar package for each concurrent instance, and unload the udf.jar package when the instance ends. If the udf.jar file needs to load a file of several hundred MBs, the memory usage will increase sharply due to concurrency, potentially leading to OOM (Out of Memory).
 
-The solution is to split the resource loading code, generate a separate jar package, and have other packages directly reference this resource jar package.
+Solution 1: The solution is to split the resource loading code, generate a separate jar package, and have other packages directly reference this resource jar package.
 
 Assume the files have been split into DictLibrary and FunctionUdf.
 
