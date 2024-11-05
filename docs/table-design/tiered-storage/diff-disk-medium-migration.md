@@ -53,9 +53,9 @@ By configuring `dynamic_partition.hot_partition_num` and `dynamic_partition.stor
 *`dynamic_partition.storage_medium`*
 
   
-  :::info Note
-  This parameteres is supported since Doris version 1.2.3
-  :::
+:::info Note
+This parameteres is supported since Doris version 1.2.3
+:::
 
   Specifies the final storage medium for the newly created dynamic partition. HDD is the default, but SSD can be selected.
 
