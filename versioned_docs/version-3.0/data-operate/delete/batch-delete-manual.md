@@ -153,9 +153,9 @@ mysql> CREATE TABLE IF NOT EXISTS table1 (
     ->     username VARCHAR(64),
     ->     pv BIGINT
     -> ) UNIQUE KEY (siteid, citycode, username)
-    -> DISTRIBUTED BY HASH(siteid) BUCKETS 1
+    -> DISTRIBUTED BY HASH(siteid) BUCKETS 10
     -> PROPERTIES (
-    ->     "replication_num" = "1"
+    ->     "replication_num" = "3"
     -> );
 Query OK, 0 rows affected (0.34 sec)
 
