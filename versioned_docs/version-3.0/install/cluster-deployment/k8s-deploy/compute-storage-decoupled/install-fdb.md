@@ -35,7 +35,7 @@ kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-o
 kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbrestores.yaml
 ```
 
-Expected Results:
+Expected Results:  
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbclusters.yaml
@@ -47,24 +47,24 @@ customresourcedefinition.apiextensions.k8s.io/foundationdbrestores.apps.foundati
 ```
 ## Deploy fdb-kubernetes-operator service
 The fdb-kubernetes-operator repository provides a deployment sample for deploying the FDB cluster in IP mode. The doris-operator repository provides a sample for deploying the FDB cluster in FQDN mode, which can be downloaded on demand.
-1. Download the deployment sample:
-- Download from the fdb-kubernetes-operator official repository:
+1. Download the deployment sample:  
+- Download from the fdb-kubernetes-operator official repository:  
   By default, fdb-kuberentes-operator deploys FDB Cluster in IP mode. You can download the [fdb-kubernetes-operator default deployment](https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml) yaml. If you use the FQDN deployment mode, please follow the official documentation [Using DNS section](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#using-dns) to customize the domain name mode.
 ```bash
 wget -O fdb-operator.yaml https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml
 ```
-- Download from the doris-operator repository:
+- Download from the doris-operator repository:  
   The doris-operator repository has a deployment example based on the fdb-kuberentes-operator 1.46.0 version, which can be used directly to deploy the FDB cluster.
 
 ```bash
 wget https://raw.githubusercontent.com/apache/doris-operator/blob/master/config/operator/fdb-operator.yaml
 ```
-2. Deploy the fdb-kubernetes-operator service:
+2. Deploy the fdb-kubernetes-operator service:   
    After customizing the deployment yaml of `fdb-kubernetes-operator`, use the following command to deploy fdb-kubernetes-operator:
 ```bash
 kubectl apply -f fdb-operator.yaml
 ```
-Expected Results:
+Expected Results:  
 ```bash
 serviceaccount/fdb-kubernetes-operator-controller-manager created
 clusterrole.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-clusterrole created
@@ -76,13 +76,13 @@ deployment.apps/fdb-kubernetes-operator-controller-manager created
 
 ## Deploy FDB cluster
 The deployment sample of FDB is provided in the [fdb-kubernetes-operator repository](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/config/samples/cluster.yaml). You can download it directly with the following command
-1. Download the deployment sample:
-   Download the IP mode deployment sample from the FDB official website:
+1. Download the deployment sample:  
+   Download the IP mode deployment sample from the FDB official website:  
 ```bash
 wget https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/cluster.yaml
 ```
-2. Customized deployment example:
-- The environment can access dockerhub
+2. Customized deployment example:  
+- The environment can access dockerhub  
   Customize the final deployment state according to the [User Manual](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md) provided by the official website. If you use FQDN deployment, please set the `routing.useDNSInClusterFile` field to true and configure as follows:
 ```yaml
 spec:
@@ -90,11 +90,14 @@ spec:
   useDNSInClusterFile: true
 ```
 The official repository of doris-operator provides a deployment example of [deploying FDB using FQDN](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/cluster.yaml) that can be downloaded and used directly.
+
 ## Private network environment
+
 In a private network environment, if you cannot directly access dockerhub, you can download the required image from the official repository of FDB and push it to the private repository. fdb-kubernetes-operator depends on [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar) .
 Deployment of FDB dependent images include: [foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb) , [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar).
 After pushing to the private repository, follow the fdb-kubernetes-operator official document [Customized Image Configuration](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#customizing-the-foundationdb-image) instructions for configuration.
-You can refer to the following configuration to add private repository image configuration:
+You can refer to the following configuration to add private repository image configuration:  
+
 ```yaml
 spec:
   mainContainer:
@@ -110,6 +113,7 @@ spec:
 
 :::tip Tip
 - In a private environment, when FDB is pushed to a private repository, the tag must be consistent with the official one, for example: 7.1.38.
-- When deploying FDB, FoundationDBCluster resources, .spec.version must be configured.  
-  ::: 
+- When deploying FDB, FoundationDBCluster resources, .spec.version must be configured.
+- When FDB is deployed based on fdb-kubernetes-operator, at least three hosts are required to meet the high availability requirements of the production environment.  
+::: 
 

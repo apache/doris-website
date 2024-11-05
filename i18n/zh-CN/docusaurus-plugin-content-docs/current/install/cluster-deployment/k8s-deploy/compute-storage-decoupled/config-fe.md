@@ -124,4 +124,4 @@ spec:
 :::tip 提示
 1. K8s 部署中，使用 ConfigMap 挂载定制化配置文件时，无需添加 `meta_service_endpoint`、`deploy_mode` 以及 `cluster_id` 配置，Doris-Operator 相关服务会自动添加。
 2. K8s 部署中，使用 ConfigMap 挂载定制化配置文件时，必须设定 `enable_fqdn_mode=true`。
-   :::
+:::

@@ -46,17 +46,17 @@ customresourcedefinition.apiextensions.k8s.io/foundationdbrestores.apps.foundati
 ## 部署 fdb-kubernetes-operator 服务
 fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FDB 集群的部署样例。在 doris-operator 仓库中提供了以 FQDN 模式部署的 FDB 集群样例，可以按需下载。
 1. 下载部署样例:
-- 从 fdb-kubernetes-operator 官方仓库下载:
+- 从 fdb-kubernetes-operator 官方仓库下载:  
   fdb-kuberentes-operator 默认情况下使用 IP 模式部署 FDB Cluster，可以下载 [fdb-kubernetes-operator 默认部署](https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml) yaml。如果使用 FQDN 部署模式，请按照官方文档[使用 DNS 部分](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#using-dns)进行定制化使用域名模式。
 ```bash
 wget -O fdb-operator.yaml https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml
 ```
-- 从 doris-operator 仓库下载:
+- 从 doris-operator 仓库下载:  
   doris-operator 仓库中制定化了以 fdb-kuberentes-operator 1.46.0 版本为基础的部署示例，可直接使用部署 FDB cluster 。
 ```bash
 wget https://raw.githubusercontent.com/apache/doris-operator/blob/master/config/operator/fdb-operator.yaml
 ```
-2. 部署 fdb-kubernetes-operator 服务:
+2. 部署 fdb-kubernetes-operator 服务:  
    定制化 `fdb-kubernetes-operator` 的部署 yaml 后，使用如下命令部署 fdb-kubernetes-operator ：
 ```bash
 kubectl apply -f fdb-operator.yaml
@@ -73,12 +73,12 @@ deployment.apps/fdb-kubernetes-operator-controller-manager created
 
 ## 部署 FDB 集群
 在 [fdb-kubernetes-operator 仓库](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/config/samples/cluster.yaml)中提供了部署 FDB 的部署样例，通过如下命令直接下载使用
-1. 下载部署样例:
-   从 FDB 官方下载 IP 模式部署样例：
+1. 下载部署样例：  
+   从 FDB 官方下载 IP 模式部署样例：  
 ```bash
 wget https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/cluster.yaml
 ```
-2. 定制化部署样例：
+2. 定制化部署样例：  
 - 环境可访问 dockerhub
   根据官网提供的[用户手册](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md)定制化部署终态。如果使用 FQDN 部署，请将 `routing.useDNSInClusterFile` 字段设置为 true ,配置如下：
 ```yaml
@@ -107,5 +107,6 @@ spec:
 
 :::tip 提示
 - 私有环境下，FDB 推到私有仓库时，tag 必须与官方保持一致，比如：7.1.38。
-- 部署 FDB 时, FoundationDBCluster 资源，.spec.version 必须配置。  
-  ::: 
+- 部署 FDB 时, FoundationDBCluster 资源，.spec.version 必须配置。
+- FDB 基于 fdb-kubernetes-operator 部署，至少需要三个宿主机才可满足生产环境高可用要求。  
+::: 

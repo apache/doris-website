@@ -162,4 +162,4 @@ BE 服务默认 Cache 配置为 `file_cache_path = [{"path":"/opt/apache-doris/b
 :::tip 提示
 - file_cache_path 的值必须是一个 JSON 数组。
 - 所有的启动配置必须挂载到 /etc/doris 目录下。   
-  ::: 
+::: 
