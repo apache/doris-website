@@ -167,16 +167,6 @@ ALTER TABLE example_db.my_table
 ADD PARTITION p1 VALUES [("2014-01-01"), ("2014-02-01"));
 ```
 
-10. Add partitions of number type and time type in batches
-
-```sql
-ALTER TABLE example_db.my_table ADD PARTITIONS FROM (1) TO (100) INTERVAL 10;
-ALTER TABLE example_db.my_table ADD PARTITIONS FROM ("2023-01-01") TO ("2025-01-01") INTERVAL 1 YEAR;
-ALTER TABLE example_db.my_table ADD PARTITIONS FROM ("2023-01-01") TO ("2025-01-01") INTERVAL 1 MONTH;
-ALTER TABLE example_db.my_table ADD PARTITIONS FROM ("2023-01-01") TO ("2025-01-01") INTERVAL 1 WEEK;
-ALTER TABLE example_db.my_table ADD PARTITIONS FROM ("2023-01-01") TO ("2025-01-01") INTERVAL 1 DAY;
-```
-
 ### Keywords
 
 ```text

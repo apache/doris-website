@@ -72,7 +72,7 @@ FE 配置项：
 - `skip_audit_user_list` (自 3.0.1 支持)
 
     如果不希望某些用户的操作被审计日志记录，可以通过这个配置修改。
-
+<!-- unexecutable: configuration -->
     ```
     skip_audit_user_list=root
     -- or
@@ -122,7 +122,7 @@ Doris 2.1 版本之前的用户，请参阅如下方式使用审计日志插件�
     * password：集群用户密码。
 
 4. 重新打包 Audit Loader 插件
-
+<!-- unexecutable: zip shell command -->
     ```shell
     zip -r -q -m auditloader.zip auditloader.jar plugin.properties plugin.conf
     ```
@@ -134,7 +134,7 @@ Doris 2.1 版本之前的用户，请参阅如下方式使用审计日志插件�
 若需开启慢查询日志导入功能，还需要额外创建慢表 `doris_slow_log_tbl__`，其表结构与 `doris_audit_log_tbl__` 一致。
 
 其中 `dynamic_partition` 属性根据自己的需要，选择审计日志保留的天数。
-
+<!-- executable: create audit table -->
 ```sql
 create database doris_audit_db__;
 

@@ -135,10 +135,10 @@ doriscluster-helm-be-2   1/1     Running   0          16s
 
 1. 下载 Doris Cluster Chart 资源
 
-下载 `doris-{chart_version}.tgz` 安装 Doris Cluster chart。如需要下载 2.0.6 版本的 Doris 集群可以使用以下命令：
+下载 `doris-{chart_version}.tgz` 安装 Doris Cluster chart。如需要下载 1.6.1 版本的 Doris 集群可以使用以下命令：
 
 ```shell
-wget https://charts.selectdb.com/doris-2.0.6.tgz
+wget https://charts.selectdb.com/doris-1.6.1.tgz
 ```
 
 2. 安装 Doris 集群

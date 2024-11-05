@@ -1,6 +1,6 @@
 ---
 {
-"title": "配置 FE 部署",
+"title": "配置部署 FE",
 "language": "zh-CN"
 }
 ---
@@ -33,7 +33,7 @@ spec:
     replicas: 2
 ```
 
-配置好需要使用的 FE 服务镜像，将配置更新到需要[部署的存算分离资源](../install-quickstart#部署 DorisDisaggregatedCluster 资源)中。
+配置好版本大于 3.0.2 的需要使用的 FE 服务镜像，将配置更新到需要[部署的存算分离资源](install-quickstart#第二步快速部署存算分离集群)中。
 
 ## 配置资源
 
@@ -52,7 +52,7 @@ spec:
       memory: 4Gi
 ```
 
-上述样例展示如何将 FE 服务的计算资源配置为 4c 4Gi 的模式。配置好 FE 希望使用的资源，将配置信息更新到[需要部署的存算分离资源](../install-quickstart#部署 DorisDisaggregatedCluster 资源)中。
+上述样例展示如何将 FE 服务的计算资源配置为 4c 4Gi 的模式。配置好 FE 希望使用的资源，将配置信息更新到[需要部署的存算分离资源](install-quickstart#第二步快速部署存算分离集群)中。
 
 ### 配置服务存储资源
 
@@ -73,7 +73,7 @@ spec:
             storage: 200Gi
 ```
 
-上述样例展示了如何为 FE 服务添加 200Gi 的存储。`{storageClassName}` 为需要使用的 StorageClass 的名称，如果不填写将使用集群默认的 StorageClass 。按上述模式配置好 FE 服务需要使用的存储信息后，将配置更新到[需要部署的存算分离资源](../install-quickstart#部署 DorisDisaggregatedCluster 资源)中。
+上述样例展示了如何为 FE 服务添加 200Gi 的存储。`{storageClassName}` 为需要使用的 StorageClass 的名称，如果不填写将使用集群默认的 StorageClass 。按上述模式配置好 FE 服务需要使用的存储信息后，将配置更新到[需要部署的存算分离资源](install-quickstart.md#第二步快速部署存算分离集群)中。
 
 ## 定制化配置文件
 
@@ -119,8 +119,9 @@ spec:
 
 在 `DorisDisaggregatedCluster` 资源中，配置挂载 ConfigMap 的 configMaps 是一个数组。每一个元素的 name 表示当前命名空间的 ConfigMap 名称。
 
-按上述模式配置好 FE 服务需要使用的 ConfigMap 信息，将配置更新到[需要部署的存算分离资源](../install-quickstart#部署 DorisDisaggregatedCluster 资源)中。
+按上述模式配置好 FE 服务需要使用的 ConfigMap 信息，将配置更新到[需要部署的存算分离资源](install-quickstart.md#第二步快速部署存算分离集群)中。
 
 :::tip 提示
-K8s 部署中，使用  ConfigMap 挂载定制化配置文件时，无需添加 `meta_service_endpoint` 以及 `cloud_unique_id` 配置，Doris-Operator 相关服务会自动添加。
-:::
+1. K8s 部署中，使用 ConfigMap 挂载定制化配置文件时，无需添加 `meta_service_endpoint`、`deploy_mode` 以及 `cluster_id` 配置，Doris-Operator 相关服务会自动添加。
+2. K8s 部署中，使用 ConfigMap 挂载定制化配置文件时，必须设定 `enable_fqdn_mode=true`。
+   :::

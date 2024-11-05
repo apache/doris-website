@@ -201,7 +201,7 @@ PROPERTIES(
 Table structure:
 
 ```sql
-MySQL  desc test_table;
+MySQL > desc test_table;
 +-------------+--------------+------+-------+---------+---------+
 | Field       | Type         | Null | Key   | Default | Extra   |
 +-------------+--------------+------+-------+---------+---------+
@@ -218,12 +218,12 @@ MySQL  desc test_table;
 Load the following data:
 
 ```Plain
-1       2020-02-22      1       2020-02-21      a
-1       2020-02-22      1       2020-02-22      b
-1       2020-02-22      1       2020-03-05      c
-1       2020-02-22      1       2020-02-26      d
-1       2020-02-22      1       2020-02-23      e
-1       2020-02-22      1       2020-02-24      b
+1	2020-02-22	1	2020-02-21	a
+1	2020-02-22	1	2020-02-22	b
+1	2020-02-22	1	2020-03-05	c
+1	2020-02-22	1	2020-02-26	d
+1	2020-02-22	1	2020-02-23	e
+1	2020-02-22	1	2020-02-24	b
 ```
 
 Here is an example using Stream Load:
@@ -235,7 +235,7 @@ curl --location-trusted -u root: -T testData http://host:port/api/test/test_tabl
 The result is:
 
 ```sql
-MySQL  select * from test_table;
+MySQL > select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
@@ -250,14 +250,14 @@ In the data load, because the value of the sequence column (i.e., modify_date) '
 After completing the above steps, load the following data:
 
 ```Plain
-1       2020-02-22      1       2020-02-22      a
-1       2020-02-22      1       2020-02-23      b
+1	2020-02-22	1	2020-02-22	a
+1	2020-02-22	1	2020-02-23	b
 ```
 
 Query the data:
 
 ```sql
-MySQL [test] select * from test_table;
+MySQL [test] > select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
@@ -270,14 +270,14 @@ In the loaded data, the sequence column (modify_date) of all previously loaded d
 **4. Try loading the following data again**
 
 ```Plain
-1       2020-02-22      1       2020-02-22      a
-1       2020-02-22      1       2020-03-23      w
+1	2020-02-22	1	2020-02-22	a
+1	2020-02-22	1	2020-03-23	w
 ```
 
 Query the data:
 
 ```sql
-MySQL [test] select * from test_table;
+MySQL [test] > select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
