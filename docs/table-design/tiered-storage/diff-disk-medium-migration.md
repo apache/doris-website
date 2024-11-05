@@ -30,7 +30,7 @@ By configuring `dynamic_partition.hot_partition_num` and `dynamic_partition.stor
 
 *`dynamic_partition.hot_partition_num`*
 
-  :::tip
+:::tip
 
   If the storage path does not include an SSD disk path, configuring this parameter will result in the failure of dynamic partition creation.
 
