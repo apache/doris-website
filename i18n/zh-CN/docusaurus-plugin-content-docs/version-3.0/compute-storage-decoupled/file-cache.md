@@ -57,7 +57,12 @@ under the License.
 
 ### 淘汰
 
-为了最大化利用缓存空间对数据访问的加速，Doris 会尽可能多的利用缓存的可用空间，缓存的淘汰有两种触发时机：删除远程存储数据或者写入缓存空间不足。删除远程存储数据时直接删除了缓存中对应的数据，写入缓存空间不足时，会按照 Disposable、Normal Data、Index、TTL 的顺序淘汰。TTL 队列的数据过期时会被移动到 Normal Data 队列。
+上述各类型缓存共同使用总缓存空间。根据重要程度的不同我们可以为它们划分比例。比例可以在 be 配置文件中通过 `file_cache_path` 设置，默认为: TTL : Normal : Index : Disposable = 50% :  30% : 10% : 10%。
+
+这些比例不是硬性限制，Doris会根据需要动态调整以充分利用空间来加速访问。例如用户如果不使用 TTL 类型的缓存，那么其它类型可以超过预设比例使用原本为 TTL 分配的空间。
+
+缓存的淘汰有两种触发时机：垃圾清理或者缓存空间不足。当用户删除数据时，或是导入 compaction 任务结束时，会异步地对过期的缓存数据进行淘汰。写入缓存空间不足时，会按照 Disposable 、 Normal Data、Index、TTL 的顺序淘汰。例如：如果写入 Normal Data 时空间不足，那么 Doris 会依次淘汰 Disposable、Index、TTL 的部分数据（按照 LRU 的顺序）。注意我们不会将淘汰目标类型的数据全部淘汰再淘汰顺序中的下一个类型，而是至少会保留上述比例的空间以让其它类型也能正常工作。如果这个过程不能成功淘汰出足够的空间，那么将会触发自身类型的 LRU 淘汰。接着上面写 Normal Data 时空间不足例子，如果不能从其它类型中淘汰出足够的空间，此时 Normal Data 将从自身按照 LRU 顺序淘汰出数据。
+
 
 ## 缓存预热
 
@@ -84,7 +89,9 @@ Doris BE 节点通过 `curl {be_ip}:{brpc_port}/vars ( brpc_port 默认为 8060 
 上述例子中指标前缀为 File Cache 的路径，例如前缀 "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" 表示 "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
 去掉前缀的部分为统计指标，比如 "file_cache_cache_size" 表示当前 路径的 File Cache 大小为 26111 字节
 
-下表为全部的指标意义 (一下表示 size 大小单位均为字节)
+
+下表为全部的指标意义 (以下表示 Size 大小单位均为字节)
+
 
 指标名称 (不包含路径前缀) | 语义
 -----|------
@@ -102,6 +109,9 @@ file_cache_total_evict_size | 从启动到当前，整个 File Cache 总共淘�
 file_cache_ttl_cache_evict_size | 从启动到当前 TTL 队列总共淘汰的数据量大小
 file_cache_ttl_cache_lru_queue_element_count | 当前 TTL 队列里的元素个数
 file_cache_ttl_cache_size | 当前 TTL 队列的大小
+file_cache_evict_by_heat\_[A]\_to\_[B] | 为了写入 B 缓存类型的数据而淘汰的 A 缓存类型的数据量（基于过期时间的淘汰方式） 
+file_cache_evict_by_size\_[A]\_to\_[B] | 为了写入 B 缓存类型的数据而淘汰的 A 缓存类型的数据量（基于空间的淘汰方式） 
+file_cache_evict_by_self_lru\_[A] | A 缓存类型的数据为了写入新数据而淘汰自身的数据量（基于 LRU 的淘汰方式） 
 
 ### SQL profile
 
