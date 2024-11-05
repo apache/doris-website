@@ -26,7 +26,7 @@ under the License.
 
 ## Overview
 
-Show the Partition' status of all tables in the database.
+Show the Partition status of all tables in the database.
 
 ## Database
 

@@ -26,7 +26,7 @@ under the License.
 
 ## Overview
 
-Show the Partition' status of all tables in the database. Before 3.0.2(inclusive), the tables were always empty.
+Show the Partition status of all tables in the database. Before 3.0.2(inclusive), the tables were always empty.
 
 ## Database
 
