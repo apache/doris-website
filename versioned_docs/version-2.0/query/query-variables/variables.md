@@ -698,7 +698,10 @@ This field is supported since version 2.0.2.
 :::
 
   Whether to enable partial columns update semantics for native insert into statement, default is false. Please note that the default value of the session variable `enable_insert_strict`, which controls whether the insert statement operates in strict mode, is true. In other words, the insert statement is in strict mode by default, and in this mode, updating non-existing keys in partial column updates is not allowed. Therefore, when using the insert statement for partial columns update and wishing to insert non-existing keys, you need to set `enable_unique_key_partial_update` to true and simultaneously set `enable_insert_strict` to false.
-  
+
+* `enable_cooldown_replica_affinity`
+
+  Users can choose whether to use the cooled copy for scanning first, which defaults to true
 
 
 #### Supplementary instructions on statement execution timeout control
