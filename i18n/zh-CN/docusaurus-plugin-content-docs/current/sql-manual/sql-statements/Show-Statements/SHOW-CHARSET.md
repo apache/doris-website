@@ -41,7 +41,7 @@ Maxlen：最大字节长度
 ### Example
 
 ```sql
-mysql> show chatset;
+mysql> show charset;
 
 | Charset   | Description     | Default collation | Maxlen |
 |-----------|-----------------|-------------------|--------|
