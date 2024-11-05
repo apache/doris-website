@@ -25,8 +25,6 @@ under the License.
 -->
 
 
-## 动态分区
-
 开启动态分区的表，将会按照设定的规则添加、删除分区，从而对表的分区实现生命周期管理(TTL)，减少用户的使用负担。
 
 动态分区只支持在 DATE/DATETIME 列上进行 Range 类型的分区。
@@ -41,7 +39,7 @@ under the License.
 如果这个表是被 CCR 复制而来的，即 PROPERTIES 中包含`is_being_synced = true`时，在`show create table`中会显示开启状态，但不会实际生效。当`is_being_synced`被设置为 `false` 时，这些功能将会恢复生效，但`is_being_synced`属性仅供 CCR 外围模块使用，在 CCR 同步的过程中不要手动设置。
 :::
 
-### 使用方式
+## 使用方式
 
 动态分区的规则可以在建表时指定，或者在运行时进行修改。当前仅支持对单分区列的分区表设定动态分区规则。
 
@@ -69,7 +67,7 @@ under the License.
   )
   ```
 
-### 规则参数
+## 规则参数
 
 动态分区的规则参数都以 `dynamic_partition.` 为前缀：
 
@@ -166,7 +164,7 @@ under the License.
 
   这两个时间段的分区。其中，`reserved_history_periods` 的每一个 `[...,...]` 是一对设置项，两者需要同时被设置，且第一个时间不能大于第二个时间。
 
-### 创建历史分区规则
+## 创建历史分区规则
 
 当 create_history_partition 为 true，即开启创建历史分区功能时，Doris 会根据 dynamic_partition.start 和 dynamic_partition.history_partition_num 来决定创建历史分区的个数。
 
@@ -220,7 +218,7 @@ under the License.
   p20210523
   ```
 
-### 示例
+## 示例
 
 1. 表 tbl1 分区列 k1 类型为 DATE，创建一个动态分区规则。按天分区，只保留最近 7 天的分区，并且预先创建未来 3 天的分区。
 
@@ -342,7 +340,7 @@ p202005: ["2020-05-28", "2020-06-28")
 p202006: ["2020-06-28", "2020-07-28")
 ```
 
-### 原理与控制行为
+## 原理与控制行为
 
 Doris FE 中有固定的 dynamic partition 控制线程，持续以特定时间间隔（即 `dynamic_partition_check_interval_seconds`）进行 dynamic partition 表的分区检查，完成需要的分区创建与删除操作。
 
@@ -366,7 +364,7 @@ Doris FE 中有固定的 dynamic partition 控制线程，持续以特定时间�
     整个**特定范围**按照 `time_unit` 划分为若干分区范围。对于任意一个范围，如果其与某个当前存在的分区 `X` 相交，则 `X` 被保留，否则该范围将被 dynamic partition 所创建的一个分区所完整覆盖。
 4. 除非分区数量即将超过 `max_dynamic_partition_num`，创建将会失败。
 
-### 修改动态分区属性
+## 修改动态分区属性
 
 通过如下命令可以修改动态分区的属性：
 
@@ -417,7 +415,7 @@ p20200521: ["2020-05-21", "2020-05-22")
 
 -   LastDropPartitionMsg: 最后一次执行动态删除分区调度的错误信息
 
-### 高级操作
+## 高级操作
 
 **FE 配置项**
 

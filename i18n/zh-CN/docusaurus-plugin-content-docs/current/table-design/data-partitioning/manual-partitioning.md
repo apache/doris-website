@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-## 手动分区
-
-### 分区列
+## 分区列
 
 -   分区列可以指定一列或多列，分区列必须为 KEY 列。多列分区的使用方式在后面多列分区小结介绍。
 -   PARTITION 列默认必须为 NOT NULL 列，如果需要使用 NULL 列，应设置 session variable `allow_partition_column_nullable = true`。对于 LIST PARTITION，支持真正的 NULL 分区。对于 RANGE PARTITION，NULL 值会被划归**最小的 LESS THAN 分区**。
@@ -36,7 +34,7 @@ under the License.
 -   当不使用分区建表时，系统会自动生成一个和表名同名的，全值范围的分区。该分区对用户不可见，并且不可删改。
 -   创建分区时不可添加范围重叠的分区。
 
-### Range 分区
+## Range 分区
 
 分区列通常为时间列，以方便的管理新旧数据。Range 分区支持的列类型 DATE,  DATETIME, TINYINT, SMALLINT, INT, BIGINT, LARGEINT。
 
@@ -127,7 +125,7 @@ PARTITION BY RANGE(col)
 )                                                                                                                                                                                                                                      
 ```
 
-### List 分区
+## List 分区
 
 分区列支持 `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME, CHAR, VARCHAR` 数据类型，分区值为枚举值。只有当数据为目标分区枚举值其中之一时，才可以命中分区。
 
@@ -155,7 +153,7 @@ PARTITION BY LIST(id, city)
 )
 ```
 
-### NULL 分区
+## NULL 分区
 
 PARTITION 列默认必须为 NOT NULL 列，如果需要使用 NULL 列，应设置 session variable `allow_partition_column_nullable = true`。对于 LIST PARTITION，我们支持真正的 NULL 分区。对于 RANGE PARTITION，NULL 值会被划归**最小的 LESS THAN 分区**。分列如下：
 

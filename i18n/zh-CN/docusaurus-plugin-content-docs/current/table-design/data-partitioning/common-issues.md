@@ -1,6 +1,6 @@
 ---
 {
-    "title": "自动分区",
+    "title": "常见问题",
     "language": "zh-CN"
 }
 ---
@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-## 常见问题
 
 **1.  如果在较长的建表语句中出现语法错误，可能会出现语法错误提示不全的现象。这里罗列可能的语法错误供手动纠错：**
 
