@@ -35,9 +35,11 @@ In Doris, data is logically represented in the form of tables. A table comprises
 
 Columns can be broadly categorized into two types: Key and Value. From a business perspective, Key and Value can correspond to dimension columns and metric columns, respectively. In Doris, the Key columns are those specified in the table creation statement. The columns that follow the keywords `unique key`, `aggregate key`, or `duplicate key` in the table creation statement are considered Key columns, while the remaining columns are Value columns.
 
-The data models in Doris are primarily classified into three types:
+The data models in Doris are classified into three types:
 
 - Duplicate: This data model allows for storing duplicate rows based on the specified key columns. It is suitable for scenarios where preserving all the original data records is essential.
-- Unique: In this data model, each row is uniquely identified by the combination of values in the key columns. This ensures that no duplicate rows exist for a given set of key values.
+
+- Unique: In this data model, each row is uniquely identified by the combination of values in the key columns. This ensures that no duplicate rows exist for a given set of key values. It is suitable for scenarios where data needs updating.
+
 - Aggregate: This model enables the aggregation of data based on the key columns. It is commonly used for scenarios where summary or aggregated information, such as totals or averages, is required.
 
