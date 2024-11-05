@@ -53,7 +53,7 @@ PROPERTIES (
 ```
 
 :::caution
-在 Doris 2.1 版本中，写时合并将会是主键模型的默认方式。所以如果使用 Doris 2.1 版本，务必要阅读相关建表文档。
+从 Doris 2.1 版本开始，写时合并是主键模型的默认方式。所以如果使用 Doris 2.1 及以上版本版本，务必要阅读相关建表文档。
 :::
 
 ### 主键模型的两种更新方式
@@ -82,12 +82,8 @@ Doris 支持 Stream Load、Broker Load、Routine Load、Insert Into 等多种导
 
 ## 聚合（Aggregate）模型的更新
 
-上面提到的主键模型的更新方式，更多指的是对于相同的 Key，用新的值替换旧的值。而聚合模型的更新，主要是指的是用新的列值和旧的聚合值按照聚合函数的要求产出新的聚合值。
+聚合模型的更新，主要是指的是用新的列值和旧的聚合值按照聚合函数的要求产出新的聚合值。
 
-New Agg Value = Agg Func ( Old Agg Value + New Column Value)
+New Agg Value = Agg Func ( Old Agg Value, New Column Value)
 
-聚合模型只支持基于导入方式的更新，不支持使用 Update 语句更新。
-
-在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NULL，也可以间接实现类似主键表的部分列更新能力。
-
-更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
+聚合模型只支持基于导入方式的更新，不支持使用 Update 语句更新。在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NULL，也可以间接实现类似主键表的部分列更新能力。更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
