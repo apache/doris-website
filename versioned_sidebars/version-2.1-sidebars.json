@@ -33,6 +33,7 @@
                                 "install/cluster-deployment/k8s-deploy/install-doris-cluster",
                                 "install/cluster-deployment/k8s-deploy/install-access-cluster",
                                 "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
+                                "install/cluster-deployment/k8s-deploy/init-pwd",
                                 "install/cluster-deployment/k8s-deploy/root-user-use",
                                 "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
                                 "install/cluster-deployment/k8s-deploy/debug-crash"

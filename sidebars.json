@@ -37,6 +37,7 @@
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-access-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/doris-cluster-upgrade",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/init-pwd",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/root-user-use",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/expansion-and-contraction",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/debug-crash"
