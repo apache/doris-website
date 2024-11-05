@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS example_tbl_unique
     `register_time` DATETIME COMMENT "User registration time"
 )
 UNIQUE KEY(`user_id`, `username`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 10
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 3"
 );
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS example_tbl_unique
     `register_time` DATETIME COMMENT "User registration time"
 )
 UNIQUE KEY(`user_id`, `username`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 10
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 3",
 "enable_unique_key_merge_on_write" = "false"
