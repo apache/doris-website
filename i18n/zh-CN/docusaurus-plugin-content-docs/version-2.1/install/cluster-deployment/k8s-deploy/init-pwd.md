@@ -104,7 +104,7 @@ func main() {
 
 - Secret 方式  
 
-  Doris Operator 提供使用 [Basic authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) 来指定管理节点的用户名和密码，DorisCluster 资源配置需要使用的 Secret 后，Doris Operator 会自动将 Secret 以文件形式挂载到容器指定位置，容器的辅助服务会解析出文件的用户名和密码来自动添加自身到指定集群。basic-authentication-secret 的 stringData 只包含 2 个字段： username 和 password 。使用 Secret 配置管理用户名和密码流程如下：  
+  Doris Operator 提供使用 [Basic authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) 来指定管理节点的用户名和密码，DorisCluster 资源配置需要使用的 Secret 后，Doris Operator 会自动将 Secret 以文件形式挂载到容器指定位置，容器的辅助服务会解析出文件中的用户名和密码来自动添加自身到指定集群。basic-authentication-secret 的 stringData 只包含 2 个字段： username 和 password 。使用 Secret 配置管理用户名和密码流程如下：  
   
   a. 配置需要使用的 Secret  
 
