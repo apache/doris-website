@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Fluent Bit Doris output plugin
-
 [Fluent Bit](https://fluentbit.io/) 是一个快速的日志处理器和转发器，它支持自定义输出插件将数据写入存储系统，Fluent Bit Doris output plugin 是输出到 Doris 的插件。
 
 Fluent Bit Doris output plugin 调用 [Doris Stream Load](../data-operate/import/stream-load-manual.md) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
@@ -184,7 +182,7 @@ doris_log.conf:
     log_progress_interval 10
 ```
 
-parsers.conf
+parsers.conf:
 ```
 [MULTILINE_PARSER]
     name          multiline_java

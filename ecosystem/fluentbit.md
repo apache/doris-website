@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Fluent Bit Doris output plugin
-
 [Fluent Bit](https://fluentbit.io/) is a fast log processor and forwarder that supports custom output plugins to write data into storage systems, with the Fluent Bit Doris output plugin being the one for outputting to Doris.
 
 By invoking the [Doris Stream Load](../data-operate/import/stream-load-manual.md) HTTP interface, the Fluent Bit Doris output plugin writes data into Doris in real-time, offering capabilities such as multi-threaded concurrency, failure retries, custom Stream Load formats and parameters, and output write speed.
@@ -183,7 +181,7 @@ doris_log.conf:
     log_progress_interval 10
 ```
 
-parsers.conf
+parsers.conf:
 ```
 [MULTILINE_PARSER]
     name          multiline_java
