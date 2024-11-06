@@ -82,7 +82,7 @@ MS 服务需要使用 FDB 作为后端元数据存储，部署 MS 服务必须�
 在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
 
 ```shell
-kubectl -n doris get svc
+kubectl get svc
 ```
 
 返回结果如下：
@@ -101,7 +101,7 @@ test-disaggregated-cluster-cg2           ClusterIP   10.96.50.199   <none>      
 使用以下命令，可以在当前的 Kubernetes 集群中创建一个包含 mysql client 的 pod：
 
 ```shell
-kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=doris -- /bin/bash
+kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never -- /bin/bash
 ```
 
 在集群内的容器中，可以使用 fe 服务名访问 Doris 集群：

@@ -84,7 +84,7 @@ Refer to [Accessing Doris Cluster](../compute-storage-coupled/install-access-clu
 After deploying the cluster, you can view the service exposed by Doris Operator by using the following command:
 
 ```shell
-kubectl -n doris get svc
+kubectl get svc
 ```
 
 The returned results are as follows:
@@ -103,7 +103,7 @@ test-disaggregated-cluster-cg2           ClusterIP   10.96.50.199   <none>      
 Use the following command to create a pod containing the mysql client in the current Kubernetes cluster:
 
 ```shell
-kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=doris -- /bin/bash
+kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never -- /bin/bash
 ```
 
 In the container within the cluster, you can use the fe service name to access the Doris cluster:

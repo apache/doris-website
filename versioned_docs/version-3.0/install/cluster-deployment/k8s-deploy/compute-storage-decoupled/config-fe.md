@@ -123,4 +123,4 @@ Configure the ConfigMap information required by the FE service according to the 
 :::tip Tip
 - In K8s deployment, when using ConfigMap to mount customized configuration files, there is no need to add `meta_service_endpoint`、`deploy_mode` 以及 `cluster_id` configurations, and Doris-Operator related services will be added automatically.
 - In K8s deployment, when using ConfigMap to mount customized configuration files, must to add `enable_fqdn_mode=true`.  
-  :::
+:::
