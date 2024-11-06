@@ -38,9 +38,26 @@ BE 进程启动后，会先读取 `be.conf` 中的配置项，之后再读取 `b
 
 ## 查看配置项
 
-用户可以通过访问 BE 的 Web 页面查看当前配置项：
+有两种方式能够查看BE配置型：
 
-`http://be_host:be_webserver_port/varz`
+1. 通过BE前端页面查看
+
+    在浏览器中打开 BE 前端页面: `http://be_host:be_webserver_port/varz`
+
+2. 通过命令行查看
+
+   可以在 MySQL 客户端中，通过以下命令查看 BE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md)：
+
+    `SHOW BACKEND CONFIG;`
+
+    结果中各列含义如下：
+
+    1. BackendId: backend 节点 ID。
+    2. Host: backend 节点 IP。
+    3. Key: 配置项名称。
+    4. Value: 配置项的值。
+    5. Type: 配置项值类型，如果整型、字符串。
+    6. 是否可以动态配置。如果为 true，表示该配置项可以在运行时进行动态配置。如果 false，则表示该配置项只能在 `be.conf` 中配置并且重启 FE 后生效。
 
 ## 设置配置项
 
