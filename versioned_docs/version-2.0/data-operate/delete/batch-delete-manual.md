@@ -48,9 +48,9 @@ Batch Delete only works on Unique models.
 
 ## Fundamental
 
-This is achieved by adding a hidden column `DORIS_DELETE_SIGN` to the Unique table.
+This is achieved by adding a hidden column `__DORIS_DELETE_SIGN__` to the Unique table.
 
-When FE parses the query, `DORIS_DELETE_SIGN` is removed when it encounters * and so on, and `DORIS_DELETE_SIGN !` `= true`, BE will add a column for judgement when reading, and determine whether to delete by the condition.
+When FE parses the query, `__DORIS_DELETE_SIGN__` is removed when it encounters * and so on, and `__DORIS_DELETE_SIGN__ !` `= true`, BE will add a column for judgement when reading, and determine whether to delete by the condition.
 
 - Import
 
@@ -58,7 +58,7 @@ When FE parses the query, `DORIS_DELETE_SIGN` is removed when it encounters * an
 
 - Read
 
-    The read adds `DORIS_DELETE_SIGN !` `= true` condition, BE does not sense this process and executes normally.
+    The read adds `__DORIS_DELETE_SIGN__ !` `= true` condition, BE does not sense this process and executes normally.
 
 - Cumulative Compaction
 
@@ -76,7 +76,7 @@ There are two forms of enabling Batch Delete support:
 
 2. For tables that do not have the above FE configuration changed or for existing tables that do not support Batch Delete, the following statement can be used: `ALTER TABLE tablename ENABLE FEATURE "BATCH_DELETE"` to enable Batch Delete. This is essentially a schema change operation, which returns immediately and can be confirmed by `showing alter table column`.
 
-Then how to determine whether a table supports Batch Delete, you can set a session variable to show hidden columns `SET show_hidden_columns=true`, and after that use `desc tablename`, if there is a `DORIS_DELETE_SIGN` column in the output then it is supported, if there is not then it is not supported.
+Then how to determine whether a table supports Batch Delete, you can set a session variable to show hidden columns `SET show_hidden_columns=true`, and after that use `desc tablename`, if there is a `__DORIS_DELETE_SIGN__` column in the output then it is supported, if there is not then it is not supported.
 
 ## Syntax Description
 
@@ -295,8 +295,8 @@ mysql> DESC table1;
     | name                   | VARCHAR(100) | No   | true  | NULL    |         |
     | gender                 | VARCHAR(10)  | Yes  | false | NULL    | REPLACE |
     | age                    | INT          | Yes  | false | NULL    | REPLACE |
-    | DORIS_DELETE_SIGN  | TINYINT      | No   | false | 0       | REPLACE |
-    | DORIS_SEQUENCE_COL | INT          | Yes  | false | NULL    | REPLACE |
+    | __DORIS_DELETE_SIGN__  | TINYINT      | No   | false | 0       | REPLACE |
+    | __DORIS_SEQUENCE_COL__ | INT          | Yes  | false | NULL    | REPLACE |
     +------------------------+--------------+------+-------+---------+---------+
     4 rows in set (0.00 sec)
     ```

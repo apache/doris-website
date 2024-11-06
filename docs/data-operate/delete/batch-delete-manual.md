@@ -48,9 +48,9 @@ Batch Delete only works on Unique models.
 
 ## Fundamental
 
-This is achieved by adding a hidden column `DORIS_DELETE_SIGN` to the Unique table.
+This is achieved by adding a hidden column `__DORIS_DELETE_SIGN__` to the Unique table.
 
-When FE parses the query, `DORIS_DELETE_SIGN` is removed when it encounters * and so on, and `DORIS_DELETE_SIGN !` `= true`, BE will add a column for judgement when reading, and determine whether to delete by the condition.
+When FE parses the query, `__DORIS_DELETE_SIGN__` is removed when it encounters * and so on, and `__DORIS_DELETE_SIGN__ !` `= true`, BE will add a column for judgement when reading, and determine whether to delete by the condition.
 
 - Import
 
@@ -58,7 +58,7 @@ When FE parses the query, `DORIS_DELETE_SIGN` is removed when it encounters * an
 
 - Read
 
-    The read adds `DORIS_DELETE_SIGN !` `= true` condition, BE does not sense this process and executes normally.
+    The read adds `__DORIS_DELETE_SIGN__ !` `= true` condition, BE does not sense this process and executes normally.
 
 - Cumulative Compaction
 
@@ -285,8 +285,8 @@ mysql> DESC table1;
     | name                   | VARCHAR(100) | No   | true  | NULL    |         |
     | gender                 | VARCHAR(10)  | Yes  | false | NULL    | REPLACE |
     | age                    | INT          | Yes  | false | NULL    | REPLACE |
-    | DORIS_DELETE_SIGN  | TINYINT      | No   | false | 0       | REPLACE |
-    | DORIS_SEQUENCE_COL | INT          | Yes  | false | NULL    | REPLACE |
+    | __DORIS_DELETE_SIGN__  | TINYINT      | No   | false | 0       | REPLACE |
+    | __DORIS_SEQUENCE_COL__ | INT          | Yes  | false | NULL    | REPLACE |
     +------------------------+--------------+------+-------+---------+---------+
     4 rows in set (0.00 sec)
     ```
@@ -350,7 +350,7 @@ mysql> DESC table1;
     li,male,10
     ```
 
-    This is because in the underlying dependencies, it will first judge the case of the same key, display the row data with a large value in the sequence column, and then check whether the `DORIS_DELETE_SIGN` value of the row is 1. If it is 1, it will not be displayed. If it is 0, it will still be read out.
+    This is because in the underlying dependencies, it will first judge the case of the same key, display the row data with a large value in the sequence column, and then check whether the `__DORIS_DELETE_SIGN__` value of the row is 1. If it is 1, it will not be displayed. If it is 0, it will still be read out.
 
 :::tip Tip
 When data is written and deleted at the same time in the imported data (e.g., in the Flink CDC scenario), using the sequence column can effectively ensure consistency when the data arrives out of order, avoiding the deletion operation of an old version that arrives later, and accidentally deleting the new version of the data that arrives first.
