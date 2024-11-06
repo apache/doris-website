@@ -25,11 +25,11 @@ under the License.
 -->
 
 
-## 基本概念
+本文档主要介绍 Doris 的建表和数据划分，以及建表操作中可能遇到的问题和解决方法。
+
+## Row & Column
 
 在 Doris 中，数据都以表（Table）的形式进行逻辑上的描述。
-
-### Row & Column
 
 一张表包括行（Row）和列（Column）：
 
@@ -39,7 +39,7 @@ under the License.
 
 -   Column 可以分为两大类：Key 和 Value。从业务角度看，Key 和 Value 可以分别对应维度列和指标列。Doris 的 key 列是建表语句中指定的列，建表语句中的关键字'unique key'或'aggregate key'或'duplicate key'后面的列就是 key 列，除了 key 列剩下的就是 value 列。从聚合模型的角度来说，Key 列相同的行，会聚合成一行。其中 Value 列的聚合方式由用户在建表时指定。关于更多聚合模型的介绍，可以参阅 [Doris 数据模型](../table-design/data-model/overview.md)。
 
-### 分区和分桶（Partition & Tablet）
+## 分区和分桶（Partition & Tablet）
 
 Doris 支持两层的数据划分。第一层是分区（Partition），支持 Range 和 List 的划分方式。第二层是 Bucket（Tablet），支持 Hash 和 Random 的划分方式。建表时如果不建立分区，此时 Doris 会生成一个默认的分区，对用户是透明的。使用默认分区时，只支持 Bucket 划分。
 
@@ -57,7 +57,7 @@ Doris 支持两层的数据划分。第一层是分区（Partition），支持 R
 
 -   解决数据倾斜问题：每个分区可以单独指定分桶数量。如按天分区，当每天的数据量差异很大时，可以通过指定分区的分桶数，合理划分不同分区的数据，分桶列建议选择区分度大的列。
 
-### 建表举例
+## 建表举例
 
 Doris 的建表是一个同步命令，SQL 执行完成即返回结果，命令返回成功即表示建表成功。具体建表语法可以参考[CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)，也可以通过 `HELP CREATE TABLE` 查看更多帮助。
 
@@ -102,7 +102,7 @@ ENGINE 的类型是 OLAP，即默认的 ENGINE 类型。在 Doris 中，只有�
 
 `IF NOT EXISTS`表示如果没有创建过该表，则创建。注意这里只判断表名是否存在，而不会判断新建表 Schema 是否与已存在的表 Schema 相同。所以如果存在一个同名但不同 Schema 的表，该命令也会返回成功，但并不代表已经创建了新的表和新的 Schema。。
 
-### 查看分区信息
+## 查看分区信息
 
 可以通过 show create table 来查看表的分区信息。
 
@@ -161,7 +161,7 @@ ENGINE 的类型是 OLAP，即默认的 ENGINE 类型。在 Doris 中，只有�
 +---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                  
 ```
 
-### 修改分区信息
+## 修改分区信息
 
 通过 alter table add partition 来增加新的分区
 

@@ -27,11 +27,10 @@ under the License.
 
 This document mainly introduces table creation and data partitioning in Doris, as well as potential problems and solutions encountered during table creation operations.
 
-## Basic concepts
+
+## Row & Column
 
 In Doris, data is logically described in the form of tables.
-
-### Row & Column
 
 A table consists of rows and columns:
 
@@ -39,7 +38,7 @@ A table consists of rows and columns:
 - Column: Used to describe different fields in a row of data;
 - Columns can be divided into two types: Key and Value. From a business perspective, Key and Value can correspond to dimension columns and metric columns, respectively. The key columns in Doris are those specified in the table creation statement, which are the columns following the keywords `unique key`, `aggregate key`, or `duplicate key`. The remaining columns are value columns. From the perspective of the aggregation model, rows with the same Key columns will be aggregated into a single row. The aggregation method for value columns is specified by the user during table creation. For more information on aggregation models, refer to the Doris [Data Model](../table-design/data-model/overview).
 
-### Partition & Tablet
+## Partition & Tablet
 
 Doris supports two levels of data partitioning. The first level is Partitioning, which supports Range and List partition. The second level is Bucket (also known as Tablet), which supports Hash and Random . If no partitioning is established during table creation, Doris generates a default partition that is transparent to the user. When using the default partition, only Bucket is supported.
 
@@ -55,7 +54,7 @@ Benefits of Two-Level data partitioning:
 - Historical data deletion requirements: If there is a need to delete historical data (such as retaining only the data for the most recent several days), composite partition can be used to achieve this goal by deleting historical partitions. Alternatively, DELETE statements can be sent within specified partitions to delete data.
 - Solving data skew issues: Each partition can specify the number of buckets independently. For example, when partitioning by day and there are significant differences in data volume between days, the number of buckets for each partition can be specified to reasonably distribute data across different partitions. It is recommended to choose a column with high distinctiveness as the bucketing column.
 
-### Example of creating a table 
+## Example of creating a table 
 
 CREATE TABLE in Doris is a synchronous command. It returns results after the SQL execution is completed. Successful returns indicate successful table creation. For more information, please refer to [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE), or input  the `HELP CREATE TABLE;` command. 
 
@@ -99,7 +98,7 @@ The default type of ENGINE is OLAP. In Doris, only this OLAP ENGINE type is resp
 
 `IF NOT EXISTS` indicates that if the table has not been created before, it will be created. Note that this only checks if the table name exists and does not check if the schema of the new table is the same as the schema of an existing table. Therefore, if there is a table with the same name but a different schema, this command will also return successfully, but it does not mean that a new table and a new schema have been created.
 
-### View partition
+## View partition
 
 You can use the `show create table` command to view the partition information of a table.
 
@@ -158,7 +157,7 @@ You can use `show partitions from your_table` command to view the partition info
 +---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                  
 ```
 
-### Alter partition
+## Alter partition
 
 You can add a new partition by using the `alter table add partition` command.
 

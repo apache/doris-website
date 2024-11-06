@@ -25,11 +25,11 @@ under the License.
 -->
 
 
-## Basic concepts
+This document mainly introduces table creation and data partitioning in Doris, as well as potential problems and solutions encountered during table creation operations.
+
+## Row & Column
 
 In Doris, data is logically described in the form of tables.
-
-### Row & Column
 
 A table consists of rows and columns:
 
@@ -39,7 +39,7 @@ A table consists of rows and columns:
 
 - Columns can be divided into two types: Key and Value. From a business perspective, Key and Value can correspond to dimension columns and metric columns respectively. The key columns in Apache Doris are those specified in the table creation statement, which are the columns following the keywords  `unique key`, `aggregate key`, or `duplicate key`. The remaining columns are value columns. From the perspective of the aggregation model, rows with the same Key columns will be aggregated into a single row. The aggregation method for value columns is specified by the user during table creation. For more information on aggregation models, refer to the Doris [Data Model](../table-design/data-model/overview).
 
-### Partition & Tablet
+## Partition & Tablet
 
 Apache Doris supports two levels of data partitioning. The first level is partition, which supports RANGE partitioning and LIST partitioning. The second level is tablet (also called bucket), which supports Hash bucket and Random bucket. If no partition is established during table creation, Apache Doris generates a default partition that is transparent to the user. When using the default partition, only bucket is supported.
 
@@ -57,7 +57,7 @@ The benefits of Apache Doris's two-level data partitioning are as follows:
 
 - Each partition can specify the number of buckets independently. For example, when data is partitioned by day and there are significant differences in data volume between days, the number of buckets for each partition can be specified to reasonably distribute data across different partitions. It is recommended to choose a column with high distinctiveness as the bucketing column.
 
-### Example of creating a table
+## Example of creating a table
 
 `CREATE TABLE` in Apache Doris is a synchronous command which returns the result once the SQL is executed. Successful returns indicate successful table creation. For more information, refer to [CREATE-TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) or input  the `HELP CREATE TABLE` command.
 
@@ -101,7 +101,7 @@ The default type of `ENGINE` is `OLAP`. Only OLAP is responsible for data manage
 
 `IF NOT EXISTS`  indicates that if the table has not been created before, it will be created. Note that this only checks if the table name exists and does not check if the schema of the new table is the same as the schema of an existing table. Therefore, if there is a table with the same name but a different schema, this command will also return successfully, but it does not mean that a new table with a new schema has been created.
 
-### View partitions
+## View partitions
 
 View the partiton information of a table by running the  `show create table` command.
 
@@ -160,7 +160,7 @@ Or run the  `show partitions from your_table` command.
 +---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                  
 ```
 
-### Alter partitions
+## Alter partitions
 
 You can add a new partition by running the  `alter table add partition ` command.
 
