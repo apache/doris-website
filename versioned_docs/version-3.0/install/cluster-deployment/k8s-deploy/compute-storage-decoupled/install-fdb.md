@@ -103,7 +103,6 @@ wget https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main
 
 - The environment can access dockerhub  
   Customize the final deployment state according to the [User Manual](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md) provided by the official website. If you use FQDN deployment, please set the `routing.useDNSInClusterFile` field to true and configure as follows:  
-  The official repository of doris-operator provides a deployment example of [deploying FDB using FQDN](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/cluster.yaml) that can be downloaded and used directly.
 
 ```yaml
 spec:
@@ -111,13 +110,15 @@ spec:
   useDNSInClusterFile: true
 ```
 
-- Private network environment
+The official repository of doris-operator provides a deployment example of [deploying FDB using FQDN](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/cluster.yaml) that can be downloaded and used directly.
 
-  In a private network environment, if you cannot directly access dockerhub, you can download the required image from the official repository of FDB and push it to the private repository. fdb-kubernetes-operator depends on [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar).  
-  Deployment of FDB dependent images include: [foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb) , [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar).  
-  After pushing to the private repository, follow the fdb-kubernetes-operator official document [Customized Image Configuration](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#customizing-the-foundationdb-image) instructions for configuration.  
+## Private network environment
 
-  You can refer to the following configuration to add private repository image configuration:  
+In a private network environment, if you cannot directly access dockerhub, you can download the required image from the official repository of FDB and push it to the private repository. fdb-kubernetes-operator depends on [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar) .
+Deployment of FDB dependent images include: [foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb) , [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar).
+After pushing to the private repository, follow the fdb-kubernetes-operator official document [Customized Image Configuration](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#customizing-the-foundationdb-image) instructions for configuration.  
+
+You can refer to the following configuration to add private repository image configuration:  
 
 ```yaml
 spec:
@@ -138,7 +139,7 @@ spec:
 - When FDB is deployed based on fdb-kubernetes-operator, at least three hosts are required to meet the high availability requirements of the production environment.  
 ::: 
 
-## Confirm FDB state  
+## Confirm FDB  
 
 Based on the FDB deployed by fdb-kubernetes-operator, you can view the FDB cluster status through the following command:  
 

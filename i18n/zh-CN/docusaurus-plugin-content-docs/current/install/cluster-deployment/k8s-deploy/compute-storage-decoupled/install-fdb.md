@@ -104,8 +104,7 @@ wget https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main
 
 - 环境可访问 dockerhub  
 
-  根据官网提供的[用户手册](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md)定制化部署终态。如果使用 FQDN 部署，请将 `routing.useDNSInClusterFile` 字段设置为 true ，配置如下：  
-  doris-operator 的官方仓库中提供了使用 [FQDN 部署 FDB 的部署样例](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/cluster.yaml)可直接下载使用。
+  根据官网提供的[用户手册](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md)定制化部署终态。如果使用 FQDN 部署，请将 `routing.useDNSInClusterFile` 字段设置为 true ,配置如下：  
 
 ```yaml
 spec:
@@ -113,13 +112,15 @@ spec:
   useDNSInClusterFile: true
 ```
 
-- 私网环境
+doris-operator 的官方仓库中提供了使用 [FQDN 部署 FDB 的部署样例](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/cluster.yaml)可直接下载使用。
 
-  在私网环境下，如果不能直接访问 dockerhub 可从 FDB 的官方仓库中将需要的镜像下载，并推到私有仓库中。 fdb-kubernetes-operator 依赖 [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar) 。  
-  部署 FDB 依赖的镜像包括：[foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb) ， [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar)。  
-  推到私有仓库后，按照 fdb-kubernetes-operator 官方文档[定制化镜像配置](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#customizing-the-foundationdb-image)说明进行配置。  
+## 私网环境
 
-  可参考如下配置添加私有仓库镜像配置：  
+在私网环境下，如果不能直接访问 dockerhub 可从 FDB 的官方仓库中将需要的镜像下载，并推到私有仓库中。 fdb-kubernetes-operator 依赖 [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar) 。
+部署 FDB 依赖的镜像包括：[foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb) ， [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar)。
+推到私有仓库后，按照 fdb-kubernetes-operator 官方文档[定制化镜像配置](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#customizing-the-foundationdb-image)说明进行配置。  
+
+可参考如下配置添加私有仓库镜像配置：  
 
 ```yaml
 spec:
@@ -140,7 +141,7 @@ spec:
 - FDB 基于 fdb-kubernetes-operator 部署，至少需要三个宿主机才可满足生产环境高可用要求。  
 ::: 
 
-## 确认 FDB 状态
+## 确认 FDB 环境
 
 FDB 基于 fdb-kubernetes-operator 部署，可以通过如下命令查看 FDB 集群状态：
 
