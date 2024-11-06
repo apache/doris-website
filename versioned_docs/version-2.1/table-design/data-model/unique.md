@@ -36,7 +36,7 @@ The Unique data model provides two implementation methods:
 
 The default update semantics of the Unique model is a **full-row UPSERT**, which stands for UPDATE OR INSERT. If the key of the row data exists, an update will be performed; if it does not exist, new data will be inserted. Under the full-row UPSERT semantics, even if the user uses INSERT INTO to specify partial columns for writing, Doris will fill the unprovided columns with NULL values or default values in the Planner.
 
-If a user wishes to update partial fields, they need to use the merge-on-write implementation and enable support for partial column updates through specific parameters. Please refer to the Data Operate/Data Update section for more details.
+If a user wishes to update partial fields, they need to use the merge-on-write implementation and enable support for partial column updates through specific parameters. Please refer to the documentation [partial column updates](../../data-operate/update/update-of-unique-model) for more details.
 
 Let's look at how to create a Unique model table with merge-on-read and merge-on-write using a typical user basic information table as an example. This table does not have aggregation requirements and only needs to ensure the uniqueness of the primary key (The primary key is user_id + username).
 
