@@ -32,11 +32,7 @@ The main reason is that Doris currently supports row-level updates, which means 
 
 This poses a problem when multiple update operations are performed concurrently on the same row. The behavior becomes unpredictable, and it may lead to inconsistent or "dirty" data.
 
-However, in practical applications, if the user can guarantee that concurrent updates will not operate on the same row simultaneously, they can manually enable concurrent update restrictions. This can be achieved by modifying the FE (Frontend) configuration `enable_concurrent_update`. When the configuration value is set to true, there are no restrictions on concurrent updates.
-
-:::caution
-Note: Enabling the `enable_concurrent_update` configuration carries some performance risks.
-:::
+However, in practical applications, if the user can ensure that concurrent updates will not affect the same row simultaneously, they can manually enable the concurrent update restriction. This can be done by modifying the FE (Frontend) configuration `enable_concurrent_update`. When this configuration is set to `true`, the update command will not have transaction guarantees.
 
 ## Sequence Column
 
@@ -63,15 +59,6 @@ During data load, the FE (Frontend) sets the value of the hidden column as the v
 **Read**
 
 When requesting the value column, an additional read operation is performed for the `DORIS_SEQUENCE_COL` column. This column is used as the basis for the REPLACE
-
-**Cumulative Compaction**
-
-The principles during Cumulative Compaction are the same as the read operation.
-
-**Base Compaction**
-
-The principles during Base Compaction are the same as the read operation.
-
 
 ### Syntax Usage
 

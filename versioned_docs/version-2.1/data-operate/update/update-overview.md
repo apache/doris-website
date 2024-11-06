@@ -53,7 +53,7 @@ PROPERTIES (
 ```
 
 :::caution
-Starting from Doris 2.1, write merge will be the default mode for the unique key model. So, if you are using Doris 2.1, make sure to read the relevant table creation documentation.
+Starting from Doris 2.1, MoW is the default mode for the unique key model. So, if you are using Doris 2.1 or higher version, make sure to read the relevant table creation documentation.
 :::
 
 ### Two Update Methods in Unique Key Model
@@ -80,10 +80,6 @@ The documentation on update transactions in the unique key model will cover thes
 
 The update in the aggregate model refers to the process of generating new aggregate values by combining new column values with existing aggregate values, according to the requirements of the aggregate functions.
 
-New Agg Value = Agg Func ( Old Agg Value + New Column Value)
+New Agg Value = Agg Func ( Old Agg Value, New Column Value)
 
-The update in the aggregate model is only supported through load methods and does not support the use of Update statements.
-
-When defining a table in the aggregate model, if the aggregation function for the value column is defined as REPLACE_IF_NULL, it indirectly achieves partial column update capabilities similar to the unique key model.
-
-For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/update-of-aggregate-model).
+The update in the aggregate model is only supported through load methods and does not support the use of Update statements. When defining a table in the aggregate model, if the aggregation function for the value column is defined as REPLACE_IF_NULL, it indirectly achieves partial column update capabilities similar to the unique key model. For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/update-of-aggregate-model).
