@@ -33,7 +33,7 @@ under the License.
 
 对于类似于从事务数据库中，通过 CDC 进行数据导入的场景，数据中 Insert 和 Delete 一般是穿插出现的，面对这种场景当前 Delete 操作也是无法实现。
 
-基于数据导入的方式，数据有三种合并方式：
+导入数据时有几种合并方式：
 
 1. APPEND: 数据全部追加到现有数据中。
 
@@ -45,9 +45,9 @@ under the License.
 
 ## 基本原理
 
-通过在 Unique 表上增加一个隐藏列`DORIS_DELETE_SIGN`来实现。
+通过在 Unique 表上增加一个隐藏列`__DORIS_DELETE_SIGN__`来实现。
 
-FE 解析查询时，遇到 * 等扩展时去掉`DORIS_DELETE_SIGN`，并且默认加上 `DORIS_DELETE_SIGN != true` 的条件，BE 读取时都会加上一列进行判断，通过条件确定是否删除。
+FE 解析查询时，遇到 * 等扩展时去掉`__DORIS_DELETE_SIGN__`，并且默认加上 `__DORIS_DELETE_SIGN__ != true` 的条件，BE 读取时都会加上一列进行判断，通过条件确定是否删除。
 
 - 导入
 
@@ -55,7 +55,7 @@ FE 解析查询时，遇到 * 等扩展时去掉`DORIS_DELETE_SIGN`，并且默�
 
 - 读取
 
-    读取时在所有存在隐藏列的上增加`DORIS_DELETE_SIGN != true` 的条件，be 不感知这一过程，正常执行。
+    读取时在所有存在隐藏列的上增加`__DORIS_DELETE_SIGN__ != true` 的条件，be 不感知这一过程，正常执行。
 
 - Cumulative Compaction
 
@@ -265,7 +265,7 @@ curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, ci
 curl --location-trusted -u root: -H "column_separator:," -H "columns: name, gender, age" -H "function_column.sequence_col: age" -H "merge_type: DELETE"  -T ~/table1_data http://127.0.0.1:8030/api/test/table1/_stream_load
 ```
 
-当 Unique 表设置了 Sequence 列时，在相同 Key 列下，Sequence 列的值会作为 REPLACE 聚合函数替换顺序的依据，较大值可以替换较小值。当对这种表基于`DORIS_DELETE_SIGN`进行删除标记时，需要保证 Key 相同和 Sequence 列值要大于等于当前值。
+当 Unique 表设置了 Sequence 列时，在相同 Key 列下，Sequence 列的值会作为 REPLACE 聚合函数替换顺序的依据，较大值可以替换较小值。当对这种表基于`__DORIS_DELETE_SIGN__`进行删除标记时，需要保证 Key 相同和 Sequence 列值要大于等于当前值。
 
 假设有表，结构如下
 
@@ -280,8 +280,8 @@ mysql DESC table1;
 | name                   | VARCHAR(100) | No   | true  | NULL    |         |
 | gender                 | VARCHAR(10)  | Yes  | false | NULL    | REPLACE |
 | age                    | INT          | Yes  | false | NULL    | REPLACE |
-| DORIS_DELETE_SIGN  | TINYINT      | No   | false | 0       | REPLACE |
-| DORIS_SEQUENCE_COL | INT          | Yes  | false | NULL    | REPLACE |
+| __DORIS_DELETE_SIGN__  | TINYINT      | No   | false | 0       | REPLACE |
+| __DORIS_SEQUENCE_COL__ | INT          | Yes  | false | NULL    | REPLACE |
 +------------------------+--------------+------+-------+---------+---------+
 4 rows in set (0.00 sec)
 ```
@@ -347,6 +347,6 @@ li,male,9
 li,male,10
 ```
 
-并没有被删除，这是因为在底层的依赖关系上，会先判断 key 相同的情况，对外展示 sequence 列的值大的行数据，然后在看该行的`DORIS_DELETE_SIGN`值是否为 1，如果为 1 则不会对外展示，如果为 0，则仍会读出来。
+并没有被删除，这是因为在底层的依赖关系上，会先判断 key 相同的情况，对外展示 sequence 列的值大的行数据，然后在看该行的`__DORIS_DELETE_SIGN__`值是否为 1，如果为 1 则不会对外展示，如果为 0，则仍会读出来。
 
 当导入数据中同时存在数据写入和删除时（例如 CDC 场景中），使用 Sequence 列可以有效的保证当数据乱序到达时的一致性，避免后到达的一个旧版本的删除操作，误删掉了先到达的新版本的数据。
