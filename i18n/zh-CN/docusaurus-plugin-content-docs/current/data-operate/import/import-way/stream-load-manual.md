@@ -49,9 +49,9 @@ Stream Load 支持导入 CSV、JSON、Parquet 与 ORC 格式的数据。
 
 在导入 CSV 文件时，需要明确区分空值（null）与空字符串：
 
-- 空值（null）需要用 `\N` 表示，`a,\N,b` 数据表示中间列是一个空值（null）
+- 空值（null）：使用 `\N` 表示。例如 `a,\N,b` 表示中间列的值为 null。
 
-- 空字符串直接将数据置空，a, ,b 数据表示中间列是一个空字符串
+- 空字符串：当两个分隔符之间没有任何字符时表示空字符串。例如 `a,,b` 中，两个逗号之间没有字符，表示中间列的值为空字符串。
 
 ## 基本原理
 
@@ -63,7 +63,7 @@ Stream Load 支持导入 CSV、JSON、Parquet 与 ORC 格式的数据。
 
 1. Client 向 FE 提交 Stream Load 导入作业请求
 
-2. FE 会随机选择一台 BE 作为 Coordinator 节点，负责导入作业调度，然后返回给 Client 一个 HTTP 重定向
+2. FE 会轮询选择一台 BE 作为 Coordinator 节点，负责导入作业调度，然后返回给 Client 一个 HTTP 重定向
 
 3. Client 连接 Coordinator BE 节点，提交导入请求
 

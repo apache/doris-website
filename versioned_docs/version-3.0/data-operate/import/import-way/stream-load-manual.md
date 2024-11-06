@@ -49,10 +49,10 @@ Stream Load supports importing data in CSV, JSON, Parquet, and ORC formats.
 
 ### Usage limitations
 
-When importing CSV files, it is necessary to clearly distinguish between null values and empty strings:
+When importing CSV files, it's important to distinguish between null values and empty strings:
 
-- Null values need to be represented by `\N`. For example, the data "a,\N,b" indicates that the middle column is a null value.
-- Empty strings can be represented by leaving the data empty. For example, the data "a, ,b" indicates that the middle column is an empty string.
+- Null values: Use `\N` to represent null. For example, `a,\N,b` indicates the middle column is null.
+- Empty string: An empty string is represented when there are no characters between two delimiters. For example, in `a,,b`, there are no characters between the two commas, indicating that the middle column value is an empty string.
 
 ### Basic principles
 
@@ -63,7 +63,7 @@ The following figure shows the main flow of Stream load, omitting some import de
 ![Basic principles](/images/stream-load.png)
 
 1. The client submits a Stream Load import job request to the FE (Frontend).
-2. The FE randomly selects a BE (Backend) as the Coordinator node, which is responsible for scheduling the import job, and then returns an HTTP redirect to the client.
+2. The FE selects a BE (Backend) as the Coordinator node in a round-robin manner, which is responsible for scheduling the import job, and then returns an HTTP redirect to the client.
 3. The client connects to the Coordinator BE node and submits the import request.
 4. The Coordinator BE distributes the data to the appropriate BE nodes and returns the import result to the client once the import is complete.
 5. Alternatively, the client can directly specify a BE node as the Coordinator and distribute the import job directly.
