@@ -66,7 +66,19 @@
                     ]
                 },
                 "table-design/row-store",
-                "table-design/data-partition",
+                {
+                    "type": "category",
+                    "label": "Data Partitioning",
+                    "items": [
+                        "table-design/data-partitioning/basic-concepts",
+                        "table-design/data-partitioning/manual-partitioning",
+                        "table-design/data-partitioning/dynamic-partitioning",
+                        "table-design/data-partitioning/auto-partitioning",
+                        "table-design/data-partitioning/manual-bucketing",
+                        "table-design/data-partitioning/auto-bucket",
+                        "table-design/data-partitioning/common-issues"
+                    ]
+                },
                 "table-design/schema-change",
                 "table-design/cold-hot-separation",
                 {
