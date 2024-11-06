@@ -547,6 +547,3 @@ HAVING grouping_id(YEAR(d_date), ca_state, i_category) = 0
     );
     ```
 
-## 设计文档
-
-详细内容，可前往 Oracle 官网参考[ SQL for Aggregation in Data Warehouses](https://docs.oracle.com/en/database/oracle/oracle-database/23/dwhsg/sql-aggregation-data-warehouses.html#GUID-C70DDA78-57D4-480A-AFDD-33EDFC1C15AE)
