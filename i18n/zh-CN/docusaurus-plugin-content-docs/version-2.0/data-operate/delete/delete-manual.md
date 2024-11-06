@@ -118,7 +118,7 @@ DELETE FROM table_name [table_alias]
 
 使用`t2`和`t3`表连接的结果，删除`t1`中的数据，删除的表只支持 unique 模型
 
-```SQL
+```sql
 -- 创建t1, t2, t3三张表
 CREATE TABLE t1
   (id INT, c1 BIGINT, c2 STRING, c3 DOUBLE, c4 DATE)
@@ -179,8 +179,8 @@ Delete 命令是一个 SQL 命令，返回结果是同步的，分为以下几�
 
 如果 Delete 顺利执行完成并可见，将返回下列结果，`Query OK`表示成功
 
-```SQL
-mysql delete from test_tbl PARTITION p1 where k1 = 1;
+```sql
+mysql> delete from test_tbl PARTITION p1 where k1 = 1;
 Query OK, 0 rows affected (0.04 sec)
 {'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'VISIBLE', 'txnId':'4005'}
 ```
@@ -190,7 +190,7 @@ Query OK, 0 rows affected (0.04 sec)
 Doris 的事务提交分为两步：提交和发布版本，只有完成了发布版本步骤，结果才对用户是可见的。若已经提交成功了，那么就可以认为最终一定会发布成功，Doris 会尝试在提交完后等待发布一段时间，如果超时后即使发布版本还未完成也会优先返回给用户，提示用户提交已经完成。若如果 Delete 已经提交并执行，但是仍未发布版本和可见，将返回下列结果
 
 ```sql
-mysql delete from test_tbl PARTITION p1 where k1 = 1;
+mysql> delete from test_tbl PARTITION p1 where k1 = 1;
 Query OK, 0 rows affected (0.04 sec)
 {'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'COMMITTED', 'txnId':'4005', 'err':'delete job is committed but may be taking effect later' }
 ```
@@ -212,14 +212,14 @@ Query OK, 0 rows affected (0.04 sec)
 如果 Delete 语句没有提交成功，将会被 Doris 自动中止，返回下列结果
 
 ```sql
-mysql delete from test_tbl partition p1 where k1  80;
+mysql> delete from test_tbl partition p1 where k1 > 80;
 ERROR 1064 (HY000): errCode = 2, detailMessage = {错误原因}
 ```
 
 比如说一个超时的删除，将会返回 `timeout` 时间和未完成的`(tablet=replica)`
 
 ```sql
-mysql delete from test_tbl partition p1 where k1  80;
+mysql> delete from test_tbl partition p1 where k1 > 80;
 ERROR 1064 (HY000): errCode = 2, detailMessage = failed to delete replicas from job: 4005, Unfinished replicas:10000=60000, 10001=60000, 10002=60000
 ```
 
@@ -274,7 +274,7 @@ SHOW DELETE [FROM db_name]
 使用示例
 
 ```sql
-mysql show delete from test_db;
+mysql> show delete from test_db;
 +-----------+---------------+---------------------+-----------------+----------+
 | TableName | PartitionName | CreateTime          | DeleteCondition | State    |
 +-----------+---------------+---------------------+-----------------+----------+

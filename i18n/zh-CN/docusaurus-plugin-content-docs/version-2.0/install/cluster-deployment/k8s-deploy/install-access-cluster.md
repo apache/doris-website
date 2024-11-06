@@ -124,7 +124,7 @@ spec:
 
 2. 配置使用 NodePort 作为 Service 类型
 
-使用 NodePort 访问模式，需要定义 Doris Cluster 的 [CR](https://github.com/selectdb/doris-operator/blob/master/doc/examples/doriscluster-all-fields-reference.yaml) 文件中指定 FE 与 BE 使用 NodePort 模式，具体改动如下：
+使用 NodePort 访问模式，需要定义 DorisCluster 资源，指定 FE 与 BE 使用 NodePort 模式，具体改动如下：
 
 ```yaml
 ...
@@ -184,7 +184,7 @@ mysql -h 192.168.88.62 -P 31545 -uroot
 
 ## Stream Load ErrorURL 重定向
 
-[Stream Load](../../../data-operate/import/stream-load-manual) 是 Doris 提供的一种同步导入模式，是一种高效导入本地文件到 Doris 的方式。在物理机或虚机部署的情况下，直接使用 http 的方式向 FE 发起导入数据请求，FE 通过 301 机制将请求重定向到 BE 服务，执行写入请求。在 Kubernetes 上 FE 和 BE 使用 [Service](https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/) 作为服务发现的方式。在使用代理屏蔽内部真实地址来提供服务发现的情形下，使用 FE 301 返回的 BE 的地址 (服务内部通信使用的真实的地址) 无法访问。在 Kubernetes 上需要使用 BE 的 Service 地址导入数据。
+[Stream Load](../../../data-operate/import/stream-load-manual.md) 是 Doris 提供的一种同步导入模式，是一种高效导入本地文件到 Doris 的方式。在物理机或虚机部署的情况下，直接使用 http 的方式向 FE 发起导入数据请求，FE 通过 301 机制将请求重定向到 BE 服务，执行写入请求。在 Kubernetes 上 FE 和 BE 使用 [Service](https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/) 作为服务发现的方式。在使用代理屏蔽内部真实地址来提供服务发现的情形下，使用 FE 301 返回的 BE 的地址 (服务内部通信使用的真实的地址) 无法访问。在 Kubernetes 上需要使用 BE 的 Service 地址导入数据。
 
 如在下例中，Stream Load ErrorUrl 返回结果 `http://doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluster.local:8040/api/_load_error_log?file=__shard_1/error_log_insert_stmt_af474190276a2e9c-49bb9d175b8e968e_af474190276a2e9c_49bb9d175b8e968e`
 

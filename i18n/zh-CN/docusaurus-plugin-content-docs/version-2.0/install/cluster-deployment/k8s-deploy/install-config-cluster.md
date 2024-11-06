@@ -115,7 +115,7 @@ doris-storage                 openebs.io/local               Delete          Wai
 ```
 
 :::tip 提示
-可以通过配置 [ConfigMap](<#FE ConfigMap>) 修改默认的元数据路径与日志路径：
+可以通过配置 [ConfigMap](#fe-configmap) 修改默认的元数据路径与日志路径：
 1. fe-meta 的 mounthPath 配置需要与 ConfigMap 中的 meta_dir 变量配置路径一致，默认情况下元数据会写入  /opt/apache-doris/fe/doris-meta 目录下；
 2. fe-log 的 mounthPath 配置需要与 ConfigMap 中的 LOG_DIR 变量路径一致，默认情况下日志数据会写入到 /opt/apache-doris/fe/log 目录下。
 :::

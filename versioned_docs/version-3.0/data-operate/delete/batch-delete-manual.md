@@ -147,19 +147,33 @@ if session variable `SET show_hidden_columns = true` was executed before running
 ### Check if Batch Delete Support is Enabled
 
 ```sql
-mysql SET show_hidden_columns=true;
+mysql> CREATE TABLE IF NOT EXISTS table1 (
+    ->     siteid INT,
+    ->     citycode INT,
+    ->     username VARCHAR(64),
+    ->     pv BIGINT
+    -> ) UNIQUE KEY (siteid, citycode, username)
+    -> DISTRIBUTED BY HASH(siteid) BUCKETS 10
+    -> PROPERTIES (
+    ->     "replication_num" = "3"
+    -> );
+Query OK, 0 rows affected (0.34 sec)
+
+mysql> SET show_hidden_columns=true;
 Query OK, 0 rows affected (0.00 sec)
 
-mysql DESC test;
-+-----------------------+--------------+------+-------+---------+---------+
-| Field                 | Type         | Null | Key   | Default | Extra   |
-+-----------------------+--------------+------+-------+---------+---------+
-| name                  | VARCHAR(100) | No   | true  | NULL    |         |
-| gender                | VARCHAR(10)  | Yes  | false | NULL    | REPLACE |
-| age                   | INT          | Yes  | false | NULL    | REPLACE |
-| DORIS_DELETE_SIGN | TINYINT      | No   | false | 0       | REPLACE |
-+-----------------------+--------------+------+-------+---------+---------+
-4 rows in set (0.00 sec)
+mysql> DESC table1;
++-----------------------+-------------+------+-------+---------+-------+
+| Field                 | Type        | Null | Key   | Default | Extra |
++-----------------------+-------------+------+-------+---------+-------+
+| siteid                | int         | Yes  | true  | NULL    |       |
+| citycode              | int         | Yes  | true  | NULL    |       |
+| username              | varchar(64) | Yes  | true  | NULL    |       |
+| pv                    | bigint      | Yes  | false | NULL    | NONE  |
+| __DORIS_DELETE_SIGN__ | tinyint     | No   | false | 0       | NONE  |
+| __DORIS_VERSION_COL__ | bigint      | No   | false | 0       | NONE  |
++-----------------------+-------------+------+-------+---------+-------+
+6 rows in set (0.01 sec)
 ```
 
 ### Stream Load Usage Examples
@@ -167,19 +181,19 @@ mysql DESC test;
 1. Import data normally:
 
     ```shell
-    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: APPEND" -T ~/table1_data http://127.0.0.1: 8130/api/test/table1/_stream_load
+    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: APPEND" -T ~/table1_data http://127.0.0.1:8030/api/test/table1/_stream_load
     ```
 
     The APPEND condition can be omitted, which has the same effect as the following statement:
 
     ```shell
-    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -T ~/table1_data http://127.0.0.1:8130/api/test/table1 /_stream_load
+    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -T ~/table1_data http://127.0.0.1:8030/api/test/table1/_stream_load
     ```
 
 2. Delete all data with the same key as the imported data
 
     ```Shell
-    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: DELETE" -T ~/table1_data http://127.0.0.1: 8130/api/test/table1/_stream_load
+    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: DELETE" -T ~/table1_data http://127.0.0.1:8030/api/test/table1/_stream_load
     ```
 
     Before load:
@@ -214,7 +228,7 @@ mysql DESC test;
 3. Import the same row as the key column of the row with `site_id=1`
 
     ```shell
-    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: MERGE" -H "delete: siteid=1" -T ~/ table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
+    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: MERGE" -H "delete: siteid=1" -T ~/ table1_data http://127.0.0.1:8030/api/test/table1/_stream_load
     ```
 
     Before load:
@@ -253,7 +267,7 @@ mysql DESC test;
 4. When the table has the sequence column, delete all data with the same key as the imported data
 
     ```shell
-    curl --location-trusted -u root: -H "column_separator:," -H "columns: name, gender, age" -H "function_column.sequence_col: age" -H "merge_type: DELETE"  -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
+    curl --location-trusted -u root: -H "column_separator:," -H "columns: name, gender, age" -H "function_column.sequence_col: age" -H "merge_type: DELETE"  -T ~/table1_data http://127.0.0.1:8030/api/test/table1/_stream_load
     ```
 
     When the unique table has the sequence column, sequence column is used as the basis for the replacement order of the REPLACE aggregate function under the same key column, and the larger value can replace the smaller value. If you want delete some data, the imported data must have the same key and the sequence column must be larger or equal than before.
@@ -261,10 +275,10 @@ mysql DESC test;
     For example, one table like this:
 
     ```sql
-    mysql SET show_hidden_columns=true;
+    mysql> SET show_hidden_columns=true;
     Query OK, 0 rows affected (0.00 sec)
 
-    mysql DESC table1;
+    mysql> DESC table1;
     +------------------------+--------------+------+-------+---------+---------+
     | Field                  | Type         | Null | Key   | Default | Extra   |
     +------------------------+--------------+------+-------+---------+---------+

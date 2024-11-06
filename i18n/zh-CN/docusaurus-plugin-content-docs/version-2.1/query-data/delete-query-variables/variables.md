@@ -719,6 +719,12 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
   使用 `insert overwrite` 覆写自动分区表时，是否同时支持创建新分区，默认为 `false`。
 
+* `enable_cooldown_replica_affinity`
+
+  用户可以选择是否首先使用冷却副本进行扫描,默认为true
+
+***
+
 ### 关于语句执行超时控制的补充说明
 
 - 控制手段

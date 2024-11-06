@@ -66,7 +66,7 @@ When creating an S3 resource, a remote S3 connection validation is performed to 
 
 Here is an example of creating an S3 resource:
 
-```Plain
+```sql
 CREATE RESOURCE "remote_s3"
 PROPERTIES
 (
@@ -97,13 +97,18 @@ CREATE TABLE IF NOT EXISTS create_table_use_created_policy
 UNIQUE KEY(k1)
 DISTRIBUTED BY HASH (k1) BUCKETS 3
 PROPERTIES(
+    "enable_unique_key_merge_on_write" = "false",
     "storage_policy" = "test_policy"
 );
 ```
 
+:::warning Notice
+If you set `"enable_unique_key_merge_on_write" = "true"` in UNIQUE table, you can't use this feature.
+:::
+
 And here is an example of creating an HDFS resource:
 
-```Plain
+```sql
 CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "type"="hdfs",
         "fs.defaultFS"="fs_host:default_fs_port",
@@ -128,19 +133,24 @@ CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
 UNIQUE KEY(k1)
 DISTRIBUTED BY HASH (k1) BUCKETS 3
 PROPERTIES(
+    "enable_unique_key_merge_on_write" = "false",
     "storage_policy" = "test_policy"
 );
 ```
 
+:::warning Notice
+If you set `"enable_unique_key_merge_on_write" = "true"` in UNIQUE table, you can't use this feature.
+:::
+
 Associate a storage policy with an existing table by using the following command:
 
-```Plain
+```sql
 ALTER TABLE create_table_not_have_policy SET ("storage_policy" = "test_policy");
 ```
 
 Associate a storage policy with an existing partition by using the following command:
 
-```Plain
+```sql
 ALTER TABLE create_table_partition MODIFY PARTITION (*) SET ("storage_policy" = "test_policy");
 ```
 
@@ -219,7 +229,7 @@ Furthermore, the garbage data on objects is not immediately cleaned up. The BE p
 
 The S3 SDK defaults to using the virtual-hosted style. However, some object storage systems (e.g., MinIO) may not have virtual-hosted style access enabled or supported. In such cases, you can add the `use_path_style` parameter to force the use of path-style access:
 
-```Plain
+```sql
 CREATE RESOURCE "remote_s3"
 PROPERTIES
 (

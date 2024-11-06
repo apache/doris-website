@@ -122,8 +122,7 @@ spec:
 ```
 2. Configure using NodePort as Service type
 
-To use the NodePort access mode, you need to specify FE in the [CR](https://github.com/selectdb/doris-operator/blob/master/doc/examples/doriscluster-all-fields-reference.yaml) file that defines Doris Cluster Use NodePort mode with BE, the specific changes are as follows:
-
+Custom DorisCluster resource to use NodePort mode with BE, the specific changes are as follows:
 ```yaml
 ...
 spec:

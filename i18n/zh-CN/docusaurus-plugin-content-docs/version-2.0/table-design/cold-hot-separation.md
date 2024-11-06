@@ -64,7 +64,7 @@ under the License.
 
 下面演示如何创建 S3 RESOURCE：
 
-```Plain
+```sql
 CREATE RESOURCE "remote_s3"
 PROPERTIES
 (
@@ -95,13 +95,18 @@ CREATE TABLE IF NOT EXISTS create_table_use_created_policy
 UNIQUE KEY(k1)
 DISTRIBUTED BY HASH (k1) BUCKETS 3
 PROPERTIES(
+    "enable_unique_key_merge_on_write" = "false",
     "storage_policy" = "test_policy"
 );
 ```
 
+:::warning 注意
+UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话，无法使用此功能。
+:::
+
 以及如何创建 HDFS RESOURCE：
 
-```Plain
+```sql
 CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "type"="hdfs",
         "fs.defaultFS"="fs_host:default_fs_port",
@@ -127,19 +132,24 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
     UNIQUE KEY(k1)
     DISTRIBUTED BY HASH (k1) BUCKETS 3
     PROPERTIES(
+    "enable_unique_key_merge_on_write" = "false",
     "storage_policy" = "test_policy"
     );
 ```
 
+:::warning 注意
+UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话，无法使用此功能。
+:::
+
 或者对一个已存在的表，关联 Storage policy
 
-```Plain
+```sql
 ALTER TABLE create_table_not_have_policy set ("storage_policy" = "test_policy");
 ```
 
 或者对一个已存在的 partition，关联 Storage policy
 
-```Plain
+```sql
 ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="test_policy");
 ```
 
@@ -217,7 +227,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统 (如：minio) 可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 use_path_style 参数来强制使用 path style 方式：
 
-```Plain
+```sql
 CREATE RESOURCE "remote_s3"
 PROPERTIES
 (
