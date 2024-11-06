@@ -43,6 +43,216 @@ CCR 通常被用于容灾备份、读写分离、集团与公司间数据传输�
 - 隔离升级：当在对系统集群升级时，有可能因为某些原因需要进行版本回滚，传统的升级模式往往会因为元数据不兼容的原因无法回滚。而使用 CCR 可以解决该问题，先构建一个备用的集群进行升级并双跑验证，用户可以依次升级各个集群，同时 CCR 也不依赖特定版本，使版本的回滚变得可行。
 
 
+## 功能列表
+
+### Create DB
+
+| 属性                   | 是否支持 | Doris VERSION | CCR Version | 同步方式  | 说明 |
+| ---------------------- | -------- | ------------- | ----------- | --------- | ---- |
+| replication_allocation | 支持     | -             | -           | FULL SYNC |      |
+| DATA QUOTA             | 不支持   |               |             |           |      |
+| REPLICA QUOTA          | 不支持   |               |             |           |      |
+
+### Alter DB
+
+| 属性                   | 是否支持 | 上游是否可以操作 | 下游是否可以操作 | 说明                              |
+| ---------------------- | -------- | ---------------- | ---------------- | --------------------------------- |
+| replication_allocation | 不支持   | 不可以           | 不可以           | 上下游各自操作会导致 CCR 任务中断 |
+| DATA QUOTA             | 不支持   | 可以             | 可以             |                                   |
+| REPLICA QUOTA          | 不支持   | 可以             | 可以             |                                   |
+
+### Create Table
+
+| 属性                                      | 是否支持 | Doris VERSION | CCR Version | 同步方式 | 说明                                                     |
+| ----------------------------------------- | -------- | ------------- | ----------- | -------- | -------------------------------------------------------- |
+| 表模型（DUP，UNIQUE，AGGREGATE）          | 支持     | -             | -           | SQL      |                                                          |
+| 分区分桶                                  | 支持     | -             | -           | SQL      |                                                          |
+| replication_num                           | 支持     | -             | -           | SQL      |                                                          |
+| replication_allocation （resource group） | 支持     | -             | -           | SQL      | 上游必须与下游一致，BE tag 必须一致，否则 CCR 任务会失败 |
+| colocate_with                             | 不支持   |               |             |          |                                                          |
+| storage_policy                            | 不支持   |               |             |          |                                                          |
+| dynamic_partition                         | 支持     | -             | -           | SQL      |                                                          |
+| storage_medium                            | 支持     | -             | -           | SQL      |                                                          |
+| auto_bucket                               | 支持     | -             | -           | SQL      |                                                          |
+| group_commit 系列                         | 支持     | -             | -           | SQL      |                                                          |
+| enable_unique_key_merge_on_write          | 支持     | -             | -           | SQL      |                                                          |
+| enable_single_replica_compaction          | 支持     | -             | -           | SQL      |                                                          |
+| disable_auto_compaction                   | 支持     | -             | -           | SQL      |                                                          |
+| compaction_policy                         | 支持     | -             | -           | SQL      |                                                          |
+| time_series_compaction 系列               | 支持     | -             | -           | SQL      |                                                          |
+| binlog 系列                               | 支持     | -             | -           | SQL      | 待确认                                                   |
+| variant_enable_flatten_nested             | 支持     | -             | -           | SQL      |                                                          |
+| skip_write_index_on_load                  | 支持     | -             | -           | SQL      |                                                          |
+| row_strore系列                            | 支持     | -             | -           | SQL      |                                                          |
+| seq 列                                    | 支持     | -             | -           | SQL      |                                                          |
+| enable_light_schema_change                | 支持     | -             | -           | SQL      |                                                          |
+| compression_type                          | 支持     | -             | -           | SQL      |                                                          |
+| 索引                                      | 支持     | -             | -           | SQL      |                                                          |
+| bloom_filter_columns                      | 支持     | -             | -           | SQL      |                                                          |
+| bloom_filter_fpp                          | 不支持   |               |             |          |                                                          |
+| storage_cooldown_time                     | 不支持   |               |             |          |                                                          |
+| Generated column                          | 支持     |               |             | SQL      |                                                          |
+| 自增 id                                   | 不支持   |               |             |          | 目前有问题                                               |
+
+### 导入
+
+| 导入方式     | 是否支持             | DORIS Version | CCR Version | 同步方式 | 下游是否可以操作                                             | 说明                                                 |
+| ------------ | -------------------- | ------------- | ----------- | -------- | ------------------------------------------------------------ | ---------------------------------------------------- |
+| stream load  | 支持（临时分区除外） | -             | -           | TXN      | 不可以，如果下游导入了，后续触发full或者partial sync，下游导入的数据会丢失 | 上游事务可见，即数据可见时生成binlog，下游开始同步。 |
+| broker load  | 支持（临时分区除外） | -             | -           | TXN      | 同上                                                         | 同上                                                 |
+| routine load | 支持（临时分区除外） | -             | -           | TXN      | 同上                                                         | 同上                                                 |
+| mysql load   | 支持（临时分区除外） | -             | -           | TXN      | 同上                                                         | 同上                                                 |
+| group commit | 支持（临时分区除外） | 2.1           | 2.1         | TXN      | 同上                                                         | 同上                                                 |
+
+
+### DML
+
+| 操作                      | 是否支持             | DORIS VERSION | CCR Version | 同步方式     | 下游是否可以操作                                             | 说明                                                 |
+| ------------------------- | -------------------- | ------------- | ----------- | ------------ | ------------------------------------------------------------ | ---------------------------------------------------- |
+| delete                    | 支持                 | -             | -           | TXN          | 不可以，如果下游操作，后续触发full或者partial sync，下游操作会丢失 | 上游事务可见，即数据可见时生成binlog，下游开始同步。 |
+| update                    | 支持                 | -             | -           | TXN          | 同上                                                         | 同上                                                 |
+| insert                    | 支持                 | -             | -           | TXN          | 同上                                                         | 同上                                                 |
+| Insert into overwrite     | 支持（临时分区除外） | 2.1.6         |             | partial sync | 同上                                                         | 同上                                                 |
+| Insert into overwrite     | 支持（临时分区除外） | 2.0           |             | full sync    | 同上                                                         | 同上                                                 |
+| 显式事务(3.0)begin commit | 不支持               |               |             |              |                                                              |                                                      |
+
+### 分区操作
+
+| 操作               | 是否支持                        | DORIS VERSION | CCR VERSION |        同步方式            | 下游是否可以单独操作                                        | 说明                                                         |
+| ------------------ | ------------------------------- | ------------- | ----------- | ---------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------ |
+| Add Partition      | 支持                            | -             | -           | SQL                                | 不能，后续触发fullsync 或者 partial sync 会导致下游操作丢失 | cooldown time 属性及其行为未知                               |
+| Add Temp Partition | 不支持                          |               |             |                                    | 同上                                                        |                                                              |
+| Drop Partition     | 支持                            | -             | -           | 2.0.15/2.1.6 前：fullsync之后：SQL | 同上                                                        |                                                              |
+| Replace Partition  | 支持                            |               |             | partial sync                       | 同上                                                        | partial sync **只支持 strict range 和 non-tmp partition 的 replace 方式**，否则会触发 fullsync临时分区待确认 |
+| Modify Partition   | 不支持                          | 未发版本      | 未发版本    | SQL                                | 同上                                                        | 有binlog，但是sycer没处理，ccr 任务会停止了？应该让上游禁止掉或者忽略掉，忽略的话，需要上下游不要求副本数一致才可以，目前建议走partial sync。 |
+| Rename Partition   | 表级别任务不支持db 级别任务支持 | 未发版本      | 未发版本    | SQL                                | 同上                                                        | 表级别任务 rename 会导致 CCR 任务停止                        |
+
+### 基础表操作
+
+| 操作           | 是否支持                        | DORIS VERSION           | CCR VERSION | 同步方式                           | 下游是否可以单独操作          | 说明                                  |
+| -------------- | ------------------------------- | ----------------------- | ----------- | ---------------------------------- | ----------------------------- | ------------------------------------- |
+| Create Table   | 支持                            | -                       |             | SQL                                | 不支持操作 CCR 任务同步的表。 | 属性参考创建表部分                    |
+| Drop Table     | 支持                            | -                       |             | 2.0.15/2.1.6 前：fullsync之后：SQL | 同上                          |                                       |
+| Rename Table   | 表级别任务不支持db 级别任务支持 | master(2.0/2.1还不支持) |             | SQL                                | 同上                          | 表级别任务 rename 会导致 CCR 任务停止 |
+| Replace Table  | 不支持                          |                         |             |                                    | 同上                          |                                       |
+| Truncate Table | 支持                            | -                       |             | SQL                                | 同上                          |                                       |
+| Restore Table  | 未知                            |                         |             |                                    | 同上                          |                                       |
+
+### 修改表属性
+
+同步方式为 SQL
+
+| 属性                       | 是否支持 | Doris VERSION | CCR Version | 上游是否可以操作 | 下游是否可以操作                           | 说明                                    |
+| -------------------------- | -------- | ------------- | ----------- | ---------------- | ------------------------------------------ | --------------------------------------- |
+| colocate                   | 不支持   |               |             | 可以             | 不可以，触发full sync 下游操作会丢失       |                                         |
+| Distribution type          | 不支持   |               |             | 不可以           | 同上                                       |                                         |
+| 动态分区相关属性           | 不支持   |               |             | 可以             | 同上                                       |                                         |
+| 副本数                     | 不支持   |               |             | 不可以           | 不可以                                     |                                         |
+| replication_allocation     | 不支持   |               |             | 不可以           |                                            |                                         |
+| Storage policy             | 不支持   |               |             | 不可以           | 不可以                                     |                                         |
+| enable_light_schema_change | 不支持   |               |             |                  |                                            | CCR 只能同步轻量级 schema change 的表。 |
+| row_store                  | 未知     |               |             |                  |                                            |                                         |
+| bloom_filter_columns       | 未知     |               |             |                  |                                            |                                         |
+| Bucket num                 | 不支持   |               |             | 可以             | 不可以，触发full sync 下游操作会丢失       |                                         |
+| isBeingSyced               | 不支持   |               |             | 不可以           | 不可以                                     |                                         |
+| compaction 系列属性        | 不支持   |               |             | 可以             | 不可以，触发full sync 下游操作会丢失不可以 |                                         |
+| skip_write_index_on_load   | 不支持   |               |             | 可以             | 同上                                       |                                         |
+| Seq 列                     | 支持     | -             | -           | 可以             | 不可以，触发full sync 下游操作会丢失不可以 |                                         |
+| Delete sign 列             | 支持     | -             | -           | 可以             | 同上                                       |                                         |
+| comment                    | 不支持   |               |             | 可以             | 不可以，触发full sync 下游操作会丢失不可以 |                                         |
+
+### 列操作
+
+表中 Base Index 上的列操作。
+
+| 操作          | 是否支持 | Doris VERSION | CCR Version | 同步方式                | 下游是否可以操作            | 备注                            |
+| ------------- | -------- | ------------- | ----------- | ----------------------- | --------------------------- | ------------------------------- |
+| ADD COLUMN    | 支持     | -             | -           | SQL                     | 不可以，会导致 CCR 任务中断 |                                 |
+| DROP COLUMN   | 支持     | -             | -           | SQL                     | 同上                        |                                 |
+| MODIFY COLUMN | 支持     | -             | -           | fullsync / partial sync | 同上                        | 在开始前会尝试删除下游的 tables |
+| ORDER BY      | 支持     |               |             | fullsync / partial sync | 同上                        | 在开始前会尝试删除下游的 tables |
+| RENAME        |          |               |             |                         | 同上                        |                                 |
+| COMMENT       | 不支持   |               |             |                         | 同上                        |                                 |
+
+表中 Rollup Index 上的列操作。
+
+| 操作          | 是否支持 | 备注              |
+| ------------- | -------- | ----------------- |
+| ADD COLUMN    | 未知     | 导致 CCR 任务中断 |
+| DROP COLUMN   |          | 同上              |
+| MODIFY COLUMN |          | 同上              |
+| ORDER BY      |          | 同上              |
+
+
+### Rollup
+
+| 操作          | 是否支持 | 备注         |
+| ------------- | -------- | ------------ |
+| Add Rollup    | 不支持   |              |
+| Drop Rollup   | 不支持   |              |
+| Rename Rollup | 不支持   | CCR 任务中断 |
+
+
+### View
+
+| 操作        | 是否支持 | Doris VERSION | CCR Version | 同步方式 | 备注                             |
+| ----------- | -------- | ------------- | ----------- | -------- | -------------------------------- |
+| Create View | 支持     | -             | -           | SQL      | 上下游db  table 同名时可以工作。 |
+| Alter View  | 不支持   |               |             |          | 没有binlog                       |
+| Drop View   | 不支持   |               |             |          |                                  |
+
+
+### Materialized View
+
+同步 Materialized View
+
+| 操作                     | 是否支持 | 备注                                                         |
+| ------------------------ | -------- | ------------------------------------------------------------ |
+| Create Materialized View | 未知     | 上下游db  table 同名时可以工作，不同名时需要下游手动重建 view。 |
+| Drop Materialized View   | 未知     |                                                              |
+
+
+不支持 异步 Materialized View。
+
+| 操作                           | 是否支持 |
+| ------------------------------ | -------- |
+| CREATE ASYNC MATERIALIZED VIEW | 不支持   |
+| ALTER ASYNC MATERIALIZED VIEW  | 不支持   |
+| DROP ASYNC MATERIALIZED VIEW   | 不支持   |
+| REFRESH                        | 不支持   |
+| PAUSE                          | 不支持   |
+| RESUME                         | 不支持   |
+
+
+### Index
+
+Inverted Index
+
+| 属性         | 是否支持             | 备注     |
+| ------------ | -------------------- | -------- |
+| Create Index | 不支持               | 影响未知 |
+| Drop Index   | 未知，没有生成binlog | 影响未知 |
+
+
+### 统计信息
+
+上下游之间不同步，独立工作。
+
+### 其它
+
+| 操作             | 是否支持 |
+| ---------------- | -------- |
+| 外表             | 不支持   |
+| Recycle bin      | 不支持   |
+| catalog          | 不支持   |
+| Workload group   | 不支持   |
+| JOB              | 不支持   |
+| function         | 不支持   |
+| policy           | 不支持   |
+| 用户             | 不支持   |
+| CANCEL ALTER JOB | 支持     |
+
+
 ## 原理与架构
 
 ### 名词解释
@@ -61,6 +271,17 @@ syncer：一个轻量级的进程
 ![ccr 架构说明](/images/ccr-architecture-description.png)
 
 CCR 工具主要依赖一个轻量级进程：Syncers。Syncers 会从源集群获取 binlog，直接将元数据应用于目标集群，通知目标集群从源集群拉取数据。从而实现全量和增量迁移。
+
+### 同步方式
+
+CCR 支持四种同步方式：
+
+| 同步方式    |   原理    |      触发时机     |
+| FullSync  |  上游全量backup，下游restore。 | 首次同步或者操作触发，操作见功能列表。 |
+| PartialSync  |  上游表或者分区级别 Backup，下游表或者分区级别restore。 | 操作触发，操作见功能列表。 |
+| TXN  |  增量数据同步，上游提交之后，下游开始同步。 | 操作触发，操作见功能列表。 |
+| SQL  |  在下游回放上游操作的 SQL。 | 操作触发，操作见功能列表。 |
+
 
 ## 使用
 
