@@ -260,8 +260,8 @@
     "description": "The label for category Maintenance and Monitor in sidebar docs"
   },
   "sidebar.docs.category.Monitor Metrics": {
-    "message": "监控指标",
-    "description": "The label for category Monitor Metrics in sidebar docs"
+    "message": "监控",
+    "description": "The label for category Monitor in sidebar docs"
   },
   "sidebar.docs.category.Memory Management": {
     "message": "内存管理",

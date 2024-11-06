@@ -201,7 +201,7 @@ PROPERTIES(
 Table structure:
 
 ```sql
-MySQL > desc test_table;
+MySQL> desc test_table;
 +-------------+--------------+------+-------+---------+---------+
 | Field       | Type         | Null | Key   | Default | Extra   |
 +-------------+--------------+------+-------+---------+---------+
@@ -235,7 +235,7 @@ curl --location-trusted -u root: -T testData http://host:port/api/test/test_tabl
 The result is:
 
 ```sql
-MySQL > select * from test_table;
+MySQL> select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
@@ -257,7 +257,7 @@ After completing the above steps, load the following data:
 Query the data:
 
 ```sql
-MySQL [test] > select * from test_table;
+MySQL [test]> select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
@@ -277,7 +277,7 @@ In the loaded data, the sequence column (modify_date) of all previously loaded d
 Query the data:
 
 ```sql
-MySQL [test] > select * from test_table;
+MySQL [test]> select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+

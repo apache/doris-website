@@ -115,7 +115,7 @@ microk8s-hostpath (default)   microk8s.io/hostpath           Delete          Imm
 doris-storage                 openebs.io/local               Delete          WaitForFirstConsumer   false                  54d
 ```
 :::tip Tip
-The default metadata path and log path can be modified by configuring [ConfigMap](<#FE ConfigMap>):
+The default metadata path and log path can be modified by configuring [ConfigMap](#fe-configmap):
 1. The mounthPath configuration of fe-meta needs to be consistent with the meta_dir variable configuration path in ConfigMap. By default, metadata will be written to the /opt/apache-doris/fe/doris-meta directory;
 2. The mounthPath configuration of fe-log needs to be consistent with the LOG_DIR variable path in ConfigMap. By default, log data will be written to the /opt/apache-doris/fe/log directory.
 :::

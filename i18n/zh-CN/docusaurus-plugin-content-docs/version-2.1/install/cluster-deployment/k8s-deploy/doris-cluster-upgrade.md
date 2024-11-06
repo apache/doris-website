@@ -33,7 +33,7 @@ under the License.
 
 - 升级操作推荐在业务低峰期进行。
 - 滚动升级过程中，会导致连接到被关闭节点的连接失效，造成请求失败，对于这类业务，推荐在客户端添加重试能力。
-- 升级前可以阅读 [常规升级手册](https://doris.apache.org/zh-CN/docs/dev/admin-manual/cluster-management/upgrade)，便于理解升级中的一些原理和注意事项。
+- 升级前可以阅读 [常规升级手册](../../../admin-manual/cluster-management/upgrade.md)，便于理解升级中的一些原理和注意事项。
 - 升级前无法对数据和元数据的兼容性进行验证，因此集群升级一定要避免数据存在 单副本 情况 和 集群单 FE FOLLOWER 节点。
 - 升级过程中会有节点重启，所以可能会触发不必要的集群均衡和副本修复逻辑，先通过以下命令关闭
 ```
@@ -41,7 +41,7 @@ admin set frontend config("disable_balance" = "true");
 admin set frontend config("disable_colocate_balance" = "true");
 admin set frontend config("disable_tablet_scheduler" = "true");
 ```
-- Doris 升级请遵守不要跨两个及以上关键节点版本升级的原则，若要跨多个关键节点版本升级，先升级到最近的关键节点版本，随后再依次往后升级，若是非关键节点版本，则可忽略跳过。具体参考 [升级版本说明](https://doris.apache.org/zh-CN/docs/dev/admin-manual/cluster-management/upgrade#doris-%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
+- Doris 升级请遵守不要跨两个及以上关键节点版本升级的原则，若要跨多个关键节点版本升级，先升级到最近的关键节点版本，随后再依次往后升级，若是非关键节点版本，则可忽略跳过。具体参考 [升级版本说明](../../../admin-manual/cluster-management/upgrade.md)
 
 ## 升级操作
 
@@ -121,7 +121,7 @@ $ kubectl get pod -n doris
 
 ## 升级完成后
 ### 验证集群节点状态
-通过  [访问 Doris 集群](../k8s-deploy/install-access-cluster) 文档提供的方式，通过 `mysql-client` 访问 Doris。 
+通过  [访问 Doris 集群](../k8s-deploy/install-access-cluster.md) 文档提供的方式，通过 `mysql-client` 访问 Doris。 
 使用 `show frontends` 和 `show backends` 等 SQL 查看各个组件的 版本 和 状态。
 ```
 mysql> show frontends\G;

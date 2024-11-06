@@ -36,11 +36,11 @@ Queries and DDL single statements are implicit transactions and are not supporte
 
 Explicit transactions require users to actively start, commit, or roll back transactions. Currently, DDL and query statements are not supported.
 
-    ```sql
-    BEGIN;
-    [INSERT, UPDATE, DELETE statement]
-    COMMIT; / ROLLBACK;
-    ```
+```sql
+BEGIN;
+[INSERT, UPDATE, DELETE statement]
+COMMIT; / ROLLBACK;
+```
 
 ### Implicit Transactions
 

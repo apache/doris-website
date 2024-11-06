@@ -550,16 +550,16 @@ ReasonOfStateChanged:
     ```sql
     1,Benjamin,18
     2,Emily,20
-    3,Alexander,22
+    3,Alexander,dirty_data
     ```
 
 2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test01 (
-        id       INT             NOT NULL   COMMENT "用户 id",
-        name     VARCHAR(30)     NOT NULL   COMMENT "名字",
-        age      INT                        COMMENT "年纪"
+        id       INT             NOT NULL   COMMENT "User ID",
+        name     VARCHAR(30)     NOT NULL   COMMENT "Name",
+        age      INT                        COMMENT "Age"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -569,19 +569,17 @@ ReasonOfStateChanged:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age)
+            COLUMNS TERMINATED BY ","
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "max_filter_ratio"="0.5",
-                "strict_mode" = "false"
+                "max_error_number" = "100",
+                "strict_mode" = "true"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad01",
-                "property.group.id" = "kafka_job01",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -595,9 +593,8 @@ ReasonOfStateChanged:
     +------+------------+------+
     |    1 | Benjamin   |   18 |
     |    2 | Emily      |   20 |
-    |    3 | Alexander  |   22 |
     +------+------------+------+
-    3 rows in set (0.01 sec)
+    2 rows in set (0.01 sec)
     ```
 
 **从指定消费点消费数据**
@@ -617,9 +614,9 @@ ReasonOfStateChanged:
 
     ```sql
     CREATE TABLE demo.routine_test02 (
-        id       INT             NOT NULL   COMMENT "用户 id",
-        name     VARCHAR(30)     NOT NULL   COMMENT "名字",
-        age      INT                        COMMENT "年纪"
+        id       INT             NOT NULL   COMMENT "User ID",
+        name     VARCHAR(30)     NOT NULL   COMMENT "Name",
+        age      INT                        COMMENT "Age"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -629,18 +626,11 @@ ReasonOfStateChanged:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job02 ON routine_test02
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
+            COLUMNS TERMINATED BY ","
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad02",
-                "property.group.id" = "kafka_job",
                 "kafka_partitions" = "0",
                 "kafka_offsets" = "3"
             );
@@ -674,9 +664,9 @@ ReasonOfStateChanged:
 
     ```sql
     CREATE TABLE demo.routine_test03 (
-        id       INT             NOT NULL   COMMENT "用户 id",
-        name     VARCHAR(30)     NOT NULL   COMMENT "名字",
-        age      INT                        COMMENT "年纪"
+        id       INT             NOT NULL   COMMENT "User ID",
+        name     VARCHAR(30)     NOT NULL   COMMENT "Name",
+        age      INT                        COMMENT "Age"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -686,13 +676,7 @@ ReasonOfStateChanged:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job03 ON routine_test03
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
+            COLUMNS TERMINATED BY ","
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
@@ -734,9 +718,9 @@ ReasonOfStateChanged:
 
     ```sql
     CREATE TABLE demo.routine_test04 (
-        id       INT             NOT NULL   COMMENT "用户 id",
-        name     VARCHAR(30)     NOT NULL   COMMENT "名字",
-        age      INT                        COMMENT "年纪"
+        id       INT             NOT NULL   COMMENT "User ID",
+        name     VARCHAR(30)     NOT NULL   COMMENT "Name",
+        age      INT                        COMMENT "Age"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -747,18 +731,11 @@ ReasonOfStateChanged:
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job04 ON routine_test04
             COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age),
             WHERE id >= 3
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad04",
-                "property.group.id" = "kafka_job04",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -791,23 +768,17 @@ ReasonOfStateChanged:
 
     ```sql
     CREATE TABLE demo.routine_test05 (
-        id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
-        date    DATETIME                 COMMENT "时间"
+        id      INT            NOT NULL  COMMENT "ID",
+        name    VARCHAR(30)    NOT NULL  COMMENT "Name",
+        age     INT                      COMMENT "Age",
+        date    DATETIME                 COMMENT "Date"
     )
-    PARTITION BY RANGE(date) ()
-    DISTRIBUTED BY HASH(date)
-    PROPERTIES
-    (        
-        "replication_num" = "1",
-        "dynamic_partition.enable" = "true",
-        "dynamic_partition.time_unit" = "DAY",
-        "dynamic_partition.start" = "-2",
-        "dynamic_partition.end" = "3",
-        "dynamic_partition.prefix" = "p",
-        "dynamic_partition.buckets" = "1"
-    );
+    DUPLICATE KEY(`id`)
+    PARTITION BY RANGE(`id`)
+    (PARTITION partition_a VALUES [("0"), ("1")),
+    PARTITION partition_b VALUES [("1"), ("2")),
+    PARTITION partition_c VALUES [("2"), ("3")))
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
 3. 导入命令
@@ -815,20 +786,13 @@ ReasonOfStateChanged:
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job05 ON routine_test05
             COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age,date),
-            PARTITION(p20240205)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
+            PARTITION(partition_b)
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad05",
-                "property.group.id" = "kafka_job05",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            ); 
+            );
     ```
 
 4. 导入结果
@@ -838,9 +802,9 @@ ReasonOfStateChanged:
     +------+----------+------+---------------------+
     | id   | name     | age  | date                |
     +------+----------+------+---------------------+
-    |    2 | Emily    |   20 | 2024-02-05 11:00:00 |
+    |    1 | Benjamin |   18 | 2024-02-04 10:00:00 |
     +------+----------+------+---------------------+
-    3 rows in set (0.01 sec)
+    1 rows in set (0.01 sec)
     ```
 
 **设置导入时区**
@@ -858,9 +822,9 @@ ReasonOfStateChanged:
     ```sql
     CREATE TABLE demo.routine_test06 (
         id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
-        date    DATETIME                 COMMENT "时间"
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age",
+        date    DATETIME                 COMMENT "date"
     )
     DUPLICATE KEY(id)
     DISTRIBUTED BY HASH(id) BUCKETS 1;
@@ -870,19 +834,15 @@ ReasonOfStateChanged:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job06 ON routine_test06
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age，date)
+            COLUMNS TERMINATED BY ","
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false",
-                "timezone"="Asia/Shanghai"
+                "timezone" = "Asia/Shanghai"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad06",
-                "property.group.id" = "kafka_job06",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -894,9 +854,9 @@ ReasonOfStateChanged:
     +------+-------------+------+---------------------+
     | id   | name        | age  | date                |
     +------+-------------+------+---------------------+
-    |    1 | Benjamin    |   18 | 2024-02-05 10:00:00 |
+    |    1 | Benjamin    |   18 | 2024-02-04 10:00:00 |
     |    2 | Emily       |   20 | 2024-02-05 11:00:00 |
-    |    3 | Alexander   |   22 | 2024-02-05 12:00:00 |
+    |    3 | Alexander   |   22 | 2024-02-06 12:00:00 |
     +------+-------------+------+---------------------+
     3 rows in set (0.00 sec)
     ```
@@ -928,51 +888,43 @@ mysql> SELECT * FROM routine_test07;
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test07 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-)
-DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test07 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age"
+    )
+    UNIQUE KEY(id)
+    DISTRIBUTED BY HASH(id) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job07 ON routine_test07
-        WITH DELETE 
-        COLUMNS TERMINATED BY ",",
-        COLUMNS(id, name, age)
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "max_filter_ratio"="0.5",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad07",
-            "property.group.id" = "kafka_job07",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job07 ON routine_test07
+            WITH DELETE
+            COLUMNS TERMINATED BY ","
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad07",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> SELECT * FROM routine_test07;
-+------+----------------+------+
-| id   | name           | age  |
-+------+----------------+------+
-|    1 | Benjamin       |   18 |
-|    2 | Emily          |   20 |
-|    4 | Sophia         |   24 |
-|    6 | Charlotte      |   28 |
-+------+----------------+------+
-```
+    ```sql
+    mysql> SELECT * FROM routine_test07;
+    +------+----------------+------+
+    | id   | name           | age  |
+    +------+----------------+------+
+    |    1 | Benjamin       |   18 |
+    |    2 | Emily          |   20 |
+    |    4 | Sophia         |   24 |
+    |    6 | Charlotte      |   28 |
+    +------+----------------+------+
+    ```
 
 **指定 merge_typpe 进行 merge 操作**
 
@@ -1006,37 +958,30 @@ mysql> SELECT * FROM routine_test08;
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test08 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-)
-DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test08 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age"
+    )
+    UNIQUE KEY(id)
+    DISTRIBUTED BY HASH(id) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job08 ON routine_test08
-        WITH MERGE 
-        COLUMNS TERMINATED BY ",",
-        COLUMNS(id, name, age),
-        DELETE ON id = 2
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad08",
-            "property.group.id" = "kafka_job08",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );   
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job08 ON routine_test08
+            WITH MERGE
+            COLUMNS TERMINATED BY ",",
+            DELETE ON id = 2
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad08",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );   
+    ```
 
 4. 导入结果
 
@@ -1069,30 +1014,30 @@ mysql> SELECT * FROM routine_test08;
 
 导入前表中数据如下：
 
-```sql
-mysql> SELECT * FROM routine_test09;
-+------+----------------+------+
-| id   | name           | age  |
-+------+----------------+------+
-|    1 | Benjamin       |   18 |
-|    2 | Emily          |   20 |
-|    3 | Alexander      |   22 |
-|    4 | Sophia         |   24 |
-|    5 | William        |   26 |
-|    6 | Charlotte      |   28 |
-+------+----------------+------+
-6 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> SELECT * FROM routine_test09;
+    +------+----------------+------+
+    | id   | name           | age  |
+    +------+----------------+------+
+    |    1 | Benjamin       |   18 |
+    |    2 | Emily          |   20 |
+    |    3 | Alexander      |   22 |
+    |    4 | Sophia         |   24 |
+    |    5 | William        |   26 |
+    |    6 | Charlotte      |   28 |
+    +------+----------------+------+
+    6 rows in set (0.01 sec)
+    ```
 
 2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test08 (
         id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age",
     )
-    DUPLICATE KEY(id)
+    UNIQUE KEY(id)
     DISTRIBUTED BY HASH(id) BUCKETS 1
     PROPERTIES (
         "function_column.sequence_col" = "age"
@@ -1117,7 +1062,6 @@ mysql> SELECT * FROM routine_test09;
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad09",
-                "property.group.id" = "kafka_job09",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );   
     ```
@@ -1153,9 +1097,9 @@ mysql> SELECT * FROM routine_test09;
     ```sql
     CREATE TABLE demo.routine_test10 (
         id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
-        num     INT                      COMMENT "数量"
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age",
+        num     INT                      COMMENT "number"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1167,17 +1111,10 @@ mysql> SELECT * FROM routine_test09;
     CREATE ROUTINE LOAD demo.kafka_job10 ON routine_test10
             COLUMNS TERMINATED BY ",",
             COLUMNS(id, name, age, num=age*10)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "max_filter_ratio"="0.5",
-                "strict_mode" = "false"
-            )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad10",
-                "property.group.id" = "kafka_job10",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1211,9 +1148,9 @@ mysql> SELECT * FROM routine_test09;
     ```sql
     CREATE TABLE demo.routine_test11 (
         id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
-        num     INT                      COMMENT "数量"
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age",
+        num     INT                      COMMENT "number"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1222,7 +1159,8 @@ mysql> SELECT * FROM routine_test09;
 3. 导入命令
 
     ```sql
-    CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
+    CREATE ROUTINE LOAD demo.kafka_job11 ON routine_test11
+            COLUMNS TERMINATED BY ","
             PROPERTIES
             (
                 "desired_concurrent_number"="1",
@@ -1232,7 +1170,6 @@ mysql> SELECT * FROM routine_test09;
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad12",
-                "property.group.id" = "kafka_job12",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );
     ```
@@ -1240,7 +1177,7 @@ mysql> SELECT * FROM routine_test09;
 4. 导入结果
 
     ```sql
-    mysql> SELECT * FROM routine_test12;
+    mysql> SELECT * FROM routine_test11;
     +------+----------------+------+------+
     | id   | name           | age  | num  |
     +------+----------------+------+------+
@@ -1268,8 +1205,8 @@ mysql> SELECT * FROM routine_test09;
     ```sql
     CREATE TABLE demo.routine_test12 (
         id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1281,15 +1218,12 @@ mysql> SELECT * FROM routine_test09;
     CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad12",
-                "property.group.id" = "kafka_job12",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1323,9 +1257,9 @@ mysql> SELECT * FROM routine_test09;
     ```sql
     CREATE TABLE demo.routine_test13 (
         id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
-        num     INT                      COMMENT "数字"
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age",
+        num     INT                      COMMENT "num"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1338,16 +1272,13 @@ mysql> SELECT * FROM routine_test09;
             COLUMNS(name, id, num, age)
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "format" = "json",
-                "strict_mode" = "false",
                 "jsonpaths" = "[\"$.name\",\"$.id\",\"$.num\",\"$.age\"]"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad13",
-                "property.group.id" = "kafka_job13",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1381,8 +1312,8 @@ mysql> SELECT * FROM routine_test09;
     ```sql
     CREATE TABLE demo.routine_test14 (
         id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1394,16 +1325,13 @@ mysql> SELECT * FROM routine_test09;
     CREATE ROUTINE LOAD demo.kafka_job14 ON routine_test14
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "format" = "json",
-                "strict_mode" = "false",
                 "json_root" = "$.source"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad14",
-                "property.group.id" = "kafka_job14",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1437,9 +1365,9 @@ mysql> SELECT * FROM routine_test09;
     ```sql
     CREATE TABLE demo.routine_test15 (
         id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
-        num     INT                      COMMENT "数字"
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age",
+        num     INT                      COMMENT "num"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1452,15 +1380,12 @@ mysql> SELECT * FROM routine_test09;
             COLUMNS(id, name, age, num=age*10)
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "format" = "json",
-                "strict_mode" = "false"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad15",
-                "property.group.id" = "kafka_job15",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1497,9 +1422,9 @@ mysql> SELECT * FROM routine_test09;
     CREATE TABLE demo.routine_test16
     (
         id      INT             NOT NULL  COMMENT "id",
-        name    VARCHAR(30)     NOT NULL  COMMENT "名字",
-        age     INT                       COMMENT "年纪",
-        array   ARRAY<int(11)>  NULL      COMMENT "测试数组列"
+        name    VARCHAR(30)     NOT NULL  COMMENT "name",
+        age     INT                       COMMENT "age",
+        array   ARRAY<int(11)>  NULL      COMMENT "test array column"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1511,15 +1436,12 @@ mysql> SELECT * FROM routine_test09;
     CREATE ROUTINE LOAD demo.kafka_job16 ON routine_test16
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad16",
-                "property.group.id" = "kafka_job16",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1553,9 +1475,9 @@ mysql> SELECT * FROM routine_test09;
     ```sql
     CREATE TABLE demo.routine_test17 (
         id      INT                 NOT NULL  COMMENT "id",
-        name    VARCHAR(30)         NOT NULL  COMMENT "名字",
-        age     INT                           COMMENT "年纪",
-        map     Map<STRING, INT>    NULL      COMMENT "测试列"
+        name    VARCHAR(30)         NOT NULL  COMMENT "name",
+        age     INT                           COMMENT "age",
+        map     Map<STRING, INT>    NULL      COMMENT "test column"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1567,15 +1489,12 @@ mysql> SELECT * FROM routine_test09;
     CREATE ROUTINE LOAD demo.kafka_job17 ON routine_test17
         PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad17",
-                "property.group.id" = "kafka_job17",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1609,10 +1528,10 @@ mysql> SELECT * FROM routine_test09;
     ```sql
     CREATE TABLE demo.routine_test18 (
         id        INT            NOT NULL      COMMENT "id",
-        name      VARCHAR(30)    NOT NULL      COMMENT "名字",
-        age       INT                          COMMENT "年纪",
-        bitmap_id INT                          COMMENT "测试",
-        device_id BITMAP         BITMAP_UNION  COMMENT "测试列"
+        name      VARCHAR(30)    NOT NULL      COMMENT "name",
+        age       INT                          COMMENT "age",
+        bitmap_id INT                          COMMENT "test",
+        device_id BITMAP         BITMAP_UNION  COMMENT "test column"
     )
     AGGREGATE KEY (`id`,`name`,`age`,`bitmap_id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1625,15 +1544,12 @@ mysql> SELECT * FROM routine_test09;
             COLUMNS(id, name, age, bitmap_id, device_id=to_bitmap(bitmap_id))
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad18",
-                "property.group.id" = "kafka_job18",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );
     ```
@@ -1661,14 +1577,14 @@ mysql> SELECT * FROM routine_test09;
 1. 导入数据样例
 
     ```sql
-    2022-05-05,10001，测试 01，北京，windows
-    2022-05-05,10002，测试 01，北京，linux
-    2022-05-05,10003，测试 01，北京，macos
-    2022-05-05,10004，测试 01，河北，windows
-    2022-05-06,10001，测试 01，上海，windows
-    2022-05-06,10002，测试 01，上海，linux
-    2022-05-06,10003，测试 01，江苏，macos
-    2022-05-06,10004，测试 01，陕西，windows
+    2022-05-05,10001,Test01,Beijing,windows
+    2022-05-05,10002,Test01,Beijing,linux
+    2022-05-05,10003,Test01,Beijing,macos
+    2022-05-05,10004,Test01,Hebei,windows
+    2022-05-06,10001,Test01,Shanghai,windows
+    2022-05-06,10002,Test01,Shanghai,linux
+    2022-05-06,10003,Test01,Jiangsu,macos
+    2022-05-06,10004,Test01,Shaanxi,windows
     ```
 
 2. 建表结构
@@ -1692,16 +1608,10 @@ mysql> SELECT * FROM routine_test09;
     CREATE ROUTINE LOAD demo.kafka_job19 ON routine_test19
             COLUMNS TERMINATED BY ",",
             COLUMNS(dt, id, name, province, os, pv=hll_hash(id))
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad19",
-                "property.group.id" = "kafka_job19",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1713,14 +1623,14 @@ mysql> SELECT * FROM routine_test09;
     +------------+-------+----------+----------+---------+------+
     | dt         | id    | name     | province | os      | pv   |
     +------------+-------+----------+----------+---------+------+
-    | 2022-05-05 | 10001 | 测试 01   | 北京     | windows | NULL |
-    | 2022-05-06 | 10001 | 测试 01   | 上海     | windows | NULL |
-    | 2022-05-05 | 10002 | 测试 01   | 北京     | linux   | NULL |
-    | 2022-05-06 | 10002 | 测试 01   | 上海     | linux   | NULL |
-    | 2022-05-05 | 10004 | 测试 01   | 河北     | windows | NULL |
-    | 2022-05-06 | 10004 | 测试 01   | 陕西     | windows | NULL |
-    | 2022-05-05 | 10003 | 测试 01   | 北京     | macos   | NULL |
-    | 2022-05-06 | 10003 | 测试 01   | 江苏     | macos   | NULL |
+    | 2022-05-05 | 10001 | Test01   | Beijing     | windows | NULL |
+    | 2022-05-06 | 10001 | Test01   | Shanghai    | windows | NULL |
+    | 2022-05-05 | 10002 | Test01   | Beijing     | linux   | NULL |
+    | 2022-05-06 | 10002 | Test01   | Shanghai    | linux   | NULL |
+    | 2022-05-05 | 10004 | Test01   | Heibei      | windows | NULL |
+    | 2022-05-06 | 10004 | Test01   | Shanxi      | windows | NULL |
+    | 2022-05-05 | 10003 | Test01   | Beijing     | macos   | NULL |
+    | 2022-05-06 | 10003 | Test01   | Jiangsu     | macos   | NULL |
     +------------+-------+----------+----------+---------+------+
     8 rows in set (0.01 sec)
 
@@ -1750,8 +1660,8 @@ mysql> SELECT * FROM routine_test09;
     ```sql
     CREATE TABLE demo.routine_test20 (
         id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1763,16 +1673,12 @@ mysql> SELECT * FROM routine_test09;
     CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "192.168.100.129:9092",
                 "kafka_topic" = "routineLoad21",
-                "property.group.id" = "kafka_job21",
-                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
                 "property.security.protocol" = "ssl",
                 "property.ssl.ca.location" = "FILE:ca.pem",
                 "property.ssl.certificate.location" = "FILE:client.pem",
@@ -1810,8 +1716,8 @@ mysql> SELECT * FROM routine_test09;
     ```sql
     CREATE TABLE demo.routine_test21 (
         id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1823,16 +1729,12 @@ mysql> SELECT * FROM routine_test09;
     CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "192.168.100.129:9092",
                 "kafka_topic" = "routineLoad21",
-                "property.group.id" = "kafka_job21",
-                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
                 "property.security.protocol" = "SASL_PLAINTEXT",
                 "property.sasl.kerberos.service.name" = "kafka",
                 "property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
@@ -1870,8 +1772,8 @@ mysql> SELECT * FROM routine_test09;
     ```sql
     CREATE TABLE demo.routine_test22 (
         id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-        age     INT                      COMMENT "年纪",
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1883,16 +1785,12 @@ mysql> SELECT * FROM routine_test09;
     CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "192.168.100.129:9092",
                 "kafka_topic" = "routineLoad22",
-                "property.group.id" = "kafka_job22",
-                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
                 "property.security.protocol"="SASL_PLAINTEXT",
                 "property.sasl.mechanism"="PLAIN",
                 "property.sasl.username"="admin",
@@ -1922,20 +1820,10 @@ mysql> SELECT * FROM routine_test09;
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1
-PROPERTIES
-(
-    "desired_concurrent_number"="3",
-    "max_batch_interval" = "20",
-    "max_batch_rows" = "300000",
-    "max_batch_size" = "209715200",
-    "strict_mode" = "false"
-)
 FROM KAFKA
 (
     "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
     "kafka_topic" = "my_topic",
-    "property.group.id" = "xxx",
-    "property.client.id" = "xxx",
     "property.kafka_default_offsets" = "OFFSET_BEGINNING"
 );
 ```
@@ -1953,18 +1841,12 @@ PRECEDING FILTER k1 = 1,
 WHERE k1 < 100 and k2 like "%doris%"
 PROPERTIES
 (
-    "desired_concurrent_number"="3",
-    "max_batch_interval" = "20",
-    "max_batch_rows" = "300000",
-    "max_batch_size" = "209715200",
     "strict_mode" = "true"
 )
 FROM KAFKA
 (
     "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-    "kafka_topic" = "my_topic",
-    "kafka_partitions" = "0,1,2,3",
-    "kafka_offsets" = "101,0,0,200"
+    "kafka_topic" = "my_topic"
 );
 ```
 

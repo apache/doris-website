@@ -557,7 +557,7 @@ The columns in the result set provide the following information:
     ```sql
     1,Benjamin,18
     2,Emily,20
-    3,Alexander,22
+    3,Alexander,dirty_data
     ```
 
 2. Create table:
@@ -576,19 +576,17 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age)
+            COLUMNS TERMINATED BY ","
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "max_filter_ratio"="0.5",
-                "strict_mode" = "false"
+                "max_error_number" = "100",
+                "strict_mode" = "true"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad01",
-                "property.group.id" = "kafka_job01",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -602,9 +600,8 @@ The columns in the result set provide the following information:
     +------+------------+------+
     |    1 | Benjamin   |   18 |
     |    2 | Emily      |   20 |
-    |    3 | Alexander  |   22 |
     +------+------------+------+
-    3 rows in set (0.01 sec)
+    2 rows in set (0.01 sec)
     ```
 
 **Consuming Data from a Specified Offset**
@@ -636,18 +633,11 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job02 ON routine_test02
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
+            COLUMNS TERMINATED BY ","
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad02",
-                "property.group.id" = "kafka_job",
                 "kafka_partitions" = "0",
                 "kafka_offsets" = "3"
             );
@@ -693,13 +683,7 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job03 ON routine_test03
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
+            COLUMNS TERMINATED BY ","
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
@@ -754,18 +738,11 @@ The columns in the result set provide the following information:
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job04 ON routine_test04
             COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age),
             WHERE id >= 3
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad04",
-                "property.group.id" = "kafka_job04",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -803,18 +780,12 @@ The columns in the result set provide the following information:
         age     INT                      COMMENT "Age",
         date    DATETIME                 COMMENT "Date"
     )
-    PARTITION BY RANGE(date) ()
-    DISTRIBUTED BY HASH(date)
-    PROPERTIES
-    (        
-        "replication_num" = "1",
-        "dynamic_partition.enable" = "true",
-        "dynamic_partition.time_unit" = "DAY",
-        "dynamic_partition.start" = "-2",
-        "dynamic_partition.end" = "3",
-        "dynamic_partition.prefix" = "p",
-        "dynamic_partition.buckets" = "1"
-    );
+    DUPLICATE KEY(`id`)
+    PARTITION BY RANGE(`id`)
+    (PARTITION partition_a VALUES [("0"), ("1")),
+    PARTITION partition_b VALUES [("1"), ("2")),
+    PARTITION partition_c VALUES [("2"), ("3")))
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
 3. Load command:
@@ -822,18 +793,13 @@ The columns in the result set provide the following information:
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job05 ON routine_test05
             COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age, date),
-            PARTITION(p20240205)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
+            PARTITION(partition_b)
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad05",
-                "property.group.id" = "Apologies, but I'm unable to assist with the translation request at the moment.")
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );
     ```
 
 4. Load result:
@@ -843,9 +809,9 @@ The columns in the result set provide the following information:
     +------+----------+------+---------------------+
     | id   | name     | age  | date                |
     +------+----------+------+---------------------+
-    |    2 | Emily    |   20 | 2024-02-05 11:00:00 |
+    |    1 | Benjamin |   18 | 2024-02-04 10:00:00 |
     +------+----------+------+---------------------+
-    3 rows in set (0.01 sec)
+    1 rows in set (0.01 sec)
     ```
 
 **Setting Time Zone for load**
@@ -875,19 +841,15 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job06 ON routine_test06
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age, date)
+            COLUMNS TERMINATED BY ","
             PROPERTIES
             (
-                "desired_concurrent_number" = "1",
-                "strict_mode" = "false",
                 "timezone" = "Asia/Shanghai"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad06",
-                "property.group.id" = "kafka_job06",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -899,9 +861,9 @@ The columns in the result set provide the following information:
     +------+-------------+------+---------------------+
     | id   | name        | age  | date                |
     +------+-------------+------+---------------------+
-    |    1 | Benjamin    |   18 | 2024-02-05 10:00:00 |
+    |    1 | Benjamin    |   18 | 2024-02-04 10:00:00 |
     |    2 | Emily       |   20 | 2024-02-05 11:00:00 |
-    |    3 | Alexander   |   22 | 2024-02-05 12:00:00 |
+    |    3 | Alexander   |   22 | 2024-02-06 12:00:00 |
     +------+-------------+------+---------------------+
     3 rows in set (0.00 sec)
     ```
@@ -939,7 +901,7 @@ The columns in the result set provide the following information:
         name    VARCHAR(30)    NOT NULL  COMMENT "name",
         age     INT                      COMMENT "age"
     )
-    DUPLICATE KEY(id)
+    UNIQUE KEY(id)
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
@@ -947,20 +909,12 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job07 ON routine_test07
-            WITH DELETE 
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age)
-            PROPERTIES
-            (
-                "desired_concurrent_number" = "1",
-                "max_filter_ratio" = "0.5",
-                "strict_mode" = "false"
-            )
+            WITH DELETE
+            COLUMNS TERMINATED BY ","
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad07",
-                "property.group.id" = "kafka_job07",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1017,7 +971,7 @@ The columns in the result set provide the following information:
         name    VARCHAR(30)    NOT NULL  COMMENT "name",
         age     INT                      COMMENT "age"
     )
-    DUPLICATE KEY(id)
+    UNIQUE KEY(id)
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
@@ -1025,20 +979,13 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job08 ON routine_test08
-            WITH MERGE 
+            WITH MERGE
             COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age),
             DELETE ON id = 2
-            PROPERTIES
-            (
-                "desired_concurrent_number" = "1",
-                "strict_mode" = "false"
-            )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad08",
-                "property.group.id" = "kafka_job08",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );   
     ```
@@ -1097,7 +1044,7 @@ The columns in the result set provide the following information:
         name    VARCHAR(30)    NOT NULL  COMMENT "name",
         age     INT                      COMMENT "age",
     )
-    DUPLICATE KEY(id)
+    UNIQUE KEY(id)
     DISTRIBUTED BY HASH(id) BUCKETS 1
     PROPERTIES (
         "function_column.sequence_col" = "age"
@@ -1122,7 +1069,6 @@ The columns in the result set provide the following information:
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad09",
-                "property.group.id" = "kafka_job09",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );   
     ```
@@ -1172,17 +1118,10 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job10 ON routine_test10
             COLUMNS TERMINATED BY ",",
             COLUMNS(id, name, age, num=age*10)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "max_filter_ratio"="0.5",
-                "strict_mode" = "false"
-            )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad10",
-                "property.group.id" = "kafka_job10",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1227,7 +1166,8 @@ The columns in the result set provide the following information:
 3. Load command:
 
     ```sql
-    CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
+    CREATE ROUTINE LOAD demo.kafka_job11 ON routine_test11
+            COLUMNS TERMINATED BY ","
             PROPERTIES
             (
                 "desired_concurrent_number"="1",
@@ -1237,7 +1177,6 @@ The columns in the result set provide the following information:
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad12",
-                "property.group.id" = "kafka_job12",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );
     ```
@@ -1286,15 +1225,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad12",
-                "property.group.id" = "kafka_job12",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1343,16 +1279,13 @@ The columns in the result set provide the following information:
             COLUMNS(name, id, num, age)
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "format" = "json",
-                "strict_mode" = "false",
                 "jsonpaths" = "[\"$.name\",\"$.id\",\"$.num\",\"$.age\"]"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad13",
-                "property.group.id" = "kafka_job13",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1399,16 +1332,13 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job14 ON routine_test14
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "format" = "json",
-                "strict_mode" = "false",
                 "json_root" = "$.source"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad14",
-                "property.group.id" = "kafka_job14",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1457,15 +1387,12 @@ The columns in the result set provide the following information:
             COLUMNS(id, name, age, num=age*10)
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "format" = "json",
-                "strict_mode" = "false"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad15",
-                "property.group.id" = "kafka_job15",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1516,15 +1443,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job16 ON routine_test16
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad16",
-                "property.group.id" = "kafka_job16",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1572,15 +1496,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job17 ON routine_test17
         PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad17",
-                "property.group.id" = "kafka_job17",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1630,15 +1551,12 @@ The columns in the result set provide the following information:
             COLUMNS(id, name, age, bitmap_id, device_id=to_bitmap(bitmap_id))
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad18",
-                "property.group.id" = "kafka_job18",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );
     ```
@@ -1697,16 +1615,10 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job19 ON routine_test19
             COLUMNS TERMINATED BY ",",
             COLUMNS(dt, id, name, province, os, pv=hll_hash(id))
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad19",
-                "property.group.id" = "kafka_job19",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1768,16 +1680,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "192.168.100.129:9092",
                 "kafka_topic" = "routineLoad21",
-                "property.group.id" = "kafka_job21",
-                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
                 "property.security.protocol" = "ssl",
                 "property.ssl.ca.location" = "FILE:ca.pem",
                 "property.ssl.certificate.location" = "FILE:client.pem",
@@ -1828,16 +1736,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "192.168.100.129:9092",
                 "kafka_topic" = "routineLoad21",
-                "property.group.id" = "kafka_job21",
-                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
                 "property.security.protocol" = "SASL_PLAINTEXT",
                 "property.sasl.kerberos.service.name" = "kafka",
                 "property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
@@ -1888,16 +1792,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "192.168.100.129:9092",
                 "kafka_topic" = "routineLoad22",
-                "property.group.id" = "kafka_job22",
-                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
                 "property.security.protocol"="SASL_PLAINTEXT",
                 "property.sasl.mechanism"="PLAIN",
                 "property.sasl.username"="admin",
@@ -1927,20 +1827,10 @@ Assuming we need to load data from Kafka into tables "tbl1" and "tbl2" in the "e
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1
-PROPERTIES
-(
-    "desired_concurrent_number"="3",
-    "max_batch_interval" = "20",
-    "max_batch_rows" = "300000",
-    "max_batch_size" = "209715200",
-    "strict_mode" = "false"
-)
 FROM KAFKA
 (
     "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
     "kafka_topic" = "my_topic",
-    "property.group.id" = "xxx",
-    "property.client.id" = "xxx",
     "property.kafka_default_offsets" = "OFFSET_BEGINNING"
 );
 ```
@@ -1958,18 +1848,12 @@ PRECEDING FILTER k1 = 1,
 WHERE k1 < 100 and k2 like "%doris%"
 PROPERTIES
 (
-    "desired_concurrent_number"="3",
-    "max_batch_interval" = "20",
-    "max_batch_rows" = "300000",
-    "max_batch_size" = "209715200",
     "strict_mode" = "true"
 )
 FROM KAFKA
 (
     "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-    "kafka_topic" = "my_topic",
-    "kafka_partitions" = "0,1,2,3",
-    "kafka_offsets" = "101,0,0,200"
+    "kafka_topic" = "my_topic"
 );
 ```
 
