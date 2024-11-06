@@ -660,7 +660,7 @@ Typically, the maximum supported data volume for an import job is `max_bytes_per
 - The minimum processed data volume, maximum concurrency, size of the source file, and the current number of BE nodes jointly determine the concurrency of this import.
 
 ```Plain
-Import Concurrency = Math.min(Source File Size / Minimum Processing Amount, Maximum Concurrency, Current Number of BE Nodes)
+Import Concurrency = Math.min(Source File Size / Minimum Processing Amount, Maximum Concurrency, Current Number of BE Nodes * load_parallelism)
 Processing Volume per BE for this Import = Source File Size / Import Concurrency
 ```
 
