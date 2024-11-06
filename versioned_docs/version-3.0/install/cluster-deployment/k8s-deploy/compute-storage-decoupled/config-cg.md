@@ -159,4 +159,4 @@ In K8s deployment mode, Doris-Operator mounts customized persistent storage for 
 :::tip Tip
 - The value of file_cache_path must be a JSON array.
 - All startup configurations must be mounted in the /etc/doris directory.  
-  ::: 
+::: 
