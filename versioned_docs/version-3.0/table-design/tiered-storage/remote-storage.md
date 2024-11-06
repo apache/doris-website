@@ -28,6 +28,10 @@ under the License.
 
 Remote storage supports placing some data in external storage (such as object storage or HDFS), which saves costs without sacrificing functionality.
 
+:::warning Note
+Data in remote storage only has one replica. The reliability of the data depends on the reliability of the remote storage. You need to ensure that the remote storage employs EC (Erasure Coding) or multi-replica technology to guarantee data reliability.
+:::
+
 ### Usage Guide
 
 Using S3 object storage as an example, start by creating an S3 RESOURCE:

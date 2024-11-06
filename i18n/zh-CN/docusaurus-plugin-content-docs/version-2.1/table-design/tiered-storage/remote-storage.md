@@ -28,6 +28,10 @@ under the License.
 
 远程存储支持把部分数据放到外部存储（例如对象存储，HDFS）上，节省成本，不牺牲功能。
 
+:::warning 注意
+远程存储的数据只有一个副本，数据可靠性依赖远程存储的数据可靠性，您需要保证远程存储有ec（擦除码）或者多副本技术确保数据可靠性。
+:::
+
 ## 使用方法
 
 以S3对象存储为例，首先创建S3 RESOURCE：
@@ -55,7 +59,7 @@ PROPERTIES
 
 之后创建STORAGE POLICY，关联上文创建的RESOURCE：
 
-```Plain
+```sql
 CREATE STORAGE POLICY test_policy
 PROPERTIES(
     "storage_resource" = "remote_s3",
@@ -65,7 +69,7 @@ PROPERTIES(
 
 最后建表的时候指定STORAGE POLICY：
 
-```Plain
+```sql
 CREATE TABLE IF NOT EXISTS create_table_use_created_policy 
 (
     k1 BIGINT,
