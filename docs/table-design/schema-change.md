@@ -36,23 +36,20 @@ Users can modify the schema of an existing table through the Schema Change opera
 
 - Transaction: Each import task is a transaction, and each transaction has a unique increasing transaction ID.
 
-## Introduction 
+## Introduction
 
-**Light Schema Change**
+**Overview**
 
-Before introduction, it is necessary to know the three Schema Change implementations before the Apache Doris 1.2.0 version, all of which are asynchronous:
+|Schema change Implementation | Pattern | Main Logic | Typical Scenario |
+|-----------------|------|---------|----------|
+| Light Schema Change | Synchronous | Only modifies the FE's schema metadata | Adding or dropping value columns |
+| Direct Schema Change | Asynchronous | Rewrites the data files holistically, but does not involve reordering | Changing the type of value columns |
+| Sort Schema Change | Asynchronous | Rewrites the data files holistically and reorders them | Changing the type of key columns |
+| Hard Linked Schema Change | Asynchronous | Relinks the data files without modifying the data files themselves | Replaced by Light Schema Change |
 
-- Hard linked schema change  mainly acts on addition and subtraction of value columns and does not require modification of the data file.
+**Dual Writing**
 
-- Direct schema change  is mainly used to change the type of value  column, which needs to rewrite the data, but does not involve the key  column, and does not need to be reordered.
-
-- Sort schema change  is mainly used for the key column  schema change, because the key  column addition/subtraction/modification type and other operations will affect the sorting of existing data, so the data needs to be read out again, modified, and then sort.
-
-Since Apache Doris 1.2.0 , for the first type, the new feature of light schema change has been introduced. The new light schema change allows the addition and subtraction of the value column to be completed in milliseconds. Starting from Apache Doris 2.0.0, all newly created tables have enabled light schema change by default.
-
-**In addition to adding and deleting the value column, the main principles of other types of schema changes are as follows**
-
-The basic process of executing schema change is to generate a new schema table from the data  /Index  in the original table  /Index data. There are mainly two parts of data conversion, one is the conversion of existing historical data, and the other is the conversion of newly arrived imported data during the execution of schema change.
+Dual writing is a process shared by Direct Schema Change and Sort Schema Change. Both methods generate a new schema table/index data from the original table/index data. It mainly involves two parts of data conversion: one is the conversion of existing historical data, and the other is the conversion of newly arrived import data during the execution of the Schema Change.
 
 ```Plain
 +----------+
@@ -74,7 +71,7 @@ The basic process of executing schema change is to generate a new schema table f
             +------------------+ +---------------+
 ```
 
-Before starting to convert historical data, Doris will obtain a latest transaction ID and wait for all import transactions before this transaction ID to complete. This transaction ID becomes a watershed. This means that Doris ensures that all import tasks after the watershed will generate data for the original table  /Index  and the new table  /Index  at the same time. This way, when the historical data conversion is completed, the data in the new table can be guaranteed to be complete.
+Before the historical data transformation begins, it will wait for all preceding transactions to complete. After that, the data transformation starts, and to ensure data integrity, subsequent import tasks will generate data for both the original table/index and the new table/index. The data imported during the transformation period must be compatible with both the new and old schemas; otherwise, the import will fail.
 
 The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
 
@@ -100,6 +97,7 @@ ALTER TABLE table_name ADD COLUMN column_name column_type [KEY | agg_type] [DEFA
 #### non-aggregate model
 
 table's DDL:
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     col1 int,
@@ -110,10 +108,10 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
 ) DUPLICATE KEY(col1, col2, col3)
 DISTRIBUTED BY RANDOM BUCKETS 1
 ROLLUP (
-   example_rollup_index (col1, col3, col4, col5)
+    example_rollup_index (col1, col3, col4, col5)
 )
 PROPERTIES (
-   "replication_num" = "1"
+    "replication_num" = "1"
 )
 ```
 
@@ -136,6 +134,7 @@ TO example_rollup_index;
 #### aggregate model
 
 table's DDL:
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     col1 int,
@@ -262,6 +261,7 @@ ALTER TABLE table_name MODIFY COLUMN column_name column_type [KEY | agg_type] [N
 ### Examples
 
 table's DDL:
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     col0 int,
@@ -329,7 +329,7 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
 ) AGGREGATE KEY(k1, k2, k3, k4)
 DISTRIBUTED BY HASH(k1) BUCKETS 1
 ROLLUP (
-   example_rollup_index(k1, k2, k3, v1, v2)
+    example_rollup_index(k1, k2, k3, v1, v2)
 )
 PROPERTIES (
     "replication_num" = "1"
@@ -360,8 +360,8 @@ CREATE TABLE IF NOT EXISTS example_db.tbl1(
 ) AGGREGATE KEY(k1, k2, k3)
 DISTRIBUTED BY HASH(k1) BUCKETS 1
 ROLLUP (
-   rollup1 (k1, k2),
-   rollup2 (k2)
+    rollup1 (k1, k2),
+    rollup2 (k2)
 )
 PROPERTIES (
     "replication_num" = "1"
@@ -406,6 +406,7 @@ Additionally, it is not allowed to add columns to a rollup that already exist in
 ### Example 2
 
 table's DDL
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     k1 int DEFAULT "1",
@@ -416,10 +417,10 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
 ) AGGREGATE KEY(k1, k2, k3, k4)
 DISTRIBUTED BY HASH(k1) BUCKETS 1
 ROLLUP (
-   example_rollup_index(k1, k3, k2, v1)
+    example_rollup_index(k1, k3, k2, v1)
 )
 PROPERTIES (
-   "replication_num" = "1"
+    "replication_num" = "1"
 )
 ```
 
@@ -439,9 +440,9 @@ ALTER TABLE RENAME COLUMN old_column_name new_column_name;
 
 ## Check Job Status
 
-The creation of a schema change is an asynchronous process. After a job is successfully submitted, users need to use the `SHOW ALTER TABLE COLUMN` command to check the progress of the job.
+Users could use the `SHOW ALTER TABLE COLUMN` command to check the progress of the schema change job.
 
-`SHOW ALTER TABLE COLUMN ` allows you to view the currently executing or completed schema Change jobs. When a schema change job involves multiple indexes, the command will display multiple rows, with each row corresponding to an index. For example:
+`SHOW ALTER TABLE COLUMN` allows you to view the currently executing or completed schema Change jobs. When a schema change job involves multiple indexes, the command will display multiple rows, with each row corresponding to an index. For example:
 
 ```sql
 mysql > SHOW ALTER TABLE COLUMN\G;
@@ -530,7 +531,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 
 - Note that apart from the new column type, other attributes such as the aggregation method, nullable property, and default value should be completed based on the original information.
 
-- It is not supported to modify column names, aggregation types, nullable properties, default values, or column comments.
+- It is not supported to modify aggregation types, nullable properties, or default values.
 
 ## FAQs
 
