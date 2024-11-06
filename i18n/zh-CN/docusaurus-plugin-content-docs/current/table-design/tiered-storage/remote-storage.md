@@ -121,7 +121,7 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
 UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话，无法使用此功能。
 :::
 
-除了新建表支持设置远程存储外，DORIS还支持对一个已存在的表或者PARTITION，设置远程存储。
+除了新建表支持设置远程存储外，Doris还支持对一个已存在的表或者PARTITION，设置远程存储。
 
 对一个已存在的表，设置远程存储，将创建好的STORAGE POLICY与表关联：
 
@@ -177,7 +177,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 ## 远程存储的 Schema Change
 
-数据冷却后支持 Schema Change 类型如下：
+远程存储支持 Schema Change 类型如下：
 
 -   增加、删除列
 
