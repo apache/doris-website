@@ -44,51 +44,50 @@ Github: https://github.com/apache/doris-spark-connector
 | 1.1.0     | 3.2, 3.1, 2.3       | 1.0 +       | 8    | 2.12, 2.11 |
 | 1.0.1     | 3.1, 2.3            | 0.12 - 0.15 | 8    | 2.12, 2.11 |
 
-## Build and Install
+## How To Use
 
-Ready to work
-
-1. Modify the `custom_env.sh.tpl` file and rename it to `custom_env.sh`
-
-2. Execute following command in source dir:
-   `sh build.sh`
-   Follow the prompts to enter the Scala and Spark versions you need to start compiling.
-
-After the compilation is successful, the target jar package will be generated in the `dist` directory, such
-as: `spark-doris-connector-3.1_2.12-1.2.0-SNAPSHOT.jar`.
-Copy this file to `ClassPath` in `Spark` to use `Spark-Doris-Connector`. For example, `Spark` running in `Local` mode,
-put this file in the `jars/` folder. `Spark` running in `Yarn` cluster mode, put this file in the pre-deployment
-package.
-
-For example upload `spark-doris-connector-3.1_2.12-1.2.0-SNAPSHOT.jar` to hdfs and add hdfs file path in
-spark.yarn.jars.
-
-1. Upload `spark-doris-connector-3.1_2.12-1.2.0-SNAPSHOT.jar` Jar to hdfs.
-
-```
-hdfs dfs -mkdir /spark-jars/
-hdfs dfs -put /your_local_path/spark-doris-connector-3.1_2.12-1.2.0-SNAPSHOT.jar /spark-jars/
-```
-
-2. Add `spark-doris-connector-3.1_2.12-1.2.0-SNAPSHOT.jar` dependency in Cluster.
-
-```
-spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-3.1_2.12-1.2.0-SNAPSHOT.jar
-```
-
-## Using Maven
-
+### Maven
 ```
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>spark-doris-connector-3.4_2.12</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.2</version>
 </dependency>
 ```
+**Note**
 
-**Notes**
+1. Please replace the corresponding Connector version according to different Spark and Scala versions.
 
-Please replace the Connector version according to the different Spark and Scala versions.
+2. You can also download the relevant version jar package from [here](https://repo.maven.apache.org/maven2/org/apache/doris/).
+
+### Compile
+
+When compiling, you can directly run `sh build.sh`, for details, please refer to here.
+
+After successful compilation, the target jar package will be generated in the `dist` directory, such as: spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar. Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`. For example, for `Spark` running in `Local` mode, put this file in the `jars/` folder. For `Spark` running in `Yarn` cluster mode, put this file in the pre-deployment package.
+You can also
+
+2. Execute in the source code directory:
+
+`sh build.sh`
+Enter the Scala and Spark versions you need to compile according to the prompts.
+
+After successful compilation, the target jar package will be generated in the `dist` directory, such as: `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar`.
+Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`.
+
+For example, if `Spark` is running in `Local` mode, put this file in the `jars/` folder. If `Spark` is running in `Yarn` cluster mode, put this file in the pre-deployment package.
+
+For example, upload `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar` to hdfs and add the Jar package path on hdfs to the `spark.yarn.jars` parameter
+```shell
+1. Upload `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar` to hdfs.
+
+hdfs dfs -mkdir /spark-jars/
+hdfs dfs -put /your_local_path/spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar /spark-jars/
+
+2. Add the `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar` dependency in the cluster.
+spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar
+
+```
 
 ## Example
 
@@ -113,7 +112,7 @@ FROM spark_doris;
 
 #### DataFrame
 
-```scala
+```java
 val dorisSparkDF = spark.read.format("doris")
   .option("doris.table.identifier", "$YOUR_DORIS_DATABASE_NAME.$YOUR_DORIS_TABLE_NAME")
   .option("doris.fenodes", "$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT")
@@ -126,7 +125,7 @@ dorisSparkDF.show(5)
 
 #### RDD
 
-```scala
+```java
 import org.apache.doris.spark._
 
 val dorisSparkRDD = sc.dorisRDD(
@@ -143,7 +142,7 @@ dorisSparkRDD.collect()
 
 #### pySpark
 
-```scala
+```java
 dorisSparkDF = spark.read.format("doris")
   .option("doris.table.identifier", "$YOUR_DORIS_DATABASE_NAME.$YOUR_DORIS_TABLE_NAME")
   .option("doris.fenodes", "$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT")
@@ -183,8 +182,8 @@ FROM YOUR_TABLE
 
 #### DataFrame(batch/stream)
 
-```scala
-## batch sink
+```java
+// batch sink
 val mockDataDF = List(
   (3, "440403001005", "21.cn"),
   (1, "4404030013005", "22.cn"),
@@ -204,9 +203,9 @@ mockDataDF.write.format("doris")
   // .option("save_mode", SaveMode.Overwrite)
   .save()
 
-## stream sink(StructuredStreaming)
+// stream sink(StructuredStreaming)
 
-### Result DataFrame with structured data, the configuration method is the same as the batch mode.
+// Result DataFrame with structured data, the configuration method is the same as the batch mode.
 val sourceDf = spark.readStream.
        .format("your_own_stream_source")
        .load()
@@ -223,7 +222,7 @@ resultDf.writeStream
       .start()
       .awaitTermination()
 
-### There is a column value in the Result DataFrame that can be written directly, such as the value in the kafka message that conforms to the import format
+// There is a column value in the Result DataFrame that can be written directly, such as the value in the kafka message that conforms to the import format
 
 val kafkaSource = spark.readStream
   .format("kafka")
@@ -261,14 +260,14 @@ kafkaSource.selectExpr("CAST(key AS STRING)", "CAST(value as STRING)")
 | doris.request.query.timeout.s    | 3600              | Query the timeout time of doris, the default is 1 hour, -1 means no timeout limit                                                                                                                                                                                                                                                                                                                                                                                               |
 | doris.request.tablet.size        | Integer.MAX_VALUE | The number of Doris Tablets corresponding to an RDD Partition. The smaller this value is set, the more partitions will be generated. This will increase the parallelism on the Spark side, but at the same time will cause greater pressure on Doris.                                                                                                                                                                                                                           |
 | doris.read.field                 | --                | List of column names in the Doris table, separated by commas                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| doris.batch.size                 | 1024              | The maximum number of rows to read data from BE at one time. Increasing this value can reduce the number of connections between Spark and Doris. Thereby reducing the extra time overhead caused by network delay.                                                                                                                                                                                                                                                              |
+| doris.batch.size                 | 4064              | The maximum number of rows to read data from BE at one time. Increasing this value can reduce the number of connections between Spark and Doris. Thereby reducing the extra time overhead caused by network delay.                                                                                                                                                                                                                                                              |
 | doris.exec.mem.limit             | 2147483648        | Memory limit for a single query. The default is 2GB, in bytes.                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | doris.deserialize.arrow.async    | false             | Whether to support asynchronous conversion of Arrow format to RowBatch required for spark-doris-connector iteration                                                                                                                                                                                                                                                                                                                                                             |
 | doris.deserialize.queue.size     | 64                | Asynchronous conversion of the internal processing queue in Arrow format takes effect when doris.deserialize.arrow.async is true                                                                                                                                                                                                                                                                                                                                                |
 | doris.write.fields               | --                | Specifies the fields (or the order of the fields) to write to the Doris table, fileds separated by commas.<br/>By default, all fields are written in the order of Doris table fields.                                                                                                                                                                                                                                                                                           |
 | doris.sink.batch.size            | 100000            | Maximum number of lines in a single write BE                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| doris.sink.max-retries           | 0                 | Number of retries after writing BE failed                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| doris.sink.properties.format     | --                | Data format of the stream load.<br/>Supported formats: csv, json, arrow(since version 1.4.0)<br/> [More Multi-parameter details](../data-operate/import/stream-load-manual.md)                                                                                                                                                                                                                                                     |
+| doris.sink.max-retries           | 0                 | Number of retries after writing BE, Since version 1.3.0, the default value is 0, which means no retries are performed by default. When this parameter is set greater than 0, batch-level failure retries will be performed, and data of the configured size of `doris.sink.batch.size` will be cached in the Spark Executor memory. The memory allocation may need to be appropriately increased.                                              |
+| doris.sink.properties.format     | --                | Data format of the stream load.<br/>Supported formats: csv, json, arrow <br/> [More Multi-parameter details](../data-operate/import/stream-load-manual.md)                                                                                                                                                                                                                                                     |
 | doris.sink.properties.*          | --                | Import parameters for Stream Load. <br/>For example:<br/>Specify column separator: `'doris.sink.properties.column_separator' = ','`.<br/>[More parameter details](../data-operate/import/stream-load-manual.md)                                                                                                                                                                                                                    |
 | doris.sink.task.partition.size   | --                | The number of partitions corresponding to the Writing task. After filtering and other operations, the number of partitions written in Spark RDD may be large, but the number of records corresponding to each Partition is relatively small, resulting in increased writing frequency and waste of computing resources. The smaller this value is set, the less Doris write frequency and less Doris merge pressure. It is generally used with doris.sink.task.use.repartition. |
 | doris.sink.task.use.repartition  | false             | Whether to use repartition mode to control the number of partitions written by Doris. The default value is false, and coalesce is used (note: if there is no Spark action before the write, the whole computation will be less parallel). If it is set to true, then repartition is used (note: you can set the final number of partitions at the cost of shuffle).                                                                                                             |
@@ -299,9 +298,35 @@ kafkaSource.selectExpr("CAST(key AS STRING)", "CAST(value as STRING)")
 | doris.request.auth.password | --            | Doris password                                                                                                                                  |
 | doris.filter.query          | --            | Filter expression of the query, which is transparently transmitted to Doris. Doris uses this expression to complete source-side data filtering. |
 
-:::tip
 
-1. In Spark SQL, when writing data through insert into, if the target table of doris contains `BITMAP` or `HLL` type data, you need to set the parameter `doris.ignore-type` to the corresponding type, and set `doris.write.fields` maps the corresponding columns, the usage is as follows:
+## Doris & Spark Column Type Mapping
+
+| Doris Type | Spark Type                       |
+|------------|----------------------------------|
+| NULL_TYPE  | DataTypes.NullType               |
+| BOOLEAN    | DataTypes.BooleanType            |
+| TINYINT    | DataTypes.ByteType               |
+| SMALLINT   | DataTypes.ShortType              |
+| INT        | DataTypes.IntegerType            |
+| BIGINT     | DataTypes.LongType               |
+| FLOAT      | DataTypes.FloatType              |
+| DOUBLE     | DataTypes.DoubleType             |
+| DATE       | DataTypes.DateType               |
+| DATETIME   | DataTypes.StringType<sup>1</sup> |
+| DECIMAL    | DecimalType                      |
+| CHAR       | DataTypes.StringType             |
+| LARGEINT   | DecimalType                      |
+| VARCHAR    | DataTypes.StringType             |
+| TIME       | DataTypes.DoubleType             |
+| HLL        | Unsupported datatype             |
+| Bitmap     | Unsupported datatype             |
+
+* Note: In Connector, ` DATETIME` is mapped to `String`. Due to the processing logic of the Doris underlying storage engine, when the time type is used directly, the time range covered cannot meet the demand. So use `String` type to directly return the corresponding time readable text.
+
+## FAQ
+1. **How to write Bitmap type**
+
+In Spark SQL, when writing data through insert into, if the target table of doris contains data of type `BITMAP` or `HLL`, you need to set the parameter `doris.ignore-type` to the corresponding type and map the columns through `doris.write.fields`. The usage is as follows:
 > BITMAP
 > ```sql
 > CREATE TEMPORARY VIEW spark_doris
@@ -329,12 +354,11 @@ kafkaSource.selectExpr("CAST(key AS STRING)", "CAST(value as STRING)")
 > );
 > ```
 
-2. Since version 1.3.0, the default value of `doris.sink.max-retries` configuration is 0, which means no retries are performed by default.
-   When this parameter is set greater than 0, batch-level failure retries will be performed, and data of the configured size of `doris.sink.batch.size` will be cached in the Spark Executor memory. The memory allocation may need to be appropriately increased.
+2. **How to use overwrite to write?**
 
-3. Since version 1.3.0, overwrite mode insertion is supported (only full table-level overwrite insertion is supported). The specific usage is as follows
+Starting from version 1.3.0, overwrite mode writing is supported (only supports data overwriting at the full table level). The specific usage is as follows:
 > DataFrame
-> ```scala
+> ```java
 > resultDf.format("doris")
 >   .option("doris.fenodes","$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT")
 >   // your own options
@@ -348,28 +372,3 @@ kafkaSource.selectExpr("CAST(key AS STRING)", "CAST(value as STRING)")
 > SELECT * FROM your_source_table
 > ```
 
-:::
-
-## Doris & Spark Column Type Mapping
-
-| Doris Type | Spark Type                       |
-|------------|----------------------------------|
-| NULL_TYPE  | DataTypes.NullType               |
-| BOOLEAN    | DataTypes.BooleanType            |
-| TINYINT    | DataTypes.ByteType               |
-| SMALLINT   | DataTypes.ShortType              |
-| INT        | DataTypes.IntegerType            |
-| BIGINT     | DataTypes.LongType               |
-| FLOAT      | DataTypes.FloatType              |
-| DOUBLE     | DataTypes.DoubleType             |
-| DATE       | DataTypes.DateType               |
-| DATETIME   | DataTypes.StringType<sup>1</sup> |
-| DECIMAL    | DecimalType                      |
-| CHAR       | DataTypes.StringType             |
-| LARGEINT   | DecimalType                      |
-| VARCHAR    | DataTypes.StringType             |
-| TIME       | DataTypes.DoubleType             |
-| HLL        | Unsupported datatype             |
-| Bitmap     | Unsupported datatype             |
-
-* Note: In Connector, ` DATETIME` is mapped to `String`. Due to the processing logic of the Doris underlying storage engine, when the time type is used directly, the time range covered cannot meet the demand. So use `String` type to directly return the corresponding time readable text.
