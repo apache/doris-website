@@ -49,7 +49,7 @@ under the License.
 
 * `compact_type`
   
-    - 取值为`base`或`cumulative`或`full`。full_compaction 的使用场景请参考[数据恢复](../data-admin/reparing-data.md)。
+    - 取值为`base`或`cumulative`或`full`。full_compaction 的使用场景请参考[数据恢复](../../data-admin/repairing-data)。
 
 ## Request body
 
