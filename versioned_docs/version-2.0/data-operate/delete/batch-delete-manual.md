@@ -34,7 +34,7 @@ When you delete by Delete statement, each execution of Delete generates an empty
 
 For scenarios like importing data from a transactional database via CDC, Insert and Delete are usually interspersed in the data. In this case, the current Delete operation cannot be implemented.
 
-Based on imported data, there are three ways the data can be merged:
+When importing data, there are several ways to merge it:
 
 1. APPEND: Append all data to existing data.
 
