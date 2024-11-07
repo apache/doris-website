@@ -38,9 +38,7 @@ PROPERTIES
 
 <vault_name> 是用户定义的 Storage Vault 名称，是用户接口用于访问 Storage Vault 的标识。
 
-**示例**
-
-**创建 HDFS  Storage Vault **
+### 创建 HDFS  Storage Vault
 
 创建基于 HDFS 的存算分离模式 Doris 集群，需要确保所有的节点（包括 FE / BE 节点、Meta Service) 均有权限访问所指定的 HDFS，包括提前完成机器的 Kerberos 授权配置和连通性检查（可在对应的每个节点上使用 Hadoop Client 进行测试）等。
 
@@ -57,7 +55,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     );
 ```
 
-**创建 S3  Storage Vault **
+### 创建 S3  Storage Vault
 
 ```SQL
 CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
@@ -75,7 +73,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
 
 更多参数说明及示例可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
 
-### 查看 Storage Vault 
+## 查看 Storage Vault 
 
 **语法**
 
@@ -93,7 +91,7 @@ SHOW STORAGE VAULTS
 SET <vault_name> AS DEFAULT STORAGE VAULT
 ```
 
-### 建表时指定 Storage Vault 
+## 建表时指定 Storage Vault 
 
 建表时在 `PROPERTIES` 中指定 `storage_vault_name`，则数据会存储在指定 `vault name` 所对应的 Storage Vault 上。建表成功后，该表不允许再修改 `storage_vault`，即不支持更换 Storage Vault 。
 
@@ -117,23 +115,23 @@ PROPERTIES (
 );
 ```
 
-### 更改 Storage Vault 
+## 更改 Storage Vault 
 
 用于更新 Storage Vault 配置的可修改属性。
 
 Coming soon
 
-### 删除 Storage Vault 
+## 删除 Storage Vault 
 
 只有非默认 Storage Vault 且没有被任何表引用的 Storage Vault 才可被删除。
 
 Coming soon
 
-###  Storage Vault 权限
+##  Storage Vault 权限
 
 向指定的 MySQL 用户授予某个 Storage Vault 的使用权限，使该用户可以进行建表时指定该 Storage Vault 或查看 Storage Vault 等操作。
 
-**语法**
+### 授予
 
 ```sql
 GRANT
@@ -147,7 +145,7 @@ GRANT
 - 通过 `SHOW STORAGE VAULT` 查看该 Storage Vault 的信息；
 - 建表时在 `PROPERTIES` 中指定使用该 Storage Vault 。
 
-**示例**
+### 撤销
 
 ```sql
 grant usage_priv on storage vault my_storage_vault to user1
