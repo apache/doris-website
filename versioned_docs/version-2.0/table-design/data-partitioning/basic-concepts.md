@@ -38,21 +38,37 @@ A table consists of rows and columns:
 - Column: Used to describe different fields in a row of data;
 - Columns can be divided into two types: Key and Value. From a business perspective, Key and Value can correspond to dimension columns and metric columns, respectively. The key columns in Doris are those specified in the table creation statement, which are the columns following the keywords `unique key`, `aggregate key`, or `duplicate key`. The remaining columns are value columns. From the perspective of the aggregation model, rows with the same Key columns will be aggregated into a single row. The aggregation method for value columns is specified by the user during table creation. For more information on aggregation models, refer to the Doris [Data Model](../table-design/data-model/overview).
 
-## Partition & Tablet
+## Partition & Bucket
 
-Doris supports two levels of data partitioning. The first level is Partitioning, which supports Range and List partition. The second level is Bucket (also known as Tablet), which supports Hash and Random . If no partitioning is established during table creation, Doris generates a default partition that is transparent to the user. When using the default partition, only Bucket is supported.
+Doris uses a two-level partitioning and bucketing method to organize and manage data.
 
-In the Doris storage engine, data is horizontally partitioned into several tablets. Each tablet contains several rows of data. There is no overlap between the data in different tablets, and they are stored physically independently.
+### Partition
 
-Multiple tablets logically belong to different partitions. A single tablet belongs to only one partition, while a partition contains several tablets. Because tablets are stored physically independently, partitions can also be considered physically independent. The tablet is the smallest physical storage unit for operations such as data movement and replication.
+Partition refers to dividing the table into smaller, more manageable, non-overlapping subsets based on specific column values in the table. Each subset of data is called a partition. Each row of data belongs to exactly one specific partition. Partitions can be seen as the smallest logical management unit.
 
-Several partitions compose a table. The partition can be considered the smallest logical management unit.
+Currently, Doris supports two types of partitioning: Range and List. If no partition is specified during table creation, Doris will generate a default partition containing all the data in the table, which is transparent to the user.
 
-Benefits of Two-Level data partitioning:
+Partitioning based on data distribution and query patterns offers several benefits:
 
-- For dimensions with time or similar ordered values, such dimension columns can be used as partitioning columns. The partition granularity can be evaluated based on import frequency and partition data volume.
-- Historical data deletion requirements: If there is a need to delete historical data (such as retaining only the data for the most recent several days), composite partition can be used to achieve this goal by deleting historical partitions. Alternatively, DELETE statements can be sent within specified partitions to delete data.
-- Solving data skew issues: Each partition can specify the number of buckets independently. For example, when partitioning by day and there are significant differences in data volume between days, the number of buckets for each partition can be specified to reasonably distribute data across different partitions. It is recommended to choose a column with high distinctiveness as the bucketing column.
+- **Improved Query Performance**: Partitioning allows the system to prune irrelevant partitions based on the query conditions, reducing the amount of data scanned and significantly improving query efficiency. This is especially beneficial when handling large datasets, as the partition strategy can greatly reduce I/O overhead.
+
+- **Flexible Management**: Partitioning allows data to be split based on logic such as time or geography, facilitating data archiving, cleaning, and backup. For example, partitioning by time can effectively manage historical and newly added data, supporting efficient time-based data maintenance strategies.
+
+### Bucket
+
+Bucketing refers to further dividing the data within a partition into smaller, non-overlapping units according to some rule. Each row of data belongs to exactly one specific bucket. Unlike partitioning, which divides data based on specific column values, bucketing attempts to evenly distribute the data across predefined buckets, thereby reducing data skew. Bucketing improves query performance by ensuring even data distribution and enhancing data locality.
+
+Currently, Doris supports two types of bucketing: Hash and Random.
+
+A bucket corresponds to a data shard (Tablet) at the physical level, and data shards are physically stored independently. They are the smallest physical storage units for operations like data movement and replication.
+
+Proper bucketing offers several advantages:
+
+- **Even Data Distribution**: Bucketing evenly distributes data across buckets, reducing the risk of data concentration or skew, and preventing resource overload on specific nodes or storage devices.
+
+- **Reduced Hotspots**: By distributing data evenly, bucketing helps to reduce the risk of overloading specific nodes or partitions, preventing hotspots, and improving system stability and processing capability.
+
+- **Improved Concurrency Performance**: Bucketing enhances the performance of concurrent queries, especially when multiple query requests need to access different data within the same partition. The granularity of bucketing allows the system to efficiently process multiple requests in parallel, thereby improving throughput.
 
 ## Example of creating a table 
 
