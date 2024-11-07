@@ -169,4 +169,4 @@ ENGINE 的类型是 OLAP，即默认的 ENGINE 类型。在 Doris 中，只有�
 ALTER TABLE example_range_tbl ADD  PARTITION p201704 VALUES LESS THAN("2020-05-01") DISTRIBUTED BY HASH(`user_id`) BUCKETS 5;
 ```
 
-其它更多分区修改操作，参见 SQL 手册 ALTER-TABLE-PARTITION。
+其它更多分区修改操作，参见 SQL 手册 [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION)。

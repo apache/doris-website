@@ -233,7 +233,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
 - For data partitioning:
 
-    - Enable [range partitioning](../../table-design/data-partition#range-partition) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](../../table-design/data-partition#dynamic-partition)   (`"dynamic_partition.enable" = "true"`) managed automatically by day.
+    - Enable [range partitioning](../../table-design/data-partitioning/dynamic-partitioning#range-partition) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](../../table-design/data-partitioning/dynamic-partitioning)   (`"dynamic_partition.enable" = "true"`) managed automatically by day.
 
     - Use a field in the DATETIME type as the key (`DUPLICATE KEY(ts)`) for accelerated retrieval of the latest N log entries.
 
@@ -243,7 +243,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
     - Use the Random strategy (`DISTRIBUTED BY RANDOM BUCKETS 60`) to optimize batch writing efficiency when paired with single tablet imports.
 
-For more information, refer to [Data Partitioning](../../table-design/data-partition.md).
+For more information, refer to [Data Partitioning](../../table-design/data-partitioning/basic-concepts).
 
 **Configure compression parameters**
 

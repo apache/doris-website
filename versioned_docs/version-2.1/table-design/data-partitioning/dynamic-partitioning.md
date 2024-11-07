@@ -29,7 +29,7 @@ Dynamic partitioning is designed to manage the lifecycle of partitions, reducing
 
 Dynamic partitioning only supports RANGE partitioning based on `DATE` or `DATETIME` columns. It is applicable for cases where time data in partition columns grows synchronously with the real world. In such scenarios, data can be partitioned flexibly based on time data, and can be automatically stored with the cold-hot tiering strategy or recycled according to settings. 
 
-For partitioning method that can be more widely applicable, see [Auto partitioning](https://doris.apache.org/docs/table-design/data-partition/#auto-partitioning).
+For partitioning method that can be more widely applicable, see [Auto partitioning](https://doris.apache.org/docs/table-design/data-partitioning/auto-partitioning).
 
 :::caution Warning
 
