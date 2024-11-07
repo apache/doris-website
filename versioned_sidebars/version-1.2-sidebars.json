@@ -1205,6 +1205,7 @@
         "ecosystem/datax",
         "ecosystem/dbt-doris-adapter",
         "ecosystem/seatunnel",
+        "ecosystem/kettle",
         "ecosystem/kyuubi",
         "ecosystem/logstash",
         "ecosystem/beats",
