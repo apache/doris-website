@@ -76,13 +76,13 @@ We will provide detailed explanations of these two update methods in the documen
 
 ### Update Transactions in Unique Key Model
 
-**Updating Data Using the `UPDATE` Statement**
+#### Updating Data Using the `UPDATE` Statement
 
 By default, Doris does not allow multiple `UPDATE` operations on the same table to occur concurrently. The `UPDATE` statement uses table-level locking to ensure transactional consistency.
 
 Users can adjust concurrency limits by modifying the FE configuration. When concurrency limits are relaxed, the `UPDATE` statement will no longer provide transactional guarantees.
 
-**Batch Updates Based on Load**
+#### Batch Updates Based on Load
 
 Doris provides atomicity for all load update operations—each data load will either be fully applied or fully rolled back.
 
