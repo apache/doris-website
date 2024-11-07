@@ -98,7 +98,7 @@ PROPERTIES (
 
    
 
-​		注意：在 2.1.0 版本，`FUNC_CALL_EXPR` 外围不需要被括号包围。
+​	注意：在 2.1.0 版本，`FUNC_CALL_EXPR` 外围不需要被括号包围。
 
 2. AUTO LIST PARTITION:
 
@@ -149,7 +149,7 @@ AUTO PARTITION BY LIST(`partition_col`)
 ### 约束
 
 1. 在 AUTO LIST PARTITION 中，**分区名长度不得超过 50**. 该长度来自于对应数据行上各分区列内容的拼接与转义，因此实际容许长度可能更短。
-2. 在 AUTO RANGE PARTITION 中，分区函数仅支持 `date_trunc`，分区列仅支持 `DATE` 或者 `DATETIME` 格式；
+2. 在 AUTO RANGE PARTITION 中，分区函数仅支持 `date_trunc`，分区列仅支持 `DATE` 或者 `DATETIME` 类型；
 3. 在 AUTO LIST PARTITION 中，不支持函数调用，分区列支持 `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` 数据类型，分区值为枚举值。
 4. 在 AUTO LIST PARTITION 中，分区列的每个当前不存在对应分区的取值，都会创建一个独立的新 PARTITION。
 

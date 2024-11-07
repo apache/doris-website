@@ -42,7 +42,7 @@ under the License.
 
 1.  FIXED RANGE：定义分区的左闭右开区间。  
 
-```Plain
+```sql
 PARTITION BY RANGE(col1[, col2, ...])                                                                                                                                                                                                  
 (                                                                                                                                                                                                                                      
     PARTITION partition_name1 VALUES [("k1-lower1", "k2-lower1", "k3-lower1",...), ("k1-upper1", "k2-upper1", "k3-upper1", ...)),                                                                                                      
@@ -52,7 +52,7 @@ PARTITION BY RANGE(col1[, col2, ...])
 
 示例如下：
 
-```shell
+```sql
 PARTITION BY RANGE(`date`)
 (
     PARTITION `p201701` VALUES [("2017-01-01"),  ("2017-02-01")),
@@ -63,7 +63,7 @@ PARTITION BY RANGE(`date`)
 
 2. LESS THAN：仅定义分区上界。下界由上一个分区的上界决定。 
 
-```Plain
+```sql
 PARTITION BY RANGE(col1[, col2, ...])                                                                                                                                                                                                  
 (                                                                                                                                                                                                                                      
     PARTITION partition_name1 VALUES LESS THAN MAXVALUE | ("value1", "value2", ...),                                                                                                                                                     
@@ -92,7 +92,7 @@ Partition 支持通过 `VALUES IN (...)` 来指定每个分区包含的枚举值
 
 举例如下：
 
-```shell
+```sql
 PARTITION BY LIST(city)
 (
     PARTITION `p_cn` VALUES IN ("Beijing", "Shanghai", "Hong Kong"),
@@ -103,7 +103,7 @@ PARTITION BY LIST(city)
 
 List 分区也支持多列分区，示例如下：
 
-```Plain
+```sql
 PARTITION BY LIST(id, city)
 (
     PARTITION p1_city VALUES IN (("1", "Beijing"), ("1", "Shanghai")),

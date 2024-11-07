@@ -57,7 +57,7 @@ PARTITION BY RANGE(col1[, col2, ...])
 
 For example: 
 
-```
+```sql
 PARTITION BY RANGE(`date`)
 (
     PARTITION `p201701` VALUES [("2017-01-01"),  ("2017-02-01")),

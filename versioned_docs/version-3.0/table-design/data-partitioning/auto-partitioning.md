@@ -146,7 +146,7 @@ In Apache Doris 2.1.0 version, `FUNC_CALL_EXPR` needs not to be enclosed in pare
 **Constraints**
 
 - In auto LIST partitioning, the partition name length **must** **not exceed 50 characters**. This length is derived from the concatenation and escape of contents of partition columns on corresponding data rows, so the actual allowed length may be shorter.
-- In auto RANGE partitioning, the partition function only supports `date_trunc`, and the partition column supports only `DATE` or `DATETIME` formats. 
+- In auto RANGE partitioning, the partition function only supports `date_trunc`, and the partition column supports only `DATE` or `DATETIME` types. 
 - In auto LIST partitioning, function calls are not supported, and the partition column supports `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` data types, with partition values being enumeration values. 
 - In auto LIST partitioning, for every existing value in the partition column that does not correspond to a partition, a new independent partitioning will be created. 
 
