@@ -684,7 +684,7 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 - 最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数共同决定了本次导入的并发数。
 
 ```Plain
-本次导入并发数 = Math.min(源文件大小/最小处理量，最大并发数，当前BE节点个数 * load_parallelism)
+本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
 本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
 ```
 
