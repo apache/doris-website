@@ -79,4 +79,4 @@ PROPERTIES (
 );
 ```
 
-更多点查的使用请参考 [高并发点查](../query/high-concurrent-point-query) 。
+更多点查的使用请参考 [高并发点查](../query-acceleration/high-concurrent-point-query) 。

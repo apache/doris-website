@@ -26,7 +26,7 @@ under the License.
 
 # Hive HLL UDF
 
- The Hive HLL UDF provides a set of UDFs for generating HLL operations in Hive tables, which are identical to Doris HLL. Hive HLL can be imported into Doris through Spark HLL Load. For more information about HLL, please refer to Using HLL for Approximate Deduplication.:[Approximate Deduplication Using HLL](../query/duplicate/using-hll.md)
+ The Hive HLL UDF provides a set of UDFs for generating HLL operations in Hive tables, which are identical to Doris HLL. Hive HLL can be imported into Doris through Spark HLL Load. For more information about HLL, please refer to Using HLL for Approximate Deduplication.:[Approximate Deduplication Using HLL](https://doris.apache.org/docs/query-acceleration/distinct-counts/using-hll/)
 
  Function Introduction:
   1. UDAF

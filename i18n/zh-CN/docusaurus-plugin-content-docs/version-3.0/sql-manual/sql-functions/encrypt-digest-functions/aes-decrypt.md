@@ -34,7 +34,7 @@ AES 解密函数。该函数与 MySQL 中的 `AES_DECRYPT` 函数行为一致。
 - `str` 为待解密文本；
 - `key_str` 为密钥。注意此密钥并非 16 进制编码，而是编码后的字符串表示。例如对于 128 位密钥加密，`key_str` 长度应为 16。如果密钥长度不足，使用**零填充**补齐。如果长度超出，使用循环异或的方式求出最终密钥。例如算法使用的 128 位密钥为 `key`，则 `key[i] = key_str[i] ^ key_str[i+128] ^ key_str[i+256] ^ ...`
 - `init_vector` 为算法中使用到的初始向量，仅在特定算法下生效，如不指定，则 Doris 使用内置向量；
-- `encryption_mode` 为加密算法，可选值见于：[变量](../../../query/query-variables/variables)。
+- `encryption_mode` 为加密算法，可选值见于变量。
 
 :::warning
 截止 3.0.2，两参数版本，会无视 session variable `block_encryption_mode`，始终使用 `AES_128_ECB` 算法进行解密。因此不推荐调用。

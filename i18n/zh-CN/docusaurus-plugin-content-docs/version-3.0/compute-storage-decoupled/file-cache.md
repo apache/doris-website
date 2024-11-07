@@ -24,27 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在存算分离的架构中，数据被存储在远程存储。Doris数据库通过利用本地硬盘上的缓存来加速数据访问，并采用了一种先进的多队列LRU（Least Recently Used）策略来高效管理缓存空间。这种策略特别优化了索引和元数据的访问路径，旨在最大化地缓存用户频繁访问的数据。针对多计算组（Compute Group）的应用场景，Doris还提供了缓存预热功能，以便在新计算组建立时，能够迅速加载特定数据（如表或分区）到缓存中，从而提升查询性能。
+在存算分离的架构中，数据被存储在远程存储。Doris 数据库通过利用本地硬盘上的缓存来加速数据访问，并采用了一种先进的多队列 LRU（Least Recently Used）策略来高效管理缓存空间。这种策略特别优化了索引和元数据的访问路径，旨在最大化地缓存用户频繁访问的数据。针对多计算组（Compute Group）的应用场景，Doris 还提供了缓存预热功能，以便在新计算组建立时，能够迅速加载特定数据（如表或分区）到缓存中，从而提升查询性能。
 
 ## 多队列 LRU
 
 ### LRU
 
- * LRU通过维护一个数据访问队列来管理缓存。当数据被访问时，该数据会被移动到队列的前端。新加入缓存的数据同样会被置于队列前端，以防止其过早被淘汰。当缓存空间达到上限时，队列尾部的数据将优先被移除。
+ * LRU 通过维护一个数据访问队列来管理缓存。当数据被访问时，该数据会被移动到队列的前端。新加入缓存的数据同样会被置于队列前端，以防止其过早被淘汰。当缓存空间达到上限时，队列尾部的数据将优先被移除。
 
 ### TTL (Time-To-Live)
 
-  * TTL策略确保新导入的数据在缓存中保留一段时间不被淘汰。在这段时间内，数据具有最高优先级，且所有TTL数据之间地位平等。当缓存空间不足时，系统会优先淘汰其它队列中的数据，以确保TTL数据能够被写入缓存。
+  * TTL 策略确保新导入的数据在缓存中保留一段时间不被淘汰。在这段时间内，数据具有最高优先级，且所有 TTL 数据之间地位平等。当缓存空间不足时，系统会优先淘汰其它队列中的数据，以确保 TTL 数据能够被写入缓存。
 
-  * 应用场景：TTL策略特别适用于希望在本地持久化的小规模数据表。对于常驻表，可以设置较长的TTL值来保护其数据；对于动态分区的数据表，可以根据Hot Partition的活跃时间设定相应的TTL值。
+  * 应用场景：TTL 策略特别适用于希望在本地持久化的小规模数据表。对于常驻表，可以设置较长的 TTL 值来保护其数据；对于动态分区的数据表，可以根据 Hot Partition 的活跃时间设定相应的 TTL 值。
 
-  * 注意事项：目前系统不支持直接查看TTL数据在缓存中的占比。
+  * 注意事项：目前系统不支持直接查看 TTL 数据在缓存中的占比。
 
 ### 多队列
 
- * Doris采用基于LRU的多队列策略，根据TTL属性和数据属性将数据分为四类，并分别置于TTL队列、Index队列、NormalData队列和Disposable队列中。设置了TTL属性的数据被放置到TTL队列，没有设置TTL属性的索引数据被放置到Index队列，没有设置TTL属性的索引数据被放置到NormalData队列，临时使用的数据被放置到Disposable队列中。
+ * Doris 采用基于 LRU 的多队列策略，根据 TTL 属性和数据属性将数据分为四类，并分别置于 TTL 队列、Index 队列、NormalData 队列和 Disposable 队列中。设置了 TTL 属性的数据被放置到 TTL 队列，没有设置 TTL 属性的索引数据被放置到 Index 队列，没有设置 TTL 属性的索引数据被放置到 NormalData 队列，临时使用的数据被放置到 Disposable 队列中。
 
-* 在数据读取和写入过程中，Doris会地选择填充和读取的队列，以最大化缓存利用率。具体机制如下：
+* 在数据读取和写入过程中，Doris 会地选择填充和读取的队列，以最大化缓存利用率。具体机制如下：
 
 | 操作          | 未命中时填充的队列 | 写入数据时填充的队列    |
 | ------------- | ----------------------| ---------- |
@@ -57,13 +57,14 @@ under the License.
 
 ### 淘汰
 
-上述各类型缓存共同使用总缓存空间。根据重要程度的不同我们可以为它们划分比例。比例可以在 be 配置文件中通过 `file_cache_path` 设置，默认为: TTL : Normal : Index : Disposable = 50% :  30% : 10% : 10%。
+上述各类型缓存共同使用总缓存空间。根据重要程度的不同我们可以为它们划分比例。比例可以在 be 配置文件中通过 `file_cache_path` 设置，默认为：TTL : Normal : Index : Disposable = 50% :  30% : 10% : 10%。
 
-这些比例不是硬性限制，Doris会根据需要动态调整以充分利用空间来加速访问。例如用户如果不使用 TTL 类型的缓存，那么其它类型可以超过预设比例使用原本为 TTL 分配的空间。
+这些比例不是硬性限制，Doris 会根据需要动态调整以充分利用空间来加速访问。例如用户如果不使用 TTL 类型的缓存，那么其它类型可以超过预设比例使用原本为 TTL 分配的空间。
 
-缓存的淘汰有两种触发时机：垃圾清理或者缓存空间不足。当用户删除数据时，或是导入 compaction 任务结束时，会异步地对过期的缓存数据进行淘汰。写入缓存空间不足时，会按照 Disposable 、 Normal Data、Index、TTL 的顺序淘汰。例如：如果写入 Normal Data 时空间不足，那么 Doris 会依次淘汰 Disposable、Index、TTL 的部分数据（按照 LRU 的顺序）。注意我们不会将淘汰目标类型的数据全部淘汰再淘汰顺序中的下一个类型，而是至少会保留上述比例的空间以让其它类型也能正常工作。如果这个过程不能成功淘汰出足够的空间，那么将会触发自身类型的 LRU 淘汰。接着上面写 Normal Data 时空间不足例子，如果不能从其它类型中淘汰出足够的空间，此时 Normal Data 将从自身按照 LRU 顺序淘汰出数据。
+缓存的淘汰有两种触发时机：垃圾清理或者缓存空间不足。当用户删除数据时，或是导入 compaction 任务结束时，会异步地对过期的缓存数据进行淘汰。写入缓存空间不足时，会按照 Disposable、Normal Data、Index、TTL 的顺序淘汰。例如：如果写入 Normal Data 时空间不足，那么 Doris 会依次淘汰 Disposable、Index、TTL 的部分数据（按照 LRU 的顺序）。注意我们不会将淘汰目标类型的数据全部淘汰再淘汰顺序中的下一个类型，而是至少会保留上述比例的空间以让其它类型也能正常工作。如果这个过程不能成功淘汰出足够的空间，那么将会触发自身类型的 LRU 淘汰。接着上面写 Normal Data 时空间不足例子，如果不能从其它类型中淘汰出足够的空间，此时 Normal Data 将从自身按照 LRU 顺序淘汰出数据。
 
-特别的，对于带有过期时间的 TTL 队列，其数据过期时会被移动到 Normal Data 队列，作为 Normal Data 参与淘汰。
+其中特别注意的是，对于带有过期时间的 TTL 队列，其数据过期时会被移动到 Normal Data 队列，作为 Normal Data 参与淘汰。
+
 
 ## 缓存预热
 
@@ -87,12 +88,14 @@ Doris 每 10 分钟收集各个计算组的缓存热点信息到内部系统表�
 
 Doris BE 节点通过 `curl {be_ip}:{brpc_port}/vars ( brpc_port 默认为 8060 ) 获取 cache 统计信息，指标项的名称开始为磁盘路径。
 
-上述例子中指标前缀为 File Cache 的路径, 例如前缀 "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" 表示 "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
-去掉前缀的部分为统计指标, 比如 "file_cache_cache_size" 表示当前 路径的 File Cache 大小为 26111 字节
+上述例子中指标前缀为 File Cache 的路径，例如前缀 "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" 表示 "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
+去掉前缀的部分为统计指标，比如 "file_cache_cache_size" 表示当前 路径的 File Cache 大小为 26111 字节
 
-下表为全部的指标意义 (以下表示size大小单位均为字节)
 
-指标名称(不包含路径前缀) | 语义
+下表为全部的指标意义 (以下表示 Size 大小单位均为字节)
+
+
+指标名称 (不包含路径前缀) | 语义
 -----|------
 file_cache_cache_size | 当前 File Cache 的总大小
 file_cache_disposable_queue_cache_size | 当前 disposable 队列的大小
@@ -104,7 +107,7 @@ file_cache_index_queue_evict_size | 从启动到当前 index 队列总共淘汰�
 file_cache_normal_queue_cache_size | 当前 normal 队列的大小
 file_cache_normal_queue_element_count | 当前 normal 队列里的元素个数
 file_cache_normal_queue_evict_size | 从启动到当前 normal 队列总共淘汰的数据量大小
-file_cache_total_evict_size | 从启动到当前, 整个 File Cache 总共淘汰的数据量大小
+file_cache_total_evict_size | 从启动到当前，整个 File Cache 总共淘汰的数据量大小
 file_cache_ttl_cache_evict_size | 从启动到当前 TTL 队列总共淘汰的数据量大小
 file_cache_ttl_cache_lru_queue_element_count | 当前 TTL 队列里的元素个数
 file_cache_ttl_cache_size | 当前 TTL 队列的大小
@@ -128,7 +131,7 @@ SQL profile 中 cache 相关的指标在 SegmentIterator 下，包括
 | RemoteIOUseTimer             | 读取远程存储的耗时     |
 | WriteCacheIOUseTimer         | 写 File Cache 的耗时     |
 
-您可以通过 [查询性能分析](../query/query-analysis/query-analytics) 查看查询性能分析。
+您可以通过 [查询性能分析](../query-acceleration/tuning/query-profile) 查看查询性能分析。
 
 ## 使用方法
 
@@ -187,7 +190,7 @@ WARM UP COMPUTE GROUP compute_group_name1 WITH COMPUTE GROUP compute_group_name0
 SHOW CACHE HOTSPOT '/';
 ```
 
-查看 `compute_group_name0` 下的所有表中最频繁访问的 Partition 。
+查看 `compute_group_name0` 下的所有表中最频繁访问的 Partition。
 
 ```sql
 SHOW CACHE HOTSPOT '/compute_group_name0';
@@ -199,13 +202,13 @@ SHOW CACHE HOTSPOT '/compute_group_name0';
 SHOW CACHE HOTSPOT '/compute_group_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer';
 ```
 
-- 将表 `customer` 的数据预热到 `compute_group_name1`。执行以下 SQL ，可以将该表在远端存储上的数据全部拉取到本地。
+- 将表 `customer` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该表在远端存储上的数据全部拉取到本地。
 
 ```sql
 WARM UP COMPUTE GROUP compute_group_name1 WITH TABLE customer
 ```
 
-- 将表 `customer` 的分区 `p1` 的数据预热到 `compute_group_name1`。执行以下 SQL ，可以将该分区在远端存储上的数据全部拉取到本地。
+- 将表 `customer` 的分区 `p1` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该分区在远端存储上的数据全部拉取到本地。
 
 ```sql
 WARM UP COMPUTE GROUP compute_group_name1 with TABLE customer PARTITION p1
@@ -223,7 +226,7 @@ WARM UP COMPUTE GROUP cloud_warm_up WITH TABLE test_warm_up;
 SHOW WARM UP JOB WHERE ID = 13418; 
 ```
 
-可根据 `FinishBatch` 和 `AllBatch` 判断当前任务进度，每个 Batch 的数据大小约为 10GB。 目前，一个计算组中，同一时间内只支持执行一个预热 Job 。用户可以停止正在进行的预热 Job 。
+可根据 `FinishBatch` 和 `AllBatch` 判断当前任务进度，每个 Batch 的数据大小约为 10GB。目前，一个计算组中，同一时间内只支持执行一个预热 Job。用户可以停止正在进行的预热 Job。
 
 ```sql
 CANCEL WARM UP JOB WHERE id = 13418;
