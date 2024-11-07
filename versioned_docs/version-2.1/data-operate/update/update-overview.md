@@ -58,9 +58,13 @@ Starting from Doris 2.1, MoW is the default mode for the unique key model. So, i
 
 ### Two Update Methods in Unique Key Model
 
-- Update statement: This method is used to update a specific column and is suitable for infrequent updates with a small amount of data.
+#### `UPDATE` statement
 
-- Batch update based on load: Doris supports various load methods such as Stream Load, Broker Load, Routine Load, and Insert Into. For unique key tables, all load have the "UPSERT" semantics, meaning that if a row with the same key does not exist, it will be inserted, and if it already exists, it will be updated.
+This method is used to update a specific column and is suitable for infrequent updates with a small amount of data.
+
+#### Batch update based on load
+
+Doris supports various load methods such as Stream Load, Broker Load, Routine Load, and Insert Into. For unique key tables, all load have the "UPSERT" semantics, meaning that if a row with the same key does not exist, it will be inserted, and if it already exists, it will be updated.
 
 - If all columns are updated, MoR and MoW have the same semantics, which is to replace all value columns for the same key.
 
@@ -72,9 +76,21 @@ We will provide detailed explanations of these two update methods in the documen
 
 ### Update Transactions in Unique Key Model
 
-Whether you use the update statement or the batch update based on load, there may be multiple update statements or load jobs in progress. In such cases, it is important to ensure the effectiveness of multiple updates, maintain atomicity, and prevent data inconsistency. This is where update transactions in the unique key model come into play.
+**Updating Data Using the `UPDATE` Statement**
 
-The documentation on update transactions in the unique key model will cover these aspects. In this document, we will focus on how to control the effectiveness of updates by introducing the hidden column __**DORIS_SEQUENCE_COL__, allowing developers to coordinate and achieve better update transactions.
+By default, Doris does not allow multiple `UPDATE` operations on the same table to occur concurrently. The `UPDATE` statement uses table-level locking to ensure transactional consistency.
+
+Users can adjust concurrency limits by modifying the FE configuration. When concurrency limits are relaxed, the `UPDATE` statement will no longer provide transactional guarantees.
+
+**Batch Updates Based on Load**
+
+Doris provides atomicity for all load update operations—each data load will either be fully applied or fully rolled back.
+
+For concurrent load updates, Doris determines the order of concurrent updates using an internal version control system (assigned based on the order of completed loading), using an MVCC mechanism.
+
+Since the commit order of multiple concurrent load updates may be unpredictable, if these concurrent load jobs involve updates to the same primary key, the order in which they take effect is also uncertain. As a result, the final visible outcome may be indeterminate. To address this issue, Doris provides a `sequence` column mechanism, allowing users to specify a version for each row in concurrent load updates, thus ensuring determinism in the outcome of concurrent updates.
+
+For more detailed information on transaction mechanisms, refer to the documentation on [Transactional Updates in the Primary Key Model](../update/unique-update-transaction.md).
 
 ## Update in Aggregate Model
 
