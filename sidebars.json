@@ -365,7 +365,14 @@
                     "items": [
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
-                        "admin-manual/data-admin/ccr",
+                        {
+                            "type": "category",
+                            "label": "Cross Cluster Replication",
+                            "items": [
+                                "admin-manual/data-admin/ccr/overview.md",
+                                "admin-manual/data-admin/ccr/feature.md"
+                            ]
+                        },
                         "admin-manual/data-admin/recyclebin",
                         "admin-manual/data-admin/repairing-data"
                     ]
