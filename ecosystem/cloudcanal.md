@@ -29,16 +29,16 @@ BladePipe is a **real-time end-to-end data replication** tool, moving data betwe
 ## Functions
 BladePipe presents a visual management interface, allowing you to easily create DataJobs to realize **schema migration, data migration, synchronization, verification and correction**, etc. In addition, more refined and customized configurations are supported by setting parameters. The supported source DataSources and functions are as follows:
 
-| Source DataSource | Schema Migration | Data Migration | Data Sync | Verification & Correction |
-| :--- | :--- | :--- | :--- | :--- |
-| MySQL/MariaDB/AuroraMySQL | Yes | Yes | Yes | Yes |
-| Oracle | Yes | Yes | Yes | Yes |
-| PostgreSQL//AuroraPostgreSQL | Yes | Yes | Yes | Yes |
-| SQL Server | Yes | Yes | Yes | Yes |
-| Kafka | No | No | Yes | No |
-| AutoMQ | No | No | Yes | No |
-| TiDB | Yes | Yes | Yes | Yes |
-| Hana | Yes | Yes | Yes | Yes |
+| Source DataSource            | Schema Migration | Data Migration | Data Sync | Verification & Correction |
+|------------------------------|------------------|----------------|-----------|---------------------------|
+| MySQL/MariaDB/AuroraMySQL    | Yes              | Yes            | Yes       | Yes                       |
+| Oracle                       | Yes              | Yes            | Yes       | Yes                       |
+| PostgreSQL//AuroraPostgreSQL | Yes              | Yes            | Yes       | Yes                       |
+| SQL Server                   | Yes              | Yes            | Yes       | Yes                       |
+| Kafka                        | No               | No             | Yes       | No                        |
+| AutoMQ                       | No               | No             | Yes       | No                        |
+| TiDB                         | Yes              | Yes            | Yes       | Yes                       |
+| Hana                         | Yes              | Yes            | Yes       | Yes                       |
 
 :::info
 For more functions and parameter settings, please refer to [BladePipe Connections](https://doc.bladepipe.com/dataMigrationAndSync/connection/mysql2?target=Doris).
@@ -53,23 +53,28 @@ Taking a MySQL instance as an example, the following part describes how to move 
 ### Add DataSources
 1. Log in to the [BladePipe Cloud](https://cloud.bladepipe.com/). Click **DataSource** > **Add DataSource**.
 2. Select MySQL and Doris as the Type respectively, and fill in the setup form accordingly. 
-   ![Add DataSources-1](/static/images/bp-doris-1.png)
+   ![Add DataSources-1](/images/bp-doris-1.png)
+
 3. Click **Test Connection**. After successful connection, click **Add DataSource** to add the DataSource. 
-   ![Add DataSources-2](/static/images/bp-doris-2.png)
+   ![Add DataSources-2](/images/bp-doris-2.png)
 
 ### Create a DataJob
 1. Click DataJob > [Create DataJob](https://doc.bladepipe.com/operation/job_manage/create_job/create_full_incre_task).
 2. Select the source and target DataSources, and click **Test Connection** to ensure the connection to the source and target DataSources are both successful.
-  ![Create a DataJob-1](/static/images/bp-doris-3.png)
+  ![Create a DataJob-1](/images/bp-doris-3.png)
+
 1. Select **Incremental** for DataJob Type, together with the **Full Data** option.
-  ![Create a DataJob-2](/static/images/bp-doris-4.png)
+  ![Create a DataJob-2](/images/bp-doris-4.png)
+
 1. Select the tables to be replicated.
-  ![Create a DataJob-3](/static/images/bp-doris-5.png)
+  ![Create a DataJob-3](/images/bp-doris-5.png)
+
 1. Select the columns to be replicated.
-  ![Create a DataJob-4](/static/images/bp-doris-6.png)
+  ![Create a DataJob-4](/images/bp-doris-6.png)
+
 1. Confirm the DataJob creation.
 2. The DataJob runs automatically.
-  ![Create a DataJob-5](/static/images/bp-doris-8.png)
+  ![Create a DataJob-5](/images/bp-doris-8.png)
   
   :::info
   Once the DataJob is created and started, BladePipe will automatically run the following DataTasks:

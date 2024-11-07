@@ -30,16 +30,16 @@ CloudCanal 是一款全自研、可视化、自动化的数据迁移、同步工
 ## 功能说明
 CloudCanal 提供可视化的界面，可轻松实现数据的结构迁移、全量迁移、增量同步、校验与订正等，此外还可通过设置参数，完成更多精细化、自定义的数据同步配置。目前支持的源端数据源及功能如下：
 
-| 源端数据源 | 结构迁移 | 全量迁移 | 增量同步 | 校验订正 |
-| :--- | :--- | :--- | :--- | :--- |
-| MySQL/MariaDB/AuroraMySQL | 支持 | 支持 | 支持 | 支持 |
-| Oracle | 支持 | 支持 | 支持 | 支持 |
-| PostgreSQL//AuroraPostgreSQL | 支持 | 支持 | 支持 | 支持 |
-| SQL Server | 支持 | 支持 | 支持 | 支持 |
-| Kafka | 不支持 | 不支持 | 支持 | 不支持 |
-| AutoMQ | 不支持 | 不支持 | 支持 | 不支持 |
-| TiDB | 支持 | 支持 | 支持 | 支持 |
-| Hana | 支持 | 支持 | 支持 | 支持 |
+| 源端数据源                     | 结构迁移 | 全量迁移 | 增量同步 | 校验订正 |
+|------------------------------|---------|---------|--------|---------|
+| MySQL/MariaDB/AuroraMySQL    | 支持     | 支持     | 支持   | 支持     |
+| Oracle                       | 支持     | 支持     | 支持   | 支持     |
+| PostgreSQL//AuroraPostgreSQL | 支持     | 支持     | 支持   | 支持     |
+| SQL Server                   | 支持     | 支持     | 支持   | 支持     |
+| Kafka                        | 不支持   | 不支持    | 支持   | 不支持   |
+| AutoMQ                       | 不支持   | 不支持    | 支持   | 不支持   |
+| TiDB                         | 支持     | 支持     | 支持   | 支持     |
+| Hana                         | 支持     | 支持     | 支持   | 支持     |
 
 :::info
 更多功能及参数设置，请参考 [CloudCanal 数据链路说明](https://www.clougence.com/cc-doc/dataMigrationAndSync/connection/mysql2?target=Doris)。
@@ -54,23 +54,28 @@ CloudCanal 提供可视化的界面，可轻松实现数据的结构迁移、全
 ### 添加数据源
 1. 登录 CloudCanal 控制台，点击 **数据源管理** > **新增数据源**。
 2. 分别选择 MySQL 和 Doris 数据源，并填写相应信息。
-   ![添加数据源-1](/static/images/cc-doris-1.png)
+   ![添加数据源-1](/images/cc-doris-1.png)
+
 3. 点击 **测试连接**，连接成功后，点击 **新增数据源**，完成数据源添加。
-   ![添加数据源-2](/static/images/cc-doris-2.png)
+   ![添加数据源-2](/images/cc-doris-2.png)
 
 ### 创建任务
 1. 点击 **同步任务** > **创建任务**。
 2. 选择源和目标数据源，并分别点击 **测试连接**。
-   ![创建任务-1](/static/images/cc-doris-3.png)
+   ![创建任务-1](/images/cc-doris-3.png)
+
 3. 选择 **数据同步** 并勾选 **全量初始化**。
-   ![创建任务-2](/static/images/cc-doris-4.png)
+   ![创建任务-2](/images/cc-doris-4.png)
+
 4. 选择需要同步的表。
-   ![创建任务-3](/static/images/cc-doris-5.png)
+   ![创建任务-3](/images/cc-doris-5.png)
+
 5. 选择需要同步的列。
-   ![创建任务-4](/static/images/cc-doris-6.png)
+   ![创建任务-4](/images/cc-doris-6.png)
+
 6. 确认创建任务。
 7. 任务成功运行。
-   ![创建任务-5](/static/images/cc-doris-8.png)
+   ![创建任务-5](/images/cc-doris-8.png)
   
   :::info
   当任务创建完成，CloudCanal 会自动进行任务流转，其中的步骤包括：
