@@ -57,6 +57,7 @@ under the License.
 
 ### 淘汰
 
+
 上述各类型缓存共同使用总缓存空间。根据重要程度的不同我们可以为它们划分比例。比例可以在 be 配置文件中通过 `file_cache_path` 设置，默认为：TTL : Normal : Index : Disposable = 50% :  30% : 10% : 10%。
 
 这些比例不是硬性限制，Doris 会根据需要动态调整以充分利用空间来加速访问。例如用户如果不使用 TTL 类型的缓存，那么其它类型可以超过预设比例使用原本为 TTL 分配的空间。
@@ -65,6 +66,7 @@ under the License.
 
 需要特别注意的是，对于带有过期时间的 TTL 队列，其数据过期时会被移动到 Normal Data 队列，作为 Normal Data 参与淘汰。
 
+特别的，对于带有过期时间的 TTL 队列，其数据过期时会被移动到 Normal Data 队列，作为 Normal Data 参与淘汰。
 
 ## 缓存预热
 
@@ -92,8 +94,7 @@ Doris BE 节点通过 `curl {be_ip}:{brpc_port}/vars ( brpc_port 默认为 8060 
 去掉前缀的部分为统计指标，比如 "file_cache_cache_size" 表示当前 路径的 File Cache 大小为 26111 字节
 
 
-下表为全部的指标意义 (以下表示 size 大小单位均为字节)：
-
+下表为全部的指标意义 (以下表示 size 大小单位均为字节)
 
 指标名称 (不包含路径前缀) | 语义
 -----|------

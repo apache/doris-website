@@ -91,7 +91,8 @@ Doris BE 节点通过 `curl {be_ip}:{brpc_port}/vars ( brpc_port 默认为 8060 
 上述例子中指标前缀为 File Cache 的路径，例如前缀 "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" 表示 "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
 去掉前缀的部分为统计指标，比如 "file_cache_cache_size" 表示当前 路径的 File Cache 大小为 26111 字节
 
-下表为全部的指标意义 (以下表示 size 大小单位均为字节)：
+
+下表为全部的指标意义 (以下表示 Size 大小单位均为字节)
 
 
 指标名称 (不包含路径前缀) | 语义
