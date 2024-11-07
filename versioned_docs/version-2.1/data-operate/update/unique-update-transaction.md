@@ -41,24 +41,20 @@ The Unique model primarily caters to scenarios that require unique primary keys,
 To address this issue, Doris supports sequence columns. Users can specify a sequence column during data load, allowing the replacement order to be controlled by the user. The sequence column determines the order of replacements for rows with the same key column. A higher sequence value can replace a lower one, but not vice versa. This method delegates the determination of order to the user, enabling control over the replacement sequence.
 
 :::note
-Sequence columns are currently supported only in the Uniq model.
+Sequence columns are currently supported only in the Unique model.
 :::
 
 ### Basic Principles
 
-The basic principle is achieved by adding a hidden column called __**DORIS_SEQUENCE_COL__. The type of this column is specified by the user during table creation and its specific value is determined during data load. Based on this value, the row that takes effect is determined for rows with the same key column.
+The basic principle is achieved by adding a hidden column called **__DORIS_SEQUENCE_COL__**. The type of this column is specified by the user during table creation and its specific value is determined during data load. Based on this value, the row that takes effect is determined for rows with the same key column.
 
 **Table Creation**
 
-When creating a Uniq table, an automatically added hidden column called __**DORIS_SEQUENCE_COL__ is created, based on the user-specified type.
+When creating a Unique table, an automatically added hidden column called __DORIS_SEQUENCE_COL__ is created, based on the user-specified type.
 
 **Data load**
 
-During data load, the FE (Frontend) sets the value of the hidden column as the value of the `ORDER BY` expression (for broker load and routine load) or the value of the `function_column.sequence_col` expression (for stream load). The value column is replaced based on this sequence value. The value of the hidden column, `DORIS_SEQUENCE_COL`, can be set as a column in the data source or a column in the table structure.
-
-**Read**
-
-When requesting the value column, an additional read operation is performed for the `DORIS_SEQUENCE_COL` column. This column is used as the basis for the REPLACE
+During data load, the FE (Frontend) sets the value of the hidden column as the value of the `ORDER BY` expression (for broker load and routine load) or the value of the `function_column.sequence_col` expression (for stream load). The value column is replaced based on this sequence value. The value of the hidden column, `__DORIS_SEQUENCE_COL__`, can be set as a column in the data source or a column in the table structure.
 
 ### Syntax Usage
 
@@ -66,7 +62,7 @@ When requesting the value column, an additional read operation is performed for 
 
 **1. Set `sequence_col` (Recommended)**
 
-When creating a Uniq table, specify the mapping of the sequence column to other columns in the table.
+When creating a Unique table, specify the mapping of the sequence column to other columns in the table.
 
 ```Plain
 PROPERTIES (
@@ -80,7 +76,7 @@ The load method is the same as when there is no sequence column, making it relat
 
 **2. Set `sequence_type`**
 
-When creating a Uniq table, specify the type of the sequence column.
+When creating a Unique table, specify the type of the sequence column.
 
 ```Plain
 PROPERTIES (
@@ -157,7 +153,7 @@ If `function_column.sequence_col` or `function_column.sequence_type` is set when
 
 For a table that does not support sequence columns, if you want to use this feature, you can use the following statement: `ALTER TABLE example_db.my_table ENABLE FEATURE "SEQUENCE_LOAD" WITH PROPERTIES ("function_column.sequence_type" = "Date")` to enable it.
 
-If you are unsure whether a table supports sequence columns, you can set a session variable to display hidden columns with `SET show_hidden_columns=true`, and then use `desc tablename`. If the output includes the `DORIS_SEQUENCE_COL` column, it means that the table supports sequence columns; otherwise, it does not.
+If you are unsure whether a table supports sequence columns, you can set a session variable to display hidden columns with `SET show_hidden_columns=true`, and then use `desc tablename`. If the output includes the `__DORIS_SEQUENCE_COL__` column, it means that the table supports sequence columns; otherwise, it does not.
 
 ### Usage Example
 

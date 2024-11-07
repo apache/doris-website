@@ -45,24 +45,20 @@ Unique 模型主要针对需要唯一主键的场景，可以保证主键唯一�
 为了解决这个问题，Doris 支持了 sequence 列，通过用户在导入时指定 sequence 列，相同 key 列下，按照 sequence 列的值进行替换，较大值可以替换较小值，反之则无法替换。该方法将顺序的确定交给了用户，由用户控制替换顺序。
 
 :::note
-sequence 列目前只支持 Uniq 模型。
+sequence 列目前只支持 Unique 模型。
 :::
 
 ### 基本原理
 
-通过增加一个隐藏列__**DORIS_SEQUENCE_COL__**实现，该列的类型由用户在建表时指定，在导入时确定该列具体值，并依据该值决定相同 Key 列下，哪一行生效。
+通过增加一个隐藏列**__DORIS_SEQUENCE_COL__**实现，该列的类型由用户在建表时指定，在导入时确定该列具体值，并依据该值决定相同 Key 列下，哪一行生效。
 
 **建表**
 
-创建 Uniq 表时，将按照用户指定类型自动添加一个隐藏列__**DORIS_SEQUENCE_COL__**。
+创建 Unique 表时，用户可以设置表中的某一列作为sequence列。
 
 **导入**
 
-导入时，fe 在解析的过程中将隐藏列的值设置成 `order by` 表达式的值 (broker load 和 routine load)，或者`function_column.sequence_col`表达式的值 (stream load)，value 列将按照该值进行替换。隐藏列`DORIS_SEQUENCE_COL`的值既可以设置为数据源中一列，也可以是表结构中的一列。
-
-**读取**
-
-请求包含 value 列时需要额外读取`DORIS_SEQUENCE_COL`列，该列用于在相同 key 列下，REPLACE 聚合函数替换顺序的依据，较大值可以替换较小值，反之则不能替换。
+导入时，fe 在解析的过程中将隐藏列的值设置成 `order by` 表达式的值 (broker load 和 routine load)，或者`function_column.sequence_col`表达式的值 (stream load)，value 列将按照该值进行替换。隐藏列`__DORIS_SEQUENCE_COL__`的值既可以设置为数据源中一列，也可以是表结构中的一列。
 
 ### 使用语法
 
@@ -70,7 +66,7 @@ sequence 列目前只支持 Uniq 模型。
 
 **1. 设置****`sequence_col`（推荐）**
 
-创建 Uniq 表时，指定 sequence 列到表中其他 column 的映射
+创建 Unique 表时，指定 sequence 列到表中其他 column 的映射
 
 ```Plain
 PROPERTIES (
@@ -161,7 +157,7 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 
 对于一个不支持 sequence column 的表，如果想要使用该功能，可以使用如下语句： `ALTER TABLE example_db.my_table ENABLE FEATURE "SEQUENCE_LOAD" WITH PROPERTIES ("function_column.sequence_type" = "Date")` 来启用。 
 
-如果不确定一个表是否支持 sequence column，可以通过设置一个 session variable 来显示隐藏列 `SET show_hidden_columns=true` ，之后使用`desc tablename`，如果输出中有`DORIS_SEQUENCE_COL` 列则支持，如果没有则不支持。
+如果不确定一个表是否支持 sequence column，可以通过设置一个 session variable 来显示隐藏列 `SET show_hidden_columns=true` ，之后使用`desc tablename`，如果输出中有`__DORIS_SEQUENCE_COL__` 列则支持，如果没有则不支持。
 
 ### 使用示例
 
