@@ -60,7 +60,7 @@ Starting from Doris 2.1, MoW is the default mode for the unique key model. So, i
 
 #### `UPDATE` statement
 
-This method is used to update a specific column and is suitable for infrequent updates with a small amount of data.
+Whether it is MoR or MoW, the semantics ensure that the specified columns are updated. The time taken for a single UPDATE operation increases with the amount of data being updated.
 
 #### Batch update based on load
 
