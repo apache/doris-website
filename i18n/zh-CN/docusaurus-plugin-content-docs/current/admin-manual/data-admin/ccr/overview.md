@@ -171,7 +171,7 @@ database、table：
 
 ### 启动 Syncer 说明
 
-根据配置选项启动 Syncer，并且在默认或指定路径下保存一个 pid 文件，pid 文件的命名方式为`host_port.pid`。  
+根据配置选项启动 Syncer，并且在默认或指定路径下保存一个 pid 文件，pid 文件的命名方式为`host_port.pid`。
 
 **输出路径下的文件结构**
 
@@ -196,7 +196,7 @@ output_dir
 
 **启动选项**
 
-1. --daemon   
+1. --daemon
 
 后台运行 Syncer，默认为 false
 
@@ -204,23 +204,23 @@ output_dir
 bash bin/start_syncer.sh --daemon
 ```
 
-2. --db_type  
+2. --db_type
 
-Syncer 目前能够使用两种数据库来保存自身的元数据，分别为`sqlite3`（对应本地存储）和`mysql`（本地或远端存储）  
+Syncer 目前能够使用两种数据库来保存自身的元数据，分别为`sqlite3`（对应本地存储）和`mysql`（本地或远端存储）
 
 ```sql
 bash bin/start_syncer.sh --db_type mysql
 ```
 
-默认值为 sqlite3  
+默认值为 sqlite3
 
 在使用 mysql 存储元数据时，Syncer 会使用`CREATE IF NOT EXISTS`来创建一个名为`ccr`的库，ccr 相关的元数据表都会保存在其中
 
-3. --db_dir  
+3. --db_dir
 
-**这个选项仅在 db 使用****`sqlite3`****时生效**  
+**这个选项仅在 db 使用****`sqlite3`****时生效**
 
-可以通过此选项来指定 sqlite3 生成的 db 文件名及路径。  
+可以通过此选项来指定 sqlite3 生成的 db 文件名及路径。
 
 ```sql
 bash bin/start_syncer.sh --db_dir /path/to/ccr.db
@@ -230,7 +230,7 @@ bash bin/start_syncer.sh --db_dir /path/to/ccr.db
 
 4. --db_host & db_port & db_user & db_password
 
-**这个选项仅在 db 使用****`mysql`****时生效**  
+**这个选项仅在 db 使用****`mysql`****时生效**
 
 ```sql
 bash bin/start_syncer.sh --db_host 127.0.0.1 --db_port 3306 --db_user root --db_password "qwe123456"
@@ -238,9 +238,9 @@ bash bin/start_syncer.sh --db_host 127.0.0.1 --db_port 3306 --db_user root --db_
 
 db_host、db_port 的默认值如例子中所示，db_user、db_password 默认值为空
 
-5. --log_dir  
+5. --log_dir
 
-日志的输出路径  
+日志的输出路径
 
 ```sql
 bash bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log
@@ -248,7 +248,7 @@ bash bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log
 
 默认路径为`SYNCER_OUTPUT_DIR/log`，文件名为`ccr_syncer.log`
 
-6. --log_level 
+6. --log_level
 
 用于指定 Syncer 日志的输出等级。
 
@@ -268,25 +268,25 @@ bash bin/start_syncer.sh --log_level info
 [2023-07-18 16:30:18] FATAL This is fatal type. ccrName=xxx line=xxx
 ```
 
-在--daemon 下，log_level 默认值为`info`  
+在--daemon 下，log_level 默认值为`info`
 
 在前台运行时，log_level 默认值为`trace`，同时日志会通过 tee 来保存到 log_dir
 
-6. --host && --port  
+6. --host && --port
 
-用于指定 Syncer 的 host 和 port，其中 host 只起到在集群中的区分自身的作用，可以理解为 Syncer 的 name，集群中 Syncer 的名称为`host:port`  
+用于指定 Syncer 的 host 和 port，其中 host 只起到在集群中的区分自身的作用，可以理解为 Syncer 的 name，集群中 Syncer 的名称为`host:port`
 
 ```sql
 bash bin/start_syncer.sh --host 127.0.0.1 --port 9190
 ```
 
-host 默认值为 127.0.0.1，port 的默认值为 9190  
+host 默认值为 127.0.0.1，port 的默认值为 9190
 
-7. --pid_dir  
+7. --pid_dir
 
-用于指定 pid 文件的保存路径  
+用于指定 pid 文件的保存路径
 
-pid 文件是 stop_syncer.sh 脚本用于关闭 Syncer 的凭据，里面保存了对应 Syncer 的进程号，为了方便 Syncer 的集群化管理，可以指定 pid 文件的保存路径  
+pid 文件是 stop_syncer.sh 脚本用于关闭 Syncer 的凭据，里面保存了对应 Syncer 的进程号，为了方便 Syncer 的集群化管理，可以指定 pid 文件的保存路径
 
 ```sql
 bash bin/start_syncer.sh --pid_dir /path/to/pids
@@ -296,7 +296,7 @@ bash bin/start_syncer.sh --pid_dir /path/to/pids
 
 ### Syncer 停止说明
 
-根据默认或指定路径下 pid 文件中的进程号关闭对应 Syncer，pid 文件的命名方式为`host_port.pid`。  
+根据默认或指定路径下 pid 文件中的进程号关闭对应 Syncer，pid 文件的命名方式为`host_port.pid`。
 
 **输出路径下的文件结构**
 
@@ -320,21 +320,21 @@ output_dir
 
 **停止选项**
 
-有三种关闭方法：  
+有三种关闭方法：
 
-1. 关闭目录下单个 Syncer  
+1. 关闭目录下单个 Syncer
 
 ​    指定要关闭 Syncer 的 host && port，注意要与 start_syncer 时指定的 host 一致
 
-2. 批量关闭目录下指定 Syncer  
+2. 批量关闭目录下指定 Syncer
 
 ​    指定要关闭的 pid 文件名，以空格分隔，用`" "`包裹
 
-3. 关闭目录下所有 Syncer  
+3. 关闭目录下所有 Syncer
 
 ​    默认即可
 
-1. --pid_dir  
+1. --pid_dir
 
 指定 pid 文件所在目录，上述三种关闭方法都依赖于 pid 文件的所在目录执行
 
@@ -342,11 +342,11 @@ output_dir
 bash bin/stop_syncer.sh --pid_dir /path/to/pids
 ```
 
-例子中的执行效果就是关闭`/path/to/pids`下所有 pid 文件对应的 Syncers（**方法 3**），`--pid_dir`可与上面三种关闭方法组合使用。  
+例子中的执行效果就是关闭`/path/to/pids`下所有 pid 文件对应的 Syncers（**方法 3**），`--pid_dir`可与上面三种关闭方法组合使用。
 
 默认值为`SYNCER_OUTPUT_DIR/bin`
 
-2. --host && --port  
+2. --host && --port
 
 关闭 pid_dir 路径下 host:port 对应的 Syncer
 
@@ -354,13 +354,13 @@ bash bin/stop_syncer.sh --pid_dir /path/to/pids
 bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190
 ```
 
-host 的默认值为 127.0.0.1，port 默认值为空  
+host 的默认值为 127.0.0.1，port 默认值为空
 
-即，单独指定 host 时**方法 1**不生效，会退化为**方法 3**。  
+即，单独指定 host 时**方法 1**不生效，会退化为**方法 3**。
 
 host 与 port 都不为空时**方法 1**才能生效
 
-3. --files 
+3. --files
 
 关闭 pid_dir 路径下指定 pid 文件名对应的 Syncer
 
@@ -378,7 +378,7 @@ bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"
 curl -X POST -H "Content-Type: application/json" -d {json_body} http://ccr_syncer_host:ccr_syncer_port/operator
 ```
 
-json_body: 以 json 的格式发送操作所需信息  
+json_body: 以 json 的格式发送操作所需信息
 
 operator：对应 Syncer 的不同操作
 
@@ -394,29 +394,29 @@ or
 
 ### 创建任务
 
-    ```shell
-    curl -X POST -H "Content-Type: application/json" -d '{
-        "name": "ccr_test",
-        "src": {
-        "host": "localhost",
-        "port": "9030",
-        "thrift_port": "9020",
-        "user": "root",
-        "password": "",
-        "database": "demo",
-        "table": "example_tbl"
-        },
-        "dest": {
-        "host": "localhost",
-        "port": "9030",
-        "thrift_port": "9020",
-        "user": "root",
-        "password": "",
-        "database": "ccrt",
-        "table": "copy"
-        }
-    }' http://127.0.0.1:9190/create_ccr
-    ```
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{
+    "name": "ccr_test",
+    "src": {
+    "host": "localhost",
+    "port": "9030",
+    "thrift_port": "9020",
+    "user": "root",
+    "password": "",
+    "database": "demo",
+    "table": "example_tbl"
+    },
+    "dest": {
+    "host": "localhost",
+    "port": "9030",
+    "thrift_port": "9020",
+    "user": "root",
+    "password": "",
+    "database": "ccrt",
+    "table": "copy"
+    }
+}' http://127.0.0.1:9190/create_ccr
+```
 
 - name: CCR 同步任务的名称，唯一即可
 
@@ -434,79 +434,79 @@ or
 
 ### 查看同步进度
 
-    ```shell
-    curl -X POST -H "Content-Type: application/json" -d '{
-        "name": "job_name"
-    }' http://ccr_syncer_host:ccr_syncer_port/get_lag
-    ```
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{
+    "name": "job_name"
+}' http://ccr_syncer_host:ccr_syncer_port/get_lag
+```
 
-​    其中 job_name 是 create_ccr 时创建的 name。
+job_name 是 create_ccr 时创建的 name。
 
-### ​暂停任务
+### 暂停任务
 
-    ```shell
-    curl -X POST -H "Content-Type: application/json" -d '{
-        "name": "job_name"
-    }' http://ccr_syncer_host:ccr_syncer_port/pause 
-    ```
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{
+    "name": "job_name"
+}' http://ccr_syncer_host:ccr_syncer_port/pause
+```
 
 ### 恢复任务
 
-    ```shell
-    curl -X POST -H "Content-Type: application/json" -d '{
-        "name": "job_name"
-    }' http://ccr_syncer_host:ccr_syncer_port/resume
-    ```
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{
+    "name": "job_name"
+}' http://ccr_syncer_host:ccr_syncer_port/resume
+```
 
 ### 删除任务
 
-    ```shell
-    curl -X POST -H "Content-Type: application/json" -d '{
-        "name": "job_name"
-    }' http://ccr_syncer_host:ccr_syncer_port/delete
-    ```
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{
+    "name": "job_name"
+}' http://ccr_syncer_host:ccr_syncer_port/delete
+```
 
 ### 获取版本
 
-    ```shell
-    curl http://ccr_syncer_host:ccr_syncer_port/version
+```shell
+curl http://ccr_syncer_host:ccr_syncer_port/version
 
-    # > return
-    {"version": "2.0.1"}
-    ```
+# > return
+{"version": "2.0.1"}
+```
 
 ### 查看任务状态
 
-    ```shell
-    curl -X POST -H "Content-Type: application/json" -d '{
-        "name": "job_name"
-    }' http://ccr_syncer_host:ccr_syncer_port/job_status
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{
+    "name": "job_name"
+}' http://ccr_syncer_host:ccr_syncer_port/job_status
 
-    {
-    "success": true,
-    "status": {
-        "name": "ccr_db_table_alias",
-        "state": "running",
-        "progress_state": "TableIncrementalSync"
-    }
-    }
-    ```
+{
+"success": true,
+"status": {
+    "name": "ccr_db_table_alias",
+    "state": "running",
+    "progress_state": "TableIncrementalSync"
+}
+}
+```
 
 ### 结束同步
 
-    ```shell
-    curl -X POST -H "Content-Type: application/json" -d '{
-        "name": "job_name"
-    }' http://ccr_syncer_host:ccr_syncer_port/desync
-    ```
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{
+    "name": "job_name"
+}' http://ccr_syncer_host:ccr_syncer_port/desync
+```
 
 ### 获取任务列表
 
-    ```shell
-    curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
+```shell
+curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
 
-    {"success":true,"jobs":["ccr_db_table_alias"]}
-    ```
+{"success":true,"jobs":["ccr_db_table_alias"]}
+```
 
 ### 开启库中所有表的 binlog
 
