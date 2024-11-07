@@ -39,11 +39,16 @@ under the License.
   ```shell
   kubectl create namespace ${namespace}
   ```
+2. 下载 `DorisCluster` 部署样例，参考[集群配置文档](install-config-cluster.md)定制化集群规格。
 
-2. 部署 Doris 集群
+```shell
+wget https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
+```
+
+3. 部署 Doris 集群
 
   ```shell
-  kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
+  kubectl apply -f doriscluster-sample.yaml -n ${namespace}
   ```
 
 **离线部署**
@@ -79,13 +84,20 @@ under the License.
   docker load -i doris.be-ubuntu-v2.0.2.tar
   ```
 
-2. 创建 namespace：
+2. 下载 `DorisCluster` 部署样例，将部署样例上传到能够使用 `kubectl` 操作 K8s 集群的机器。
+
+```shell
+wget https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
+```
+按照[集群配置文档](install-config-cluster.md)定制化部署样例 `doriscluster-sample.yaml`。
+
+3. 创建 namespace：
 
   ```shell
   kubectl create namespace ${namespace}
   ```
 
-3. 部署 Doris 集群
+4. 部署 Doris 集群
 
   ```shell
   kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}

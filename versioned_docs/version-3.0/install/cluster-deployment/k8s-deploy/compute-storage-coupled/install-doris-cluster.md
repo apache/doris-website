@@ -1,7 +1,7 @@
 ---
 {
-"title": "Deploying Doris Cluster",
-"language": "en"
+  "title": "Deploying Doris Cluster",
+  "language": "en"
 }
 ---
 
@@ -40,7 +40,12 @@ Deploying a cluster online requires the following steps:
 kubectl create namespace ${namespace}
 ```
 
-2. Deploy Doris cluster
+2. download the example `DorisCluster` and refer to the [config doc](install-config-cluster.md) for customizing Doris cluster specification.
+```shell
+wget https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
+```
+
+3. Deploy Doris cluster
 
 ```shell
 kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
@@ -78,24 +83,32 @@ Upload the image tar package to the server and execute the docker load command:
 docker load -i doris.fe-ubuntu-v2.0.2.tar
 docker load -i doris.be-ubuntu-v2.0.2.tar
 ```
+Push the image to the repo that K8s can access.
 
-2. Create namespace:
+2. download the example `DorisCluster` and unload the file to the server that can using kubectl to operation k8s cluster.
+
+```shell
+wget https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
+```
+Custom the `doriscluster-sample.yaml` as [the config doc](install-config-cluster.md).
+
+3. Create namespace:
 
 ```shell
 kubectl create namespace ${namespace}
 ```
 
-3. Deploy Doris cluster
+4. Deploy Doris cluster
 
 ```shell
-kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
+kubectl apply -f doriscluster-sample.yaml -n ${namespace}
 ```
 
 ### Deploy using Helm
 
 **Online Deployment**
 
-Before installation, you need to add a deployment warehouse. If it has been added, you can directly install Doris Cluster. Otherwise, please refer to the operation of **Add Deployment Warehouse** when adding [Deploy Doris Operator](<./install-operator.md#Option 3: Helm deploys Doris Operator>)
+Before installation, you need to add a deployment warehouse. If it has been added, you can directly install Doris Cluster. Otherwise, please refer to the operation of **Add Deployment Warehouse** when adding [Deploy Doris Operator](./install-operator.md#option-3-helm-deploys-doris-operator)
 
 1. Install Doris Cluster
 
