@@ -53,23 +53,23 @@ Taking a MySQL instance as an example, the following part describes how to move 
 ### Add DataSources
 1. Log in to the [BladePipe Cloud](https://cloud.bladepipe.com/). Click **DataSource** > **Add DataSource**.
 2. Select MySQL and Doris as the Type respectively, and fill in the setup form accordingly. 
-   ![Add DataSources-1](../static/images/bp-doris-1.png)
+   ![Add DataSources-1](/static/images/bp-doris-1.png)
 3. Click **Test Connection**. After successful connection, click **Add DataSource** to add the DataSource. 
-   ![Add DataSources-2](../static/images/bp-doris-2.png)
+   ![Add DataSources-2](/static/images/bp-doris-2.png)
 
 ### Create a DataJob
 1. Click DataJob > [Create DataJob](https://doc.bladepipe.com/operation/job_manage/create_job/create_full_incre_task).
 2. Select the source and target DataSources, and click **Test Connection** to ensure the connection to the source and target DataSources are both successful.
-  ![Create a DataJob-1](../static/images/bp-doris-3.png)
-3. Select **Incremental** for DataJob Type, together with the **Full Data** option.
-  ![Create a DataJob-2](../static/images/bp-doris-4.png)
-4. Select the tables to be replicated.
-  ![Create a DataJob-3](../static/images/bp-doris-5.png)
-5. Select the columns to be replicated.
-  ![Create a DataJob-4](../static/images/bp-doris-6.png)
-6. Confirm the DataJob creation.
-7. The DataJob runs automatically.
-  ![Create a DataJob-5](../static/images/bp-doris-8.png)
+  ![Create a DataJob-1](/static/images/bp-doris-3.png)
+1. Select **Incremental** for DataJob Type, together with the **Full Data** option.
+  ![Create a DataJob-2](/static/images/bp-doris-4.png)
+1. Select the tables to be replicated.
+  ![Create a DataJob-3](/static/images/bp-doris-5.png)
+1. Select the columns to be replicated.
+  ![Create a DataJob-4](/static/images/bp-doris-6.png)
+1. Confirm the DataJob creation.
+2. The DataJob runs automatically.
+  ![Create a DataJob-5](/static/images/bp-doris-8.png)
   
   :::info
   Once the DataJob is created and started, BladePipe will automatically run the following DataTasks:

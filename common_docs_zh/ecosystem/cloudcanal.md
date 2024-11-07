@@ -54,23 +54,23 @@ CloudCanal 提供可视化的界面，可轻松实现数据的结构迁移、全
 ### 添加数据源
 1. 登录 CloudCanal 控制台，点击 **数据源管理** > **新增数据源**。
 2. 分别选择 MySQL 和 Doris 数据源，并填写相应信息。
-   ![添加数据源-1](../../static/images/cc-doris-1.png)
+   ![添加数据源-1](/static/images/cc-doris-1.png)
 3. 点击 **测试连接**，连接成功后，点击 **新增数据源**，完成数据源添加。
-   ![添加数据源-2](../../static/images/cc-doris-2.png)
+   ![添加数据源-2](/static/images/cc-doris-2.png)
 
 ### 创建任务
 1. 点击 **同步任务** > **创建任务**。
 2. 选择源和目标数据源，并分别点击 **测试连接**。
-   ![创建任务-1](../../static/images/cc-doris-3.png)
+   ![创建任务-1](/static/images/cc-doris-3.png)
 3. 选择 **数据同步** 并勾选 **全量初始化**。
-   ![创建任务-2](../../static/images/cc-doris-4.png)
+   ![创建任务-2](/static/images/cc-doris-4.png)
 4. 选择需要同步的表。
-   ![创建任务-3](../../static/images/cc-doris-5.png)
+   ![创建任务-3](/static/images/cc-doris-5.png)
 5. 选择需要同步的列。
-   ![创建任务-4](../../static/images/cc-doris-6.png)
+   ![创建任务-4](/static/images/cc-doris-6.png)
 6. 确认创建任务。
 7. 任务成功运行。
-   ![创建任务-5](../../static/images/cc-doris-8.png)
+   ![创建任务-5](/static/images/cc-doris-8.png)
   
   :::info
   当任务创建完成，CloudCanal 会自动进行任务流转，其中的步骤包括：
