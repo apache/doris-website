@@ -84,14 +84,14 @@ SHOW (FRONTEND|BACKEND)  CONFIG [LIKE "pattern"];
     SHOW BACKEND CONFIG FROM 10001;
     ```
 4. 使用like谓词查看Be ID为`10001`的配置
-    ````
+    ```
     mysql> SHOW BACKEND CONFIG LIKE "be_port" FROM 10001;
     +-----------+---------------+---------+-------+---------+-----------+
     | BackendId | Host          | Key     | Value | Type    | IsMutable |
     +-----------+---------------+---------+-------+---------+-----------+
     | 10001     | xx.xx.xxx.xxx | be_port | 9060  | int32_t | false     |
     +-----------+---------------+---------+-------+---------+-----------+
-    ````
+    ```
 ### Keywords
 
     SHOW, CONFIG

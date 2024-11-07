@@ -84,14 +84,14 @@ The columns in the results of showing BE configuration have the following meanin
     SHOW BACKEND CONFIG FROM 10001;
     ```
 4. View the configuration useing both a pattern and a backend ID
-    ````
+    ```
     mysql> SHOW BACKEND CONFIG LIKE "be_port" FROM 10001;
     +-----------+---------------+---------+-------+---------+-----------+
     | BackendId | Host          | Key     | Value | Type    | IsMutable |
     +-----------+---------------+---------+-------+---------+-----------+
     | 10001     | xx.xx.xxx.xxx | be_port | 9060  | int32_t | false     |
     +-----------+---------------+---------+-------+---------+-----------+
-    ````
+    ```
 
 
 ### Keywords
