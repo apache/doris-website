@@ -83,3 +83,23 @@ The update in the aggregate model refers to the process of generating new aggreg
 New Agg Value = Agg Func ( Old Agg Value, New Column Value)
 
 The update in the aggregate model is only supported through load methods and does not support the use of Update statements. When defining a table in the aggregate model, if the aggregation function for the value column is defined as REPLACE_IF_NULL, it indirectly achieves partial column update capabilities similar to the unique key model. For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/update-of-aggregate-model).
+
+## Comparison of Update Capabilities for Different Models/Implementations
+
+### Performance Comparison
+|                | Unique Key MoW                                                                                                                                                               | Unique Key MoR | Aggregate Key |
+|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|---------------|
+| Import Speed   | Deduplication is performed during import. Small-batch real-time writes incur approximately 10%-20% performance loss compared to MoR, while large-batch imports (e.g., tens or hundreds of millions of records) have about 30%-50% performance loss compared to MoR. | Similar to Duplicate Key | Similar to Duplicate Key |
+| Query Speed    | Similar to Duplicate Key                                                                                                                                                      | Requires deduplication during queries, with query time approximately 3-10 times that of MoW | If the aggregation function is REPLACE/REPLACE_IF_NOT_NULL, query speed is similar to MoR |
+| Predicate Pushdown | Supported                                                                                                                                                                | Not Supported  | Not Supported |
+| Resource Consumption | - **Import Resource Consumption**: Consumes approximately 10%-30% more CPU compared to Duplicate Key/Unique Key MoR.<br> - **Query Resource Consumption**: Similar to Duplicate Key with no additional resource consumption.<br> - **Compaction Resource Consumption**: Higher memory and CPU usage compared to Duplicate Key, specific usage depends on data characteristics and volume. | - **Import Resource Consumption**: Similar to Duplicate Key with no additional resource consumption.<br> - **Query Resource Consumption**: Higher CPU and memory consumption during queries compared to Duplicate Key/Unique Key MoW.<br> - **Compaction Resource Consumption**: Higher memory and CPU usage than Duplicate Key, specific usage depends on data characteristics and volume. | Same as Unique Key MoR |
+
+### Feature Support Comparison
+|                | Unique Key MoW | Unique Key MoR | Aggregate Key |
+|----------------|----------------|----------------|---------------|
+| UPDATE         | Supported       | Supported      | Not Supported |
+| DELETE         | Supported       | Supported      | Not Supported |
+| sequence column| Supported       | Supported      | Not Supported |
+| delete_sign    | Supported       | Supported      | Not Supported |
+| Partial Column Updates | Supported | Not Supported | Supported     |
+| Inverted Index | Supported       | Not Supported  | Not Supported |

@@ -87,3 +87,22 @@ Doris 支持 Stream Load、Broker Load、Routine Load、Insert Into 等多种导
 New Agg Value = Agg Func ( Old Agg Value, New Column Value)
 
 聚合模型只支持基于导入方式的更新，不支持使用 Update 语句更新。在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NULL，也可以间接实现类似主键表的部分列更新能力。更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
+
+## 不同模型/实现的更新能力对比
+### 性能对比
+|                | Unique Key MoW                                                                                                                                                               | Unique Key MoR | Aggregate Key |
+|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|---------------|
+| 导入速度       | 导入过程中进行数据去重，小批量实时写入相比MoR约有10%-20%的性能损失，大批量导入（例如千万级/亿级数据）相比MoR约有30%-50%的性能损失                                                                                                  | 与Duplicate Key接近  | 与Duplicate Key接近  |
+| 查询速度       | 与Duplicate Key接近                                                                                                                                                             | 需要在查询期间进行去重，查询耗时约为 MoW 的3-10倍 | 如果聚合函数为REPLACE/REPLACE_IF_NOT_NULL，查询速度与MoR接近 |
+| 谓词下推       | 支持                                                                                                                                                                           | 不支持        | 不支持        |
+| 资源消耗       | - **导入资源消耗**：相比Duplicate Key/Unique Key MoR，约额外消耗约10%-30%的CPU。<br> - **查询资源消耗**：与Duplicate Key接近，无额外资源消耗。<br> - **Compaction资源消耗**：相比Duplicate Key，消耗更多内存和CPU，具体取决于数据特征和数据量。 | - **导入资源消耗**：与Duplicate Key相近，无额外资源消耗。<br> - **查询资源消耗**：相比Duplicate Key/Unique Key MoW，查询时额外消耗更多的CPU和内存。<br> - **Compaction资源消耗**：相比Duplicate Key，需更多内存和CPU，具体数值取决于数据特征和数据量。 | 与Unique Key MoR相同 |
+
+### 功能支持对比
+|                | Unique Key MoW | Unique Key MoR | Aggregate Key |
+|----------------|----------------|----------------|---------------|
+| UPDATE         |支持|支持|不支持|
+| DELETE         |支持|支持|不支持|
+| sequence列     |支持|支持|不支持|
+| delete_sign    |支持|支持|不支持|
+| 部分列更新     |支持|不支持|支持|
+| 倒排索引       |支持|不支持|不支持|
