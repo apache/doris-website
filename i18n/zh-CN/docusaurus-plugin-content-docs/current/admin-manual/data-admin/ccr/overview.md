@@ -391,11 +391,7 @@ or
 {"success":false,"error_msg":"job ccr_test not exist"}
 ```
 
-### operators
-
-- create_ccr  
-
-​    创建 CCR 任务
+### 创建任务
 
     ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
@@ -435,9 +431,7 @@ or
 
   - 如果是表级别同步，则需要填入 dbName、tableName
 
-- get_lag
-
-​    查看同步进度
+### 查看同步进度
 
     ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
@@ -447,9 +441,7 @@ or
 
 ​    其中 job_name 是 create_ccr 时创建的 name
 
-- pause
-
-​    暂停同步任务
+### ​暂停任务
 
     ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
@@ -457,9 +449,7 @@ or
     }' http://ccr_syncer_host:ccr_syncer_port/pause 
     ```
 
-- resume
-
-​    恢复同步任务
+### 恢复任务
 
     ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
@@ -467,9 +457,7 @@ or
     }' http://ccr_syncer_host:ccr_syncer_port/resume
     ```
 
-- delete
-
-​    删除同步任务
+### 删除任务
 
     ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
@@ -477,9 +465,7 @@ or
     }' http://ccr_syncer_host:ccr_syncer_port/delete
     ```
 
-- version
-
-    获取版本信息
+### 获取版本
 
     ```shell
     curl http://ccr_syncer_host:ccr_syncer_port/version
@@ -488,9 +474,7 @@ or
     {"version": "2.0.1"}
     ```
 
-- job status
-
-    查看 job 的状态
+### 查看任务状态
 
     ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
@@ -507,9 +491,7 @@ or
     }
     ```
 
-- desync job
-
-    不做 sync，此时用户可以将源和目的集群互换
+### 结束同步
 
     ```shell
     curl -X POST -H "Content-Type: application/json" -d '{
@@ -517,9 +499,7 @@ or
     }' http://ccr_syncer_host:ccr_syncer_port/desync
     ```
 
-- list_jobs
-
-    展示已经创建的所有任务
+### 获取任务列表
 
     ```shell
     curl http://ccr_syncer_host:ccr_syncer_port/list_jobs

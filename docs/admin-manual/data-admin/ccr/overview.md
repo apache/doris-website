@@ -371,11 +371,7 @@ or
 {"success":false,"error_msg":"job ccr_test not exist"}
 ```
 
-**Operators**
-
-- create_ccr 
-
-Create CCR tasks
+### Create Job
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -409,9 +405,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
   - If it is a database-level synchronization, fill in the database name and leave the table name empty.
   - If it is a table-level synchronization, specify both the database name and the table name.
 
-- get_lag
-
-View the synchronization progress.
+### Get Synchronization Lag
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -421,9 +415,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 The job_name is the name specified when create_ccr.
 
-- pause
-
-Pause synchronization task.
+### Pause Job
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -431,9 +423,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://ccr_syncer_host:ccr_syncer_port/pause 
 ```
 
-- resume
-
-Resume synchronization task.
+### Resume Job
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -441,9 +431,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://ccr_syncer_host:ccr_syncer_port/resume
 ```
 
-- delete
-
-Delete synchronization task.
+### Delete Job
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -451,9 +439,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://ccr_syncer_host:ccr_syncer_port/delete
 ```
 
-- version
-
-View version information.
+### Display Version
 
 ```shell
 curl http://ccr_syncer_host:ccr_syncer_port/version
@@ -462,9 +448,7 @@ curl http://ccr_syncer_host:ccr_syncer_port/version
 {"version": "2.0.1"}
 ```
 
-- job status
-
-View job status.
+### View Job Status
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -481,9 +465,9 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }
 ```
 
-- desync job
+### Desynchronize Job
 
-No sync. Users can swap the source and target clusters.
+Do not sync any more. Users can swap the source and target clusters.
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -491,9 +475,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://ccr_syncer_host:ccr_syncer_port/desync
 ```
 
-- list_jobs
-
-List all created tasks.
+### List All Jobs
 
 ```shell
 curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
