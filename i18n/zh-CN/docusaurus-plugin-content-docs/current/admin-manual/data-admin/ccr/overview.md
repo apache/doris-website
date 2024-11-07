@@ -73,6 +73,7 @@ CCR 工具主要依赖一个轻量级进程：Syncers。Syncers 会从源集群�
 CCR 支持四种同步方式：
 
 | 同步方式    |   原理    |      触发时机     |
+|------------|-----------|------------------|
 | Full Sync  |  上游全量backup，下游restore。 | 首次同步或者操作触发，操作见功能列表。 |
 | Partial Sync  |  上游表或者分区级别 Backup，下游表或者分区级别restore。 | 操作触发，操作见功能列表。 |
 | TXN  |  增量数据同步，上游提交之后，下游开始同步。 | 操作触发，操作见功能列表。 |
@@ -439,7 +440,7 @@ or
     }' http://ccr_syncer_host:ccr_syncer_port/get_lag
     ```
 
-​    其中 job_name 是 create_ccr 时创建的 name
+​    其中 job_name 是 create_ccr 时创建的 name。
 
 ### ​暂停任务
 
