@@ -571,7 +571,6 @@ FROM
 3 rows in set (0.03 sec)
 ```
 
-了解更多有关分析函数信息，可以参考 Oracle 官网文档 [SQL for Analysis and Reporting](https://docs.oracle.com/en/database/oracle/oracle-database/23/dwhsg/sql-analysis-reporting-data-warehouses.html#GUID-20EFBF1E-F79D-4E4A-906C-6E496EECA684)
 
 ## 附录
 
