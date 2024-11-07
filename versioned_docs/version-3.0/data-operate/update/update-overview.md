@@ -64,13 +64,11 @@ This method is used to update a specific column and is suitable for infrequent u
 
 #### Batch update based on load
 
-Doris supports various load methods such as Stream Load, Broker Load, Routine Load, and Insert Into. For unique key tables, all load have the "UPSERT" semantics, meaning that if a row with the same key does not exist, it will be inserted, and if it already exists, it will be updated.
+Doris supports multiple data load methods, including Stream Load, Broker Load, Routine Load, and Insert Into. For primary key tables, all load operations default to "UPSERT" semantics: if a record with the same key does not exist, it is inserted; if it already exists, it is updated. There are two types of updates: full row updates and partial column updates.
 
-- If all columns are updated, MoR and MoW have the same semantics, which is to replace all value columns for the same key.
+- **Full Row Update**: Updates for Unique Key tables default to full row updates. During data loading, users can choose to provide either all fields or only part of them. If only partial fields are provided, Doris will fill in the missing fields with default values to form a complete record for updating.
 
-- If only some columns are updated, the default semantics for MoR and MoW are the same. In this case, the missing columns in the table schema will be updated with their default values, overwriting the old records.
-
-- If only some columns are updated and MoW is used in the unique key model, and the MySQL session variable "partial_columns" is set to true, or the HTTP header "partial_columns" is set to true, the missing columns will be updated with the corresponding missing column values from the existing record, instead of using the default values from the table schema.
+- **Partial Column Update**: Unique Key MoW supports partial column updates. Users can enable this feature by setting the session variable `enable_unique_key_partial_update = true` or by specifying `partial_columns:true` in the HTTP Header. When enabled, if a record with the given primary key exists, only the specified fields are updated; if the primary key does not exist, the missing fields are filled with default values.
 
 We will provide detailed explanations of these two update methods in the documentation: [Update in Unique Key Model](../update/unique-update) and [Load Update in Unique Key Model](../update/update-of-unique-model).
 

@@ -64,13 +64,11 @@ PROPERTIES (
 
 #### 基于导入的批量更新
 
-Doris 支持 Stream Load、Broker Load、Routine Load、Insert Into 等多种导入方式，对于主键表，所有的导入都是“UPSERT”的语义，即如果相同 Key 的行不存在，则插入。对于已经存在的记录，则进行更新。
+Doris 支持多种数据导入方式，包括 Stream Load、Broker Load、Routine Load 以及 Insert Into 等。对于主键表，所有导入操作默认采用“UPSERT”语义：当相同主键的记录不存在时执行插入操作，若记录已存在则进行更新操作。更新方式包括整行更新和部分列更新：
 
-- 如果更新的是所有列，MoR 和 MoW 的语义是一样的，都是覆盖相同 Key 的所有 Value 列。
+- **整行更新**：Unique Key 表的更新默认为整行更新。在导入数据时，用户可以选择提供所有字段，或仅提供部分字段。当用户只提供部分字段时，Doris 会用默认值填充缺失的字段，生成完整记录并进行更新。
 
-- 如果更新的是部分列，MoR 和 MoW 的默认语义是一样的，即使用表 Schema 中缺失列的默认值作为缺失列的值，去覆盖旧的记录。
-
-- 如果更新的是部分列，主键模型采用的是 MoW，并且设置了 MySQL Session 变量 partial_columns = true 或者 HTTP Header partial_columns:true，则被更新的缺失列的值，不是再使用表 Schema 中缺失列的默认值，而是已经存在记录的对应缺失列的值。
+- **部分列更新**：Unique Key MoW 支持部分列更新。用户可以通过设置会话变量 `enable_unique_key_partial_update = true` 或在 HTTP Header 中指定 `partial_columns:true` 来启用此功能。开启后，若导入数据的主键已存在，则仅更新指定的部分字段；若主键不存在，则使用默认值填充缺失字段。
 
 我们会分别在文档 [主键模型的 Update 更新](../update/unique-update) 和 [主键模型的导入更新](../update/update-of-unique-model) 详细介绍两种更新方式。
 
