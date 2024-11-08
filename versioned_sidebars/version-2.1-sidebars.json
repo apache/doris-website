@@ -1632,6 +1632,7 @@
         "benchmark/tpcds"
     ],
     "ecosystem": [
+        "ecosystem/cloudcanal",
         "ecosystem/spark-doris-connector",
         "ecosystem/flink-doris-connector",
         "ecosystem/doris-kafka-connector",
@@ -1645,7 +1646,6 @@
         "ecosystem/doris-streamloader",
         "ecosystem/hive-bitmap-udf",
         "ecosystem/hive-hll-udf",
-        "ecosystem/cloudcanal",
         {
             "type": "category",
             "label": "BI and Database IDE",

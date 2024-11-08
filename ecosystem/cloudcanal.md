@@ -24,21 +24,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-BladePipe is a **real-time end-to-end data replication** tool, moving data between **30+** databases, message queues, search engines, caching, real-time data warehouses, data lakes and more, with ultra-low latency less than 3 seconds. It features efficiency, stability and scalability, compatibility with diverse database engines, one-stop management, enhanced security, and complex data transformation.
+BladePipe is a **real-time end-to-end data replication** tool, moving data between **30+** databases, message queues, search engines, caching, real-time data warehouses, data lakes and more, with **ultra-low latency less than 3 seconds**. It features efficiency, stability and scalability, compatibility with diverse database engines, one-stop management, enhanced security, and complex data transformation.
 
 ## Functions
-BladePipe presents a visual management interface, allowing you to easily create DataJobs to realize **schema migration, data migration, synchronization, verification and correction**, etc. In addition, more refined and customized configurations are supported by setting parameters. The supported source DataSources and functions are as follows:
+BladePipe presents a visual management interface, allowing you to easily create DataJobs to realize **schema migration, data migration, synchronization, verification and correction**, etc. In addition, more refined and customized configurations are supported by setting parameters. Now BladePipe supports data movement from the following source DataSources to Doris:
 
 | Source DataSource            | Schema Migration | Data Migration | Data Sync | Verification & Correction |
 |------------------------------|------------------|----------------|-----------|---------------------------|
 | MySQL/MariaDB/AuroraMySQL    | Yes              | Yes            | Yes       | Yes                       |
 | Oracle                       | Yes              | Yes            | Yes       | Yes                       |
-| PostgreSQL//AuroraPostgreSQL | Yes              | Yes            | Yes       | Yes                       |
+| PostgreSQL/AuroraPostgreSQL | Yes              | Yes            | Yes       | Yes                       |
 | SQL Server                   | Yes              | Yes            | Yes       | Yes                       |
 | Kafka                        | No               | No             | Yes       | No                        |
 | AutoMQ                       | No               | No             | Yes       | No                        |
 | TiDB                         | Yes              | Yes            | Yes       | Yes                       |
 | Hana                         | Yes              | Yes            | Yes       | Yes                       |
+| PolarDB-X                    | Yes              | Yes            | Yes       | Yes                       |
 
 :::info
 For more functions and parameter settings, please refer to [BladePipe Connections](https://doc.bladepipe.com/dataMigrationAndSync/connection/mysql2?target=Doris).
@@ -73,14 +74,8 @@ Taking a MySQL instance as an example, the following part describes how to move 
   ![Create a DataJob-4](/images/bp-doris-6.png)
 
 1. Confirm the DataJob creation.
-2. The DataJob runs automatically.
+2. The DataJob runs automatically. BladePipe will automatically run the following DataTasks:   
+  - **Schema Migration**: The schemas of the source tables will be migrated to the target instance.   
+  - **Full Data**: All existing data of the source tables will be fully migrated to the target instance.   
+  - **Incremental**: Ongoing data changes will be continuously synchronized to the target instance.
   ![Create a DataJob-5](/images/bp-doris-8.png)
-  
-  :::info
-  Once the DataJob is created and started, BladePipe will automatically run the following DataTasks:
-  
-  - Schema Migration: The schemas of the source tables will be migrated to the target instance.
-  - Full Data: All existing data of the source tables will be fully migrated to the target instance.
-  - Incremental: Ongoing data changes will be continuously synchronized to the target instance.
-  :::
-
