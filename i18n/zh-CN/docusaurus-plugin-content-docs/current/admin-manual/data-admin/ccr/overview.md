@@ -218,7 +218,7 @@ bash bin/start_syncer.sh --db_type mysql
 
 3. --db_dir
 
-**这个选项仅在 db 使用****`sqlite3`****时生效**
+**这个选项仅在 db 使用 `sqlite3` 时生效**
 
 可以通过此选项来指定 sqlite3 生成的 db 文件名及路径。
 
@@ -230,7 +230,7 @@ bash bin/start_syncer.sh --db_dir /path/to/ccr.db
 
 4. --db_host & db_port & db_user & db_password
 
-**这个选项仅在 db 使用****`mysql`****时生效**
+**这个选项仅在 db 使用 `mysql` 时生效**
 
 ```sql
 bash bin/start_syncer.sh --db_host 127.0.0.1 --db_port 3306 --db_user root --db_password "qwe123456"
