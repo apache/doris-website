@@ -26,7 +26,7 @@ under the License.
 
 Doris 支持对csv、json、parquet、orc格式的数据文件进行导入。本文对各种文件格式支持的导入方式、适用参数、使用方式进行详细的介绍。
 
-## CSV 格式
+## CSV 
 ### 支持的导入方式
 以下导入方式支持 CSV 格式的数据导入：
 - [Stream Load](./import-way/stream-load-manual.md)
@@ -125,7 +125,7 @@ PROPERTIES
 );
 ```
 
-## JSON 格式
+## JSON 
 
 Doris 支持导入 JSON 格式的数据。本文档主要说明在进行 JSON 格式数据导入时的注意事项。
 

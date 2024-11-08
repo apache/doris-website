@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Data Formats",
+    "title": "File Formats",
     "language": "en"
 }
 ---
@@ -26,7 +26,7 @@ under the License.
 
 Doris supports importing data files in CSV, JSON, Parquet, and ORC formats. This document provides detailed information on the supported import methods, applicable parameters, and usage for each file format.
 
-## CSV Format
+## CSV
 ### Supported Import Methods
 The following import methods support data import in CSV format:
 - [Stream Load](./import-way/stream-load-manual.md)
@@ -126,7 +126,7 @@ PROPERTIES
 ```
 
 
-## Json format
+## JSON
 Doris supports importing data in JSON format. This document mainly describes the precautions when importing data in JSON format.
 
 ### Supported import methods
