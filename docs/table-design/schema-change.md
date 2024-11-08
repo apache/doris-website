@@ -40,38 +40,48 @@ Users can modify the schema of an existing table through the Schema Change opera
 
 **Overview**
 
-|Schema change Implementation | Pattern | Main Logic | Typical Scenario |
-|-----------------|------|---------|----------|
-| Light Schema Change | Synchronous | Only modifies the FE's schema metadata | Adding or dropping value columns |
-| Direct Schema Change | Asynchronous | Rewrites the data files holistically, but does not involve reordering | Changing the type of value columns |
-| Sort Schema Change | Asynchronous | Rewrites the data files holistically and reorders them | Changing the type of key columns |
-| Hard Linked Schema Change | Asynchronous | Relinks the data files without modifying the data files themselves | Replaced by Light Schema Change |
+The implementation of Schema Change is divided into two major categories: Light Weight Schema Change and Heavy Weight Schema Change.
 
-**Dual Writing**
+- Light Weight Schema Change is completed quickly by synchronously modifying only the FE's metadata, typically within seconds. Adding or dropping value columns, changing column names, and increasing the length of VARCHAR columns (except for DUP KEY columns and UNIQUE KEY columns) all use the logic of Light Weight Schema Change.
 
-Dual writing is a process shared by Direct Schema Change and Sort Schema Change. Both methods generate a new schema table/index data from the original table/index data. It mainly involves two parts of data conversion: one is the conversion of existing historical data, and the other is the conversion of newly arrived import data during the execution of the Schema Change.
+- Heavy Weight Schema Change relies on the BE for data file transformation. The specific implementation methods are as follows:
 
-```Plain
-+----------+
-| Load Job |
-+----+-----+
-     |
-     | Load job generates both origin and new Index data
-     |
-     |      +------------------+ +---------------+
-     |      | Origin Index     | | Origin Index  |
-     +------> New Incoming Data| | History Data  |
-     |      +------------------+ +------+--------+
-     |                                  |
-     |                                  | Convert history data
-     |                                  |
-     |      +------------------+ +------v--------+
-     |      | New Index        | | New Index     |
-     +------> New Incoming Data| | History Data  |
-            +------------------+ +---------------+
-```
+    |Schema change Implementation | Main Logic | Typical Scenario |
+    |-----------------|------|---------|----------|
+    | Direct Schema Change | Rewrites the data files holistically without involving reordering | Changing the data type of value columns |
+    | Sort Schema Change | Rewrites the data files holistically and reorders them | Changing the data type of key columns |
+    | Hard Linked Schema Change | Relinks the data files without directly modifying the data files | Replaced by Light Weight Schema Change for column changes |
 
-Before the historical data transformation begins, it will wait for all preceding transactions to complete. After that, the data transformation starts, and to ensure data integrity, subsequent import tasks will generate data for both the original table/index and the new table/index. The data imported during the transformation period must be compatible with both the new and old schemas; otherwise, the import will fail.
+**Main Process**
+
+For Light Weight Schema Change, only the corresponding metadata in FE is modified after the Alter command is issued, and the return of the Alter command signifies the end of the schema change.
+
+For Heavy Weight Schema Change, after the user issues the Alter command, a task for schema change is started in the background, and the return of the command signifies the successful submission of the schema change task. The execution of the background task goes through the following process:
+
+1. For each tablet of the target table, a corresponding new tablet is created according to the schema after the change, used for storing the transformed data.
+2. Wait for all previous import transactions to end before starting data transformation.
+3. Start data transformation, task by task for each tablet, writing the data from the old tablet after the change to the newly created tablet. The differences among the three heavy weight Schema Changes are in this step, where data transformation is carried out according to their respective implementation logics mentioned above.
+4. After the data transformation starts, if a new import transaction is created, to ensure data integrity, the new import transaction will simultaneously generate data for both the old tablet and the new tablet, known as dual writing. Data written during the dual write period must be compatible with both the new and old schemas, otherwise, the import will fail.
+    ```Plain
+    +----------+
+    | Load Job |
+    +----+-----+
+        |
+        | Load job generates both origin and new Index data
+        |
+        |      +------------------+ +---------------+
+        |      | Origin Index     | | Origin Index  |
+        +------> New Incoming Data| | History Data  |
+        |      +------------------+ +------+--------+
+        |                                  |
+        |                                  | Convert history data
+        |                                  |
+        |      +------------------+ +------v--------+
+        |      | New Index        | | New Index     |
+        +------> New Incoming Data| | History Data  |
+                +------------------+ +---------------+
+    ```
+5. After the data transformation is completed, all tablets storing old data will be deleted, and all new tablets that have completed the data change will replace the old tablets for service.
 
 The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
 

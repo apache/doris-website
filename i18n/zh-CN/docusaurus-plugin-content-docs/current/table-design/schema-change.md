@@ -40,38 +40,48 @@ under the License.
 
 **概览**
 
-|Schema change实现| 模式 | 主要逻辑 | 典型场景 |
-|-----------------|------|---------|----------|
-| Light Schema Change | 同步 | 只修改FE的Schema元数据 | 增加或删除value列 |
-| Direct Schema Change | 异步 | 对数据文件进行整体重写，但是不会涉及重排序 | 更改value列类型 |
-| Sort Schema Change | 异步 | 对数据文件进行整体重写，并进行重排序 | 更改key列类型 |
-| Hard Linked Schema Change | 异步 | 对数据文件进行重新链接，不需要修改数据文件 | 被light schema change取代 |
+Schema Change 的实现分为两个大类：轻量级Schema Change和重量级Schema Change。
 
-**数据双写**
+- 轻量级Schema Change完成速度很快，只会同步地修改FE的元数据，一般在秒级别完成。增加或删除value列、更改列名、增加除DUP KEY列和UNIQUE KEY列以外的VARCHAR列的长度，都会使用轻量级Schema Change的逻辑。
 
-数据双写是Direct Schema Change和Sort Schema Change共有的流程。这两种方式会通过原表 /Index 的数据，生成一份新 Schema 的表 /Index 数据。其中主要需要进行两部分数据转换，一是已存在的历史数据的转换，二是在 Schema Change 执行过程中，新到达的导入数据的转换。
+- 重量级Schema Change需要依赖BE进行数据文件的转换。具体实现方式如下：
 
-```Plain
-+----------+
-| Load Job |
-+----+-----+
-     |
-     | Load job generates both origin and new Index data
-     |
-     |      +------------------+ +---------------+
-     |      | Origin Index     | | Origin Index  |
-     +------> New Incoming Data| | History Data  |
-     |      +------------------+ +------+--------+
-     |                                  |
-     |                                  | Convert history data
-     |                                  |
-     |      +------------------+ +------v--------+
-     |      | New Index        | | New Index     |
-     +------> New Incoming Data| | History Data  |
-            +------------------+ +---------------+
-```
+    |Schema change实现| 主要逻辑 | 使用场景 |
+    |-----------------|---------|----------|
+    | Direct Schema Change | 对数据文件进行整体重写，但是不会涉及重排序 | 更改value列的数据类型 |
+    | Sort Schema Change | 对数据文件进行整体重写，并进行重排序 | 更改key列的数据类型 |
+    | Hard Linked Schema Change | 对数据文件进行重新链接，不需要直接修改数据文件 | 在列的变更中被轻量级Schema Change取代 |
 
-历史数据转换开始前，会等待先前所有事务结束。随后开始数据转换，为保证数据完整性，之后导入任务会同时为原表/Index和新表/Index生成数据。数据转换期间导入的数据必须兼容新、旧schema，否则导入会失败。
+**主要流程**
+
+对于轻量级Schema Change，只会在Alter命令发起后修改FE的相应元数据，Alter命令的返回就代表Schema变更的结束。
+
+对于重量级Schema Change，在用户发起Alter命令后，会在后台启动一个任务进行Schema的变更，命令的返回代表着Schema变更任务的提交成功。后台任务的执行将经过以下过程：
+
+1. 对目标表的每个tablet，都根据变更后的schema创建对应的new tablet，用于存放转换后的数据。
+2. 等待先前的所有导入事务结束，才能开始数据转换。
+3. 开始数据转换，按tablet为任务单位，把每个旧tablet上的数据经过变更写入到之前新建的tablet上。三种重量级Schema Change的差异在这一步上，会通过上文提到的各自实现逻辑进行数据转换。
+4. 数据转换开始后，如果有新的导入事务创建，为保证数据完整性，新的导入事务将同时为旧tablet和新tablet生成数据，即数据双写。双写期间的数据必须兼容新、旧Schema，否则会导入失败。
+    ```Plain
+    +----------+
+    | Load Job |
+    +----+-----+
+        |
+        | Load job generates both origin and new Index data
+        |
+        |      +------------------+ +---------------+
+        |      | Origin Index     | | Origin Index  |
+        +------> New Incoming Data| | History Data  |
+        |      +------------------+ +------+--------+
+        |                                  |
+        |                                  | Convert history data
+        |                                  |
+        |      +------------------+ +------v--------+
+        |      | New Index        | | New Index     |
+        +------> New Incoming Data| | History Data  |
+                +------------------+ +---------------+
+    ```
+5. 数据转换完成后，所有存放旧数据的tablet将会被删除，所有完成数据变更的新tablet将会取代旧tablet进行服务。
 
 创建 Schema Change 的具体语法可以查看帮助 [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 中 Schema Change 部分的说明。
 
