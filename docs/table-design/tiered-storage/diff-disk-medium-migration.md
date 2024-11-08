@@ -26,7 +26,7 @@ under the License.
 
 You can set parameters for dynamic partitions across different disk types, facilitating data migration from SSDs to HDDs based on the parameters. This strategy improves read and write performance in Doris while lowering costs.
 
-By configuring `dynamic_partition.hot_partition_num` and `dynamic_partition.storage_medium`, you can use SSD and HDD tiered storage. For specific usage, please refer to [Data Partitioning - Dynamic Partitioning](../../table-design/data-partition.md#dynamic-partitioning).
+By configuring `dynamic_partition.hot_partition_num` and `dynamic_partition.storage_medium`, you can use SSD and HDD tiered storage. For specific usage, please refer to [Data Partitioning - Dynamic Partitioning](../../table-design/data-partitioning/dynamic-partitioning).
 
 *`dynamic_partition.hot_partition_num`*
 
