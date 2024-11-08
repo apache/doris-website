@@ -30,8 +30,7 @@ under the License.
 
 `DATETIME STR TWO DATES (VARCHAR STR, VARCHAR format)`
 
-
-Convert STR to DATE type by format specified, if the conversion result does not return NULL. Note that the 'format' parameter specifies the format of the first parameter.
+Convert `str` to `DATETIME` in the manner specified by `format`. If `str` cannot be parsed in the format specified by `format`, the result is unspecified.
 
 All formats in [date_format](./date-format) are supported. 
 
@@ -39,9 +38,9 @@ All formats in [date_format](./date-format) are supported.
 >
 > Support auto completing the remainder of date part for '%Y' and '%Y-%m'.
 
-### example
+### Example
 
-```
+```sql
 mysql> select str_to_date('2014-12-21 12:34:56', '%Y-%m-%d %H:%i:%s');
 +---------------------------------------------------------+
 | str_to_date('2014-12-21 12:34:56', '%Y-%m-%d %H:%i:%s') |
