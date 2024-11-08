@@ -106,7 +106,7 @@ New Agg Value = Agg Func ( Old Agg Value, New Column Value)
 | 导入速度       | 导入过程中进行数据去重，小批量实时写入相比MoR约有10%-20%的性能损失，大批量导入（例如千万级/亿级数据）相比MoR约有30%-50%的性能损失                                                                                                  | 与Duplicate Key接近  | 与Duplicate Key接近  |
 | 查询速度       | 与Duplicate Key接近                                                                                                                                                             | 需要在查询期间进行去重，查询耗时约为 MoW 的3-10倍 | 如果聚合函数为REPLACE/REPLACE_IF_NOT_NULL，查询速度与MoR接近 |
 | 谓词下推       | 支持                                                                                                                                                                           | 不支持        | 不支持        |
-| 资源消耗       | - **导入资源消耗**：相比Duplicate Key/Unique Key MoR，约额外消耗约10%-30%的CPU。<br> - **查询资源消耗**：与Duplicate Key接近，无额外资源消耗。<br> - **Compaction资源消耗**：相比Duplicate Key，消耗更多内存和CPU，具体取决于数据特征和数据量。 | - **导入资源消耗**：与Duplicate Key相近，无额外资源消耗。<br> - **查询资源消耗**：相比Duplicate Key/Unique Key MoW，查询时额外消耗更多的CPU和内存。<br> - **Compaction资源消耗**：相比Duplicate Key，需更多内存和CPU，具体数值取决于数据特征和数据量。 | 与Unique Key MoR相同 |
+| 资源消耗       | - **导入资源消耗**：相比Duplicate Key/Unique Key MoR，约额外消耗约10%-30%的CPU。<br /> - **查询资源消耗**：与Duplicate Key接近，无额外资源消耗。<br /> - **Compaction资源消耗**：相比Duplicate Key，消耗更多内存和CPU，具体取决于数据特征和数据量。 | - **导入资源消耗**：与Duplicate Key相近，无额外资源消耗。<br /> - **查询资源消耗**：相比Duplicate Key/Unique Key MoW，查询时额外消耗更多的CPU和内存。<br /> - **Compaction资源消耗**：相比Duplicate Key，需更多内存和CPU，具体数值取决于数据特征和数据量。 | 与Unique Key MoR相同 |
 
 ### 功能支持对比
 |                | Unique Key MoW | Unique Key MoR | Aggregate Key |
