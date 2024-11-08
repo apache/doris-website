@@ -78,7 +78,7 @@ Doris 支持多种数据导入方式，包括 Stream Load、Broker Load、Routin
 
 默认情况下，Doris 不允许在同一时间对同一张表进行多个`UPDATE`操作。`UPDATE`语句通过表级锁来确保事务的一致性。
 
-用户可以通过修改 FE 配置来调整并发限制。当放宽并发限制时，`UPDATE`语句将不再提供事务保证。
+用户可以通过修改 FE 配置`enable_concurrent_update=true`来调整并发限制。当放宽并发限制时，`UPDATE`语句将不再提供事务保证。
 
 #### 基于导入的批量更新
 
@@ -109,11 +109,11 @@ New Agg Value = Agg Func ( Old Agg Value, New Column Value)
 | 资源消耗       | - **导入资源消耗**：相比Duplicate Key/Unique Key MoR，约额外消耗约10%-30%的CPU。<br> - **查询资源消耗**：与Duplicate Key接近，无额外资源消耗。<br> - **Compaction资源消耗**：相比Duplicate Key，消耗更多内存和CPU，具体取决于数据特征和数据量。 | - **导入资源消耗**：与Duplicate Key相近，无额外资源消耗。<br> - **查询资源消耗**：相比Duplicate Key/Unique Key MoW，查询时额外消耗更多的CPU和内存。<br> - **Compaction资源消耗**：相比Duplicate Key，需更多内存和CPU，具体数值取决于数据特征和数据量。 | 与Unique Key MoR相同 |
 
 ### 功能支持对比
-|                | Unique Key MoW | Unique Key MoR | Aggregate Key |
-|----------------|----------------|----------------|---------------|
-| UPDATE         |支持|支持|不支持|
-| DELETE         |支持|支持|不支持|
-| sequence列     |支持|支持|不支持|
-| delete_sign    |支持|支持|不支持|
-| 部分列更新     |支持|不支持|支持|
-| 倒排索引       |支持|不支持|不支持|
+|                | Unique Key MoW | Unique Key MoR | Aggregate Key  |
+|----------------|----------------|----------------|----------------|
+| UPDATE         |支持|支持| 不支持            |
+| DELETE         |支持|支持| 不支持            |
+| sequence列     |支持|支持| 不支持            |
+| delete_sign    |支持|支持| 不支持            |
+| 部分列更新     |支持|不支持| 支持(但无法更新null值) |
+| 倒排索引       |支持|不支持| 不支持            |

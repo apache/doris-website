@@ -62,7 +62,7 @@ Starting from Doris 2.1, MoW is the default mode for the unique key model. So, i
 
 Whether it is MoR or MoW, the semantics ensure that the specified columns are updated. The time taken for a single UPDATE operation increases with the amount of data being updated.
 
-#### Batch update based on load: 
+#### Batch update based on load 
 
 Doris supports multiple data load methods, including Stream Load, Broker Load, Routine Load, and Insert Into. For primary key tables, all load operations default to "UPSERT" semantics: if a record with the same key does not exist, it is inserted; if it already exists, it is updated. There are two types of updates: full row updates and partial column updates.
 
@@ -78,7 +78,7 @@ We will provide detailed explanations of these two update methods in the documen
 
 By default, Doris does not allow multiple `UPDATE` operations on the same table to occur concurrently. The `UPDATE` statement uses table-level locking to ensure transactional consistency.
 
-Users can adjust concurrency limits by modifying the FE configuration. When concurrency limits are relaxed, the `UPDATE` statement will no longer provide transactional guarantees.
+Users can adjust concurrency limits by modifying the FE configuration `enable_concurrent_update=true`. When concurrency limits are relaxed, the `UPDATE` statement will no longer provide transactional guarantees.
 
 #### Batch Updates Based on Load
 
@@ -109,11 +109,11 @@ The update in the aggregate model is only supported through load methods and doe
 | Resource Consumption | - **Import Resource Consumption**: Consumes approximately 10%-30% more CPU compared to Duplicate Key/Unique Key MoR.<br> - **Query Resource Consumption**: Similar to Duplicate Key with no additional resource consumption.<br> - **Compaction Resource Consumption**: Higher memory and CPU usage compared to Duplicate Key, specific usage depends on data characteristics and volume. | - **Import Resource Consumption**: Similar to Duplicate Key with no additional resource consumption.<br> - **Query Resource Consumption**: Higher CPU and memory consumption during queries compared to Duplicate Key/Unique Key MoW.<br> - **Compaction Resource Consumption**: Higher memory and CPU usage than Duplicate Key, specific usage depends on data characteristics and volume. | Same as Unique Key MoR |
 
 ### Feature Support Comparison
-|                | Unique Key MoW | Unique Key MoR | Aggregate Key |
-|----------------|----------------|----------------|---------------|
-| UPDATE         | Supported       | Supported      | Not Supported |
-| DELETE         | Supported       | Supported      | Not Supported |
-| sequence column| Supported       | Supported      | Not Supported |
-| delete_sign    | Supported       | Supported      | Not Supported |
-| Partial Column Updates | Supported | Not Supported | Supported     |
-| Inverted Index | Supported       | Not Supported  | Not Supported |
+|                | Unique Key MoW | Unique Key MoR | Aggregate Key                      |
+|----------------|----------------|----------------|------------------------------------|
+| UPDATE         | Supported       | Supported      | Not Supported                      |
+| DELETE         | Supported       | Supported      | Not Supported                      |
+| sequence column| Supported       | Supported      | Not Supported                      |
+| delete_sign    | Supported       | Supported      | Not Supported                      |
+| Partial Column Updates | Supported | Not Supported | Supported(can't update null value) |
+| Inverted Index | Supported       | Not Supported  | Not Supported                      |

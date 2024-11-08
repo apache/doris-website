@@ -78,7 +78,7 @@ We will provide detailed explanations of these two update methods in the documen
 
 By default, Doris does not allow multiple `UPDATE` operations on the same table to occur concurrently. The `UPDATE` statement uses table-level locking to ensure transactional consistency.
 
-Users can adjust concurrency limits by modifying the FE configuration. When concurrency limits are relaxed, the `UPDATE` statement will no longer provide transactional guarantees.
+Users can adjust concurrency limits by modifying the FE configuration `enable_concurrent_update=true`. When concurrency limits are relaxed, the `UPDATE` statement will no longer provide transactional guarantees.
 
 #### Batch Updates Based on Load
 
@@ -115,5 +115,5 @@ The update in the aggregate model is only supported through load methods and doe
 | DELETE         | Supported       | Supported      | Not Supported |
 | sequence column| Supported       | Supported      | Not Supported |
 | delete_sign    | Supported       | Supported      | Not Supported |
-| Partial Column Updates | Supported | Not Supported | Supported     |
+| Partial Column Updates | Supported | Not Supported | Supported(can't update null value) |
 | Inverted Index | Supported       | Not Supported  | Not Supported |
