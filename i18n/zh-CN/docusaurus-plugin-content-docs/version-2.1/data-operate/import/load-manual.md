@@ -1,6 +1,6 @@
 ---
 {
-    "title": "导入概览",
+    "title": "概览",
     "language": "zh-CN"
 }
 ---

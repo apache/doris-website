@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Load High Availability",
+    "title": "High Availability",
     "language": "en-US"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# Load High Availability
 
 ## Overview
 

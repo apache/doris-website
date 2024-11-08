@@ -1,6 +1,6 @@
 ---
 {
-    "title": "错误数据处理",
+    "title": "错误处理",
     "language": "zh-CN"
 }
 ---

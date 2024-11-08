@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Migrating Data from Other OLAP",
+    "title": "Migration from OLAP",
     "language": "en"
 }
 ---

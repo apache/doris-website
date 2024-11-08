@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Import Data Formats",
+    "title": "Data Formats",
     "language": "en"
 }
 ---

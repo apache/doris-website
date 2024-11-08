@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Error Data Handling",
+    "title": "Error Handling",
     "language": "en"
 }
 ---

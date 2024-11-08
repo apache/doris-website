@@ -100,12 +100,12 @@
             "items": [
                 {
                     "type": "category",
-                    "label": "Loading Data",
+                    "label": "Data Loading",
                     "items": [
                         "data-operate/import/load-manual",
                         {
                             "type": "category",
-                            "label": "Import Way",
+                            "label": "Loading Methods",
                             "items": [
                                 "data-operate/import/import-way/stream-load-manual",
                                 "data-operate/import/import-way/broker-load-manual",

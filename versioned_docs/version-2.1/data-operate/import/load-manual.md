@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Loading Overview",
+    "title": "Overview",
     "language": "en"
 }
 ---

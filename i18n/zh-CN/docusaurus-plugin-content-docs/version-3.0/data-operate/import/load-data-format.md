@@ -1,6 +1,6 @@
 ---
 {
-    "title": "导入数据格式",
+    "title": "数据格式",
     "language": "zh-CN"
 }
 ---

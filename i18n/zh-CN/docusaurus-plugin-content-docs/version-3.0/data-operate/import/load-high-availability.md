@@ -1,6 +1,6 @@
 ---
 {
-    "title": "导入高可用性",
+    "title": "高可用性保障",
     "language": "zh-CN"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# 导入高可用性
 
 ## 概述
 
