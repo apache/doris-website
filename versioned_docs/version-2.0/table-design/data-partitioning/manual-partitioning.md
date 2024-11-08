@@ -28,9 +28,9 @@ under the License.
 ## Partition columns
 
 - Partition columns can be specified as one or multiple columns, and the partition columns must be KEY columns. The usage of multi-column partitioning will be introduced later in the summary section of multi-column partitioning.
-- When `allowPartitionColumnNullable` is set to true, Range partition supports the use of NULL partition columns. List Partition does not support NULL partition columns at all times.
+- When `allow_partition_column_nullable` is set to true, Range partition supports the use of NULL partition columns. List Partition does not support NULL partition columns at all times.
 - Regardless of the type of partition column, double quotes are required when writing partition values.
-- There is theoretically no upper limit on the number of partitions.
+- There is theoretically no upper limit on the number of partitions. However, each table is limited to 4096 partitions by default. If you want to exceed this limit, you can modify the FE configuration parameters `max_multi_partition_num` and `max_dynamic_partition_num`.
 - When creating a table without partitioning, the system will automatically generate a full-range partition with the same name as the table name. This partition is not visible to users and cannot be deleted or modified.
 - Overlapping ranges are not allowed when creating partitions.
 

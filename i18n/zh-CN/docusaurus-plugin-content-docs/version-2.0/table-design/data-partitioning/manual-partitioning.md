@@ -29,11 +29,11 @@ under the License.
 
 -   分区列可以指定一列或多列，分区列必须为 KEY 列。多列分区的使用方式在后面多列分区小结介绍。
 
--   当 `allowPartitionColumnNullable` 为 `true` 时，Range 分区支持使用 NULL 分区列。List Partition 始终不支持 NULL 分区列。
+-   当 `allow_partition_column_nullable` 为 `true` 时，Range 分区支持使用 NULL 分区列。List Partition 始终不支持 NULL 分区列。
 
 -   不论分区列是什么类型，在写分区值时，都需要加双引号。
 
--   分区数量理论上没有上限。
+-   分区数量理论上没有上限。但默认限制每张表 4096 个分区，如果想突破这个限制，可以修改 FE 配置`max_multi_partition_num`和`max_dynamic_partition_num `。
 
 -   当不使用分区建表时，系统会自动生成一个和表名同名的，全值范围的分区。该分区对用户不可见，并且不可删改。
 

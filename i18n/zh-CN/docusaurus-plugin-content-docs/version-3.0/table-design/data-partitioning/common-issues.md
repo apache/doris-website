@@ -44,13 +44,13 @@ Doris 建表是按照 Partition 粒度依次创建的。当一个 Partition 创�
 
 -   以下罗列一些常见的 tablet 创建失败错误，包括但不限于：
 
-    -   BE 没有收到相关 task，此时无法在 be.INFO 中找到 tablet id 相关日志或者 BE 创建成功，但汇报失败。以上问题，请参阅 [安装与部署](../install/cluster-deployment/standard-deployment) 检查 FE 和 BE 的连通性。
+    -   BE 没有收到相关 task，此时无法在 be.INFO 中找到 tablet id 相关日志或者 BE 创建成功，但汇报失败。以上问题，请参阅 [安装与部署](../../install/cluster-deployment/standard-deployment) 检查 FE 和 BE 的连通性。
 
     -   预分配内存失败。可能是表中一行的字节长度超过了 100KB。
 
     -   `Too many open files`。打开的文件句柄数超过了 Linux 系统限制。需修改 Linux 系统的句柄数限制。
 
-如果创建数据分片时超时，也可以通过在 fe.conf 中设置 `tablet_create_timeout_second=xxx` 以及 `max_create_table_timeout_second=xxx` 来延长超时时间。其中 `tablet_create_timeout_second` 默认是 1 秒，`max_create_table_timeout_second` 默认是 60 秒，总体的超时时间为 min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second)，具体参数设置可参阅 [FE 配置项](../admin-manual/config/fe-config) 。
+如果创建数据分片时超时，也可以通过在 fe.conf 中设置 `tablet_create_timeout_second=xxx` 以及 `max_create_table_timeout_second=xxx` 来延长超时时间。其中 `tablet_create_timeout_second` 默认是 1 秒，`max_create_table_timeout_second` 默认是 60 秒，总体的超时时间为 min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second)，具体参数设置可参阅 [FE 配置项](../../admin-manual/config/fe-config) 。
 
 **3.  建表命令长时间不返回结果。**
 
@@ -60,4 +60,4 @@ Doris 建表是按照 Partition 粒度依次创建的。当一个 Partition 创�
 
 ## 更多帮助
 
-关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) 命令手册中查阅，也可以在 MySQL 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。
+关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) 命令手册中查阅，也可以在 MySQL 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。

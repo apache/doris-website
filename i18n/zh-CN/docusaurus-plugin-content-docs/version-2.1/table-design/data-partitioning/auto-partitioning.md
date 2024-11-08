@@ -74,11 +74,11 @@ PROPERTIES (
 
 
 
-该表内存储了大量业务历史数据，依据交易发生的日期进行分区。可以看到在建表时，我们需要预先手动创建分区。如果分区列的数据范围发生变化，例如上表中增加了 2022 年的数据，则我们需要通过[ALTER-TABLE-PARTITION](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION)对表的分区进行更改。如果这种分区需要变更，或者进行更细粒度的细分，修改起来非常繁琐。此时我们就可以使用 AUTO PARTITION 改写该表 DDL。
+该表内存储了大量业务历史数据，依据交易发生的日期进行分区。可以看到在建表时，我们需要预先手动创建分区。如果分区列的数据范围发生变化，例如上表中增加了 2022 年的数据，则我们需要通过[ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION)对表的分区进行更改。如果这种分区需要变更，或者进行更细粒度的细分，修改起来非常繁琐。此时我们就可以使用 AUTO PARTITION 改写该表 DDL。
 
 ## 语法
 
-建表时，使用以下语法填充[CREATE-TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)时的`partition_info`部分：
+建表时，使用以下语法填充[CREATE-TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)时的`partition_info`部分：
 
 1. AUTO RANGE PARTITION:
 
@@ -274,7 +274,7 @@ mysql> show partitions from `DAILY_TRADE_VALUE`;
 - 如同普通分区表一样，AUTO LIST PARTITION 支持多列分区，语法并无区别。
 - 在数据的插入或导入过程中如果创建了分区，而整个导入过程没有完成（失败或被取消），被创建的分区不会被自动删除。
 - 使用 AUTO PARTITION 的表，只是分区创建方式上由手动转为了自动。表及其所创建分区的原本使用方法都与非 AUTO PARTITION 的表或分区相同。
-- 为防止意外创建过多分区，我们通过[FE 配置项](../admin-manual/config/fe-config)中的`max_auto_partition_num`控制了一个 AUTO PARTITION 表最大容纳分区数。如有需要可以调整该值
-- 向开启了 AUTO PARTITION 的表导入数据时，Coordinator 发送数据的轮询间隔与普通表有所不同。具体请见[BE 配置项](../admin-manual/config/be-config)中的`olap_table_sink_send_interval_auto_partition_factor`。开启前移（`enable_memtable_on_sink_node = true`）后该变量不产生影响。
-- 在使用[insert-overwrite](../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT-OVERWRITE)插入数据时，如果指定了覆写的 partition，则 AUTO PARTITION 表在此过程中表现得如同普通表，不创建新的分区。
+- 为防止意外创建过多分区，我们通过[FE 配置项](../../admin-manual/config/fe-config)中的`max_auto_partition_num`控制了一个 AUTO PARTITION 表最大容纳分区数。如有需要可以调整该值
+- 向开启了 AUTO PARTITION 的表导入数据时，Coordinator 发送数据的轮询间隔与普通表有所不同。具体请见[BE 配置项](../../admin-manual/config/be-config)中的`olap_table_sink_send_interval_auto_partition_factor`。开启前移（`enable_memtable_on_sink_node = true`）后该变量不产生影响。
+- 在使用[insert-overwrite](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT-OVERWRITE)插入数据时，如果指定了覆写的 partition，则 AUTO PARTITION 表在此过程中表现得如同普通表，不创建新的分区。
 - 如果导入创建分区时，该表涉及其他元数据操作（如 Schema Change、Rebalance），则导入可能失败。
