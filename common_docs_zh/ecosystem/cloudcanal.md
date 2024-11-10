@@ -46,6 +46,7 @@ CloudCanal 提供可视化的界面，可轻松实现数据的结构迁移、全
 更多功能及参数设置，请参考 [CloudCanal 数据链路说明](https://www.clougence.com/cc-doc/dataMigrationAndSync/connection/mysql2?target=Doris)。
 :::
 
+
 ## 下载安装
 请参考 [全新安装(Docker Linux/MacOS)](https://www.clougence.com/cc-doc/productOP/docker/install_linux_macos)，前往 [CloudCanal 官网](https://www.clougence.com/) 下载安装私有部署版本。
 
@@ -76,7 +77,7 @@ CloudCanal 提供可视化的界面，可轻松实现数据的结构迁移、全
 
 6. 确认创建任务。
 7. 任务自动运行。CloudCanal 会自动进行任务流转，其中的步骤包括：
-  - 结构迁移: 将源端的表结构迁移到对端，如果同名表在对端已存在，则忽略。
-  - 全量数据迁移: 已存在的存量数据将会完整迁移到对端，支持断点续传。
-  - 增量数据同步: 增量数据将会持续地同步到对端数据库，并且保持实时（秒级别延迟）。
+   - 结构迁移: 将源端的表结构迁移到对端，如果同名表在对端已存在，则忽略。
+   - 全量数据迁移: 已存在的存量数据将会完整迁移到对端，支持断点续传。
+   - 增量数据同步: 增量数据将会持续地同步到对端数据库，并且保持实时（秒级别延迟）。   
   ![创建任务-5](/images/cc-doris-8.png)

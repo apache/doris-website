@@ -59,6 +59,7 @@ Taking a MySQL instance as an example, the following part describes how to move 
 3. Click **Test Connection**. After successful connection, click **Add DataSource** to add the DataSource. 
    ![Add DataSources-2](/images/bp-doris-2.png)
 
+
 ### Create a DataJob
 1. Click DataJob > [Create DataJob](https://doc.bladepipe.com/operation/job_manage/create_job/create_full_incre_task).
 2. Select the source and target DataSources, and click **Test Connection** to ensure the connection to the source and target DataSources are both successful.
@@ -75,7 +76,7 @@ Taking a MySQL instance as an example, the following part describes how to move 
 
 1. Confirm the DataJob creation.
 2. The DataJob runs automatically. BladePipe will automatically run the following DataTasks:   
-  - **Schema Migration**: The schemas of the source tables will be migrated to the target instance.   
-  - **Full Data**: All existing data of the source tables will be fully migrated to the target instance.   
-  - **Incremental**: Ongoing data changes will be continuously synchronized to the target instance.
+    - **Schema Migration**: The schemas of the source tables will be migrated to the target instance.   
+    - **Full Data**: All existing data of the source tables will be fully migrated to the target instance.   
+    - **Incremental**: Ongoing data changes will be continuously synchronized to the target instance. 
   ![Create a DataJob-5](/images/bp-doris-8.png)
