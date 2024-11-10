@@ -53,6 +53,14 @@ The audit log plugin can be turned off at any time:
 
 After disable, Doris will stop writing to the `audit_log` table. Audit logs that have been written will not change.
 
+### Audit log table
+
+With the upgrade of Doris version, the fields of the audit log table will also increase. For details, please refer to [audit_log](./system-tables/internal_schema/audit_log.md)
+
+Starting from version 2.1.8 and 3.0.3, the `audit_log` system table will automatically add new fields of `audit_log` table as the Doris version is upgraded.
+
+In previous versions, users need to manually add fields to the `audit_log` system table through the `ALTER TABLE` command.
+
 ### Related configuration
 
 The audit log table is a dynamic partitioned table, partitioned by day, and retains the data of the last 30 days by default.

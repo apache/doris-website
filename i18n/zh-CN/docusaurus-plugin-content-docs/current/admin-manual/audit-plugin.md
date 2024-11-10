@@ -54,6 +54,14 @@ Doris 的审计日志插件是在 FE 的插件框架基础上开发的。是一�
 
 关闭后，Doris 将会停止 `audit_log` 表的写入。已写入的审计日志不会变化。
 
+### 审计日志表
+
+随着 Doris 的版本升级，审计日志表的字段也会增加，具体请参阅 [audit_log](./system-tables/internal_schema/audit_log.md)
+
+自 2.1.8 和 3.0.3 版本开始，`audit_log` 系统表会随着 Doris 版本升级，自动添加新增字段。
+
+之前的版本，用户需手动通过 `ALTER TABLE` 命令为 `audit_log` 系统表增加字段。
+
 ### 相关配置
 
 审计日志表是一张动态分区表，按天分区，默认保留最近 30 天的数据。

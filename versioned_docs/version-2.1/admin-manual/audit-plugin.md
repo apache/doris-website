@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Audit Log Plugin
 
 Doris's audit log plugin was developed based on FE's plugin framework. Is an optional plugin. Users can install or uninstall this plugin at runtime.
 
@@ -54,6 +53,14 @@ The audit log plugin can be turned off at any time:
 
 After disable, Doris will stop writing to the `audit_log` table. Audit logs that have been written will not change.
 
+### Audit log table
+
+With the upgrade of Doris version, the fields of the audit log table will also increase. For details, please refer to [audit_log](./system-tables/internal_schema/audit_log.md)
+
+Starting from version 2.1.8 and 3.0.3, the `audit_log` system table will automatically add new fields of `audit_log` table as the Doris version is upgraded.
+
+In previous versions, users need to manually add fields to the `audit_log` system table through the `ALTER TABLE` command.
+
 ### Related configuration
 
 The audit log table is a dynamic partitioned table, partitioned by day, and retains the data of the last 30 days by default.
@@ -66,6 +73,18 @@ The following 3 global variables can control some writing behaviors of the audit
 - `audit_plugin_load_timeout`: The default timeout of audit log load job. Default 600 seconds.
 
 Can be set via `set global xxx=yyy`.
+
+FE configurations:
+
+- `skip_audit_user_list` (Since 3.0.1)
+
+    If you do not want certain users' operations to be recorded in the audit log, you can modify this configuration.
+
+    ```
+    skip_audit_user_list=root
+    -- or
+    skip_audit_user_list=user1,user2
+    ```
 
 ## Compilation, Configuration and Deployment
 
