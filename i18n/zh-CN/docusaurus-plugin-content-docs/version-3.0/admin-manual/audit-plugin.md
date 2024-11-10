@@ -54,6 +54,14 @@ Doris 的审计日志插件是在 FE 的插件框架基础上开发的。是一�
 
 关闭后，Doris 将会停止 `audit_log` 表的写入。已写入的审计日志不会变化。
 
+### 审计日志表
+
+随着 Doris 的版本升级，审计日志表的字段也会增加，具体请参阅 [audit_log](./system-tables/internal_schema/audit_log.md)
+
+自 2.1.8 和 3.0.3 版本开始，`audit_log` 系统表会随着 Doris 版本升级，自动添加新增字段。
+
+之前的版本，用户需手动通过 `ALTER TABLE` 命令为 `audit_log` 系统表增加字段。
+
 ### 相关配置
 
 审计日志表是一张动态分区表，按天分区，默认保留最近 30 天的数据。
@@ -72,7 +80,7 @@ FE 配置项：
 - `skip_audit_user_list` (自 3.0.1 支持)
 
     如果不希望某些用户的操作被审计日志记录，可以通过这个配置修改。
-<!-- unexecutable: configuration -->
+
     ```
     skip_audit_user_list=root
     -- or
@@ -122,7 +130,7 @@ Doris 2.1 版本之前的用户，请参阅如下方式使用审计日志插件�
     * password：集群用户密码。
 
 4. 重新打包 Audit Loader 插件
-<!-- unexecutable: zip shell command -->
+
     ```shell
     zip -r -q -m auditloader.zip auditloader.jar plugin.properties plugin.conf
     ```
@@ -134,7 +142,7 @@ Doris 2.1 版本之前的用户，请参阅如下方式使用审计日志插件�
 若需开启慢查询日志导入功能，还需要额外创建慢表 `doris_slow_log_tbl__`，其表结构与 `doris_audit_log_tbl__` 一致。
 
 其中 `dynamic_partition` 属性根据自己的需要，选择审计日志保留的天数。
-<!-- executable: create audit table -->
+
 ```sql
 create database doris_audit_db__;
 

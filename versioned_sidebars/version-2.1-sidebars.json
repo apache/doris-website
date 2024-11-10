@@ -447,7 +447,7 @@
                         "admin-manual/system-tables/overview",
                         {
                             "type": "category",
-                            "label": "Database: information_schema",
+                            "label": "information_schema",
                             "items": [
                                 "admin-manual/system-tables/information_schema/active_queries",
                                 "admin-manual/system-tables/information_schema/backend_active_tasks",
@@ -490,7 +490,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "Database: MySQL",
+                            "label": "mysql",
                             "items": [
                                 "admin-manual/system-tables/mysql/props_priv",
                                 "admin-manual/system-tables/mysql/user"
@@ -498,7 +498,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "Database: __internal_schema",
+                            "label": "__internal_schema",
                             "items": [
                                 "admin-manual/system-tables/internal_schema/audit_log",
                                 "admin-manual/system-tables/internal_schema/column_statistics",
