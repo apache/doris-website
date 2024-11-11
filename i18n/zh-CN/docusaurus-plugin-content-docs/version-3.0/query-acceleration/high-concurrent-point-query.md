@@ -80,7 +80,7 @@ PROPERTIES (
 5. 开启行存会导致空间膨胀，占用更多的磁盘空间，如果只需要查询部分列，在 Doris 2.1 后建议使用`"row_store_columns"="key,v1,v2"` 类似的方式指定部份列作为行存，查询的时候只查询这部份列，例如
 
     ```sql
-    SELECT key, v1, v2 FROM tbl_point_query WHERE key = 1
+    SELECT `key`, v1, v2 FROM tbl_point_query WHERE key = 1
     ```
 
 ## 使用 PreparedStatement
