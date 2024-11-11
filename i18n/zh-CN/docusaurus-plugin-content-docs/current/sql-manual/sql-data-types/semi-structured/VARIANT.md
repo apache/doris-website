@@ -342,6 +342,95 @@ mysql> SELECT
 3 rows in set (0.03 sec)
 ```
 
+### 嵌套数组类型
+```json
+{
+  "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
+}
+```
+在上面的 JSON 中，数组 nested 包含的对象（object）被称为嵌套数组类型。需要注意的是，目前仅支持一层数组的展开。以下是一个示例：
+``` sql
+-- 注意：设置 variant_enable_flatten_nested 为 true
+-- 这样可以展开嵌套数组，将数组中的元素以列式存储
+-- 如果设置为 false，嵌套数组会存储为 JSON 类型
+CREATE TABLE `simple_nested_test` (
+  `k` bigint NULL,
+  `v` variant NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`k`)
+DISTRIBUTED BY HASH(`k`) BUCKETS 8
+PROPERTIES (
+"file_cache_ttl_seconds" = "0",
+"is_being_synced" = "false",
+"storage_medium" = "hdd",
+"storage_format" = "V2",
+"inverted_index_storage_format" = "V2",
+"light_schema_change" = "true",
+"disable_auto_compaction" = "false",
+"variant_enable_flatten_nested" = "true",
+"enable_single_replica_compaction" = "false",
+"group_commit_interval_ms" = "10000",
+"group_commit_data_bytes" = "134217728"
+);
+
+insert into simple_nested_test values(1, '{
+  "eventId": 1,
+  "firstName": "Name1",
+  "lastName": "Eric",
+  "body": {
+    "phoneNumbers": [
+      {
+        "number": "1111111111",
+        "type": "GSM",
+        "callLimit": 5
+      },
+      {
+        "number": "222222222",
+        "type": "HOME",
+        "callLimit": 3
+      },
+      {
+        "number": "33333333",
+        "callLimit": 2,
+        "type": "WORK"
+      }
+    ]
+  }
+}');
+
+-- 设置为展示扩展列的描述信息
+set describe_extend_variant_column = true;  
+
+-- 使用 DESC 命令将展示如下的扩展列，v.body.phoneNumbers.callLimit, v.body.phoneNumbers.number, v.body.phoneNumbers.type
+-- 是从 v.body.phoneNumbers 中展开的字段
+mysql> desc simple_nested_test;
++-------------------------------+----------------+------+-------+---------+-------+
+| Field                         | Type           | Null | Key   | Default | Extra |
++-------------------------------+----------------+------+-------+---------+-------+
+| k                             | bigint         | Yes  | true  | NULL    |       |
+| v                             | variant        | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.callLimit | array<tinyint> | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.number    | array<text>    | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.type      | array<text>    | Yes  | false | NULL    | NONE  |
+| v.eventId                     | tinyint        | Yes  | false | NULL    | NONE  |
+| v.firstName                   | text           | Yes  | false | NULL    | NONE  |
+| v.lastName                    | text           | Yes  | false | NULL    | NONE  |
++-------------------------------+----------------+------+-------+---------+-------+
+8 rows in set (0.00 sec)
+
+-- 使用 lateral view (explode_variant_array) 来展开数组，并查询符合条件的电话号码及事件 ID
+mysql> select v['eventId'], phone_numbers
+    from simple_nested_test lateral view explode_variant_array(v['body']['phoneNumbers']) tmp1 as phone_numbers
+    where phone_numbers['type'] = 'GSM' OR phone_numbers['type'] = 'HOME' and phone_numbers['callLimit'] > 2;                                                                                                               
++--------------------------+----------------------------------------------------+
+| element_at(v, 'eventId') | phone_numbers                                      |
++--------------------------+----------------------------------------------------+
+| 1                        | {"callLimit":5,"number":"1111111111","type":"GSM"} |
+| 1                        | {"callLimit":3,"number":"222222222","type":"HOME"} |
++--------------------------+----------------------------------------------------+
+2 rows in set (0.02 sec)
+```
+
 ### 使用限制和最佳实践
 
 **VARIANT 类型的使用有以下限制：**
