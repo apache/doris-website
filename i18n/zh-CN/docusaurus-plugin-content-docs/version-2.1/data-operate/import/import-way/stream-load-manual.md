@@ -61,15 +61,15 @@ Stream Load 支持导入 CSV、JSON、Parquet 与 ORC 格式的数据。
 
 ![Stream Load 基本原理](/images/stream-load.png)
 
-1. Client 向 FE 提交 Stream Load 导入作业请求
+1. Client 向 FE 提交 Stream Load 导入作业请求；
 
-2. FE 会轮询选择一台 BE 作为 Coordinator 节点，负责导入作业调度，然后返回给 Client 一个 HTTP 重定向
+2. FE 会轮询选择一台 BE 作为 Coordinator 节点，负责导入作业调度，然后返回给 Client 一个 HTTP 重定向；
 
-3. Client 连接 Coordinator BE 节点，提交导入请求
+3. Client 连接 Coordinator BE 节点，提交导入请求；
 
-4. Coordinator BE 会分发数据给相应 BE 节点，导入完成后会返回导入结果给 Client
+4. Coordinator BE 会分发数据给相应 BE 节点，导入完成后会返回导入结果给 Client；
 
-5. Client 也可以直接通过指定 BE 节点作为 Coordinator，直接分发导入作业
+5. Client 也可以直接通过指定 BE 节点作为 Coordinator，直接分发导入作业。
 
 ## 快速上手
 
