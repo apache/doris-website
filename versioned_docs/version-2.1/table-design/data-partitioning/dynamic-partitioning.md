@@ -129,7 +129,7 @@ Note that if the user sets history_partition_num (> 0), the starting partition f
 
   When `time_unit` is` MONTH`, this parameter is used to specify the start date of each month. The value ranges from 1 to 28. 1 means the 1st of every month, and 28 means the 28th of every month. The default is 1, which means that every month starts at 1st. The 29, 30 and 31 are not supported at the moment to avoid ambiguity caused by lunar years or months.
 
-- Doris supports multi-level storage with SSD and HDD tiers. For more details, please refer to [tiered-storage](./tiered-storage/diff-disk-medium-migration.md)
+- Doris supports multi-level storage with SSD and HDD tiers. For more details, please refer to [tiered-storage](../tiered-storage/diff-disk-medium-migration.md)
 
 - `dynamic_partition.create_history_partition`
 
@@ -230,7 +230,7 @@ p20210523
 
 1. Table `tbl1` partition column k1, type is DATE, create a dynamic partition rule. By day partition, only the partitions of the last 7 days are kept, and the partitions of the next 3 days are created in advance.
 
-   ```
+   ```sql
    CREATE TABLE tbl1
    (
        k1 DATE,
@@ -264,7 +264,7 @@ p20210523
 
 2. Table tbl1 partition column k1, type is DATETIME, create a dynamic partition rule. Partition by week, only keep the partition of the last 2 weeks, and create the partition of the next 2 weeks in advance.
 
-   ```
+   ```sql
    CREATE TABLE tbl1
    (
        k1 DATETIME,
@@ -313,7 +313,7 @@ p20210523
 
 3. Table tbl1 partition column k1, type is DATE, create a dynamic partition rule. Partition by month without deleting historical partitions, and create partitions for the next 2 months in advance. At the same time, set the starting date on the 3rd of each month.
 
-   ```
+   ```sql
    CREATE TABLE tbl1
    (
        k1 DATE,
@@ -380,7 +380,7 @@ Therefore, after the automatic maintenance of the partition table, the state pre
 
 You can modify the properties of the dynamic partitioning with the following command:
 
-```
+```sql
 ALTER TABLE tbl1 SET
 (
     "dynamic_partition.prop1" = "value1",

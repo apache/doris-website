@@ -46,7 +46,7 @@ Currently, dynamic partition rules can only be set for partition tables with sin
 
 - Specified when creating table
 
-```
+```sql
 CREATE TABLE tbl1
 (...)
 PROPERTIES
@@ -59,7 +59,7 @@ PROPERTIES
 
 - Modify at runtime
 
-```
+```sql
 ALTER TABLE tbl1 SET
 (
     "dynamic_partition.prop1" = "value1",
@@ -256,7 +256,7 @@ p20210523
 
 1. Table `tbl1` partition column k1, type is DATE, create a dynamic partition rule. By day partition, only the partitions of the last 7 days are kept, and the partitions of the next 3 days are created in advance.
 
-   ```
+   ```sql
    CREATE TABLE tbl1
    (
        k1 DATE,
@@ -339,7 +339,7 @@ p20210523
 
 3. Table tbl1 partition column k1, type is DATE, create a dynamic partition rule. Partition by month without deleting historical partitions, and create partitions for the next 2 months in advance. At the same time, set the starting date on the 3rd of each month.
 
-   ```
+   ```sql
    CREATE TABLE tbl1
    (
        k1 DATE,
@@ -380,7 +380,7 @@ p20210523
 
 You can modify the properties of the dynamic partition with the following command
 
-```
+```sql
 ALTER TABLE tbl1 SET
 (
     "dynamic_partition.prop1" = "value1",
@@ -402,7 +402,7 @@ If the partition granularity is changed to MONTH at this time, the system will t
 
 You can further view the scheduling of dynamic partitioned tables by using the following command:
 
-```
+```sql
 mysql> SHOW DYNAMIC PARTITION TABLES;
 +-----------+--------+----------+-------------+------+--------+---------+-----------+----------------+---------------------+--------+------------------------+----------------------+-------------------------+
 | TableName | Enable | TimeUnit | Start       | End  | Prefix | Buckets | StartOf   | LastUpdateTime | LastSchedulerTime   | State  | LastCreatePartitionMsg | LastDropPartitionMsg | ReservedHistoryPeriods  |

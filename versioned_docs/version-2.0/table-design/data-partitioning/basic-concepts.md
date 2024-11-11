@@ -36,7 +36,7 @@ A table consists of rows and columns:
 
 - Row: Represents a single line of user data;
 - Column: Used to describe different fields in a row of data;
-- Columns can be divided into two types: Key and Value. From a business perspective, Key and Value can correspond to dimension columns and metric columns, respectively. The key columns in Doris are those specified in the table creation statement, which are the columns following the keywords `unique key`, `aggregate key`, or `duplicate key`. The remaining columns are value columns. From the perspective of the aggregation model, rows with the same Key columns will be aggregated into a single row. The aggregation method for value columns is specified by the user during table creation. For more information on aggregation models, refer to the Doris [Data Model](../table-design/data-model/overview).
+- Columns can be divided into two types: Key and Value. From a business perspective, Key and Value can correspond to dimension columns and metric columns, respectively. The key columns in Doris are those specified in the table creation statement, which are the columns following the keywords `unique key`, `aggregate key`, or `duplicate key`. The remaining columns are value columns. From the perspective of the aggregation model, rows with the same Key columns will be aggregated into a single row. The aggregation method for value columns is specified by the user during table creation. For more information on aggregation models, refer to the Doris [Data Model](../../table-design/data-model/overview).
 
 ## Partition & Bucket
 
@@ -72,11 +72,11 @@ Proper bucketing offers several advantages:
 
 ## Example of creating a table 
 
-CREATE TABLE in Doris is a synchronous command. It returns results after the SQL execution is completed. Successful returns indicate successful table creation. For more information, please refer to [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE), or input  the `HELP CREATE TABLE;` command. 
+CREATE TABLE in Doris is a synchronous command. It returns results after the SQL execution is completed. Successful returns indicate successful table creation. For more information, please refer to [CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE), or input  the `HELP CREATE TABLE;` command. 
 
 This section introduces how to create tables in Doris by range partiton and hash buckets.
 
-```
+```sql
 -- Range Partition
 CREATE TABLE IF NOT EXISTS example_range_tbl
 (
@@ -108,17 +108,17 @@ PROPERTIES
 
 Here use the AGGREGATE KEY data model as an example. In the AGGREGATE KEY data model, all columns that are specified with an aggregation type (SUM, REPLACE, MAX, or MIN) are Value columns. The rest are the Key columns.
 
-In the PROPERTIES at the end of the CREATE TABLE statement, you can find detailed information about the relevant parameters that can be set in PROPERTIES by referring to the documentation on [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE).
+In the PROPERTIES at the end of the CREATE TABLE statement, you can find detailed information about the relevant parameters that can be set in PROPERTIES by referring to the documentation on [CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE).
 
 The default type of ENGINE is OLAP. In Doris, only this OLAP ENGINE type is responsible for data management and storage by Doris itself. Other ENGINE types, such as mysql, broker, es, etc., are essentially just mappings to tables in other external databases or systems, allowing Doris to read this data. However, Doris itself does not create, manage, or store any tables or data for non-OLAP ENGINE types.
 
 `IF NOT EXISTS` indicates that if the table has not been created before, it will be created. Note that this only checks if the table name exists and does not check if the schema of the new table is the same as the schema of an existing table. Therefore, if there is a table with the same name but a different schema, this command will also return successfully, but it does not mean that a new table and a new schema have been created.
 
-## View partition
+## View partitions
 
 You can use the `show create table` command to view the partition information of a table.
 
-```
+```sql
 > show create table  example_range_tbl 
 +-------------------+---------------------------------------------------------------------------------------------------------+                                                                                                            
 | Table             | Create Table                                                                                            |                                                                                                            
@@ -155,7 +155,7 @@ You can use the `show create table` command to view the partition information of
 
 You can use `show partitions from your_table` command to view the partition information of a table.
 
-```
+```sql
 > show partitions from example_range_tbl
 +-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------
 +---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                                                                                                     
@@ -173,12 +173,12 @@ You can use `show partitions from your_table` command to view the partition info
 +---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                  
 ```
 
-## Alter partition
+## Alter partitions
 
 You can add a new partition by using the `alter table add partition` command.
 
-```
+```sql
 ALTER TABLE example_range_tbl ADD  PARTITION p201704 VALUES LESS THAN("2020-05-01") DISTRIBUTED BY HASH(`user_id`) BUCKETS 5;
 ```
 
-For more partition modification operations, please refer to the SQL manual on [ALTER-TABLE-PARTITION](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION).
+For more partition modification operations, please refer to the SQL manual on [ALTER-TABLE-PARTITION](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION).
