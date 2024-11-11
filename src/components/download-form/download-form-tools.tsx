@@ -54,13 +54,15 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                 const currentCPU: any = currentVersion.children.find(item => params.cpu === item.value);
                 return currentCPU.Binary;
             }
-        } else if (tool === ToolsEnum.Flink || tool === ToolsEnum.Spark) {
-            const currentVersion = currentTool
-                .find(item => item.value === version[0])
-                .children.find(child => child.value === version[1]);
-            return currentVersion[params.tarBall];
         } else {
-            const currentVersion = currentTool.find(item => version === item.value);
+            let currentVersion;
+            if (tool === ToolsEnum.Flink || tool === ToolsEnum.Spark) {
+                currentVersion = currentTool
+                    .find(item => item.value === version[0])
+                    .children.find(child => child.value === version[1]);
+            } else {
+                currentVersion = currentTool.find(item => version === item.value);
+            }
             const tempType = params.type === 'sha512' ? 'sha1' : params.type;
             return !params.type ? `${currentVersion[params.tarBall]}` : `${currentVersion[params.tarBall]}.${tempType}`;
         }

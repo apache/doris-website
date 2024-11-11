@@ -1386,6 +1386,9 @@ const FLINK_SAME_SOURCE_152 =
 const FLINK_SAME_SOURCE_140 =
     'https://downloads.apache.org/doris/flink-connector/1.4.0/apache-doris-flink-connector-1.4.0-src.tar.gz';
 
+const FLINK_SAME_SOURCE_2401 =
+    'https://downloads.apache.org/doris/flink-connector/24.0.1/apache-doris-flink-connector-24.0.1-src.tar.gz';
+
 const SPARK_SAME_SOURCE_132 =
     'https://downloads.apache.org/doris/spark-connector/1.3.2/apache-doris-spark-connector-1.3.2-src.tar.gz';
 const SPARK_SAME_SOURCE_120 =
@@ -1416,6 +1419,54 @@ export const TOOL_VERSIONS = [
         label: ToolsEnum.Flink,
         value: ToolsEnum.Flink,
         children: [
+            {
+                label: '24.0.1',
+                value: '24.0.1',
+                children: [
+                    {
+                        value: '1.20',
+                        label: 'For Flink 1.20',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.20/24.0.1/flink-doris-connector-1.20-24.0.1.jar',
+                    },
+                    {
+                        value: '1.19',
+                        label: 'For Flink 1.19',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.19/24.0.1/flink-doris-connector-1.19-24.0.1.jar',
+                    },
+                    {
+                        value: '1.18',
+                        label: 'For Flink 1.18',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.18/24.0.1/flink-doris-connector-1.18-24.0.1.jar',
+                    },
+                    {
+                        value: '1.17',
+                        label: 'For Flink 1.17',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.17/24.0.1/flink-doris-connector-1.17-24.0.1.jar',
+                    },
+                    {
+                        value: '1.16',
+                        label: 'For Flink 1.16',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.16/24.0.1/flink-doris-connector-1.16-24.0.1.jar',
+                    },
+                    {
+                        value: '1.15',
+                        label: 'For Flink 1.15',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.15/24.0.1/flink-doris-connector-1.15-24.0.1.jar',
+                    },
+                ],
+            },
             {
                 label: '1.6.2',
                 value: '1.6.2',
