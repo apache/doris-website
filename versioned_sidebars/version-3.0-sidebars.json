@@ -1679,6 +1679,7 @@
         "benchmark/tpcds"
     ],
     "ecosystem": [
+        "ecosystem/cloudcanal",
         "ecosystem/spark-doris-connector",
         "ecosystem/flink-doris-connector",
         "ecosystem/doris-kafka-connector",
