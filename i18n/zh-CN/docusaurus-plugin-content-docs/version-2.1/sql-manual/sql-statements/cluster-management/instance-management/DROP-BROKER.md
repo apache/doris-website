@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-SYSTEM-DROP-BROKER",
+    "title": "DROP BROKER",
     "language": "zh-CN"
 }
 
@@ -25,7 +25,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-SYSTEM-DROP-BROKER
+
 
 ### Name
 

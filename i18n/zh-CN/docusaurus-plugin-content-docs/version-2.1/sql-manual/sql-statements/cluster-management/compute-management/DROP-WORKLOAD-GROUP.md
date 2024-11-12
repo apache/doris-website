@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-WORKLOAD-GROUP",
+    "title": "DROP WORKLOAD GROUP",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-WORKLOAD-GROUP
+
 
 ### Name
 

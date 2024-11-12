@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-RESOURCES",
+    "title": "SHOW RESOURCES",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-RESOURCES
+
 
 ### Name
 
@@ -49,12 +49,12 @@ SHOW RESOURCES
 
 说明：
 
-1. 如果使用 NAME LIKE，则会匹配 RESOURCES 的 Name 包含 name_matcher 的Resource
+1. 如果使用 NAME LIKE，则会匹配 RESOURCES 的 Name 包含 name_matcher 的 Resource
 2. 如果使用 NAME = ，则精确匹配指定的 Name
 3. 如果指定了 RESOURCETYPE，则匹配对应的 Resrouce 类型
 4. 可以使用 ORDER BY 对任意列组合进行排序
 5. 如果指定了 LIMIT，则显示 limit 条匹配记录。否则全部显示
-6. 如果指定了 OFFSET，则从偏移量 offset 开始显示查询结果。默认情况下偏移量为0。
+6. 如果指定了 OFFSET，则从偏移量 offset 开始显示查询结果。默认情况下偏移量为 0。
 7. 如果使用了 LIKE，则会忽略 WHERE 语句。
 
 ### Example
@@ -65,13 +65,13 @@ SHOW RESOURCES
     SHOW RESOURCES;
     ```
 
-2. 展示指定 Resource ，NAME 中包含字符串 "20140102"，展示10个属性
+2. 展示指定 Resource，NAME 中包含字符串 "20140102"，展示 10 个属性
     
     ```sql
     SHOW RESOURCES WHERE NAME LIKE "2014_01_02" LIMIT 10;
     ```
 
-3. 展示指定 Resource ，指定 NAME 为 "20140102" 并按 KEY 降序排序
+3. 展示指定 Resource，指定 NAME 为 "20140102" 并按 KEY 降序排序
     
     ```sql
     SHOW RESOURCES WHERE NAME = "20140102" ORDER BY `KEY` DESC;

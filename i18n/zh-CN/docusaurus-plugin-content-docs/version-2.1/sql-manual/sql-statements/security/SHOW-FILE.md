@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-FILE",
+    "title": "SHOW FILE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-FILE
+
 
 ### Name
 
@@ -43,7 +43,7 @@ SHOW FILE [FROM database];
 说明：
 
 ```text
-FileId:     文件ID，全局唯一
+FileId:     文件 ID，全局唯一
 DbName:     所属数据库名称
 Catalog:    自定义分类
 FileName:   文件名

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CLEAN QUERY STATS",
+    "title": "CLEAN ALL QUERY STATS",
     "language": "zh-CN"
 }
 ---

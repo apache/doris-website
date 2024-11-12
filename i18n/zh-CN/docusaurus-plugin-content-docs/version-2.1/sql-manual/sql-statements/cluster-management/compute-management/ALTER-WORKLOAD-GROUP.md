@@ -1,6 +1,6 @@
 ---
 {
-"title": "ALTER-WORKLOAD-GROUP",
+"title": "ALTER WORKLOAD GROUP",
 "language": "zh-CN"
 }
 ---
@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-WORKLOAD-GROUP
 
 ### Name
 
@@ -47,8 +46,8 @@ PROPERTIES (
 
 注意：
 
-* 修改 memory_limit 属性时不可使所有 memory_limit 值的总和超过100%；
-* 支持修改部分属性，例如只修改cpu_share的话，properties里只填cpu_share即可。
+* 修改 memory_limit 属性时不可使所有 memory_limit 值的总和超过 100%；
+* 支持修改部分属性，例如只修改 cpu_share 的话，properties 里只填 cpu_share 即可。
 
 ### Example
 

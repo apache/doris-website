@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-RESOURCE",
+    "title": "DROP RESOURCE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-RESOURCE
+
 
 ### Name
 

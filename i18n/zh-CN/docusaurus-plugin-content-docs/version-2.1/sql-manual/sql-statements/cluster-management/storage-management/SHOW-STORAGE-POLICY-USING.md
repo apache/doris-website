@@ -1,6 +1,6 @@
 ---
 {
-   "title": "SHOW-STORAGE-POLICY-USING",
+   "title": "SHOW STORAGE POLICY USING",
    "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-STORAGE-POLICY-USING
+
 
 ### Name
 
@@ -56,7 +56,7 @@ SHOW STORAGE POLICY USING [FOR some_policy]
    +-----------------------+-----------------------------------------+----------------------------------------+------------+
    ```
    
-2. 查看使用存储策略test_storage_policy的对象
+2. 查看使用存储策略 test_storage_policy 的对象
 
     ```sql
     mysql> show storage policy using for test_storage_policy;

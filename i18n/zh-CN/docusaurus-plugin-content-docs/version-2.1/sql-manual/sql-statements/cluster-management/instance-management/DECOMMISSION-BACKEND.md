@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-SYSTEM-DECOMMISSION-BACKEND",
+    "title": "DECOMMISSION BACKEND",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-SYSTEM-DECOMMISSION-BACKEND
+
 
 ### Name
 
@@ -50,7 +50,7 @@ ALTER SYSTEM DECOMMISSION BACKEND "id1","id2"...;
 
  说明：
 
-1. host 可以是主机名或者ip地址
+1. host 可以是主机名或者 ip 地址
 2.  heartbeat_port 为该节点的心跳端口
 3. 节点下线操作用于安全下线节点。该操作为异步操作。如果成功，节点最终会从元数据中删除。如果失败，则不会完成下线。
 4. 可以手动取消节点下线操作。详见 CANCEL DECOMMISSION

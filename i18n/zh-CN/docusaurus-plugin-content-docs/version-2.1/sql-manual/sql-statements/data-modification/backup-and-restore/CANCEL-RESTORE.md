@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL-RESTORE",
+    "title": "CANCEL RESTORE",
     "language": "zh-CN"
 }
 ---

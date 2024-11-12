@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CHARSET",
+    "title": "SHOW CHARSET",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CHARSET
+
 
 ### Description
 
@@ -33,10 +33,10 @@ under the License.
 SHOW CHARACTER 命令返回以下字段：
 
 
-Charset：字符集
-Description：描述
-Default Collation：默认校对名称
-Maxlen：最大字节长度
+1. Charset：字符集
+2. Description：描述
+3. Default Collation：默认校对名称
+4. Maxlen：最大字节长度
 
 ### Example
 

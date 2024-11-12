@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-SYSTEM-DROP-FOLLOWER",
+    "title": "DROP FOLLOWER",
     "language": "zh-CN"
 }
 ---
