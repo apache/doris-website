@@ -30,9 +30,13 @@ Routine Load 是一个流式导入作业，支持 Exactly-Once 语义，保证�
 
 ## 使用场景
 
+### 支持数据源
+
+Routine Load 支持从 Kafka 集群中消费数据。
+
 ### 支持数据文件格式
 
-Routine Load 支持从 Kafka 中消费 CSV 及 JSON 格式的数据。
+Routine Load 支持 CSV 及 JSON 格式的数据。
 
 在导入 CSV 格式时，需要明确区分空值（null）与空字符串（''）：
 
@@ -44,8 +48,6 @@ Routine Load 支持从 Kafka 中消费 CSV 及 JSON 格式的数据。
 
 在使用 Routine Load 消费 Kafka 中数据时，有以下限制：
 
-- 支持无认证的 Kafka 访问，以及通过 SSL 方式认证的 Kafka 集群；
-
 - 支持的消息格式为 CSV 及 JSON 文本格式。CSV 每一个 message 为一行，且行尾**不包含**换行符；
 
 - 默认支持 Kafka 0.10.0.0（含）以上版本。如果要使用 Kafka 0.10.0.0 以下版本（0.9.0, 0.8.2, 0.8.1, 0.8.0），需要修改 BE 的配置，将 `kafka_broker_version_fallback` 的值设置为要兼容的旧版本，或者在创建 Routine Load 的时候直接设置 `property.broker.version.fallback` 的值为要兼容的旧版本，使用旧版本的代价是 Routine Load 的部分新特性可能无法使用，如根据时间设置 Kafka 分区的 offset。
@@ -54,25 +56,25 @@ Routine Load 支持从 Kafka 中消费 CSV 及 JSON 格式的数据。
 
 Routine Load 会持续消费 Kafka Topic 中的数据，写入 Doris 中。
 
-在 Doris 中，创建 Routine Load 作业后会生成一个常驻的导入作业和若干个导入任务：
+在 Doris 中，创建 Routine Load 作业后会生成一个常驻的导入作业，包括若干个导入任务：
 
-- 导入作业（load job）：一个 Routine Load 对应一个导入作业，导入作业是一个常驻的任务，会持续不断地消费 Kafka Topic 中的数据；
+- 导入作业（load job）：一个 Routine Load Job 是一个常驻的导入作业，会持续不断地消费数据源中的数据。
 
-- 导入任务（load task）：一个导入作业会被拆解成若干个导入作业，作为一个独立的导入基本单位，以 Stream Load 的方式写入到 BE 中。
+- 导入任务（load task）：一个导入作业会被拆解成若干个导入任务进行实际消费，每个任务都是一个独立的事务。
 
 Routine Load 的导入具体流程如下图展示：
 
 ![Routine Load](/images/routine-load.png)
 
-1. Client 向 FE 提交 Routine Load 常驻 Routine Load Job
+1. Client 向 FE 提交创建 Routine Load 作业请求，FE 通过 Routine Load Manager 生成一个常驻的导入作业（Routine Load Job）。
 
-2. FE 通过 Job Scheduler 将 Routine Load Job 拆分成若干个 Routine Load Task
+2. FE 通过 Job Scheduler 将 Routine Load Job 拆分成若干个 Routine Load Task，由 Task Scheduler 进行调度，下发到 BE 节点。
 
-3. 在 BE 上，一个 Routine Load Task 会被视为 Stream Load 任务进行导入，导入完成后向 FE 汇报
+3. 在 BE 上，一个 Routine Load Task 导入完成后向 FE 提交事务，并更新 Job 的元数据。
 
-4. FE 中的 Job Scheduler 根据汇报结果，继续生成新的 Task，或对失败的 Task 进行重试
+4. 一个 Routine Load Task 提交后，会继续生成新的 Task，或对超时的 Task 进行重试。
 
-5. Routine Load Job 会不断产生新的 Task，来完成数据的不间断导入
+5. 新生成的 Routine Load Task 由 Task Scheduler 继续调度，不断循环。
 
 ## 快速上手
 
@@ -389,7 +391,7 @@ FROM KAFKA [data_source_properties]
 
 指定需要导入的表的名称，可选参数。
 
-如果不指定，则采用动态表的方式，这个时候需要 Kafka 中的数据包含表名的信息。目前仅支持从 Kafka 的 Value 中获取动态表名，且需要符合这种格式：以 json 为例：`table_name|{"col1": "val1", "col2": "val2"}`, 其中 `tbl_name` 为表名，以 `|` 作为表名和表数据的分隔符。csv 格式的数据也是类似的，如：`table_name|val1,val2,val3`。注意，这里的 `table_name` 必须和 Doris 中的表名一致，否则会导致导入失败。注意，动态表不支持后面介绍的 column_mapping 配置。
+如果不指定，则采用动态表的方式，这个时候需要 Kafka 中的数据包含表名的信息。目前仅支持从 Kafka 的 Value 中获取动态表名，且需要符合这种格式：以 json 为例：`table_name|{"col1": "val1", "col2": "val2"}`, 其中 `tbl_name` 为表名，以 `|` 作为表名和表数据的分隔符。CSV 格式的数据也是类似的，如：`table_name|val1,val2,val3`。注意，这里的 `table_name` 必须和 Doris 中的表名一致，否则会导致导入失败。注意，动态表不支持后面介绍的 column_mapping 配置。
 
 **merge_type 子句**
 
@@ -445,15 +447,15 @@ job_properties 子句具体参数选项如下：
 | max_error_number          | 采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数大于 `max_error_number`，则会导致例行作业被暂停，需要人工介入检查数据质量问题，通过 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) 命令中 `ErrorLogUrls` 检查数据的质量问题。被 where 条件过滤掉的行不算错误行。 |
 | strict_mode               | 是否开启严格模式，默认为关闭。严格模式表示对于导入过程中的列类型转换进行严格过滤。如果开启后，非空原始数据的列类型变换如果结果为 NULL，则会被过滤。<p>严格模式过滤策略如下：</p> <p>- 某衍生列（由函数转换生成而来），Strict Mode 对其不产生影响</p> <p>- 当列类型需要转换，错误的数据类型将被过滤掉，在 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) 的 `ErrorLogUrls` 中查看因为数据类型错误而被过滤掉的列</p> <p>- 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict mode 对其也不产生影响。例如：如果类型是 decimal(1,0), 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。详细内容参考[严格模式](../../../data-operate/import/error-data-handling#严格模式)。</p> |
 | timezone                  | 指定导入作业所使用的时区。默认为使用 Session 的 timezone 参数。该参数会影响所有导入涉及的和时区有关的函数结果。 |
-| format                    | 指定导入数据格式，默认是 csv，支持 json 格式。               |
-| jsonpaths                 | 当导入数据格式为 JSON 时，可以通过 jsonpaths 指定抽取 Json 数据中的字段。例如通过以下命令指定导入 jsonpaths：`"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
-| json_root                 | 当导入数据格式为 json 时，可以通过 json_root 指定 Json 数据的根节点。Doris 将通过 json_root 抽取根节点的元素进行解析。默认为空。例如通过一下命令指定导入 Json 根节点：`"json_root" = "$.RECORDS"` |
-| strip_outer_array         | 当导入数据格式为 json 时，strip_outer_array 为 true 表示 Json 数据以数组的形式展现，数据中的每一个元素将被视为一行数据。默认值是 false。通常情况下，Kafka 中的 Json 数据可能以数组形式表示，即在最外层中包含中括号`[]`，此时，可以指定 `"strip_outer_array" = "true"`，以数组模式消费 Topic 中的数据。如以下数据会被解析成两行：`[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
+| format                    | 指定导入数据格式，默认是 CSV，支持 JSON 格式。               |
+| jsonpaths                 | 当导入数据格式为 JSON 时，可以通过 jsonpaths 指定抽取 JSON 数据中的字段。例如通过以下命令指定导入 jsonpaths：`"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
+| json_root                 | 当导入数据格式为 JSON 时，可以通过 json_root 指定 JSON 数据的根节点。Doris 将通过 json_root 抽取根节点的元素进行解析。默认为空。例如通过一下命令指定导入 JSON 根节点：`"json_root" = "$.RECORDS"` |
+| strip_outer_array         | 当导入数据格式为 json 时，strip_outer_array 为 true 表示 JSON 数据以数组的形式展现，数据中的每一个元素将被视为一行数据。默认值是 false。通常情况下，Kafka 中的 JSON 数据可能以数组形式表示，即在最外层中包含中括号`[]`，此时，可以指定 `"strip_outer_array" = "true"`，以数组模式消费 Topic 中的数据。如以下数据会被解析成两行：`[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
 | send_batch_parallelism    | 用于设置发送批量数据的并行度。如果并行度的值超过 BE 配置中的 `max_send_batch_parallelism_per_job`，那么作为协调点的 BE 将使用 `max_send_batch_parallelism_per_job` 的值。 |
 | load_to_single_tablet     | 支持一个任务只导入数据到对应分区的一个 tablet，默认值为 false，该参数只允许在对带有 random 分桶的 olap 表导数的时候设置。 |
 | partial_columns           | 指定是否开启部分列更新功能。默认值为 false。该参数只允许在表模型为 Unique 且采用 Merge on Write 时设置。一流多表不支持此参数。具体参考文档[部分列更新](../../../data-operate/update/update-of-unique-model) |
 | max_filter_ratio          | 采样窗口内，允许的最大过滤率。必须在大于等于 0 到小于等于 1 之间。默认值是 1.0，表示可以容忍任何错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数/总行数大于 `max_filter_ratio`，则会导致例行作业被暂停，需要人工介入检查数据质量问题。被 where 条件过滤掉的行不算错误行。 |
-| enclose                   | 指定包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。 |
+| enclose                   | 指定包围符。当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。 |
 | escape                    | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
 
 **04 data_source_properties 子句**
@@ -541,9 +543,7 @@ ReasonOfStateChanged:
 
 ## 导入示例
 
-### CSV 格式导入
-
-**设置导入最大容错率**
+### 设置导入最大容错率
 
 1. 导入数据样例
 
@@ -597,7 +597,7 @@ ReasonOfStateChanged:
     2 rows in set (0.01 sec)
     ```
 
-**从指定消费点消费数据**
+### 从指定消费点消费数据
 
 1. 导入数据样例
 
@@ -650,7 +650,7 @@ ReasonOfStateChanged:
     3 rows in set (0.01 sec)
     ```
 
-**指定 Consumer Group 的 group.id 与 client.id**
+### 指定 Consumer Group 的 group.id 与 client.id
 
 1. 导入数据样例
 
@@ -701,7 +701,7 @@ ReasonOfStateChanged:
     3 rows in set (0.01 sec)
     ```
 
-**设置导入过滤条件**
+### 设置导入过滤条件
 
 1. 导入数据样例
 
@@ -754,7 +754,7 @@ ReasonOfStateChanged:
     3 rows in set (0.01 sec)
     ```
 
-**导入指定分区数据**
+### 导入指定分区数据
 
 1. 导入数据样例
 
@@ -807,7 +807,7 @@ ReasonOfStateChanged:
     1 rows in set (0.01 sec)
     ```
 
-**设置导入时区**
+### 设置导入时区
 
 1. 导入数据样例
 
@@ -860,6 +860,7 @@ ReasonOfStateChanged:
     +------+-------------+------+---------------------+
     3 rows in set (0.00 sec)
     ```
+### 设置 merge_type
 
 **指定 merge_type 进行 delete 操作**
 
@@ -1082,7 +1083,7 @@ mysql> SELECT * FROM routine_test08;
     5 rows in set (0.00 sec)
     ```
 
-**导入完成列影射与衍生列计算**
+### 导入完成列影射与衍生列计算
 
 1. 导入数据样例
 
@@ -1133,7 +1134,7 @@ mysql> SELECT * FROM routine_test08;
     3 rows in set (0.01 sec)
     ```
 
-**导入包含包围符的数据**
+### 导入包含包围符的数据
 
 1. 导入数据样例
 
@@ -1828,7 +1829,7 @@ FROM KAFKA
 );
 ```
 
-这个时候需要 Kafka 中的数据包含表名的信息。目前仅支持从 Kafka 的 Value 中获取动态表名，且需要符合这种格式：以 json 为例：`table_name|{"col1": "val1", "col2": "val2"}`, 其中 `tbl_name` 为表名，以 `|` 作为表名和表数据的分隔符。csv 格式的数据也是类似的，如：`table_name|val1,val2,val3`。注意，这里的 `table_name` 必须和 Doris 中的表名一致，否则会导致导入失败。注意，动态表不支持后面介绍的 column_mapping 配置。
+这个时候需要 Kafka 中的数据包含表名的信息。目前仅支持从 Kafka 的 Value 中获取动态表名，且需要符合这种格式：以 JSON 为例：`table_name|{"col1": "val1", "col2": "val2"}`, 其中 `tbl_name` 为表名，以 `|` 作为表名和表数据的分隔符。CSV 格式的数据也是类似的，如：`table_name|val1,val2,val3`。注意，这里的 `table_name` 必须和 Doris 中的表名一致，否则会导致导入失败。注意，动态表不支持后面介绍的 column_mapping 配置。
 
 ### 严格模式导入
 
