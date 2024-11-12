@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-ROLE",
+    "title": "ALTER ROLE",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-ASYNC-MATERIALIZED-VIEW",
+    "title": "SHOW CREATE ASYNC MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-ASYNC-MATERIALIZED-VIEW
+
 
 ### Name
 

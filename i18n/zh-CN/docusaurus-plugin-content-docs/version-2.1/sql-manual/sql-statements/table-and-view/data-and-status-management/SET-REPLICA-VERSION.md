@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN-SET-REPLICA-VERSION",
+    "title": "SET REPLICA VERSION",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-SET-REPLICA-VERSION
+
 
 ### Name
 
@@ -47,8 +47,8 @@ ADMIN SET REPLICA VERSION
 
 1. `tablet_id`：必需。指定一个 Tablet Id.
 2. `backend_id`：必需。指定 Backend Id.
-3. `version`：可选。设置副本的版本.
-4. `last_success_version`：可选。设置副本的最大成功版本.
+3. `version`：可选。设置副本的版本。
+4. `last_success_version`：可选。设置副本的最大成功版本。
 5. `last_failed_version`：可选。设置副本的最大失败版本。
 
 
@@ -60,7 +60,7 @@ ADMIN SET REPLICA VERSION
 > 
 >   修改之前先记录原来的值。修改完毕之后，对表进行读写验证，如果读写失败，请恢复原来的值！但可能会恢复失败！
 > 
->   严禁对正在写入数据的tablet进行操作 ！
+>   严禁对正在写入数据的 tablet 进行操作！
 
 
 ### Example

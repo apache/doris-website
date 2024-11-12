@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-GRANTS",
+    "title": "SHOW GRANTS",
     "language": "zh-CN"
 }
 ---

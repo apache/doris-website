@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DESCRIBE",
+    "title": "DESC TABLE",
     "language": "zh-CN"
 }
 ---
@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DESCRIBE
+
 
 ### Name
 
-DESCRIBE
+DESC TABLE
 
 ### Description
 
@@ -46,7 +46,7 @@ DESC[RIBE] [db_name.]table_name [ALL];
 
 ### Example
 
-1. 显示Base表Schema
+1. 显示 Base 表 Schema
 
     ```sql
     DESC table_name;

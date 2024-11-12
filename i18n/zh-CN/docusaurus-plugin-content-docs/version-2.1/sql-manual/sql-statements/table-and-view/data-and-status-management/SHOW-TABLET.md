@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-TABLET",
+    "title": "SHOW TABLET",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-TABLET
+
 
 ### Name
 
@@ -32,7 +32,7 @@ SHOW TABLET
 
 ### Description
 
-该语句用于显示指定tablet id 信息（仅管理员使用）
+该语句用于显示指定 tablet id 信息（仅管理员使用）
 
 语法：
 

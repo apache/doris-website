@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STOP-ROUTINE-LOAD",
+    "title": "STOP ROUTINE LOAD",
     "language": "zh-CN"
 }
 ---

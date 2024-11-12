@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-ROUTINE-LOAD",
+    "title": "CREATE ROUTINE LOAD",
     "language": "zh-CN"
 }
 

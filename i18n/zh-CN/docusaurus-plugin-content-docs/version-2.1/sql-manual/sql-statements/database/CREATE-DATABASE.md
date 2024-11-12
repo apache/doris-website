@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-DATABASE",
+    "title": "CREATE DATABASE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-DATABASE
+
 
 ### Name
 
@@ -43,7 +43,7 @@ CREATE DATABASE [IF NOT EXISTS] db_name
 
 `PROPERTIES` 该数据库的附加信息，可以缺省。
 
-- 如果要为db下的table指定默认的副本分布策略，需要指定`replication_allocation`（table的`replication_allocation`属性优先级会高于db）
+- 如果要为 db 下的 table 指定默认的副本分布策略，需要指定`replication_allocation`（table 的`replication_allocation`属性优先级会高于 db）
 
   ```sql
   PROPERTIES (
@@ -69,7 +69,7 @@ CREATE DATABASE [IF NOT EXISTS] db_name
    ```
 
 :::caution
-若建表语句属性key带replication_allocation或replication_num，则db的默认的副本分布策略不会生效
+若建表语句属性 key 带 replication_allocation 或 replication_num，则 db 的默认的副本分布策略不会生效
 :::
 
 ### Keywords

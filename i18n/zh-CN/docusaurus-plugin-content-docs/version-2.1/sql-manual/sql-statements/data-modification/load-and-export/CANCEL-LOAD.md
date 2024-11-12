@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL-LOAD",
+    "title": "CANCEL LOAD",
     "language": "zh-CN"
 }
 ---

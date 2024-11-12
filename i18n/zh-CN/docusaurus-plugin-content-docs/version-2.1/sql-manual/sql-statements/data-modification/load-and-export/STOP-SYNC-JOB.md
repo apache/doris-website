@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STOP-SYNC-JOB",
+    "title": "STOP SYNC JOB",
     "language": "zh-CN"
 }
 ---
@@ -34,7 +34,7 @@ STOP SYNC JOB
 
 通过 `job_name` 停止一个数据库内非停止状态的常驻数据同步作业。
 
-语法:
+语法：
 
 ```sql
 STOP SYNC JOB [db.]job_name

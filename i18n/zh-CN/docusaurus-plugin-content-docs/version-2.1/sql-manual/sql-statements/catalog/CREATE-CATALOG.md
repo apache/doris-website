@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-CATALOG",
+    "title": "CREATE CATALOG",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-CATALOG
+
 
 ### Name
 
@@ -43,7 +43,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
 
 * hms：Hive MetaStore
 * es：Elasticsearch
-* jdbc：数据库访问的标准接口(JDBC), 当前支持 MySQL 和 PostgreSQL
+* jdbc：数据库访问的标准接口 (JDBC), 当前支持 MySQL 和 PostgreSQL
 
 ### Example
 

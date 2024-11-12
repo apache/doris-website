@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-REPOSITORY",
+    "title": "DROP REPOSITORY",
     "language": "zh-CN"
 }
 ---

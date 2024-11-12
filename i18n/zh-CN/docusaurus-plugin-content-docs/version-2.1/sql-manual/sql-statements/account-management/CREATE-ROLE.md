@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-ROLE",
+    "title": "CREATE ROLE",
     "language": "zh-CN"
 }
 ---

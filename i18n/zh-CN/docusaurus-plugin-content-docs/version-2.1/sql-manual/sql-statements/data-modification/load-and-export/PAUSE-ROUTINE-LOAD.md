@@ -1,6 +1,6 @@
 ---
 {
-    "title": "PAUSE-ROUTINE-LOAD",
+    "title": "PAUSE ROUTINE LOAD",
     "language": "zh-CN"
 }
 ---

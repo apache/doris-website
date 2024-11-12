@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-INDEX",
+    "title": "CREATE INDEX",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-INDEX
+
 
 ### Name
 
@@ -43,7 +43,7 @@ CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING I
 
 ### Example
 
-1. 在table1 上为siteid 创建倒排索引
+1. 在 table1 上为 siteid 创建倒排索引
 
    ```sql
    CREATE INDEX [IF NOT EXISTS] index_name ON table1 (siteid) USING INVERTED COMMENT 'balabala';

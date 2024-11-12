@@ -1,6 +1,6 @@
 ---
 {
-    "title": "TRUNCATE-TABLE",
+    "title": "TRUNCATE TABLE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TRUNCATE-TABLE
+
 
 ### Name
 

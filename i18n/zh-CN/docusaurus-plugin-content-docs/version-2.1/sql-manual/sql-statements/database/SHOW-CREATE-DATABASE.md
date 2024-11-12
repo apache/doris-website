@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-DATABASE",
+    "title": "SHOW CREATE DATABASE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-DATABASE
+
 
 ### Name
 
@@ -47,7 +47,7 @@ SHOW CREATE DATABASE db_name;
 
 ### Example
 
-1. 查看doris中test数据库的创建情况
+1. 查看 doris 中 test 数据库的创建情况
 
    ```sql
    mysql> SHOW CREATE DATABASE test;
@@ -58,7 +58,7 @@ SHOW CREATE DATABASE db_name;
    +----------+------------------------+
    1 row in set (0.00 sec)
    ```
-2. 查看 hive catalog 中数据库hdfs_text的创建信息
+2. 查看 hive catalog 中数据库 hdfs_text 的创建信息
 
     ```sql
     mysql> show create database hdfs_text;                                                                                     

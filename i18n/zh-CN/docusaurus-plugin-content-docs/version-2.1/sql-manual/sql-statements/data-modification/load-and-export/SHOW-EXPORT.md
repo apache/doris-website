@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-EXPORT",
+    "title": "SHOW EXPORT",
     "language": "zh-CN"
 }
 ---
@@ -49,7 +49,7 @@ SHOW EXPORT
 [LIMIT limit];
 ```
 说明：
-      1. 如果不指定 db_name，使用当前默认db
+      1. 如果不指定 db_name，使用当前默认 db
       2. 如果指定了 STATE，则匹配 EXPORT 状态
       3. 可以使用 ORDER BY 对任意列组合进行排序
       4. 如果指定了 LIMIT，则显示 limit 条匹配记录。否则全部显示
@@ -74,13 +74,13 @@ SHOW EXPORT
     SHOW EXPORT FROM example_db WHERE STATE = "exporting" ORDER BY StartTime DESC;
     ```
     
-4. 展示指定db，指定job_id的导出任务
+4. 展示指定 db，指定 job_id 的导出任务
    
     ```sql
       SHOW EXPORT FROM example_db WHERE ID = job_id;
     ```
     
-5. 展示指定db，指定label的导出任务
+5. 展示指定 db，指定 label 的导出任务
    
     ```sql
      SHOW EXPORT FROM example_db WHERE LABEL = "mylabel";

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-CATALOG",
+    "title": "ALTER CATALOG",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-CATALOG
+
 
 ### Name
 

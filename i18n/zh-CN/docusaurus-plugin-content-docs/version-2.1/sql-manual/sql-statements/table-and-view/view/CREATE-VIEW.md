@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-VIEW",
+    "title": "CREATE VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-VIEW
+
 
 ### Name
 

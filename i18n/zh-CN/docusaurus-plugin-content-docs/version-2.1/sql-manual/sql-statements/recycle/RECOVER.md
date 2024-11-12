@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## RECOVER
 
 ### Name
 
@@ -32,61 +31,61 @@ RECOVER
 
 ### Description
 
-该语句用于恢复之前删除的 database、table 或者 partition。支持通过name、id来恢复指定的元信息，并且支持将恢复的元信息重命名。
+该语句用于恢复之前删除的 database、table 或者 partition。支持通过 name、id 来恢复指定的元信息，并且支持将恢复的元信息重命名。
 
 可以通过 `SHOW CATALOG RECYCLE BIN` 来查询当前可恢复的元信息。
 
 语法：
 
-1. 以name恢复 database
+1. 以 name 恢复 database
 
    ```sql
    RECOVER DATABASE db_name;
    ```
 
-2. 以name恢复 table
+2. 以 name 恢复 table
 
    ```sql
    RECOVER TABLE [db_name.]table_name;
    ```
 
-3. 以name恢复 partition
+3. 以 name 恢复 partition
 
    ```sql
    RECOVER PARTITION partition_name FROM [db_name.]table_name;
    ```
 
-4. 以name和id恢复 database
+4. 以 name 和 id 恢复 database
 
    ```sql
    RECOVER DATABASE db_name db_id;
    ```
 
-5. 以name和id恢复 table
+5. 以 name 和 id 恢复 table
 
    ```sql
    RECOVER TABLE [db_name.]table_name table_id;
    ```
 
-6. 以name和id恢复 partition
+6. 以 name 和 id 恢复 partition
 
    ```sql
    RECOVER PARTITION partition_name partition_id FROM [db_name.]table_name;
    ```   
 
-7. 以name恢复 database 并设定新名字
+7. 以 name 恢复 database 并设定新名字
 
    ```sql
    RECOVER DATABASE db_name AS new_db_name;
    ```
 
-8. 以name和id恢复 table 并设定新名字
+8. 以 name 和 id 恢复 table 并设定新名字
 
    ```sql
    RECOVER TABLE [db_name.]table_name table_id AS new_db_name;
    ```
 
-9. 以name和id恢复 partition 并设定新名字
+9. 以 name 和 id 恢复 partition 并设定新名字
 
    ```sql
    RECOVER PARTITION partition_name partition_id AS new_db_name FROM [db_name.]table_name;
@@ -94,8 +93,8 @@ RECOVER
 
 说明：
 
-- 该操作仅能恢复之前一段时间内删除的元信息。默认为 1 天。（可通过fe.conf中`catalog_trash_expire_second`参数配置）
-- 如果恢复元信息时没有指定id，则默认恢复最后一个删除的同名元数据。
+- 该操作仅能恢复之前一段时间内删除的元信息。默认为 1 天。（可通过 fe.conf 中`catalog_trash_expire_second`参数配置）
+- 如果恢复元信息时没有指定 id，则默认恢复最后一个删除的同名元数据。
 - 可以通过 `SHOW CATALOG RECYCLE BIN` 来查询当前可恢复的元信息。
 
 ### Example

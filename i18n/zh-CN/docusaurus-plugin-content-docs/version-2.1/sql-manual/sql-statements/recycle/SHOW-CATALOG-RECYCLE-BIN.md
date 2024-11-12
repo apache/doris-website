@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CATALOG-RECYCLE-BIN",
+    "title": "SHOW CATALOG RECYCLE BIN",
     "language": "zh-CN"
 }
 ---
@@ -24,11 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
 
-## SHOW-CATALOG-RECYCLE-BIN
+
+
 
 ### Name
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-INDEX",
+    "title": "SHOW INDEX",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-INDEX
+
+
 
 ### Name
 
@@ -32,7 +33,7 @@ SHOW INDEX
 
 ### Description
 
- 该语句用于展示一个表中索引的相关信息，目前只支持bitmap 索引
+ 该语句用于展示一个表中索引的相关信息，目前只支持 bitmap 索引
 
 语法：
 

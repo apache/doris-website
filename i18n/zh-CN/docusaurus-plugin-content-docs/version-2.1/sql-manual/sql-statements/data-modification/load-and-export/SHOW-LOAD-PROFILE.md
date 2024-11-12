@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-LOAD-PROFILE",
+    "title": "SHOW LOAD PROFILE",
     "language": "zh-CN"
 }
 ---

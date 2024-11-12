@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Kill Query",
+    "title": "KILL QUERY",
     "language": "zh-CN"
 }
 ---

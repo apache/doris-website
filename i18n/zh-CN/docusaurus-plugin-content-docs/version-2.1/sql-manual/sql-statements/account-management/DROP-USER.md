@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-USER",
+    "title": "DROP USER",
     "language": "zh-CN"
 }
 ---

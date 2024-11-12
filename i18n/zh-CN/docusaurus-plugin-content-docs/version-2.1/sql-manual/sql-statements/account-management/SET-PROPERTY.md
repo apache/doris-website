@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SET-PROPERTY",
+    "title": "SET PROPERTY",
     "language": "zh-CN"
 }
 ---
@@ -32,7 +32,7 @@ SET PROPERTY
 
 ### Description
 
- 设置用户的属性，包括分配给用户的资源、导入cluster等
+ 设置用户的属性，包括分配给用户的资源、导入 cluster 等
 
 ```sql
 SET PROPERTY [FOR 'user'] 'key' = 'value' [, 'key' = 'value']
@@ -42,15 +42,15 @@ SET PROPERTY [FOR 'user'] 'key' = 'value' [, 'key' = 'value']
 
 key:
 
-超级用户权限:
+超级用户权限：
 
 ​        max_user_connections: 最大连接数。
 
-​        max_query_instances: 用户同一时间点执行查询可以使用的instance个数。
+​        max_query_instances: 用户同一时间点执行查询可以使用的 instance 个数。
 
 ​        sql_block_rules: 设置 sql block rules。设置后，该用户发送的查询如果匹配规则，则会被拒绝。
 
-​        cpu_resource_limit: 限制查询的cpu资源。详见会话变量 `cpu_resource_limit` 的介绍。-1 表示未设置。
+​        cpu_resource_limit: 限制查询的 cpu 资源。详见会话变量 `cpu_resource_limit` 的介绍。-1 表示未设置。
 
 ​        exec_mem_limit: 限制查询的内存使用。详见会话变量 `exec_mem_limit` 的介绍。-1 表示未设置。
 
@@ -62,25 +62,25 @@ key:
 
 ### Example
 
-1. 修改用户 jack 最大连接数为1000
+1. 修改用户 jack 最大连接数为 1000
    
     ```sql
     SET PROPERTY FOR 'jack' 'max_user_connections' = '1000';
     ```
 
-2. 修改用户jack的查询可用instance个数为3000
+2. 修改用户 jack 的查询可用 instance 个数为 3000
    
     ```sql
     SET PROPERTY FOR 'jack' 'max_query_instances' = '3000';
     ```
     
-3. 修改用户jack的sql block rule
+3. 修改用户 jack 的 sql block rule
    
     ```sql
     SET PROPERTY FOR 'jack' 'sql_block_rules' = 'rule1, rule2';
     ```
 
-4. 修改用户jack的 cpu 使用限制
+4. 修改用户 jack 的 cpu 使用限制
     
     ```sql
     SET PROPERTY FOR 'jack' 'cpu_resource_limit' = '2';

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-ASYNC-MATERIALIZED-VIEW",
+    "title": "ALTER ASYNC MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-ASYNC-MATERIALIZED-VIEW
+
 
 ### Name
 
@@ -49,7 +49,7 @@ ALTER MATERIALIZED VIEW mvName=multipartIdentifier ((RENAME newName=identifier)
 
 用来更改物化视图的名字
 
-例如: 将mv1的名字改为mv2
+例如：将 mv1 的名字改为 mv2
 ```sql
 ALTER MATERIALIZED VIEW mv1 rename mv2;
 ```
@@ -63,9 +63,9 @@ ALTER MATERIALIZED VIEW mv1 rename mv2;
 同[创建异步物化视图](../Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 
 ##### SET
-修改物化视图特有的property
+修改物化视图特有的 property
 
-例如修改mv1的grace_period为3000ms
+例如修改 mv1 的 grace_period 为 3000ms
 ```sql
 ALTER MATERIALIZED VIEW mv1 set("grace_period"="3000");
 ```
@@ -79,7 +79,7 @@ ALTER MATERIALIZED VIEW [db.]mv1 REPLACE WITH MATERIALIZED VIEW mv2
 
 swap 默认为 TRUE
 - 如果 swap 参数为 TRUE，相当于把物化视图 mv1 重命名为 mv2 , 同时把 mv2 重命名为 mv1
-- 如果 swap 参数为 FALSE，相当于把 mv2 重命名为 mv1 ，原有的 mv1 被删除
+- 如果 swap 参数为 FALSE，相当于把 mv2 重命名为 mv1，原有的 mv1 被删除
 
 例如想把 mv1 和 mv2 的名字互换
 ```sql

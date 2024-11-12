@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CONVERT-LIGHT-SCHEMA-CHANGE-PROCESS",
+    "title": "SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CONVERT-LIGHT-SCHEMA-CHANGE-PROCESS
+
 
 ### Name
 
@@ -32,9 +32,9 @@ SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS
 
 ### Description
 
-用来查看将非light schema change的olpa表转换为light schema change表的情况， 需要开启配置`enable_convert_light_weight_schema_change`
+用来查看将非 light schema change 的 olpa 表转换为 light schema change 表的情况，需要开启配置`enable_convert_light_weight_schema_change`
 
-语法:
+语法：
 
 ```sql
 SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [FROM db]
@@ -42,7 +42,7 @@ SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [FROM db]
 
 ### Example
 
-1. 查看在database test上的转换情况
+1. 查看在 database test 上的转换情况
 
     ```sql
      SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS FROM test;

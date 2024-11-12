@@ -1,6 +1,6 @@
 ---
 {
-"title": "SHOW-DATA-SKEW",
+"title": "SHOW DATA SKEW",
 "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-DATA-SKEW
+
 
 ### Name
 

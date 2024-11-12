@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-TABLE-AS-SELECT",
+    "title": "CREATE TABLE AS SELECT",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-TABLE-AS-SELECT
+
 
 ### Name
 

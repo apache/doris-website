@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN-REBALANCE-DISK",
+    "title": "REBALANCE DISK",
     "language": "zh-CN"
 }
 ---
@@ -22,13 +22,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-REBALANCE-DISK
+
 
 ### Name
 ADMIN REBALANCE DISK
 ### Description
 
-该语句用于尝试优先均衡指定的BE磁盘数据
+该语句用于尝试优先均衡指定的 BE 磁盘数据
 
 语法：
 
@@ -38,19 +38,19 @@ ADMIN REBALANCE DISK
 
 说明：
 
-    1. 该语句表示让系统尝试优先均衡指定BE的磁盘数据，不受限于集群是否均衡。
-    2. 默认的 timeout 是 24小时。超时意味着系统将不再优先均衡指定的BE磁盘数据。需要重新使用该命令设置。
-	3. 指定BE的磁盘数据均衡后，该BE的优先级将会失效。
+    1. 该语句表示让系统尝试优先均衡指定 BE 的磁盘数据，不受限于集群是否均衡。
+    2. 默认的 timeout 是 24 小时。超时意味着系统将不再优先均衡指定的 BE 磁盘数据。需要重新使用该命令设置。
+	3. 指定 BE 的磁盘数据均衡后，该 BE 的优先级将会失效。
 
 ### Example
 
-1. 尝试优先均衡集群内的所有BE
+1. 尝试优先均衡集群内的所有 BE
 
     ```
     ADMIN REBALANCE DISK;
     ```
 
-2. 尝试优先均衡指定BE
+2. 尝试优先均衡指定 BE
 
     ```
     ADMIN REBALANCE DISK ON ("192.168.1.1:1234", "192.168.1.2:1234");

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "BROKER-LOAD",
+    "title": "BROKER LOAD",
     "language": "zh-CN"
 }
 ---

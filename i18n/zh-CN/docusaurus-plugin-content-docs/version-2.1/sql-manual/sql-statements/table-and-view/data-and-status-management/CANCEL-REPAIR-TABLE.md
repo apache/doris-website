@@ -1,9 +1,8 @@
 ---
 {
-    "title": "ADMIN-CLEAN-TRASH",
+    "title": "CANCEL REPAIR TABLE",
     "language": "zh-CN"
 }
-
 ---
 
 <!--
@@ -25,39 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-CLEAN-TRASH
+
 
 ### Name
 
-ADMIN CLEAN TRASH
+ADMIN CANCEL REPAIR
 
 ### Description
 
-该语句用于清理 backend 内的垃圾数据
+该语句用于取消以高优先级修复指定表或分区
 
 语法：
 
 ```sql
-ADMIN CLEAN TRASH [ON ("BackendHost1:BackendHeartBeatPort1", "BackendHost2:BackendHeartBeatPort2", ...)];
+ADMIN CANCEL REPAIR TABLE table_name[ PARTITION (p1,...)];
 ```
 
 说明：
 
-1. 以 BackendHost:BackendHeartBeatPort 表示需要清理的 backend ，不添加on限定则清理所有 backend 。
+1. 该语句仅表示系统不再以高优先级修复指定表或分区的分片副本。系统仍会以默认调度方式修复副本。
 
 ### Example
 
-1. 清理所有be节点的垃圾数据。
+ 1. 取消高优先级修复
 
-        ADMIN CLEAN TRASH;
-
-2. 清理'192.168.0.1:9050'和'192.168.0.2:9050'的垃圾数据。
-
-        ADMIN CLEAN TRASH ON ("192.168.0.1:9050","192.168.0.2:9050");
+       ```sql
+        ADMIN CANCEL REPAIR TABLE tbl PARTITION(p1);
+       ```
 
 ### Keywords
 
-    ADMIN, CLEAN, TRASH
+    ADMIN, CANCEL, REPAIR
 
 ### Best Practice
 

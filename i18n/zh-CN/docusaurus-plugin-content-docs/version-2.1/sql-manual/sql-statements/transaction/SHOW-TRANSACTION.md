@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-TRANSACTION",
+    "title": "SHOW TRANSACTION",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-TRANSACTION
+
 
 ### Name
 
@@ -61,7 +61,7 @@ ErrorReplicasCount: 0
          TimeoutMs: 300000
 ```
 
-* TransactionId：事务id
+* TransactionId：事务 id
 * Label：导入任务对应的 label
 * Coordinator：负责事务协调的节点
 * TransactionStatus：事务状态
@@ -75,7 +75,7 @@ ErrorReplicasCount: 0
 * FinishTime：数据可见的时间
 * Reason：错误信息
 * ErrorReplicasCount：有错误的副本数
-* ListenerId：相关的导入作业的id
+* ListenerId：相关的导入作业的 id
 * TimeoutMs：事务超时时间，单位毫秒
 
 ### Example
@@ -92,7 +92,7 @@ ErrorReplicasCount: 0
     SHOW TRANSACTION FROM db WHERE ID=4005;
     ```
 
-3. 查看 label 为 label_name的事务：
+3. 查看 label 为 label_name 的事务：
     
     ```sql
     SHOW TRANSACTION WHERE LABEL = 'label_name';

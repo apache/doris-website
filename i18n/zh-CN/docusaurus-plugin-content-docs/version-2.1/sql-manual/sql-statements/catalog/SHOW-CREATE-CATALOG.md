@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-CATALOG",
+    "title": "SHOW CREATE CATALOG",
     "language": "zh-CN"
 }
 ---
@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
+
 
 ## SHOW-CREATE-CATALOG
 

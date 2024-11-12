@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-TABLE-COMMENT",
+    "title": "ALTER TABLE COMMENT",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-TABLE-COMMENT
+
 
 ### Name
 

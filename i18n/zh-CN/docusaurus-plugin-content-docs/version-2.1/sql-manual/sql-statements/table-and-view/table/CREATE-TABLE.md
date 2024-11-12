@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-TABLE",
+    "title": "CREATE TABLE",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4
@@ -26,7 +26,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-TABLE
+
 
 ### Description
 
@@ -477,7 +477,7 @@ UNIQUE KEY(k1, k2)
 * 动态分区相关
 
 
-    动态分区相关参考[分区分桶-动态分区](../../../../table-design/data-partition.md#动态分区)
+    动态分区相关参考[分区分桶 - 动态分区](../../../../table-design/data-partition.md#动态分区)
 
 
 ### Example

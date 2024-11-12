@@ -1,6 +1,6 @@
 ---
 {
-"title": "CREATE-ASYNC-MATERIALIZED-VIEW",
+"title": "CREATE ASYNC MATERIALIZED VIEW",
 "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-ASYNC-MATERIALIZED-VIEW
+
 
 ### Name
 
@@ -52,7 +52,7 @@ CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
 
 ##### simpleColumnDefs
 
-用来定义物化视图column信息，如果不定义，将自动推导
+用来定义物化视图 column 信息，如果不定义，将自动推导
 
 ```sql
 simpleColumnDefs
@@ -64,7 +64,7 @@ simpleColumnDef
     ;
 ```
 
-例如:定义两列aa和bb,其中aa的注释为"name"
+例如：定义两列 aa 和 bb，其中 aa 的注释为"name"
 ```sql
 CREATE MATERIALIZED VIEW mv1
 (aa comment "name",bb)
@@ -72,7 +72,7 @@ CREATE MATERIALIZED VIEW mv1
 
 ##### buildMode
 
-用来定义物化视图是否创建完成立即刷新,默认IMMEDIATE
+用来定义物化视图是否创建完成立即刷新，默认 IMMEDIATE
 
 IMMEDIATE：立即刷新
 

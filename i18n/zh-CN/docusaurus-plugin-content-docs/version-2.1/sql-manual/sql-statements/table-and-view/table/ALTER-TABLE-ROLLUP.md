@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-TABLE-ROLLUP",
+    "title": "ALTER TABLE ROLLUP",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-TABLE-ROLLUP
+
 
 ### Name
 
@@ -52,7 +52,7 @@ ADD ROLLUP rollup_name (column_name1, column_name2, ...)
 [PROPERTIES ("key"="value", ...)]
 ```
 
- properties: 支持设置超时时间，默认超时时间为1天。
+ properties: 支持设置超时时间，默认超时时间为 1 天。
 
 2. 批量创建 rollup index
 
@@ -122,7 +122,7 @@ ALTER TABLE example_db.my_table
 DROP ROLLUP example_rollup_index2;
 ```
 
-5. 批量删除Rollup
+5. 批量删除 Rollup
 
 ```sql
 ALTER TABLE example_db.my_table

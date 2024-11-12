@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-FUNCTION",
+    "title": "DROP FUNCTION",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-FUNCTION
+
 
 ### Name
 

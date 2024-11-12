@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-TABLE",
+    "title": "SHOW CREATE TABLE",
     "language": "zh-CN"
 }
 ---

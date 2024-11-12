@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-REPOSITORY",
+    "title": "SHOW CREATE REPOSITORY",
     "language": "zh-CN"
 }
 ---
@@ -32,7 +32,7 @@ SHOW CREATE REPOSITORY
 
 ### Description
 
-该语句用于展示仓库的创建语句.
+该语句用于展示仓库的创建语句。
 
 语法：
 

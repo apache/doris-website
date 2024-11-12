@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-ROLES",
+    "title": "SHOW ROLES",
     "language": "zh-CN"
 }
 ---

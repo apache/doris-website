@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-DYNAMIC-PARTITION",
+    "title": "SHOW DYNAMIC PARTITION TABLES",
     "language": "zh-CN"
 }
 ---
@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-DYNAMIC-PARTITION
+
 
 ### Name
 
-SHOW DYNAMIC
+SHOW DYNAMIC PARTITION TABLES
 
 ### Description
 
-该语句用于展示当前db下所有的动态分区表状态
+该语句用于展示当前 db 下所有的动态分区表状态
 
 语法：
 
