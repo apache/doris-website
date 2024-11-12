@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-SQL-BLOCK-RULE",
+    "title": "SHOW SQL_BLOCK_RULE",
     "language": "zh-CN"
 }
 ---
@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-SQL-BLOCK-RULE
+
 
 ### Name
 
-SHOW SQL  BLOCK RULE
+SHOW SQL BLOCK RULE
 
 ### Description
 
-查看已配置的SQL阻止规则，不指定规则名则为查看所有规则。
+查看已配置的 SQL 阻止规则，不指定规则名则为查看所有规则。
 
 语法：
 

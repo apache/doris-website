@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-SYSTEM-MODIFY-BACKEND",
+    "title": "MODIFY BACKEND",
     "language": "zh-CN"
 }
 
@@ -25,7 +25,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-SYSTEM-MODIFY-BACKEND
+
 
 ### Name
 
@@ -51,7 +51,7 @@ ALTER SYSTEM MODIFY BACKEND "id1" SET ("key" = "value"[, ...]);
 
  说明：
 
-1. host 可以是主机名或者ip地址
+1. host 可以是主机名或者 ip 地址
 2. heartbeat_port 为该节点的心跳端口
 3. 修改 BE 节点属性目前支持以下属性：
 

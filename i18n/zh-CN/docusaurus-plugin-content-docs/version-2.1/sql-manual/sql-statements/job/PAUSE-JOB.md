@@ -1,6 +1,6 @@
 ---
 {
-"title": "PAUSE-JOB",
+"title": "PAUSE JOB",
 "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## PAUSE-JOB
+
 
 ### Name
 
@@ -32,7 +32,7 @@ PAUSE JOB
 
 ### Description
 
-用户暂停一个正在 RUNNING 状态的 JOB ，正在运行的 TASK 会被中断，JOB 状态变更为 PAUSED。 被停止的 JOB 可以通过 RESUME 操作恢复运行。
+用户暂停一个正在 RUNNING 状态的 JOB，正在运行的 TASK 会被中断，JOB 状态变更为 PAUSED。被停止的 JOB 可以通过 RESUME 操作恢复运行。
 
 使用此命令需要 ADMIN 权限。
 

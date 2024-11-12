@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-ENCRYPTKEY",
+    "title": "CREATE ENCRYPTKEY",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-ENCRYPTKEY
+
 
 ### Name
 

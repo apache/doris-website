@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-DATA-TYPES",
+    "title": "SHOW DATA TYPES",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-DATA-TYPES
+
 
 ### Name
 
@@ -41,7 +41,7 @@ SHOW DATA TYPES
 
 ### Example
 
-    1. 查看Doris支持的所有数据类型
+    1. 查看 Doris 支持的所有数据类型
 
         SHOW DATA TYPES;
 

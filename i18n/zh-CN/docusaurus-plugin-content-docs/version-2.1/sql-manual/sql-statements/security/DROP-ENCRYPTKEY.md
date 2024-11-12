@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-ENCRYPTKEY",
+    "title": "DROP ENCRYPTKEY",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-ENCRYPTKEY
+
 
 ### Name
 

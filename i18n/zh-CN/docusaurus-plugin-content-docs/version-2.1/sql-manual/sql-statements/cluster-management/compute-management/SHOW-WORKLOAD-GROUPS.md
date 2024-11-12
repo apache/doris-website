@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-WORKLOAD-GROUPS",
+    "title": "SHOW WORKLOAD GROUPS",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-WORKLOAD-GROUPS
+
 
 ### Name
 
@@ -32,7 +32,7 @@ SHOW WORKLOAD GROUPS
 
 ### Description
 
-该语句用于展示当前用户具有usage_priv权限的资源组。
+该语句用于展示当前用户具有 usage_priv 权限的资源组。
 
 语法：
 

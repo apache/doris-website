@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN-SET-CONFIG",
+    "title": "SET FRONTEND CONFIG",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-SET-CONFIG
+
 
 ### Name
 

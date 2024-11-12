@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-ENCRYPTKEY",
+    "title": "SHOW ENCRYPTKEY",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-ENCRYPT-KEY
+
 
 ### Name
 

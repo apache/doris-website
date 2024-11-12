@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-FILE",
+    "title": "DROP FILE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-FILE
+
 
 ### Name
 
@@ -45,7 +45,7 @@ DROP FILE "file_name" [FROM database]
 
 - file_name:  文件名。
 - database: 文件归属的某一个 db，如果没有指定，则使用当前 session 的 db。
-- properties 支持以下参数:
+- properties 支持以下参数：
   - `catalog`: 必须。文件所属分类。
 
 ### Example

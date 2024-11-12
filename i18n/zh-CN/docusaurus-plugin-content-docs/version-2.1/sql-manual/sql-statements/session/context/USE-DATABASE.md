@@ -1,6 +1,6 @@
 ---
 {
-    "title": "USE",
+    "title": "USE DATABASE",
     "language": "zh-CN"
 }
 ---
@@ -40,8 +40,8 @@ USE 命令可以让我们来使用数据库
 USE <[CATALOG_NAME].DATABASE_NAME>
 ```
 
-说明:
-1. 使用`USE CATALOG_NAME.DATABASE_NAME`, 会先将当前的Catalog切换为`CATALOG_NAME`, 然后再讲当前的Database切换为`DATABASE_NAME`
+说明：
+1. 使用`USE CATALOG_NAME.DATABASE_NAME`, 会先将当前的 Catalog 切换为`CATALOG_NAME`, 然后再讲当前的 Database 切换为`DATABASE_NAME`
 
 ### Example
 
@@ -52,7 +52,7 @@ USE <[CATALOG_NAME].DATABASE_NAME>
    Database changed
    ```
 
-2. 如果 demo 数据库在hms_catalog的Catalog下存在，尝试切换到hms_catalog, 并使用它：
+2. 如果 demo 数据库在 hms_catalog 的 Catalog 下存在，尝试切换到 hms_catalog, 并使用它：
 
     ```sql
     mysql> use hms_catalog.demo;

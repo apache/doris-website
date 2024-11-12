@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-SYSTEM-DROP-BACKEND",
+    "title": "DROP BACKEND",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-SYSTEM-DROP-BACKEND
+
 
 ### Name
 
@@ -50,7 +50,7 @@ ALTER SYSTEM DROP BACKEND "id1","id2"...;
 
 说明：
 
-1. host 可以是主机名或者ip地址
+1. host 可以是主机名或者 ip 地址
 2. heartbeat_port 为该节点的心跳端口
 3. 增加和删除节点为同步操作。这两种操作不考虑节点上已有的数据，节点直接从元数据中删除，请谨慎使用。
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-SQL-BLOCK-RULE",
+    "title": "CREATE SQL_BLOCK_RULE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-SQL-BLOCK-RULE
+
 
 ### Name
 

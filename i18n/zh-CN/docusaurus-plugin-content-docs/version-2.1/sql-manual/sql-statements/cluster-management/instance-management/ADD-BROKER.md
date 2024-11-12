@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-SYSTEM-ADD-BROKER",
+    "title": "ADD BROKER",
     "language": "zh-CN"
 }
 
@@ -25,7 +25,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-SYSTEM-ADD-BROKER
+
 
 ### Name
 
@@ -48,7 +48,7 @@ ALTER SYSTEM ADD BROKER broker_name "broker_host1:broker_ipc_port1","broker_host
    ```sql
     ALTER SYSTEM ADD BROKER "host1:port", "host2:port";
    ```
-2. fe开启fqdn([fqdn](../../../admin-manual/cluster-management/fqdn.md))时添加一个Broker
+2. fe 开启 fqdn([fqdn](../../../admin-manual/cluster-management/fqdn.md)) 时添加一个 Broker
 
    ```sql
     ALTER SYSTEM ADD BROKER "broker_fqdn1:port";

@@ -1,6 +1,6 @@
 ---
 {
-"title": "ALTER-POLICY",
+"title": "ALTER STORAGE POLICY",
 "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-POLICY
+
 
 ### Name
 
@@ -41,11 +41,11 @@ PROPERTIES ("key"="value", ...);
 
 ### Example
 
-1. 修改名为 cooldown_datetime冷热分层数据迁移时间点：
+1. 修改名为 cooldown_datetime 冷热分层数据迁移时间点：
 ```sql
 ALTER STORAGE POLICY has_test_policy_to_alter PROPERTIES("cooldown_datetime" = "2023-06-08 00:00:00");
 ```
-2. 修改名为 cooldown_ttl的冷热分层数据迁移倒计时
+2. 修改名为 cooldown_ttl 的冷热分层数据迁移倒计时
 ```sql
 ALTER STORAGE POLICY has_test_policy_to_alter PROPERTIES ("cooldown_ttl" = "10000");
 ALTER STORAGE POLICY has_test_policy_to_alter PROPERTIES ("cooldown_ttl" = "1h");
