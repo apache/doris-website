@@ -94,7 +94,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
    通过以下命令添加 Doris Operator 的自定义资源（CRD）：
 
    ```shell
-   kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+   kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
    ```
    期望输出结果：
 
@@ -145,7 +145,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
    curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
    ```
 
-2. 根据[集群配置章节](./install-doris-cluster.md)按需进行定制化配置，配置完成后通过如下命令部署：
+2. 根据[集群配置章节](./install-config-cluster.md)按需进行定制化配置，配置完成后通过如下命令部署：
 
    ```shell
    kubectl apply -f doriscluster-sample.yaml
