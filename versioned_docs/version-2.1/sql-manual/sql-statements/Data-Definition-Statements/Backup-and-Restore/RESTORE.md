@@ -65,6 +65,8 @@ illustrate:
     - This feature is supported since the Apache Doris 1.2.6  version
   - "clean_partitions": Indicates whether to clean up partitions that do not belong to the restore target. For example, if the target table before the restore has partitions that are not present in the snapshot, specifying `clean_partitions` can drop these extra partitions and move them into the recycle bin during the restore.
     - This feature is supported since the Apache Doris 1.2.6  version
+  - "reserve_storage_policy" = "true": Default is true, The restored table will keep the storage policy as before the backup, and the correspond resources and storage policies will be created. When the reserve_storage_policy is false, the restored tables become normal and will not cooldown.
+  - "storage_resource" = "resource_name": The restored table's new resource. If set new storage_resource, old storage policy's storage_resource will be be updated to new "resource_name". If "reserve_storage_policy"="false" is set, "storage_resource" will be ignored.
 
 ### Example
 
