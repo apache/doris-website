@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-ROUTINE-LOAD-TASK",
+    "title": "SHOW ROUTINE LOAD TASK",
     "language": "zh-CN"
 }
 ---

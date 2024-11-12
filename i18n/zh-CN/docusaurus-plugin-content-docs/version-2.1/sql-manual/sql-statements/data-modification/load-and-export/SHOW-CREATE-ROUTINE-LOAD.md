@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-ROUTINE-LOAD",
+    "title": "SHOW CREATE ROUTINE LOAD",
     "language": "zh-CN"
 }
 ---
@@ -32,7 +32,7 @@ SHOW CREATE ROUTINE LOAD
 
 ### Description
 
-该语句用于展示例行导入作业的创建语句.
+该语句用于展示例行导入作业的创建语句。
 
 结果中的 kafka partition 和 offset 展示的当前消费的 partition，以及对应的待消费的 offset。
 
@@ -48,7 +48,7 @@ SHOW [ALL] CREATE ROUTINE LOAD for load_name;
 
 ### Example
 
-1. 展示默认db下指定例行导入作业的创建语句
+1. 展示默认 db 下指定例行导入作业的创建语句
 
    ```sql
    SHOW CREATE ROUTINE LOAD for test_load

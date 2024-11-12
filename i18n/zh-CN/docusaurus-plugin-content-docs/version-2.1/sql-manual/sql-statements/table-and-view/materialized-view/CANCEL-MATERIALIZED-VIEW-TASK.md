@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL-MATERIALIZED-VIEW-TASK",
+    "title": "CANCEL MATERIALIZED VIEW TASK",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CANCEL-MATERIALIZED-VIEW-TASK
+
 
 ### Name
 
@@ -32,7 +32,7 @@ CANCEL MATERIALIZED VIEW TASK
 
 ### Description
 
-该语句用于取消物化视图的task
+该语句用于取消物化视图的 task
 
 语法：
 
@@ -42,7 +42,7 @@ CANCEL MATERIALIZED VIEW TASK taskId=INTEGER_VALUE ON mvName=multipartIdentifier
 
 ### Example
 
-1. 取消物化视图mv1的id为1的task
+1. 取消物化视图 mv1 的 id 为 1 的 task
 
     ```sql
     CANCEL MATERIALIZED VIEW TASK 1 on mv1;

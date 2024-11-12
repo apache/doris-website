@@ -1,6 +1,6 @@
 ---
 {
-    "title": "GRANT",
+    "title": "GRANT TO",
     "language": "zh-CN"
 }
 ---

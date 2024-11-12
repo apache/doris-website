@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-MATERIALIZED-VIEW",
+    "title": "SHOW CREATE MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-MATERIALIZED-VIEW
+
 
 ### Name
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "PAUSE-SYNC-JOB",
+    "title": "PAUSE SYNC JOB",
     "language": "zh-CN"
 }
 ---

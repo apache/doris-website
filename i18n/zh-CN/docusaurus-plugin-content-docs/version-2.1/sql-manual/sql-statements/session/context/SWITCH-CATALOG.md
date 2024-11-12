@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SWITCH",
+    "title": "SWITCH CATALOG",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-ROLE",
+    "title": "DROP ROLE",
     "language": "zh-CN"
 }
 ---
@@ -38,7 +38,7 @@ DROP ROLE
   DROP ROLE [IF EXISTS] role1;
 ```
 
-删除角色不会影响以前属于角色的用户的权限。 它仅相当于解耦来自用户的角色。 用户从角色获得的权限不会改变
+删除角色不会影响以前属于角色的用户的权限。它仅相当于解耦来自用户的角色。用户从角色获得的权限不会改变
 
 ### Example
 

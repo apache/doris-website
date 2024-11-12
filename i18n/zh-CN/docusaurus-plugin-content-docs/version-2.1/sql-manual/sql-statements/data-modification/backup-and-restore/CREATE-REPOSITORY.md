@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-REPOSITORY",
+    "title": "CREATE REPOSITORY",
     "language": "zh-CN"
 }
 ---

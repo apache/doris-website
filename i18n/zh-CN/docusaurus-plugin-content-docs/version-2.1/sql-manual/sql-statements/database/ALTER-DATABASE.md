@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-DATABASE",
+    "title": "ALTER DATABASE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-DATABASE
+
 
 ### Name
 
@@ -34,7 +34,7 @@ ALTER DATABASE
 
 该语句用于设置指定数据库的属性。（仅管理员使用）
 
-1) 设置数据库数据量配额，单位为B/K/KB/M/MB/G/GB/T/TB/P/PB
+1) 设置数据库数据量配额，单位为 B/K/KB/M/MB/G/GB/T/TB/P/PB
 
 ```sql
 ALTER DATABASE db_name SET DATA QUOTA quota;
@@ -54,7 +54,7 @@ ALTER DATABASE db_name SET REPLICA QUOTA quota;
 
 说明：
     重命名数据库后，如需要，请使用 REVOKE 和 GRANT 命令修改相应的用户权限。
-    数据库的默认数据量配额为1024GB，默认副本数量配额为1073741824。
+    数据库的默认数据量配额为 1024GB，默认副本数量配额为 1073741824。
 
 4) 对已有 database 的 property 进行修改操作
 
@@ -88,13 +88,13 @@ ALTER DATABASE example_db RENAME example_db2;
 ALTER DATABASE example_db SET REPLICA QUOTA 102400;
 ```
 
-4. 修改db下table的默认副本分布策略（该操作仅对新建的table生效，不会修改db下已存在的table）
+4. 修改 db 下 table 的默认副本分布策略（该操作仅对新建的 table 生效，不会修改 db 下已存在的 table）
 
 ```sql
 ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "tag.location.default:2");
 ```
 
-5. 取消db下table的默认副本分布策略（该操作仅对新建的table生效，不会修改db下已存在的table）
+5. 取消 db 下 table 的默认副本分布策略（该操作仅对新建的 table 生效，不会修改 db 下已存在的 table）
 
 ```sql
 ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "");

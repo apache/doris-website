@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-INDEX",
+    "title": "DROP INDEX",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-INDEX
+
 
 ### Name
 
@@ -32,7 +32,7 @@ DROP INDEX
 
 ### Description
 
-该语句用于从一个表中删除指定名称的索引，目前仅支持bitmap 索引
+该语句用于从一个表中删除指定名称的索引，目前仅支持 bitmap 索引
 语法：
 
 ```sql

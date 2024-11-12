@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-TABLE-STATUS",
+    "title": "SHOW TABLE STATUS",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-TABLE-STATUS
+
 
 ### Name
 

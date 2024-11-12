@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-ASYNC-MATERIALIZED-VIEW",
+    "title": "DROP ASYNC MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-ASYNC-MATERIALIZED-VIEW
+
 
 ### Name
 
@@ -49,7 +49,7 @@ DROP MATERIALIZED VIEW (IF EXISTS)? mvName=multipartIdentifier
 
 ### Example
 
-1. 删除表物化视图mv1
+1. 删除表物化视图 mv1
 
 ```sql
 DROP MATERIALIZED VIEW mv1;

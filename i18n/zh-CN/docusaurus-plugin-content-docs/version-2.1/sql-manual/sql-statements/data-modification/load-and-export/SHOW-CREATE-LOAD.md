@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-LOAD",
+    "title": "SHOW CREATE LOAD",
     "language": "zh-CN"
 }
 ---
@@ -32,7 +32,7 @@ SHOW CREATE LOAD
 
 ### Description
 
-该语句用于展示导入作业的创建语句.
+该语句用于展示导入作业的创建语句。
 
 语法：
 
@@ -45,7 +45,7 @@ SHOW CREATE LOAD for load_name;
 
 ### Example
 
-1. 展示默认db下指定导入作业的创建语句
+1. 展示默认 db 下指定导入作业的创建语句
 
    ```sql
    SHOW CREATE LOAD for test_load

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CLEAN-LABEL",
+    "title": "CLEAN LABEL",
     "language": "zh-CN"
 }
 ---

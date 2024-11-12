@@ -1,6 +1,6 @@
 ---
 {
-    "title": "INSERT-OVERWRITE",
+    "title": "INSERT OVERWRITE",
     "language": "zh-CN"
 }
 
@@ -51,7 +51,7 @@ INSERT OVERWRITE table table_name
 > partitions: 需要重写的目标分区，支持两种形式：
 >
 >> 1. 分区名。必须是 `table_name` 中存在的分区，多个分区名称用逗号分隔。
->> 2. 星号(*)。开启[自动检测分区](#overwrite-auto-detect-partition)功能。写入操作将会自动检测数据所涉及的分区，并覆写这些分区。该功能自 Apache Doris 2.1.3 版本开始支持。
+>> 2. 星号 (*)。开启[自动检测分区](#overwrite-auto-detect-partition)功能。写入操作将会自动检测数据所涉及的分区，并覆写这些分区。该功能自 Apache Doris 2.1.3 版本开始支持。
 >>     
 >
 > label: 为 Insert 任务指定一个 label
@@ -78,7 +78,7 @@ INSERT OVERWRITE table table_name
 #### For Auto Partition Table
 
 如果 INSERT OVERWRITE 的目标表是自动分区表，那么行为受到 [Session Variable](../#变量) `enable_auto_create_when_overwrite` 的控制，具体行为如下：
-1. 若未指定 PARTITION （覆写整表），当 `enable_auto_create_when_overwrite` 为 `true`，在覆写整表已有数据的同时，对于没有对应分区的数据，按照该表的自动分区规则创建分区，并容纳这些原本没有对应分区的数据。如果 `enable_auto_create_when_overwrite` 为 `false`，未找到分区的数据将累计错误行直到失败。
+1. 若未指定 PARTITION（覆写整表），当 `enable_auto_create_when_overwrite` 为 `true`，在覆写整表已有数据的同时，对于没有对应分区的数据，按照该表的自动分区规则创建分区，并容纳这些原本没有对应分区的数据。如果 `enable_auto_create_when_overwrite` 为 `false`，未找到分区的数据将累计错误行直到失败。
 2. 如果指定了覆写的 PARTITION，那么在此过程中，AUTO PARTITION 表表现得如同普通分区表一样，不满足现有分区条件的数据将被过滤，而非创建新的分区。
 3. 若指定 PARTITION 为 `partition(*)` （自动检测分区并覆写），当 `enable_auto_create_when_overwrite` 为 `true`，对于那些在表中有对应分区的数据，覆写它们对应的分区，其他已有分区不变。同时，对于没有对应分区的数据，按照该表的自动分区规则创建分区，并容纳这些原本没有对应分区的数据。如果 `enable_auto_create_when_overwrite` 为 `false`，未找到分区的数据将累计错误行直到失败。
 
@@ -159,7 +159,7 @@ PROPERTIES (
 
 #### Overwrite Table
 
-1. VALUES的形式重写`test`表
+1. VALUES 的形式重写`test`表
 
     ```sql
     # 单行重写
@@ -175,10 +175,10 @@ PROPERTIES (
     ```
 
 - 第一条语句和第二条语句的效果一致，重写时如果不指定目标列，会使用表中的列顺序来作为默认的目标列。重写成功后表`test`中只有一行数据。
-- 第三条语句和第四条语句的效果一致，没有指定的列`c2`会使用默认值4来完成数据重写。重写成功后表`test`中只有一行数据。
+- 第三条语句和第四条语句的效果一致，没有指定的列`c2`会使用默认值 4 来完成数据重写。重写成功后表`test`中只有一行数据。
 - 第五条语句和第六条语句的效果一致，在语句中可以使用表达式（如`2+2`，`2*2`），执行语句的时候会计算出表达式的结果再重写表`test`。重写成功后表`test`中有两行数据。
 
-- 第七条语句和第八条语句的效果一致，没有指定的列`c2`会使用默认值4来完成数据重写。重写成功后表`test`中有两行数据。
+- 第七条语句和第八条语句的效果一致，没有指定的列`c2`会使用默认值 4 来完成数据重写。重写成功后表`test`中有两行数据。
 
 2. 查询语句的形式重写`test`表，表`test2`和表`test`的数据格式需要保持一致，如果不一致会触发数据类型的隐式转换
 
@@ -189,14 +189,14 @@ PROPERTIES (
 
 - 第一条语句和第二条语句的效果一致，该语句的作用是将数据从表`test2`中取出，使用取出的数据重写表`test`。重写成功后表`test`中的数据和表`test2`中的数据保持一致。
 
-3. 重写 `test` 表并指定label
+3. 重写 `test` 表并指定 label
 
     ```sql
     INSERT OVERWRITE table test WITH LABEL `label1` SELECT * FROM test2;
     INSERT OVERWRITE table test WITH LABEL `label2` (c1, c2) SELECT * from test2;
     ```
 
-- 用户可以通过`SHOW LOAD;`命令查看此`label`导入作业的状态。需要注意的是label具有唯一性。
+- 用户可以通过`SHOW LOAD;`命令查看此`label`导入作业的状态。需要注意的是 label 具有唯一性。
 
 
 #### Overwrite Table Partition
@@ -208,7 +208,7 @@ PROPERTIES (
 
 举例如下：
 
-1. VALUES的形式重写`test`表分区`P1`和`p2`
+1. VALUES 的形式重写`test`表分区`P1`和`p2`
 
     ```sql
     # 单行重写
@@ -238,7 +238,7 @@ PROPERTIES (
     INSERT OVERWRITE table test PARTITION(p1,p2) (c1, c2) SELECT * from test2;
     ```
 
-3. 重写 `test` 表分区`P1`和`p2`并指定label
+3. 重写 `test` 表分区`P1`和`p2`并指定 label
 
     ```sql
     INSERT OVERWRITE table test PARTITION(p1,p2) WITH LABEL `label3` SELECT * FROM test2;

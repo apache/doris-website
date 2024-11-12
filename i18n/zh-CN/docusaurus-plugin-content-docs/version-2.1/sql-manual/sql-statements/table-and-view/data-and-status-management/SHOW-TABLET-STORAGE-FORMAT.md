@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW TABLET STORAGE FORMAT
+
 ### description
 
     该语句用于显示Backend上的存储格式信息（仅管理员使用）
@@ -33,7 +33,7 @@ under the License.
 
 ### example
 
-    ```
+    ```sql
     MySQL [(none)]> show tablet storage format;
     +-----------+---------+---------+
     | BackendId | V1Count | V2Count |

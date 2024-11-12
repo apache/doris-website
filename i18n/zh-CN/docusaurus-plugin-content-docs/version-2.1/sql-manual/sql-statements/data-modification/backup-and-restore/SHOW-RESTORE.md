@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-RESTORE",
+    "title": "SHOW RESTORE",
     "language": "zh-CN"
 }
 ---

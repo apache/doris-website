@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SET-VARIABLE",
+    "title": "SET VARIABLE",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-ALTER",
+    "title": "SHOW ALTER TABLE",
     "language": "zh-CN"
 }
 
@@ -25,11 +25,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-ALTER
+
 
 ### Name
 
-SHOW ALTER
+SHOW ALTER TABLE
 
 ### Description
 

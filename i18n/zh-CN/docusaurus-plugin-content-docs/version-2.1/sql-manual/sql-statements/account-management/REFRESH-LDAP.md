@@ -1,6 +1,6 @@
 ---
 {
-    "title": "REFRESH-LDAP",
+    "title": "REFRESH LDAP",
     "language": "zh-CN"
 }
 ---

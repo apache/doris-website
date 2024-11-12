@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CLEAN-PROFILE",
+    "title": "CLEAN ALL PROFILE",
     "language": "zh-CN"
 }
 ---

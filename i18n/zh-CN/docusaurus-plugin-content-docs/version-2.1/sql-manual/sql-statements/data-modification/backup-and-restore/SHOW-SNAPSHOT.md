@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-SNAPSHOT",
+    "title": "SHOW SNAPSHOT",
     "language": "zh-CN"
 }
 ---
@@ -43,12 +43,12 @@ SHOW SNAPSHOT ON `repo_name`
 
 说明：
         1. 各列含义如下：
-            Snapshot：   备份的名称
-            Timestamp：  对应备份的时间版本
-            Status：     如果备份正常，则显示 OK，否则显示错误信息
+            Snapshot：备份的名称
+            Timestamp：对应备份的时间版本
+            Status：如果备份正常，则显示 OK，否则显示错误信息
                 2. 如果指定了 TIMESTAMP，则会额外显示如下信息：
-            Database：   备份数据原属的数据库名称
-            Details：    以 Json 的形式，展示整个备份的数据目录及文件结构
+            Database：备份数据原属的数据库名称
+            Details：以 Json 的形式，展示整个备份的数据目录及文件结构
 
 ### Example
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-SYNC-JOB",
+    "title": "SHOW SYNC JOB",
     "language": "zh-CN"
 }
 

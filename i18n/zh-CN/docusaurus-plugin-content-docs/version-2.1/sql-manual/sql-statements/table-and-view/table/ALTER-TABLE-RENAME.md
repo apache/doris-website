@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-TABLE-RENAME",
+    "title": "ALTER TABLE RENAME",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-TABLE-RENAME
+
 
 ### Name
 

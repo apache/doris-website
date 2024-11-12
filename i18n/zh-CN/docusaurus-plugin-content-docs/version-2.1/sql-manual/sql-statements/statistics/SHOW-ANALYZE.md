@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-ANALYZE",
+    "title": "SHOW ANALYZE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-ANALYZE
+
 
 ### Name
 

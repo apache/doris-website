@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-USER",
+    "title": "CREATE USER",
     "language": "zh-CN"
 }
 ---
@@ -61,15 +61,15 @@ password_policy 是用于指定密码认证登录相关策略的子句，目前�
 
 1. `PASSWORD_HISTORY`
 
-    是否允许当前用户重置密码时使用历史密码。如 `PASSWORD_HISTORY 10` 表示禁止使用过去10次设置过的密码为新密码。如果设置为 `PASSWORD_HISTORY DEFAULT`，则会使用全局变量 `password_history` 中的值。`0` 表示不启用这个功能。默认为 0。
+    是否允许当前用户重置密码时使用历史密码。如 `PASSWORD_HISTORY 10` 表示禁止使用过去 10 次设置过的密码为新密码。如果设置为 `PASSWORD_HISTORY DEFAULT`，则会使用全局变量 `password_history` 中的值。`0` 表示不启用这个功能。默认为 0。
 
 2. `PASSWORD_EXPIRE`
 
-    设置当前用户密码的过期时间。如 `PASSWORD_EXPIRE INTERVAL 10 DAY` 表示密码会在 10 天后过期。`PASSWORD_EXPIRE NEVER` 表示密码不过期。如果设置为 `PASSWORD_EXPIRE DEFAULT`，则会使用全局变量 `default_password_lifetime` 中的值。默认为 NEVER（或0），表示不会过期。
+    设置当前用户密码的过期时间。如 `PASSWORD_EXPIRE INTERVAL 10 DAY` 表示密码会在 10 天后过期。`PASSWORD_EXPIRE NEVER` 表示密码不过期。如果设置为 `PASSWORD_EXPIRE DEFAULT`，则会使用全局变量 `default_password_lifetime` 中的值。默认为 NEVER（或 0），表示不会过期。
 
 3. `FAILED_LOGIN_ATTEMPTS` 和 `PASSWORD_LOCK_TIME`
 
-    设置当前用户登录时，如果使用错误的密码登录n次后，账户将被锁定，并设置锁定时间。如 `FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY` 表示如果3次错误登录，则账户会被锁定一天。
+    设置当前用户登录时，如果使用错误的密码登录 n 次后，账户将被锁定，并设置锁定时间。如 `FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY` 表示如果 3 次错误登录，则账户会被锁定一天。
 
     被锁定的账户可以通过 ALTER USER 语句主动解锁。
 
@@ -87,11 +87,11 @@ password_policy 是用于指定密码认证登录相关策略的子句，目前�
     CREATE USER jack@'172.10.1.10' IDENTIFIED BY '123456';
     ```
 
-3. 为了避免传递明文，用例2也可以使用下面的方式来创建
+3. 为了避免传递明文，用例 2 也可以使用下面的方式来创建
 
     ```sql
     CREATE USER jack@'172.10.1.10' IDENTIFIED BY PASSWORD '*6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9';
-    后面加密的内容可以通过PASSWORD()获得到,例如：
+    后面加密的内容可以通过 PASSWORD() 获得到，例如：
     SELECT PASSWORD('123456');
     ```
 
@@ -113,13 +113,13 @@ password_policy 是用于指定密码认证登录相关策略的子句，目前�
     CREATE USER 'jack'@'%' IDENTIFIED BY '12345' DEFAULT ROLE 'my_role';
     ```
 
-7. 创建一个用户，设定密码10天后过期，并且设置如果3次错误登录则账户会被锁定一天。
+7. 创建一个用户，设定密码 10 天后过期，并且设置如果 3 次错误登录则账户会被锁定一天。
 
     ```sql
     CREATE USER 'jack' IDENTIFIED BY '12345' PASSWORD_EXPIRE INTERVAL 10 DAY FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY;
     ```
 
-8. 创建一个用户，并限制不可重置密码为最近8次是用过的密码。
+8. 创建一个用户，并限制不可重置密码为最近 8 次是用过的密码。
 
     ```sql
     CREATE USER 'jack' IDENTIFIED BY '12345' PASSWORD_HISTORY 8;

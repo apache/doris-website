@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL-BACKUP",
+    "title": "CANCEL BACKUP",
     "language": "zh-CN"
 }
 ---

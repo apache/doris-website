@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-PROPERTY",
+    "title": "SHOW PROPERTY",
     "language": "zh-CN"
 }
 ---
@@ -43,7 +43,7 @@ SHOW ALL PROPERTIES [LIKE key]
 
 * `user`
 
-   查看指定用户的属性。 如果未指定，请检查当前用户的。
+   查看指定用户的属性。如果未指定，请检查当前用户的。
 
 * `LIKE`
 
@@ -51,7 +51,7 @@ SHOW ALL PROPERTIES [LIKE key]
 
 * `ALL` 
 
-   查看所有用户的属性(从2.0.3版本开始支持)
+   查看所有用户的属性 (从 2.0.3 版本开始支持)
 
 返回结果说明：
 
@@ -67,11 +67,11 @@ mysql> show property like'%connection%';
 
 * `Key`
 
-  属性名.
+  属性名。
 
 * `Value`
 
-  属性值.
+  属性值。
 
 
 ```sql
@@ -87,11 +87,11 @@ mysql> show all properties like "%connection%";
 
 * `User`
 
-  用户名.
+  用户名。
 
 * `Properties`
 
-  对应用户各个property的key:value.
+  对应用户各个 property 的 key:value.
 
 ### Example
 
@@ -101,13 +101,13 @@ mysql> show all properties like "%connection%";
    SHOW PROPERTY FOR 'jack'
    ```
 
-2. 查看 jack 用户导入cluster相关属性
+2. 查看 jack 用户导入 cluster 相关属性
 
    ```sql
    SHOW PROPERTY FOR 'jack' LIKE '%load_cluster%'
    ```
 
-3. 查看所有用户导入cluster相关属性
+3. 查看所有用户导入 cluster 相关属性
 
    ```sql
    SHOW ALL PROPERTIES LIKE '%load_cluster%'

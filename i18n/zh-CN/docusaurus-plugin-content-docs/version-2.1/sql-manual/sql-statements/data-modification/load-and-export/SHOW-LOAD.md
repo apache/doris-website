@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-LOAD",
+    "title": "SHOW LOAD",
     "language": "zh-CN"
 }
 ---
@@ -50,7 +50,7 @@ SHOW LOAD
 
 说明：
 
-1) 如果不指定 db_name，使用当前默认db
+1) 如果不指定 db_name，使用当前默认 db
     
 2)  如果使用 LABEL LIKE，则会匹配导入任务的 label 包含 label_matcher 的导入任务
     
@@ -62,7 +62,7 @@ SHOW LOAD
     
 6)  如果指定了 LIMIT，则显示 limit 条匹配记录。否则全部显示
     
-7) 如果指定了 OFFSET，则从偏移量offset开始显示查询结果。默认情况下偏移量为0。
+7) 如果指定了 OFFSET，则从偏移量 offset 开始显示查询结果。默认情况下偏移量为 0。
     
 8)  如果是使用 broker/mini load，则 URL 列中的连接可以使用以下命令查看：
     
@@ -78,7 +78,7 @@ SHOW LOAD
     SHOW LOAD;
     ```
 
-2. 展示指定 db 的导入任务，label 中包含字符串 "2014_01_02"，展示最老的10个
+2. 展示指定 db 的导入任务，label 中包含字符串 "2014_01_02"，展示最老的 10 个
     
     ```sql
     SHOW LOAD FROM example_db WHERE LABEL LIKE "2014_01_02" LIMIT 10;
@@ -96,7 +96,7 @@ SHOW LOAD
     SHOW LOAD FROM example_db WHERE LABEL = "load_example_db_20140102" AND STATE = "loading" ORDER BY LoadStartTime DESC;
     ```
 
-5. 展示指定 db 的导入任务 并按 LoadStartTime 降序排序,并从偏移量5开始显示10条查询结果
+5. 展示指定 db 的导入任务 并按 LoadStartTime 降序排序，并从偏移量 5 开始显示 10 条查询结果
     
     ```sql
     SHOW LOAD FROM example_db ORDER BY LoadStartTime DESC limit 5,10;

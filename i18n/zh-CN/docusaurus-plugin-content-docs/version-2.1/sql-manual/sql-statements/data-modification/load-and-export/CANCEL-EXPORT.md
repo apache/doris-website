@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL-EXPORT",
+    "title": "CANCEL EXPORT",
     "language": "zh-CN"
 }
 ---

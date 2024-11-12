@@ -1,6 +1,6 @@
 ---
 {
-    "title": "RESUME-SYNC-JOB",
+    "title": "RESUME SYNC JOB",
     "language": "zh-CN"
 }
 ---
@@ -34,7 +34,7 @@ RESUME SYNC JOB
 
 通过 `job_name`恢复一个当前数据库已被暂停的常驻数据同步作业，作业将从上一次被暂停前最新的位置继续同步数据。
 
-语法:
+语法：
 
 ```sql
 RESUME SYNC JOB [db.]job_name

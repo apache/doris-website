@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-DELETE",
+    "title": "SHOW DELETE",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-ROUTINE-LOAD",
+    "title": "SHOW ROUTINE LOAD",
     "language": "zh-CN"
 }
 ---
@@ -67,7 +67,7 @@ ReasonOfStateChanged: 作业状态变更的原因
 
 * State
   
-        有以下5种State：
+        有以下 5 种 State：
         * NEED_SCHEDULE：作业等待被调度
         * RUNNING：作业运行中
         * PAUSED：作业被暂停
@@ -76,11 +76,11 @@ ReasonOfStateChanged: 作业状态变更的原因
     
 * Progress
   
-        对于Kafka数据源，显示每个分区当前已消费的offset。如 {"0":"2"} 表示Kafka分区0的消费进度为2。
+        对于 Kafka 数据源，显示每个分区当前已消费的 offset。如 {"0":"2"} 表示 Kafka 分区 0 的消费进度为 2。
     
 * Lag
   
-        对于Kafka数据源，显示每个分区的消费延迟。如{"0":10} 表示Kafka分区0的消费延迟为10。
+        对于 Kafka 数据源，显示每个分区的消费延迟。如{"0":10} 表示 Kafka 分区 0 的消费延迟为 10。
 
 ### Example
 

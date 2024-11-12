@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL-ALTER-TABLE",
+    "title": "CANCEL ALTER TABLE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CANCEL-ALTER-TABLE
+
 
 ### Name
 
@@ -52,9 +52,9 @@ CANCEL ALTER TABLE ROLLUP
 FROM db_name.table_name
 ```
 
-3. 根据job id批量撤销rollup操作
+3. 根据 job id 批量撤销 rollup 操作
 
-语法:
+语法：
 
 ```sql
 CANCEL ALTER TABLE ROLLUP
@@ -93,7 +93,7 @@ CANCEL ALTER TABLE ROLLUP
 FROM example_db.my_table;
 ```
 
-1. 根据job id撤销 my_table 下的 ADD ROLLUP 操作。
+1. 根据 job id 撤销 my_table 下的 ADD ROLLUP 操作。
 
    [CANCEL ALTER TABLE ROLLUP]
 

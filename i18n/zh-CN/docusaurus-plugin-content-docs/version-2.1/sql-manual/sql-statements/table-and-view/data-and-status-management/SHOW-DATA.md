@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-DATA",
+    "title": "SHOW DATA",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-DATA
+
 
 ### Name
 
@@ -56,7 +56,7 @@ SHOW DATA [FROM [db_name.]table_name] [ORDER BY ...];
 
 ### Example
 
-1. 默认展示各个db的汇总数据量，RecycleBin中的数据量
+1. 默认展示各个 db 的汇总数据量，RecycleBin 中的数据量
 
     ```
     SHOW DATA;

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN-SET-TABLE-STATUS",
+    "title": "SET TABLE STATUS",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-SET-TABLE-STATUS
+
 
 ### Name
 
@@ -32,7 +32,7 @@ ADMIN SET TABLE STATUS
 
 ### Description
 
-该语句用于设置指定表的状态，仅支持OLAP表。
+该语句用于设置指定表的状态，仅支持 OLAP 表。
 
 该命令目前仅用于手动将 OLAP 表状态设置为指定状态，从而使得某些由于表状态被阻碍的任务能够继续运行。
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "RESUME-ROUTINE-LOAD",
+    "title": "RESUME ROUTINE LOAD",
     "language": "zh-CN"
 }
 ---

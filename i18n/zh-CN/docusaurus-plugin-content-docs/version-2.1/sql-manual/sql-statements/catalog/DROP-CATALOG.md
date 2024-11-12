@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-CATALOG",
+    "title": "DROP CATALOG",
     "language": "zh-CN"
 }
 ---
@@ -23,15 +23,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
 
-## DROP-CATALOG
+
+
 
 ### Name
 
-CREATE CATALOG
+DROP CATALOG
 
 
 ### Description

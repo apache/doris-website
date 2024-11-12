@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-FUNCTION",
+    "title": "CREATE FUNCTION",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-FUNCTION
+
 
 ### Name
 
@@ -59,7 +59,7 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
 
  		如果没有上述两项，表示创建的函数是一个标量函数
 
--  `function_name`: 要创建函数的名字, 可以包含数据库的名字。比如：`db1.my_func`。
+-  `function_name`: 要创建函数的名字，可以包含数据库的名字。比如：`db1.my_func`。
 
 
 -  `arg_type`: 函数的参数类型，与建表时定义的类型一致。变长参数时可以使用`, ...`来表示，如果是变长类型，那么变长部分参数的类型与最后一个非变长参数类型一致。
@@ -79,18 +79,18 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
 
 - `properties`: 用于设定函数相关属性，能够设置的属性包括：	
 
-  - `file`: 表示的包含用户UDF的jar包，当在多机环境时，也可以使用http的方式下载jar包。这个参数是必须设定的。
+  - `file`: 表示的包含用户 UDF 的 jar 包，当在多机环境时，也可以使用 http 的方式下载 jar 包。这个参数是必须设定的。
 
-  - `symbol`: 表示的是包含UDF类的类名。这个参数是必须设定的
+  - `symbol`: 表示的是包含 UDF 类的类名。这个参数是必须设定的
 
-  - `type`: 表示的 UDF 调用类型，默认为 Native，使用 Java UDF时传 JAVA_UDF。
+  - `type`: 表示的 UDF 调用类型，默认为 Native，使用 Java UDF 时传 JAVA_UDF。
 
-  - `always_nullable`：表示的 UDF 返回结果中是否有可能出现NULL值，是可选参数，默认值为true。
+  - `always_nullable`：表示的 UDF 返回结果中是否有可能出现 NULL 值，是可选参数，默认值为 true。
 
 
 ### Example
 
-1. 创建一个自定义UDF函数
+1. 创建一个自定义 UDF 函数
 
    ```sql
    CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
@@ -102,7 +102,7 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
    ```
 
 
-2. 创建一个自定义UDAF函数
+2. 创建一个自定义 UDAF 函数
 
    ```sql
    CREATE AGGREGATE FUNCTION simple_sum(INT) RETURNS INT PROPERTIES (
