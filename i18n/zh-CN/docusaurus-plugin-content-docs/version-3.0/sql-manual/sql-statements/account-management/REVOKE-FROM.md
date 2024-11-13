@@ -1,6 +1,6 @@
 ---
 {
-    "title": "REVOKE",
+    "title": "REVOKE FROM",
     "language": "zh-CN"
 }
 ---

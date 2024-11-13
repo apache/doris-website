@@ -1,6 +1,6 @@
 ---
 {
-    "title": "REFRESH-LDAP",
+    "title": "REFRESH LDAP",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## REFRESH-LDAP
+
 
 ### Name
 

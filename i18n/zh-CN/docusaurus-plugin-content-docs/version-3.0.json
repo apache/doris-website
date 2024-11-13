@@ -243,6 +243,134 @@
     "message": "SQL 语句",
     "description": "The label for category SQL Statements in sidebar docs"
   },
+  "sidebar.docs.category.Data Modification": {
+    "message": "数据修改",
+    "description": "The label for category Data Modification in sidebar docs"
+  },
+  "sidebar.docs.category.Load and Export": {
+    "message": "导入导出",
+    "description": "The label for category Load and Export in sidebar docs"
+  },
+  "sidebar.docs.category.Backup and Restore": {
+    "message": "备份恢复",
+    "description": "The label for category Backup and Restore in sidebar docs"
+  },
+  "sidebar.docs.category.Account Management": {
+    "message": "账户、角色和权限",
+    "description": "The label for category Account Management in sidebar docs"
+  },
+  "sidebar.docs.category.Session": {
+    "message": "会话",
+    "description": "The label for category Session in sidebar docs"
+  },
+  "sidebar.docs.category.Context": {
+    "message": "上下文",
+    "description": "The label for category Context in sidebar docs"
+  },
+  "sidebar.docs.category.Variable": {
+    "message": "变量",
+    "description": "The label for category Variable in sidebar docs"
+  },
+  "sidebar.docs.category.Query": {
+    "message": "查询",
+    "description": "The label for category Session in sidebar docs"
+  },
+  "sidebar.docs.category.Connection": {
+    "message": "连接",
+    "description": "The label for category Connection in sidebar docs"
+  },
+  "sidebar.docs.category.Transaction": {
+    "message": "事务",
+    "description": "The label for category Transaction in sidebar docs"
+  },
+  "sidebar.docs.category.Data Catalog": {
+    "message": "数据目录",
+    "description": "The label for category Catalog in sidebar docs"
+  },
+  "sidebar.docs.category.Database": {
+    "message": "数据库",
+    "description": "The label for category Database in sidebar docs"
+  },
+  "sidebar.docs.category.Table and Views": {
+    "message": "表和视图",
+    "description": "The label for category Table and Views in sidebar docs"
+  },
+  "sidebar.docs.category.Table": {
+    "message": "表",
+    "description": "The label for category Table in sidebar docs"
+  },
+  "sidebar.docs.category.Index": {
+    "message": "索引",
+    "description": "The label for category Index in sidebar docs"
+  },
+  "sidebar.docs.category.View": {
+    "message": "视图",
+    "description": "The label for category View in sidebar docs"
+  },
+  "sidebar.docs.category.Materialized View": {
+    "message": "物化视图",
+    "description": "The label for category Materialized View in sidebar docs"
+  },
+  "sidebar.docs.category.Data and Status Management": {
+    "message": "表数据和状态管理",
+    "description": "The label for category Data and Status Management in sidebar docs"
+  },
+  "sidebar.docs.category.Recycle": {
+    "message": "回收站",
+    "description": "The label for category DataRecyclebase in sidebar docs"
+  },
+  "sidebar.docs.category.Function": {
+    "message": "函数",
+    "description": "The label for category Function in sidebar docs"
+  },
+  "sidebar.docs.category.Statistics": {
+    "message": "统计信息",
+    "description": "The label for category Statistics in sidebar docs"
+  },
+  "sidebar.docs.category.Cluster Management": {
+    "message": "集群管理",
+    "description": "The label for category Statistics in sidebar docs"
+  },
+  "sidebar.docs.category.Instance Management": {
+    "message": "物理实例管理",
+    "description": "The label for category Instance in sidebar docs"
+  },
+  "sidebar.docs.category.Compute Management": {
+    "message": "计算资源管理",
+    "description": "The label for category Compute in sidebar docs"
+  },
+  "sidebar.docs.category.Storage Management": {
+    "message": "存储资源管理",
+    "description": "The label for category Storage in sidebar docs"
+  },
+  "sidebar.docs.category.Security": {
+    "message": "安全",
+    "description": "The label for category Statistics in sidebar docs"
+  },
+  "sidebar.docs.category.Data Governance": {
+    "message": "数据治理",
+    "description": "The label for category Governance in sidebar docs"
+  },
+  "sidebar.docs.category.Job": {
+    "message": "后台任务",
+    "description": "The label for category Governance in sidebar docs"
+  },
+  "sidebar.docs.category.Plugin": {
+    "message": "插件",
+    "description": "The label for category Governance in sidebar docs"
+  },
+  "sidebar.docs.category.Character Set": {
+    "message": "字符集",
+    "description": "The label for category Governance in sidebar docs"
+  },
+  "sidebar.docs.category.Types": {
+    "message": "类型",
+    "description": "The label for category Governance in sidebar docs"
+  },
+  "sidebar.docs.category.Info System and Help": {
+    "message": "系统信息和帮助",
+    "description": "The label for category Governance in sidebar docs"
+  },
   "sidebar.docs.category.SQL Types": {
     "message": "SQL 类型",
     "description": "The label for category Data Types in sidebar docs"
@@ -343,10 +471,6 @@
     "message": "分析（窗口）函数",
     "description": "The label for category Analytic(Window) Functions in sidebar docs"
   },
-  "sidebar.docs.category.Account Management": {
-    "message": "账户管理",
-    "description": "The label for category Account Management in sidebar docs"
-  },
   "sidebar.docs.category.Cluster management": {
     "message": "集群管理",
     "description": "The label for category Cluster management in sidebar docs"
@@ -358,10 +482,6 @@
   "sidebar.docs.category.Alter": {
     "message": "Alter",
     "description": "The label for category Alter in sidebar docs"
-  },
-  "sidebar.docs.category.Backup and Restore": {
-    "message": "备份及恢复",
-    "description": "The label for category Backup and Restore in sidebar docs"
   },
   "sidebar.docs.category.Create": {
     "message": "Create",

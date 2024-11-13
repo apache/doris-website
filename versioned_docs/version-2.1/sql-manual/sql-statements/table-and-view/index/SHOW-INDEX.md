@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER VIEW",
+    "title": "SHOW-INDEX",
     "language": "en"
 }
 ---
@@ -24,50 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-VIEW
+## SHOW-INDEX
 
 ### Name
 
-ALTER VIEW
+SHOW INDEX
 
 ### Description
 
-This statement is used to modify the definition of a view
+  This statement is used to display information about indexes in a table.
 
 grammar:
 
-```sql
-ALTER VIEW
-[db_name.]view_name
-(column1[ COMMENT "col comment"][, column2, ...])
-AS query_stmt
+```SQL
+SHOW INDEX[ES] FROM [db_name.]table_name [FROM database];
+or
+SHOW KEY[S] FROM [db_name.]table_name [FROM database];
 ```
-
-illustrate:
-
-- Views are all logical, and the data in them will not be stored on physical media. When querying, the view will be used as a subquery in the statement. Therefore, modifying the definition of the view is equivalent to modifying query_stmt.
-- query_stmt is any supported SQL
 
 ### Example
 
-1. Modify the view example_view on example_db
+  1. Display the lower index of the specified table_name
 
-```sql
-ALTER VIEW example_db.example_view
-(
-c1 COMMENT "column 1",
-c2 COMMENT "column 2",
-c3 COMMENT "column 3"
-)
-AS SELECT k1, k2, SUM(v1) FROM example_table
-GROUP BY k1, k2
-```
+     ```SQL
+      SHOW INDEX FROM example_db.table_name;
+     ```
 
 ### Keywords
 
-```text
-ALTER, VIEW
-```
+    SHOW, INDEX
 
 ### Best Practice
 
