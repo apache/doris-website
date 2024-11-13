@@ -66,7 +66,7 @@ $ kubectl delete pod ${pod_name} --namespace ${namespace}
 
 - FE needs to modify the `query_port=9030` configuration with the default path: `/opt/apache-doris/fe/conf/fe.conf`.
 - BE needs to modify the `heartbeat_service_port=9050` configuration with the default path: `/opt/apache-doris/be/conf/be.conf`.  
-  :::
+:::
 
 ## Upgrading doris cluster
 
