@@ -28,7 +28,7 @@ under the License.
 
 The [DataX](https://github.com/alibaba/DataX) Doriswriter plugin supports synchronizing data from various data sources, such as MySQL, Oracle, and SQL Server, into Doris using the Stream Load method.
 
-:::Note
+:::info Note
 This plugin needs to be used together with the DataX service.
 DataX supports multiple data sources. For more details, see here.
 :::
