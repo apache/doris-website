@@ -98,7 +98,7 @@ spec:
 
 :::tip Tip
 - FE 和 BE 所需要的最小资源为 4c 8Gi ，此为最小启动配置，如果需要进行正常能力测试为 8c 8Gi。  
-  :::
+:::
 
 ## 定制化启动配置
 Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。默认情况下，服务使用 image 里默认配置作为启动参数配置。请预先按照[FE 配置文档](../../../../admin-manual/config/fe-config.md)和 [BE 配置文档](../../../../admin-manual/config/be-config.md)介绍，将定制好启动参数配置到特定的 `ConfigMap` 中。配置好后，将定制的 ConfigMap 部署到需要[部署 `DorisCluster` 资源](install-quickstart.md#第-3-步部署-doris-集群)的 namespace 中。
@@ -690,7 +690,7 @@ func main() {
 
 :::tip 提示
 - 部署后请设置 root 的密码，Doris Operator 会转为使用自动新建的用户名和密码管理节点，请避免删除自动化创建的用户。  
-  :::
+:::
 
 ### 集群部署后设置 root 用户密码
 
@@ -759,5 +759,5 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 
 :::tip 提示
 - 部署后设置 root 密码，并配置新的拥有管理节点的用户名和密码后，会引起存量服务滚动重启一次。    
-  :::
+:::
 

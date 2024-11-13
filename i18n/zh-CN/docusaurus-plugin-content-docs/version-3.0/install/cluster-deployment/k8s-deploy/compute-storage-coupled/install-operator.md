@@ -37,7 +37,7 @@ kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master
 如果没有外网，先将 CRD 文件下载到本地：
 
 ```shell
-wget https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+wget https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
 kubectl create -f ./doris.selectdb.com_dorisclusters.yaml
 ```
 
