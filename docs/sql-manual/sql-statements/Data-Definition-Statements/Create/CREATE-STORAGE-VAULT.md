@@ -48,13 +48,14 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 
 | param           | is required | desc                                                                                                                                                                                                               |
 |:----------------|:------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `s3.endpoint`   | required    | The endpoint used for object storage. <br/>**Notice**, please don't provide the endpoint with any `http://` or `https://`. And for Azure Blob Storage, the endpoint should be like `${ak}.blob.core.windows.net/`. |
-| `s3.region`     | required    | The region of your bucket.(Not required when you'r using GCP or AZURE).                                                                                                                               |
-| `s3.root.path`  | required    | The path where the data would be stored.                                                                                                                                |
-| `s3.bucket`     | required    | The bucket of your object storage account. (StorageAccount if you're using Azure).                                                                                                                                |
-| `s3.access_key` | required    | The access key of your object storage account. (AccountName if you're using Azure).                                                                                                                                |
-| `s3.secret_key` | required    | The secret key of your object storage account. (AccountKey if you're using Azure).                                                                                                                                |
-| `provider`      | required    | The cloud vendor which provides the object storage service. The supported values include `COS`, `OSS`, `S3`, `OBS`, `BOS`, `AZURE`, `GCP`                                                                                                                                |
+| `s3.endpoint`    | required    | The endpoint used for object storage. <br/>**Notice**, please don't provide the endpoint with any `http://` or `https://`. And for Azure Blob Storage, the endpoint should be like `${ak}.blob.core.windows.net/`. |
+| `s3.region`      | required    | The region of your bucket.(Not required when you'r using GCP or AZURE).                                                                                                                               |
+| `s3.root.path`   | required    | The path where the data would be stored.                                                                                                                                |
+| `s3.bucket`      | required    | The bucket of your object storage account. (StorageAccount if you're using Azure).                                                                                                                                |
+| `s3.access_key`  | required    | The access key of your object storage account. (AccountName if you're using Azure).                                                                                                                                |
+| `s3.secret_key`  | required    | The secret key of your object storage account. (AccountKey if you're using Azure).                                                                                                                                |
+| `provider`       | required    | The cloud vendor which provides the object storage service. The supported values include `COS`, `OSS`, `S3`, `OBS`, `BOS`, `AZURE`, `GCP`                                                                                                                                |
+| `use_path_style` | optional    | Indicate using `path-style` URL or `virtual-hosted-style URL`, default `false` (`virtual-hosted-style`)                                                                                                               |
 
 ##### HDFS Vault
 

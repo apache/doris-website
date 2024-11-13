@@ -119,13 +119,42 @@ PROPERTIES (
 
 用于更新 Storage Vault 配置的可修改属性。
 
-Coming soon
+S3 Storage Vault 允许修改的属性:
+- `VAULT_NAME`
+- `s3.access_key`
+- `s3.secret_key`
+- `use_path_style`
+
+HDFS Storage Vault 禁止修改的属性:
+- `path_prefix`
+- `fs.defaultFS`
+
+更多属性说明见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
+
+**示例**
+
+```sql
+ALTER STORAGE VAULT old_s3_vault
+PROPERTIES (
+    "type" = "S3",
+    "VAULT_NAME" = "new_s3_vault",
+    "s3.access_key" = "new_ak"
+    "s3.secret_key" = "new_sk"
+);
+```
+
+```sql
+ALTER STORAGE VAULT old_hdfs_vault
+PROPERTIES (
+    "type" = "hdfs",
+    "VAULT_NAME" = "new_hdfs_vault",
+    "hadoop.username" = "hdfs"
+);
+```
 
 ## 删除 Storage Vault 
 
-只有非默认 Storage Vault 且没有被任何表引用的 Storage Vault 才可被删除。
-
-Coming soon
+暂不支持
 
 ##  Storage Vault 权限
 
