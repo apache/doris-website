@@ -289,7 +289,7 @@ spec:
 上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
 
 :::tip 提示  
-如果在[定制化配置文件中](#fe-使用定制化启动配置)，重新设置了 [`meta_dir`](../../../admin-manual/config/fe-config.md#meta_dir) 或者 [`sys_log_dir`](../../../admin-manual/config/fe-config.md#sys_log_dir) 请重新设置 `mountPath` 。
+如果在[定制化配置文件中](#fe-定制化启动配置)，重新设置了 [`meta_dir`](../../../admin-manual/config/fe-config.md#meta_dir) 或者 [`sys_log_dir`](../../../admin-manual/config/fe-config.md#sys_log_dir) 请重新设置 `mountPath` 。
 :::
 
 ### BE 配置持久化存储
@@ -602,7 +602,7 @@ func main() {
 	fmt.Println("*"+tes)
 }
 ```
-将加密后的密码按照配置文件格式要求配置到 `fe.conf` 中， 根据[集群参数配置章节](#fe-使用定制化启动配置)的介绍将配置文件以 configmap 的形式下发到 K8s 集中。
+将加密后的密码按照配置文件格式要求配置到 `fe.conf` 中， 根据[集群参数配置章节](#fe-定制化启动配置)的介绍将配置文件以 configmap 的形式下发到 K8s 集中。
 
 **2. 构建 DorisCluster 资源**
 

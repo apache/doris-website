@@ -100,11 +100,11 @@ Update the configuration to the [DorisCluster resource](install-quickstart.md#st
 The minimum resources required for FE and BE are 4c and 8Gi. This is the minimum required for startup. The normal testing needed resources are 8c and 8Gi.  
 :::
 
-## Customized startup configuration
+## Custom startup configuration
 Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations.Customized the startup parameters into a specific ConfigMap according to the introductions in the [FE Configuration Document](../../../admin-manual/config/fe-config.md) and the [BE Configuration Document](../../../admin-manual/config/be-config.md),
 and deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) needs to be deployed.
 
-### Customized FE startup configuration
+### Custom FE startup configuration
 1. Deploying ConfigMap
    The following defines a ConfigMap named fe-conf that can be used by Doris FE:
 ```yaml
@@ -157,7 +157,7 @@ spec:
       resolveKey: fe.conf
 ```
 
-### Customized BE startup configuration
+### Custom BE startup configuration
 1. Deploying ConfigMap  
    The following defines a ConfigMap named `be-conf` that can be used by Doris BE:
 ```yaml

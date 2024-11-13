@@ -1,6 +1,6 @@
 ---
 {
-      "title": "cluster operation",
+      "title": "Cluster Operation",
       "language": "en"
 }
 ---

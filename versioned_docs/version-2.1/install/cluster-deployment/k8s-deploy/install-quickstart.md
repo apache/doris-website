@@ -1,7 +1,7 @@
 ---
 {
-"title": "Quick Start",
-"language": "en"
+   "title": "Quick Start",
+   "language": "en"
 }
 ---
 
@@ -138,7 +138,7 @@ For Doris Operator related configuration and other deployment methods, please re
 
 ## Step 4: Connect and access the Doris cluster
 
-The Doris cluster is quickly deployed in the test environment. You can enter the container FE and use the MySQL Client to connect to Doris for test operations. For other access methods, refer to [Accessing Doris Cluster](./install-access-cluster.md) for configuration.
+The Doris cluster is quickly deployed in the test environment. You can enter the container FE and use the MySQL Client to connect to Doris for test operations. For other access methods, refer to [Accessing Doris Cluster](./install-config-cluster.md#access-configuration) for configuration.
 1. Get the FE container name:
    ```
    kubectl get pod -n doris | grep fe

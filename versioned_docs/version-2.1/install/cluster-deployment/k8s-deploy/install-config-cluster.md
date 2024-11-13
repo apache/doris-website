@@ -100,11 +100,11 @@ Update the configuration to the [DorisCluster resource](install-quickstart.md#st
 The minimum resources required for FE and BE are 4c and 8Gi. This is the minimum required for startup. The normal testing needed resources are 8c and 8Gi.  
 :::
 
-## Customized startup configuration
+## Custom startup configuration
 Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations.Customized the startup parameters into a specific ConfigMap according to the introductions in the [FE Configuration Document](../../../admin-manual/config/fe-config.md) and the [BE Configuration Document](../../../admin-manual/config/be-config.md), 
 and deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) needs to be deployed.  
 
-### Customized FE startup configuration
+### Custom FE startup configuration
 1. Deploying ConfigMap
 The following defines a ConfigMap named fe-conf that can be used by Doris FE:
 ```yaml
@@ -157,7 +157,7 @@ spec:
       resolveKey: fe.conf
 ```
 
-### Customized BE startup configuration
+### Custom BE startup configuration
 1. Deploying ConfigMap  
 The following defines a ConfigMap named `be-conf` that can be used by Doris BE:
 ```yaml
@@ -311,7 +311,7 @@ In the deployment of Doris on K8s, it is recommended to persist the `/opt/apache
     ```
   In the above configuration, ${your_storageclass} represents the name of the StorageClass you want to use, and ${storageSize} represents the storage size you want to use. The format of ${storageSize} follows the [quantity expression method](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/) of K8s, such as: 100Gi. Please replace them as needed when using.
 
-- **Customized storage paths for BE**
+- **Custom storage paths for BE**
 
     Doris provides the ability to configure multiple storage directories to fully utilize the advantages of multiple disks. If multiple storage directories are specified through `storage_root_path` in the customized configuration, the deployed DorisCluster should add multiple templates . For example, if `storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD`, you need to add the following configuration to the deployment resource:
     ```yaml
