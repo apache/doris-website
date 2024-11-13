@@ -26,7 +26,7 @@ under the License.
 
 
 
-## SHOW-CREATE-CATALOG
+
 
 ### Name
 
