@@ -30,9 +30,13 @@ Routine Load is a streaming load job that supports Exactly-Once semantics, ensur
 
 ## Usage Scenarios
 
+### Supported Data Sources
+
+Routine Load supports consuming data from Kafka clusters.
+
 ### Supported Data File Formats
 
-Routine Load supports consuming data in CSV and JSON formats from Kafka.
+Routine Load supports consuming data in CSV and JSON formats.
 
 When loading CSV format, it is necessary to clearly distinguish between null values and empty strings:
 
@@ -44,35 +48,33 @@ When loading CSV format, it is necessary to clearly distinguish between null val
 
 When using Routine Load to consume data from Kafka, there are the following limitations:
 
-- It supports unauthenticated Kafka access as well as Kafka clusters authenticated through SSL.
-
 - The supported message formats are CSV and JSON text formats. Each message in CSV should be on a separate line, and the line should not end with a newline character.
 
 - By default, it supports Kafka versions 0.10.0.0 and above. If you need to use a Kafka version below 0.10.0.0 (such as 0.9.0, 0.8.2, 0.8.1, 0.8.0), you need to modify the BE configuration by setting the value of `kafka_broker_version_fallback` to the compatible older version, or directly set the value of `property.broker.version.fallback` when creating the Routine Load. However, using an older version may mean that some new features of Routine Load, such as setting the offset of Kafka partitions based on time, may not be available.
 
 ## Basic Principles
 
-Routine Load continuously consumes data from Kafka Topic and writes it into Doris.
+Routine Load continuously consumes data from Kafka Topics and writes it into Doris.
 
-When a Routine Load job is created in Doris, it generates a persistent load job and several load tasks:
+When a Routine Load job is created in Doris, it generates a resident import job that consists of several import tasks:
 
-- Load Job: Each routine load corresponds to a load job. The load job is a persistent task that continuously consumes data from the Kafka Topic.
+- Load Job: A Routine Load Job is a resident import job that continuously consumes data from the data source.
 
-- Load Task: A load job is divided into several load tasks, which are loaded as independent basic units using the Stream Load method into BE.
+- Load Task: An import job is broken down into several import tasks for actual consumption, with each task being an independent transaction.
 
-The specific process of Routine Load is illustrated in the following diagram:
+The specific import process of Routine Load is shown in the following diagram:
 
 ![Routine Load](/images/routine-load.png)
 
-1. The Client submits a Routine Load job to the FE to establish a persistent Routine Load Job.
+1. The Client submits a request to create a Routine Load job to the FE, and the FE generates a resident import job (Routine Load Job) through the Routine Load Manager.
 
-2. The FE splits the Routine Load Job into multiple Routine Load Tasks through the Job Scheduler.
+2. The FE splits the Routine Load Job into several Routine Load Tasks through the Job Scheduler, which are then scheduled by the Task Scheduler and distributed to BE nodes.
 
-3. On the BE, each Routine Load Task is treated as a Stream Load task for importation and reports back to the FE upon completion.
+3. On the BE, after a Routine Load Task is completed, it submits the transaction to the FE and updates the Job's metadata.
 
-4. The Job Scheduler in the FE generates new Tasks based on the report results or retries failed Tasks.
+4. After a Routine Load Task is submitted, it continues to generate new Tasks or retries timed-out Tasks.
 
-5. The Routine Load Job continuously generates new Tasks to complete uninterrupted data importation.
+5. The newly generated Routine Load Tasks continue to be scheduled by the Task Scheduler in a continuous cycle.
 
 ## Quick Start
 
@@ -433,33 +435,16 @@ Here are the available parameters for the job_properties clause:
 | max_error_number            | The maximum number of error rows allowed within a sampling window. Must be greater than or equal to 0. The default value is 0, which means no error rows are allowed. The sampling window is `max_batch_rows * 10`. If the number of error rows within the sampling window exceeds `max_error_number`, the regular job will be paused and manual intervention is required to check for data quality issues using the [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) command and `ErrorLogUrls`. Rows filtered out by the WHERE condition are not counted as error rows. |
 | strict_mode                 | Whether to enable strict mode. The default value is disabled. Strict mode applies strict filtering to type conversions during the load process. If enabled, non-null original data that results in a NULL after type conversion will be filtered out. The filtering rules in strict mode are as follows:<ul><li>Derived columns (generated by functions) are not affected by strict mode.</li><li>If a column's type needs to be converted, any data with an incorrect data type will be filtered out. You can check the filtered columns due to data type errors in the `ErrorLogUrls` of [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD).</li><li>For columns with range restrictions, if the original data can be successfully converted but falls outside the declared range, strict mode does not affect it. For example, if the type is decimal(1,0) and the original data is 10, it can be converted but is not within the range declared for the column. Strict mode does not affect this type of data. For more details, see [Strict Mode](../../../data-operate/import/error-data-handling#maximum-error-rate).</li></ul> |
 | timezone                    | Specifies the time zone used by the load job. The default is to use the session's timezone parameter. This parameter affects the results of all timezone-related functions involved in the load. |
-| format                      | Specifies the data format for the load. The default is csv, and JSON format is supported. |
+| format                      | Specifies the data format for the load. The default is CSV, and JSON format is supported. |
 | jsonpaths                   | When the data format is JSON, jsonpaths can be used to specify the JSON paths to extract data from nested structures. It is a JSON array of strings, where each string represents a JSON path. |
-| delimiter                   | Specifies the delimiter used in CSV files. The default delimiter is a comma (,). |
-| escape                      | Specifies the escape character used in CSV files. The default escape character is a backslash (\). |
-| quote                       | Specifies the quote character used in CSV files. The default quote character is a double quotation mark ("). |
-| null_format                 | Specifies the string representation of NULL values in the load data. The default is an empty string. |
-| skip_header_lines           | Specifies the number of lines to skip at the beginning of the load data file. The default is 0, which means no lines are skipped. |
-| skip_footer_lines           | Specifies the number of lines to skip at the end of the load data file. The default is 0, which means no lines are skipped. |
-| query_parallelism           | Specifies the number of parallel threads used by each subtask to execute SQL statements. The default is 1. |
-| query_timeout               | Specifies the timeout for SQL statement execution. The default is 3600 seconds (1 hour). |
-| query_band                  | Specifies the query band string to be set for each subtask.  |
-| memory_quota_per_query      | Specifies the memory quota for each subtask, in bytes. The default is -1, which means to use the system default. |
-| error_table_name            | Specifies the name of the error table where error rows are stored. The default is null, which means no error table is generated. |
-| error_table_database        | Specifies the database where the error table is located. The default is null, which means the error table is located in the current database. |
-| error_table_schema          | Specifies the schema where the error table is located. The default is null, which means the error table is located in the public schema. |
-| error_table_logging_policy  | Specifies the logging policy for the error table. The default is null, which means to use the system default. |
-| error_table_reuse_policy    | Specifies the reuse policy for the error table. The default is null, which means to use the system default. |
-| error_table_creation_time   | Specifies the creation time for the error table. The default is null, which means to use the current time. |
-| error_table_cleanup_time    | Specifies the cleanup time for the error table. The default is null, which means not set a cleanup time. |
-| error_table_log             | Specifies whether to enable logging for the error table. The default is null, which means to use the system default. |
-| error_table_backup_time     | Specifies the backup time for the error table. The default is null, which means not set a backup time. |
-| error_table_backup_path     | Specifies the backup path for the error table. The default is null, which means not set a backup path. |
-| error_table_lifetime        | Specifies the lifetime of the error table. The default is null, which means to use the system default. |
-| error_table_backup_lifetime | Specifies the backup lifetime for the error table. The default is null, which means to use the system default. |
-| error_table_label           | Specifies the label for the error table. The default is null, which means not set a label. |
-| error_table_priority        | Specifies the priority for the error table. The default is null, which means to use the system default. |
-| error_table_comment         | Specifies the comment for the error table. The default is null, which means to not set a comment. |
+| json_root                 | When importing JSON format data, you can specify the root node of the JSON data through json_root. Doris will extract and parse elements from the root node. Default is empty. For example, specify the JSON root node with: `"json_root" = "$.RECORDS"` |
+| strip_outer_array         | When importing JSON format data, if strip_outer_array is true, it indicates that the JSON data is presented as an array, and each element in the data will be treated as a row. Default value is false. Typically, JSON data in Kafka might be represented as an array with square brackets `[]` in the outermost layer. In this case, you can specify `"strip_outer_array" = "true"` to consume Topic data in array mode. For example, the following data will be parsed into two rows: `[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
+| send_batch_parallelism    | Used to set the parallelism of sending batch data. If the parallelism value exceeds the `max_send_batch_parallelism_per_job` in BE configuration, the coordinating BE will use the value of `max_send_batch_parallelism_per_job`. |
+| load_to_single_tablet     | Supports importing data to only one tablet in the corresponding partition per task. Default value is false. This parameter can only be set when importing data to OLAP tables with random bucketing. |
+| partial_columns           | Specifies whether to enable partial column update feature. Default value is false. This parameter can only be set when the table model is Unique and uses Merge on Write. Multi-table streaming does not support this parameter. For details, refer to [Partial Column Update](../../../data-operate/update/update-of-unique-model) |
+| max_filter_ratio          | The maximum allowed filter ratio within the sampling window. Must be between 0 and 1 inclusive. Default value is 1.0, indicating any error rows can be tolerated. The sampling window is `max_batch_rows * 10`. If the ratio of error rows to total rows within the sampling window exceeds `max_filter_ratio`, the routine job will be suspended and require manual intervention to check data quality issues. Rows filtered by WHERE conditions are not counted as error rows. |
+| enclose                   | Specifies the enclosing character. When CSV data fields contain line or column separators, a single-byte character can be specified as an enclosing character for protection to prevent accidental truncation. For example, if the column separator is "," and the enclosing character is "'", the data "a,'b,c'" will have "b,c" parsed as one field. |
+| escape                    | Specifies the escape character. Used to escape characters in fields that are identical to the enclosing character. For example, if the data is "a,'b,'c'", the enclosing character is "'", and you want "b,'c" to be parsed as one field, you need to specify a single-byte escape character, such as "\", and modify the data to "a,'b,\'c'". |
 
 These parameters can be used to customize the behavior of a Routine Load job according to your specific requirements.
 
@@ -548,9 +533,7 @@ The columns in the result set provide the following information:
 
 ## Load example
 
-### Loading CSV Format
-
-**Setting the Maximum Error Tolerance**
+### Setting the Maximum Error Tolerance
 
 1. Load sample data:
 
@@ -604,7 +587,7 @@ The columns in the result set provide the following information:
     2 rows in set (0.01 sec)
     ```
 
-**Consuming Data from a Specified Offset**
+### Consuming Data from a Specified Offset
 
 1. Load sample data:
 
@@ -657,7 +640,7 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Specifying the Consumer Group's group.id and client.id**
+### Specifying the Consumer Group's group.id and client.id
 
 1. Load sample data:
 
@@ -708,7 +691,7 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Setting load filtering conditions**
+### Setting load filtering conditions
 
 1. Load sample data:
 
@@ -761,7 +744,7 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Loading specified partition data**
+### Loading specified partition data
 
 1. Load sample data:
 
@@ -814,7 +797,7 @@ The columns in the result set provide the following information:
     1 rows in set (0.01 sec)
     ```
 
-**Setting Time Zone for load**
+### Setting Time Zone for load
 
 1. Load sample data:
 
@@ -867,6 +850,8 @@ The columns in the result set provide the following information:
     +------+-------------+------+---------------------+
     3 rows in set (0.00 sec)
     ```
+
+### Setting merge_type
 
 **Specify merge_type for delete operation**
 
@@ -1089,7 +1074,7 @@ The columns in the result set provide the following information:
     5 rows in set (0.00 sec)
     ```
 
-**Load with column mapping and derived column calculation**
+### Load with column mapping and derived column calculation
 
 1. Load sample data:
 
@@ -1140,7 +1125,7 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Load with enclosed data**
+### Load with enclosed data
 
 1. Load sample data:
 
