@@ -158,6 +158,10 @@ spec:
       resolveKey: fe.conf
 ```
 
+:::tip Tip  
+K8s 部署中请将 `enable_fqdn_mode=true` 加入启动配置中。如果想用 IP 模式，且 K8s 集群能够保证 pod 重启后 IP 不发生变化，请参照这个 [issue](https://github.com/apache/doris-operator/issues/138) 进行配置 IP 模式启动。
+:::
+
 ### BE 定制化启动配置
 1. 部署 configmap  
    以下定义了名为 `be-conf` ，Doris BE 可使用的 ConfigMap ：

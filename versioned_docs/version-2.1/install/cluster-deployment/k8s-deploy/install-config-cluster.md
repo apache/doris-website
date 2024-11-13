@@ -157,6 +157,10 @@ spec:
       resolveKey: fe.conf
 ```
 
+:::tip Tip
+Please add `enable_fqdn_mode=true` in start config. If you want to use ip mode and K8s have the ability that the pod IP keep the same after restarted, please refer to the [issue](https://github.com/apache/doris-operator/issues/138) to config.
+:::
+
 ### Custom BE startup configuration
 1. Deploying ConfigMap  
 The following defines a ConfigMap named `be-conf` that can be used by Doris BE:
@@ -286,8 +290,8 @@ spec:
 ```
 In the above configuration, ${your_storageclass} represents the name of the StorageClass you want to use, and ${storageSize} represents the storage size you want to allocation. The format of ${storageSize} follows the [quantity expression](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/) method of K8s, such as: 100Gi. Please replace them as needed when using.
 
-:::tip Tip  
-If you have reconfigured meta_dir or sys_log_dir in the [customized configuration file](#customized-fe-startup-configuration), please reconfigure the mountPath.
+:::tip Tip
+- If you have reconfigured meta_dir or sys_log_dir in the [customized configuration file](#customized-fe-startup-configuration), please reconfigure the mountPath.
 :::
 
 ### Persistent storage for BE

@@ -157,6 +157,10 @@ spec:
       resolveKey: fe.conf
 ```
 
+:::tip Tip
+Please add `enable_fqdn_mode=true` in start config. If you want to use ip mode and K8s have the ability that the pod IP keep the same after restarted, please refer to the [issue](https://github.com/apache/doris-operator/issues/138) to config.
+:::
+
 ### Custom BE startup configuration
 1. Deploying ConfigMap  
    The following defines a ConfigMap named `be-conf` that can be used by Doris BE:
