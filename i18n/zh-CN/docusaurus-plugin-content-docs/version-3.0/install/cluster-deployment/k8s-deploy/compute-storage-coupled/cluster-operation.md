@@ -62,7 +62,7 @@ $ kubectl delete pod ${pod_name} --namespace ${namespace}
 **进入 pod 内部后，需要修改配置文件的端口信息，才能手动启动 相应的 Doris 组件**
 - FE 需要修改默认路径为：`/opt/apache-doris/fe/conf/fe.conf` 的 `query_port=9030` 配置。
 - BE 需要修改默认路径为：`/opt/apache-doris/be/conf/be.conf` 的 `heartbeat_service_port=9050` 配置。  
-  :::
+:::
 
 ## 服务扩缩容
 Doris 在 K8S 之上的扩缩容可通过修改 DorisCluster 资源对应组件的 replicas 字段来实现。修改可直接编辑对应的资源，也可通过命令的方式。
