@@ -243,7 +243,7 @@ spec:
 ## Persistent storage
 Kubernetes provides the [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) to persist data to physical storage. In Kubernetes, the Doris Operator automatically creates corresponding PersistentVolumeClaims associated with appropriate PersistentVolumes using the template that defined in the need deployed [DorisCluster Resource](install-quickstart.md#step-3-deploy-doris-cluster).
 
-### Configuring persistent storage for FE
+### Persistent storage for FE
 In the deployment of Doris on K8s, it is recommended to persist the `/opt/apache-doris/fe/doris-meta` mount point by default. This is the default storage path for FE metadata. When Doris is deployed on K8s, logs are output to the console by default. If the cluster has the ability to collect logs, they can be directly collected through the console. If the cluster lacks a log collection system, it is recommended to persist the log path, default value is `/opt/apache-doris/fe/log`.
 
 #### Persistent metadata
@@ -290,11 +290,11 @@ In the above configuration, ${your_storageclass} represents the name of the Stor
 If you have reconfigured meta_dir or sys_log_dir in the [customized configuration file](#customized-fe-startup-configuration), please reconfigure the mountPath.
 :::
 
-### Configuring Persistent Storage for BE
+### Persistent storage for BE
 In the deployment of Doris on K8s, it is recommended to persist the `/opt/apache-doris/be/storage` mount point by default. This is the default storage path for storing actual data on BE nodes. When Doris is deployed on K8s, logs are output to the console by default. If the cluster has the ability to collect logs, they can be directly collected through the console. If the cluster lacks a log collection system, it is recommended to persist the log path, default value is `/opt/apache-doris/be/log`.
 
 #### Persistent data
-- **using default storage path**  
+- **Using default storage path**  
   If BE uses the default configuration, please update the following configuration information to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) to be deployed:
     ```yaml
     beSpec:
