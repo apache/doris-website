@@ -26,7 +26,7 @@ under the License.
 
 The Storage Vault is a remote shared storage used by Doris in a decoupled storage-compute model. You can configure one or more Storage Vaults to store different tables in different Storage Vaults.
 
-## Create an Storage Vault
+## Create a Storage Vault
 
 **Syntax**
 
