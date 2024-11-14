@@ -640,6 +640,8 @@ Different Broker types and access methods require different authentication infor
 
 ## Related Configurations
 
+### fe.conf
+
 The following configurations belong to the system-level settings for Broker load, which affect all Broker load import tasks. These configurations can be adjusted by modifying the `fe.conf `file.
 
 **min_bytes_per_broker_scanner**
@@ -668,6 +670,25 @@ Typically, the maximum supported data volume for an import job is `max_bytes_per
 Import Concurrency = Math.min(Source File Size / min_bytes_per_broker_scanner, max_broker_concurrency, Current Number of BE Nodes * load_parallelism)
 Processing Volume per BE for this Import = Source File Size / Import Concurrency
 ```
+
+**default_load_parallelism**
+
+- Default: 8.
+
+- Limits the maximum parallel instances on each backend.
+
+- The minimum processed data volume, maximum concurrency, size of the source file, and the current number of BE nodes jointly determine the concurrency of this import.
+
+```Plain
+Import Concurrency = Math.min(Source File Size / min_bytes_per_broker_scanner, max_broker_concurrency, Current Number of BE Nodes * load_parallelism)
+Processing Volume per BE for this Import = Source File Size / Import Concurrency
+```
+
+**broker_load_default_timeout_second**
+
+- Default: 14400.
+
+- The default broker load timeout in seconds.
 
 ## Common Issues
 

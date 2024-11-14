@@ -664,6 +664,8 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 ## 相关配置
 
+### fe.conf
+
 下面几个配置属于 Broker load 的系统级别配置，也就是作用于所有 Broker load 导入任务的配置。主要通过修改 `fe.conf`来调整配置值。
 
 **min_bytes_per_broker_scanner**
@@ -692,6 +694,47 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
 本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
 ```
+
+**default_load_parallelism**
+
+- 默认 8。
+
+- 每个 BE 节点最大并发 instance 数
+
+- 最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数共同决定了本次导入的并发数。
+
+```Plain
+本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
+本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
+```
+
+**broker_load_default_timeout_second**
+
+- 默认值 14400.
+
+- Broker Load 导入的超时时间，单位：秒。
+
+### session variables
+
+**exec_mem_limit**
+
+- 默认值 2147483648。
+
+- 导入内存限制，单位：字节。
+
+**time_zone**
+
+- 默认值 "Asia/Shanghai"。
+
+- 默认时区，会影响导入中时区相关的函数结果。
+
+**send_batch_parallelism**
+
+- 默认值 1
+
+- sink 节点发送数据的并发度，仅在关闭前移时生效。
+
+Session variable `enable_memtable_on_sink_node` 为 true 时开启前移，为 false 时关闭前移。
 
 ## 常见问题
 
