@@ -36,8 +36,6 @@ The table function generates a temporary partition TABLE, which allows you to vi
 
 This function is used in the from clause.
 
-This function is supported since 2.1.5
-
 #### Syntax
 
 `partitions("catalog"="","database"="","table"="")`

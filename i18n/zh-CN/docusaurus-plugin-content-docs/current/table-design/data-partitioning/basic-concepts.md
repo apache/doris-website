@@ -24,9 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 本文档主要介绍 Doris 的建表和数据划分，以及建表操作中可能遇到的问题和解决方法。
-
 
 ## Row & Column
 
@@ -115,7 +116,172 @@ PROPERTIES
 
 ENGINE 的类型是 OLAP，即默认的 ENGINE 类型。在 Doris 中，只有这个 ENGINE 类型是由 Doris 负责数据管理和存储的。其他 ENGINE 类型，如 MySQL、 Broker、ES 等等，本质上只是对外部其他数据库或系统中的表的映射，以保证 Doris 可以读取这些数据。而 Doris 本身并不创建、管理和存储任何非 OLAP ENGINE 类型的表和数据。
 
-`IF NOT EXISTS`表示如果没有创建过该表，则创建。注意这里只判断表名是否存在，而不会判断新建表 Schema 是否与已存在的表 Schema 相同。所以如果存在一个同名但不同 Schema 的表，该命令也会返回成功，但并不代表已经创建了新的表和新的 Schema。。
+`IF NOT EXISTS`表示如果没有创建过该表，则创建。注意这里只判断表名是否存在，而不会判断新建表 Schema 是否与已存在的表 Schema 相同。所以如果存在一个同名但不同 Schema 的表，该命令也会返回成功，但并不代表已经创建了新的表和新的 Schema。
+
+### 高级特性与示例
+
+Doris 支持包括动态分区、自动分区、自动分桶在内的高级数据划分方式，它们能够更灵活地实现数据管理。以下举例实现：
+
+<Tabs>
+<TabItem value="自动分区" label="自动分区" default>
+<p>
+
+[自动分区](./auto-partitioning) 支持根据用户定义的规则在数据导入时自动创建对应分区，更为便捷。将上例用自动 Range 分区改写如下：
+
+```sql
+CREATE TABLE IF NOT EXISTS example_range_tbl
+(
+    `user_id` LARGEINT NOT NULL COMMENT "用户id",
+    `date` DATE NOT NULL COMMENT "数据灌入日期时间",
+    `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
+    `city` VARCHAR(20) COMMENT "用户所在城市",
+    `age` SMALLINT COMMENT "用户年龄",
+    `sex` TINYINT COMMENT "用户性别",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
+    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
+)
+ENGINE=OLAP
+AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
+AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- 使用月作为分区粒度
+()
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
+PROPERTIES
+(
+    "replication_num" = "1"
+);
+```
+
+如上建表，当数据导入时，Doris 将会自动创建对应分区，分区列为 `date`，粒度为月级别。`2018-12-01` 和 `2018-12-31` 将会落入同一个分区，而 `2018-11-12` 将会落入领一个分区。自动分区还支持 List 分区，更多用法请查看自动分区文档。
+
+</p>
+</TabItem>
+
+<TabItem value="动态分区" label="动态分区">
+<p>
+
+[动态分区](./dynamic-partitioning)是根据现实时间进行自动的分区创建与回收的管理方式，将上例用动态分区改写如下：
+
+```sql
+CREATE TABLE IF NOT EXISTS example_range_tbl
+(
+    `user_id` LARGEINT NOT NULL COMMENT "用户id",
+    `date` DATE NOT NULL COMMENT "数据灌入日期时间",
+    `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
+    `city` VARCHAR(20) COMMENT "用户所在城市",
+    `age` SMALLINT COMMENT "用户年龄",
+    `sex` TINYINT COMMENT "用户性别",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
+    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
+)
+ENGINE=OLAP
+AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
+PARTITION BY RANGE(`date`)
+()
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
+PROPERTIES
+(
+    "replication_num" = "1",
+    "dynamic_partition.enable" = "true",
+    "dynamic_partition.time_unit" = "WEEK", --- 分区粒度为周
+    "dynamic_partition.start" = "-2", --- 向前保留两周
+    "dynamic_partition.end" = "2", --- 提前创建后两周
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "8"
+);
+```
+
+动态分区支持分层存储、自定副本数等功能，详见动态分区文档。
+
+</p>
+</TabItem>
+
+<TabItem value="自动分区+动态分区" label="自动分区+动态分区">
+<p>
+
+自动分区与动态分区各有其优点，将二者结合可以实现分区的灵活按需创建和自动回收：
+
+```sql
+CREATE TABLE IF NOT EXISTS example_range_tbl
+(
+    `user_id` LARGEINT NOT NULL COMMENT "用户id",
+    `date` DATE NOT NULL COMMENT "数据灌入日期时间",
+    `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
+    `city` VARCHAR(20) COMMENT "用户所在城市",
+    `age` SMALLINT COMMENT "用户年龄",
+    `sex` TINYINT COMMENT "用户性别",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
+    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
+)
+ENGINE=OLAP
+AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
+AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- 使用月作为分区粒度
+()
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
+PROPERTIES
+(
+    "replication_num" = "1",
+    "dynamic_partition.enable" = "true",
+    "dynamic_partition.time_unit" = "month", --- 二者粒度必须相同
+    "dynamic_partition.start" = "-2" --- 动态分区自动清理超过两周的历史分区
+    "dynamic_partition.end" = "0", --- 动态分区不创建未来分区，完全交给自动分区
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "8"
+);
+```
+
+关于该功能的细节建议，详见[自动分区与动态分区联用](./auto-partitioning#与动态分区联用)。
+
+</p>
+</TabItem>
+
+<TabItem value="自动分桶" label="自动分桶">
+<p>
+
+当用户不确定合理的分桶数时，可以使用[自动分桶](./auto-bucket)由 Doris 完成估计，用户仅需提供估计的表数据量：
+
+```sql
+CREATE TABLE IF NOT EXISTS example_range_tbl
+(
+    `user_id` LARGEINT NOT NULL COMMENT "用户id",
+    `date` DATE NOT NULL COMMENT "数据灌入日期时间",
+    `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
+    `city` VARCHAR(20) COMMENT "用户所在城市",
+    `age` SMALLINT COMMENT "用户年龄",
+    `sex` TINYINT COMMENT "用户性别",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
+    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
+)
+ENGINE=OLAP
+AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
+PARTITION BY RANGE(`date`)
+(
+    PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
+    PARTITION `p201702` VALUES LESS THAN ("2017-03-01"),
+    PARTITION `p201703` VALUES LESS THAN ("2017-04-01"),
+    PARTITION `p2018` VALUES [("2018-01-01"), ("2019-01-01"))
+)
+DISTRIBUTED BY HASH(`user_id`) BUCKETS AUTO
+PROPERTIES
+(
+    "replication_num" = "1",
+    "estimate_partition_size" = "2G" --- 用户估计一个分区将有的数据量，不提供则默认为 10G
+);
+```
+
+需要注意的是，该方式不适用于表数据量特别大的情况。
+
+</p>
+</TabItem>
+
+</Tabs>
 
 ## 查看分区信息
 
@@ -185,3 +351,35 @@ ALTER TABLE example_range_tbl ADD  PARTITION p201704 VALUES LESS THAN("2020-05-0
 ```
 
 其它更多分区修改操作，参见 SQL 手册 [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION)。
+
+## 分区检索
+
+`partitions` 表函数和 `information_schema.partitions` 系统表记录了集群的分区信息。在自动管理分区时，可以通过对应表提取分区信息使用：
+
+```sql
+--- 在 Auto Partition 表中找对应值所属的分区
+mysql> select * from partitions("catalog"="internal", "database"="optest", "table"="DAILY_TRADE_VALUE") where PartitionName = auto_partition_name('range', 'year', '2008-02-03');
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+| PartitionId | PartitionName   | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize  | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+|      127095 | p20080101000000 |              2 | 2024-11-14 17:29:02 | NORMAL | TRADE_DATE   | [types: [DATEV2]; keys: [2008-01-01]; ..types: [DATEV2]; keys: [2009-01-01]; ) | TRADE_DATE      |      10 |              1 | HDD           | 9999-12-31 23:59:59 |                     | \N                       | 985.000 B |          0 | tag.location.default: 1 |         1 |                  1 | \N           |
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+1 row in set (0.30 sec)
+
+mysql> select * from information_schema.partitions where TABLE_SCHEMA='optest' and TABLE_NAME='list_table1' and PARTITION_NAME=auto_partition_name('list', null);
++---------------+--------------+-------------+----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+-----------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| TABLE_CATALOG | TABLE_SCHEMA | TABLE_NAME  | PARTITION_NAME | SUBPARTITION_NAME | PARTITION_ORDINAL_POSITION | SUBPARTITION_ORDINAL_POSITION | PARTITION_METHOD | SUBPARTITION_METHOD | PARTITION_EXPRESSION | SUBPARTITION_EXPRESSION | PARTITION_DESCRIPTION | TABLE_ROWS | AVG_ROW_LENGTH | DATA_LENGTH | MAX_DATA_LENGTH | INDEX_LENGTH | DATA_FREE | CREATE_TIME | UPDATE_TIME         | CHECK_TIME          | CHECKSUM | PARTITION_COMMENT | NODEGROUP | TABLESPACE_NAME |
++---------------+--------------+-------------+----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+-----------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| internal      | optest       | list_table1 | pX             | NULL              |                          0 |                             0 | LIST             | NULL                | str                  | NULL                    | (NULL)                |          1 |           1266 |        1266 |               0 |            0 |         0 |           0 | 2024-11-14 19:58:45 | 0000-00-00 00:00:00 |        0 |                   |           |                 |
++---------------+--------------+-------------+----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+-----------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+1 row in set (0.24 sec)
+
+--- 找对应起始点的分区
+mysql> select * from information_schema.partitions where TABLE_NAME='DAILY_TRADE_VALUE' and PARTITION_DESCRIPTION like "[('2012-01-01'),%";
++---------------+--------------+-------------------+-----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+----------------------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| TABLE_CATALOG | TABLE_SCHEMA | TABLE_NAME        | PARTITION_NAME  | SUBPARTITION_NAME | PARTITION_ORDINAL_POSITION | SUBPARTITION_ORDINAL_POSITION | PARTITION_METHOD | SUBPARTITION_METHOD | PARTITION_EXPRESSION | SUBPARTITION_EXPRESSION | PARTITION_DESCRIPTION            | TABLE_ROWS | AVG_ROW_LENGTH | DATA_LENGTH | MAX_DATA_LENGTH | INDEX_LENGTH | DATA_FREE | CREATE_TIME | UPDATE_TIME         | CHECK_TIME          | CHECKSUM | PARTITION_COMMENT | NODEGROUP | TABLESPACE_NAME |
++---------------+--------------+-------------------+-----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+----------------------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| internal      | optest       | DAILY_TRADE_VALUE | p20120101000000 | NULL              |                          0 |                             0 | RANGE            | NULL                | TRADE_DATE           | NULL                    | [('2012-01-01'), ('2013-01-01')) |          1 |            985 |         985 |               0 |            0 |         0 |           0 | 2024-11-14 17:29:02 | 0000-00-00 00:00:00 |        0 |                   |           |                 |
++---------------+--------------+-------------------+-----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+----------------------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+1 row in set (0.65 sec)
+```

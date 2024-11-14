@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## auto_partition_name
-### description
+### Description
 #### Syntax
 
 `VARCHAR AUTO_PARTITION_NAME('RANGE', 'VARCHAR unit', DATETIME datetime)`
@@ -40,9 +40,12 @@ The datetime parameter is a legal date expression.
 
 The unit parameter is the time interval you want, the available values are: [`second`, `minute`, `hour`, `day`, `month`, `year`].
 If unit does not match one of these options, a syntax error will be returned. 
-### example
 
-```
+**Supported since Doris 3.0.2**
+
+### Example
+
+```sql
 mysql> select auto_partition_name('range', 'years', '123');
 ERROR 1105 (HY000): errCode = 2, detailMessage = range auto_partition_name must accept year|month|day|hour|minute|second for 2nd argument
 
@@ -108,7 +111,6 @@ mysql> select auto_partition_name('list', "你好");
 +------------------------------------+
 | p4f60597d2                         |
 +------------------------------------+
-
 ```
 
 ### keywords

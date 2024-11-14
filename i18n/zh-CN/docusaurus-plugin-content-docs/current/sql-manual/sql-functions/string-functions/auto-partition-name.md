@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## auto_partition_name
-### description
+### Description
 #### Syntax
 
 `VARCHAR AUTO_PARTITION_NAME('RANGE', 'VARCHAR unit', DATETIME datetime)`
@@ -40,9 +40,9 @@ datetime 参数是合法的日期表达式。
 
 unit 参数是您希望的时间间隔，可选的值如下：[`second`,`minute`,`hour`,`day`,`month`,`year`]。
 如果 unit 不符合上述可选值，结果将返回语法错误。 
-### example
 
-```
+### Example
+```sql
 mysql> select auto_partition_name('range', 'years', '123');
 ERROR 1105 (HY000): errCode = 2, detailMessage = range auto_partition_name must accept year|month|day|hour|minute|second for 2nd argument
 
@@ -108,7 +108,6 @@ mysql> select auto_partition_name('list', "你好");
 +------------------------------------+
 | p4f60597d2                         |
 +------------------------------------+
-
 ```
 
 ### keywords
