@@ -59,6 +59,23 @@ WITH [HDFS|S3|BROKER broker_name]
 
 具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD)。
 
+## Load Properties
+
+| Property 名称 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| "timeout" | Long | 14400 | 导入的超时时间，单位秒。范围是 1 秒 ~ 259200 秒。 |
+| "max_filter_ratio" | Float | 0.0 | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。 |
+| "exec_mem_limit" | Long | 2147483648 | 导入内存限制。默认为 2GB。单位为字节。 |
+| "strict_mode" | Boolean | false | 是否开启严格模式。 |
+| "partial_columns" | Boolean | false | 是否使用部分列更新，只在表模型为 Unique Key 且采用 Merge on Write 时有效。 |
+| "timezone" | String | "Asia/Shanghai" | 本次导入所使用的时区。该参数会影响所有导入涉及的和时区有关的函数结果。 |
+| "load_parallelism" | Integer | 8 | 每个 BE 上并发 instance 数量的上限。 |
+| "send_batch_parallelism" | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
+| "load_to_single_tablet" | Boolean | "false" | 是否每个分区只导入一个 tablet，默认值为 false。该参数只允许在对带有 random 分桶的 OLAP 表导数的时候设置。 |
+| "skip_lines" | Integer | "0" | 跳过 CSV 文件的前几行。当设置 format 设置为 csv_with_names或csv_with_names_and_types时，该参数会失效。 |
+| "trim_double_quotes" | Boolean | "false" | 是否裁剪掉导入文件每个字段最外层的双引号。 |
+| "priority" | "HIGH" 或 "NORMAL" 或 "LOW" | "NORMAL" | 导入任务的优先级。 |
+
 ## 查看导入状态
 
 Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) 命令查看
@@ -732,7 +749,7 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 - 默认值 1
 
-- sink 节点发送数据的并发度，仅在关闭前移时生效。
+- sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。
 
 Session variable `enable_memtable_on_sink_node` 为 true 时开启前移，为 false 时关闭前移。
 
