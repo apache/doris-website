@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Audit Log Plugin
+    "title": "Audit Log Plugin",
     "language": "en"
 }
 ---
@@ -66,7 +66,7 @@ In previous versions, users need to manually add fields to the `audit_log` syste
 
 The audit log table is a dynamic partitioned table, partitioned by day, and retains data for the last 30 days by default.
 
-The following 3 global variables can control some writing behaviors of the audit log table:
+The following global variables can control some writing behaviors of the audit log table:
 
 - `audit_plugin_max_batch_interval_sec`: The maximum write interval for the audit log table. Default is 60 seconds.
 - `audit_plugin_max_batch_bytes`: The maximum amount of data written per batch to the audit log table. Default is 50MB.

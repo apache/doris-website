@@ -66,7 +66,7 @@ under the License.
 
 审计日志表是一张动态分区表，按天分区，默认保留最近 30 天的数据。
 
-以下 3 个全局变量可以控制审计日志表的一些写入行为：
+以下全局变量可以控制审计日志表的一些写入行为：
 
 - `audit_plugin_max_batch_interval_sec`：审计日志表的最大写入间隔。默认 60 秒。
 - `audit_plugin_max_batch_bytes`：审计日志表每批次最大写入数据量。默认 50MB。
