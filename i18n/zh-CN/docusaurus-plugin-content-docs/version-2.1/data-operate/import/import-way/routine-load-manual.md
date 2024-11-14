@@ -106,9 +106,9 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "name",
+    age                INT                   COMMENT "age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -155,9 +155,9 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "name",
+    age                INT                   COMMENT "age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;

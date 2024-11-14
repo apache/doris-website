@@ -108,9 +108,9 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
     ```sql
     CREATE TABLE testdb.test_streamload(
-        user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-        name               VARCHAR(20)           COMMENT "用户姓名",
-        age                INT                   COMMENT "用户年龄"
+        user_id            BIGINT       NOT NULL COMMENT "user id",
+        name               VARCHAR(20)           COMMENT "name",
+        age                INT                   COMMENT "age"
     )
     DUPLICATE KEY(user_id)
     DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -191,9 +191,9 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
     ```sql
     CREATE TABLE testdb.test_streamload(
-        user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-        name               VARCHAR(20)           COMMENT "用户姓名",
-        age                INT                   COMMENT "用户年龄"
+        user_id            BIGINT       NOT NULL COMMENT "user id",
+        name               VARCHAR(20)           COMMENT "name",
+        age                INT                   COMMENT "age"
     )
     DUPLICATE KEY(user_id)
     DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -800,9 +800,9 @@ curl --location-trusted -u root -T test.json -H "label:1" -H "format:json" -H 'c
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "name",
+    age                INT                   COMMENT "age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -925,8 +925,8 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 ```sql
 CREATE TABLE testdb.test_streamload(
     typ_id     BIGINT          NOT NULL COMMENT "ID",
-    name       VARCHAR(20)     NULL     COMMENT "名称",
-    arr        ARRAY<int(10)>  NULL     COMMENT "数组"
+    name       VARCHAR(20)     NULL     COMMENT "name",
+    arr        ARRAY<int(10)>  NULL     COMMENT "array"
 )
 DUPLICATE KEY(typ_id)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;
@@ -967,7 +967,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 ```sql
 CREATE TABLE testdb.test_streamload(
     user_id            BIGINT       NOT NULL COMMENT "ID",
-    namemap            Map<STRING, INT>  NULL     COMMENT "名称"
+    namemap            Map<STRING, INT>  NULL     COMMENT "namemap"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
