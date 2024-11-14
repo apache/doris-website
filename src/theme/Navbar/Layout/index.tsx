@@ -5,13 +5,10 @@ import { useHideableNavbar, useNavbarMobileSidebar } from '@docusaurus/theme-com
 import { translate } from '@docusaurus/Translate';
 import NavbarMobileSidebar from '@theme/Navbar/MobileSidebar';
 import styles from './styles.module.css';
-import { useLocation } from '@docusaurus/router';
-
 function NavbarBackdrop(props) {
     return <div role="presentation" {...props} className={clsx('navbar-sidebar__backdrop', props.className)} />;
 }
 export default function NavbarLayout({ children }) {
-    const location = useLocation();
     const {
         navbar: { hideOnScroll, style },
     } = useThemeConfig();
@@ -25,12 +22,11 @@ export default function NavbarLayout({ children }) {
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const pathname = location.pathname.split('/')[1];
-            const tempPath = ['get-starting', 'benchmark', 'ecosystems', 'faq', 'releasenotes'];
-            const isDocsPage =
-                tempPath.includes(pathname) || tempPath.some(path => location.pathname.includes(`zh-CN/${path}`));
+            const tempPath = ['get-starting', 'benchmark', 'ecosystems', 'faq', 'releasenotes']
+            const isDocsPage = tempPath.includes(pathname) || tempPath.some(path => location.pathname.includes(`zh-CN/${path}`))
             const docsPage = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
             setIsDocsPage(docsPage);
-            setWithoutDoc(isDocsPage);
+            setWithoutDoc(isDocsPage)
         }
 
         if (typeof window !== 'undefined') {
@@ -39,17 +35,6 @@ export default function NavbarLayout({ children }) {
             setIsCommunity(communityPage);
         }
     }, [typeof window !== 'undefined' && location.pathname]);
-
-    useEffect(() => {
-        if (
-            typeof window !== 'undefined' &&
-            location.pathname.length > 1 &&
-            location.pathname[location.pathname.length - 1] === '/'
-        ) {
-            window.location.pathname = location.pathname.slice(0, -1);
-        }
-    }, [location.pathname]);
-
     return (
         <nav
             ref={navbarRef}
