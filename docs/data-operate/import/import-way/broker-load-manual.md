@@ -531,6 +531,7 @@ Doris supports importing data directly from object storage systems that support 
     )
     WITH S3
     (
+        "provider" = "S3",
         "AWS_ENDPOINT" = "AWS_ENDPOINT",
         "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
         "AWS_SECRET_KEY"="AWS_SECRET_KEY",
@@ -541,6 +542,17 @@ Doris supports importing data directly from object storage systems that support 
         "timeout" = "3600"
     );
 ```
+
+The `provider` specifies the vendor of the S3 Service.
+Supported S3 Provider list:
+
+- "S3" (AWS, Amazon Web Services)
+- "AZURE" (Microsoft Azure)
+- "GCP" (GCP, Google Cloud Platform)
+- "OSS" (Alibaba Cloud)
+- "COS" (Tencent Cloud)
+- "OBS" (Huawei Cloud)
+- "BOS" (Baidu Cloud)
 
 ### Common Issues
 

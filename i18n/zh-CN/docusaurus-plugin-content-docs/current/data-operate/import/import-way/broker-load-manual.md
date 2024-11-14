@@ -532,6 +532,7 @@ Doris 支持通过 S3 协议直接从支持 S3 协议的对象存储系统导入
     )
     WITH S3
     (
+        "provider" = "S3",
         "AWS_ENDPOINT" = "AWS_ENDPOINT",
         "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
         "AWS_SECRET_KEY"="AWS_SECRET_KEY",
@@ -542,6 +543,16 @@ Doris 支持通过 S3 协议直接从支持 S3 协议的对象存储系统导入
         "timeout" = "3600"
     );
 ```
+
+其中 `provider` 参数指定了 S3 供应商，支持列表：
+
+- "OSS" (阿里云)
+- "COS" (腾讯云)
+- "OBS" (华为云)
+- "BOS" (百度云)
+- "S3" (亚马逊 AWS)
+- "AZURE" (微软 Azure)
+- "GCP" (谷歌 GCP)
 
 ### 常见问题
 
@@ -563,11 +574,11 @@ Doris 支持通过 S3 协议直接从支持 S3 协议的对象存储系统导入
   ```sql
     WITH S3
     (
-          "AWS_ENDPOINT" = "AWS_ENDPOINT",
-          "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
-          "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
-          "AWS_TOKEN" = "AWS_TEMP_TOKEN",
-          "AWS_REGION" = "AWS_REGION"
+        "AWS_ENDPOINT" = "AWS_ENDPOINT",
+        "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
+        "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
+        "AWS_TOKEN" = "AWS_TEMP_TOKEN",
+        "AWS_REGION" = "AWS_REGION"
     )
   ```
 
