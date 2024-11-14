@@ -26,7 +26,7 @@ under the License.
 
 The Storage Vault is a remote shared storage used by Doris in a decoupled storage-compute model. You can configure one or more Storage Vaults to store different tables in different Storage Vaults.
 
-## Creating a Storage Vault
+## Create an Storage Vault
 
 **Syntax**
 
@@ -39,7 +39,7 @@ PROPERTIES
 <vault_name> is the user-defined name of the Storage Vault, which serves as the identifier for accessing the Storage Vault.
 
 
-### Creating an HDFS Storage Vault
+### Create an HDFS Storage Vault
 
 To create an HDFS-based decoupled storage-compute Doris cluster, ensure that all nodes (including FE/BE nodes, Meta Service) have privilege to access the specified HDFS, including completing Kerberos authorization configuration and connectivity checks in advance (which can be tested using Hadoop Client on each corresponding node).
 
@@ -56,7 +56,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     );
 ```
 
-### Creating an S3 Storage Vault
+### Create an S3 Storage Vault
 
 ```sql
 CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
@@ -74,7 +74,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
 
 More parameter explanations and examples can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md).
 
-## Viewing Storage Vaults
+## View Storage Vaults
 
 **Syntax**
 
@@ -84,7 +84,7 @@ SHOW STORAGE VAULTS
 
 The returned result includes 4 columns: the Storage Vault name, Storage Vault ID, properties, and whether it is the default Storage Vault.
 
-## Setting the Default Storage Vault
+## Set the Default Storage Vault
 
 **Syntax**
 
@@ -92,7 +92,7 @@ The returned result includes 4 columns: the Storage Vault name, Storage Vault ID
 SET <vault_name> AS DEFAULT STORAGE VAULT
 ```
 
-## Specifying Storage Vault When Creating a Table
+## Specify Storage Vault When Creating a Table
 
 When creating a table, specify `storage_vault_name` in `PROPERTIES`, and the data will be stored in the Storage Vault corresponding to the specified `vault name`. Once the table is successfully created, the `storage_vault` cannot be modified, meaning changing the Storage Vault is not supported.
 
@@ -116,17 +116,45 @@ PROPERTIES (
 );
 ```
 
-## Changing Storage Vault
+## Alter Storage Vault
 
-Used to update modifiable properties of the Storage Vault configuration.
+Used to alter modifiable properties of the Storage Vault configuration.
 
-Coming soon
+S3 Storage Vault allowed properties:
+- `VAULT_NAME`
+- `s3.access_key`
+- `s3.secret_key`
+- `use_path_style`
 
-## Deleting a Storage Vault
+HDFS Storage Vault forbidden properties:
+- `path_prefix`
+- `fs.defaultFS`
 
-Only non-default Storage Vaults that are not referenced by any tables can be deleted.
+Properties explanations can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md).
 
-Coming soon
+**Example**
+
+```sql
+ALTER STORAGE VAULT old_s3_vault
+PROPERTIES (
+    "type" = "S3",
+    "VAULT_NAME" = "new_s3_vault",
+    "s3.access_key" = "new_ak"
+    "s3.secret_key" = "new_sk"
+);
+```
+
+```sql
+ALTER STORAGE VAULT old_hdfs_vault
+PROPERTIES (
+    "type" = "hdfs",
+    "VAULT_NAME" = "new_hdfs_vault",
+    "hadoop.username" = "hdfs"
+);
+```
+## Delete an Storage Vault
+
+Not supported
 
 ## Storage Vault Privilege
 

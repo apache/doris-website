@@ -26,7 +26,7 @@ under the License.
 
 可以配置动态分区参数，在不同的磁盘类型上创建动态分区，Doris 会根据配置参数将冷数据从SSD迁移到HDD。这样的做法在降低成本的同时，也提升了Doris的读写性能。
 
-动态分区参数可以参考[分区分桶-动态分区](../../table-design/data-partition.md#动态分区)
+动态分区参数可以参考[数据划分-动态分区](../../table-design/data-partitioning/dynamic-partitioning)
 
 `dynamic_partition.hot_partition_num`
 

@@ -102,15 +102,17 @@ If the Workload Group's tag is not empty, the Workload Group will only be sent t
 You can refer to the recommended usage:[group-workload-groups](./group-workload-groups.md)
 
 
-## Configure cgroup
+## Configure GGroup
 
-Doris 2.0 version uses Doris scheduling to limit CPU resources, but since version 2.1, Doris defaults to using CGgroup v1 to limit CPU resources. Therefore, if CPU resources are expected to be limited in version 2.1, it is necessary to have CGgroup installed on the node where BE is located.
+The 2.0 version of Doris uses scheduling based on Doris itself to implement CPU resource limitations. However, starting from version 2.1, Doris defaults to using CGroup-based CPU resource limitations. Therefore, if you wish to enforce CPU resource constraints in version 2.1, the node where the BE (Backend) is located must have the CGroup environment already installed.
+
+Currently, supported CGroup versions are CGroup v1 and CGroup v2.
 
 If users use the Workload Group software limit in version 2.0 and upgrade to version 2.1, they also need to configure CGroup, Otherwise, cpu soft limit may not work.
 
 If using CGroup within a container, the container needs to have permission to operate the host.
 
-Without configuring cgroup, users can use all functions of the workload group except for CPU limitations.
+Without configuring GGroup, users can use all functions of the workload group except for CPU limitations.
 
 1. Firstly, confirm that the CGgroup has been installed on the node where BE is located.
 ```
@@ -130,27 +132,49 @@ If this path exists, it indicates that cgroup v2 is currently active.
 /sys/fs/cgroup/cgroup.controllers
 ```
 
-3. Create a new directory named doris in the CPU path of cgroup, user can specify their own directory name.
+3. Create a new directory named ```doris``` in CGroup path, user can specify their own directory name.
 
-```mkdir /sys/fs/cgroup/cpu/doris```
+```
+// If using CGroup v1, then mkdir as follow:
+mkdir /sys/fs/cgroup/cpu/doris
+
+// If using CGroup v2, then mkdir as follow:
+mkdir /sys/fs/cgroup/doris
+```
 
 4. It is necessary to ensure that Doris's BE process has read/write/execute permissions for this directory
 ```
-// Modify the permissions of this directory to read, write, and execute
+// If using CGroup v1, then do as follow:
+// 1.Modify the permissions of this directory to read, write, and execute
 chmod 770 /sys/fs/cgroup/cpu/doris
 
-// Assign the ownership of this directory to Doris's account
+// 2.Assign the ownership of this directory to Doris's account
 chown -R doris:doris /sys/fs/cgroup/cpu/doris
+
+
+// If using CGroup v2, then do as follow:
+// 1.Modify the permissions of this directory to read, write, and execute
+chmod 770 /sys/fs/cgroup/doris
+
+// 2.Assign the ownership of this directory to Doris's account
+chown -R doris:doris /sys/fs/cgroup/doris
+
 ```
 
-5. If cgroup v2 is being used in the current environment, the following actions need to be taken. This is because cgroup v2 has stricter permission controls, requiring write access to the cgroup.procs file in the root directory in order to move processes between groups.
+5. If CGroup v2 is being used in the current environment, the following actions need to be taken. This is because cgroup v2 has stricter permission controls, requiring write access to the cgroup.procs file in the root directory in order to move processes between groups.
+This step can be skipped if using CGroup v1.
 ```
 chmod a+w /sys/fs/cgroup/cgroup.procs
 ```
 
 6. Modify the configuration of BE and specify the path to cgroup
 ```
+// If using CGroup v1:
 doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
+
+
+// If using CGroup v2:
+doris_cgroup_cpu_path = /sys/fs/cgroup/doris
 ```
 
 7. restart BE, in the log (be. INFO), you can see the words "add thread xxx to group" indicating successful configuration.

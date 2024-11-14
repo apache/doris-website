@@ -105,7 +105,19 @@
                     ]
                 },
                 "table-design/row-store",
-                "table-design/data-partition",
+                {
+                    "type": "category",
+                    "label": "Data Partitioning",
+                    "items": [
+                        "table-design/data-partitioning/basic-concepts",
+                        "table-design/data-partitioning/manual-partitioning",
+                        "table-design/data-partitioning/dynamic-partitioning",
+                        "table-design/data-partitioning/auto-partitioning",
+                        "table-design/data-partitioning/manual-bucketing",
+                        "table-design/data-partitioning/auto-bucket",
+                        "table-design/data-partitioning/common-issues"
+                    ]
+                },
                 "table-design/schema-change",
                 "table-design/auto-increment",
                 "table-design/best-practice"
@@ -1050,9 +1062,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/collect-set",
                                 "sql-manual/sql-functions/aggregate-functions/collect-list",
                                 "sql-manual/sql-functions/aggregate-functions/retention",
-                                "sql-manual/sql-functions/aggregate-functions/regr_sxx",
-                                "sql-manual/sql-functions/aggregate-functions/regr_sxy",
-                                "sql-manual/sql-functions/aggregate-functions/regr_syy",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-count",
                                 "sql-manual/sql-functions/aggregate-functions/kurt",
@@ -1679,6 +1688,7 @@
         "benchmark/tpcds"
     ],
     "ecosystem": [
+        "ecosystem/cloudcanal",
         "ecosystem/spark-doris-connector",
         "ecosystem/flink-doris-connector",
         "ecosystem/doris-kafka-connector",
@@ -1731,6 +1741,7 @@
             "type": "category",
             "label": "v2.1",
             "items": [
+                "releasenotes/v2.1/release-2.1.7",
                 "releasenotes/v2.1/release-2.1.6",
                 "releasenotes/v2.1/release-2.1.5",
                 "releasenotes/v2.1/release-2.1.4",

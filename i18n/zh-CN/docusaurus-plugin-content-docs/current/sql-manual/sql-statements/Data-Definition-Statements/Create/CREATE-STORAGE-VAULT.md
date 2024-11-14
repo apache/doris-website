@@ -47,13 +47,14 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 
 | 参数              | 是否必需 | 描述                                                                                                      |
 |:----------------|:-----|:--------------------------------------------------------------------------------------------------------|
-| `s3.endpoint`   | 必需   | 用于对象存储的端点。<br/>注意，请不要提供带有 http:// 或 https:// 开头的链接。对于 Azure Blob 存储，链接应该像 ${ak}.blob.core.windows.net/。 |
-| `s3.region`     | 必需   | 您的存储桶的区域。(如果您使用 GCP 或 AZURE,则不需要)。 |
-| `s3.root.path`  | 必需   | 存储数据的路径。 |
-| `s3.bucket`     | 必需   | 您的对象存储账户的存储桶。(如果您使用 Azure,则为 StorageAccount)。 |
-| `s3.access_key` | 必需   | 您的对象存储账户的访问密钥。(如果您使用 Azure,则为 AccountName)。 |
-| `s3.secret_key` | 必需   | 您的对象存储账户的秘密密钥。(如果您使用 Azure,则为 AccountKey)。 |
-| `provider`      | 必需   | 提供对象存储服务的云供应商。支持的值有`COS`，`OSS`，`S3`，`OBS`，`BOS`，`AZURE`，`GCP` |
+| `s3.endpoint`    | 必需   | 用于对象存储的端点。<br/>注意，请不要提供带有 http:// 或 https:// 开头的链接。对于 Azure Blob 存储，链接应该像 ${ak}.blob.core.windows.net/。 |
+| `s3.region`      | 必需   | 您的存储桶的区域。(如果您使用 GCP 或 AZURE,则不需要)。 |
+| `s3.root.path`   | 必需   | 存储数据的路径。 |
+| `s3.bucket`      | 必需   | 您的对象存储账户的存储桶。(如果您使用 Azure,则为 StorageAccount)。 |
+| `s3.access_key`  | 必需   | 您的对象存储账户的访问密钥。(如果您使用 Azure,则为 AccountName)。 |
+| `s3.secret_key`  | 必需   | 您的对象存储账户的秘密密钥。(如果您使用 Azure,则为 AccountKey)。 |
+| `provider`       | 必需   | 提供对象存储服务的云供应商。支持的值有`COS`，`OSS`，`S3`，`OBS`，`BOS`，`AZURE`，`GCP` |
+| `use_path_style` | 可选   | 使用 path-style URL 或者 virtual-hosted-style URL, 默认值 false(virtual-hosted-style)                                                                                      |
 
 ##### HDFS vault
 
