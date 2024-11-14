@@ -101,7 +101,7 @@ The minimum resources required for FE and BE are 4c and 8Gi. This is the minimum
 :::
 
 ## Custom startup configuration
-Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations.Customized the startup parameters into a specific ConfigMap according to the introductions in the [FE Configuration Document](../../../admin-manual/config/fe-config.md) and the [BE Configuration Document](../../../admin-manual/config/be-config.md),
+Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations.Customized the startup parameters into a specific ConfigMap according to the introductions in the [FE Configuration Document](../../../../admin-manual/config/fe-config.md) and the [BE Configuration Document](../../../../admin-manual/config/be-config.md),
 and deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) needs to be deployed.
 
 ### Custom FE startup configuration
@@ -291,7 +291,7 @@ spec:
 In the above configuration, ${your_storageclass} represents the name of the StorageClass you want to use, and ${storageSize} represents the storage size you want to allocation. The format of ${storageSize} follows the [quantity expression](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/) method of K8s, such as: 100Gi. Please replace them as needed when using.
 
 :::tip Tip  
-If you have reconfigured meta_dir or sys_log_dir in the [customized configuration file](#customized-fe-startup-configuration), please reconfigure the mountPath.
+If you have reconfigured meta_dir or sys_log_dir in the [customized configuration file](#custom-fe-startup-configuration), please reconfigure the mountPath.
 :::
 
 ### Persistent storage for BE
@@ -523,7 +523,7 @@ mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com
 ```
 
 ## Configuring the Username and Password for the Management Cluster
-The management of Doris nodes requires connecting to the live FE nodes via the MySQL protocol using a username and password for operations. Doris implements [a permission management mechanism similar to RBAC](../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac), and the management of nodes requires the user to have the [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission. By default, Doris Operator deploys and manages the cluster configured with DorisCluster resources using the root user with all permissions in passwordless mode. After adding a password to the root user, it is necessary to explicitly configure the username and password with Node_Priv permission in the DorisCluster resource, so that Doris Operator can perform automated management operations on the cluster.
+The management of Doris nodes requires connecting to the live FE nodes via the MySQL protocol using a username and password for operations. Doris implements [a permission management mechanism similar to RBAC](../../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac), and the management of nodes requires the user to have the [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission. By default, Doris Operator deploys and manages the cluster configured with DorisCluster resources using the root user with all permissions in passwordless mode. After adding a password to the root user, it is necessary to explicitly configure the username and password with Node_Priv permission in the DorisCluster resource, so that Doris Operator can perform automated management operations on the cluster.
 
 DorisCluster resources provide two ways to configure the username and password required for managing cluster nodes, including the way of environment variable configuration and the way of using [Secret](https://kubernetes.io/docs/concepts/configuration/secret/). Configuring the username and password for cluster management can be divided into three cases:
 
@@ -537,7 +537,7 @@ Doris supports configuring the root user's password in encrypted form in `fe.con
 
 **1. Generate the Root Encrypted Password**
 
-Doris supports setting the root user's password in the [fe.conf](../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password) in encrypted form. The password encryption is implemented using two-stage SHA-1 encryption. The code implementation is as follows:
+Doris supports setting the root user's password in the [fe.conf](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password) in encrypted form. The password encryption is implemented using two-stage SHA-1 encryption. The code implementation is as follows:
 
 Java Code for Two-Stage SHA-2 Encryption:
 
@@ -673,7 +673,7 @@ After deployment, please set the root password. Doris Operator will switch to us
 
 ### Setting the Root User Password after Cluster Deployment
 
-After the Doris cluster is deployed and the root user's password is set, it is necessary to configure a user with [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission into the DorisCluster resource so that Doris Operator can automatically manage the cluster nodes. It is not recommended to use root as this username. Please refer to [the User Creation and Permission Assignment Section](../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) to create a new user and grant Node_priv permission. After creating the user, specify the new management user and password through the environment variable or Secret method, and configure the corresponding DorisCluster resource.
+After the Doris cluster is deployed and the root user's password is set, it is necessary to configure a user with [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission into the DorisCluster resource so that Doris Operator can automatically manage the cluster nodes. It is not recommended to use root as this username. Please refer to [the User Creation and Permission Assignment Section](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) to create a new user and grant Node_priv permission. After creating the user, specify the new management user and password through the environment variable or Secret method, and configure the corresponding DorisCluster resource.
 
 **1. Create a User with Node_priv Permission**
 
@@ -695,7 +695,7 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 
 Here, ${DB_ADMIN_USER} is the newly created username.
 
-For detailed usage of creating users, setting passwords, and granting permissions, please refer to the official document [CREATE-USER](../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) section.
+For detailed usage of creating users, setting passwords, and granting permissions, please refer to the official document [CREATE-USER](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) section.
 
 **3. Configure DorisCluster**
 - Using Environment Variables
