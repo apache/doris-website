@@ -47,6 +47,10 @@
     "message": "数据模型",
     "description": "The label for category Data Models in sidebar docs"
   },
+  "sidebar.docs.category.Data Partitioning": {
+    "message": "数据划分",
+    "description": "The label for category Data Partitioning in sidebar docs"
+  },
   "sidebar.docs.category.Table Indexes": {
     "message": "表索引",
     "description": "The label for category Table Index in sidebar docs"

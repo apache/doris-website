@@ -86,9 +86,9 @@ Table schema design has a significant impact on database performance, and this h
 
 1. **Retrieval of the latest N logs**: Using a `DATETIME` type time field as the primary key can largely speed queries up.
 
-2. **Partitioning strategy**: Use `PARTITION BY RANGE` based on a time field and enable [dynamic partition](https://doris.apache.org/docs/2.0/table-design/data-partition#dynamic-partition). This allows for  auto-management of data partitions.
+2. **Partitioning strategy**: Use `PARTITION BY RANGE` based on a time field and enable [dynamic partition](https://doris.apache.org/docs/2.0/table-design/data-partitioning/dynamic-partitioning). This allows for  auto-management of data partitions.
 
-3. **Bucketing strategy**: Adopt random bucketing and set the number of buckets to roughly three times the total number of disks in the cluster. (Apache Doris also provides an [auto bucket](https://doris.apache.org/docs/2.0/table-design/data-partition/#auto-bucket) feature to avoid performance loss caused by improper data sharding.)
+3. **Bucketing strategy**: Adopt random bucketing and set the number of buckets to roughly three times the total number of disks in the cluster. (Apache Doris also provides an [auto bucket](https://doris.apache.org/docs/2.0/table-design/data-partitioning/auto-bucket) feature to avoid performance loss caused by improper data sharding.)
 
 4. **Indexing**: Create indexes for frequently searched fields to improve query efficiency. Pay attention to the parser for the fields that require full-text searching, because it determines query accuracy.
 
