@@ -24,23 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## posexplode
-
-## description
+## Description
 
 The table function is used in conjunction with Lateral View and can support multiple Lateral Views. It only supports the new optimizer.
 
 It expands an array column into multiple rows and adds a column indicating the position, returning a struct type. When the array is NULL or empty, posexplode_outer returns NULL. Both posexplode and posexplode_outer will return NULL elements within the array.
 
-## syntax
+## Syntax
 ```sql
 posexplode(array)
 posexplode_outer(array)
 ```
 
-### example
+### Example
 
-```
+```sql
     CREATE TABLE IF NOT EXISTS `table_test`(
                 `id` INT NULL,
                 `name` TEXT NULL,
@@ -95,5 +93,5 @@ mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view pos
 +------+----------+--------------------------------+------+---------+
 ```
 
-### keywords
+### Keywords
 POSEXPLODE,POSEXPLODE_OUTER

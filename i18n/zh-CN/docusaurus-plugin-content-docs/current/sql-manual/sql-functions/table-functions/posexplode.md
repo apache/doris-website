@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## posexplode
-
-## description
+## Description
 
 表函数，需配合 Lateral View 使用, 可以支持多个 Lateral view, 仅仅支持新优化器。
 
@@ -34,15 +32,15 @@ under the License.
 当 array 为NULL或者为空时，`posexplode_outer` 返回NULL。
 `posexplode` 和 `posexplode_outer` 均会返回 array 内部的NULL元素。
 
-## syntax
+## Syntax
 ```sql
 posexplode(expr)
 posexplode_outer(expr)
 ```
 
-### example
+### Example
 
-```
+``` sql
     CREATE TABLE IF NOT EXISTS `table_test`(
                 `id` INT NULL,
                 `name` TEXT NULL,
@@ -97,5 +95,5 @@ mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view pos
 +------+----------+--------------------------------+------+---------+
 ```
 
-### keywords
+### Keywords
 POSEXPLODE,POSEXPLODE_OUTER
