@@ -387,50 +387,6 @@ The return result parameters are explained in the following table:
 
 Users can access the ErrorURL to review data that failed to import due to issues with data quality. By executing the command `curl "<ErrorURL>"`, users can directly retrieve information about the erroneous data.
 
-## Application of Table Value Function in Stream Load - http_stream Mode
-
-Leveraging the recently introduced functionality of Table Value Function (TVF) in Doris, Stream Load now allows the expression of import parameters through SQL statements. Specifically, a TVF named `http_stream` has been dedicated for Stream Load operations.
-
-:::tip
-
-When performing Stream Load using the TVF `http_stream`, the Rest API URL differs from the standard URL used for regular Stream Load imports.
-
-- Standard Stream Load URL:
-  `http://fe_host:http_port/api/{db}/{table}/_stream_load`
-- URL for Stream Load using TVF `http_stream`:
-  `http://fe_host:http_port/api/_http_stream`
-
-:::
-
-Using curl for Stream Load in http_stream Mode:
-
-```shell
-curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
-```
-
-Adding a SQL parameter in the header to replace the previous parameters such as `column_separator`, `line_delimiter`, `where`, `columns`, etc., makes it very convenient to use.
-
-Example of load SQL:
-
-```shell
-insert into db.table (col1, col2, ...) select c1, c2, ... from http_stream("property1"="value1");
-```
-
-http_stream parameter:
-
-- "column_separator" = ","
-- "format" = "CSV"
-- ...
-
-When loading CSV data from http_stream, the column name in `select ... from http_stream` must be in format of `c1, c2, ...`.
-See the example below.
-
-For example:
-
-```Plain
-curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream(\"format\" = \"CSV\", \"column_separator\" = \",\" ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
-```
-
 ## Load example
 
 ### Setting load timeout and maximum size
