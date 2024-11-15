@@ -24,16 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## top_level_domain
-## description
-## Syntax
+
+## 描述
+
+## 语法
 
 `VARCHAR  top_level_domain(VARCHAR url)`
 
 
-在url中提取出顶级域名返回，若为不合法的url，则返回空字符串
+在 URL 中提取出顶级域名返回，若为不合法的 URL，则返回空字符串
 
-```
+```sql
 mysql [(none)]>select top_level_domain("www.baidu.com");
 +-----------------------------------+
 | top_level_domain('www.baidu.com') |
@@ -57,5 +58,6 @@ mysql [(none)]>select top_level_domain("wwwwwwww");
 
 ```
 
-### keywords
-    TOP_LEVEL_DOMAIN
+### 关键词
+
+TOP_LEVEL_DOMAIN
