@@ -51,7 +51,7 @@ LakeSoul 是由数元灵开发的云原生湖仓框架，并在 2023 年 5 月�
 
 ## 使用指南
 
-本文涉及所有脚本和代码可以从该地址获取：[https://github.com/apache/doris/tree/master/samples/datalake/lakesoul](https://github.com/Ceng23333/doris/tree/lakesoul_doc/samples/datalake/lakesoul)
+本文涉及所有脚本和代码可以从该地址获取：[https://github.com/apache/doris/tree/master/samples/datalake/lakesoul](https://github.com/apache/doris/tree/master/samples/datalake/lakesoul)
 
 ### 01 环境准备
 
@@ -89,7 +89,7 @@ LakeSoul 是由数元灵开发的云原生湖仓框架，并在 2023 年 5 月�
 
 如下所示，在 Doris 集群中已经创建了一个名为 lakesoul 的 Catalog（可使用 SHOW CATALOGS 查看）。以下是该 Catalog 的创建语句：
 
-  ```sql
+```sql
   -- Already created
   CREATE CATALOG `lakesoul` PROPERTIES (
     'type'='lakesoul',
@@ -99,17 +99,17 @@ LakeSoul 是由数元灵开发的云原生湖仓框架，并在 2023 年 5 月�
     'minio.endpoint'='http://minio:9000',
     'minio.access_key'='admin',
     'minio.secret_key'='password'
-    );```
+  );
 
   ```
-  LakeSoul 表 lakesoul.tpch.customer 已加载到 Doris 中。在 Doris 中查询数据。
+  LakeSoul 表 `lakesoul.tpch.customer` 已加载到 Doris 中。在 Doris 中查询数据。
 
-  - 查询数据
-  ```sql
-  mysql> use `lakesoul`.`tpch`;
+- 查询数据
+    ```sql
+  Doris> use `lakesoul`.`tpch`;
   Database changed
 
-  mysql> show tables;
+  Doris> show tables;
   +---------------------+
   | Tables_in_tpch      |
   +---------------------+
@@ -117,7 +117,7 @@ LakeSoul 是由数元灵开发的云原生湖仓框架，并在 2023 年 5 月�
   +---------------------+
   1 row in set (0.00 sec)
 
-  mysql> select * from customer_from_spark where c_nationkey = 1 order by c_custkey limit 4;
+  Doris> select * from customer_from_spark where c_nationkey = 1 order by c_custkey limit 4;
   +-----------+--------------------+-----------------------------------------+-------------+-----------------+-----------+--------------+--------------------------------------------------------------------------------------------------------+
   | c_custkey | c_name             | c_address                               | c_nationkey | c_phone         | c_acctbal | c_mktsegment | c_comment                                                                                              |
   +-----------+--------------------+-----------------------------------------+-------------+-----------------+-----------+--------------+--------------------------------------------------------------------------------------------------------+
@@ -128,7 +128,7 @@ LakeSoul 是由数元灵开发的云原生湖仓框架，并在 2023 年 5 月�
   +-----------+--------------------+-----------------------------------------+-------------+-----------------+-----------+--------------+--------------------------------------------------------------------------------------------------------+
   4 rows in set (3.14 sec)
 
-  mysql> select * from customer_from_spark where c_nationkey = 1 order by c_custkey desc limit 4;
+  Doris> select * from customer_from_spark where c_nationkey = 1 order by c_custkey desc limit 4;
   +-----------+--------------------+-----------------------------------------+-------------+-----------------+-----------+--------------+-------------------------------------------------------------------------------------------------+
   | c_custkey | c_name             | c_address                               | c_nationkey | c_phone         | c_acctbal | c_mktsegment | c_comment                                                                                       |
   +-----------+--------------------+-----------------------------------------+-------------+-----------------+-----------+--------------+-------------------------------------------------------------------------------------------------+
@@ -141,78 +141,78 @@ LakeSoul 是由数元灵开发的云原生湖仓框架，并在 2023 年 5 月�
   ```
 
 - 分区裁剪
-Doris 可以对 LakeSoul 执行分区裁剪，并通过原生读取加速查询过程。我们可以通过 `explain verbose` 来检查这一点。
+    Doris 可以对 LakeSoul 执行分区裁剪，并通过原生读取加速查询过程。我们可以通过 `explain verbose` 来检查这一点。
 
 
-```sql
-mysql> explain verbose select * from customer_from_spark where c_nationkey < 3;
-+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Explain String(Old Planner)                                                                                                                                          |
-+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| PLAN FRAGMENT 0                                                                                                                                                      |
-|   OUTPUT EXPRS:                                                                                                                                                      |
-|     `lakesoul`.`tpch`.`customer_from_spark`.`c_custkey`                                                                                                              |
-|     `lakesoul`.`tpch`.`customer_from_spark`.`c_name`                                                                                                                 |
-|     `lakesoul`.`tpch`.`customer_from_spark`.`c_address`                                                                                                              |
-|     `lakesoul`.`tpch`.`customer_from_spark`.`c_nationkey`                                                                                                            |
-|     `lakesoul`.`tpch`.`customer_from_spark`.`c_phone`                                                                                                                |
-|     `lakesoul`.`tpch`.`customer_from_spark`.`c_acctbal`                                                                                                              |
-|     `lakesoul`.`tpch`.`customer_from_spark`.`c_mktsegment`                                                                                                           |
-|     `lakesoul`.`tpch`.`customer_from_spark`.`c_comment`                                                                                                              |
-|   PARTITION: UNPARTITIONED                                                                                                                                           |
-|                                                                                                                                                                      |
-|   HAS_COLO_PLAN_NODE: false                                                                                                                                          |
-|                                                                                                                                                                      |
-|   VRESULT SINK                                                                                                                                                       |
-|      MYSQL_PROTOCAL                                                                                                                                                  |
-|                                                                                                                                                                      |
-|   1:VEXCHANGE                                                                                                                                                        |
-|      offset: 0                                                                                                                                                       |
-|      tuple ids: 0                                                                                                                                                    |
-|                                                                                                                                                                      |
-| PLAN FRAGMENT 1                                                                                                                                                      |
-|                                                                                                                                                                      |
-|   PARTITION: RANDOM                                                                                                                                                  |
-|                                                                                                                                                                      |
-|   HAS_COLO_PLAN_NODE: false                                                                                                                                          |
-|                                                                                                                                                                      |
-|   STREAM DATA SINK                                                                                                                                                   |
-|     EXCHANGE ID: 01                                                                                                                                                  |
-|     UNPARTITIONED                                                                                                                                                    |
-|                                                                                                                                                                      |
-|   0:VplanNodeName                                                                                                                                                    |
-|      table: customer_from_spark                                                                                                                                      |
-|      predicates: (`c_nationkey` < 3)                                                                                                                                 |
-|      inputSplitNum=12, totalFileSize=0, scanRanges=12                                                                                                                |
-|      partition=0/0                                                                                                                                                   |
-|      backends:                                                                                                                                                       |
-|        10002                                                                                                                                                         |
-|          s3://lakesoul-test-bucket/data/tpch/customer_from_spark/c_nationkey=1/part-00000-0568c817-d6bc-4fa1-bb9e-b311069b131c_00000.c000.parquet start: 0 length: 0 |
-|          s3://lakesoul-test-bucket/data/tpch/customer_from_spark/c_nationkey=1/part-00001-d99a8fe6-61ab-4285-94da-2f84f8746a8a_00001.c000.parquet start: 0 length: 0 |
-|          s3://lakesoul-test-bucket/data/tpch/customer_from_spark/c_nationkey=1/part-00002-8a8e396f-685f-4b0f-87fa-e2a3fe5be87e_00002.c000.parquet start: 0 length: 0 |
-|          ... other 8 files ...                                                                                                                                       |
-|          s3://lakesoul-test-bucket/data/tpch/customer_from_spark/c_nationkey=0/part-00003-d5b598cd-5bed-412c-a26f-bb4bc9c937bc_00003.c000.parquet start: 0 length: 0 |
-|      numNodes=1                                                                                                                                                      |
-|      pushdown agg=NONE                                                                                                                                               |
-|      tuple ids: 0                                                                                                                                                    |
-|                                                                                                                                                                      |
-| Tuples:                                                                                                                                                              |
-| TupleDescriptor{id=0, tbl=customer_from_spark}                                                                                                                       |
-|   SlotDescriptor{id=0, col=c_custkey, colUniqueId=0, type=int, nullable=false, isAutoIncrement=false, subColPath=null}                                               |
-|   SlotDescriptor{id=1, col=c_name, colUniqueId=1, type=text, nullable=true, isAutoIncrement=false, subColPath=null}                                                  |
-|   SlotDescriptor{id=2, col=c_address, colUniqueId=2, type=text, nullable=true, isAutoIncrement=false, subColPath=null}                                               |
-|   SlotDescriptor{id=3, col=c_nationkey, colUniqueId=3, type=int, nullable=false, isAutoIncrement=false, subColPath=null}                                             |
-|   SlotDescriptor{id=4, col=c_phone, colUniqueId=4, type=text, nullable=true, isAutoIncrement=false, subColPath=null}                                                 |
-|   SlotDescriptor{id=5, col=c_acctbal, colUniqueId=5, type=decimalv3(15,2), nullable=true, isAutoIncrement=false, subColPath=null}                                    |
-|   SlotDescriptor{id=6, col=c_mktsegment, colUniqueId=6, type=text, nullable=true, isAutoIncrement=false, subColPath=null}                                            |
-|   SlotDescriptor{id=7, col=c_comment, colUniqueId=7, type=text, nullable=true, isAutoIncrement=false, subColPath=null}                                               |
-+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-57 rows in set (0.03 sec)
+    ```sql
+    Doris> explain verbose select * from customer_from_spark where c_nationkey < 3;
+    +----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | Explain String(Old Planner)                                                                                                                                          |
+    +----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | PLAN FRAGMENT 0                                                                                                                                                      |
+    |   OUTPUT EXPRS:                                                                                                                                                      |
+    |     `lakesoul`.`tpch`.`customer_from_spark`.`c_custkey`                                                                                                              |
+    |     `lakesoul`.`tpch`.`customer_from_spark`.`c_name`                                                                                                                 |
+    |     `lakesoul`.`tpch`.`customer_from_spark`.`c_address`                                                                                                              |
+    |     `lakesoul`.`tpch`.`customer_from_spark`.`c_nationkey`                                                                                                            |
+    |     `lakesoul`.`tpch`.`customer_from_spark`.`c_phone`                                                                                                                |
+    |     `lakesoul`.`tpch`.`customer_from_spark`.`c_acctbal`                                                                                                              |
+    |     `lakesoul`.`tpch`.`customer_from_spark`.`c_mktsegment`                                                                                                           |
+    |     `lakesoul`.`tpch`.`customer_from_spark`.`c_comment`                                                                                                              |
+    |   PARTITION: UNPARTITIONED                                                                                                                                           |
+    |                                                                                                                                                                      |
+    |   HAS_COLO_PLAN_NODE: false                                                                                                                                          |
+    |                                                                                                                                                                      |
+    |   VRESULT SINK                                                                                                                                                       |
+    |      MYSQL_PROTOCAL                                                                                                                                                  |
+    |                                                                                                                                                                      |
+    |   1:VEXCHANGE                                                                                                                                                        |
+    |      offset: 0                                                                                                                                                       |
+    |      tuple ids: 0                                                                                                                                                    |
+    |                                                                                                                                                                      |
+    | PLAN FRAGMENT 1                                                                                                                                                      |
+    |                                                                                                                                                                      |
+    |   PARTITION: RANDOM                                                                                                                                                  |
+    |                                                                                                                                                                      |
+    |   HAS_COLO_PLAN_NODE: false                                                                                                                                          |
+    |                                                                                                                                                                      |
+    |   STREAM DATA SINK                                                                                                                                                   |
+    |     EXCHANGE ID: 01                                                                                                                                                  |
+    |     UNPARTITIONED                                                                                                                                                    |
+    |                                                                                                                                                                      |
+    |   0:VplanNodeName                                                                                                                                                    |
+    |      table: customer_from_spark                                                                                                                                      |
+    |      predicates: (`c_nationkey` < 3)                                                                                                                                 |
+    |      inputSplitNum=12, totalFileSize=0, scanRanges=12                                                                                                                |
+    |      partition=0/0                                                                                                                                                   |
+    |      backends:                                                                                                                                                       |
+    |        10002                                                                                                                                                         |
+    |          s3://lakesoul-test-bucket/data/tpch/customer_from_spark/c_nationkey=1/part-00000-0568c817-d6bc-4fa1-bb9e-b311069b131c_00000.c000.parquet start: 0 length: 0 |
+    |          s3://lakesoul-test-bucket/data/tpch/customer_from_spark/c_nationkey=1/part-00001-d99a8fe6-61ab-4285-94da-2f84f8746a8a_00001.c000.parquet start: 0 length: 0 |
+    |          s3://lakesoul-test-bucket/data/tpch/customer_from_spark/c_nationkey=1/part-00002-8a8e396f-685f-4b0f-87fa-e2a3fe5be87e_00002.c000.parquet start: 0 length: 0 |
+    |          ... other 8 files ...                                                                                                                                       |
+    |          s3://lakesoul-test-bucket/data/tpch/customer_from_spark/c_nationkey=0/part-00003-d5b598cd-5bed-412c-a26f-bb4bc9c937bc_00003.c000.parquet start: 0 length: 0 |
+    |      numNodes=1                                                                                                                                                      |
+    |      pushdown agg=NONE                                                                                                                                               |
+    |      tuple ids: 0                                                                                                                                                    |
+    |                                                                                                                                                                      |
+    | Tuples:                                                                                                                                                              |
+    | TupleDescriptor{id=0, tbl=customer_from_spark}                                                                                                                       |
+    |   SlotDescriptor{id=0, col=c_custkey, colUniqueId=0, type=int, nullable=false, isAutoIncrement=false, subColPath=null}                                               |
+    |   SlotDescriptor{id=1, col=c_name, colUniqueId=1, type=text, nullable=true, isAutoIncrement=false, subColPath=null}                                                  |
+    |   SlotDescriptor{id=2, col=c_address, colUniqueId=2, type=text, nullable=true, isAutoIncrement=false, subColPath=null}                                               |
+    |   SlotDescriptor{id=3, col=c_nationkey, colUniqueId=3, type=int, nullable=false, isAutoIncrement=false, subColPath=null}                                             |
+    |   SlotDescriptor{id=4, col=c_phone, colUniqueId=4, type=text, nullable=true, isAutoIncrement=false, subColPath=null}                                                 |
+    |   SlotDescriptor{id=5, col=c_acctbal, colUniqueId=5, type=decimalv3(15,2), nullable=true, isAutoIncrement=false, subColPath=null}                                    |
+    |   SlotDescriptor{id=6, col=c_mktsegment, colUniqueId=6, type=text, nullable=true, isAutoIncrement=false, subColPath=null}                                            |
+    |   SlotDescriptor{id=7, col=c_comment, colUniqueId=7, type=text, nullable=true, isAutoIncrement=false, subColPath=null}                                               |
+    +----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    57 rows in set (0.03 sec)
 
-```
+    ```
 
 
-通过检查 `EXPLAIN VERBOSE` 语句的结果，可以看到谓词条件 `c_nationkey < 3` 最终只命中一个分区（partition=0/0）。
+    通过检查 `EXPLAIN VERBOSE` 语句的结果，可以看到谓词条件 `c_nationkey < 3` 最终只命中一个分区（partition=0/0）。
 
 ### 04 CDC 表支持
 
@@ -239,7 +239,7 @@ Job has been submitted with JobID d1b3641dcd1ad85c6b373d49b1867e68
 Flink CDC 作业将启动。我们可以通过重新创建 LakeSoul Catalog 在 `doris client` 中检查启动过程。Flink CDC 作业启动后，我们可以在 `doris client` 中看到正在同步的 LakeSoul CDC 表。
 
 ```sql
-mysql> show tables;
+Doris> show tables;
 +---------------------+
 | Tables_in_tpch      |
 +---------------------+
@@ -248,13 +248,13 @@ mysql> show tables;
 2 rows in set (0.00 sec)
 
 
-mysql> drop catalog if exists lakesoul;
+Doris> drop catalog if exists lakesoul;
 Query OK, 0 rows affected (0.00 sec)
 
-mysql> create catalog `lakesoul`  properties ('type'='lakesoul', 'lakesoul.pg.username'='lakesoul_test', 'lakesoul.pg.password'='lakesoul_test', 'lakesoul.pg.url'='jdbc:postgresql://lakesoul-meta-pg:5432/lakesoul_test?stringtype=unspecified', 'minio.endpoint'='http://minio:9000', 'minio.access_key'='admin', 'minio.secret_key'='password');
+Doris> create catalog `lakesoul`  properties ('type'='lakesoul', 'lakesoul.pg.username'='lakesoul_test', 'lakesoul.pg.password'='lakesoul_test', 'lakesoul.pg.url'='jdbc:postgresql://lakesoul-meta-pg:5432/lakesoul_test?stringtype=unspecified', 'minio.endpoint'='http://minio:9000', 'minio.access_key'='admin', 'minio.secret_key'='password');
 Query OK, 0 rows affected (0.01 sec)
 
-mysql> show tables;
+Doris> show tables;
 +---------------------+
 | Tables_in_tpch      |
 +---------------------+
@@ -263,7 +263,7 @@ mysql> show tables;
 +---------------------+
 2 rows in set (0.00 sec)
 
-mysql> select c_custkey, c_name, c_address, c_nationkey , c_phone, c_acctbal , c_mktsegment , c_comment from lakesoul.tpch.customer where c_custkey < 10;
+Doris> select c_custkey, c_name, c_address, c_nationkey , c_phone, c_acctbal , c_mktsegment , c_comment from lakesoul.tpch.customer where c_custkey < 10;
 +-----------+--------------------+---------------------------------------+-------------+-----------------+-----------+--------------+-------------------------------------------------------------------------------------------------------------------+
 | c_custkey | c_name             | c_address                             | c_nationkey | c_phone         | c_acctbal | c_mktsegment | c_comment                                                                                                         |
 +-----------+--------------------+---------------------------------------+-------------+-----------------+-----------+--------------+-------------------------------------------------------------------------------------------------------------------+
@@ -301,7 +301,7 @@ Rows matched: 1  Changed: 1  Warnings: 0
 
 
 ```sql
-mysql> select c_custkey, c_name, c_address, c_nationkey , c_phone, c_acctbal , c_mktsegment , c_comment from lakesoul.tpch.customer where c_custkey < 10;
+Doris> select c_custkey, c_name, c_address, c_nationkey , c_phone, c_acctbal , c_mktsegment , c_comment from lakesoul.tpch.customer where c_custkey < 10;
 +-----------+--------------------+---------------------------------------+-------------+-----------------+-----------+--------------+-------------------------------------------------------------------------------------------------------------------+
 | c_custkey | c_name             | c_address                             | c_nationkey | c_phone         | c_acctbal | c_mktsegment | c_comment                                                                                                         |
 +-----------+--------------------+---------------------------------------+-------------+-----------------+-----------+--------------+-------------------------------------------------------------------------------------------------------------------+
@@ -331,7 +331,7 @@ Query OK, 1 row affected (0.01 sec)
 
 
 ```sql
-mysql> select c_custkey, c_name, c_address, c_nationkey , c_phone, c_acctbal , c_mktsegment , c_comment from lakesoul.tpch.customer where c_custkey < 10;
+Doris> select c_custkey, c_name, c_address, c_nationkey , c_phone, c_acctbal , c_mktsegment , c_comment from lakesoul.tpch.customer where c_custkey < 10;
 +-----------+--------------------+---------------------------------------+-------------+-----------------+-----------+--------------+-------------------------------------------------------------------------------------------------------------------+
 | c_custkey | c_name             | c_address                             | c_nationkey | c_phone         | c_acctbal | c_mktsegment | c_comment                                                                                                         |
 +-----------+--------------------+---------------------------------------+-------------+-----------------+-----------+--------------+-------------------------------------------------------------------------------------------------------------------+
