@@ -37,22 +37,22 @@ doris-operator provides a `debug` running mode. The following describes how to e
 
 When a pod of the service enters CrashLoopBackOff or cannot be started normally during normal operation, take the following steps to put the service into `debug` mode and manually start the service to find the problem.
 
-**1.Use the following command to add annotation to the pod with problems.**
-```shell
-$ kubectl annotate pod ${pod_name} --namespace ${namespace} selectdb.com.doris/runmode=debug
-```
-When the service is restarted next time, the service will detect the annotation that identifies the `debug` mode startup, and will enter the `debug` mode to start, and the pod status will be `running`.
+1. **Use the following command to add annotation to the pod with problems.**
+  ```shell
+  $ kubectl annotate pod ${pod_name} --namespace ${namespace} selectdb.com.doris/runmode=debug
+  ```
+  When the service is restarted next time, the service will detect the annotation that identifies the `debug` mode startup, and will enter the `debug` mode to start, and the pod status will be `running`.
 
-**2.When the service enters `debug` mode, the pod of the service is displayed in a normal state. Users can enter the inside of the pod through the following command**
+2. **When the service enters `debug` mode, the pod of the service is displayed in a normal state. Users can enter the inside of the pod through the following command**
 
-```shell
-$ kubectl --namespace ${namespace} exec -ti ${pod_name} bash
-```
+  ```shell
+  $ kubectl --namespace ${namespace} exec -ti ${pod_name} bash
+  ```
 
-**3. Manually start the service under `debug`. When the user enters the pod, manually execute the `start_xx.sh` script by modifying the port of the corresponding configuration file. The script directory is under `/opt/apache-doris/xx/bin`.**
+3. **Manually start the service under `debug`. When the user enters the pod, manually execute the `start_xx.sh` script by modifying the port of the corresponding configuration file. The script directory is under `/opt/apache-doris/xx/bin`.**
 
-FE needs to modify `query_port`, BE needs to modify `heartbeat_service_port`
-The main purpose is to avoid misleading the flow by accessing the crashed node through service in `debug` mode.
+  FE needs to modify `query_port`, BE needs to modify `heartbeat_service_port`
+  The main purpose is to avoid misleading the flow by accessing the crashed node through service in `debug` mode.
 
 ### Exit debug mode
 
@@ -102,35 +102,35 @@ If you retain the cluster's crd (Doris Operator defines the abbreviation of `Dor
 
 1. Modify `spec.beSpec.image`
 
-Change `selectdb/doris.be-ubuntu:2.0.4` to `selectdb/doris.be-ubuntu:2.1.0`
-```
-$ vim doriscluster-sample.yaml
-```
+  Change `selectdb/doris.be-ubuntu:2.0.4` to `selectdb/doris.be-ubuntu:2.1.0`
+  ```
+  $ vim doriscluster-sample.yaml
+  ```
 
 2. Save the changes and apply the changes to be upgraded:
-```
-$ kubectl apply -f doriscluster-sample.yaml -n doris
-```
+  ```
+  $ kubectl apply -f doriscluster-sample.yaml -n doris
+  ```
 
 It can also be modified directly through `kubectl edit dcr`.
 
 1. Check the dcr list under namespace 'doris' to obtain the `cluster_name` that needs to be updated.
-```
-$ kubectl get dcr -n doris
-NAME                  FESTATUS    BESTATUS    CNSTATUS
-doriscluster-sample   available   available
-```
+  ```
+  $ kubectl get dcr -n doris
+  NAME                  FESTATUS    BESTATUS    CNSTATUS
+  doriscluster-sample   available   available
+  ```
 
 2. Modify, save and take effect
-```
-$ kubectl edit dcr doriscluster-sample -n doris
-```
-After entering the text editor, you will find `spec.beSpec.image` and change `selectdb/doris.be-ubuntu:2.0.4` to `selectdb/doris.be-ubuntu:2.1.0`
-
+  ```
+  $ kubectl edit dcr doriscluster-sample -n doris
+  ```
+  After entering the text editor, you will find `spec.beSpec.image` and change `selectdb/doris.be-ubuntu:2.0.4` to `selectdb/doris.be-ubuntu:2.1.0`
+  
 3. View the upgrade process and results:
-```
-$ kubectl get pod -n doris
-```
+  ```
+  $ kubectl get pod -n doris
+  ```
 
 When all Pods are rebuilt and enter the Running state, the upgrade is complete.
 
@@ -140,28 +140,28 @@ If you retain the cluster's crd (Doris Operator defines the abbreviation of the 
 
 1. Modify `spec.feSpec.image`
 
-Change `selectdb/doris.fe-ubuntu:2.0.4` to `selectdb/doris.fe-ubuntu:2.1.0`
-```
-$ vim doriscluster-sample.yaml
-```
+  Change `selectdb/doris.fe-ubuntu:2.0.4` to `selectdb/doris.fe-ubuntu:2.1.0`
+  ```
+  $ vim doriscluster-sample.yaml
+  ```
 
 2. Save the changes and apply the changes to be upgraded:
-```
-$ kubectl apply -f doriscluster-sample.yaml -n doris
-```
+  ```
+  $ kubectl apply -f doriscluster-sample.yaml -n doris
+  ```
 
 It can also be modified directly through `kubectl edit dcr`.
 
 1. Modify, save and take effect
-```
-$ kubectl edit dcr doriscluster-sample -n doris
-```
-After entering the text editor, you will find `spec.feSpec.image` and change `selectdb/doris.fe-ubuntu:2.0.4` to `selectdb/doris.fe-ubuntu:2.1.0`
+  ```
+  $ kubectl edit dcr doriscluster-sample -n doris
+  ```
+  After entering the text editor, you will find `spec.feSpec.image` and change `selectdb/doris.fe-ubuntu:2.0.4` to `selectdb/doris.fe-ubuntu:2.1.0`
 
 2. View the upgrade process and results:
-```
-$ kubectl get pod -n doris
-```
+  ```
+  $ kubectl get pod -n doris
+  ```
 
 When all Pods are rebuilt and enter the Running state, the upgrade is complete.
 

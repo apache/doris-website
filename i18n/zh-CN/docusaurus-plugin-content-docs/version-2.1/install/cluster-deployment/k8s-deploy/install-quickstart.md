@@ -182,7 +182,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
 
 ## 第 4 步：连接访问 Doris 集群
 
-在测试环境中快速部署的 Doris 集群，可以进入容器 FE 内部使用 MySQL Client 链接 Doris 进行测试操作。其他访问方式可参考[集群访问章节](./install-config-cluster.md)配置使用。
+在测试环境中快速部署的 Doris 集群，可以进入容器 FE 内部使用 MySQL Client 链接 Doris 进行测试操作。其他访问方式可参考[集群访问章节](./install-config-cluster.md#访问配置)配置使用。
 
 1. 获取 FE 容器名称：
 
