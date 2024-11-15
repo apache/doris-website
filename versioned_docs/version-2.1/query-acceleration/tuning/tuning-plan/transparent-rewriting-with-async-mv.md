@@ -34,9 +34,11 @@ Next, through an example, we will demonstrate in detail how to use aync-material
 
 ### 1 Creation of Base Tables and Data Insertion
 
-First, create two tables, `orders` and `lineitem`, in the TPC-H database, and insert the corresponding data.
+First, create two tables, `orders` and `lineitem`, in the tpch database, and insert the corresponding data.
 
 ```sql
+CREATE DATABASE IF NOT EXISTS tpch;
+
 USE tpch;  
   
 -- Create the orders table  
