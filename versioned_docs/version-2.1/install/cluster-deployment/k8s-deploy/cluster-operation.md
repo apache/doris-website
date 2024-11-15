@@ -30,33 +30,33 @@ In the k8s environment, the service will enter the `CrashLoopBackOff` state due 
 
 In this state, the cause of the service problem cannot be determined simply by using the describe and logs commands. When the service enters the `CrashLoopBackOff` state, there needs to be a mechanism that allows the pod deploying the service to enter the `running` state so that users can enter the container for debugging through exec.
 
-doris-operator provides a `debug` running mode. The following describes how to enter debug mode for manual debugging when the service enters `CrashLoopBackOff`, and how to return to normal startup state after solving the problem.
+doris-operator provides a `Debug` running mode. The following describes how to enter Debug mode for manual debugging when the service enters `CrashLoopBackOff`, and how to return to normal startup state after solving the problem.
 
 
-### Start debug mode
+### Start Debug mode
 
-When a pod of the service enters CrashLoopBackOff or cannot be started normally during normal operation, take the following steps to put the service into `debug` mode and manually start the service to find the problem.
+When a pod of the service enters CrashLoopBackOff or cannot be started normally during normal operation, take the following steps to put the service into `Debug` mode and manually start the service to find the problem.
 
 1. **Use the following command to add annotation to the pod with problems.**
   ```shell
   $ kubectl annotate pod ${pod_name} --namespace ${namespace} selectdb.com.doris/runmode=debug
   ```
-  When the service is restarted next time, the service will detect the annotation that identifies the `debug` mode startup, and will enter the `debug` mode to start, and the pod status will be `running`.
+  When the service is restarted next time, the service will detect the annotation that identifies the `Debug` mode startup, and will enter the `Debug` mode to start, and the pod status will be `running`.
 
-2. **When the service enters `debug` mode, the pod of the service is displayed in a normal state. Users can enter the inside of the pod through the following command**
+2. **When the service enters `Debug` mode, the pod of the service is displayed in a normal state. Users can enter the inside of the pod through the following command**
 
   ```shell
   $ kubectl --namespace ${namespace} exec -ti ${pod_name} bash
   ```
 
-3. **Manually start the service under `debug`. When the user enters the pod, manually execute the `start_xx.sh` script by modifying the port of the corresponding configuration file. The script directory is under `/opt/apache-doris/xx/bin`.**
+3. **Manually start the service under `Debug`. When the user enters the pod, manually execute the `start_xx.sh` script by modifying the port of the corresponding configuration file. The script directory is under `/opt/apache-doris/xx/bin`.**
 
   FE needs to modify `query_port`, BE needs to modify `heartbeat_service_port`
-  The main purpose is to avoid misleading the flow by accessing the crashed node through service in `debug` mode.
+  The main purpose is to avoid misleading the flow by accessing the crashed node through service in `Debug` mode.
 
-### Exit debug mode
+### Exit Debug mode
 
-When the service locates the problem, it needs to exit the `debug` operation. At this time, you only need to delete the corresponding pod according to the following command, and the service will start in the normal mode.
+When the service locates the problem, it needs to exit the `Debug` operation. At this time, you only need to delete the corresponding pod according to the following command, and the service will start in the normal mode.
 ```shell
 $ kubectl delete pod ${pod_name} --namespace ${namespace}
 ```
