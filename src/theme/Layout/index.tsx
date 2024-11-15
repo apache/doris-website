@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import { PageMetadata, ThemeClassNames } from '@docusaurus/theme-common';
@@ -9,6 +9,7 @@ import ErrorPageContent from '@theme/ErrorPageContent';
 import useScrollTop from '@site/src/hooks/scroll-top-hooks';
 import './styles.scss';
 import AnnouncementBar from '../AnnouncementBar';
+import { useHistory } from '@docusaurus/router';
 // import Navbar from '@theme/Navbar';
 // import Footer from '../Footer';
 export default function CustomLayout(props) {
@@ -23,8 +24,17 @@ export default function CustomLayout(props) {
         keywords,
         showAnnouncementBar,
     } = props;
+    const history = useHistory();
     useKeyboardNavigation();
     const { isTop } = useScrollTop(80);
+
+    useEffect(() => {
+        if (
+            history.location.pathname?.length > 1 &&
+            history.location.pathname[history.location.pathname.length - 1] === '/'
+        )
+            history.replace(history.location.pathname.slice(0, -1));
+    }, []);
     return (
         <Layout>
             <PageMetadata title={title} description={description} keywords={keywords} />
