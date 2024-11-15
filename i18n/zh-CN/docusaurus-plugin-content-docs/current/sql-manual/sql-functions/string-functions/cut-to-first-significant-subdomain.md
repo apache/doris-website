@@ -24,15 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## cut_to_first_significant_subdomain
-## description
-## Syntax
+
+## 说明
+
+## 语法
 
 `VARCHAR  cut_to_first_significant_subdomain(VARCHAR url)`
 
-在url中提取出域中包含顶级子域直至“第一个有效子域”的部分, 若不合法时，则会返回空字符串
+在 URL 中提取出域中包含顶级子域直至“第一个有效子域”的部分, 若不合法时，则会返回空字符串
 
-```
+```sql
 mysql [(none)]>select cut_to_first_significant_subdomain("www.baidu.com");
 +-----------------------------------------------------+
 | cut_to_first_significant_subdomain('www.baidu.com') |
@@ -56,5 +57,6 @@ mysql [(none)]>select cut_to_first_significant_subdomain("wwwwwwww");
 
 ```
 
-### keywords
-    CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN
+## 关键字
+
+CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN
