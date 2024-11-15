@@ -57,6 +57,6 @@ mysql [(none)]>select cut_to_first_significant_subdomain("wwwwwwww");
 
 ```
 
-## 关键字
+## 关键词
 
 CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN
