@@ -24,14 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## first_significant_subdomain
-## description
-## Syntax
+
+## 描述
+
+## 语法
 
 `VARCHAR  first_significant_subdomain(VARCHAR url)`
 
 
-在url中提取出“第一个有效子域”返回，若不合法则会返回空字符串
+在 URL 中提取出“第一个有效子域”返回，若不合法则会返回空字符串
 
 ```
 mysql [(none)]>select first_significant_subdomain("www.baidu.com");
@@ -57,5 +58,6 @@ mysql [(none)]>select first_significant_subdomain("wwwwwwww");
 
 ```
 
-### keywords
-    FIRST_SIGNIFICANT_SUBDOMAIN
+### 关键词
+
+FIRST_SIGNIFICANT_SUBDOMAIN
