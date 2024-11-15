@@ -568,7 +568,7 @@ Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Do
 
   Doris 支持密文的方式在 [FE 的配置文件](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password)中设置 root 用户的密码，密码的加密方式是采用 2 阶段 SHA-1 加密实现。代码实现如下:
   
-  java 代码实现 2 阶段 SHA-2 加密：
+  Java 代码实现 2 阶段 SHA-2 加密：
   
   ```java
   import org.apache.commons.codec.digest.DigestUtils;
@@ -582,7 +582,7 @@ Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Do
     }
   ```
   
-  golang 代码实现 2 阶段 SHA-1 加密：
+  Golang 代码实现 2 阶段 SHA-1 加密：
   
   ```go
   import (
