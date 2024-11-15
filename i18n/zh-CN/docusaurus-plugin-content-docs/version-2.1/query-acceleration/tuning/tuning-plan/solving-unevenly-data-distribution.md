@@ -53,7 +53,7 @@ SELECT COUNT(*) FROM orders JOIN customer ON o_custkey = c_custkey;
 以下 SQL 查询为例：
 
 ```sql
-select count() 
+select count(1) 
 from orders, customer 
 where o_custkey = c_custkey and o_orderdate < '1920-01-02'
 ```
@@ -67,7 +67,7 @@ where o_custkey = c_custkey and o_orderdate < '1920-01-02'
 改写 SQL 如下：
 
 ```sql
-select /* leading(orders customer) */ count() 
+select /* +leading(orders customer) */ count(1) 
 from orders, customer 
 where o_custkey = c_custkey and o_orderdate < '1920-01-02'
 ```
