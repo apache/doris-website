@@ -28,53 +28,60 @@ under the License.
 
 ## 名词解释
 
--   Base Table：基表。每一个表被创建时，都对应一个基表。
+- Base Table：基表。使用建表语句创建出的原始表。
 
--   Rollup：基于基表或者其他 Rollup 创建出来的上卷表。
+- Rollup：基于基表或者其他 Rollup 创建出来的上卷表。
 
--   Index：物化索引。Rollup 或 Base Table 都被称为物化索引。
+- Index：物化索引。Rollup 和 Base Table 都被称为物化索引。
 
--   Transaction：事务。每一个导入任务都是一个事务，每个事务有一个唯一递增的 Transaction ID。
+- Transaction：事务。每一个导入任务都对应一个事务，每个事务有一个唯一递增的 Transaction ID。
 
 ## 原理介绍
 
-**Light Schema Change**
+**概览**
 
-在正式介绍以前，需要认识一下 Apache Doris 1.2.0 版本之前的 3 种 Schema Change 实现，这三种方式都是异步的：
+Schema Change 的实现分为两个大类：轻量级Schema Change和重量级Schema Change。
 
--   Hard Linked Schema Change 主要作用于加减 Value 列，不需要对数据文件有修改。
+- 轻量级Schema Change完成速度很快，只会同步地修改FE的元数据，一般在秒级别完成。增加或删除value列、更改列名、增加除DUP KEY列和UNIQUE KEY列以外的VARCHAR列的长度，都会使用轻量级Schema Change的逻辑。
 
--   Direct Schema Change 主要作用于改变 Value 列的类型，需要对数据进行重写，但不涉及到 Key 列，无需重新排序。
+- 重量级Schema Change需要依赖BE进行数据文件的转换。具体实现方式如下：
 
--   Sort Schema Change 主要是作用于对 key 列进行的 Schema Change，由于对 Key 列进行加/减/修改类型等操作都会影响到已有数据的排序，所以需要把数据重新读出来，修改后，然后再进行排序。
+    |Schema change实现| 主要逻辑 | 使用场景 |
+    |-----------------|---------|----------|
+    | Direct Schema Change | 对数据文件进行整体重写，但是不会涉及重排序 | 更改value列的数据类型 |
+    | Sort Schema Change | 对数据文件进行整体重写，并进行重排序 | 更改key列的数据类型 |
+    | Hard Linked Schema Change | 对数据文件进行重新链接，不需要直接修改数据文件 | 在列的变更中被轻量级Schema Change取代 |
 
-从 Apache Doris 1.2.0 以后，针对第一种，引入了 Light Schema Change 新特性，新的 Light Schema Change 使得增减 Value 列可以在毫秒级完成。从 Apache Doris 2.0.0 开始，所有的新建表都默认启用了 Light Schema Change。
+**主要流程**
 
-**除了对 Value 列的增加和删除，其它类型的 Schema 变更的主要原理如下**
+对于轻量级Schema Change，只会在Alter命令发起后修改FE的相应元数据，Alter命令的返回就代表Schema变更的结束。
 
-执行 Schema Change 的基本过程，是通过原表 /Index 的数据，生成一份新 Schema 的表 /Index 数据。其中主要需要进行两部分数据转换，一是已存在的历史数据的转换，二是在 Schema Change 执行过程中，新到达的导入数据的转换。
+对于重量级Schema Change，在用户发起Alter命令后，会在后台启动一个任务进行Schema的变更，命令的返回代表着Schema变更任务的提交成功。后台任务的执行将经过以下过程：
 
-```Plain
-+----------+
-| Load Job |
-+----+-----+
-     |
-     | Load job generates both origin and new Index data
-     |
-     |      +------------------+ +---------------+
-     |      | Origin Index     | | Origin Index  |
-     +------> New Incoming Data| | History Data  |
-     |      +------------------+ +------+--------+
-     |                                  |
-     |                                  | Convert history data
-     |                                  |
-     |      +------------------+ +------v--------+
-     |      | New Index        | | New Index     |
-     +------> New Incoming Data| | History Data  |
-            +------------------+ +---------------+
-```
-
-在开始转换历史数据之前，Doris 会获取一个最新的 Transaction ID。并等待这个 Transaction ID 之前的所有导入事务完成。这个 Transaction ID 成为分水岭。意思是，Doris 保证在分水岭之后的所有导入任务，都会同时为原表 /Index 和新表 /Index 生成数据。这样当历史数据转换完成后，可以保证新的表中的数据是完整的。
+1. 对目标表的每个tablet，都根据变更后的schema创建对应的new tablet，用于存放转换后的数据。
+2. 等待先前的所有导入事务结束，才能开始数据转换。
+3. 开始数据转换，按tablet为任务单位，把每个旧tablet上的数据经过变更写入到之前新建的tablet上。三种重量级Schema Change的差异在这一步上，会通过上文提到的各自实现逻辑进行数据转换。
+4. 数据转换开始后，如果有新的导入事务创建，为保证数据完整性，新的导入事务将同时为旧tablet和新tablet生成数据，即数据双写。双写期间的数据必须兼容新、旧Schema，否则会导入失败。
+    ```Plain
+    +----------+
+    | Load Job |
+    +----+-----+
+        |
+        | Load job generates both origin and new Index data
+        |
+        |      +------------------+ +---------------+
+        |      | Origin Index     | | Origin Index  |
+        +------> New Incoming Data| | History Data  |
+        |      +------------------+ +------+--------+
+        |                                  |
+        |                                  | Convert history data
+        |                                  |
+        |      +------------------+ +------v--------+
+        |      | New Index        | | New Index     |
+        +------> New Incoming Data| | History Data  |
+                +------------------+ +---------------+
+    ```
+5. 数据转换完成后，所有存放旧数据的tablet将会被删除，所有完成数据变更的新tablet将会取代旧tablet进行服务。
 
 创建 Schema Change 的具体语法可以查看帮助 [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 中 Schema Change 部分的说明。
 
@@ -89,17 +96,18 @@ ALTER TABLE table_name ADD COLUMN column_name column_type [KEY | agg_type] [DEFA
 [PROPERTIES ("key"="value", ...)]
 ```
 
--   聚合模型如果增加 Value 列，需要指定 `agg_type`
+- 聚合模型如果增加 Value 列，需要指定 `agg_type`
 
--   非聚合模型（如 DUPLICATE KEY）如果增加 Key 列，需要指定 `KEY` 关键字
+- 非聚合模型（如 DUPLICATE KEY）如果增加 Key 列，需要指定 `KEY` 关键字
 
--   不能在 Rollup Index 中增加 Base Index 中已经存在的列（如有需要，可以重新创建一个 Rollup Index）
+- 不能在 Rollup Index 中增加 Base Index 中已经存在的列（如有需要，可以重新创建一个 Rollup Index）
 
 ### 示例
 
 #### 非聚合模型
 
 建表语句：
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     col1 int,
@@ -110,14 +118,14 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
 ) DUPLICATE KEY(col1, col2, col3)
 DISTRIBUTED BY RANDOM BUCKETS 1
 ROLLUP (
-   example_rollup_index (col1, col3, col4, col5)
+    example_rollup_index (col1, col3, col4, col5)
 )
 PROPERTIES (
-   "replication_num" = "1"
+    "replication_num" = "1"
 )
 ```
 
-**1. 向 `example_rollup_index ` 的 col1 后添加一个 Key 列 `new_col`**
+**1. 向 `example_rollup_index` 的 col1 后添加一个 Key 列 `new_col`**
 
 ```sql
 ALTER TABLE example_db.my_table
@@ -136,6 +144,7 @@ TO example_rollup_index;
 #### 聚合模型
 
 建表语句：
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     col1 int,
@@ -183,7 +192,7 @@ ALTER TABLE table_name ADD COLUMN (column_name1 column_type [KEY | agg_type] DEF
 
 - 聚合模型如果增加 Key 列，需要指定 KEY 关键字
 
-- 不能在 Rollup Index 中增加 Base Index 中已经存在的列（如有需要，可以重新创建一个 Rollup Index）
+- 不能在 Rollup Index 中增加 Base Table 中已经存在的列（如有需要，可以重新创建一个 Rollup Index）
 
 ### 示例
 
@@ -204,9 +213,9 @@ ALTER TABLE table_name DROP COLUMN column_name
 [FROM rollup_index_name]
 ```
 
--   不能删除分区列
+- 不能删除分区列
 
--   如果是从 Base Index 中删除列，则如果 Rollup Index 中包含该列，也会被删除
+- 如果是从 Base Table 中删除列，则如果 Rollup Index 中包含该列，也会被删除
 
 ### 示例
 
@@ -229,39 +238,40 @@ ALTER TABLE table_name MODIFY COLUMN column_name column_type [KEY | agg_type] [N
 [PROPERTIES ("key"="value", ...)]
 ```
 
--   聚合模型如果修改 Value 列，需要指定 `agg_type`
+- 聚合模型如果修改 Value 列，需要指定 `agg_type`
 
--   非聚合类型如果修改 Key 列，需要指定 **KEY** 关键字
+- 非聚合类型如果修改 Key 列，需要指定 **KEY** 关键字
 
--   只能修改列的类型，列的其他属性维持原样（即其他属性需在语句中按照原属性显式的写出，参见 Example 8）
+- 只能修改列的类型，列的其他属性维持原样（即其他属性需在语句中按照原属性显式的写出，参见 Example 8）
 
--   分区列和分桶列不能做任何修改
+- 分区列和分桶列不能做任何修改
 
--   目前支持以下类型的转换（精度损失由用户保证）
+- 目前支持以下类型的转换（用户需要注意精度损失）
 
-    -   TINYINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE 类型向范围更大的数字类型转换
+  - TINYINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE 类型向范围更大的数字类型转换
 
-    -   TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE/DECIMAL 转换成 VARCHAR
+  - TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE/DECIMAL 转换成 VARCHAR
 
-    -   VARCHAR 支持修改最大长度
+  - VARCHAR 支持修改最大长度
 
-    -   VARCHAR/CHAR 转换成 TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE
+  - VARCHAR/CHAR 转换成 TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE
 
-    -   VARCHAR/CHAR 转换成 DATE (目前支持"%Y-%m-%d", "%y-%m-%d", "%Y%m%d", "%y%m%d", "%Y/%m/%d, "%y/%m/%d" 六种格式化格式)
+  - VARCHAR/CHAR 转换成 DATE (目前支持"%Y-%m-%d", "%y-%m-%d", "%Y%m%d", "%y%m%d", "%Y/%m/%d, "%y/%m/%d" 六种格式化格式)
 
-    -   DATETIME 转换成 DATE (仅保留年 - 月 - 日信息，例如： `2019-12-09 21:47:05` <--> `2019-12-09`)
+  - DATETIME 转换成 DATE (仅保留年 - 月 - 日信息，例如： `2019-12-09 21:47:05` <--> `2019-12-09`)
 
-    -   DATE 转换成 DATETIME (时分秒自动补零，例如： `2019-12-09` <--> `2019-12-09 00:00:00`)
+  - DATE 转换成 DATETIME (时分秒自动补零，例如： `2019-12-09` <--> `2019-12-09 00:00:00`)
 
-    -   FLOAT 转换成 DOUBLE
+  - FLOAT 转换成 DOUBLE
 
-    -   INT 转换成 DATE (如果 INT 类型数据不合法则转换失败，原始数据不变)
+  - INT 转换成 DATE (如果 INT 类型数据不合法则转换失败，原始数据不变)
 
-    -   除 DATE 与 DATETIME 以外都可以转换成 STRING，但是 STRING 不能转换任何其他类型
+  - 除 DATE 与 DATETIME 以外都可以转换成 STRING，但是 STRING 不能转换任何其他类型
 
 ### 示例
 
 建表语句：
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     col0 int,
@@ -293,7 +303,7 @@ ALTER TABLE example_db.my_table
 MODIFY COLUMN col5 VARCHAR(64) REPLACE DEFAULT "abc";
 ```
 
-注意：只能修改列的类型，列的其他属性维持原样
+注意：只能修改列的类型，列的其他属性需要维持原样
 
 **3. 修改 Duplicate Key 表 Key 列的某个字段的长度**
 
@@ -312,9 +322,9 @@ ALTER TABLE table_name ORDER BY (column_name1, column_name2, ...)
 [PROPERTIES ("key"="value", ...)]
 ```
 
--   Index 中的所有列都要写出来
+- Index 中的所有列都要写出来
 
--   Value 列在 Key 列之后
+- Value 列在 Key 列之后
 
 ### 示例
 
@@ -406,6 +416,7 @@ ADD COLUMN k5 INT default "1" to rollup2;
 ### 示例 2
 
 建表语句
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     k1 int DEFAULT "1",
@@ -416,10 +427,10 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
 ) AGGREGATE KEY(k1, k2, k3, k4)
 DISTRIBUTED BY HASH(k1) BUCKETS 1
 ROLLUP (
-   example_rollup_index(k1, k3, k2, v1)
+    example_rollup_index(k1, k3, k2, v1)
 )
 PROPERTIES (
-   "replication_num" = "1"
+    "replication_num" = "1"
 )
 ```
 
@@ -439,7 +450,7 @@ ALTER TABLE RENAME COLUMN old_column_name new_column_name;
 
 ## 查看作业
 
-Schema Change 的创建是一个异步过程，作业提交成功后，用户需要通过 `SHOW ALTER TABLE COLUMN` 命令来查看作业进度。
+用户可以通过 `SHOW ALTER TABLE COLUMN` 命令来查看schema change作业进度。
 
 `SHOW ALTER TABLE COLUMN` 可以查看当前正在执行或已经完成的 Schema Change 作业。当一次 Schema Change 作业涉及到多个 Index 时，该命令会显示多行，每行对应一个 Index。举例如下：
 
@@ -462,41 +473,41 @@ TransactionId: 10023
 1 row in set (0.00 sec)
 ```
 
--   JobId：每个 Schema Change 作业的唯一 ID。
+- JobId：每个 Schema Change 作业的唯一 ID。
 
--   TableName：Schema Change 对应的基表的表名。
+- TableName：Schema Change 对应的基表的表名。
 
--   CreateTime：作业创建时间。
+- CreateTime：作业创建时间。
 
--   FinishedTime：作业结束时间。如未结束，则显示 "N/A"。
+- FinishedTime：作业结束时间。如未结束，则显示 "N/A"。
 
--   IndexName：本次修改所涉及的某一个 Index 的名称。
+- IndexName：本次修改所涉及的某一个 Index 的名称。
 
--   IndexId：新的 Index 的唯一 ID。
+- IndexId：新的 Index 的唯一 ID。
 
--   OriginIndexId：旧的 Index 的唯一 ID。
+- OriginIndexId：旧的 Index 的唯一 ID。
 
--   SchemaVersion：以 M:N 的格式展示。其中 M 表示本次 Schema Change 变更的版本，N 表示对应的 Hash 值。每次 Schema Change，版本都会递增。
+- SchemaVersion：以 M:N 的格式展示。其中 M 表示本次 Schema Change 变更的版本，N 表示对应的 Hash 值。每次 Schema Change，版本都会递增。
 
--   TransactionId：转换历史数据的分水岭 Transaction ID。
+- TransactionId：转换历史数据的分水岭 Transaction ID。
 
--   State：作业所在阶段。
+- State：作业所在阶段。
 
-    -   PENDING：作业在队列中等待被调度。
+  - PENDING：作业在队列中等待被调度。
 
-    -   WAITING_TXN：等待分水岭 Transaction ID 之前的导入任务完成。
+  - WAITING_TXN：等待分水岭 Transaction ID 之前的导入任务完成。
 
-    -   RUNNING：历史数据转换中。
+  - RUNNING：历史数据转换中。
 
-    -   FINISHED：作业成功。
+  - FINISHED：作业成功。
 
-    -   CANCELLED：作业失败。
+  - CANCELLED：作业失败。
 
--   Msg：如果作业失败，这里会显示失败信息。
+- Msg：如果作业失败，这里会显示失败信息。
 
--   Progress：作业进度。只有在 RUNNING 状态才会显示进度。进度是以 M/N 的形式显示。其中 N 为 Schema Change 涉及的总副本数。M 为已完成历史数据转换的副本数。
+- Progress：作业进度。只有在 RUNNING 状态才会显示进度。进度是以 M/N 的形式显示。其中 N 为 Schema Change 涉及的总副本数。M 为已完成历史数据转换的副本数。
 
--   Timeout：作业超时时间。单位秒。
+- Timeout：作业超时时间。单位秒。
 
 ## 取消作业
 
@@ -508,31 +519,31 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 
 ## 注意事项
 
--   一张表在同一时间只能有一个 Schema Change 作业在运行。
+- 一张表在同一时间只能有一个 Schema Change 作业在运行。
 
--   Schema Change 操作不阻塞导入和查询操作。除非操作本身影响了表的元数据（例如自动分区表导入过程中创建了分区）
+- Schema Change 操作不阻塞导入和查询操作。除非操作本身影响了表的元数据（例如自动分区表导入过程中创建了分区）
 
--   分区列和分桶列不能修改。
+- 分区列和分桶列不能修改。
 
--   如果 Schema 中有 REPLACE 方式聚合的 Value 列，则不允许删除 Key 列。
+- 如果 Schema 中有 REPLACE 方式聚合的 Value 列，则不允许删除 Key 列。
 
--   如果删除 Key 列，Doris 无法决定 REPLACE 列的取值。
+- 如果删除 Key 列，Doris 无法决定 REPLACE 列的取值。
 
--   Unique 数据模型表的所有非 Key 列都是 REPLACE 聚合方式。
+- Unique 数据模型表的所有非 Key 列都是 REPLACE 聚合方式。
 
--   在新增聚合类型为 SUM 或者 REPLACE 的 Value 列时，该列的默认值对历史数据没有含义。
+- 在新增聚合类型为 SUM 或者 REPLACE 的 Value 列时，该列的默认值对历史数据没有含义。
 
--   因为历史数据已经失去明细信息，所以默认值的取值并不能实际反映聚合后的取值。
+- 因为历史数据已经失去明细信息，所以默认值的取值并不能实际反映聚合后的取值。
 
--   当修改列类型时，除 Type 以外的字段都需要按原列上的信息补全。
+- 当修改列类型时，除 Type 以外的字段都需要按原列上的信息补全。
 
--   如修改列 `k1 INT SUM NULL DEFAULT "1"` 类型为 BIGINT，则需执行命令如下：
+- 如修改列 `k1 INT SUM NULL DEFAULT "1"` 类型为 BIGINT，则需执行命令如下：
 
--   `ALTER TABLE tbl1 MODIFY COLUMN `k1` BIGINT SUM NULL DEFAULT "1";`
+- `ALTER TABLE tbl1 MODIFY COLUMN`k1`BIGINT SUM NULL DEFAULT "1";`
 
--   注意，除新的列类型外，如聚合方式，Nullable 属性，以及默认值都要按照原信息补全。
+- 注意，除新的列类型外，如聚合方式，Nullable 属性，以及默认值都要按照原信息补全。
 
--   不支持修改列名称、聚合类型、Nullable 属性、默认值以及列注释。
+- 不支持修改聚合类型、Nullable 属性、默认值。
 
 ## 常见问题
 
@@ -570,13 +581,13 @@ ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
 
 ### FE 配置
 
--   `alter_table_timeout_second`：作业默认超时时间，86400 秒。
+- `alter_table_timeout_second`：作业默认超时时间，86400 秒。
 
 ### BE 配置
 
--   `alter_tablet_worker_count`：在 BE 端用于执行历史数据转换的线程数。默认为 3。如果希望加快 Schema Change 作业的速度，可以适当调大这个参数后重启 BE。但过多的转换线程可能会导致 IO 压力增加，影响其他操作。该线程和 Rollup 作业共用。
+- `alter_tablet_worker_count`：在 BE 端用于执行历史数据转换的线程数。默认为 3。如果希望加快 Schema Change 作业的速度，可以适当调大这个参数后重启 BE。但过多的转换线程可能会导致 IO 压力增加，影响其他操作。该线程和 Rollup 作业共用。
 
--   `alter_index_worker_count`：在 BE 端用于执行历史数据构建索引的线程数（注：当前只支持倒排索引）。默认为 3。如果希望加快 Index Change 作业的速度，可以适当调大这个参数后重启 BE。但过多的线程可能会导致 IO 压力增加，影响其他操作。
+- `alter_index_worker_count`：在 BE 端用于执行历史数据构建索引的线程数（注：当前只支持倒排索引）。默认为 3。如果希望加快 Index Change 作业的速度，可以适当调大这个参数后重启 BE。但过多的线程可能会导致 IO 压力增加，影响其他操作。
 
 ## 更多参考
 
