@@ -423,11 +423,11 @@ As a distributed database, Doris considers the physical machines where TopN and 
 
 ### Tuning
 
-The session variable `topn_opt_limit_threshold` controls whether to generate a TopN Runtime Filter.
+The session variable `topn_filter_ratio` controls whether to generate a TopN Runtime Filter.
 
-The fewer rows specified in the SQL's `limit` clause, the stronger the filtering effect of the TopN Runtime Filter. Therefore, by default, Doris enables the generation of corresponding TopN Runtime Filters only when the `limit` number is less than 1024.
+The fewer rows specified in the SQL's `limit` clause, the stronger the filtering effect of the TopN Runtime Filter. Therefore, by default, Doris enables the generation of corresponding TopN Runtime Filters only when the `limit` number is less than half of the data in the table.
 
-For example, setting `set topn_opt_limit_threshold=10` would prevent the generation of a TopN Runtime Filter for the following query:
+For example, setting `set topn_filter_ratio=0` would prevent the generation of a TopN Runtime Filter for the following query:
 
 ```sql
 select o_orderkey from orders order by o_orderdate limit 20;
