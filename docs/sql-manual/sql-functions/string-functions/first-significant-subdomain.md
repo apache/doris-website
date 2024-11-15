@@ -24,8 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## first_significant_subdomain
-## description
+
+## Description
+
 ## Syntax
 
 `VARCHAR  first_significant_subdomain(VARCHAR url)`
@@ -33,9 +34,9 @@ under the License.
 
 Extract the "first valid subdomain" from a URL and return it. If the URL is invalid, return an empty string.
 
-## example
+## Example
 
-```
+```sql
 mysql [(none)]>select first_significant_subdomain("www.baidu.com");
 +----------------------------------------------+
 | first_significant_subdomain('www.baidu.com') |
@@ -58,5 +59,6 @@ mysql [(none)]>select first_significant_subdomain("wwwwwwww");
 +-----------------------------------------+
 ```
 
-### keywords
-    FIRST_SIGNIFICANT_SUBDOMAIN
+### Keywords
+
+FIRST_SIGNIFICANT_SUBDOMAIN
