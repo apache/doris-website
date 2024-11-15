@@ -382,11 +382,11 @@ Doris provides the ClusterIP access mode by default on Kubernetes. The ClusterIP
   doriscluster-sample-fe-service    ClusterIP   10.1.118.16   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   14m
   ```
 
-3. Access Doris from Inside the Container  
+  In the above results, there are two types of services for FE and BE, with suffixes of "internal" and "service" respectively:
+  - The services with the "internal" suffix can only be used for internal communication within Doris, such as heartbeat, data exchange, and other operations, and are not for external use.
+  - The services with the "service" suffix can be used by users.
 
-In the above results, there are two types of services for FE and BE, with suffixes of "internal" and "service" respectively:
-- The services with the "internal" suffix can only be used for internal communication within Doris, such as heartbeat, data exchange, and other operations, and are not for external use.
-- The services with the "service" suffix can be used by users.
+3. Access Doris from Inside the Container  
 
   You can create a pod containing the mysql client in the current Kubernetes cluster using the following command:
   ```shell

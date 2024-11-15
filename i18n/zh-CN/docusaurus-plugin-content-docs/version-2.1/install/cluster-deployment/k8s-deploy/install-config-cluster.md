@@ -400,8 +400,8 @@ Doris 在 Kubernetes 上默认提供 [ClusterIP 访问模式](https://kubernetes
   
   在以上结果中，FE 与 BE 有两类 Service，后缀分别为 internal 与 service：
   
-  \  - 以 internal 后缀的 Service 服务只能 Doris 内部通信使用，如心跳，数据交换等操作，不对外使用。  
-  \  - 以 service 后缀的 Service 服务可以提供用户使用。  
+  - 以 internal 后缀的 Service 服务只能 Doris 内部通信使用，如心跳，数据交换等操作，不对外使用。  
+  - 以 service 后缀的 Service 服务可以提供用户使用。  
 
 3. 在容器内部访问 Doris  
 
