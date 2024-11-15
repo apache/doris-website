@@ -24,8 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## top_level_domain
-## description
+
+## Description
+
 ## Syntax
 
 `VARCHAR  top_level_domain(VARCHAR url)`
@@ -33,9 +34,9 @@ under the License.
 
 Extract the top-level domain from a URL and return it. If the URL is invalid, return an empty string.
 
-## example
+## Example
 
-```
+```sql
 mysql [(none)]>select top_level_domain("www.baidu.com");
 +-----------------------------------+
 | top_level_domain('www.baidu.com') |
@@ -59,4 +60,5 @@ mysql [(none)]>select top_level_domain("wwwwwwww");
 ```
 
 ### keywords
-    top_level_domain
+
+top_level_domain
