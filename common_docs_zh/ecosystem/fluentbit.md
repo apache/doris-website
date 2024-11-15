@@ -24,16 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-[Fluent Bit](https://fluentbit.io/) 是一个快速的日志处理器和转发器，它支持自定义输出插件将数据写入存储系统，Fluent Bit Doris output plugin 是输出到 Doris 的插件。
+[Fluent Bit](https://fluentbit.io/) 是一个快速的日志处理器和转发器，它支持自定义输出插件将数据写入存储系统，Fluent Bit Doris Output Plugin 是输出到 Doris 的插件。
 
-Fluent Bit Doris output plugin 调用 [Doris Stream Load](../data-operate/import/stream-load-manual.md) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
+Fluent Bit Doris Output Plugin 调用 [Doris Stream Load](../data-operate/import/stream-load-manual.md) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
 
-使用 Fluent Bit Doris output plugin 主要有三个步骤：
-1. 下载或编译包含 Doris output plugin 的 Fluent Bit 二进制程序
+使用 Fluent Bit Doris Output Plugin 主要有三个步骤：
+1. 下载或编译包含 Doris Output Plugin 的 Fluent Bit 二进制程序
 2. 配置 Fluent Bit 输出地址和其他参数
 3. 启动 Fluent Bit 将数据实时写入 Doris
 
-## 安装（alpha）
+## 安装（alpha 版本）
 
 ### 从官网下载
 
@@ -78,9 +78,9 @@ Fluent Bit Doris output plugin 的配置如下：
 
 **1. 数据**
 
-FE 日志文件一般位于 Doris 安装目录下的 fe/log/fe.log 文件，是典型的 Java 程序日志，包括时间戳，日志级别，线程名，代码位置，日志内容等字段。不仅有正常的日志，还有带 stacktrace 的异常日志，stacktrace 是跨行的，日志采集存储需要把主日志和 stacktrace 组合成一条日志。
+FE 日志文件一般位于 Doris 安装目录下的 `fe/log/fe.log` 文件，是典型的 Java 程序日志，包括时间戳，日志级别，线程名，代码位置，日志内容等字段。不仅有正常的日志，还有带 `stacktrace` 的异常日志，`stacktrace` 是跨行的，日志采集存储需要把主日志和 `stacktrace` 组合成一条日志。
 
-```
+```java
 2024-07-08 21:18:01,432 INFO (Statistics Job Appender|61) [StatisticsJobAppender.runAfterCatalogReady():70] Stats table not available, skip
 2024-07-08 21:18:53,710 WARN (STATS_FETCH-0|208) [StmtExecutor.executeInternalQuery():3332] Failed to run internal SQL: OriginStatement{originStmt='SELECT * FROM __internal_schema.column_statistics WHERE part_id is NULL  ORDER BY update_time DESC LIMIT 500000', idx=0}
 org.apache.doris.common.UserException: errCode = 2, detailMessage = tablet 10031 has no queryable replicas. err: replica 10032's backend 10008 does not exist or not alive
@@ -92,7 +92,7 @@ org.apache.doris.common.UserException: errCode = 2, detailMessage = tablet 10031
 
 表结构包括日志的产生时间，采集时间，主机名，日志文件路径，日志类型，日志级别，线程名，代码位置，日志内容等字段。
 
-```
+```sql
 CREATE TABLE `doris_log` (
   `log_time` datetime NULL COMMENT 'log content time',
   `collect_time` datetime NULL COMMENT 'log agent collect time',
@@ -130,10 +130,11 @@ PROPERTIES (
 
 **3. 配置**
 
-Fluent Bit 日志采集的配置文件如下，doris_log.conf 用于定义 ETL 的各个部分组件，parsers.conf 用于定义不同的日志解析器。
+Fluent Bit 日志采集的配置文件如下，`doris_log.conf` 用于定义 ETL 的各个部分组件，`parsers.conf` 用于定义不同的日志解析器。
 
 doris_log.conf:
-```
+
+```java
 # config for Fluent Bit service
 [SERVICE]
     log_level info
@@ -183,7 +184,8 @@ doris_log.conf:
 ```
 
 parsers.conf:
-```
+
+```java
 [MULTILINE_PARSER]
     name          multiline_java
     type          regex
@@ -211,7 +213,7 @@ parsers.conf:
 
 **4. 运行 Fluent Bit**
 
-```
+```java
 fluent-bit -c doris_log.conf
 
 # log stream load response
@@ -250,13 +252,13 @@ fluent-bit -c doris_log.conf
 
 github events archive 是 github 用户操作事件的归档数据，格式是 JSON，可以从 https://www.gharchive.org/ 下载，比如下载 2024年1月1日15点的数据。
 
-```
+```shell
 wget https://data.gharchive.org/2024-01-01-15.json.gz
 ```
 
 下面是一条数据样例，实际一条数据一行，这里为了方便展示进行了格式化。
 
-```
+```jason
 {
   "id": "37066529221",
   "type": "PushEvent",
@@ -289,7 +291,7 @@ wget https://data.gharchive.org/2024-01-01-15.json.gz
 
 **2. 建表**
 
-```
+```sql
 CREATE TABLE github_events
 (
   `created_at` DATETIME,
@@ -329,6 +331,7 @@ PROPERTIES (
 和之前 TEXT 日志采集相比，该配置文件没有使用 FILTER，因为不需要额外的处理转换。
 
 github_events.conf:
+
 ```
 [SERVICE]
     log_level info
