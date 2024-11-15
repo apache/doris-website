@@ -380,7 +380,7 @@ Doris 在 Kubernetes 上默认提供 [ClusterIP 访问模式](https://kubernetes
   ```
   
   返回结果如下：
-  
+
   ```shell
   NAME                              TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)                               AGE
   doriscluster-sample-be-internal   ClusterIP   None          <none>        9050/TCP                              9m

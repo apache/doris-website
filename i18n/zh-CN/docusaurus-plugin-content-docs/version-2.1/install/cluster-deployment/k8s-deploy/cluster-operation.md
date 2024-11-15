@@ -25,10 +25,10 @@
     -->
 
 ## 服务 Crash 情况下如何进入容器
-在 k8s 环境中服务因为一些预期之外的事情会进入 `CrashLoopBackOff` 状态，通过 `kubectl get pod --namespace ${namespace}` 命令可以查看指定 namespace 下的 pod 状态和 pod_name。
+在 K8s 环境中服务因为一些预期之外的事情会进入 `CrashLoopBackOff` 状态，通过 `kubectl get pod --namespace ${namespace}` 命令可以查看指定 namespace 下的 pod 状态和 pod_name。
 在这种状态下，单纯通过 describe 和 logs 命令无法判定服务出问题的原因。当服务进入 `CrashLoopBackOff` 状态时，需要有一种机制允许部署服务的 pod 进入 `running` 状态方便用户通过 exec 进入容器内进行 debug。
 
-doris-operator 提供了 `debug` 的运行模式，下面描述了当服务进入 `CrashLoopBackOff` 时如何进入 debug 模式进行人工 debug ，以及解决后如何恢复到正常启动状态。
+Doris Operator 提供了 `debug` 的运行模式，下面描述了当服务进入 `CrashLoopBackOff` 时如何进入 debug 模式进行人工 debug ，以及解决后如何恢复到正常启动状态。
 
 ### 启动 Debug 模式
 
@@ -65,7 +65,7 @@ $ kubectl delete pod ${pod_name} --namespace ${namespace}
 :::
 
 ## 服务扩缩容
-Doris 在 K8S 之上的扩缩容可通过修改 DorisCluster 资源对应组件的 replicas 字段来实现。修改可直接编辑对应的资源，也可通过命令的方式。
+Doris 在 K8s 之上的扩缩容可通过修改 DorisCluster 资源对应组件的 replicas 字段来实现。修改可直接编辑对应的资源，也可通过命令的方式。
 
 ### 获取 DorisCluster 资源
 
@@ -79,7 +79,7 @@ doriscluster-sample   available   available
 
 ### 扩缩容资源
 
-K8S 所有运维操作通过修改资源为最终状态，由 Operator 服务自动完成运维。扩缩容操作可通过 `kubectl --namespace {namespace}  edit doriscluster {dcr_name}` 直接进入编辑模式修改对应 spec 的 replicas 值，保存退出后 Doris-Operator 完成运维，也可以通过如下命令实现不同组件的扩缩容。
+K8s 所有运维操作通过修改资源为最终状态，由 Operator 服务自动完成运维。扩缩容操作可通过 `kubectl --namespace {namespace}  edit doriscluster {dcr_name}` 直接进入编辑模式修改对应 spec 的 replicas 值，保存退出后 Doris-Operator 完成运维，也可以通过如下命令实现不同组件的扩缩容。
 
 #### FE 扩容
 
@@ -204,7 +204,7 @@ admin set frontend config("disable_tablet_scheduler" = "true");
 
 #### 升级 FE
 
-如果保留了集群的 crd（Doris-Operator 定义了 `DorisCluster` 类型资源名称的简写）文件，则可以通过修改该配置文件并且 `kubectl apply` 的命令来进行升级。
+如果保留了集群的 crd（Doris Operator 定义了 `DorisCluster` 类型资源名称的简写）文件，则可以通过修改该配置文件并且 `kubectl apply` 的命令来进行升级。
 
 1. 修改 `spec.feSpec.image`
 
