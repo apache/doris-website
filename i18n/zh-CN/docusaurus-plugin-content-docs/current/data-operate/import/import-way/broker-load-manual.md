@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 为什么引入 Broker Load？ 
+Broker Load 通过 MySQL API 发起，Doris 会根据 LOAD 语句中的信息，主动从数据源拉取数据。Broker Load 是一个异步导入方式，需要通过 SHOW LOAD 语句查看导入进度和导入结果。
 
-Stream Load 是一种推的方式，即导入的数据依靠客户端读取，并推送到 Doris。Broker Load 则是将导入请求发送给 Doris，有 Doris 主动拉取数据，所以如果数据存储在类似 HDFS 或者 对象存储中，则使用 Broker Load 是最方便的。这样，数据就不需要经过客户端，而有 Doris 直接读取导入。
+## 使用场景
+
+Broker Load 适合源数据存储在远程存储系统，比如对象存储或HDFS，并且数据量比较大的场景。 与 Stream Load 不同，Broker Load 导入的数据无需经过客户端，而是由 Doris 主动拉取并处理。
 
 从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF](../../../lakehouse/file) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
-
-Broker Load 适合源数据存储在远程存储系统，比如 HDFS，并且数据量比较大的场景。
 
 ## 基本原理
 
@@ -44,39 +44,53 @@ BE 在执行的过程中会从 Broker 拉取数据，在对数据 transform 之�
 
 当前 BE 内置了对 HDFS 和 S3 两个 Broker 的支持，所以如果从 HDFS 和 S3 中导入数据，则不需要额外启动 Broker 进程。如果有自己定制的 Broker 实现，则需要部署相应的 Broker 进程。
 
-## 导入语法
-
-```sql
-LOAD LABEL load_label
-(
-data_desc1[, data_desc2, ...]
-)
-WITH [HDFS|S3|BROKER broker_name] 
-[broker_properties]
-[load_properties]
-[COMMENT "comments"];
-```
+## 快速上手
 
 具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD)。
 
-## Load Properties
+### 前置检查
 
-| Property 名称 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| "timeout" | Long | 14400 | 导入的超时时间，单位秒。范围是 1 秒 ~ 259200 秒。 |
-| "max_filter_ratio" | Float | 0.0 | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。 |
-| "exec_mem_limit" | Long | 2147483648 | 导入内存限制。默认为 2GB。单位为字节。 |
-| "strict_mode" | Boolean | false | 是否开启严格模式。 |
-| "partial_columns" | Boolean | false | 是否使用部分列更新，只在表模型为 Unique Key 且采用 Merge on Write 时有效。 |
-| "timezone" | String | "Asia/Shanghai" | 本次导入所使用的时区。该参数会影响所有导入涉及的和时区有关的函数结果。 |
-| "load_parallelism" | Integer | 8 | 每个 BE 上并发 instance 数量的上限。 |
-| "send_batch_parallelism" | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
-| "load_to_single_tablet" | Boolean | "false" | 是否每个分区只导入一个 tablet，默认值为 false。该参数只允许在对带有 random 分桶的 OLAP 表导数的时候设置。 |
-| "skip_lines" | Integer | "0" | 跳过 CSV 文件的前几行。当设置 format 设置为 csv_with_names或csv_with_names_and_types时，该参数会失效。 |
-| "trim_double_quotes" | Boolean | "false" | 是否裁剪掉导入文件每个字段最外层的双引号。 |
-| "priority" | "HIGH" 或 "NORMAL" 或 "LOW" | "NORMAL" | 导入任务的优先级。 |
+Broker Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
 
-## 查看导入状态
+### 创建导入作业
+
+以 S3 Load 为例，
+
+```sql
+    LOAD LABEL broker_load_2022_04_15
+    (
+        DATA INFILE("s3://your_bucket_name/your_file.txt")
+        INTO TABLE load_test
+        COLUMNS TERMINATED BY ","
+    )
+    WITH S3
+    (
+        "provider" = "S3",
+        "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
+        "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
+        "AWS_SECRET_KEY"="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+        "AWS_REGION" = "us-west-2"
+    )
+    PROPERTIES
+    (
+        "timeout" = "3600"
+    );
+```
+
+其中 `provider` 字段需要根据实际的对象存储服务商填写。
+Doris 支持的 provider 列表：
+
+- "OSS" (阿里云)
+- "COS" (腾讯云)
+- "OBS" (华为云)
+- "BOS" (百度云)
+- "S3" (亚马逊 AWS)
+- "AZURE" (微软 Azure)
+- "GCP" (谷歌 GCP)
+
+如不在列表中 (例如 MinIO)，可以尝试使用 "S3" (兼容 AWS 模式)
+
+### 查看导入作业
 
 Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) 命令查看
 
@@ -101,7 +115,7 @@ LoadFinishTime: 2022-04-01 18:59:11
 1 row in set (0.01 sec)
 ```
 
-## 取消导入
+### 取消导入作业
 
 当 Broker load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label。取消导入命令语法可执行 [CANCEL LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CANCEL-LOAD) 查看。
 
@@ -110,6 +124,138 @@ LoadFinishTime: 2022-04-01 18:59:11
 ```SQL
 CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_03_23";
 ```
+
+## 参考手册
+
+### 导入命令
+
+```sql
+LOAD LABEL load_label
+(
+data_desc1[, data_desc2, ...]
+)
+WITH [HDFS|S3|BROKER broker_name] 
+[broker_properties]
+[load_properties]
+[COMMENT "comments"];
+```
+
+### 导入配置参数
+
+**load properties**
+
+| Property 名称 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| "timeout" | Long | 14400 | 导入的超时时间，单位秒。范围是 1 秒 ~ 259200 秒。 |
+| "max_filter_ratio" | Float | 0.0 | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。 |
+| "exec_mem_limit" | Long | 2147483648 | 导入内存限制。默认为 2GB。单位为字节。 |
+| "strict_mode" | Boolean | false | 是否开启严格模式。 |
+| "partial_columns" | Boolean | false | 是否使用部分列更新，只在表模型为 Unique Key 且采用 Merge on Write 时有效。 |
+| "timezone" | String | "Asia/Shanghai" | 本次导入所使用的时区。该参数会影响所有导入涉及的和时区有关的函数结果。 |
+| "load_parallelism" | Integer | 8 | 每个 BE 上并发 instance 数量的上限。 |
+| "send_batch_parallelism" | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
+| "load_to_single_tablet" | Boolean | "false" | 是否每个分区只导入一个 tablet，默认值为 false。该参数只允许在对带有 random 分桶的 OLAP 表导数的时候设置。 |
+| "skip_lines" | Integer | "0" | 跳过 CSV 文件的前几行。当设置 format 设置为 csv_with_names或csv_with_names_and_types时，该参数会失效。 |
+| "trim_double_quotes" | Boolean | "false" | 是否裁剪掉导入文件每个字段最外层的双引号。 |
+| "priority" | "HIGH" 或 "NORMAL" 或 "LOW" | "NORMAL" | 导入任务的优先级。 |
+
+**fe.conf**
+
+下面几个配置属于 Broker load 的系统级别配置，也就是作用于所有 Broker load 导入任务的配置。主要通过修改 `fe.conf`来调整配置值。
+
+| Session Variable | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| min_bytes_per_broker_scanner | Long | 67108864 (64 MB) | 一个 Broker Load 作业中单 BE 处理的数据量的最小值，单位：字节。 |
+| max_bytes_per_broker_scanner | Long | 536870912000 (500 GB) | 一个 Broker Load 作业中单 BE 处理的数据量的最大值，单位：字节。通常一个导入作业支持的最大数据量为 `max_bytes_per_broker_scanner * BE 节点数`。如果需要导入更大数据量，则需要适当调整 `max_bytes_per_broker_scanner` 参数的大小。 |
+| max_broker_concurrency | Integer | 10 | 限制了一个作业的最大的导入并发数。 |
+| default_load_parallelism | Integer | 8 | 每个 BE 节点最大并发 instance 数 |
+| broker_load_default_timeout_second | 14400 | Broker Load 导入的默认超时时间，单位：秒。 |
+
+注：最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数共同决定了本次导入的并发数。
+
+```Plain
+本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
+本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
+```
+
+**session variable**
+
+| Session Variable | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| exec_mem_limit | Long | 2147483648 | 导入内存限制，单位：字节。 |
+| time_zone | String | "Asia/Shanghai" | 默认时区，会影响导入中时区相关的函数结果。 |
+| send_batch_parallelism | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
+
+## S3 Load
+
+Doris 支持通过 S3 协议直接从支持 S3 协议的对象存储系统导入数据。这里主要介绍如何导入 AWS S3 中存储的数据，支持导入其他支持 S3 协议的对象存储系统可以参考 AWS S3。 
+
+### 准备工作
+
+- AK 和 SK：首先需要找到或者重新生成 AWS `Access keys`，可以在 AWS console 的 `My Security Credentials` 找到生成方式。
+
+- REGION 和 ENDPOINT：REGION 可以在创建桶的时候选择也可以在桶列表中查看到。每个 REGION 的 S3 ENDPOINT 可以通过如下页面查到 [AWS 文档](https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_region)。
+
+### 导入示例
+
+```sql
+    LOAD LABEL example_db.example_label_1
+    (
+        DATA INFILE("s3://your_bucket_name/your_file.txt")
+        INTO TABLE load_test
+        COLUMNS TERMINATED BY ","
+    )
+    WITH S3
+    (
+        "provider" = "S3",
+        "AWS_ENDPOINT" = "AWS_ENDPOINT",
+        "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+        "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+        "AWS_REGION" = "AWS_REGION"
+    )
+    PROPERTIES
+    (
+        "timeout" = "3600"
+    );
+```
+
+其中 `provider` 参数指定了 S3 供应商，支持列表：
+
+- "OSS" (阿里云)
+- "COS" (腾讯云)
+- "OBS" (华为云)
+- "BOS" (百度云)
+- "S3" (亚马逊 AWS)
+- "AZURE" (微软 Azure)
+- "GCP" (谷歌 GCP)
+
+### 常见问题
+
+- S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式：
+
+  ```sql
+    WITH S3
+    (
+          "AWS_ENDPOINT" = "AWS_ENDPOINT",
+          "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+          "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+          "AWS_REGION" = "AWS_REGION",
+          "use_path_style" = "true"
+    )
+  ```
+
+- 支持使用临时秘钥 (TOKEN) 访问所有支持 S3 协议的对象存储，用法如下：
+
+  ```sql
+    WITH S3
+    (
+        "AWS_ENDPOINT" = "AWS_ENDPOINT",
+        "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
+        "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
+        "AWS_TOKEN" = "AWS_TEMP_TOKEN",
+        "AWS_REGION" = "AWS_REGION"
+    )
+  ```
 
 ## HDFS Load
 
@@ -511,77 +657,6 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
   );
   ```
 
-## S3 Load
-
-Doris 支持通过 S3 协议直接从支持 S3 协议的对象存储系统导入数据。这里主要介绍如何导入 AWS S3 中存储的数据，支持导入其他支持 S3 协议的对象存储系统可以参考 AWS S3。 
-
-### 准备工作
-
-- AK 和 SK：首先需要找到或者重新生成 AWS `Access keys`，可以在 AWS console 的 `My Security Credentials` 找到生成方式。
-
-- REGION 和 ENDPOINT：REGION 可以在创建桶的时候选择也可以在桶列表中查看到。每个 REGION 的 S3 ENDPOINT 可以通过如下页面查到 [AWS 文档](https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_region)。
-
-### 导入示例
-
-```sql
-    LOAD LABEL example_db.example_label_1
-    (
-        DATA INFILE("s3://your_bucket_name/your_file.txt")
-        INTO TABLE load_test
-        COLUMNS TERMINATED BY ","
-    )
-    WITH S3
-    (
-        "provider" = "S3",
-        "AWS_ENDPOINT" = "AWS_ENDPOINT",
-        "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
-        "AWS_SECRET_KEY"="AWS_SECRET_KEY",
-        "AWS_REGION" = "AWS_REGION"
-    )
-    PROPERTIES
-    (
-        "timeout" = "3600"
-    );
-```
-
-其中 `provider` 参数指定了 S3 供应商，支持列表：
-
-- "OSS" (阿里云)
-- "COS" (腾讯云)
-- "OBS" (华为云)
-- "BOS" (百度云)
-- "S3" (亚马逊 AWS)
-- "AZURE" (微软 Azure)
-- "GCP" (谷歌 GCP)
-
-### 常见问题
-
-- S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式：
-
-  ```sql
-    WITH S3
-    (
-          "AWS_ENDPOINT" = "AWS_ENDPOINT",
-          "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
-          "AWS_SECRET_KEY"="AWS_SECRET_KEY",
-          "AWS_REGION" = "AWS_REGION",
-          "use_path_style" = "true"
-    )
-  ```
-
-- 支持使用临时秘钥 (TOKEN) 访问所有支持 S3 协议的对象存储，用法如下：
-
-  ```sql
-    WITH S3
-    (
-        "AWS_ENDPOINT" = "AWS_ENDPOINT",
-        "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
-        "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
-        "AWS_TOKEN" = "AWS_TEMP_TOKEN",
-        "AWS_REGION" = "AWS_REGION"
-    )
-  ```
-
 ## 其他 Broker 导入
 
 其他远端存储系统的 Broker 是 Doris 集群中一种可选进程，主要用于支持 Doris 读写远端存储上的文件和目录。目前提供了如下存储系统的 Broker 实现。
@@ -690,79 +765,6 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 )
 ```
 
-## 相关配置
-
-### fe.conf
-
-下面几个配置属于 Broker load 的系统级别配置，也就是作用于所有 Broker load 导入任务的配置。主要通过修改 `fe.conf`来调整配置值。
-
-**min_bytes_per_broker_scanner**
-
-- 默认 64MB。
-
-- 一个 Broker Load 作业中单 BE 处理的数据量的最小值
-
-**max_bytes_per_broker_scanner**
-
-- 默认 500GB。
-
-- 一个 Broker Load 作业中单 BE 处理的数据量的最大值
-
-通常一个导入作业支持的最大数据量为 `max_bytes_per_broker_scanner * BE 节点数`。如果需要导入更大数据量，则需要适当调整 `max_bytes_per_broker_scanner` 参数的大小。
-
-**max_broker_concurrency**
-
-- 默认 10。
-
-- 限制了一个作业的最大的导入并发数。
-
-- 最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数共同决定了本次导入的并发数。
-
-```Plain
-本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
-本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
-```
-
-**default_load_parallelism**
-
-- 默认 8。
-
-- 每个 BE 节点最大并发 instance 数
-
-- 最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数共同决定了本次导入的并发数。
-
-```Plain
-本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
-本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
-```
-
-**broker_load_default_timeout_second**
-
-- 默认值 14400.
-
-- Broker Load 导入的超时时间，单位：秒。
-
-### session variables
-
-**exec_mem_limit**
-
-- 默认值 2147483648。
-
-- 导入内存限制，单位：字节。
-
-**time_zone**
-
-- 默认值 "Asia/Shanghai"。
-
-- 默认时区，会影响导入中时区相关的函数结果。
-
-**send_batch_parallelism**
-
-- 默认值 1
-
-- sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。
-
-Session variable `enable_memtable_on_sink_node` 为 true 时开启前移，为 false 时关闭前移。
 
 ## 常见问题
 
