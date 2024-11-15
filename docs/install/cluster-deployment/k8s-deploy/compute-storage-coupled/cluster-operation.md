@@ -30,7 +30,7 @@ In the k8s environment, the service will enter the `CrashLoopBackOff` state due 
 
 In this state, the cause of the service problem cannot be determined simply by using the describe and logs commands. When the service enters the `CrashLoopBackOff` state, there needs to be a mechanism that allows the pod deploying the service to enter the `running` state so that users can enter the container for debugging through exec.
 
-doris-operator provides a `Debug` running mode. The following describes how to enter Debug mode for manual debugging when the service enters `CrashLoopBackOff`, and how to return to normal startup state after solving the problem.
+Doris Operator provides a `Debug` running mode. The following describes how to enter Debug mode for manual debugging when the service enters `CrashLoopBackOff`, and how to return to normal startup state after solving the problem.
 
 
 ### Start Debug mode
@@ -114,7 +114,7 @@ If you retain the cluster's crd (Doris Operator defines the abbreviation of `Dor
 
 It can also be modified directly through `kubectl edit dcr`.
 
-1. Check the dcr list under namespace 'doris' to obtain the `cluster_name` that needs to be updated.
+1. Check the dcr list under namespace `doris` to obtain the `cluster_name` that needs to be updated.
   ```shell
   $ kubectl get dcr -n doris
   NAME                  FESTATUS    BESTATUS    CNSTATUS

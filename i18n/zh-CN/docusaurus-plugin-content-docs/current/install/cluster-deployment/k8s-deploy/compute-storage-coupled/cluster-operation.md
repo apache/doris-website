@@ -69,7 +69,7 @@ Doris 在 K8s 之上的扩缩容可通过修改 DorisCluster 资源对应组件�
 
 ### 获取 DorisCluster 资源
 
-使用命令 `kubectl --namespace {namespace} get doriscluster` 获取已部署 DorisCluster (简称 dcr ) 资源的名称。本文中，我们以 doris 为 namespace.
+使用命令 `kubectl --namespace {namespace} get doriscluster` 获取已部署 DorisCluster (简称 dcr ) 资源的名称。本文中，我们以 `doris` 为 namespace.
 
 ```shell
 $ kubectl --namespace doris get doriscluster
