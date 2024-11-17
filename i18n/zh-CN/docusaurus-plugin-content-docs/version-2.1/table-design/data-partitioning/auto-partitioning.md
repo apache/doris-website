@@ -177,7 +177,7 @@ mysql> select * from auto_null_list partition(pX);
 1 row in set (0.20 sec)
 ```
 
-1. 对于 AUTO RANGE PARTITION，**不支持 NULLABLE 列作为分区列**。
+2. 对于 AUTO RANGE PARTITION，**不支持 NULLABLE 列作为分区列**。
 
 ```sql
 mysql>  CREATE TABLE `range_table_nullable` (
