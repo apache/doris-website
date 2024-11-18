@@ -1,7 +1,7 @@
 ---
 {
-"title": "Quick Start",
-"language": "en"
+   "title": "Quick Start",
+   "language": "en"
 }
 ---
 
@@ -74,7 +74,7 @@ Deploying Doris Operator consists of two parts: installing the definition and de
 1. Installing Doris Operator CRD
    Add the custom resource (CRD) of Doris Operator using the following command:
    ```
-   kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+   kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
    ```
    Expected output:
    ```
@@ -111,7 +111,7 @@ For Doris Operator related configuration and other deployment methods, please re
    ```
    curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
    ```
-2. Perform customized configuration as needed according to the [Deploying Doris Cluster](./install-doris-cluster.md). After the configuration is completed, deploy it with the following command:
+2. Perform customized configuration as needed according to the doc of [Config Doris to Deploy](./install-config-cluster.md). After the configuration is completed, deploy it with the following command:
    ```
    kubectl apply -f doriscluster-sample.yaml
    ```
@@ -138,7 +138,7 @@ For Doris Operator related configuration and other deployment methods, please re
 
 ## Step 4: Connect and access the Doris cluster
 
-The Doris cluster is quickly deployed in the test environment. You can enter the container FE and use the MySQL Client to connect to Doris for test operations. For other access methods, refer to [Accessing Doris Cluster](./install-access-cluster.md) for configuration.
+The Doris cluster is quickly deployed in the test environment. You can enter the container FE and use the MySQL Client to connect to Doris for test operations. For other access methods, refer to [Accessing Doris Cluster](./install-config-cluster.md#access-configuration) for configuration.
 1. Get the FE container name:
    ```
    kubectl get pod -n doris | grep fe
