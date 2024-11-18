@@ -47,7 +47,7 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 
     - 可以使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将 S3、HDFS 和 NAS 中的文件同步写入到 Doris 中，配合 [JOB](../scheduler/job-scheduler.md) 可以异步写入。
 
-    - 可以使用 [Stream Load](./import-way/stream-load-manua) 或者 [Doris Streamloader](../../ecosystem/doris-streamloader.md) 将本地文件写入 Doris 中。
+    - 可以使用 [Stream Load](./import-way/stream-load-manual) 或者 [Doris Streamloader](../../ecosystem/doris-streamloader.md) 将本地文件写入 Doris 中。
 
 - **外部数据源集成**：通过与外部数据源（如 Hive、JDBC、Iceberg 等）的集成，实现对外部数据的查询和部分数据导入到 Doris 表中。
     - 可以创建 [Catalog](../../lakehouse/lakehouse-overview.md) 读取外部数据源中的数据，使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将外部数据源中的数据同步写入到 Doris 中，配合 [JOB](../scheduler/job-scheduler.md) 可以异步写入。
