@@ -87,7 +87,7 @@ Doris 提供了多种不同粒度的 Explain 工具，如 Explain Verbose、Expl
 
 又如，两表的 Inner 等值连接中，连接条件一侧的过滤条件没有推导到另外一侧，导致没有对推导一侧的表进行提前过滤，也可能导致性能问题等。此类性能瓶颈都可以通过分析 Explain 的输出来定位和解决。
 
-详细信息请参考[计划调优](../../query-acceleration/tuning/tuning-plan/)
+详细信息请参考[计划调优](../../query-acceleration/tuning/tuning-plan/optimizing-table-schema)
 
 ### Doris Profile
 
@@ -123,19 +123,19 @@ Schema 设计调优基本可分为三个方面：
 
 - 特定优化手段的使用，如建立 Colocate Group 等。主要目的是排除因为 Schema 设计不合理或者没有充分利用 Doris 现有优化能力导致的性能问题
 
-详细调优案例请参考文档[计划调优](../../query-acceleration/tuning/tuning-plan/)
+详细调优案例请参考文档[计划调优](../../query-acceleration/tuning/tuning-plan/optimizing-table-schema)
 
 ### 第三步：计划调优
 
 检查和优化完业务 Schema 后，将进入调优的主体工作，即计划调优与执行调优。如上所述，在性能调优工具中，这个阶段的主要工作是充分利用 Doris 所提供的各种层级的 Explain 工具，对慢 SQL 的执行计划进行系统分析，以找到关键优化点进行针对性优化。
 
-- 针对单表查询和分析场景，可以通过分析执行计划、[查看分区裁剪是否正常](../../query-acceleration/tuning/tuning-plan/optimizing-table-scanning)、是否可以[构建单表物化视图进行查询加速](../../query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv)等。
+- 针对单表查询和分析场景，可以通过分析执行计划、查看分区裁剪是否正常、是否可以构建单表物化视图进行查询加速等。
 
-- 针对复杂多表分析场景，可以分析统计信息是否正常、分析 Join Order 是否合理、分析 Runtime Filter 是否正常规划等，定位具体的性能瓶颈。如果出现非预期的情况，比如 Join Order 不合理，通过观察 Explain 的结果、手工指定 Join Jint 进行执行计划的绑定、[控制 Join 顺序](../../query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint)和 [Shuffle 方式](../../query-acceleration/tuning/tuning-plan/adjusting-join-shuffle)、[控制代价改写](../../query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule)行为等操作方法，从而达到调优执行计划的目的。
+- 针对复杂多表分析场景，可以分析统计信息是否正常、分析 Join Order 是否合理、分析 Runtime Filter 是否正常规划等，定位具体的性能瓶颈。如果出现非预期的情况，比如 Join Order 不合理，通过观察 Explain 的结果、手工指定 Join Jint 进行执行计划的绑定、控制 Join 顺序和 Shuffle 方式、控制代价改写行为等操作方法，从而达到调优执行计划的目的。
 
-- 针对部分特定场景，可以通过使用 Doris 提供的高级功能，比如[异步物化视图改写](../../query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv)、[SQL Cache](../../query-acceleration/tuning/tuning-plan/accelerating-queries-with-sql-cache) 等来加速查询。
+- 针对部分特定场景，可以通过使用 Doris 提供的高级功能，比如异步物化视图改写、SQL Cache 等来加速查询。
 
-详细调优案例请参考文档[计划调优](../../query-acceleration/tuning/tuning-plan/)。
+详细调优案例请参考文档[计划调优](../../query-acceleration/tuning/tuning-plan/optimizing-table-schema)。
 
 :::tip 提示
 
