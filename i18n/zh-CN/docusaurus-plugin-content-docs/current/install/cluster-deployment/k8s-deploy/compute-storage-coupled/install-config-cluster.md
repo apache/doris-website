@@ -768,3 +768,22 @@ Doris 集群在部署后设置了 root 用户的密码，需要配置一个拥�
 - 部署后设置 root 密码，并配置新的拥有管理节点的用户名和密码后，会引起存量服务滚动重启一次。    
 :::
 
+
+:::tip 提示
+- 部署后设置 root 密码，并配置新的拥有管理节点的用户名和密码后，会引起存量服务滚动重启一次。    
+  :::
+
+## 开启 workload group 能力
+Doris 从 2.1 版本开始，支持使用 cgroup 实现 workload group 能力。在 K8s 部署中如果需要使用 workload group 能力， 请在 `beSpec` 将 `enableWorkloadGroup` 设置为 `true` 。配置如下：
+```yaml
+spec:
+  beSpec:
+    enableWorkloadGroup: true
+```
+在 K8s 上使用 Doris Operator 部署的集群开启 `workload group` 能力时，Doris Operator 自动初始化 [workload group 依赖的环境配置](../../../../admin-manual/resource-admin/workload-group.md#配置-cgroup-的环境)，与 `workload group` 相关的配置无需填写。
+
+:::tip 提示  
+- 容器中使用 cgroup 的能力，需要给容器开启特权模式。将 `enableWorkloadGroup` 设置为 `true` 时，Doris Operator 自动为 BE 服务的容器开启特权模式。  
+- 设置 `enableWorkloadGroup` 为 `true` 后，将会导致 BE 服务滚动重启一次。  
+- 使用 workload group 需要 doris 的 image 版本大于等于 2.1.7 。  
+:::

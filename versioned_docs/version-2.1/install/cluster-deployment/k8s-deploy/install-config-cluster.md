@@ -744,3 +744,18 @@ After the Doris cluster is deployed and the root user's password is set, it is n
 :::tip Tip  
 After setting the root password and configuring the new username and password for managing nodes after deployment, the existing services will be restarted once in a rolling manner.  
 :::
+
+## Enable workload group
+Starting from version 2.1, Doris supports workload group functionality through cgroup. To enable this functionality in a Kubernetes deployment, set `enableWorkloadGroup` to `true` in the beSpec. An example configuration is as follows:
+```yaml
+spec:
+  beSpec:
+    enableWorkloadGroup: true
+```
+When deploying a Doris cluster on Kubernetes using Doris Operator with the workload group functionality enabled, the Operator automatically initializes the environment configuration required for workload group. Therefore, no additional [workload group related configurations](../../../admin-manual/resource-admin/workload-group.md#configure-ggroup) are needed config.  
+
+:::tip Tip  
+- To use cgroup functionality within the container, privileged mode must be enabled for the container. When enableWorkloadGroup is set to true, Doris Operator automatically enables privileged mode for the BE service containers.  
+- Enabling enableWorkloadGroup will cause a rolling restart of the BE pods.  
+- The workload group feature requires the Doris image version to be 2.1.7 or later.  
+:::
