@@ -107,6 +107,9 @@ Parquet、ORC 文件格式拥有自己的数据类型。Apache Doris 的导出�
     |map|map|
     |array|array|
     |json|不支持|
+    |bitmap | binary | binary
+    |quantile_state | binary | binary
+    |hll | binary | binary
 
 
 2. Apache Doris 导出到 Parquet 文件格式时，会先将 Apache Doris 内存数据转换为 Arrow 内存数据格式，然后由 Arrow 写出到 Parquet 文件格式。Apache Doris 数据类型到 Arrow 数据类的映射关系为：
@@ -131,3 +134,6 @@ Parquet、ORC 文件格式拥有自己的数据类型。Apache Doris 的导出�
     |map|map|
     |array|list|
     |json|utf8|
+    |bitmap | binary | binary
+    |quantile_state | binary | binary
+    |hll | binary | binary

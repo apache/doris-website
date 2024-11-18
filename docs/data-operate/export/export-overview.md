@@ -107,6 +107,9 @@ The following table shows the mapping between Doris data types and Parquet, ORC 
     |map|map|
     |array|array|
     |json| Not supported|
+    |bitmap | binary | binary
+    |quantile_state | binary | binary
+    |hll | binary | binary
 
 2. When Doris exports to Parquet file format, it first converts Doris in-memory data to Arrow in-memory data format, then writes out to Parquet file format. The mapping relationship between Doris data types and Arrow data types is:
 
@@ -130,3 +133,6 @@ The following table shows the mapping between Doris data types and Parquet, ORC 
     | map | map |
     | array | list |
     |json| utf8 |
+    |bitmap | binary | binary
+    |quantile_state | binary | binary
+    |hll | binary | binary
