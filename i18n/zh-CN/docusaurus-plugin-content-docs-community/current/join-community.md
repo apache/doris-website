@@ -31,39 +31,6 @@ under the License.
 
 
 
-
-## 🙌 更多开发者加入我们
-
-[![Monthly Active Contributors](https://contributor-overtime-api.apiseven.com/contributors-svg?chart=contributorMonthlyActivity&repo=apache/doris)](https://www.apiseven.com/en/contributor-graph?chart=contributorMonthlyActivity&repo=apache/doris)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[![Contributor over time](https://contributor-overtime-api.apiseven.com/contributors-svg?chart=contributorOverTime&repo=apache/doris)](https://www.apiseven.com/en/contributor-graph?chart=contributorOverTime&repo=apache/doris)
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 🌟 更多用户认可我们
 
 <a href="https://star-history.com/#apache/doris&Date">
@@ -73,14 +40,6 @@ under the License.
     <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=apache/doris&type=Date" />
   </picture>
 </a>
-
-
-
-
-
-
-
-
 
 
 

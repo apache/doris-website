@@ -243,7 +243,7 @@ CANCEL BUILD INDEX ON table_name (job_id1,jobid_2,...);
 
 :::tip
 
-`BUILD INDEX` 会生成一个异步任务执行，在每个 BE 上有多个线程执行索引构建任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是 3。
+`BUILD INDEX` 会生成一个异步任务执行，在每个 BE 上有多个线程执行索引删除任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是 3。
 
 2.0.12 之前的版本 `BUILD INDEX` 会一直重试直到成功，从这两个版本开始通过失败和超时机制避免一直重试。
 
