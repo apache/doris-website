@@ -232,7 +232,7 @@ PROPERTIES
     "replication_num" = "1",
     "dynamic_partition.enable" = "true",
     "dynamic_partition.time_unit" = "month", --- 二者粒度必须相同
-    "dynamic_partition.start" = "-2" --- 动态分区自动清理超过两周的历史分区
+    "dynamic_partition.start" = "-2", --- 动态分区自动清理超过两周的历史分区
     "dynamic_partition.end" = "0", --- 动态分区不创建未来分区，完全交给自动分区
     "dynamic_partition.prefix" = "p",
     "dynamic_partition.buckets" = "8"
