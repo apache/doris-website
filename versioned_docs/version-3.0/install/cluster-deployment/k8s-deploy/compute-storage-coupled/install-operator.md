@@ -32,7 +32,7 @@ The deployment involves the following steps:
 
 ## Directly use resources
 
-### non-network-isolated from github
+### Non-network-isolated from github
 If your environment has access to [Doris Operator repo](https://github.com/apache/doris-operator), you can deploy Doris Operator directly using the resources defined in the Doris Operator repository. 
 
 #### Add doris operator resource definitions
@@ -54,7 +54,7 @@ Expected output:
 dorisclusters.doris.selectdb.com                      2024-02-22T16:23:13Z
 ```
 
-### Deploy doris operator
+#### Deploy doris operator
 The Doris Operator repository provides a deployment template. If your environment can access the Doris Operator repository, please use this template to deploy the Operator.
 Run the following command to deploy Doris Operator using the default configuration:
 ```shell
@@ -82,7 +82,7 @@ NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 ```
 
-### network-isolated from github
+### Network-isolated from github
 If your deployment environment is isolated from GitHub, download the necessary resources on a machine with GitHub access, then transfer them to the target environment.  
 
 #### Apply doris operator resource definitions
