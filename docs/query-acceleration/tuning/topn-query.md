@@ -54,6 +54,8 @@ The following two parameters are session variables that can be set for a specifi
 
 2. `enable_two_phase_read_optimization`: This session variable determines whether to enable this optimization. It defaults to true, and setting it to false disables the optimization.
 
+3. `topn_filter_ratio`, the ratio between LIMIT n and the total data in the table, the default value is 0.5, which means that if the number of LIMIT is more than half of the data in the table, no filter will be generated.
+
 ### Checking if TOPN Query Optimization is Enabled
 
 To confirm if TOPN query optimization is enabled for a particular SQL, you can use the `EXPLAIN` statement to get the query plan. An example is as follows:

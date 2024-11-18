@@ -78,4 +78,5 @@ mvn clean package -DskipTests
 | 单次导入最大行数     | 10000          | N        | 单次导入的最大行数                      |
 | 单次导入最大字节     | 10485760(10MB) | N        | 单次导入的最大字节大小                    |
 | 导入重试次数       | 3              | N        | 导入失败之后的重试次数                    |
-| StreamLoad属性 | --             | N        | Streamload的请求头                 |
+| Stream Load属性 | --             | N        | Stream Load的请求头                 |
+| 删除模式 | N             | N        | 是否开启删除模式。默认情况下，Stream Load执行插入操作，开启删除模式后，Stream Load写入均为删除操作                 |

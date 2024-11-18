@@ -418,11 +418,11 @@ mysql> explain select o_orderkey from orders order by o_orderdate limit 5;
 
 ### 调优
 
-Session 变量 `topn_opt_limit_threshold` 可以控制是否生成 TopN Runtime Filter。
+Session 变量 `topn_filter_ratio` 可以控制是否生成 TopN Runtime Filter。
 
-如果 SQL 中 `limit` 的数量越少，那么 TopN Runtime Filter 的过滤性就越强。因此，系统默认情况下，只有在 `limit` 数量小于 1024 时，才会启用生成对应的 TopN Runtime Filter。
+如果 SQL 中 `limit` 的数量越少，那么 TopN Runtime Filter 的过滤性就越强。因此，系统默认情况下，只有在 `limit` 数量小于 表中数据的一半 时，才会启用生成对应的 TopN Runtime Filter。
 
-例如，如果设置 `set topn_opt_limit_threshold=10`，那么执行以下查询就不会生成 TopN Runtime Filter。
+例如，如果设置 `set topn_filter_ratio=0`，那么执行以下查询就不会生成 TopN Runtime Filter。
 
 ```sql
 select o_orderkey from orders order by o_orderdate limit 20;

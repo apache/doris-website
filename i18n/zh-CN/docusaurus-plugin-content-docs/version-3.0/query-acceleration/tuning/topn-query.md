@@ -55,6 +55,8 @@ SELECT * FROM tablex WHERE xxx ORDER BY c1,c2 ... LIMIT n
 
 2. `enable_two_phase_read_opt`，是否开启优化 3，默认为 true，可以调为 false 关闭这个优化。
 
+3. `topn_filter_ratio`，LIMIT n 和表总数据的比率，默认值 0.5，表示 LIMIT 数量多于表中数据的一半则不生成 filter 。
+
 ### 检查 TOPN 查询优化是否启用
 
 explain SQL 拿到 query plan 可以确认这个 sql 是否启用 TOPN 查询优化，以下面的为例：
@@ -88,7 +90,7 @@ explain SQL 拿到 query plan 可以确认这个 sql 是否启用 TOPN 查询优
 
 ### 检查 TOPN 查询优化执行时是否有效果
 
-首先，可以将 `topn_opt_limit_threshold` 设置为 0 关闭 TOPN 查询优化，对比开启和关闭优化的 SQL 执行时间。
+首先，可以将 `topn_filter_ratio` 设置为 0 关闭 TOPN 查询优化，对比开启和关闭优化的 SQL 执行时间。
 
 开启 TOPN 查询优化后，在 Query Profile 中搜索 RuntimePredicate，关注下面几个指标：
 

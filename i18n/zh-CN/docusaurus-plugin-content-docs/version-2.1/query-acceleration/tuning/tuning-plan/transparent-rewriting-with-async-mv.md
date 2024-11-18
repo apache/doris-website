@@ -34,9 +34,10 @@ under the License.
 
 ### 1 创建基础表与数据插入
 
-首先，在 TPC-H 数据库中创建 `orders` 和 `lineitem` 两张表，并插入相应的数据。
+首先，创建tpch数据库并在其中创建 `orders` 和 `lineitem` 两张表，并插入相应的数据。
 
 ```sql
+CREATE DATABASE IF NOT EXISTS tpch;
 USE tpch;
 
 -- 创建 orders 表
