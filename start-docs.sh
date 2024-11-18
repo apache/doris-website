@@ -54,9 +54,9 @@ cp -rf common_docs_zh/faq i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0
 cp -rf common_docs_zh/releasenotes i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0
 cp -rf common_docs_zh/gettingStarted i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0
 if [ "$1" = "zh-CN" ]; then
-  yarn start:zh-CN --host 0.0.0.0
+  yarn start:zh-CN
 else
-  yarn start --host 0.0.0.0
+  yarn start
 fi
 
 
