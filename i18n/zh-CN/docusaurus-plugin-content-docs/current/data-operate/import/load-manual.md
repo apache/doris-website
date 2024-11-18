@@ -32,7 +32,7 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 
     - 并发较高或者频次较高（大于 20 并发或者 1 分钟写入多次）时建议打开 [Group Commit](./import-way/group-commit-manual.md)，使用 JDBC INSERT 或者 Stream Load 写入数据。
 
-    - 吞吐较高时推荐使用 [Stream Load](./import-way/stream-load-manua) 通过 HTTP 写入数据。
+    - 吞吐较高时推荐使用 [Stream Load](./import-way/stream-load-manual) 通过 HTTP 写入数据。
 
 - **流式同步**：通过实时数据流（如 Flink、Kafka、事务数据库）将数据实时导入到 Doris 表中，适用于需要实时分析和查询的场景。
 
