@@ -85,5 +85,5 @@ DECIMALV3 in Doris is a real high-precision fixed-point number. Compared with th
 ```
 3. More complete precision deduction. For different expressions, different precision inference rules are applied to deduce the precision of the results.
 
-### keywords
+### Keywords
 DECIMALV3

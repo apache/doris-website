@@ -22,8 +22,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp_extract_all
-### description
+## Regexp_extract_all
+### Description
 #### Syntax
 
 `VARCHAR regexp_extract_all(VARCHAR str, VARCHAR pattern)`
@@ -32,7 +32,7 @@ under the License.
 
 字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
 
-### example
+### Example
 
 ```sql
 mysql> SELECT regexp_extract_all('AbCdE', '([[:lower:]]+)C([[:lower:]]+)');
@@ -64,5 +64,5 @@ mysql> select regexp_extract_all('这是一段中文This is a passage in English
 +------------------------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     REGEXP_EXTRACT_ALL,REGEXP,EXTRACT,ALL

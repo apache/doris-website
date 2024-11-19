@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sign
+## Sign
 
-### description
+### Description
 #### Syntax
 
 `TINYINT sign(DOUBLE x)`
 Returns the sign of `x`. Negative, zero or positive numbers correspond to -1, 0 or 1 respectively.
 
-### example
+### Example
 
 ```
 mysql> select sign(3);
@@ -53,5 +53,5 @@ mysql> select sign(-10.0);
 1 row in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 	SIGN

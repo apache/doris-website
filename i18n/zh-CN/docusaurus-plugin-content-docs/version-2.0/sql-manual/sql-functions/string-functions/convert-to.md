@@ -28,8 +28,8 @@ under the License.
 该功能自 Apache Doris  1.2 版本起支持
 :::
 
-## convert_to
-### description
+## Convert_to
+### Description
 #### Syntax
 
 `VARCHAR convert_to(VARCHAR column, VARCHAR character)`
@@ -39,7 +39,7 @@ under the License.
 
 
 
-### example
+### Example
 
 ```
 mysql> select * from class_test order by class_name;
@@ -71,5 +71,5 @@ mysql> select * from class_test order by convert(class_name using gbk);
 +----------+------------+-------------+
 
 ```
-### keywords
+### Keywords
     convert_to

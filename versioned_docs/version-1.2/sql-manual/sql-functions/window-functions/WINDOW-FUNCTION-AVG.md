@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION AVG
-### description
+### Description
 
 Calculate the mean of the data within the window
 
@@ -20,7 +20,7 @@ Calculate the mean of the data within the window
 AVG([ALL] *expression*) [OVER (*analytic_clause*)]
 ```
 
-### example
+### Example
 
 Calculate the x-average of the current row and the rows before and after it
 
@@ -48,6 +48,6 @@ from int_t where property in ('odd','even');
  | 9  | odd      | 8              |
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,AVG

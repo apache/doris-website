@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## reverse
-### description
+## Reverse
+### Description
 #### Syntax
 
 ```sql
@@ -35,7 +35,7 @@ ARRAY<T> reverse(ARRAY<T> arr)
 
 The REVERSE() function reverses a string or array and returns the result.
 
-### example
+### Example
 
 ```
 mysql> SELECT REVERSE('hello');
@@ -78,5 +78,5 @@ mysql> select k1, k2, reverse(k2) from array_test01 order by k1;
 |  5   | [' ', NULL, 'f', 'g']             | ['g', 'f', NULL, ' ']             |
 +------+-----------------------------------+-----------------------------------+
 ```
-### keywords
+### Keywords
     REVERSE, ARRAY

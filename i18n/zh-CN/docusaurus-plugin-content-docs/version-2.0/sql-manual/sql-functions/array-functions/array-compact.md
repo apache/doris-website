@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_compact
+## Array_compact
 
 array_compact
 
-### description
+### Description
 
 从数组中删除连续的重复元素，结果值的顺序由源数组中的顺序决定。
 
@@ -44,7 +44,7 @@ array_compact
 
 Type: Array.
 
-### example
+### Example
 
 ```
 select array_compact([1, 2, 3, 3, null, null, 4, 4]);
@@ -72,6 +72,6 @@ select array_compact(['2015-03-13','2015-03-13']);
 +--------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,COMPACT,ARRAY_COMPACT

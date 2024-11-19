@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## overlay
+## Overlay
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 返回字符串 str，并用字符串 newstr 替换从位置 pos 开始、长度为 len 字符的子字符串。如果 pos 不在字符串长度范围内，则返回原始字符串。如果 len 不在字符串其余部分的长度范围内，则从位置 pos 开始替换字符串其余部分。如果任何参数为 NULL，则返回 NULL。
 
-### example
+### Example
 
 ```
 mysql> select overlay('Quadratic', 3, 4, 'What');
@@ -67,5 +67,5 @@ mysql> select overlay('Quadratic', 0, 100, 'What');
 | Quadratic                            |
 +--------------------------------------+
 ```
-### keywords
+### Keywords
     OVERLAY

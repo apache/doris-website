@@ -33,7 +33,7 @@ under the License.
 
 Judging whether geometric shape 1 can contain geometric shape 2 completely
 
-### example
+### Example
 
 
 ```
@@ -51,5 +51,5 @@ mysql> SELECT ST_Contains(ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"),
 |                                                                                        0 |
 +------------------------------------------------------------------------------------------+
 ```
-### keywords
+### Keywords
 ST_CONTAINS,ST,CONTAINS

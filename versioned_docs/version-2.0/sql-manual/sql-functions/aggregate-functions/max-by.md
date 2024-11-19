@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## MAX_BY
-### description
+### Description
 #### Syntax
 
 `MAX_BY(expr1, expr2)`
@@ -33,7 +33,7 @@ under the License.
 
 Returns the value of an expr1 associated with the maximum value of expr2 in a group.
 
-### example
+### Example
 ```
 MySQL > select * from tbl;
 +------+------+------+------+
@@ -52,5 +52,5 @@ MySQL > select max_by(k1, k4) from tbl;
 |                  0 |
 +--------------------+ 
 ```
-### keywords
+### Keywords
 MAX_BY

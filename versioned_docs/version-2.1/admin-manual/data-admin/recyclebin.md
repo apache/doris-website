@@ -101,7 +101,7 @@ In addition, users can use the command `show trash` to view the trash data capac
 
 #### Operation
 
-##### single mode
+##### Single mode
 
 1. http request method
 
@@ -132,7 +132,7 @@ In addition, users can use the command `show trash` to view the trash data capac
     sh tools/restore_tablet_tool.sh --backend "http://127.0.0.1:8040" --tablet_id 12345 --schema_hash 11111
     ```
 
-##### batch mode
+##### Batch mode
 
 The batch recovery mode is used to realize the function of recovering multiple tablet data.
 

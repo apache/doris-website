@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## curdate,current_date
+## Curdate,current_date
 ### Description
 #### Syntax
 
@@ -32,7 +32,7 @@ under the License.
 
 Get the current date and return it in Date type
 
-### example
+### Example
 
 ```
 mysql> SELECT CURDATE();
@@ -49,6 +49,6 @@ mysql> SELECT CURDATE() + 0;
 |      20191220 |
 +---------------+
 ```
-### keywords
+### Keywords
 
     CURDATE,CURRENT_DATE

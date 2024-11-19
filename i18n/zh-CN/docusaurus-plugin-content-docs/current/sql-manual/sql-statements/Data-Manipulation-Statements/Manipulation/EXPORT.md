@@ -256,7 +256,7 @@ PROPERTIES (
 ```
 Export 导出数据时会先将`/home/user/`目录下所有文件及目录删除，然后导出数据到该目录下。
 
-#### export with S3
+#### Export with S3
 
 1. 将 s3_test 表中的所有数据导出到 S3 上，以不可见字符 `\x07` 作为列或者行分隔符。如果需要将数据导出到 minio，还需要指定 `use_path_style`=`true`。
 
@@ -273,7 +273,7 @@ PROPERTIES (
 )
 ```
 
-#### export with HDFS
+#### Export with HDFS
 
 1. 将 Test 表中的所有数据导出到 HDFS 上，导出文件格式为 Parquet，导出作业单个文件大小限制为 512MB，保留所指定目录下的所有文件。
 
@@ -290,7 +290,7 @@ with HDFS (
 );
 ```
 
-#### export with Broker
+#### Export with Broker
 需要先启动 Broker 进程，并在 FE 中添加该 Broker。
 1. 将 Test 表中的所有数据导出到 hdfs 上
 ```sql

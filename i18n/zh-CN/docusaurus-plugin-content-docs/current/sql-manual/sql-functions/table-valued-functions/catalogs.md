@@ -32,13 +32,13 @@ under the License.
 catalogs
 
 
-### description
+### Description
 
 表函数，生成 catalogs 临时表，可以查看当前doris中的创建的 catalogs 信息。
 
 该函数用于 from 子句中。
 
-#### syntax
+#### Syntax
 
 `catalogs()`
 
@@ -63,7 +63,7 @@ mysql> desc function catalogs();
 
 
 
-### example
+### Example
 
 ```
 mysql> select * from catalogs();
@@ -87,6 +87,6 @@ mysql> select * from catalogs();
 13 rows in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
     catalogs

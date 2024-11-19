@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## query
+## Query
 
 ### Name
 
 query
 
-### description
+### Description
 
 query 表函数（table-valued-function,tvf），可用于将查询语句直接透传到某个 catalog 进行数据查询
 
@@ -39,7 +39,7 @@ Doris 2.1.3 版本开始支持，当前仅支持透传查询 jdbc catalog。
 需要先在 Doris 中创建对应的 catalog。
 :::
 
-#### syntax
+#### Syntax
 
 ```sql
 query(

@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## PERCENTILE_APPROX_WEIGHTED
-### description
+### Description
 #### Syntax
 
 `PERCENTILE_APPROX_WEIGHTED(expr, w ,DOUBLE p [, DOUBLE compression])`
@@ -33,7 +33,7 @@ under the License.
 
 该函数和 PERCENTILE_APPROX 类似，唯一的区别是多了一个参数 w，用来表示 expr 出现的次数。
 
-### example
+### Example
 ```
 mysql >select * from quantile_weighted_table order by k;
 +------+------+
@@ -54,5 +54,5 @@ mysql >select percentile_approx_weighted(k,w,0.55) from quantile_weighted_table;
 
 ```
 
-### keywords
+### Keywords
 PERCENTILE_APPROX,PERCENTILE,APPROX,PERCENTILE_APPROX_WEIGHTED

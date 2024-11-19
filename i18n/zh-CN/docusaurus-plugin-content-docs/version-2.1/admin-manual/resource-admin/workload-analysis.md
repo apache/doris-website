@@ -30,7 +30,7 @@ Doris支持通过Workload系统表对集群中的工作负载进行分析，可�
 
 ## Workload系统表介绍
 目前系统表主要在```information_schema```库里。
-### active_queries
+### Active_queries
 ```active_queries```表记录了当前在FE上查询的执行信息，字段的详细信息如下：
 * query_id，查询的id
 * query_start_time，查询开始执行的时间；如果查询有排队的话，那么就代表排队结束之后开始执行的时间

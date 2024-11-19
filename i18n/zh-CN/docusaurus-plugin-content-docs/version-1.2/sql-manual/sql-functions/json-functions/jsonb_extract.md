@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## jsonb_extract
+## Jsonb_extract
 
 jsonb_extract
 
-### description
+### Description
 #### Syntax
 
 ```sql
@@ -54,10 +54,10 @@ jsonb_extract是一系列函数，从JSONB类型的数据中提取json_path指�
 - 如果json_path指定的字段在JSON中不存在，返回NULL
 - 如果json_path指定的字段在JSON中的实际类型和jsonb_extract_t指定的类型不一致，如果能无损转换成指定类型返回指定类型t，如果不能则返回NULL
 
-### example
+### Example
 
 参考 [jsonb tutorial](../../sql-reference/Data-Types/JSONB.md) 中的示例
 
-### keywords
+### Keywords
 JSONB, JSON, jsonb_extract, jsonb_extract_isnull, jsonb_extract_bool, jsonb_extract_int, jsonb_extract_bigint, jsonb_extract_double, jsonb_extract_string
 

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_unquote
+## Json_unquote
 ### Description
 #### Syntax
 
@@ -47,7 +47,7 @@ Escape sequences within a string as shown in the following table will be recogni
 
 
 
-### example
+### Example
 
 ```
 mysql> SELECT json_unquote('"doris"');
@@ -79,5 +79,5 @@ mysql> SELECT json_unquote('"\\ttest"');
 |       test                    |
 +--------------------------+
 ```
-### keywords
+### Keywords
 json,unquote,json_unquote

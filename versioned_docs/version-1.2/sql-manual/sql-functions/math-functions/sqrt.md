@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sqrt
+## Sqrt
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE sqrt(DOUBLE x)`
@@ -34,7 +34,7 @@ Returns the square root of `x`.`x` is required to be greater than or equal to `0
 Another alias for this function is `dsqrt`.
 :::
 
-### example
+### Example
 
 ```
 mysql> select sqrt(9);
@@ -57,5 +57,5 @@ mysql> select sqrt(100.0);
 +-------------+
 ```
 
-### keywords
+### Keywords
 	SQRT, DSQRT

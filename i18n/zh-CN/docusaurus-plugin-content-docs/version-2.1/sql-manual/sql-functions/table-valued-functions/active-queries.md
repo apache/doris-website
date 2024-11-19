@@ -34,13 +34,13 @@ active_queries
 已废弃。自 2.1.1 起，此表函数移到 information_schema.active_queries 表。
 :::
 
-### description
+### Description
 
 表函数，生成active_queries临时表，可以查看当前doris集群中正在运行的 query 信息。
 
 该函数用于from子句中。
 
-#### syntax
+#### Syntax
 `active_queries()`
 
 active_queries()表结构：
@@ -60,7 +60,7 @@ mysql [(none)]>desc function active_queries();
 7 rows in set (0.00 sec)
 ```
 
-### example
+### Example
 ```
 mysql [(none)]>select * from active_queries();
 +-----------------------------------+---------------------+-------------+-----------------+----------+------------------+--------------------------------+
@@ -71,6 +71,6 @@ mysql [(none)]>select * from active_queries();
 1 row in set (0.03 sec)
 ```
 
-### keywords
+### Keywords
 
     active_queries

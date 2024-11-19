@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_intersect
+## Array_intersect
 
 array_intersect
 
-### description
+### Description
 
 #### Syntax
 
@@ -36,7 +36,7 @@ array_intersect
 
 返回一个数组，包含array1和array2的交集中的所有元素，不包含重复项，如果输入参数为NULL，则返回NULL
 
-### example
+### Example
 
 ```
 mysql> select k1,k2,k3,array_intersect(k2,k3) from array_type_table;
@@ -78,6 +78,6 @@ mysql> select k1,k2,k3,array_intersect(k2,k3) from array_type_table_decimal;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,INTERSECT,ARRAY_INTERSECT

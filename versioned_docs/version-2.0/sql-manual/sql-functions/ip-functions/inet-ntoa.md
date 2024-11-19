@@ -30,18 +30,18 @@ INET_NTOA
 
 
 
-### description
+### Description
 
 #### Syntax
 
 `VARCHAR INET_NTOA(BIGINT ipv4_num)`
 
 Takes a Int16, Int32, Int64 number. Interprets it as an IPv4 address in big endian. Returns a string containing the corresponding IPv4 address in the format A.B.C.d (dot-separated numbers in decimal form).
-### notice
+### Notice
 
 `will return NULL if the input parameter is negative or larger than 4294967295(num value of '255.255.255.255')`
 
-### example
+### Example
 
 ```
 mysql> select inet_ntoa(3232235521);
@@ -65,6 +65,6 @@ mysql> select num,inet_ntoa(num) from ipv4_bi;
 7 rows in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
 INET_NTOA, IP

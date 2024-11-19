@@ -26,8 +26,8 @@ under the License.
 
 <version since="1.2">
 
-## convert_to
-### description
+## Convert_to
+### Description
 #### Syntax
 
 `VARCHAR convert_to(VARCHAR column, VARCHAR character)`
@@ -37,7 +37,7 @@ under the License.
 
 </version>
 
-### example
+### Example
 
 ```
 mysql> select * from class_test order by class_name;
@@ -69,5 +69,5 @@ mysql> select * from class_test order by convert(class_name using gbk);
 +----------+------------+-------------+
 
 ```
-### keywords
+### Keywords
     convert_to

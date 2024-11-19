@@ -463,7 +463,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 * 描述: 每个OlapScanner 读取的最大数据量
 * 默认值: 1024
 
-### compaction
+### Compaction
 
 #### `disable_auto_compaction`
 

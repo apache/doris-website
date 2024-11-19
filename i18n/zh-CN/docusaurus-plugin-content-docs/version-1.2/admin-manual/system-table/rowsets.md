@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## rowsets
+## Rowsets
 
 ### Name
 
@@ -34,7 +34,7 @@ rowsets
 
 </version>
 
-### description
+### Description
 
 `rowsets` 是doris内置的一张系统表，存放在`information_schema`数据库下。通过 `rowsets` 系统表可以查看各个`BE` 当前rowsets情况。
 

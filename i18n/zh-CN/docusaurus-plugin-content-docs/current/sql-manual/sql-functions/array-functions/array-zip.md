@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_zip
+## Array_zip
 
 array_zip
 
-### description
+### Description
 
 将所有数组合并成一个单一的数组。结果数组包含源数组中按参数列表顺序分组的相应元素。
 
@@ -38,7 +38,7 @@ array_zip
 
 将来自源数组的元素分组成结构体的数组。结构体中的数据类型与输入数组的类型相同，并按照传递数组的顺序排列。
 
-### example
+### Example
 
 ```
 mysql> select array_zip(['a', 'b', 'c'], [1, 2, 3]);
@@ -50,6 +50,6 @@ mysql> select array_zip(['a', 'b', 'c'], [1, 2, 3]);
 1 row in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
 ARRAY,ZIP,ARRAY_ZIP

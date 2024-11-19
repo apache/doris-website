@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_second
-### description
+## From_second
+### Description
 #### Syntax
 
 `DATETIME FROM_SECOND(BIGINT unix_timestamp)`
@@ -34,7 +34,7 @@ under the License.
 
 将时间戳转化为对应的 DATETIME，传入的是整型，返回的是DATETIME类型。若`unix_timestamp < 0` 或函数结果大于 `9999-12-31 23:59:59.999999`，则返回`NULL`。
 
-### example
+### Example
 
 ```
 mysql> set time_zone='Asia/Shanghai';
@@ -68,6 +68,6 @@ mysql> select from_microsecond(253402272000000000);
 +--------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     FROM_SECOND,FROM,SECOND,MILLISECOND,MICROSECOND

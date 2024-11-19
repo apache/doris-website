@@ -24,19 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode_bitmap
+## Explode_bitmap
 
-### description
+### Description
 
 Table functions must be used in conjunction with Lateral View.
 
 Expand a bitmap type.
 
-#### syntax
+#### Syntax
 
 `explode_bitmap(bitmap)`
 
-### example
+### Example
 
 Original table data:
 
@@ -150,6 +150,6 @@ lateral view explode_split("a,b", ",") tmp2 as e2 order by k1, e1, e2;
 +------+------+------+
 ```
 
-### keywords
+### Keywords
 
 explode,bitmap,explode_bitmap

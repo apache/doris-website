@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## str_to_date
+## Str_to_date
 ### Description
 #### Syntax
 
@@ -73,6 +73,6 @@ mysql> select str_to_date('2023','%Y');
 +---------------------------+
 ```
 
-### keywords
+### Keywords
 
     STR_TO_DATE,STR,TO,DATE

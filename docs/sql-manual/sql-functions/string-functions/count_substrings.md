@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## count_substrings
+## Count_substrings
 
-### description
+### Description
 
 #### Syntax
 
@@ -43,7 +43,7 @@ Therefore, when str: ccc and pattern: cc, the result returned is 1.
 
 Returns the total number of occurrences of the substring.
 
-### example
+### Example
 
 ```
 mysql [(none)]>select count_substrings('a1b1c1d','1');
@@ -102,6 +102,6 @@ mysql [(none)]>select count_substrings('abccbaacb','c');
 |                                  3 |
 +------------------------------------+
 ```
-### keywords
+### Keywords
 
 COUNT_SUBSTRINGS,SUBSTRINGS

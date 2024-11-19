@@ -30,7 +30,7 @@ Return the XOR value of two numbers.
 ## Syntax
 `BOOLEAN xor BOOLEAN`
 
-### example
+### Example
 
 ```sql
 mysql >select true xor false,true xor true;

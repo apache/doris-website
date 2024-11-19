@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## jsonb_exists_path
+## Jsonb_exists_path
 
-### description
+### Description
 
 It is used to judge whether the field specified by json_path exists in the JSONB data. If it exists, it returns TRUE, and if it does not exist, it returns FALSE
 
@@ -36,11 +36,11 @@ It is used to judge whether the field specified by json_path exists in the JSONB
 BOOLEAN jsonb_exists_path(JSONB j, VARCHAR json_path)
 ```
 
-### example
+### Example
 
 Refer to [jsonb tutorial](../../sql-reference/Data-Types/JSONB.md)
 
-### keywords
+### Keywords
 
 jsonb_exists_path
 

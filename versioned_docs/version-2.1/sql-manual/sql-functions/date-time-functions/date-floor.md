@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## date_floor
-### description
+## Date_floor
+### Description
 #### Syntax
 
 `DATETIME DATE_FLOOR(DATETIME datetime, INTERVAL period type)`
@@ -39,7 +39,7 @@ The period parameter specifies how many units each cycle consists of, starting f
 
 type ：YEAR, MONTH, DAY, HOUR, MINUTE, SECOND.
 
-### example
+### Example
 
 ```
 mysql>select date_floor("0001-01-01 00:00:16",interval 5 second);
@@ -99,7 +99,7 @@ mysql>select date_floor("2023-07-13 22:28:18",interval 5 year);
 
 ```
 
-### keywords
+### Keywords
 
     DATE_FLOOR,DATE,FLOOR
 

@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## COLLECT_LIST
-### description
+### Description
 #### Syntax
 
 `ARRAY<T> collect_list(expr[,max_size])`
@@ -34,13 +34,13 @@ under the License.
 得到的结果数组中不包含NULL元素，数组中的元素顺序不固定。该函数具有别名`group_array`。
 
 
-### notice
+### Notice
 
 ```
 仅支持向量化引擎中使用
 ```
 
-### example
+### Example
 
 ```
 mysql> select k1,k2,k3 from collect_list_test order by k1;
@@ -75,5 +75,5 @@ mysql> select k1,collect_list(k2),collect_list(k3,1) from collect_list_test grou
 
 ```
 
-### keywords
+### Keywords
 COLLECT_LIST,GROUP_ARRAY,COLLECT_SET,ARRAY

@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## asin
+## Asin
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE asin(DOUBLE x)`
 返回`x`的反正弦值，若 `x`不在`-1`到 `1`的范围之内，则返回 `nan`.
 
-### example
+### Example
 
 ```
 mysql> select asin(0.5);
@@ -47,5 +47,5 @@ mysql> select asin(2);
 +-----------+
 ```
 
-### keywords
+### Keywords
 	ASIN

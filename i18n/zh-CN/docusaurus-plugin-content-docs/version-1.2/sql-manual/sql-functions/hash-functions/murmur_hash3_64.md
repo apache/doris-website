@@ -22,16 +22,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## murmur_hash3_64
+## Murmur_hash3_64
 
-### description
+### Description
 #### Syntax
 
 `BIGINT MURMUR_HASH3_64(VARCHAR input, ...)`
 
 返回输入字符串的64位murmur3 hash值
 
-### example
+### Example
 
 ```
 mysql> select murmur_hash3_64(null);
@@ -56,6 +56,6 @@ mysql> select murmur_hash3_64("hello", "world");
 +-----------------------------------+
 ```
 
-### keywords
+### Keywords
 
     MURMUR_HASH3_64,HASH

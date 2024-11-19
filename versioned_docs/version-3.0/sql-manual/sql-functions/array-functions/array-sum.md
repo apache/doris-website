@@ -24,10 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_sum
+## Array_sum
 array_sum
 
-### description
+### Description
 
 #### Syntax
 
@@ -39,7 +39,7 @@ T array_sum(lambda, Array<T> arr1, Array<T> arr2 ....)
 Get the sum of all elements in an array (`NULL` values are skipped).
 When the array is empty or all elements in the array are `NULL` values, the function returns `NULL`.
 
-### example
+### Example
 
 ```shell
 mysql> create table array_type_table(k1 INT, k2 Array<int>) duplicate key (k1)
@@ -58,7 +58,7 @@ mysql> select k2, array_sum(k2) from array_type_table;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,SUM,ARRAY_SUM
 

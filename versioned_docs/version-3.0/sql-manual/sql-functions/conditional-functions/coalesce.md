@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## coalesce
-### description
+## Coalesce
+### Description
 #### Syntax
 
 `coalesce(expr1, expr2, ...., expr_n)`
@@ -33,7 +33,7 @@ under the License.
 
 Returns the first non empty expression in the parameter (from left to right)
 
-### example
+### Example
 
 ```
 mysql> select coalesce(NULL, '1111', '0000');
@@ -43,5 +43,5 @@ mysql> select coalesce(NULL, '1111', '0000');
 | 1111                           |
 +--------------------------------+
 ```
-### keywords
+### Keywords
 COALESCE

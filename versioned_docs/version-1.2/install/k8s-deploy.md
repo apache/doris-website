@@ -55,7 +55,7 @@ Start the BE (role type is Compute Node):`kubectl create -f doris_cn.yml`
 - BE (role type is Compute Node)
   - Command:`kubectl scale statefulset doris-cn-cluster1 --replicas=4`
 
-## test and verify
+## Test and verify
 
 Connect to the FE using mysql-client and perform operations such as' show backends' and 'show frontends' to view the status of each node
 
@@ -70,7 +70,7 @@ Connect to the FE using mysql-client and perform operations such as' show backen
 - View IP and port information `kubectl get ep`
 - [More knowledge of k8s](https://kubernetes.io)
 
-## common problem
+## Common problem
 
 - How is data persistent?
 

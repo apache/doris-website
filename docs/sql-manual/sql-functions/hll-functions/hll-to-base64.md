@@ -22,16 +22,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hll_to_base64
+## Hll_to_base64
 
-### description
+### Description
 #### Syntax
 
 `VARCHAR HLL_TO_BASE64(HLL input)`
 
 Convert an input hll to a base64 string. If input is NULL, return NULL.
 
-### example
+### Example
 
 ```
 mysql> select hll_to_base64(NULL);
@@ -75,5 +75,5 @@ mysql>  select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash('abc'))));
 1 row in set (0.04 sec)
 ```
 
-### keywords
+### Keywords
 HLL_TO_BASE64, HLL

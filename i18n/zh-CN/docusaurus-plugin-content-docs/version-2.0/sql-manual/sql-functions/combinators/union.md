@@ -26,14 +26,14 @@ under the License.
 
 ## UNION
 
-### description
+### Description
 #### Syntax
 
 `AGGREGATE_FUNCTION_UNION(agg_state)`
 将多个聚合中间结果聚合为一个。
 结果的类型为agg_state，函数签名与入参一致。
 
-### example
+### Example
 ```
 mysql [test]>select avg_merge(t) from (select avg_union(avg_state(1)) as t from d_table group by k1)p;
 +----------------+
@@ -42,5 +42,5 @@ mysql [test]>select avg_merge(t) from (select avg_union(avg_state(1)) as t from 
 |              1 |
 +----------------+
 ```
-### keywords
+### Keywords
 AGG_STATE, UNION

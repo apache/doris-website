@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_min
+## Array_min
 
 array_min
 
-### description
+### Description
 
 #### Syntax
 `T array_min(ARRAY<T> array1)`
@@ -36,7 +36,7 @@ array_min
 Get the minimum element in an array (`NULL` values are skipped).
 When the array is empty or all elements in the array are `NULL` values, the function returns `NULL`.
 
-### example
+### Example
 
 ```shell
 mysql> create table array_type_table(k1 INT, k2 Array<int>) duplicate key (k1)
@@ -55,6 +55,6 @@ mysql> select k2, array_min(k2) from array_type_table;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,MIN,ARRAY_MIN

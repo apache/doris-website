@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_test
-### description
+## Bit_test
+### Description
 #### Syntax
 
 `bit_test(Integer-type value, Integer-type pos, '......')`
@@ -35,7 +35,7 @@ under the License.
 如果pos 的取值为负数或者超过value的bit位总数，则会返回结果为0.
 整数value范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
-### example
+### Example
 
 mysql [(none)]>SELECT bit_test(43, 1);
 +-----------------+

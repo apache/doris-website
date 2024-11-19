@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_quote
+## Json_quote
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 Enclose json_value in double quotes ("), escape special characters contained.
 
-### example
+### Example
 
 ```
 MySQL> SELECT json_quote('null'), json_quote('"null"');
@@ -66,5 +66,5 @@ MySQL> select json_quote("\n\b\r\t");
 | "\n\b\r\t"             |
 +------------------------+
 ```
-### keywords
+### Keywords
 json,quote,json_quote

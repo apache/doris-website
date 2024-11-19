@@ -48,7 +48,7 @@ distribution_desc
 [extra_properties]
 ```
 
-#### column_definition_list
+#### Column_definition_list
 
 列定义列表：
 
@@ -137,7 +137,7 @@ distribution_desc
   v4 INT SUM NOT NULL DEFAULT "1" COMMENT "This is column v4"
   ```
     
-#### index_definition_list
+#### Index_definition_list
 
 索引列表定义：
 
@@ -159,13 +159,13 @@ distribution_desc
     ...
     ```
 
-#### engine_type
+#### Engine_type
 
 表引擎类型。本文档中类型皆为 OLAP。其他外部表引擎类型见 [CREATE EXTERNAL TABLE](./CREATE-EXTERNAL-TABLE.md) 文档。示例：
     
     `ENGINE=olap`
     
-#### keys_type
+#### Keys_type
 
 数据模型。
 
@@ -187,7 +187,7 @@ AGGREGATE KEY(k1, k2, k3),
 UNIQUE KEY(k1, k2)
 ```
     
-#### table_comment
+#### Table_comment
 
 表注释。示例：
     
@@ -195,7 +195,7 @@ UNIQUE KEY(k1, k2)
     COMMENT "This is my first DORIS table"
     ```
 
-#### partition_info
+#### Partition_info
 
 分区信息，支持三种写法：
 
@@ -245,7 +245,7 @@ UNIQUE KEY(k1, k2)
     ```
 
 
-#### distribution_desc
+#### Distribution_desc
 
 定义数据分桶方式。
 
@@ -260,7 +260,7 @@ UNIQUE KEY(k1, k2)
    说明：
       使用随机数进行分桶。 
 
-#### rollup_list
+#### Rollup_list
 
 建表的同时可以创建多个物化视图（ROLLUP）。
 
@@ -279,7 +279,7 @@ UNIQUE KEY(k1, k2)
     )
     ```
 
-#### properties
+#### Properties
 
 设置表属性。目前支持以下属性：
 

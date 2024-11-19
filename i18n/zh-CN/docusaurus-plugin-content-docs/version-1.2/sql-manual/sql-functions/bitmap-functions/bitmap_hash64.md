@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_hash64
-### description
+## Bitmap_hash64
+### Description
 #### Syntax
 
 `BITMAP BITMAP_HASH64(expr)`
@@ -36,7 +36,7 @@ under the License.
 cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,device_id, device_id=bitmap_hash64(device_id)"   http://host:8410/api/test/testDb/_stream_load
 ```
 
-### example
+### Example
 
 ```
 mysql> select bitmap_to_string(bitmap_hash64('hello'));
@@ -47,6 +47,6 @@ mysql> select bitmap_to_string(bitmap_hash64('hello'));
 +------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_HASH,BITMAP

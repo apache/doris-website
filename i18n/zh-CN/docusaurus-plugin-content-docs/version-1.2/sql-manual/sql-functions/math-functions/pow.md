@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## pow
+## Pow
 
-### description
+### Description
 
 返回第一个参数的值，该值是第二个参数的幂。
 
@@ -37,7 +37,7 @@ under the License.
 `DOUBLE pow(DOUBLE a, DOUBLE b)`
 返回`a`的`b`次方.
 
-### example
+### Example
 
 ```
 mysql> select pow(2,0);
@@ -60,5 +60,5 @@ mysql> select pow(3,2.4);
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	POW, POWER, FPOW, DPOW

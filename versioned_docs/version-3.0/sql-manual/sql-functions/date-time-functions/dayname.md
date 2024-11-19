@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## dayname
+## Dayname
 ### Description
 #### Syntax
 
@@ -35,7 +35,7 @@ Date name corresponding to return date
 
 The parameter is Date or Datetime type
 
-### example
+### Example
 
 ```
 mysql> select dayname('2007-02-03 00:00:00');
@@ -45,5 +45,5 @@ mysql> select dayname('2007-02-03 00:00:00');
 | Saturday                       |
 +--------------------------------+
 ```
-### keywords
+### Keywords
     DAYNAME

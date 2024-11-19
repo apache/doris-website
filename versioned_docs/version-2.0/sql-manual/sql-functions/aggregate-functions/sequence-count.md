@@ -56,7 +56,7 @@ We define `t` as the difference in seconds between two times,  For example, patt
 
 Number of non-overlapping event chains that are matched.
 
-### example
+### Example
 
 **count examples**
 
@@ -249,6 +249,6 @@ SELECT sequence_count('(?1)(?2)', date, number = 1, number = 5, number = 6) FROM
 +------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 SEQUENCE_COUNT

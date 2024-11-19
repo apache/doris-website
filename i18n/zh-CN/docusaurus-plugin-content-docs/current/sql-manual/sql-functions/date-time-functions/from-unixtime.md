@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_unixtime
-### description
+## From_unixtime
+### Description
 #### Syntax
 
 `DATETIME FROM_UNIXTIME(BIGINT unix_timestamp[, VARCHAR string_format])`
@@ -40,7 +40,7 @@ under the License.
 目前支持的 `unix_timestamp` 范围为 `[0, 32536771199]`，超出范围的 `unix_timestamp` 将会得到 NULL
 
 
-### example
+### Example
 
 ```
 mysql> select from_unixtime(1196440219);
@@ -83,6 +83,6 @@ mysql> select from_second(21474836470);
 +--------------------------+
 ```
 
-### keywords
+### Keywords
 
     FROM_UNIXTIME,FROM,UNIXTIME

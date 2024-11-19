@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## ST_Distance_Sphere
-### description
+### Description
 #### Syntax
 
 `DOUBLE ST_Distance_Sphere(DOUBLE x_lng, DOUBLE x_lat, DOUBLE y_lng, DOUBLE y_lat)`
@@ -36,7 +36,7 @@ Calculate the spherical distance between two points of the earth in meters. The 
 x_lng and y_lng are Longitude values, must be in the range [-180, 180].
 x_lat and y_lat are Latitude values, must be in the range [-90, 90].
 
-### example
+### Example
 
 ```
 mysql> select st_distance_sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219);
@@ -46,5 +46,5 @@ mysql> select st_distance_sphere(116.35620117, 39.939093, 116.4274406433, 39.902
 |                                                         7336.9135549995917 |
 +----------------------------------------------------------------------------+
 ```
-### keywords
+### Keywords
 ST_DISTANCE_SPHERE,ST,DISTANCE,SPHERE

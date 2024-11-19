@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## initcap
-### description
+## Initcap
+### Description
 #### Syntax
 
 `VARCHAR initcap(VARCHAR str)`
@@ -33,7 +33,7 @@ under the License.
 Convert the first letter of each word to upper case and the rest to lower case. 
 Words are sequences of alphanumeric characters separated by non-alphanumeric characters.
 
-### example
+### Example
 
 ```
 mysql> select initcap('hello hello.,HELLO123HELlo');
@@ -43,5 +43,5 @@ mysql> select initcap('hello hello.,HELLO123HELlo');
 | Hello Hello.,Hello123hello            |
 +---------------------------------------+
 ```
-### keywords
+### Keywords
     INITCAP

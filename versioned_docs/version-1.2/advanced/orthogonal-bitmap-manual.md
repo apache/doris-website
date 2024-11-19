@@ -89,7 +89,7 @@ When loading data, vertically cut the bitmap value range of the user. For exampl
 
 Note: The orthogonal bitmap function cannot be used in the partitioned table. Because the partitions of the partitioned table are orthogonal, the data between partitions cannot be guaranteed to be orthogonal, so the calculation result cannot be estimated.
 
-#### orthogonal_bitmap_intersect 
+#### Orthogonal_bitmap_intersect 
 
 The bitmap intersection function
 
@@ -112,7 +112,7 @@ select BITMAP_COUNT(orthogonal_bitmap_intersect(user_id, tag, 13080800, 11110200
 
 ```
 
-#### orthogonal_bitmap_intersect_count 
+#### Orthogonal_bitmap_intersect_count 
 
 To calculate the bitmap intersection count function, the syntax is the same as the original Intersect_Count, but the implementation is different
 
@@ -129,7 +129,7 @@ Explain:
 on the basis of this table schema, the query planning aggregation is divided into two layers. In the first layer, be nodes (update and serialize) first press filter_ Values are used to hash aggregate the keys, and then the intersection of bitmaps of all keys is performed, and then the intersection results are counted. The count values are serialized and sent to the second level be nodes (merge and finalize). In the second level be nodes, the sum of all the count values from the first level nodes is calculated circularly
 
 
-#### orthogonal_bitmap_union_count 
+#### Orthogonal_bitmap_union_count 
 
 Figure out the bitmap union count function, syntax with the original bitmap_union_count, but the implementation is different.
 

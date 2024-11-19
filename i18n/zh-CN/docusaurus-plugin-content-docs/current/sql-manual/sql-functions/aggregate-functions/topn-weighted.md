@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## TOPN_WEIGHTED
-### description
+### Description
 #### Syntax
 
 `ARRAY<T> topn_weighted(expr, BigInt weight, INT top_num[, INT space_expand_rate])`
@@ -38,7 +38,7 @@ counter numbers = top_num * space_expand_rate
 ```
 space_expand_rate的值越大，结果越准确，默认值为50
 
-### example
+### Example
 ```
 mysql> select topn_weighted(k5,k1,3) from baseall;
 +------------------------------+
@@ -56,5 +56,5 @@ mysql> select topn_weighted(k5,k1,3,100) from baseall;
 +-----------------------------------+
 1 row in set (0.02 sec)
 ```
-### keywords
+### Keywords
 TOPN, TOPN_WEIGHTED

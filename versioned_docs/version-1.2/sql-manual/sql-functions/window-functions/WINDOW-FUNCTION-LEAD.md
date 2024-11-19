@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION LEAD
-### description
+### Description
 
 The LEAD() method is used to calculate the value of the current line several lines backwards.
 
@@ -20,7 +20,7 @@ The LEAD() method is used to calculate the value of the current line several lin
 LEAD(expr, offset, default) OVER (partition_by_clause order_by_clause)
 ```
 
-### example
+### Example
 
 Calculate the trend of the closing price of the second day compared with the closing price of the day, that is, the closing price of the second day is higher or lower than that of the day.
 
@@ -46,6 +46,6 @@ order by closing_date;
 | JDR          | 2014-09-19 00:00:00 | 13.98         | flat or lower |
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,LEAD

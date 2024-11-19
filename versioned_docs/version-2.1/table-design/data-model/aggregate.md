@@ -211,7 +211,7 @@ In Doris, data aggregation happens in the following 3 stages:
 
 At different stages, data will be aggregated to varying degrees. For example, when a batch of data is just imported, it may not be aggregated with the existing data. But for users, they **can only query aggregated data**. That is, what users see are the aggregated data, and they **should not assume that what they have seen are not or partly aggregated**. 
 
-### agg_state
+### Agg_state
 
 :::tip
 

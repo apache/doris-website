@@ -49,7 +49,7 @@ Workload Group 是从 2.0 版本开始支持的功能，Workload Group 在 2.0 �
 
 情况 2：如果在 2.0 版本没有使用 Workload Group 功能，那么也需要先把 Doris 集群整体升级到 2.1 版本后，再根据下文的***workload group 使用***的章节开始使用该功能。
 
-## workload group 属性
+## Workload group 属性
 
 * cpu_share: 可选，默认值为 1024，取值范围是正整数。用于设置 workload group 获取 cpu 时间的多少，可以实现 cpu 资源软隔离。cpu_share 是相对值，表示正在运行的 workload group 可获取 cpu 资源的权重。例如，用户创建了 3 个 workload group g-a、g-b 和 g-c，cpu_share 分别为 10、30、40，某一时刻 g-a 和 g-b 正在跑任务，而 g-c 没有任务，此时 g-a 可获得 25% (10 / (10 + 30)) 的 cpu 资源，而 g-b 可获得 75% 的 cpu 资源。如果系统只有一个 workload group 正在运行，则不管其 cpu_share 的值为多少，它都可获取全部的 cpu 资源。
 
@@ -194,7 +194,7 @@ WorkloadGroup的内存管理和IO管理功能是Doris内部实现，不依赖外
 
 如果要在K8S上使用Doris，建议使用Doris Operator进行部署，可以屏蔽底层的权限细节问题。
 
-## workload group 使用
+## Workload group 使用
 1. 首先创建一个自定义的 workload group。
 ```
 create workload group if not exists g1

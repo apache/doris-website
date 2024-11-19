@@ -24,17 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## iceberg_meta
+## Iceberg_meta
 
 ### Name
 
 iceberg_meta
 
-### description
+### Description
 
 iceberg_meta 表函数（table-valued-function,tvf），可以用于读取 iceberg 表的各类元数据信息，如操作历史、生成的快照、文件元数据等。
 
-#### syntax
+#### Syntax
 ```sql
 iceberg_meta(
   "table" = "ctl.db.tbl", 

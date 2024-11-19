@@ -22,8 +22,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sub_replace
-### description
+## Sub_replace
+### Description
 #### Syntax
 
 `VARCHAR sub_replace(VARCHAR str, VARCHAR new_str, INT start[, INT len])`
@@ -31,7 +31,7 @@ under the License.
 返回用new_str字符串替换str中从start开始长度为len的新字符串。
 其中start,len为负整数，返回NULL, 且len的默认值为new_str的长度。
 
-### example
+### Example
 
 ```
 mysql> select sub_replace("this is origin str","NEW-STR",1);
@@ -48,5 +48,5 @@ mysql> select sub_replace("doris","***",1,2);
 | d***is                            |
 +-----------------------------------+
 ```
-### keywords
+### Keywords
     SUB_REPLACE

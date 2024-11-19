@@ -47,7 +47,7 @@ REVOKE role_list FROM user_identity
 
 ## Parameters
 
-### privilege_list
+### Privilege_list
 
 A comma-separated list of privileges to be revoked. Supported privileges include:
 
@@ -62,7 +62,7 @@ A comma-separated list of privileges to be revoked. Supported privileges include
 - USAGE_PRIV: Usage privileges
 - SHOW_VIEW_PRIV: Privileges to view view definitions
 
-### priv_level
+### Priv_level
 
 Specifies the scope of the privileges. Supported formats:
 
@@ -71,31 +71,31 @@ Specifies the scope of the privileges. Supported formats:
 - catalog_name.db.*: All tables in the specified database
 - catalog_name.db.tbl: Specific table in the specified database
 
-### resource_name
+### Resource_name
 
 Specifies the resource scope. Supports % (matches any string) and _ (matches any single character) wildcards.
 
-### workload_group_name
+### Workload_group_name
 
 Specifies the workload group name. Supports % (matches any string) and _ (matches any single character) wildcards.
 
-### compute_group_name
+### Compute_group_name
 
 Specifies the compute group name. Supports % (matches any string) and _ (matches any single character) wildcards.
 
-### storage_vault_name
+### Storage_vault_name
 
 Specifies the storage vault name. Supports % (matches any string) and _ (matches any single character) wildcards.
 
-### user_identity
+### User_identity
 
 Specifies the user from whom privileges are being revoked. Must be a user created with CREATE USER. The host in user_identity can be a domain name. If it's a domain name, the revocation of privileges may be delayed by about 1 minute.
 
-### role_name
+### Role_name
 
 Specifies the role from which privileges are being revoked. The role must exist.
 
-### role_list
+### Role_list
 
 A comma-separated list of roles to be revoked. All specified roles must exist.
 

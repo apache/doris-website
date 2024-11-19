@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## floor
+## Floor
 
-### description
+### Description
 #### Syntax
 
 `T floor(T x[, d])`
@@ -42,7 +42,7 @@ Else if `d` is a column, and `x` has Decimal type, scale of result Decimal will 
 Another alias for this function is `dfloor`.
 :::
 
-### example
+### Example
 
 ```
 mysql> select floor(1);
@@ -83,5 +83,5 @@ mysql> SELECT number
 +--------+------------------+-------------------+-----------------+------------------+
 ```
 
-### keywords
+### Keywords
 	FLOOR, DFLOOR

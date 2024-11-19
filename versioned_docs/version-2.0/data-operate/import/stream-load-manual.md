@@ -1291,7 +1291,7 @@ curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -
 # -- load_sql
 # insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
 
-# http_stream
+# Http_stream
 # (
 #     "column_separator" = ",",
 #     "format" = "CSV",

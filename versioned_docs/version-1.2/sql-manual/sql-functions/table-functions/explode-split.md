@@ -24,10 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode_split
+## Explode_split
 
-### description
-#### syntax
+### Description
+#### Syntax
 
 `explode_split(str, delimiter)`
 
@@ -41,7 +41,7 @@ grammar:
 explode_split(str, delimiter)
 ```
 
-### example
+### Example
 
 Original table data:
 
@@ -110,6 +110,6 @@ mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e
 +------+------+
 ```
 
-### keywords
+### Keywords
 
 explode,split,explode_split

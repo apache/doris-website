@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## group_bitmap_xor
-### description
+## Group_bitmap_xor
+### Description
 #### Syntax
 
 `BITMAP GROUP_BITMAP_XOR(expr)`
 
 对expr进行 xor 计算, 返回新的bitmap。
 
-### example
+### Example
 
 ```
 mysql>  select page, bitmap_to_string(user_id) from pv_bitmap;
@@ -52,6 +52,6 @@ mysql> select page, bitmap_to_string(group_bitmap_xor(user_id)) from pv_bitmap g
 +------+-----------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     GROUP_BITMAP_XOR,BITMAP

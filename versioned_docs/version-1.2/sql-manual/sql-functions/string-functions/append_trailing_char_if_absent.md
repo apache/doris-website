@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## append_trailing_char_if_absent
+## Append_trailing_char_if_absent
 
-### description
+### Description
 
 #### Syntax
 
@@ -35,7 +35,7 @@ under the License.
 If the @str string is non-empty and does not contain the @trailing_char character at the end, it appends the @trailing_char character to the end.
 @trailing_char contains only one character, and it will return NULL if contains more than one character
 
-### example
+### Example
 
 ```
 MySQL [test]> select append_trailing_char_if_absent('a','c');
@@ -55,6 +55,6 @@ MySQL [test]> select append_trailing_char_if_absent('ac','c');
 1 row in set (0.00 sec)
 ```
 
-### keywords
+### Keywords
 
     APPEND_TRAILING_CHAR_IF_ABSENT

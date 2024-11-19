@@ -719,7 +719,7 @@ Processing Volume per BE for this Import = Source File Size / Import Concurrency
 
 - The default broker load timeout in seconds.
 
-### session variables
+### Session variables
 
 **exec_mem_limit**
 

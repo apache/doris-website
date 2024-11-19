@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## microseconds_sub
-### description
+## Microseconds_sub
+### Description
 #### Syntax
 
 `DATETIMEV2 microseconds_sub(DATETIMEV2 basetime, INT delta)`
@@ -33,7 +33,7 @@ under the License.
 - delta: 从 basetime 起需要扣减的微秒数
 - 返回类型为 DATETIMEV2
 
-### example
+### Example
 ```
 mysql> select now(3), microseconds_sub(now(3), 100000);
 +-------------------------+----------------------------------+
@@ -44,7 +44,7 @@ mysql> select now(3), microseconds_sub(now(3), 100000);
 ```
 `now(3)` 返回精度位数 3 的 DATETIMEV2 类型当前时间，`microseconds_add(now(3), 100000)` 返回当前时间减去 100000 微秒后的 DATETIMEV2 类型时间
 
-### keywords
+### Keywords
     microseconds_sub
 
     

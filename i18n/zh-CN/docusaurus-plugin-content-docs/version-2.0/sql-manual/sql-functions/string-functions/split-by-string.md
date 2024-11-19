@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## split_by_string
+## Split_by_string
 
-### description
+### Description
 
 #### Syntax
 
@@ -49,7 +49,7 @@ under the License.
 
 Type: `Array(String)`
 
-### example
+### Example
 
 ```
 select split_by_string('a1b1c1d','1');
@@ -101,6 +101,6 @@ select split_by_string(',,a,,b,,c,,',',,');
 | ['', 'a', 'b', 'c', '']              |
 +--------------------------------------+
 ```
-### keywords
+### Keywords
 
 SPLIT_BY_STRING,SPLIT

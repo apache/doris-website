@@ -29,7 +29,7 @@ under the License.
 
 Doris provides a graphical command to help users analyze a specific query or import more easily. This article describes how to use this feature.
 
-## query plan tree
+## Query plan tree
 
 SQL is a descriptive language, and users describe the data they want to get through a SQL. The specific execution mode of a SQL depends on the implementation of the database. The query planner is used to determine how the database executes a SQL.
 

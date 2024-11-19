@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_reverse_sort
+## Array_reverse_sort
 
 array_reverse_sort
 
-### description
+### Description
 
 #### Syntax
 
@@ -35,7 +35,7 @@ array_reverse_sort
 返回按降序排列后的数组，如果输入数组为 NULL，则返回 NULL。
 如果数组元素包含 NULL, 则输出的排序数组会将 NULL 放在最后面。
 
-### example
+### Example
 
 ```mysql> select k1, k2, array_reverse_sort(k2) from array_test;
 +------+-----------------------------+-----------------------------+
@@ -67,6 +67,6 @@ mysql> select k1, k2, array_reverse_sort(k2) from array_test01;
 +------+------------------------------------------+------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, SORT, REVERSE, ARRAY_SORT, ARRAY_REVERSE_SORT

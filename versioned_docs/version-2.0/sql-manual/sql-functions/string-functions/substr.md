@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## substr
+## Substr
 ### Description
 #### Syntax
 
@@ -30,7 +30,7 @@ under the License.
 
 Find a substring, return the part of the string described by the first parameter starting from start and having a length of len. The index of the first letter is 1.
 
-### example
+### Example
 
 ```
 mysql> select substr("Hello doris", 2, 1);
@@ -46,5 +46,5 @@ mysql> select substr("Hello doris", 1, 2);
 | He                          |
 +-----------------------------+
 ```
-### keywords
+### Keywords
     SUBSTR

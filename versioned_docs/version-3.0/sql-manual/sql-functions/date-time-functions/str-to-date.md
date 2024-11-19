@@ -72,6 +72,6 @@ mysql> select str_to_date('2023','%Y');
 | 2023-01-01                |
 +---------------------------+
 ```
-### keywords
+### Keywords
 
     STR_TO_DATE,STR,TO,DATE

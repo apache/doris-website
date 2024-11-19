@@ -34,13 +34,13 @@ active_queries
 Deprecated. Since 2.1.1, this table function has been moved to the information_schema.active_queries.
 :::
 
-### description
+### Description
 
 Table-Value-Function, generate a temporary table named active_queries. This tvf is used to view the information of running queries in doris cluster.
 
 This function is used in FROM clauses.
 
-#### syntax
+#### Syntax
 `active_queries()`
 
 active_queries() table schema：
@@ -67,7 +67,7 @@ mysql [(none)]> desc function active_queries();
 14 rows in set (0.00 sec)
 ```
 
-### example
+### Example
 ```
 mysql [(none)]>select * from active_queries();
 +------------+--------+----------------------------------+---------------------+-------------+-----------------+----------------+----------+------------+-------------------+------------------------+----------+------------------+-------+
@@ -78,6 +78,6 @@ mysql [(none)]>select * from active_queries();
 1 row in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
     active_queries

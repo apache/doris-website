@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_insert
+## Json_insert
 
 ### Description
 #### Syntax
@@ -44,7 +44,7 @@ A path-value pair for a nonexisting path in the json adds the value to the json 
 
 Otherwise, a path-value pair for a nonexisting path in the json is ignored and has no effect.
 
-### example
+### Example
 
 ```
 MySQL> select json_insert(null, null, null);
@@ -69,5 +69,5 @@ MySQL> select json_insert('{"k": 1}', "$.j", 2);
 +---------------------------------------+
 ```
 
-### keywords
+### Keywords
 JSON, json_insert

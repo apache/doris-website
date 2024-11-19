@@ -33,7 +33,7 @@ under the License.
 
 Returns the minimum value of an expr expression
 
-### example
+### Example
 ```
 MySQL > select min(scan_rows) from log_statis group by datetime;
 +------------------+
@@ -42,5 +42,5 @@ MySQL > select min(scan_rows) from log_statis group by datetime;
 |                0 |
 +------------------+
 ```
-### keywords
+### Keywords
 MIN

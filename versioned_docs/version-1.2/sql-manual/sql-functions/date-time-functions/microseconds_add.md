@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## microseconds_add
-### description
+## Microseconds_add
+### Description
 #### Syntax
 
 `DATETIMEV2 microseconds_add(DATETIMEV2 basetime, INT delta)`
@@ -33,7 +33,7 @@ under the License.
 - delta: Microseconds to add to basetime
 - Return type of this function is DATETIMEV2
 
-### example
+### Example
 ```
 mysql> select now(3), microseconds_add(now(3), 100000);
 +-------------------------+----------------------------------+
@@ -44,7 +44,7 @@ mysql> select now(3), microseconds_add(now(3), 100000);
 ```
 `now(3)` returns current time as type DATETIMEV2 with precision 3d，`microseconds_add(now(3), 100000)` means 100000 microseconds after current time
 
-### keywords
+### Keywords
     microseconds_add
 
     

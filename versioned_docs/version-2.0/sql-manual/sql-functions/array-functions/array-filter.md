@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_filter
+## Array_filter
 
 array_filter(lambda,array)
 
@@ -36,7 +36,7 @@ array array_filter(array arr, array_bool filter_column)
 
 
 
-### description
+### Description
 
 #### Syntax
 ```sql
@@ -54,7 +54,7 @@ array_filter(x->(abs(x)-2)>0, array1);
 array_filter(c_array,[0,1,0]);
 ```
 
-### example
+### Example
 
 ```shell
 mysql [test]>select c_array,array_filter(c_array,[0,1,0]) from array_test;
@@ -116,7 +116,7 @@ mysql [test]>select *, array_filter(x->x>0, array_map((x,y)->(x>y), c_array1,c_a
 +------+-----------------+-------------------------+--------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,FILTER,ARRAY_FILTER
 

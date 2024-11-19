@@ -48,7 +48,7 @@ For certain fields, special attention should be paid to their allowed value rang
 | cloud_unique_id | A configuration in `be.conf`  and `fe.conf` in the compute-storage decoupled mode; should be provided in a create_cluster request; the format of it is `1:<instance_id>:<string>`, in which the `string` should conform to the format of `[0-9a-zA-Z_-]+`. The value for each node should be different. | Example: `1:regression_instance0:regression-cloud-unique-id-1` |
 | cluster_name    | In the compute-storage decoupled mode, this field is required when describing a compute cluster. It must be a unique identifier and its format should match the pattern ` [a-zA-Z][0-9a-zA-Z_]+` | Example: `write_cluster`, `read_cluster0`                    |
 
-## create_instance (multiple storage vaults)
+## Create_instance (multiple storage vaults)
 
 ### Description
 
@@ -232,7 +232,7 @@ Content-Type: text/plain
 }
 ```
 
-## create_instance (one storage vault)
+## Create_instance (one storage vault)
 
 :::caution
 
@@ -351,7 +351,7 @@ Content-Type: text/plain
 }
 ```
 
-## drop_instance
+## Drop_instance
 
 ### Description
 
@@ -412,7 +412,7 @@ Content-Type: text/plain
 }
 ```
 
-## get_instance
+## Get_instance
 
 ### Description
 
@@ -585,7 +585,7 @@ Content-Type: text/plain
 }
 ```
 
-## set_instance_status
+## Set_instance_status
 
 ### Description
 
@@ -637,7 +637,7 @@ curl '127.0.0.1:5000/MetaService/http/set_instance_status?token=greedisgood9999'
 }
 ```
 
-## get_obj_store_info
+## Get_obj_store_info
 
 ### Description
 
@@ -710,7 +710,7 @@ Content-Type: text/plain
 }
 ```
 
-## update_ak_sk
+## Update_ak_sk
 
 ### Description
 
@@ -813,7 +813,7 @@ Content-Type: text/plain
 }
 ```
 
-## legacy_update_ak_sk
+## Legacy_update_ak_sk
 
 :::caution
 
@@ -894,7 +894,7 @@ Content-Type: text/plain
 }
 ```
 
-## add_obj_info
+## Add_obj_info
 
 ### Description
 
@@ -978,7 +978,7 @@ Content-Type: text/plain
 }
 ```
 
-## add_cluster
+## Add_cluster
 
 ### Description
 
@@ -1075,7 +1075,7 @@ Content-Type: text/plain
 }
 ```
 
-## get_cluster
+## Get_cluster
 
 ### Description
 
@@ -1160,7 +1160,7 @@ Content-Type: text/plain
 }
 ```
 
-## drop_cluster
+## Drop_cluster
 
 ### Description
 
@@ -1232,7 +1232,7 @@ Content-Type: text/plain
 }
 ```
 
-## rename_cluster
+## Rename_cluster
 
 ### Description
 
@@ -1304,7 +1304,7 @@ Content-Type: text/plain
 }
 ```
 
-## add_node
+## Add_node
 
 ### Description
 
@@ -1412,7 +1412,7 @@ Content-Type: text/plain
 }
 ```
 
-## drop_node
+## Drop_node
 
 ### Description
 
@@ -1512,7 +1512,7 @@ Content-Type: text/plain
 }
 ```
 
-## update_cluster_mysql_user_name
+## Update_cluster_mysql_user_name
 
 ### Description
 
@@ -1592,7 +1592,7 @@ Content-Type: text/plain
 }
 ```
 
-## cloud_cluster_status
+## Cloud_cluster_status
 
 ### Description
 
@@ -1669,7 +1669,7 @@ curl -u root: http://127.0.0.1:12100/rest/v2/manager/cluster/cluster_info/cloud_
 }
 ```
 
-## enable_instance_sse
+## Enable_instance_sse
 
 ### Description
 
@@ -1730,7 +1730,7 @@ Content-Type: text/plain
 }
 ```
 
-## get_cluster_status
+## Get_cluster_status
 
 ### Description
 
@@ -1811,7 +1811,7 @@ Content-Type: text/plain
 }
 ```
 
-## set_cluster_status
+## Set_cluster_status
 
 ### Description
 
@@ -1890,7 +1890,7 @@ Attempts to execute status transitions other than those listed above will incur 
 }
 ```
 
-## decode_key
+## Decode_key
 
 ### Description
 
@@ -1932,7 +1932,7 @@ Content-Type: text/plain
 0110696e7374616e636500011072656772657373696f6e5f696e7374616e6365300001
 ```
 
-## get_tablet_stats
+## Get_tablet_stats
 
 ### Description
 
@@ -2009,7 +2009,7 @@ tablet_stats {
 }
 ```
 
-## abort_txn
+## Abort_txn
 
 ### Description
 
@@ -2065,7 +2065,7 @@ status {
 }
 ```
 
-## abort_tablet_job
+## Abort_tablet_job
 
 ### Description
 

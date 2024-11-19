@@ -37,7 +37,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 [properties]
 ```
 
-#### properties
+#### Properties
 
 | 参数     | 是否必需 | 描述                     |
 |:-------|:-----|:-----------------------|

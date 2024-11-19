@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## unix_timestamp
-### description
+## Unix_timestamp
+### Description
 #### Syntax
 
 `INT UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])`
@@ -42,7 +42,7 @@ Format 的格式请参阅 `date_format` 函数的格式说明。
 
 该函数受时区影响。
 
-### example
+### Example
 
 ```
 mysql> select unix_timestamp();
@@ -81,6 +81,6 @@ mysql> select unix_timestamp('1969-01-01 00:00:00');
 +---------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     UNIX_TIMESTAMP,UNIX,TIMESTAMP

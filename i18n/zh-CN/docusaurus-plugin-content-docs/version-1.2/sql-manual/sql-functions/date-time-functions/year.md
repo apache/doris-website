@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## year
-### description
+## Year
+### Description
 #### Syntax
 
 `INT YEAR(DATETIME date)`
@@ -35,7 +35,7 @@ under the License.
 
 参数为Date或者Datetime类型
 
-### example
+### Example
 
 ```
 mysql> select year('1987-01-01');
@@ -46,6 +46,6 @@ mysql> select year('1987-01-01');
 +-----------------------------+
 ```
 
-### keywords
+### Keywords
 
     YEAR

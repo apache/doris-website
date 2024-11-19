@@ -22,22 +22,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array()
+## Array()
 
 array()
 
-### description
+### Description
 
 #### Syntax
 
 `ARRAY<T> array(T, ...)`
 根据参数构造并返回array, 参数可以是多列或者常量
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 mysql> select array("1", 2, 1.1);
@@ -77,6 +77,6 @@ mysql>  select array(qid, creationDate, null) from nested  limit 4;
 4 rows in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
 ARRAY,ARRAY,CONSTRUCTOR

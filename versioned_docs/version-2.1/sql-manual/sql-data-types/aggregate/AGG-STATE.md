@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## AGG_STATE
-### description
+### Description
       AGG_STATE cannot be used as a key column, and the signature of the aggregation function must be declared at the same time when creating the table.
       User does not need to specify length and default value. The actual stored data size is related to the function implementation.
     
@@ -37,7 +37,7 @@ under the License.
 
 **Note: Because agg_state stores the intermediate result of the aggregation function, the read and write process is strongly dependent on the specific implementation of the aggregation function, if the implementation of the aggregation function is modified during the Doris version upgrade, it may cause incompatible situations. If the incompatibility occurs, the materialized view using the corresponding agg_state needs to be dropped and recreated, and the underlying aggregation table involved will be directly unavailable, so you need to use agg_state with caution.**
 
-### example
+### Example
 
 Create table example:
 ```sql
@@ -96,6 +96,6 @@ If you need to get the actual result, you need to use the corresponding [merge](
 If you want to aggregate only the agg_state without getting the actual result during the process, you can use the [union](../..//sql-functions/combinators/union.md) function.
 
 For more examples, see [datatype_p0/agg_state](https://github.com/apache/doris/tree/master/regression-test/suites/datatype_p0/agg_state)
-### keywords
+### Keywords
 
     AGG_STATE

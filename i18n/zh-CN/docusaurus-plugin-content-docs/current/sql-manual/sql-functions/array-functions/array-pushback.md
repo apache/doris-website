@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_pushback
+## Array_pushback
 
 array_pushback
 
-### description
+### Description
 
 #### Syntax
 
@@ -40,7 +40,7 @@ array_pushback
 
 类型：Array.
 
-### example
+### Example
 
 ```
 mysql> select array_pushback([1, 2], 3);
@@ -71,6 +71,6 @@ mysql> select col1, col3, array_pushback(col3, col1) from array_test;
 +------+-----------+---------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,PUSHBACK,ARRAY_PUSHBACK

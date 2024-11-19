@@ -30,7 +30,7 @@ under the License.
 
 `DOUBLE ST_Azimuth(GEOPOINT point1, GEOPOINT point2)`
 
-### description
+### Description
 
 Enter two point, and returns the azimuth of the line segment formed by points 1 and 2. The azimuth is the angle in radians measured between the line from point 1 facing true North to the line segment from point 1 to point 2.
 
@@ -47,7 +47,7 @@ ST_Azimuth has the following edge cases:
 * If the two input points are exactly antipodal, returns NULL.
 * If either of the input geographies are not single points or are the empty geography, throws an error.
 
-### example
+### Example
 
 ```
 mysql> SELECT st_azimuth(ST_Point(1, 0),ST_Point(0, 0));
@@ -91,5 +91,5 @@ mysql> SELECT st_azimuth(ST_Point(-30, 0),ST_Point(150, 0));
 1 row in set (0.02 sec)
 
 ```
-### keywords
+### Keywords
 ST_AZIMUTH,ST,AZIMUTH

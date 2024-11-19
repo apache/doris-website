@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## floor
+## Floor
 
-### description
+### Description
 #### Syntax
 
 `BIGINT floor(DOUBLE x)`
@@ -34,7 +34,7 @@ under the License.
 该函数的另一个别名为 `dfloor`。
 :::
 
-### example
+### Example
 
 ```
 mysql> select floor(1);
@@ -57,5 +57,5 @@ mysql> select floor(-10.3);
 +--------------+
 ```
 
-### keywords
+### Keywords
 	FLOOR, DFLOOR

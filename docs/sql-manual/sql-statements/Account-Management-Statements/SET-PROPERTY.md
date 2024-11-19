@@ -38,11 +38,11 @@ The user attribute set here is for user, not user_identity. That is, if two user
 
 ## Parameters
 
-### user
+### User
 
 The username for which to set attributes. If omitted, the attributes are set for the current user.
 
-### key
+### Key
 
 The attribute key to set. Available keys include:
 
@@ -58,7 +58,7 @@ The attribute key to set. Available keys include:
 
 Note: If the attributes `cpu_resource_limit` and `exec_mem_limit` are not set, the value in the session variable will be used by default.
 
-### value
+### Value
 
 The value to set for the specified key.
 

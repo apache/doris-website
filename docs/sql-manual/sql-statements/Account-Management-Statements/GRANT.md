@@ -47,7 +47,7 @@ GRANT role_list TO user_identity
 
 ## Parameters
 
-### privilege_list
+### Privilege_list
 
 A comma-separated list of privileges to be granted. Currently supported privileges include:
 
@@ -66,7 +66,7 @@ Legacy privilege conversion:
 - ALL and READ_WRITE will be converted to: SELECT_PRIV, LOAD_PRIV, ALTER_PRIV, CREATE_PRIV, DROP_PRIV.
 - READ_ONLY is converted to SELECT_PRIV.
 
-### priv_level
+### Priv_level
 
 Supports the following four forms:
 
@@ -75,31 +75,31 @@ Supports the following four forms:
 - catalog_name.db.*: Privileges can be applied to all tables under the specified database.
 - catalog_name.db.tbl: Privileges can be applied to the specified table under the specified database.
 
-### resource_name
+### Resource_name
 
 Specifies the resource name, supporting `%` and `*` to match all resources, but does not support wildcards, such as res*.
 
-### workload_group_name
+### Workload_group_name
 
 Specifies the workload group name, supporting `%` and `*` to match all workload groups, but does not support wildcards.
 
-### compute_group_name
+### Compute_group_name
 
 Specifies the compute group name, supporting `%` and `*` to match all compute groups, but does not support wildcards.
 
-### storage_vault_name
+### Storage_vault_name
 
 Specifies the storage vault name, supporting `%` and `*` to match all storage vaults, but does not support wildcards.
 
-### user_identity
+### User_identity
 
 Specifies the user to receive the privileges. Must be a user_identity created with CREATE USER. The host in user_identity can be a domain name. If it is a domain name, the effective time of the authority may be delayed by about 1 minute.
 
-### role_name
+### Role_name
 
 Specifies the role to receive the privileges. If the specified role does not exist, it will be created automatically.
 
-### role_list
+### Role_list
 
 A comma-separated list of roles to be assigned. The specified roles must exist.
 

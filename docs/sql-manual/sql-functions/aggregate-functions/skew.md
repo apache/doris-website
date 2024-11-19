@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## skewness,skew,skew_pop
+## Skewness,skew,skew_pop
 ### Description
 
 Returns the [skewness](https://en.wikipedia.org/wiki/Skewness) of the expr expression.

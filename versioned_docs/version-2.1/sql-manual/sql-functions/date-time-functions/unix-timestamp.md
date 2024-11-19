@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## unix_timestamp
+## Unix_timestamp
 ### Description
 #### Syntax
 
@@ -42,7 +42,7 @@ See `date_format` function to get Format explanation.
 
 This function is affected by time zone.
 
-### example
+### Example
 
 ```
 mysql> select unix_timestamp();
@@ -81,6 +81,6 @@ mysql> select unix_timestamp('1969-01-01 00:00:00');
 +---------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     UNIX_TIMESTAMP,UNIX,TIMESTAMP

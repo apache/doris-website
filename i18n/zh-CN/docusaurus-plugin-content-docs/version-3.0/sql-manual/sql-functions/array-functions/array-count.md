@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_count
+## Array_count
 
 array_count
 
-### description
+### Description
 
 ```sql
 array_count(lambda, array1, ...)
@@ -46,7 +46,7 @@ array_count(x->(abs(x)-1), array1);
 array_count((x,y)->(x = y), array1, array2);
 ```
 
-### example
+### Example
 
 ```
 mysql> select array_count(x -> x, [0, 1, 2, 3]);
@@ -96,7 +96,7 @@ mysql> select *, array_count((x, y) -> x>y, c_array1, c_array2) from array_test;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY, COUNT, ARRAY_COUNT
 

@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## GROUP_BIT_XOR
-### description
+### Description
 #### Syntax
 
 `expr GROUP_BIT_XOR(expr)`
@@ -33,7 +33,7 @@ under the License.
 Perform an xor calculation on expr, and return a new expr.
 All ints are supported
 
-### example
+### Example
 
 ```
 mysql> select * from group_bit;
@@ -55,6 +55,6 @@ mysql> select group_bit_xor(value) from group_bit;
 +------------------------+
 ```
 
-### keywords
+### Keywords
 
     GROUP_BIT_XOR,BIT

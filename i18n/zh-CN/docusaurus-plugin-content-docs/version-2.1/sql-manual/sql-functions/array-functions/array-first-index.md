@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_first_index
+## Array_first_index
 
 array_first_index
 
-### description
+### Description
 
 #### Syntax
 
@@ -43,7 +43,7 @@ array_first_index(x->(abs(x)-1), array1);
 array_first_index((x,y)->(x = y), array1, array2);
 ```
 
-### example
+### Example
 
 ```
 mysql> select array_first_index(x->x+1>3, [2, 3, 4]);
@@ -78,6 +78,6 @@ mysql> select col2, col3, array_first_index((x,y)->x>y, col2, col3) from array_t
 +--------------+--------------+---------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,FIRST_INDEX,ARRAY_FIRST_INDEX

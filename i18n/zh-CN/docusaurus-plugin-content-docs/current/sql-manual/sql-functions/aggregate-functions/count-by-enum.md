@@ -28,7 +28,7 @@ under the License.
 
 COUNT_BY_ENUM
 
-### description
+### Description
 #### Syntax
 
 `count_by_enum(expr1, expr2, ... , exprN);`
@@ -80,7 +80,7 @@ COUNT_BY_ENUM
 * null：null 值个数
 * all：总数，包括 null 值与非 null 值
 
-### example
+### Example
 
 ```sql
 DROP TABLE IF EXISTS count_by_enum_test;
@@ -142,6 +142,6 @@ select count_by_enum(f1,f2,f3) from count_by_enum_test;
 
 ```
 
-### keywords
+### Keywords
 
 COUNT_BY_ENUM

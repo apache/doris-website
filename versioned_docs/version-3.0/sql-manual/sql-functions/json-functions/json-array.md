@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_array
+## Json_array
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 Generate a json array containing the specified values, return empty if no values
 
-### example
+### Example
 
 ```
 MySQL> select json_array();
@@ -66,5 +66,5 @@ MySQL> select json_array("a", null, "c");
 | ["a", NULL, "c"]             |
 +------------------------------+
 ```
-### keywords
+### Keywords
 json,array,json_array

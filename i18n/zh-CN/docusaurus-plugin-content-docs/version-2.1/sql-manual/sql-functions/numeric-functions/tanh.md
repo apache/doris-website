@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## tanh
+## Tanh
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE tanh(DOUBLE x)`
 返回`x`的双曲正切值，tanh(x) = sinh(x) / cosh(x).
 
-### example
+### Example
 
 ```
 mysql> select tanh(0);
@@ -48,5 +48,5 @@ mysql> select tanh(1);
 +---------------------+
 ```
 
-### keywords
+### Keywords
 	TANH

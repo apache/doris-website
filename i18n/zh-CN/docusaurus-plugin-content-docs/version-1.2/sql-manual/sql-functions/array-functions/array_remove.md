@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_remove
+## Array_remove
 
 array_remove
 
-### description
+### Description
 
 #### Syntax
 
@@ -34,11 +34,11 @@ array_remove
 
 返回移除所有的指定元素后的数组，如果输入参数为NULL，则返回NULL
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 mysql> select array_remove(['test', NULL, 'value'], 'value');
@@ -90,6 +90,6 @@ mysql> select k1, k2, array_remove(k2, k1) from array_type_table_nullable;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,REMOVE,ARRAY_REMOVE

@@ -34,7 +34,7 @@ under the License.
 Convert a WKT (Well Known Text) into a circle on the earth's sphere. Where `center_lng'denotes the longitude of the center of a circle,
 ` Center_lat` denotes the latitude of the center of a circle, radius` denotes the radius of a circle in meters.
 
-### example
+### Example
 
 ```
 mysql> SELECT ST_AsText(ST_Circle(111, 64, 10000));
@@ -44,5 +44,5 @@ mysql> SELECT ST_AsText(ST_Circle(111, 64, 10000));
 | CIRCLE ((111 64), 10000)                   |
 +--------------------------------------------+
 ```
-### keywords
+### Keywords
 ST_CIRCLE,ST,CIRCLE

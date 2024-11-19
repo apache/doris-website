@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_last_index
+## Array_last_index
 
 array_last_index
 
-### description
+### Description
 
 #### Syntax
 
@@ -43,7 +43,7 @@ array_last_index(x->(abs(x)-1), array1);
 array_last_index((x,y)->(x = y), array1, array2);
 ```
 
-### example
+### Example
 
 ```
 mysql> select array_last_index(x -> x is null, [null, null, 1, 2]);
@@ -79,6 +79,6 @@ mysql> select col2, col3, array_last_index((x,y)->x>y, col2, col3) from array_te
 +--------------+--------------+---------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,FIRST_INDEX,array_last_index

@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## last_day
+## Last_day
 ### Description
 #### Syntax
 
@@ -34,7 +34,7 @@ under the License.
 '30'(四月，六月，九月，十一月),
 '31'(一月，三月，五月，七月，八月，十月，十二月)
 
-### example
+### Example
 
 ```
 mysql > select last_day('2000-02-03');
@@ -45,5 +45,5 @@ mysql > select last_day('2000-02-03');
 +-------------------+
 ```
 
-### keywords
+### Keywords
     LAST_DAY,DAYS

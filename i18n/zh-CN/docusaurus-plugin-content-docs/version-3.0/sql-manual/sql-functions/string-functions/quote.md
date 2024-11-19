@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## quote
-### description
+## Quote
+### Description
 #### Syntax
 
 `VARCHAR quote(VARCHAR str)`
 
 将参数中所有的字符串按原样输出,并用''套起来
 
-### example
+### Example
 
 ```sql
 mysql> select quote('hello world!\\t');
@@ -41,5 +41,5 @@ mysql> select quote('hello world!\\t');
 +-------------------------+
 ```
 
-### keywords
+### Keywords
     QUOTE

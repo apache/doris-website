@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## named_struct
+## Named_struct
 
 named_struct
 
-### description
+### Description
 
 #### Syntax
 
@@ -36,7 +36,7 @@ Construct a struct with the given field names and values.
 
 The number of parameters must be non zero and even. With odd digits being the name of the field and could be string literal, with even digits being the value of the field and could be column or literal.
 
-### example
+### Example
 
 ```
 mysql> select named_struct('f1', 1, 'f2', 'a', 'f3', "abc");
@@ -64,6 +64,6 @@ mysql> select named_struct('f1', k1, 'f2', k2, 'f3', null) from test_tb;
 1 row in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 
 NAMED, STRUCT, NAMED_STRUCT

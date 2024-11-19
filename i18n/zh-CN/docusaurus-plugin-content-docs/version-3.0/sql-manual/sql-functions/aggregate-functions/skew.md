@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## skewness,skew,skew_pop
+## Skewness,skew,skew_pop
 ### 描述
 
 返回表达式的 [斜度](https://en.wikipedia.org/wiki/Skewness)。

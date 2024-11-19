@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_remove
+## Array_remove
 
 array_remove
 
-### description
+### Description
 
 #### Syntax
 
@@ -34,7 +34,7 @@ array_remove
 
 Remove all elements that equal to element from array.
 
-### example
+### Example
 
 ```
 mysql> select array_remove(['test', NULL, 'value'], 'value');
@@ -86,7 +86,7 @@ mysql> select k1, k2, array_remove(k2, k1) from array_type_table_nullable;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,REMOVE,ARRAY_REMOVE
 

@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## field
+## Field
 
 field
 
-### description
+### Description
 #### Syntax
 
 `field(Expr e, param1, param2, param3,.....)`
@@ -40,7 +40,7 @@ You can use asc and desc to control the overall order.
 If there is a NULL value, you can use nulls first, nulls last to control the order of nulls.
 
 
-### example
+### Example
 
 ```
 mysql> select k1,k7 from baseall where k1 in (1,2,3) order by field(k1,2,1,3);
@@ -89,5 +89,5 @@ mysql> select class_name from class_test order by field(class_name,'Suzi','Ben',
 | Henry      |
 +------------+
 ```
-### keywords
+### Keywords
     field

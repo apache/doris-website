@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## elt
+## Elt
 ### Description
 #### Syntax
 
@@ -30,7 +30,7 @@ under the License.
 
 Returns the string at specified index. Returns NULL if there is no string at specified index.
 
-### example
+### Example
 
 ```
 mysql> select elt(1, 'aaa', 'bbb');
@@ -58,5 +58,5 @@ mysql> select elt(2, 'aaa', 'bbb');
 | NULL                  |
 +-----------------------+
 ```
-### keywords
+### Keywords
     ELT

@@ -33,7 +33,7 @@ under the License.
 
 Returns the standard deviation of the expr expression
 
-### example
+### Example
 ```
 MySQL > select stddev(scan_rows) from log_statis group by datetime;
 +---------------------+
@@ -49,5 +49,5 @@ MySQL > select stddev_pop(scan_rows) from log_statis group by datetime;
 |      2.3722760595994914 |
 +-------------------------+
 ```
-### keywords
+### Keywords
 STDDEV,STDDEV_POP,POP

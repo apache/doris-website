@@ -54,11 +54,11 @@ ALTER MATERIALIZED VIEW mvName=multipartIdentifier ((RENAME newName=identifier)
 ALTER MATERIALIZED VIEW mv1 rename mv2;
 ```
 
-##### refreshMethod
+##### RefreshMethod
 
 同[创建异步物化视图](../Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 
-##### refreshTrigger
+##### RefreshTrigger
 
 同[创建异步物化视图](../Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 

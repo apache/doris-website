@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## concat_ws
+## Concat_ws
 ### Description
 #### Syntax
 
@@ -37,7 +37,7 @@ Using the first parameter SEP as a connector, the second parameter and all subse
 If the separator is NULL, return NULL.
 The `concat_ws` function does not skip empty strings, it skips NULL values.
 
-### example
+### Example
 
 ```
 mysql> select concat_ws("or", "d", "is");
@@ -82,5 +82,5 @@ mysql> select concat_ws("or", ["d", NULL,"is"]);
 | doris                                   |
 +-----------------------------------------+
 ```
-### keywords
+### Keywords
     CONCAT_WS,CONCAT,WS,ARRAY

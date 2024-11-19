@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_subset_in_range
+## Bitmap_subset_in_range
 
 ### Description
 
@@ -34,7 +34,7 @@ under the License.
 
 返回 BITMAP 指定范围内的子集(不包括范围结束)。
 
-### example
+### Example
 
 ```
 mysql> select bitmap_to_string(bitmap_subset_in_range(bitmap_from_string('1,2,3,4,5'), 0, 9)) value;
@@ -52,6 +52,6 @@ mysql> select bitmap_to_string(bitmap_subset_in_range(bitmap_from_string('1,2,3,
 +-------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_SUBSET_IN_RANGE,BITMAP_SUBSET,BITMAP

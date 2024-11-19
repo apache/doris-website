@@ -28,7 +28,7 @@ under the License.
 
 IN
 
-### description
+### Description
 
 #### Syntax
 
@@ -42,7 +42,7 @@ Subquery can only return one column, and the column types returned by subquery m
 
 If subquery returns a bitmap data type column, expr must be an integer.
 
-### example
+### Example
 
 ```
 mysql> select id from cost where id in (1, 2);
@@ -73,6 +73,6 @@ mysql> select id from tbl1 where id in (select bitmap_col from tbl3);
 +------+
 ```
 
-### keywords
+### Keywords
 
     IN

@@ -22,8 +22,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## running_difference
-### description
+## Running_difference
+### Description
 #### Syntax
 
 `T running_difference(T x)`
@@ -45,7 +45,7 @@ SELECT x - lag(x, 1, 0) OVER (ORDER BY k) FROM t;
 #### Returned value
 第一行返回 0，随后的每一行返回与前一行的差值。
 
-### example
+### Example
 
 ```sql
 DROP TABLE IF EXISTS running_difference_test;
@@ -180,6 +180,6 @@ FROM
 
 ```
 
-### keywords
+### Keywords
 
 running_difference

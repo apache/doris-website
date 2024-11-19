@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## local
+## Local
 
 ### Name
 
@@ -36,7 +36,7 @@ Local表函数（table-valued-function,tvf），可以让用户像访问关系�
 
 该函数需要 ADMIN 权限。
 
-#### syntax
+#### Syntax
 
 ```sql
 local(

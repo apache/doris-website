@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-## strright
+## Strright
 ### Description
 #### Syntax
 
@@ -35,7 +35,7 @@ under the License.
 It returns the right part of a string of specified length, length is char length not the byte size. Another alias for this function is `right`.
 If the parameters contain a NULL value, the function will always return NULL. If the integer parameter is negative, the function will retrieve the portion of the string starting from the left and moving to the right, beginning at the absolute value of len.
 
-### example
+### Example
 
 ```
 mysql> select strright("Hello doris",5);
@@ -63,5 +63,5 @@ mysql> select strright(NULL,5);
 | NULL           |
 +----------------+
 ```
-### keywords
+### Keywords
     STRRIGHT, RIGHT

@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## radians
+## Radians
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE radians(DOUBLE x)`
 Returns the value of `x` in radians, converted from degrees to radians.
 
-### example
+### Example
 
 ```
 mysql> select radians(0);
@@ -53,5 +53,5 @@ mysql> select radians(90);
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	RADIANS

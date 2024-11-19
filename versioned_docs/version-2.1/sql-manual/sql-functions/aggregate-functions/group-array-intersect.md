@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## group_array_intersect
-### description
+## Group_array_intersect
+### Description
 #### Syntax
 
 `expr GROUP_ARRAY_INTERSECT(expr)`
 
 calculate the intersect element from all arrays given, return a new array
 
-### example
+### Example
 
 ```
 mysql> select c_array_string from group_array_intersect_test where id in (18, 20);
@@ -53,5 +53,5 @@ mysql> select group_array_intersect(c_array_string) from group_array_intersect_t
 1 row in set (0.03 sec)
 ```
 
-### keywords
+### Keywords
 GROUP_ARRAY_INTERSECT, ARRAY

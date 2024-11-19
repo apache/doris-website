@@ -32,7 +32,7 @@ under the License.
 
 Calculate the covariance between x and y.
 
-### example
+### Example
 
 ```
 mysql> select covar(x,y) from baseall;
@@ -44,5 +44,5 @@ mysql> select covar(x,y) from baseall;
 1 row in set (0.21 sec)
 
 ```
-### keywords
+### Keywords
 COVAR, COVAR_POP

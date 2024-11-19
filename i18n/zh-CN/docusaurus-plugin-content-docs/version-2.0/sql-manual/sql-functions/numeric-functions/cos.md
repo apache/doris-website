@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## cos
+## Cos
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE cos(DOUBLE x)`
 返回`x`的余弦值，`x` 为弧度值.
 
-### example
+### Example
 
 ```
 mysql> select cos(1);
@@ -53,5 +53,5 @@ mysql> select cos(Pi());
 +-----------+
 ```
 
-### keywords
+### Keywords
 	COS

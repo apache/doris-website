@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## days_diff
-### description
+## Days_diff
+### Description
 #### Syntax
 
 `INT days_diff(DATETIME enddate, DATETIME startdate)`
 
 The number of days between end date and start date, the date judgment is accurate to seconds and rounded down to the nearest integer. Different from the date_diff function, the datediff function judges the date with precision to the day."
 
-### example
+### Example
 
 ```
 mysql> select days_diff('2020-12-25 22:00:00','2020-12-24 22:00:00');
@@ -50,6 +50,6 @@ mysql> select days_diff('2020-12-25 22:00:00','2020-12-24 22:00:01');
 +---------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     days_diff

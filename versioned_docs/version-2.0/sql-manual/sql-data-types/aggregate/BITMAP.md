@@ -37,7 +37,7 @@ And the BITMAP column can only be queried or used by supporting functions such a
 The use of BITMAP in offline scenarios will affect the import speed. In the case of a large amount of data, the query speed will be slower than HLL and better than Count Distinct.
 Note: If BITMAP does not use a global dictionary in real-time scenarios, using bitmap_hash() may cause an error of about one-thousandth. If the error rate is not tolerable, bitmap_hash64 can be used instead.
 
-### example
+### Example
 
 Create table example:
 
@@ -70,5 +70,5 @@ Query data example:
 
 When querying, BITMAP can cooperate with `return_object_data_as_binary`. For details, please refer to [variables](../../../advanced/variables.md).
     
-### keywords
+### Keywords
 BITMAP

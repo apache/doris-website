@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION LAST_VALUE
-### description
+### Description
 
 :::info Note
 Since 2.0.9 , the ignore_null usage is supported
@@ -24,7 +24,7 @@ LAST_VALUE() returns the last value in the window range . Opposite of FIRST_VALU
 LAST_VALUE(expr[, ignore_null]) OVER(partition_by_clause order_by_clause [window_clause])
 ```
 
-### example
+### Example
 
 Using the data from the FIRST_VALUE() example:
 
@@ -51,6 +51,6 @@ from t order by `id`, `myday`, `time_col`;
 |   12 |    24 | 02-24-10-21 |  NULL |        NULL |            NULL |                NULL |
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,LAST_VALUE

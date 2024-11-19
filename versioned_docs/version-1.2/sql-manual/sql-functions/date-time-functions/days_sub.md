@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## days_sub
-### description
+## Days_sub
+### Description
 #### Syntax
 
 `DATETIME DAYS_SUB(DATETIME date, INT days)`
@@ -34,7 +34,7 @@ Subtract a specified number of days from a datetime or date
 
 The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
 
-### example
+### Example
 
 ```
 mysql> select days_sub("2020-02-02 02:02:02", 1);
@@ -45,6 +45,6 @@ mysql> select days_sub("2020-02-02 02:02:02", 1);
 +------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     DAYS_SUB

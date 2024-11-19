@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## append_trailing_char_if_absent
+## Append_trailing_char_if_absent
 
-### description
+### Description
 
 #### Syntax
 
@@ -35,7 +35,7 @@ under the License.
 如果 str 字符串非空并且末尾不包含 trailing_char 字符，则将 trailing_char 字符附加到末尾。
 trailing_char 只能包含一个字符，如果包含多个字符，将返回NULL
 
-### example
+### Example
 
 ```
 MySQL [test]> select append_trailing_char_if_absent('a','c');
@@ -55,6 +55,6 @@ MySQL [test]> select append_trailing_char_if_absent('ac','c');
 1 row in set (0.00 sec)
 ```
 
-### keywords
+### Keywords
 
     APPEND_TRAILING_CHAR_IF_ABSENT

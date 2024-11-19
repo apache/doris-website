@@ -219,7 +219,7 @@ Export 作业拆分成多个`SELECT INTO OUTFILE`的具体逻辑是：将该表�
 
 - 当所要导出的数据量很大时，可以考虑适当调大`parallelism`参数来增加并发导出。若机器核数紧张，无法再增加`parallelism` 而导出表的 Tablets 又较多 时，可以考虑调大`maximum_tablets_of_outfile_in_export`来增加一个`SELECT INTO OUTFILE`语句负责的 Tablets 数量，也可以加快导出速度。
 
-### exec_mem_limit
+### Exec_mem_limit
 
 通常一个 Export 作业的查询计划只有 `扫描-导出` 两部分，不涉及需要太多内存的计算逻辑。所以通常 2GB 的默认内存限制可以满足需求。
 

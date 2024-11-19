@@ -34,7 +34,7 @@ Doris 集群必须完全搭建完成后再配置 FE 和 BE 的自动拉起服务
 
 systemd 具体使用以及参数解析可以参考[这里](https://systemd.io/) 
 
-### sudo 权限控制
+### Sudo 权限控制
 
 在使用 systemd 控制 doris 服务时，需要有 sudo 权限。为了保证最小粒度的 sudo 权限分配，可以将 doris-fe 与 doris-be 服务的 systemd 控制权限分配给指定的非 root 用户。在 visudo 来配置 doris-fe 与 doris-be 的 systemctl 管理权限。
 

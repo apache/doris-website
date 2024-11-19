@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_extract
+## Json_extract
 
  
 
-### description
+### Description
 #### Syntax
 
 ```sql
@@ -67,7 +67,7 @@ json path的语法如下
 - 如果 json_path 指定的字段在JSON中不存在，返回NULL
 - 如果 json_path 指定的字段在JSON中的实际类型和json_extract_t指定的类型不一致，如果能无损转换成指定类型返回指定类型t，如果不能则返回NULL
 
-### example
+### Example
 
 参考 [json tutorial](../../sql-reference/Data-Types/JSON.md) 中的示例
 
@@ -105,5 +105,5 @@ mysql> SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
 1 row in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 JSONB, JSON, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_largeint, json_extract_double, json_extract_string

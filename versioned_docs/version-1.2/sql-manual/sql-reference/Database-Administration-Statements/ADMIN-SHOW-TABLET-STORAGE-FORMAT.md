@@ -25,12 +25,12 @@ under the License.
 -->
 
 ## ADMIN SHOW TABLET STORAGE FORMAT
-### description
+### Description
     This statement is used to display tablet storage foramt information (for administrators only)
     Grammar:
         ADMIN SHOW TABLET STORAGE FORMAT [VERBOSE]
 
-### example
+### Example
     MySQL [(none)]> admin show tablet storage format;
     +-----------+---------+---------+
     | BackendId | V1Count | V2Count |
@@ -49,6 +49,6 @@ under the License.
     +-----------+----------+---------------+
     4 rows in set (0.034 sec)
 
-### keywords
+### Keywords
     ADMIN, SHOW, TABLET, STORAGE, FORMAT, ADMIN SHOW
 

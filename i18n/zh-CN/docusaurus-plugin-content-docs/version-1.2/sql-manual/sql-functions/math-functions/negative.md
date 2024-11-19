@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## negative
+## Negative
 
-### description
+### Description
 #### Syntax
 
 ```sql
@@ -34,7 +34,7 @@ DECIMAL negative(DECIMAL x)
 ```
 返回`-x`.
 
-### example
+### Example
 
 ```
 mysql> SELECT negative(-10);
@@ -51,5 +51,5 @@ mysql> SELECT negative(12);
 +--------------+
 ```
 
-### keywords
+### Keywords
 	NEGATIVE

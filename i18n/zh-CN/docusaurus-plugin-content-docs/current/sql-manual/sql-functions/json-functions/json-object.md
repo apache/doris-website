@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_object
-### description
+## Json_object
+### Description
 #### Syntax
 
 `VARCHAR json_object(VARCHAR,...)`
@@ -33,7 +33,7 @@ under the License.
 
 生成一个包含指定Key-Value对的json object, 当Key值为NULL或者传入参数为奇数个时，返回异常错误
 
-### example
+### Example
 
 ```
 MySQL> select json_object();
@@ -66,5 +66,5 @@ MySQL> select json_object('username',null);
 | {"username": NULL}              |
 +---------------------------------+
 ```
-### keywords
+### Keywords
 json,object,json_object

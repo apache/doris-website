@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## convert_to
-### description
+## Convert_to
+### Description
 #### Syntax
 
 `VARCHAR convert_to(VARCHAR column, VARCHAR character)`
@@ -33,7 +33,7 @@ under the License.
 因为当 order by column 中包含中文时，其排列不是按照汉语拼音的顺序。
 将 column 的字符编码转为 gbk 后，可实现按拼音的排列的效果。
 
-### example
+### Example
 
 ```
 mysql> select * from class_test order by class_name;
@@ -65,5 +65,5 @@ mysql> select * from class_test order by convert(class_name using gbk);
 +----------+------------+-------------+
 
 ```
-### keywords
+### Keywords
     convert_to

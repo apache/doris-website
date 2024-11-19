@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## struct()
+## Struct()
 
 struct()
 
-### description
+### Description
 
 #### Syntax
 
@@ -34,7 +34,7 @@ struct()
 
 根据给定的值构造并返回struct，参数可以是多列或常量
 
-### example
+### Example
 
 ```
 mysql> select struct(1, 'a', "abc");
@@ -70,6 +70,6 @@ mysql> select struct(k1, k2, null) from test_tb;
 1 row in set (0.04 sec)
 ```
 
-### keywords
+### Keywords
 
 STRUCT, CONSTRUCTOR

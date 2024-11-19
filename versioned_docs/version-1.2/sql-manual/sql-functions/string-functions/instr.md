@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## instr
+## Instr
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 Returns the location where substr first appeared in str (counting from 1). If substr does not appear in str, return 0.
 
-### example
+### Example
 
 ```
 mysql> select instr("abc", "b");
@@ -50,5 +50,5 @@ mysql> select instr("abc", "d");
 |                 0 |
 +-------------------+
 ```
-### keywords
+### Keywords
     INSTR

@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## substr
-### description
+## Substr
+### Description
 #### Syntax
 
 `VARCHAR substr(VARCHAR content, INT start, INT length)`
 
 求子字符串，返回第一个参数描述的字符串中从start开始长度为len的部分字符串。首字母的下标为1。
 
-### example
+### Example
 
 ```
 mysql> select substr("Hello doris", 2, 1);
@@ -46,5 +46,5 @@ mysql> select substr("Hello doris", 1, 2);
 | He                          |
 +-----------------------------+
 ```
-### keywords
+### Keywords
     SUBSTR

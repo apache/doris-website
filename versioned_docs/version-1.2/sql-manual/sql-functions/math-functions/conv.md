@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## conv
+## Conv
 
-### description
+### Description
 #### Syntax
 
 ```sql
@@ -33,7 +33,7 @@ VARCHAR CONV(BIGINT input, TINYINT from_base, TINYINT to_base)
 ```
 Convert the input number to the target base. The input base range should be within `[2,36]`. 
 
-### example
+### Example
 
 ```
 MySQL [test]> SELECT CONV(15,10,2);
@@ -58,5 +58,5 @@ MySQL [test]> SELECT CONV(230,10,16);
 +-------------------+
 ```
 
-### keywords
+### Keywords
 	CONV

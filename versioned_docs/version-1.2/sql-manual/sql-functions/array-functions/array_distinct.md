@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_distinct
+## Array_distinct
 
 array_distinct
 
-### description
+### Description
 
 #### Syntax
 
@@ -37,11 +37,11 @@ array_distinct
 Return the array which has been removed duplicate values.
 Return NULL for NULL input.
 
-### notice
+### Notice
 
 `Only supported in vectorized engine`
 
-### example
+### Example
 
 ```
 mysql> select k1, k2, array_distinct(k2) from array_test;
@@ -72,7 +72,7 @@ mysql> select k1, k2, array_distinct(k2) from array_test01;
 +------+------------------------------------------+---------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, DISTINCT, ARRAY_DISTINCT
 

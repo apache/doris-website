@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## months_add
-### description
+## Months_add
+### Description
 #### Syntax
 
 `DATETIME MONTHS_ADD(DATETIME date, INT months)`
@@ -34,7 +34,7 @@ Add the specified month from the date
 
 The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
 
-### example
+### Example
 
 ```
 mysql> select months_add("2020-01-31 02:02:02", 1);
@@ -45,6 +45,6 @@ mysql> select months_add("2020-01-31 02:02:02", 1);
 +--------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     MONTHS_ADD

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## unhex
-### description
+## Unhex
+### Description
 #### Syntax
 
 `VARCHAR unhex(VARCHAR str)`
@@ -35,7 +35,7 @@ If the string contains characters other than `[0-9], [a-f], [A-F]`, an empty str
 In other cases, every two characters are a group of characters converted into hexadecimal, and then spliced into a string for output.
 
 
-### example
+### Example
 
 ```
 mysql> select unhex('@');
@@ -59,5 +59,5 @@ mysql> select unhex('4142');
 | AB            |
 +---------------+
 ```
-### keywords
+### Keywords
     UNHEX

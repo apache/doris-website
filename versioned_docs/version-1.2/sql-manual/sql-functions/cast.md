@@ -33,7 +33,7 @@ under the License.
 
 Converts input to the specified type
 
-### example
+### Example
 
 1. Turn constant, or a column in a table
 
@@ -67,5 +67,5 @@ mysql> select cast(cast ("11.2" as double) as bigint);
 +----------------------------------------+
 1 row in set (0.00 sec)
 ```
-### keywords
+### Keywords
 CAST

@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## truncate
+## Truncate
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE truncate(DOUBLE x, INT d)`
@@ -35,7 +35,7 @@ When `d > 0`: keep `d` decimal places of `x`
 When `d = 0`: remove the fractional part of `x` and keep only the integer part 
 When `d < 0`: Remove the fractional part of `x`, and replace the integer part with the number `0` according to the number of digits specified by `d`
 
-### example
+### Example
 
 ```
 mysql> select truncate(124.3867, 2);
@@ -58,5 +58,5 @@ mysql> select truncate(-124.3867, -2);
 +-------------------------+
 ```
 
-### keywords
+### Keywords
 	TRUNCATE

@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## nvl
+## Nvl
 
 nvl
 
-### description
+### Description
 #### Syntax
 
 `nvl(expr1, expr2)`
@@ -36,7 +36,7 @@ nvl
 
 If the value of expr1 is not null, expr1 is returned, otherwise expr2 is returned
 
-### example
+### Example
 
 ```
 mysql> select nvl(1,0);
@@ -53,5 +53,5 @@ mysql> select nvl(null,10);
 |               10 |
 +------------------+
 ```
-### keywords
+### Keywords
 NVL

@@ -223,7 +223,7 @@ PROPERTIES (
 
   It is generally recommended that the amount of data scanned by a query plan is within 3-5 GB.
 
-  #### memory limit
+  #### Memory limit
 
   Usually, the query plan of an Export job has only two parts of `scan-export`, which does not involve calculation logic that requires too much memory. So usually the default memory limit of 2GB suffices.
 

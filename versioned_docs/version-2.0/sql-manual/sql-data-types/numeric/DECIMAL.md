@@ -84,5 +84,5 @@ DECIMAL in Doris is a real high-precision fixed-point number. Decimal has the fo
 ```
 3. More complete precision deduction. For different expressions, different precision inference rules are applied to deduce the precision of the results.
 
-### keywords
+### Keywords
 DECIMAL

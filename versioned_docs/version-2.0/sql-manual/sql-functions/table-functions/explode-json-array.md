@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode_json_array
+## Explode_json_array
 
-### description
+### Description
 
 Table functions must be used in conjunction with Lateral View.
 
 Expand a json array. According to the array element type, there are three function names. Corresponding to integer, floating point and string arrays respectively.
 
-#### syntax
+#### Syntax
 
 ```sql
 explode_json_array_int(json_str)
@@ -41,7 +41,7 @@ explode_json_array_string(json_str)
 explode_json_array_json(json_str)
 ```
 
-### example
+### Example
 
 Original table data:
 
@@ -294,6 +294,6 @@ mysql> select k1, e1 from example1 lateral view explode_json_array_json('[{"id":
 +------+------------------------+
 ```
 
-### keywords
+### Keywords
 
 explode,json,array,json_array,explode_json,explode_json_array

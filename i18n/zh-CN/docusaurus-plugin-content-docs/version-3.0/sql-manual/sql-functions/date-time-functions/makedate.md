@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## makedate
-### description
+## Makedate
+### Description
 #### Syntax
 
 `DATE MAKEDATE(INT year, INT dayofyear)`
 
 返回指定年份和dayofyear构建的日期。dayofyear必须大于0，否则结果为空。
 
-### example
+### Example
 ```
 mysql> select makedate(2021,1), makedate(2021,100), makedate(2021,400);
 +-------------------+---------------------+---------------------+
@@ -42,6 +42,6 @@ mysql> select makedate(2021,1), makedate(2021,100), makedate(2021,400);
 +-------------------+---------------------+---------------------+
 ```
 
-### keywords
+### Keywords
 
     MAKEDATE

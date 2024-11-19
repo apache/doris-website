@@ -35,7 +35,7 @@ Convert STR to DATE type by format specified, if the conversion result does not 
 
 The `format` supported is consistent with [date_format](date_format.md)
 
-### example
+### Example
 
 ```
 mysql> select str_to_date('2014-12-21 12:34:56', '%Y-%m-%d %H:%i:%s');
@@ -67,6 +67,6 @@ mysql> select str_to_date("2020-09-01", "%Y-%m-%d %H:%i:%s");
 +------------------------------------------------+
 1 row in set (0.01 sec)
 ```
-### keywords
+### Keywords
 
     STR_TO_DATE,STR,TO,DATE

@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sec_to_time
-### description
+## Sec_to_time
+### Description
 #### Syntax
 
 `TIME sec_to_time(INT timestamp)`
 
 The parameter is a timestamp of type INT, and the function returns a time of type TIME.
 
-### example
+### Example
 
 ```
 mysql >select sec_to_time(time_to_sec(cast('16:32:18' as time)));
@@ -44,5 +44,5 @@ mysql >select sec_to_time(time_to_sec(cast('16:32:18' as time)));
 1 row in set (0.53 sec)
 ```
 
-### keywords
+### Keywords
     SEC_TO_TIME

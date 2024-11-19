@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## countequal
+## Countequal
 
 countequal
 
-### description
+### Description
 
 #### Syntax
 
@@ -42,11 +42,11 @@ num      - value在array中的数量；
 NULL     - 如果数组为NULL。
 ```
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 mysql> select *, countEqual(c_array,5) from array_test;
@@ -75,6 +75,6 @@ mysql> select *,countEqual(c_array, 1),countEqual(c_array, 5),countEqual(c_array
 +------+-----------------------+--------------------------+--------------------------+-----------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,COUNTEQUAL

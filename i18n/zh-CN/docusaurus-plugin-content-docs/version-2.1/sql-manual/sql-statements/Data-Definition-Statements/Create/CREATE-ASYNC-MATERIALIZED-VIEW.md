@@ -50,7 +50,7 @@ CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
 
 #### 说明
 
-##### simpleColumnDefs
+##### SimpleColumnDefs
 
 用来定义物化视图column信息，如果不定义，将自动推导
 
@@ -70,7 +70,7 @@ CREATE MATERIALIZED VIEW mv1
 (aa comment "name",bb)
 ```
 
-##### buildMode
+##### BuildMode
 
 用来定义物化视图是否创建完成立即刷新,默认IMMEDIATE
 
@@ -91,7 +91,7 @@ CREATE MATERIALIZED VIEW mv1
 BUILD IMMEDIATE
 ```
 
-##### refreshMethod
+##### RefreshMethod
 
 用来定义物化视图刷新方式，默认 AUTO
 

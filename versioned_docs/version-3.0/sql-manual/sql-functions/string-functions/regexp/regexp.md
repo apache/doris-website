@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp
-### description
-#### syntax
+## Regexp
+### Description
+#### Syntax
 
 `BOOLEAN regexp(VARCHAR str, VARCHAR pattern)`
 
@@ -34,7 +34,7 @@ Perform regular matching on the string str, return true if it matches, and retur
 
 Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
 
-### example
+### Example
 
 ```sql
 --- Find all data starting with 'billie' in the k1 field
@@ -61,5 +61,5 @@ mysql> select regexp('这是一段中文This is a passage in English 1234567', '
 +-----------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     REGEXP

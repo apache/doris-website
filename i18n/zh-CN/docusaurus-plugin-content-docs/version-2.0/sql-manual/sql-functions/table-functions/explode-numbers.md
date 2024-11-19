@@ -24,18 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode_numbers
+## Explode_numbers
 
-### description
+### Description
 
 表函数，需配合 Lateral View 使用。
 
 获得一个[0,n)的序列。
 
-#### syntax
+#### Syntax
 `explode_numbers(n)`
 
-### example
+### Example
 
 ```
 mysql> select e1 from (select 1 k1) as t lateral view explode_numbers(5) tmp1 as e1;
@@ -49,6 +49,6 @@ mysql> select e1 from (select 1 k1) as t lateral view explode_numbers(5) tmp1 as
 |    4 |
 +------+
 ```
-### keywords
+### Keywords
 
 explode,numbers,explode_numbers

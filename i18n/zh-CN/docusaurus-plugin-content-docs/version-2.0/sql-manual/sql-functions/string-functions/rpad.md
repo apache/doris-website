@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## rpad
-### description
+## Rpad
+### Description
 #### Syntax
 
 `VARCHAR rpad(VARCHAR str, INT len, VARCHAR pad)`
@@ -35,7 +35,7 @@ under the License.
 
 除包含 NULL 值外，如果 pad 为空，则返回值为空串。
 
-### example
+### Example
 
 ```
 mysql> SELECT rpad("hi", 5, "xy");
@@ -60,5 +60,5 @@ mysql> SELECT rpad("", 0, "");
 +-----------------+
 ```
 
-### keywords
+### Keywords
     RPAD

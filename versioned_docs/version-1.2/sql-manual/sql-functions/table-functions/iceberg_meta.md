@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## iceberg_meta
+## Iceberg_meta
 
 ### Name
 
@@ -34,11 +34,11 @@ iceberg_meta
 
 </version>
 
-### description
+### Description
 
 iceberg_meta table-valued-function(tvf), Use for read iceberg metadata，operation history, snapshots of table, file metadata etc.
 
-#### syntax
+#### Syntax
 
 ```sql
 iceberg_meta(

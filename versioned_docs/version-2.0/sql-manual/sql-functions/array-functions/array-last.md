@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_last
+## Array_last
 
 array_last
 
-### description
+### Description
 Returns the last element in the array for which func(arr1[i]) returns something other than 0.
 
 #### Syntax
@@ -39,7 +39,7 @@ T array_last(lambda, ARRAY<T>)
 
 Use a lambda bool expression and an array as the input parameters, the lambda expression is used to evaluate the internal data of other input ARRAY parameters.
 
-### example
+### Example
 
 ```
 mysql> select array_last(x->x>2, [1,2,3,0]) ;
@@ -60,6 +60,6 @@ mysql> select array_last(x->x>4, [1,2,3,0]) ;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY, LAST, ARRAY_LAST

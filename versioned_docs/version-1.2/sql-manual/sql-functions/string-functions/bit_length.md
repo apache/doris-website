@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_length
+## Bit_length
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 Return length of argument in bits.
 
-### example
+### Example
 
 ```
 mysql> select bit_length("abc");
@@ -50,5 +50,5 @@ mysql> select bit_length("中国");
 |                   48 |
 +----------------------+
 ```
-### keywords
+### Keywords
     BIT_LENGTH

@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## HISTOGRAM
-### description
+### Description
 #### Syntax
 
 `histogram(expr[, INT num_buckets])`
@@ -39,7 +39,7 @@ Parameter description：
 
 Alias function: `hist(expr[, INT num_buckets])`
 
-### example
+### Example
 
 ```
 MySQL [test]> SELECT histogram(c_float) FROM histogram_test;
@@ -99,6 +99,6 @@ Field description：
 
 > Total number of histogram elements = number of elements in the last bucket(count) + total number of elements in the previous bucket(pre_sum).
 
-### keywords
+### Keywords
 
 HISTOGRAM, HIST

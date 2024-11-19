@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## TOPN_ARRAY
-### description
+### Description
 #### Syntax
 
 `ARRAY<T> topn_array(expr, INT top_num[, INT space_expand_rate])`
@@ -39,7 +39,7 @@ counter numbers = top_num * space_expand_rate
 ```
 The higher value of space_expand_rate, the more accurate result will be. The default value is 50
 
-### example
+### Example
 ```
 mysql> select topn_array(k3,3) from baseall;
 +--------------------------+
@@ -57,5 +57,5 @@ mysql> select topn_array(k3,3,100) from baseall;
 +--------------------------+
 1 row in set (0.02 sec)
 ```
-### keywords
+### Keywords
 TOPN, TOPN_ARRAY
