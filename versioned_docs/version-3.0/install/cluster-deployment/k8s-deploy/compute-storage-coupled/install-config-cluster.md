@@ -28,7 +28,7 @@ under the License.
 In the default deployed DorisCluster resources, the images used by FE and BE may not be the latest versions. The default number of replicas is FE = 3, BE = 3. The computing resources used by FE are 6c and 12Gi, and the resources used by BE are 8 c and 16Gi. Please refer to the following instructions for making changes.
 
 ### Image settings
-The Doris Operator is decoupled from the Doris version. Essentially, the Doris Operator can deploy any version of Doris if not explicitly specified.
+The Doris Operator is decoupled from the Doris version. Essentially, the Doris Operator can deploy any version of Doris if not explicitly specified. 
 
 **FE image settings**  
 Specify the image for fe as follows:
@@ -37,7 +37,7 @@ spec:
   feSpec:
     image: ${image}
 ```
-Replace ${image} with the name of the image you want to deploy, update the configuration to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) that needs to be deployed.
+Replace ${image} with the name of the image you want to deploy, update the configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) that needs to be deployed.
 
 **BE image settings**  
 Specify the image for be as follows:
@@ -46,7 +46,7 @@ spec:
   beSpec:
     image: ${image}
 ```
-Replace ${image} with the name of the image you want to deploy, update the configuration to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) that needs to be deployed.
+Replace ${image} with the name of the image you want to deploy, update the configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) that needs to be deployed.
 
 ### Replicas settings
 **FE Replicas Setting**  
@@ -56,7 +56,7 @@ spec:
   feSpec:
     replicas: 5
 ```
-Update the configuration to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) that needs to be deployed.
+Update the configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) that needs to be deployed.
 
 **BE Replicas Setting**  
 Specify the replicas of be as follows:
@@ -65,7 +65,7 @@ spec:
   beSpec:
     replicas: 5
 ```
-Update the configuration to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) that needs to be deployed.
+Update the configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) that needs to be deployed.
 
 ### Computing resource settings
 **FE computing resource settings**  
@@ -80,7 +80,7 @@ spec:
       cpu: 8
       memory: 16Gi
 ```
-Update the configuration to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) that needs to be deployed.
+Update the configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) that needs to be deployed.
 
 **BE computing resource settings**    
 To change the computing resources of be to 16c and 32Gi, the configuration is as follows:
@@ -94,7 +94,7 @@ spec:
       cpu: 16
       memory: 32Gi
 ```
-Update the configuration to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) that needs to be deployed.
+Update the configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) that needs to be deployed.
 
 :::tip Tip  
 The minimum resources required for FE and BE are 4c and 8Gi. This is the minimum required for startup. The normal testing needed resources are 8c and 8Gi.  
@@ -102,7 +102,7 @@ The minimum resources required for FE and BE are 4c and 8Gi. This is the minimum
 
 ## Custom startup configuration
 Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations.Customized the startup parameters into a specific ConfigMap according to the introductions in the [FE Configuration Document](../../../../admin-manual/config/fe-config.md) and the [BE Configuration Document](../../../../admin-manual/config/be-config.md),
-and deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) needs to be deployed.
+and deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) needs to be deployed.
 
 ### Custom FE startup configuration
 1. Deploying ConfigMap  
@@ -148,7 +148,7 @@ and deploy the customized ConfigMap to the namespace where the [DorisCluster res
   ${namespace} is the namespace to which the DorisCluster resource needs to be deployed, and ${feConfigMapFile} is the name of the configMap file used by FE.
 
 2. Configuring DorisCluster resource  
-  When use the ConfigMap named by `fe-conf` to mount startup configuration, add the following config to the FE spec of the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) to be deployed:
+  When use the ConfigMap named by `fe-conf` to mount startup configuration, add the following config to the FE spec of the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) to be deployed:
   ```yaml
   spec:
     feSpec:
@@ -158,7 +158,7 @@ and deploy the customized ConfigMap to the namespace where the [DorisCluster res
   ```
 
 :::tip Tip
-Please add `enable_fqdn_mode=true` in start config. If you want to use ip mode and K8s have the ability that the pod IP keep the same after restarted, please refer to the [issue](https://github.com/apache/doris-operator/issues/138) to config.
+Please add `enable_fqdn_mode=true` in start config. If you want to use ip mode and K8s have the ability that the pod IP keep the same after restarted, please refer to the issue [#138](https://github.com/apache/doris-operator/issues/138) to config.
 :::
 
 ### Custom BE startup configuration
@@ -199,14 +199,14 @@ Please add `enable_fqdn_mode=true` in start config. If you want to use ip mode a
       heartbeat_service_port = 9050
       brpc_port = 8060
   ```
-  When using the ConfigMap to mount BE startup configuration, the key corresponding to the configuration must be `be.conf`. Write the ConfigMap to a file and deploy it to the namespace where the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) is deployed, using the following command:
+  When using the ConfigMap to mount BE startup configuration, the key corresponding to the configuration must be `be.conf`. Write the ConfigMap to a file and deploy it to the namespace where the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) is deployed, using the following command:
   ```shell
   kubectl -n ${namespace} apply -f ${beConfigMapFile}.yaml
   ```
   ${namespace} is the namespace to which the DorisCluster resource needs to be deployed, and ${beConfigMapFile} is the name of the configMap file used by BE.
   
 2. Configuring DorisCluster Resource  
-  When use the ConfigMap named by `be-conf` to mount startup configuration, add the following config to the BE spec of the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) to be deployed:
+  When use the ConfigMap named by `be-conf` to mount startup configuration, add the following config to the BE spec of the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) to be deployed:
   ```yaml
   spec:
     feSpec:
@@ -246,13 +246,13 @@ The following is an example of mounting the ConfigMaps named test-be1 and test-b
   ```
   
 ## Persistent storage
-Kubernetes provides the [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) to persist data to physical storage. In Kubernetes, the Doris Operator automatically creates corresponding PersistentVolumeClaims associated with appropriate PersistentVolumes using the template that defined in the need deployed [DorisCluster Resource](install-quickstart.md#step-3-deploy-doris-cluster).
+Kubernetes provides the [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) to persist data to physical storage. In Kubernetes, the Doris Operator automatically creates corresponding PersistentVolumeClaims associated with appropriate PersistentVolumes using the template that defined in the need deployed [DorisCluster Resource](install-quickstart.md#step-2-deploy-doris-cluster).
 
 ### Persistent storage for FE
 In the deployment of Doris on K8s, it is recommended to persist the `/opt/apache-doris/fe/doris-meta` mount point by default. This is the default storage path for FE metadata. When Doris is deployed on K8s, logs are output to the console by default. If the cluster has the ability to collect logs, they can be directly collected through the console. If the cluster lacks a log collection system, it is recommended to persist the log path, default value is `/opt/apache-doris/fe/log`.
 
 #### Persistent metadata
-When using the default configuration file, add the following configuration to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) to be deployed:
+When using the default configuration file, add the following configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) to be deployed:
 ```yaml
 spec:
   feSpec:
@@ -272,7 +272,7 @@ spec:
 In the above configuration, ${your_storageclass} represents the name of the StorageClass you want to use, and ${storageSize} represents the storage size you want to allocation. The format of ${storageSize} follows the [quantity expression](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/) method of K8s, such as: 100Gi. Please replace them as needed when using.
 
 #### Persistent FE log
-When using the default configuration file, add the following configuration to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) to be deployed:
+When using the default configuration file, add the following configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) to be deployed:
 ```yaml
 spec:
   feSpec:
@@ -300,7 +300,7 @@ In the deployment of Doris on K8s, it is recommended to persist the `/opt/apache
 
 #### Persistent data
 - **Using default storage path**  
-  If BE uses the default configuration, please update the following configuration information to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) to be deployed:
+  If BE uses the default configuration, please update the following configuration information to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) to be deployed:
   ```yaml
   beSpec:
     persistentVolumes:
@@ -344,7 +344,7 @@ In the deployment of Doris on K8s, it is recommended to persist the `/opt/apache
   In the above configuration, ${your_storageclass} represents the name of the StorageClass you want to use, and ${storageSize} represents the storage size you want to use. The format of ${storageSize} follows the [quantity expression method](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/) of K8s, such as: 100Gi. Please replace them as needed when using.
 
 #### Persistent BE log
-When using the default configuration file, add the following configuration to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) to be deployed:
+When using the default configuration file, add the following configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) to be deployed:
 ```yaml
 beSpec:
   persistentVolumes:

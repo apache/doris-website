@@ -1,6 +1,6 @@
 ---
 {
-   "title": "Quick Start",
+   "title": "Deploy on Kubernetes",
    "language": "en"
 }
 ---
@@ -23,53 +23,11 @@ under the License.
 -->
 This section describes how to deploy Doris Operator and Doris cluster in the test Kubernetes cluster.
 The deployment operations are as follows:
-1. Create a Kubernetes test cluster
-2. Deploy Doris Operator
-3. Deploy Doris cluster
-4. Connect to Doris cluster
+1. Deploy Doris Operator
+2. Deploy Doris cluster
+3. Connect to Doris cluster
 
-## Step 1: Create a Kubernetes test cluster
-This step briefly describes how to quickly build a single-node k8s cluster without a k8s cluster. If you already have a k8s cluster, please skip this step.
-Kind is currently a common solution for creating a local Kubernetes test environment. Kind uses Docker containers as nodes to create and run Kubernetes clusters locally.
-
-1. Deployment prerequisites
-   Before deployment, you need to ensure that the following components are available in the environment:
-
-| Components | Version requirements |
-|------------|----------------------|
-| Docker     | \>= 18.09            |
-| kubectl    | \>=1.19              |
-| kind       | \>=0.8.0             |
-
-2. Deploy Kubernetes cluster using kind
-   In this example, kind 0.10.0 is used to install the Kubernetes cluster. The command is as follows:
-
-   ```
-      kind create cluster --image kindest/node:v1.20.2 --name test-doris
-   ```
-   Expected output:
-   ```
-   Creating cluster "test-doris" ...
-    ✓ Ensuring node image (kindest/node:v1.20.2)
-    ✓ Preparing nodes
-    ✓ Writing configuration
-    ✓ Starting control-plane
-    ✓ Installing CNI
-    ✓ Installing StorageClass
-   Set kubectl context to "kind-test-doris"
-   You can now use your cluster with:
-   ```
-3. Check the Kubernetes cluster status Use the following command to check the Kubernetes cluster status:
-   ```
-   kubectl cluster-info --context kind-test-doris
-   ```
-   Expected output:
-   ```
-   Kubernetes control plane is running at https://127.0.0.1:40075
-   KubeDNS is running at https://127.0.0.1:40075/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-   To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
-   ```
-## Step 2: Deploy Doris Operator
+## Step 1: Deploy Doris Operator
 Deploying Doris Operator consists of two parts: installing the definition and deploying the operator service:
 1. Installing Doris Operator CRD
    Add the custom resource (CRD) of Doris Operator using the following command:
@@ -105,8 +63,8 @@ Deploying Doris Operator consists of two parts: installing the definition and de
    NAME                              READY   STATUS    RESTARTS   AGE
    doris-operator-7f578c86cb-nz6jn   1/1     Running   0          19m
    ```
-For Doris Operator related configuration and other deployment methods, please refer to [Deploying Doris Operator](./install-operator.md).
-## Step 3: Deploy Doris cluster
+
+## Step 2: Deploy Doris cluster
 1. Download the template Doris deployment template:
    ```
    curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
@@ -136,7 +94,7 @@ For Doris Operator related configuration and other deployment methods, please re
    doriscluster-sample   available   available
    ```
 
-## Step 4: Connect and access the Doris cluster
+## Step 3: Access the Doris cluster
 
 The Doris cluster is quickly deployed in the test environment. You can enter the container FE and use the MySQL Client to connect to Doris for test operations. For other access methods, refer to [Accessing Doris Cluster](./install-config-cluster.md#access-configuration) for configuration.
 1. Get the FE container name:

@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## 集群规划
-默认部署的 `DorisCluster` 资源中，FE 和 BE 使用的可能不是最新的版本的 image，默认的副本数为 FE=3,BE=3 ，FE 使用的计算资源配置为 6c 12Gi，BE 使用的资源是 8c 16Gi。在使用过程中，如需更修改请参考如下介绍修改。
+默认部署的 `DorisCluster` 资源中，FE 和 BE 使用的可能不是最新的版本的 image，默认的副本数为 FE=3 ，BE=3 ，FE 使用的计算资源配置为 6c 12Gi，BE 使用的资源是 8c 16Gi。在使用过程中，如需更修改请参考如下介绍修改。
 
 ### image 设置
 Doris Operator 与 Doris 版本相互解耦，Doris Operator 如果不明确说明，本质上可以部署任何版本的 Doris 。
@@ -37,7 +37,7 @@ spec:
   feSpec:
     image: ${image}
 ```
-将 ${image} 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中。
+将 ${image} 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中。
 
 **BE Image 设置**  
 重新指定 BE 的 image 配置如下：
@@ -46,7 +46,7 @@ spec:
   beSpec:
     image: ${image}
 ```
-将 ${image} 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中。
+将 ${image} 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中。
 
 ### 副本数设定
 **FE 副本数修改**  
@@ -56,7 +56,7 @@ spec:
   feSpec:
     replicas: 5
 ```
-将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中。
+将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中。
 
 **BE 副本数修改**  
 将默认的 BE 副本数 3 改为 5 配置如下：
@@ -65,7 +65,7 @@ spec:
   beSpec:
     replicas: 5
 ```
-将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中。
+将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中。
 
 ### 计算资源设定
 **FE 计算资源设定**  
@@ -80,7 +80,7 @@ spec:
       cpu: 8
       memory: 16Gi
 ```
-将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中。
+将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中。
 
 **BE 计算资源设定**
 默认部署的 BE 计算资源为 8c, 16Gi, 将计算资源修改为 16c， 32Gi 配置如下：
@@ -94,14 +94,14 @@ spec:
       cpu: 16
       memory: 32Gi
 ```
-将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中。
+将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中。
 
 :::tip Tip
 - FE 和 BE 所需要的最小资源为 4c 8Gi ，此为最小启动配置，如果需要进行正常能力测试为 8c 8Gi。  
 :::
 
 ## 定制化启动配置
-Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。默认情况下，服务使用 image 里默认配置作为启动参数配置。请预先按照[FE 配置文档](../../../../admin-manual/config/fe-config.md)和 [BE 配置文档](../../../../admin-manual/config/be-config.md)介绍，将定制好启动参数配置到特定的 `ConfigMap` 中。配置好后，将定制的 ConfigMap 部署到需要[部署 `DorisCluster` 资源](install-quickstart.md#第-3-步部署-doris-集群)的 namespace 中。
+Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。默认情况下，服务使用 image 里默认配置作为启动参数配置。请预先按照[FE 配置文档](../../../../admin-manual/config/fe-config.md)和 [BE 配置文档](../../../../admin-manual/config/be-config.md)介绍，将定制好启动参数配置到特定的 `ConfigMap` 中。配置好后，将定制的 ConfigMap 部署到需要[部署 `DorisCluster` 资源](install-quickstart.md#第-2-步部署-doris-集群)的 namespace 中。
 
 ### FE 定制化启动配置
 
@@ -148,7 +148,7 @@ Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。默�
   ${namespace} 为 `DorisCluster` 资源需要部署到的 namespace，${feConfigMapFile} 为 fe使用的 configMap 文件名称。
    
 2. 配置 DorisCluster 资源  
-  以 fe-conf 对应的 ConfigMap 为例，在需要[部署的 `DorisCluster` 资源](install-quickstart.md#第-3-步部署-doris-集群)的 FE 配置中，添加如下信息：
+  以 fe-conf 对应的 ConfigMap 为例，在需要[部署的 `DorisCluster` 资源](install-quickstart.md#第-2-步部署-doris-集群)的 FE 配置中，添加如下信息：
   ```yaml
   spec:
     feSpec:
@@ -158,7 +158,7 @@ Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。默�
   ```
 
 :::tip Tip  
-K8s 部署中请将 `enable_fqdn_mode=true` 加入启动配置中。如果想用 IP 模式，且 K8s 集群能够保证 pod 重启后 IP 不发生变化，请参照这个 [issue](https://github.com/apache/doris-operator/issues/138) 进行配置 IP 模式启动。
+K8s 部署中请将 `enable_fqdn_mode=true` 加入启动配置中。如果想用 IP 模式，且 K8s 集群能够保证 pod 重启后 IP 不发生变化，请参照这个 issue [#138](https://github.com/apache/doris-operator/issues/138) 进行配置 IP 模式启动。
 :::
 
 ### BE 定制化启动配置
@@ -207,7 +207,7 @@ K8s 部署中请将 `enable_fqdn_mode=true` 加入启动配置中。如果想用
   ${namespace} 为 `DorisCluster` 资源需要部署到的 namespace，${beConfigMapFile} 为 configMap 文件名称。
 
 2. 配置 DorisCluster 资源  
-  以 be-conf 对应的 ConfigMap 为例，在需要[部署的 `DorisCluster` 资源](install-quickstart.md#第-3-步部署-doris-集群)的 BE 配置中，添加如下信息：
+  以 be-conf 对应的 ConfigMap 为例，在需要[部署的 `DorisCluster` 资源](install-quickstart.md#第-2-步部署-doris-集群)的 BE 配置中，添加如下信息：
   ```yaml
   spec:
     feSpec:
@@ -254,7 +254,7 @@ spec:
 在 Doris 在 K8s 部署中，默认情况下建议持久化 `/opt/apache-doris/fe/doris-meta` 挂载点，此为 FE 元数据的默认存储路径。Doris 在 K8s 上部署，默认将所有的日志信息输出到 console ，如果集群有日志收集能力可直接通过 console 收集。如果集群缺少日志收集系统，默认情况下建议持久化 `/opt/apache-doris/fe/log` 挂载点。
 
 #### FE 元数据持久化配置
-使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中：
+使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中：
 ```yaml
 spec:
   feSpec:
@@ -274,7 +274,7 @@ spec:
 上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
 
 #### FE 日志持久化配置
-使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中：
+使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中：
 ```yaml
 spec:
   feSpec:
@@ -302,7 +302,7 @@ spec:
 
 #### BE 配置数据持久化
 - **BE 配置默认持久化存储路径**  
-  如果 BE 使用默认配置，请将下列配置信息更新到需要[部署的 DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中：
+  如果 BE 使用默认配置，请将下列配置信息更新到需要[部署的 DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中：
   ```yaml
   beSpec:
     persistentVolumes:
@@ -319,7 +319,7 @@ spec:
   上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
 
 - **BE 配置多个持久化存储目录**  
-  Doris 为充分利用多磁盘的优势提供可配置多个存储目录。如果在定制化配置中通过 [`storage_root_path`](../../../../admin-manual/config/be-config.md#storage_root_path) 指定了多个存储目录，在需要[部署的 `DorisCluster` 资源](install-quickstart.md#第-3-步部署-doris-集群)的 BE 配置中增加多个存储配置。例如：`storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD`, 则需要在部署资源中添加如下配置：
+  Doris 为充分利用多磁盘的优势提供可配置多个存储目录。如果在定制化配置中通过 [`storage_root_path`](../../../../admin-manual/config/be-config.md#storage_root_path) 指定了多个存储目录，在需要[部署的 `DorisCluster` 资源](install-quickstart.md#第-2-步部署-doris-集群)的 BE 配置中增加多个存储配置。例如：`storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD`, 则需要在部署资源中添加如下配置：
   ```yaml
   beSpec:
     persistentVolumes:
@@ -345,7 +345,7 @@ spec:
   上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
 
 #### BE 持久化日志
-使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中：
+使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中：
 ```yaml
 beSpec:
   persistentVolumes:
