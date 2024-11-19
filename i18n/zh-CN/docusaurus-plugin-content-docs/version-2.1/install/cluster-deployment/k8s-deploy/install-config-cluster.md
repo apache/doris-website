@@ -141,11 +141,11 @@ Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。默�
       edit_log_port = 9010
       enable_fqdn_mode = true
   ```
-使用 ConfigMap 挂载 FE 启动配置信息时，配置信息对应的 key 必须为 `fe.conf` 。将 ConfigMap 写入文件，通过如下命令部署到 `DorisCluster` 资源部署的 namespace ：
+  使用 ConfigMap 挂载 FE 启动配置信息时，配置信息对应的 key 必须为 `fe.conf` 。将 ConfigMap 写入文件，通过如下命令部署到 `DorisCluster` 资源部署的 namespace ：
   ```shell
   kubectl -n ${namespace} apply -f ${feConfigMapFile}.yaml
   ```
-${namespace} 为 `DorisCluster` 资源需要部署到的 namespace，${feConfigMapFile} 为 fe使用的 configMap 文件名称。
+  ${namespace} 为 `DorisCluster` 资源需要部署到的 namespace，${feConfigMapFile} 为 fe使用的 configMap 文件名称。
 
 2. 配置 DorisCluster 资源  
    以 fe-conf 对应的 ConfigMap 为例，在需要[部署的 `DorisCluster` 资源](install-quickstart.md#第-2-步部署-doris-集群)的 FE 配置中，添加如下信息：
@@ -200,11 +200,11 @@ K8s 部署中请将 `enable_fqdn_mode=true` 加入启动配置中。如果想用
       heartbeat_service_port = 9050
       brpc_port = 8060
   ```
-使用 ConfigMap 挂载 BE 启动配置信息时，配置信息对应的 key 必须为 `be.conf` 。将 ConfigMap 写入文件，通过如下命令部署到 `DorisCluster` 资源部署的 namespace ：
+  使用 ConfigMap 挂载 BE 启动配置信息时，配置信息对应的 key 必须为 `be.conf` 。将 ConfigMap 写入文件，通过如下命令部署到 `DorisCluster` 资源部署的 namespace ：
   ```shell
   kubectl -n ${namespace} apply -f ${beConfigMapFile}.yaml
   ```
-${namespace} 为 `DorisCluster` 资源需要部署到的 namespace，${beConfigMapFile} 为 configMap 文件名称。
+  ${namespace} 为 `DorisCluster` 资源需要部署到的 namespace，${beConfigMapFile} 为 configMap 文件名称。
 
 2. 配置 DorisCluster 资源  
    以 be-conf 对应的 ConfigMap 为例，在需要[部署的 `DorisCluster` 资源](install-quickstart.md#第-2-步部署-doris-集群)的 BE 配置中，添加如下信息：
@@ -369,17 +369,17 @@ Doris 在 Kubernetes 上默认提供 [ClusterIP 访问模式](https://kubernetes
 
 1. 配置使用 ClusterIP 作为 Service 类型
 
-Doris 在 Kubernetes 上默认提供 ClusterIP 访问模式。无需进行修改即可使用 ClusterIP 访问模式。
+  Doris 在 Kubernetes 上默认提供 ClusterIP 访问模式。无需进行修改即可使用 ClusterIP 访问模式。
 
 2. 获取 Service
 
-在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
+  在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
 
   ```shell
   kubectl -n doris get svc
   ```
 
-返回结果如下：
+  返回结果如下：
 
   ```shell
   NAME                              TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)                               AGE
@@ -389,20 +389,20 @@ Doris 在 Kubernetes 上默认提供 ClusterIP 访问模式。无需进行修改
   doriscluster-sample-fe-service    ClusterIP   10.1.118.16   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   14m
   ```
 
-在以上结果中，FE 与 BE 有两类 Service，后缀分别为 internal 与 service：
+  在以上结果中，FE 与 BE 有两类 Service，后缀分别为 internal 与 service：
 
 - 以 internal 后缀的 Service 服务只能 Doris 内部通信使用，如心跳，数据交换等操作，不对外使用。
 - 以 service 后缀的 Service 服务可以提供用户使用。
 
 3. 在容器内部访问 Doris
 
-使用以下命令，可以在当前的 Kubernetes 集群中创建一个包含 mysql client 的 pod：
+  使用以下命令，可以在当前的 Kubernetes 集群中创建一个包含 mysql client 的 pod：
 
   ```shell
   kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=doris -- /bin/bash
   ```
 
-在集群内的容器中，可以使用对外暴露的后缀为 `service` 的服务名访问 Doris 集群：
+  在集群内的容器中，可以使用对外暴露的后缀为 `service` 的服务名访问 Doris 集群：
 
   ```shell
   ## 使用 service 类型 pod name 访问 Doris 集群
@@ -468,13 +468,13 @@ Doris 在 Kubernetes 上默认提供 ClusterIP 访问模式。无需进行修改
 
 2. 获取 Service
 
-在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
+  在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
 
   ```shell
   kubectl get service
   ```
 
-返回结果如下：
+  返回结果如下：
 
   ```shell
   NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                                       AGE
@@ -487,13 +487,12 @@ Doris 在 Kubernetes 上默认提供 ClusterIP 访问模式。无需进行修改
 
 3. 使用 NodePort 访问服务
 
-以 mysql 连接为例。Doris 的 Query Port 端口默认为 9030，在以上样例中本地中被映射到本地端口 31545。在访问 Doris 集群时，同时需要获取到对应的 IP 地址，可以通过以下命令查看：
+  以 mysql 连接为例。Doris 的 Query Port 端口默认为 9030，在以上样例中本地中被映射到本地端口 31545。在访问 Doris 集群时，同时需要获取到对应的 IP 地址，可以通过以下命令查看：
 
   ```shell
   kubectl get nodes -owide
   ```
-
-返回结果如下：
+  返回结果如下：
 
   ```shell
   NAME   STATUS   ROLES           AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE          KERNEL-VERSION          CONTAINER-RUNTIME
@@ -503,7 +502,7 @@ Doris 在 Kubernetes 上默认提供 ClusterIP 访问模式。无需进行修改
   r63    Ready    <none>          14d   v1.28.2   192.168.88.63   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
   ```
 
-在 NodePort 模式下，可以根据任何 node 节点的宿主机 IP 与端口映射访问 Kubernetes 集群内的服务。在本例中可以使用任一的 node 节点 IP，192.168.88.61、192.168.88.62、192.168.88.63 访问 Doris 服务。如在下例中使用了 node 节点 192.168.88.62 与映射出的 query port 端口 31545 访问集群：
+  在 NodePort 模式下，可以根据任何 node 节点的宿主机 IP 与端口映射访问 Kubernetes 集群内的服务。在本例中可以使用任一的 node 节点 IP，192.168.88.61、192.168.88.62、192.168.88.63 访问 Doris 服务。如在下例中使用了 node 节点 192.168.88.62 与映射出的 query port 端口 31545 访问集群：
 
   ```shell
   mysql -h 192.168.88.62 -P 31545 -uroot
@@ -529,13 +528,13 @@ Doris 在 Kubernetes 上默认提供 ClusterIP 访问模式。无需进行修改
   ```
 2. 获取 Service
 
-在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
+  在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
 
   ```shell
   kubectl get service
   ```
 
-返回结果如下：
+  返回结果如下：
 
   ```shell
   NAME                              TYPE           CLUSTER-IP       EXTERNAL-IP                                                                     PORT(S)                                                       AGE
@@ -566,9 +565,9 @@ Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Do
 
 1. **构建 root 加密密码**
 
-Doris 支持密文的方式在 [FE 的配置文件](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password)中设置 root 用户的密码，密码的加密方式是采用 2 阶段 SHA-1 加密实现。代码实现如下:
+  Doris 支持密文的方式在 [FE 的配置文件](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password)中设置 root 用户的密码，密码的加密方式是采用 2 阶段 SHA-1 加密实现。代码实现如下:
 
-Java 代码实现 2 阶段 SHA-2 加密：
+  Java 代码实现 2 阶段 SHA-2 加密：
 
   ```java
   import org.apache.commons.codec.digest.DigestUtils;
@@ -582,7 +581,7 @@ Java 代码实现 2 阶段 SHA-2 加密：
     }
   ```
 
-Golang 代码实现 2 阶段 SHA-1 加密：
+  Golang 代码实现 2 阶段 SHA-1 加密：
 
   ```go
   import (
@@ -610,14 +609,14 @@ Golang 代码实现 2 阶段 SHA-1 加密：
   	fmt.Println("*"+tes)
   }
   ```
-将加密后的密码按照配置文件格式要求配置到 `fe.conf` 中， 根据[集群参数配置章节](#fe-定制化启动配置)的介绍将配置文件以 configmap 的形式下发到 K8s 集中。
+  将加密后的密码按照配置文件格式要求配置到 `fe.conf` 中， 根据[集群参数配置章节](#fe-定制化启动配置)的介绍将配置文件以 configmap 的形式下发到 K8s 集中。
 
 2. **构建 DorisCluster 资源**
 
-配置文件设置了 root 初始化密码，Doris FE 第一个节点启动后 root 的密码会立即生效，其他节点加入集群需要 Doris Operator 使用 root 用户名 + 密码的方式来操作。需要在部署的 DorisCluster 资源中指定用户名 + 密码，以便 Doris Operator 自动管理集群节点。
+  配置文件设置了 root 初始化密码，Doris FE 第一个节点启动后 root 的密码会立即生效，其他节点加入集群需要 Doris Operator 使用 root 用户名 + 密码的方式来操作。需要在部署的 DorisCluster 资源中指定用户名 + 密码，以便 Doris Operator 自动管理集群节点。
 - 环境变量方式
 
-将用户名 root 和密码配置到 DorisCluster 资源中的 ".spec.adminUser.name" 和 ".spec.adminUser.password" 字段，Doris Operator 会自动将下列配置转为容器的环境变量使用，容器内的辅助服务会使用环境变量配置的用户名和密码来添加自身到指定的集群。配置格式如下：
+  将用户名 root 和密码配置到 DorisCluster 资源中的 ".spec.adminUser.name" 和 ".spec.adminUser.password" 字段，Doris Operator 会自动将下列配置转为容器的环境变量使用，容器内的辅助服务会使用环境变量配置的用户名和密码来添加自身到指定的集群。配置格式如下：
 
   ```yaml
   spec:
@@ -626,15 +625,15 @@ Golang 代码实现 2 阶段 SHA-1 加密：
       password: ${password}
   ```
 
-其中，${password} 为 root 的非加密密码。
+  其中，${password} 为 root 的非加密密码。
 
 - Secret 方式
 
-Doris Operator 提供使用 [Basic authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) 来指定管理节点的用户名和密码，DorisCluster 资源配置需要使用的 Secret 后，Doris Operator 会自动将 Secret 以文件形式挂载到容器指定位置，容器的辅助服务会解析出文件中的用户名和密码来自动添加自身到指定集群。basic-authentication-secret 的 stringData 只包含 2 个字段： username 和 password 。使用 Secret 配置管理用户名和密码流程如下：
+  Doris Operator 提供使用 [Basic authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) 来指定管理节点的用户名和密码，DorisCluster 资源配置需要使用的 Secret 后，Doris Operator 会自动将 Secret 以文件形式挂载到容器指定位置，容器的辅助服务会解析出文件中的用户名和密码来自动添加自身到指定集群。basic-authentication-secret 的 stringData 只包含 2 个字段： username 和 password 。使用 Secret 配置管理用户名和密码流程如下：
 
-a. 配置需要使用的 Secret
+  a. 配置需要使用的 Secret
 
-按照如下格式配置需要使用的 Basic authentication Secret ：
+  按照如下格式配置需要使用的 Basic authentication Secret ：
 
   ```yaml
   stringData:
@@ -642,19 +641,19 @@ a. 配置需要使用的 Secret
     password: ${password}
   ```
 
-其中 ${password} 为 root 设置的非加密密码。  
-将 Secret 通过 `kubectl -n ${namespace} apply -f ${secretFileName}.yaml` 将更新后的 Secret 部署到 K8s 集群中。其中 ${namespace} 为 DorisCluster 资源需要部署的命名空间，${secretFileName} 为需要部署的 Secret 的文件名称。
+  其中 ${password} 为 root 设置的非加密密码。  
+  将 Secret 通过 `kubectl -n ${namespace} apply -f ${secretFileName}.yaml` 将更新后的 Secret 部署到 K8s 集群中。其中 ${namespace} 为 DorisCluster 资源需要部署的命名空间，${secretFileName} 为需要部署的 Secret 的文件名称。
 
-b. 配置需要部署的 DorisCluster 资源
+  b. 配置需要部署的 DorisCluster 资源
 
-配置 DorisCluster 指定需要使用的 Secret 格式如下：
+  配置 DorisCluster 指定需要使用的 Secret 格式如下：
 
   ```yaml
   spec:
     authSecret: ${secretName}
   ```
 
-其中，${secretName} 为包含 root 用户名和密码的 Secret 名称。
+  其中，${secretName} 为包含 root 用户名和密码的 Secret 名称。
 
 ### 部署时自动创建非 root 管理用户和密码（推荐）
 
@@ -705,13 +704,13 @@ Doris 集群在部署后设置了 root 用户的密码，需要配置一个拥�
 
 1. 新建拥有 Node_priv 权限用户
 
-使用 MySQL 协议连接数据库后，使用如下命令可以创建一个简易的仅拥有 Node_priv 权限的用户并设置密码。
+  使用 MySQL 协议连接数据库后，使用如下命令可以创建一个简易的仅拥有 Node_priv 权限的用户并设置密码。
 
   ```shell
   CREATE USER '${DB_ADMIN_USER}' IDENTIFIED BY '${DB_ADMIN_PASSWD}';
   ```
 
-其中 ${DB_ADMIN_USER} 为希望创建的用户名，${DB_ADMIN_PASSWD} 为希望为新建用户设置的密码。
+  其中 ${DB_ADMIN_USER} 为希望创建的用户名，${DB_ADMIN_PASSWD} 为希望为新建用户设置的密码。
 
 2. 给新建用户赋予 Node_priv 权限
 
@@ -721,8 +720,8 @@ Doris 集群在部署后设置了 root 用户的密码，需要配置一个拥�
   GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
   ```
 
-其中，${DB_ADMIN_USER} 为新创建的用户名。  
-新建用户，设置密码，以及赋予权限详细使用，请参考官方文档 [CREATE-USER](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) 部分。
+  其中，${DB_ADMIN_USER} 为新创建的用户名。  
+  新建用户，设置密码，以及赋予权限详细使用，请参考官方文档 [CREATE-USER](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) 部分。
 
 3. 配置 DorisCluster 资源
 
@@ -767,4 +766,6 @@ Doris 集群在部署后设置了 root 用户的密码，需要配置一个拥�
 :::tip 提示
 - 部署后设置 root 密码，并配置新的拥有管理节点的用户名和密码后，会引起存量服务滚动重启一次。    
 :::
+
+
 

@@ -199,11 +199,11 @@ Please add `enable_fqdn_mode=true` in start config. If you want to use ip mode a
       heartbeat_service_port = 9050
       brpc_port = 8060
   ```
-When using the ConfigMap to mount BE startup configuration, the key corresponding to the configuration must be `be.conf`. Write the ConfigMap to a file and deploy it to the namespace where the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) is deployed, using the following command:
+  When using the ConfigMap to mount BE startup configuration, the key corresponding to the configuration must be `be.conf`. Write the ConfigMap to a file and deploy it to the namespace where the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) is deployed, using the following command:
   ```shell
   kubectl -n ${namespace} apply -f ${beConfigMapFile}.yaml
   ```
-${namespace} is the namespace to which the DorisCluster resource needs to be deployed, and ${beConfigMapFile} is the name of the configMap file used by BE.
+  ${namespace} is the namespace to which the DorisCluster resource needs to be deployed, and ${beConfigMapFile} is the name of the configMap file used by BE.
 
 2. Configuring DorisCluster Resource  
    When use the ConfigMap named by `be-conf` to mount startup configuration, add the following config to the BE spec of the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) to be deployed:
@@ -383,17 +383,17 @@ The returned result is as follows:
   doriscluster-sample-fe-service    ClusterIP   10.1.118.16   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   14m
   ```
 
-In the above results, there are two types of services for FE and BE, with suffixes of "internal" and "service" respectively:
+  In the above results, there are two types of services for FE and BE, with suffixes of "internal" and "service" respectively:
 - The services with the "internal" suffix can only be used for internal communication within Doris, such as heartbeat, data exchange, and other operations, and are not for external use.
 - The services with the "service" suffix can be used by users.
 
 3. Access Doris from Inside the Container
 
-You can create a pod containing the mysql client in the current Kubernetes cluster using the following command:
+  You can create a pod containing the mysql client in the current Kubernetes cluster using the following command:
   ```shell
   kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=doris -- /bin/bash
   ```
-From within the container in the cluster, you can access the Doris cluster using the service name with the "service" suffix that is exposed externally:
+  From within the container in the cluster, you can access the Doris cluster using the service name with the "service" suffix that is exposed externally:
 
   ```shell
   mysql -uroot -P9030 -hdoriscluster-sample-fe-service
@@ -408,13 +408,13 @@ If users need to access Doris from outside the Kubernetes cluster, they can choo
 
   If the port mapping is explicitly specified, Kubernetes will fixedly allocate that port when it is unused and there is no conflict.
 
-Static allocation requires planning the port mapping. Doris provides the following ports for interacting with the outside:
+  Static allocation requires planning the port mapping. Doris provides the following ports for interacting with the outside:
 
-| Port Name | default value | Port Description                     |
-|------| ---- |--------------------------|
-| Query Port | 9030 | Used to access the Doris cluster via the MySQL protocol |
-| HTTP Port | 8030 | The http server port on FE, used to view FE information |
-| Web Server Port | 8040 | The http server port on BE, used to view BE information |
+  | Port Name | default value | Port Description                     |
+  |------| ---- |--------------------------|
+  | Query Port | 9030 | Used to access the Doris cluster via the MySQL protocol |
+  | HTTP Port | 8030 | The http server port on FE, used to view FE information |
+  | Web Server Port | 8040 | The http server port on BE, used to view BE information |
 
 1. Configure NodePort
 
@@ -461,7 +461,7 @@ Static allocation requires planning the port mapping. Doris provides the followi
   ```shell
   kubectl get service
   ```
-The returned result is as follows:
+  The returned result is as follows:
   ```shell
   NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                                       AGE
   kubernetes                        ClusterIP   10.152.183.1     <none>        443/TCP                                                       169d
@@ -475,7 +475,7 @@ The returned result is as follows:
   ```shell
   kubectl get nodes -owide
   ```
-The returned result is as follows:
+  The returned result is as follows:
   ```shell
   NAME   STATUS   ROLES           AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE          KERNEL-VERSION          CONTAINER-RUNTIME
   r60    Ready    control-plane   14d   v1.28.2   192.168.88.60   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
@@ -483,7 +483,7 @@ The returned result is as follows:
   r62    Ready    <none>          14d   v1.28.2   192.168.88.62   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
   r63    Ready    <none>          14d   v1.28.2   192.168.88.63   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
   ```
-In the NodePort mode, you can access the services within the Kubernetes cluster based on the host IP of any node and the port mapping. In this example, you can use the IP of any node, such as 192.168.88.61, 192.168.88.62, or 192.168.88.63, to access the Doris service. For example, in the following, the node 192.168.88.62 and the mapped query port 31545 are used to access the cluster:
+  In the NodePort mode, you can access the services within the Kubernetes cluster based on the host IP of any node and the port mapping. In this example, you can use the IP of any node, such as 192.168.88.61, 192.168.88.62, or 192.168.88.63, to access the Doris service. For example, in the following, the node 192.168.88.62 and the mapped query port 31545 are used to access the cluster:
   ```shell
   mysql -h 192.168.88.62 -P 31545 -uroot
   ```
@@ -498,7 +498,7 @@ In the NodePort mode, you can access the services within the Kubernetes cluster 
       service:
         type: LoadBalancer
   ```
-**BE LoadBalancer**
+  **BE LoadBalancer**
   ```yaml
   spec:
     beSpec:
@@ -510,7 +510,7 @@ In the NodePort mode, you can access the services within the Kubernetes cluster 
   ```shell
   kubectl get service
   ```
-The returned result is as follows:
+  The returned result is as follows:
   ```shell
   NAME                              TYPE           CLUSTER-IP       EXTERNAL-IP                                                                     PORT(S)                                                       AGE
   kubernetes                        ClusterIP      10.152.183.1     <none>                                                                          443/TCP                                                       169d
@@ -521,7 +521,7 @@ The returned result is as follows:
   ```
 
 3. Access Using the LoadBalancer Mode  
-   Taking the mysql connection as an example:
+  Taking the mysql connection as an example:
   ```shell
   mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 31545 -uroot
   ```
@@ -541,9 +541,9 @@ Doris supports configuring the root user's password in encrypted form in `fe.con
 
 1. **Generate the Root Encrypted Password**
 
-Doris supports setting the root user's password in the [fe.conf](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password) in encrypted form. The password encryption is implemented using two-stage SHA-1 encryption. The code implementation is as follows:
+  Doris supports setting the root user's password in the [fe.conf](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password) in encrypted form. The password encryption is implemented using two-stage SHA-1 encryption. The code implementation is as follows:
 
-Java Code for Two-Stage SHA-2 Encryption:
+  Java Code for Two-Stage SHA-2 Encryption:
 
   ```java
   import org.apache.commons.codec.digest.DigestUtils;
@@ -557,7 +557,7 @@ Java Code for Two-Stage SHA-2 Encryption:
     }
   ```
 
-Golang Code for Two-Stage SHA-1 Encryption:
+  Golang Code for Two-Stage SHA-1 Encryption:
 
   ```go
   import (
@@ -585,15 +585,15 @@ Golang Code for Two-Stage SHA-1 Encryption:
       fmt.Println("*"+tes)
   }
   ```
-Configure the encrypted password into `fe.conf` according to the requirements of the configuration file format. Then, distribute the configuration file to the K8s cluster in the form of a configmap according to the introduction in [the Cluster Parameter Configuration Section](./install-config-cluster.md).
+  Configure the encrypted password into `fe.conf` according to the requirements of the configuration file format. Then, distribute the configuration file to the K8s cluster in the form of a configmap according to the introduction in [the Cluster Parameter Configuration Section](./install-config-cluster.md).
 
 2. **Configure the DorisCluster Resource**
 
-After setting the root initialization password in the configuration file, the root password will take effect immediately after the first Doris FE node starts. When other nodes join the cluster, Doris Operator needs to operate using the root username + password. It is necessary to specify the username + password in the deployed DorisCluster resource so that Doris Operator can automatically manage the cluster nodes.
+  After setting the root initialization password in the configuration file, the root password will take effect immediately after the first Doris FE node starts. When other nodes join the cluster, Doris Operator needs to operate using the root username + password. It is necessary to specify the username + password in the deployed DorisCluster resource so that Doris Operator can automatically manage the cluster nodes.
 
-**Using Environment Variables**
+  **Using Environment Variables**
 
-Configure the username root and password into the ".spec.adminUser.name" and ".spec.adminUser.password" fields in the DorisCluster resource. Doris Operator will automatically convert the following configuration into environment variables for the container to use. The auxiliary services inside the container will use the username and password configured by the environment variables to add themselves to the specified cluster. The configuration format is as follows:
+  Configure the username root and password into the ".spec.adminUser.name" and ".spec.adminUser.password" fields in the DorisCluster resource. Doris Operator will automatically convert the following configuration into environment variables for the container to use. The auxiliary services inside the container will use the username and password configured by the environment variables to add themselves to the specified cluster. The configuration format is as follows:
 
   ```yaml
   spec:
@@ -601,15 +601,15 @@ Configure the username root and password into the ".spec.adminUser.name" and ".s
       name: root
       password: ${password}
   ```
-Here, ${password} is the unencrypted password of root.
+  Here, ${password} is the unencrypted password of root.
 
-**Using Secret:**
+  **Using Secret:**
 
-Doris Operator provides the use of [Basic authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) to specify the username and password of the management node. After the DorisCluster resource is configured to use the required Secret, Doris Operator will automatically mount the Secret to the specified location of the container in the form of a file. The auxiliary services of the container will parse the username and password from the file to automatically add themselves to the specified cluster. The stringData of basic-authentication-secret only contains two fields: username and password. The process of using Secret to configure the management username and password is as follows:
+  Doris Operator provides the use of [Basic authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) to specify the username and password of the management node. After the DorisCluster resource is configured to use the required Secret, Doris Operator will automatically mount the Secret to the specified location of the container in the form of a file. The auxiliary services of the container will parse the username and password from the file to automatically add themselves to the specified cluster. The stringData of basic-authentication-secret only contains two fields: username and password. The process of using Secret to configure the management username and password is as follows:
 
-a. Configure the Required Secret
+  a. Configure the Required Secret
 
-Configure the required Basic authentication Secret according to the following format:
+  Configure the required Basic authentication Secret according to the following format:
 
   ```yaml
   stringData:
@@ -617,18 +617,18 @@ Configure the required Basic authentication Secret according to the following fo
     password: ${password}
   ```
 
-Here, ${password} is the unencrypted password set for root.
+  Here, ${password} is the unencrypted password set for root.
 
-b. Configure the DorisCluster Resource to be Deployed
+  b. Configure the DorisCluster Resource to be Deployed
 
-Configure the DorisCluster to specify the required Secret in the following format:
+  Configure the DorisCluster to specify the required Secret in the following format:
 
   ```yaml
   spec:
     authSecret: ${secretName}
   ```
 
-Here, ${secretName} is the name of the Secret containing the root username and password.
+  Here, ${secretName} is the name of the Secret containing the root username and password.
 
 ### Automatically Creating Non-Root Management Users and Passwords during Deployment (Recommended)
 
@@ -683,30 +683,30 @@ After the Doris cluster is deployed and the root user's password is set, it is n
 
 1. **Create a User with Node_priv Permission**
 
-After connecting to the database using the MySQL protocol, use the following command to create a simple user with only Node_priv permission and set the password.
+  After connecting to the database using the MySQL protocol, use the following command to create a simple user with only Node_priv permission and set the password.
 
   ```shell
   CREATE USER '${DB_ADMIN_USER}' IDENTIFIED BY '${DB_ADMIN_PASSWD}';
   ```
 
-Here, ${DB_ADMIN_USER} is the username you hope to create, and ${DB_ADMIN_PASSWD} is the password you hope to set for the newly created user.
+  Here, ${DB_ADMIN_USER} is the username you hope to create, and ${DB_ADMIN_PASSWD} is the password you hope to set for the newly created user.
 
 2. **Grant Node_priv Permission to the Newly Created User**
 
-After connecting to the database using the MySQL protocol, use the following command to grant Node_priv permission to the newly created user.
+  After connecting to the database using the MySQL protocol, use the following command to grant Node_priv permission to the newly created user.
 
   ```shell
   GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
   ```
 
-Here, ${DB_ADMIN_USER} is the newly created username.
+  Here, ${DB_ADMIN_USER} is the newly created username.
 
-For detailed usage of creating users, setting passwords, and granting permissions, please refer to the official document [CREATE-USER](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) section.
+  For detailed usage of creating users, setting passwords, and granting permissions, please refer to the official document [CREATE-USER](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) section.
 
 3. **Configure DorisCluster**  
    **Using Environment Variables**
 
-Configure the newly created username and password into the ".spec.adminUser.name" and ".spec.adminUser.password" fields in the DorisCluster resource. Doris Operator will automatically convert the following configuration into environment variables. The auxiliary services inside the container will use the username and password configured by the environment variables to add themselves to the specified cluster. The configuration format is as follows:
+  Configure the newly created username and password into the ".spec.adminUser.name" and ".spec.adminUser.password" fields in the DorisCluster resource. Doris Operator will automatically convert the following configuration into environment variables. The auxiliary services inside the container will use the username and password configured by the environment variables to add themselves to the specified cluster. The configuration format is as follows:
 
   ```yaml
   spec:
@@ -715,13 +715,13 @@ Configure the newly created username and password into the ".spec.adminUser.name
       password: ${DB_ADMIN_PASSWD}
   ```
 
-Here, ${DB_ADMIN_USER} is the newly created username, and ${DB_ADIC_PASSWD} is the password set for the newly created user.
+  Here, ${DB_ADMIN_USER} is the newly created username, and ${DB_ADIC_PASSWD} is the password set for the newly created user.
 
-**Using Secret**
+  **Using Secret**
 
-a. Configure the Required Secret
+  a. Configure the Required Secret
 
-Configure the required Basic authentication Secret according to the following format:
+  Configure the required Basic authentication Secret according to the following format:
 
   ```yaml
   stringData:
@@ -729,18 +729,18 @@ Configure the required Basic authentication Secret according to the following fo
     password: ${DB_ADMIN_PASSWD}
   ```
 
-Here, ${DB_ADMIN_USER} is the newly created username, and ${DB_ADMIN_PASSWD} is the password set for the newly created username.  
-Deploy the configured Secret to the K8s cluster by running kubectl -n ${namespace} apply -f ${secretFileName}.yaml. Here, ${namespace} is the namespace where the DorisCluster resource needs to be deployed, and ${secretFileName} is the file name of the Secret to be deployed.
+  Here, ${DB_ADMIN_USER} is the newly created username, and ${DB_ADMIN_PASSWD} is the password set for the newly created username.  
+  Deploy the configured Secret to the K8s cluster by running kubectl -n ${namespace} apply -f ${secretFileName}.yaml. Here, ${namespace} is the namespace where the DorisCluster resource needs to be deployed, and ${secretFileName} is the file name of the Secret to be deployed.
 
-b. Update the DorisCluster Resource Requiring Secret
+  b. Update the DorisCluster Resource Requiring Secret
 
-Update the DorisCluster resource according to the following format:
+  Update the DorisCluster resource according to the following format:
 
   ```yaml
   spec:
     authSecret: ${secretName}
   ```
-Here, ${secretName} is the name of the deployed Basic authentication Secret.
+  Here, ${secretName} is the name of the deployed Basic authentication Secret.
 
 :::tip Tip  
 After setting the root password and configuring the new username and password for managing nodes after deployment, the existing services will be restarted once in a rolling manner.  
