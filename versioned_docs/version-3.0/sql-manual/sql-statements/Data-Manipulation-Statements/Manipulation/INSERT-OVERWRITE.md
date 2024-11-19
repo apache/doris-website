@@ -81,7 +81,7 @@ If the target table of the INSERT OVERWRITE is an autopartitioned table, the beh
 2. If an overwrite PARTITION is specified, the AUTO PARTITION table behaves as a normal partitioned table during this process, and data that does not satisfy the conditions of an existing partition is filtered instead of creating a new partition.
 3. If you specify PARTITION as `partition(*)` (auto detect partition and overwrite), when `enable_auto_create_when_overwrite` is `true`, for the data that have corresponding partitions in the table, overwrite their corresponding partitions, and leave the other existing partitions unchanged. At the same time, for data without corresponding partitions, create partitions according to the table's auto-partitioning rules, and accommodate the data without corresponding partitions. If `enable_auto_create_when_overwrite` is `false`, data for which no partition is found will accumulate error rows until it fails.
 
-`enable_auto_create_when_overwrite` was introduced since 3.0.1. In versions without `enable_auto_create_when_overwrite`, the behaviour is as if the variable had a value of `false`.
+`enable_auto_create_when_overwrite` was introduced since 3.0.3. In versions without `enable_auto_create_when_overwrite`, the behaviour is as if the variable had a value of `false`.
 
 Examples are shown below:
 
