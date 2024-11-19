@@ -24,13 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## auto_partition_name
-
 :::tip 提示
 该功能自 Apache Doris 2.1.6 版本起支持
 :::
-
-auto_partition_name
 
 ### Description
 #### Syntax
@@ -118,6 +114,6 @@ mysql> select auto_partition_name('list', "你好");
 +------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     AUTO_PARTITION_NAME,AUTO,PARTITION,NAME
