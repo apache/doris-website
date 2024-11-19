@@ -376,7 +376,7 @@ public class UDTFStringTest {
 
 Currently, in Doris, executing a UDF function, e.g., `select udf(col) from table`, will load the udf.jar package for each concurrent instance, and unload the udf.jar package when the instance ends. If the udf.jar file needs to load a file of several hundred MBs, the memory usage will increase sharply due to concurrency, potentially leading to OOM (Out of Memory).
 
-Solution 1: The solution is to split the resource loading code, generate a separate jar package, and have other packages directly reference this resource jar package.
+**Solution 1: The solution is to split the resource loading code, generate a separate jar package, and have other packages directly reference this resource jar package.**
 
 Assume the files have been split into DictLibrary and FunctionUdf.
 
@@ -448,7 +448,7 @@ cache is supported starting from Doris version 3.0.
 :::
 
 
-Solution 2: Global Cache for JAR Files with Custom Expiration
+**Solution 2: Global Cache for JAR Files with Custom Expiration**
 
 In this solution, a global cache is implemented for JAR files with a customizable expiration policy. When creating the function, two additional attributes are introduced:
 
@@ -458,17 +458,17 @@ If the static cache loading method is used, upon the first invocation of the UDF
 
 In the background, a thread regularly checks the cache, and if a cached UDF has not been called within the configured expiration time, it will be evicted from the cache.
 
-    ```sql
-        CREATE FUNCTION print_12() RETURNS int 
-        PROPERTIES (
-            "file" = "file:///mnt/ava-udf-demo-jar-with-dependencies.jar",
-            "symbol" = "org.apache.doris.udf.AddOne", 
-            "always_nullable"="true",
-            "type" = "JAVA_UDF",
-            "static_load" = "true", // default value is false
-            "expiration_time" = "60" // default value is 360 minutes
-        );
-    ```
+```sql
+    CREATE FUNCTION print_12() RETURNS int 
+    PROPERTIES (
+        "file" = "file:///mnt/ava-udf-demo-jar-with-dependencies.jar",
+        "symbol" = "org.apache.doris.udf.AddOne", 
+        "always_nullable"="true",
+        "type" = "JAVA_UDF",
+        "static_load" = "true", // default value is false
+        "expiration_time" = "60" // default value is 360 minutes
+    );
+```
 
 ## Usage Notes
 
