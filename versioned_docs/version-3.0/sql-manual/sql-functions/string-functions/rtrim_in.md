@@ -36,7 +36,7 @@ When there is no rhs parameter, remove the spaces that appear consecutively in t
 
 
 
-## Example
+## Examples
 
 ```sql
 mysql> SELECT rtrim_in('ab d   ') str;
