@@ -38,39 +38,39 @@ Doris Operator 可直接通过下发资源的方式部署，也可以使用 helm
 #### 下发 Doris Operator 资源定义
 Doris Operator 使用自定义资源定义（Custom Resource Definition, CRD）扩展 Kubernetes。Doris Cluster 的 CRD 中封装了对 Doris 对象的描述，例如对 FE 或 BE 的描述，详细内容可以参考 [doris-operator-api](https://github.com/apache/doris-operator/blob/master/doc/api.md)。在部署 Doris 前，需要先创建 Doris Cluster 的 CRD。
 
-通过以下命令可以在 Kubernetes 环境中部署 Doris Cluster CRD：
+1. 执行以下命令部署 Doris Cluster CRD：
 
-```shell
-kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
-```
-以下是期望输出结果：
+  ```shell
+  kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+  ```
+  预期输出：
+  
+  ```shell
+  customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
+  ```
 
-```shell
-customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
-```
+2. 验证 CRD 是否创建成功：
 
-在创建了 Doris Cluster CRD 后，可以通过以下命令查看创建的 CRD。
-
-```shell
-kubectl get crd | grep doris
-```
-
-以下为期望输出结果：
-
-```shell
-dorisclusters.doris.selectdb.com                      2024-02-22T16:23:13Z
-```
+  ```shell
+  kubectl get crd | grep doris
+  ```
+  
+  预期输出：
+  
+  ```shell
+  dorisclusters.doris.selectdb.com                      2024-02-22T16:23:13Z
+  ```
 
 #### 部署 Doris Operator
 Doris Operator 仓库中提供了部署 Doris Operator 模板，在可访问 [Doris Operator 仓库](https://github.com/apache/doris-operator)的环境下直接使用仓库模板部署。
 
-通过以下命令使用仓库中定义的默认配置部署 Doris Operator：
+通过以下命令使用使用官方模板安装 Doris Operator：
 
 ```shell
 kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
 ```
 
-以下为期望输出结果：
+预期输出：
 
 ```shell
 namespace/doris created
@@ -82,34 +82,35 @@ serviceaccount/doris-operator created
 deployment.apps/doris-operator created
 ```
 
-#### 检查 Doris Operator 状态
+#### 检查 Doris Operator 部署状态
 
-通过 `kubectl get pods` 命令查看 Doris Operator 的 Pod 部署状态。当 Doris Operator 的 Pod 处于 Running 状态且 Pod 内所有容器都已经就绪，即部署成功。通常情况下 Doris Operator 只需要部署一个，使用默认资源时，Doris Operator 会部署到 `doris` 命名空间。
+通过 `kubectl get pods` 命令查看 Doris Operator 的 Pod 部署状态。当 Doris Operator 的 Pod 处于 Running 状态且 Pod 内所有容器都已经就绪，即部署成功。在默认配置下，Doris Operator 部署为单实例，并默认安装在 `doris` 命名空间。
 
 ```shell
 kubectl get pod --namespace doris
 ```
 
-返回结果如下：
+预期结果：
 
 ```shell
 NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 ```
 
-### 环境与 github 网络隔离
-部署环境如果与 github 存在网络隔离，请预先在一台与 github 网络连通的机器上将部署的资源下载，并传到部署机器。
+### 在网络隔离环境中部署
+如果部署环境无法直接访问 GitHub 或 Docker Hub，需要在联网环境中准备必要文件和镜像，并传输到目标环境。
 
 #### 下发 Doris Operator 资源定义
 1. 在与 github 不存在网络隔离的机器上，使用如下命令下载资源定义：
   ```shell
   wget https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
   ```
-2. 在可使用 kubectl 命令机器上，使用如下命令下发资源定义：
+  将下载的资源定义文件传递到目标环境。  
+2. 在目标环境中，使用如下命令下发资源定义：
   ```shell
   kubectl create -f ./doris.selectdb.com_dorisclusters.yaml
   ```
-  以下是期望输出结果：
+  预期结果：
   
   ```shell
   customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
@@ -117,13 +118,10 @@ doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 
 3. 查看资源定义是否下发成功:  
   在创建了 Doris Cluster CRD 后，可以通过以下命令查看创建的 CRD。
-  
   ```shell
   kubectl get crd | grep doris
   ```
-  
   以下为期望输出结果：
-  
   ```shell
   dorisclusters.doris.selectdb.com                      2024-02-22T16:23:13Z
   ```
@@ -131,11 +129,11 @@ doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 #### 部署 Doris Operator 及其权限规则
 如果部署环境不能拉取 [Doris Operator 镜像](https://hub.docker.com/repository/docker/selectdb/doris.k8s-operator/general)，请预先拉取 image 并传到私有仓库，详细使用请参考文档 [Moving docker images from one container registry to another](https://medium.com/@pjbgf/moving-docker-images-from-one-container-registry-to-another-2f1f1631dc49) 。
 
-1. 获取部署模板样例。  
+1. 获取部署模板：  
   ```shell
   wget https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
   ```
-2. 更新部署的 image。
+2. 修改模板中的镜像地址为私有仓库地址：
   将部署样例中的 image 替换成预先上传的私有仓库的 Doris Operator image 地址:
   ```yaml
   spec:
@@ -153,11 +151,11 @@ doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
           - "ALL"
   ```
   部署样例中，默认的 image 为上述展示的 `selectdb/doris.k8s-operator:latest` 。使用时请将其替换成私有仓库存放的地址。  
-3. 使用如下命令部署 Doris Operator 及其依赖权限规则。  
+3. 使用如下命令部署：  
   ```shell
   kubectl apply -f ./operator.yaml
   ```
-  以下为期望输出结果：
+  预期结果：
   ```shell
   namespace/doris created
   role.rbac.authorization.k8s.io/leader-election-role created
@@ -168,7 +166,7 @@ doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
   deployment.apps/doris-operator created
   ```
 4. 检查 Doris Operator 部署状态  
-  通过 `kubectl get pods` 命令查看 Doris Operator 的 Pod 部署状态。当 Doris Operator 的 Pod 处于 Running 状态且 Pod 内所有容器都已经就绪，即部署成功。通常情况下 Doris Operator 只需要部署一个，使用默认资源时，Doris Operator 会部署到 `doris` 命名空间。
+  通过 `kubectl get pods` 命令查看 Doris Operator 的 Pod 部署状态。当 Doris Operator 的 Pod 处于 Running 状态且 Pod 内所有容器都已经就绪，即部署成功。在默认配置下，Doris Operator 部署为单实例，并默认安装在 `doris` 命名空间。
   
   ```shell
   kubectl get pod --namespace doris
@@ -181,43 +179,37 @@ doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
   ```
 
 ## Helm 部署
-Helm Chart 是一系列描述 Kubernetes 相关资源的 YAML 文件的封装。通过 Helm 部署应用时，你可以自定义应用的元数据，以便于分发应用。Chart 是 Helm 的软件包，采用 TAR 格式，用于部署 Kubernetes 原生应用程序。通过 Helm Chart 可以简化部署 Doris 集群的流程。
+Helm Chart 是一系列描述 Kubernetes 相关资源的 YAML 文件的封装。Helm Chart 的核心价值在于通过模板化配置简化应用程序部署的复杂性，并支持版本控制和易于更新。
 
 ### 添加 Helm Chart 仓库
-通过 `repo add` 命令添加远程仓库。
+1. 添加 Doris Helm Chart 仓库：
 
-```shell
-helm repo add doris-repo https://charts.selectdb.com
-```
-
-通过 `repo update` 命令更新最新版本的 Chart 。
-
-```shell
-helm repo update doris-repo
-```
+  ```shell
+  helm repo add doris-repo https://charts.selectdb.com
+  ```
+2. 更新 Chart 仓库：
+  ```shell
+  helm repo update doris-repo
+  ```
 
 ### 安装 Doris Operator
 
-1. 通过 `helm install` 命令可以使用默认配置在 Doris 的 Namespace 中安装 Doris Operator
-
+1. 通过 `helm install` 命令使用默认配置安装 Doris Operator：
   ```shell
   helm install operator doris-repo/doris-operator
   ```
-
   如果需要自定义装配 [values.yaml](https://artifacthub.io/packages/helm/doris/doris-operator?modal=values) ，可以参考如下命令：
-
   ```shell
   helm install -f values.yaml operator doris-repo/doris-operator
   ```
 
-2. 通过 `kubectl get pods` 命令查看 Pod 的部署状态。    
+2. 通过 `kubectl get pods` 命令查看 Pod 的部署状态:    
   当 Doris Operator 的 Pod 处于 Running 状态且 Pod 内所有容器都已经就绪，即部署成功。
-
   ```shell
   kubectl get pod --namespace doris
   ```
 
-  返回结果如下：
+  预期结果：
 
   ```shell
   NAME                              READY   STATUS    RESTARTS   AGE

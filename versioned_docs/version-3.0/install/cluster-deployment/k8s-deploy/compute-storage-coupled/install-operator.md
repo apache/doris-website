@@ -30,29 +30,29 @@ The deployment involves the following steps:
 2. Deploy the Operator and RBAC rules.  
 3. Verify the deployment status.
 
-## Directly use resources
+## Directly use resources deploying
 
-### Non-network-isolated from github
+###  Environment with gitHub access
 If your environment has access to [Doris Operator repo](https://github.com/apache/doris-operator), you can deploy Doris Operator directly using the resources defined in the Doris Operator repository. 
 
-#### Add doris operator resource definitions
+#### Applying doris operator resource definitions
 Doris Operator uses Custom Resource Definitions (CRDs) to extend Kubernetes. The Doris Cluster CRD encapsulates the descriptions of Doris objects, such as Frontend (FE) and Backend (BE) components. For detailed information, refer to the doris-operator-api. Before deploying Doris, the Doris Cluster CRD must be created.  
-Run the following command to deploy the Doris Cluster CRD in your Kubernetes environment:
-```shell
-kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
-```
-Expected output:
-```shell
-customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
-```
-To confirm that the CRD has been created:
-```shell
-kubectl get crd | grep doris
-```
-Expected output:
-```shell
-dorisclusters.doris.selectdb.com                      2024-02-22T16:23:13Z
-```
+1. Run the following command to deploy the Doris Cluster CRD in your Kubernetes environment:
+  ```shell
+  kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+  ```
+  Expected output:
+  ```shell
+  customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
+  ```
+2. Verify that the CRD has been successfully created:
+  ```shell
+  kubectl get crd | grep doris
+  ```
+  Expected output:
+  ```shell
+  dorisclusters.doris.selectdb.com                      2024-02-22T16:23:13Z
+  ```
 
 #### Deploy doris operator
 The Doris Operator repository provides a deployment template. If your environment can access the Doris Operator repository, please use this template to deploy the Operator.
@@ -71,8 +71,8 @@ serviceaccount/doris-operator created
 deployment.apps/doris-operator created
 ```
 
-#### Check doris operator status
-To check the deployment status of Doris Operator:
+#### Verifying doris operator deployment
+Use the kubectl get pods command to check the status of the Doris Operator's pods. The deployment is successful if the pod is in the Running state and all containers are ready. By default, Doris Operator is deployed as a single instance in the doris namespace.  
 ```shell
 kubectl get pod --namespace doris
 ```
@@ -82,8 +82,8 @@ NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 ```
 
-### Network-isolated from github
-If your deployment environment is isolated from GitHub, download the necessary resources on a machine with GitHub access, then transfer them to the target environment.  
+### Deploying in an Isolated Network
+If the deployment environment cannot access GitHub or Docker Hub, prepare the required files and images in a connected environment and transfer them to the target environment.  
 
 #### Apply doris operator resource definitions
 1. On a machine with GitHub access, download the resource definitions:
@@ -113,7 +113,7 @@ If the environment cannot pull the [Doris Operator image](https://hub.docker.com
   ```shell
   wget https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
   ```
-2. Update the image reference: Replace the default image (selectdb/doris.k8s-operator:latest) in the deployment template with the private registry address:
+2. Update the image reference in the deployment template with the private registry:
   ```yaml
   spec:
     containers:
@@ -121,7 +121,7 @@ If the environment cannot pull the [Doris Operator image](https://hub.docker.com
       - /dorisoperator
       args:
       - --leader-elect
-      image: private.registry.com/doris.k8s-operator:latest
+      image: selectdb/doris.k8s-operator:latest
       name: dorisoperator
       securityContext:
         allowPrivilegeEscalation: false
@@ -129,7 +129,8 @@ If the environment cannot pull the [Doris Operator image](https://hub.docker.com
           drop:
           - "ALL"
   ```
-3. Apply the deployment:
+  Replace selectdb/doris.k8s-operator:latest with the address of your private registry.  
+3. Deploy Doris Operator using the updated template:
   ```shell
   kubectl apply -f ./operator.yaml
   ```
@@ -153,8 +154,8 @@ If the environment cannot pull the [Doris Operator image](https://hub.docker.com
   doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
   ```
 
-## Use helm to deploy
-Helm Charts are collections of YAML files describing Kubernetes resources. By using Helm, you can easily customize and deploy applications. A Chart is a Helm package (in TAR format) used for deploying Kubernetes-native applications, simplifying the process of deploying Doris clusters.
+## Deploy using helm
+Helm Charts are packaged YAML files used to manage Kubernetes resources. They simplify application deployment, support version control, and make updates easier.
 
 ### Add the helm chart repo
 1. Add the Doris Helm repository:
@@ -171,11 +172,11 @@ Helm Charts are collections of YAML files describing Kubernetes resources. By us
   ```shell
   helm install operator doris-repo/doris-operator
   ```
-  To customize the deployment, create and specify a values.yaml file:
+  If custom configurations are needed, refer to the values.yaml file and run:
   ```shell
   helm install -f values.yaml operator doris-repo/doris-operator
   ```
-2. Verify the deployment:
+2. Verify the deployment status:
   ```shell
   kubectl get pods --namespace doris
   ```
