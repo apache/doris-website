@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_cum_sum
+## Array_cum_sum
 
 <version since="1.2.3">
 
@@ -30,7 +30,7 @@ array_cum_sum
 
 </version>
 
-### description
+### Description
 
 返回数组的累计和。数组中的`NULL`值会被跳过，并在结果数组的相同位置设置`NULL`。
 
@@ -40,11 +40,11 @@ array_cum_sum
 Array<T> array_cum_sum(Array<T>)
 ```
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```shell
 mysql> create table array_type_table(k1 INT, k2 Array<int>) duplicate key (k1) distributed by hash(k1) buckets 1 properties('replication_num' = '1');
@@ -63,6 +63,6 @@ mysql> select k2, array_cum_sum(k2) from array_type_table;
 Time: 0.122s
 ```
 
-### keywords
+### Keywords
 
 ARRAY,CUM_SUM,ARRAY_CUM_SUM

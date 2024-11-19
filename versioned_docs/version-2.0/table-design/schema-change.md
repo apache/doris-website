@@ -97,7 +97,7 @@ ALTER TABLE table_name ADD COLUMN column_name column_type [KEY | agg_type] [DEFA
 
 ### Examples
 
-#### non-aggregate model
+#### Non-aggregate model
 
 table's DDL:
 ```sql
@@ -133,7 +133,7 @@ ADD COLUMN new_col INT DEFAULT "0" AFTER col1
 TO example_rollup_index;
 ```
 
-#### aggregate model
+#### Aggregate model
 
 table's DDL:
 ```sql

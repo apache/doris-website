@@ -23,15 +23,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-## bit_shift_right
-### description
-#### syntax
+## Bit_shift_right
+### Description
+#### Syntax
 
 `BIT_SHIFT_RIGHT(BIGINT x, TINYINT c)`
 
 返回对 BIGINT 类型 x 进行逻辑右移 c 位的结果。
 
-### example
+### Example
 Normal case
 ```sql
 select 1024 as x, number as c, bit_shift_right(1024, number) as bit_shift_right from numbers("number"="5")
@@ -73,6 +73,6 @@ select bit_shift_right(100, -1)
 1 row in set (0.04 sec)
 ```
 
-### keywords
+### Keywords
 
     BITSHIFT, BITSHIFTRIGHT

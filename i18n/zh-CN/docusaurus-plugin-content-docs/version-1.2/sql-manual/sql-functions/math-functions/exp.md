@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## exp
+## Exp
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE exp(DOUBLE x)`
@@ -34,7 +34,7 @@ under the License.
 该函数的另一个别名为 `dexp`。
 :::
 
-### example
+### Example
 
 ```
 mysql> select exp(2);
@@ -51,5 +51,5 @@ mysql> select exp(3.4);
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	EXP, DEXP

@@ -26,7 +26,7 @@ under the License.
 
 Apache Doris cluster has multiple built-in system databases to store metadata information about the Doris system itself.
 
-### information_schema
+### Information_schema
 
 All tables under the `information_schema` database are virtual tables and do not have physical entities. These system tables contain metadata about the Doris cluster and all its database objects, including databases, tables, columns, permissions, etc. They also include functional status information like Workload Group, Task, etc.
 
@@ -36,7 +36,7 @@ All tables in the `information_schema` database are read-only, and users cannot 
 
 By default, all users have read permissions for all tables in this database, but the query results will vary based on the user's actual permission. For example, if User A only has permissions for `db1.table1`, querying the `information_schema.tables` table will only return information related to `db1.table1`.
 
-### mysql
+### Mysql
 
 All tables under the `mysql` database are virtual tables and do not have physical entities. These system tables contain information such as permissions and are mainly used for MySQL ecosystem compatibility.
 

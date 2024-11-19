@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## l1_distance
+## L1_distance
 
-### description
+### Description
 #### Syntax
 
 ```sql
@@ -38,7 +38,7 @@ DOUBLE l1_distance(ARRAY<T> array1, ARRAY<T> array2)
 * 输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE
 * 输入数组array1和array2，元素数量需保持一致
 
-### example
+### Example
 
 ```
 sql> SELECT l1_distance([1, 2], [2, 3]);
@@ -49,5 +49,5 @@ sql> SELECT l1_distance([1, 2], [2, 3]);
 +---------------------------------------+
 ```
 
-### keywords
+### Keywords
 	L1_DISTANCE,DISTANCE,L1,ARRAY

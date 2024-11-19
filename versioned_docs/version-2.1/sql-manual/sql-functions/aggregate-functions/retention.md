@@ -51,7 +51,7 @@ An array of 1s and 0s with a maximum length of 32 bits, the final output array h
 
 0 — Condition wasn’t met for the event.
 
-### example
+### Example
 
 ```sql
 DROP TABLE IF EXISTS retention_test;
@@ -136,6 +136,6 @@ SELECT
 
 ```
 
-### keywords
+### Keywords
 
 RETENTION

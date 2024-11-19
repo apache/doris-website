@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## days_diff
-### description
+## Days_diff
+### Description
 #### Syntax
 
 `INT days_diff(DATETIME enddate, DATETIME startdate)`
 
 开始时间到结束时间相差几天，对日期的判断精确到秒，并向下取整数。
 区别于date_diff，datediff函数对日期的判断精确到天。
-### example
+### Example
 
 ```
 mysql> select days_diff('2020-12-25 22:00:00','2020-12-24 22:00:00');
@@ -50,6 +50,6 @@ mysql> select days_diff('2020-12-25 22:00:00','2020-12-24 22:00:01');
 +---------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     days_diff

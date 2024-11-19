@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## local
+## Local
 
 ### Name
 
@@ -36,7 +36,7 @@ Local table-valued-function(tvf), allows users to read and access local file con
 
 It needs `ADMIN` privilege to use.
 
-#### syntax
+#### Syntax
 
 ```sql
 local(

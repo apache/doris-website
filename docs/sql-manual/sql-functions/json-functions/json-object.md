@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_object
+## Json_object
 ### Description
 #### Syntax
 
@@ -34,7 +34,7 @@ under the License.
 Generate a json object containing the specified Key-Value,
 an exception error is returned when Key is NULL or the number of parameters are odd.
 
-### example
+### Example
 
 ```
 MySQL> select json_object();
@@ -67,5 +67,5 @@ MySQL> select json_object('username',null);
 | {"username": NULL}              |
 +---------------------------------+
 ```
-### keywords
+### Keywords
 json,object,json_object

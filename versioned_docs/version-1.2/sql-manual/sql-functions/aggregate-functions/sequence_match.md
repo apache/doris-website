@@ -58,7 +58,7 @@ We define `t` as the difference in seconds between two times,  For example, patt
 
 0, if the pattern isn’t matched.
 
-### example
+### Example
 
 **match examples**
 
@@ -251,6 +251,6 @@ SELECT sequence_match('(?1)(?2)', date, number = 1, number = 5, number = 6) FROM
 +------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 SEQUENCE_MATCH

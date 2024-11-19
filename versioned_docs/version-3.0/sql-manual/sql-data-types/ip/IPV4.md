@@ -26,14 +26,14 @@ under the License.
 
 ## IPV4
 
-### description
+### Description
 
 IPv4 type, stored in the form of UInt32 in 4 bytes, used to represent IPv4 addresses.
 The range of values is ['0.0.0.0', '255.255.255.255'].
 
 `Inputs that exceed the value range or have invalid format will return NULL`
 
-### example
+### Example
 
 Create table example:
 
@@ -73,6 +73,6 @@ mysql> select * from ipv4_test order by id;
 +------+-----------------+
 ```
 
-### keywords
+### Keywords
 
 IPV4

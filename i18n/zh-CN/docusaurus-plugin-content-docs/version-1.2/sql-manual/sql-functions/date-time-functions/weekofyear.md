@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weekofyear
-### description
+## Weekofyear
+### Description
 #### Syntax
 
 `INT WEEKOFYEAR(DATETIME date)`
@@ -36,7 +36,7 @@ under the License.
 
 参数为Date或者Datetime类型
 
-### example
+### Example
 
 ```
 mysql> select weekofyear('2008-02-20 00:00:00');
@@ -47,6 +47,6 @@ mysql> select weekofyear('2008-02-20 00:00:00');
 +-----------------------------------+
 ```
 
-### keywords
+### Keywords
 
     WEEKOFYEAR

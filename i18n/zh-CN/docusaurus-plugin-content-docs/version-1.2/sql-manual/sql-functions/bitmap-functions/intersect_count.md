@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## intersect_count
-### description
+## Intersect_count
+### Description
 #### Syntax
 
 `BITMAP INTERSECT_COUNT(bitmap_column, column_to_filter, filter_values)`
 聚合函数，求bitmap交集大小的函数, 不要求数据分布正交
 第一个参数是Bitmap列，第二个参数是用来过滤的维度列，第三个参数是变长参数，含义是过滤维度列的不同取值
 
-### example
+### Example
 
 ```
 MySQL [test_query_qa]> select dt,bitmap_to_string(user_id) from pv_bitmap where dt in (3,4);
@@ -51,6 +51,6 @@ MySQL [test_query_qa]> select intersect_count(user_id,dt,3,4) from pv_bitmap;
 1 row in set (0.014 sec)
 ```
 
-### keywords
+### Keywords
 
     INTERSECT_COUNT,BITMAP

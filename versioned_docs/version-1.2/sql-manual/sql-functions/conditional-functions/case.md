@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## case
-### description
+## Case
+### Description
 #### Syntax
 
 ```
@@ -49,7 +49,7 @@ END
 
 Compare the expression with multiple possible values, and return the corresponding results when matching
 
-### example
+### Example
 
 ```
 mysql> select user_id, case user_id when 1 then 'user_id = 1' when 2 then 'user_id = 2' else 'user_id not exist' end test_case from test;
@@ -68,5 +68,5 @@ mysql> select user_id, case when user_id = 1 then 'user_id = 1' when user_id = 2
 | 2       | user_id = 2 |
 +---------+-------------+
 ```
-### keywords
+### Keywords
 CASE

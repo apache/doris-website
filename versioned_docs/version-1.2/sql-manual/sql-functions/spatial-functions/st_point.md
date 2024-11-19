@@ -34,7 +34,7 @@ under the License.
 Given the X coordinate value, the Y coordinate value returns the corresponding Point.
 The current value is meaningful only for spherical sets, and X/Y corresponds to longitude/latitude.
 
-### example
+### Example
 
 ```
 mysql> SELECT ST_AsText(ST_Point(24.7, 56.7));
@@ -44,5 +44,5 @@ mysql> SELECT ST_AsText(ST_Point(24.7, 56.7));
 | POINT (24.7 56.7)               |
 +---------------------------------+
 ```
-### keywords
+### Keywords
 ST_POINT,ST,POINT

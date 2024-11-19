@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## HLL_EMPTY
-### description
+### Description
 #### Syntax
 
 `HLL_EMPTY(value)`
 
 HLL_EMPTY returns a null value of type hll.
 
-### example
+### Example
 ```
 MySQL > select hll_cardinality(hll_empty());
 +------------------------------+
@@ -41,5 +41,5 @@ MySQL > select hll_cardinality(hll_empty());
 |                            0 |
 +------------------------------+
 ```
-### keywords
+### Keywords
 HLL,HLL_EMPTY

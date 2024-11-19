@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## tan
+## Tan
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE tan(DOUBLE x)`
 返回`x`的正切值，`x`为弧度值.
 
-### example
+### Example
 
 ```
 mysql> select tan(0);
@@ -47,5 +47,5 @@ mysql> select tan(1);
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	TAN

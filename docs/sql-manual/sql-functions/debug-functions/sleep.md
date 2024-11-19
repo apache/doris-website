@@ -24,20 +24,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sleep
+## Sleep
 
 :::warning Warning
 This function cannot be used in a production environment and will have serious implications.
 :::
 
-### description
+### Description
 #### Syntax
 
 `BOOLEAN sleep(INT num)`
 
 Sleeps the current session for `num` second(s)。
 
-### example
+### Example
 
 ```sql
 mysql> select sleep(10);
@@ -48,5 +48,5 @@ mysql> select sleep(10);
 +-----------+
 ```
 
-### keywords
+### Keywords
     sleep

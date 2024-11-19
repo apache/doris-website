@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_extract
+## Json_extract
 
-### description
+### Description
 
 #### Syntax
 
@@ -32,7 +32,7 @@ under the License.
 
 `json_extract` function returns data from a JSON document, selected from the parts of the document matched by the `path` arguments. Returns NULL if any argument is NULL or if the `json_str` argument is not a valid JSON document. If the `path` parameter is not a valid path (that is, the path does not appear in the JSON document), the corresponding item in the returned array is NULL (see example below)
 
-### example
+### Example
 
 ```
 mysql> SELECT json_extract('{"id": 123, "name": "doris"}', '$.id');
@@ -68,5 +68,5 @@ mysql> SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
 1 row in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 JSON, EXTRACT, JSON_EXTRACT

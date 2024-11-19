@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_valid
-### description
+## Json_valid
+### Description
 
 json_valid 函数返回0或1以表明是否为有效的JSON, 如果参数是NULL则返回NULL。
 
@@ -33,7 +33,7 @@ json_valid 函数返回0或1以表明是否为有效的JSON, 如果参数是NULL
 
 `JSONB json_valid(VARCHAR json_str)`
 
-### example
+### Example
 
 1. 正常JSON字符串
 
@@ -71,5 +71,5 @@ MySQL > select json_valid(NULL);
 1 row in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 JSON, VALID, JSON_VALID

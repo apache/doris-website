@@ -24,12 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_shuffle
+## Array_shuffle
 
 array_shuffle
 shuffle
 
-### description
+### Description
 
 #### Syntax
 
@@ -48,7 +48,7 @@ shuffle(array1);
 shuffle(array1, 0);
 ```
 
-### example
+### Example
 
 ```sql
 
@@ -76,6 +76,6 @@ MySQL [test]> select c_array1, array_shuffle(c_array1, 0) from array_test;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,ARRAY_SHUFFLE,SHUFFLE

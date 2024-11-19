@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sequence
+## Sequence
 
 
 
@@ -32,7 +32,7 @@ sequence
 
 
 
-### description
+### Description
 函数 array_range 的别称
 
 #### Syntax
@@ -54,11 +54,11 @@ ARRAY<Datetime> sequence(Datetime start_datetime, Datetime end_datetime, INTERVA
 UNIT 支持年/月/周/日/小时/分钟/秒。
 返回 start_datetime 和最接近 end_datetime 之间的 datetimev2 数组（按 Interval_step UNIT 计算）。
 
-### notice
+### Notice
 
 `如果第三个参数 step/interval_step 为负数或者零, 函数结果将为NULL`
 
-### example
+### Example
 
 ```
 mysql> select sequence(10);
@@ -97,6 +97,6 @@ mysql> select sequence(cast('2019-05-15 12:00:00' as datetimev2(0)), cast('2022-
 +------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, RANGE, SEQUENCE

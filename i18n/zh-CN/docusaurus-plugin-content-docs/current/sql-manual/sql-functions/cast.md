@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## CAST
-### description
+### Description
 #### Syntax
 
 `T cast (input as Type)`
 
 将 input 转成 指定的 Type类型
 
-### example
+### Example
 
 1. 转常量，或表中某列
 
@@ -90,5 +90,5 @@ mysql> select cast('2024-12-29-20:40:50.123499' as datetime(3));
 | 2024-12-29 20:40:50.123                             |
 +-----------------------------------------------------+
 ```
-### keywords
+### Keywords
 CAST

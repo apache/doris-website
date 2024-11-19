@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_count
-### description
+## Bit_count
+### Description
 #### Syntax
 
 `BIT_COUNT(Integer-type x)`
@@ -34,7 +34,7 @@ under the License.
 
 整型可以是：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
-### example
+### Example
 
 ```
 select "0b11111111", bit_count(-1)
@@ -47,6 +47,6 @@ select "0b11111111", bit_count(-1)
 +--------------+---------------+
 ```
 
-### keywords
+### Keywords
 
     BITCOUNT, BIT_COUNT

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## nullable
-### description
+## Nullable
+### Description
 
 :::tip
 仅供开发者调试用，请勿在生产环境手动调用该函数。
@@ -37,7 +37,7 @@ under the License.
 
 转换 `expr` 为 nullable 属性，若 `expr` 已经是 nullable 的，则为其本身。
 
-### example
+### Example
 
 ```sql
 mysql> select k1, nullable(k1), nullable(1) from test_nullable_functions order by k1;
@@ -52,5 +52,5 @@ mysql> select k1, nullable(k1), nullable(1) from test_nullable_functions order b
 +------+--------------+-------------+
 ```
 
-### keywords
+### Keywords
     nullable

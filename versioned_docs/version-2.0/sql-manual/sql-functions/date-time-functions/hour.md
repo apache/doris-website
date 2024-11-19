@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hour
-### description
+## Hour
+### Description
 #### Syntax
 
 `INT HOUR(DATETIME date)`
@@ -34,7 +34,7 @@ Returns hour information in the time type, ranging from 0,23
 
 The parameter is Date or Datetime type
 
-### example
+### Example
 
 ```
 mysql> select hour('2018-12-31 23:59:59');
@@ -44,5 +44,5 @@ mysql> select hour('2018-12-31 23:59:59');
 |                          23 |
 +-----------------------------+
 ```
-### keywords
+### Keywords
     HOUR

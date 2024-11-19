@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_range
+## Array_range
 
 array_range
 
-### description
+### Description
 
 #### Syntax
 
@@ -42,7 +42,7 @@ start default value is 0, and step default value is 1.
 Return the array which numbers from start to end - 1 by step.
 
 
-### example
+### Example
 
 ```
 mysql> select array_range(10);
@@ -67,6 +67,6 @@ mysql> select array_range(0,20,2);
 +-------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, RANGE, ARRAY_RANGE

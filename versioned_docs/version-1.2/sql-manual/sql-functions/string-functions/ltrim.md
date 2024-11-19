@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ltrim
+## Ltrim
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 When the 'rhs' parameter is not present, remove the continuous spaces that appear from the beginning of the 'str' parameter. Otherwise, remove 'rhs'.
 
-### example
+### Example
 
 ```
 mysql> SELECT ltrim('   ab d');
@@ -50,5 +50,5 @@ mysql> SELECT ltrim('ababccaab','ab') str;
 | ccaab |
 +-------+
 ```
-### keywords
+### Keywords
     LTRIM

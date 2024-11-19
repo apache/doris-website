@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hours_sub
-### description
+## Hours_sub
+### Description
 #### Syntax
 
 `DATETIME HOURS_SUB(DATETIME date, INT hours)`
@@ -34,7 +34,7 @@ Subtracts a specified number of hours from a datetime or date
 
 The parameter date can be DATETIME or DATE, and the return type is DATETIME.
 
-### example
+### Example
 
 ```
 mysql> select hours_sub("2020-02-02 02:02:02", 1);
@@ -45,6 +45,6 @@ mysql> select hours_sub("2020-02-02 02:02:02", 1);
 +-------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     HOURS_SUB

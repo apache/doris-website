@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ascii
-### description
+## Ascii
+### Description
 #### Syntax
 
 `INT ascii(VARCHAR str)`
@@ -33,7 +33,7 @@ under the License.
 
 返回字符串第一个字符对应的 ascii 码
 
-### example
+### Example
 
 ```
 mysql> select ascii('1');
@@ -50,5 +50,5 @@ mysql> select ascii('234');
 |           50 |
 +--------------+
 ```
-### keywords
+### Keywords
     ASCII

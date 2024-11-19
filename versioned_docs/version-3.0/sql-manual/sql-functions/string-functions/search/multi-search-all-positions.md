@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## multi_search_all_positions
+## Multi_search_all_positions
 ### Description
 #### Syntax
 
@@ -32,7 +32,7 @@ under the License.
 
 Returns an `ARRAY` where the `i`-th element is the position of the `i`-th element in `needles`(i.e. `needle`)'s **first** occurrence in the string `haystack`. Positions are counted from 1, with 0 meaning the element was not found. **Case-sensitive**.
 
-### example
+### Example
 
 ```
 mysql> select multi_search_all_positions('Hello, World!', ['hello', '!', 'world']);
@@ -50,5 +50,5 @@ select multi_search_all_positions("Hello, World!", ['hello', '!', 'world', 'Hell
 +---------------------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     MULTI_SEARCH,SEARCH,POSITIONS

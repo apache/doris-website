@@ -91,7 +91,7 @@ load数据时，对用户bitmap值range范围纵向切割，例如，用户id在
 
 注：正交bitmap函数不能用在分区表，因为分区表分区内正交，分区之间的数据是无法保证正交的，则计算结果也是无法预估的。
 
-#### bitmap_orthogonal_intersect
+#### Bitmap_orthogonal_intersect
 
 求bitmap交集函数
 
@@ -113,7 +113,7 @@ orthogonal_bitmap_intersect(bitmap_column, column_to_filter, filter_values)
 select BITMAP_COUNT(orthogonal_bitmap_intersect(user_id, tag, 13080800, 11110200)) from user_tag_bitmap  where tag in (13080800, 11110200);
 ```
 
-#### orthogonal_bitmap_intersect_count
+#### Orthogonal_bitmap_intersect_count
 
 求bitmap交集count函数,语法同原版intersect_count，但实现不同
 
@@ -129,7 +129,7 @@ orthogonal_bitmap_intersect_count(bitmap_column, column_to_filter, filter_values
 
 查询规划聚合上分2层，在第一层be节点（update、serialize）先按filter_values为key进行hash聚合，然后对所有key的bitmap求交集，再对交集结果求count，count值序列化后发送至第二层be节点（merge、finalize），在第二层be节点对所有来源于第一层节点的count值循环求sum
 
-#### orthogonal_bitmap_union_count
+#### Orthogonal_bitmap_union_count
 
 求bitmap并集count函数，语法同原版bitmap_union_count，但实现不同。
 

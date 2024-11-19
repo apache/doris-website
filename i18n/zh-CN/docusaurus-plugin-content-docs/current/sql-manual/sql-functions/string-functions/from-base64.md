@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_base64
-### description
+## From_base64
+### Description
 #### Syntax
 
 `VARCHAR from_base64(VARCHAR str)`
@@ -33,7 +33,7 @@ under the License.
 
 返回对输入的字符串进行Base64解码后的结果，当输入字符串不正确时（出现非Base64编码后可能出现的字符）将会返回NULL
 
-### example
+### Example
 
 ```
 mysql> select from_base64('MQ==');
@@ -50,5 +50,5 @@ mysql> select from_base64('MjM0');
 | 234                 |
 +---------------------+
 ```
-### keywords
+### Keywords
     from_base64

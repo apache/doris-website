@@ -25,7 +25,7 @@ under the License.
 -->
 
 # CHECK/RESET Stub Cache
-## description
+## Description
    
 ### Check Stub Cache
     Check whether the connection cache is available
@@ -40,7 +40,7 @@ under the License.
     Description: Reset connection cache
     METHOD: GET
     URI: http://be_host:be_http_port/api/reset_rpc_channel/{endpoints}
-## example
+## Example
 
     curl -X GET "http://host:port/api/check_rpc_channel/host2/8060/1024000"
     curl -X GET "http://host:port/api/reset_rpc_channel/all"

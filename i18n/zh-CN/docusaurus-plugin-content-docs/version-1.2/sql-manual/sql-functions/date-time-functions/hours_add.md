@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hours_add
-### description
+## Hours_add
+### Description
 #### Syntax
 
 `DATETIME HOURS_ADD(DATETIME date, INT hours)`
@@ -34,7 +34,7 @@ under the License.
 
 参数 date 可以是 DATETIME 或者 DATE 类型，返回类型为 DATETIME。
 
-### example
+### Example
 
 ```
 mysql> select hours_add("2020-02-02 02:02:02", 1);
@@ -45,6 +45,6 @@ mysql> select hours_add("2020-02-02 02:02:02", 1);
 +-------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     HOURS_ADD

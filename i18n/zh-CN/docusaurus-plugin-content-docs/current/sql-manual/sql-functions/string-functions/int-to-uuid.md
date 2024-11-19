@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## int_to_uuid
+## Int_to_uuid
 
-### description
+### Description
 
 `VARCHAR int_to_uuid(LARGEINT int128)`
 
 对于输入的已编码 LARGEINT，转译为原始的 uuid 字符串。
 
-### example
+### Example
 
 ```sql
 mysql> select int_to_uuid(95721955514869408091759290071393952876);
@@ -43,5 +43,5 @@ mysql> select int_to_uuid(95721955514869408091759290071393952876);
 +-----------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     INT_TO_UUID

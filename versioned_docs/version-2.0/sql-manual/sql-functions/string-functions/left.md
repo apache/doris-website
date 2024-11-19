@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## left
+## Left
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 It returns the left part of a string of specified length, length is char length not the byte size. Another alias for this function is [strleft](./strleft.md).
 
-### example
+### Example
 
 ```
 mysql> select left("Hello doris",5);
@@ -43,5 +43,5 @@ mysql> select left("Hello doris",5);
 | Hello                  |
 +------------------------+
 ```
-### keywords
+### Keywords
     LEFT

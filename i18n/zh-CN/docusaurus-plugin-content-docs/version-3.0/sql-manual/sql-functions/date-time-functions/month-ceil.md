@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## month_ceil
-### description
+## Month_ceil
+### Description
 #### Syntax
 
 ```sql
@@ -41,7 +41,7 @@ DATETIME MONTH_CEIL(DATETIME datetime, INT period, DATETIME origin)
 - period：参数是指定每个周期有几个月组成。
 - origin：开始的时间起点，如果不填，默认是 0001-01-01T00:00:00。
 
-### example
+### Example
 
 ```
 mysql> select month_ceil("2023-07-13 22:28:18", 5);
@@ -53,7 +53,7 @@ mysql> select month_ceil("2023-07-13 22:28:18", 5);
 1 row in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 
     MONTH_CEIL, MONTH, CEIL
 

@@ -36,7 +36,7 @@ Parameter Description:
 expr: Required. Columns whose values are of type integer (up to bigint).
 p: The exact percentile is required, an array of constants, taking the value [0.0, 1.0].
 
-### example
+### Example
 ```
 mysql> select percentile_array(k1,[0.3,0.5,0.9]) from baseall;
 +----------------------------------------------+
@@ -48,5 +48,5 @@ mysql> select percentile_array(k1,[0.3,0.5,0.9]) from baseall;
 
 ```
 
-### keywords
+### Keywords
 PERCENTILE_ARRAY

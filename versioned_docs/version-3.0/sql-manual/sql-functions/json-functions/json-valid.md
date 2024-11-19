@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_valid
-### description
+## Json_valid
+### Description
 
 json_valid functions returns 0 or 1 to indicate whether a value is valid JSON and Returns NULL if the argument is NULL.
 
@@ -33,7 +33,7 @@ json_valid functions returns 0 or 1 to indicate whether a value is valid JSON an
 
 `JSONB json_valid(VARCHAR json_str)`
 
-### example
+### Example
 
 1. parse valid JSON string
 
@@ -71,5 +71,5 @@ MySQL > select json_valid(NULL);
 1 row in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 JSON, VALID, JSON_VALID

@@ -28,7 +28,7 @@ under the License.
 
 RETENTION
 
-### description
+### Description
 #### Syntax
 
 `retention(event1, event2, ... , eventN);`
@@ -51,7 +51,7 @@ RETENTION
 
 0 — 条件不满足
 
-### example
+### Example
 
 ```sql
 DROP TABLE IF EXISTS retention_test;
@@ -136,6 +136,6 @@ SELECT
 
 ```
 
-### keywords
+### Keywords
 
 RETENTION

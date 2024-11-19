@@ -24,16 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_shift_left
-### description
-#### syntax
+## Bit_shift_left
+### Description
+#### Syntax
 
 `BIT_SHIFT_LEFT(BIGINT x, TINYINT c)`
 
 Do logical left shift to `BIGINT` type x by c bits, and return result as a `BIGINT`.
 Return zero if `c` is less than 0.
 
-### example
+### Example
 Normal case
 ```sql
 select 8 as x, number as c, bit_shift_left(8, number) as bit_shift_left from numbers("number"="5")
@@ -66,6 +66,6 @@ FROM tbl
 +---------------------+-------------------------------+
 1 row in set (0.05 sec)
 ```
-### keywords
+### Keywords
 
     BITSHIFT, BITSHIFTLEFT

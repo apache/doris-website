@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## date_floor
+## Date_floor
 ### Description
 **Syntax** 
 

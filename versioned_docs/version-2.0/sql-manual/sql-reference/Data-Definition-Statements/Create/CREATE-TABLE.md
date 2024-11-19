@@ -48,7 +48,7 @@ distribution_desc
 [extra_properties]
 ```
 
-#### column_definition_list
+#### Column_definition_list
 
 Column definition list:
 
@@ -148,7 +148,7 @@ Column definition list:
         v4 INT SUM NOT NULL DEFAULT "1" COMMENT "This is column v4"
         ```
 
-#### index_definition_list
+#### Index_definition_list
 
 Index list definition:
 
@@ -170,13 +170,13 @@ Index list definition:
     ...
     ```
 
-#### engine_type
+#### Engine_type
 
 Table engine type. All types in this document are OLAP. For other external table engine types, see [CREATE EXTERNAL TABLE](./CREATE-EXTERNAL-TABLE.md) document. Example:
 
     `ENGINE=olap`
 
-#### keys_type
+#### Keys_type
 
 Data model.
 
@@ -198,7 +198,7 @@ AGGREGATE KEY(k1, k2, k3),
 UNIQUE KEY(k1, k2)
 ```
 
-#### table_comment
+#### Table_comment
 
 Table notes. Example:
 
@@ -206,7 +206,7 @@ Table notes. Example:
     COMMENT "This is my first DORIS table"
     ```
 
-#### partition_info
+#### Partition_info
 
 Partition information supports three writing methods:
 
@@ -257,7 +257,7 @@ This feature is supported since the Apache Doris 1.2 version
     )
     ```
     
-#### distribution_desc
+#### Distribution_desc
 
 Define the data bucketing method.
 
@@ -273,7 +273,7 @@ Define the data bucketing method.
    Explain:
    Use random numbers for bucketing.
 
-#### rollup_list
+#### Rollup_list
 
 Multiple materialized views (ROLLUP) can be created at the same time as the table is built.
 
@@ -292,7 +292,7 @@ Multiple materialized views (ROLLUP) can be created at the same time as the tabl
     )
     ```
 
-#### properties
+#### Properties
 
 Set table properties. The following attributes are currently supported:
 

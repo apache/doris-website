@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## CAST
-### description
+### Description
 #### Syntax
 
 `T cast (input as Type)`
 
 将 input 转成 指定的 Type类型
 
-### example
+### Example
 
 1. 转常量，或表中某列
 
@@ -66,5 +66,5 @@ mysql> select cast(cast ("11.2" as double) as bigint);
 +----------------------------------------+
 1 row in set (0.00 sec)
 ```
-### keywords
+### Keywords
 CAST

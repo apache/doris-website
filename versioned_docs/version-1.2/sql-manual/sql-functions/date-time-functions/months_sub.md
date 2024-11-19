@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## months_sub
-### description
+## Months_sub
+### Description
 #### Syntax
 
 `DATETIME MONTHS_SUB(DATETIME date, INT months)`
@@ -34,7 +34,7 @@ Subtracts a specified number of months from a datetime or date
 
 The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
 
-### example
+### Example
 
 ```
 mysql> select months_sub("2020-02-02 02:02:02", 1);
@@ -45,6 +45,6 @@ mysql> select months_sub("2020-02-02 02:02:02", 1);
 +--------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     MONTHS_SUB

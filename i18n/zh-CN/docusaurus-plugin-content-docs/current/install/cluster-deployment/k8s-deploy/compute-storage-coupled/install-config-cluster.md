@@ -27,7 +27,7 @@ under the License.
 ## 集群规划
 默认部署的 `DorisCluster` 资源中，FE 和 BE 使用的可能不是最新的版本的 image，默认的副本数为 FE=3,BE=3 ，FE 使用的计算资源配置为 6c 12Gi，BE 使用的资源是 8c 16Gi。在使用过程中，如需更修改请参考如下介绍修改。
 
-### image 设置
+### Image 设置
 Doris Operator 与 Doris 版本相互解耦，Doris Operator 如果不明确说明，本质上可以部署任何版本的 Doris 。
 
 **FE Image 设置**  

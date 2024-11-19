@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-## year
+## Year
 ### Description
 #### Syntax
 
@@ -36,7 +36,7 @@ Returns the year part of the date type, ranging from 1000 to 9999
 
 The parameter is Date or Datetime type
 
-### example
+### Example
 
 ```
 mysql> select year('1987-01-01');
@@ -46,5 +46,5 @@ mysql> select year('1987-01-01');
 |                        1987 |
 +-----------------------------+
 ```
-### keywords
+### Keywords
     YEAR

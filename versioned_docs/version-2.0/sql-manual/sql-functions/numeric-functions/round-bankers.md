@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## round_bankers
+## Round_bankers
 
-### description
+### Description
 #### Syntax
 
 `T round_bankers(T x[, d])`
@@ -35,7 +35,7 @@ Rounds the argument `x` to `d` specified decimal places. `d` defaults to 0 if no
 
 
 
-### example
+### Example
 
 ```
 mysql> select round_bankers(0.4);
@@ -76,5 +76,5 @@ mysql> select round_bankers(1667.2725, -2);
 +------------------------------+
 ```
 
-### keywords
+### Keywords
 	round_bankers

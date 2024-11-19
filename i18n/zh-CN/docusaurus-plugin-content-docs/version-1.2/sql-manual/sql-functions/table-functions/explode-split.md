@@ -24,18 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode_split
+## Explode_split
 
-### description
+### Description
 
 表函数，需配合 Lateral View 使用。
 
 将一个字符串按指定的分隔符分割成多个子串。
 
-#### syntax
+#### Syntax
 `explode_split(str, delimiter)`
 
-### example
+### Example
 
 原表数据：
 
@@ -100,6 +100,6 @@ mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e
 +------+------+
 ```
 
-### keywords
+### Keywords
 
 explode,split,explode_split

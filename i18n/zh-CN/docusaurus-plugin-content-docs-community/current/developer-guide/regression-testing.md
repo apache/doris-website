@@ -131,7 +131,7 @@ customConf1 = "test_custom_conf_value"
 ## Action
 Action是一个测试框架默认提供的测试行为，使用DSL来定义。
 
-### sql action
+### Sql action
 sql action用于提交sql并获取结果，如果查询失败则会抛出异常
 
 参数如下
@@ -227,7 +227,7 @@ suite("sql_action", "demo") {
 }
 ```
 
-### qt action
+### Qt action
 qt action用于提交sql，并使用对应的.out TSV文件来校验结果
 - String sql: 输入sql字符串
 - return void
@@ -264,7 +264,7 @@ suite("qt_action", "demo") {
 }
 ```
 
-### test action
+### Test action
 test action可以使用更复杂的校验规则来测试，比如验证行数、执行时间、是否抛出异常
 
 可用参数
@@ -366,7 +366,7 @@ suite("test_action", "demo") {
 }
 ```
 
-### explain action
+### Explain action
 explain action用来校验explain返回的字符串是否包含某些字符串
 
 可用参数:
@@ -413,7 +413,7 @@ suite("explain_action", "demo") {
 }
 ```
 
-### streamLoad action
+### StreamLoad action
 streamLoad action用于导入数据
 可用参数为
 - String db: db，默认值为regression-conf.groovy中的defaultDb

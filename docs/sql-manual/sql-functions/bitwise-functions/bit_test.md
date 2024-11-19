@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_test
-### description
+## Bit_test
+### Description
 #### Syntax
 
 `bit_test(Integer-type value, Integer-type pos, '......')`
@@ -34,9 +34,9 @@ under the License.
 If the value of pos is negative or exceeds the total number of bits in value, the result will be 0.
 Integer value ranges: TINYINT, SMALLINT, INT, BIGINT, LARGEINT."
 
-### example
+### Example
 
-### example
+### Example
 
 mysql [(none)]>SELECT bit_test(43, 1);
 +-----------------+

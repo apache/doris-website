@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## to_base64
-### description
+## To_base64
+### Description
 #### Syntax
 
 `VARCHAR to_base64(VARCHAR str)`
@@ -33,7 +33,7 @@ under the License.
 
 返回对输入的字符串进行Base64编码后的结果
 
-### example
+### Example
 
 ```
 mysql> select to_base64('1');
@@ -50,5 +50,5 @@ mysql> select to_base64('234');
 | MjM0             |
 +------------------+
 ```
-### keywords
+### Keywords
     to_base64

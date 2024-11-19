@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## pow
+## Pow
 
-### description
+### Description
 
 Returns the value of the first argument raised to the power of the second argument.
 
@@ -37,7 +37,7 @@ The other aliases for this function are `power`, `fpow` and `dpow`.
 `DOUBLE pow(DOUBLE a, DOUBLE b)`
 Returns `a` raised to the `b` power.
 
-### example
+### Example
 
 ```
 mysql> select pow(2,0);
@@ -60,5 +60,5 @@ mysql> select pow(3,2.4);
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	POW, POWER, FPOW, DPOW

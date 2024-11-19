@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## QUANTILE_STATE
-### description
+### Description
     QUANTILE_STATE
     QUANTILE_STATE不能作为key列使用，建表时配合聚合类型为QUANTILE_UNION。
     用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。
@@ -49,11 +49,11 @@ under the License.
 
     
 
-### example
+### Example
     select QUANTILE_PERCENT(QUANTILE_UNION(v1)) from test_table group by k1, k2, k3;
     
 
-### notice
+### Notice
 
 使用前可以通过如下命令打开 QUANTILE_STATE 开关:
 
@@ -63,6 +63,6 @@ $ mysql-client > admin set frontend config("enable_quantile_state_type"="true");
 
 这种方式下 QUANTILE_STATE 开关会在Fe进程重启后重置，或者在fe.conf中添加`enable_quantile_state_type=true`配置项可永久生效。
 
-### keywords
+### Keywords
 
     QUANTILE_STATE, QUANTILE_UNION, TO_QUANTILE_STATE, QUANTILE_PERCENT

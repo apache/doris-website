@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_shift_right
-### description
-#### syntax
+## Bit_shift_right
+### Description
+#### Syntax
 
 `BIT_SHIFT_RIGHT(BIGINT x, TINYINT c)`
 
 Return result of logical right shift of `BIGINT` type x by c bits.
 
-### example
+### Example
 Normal case
 ```sql
 select 1024 as x, number as c, bit_shift_right(1024, number) as bit_shift_right from numbers("number"="5")
@@ -74,6 +74,6 @@ select bit_shift_right(100, -1)
 ```
 
 
-### keywords
+### Keywords
 
     BITSHIFT, BITSHIFTRIGHT

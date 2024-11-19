@@ -83,7 +83,7 @@ LDAP 组授权是将 LDAP 中的 group 映射到 Doris 中的 Role，如果用�
 
 ## 启用 LDAP 认证
 
-### server 端配置
+### Server 端配置
 
 需要在 fe/conf/ldap.conf 文件中配置 LDAP 基本信息，另有 LDAP 管理员密码需要使用 sql 语句进行设置。
 

@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_distinct
+## Array_distinct
 
 array_distinct
 
-### description
+### Description
 
 #### Syntax
 
@@ -36,7 +36,7 @@ array_distinct
 
 返回去除了重复元素的数组，如果输入数组为NULL，则返回NULL。
 
-### example
+### Example
 
 ```
 mysql> select k1, k2, array_distinct(k2) from array_test;
@@ -67,6 +67,6 @@ mysql> select k1, k2, array_distinct(k2) from array_test01;
 +------+------------------------------------------+---------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, DISTINCT, ARRAY_DISTINCT

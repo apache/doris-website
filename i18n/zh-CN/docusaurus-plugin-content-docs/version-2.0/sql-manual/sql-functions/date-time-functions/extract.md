@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## extract
-### description
+## Extract
+### Description
 #### Syntax
 
 `INT extract(unit FROM DATETIME)`
@@ -49,6 +49,6 @@ mysql> select extract(year from '2022-09-22 17:01:30') as year,
 +------+-------+------+------+--------+--------+-------------+
 ```
 
-### keywords
+### Keywords
 
     extract

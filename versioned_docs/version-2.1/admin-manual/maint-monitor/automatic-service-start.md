@@ -35,7 +35,7 @@ The automatic pull-up service of FE and BE must be configured after the Doris cl
 
 For details about systemd usage and parameter parsing, see [here](https://systemd.io/) 
 
-### sudo permission control
+### Sudo permission control
 
 sudo permissions are required to control the doris service using systemd. To ensure the minimum granularity of sudo permission assignment, you can assign the systemd control permission of doris-fe and doris-be services to specified non-root users. Configure the systemctl management permission for doris-fe and doris-be in visudo.
 

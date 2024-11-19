@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weekofyear
+## Weekofyear
 ### Description
 #### Syntax
 
@@ -36,7 +36,7 @@ Get the Weeks of the Year
 
 The parameter is Date or Datetime type
 
-### example
+### Example
 
 ```
 mysql> select weekofyear('2008-02-20 00:00:00');
@@ -46,5 +46,5 @@ mysql> select weekofyear('2008-02-20 00:00:00');
 |                                 8 |
 +-----------------------------------+
 ```
-### keywords
+### Keywords
     WEEKOFYEAR

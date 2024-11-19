@@ -47,7 +47,7 @@ REVOKE role_list FROM user_identity
 
 ## 参数
 
-### privilege_list
+### Privilege_list
 
 需要撤销的权限列表，以逗号分隔。支持的权限包括：
 
@@ -62,7 +62,7 @@ REVOKE role_list FROM user_identity
 - USAGE_PRIV：使用权限
 - SHOW_VIEW_PRIV：查看视图定义权限
 
-### priv_level
+### Priv_level
 
 指定权限的作用范围。支持以下格式：
 
@@ -71,32 +71,32 @@ REVOKE role_list FROM user_identity
 - catalog_name.db.*：指定数据库中的所有表
 - catalog_name.db.tbl：指定数据库中的特定表
 
-### resource_name
+### Resource_name
 
 指定 resource 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
-### workload_group_name
+### Workload_group_name
 
 指定 workload group 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
-### compute_group_name
+### Compute_group_name
 
 指定 compute group 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
-### storage_vault_name
+### Storage_vault_name
 
 指定 storage vault 名称。支持 % （匹配任意字符串）和 _（匹配任意单个字符）通配符。
 
 
-### user_identity
+### User_identity
 
 指定要撤销权限的用户。必须是使用 CREATE USER 创建的用户。user_identity 中的 host 可以是域名，如果是域名，权限的撤销时间可能会有 1 分钟左右的延迟。
 
-### role_name
+### Role_name
 
 指定要撤销权限的角色。该角色必须存在。
 
-### role_list
+### Role_list
 
 需要撤销的角色列表，以逗号分隔。指定的所有角色必须存在。
 

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_days
+## From_days
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 Given a day number, returns a DATE. Note that to maintain consistent behavior with MySQL, the date 0000-02-29 does not exist.
 
-### example
+### Example
 
 ```
 mysql> select from_days(730669);
@@ -65,5 +65,5 @@ mysql> select from_days (60);
 +---------------+
 ```
 
-### keywords
+### Keywords
     FROM_DAYS,FROM,DAYS

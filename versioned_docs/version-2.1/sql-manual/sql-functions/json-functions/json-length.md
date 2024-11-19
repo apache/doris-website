@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_length
-### description
+## Json_length
+### Description
 #### Syntax
 
 `INT json_length(JSON json_str)`
@@ -37,7 +37,7 @@ If specified path, the JSON_LENGTH() function returns the length of the data mat
 * The length of an array is the number of array elements. For example, the length of [1, 2] is 2.
 * The length of an object is the number of object members. For example, the length of {"x": 1} is 1.
 
-### example
+### Example
 
 ```
 mysql> SELECT json_length('{"k1":"v31","k2":300}');
@@ -64,5 +64,5 @@ mysql> SELECT json_length('{"x": 1, "y": [1, 2]}', '$.y');
 +---------------------------------------------+
 1 row in set (0.07 sec)
 ```
-### keywords
+### Keywords
 json,json_length

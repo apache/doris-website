@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## BITMAP_AGG
-### description
+### Description
 #### Syntax
 
 `BITMAP_AGG(expr)`
@@ -34,7 +34,7 @@ under the License.
 This aggregating function returns a bitmap that aggregates the values of expr, excluding any null values.
 The type of expr needs to be TINYINT, SMALLINT, INT, or BIGINT.
 
-### example
+### Example
 ```
 MySQL > select `n_nationkey`, `n_name`, `n_regionkey` from `nation`;
 +-------------+----------------+-------------+
@@ -85,5 +85,5 @@ MySQL > select bitmap_count(bitmap_agg(n_nationkey))  from nation;
 |                                      25 |
 +-----------------------------------------+
 ```
-### keywords
+### Keywords
 BITMAP_AGG

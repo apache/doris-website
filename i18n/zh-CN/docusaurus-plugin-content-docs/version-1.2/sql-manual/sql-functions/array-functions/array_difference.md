@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_difference
+## Array_difference
 
 array_difference
 
-### description
+### Description
 
 #### Syntax
 
@@ -37,11 +37,11 @@ array_difference
 计算相邻数组元素之间的差异。返回一个数组，其中第一个元素将为0，第二个元素是a[1]-a[0]之间的差值。
 注意若 NULL 值存在，返回结果为NULL
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 mysql> select *,array_difference(k2) from array_type_table;
@@ -59,6 +59,6 @@ mysql> select *,array_difference(k2) from array_type_table;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY, DIFFERENCE, ARRAY_DIFFERENCE

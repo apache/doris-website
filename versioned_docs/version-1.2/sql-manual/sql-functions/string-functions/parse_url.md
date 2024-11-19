@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## parse_url
-### description
+## Parse_url
+### Description
 #### Syntax
 
 `VARCHAR  parse_url(VARCHAR url, VARCHAR  name)`
@@ -33,7 +33,7 @@ under the License.
 
 From the URL, the field corresponding to name is resolved. The name options are as follows: 'PROTOCOL', 'HOST', 'PATH', 'REF', 'AUTHORITY', 'FILE', 'USERINFO', 'PORT', 'QUERY', and the result is returned.
 
-### example
+### Example
 
 ```
 mysql> SELECT parse_url ('https://doris.apache.org/', 'HOST');
@@ -46,5 +46,5 @@ mysql> SELECT parse_url ('https://doris.apache.org/', 'HOST');
 
 If you want to get parameter in QUERY, you can use [extract_url_parameter](./extract_url_parameter.md).
 
-### keywords
+### Keywords
     PARSE URL

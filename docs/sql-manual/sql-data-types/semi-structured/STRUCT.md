@@ -26,11 +26,11 @@ under the License.
 
 ## STRUCT
 
-### name
+### Name
 
 STRUCT
 
-### description
+### Description
 
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >`
 
@@ -61,7 +61,7 @@ We have a todo list for future version:
 TODO: Supports nested Struct or other complex types
 ```
 
-### example
+### Example
 
 Create table example:
 
@@ -119,6 +119,6 @@ mysql> select * from struct_test;
 3 rows in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 
     STRUCT

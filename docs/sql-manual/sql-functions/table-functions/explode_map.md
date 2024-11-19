@@ -24,22 +24,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode
+## Explode
 
-### description
+### Description
 
 Table functions must be used in conjunction with Lateral View, support multi conjunction with Lateral View,support new optimizer only.
 
 explode map column to rows. `explode_map_outer` will return NULL, while `map` is NULL or empty.
 `explode_map` and `explode_map_outer` both keep the nested NULL elements of map.
 
-#### syntax
+#### Syntax
 ```sql
 explode_map(expr)
 explode_map_outer(expr)
 ```
 
-### example
+### Example
 ```mysql> SET enable_nereids_planner=true
 mysql> SET enable_fallback_to_original_planner=false
 
@@ -125,5 +125,5 @@ mysql> select name, k,v,k1,v1 from sdu lateral view explode_map_outer(score) tmp
 +----------+---------+------+---------+------+
 ```
 
-### keywords
+### Keywords
 EXPLODE_MAP,EXPLODE_MAP_OUTER,MAP

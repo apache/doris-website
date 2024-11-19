@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## l2_distance
+## L2_distance
 
-### description
+### Description
 #### Syntax
 
 ```sql
@@ -38,7 +38,7 @@ Return NULL if input array is NULL or any element of array is NULL.
 * nested type of input array support: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE
 * input array1 and array2 should have the same element size
 
-### example
+### Example
 
 ```
 sql> SELECT l2_distance([1, 2], [2, 3]);
@@ -49,5 +49,5 @@ sql> SELECT l2_distance([1, 2], [2, 3]);
 +---------------------------------------+
 ```
 
-### keywords
+### Keywords
 	L2_DISTANCE,DISTANCE,L2,ARRAY

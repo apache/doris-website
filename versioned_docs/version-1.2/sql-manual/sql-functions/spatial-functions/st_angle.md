@@ -30,7 +30,7 @@ under the License.
 
 `DOUBLE ST_Angle(GEOPOINT point1, GEOPOINT point2, GEOPOINT point3)`
 
-### description
+### Description
 
 Enter three point, which represent two intersecting lines. Returns the angle between these lines. Point 2 and point 1 represent the first line and point 2 and point 3 represent the second line. The angle between these lines is in radians, in the range [0, 2pi). The angle is measured clockwise from the first line to the second line.
 
@@ -42,7 +42,7 @@ ST_ANGLE has the following edge cases:
 * If points 2 and 1 are exactly antipodal, returns NULL.
 * If any of the input geographies are not single points or are the empty geography, then throws an error.
 
-### example
+### Example
 
 ```
 mysql> SELECT ST_Angle(ST_Point(1, 0),ST_Point(0, 0),ST_Point(0, 1));
@@ -85,5 +85,5 @@ mysql> SELECT ST_Angle(ST_Point(0, 0),ST_Point(-30, 0),ST_Point(150, 0));
 +--------------------------------------------------------------------------+
 1 row in set (0.02 sec)
 ```
-### keywords
+### Keywords
 ST_ANGLE,ST,ANGLE

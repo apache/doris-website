@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## running_difference
+## Running_difference
 
-### description
+### Description
 #### Syntax
 
 `T running_difference(T x)`
@@ -47,7 +47,7 @@ SELECT x - lag(x, 1, 0) OVER (ORDER BY k) FROM t;
 ##### Returned value
 Returns 0 for the first row and the difference from the previous row for each subsequent row
 
-### example
+### Example
 
 ```sql
 DROP TABLE IF EXISTS running_difference_test;
@@ -182,6 +182,6 @@ FROM
 
 ```
 
-### keywords
+### Keywords
 
 running_difference

@@ -1830,7 +1830,7 @@ show data （其他用法：HELP SHOW DATA）
 
 仅在使用  PartitionRebalancer  时有效。如果更改，缓存的移动将被清除
 
-#### tablet_rebalancer_type
+#### Tablet_rebalancer_type
 
 默认值：BeLoad
 

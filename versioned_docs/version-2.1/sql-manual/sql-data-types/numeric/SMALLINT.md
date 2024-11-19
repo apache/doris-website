@@ -29,5 +29,5 @@ under the License.
 SMALLINT
 2-byte signed integer, range [-32768, 32767]
 
-### keywords
+### Keywords
 SMALLINT

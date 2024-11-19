@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_count
-### description
+## Bitmap_count
+### Description
 #### Syntax
 
 `BITMAP BITMAP_COUNT(BITMAP lhs)`
 
 Returns the number of input bitmaps。
 
-### example
+### Example
 
 ```
 mysql> select bitmap_count(to_bitmap(1)) cnt;
@@ -51,6 +51,6 @@ mysql> select bitmap_count(bitmap_and(to_bitmap(1), to_bitmap(1))) cnt;
 
 ```
 
-### keywords
+### Keywords
 
     BITMAP_COUNT

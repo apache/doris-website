@@ -30,7 +30,7 @@ under the License.
 
 `DOUBLE ST_Angle(GEOPOINT point1, GEOPOINT point2, GEOPOINT point3)`
 
-### description
+### Description
 
 输入三个点，它们表示两条相交的线。返回这些线之间的夹角。点 2 和点 1 表示第一条线，点 2 和点 3 表示第二条线。这些线之间的夹角以弧度表示，范围为 [0, 2pi)。夹角按顺时针方向从第一条线开始测量，直至第二条线。
 
@@ -42,7 +42,7 @@ ST_ANGLE 存在以下边缘情况：
 * 如果点 2 和点 1 是完全对映点，则返回 NULL。
 * 如果任何输入地理位置不是单点或为空地理位置，则会抛出错误。
 
-### example
+### Example
 
 ```
 mysql> SELECT ST_Angle(ST_Point(1, 0),ST_Point(0, 0),ST_Point(0, 1));
@@ -85,5 +85,5 @@ mysql> SELECT ST_Angle(ST_Point(0, 0),ST_Point(-30, 0),ST_Point(150, 0));
 +--------------------------------------------------------------------------+
 1 row in set (0.02 sec)
 ```
-### keywords
+### Keywords
 ST_ANGLE,ST,ANGLE

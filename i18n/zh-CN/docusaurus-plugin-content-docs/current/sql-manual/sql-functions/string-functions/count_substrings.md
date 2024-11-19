@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## count_substrings
+## Count_substrings
 
-### description
+### Description
 
 #### Syntax
 
@@ -43,7 +43,7 @@ under the License.
 
 返回一个包含子字符串的总个数.
 
-### example
+### Example
 
 ```
 mysql [(none)]>select count_substrings('a1b1c1d','1');
@@ -103,6 +103,6 @@ mysql [(none)]>select count_substrings('abccbaacb','c');
 |                                  3 |
 +------------------------------------+
 ```
-### keywords
+### Keywords
 
 COUNT_SUBSTRINGS,SUBSTRINGS

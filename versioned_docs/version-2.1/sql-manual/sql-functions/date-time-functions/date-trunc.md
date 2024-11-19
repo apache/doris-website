@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## date_trunc
+## Date_trunc
 
 date_trunc
 
@@ -40,7 +40,7 @@ datetime is a legal date expression.
 
 unit is the time unit you want to truncate. The optional values are as follows: [`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`].
 
-### example
+### Example
 
 ```
 mysql> select date_trunc('2010-12-02 19:28:30', 'second');
@@ -99,6 +99,6 @@ mysql> select date_trunc('2010-12-02 19:28:30', 'year');
 | 2010-01-01 00:00:00                             |
 +-------------------------------------------------+
 ```
-### keywords
+### Keywords
 
 DATE_TRUNC,DATE,DATETIME

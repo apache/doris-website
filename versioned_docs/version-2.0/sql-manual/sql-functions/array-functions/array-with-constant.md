@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_with_constant
+## Array_with_constant
 
 array_with_constant
 
-### description
+### Description
 
 #### Syntax
 
@@ -36,7 +36,7 @@ ARRAY<T> array_repeat(T, n)
 ```
 
 get array of constants with n length, array_repeat has the same function as array_with_constant and is used to be compatible with the hive syntax format
-### example
+### Example
 
 ```
 mysql> select array_with_constant(2, "hello"), array_repeat("hello", 2);
@@ -73,6 +73,6 @@ mysql> select array_with_constant(null, 3), array_repeat(3, null);
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,WITH_CONSTANT,ARRAY_WITH_CONSTANT,ARRAY_REPEAT

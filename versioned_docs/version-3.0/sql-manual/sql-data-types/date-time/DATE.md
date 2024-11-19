@@ -33,7 +33,7 @@ DATE
 date
 Date type, the current range of values is ['0000-01-01','9999-12-31'], and the default print form is 'yyyy-MM-dd'.
 
-### example
+### Example
 
 ```sql
 SELECT DATE('2003-12-31 01:02:03');
@@ -44,5 +44,5 @@ SELECT DATE('2003-12-31 01:02:03');
 +-----------------------------+
 ```
 
-### keywords
+### Keywords
 DATE

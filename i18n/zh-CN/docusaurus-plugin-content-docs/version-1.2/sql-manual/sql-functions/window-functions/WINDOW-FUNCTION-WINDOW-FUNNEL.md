@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION WINDOW_FUNNEL
-### description
+### Description
 
 漏斗分析函数搜索滑动时间窗口内最大的发生的最大事件序列长度。
 
@@ -31,7 +31,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 window_funnel(window, mode, timestamp_column, event1, event2, ... , eventN)
 ```
 
-### example
+### Example
 
 ```sql
 CREATE TABLE windowfunnel_test (
@@ -57,6 +57,6 @@ select window_funnel(3600 * 3, 'default', t.xwhen, t.xwhat = 1, t.xwhat = 2 ) AS
 | 2 |
 ```
 
-### keywords
+### Keywords
 
     WINDOW,FUNCTION,WINDOW_FUNNEL

@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_position
+## Array_position
 
 array_position
 
-### description
+### Description
 
 #### Syntax
 
@@ -42,7 +42,7 @@ position - value position in array (starts with 1);
 NULL     - when array is NULL.
 ```
 
-### example
+### Example
 
 ```
 mysql> SELECT id,c_array,array_position(c_array, 5) FROM `array_test`;
@@ -64,7 +64,7 @@ mysql> select array_position([1, null], null);
 1 row in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
 ARRAY,POSITION,ARRAY_POSITION
 

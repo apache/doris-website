@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## get_json_int
+## Get_json_int
 ### Description
 #### Syntax
 
@@ -43,7 +43,7 @@ Exception handling is as follows:
 - if the field specified by json_path does not exist, return NULL
 - if datatype of the field specified by json_path is not the same with type of json_extract_t, return t if it can be cast to t else NULL
 
-### example
+### Example
 
 1. Get the value of key as "k1"
 
@@ -76,5 +76,5 @@ mysql> SELECT get_json_int('{"k1.key":{"k2":[1, 2]}}', '$."k1.key".k2[0]');
 |                                                            1 |
 +--------------------------------------------------------------+
 ```
-### keywords
+### Keywords
 GET_JSON_INT,GET,JSON,INT

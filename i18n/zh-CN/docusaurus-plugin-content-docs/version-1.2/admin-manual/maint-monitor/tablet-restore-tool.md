@@ -47,7 +47,7 @@ BE提供http接口和 `restore_tablet_tool.sh` 脚本实现这个功能，支持
 
 ### 操作
 
-#### single mode
+#### Single mode
 
 1. http请求方式
 
@@ -78,7 +78,7 @@ BE提供http接口和 `restore_tablet_tool.sh` 脚本实现这个功能，支持
     sh tools/restore_tablet_tool.sh --backend "http://127.0.0.1:8040" --tablet_id 12345 --schema_hash 11111
     ```
 
-#### batch mode
+#### Batch mode
 
 批量恢复模式用于实现恢复多个tablet数据的功能。
 

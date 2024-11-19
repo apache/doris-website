@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## yearweek
+## Yearweek
 ### Description
 #### Syntax
 
@@ -49,7 +49,7 @@ The following table describes how the mode argument works.
 
 The parameter is Date or Datetime type
 
-### example
+### Example
 ```
 mysql> select yearweek('2021-1-1');
 +----------------------+
@@ -75,5 +75,5 @@ mysql> select yearweek('2024-12-30',1);
 +------------------------------------+
 ```
 
-### keywords
+### Keywords
     YEARWEEK

@@ -24,13 +24,13 @@ under the License.
 
 ## SM3
 
-### description
+### Description
 Calculates an SM3 256-bit checksum for the string
 #### Syntax
 
 `SM3(str)`
 
-### example
+### Example
 
 ```
 MySQL > select sm3("abcd");
@@ -42,6 +42,6 @@ MySQL > select sm3("abcd");
 1 row in set (0.009 sec)
 ```
 
-### keywords
+### Keywords
 
     SM3

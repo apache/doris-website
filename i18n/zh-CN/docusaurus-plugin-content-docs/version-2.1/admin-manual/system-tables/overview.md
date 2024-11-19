@@ -26,7 +26,7 @@ under the License.
 
 Doris 集群内置多个系统数据库，用于存储 Doris 系统本身的一些元数据信息。
 
-## information_schema
+## Information_schema
 
 `information_schema` 库下的所有表都是虚拟表，本身并不存在物理实体。这些系统表包含了关于 Doris 集群及其所有数据库对象的元数据。这些对象包括数据库、表、列、权限等。
 也包含如 Workload Group、Task 等功能状态信息。
@@ -38,7 +38,7 @@ Doris 集群内置多个系统数据库，用于存储 Doris 系统本身的一�
 所有用户默认对这个库下的所有表拥有读权限，但可查询的内容会根据用户实际的权限范围而不同。比如用户 A 只拥有 `db1.table1` 的权限。则用户查询 `information_schema.tables` 表时，只会返回 `db1.table1` 相关的信息。
 
 
-## mysql
+## Mysql
 
 `mysql` 库下的所有表都是虚拟表，本身并不存在物理实体。这些系统表包含如权限等信息，主要用于兼容 MySQL 生态。
 

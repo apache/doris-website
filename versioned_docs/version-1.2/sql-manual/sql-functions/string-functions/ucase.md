@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ucase
-### description
+## Ucase
+### Description
 #### Syntax
 
 `INT ucase(VARCHAR str)`
@@ -33,5 +33,5 @@ under the License.
 
 Convert all strings in parameters to uppercase. Another alias for this function is [upper](./upper.md).
 
-### keywords
+### Keywords
     UCASE

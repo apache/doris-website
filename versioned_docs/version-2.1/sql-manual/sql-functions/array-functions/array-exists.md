@@ -24,12 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_exists
+## Array_exists
 
 array_exists(lambda,array1,array2....)
 array_exists(array1)
 
-### description
+### Description
 
 #### Syntax
 ```sql
@@ -49,7 +49,7 @@ array_exists((x,y)->(x = y), array1, array2);
 array_exists(array1);
 ```
 
-### example
+### Example
 
 ```sql
 
@@ -110,7 +110,7 @@ mysql [test]>select *, array_exists(c_array1) from array_test2 order by id;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,ARRAY_EXISTS
 

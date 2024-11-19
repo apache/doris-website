@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## space
-### description
+## Space
+### Description
 #### Syntax
 
 `VARCHAR space(Int num)`
 
 返回由num个空格组成的字符串。
 
-### example
+### Example
 
 ```
 mysql> select length(space(10));
@@ -51,5 +51,5 @@ mysql> select length(space(-10));
 +--------------------+
 1 row in set (0.02 sec)
 ```
-### keywords
+### Keywords
     space

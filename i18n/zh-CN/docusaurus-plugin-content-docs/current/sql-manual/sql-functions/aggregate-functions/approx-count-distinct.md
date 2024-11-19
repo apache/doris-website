@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## APPROX_COUNT_DISTINCT
-### description
+### Description
 #### Syntax
 
 `APPROX_COUNT_DISTINCT(expr)`
@@ -35,7 +35,7 @@ under the License.
 
 它比 COUNT 和 DISTINCT 组合的速度更快，并使用固定大小的内存，因此对于高基数的列可以使用更少的内存。
 
-### example
+### Example
 ```
 MySQL > select approx_count_distinct(query_id) from log_statis group by datetime;
 +-----------------+
@@ -44,5 +44,5 @@ MySQL > select approx_count_distinct(query_id) from log_statis group by datetime
 | 17721           |
 +-----------------+
 ```
-### keywords
+### Keywords
 APPROX_COUNT_DISTINCT

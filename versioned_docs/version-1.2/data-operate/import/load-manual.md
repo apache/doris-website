@@ -65,7 +65,7 @@ Different import methods support slightly different data formats.
 | Routine Load   | csv, json               |
 | MySql Load     | csv                     |
 
-## import instructions
+## Import instructions
 
 The data import implementation of Apache Doris has the following common features, which are introduced here to help you better use the data import function
 

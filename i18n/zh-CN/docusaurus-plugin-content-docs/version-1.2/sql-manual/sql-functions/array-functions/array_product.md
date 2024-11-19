@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_product
+## Array_product
 
 array_product
 
-### description
+### Description
 
 #### Syntax
 
@@ -36,7 +36,7 @@ array_product
 
 返回数组中所有元素的乘积，数组中的`NULL`值会被跳过。空数组以及元素全为`NULL`值的数组，结果返回`NULL`值。
 
-### example
+### Example
 
 ```shell
 mysql> create table array_type_table(k1 INT, k2 Array<int>) duplicate key (k1)
@@ -55,7 +55,7 @@ mysql> select k2, array_product(k2) from array_type_table;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,PRODUCT,ARRAY_PRODUCT
 

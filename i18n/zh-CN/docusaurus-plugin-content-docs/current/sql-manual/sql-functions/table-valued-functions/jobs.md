@@ -30,7 +30,7 @@ under the License.
 
 jobs
 
-### description
+### Description
 
 表函数，生成任务临时表，可以查看某个任务类型中的job信息。
 
@@ -38,7 +38,7 @@ jobs
 
 该函数自 2.1.0 版本支持。
 
-#### syntax
+#### Syntax
 
 `jobs("type"="")`
 
@@ -118,7 +118,7 @@ mysql> desc function jobs("type"="mv");
 * Status：job状态
 * CreateTime：task创建时间
 
-### example
+### Example
 
 1. 查看所有物化视图的job
 
@@ -141,6 +141,6 @@ mysql> select * from jobs("type"="insert");
 ```sql
 mysql> select * from jobs("type"="insert") where Name='one_insert_job';
 ```
-### keywords
+### Keywords
 
     jobs, job, insert, mv, materialized view, schedule

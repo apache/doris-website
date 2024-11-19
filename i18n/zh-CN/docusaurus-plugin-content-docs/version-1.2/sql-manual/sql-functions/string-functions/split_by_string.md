@@ -22,12 +22,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## split_by_string
+## Split_by_string
 
 <version since="1.2.2">
 </version>
 
-### description
+### Description
 
 #### Syntax
 
@@ -52,11 +52,11 @@ under the License.
 
 Type: `Array(String)`
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 select split_by_string('a1b1c1d','1');
@@ -108,6 +108,6 @@ select split_by_string(',,a,,b,,c,,',',,');
 | ['', 'a', 'b', 'c', '']              |
 +--------------------------------------+
 ```
-### keywords
+### Keywords
 
 SPLIT_BY_STRING,SPLIT

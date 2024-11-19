@@ -22,14 +22,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## orthogonal_bitmap_union_count
-### description
+## Orthogonal_bitmap_union_count
+### Description
 #### Syntax
 
 `BITMAP ORTHOGONAL_BITMAP_UNION_COUNT(bitmap_column, column_to_filter, filter_values)`
 Figure out the bitmap union count function, syntax with the original bitmap_union_count, but the implementation is different.
 
-### example
+### Example
 
 ```
 mysql> select orthogonal_bitmap_union_count(members) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
@@ -41,6 +41,6 @@ mysql> select orthogonal_bitmap_union_count(members) from tag_map where  tag_gro
 1 row in set (2.645 sec)
 ```
 
-### keywords
+### Keywords
 
     ORTHOGONAL_BITMAP_UNION_COUNT,BITMAP

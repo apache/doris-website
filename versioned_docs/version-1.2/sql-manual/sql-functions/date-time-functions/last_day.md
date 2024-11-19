@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## last_day
+## Last_day
 ### Description
 #### Syntax
 
@@ -34,7 +34,7 @@ Return the last day of the month, the return day may be :
 '30'(April, June, September, November),
 '31'(January, March, May, July, August, October, December)
 
-### example
+### Example
 
 ```
 mysql > select last_day('2000-02-03');
@@ -45,5 +45,5 @@ mysql > select last_day('2000-02-03');
 +-------------------+
 ```
 
-### keywords
+### Keywords
     LAST_DAY,DAYS

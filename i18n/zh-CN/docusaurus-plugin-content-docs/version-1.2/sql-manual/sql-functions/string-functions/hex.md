@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hex
-### description
+## Hex
+### Description
 #### Syntax
 
 `VARCHAR hex(VARCHAR str)`
@@ -37,7 +37,7 @@ under the License.
 如果输入参数是字符串，则将每个字符转化为两个十六进制的字符，将转化后的所有字符拼接为字符串输出
 
 
-### example
+### Example
 
 ```
 输入字符串
@@ -81,5 +81,5 @@ mysql> select hex(-1);
 | FFFFFFFFFFFFFFFF |
 +------------------+
 ```
-### keywords
+### Keywords
     HEX

@@ -26,17 +26,17 @@ under the License.
 
 ## TIME
 
-### name
+### Name
 
 TIME
 
-### description
+### Description
 
 TIME type
     `TIME` type that can appear as a query result. Table storage and manual CAST generation are not supported.
     When calculating without constant folding, it could represent `[-838:59:59, 838:59:59]`。
 
-### example
+### Example
 
 ```sql
 mysql [(none)]> select timediff('2020-01-01', '2000-01-01');
@@ -48,6 +48,6 @@ mysql [(none)]> select timediff('2020-01-01', '2000-01-01');
 1 row in set (0.00 sec)
 ```
 
-### keywords
+### Keywords
 
     TIME

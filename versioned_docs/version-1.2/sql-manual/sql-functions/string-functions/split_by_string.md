@@ -22,12 +22,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## split_by_string 
+## Split_by_string 
 
 <version since="1.2.2">
 </version>
 
-### description
+### Description
 
 #### Syntax
 
@@ -52,11 +52,11 @@ The original string s is empty.
 
 Type: `Array(String)`
 
-### notice
+### Notice
 
 `Only supported in vectorized engine`
 
-### example
+### Example
 
 ```
 SELECT split_by_string('1, 2 3, 4,5, abcde', ', ');
@@ -109,6 +109,6 @@ select split_by_string(',,a,,b,,c,,',',,');
 | ['', 'a', 'b', 'c', '']              |
 +--------------------------------------+
 ```
-### keywords
+### Keywords
 
 SPLIT_BY_STRING,SPLIT

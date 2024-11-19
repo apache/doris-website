@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## year_ceil
-### description
+## Year_ceil
+### Description
 #### Syntax
 
 ```sql
@@ -41,7 +41,7 @@ Convert the date to the nearest rounding up time of the specified time interval 
 - period: specifies how many years each cycle consists of.
 - origin: starting from 0001-01-01T00:00:00.
 
-### example
+### Example
 
 ```
 mysql> select year_ceil(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5);
@@ -53,6 +53,6 @@ mysql> select year_ceil(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5);
 1 row in set (0.02 sec)
 ```
 
-### keywords
+### Keywords
 
     YEAR_CEIL, YEAR, CEIL

@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_pushfront
+## Array_pushfront
 
 array_pushfront
 
-### description
+### Description
 
 #### Syntax
 
@@ -39,7 +39,7 @@ array_pushfront
 
 类型：Array.
 
-### example
+### Example
 
 ```
 mysql> select array_pushfront([1, 2], 3);
@@ -70,6 +70,6 @@ mysql> select col1, col3, array_pushfront(col3, col1) from array_test;
 +------+-----------+---------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,PUSHFRONT,ARRAY_PUSHFRONT

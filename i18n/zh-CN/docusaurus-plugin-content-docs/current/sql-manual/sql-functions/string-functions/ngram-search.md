@@ -63,5 +63,5 @@ mysql> select ngram_search("abababab","babababa",2);
 |                                       1 |
 +-----------------------------------------+
 ```
-## keywords
+## Keywords
     NGRAM_SEARCH,NGRAM,SEARCH

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## time_to_sec
-### description
+## Time_to_sec
+### Description
 #### Syntax
 
 `INT time_to_sec(TIME datetime)`
@@ -33,7 +33,7 @@ under the License.
 参数为Datetime类型
 将指定的时间值转为秒数，即返回结果为：小时×3600 + 分钟×60 + 秒。
 
-### example
+### Example
 
 ```
 mysql >select current_time(),time_to_sec(current_time());
@@ -44,5 +44,5 @@ mysql >select current_time(),time_to_sec(current_time());
 +----------------+-----------------------------+
 1 row in set (0.01 sec)
 ```
-### keywords
+### Keywords
     TIME_TO_SEC

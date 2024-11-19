@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp_extract_all
+## Regexp_extract_all
 ### Description
 #### Syntax
 
@@ -34,7 +34,7 @@ Regularly matches a string str and extracts the first sub-pattern matching part 
 
 Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
 
-### example
+### Example
 
 ```sql
 mysql> SELECT regexp_extract_all('AbCdE', '([[:lower:]]+)C([[:lower:]]+)');
@@ -66,5 +66,5 @@ mysql> select regexp_extract_all('这是一段中文This is a passage in English
 +------------------------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     REGEXP_EXTRACT_ALL,REGEXP,EXTRACT,ALL

@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_except
+## Array_except
 
 array_except
 
-### description
+### Description
 
 #### Syntax
 
@@ -36,11 +36,11 @@ array_except
 
 Returns an array of the elements in array1 but not in array2, without duplicates. If the input parameter is null, null is returned.
 
-### notice
+### Notice
 
 `Only supported in vectorized engine`
 
-### example
+### Example
 
 ```
 mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table;
@@ -82,6 +82,6 @@ mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table_decimal;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,EXCEPT,ARRAY_EXCEPT

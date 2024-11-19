@@ -36,7 +36,7 @@ under the License.
 
 目前支持对几何图形是：Point, LineString, Polygon。
 
-### example
+### Example
 
 ```
 mysql> select ST_AsBinary(st_point(24.7, 56.7));
@@ -64,5 +64,5 @@ mysql> select ST_AsBinary(ST_Polygon("POLYGON ((114.104486 22.547119,114.093758 
 1 row in set (0.02 sec)
 
 ```
-### keywords
+### Keywords
 ST_ASBINARY,ST,ASBINARY

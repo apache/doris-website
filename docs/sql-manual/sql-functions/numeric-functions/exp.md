@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## exp
+## Exp
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE exp(DOUBLE x)`
@@ -34,7 +34,7 @@ Returns `x` raised to the base `e`.
 Another alias for this function is `dexp`.
 :::
 
-### example
+### Example
 
 ```
 mysql> select exp(2);
@@ -51,5 +51,5 @@ mysql> select exp(3.4);
 +--------------------+
 ```
 
-### keywords
+### Keywords
 	EXP, DEXP

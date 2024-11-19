@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## asin
+## Asin
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE asin(DOUBLE x)`
 Returns the arc sine of `x`, or `nan` if `x` is not in the range `-1` to `1`.
 
-### example
+### Example
 
 ```
 mysql> select asin(0.5);
@@ -47,5 +47,5 @@ mysql> select asin(2);
 +-----------+
 ```
 
-### keywords
+### Keywords
 	ASIN

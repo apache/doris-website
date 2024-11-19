@@ -59,7 +59,7 @@ under the License.
 
 使用 mysql-client 连接到 FE，执行 `show backends`，`show frontends`等操作查看各节点状态
 
-## k8s简易操作命令
+## K8s简易操作命令
 
 - 首次执行yml文件 `kubectl create -f xxx.yml`
 - 修改yml文件后执行 `kubectl apply -f xxx.yml`

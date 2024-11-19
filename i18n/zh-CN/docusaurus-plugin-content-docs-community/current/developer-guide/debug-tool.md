@@ -196,7 +196,7 @@ pprof --svg lib/doris_be /tmp/doris_be.hprof.0012.heap > heap.svg
 
 **注意：开启这个选项是要影响程序的执行性能的，请慎重对线上的实例开启**
 
-###### pprof remote server
+###### Pprof remote server
 
 HEAP PROFILE虽然能够获得全部的内存使用信息，但是也有比较受限的地方。1. 需要重启BE进行。2. 需要一直开启这个命令，导致对整个进程的性能造成影响。
 
@@ -438,7 +438,7 @@ cat be.out | python asan_symbolize.py | c++filt
 
 当系统的CPU Idle很低的时候，说明系统的CPU已经成为了主要瓶颈，这个时候就需要分析一下当前的CPU使用情况。对于Doris的BE可以有如下两种方式来分析Doris的CPU瓶颈。
 
-#### pprof
+#### Pprof
 
 由于Doris内部已经集成了并兼容了GPerf的REST接口，那么用户可以通过`pprof`工具来分析远程的Doris BE。具体的使用方式如下：
 
@@ -450,7 +450,7 @@ pprof --svg --seconds=60 http://be_host:be_webport/pprof/profile > be.svg
 
 ![CPU Pprof](/images/cpu-pprof-demo.png)
 
-#### perf + flamegragh
+#### Perf + flamegragh
 
 这个是相当通用的一种CPU分析方式，相比于`pprof`，这种方式必须要求能够登陆到分析对象的物理机上。但是相比于pprof只能定时采点，perf是能够通过不同的事件来完成堆栈信息采集的。具体的使用方式如下：
 

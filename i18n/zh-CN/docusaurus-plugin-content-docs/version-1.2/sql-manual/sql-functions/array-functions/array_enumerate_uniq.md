@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_enumerate_uniq
+## Array_enumerate_uniq
 
 <version since="1.2.3">
 
@@ -32,7 +32,7 @@ array_enumerate_uniq
 
 </version>
 
-### description
+### Description
 #### Syntax
 
 `ARRAY<T> array_enumerate_uniq(ARRAY<T> arr)`
@@ -41,7 +41,7 @@ array_enumerate_uniq
 该函数也可接受多个大小相同的数组作为参数，这种情况下，返回的是数组中相同位置的元素组成的元组在具有相同值的元组中的位置。例如 array_enumerate_uniq([1, 2, 1, 1, 2], [2, 1, 2, 2, 1]) = [1, 1, 2, 3, 2]
 
 
-### example
+### Example
 
 ```shell
 mysql> select k2, array_enumerate_uniq([1, 2, 3, 1, 2, 3]);
@@ -58,6 +58,6 @@ mysql> select array_enumerate_uniq([1, 1, 1, 1, 1], [2, 1, 2, 1, 2], [3, 1, 3, 1
 +----------------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,ENUMERATE_UNIQ,ARRAY_ENUMERATE_UNIQ

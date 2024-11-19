@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## floor
+## Floor
 
-### description
+### Description
 #### Syntax
 
 `BIGINT floor(DOUBLE x)`
@@ -34,7 +34,7 @@ Returns the largest integer value less than or equal to `x`.
 Another alias for this function is `dfloor`.
 :::
 
-### example
+### Example
 
 ```
 mysql> select floor(1);
@@ -57,5 +57,5 @@ mysql> select floor(-10.3);
 +--------------+
 ```
 
-### keywords
+### Keywords
 	FLOOR, DFLOOR

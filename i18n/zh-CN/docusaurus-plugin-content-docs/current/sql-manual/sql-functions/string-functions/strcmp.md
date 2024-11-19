@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## strcmp
+## Strcmp
 
-### description
+### Description
 
 `TINYINT strcmp(VARCHAR str0, VARCHAR str1)`
 
@@ -38,7 +38,7 @@ under the License.
 如果 `str0` 在字典顺序上大于 `str1`，返回 1。
 如果 `str0` 在字典顺序上小于 `str1`，返回 -1。
 
-### example
+### Example
 
 ```sql
 mysql> select strcmp("test", "test");
@@ -66,5 +66,5 @@ mysql> select strcmp("test", "test1");
 1 row in set (0.00 sec)
 ```
 
-### keywords
+### Keywords
     STRCMP

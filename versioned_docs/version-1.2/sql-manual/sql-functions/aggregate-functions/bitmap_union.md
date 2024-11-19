@@ -27,9 +27,9 @@ under the License.
 
 ## BITMAP_UNION
 
-### description
+### Description
 
-### example
+### Example
 
 #### Create table
 
@@ -144,6 +144,6 @@ from pv_bitmap
 where page in ('meituan', 'waimai');
 ```
 
-### keywords
+### Keywords
 
 BITMAP, BITMAP_COUNT, BITMAP_EMPTY, BITMAP_UNION, BITMAP_UNION_INT, TO_BITMAP, BITMAP_UNION_COUNT, INTERSECT_COUNT

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp_replace_one
-### description
+## Regexp_replace_one
+### Description
 #### Syntax
 
 `VARCHAR regexp_replace_one(VARCHAR str, VARCHAR pattern, VARCHAR repl)`
@@ -34,7 +34,7 @@ under the License.
 
 字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
 
-### example
+### Example
 
 ```sql
 mysql> SELECT regexp_replace_one('a b c', " ", "-");
@@ -59,5 +59,5 @@ mysql> select regexp_replace_one('这是一段中文This is a passage in English
 +------------------------------------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
     REGEXP_REPLACE_ONE,REGEXP,REPLACE,ONE

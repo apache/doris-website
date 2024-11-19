@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## minutes_add
-### description
+## Minutes_add
+### Description
 #### Syntax
 
 `DATETIME MINUTES_ADD(DATETIME date, INT minutes)`
@@ -34,7 +34,7 @@ Add specified minutes from date time or date
 
 The parameter date can be DATETIME or DATE, and the return type is DATETIME.
 
-### example
+### Example
 
 ```
 mysql> select minutes_add("2020-02-02", 1);
@@ -45,6 +45,6 @@ mysql> select minutes_add("2020-02-02", 1);
 +---------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     MINUTES_ADD

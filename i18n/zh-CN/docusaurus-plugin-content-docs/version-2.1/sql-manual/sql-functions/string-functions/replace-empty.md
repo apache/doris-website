@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## replace_empty
-### description
+## Replace_empty
+### Description
 #### Syntax
 
 自 2.1.5 版本支持。
@@ -40,7 +40,7 @@ under the License.
 
 该函数主要用于兼容 Presto、Trino，其行为了 Presto、Trino 中的 `REPLACE()` 函数完全一致。
 
-### example
+### Example
 
 ```
 mysql> select replace_empty("http://www.baidu.com:9090", "9090", "");
@@ -65,6 +65,6 @@ mysql> select replace_empty("", "", "xyz");
 +------------------------------+
 ```
 
-### keywords
+### Keywords
 
     REPLACE_EMPTY

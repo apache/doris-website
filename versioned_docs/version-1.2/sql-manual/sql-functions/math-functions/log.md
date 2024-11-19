@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## log
+## Log
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE log(DOUBLE b, DOUBLE x)`
 Returns the logarithm of `x` based on base `b`.
 
-### example
+### Example
 
 ```
 mysql> select log(5,1);
@@ -53,5 +53,5 @@ mysql> select log(2,65536);
 +-------------------+
 ```
 
-### keywords
+### Keywords
 	LOG

@@ -26,14 +26,14 @@ under the License.
 
 ## MERGE
 
-### description
+### Description
 #### Syntax
 
 `AGGREGATE_FUNCTION_MERGE(agg_state)`
 The aggregated intermediate results are aggregated and calculated to obtain the actual result.
 The type of the result is consistent with `AGGREGATE_FUNCTION`.
 
-### example
+### Example
 ```
 mysql [test]>select avg_merge(avg_state(1)) from d_table;
 +-------------------------+
@@ -42,5 +42,5 @@ mysql [test]>select avg_merge(avg_state(1)) from d_table;
 |                       1 |
 +-------------------------+
 ```
-### keywords
+### Keywords
 AGG_STATE, MERGE

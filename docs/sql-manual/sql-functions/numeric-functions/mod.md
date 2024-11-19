@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## mod
+## Mod
 
-### description
+### Description
 #### Syntax
 
 `mod(col_a, col_b)`  
@@ -33,7 +33,7 @@ under the License.
 
 Find the remainder of a/b. For floating-point types, use the fmod function.
 
-### example
+### Example
 
 ```
 mysql> select mod(10, 3);
@@ -51,5 +51,5 @@ mysql> select fmod(10.1, 3.2);
 +-----------------+
 ```
 
-### keywords
+### Keywords
 	MOD，FMOD

@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## truncate
+## Truncate
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE truncate(DOUBLE x, INT d)`  
@@ -39,7 +39,7 @@ under the License.
 
 如果 `d` 为一个列，并且第一个参数为 Decimal 类型，那么结果 Decimal 会跟入参 Decimal 具有相同的小数部分长度。
 
-### example
+### Example
 
 ```
 mysql> select truncate(124.3867, 2);
@@ -73,5 +73,5 @@ mysql> select cast("123.123456" as Decimal(9,6)), number, truncate(cast ("123.12
 +---------------------------------------+--------+----------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 	TRUNCATE

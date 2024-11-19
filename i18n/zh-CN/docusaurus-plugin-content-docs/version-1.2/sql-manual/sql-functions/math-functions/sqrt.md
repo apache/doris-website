@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sqrt
+## Sqrt
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE sqrt(DOUBLE x)`
@@ -34,7 +34,7 @@ under the License.
 该函数的另一个别名为 `dsqrt`。
 :::
 
-### example
+### Example
 
 ```
 mysql> select sqrt(9);
@@ -57,5 +57,5 @@ mysql> select sqrt(100.0);
 +-------------+
 ```
 
-### keywords
+### Keywords
 	SQRT, DSQRT

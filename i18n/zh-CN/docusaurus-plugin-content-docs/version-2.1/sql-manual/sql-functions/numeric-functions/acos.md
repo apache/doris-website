@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## acos
+## Acos
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE acos(DOUBLE x)`
 返回`x`的反余弦值，若 `x`不在`-1`到 `1`的范围之内，则返回 `NULL`.
 
-### example
+### Example
 
 ```
 mysql> select acos(1);
@@ -53,5 +53,5 @@ mysql> select acos(-2);
 +------------+
 ```
 
-### keywords
+### Keywords
 	ACOS

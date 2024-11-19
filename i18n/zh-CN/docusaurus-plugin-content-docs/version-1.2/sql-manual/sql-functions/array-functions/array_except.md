@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_except
+## Array_except
 
 array_except
 
-### description
+### Description
 
 #### Syntax
 
@@ -36,11 +36,11 @@ array_except
 
 返回一个数组，包含所有在array1内但不在array2内的元素，不包含重复项，如果输入参数为NULL，则返回NULL
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```
 mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table;
@@ -82,6 +82,6 @@ mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table_decimal;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY,EXCEPT,ARRAY_EXCEPT

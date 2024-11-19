@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## week
+## Week
 ### Description
 #### Syntax
 
@@ -46,7 +46,7 @@ The following table describes how the mode argument works.
 
 The parameter is Date or Datetime type
 
-### example
+### Example
 ```
 mysql> select week('2020-1-1');
 +------------------+
@@ -63,5 +63,5 @@ mysql> select week('2020-7-1',1);
 |                  27 |
 +---------------------+
 ```
-### keywords
+### Keywords
     WEEK

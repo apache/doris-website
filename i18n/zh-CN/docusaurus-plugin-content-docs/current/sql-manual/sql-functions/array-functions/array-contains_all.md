@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_contains_all
+## Array_contains_all
 
 array_contains_all
 
-### description
+### Description
 
 #### Syntax
 
@@ -42,7 +42,7 @@ array_contains_all
 NULL - array1或array2为NULL。
 ```
 
-### example
+### Example
 
 ```
 mysql [(none)]>select array_contains_all([1,2,3,4], [1,2,4]);
@@ -78,6 +78,6 @@ mysql [(none)]>select array_contains_all([1,2,3,4], NULL);
 1 row in set (0.00 sec)
 ```
 
-### keywords
+### Keywords
 
 ARRAY,CONTAIN,ARRAY_CONTAINS_ALL

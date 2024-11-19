@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## month
+## Month
 ### Description
 #### Syntax
 
@@ -35,7 +35,7 @@ Returns month information in the time type, ranging from 1,12
 
 The parameter is Date or Datetime type
 
-### example
+### Example
 
 ```
 mysql> select month('1987-01-01');
@@ -45,5 +45,5 @@ mysql> select month('1987-01-01');
 |                           1 |
 +-----------------------------+
 ```
-### keywords
+### Keywords
     MONTH

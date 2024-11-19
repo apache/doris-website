@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## group_concat
-### description
+## Group_concat
+### Description
 #### Syntax
 
 `VARCHAR GROUP_CONCAT([DISTINCT] VARCHAR str[, VARCHAR sep] [ORDER BY { col_name | expr} [ASC | DESC]])`
@@ -39,7 +39,7 @@ under the License.
 `group_concat`暂不支持`distinct`和`order by`一起用。
 :::
 
-### example
+### Example
 
 ```
 mysql> select value from test;
@@ -81,5 +81,5 @@ mysql> select GROUP_CONCAT(value, NULL) from test;
 +----------------------------+
 ```
 
-### keywords
+### Keywords
 GROUP_CONCAT,GROUP,CONCAT

@@ -49,7 +49,7 @@ The array of 1 or 0.
 
 0 — Condition wasn’t met for the event.
 
-### example
+### Example
 
 ```sql
 DROP TABLE IF EXISTS retention_test;
@@ -134,6 +134,6 @@ SELECT
 
 ```
 
-### keywords
+### Keywords
 
 RETENTION

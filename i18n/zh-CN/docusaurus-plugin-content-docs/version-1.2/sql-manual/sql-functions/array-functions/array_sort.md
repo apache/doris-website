@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_sort
+## Array_sort
 
 array_sort
 
-### description
+### Description
 
 #### Syntax
 
@@ -35,11 +35,11 @@ array_sort
 返回按升序排列后的数组，如果输入数组为NULL，则返回NULL。
 如果数组元素包含NULL, 则输出的排序数组会将NULL放在最前面。
 
-### notice
+### Notice
 
 `仅支持向量化引擎中使用`
 
-### example
+### Example
 
 ```mysql> select k1, k2, array_sort(k2) from array_test;
 +------+-----------------------------+-----------------------------+
@@ -71,6 +71,6 @@ mysql> select k1, k2, array_sort(k2) from array_test01;
 +------+------------------------------------------+------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, SORT, ARRAY_SORT

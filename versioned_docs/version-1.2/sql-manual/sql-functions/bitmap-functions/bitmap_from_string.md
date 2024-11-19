@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_from_string
+## Bitmap_from_string
 
-### description
+### Description
 #### Syntax
 
 `BITMAP BITMAP_FROM_STRING(VARCHAR input)`
@@ -33,7 +33,7 @@ Convert a string into a bitmap. The input string should be a comma separated uns
 For example: input string "0, 1, 2" will be converted to a Bitmap with bit 0, 1, 2 set.
 If input string is invalid, return NULL.
 
-### example
+### Example
 
 ```
 mysql> select bitmap_to_string(bitmap_empty());
@@ -65,6 +65,6 @@ mysql> select bitmap_to_string(bitmap_from_string("0, 1, 18446744073709551615"))
 +--------------------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     BITMAP_FROM_STRING,BITMAP

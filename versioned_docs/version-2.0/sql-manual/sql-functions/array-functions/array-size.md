@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_size (size, cardinality)
+## Array_size (size, cardinality)
 array_size (size, cardinality)
-### description
+### Description
 
 #### Syntax
 
@@ -38,7 +38,7 @@ BIGINT cardinality(ARRAY<T> arr)
 
 Returns the size of the array, returns NULL for NULL input.
 
-### example
+### Example
 
 ```
 mysql> select k1,k2,size(k2) from array_test;
@@ -70,7 +70,7 @@ mysql> select k1,k2,cardinality(k2) from array_test;
 
 ```
 
-### keywords
+### Keywords
 
 ARRAY_SIZE, SIZE, CARDINALITY
 

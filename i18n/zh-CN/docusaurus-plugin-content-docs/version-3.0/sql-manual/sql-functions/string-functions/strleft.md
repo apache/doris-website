@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## strleft
-### description
+## Strleft
+### Description
 #### Syntax
 
 `VARCHAR strleft(VARCHAR str, INT len)`
@@ -34,7 +34,7 @@ under the License.
 它返回具有指定长度的字符串的左边部分，长度的单位为utf8字符，此函数的另一个别名为 `left`。
 如果函数参数含有NULL值那么函数将始终返回NULL，如果整型参数小于等于0，那么将返回空 “”。
 
-### example
+### Example
 
 ```
 mysql> select strleft("Hello doris",5);
@@ -62,5 +62,5 @@ mysql> select strleft(NULL,3);
 | NULL             |
 +------------------+
 ```
-### keywords
+### Keywords
     STRLEFT, LEFT

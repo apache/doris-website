@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## substring
-### description
+## Substring
+### Description
 #### Syntax
 
 `VARCHAR substring(VARCHAR str, INT pos, [INT len])`
@@ -39,7 +39,7 @@ under the License.
 
 该函数还有一个别名 `SUBSTR`
 
-### example
+### Example
 
 ```
 mysql> select substring('abc1', 2);
@@ -77,5 +77,5 @@ mysql> select substring('abc1def', 2, 2);
 | bc                          |
 +-----------------------------+
 ```
-### keywords
+### Keywords
     SUBSTRING, STRING, SUBSTR

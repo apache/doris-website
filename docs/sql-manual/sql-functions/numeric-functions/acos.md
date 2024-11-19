@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## acos
+## Acos
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE acos(DOUBLE x)`
 Returns the arc cosine of `x`, or `NULL` if `x` is not in the range `-1` to `1`.
 
-### example
+### Example
 
 ```
 mysql> select acos(1);
@@ -53,5 +53,5 @@ mysql> select acos(-2);
 +------------+
 ```
 
-### keywords
+### Keywords
 	ACOS

@@ -33,7 +33,7 @@ under the License.
 计算协方差, 即返回结果为: x和y的协方差。
 
 
-### example
+### Example
 
 ```
 mysql> select covar(x,y) from baseall;
@@ -45,5 +45,5 @@ mysql> select covar(x,y) from baseall;
 1 row in set (0.21 sec)
 
 ```
-### keywords
+### Keywords
 COVAR

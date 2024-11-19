@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## query
+## Query
 
 ### Name
 
 query
 
-### description
+### Description
 
 Query table function (table-valued-function, tvf) can be used to transparently transmit query statements directly to a catalog for data query
 
@@ -39,7 +39,7 @@ Supported by Doris version 2.1.3, currently only transparent query jdbc catalog 
 You need to create the corresponding catalog in Doris first.
 :::
 
-#### syntax
+#### Syntax
 
 ```sql
 query(

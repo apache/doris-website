@@ -24,20 +24,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sleep
+## Sleep
 
 :::warning 警告
 此函数不能在生产环境使用，将产生严重影响。
 :::
 
-### description
+### Description
 #### Syntax
 
 `BOOLEAN sleep(INT num)`
 
 使当前会话休眠 `num` 秒。
 
-### example
+### Example
 
 ```sql
 mysql> select sleep(10);
@@ -48,5 +48,5 @@ mysql> select sleep(10);
 +-----------+
 ```
 
-### keywords
+### Keywords
     sleep

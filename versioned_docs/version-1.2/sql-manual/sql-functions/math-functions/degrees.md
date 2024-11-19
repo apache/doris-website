@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## degrees
+## Degrees
 
-### description
+### Description
 #### Syntax
 
 `DOUBLE degrees(DOUBLE x)`
 Returns the degree of `x`, converted from radians to degrees.
 
-### example
+### Example
 
 ```
 mysql> select degrees(0);
@@ -53,5 +53,5 @@ mysql> select degrees(Pi());
 +---------------+
 ```
 
-### keywords
+### Keywords
 	DEGREES

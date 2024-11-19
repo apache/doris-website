@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_first
+## Array_first
 
 array_first
 
-### description
+### Description
 Returns the first element in the array for which func(arr1[i]) returns something other than 0.
 
 #### Syntax
@@ -39,7 +39,7 @@ T array_first(lambda, ARRAY<T>)
 
 Use a lambda bool expression and an array as the input parameters, the lambda expression is used to evaluate the internal data of other input ARRAY parameters.
 
-### example
+### Example
 
 ```
 mysql> select array_first(x->x>2, [1,2,3,0]) ;
@@ -67,6 +67,6 @@ mysql> select array_first(x->x>1, [1,2,3,0]) ;
 ```
 
 
-### keywords
+### Keywords
 
 ARRAY, LAST, array_first

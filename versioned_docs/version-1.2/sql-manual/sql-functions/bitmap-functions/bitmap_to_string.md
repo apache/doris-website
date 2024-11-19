@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_to_string
+## Bitmap_to_string
 
-### description
+### Description
 #### Syntax
 
 `VARCHAR BITMAP_TO_STRING(BITMAP input)`
@@ -32,7 +32,7 @@ under the License.
 Convert a input BITMAP to a string. The string is a separated string, contains all set bits in Bitmap.
 If input is null, return null.
 
-### example
+### Example
 
 ```
 mysql> select bitmap_to_string(null);
@@ -65,6 +65,6 @@ mysql> select bitmap_to_string(bitmap_or(to_bitmap(1), to_bitmap(2)));
 
 ```
 
-### keywords
+### Keywords
 
     BITMAP_TO_STRING,BITMAP

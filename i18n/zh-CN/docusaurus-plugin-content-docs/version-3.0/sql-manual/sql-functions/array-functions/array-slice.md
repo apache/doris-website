@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_slice
+## Array_slice
 
 array_slice
 
-### description
+### Description
 
 #### Syntax
 
@@ -41,7 +41,7 @@ array_slice
 如果len是负数，则表示长度为0
 ```
 
-### example
+### Example
 
 
 ```
@@ -146,6 +146,6 @@ mysql> select k2, array_slice(k2, -5) from array_type_table;
 +-----------+----------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY,SLICE,ARRAY_SLICE

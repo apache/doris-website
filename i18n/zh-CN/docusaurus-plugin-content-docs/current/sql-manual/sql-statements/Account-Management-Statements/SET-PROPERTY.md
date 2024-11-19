@@ -36,11 +36,11 @@ SET PROPERTY [FOR 'user'] 'key' = 'value' [, 'key' = 'value']
 
 ## 参数
 
-### user
+### User
 
 要设置属性的用户名。如果省略，则为当前用户设置属性。
 
-### key
+### Key
 
 要设置的属性键。可用的键包括：
 
@@ -56,7 +56,7 @@ SET PROPERTY [FOR 'user'] 'key' = 'value' [, 'key' = 'value']
 
 注：如果未设置 `cpu_resource_limit` 和 `exec_mem_limit`，则默认使用会话变量中的值。
 
-### value
+### Value
 
 为指定键设置的值。
 

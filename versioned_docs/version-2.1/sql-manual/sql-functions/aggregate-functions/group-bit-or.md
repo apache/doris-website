@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## group_bit_or
-### description
+## Group_bit_or
+### Description
 #### Syntax
 
 `expr GROUP_BIT_OR(expr)`
@@ -33,7 +33,7 @@ under the License.
 Perform an or calculation on expr, and return a new expr.
 All ints are supported
 
-### example
+### Example
 
 ```
 mysql> select * from group_bit;
@@ -55,6 +55,6 @@ mysql> select group_bit_or(value) from group_bit;
 +-----------------------+
 ```
 
-### keywords
+### Keywords
 
     GROUP_BIT_OR,BIT

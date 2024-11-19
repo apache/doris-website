@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## right
+## Right
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 It returns the right part of a string of specified length, length is char length not the byte size. Another alias for this function is [strright](./strright.md).
 
-### example
+### Example
 
 ```
 mysql> select right("Hello doris",5);
@@ -43,5 +43,5 @@ mysql> select right("Hello doris",5);
 | doris                   |
 +-------------------------+
 ```
-### keywords
+### Keywords
     RIGHT

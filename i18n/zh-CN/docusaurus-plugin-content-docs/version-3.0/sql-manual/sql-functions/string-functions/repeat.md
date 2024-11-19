@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## repeat
-### description
+## Repeat
+### Description
 #### Syntax
 
 `VARCHAR repeat(VARCHAR str, INT count)`
@@ -40,7 +40,7 @@ set repeat_max_num = 20000
 ```
 :::
 
-### example
+### Example
 
 ```
 mysql> SELECT repeat("a", 3);
@@ -57,5 +57,5 @@ mysql> SELECT repeat("a", -1);
 |                 |
 +-----------------+
 ```
-### keywords
+### Keywords
     REPEAT

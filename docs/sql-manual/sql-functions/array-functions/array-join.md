@@ -24,12 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_join
+## Array_join
 
 array_join
 
 
-### description
+### Description
 
 #### Syntax
 
@@ -42,7 +42,7 @@ If null_replace is NULL, return NULL.
 If sep is an empty string, no delimiter is applied.
 If null_replace is an empty string or not specified, the NULL elements in the array are discarded directly.
 
-### example
+### Example
 
 ```
 mysql> select k1, k2, array_join(k2, '_', 'null') from array_test order by k1;
@@ -94,6 +94,6 @@ mysql> select k1, k2, array_join(k2, '_') from array_test01 order by k1;
 +------+-----------------------------------+----------------------------+
 ```
 
-### keywords
+### Keywords
 
 ARRAY, JOIN, ARRAY_JOIN

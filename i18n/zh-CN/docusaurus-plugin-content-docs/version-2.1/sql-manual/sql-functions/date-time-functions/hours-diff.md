@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hours_diff
-### description
+## Hours_diff
+### Description
 #### Syntax
 
 `INT hours_diff(DATETIME enddate, DATETIME startdate)`
 
 开始时间到结束时间相差几小时
 
-### example
+### Example
 
 ```
 mysql> select hours_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
@@ -43,6 +43,6 @@ mysql> select hours_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
 +----------------------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
     hours_diff

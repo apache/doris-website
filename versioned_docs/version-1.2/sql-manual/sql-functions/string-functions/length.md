@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## length
+## Length
 ### Description
 #### Syntax
 
@@ -33,7 +33,7 @@ under the License.
 
 Returns the length of the string in byte size.
 
-### example
+### Example
 
 ```
 mysql> select length("abc");
@@ -50,5 +50,5 @@ mysql> select length("中国");
 |                6 |
 +------------------+
 ```
-### keywords
+### Keywords
     LENGTH

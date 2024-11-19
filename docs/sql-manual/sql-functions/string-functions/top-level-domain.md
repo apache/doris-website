@@ -59,6 +59,6 @@ mysql [(none)]>select top_level_domain("wwwwwwww");
 +------------------------------+
 ```
 
-### keywords
+### Keywords
 
 top_level_domain

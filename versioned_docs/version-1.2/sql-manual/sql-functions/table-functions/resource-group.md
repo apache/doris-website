@@ -34,13 +34,13 @@ resource_groups
 
 </version>
 
-### description
+### Description
 
 Table-Value-Function, generate a temporary table named `resource_groups`. This tvf is used to view informations about current resource groups.
 
 This function is used in `FROM` clauses.
 
-#### syntax
+#### Syntax
 
 `resource_groups()`
 
@@ -57,7 +57,7 @@ mysql> desc function resource_groups();
 +-------+-------------+------+-------+---------+-------+
 ```
 
-### example
+### Example
 ```
 mysql> select * from resource_groups()\G
 +-------+------------+-----------+-------+
@@ -68,6 +68,6 @@ mysql> select * from resource_groups()\G
 +-------+------------+-----------+-------+
 ```
 
-### keywords
+### Keywords
 
     resource_groups

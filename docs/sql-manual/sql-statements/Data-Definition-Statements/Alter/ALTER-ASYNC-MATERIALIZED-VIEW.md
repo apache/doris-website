@@ -34,7 +34,7 @@ ALTER ASYNC MATERIALIZED VIEW
 
 This statement is used to modify asynchronous materialized views.
 
-#### syntax
+#### Syntax
 
 ```sql
 ALTER MATERIALIZED VIEW mvName=multipartIdentifier ((RENAME newName=identifier)
@@ -43,7 +43,7 @@ ALTER MATERIALIZED VIEW mvName=multipartIdentifier ((RENAME newName=identifier)
        | (SET  LEFT_PAREN fileProperties=propertyItemList RIGHT_PAREN))
 ```
 
-#### illustrate
+#### Illustrate
 
 ##### RENAME
 
@@ -54,11 +54,11 @@ For example, changing the name of mv1 to mv2
 ALTER MATERIALIZED VIEW mv1 rename mv2;
 ```
 
-##### refreshMethod
+##### RefreshMethod
 
 Same as [creating asynchronous materialized views](../Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 
-##### refreshTrigger
+##### RefreshTrigger
 
 Same as [creating asynchronous materialized views](../Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 

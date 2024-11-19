@@ -22,9 +22,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## abs
+## Abs
 
-### description
+### Description
 #### Syntax
 
 ```sql
@@ -40,7 +40,7 @@ DECIMAL abs(DECIMAL x)`
 
 返回`x`的绝对值.
 
-### example
+### Example
 
 ```
 mysql> select abs(-2);
@@ -63,5 +63,5 @@ mysql> select abs(-3254654236547654354654767);
 +---------------------------------+
 ```
 
-### keywords
+### Keywords
 	ABS

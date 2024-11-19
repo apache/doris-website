@@ -96,7 +96,7 @@ The above import methods all support column mapping, transformation and filterin
   WHERE k1 > k2
   ```
 
-## column mapping
+## Column mapping
 
 The purpose of column mapping is mainly to describe the information of each column in the import file, which is equivalent to defining the name of the column in the source data. By describing the column mapping relationship, we can import source files with different column order and different number of columns into Doris. Below we illustrate with an example:
 

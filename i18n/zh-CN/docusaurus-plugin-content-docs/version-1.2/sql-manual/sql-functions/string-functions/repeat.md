@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## repeat
-### description
+## Repeat
+### Description
 #### Syntax
 
 `VARCHAR repeat(VARCHAR str, INT count)`
@@ -33,7 +33,7 @@ under the License.
 
 将字符串 str 重复 count 次输出，count 小于1时返回空串，str，count 任一为NULL时，返回 NULL
 
-### example
+### Example
 
 ```
 mysql> SELECT repeat("a", 3);
@@ -50,5 +50,5 @@ mysql> SELECT repeat("a", -1);
 |                 |
 +-----------------+
 ```
-### keywords
+### Keywords
     REPEAT
