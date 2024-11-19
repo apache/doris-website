@@ -40,44 +40,6 @@ Materialized views are suitable for the following scenarios:
 
 For queries that frequently reuse the same subquery results, a sync-materialized view can significantly enhance performance. Doris automatically maintains the data in the materialized view, ensuring data consistency between the base table and the materialized view without additional manual maintenance costs. During queries, the system automatically matches the optimal materialized view and reads data directly from it.
 
-When using materialized views, please note the following points:
-
-1. In Doris version 2.0, materialized views have enhanced features. It is recommended that users confirm in a test environment whether the expected queries can hit the desired materialized views before using them in a formal production environment.
-
-2. It is not advisable to create multiple similar materialized views on the same table, as this may lead to conflicts between them, resulting in query misses.
-
-## Usage Process
-
-The usage process for materialized views is as follows:
-
-### 1 Create a Materialized View
-
-1. Determine the type of materialized view to create based on the characteristics of the query statement.
-
-2. Extract the common grouping and aggregation methods from multiple queries as the basis for defining the materialized view.
-
-3. It is not necessary to create materialized views for all dimension combinations; only create them for commonly used dimension combinations.
-
-4. Creating a materialized view is an asynchronous operation. After submitting the creation task, Doris will compute the existing data in the background until the creation is successful.
-
-### 2 Automatic Query Matching
-
-1. After the materialized view is successfully created, when a user queries the base table, Doris will automatically select an optimal materialized view and read data from it for computation.
-
-2. Users can use the EXPLAIN command to check whether the current query is using a materialized view.
-
-### 3 Update Strategy
-
-To ensure data consistency between the materialized view and the base table, Doris synchronizes operations on the base table to the materialized view, using incremental updates to improve update efficiency and ensuring the atomicity of operations through transactions.
-
-### 4 Supported Aggregation Functions
-
-1. SUM, MIN, MAX (applicable to Version 0.12)
-
-2. COUNT, BITMAP_UNION, HLL_UNION (applicable to Version 0.13)
-
-3. General aggregation functions (applicable to Version 2.0)
-
 ## Tuning Usage Case
 
 The following is a specific example to illustrate the use of single-table materialized views:
