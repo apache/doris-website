@@ -76,3 +76,4 @@ Click Start Running the Job to complete data synchronization
 | Maximum bytes for a single import | 10485760 (10MB) | N | Maximum byte size for a single import |
 | Number of import retries | 3 | N | Number of retries after import failure |
 | StreamLoad properties | -- | N | Streamload request header |
+| Delete Mode | N | N | Whether to enable delete mode. By default, Stream Load performs insert operations. After the delete mode is enabled, all Stream Load writes are delete operations. |

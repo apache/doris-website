@@ -38,43 +38,50 @@ Users can modify the schema of an existing table through the Schema Change opera
 
 ## Introduction
 
-**Light Schema Change**
+**Overview**
 
-Before introduction, it is necessary to know the three Schema Change implementations before the Apache Doris 1.2.0 version, all of which are asynchronous:
+The implementation of Schema Change is divided into two major categories: Light Weight Schema Change and Heavy Weight Schema Change.
 
-- Hard linked schema change  mainly acts on addition and subtraction of value columns and does not require modification of the data file.
+- Light Weight Schema Change is completed quickly by synchronously modifying only the FE's metadata, typically within seconds. Adding or dropping value columns, changing column names, and increasing the length of VARCHAR columns (except for DUP KEY columns and UNIQUE KEY columns) all use the logic of Light Weight Schema Change.
 
-- Direct schema change  is mainly used to change the type of value  column, which needs to rewrite the data, but does not involve the key  column, and does not need to be reordered.
+- Heavy Weight Schema Change relies on the BE for data file transformation. The specific implementation methods are as follows:
 
-- Sort schema change  is mainly used for the key column  schema change, because the key  column addition/subtraction/modification type and other operations will affect the sorting of existing data, so the data needs to be read out again, modified, and then sort.
+    |Schema change Implementation | Main Logic | Typical Scenario |
+    |-----------------|------|---------|----------|
+    | Direct Schema Change | Rewrites the data files holistically without involving reordering | Changing the data type of value columns |
+    | Sort Schema Change | Rewrites the data files holistically and reorders them | Changing the data type of key columns |
+    | Hard Linked Schema Change | Relinks the data files without directly modifying the data files | Replaced by Light Weight Schema Change for column changes |
 
-Since Apache Doris 1.2.0 , for the first type, the new feature of light schema change has been introduced. The new light schema change allows the addition and subtraction of the value column to be completed in milliseconds. Starting from Apache Doris 2.0.0, all newly created tables have enabled light schema change by default.
+**Main Process**
 
-**In addition to adding and deleting the value column, the main principles of other types of schema changes are as follows**
+For Light Weight Schema Change, only the corresponding metadata in FE is modified after the Alter command is issued, and the return of the Alter command signifies the end of the schema change.
 
-The basic process of executing schema change is to generate a new schema table from the data  /Index  in the original table  /Index data. There are mainly two parts of data conversion, one is the conversion of existing historical data, and the other is the conversion of newly arrived imported data during the execution of schema change.
+For Heavy Weight Schema Change, after the user issues the Alter command, a task for schema change is started in the background, and the return of the command signifies the successful submission of the schema change task. The execution of the background task goes through the following process:
 
-```Plain
-+----------+
-| Load Job |
-+----+-----+
-     |
-     | Load job generates both origin and new Index data
-     |
-     |      +------------------+ +---------------+
-     |      | Origin Index     | | Origin Index  |
-     +------> New Incoming Data| | History Data  |
-     |      +------------------+ +------+--------+
-     |                                  |
-     |                                  | Convert history data
-     |                                  |
-     |      +------------------+ +------v--------+
-     |      | New Index        | | New Index     |
-     +------> New Incoming Data| | History Data  |
-            +------------------+ +---------------+
-```
-
-Before starting to convert historical data, Doris will obtain a latest transaction ID and wait for all import transactions before this transaction ID to complete. This transaction ID becomes a watershed. This means that Doris ensures that all import tasks after the watershed will generate data for the original table  /Index  and the new table  /Index  at the same time. This way, when the historical data conversion is completed, the data in the new table can be guaranteed to be complete.
+1. For each tablet of the target table, a corresponding new tablet is created according to the schema after the change, used for storing the transformed data.
+2. Wait for all previous import transactions to end before starting data transformation.
+3. Start data transformation, task by task for each tablet, writing the data from the old tablet after the change to the newly created tablet. The differences among the three heavy weight Schema Changes are in this step, where data transformation is carried out according to their respective implementation logics mentioned above.
+4. After the data transformation starts, if a new import transaction is created, to ensure data integrity, the new import transaction will simultaneously generate data for both the old tablet and the new tablet, known as dual writing. Data written during the dual write period must be compatible with both the new and old schemas, otherwise, the import will fail.
+    ```Plain
+    +----------+
+    | Load Job |
+    +----+-----+
+        |
+        | Load job generates both origin and new Index data
+        |
+        |      +------------------+ +---------------+
+        |      | Origin Index     | | Origin Index  |
+        +------> New Incoming Data| | History Data  |
+        |      +------------------+ +------+--------+
+        |                                  |
+        |                                  | Convert history data
+        |                                  |
+        |      +------------------+ +------v--------+
+        |      | New Index        | | New Index     |
+        +------> New Incoming Data| | History Data  |
+                +------------------+ +---------------+
+    ```
+5. After the data transformation is completed, all tablets storing old data will be deleted, and all new tablets that have completed the data change will replace the old tablets for service.
 
 The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
 
@@ -100,6 +107,7 @@ ALTER TABLE table_name ADD COLUMN column_name column_type [KEY | agg_type] [DEFA
 #### non-aggregate model
 
 table's DDL:
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     col1 int,
@@ -110,10 +118,10 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
 ) DUPLICATE KEY(col1, col2, col3)
 DISTRIBUTED BY RANDOM BUCKETS 1
 ROLLUP (
-   example_rollup_index (col1, col3, col4, col5)
+    example_rollup_index (col1, col3, col4, col5)
 )
 PROPERTIES (
-   "replication_num" = "1"
+    "replication_num" = "1"
 )
 ```
 
@@ -136,6 +144,7 @@ TO example_rollup_index;
 #### aggregate model
 
 table's DDL:
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     col1 int,
@@ -262,6 +271,7 @@ ALTER TABLE table_name MODIFY COLUMN column_name column_type [KEY | agg_type] [N
 ### Examples
 
 table's DDL:
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     col0 int,
@@ -329,7 +339,7 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
 ) AGGREGATE KEY(k1, k2, k3, k4)
 DISTRIBUTED BY HASH(k1) BUCKETS 1
 ROLLUP (
-   example_rollup_index(k1, k2, k3, v1, v2)
+    example_rollup_index(k1, k2, k3, v1, v2)
 )
 PROPERTIES (
     "replication_num" = "1"
@@ -360,8 +370,8 @@ CREATE TABLE IF NOT EXISTS example_db.tbl1(
 ) AGGREGATE KEY(k1, k2, k3)
 DISTRIBUTED BY HASH(k1) BUCKETS 1
 ROLLUP (
-   rollup1 (k1, k2),
-   rollup2 (k2)
+    rollup1 (k1, k2),
+    rollup2 (k2)
 )
 PROPERTIES (
     "replication_num" = "1"
@@ -406,6 +416,7 @@ Additionally, it is not allowed to add columns to a rollup that already exist in
 ### Example 2
 
 table's DDL
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     k1 int DEFAULT "1",
@@ -416,10 +427,10 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
 ) AGGREGATE KEY(k1, k2, k3, k4)
 DISTRIBUTED BY HASH(k1) BUCKETS 1
 ROLLUP (
-   example_rollup_index(k1, k3, k2, v1)
+    example_rollup_index(k1, k3, k2, v1)
 )
 PROPERTIES (
-   "replication_num" = "1"
+    "replication_num" = "1"
 )
 ```
 
@@ -439,9 +450,9 @@ ALTER TABLE RENAME COLUMN old_column_name new_column_name;
 
 ## Check Job Status
 
-The creation of a schema change is an asynchronous process. After a job is successfully submitted, users need to use the `SHOW ALTER TABLE COLUMN` command to check the progress of the job.
+Users could use the `SHOW ALTER TABLE COLUMN` command to check the progress of the schema change job.
 
-`SHOW ALTER TABLE COLUMN ` allows you to view the currently executing or completed schema Change jobs. When a schema change job involves multiple indexes, the command will display multiple rows, with each row corresponding to an index. For example:
+`SHOW ALTER TABLE COLUMN` allows you to view the currently executing or completed schema Change jobs. When a schema change job involves multiple indexes, the command will display multiple rows, with each row corresponding to an index. For example:
 
 ```sql
 mysql > SHOW ALTER TABLE COLUMN\G;
@@ -485,11 +496,11 @@ TransactionId: 10023
   - PENDING: the job is waiting in the queue to be scheduled.
 
   - WAITING_TXN: waiting for import tasks before the boundary transaction ID to complete.
-
+  
   - RUNNING: historical data transformation is in progress.
-
+  
   - FINISHED: the job completed successfully.
-
+  
   - CANCELLED: the job was cancelled.
 
 - Msg: if the job fails, this field displays the failure message.
@@ -530,7 +541,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 
 - Note that apart from the new column type, other attributes such as the aggregation method, nullable property, and default value should be completed based on the original information.
 
-- It is not supported to modify column names, aggregation types, nullable properties, default values, or column comments.
+- It is not supported to modify aggregation types, nullable properties, or default values.
 
 ## FAQs
 

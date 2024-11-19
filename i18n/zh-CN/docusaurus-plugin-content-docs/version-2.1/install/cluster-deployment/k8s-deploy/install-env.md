@@ -1,6 +1,6 @@
 ---
 {
-"title": "集群环境要求",
+"title": "环境要求",
 "language": "zh-CN"
 }
 ---

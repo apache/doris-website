@@ -28,7 +28,7 @@ under the License.
 
 [DataX](https://github.com/alibaba/DataX) Doriswriter 插件，支持将 MySQL、Oracle、SqlServer 等多种数据源中的数据通过 Stream Load的方式同步到 Doris 中。
 
-:::注意
+:::info 注意
 1. 需要配合 DataX 服务一起使用。
 2. DataX支持多种数据源，可参考[这里](https://github.com/alibaba/DataX#support-data-channels)。
 :::

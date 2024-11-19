@@ -97,9 +97,9 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
     ```sql
     CREATE TABLE testdb.test_streamload(
-        user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-        name               VARCHAR(20)           COMMENT "用户姓名",
-        age                INT                   COMMENT "用户年龄"
+        user_id            BIGINT       NOT NULL COMMENT "user id",
+        name               VARCHAR(20)           COMMENT "name",
+        age                INT                   COMMENT "age"
     )
     DUPLICATE KEY(user_id)
     DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -180,9 +180,9 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
     ```sql
     CREATE TABLE testdb.test_streamload(
-        user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-        name               VARCHAR(20)           COMMENT "用户姓名",
-        age                INT                   COMMENT "用户年龄"
+        user_id            BIGINT       NOT NULL COMMENT "user id",
+        name               VARCHAR(20)           COMMENT "name",
+        age                INT                   COMMENT "age"
     )
     DUPLICATE KEY(user_id)
     DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -376,51 +376,6 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 | ErrorURL               | 如果有数据质量问题，通过访问这个 URL 查看具体错误行          |
 
 通过 ErrorURL 可以查看因为数据质量不佳导致的导入失败数据。使用命令 `curl "<ErrorURL>"` 命令直接查看错误数据的信息。
-
-## TVF 在 Stream Load 中的应用 - http_stream 模式
-
-依托 Doris 最新引入的 Table Value Function（TVF）的功能，在 Stream Load 中，可以通过使用 SQL 表达式来表达导入的参数。这个专门为 Stream Load 提供的 TVF 为 http_stream。
-
-:::caution
-注意
-
-使用 TVF http_stream 进行 Stream Load 导入时的 Rest API URL 不同于 Stream Load 普通导入的 URL。
-
-- 普通导入的 URL 为：
-  
-    http://fe_host:http_port/api/{db}/{table}/_stream_load
-
-- 使用 TVF http_stream 导入的 URL 为：
-
-    http://fe_host:http_port/api/_http_stream
-:::
-
-使用 `curl` 来使用 Stream Load 的 http stream 模式：
-```shell
-curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
-```
-
-在 Header 中添加一个`sql`的参数，去替代之前参数中的`column_separator`、`line_delimiter`、`where`、`columns`等参数，使用起来非常方便。
-
-load_sql 举例：
-
-```shell
-insert into db.table (col1, col2, ...) select c1, c2, ... from http_stream("property1"="value1");
-```
-
-http_stream 支持的参数：
-
-"column_separator" = ",", "format" = "CSV",
-
-导入 CSV 文件时，`select ... from http_stream` 子句中的列名格式必须为 `c1, c2, c3, ...`，见下方示例
-
-...
-
-示例：
-
-```Plain
-curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream(\"format\" = \"CSV\", \"column_separator\" = \",\" ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
-```
 
 ## 导入举例
 
@@ -785,9 +740,9 @@ curl --location-trusted -u root -T test.json -H "label:1" -H "format:json" -H 'c
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "name",
+    age                INT                   COMMENT "age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -910,8 +865,8 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 ```sql
 CREATE TABLE testdb.test_streamload(
     typ_id     BIGINT          NOT NULL COMMENT "ID",
-    name       VARCHAR(20)     NULL     COMMENT "名称",
-    arr        ARRAY<int(10)>  NULL     COMMENT "数组"
+    name       VARCHAR(20)     NULL     COMMENT "name",
+    arr        ARRAY<int(10)>  NULL     COMMENT "array"
 )
 DUPLICATE KEY(typ_id)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;
@@ -952,7 +907,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 ```sql
 CREATE TABLE testdb.test_streamload(
     user_id            BIGINT       NOT NULL COMMENT "ID",
-    namemap            Map<STRING, INT>  NULL     COMMENT "名称"
+    namemap            Map<STRING, INT>  NULL     COMMENT "namemap"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;

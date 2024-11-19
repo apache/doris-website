@@ -1,6 +1,6 @@
 ---
 {
-"title": "Cluster Environment Requirements",
+"title": "Environment Requirements",
 "language": "en"
 }
 ---

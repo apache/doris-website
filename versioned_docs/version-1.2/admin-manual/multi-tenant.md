@@ -127,6 +127,10 @@ Node resource division refers to setting tags for BE nodes in a Doris cluster, a
     set property for'user2''resource_tags.location' = 'group_b';
     set property for'user3''resource_tags.location' = 'group_a, group_b, group_c';
     ```
+
+   :::tip
+   It should be noted that after each modification of the ```resource_tags.location``` property, the user needs to re-establish the connection for the changes to take effect.
+   :::
     
     After the setting is complete, when user1 initiates a query on the UserTable table, it will only access the data copy on the nodes in the `group_a` resource group, and the query will only use the node computing resources in the `group_a` resource group. The query of user3 can use copies and computing resources in any resource group.
     

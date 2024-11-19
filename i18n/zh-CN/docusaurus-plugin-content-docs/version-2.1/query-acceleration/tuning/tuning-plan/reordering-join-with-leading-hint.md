@@ -64,8 +64,6 @@ EXPLAIN SELECT /*+ LEADING(t2 t1) */ * FROM t1 JOIN t2 ON t1.c1 = t2.c2;
 
 ## 调优案例
 
-## 调优案例
-
 **1. 左深树（默认行为）**
 
 ```sql
