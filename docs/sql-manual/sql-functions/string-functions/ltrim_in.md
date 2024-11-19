@@ -24,18 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ltrim_in
-### Description
-#### Syntax
+
+## Description
+
+When there is no rhs parameter, remove the spaces that appear consecutively in the parameter str starting from the left part; when there is an rhs parameter, search and remove any characters in the rhs character set at the left end of the string (regardless of order)
+
+## Syntax
 
 `VARCHAR ltrim_in(VARCHAR str[, VARCHAR rhs])`
 
 
-When there is no rhs parameter, remove the spaces that appear consecutively in the parameter str starting from the left part; when there is an rhs parameter, search and remove any characters in the rhs character set at the left end of the string (regardless of order)
+## Examples
 
-### example
-
-```
+```sql
 mysql> SELECT ltrim_in('   ab d') str;
 +------+
 | str  |
@@ -50,5 +51,7 @@ mysql> SELECT ltrim_in('ababccaab','ab') str;
 | ccaab |
 +-------+
 ```
-### keywords
-    LTRIM_IN
+
+## Keywords
+
+LTRIM_IN
