@@ -24,18 +24,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## trim_in
-### description
-#### Syntax
+
+## 描述
+
+## 语法
 
 `VARCHAR trim_in(VARCHAR str[, VARCHAR rhs])`
 
 
-当没有 rhs 参数时，将参数 str 中右侧和左侧开始部分连续出现的空格去掉；当有 rhs 参数时，在字符串的两端查找并移除 rhs 字符集合中的任何字符（不考虑顺序）
+当没有 `rhs` 参数时，将参数 `str` 中右侧和左侧开始部分连续出现的空格去掉；当有 `rhs` 参数时，在字符串的两端查找并移除 `rhs` 字符集合中的任何字符（不考虑顺序）
 
-### example
 
-```
+## 举例
+
+```sql
 mysql> SELECT trim_in('   ab d   ') str;
 +------+
 | str  |
@@ -50,5 +52,7 @@ mysql> SELECT trim_in('ababccaab','ab') str;
 | cc   |
 +------+
 ```
-### keywords
-    TRIM_IN
+
+## 关键词
+
+TRIM_IN
