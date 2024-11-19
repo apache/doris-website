@@ -118,7 +118,7 @@ export const DORIS_VERSIONS: Option[] = [
                 gz: `${ORIGIN}apache-doris-2.0.15.1-bin-x64.tar.gz`,
                 asc: `${ORIGIN}apache-doris-2.0.15.1-bin-x64.tar.gz.asc`,
                 sha512: `${ORIGIN}apache-doris-2.0.15.1-bin-x64.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.0/2.0.15/',
+                source: 'https://downloads.apache.org/doris/2.0/2.0.15.1/',
                 version: '2.0.15.1',
             },
             {
@@ -127,7 +127,7 @@ export const DORIS_VERSIONS: Option[] = [
                 gz: `${ORIGIN}apache-doris-2.0.15.1-bin-x64-noavx2.tar.gz`,
                 asc: `${ORIGIN}apache-doris-2.0.15.1-bin-x64-noavx2.tar.gz.asc`,
                 sha512: `${ORIGIN}apache-doris-2.0.15.1-bin-x64-noavx2.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.0/2.0.15/',
+                source: 'https://downloads.apache.org/doris/2.0/2.0.15.1/',
                 version: '2.0.15.1',
             },
             {
@@ -136,7 +136,7 @@ export const DORIS_VERSIONS: Option[] = [
                 gz: `${ORIGIN}apache-doris-2.0.15.1-bin-arm64.tar.gz`,
                 asc: `${ORIGIN}apache-doris-2.0.15.1-bin-arm64.tar.gz.asc`,
                 sha512: `${ORIGIN}apache-doris-2.0.15.1-bin-arm64.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.0/2.0.15/',
+                source: 'https://downloads.apache.org/doris/2.0/2.0.15.1/',
                 version: '2.0.15.1',
             },
         ],
@@ -547,7 +547,7 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                         gz: `${ORIGIN}apache-doris-2.0.15.1-bin-x64.tar.gz`,
                         asc: `${ORIGIN}apache-doris-2.0.15.1-bin-x64.tar.gz.asc`,
                         sha512: `${ORIGIN}apache-doris-2.0.15.1-bin-x64.tar.gz.sha512`,
-                        source: 'https://downloads.apache.org/doris/2.0/2.0.15/',
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.15.1/',
                         version: '2.0.15.1',
                     },
                     {
@@ -556,7 +556,7 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                         gz: `${ORIGIN}apache-doris-2.0.15.1-bin-x64-noavx2.tar.gz`,
                         asc: `${ORIGIN}apache-doris-2.0.15.1-bin-x64-noavx2.tar.gz.asc`,
                         sha512: `${ORIGIN}apache-doris-2.0.15.1-bin-x64-noavx2.tar.gz.sha512`,
-                        source: 'https://downloads.apache.org/doris/2.0/2.0.15/',
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.15.1/',
                         version: '2.0.15.1',
                     },
                     {
@@ -565,7 +565,7 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                         gz: `${ORIGIN}apache-doris-2.0.15.1-bin-arm64.tar.gz`,
                         asc: `${ORIGIN}apache-doris-2.0.15.1-bin-arm64.tar.gz.asc`,
                         sha512: `${ORIGIN}apache-doris-2.0.15.1-bin-arm64.tar.gz.sha512`,
-                        source: 'https://downloads.apache.org/doris/2.0/2.0.15/',
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.15.1/',
                         version: '2.0.15.1',
                     },
                 ],
