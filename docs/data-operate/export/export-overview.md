@@ -106,7 +106,8 @@ The following table shows the mapping between Doris data types and Parquet, ORC 
     |struct|struct|
     |map|map|
     |array|array|
-    |json| Not supported|
+    |json | string|
+    |variant | string|
     |bitmap | binary | binary
     |quantile_state | binary | binary
     |hll | binary | binary
@@ -132,7 +133,8 @@ The following table shows the mapping between Doris data types and Parquet, ORC 
     | struct | struct |
     | map | map |
     | array | list |
-    |json| utf8 |
-    |bitmap | binary | binary
-    |quantile_state | binary | binary
-    |hll | binary | binary
+    | json | utf8 |
+    | variant | utf8|
+    | bitmap | binary | binary
+    | quantile_state | binary | binary
+    | hll | binary | binary

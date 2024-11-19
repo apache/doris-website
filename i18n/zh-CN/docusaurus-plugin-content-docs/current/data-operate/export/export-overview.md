@@ -106,7 +106,8 @@ Parquet、ORC 文件格式拥有自己的数据类型。Apache Doris 的导出�
     |struct|struct|
     |map|map|
     |array|array|
-    |json|不支持|
+    |json|string|
+    |variant | string|
     |bitmap | binary | binary
     |quantile_state | binary | binary
     |hll | binary | binary
@@ -134,6 +135,7 @@ Parquet、ORC 文件格式拥有自己的数据类型。Apache Doris 的导出�
     |map|map|
     |array|list|
     |json|utf8|
+    |variant | utf8 |
     |bitmap | binary | binary
     |quantile_state | binary | binary
     |hll | binary | binary
