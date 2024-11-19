@@ -26,11 +26,12 @@ under the License.
 
 ## Description
 
-When there is no rhs parameter, remove the spaces that appear consecutively in the parameter str starting from the left part; when there is an rhs parameter, search and remove any characters in the rhs character set at the left end of the string (regardless of order)
 
 ## Syntax
 
 `VARCHAR ltrim_in(VARCHAR str[, VARCHAR rhs])`
+
+When there is no rhs parameter, remove the spaces that appear consecutively in the parameter str starting from the left part; when there is an rhs parameter, search and remove any characters in the rhs character set at the left end of the string (regardless of order)
 
 
 ## Examples
