@@ -24,18 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## rtrim_in
-### description
-#### Syntax
+
+## Description
+
+When there is no rhs parameter, remove the spaces that appear consecutively in the parameter str starting from the right part; when there is an rhs parameter, search and remove any characters in the rhs character set at the right end of the string (regardless of order)
+
+## Syntax
 
 `VARCHAR rtrim_in(VARCHAR str[, VARCHAR rhs])`
 
 
-When there is no rhs parameter, remove the spaces that appear consecutively in the parameter str starting from the right part; when there is an rhs parameter, search and remove any characters in the rhs character set at the right end of the string (regardless of order)
 
-### example
 
-```
+## Example
+
+```sql
 mysql> SELECT rtrim_in('ab d   ') str;
 +------+
 | str  |
@@ -50,5 +53,7 @@ mysql> SELECT rtrim_in('ababccaab','ab') str;
 | ababcc |
 +--------+
 ```
-### keywords
-    RTRIM_IN
+
+## Keywords
+
+RTRIM_IN
