@@ -46,7 +46,7 @@ spec:
   beSpec:
     image: ${image}
 ```
-Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster).  Official BE images are available at [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.fe-ubuntu).
+Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster).  Official BE images are available at [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.be-ubuntu).
 
 ### Replicas settings
 **FE Replicas Setting**  
@@ -582,7 +582,7 @@ Use the following methods to encrypt the root password using two-stage SHA-1 enc
       fmt.Println("*"+tes)
   }
   ```
-  Configure the encrypted password into `fe.conf` according to the requirements of the configuration file format. Then, Then, distribute the configuration to the Kubernetes cluster using a ConfigMap, describes in [the Cluster Parameter Configuration Section](./install-config-cluster.md).
+  Configure the encrypted password into `fe.conf` according to the requirements of the configuration file format. Then, Then, distribute the configuration to the Kubernetes cluster using a ConfigMap, describes in [the Cluster Parameter Configuration Section](#custom-fe-startup-configuration).
 
 #### step 2: Configure the DorisCluster resource
 After setting the root password in fe.conf, Doris will automatically apply the password to the first FE node when it starts. For other nodes to join the cluster, specify the username and password in the DorisCluster resource so that Doris Operator can perform automatic node management.
