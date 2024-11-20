@@ -104,7 +104,7 @@ spec:
 在 Kubernetes 中，Doris 使用 `ConfigMap` 将配置文件和服务分离。默认情况下，服务使用镜像里默认配置作为启动参数。请根据 [FE 配置文档](../../../admin-manual/config/fe-config.md)和 [BE 配置文档](../../../admin-manual/config/be-config.md)介绍，预先将定制好的启动参数配置到特定的 `ConfigMap` 中。配置完成后，将其部署到目标[ `DorisCluster` 资源](install-quickstart.md#第-2-步部署-doris-集群)所在的命名空间中。
 
 ### FE 定制化启动配置
-#### 第一步：配置并部署 ConfigMap  
+#### 第 1 步：配置并部署 ConfigMap  
 以下示例定义了名为 `fe-conf` 的 ConfigMap，该配置可供 Doris FE 使用：
 ```yaml
 apiVersion: v1
@@ -146,7 +146,7 @@ kubectl -n ${namespace} apply -f ${feConfigMapFile}.yaml
 ```
 ${namespace} 为 目标 `DorisCluster` 资源 将要部署的命名空间， ${feConfigMapFile} 为包含上述配置的文件名。
 
-#### 第二步：配置 DorisCluster 资源  
+#### 第 2 步：配置 DorisCluster 资源  
 以 fe-conf 对应的 ConfigMap 为例，需要在[部署的 `DorisCluster` 资源](install-quickstart.md#第-2-步部署-doris-集群)中添加如下信息：
 ```yaml
 spec:
@@ -161,7 +161,7 @@ Kubernetes 部署中，建议使用 FQDN 模式，启动配置中应添加 enabl
 :::
 
 ### BE 定制化启动配置
-#### 第一步：配置并部署 configmap   
+#### 第 1 步：配置并部署 configmap   
 以下定义了名为 `be-conf` ConfigMap，该配置可供 Doris BE 使用：
 ```yaml
 apiVersion: v1
@@ -204,7 +204,7 @@ kubectl -n ${namespace} apply -f ${beConfigMapFile}.yaml
 ```
 ${namespace} 为 `DorisCluster` 资源需要部署到的 namespace，${beConfigMapFile} 为包含上述配置的文件名。
 
-#### 第二步：配置 DorisCluster 资源  
+#### 第 2 步：配置 DorisCluster 资源  
 以 be-conf 对应的 ConfigMap 为例，需要在[部署的 `DorisCluster` 资源](install-quickstart.md#第-2-步部署-doris-集群)中添加如下信息：
 ```yaml
 spec:
@@ -364,11 +364,11 @@ Kubernetes 通过 Service 作为 vip 和负载均衡器的能力，Service 有�
 ### ClusterIP
 Doris 在 Kubernetes 上默认使用 [ClusterIP 访问模式](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)。ClusterIP 访问模式在 Kubernetes 集群内提供了一个内部地址，该地址作为服务在Kubernetes 内部的。
 
-#### 第一步：配置使用 ClusterIP 作为 Service 类型
+#### 第 1 步：配置使用 ClusterIP 作为 Service 类型
 
   Doris 默认在 Kubernetes 上启用 ClusterIP 访问模式，用户无需额外修改即可使用该模式。
 
-#### 第二步：获取 Service 访问地址
+#### 第 2 步：获取 Service 访问地址
 
 部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
 
@@ -391,7 +391,7 @@ doriscluster-sample-fe-service    ClusterIP   10.1.118.16   <none>        8030/T
 以 internal 后缀的 Service 仅供 Doris 内部通信使用，如心跳，数据交换等，不对外暴漏。  
 以 service 后缀的 Service 用于访问集群服务。
 
-#### 第三步：在容器内部访问 Doris
+#### 第 3 步：在容器内部访问 Doris
 
 使用如下命令在当前的 Kubernetes 集群中创建一个包含 MySQL 客户端 的 Pod：
 
@@ -420,7 +420,7 @@ mysql -uroot -P9030 -hdoriscluster-sample-fe-service
 | Web Server Port | 8040 | BE 上的 http server 端口，用于查看 BE 的信息 |
 
 
-#### 第一步：配置 FE 和 BE 的 NodePort
+#### 第 1 步：配置 FE 和 BE 的 NodePort
 **FE NodePort**  
 - 动态分配配置：
   ```yaml
@@ -459,7 +459,7 @@ mysql -uroot -P9030 -hdoriscluster-sample-fe-service
         targetPort: 8040
   ```
 
-#### 第二步：获取 Service  
+#### 第 2 步：获取 Service  
 集群部署完成后，通过以下命令查看 `Service` ：
 ```shell
 kubectl get service
@@ -473,7 +473,7 @@ doriscluster-sample-fe-service    NodePort    10.152.183.58    <none>        803
 doriscluster-sample-be-internal   ClusterIP   None             <none>        9050/TCP                                                      2d
 doriscluster-sample-be-service    NodePort    10.152.183.244   <none>        9060:30940/TCP,8040:32713/TCP,9050:30621/TCP,8060:30926/TCP   2d
 ```
-#### 第三步：使用 NodePort 访问服务  
+#### 第 3 步：使用 NodePort 访问服务  
 以 mysql 连接为例， Doris 的 Query Port 默认端口 9030，在上述示例中，端口  9030 被映射到本地端口 31545 。要访问 Doris 集群，需要获取到集群的节点 IP 地址，可以使用以下命令查看：
 ```shell
 kubectl get nodes -owide
@@ -496,7 +496,7 @@ mysql -h 192.168.88.62 -P 31545 -uroot
 
 ### LoadBalancer
 [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) 是由云服务商提供的负载均衡器。此配置仅适用于云平台提供的 Kubernetes 环境。
-#### 第一步：配置 LoadBalancer 模式  
+#### 第 1 步：配置 LoadBalancer 模式  
 **FE 配置 LoadBalancer**  
 ```yaml
 spec:
@@ -511,7 +511,7 @@ spec:
       service:
         type: LoadBalancer
   ```
-#### 第二步：获取 Service
+#### 第 2 步：获取 Service
 在部署集群后，通过以下命令可以查看可访问 `Doris` 的 `Service`：
 ```shell
 kubectl get service
@@ -527,7 +527,7 @@ doriscluster-sample-fe-service    LoadBalancer   10.152.183.58    ac4828493dgrft
 doriscluster-sample-be-internal   ClusterIP      None             <none>                                                                          9050/TCP                                                      2d
 doriscluster-sample-be-service    LoadBalancer   10.152.183.244   ac4828493dgrftb884g67wg4tb68gyut-1137823345.us-east-1.elb.amazonaws.com         9060:30940/TCP,8040:32713/TCP,9050:30621/TCP,8060:30926/TCP   2d
 ```
-#### 第三步：使用 LoadBalancer 模式访问  
+#### 第 3 步：使用 LoadBalancer 模式访问  
 以 MySQL 连接为例：
 ```shell
 mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 31545 -uroot
@@ -545,7 +545,7 @@ DorisCluster 资源提供两种方式来配置管理集群节点所需的用户�
 ### 集群部署配置 root 用户密码
 Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Doris 首次部署时配置 root 用户的密码，以便让 Doris Operator 能够自动管理集群节点，请按照如下步骤操作：
 
-#### 第一步：构建 root 加密密码
+#### 第 1 步：构建 root 加密密码
 
 Doris 支持密文的方式在 [FE 的配置文件](../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password)中设置 root 用户的密码，密码的加密方式是采用两阶段 SHA-1 加密实现。代码实现示例如下:
 
@@ -593,7 +593,7 @@ func main() {
 ```
 将加密后的密码按照配置文件要求配置到 `fe.conf` 中， 根据[集群参数配置章节](#fe-定制化启动配置)章节的说明，将配置文件以 `ConfigMap` 的形式下发到 Kubernetes 集群。
 
-#### 第二步：构建 DorisCluster 资源
+#### 第 2 步：构建 DorisCluster 资源
 配置文件设置了 root 初始化密码后，当 Doris FE 第一个节点启动后 root 的密码会立即生效，后续节点加入集群时， Doris Operator 将使用 root 用户名和密码来添加节点。因此，需要在部署的 DorisCluster 资源中指定用户名和密码，以便 Doris Operator 管理集群节点。
 - 环境变量方式
 
@@ -689,7 +689,7 @@ func main() {
 
 Doris 集群在部署后，若未设置 root 用户的密码。需要配置一个具有 [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户，便于 Doris Operator 自动化的管理集群节点。建议不要使用 root 用户， 请参考[用户新建和权限赋值章节](../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 配置新的管理用户和密码，并在 DorisCluster 资源中配置。
 
-#### 第一步：新建拥有 Node_priv 权限用户
+#### 第 1 步：新建拥有 Node_priv 权限用户
 
 通过 MySQL 协议连接数据库后，通过如下命令创建一个仅拥有 Node_priv 权限的用户并设置密码。
 
@@ -699,7 +699,7 @@ CREATE USER '${DB_ADMIN_USER}' IDENTIFIED BY '${DB_ADMIN_PASSWD}';
 
 其中 ${DB_ADMIN_USER} 为要创建的用户名，${DB_ADMIN_PASSWD} 为要设置的密码。
 
-#### 第二步：为新用户赋予 Node_priv 权限
+#### 第 2 步：为新用户赋予 Node_priv 权限
 
 使用 MySQL 协议连接数据库后，执行如下命令将 Node_priv 权限赋予新用户。
 
@@ -710,7 +710,7 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 其中，${DB_ADMIN_USER} 为新创建的用户名。  
 新建用户名密码，以及赋予权限详细使用，请参考官方文档 [CREATE-USER](../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) 部分。
 
-#### 第三步：配置 DorisCluster 资源
+#### 第 3 步：配置 DorisCluster 资源
 
 - 环境变量方式
 
