@@ -4,7 +4,7 @@
     'description': "Ortege handles massive volumes of blockchain data to power its analytics platform, Ortege Studio. Apache Doris forms the backbone of its Lakehouse v2, enabling it to process billions of records and deliver real-time insights.",
     'summary': "Ortege handles massive volumes of blockchain data to power its analytics platform, Ortege Studio. Apache Doris forms the backbone of its Lakehouse v2, enabling it to process billions of records and deliver real-time insights.",
     'date': '2024-11-20',
-    'author': 'Data Platform Team of TikTok',
+    'author': 'Justin Trollip',
     'tags': ['Best Practice'],
     'picked': "true",
     'order': "2",
