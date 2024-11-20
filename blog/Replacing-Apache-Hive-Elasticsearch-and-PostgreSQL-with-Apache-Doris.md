@@ -113,7 +113,7 @@ We have 2 clusters in Apache Doris accommodating tens of TBs of data, with almos
 
 ![user-segmentation-latency-3](/images/Tianyancha_11.png)
 
-Lastly, I would like to share with you something that interested us most when we first talked to the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA):
+Lastly, I would like to share with you something that interested us most when we first talked to the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw):
 
 - Apache Doris supports data ingestion transactions so it can ensure data is written **exactly once**.
 - It is well-integrated with the data ecosystem and can smoothly interface with most data sources and data formats.

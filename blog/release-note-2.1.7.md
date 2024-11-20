@@ -1,7 +1,12 @@
 ---
 {
-    "title": "Release 2.1.7",
-    "language": "en"
+    'title': 'Apache Doris 2.1.7 just released',
+    'summary': 'This version brings continuous upgrades and improvements. Additionally, several fixes have been implemented in areas such as the  to the Lakehouse, Async Materialized Views, and Semi-Structured Data Management, Query Optimizer and Permission Management.',
+    'description': 'This version brings continuous upgrades and improvements. Additionally, several fixes have been implemented in areas such as the  to the Lakehouse, Async Materialized Views, and Semi-Structured Data Management, Query Optimizer and Permission Management.',
+    'date': '2024-11-10',
+    'author': 'Apache Doris',
+    'tags': ['Release Notes'],
+    "image": '/images/2.1.7.jpg'
 }
 ---
 
@@ -13,9 +18,7 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
-
   http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -24,7 +27,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Dear community, **Apache Doris version 2.1.7 was officially released on November 10, 2024.** This version brings continuous upgrades and improvementsAdditionally, several fixes have been implemented in areas such as the  to the Lakehouse, Async Materialized Views, and Semi-Structured Data Management, Query Optimizer and Permission Management. 
+
+Dear community, **Apache Doris version 2.1.7 was officially released on November 10, 2024.** This version brings continuous upgrades and improvements. Additionally, several fixes have been implemented in areas such as the  to the Lakehouse, Async Materialized Views, and Semi-Structured Data Management, Query Optimizer and Permission Management. 
 
 **Quick Download:** https://doris.apache.org/download/
 
@@ -56,7 +60,6 @@ Dear community, **Apache Doris version 2.1.7 was officially released on November
 - The `count_substrings` function has been added. [#42055](https://github.com/apache/doris/pull/42055)
 - The `translate` and `url_encode` functions have been added. [#41051](https://github.com/apache/doris/pull/41051)
 - The `normal_cdf`, `to_iso8601`, and `from_iso8601_date` functions have been added. [#40695](https://github.com/apache/doris/pull/40695)
-
 
 ### Storage Management
 

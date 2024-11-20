@@ -5,7 +5,7 @@
     'summary': "Dear community, We are excited to announce the official release of Apache Doris Flink Connector version 24.0.0 on September 5th, 2024.",
     'date': '2024-09-25',
     'author': 'Apache Doris',
-    'tags': ['Best Practice'],
+    'tags': ['Release Notes'],
     "image": '/images/release-flink-doris-connector-24.0.jpg'
 }
 

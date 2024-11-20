@@ -25,10 +25,10 @@ under the License.
 -->
 
 ## 集群规划
-默认部署的 `DorisCluster` 资源中，FE 和 BE 使用的可能不是最新的版本的 image，默认的副本数为 FE=3,BE=3 ，FE 使用的计算资源配置为 6c 12Gi，BE 使用的资源是 8c 16Gi。在使用过程中，如需更修改请参考如下介绍修改。
+默认部署的 `DorisCluster` 资源中，FE 和 BE 使用的可能不是最新的版本的 image，默认的副本数为 FE=3,BE=3，FE 使用的计算资源配置为 6c 12Gi，BE 使用的资源是 8c 16Gi。在使用过程中，如需更修改请参考如下介绍修改。
 
 ### image 设置
-Doris Operator 与 Doris 版本相互解耦，Doris Operator 如果不明确说明，本质上可以部署任何版本的 Doris 。
+Doris Operator 与 Doris 版本相互解耦，Doris Operator 如果不明确说明，本质上可以部署任何版本的 Doris。
 
 **FE Image 设置**  
 重新指定 FE 的 image 配置如下：
@@ -83,7 +83,7 @@ spec:
 将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中。
 
 **BE 计算资源设定**
-默认部署的 BE 计算资源为 8c, 16Gi, 将计算资源修改为 16c， 32Gi 配置如下：
+默认部署的 BE 计算资源为 8c, 16Gi, 将计算资源修改为 16c，32Gi 配置如下：
 ```yaml
 spec:
   beSpec:
@@ -97,7 +97,7 @@ spec:
 将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中。
 
 :::tip Tip
-- FE 和 BE 所需要的最小资源为 4c 8Gi ，此为最小启动配置，如果需要进行正常能力测试为 8c 8Gi。  
+- FE 和 BE 所需要的最小资源为 4c 8Gi，此为最小启动配置，如果需要进行正常能力测试为 8c 8Gi。  
 :::
 
 ## 定制化启动配置
@@ -106,7 +106,7 @@ Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。默�
 ### FE 定制化启动配置
 
 1. 部署 configmap  
-  以下定义了名为 `fe-conf` ，Doris FE 可使用的 ConfigMap ：  
+  以下定义了名为 `fe-conf` ，Doris FE 可使用的 ConfigMap：  
   ```yaml
   apiVersion: v1
   kind: ConfigMap
@@ -141,11 +141,11 @@ Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。默�
       edit_log_port = 9010
       enable_fqdn_mode = true
   ```
-  使用 ConfigMap 挂载 FE 启动配置信息时，配置信息对应的 key 必须为 `fe.conf` 。将 ConfigMap 写入文件，通过如下命令部署到 `DorisCluster` 资源部署的 namespace ：  
+  使用 ConfigMap 挂载 FE 启动配置信息时，配置信息对应的 key 必须为 `fe.conf` 。将 ConfigMap 写入文件，通过如下命令部署到 `DorisCluster` 资源部署的 namespace：  
   ```shell
   kubectl -n ${namespace} apply -f ${feConfigMapFile}.yaml
   ```
-  ${namespace} 为 `DorisCluster` 资源需要部署到的 namespace，${feConfigMapFile} 为 fe使用的 configMap 文件名称。
+  ${namespace} 为 `DorisCluster` 资源需要部署到的 namespace，${feConfigMapFile} 为 fe 使用的 configMap 文件名称。
    
 2. 配置 DorisCluster 资源  
   以 fe-conf 对应的 ConfigMap 为例，在需要[部署的 `DorisCluster` 资源](install-quickstart.md#第-3-步部署-doris-集群)的 FE 配置中，添加如下信息：
@@ -163,7 +163,7 @@ K8s 部署中请将 `enable_fqdn_mode=true` 加入启动配置中。如果想用
 
 ### BE 定制化启动配置
 1. 部署 configmap   
-  以下定义了名为 `be-conf` ，Doris BE 可使用的 ConfigMap ：
+  以下定义了名为 `be-conf` ，Doris BE 可使用的 ConfigMap：
 
   ```yaml
   apiVersion: v1
@@ -200,7 +200,7 @@ K8s 部署中请将 `enable_fqdn_mode=true` 加入启动配置中。如果想用
       heartbeat_service_port = 9050
       brpc_port = 8060
   ```
-  使用 ConfigMap 挂载 BE 启动配置信息时，配置信息对应的 key 必须为 `be.conf` 。将 ConfigMap 写入文件，通过如下命令部署到 `DorisCluster` 资源部署的 namespace ：
+  使用 ConfigMap 挂载 BE 启动配置信息时，配置信息对应的 key 必须为 `be.conf` 。将 ConfigMap 写入文件，通过如下命令部署到 `DorisCluster` 资源部署的 namespace：
   ```shell
   kubectl -n ${namespace} apply -f ${beConfigMapFile}.yaml
   ```
@@ -217,7 +217,7 @@ K8s 部署中请将 `enable_fqdn_mode=true` 加入启动配置中。如果想用
   ```
 
 :::tip Tip  
-如果需要将文件挂载到和启动配置同一目录下，需要将配置信息配置到启动配置所在的 ConfigMap 中。 ConfigMap 中的 key 为文件名称，value 为配置信息。  
+如果需要将文件挂载到和启动配置同一目录下，需要将配置信息配置到启动配置所在的 ConfigMap 中。ConfigMap 中的 key 为文件名称，value 为配置信息。  
 :::
 
 ### 多 ConfigMap 挂载
@@ -248,10 +248,10 @@ spec:
 ```
 
 ## 配置持久化存储
-在 Doris 集群中，包括 FE、BE、CN 和监控组件在内的组件都需要将数据持久化到物理存储中。Kubernetes 提供了 [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) 的能力将数据持久化到物理存储中。在 Kubernetes 环境中，Doris Operator 使用 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 模式自动创建相应的 PersistenVolumeClaim 关联合适的 PersistentVolume 。
+在 Doris 集群中，包括 FE、BE、CN 和监控组件在内的组件都需要将数据持久化到物理存储中。Kubernetes 提供了 [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) 的能力将数据持久化到物理存储中。在 Kubernetes 环境中，Doris Operator 使用 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 模式自动创建相应的 PersistenVolumeClaim 关联合适的 PersistentVolume。
 
 ### FE 配置持久化存储
-在 Doris 在 K8s 部署中，默认情况下建议持久化 `/opt/apache-doris/fe/doris-meta` 挂载点，此为 FE 元数据的默认存储路径。Doris 在 K8s 上部署，默认将所有的日志信息输出到 console ，如果集群有日志收集能力可直接通过 console 收集。如果集群缺少日志收集系统，默认情况下建议持久化 `/opt/apache-doris/fe/log` 挂载点。
+在 Doris 在 K8s 部署中，默认情况下建议持久化 `/opt/apache-doris/fe/doris-meta` 挂载点，此为 FE 元数据的默认存储路径。Doris 在 K8s 上部署，默认将所有的日志信息输出到 console，如果集群有日志收集能力可直接通过 console 收集。如果集群缺少日志收集系统，默认情况下建议持久化 `/opt/apache-doris/fe/log` 挂载点。
 
 #### FE 元数据持久化配置
 使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中：
@@ -271,7 +271,7 @@ spec:
           requests:
             storage: ${storageSize}
 ```
-上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
+上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。请在使用时按需替换。
 
 #### FE 日志持久化配置
 使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中：
@@ -291,14 +291,14 @@ spec:
           requests:
             storage: ${storageSize}
 ```
-上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
+上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。请在使用时按需替换。
 
 :::tip 提示  
 如果在[定制化配置文件中](#fe-定制化启动配置)，重新设置了 [`meta_dir`](../../../../admin-manual/config/fe-config.md#meta_dir) 或者 [`sys_log_dir`](../../../../admin-manual/config/fe-config.md#sys_log_dir) 请重新设置 `mountPath` 。
 :::
 
 ### BE 配置持久化存储
-在 Doris 在 K8s 部署中，默认情况下建议持久化 `/opt/apache-doris/be/storage` 挂载点，此为 BE 节点默认存储真实数据的路径。Doris 在 K8s 上部署，默认将所有的日志信息输出到 console 。如果集群有日志收集能力可直接通过 console 收集，如果集群缺少日志收集系统，默认情况下建议持久化 `/opt/apache-doris/be/log` 挂载点。
+在 Doris 在 K8s 部署中，默认情况下建议持久化 `/opt/apache-doris/be/storage` 挂载点，此为 BE 节点默认存储真实数据的路径。Doris 在 K8s 上部署，默认将所有的日志信息输出到 console。如果集群有日志收集能力可直接通过 console 收集，如果集群缺少日志收集系统，默认情况下建议持久化 `/opt/apache-doris/be/log` 挂载点。
 
 #### BE 配置数据持久化
 - **BE 配置默认持久化存储路径**  
@@ -316,7 +316,7 @@ spec:
           requests:
             storage: ${storageSize}
   ```
-  上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
+  上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。请在使用时按需替换。
 
 - **BE 配置多个持久化存储目录**  
   Doris 为充分利用多磁盘的优势提供可配置多个存储目录。如果在定制化配置中通过 [`storage_root_path`](../../../../admin-manual/config/be-config.md#storage_root_path) 指定了多个存储目录，在需要[部署的 `DorisCluster` 资源](install-quickstart.md#第-3-步部署-doris-集群)的 BE 配置中增加多个存储配置。例如：`storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD`, 则需要在部署资源中添加如下配置：
@@ -342,7 +342,7 @@ spec:
           requests:
             storage: ${storageSize}
   ```
-  上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
+  上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。请在使用时按需替换。
 
 #### BE 持久化日志
 使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-quickstart.md#第-3-步部署-doris-集群)中：
@@ -359,7 +359,7 @@ beSpec:
         requests:
           storage: ${storageSize}
 ```
-上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
+上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。请在使用时按需替换。
 
 ## 访问配置
 Kubernetes 提供使用 Service 方式作为 vip 和负载均衡器，Service 有三种对外暴漏模式 `ClusterIP` 、 `NodePort` 、 `LoadBalancer` .
@@ -553,7 +553,7 @@ Doris 在 Kubernetes 上默认提供 [ClusterIP 访问模式](https://kubernetes
   ```
   
 ## 配置管理用户名和密码
-Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac)，节点的管理需要用户拥有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization#权限类型) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisCluster 资源配置的集群进行部署和管理。 root 用户添加密码后，需要在 DorisCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
+Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac)，节点的管理需要用户拥有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization#权限类型) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisCluster 资源配置的集群进行部署和管理。root 用户添加密码后，需要在 DorisCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
 
 DorisCluster 资源提供两种方式来配置管理集群节点所需的用户名、密码，包括：环境变量配置的方式，以及使用 [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) 配置的方式。配置集群管理的用户名和密码分为 3 种情况：
 
@@ -566,7 +566,7 @@ Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Do
 
 1. **构建 root 加密密码**
 
-  Doris 支持密文的方式在 [FE 的配置文件](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password)中设置 root 用户的密码，密码的加密方式是采用 2 阶段 SHA-1 加密实现。代码实现如下:
+  Doris 支持密文的方式在 [FE 的配置文件](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password)中设置 root 用户的密码，密码的加密方式是采用 2 阶段 SHA-1 加密实现。代码实现如下：
   
   Java 代码实现 2 阶段 SHA-2 加密：
   
@@ -610,7 +610,7 @@ Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Do
   	fmt.Println("*"+tes)
   }
   ```
-  将加密后的密码按照配置文件格式要求配置到 `fe.conf` 中， 根据[集群参数配置章节](#fe-定制化启动配置)的介绍将配置文件以 configmap 的形式下发到 K8s 集中。
+  将加密后的密码按照配置文件格式要求配置到 `fe.conf` 中，根据[集群参数配置章节](#fe-定制化启动配置)的介绍将配置文件以 configmap 的形式下发到 K8s 集中。
 
 2. **构建 DorisCluster 资源**
 
@@ -630,11 +630,11 @@ Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Do
   
   - Secret 方式
   
-  Doris Operator 提供使用 [Basic authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) 来指定管理节点的用户名和密码，DorisCluster 资源配置需要使用的 Secret 后，Doris Operator 会自动将 Secret 以文件形式挂载到容器指定位置，容器的辅助服务会解析出文件中的用户名和密码来自动添加自身到指定集群。basic-authentication-secret 的 stringData 只包含 2 个字段： username 和 password 。使用 Secret 配置管理用户名和密码流程如下：
+  Doris Operator 提供使用 [Basic authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) 来指定管理节点的用户名和密码，DorisCluster 资源配置需要使用的 Secret 后，Doris Operator 会自动将 Secret 以文件形式挂载到容器指定位置，容器的辅助服务会解析出文件中的用户名和密码来自动添加自身到指定集群。basic-authentication-secret 的 stringData 只包含 2 个字段：username 和 password。使用 Secret 配置管理用户名和密码流程如下：
   
   a. 配置需要使用的 Secret
   
-  按照如下格式配置需要使用的 Basic authentication Secret ：
+  按照如下格式配置需要使用的 Basic authentication Secret：
   
   ```yaml
   stringData:
@@ -658,7 +658,7 @@ Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Do
 
 ### 部署时自动创建非 root 管理用户和密码（推荐）
 
-在首次部署时不设置 root 的初始化密码，通过环境变量或者 Secret 的方式设置非 root 用户和登录密码。 Doris 容器的辅助服务会自动在数据库中创建配置的用户，设置密码和赋予 Node_priv 权限, Doris Operator 会以自动创建的用户名和密码管理集群节点。
+在首次部署时不设置 root 的初始化密码，通过环境变量或者 Secret 的方式设置非 root 用户和登录密码。Doris 容器的辅助服务会自动在数据库中创建配置的用户，设置密码和赋予 Node_priv 权限，Doris Operator 会以自动创建的用户名和密码管理集群节点。
 
 - 环境变量模式
 
@@ -675,7 +675,7 @@ Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Do
 
   a. 配置需要使用的 Secret
 
-  按照如下格式配置需要使用的 Basic authentication Secret ：
+  按照如下格式配置需要使用的 Basic authentication Secret：
   ```yaml
   stringData:
     username: ${DB_ADMIN_USER}
@@ -701,7 +701,7 @@ Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Do
 
 ### 集群部署后设置 root 用户密码
 
-Doris 集群在部署后设置了 root 用户的密码，需要配置一个拥有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户到 DorisCluster 资源中，以便 Doris Operator 自动化的管理集群节点。此用户名不建议使用 root ， 请参考[用户新建和权限赋值章节](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 的方式指定新的管理用户和密码，并配置对应的 DorisCluster 资源。
+Doris 集群在部署后设置了 root 用户的密码，需要配置一个拥有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户到 DorisCluster 资源中，以便 Doris Operator 自动化的管理集群节点。此用户名不建议使用 root，请参考[用户新建和权限赋值章节](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 的方式指定新的管理用户和密码，并配置对应的 DorisCluster 资源。
 
 1. 新建拥有 Node_priv 权限用户
 
@@ -743,7 +743,7 @@ Doris 集群在部署后设置了 root 用户的密码，需要配置一个拥�
   
     a. 配置需要使用的 Secret
   
-    按照如下格式配置需要使用的 Basic authentication Secret ：
+    按照如下格式配置需要使用的 Basic authentication Secret：
   
     ```yaml
     stringData:

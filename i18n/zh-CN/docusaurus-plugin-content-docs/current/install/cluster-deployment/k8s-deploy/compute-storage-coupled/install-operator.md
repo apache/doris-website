@@ -205,7 +205,7 @@ Helm Chart 是一系列描述 Kubernetes 相关资源的 YAML 文件的封装。
   helm install operator doris-repo/doris-operator
   ```
   
-  如果需要自定义装配 [values.yaml](https://artifacthub.io/packages/helm/doris/doris-operator?modal=values) ，可以参考如下命令:
+  如果需要自定义装配 [values.yaml](https://artifacthub.io/packages/helm/doris/doris-operator?modal=values) ，可以参考如下命令：
   
   ```shell
   helm install -f values.yaml operator doris-repo/doris-operator
@@ -244,7 +244,7 @@ Helm Chart 是一系列描述 Kubernetes 相关资源的 YAML 文件的封装。
   helm install operator doris-operator-1.4.0.tgz
   ```
   
-  如果需要自定义装配 [values.yaml](https://artifacthub.io/packages/helm/doris/doris-operator?modal=values) ，可以参考如下命令:
+  如果需要自定义装配 [values.yaml](https://artifacthub.io/packages/helm/doris/doris-operator?modal=values) ，可以参考如下命令：
   
   ```shell
   helm install -f values.yaml operator doris-operator-1.4.0.tgz

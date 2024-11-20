@@ -58,7 +58,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
   You can now use your cluster with:
   ```
 3. 检查 Kubernetes 集群状态
-  使用以下命令检查 Kubernete 集群状态:
+  使用以下命令检查 Kubernete 集群状态：
   ```
   kubectl cluster-info --context kind-test-doris
   ```
@@ -75,12 +75,12 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
   ```
   kubectl create -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
   ```
-  期望输出结果:
+  期望输出结果：
   ```
   customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
   ```
 2. 安装 Doris Operator
-  通过以下命令安装 Doris Operator ：
+  通过以下命令安装 Doris Operator：
   ```
   kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/operator/operator.yaml
   ```
@@ -99,7 +99,7 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
   ```
   kubectl get pods -n doris
   ```
-  期望输出结果:
+  期望输出结果：
   ```
   NAME                              READY   STATUS    RESTARTS   AGE
   doris-operator-7f578c86cb-nz6jn   1/1     Running   0          19m
@@ -136,14 +136,14 @@ Kind 是目前比较通用的创建本地 Kubernetes 测试环境的方案。Kin
   ```
 ## 第 4 步：连接访问 Doris 集群
 在测试环境中快速部署的 Doris 集群，可以进入容器 FE 内部使用 MySQL Client 链接 Doris 进行测试操作。其他访问方式可参考[集群配置访问章节](./install-config-cluster.md#访问配置)配置使用。
-1. 获取 FE 容器名称:
+1. 获取 FE 容器名称：
   ```
   kubectl get pod -n doris | grep fe
   doriscluster-sample-fe-0          1/1     Running   0          16m
   ```
   在本例中，FE 容器名为 doriscluster-sample-fe-0。
 
-2. 进入 FE 容器内部:
+2. 进入 FE 容器内部：
   ```
   kubectl -n doris exec -it doriscluster-sample-fe-0 /bin/bash
   ```

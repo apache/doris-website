@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-存算分离计算组（ Compute Group ）负责数据导入并缓存对象存储中的数据，计算组之间相互隔离。
+存算分离计算组（Compute Group）负责数据导入并缓存对象存储中的数据，计算组之间相互隔离。
 
 ## 指定计算组名称
 
@@ -40,7 +40,7 @@ spec:
 
 上述配置部署一套名称为 cg1 的计算组。上述样例变量解释如下：
 
-`{beImage}` 为部署 BE 服务的 image 。
+`{beImage}` 为部署 BE 服务的 image。
 
 :::tip 提示
 cg1 为计算组的名称，执行 sql 的过程中可通过计算组名称选定想要使用的计算组。
@@ -64,9 +64,9 @@ spec:
     replicas: 2
 ```
 
-以上为两套计算组的简单配置，计算组的名称分别为 cg1 和 cg2 。使用存算分离集群时可通过计算组的名称选择使用哪一个计算组，实际使用中可按照业务类别指定计算组名称。
+以上为两套计算组的简单配置，计算组的名称分别为 cg1 和 cg2。使用存算分离集群时可通过计算组的名称选择使用哪一个计算组，实际使用中可按照业务类别指定计算组名称。
 
-修改如下配置到需要[部署存算分离](install-quickstart.md) `DorisDisaggregatedCluster` 资源中，可部署 2 套计算组，一套可部署 3 个 包含 BE 服务的 pod ， 一套可部署 2 个包含 BE 服务的 pod 。 `{beImage}` 指定想要使用的 BE 服务的 image 。
+修改如下配置到需要[部署存算分离](install-quickstart.md) `DorisDisaggregatedCluster` 资源中，可部署 2 套计算组，一套可部署 3 个 包含 BE 服务的 pod，一套可部署 2 个包含 BE 服务的 pod。 `{beImage}` 指定想要使用的 BE 服务的 image。
 
 :::tip 提示
 多套计算组使用的 image 尽量保持一致。
@@ -93,7 +93,7 @@ spec:
 
 ## 配置 Cache 持久化存储
 
-默认情况下，每个 BE 服务会使用 EmptyDir 存储模式来缓存数据，在真实使用场景下需要根据实际需要定义需要的存储大小以及希望使用的 StorageClass 。
+默认情况下，每个 BE 服务会使用 EmptyDir 存储模式来缓存数据，在真实使用场景下需要根据实际需要定义需要的存储大小以及希望使用的 StorageClass。
 
 ### 1.定制化配置文件
 存算分离下，每个计算组的 BE 服务默认使用镜像内的配置文件启动，在 K8s 部署中可使用 ConfigMap 资源自定义 BE 启动配置，在[挂载定制化 ConfigMap 中](#3挂载定制化-configmap)，展示了一个 ConfigMap 配置样例。请根据[存算分离文档](../../../../compute-storage-decoupled/compilation-and-deployment.md)进行 BE 的相关启动配置，`deploy_mode` 在 K8s 部署中相关服务自动添加，可无需指定。
@@ -155,9 +155,9 @@ spec:
             storage: "200Gi"
 ```
 
-以上为名称 cg1 的计算组配置 200Gi 的持久化存储，使用 K8s 集群中默认的 StorageClass 来自动创建存储。如果需要指定 StorageClass ，请取消注释将 storageClassName 设置为想要使用的 StorageClass 的名称。
+以上为名称 cg1 的计算组配置 200Gi 的持久化存储，使用 K8s 集群中默认的 StorageClass 来自动创建存储。如果需要指定 StorageClass，请取消注释将 storageClassName 设置为想要使用的 StorageClass 的名称。
 
-BE 服务默认 Cache 配置为 `file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]` 存储容量总可使用容量为 100Gi ，查询可使用的最大容量为 100Gi 。K8s 部署模式下，Doris-Operator 会为每个路径挂载定制的持久化存储。如果需要指定多个路径挂载多盘作为数据缓存，请参考[定制化配置文件](../../../../compute-storage-decoupled/compilation-and-deployment.md#54-添加-be-节点)。
+BE 服务默认 Cache 配置为 `file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]` 存储容量总可使用容量为 100Gi，查询可使用的最大容量为 100Gi。K8s 部署模式下，Doris-Operator 会为每个路径挂载定制的持久化存储。如果需要指定多个路径挂载多盘作为数据缓存，请参考[定制化配置文件](../../../../compute-storage-decoupled/compilation-and-deployment.md#54-添加-be-节点)。
 
 :::tip 提示
 - file_cache_path 的值必须是一个 JSON 数组。
