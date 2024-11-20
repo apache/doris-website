@@ -441,6 +441,7 @@ mysql -uroot -P9030 -hdoriscluster-sample-fe-service
         - nodePort: 31002
           targetPort: 9030
   ```
+
 **BE NodePort**  
 - 动态分配配置：
   ```yaml
@@ -755,6 +756,4 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 :::tip 提示
 - 部署后设置 root 密码，并配置新的拥有管理节点的用户名和密码后，会引起存量服务滚动重启一次。    
 :::
-
-
 

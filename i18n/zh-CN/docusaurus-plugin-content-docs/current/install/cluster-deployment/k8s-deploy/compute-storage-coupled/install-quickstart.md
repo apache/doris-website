@@ -44,7 +44,7 @@ under the License.
    ```
    期望输出结果：
 
-   ```
+   ```shell
    customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
    ```
 
@@ -57,7 +57,7 @@ under the License.
    ```
    期望输出结果：
 
-   ```
+   ```shell
    namespace/doris created
    role.rbac.authorization.k8s.io/leader-election-role created
    rolebinding.rbac.authorization.k8s.io/leader-election-rolebinding created
@@ -76,7 +76,7 @@ under the License.
    ```
    期望输出结果：
 
-   ```
+   ```shell
    NAME                              READY   STATUS    RESTARTS   AGE
    doris-operator-7f578c86cb-nz6jn   1/1     Running   0          19m
    ```
@@ -105,7 +105,7 @@ under the License.
 
    期望结果：
 
-   ```
+   ```shell
    NAME                       READY   STATUS    RESTARTS   AGE
    doriscluster-sample-fe-0   1/1     Running   0          2m
    doriscluster-sample-be-0   1/1     Running   0          3m
@@ -119,7 +119,7 @@ under the License.
 
    期望结果：
 
-   ```
+   ```shell
    NAME                  FESTATUS    BESTATUS    CNSTATUS   BROKERSTATUS
    doriscluster-sample   available   available
    ```
@@ -136,7 +136,7 @@ under the License.
 
    期望结果：
 
-   ```
+   ```shell
    NAME                          READY   STATUS    RESTARTS   AGE  
    doriscluster-sample-fe-0      1/1     Running   0          16m
    ```
