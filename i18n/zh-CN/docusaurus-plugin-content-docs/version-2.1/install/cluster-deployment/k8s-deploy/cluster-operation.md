@@ -32,7 +32,7 @@ Doris Operator 提供了 `Debug` 的运行模式，下面描述了当服务进�
 
 ### 启动 Debug 模式
 
-当服务一个 pod 进入 CrashLoopBackOff 或者正常运行过程中无法再正常启动时，通过一下步骤让服务进入 `Debug` 模式，进行手动启动服务查找问题。
+当服务一个 pod 进入 CrashLoopBackOff 或者正常运行过程中无法再正常启动时，通过以下步骤让服务进入 `Debug` 模式，进行手动启动服务查找问题。
 
 1. **通过以下命令给运行有问题的 pod 进行添加 annnotation**
   ```shell
