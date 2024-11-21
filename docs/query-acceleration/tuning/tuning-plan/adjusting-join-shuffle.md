@@ -28,16 +28,18 @@ under the License.
 
 Doris supports the use of hints to adjust the type of data shuffle in Join operations, thereby optimizing query performance. This section will introduce in detail how to use hints in Doris to specify the type of Join shuffle.
 
-Currently, Doris is limited to specifying the Distribute Type for the right table in a Join, offering two types to choose from: `[shuffle]` and `[broadcast]`. The Distribute Type should be placed before the right table in the Join, and can be represented using either square brackets `[]` or double slashes `//`.
+Currently, Doris is limited to specifying the Distribute Type for the right table in a Join and provides only two types to choose from: `[shuffle]` and `[broadcast]`. The Distribute Type needs to be placed before the right table in the Join, using square brackets `[]`.
+
 
 Examples are as follows:
 
 ```sql
 SELECT COUNT(*) FROM t2 JOIN [broadcast] t1 ON t1.c1 = t2.c2;
-SELECT COUNT(*) FROM t2 JOIN /*+broadcast*/ t1 ON t1.c1 = t2.c2;
+SELECT COUNT(*) FROM t2 JOIN [shuffle] t1 ON t1.c1 = t2.c2;
 SELECT /*+ ordered */ COUNT(*) FROM t2 JOIN [broadcast] t1 ON t1.c1 = t2.c2;
-SELECT /*+ ordered */ COUNT(*) FROM t2 JOIN /+broadcast/ t1 ON t1.c1 = t2.c2;
+SELECT /*+ ordered */ COUNT(*) FROM t2 JOIN [shuffle] t1 ON t1.c1 = t2.c2;
 ```
+
 
 When using hints, please note the following:
 
@@ -118,4 +120,8 @@ In the EXPLAIN results, you can see the relevant information for the distribute 
 
 ## Summary
 
-By properly using DistributeHint, you can optimize the shuffle method of Join operations and improve query performance. In practice, it is recommended to first analyze the query execution plan through EXPLAIN and then choose the appropriate shuffle type based on the actual situation.
+By reasonably using DistributeHint, you can optimize the Shuffle method for Join operations and enhance query performance. In practice, it is recommended to first analyze the query execution plan using EXPLAIN and then select the appropriate Shuffle type based on the actual situation. When using it, please pay attention to the following points:
+
+1. If a DistributeHint fails to correctly generate an execution plan, Doris will not display the Hint but will make it effective based on the principle of "best effort". Ultimately, the Distribute method displayed by EXPLAIN prevails.
+2. In the current version, DistributeHint temporarily does not support mixing with LEADING, and the Hint will only take effect when the table specified by Distribute is located on the right side of the Join.
+3. It is recommended to mix DistributeHint with ORDERED. First, use ORDERED to fix the Join order, and then specify the expected Distribute method for the corresponding Join.

@@ -73,7 +73,7 @@ spec:
             storage: 200Gi
 ```
 
-上述样例展示了如何为 FE 服务添加 200Gi 的存储。`{storageClassName}` 为需要使用的 StorageClass 的名称，如果不填写将使用集群默认的 StorageClass 。按上述模式配置好 FE 服务需要使用的存储信息后，将配置更新到[需要部署的存算分离资源](install-quickstart.md#第二步快速部署存算分离集群)中。
+上述样例展示了如何为 FE 服务添加 200Gi 的存储。`{storageClassName}` 为需要使用的 StorageClass 的名称，如果不填写将使用集群默认的 StorageClass。按上述模式配置好 FE 服务需要使用的存储信息后，将配置更新到[需要部署的存算分离资源](install-quickstart.md#第二步快速部署存算分离集群)中。
 
 ## 定制化配置文件
 

@@ -1,4 +1,20 @@
 export const NEWSLETTER_DATA = [
+
+    {
+        tags: ['Best Practice'],
+        title: "Scaling Bitcoin data to billions of records with Apache Doris: our journey to auto-partitioning",
+        content: `To power lightning-fast queries and ensure the Deep Dive dashboards deliver real-time insights, Ortege relies on Apache Doris. A crucial feature they embrace is Auto Partition.`,
+        to: '/blog/ortege-studio-1-scaling-bitcoin-data-to-billions-of-records',
+        image: 'ortege-1.jpg',
+    },
+    {
+        tags: ['Best Practice'],
+        title: "Fine-tuning Apache Doris for maximum performance and resilience: a deep dive into fe.conf",
+        content: `Ortege handles massive volumes of blockchain data to power its analytics platform, Ortege Studio. Apache Doris forms the backbone of its Lakehouse v2, enabling it to process billions of records and deliver real-time insights.`,
+        to: '/blog/ortege-studio-2-fine-tuning-apache-doris-for-maximum-performance-and-resilience',
+        image: 'ortege-2.jpg',
+    },
+
     {
         tags: ['Release Note'],
         title: "New milestone: Apache Doris 3.0 has been released",
@@ -12,21 +28,6 @@ export const NEWSLETTER_DATA = [
         content: `We are excited to invite the data platform team of TikTok to talk about how they use Apache Doris in their real-time data architecture and how they benefit from it, which could serve as a model for effective real-time data warehousing.`,
         to: '/blog/real-time-data-warehouse-in-TikTok-based-on-doris',
         image: 'real-time-data-warehouse-in-tiktok-based-on-apache-doris.png',
-    },
-
-    {
-        tags: ['Top News'],
-        title: "How AI unicorn MiniMax migrated from Loki and built a PB-scale logging system with Apache Doris",
-        content: `Serving a PB-scale data size with over 99.9% availability, Apache Doris is the vital signs monitor of MiniMax, a generative AI startup backed by Alibaba.`,
-        to: '/blog/ai-unicorn-minimax-from-loki-and-built-a-pb-scale-logging-system-with-doris',
-        image: 'minimax-migrated-from-loki-to-doris.png',
-    },
-    {
-        tags: ['Tech Sharing'],
-        title: "Automatic and flexible data sharding: Auto Partition in Apache Doris",
-        content: `Apache Doris 2.1.0 introduces Auto Partition. It supports partitioning data by RANGE or by LIST and further enhances flexibility on top of automatic partitioning.`,
-        to: '/blog/auto-partition-in-apache-doris',
-        image: 'auto-partition-in-apache-doris.jpg',
     },
 
 

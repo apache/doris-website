@@ -55,7 +55,7 @@ under the License.
 - 增加了`count_substrings` 函数。[#42055](https://github.com/apache/doris/pull/42055)
 - 增加 `translate` 和 `url_encode` 函数。[#41051](https://github.com/apache/doris/pull/41051)
 - 增加 `normal_cdf`, `to_iso8601`, `from_iso8601_date` 函数。[ #40695](https://github.com/apache/doris/pull/40695)
-- 增加 `trim_in`、`ltrim_in`、 `rtrim_in` 函数。[#42641 ](https://github.com/apache/doris/pull/42641)
+
 
 ### 存储管理
 

@@ -134,7 +134,7 @@ The results are as below:
 In short, what contributed to the fast data loading and data queries in this case?
 
 - The Colocate mechanism that's designed for distributed computing
-- Collaboration between database users and [developers](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) that enables the operator merging
+- Collaboration between database users and [developers](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) that enables the operator merging
 - Support for a wide range of data loading methods to choose from
 - A vectorized engine that brings overall performance increase
 
