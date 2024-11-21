@@ -24,48 +24,96 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-When writing data to the table, Doris distributes the data rows across various data shards (Tablets) based on the table's partitioning and bucketing strategies. Through data distribution, Doris can leverage the storage and computing capabilities of multiple machines, thus achieving large-scale data storage and processing. During query execution, the optimizer performs partition and bucket pruning, and during JOIN or aggregation queries, data may be transferred between nodes (Shuffle). By using reasonable partitioning and bucketing strategies, partition pruning and COLOCATE can be fully utilized to optimize query performance.
+In Doris, **data distribution** is centered on efficiently mapping rows of data written to a table onto various **data tablets** in the underlying storage through well-designed partitioning and bucketing strategies. With these distribution strategies, Doris fully leverages multi-node storage and computational capabilities, enabling efficient storage and querying of large-scale datasets.
 
-## Nodes
+---
 
-A Doris cluster consists of a set of FE nodes and BE nodes, each with its own operating system, dedicated memory, and disk storage. FE nodes are responsible for managing the cluster's metadata and parsing and planning SQL, with shards (Tablets) being the most important type of metadata; BE nodes are responsible for data storage and query processing. After the planning is completed by FE, the computation tasks are sent to BE, and after BE completes the computation, the final results are returned to FE, which then returns the query results to the user. The data of the shards (Tablets) is stored on the disks of the BE.
+## Overview of Data Distribution
 
-## Tables and Shards
+### Data Ingestion
 
-When data is written to Doris tables, Doris first maps the data rows to the corresponding partitions based on the partition type and the values of the partition columns, and then maps the data rows to a shard under the partition based on the bucketing columns, thus giving the data rows a corresponding storage location.
+When data is written to a table, Doris first assigns each row to the corresponding partition based on the table's partitioning strategy. Then, it maps the rows to specific tablets within the partition according to the bucketing strategy, determining the physical storage location for each row.
 
-### Partitioning
+### Query Execution
 
-You can understand Doris's partitioning from the partition type and partition mode. The partition type determines which partition the data rows are mapped to, while the partition mode determines how the partitions are created.
+During query execution, Doris' optimizer leverages partition and bucket pruning to minimize data scans. For queries involving JOIN or aggregation, cross-node data transfers (Shuffle) may occur. Properly designed partitioning and bucketing strategies can reduce Shuffle operations and improve query performance through mechanisms like **Colocate Join**.
 
-- Partition Types: Doris supports Range and List partitioning.
-   - Range: Refers to mapping data rows with partition column values within a certain range to a partition.
-   - List: Refers to mapping data rows where the partition column equals certain specific values to a partition.
+---
 
-- Partition Modes: Doris supports three modes for creating partitions: manual, dynamic, and automatic. They are:
-   - Manual: Users specify partitions when creating the table or use the Alter statement to add partitions.
-   - Dynamic: Doris creates partitions based on the time schedule of the partitions, and no partitions are created when importing data.
-   - Automatic: Doris creates partitions as needed based on the imported data.
+## Node and Storage Architecture
 
-### Bucketing
+### Node Types
 
-Doris supports two types of bucketing: Hash and Random.
+A Doris cluster consists of two types of nodes:
 
-- Hash: Maps data rows to shards within a partition based on the hash value of the bucketing column values, using crc32 and the modulus of the number of buckets.
-- Random: Randomly maps data rows to shards within a partition; for small files, you can use load_to_single_tablet to optimize.
+- **FE Nodes (Frontend)**: Manage cluster metadata (e.g., tables, tablets) and handle SQL parsing and execution planning.
+- **BE Nodes (Backend)**: Store data and execute computational tasks. After processing, BE nodes send the results back to FE nodes, which aggregate and return the final output to the user.
 
-To optimize the joins and aggregation queries of large tables, COLOCATE can be used to enhance performance.
+### Data Tablets
 
-## Data Distribution Goals
+The data stored on BE nodes is organized into multiple **data tablets**, which are the smallest units of data management and the fundamental building blocks for data movement and replication.
 
-The primary goal of data distribution in Doris is:
+---
 
- - To utilize the storage and computing capabilities of multiple nodes, meaning that data is evenly distributed across various BE nodes. Uneven data distribution or data skew can cause some nodes to process more data than others, thus affecting query performance.
+## Partitioning Strategy
 
-Other goals include:
+Partitioning is the first layer of logical data organization that divides a table into smaller subsets. Doris offers the following **partition types** and **partition modes**:
 
- - Optimizing query performance: Fully utilizing partition and bucket pruning and COLOCATE to significantly enhance query performance based on query characteristics.
- - Flexible data management: For example, partitioning by time, storing cold data on HDD, hot data on SSD, and deleting historical partitions to free up data.
- - Reasonable metadata: The metadata of each shard (Tablet) exists in both FE and BE, requiring reasonable control over the number of shards. Based on experience, every 10 million shards require at least 100GB of memory in FE, and the number of shards handled by a single BE should be less than 20,000.
- - Write throughput: The number of buckets per partition should not be too large (recommended < 128), as a larger number can affect write throughput. The number of partitions involved in each write should also not be too large; it is recommended to import a few partitions at a time.
+### Partition Types
 
+- **Range Partition**: Maps rows to partitions based on a range of values in the partition column.
+- **List Partition**: Maps rows to partitions based on specific values in the partition column.
+
+### Partition Modes
+
+- **Manual Partitioning**: Users manually define partitions when creating a table or by using `ALTER` statements to add partitions.
+- **Dynamic Partitioning**: The system creates partitions based on a time-based schedule, but it does not automatically create partitions during data ingestion.
+- **Automatic Partitioning**: The system automatically creates partitions on demand during data ingestion.
+
+---
+
+## Bucketing Strategy
+
+Bucketing is the second layer of logical data organization, which divides rows within a partition into smaller subsets. Doris supports the following bucketing methods:
+
+- **Hash Bucketing**: Distributes rows across tablets by calculating the `crc32` hash of bucket column values and taking the modulo of the bucket count to ensure even distribution.
+- **Random Bucketing**: Randomly assigns rows to tablets, ideal for small-scale data ingestion (e.g., using `load_to_single_tablet` for optimization).
+
+---
+
+## Data Distribution Optimization
+
+### Colocate Join
+
+For large tables frequently involved in JOIN or aggregation queries, **Colocate** ensures rows with the same bucket column values are located on the same physical node. This minimizes cross-node data transfers and significantly enhances query performance.
+
+### Partition Pruning
+
+Doris can prune irrelevant partitions based on query filters, reducing the scan range and lowering I/O costs.
+
+---
+
+## Goals of Data Distribution
+
+1. **Even Data Distribution**
+   Ensures data is evenly distributed across BE nodes to prevent data skew, which can cause some nodes to be overloaded, thus affecting query performance.
+
+2. **Query Performance Optimization**
+   Minimizes Shuffle costs and enhances JOIN and aggregation efficiency through partition pruning, bucketing, and Colocate optimizations.
+
+3. **Flexible Data Management**
+   - Partition data by time to store cold data on HDD and hot data on SSD.
+   - Regularly delete historical partitions to release storage space.
+
+4. **Metadata Scalability**
+   Metadata for each tablet is stored on both FE and BE nodes. Proper control of the tablet count is necessary. Recommended guidelines include:
+   - At least 100 GB of memory for FE nodes per 10 million tablets.
+   - A single BE node should manage fewer than 20,000 tablets.
+
+5. **Optimized Write Throughput**
+   - Limit the bucket count to a reasonable number (recommended < 128) to avoid write throughput degradation.
+   - Restrict the number of partitions involved in each write operation (preferably ingesting data into only a few partitions per batch).
+
+---
+
+By carefully designing and managing partitioning and bucketing strategies, Doris enables efficient storage and query processing for large-scale datasets, meeting diverse and complex business needs.
