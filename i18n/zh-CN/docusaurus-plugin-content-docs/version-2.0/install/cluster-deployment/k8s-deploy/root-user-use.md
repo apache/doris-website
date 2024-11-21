@@ -28,7 +28,7 @@ Doris-Operator 在部署管理相关服务节点使用的是 root 账号无密�
 
 ## 修改 root 账号及其密码
 
-1. 参阅 [认证和鉴权](../../../admin-manual/privilege-ldap/user-privilege) 文档，修改或创建相应密码或账户名，并在 Doris 中给予该账号管理节点的权限。
+1. 参阅 [认证和鉴权](../../../admin-manual/privilege-ldap/user-privilege.md) 文档，修改或创建相应密码或账户名，并在 Doris 中给予该账号管理节点的权限。
 
 2. 在 DorisCluster CRD 文件中的配置添加 spec.adminUser.* 样例如下：
 

@@ -456,7 +456,7 @@ select * from records_tbl order by `key`, `name` limit 100;
 Fetching the data for the second page can be accomplished by:
 
 ```sql
-select * from records_tbl order by `key`, `name` limit 100, offset 100;
+select * from records_tbl order by `key`, `name` limit 100 offset 100;
 ```
 
 However, when performing deep pagination queries (with large offsets), even if the actual required data rows are few, this method still reads all data into memory for full sorting before subsequent processing, which is quite inefficient. Using an auto-incrementa column assigns a unique value to each row, allowing the use of where `unique_value` > x limit y to filter a significant amount of data beforehand, making pagination more efficient.

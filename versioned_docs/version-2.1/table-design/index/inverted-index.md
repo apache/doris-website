@@ -187,6 +187,14 @@ Syntax explanation:
   <p>- From version 2.1.2, the default is true, automatically converting to lowercase. Earlier versions default to false.</p>
 </details>
 
+<details>
+  <summary>stopwords</summary>
+
+  **Specifying the stopword list to use, which will affect the behavior of the tokenizer**
+  <p>- The default built-in stopword list includes meaningless words such as 'is,' 'the,' 'a,' etc. When writing or querying, the tokenizer will ignore words that are in the stopword list.</p>
+  <p>- none: Use an empty stopword list</p>
+</details>
+
 **4. `COMMENT` is optional for specifying index comments**
 
 ### Adding Inverted Indexes to Existing Tables
@@ -318,6 +326,7 @@ To check the actual effect of tokenization or to tokenize a piece of text, you c
 
 The first parameter of the `TOKENIZE` function is the text to be tokenized, and the second parameter specifies the tokenization parameters used when creating the index.
 
+```sql
 mysql> SELECT TOKENIZE('I love CHINA','"parser"="english"');
 +------------------------------------------------+
 | tokenize('I love CHINA', '"parser"="english"') |
@@ -378,8 +387,8 @@ PROPERTIES ("replication_num" = "1");
 
 **Importing Data via Stream Load**
 
-```
-wget https://doris-build-1308700295.cos.ap-beijing.myqcloud.com/regression/index/hacknernews_1m.csv.gz
+```json
+wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/index/hacknernews_1m.csv.gz
 
 curl --location-trusted -u root: -H "compress_type:gz" -T hacknernews_1m.csv.gz http://127.0.0.1:8030/api/test_inverted_index/hackernews_1m/_stream_load
 {
@@ -634,39 +643,41 @@ mysql> SELECT count() FROM hackernews_1m;
   -- Execute BUILD INDEX to add the inverted index for existing data
   mysql> BUILD INDEX idx_author ON hackernews_1m;
   Query OK, 0 rows affected (0.01 sec)
+  ```
   
-Creating an incremental index for 1 million author records took only 1.5 seconds.
+  
+- Creating an incremental index for 1 million author records took only 1.5 seconds.
+  
+  ```sql
+  mysql> SHOW ALTER TABLE COLUMN;
+  +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
+  | JobId | TableName     | CreateTime              | FinishTime              | IndexName     | IndexId | OriginIndexId | SchemaVersion | TransactionId | State    | Msg  | Progress | Timeout |
+  +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
+  | 10030 | hackernews_1m | 2023-02-10 19:44:12.929 | 2023-02-10 19:44:13.938 | hackernews_1m | 10031   | 10008         | 1:1994690496  | 3             | FINISHED |      | NULL     | 2592000 |
+  | 10053 | hackernews_1m | 2023-02-10 19:49:32.893 | 2023-02-10 19:49:33.982 | hackernews_1m | 10054   | 10008         | 1:378856428   | 4             | FINISHED |      | NULL     | 2592000 |
+  | 10076 | hackernews_1m | 2023-02-10 19:54:20.046 | 2023-02-10 19:54:21.521 | hackernews_1m | 10077   | 10008         | 1:1335127701  | 5             | FINISHED |      | NULL     | 2592000 |
+  +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
+  ```
 
-```sql
-mysql> SHOW ALTER TABLE COLUMN;
-+-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-| JobId | TableName     | CreateTime              | FinishTime              | IndexName     | IndexId | OriginIndexId | SchemaVersion | TransactionId | State    | Msg  | Progress | Timeout |
-+-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-| 10030 | hackernews_1m | 2023-02-10 19:44:12.929 | 2023-02-10 19:44:13.938 | hackernews_1m | 10031   | 10008         | 1:1994690496  | 3             | FINISHED |      | NULL     | 2592000 |
-| 10053 | hackernews_1m | 2023-02-10 19:49:32.893 | 2023-02-10 19:49:33.982 | hackernews_1m | 10054   | 10008         | 1:378856428   | 4             | FINISHED |      | NULL     | 2592000 |
-| 10076 | hackernews_1m | 2023-02-10 19:54:20.046 | 2023-02-10 19:54:21.521 | hackernews_1m | 10077   | 10008         | 1:1335127701  | 5             | FINISHED |      | NULL     | 2592000 |
-+-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-```
+  ```sql
+  mysql> SHOW BUILD INDEX ORDER BY CreateTime DESC LIMIT 1;
+  +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
+  | JobId | TableName     | PartitionName | AlterInvertedIndexes                               | CreateTime              | FinishTime              | TransactionId | State    | Msg  | Progress |
+  +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
+  | 13006 | hackernews_1m | hackernews_1m | [ADD INDEX idx_author (`author`) USING INVERTED],  | 2023-06-26 17:23:02.610 | 2023-06-26 17:23:03.755 | 3004          | FINISHED |      | NULL     |
+  +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
+  1 row in set (0.01 sec)
+  ```
 
-```sql
-mysql> SHOW BUILD INDEX ORDER BY CreateTime DESC LIMIT 1;
-+-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-| JobId | TableName     | PartitionName | AlterInvertedIndexes                               | CreateTime              | FinishTime              | TransactionId | State    | Msg  | Progress |
-+-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-| 13006 | hackernews_1m | hackernews_1m | [ADD INDEX idx_author (`author`) USING INVERTED],  | 2023-06-26 17:23:02.610 | 2023-06-26 17:23:03.755 | 3004          | FINISHED |      | NULL     |
-+-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-1 row in set (0.01 sec)
-```
+- After creating the index, string equality matches also showed significant acceleration.
 
--- After creating the index, string equality matches also showed significant acceleration.
-
-```sql
-mysql> SELECT count() FROM hackernews_1m WHERE author = 'faster';
-+---------+
-| count() |
-+---------+
-|      20 |
-+---------+
-1 row in set (0.01 sec)
-```
+  ```sql
+  mysql> SELECT count() FROM hackernews_1m WHERE author = 'faster';
+  +---------+
+  | count() |
+  +---------+
+  |      20 |
+  +---------+
+  1 row in set (0.01 sec)
+  ```
 

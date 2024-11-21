@@ -39,6 +39,7 @@ Note:
 
 1. Partial updates are only supported in the Merge-on-Write implementation of the Unique Key starting from version 2.0.
 2. Starting from version 2.0.2, partial updates are supported using INSERT INTO.
+3. Partial updates are not supported on tables with materialized views.
 :::
 
 ### Use Cases
@@ -115,7 +116,7 @@ $ cat update.csv
 
 1,To be shipped
 
-$ curl --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:48037/api/db1/order_tbl/_stream_load
+$ curl --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
 
 If you are using `INSERT INTO`, you can update as following methods:
@@ -137,8 +138,6 @@ After the update, the result is as follows:
 +----------+--------------+--------------+
 1 row in set (0.01 sec)
 ```
-
-Partial Column Updates in the Primary Key Model
 
 ### Notes
 

@@ -306,6 +306,22 @@ CREATE CATALOG hive PROPERTIES (
 
 > 该变量默认为 `false`。
 
+## 查询 Hive 分区
+
+可以通过下面两种方式查询 Hive 分区信息。
+
+- `SHOW PARTITIONS FROM hive_table`
+
+    该语句可以列出指定 Hive 表的所有分区以及分区值信息。
+
+- 使用 `table$partitions` 元数据表
+
+    自 2.1.7 和 3.0.3 版本开始，用户可以通过 `table$partitions` 元数据表查询 Hive 分区信息。`table$partitions` 本质上是一个关系表，所以可以使用在任意 SELECT 语句中。
+
+    ```
+    SELECT * FROM hive_table$partitions;
+    ```
+
 ## 使用 broker 访问 HMS
 
 创建 HMS Catalog 时增加如下配置，Hive 外表文件分片和文件扫描将会由名为 `test_broker` 的 Broker 完成

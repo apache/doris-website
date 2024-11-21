@@ -233,7 +233,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 * 描述：和外部表建立连接的超时时间。
 * 默认值：5 秒
 
-#### `status_report_interval`
+#### `pipeline_status_report_interval`
 
 * 描述：配置文件报告之间的间隔；单位：秒
 * 默认值：5
@@ -337,12 +337,6 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 * 描述：当使用 odbc 外表时，如果 odbc 源表的某一列类型不是 HLL, CHAR 或者 VARCHAR，并且列值长度超过该值，则查询报错'column value length longer than buffer length'. 可增大该值
 * 默认值：100
 
-#### `jsonb_type_length_soft_limit_bytes`
-
-* 类型：int32
-* 描述：JSONB 类型最大长度的软限，单位是字节
-* 默认值：1048576
-
 ### 查询
 
 #### `fragment_mgr_asynic_work_pool_queue_size`
@@ -359,12 +353,6 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 
 * 描述：根据后续任务动态创建线程，最大创建 512 个线程。
 * 默认值：512
-
-#### `doris_scan_range_row_count`
-
-* 类型：int32
-* 描述：BE 在进行数据扫描时，会将同一个扫描范围拆分为多个 ScanRange。该参数代表了每个 ScanRange 代表扫描数据范围。通过该参数可以限制单个 OlapScanner 占用 io 线程的时间。
-* 默认值：524288
 
 #### `doris_scanner_row_num`
 
@@ -586,13 +574,6 @@ BaseCompaction:546859:
 * 描述：Compaction 任务的生产者每次连续生产多少轮 cumulative compaction 任务后生产一轮 base compaction。
 * 默认值：9
 
-#### `cumulative_compaction_policy`
-
-* 类型：string
-* 描述：配置 cumulative compaction 阶段的合并策略，目前实现了两种合并策略，num_based 和 size_based
-  - 详细说明，ordinary，是最初版本的 cumulative compaction 合并策略，做一次 cumulative compaction 之后直接 base compaction 流程。size_based，通用策略是 ordinary 策略的优化版本，仅当 rowset 的磁盘体积在相同数量级时才进行版本合并。合并之后满足条件的 rowset 进行晋升到 base compaction 阶段。能够做到在大量小批量导入的情况下：降低 base compact 的写入放大率，并在读取放大率和空间放大率之间进行权衡，同时减少了文件版本的数据。
-* 默认值：size_based
-
 #### `max_cumu_compaction_threads`
 
 * 类型：int32
@@ -726,11 +707,6 @@ BaseCompaction:546859:
 
 * 描述：soft limit 是指站单节点导入内存上限的比例。例如所有导入任务导入的内存上限是 20GB，则 soft limit 默认为该值的 50%，即 10GB。导入内存占用超过 soft limit 时，会挑选占用内存最大的作业进行下刷以提前释放内存空间。
 * 默认值：50（%）
-
-#### `routine_load_thread_pool_size`
-
-* 描述：routine load 任务的线程池大小。这应该大于 FE 配置 'max_concurrent_task_num_per_be'
-* 默认值：10
 
 #### `slave_replica_writer_rpc_timeout_sec`
 
@@ -867,21 +843,6 @@ BaseCompaction:546859:
 * 描述：每个 store 用于刷新内存表的线程数
 * 默认值：2
 
-#### `num_threads_per_core`
-
-* 描述：控制每个内核运行工作的线程数。通常选择 2 倍或 3 倍的内核数量。这使核心保持忙碌而不会导致过度抖动
-* 默认值：3
-
-#### `num_threads_per_disk`
-
-* 描述：每个磁盘的最大线程数也是每个磁盘的最大队列深度
-* 默认值：0
-
-#### `number_slave_replica_download_threads`
-
-* 描述：每个 BE 节点上 slave 副本同步 Master 副本数据的线程数，用于单副本数据导入功能。
-* 默认值：64
-
 #### `publish_version_worker_count`
 
 * 描述：生效版本的线程数
@@ -921,29 +882,6 @@ BaseCompaction:546859:
 
 ### 内存
 
-#### `disable_mem_pools`
-
-* 类型：bool
-* 描述：是否禁用内存缓存池
-* 默认值：false
-
-#### `buffer_pool_clean_pages_limit`
-
-* 描述：清理可能被缓冲池保存的 Page
-* 默认值：50%
-
-#### `buffer_pool_limit`
-
-* 类型：string
-* 描述：buffer pool 之中最大的可分配内存
-  - BE 缓存池最大的内存可用量，buffer pool 是 BE 新的内存管理结构，通过 buffer page 来进行内存管理，并能够实现数据的落盘。并发的所有查询的内存申请都会通过 buffer pool 来申请。当前 buffer pool 仅作用在**AggregationNode**与**ExchangeNode**。
-* 默认值：20%
-
-#### `chunk_reserved_bytes_limit`
-
-* 描述：Chunk Allocator 的 reserved bytes 限制，通常被设置为 mem_limit 的百分比。默认单位字节，值必须是 2 的倍数，且必须大于 0，如果大于物理内存，将被设置为物理内存大小。增加这个变量可以提高性能，但是会获得更多其他模块无法使用的空闲内存。
-* 默认值：20%
-
 #### `max_memory_sink_batch_count`
 
 * 描述：最大外部扫描缓存批次计数，表示缓存 max_memory_cache_batch_count * batch_size row，默认为 20，batch_size 的默认值为 1024，表示将缓存 20 * 1024 行。
@@ -959,12 +897,6 @@ BaseCompaction:546859:
 * 类型：int32
 * 描述：如果一个 page 中的行数小于这个值就不会创建 zonemap，用来减少数据膨胀。
 * 默认值：20
-
-#### `enable_tcmalloc_hook`
-
-* 类型：bool
-* 描述：是否 Hook TCmalloc new/delete，目前在Hook中统计thread local MemTracker。
-* 默认值：true
 
 #### `memory_mode`
 
@@ -989,11 +921,6 @@ BaseCompaction:546859:
 * 描述：TCMalloc Hook consume/release MemTracker 时的最小长度，小于该值的 consume size 会持续累加，避免频繁调用 MemTracker 的 consume/release，减小该值会增加 consume/release 的频率，增大该值会导致 MemTracker 统计不准，理论上一个 MemTracker 的统计值与真实值相差 = (mem_tracker_consume_min_size_bytes * 这个 MemTracker 所在的 BE 线程数)。
 * 默认值：1048576
 
-#### `cache_clean_interval`
-
-* 描述：文件句柄缓存清理的间隔，用于清理长期不用的文件句柄。同时也是 Segment Cache 的清理间隔时间。
-* 默认值：1800 (s)
-
 #### `min_buffer_size`
 
 * 描述：最小读取缓冲区大小
@@ -1011,42 +938,6 @@ BaseCompaction:546859:
 * 描述：读取 hdfs 或者对象存储上的文件时，使用的缓存大小。
   - 增大这个值，可以减少远端数据读取的调用次数，但会增加内存开销。
 * 默认值：16MB
-
-#### `file_cache_alive_time_sec`
-
-* 类型：int64
-* 描述：缓存文件的保存时间，单位：秒
-* 默认值：604800（1 个星期）
-
-#### `file_cache_max_size_per_disk`
-
-* 类型：int64
-* 描述：缓存占用磁盘大小，一旦超过这个设置，会删除最久未访问的缓存，为 0 则不限制大小。单位：字节。
-* 默认值：0
-
-#### `max_sub_cache_file_size`
-
-* 类型：int64
-* 描述：缓存文件使用 sub_file_cache 时，切分文件的最大大小，单位 B
-* 默认值：104857600（100MB）
-
-#### `download_cache_thread_pool_thread_num`
-
-* 类型：int32
-* 描述：DownloadCache 线程池线程数目。在 FileCache 的缓存下载任务之中，缓存下载操作会作为一个线程 Task 提交到线程池之中等待被调度，该参数决定了 DownloadCache 线程池的大小。
-* 默认值：48
-
-#### `download_cache_thread_pool_queue_size`
-
-* Type: int32
-* 描述：DownloadCache 线程池线程数目。在 FileCache 的缓存下载任务之中，缓存下载操作会作为一个线程 Task 提交到线程池之中等待被调度，而提交的任务数目超过线程池队列的长度之后，后续提交的任务将阻塞直到队列之中有新的空缺。
-* 默认值：102400
-
-#### `generate_cache_cleaner_task_interval_sec`
-
-* 类型：int64
-* 描述：缓存文件的清理间隔，单位：秒
-* 默认值：43200（12 小时）
 
 #### `path_gc_check`
 
@@ -1066,10 +957,6 @@ BaseCompaction:546859:
 #### `path_gc_check_step_interval_ms`
 
 * 默认值：10 (ms)
-
-#### `path_scan_interval_second`
-
-* 默认值：86400
 
 #### `scan_context_gc_interval_min`
 
@@ -1105,11 +992,6 @@ BaseCompaction:546859:
 * 类型：int32
 * 描述：存储引擎允许存在损坏硬盘的百分比，损坏硬盘超过改比例后，BE 将会自动退出。
 * 默认值：0
-
-#### `read_size`
-
-* 描述：读取大小是发送到 os 的读取大小。在延迟和整个过程之间进行权衡，试图让磁盘保持忙碌但不引入寻道。对于 8 MB 读取，随机 io 和顺序 io 的性能相似
-* 默认值：8388608
 
 #### `min_garbage_sweep_interval`
 
@@ -1186,14 +1068,6 @@ BaseCompaction:546859:
 * 描述：存储引擎保留的未生效数据的最大时长
 * 默认值：1800 (s)
 
-#### `ignore_rowset_stale_inconsistent_delete`
-
-* 类型：bool
-* 描述：用来决定当删除过期的合并过的 rowset 后无法构成一致的版本路径时，是否仍要删除。
-  - 合并的过期 rowset 版本路径会在半个小时后进行删除。在异常下，删除这些版本会出现构造不出查询一致路径的问题，当配置为 false 时，程序检查比较严格，程序会直接报错退出。
-    当配置为 true 时，程序会正常运行，忽略这个错误。一般情况下，忽略这个错误不会对查询造成影响，仅会在 fe 下发了合并过的版本时出现 -230 错误。
-* 默认值：false
-
 #### `create_tablet_worker_count`
 
 * 描述：BE 创建 tablet 的工作线程数
@@ -1210,11 +1084,6 @@ BaseCompaction:546859:
 * 描述：限制单个 tablet 最大 version 的数量。用于防止导入过于频繁，或 compaction 不及时导致的大量 version 堆积问题。当超过限制后，导入任务将被拒绝。
 * 默认值：2000
 
-#### `number_tablet_writer_threads`
-
-* 描述：tablet 写线程数
-* 默认值：16
-
 #### `tablet_map_shard_size`
 
 * 描述：tablet_map_lock 分片大小，值为 2^n, n=0,1,2,3,4，这是为了更好地管理 tablet
@@ -1229,11 +1098,6 @@ BaseCompaction:546859:
 
 * 描述：TabletMeta Checkpoint 的最小 Rowset 数目
 * 默认值：10
-
-#### `tablet_stat_cache_update_interval_second`
-
-* 描述：tablet 状态缓存的更新间隔
-* 默认值：300 (s)
 
 #### `tablet_rowset_stale_sweep_time_sec`
 
@@ -1302,16 +1166,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：快照文件清理的间隔
 * 默认值：172800 (48 小时)
 
-#### `compress_rowbatches`
-
-* 类型：bool
-
-* 描述：序列化 RowBatch 时是否使用 Snappy 压缩算法进行数据压缩
-
-* 默认值：true
-
-  
-
 ### 日志
 
 #### `sys_log_dir`
@@ -1365,7 +1219,7 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：日志刷盘的策略，默认保持在内存中
 * 默认值：空
 
-### 其他
+### 其它
 
 #### `report_tablet_interval_seconds`
 
@@ -1411,11 +1265,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 描述：下载最低限速
 * 默认值：50 (KB/s)
-
-#### `doris_cgroups`
-
-* 描述：分配给 doris 的 cgroups
-* 默认值：空
 
 #### `priority_queue_remaining_tasks_increased_frequency`
 
@@ -1470,7 +1319,30 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：当 Group Commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
 * 默认值：10000
 
-#### `default_tzfiles_path`
+### 存算分离模式
 
-* 描述：Doris 自带的时区数据库。如果系统目录下未找到时区文件，则启用该目录下的数据。
-* 默认值："${DORIS_HOME}/zoneinfo"
+#### `deploy_mode`
+
+* 默认值: ""
+
+* 描述: BE 运行的模式。`cloud` 表示算分离模式。
+
+#### `meta_service_endpoint`
+
+* 默认值: ""
+
+* 描述: Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。该值通常由 FE 通过心跳传递给 BE，无需配置。
+
+#### `enable_file_cache`
+
+* 默认值：在存算分离模式下为 true，在非存算分离模式下为 false。
+
+* 描述：是否使用文件缓存。
+
+#### `file_cache_path`
+
+* 默认值： [{"path":"${DORIS_HOME}/file_cache"}]
+
+* 描述：用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一个条目。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
+
+* 格式： [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]

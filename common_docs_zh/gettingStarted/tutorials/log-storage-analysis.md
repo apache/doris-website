@@ -59,8 +59,8 @@ under the License.
 
 经过 Benchmark 测试及生产验证，基于 Apache Doris 构建的日志存储与分析平台，性价比相对于 Elasticsearch 具有 5～10 倍的提升。Apache Doris 的性能优势，主要得益于全球领先的高性能存储和查询引擎，以及下面一些针对日志场景的专门优化：
 
-- **写入吞吐提升**：Elasticsearch 写入的性能瓶颈在于解析数据和构建倒排索引的 CPU 消耗。相比之下，Apache Doris 进行了两方面的写入优化：一方面利用 SIMD 等 CPU 向量化指令提升了 JSON 数据解析速度和索引构建性能；另一方面针对日志场景简化倒了排索引结构，去掉日志场景不需要的正排等数据结构，有效降低了索引构建的复杂度。同样的资源，Apache Doris 的写入性能是 Elasticsearch 的 3～5 倍。
-- **存储成本降低**：Elasticsearch 存储瓶颈在于正排、倒排、Docvalue 列存多份存储和通用压缩算法压缩率较低。相比之下，Apache Doris 在存储上进行了以下优化：去掉正排，缩减了 30% 的索引数据量；采用列式存储和 Zstandard 压缩算法，压缩比可达到 5～10 倍，远高于 Elasticsearch 的 1.5 倍；日志数据中冷数据访问频率很低，Apache Doris 冷热分层功能可以将超过定义时间段的日志自动存储到更低的对象存储中，冷数据的存储成本可降低 70% 以上。同样的原始数据，SelectDB 的存储成本只需要 Elasticsearch 的 20% 左右。
+- **写入吞吐提升**：Elasticsearch 写入的性能瓶颈在于解析数据和构建倒排索引的 CPU 消耗。相比之下，Apache Doris 进行了两方面的写入优化：一方面利用 SIMD 等 CPU 向量化指令提升了 JSON 数据解析速度和索引构建性能；另一方面针对日志场景简化了倒排索引结构，去掉日志场景不需要的正排等数据结构，有效降低了索引构建的复杂度。同样的资源，Apache Doris 的写入性能是 Elasticsearch 的 3～5 倍。
+- **存储成本降低**：Elasticsearch 存储瓶颈在于正排、倒排、Docvalue 列存多份存储和通用压缩算法压缩率较低。相比之下，Apache Doris 在存储上进行了以下优化：去掉正排，缩减了 30% 的索引数据量；采用列式存储和 Zstandard 压缩算法，压缩比可达到 5～10 倍，远高于 Elasticsearch 的 1.5 倍；日志数据中冷数据访问频率很低，Apache Doris 冷热分层功能可以将超过定义时间段的日志自动存储到更低的对象存储中，冷数据的存储成本可降低 70% 以上。同样的原始数据，Doris 的存储成本只需要 Elasticsearch 的 20% 左右。
 - **查询性能提升**：Apache Doris 将全文检索的流程简化，跳过了相关性打分等日志场景不需要的算法，加速基础的检索性能。同时针对日志场景常见的查询，比如查询包含某个关键字的最新 100 条日志，在查询规划和执行上做专门的 TopN 动态剪枝等优化。
 
 ### 分析能力强
@@ -73,23 +73,23 @@ Apache Doris 支持标准 SQL、兼容 MySQL 协议和语法，因此基于 Apac
 
 ### Flexible Schema
 
-下面是一个典型的 JSON 格式半结构化日志样例。顶层字段是一些比较固定的字段，比如日志时间戳（`timestamp`），日志来源（`source`），志所在机器（`node`），打日志的模块（`component`），日志级别（`level`），客户端请求标识（`clientRequestId`），日志内容（`message`），日志扩展属性（`properties`），基本上每条日志都会有。而扩展属性 `properties` 的内部嵌套字段 `properties.size`、`properties.format` 等是比较动态的，每条日志的字段可能不一样。
+下面是一个典型的 JSON 格式半结构化日志样例。顶层字段是一些比较固定的字段，比如日志时间戳（`timestamp`），日志来源（`source`），日志所在机器（`node`），打日志的模块（`component`），日志级别（`level`），客户端请求标识（`clientRequestId`），日志内容（`message`），日志扩展属性（`properties`），基本上每条日志都会有。而扩展属性 `properties` 的内部嵌套字段 `properties.size`、`properties.format` 等是比较动态的，每条日志的字段可能不一样。
 
 ```JSON  
 {  
-"timestamp": "2014-03-08T00:50:03.8432810Z",  
-"source": "ADOPTIONCUSTOMERS81",  
-"node": "Engine000000000405",  
-"level": "Information",  
-"component": "DOWNLOADER",  
-"clientRequestId": "671db15d-abad-94f6-dd93-b3a2e6000672",  
-"message": "Downloading file path: benchmark/2014/ADOPTIONCUSTOMERS81_94_0.parquet.gz",  
-"properties": {  
-"size": 1495636750,  
-"format": "parquet",  
-"rowCount": 855138,  
-"downloadDuration": "00:01:58.3520561"  
-}  
+  "timestamp": "2014-03-08T00:50:03.8432810Z",
+  "source": "ADOPTIONCUSTOMERS81",
+  "node": "Engine000000000405",
+  "level": "Information",
+  "component": "DOWNLOADER",
+  "clientRequestId": "671db15d-abad-94f6-dd93-b3a2e6000672",
+  "message": "Downloading file path: benchmark/2014/ADOPTIONCUSTOMERS81_94_0.parquet.gz",
+  "properties": {
+    "size": 1495636750,
+    "format": "parquet",
+    "rowCount": 855138,
+    "downloadDuration": "00:01:58.3520561"
+  }
 }
 ```
 
@@ -112,52 +112,47 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 
 1.  **评估写入资源**：计算公式如下：
 
-  - 日增数据量 / 86400 s = 平均写入吞吐
-  - 平均写入吞吐 x 写入吞吐峰值 / 均值比 = 峰值写入吞吐
-  - 峰值写入吞吐 / 单核写入吞吐 = 峰值写入所需 CPU 核数
+  - `平均写入吞吐 = 日增数据量 / 86400 s`
+  - `峰值写入吞吐 = 平均写入吞吐 * 写入吞吐峰值 / 均值比`
+  - `峰值写入所需 CPU 核数 = 峰值写入吞吐 / 单核写入吞吐`
 
-2. **评估存储资源**：计算公式为「日增数据量 / 压缩率 * 副本数 * 数据存储周期 = 所需存储空间」。
+2. **评估存储资源**：计算公式为 `所需存储空间 = 日增数据量 / 压缩率 * 副本数 * 数据存储周期`
 
 3. **评估查询资源**：查询的资源消耗随查询量和复杂度而异，建议初始预留 50% 的 CPU 资源用于查询，再根据实际测试情况进行调整。
    
 4. **汇总整合资源**：由第 1 步和第 3 步估算出所需 CPU 核数后，除以单机 CPU 核数，估算出 BE 服务器数量，再根据 BE 服务器数量和第 2 步的结果，估算出每台 BE 服务器所需存储空间，然后分摊到 4～12 块数据盘，计算出单盘存储容量。
 
-以每天新增 100 TB 数据量（压缩前）、7 倍压缩率、1 副本、热数据存储 3 天、冷数据存储 30 天、写入吞吐峰值 / 均值比 200%、单核写入吞吐 10 MB/s、查询预留 50% CPU 资源为例，可估算出：
+以每天新增 100 TB 数据量（压缩前）、5 倍压缩率、1 副本、热数据存储 3 天、冷数据存储 30 天、写入吞吐峰值 / 均值比 200%、单核写入吞吐 10 MB/s、查询预留 50% CPU 资源为例，可估算出：
 
 - FE：3 台服务器，每台配置 16 核 CPU、64 GB 内存、1 块 100 GB SSD 盘
-- BE：15 台服务器，每台配置 32 核 CPU、256 GB 内存、8 块 500 GB SSD 盘
-- Amazon S3 存储空间：即为预估冷数据存储空间，430 TB
+- BE：15 台服务器，每台配置 32 核 CPU、256 GB 内存、10 块 600 GB SSD 盘
+- S3 对象存储空间：即为预估冷数据存储空间，600 TB
 
 该例子中，各关键指标的值及具体计算方法可见下表：
 
 | 关键指标（单位）                 | 值    | 说明                                                         |
 | :------------------------------- | :---- | :----------------------------------------------------------- |
 | 日增数据量（TB）                 | 100   | 根据实际需求填写                                             |
-| 压缩率                           | 7     | 一般为 5～10 倍（含索引），根据实际需求填写                  |
+| 压缩率                           | 5     | 一般为 3～10 倍（含索引），根据实际需求填写                  |
 | 副本数                           | 1     | 根据实际需求填写，默认 1 副本，可选值：1，2，3               |
 | 热数据存储周期（天）             | 3     | 根据实际需求填写                                             |
 | 冷数据存储周期（天）             | 30    | 根据实际需求填写                                             |
-| 总存储周期（天）                 | 33    | 算法：热数据存储周期 + 冷数据存储周期                        |
-| 预估热数据存储空间（TB）         | 42.9  | 算法：日增数据量 / 压缩率 * 副本数 * 热数据存储周期          |
-| 预估冷数据存储空间（TB）         | 428.6 | 算法：日增数据量 / 压缩率 * 副本数 * 冷数据存储周期          |
+| 总存储周期（天）                 | 33    | 算法：`热数据存储周期 + 冷数据存储周期`                      |
+| 预估热数据存储空间（TB）         | 60  | 算法：`日增数据量 / 压缩率 * 副本数 * 热数据存储周期`        |
+| 预估冷数据存储空间（TB）         | 600 | 算法：`日增数据量 / 压缩率 * 副本数 * 冷数据存储周期`        |
 | 写入吞吐峰值 / 均值比            | 200%  | 根据实际需求填写，默认 200%                                  |
 | 单机 CPU 核数                    | 32    | 根据实际需求填写，默认 32 核                                 |
-| 平均写入吞吐（MB/s）             | 1214  | 算法：日增数据量 / 86400 s                                   |
-| 峰值写入吞吐（MB/s）             | 2427  | 算法：平均写入吞吐 * 写入吞吐峰值 / 均值比                   |
-| 峰值写入所需 CPU 核数            | 242.7 | 算法：峰值写入吞吐 / 单机写入吞吐                           |
+| 平均写入吞吐（MB/s）             | 1214  | 算法：`日增数据量 / 86400 s`                                 |
+| 峰值写入吞吐（MB/s）             | 2427  | 算法：`平均写入吞吐 * 写入吞吐峰值 / 均值比`                 |
+| 峰值写入所需 CPU 核数            | 242.7 | 算法：`峰值写入吞吐 / 单核写入吞吐`                          |
 | 查询预留 CPU 百分比              | 50%   | 根据实际需求填写，默认 50%                                   |
-| 预估 BE 服务器数                 | 15.2  | 算法：峰值写入所需 CPU 核数 / 单机 CPU 核数 /（1 - 查询预留 CPU 百分比） |
-| 预估 BE 服务器数取整             | 15    | 算法：MAX (副本数，预估 BE 服务器数上取整)                   |
-| 预估每台 BE 服务器存储空间（TB） | 4.03  | 算法：预估热数据存储空间 / 预估 BE 服务器数 /（1 - 30%），其中，30% 是存储空间预留值。建议每台 BE 服务器挂载 4～12 块数据盘，以提高 I/O 能力。 |
+| 预估 BE 服务器数                 | 15.2  | 算法：`峰值写入所需 CPU 核数 / 单机 CPU 核数 /（1 - 查询预留 CPU 百分比）` |
+| 预估 BE 服务器数取整             | 15    | 算法：`MAX (副本数，预估 BE 服务器数取整)`                   |
+| 预估每台 BE 服务器存储空间（TB） | 5.7  | 算法：`预估热数据存储空间 / 预估 BE 服务器数 /（1 - 30%）`，其中，30% 是存储空间预留值。建议每台 BE 服务器挂载 4～12 块数据盘，以提高 I/O 能力。 |
 
 ### 第 2 步：部署集群
 
 完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../../install/cluster-deployment/standard-deployment)。
-
-另，推荐使用 SelectDB Enterprise 推出的 Cluster Manager 工具部署集群，以降低整体部署成本。更多关于 Cluster Manager 的信息，可参考以下文档：
-
-- [Cluster Manager for Apache Doris 24.x 安装手册](https://docs.selectdb.com/docs/enterprise/cluster-manager-guide/deployment-guide/deployment-guide-24.x)
-- [Cluster Manager for Apache Doris 24.x 使用手册](https://docs.selectdb.com/docs/enterprise/cluster-manager-guide/management-guide/management-guide-24.x)
 
 ### 第 3 步：优化 FE 和 BE 配置
 
@@ -173,7 +168,6 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | `streaming_label_keep_max_second = 3600` `label_keep_max_second = 7200` | 高频导入事务标签内存占用多，保留时间调短。                   |
 | `enable_round_robin_create_tablet = true`                    | 创建 Tablet 时，采用 Round Robin 策略，尽量均匀。            |
 | `tablet_rebalancer_type = partition`                         | 均衡 Tablet 时，采用每个分区内尽量均匀的策略。               |
-| `enable_single_replica_load = true`                          | 开启单副本导入，多个副本只需构建一次索引，减少 CPU 消耗。    |
 | `autobucket_min_buckets = 10`                                | 将自动分桶的最小分桶数从 1 调大到 10，避免日志量增加时分桶不够。 |
 | `max_backend_heartbeat_failure_tolerance_count = 10`         | 日志场景下 BE 服务器压力较大，可能短时间心跳超时，因此将容忍次数从 1 调大到 10。 |
 
@@ -190,7 +184,6 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | -          | `file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]` | 配置冷数据的缓存路径和相关设置，具体配置说明如下：<br />`path`：缓存路径<br />`total_size`：该缓存路径的总大小，单位为字节，53687091200 字节等于 50 GB<br />`query_limit`：单次查询可以从缓存路径中查询的最大数据量，单位为字节，10737418240 字节等于 10 GB |
 | 写入       | `write_buffer_size = 1073741824`                             | 增加写入缓冲区（buffer）的文件大小，减少小文件和随机 I/O 操作，提升性能。 |
 | -          | `max_tablet_version_num = 20000`                             | 配合建表的 time_series compaction 策略，允许更多版本暂时未合并。 |
-| -          | `enable_single_replica_load = true`                          | 开启单副本写入，减少 CPU 消耗。与 FE 配置相同。              |
 | Compaction | `max_cumu_compaction_threads = 8`                            | 设置为 CPU 核数 / 4，意味着 CPU 资源的 1/4 用于写入，1/4 用于后台 Compaction，2/1 留给查询和其他操作。 |
 | -          | `inverted_index_compaction_enable = true`                    | 开启索引合并（index compaction），减少 Compaction 时的 CPU 消耗。 |
 | -          | `enable_segcompaction = false` `enable_ordered_data_compaction = false` | 关闭日志场景不需要的两个 Compaction 功能。                   |
@@ -214,35 +207,38 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 
 **配置分区分桶参数**
 
-- 分区时，按照以下说明配置：
-- 使用时间字段上的 [Range 分区](../../table-design/data-partition/#range-%E5%88%86%E5%8C%BA)，并开启 [动态分区](../../table-design/data-partition?_highlight=%E8%87%AA%E5%8A%A8&_highlight=%E5%88%86&_highlight=%E6%A1%B6#%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA)，按天自动管理分区。
-- 使用 Datetime 类型的时间字段作为 Key，在查询最新 N 条日志时有数倍加速。
-- 分桶时，按照以下说明配置：
-- 分桶数量大致为集群磁盘总数的 3 倍。
-- 使用 Random 策略，配合写入时的 Single Tablet 导入，可以提升批量（Batch）写入的效率。
+分区时，按照以下说明配置：
+- 使用时间字段上的 [Range 分区](../../table-design/data-partition/#range-%E5%88%86%E5%8C%BA) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](../../table-design/data-partition) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
+- 使用 Datetime 类型的时间字段作为 Key (`DUPLICATE KEY(ts)`)，在查询最新 N 条日志时有数倍加速。
 
-更多关于分区分桶的信息，可参考 [分区分桶](../../table-design/data-partition)。
+分桶时，按照以下说明配置：
+- 分桶数量大致为集群磁盘总数的 3 倍，每个桶的数据量压缩后 5GB 左右。
+- 使用 Random 策略 (`DISTRIBUTED BY RANDOM BUCKETS 60`)，配合写入时的 Single Tablet 导入，可以提升批量（Batch）写入的效率。
+
+更多关于分区分桶的信息，可参考 [数据划分](../../table-design/data-partitioning/basic-concepts)。
+
+**配置压缩参数**
+- 使用 zstd 压缩算法(`"compression" = "zstd"`), 提高数据压缩率。
 
 **配置 Compaction 参数**
 
 按照以下说明配置 Compaction 参数：
 
-- 使用 time_series 策略，以减轻写放大效应，对于高吞吐日志写入的资源写入很重要。
-- 使用单副本 Compaction，减少多副本 Compaction 的开销。
+- 使用 time_series 策略(`"compaction_policy" = "time_series"`)，以减轻写放大效应，对于高吞吐日志写入的资源写入很重要。
 
 **建立和配置索引参数**
 
 按照以下说明操作：
 
-- 对经常查询的字段建立索引。
+- 对经常查询的字段建立索引 (`USING INVERTED`)。
 - 对需要全文检索的字段，将分词器（parser）参数赋值为 unicode，一般能满足大部分需求。如有支持短语查询的需求，将 support_phrase 参数赋值为 true；如不需要，则设置为 false，以降低存储空间。
 
 **配置存储策略**
 
 按照以下说明操作：
 
-- 对于热存储数据，如果使用云盘，可配置 1 副本；如果使用物理盘，则至少配置 2 副本。
-- 配置 `log_s3` 的存储位置，并设置 `log_policy_3day` 冷热数据分层策略，即在超过 3 天后将数据冷却至 `log_s3` 指定的存储位置。可参考以下代码：
+- 对于热存储数据，如果使用云盘，可配置 1 副本；如果使用物理盘，则至少配置 2 副本 (`"replication_num" = "2"`)。
+- 配置 `log_s3` 的存储位置 (`CREATE RESOURCE "log_s3"`)，并设置 `log_policy_3day` 冷热数据分层策略 (`CREATE STORAGE POLICY log_policy_3day`)，即在超过 3 天后将数据冷却至 `log_s3` 指定的存储位置。可参考以下代码：
 
 ```sql
 CREATE DATABASE log_db;
@@ -279,20 +275,20 @@ CREATE TABLE log_table
 ENGINE = OLAP
 DUPLICATE KEY(`ts`)
 PARTITION BY RANGE(`ts`) ()
-DISTRIBUTED BY RANDOM BUCKETS 250
+DISTRIBUTED BY RANDOM BUCKETS 60
 PROPERTIES (
-"compaction_policy" = "time_series",
-"dynamic_partition.enable" = "true",
-"dynamic_partition.create_history_partition" = "true",
-"dynamic_partition.time_unit" = "DAY",
-"dynamic_partition.start" = "-30",
-"dynamic_partition.end" = "1",
-"dynamic_partition.prefix" = "p",
-"dynamic_partition.buckets" = "250",
-"dynamic_partition.replication_num" = "2", -- 存算分离不需要
-"replication_num" = "2" -- 存算分离不需要
-"enable_single_replica_compaction" = "true", -- 存算分离不需要
-"storage_policy" = "log_policy_3day" -- 存算分离不需要
+  "compression" = "zstd",
+  "compaction_policy" = "time_series",
+  "dynamic_partition.enable" = "true",
+  "dynamic_partition.create_history_partition" = "true",
+  "dynamic_partition.time_unit" = "DAY",
+  "dynamic_partition.start" = "-30",
+  "dynamic_partition.end" = "1",
+  "dynamic_partition.prefix" = "p",
+  "dynamic_partition.buckets" = "60",
+  "dynamic_partition.replication_num" = "2", -- 存算分离不需要
+  "replication_num" = "2", -- 存算分离不需要
+  "storage_policy" = "log_policy_3day" -- 存算分离不需要
 );
 ```
 
@@ -482,7 +478,7 @@ FROM KAFKA (
 SHOW ROUTINE LOAD;
 ```
 
-更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](../../data-operate/import/routine-load-manual)。
+更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](../../data-operate/import/import-way/routine-load-manual)。
 
 **使用自定义程序采集日志**
 
@@ -555,11 +551,9 @@ ORDER BY ts DESC LIMIT 10;
 
 **可视化日志分析**
 
-基于 Apache Doris 构建的 SelectDB Enterprise Core 提供了名为 Doris WebUI 的数据开发平台，Doris WebUI 包含了类 Kibana Discover 的日志检索分析界面，提供直观、易用的探索式日志分析交互，如下图所示：
+一些第三方厂商提供了基于 Apache Doris 的可视化日志分析开发平台，包含类 Kibana Discover 的日志检索分析界面，提供直观、易用的探索式日志分析交互。
 
 ![WebUI](/images/WebUI-CN.jpeg)
-
-在此界面上，Doris WebUI 主要支持以下功能：
 
 - 支持全文检索和 SQL 两种模式
 - 支持时间框和直方图上选择查询日志的时间段
@@ -567,4 +561,5 @@ ORDER BY ts DESC LIMIT 10;
 - 在日志数据上下文交互式点击增加和删除筛选条件
 - 搜索结果的字段 Top 值展示，便于发现异常值和进一步下钻分析
 
-你可以 [点此下载 SelectDB Enterprise Core](https://www.selectdb.com/download/enterprise#core)，完成 [安装](https://docs.selectdb.com/docs/enterprise/enterprise-core-guide/selectdb-distribution-doris-core-deployment-guide) 后，即可使用 Doris WebUI 登录数据库。更多关于如何使用 Doris WebUI 的信息，可参考 [WebUI](https://docs.selectdb.com/docs/enterprise/enterprise-core-guide/selectdb-webui-guide)。
+您可以联系 dev@doris.apache.org 获得更多帮助。
+

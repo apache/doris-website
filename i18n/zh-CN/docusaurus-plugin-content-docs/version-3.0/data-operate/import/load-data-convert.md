@@ -1,6 +1,6 @@
 ---
 {
-    "title": "数据转化",
+    "title": "数据转换",
     "language": "zh-CN"
 }
 ---
@@ -169,11 +169,11 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 | 1    | 100  | beijing   | 1.1  |
 | 2    | 200  | shanghai  | 1.2  |
 | 3    | 300  | guangzhou | 1.3  |
-| 4    | `\N` | chongqing | 1.4  |
+| 4    | `\N`   | chongqing | 1.4  |
 
-
+:::note
 注：`\N` 在源文件中表示 null。
-
+:::
 
 1. 调整映射顺序
 
@@ -261,7 +261,7 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 | 1    | 100  | beijing   | 1.1  |
 | 2    | 200  | shanghai  | 1.2  |
 | 3    | 300  | guangzhou | 1.3  |
-| `\N`  | 400  | chongqing | 1.4  |
+|`\N`   | 400  | chongqing | 1.4  |
 
 1. 将源文件中的列值经转换后导入表中
 
@@ -404,25 +404,3 @@ where k1 is not null and k4 >= 1.2
 | ---- | ---- | ---- | ---- |
 | 2    | 200  | 2    | 1.2  |
 | 3    | 300  | 3    | 1.3  |
-
-## 最佳实践
-
-### 数据质量问题和过滤阈值
-
-导入作业中被处理的数据行可以分为如下三种：
-
-- Filtered Rows 因数据质量不合格而被过滤掉的数据。数据质量不合格包括类型错误、精度错误、字符串长度超长、文件列数不匹配等数据格式问题，以及因没有对应的分区而被过滤掉的数据行。
-
-- Unselected Rows 这部分为因 `preceding filter` 或 `where` 列过滤条件而被过滤掉的数据行。
-
-- Loaded Rows 被正确导入的数据行。
-
-Doris 的导入任务允许用户设置最大错误率（`max_filter_ratio`）。如果导入的数据的错误率低于阈值，则这些错误行将被忽略，其他正确的数据将被导入。
-
-错误率的计算方式为：
-
-```sql
-# Filtered Rows / (#Filtered Rows + #Loaded Rows)
-```
-
-也就是说 `Unselected Rows` 不会参与错误率的计算。

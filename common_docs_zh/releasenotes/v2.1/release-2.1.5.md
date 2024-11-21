@@ -207,7 +207,7 @@ under the License.
 
 - 支持为 `INSERT INTO ... FROM TABLE VALUE FUNCTION` 语句设置 `max_filter_ratio` 参数。
 
-  - 更多信息，请参考[文档](https://doris.apache.org/zh-CN/docs/data-operate/import/insert-into-manual/)
+  - 更多信息，请参考[文档](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/insert-into-manual/)
 
 ## Bug 修复
 

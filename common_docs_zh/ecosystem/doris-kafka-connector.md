@@ -54,6 +54,11 @@ bootstrap.servers=127.0.0.1:9092
 # 修改为创建的 plugins 目录
 # 注意：此处请填写 Kafka 的直接路径。例如：plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
+
+# 建议将 Kafka 的 max.poll.interval.ms 时间调大到 30 分钟以上，默认 5 分钟
+# 避免 Stream Load 导入数据消费超时，消费者被踢出消费群组
+max.poll.interval.ms=1800000
+consumer.max.poll.interval.ms=1800000
 ```
 
 配置 doris-connector-sink.properties
@@ -103,6 +108,11 @@ group.id=connect-cluster
 # 修改为创建的 plugins 目录
 # 注意：此处请填写 Kafka 的直接路径。例如：plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
+
+# 建议将 Kafka 的 max.poll.interval.ms 时间调大到 30 分钟以上，默认 5 分钟
+# 避免 Stream Load 导入数据消费超时，消费者被踢出消费群组
+max.poll.interval.ms=1800000
+consumer.max.poll.interval.ms=1800000
 ```
 
 
@@ -350,3 +360,36 @@ Caused by: org.apache.kafka.connect.errors.DataException: JsonConverter with sch
   1. 将 `org.apache.kafka.connect.json.JsonConverter` 更换为 `org.apache.kafka.connect.storage.StringConverter`
   2. 启动模式为 **Standalone** 模式，则将 config/connect-standalone.properties 中 `value.converter.schemas.enable` 或 `key.converter.schemas.enable` 改成false；
     启动模式为 **Distributed** 模式，则将 config/connect-distributed.properties 中 `value.converter.schemas.enable` 或 `key.converter.schemas.enable` 改成false
+
+**2. 消费超时，消费者被踢出消费群组：**
+
+```
+org.apache.kafka.clients.consumer.CommitFailedException: Offset commit cannot be completed since the consumer is not part of an active group for auto partition assignment; it is likely that the consumer was kicked out of the group.
+        at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.sendOffsetCommitRequest(ConsumerCoordinator.java:1318)
+        at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.doCommitOffsetsAsync(ConsumerCoordinator.java:1127)
+        at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.commitOffsetsAsync(ConsumerCoordinator.java:1093)
+        at org.apache.kafka.clients.consumer.KafkaConsumer.commitAsync(KafkaConsumer.java:1590)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.doCommitAsync(WorkerSinkTask.java:361)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.doCommit(WorkerSinkTask.java:376)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.commitOffsets(WorkerSinkTask.java:467)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.commitOffsets(WorkerSinkTask.java:381)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.iteration(WorkerSinkTask.java:221)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.execute(WorkerSinkTask.java:206)
+        at org.apache.kafka.connect.runtime.WorkerTask.doRun(WorkerTask.java:204)
+        at org.apache.kafka.connect.runtime.WorkerTask.run(WorkerTask.java:259)
+        at org.apache.kafka.connect.runtime.isolation.Plugins.lambda$withClassLoader$1(Plugins.java:181)
+        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base/java.lang.Thread.run(Thread.java:833)
+```
+
+**解决方案：**
+
+将 Kafka 中 `max.poll.interval.ms` 根据场景进行调大，默认值是 `300000`
+- 如果是 Standalone 模式启动，则在 config/connect-standalone.properties 的配置文件中增加 `max.poll.interval.ms` 和 `consumer.max.poll.interval.ms` 参数，并配置参数值。
+- 如果是 Distributed 模式启动，则在  config/connect-distributed.properties  的配置文件增加 `max.poll.interval.ms` 和 `consumer.max.poll.interval.ms` 参数，并配置参数值。
+
+调整参数后，重启kafka-connect
+

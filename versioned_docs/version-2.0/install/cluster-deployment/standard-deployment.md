@@ -152,7 +152,7 @@ It is not recommended to disable swap by setting vm.swappiness = 0 because this 
 
 ### Check and disable system firewall
 
-If you find different ports, try disabling the firewall to confirm whether it is the cause. If it is, open the corresponding ports for communication based on the configured ports for Doris components.
+If you find inaccessible ports,try disabling the firewall to confirm whether it is the cause. If it is, open the corresponding ports for communication based on the configured ports for Doris components.
 
 ```SQL
 sudo systemctl stop firewalld.service

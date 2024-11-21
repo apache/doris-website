@@ -43,7 +43,7 @@ function Footer() {
                 </div>
                 <div className="content container">
                     <div className="my-7 text-[#8592A6] text-sm">
-                    {/* border-b border-[#F7F9FE] */}
+                        {/* border-b border-[#F7F9FE] */}
                         <div className="flex flex-col lg:flex-row pb-3 flex-wrap">
                             <div className=" w-40 mb-3 lg:mb-0 font-medium">RESOURCES</div>
                             {ResourcesItems.map(({ label, href }) => (
@@ -101,7 +101,7 @@ function Footer() {
                                     <TwitterIcon />
                                 </a>
                                 <a
-                                    href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA"
+                                    href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw"
                                     title="slack"
                                     target="_blank"
                                     className="item"

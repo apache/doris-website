@@ -42,7 +42,7 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button2">Join Slack</Translate>,
-            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA',
+            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw',
             type: 'ghost',
         },
     ];
@@ -268,7 +268,7 @@ export default function Home(): JSX.Element {
                     </defs>
                 </svg>
             ),
-            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA',
+            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw',
         },
         {
             title: <Translate id="community.title.c4">Twitter</Translate>,
@@ -381,7 +381,7 @@ export default function Home(): JSX.Element {
             href: 'https://www.youtube.com/@apachedoris/channels',
         },
     ];
-console.log(siteConfig,'siteConfig')
+    console.log(siteConfig, 'siteConfig')
     return (
         <Layout
             title={translate({ id: 'homepage.title', message: 'Apache Doris: Open source data warehouse for real time data analytics' })}

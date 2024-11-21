@@ -187,6 +187,14 @@ Syntax explanation:
   <p>- From versions 2.0.7 and 2.1.2, the default is true, automatically converting to lowercase. Earlier versions default to false.</p>
 </details>
 
+<details>
+  <summary>stopwords</summary>
+
+  **Specifying the stopword list to use, which will affect the behavior of the tokenizer**
+  <p>- The default built-in stopword list includes meaningless words such as 'is,' 'the,' 'a,' etc. When writing or querying, the tokenizer will ignore words that are in the stopword list.</p>
+  <p>- none: Use an empty stopword list</p>
+</details>
+
 **4. `COMMENT` is optional for specifying index comments**
 
 ### Adding Inverted Indexes to Existing Tables
@@ -234,7 +242,7 @@ CANCEL BUILD INDEX ON table_name (job_id1, job_id2, ...);
 
 `BUILD INDEX` creates an asynchronous task executed by multiple threads on each BE. The number of threads can be set using the BE config `alter_index_worker_count`, with a default value of 3.
 
-In versions before 2.0.12 and 2.1.4, `BUILD INDEX` would keep retrying until it succeeded. Starting from these versions, failure and timeout mechanisms prevent endless retries.
+In versions before 2.0.12 and 2.1.4, `BUILD INDEX` would keep retrying until it succeeded. Starting from these versions, failure and timeout mechanisms prevent endless retries. 3.0 (Cloud Mode) does not support this command as this moment.
 
 1. If the majority of replicas for a tablet fail to `BUILD INDEX`, the entire `BUILD INDEX` operation fails.
 2. If the time exceeds `alter_table_timeout_second`, the `BUILD INDEX` operation times out.
@@ -379,7 +387,7 @@ PROPERTIES ("replication_num" = "1");
 **Importing Data via Stream Load**
 
 ```
-wget https://doris-build-1308700295.cos.ap-beijing.myqcloud.com/regression/index/hacknernews_1m.csv.gz
+wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/index/hacknernews_1m.csv.gz
 
 curl --location-trusted -u root: -H "compress_type:gz" -T hacknernews_1m.csv.gz http://127.0.0.1:8030/api/test_inverted_index/hackernews_1m/_stream_load
 {

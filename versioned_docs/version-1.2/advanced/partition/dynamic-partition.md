@@ -283,7 +283,7 @@ If some partitions between `dynamic_partition.start` and `dynamic_partition.end`
 
     On the next day, 2020-05-30, a new partition will be created `p20200602: [" 2020-06-02 "," 2020-06-03 ")`
     
-    On 2020-06-06, because `dynamic_partition.start` is set to 7, the partition 7 days ago will be deleted, that is, the partition `p20200529` will be deleted.
+    On 2020-06-06, because `dynamic_partition.start` is set to -7, the partition 7 days ago will be deleted, that is, the partition `p20200529` will be deleted.
     
 2. Table tbl1 partition column k1, type is DATETIME, create a dynamic partition rule. Partition by week, only keep the partition of the last 2 weeks, and create the partition of the next 2 weeks in advance.
 

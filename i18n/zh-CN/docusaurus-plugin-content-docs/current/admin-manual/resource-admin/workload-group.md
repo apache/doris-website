@@ -95,24 +95,29 @@ Workload Group功能是对单台BE资源用量的划分。当用户创建了一�
 create workload group tag_wg properties('tag'='cn1');
 ```
 2. 修改集群中一个BE的标签为cn1，此时tag_wg这个Workload Group就只会发送到这个BE以及标签为空的BE上。tag.workload_group属性可以指定多个，使用英文逗号分隔。
+需要注意的是，alter接口目前不支持增量更新，每次修改BE的属性都需要增加全量的属性，因此下面语句中添加了tag.location属性，default为系统默认值，实际修改时需要按照BE原有属性指定。
 ```
-alter system modify backend "localhost:9050" set ("tag.workload_group" = "cn1");
+alter system modify backend "localhost:9050" set ("tag.workload_group" = "cn1", "tag.location"="default");
 ```
 
 Workload Group和BE的匹配规则说明:
 1. 当Workload Group的Tag为空，那么这个Workload Group可以发送给所有的BE，不管该BE是否指定了tag。
 2. 当Workload Group的Tag不为空，那么Workload Group只会发送给具有相同标签的BE。
 
+推荐用法可以参考:[Workload Group分组功能](./group-workload-groups.md)
+
 ## 配置 cgroup 的环境
-Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但是从 2.1 版本起，Doris 默认使用基于 CGroup v1 版本对 CPU 资源进行限制，因此如果期望在 2.1 版本对 CPU 资源进行约束，那么需要 BE 所在的节点上已经安装好 CGroup 的环境。
+Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但是从 2.1 版本起，Doris 默认使用基于 CGroup 对 CPU 资源进行限制，因此如果期望在 2.1 版本对 CPU 资源进行约束，那么需要 BE 所在的节点上已经安装好 CGroup 的环境。
+
+目前支持的 CGroup 版本为 CGroup v1 和 CGroup v2。
 
 用户如果在 2.0 版本使用了 Workload Group 的软限并升级到了 2.1 版本，那么也需要配置 CGroup，否则可能导致软限失效。
 
 如果是在容器内使用 CGroup，需要容器具备操作宿主机的权限。
 
-在不配置 cgroup 的情况下，用户可以使用 workload group 除 CPU 限制外的所有功能。
+在不配置 CGroup 的情况下，用户可以使用 Workload Group 除 CPU 限制外的所有功能。
 
-1. 首先确认 BE 所在节点是否已经安装好cgroup
+1. 首先确认 BE 所在节点是否已经安装好 GGroup
 ```
 cat /proc/filesystems | grep cgroup
 nodev	cgroup
@@ -120,36 +125,56 @@ nodev	cgroup2
 nodev	cgroupfs
 ```
 
-2. 确认cgroup的版本
+2. 确认目前生效的 CGroup 版本
 ```
-如果包含这个路径说明目前生效的是cgroup v1
+如果存在这个路径说明目前生效的是cgroup v1
 /sys/fs/cgroup/cpu/
 
-如果包含这个路径说明目前生效的是cgroup v2
+如果存在这个路径说明目前生效的是cgroup v2
 /sys/fs/cgroup/cgroup.controllers
 ```
 
-3. 在 cgroup 的 cpu 路径下新建一个名为 doris 的目录，这个目录名用户可以自行指定
+3. 在 CGroup 路径下新建一个名为 doris 的目录，这个目录名用户可以自行指定
 
-```mkdir /sys/fs/cgroup/cpu/doris```
+```
+如果是cgroup v1就在cpu目录下新建
+mkdir /sys/fs/cgroup/cpu/doris
+
+如果是cgroup v2就在直接在cgroup目录下新建
+mkdir /sys/fs/cgroup/doris
+```
 
 4. 需要保证 Doris 的 BE 进程对于这个目录有读/写/执行权限
 ```
-// 修改这个目录的权限为可读可写可执行
+// 如果是CGroup v1，那么命令如下:
+// 1. 修改这个目录的权限为可读可写可执行
 chmod 770 /sys/fs/cgroup/cpu/doris
 
-// 把这个目录的归属划分给doris的账户
+// 2. 把这个目录的归属划分给doris的账户
 chown -R doris:doris /sys/fs/cgroup/cpu/doris
+
+
+// 如果是CGroup v2，那么命令如下:
+// 1. 修改这个目录的权限为可读可写可执行
+chmod 770 /sys/fs/cgroup/doris
+
+// 2. 把这个目录的归属划分给doris的账户
+chown -R doris:doris /sys/fs/cgroup/doris
 ```
 
-5. 如果目前环境里使用的是cgroup v2版本，那么需要做以下操作。这是因为cgroup v2对于权限管控比较严格，需要具备根目录的cgroup.procs文件的写权限才能实现进程在group之间的移动。
+5. 如果目前环境里使用的是GGroup v2版本，那么需要做以下操作。这是因为CGroup v2对于权限管控比较严格，需要具备根目录的cgroup.procs文件的写权限才能实现进程在group之间的移动。
+如果是CGroup v1那么不需要这一步。
 ```
 chmod a+w /sys/fs/cgroup/cgroup.procs
 ```
 
 6. 修改 BE 的配置，指定 cgroup 的路径
 ```
+如果是Cgroup v1，那么配置路径如下
 doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
+
+如果是Cgroup v2，那么配置路径如下
+doris_cgroup_cpu_path = /sys/fs/cgroup/doris
 ```
 
 7. 重启 BE，在日志（be.INFO）可以看到"add thread xxx to group"的字样代表配置成功
@@ -179,16 +204,26 @@ properties (
     "enable_memory_overcommit"="true"
 );
 ```
-此时配置的 CPU 限制为软限。自 2.1 版本起，系统会自动创建一个名为```normal```的 group，不可删除。
+此时配置的 CPU 限制为软限。自 2.1 版本起，系统会自动创建一个名为```normal```的 group，不可删除。创建 workload group 详细使用可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，
 
-创建 workload group 详细可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)；查看 workload group 可访问 Doris 系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。
+2. 查看/修改/删除 workload group语句如下：
+```
+show workload groups;
 
-2. 绑定 workload group。
-* 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`:
+alter workload group g1 properties('memory_limit'='10%');
+
+drop workload group g1;
+
+```
+查看 workload group 可访问 Doris 系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。 删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)。
+
+3. 绑定 workload group。
+* 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`，需要注意的这里的value不能填空，否则语句会执行失败，如果不知道要设置哪些group，可以设置为`normal`，`normal`为全局默认的group。
 ```
 set property 'default_workload_group' = 'g1';
 ```
-当前用户的查询将默认使用'g1'。
+执行完该语句后，当前用户的查询将默认使用'g1'。
+
 * 通过 session 变量指定 workload group, 默认为空：
 ```
 set workload_group = 'g1';
@@ -197,7 +232,7 @@ session 变量`workload_group`优先于 user property `default_workload_group`, 
 
 如果是非 admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 workload group 授权参考：[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
 
-6. 执行查询，查询将关联到指定的 workload group。
+4. 执行查询，查询将关联到指定的 workload group。
 
 ### 查询排队功能
 ```
@@ -211,11 +246,16 @@ properties (
 );
 ```
 
-需要注意的是，目前的排队设计是不感知 FE 的个数的，排队的参数只在单 FE 粒度生效，例如：
+1. 需要注意的是，目前的排队设计是不感知 FE 的个数的，排队的参数只在单 FE 粒度生效，例如：
 
 一个 Doris 集群配置了一个 work load group，设置 max_concurrency = 1
 如果集群中有 1FE，那么这个 workload group 在 Doris 集群视角看同时只会运行一个 SQL
 如果有 3 台 FE，那么在 Doris 集群视角看最大可运行的 SQL 个数为 3
+
+2. 在有些运维情况下，管理员账户需要绕开排队的逻辑，那么可以通过设置session变量：
+```
+set bypass_workload_group = true;
+```
 
 ### 配置 CPU 的硬限
 目前 Doris 默认运行 CPU 的软限，如果期望使用 Workload Group 的硬限功能，可以按照如下流程操作。

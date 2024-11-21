@@ -95,7 +95,7 @@ kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
 
 **Online Deployment**
 
-Before installation, you need to add a deployment warehouse. If it has been added, you can directly install Doris Cluster. Otherwise, please refer to the operation of **Add Deployment Warehouse** when adding [Deploy Doris Operator](<./install-operator.md#Option 3: Helm deploys Doris Operator>)
+Before installation, you need to add a deployment warehouse. If it has been added, you can directly install Doris Cluster. Otherwise, please refer to the operation of **Add Deployment Warehouse** when adding [Deploy Doris Operator](install-operator.md#option-3-helm-deploys-doris-operator)
 
 1. Install Doris Cluster
 
@@ -135,10 +135,10 @@ doriscluster-helm-be-2   1/1     Running   0          16s
 
 1. Download the Doris Cluster Chart resource
 
-Download `doris-{chart_version}.tgz` to install Doris Cluster chart. If you need to download the 2.0.6 version of the Doris cluster, you can use the following command:
+Download `doris-{chart_version}.tgz` to install Doris Cluster chart. If you need to download the 1.6.1 version of the Doris cluster, you can use the following command:
 
 ```shell
-wget https://charts.selectdb.com/doris-2.0.6.tgz
+wget https://charts.selectdb.com/doris-1.6.1.tgz
 ```
 
 2. Install Doris cluster

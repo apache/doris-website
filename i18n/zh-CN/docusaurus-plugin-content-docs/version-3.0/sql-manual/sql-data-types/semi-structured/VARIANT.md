@@ -171,7 +171,7 @@ properties("replication_num" = "1");
 导入 gh_2022-11-07-3.json，这是 github events 一个小时的数据
 
 ``` shell
-wget http://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/variant/gh_2022-11-07-3.json
+wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/variant/gh_2022-11-07-3.json
 
 curl --location-trusted -u root:  -T gh_2022-11-07-3.json -H "read_json_by_line:true" -H "format:json"  http://127.0.0.1:18148/api/test_variant/github_events/_strea
 m_load
@@ -304,9 +304,10 @@ mysql> SELECT
 2. 获取评论中包含 doris 的数量
 
 ``` sql
+-- implicit cast `payload['comment']['body']` to string type
 mysql> SELECT
     ->     count() FROM github_events
-    ->     WHERE cast(payload['comment']['body'] as text) MATCH 'doris';
+    ->     WHERE payload['comment']['body'] MATCH 'doris';
 +---------+
 | count() |
 +---------+
@@ -341,6 +342,95 @@ mysql> SELECT
 3 rows in set (0.03 sec)
 ```
 
+### 嵌套数组类型
+```json
+{
+  "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
+}
+```
+在上面的 JSON 中，数组 nested 包含的对象（object）被称为嵌套数组类型。需要注意的是，目前仅支持一层数组的展开。以下是一个示例：
+``` sql
+-- 注意：设置 variant_enable_flatten_nested 为 true
+-- 这样可以展开嵌套数组，将数组中的元素以列式存储
+-- 如果设置为 false，嵌套数组会存储为 JSON 类型
+CREATE TABLE `simple_nested_test` (
+  `k` bigint NULL,
+  `v` variant NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`k`)
+DISTRIBUTED BY HASH(`k`) BUCKETS 8
+PROPERTIES (
+"file_cache_ttl_seconds" = "0",
+"is_being_synced" = "false",
+"storage_medium" = "hdd",
+"storage_format" = "V2",
+"inverted_index_storage_format" = "V2",
+"light_schema_change" = "true",
+"disable_auto_compaction" = "false",
+"variant_enable_flatten_nested" = "true",
+"enable_single_replica_compaction" = "false",
+"group_commit_interval_ms" = "10000",
+"group_commit_data_bytes" = "134217728"
+);
+
+insert into simple_nested_test values(1, '{
+  "eventId": 1,
+  "firstName": "Name1",
+  "lastName": "Eric",
+  "body": {
+    "phoneNumbers": [
+      {
+        "number": "1111111111",
+        "type": "GSM",
+        "callLimit": 5
+      },
+      {
+        "number": "222222222",
+        "type": "HOME",
+        "callLimit": 3
+      },
+      {
+        "number": "33333333",
+        "callLimit": 2,
+        "type": "WORK"
+      }
+    ]
+  }
+}');
+
+-- 设置为展示扩展列的描述信息
+set describe_extend_variant_column = true;  
+
+-- 使用 DESC 命令将展示如下的扩展列，v.body.phoneNumbers.callLimit, v.body.phoneNumbers.number, v.body.phoneNumbers.type
+-- 是从 v.body.phoneNumbers 中展开的字段
+mysql> desc simple_nested_test;
++-------------------------------+----------------+------+-------+---------+-------+
+| Field                         | Type           | Null | Key   | Default | Extra |
++-------------------------------+----------------+------+-------+---------+-------+
+| k                             | bigint         | Yes  | true  | NULL    |       |
+| v                             | variant        | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.callLimit | array<tinyint> | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.number    | array<text>    | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.type      | array<text>    | Yes  | false | NULL    | NONE  |
+| v.eventId                     | tinyint        | Yes  | false | NULL    | NONE  |
+| v.firstName                   | text           | Yes  | false | NULL    | NONE  |
+| v.lastName                    | text           | Yes  | false | NULL    | NONE  |
++-------------------------------+----------------+------+-------+---------+-------+
+8 rows in set (0.00 sec)
+
+-- 使用 lateral view (explode_variant_array) 来展开数组，并查询符合条件的电话号码及事件 ID
+mysql> select v['eventId'], phone_numbers
+    from simple_nested_test lateral view explode_variant_array(v['body']['phoneNumbers']) tmp1 as phone_numbers
+    where phone_numbers['type'] = 'GSM' OR phone_numbers['type'] = 'HOME' and phone_numbers['callLimit'] > 2;                                                                                                               
++--------------------------+----------------------------------------------------+
+| element_at(v, 'eventId') | phone_numbers                                      |
++--------------------------+----------------------------------------------------+
+| 1                        | {"callLimit":5,"number":"1111111111","type":"GSM"} |
+| 1                        | {"callLimit":3,"number":"222222222","type":"HOME"} |
++--------------------------+----------------------------------------------------+
+2 rows in set (0.02 sec)
+```
+
 ### 使用限制和最佳实践
 
 **VARIANT 类型的使用有以下限制：**
@@ -363,6 +453,10 @@ VARIANT 动态列与预定义静态列几乎一样高效。处理诸如日志之
 - 2 维及其以上的数组列存化会被存成 JSONB 编码，性能不如原生数组
 - 不支持作为主键或者排序键
 - 查询过滤、聚合需要带 cast，存储层会根据存储类型和 cast 目标类型来消除 cast 操作，加速查询。
+
+### FAQ
+1. Stream Load 报错： [CANCELLED][INTERNAL_ERROR]tablet error: [DATA_QUALITY_ERROR]Reached max column size limit 2048。
+由于 Compaction 和元信息存储限制， VARIANT 类型会限制列数，默认 2048 列，可以适当调整 BE 配置 `variant_max_merged_tablet_schema_size` ， 但是不建议超过 4096
 
 ### Keywords
 

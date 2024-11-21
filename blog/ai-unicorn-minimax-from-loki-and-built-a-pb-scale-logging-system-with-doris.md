@@ -6,8 +6,6 @@
     'date': '2024-08-29',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
-    'picked': "true",
-    'order': "1",
     "image": '/images/minimax-migrated-from-loki-to-doris.png'
 }
 

@@ -157,7 +157,7 @@ properties("replication_num" = "1");
 Load the `gh_2022-11-07-3.json` file, which is Github Events records of an hour. One formatted row of it looks like this: 
 
 ```JSON
-wget http://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/variant/gh_2022-11-07-3.json
+wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/variant/gh_2022-11-07-3.json
 
 curl --location-trusted -u root:  -T gh_2022-11-07-3.json -H "read_json_by_line:true" -H "format:json"  http://127.0.0.1:18148/api/test_variant/github_events/_strea
 m_load
@@ -286,9 +286,10 @@ mysql> SELECT
 2. Count the number of events containing the keyword `doris`.
 
 ```sql
+-- implicit cast `payload['comment']['body']` to string type
 mysql> SELECT
     ->     count() FROM github_events
-    ->     WHERE cast(payload['comment']['body'] as text) MATCH 'doris';
+    ->     WHERE payload['comment']['body'] MATCH 'doris';
 +---------+
 | count() |
 +---------+
@@ -426,4 +427,4 @@ The Doris-based solution also delivers lower CPU usage in data writing and highe
 
 The Variant data type has stood the test of many users before the official release of Apache Doris 2.1.0. It is production-available now. In the future, we plan to realize more lightweight changes for Variant to facilitate data modeling. 
 
-For more information about Variant and guides on how to build a semi-structured data analytics solution for your case, come talk to the [Apache Doris developer team](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).
+For more information about Variant and guides on how to build a semi-structured data analytics solution for your case, come talk to the [Apache Doris developer team](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw).

@@ -79,13 +79,13 @@ Apache Doris 的数据存储在类似 SSTable（Sorted String Table）的数据�
 -   当我们的查询条件，是前缀索引的前缀时，可以极大地加快查询速度。比如在第一个例子中，执行如下查询：
 
 ```sql
-SELECT * FROM table WHERE user_id=1829239 and age=20；
+SELECT * FROM table WHERE user_id=1829239 and age=20;
 ```
 
 该查询的效率会远高于如下查询：
 
 ```sql
-SELECT * FROM table WHERE age=20；
+SELECT * FROM table WHERE age=20;
 ```
 
 所以在建表时，正确选择列顺序，能够极大地提高查询效率。

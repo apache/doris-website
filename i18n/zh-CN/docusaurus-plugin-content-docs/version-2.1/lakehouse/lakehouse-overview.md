@@ -41,7 +41,7 @@ Doris 在设计湖仓一体时，主要考虑如下四个应用场景：
 
 - 湖仓查询加速：Doris 作为一个非常高效的 OLAP 查询引擎，有着非常好的 MPP 向量化的分布式的查询层，可以直接利用 Doris 非常高效的查询引擎，对湖上数据进行加速分析。
 
-- 统一数据分析网关：提供各类异构数据源的查询和写入能力，用户利用 Doris，可以把这些外部的数据源，统一到 Doris 的元数据的映射结构上，用户在通过 Doris 去查询这些外部数据源的时候，可以提供一致的查询体验。
+- 统一数据分析网关：提供各类异构数据源的查询和写入能力，支持用户将这些外部数据源统一到 Doris 的元数据映射结构上，当用户通过 Doris 查询这些外部数据源时，能够提供一致的查询体验。
 
 - 统一数据集成：首先通过数据湖的数据源连接能力，能够让多数据源的数据以增量或全量的方式同步到 Doris，并且利用 Doris 的数据处理能力对这些数据进行加工。加工完的数据一方面可以直接通过 Doris 对外提供查询，另一方面也可以通过 Doris 的数据导出能力，继续为下游提供全量或增量数据服务。通过 Doris 可以减少对外部工具的依赖，可以直接将上下游数据，以及包括同步、加工、处理在内的整条链路打通。
 
@@ -49,7 +49,7 @@ Doris 在设计湖仓一体时，主要考虑如下四个应用场景：
 
 ## 基于 Doris 的湖仓一体架构
 
-Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon(Incubating)、Elasticsearch、MySQL、Oracle、SQLSserver 等主流数据湖、数据库的连接访问。以及可以通过 Apache Ranger 等进行统一的权限管理，具体架构如下：
+Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon、LakeSoul、Elasticsearch、MySQL、Oracle、SQL Server 等主流数据湖、数据库的连接访问。以及可以通过 Apache Ranger 等进行统一的权限管理，具体架构如下：
 
 
 ![基于 Doris 的湖仓一体架构](/images/doris-based-data-lakehouse-architecture.png)
@@ -375,7 +375,7 @@ select k1, k4 from table;           // Query OK.
 
 使用 Doris 对 External Catalog 中库表进行访问时，默认情况下，依赖 Doris 自身的权限访问管理功能。
 
-Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参阅 [认证和鉴权](../admin-manual/auth/authentication-and-authorization.md) 文档。
+Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参阅 [认证和鉴权](../admin-manual/auth/authentication-and-authorization) 文档。
 
 用户也可以通过 `access_controller.class` 属性指定自定义的鉴权类。如通过指定：
 
@@ -396,38 +396,6 @@ Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参�
 :::tip
 - 当 `include_database_list` 和 `exclude_database_list` 有重合的 database 配置时，`exclude_database_list`会优先生效。
 
-- 连接 JDBC 时，上述 2 个配置需要和配置 `only_specified_database` 搭配使用，详见 [JDBC](../lakehouse/database/jdbc.md)
+- 连接 JDBC 时，上述 2 个配置需要和配置 `only_specified_database` 搭配使用，详见 [JDBC](../lakehouse/database/jdbc)
 :::
 
-### 元数据更新
-
-默认情况下，外部数据源的元数据变动，如创建、删除表，加减列等操作，不会同步给 Doris。
-
-用户可以通过以下几种方式刷新元数据。
-
-**手动刷新**
-
-用户需要通过 [REFRESH](../sql-manual/sql-statements/Utility-Statements/REFRESH) 命令手动刷新元数据。
-
-**定时刷新**
-
-在创建 catalog 时，在 properties 中指定刷新时间参数`metadata_refresh_interval_sec` ，以秒为单位，若在创建 catalog 时设置了该参数，FE 的 master 节点会根据参数值定时刷新该 catalog。目前支持三种类型
-
-- hms：Hive MetaStore
-
-- es：Elasticsearch
-
-- jdbc：数据库访问的标准接口 (JDBC)
-
-```Plain
--- 设置catalog刷新间隔为20秒
-CREATE CATALOG es PROPERTIES (
-    "type"="es",
-    "hosts"="http://127.0.0.1:9200",
-    "metadata_refresh_interval_sec"="20"
-);
-```
-
-**自动刷新**
-
-自动刷新目前仅支持 [Hive Catalog](../lakehouse/datalake-analytics/hive)。

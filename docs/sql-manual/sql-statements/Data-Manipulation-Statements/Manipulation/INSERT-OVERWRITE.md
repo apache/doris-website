@@ -72,8 +72,66 @@ INSERT OVERWRITE table table_name
 Notice:
 
 1. In the current version, the session variable `enable_insert_strict` is set to `true` by default. If some data that does not conform to the format of the target table is filtered out during the execution of the `INSERT OVERWRITE` statement, such as when overwriting a partition and not all partition conditions are satisfied, overwriting the target table will fail.
-2. If the target table of the INSERT OVERWRITE is an [AUTO-PARTITION-table](../../../../advanced/partition/auto-partition), then new partitions can be created if PARTITION is not specified (that is, rewrite the whole table). If PARTITION for overwrite is specified(Includes automatic detection and overwriting of partitions through the `partition(*)` syntax), then the AUTO PARTITION table behaves as if it were a normal partitioned table during this process, and data that does not satisfy the existing partition conditions is filtered instead of creating a new partition.
-3. The `INSERT OVERWRITE` statement first creates a new table, inserts the data to be overwritten into the new table, and then atomically replaces the old table with the new table and modifies its name. Therefore, during the process of overwriting the table, the data in the old table can still be accessed normally until the overwriting is completed.
+2. The `INSERT OVERWRITE` statement first creates a new table, inserts the data to be overwritten into the new table, and then atomically replaces the old table with the new table and modifies its name. Therefore, during the process of overwriting the table, the data in the old table can still be accessed normally until the overwriting is completed.
+
+#### For Auto Partition Table
+
+If the target table of the INSERT OVERWRITE is an autopartitioned table, the behaviour is controlled by the [Session Variable](../#variable)  `enable_auto_create_when_overwrite` controls the behaviour as follows:
+1. If PARTITION is not specified (overwrite the whole table), when `enable_auto_create_when_overwrite` is `true`, the table is overwritten and partitions are created according to the table's auto-partitioning rules for data that does not have a corresponding partition, and those datas is admit. If `enable_auto_create_when_overwrite` is `false`, data for which no partition is found will accumulate error rows until it fails.
+2. If an overwrite PARTITION is specified, the AUTO PARTITION table behaves as a normal partitioned table during this process, and data that does not satisfy the conditions of an existing partition is filtered instead of creating a new partition.
+3. If you specify PARTITION as `partition(*)` (auto detect partition and overwrite), when `enable_auto_create_when_overwrite` is `true`, for the data that have corresponding partitions in the table, overwrite their corresponding partitions, and leave the other existing partitions unchanged. At the same time, for data without corresponding partitions, create partitions according to the table's auto-partitioning rules, and accommodate the data without corresponding partitions. If `enable_auto_create_when_overwrite` is `false`, data for which no partition is found will accumulate error rows until it fails.
+
+In versions without `enable_auto_create_when_overwrite`, the behaviour is as if the variable had a value of `false`.
+
+Examples are shown below:
+
+```sql
+mysql> create table auto_list(
+    ->              k0 varchar null
+    ->          )
+    ->          auto partition by list (k0)
+    ->          (
+    ->              PARTITION p1 values in (("Beijing"), ("BEIJING")),
+    ->              PARTITION p2 values in (("Shanghai"), ("SHANGHAI")),
+    ->              PARTITION p3 values in (("xxx"), ("XXX")),
+    ->              PARTITION p4 values in (("list"), ("LIST")),
+    ->              PARTITION p5 values in (("1234567"), ("7654321"))
+    ->          )
+    ->          DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    ->          properties("replication_num" = "1");
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> insert into auto_list values ("Beijing"),("Shanghai"),("xxx"),("list"),("1234567");
+Query OK, 5 rows affected (0.22 sec)
+
+mysql> insert overwrite table auto_list partition(*) values ("BEIJING"), ("new1");
+Query OK, 2 rows affected (0.28 sec)
+
+mysql> select * from auto_list;
++----------+ --- p1 is overwritten, new1 gets the new partition, and the other partitions remain unchanged.
+| k0       |
++----------+
+| 1234567  |
+| BEIJING  |
+| list     |
+| xxx      |
+| new1     |
+| Shanghai |
++----------+
+6 rows in set (0.48 sec)
+
+mysql> insert overwrite table auto_list values ("SHANGHAI"), ("new2");
+Query OK, 2 rows affected (0.17 sec)
+
+mysql> select * from auto_list;
++----------+ --- The whole table is overwritten, and new2 gets the new partition.
+| k0       |
++----------+
+| new2     |
+| SHANGHAI |
++----------+
+2 rows in set (0.15 sec)
+```
 
 ### Example
 

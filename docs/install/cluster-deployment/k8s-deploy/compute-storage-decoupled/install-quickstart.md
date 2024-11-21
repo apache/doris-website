@@ -1,6 +1,6 @@
 ---
 {
-"title": "Compute-storage decoupled quick start",
+"title": "Quick Start",
 "language": "en"
 }
 ---
@@ -24,115 +24,116 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Deploying a complete Doris Compute-storage decoupled cluster from scratch on K8s is divided into two parts: the first part deploys `Doris-Operator`; the second part distributes the relevant resources `DorisDisaggregatedMetaService` and `DorisDisaggregatedCluster` for deploying the Compute-storage decoupled cluster. The `DorisDisaggregatedMetaService` resource deploys the metadata component; the `DorisDisaggregatedCluster` resource deploys the SQL parsing component and the computing component.
+To deploy a storage-computing separation cluster on K8s, FDB deployed in advance is required. If it is a virtual machine deployment, please ensure the deployed virtual machine can be accessed by the services on the K8s cluster. For deployment, please refer to [Before Deployment](../../../../compute-storage-decoupled/before-deployment.md#51-install-foundationdb) doc; if deploy on K8s, please refer to [FDB deployment on k8s](install-fdb.md).  
+Doris storage-computing separation cluster deployment is divided into two parts: deploying Doris-Operator and its RBAC resources; Deploying customized resource `DorisDisaggregatedCluster`.
 
-## Install Operator
+## Step 1: Deploy Operator
 
-1. Create CRD：
-
+1. Issue resource definitions:
+```bash
+kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/crds.yaml
 ```
-kubectl create -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/crds.yaml
-```
 
-Expected Results：
-
-```
-customresourcedefinition.apiextensions.k8s.io/foundationdbclusters.apps.foundationdb.org created
-customresourcedefinition.apiextensions.k8s.io/foundationdbbackups.apps.foundationdb.org created
-customresourcedefinition.apiextensions.k8s.io/foundationdbrestores.apps.foundationdb.org created
+Expected Results:
+```bash
 customresourcedefinition.apiextensions.k8s.io/dorisdisaggregatedclusters.disaggregated.cluster.doris.com created
-customresourcedefinition.apiextensions.k8s.io/dorisdisaggregatedmetaservices.disaggregated.metaservice.doris.com created
+customresourcedefinition.apiextensions.k8s.io/doris.selectdb.com_dorisclusters.yaml created
 ```
 
 2. Deploy Doris-Operator and dependent RBAC rules:
 
-```
-kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/operator/disaggregated-operator.yaml
+```bash
+kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/disaggregated-operator.yaml
 ```
 
-Expected Results：
+Expected Results:
 
-```
+```bash
 kubectl -n doris get pods
-NAME                                         READY   STATUS    RESTARTS   AGE
-doris-operator-fdb-manager-d75574c47-b2sqx   1/1     Running   0          11s
-doris-operator-5b667b4954-d674k              1/1     Running   0          11s
+NAME                              READY   STATUS    RESTARTS   AGE
+doris-operator-6b97df65c4-xwvw8   1/1     Running   0          19s
 ```
 
-## Compute-storage decoupled cluster quick start
+## Step 2: Quickly deploy a storage and computing separation cluster
+1. Download the `ddc-sample.yaml` deployment sample:
 
-### Install DorisDisaggregatedMetaService
-
-1. Download `ddm-sample.yaml`, a resource that tells Doris-Operator how to deploy metadata components.
-
-```shell
-curl -O https://raw.githubusercontent.com/selectdb/doris-operator/master/doc/examples/disaggregated/metaservice/ddm-sample.yaml
+```bash
+curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/disaggregated/cluster/ddc-sample.yaml
 ```
 
-Deploy resources according to configuration metadata chapters: [FDB](install-metaservice/config-fdb.md), [ms](install-metaservice/config-ms.md), [recycler](install-metaservice/config-recycler.md) Configure resources according to actual needs.
-
-2. Apply `DorisDisaggregatedMetaService`
-
-```
-kubectl apply -f ddm-sample.yaml
-```
-
-Expected Results：
-
-```
-kubectl get ddm
-NAME                   FDBSTATUS   MSSTATUS   RECYCLERSTATUS
-meta-service-release   Available   Ready      Ready
-```
-
-### Config object storage
-
-The Compute-storage decoupled cluster uses object storage as persistent storage. You need to use ConfigMap to deliver [object storage information used by the Compute-storage decoupled cluster](install-cluster/config-relation#Register object storage).
-
-1. Download the ConfigMap resource that contains the object storage information:
-
-Compute-storage decoupled cluster uses object storage as the backend storage, and needs to plan the object storage to be used in advance. Download `object-store-info.yaml`.
-
-```
-curl -O https://raw.githubusercontent.com/selectdb/doris-operator/master/doc/examples/disaggregated/cluster/object-store-info.yaml
-```
-
-2. According to the [Doris Compute-storage decoupled_interface](../../../../compute-storage-decoupled/creating-cluster#%E5%86%85%E7%BD%AE%E5%AD%98%E5%82%A8%E5%90%8E%E7%AB%AF) format, configure the object storage information in JSON format, with `instance.conf` as the key and the object storage information in JSON format as the value configured in the data of ConfigMap. (Replace the corresponding value in the sample JSON format)
-
-apply `object-store-info.yaml` :
-
-```shell
-kubectl apply -f object-store-info.yaml
-```
-
-:::tip Tip
-- To deploy a Compute-storage decoupled cluster, you need to plan the object storage to be used in advance, and configure the object storage information through ConfigMap to the Namespace where the doris Compute-storage decoupled cluster needs to be deployed.
-- The configuration in the case is mainly to show the basic configuration information required for object storage. All values are fictitious and cannot be used in real scenarios. If you need to build a real and available cluster, please fill in the real data.
-:::
-
-### Install DorisDisaggregatedCluster
-
-1. Download `ddc-sample.yaml`:
-
-```shell
-curl -O https://raw.githubusercontent.com/selectdb/doris-operator/master/doc/examples/disaggregated/cluster/ddc-sample.yaml
-```
-
-2. According to the chapters on configuring Compute-storage decoupled cluster: [Cluster association configuration](install-cluster/config-relation.md), [fe](install-cluster/config-fe.md), [compute cluster](install-cluster/config-cc.md), configure resources according to actual needs. Use the following command to deploy resources:
-
-```
+2. According to the documents of deploying doris storage and computing separation cluster, configure metaService in the [metadata configuration](config-ms.md); configure the fe specifications in the [fe configuration](config-fe.md); and configure the resource groups in the [compute cluster configuration](config-cg.md). After the configuration is completed, use the following command to deploy resource:
+```bash
 kubectl apply -f ddc-sample.yaml
 ```
-
-The expected results of deploying a computing cluster are as follows:
-
-```
+After the deployment resource is delivered, using the command `kubectl get ddc` to check the cluster status. The expected successful result is as follow:
+```bash
 kubectl get ddc
 NAME                         CLUSTERHEALTH   FEPHASE   CGCOUNT   CGAVAILABLECOUNT   CGFULLAVAILABLECOUNT
-test-disaggregated-cluster   green           Ready     1         1                  1
+test-disaggregated-cluster   green           Ready     2         2                  2
+```
+:::tip Tip  
+MS service needs to use FDB as the backend metadata storage. FDB service must be deployed before deploying MS service. Please deploy it in advance according to [install FDB](install-fdb.md).  
+:::
+
+## Step 3: Creating remote storage vault
+After the cluster is built, you need to execute the corresponding `CREATE STORAGE VAULT` SQL statement through the client to create a storage backend to achieve data persistence.
+Refer to [Accessing Doris Cluster](../compute-storage-coupled/install-access-cluster.md) to connect to the Doris cluster. One of the implementation methods is provided below.
+
+**1. Get service**
+
+After deploying the cluster, you can view the service exposed by Doris Operator by using the following command:
+
+```shell
+kubectl get svc
 ```
 
-:::tip Tip
-- `DorisDisaggregatedCluster` must be configured to use `DorisDisaggregatedMetaService` resource information in the [specification](install-cluster/config-relation.md).
-- To deploy a Compute-storage decoupled cluster, you must plan the object storage you want to use in advance and configure the deployment according to the [object storage configuration section](install-cluster/config-relation.md) in the cluster association configuration.
-:::
+The returned results are as follows:
+
+```shell
+NAME                                     TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)                               AGE
+test-disaggregated-cluster-fe            ClusterIP   10.96.147.97   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   15m
+test-disaggregated-cluster-fe-internal   ClusterIP   None           <none>        9030/TCP                              15m
+test-disaggregated-cluster-ms            ClusterIP   10.96.169.8    <none>        5000/TCP                              15m
+test-disaggregated-cluster-cg1           ClusterIP   10.96.47.90    <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   14m
+test-disaggregated-cluster-cg2           ClusterIP   10.96.50.199   <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   14m
+```
+
+**2. Access by MySQL Client**
+
+Use the following command to create a pod containing the mysql client in the current Kubernetes cluster:
+
+```shell
+kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never -- /bin/bash
+```
+
+In the container within the cluster, you can use the fe service name to access the Doris cluster:
+
+```shell
+mysql -uroot -P9030 -h test-disaggregated-cluster-fe  
+```
+
+**3. Create storage vault**
+
+Create statement syntax, please refer to [managing storage vault](../../../../compute-storage-decoupled/managing-storage-vault.md).  
+Here is an example of S3 protocol object storage:
+
+1. Create S3 Storage Vault
+```SQL
+CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+    PROPERTIES (
+        "type"="S3",                                   -- required
+        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
+        "s3.region" = "bj",                            -- required
+        "s3.bucket" = "bucket",                        -- required
+        "s3.root.path" = "big/data/prefix",            -- required
+        "s3.access_key" = "ak",                        -- required
+        "s3.secret_key" = "sk",                        -- required
+        "provider" = "OSS"                             -- required
+    );
+```
+
+2. Set the default storage vault
+```SQL
+SET s3_vault AS DEFAULT STORAGE VAULT;
+```
+

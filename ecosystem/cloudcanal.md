@@ -1,7 +1,7 @@
 ---
 {
-    "title": "CloudCanal Data Import",
-    "language": "en"
+  "title": "BladePipe",
+  "language": "en"
 }
 ---
 
@@ -24,85 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# CloudCanal Data Import
+BladePipe is a **real-time end-to-end data replication** tool, moving data between **30+** databases, message queues, search engines, caching, real-time data warehouses, data lakes and more, with **ultra-low latency less than 3 seconds**. It features efficiency, stability and scalability, compatibility with diverse database engines, one-stop management, enhanced security, and complex data transformation.
 
-## Introduction
+## Functions
+BladePipe presents a visual management interface, allowing you to easily create DataJobs to realize **schema migration, data migration, synchronization, verification and correction**, etc. In addition, more refined and customized configurations are supported by setting parameters. Now BladePipe supports data movement from the following source DataSources to Doris:
 
-CloudCanal Community Edition is a free data migration and synchronization platform published by [ClouGence Co., Ltd](https://www.cloudcanalx.com) that integrates Schema Migration, Full Data Migration, verification, Correction, and real-time Incremental Synchronization.
-CloudCanal help users build a modern data stack in a simple way.
-![image.png](/images/cloudcanal/cloudcanal-1.jpg)
+| Source DataSource            | Schema Migration | Data Migration | Data Sync | Verification & Correction |
+|------------------------------|------------------|----------------|-----------|---------------------------|
+| MySQL/MariaDB/AuroraMySQL    | Yes              | Yes            | Yes       | Yes                       |
+| Oracle                       | Yes              | Yes            | Yes       | Yes                       |
+| PostgreSQL/AuroraPostgreSQL | Yes              | Yes            | Yes       | Yes                       |
+| SQL Server                   | Yes              | Yes            | Yes       | Yes                       |
+| Kafka                        | No               | No             | Yes       | No                        |
+| AutoMQ                       | No               | No             | Yes       | No                        |
+| TiDB                         | Yes              | Yes            | Yes       | Yes                       |
+| Hana                         | Yes              | Yes            | Yes       | Yes                       |
+| PolarDB-X                    | Yes              | Yes            | Yes       | Yes                       |
 
-## Download
+:::info
+For more functions and parameter settings, please refer to [BladePipe Connections](https://doc.bladepipe.com/dataMigrationAndSync/connection/mysql2?target=Doris).
+:::
 
-[CloudCanal Download Link](https://www.cloudcanalx.com)
+## Installation
+Follow the instructions in [Install Worker (Docker)](https://doc.bladepipe.com/productOP/docker/install_worker_docker) or [Install Worker (Binary)](https://doc.bladepipe.com/productOP/binary/install_worker_binary) to download and install a BladePipe Worker.
 
-## Function Description
+## Example
+Taking a MySQL instance as an example, the following part describes how to move data from MySQL to Doris. 
 
-- It is highly recommended to utilize CloudCanal version 2.2.5.0 or higher for efficient data import into Doris.
-- It is advisable to exercise control over the ingestion frequency when using CloudCanal to import **incremental data** into Doris. The default import frequency for writing data from CloudCanal to Doris can be adjusted using the `realFlushPauseSec` parameter, which is set to 10 seconds by default.
-- In the current community edition with a maximum memory configuration of 2GB, if DataJobs encounter OOM exceptions or significant GC pauses, it is recommended to reduce the batch size to minimize memory usage. For full DataTask, you can adjust the `fullBatchSize` and `fullRingBufferSize` parameters. For incremental DataTask, the `increBatchSize` and `increRingBufferSize` parameters can be adjusted accordingly.
-- Supported Source endpoints and features：
+### Add DataSources
+1. Log in to the [BladePipe Cloud](https://cloud.bladepipe.com/). Click **DataSource** > **Add DataSource**.
+2. Select MySQL and Doris as the Type respectively, and fill in the setup form accordingly. 
+   ![Add DataSources-1](/images/bp-doris-1.png)
 
-  | Source Endpoints \ Feature | Schema Migration | Full Data | Incremental | Verification | 
-  | --- | --- | --- | --- | --- |
-  | Oracle      | Yes | Yes | Yes | Yes |
-  | PostgreSQL  | Yes | Yes | Yes | Yes |
-  | Greenplum   | Yes | Yes | No | Yes |
-  | MySQL       | Yes | Yes | Yes | Yes |
+3. Click **Test Connection**. After successful connection, click **Add DataSource** to add the DataSource. 
+   ![Add DataSources-2](/images/bp-doris-2.png)
 
-## Instructions for Use
 
-CloudCanal offers a comprehensive productized capability where users can seamlessly add DataSources and create DataJobs through a visual interface. This enables automated schema migration, full data migration, and real-time incremental synchronization. The following example demonstrates how to migrate and synchronize data from a MySQL to the target Doris. Similar procedures can be applied when synchronizing other source endpoints with Doris.
+### Create a DataJob
+1. Click DataJob > [Create DataJob](https://doc.bladepipe.com/operation/job_manage/create_job/create_full_incre_task).
+2. Select the source and target DataSources, and click **Test Connection** to ensure the connection to the source and target DataSources are both successful.
+  ![Create a DataJob-1](/images/bp-doris-3.png)
 
-### Prerequisites
+1. Select **Incremental** for DataJob Type, together with the **Full Data** option.
+  ![Create a DataJob-2](/images/bp-doris-4.png)
 
-First, refer to the [CloudCanal Quick Start](https://www.cloudcanalx.com/us/cc-doc/quick/quick_start) to complete the installation and deployment of the CloudCanal Community Edition.
+1. Select the tables to be replicated.
+  ![Create a DataJob-3](/images/bp-doris-5.png)
 
-### Add DataSource
+1. Select the columns to be replicated.
+  ![Create a DataJob-4](/images/bp-doris-6.png)
 
-- Log in to the CloudCanal platform
-- Go to **DataSource Management** -> **Add DataSource**
-- Select **Doris** from the options for self-built databases
-
-![image.png](/images/cloudcanal/cloudcanal-11.png)
-
-> Tips:
->
-> - Client Address: The address of the Doris server's MySQL client service port. CloudCanal primarily uses this address to query metadata information of the database tables.
->
-> - HTTP Address: The HTTP address is mainly used to receive data import requests from CloudCanal.
-
-### Create DataJob
-
-Once the DataSource has been added successfully, you can follow these steps to create data migration and synchronization DataJob.
-
-- Go to **DataJob Management** -> **Create DataJob** in the CloudCanal
-- Select the source and target databases for the DataJob
-- Click Next Step
-
-![image.png](/images/cloudcanal/cloudcanal-12.png)
-
-- Choose **Incremental** and enable **Full Data**
-- Select DDL Sync
-- Click Next Step
-
-![image.png](/images/cloudcanal/cloudcanal-13.png)
-
-- Select the tables you want to subscribe to. Please note that **the tables automatically created during structural migration follow the primary key model, so tables without a primary key are not currently supported**
-- Click Next Step
-
-![image.png](/images/cloudcanal/cloudcanal-14.png)
-
-- Configure the column mapping
-- Click Next Step
-
-![image.png](/images/cloudcanal/cloudcanal-15.png)
-
-- Create DataJob
-
-![image.png](/images/cloudcanal/cloudcanal-16.png)
-
-- Check the status of DataJob. The DataJob will automatically go through the stages of Schema Migration, Full Data, and Incremental after it has been created
-
-![image.png](/images/cloudcanal/cloudcanal-17.png)
-
+1. Confirm the DataJob creation.
+2. The DataJob runs automatically. BladePipe will automatically run the following DataTasks:   
+  - **Schema Migration**: The schemas of the source tables will be migrated to the target instance.   
+  - **Full Data**: All existing data of the source tables will be fully migrated to the target instance.   
+  - **Incremental**: Ongoing data changes will be continuously synchronized to the target instance. 
+  ![Create a DataJob-5](/images/bp-doris-8.png)

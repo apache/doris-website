@@ -46,7 +46,7 @@ systemctl disable firewalld
 
 If the firewall service cannot be turned off, you can open the FE and BE ports according to your plan:
 :::tip Tip
-If the firewall cannot be turned off, you need to open the firewall of the corresponding Doris port according to the Kubernetes mapping rules. For specific ports, please refer to [Doris Cluster Port Planning](../standard-deployment.md#Network Requirements).
+If the firewall cannot be turned off, you need to open the firewall of the corresponding Doris port according to the Kubernetes mapping rules. For specific ports, please refer to [Doris Cluster Port Planning](../standard-deployment.md#2-check-operating-system).
 :::
 
 
@@ -83,6 +83,6 @@ sysctl -w vm.max_map_count=2000000
 When deploying Doris, it is recommended to turn off transparent huge pages.
 
 ```shell
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-echo never > /sys/kernel/mm/transparent_hugepage/defrag
+echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
+echo madvise > /sys/kernel/mm/transparent_hugepage/defrag
 ```

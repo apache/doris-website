@@ -46,6 +46,7 @@ under the License.
 | 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
 | 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
 | 1.6.2             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 | - |
+| 24.0.1            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
 
 ## USE
 
@@ -58,7 +59,7 @@ Add flink-doris-connector
 <dependency>
    <groupId>org.apache.doris</groupId>
    <artifactId>flink-doris-connector-1.16</artifactId>
-   <version>1.6.2</version>
+   <version>24.0.1</version>
 </dependency>
 ```
 
@@ -96,6 +97,24 @@ CREATE TABLE flink_doris_source (
        'username' = 'root',
        'password' = 'password'
 );
+```
+:::info Note
+Flink Connector 24.0.0 and later versions support using [Arrow Flight SQL](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/) to read data
+:::
+```sql
+CREATE TABLE doris_source (
+name STRING,
+age int
+) 
+WITH (
+  'connector' = 'doris',
+  'fenodes' = 'FE_IP:HTTP_PORT',
+  'table.identifier' = 'database.table',
+  'source.use-flight-sql' = 'true',
+  'source.flight-sql-port' = '{fe.conf:arrow_flight_sql_port}',
+  'username' = 'root',
+  'password' = ''
+)
 ```
 
 **DataStream**
@@ -243,7 +262,7 @@ DataStream<RowData> source = env. fromElements("")
 source. sinkTo(builder. build());
 ```
 
-**SchemaChange data stream (JsonDebeziumSchemaSerializer)**
+**CDC data stream (JsonDebeziumSchemaSerializer)**
 
 ```java
 // enable checkpoint
@@ -272,7 +291,7 @@ env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL Source")
          .sinkTo(builder.build());
 ```
 
-Reference: [CDCSchemaChangeExample](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/CDCSchemaChangeExample.java)
+Reference: [CDCSchemaChangeExample](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/CDCSchemaChangeExample.java)
 
 ### Lookup Join
 
@@ -334,15 +353,22 @@ ON a.city = c.city
 | doris.exec.mem.limit          | 2147483648         | N        | Memory limit for a single query. The default is 2GB, in bytes |
 | doris.deserialize.arrow.async | FALSE              | N        | Whether to support asynchronous conversion of Arrow format to RowBatch needed for flink-doris-connector iterations |
 | doris.deserialize.queue.size  | 64                 | N        | Asynchronous conversion of internal processing queue in Arrow format, effective when doris.deserialize.arrow.async is true |
+| source.use-flight-sql | FALSE              | N        | Whether to use Arrow Flight SQL to read |
+| source.flight-sql-port  | -                 | N        | When using ArrowFlightSQL to read, FE's arrow_flight_sql_port |
+
+#### Datastream-specific configuration items
+| Key                           | Default Value      | Required | Comment                                                      |
+| ----------------------------- | ------------------ | -------- | ------------------------------------------------------------ |
 | doris.read.field              | --                 | N        | Read the list of column names of the Doris table, separated by commas |
 | doris.filter.query            | --                 | N        | The expression to filter the read data, this expression is transparently passed to Doris. Doris uses this expression to complete source-side data filtering. For example age=18. |
+
 
 ### Sink configuration items
 
 | Key                         | Default Value | Required | Comment                                                      |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------ |
 | sink.label-prefix           | --            | Y        | The label prefix used by Stream load import. In the 2pc scenario, global uniqueness is required to ensure Flink's EOS semantics. |
-| sink.properties.*           | --            | N        | Import parameters for Stream Load. <br/>For example: 'sink.properties.column_separator' = ', ' defines column delimiters, 'sink.properties.escape_delimiters' = 'true' special characters as delimiters, '\x01' will be converted to binary 0x01 <br/><br/>JSON format import<br/>'sink.properties.format' = 'json' 'sink.properties. read_json_by_line' = 'true'<br/>Detailed parameters refer to [here](../data-operate/import/stream-load-manual.md). |
+| sink.properties.*           | --            | N        | Import parameters for Stream Load. <br />For example: 'sink.properties.column_separator' = ', ' defines column delimiters, 'sink.properties.escape_delimiters' = 'true' special characters as delimiters, '\x01' will be converted to binary 0x01 <br /><br />JSON format import<br />'sink.properties.format' = 'json' 'sink.properties. read_json_by_line' = 'true'<br />Detailed parameters refer to [here](../data-operate/import/stream-load-manual.md).<br /><br />Group Commit mode<br />'sink.properties.group_commit' = 'sync_mode'<br /> Starting from version 1.6.2, we have introduced support for load data with group commit functionality. For a comprehensive understanding of the available parameters, please refer to the Group Commit Manual [group commit](https://doris.apache.org/docs/data-operate/import/import-way/group-commit-manual/). |
 | sink.enable-delete          | TRUE          | N        | Whether to enable delete. This option requires the Doris table to enable the batch delete function (Doris 0.15+ version is enabled by default), and only supports the Unique model. |
 | sink.enable-2pc             | TRUE          | N        | Whether to enable two-phase commit (2pc), the default is true, to ensure Exactly-Once semantics. For two-phase commit, please refer to [here](../data-operate/import/stream-load-manual.md). |
 | sink.buffer-size            | 1MB           | N        | The size of the write data cache buffer, in bytes. It is not recommended to modify, the default configuration is enough |
@@ -351,8 +377,8 @@ ON a.city = c.city
 | sink.use-cache              | false         | N        | In case of an exception, whether to use the memory cache for recovery. When enabled, the data during the Checkpoint period will be retained in the cache. |
 | sink.enable.batch-mode      | false         | N        | Whether to use the batch mode to write to Doris. After it is enabled, the writing timing does not depend on Checkpoint. The writing is controlled through the sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval parameter. Enter the opportunity. <br />After being turned on at the same time, Exactly-once semantics will not be guaranteed. Uniq model can be used to achieve idempotence. |
 | sink.flush.queue-size       | 2             | N        | In batch mode, the cached column size.                       |
-| sink.buffer-flush.max-rows  | 50000         | N        | In batch mode, the maximum number of data rows written in a single batch. |
-| sink.buffer-flush.max-bytes | 10MB          | N        | In batch mode, the maximum number of bytes written in a single batch. |
+| sink.buffer-flush.max-rows  | 500000         | N        | In batch mode, the maximum number of data rows written in a single batch. |
+| sink.buffer-flush.max-bytes | 100MB          | N        | In batch mode, the maximum number of bytes written in a single batch. |
 | sink.buffer-flush.interval  | 10s           | N        | In batch mode, the interval for asynchronously refreshing the cache |
 | sink.ignore.update-before   | true          | N        | Whether to ignore the update-before event, ignored by default. |
 
@@ -538,23 +564,21 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --oracle-conf           | Oracle CDCSource configuration, for example --oracle-conf hostname=127.0.0.1, you can find [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/) View all configurations Oracle-CDC, where hostname/username/password/database-name/schema-name is required. |
 | --postgres-conf         | Postgres CDCSource configuration, e.g. --postgres-conf hostname=127.0.0.1, you can find [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/postgres-cdc/) View all configurations Postgres-CDC where hostname/username/password/database-name/schema-name/slot.name is required. |
 | --sqlserver-conf        | SQLServer CDCSource configuration, for example --sqlserver-conf hostname=127.0.0.1, you can find it [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/sqlserver-cdc/) View all configurations SQLServer-CDC, where hostname/username/password/database-name/schema-name is required. |
-<<<<<<< HEAD
 | --db2-conf        | DB2 CDCSource configuration, for example --db2-conf hostname=127.0.0.1, you can find it [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.1/docs/connectors/flink-sources/db2-cdc/) View all configurations DB2-CDC, where hostname/username/password/database-name/schema-name is required. |
-=======
 | --mongodb-conf          | MongoDB CDCSource configuration, for example --mongodb-conf hosts=127.0.0.1:27017, you can find all Mongo-CDC configurations [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/), where hosts/username/password/database are required. The --mongodb-conf schema.sample-percent configuration is for automatically sampling MongoDB data for creating a table in Doris, with a default value of 0.2. |
->>>>>>> 59a26707 (Add a guide related to Mongo CDC to the flink-doris-connector documentation.)
 | --sink-conf             | All configurations of Doris Sink can be found [here](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9) View the complete configuration items. |
 | --table-conf            | The configuration items of the Doris table(The exception is table-buckets, non-properties attributes), that is, the content contained in properties. For example `--table-conf replication_num=1`, and the `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"` option specifies the number of buckets for different tables based on the order of regular expressions. If there is no match, the table is created with the default setting of BUCKETS AUTO. |
 | --ignore-default-value  | Turn off the default value of synchronizing MySQL table structure. It is suitable for synchronizing MySQL data to Doris when the field has a default value but the actual inserted data is null. Reference [here](https://github.com/apache/doris-flink-connector/pull/152) |
 | --use-new-schema-change | Whether to use the new schema change to support synchronization of MySQL multi-column changes and default values. since version 1.6.0, the default value has been set to true. Reference [here](https://github.com/apache/doris-flink-connector/pull/167) |
 | --schema-change-mode    | The mode for parsing schema change supports two parsing modes: `debezium_structure` and `sql_parser`. The default mode is `debezium_structure`. <br/><br/> `debezium_structure` parses the data structure used when upstream CDC synchronizes data, and determines DDL change operations by parsing this structure. <br/> `sql_parser` determines the DDL change operation by parsing the DDL statement when the upstream CDC synchronizes data, so this parsing mode is more accurate. <br/> Usage example: `--schema-change-mode debezium_structure`<br/> This feature will be available in versions after 1.6.2.1|
 | --single-sink           | Whether to use a single Sink to synchronize all tables. When turned on, newly created tables in the upstream can also be automatically recognized and tables automatically created. |
-| --multi-to-one-origin   | When writing multiple upstream tables into the same table, the configuration of the source table, for example: --multi-to-one-origin="a\_.\*｜b_.\*"， Reference [here](https://github.com/apache/doris-flink-connector/pull/208) |
-| --multi-to-one-target   | Used with multi-to-one-origin, the configuration of the target table, such as: --multi-to-one-target="a\|b" |
+| --multi-to-one-origin   | When writing multiple upstream tables into the same table, the configuration of the source table, for example: --multi-to-one-origin "a\_.\*｜b_.\*"， Reference [here](https://github.com/apache/doris-flink-connector/pull/208) |
+| --multi-to-one-target   | Used with multi-to-one-origin, the configuration of the target table, such as: --multi-to-one-target "a\|b" |
 | --create-table-only     | Whether only the table schema should be synchronized                                                                   |
 
 :::info Note
-When synchronizing, you need to add the corresponding Flink CDC dependencies in the $FLINK_HOME/lib directory, such as flink-sql-connector-mysql-cdc-${version}.jar, flink-sql-connector-oracle-cdc-${version}.jar , flink-sql-connector-mongodb-cdc-${version}.jar
+1. When synchronizing, you need to add the corresponding Flink CDC dependencies in the `$FLINK_HOME/lib` directory, such as flink-sql-connector-mysql-cdc-${version}.jar, flink-sql-connector-oracle-cdc-${version}.jar , flink-sql-connector-mongodb-cdc-${version}.jar
+2. The Flink CDC version that Connector 24.0.0 depends on must be above 3.1 . If Flink CDC is to be used for synchronizing data from MySQL or Oracle, relevant JDBC drivers also need to be added under `$FLINK_HOME/lib`.
 :::
 
 ### MySQL synchronization example
@@ -564,7 +588,7 @@ When synchronizing, you need to add the corresponding Flink CDC dependencies in 
      -Dexecution.checkpointing.interval=10s\
      -Dparallelism.default=1\
      -c org.apache.doris.flink.tools.cdc.CdcTools\
-     lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     lib/flink-doris-connector-1.18-24.0.1.jar \
      mysql-sync-database\
      --database test_db \
      --mysql-conf hostname=127.0.0.1 \
@@ -588,7 +612,7 @@ When synchronizing, you need to add the corresponding Flink CDC dependencies in 
       -Dexecution.checkpointing.interval=10s \
       -Dparallelism.default=1 \
       -c org.apache.doris.flink.tools.cdc.CdcTools \
-      ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar\
+      ./lib/flink-doris-connector-1.18-24.0.1.jar \
       oracle-sync-database \
       --database test_db \
       --oracle-conf hostname=127.0.0.1 \
@@ -613,7 +637,7 @@ When synchronizing, you need to add the corresponding Flink CDC dependencies in 
      -Dexecution.checkpointing.interval=10s \
      -Dparallelism.default=1\
      -c org.apache.doris.flink.tools.cdc.CdcTools \
-     ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     ./lib/flink-doris-connector-1.18-24.0.1.jar \
      postgres-sync-database \
      --database db1\
      --postgres-conf hostname=127.0.0.1 \
@@ -640,7 +664,7 @@ When synchronizing, you need to add the corresponding Flink CDC dependencies in 
      -Dexecution.checkpointing.interval=10s \
      -Dparallelism.default=1 \
      -c org.apache.doris.flink.tools.cdc.CdcTools \
-     ./lib/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar \
+     ./lib/flink-doris-connector-1.18-24.0.1.jar \
      sqlserver-sync-database \
      --database db1\
      --sqlserver-conf hostname=127.0.0.1 \
@@ -665,7 +689,7 @@ When synchronizing, you need to add the corresponding Flink CDC dependencies in 
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    lib/flink-doris-connector-1.16-SNAPSHOT.jar \
+    lib/flink-doris-connector-1.16-24.0.1.jar \
     db2-sync-database \
     --database db2_test \
     --db2-conf hostname=127.0.0.1 \
@@ -692,7 +716,7 @@ When synchronizing, you need to add the corresponding Flink CDC dependencies in 
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
-    ./lib/flink-doris-connector-1.18-1.6.2-SNAPSHOT.jar \
+    ./lib/flink-doris-connector-1.18-24.0.1.jar \
     mongodb-sync-database \
     --database doris_db \
     --schema-change-mode debezium_structure \
@@ -831,7 +855,7 @@ Before Connector1.1.0, it was written in batches, and the writing was driven by 
 
 9. **tablet writer write failed, tablet_id=190958, txn_id=3505530, err=-235**
 
-It usually occurs before Connector1.1.0, because the writing frequency is too fast, resulting in too many versions. The frequency of Streamload can be reduced by setting the sink.batch.size and sink.batch.interval parameters.
+It usually occurs before Connector1.1.0, because the writing frequency is too fast, resulting in too many versions. The frequency of Streamload can be reduced by setting the sink.batch.size and sink.batch.interval parameters. After Connector 1.1.0, the default write timing is controlled by Checkpoint, and the write frequency can be reduced by increasing the Checkpoint interval.
 
 10. **Flink imports dirty data, how to skip it? **
 
@@ -859,3 +883,7 @@ The issue may have occurred due to configuring the IP address of `be`, which is 
 16. **When using Flink-connector to synchronize MySQL data to Doris, there is a time difference of several hours between the timestamp.**
 
 Flink  Connector synchronizes the entire database from MySQL with a default timezone of UTC+8. If your data resides in a different timezone, you can adjust it using the following configuration, for example: `--mysql-conf debezium.date.format.timestamp.zone="UTC+3"`.
+
+17. **What is the difference between batch writing and streaming writing**
+
+Connector 1.5.0 and later support batch writing. Batch writing does not rely on Checkpoint. Data is cached in memory and the writing timing is controlled according to the parameters sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval. Checkpoint must be enabled for streaming writing. During the entire Checkpoint period, upstream data is continuously written to Doris, and data is not cached in memory all the time.

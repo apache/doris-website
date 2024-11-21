@@ -54,6 +54,11 @@ bootstrap.servers=127.0.0.1:9092
 # Modify to the created plugins directory
 # Note: Please fill in the direct path to Kafka here. For example: plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
+
+# It is recommended to increase the max.poll.interval.ms time of Kafka to more than 30 minutes, the default is 5 minutes
+# Avoid Stream Load import data consumption timeout and consumers being kicked out of the consumer group
+max.poll.interval.ms=1800000
+consumer.max.poll.interval.ms=1800000
 ```
 
 Configure doris-connector-sink.properties
@@ -102,6 +107,11 @@ group.id=connect-cluster
 # Modify to the created plugins directory
 # Note: Please fill in the direct path to Kafka here. For example: plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
+
+# It is recommended to increase the max.poll.interval.ms time of Kafka to more than 30 minutes, the default is 5 minutes
+# Avoid Stream Load import data consumption timeout and consumers being kicked out of the consumer group
+max.poll.interval.ms=1800000
+consumer.max.poll.interval.ms=1800000
 ```
 
 
@@ -350,3 +360,35 @@ This is because using the `org.apache.kafka.connect.json.JsonConverter` converte
   1. Replace `org.apache.kafka.connect.json.JsonConverter` with `org.apache.kafka.connect.storage.StringConverter`
   2. If the startup mode is **Standalone** mode, change `value.converter.schemas.enable` or `key.converter.schemas.enable` in config/connect-standalone.properties to false;
    If the startup mode is **Distributed** mode, change `value.converter.schemas.enable` or `key.converter.schemas.enable` in config/connect-distributed.properties to false
+
+**2. The consumption times out and the consumer is kicked out of the consumption group:**
+
+```
+org.apache.kafka.clients.consumer.CommitFailedException: Offset commit cannot be completed since the consumer is not part of an active group for auto partition assignment; it is likely that the consumer was kicked out of the group.
+        at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.sendOffsetCommitRequest(ConsumerCoordinator.java:1318)
+        at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.doCommitOffsetsAsync(ConsumerCoordinator.java:1127)
+        at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.commitOffsetsAsync(ConsumerCoordinator.java:1093)
+        at org.apache.kafka.clients.consumer.KafkaConsumer.commitAsync(KafkaConsumer.java:1590)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.doCommitAsync(WorkerSinkTask.java:361)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.doCommit(WorkerSinkTask.java:376)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.commitOffsets(WorkerSinkTask.java:467)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.commitOffsets(WorkerSinkTask.java:381)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.iteration(WorkerSinkTask.java:221)
+        at org.apache.kafka.connect.runtime.WorkerSinkTask.execute(WorkerSinkTask.java:206)
+        at org.apache.kafka.connect.runtime.WorkerTask.doRun(WorkerTask.java:204)
+        at org.apache.kafka.connect.runtime.WorkerTask.run(WorkerTask.java:259)
+        at org.apache.kafka.connect.runtime.isolation.Plugins.lambda$withClassLoader$1(Plugins.java:181)
+        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base/java.lang.Thread.run(Thread.java:833)
+```
+
+**Solution:**
+
+Increase `max.poll.interval.ms` in Kafka according to the scenario. The default value is `300000`
+- If it is started in Standalone mode, add the `max.poll.interval.ms` and `consumer.max.poll.interval.ms` parameters in the configuration file of config/connect-standalone.properties, and configure the parameter values.
+- If it is started in Distributed mode, add the `max.poll.interval.ms` and `consumer.max.poll.interval.ms` parameters in the configuration file of config/connect-distributed.properties, and configure the parameter values.
+
+After adjusting the parameters, restart kafka-connect

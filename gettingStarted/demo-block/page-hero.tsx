@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './demo-block.css';
 export default function PageHero() {
     const [currentVersion, setCurrentVersion] = useState('')
@@ -22,7 +22,7 @@ export default function PageHero() {
             </div>
         </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/doris-hudi`}>
+                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/building-lakehouse/doris-hudi`}>
                         <div className="home-page-hero-button-label"><div>Tutorials</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -35,7 +35,7 @@ export default function PageHero() {
                         </div>
                         <div style={{ fontSize: 12, marginBottom: 20 }}>How to quickly set up a test & demo environment for Apache Doris and Hudi and how to use.</div>
                     </a>
-                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/doris-paimon`}>
+                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/building-lakehouse/doris-paimon`}>
                         <div className="latest-button-title">
                             <div className="home-page-hero-button-label"><div>Tutorials</div></div>
                             {/* <div className="home-page-hero-button-icon">

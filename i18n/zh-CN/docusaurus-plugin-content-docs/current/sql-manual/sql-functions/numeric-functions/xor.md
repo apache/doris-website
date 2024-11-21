@@ -22,17 +22,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## xor
+## Description
 
-### description
-#### Syntax
 
-`BOOLEAN xor BOOLEAN`
 返回两个数的异或值。
 
-### example
+## Syntax
+`BOOLEAN xor BOOLEAN`
 
-```
+## Example
+```sql
 mysql >select true xor false,true xor true;
 +------------------+-----------------+
 | (TRUE XOR FALSE) | (TRUE XOR TRUE) |
@@ -42,5 +41,5 @@ mysql >select true xor false,true xor true;
 
 ```
 
-### keywords
+## Keywords
 	XOR

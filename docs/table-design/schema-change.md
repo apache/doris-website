@@ -36,45 +36,52 @@ Users can modify the schema of an existing table through the Schema Change opera
 
 - Transaction: Each import task is a transaction, and each transaction has a unique increasing transaction ID.
 
-## Introduction 
+## Introduction
 
-**Light Schema Change**
+**Overview**
 
-Before introduction, it is necessary to know the three Schema Change implementations before the Apache Doris 1.2.0 version, all of which are asynchronous:
+The implementation of Schema Change is divided into two major categories: Light Weight Schema Change and Heavy Weight Schema Change.
 
-- Hard linked schema change  mainly acts on addition and subtraction of value columns and does not require modification of the data file.
+- Light Weight Schema Change is completed quickly by synchronously modifying only the FE's metadata, typically within seconds. Adding or dropping value columns, changing column names, and increasing the length of VARCHAR columns (except for DUP KEY columns and UNIQUE KEY columns) all use the logic of Light Weight Schema Change.
 
-- Direct schema change  is mainly used to change the type of value  column, which needs to rewrite the data, but does not involve the key  column, and does not need to be reordered.
+- Heavy Weight Schema Change relies on the BE for data file transformation. The specific implementation methods are as follows:
 
-- Sort schema change  is mainly used for the key column  schema change, because the key  column addition/subtraction/modification type and other operations will affect the sorting of existing data, so the data needs to be read out again, modified, and then sort.
+    |Schema change Implementation | Main Logic | Typical Scenario |
+    |-----------------|------|---------|----------|
+    | Direct Schema Change | Rewrites the data files holistically without involving reordering | Changing the data type of value columns |
+    | Sort Schema Change | Rewrites the data files holistically and reorders them | Changing the data type of key columns |
+    | Hard Linked Schema Change | Relinks the data files without directly modifying the data files | Replaced by Light Weight Schema Change for column changes |
 
-Since Apache Doris 1.2.0 , for the first type, the new feature of light schema change has been introduced. The new light schema change allows the addition and subtraction of the value column to be completed in milliseconds. Starting from Apache Doris 2.0.0, all newly created tables have enabled light schema change by default.
+**Main Process**
 
-**In addition to adding and deleting the value column, the main principles of other types of schema changes are as follows**
+For Light Weight Schema Change, only the corresponding metadata in FE is modified after the Alter command is issued, and the return of the Alter command signifies the end of the schema change.
 
-The basic process of executing schema change is to generate a new schema table from the data  /Index  in the original table  /Index data. There are mainly two parts of data conversion, one is the conversion of existing historical data, and the other is the conversion of newly arrived imported data during the execution of schema change.
+For Heavy Weight Schema Change, after the user issues the Alter command, a task for schema change is started in the background, and the return of the command signifies the successful submission of the schema change task. The execution of the background task goes through the following process:
 
-```Plain
-+----------+
-| Load Job |
-+----+-----+
-     |
-     | Load job generates both origin and new Index data
-     |
-     |      +------------------+ +---------------+
-     |      | Origin Index     | | Origin Index  |
-     +------> New Incoming Data| | History Data  |
-     |      +------------------+ +------+--------+
-     |                                  |
-     |                                  | Convert history data
-     |                                  |
-     |      +------------------+ +------v--------+
-     |      | New Index        | | New Index     |
-     +------> New Incoming Data| | History Data  |
-            +------------------+ +---------------+
-```
-
-Before starting to convert historical data, Doris will obtain a latest transaction ID and wait for all import transactions before this transaction ID to complete. This transaction ID becomes a watershed. This means that Doris ensures that all import tasks after the watershed will generate data for the original table  /Index  and the new table  /Index  at the same time. This way, when the historical data conversion is completed, the data in the new table can be guaranteed to be complete.
+1. For each tablet of the target table, a corresponding new tablet is created according to the schema after the change, used for storing the transformed data.
+2. Wait for all previous import transactions to end before starting data transformation.
+3. Start data transformation, task by task for each tablet, writing the data from the old tablet after the change to the newly created tablet. The differences among the three heavy weight Schema Changes are in this step, where data transformation is carried out according to their respective implementation logics mentioned above.
+4. After the data transformation starts, if a new import transaction is created, to ensure data integrity, the new import transaction will simultaneously generate data for both the old tablet and the new tablet, known as dual writing. Data written during the dual write period must be compatible with both the new and old schemas, otherwise, the import will fail.
+    ```Plain
+    +----------+
+    | Load Job |
+    +----+-----+
+        |
+        | Load job generates both origin and new Index data
+        |
+        |      +------------------+ +---------------+
+        |      | Origin Index     | | Origin Index  |
+        +------> New Incoming Data| | History Data  |
+        |      +------------------+ +------+--------+
+        |                                  |
+        |                                  | Convert history data
+        |                                  |
+        |      +------------------+ +------v--------+
+        |      | New Index        | | New Index     |
+        +------> New Incoming Data| | History Data  |
+                +------------------+ +---------------+
+    ```
+5. After the data transformation is completed, all tablets storing old data will be deleted, and all new tablets that have completed the data change will replace the old tablets for service.
 
 The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
 
@@ -97,7 +104,28 @@ ALTER TABLE table_name ADD COLUMN column_name column_type [KEY | agg_type] [DEFA
 
 ### Examples
 
-**1. Adding a key column `new_col` (non-aggregate model) after col1 to `example_rollup_index`**
+#### non-aggregate model
+
+table's DDL:
+
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col1 int,
+    col2 int,
+    col3 int,
+    col4 int,
+    col5 int
+) DUPLICATE KEY(col1, col2, col3)
+DISTRIBUTED BY RANDOM BUCKETS 1
+ROLLUP (
+    example_rollup_index (col1, col3, col4, col5)
+)
+PROPERTIES (
+    "replication_num" = "1"
+)
+```
+
+**1. Adding a key column `new_col` after col1 to `example_rollup_index`**
 
 ```sql
 ALTER TABLE example_db.my_table
@@ -105,7 +133,7 @@ ADD COLUMN new_col INT KEY DEFAULT "0" AFTER col1
 TO example_rollup_index;
 ```
 
-**2. Adding a value column `new_col` (non-aggregate model) with a default value of 0 after col1 to `example_rollup_index`**
+**2. Adding a value column `new_col` with a default value of 0 after col1 to `example_rollup_index`**
 
 ```sql
 ALTER TABLE example_db.my_table   
@@ -113,7 +141,28 @@ ADD COLUMN new_col INT DEFAULT "0" AFTER col1
 TO example_rollup_index;
 ```
 
-**3. Adding a Key column `new_col` (aggregate model) after col1 to `example_rollup_index`**
+#### aggregate model
+
+table's DDL:
+
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col1 int,
+    col2 int,
+    col3 int,
+    col4 int SUM,
+    col5 varchar(32) REPLACE DEFAULT "abc"
+) AGGREGATE KEY(col1, col2, col3)
+DISTRIBUTED BY HASH(col1) BUCKETS 1
+ROLLUP (
+    example_rollup_index (col1, col3, col4, col5)
+)
+PROPERTIES (
+    "replication_num" = "1"
+)
+```
+
+**3. Adding a Key column `new_col` after col1 to `example_rollup_index`**
 
 ```sql
 ALTER TABLE example_db.my_table   
@@ -121,7 +170,7 @@ ADD COLUMN new_col INT DEFAULT "0" AFTER col1
 TO example_rollup_index;
 ```
 
-**4. Adding a value column `new_col` with SUM aggregation type (aggregate model) after col1 to `example_rollup_index`**
+**4. Adding a value column `new_col` with SUM aggregation type after col1 to `example_rollup_index`**
 
 ```sql
 ALTER TABLE example_db.my_table   
@@ -151,7 +200,7 @@ Adding multiple columns (aggregate model) to `example_rollup_index`:
 
 ```sql
 ALTER TABLE example_db.my_table
-ADD COLUMN (col1 INT DEFAULT "1", col2 FLOAT SUM DEFAULT "2.3")
+ADD COLUMN (c1 INT DEFAULT "1", c2 FLOAT SUM DEFAULT "0")
 TO example_rollup_index;
 ```
 
@@ -174,7 +223,7 @@ Removing column col2 from `example_rollup_index`:
 
 ```sql
 ALTER TABLE example_db.my_table
-DROP COLUMN col2
+DROP COLUMN col3
 FROM example_rollup_index;
 ```
 
@@ -221,6 +270,23 @@ ALTER TABLE table_name MODIFY COLUMN column_name column_type [KEY | agg_type] [N
 
 ### Examples
 
+table's DDL:
+
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col0 int,
+    col1 int DEFAULT "1",
+    col2 int,
+    col3 varchar(32),
+    col4 int SUM,
+    col5 varchar(32) REPLACE DEFAULT "abc"
+) AGGREGATE KEY(col0, col1, col2, col3)
+DISTRIBUTED BY HASH(col0) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+)
+```
+
 **1. Modifying the column type of Key column col1 to BIGINT in the base index and moving it after column col2**
 
 ```sql
@@ -233,8 +299,8 @@ Note: whether modifying a key column or a value column, the complete column info
 **2. Modifying the maximum length of column val1 in the Base Index. The original val1 is (val1 VARCHAR(32) REPLACE DEFAULT "abc")**
 
 ```sql
-ALTER TABLE example_db.my_table 
-MODIFY COLUMN val1 VARCHAR(64) REPLACE DEFAULT "abc"
+ALTER TABLE example_db.my_table
+MODIFY COLUMN col5 VARCHAR(64) REPLACE DEFAULT "abc";
 ```
 
 Note: only the column type can be modified while keeping the other properties of the column unchanged.
@@ -242,7 +308,8 @@ Note: only the column type can be modified while keeping the other properties of
 **3. Modifying the length of a field in the key column of a duplicate key table**
 
 ```sql
-alter table example_tbl modify column k3 varchar(50) key null comment 'to 50'
+ALTER TABLE example_db.my_table
+MODIFY COLUMN col3 varchar(50) KEY NULL comment 'to 50'
 ```
 
 ## Reorder columns for a specified index
@@ -261,6 +328,24 @@ ALTER TABLE table_name ORDER BY (column_name1, column_name2, ...)
 
 ### Example
 
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    k1 int DEFAULT "1",
+    k2 int,
+    k3 varchar(32),
+    k4 date,
+    v1 int SUM,
+    v2 int MAX,
+) AGGREGATE KEY(k1, k2, k3, k4)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+ROLLUP (
+    example_rollup_index(k1, k2, k3, v1, v2)
+)
+PROPERTIES (
+    "replication_num" = "1"
+)
+```
+
 Reorder columns in the index `example_rollup_index` (assuming the original column order is: k1, k2, k3, v1, v2).
 
 ```sql
@@ -277,19 +362,20 @@ Schema change can modify multiple indexes in a single job.
 
 Source Schema:
 
-```Plain
-+-----------+-------+------+------+------+---------+-------+
-| IndexName | Field | Type | Null | Key  | Default | Extra |
-+-----------+-------+------+------+------+---------+-------+
-| tbl1      | k1    | INT  | No   | true | N/A     |       |
-|           | k2    | INT  | No   | true | N/A     |       |
-|           | k3    | INT  | No   | true | N/A     |       |
-|           |       |      |      |      |         |       |
-| rollup2   | k2    | INT  | No   | true | N/A     |       |
-|           |       |      |      |      |         |       |
-| rollup1   | k1    | INT  | No   | true | N/A     |       |
-|           | k2    | INT  | No   | true | N/A     |       |
-+-----------+-------+------+------+------+---------+-------+
+```sql
+CREATE TABLE IF NOT EXISTS example_db.tbl1(
+    k1 int,
+    k2 int,
+    k3 int
+) AGGREGATE KEY(k1, k2, k3)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+ROLLUP (
+    rollup1 (k1, k2),
+    rollup2 (k2)
+)
+PROPERTIES (
+    "replication_num" = "1"
+)
 ```
 
 You can use the following command to add a column k4 to rollup1 and rollup2, and add an additional column k5 to rollup2:
@@ -329,9 +415,28 @@ Additionally, it is not allowed to add columns to a rollup that already exist in
 
 ### Example 2
 
+table's DDL
+
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    k1 int DEFAULT "1",
+    k2 int,
+    k3 varchar(32),
+    k4 date,
+    v1 int SUM,
+) AGGREGATE KEY(k1, k2, k3, k4)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+ROLLUP (
+    example_rollup_index(k1, k3, k2, v1)
+)
+PROPERTIES (
+    "replication_num" = "1"
+)
+```
+
 ```sql
 ALTER TABLE example_db.my_table
-ADD COLUMN v2 INT MAX DEFAULT "0" AFTER k2 TO example_rollup_index,
+ADD COLUMN v2 INT MAX DEFAULT "0" TO example_rollup_index,
 ORDER BY (k3,k1,k2,v2,v1) FROM example_rollup_index;
 ```
 
@@ -345,12 +450,12 @@ ALTER TABLE RENAME COLUMN old_column_name new_column_name;
 
 ## Check Job Status
 
-The creation of a schema change is an asynchronous process. After a job is successfully submitted, users need to use the `SHOW ALTER TABLE COLUMN` command to check the progress of the job.
+Users could use the `SHOW ALTER TABLE COLUMN` command to check the progress of the schema change job.
 
-`SHOW ALTER TABLE COLUMN ` allows you to view the currently executing or completed schema Change jobs. When a schema change job involves multiple indexes, the command will display multiple rows, with each row corresponding to an index. For example:
+`SHOW ALTER TABLE COLUMN` allows you to view the currently executing or completed schema Change jobs. When a schema change job involves multiple indexes, the command will display multiple rows, with each row corresponding to an index. For example:
 
 ```sql
-mysql SHOW ALTER TABLE COLUMN\G;
+mysql > SHOW ALTER TABLE COLUMN\G;
 *************************** 1. row ***************************
         JobId: 20021
     TableName: tbl1
@@ -436,7 +541,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 
 - Note that apart from the new column type, other attributes such as the aggregation method, nullable property, and default value should be completed based on the original information.
 
-- It is not supported to modify column names, aggregation types, nullable properties, default values, or column comments.
+- It is not supported to modify aggregation types, nullable properties, or default values.
 
 ## FAQs
 
@@ -484,4 +589,4 @@ ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
 
 ## More Details
 
-For more detailed syntax and best practices regarding Schema Change, please refer to the [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) command manual. You can also enter `HELP ALTER TABLE COLUMN `in the MySQL client command line for more help information.
+For more detailed syntax and best practices regarding Schema Change, please refer to the [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) command manual.

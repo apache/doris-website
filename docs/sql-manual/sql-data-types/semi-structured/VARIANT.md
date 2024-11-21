@@ -171,7 +171,7 @@ properties("replication_num" = "1");
 Importing gh_2022-11-07-3.json, which contains one hour's worth of GitHub events data.
 
 ``` shell
-wget http://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/variant/gh_2022-11-07-3.json
+wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/variant/gh_2022-11-07-3.json
 
 curl --location-trusted -u root:  -T gh_2022-11-07-3.json -H "read_json_by_line:true" -H "format:json"  http://127.0.0.1:18148/api/test_variant/github_events/_strea
 m_load
@@ -300,9 +300,10 @@ mysql> SELECT
 2. Retrieve the count of comments containing "doris".
 
 ``` sql
+-- implicit cast `payload['comment']['body']` to string type
 mysql> SELECT
     ->     count() FROM github_events
-    ->     WHERE cast(payload['comment']['body'] as text) MATCH 'doris';
+    ->     WHERE payload['comment']['body'] MATCH 'doris';
 +---------+
 | count() |
 +---------+
@@ -337,6 +338,95 @@ mysql> SELECT
 3 rows in set (0.03 sec)
 ```
 
+### Nested Array
+```json
+{
+  "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
+}
+```
+In the JSON example above, the array nested contains objects (or nested data types). It’s important to note that only one level of array expansion is currently supported. Here is an example:
+``` sql
+-- Note: Set variant_enable_flatten_nested to true
+-- This setting enables nested array expansion, allowing array<object> elements to be stored in columnar format.
+-- If set to false, nested arrays will be stored as JSON types.
+CREATE TABLE `simple_nested_test` (
+  `k` bigint NULL,
+  `v` variant NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`k`)
+DISTRIBUTED BY HASH(`k`) BUCKETS 8
+PROPERTIES (
+"file_cache_ttl_seconds" = "0",
+"is_being_synced" = "false",
+"storage_medium" = "hdd",
+"storage_format" = "V2",
+"inverted_index_storage_format" = "V2",
+"light_schema_change" = "true",
+"disable_auto_compaction" = "false",
+"variant_enable_flatten_nested" = "true",
+"enable_single_replica_compaction" = "false",
+"group_commit_interval_ms" = "10000",
+"group_commit_data_bytes" = "134217728"
+);
+
+insert into simple_nested_test values(1, '{
+  "eventId": 1,
+  "firstName": "Name1",
+  "lastName": "Eric",
+  "body": {
+    "phoneNumbers": [
+      {
+        "number": "1111111111",
+        "type": "GSM",
+        "callLimit": 5
+      },
+      {
+        "number": "222222222",
+        "type": "HOME",
+        "callLimit": 3
+      },
+      {
+        "number": "33333333",
+        "callLimit": 2,
+        "type": "WORK"
+      }
+    ]
+  }
+}');
+
+-- Enable extended column descriptions
+set describe_extend_variant_column = true;  
+
+-- The DESC command will display expanded columns such as v.body.phoneNumbers.callLimit, v.body.phoneNumbers.number, and v.body.phoneNumbers.type
+-- These fields are expanded from v.body.phoneNumbers
+mysql> desc simple_nested_test;
++-------------------------------+----------------+------+-------+---------+-------+
+| Field                         | Type           | Null | Key   | Default | Extra |
++-------------------------------+----------------+------+-------+---------+-------+
+| k                             | bigint         | Yes  | true  | NULL    |       |
+| v                             | variant        | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.callLimit | array<tinyint> | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.number    | array<text>    | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.type      | array<text>    | Yes  | false | NULL    | NONE  |
+| v.eventId                     | tinyint        | Yes  | false | NULL    | NONE  |
+| v.firstName                   | text           | Yes  | false | NULL    | NONE  |
+| v.lastName                    | text           | Yes  | false | NULL    | NONE  |
++-------------------------------+----------------+------+-------+---------+-------+
+8 rows in set (0.00 sec)
+
+-- Use lateral view (explode_variant_array) to expand arrays and query phone numbers and event IDs that meet specific criteria
+mysql> select v['eventId'], phone_numbers
+    from simple_nested_test lateral view explode_variant_array(v['body']['phoneNumbers']) tmp1 as phone_numbers
+    where phone_numbers['type'] = 'GSM' OR phone_numbers['type'] = 'HOME' and phone_numbers['callLimit'] > 2;                                                                                                               
++--------------------------+----------------------------------------------------+
+| element_at(v, 'eventId') | phone_numbers                                      |
++--------------------------+----------------------------------------------------+
+| 1                        | {"callLimit":5,"number":"1111111111","type":"GSM"} |
+| 1                        | {"callLimit":3,"number":"222222222","type":"HOME"} |
++--------------------------+----------------------------------------------------+
+2 rows in set (0.02 sec)
+```
+
 ### Usage Restrictions and Best Practices
 
 **There are several limitations when using the VARIANT type:**
@@ -359,6 +449,10 @@ When the above types cannot be compatible, they will be transformed into JSON ty
 - Arrays with dimensions of 2 or higher will be stored as JSONB encoding, which might perform less efficiently than native arrays.
 - Not supported as primary or sort keys.
 - Queries with filters or aggregations require casting. The storage layer eliminates cast operations based on storage type and the target type of the cast, speeding up queries. 
+
+### FAQ
+1.Streamload Error: [CANCELLED][INTERNAL_ERROR] tablet error: [DATA_QUALITY_ERROR] Reached max column size limit 2048.
+Due to compaction and metadata storage limitations, the VARIANT type imposes a limit on the number of columns, with the default being 2048 columns. You can adjust the BE configuration `variant_max_merged_tablet_schema_size` accordingly, but it is not recommended to exceed 4096 columns.
 
 ### Keywords
 

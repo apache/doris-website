@@ -95,7 +95,7 @@ kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
 
 **在线部署**
 
-在安装开始前，需要添加部署仓库，若已经添加则可直接进行 Doris Cluster 的安装，否则请参考添加[部署 Doris Operator](./install-operator.md#%E6%96%B9%E6%A1%88%E4%B8%89helm-%E9%83%A8%E7%BD%B2-doris-operator) 时 **添加部署仓库** 的操作
+在安装开始前，需要添加部署仓库，若已经添加则可直接进行 Doris Cluster 的安装，否则请参考添加[部署 Doris Operator](./install-operator.md#方案三helm-部署-doris-operator) 时 **添加部署仓库** 的操作
 
 1. 安装 Doris Cluster
 
@@ -135,10 +135,10 @@ doriscluster-helm-be-2   1/1     Running   0          16s
 
 1. 下载 Doris Cluster Chart 资源
 
-下载 `doris-{chart_version}.tgz` 安装 Doris Cluster chart。如需要下载 2.0.6 版本的 Doris 集群可以使用以下命令：
+下载 `doris-{chart_version}.tgz` 安装 Doris Cluster chart。如需要下载 1.6.1 版本的 Doris 集群可以使用以下命令：
 
 ```shell
-wget https://charts.selectdb.com/doris-2.0.6.tgz
+wget https://charts.selectdb.com/doris-1.6.1.tgz
 ```
 
 2. 安装 Doris 集群

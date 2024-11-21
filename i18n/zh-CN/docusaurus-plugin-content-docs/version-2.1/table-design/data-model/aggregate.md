@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-聚合数据模型，也称为 Aggregate 数据模型。
+聚合数据模型，也称为 Aggregate 数据模型。可根据 Key 列聚合数据，Doris 存储层保留聚合后的数据，从而可以减少存储空间和提升查询性能；通常用于需要汇总或聚合信息（如总数或平均值）的情况。
 
 下面以实际的例子来说明什么是聚合模型，以及如何正确的使用聚合模型。
 
@@ -60,9 +60,9 @@ CREATE TABLE IF NOT EXISTS example_tbl_agg1
     `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
 )
 AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 10
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
+"replication_allocation" = "tag.location.default: 3"
 );
 ```
 

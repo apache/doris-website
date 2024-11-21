@@ -525,7 +525,11 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 }
 ```
 
-- `block_encryption_mode` 可以通过 block_encryption_mode 参数，控制块加密模式，默认值为：空。当使用 AES 算法加密时相当于`AES_128_ECB`, 当时用 SM3 算法加密时相当于`SM3_128_ECB` 可选值：
+- `block_encryption_mode`
+可以通过该参数控制块加密模式，默认值为空。
+当为空时，使用 AES 算法加密相当于使用 `AES_128_ECB`, 当使用 SM4 算法加密时相当于 `SM4_128_ECB`。
+
+可选值：
 
 ```text
   AES_128_ECB,
@@ -696,6 +700,10 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
   :::
 
   是否在对 insert into 语句启用部分列更新的语义，默认为 false。需要注意的是，控制 insert 语句是否开启严格模式的会话变量`enable_insert_strict`的默认值为 true，即 insert 语句默认开启严格模式，而在严格模式下进行部分列更新不允许更新不存在的 key。所以，在使用 insert 语句进行部分列更新的时候如果希望能插入不存在的 key，需要在`enable_unique_key_partial_update`设置为 true 的基础上同时将`enable_insert_strict`设置为 false。
+
+* `enable_cooldown_replica_affinity`
+
+  用户可以选择是否首先使用冷却副本进行扫描,默认为true
 
 ***
 

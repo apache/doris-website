@@ -78,7 +78,7 @@ Doris uses the parquet native reader to read the data files of the COW table, an
 |      hudiNativeReadSplits=717/810                                            |
 ```
 
-Users can view the perfomace of Java SDK through [profile](../../admin-manual/fe/profile-action), for exmpale:
+Users can view the perfomace of Java SDK through [profile](../../admin-manual/fe/profile-action), for example:
 
 ```
 -  HudiJniScanner:  0ns

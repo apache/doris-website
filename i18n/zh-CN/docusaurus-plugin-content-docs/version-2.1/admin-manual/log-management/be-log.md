@@ -80,17 +80,22 @@ under the License.
 | `aws_log_level` | 0 | | 用于控制 aws sdk 的日志等级。默认为 0，表示关闭 aws sdk 日志。默认情况下，aws sdk 日志已经被 glog 主动捕获，并会正常打印主动捕获的日志。个别情况下，需要开启 aws sdk 日志以查看更多未被捕获的日志。不同数字代表不同日志等级：Off = 0, Fatal = 1, Error = 2, Warn = 3, Info = 4, Debug = 5, Trace = 6 |
 | `s3_file_writer_log_interval_second` | 60 | | 当执行 S3 Upload 操作时，会每隔 60 秒（默认）打印操作进度。 |
 | `enable_debug_log_timeout_secs` | 0 | | 当值大于 0 时，会打印 pipeline 执行引擎的一些详细执行日志。主要用于排查问题。默认情况下关闭 |
+| `sys_log_enable_custom_date_time_format` | false | | 是否允许自定义日志中的日期格式（自 2.1.7 版本支持） |
+| `sys_log_custom_date_time_format` | `%Y-%m-%d %H:%M:%S` | | 默认的日志日期自定义格式，仅当 `sys_log_enable_custom_date_time_format` 为 `true` 时生效（自 2.1.7 版本支持） |
+| `sys_log_custom_date_time_ms_format` | `,{:03d}` | | 默认的日志日期中的时间精度，仅当 `sys_log_enable_custom_date_time_format` 为 `true` 时生效（自 2.1.7 版本支持） |
 
 ## 开启 DEBUG 日志
 
-BE 的 Debug 日志目前仅支持通过配置文件修改并重启 BE 节点以生效。
+### 静态配置
+
+在 `be.conf` 中设置 `sys_log_verbose_modules` 与 `sys_log_verbose_level`。
 
 ```text
 sys_log_verbose_modules=plan_fragment_executor,olap_scan_node
 sys_log_verbose_level=3
 ```
 
-`sys_log_verbose_modules` 指定要开启的文件名，可以通过通配符 * 指定。比如：
+`sys_log_verbose_modules` 指定要开启的文件名，可以通过通配符 `*` 指定。比如：
 
 ```text
 sys_log_verbose_modules=*
@@ -99,6 +104,20 @@ sys_log_verbose_modules=*
 表示开启所有 DEBUG 日志。
 
 `sys_log_verbose_level` 表示 DEBUG 的级别。数字越大，则 DEBUG 日志越详细。取值范围在 1-10。
+
+### 动态调整
+
+通过以下 RESTful API 即可：
+
+```bash
+curl -X POST "http://<be_host>:<webport>/api/glog/adjust?module=<module_name>&level=<level_number>"
+```
+
+动态调整方式同样支持通配符，例如使用 `module=*&level=10` 将打开所有 BE vlog。但通配符与单独的模块名互不隶属，例如将 `moduleA` 的 vlog 级别调整为 `10`，再使用 `module=*&level=-1`，并**不会**关闭 `moduleA` 的 vlog。
+
+注意：动态调整的配置不会被持久化，BE 重启后将会失效。
+
+另外无论通过何种方式，只要模块不存在，GLOG 将会创建对应日志模块（没有实际影响），并不会返回错误。
 
 ## 容器环境日志配置
 

@@ -90,23 +90,29 @@ Example:
 create workload group tag_wg properties('tag'='cn1');
 ```
 2. Modify the tag of a BE in the cluster to cn1. At this point, the tag_wg Workload Group will only be sent to this BE and any BE with no tag. The tag.workload_group attribute can specify multiple values, separated by commas.
+It is important to note that the alter interface currently does not support incremental updates. Each time the BE attributes are modified, the entire set of attributes needs to be provided. Therefore, in the statements below, the tag.location attribute is added, with 'default' as the system default value. In practice, the existing attributes of the BE should be specified accordingly.
 ```
-alter system modify backend "localhost:9050" set ("tag.workload_group" = "cn1");
+alter system modify backend "localhost:9050" set ("tag.workload_group" = "cn1", "tag.location"="default");
 ```
 
 Workload Group and BE Matching Rules:
 If the Workload Group's tag is empty, the Workload Group can be sent to all BEs, regardless of whether the BE has a tag or not.
 If the Workload Group's tag is not empty, the Workload Group will only be sent to BEs with the same tag.
 
-## Configure cgroup
+You can refer to the recommended usage:[group-workload-groups](./group-workload-groups.md)
 
-Doris 2.0 version uses Doris scheduling to limit CPU resources, but since version 2.1, Doris defaults to using CGgroup v1 to limit CPU resources. Therefore, if CPU resources are expected to be limited in version 2.1, it is necessary to have CGgroup installed on the node where BE is located.
+
+## Configure GGroup
+
+The 2.0 version of Doris uses scheduling based on Doris itself to implement CPU resource limitations. However, starting from version 2.1, Doris defaults to using CGroup-based CPU resource limitations. Therefore, if you wish to enforce CPU resource constraints in version 2.1, the node where the BE (Backend) is located must have the CGroup environment already installed.
+
+Currently, supported CGroup versions are CGroup v1 and CGroup v2.
 
 If users use the Workload Group software limit in version 2.0 and upgrade to version 2.1, they also need to configure CGroup, Otherwise, cpu soft limit may not work.
 
 If using CGroup within a container, the container needs to have permission to operate the host.
 
-Without configuring cgroup, users can use all functions of the workload group except for CPU limitations.
+Without configuring GGroup, users can use all functions of the workload group except for CPU limitations.
 
 1. Firstly, confirm that the CGgroup has been installed on the node where BE is located.
 ```
@@ -126,27 +132,49 @@ If this path exists, it indicates that cgroup v2 is currently active.
 /sys/fs/cgroup/cgroup.controllers
 ```
 
-3. Create a new directory named doris in the CPU path of cgroup, user can specify their own directory name.
+3. Create a new directory named ```doris``` in CGroup path, user can specify their own directory name.
 
-```mkdir /sys/fs/cgroup/cpu/doris```
+```
+// If using CGroup v1, then mkdir as follow:
+mkdir /sys/fs/cgroup/cpu/doris
+
+// If using CGroup v2, then mkdir as follow:
+mkdir /sys/fs/cgroup/doris
+```
 
 4. It is necessary to ensure that Doris's BE process has read/write/execute permissions for this directory
 ```
-// Modify the permissions of this directory to read, write, and execute
+// If using CGroup v1, then do as follow:
+// 1.Modify the permissions of this directory to read, write, and execute
 chmod 770 /sys/fs/cgroup/cpu/doris
 
-// Assign the ownership of this directory to Doris's account
+// 2.Assign the ownership of this directory to Doris's account
 chown -R doris:doris /sys/fs/cgroup/cpu/doris
+
+
+// If using CGroup v2, then do as follow:
+// 1.Modify the permissions of this directory to read, write, and execute
+chmod 770 /sys/fs/cgroup/doris
+
+// 2.Assign the ownership of this directory to Doris's account
+chown -R doris:doris /sys/fs/cgroup/doris
+
 ```
 
-5. If cgroup v2 is being used in the current environment, the following actions need to be taken. This is because cgroup v2 has stricter permission controls, requiring write access to the cgroup.procs file in the root directory in order to move processes between groups.
+5. If CGroup v2 is being used in the current environment, the following actions need to be taken. This is because cgroup v2 has stricter permission controls, requiring write access to the cgroup.procs file in the root directory in order to move processes between groups.
+This step can be skipped if using CGroup v1.
 ```
 chmod a+w /sys/fs/cgroup/cgroup.procs
 ```
 
 6. Modify the configuration of BE and specify the path to cgroup
 ```
+// If using CGroup v1:
 doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
+
+
+// If using CGroup v2:
+doris_cgroup_cpu_path = /sys/fs/cgroup/doris
 ```
 
 7. restart BE, in the log (be. INFO), you can see the words "add thread xxx to group" indicating successful configuration.
@@ -177,16 +205,26 @@ properties (
     "enable_memory_overcommit"="true"
 );
 ```
-This is soft CPU limit. Since version 2.1, the system will automatically create a group named ` ` normal ` `, which cannot be deleted.
+This is soft CPU limit. Since version 2.1, the system will automatically create a group named ```normal```, which cannot be deleted.
+For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP).
 
-For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP), and to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP); to view the workload group, you can visit doris system table ```information_schema.workload_groups``` or [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS).
+2. show/alter/drop workload group statement as follows:
+```
+show workload groups;
 
-2. Bind the workload group.
-* Bind the user to the workload group by default by setting the user property to ``normal``.
+alter workload group g1 properties('memory_limit'='10%');
+
+drop workload group g1;
+```
+to view the workload group, you can visit doris system table ```information_schema.workload_groups``` or [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS);to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP).
+
+3. Bind the workload group.
+* Bind the user to the workload group by default by setting the user property to ```normal```.Note that the value here cannot be left blank, otherwise the statement will fail to execute. If you're unsure which group to set, you can set it to ```normal```, as ```normal``` is the global default group.
 ```
 set property 'default_workload_group' = 'g1'.
 ```
-The current user's query will use 'g1' by default.
+After executing this statement, the current user's query will use 'g1' by default.
+
 * Specify the workload group via the session variable, which defaults to null.
 ```
 set workload_group = 'g1'.
@@ -195,7 +233,7 @@ session variable `workload_group` takes precedence over user property `default_w
 
 If you are a non-admin user, you need to execute [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) to check if the current user can see the workload group, if not, the workload group may not exist or the current user does not have permission to execute the query. If you cannot see the workload group, the workload group may not exist or the current user does not have privileges. To authorize the workload group, refer to: [grant statement](../../sql-manual/sql-statements/Account-Management-Statements/GRANT).
 
-6. Execute the query, which will be associated with the g1 workload group.
+4. Execute the query, which will be associated with the g1 workload group.
 
 ### Query Queue
 ```
@@ -208,11 +246,16 @@ properties (
     "queue_timeout" = "3000"
 );
 ```
-It should be noted that the current queuing design is not aware of the number of FEs, and the queuing parameters only works in a single FE, for example:
+1. It should be noted that the current queuing design is not aware of the number of FEs, and the queuing parameters only works in a single FE, for example:
 
 A Doris cluster is configured with a work load group and set max_concurrency=1,
 If there is only 1 FE in the cluster, then this workload group will only run one SQL at the same time from the Doris cluster perspective,
 If there are 3 FEs, the maximum number of query that can be run in Doris cluster is 3.
+
+2. In some operational scenarios, the administrator needs to bypass the queuing. This can be achieved by setting a session variable:
+```
+set bypass_workload_group = true;
+```
 
 ### Configure CPU hard limits
 At present, Doris defaults to running the CPU's soft limit. If you want to use Workload Group's hard limit, you can do as follows.

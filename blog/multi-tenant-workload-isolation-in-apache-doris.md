@@ -221,4 +221,4 @@ In future releases, we will keep improving user experience of the Workload Group
 
 - The main idea of Resource Tag is to group the BE nodes, while that of Workload Group is to further divide the resources of a single BE node. For users to grasp these ideas, they need to learn about the concept of BE nodes in Doris first. However, from an operational perspective, users only need to understand the resource consumption percentage of each of their workloads and what priority they should have when cluster load is saturated. Thus, we will try and figure out a way to flatten the learning curve for users, such as keeping the concept of BE nodes in the black box. 
 
-For further assistance on workload isolation in Apache Doris, join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).
+For further assistance on workload isolation in Apache Doris, join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw).

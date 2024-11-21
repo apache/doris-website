@@ -80,26 +80,45 @@ The following configuration items are configured in the `be.conf` file.
 | `aws_log_level` | 0 | | Controls the log level for the AWS SDK. Default is 0, indicating AWS SDK logs are turned off. By default, AWS SDK logs are actively captured by glog and will be printed normally. In some cases, you may need to enable AWS SDK logs to view more uncaptured logs. Different numbers represent different log levels: Off = 0, Fatal = 1, Error = 2, Warn = 3, Info = 4, Debug = 5, Trace = 6. |
 | `s3_file_writer_log_interval_second` | 60 | | When performing S3 Upload operations, the progress of operations is printed every 60 seconds by default. |
 | `enable_debug_log_timeout_secs` | 0 | | When the value is greater than 0, some detailed execution logs of the pipeline execution engine will be printed. Mainly used for troubleshooting. By default, this is turned off. |
+| `sys_log_enable_custom_date_time_format` | false | | Whether to allow custom date format in logs (supported since version 2.1.7) |
+| `sys_log_custom_date_time_format` | `%Y-%m-%d %H:%M:%S` | | The default custom format for log date, only effective when `sys_log_enable_custom_date_time_forma` is `true` (supported since version 2.1.7) |
+| `sys_log_custom_date_time_ms_format` | `,{:03d}` | | The default time precision in the log date. This is only effective when `sys_log_enable_custom_date_time_format` is `true` (supported since version 2.1.7) |
 
 
 ## Enable DEBUG Log
 
-BE's Debug log currently only supports modification through configuration files and restarting the BE node to take effect.
+### Static Configuration
+
+Set `sys_log_verbose_modules` and `sys_log_verbose_level` in `be.conf`:
 
 ```text
 sys_log_verbose_modules=plan_fragment_executor,olap_scan_node
 sys_log_verbose_level=3
 ```
 
-`sys_log_verbose_modules` specifies the file names to be enabled, and wildcards (*) can be used. For example:
+`sys_log_verbose_modules` Specifies the names of the files to be opened, which can be specified by the wildcard `*`. For example:
 
 ```text
 sys_log_verbose_modules=*
 ```
 
-indicates enabling all DEBUG logs.
+will turn on all BE verbose log.
 
-`sys_log_verbose_level` indicates the level of DEBUG. The larger the number, the more detailed the DEBUG log. The value range is from 1 to 10.
+`sys_log_verbose_level` Indicates the level of DEBUG. The higher the number, the more detailed the DEBUG log. The value ranges from 1 to 10.
+
+### Dynamic Modification
+
+Since 2.1, the DEBUG log of BE supports dynamic modification via the following RESTful API:
+
+```bash
+curl -X POST "http://<be_host>:<webport>/api/glog/adjust?module=<module_name>&level=<level_number>"
+```
+
+The dynamic adjustment method also supports wildcards, e.g. using `module=*&level=10` will turn on all BE vlogs, but wildcards are not attached to individual module names. e.g. adjusting the vlog level of `moduleA` to `10`, then using `module=*&level=-1` will **NOT** turn off the vlog of `moduleA`'s vlog.
+
+Note: Dynamically adjusted configurations are not persisted and will expire after a BE reboot.
+
+In addition, GLOG will create the corresponding log module if the module does not exist (no real effect) and will not return an error, regardless of the method.
 
 ## Container Environment Log Configuration
 

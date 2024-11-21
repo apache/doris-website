@@ -36,11 +36,11 @@ Queries and DDL single statements are implicit transactions and are not supporte
 
 Explicit transactions require users to actively start, commit, or roll back transactions. Currently, DDL and query statements are not supported.
 
-    ```sql
-    BEGIN;
-    [INSERT, UPDATE, DELETE statement]
-    COMMIT; / ROLLBACK;
-    ```
+```sql
+BEGIN;
+[INSERT, UPDATE, DELETE statement]
+COMMIT; / ROLLBACK;
+```
 
 ### Implicit Transactions
 
@@ -149,8 +149,6 @@ Query OK, 0 rows affected (1.02 sec)
 This method not only achieves atomicity, but also in Doris, it enhances the writing performance of `INSERT INTO VALUES`.
 
 If user enables `Group Commit` and transaction insert at the same time, the transaction insert will work. 
-
-See [Insert Into](import/load-atomicity.md#insert-into) for more details.
 
 ### Multiple `INSERT INTO SELECT`, `UPDATE`, `DELETE` for multiple tables
 
@@ -437,7 +435,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 - Specify the transaction using the Transaction ID:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
       "msg": "transaction [18036] commit successfully."
@@ -459,7 +457,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 - Specify the transaction using the Transaction ID:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
       "msg": "transaction [18037] abort successfully."
@@ -469,7 +467,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 - Specify the transaction using the label:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
       "msg": "label [55c8ffc9-1c40-4d51-b75e-f2265b3602ef] abort successfully."

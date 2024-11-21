@@ -157,7 +157,7 @@ WITH BROKER broker_name
 
 - `broker_properties`
 
-  Specifies the information required by the broker. This information is usually used by the broker to be able to access remote storage systems. Such as BOS or HDFS. See the [Broker](../../../../advanced/broker.md) documentation for specific information.
+  Specifies the information required by the broker. This information is usually used by the broker to be able to access remote storage systems. Such as BOS or HDFS. See the [Broker Load](../../../../data-operate/import/broker-load-manual) documentation for specific information.
 
   ```text
   (
@@ -249,7 +249,7 @@ WITH BROKER broker_name
        SET (
            k2 = tmp_k2 + 1,
            k3 = tmp_k3 + 1
-       )
+       ),
        DATA INFILE("hdfs://hdfs_host:hdfs_port/input/file-20*")
        INTO TABLE `my_table2`
        COLUMNS TERMINATED BY ","
@@ -450,7 +450,7 @@ WITH BROKER broker_name
         FORMAT AS "json"
         PROPERTIES(
           "json_root" = "$.item",
-          "jsonpaths" = "[$.id, $.city, $.code]"
+          "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
         )       
     )
     with HDFS (
@@ -476,7 +476,7 @@ WITH BROKER broker_name
         SET (id = id * 10)
         PROPERTIES(
           "json_root" = "$.item",
-          "jsonpaths" = "[$.id, $.code, $.city]"
+          "jsonpaths" = "[\"$.id\", \"$.code\", \"$.city\"]"
         )       
     )
     with HDFS (

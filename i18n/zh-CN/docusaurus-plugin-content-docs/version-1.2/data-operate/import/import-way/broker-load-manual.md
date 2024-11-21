@@ -309,7 +309,7 @@ Broker Load 需要借助 Broker 进程访问远端存储，不同的 Broker 需�
   前两个配置限制了单个 BE 处理的数据量的最小和最大值。第三个配置限制了一个作业的最大的导入并发数。最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数 **共同决定了本次导入的并发数**。
 
   ```text
-  本次导入并发数 = Math.min(源文件大小/最小处理量，最大并发数，当前BE节点个数)
+  本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
   本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
   ```
 

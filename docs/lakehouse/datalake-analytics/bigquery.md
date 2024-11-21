@@ -1,7 +1,7 @@
 ---
 {
     "title": "BigQuery Catalog",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 

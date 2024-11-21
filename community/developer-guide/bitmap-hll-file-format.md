@@ -45,6 +45,7 @@ The Flag value description is as follows:
 | 2 | BITMAP32, 32-bit bitmap corresponds to the type `org.roaringbitmap.RoaringBitmap` in java. The type is `roaring::Roaring` in C++, and the following data is the structure after the sequence of roaring::Roaring. You can use `org in java. .roaringbitmap.RoaringBitmap` or `roaring::Roaring` in c++ directly deserialize |
 | 3 | SINGLE64, there is only one 64-bit unsigned integer value in the bitmap, and the next 8 bytes represent the 64-bit unsigned integer value |
 | 4 | BITMAP64, 64-bit bitmap corresponds to `org.roaringbitmap.RoaringBitmap` in java; `Roaring64Map` in doris in c++. The data structure is the same as the result in the roaring library, but the serialization and deserialization methods It is different, there will be 1-8 bytes of variable-length encoding uint64 in the bitmap representation of the size. The following data is a series of multiple high-order representations of 4 bytes and 32-bit roaring bitmap serialized data repeated |
+| 5 | SET, When the number of values in the bitmap is greater than one and less than 32, the BitmapValue actually uses a hash set to store the values. The data structure: A uint8_t of one byte represents the number of values, followed by the values themselves (8 bytes each, uint64_t). ｜
 
 C++ serialization and deserialization examples are in the `BitmapValue::write()` method in `be/src/util/bitmap_value.h` and the Java examples are in the `serialize()` `deserialize()` method in `fe/fe-common/src/main/java/org/apache/doris/common/io/BitmapValue.java`.
 

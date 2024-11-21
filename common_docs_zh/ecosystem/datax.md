@@ -26,66 +26,34 @@ under the License.
 
 # DataX doriswriter
 
-[DataX](https://github.com/alibaba/DataX) doriswriter 插件，用于通过 DataX 同步其他数据源的数据到 Doris 中。
+[DataX](https://github.com/alibaba/DataX) Doriswriter 插件，支持将 MySQL、Oracle、SqlServer 等多种数据源中的数据通过 Stream Load的方式同步到 Doris 中。
 
-这个插件是利用 Doris 的 Stream Load 功能进行数据导入的。需要配合 DataX 服务一起使用。
+:::info 注意
+1. 需要配合 DataX 服务一起使用。
+2. DataX支持多种数据源，可参考[这里](https://github.com/alibaba/DataX#support-data-channels)。
+:::
 
-## 关于 DataX
 
-DataX 是阿里云 DataWorks 数据集成 的开源版本，在阿里巴巴集团内被广泛使用的离线数据同步工具/平台。DataX 实现了包括 MySQL、Oracle、SqlServer、Postgre、HDFS、Hive、ADS、HBase、TableStore(OTS)、MaxCompute(ODPS)、Hologres、DRDS 等各种异构数据源之间高效的数据同步功能。
+## 使用
 
-更多信息请参阅：`https://github.com/alibaba/DataX/`
+### 直接下载DataX安装包
 
-## 使用手册
+DataX官方提供了安装包，已经包含了DataX可直接下载使用，可参考[这里](https://github.com/alibaba/DataX?tab=readme-ov-file#download-datax%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80)
 
-DataX doriswriter 插件代码 [这里](https://github.com/apache/incubator-doris/tree/master/extension/DataX)。
+### 自行编译DorisWriter插件
 
-这个目录包含插件代码以及 DataX 项目的开发环境。
-
-doriswriter 插件依赖的 DataX 代码中的一些模块。而这些模块并没有在 Maven 官方仓库中。所以我们在开发 doriswriter 插件时，需要下载完整的 DataX 代码库，才能进行插件的编译和开发。
-
-### 目录结构
-
-1. `doriswriter/`
-
-   这个目录是 doriswriter 插件的代码目录。这个目录中的所有代码，都托管在 Apache Doris 的代码库中。
-
-   doriswriter 插件帮助文档在这里：`doriswriter/doc`
-
-2. `init-env.sh`
-
-   这个脚本主要用于构建 DataX 开发环境，他主要进行了以下操作：
-
-    1. 将 DataX 代码库 clone 到本地。
-    2. 将 `doriswriter/` 目录软链到 `DataX/doriswriter` 目录。
-    3. 在 `DataX/pom.xml` 文件中添加 `<module>doriswriter</module>` 模块。
-    4. 将 `DataX/core/pom.xml` 文件中的 httpclient 版本从 4.5 改为 4.5.13.
-
-       > httpclient v4.5 在处理 307 转发时有 bug。
-
-   这个脚本执行后，开发者就可以进入 `DataX/` 目录开始开发或编译了。因为做了软链，所以任何对 `DataX/doriswriter` 目录中文件的修改，都会反映到 `doriswriter/` 目录中，方便开发者提交代码。
-
-### 编译
-
-#### Doris 代码库编译
+下载DorisWriter 的插件[源码](https://github.com/apache/doris/tree/master/extension/DataX)
 
 1. 运行 `init-env.sh`
-2. 按需修改 `DataX/doriswriter` 中的代码。
-3. 编译 doriswriter：
+2. 编译 doriswriter：
 
-    1. 单独编译 doriswriter 插件：
+    > 单独编译 doriswriter 插件：
 
        `mvn clean install -pl plugin-rdbms-util,doriswriter -DskipTests`
 
-    2. 编译整个 DataX 项目：
+    > 如需编译整个 DataX 项目可参考[这里](https://github.com/alibaba/DataX/blob/master/userGuid.md#quick-start)
 
-       `mvn package assembly:assembly -Dmaven.test.skip=true`
-
-       产出在 `target/datax/datax/`.
-
-       > hdfsreader, hdfswriter and oscarwriter 这三个插件需要额外的 jar 包。如果你并不需要这些插件，可以在 `DataX/pom.xml` 中删除这些插件的模块。
-
-    3. 编译错误
+    > 编译错误
 
        如遇到如下编译错误：
 
@@ -96,22 +64,7 @@ doriswriter 插件依赖的 DataX 代码中的一些模块。而这些模块并�
        可尝试以下方式解决：
 
         1. 下载 [alibaba-datax-maven-m2-20210928.tar.gz](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/alibaba-datax-maven-m2-20210928.tar.gz)
-        2. 解压后，将得到的 `alibaba/datax/` 目录，拷贝到所使用的 maven 对应的 `.m2/repository/com/alibaba/` 下。
-        3. 再次尝试编译。
-
-4. 按需提交修改。
-
-#### Datax 代码库编译
-
-从 datax 代码库拉取代码，执行编译
-
-```
-git clone https://github.com/alibaba/DataX.git
-cd datax
-mvn package assembly:assembly -Dmaven.test.skip=true
-```
-
-编译完成后可以在 `datax/target/Datax` 下看到 datax.tar.gz 包
+        2. 解压后，将得到的 `alibaba/datax/` 目录，拷贝到所使用的 maven 对应的 `.m2/repository/com/alibaba/` 下, 再次尝试编译。
 
 ### Datax DorisWriter 参数介绍：
 
@@ -171,7 +124,7 @@ mvn package assembly:assembly -Dmaven.test.skip=true
 * **batchSize**
   - 描述：每批次导入数据的最大数据量。和 **maxBatchRows** 共同控制每批次的导入数量。每批次数据达到两个阈值之一，即开始导入这一批次的数据。
   - 必选：否
-  - 默认值：104857600
+  - 默认值：94371840
   
 * **maxRetries**
 

@@ -25,6 +25,11 @@ under the License.
 -->
 
 ## sleep
+
+:::warning Warning
+This function cannot be used in a production environment and will have serious implications.
+:::
+
 ### description
 #### Syntax
 

@@ -26,7 +26,7 @@ function getDocsVersions() {
 }
 
 function getLatestVersion() {
-    return VERSIONS.includes('3.0') ? '3.0' : VERSIONS[0];
+    return VERSIONS.includes('2.1') ? '2.1' : VERSIONS[0];
 }
 
 /** @type {import('@docusaurus/types').Config} */
@@ -229,9 +229,9 @@ const config = {
                 jsLoader: 'matomo.js',
             },
             announcementBar: {
-                id: 'support_us',
+                id: 'apache_doris_meetup_singapore',
                 content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Do you ❤️ Doris? Give us a 🌟 on GitHub 
-                        <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="/images/github-white-icon.svg">
+                <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="/images/github-white-icon.svg">
                     </a>`,
                 backgroundColor: '#3C2FD4',
                 textColor: '#FFFFFF',

@@ -103,8 +103,8 @@ under the License.
 
 ![Local Shuffle Clickbench and TPCH-100](/images/2.1-doris-clickbench-tpch.png)
 
-:::note
-参考文档：[Pipeline X 执行引擎](../query/pipeline/pipeline-x-execution-engine.md)
+:::note 备注
+参考文档：[Pipeline X 执行引擎](https://doris.apache.org/zh-CN/docs/query-acceleration/pipeline-execution-engine)
 :::
 
 ## ARM 架构深度适配，性能提升 230% 
@@ -143,7 +143,8 @@ under the License.
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV1cS421A7kA/?spm_id_from=333.999.0.0
 
-- 参考文档：[SQL 方言兼容](../lakehouse/sql-dialect.md)
+- 参考文档：[SQL 方言兼容](https://doris.apache.org/zh-CN/docs/lakehouse/sql-dialect.md)
+
 :::
 
 ### 高速数据读取，数据传输效率提升 100 倍
@@ -301,8 +302,7 @@ CREATE MATERIALIZED VIEW mv1
 
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV1s2421T71z/?spm_id_from=333.999.0.0
-
-- 参考文档：[异步物化视图](../query/view-materialized-view/async-materialized-view.md)
+- 参考文档：[异步物化视图](https://doris.apache.org/zh-CN/docs/query-acceleration/materialized-view/async-materialized-view/overview)
 :::
 
 ## 存储能力增强
@@ -407,7 +407,8 @@ PROPERTIES (
 :::
 
 :::note
-参考文档：https://doris.apache.org/zh-CN/docs/table-design/data-partition#%E8%87%AA%E5%8A%A8%E5%88%86%E5%8C%BA
+
+参考文档：[数据划分](https://doris.apache.org/zh-CN/docs/table-design/data-partitioning/basic-concepts)
 :::
 
 ### INSERT INTO SELECT 导入性能提升 100%
@@ -438,7 +439,7 @@ MemTable 前移在 2.1 版本中默认开启，用户无需修改原有的导入
 
 ### 高频实时导入/服务端攒批 Group Commit
 
-在数据导入过程中，不同批次导入的数据都会写入内存表中，随后在磁盘中上形成一个个 RowSet 文件，每个 Rowset 文件对应一次数据导入版本。后台 Compacttion 进程会自动对多个版本的 RowSet 文件进行合并，将多个 RowSet 小文件合并成 RowSet 大文件以优化查询性能以及存储空间，而每一次的 Compaction 进程都会产生对 CPU、内存以及磁盘 IO 资源的消耗。在实际数据写入场景中，写入越实时高频、生成 RowSet 版本数越高、Compaction 所消耗的资源就越大。为了避免高频写入带来的过多资源消耗甚至 OOM，Apache Doris 引入了反压机制，即在版本过多的情况下会返回 -235，并对数据的版本数量进行控制。
+在数据导入过程中，不同批次导入的数据都会写入内存表中，随后在磁盘中上形成一个个 RowSet 文件，每个 Rowset 文件对应一次数据导入版本。后台 Compaction 进程会自动对多个版本的 RowSet 文件进行合并，将多个 RowSet 小文件合并成 RowSet 大文件以优化查询性能以及存储空间，而每一次的 Compaction 进程都会产生对 CPU、内存以及磁盘 IO 资源的消耗。在实际数据写入场景中，写入越实时高频、生成 RowSet 版本数越高、Compaction 所消耗的资源就越大。为了避免高频写入带来的过多资源消耗甚至 OOM，Apache Doris 引入了反压机制，即在版本过多的情况下会返回 -235，并对数据的版本数量进行控制。
 
 
 ![高频实时导入/服务端攒批 Group Commit](/images/2.1-doris-group-commit.png)
@@ -469,7 +470,8 @@ MemTable 前移在 2.1 版本中默认开启，用户无需修改原有的导入
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1um411o7Ha/?spm_id_from=333.999.0.0
 
-- 参考文档和完整测试报告：[Group Commit](../data-operate/import/group-commit-manual.md)
+- 参考文档和完整测试报告：[Group Commit](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/group-commit-manual)
+
 :::
 
 ## 半结构化数据分析
@@ -540,7 +542,8 @@ SELECT v["properties"]["title"] from ${table_name}
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV13u4m1g7ra/?spm_id_from=333.999.0.0
 
-- 参考文档：[VARIANT](../sql-manual/sql-types/Data-Types/VARIANT.md)
+- 参考文档：[VARIANT](https://doris.apache.org/zh-CN/docs/sql-manual/sql-data-types/semi-structured/VARIANT.md)
+
 :::
 
 ### IP 数据类型 
@@ -554,7 +557,8 @@ SELECT v["properties"]["title"] from ${table_name}
 - INET_ATON：获取包含 IPv4 地址的字符串，格式为 A.B.C.D（点分隔的十进制数字）
 
 :::note
-参考文档：[IPV6](../sql-manual/sql-types/Data-Types/IPV6.md)
+参考文档：[IPV6](https://doris.apache.org/zh-CN/docs/sql-manual/sql-data-types/ip/IPV6)
+
 :::
 
 ### 复杂数据类型分析函数完善
@@ -670,7 +674,7 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 - `MAP_AGG`：接收 expr1 作为键，expr2 作为对应的值，返回一个 MAP 
 
 :::note
-参考文档：[MAP_AGG](../sql-manual/sql-functions/aggregate-functions/map-agg.md)
+参考文档：[MAP_AGG](https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/aggregate-functions/map-agg.md)
 :::
 
 
@@ -695,8 +699,8 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1Fz421X7XE/?spm_id_from=333.999.0.0
+- 参考文档：[Workload Group](https://doris.apache.org/zh-CN/docs/admin-manual/resource-admin/workload-group.md)
 
-- 参考文档：[Workload Group](../admin-manual/resource-admin/workload-group.md)
 :::
 
 ### TopSQL
@@ -753,7 +757,7 @@ select QueryId,max(BePeakMemoryBytes) as be_peak_mem from active_queries() group
 目前主要展示的负载类型包括 Select 和`Insert Into……Select`，预计在 2.1 版本之上的三位迭代版本中会支持 Stream Load 和 Broker Load 的资源用量展示。
 
 :::note
-参考文档：[ACTIVE_QUERIES](../sql-manual/sql-functions/table-functions/active_queries.md)
+参考文档：[ACTIVE_QUERIES](https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/table-functions/active_queries.md)
 :::
 
 
@@ -852,10 +856,10 @@ JOB e_daily
         FROM site_activity.sessions where create_time >=  days_add(now(),-1) ;
 ```
 
-:::caution
-注意事项
+:::caution 注意事项
 
-当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](https://doris.apache.org/zh-CN/docs/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+
 :::
 
 ## Behavior Changed
@@ -874,7 +878,8 @@ JOB e_daily
 
   - 对于之前已经安装过审计日志插件的用户，升级后可以继续使用原有插件，也可以通过 uninstall 命令卸载原有插件后，使用新的插件。但注意，切换插件后，审计日志表也将切换到新的表中。
 
-  - 具体可参阅：[审计日志插件](../admin-manual/audit-plugin.md)
+  - 具体可参阅：[审计日志插件](https://doris.apache.org/zh-CN/docs/admin-manual/audit-plugin.md)
+
 
 
 

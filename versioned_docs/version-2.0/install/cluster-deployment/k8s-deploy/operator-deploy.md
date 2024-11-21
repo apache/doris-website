@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris-Operator is software extension to Kubernetes that make use of custom resource to manage Doris and it components. It provides [DorisCluster](https://github.com/selectdb/doris-operator/blob/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml) a Kubernetes [CustomResourceDefinition](https://kubernetes.io/docs/reference/kubernetes-api/extend-resources/custom-resource-definition-v1/) for user to custom resource.
+Doris-Operator is software extension to Kubernetes that make use of custom resource to manage Doris and it components. It provides [DorisCluster](https://github.com/apache/doris-operator/blob/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml) a Kubernetes [CustomResourceDefinition](https://kubernetes.io/docs/reference/kubernetes-api/extend-resources/custom-resource-definition-v1/) for user to custom resource.
 ## Deploy Doris on Kubernetes
 
 ### Start Kubernetes
@@ -50,12 +50,12 @@ Kubernetes official documents recommends some ways to set up Kubernetes, as [min
 ### Deploy Doris-Operator on Kubernetes
 **1. Apply the [Custom Resource Definition(CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions)**  
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml    
+kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml    
 ```
 **2. Install Doris-Operator**  
 If you want to use the defaults operator resource:
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/operator/operator.yaml
+kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
 ```  
 The user defined deployment in github repo are simply:  
 Instead of using the command below, apply your local version of the Operator manifest to the cluster when you custom operator resource.
@@ -73,12 +73,12 @@ Expected result, the Pod `STATUS` is `Running` and all containers in Pod are all
 
 ### Start Doris on Kubernetes
 **1. Initialize Doris Cluster**    
-User can directly deploy Doris by [examples](https://github.com/selectdb/doris-operator/tree/master/doc/examples) provided by Doris-Operator. Below is the command:    
+User can directly deploy Doris by [examples](https://github.com/apache/doris-operator/tree/master/doc/examples) provided by Doris-Operator. Below is the command:    
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/doc/examples/doriscluster-sample.yaml  
+kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml  
 ```
-Or download [doriscluster-sample](https://github.com/selectdb/doris-operator/tree/master/doc/examples/doriscluster-sample.yaml) a custom resource that tells the Operator how to configure the Kubernetes cluster, and custom resource as [api.md](https://github.com/selectdb/doris-operator/blob/master/doc/api.md) and 
-[how_to_use](https://github.com/selectdb/doris-operator/tree/master/doc/how_to_use.md) docs. Instead of using the command below, apply the customized resource.
+Or download [doriscluster-sample](https://github.com/apache/doris-operator/tree/master/doc/examples/doriscluster-sample.yaml) a custom resource that tells the Operator how to configure the Kubernetes cluster, and custom resource as [api.md](https://github.com/apache/doris-operator/blob/master/doc/api.md) and 
+[how_to_use](https://github.com/aapche/doris-operator/tree/master/doc/how_to_use.md) docs. Instead of using the command below, apply the customized resource.
 ```shell
 kubeectl apply -f doriscluster-sample.yaml  
 ```

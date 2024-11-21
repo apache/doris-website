@@ -100,12 +100,6 @@ When mapping SQLServer, a Database in Doris corresponds to a Schema under the sp
 
 ## Query optimization
 
-### Statistics
-
-Doris maintains table statistics in the Catalog so that it can better optimize query plans when executing queries.
-
-See [external-statistics](../external-statistics) to learn how to collect statistics.
-
 ### Predicate pushdown
 
 When executing a query like `where dt = '2022-01-01'`, Doris can push these filtering conditions down to the external data source, thereby directly excluding data that does not meet the conditions at the data source level, reducing inaccuracies. Necessary data acquisition and transmission. This greatly improves query performance while also reducing the load on external data sources.
@@ -120,13 +114,37 @@ Doris will automatically add the escape character ([]) to the field names and ta
 
 ## FAQ
 
-1. Communication link abnormality occurs when reading SQL Server
+1. Certificate authentication exception occurs when connecting to SQL Server
 
     ```
-    ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[CANCELLED][INTERNAL_ERROR]UdfRuntimeException: Initialize datasource failed:
-    CAUSED BY: SQLServerException: The driver could not establish a secure connection to SQL Server by using Secure Sockets Layer (SSL) encryption.
+    SQLServerException: The driver could not establish a secure connection to SQL Server by using Secure Sockets Layer (SSL) encryption.
     Error: "sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException:
     unable to find valid certification path to requested target". ClientConnectionId:a92f3817-e8e6-4311-bc21-7c66
     ```
 
    You can add `encrypt=false` to the end of the JDBC connection string when creating the Catalog, such as `"jdbc_url" = "jdbc:sqlserver://127.0.0.1:1433;DataBaseName=doris_test;encrypt=false"`
+
+2. TLS exception occurs when connecting to SQL Server
+
+   ```
+   The server selected protocol version TLS10 is not accepted by client preferences [TLS13, TLS12]
+   ```
+
+   This is due to a TLS protocol version mismatch between SQL Server and the JDBC client. The connected SQL Server only supports TLS 1.0, and the JAVA environment where the JDBC client is located has TLS 1.0 disabled by default.
+
+   The solution is as follows:
+   1. Enable TLS 1.2 on SQL Server.
+      Reference: [SQL Server TLS 1.2 support](https://learn.microsoft.com/en-us/troubleshoot/sql/database-engine/connect/tls-1-2-support-microsoft-sql-server)
+   2. Enable TLS 1.0 for the JDK.
+      ```shell
+      vim ${JAVA_HOME}/lib/security/java.security
+      #find this paragraph
+      jdk.tls.disabledAlgorithms=SSLv3, TLSv1, TLSv1.1, RC4, DES, MD5withRSA, \
+      DH keySize < 1024, EC keySize < 224, 3DES_EDE_CBC, anon, NULL, \
+      include jdk.disabled.namedCurves
+      
+      #Delete TLSv1, TLSv1.1 and change it to the following
+      jdk.tls.disabledAlgorithms=SSLv3, RC4, DES, MD5withRSA, \
+      DH keySize < 1024, EC keySize < 224, anon, NULL, \
+      include jdk.disabled.namedCurves
+      ```

@@ -114,20 +114,23 @@ CREATE CATALOG iceberg PROPERTIES (
 #### AWS Glue
 
 > When connecting Glue, if it's not on the EC2 environment, need copy the `~/.aws` from the EC2 environment to the current environment. And can also download and configure the [AWS Cli tools](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), which also creates the `.aws` directory under the current user directory.
+> Please upgrade to Doris 2.1.7, 3.0.3 or later version to connect to Glue.
 
 ```sql
-CREATE CATALOG glue PROPERTIES (
+-- Using access key and secret key
+CREATE CATALOG glue2 PROPERTIES (
     "type"="iceberg",
     "iceberg.catalog.type" = "glue",
-    "glue.endpoint" = "https://glue.us-east-1.amazonaws.com",
-    "glue.access_key" = "ak",
-    "glue.secret_key" = "sk"
+    "glue.endpoint" = "https://glue.us-east-1.amazonaws.com/",
+    "client.credentials-provider" = "com.amazonaws.glue.catalog.credentials.ConfigAWSProvider",
+    "client.credentials-provider.glue.access_key" = "ak",
+    "client.credentials-provider.glue.secret_key" = "sk"
 );
 ```
 
 1. For Iceberg properties, see [Iceberg Glue Catalog](https://iceberg.apache.org/docs/latest/aws/#glue-catalog).
 
-2. If you do not fill the credentials(`glue.access_key` and `glue.secret_key`) in glue catalog, the default DefaultAWSCredentialsProviderChain will be used, and it will read credentials and the system environment variables or instance profile properties on AWS EC2.
+2. If you do not specify `client.credentials-provider`, the default DefaultAWSCredentialsProviderChain will be used, and it will read credentials and the system environment variables or instance profile properties on AWS EC2.
 
 #### Alibaba Cloud DLF
 
