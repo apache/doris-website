@@ -467,7 +467,7 @@ doriscluster-sample-fe-service    NodePort    10.152.183.58    <none>        803
 doriscluster-sample-be-internal   ClusterIP   None             <none>        9050/TCP                                                      2d
 doriscluster-sample-be-service    NodePort    10.152.183.244   <none>        9060:30940/TCP,8040:32713/TCP,9050:30621/TCP,8060:30926/TCP   2d
 ```
-### step 3: Access service using NodePort  
+#### step 3: Access service using NodePort  
 To access Doris via NodePort, you need to know the Node IP and the mapped port. You can retrieve the node IPs using:
 ```shell
   kubectl get nodes -owide
