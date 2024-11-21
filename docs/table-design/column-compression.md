@@ -1,0 +1,147 @@
+---
+{
+    "title": "Column Compression",
+    "language": "en_US"
+}
+---
+
+<!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+Doris adopts a **columnar storage** model to organize and store data, which is particularly suitable for analytical workloads and can significantly improve query efficiency. In columnar storage, each column of the table is stored independently, facilitating the application of compression techniques and thus improving storage efficiency. Doris provides various compression algorithms, allowing users to choose the appropriate compression method based on workload requirements to optimize storage and query performance.
+
+## Why Compression is Needed
+
+In Doris, data compression mainly has the following two core objectives:
+
+1. **Improve Storage Efficiency**
+   Compression can significantly reduce the disk space required for data storage, allowing more data to be stored on the same physical resources.
+
+2. **Optimize Performance**
+   The volume of compressed data is smaller, requiring fewer I/O operations during queries, thereby accelerating query response times. Modern compression algorithms typically have very fast decompression speeds, which can enhance read efficiency while reducing storage space.
+
+## Supported Compression Algorithms
+
+Doris supports various compression algorithms, each with different trade-offs between compression ratio and decompression speed, allowing users to choose the appropriate algorithm based on their needs:
+
+###  No Compression
+   - **Characteristics**:
+     - No compression is applied to the data.
+   - **Applicable Scenarios**:
+     Suitable for scenarios where compression is not needed, such as when the data is already compressed or storage space is not an issue.
+
+### LZ4
+   - **Characteristics**:
+     - Very fast compression and decompression speeds.
+     - Moderate compression ratio.
+   - **Applicable Scenarios**:
+     Suitable for scenarios with high decompression speed requirements, such as real-time queries or high-concurrency loads.
+
+### LZ4F (LZ4 Frame)
+   - **Characteristics**:
+     - An extended version of LZ4 that supports more flexible compression configurations.
+     - Fast speed with a moderate compression ratio.
+   - **Applicable Scenarios**:
+     Needed in scenarios where fast compression is required while having fine control over configurations.
+
+### LZ4HC (LZ4 High Compression)
+   - **Characteristics**:
+     - Higher compression ratio compared to LZ4, but slower compression speed.
+     - Decompression speed is comparable to LZ4.
+   - **Applicable Scenarios**:
+     Needed in scenarios where a higher compression ratio is required while still focusing on decompression speed.
+
+### ZSTD (Zstandard)
+   - **Characteristics**:
+     - High compression ratio with support for flexible compression level adjustments.
+     - Even at high compression ratios, decompression speed remains fast.
+   - **Applicable Scenarios**:
+     Required in scenarios with high storage efficiency demands while also needing to balance query performance.
+
+### Snappy
+   - **Characteristics**:
+     - Designed to focus on fast decompression.
+     - Moderate compression ratio.
+   - **Applicable Scenarios**:
+     Required in scenarios with high demands for decompression speed and low CPU overhead.
+
+### Zlib
+   - **Characteristics**:
+     - Provides a good balance between compression ratio and speed.
+     - Compared to other algorithms, compression and decompression speeds are slower, but the compression ratio is higher.
+   - **Applicable Scenarios**:
+     Required in scenarios with high storage efficiency demands and insensitivity to decompression speed, such as archiving and cold data storage.
+
+## Compression Principles
+
+**Column Compression**
+   Due to the adoption of columnar storage, Doris can independently compress each column in the table. This method enhances compression efficiency because the data in the same column often has similar distribution characteristics.
+
+**Encoding Before Compression**
+   Before compressing data, Doris encodes the column data (e.g., **dictionary encoding**, **run-length encoding**, etc.) to transform the data into a form more suitable for compression, further enhancing compression efficiency.
+
+**Page Compression**
+   Doris adopts a **page**-level compression strategy. The data in each column is divided into multiple pages, and the data within each page is compressed independently. By compressing by page, Doris can efficiently handle large-scale datasets while ensuring high compression ratios and decompression performance.
+
+**Configurable Compression Strategies**
+   Users can specify the compression algorithm to be used when creating a table. This flexibility allows users to make the best choice between compression efficiency and performance based on specific workloads.
+
+## Factors Affecting Compression Effectiveness
+
+Although different compression algorithms have their own advantages and disadvantages, the effectiveness of compression depends not only on the chosen algorithm but also on the following factors:
+
+### Order of Data
+   The order of data has a significant impact on compression effectiveness. For columns with high sequentiality (e.g., timestamps or continuous numeric columns), compression algorithms can typically achieve better results. The more regular the order of the data, the more repetitive patterns the compression algorithm can identify during compression, thus improving the compression ratio.
+
+### Data Redundancy
+   The more duplicate values in a data column, the more pronounced the compression effect. For example, using dictionary encoding on duplicate values can significantly reduce storage space. However, for data columns without obvious duplicates, the compression effect may not meet expectations.
+
+### Data Type
+   The type of data can also affect compression effectiveness. Generally, numeric data types (such as integers and floating-point numbers) are easier to compress than string data types. For data types with a wide range of values, the effectiveness of the compression algorithm may be impacted.
+
+### Column Length
+   The length of data in a column can also affect compression effectiveness. Shorter columns are usually easier to compress than longer columns because compression algorithms can more efficiently find repetitive patterns in shorter data blocks.
+
+### Nulls
+   When the proportion of null values in a column is high, the compression algorithm may be more effective because it can encode these null values as a special pattern, reducing storage space.
+
+## How to Choose the Right Compression Algorithm
+
+Choosing the right compression algorithm should be based on workload characteristics:
+
+- For **high-performance real-time analysis** scenarios, it is recommended to use **LZ4** or **Snappy**.
+- For scenarios prioritizing **storage efficiency**, it is recommended to use **ZSTD** or **Zlib**.
+- For scenarios that need to balance speed and compression ratio, **LZ4F** can be chosen.
+- For **archiving or cold data storage** scenarios, it is advisable to use **Zlib** or **LZ4HC**.
+
+## Setting Compression in Doris
+
+When creating a table, you can specify the compression algorithm to determine how the data is stored:
+
+```sql
+CREATE TABLE example_table (
+    id INT,
+    name STRING,
+    age INT
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 10
+PROPERTIES (
+    "compression" = "zstd"
+);
