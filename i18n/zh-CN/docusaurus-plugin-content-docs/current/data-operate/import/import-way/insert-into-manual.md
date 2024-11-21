@@ -94,13 +94,15 @@ Query OK, 3 rows affected (0.544 sec)
 5. 查看导入数据
 
 ```sql
-MySQL> SELECT COUNT(*) FROM testdb.test_table2;
-+----------+
-| count(*) |
-+----------+
-|        3 |
-+----------+
-1 row in set (0.071 sec)
+MySQL> SELECT * FROM testdb.test_table2 ORDER BY age;
++---------+--------+------+
+| user_id | name   | age  |
++---------+--------+------+
+|       5 | Ava    |   17 |
+|       1 | Emily  |   25 |
+|       3 | Olivia |   28 |
++---------+--------+------+
+3 rows in set (0.02 sec)
 ```
 
 6. 可以使用 [JOB](../../scheduler/job-scheduler.md) 异步执行 INSERT。
