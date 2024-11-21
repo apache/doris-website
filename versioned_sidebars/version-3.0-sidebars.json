@@ -1670,7 +1670,8 @@
                     "items": [
                         "gettingStarted/tutorials/building-lakehouse/doris-hudi",
                         "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
+                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
+                        "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
                     ]
                 },
                 "gettingStarted/tutorials/log-storage-analysis"
