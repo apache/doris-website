@@ -161,7 +161,7 @@ Kubernetes 部署中，建议使用 FQDN 模式，启动配置中应添加 enabl
 :::
 
 ### BE 定制化启动配置
-#### 第 1 步：配置并部署 configmap   
+#### 第 1 步：配置并部署 ConfigMap   
 以下定义了名为 `be-conf` ConfigMap，该配置可供 Doris BE 使用：
 ```yaml
 apiVersion: v1
@@ -535,7 +535,7 @@ mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com
 ```
 
 ## 配置管理用户名和密码
-Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac)，节点的管理需要用户拥有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization#权限类型) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisCluster 资源配置的集群进行部署和管理。 root 用户添加密码后，需要在 DorisCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
+Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac)，节点的管理需要用户拥有 [Node_priv](../../../admin-manual/auth/authentication-and-authorization#权限类型) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisCluster 资源配置的集群进行部署和管理。 root 用户添加密码后，需要在 DorisCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
 
 DorisCluster 资源提供两种方式来配置管理集群节点所需的用户名、密码，包括：环境变量配置的方式，以及使用 [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) 配置的方式。配置集群管理的用户名和密码分为 3 种情况：
 

@@ -161,7 +161,7 @@ Kubernetes 部署中，建议使用 FQDN 模式，启动配置中应添加 enabl
 :::
 
 ### BE 定制化启动配置
-#### 第 1 步：配置并部署 configmap   
+#### 第 1 步：配置并部署 ConfigMap   
 以下定义了名为 `be-conf` ConfigMap，该配置可供 Doris BE 使用：
 ```yaml
 apiVersion: v1
