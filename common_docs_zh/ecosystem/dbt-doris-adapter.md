@@ -1,7 +1,7 @@
 ---
 {
-"title": "DBT Doris Adapter",
-"language": "zh-CN"
+  "title": "DBT Doris Adapter",
+  "language": "zh-CN"
 }
 ---
 
@@ -60,16 +60,16 @@ dbt init
 ```
 会出现询问式命令行，输入相应配置如下即可初始化一个 dbt 项目：
 
-| 名称       | 默认值  | 含义                                                   |  
-|----------|------|------------------------------------------------------|
-| project  |      | 项目名                                                  | 
-| database |      | 输入对应编号选择适配器（选择 doris）                                | 
-| host     |      | doris 的 host                                         | 
-| port     | 9030 | doris 的 MySQL Protocol Port                          |
-| schema   |      | 在 dbt-doris 中，等同于 database，库名                        |
-| username |      | doris 的 username |
-| password |      | doris 的 password                                  |
-| threads  | 1    | dbt-doris 中并行度（设置与集群能力不匹配的并行度会增加 dbt 运行失败风险）        |
+| 名称       | 默认值  | 含义                                           |  
+|----------|------|----------------------------------------------|
+| project  |      | 项目名                                          | 
+| database |      | 输入对应编号选择适配器                                  | 
+| host     |      | doris 的 host                                 | 
+| port     | 9030 | doris 的 MySQL Protocol Port                  |
+| schema   |      | 在 dbt-doris 中，等同于 database，库名                |
+| username |      | doris 的 username                             |
+| password |      | doris 的 password                             |
+| threads  | 1    | dbt-doris 中并行度（设置与集群能力不匹配的并行度会增加 dbt 运行失败风险） |
 
 
 ### dbt-doris adapter 运行
@@ -86,7 +86,7 @@ dbt run
 可以登陆 doris，查看 my_first_dbt_model 和 my_second_dbt_model 的数据结果及建表语句。
 
 ### dbt-doris adapter 物化方式
-dbt-doris 的 物化方式（Materialization）支持一下三种：
+dbt-doris 的 物化方式（Materialization）支持以下三种：
 
 1. view
 
@@ -94,7 +94,7 @@ dbt-doris 的 物化方式（Materialization）支持一下三种：
 
 3. incremental
 
-**View** 
+**View**
 
 使用`view`作为物化模式，在 Models 每次运行时都会通过 create view as 语句重新构建为视图。(默认情况下，dbt 的物化方式为 view)
 ``` 
@@ -249,9 +249,9 @@ models:
 
 [`seed`](https://docs.getdbt.com/faqs/seeds/build-one-seed) 是用于加载 csv 等数据文件时的功能模块，它是一种加载文件入库参与模型构建的一种方式，但有以下注意事项：
 
-1. seed 不应用于加载原始数据（例如，从生产数据库导出大型 CSV 文件）。 
+1. seed 不应用于加载原始数据（例如，从生产数据库导出大型 CSV 文件）。
 
-2. 由于 seed 是受版本控制的，因此它们最适合包含特定于业务的逻辑的文件，例如国家/地区代码列表或员工的用户 ID。 
+2. 由于 seed 是受版本控制的，因此它们最适合包含特定于业务的逻辑的文件，例如国家/地区代码列表或员工的用户 ID。
 
 3. 对于大文件，使用 dbt 的 seed 功能加载 CSV 的性能不佳。应该考虑使用 streamload 等方式将这些 CSV 加载到 doris 中。
 
@@ -276,4 +276,226 @@ seeds:
         ip: varchar(15)
         name: varchar(20)
         cost: DecimalV3(19,10)
+```
+## 使用示例
+
+### 视图模型样例参考
+
+```sql
+{{ config(materialized='view') }}
+
+select
+    u.user_id,
+    max(o.create_time) as create_time,
+    sum (o.cost) as balance
+from {{ ref('sell_order') }} as o
+left join {{ ref('sell_user') }} as u
+on u.account_id=o.account_id
+group by u.user_id
+order by u.user_id
+```
+
+### 表模型样例参考
+
+```sql
+{{ config(materialized='table') }}
+
+select
+    u.user_id,
+    max(o.create_time) as create_time,
+    sum (o.cost) as balance
+from {{ ref('sell_order') }} as o
+left join {{ ref('sell_user') }} as u
+on u.account_id=o.account_id
+group by u.user_id
+order by u.user_id
+```
+
+### 增量模型样例参考(duplicate 模式)
+
+建表为 duplicate 模式，无数据聚合，不需要指定 unique_key
+
+```sql
+{{ config(
+    materialized='incremental', 
+    replication_num=1
+) }}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select * from source_data
+```
+
+### 增量模型样例参考(unique 模式)
+
+建表为 unique 模式，数据聚合，必须指定 unique_key
+
+```sql
+{{ config(
+materialized='incremental', 
+unique_key=['account_id','create_time']
+) }}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select * from source_data
+```
+
+### 增量模型全量刷新样例参考
+
+```sql
+{{ config(
+    materialized='incremental', 
+    full_refresh = true
+)}}
+
+select * from
+ {{ source('dbt_source', 'sell_user') }}
+```
+
+### 设置分桶规则样例参考
+
+此处 buckets 可以填 auto 或者正整数，分别代表自动分桶和设置固定分桶数
+
+```sql
+{{ config(
+    materialized='incremental', 
+    unique_key=['account_id',"create_time"], 
+    distributed_by=['account_id'], 
+    buckets='auto' 
+) }}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order') }}
+)
+
+select
+    *
+    from source_data
+
+{% if is_incremental() %}
+    where
+    create_time > (select max(create_time) from {{this}})
+{% endif %}
+```
+
+### 设置副本数样例参考
+
+```sql
+{{ config(
+    materialized='table', 
+    replication_num=1
+)}}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select * from source_data
+```
+
+### 动态分区样例参考
+
+```sql
+{{ config(
+    materialized='incremental', 
+    partition_by = 'create_time',
+    partition_type = 'range', 
+    -- 这里的 properties 是 create table 语句中的 properties，这里面写了动态分区的相关配置
+    properties = {
+        "dynamic_partition.time_unit":"DAY",
+        "dynamic_partition.end":"8",
+        "dynamic_partition.prefix":"p",
+        "dynamic_partition.buckets":"4",
+        "dynamic_partition.create_history_partition":"true",
+        "dynamic_partition.history_partition_num":"3"
+    }
+) }}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select
+    *
+    from source_data
+
+{% if is_incremental() %}
+    where    
+    create_time = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+{% endif %}
+```
+
+### 常规分区样例参考
+
+```sql
+{{ config(
+    materialized='incremental', 
+    partition_by = 'create_time',
+    partition_type = 'range',  
+    -- 这里的 partition_by_init 是指的 创建分区表的历史分区，当前 doris 版本的历史分区需要手动指定
+    partition_by_init = [
+        "PARTITION `p20240601` VALUES [(\"2024-06-01\"),  (\"2024-06-02\"))",
+        "PARTITION `p20240602` VALUES [(\"2024-06-02\"),  (\"2024-06-03\"))"
+    ]
+ )}}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select
+    *
+    from source_data
+
+{% if is_incremental() %}
+    where    
+    -- 如果提供了my_date变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令） 如果没有提供 my_date 变量(直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数,这个通路也是生产环境经常走的。 
+    create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
+
+{% endif %}
+```
+
+### 批处理日期设置参数样例参考
+
+```sql
+{{ config(
+    materialized='incremental', 
+    partition_by = 'create_time',
+    partition_type = 'range',
+    ...
+)}}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select
+    *
+    from source_data
+
+{% if is_incremental() %}
+    where    
+    -- 如果提供了my_date变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令） 如果没有提供 my_date 变量(直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数,这个通路也是生产环境经常走的。 
+    create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
+
+{% endif %}
 ```
