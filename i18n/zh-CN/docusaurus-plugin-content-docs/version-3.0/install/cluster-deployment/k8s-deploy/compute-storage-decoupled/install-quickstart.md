@@ -75,7 +75,7 @@ MS 服务需要使用 FDB 作为后端元数据存储，部署 MS 服务必须�
 
 ## 第三步：创建远程存储后端
 存算分离集群搭建完毕后，需要通过客户端执行相应的 `CREATE STORAGE VAULT` SQL 语句创建存储后端来实现数据的持久化。
-集群访问方式可参考 [访问 Doris 集群](../compute-storage-coupled/install-access-cluster.md) 来连接 Doris 集群，下文提供其中一种实现方式。
+集群访问方式可参考 [访问 Doris 集群](../compute-storage-coupled/install-config-cluster.md#访问配置) 来连接 Doris 集群，下文提供其中一种实现方式。
 
 **1. 获取 Service**
 

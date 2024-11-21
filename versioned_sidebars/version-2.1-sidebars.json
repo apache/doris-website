@@ -28,7 +28,6 @@
                             "items": [
                                 "install/cluster-deployment/k8s-deploy/install-env",
                                 "install/cluster-deployment/k8s-deploy/install-quickstart",
-                                "install/cluster-deployment/k8s-deploy/install-operator",
                                 "install/cluster-deployment/k8s-deploy/install-config-cluster",
                                 "install/cluster-deployment/k8s-deploy/cluster-operation"
                             ]
