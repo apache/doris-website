@@ -122,7 +122,7 @@ Doris 对所有导入更新操作提供原子性保障，即每次导入数据�
 
 New Agg Value = Agg Func (Old Agg Value, New Column Value)
 
-聚合模型只支持基于导入方式的更新，不支持使用 Update 语句更新。在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NULL，也可以间接实现类似主键表的部分列更新能力。更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
+聚合模型只支持基于导入方式的更新，不支持使用 Update 语句更新。在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NOT_NULL，也可以间接实现类似主键表的部分列更新能力。更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
 
 ## 主键模型和聚合模型的选择建议
 - 大部分有数据更新需求的场景，都建议**首选主键模型**。例如从 TP 数据库 CDC 同步到 Doris，用户画像，人群圈选等。

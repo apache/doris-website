@@ -122,7 +122,7 @@ The update in the aggregate model refers to the process of generating new aggreg
 
 New Agg Value = Agg Func (Old Agg Value, New Column Value)
 
-The update in the aggregate model is only supported through load methods and does not support the use of Update statements. When defining a table in the aggregate model, if the aggregation function for the value column is defined as REPLACE_IF_NULL, it indirectly achieves partial column update capabilities similar to the unique key model. For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/update-of-aggregate-model).
+The update in the aggregate model is only supported through load methods and does not support the use of Update statements. When defining a table in the aggregate model, if the aggregation function for the value column is defined as REPLACE_IF_NOT_NULL, it indirectly achieves partial column update capabilities similar to the unique key model. For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/update-of-aggregate-model).
 
 ## Recommendations for Choosing Between Primary Key and Aggregate Models
 - For most scenarios that require data updates, it is recommended to **prefer the primary key model**. Examples include synchronizing from TP databases to Doris via CDC, user profiling, and audience targeting.

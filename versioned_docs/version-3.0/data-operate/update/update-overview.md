@@ -28,7 +28,7 @@ Data update refers to modifying the value columns in data records with the same 
 
 - **Primary Key (Unique) Model**: The primary key model is specifically designed for data updates. Doris supports two storage implementations: Merge-on-Read (MoR) and Merge-on-Write (MoW). MoR optimizes write performance, while MoW provides better analytical performance. From Doris version 2.1, the default storage method is MoW. The primary key model supports using the `UPDATE` statement for small data updates and also supports batch updates through data loading. Loading methods include Stream Load, Broker Load, Routine Load, and Insert Into, all following the "UPSERT" semantics, meaning if the record does not exist, it is inserted; if it exists, it is updated. Update operations support both full row updates and partial column updates, with full row updates being the default.
 
-- **Aggregate Model**: In the aggregate model, data update is a special use case. When the aggregate function is set to REPLACE or REPLACE_IF_NOT_NULL, data updates can be achieved. The aggregate model only supports updates based on data loading and does not support using the `UPDATE` statement. By setting the aggregate function to REPLACE_IF_NULL, partial column update capability can be achieved.
+- **Aggregate Model**: In the aggregate model, data update is a special use case. When the aggregate function is set to REPLACE or REPLACE_IF_NOT_NULL, data updates can be achieved. The aggregate model only supports updates based on data loading and does not support using the `UPDATE` statement. By setting the aggregate function to REPLACE_IF_NOT_NULL, partial column update capability can be achieved.
 
 By understanding the data update methods of different models, you can better choose the appropriate update strategy to meet specific business needs.
 
@@ -122,7 +122,7 @@ The update in the aggregate model refers to the process of generating new aggreg
 
 New Agg Value = Agg Func (Old Agg Value, New Column Value)
 
-The update in the aggregate model is only supported through load methods and does not support the use of Update statements. When defining a table in the aggregate model, if the aggregation function for the value column is defined as REPLACE_IF_NULL, it indirectly achieves partial column update capabilities similar to the unique key model. For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/update-of-aggregate-model).
+The update in the aggregate model is only supported through load methods and does not support the use of Update statements. When defining a table in the aggregate model, if the aggregation function for the value column is defined as REPLACE_IF_NOT_NULL, it indirectly achieves partial column update capabilities similar to the unique key model. For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/update-of-aggregate-model).
 
 ## Recommendations for Choosing Between Primary Key and Aggregate Models
 - For most scenarios that require data updates, it is recommended to **prefer the primary key model**. Examples include synchronizing from TP databases to Doris via CDC, user profiling, and audience targeting.
