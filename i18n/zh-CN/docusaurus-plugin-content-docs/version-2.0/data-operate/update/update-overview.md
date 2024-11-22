@@ -28,7 +28,7 @@ under the License.
 
 - **主键（Unique）模型**：主键模型是专门为数据更新设计的一种数据模型。Doris 支持两种存储方式：Merge-on-Read（MoR）和 Merge-on-Write（MoW）。MoR 优化了写入性能，而 MoW 则提供了更好的分析性能。在 Doris 2.0 版本中，默认存储方式为 MoR。主键模型支持使用 `UPDATE` 语句进行少量数据更新，也支持通过导入方式进行批量更新。导入方式包括 Stream Load、Broker Load、Routine Load 和 Insert Into 等，所有导入操作都遵循“UPSERT”语义，即如果记录不存在则插入，存在则更新。更新操作支持整行更新和部分列更新，默认为整行更新。
 
-- **聚合（Aggregate）模型**：在聚合模型中，数据更新是一种特殊用法。当聚合函数设置为 REPLACE 或 REPLACE_IF_NOT_NULL 时，可以实现数据更新。聚合模型仅支持基于导入方式的更新，不支持使用 `UPDATE` 语句。通过设置聚合函数为 REPLACE_IF_NULL，可以实现部分列更新的能力。
+- **聚合（Aggregate）模型**：在聚合模型中，数据更新是一种特殊用法。当聚合函数设置为 REPLACE 或 REPLACE_IF_NOT_NULL 时，可以实现数据更新。聚合模型仅支持基于导入方式的更新，不支持使用 `UPDATE` 语句。通过设置聚合函数为 REPLACE_IF_NOT_NULL，可以实现部分列更新的能力。
 
 通过对不同模型的数据更新方式的理解，可以更好地选择适合的更新策略，以满足具体的业务需求。
 
