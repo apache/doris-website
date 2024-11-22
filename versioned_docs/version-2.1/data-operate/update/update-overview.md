@@ -26,9 +26,9 @@ under the License.
 
 Data update refers to modifying the Value columns in data records with the same Key. The handling of data updates varies for different data models:
 
-- **Primary Key (Unique) Model**: The primary key model is specifically designed for data updates. Doris supports two storage implementation: Merge-on-Read (MoR) and Merge-on-Write (MoW). MoR optimizes write performance, while MoW provides better analytical performance. From Doris version 2.1, the default storage method is MoW. The primary key model supports using the Update statement for small data updates and also supports batch updates through data loading. Loading methods include Stream Load, Broker Load, Routine Load, and Insert Into, all following the "UPSERT" semantics, meaning if the record does not exist, it is inserted; if it exists, it is updated. Update operations support both full row updates and partial column updates, with full row updates being the default.
+- **Primary Key (Unique) Model**: The primary key model is specifically designed for data updates. Doris supports two storage implementations: Merge-on-Read (MoR) and Merge-on-Write (MoW). MoR optimizes write performance, while MoW provides better analytical performance. From Doris version 2.1, the default storage method is MoW. The primary key model supports using the Update statement for small data updates and also supports batch updates through data loading. Loading methods include Stream Load, Broker Load, Routine Load, and Insert Into, all following the "UPSERT" semantics, meaning if the record does not exist, it is inserted; if it exists, it is updated. Update operations support both full row updates and partial column updates, with full row updates being the default.
 
-- **Aggregate Model**: In the aggregate model, data update is a special use case. When the aggregate function is set to REPLACE or REPLACE_IF_NOT_NULL, data updates can be achieved. The aggregate model only supports updates based on data loading and does not support using the Update statement. By setting the aggregate function to REPLACE_IF_NULL, partial column update capability can be achieved.
+- **Aggregate Model**: In the aggregate model, data update is a special use case. When the aggregate function is set to REPLACE or REPLACE_IF_NOT_NULL, data updates can be achieved. The aggregate model only supports updates based on data loading and does not support using the Update statement. By setting the aggregate function to REPLACE_IF_NOT_NULL, partial column update capability can be achieved.
 
 By understanding the data update methods of different models, you can better choose the appropriate update strategy to meet specific business needs.
 
@@ -49,7 +49,7 @@ By understanding the data update methods of different models, you can better cho
 | DELETE         | Supported       | Supported      | Not Supported                      |
 | sequence column| Supported       | Supported      | Not Supported                      |
 | delete_sign    | Supported       | Supported      | Not Supported                      |
-| Partial Column Updates | Supported | Not Supported | Supported(can't update null value) |
+| Partial Column Updates | Supported | Not Supported | Supported (can't update null value) |
 | Inverted Index | Supported       | Not Supported  | Not Supported                      |
 
 ## Update in Primary Key (Unique) Model
@@ -61,14 +61,14 @@ By default, in Doris 2.0, the unique key model is still based on MoR. To create 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
 (
-    `user_id` LARGEINT NOT NULL,
-    `username` VARCHAR(50) NOT NULL ,
-    `city` VARCHAR(20),
-    `age` SMALLINT,
-    `sex` TINYINT,
-    `phone` LARGEINT,
-    `address` VARCHAR(500),
-    `register_time` DATETIME
+  `user_id` LARGEINT NOT NULL,
+  `username` VARCHAR(50) NOT NULL ,
+  `city` VARCHAR(20),
+  `age` SMALLINT,
+  `sex` TINYINT,
+  `phone` LARGEINT,
+  `address` VARCHAR(500),
+  `register_time` DATETIME
 )
 UNIQUE KEY(`user_id`, `username`)
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
@@ -120,7 +120,7 @@ For more detailed information on transaction mechanisms, refer to the documentat
 
 The update in the aggregate model refers to the process of generating new aggregate values by combining new column values with existing aggregate values, according to the requirements of the aggregate functions.
 
-New Agg Value = Agg Func ( Old Agg Value, New Column Value)
+New Agg Value = Agg Func (Old Agg Value, New Column Value)
 
 The update in the aggregate model is only supported through load methods and does not support the use of Update statements. When defining a table in the aggregate model, if the aggregation function for the value column is defined as REPLACE_IF_NULL, it indirectly achieves partial column update capabilities similar to the unique key model. For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/update-of-aggregate-model).
 
