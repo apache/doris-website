@@ -1,7 +1,7 @@
 ---
 {
     "title": "AUTO_PARTITION_NAME",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -24,25 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## auto_partition_name
-### description
+### Description
 #### Syntax
 
 `VARCHAR AUTO_PARTITION_NAME('RANGE', 'VARCHAR unit', DATETIME datetime)`
 
 `VARCHAR AUTO_PARTITION_NAME('LIST', VARCHAR,...)`
 
-Generate datetime partition names by unit following RANGE's partition name rules
+遵循 RANGE 的分区名规则将 datetime 按照 unit 生成分区名
 
-Convert strings to partition names following LIST's partition name rules
+遵循 LIST 的分区名规则将字符串转换为分区名
 
-The datetime parameter is a legal date expression.
+datetime 参数是合法的日期表达式。
 
-The unit parameter is the time interval you want, the available values are: [`second`, `minute`, `hour`, `day`, `month`, `year`].
-If unit does not match one of these options, a syntax error will be returned. 
-### example
+unit 参数是您希望的时间间隔，可选的值如下：[`second`,`minute`,`hour`,`day`,`month`,`year`]。
+如果 unit 不符合上述可选值，结果将返回语法错误。 
 
-```
+### Example
+```sql
 mysql> select auto_partition_name('range', 'years', '123');
 ERROR 1105 (HY000): errCode = 2, detailMessage = range auto_partition_name must accept year|month|day|hour|minute|second for 2nd argument
 
@@ -108,9 +107,8 @@ mysql> select auto_partition_name('list', "你好");
 +------------------------------------+
 | p4f60597d2                         |
 +------------------------------------+
-
 ```
 
-### keywords
+### Keywords
 
     AUTO_PARTITION_NAME,AUTO,PARTITION,NAME

@@ -28,7 +28,6 @@
                             "items": [
                                 "install/cluster-deployment/k8s-deploy/install-env",
                                 "install/cluster-deployment/k8s-deploy/install-quickstart",
-                                "install/cluster-deployment/k8s-deploy/install-operator",
                                 "install/cluster-deployment/k8s-deploy/install-config-cluster",
                                 "install/cluster-deployment/k8s-deploy/cluster-operation"
                             ]
@@ -1625,7 +1624,8 @@
                     "items": [
                         "gettingStarted/tutorials/building-lakehouse/doris-hudi",
                         "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
+                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
+                        "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
                     ]
                 },
                 "gettingStarted/tutorials/log-storage-analysis"
@@ -1649,6 +1649,7 @@
         "ecosystem/kyuubi",
         "ecosystem/logstash",
         "ecosystem/beats",
+        "ecosystem/fluentbit",
         "ecosystem/automq-load",
         "ecosystem/doris-streamloader",
         "ecosystem/hive-bitmap-udf",

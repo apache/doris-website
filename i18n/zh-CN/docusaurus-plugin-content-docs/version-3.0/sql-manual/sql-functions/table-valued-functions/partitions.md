@@ -36,8 +36,6 @@ partitions
 
 该函数用于 From 子句中。
 
-该函数自 2.1.5 版本开始支持。
-
 #### Syntax
 
 `partitions("catalog"="","database"="","table"="")`

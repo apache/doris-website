@@ -32,7 +32,6 @@
                                     "label": "Compute storage coupled",
                                     "items": [
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-quickstart",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-operator",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
                                     ]
@@ -909,7 +908,7 @@
                                 "sql-manual/sql-functions/string-functions/to-base64",
                                 "sql-manual/sql-functions/string-functions/from-base64",
                                 "sql-manual/sql-functions/string-functions/ascii",
-                                "sql-manual/sql-functions/string-functions/auto_partition_name",
+                                "sql-manual/sql-functions/string-functions/auto-partition-name",
                                 "sql-manual/sql-functions/string-functions/crc32",
                                 "sql-manual/sql-functions/string-functions/length",
                                 "sql-manual/sql-functions/string-functions/bit-length",
@@ -956,6 +955,9 @@
                                 "sql-manual/sql-functions/string-functions/money-format",
                                 "sql-manual/sql-functions/string-functions/ngram-search",
                                 "sql-manual/sql-functions/string-functions/parse-url",
+                                "sql-manual/sql-functions/string-functions/cut-to-first-significant-subdomain",
+                                "sql-manual/sql-functions/string-functions/first-significant-subdomain",
+                                "sql-manual/sql-functions/string-functions/top-level-domain",
                                 "sql-manual/sql-functions/string-functions/quote",
                                 "sql-manual/sql-functions/string-functions/url-decode",
                                 "sql-manual/sql-functions/string-functions/convert-to",
@@ -1253,6 +1255,7 @@
                             "items": [
                                 "sql-manual/sql-functions/table-functions/explode-json-array",
                                 "sql-manual/sql-functions/table-functions/explode",
+                                "sql-manual/sql-functions/table-functions/posexplode",
                                 "sql-manual/sql-functions/table-functions/explode-split",
                                 "sql-manual/sql-functions/table-functions/explode_map",
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
@@ -1692,7 +1695,8 @@
                     "items": [
                         "gettingStarted/tutorials/building-lakehouse/doris-hudi",
                         "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
+                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
+                        "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
                     ]
                 },
                 "gettingStarted/tutorials/log-storage-analysis"
@@ -1716,6 +1720,7 @@
         "ecosystem/kyuubi",
         "ecosystem/logstash",
         "ecosystem/beats",
+        "ecosystem/fluentbit",
         "ecosystem/automq-load",
         "ecosystem/doris-streamloader",
         "ecosystem/hive-bitmap-udf",
