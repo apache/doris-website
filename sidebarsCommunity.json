@@ -80,13 +80,6 @@
             "type": "link",
             "href": "https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals",
             "label": "Improvement Proposals"
-        },
-        {
-            "type": "category",
-            "label": "Announcements",
-            "items": [
-                "announcement/2401",
-            ]
         }
     ]
 }

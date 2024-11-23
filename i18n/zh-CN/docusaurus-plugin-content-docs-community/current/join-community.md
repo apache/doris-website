@@ -1,6 +1,6 @@
 ---
 {
-    "title": "加入社区",
+    "title": "Doris 社区声明",
     "language": "zh-CN"
 }
 
@@ -26,42 +26,22 @@ under the License.
 -->
 
 
+Hi，各位 Doris 技术爱好者：
 
-[Apache Doris](https://github.com/apache/doris) 聚集了世界全国各地的用户与开发人员，致力于打造一个内容完整、持续成长的互联网开发者学习生态圈！在 2022 年 6 月，Apache Doris 成功从 Apache 孵化器毕业，正式成为 Apache 顶级项目（Top-Level Project, TLP）。
+Apache Doris 作为一个秉持开源开放理念的社区，我们的微信技术交流群旨在为每一位成员提供一个自由、公正、开放的平台，以便大家能够深入讨论技术问题。同时，我们有项目 PMC 成员负责监督，确保群内环境不受广告、恶意攻击或不当管理行为的干扰。
 
+Apache Doris 技术交流群由于早期的一些不规范原因，群主掌握在个人手里。最近几个群的个人群主多次进行恶意踢人、随意移除社区管理员及 PMC 成员或 Committer 等行为，已经严重干扰了 Apache Doris 社区群的正常运作。这种行为完全违背了 Apache 项目开放社区的初衷和原则，将技术交流群视为个人私有财产进行不当管理。
 
+为了解决这一问题，请大家认准并加入 Apache Doris PMC 的官方社群。可以通过访问 doris.apache.org 并扫描底部 Doris 小助手的二维码来加入。
 
-## 🌟 更多用户认可我们
+![qrcode-community](/images/qrcode-assistance.png)
 
-<a href="https://star-history.com/#apache/doris&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=apache/doris&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=apache/doris&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=apache/doris&type=Date" />
-  </picture>
-</a>
+此外，我们 PMC 团队已提前创建了多个新的官方技术交流群，大家可以直接扫描相应的二维码加入。
 
+![qrcode-community](/images/qrcode-community.png)
 
+在加入过程中，如遇任何问题，欢迎随时通过以下微信账号寻求帮助：可加微信：morningman-cmy，ApacheDoris_Official
 
+对于少数群主的不当行为给大家带来的不便和困扰，我代表 Doris 社区向大家表示诚挚的歉意。在大家的共同支持与努力下，我们有信心将 Doris 社区建设得更好，为技术交流与进步创造更加和谐的环境。
 
-
-
-
-
-**我们非常感谢 🔗[社区贡献者](https://github.com/apache/doris/graphs/contributors) 对 Apache Doris 的大力支持！**
-
-
-
-
-## 👋 想要了解更多？别错过社区最新动态！
-
-一起加入 Apache Doris 社区，了解头部企业如何基于 Apache Doris 构建统一实时数仓，从技术见解获得更多灵感！
-
-
-- 加入社群参与讨论 -  💬 [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) 📇 [Github](https://github.com/apache/doris) 
-
-- 用户案例与技术见解 -  📭 [Twitter](https://twitter.com/doris_apache) 
-
-- 来领英拓展技术大牛社交圈 - 🌐 [LinkedIn](https://www.linkedin.com/company/doris-apache/) 
-
-- 活动视频回顾 - ▶️ [YouTube](https://www.youtube.com/@Select_DB) 📺 [Bilibili](https://space.bilibili.com/362350065) 
+谢谢大家的理解与支持！
