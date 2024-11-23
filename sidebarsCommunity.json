@@ -85,7 +85,7 @@
             "type": "category",
             "label": "Announcements",
             "items": [
-                "doris-announcement/2401-announcement"
+                "doris-announcement/announcement-2401"
             ]
         }
     ]
