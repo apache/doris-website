@@ -375,7 +375,7 @@ UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法， 
     );
     ```
 
-3. 使用 Java-UDTF, 在Doris 中使用UDTF 需要结合 Lateral View, 实现行转列的效果 :
+3. 使用 Java-UDTF, 在Doris 中使用UDTF 需要结合 [Lateral View](../lateral-view.md), 实现行转列的效果 :
 
     ```sql
     select id, str, e1 from test_table lateral view java_utdf(str,',') tmp as e1;
@@ -403,7 +403,7 @@ UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法， 
 
 *解决方案1:*
 
-是可以将资源加载代码拆分开，单独生成一个 jar 包文件，然后其他包直接引用该资源 jar 包。 
+是可以将资源加载代码拆分开，单独生成一个 JAR 包文件，然后其他包直接引用该资源 JAR 包。 
 
 假设已经将代码拆分为了 DictLibrary 和 FunctionUdf 两个文件。
 
@@ -439,7 +439,7 @@ public class FunctionUdf {
 }
 ```
 
-1. 单独编译 DictLibrary 文件，使其生成一个独立的 jar 包，这样可以得到一个资源文件包 DictLibrary.jar: 
+1. 单独编译 DictLibrary 文件，使其生成一个独立的 JAR 包，这样可以得到一个资源文件包 DictLibrary.jar: 
 
     ```shell
     javac   ./DictLibrary.java
@@ -453,7 +453,7 @@ public class FunctionUdf {
     jar  -cvf ./FunctionUdf.jar  ./FunctionUdf.class
     ```
 
-3. 由于想让资源 jar 包被所有的并发引用，所以想让它被JVM 直接夹在，可以将它放到指定路径 `be/custom_lib` 下面，BE 服务重启之后就可以随着 JVM 的启动加载进来，因此都会随着服务启动而加载，停止而释放。
+3. 由于想让资源 JAR 包被所有的并发引用，所以想让它被JVM 直接加载，可以将它放到指定路径 `be/custom_lib` 下面，BE 服务重启之后就可以随着 JVM 的启动加载进来，因此都会随着服务启动而加载，停止而释放。
 
 4. 最后利用 `CREATE FUNCTION` 语句创建一个 UDF 函数， 这样每次卸载仅是FunctionUdf.jar。
 
@@ -468,10 +468,10 @@ public class FunctionUdf {
 
 *解决方案2:* 
 
-BE 全局缓存jar 包，自定义过期淘汰时间，在create function 时增加两个属性字段，其中
+BE 全局缓存 JAR 包，自定义过期淘汰时间，在create function 时增加两个属性字段，其中
 static_load: 用于定义是否使用静态cache 加载的方式。
 
-expiration_time: 用于定义jar 包的过期时间，单位为分钟。
+expiration_time: 用于定义 JAR 包的过期时间，单位为分钟。
 
 若使用静态cache 加载方式，则在第一次调用该UDF 函数时，在初始化之后会将该UDF 的实例缓存起来，在下次调用该UDF 时，首先会在cache 中进行查找，如果没有找到，则会进行相关初始化操作。
 
@@ -498,7 +498,7 @@ PROPERTIES (
     "expiration_time" = "60" // default value is 360 minutes
 );
 ```
-可以看到结果是一直在递增的，证明加载的jar 包没有被卸载后又加载，重新初始化变量为0.
+可以看到结果是一直在递增的，证明加载的 JAR 包没有被卸载后又加载，导致重新初始化变量为 0.
 ```sql
 mysql [test_query_qa]>select print_12();
 +------------+

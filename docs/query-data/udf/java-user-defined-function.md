@@ -384,7 +384,7 @@ For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-
     );
     ```
 
-3. When using Java-UDTF, in Doris, UDTFs must be used with `Lateral View` to achieve the row-to-column transformation effect:
+3. When using Java-UDTF, in Doris, UDTFs must be used with [`Lateral View`](../lateral-view.md) to achieve the row-to-column transformation effect:
 
     ```sql
     select id, str, e1 from test_table lateral view java_utdf(str,',') tmp as e1;
