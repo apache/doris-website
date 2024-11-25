@@ -34,7 +34,7 @@ under the License.
 
 已编译好的二进制文件（包含所有 Doris 模块）可从 [Doris 下载页面](https://doris.apache.org/download/) 获取（选择 3.0.2 或更高版本）。
 
-### 2.2 编译产出（可选）
+### 2.2 编译产出 (可选)
 
 使用代码库自带的 `build.sh` 脚本进行编译。新增的 MS 模块通过 `--cloud` 参数编译。
 
@@ -178,7 +178,6 @@ bin/start.sh --meta-service --daemon
 ```bash
 bin/start_fe.sh --daemon
 ```
-
 第一个 FE 进程初始化集群并以 FOLLOWER 角色工作。使用 mysql 客户端连接 FE 使用 `show frontends` 确认刚才启动的 FE 是 master。
 
 ### 5.3 添加其他 FE 节点
@@ -191,7 +190,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
 将 `host:port` 替换为 FE 节点的实际地址和编辑日志端口。更多信息请参见 [ADD FOLLOWER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER.md) 和 [ADD OBSERVER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER.md)。
 
-生产环境中，请确保在 FOLLOWER 角色中的前端 (FE) 节点总数，包括第一个 FE，保持为奇数。一般来说，三个 FOLLOWER 就足够了。观察者角色的前端节点可以是任意数量。
+生产环境中请确保在 FOLLOWER 角色中的前端 (FE) 节点总数，包括第一个 FE，保持为奇数。一般来说，三个 FOLLOWER 就足够了。OBSERVER 角色的前端节点可以是任意数量。
 
 ### 5.4 添加 BE 节点
 
@@ -205,12 +204,17 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
    - 描述：指定 doris 启动模式
    - 格式：cloud 表示存算分离模式，其它存算一体模式
    - 示例：`cloud`
-
 2. `file_cache_path`
-   - 描述: 用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
+   - 描述: 用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。`path` 指定磁盘路径，`total_size` 限制缓存的大小；0 将使用整个磁盘空间。还可以加上[各类型缓存](./file-cache)的空间比例限制。
    - 格式: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
    - 示例: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+   - 示例: [{"path":"/path/to/file_cache","total_size":21474836480, "ttl_percent":50, "normal_percent":40, "disposable_percent":5, "index_percent":5}]
    - 默认: [{"path":"${DORIS_HOME}/file_cache"}]
+
+:::info 备注
+
+file_cache_path 一旦配置并投入使用，不建议更改路径顺序，否则 BE 在重启后的一段时间内命中率将会降低。增减磁盘也会引起同样的问题。随着缓存数据不断更替，命中率将会逐渐恢复。后续版本中将会引入一致性哈希算法解决这个问题。
+:::
 
 #### 5.4.1 启动和添加 BE
 
@@ -250,7 +254,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
 ## 6. 创建 Storage Vault
 
- Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个 Storage Vault 。可以将 Storage Vault 设置成为默认 Storage Vault ，系统表和未指定 Storage Vault 的表都将存储在这个默认 Storage Vault 中。默认 Storage Vault 不能被删除。以下是为您的 Doris 集群创建 Storage Vault 的方法：
+ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个 Storage Vault 。可以将一个 Storage Vault 设置为默认 Storage Vault ，系统表和未指定 Storage Vault 的表都将存储在这个默认 Storage Vault 中。默认 Storage Vault 不能被删除。以下是为您的 Doris 集群创建 Storage Vault 的方法：
 
 ### 6.1 创建 HDFS  Storage Vault 
 

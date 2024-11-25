@@ -204,12 +204,17 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
    - 描述：指定 doris 启动模式
    - 格式：cloud 表示存算分离模式，其它存算一体模式
    - 示例：`cloud`
-
 2. `file_cache_path`
-   - 描述: 用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
+   - 描述: 用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。`path` 指定磁盘路径，`total_size` 限制缓存的大小；0 将使用整个磁盘空间。还可以加上[各类型缓存](./file-cache)的空间比例限制。
    - 格式: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
    - 示例: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+   - 示例: [{"path":"/path/to/file_cache","total_size":21474836480, "ttl_percent":50, "normal_percent":40, "disposable_percent":5, "index_percent":5}]
    - 默认: [{"path":"${DORIS_HOME}/file_cache"}]
+
+:::info 备注
+
+file_cache_path 一旦配置并投入使用，不建议更改路径顺序，否则 BE 在重启后的一段时间内命中率将会降低。增减磁盘也会引起同样的问题。随着缓存数据不断更替，命中率将会逐渐恢复。后续版本中将会引入一致性哈希算法解决这个问题。
+:::
 
 #### 5.4.1 启动和添加 BE
 
