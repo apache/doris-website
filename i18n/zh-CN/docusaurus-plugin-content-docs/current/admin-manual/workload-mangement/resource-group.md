@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Resource Group",
-    "language": "zh-CN"
+"title": "Resource Group",
+"language": "zh-CN"
 }
 ---
 
@@ -114,7 +114,7 @@ FE 不参与用户数据的处理计算等工作，因此是一个资源消耗�
     │                                                    │
     └────────────────────────────────────────────────────┘
    ```
-   
+
    为了方便设置 table 的数据分布策略，可以在 database 层面设置统一的数据分布策略，但是 table 设置的优先级高于 database
 
    ```sql
@@ -150,12 +150,12 @@ FE 不参与用户数据的处理计算等工作，因此是一个资源消耗�
 4. 导入作业的资源组分配
 
    导入作业（包括 insert、broker load、routine load、stream load 等）的资源使用可以分为两部分：
-   1. 计算资源：负责读取数据源、数据转换和分发。
-   2. 写入资源：负责数据编码、压缩并写入磁盘。
+    1. 计算资源：负责读取数据源、数据转换和分发。
+    2. 写入资源：负责数据编码、压缩并写入磁盘。
 
    其中写入资源必须是数据副本所在的节点，而计算资源理论上可以选择任意节点完成。所以对于导入作业的资源组的分配分成两个步骤：
-   1. 使用用户级别的 resource tag 来限定计算资源所能使用的资源组。
-   2. 使用副本的 resource tag 来限定写入资源所能使用的资源组。
+    1. 使用用户级别的 resource tag 来限定计算资源所能使用的资源组。
+    2. 使用副本的 resource tag 来限定写入资源所能使用的资源组。
 
    所以如果希望导入操作所使用的全部资源都限定在数据所在的资源组的话，只需将用户级别的 resource tag 设置为和副本的 resource tag 相同即可。
 
@@ -248,18 +248,18 @@ FE 不参与用户数据的处理计算等工作，因此是一个资源消耗�
 
 ### table 数量很多时如何方便的设置副本分布策略
 
-   比如有一个 db1,db1 下有四个 table，table1 需要的副本分布策略为 `group_a:1,group_b:2`，table2，table3, table4 需要的副本分布策略为 `group_c:1,group_b:2`
+比如有一个 db1,db1 下有四个 table，table1 需要的副本分布策略为 `group_a:1,group_b:2`，table2，table3, table4 需要的副本分布策略为 `group_c:1,group_b:2`
 
-   那么可以使用如下语句创建 db1：
+那么可以使用如下语句创建 db1：
 
   ```sql
    CREATE DATABASE db1 PROPERTIES (
    "replication_allocation" = "tag.location.group_c:1, tag.location.group_b:2"
    )
    ```
-   
-   使用如下语句创建 table1：
-   
+
+使用如下语句创建 table1：
+
    ```sql
    CREATE TABLE table1
    (k1 int, k2 int)
@@ -269,6 +269,6 @@ FE 不参与用户数据的处理计算等工作，因此是一个资源消耗�
    )
    ```
 
-   table2，table3,table4 的建表语句无需再指定`replication_allocation`。
-   
-   注意事项：更改 database 的副本分布策略不会对已有的 table 产生影响。
+table2，table3,table4 的建表语句无需再指定`replication_allocation`。
+
+注意事项：更改 database 的副本分布策略不会对已有的 table 产生影响。
