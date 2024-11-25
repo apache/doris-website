@@ -40,12 +40,7 @@ under the License.
    通过以下命令添加 Doris Operator 的自定义资源（CRD）：
 
    ```shell
-   kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
-   ```
-   期望输出结果：
-
-   ```shell
-   customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
+   kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.apache.com_dorisclusters.yaml
    ```
 
 2. 安装 Doris Operator
