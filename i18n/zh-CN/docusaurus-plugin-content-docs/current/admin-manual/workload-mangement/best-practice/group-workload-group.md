@@ -32,7 +32,7 @@ Workload Group分组功能常用于当一个Doris集群中有多个物理隔离�
 1. 把normal group的资源配置量尽量调小，作为保底的查询分组，比如查询如果不携带任何Workload Group信息，那么就会自动使用这个默认的group，作用是避免查询失败。
 2. 为这两个子集群分别创建对应的Workload Group，绑定到对应的子集群上。
    例如，为rg1集群创建第一个名为wg1的Workload Group分组，包含Workload Group a和Workload Group b两个Workload Group。为rg2集群创建第二个名为wg2的Workload Group分组，包含Workload Group c和Workload Group d。
-那么最终效果如下：
+   那么最终效果如下：
 
 ![rg1_rg2_workload_group](/images/workload-management/rg1_rg2_workload_group.png)
 
@@ -82,7 +82,7 @@ create workload group d properties ("memory_limit"="45%","tag"="wg2")
 ```
 
 2. 把BE绑定到wg1和wg2，此时Workload Group a和b只会在be1和be2上生效。Workload Group c和d只会在be3和be4上生效。
-（需要注意的是这里在修改时指定了tag.location，原因是修改BE配置的接口目前暂时不支持增量更新，因此在新加属性时要把存量的属性也携带上）
+   （需要注意的是这里在修改时指定了tag.location，原因是修改BE配置的接口目前暂时不支持增量更新，因此在新加属性时要把存量的属性也携带上）
 ```
 -- 把be1和be2绑定到wg1
 alter system modify backend "be1:9050" set ("tag.location" = "rg1",tag.workload_group="wg1");
@@ -141,10 +141,8 @@ tag.location用于指定BE归属于哪个数据副本分组，数据副本也有
 
 tag.workload_group用于指定BE归属于哪个Workload Group的分组，Workload Group也具有tag属性用于指定Workload Group归属于哪个分组，Workload Group也只会在具有分组的BE上生效。
 Doris存算一体模式下，数据副本和计算通常是绑定的，因此也比较推荐BE的tag.location和tag.workload_group值是对齐的。
-   :::
+:::
 
 目前Workload Group的tag和Be的tag.workload_group的匹配规则为：
 1. 当Workload Group的tag为空，那么这个Workload Group可以发送给所有的BE，不管该BE是否指定了tag。
 2. 当Workload Group的tag不为空，那么Workload Group只会发送给具有相同标签的BE。
-
-
