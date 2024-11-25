@@ -4,7 +4,7 @@
     "language": "en-US"
 }
 ---
-
+//todo
 `-` Indicates Doris version 2.0 and above, all versions of CCR. It is recommended to use Doris version 2.0.15 or 2.1.6 or newer.
 
 ## Database
@@ -52,12 +52,12 @@ Renaming is not supported for upstream and downstream; doing so may cause views 
 | enable_single_replica_compaction              | Supported | -             | -           | SQL         |                                                               |
 | disable_auto_compaction                       | Supported | -             | -           | SQL         |                                                               |
 | compaction_policy                             | Supported | -             | -           | SQL         |                                                               |
-| time_series_compaction series                 | Supported | -             | -           | SQL         |                                                               |
-| binlog series                                 | Supported | -             | -           | SQL         | To be confirmed                                               |
+| time_series_compaction series                 | Supported | -             | -           | SQL         | including goal_size_mbytes, file_count_threshold, time_threshold_seconds, level_threshold |
+| binlog series                                 | Supported | -             | -           | SQL         | including binlog.enable, binlog.ttl_seconds, binlog.max_bytes, binlog.max_history_nums |
 | variant_enable_flatten_nested                 | Supported | -             | -           | SQL         |                                                               |
 | skip_write_index_on_load                      | Supported | -             | -           | SQL         |                                                               |
-| row_store series                              | Supported | -             | -           | SQL         |                                                               |
-| seq column                                    | Supported | -             | -           | SQL         |                                                               |
+| row_store series                              | Supported | -             | -           | SQL         | including row_store_columns, row_store_page_size |
+| seq column                                    | Supported | -             | -           | SQL         | including function_column.sequence_type, function_column.sequence_col |
 | enable_light_schema_change                    | Supported | -             | -           | SQL         |                                                               |
 | compression_type                              | Supported | -             | -           | SQL         |                                                               |
 | index                                         | Supported | -             | -           | SQL         |                                                               |
