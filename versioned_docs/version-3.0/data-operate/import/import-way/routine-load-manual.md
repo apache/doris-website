@@ -30,9 +30,13 @@ Routine Load is a streaming load job that supports Exactly-Once semantics, ensur
 
 ## Usage Scenarios
 
+### Supported Data Sources
+
+Routine Load supports consuming data from Kafka clusters.
+
 ### Supported Data File Formats
 
-Routine Load supports consuming data in CSV and JSON formats from Kafka.
+Routine Load supports consuming data in CSV and JSON formats.
 
 When loading CSV format, it is necessary to clearly distinguish between null values and empty strings:
 
@@ -44,35 +48,33 @@ When loading CSV format, it is necessary to clearly distinguish between null val
 
 When using Routine Load to consume data from Kafka, there are the following limitations:
 
-- It supports unauthenticated Kafka access as well as Kafka clusters authenticated through SSL.
-
 - The supported message formats are CSV and JSON text formats. Each message in CSV should be on a separate line, and the line should not end with a newline character.
 
 - By default, it supports Kafka versions 0.10.0.0 and above. If you need to use a Kafka version below 0.10.0.0 (such as 0.9.0, 0.8.2, 0.8.1, 0.8.0), you need to modify the BE configuration by setting the value of `kafka_broker_version_fallback` to the compatible older version, or directly set the value of `property.broker.version.fallback` when creating the Routine Load. However, using an older version may mean that some new features of Routine Load, such as setting the offset of Kafka partitions based on time, may not be available.
 
 ## Basic Principles
 
-Routine Load continuously consumes data from Kafka Topic and writes it into Doris.
+Routine Load continuously consumes data from Kafka Topics and writes it into Doris.
 
-When a Routine Load job is created in Doris, it generates a persistent load job and several load tasks:
+When a Routine Load job is created in Doris, it generates a resident import job that consists of several import tasks:
 
-- Load Job: Each routine load corresponds to a load job. The load job is a persistent task that continuously consumes data from the Kafka Topic.
+- Load Job: A Routine Load Job is a resident import job that continuously consumes data from the data source.
 
-- Load Task: A load job is divided into several load tasks, which are loaded as independent basic units using the Stream Load method into BE.
+- Load Task: An import job is broken down into several import tasks for actual consumption, with each task being an independent transaction.
 
-The specific process of Routine Load is illustrated in the following diagram:
+The specific import process of Routine Load is shown in the following diagram:
 
 ![Routine Load](/images/routine-load.png)
 
-1. The Client submits a Routine Load job to the FE to establish a persistent Routine Load Job.
+1. The Client submits a request to create a Routine Load job to the FE, and the FE generates a resident import job (Routine Load Job) through the Routine Load Manager.
 
-2. The FE splits the Routine Load Job into multiple Routine Load Tasks through the Job Scheduler.
+2. The FE splits the Routine Load Job into several Routine Load Tasks through the Job Scheduler, which are then scheduled by the Task Scheduler and distributed to BE nodes.
 
-3. On the BE, each Routine Load Task is treated as a Stream Load task for importation and reports back to the FE upon completion.
+3. On the BE, after a Routine Load Task is completed, it submits the transaction to the FE and updates the Job's metadata.
 
-4. The Job Scheduler in the FE generates new Tasks based on the report results or retries failed Tasks.
+4. After a Routine Load Task is submitted, it continues to generate new Tasks or retries timed-out Tasks.
 
-5. The Routine Load Job continuously generates new Tasks to complete uninterrupted data importation.
+5. The newly generated Routine Load Tasks continue to be scheduled by the Task Scheduler in a continuous cycle.
 
 ## Quick Start
 
@@ -105,7 +107,7 @@ In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTIN
     In Doris, create the table for loading with the following syntax:
 
     ```sql
-    CREATE TABLE testdb.test_streamload(
+    CREATE TABLE testdb.test_routineload_tbl(
         user_id            BIGINT       NOT NULL COMMENT "User ID",
         name               VARCHAR(20)           COMMENT "User Name",
         age                INT                   COMMENT "User Age"
@@ -144,7 +146,7 @@ In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTIN
     In Doris, create the table for loading with the following syntax:
 
     ```sql
-    CREATE TABLE testdb.test_streamload(
+    CREATE TABLE testdb.test_routineload_tbl(
         user_id            BIGINT       NOT NULL COMMENT "User ID",
         name               VARCHAR(20)           COMMENT "User Name",
         age                INT                   COMMENT "User Age"
@@ -429,37 +431,20 @@ Here are the available parameters for the job_properties clause:
 | desired_concurrent_number   | <ul><li>Default value: 256</li><li>Description: Specifies the desired concurrency for a single load subtask (load task). It modifies the expected number of load subtasks for a Routine Load job. The actual concurrency during the load process may not be equal to the desired concurrency. The actual concurrency is determined based on factors such as the number of nodes in the cluster, the load on the cluster, and the characteristics of the data source. The actual number of loading subtasks can be calculated using the following formula:</li><li>`min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`</li> <li>where:</li><li>topic_partition_num: The number of partitions in the Kafka topic</li><li>desired_concurrent_number: The parameter value set</li><li>max_routine_load_task_concurrent_num: The parameter for setting the maximum task parallelism for Routine Load in the FE</li></ul> |
 | max_batch_interval          | The maximum running time for each subtask, in seconds. Must be greater than 0, with a default value of 60s. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
 | max_batch_rows              | The maximum number of rows read by each subtask. Must be greater than or equal to 200,000. The default value is 20,000,000. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
-| max_batch_size              | The maximum number of bytes read by each subtask. The unit is bytes, and and the range is from 100MB to 10GB. The default value is 1G. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
+| max_batch_size              | The maximum number of bytes read by each subtask. The unit is bytes, and the range is from 100MB to 10GB. The default value is 1G. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
 | max_error_number            | The maximum number of error rows allowed within a sampling window. Must be greater than or equal to 0. The default value is 0, which means no error rows are allowed. The sampling window is `max_batch_rows * 10`. If the number of error rows within the sampling window exceeds `max_error_number`, the regular job will be paused and manual intervention is required to check for data quality issues using the [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) command and `ErrorLogUrls`. Rows filtered out by the WHERE condition are not counted as error rows. |
 | strict_mode                 | Whether to enable strict mode. The default value is disabled. Strict mode applies strict filtering to type conversions during the load process. If enabled, non-null original data that results in a NULL after type conversion will be filtered out. The filtering rules in strict mode are as follows:<ul><li>Derived columns (generated by functions) are not affected by strict mode.</li><li>If a column's type needs to be converted, any data with an incorrect data type will be filtered out. You can check the filtered columns due to data type errors in the `ErrorLogUrls` of [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD).</li><li>For columns with range restrictions, if the original data can be successfully converted but falls outside the declared range, strict mode does not affect it. For example, if the type is decimal(1,0) and the original data is 10, it can be converted but is not within the range declared for the column. Strict mode does not affect this type of data. For more details, see [Strict Mode](../../../data-operate/import/error-data-handling#maximum-error-rate).</li></ul> |
 | timezone                    | Specifies the time zone used by the load job. The default is to use the session's timezone parameter. This parameter affects the results of all timezone-related functions involved in the load. |
-| format                      | Specifies the data format for the load. The default is csv, and JSON format is supported. |
+| format                      | Specifies the data format for the load. The default is CSV, and JSON format is supported. |
 | jsonpaths                   | When the data format is JSON, jsonpaths can be used to specify the JSON paths to extract data from nested structures. It is a JSON array of strings, where each string represents a JSON path. |
-| delimiter                   | Specifies the delimiter used in CSV files. The default delimiter is a comma (,). |
-| escape                      | Specifies the escape character used in CSV files. The default escape character is a backslash (\). |
-| quote                       | Specifies the quote character used in CSV files. The default quote character is a double quotation mark ("). |
-| null_format                 | Specifies the string representation of NULL values in the load data. The default is an empty string. |
-| skip_header_lines           | Specifies the number of lines to skip at the beginning of the load data file. The default is 0, which means no lines are skipped. |
-| skip_footer_lines           | Specifies the number of lines to skip at the end of the load data file. The default is 0, which means no lines are skipped. |
-| query_parallelism           | Specifies the number of parallel threads used by each subtask to execute SQL statements. The default is 1. |
-| query_timeout               | Specifies the timeout for SQL statement execution. The default is 3600 seconds (1 hour). |
-| query_band                  | Specifies the query band string to be set for each subtask.  |
-| memory_quota_per_query      | Specifies the memory quota for each subtask, in bytes. The default is -1, which means to use the system default. |
-| error_table_name            | Specifies the name of the error table where error rows are stored. The default is null, which means no error table is generated. |
-| error_table_database        | Specifies the database where the error table is located. The default is null, which means the error table is located in the current database. |
-| error_table_schema          | Specifies the schema where the error table is located. The default is null, which means the error table is located in the public schema. |
-| error_table_logging_policy  | Specifies the logging policy for the error table. The default is null, which means to use the system default. |
-| error_table_reuse_policy    | Specifies the reuse policy for the error table. The default is null, which means to use the system default. |
-| error_table_creation_time   | Specifies the creation time for the error table. The default is null, which means to use the current time. |
-| error_table_cleanup_time    | Specifies the cleanup time for the error table. The default is null, which means not set a cleanup time. |
-| error_table_log             | Specifies whether to enable logging for the error table. The default is null, which means to use the system default. |
-| error_table_backup_time     | Specifies the backup time for the error table. The default is null, which means not set a backup time. |
-| error_table_backup_path     | Specifies the backup path for the error table. The default is null, which means not set a backup path. |
-| error_table_lifetime        | Specifies the lifetime of the error table. The default is null, which means to use the system default. |
-| error_table_backup_lifetime | Specifies the backup lifetime for the error table. The default is null, which means to use the system default. |
-| error_table_label           | Specifies the label for the error table. The default is null, which means not set a label. |
-| error_table_priority        | Specifies the priority for the error table. The default is null, which means to use the system default. |
-| error_table_comment         | Specifies the comment for the error table. The default is null, which means to not set a comment. |
+| json_root                 | When importing JSON format data, you can specify the root node of the JSON data through json_root. Doris will extract and parse elements from the root node. Default is empty. For example, specify the JSON root node with: `"json_root" = "$.RECORDS"` |
+| strip_outer_array         | When importing JSON format data, if strip_outer_array is true, it indicates that the JSON data is presented as an array, and each element in the data will be treated as a row. Default value is false. Typically, JSON data in Kafka might be represented as an array with square brackets `[]` in the outermost layer. In this case, you can specify `"strip_outer_array" = "true"` to consume Topic data in array mode. For example, the following data will be parsed into two rows: `[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
+| send_batch_parallelism    | Used to set the parallelism of sending batch data. If the parallelism value exceeds the `max_send_batch_parallelism_per_job` in BE configuration, the coordinating BE will use the value of `max_send_batch_parallelism_per_job`. |
+| load_to_single_tablet     | Supports importing data to only one tablet in the corresponding partition per task. Default value is false. This parameter can only be set when importing data to OLAP tables with random bucketing. |
+| partial_columns           | Specifies whether to enable partial column update feature. Default value is false. This parameter can only be set when the table model is Unique and uses Merge on Write. Multi-table streaming does not support this parameter. For details, refer to [Partial Column Update](../../../data-operate/update/update-of-unique-model) |
+| max_filter_ratio          | The maximum allowed filter ratio within the sampling window. Must be between 0 and 1 inclusive. Default value is 1.0, indicating any error rows can be tolerated. The sampling window is `max_batch_rows * 10`. If the ratio of error rows to total rows within the sampling window exceeds `max_filter_ratio`, the routine job will be suspended and require manual intervention to check data quality issues. Rows filtered by WHERE conditions are not counted as error rows. |
+| enclose                   | Specifies the enclosing character. When CSV data fields contain line or column separators, a single-byte character can be specified as an enclosing character for protection to prevent accidental truncation. For example, if the column separator is "," and the enclosing character is "'", the data "a,'b,c'" will have "b,c" parsed as one field. |
+| escape                    | Specifies the escape character. Used to escape characters in fields that are identical to the enclosing character. For example, if the data is "a,'b,'c'", the enclosing character is "'", and you want "b,'c" to be parsed as one field, you need to specify a single-byte escape character, such as "\", and modify the data to "a,'b,\'c'". |
 
 These parameters can be used to customize the behavior of a Routine Load job according to your specific requirements.
 
@@ -548,16 +533,14 @@ The columns in the result set provide the following information:
 
 ## Load example
 
-### Loading CSV Format
-
-**Setting the Maximum Error Tolerance**
+### Setting the Maximum Error Tolerance
 
 1. Load sample data:
 
     ```sql
     1,Benjamin,18
     2,Emily,20
-    3,Alexander,22
+    3,Alexander,dirty_data
     ```
 
 2. Create table:
@@ -576,19 +559,17 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age)
+            COLUMNS TERMINATED BY ","
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "max_filter_ratio"="0.5",
-                "strict_mode" = "false"
+                "max_error_number" = "100",
+                "strict_mode" = "true"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad01",
-                "property.group.id" = "kafka_job01",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -602,12 +583,11 @@ The columns in the result set provide the following information:
     +------+------------+------+
     |    1 | Benjamin   |   18 |
     |    2 | Emily      |   20 |
-    |    3 | Alexander  |   22 |
     +------+------------+------+
-    3 rows in set (0.01 sec)
+    2 rows in set (0.01 sec)
     ```
 
-**Consuming Data from a Specified Offset**
+### Consuming Data from a Specified Offset
 
 1. Load sample data:
 
@@ -636,18 +616,11 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job02 ON routine_test02
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
+            COLUMNS TERMINATED BY ","
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad02",
-                "property.group.id" = "kafka_job",
                 "kafka_partitions" = "0",
                 "kafka_offsets" = "3"
             );
@@ -667,7 +640,7 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Specifying the Consumer Group's group.id and client.id**
+### Specifying the Consumer Group's group.id and client.id
 
 1. Load sample data:
 
@@ -693,13 +666,7 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job03 ON routine_test03
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
+            COLUMNS TERMINATED BY ","
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
@@ -724,7 +691,7 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Setting load filtering conditions**
+### Setting load filtering conditions
 
 1. Load sample data:
 
@@ -754,18 +721,11 @@ The columns in the result set provide the following information:
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job04 ON routine_test04
             COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age),
             WHERE id >= 3
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad04",
-                "property.group.id" = "kafka_job04",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -784,7 +744,7 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Loading specified partition data**
+### Loading specified partition data
 
 1. Load sample data:
 
@@ -803,18 +763,12 @@ The columns in the result set provide the following information:
         age     INT                      COMMENT "Age",
         date    DATETIME                 COMMENT "Date"
     )
-    PARTITION BY RANGE(date) ()
-    DISTRIBUTED BY HASH(date)
-    PROPERTIES
-    (        
-        "replication_num" = "1",
-        "dynamic_partition.enable" = "true",
-        "dynamic_partition.time_unit" = "DAY",
-        "dynamic_partition.start" = "-2",
-        "dynamic_partition.end" = "3",
-        "dynamic_partition.prefix" = "p",
-        "dynamic_partition.buckets" = "1"
-    );
+    DUPLICATE KEY(`id`)
+    PARTITION BY RANGE(`id`)
+    (PARTITION partition_a VALUES [("0"), ("1")),
+    PARTITION partition_b VALUES [("1"), ("2")),
+    PARTITION partition_c VALUES [("2"), ("3")))
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
 3. Load command:
@@ -822,18 +776,13 @@ The columns in the result set provide the following information:
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job05 ON routine_test05
             COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age, date),
-            PARTITION(p20240205)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
+            PARTITION(partition_b)
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad05",
-                "property.group.id" = "Apologies, but I'm unable to assist with the translation request at the moment.")
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );
     ```
 
 4. Load result:
@@ -843,12 +792,12 @@ The columns in the result set provide the following information:
     +------+----------+------+---------------------+
     | id   | name     | age  | date                |
     +------+----------+------+---------------------+
-    |    2 | Emily    |   20 | 2024-02-05 11:00:00 |
+    |    1 | Benjamin |   18 | 2024-02-04 10:00:00 |
     +------+----------+------+---------------------+
-    3 rows in set (0.01 sec)
+    1 rows in set (0.01 sec)
     ```
 
-**Setting Time Zone for load**
+### Setting Time Zone for load
 
 1. Load sample data:
 
@@ -875,19 +824,15 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job06 ON routine_test06
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age, date)
+            COLUMNS TERMINATED BY ","
             PROPERTIES
             (
-                "desired_concurrent_number" = "1",
-                "strict_mode" = "false",
                 "timezone" = "Asia/Shanghai"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad06",
-                "property.group.id" = "kafka_job06",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -899,12 +844,14 @@ The columns in the result set provide the following information:
     +------+-------------+------+---------------------+
     | id   | name        | age  | date                |
     +------+-------------+------+---------------------+
-    |    1 | Benjamin    |   18 | 2024-02-05 10:00:00 |
+    |    1 | Benjamin    |   18 | 2024-02-04 10:00:00 |
     |    2 | Emily       |   20 | 2024-02-05 11:00:00 |
-    |    3 | Alexander   |   22 | 2024-02-05 12:00:00 |
+    |    3 | Alexander   |   22 | 2024-02-06 12:00:00 |
     +------+-------------+------+---------------------+
     3 rows in set (0.00 sec)
     ```
+
+### Setting merge_type
 
 **Specify merge_type for delete operation**
 
@@ -939,7 +886,7 @@ The columns in the result set provide the following information:
         name    VARCHAR(30)    NOT NULL  COMMENT "name",
         age     INT                      COMMENT "age"
     )
-    DUPLICATE KEY(id)
+    UNIQUE KEY(id)
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
@@ -947,20 +894,12 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job07 ON routine_test07
-            WITH DELETE 
-            COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age)
-            PROPERTIES
-            (
-                "desired_concurrent_number" = "1",
-                "max_filter_ratio" = "0.5",
-                "strict_mode" = "false"
-            )
+            WITH DELETE
+            COLUMNS TERMINATED BY ","
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad07",
-                "property.group.id" = "kafka_job07",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1017,7 +956,7 @@ The columns in the result set provide the following information:
         name    VARCHAR(30)    NOT NULL  COMMENT "name",
         age     INT                      COMMENT "age"
     )
-    DUPLICATE KEY(id)
+    UNIQUE KEY(id)
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
@@ -1025,20 +964,13 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job08 ON routine_test08
-            WITH MERGE 
+            WITH MERGE
             COLUMNS TERMINATED BY ",",
-            COLUMNS(id, name, age),
             DELETE ON id = 2
-            PROPERTIES
-            (
-                "desired_concurrent_number" = "1",
-                "strict_mode" = "false"
-            )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad08",
-                "property.group.id" = "kafka_job08",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );   
     ```
@@ -1097,7 +1029,7 @@ The columns in the result set provide the following information:
         name    VARCHAR(30)    NOT NULL  COMMENT "name",
         age     INT                      COMMENT "age",
     )
-    DUPLICATE KEY(id)
+    UNIQUE KEY(id)
     DISTRIBUTED BY HASH(id) BUCKETS 1
     PROPERTIES (
         "function_column.sequence_col" = "age"
@@ -1122,7 +1054,6 @@ The columns in the result set provide the following information:
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad09",
-                "property.group.id" = "kafka_job09",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );   
     ```
@@ -1143,7 +1074,7 @@ The columns in the result set provide the following information:
     5 rows in set (0.00 sec)
     ```
 
-**Load with column mapping and derived column calculation**
+### Load with column mapping and derived column calculation
 
 1. Load sample data:
 
@@ -1172,17 +1103,10 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job10 ON routine_test10
             COLUMNS TERMINATED BY ",",
             COLUMNS(id, name, age, num=age*10)
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "max_filter_ratio"="0.5",
-                "strict_mode" = "false"
-            )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad10",
-                "property.group.id" = "kafka_job10",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1201,7 +1125,7 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Load with enclosed data**
+### Load with enclosed data
 
 1. Load sample data:
 
@@ -1227,7 +1151,8 @@ The columns in the result set provide the following information:
 3. Load command:
 
     ```sql
-    CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
+    CREATE ROUTINE LOAD demo.kafka_job11 ON routine_test11
+            COLUMNS TERMINATED BY ","
             PROPERTIES
             (
                 "desired_concurrent_number"="1",
@@ -1237,7 +1162,6 @@ The columns in the result set provide the following information:
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad12",
-                "property.group.id" = "kafka_job12",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );
     ```
@@ -1286,15 +1210,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad12",
-                "property.group.id" = "kafka_job12",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1343,16 +1264,13 @@ The columns in the result set provide the following information:
             COLUMNS(name, id, num, age)
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "format" = "json",
-                "strict_mode" = "false",
                 "jsonpaths" = "[\"$.name\",\"$.id\",\"$.num\",\"$.age\"]"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad13",
-                "property.group.id" = "kafka_job13",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1399,16 +1317,13 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job14 ON routine_test14
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "format" = "json",
-                "strict_mode" = "false",
                 "json_root" = "$.source"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad14",
-                "property.group.id" = "kafka_job14",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1457,15 +1372,12 @@ The columns in the result set provide the following information:
             COLUMNS(id, name, age, num=age*10)
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
                 "format" = "json",
-                "strict_mode" = "false"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad15",
-                "property.group.id" = "kafka_job15",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1516,15 +1428,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job16 ON routine_test16
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad16",
-                "property.group.id" = "kafka_job16",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1572,15 +1481,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job17 ON routine_test17
         PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad17",
-                "property.group.id" = "kafka_job17",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1630,15 +1536,12 @@ The columns in the result set provide the following information:
             COLUMNS(id, name, age, bitmap_id, device_id=to_bitmap(bitmap_id))
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad18",
-                "property.group.id" = "kafka_job18",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );
     ```
@@ -1697,16 +1600,10 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job19 ON routine_test19
             COLUMNS TERMINATED BY ",",
             COLUMNS(dt, id, name, province, os, pv=hll_hash(id))
-            PROPERTIES
-            (
-                "desired_concurrent_number"="1",
-                "strict_mode" = "false"
-            )
             FROM KAFKA
             (
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad19",
-                "property.group.id" = "kafka_job19",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
             );  
     ```
@@ -1768,16 +1665,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "192.168.100.129:9092",
                 "kafka_topic" = "routineLoad21",
-                "property.group.id" = "kafka_job21",
-                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
                 "property.security.protocol" = "ssl",
                 "property.ssl.ca.location" = "FILE:ca.pem",
                 "property.ssl.certificate.location" = "FILE:client.pem",
@@ -1828,16 +1721,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "192.168.100.129:9092",
                 "kafka_topic" = "routineLoad21",
-                "property.group.id" = "kafka_job21",
-                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
                 "property.security.protocol" = "SASL_PLAINTEXT",
                 "property.sasl.kerberos.service.name" = "kafka",
                 "property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
@@ -1888,16 +1777,12 @@ The columns in the result set provide the following information:
     CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
             PROPERTIES
             (
-                "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "format" = "json"
             )
             FROM KAFKA
             (
                 "kafka_broker_list" = "192.168.100.129:9092",
                 "kafka_topic" = "routineLoad22",
-                "property.group.id" = "kafka_job22",
-                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
                 "property.security.protocol"="SASL_PLAINTEXT",
                 "property.sasl.mechanism"="PLAIN",
                 "property.sasl.username"="admin",
@@ -1927,20 +1812,10 @@ Assuming we need to load data from Kafka into tables "tbl1" and "tbl2" in the "e
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1
-PROPERTIES
-(
-    "desired_concurrent_number"="3",
-    "max_batch_interval" = "20",
-    "max_batch_rows" = "300000",
-    "max_batch_size" = "209715200",
-    "strict_mode" = "false"
-)
 FROM KAFKA
 (
     "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
     "kafka_topic" = "my_topic",
-    "property.group.id" = "xxx",
-    "property.client.id" = "xxx",
     "property.kafka_default_offsets" = "OFFSET_BEGINNING"
 );
 ```
@@ -1958,18 +1833,12 @@ PRECEDING FILTER k1 = 1,
 WHERE k1 < 100 and k2 like "%doris%"
 PROPERTIES
 (
-    "desired_concurrent_number"="3",
-    "max_batch_interval" = "20",
-    "max_batch_rows" = "300000",
-    "max_batch_size" = "209715200",
     "strict_mode" = "true"
 )
 FROM KAFKA
 (
     "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-    "kafka_topic" = "my_topic",
-    "kafka_partitions" = "0,1,2,3",
-    "kafka_offsets" = "101,0,0,200"
+    "kafka_topic" = "my_topic"
 );
 ```
 

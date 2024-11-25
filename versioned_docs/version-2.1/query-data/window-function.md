@@ -579,7 +579,6 @@ This results in a consistent query output:
 3 rows in set (0.03 sec)
 ```
 
-For more information on analytic functions, refer to the Oracle official documentation  [SQL for Analysis and Reporting](https://docs.oracle.com/en/database/oracle/oracle-database/23/dwhsg/sql-analysis-reporting-data-warehouses.html#GUID-20EFBF1E-F79D-4E4A-906C-6E496EECA684)
 
 ## Reference
 

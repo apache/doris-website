@@ -107,15 +107,17 @@ Workload Group和BE的匹配规则说明:
 推荐用法可以参考:[Workload Group分组功能](./group-workload-groups.md)
 
 ## 配置 cgroup 的环境
-Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但是从 2.1 版本起，Doris 默认使用基于 CGroup v1 版本对 CPU 资源进行限制，因此如果期望在 2.1 版本对 CPU 资源进行约束，那么需要 BE 所在的节点上已经安装好 CGroup 的环境。
+Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但是从 2.1 版本起，Doris 默认使用基于 CGroup 对 CPU 资源进行限制，因此如果期望在 2.1 版本对 CPU 资源进行约束，那么需要 BE 所在的节点上已经安装好 CGroup 的环境。
+
+目前支持的 CGroup 版本为 CGroup v1 和 CGroup v2。
 
 用户如果在 2.0 版本使用了 Workload Group 的软限并升级到了 2.1 版本，那么也需要配置 CGroup，否则可能导致软限失效。
 
 如果是在容器内使用 CGroup，需要容器具备操作宿主机的权限。
 
-在不配置 cgroup 的情况下，用户可以使用 workload group 除 CPU 限制外的所有功能。
+在不配置 CGroup 的情况下，用户可以使用 Workload Group 除 CPU 限制外的所有功能。
 
-1. 首先确认 BE 所在节点是否已经安装好cgroup
+1. 首先确认 BE 所在节点是否已经安装好 GGroup
 ```
 cat /proc/filesystems | grep cgroup
 nodev	cgroup
@@ -123,36 +125,53 @@ nodev	cgroup2
 nodev	cgroupfs
 ```
 
-2. 确认cgroup的版本
+2. 确认目前生效的 CGroup 版本
 ```
-如果包含这个路径说明目前生效的是cgroup v1
+如果存在这个路径说明目前生效的是cgroup v1
 /sys/fs/cgroup/cpu/
 
-如果包含这个路径说明目前生效的是cgroup v2
+如果存在这个路径说明目前生效的是cgroup v2
 /sys/fs/cgroup/cgroup.controllers
 ```
 
-3. 在 cgroup 的 cpu 路径下新建一个名为 doris 的目录，这个目录名用户可以自行指定
+3. 在 CGroup 路径下新建一个名为 doris 的目录，这个目录名用户可以自行指定
 
-```mkdir /sys/fs/cgroup/cpu/doris```
+```
+如果是cgroup v1就在cpu目录下新建
+mkdir /sys/fs/cgroup/cpu/doris
+
+如果是cgroup v2就在直接在cgroup目录下新建
+mkdir /sys/fs/cgroup/doris
+```
 
 4. 需要保证 Doris 的 BE 进程对于这个目录有读/写/执行权限
 ```
-// 修改这个目录的权限为可读可写可执行
+// 如果是CGroup v1，那么命令如下:
+// 1. 修改这个目录的权限为可读可写可执行
 chmod 770 /sys/fs/cgroup/cpu/doris
-
-// 把这个目录的归属划分给doris的账户
+// 2. 把这个目录的归属划分给doris的账户
 chown -R doris:doris /sys/fs/cgroup/cpu/doris
+
+// 如果是CGroup v2，那么命令如下:
+// 1. 修改这个目录的权限为可读可写可执行
+chmod 770 /sys/fs/cgroup/doris
+// 2. 把这个目录的归属划分给doris的账户
+chown -R doris:doris /sys/fs/cgroup/doris
 ```
 
-5. 如果目前环境里使用的是cgroup v2版本，那么需要做以下操作。这是因为cgroup v2对于权限管控比较严格，需要具备根目录的cgroup.procs文件的写权限才能实现进程在group之间的移动。
+5. 如果目前环境里使用的是GGroup v2版本，那么需要做以下操作。这是因为CGroup v2对于权限管控比较严格，需要具备根目录的cgroup.procs文件的写权限才能实现进程在group之间的移动。
+   如果是CGroup v1那么不需要这一步。
 ```
 chmod a+w /sys/fs/cgroup/cgroup.procs
 ```
 
 6. 修改 BE 的配置，指定 cgroup 的路径
 ```
+如果是Cgroup v1，那么配置路径如下
 doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
+
+如果是Cgroup v2，那么配置路径如下
+doris_cgroup_cpu_path = /sys/fs/cgroup/doris
 ```
 
 7. 重启 BE，在日志（be.INFO）可以看到"add thread xxx to group"的字样代表配置成功

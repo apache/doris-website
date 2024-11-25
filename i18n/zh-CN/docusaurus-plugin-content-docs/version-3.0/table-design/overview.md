@@ -34,7 +34,7 @@ Doris 中表名默认是大小写敏感的，可以在第一次初始化集群�
 
 ## 表属性
 
-Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties)，其中分桶数(buckets)、存储介质(storage_medium)、副本数(replication)、冷热分离存储策略(storage_policy)属性作用于分区，即分区创建之后，分区就会有自己的属性，修改表属性只对未来创建的分区生效，对已经创建好的分区不生效，关于属性更多的信息请参考[修改表属性](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY.md)
+Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties)，其中分桶数(buckets)、存储介质(storage_medium)、副本数(replication_num)、冷热分离存储策略(storage_policy)属性作用于分区，即分区创建之后，分区就会有自己的属性，修改表属性只对未来创建的分区生效，对已经创建好的分区不生效，关于属性更多的信息请参考[修改表属性](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY.md)
 
 
 ## 注意事项

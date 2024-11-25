@@ -338,6 +338,95 @@ mysql> SELECT
 3 rows in set (0.03 sec)
 ```
 
+### Nested Array
+```json
+{
+  "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
+}
+```
+In the JSON example above, the array nested contains objects (or nested data types). It’s important to note that only one level of array expansion is currently supported. Here is an example:
+``` sql
+-- Note: Set variant_enable_flatten_nested to true
+-- This setting enables nested array expansion, allowing array<object> elements to be stored in columnar format.
+-- If set to false, nested arrays will be stored as JSON types.
+CREATE TABLE `simple_nested_test` (
+  `k` bigint NULL,
+  `v` variant NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`k`)
+DISTRIBUTED BY HASH(`k`) BUCKETS 8
+PROPERTIES (
+"file_cache_ttl_seconds" = "0",
+"is_being_synced" = "false",
+"storage_medium" = "hdd",
+"storage_format" = "V2",
+"inverted_index_storage_format" = "V2",
+"light_schema_change" = "true",
+"disable_auto_compaction" = "false",
+"variant_enable_flatten_nested" = "true",
+"enable_single_replica_compaction" = "false",
+"group_commit_interval_ms" = "10000",
+"group_commit_data_bytes" = "134217728"
+);
+
+insert into simple_nested_test values(1, '{
+  "eventId": 1,
+  "firstName": "Name1",
+  "lastName": "Eric",
+  "body": {
+    "phoneNumbers": [
+      {
+        "number": "1111111111",
+        "type": "GSM",
+        "callLimit": 5
+      },
+      {
+        "number": "222222222",
+        "type": "HOME",
+        "callLimit": 3
+      },
+      {
+        "number": "33333333",
+        "callLimit": 2,
+        "type": "WORK"
+      }
+    ]
+  }
+}');
+
+-- Enable extended column descriptions
+set describe_extend_variant_column = true;  
+
+-- The DESC command will display expanded columns such as v.body.phoneNumbers.callLimit, v.body.phoneNumbers.number, and v.body.phoneNumbers.type
+-- These fields are expanded from v.body.phoneNumbers
+mysql> desc simple_nested_test;
++-------------------------------+----------------+------+-------+---------+-------+
+| Field                         | Type           | Null | Key   | Default | Extra |
++-------------------------------+----------------+------+-------+---------+-------+
+| k                             | bigint         | Yes  | true  | NULL    |       |
+| v                             | variant        | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.callLimit | array<tinyint> | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.number    | array<text>    | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.type      | array<text>    | Yes  | false | NULL    | NONE  |
+| v.eventId                     | tinyint        | Yes  | false | NULL    | NONE  |
+| v.firstName                   | text           | Yes  | false | NULL    | NONE  |
+| v.lastName                    | text           | Yes  | false | NULL    | NONE  |
++-------------------------------+----------------+------+-------+---------+-------+
+8 rows in set (0.00 sec)
+
+-- Use lateral view (explode_variant_array) to expand arrays and query phone numbers and event IDs that meet specific criteria
+mysql> select v['eventId'], phone_numbers
+    from simple_nested_test lateral view explode_variant_array(v['body']['phoneNumbers']) tmp1 as phone_numbers
+    where phone_numbers['type'] = 'GSM' OR phone_numbers['type'] = 'HOME' and phone_numbers['callLimit'] > 2;                                                                                                               
++--------------------------+----------------------------------------------------+
+| element_at(v, 'eventId') | phone_numbers                                      |
++--------------------------+----------------------------------------------------+
+| 1                        | {"callLimit":5,"number":"1111111111","type":"GSM"} |
+| 1                        | {"callLimit":3,"number":"222222222","type":"HOME"} |
++--------------------------+----------------------------------------------------+
+2 rows in set (0.02 sec)
+```
+
 ### Usage Restrictions and Best Practices
 
 **There are several limitations when using the VARIANT type:**

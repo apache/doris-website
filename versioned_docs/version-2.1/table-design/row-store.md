@@ -39,7 +39,7 @@ When creating a table, specify whether to enable row storage, which columns to e
 "store_row_column" = "true"
 ```
 
-2. Which columns to enable row storage for: if 1 is enabled, all columns are enabled by default. If you need to specify that only some columns are enabled for row storage, set the row_store_columns parameter, formatted as a comma-separated list of column names.
+2. Which columns to enable row storage for:if `"store_row_column" = "true"`, all columns are enabled by default. If you need to specify that only some columns are enabled for row storage, set the row_store_columns parameter, formatted as a comma-separated list of column names.
 ``` 
 "row_store_columns" = "column1,column2,column3"
 ```
@@ -77,4 +77,4 @@ PROPERTIES (
 );
 ```
 
-For more information on point query usage, please refer to [High-Concurrent Point Query](../query/high-concurrent-point-query).
+For more information on point query usage, please refer to [High-Concurrent Point Query](../query-acceleration/high-concurrent-point-query).

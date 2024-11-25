@@ -32,7 +32,7 @@ under the License.
 
 这就会存在一个问题，如果同时有两个 Update 操作对同一行进行更新，那么其行为可能是不确定的，也就是可能存在脏数据。
 
-但在实际应用中，如果用户自己可以保证即使并发更新，也不会同时对同一行进行操作的话，就可以手动打开并发限制。通过修改 FE 配置 `enable_concurrent_update`，当配置值为 true 时，则对更新并发无限制。
+但在实际应用中，如果用户自己可以保证即使并发更新，也不会同时对同一行进行操作的话，就可以手动打开并发限制。通过修改 FE 配置 `enable_concurrent_update`，当该配置值设置为 `true` 时，更新命令将不再提供事务保证。
 
 :::caution
 注意：开启 `enable_concurrent_update` 配置后，会有一定的性能风险
@@ -40,37 +40,25 @@ under the License.
 
 ## Sequence 列
 
-Uniq 模型主要针对需要唯一主键的场景，可以保证主键唯一性约束，在同一批次中导入或者不同批次中导入的数据，替换顺序不做保证。替换顺序无法保证则无法确定最终导入到表中的具体数据，存在了不确定性。
+Unique 模型主要针对需要唯一主键的场景，可以保证主键唯一性约束，在同一批次中导入或者不同批次中导入的数据，替换顺序不做保证。替换顺序无法保证则无法确定最终导入到表中的具体数据，存在了不确定性。
 
 为了解决这个问题，Doris 支持了 sequence 列，通过用户在导入时指定 sequence 列，相同 key 列下，按照 sequence 列的值进行替换，较大值可以替换较小值，反之则无法替换。该方法将顺序的确定交给了用户，由用户控制替换顺序。
 
 :::note
-sequence 列目前只支持 Uniq 模型。
+sequence 列目前只支持 Unique 模型。
 :::
 
 ### 基本原理
 
-通过增加一个隐藏列__**DORIS_SEQUENCE_COL__**实现，该列的类型由用户在建表时指定，在导入时确定该列具体值，并依据该值决定相同 Key 列下，哪一行生效。
+通过增加一个隐藏列**__DORIS_SEQUENCE_COL__**实现，该列的类型由用户在建表时指定，在导入时确定该列具体值，并依据该值决定相同 Key 列下，哪一行生效。
 
 **建表**
 
-创建 Uniq 表时，将按照用户指定类型自动添加一个隐藏列__**DORIS_SEQUENCE_COL__**。
+创建 Unique 表时，用户可以设置表中的某一列作为sequence列。
 
 **导入**
 
-导入时，fe 在解析的过程中将隐藏列的值设置成 `order by` 表达式的值 (broker load 和 routine load)，或者`function_column.sequence_col`表达式的值 (stream load)，value 列将按照该值进行替换。隐藏列`DORIS_SEQUENCE_COL`的值既可以设置为数据源中一列，也可以是表结构中的一列。
-
-**读取**
-
-请求包含 value 列时需要额外读取`DORIS_SEQUENCE_COL`列，该列用于在相同 key 列下，REPLACE 聚合函数替换顺序的依据，较大值可以替换较小值，反之则不能替换。
-
-**Cumulative Compaction**
-
-Cumulative Compaction 时和读取过程原理相同。
-
-**Base Compaction**
-
-Base Compaction 时读取过程原理相同。
+导入时，fe 在解析的过程中将隐藏列的值设置成 `order by` 表达式的值 (broker load 和 routine load)，或者`function_column.sequence_col`表达式的值 (stream load)，value 列将按照该值进行替换。隐藏列`__DORIS_SEQUENCE_COL__`的值既可以设置为数据源中一列，也可以是表结构中的一列。
 
 ### 使用语法
 
@@ -78,7 +66,7 @@ Base Compaction 时读取过程原理相同。
 
 **1. 设置****`sequence_col`（推荐）**
 
-创建 Uniq 表时，指定 sequence 列到表中其他 column 的映射
+创建 Unique 表时，指定 sequence 列到表中其他 column 的映射
 
 ```Plain
 PROPERTIES (
@@ -169,7 +157,7 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 
 对于一个不支持 sequence column 的表，如果想要使用该功能，可以使用如下语句： `ALTER TABLE example_db.my_table ENABLE FEATURE "SEQUENCE_LOAD" WITH PROPERTIES ("function_column.sequence_type" = "Date")` 来启用。 
 
-如果不确定一个表是否支持 sequence column，可以通过设置一个 session variable 来显示隐藏列 `SET show_hidden_columns=true` ，之后使用`desc tablename`，如果输出中有`DORIS_SEQUENCE_COL` 列则支持，如果没有则不支持。
+如果不确定一个表是否支持 sequence column，可以通过设置一个 session variable 来显示隐藏列 `SET show_hidden_columns=true` ，之后使用`desc tablename`，如果输出中有`__DORIS_SEQUENCE_COL__` 列则支持，如果没有则不支持。
 
 ### 使用示例
 
@@ -200,7 +188,7 @@ PROPERTIES(
 表结构如下：
 
 ```sql
-MySQL  desc test_table;
+MySQL>  desc test_table;
 +-------------+--------------+------+-------+---------+---------+
 | Field       | Type         | Null | Key   | Default | Extra   |
 +-------------+--------------+------+-------+---------+---------+
@@ -217,12 +205,12 @@ MySQL  desc test_table;
 导入如下数据
 
 ```Plain
-1       2020-02-22      1       2020-02-21      a
-1       2020-02-22      1       2020-02-22      b
-1       2020-02-22      1       2020-03-05      c
-1       2020-02-22      1       2020-02-26      d
-1       2020-02-22      1       2020-02-23      e
-1       2020-02-22      1       2020-02-24      b
+1	2020-02-22	1	2020-02-21	a
+1	2020-02-22	1	2020-02-22	b
+1	2020-02-22	1	2020-03-05	c
+1	2020-02-22	1	2020-02-26	d
+1	2020-02-22	1	2020-02-23	e
+1	2020-02-22	1	2020-02-24	b
 ```
 
 此处以 stream load 为例
@@ -234,7 +222,7 @@ curl --location-trusted -u root: -T testData http://host:port/api/test/test_tabl
 结果为
 
 ```sql
-MySQL  select * from test_table;
+MySQL> select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
@@ -249,14 +237,14 @@ MySQL  select * from test_table;
 上述步骤完成后，接着导入如下数据
 
 ```Plain
-1       2020-02-22      1       2020-02-22      a
-1       2020-02-22      1       2020-02-23      b
+1	2020-02-22	1	2020-02-22	a
+1	2020-02-22	1	2020-02-23	b
 ```
 
 查询数据
 
 ```sql
-MySQL [test] select * from test_table;
+MySQL [test]> select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
@@ -269,14 +257,14 @@ MySQL [test] select * from test_table;
 **4. 再尝试导入如下数据**
 
 ```Plain
-1       2020-02-22      1       2020-02-22      a
-1       2020-02-22      1       2020-03-23      w
+1	2020-02-22	1	2020-02-22	a
+1	2020-02-22	1	2020-03-23	w
 ```
 
 查询数据
 
 ```sql
-MySQL [test] select * from test_table;
+MySQL [test]> select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+

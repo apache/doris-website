@@ -66,7 +66,18 @@
                     ]
                 },
                 "table-design/row-store",
-                "table-design/data-partition",
+                {
+                    "type": "category",
+                    "label": "Data Partitioning",
+                    "items": [
+                        "table-design/data-partitioning/basic-concepts",
+                        "table-design/data-partitioning/manual-partitioning",
+                        "table-design/data-partitioning/dynamic-partitioning",
+                        "table-design/data-partitioning/manual-bucketing",
+                        "table-design/data-partitioning/auto-bucket",
+                        "table-design/data-partitioning/common-issues"
+                    ]
+                },
                 "table-design/schema-change",
                 "table-design/cold-hot-separation",
                 {
@@ -336,18 +347,16 @@
                     "items": [
                         {
                             "type": "category",
-                            "label": "Monitor Metrics",
+                            "label": "Monitor",
                             "items": [
-                                "admin-manual/maint-monitor/monitor-metrics/metrics"
+                                "admin-manual/maint-monitor/monitor-metrics/metrics",
+                                "admin-manual/maint-monitor/monitor-alert"
                             ]
                         },
                         "admin-manual/maint-monitor/disk-capacity",
                         "admin-manual/maint-monitor/tablet-repair-and-balance",
-                        "admin-manual/maint-monitor/be-olap-error-code",
-                        "admin-manual/maint-monitor/doris-error-code",
                         "admin-manual/maint-monitor/tablet-meta-tool",
                         "admin-manual/maint-monitor/tablet-restore-tool",
-                        "admin-manual/maint-monitor/monitor-alert",
                         "admin-manual/maint-monitor/tablet-local-debug",
                         "admin-manual/maint-monitor/metadata-operation",
                         "admin-manual/maint-monitor/automatic-service-start",
@@ -1399,7 +1408,8 @@
                     "items": [
                         "gettingStarted/tutorials/building-lakehouse/doris-hudi",
                         "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
+                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
+                        "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
                     ]
                 },
                 "gettingStarted/tutorials/log-storage-analysis"
@@ -1412,12 +1422,14 @@
         "benchmark/tpcds"
     ],
     "ecosystem": [
+        "ecosystem/cloudcanal",
         "ecosystem/spark-doris-connector",
         "ecosystem/flink-doris-connector",
         "ecosystem/doris-kafka-connector",
         "ecosystem/datax",
         "ecosystem/dbt-doris-adapter",
         "ecosystem/seatunnel",
+        "ecosystem/kettle",
         "ecosystem/kyuubi",
         "ecosystem/logstash",
         "ecosystem/beats",
@@ -1463,6 +1475,7 @@
             "type": "category",
             "label": "v2.1",
             "items": [
+                "releasenotes/v2.1/release-2.1.7",
                 "releasenotes/v2.1/release-2.1.6",
                 "releasenotes/v2.1/release-2.1.5",
                 "releasenotes/v2.1/release-2.1.4",

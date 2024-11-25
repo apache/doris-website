@@ -40,7 +40,7 @@ Doris 默认采用列式存储，每个列连续存储，在分析场景（如�
 "store_row_column" = "true"
 ```
 
-2. 哪些列开启行存：如果 1 开启，默认所有列开启行存，如果需要指定部分列开启行存，设置 row_store_columns 参数，格式为逗号分割的列名
+2. 哪些列开启行存：如果 `"store_row_column" = "true"`，默认所有列开启行存，若需要指定部分列开启行存，设置 row_store_columns 参数，格式为逗号分割的列名
 ```
 "row_store_columns" = "column1,column2,column3"
 ```
@@ -79,4 +79,4 @@ PROPERTIES (
 );
 ```
 
-更多点查的使用请参考 [高并发点查](../query/high-concurrent-point-query) 。
+更多点查的使用请参考 [高并发点查](../query-acceleration/high-concurrent-point-query) 。

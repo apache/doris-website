@@ -24,23 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-It is possible to set parameters to create dynamic partitions on the corresponding disk types, while supporting data migration between (HDD, SSD) disk types based on the data's hot and cold characteristics, which can accelerate the read and write performance of Doris.
+You can set parameters for dynamic partitions across different disk types, facilitating data migration from SSDs to HDDs based on the parameters. This strategy improves read and write performance in Doris while lowering costs.
 
-- `dynamic_partition.hot_partition_num`
+By configuring `dynamic_partition.hot_partition_num` and `dynamic_partition.storage_medium`, you can use SSD and HDD tiered storage. For specific usage, please refer to [Data Partitioning - Dynamic Partitioning](../../table-design/data-partitioning/dynamic-partitioning).
 
-  Doris supports data migration between different disk types (HDD, SSD) based on the cold/hot characteristics of the data, which can accelerate read and write performance. Users can set partition parameters to create dynamic partitions on the corresponding disk types.
-
-  For the 'dynamic_partition' parameter, please refer to [data-partition](../../table-design/data-partition.md#dynamic-partitioning)."
-
-
+*`dynamic_partition.hot_partition_num`*
 
   :::tip
 
-  If there is no SSD disk path under the storage path, configuring this parameter will cause dynamic partition creation to fail.
+  If the storage path does not include an SSD disk path, configuring this parameter will result in the failure of dynamic partition creation.
 
   :::
 
-  `hot_partition_num` is all partitions in the previous n days and in the future.
+  `hot_partition_num` indicates that the current partition and the previous hot_partition_num - 1 partitions, along with all future partitions, will be stored on SSD media.
 
   Let us give an example. Suppose today is 2021-05-20, partition by day, and the properties of dynamic partition are set to: hot_partition_num=2, end=3, start=-3. Then the system will automatically create the following partitions, and set the `storage_medium` and `storage_cooldown_time` properties:
 
@@ -54,13 +50,13 @@ It is possible to set parameters to create dynamic partitions on the correspondi
   p20210523: ["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
   ```
 
-- `dynamic_partition.storage_medium`
+*`dynamic_partition.storage_medium`*
 
   
   :::info Note
   This parameteres is supported since Doris version 1.2.3
   :::
 
-  Specifies the default storage medium for the created dynamic partition. HDD is the default, SSD can be selected.
+  Specifies the final storage medium for the newly created dynamic partition. HDD is the default, but SSD can be selected.
 
   Note that when set to SSD, the `hot_partition_num` property will no longer take effect, all partitions will default to SSD storage media and the cooldown time will be 9999-12-31 23:59:59.

@@ -26,13 +26,11 @@ under the License.
 
 ## 概述
 
-此表仅用于兼容 MySQL 行为。永远为空。
+查看数据库中所有表的 partition 情况。在 3.0.2（不包含 3.0.2）之前恒为空表。
 
 ## 所属数据库
 
-
 `information_schema`
-
 
 ## 表信息
 

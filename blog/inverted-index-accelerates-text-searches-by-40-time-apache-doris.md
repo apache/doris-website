@@ -507,4 +507,4 @@ Inverted index has been available in Apache Doris for almost a year and stood th
 - **Self-defined tokenization**: provides a user-defined tokenizer to fit in different use cases.
 - **More data types**: Users will be able to create inverted index for complex data types including Array and Map.
 
-If you encounter any issues while trying it out in Apache Doris or would like to know more details, join our [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) community and talk to us!
+If you encounter any issues while trying it out in Apache Doris or would like to know more details, join our [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) community and talk to us!

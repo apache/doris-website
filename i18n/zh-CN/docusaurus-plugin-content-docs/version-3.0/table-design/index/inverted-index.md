@@ -47,7 +47,7 @@ under the License.
 
 - 支持短语查询 `MATCH_PHRASE`
   - 支持指定词距 `slop`
-  - 支持短语+前缀 `MATCH_PHRASE_PREFIX`
+  - 支持短语 + 前缀 `MATCH_PHRASE_PREFIX`
 
 - 支持分词正则查询 `MATCH_REGEXP`
 
@@ -175,7 +175,7 @@ table_properties;
 <details>
   <summary>ignore_above</summary>
 
-  **用于指定不分词字符串索引（没有指定parser）的长度限制**
+  **用于指定不分词字符串索引（没有指定 parser）的长度限制**
   <p>- 长度超过 ignore_above 设置的字符串不会被索引。对于字符串数组，ignore_above 将分别应用于每个数组元素，长度超过 ignore_above 的字符串元素将不被索引。</p>
   <p>- 默认为 256，单位是字节</p>
 
@@ -188,6 +188,14 @@ table_properties;
   <p>- true: 转换小写</p>
   <p>- false：不转换小写</p>
   <p>- 从 2.0.7 和 2.1.2 版本开始默认为 true，自动转小写，之前的版本默认为 false</p>
+</details>
+
+<details>
+  <summary>stopwords</summary>
+
+  **指明使用的停用词表，会影响分词器的行为**
+  <p>默认的内置停用词表包含一些无意义的词：'is'、'the'、'a' 等。在写入或者查询时，分词器会忽略停用词表中的词。</p>
+  <p>- none: 使用空的停用词表</p>
 </details>
 
 **4. `COMMENT` 是可选的，用于指定索引注释**
@@ -235,7 +243,7 @@ CANCEL BUILD INDEX ON table_name (job_id1,jobid_2,...);
 
 :::tip
 
-`BUILD INDEX` 会生成一个异步任务执行，在每个 BE 上有多个线程执行索引构建任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是3。
+`BUILD INDEX` 会生成一个异步任务执行，在每个 BE 上有多个线程执行索引构建任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是 3。
 
 2.0.12 和 2.1.4 之前的版本 `BUILD INDEX` 会一直重试直到成功，从这两个版本开始通过失败和超时机制避免一直重试。3.0 存算分离模式暂不支持此命令。
 
@@ -257,7 +265,7 @@ ALTER TABLE table_name DROP INDEX idx_name;
 
 :::tip
 
-`DROP INDEX` 会删除索引定义，新写入数据不会再写索引，同时会生成一个异步任务执行索引删除操作，在每个 BE 上有多个线程执行索引构建任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是3。
+`DROP INDEX` 会删除索引定义，新写入数据不会再写索引，同时会生成一个异步任务执行索引删除操作，在每个 BE 上有多个线程执行索引删除任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是 3。
 
 :::
 
@@ -279,30 +287,30 @@ SELECT * FROM table_name WHERE content MATCH_ALL 'keyword1 keyword2';
 
 -- 2. 全文检索短语匹配，通过 MATCH_PHRASE 完成
 -- 2.1 content 列中同时包含 keyword1 和 keyword2 的行，而且 keyword2 必须紧跟在 keyword1 后面
--- 'keyword1 keyword2'，'wordx keyword1 keyword2'，'wordx keyword1 keyword2 wordy' 能匹配，因为他们都包含keyword1 keyword2，而且keyword2 紧跟在 keyword1 后面
+-- 'keyword1 keyword2'，'wordx keyword1 keyword2'，'wordx keyword1 keyword2 wordy' 能匹配，因为他们都包含 keyword1 keyword2，而且 keyword2 紧跟在 keyword1 后面
 -- 'keyword1 wordx keyword2' 不能匹配，因为 keyword1 keyword2 之间隔了一个词 wordx
 -- 'keyword2 keyword1'，因为 keyword1 keyword2 的顺序反了
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2';
 
--- 2.2 content 列中同时包含 keyword1 和 keyword2 的行，而且 keyword1 keyword2 的 `词距`（slop） 不超过3
--- 'keyword1 keyword2', 'keyword1 a keyword2', 'keyword1 a b c keyword2' 都能匹配，因为keyword1 keyword2中间隔的词分别是0 1 3 都不超过3
--- 'keyword1 a b c d keyword2' 不能能匹配，因为keyword1 keyword2中间隔的词有4个，超过3
--- 'keyword2 keyword1', 'keyword2 a keyword1', 'keyword2 a b c keyword1' 也能匹配，因为指定 slop > 0 时不再要求keyword1 keyword2 的顺序。这个行为参考了 ES，与直觉的预期不一样，因此 Doris 提供了在 slop 后面指定正数符号（+）表示需要保持 keyword1 keyword2 的先后顺序
+-- 2.2 content 列中同时包含 keyword1 和 keyword2 的行，而且 keyword1 keyword2 的 `词距`（slop）不超过 3
+-- 'keyword1 keyword2', 'keyword1 a keyword2', 'keyword1 a b c keyword2' 都能匹配，因为 keyword1 keyword2 中间隔的词分别是 0 1 3 都不超过 3
+-- 'keyword1 a b c d keyword2' 不能能匹配，因为 keyword1 keyword2 中间隔的词有 4 个，超过 3
+-- 'keyword2 keyword1', 'keyword2 a keyword1', 'keyword2 a b c keyword1' 也能匹配，因为指定 slop > 0 时不再要求 keyword1 keyword2 的顺序。这个行为参考了 ES，与直觉的预期不一样，因此 Doris 提供了在 slop 后面指定正数符号（+）表示需要保持 keyword1 keyword2 的先后顺序
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3';
 -- slop 指定正号，'keyword1 a b c keyword2' 能匹配，而 'keyword2 a b c keyword1' 不能匹配
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3+';
 
--- 2.3 在保持词顺序的前提下，对最后一个词keyword2做前缀匹配，默认找50个前缀词（session变量inverted_index_max_expansions控制）
--- 'keyword1 keyword2abc' 能匹配，因为keyword1完全一样，最后一个 keyword2abc 是 keyword2 的前缀
+-- 2.3 在保持词顺序的前提下，对最后一个词 keyword2 做前缀匹配，默认找 50 个前缀词（session 变量 inverted_index_max_expansions 控制）
+-- 'keyword1 keyword2abc' 能匹配，因为 keyword1 完全一样，最后一个 keyword2abc 是 keyword2 的前缀
 -- 'keyword1 keyword2' 也能匹配，因为 keyword2 也是 keyword2 的前缀
 -- 'keyword1 keyword3' 不能匹配，因为 keyword3 不是 keyword2 的前缀
 -- 'keyword1 keyword3abc' 也不能匹配，因为 keyword3abc 也不是 keyword2 的前缀
 SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1 keyword2';
 
--- 2.4 如果只填一个词会退化为前缀查询，默认找50个前缀词（session变量inverted_index_max_expansions控制）
+-- 2.4 如果只填一个词会退化为前缀查询，默认找 50 个前缀词（session 变量 inverted_index_max_expansions 控制）
 SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1';
 
--- 2.5 对分词后的词进行正则匹配，默认匹配50个（session变量inverted_index_max_expansions控制）
+-- 2.5 对分词后的词进行正则匹配，默认匹配 50 个（session 变量 inverted_index_max_expansions 控制）
 -- 类似 MATCH_PHRASE_PREFIX 的匹配规则，只是前缀变成了正则
 SELECT * FROM table_name WHERE content MATCH_REGEXP 'key*';
 

@@ -26,66 +26,34 @@ under the License.
 
 # DataX Doriswriter
 
-[DataX](https://github.com/alibaba/DataX) doriswriter plug-in, used to synchronize data from other data sources to Doris through DataX.
+The [DataX](https://github.com/alibaba/DataX) Doriswriter plugin supports synchronizing data from various data sources, such as MySQL, Oracle, and SQL Server, into Doris using the Stream Load method.
 
-The plug-in uses Doris' Stream Load function to synchronize and import data. It needs to be used with DataX service.
-
-## About DataX
-
-DataX is an open source version of Alibaba Cloud DataWorks data integration, an offline data synchronization tool/platform widely used in Alibaba Group. DataX implements efficient data synchronization functions between various heterogeneous data sources including MySQL, Oracle, SqlServer, Postgre, HDFS, Hive, ADS, HBase, TableStore (OTS), MaxCompute (ODPS), Hologres, DRDS, etc.
-
-More details can be found at: `https://github.com/alibaba/DataX/`
+:::info Note
+This plugin needs to be used together with the DataX service.
+DataX supports multiple data sources. For more details, see here.
+:::
 
 ## Usage
 
-The code of DataX doriswriter plug-in can be found [here](https://github.com/apache/incubator-doris/tree/master/extension/DataX).
+### Directly Download the DataX Installation Package
 
-This directory is the doriswriter plug-in development environment of Alibaba DataX.
+DataX provides an official installation package that already includes DataX, which can be downloaded and used directly. For more details, refer to [here](https://github.com/alibaba/DataX?tab=readme-ov-file#download-datax%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80).
 
-Because the doriswriter plug-in depends on some modules in the DataX code base, and these module dependencies are not submitted to the official Maven repository, when we develop the doriswriter plug-in, we need to download the complete DataX code base to facilitate our development and compilation of the doriswriter plug-in.
+### Compile the DorisWriter Plugin Manually
 
-### Directory structure
-
-1. `doriswriter/`
-
-    This directory is the code directory of doriswriter, and this part of the code should be in the Doris code base.
-
-    The help doc can be found in `doriswriter/doc`
-
-2. `init-env.sh`
-
-    The script mainly performs the following steps:
-
-    1. Git clone the DataX code base to the local
-    2. Softlink the `doriswriter/` directory to `DataX/doriswriter`.
-    3. Add `<module>doriswriter</module>` to the original `DataX/pom.xml`
-    4. Change httpclient version from 4.5 to 4.5.13 in DataX/core/pom.xml
-
-        > httpclient v4.5 can not handle redirect 307 correctly.
-
-    After that, developers can enter `DataX/` for development. And the changes in the `DataX/doriswriter` directory will be reflected in the `doriswriter/` directory, which is convenient for developers to submit code.
-
-### How to build
-
-#### Doris code base compilation
+Download the [source code](https://github.com/apache/doris/tree/master/extension/DataX) for the DorisWriter plugin.
 
 1. Run `init-env.sh`
 2. Modify code of doriswriter in `DataX/doriswriter` if you need.
 3. Build doriswriter
 
-    1. Build doriswriter along:
+    > Build doriswriter along:
 
         `mvn clean install -pl plugin-rdbms-util,doriswriter -DskipTests`
 
-    2. Build DataX:
+    > If you need to compile the entire DataX project, please refer to [here](https://github.com/alibaba/DataX/blob/master/userGuid.md#quick-start)
 
-        `mvn package assembly:assembly -Dmaven.test.skip=true`
-
-        The output will be in `target/datax/datax/`.
-
-        > hdfsreader, hdfswriter and oscarwriter needs some extra jar packages. If you don't need to use these components, you can comment out the corresponding module in DataX/pom.xml.
-
-    3. Compilation error
+    > Compilation error
 
         If you encounter the following compilation errors:
 
@@ -96,22 +64,7 @@ Because the doriswriter plug-in depends on some modules in the DataX code base, 
         You can try the following solutions:
 
         1. Download [alibaba-datax-maven-m2-20210928.tar.gz](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/alibaba-datax-maven-m2-20210928.tar.gz)
-        2. After decompression, copy the resulting `alibaba/datax/` directory to `.m2/repository/com/alibaba/` corresponding to the maven used.
-        3. Try to compile again.
-
-4. Commit code of doriswriter in `doriswriter` if you need.
-
-#### Datax code base compilation
-
-Pull the code from the datax code library and execute the compilation
-
-```
-git clone https://github.com/alibaba/DataX.git
-cd datax
-mvn package assembly:assembly -Dmaven.test.skip=true
-```
-
-After compiling, you can see the datax.tar.gz package under `datax/target/Datax`
+        2. After decompression, copy the resulting `alibaba/datax/` directory to `.m2/repository/com/alibaba/` corresponding to the maven used, and try to compile again. 
 
 ### Datax DorisWriter parameter introduction:
 
@@ -171,7 +124,7 @@ After compiling, you can see the datax.tar.gz package under `datax/target/Datax`
 * **batchSize**
   - Description: The maximum amount of data imported in each batch. Works with **maxBatchRows** to control the number of imports per batch. When each batch of data reaches one of the two thresholds, the data of this batch will start to be imported.
   - Mandatory: No
-  - Default: 104857600
+  - Default: 94371840
 
 * **maxRetries**
 

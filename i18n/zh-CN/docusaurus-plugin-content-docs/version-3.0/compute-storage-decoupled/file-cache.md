@@ -24,16 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 在存算分离的架构中，数据被存储在远程存储（例如 S3对象存储、HDFS分布式文件存储等）。Doris数据库通过利用本地硬盘上的缓存来加速数据访问，并采用了一种先进的多队列 LRU（Least Recently Used）策略来高效管理缓存空间。这种策略针对索引和元数据的访问路径进行了优化，旨在最大化地缓存用户频繁访问的数据。针对多计算组（Compute Group）的应用场景，Doris 还提供了缓存预热功能，以便在新计算组建立时，能够迅速加载特定数据（如表或分区）到缓存中，从而提升查询性能。
-
-
 
 ## 缓存时机
 
 - 查询路径缓存：如果完成查询所需的数据不在本地（cache miss），则会去读远程存储，并把读到的数据写入缓存以备后续使用。
 - 导入路径缓存：为了加速对新导入数据的查询速度，导入数据不仅流向远程存储，也会异步地写入本地缓存。
-
-
 
 ## 多队列 LRU
 
@@ -133,12 +130,14 @@ Doris 每 10 分钟收集各个计算组的缓存热点信息到内部系统表�
 
 Doris BE 节点通过 `curl {be_ip}:{brpc_port}/vars ( brpc_port 默认为 8060 ) 获取 cache 统计信息，指标项的名称开始为磁盘路径。
 
-上述例子中指标前缀为 File Cache 的路径, 例如前缀 "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" 表示 "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
-去掉前缀的部分为统计指标, 比如 "file_cache_cache_size" 表示当前 路径的 File Cache 大小为 26111 字节
+上述例子中指标前缀为 File Cache 的路径，例如前缀 "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" 表示 "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
+去掉前缀的部分为统计指标，比如 "file_cache_cache_size" 表示当前 路径的 File Cache 大小为 26111 字节
 
-下表为全部的指标意义 (一下表示size大小单位均为字节)
 
-指标名称(不包含路径前缀) | 语义
+下表为全部的指标意义 (以下表示 Size 大小单位均为字节)
+
+
+指标名称 (不包含路径前缀) | 语义
 -----|------
 file_cache_cache_size | 当前 File Cache 的总大小
 file_cache_disposable_queue_cache_size | 当前 disposable 队列的大小
@@ -150,7 +149,7 @@ file_cache_index_queue_evict_size | 从启动到当前 index 队列总共淘汰�
 file_cache_normal_queue_cache_size | 当前 normal 队列的大小
 file_cache_normal_queue_element_count | 当前 normal 队列里的元素个数
 file_cache_normal_queue_evict_size | 从启动到当前 normal 队列总共淘汰的数据量大小
-file_cache_total_evict_size | 从启动到当前, 整个 File Cache 总共淘汰的数据量大小
+file_cache_total_evict_size | 从启动到当前，整个 File Cache 总共淘汰的数据量大小
 file_cache_ttl_cache_evict_size | 从启动到当前 TTL 队列总共淘汰的数据量大小
 file_cache_ttl_cache_lru_queue_element_count | 当前 TTL 队列里的元素个数
 file_cache_ttl_cache_size | 当前 TTL 队列的大小
@@ -174,7 +173,7 @@ SQL profile 中 cache 相关的指标在 SegmentIterator 下，包括
 | RemoteIOUseTimer             | 读取远程存储的耗时     |
 | WriteCacheIOUseTimer         | 写 File Cache 的耗时     |
 
-您可以通过 [查询性能分析](../query/query-analysis/query-analytics) 查看查询性能分析。
+您可以通过 [查询性能分析](../query-acceleration/tuning/query-profile) 查看查询性能分析。
 
 ## 使用方法
 
@@ -239,7 +238,7 @@ WARM UP COMPUTE GROUP compute_group_name1 WITH COMPUTE GROUP compute_group_name0
 SHOW CACHE HOTSPOT '/';
 ```
 
-查看 `compute_group_name0` 下的所有表中最频繁访问的 Partition 。
+查看 `compute_group_name0` 下的所有表中最频繁访问的 Partition。
 
 ```sql
 SHOW CACHE HOTSPOT '/compute_group_name0';
@@ -251,13 +250,13 @@ SHOW CACHE HOTSPOT '/compute_group_name0';
 SHOW CACHE HOTSPOT '/compute_group_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer';
 ```
 
-- 将表 `customer` 的数据预热到 `compute_group_name1`。执行以下 SQL ，可以将该表在远端存储上的数据全部拉取到本地。
+- 将表 `customer` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该表在远端存储上的数据全部拉取到本地。
 
 ```sql
 WARM UP COMPUTE GROUP compute_group_name1 WITH TABLE customer
 ```
 
-- 将表 `customer` 的分区 `p1` 的数据预热到 `compute_group_name1`。执行以下 SQL ，可以将该分区在远端存储上的数据全部拉取到本地。
+- 将表 `customer` 的分区 `p1` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该分区在远端存储上的数据全部拉取到本地。
 
 ```sql
 WARM UP COMPUTE GROUP compute_group_name1 with TABLE customer PARTITION p1
@@ -275,7 +274,7 @@ WARM UP COMPUTE GROUP cloud_warm_up WITH TABLE test_warm_up;
 SHOW WARM UP JOB WHERE ID = 13418;
 ```
 
-可根据 `FinishBatch` 和 `AllBatch` 判断当前任务进度，每个 Batch 的数据大小约为 10GB。 目前，一个计算组中，同一时间内只支持执行一个预热 Job 。用户可以停止正在进行的预热 Job 。
+可根据 `FinishBatch` 和 `AllBatch` 判断当前任务进度，每个 Batch 的数据大小约为 10GB。目前，一个计算组中，同一时间内只支持执行一个预热 Job。用户可以停止正在进行的预热 Job。
 
 ```sql
 CANCEL WARM UP JOB WHERE id = 13418;

@@ -26,18 +26,18 @@ under the License.
 
 ## 添加 Doris Cluster 资源定义
 
-Doris Operator 使用自定义资源定义（Custom Resource Definition, CRD）扩展 Kubernetes。Doris Cluster 的 CRD 中封装了对 Doris 对象的描述，例如对 FE 或 BE 的描述，详细内容可以参考 [doris-operator-api](https://github.com/selectdb/doris-operator/blob/master/doc/api.md)。在部署 Doris 前，需要先创建 Doris Cluster 的 CRD。
+Doris Operator 使用自定义资源定义（Custom Resource Definition, CRD）扩展 Kubernetes。Doris Cluster 的 CRD 中封装了对 Doris 对象的描述，例如对 FE 或 BE 的描述，详细内容可以参考 [doris-operator-api](https://github.com/apache/doris-operator/blob/master/doc/api.md)。在部署 Doris 前，需要先创建 Doris Cluster 的 CRD。
 
 通过以下命令可以在 Kubernetes 环境中部署 Doris Cluster CRD：
 
 ```shell
-kubectl create -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
 ```
 
 如果没有外网，先将 CRD 文件下载到本地：
 
 ```shell
-wget https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+wget https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
 kubectl create -f ./doris.selectdb.com_dorisclusters.yaml
 ```
 
@@ -68,7 +68,7 @@ dorisclusters.doris.selectdb.com                      2024-02-22T16:23:13Z
 使用以下命令可以在 Kubernetes 集群中部署 Doris Operator：
 
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/operator/operator.yaml
+kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
 ```
 
 以下为期望输出结果：

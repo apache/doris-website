@@ -56,7 +56,13 @@ In a decoupled architecture, data is stored in remote storage. The Doris databas
 
 ### Eviction
 
-To maximize the use of cache space for data access acceleration, Doris will utilize available cache space as much as possible. Cache eviction can be triggered in two scenarios: deleting remote storage data or writing when cache space is insufficient. When remote storage data is deleted, the corresponding data in the cache is directly removed. When writing when cache space is insufficient, eviction occurs in the order of Disposable, Normal Data, Index, and TTL. Data in the TTL queue will be moved to the Normal Data queue when it expires.
+All types of caches share the total cache space, and proportions can be allocated based on their importance. These proportions can be set in the `be` configuration file using `file_cache_path`, with the default being: TTL: Normal: Index: Disposable = 50%: 30%: 10%: 10%.
+
+These proportions are not rigid limits; Doris dynamically adjusts them to make full use of space. E.g., if users do not utilize TTL cache, other types can exceed the preset proportion and use the space originally allocated for TTL.
+
+Cache eviction is triggered by two conditions: garbage collection or insufficient cache space. When users delete data or when compaction tasks end, expired cache data is asynchronously evicted. When there is not enough space to write to the cache, eviction follows the order of Disposable, Normal Data, Index, and TTL. For instance, if there is not enough space to write Normal Data, Doris will sequentially evict some Disposable, Index, and TTL data in LRU order. Note that we do not evict all data of the target type before moving on to the next type; instead, we retain at least the aforementioned proportions to ensure other types can function properly. If this process does not free up enough space, LRU eviction for the type itself will be triggered. E.g., if not enough space can be freed from other types when writing Normal Data, Normal Data will then evict its own data in LRU order.
+
+Specifically, for the TTL queue with expiration times, when data expires, it is moved to the Normal Data queue and participates in eviction as Normal Data.
 
 ## Cache Warming
 
@@ -101,6 +107,9 @@ file_cache_total_evict_size | Total amount of data evicted from the entire File 
 file_cache_ttl_cache_evict_size | Total amount of data evicted from the TTL queue since startup
 file_cache_ttl_cache_lru_queue_element_count | Current number of elements in the TTL queue
 file_cache_ttl_cache_size | Current size of the TTL queue
+file_cache_evict_by_heat\_[A]\_to\_[B] | Data from cache type A evicted due to cache type B (time-based expiration) 
+file_cache_evict_by_size\_[A]\_to\_[B] | Data from cache type A evicted due to cache type B (space-based expiration) 
+file_cache_evict_by_self_lru\_[A] | Data from cache type A evicted by its own LRU policy for new data 
 
 ### SQL Profile
 
@@ -118,7 +127,7 @@ Cache-related metrics in the SQL profile are found under SegmentIterator, includ
 | RemoteIOUseTimer                 | Time taken to read from remote storage       |
 | WriteCacheIOUseTimer             | Time taken to write to the File Cache        |
 
-You can view query performance analysis through [Query Performance Analysis](../query/query-analysis/query-analytics).
+You can view query performance analysis through [Query Performance Analysis](../query-acceleration/tuning/query-profile).
 
 ## Usage
 

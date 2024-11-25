@@ -67,7 +67,11 @@ PROPERTIES (
 与前面例子相同，对应的 Stream Load 命令为（不需要额外的 header）：
 
 ```shell
-curl  --location-trusted -u root: -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:48037/api/db1/order_tbl/_stream_load
+$ cat update.csv
+
+1,To be shipped
+
+curl  --location-trusted -u root: -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
 
 对应的`INSERT INTO`语句为（不需要额外设置 session variable）：

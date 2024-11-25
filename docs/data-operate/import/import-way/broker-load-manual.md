@@ -60,11 +60,28 @@ WITH [HDFS|S3|BROKER broker_name]
 
 For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) in the SQL manual.
 
+## Load Properties
+
+| Property Name | Type | Default Value | Description |
+| --- | --- | --- | --- |
+| "timeout" | Long | 14400 | Used to specify the timeout for the import in seconds. The configurable range is from 1 second to 259200 seconds. |
+| "max_filter_ratio" | Float | 0.0 | Used to specify the maximum tolerable ratio of filterable (irregular or otherwise problematic) data, which defaults to zero tolerance. The value range is 0 to 1. If the error rate of the imported data exceeds this value, the import will fail. Irregular data does not include rows filtered out by the where condition. |
+| "exec_mem_limit" | Long | 2147483648 | The memory limit in bytes of the load task, which defaults to 2GB. |
+| "strict_mode" | Boolean | false | Used to specify whether to enable strict mode for this import. |
+| "partial_columns" | Boolean | false | Used to specify whether to enable partial column update, the default value is false, this parameter is only available for Unique Key + Merge on Write tables. |
+| "timezone" | String | "Asia/Shanghai" | Used to specify the timezone to be used for this import. This parameter affects the results of all timezone-related functions involved in the import. |
+| "load_parallelism" | Integer | 8 | Limits the maximum parallel instances on each backend. |
+| "send_batch_parallelism" | Integer | 1 | The parallelism for sink node to send data, when memtable_on_sink_node is disabled. |
+| "load_to_single_tablet" | Boolean | "false" | Used to specify whether to load data only to a single tablet corresponding to the partition. This parameter is only available when loading to an OLAP table with random bucketing. |
+| "skip_lines" | Integer | "0" | It will skip some lines in the head of a csv file. It will be ignored when the format is csv_with_names or csv_with_names_and_types. |
+| "trim_double_quotes" | Boolean | "false" | Used to specify whether to trim the outermost double quotes of each field in the source files. |
+| "priority" | oneof "HIGH", "NORMAL", "LOW" | "NORMAL" | The priority of the task. |
+
 ## Checking import status
 
 Broker Load is an asynchronous import method, and the specific import results can be viewed through the [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) command.
 
-```Plain
+```sql
 mysql> show load order by createtime desc limit 1\G;
 *************************** 1. row ***************************
          JobId: 41326624
@@ -167,7 +184,7 @@ This configuration is used to access HDFS clusters deployed in HA (High Availabi
 
 An example configuration is as follows:
 
-```Plain
+```sql
 (
     "fs.defaultFS" = "hdfs://my_ha",
     "dfs.nameservices" = "my_ha",
@@ -180,7 +197,7 @@ An example configuration is as follows:
 
 HA mode can be combined with the previous two authentication methods for cluster access. For example, accessing HA HDFS through simple authentication:
 
-```Plain
+```sql
 (
     "username"="user",
     "password"="passwd",
@@ -257,7 +274,7 @@ HA mode can be combined with the previous two authentication methods for cluster
       SET (
           k2 = tmp_k2 + 1,
           k3 = tmp_k3 + 1
-      )
+      ),
       DATA INFILE("hdfs://host:port/input/file-20*")
       INTO TABLE `my_table2`
       COLUMNS TERMINATED BY ","
@@ -312,7 +329,7 @@ The default method is to determine by file extension.
 - Import the data and extract the partition field from the file path
 
   ```sql
-  LOAD LABEL example_db.label10
+  LOAD LABEL example_db.label5
   (
       DATA INFILE("hdfs://host:port/input/city=beijing/*/*")
       INTO TABLE `my_table`
@@ -397,10 +414,15 @@ There are the following files under the path:
 
 The table structure is as follows:
 
-```Plain
-data_time DATETIME,
-k2        INT,
-k3        INT
+```sql
+CREATE TABLE IF NOT EXISTS tbl12 (
+    data_time DATETIME,
+    k2        INT,
+    k3        INT
+) DISTRIBUTED BY HASH(data_time) BUCKETS 10
+PROPERTIES (
+    "replication_num" = "3"
+);
 ```
 
 - Use Merge mode for import
@@ -448,7 +470,7 @@ To use Merge mode for import, the "my_table" must be a Unique Key table. When th
 
 - Import the specified file format as `json`, and specify the `json_root` and jsonpaths accordingly.
 
-  ```SQL
+  ```sql
   LOAD LABEL example_db.label10
   (
       DATA INFILE("hdfs://host:port/input/file.json")
@@ -456,7 +478,7 @@ To use Merge mode for import, the "my_table" must be a Unique Key table. When th
       FORMAT AS "json"
       PROPERTIES(
         "json_root" = "$.item",
-        "jsonpaths" = "[$.id, $.city, $.code]"
+        "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
       )       
   )
   with HDFS
@@ -478,7 +500,7 @@ The `jsonpaths` can also be used in conjunction with the column list and `SET (c
       SET (id = id * 10)
       PROPERTIES(
         "json_root" = "$.item",
-        "jsonpaths" = "[$.id, $.code, $.city]"
+        "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
       )       
   )
   with HDFS
@@ -509,6 +531,7 @@ Doris supports importing data directly from object storage systems that support 
     )
     WITH S3
     (
+        "provider" = "S3",
         "AWS_ENDPOINT" = "AWS_ENDPOINT",
         "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
         "AWS_SECRET_KEY"="AWS_SECRET_KEY",
@@ -520,11 +543,22 @@ Doris supports importing data directly from object storage systems that support 
     );
 ```
 
+The `provider` specifies the vendor of the S3 Service.
+Supported S3 Provider list:
+
+- "S3" (AWS, Amazon Web Services)
+- "AZURE" (Microsoft Azure)
+- "GCP" (GCP, Google Cloud Platform)
+- "OSS" (Alibaba Cloud)
+- "COS" (Tencent Cloud)
+- "OBS" (Huawei Cloud)
+- "BOS" (Baidu Cloud)
+
 ### Common Issues
 
 - The S3 SDK defaults to using the virtual-hosted style method for accessing objects. However, some object storage systems may not have enabled or supported the virtual-hosted style access. In such cases, we can add the `use_path_style` parameter to force the use of the path style method:
 
-  ```Plain
+  ```sql
     WITH S3
     (
           "AWS_ENDPOINT" = "AWS_ENDPOINT",
@@ -537,7 +571,7 @@ Doris supports importing data directly from object storage systems that support 
 
 - Support for accessing all object storage systems that support the S3 protocol using temporary credentials (TOKEN) is available. The usage is as follows:
 
-  ```Plain
+  ```sql
     WITH S3
     (
           "AWS_ENDPOINT" = "AWS_ENDPOINT",
@@ -576,7 +610,7 @@ This section primarily focuses on the parameters required by the Broker when acc
 
 The information of the Broker consists of two parts: the name (Broker name) and the authentication information. The usual syntax format is as follows:
 
-```Plain
+```sql
 WITH BROKER "broker_name" 
 (
     "username" = "xxx",
@@ -601,7 +635,7 @@ Different Broker types and access methods require different authentication infor
 
 - Alibaba Cloud OSS
 
-  ```Plain
+  ```sql
   (
       "fs.oss.accessKeyId" = "",
       "fs.oss.accessKeySecret" = "",
@@ -611,7 +645,7 @@ Different Broker types and access methods require different authentication infor
 
 - JuiceFS
 
-  ```Plain
+  ```sql
   (
       "fs.defaultFS" = "jfs://xxx/",
       "fs.jfs.impl" = "io.juicefs.JuiceFileSystem",
@@ -625,7 +659,7 @@ Different Broker types and access methods require different authentication infor
 
   When using a Broker to access GCS, the Project ID is required, while other parameters are optional. Please refer to the [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION.md) for all parameter configurations.
 
-  ```Plain
+  ```sql
   (
       "fs.gs.project.id" = "Your Project ID",
       "fs.AbstractFileSystem.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
@@ -634,6 +668,8 @@ Different Broker types and access methods require different authentication infor
   ```
 
 ## Related Configurations
+
+### fe.conf
 
 The following configurations belong to the system-level settings for Broker load, which affect all Broker load import tasks. These configurations can be adjusted by modifying the `fe.conf `file.
 
@@ -660,9 +696,50 @@ Typically, the maximum supported data volume for an import job is `max_bytes_per
 - The minimum processed data volume, maximum concurrency, size of the source file, and the current number of BE nodes jointly determine the concurrency of this import.
 
 ```Plain
-Import Concurrency = Math.min(Source File Size / Minimum Processing Amount, Maximum Concurrency, Current Number of BE Nodes)
+Import Concurrency = Math.min(Source File Size / min_bytes_per_broker_scanner, max_broker_concurrency, Current Number of BE Nodes * load_parallelism)
 Processing Volume per BE for this Import = Source File Size / Import Concurrency
 ```
+
+**default_load_parallelism**
+
+- Default: 8.
+
+- Limits the maximum parallel instances on each backend.
+
+- The minimum processed data volume, maximum concurrency, size of the source file, and the current number of BE nodes jointly determine the concurrency of this import.
+
+```Plain
+Import Concurrency = Math.min(Source File Size / min_bytes_per_broker_scanner, max_broker_concurrency, Current Number of BE Nodes * load_parallelism)
+Processing Volume per BE for this Import = Source File Size / Import Concurrency
+```
+
+**broker_load_default_timeout_second**
+
+- Default: 14400.
+
+- The default broker load timeout in seconds.
+
+### session variables
+
+**exec_mem_limit**
+
+- Default: 2147483648.
+
+- The memory limit in bytes of the load.
+
+**time_zone**
+
+- Default: "Asia/Shanghai".
+
+- Default timezone, which affects time related functions in the load.
+
+**send_batch_parallelism**
+
+- Default: 1
+
+- The parallelism for sink node to send data, when memtable_on_sink_node is disabled.
+
+Set session variable `enable_memtable_on_sink_node` (defaults to true) to false to disable this feature.
 
 ## Common Issues
 
@@ -678,7 +755,7 @@ Appropriately adjust the `query_timeout` and `streaming_load_rpc_max_alive_time_
 
 For PARQUET or ORC format data, the column names in the file header must match the column names in the Doris table. For example:
 
-```Plain
+```sql
 (tmp_c1,tmp_c2)
 SET
 (

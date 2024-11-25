@@ -63,7 +63,7 @@ WITH [HDFS|S3|BROKER broker_name]
 
 Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-LOAD) 命令查看
 
-```Plain
+```sql
 mysql> show load order by createtime desc limit 1\G;
 *************************** 1. row ***************************
          JobId: 41326624
@@ -167,7 +167,7 @@ username 配置为要访问的用户，密码置空即可。
 
 示例如下：
 
-```Plain
+```sql
 (
     "fs.defaultFS" = "hdfs://my_ha",
     "dfs.nameservices" = "my_ha",
@@ -180,7 +180,7 @@ username 配置为要访问的用户，密码置空即可。
 
 HA 模式可以和前面两种认证方式组合，进行集群访问。如通过简单认证访问 HA HDFS：
 
-```Plain
+```sql
 (
     "username"="user",
     "password"="passwd",
@@ -257,7 +257,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
       SET (
           k2 = tmp_k2 + 1,
           k3 = tmp_k3 + 1
-      )
+      ),
       DATA INFILE("hdfs://host:port/input/file-20*")
       INTO TABLE `my_table2`
       COLUMNS TERMINATED BY ","
@@ -312,7 +312,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
 - 导入数据，并提取文件路径中的分区字段
 
   ```sql
-  LOAD LABEL example_db.label10
+  LOAD LABEL example_db.label5
   (
       DATA INFILE("hdfs://host:port/input/city=beijing/*/*")
       INTO TABLE `my_table`
@@ -397,10 +397,15 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
 
   表结构为：
 
-  ```Plain
-  data_time DATETIME,
-  k2        INT,
-  k3        INT
+  ```sql
+  CREATE TABLE IF NOT EXISTS tbl12 (
+      data_time DATETIME,
+      k2        INT,
+      k3        INT
+  ) DISTRIBUTED BY HASH(data_time) BUCKETS 10
+  PROPERTIES (
+      "replication_num" = "3"
+  );
   ```
 
 - 使用 Merge 方式导入
@@ -457,7 +462,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
       FORMAT AS "json"
       PROPERTIES(
         "json_root" = "$.item",
-        "jsonpaths" = "[$.id, $.city, $.code]"
+        "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
       )       
   )
   with HDFS
@@ -479,7 +484,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
       SET (id = id * 10)
       PROPERTIES(
         "json_root" = "$.item",
-        "jsonpaths" = "[$.id, $.code, $.city]"
+        "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
       )       
   )
   with HDFS
@@ -525,7 +530,7 @@ Doris 支持通过 S3 协议直接从支持 S3 协议的对象存储系统导入
 
 - S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式：
 
-  ```Plain
+  ```sql
     WITH S3
     (
           "AWS_ENDPOINT" = "AWS_ENDPOINT",
@@ -538,7 +543,7 @@ Doris 支持通过 S3 协议直接从支持 S3 协议的对象存储系统导入
 
 - 支持使用临时秘钥 (TOKEN) 访问所有支持 S3 协议的对象存储，用法如下：
 
-  ```Plain
+  ```sql
     WITH S3
     (
           "AWS_ENDPOINT" = "AWS_ENDPOINT",
@@ -577,7 +582,7 @@ Broker 仅作为一个数据通路，并不参与任何计算，因此仅需占�
 
 Broker 的信息包括 名称（Broker name）和 认证信息 两部分。通常的语法格式如下：
 
-```Plain
+```sql
 WITH BROKER "broker_name" 
 (
     "username" = "xxx",
@@ -603,7 +608,7 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 - 阿里云 OSS
 
-```Plain
+```sql
 (
     "fs.oss.accessKeyId" = "",
     "fs.oss.accessKeySecret" = "",
@@ -615,7 +620,7 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 当前使用 BOS 时需要下载相应的 SDK 包，具体配置与使用，可以参考 [BOS HDFS 官方文档](https://cloud.baidu.com/doc/BOS/s/fk53rav99)。在下载完成并解压后将 jar 包放到 broker 的 lib 目录下。
 
-```Plain
+```sql
 (
     "fs.bos.access.key" = "xx",
     "fs.bos.secret.access.key" = "xx",
@@ -625,7 +630,7 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 - 华为云 OBS
 
-```Plain
+```sql
 (
     "fs.obs.access.key" = "xx",
     "fs.obs.secret.key" = "xx",
@@ -635,7 +640,7 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 - JuiceFS
 
-```Plain
+```sql
 (
     "fs.defaultFS" = "jfs://xxx/",
     "fs.jfs.impl" = "io.juicefs.JuiceFileSystem",
@@ -649,7 +654,7 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 在使用 Broker 访问 GCS 时，Project ID 是必须的，其他参数可选，所有参数配置请参考 [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION.md)
 
-```Plain
+```sql
 (
     "fs.gs.project.id" = "你的 Project ID",
     "fs.AbstractFileSystem.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
@@ -684,7 +689,7 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 - 最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数共同决定了本次导入的并发数。
 
 ```Plain
-本次导入并发数 = Math.min(源文件大小/最小处理量，最大并发数，当前BE节点个数)
+本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
 本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
 ```
 
@@ -702,7 +707,7 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 如果是 PARQUET 或者 ORC 格式的数据，则文件头的列名需要与 doris 表中的列名保持一致，如：
 
-```Plain
+```sql
 (tmp_c1,tmp_c2)
 SET
 (

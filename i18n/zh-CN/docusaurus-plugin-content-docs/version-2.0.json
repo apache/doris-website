@@ -39,6 +39,10 @@
     "message": "数据模型",
     "description": "The label for category Data Model in sidebar docs"
   },
+  "sidebar.docs.category.Data Partitioning": {
+    "message": "数据划分",
+    "description": "The label for category Data Partitioning in sidebar docs"
+  },
   "sidebar.docs.category.Table Indexes": {
     "message": "表索引",
     "description": "The label for category Index in sidebar docs"
@@ -184,8 +188,8 @@
     "description": "The label for category BE OPEN API in sidebar docs"
   },
   "sidebar.docs.category.Monitor Metrics": {
-    "message": "监控指标",
-    "description": "The label for category Monitor Metrics in sidebar docs"
+    "message": "监控",
+    "description": "The label for category Monitor in sidebar docs"
   },
   "sidebar.docs.category.SQL Statements": {
     "message": "SQL 手册",

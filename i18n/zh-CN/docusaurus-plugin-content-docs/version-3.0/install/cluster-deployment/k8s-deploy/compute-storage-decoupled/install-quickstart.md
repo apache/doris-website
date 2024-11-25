@@ -1,6 +1,6 @@
 ---
 {
-"title": "存算分离快速部署",
+"title": "快速部署",
 "language": "zh-CN"
 }
 ---
@@ -24,115 +24,117 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在 K8s 上从零开始部署一整套完整的 Doris 存算分离集群分为两部分： 第一部分部署 `Doris-Operator`；第二部分下发部署存算分离集群的相关资源 `DorisDisaggregatedMetaService`  和 `DorisDisaggregatedCluster` 。 `DorisDisaggregatedMetaService` 资源部署元数据组件； `DorisDisaggregatedCluster` 资源部署存算 sql 解析组件与计算组件。
-
-## 安装 Operator
+在 K8s 上部署存算分离集群需要提前部署好 FDB。如果是虚机部署需确保部署的虚机能够被 K8s 集群上的服务访问，部署请参考存算分离部署文档中[部署前准备阶段介绍](../../../../compute-storage-decoupled/before-deployment.md)；如需要在 K8s 上部署请参考 [FDB 在 K8s 上部署](install-fdb.md)。
+部署 Doris 存算分离集群分为两部分：Doris-Operator 及其相关依赖权限部署；Doris 存算分离集群定制化资源部署。
+## 第一步：部署 Operator
 
 1. 下发资源定义：
 
-```
-kubectl create -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/crds.yaml
+```bash
+kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/crds.yaml
 ```
 
 预期结果：
-
-```
-customresourcedefinition.apiextensions.k8s.io/foundationdbclusters.apps.foundationdb.org created
-customresourcedefinition.apiextensions.k8s.io/foundationdbbackups.apps.foundationdb.org created
-customresourcedefinition.apiextensions.k8s.io/foundationdbrestores.apps.foundationdb.org created
+```bash
 customresourcedefinition.apiextensions.k8s.io/dorisdisaggregatedclusters.disaggregated.cluster.doris.com created
-customresourcedefinition.apiextensions.k8s.io/dorisdisaggregatedmetaservices.disaggregated.metaservice.doris.com created
+customresourcedefinition.apiextensions.k8s.io/doris.selectdb.com_dorisclusters.yaml created
 ```
 
 2. 部署 Doris-Operator 以及依赖的 RBAC 规则：
 
+```bash
+kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/disaggregated-operator.yaml
 ```
-kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/operator/disaggregated-operator.yaml
-```
-
 预期结果：
 
-```
+```bash
 kubectl -n doris get pods
-NAME                                         READY   STATUS    RESTARTS   AGE
-doris-operator-fdb-manager-d75574c47-b2sqx   1/1     Running   0          11s
-doris-operator-5b667b4954-d674k              1/1     Running   0          11s
+NAME                              READY   STATUS    RESTARTS   AGE
+doris-operator-6b97df65c4-xwvw8   1/1     Running   0          19s
 ```
 
-## 快速部署存算分离集群
-
-### 部署 DorisDisaggregatedMetaService 资源
-
-1. 下载 `ddm-sample.yaml`, 一种用户告诉 Doris-Operator 如何部署元数据组件的资源。
-
-```shell
-curl -O https://raw.githubusercontent.com/selectdb/doris-operator/master/doc/examples/disaggregated/metaservice/ddm-sample.yaml
+## 第二步：快速部署存算分离集群
+1. 下载 `ddc-sample.yaml` 部署样例：
+```bash
+curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/disaggregated/cluster/ddc-sample.yaml
 ```
 
-根据配置元数据部署资源章节：[FDB](./install-metaservice/config-fdb.md)，[ms](./install-metaservice/config-ms.md)， [recycler](./install-metaservice/config-recycler.md) 按照实际需要配置资源。
-
-2. 下发 `DorisDisaggregatedMetaService` 资源:
-
-```
-kubectl apply -f ddm-sample.yaml
-```
-
-预期结果：
-
-```
-kubectl get ddm
-NAME                   FDBSTATUS   MSSTATUS   RECYCLERSTATUS
-meta-service-release   Available   Ready      Ready
-```
-
-### 下发对象存储信息
-
-存算分离集群使用对象存储作为持久化存储，需要通过 ConfigMap 下发[存算分离集群使用的对象存储信息](./install-cluster/config-relation#注册对象存储)。
-
-1. 下载包含对象存储信息的 ConfigMap 资源：
-
-存算分离以对象存储作为后端存储，需要提前规划好使用的对象存储。下载 `object-store-info.yaml` 。
-
-```
-curl -O https://raw.githubusercontent.com/selectdb/doris-operator/master/doc/examples/disaggregated/cluster/object-store-info.yaml
-```
-
-2. 按照 [Doris 存算分离接口](../../../../compute-storage-decoupled/creating-cluster#%E5%86%85%E7%BD%AE%E5%AD%98%E5%82%A8%E5%90%8E%E7%AB%AF)接口格式将对象存储信息配置成 JSON 格式，以 `instance.conf` 为 key ， JSON 格式的对象存储信息作为 value 配置到 ConfigMap 的 data 中。  (替换样例 JSON 格式中对应的 value 值)
-
-部署 `object-store-info.yaml` :
-
-```shell
-kubectl apply -f object-store-info.yaml
-```
-
-:::tip 提示
-- 部署存算分离集群需要预先规划好使用的对象存储，将对象存储信息通过 ConfigMap 配置到 doris 存算分离集群需要部署的 Namespace 下。
-- 案例中的配置主要为展示对象存储的基本配置所需信息，所有的值均为虚构不能用于真实场景，如果需要搭建真实可用集群请使用真实数据填写。
-:::
-
-### 部署 DorisDisaggregatedCluster 资源
-
-1. 下载 `ddc-sample.yaml`:
-
-```shell
-curl -O https://raw.githubusercontent.com/selectdb/doris-operator/master/doc/examples/disaggregated/cluster/ddc-sample.yaml
-```
-
-2. 根据配置存算分离集群章节: [集群关联配置](./install-cluster/config-relation.md)，[fe](./install-cluster/config-fe.md)，[compute cluster](./install-cluster/config-cc.md)，按照实际需要配置资源。使用如下命令部署资源：
-
-```
+2. 根据存算分离 K8s 部署文档中，[元数据配置章节](config-ms.md)配置 metaService； [fe 集群配置章节](config-fe.md)进行 fe 终态规格配置；[计算资源组配置章节](config-cg.md)进行相关资源组的配置。配置完成后，使用如下命令部署资源：
+```bash
 kubectl apply -f ddc-sample.yaml
 ```
-
-部署一个计算集群的预期结果如下：
-
-```
+部署资源下发后，等待集群自动搭建完成，成功结果预期如下：
+```bash
 kubectl get ddc
 NAME                         CLUSTERHEALTH   FEPHASE   CGCOUNT   CGAVAILABLECOUNT   CGFULLAVAILABLECOUNT
-test-disaggregated-cluster   green           Ready     1         1                  1
+test-disaggregated-cluster   green           Ready     2         2                  2
+```
+:::tip 提示
+MS 服务需要使用 FDB 作为后端元数据存储，部署 MS 服务必须部署 FDB 服务，请按照[部署 FDB 文档](install-fdb.md)提前部署。
+:::
+
+## 第三步：创建远程存储后端
+存算分离集群搭建完毕后，需要通过客户端执行相应的 `CREATE STORAGE VAULT` SQL 语句创建存储后端来实现数据的持久化。
+集群访问方式可参考 [访问 Doris 集群](../compute-storage-coupled/install-config-cluster.md#访问配置) 来连接 Doris 集群，下文提供其中一种实现方式。
+
+**1. 获取 Service**
+
+在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
+
+```shell
+kubectl get svc
 ```
 
-:::tip 提示
-- `DorisDisaggregatedCluster` 必须在[规格中](./install-cluster/config-relation.md)配置使用 `DorisDisaggregatedMetaService` 资源信息。
-- 部署存算分离集群必须提前规划好想要使用的对象存储，按照集群关联配置中[对象存储配置章节](./install-cluster/config-relation.md)配置部署。
-:::
+返回结果如下：
+
+```shell
+NAME                                     TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)                               AGE
+test-disaggregated-cluster-fe            ClusterIP   10.96.147.97   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   15m
+test-disaggregated-cluster-fe-internal   ClusterIP   None           <none>        9030/TCP                              15m
+test-disaggregated-cluster-ms            ClusterIP   10.96.169.8    <none>        5000/TCP                              15m
+test-disaggregated-cluster-cg1           ClusterIP   10.96.47.90    <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   14m
+test-disaggregated-cluster-cg2           ClusterIP   10.96.50.199   <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   14m
+```
+
+**2. MySQL 客户端访问**
+
+使用以下命令，可以在当前的 Kubernetes 集群中创建一个包含 mysql client 的 pod：
+
+```shell
+kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never -- /bin/bash
+```
+
+在集群内的容器中，可以使用 fe 服务名访问 Doris 集群：
+
+```shell
+mysql -uroot -P9030 -h test-disaggregated-cluster-fe  
+```
+
+**3. 创建存储后端**
+
+创建语句语法，具体参考[管理 Storage Vault](../../../../compute-storage-decoupled/managing-storage-vault.md)。
+这里提供 S3 协议对象存储的示例：
+
+1. 创建 S3 Storage Vault
+```SQL
+CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+    PROPERTIES (
+        "type"="S3",                                   -- required
+        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
+        "s3.region" = "bj",                            -- required
+        "s3.bucket" = "bucket",                        -- required
+        "s3.root.path" = "big/data/prefix",            -- required
+        "s3.access_key" = "ak",                        -- required
+        "s3.secret_key" = "sk",                        -- required
+        "provider" = "OSS"                             -- required
+    );
+```
+
+2. 设置默认数据后端
+```SQL
+SET s3_vault AS DEFAULT STORAGE VAULT;
+```
+
+
+
+

@@ -477,7 +477,7 @@ UNIQUE KEY(k1, k2)
 * 动态分区相关
 
 
-    动态分区相关参考[分区分桶-动态分区](../../../../table-design/data-partition.md#动态分区)
+    动态分区相关参考[数据划分-动态分区](../../../../table-design/data-partitioning/dynamic-partitioning)
 
 
 ### Example
@@ -820,7 +820,7 @@ UNIQUE KEY(k1, k2)
 
 #### 分区和分桶
 
-一个表必须指定分桶列，但可以不指定分区。关于分区和分桶的具体介绍，可参阅 [数据划分](../../../../table-design/data-partition) 文档。
+一个表必须指定分桶列，但可以不指定分区。关于分区和分桶的具体介绍，可参阅 [数据划分](../../../../table-design/data-partitioning/basic-concepts) 文档。
 
 Doris 中的表可以分为分区表和无分区的表。这个属性在建表时确定，之后不可更改。即对于分区表，可以在之后的使用过程中对分区进行增删操作，而对于无分区的表，之后不能再进行增加分区等操作。
 
@@ -830,11 +830,11 @@ Doris 中的表可以分为分区表和无分区的表。这个属性在建表�
 
 #### 动态分区
 
-动态分区功能主要用于帮助用户自动的管理分区。通过设定一定的规则，Doris 系统定期增加新的分区或删除历史分区。可参阅 [动态分区](../../../../table-design/data-partition#dynamic-partitioning) 文档查看更多帮助。
+动态分区功能主要用于帮助用户自动的管理分区。通过设定一定的规则，Doris 系统定期增加新的分区或删除历史分区。可参阅 [动态分区](../../../../table-design/data-partitioning/dynamic-partitioning) 文档查看更多帮助。
 
 #### 自动分区
 
-自动分区功能文档参见 [自动分区](../../../../table-design/data-partition#auto-partitioning)。
+自动分区功能文档参见 [自动分区](../../../../table-design/data-partitioning/auto-partitioning)。
 
 #### 物化视图
 

@@ -76,12 +76,12 @@ INSERT OVERWRITE table table_name
 
 #### For Auto Partition Table
 
-如果 INSERT OVERWRITE 的目标表是自动分区表，那么行为受到 [Session Variable](../../../../query/query-variables/variables#变量) `enable_auto_create_when_overwrite` 的控制，具体行为如下：
+如果 INSERT OVERWRITE 的目标表是自动分区表，那么行为受到 [Session Variable](../#变量) `enable_auto_create_when_overwrite` 的控制，具体行为如下：
 1. 若未指定 PARTITION （覆写整表），当 `enable_auto_create_when_overwrite` 为 `true`，在覆写整表已有数据的同时，对于没有对应分区的数据，按照该表的自动分区规则创建分区，并容纳这些原本没有对应分区的数据。如果 `enable_auto_create_when_overwrite` 为 `false`，未找到分区的数据将累计错误行直到失败。
 2. 如果指定了覆写的 PARTITION，那么在此过程中，AUTO PARTITION 表表现得如同普通分区表一样，不满足现有分区条件的数据将被过滤，而非创建新的分区。
 3. 若指定 PARTITION 为 `partition(*)` （自动检测分区并覆写），当 `enable_auto_create_when_overwrite` 为 `true`，对于那些在表中有对应分区的数据，覆写它们对应的分区，其他已有分区不变。同时，对于没有对应分区的数据，按照该表的自动分区规则创建分区，并容纳这些原本没有对应分区的数据。如果 `enable_auto_create_when_overwrite` 为 `false`，未找到分区的数据将累计错误行直到失败。
 
-`enable_auto_create_when_overwrite` 自 3.0.1 引入，在没有 `enable_auto_create_when_overwrite` 的版本，行为如同该变量值为 `false`。
+`enable_auto_create_when_overwrite` 自 3.0.3 引入，在没有 `enable_auto_create_when_overwrite` 的版本，行为如同该变量值为 `false`。
 
 示例如下：
 

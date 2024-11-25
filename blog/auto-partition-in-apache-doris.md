@@ -6,8 +6,6 @@
     'date': '2024-08-14',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-   'picked': "true",
-    'order': "4",
     "image": '/images/auto-partition-in-apache-doris.jpg'
 }
 
@@ -40,11 +38,11 @@ Like in many databases, [Apache Doris](https://doris.apache.org) shards data int
 
 Prior to version [2.1.0](https://doris.apache.org/blog/release-note-2.1.0), there are two way you can create data partitions in Apache Doris:
 
-- **[Manual Partition](https://doris.apache.org/docs/table-design/data-partition/#manual-partitioning)**: Users specify the partitions in the table creation statement, or modify them through DDL statements afterwards.
+- **[Manual Partition](https://doris.apache.org/docs/table-design/data-partitioning/manual-partitioning)**: Users specify the partitions in the table creation statement, or modify them through DDL statements afterwards.
 
-- **[Dynamic Partition](https://doris.apache.org/docs/table-design/data-partition/#dynamic-partition)**: The system automatically maintains partitions within a pre-defined range based on the data ingestion time.
+- **[Dynamic Partition](https://doris.apache.org/docs/table-design/data-partitioning/dynamic-partitioning)**: The system automatically maintains partitions within a pre-defined range based on the data ingestion time.
 
-In Apache Doris 2.1.0, we have introduced **[Auto Partition](https://doris.apache.org/docs/table-design/data-partition/#auto-partition)**. It supports partitioning data by RANGE or by LIST and further enhances flexibility on top of automatic partitioning.
+In Apache Doris 2.1.0, we have introduced **[Auto Partition](https://doris.apache.org/docs/table-design/data-partitioning/auto-partitioning)**. It supports partitioning data by RANGE or by LIST and further enhances flexibility on top of automatic partitioning.
 
 ## Evolution of partitioning strategies in Doris
 

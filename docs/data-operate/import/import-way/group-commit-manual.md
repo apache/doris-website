@@ -44,6 +44,8 @@ Doris groups multiple loads into one transaction commit based on the `group_comm
 
 Doris writes data to the Write Ahead Log (WAL) firstly, then the load is returned. Doris groups multiple loads into one transaction commit based on the `group_commit_interval` table property, and the data is visible after the commit. To prevent excessive disk space usage by the WAL, it automatically switches to `sync_mode`. This is suitable for latency-sensitive and high-frequency writing.
 
+The number of WALs can be viewed through the FE HTTP interface, as detailed [here](../../admin-manual/fe/get-wal-size-action.md). Alternatively, you can search for the keyword `wal` in the BE metrics.
+
 ## Basic operations
 
 If the table schema is:
@@ -67,7 +69,7 @@ To reduce the CPU cost of SQL parsing and query planning, we provide the `Prepar
 1. Setup JDBC url and enable server side prepared statement
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500
 ```
 
 2. Set `group_commit` session variable, there are two ways to do it:
@@ -75,7 +77,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
 * Add `sessionVariables=group_commit=async_mode` in JDBC url
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&sessionVariables=group_commit=async_mode
+url = url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode
 ```
 
 * Use `SET group_commit = async_mode;` command
@@ -90,7 +92,7 @@ try (Statement statement = conn.createStatement()) {
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -99,35 +101,12 @@ private static final String USER = "root";
 private static final String PASSWD = "";
 private static final int INSERT_BATCH_SIZE = 10;
 
-private static void groupCommitInsert() throws Exception {
-    Class.forName(JDBC_DRIVER);
-    try (Connection conn = DriverManager.getConnection(String.format(URL_PATTERN, HOST, PORT, DB), USER, PASSWD)) {
-        // set session variable 'group_commit'
-        try (Statement statement = conn.createStatement()) {
-            statement.execute("SET group_commit = async_mode;");
-        }
-
-        String query = "insert into " + TBL + " values(?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            for (int i = 0; i < INSERT_BATCH_SIZE; i++) {
-                stmt.setInt(1, i);
-                stmt.setString(2, "name" + i);
-                stmt.setInt(3, i + 10);
-                int result = stmt.executeUpdate();
-                System.out.println("rows: " + result);
-            }
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}   
-
 private static void groupCommitInsertBatch() throws Exception {
     Class.forName(JDBC_DRIVER);
     // add rewriteBatchedStatements=true and cachePrepStmts=true in JDBC url
     // set session variables by sessionVariables=group_commit=async_mode in JDBC url
     try (Connection conn = DriverManager.getConnection(
-            String.format(URL_PATTERN + "&rewriteBatchedStatements=true&cachePrepStmts=true&sessionVariables=group_commit=async_mode", HOST, PORT, DB), USER, PASSWD)) {
+            String.format(URL_PATTERN, HOST, PORT, DB), USER, PASSWD)) {
 
         String query = "insert into " + TBL + " values(?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -148,7 +127,122 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-See [Synchronize Data Using Insert Method](./insert-into-manual) for more details about **JDBC**.
+**Note:** Due to the high frequency of `INSERT INTO` statements, a large amount of audit logs might be printed, which could impact overall performance. By default, the audit log for prepared statements is disabled. You can control whether to print the audit log for prepared statements by setting a session variable.
+
+```sql
+# Configure the session variable to enable printing the audit log for prepared statements. By default, it is set to false, which disables printing the audit log for prepared statements.
+set enable_prepared_stmt_audit_log=true;
+```
+
+For more usage on **JDBC**, refer to [Using Insert to Synchronize Data](./insert-into-manual).
+
+### Using Golang for Group Commit
+
+Golang has limited support for prepared statements, so we can manually batch the statements on the client side to improve the performance of Group Commit. Below is an example program. 
+
+```Golang
+package main
+
+import (
+    "database/sql"
+    "fmt"
+    "math/rand"
+    "strings"
+    "sync"
+    "sync/atomic"
+    "time"
+
+    _ "github.com/go-sql-driver/mysql"
+)
+
+const (
+    host     = "127.0.0.1"
+    port     = 9038
+    db       = "test"
+    user     = "root"
+    password = ""
+    table    = "async_lineitem"
+)
+
+var (
+    threadCount = 20
+    batchSize   = 100
+)
+
+var totalInsertedRows int64
+var rowsInsertedLastSecond int64
+
+func main() {
+    dbDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", user, password, host, port, db)
+    db, err := sql.Open("mysql", dbDSN)
+    if err != nil {
+        fmt.Printf("Error opening database: %s\n", err)
+        return
+    }
+    defer db.Close()
+
+    var wg sync.WaitGroup
+    for i := 0; i < threadCount; i++ {
+        wg.Add(1)
+        go func() {
+            defer wg.Done()
+            groupCommitInsertBatch(db)
+        }()
+    }
+
+    go logInsertStatistics()
+
+    wg.Wait()
+}
+
+func groupCommitInsertBatch(db *sql.DB) {
+    for {
+        valueStrings := make([]string, 0, batchSize)
+        valueArgs := make([]interface{}, 0, batchSize*16)
+        for i := 0; i < batchSize; i++ {
+            for i = 0; i < batchSize; i++ {
+                valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, "N")
+                valueArgs = append(valueArgs, "O")
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, "DELIVER IN PERSON")
+                valueArgs = append(valueArgs, "SHIP")
+                valueArgs = append(valueArgs, "N/A")
+            }
+        }
+        stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
+            table, strings.Join(valueStrings, ","))
+        _, err := db.Exec(stmt, valueArgs...)
+        if err != nil {
+            fmt.Printf("Error executing batch: %s\n", err)
+            return
+        }
+        atomic.AddInt64(&rowsInsertedLastSecond, int64(batchSize))
+        atomic.AddInt64(&totalInsertedRows, int64(batchSize))
+    }
+}
+
+func logInsertStatistics() {
+    for {
+        time.Sleep(1 * time.Second)
+        fmt.Printf("Total inserted rows: %d\n", totalInsertedRows)
+        fmt.Printf("Rows inserted in the last second: %d\n", rowsInsertedLastSecond)
+        rowsInsertedLastSecond = 0
+    }
+}
+
+```
+
 
 ### INSERT INTO VALUES
 
@@ -434,9 +528,13 @@ We have separately tested the write performance of group commit in high-concurre
 
 #### Environment
 
-* 1 FE: 8-core CPU, 16 GB RAM, 1 200 GB SSD disk
-* 3 BE: 16-core CPU, 64 GB RAM, 1 2 TB SSD disk
-* 1 Client: 8-core CPU, 64 GB RAM, 1 100 GB SSD disk
+* 1 Front End (FE) server: Alibaba Cloud with 8-core CPU, 16GB RAM, and one 100GB ESSD PL1 SSD.
+
+* 3 Backend (BE) servers: Alibaba Cloud with 16-core CPU, 64GB RAM, and one 1TB ESSD PL1 SSD.
+
+* 1 Test Client: Alibaba Cloud with 16-core CPU, 64GB RAM, and one 100GB ESSD PL1 SSD.
+
+* The version for testing is Doris-2.1.5.
 
 #### DataSet
 
@@ -448,24 +546,24 @@ We have separately tested the write performance of group commit in high-concurre
 
 #### Test Method
 
-* Setting different single-concurrency data size and concurrency num between `non group_commit` and `group_commit` modes.
+* Setting different single-concurrency data size and concurrency num between `non group_commit` and `group_commit=async mode` modes.
 
 #### Test Result
 
 | Load Way           | Single-concurrency Data Size | Concurrency | Cost Seconds | Rows / Seconds | MB / Seconds |
-|--------------------|------------------------------|-------------|--------------------|----------------|--------------|
-| `group_commit`     | 10 KB                        | 10          | 3707               | 66,697         | 8.56         |
-| `group_commit`     | 10 KB                        | 30          | 3385               | 73,042         | 9.38         |
-| `group_commit`     | 100 KB                       | 10          | 473                | 522,725        | 67.11        |
-| `group_commit`     | 100 KB                       | 30          | 390                | 633,972        | 81.39        |
-| `group_commit`     | 500 KB                       | 10          | 323                | 765,477        | 98.28        |
-| `group_commit`     | 500 KB                       | 30          | 309                | 800,158        | 102.56       |
-| `group_commit`     | 1 MB                         | 10          | 304                | 813,319        | 104.24       |
-| `group_commit`     | 1 MB                         | 30          | 286                | 864,507        | 110.88       |
-| `group_commit`     | 10 MB                        | 10          | 290                | 852,583        | 109.28       |
-| `non group_commit` | 1 MB                         | 10          | `-235 error`       |                |              |
-| `non group_commit` | 10 MB                        | 10          | 519                | 476,395        | 61.12        |
-| `non group_commit` | 10 MB                        | 30          | `-235 error`       |                |              |
+|------------------|-------------|--------|-------------|--------------------|-------------------|
+| group_commit     | 10 KB       | 10     | 3306      | 74,787         | 9.8              |
+| group_commit     | 10 KB       | 30     | 3264      | 75,750         | 10.0            |
+| group_commit     | 100 KB      | 10     | 424       | 582,447        | 76.7             |
+| group_commit     | 100 KB      | 30     | 366       | 675,543        | 89.0             |
+| group_commit     | 500 KB      | 10     | 187       | 1,318,661       | 173.7            |
+| group_commit     | 500 KB      | 30     | 183       | 1,351,087       | 178.0            |
+| group_commit     | 1 MB        | 10     | 178       | 1,385,148       | 182.5            |
+| group_commit     | 1 MB        | 30     | 178       | 1,385,148       | 182.5            |
+| group_commit     | 10 MB       | 10     | 177       | 1,396,887       | 184.0            |
+| non group_commit   | 1 MB        | 10     | 2824      | 87,536          | 11.5             |
+| non group_commit   | 10 MB       | 10     | 450       | 549,442         | 68.9             |
+| non group_commit   | 10 MB       | 30     | 177       | 1,396,887       | 184.0            |
 
 In the above test, the CPU usage of BE fluctuates between 10-40%.
 
@@ -475,9 +573,15 @@ The `group_commit` effectively enhances import performance while reducing the nu
 
 #### Environment
 
-* 1 FE: 8-core CPU, 16 GB RAM, 1 200 GB SSD disk
-* 1 BE: 16-core CPU, 64 GB RAM, 1 2 TB SSD disk
-* 1 Client: 16-core CPU, 64 GB RAM, 1 100 GB SSD disk
+1 Front End (FE) server: Alibaba Cloud with an 8-core CPU, 16GB RAM, and one 100GB ESSD PL1 SSD.
+
+1 Backend (BE) server: Alibaba Cloud with a 16-core CPU, 64GB RAM, and one 500GB ESSD PL1 SSD.
+
+1 Test Client: Alibaba Cloud with a 16-core CPU, 64GB RAM, and one 100GB ESSD PL1 SSD.
+
+The testing version is Doris-2.1.5.
+
+Disable the printing of prepared statement audit logs to enhance performance.
 
 #### DataSet
 
@@ -495,7 +599,149 @@ The `group_commit` effectively enhances import performance while reducing the nu
 
 
 | Rows per insert | Concurrency | Rows / Second | MB / Second |
-|-----------------|-------------|---------------|-------------|
-| 100             | 20          | 106931        | 11.46       |
+|-------------------|--------|--------------------|--------------------|
+| 100               | 10     | 107,172            | 11.47              |
+| 100               | 20     | 140,317            | 14.79              |
+| 100               | 30     | 142,882            | 15.28              |
 
 In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates between 60-70%.
+
+
+### Insert into Sync Mode Small Batch Data
+
+**Machine Configuration**
+
+* 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
+* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk.
+* 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
+* Test version: Doris-2.1.5
+
+**Dataset**
+
+* The data of tpch sf10 `lineitem` table.
+
+* The create table statement is
+```sql
+CREATE TABLE IF NOT EXISTS lineitem (
+  L_ORDERKEY    INTEGER NOT NULL,
+  L_PARTKEY     INTEGER NOT NULL,
+  L_SUPPKEY     INTEGER NOT NULL,
+  L_LINENUMBER  INTEGER NOT NULL,
+  L_QUANTITY    DECIMAL(15,2) NOT NULL,
+  L_EXTENDEDPRICE  DECIMAL(15,2) NOT NULL,
+  L_DISCOUNT    DECIMAL(15,2) NOT NULL,
+  L_TAX         DECIMAL(15,2) NOT NULL,
+  L_RETURNFLAG  CHAR(1) NOT NULL,
+  L_LINESTATUS  CHAR(1) NOT NULL,
+  L_SHIPDATE    DATE NOT NULL,
+  L_COMMITDATE  DATE NOT NULL,
+  L_RECEIPTDATE DATE NOT NULL,
+  L_SHIPINSTRUCT CHAR(25) NOT NULL,
+  L_SHIPMODE     CHAR(10) NOT NULL,
+  L_COMMENT      VARCHAR(44) NOT NULL
+)
+DUPLICATE KEY(L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER)
+DISTRIBUTED BY HASH(L_ORDERKEY) BUCKETS 32
+PROPERTIES (
+  "replication_num" = "3"
+);
+```
+
+**Testing Tool**
+
+* [Jmeter](https://jmeter.apache.org/)
+
+JMeter Parameter Settings as Shown in the Images
+
+![jmeter1](/images/group-commit/jmeter1.jpg)
+![jmeter2](/images/group-commit/jmeter2.jpg)
+
+1. Set the Init Statement Before Testing:
+set group_commit=async_mode and set enable_nereids_planner=false.
+
+2. Enable JDBC Prepared Statement:
+Complete URL:
+jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false.
+
+3. Set the Import Type to Prepared Update Statement.
+
+4. Set the Import Statement.
+
+5. Set the Values to Be Imported:
+Ensure that the imported values match the data types one by one.
+
+**Testing Methodology**
+
+* Use JMeter to write data into Doris. Each thread writes 1 row of data per execution using the insert into statement.
+
+**Test Results**
+
+* Data unit: rows per second.
+
+* The following tests are divided into 30, 100, and 500 concurrency.
+
+**Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|                       | 321.5      | 307.3      | 285.8    | 224.3    |
+
+**Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|                       | 1175.2     | 1108.7     | 1016.3    | 704.5  |
+
+**Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|                       | 3289.8    | 3686.7      | 3280.7    | 2609.2   |
+
+### Insert into Sync Mode Large Batch Data
+
+**Machine Configuration**
+
+* 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
+
+* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk.
+
+* 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
+
+* Test version: Doris-2.1.5
+
+**Dataset**
+
+* Insert into statement for 1000 rows: `insert into tbl values(1,1)...` (1000 rows omitted)
+
+**Testing Tool**
+
+* [Jmeter](https://jmeter.apache.org/)
+
+**Testing Methodology**
+
+* Use JMeter to write data into Doris. Each thread writes 1000 row of data per execution using the insert into statement.
+
+**Test Results**
+
+* Data unit: rows per second.
+
+* The following tests are divided into 30, 100, and 500 concurrency.
+
+**Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|                       | 92.2K     | 85.9K     | 84K     | 83.2K     |
+
+**Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|                       | 70.4K     |70.5K     | 73.2K      | 69.4K    |
+
+**Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|                       | 46.3K      | 47.7K     | 47.4K      | 46.5K      |

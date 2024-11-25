@@ -28,14 +28,8 @@
                             "items": [
                                 "install/cluster-deployment/k8s-deploy/install-env",
                                 "install/cluster-deployment/k8s-deploy/install-quickstart",
-                                "install/cluster-deployment/k8s-deploy/install-operator",
                                 "install/cluster-deployment/k8s-deploy/install-config-cluster",
-                                "install/cluster-deployment/k8s-deploy/install-doris-cluster",
-                                "install/cluster-deployment/k8s-deploy/install-access-cluster",
-                                "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
-                                "install/cluster-deployment/k8s-deploy/root-user-use",
-                                "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
-                                "install/cluster-deployment/k8s-deploy/debug-crash"
+                                "install/cluster-deployment/k8s-deploy/cluster-operation"
                             ]
                         },
                         "install/cluster-deployment/doris-on-aws"
@@ -88,9 +82,20 @@
                     ]
                 },
                 "table-design/row-store",
-                "table-design/data-partition",
+                {
+                    "type": "category",
+                    "label": "Data Partitioning",
+                    "items": [
+                        "table-design/data-partitioning/basic-concepts",
+                        "table-design/data-partitioning/manual-partitioning",
+                        "table-design/data-partitioning/dynamic-partitioning",
+                        "table-design/data-partitioning/auto-partitioning",
+                        "table-design/data-partitioning/manual-bucketing",
+                        "table-design/data-partitioning/auto-bucket",
+                        "table-design/data-partitioning/common-issues"
+                    ]
+                },
                 "table-design/schema-change",
-                "table-design/cold-hot-separation",
                 "table-design/auto-increment",
                 "table-design/best-practice"
             ]
@@ -416,17 +421,15 @@
                     "items": [
                         {
                             "type": "category",
-                            "label": "Monitor Metrics",
+                            "label": "Monitor",
                             "items": [
-                                "admin-manual/maint-monitor/monitor-metrics/metrics"
+                                "admin-manual/maint-monitor/monitor-metrics/metrics",
+                                "admin-manual/maint-monitor/monitor-alert"
                             ]
                         },
                         "admin-manual/maint-monitor/disk-capacity",
                         "admin-manual/maint-monitor/tablet-repair-and-balance",
-                        "admin-manual/maint-monitor/be-olap-error-code",
-                        "admin-manual/maint-monitor/doris-error-code",
                         "admin-manual/maint-monitor/tablet-meta-tool",
-                        "admin-manual/maint-monitor/monitor-alert",
                         "admin-manual/maint-monitor/tablet-local-debug",
                         "admin-manual/maint-monitor/metadata-operation",
                         "admin-manual/maint-monitor/automatic-service-start",
@@ -450,7 +453,7 @@
                         "admin-manual/system-tables/overview",
                         {
                             "type": "category",
-                            "label": "Database: information_schema",
+                            "label": "information_schema",
                             "items": [
                                 "admin-manual/system-tables/information_schema/active_queries",
                                 "admin-manual/system-tables/information_schema/backend_active_tasks",
@@ -493,7 +496,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "Database: MySQL",
+                            "label": "mysql",
                             "items": [
                                 "admin-manual/system-tables/mysql/props_priv",
                                 "admin-manual/system-tables/mysql/user"
@@ -501,7 +504,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "Database: __internal_schema",
+                            "label": "__internal_schema",
                             "items": [
                                 "admin-manual/system-tables/internal_schema/audit_log",
                                 "admin-manual/system-tables/internal_schema/column_statistics",
@@ -596,7 +599,8 @@
                                 "admin-manual/open-api/be-http/version-info",
                                 "admin-manual/open-api/be-http/health",
                                 "admin-manual/open-api/be-http/tablet-reload",
-                                "admin-manual/open-api/be-http/tablet-restore"
+                                "admin-manual/open-api/be-http/tablet-restore",
+                                "admin-manual/open-api/be-http/be-vlog"
                             ]
                         }
                     ]
@@ -1156,7 +1160,6 @@
                                 "sql-manual/sql-functions/numeric-functions/pmod",
                                 "sql-manual/sql-functions/numeric-functions/round",
                                 "sql-manual/sql-functions/numeric-functions/round-bankers",
-                                "sql-manual/sql-functions/numeric-functions/xor",
                                 "sql-manual/sql-functions/numeric-functions/truncate",
                                 "sql-manual/sql-functions/numeric-functions/abs",
                                 "sql-manual/sql-functions/numeric-functions/sqrt",
@@ -1621,7 +1624,8 @@
                     "items": [
                         "gettingStarted/tutorials/building-lakehouse/doris-hudi",
                         "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
+                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
+                        "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
                     ]
                 },
                 "gettingStarted/tutorials/log-storage-analysis"
@@ -1634,15 +1638,18 @@
         "benchmark/tpcds"
     ],
     "ecosystem": [
+        "ecosystem/cloudcanal",
         "ecosystem/spark-doris-connector",
         "ecosystem/flink-doris-connector",
         "ecosystem/doris-kafka-connector",
         "ecosystem/datax",
         "ecosystem/dbt-doris-adapter",
         "ecosystem/seatunnel",
+        "ecosystem/kettle",
         "ecosystem/kyuubi",
         "ecosystem/logstash",
         "ecosystem/beats",
+        "ecosystem/fluentbit",
         "ecosystem/automq-load",
         "ecosystem/doris-streamloader",
         "ecosystem/hive-bitmap-udf",
@@ -1685,6 +1692,7 @@
             "type": "category",
             "label": "v2.1",
             "items": [
+                "releasenotes/v2.1/release-2.1.7",
                 "releasenotes/v2.1/release-2.1.6",
                 "releasenotes/v2.1/release-2.1.5",
                 "releasenotes/v2.1/release-2.1.4",

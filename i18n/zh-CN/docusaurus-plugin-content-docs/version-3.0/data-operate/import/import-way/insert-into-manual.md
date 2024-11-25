@@ -65,9 +65,9 @@ INSERT INTO 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
 ```sql
 CREATE TABLE testdb.test_table(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "name",
+    age                INT                   COMMENT "age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -336,7 +336,7 @@ SHOW LOAD WARNINGS ON "http://ip:port/api/_load_error_log?file=_shard_13/error_l
 
 Doris 可以创建外部表。创建完成后，可以通过 `INSERT INTO SELECT` 的方式导入外部表的数据，当然也可以通过 SELECT 语句直接查询外部表的数据，
 
-Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon(Incubating)、Elasticsearch、MySQL、Oracle、SQLSserver 等主流数据湖、数据库的连接访问。
+Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon(Incubating)、Elasticsearch、MySQL、Oracle、SQL Server 等主流数据湖、数据库的连接访问。
 
 Multi-Catalog 相关功能，请查看湖仓一体文档。
 

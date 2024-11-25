@@ -30,12 +30,13 @@ When users have data update requirements, they can choose to use the Unique data
 
 The Unique data model provides two implementation methods:
 
+- Merge-on-write. In version 1.2, we introduced the merge-on-write implementation, which completes all data deduplication tasks during the data writing phase, thus providing excellent query performance. Since version 2.1, merge-on-write has become very mature and stable. Due to its excellent query performance, it has become the default implementation for the Unique model.
+
 - Merge-on-read. In the merge-on-read implementation, users will not trigger any data deduplication-related operations when writing data. All data deduplication operations are performed during queries or compaction. Therefore, the write performance of merge-on-read is better, the query performance is poor, and the memory consumption is also higher.
-- Merge-on-write. In version 1.2, we introduced the merge-on-write implementation, which completes all data deduplication tasks during the data writing phase, thus providing excellent query performance. Since version 2.0, merge-on-write has become very mature and stable. Due to its excellent query performance, we recommend most users to choose this implementation. Since version 2.1, merge-on-write has become the default implementation for the Unique model.
 
 The default update semantics of the Unique model is a **full-row UPSERT**, which stands for UPDATE OR INSERT. If the key of the row data exists, an update will be performed; if it does not exist, new data will be inserted. Under the full-row UPSERT semantics, even if the user uses INSERT INTO to specify partial columns for writing, Doris will fill the unprovided columns with NULL values or default values in the Planner.
 
-If a user wishes to update partial fields, they need to use the merge-on-write implementation and enable support for partial column updates through specific parameters. Please refer to the Data Operate/Data Update section for more details.
+If a user wishes to update partial fields, they need to use the merge-on-write implementation and enable support for partial column updates through specific parameters. Please refer to the documentation [partial column updates](../../data-operate/update/update-of-unique-model) for more details.
 
 Let's look at how to create a Unique model table with merge-on-read and merge-on-write using a typical user basic information table as an example. This table does not have aggregation requirements and only needs to ensure the uniqueness of the primary key (The primary key is user_id + username).
 
@@ -50,9 +51,9 @@ Let's look at how to create a Unique model table with merge-on-read and merge-on
 | address       | VARCHAR (500) | No    | User address           |
 | register_time | DATETIME      | No    | User registration time |
 
-## Merge-on-Read
+## Merge-on-Write
 
-The table creation statement for Merge-on-read is as follows:
+The table creation statement for Merge-on-Write is as follows:
 
 ```
 CREATE TABLE IF NOT EXISTS example_tbl_unique
@@ -67,18 +68,18 @@ CREATE TABLE IF NOT EXISTS example_tbl_unique
     `register_time` DATETIME COMMENT "User registration time"
 )
 UNIQUE KEY(`user_id`, `username`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 10
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
+"replication_allocation" = "tag.location.default: 3"
 );
 ```
 
-## Merge-on-Write
+## Merge-on-Read
 
-The table creation statement for Merge-on-write is as follows:
+The table creation statement for Merge-on-Read is as follows:
 
 ```
-CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
+CREATE TABLE IF NOT EXISTS example_tbl_unique
 (
     `user_id` LARGEINT NOT NULL COMMENT "User ID",
     `username` VARCHAR(50) NOT NULL COMMENT "Username",
@@ -90,17 +91,17 @@ CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
     `register_time` DATETIME COMMENT "User registration time"
 )
 UNIQUE KEY(`user_id`, `username`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 10
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1",
-"enable_unique_key_merge_on_write" = "true"
+"replication_allocation" = "tag.location.default: 3",
+"enable_unique_key_merge_on_write" = "false"
 );
 ```
 
-Users need to add the property with **enable_unique_key_merge_on_write" = "true"** when creating the table to enable Merge-on-write.
+Users need to add the property with **enable_unique_key_merge_on_write" = "false"** when creating the table to enable Merge-on-read.
 
 ```
-"enable_unique_key_merge_on_write" = "true"
+"enable_unique_key_merge_on_write" = "false"
 ```
 
 :::caution
@@ -119,6 +120,9 @@ For users of version 1.2:
 ## Use attention
 
 - The implementation of the Unique model can only be determined during table creation and cannot be modified through schema changes.
+
 - The Merge-on-read table cannot be seamlessly upgraded to the Merge-on-write table (due to completely different data organization methods). If you need to switch to Merge-on-write, you must manually perform an `INSERT INTO unique-mow-table SELECT * FROM source_table` to re-import the data.
+
 - **Whole-row Updates**: The default update semantics for the Unique model is a whole-row UPSERT, which stands for UPDATE OR INSERT. If the key for a row of data exists, it will be updated; if it does not exist, new data will be inserted. Under the whole-row UPSERT semantics, even if the user specifies only certain columns for insertion using `INSERT INTO`, Doris will fill in the unprovided columns with NULL values or default values during the planning phase.
+
 - **Partial Column Updates**: If the user wishes to update only certain fields, they must use Merge-on-write and enable support for partial column updates through specific parameters. Please refer to the documentation on [partial column updates](../../data-operate/update/update-of-unique-model) for relevant usage recommendations.

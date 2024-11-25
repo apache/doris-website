@@ -163,7 +163,7 @@ It is not recommended to disable swap by setting vm.swappiness = 0 because this 
 
 ### Check and disable system firewall
 
-If you find different ports, try disabling the firewall to confirm whether it is the cause. If it is, open the corresponding ports for communication based on the configured ports for Doris components.
+If you find inaccessible ports, try disabling  the firewall to confirm whether it is the cause. If it is, open the corresponding ports for communication based on the configured ports for Doris components.
 
 ```SQL
 sudo systemctl stop firewalld.service
@@ -290,7 +290,7 @@ This is a CIDR representation that specifies the IP used by the FE. In environme
    JAVA_OPTS="-Xmx16384m -XX:+UseMembar -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=7 -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSClassUnloadingEnabled -XX:-CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SoftRefLRUPolicyMSPerMB=0 -Xloggc:$DORIS_HOME/log/fe.gc.log.$DATE"
    ```
 
-6. Modify the case sensitivity parameter `lower_case_table_names` By default, Doris is case-sensitive for table names. If you require case-insensitive table names, you need to set this during cluster initialization. Note that once the cluster initialization is completed, the table name case sensitivity cannot be changed. Please refer to the [variable](../../query/query-variables/variables) documentation for more details on the `lower_case_table_names` setting.
+6. Modify the case sensitivity parameter `lower_case_table_names` By default, Doris is case-sensitive for table names. If you require case-insensitive table names, you need to set this during cluster initialization. Note that once the cluster initialization is completed, the table name case sensitivity cannot be changed. Please refer to the variable documentation for more details on the `lower_case_table_names` setting.
 
 **Start FE process**
 

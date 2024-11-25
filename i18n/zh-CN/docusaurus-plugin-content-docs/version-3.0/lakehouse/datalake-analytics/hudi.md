@@ -70,7 +70,7 @@ Spark 在创建 hudi mor 表的时候，会创建 `_ro` 后缀的 read optimize 
 
 ## 查询优化
 
-Doris 使用 parquet native reader 读取 COW 表的数据文件，使用 Java SDK(通过 JNI 调用 hudi-bundle) 读取 MOR 表的数据文件。在 upsert 场景下，MOR 依然会有数据文件没有被更新，这部分文件可以通过 parquet native reader 读取，用户可以通过 [explain](../../query/query-analysis/query-analytics) 命令查看 hudi scan 的执行计划，`hudiNativeReadSplits` 表示有多少 split 文件通过 parquet native reader 读取。
+Doris 使用 parquet native reader 读取 COW 表的数据文件，使用 Java SDK(通过 JNI 调用 hudi-bundle) 读取 MOR 表的数据文件。在 upsert 场景下，MOR 依然会有数据文件没有被更新，这部分文件可以通过 parquet native reader 读取，用户可以通过 Explain 命令查看 hudi scan 的执行计划，`hudiNativeReadSplits` 表示有多少 split 文件通过 parquet native reader 读取。
 ```
 |0:VHUDI_SCAN_NODE                                                             |
 |      table: minbatch_mor_rt                                                  |

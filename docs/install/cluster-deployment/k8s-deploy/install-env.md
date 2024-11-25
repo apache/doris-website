@@ -83,6 +83,6 @@ sysctl -w vm.max_map_count=2000000
 When deploying Doris, it is recommended to turn off transparent huge pages.
 
 ```shell
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-echo never > /sys/kernel/mm/transparent_hugepage/defrag
+echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
+echo madvise > /sys/kernel/mm/transparent_hugepage/defrag
 ```

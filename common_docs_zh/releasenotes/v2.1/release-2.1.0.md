@@ -408,7 +408,7 @@ PROPERTIES (
 
 :::note
 
-参考文档：[分区分桶](https://doris.apache.org/zh-CN/docs/table-design/data-partition)
+参考文档：[数据划分](https://doris.apache.org/zh-CN/docs/table-design/data-partitioning/basic-concepts)
 :::
 
 ### INSERT INTO SELECT 导入性能提升 100%

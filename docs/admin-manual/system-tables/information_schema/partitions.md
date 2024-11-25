@@ -26,13 +26,11 @@ under the License.
 
 ## Overview
 
-This table is solely used for compatibility with MySQL behavior. It is always empty.
+Show the Partition status of all tables in the database.
 
 ## Database
 
-
 `information_schema`
-
 
 ## Table Information
 

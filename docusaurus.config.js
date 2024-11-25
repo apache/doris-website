@@ -230,9 +230,7 @@ const config = {
             },
             announcementBar: {
                 id: 'apache_doris_meetup_singapore',
-                content: `<a href="https://www.meetup.com/apache-doris-meetup/events/303712793/?utm_medium=referral&utm_campaign=share-btn_savedevents_share_modal&utm_source=link" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Apache Doris Meetup @ Singapore on October 24 - Connect, share and explore innovative use cases!
-                        <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;">
-                    </a>`,
+                content: `<a href="https://5234442745174.huodongxing.com/event/5782312528011" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Join the Doris Summit Asia 2024 on December 14 ! </a>`,
                 backgroundColor: '#3C2FD4',
                 textColor: '#FFFFFF',
                 // isCloseable: false,

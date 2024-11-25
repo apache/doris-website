@@ -24,23 +24,15 @@
     "description": "The label for category Cluster Deployment in sidebar docs"
   },
   "sidebar.docs.category.Deploying on Kubernetes": {
-    "message": "K8s 部署",
+    "message": "在 Kubernetes 部署",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
   "sidebar.docs.category.Compute-storage coupled": {
-    "message": "K8s 部署存算一体",
+    "message": "在 Kubernetes 部署存算一体",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
   "sidebar.docs.category.Compute-storage decoupled": {
-    "message": "K8s 部署存算分离",
-    "description": "The label for category Deploying on Kubernetes in sidebar docs"
-  },
-  "sidebar.docs.category.Install Metaservice": {
-    "message": "部署 Metaservice",
-    "description": "The label for category Deploying on Kubernetes in sidebar docs"
-  },
-  "sidebar.docs.category.Install Cluster": {
-    "message": "部署 Cluster",
+    "message": "在 Kubernetes 部署存算分离",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
   "sidebar.docs.category.Database Connection": {
@@ -54,6 +46,10 @@
   "sidebar.docs.category.Data Models": {
     "message": "数据模型",
     "description": "The label for category Data Models in sidebar docs"
+  },
+  "sidebar.docs.category.Data Partitioning": {
+    "message": "数据划分",
+    "description": "The label for category Data Partitioning in sidebar docs"
   },
   "sidebar.docs.category.Table Indexes": {
     "message": "表索引",
@@ -105,47 +101,35 @@
   },
   "sidebar.docs.category.Data Queries": {
     "message": "数据查询",
-    "description": "The label for category Query in sidebar docs"
+    "description": "The label for category Data Queries in sidebar docs"
   },
-  "sidebar.docs.category.Quering Data": {
-    "message": "数据查询",
-    "description": "The label for category Quering Data in sidebar docs"
+  "sidebar.docs.category.User Defined Functions": {
+    "message": "自定义函数",
+    "description": "The label for category User Defined Functions in sidebar docs"
   },
-  "sidebar.docs.category.Quering Variables": {
-    "message": "查询变量",
-    "description": "The label for category Quering Variables in sidebar docs"
+  "sidebar.docs.category.Queries Acceleration": {
+    "message": "查询加速",
+    "description": "The label for category Queries Acceleration in sidebar docs"
   },
-  "sidebar.docs.category.Cost-Based Optimizer": {
-    "message": "全新优化器",
-    "description": "The label for category Cost-Based Optimizer in sidebar docs"
-  },
-  "sidebar.docs.category.Pipeline Execution Engine": {
-    "message": "Pipeline 执行引擎",
-    "description": "The label for category Pipeline Execution Engine in sidebar docs"
-  },
-  "sidebar.docs.category.Caches": {
-    "message": "查询缓存",
-    "description": "The label for category Pipeline in sidebar docs"
-  },
-  "sidebar.docs.category.View and Materialize View": {
-    "message": "视图与物化视图",
+  "sidebar.docs.category.Materialize View": {
+    "message": "物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },
-  "sidebar.docs.category.Join Optimization": {
-    "message": "Join 优化",
-    "description": "The label for category Join Optimization in sidebar docs"
+  "sidebar.docs.category.Async-Materialize View": {
+    "message": "异步物化视图",
+    "description": "The label for category View and Materialize View in sidebar docs"
   },
   "sidebar.docs.category.Distincting Counts": {
     "message": "高效去重",
     "description": "The label for category Distincting Counts in sidebar docs"
   },
-  "sidebar.docs.category.Analyzing Query": {
-    "message": "查询分析",
-    "description": "The label for category Analyzing Query in sidebar docs"
+  "sidebar.docs.category.Tuning": {
+    "message": "查询调优原理与实践",
+    "description": "The label for category Tuning in sidebar docs"
   },
-  "sidebar.docs.category.User Defined Functions": {
-    "message": "自定义函数",
-    "description": "The label for category User Defined Functions in sidebar docs"
+  "sidebar.docs.category.Tuning Plan": {
+    "message": "计划调优",
+    "description": "The label for category Tuning in sidebar docs"
   },
   "sidebar.docs.category.Alter Table": {
     "message": "表结构变更",
@@ -224,15 +208,15 @@
     "description": "The label for category System Table in sidebar docs"
   },
   "sidebar.docs.category.Database: information_schema": {
-    "message": "所属数据库：information_schema",
+    "message": "information_schema",
     "description": "The label for category System Table in sidebar docs"
   },
   "sidebar.docs.category.Database: MySQL": {
-    "message": "所属数据库：MySQL",
+    "message": "mysql",
     "description": "The label for category System Table in sidebar docs"
   },
   "sidebar.docs.category.Database: __internal_schema": {
-    "message": "所属数据库：__internal_schema",
+    "message": "__internal_schema",
     "description": "The label for category System Table in sidebar docs"
   },
   "sidebar.docs.category.OPEN API": {
@@ -248,8 +232,8 @@
     "description": "The label for category BE HTTP API in sidebar docs"
   },
   "sidebar.docs.category.Monitor Metrics": {
-    "message": "监控指标",
-    "description": "The label for category Monitor Metrics in sidebar docs"
+    "message": "监控",
+    "description": "The label for category Monitor in sidebar docs"
   },
   "sidebar.docs.category.SQL Reference": {
     "message": "SQL 手册",

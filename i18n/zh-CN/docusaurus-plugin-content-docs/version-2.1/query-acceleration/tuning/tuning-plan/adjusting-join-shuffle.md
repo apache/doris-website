@@ -28,24 +28,17 @@ under the License.
 
 Doris 支持使用 Hint 来调整 Join 操作中数据 Shuffle 的类型，从而优化查询性能。本节将详细介绍如何在 Doris 中利用 Hint 来指定 Join Shuffle 的类型。
 
-目前，Doris 仅限于指定 Join 右表的 Distribute Type，并且仅提供两种类型供选择：`[shuffle] `和 `[broadcast]`。Distribute Type 需置于 Join 右表之前，可采用中括号 `[]` 或双斜杠 `//` 两种表示方式。
+目前，Doris 仅限于指定 Join 右表的 Distribute Type，并且仅提供两种类型供选择：`[shuffle] `和 `[broadcast]`。Distribute Type 需置于 Join 右表之前，可采用中括号 `[]`的方式。
 
 示例如下：
 
 ```sql
 SELECT COUNT(*) FROM t2 JOIN [broadcast] t1 ON t1.c1 = t2.c2;
-SELECT COUNT(*) FROM t2 JOIN /*+broadcast*/ t1 ON t1.c1 = t2.c2;
+SELECT COUNT(*) FROM t2 JOIN [shuffle] t1 ON t1.c1 = t2.c2;
 SELECT /*+ ordered */ COUNT(*) FROM t2 JOIN [broadcast] t1 ON t1.c1 = t2.c2;
-SELECT /*+ ordered */ COUNT(*) FROM t2 JOIN /+broadcast/ t1 ON t1.c1 = t2.c2;
+SELECT /*+ ordered */ COUNT(*) FROM t2 JOIN [shuffle] t1 ON t1.c1 = t2.c2;
 ```
 
-在使用时，需注意以下事项：
-
-1. 若遇到无法正确生成执行计划的 DistributeHint 时，Doris 不会显示该 Hint，而是会按“最大努力”原则使其生效。最终，以 EXPLAIN 显示的 Distribute 方式为准。
-
-2. 在当前版本中，DistributeHint 暂不支持与 LEADING 混用，且仅当 Distribute 指定的表位于 Join 右边时，Hint 才会生效。
-
-3. 建议将 DistributeHint 与 ORDERED 混用。首先利用 ORDERED 固定 Join 顺序，然后再指定相应 Join 中预期使用的 Distribute 方式。
 
 ## 调优案例
 
@@ -118,4 +111,10 @@ EXPLAIN SHAPE PLAN SELECT /*+ ordered */ COUNT(*) FROM t2 JOIN [broadcast] t1 ON
 
 ## 总结
 
-通过合理使用 DistributeHint，可以优化 Join 操作的 Shuffle 方式，提升查询性能。在实践中，建议 先通过 EXPLAIN 分析查询执行计划，再根据实际情况选择合适的 Shuffle 类型。
+通过合理使用 DistributeHint，可以优化 Join 操作的 Shuffle 方式，提升查询性能。在实践中，建议 先通过 EXPLAIN 分析查询执行计划，再根据实际情况选择合适的 Shuffle 类型。在使用时，需注意以下事项：
+
+1. 若遇到无法正确生成执行计划的 DistributeHint 时，Doris 不会显示该 Hint，而是会按“最大努力”原则使其生效。最终，以 EXPLAIN 显示的 Distribute 方式为准。
+
+2. 在当前版本中，DistributeHint 暂不支持与 LEADING 混用，且仅当 Distribute 指定的表位于 Join 右边时，Hint 才会生效。
+
+3. 建议将 DistributeHint 与 ORDERED 混用。首先利用 ORDERED 固定 Join 顺序，然后再指定相应 Join 中预期使用的 Distribute 方式。

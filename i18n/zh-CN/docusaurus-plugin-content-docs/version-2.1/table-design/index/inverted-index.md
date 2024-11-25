@@ -190,6 +190,14 @@ table_properties;
   <p>- 从 2.1.2 版本开始默认为 true，自动转小写，之前的版本默认为 false</p>
 </details>
 
+<details>
+  <summary>stopwords</summary>
+
+  **指明使用的停用词表，会影响分词器的行为**
+  <p>默认的内置停用词表包含一些无意义的词：'is'、'the'、'a' 等。在写入或者查询时，分词器会忽略停用词表中的词。</p>
+  <p>- none: 使用空的停用词表</p>
+</details>
+
 **4. `COMMENT` 是可选的，用于指定索引注释**
 
 
@@ -257,7 +265,7 @@ ALTER TABLE table_name DROP INDEX idx_name;
 
 :::tip
 
-`DROP INDEX` 会删除索引定义，新写入数据不会再写索引，同时会生成一个异步任务执行索引删除操作，在每个 BE 上有多个线程执行索引构建任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是3。
+`DROP INDEX` 会删除索引定义，新写入数据不会再写索引，同时会生成一个异步任务执行索引删除操作，在每个 BE 上有多个线程执行索引删除任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是3。
 
 :::
 
@@ -407,8 +415,7 @@ PROPERTIES ("replication_num" = "1");
 **通过 Stream Load 导入数据**
 
 ```
-
-wget https://doris-build-1308700295.cos.ap-beijing.myqcloud.com/regression/index/hacknernews_1m.csv.gz
+wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/index/hacknernews_1m.csv.gz
 
 curl --location-trusted -u root: -H "compress_type:gz" -T hacknernews_1m.csv.gz  http://127.0.0.1:8030/api/test_inverted_index/hackernews_1m/_stream_load
 {

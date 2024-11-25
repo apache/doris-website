@@ -26,7 +26,7 @@ under the License.
 
 JSON 数据类型，用二进制格式高效存储 [JSON](https://www.rfc-editor.org/rfc/rfc8785) 数据，通过 JSON 函数访问其内部字段。
 
-默认支持1048576 字节（1 MB），可调大到 2147483643 字节（2 GB），可通过 BE 配置`String_type_length_soft_limit_bytes` 调整。
+默认支持1048576 字节（1 MB），可调大到 2147483643 字节（2 GB），可通过 BE 配置`string_type_length_soft_limit_bytes` 调整。
 
     与普通 String 类型存储的 JSON 字符串相比，JSON 类型有两点优势
     1. 数据写入时进行 JSON 格式校验

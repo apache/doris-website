@@ -62,7 +62,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "line_delimiter:\n" \
     -H "columns_delimiter:|" \
     -H "enclose:'" \
-    -H "escape:\" \
+    -H "escape:\\" \
     -H "skip_lines:2" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -627,12 +627,12 @@ curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\
 
 4. 以多行 Object 形式导入多行数据
 
- ```json
- {"id": 100, "city": "beijing", "code" : 1}
- {"id": 101, "city": "shanghai"}
- {"id": 102, "city": "tianjin", "code" : 3}
- {"id": 103, "city": "chongqing", "code" : 4}
- ```
+```json
+{"id": 100, "city": "beijing", "code" : 1}
+{"id": 101, "city": "shanghai"}
+{"id": 102, "city": "tianjin", "code" : 3}
+{"id": 103, "city": "chongqing", "code" : 4}
+```
 
 StreamLoad 导入：
 
