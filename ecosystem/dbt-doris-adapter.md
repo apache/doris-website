@@ -260,9 +260,9 @@ seeds:
         cost: DecimalV3(19,10)
 ```
 
-## Usage Examples
+### Usage Examples
 
-### View Model Sample Reference
+**View Model Sample Reference**
 
 ```sql
 {{ config(materialized='view') }}
@@ -278,7 +278,7 @@ group by u.user_id
 order by u.user_id
 ```
 
-### Table Model Sample Reference
+**Table Model Sample Reference**
 
 ```sql
 {{ config(materialized='table') }}
@@ -294,7 +294,7 @@ group by u.user_id
 order by u.user_id
 ```
 
-### Incremental model sample reference (duplicate mode)
+**Incremental model sample reference (duplicate mode)**
 
 Create a table in duplicate mode, without data aggregation, and without specifying unique_key
 
@@ -313,7 +313,7 @@ with source_data as (
 select * from source_data
 ```
 
-### Incremental model sample reference (unique mode)
+**Incremental model sample reference (unique mode)**
 
 Create a table in unique mode, data aggregation, unique_key must be specified
 
@@ -332,7 +332,7 @@ with source_data as (
 select * from source_data
 ```
 
-### Incremental model full refresh sample reference
+**Incremental model full refresh sample reference**
 
 ```sql
 {{ config(
@@ -344,7 +344,7 @@ select * from
  {{ source('dbt_source', 'sell_user') }}
 ```
 
-### Example of setting bucketing rules
+**Example of setting bucketing rules**
 
 Here buckets can be filled with auto or a positive integer, representing automatic bucketing and setting a fixed number of buckets respectively.
 
@@ -372,7 +372,7 @@ select
 {% endif %}
 ```
 
-### Setting the number of replicas example reference
+**Setting the number of replicas example reference**
 
 ```sql
 {{ config(
@@ -389,7 +389,7 @@ with source_data as (
 select * from source_data
 ```
 
-### Dynamic partition sample reference
+**Dynamic partition sample reference**
 
 ```sql
 {{ config(
@@ -423,7 +423,7 @@ select
 {% endif %}
 ```
 
-### Conventional partition sample reference
+**Conventional partition sample reference**
 
 ```sql
 {{ config(
@@ -455,7 +455,7 @@ select
 {% endif %}
 ```
 
-### Batch date setting parameter sample reference
+**Batch date setting parameter sample reference**
 
 ```sql
 {{ config(

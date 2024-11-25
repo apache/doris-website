@@ -277,9 +277,10 @@ seeds:
         name: varchar(20)
         cost: DecimalV3(19,10)
 ```
-## 使用示例
 
-### 视图模型样例参考
+### 使用示例
+
+**视图模型样例参考**
 
 ```sql
 {{ config(materialized='view') }}
@@ -295,7 +296,7 @@ group by u.user_id
 order by u.user_id
 ```
 
-### 表模型样例参考
+**表模型样例参考**
 
 ```sql
 {{ config(materialized='table') }}
@@ -311,7 +312,7 @@ group by u.user_id
 order by u.user_id
 ```
 
-### 增量模型样例参考(duplicate 模式)
+**增量模型样例参考(duplicate 模式)**
 
 建表为 duplicate 模式，无数据聚合，不需要指定 unique_key
 
@@ -330,7 +331,7 @@ with source_data as (
 select * from source_data
 ```
 
-### 增量模型样例参考(unique 模式)
+**增量模型样例参考(unique 模式)**
 
 建表为 unique 模式，数据聚合，必须指定 unique_key
 
@@ -349,7 +350,7 @@ with source_data as (
 select * from source_data
 ```
 
-### 增量模型全量刷新样例参考
+**增量模型全量刷新样例参考**
 
 ```sql
 {{ config(
@@ -361,7 +362,7 @@ select * from
  {{ source('dbt_source', 'sell_user') }}
 ```
 
-### 设置分桶规则样例参考
+**设置分桶规则样例参考**
 
 此处 buckets 可以填 auto 或者正整数，分别代表自动分桶和设置固定分桶数
 
@@ -389,7 +390,7 @@ select
 {% endif %}
 ```
 
-### 设置副本数样例参考
+**设置副本数样例参考**
 
 ```sql
 {{ config(
@@ -406,7 +407,7 @@ with source_data as (
 select * from source_data
 ```
 
-### 动态分区样例参考
+**动态分区样例参考**
 
 ```sql
 {{ config(
@@ -440,7 +441,7 @@ select
 {% endif %}
 ```
 
-### 常规分区样例参考
+**常规分区样例参考**
 
 ```sql
 {{ config(
@@ -472,7 +473,7 @@ select
 {% endif %}
 ```
 
-### 批处理日期设置参数样例参考
+**批处理日期设置参数样例参考**
 
 ```sql
 {{ config(
