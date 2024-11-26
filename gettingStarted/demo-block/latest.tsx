@@ -23,8 +23,8 @@ export default function Latest() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href="https://www.velodb.io/events/meetup/singapore">
-                        <div className="home-page-hero-button-label"><div>Event</div></div>
+                    <a className="latest-button" href="https://github.com/apache/doris/discussions">
+                        <div className="home-page-hero-button-label"><div>Discussion</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
                                 <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -32,10 +32,10 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Apache Doris Meetup @ Singapore</div>
+                            <div style={{ marginBottom: 10 }}>Ask Question on Discussion</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>The Apache Doris community came together for an engaging meetup in Singapore to share insights, and explore the latest developments in the world of big data and analytics.</div>
-                        <div style={{ fontSize: 14, marginBottom: 10 }}>Watch Video & Slides</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>Fostering connects within the Doris community, specially for addressing technical inquiries and providing support.</div>
+                        <div style={{ fontSize: 14, marginBottom: 10 }}>Join Discussion</div>
                     </a>
                     <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v3.0/release-3.0.2`}>
                         <div className="home-page-hero-button-label"><div>Release</div></div>

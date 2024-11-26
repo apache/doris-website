@@ -1,7 +1,7 @@
 ---
 {
-"title": "DBT Doris Adapter",
-"language": "en"
+  "title": "DBT Doris Adapter",
+  "language": "en"
 }
 ---
 
@@ -60,16 +60,16 @@ dbt init
 ```
 Users need to prepare the following information to init dbt project
 
-| name     |  default | meaning                                                                                                                                   |  
-|----------|------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| project  |      | project name                                                                                                                              | 
-| database |      | Enter the corresponding number to select the adapter（选择 doris）                                                                            | 
-| host     |      | doris host                                                                                                                                | 
-| port     | 9030 | doris MySQL Protocol Port                                                                                                                 |
-| schema   |      | In dbt-doris, it is equivalent to database, Database name                                                                                 |
-| username |      | doris username                                                                                                                            |
-| password |      | doris password                                                                                                                            |
-| threads  | 1    | Parallelism in dbt-doris (setting a parallelism that does not match the cluster capability will increase the risk of dbt running failure) |
+| name     | default | meaning                                                                                                                                   |  
+|----------|---------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| project  |         | project name                                                                                                                              | 
+| database |         | Enter the corresponding number to select the adapter                                                                                      | 
+| host     |         | doris host                                                                                                                                | 
+| port     | 9030    | doris MySQL Protocol Port                                                                                                                 |
+| schema   |         | In dbt-doris, it is equivalent to database, Database name                                                                                 |
+| username |         | doris username                                                                                                                            |
+| password |         | doris password                                                                                                                            |
+| threads  | 1       | Parallelism in dbt-doris (setting a parallelism that does not match the cluster capability will increase the risk of dbt running failure) |
 
 
 ### dbt-doris adapter run
@@ -88,7 +88,7 @@ dbt-doris Materialization support three:
 2. table
 3. incremental
 
-#### View 
+#### View
 
 Using `view` as the materialization, Models will be rebuilt as views each time they are run through the create view as statement. (By default, the materialization method of dbt is view)
 ``` 
@@ -236,7 +236,7 @@ The details of the above configuration items are as follows:
 
 [`seed`](https://docs.getdbt.com/faqs/seeds/build-one-seed) is a functional module used to load data files such as csv. It is a way to load files into the library and participate in model building, but there are the following precautions:
 1. Seeds should not be used to load raw data (for example, large CSV exports from a production database).
-2. Since seeds are version controlled, they are best suited to files that contain business-specific logic, for example a list of country codes or user IDs of employees. 
+2. Since seeds are version controlled, they are best suited to files that contain business-specific logic, for example a list of country codes or user IDs of employees.
 3. Loading CSVs using dbt's seed functionality is not performant for large files. Consider using `streamload` to load these CSVs into doris.
 
 Users can see the seeds directory under the dbt project directory, upload the csv file and seed configuration file in it and run
@@ -258,4 +258,227 @@ seeds:
         ip: varchar(15)
         name: varchar(20)
         cost: DecimalV3(19,10)
+```
+
+## Usage Examples
+
+### View Model Sample Reference
+
+```sql
+{{ config(materialized='view') }}
+
+select
+    u.user_id,
+    max(o.create_time) as create_time,
+    sum (o.cost) as balance
+from {{ ref('sell_order') }} as o
+left join {{ ref('sell_user') }} as u
+on u.account_id=o.account_id
+group by u.user_id
+order by u.user_id
+```
+
+### Table Model Sample Reference
+
+```sql
+{{ config(materialized='table') }}
+
+select
+    u.user_id,
+    max(o.create_time) as create_time,
+    sum (o.cost) as balance
+from {{ ref('sell_order') }} as o
+left join {{ ref('sell_user') }} as u
+on u.account_id=o.account_id
+group by u.user_id
+order by u.user_id
+```
+
+### Incremental model sample reference (duplicate mode)
+
+Create a table in duplicate mode, without data aggregation, and without specifying unique_key
+
+```sql
+{{ config(
+    materialized='incremental', 
+    replication_num=1
+) }}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select * from source_data
+```
+
+### Incremental model sample reference (unique mode)
+
+Create a table in unique mode, data aggregation, unique_key must be specified
+
+```sql
+{{ config(
+materialized='incremental', 
+unique_key=['account_id','create_time']
+) }}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select * from source_data
+```
+
+### Incremental model full refresh sample reference
+
+```sql
+{{ config(
+    materialized='incremental', 
+    full_refresh = true
+)}}
+
+select * from
+ {{ source('dbt_source', 'sell_user') }}
+```
+
+### Example of setting bucketing rules
+
+Here buckets can be filled with auto or a positive integer, representing automatic bucketing and setting a fixed number of buckets respectively.
+
+```sql
+{{ config(
+    materialized='incremental', 
+    unique_key=['account_id',"create_time"], 
+    distributed_by=['account_id'], 
+    buckets='auto' 
+) }}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order') }}
+)
+
+select
+    *
+    from source_data
+
+{% if is_incremental() %}
+    where
+    create_time > (select max(create_time) from {{this}})
+{% endif %}
+```
+
+### Setting the number of replicas example reference
+
+```sql
+{{ config(
+    materialized='table', 
+    replication_num=1
+)}}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select * from source_data
+```
+
+### Dynamic partition sample reference
+
+```sql
+{{ config(
+    materialized='incremental', 
+    partition_by = 'create_time',
+    partition_type = 'range', 
+        -- The properties here are the properties in the create table statement, which contains the configuration related to dynamic partitioning    
+    properties = {
+        "dynamic_partition.time_unit":"DAY",
+        "dynamic_partition.end":"8",
+        "dynamic_partition.prefix":"p",
+        "dynamic_partition.buckets":"4",
+        "dynamic_partition.create_history_partition":"true",
+        "dynamic_partition.history_partition_num":"3"
+    }
+) }}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select
+    *
+    from source_data
+
+{% if is_incremental() %}
+    where    
+    create_time = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+{% endif %}
+```
+
+### Conventional partition sample reference
+
+```sql
+{{ config(
+    materialized='incremental', 
+    partition_by = 'create_time',
+    partition_type = 'range',  
+        -- partition_by_init here refers to the historical partitions for creating partition tables. The historical partitions of the current doris version need to be manually specified.    
+    partition_by_init = [
+        "PARTITION `p20240601` VALUES [(\"2024-06-01\"),  (\"2024-06-02\"))",
+        "PARTITION `p20240602` VALUES [(\"2024-06-02\"),  (\"2024-06-03\"))"
+    ]
+ )}}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select
+    *
+    from source_data
+
+{% if is_incremental() %}
+    where
+    -- If the my_date variable is provided, use this path (via the dbt run --vars '{"my_date": "\"2024-06-03\""}' command). If the my_date variable is not provided (directly using dbt run), use the day before the current date. For the incremental selection here, it is recommended to directly use doris's CURDATE() function, which is also a common path in production environments.
+    create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
+
+{% endif %}
+```
+
+### Batch date setting parameter sample reference
+
+```sql
+{{ config(
+    materialized='incremental', 
+    partition_by = 'create_time',
+    partition_type = 'range',
+    ...
+)}}
+
+with source_data as (
+    select
+        *
+    from {{ ref('sell_order2') }}
+)
+
+select
+    *
+    from source_data
+
+{% if is_incremental() %}
+    where
+    -- If the my_date variable is provided, use this path (via the dbt run --vars '{"my_date": "\"2024-06-03\""}' command). If the my_date variable is not provided (directly using dbt run), use the day before the current date. For the incremental selection here, it is recommended to directly use doris's CURDATE() function, which is also a common path in production environments.
+    create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
+
+{% endif %}
 ```

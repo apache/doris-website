@@ -107,7 +107,7 @@ In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTIN
     In Doris, create the table for loading with the following syntax:
 
     ```sql
-    CREATE TABLE testdb.test_streamload(
+    CREATE TABLE testdb.test_routineload_tbl(
         user_id            BIGINT       NOT NULL COMMENT "User ID",
         name               VARCHAR(20)           COMMENT "User Name",
         age                INT                   COMMENT "User Age"
@@ -146,7 +146,7 @@ In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTIN
     In Doris, create the table for loading with the following syntax:
 
     ```sql
-    CREATE TABLE testdb.test_streamload(
+    CREATE TABLE testdb.test_routineload_tbl(
         user_id            BIGINT       NOT NULL COMMENT "User ID",
         name               VARCHAR(20)           COMMENT "User Name",
         age                INT                   COMMENT "User Age"
