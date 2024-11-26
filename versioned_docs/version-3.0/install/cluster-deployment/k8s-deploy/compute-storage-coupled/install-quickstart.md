@@ -29,13 +29,11 @@ The deployment operations are as follows:
 
 ## Step 1: Deploy Doris Operator
 Deploying Doris Operator consists of two parts: installing the definition and deploying the operator service:
-1. Installing Doris Operator CRD
-   Add the custom resource (CRD) of Doris Operator using the following command:
+1. Add the custom resource (CRD) of Doris Operator using the following command:
    ```shell
    kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.apache.com_dorisclusters.yaml
    ```
-2. Install Doris Operator
-   Install Doris Operator using the following command:
+2. Install Doris Operator using the following command:
    ```shell
    kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
    ```
@@ -49,8 +47,7 @@ Deploying Doris Operator consists of two parts: installing the definition and de
    serviceaccount/doris-operator created
    deployment.apps/doris-operator created
    ```
-3. Check the Doris Operator status
-   Check the deployment status of Doris Operator using the following command:
+3. Check the deployment status of Doris Operator using the following command:
    ```shell
    kubectl get pods -n doris
    ```
@@ -69,8 +66,7 @@ Deploying Doris Operator consists of two parts: installing the definition and de
    ```shell
    kubectl apply -f doriscluster-sample.yaml
    ```
-3. Check the cluster deployment status:
-   Check the status of the cluster by checking the status of pods:
+3. Check the status of the cluster by checking the status of pods:
    ```shell
    kubectl get pods
    ```

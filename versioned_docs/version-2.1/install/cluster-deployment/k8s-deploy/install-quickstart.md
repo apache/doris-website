@@ -29,14 +29,12 @@ The deployment operations are as follows:
 
 ## Step 1: Deploy Doris Operator
 Deploying Doris Operator consists of two parts: installing the definition and deploying the operator service:
-1. Installing Doris Operator CRD
-   Add the custom resource (CRD) of Doris Operator using the following command:
+1. Add the custom resource (CRD) of Doris Operator using the following command:
    ```shell
    kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.apache.com_dorisclusters.yaml
    ```
 
-2. Install Doris Operator
-   Install Doris Operator using the following command:
+2. Install Doris Operator using the following command:
    ```shell
    kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
    ```
