@@ -91,7 +91,13 @@ FE 配置项：
 
 升级到 2.1 版本后，原有的审计日志插件将不可用。本小节介绍如何将原有审计日志表中的数据迁移到新的审计日志表中。
 
+<<<<<<< HEAD
 1. 确认新旧审计日志表的字段信息
+=======
+您可以将这个文件放置在一个 http 服务器上，或者拷贝`auditloader.zip`(或者解压`auditloader.zip`) 到所有 FE 的指定目录下。这里我们使用后者。  
+该插件的安装可以参阅 [INSTALL](../sql-manual/sql-statements/plugin/INSTALL-PLUGIN)  
+执行 install 后会自动生成 AuditLoader 目录
+>>>>>>> 0e755d49db1 (6)
 
     原有审计日志表默认情况下应为：`doris_audit_db__`.`doris_audit_log_tbl__`。
 
@@ -152,7 +158,113 @@ FE 配置项：
 
 3. 删除原有插件
 
+<<<<<<< HEAD
     迁移后，可以通过 `UNINSTALL PLUGIN AuditLoader;` 命令删除原有插件即可。
+=======
+在 Doris 中，需要创建审计日志的库和表，表结构如下：
+
+若需开启慢查询日志导入功能，还需要额外创建慢表 `doris_slow_log_tbl__`，其表结构与 `doris_audit_log_tbl__` 一致。
+
+其中 `dynamic_partition` 属性根据自己的需要，选择审计日志保留的天数。
+
+```sql
+create database doris_audit_db__;
+
+create table doris_audit_db__.doris_audit_log_tbl__
+(
+    query_id varchar(48) comment "Unique query id",
+    `time` datetime not null comment "Query start time",
+    client_ip varchar(32) comment "Client IP",
+    user varchar(64) comment "User name",
+    db varchar(96) comment "Database of this query",
+    state varchar(8) comment "Query result state. EOF, ERR, OK",
+    error_code int comment "Error code of failing query.",
+    error_message string comment "Error message of failing query.",
+    query_time bigint comment "Query execution time in millisecond",
+    scan_bytes bigint comment "Total scan bytes of this query",
+    scan_rows bigint comment "Total scan rows of this query",
+    return_rows bigint comment "Returned rows of this query",
+    stmt_id int comment "An incremental id of statement",
+    is_query tinyint comment "Is this statemt a query. 1 or 0",
+    frontend_ip varchar(32) comment "Frontend ip of executing this statement",
+    cpu_time_ms bigint comment "Total scan cpu time in millisecond of this query",
+    sql_hash varchar(48) comment "Hash value for this query",
+    sql_digest varchar(48) comment "Sql digest of this query, will be empty if not a slow query",
+    peak_memory_bytes bigint comment "Peak memory bytes used on all backends of this query",
+    stmt string comment "The original statement, trimed if longer than 2G"
+) engine=OLAP
+duplicate key(query_id, `time`, client_ip)
+partition by range(`time`) ()
+distributed by hash(query_id) buckets 1
+properties(
+    "dynamic_partition.time_unit" = "DAY",
+    "dynamic_partition.start" = "-30",
+    "dynamic_partition.end" = "3",
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "1",
+    "dynamic_partition.enable" = "true",
+    "replication_num" = "3"
+);
+
+create table doris_audit_db__.doris_slow_log_tbl__
+(
+    query_id varchar(48) comment "Unique query id",
+    `time` datetime not null comment "Query start time",
+    client_ip varchar(32) comment "Client IP",
+    user varchar(64) comment "User name",
+    db varchar(96) comment "Database of this query",
+    state varchar(8) comment "Query result state. EOF, ERR, OK",
+    error_code int comment "Error code of failing query.",
+    error_message string comment "Error message of failing query.",
+    query_time bigint comment "Query execution time in millisecond",
+    scan_bytes bigint comment "Total scan bytes of this query",
+    scan_rows bigint comment "Total scan rows of this query",
+    return_rows bigint comment "Returned rows of this query",
+    stmt_id int comment "An incremental id of statement",
+    is_query tinyint comment "Is this statemt a query. 1 or 0",
+    frontend_ip varchar(32) comment "Frontend ip of executing this statement",
+    cpu_time_ms bigint comment "Total scan cpu time in millisecond of this query",
+    sql_hash varchar(48) comment "Hash value for this query",
+    sql_digest varchar(48) comment "Sql digest of a slow query",
+    peak_memory_bytes bigint comment "Peak memory bytes used on all backends of this query",
+    stmt string comment "The original statement, trimed if longer than 2G "
+) engine=OLAP
+duplicate key(query_id, `time`, client_ip)
+partition by range(`time`) ()
+distributed by hash(query_id) buckets 1
+properties(
+    "dynamic_partition.time_unit" = "DAY",
+    "dynamic_partition.start" = "-30",
+    "dynamic_partition.end" = "3",
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "1",
+    "dynamic_partition.enable" = "true",
+    "replication_num" = "3"
+);
+```
+
+>**注意**
+>
+> 上面表结构中：stmt string，这个只能在 0.15 及之后版本中使用，之前版本，字段类型使用 varchar
+
+### 部署
+
+您可以将打包好的 auditloader.zip 放置在一个 http 服务器上，或者拷贝 `auditloader.zip` 到所有 FE 的相同指定目录下。
+
+### 安装
+
+通过以下语句安装 Audit Loader 插件：
+
+```sql
+INSTALL PLUGIN FROM [source] [PROPERTIES ("key"="value", ...)]
+```
+
+详细命令参考：[INSTALL-PLUGIN](../sql-manual/sql-statements/plugin/INSTALL-PLUGIN)
+
+安装成功后，可以通过 `SHOW PLUGINS` 看到已经安装的插件，并且状态为 `INSTALLED`。
+
+完成后，插件会不断的以指定的时间间隔将审计日志插入到这个表中。
+>>>>>>> 0e755d49db1 (6)
 
 ## FAQ
 

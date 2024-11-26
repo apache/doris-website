@@ -151,7 +151,7 @@ After upgrading to version 2.1, the original audit log plugin will be unavailabl
     ```
 
 3. Remove Original Plugin
-
+    
     After migration, you can remove the original plugin by using the `UNINSTALL PLUGIN AuditLoader;` command.
 
 ## FAQ
