@@ -108,7 +108,7 @@ under the License.
 
 - 新增系统表`table_properties`，便于用户查看和管理表的各项属性。
  
-  - 更多信息，请查看文档 [table_properties](https://doris.apache.org/zh-CN/docs/admin-manual/system-tables/table_properties/)
+  - 更多信息，请查看文档 [table_properties](https://doris.apache.org/zh-CN/docs/admin-manual/system-tables/information_schema/table_properties/)
 - 新增 FE 中死锁和慢锁检测功能。
  
   - 更多信息，请查看文档 [FE 锁管理](https://doris.apache.org/zh-CN/docs/admin-manual/maint-monitor/frontend-lock-manager/)

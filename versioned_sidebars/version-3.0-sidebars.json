@@ -1669,7 +1669,8 @@
                     "items": [
                         "gettingStarted/tutorials/building-lakehouse/doris-hudi",
                         "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
+                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
+                        "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
                     ]
                 },
                 "gettingStarted/tutorials/log-storage-analysis"
@@ -1693,6 +1694,7 @@
         "ecosystem/kyuubi",
         "ecosystem/logstash",
         "ecosystem/beats",
+        "ecosystem/fluentbit",
         "ecosystem/automq-load",
         "ecosystem/doris-streamloader",
         "ecosystem/hive-bitmap-udf",

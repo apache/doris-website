@@ -53,7 +53,7 @@ When estimating the filter rate, the optimizer typically relies on the assumptio
 Considering the following SQL query:
 
 ```sql
-select count() 
+select count(1) 
 from orders, customer 
 where o_custkey = c_custkey and o_orderdate < '1920-01-02'
 ```
@@ -67,7 +67,7 @@ To optimize the query, we need to adjust the SQL statement based on the actual s
 Revising the SQL as follows:
 
 ```sql
-select /* leading(orders customer) */ count() 
+select /* +leading(orders customer) */ count(1)
 from orders, customer 
 where o_custkey = c_custkey and o_orderdate < '1920-01-02'
 ```

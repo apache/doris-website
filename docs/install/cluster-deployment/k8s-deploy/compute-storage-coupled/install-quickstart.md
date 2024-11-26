@@ -29,16 +29,13 @@ The deployment operations are as follows:
 
 ## Step 1: Deploy Doris Operator
 Deploying Doris Operator consists of two parts: installing the definition and deploying the operator service:
-1. Installing Doris Operator CRD
+1. Installing Doris Operator CRD.  
    Add the custom resource (CRD) of Doris Operator using the following command:
    ```shell
-   kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+   kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.apache.com_dorisclusters.yaml
    ```
-   Expected output:
-   ```shell
-   customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
-   ```
-2. Install Doris Operator
+
+2. Install Doris Operator.  
    Install Doris Operator using the following command:
    ```shell
    kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
@@ -53,7 +50,7 @@ Deploying Doris Operator consists of two parts: installing the definition and de
    serviceaccount/doris-operator created
    deployment.apps/doris-operator created
    ```
-3. Check the Doris Operator status
+3. Check the Doris Operator status.  
    Check the deployment status of Doris Operator using the following command:
    ```shell
    kubectl get pods -n doris
@@ -65,7 +62,7 @@ Deploying Doris Operator consists of two parts: installing the definition and de
    ```
 
 ## Step 2: Deploy Doris cluster
-1. Download the template Doris deployment template:
+1. Download the template Doris deployment template:  
    ```shell
    curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
    ```
@@ -73,7 +70,7 @@ Deploying Doris Operator consists of two parts: installing the definition and de
    ```shell
    kubectl apply -f doriscluster-sample.yaml
    ```
-3. Check the cluster deployment status:
+3. Check the cluster deployment status.  
    Check the status of the cluster by checking the status of pods:
    ```shell
    kubectl get pods

@@ -31,38 +31,6 @@ We have graduated from Apache incubator successfully and become an Top-Level Pro
 
 <hr />
 
-## 🙌 More Developers Join Us
-[![Monthly Active Contributors](https://contributor-overtime-api.apiseven.com/contributors-svg?chart=contributorMonthlyActivity&repo=apache/doris)](https://www.apiseven.com/en/contributor-graph?chart=contributorMonthlyActivity&repo=apache/doris)
-
-
-
-
-
-
-
-
-
-
-
-
-
-[![Contributor over time](https://contributor-overtime-api.apiseven.com/contributors-svg?chart=contributorOverTime&repo=apache/doris)](https://www.apiseven.com/en/contributor-graph?chart=contributorOverTime&repo=apache/doris)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## 🌟 More Stars on Github
 <a href="https://star-history.com/#apache/doris&Date">
@@ -87,25 +55,25 @@ We have graduated from Apache incubator successfully and become an Top-Level Pro
 
 
 
-##### We deeply appreciate 🔗[community contributors](https://github.com/apache/doris/graphs/contributors) for their contribution to Apache Doris.
+**We deeply appreciate 🔗[community contributors](https://github.com/apache/doris/graphs/contributors) for their contribution to Apache Doris.**
 
 
 
 
 <hr />
 
-# Don't Miss Out the Latest News and Events
+## Don't Miss Out the Latest News and Events
 
 Learn our latest techniques, get inspirations from our rich use cases, and see what the community has been up to !
 
 
-- ### Join our heated discussions -  💬 [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) 📇 [Github](https://github.com/apache/doris) 
+- Join our heated discussions -  💬 [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) 📇 [Github](https://github.com/apache/doris) 
 
-- ### Use cases and tech insight -  📭 [Twitter](https://twitter.com/doris_apache) 
+- Use cases and tech insight -  📭 [Twitter](https://twitter.com/doris_apache) 
 
-- ### Come and connect with us - 🌐 [LinkedIn](https://www.linkedin.com/company/doris-apache/) 
+- Come and connect with us - 🌐 [LinkedIn](https://www.linkedin.com/company/doris-apache/) 
 
-- ### Events Videos - ▶️ [YouTube](https://www.youtube.com/@Select_DB) 📺 [Bilibili](https://space.bilibili.com/362350065) 
+- Events Videos - ▶️ [YouTube](https://www.youtube.com/@Select_DB) 📺 [Bilibili](https://space.bilibili.com/362350065) 
 
 
 
