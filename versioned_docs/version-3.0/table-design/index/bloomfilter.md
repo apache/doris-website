@@ -52,7 +52,7 @@ BloomFilter indexes can accelerate equality queries (including = and IN) and are
 
 BloomFilter has the following limitations:
 
-1. It has no effect on queries other than in and =, such as !=, NOT IN, >, <, etc.
+1. It has no effect on queries other than in and =, such as !=, NOT IN, &gt;, &lt;, etc.
 2. It does not support BloomFilter indexing on columns of type Tinyint, Float, Double.
 3. It has limited acceleration effect on low cardinality fields. For example, a "gender" field with only two values will likely be included in almost every data block, making the BloomFilter index meaningless.
 

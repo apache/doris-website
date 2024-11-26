@@ -60,7 +60,7 @@ DELETE FROM table_name
 
 + table_name: Specifies the table from which rows are removed.
 + column_name: column belong to table_name
-+ op: Logical comparison operator, The optional types of op include: =, >, <, >=, <=, !=, in, not in
++ op: Logical comparison operator, The optional types of op include: =, &gt;, &lt;, &gt;=, &lt;=, !=, in, not in
 + value | value_list: value or value list used for logial comparison
 + WHERE condition: Specifies a condition to use to select rows for removal
 
