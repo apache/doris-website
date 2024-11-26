@@ -32,11 +32,7 @@ Deploying Doris Operator consists of two parts: installing the definition and de
 1. Installing Doris Operator CRD
    Add the custom resource (CRD) of Doris Operator using the following command:
    ```shell
-   kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
-   ```
-   Expected output:
-   ```shell
-   customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
+   kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.apache.com_dorisclusters.yaml
    ```
 2. Install Doris Operator
    Install Doris Operator using the following command:
