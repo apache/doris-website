@@ -57,7 +57,7 @@ Among the above indexes, the prefix index and ZoneMap index are built-in indexes
 | !=                      | YES     | YES     | NO           | NO              | NO                     |
 | IN                      | YES     | YES     | YES          | YES             | NO                     |
 | NOT IN                  | YES     | YES     | NO           | NO              | NO                     |
-| &gt;, &gt;&#61;, &lt;, &lt;&#61;, BETWEEN   | YES     | YES     | YES          | NO              | NO                     |
+| >, >=, <, <=, BETWEEN   | YES     | YES     | YES          | NO              | NO                     |
 | IS NULL                 | YES     | YES     | YES          | NO              | NO                     |
 | IS NOT NULL             | YES     | YES     | NO           | NO              | NO                     |
 | LIKE                    | NO      | NO      | NO           | NO              | YES                    |

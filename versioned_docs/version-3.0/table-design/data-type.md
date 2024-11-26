@@ -40,7 +40,7 @@ The list of data types supported by Doris is as follows:
 | [LARGEINT](../sql-manual/sql-data-types/numeric/LARGEINT)     | 16              | Integer value, range is [-2^127 + 1 to 2^127 - 1].               |  
 | [FLOAT](../sql-manual/sql-data-types/numeric/FLOAT)           | 4               | Single precision floating point number, range is [-3.4 * 10^38 to 3.4 * 10^38]. |  
 | [DOUBLE](../sql-manual/sql-data-types/numeric/DOUBLE)         | 8               | Double precision floating point number, range is [-1.79 * 10^308 to 1.79 * 10^308]. |  
-| [DECIMAL](../sql-manual/sql-data-types/numeric/DECIMAL)       | 4/8/16          | An exact fixed-point number defined by precision (total number of digits) and scale (number of digits to the right of the decimal point). Format: DECIMAL(M[,D]), where M is precision and D is scale. The range for M is [1, 38], and for D is [0, precision]. Storage requirements: - 4 bytes for 0 &lt; precision &lt;= 9, - 8 bytes for 9 &lt; precision &lt;= 18, - 16 bytes for 18 &lt; precision &lt;= 38. |
+| [DECIMAL](../sql-manual/sql-data-types/numeric/DECIMAL)       | 4/8/16          | An exact fixed-point number defined by precision (total number of digits) and scale (number of digits to the right of the decimal point). Format: DECIMAL(M[,D]), where M is precision and D is scale. The range for M is [1, 38], and for D is [0, precision]. Storage requirements: - 4 bytes for 0 < precision <= 9, - 8 bytes for 9 < precision <= 18, - 16 bytes for 18 < precision <= 38. |
 
 ## [Datetime data type](../sql-manual/sql-data-types/data-type-overview#date-types)
 

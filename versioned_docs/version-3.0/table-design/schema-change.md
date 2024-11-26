@@ -258,9 +258,9 @@ ALTER TABLE table_name MODIFY COLUMN column_name column_type [KEY | agg_type] [N
 
   - Conversion from VARCHAR/CHAR to DATE (supports six formatting formats: "%Y-%m-%d", "%y-%m-%d", "%Y%m%d", "%y%m%d", "%Y/%m/%d", "%y/%m/%d").
 
-  - Conversion from DATETIME to DATE (only retains year-month-day information, e.g., `2019-12-09 21:47:05` &lt;--&gt; `2019-12-09`).
+  - Conversion from DATETIME to DATE (only retains year-month-day information, e.g., `2019-12-09 21:47:05` <--> `2019-12-09`).
 
-  - Conversion from DATE to DATETIME (automatically adds zeros for hours, minutes, and seconds, e.g., `2019-12-09` &lt;--&gt; `2019-12-09 00:00:00`).
+  - Conversion from DATE to DATETIME (automatically adds zeros for hours, minutes, and seconds, e.g., `2019-12-09` <--> `2019-12-09 00:00:00`).
 
   - Conversion from FLOAT to DOUBLE.
 

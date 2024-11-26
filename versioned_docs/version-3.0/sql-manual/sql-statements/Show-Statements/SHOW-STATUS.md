@@ -48,7 +48,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 - WHERE: You can filter the result column, currently only the following columns are supported:
   - TableName: Only equal value filtering is supported.
   - State: Only supports equivalent filtering.
-  - Createtime/FinishTime: Support =, &gt;=, &lt;=, &gt;, &lt;, !=
+  - Createtime/FinishTime: Support =, >=, <=, >, <, !=
 - ORDER BY: The result set can be sorted by any column.
 - LIMIT: Use ORDER BY to perform page-turning query.
 

@@ -31,7 +31,7 @@ under the License.
 SHOW QUERY PROFILE
 
 :::caution
-Since 2.1.1, this syntax is deprecated. You can still download profile from http://&lt;fe_ip&gt;:&lt;fe_http_port&gt;/QueryProfile
+Since 2.1.1, this syntax is deprecated. You can still download profile from http://<fe_ip>:<fe_http_port>/QueryProfile
 :::
 
 ### Description

@@ -55,7 +55,7 @@ The functionality of inverted indexes is briefly introduced as follows:
 
 **2. Accelerate normal equality and range queries, covering and replacing the functionality of BITMAP index**
 
-- Support for fast filtering of string, numerical, and datetime types for `=, !=, >, >=, <, <=`
+- Support for fast filtering of string, numerical, and datetime types for =, !=, >, >=, <, <=
 
 - Support for fast filtering of string, numerical, and datetime array types for `array_contains`
 
