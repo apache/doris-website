@@ -9,3 +9,8 @@
 
 - [ ] Chinese
 - [ ] English
+
+# Docs Checklist
+
+- [ ] Checked by AI
+- [ ] Test Cases Built
