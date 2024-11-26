@@ -196,7 +196,7 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 ```
   
 其中，${DB_ADMIN_USER} 为新创建的用户名。  
-新建用户，设置密码，以及赋予权限详细使用，请参考官方文档 [CREATE-USER](../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) 部分。
+新建用户，设置密码，以及赋予权限详细使用，请参考官方文档 [CREATE-USER](../../../sql-manual/sql-statements/account-management/CREATE-USER) 部分。
   
 3. 配置 DorisCluster 资源
   

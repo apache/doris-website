@@ -95,7 +95,7 @@ Doris 2.1 版本之前的用户，请参阅如下方式使用审计日志插件�
     * plugin.conf：插件配置文件。
 
 您可以将这个文件放置在一个 http 服务器上，或者拷贝`auditloader.zip`(或者解压`auditloader.zip`) 到所有 FE 的指定目录下。这里我们使用后者。  
-该插件的安装可以参阅 [INSTALL](../sql-manual/sql-statements/Database-Administration-Statements/INSTALL-PLUGIN.md)  
+该插件的安装可以参阅 [INSTALL](../sql-manual/sql-statements/plugin/INSTALL-PLUGIN)  
 执行 install 后会自动生成 AuditLoader 目录
 
 3. 修改 plugin.conf 
@@ -216,7 +216,7 @@ properties(
 INSTALL PLUGIN FROM [source] [PROPERTIES ("key"="value", ...)]
 ```
 
-详细命令参考：[INSTALL-PLUGIN](../sql-manual/sql-statements/Database-Administration-Statements/INSTALL-PLUGIN)
+详细命令参考：[INSTALL-PLUGIN](../sql-manual/sql-statements/plugin/INSTALL-PLUGIN)
 
 安装成功后，可以通过 `SHOW PLUGINS` 看到已经安装的插件，并且状态为 `INSTALLED`。
 

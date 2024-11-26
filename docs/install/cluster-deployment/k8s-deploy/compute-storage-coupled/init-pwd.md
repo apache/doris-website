@@ -175,7 +175,7 @@ After deployment, please set the root password. Doris Operator will switch to us
   
 ## Setting the Root User Password after Cluster Deployment
   
-After the Doris cluster is deployed and the root user's password is set, it is necessary to configure a user with [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission into the DorisCluster resource so that Doris Operator can automatically manage the cluster nodes. It is not recommended to use root as this username. Please refer to [the User Creation and Permission Assignment Section](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) to create a new user and grant Node_priv permission. After creating the user, specify the new management user and password through the environment variable or Secret method, and configure the corresponding DorisCluster resource.    
+After the Doris cluster is deployed and the root user's password is set, it is necessary to configure a user with [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission into the DorisCluster resource so that Doris Operator can automatically manage the cluster nodes. It is not recommended to use root as this username. Please refer to [the User Creation and Permission Assignment Section](../../../../sql-manual/sql-statements/account-management/CREATE-USER) to create a new user and grant Node_priv permission. After creating the user, specify the new management user and password through the environment variable or Secret method, and configure the corresponding DorisCluster resource.    
   
 **1. Create a User with Node_priv Permission**  
   
@@ -197,7 +197,7 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
   
 Here, ${DB_ADMIN_USER} is the newly created username.  
   
-For detailed usage of creating users, setting passwords, and granting permissions, please refer to the official document [CREATE-USER](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) section.  
+For detailed usage of creating users, setting passwords, and granting permissions, please refer to the official document [CREATE-USER](../../../../sql-manual/sql-statements/account-management/CREATE-USER) section.  
   
 **3. Configure DorisCluster**
 - Using Environment Variables    
