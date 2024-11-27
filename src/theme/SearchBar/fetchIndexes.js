@@ -5,6 +5,9 @@ const host = process.env.TEST_ENV_URL || 'https://cdnd.selectdb.com';
 
 export function fetchIndexes(baseUrl, searchContext) {
     const cacheKey = `${baseUrl}${searchContext}`;
+    console.log('cache',cache);
+    console.log('cacheKey',cacheKey);
+    
     let promise = cache.get(cacheKey);
     if (!promise) {
         promise = legacyFetchIndexes(baseUrl, searchContext);
