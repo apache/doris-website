@@ -49,3 +49,5 @@ Doris FE 接口开启 SSL 功能需要配置密钥证书，步骤如下：
   - 设置证书类型 `key_store_type` ，默认为 `JKS`
 
   - 设置证书别名 `key_store_alias`，默认为 `doris_ssl_certificate`
+
+错憋字

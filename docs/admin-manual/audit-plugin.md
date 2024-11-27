@@ -150,8 +150,9 @@ After upgrading to version 2.1, the original audit log plugin will be unavailabl
         FROM doris_audit_db__.doris_audit_log_tbl__;
     ```
 
-3. Remove Original Plugin
 
+3. Remove Original Plugin
+    
     After migration, you can remove the original plugin by using the `UNINSTALL PLUGIN AuditLoader;` command.
 
 ## FAQ

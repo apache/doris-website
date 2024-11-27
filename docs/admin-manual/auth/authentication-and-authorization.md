@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Authentication and Authorization",
-    "language": "en"
+"title": "配置管理集群的用户名密码",
+"language": "zh-CN"
 }
 ---
 
@@ -24,223 +24,223 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The Doris permission management system is modeled after the MySQL permission management mechanism. It supports fine-grained permission control at the row and column level, role-based access control, and also supports a whitelist mechanism.
-
-## Glossary
-
-1. User Identity
-
-   Within a permission system, a user is identified as a User Identity. A User Identity consists of two parts: `username` and `host`. The `username` is the user's name, consisting of English letters (both uppercase and lowercase). `host` represents the IP from which the user connection originates. User Identity is represented as `username@'host'`, indicating `username` from `host`.
-
-   Another representation of User Identity is `username@['domain']`, where `domain` refers to a domain name that can be resolved into a set of IPs through DNS. Eventually, this is represented as a set of `username@'host'`, hence moving forward, we uniformly use `username@'host'` to denote it.
-
-2. Privilege
-
-   Privileges apply to nodes, data directories, databases, or tables. Different privileges represent different operation permissions.
-
-3. Role
-
-   Doris allows the creation of custom-named roles. A role can be viewed as a collection of privileges. Newly created users can be assigned a role, automatically inheriting the privileges of that role. Subsequent changes to the role's privileges will also reflect on the permissions of all users associated with that role.
-
-4. User Property
-
-   User properties are directly affiliated with a user, not the User Identity. Meaning, both `user@'192.%'` and `user@['domain']` share the same set of user properties, which belong to the user `user`, not to `user@'192.%'` or `user@['domain']`.
-
-   User properties include but are not limited to: maximum number of user connections, import cluster configurations, etc.
-
-## Authentication and Authorization Framework
-
-The process of a user logging into Apache Doris is divided into two parts: **Authentication** and **Authorization**.
-
-- Authentication: Identity verification is conducted based on the credentials provided by the user (such as username, client IP, password). Once verified, the individual user is mapped to a system-defined User Identity.
-- Authorization: Based on the acquired User Identity, it checks whether the user has the necessary permissions for the intended operations, according to the privileges associated with that User Identity.
-
-## Authentication
-
-Doris supports built-in authentication schemes as well as LDAP authentication.
-
-### Doris Built-in Authentication Scheme
-
-Authentication is based on usernames, passwords, and other information stored within Doris itself.
-
-Administrators create users with the `CREATE USER` command and view all created users with the `SHOW ALL GRANTS` command.
-
-When a user logs in, the system verifies whether the username, password, and client IP address are correct.
-
-#### Password Policy
-
-Doris supports the following password policies to assist users in better password management.
-
-1. `PASSWORD_HISTORY`
-
-    Determines whether a user can reuse a historical password when resetting their current password. For example, `PASSWORD_HISTORY 10` means the last 10 passwords cannot be reused as a new password. Setting `PASSWORD_HISTORY DEFAULT` will use the value from the global variable `password_history`. A setting of 0 disables this feature. The default is 0.
-
-    Examples:
-
-    - Set a global variable: `SET GLOBAL password_history = 10`
-    - Set for a user: `ALTER USER user1@'ip' PASSWORD_HISTORY 10`
-
-2. `PASSWORD_EXPIRE`
-
-    Sets the expiration time for the current user's password. For instance, `PASSWORD_EXPIRE INTERVAL 10 DAY` means the password will expire after 10 days. `PASSWORD_EXPIRE NEVER` indicates the password never expires. Setting `PASSWORD_EXPIRE DEFAULT` will use the value from the global variable `default_password_lifetime` (in days). The default is NEVER (or 0), indicating it does not expire.
-
-    Examples:
-
-    - Set a global variable: `SET GLOBAL default_password_lifetime = 1`
-    - Set for a user: `ALTER USER user1@'ip' PASSWORD_EXPIRE INTERVAL 10 DAY`
-
-3. `FAILED_LOGIN_ATTEMPTS` and `PASSWORD_LOCK_TIME`
-
-    Configures the number of incorrect password attempts after which the user account will be locked and sets the lock duration. For example, `FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY` means if there are 3 incorrect logins, the account will be locked for one day. Administrators can unlock the account using the `ALTER USER` statement.
-
-    Example:
-
-    - Set for a user: `ALTER USER user1@'ip' FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY`
-
-4. Password Strength
-
-    This is controlled by the global variable `validate_password_policy`. The default is `NONE/0`, which means no password strength checking. If set to `STRONG/2`, the password must include at least three of the following: uppercase letters, lowercase letters, numbers, and special characters, and must be at least 8 characters long.
-
-    Example:
-
-    - `SET validate_password_policy=STRONG`
-
-For more help, please refer to [ALTER USER](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-USER.md).
-
-### LDAP-based Authentication Scheme
-
-Please refer to [LDAP-based Authentication Scheme](./ldap.md).
-
-## Authorization
-
-### Permission Operations
-
-- Create user: [CREATE USER](../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md)
-- Modify user: [ALTER USER](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-USER.md)
-- Delete user: [DROP USER](../../sql-manual/sql-statements/Account-Management-Statements/DROP-USER.md)
-- Grant/Assign role: [GRANT](../../sql-manual/sql-statements/Account-Management-Statements/GRANT.md)
-- Revoke/Withdraw role: [REVOKE](../../sql-manual/sql-statements/Account-Management-Statements/REVOKE.md)
-- Create role: [CREATE ROLE](../../sql-manual/sql-statements/Account-Management-Statements/CREATE-ROLE.md)
-- Delete role: [DROP ROLE](../../sql-manual/sql-statements/Account-Management-Statements/DROP-ROLE.md)
-- Modify role: [ALTER ROLE](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-ROLE.md)
-- View current user's permissions and roles: [SHOW GRANTS](../../sql-manual/sql-statements/Show-Statements/SHOW-GRANTS.md)
-- View all users' permissions and roles: [SHOW ALL GRANTS](../../sql-manual/sql-statements/Show-Statements/SHOW-GRANTS.md)
-- View created roles: [SHOW ROLES](../../sql-manual/sql-statements/Show-Statements/SHOW-ROLES.md)
-- Set user property: [SET PROPERTY](../../sql-manual/sql-statements/Account-Management-Statements/SET-PROPERTY.md)
-- View user property: [SHOW PROPERTY](../../sql-manual/sql-statements/Show-Statements/SHOW-PROPERTY.md)
-- Change password: [SET PASSWORD](../../sql-manual/sql-statements/Account-Management-Statements/SET-PASSWORD.md)
-- View all supported privileges: [SHOW PRIVILEGES]
-- View row policy: [SHOW ROW POLICY]
-- Create row policy: [CREATE ROW POLICY]
-
-### Types of Permissions
-
-Doris currently supports the following permissions:
-
-1. `Node_priv`
-
-    Node modification permission. Includes adding, deleting, and offlining FE, BE, BROKER nodes.
-
-    Root users have this permission by default. Users who possess both `Grant_priv` and `Node_priv` can grant this permission to other users.
-
-    This permission can only be granted at the Global level.
-
-2. `Grant_priv`
-
-    Permission modification authority. Allows execution of operations including granting, revoking, adding/deleting/modifying users/roles.
-
-    Before version 2.1.2, when granting permissions to other users/roles, the current user only needed the respective level's `Grant_priv` permission. After version 2.1.2, the current user also needs permission for the resource they wish to grant.
-
-    When assigning roles to other users, Global level `Grant_priv` permission is required.
-
-3. `Select_priv`
-
-    Read-only permission for data directories, databases, and tables.
-
-4. `Load_priv`
-
-    Write permission for data directories, databases, and tables. Includes Load, Insert, Delete, etc.
-
-5. `Alter_priv`
-
-    Alteration permissions for data directories, databases, and tables. Includes renaming libraries/tables, adding/deleting/modifying columns, adding/deleting partitions, etc.
-
-6. `Create_priv`
-
-    Permission to create data directories, databases, tables, and views.
-
-7. `Drop_priv`
-
-    Permission to delete data directories, databases, tables, and views.
-
-8. `Usage_priv`
-
-    Usage permissions for Resources and Workload Groups.
-
-9. `Show_view_priv`
-
-    Permission to execute `SHOW CREATE VIEW`.
-
-### Permission Levels
-
-#### Global Permissions
-
-Permissions granted through the GRANT statement with `*.*.*` scope. These permissions apply to any table within any catalog.
-
-#### Catalog Permissions
-
-Permissions granted through the GRANT statement with `ctl.*.*` scope. These permissions apply to any table within the specified catalog.
-
-#### Database Permissions
-
-Permissions granted through the GRANT statement with `ctl.db.*` scope. These permissions apply to any table within the specified database.
-
-#### Table Permissions
-
-Permissions granted through the GRANT statement with `ctl.db.tbl` scope. These permissions apply to any column within the specified table.
-
-#### Column Permissions
-
-Column permissions are primarily used to restrict user access to certain columns within a table. Specifically, column permissions allow administrators to set viewing, editing, and other rights for certain columns, controlling user access and manipulation of specific column data.
-
-Permissions for specific columns of a table can be granted with `GRANT Select_priv(col1,col2) ON ctl.db.tbl TO user1`.
-
-Currently, column permissions support only `Select_priv`.
-
-#### Row-Level Permissions
-
-Row Policies enable administrators to define access policies based on fields within the data, controlling which users can access which rows.
-
-Specifically, Row Policies allow administrators to create rules that can filter or restrict user access to rows based on actual values stored in the data.
-
-From version 1.2, row-level permissions can be created with the `CREATE ROW POLICY` command.
-
-From version 2.1.2, support for setting row-level permissions through Apache Ranger's `Row Level Filter` is available.
-
-#### Usage Permissions
-
-- Resource Permissions
-
-    Resource permissions are set specifically for Resources, unrelated to permissions for databases or tables, and can only assign `Usage_priv` and `Grant_priv`.
-
-    Permissions for all Resources can be granted with the `GRANT USAGE_PRIV ON RESOURCE '%' TO user1`.
-
-- Workload Group Permissions
-
-    Workload Group permissions are set specifically for Workload Groups, unrelated to permissions for databases or tables, and can only assign `Usage_priv` and `Grant_priv`.
-
-    Permissions for all Workload Groups can be granted with `GRANT USAGE_PRIV ON WORKLOAD GROUP '%' TO user1`.
-
-### Data Masking
-
-Data masking is a method to protect sensitive data by modifying, replacing, or hiding the original data, such that the masked data retains certain formats and characteristics while no longer containing sensitive information.
-
-For example, administrators may choose to replace part or all of the digits of sensitive fields like credit card numbers or ID numbers with asterisks `*` or other characters, or replace real names with pseudonyms.
-
-From version 2.1.2, support for setting data masking policies for certain columns through Apache Ranger's Data Masking is available, currently only configurable via [Apache Ranger](./ranger.md).
-
-### Doris Built-in Authorization Scheme
-
+Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac)，节点的管理需要用户拥有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization#权限类型) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisCluster 资源配置的集群进行部署和管理。root 用户添加密码后，需要在 DorisCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。 
+
+DorisCluster 资源提供两种方式来配置管理集群节点所需的用户名、密码，包括：环境变量配置的方式，以及使用 [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) 配置的方式。配置集群管理的用户名和密码分为 3 种情况：  
+
+- 集群部署需初始化 root 用户密码；
+- root 无密码部署下，自动化设置拥有管理权限的非 root 用户；
+- 集群 root 无密码模式部署后，设置 root 用户密码。  
+
+## 集群部署配置 root 用户密码
+
+Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Doris 首次部署时配置 root 用户的密码，请按照如下步骤操作，以便让 Doris Operator 能够自动管理集群节点：  
+
+**1. 构建 root 加密密码**  
+
+Doris 支持密文的方式在 [FE 的配置文件](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password)中设置 root 用户的密码，密码的加密方式是采用 2 阶段 SHA-1 加密实现。代码实现如下：  
+
+java 代码实现 2 阶段 SHA-2 加密：  
+  
+```java
+import org.apache.commons.codec.digest.DigestUtils;
+
+public static void main( String[] args ) {
+      //the original password
+      String a = "123456";
+      String b = DigestUtils.sha1Hex(DigestUtils.sha1(a.getBytes())).toUpperCase();
+      //output the 2 stage encrypted password.
+      System.out.println("*"+b);
+  }
+```
+
+golang 代码实现 2 阶段 SHA-1 加密：  
+
+```go
+import (
+"crypto/sha1"
+"encoding/hex"
+"fmt"
+"strings"
+)
+
+func main() {
+	//original password
+	plan := "123456"
+	//the first stage encryption.
+	h := sha1.New()
+	h.Write([]byte(plan))
+	eb := h.Sum(nil)
+
+	//the two stage encryption.
+	h.Reset()
+	h.Write(eb)
+	teb := h.Sum(nil)
+	dst := hex.EncodeToString(teb)
+	tes := strings.ToUpper(fmt.Sprintf("%s", dst))
+	//output the 2 stage encrypted password. 
+	fmt.Println("*"+tes)
+}
+```
+
+将加密后的密码按照配置文件格式要求配置到 `fe.conf` 中，根据[集群参数配置章节](./install-config-cluster.md)的介绍将配置文件以 configmap 的形式下发到 K8s 集中。  
+
+**2. 构建 DorisCluster 资源**  
+
+配置文件设置了 root 初始化密码，Doris FE 第一个节点启动后 root 的密码会立即生效，其他节点加入集群需要 Doris Operator 使用 root 用户名 + 密码的方式来操作。需要在部署的 DorisCluster 资源中指定用户名 + 密码，以便 Doris Operator 自动管理集群节点。  
+
+- 环境变量方式  
+
+  将用户名 root 和密码配置到 DorisCluster 资源中的 ".spec.adminUser.name" 和 ".spec.adminUser.password" 字段，Doris Operator 会自动将下列配置转为容器的环境变量使用，容器内的辅助服务会使用环境变量配置的用户名和密码来添加自身到指定的集群。配置格式如下：  
+
+    ```yaml
+    spec:
+      adminUser:
+        name: root
+        password: ${password}
+    ```
+  
+  其中，${password} 为 root 的非加密密码。  
+
+- Secret 方式  
+
+  Doris Operator 提供使用 [Basic authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) 来指定管理节点的用户名和密码，DorisCluster 资源配置需要使用的 Secret 后，Doris Operator 会自动将 Secret 以文件形式挂载到容器指定位置，容器的辅助服务会解析出文件中的用户名和密码来自动添加自身到指定集群。basic-authentication-secret 的 stringData 只包含 2 个字段：username 和 password。使用 Secret 配置管理用户名和密码流程如下：  
+  
+  a. 配置需要使用的 Secret  
+
+  按照如下格式配置需要使用的 Basic authentication Secret：  
+
+    ```yaml
+    stringData:
+      username: root
+      password: ${password}
+    ```
+  
+  其中 ${password} 为 root 设置的非加密密码。  
+  将 Secret 通过 `kubectl -n ${namespace} apply -f ${secretFileName}.yaml` 将更新后的 Secret 部署到 K8s 集群中。其中 ${namespace} 为 DorisCluster 资源需要部署的命名空间，${secretFileName} 为需要部署的 Secret 的文件名称。  
+  
+  b. 配置需要部署的 DorisCluster 资源   
+  
+  配置 DorisCluster 指定需要使用的 Secret 格式如下：  
+  
+    ```yaml
+    spec:
+      authSecret: ${secretName}
+    ```
+  
+  其中，${secretName} 为包含 root 用户名和密码的 Secret 名称。  
+  
+## 部署时自动创建非 root 管理用户和密码（推荐） 
+
+在首次部署时不设置 root 的初始化密码，通过环境变量或者 Secret 的方式设置非 root 用户和登录密码。Doris 容器的辅助服务会自动在数据库中创建配置的用户，设置密码和赋予 Node_priv 权限，Doris Operator 会以自动创建的用户名和密码管理集群节点。
+  
+- 环境变量模式  
+  
+  按照如下格式配置需要部署的 DorisCluster 资源：  
+    ```yaml
+    spec:
+      adminUser:
+        name: ${DB_ADMIN_USER}
+        password: ${DB_ADMIN_PASSWD}
+    ```
+  其中，${DB_ADMIN_USER} 为需要新建拥有管理权限的用户名，${DB_ADMIN_PASSWD} 为新建用户的密码。
+
+- Secret 方式  
+  
+  a. 配置需要使用的 Secret  
+  
+  按照如下格式配置需要使用的 Basic authentication Secret：  
+    ```yaml
+    stringData:
+      username: ${DB_ADMIN_USER}
+      password: ${DB_ADMIN_PASSWD}
+    ```
+  
+  其中 ${DB_ADMIN_USER} 为新创建的用户名，${DB_ADMIN_PASSWD} 为新建用户名设置的密码。
+  将 Secret 通过 `kubectl -n ${namespace} apply -f ${secretFileName}.yaml` 将更新后的 Secret 部署到 K8s 集群中。其中 ${namespace} 为 DorisCluster 资源需要部署的命名空间，${secretFileName} 为需要部署的 Secret 的文件名称。
+  
+  b. 配置需要使用 Secret 的 DorisCluster 资源  
+  
+  按照如下格式更新 DorisCluster 资源：  
+  
+    ```yaml
+    spec:
+      authSecret: ${secretName}
+    ```
+  其中，${secretName} 为部署的 Basic authentication Secret 的名称。
+
+:::tip 提示
+- 部署后请设置 root 的密码，Doris Operator 会转为使用自动新建的用户名和密码管理节点，请避免删除自动化创建的用户。  
+:::
+
+## 集群部署后设置 root 用户密码
+
+Doris 集群在部署后设置了 root 用户的密码，需要配置一个拥有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户到 DorisCluster 资源中，以便 Doris Operator 自动化的管理集群节点。此用户名不建议使用 root，请参考[用户新建和权限赋值章节](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 的方式指定新的管理用户和密码，并配置对应的 DorisCluster 资源。
+  
+1. 新建拥有 Node_priv 权限用户
+
+   使用 MySQL 协议连接数据库后，使用如下命令可以创建一个简易的仅拥有 Node_priv 权限的用户并设置密码。
+  
+```shell
+CREATE USER '${DB_ADMIN_USER}' IDENTIFIED BY '${DB_ADMIN_PASSWD}';
+```
+  
+其中 ${DB_ADMIN_USER} 为希望创建的用户名，${DB_ADMIN_PASSWD} 为希望为新建用户设置的密码。
+  
+2. 给新建用户赋予 Node_priv 权限  
+  
+   使用 MySQL 协议连接数据库后，使用如下命令赋予新建用户 Node_priv 权限。
+  
+```shell
+GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
+```
+  
+其中，${DB_ADMIN_USER} 为新创建的用户名。  
+新建用户，设置密码，以及赋予权限详细使用，请参考官方文档 [CREATE-USER](../../../../sql-manual/sql-statements/account-management/CREATE-USER) 部分。
+  
+3. 配置 DorisCluster 资源
+  
+- 环境变量方式  
+  
+  将新创建的用户名和密码配置到 DorisCluster 资源中的 ".spec.adminUser.name" 和 ".spec.adminUser.password" 字段，Doris Operator 会自动将下列配置转为容器的环境变量。容器内的辅助服务会使用环境变量配置的用户名和密码来添加自身到指定的集群。配置格式如下：
+  
+    ```yaml
+    spec:
+      adminUser:
+        name: ${DB_ADMIN_USER}
+        password: ${DB_ADMIN_PASSWD}
+    ```
+  
+  其中，${DB_ADMIN_USER} 为新建的用户名，${DB_ADMIN_PASSWD} 为新建用户设置的密码。
+  
+- Secret 方式  
+  
+  a. 配置需要使用的 Secret  
+  
+  按照如下格式配置需要使用的 Basic authentication Secret：
+  
+    ```yaml
+    stringData:
+      username: ${DB_ADMIN_USER}
+      password: ${DB_ADMIN_PASSWD}
+    ```
+  
+  其中 ${DB_ADMIN_USER} 为新创建的用户名，${DB_ADMIN_PASSWD} 为新建用户名设置的密码。  
+  将 Secret 通过 `kubectl -n ${namespace} apply -f ${secretFileName}.yaml` 将配置好的 Secret 部署到 K8s 集群中。其中 ${namespace} 为 DorisCluster 资源需要部署的命名空间，${secretFileName} 为需要部署的 Secret 的文件名称。
+  
+  b. 更新需要使用 Secret 的 DorisCluster 资源  
+  
+  按照如下格式更新 DorisCluster 资源：
+  
+    ```yaml
+    spec:
+      authSecret: ${secretName}
+    ```
+  其中，${secretName} 为部署的 Basic authentication Secret 的名称。
+
+:::tip 提示
+- 部署后设置 root 密码，并配置新的拥有管理节点的用户名和密码后，会引起存量服务滚动重启一次。    
+:::
 Doris's permission design is based on the RBAC (Role-Based Access Control) model, where users are associated with roles, and roles are associated with permissions. Users are indirectly linked to permissions through their roles.
 
 When a role is deleted, users automatically lose all permissions associated with that role.

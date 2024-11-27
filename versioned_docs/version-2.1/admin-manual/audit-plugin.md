@@ -111,7 +111,13 @@ FE Configuration:
 
 After upgrading to version 2.1, the original audit log plugin will be unavailable. This section explains how to migrate data from the original audit log table to the new audit log table.
 
+<<<<<<< HEAD
 1. Confirm the field information of the old and new audit log tables.
+=======
+You can place this file on an http download server or copy(or unzip) it to the specified directory of all FEs. Here we use the latter.  
+The installation of this plugin can be found in [INSTALL](../sql-manual/sql-statements/plugin/INSTALL-PLUGIN)  
+After executing install, the AuditLoader directory will be automatically generated.
+>>>>>>> 0e755d49db1 (6)
 
     The default audit log table should be `doris_audit_db__`.`doris_audit_log_tbl__`.
     
@@ -172,7 +178,113 @@ After upgrading to version 2.1, the original audit log plugin will be unavailabl
 
 3. Remove Original Plugin
 
+<<<<<<< HEAD
     After migration, you can remove the original plugin by using the `UNINSTALL PLUGIN AuditLoader;` command.
+=======
+In Doris, you need to create the library and table of the audit log. The table structure is as follows:
+
+If you need to enable the slow query log import function, you need to create an additional slow table `doris_slow_log_tbl__`, whose table structure is consistent with `doris_audit_log_tbl__`.
+
+Among them, the `dynamic_partition` attribute selects the number of days for audit log retention according to your own needs.
+
+```sql
+create database doris_audit_db__;
+
+create table doris_audit_db__.doris_audit_log_tbl__
+(
+    query_id varchar(48) comment "Unique query id",
+    `time` datetime not null comment "Query start time",
+    client_ip varchar(32) comment "Client IP",
+    user varchar(64) comment "User name",
+    db varchar(96) comment "Database of this query",
+    state varchar(8) comment "Query result state. EOF, ERR, OK",
+    error_code int comment "Error code of failing query.",
+    error_message string comment "Error message of failing query.",
+    query_time bigint comment "Query execution time in millisecond",
+    scan_bytes bigint comment "Total scan bytes of this query",
+    scan_rows bigint comment "Total scan rows of this query",
+    return_rows bigint comment "Returned rows of this query",
+    stmt_id int comment "An incremental id of statement",
+    is_query tinyint comment "Is this statemt a query. 1 or 0",
+    frontend_ip varchar(32) comment "Frontend ip of executing this statement",
+    cpu_time_ms bigint comment "Total scan cpu time in millisecond of this query",
+    sql_hash varchar(48) comment "Hash value for this query",
+    sql_digest varchar(48) comment "Sql digest of this query, will be empty if not a slow query",
+    peak_memory_bytes bigint comment "Peak memory bytes used on all backends of this query",
+    stmt string comment "The original statement, trimed if longer than 2G"
+) engine=OLAP
+duplicate key(query_id, `time`, client_ip)
+partition by range(`time`) ()
+distributed by hash(query_id) buckets 1
+properties(
+    "dynamic_partition.time_unit" = "DAY",
+    "dynamic_partition.start" = "-30",
+    "dynamic_partition.end" = "3",
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "1",
+    "dynamic_partition.enable" = "true",
+    "replication_num" = "3"
+);
+
+create table doris_audit_db__.doris_slow_log_tbl__
+(
+    query_id varchar(48) comment "Unique query id",
+    `time` datetime not null comment "Query start time",
+    client_ip varchar(32) comment "Client IP",
+    user varchar(64) comment "User name",
+    db varchar(96) comment "Database of this query",
+    state varchar(8) comment "Query result state. EOF, ERR, OK",
+    error_code int comment "Error code of failing query.",
+    error_message string comment "Error message of failing query.",
+    query_time bigint comment "Query execution time in millisecond",
+    scan_bytes bigint comment "Total scan bytes of this query",
+    scan_rows bigint comment "Total scan rows of this query",
+    return_rows bigint comment "Returned rows of this query",
+    stmt_id int comment "An incremental id of statement",
+    is_query tinyint comment "Is this statemt a query. 1 or 0",
+    frontend_ip varchar(32) comment "Frontend ip of executing this statement",
+    cpu_time_ms bigint comment "Total scan cpu time in millisecond of this query",
+    sql_hash varchar(48) comment "Hash value for this query",
+    sql_digest varchar(48) comment "Sql digest of a slow query",
+    peak_memory_bytes bigint comment "Peak memory bytes used on all backends of this query",
+    stmt string comment "The original statement, trimed if longer than 2G "
+) engine=OLAP
+duplicate key(query_id, `time`, client_ip)
+partition by range(`time`) ()
+distributed by hash(query_id) buckets 1
+properties(
+    "dynamic_partition.time_unit" = "DAY",
+    "dynamic_partition.start" = "-30",
+    "dynamic_partition.end" = "3",
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "1",
+    "dynamic_partition.enable" = "true",
+    "replication_num" = "3"
+);
+```
+
+>**Notice**
+>
+> In the above table structure: stmt string, this can only be used in 0.15 and later versions, in previous versions, the field type used varchar
+
+### Deployment
+
+You can place the packaged auditloader.zip on an http server, or copy `auditloader.zip` to the same specified directory in all FEs.
+
+### Installation
+
+Install the audit loader plugin:
+
+```sql
+INSTALL PLUGIN FROM [source] [PROPERTIES ("key"="value", ...)]
+```
+
+Detailed command reference: [INSTALL-PLUGIN.md](../sql-manual/sql-statements/plugin/INSTALL-PLUGIN)
+
+After successful installation, you can see the installed plug-ins through `SHOW PLUGINS`, and the status is `INSTALLED`.
+
+After completion, the plugin will continuously insert audit logs into this table at specified intervals.
+>>>>>>> 0e755d49db1 (6)
 
 ## FAQ
 

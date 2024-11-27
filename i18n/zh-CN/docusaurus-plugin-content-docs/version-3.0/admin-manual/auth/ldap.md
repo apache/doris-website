@@ -281,3 +281,4 @@ member: uid=jack,ou=aidp,dc=domain,dc=com
   2. 检查预期的 group 是否在`ldap_group_basedn`对应的组织结构下。
   3. 检查预期 group 是否包含 member 属性。
   4. 检查预期 group 的 member 属性是否包含当前用户。
+
