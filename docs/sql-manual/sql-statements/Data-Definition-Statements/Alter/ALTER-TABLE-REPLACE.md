@@ -36,7 +36,7 @@ Atomic substitution of two tables. This operation applies only to OLAP tables.
 
 ```sql
 ALTER TABLE [db.]tbl1 REPLACE WITH TABLE tbl2
-[PROPERTIES('swap' = 'true')];
+[PROPERTIES('swap' = 'true')] FORCE?;
 ```
 
 Replace table tbl1 with table tbl2.
@@ -61,7 +61,7 @@ If `swap` is `false`, do as follows:
 
 #### Notice
 1. The default `swap` parameter is `true`. That is, a table replacement operation is equivalent to an exchange of data between two tables.
-2. If the `swap` parameter is set to false, the replaced table (table A) will be deleted and cannot be restored.
+2. If the `swap` parameter is set to false, for a period of time, the replaced table (table A) can be recovered through the RECOVER statement. See [RECOVER](../../../../sql-manual/sql-statements/Database-Administration-Statements/RECOVER) statement for details. If you execute command with FORCE, the table will be deleted directly and cannot be recovered, this operation is generally not recommended.
 3. The replacement operation can only occur between two OLAP tables and does not check whether the table structure of the two tables is consistent.
 4. The original permission Settings are not changed. Because the permission check is based on the table name.
 
@@ -83,7 +83,8 @@ ALTER TABLE tbl1 REPLACE WITH TABLE tbl2 PROPERTIES('swap' = 'true');
 ALTER TABLE tbl1 REPLACE WITH TABLE tbl2 PROPERTIES('swap' = 'false');
 ```
 
-
+This case data in tb1 data will moved to recycle-bin and can be recovered using recover statement.
+If you execute command with FORCE, the table data (tb1) will be deleted directly and cannot be recovered, this operation is generally not recommended.
 
 ### Keywords
 
