@@ -2548,25 +2548,25 @@ SmallFileMgr 中存储的最大文件数
 
 备份作业的默认超时时间
 
-#### `backup_upload_task_num_per_be`
+#### `backup_upload_snapshot_batch_size`
 
-默认值：3
-
-是否可以动态配置：true
-
-是否为 Master FE 节点独有的配置项：true
-
-备份过程中，分配给每个 be 的 upload 任务最大个数，默认值为 3 个。
-
-#### `restore_download_task_num_per_be`
-
-默认值：3
+默认值：10
 
 是否可以动态配置：true
 
 是否为 Master FE 节点独有的配置项：true
 
-恢复过程中，分配给每个 be 的 download 任务最大个数，默认值为 3 个。
+备份过程中，一个 upload 任务上传的快照数量上限，默认值为10个。
+
+#### `restore_download_snapshot_batch_size`
+
+默认值：10
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+恢复过程中，一个 download 任务下载的快照数量上限，默认值为10个。
 
 #### `max_backup_restore_job_num_per_db`
 
