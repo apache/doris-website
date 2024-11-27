@@ -32,15 +32,15 @@ SHOW CONFIG
 
 ### Description
 
-该语句用于展示当前集群的配置（当前仅支持展示 FE 的配置项）
+该语句用于展示当前集群的配置
 
 语法：
 
 ```sql
-SHOW FRONTEND CONFIG [LIKE "pattern"];
+SHOW (FRONTEND|BACKEND)  CONFIG [LIKE "pattern"];
 ```
 
-结果中的各列含义如下：
+查看FE配置项的结果中的各列含义如下：
 
 1. Key：        配置项名称
 2. Value：      配置项值
@@ -48,6 +48,15 @@ SHOW FRONTEND CONFIG [LIKE "pattern"];
 4. IsMutable：  是否可以通过 ADMIN SET CONFIG 命令设置
 5. MasterOnly： 是否仅适用于 Master FE
 6. Comment：    配置项说明
+
+查看BE配置项的结果中的各列含义如下：
+
+1. BackendId：   BE ID
+2. Host：        BE的IP地址
+3. Key：         配置项名称
+4. Value：       配置项值
+5. Type：        配置型类型 
+6. IsMutable：   是否可以修改
 
 ### Example
 
@@ -69,6 +78,20 @@ SHOW FRONTEND CONFIG [LIKE "pattern"];
     1 row in set (0.01 sec)
     ```
 
+3. 查看Be ID为`10001`的BE节点的配置项
+
+    ```sql
+    SHOW BACKEND CONFIG FROM 10001;
+    ```
+4. 使用like谓词查看Be ID为`10001`的配置
+    ```
+    mysql> SHOW BACKEND CONFIG LIKE "be_port" FROM 10001;
+    +-----------+---------------+---------+-------+---------+-----------+
+    | BackendId | Host          | Key     | Value | Type    | IsMutable |
+    +-----------+---------------+---------+-------+---------+-----------+
+    | 10001     | xx.xx.xxx.xxx | be_port | 9060  | int32_t | false     |
+    +-----------+---------------+---------+-------+---------+-----------+
+    ```
 ### Keywords
 
     SHOW, CONFIG
