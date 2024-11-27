@@ -17,7 +17,7 @@ function getDocsVersions() {
                 label: 'Dev',
                 path: 'dev',
                 banner: 'unreleased',
-                badge: false,
+                // badge: false,
             };
         } else {
             result[version] = {
