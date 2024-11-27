@@ -84,7 +84,7 @@ Deployment examples for FDB are available in the fdb-kubernetes-operator reposit
 - For private networks:  
   If the environment cannot directly access Docker Hub, download the necessary images from the official FDB repository and push them to a private registry. The fdb-kubernetes-operator depends on the following Docker images:
   [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator)  
-  [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar)
+  [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar)  
   The FDB images include:  
   [foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb)  
   [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar)  
