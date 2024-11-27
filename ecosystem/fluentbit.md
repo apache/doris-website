@@ -37,7 +37,7 @@ To use the Fluent Bit Doris output plugin, there are three main steps:
 
 ### Download from the Official Website
 
-https://github.com/joker-star-l/fluent-bit/releases/download/v3.1.9-alpha/fluent-bit
+https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/fluent-bit-3.1.9
 
 ### Compile from Source Code
 
