@@ -1,6 +1,6 @@
 ---
 {
-"title": "Java UDF、UDAF、UDTF",
+"title": "Java UDF, UDAF, UDTF",
 "language": "en"
 }
 ---
@@ -144,181 +144,185 @@ When writing a `UDAF` using Java, there are some functions that must be implemen
 
 1. Write the corresponding Java UDAF code and package it into a JAR file.
 
-    <details><summary> Example 1: SimpleDemo will implement a simple function similar to sum, where the input parameter is INT and the output parameter is INT.</summary> 
+<details>
+<summary> Example 1: SimpleDemo will implement a simple function similar to sum, where the input parameter is INT and the output parameter is INT.</summary> 
 
-    ```java
-    package org.apache.doris.udf;
+```java
+package org.apache.doris.udf;
 
-    import java.io.DataInputStream;
-    import java.io.DataOutputStream;
-    import java.io.IOException;
-    import java.util.logging.Logger;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.logging.Logger;
 
-    public class SimpleDemo  {
+public class SimpleDemo  {
 
-        Logger log = Logger.getLogger("SimpleDemo");
+    Logger log = Logger.getLogger("SimpleDemo");
 
-        //Need an inner class to store data
-        /*required*/
-        public static class State {
-            /*some variables if you need */
-            public int sum = 0;
-        }
+    //Need an inner class to store data
+    /*required*/
+    public static class State {
+        /*some variables if you need */
+        public int sum = 0;
+    }
 
-        /*required*/
-        public State create() {
-            /* here could do some init work if needed */
-            return new State();
-        }
+    /*required*/
+    public State create() {
+        /* here could do some init work if needed */
+        return new State();
+    }
 
-        /*required*/
-        public void destroy(State state) {
-            /* here could do some destroy work if needed */
-        }
+    /*required*/
+    public void destroy(State state) {
+        /* here could do some destroy work if needed */
+    }
 
-        /*Not Required*/
-        public void reset(State state) {
-            /*if you want this udaf function can work with window function.*/
-            /*Must impl this, it will be reset to init state after calculate every window frame*/
-            state.sum = 0;
-        }
+    /*Not Required*/
+    public void reset(State state) {
+        /*if you want this udaf function can work with window function.*/
+        /*Must impl this, it will be reset to init state after calculate every window frame*/
+        state.sum = 0;
+    }
 
-        /*required*/
-        //first argument is State, then other types your input
-        public void add(State state, Integer val) throws Exception {
-            /* here doing update work when input data*/
-            if (val != null) {
-                state.sum += val;
-            }
-        }
-
-        /*required*/
-        public void serialize(State state, DataOutputStream out) throws Exception {
-            /* serialize some data into buffer */
-            out.writeInt(state.sum);
-        }
-
-        /*required*/
-        public void deserialize(State state, DataInputStream in) throws Exception {
-            /* deserialize get data from buffer before you put */
-            int val = in.readInt();
-            state.sum = val;
-        }
-
-        /*required*/
-        public void merge(State state, State rhs) throws Exception {
-            /* merge data from state */
-            state.sum += rhs.sum;
-        }
-
-        /*required*/
-        //return Type you defined
-        public Integer getValue(State state) throws Exception {
-            /* return finally result */
-            return state.sum;
+    /*required*/
+    //first argument is State, then other types your input
+    public void add(State state, Integer val) throws Exception {
+        /* here doing update work when input data*/
+        if (val != null) {
+            state.sum += val;
         }
     }
 
-    ```
-    </details>
-
-
-    <details><summary> Example 2: MedianUDAF is a function that calculates the median. The input types are (DOUBLE, INT), and the output type is DOUBLE. </summary>
-
-    ```java
-    package org.apache.doris.udf.demo;  
-    
-    import java.io.DataInputStream;  
-    import java.io.DataOutputStream;
-    import java.io.IOException;
-    import java.math.BigDecimal;  
-    import java.util.Arrays;  
-    import java.util.logging.Logger;  
-
-    /* UDAF to calculate the median */  
-    public class MedianUDAF {  
-        Logger log = Logger.getLogger("MedianUDAF");  
-
-        // State storage  
-        public static class State {  
-            // Precision of the return result  
-            int scale = 0;  
-            // Whether it is the first time to execute the add method for a certain aggregation condition under a certain tablet  
-            boolean isFirst = true;  
-            // Data storage  
-            public StringBuilder stringBuilder;  
-        }  
-
-        // Initialize the state  
-        public State create() {  
-            State state = new State();  
-            // Pre-initialize based on the amount of data that needs to be aggregated under each aggregation condition of each tablet to increase performance  
-            state.stringBuilder = new StringBuilder(1000);  
-            return state;  
-        }  
-
-        // Process each data under respective aggregation conditions for each tablet  
-        public void add(State state, Double val, int scale) {  
-            if (val != null && state.isFirst) {  
-                state.stringBuilder.append(scale).append(",").append(val).append(",");  
-                state.isFirst = false;  
-            } else if (val != null) {  
-                state.stringBuilder.append(val).append(",");  
-            }  
-        }  
-
-        // Data needs to be output for aggregation after processing  
-        public void serialize(State state, DataOutputStream out) throws IOException {  
-            // Currently, only DataOutputStream is provided. If serialization of objects is required, methods such as concatenating strings, converting to JSON, or serializing into byte arrays can be considered  
-            // If the State object needs to be serialized, it may be necessary to implement a serialization interface for the State inner class  
-            // Ultimately, everything needs to be transmitted via DataOutputStream  
-            out.writeUTF(state.stringBuilder.toString());  
-        }  
-
-        // Obtain the output data from the data processing execution unit  
-        public void deserialize(State state, DataInputStream in) throws IOException {  
-            String string = in.readUTF();  
-            state.scale = Integer.parseInt(String.valueOf(string.charAt(0)));  
-            StringBuilder stringBuilder = new StringBuilder(string.substring(2));  
-            state.stringBuilder = stringBuilder;   
-        }  
-
-        // The aggregation execution unit merges the processing results of data under certain aggregation conditions for a given key. The state1 parameter is the initialized instance during the first merge of each key  
-        public void merge(State state1, State state2) {  
-            state1.scale = state2.scale;  
-            state1.stringBuilder.append(state2.stringBuilder.toString());  
-        }  
-
-        // Output the final result after merging the data for each key  
-        public Double getValue(State state) {  
-            String[] strings = state.stringBuilder.toString().split(",");  
-            double[] doubles = new double[strings.length];  
-            for (int i = 0; i < strings.length - 1; i++) {  
-                doubles[i] = Double.parseDouble(strings[i + 1]);  
-            }  
-
-            Arrays.sort(doubles);  
-            double n = doubles.length;  
-            if (n == 0) {  
-                return 0.0;  
-            }  
-            double index = (n - 1) / 2.0;  
-
-            int low = (int) Math.floor(index);  
-            int high = (int) Math.ceil(index);  
-
-            double value = low == high ? (doubles[low] + doubles[high]) / 2 : doubles[high];  
-
-            BigDecimal decimal = new BigDecimal(value);  
-            return decimal.setScale(state.scale, BigDecimal.ROUND_HALF_UP).doubleValue();  
-        }  
-
-        // Executed after each execution unit completes  
-        public void destroy(State state) {  
-        }  
+    /*required*/
+    public void serialize(State state, DataOutputStream out) throws Exception {
+        /* serialize some data into buffer */
+        out.writeInt(state.sum);
     }
-    ```
+
+    /*required*/
+    public void deserialize(State state, DataInputStream in) throws Exception {
+        /* deserialize get data from buffer before you put */
+        int val = in.readInt();
+        state.sum = val;
+    }
+
+    /*required*/
+    public void merge(State state, State rhs) throws Exception {
+        /* merge data from state */
+        state.sum += rhs.sum;
+    }
+
+    /*required*/
+    //return Type you defined
+    public Integer getValue(State state) throws Exception {
+        /* return finally result */
+        return state.sum;
+    }
+}
+```
+
 </details>
+
+
+<details>
+<summary> Example 2: MedianUDAF is a function that calculates the median. The input types are (DOUBLE, INT), and the output type is DOUBLE. </summary>
+
+```java
+package org.apache.doris.udf.demo;  
+
+import java.io.DataInputStream;  
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;  
+import java.util.Arrays;  
+import java.util.logging.Logger;  
+
+/* UDAF to calculate the median */  
+public class MedianUDAF {  
+    Logger log = Logger.getLogger("MedianUDAF");  
+
+    // State storage  
+    public static class State {  
+        // Precision of the return result  
+        int scale = 0;  
+        // Whether it is the first time to execute the add method for a certain aggregation condition under a certain tablet  
+        boolean isFirst = true;  
+        // Data storage  
+        public StringBuilder stringBuilder;  
+    }  
+
+    // Initialize the state  
+    public State create() {  
+        State state = new State();  
+        // Pre-initialize based on the amount of data that needs to be aggregated under each aggregation condition of each tablet to increase performance  
+        state.stringBuilder = new StringBuilder(1000);  
+        return state;  
+    }  
+
+    // Process each data under respective aggregation conditions for each tablet  
+    public void add(State state, Double val, int scale) {  
+        if (val != null && state.isFirst) {  
+            state.stringBuilder.append(scale).append(",").append(val).append(",");  
+            state.isFirst = false;  
+        } else if (val != null) {  
+            state.stringBuilder.append(val).append(",");  
+        }  
+    }  
+
+    // Data needs to be output for aggregation after processing  
+    public void serialize(State state, DataOutputStream out) throws IOException {  
+        // Currently, only DataOutputStream is provided. If serialization of objects is required, methods such as concatenating strings, converting to JSON, or serializing into byte arrays can be considered  
+        // If the State object needs to be serialized, it may be necessary to implement a serialization interface for the State inner class  
+        // Ultimately, everything needs to be transmitted via DataOutputStream  
+        out.writeUTF(state.stringBuilder.toString());  
+    }  
+
+    // Obtain the output data from the data processing execution unit  
+    public void deserialize(State state, DataInputStream in) throws IOException {  
+        String string = in.readUTF();  
+        state.scale = Integer.parseInt(String.valueOf(string.charAt(0)));  
+        StringBuilder stringBuilder = new StringBuilder(string.substring(2));  
+        state.stringBuilder = stringBuilder;   
+    }  
+
+    // The aggregation execution unit merges the processing results of data under certain aggregation conditions for a given key. The state1 parameter is the initialized instance during the first merge of each key  
+    public void merge(State state1, State state2) {  
+        state1.scale = state2.scale;  
+        state1.stringBuilder.append(state2.stringBuilder.toString());  
+    }  
+
+    // Output the final result after merging the data for each key  
+    public Double getValue(State state) {  
+        String[] strings = state.stringBuilder.toString().split(",");  
+        double[] doubles = new double[strings.length];  
+        for (int i = 0; i < strings.length - 1; i++) {  
+            doubles[i] = Double.parseDouble(strings[i + 1]);  
+        }  
+
+        Arrays.sort(doubles);  
+        double n = doubles.length;  
+        if (n == 0) {  
+            return 0.0;  
+        }  
+        double index = (n - 1) / 2.0;  
+
+        int low = (int) Math.floor(index);  
+        int high = (int) Math.ceil(index);  
+
+        double value = low == high ? (doubles[low] + doubles[high]) / 2 : doubles[high];  
+
+        BigDecimal decimal = new BigDecimal(value);  
+        return decimal.setScale(state.scale, BigDecimal.ROUND_HALF_UP).doubleValue();  
+    }  
+
+    // Executed after each execution unit completes  
+    public void destroy(State state) {  
+    }  
+}
+```
+    
+</details>
+
 
 2. Register and create the Java-UDAF function in Doris. For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
 
