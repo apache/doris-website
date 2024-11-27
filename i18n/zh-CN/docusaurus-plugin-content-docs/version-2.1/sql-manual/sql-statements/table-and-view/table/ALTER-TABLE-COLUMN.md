@@ -30,7 +30,7 @@ ALTER TABLE COLUMN
 
 ### Description
 
-该语句用于对已有 table 进行 Schema change 操作。schema change 是异步的，任务提交成功则返回，之后可使用[SHOW ALTER TABLE COLUMN](../../Show-Statements/SHOW-ALTER.md) 命令查看进度。
+该语句用于对已有 table 进行 Schema change 操作。schema change 是异步的，任务提交成功则返回，之后可使用[SHOW ALTER TABLE COLUMN](../../../../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE) 命令查看进度。
 
 :::tip
 Doris 在建表之后有物化索引的概念，在建表成功后为 base 表，物化索引为 base index，基于 base 表可以创建 rollup index。其中 base index 和 rollup index 都是物化索引，在进行 schema change 操作时如果不指定 rollup_index_name 默认基于 base 表进行操作。

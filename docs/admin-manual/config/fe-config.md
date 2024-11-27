@@ -1,10 +1,11 @@
 ---
 {
-    "title": "FE Configuration",
-    "language": "en",
+    "title": "FE 配置项",
+    "language": "zh-CN",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4
 }
+
 ---
 
 <!--
@@ -26,799 +27,798 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<!-- Please sort the configuration alphabetically -->
+# Doris FE 配置参数
 
-# FE Configuration
+该文档主要介绍 FE 的相关配置项。
 
-This document mainly introduces the relevant configuration items of FE.
+FE 的配置文件 `fe.conf` 通常存放在 FE 部署路径的 `conf/` 目录下。而在 0.14 版本中会引入另一个配置文件 `fe_custom.conf`。该配置文件用于记录用户在运行时动态配置并持久化的配置项。
 
-The FE configuration file `fe.conf` is usually stored in the `conf/` directory of the FE deployment path. In version 0.14, another configuration file `fe_custom.conf` will be introduced. The configuration file is used to record the configuration items that are dynamically configured and persisted by the user during operation.
+FE 进程启动后，会先读取 `fe.conf` 中的配置项，之后再读取 `fe_custom.conf` 中的配置项。`fe_custom.conf` 中的配置项会覆盖 `fe.conf` 中相同的配置项。
 
-After the FE process is started, it will read the configuration items in `fe.conf` first, and then read the configuration items in `fe_custom.conf`. The configuration items in `fe_custom.conf` will overwrite the same configuration items in `fe.conf`.
+`fe_custom.conf` 文件的位置可以在 `fe.conf` 通过 `custom_config_dir` 配置项配置。
 
-The location of the `fe_custom.conf` file can be configured in `fe.conf` through the `custom_config_dir` configuration item.
+## 查看配置项
 
-## View configuration items
+FE 的配置项有两种方式进行查看：
 
-There are two ways to view the configuration items of FE:
+1. FE 前端页面查看
 
-1. FE web page
+   在浏览器中打开 FE 前端页面 `http://fe_host:fe_http_port/variable`。在 `Configure Info` 中可以看到当前生效的 FE 配置项。
 
-    Open the FE web page `http://fe_host:fe_http_port/variable` in the browser. You can see the currently effective FE configuration items in `Configure Info`.
+2. 通过命令查看
 
-2. View by command
+   FE 启动后，可以在 MySQL 客户端中，通过以下命令查看 FE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG)：
 
-    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md):
+   `SHOW FRONTEND CONFIG;`
 
-    `SHOW FRONTEND CONFIG;`
+   结果中各列含义如下：
 
-    The meanings of the columns in the results are as follows:
+   - Key：配置项名称。
+   - Value：当前配置项的值。
+   - Type：配置项值类型，如果整型、字符串。
+   - IsMutable：是否可以动态配置。如果为 true，表示该配置项可以在运行时进行动态配置。如果 false，则表示该配置项只能在 `fe.conf` 中配置并且重启 FE 后生效。
+   - MasterOnly：是否为 Master FE 节点独有的配置项。如果为 true，则表示该配置项仅在 Master FE 节点有意义，对其他类型的 FE 节点无意义。如果为 false，则表示该配置项在所有 FE 节点中均有意义。
+   - Comment：配置项的描述。
 
-    * Key: the name of the configuration item.
-    * Value: The value of the current configuration item.
-    * Type: The configuration item value type, such as integer or string.
-    * IsMutable: whether it can be dynamically configured. If true, the configuration item can be dynamically configured at runtime. If false, it means that the configuration item can only be configured in `fe.conf` and takes effect after restarting FE.
-    * MasterOnly: Whether it is a unique configuration item of Master FE node. If it is true, it means that the configuration item is meaningful only at the Master FE node, and is meaningless to other types of FE nodes. If false, it means that the configuration item is meaningful in all types of FE nodes.
-    * Comment: The description of the configuration item.
+## 设置配置项
 
-## Set configuration items
+FE 的配置项有两种方式进行配置：
 
-There are two ways to configure FE configuration items:
+1. 静态配置
 
-1. Static configuration
+   在 `conf/fe.conf` 文件中添加和设置配置项。`fe.conf` 中的配置项会在 FE 进程启动时被读取。没有在 `fe.conf` 中的配置项将使用默认值。
 
-    Add and set configuration items in the `conf/fe.conf` file. The configuration items in `fe.conf` will be read when the FE process starts. Configuration items not in `fe.conf` will use default values.
+2. 通过 MySQL 协议动态配置
 
-2. Dynamic configuration via MySQL protocol
+   FE 启动后，可以通过以下命令动态设置配置项。该命令需要管理员权限。
 
-    After the FE starts, you can set the configuration items dynamically through the following commands. This command requires administrator privilege.
+   `ADMIN SET FRONTEND CONFIG ("fe_config_name" = "fe_config_value");`
 
-    `ADMIN SET FRONTEND CONFIG (" fe_config_name "=" fe_config_value ");`
+   不是所有配置项都支持动态配置。可以通过 `SHOW FRONTEND CONFIG;` 命令结果中的 `IsMutable` 列查看是否支持动态配置。
 
-    Not all configuration items support dynamic configuration. You can check whether the dynamic configuration is supported by the `IsMutable` column in the` SHOW FRONTEND CONFIG; `command result.
+   如果是修改 `MasterOnly` 的配置项，则该命令会直接转发给 Master FE 并且仅修改 Master FE 中对应的配置项。
 
-    If the configuration item of `MasterOnly` is modified, the command will be directly forwarded to the Master FE and only the corresponding configuration item in the Master FE will be modified.
+   **通过该方式修改的配置项将在 FE 进程重启后失效。**
 
-    **Configuration items modified in this way will become invalid after the FE process restarts.**
+   更多该命令的帮助，可以通过 `HELP ADMIN SET CONFIG;` 命令查看。
 
-    For more help on this command, you can view it through the `HELP ADMIN SET CONFIG;` command.
+3. 通过 HTTP 协议动态配置
 
-3. Dynamic configuration via HTTP protocol
+   具体请参阅 [Set Config Action](../../admin-manual/fe/set-config-action.md)
 
-    For details, please refer to [Set Config Action](../fe/set-config-action)
+   该方式也可以持久化修改后的配置项。配置项将持久化在 `fe_custom.conf` 文件中，在 FE 重启后仍会生效。
 
-    This method can also persist the modified configuration items. The configuration items will be persisted in the `fe_custom.conf` file and will still take effect after FE is restarted.
+## 应用举例
 
-## Examples
+1. 修改 `async_pending_load_task_pool_size`
 
-1. Modify `async_pending_load_task_pool_size`
+   通过 `SHOW FRONTEND CONFIG;` 可以查看到该配置项不能动态配置（`IsMutable` 为 false）。则需要在 `fe.conf` 中添加：
 
-    Through `SHOW FRONTEND CONFIG;` you can see that this configuration item cannot be dynamically configured (`IsMutable` is false). You need to add in `fe.conf`:
+   `async_pending_load_task_pool_size=20`
 
-    `async_pending_load_task_pool_size = 20`
+   之后重启 FE 进程以生效该配置。
 
-    Then restart the FE process to take effect the configuration.
+2. 修改 `dynamic_partition_enable`
 
-2. Modify `dynamic_partition_enable`
+   通过 `SHOW FRONTEND CONFIG;` 可以查看到该配置项可以动态配置（`IsMutable` 为 true）。并且是 Master FE 独有配置。则首先我们可以连接到任意 FE，执行如下命令修改配置：
 
-    Through `SHOW FRONTEND CONFIG;` you can see that the configuration item can be dynamically configured (`IsMutable` is true). And it is the unique configuration of Master FE. Then first we can connect to any FE and execute the following command to modify the configuration:
+   ```text
+   ADMIN SET FRONTEND CONFIG ("dynamic_partition_enable" = "true");`
+   ```
 
-    ```
-    ADMIN SET FRONTEND CONFIG ("dynamic_partition_enable" = "true"); `
-    ```
+   之后可以通过如下命令查看修改后的值：
 
-    Afterwards, you can view the modified value with the following command:
+   ```text
+   set forward_to_master=true;
+   SHOW FRONTEND CONFIG;
+   ```
 
-    ```
-    set forward_to_master = true;
-    SHOW FRONTEND CONFIG;
-    ```
+   通过以上方式修改后，如果 Master FE 重启或进行了 Master 切换，则配置将失效。可以通过在 `fe.conf` 中直接添加配置项，并重启 FE 后，永久生效该配置项。
 
-    After modification in the above manner, if the Master FE restarts or a Master election is performed, the configuration will be invalid. You can add the configuration item directly in `fe.conf` and restart the FE to make the configuration item permanent.
+3. 修改 `max_distribution_pruner_recursion_depth`
 
-3. Modify `max_distribution_pruner_recursion_depth`
+   通过 `SHOW FRONTEND CONFIG;` 可以查看到该配置项可以动态配置（`IsMutable` 为 true）。并且不是 Master FE 独有配置。
 
-    Through `SHOW FRONTEND CONFIG;` you can see that the configuration item can be dynamically configured (`IsMutable` is true). It is not unique to Master FE.
+   同样，我们可以通过动态修改配置的命令修改该配置。因为该配置不是 Master FE 独有配置，所以需要单独连接到不同的 FE，进行动态修改配置的操作，这样才能保证所有 FE 都使用了修改后的配置值
 
-    Similarly, we can modify the configuration by dynamically modifying the configuration command. Because this configuration is not unique to the Master FE, user need to connect to different FEs separately to modify the configuration dynamically, so that all FEs use the modified configuration values.
+## 配置项列表
 
-## Configurations
-
-### Metadata And Cluster
+### 元数据与集群管理
 
 #### `meta_dir`
 
-Default：DORIS_HOME_DIR + "/doris-meta"
+默认值：DorisFE.DORIS_HOME_DIR + "/doris-meta"
 
-Type: string Description: Doris meta data will be saved here.The storage of this dir is highly recommended as to be:
+Doris 元数据将保存在这里。强烈建议将此目录的存储为：
 
-* High write performance (SSD)
-* Safe (RAID）
+1. 高写入性能（SSD）
+
+2. 安全（RAID）
 
 #### `catalog_try_lock_timeout_ms`
 
-Default：5000  （ms）
+默认值：5000（ms）
 
-IsMutable：true
+是否可以动态配置：true
 
-The tryLock timeout configuration of catalog lock.  Normally it does not need to change, unless you need to test something.
+元数据锁的 tryLock 超时配置。通常它不需要改变，除非你需要测试一些东西。
 
 #### `enable_bdbje_debug_mode`
 
-Default：false
+默认值：false
 
-If set to true, FE will be started in BDBJE debug mode
+如果设置为 true，FE 将在 BDBJE 调试模式下启动，在 Web 页面 `System->bdbje` 可以查看相关信息，否则不可以查看
 
 #### `max_bdbje_clock_delta_ms`
 
-Default：5000 （5s）
+默认值：5000（5 秒）
 
-Set the maximum acceptable clock skew between non-master FE to Master FE host. This value is checked whenever a non-master FE establishes a connection to master FE via BDBJE. The connection is abandoned if the clock skew is larger than this value.
+设置非主 FE 到主 FE 主机之间的最大可接受时钟偏差。每当非主 FE 通过 BDBJE 建立到主 FE 的连接时，都会检查该值。如果时钟偏差大于此值，则放弃连接。
 
 #### `metadata_failure_recovery`
 
-Default：false
+默认值：false
 
-If true, FE will reset bdbje replication group(that is, to remove all electable nodes info)  and is supposed to start as Master.  If all the electable nodes can not start, we can copy the meta data to another node and set this config to true to try to restart the FE..
+如果为 true，FE 将重置 bdbje 复制组（即删除所有可选节点信息）并应该作为 Master 启动。如果所有可选节点都无法启动，我们可以将元数据复制到另一个节点并将此配置设置为 true 以尝试重新启动 FE。
 
 #### `txn_rollback_limit`
 
-Default：100
+默认值：100
 
-the max txn number which bdbje can rollback when trying to rejoin the group
-
-#### `grpc_threadmgr_threads_nums`
-
-Default: 4096
-
-Num of thread to handle grpc events in grpc_threadmgr.
+尝试重新加入组时 bdbje 可以回滚的最大 txn 数
 
 #### `bdbje_replica_ack_timeout_second`
 
-Default：10  (s)
+默认值：10
 
-The replica ack timeout when writing to bdbje , When writing some relatively large logs, the ack time may time out, resulting in log writing failure.  At this time, you can increase this value appropriately.
+元数据会同步写入到多个 Follower FE，这个参数用于控制 Master FE 等待 Follower FE 发送 ack 的超时时间。当写入的数据较大时，可能 ack 时间较长，如果超时，会导致写元数据失败，FE 进程退出。此时可以适当调大这个参数。
+
+#### `grpc_threadmgr_threads_nums`
+
+默认值：4096
+
+在 grpc_threadmgr 中处理 grpc events 的线程数量。
 
 #### `bdbje_lock_timeout_second`
 
-Default：5
+默认值：5
 
-The lock timeout of bdbje operation, If there are many LockTimeoutException in FE WARN log, you can try to increase this value
+bdbje 操作的 lock timeout  如果 FE WARN 日志中有很多 LockTimeoutException，可以尝试增加这个值
 
 #### `bdbje_heartbeat_timeout_second`
 
-Default：30
+默认值：30
 
-The heartbeat timeout of bdbje between master and follower. the default is 30 seconds, which is same as default value in bdbje. If the network is experiencing transient problems, of some unexpected long java GC annoying you,  you can try to increase this value to decrease the chances of false timeouts
+master 和 follower 之间 bdbje 的心跳超时。默认为 30 秒，与 bdbje 中的默认值相同。如果网络遇到暂时性问题，一些意外的长 Java GC 使您烦恼，您可以尝试增加此值以减少错误超时的机会
 
 #### `replica_ack_policy`
 
-Default：SIMPLE_MAJORITY
+默认值：SIMPLE_MAJORITY
 
-OPTION: ALL, NONE, SIMPLE_MAJORITY
+选项：ALL, NONE, SIMPLE_MAJORITY
 
-Replica ack policy of bdbje. more info, see: <http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.ReplicaAckPolicy.html>
+bdbje 的副本 ack 策略。更多信息，请参见：<http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.ReplicaAckPolicy.html>
 
 #### `replica_sync_policy`
 
-Default：SYNC
+默认值：SYNC
 
 选项：SYNC, NO_SYNC, WRITE_NO_SYNC
 
-Follower FE sync policy of bdbje.
+bdbje 的 Follower FE 同步策略。
 
 #### `master_sync_policy`
 
-Default：SYNC
+默认值：SYNC
 
 选项：SYNC, NO_SYNC, WRITE_NO_SYNC
 
-Master FE sync policy of bdbje. If you only deploy one Follower FE, set this to 'SYNC'. If you deploy more than 3 Follower FE,  you can set this and the following 'replica_sync_policy' to WRITE_NO_SYNC.  more info, see: <http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.SyncPolicy.html>
+Master FE 的 bdbje 同步策略。如果您只部署一个 Follower FE，请将其设置为“SYNC”。如果你部署了超过 3 个 Follower FE，你可以将这个和下面的 `replica_sync_policy` 设置为 WRITE_NO_SYNC。更多信息，参见：<http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.SyncPolicy.html>
 
 #### `bdbje_reserved_disk_bytes`
 
-The desired upper limit on the number of bytes of reserved space to retain in a replicated JE Environment.
+用于限制 bdbje 能够保留的文件的最大磁盘空间。
 
-Default: 1073741824
+默认值：1073741824
 
-Is it possible to dynamically configure: false
+是否可以动态配置：false
 
-Is it a configuration item unique to the Master FE node: false
+是否为 Master FE 节点独有的配置项：false
 
 #### `ignore_meta_check`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-If true, non-master FE will ignore the meta data delay gap between Master FE and its self,  even if the metadata delay gap exceeds *meta_delay_toleration_second*.  Non-master FE will still offer read service.
-This is helpful when you try to stop the Master FE for a relatively long time for some reason,  but still wish the non-master FE can offer read service.
+如果为 true，非主 FE 将忽略主 FE 与其自身之间的元数据延迟间隙，即使元数据延迟间隙超过 `meta_delay_toleration_second`。
+非主 FE 仍将提供读取服务。当您出于某种原因尝试停止 Master FE 较长时间，但仍希望非 Master FE 可以提供读取服务时，这会很有帮助。
 
 #### `meta_delay_toleration_second`
 
-Default: 300 (5 min)
+默认值：300（5 分钟）
 
-Non-master FE will stop offering service  if meta data delay gap exceeds *meta_delay_toleration_second*
+如果元数据延迟间隔超过  `meta_delay_toleration_second`，非主 FE 将停止提供服务
 
 #### `edit_log_port`
 
-Default：9010
+默认值：9010
 
-bdbje port
+bdbje 端口
 
 #### `edit_log_type`
 
-Default：BDB
+默认值：BDB
 
-Edit log type.
-BDB: write log to bdbje
-LOCAL: deprecated..
+编辑日志类型。
+BDB：将日志写入 bdbje
+LOCAL：已弃用。
 
 #### `edit_log_roll_num`
 
-Default：50000
+默认值：50000
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Master FE will save image every *edit_log_roll_num* meta journals.
+Master FE will save image every  `edit_log_roll_num` meta journals.
 
 #### `force_do_metadata_checkpoint`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-If set to true, the checkpoint thread will make the checkpoint regardless of the jvm memory used percent
+如果设置为 true，则无论 jvm 内存使用百分比如何，检查点线程都会创建检查点
 
 #### `metadata_checkpoint_memory_threshold`
 
-Default：60  （60%）
+默认值：60（60%）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-If the jvm memory used percent(heap or old mem pool) exceed this threshold, checkpoint thread will  not work to avoid OOM.
+如果 jvm 内存使用百分比（堆或旧内存池）超过此阈值，则检查点线程将无法工作以避免 OOM。
 
 #### `max_same_name_catalog_trash_num`
 
-It is used to set the maximum number of meta information with the same name in the catalog recycle bin. When the maximum value is exceeded, the earliest deleted meta trash will be completely deleted and cannot be recovered. 0 means not to keep objects of the same name. < 0 means no limit.
+用于设置回收站中同名元数据的最大个数，超过最大值时，最早删除的元数据将被彻底删除，不能再恢复。0 表示不保留同名对象。< 0 表示不做限制。
 
-Note: The judgment of metadata with the same name will be limited to a certain range. For example, the judgment of the database with the same name will be limited to the same cluster, the judgment of the table with the same name will be limited to the same database (with the same database id), the judgment of the partition with the same name will be limited to the same database (with the same database id) and the same table (with the same table) same table id).
+注意：同名元数据的判断会局限在一定的范围内。比如同名 database 的判断会限定在相同 cluster 下，同名 table 的判断会限定在相同 database（指相同 database id）下，同名 partition 的判断会限定在相同 database（指相同 database id）并且相同 table（指相同 table id）下。
 
-Default: 3
+默认值：3
 
-Is it possible to dynamically configure: true
+是否可以动态配置：true
 
-Is it a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
 #### `cluster_id`
 
-Default：-1
+默认值：-1
 
-node(FE or BE) will be considered belonging to the same Doris cluster if they have same cluster id.  Cluster id is usually a random integer generated when master FE start at first time. You can also specify one.
+如果节点（FE 或 BE）具有相同的集群 id，则将认为它们属于同一个 Doris 集群。Cluster id 通常是主 FE 首次启动时生成的随机整数。您也可以指定一个。
 
 #### `heartbeat_mgr_blocking_queue_size`
 
-Default：1024
+默认值：1024
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-blocking queue size to store heartbeat task in heartbeat_mgr.
+在 heartbeat_mgr 中存储心跳任务的阻塞队列大小。
 
 #### `heartbeat_mgr_threads_num`
 
-Default：8
+默认值：8
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-num of thread to handle heartbeat events in heartbeat_mgr.
+heartbeat_mgr 中处理心跳事件的线程数。
 
 #### `disable_cluster_feature`
 
-Default：true
+默认值：true
 
-IsMutable：true
+是否可以动态配置：true
 
-The multi cluster feature will be deprecated in version 0.12 , set this config to true will disable all operations related to cluster feature, include:
+多集群功能将在 0.12 版本中弃用，将此配置设置为 true 将禁用与集群功能相关的所有操作，包括：
 
-1. create/drop cluster
-2. add free backend/add backend to cluster/decommission cluster balance
-3. change the backends num of cluster
-4. link/migration db
+1. 创建/删除集群
+2. 添加、释放 BE/将 BE 添加到集群/停用集群 balance
+3. 更改集群的后端数量
+4. 链接/迁移数据库
 
 #### `enable_fqdn_mode`
 
-This configuration is mainly used in the k8s cluster environment. When enable_fqdn_mode is true, the name of the pod where the be is located will remain unchanged after reconstruction, while the ip can be changed.
+此配置用于 k8s 部署环境。当 enable_fqdn_mode 为 true 时，将允许更改 be 的重建 pod 的 ip。
 
-Default: false
+默认值：false
 
-Is it possible to dynamically configure: false
+是否可以动态配置：false
 
-Is it a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
 #### `enable_token_check`
 
-Default：true
+默认值：true
 
-For forward compatibility, will be removed later. check token when download image file.
+为了向前兼容，稍后将被删除。下载 image 文件时检查令牌。
 
 #### `enable_multi_tags`
 
-Default: false
+默认值：false
 
-Is it possible to dynamically configure: false
+是否可以动态配置：false
 
-Is it a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
-Whether to enable the multi-tags function of a single BE
+是否开启单 BE 的多标签功能
 
 #### `initial_root_password`
 
-Set root user initial 2-staged SHA-1 encrypted password, default as '', means no root password. Subsequent `set password` operations for root user will overwrite the initial root password.
+设置 root 用户初始化 2 阶段 SHA-1 加密密码，默认为''，即不设置 root 密码。后续 root 用户的 `set password` 操作会将 root 初始化密码覆盖。
 
-Example: If you want to configure a plaintext password `root@123`. You can execute Doris SQL `select password('root@123')` to generate encrypted password `*A00C34073A26B40AB4307650BFB9309D6BFA6999`.
+示例：如要配置密码的明文是 `root@123`，可在 Doris 执行 SQL `select password('root@123')` 获取加密密码 `*A00C34073A26B40AB4307650BFB9309D6BFA6999`。
 
-Default: empty string
+默认值：空字符串
 
-Is it possible to dynamically configure: false
+是否可以动态配置：false
 
-Is it a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
 #### `enable_cooldown_replica_affinity`
 
-Users can choose whether to use the cooled copy for scanning first, which defaults to true
+用户可以选择是否首先使用冷却副本进行扫描，默认为 true
 
-Default: true
+默认值：true
 
-Is it possible to dynamically configure: true
+是否可以动态配置：true
 
-Is it a configuration item unique to the Master FE node: false
+是否为 Master FE 节点独有的配置项：false
 
-### Service
+### 服务
 
 #### `query_port`
 
-Default：9030
+默认值：9030
 
-FE MySQL server port
+Doris FE 通过 mysql 协议查询连接端口
 
 #### `arrow_flight_sql_port`
 
-Default：-1
+默认值：-1
 
-Arrow Flight SQL server port
+Doris FE 通过 Arrow Flight SQL 协议查询连接端口
 
 #### `frontend_address`
 
-Status: Deprecated, not recommended use. This parameter may be deleted later
+状态：已弃用，不建议使用。
 
-Type: string
+类型:string
 
-Description: Explicitly set the IP address of FE instead of using *InetAddress.getByName* to get the IP address. Usually in *InetAddress.getByName* When the expected results cannot be obtained. Only IP address is supported, not hostname.
+描述：显式配置 FE 的 IP 地址，不使用*InetAddress。getByName*获取 IP 地址。通常在*InetAddress 中。getByName*当无法获得预期结果时。只支持 IP 地址，不支持主机名。
 
-Default value: 0.0.0.0
+默认值:0.0.0.0
 
 #### `priority_networks`
 
-Default：none
+默认值：空
 
-Declare a selection strategy for those servers have many ips.  Note that there should at most one ip match this list.  this is a list in semicolon-delimited format, in CIDR notation, e.g. 10.10.10.0/24 , If no ip match this rule, will choose one randomly.
+为那些有很多 ip 的服务器声明一个选择策略。请注意，最多应该有一个 ip 与此列表匹配。这是一个以分号分隔格式的列表，用 CIDR 表示法，例如 10.10.10.0/24。如果没有匹配这条规则的 ip，会随机选择一个。
 
 #### `http_port`
 
-Default：8030
+默认值：8030
 
-HTTP bind port. All FE http ports must be same currently.
+FE http 端口，当前所有 FE http 端口都必须相同
 
 #### `https_port`
 
-Default：8050
+默认值：8050
 
-HTTPS bind port. All FE https ports must be same currently.
+FE https 端口，当前所有 FE https 端口都必须相同
 
 #### `enable_https`
 
-Default：false
+默认值：false
 
-Https enable flag. If the value is false, http is supported. Otherwise, both http and https are supported, and http requests are automatically redirected to https.
-If enable_https is true, you need to configure ssl certificate information in fe.conf.
+FE https 使能标志位，false 表示支持 http，true 表示同时支持 http 与 https，并且会自动将 http 请求重定向到 https
+如果 enable_https 为 true，需要在 fe.conf 中配置 ssl 证书信息
 
 #### `enable_ssl`
 
-Default：true
+默认值：true
 
-If set to true, doris will establish an encrypted channel based on the SSL protocol with mysql.
+如果设置为 true，doris 将与 mysql 服务 建立基于 SSL 协议的加密通道。
 
 #### `qe_max_connection`
 
-Default：1024
+默认值：1024
 
-Maximal number of connections per FE.
+每个 FE 的最大连接数
 
 #### `check_java_version`
 
-Default：true
+默认值：true
 
-Doris will check whether the compiled and run Java versions are compatible, if not, it will throw a Java version mismatch exception message and terminate the startup
+Doris 将检查已编译和运行的 Java 版本是否兼容，如果不兼容将抛出 Java 版本不匹配的异常信息，并终止启动
 
 #### `rpc_port`
 
-Default：9020
+默认值：9020
 
-FE Thrift Server port
+FE Thrift Server 的端口
 
 #### `thrift_server_type`
 
-This configuration represents the service model used by The Thrift Service of FE, is of type String and is case-insensitive.
+该配置表示 FE 的 Thrift 服务使用的服务模型，类型为 string, 大小写不敏感。
 
-If this parameter is 'SIMPLE', then the 'TSimpleServer' model is used, which is generally not suitable for production and is limited to test use.
+若该参数为 `SIMPLE`, 则使用 `TSimpleServer` 模型，该模型一般不适用于生产环境，仅限于测试使用。
 
-If the parameter is 'THREADED', then the 'TThreadedSelectorServer' model is used, which is a non-blocking I/O model, namely the master-slave Reactor model, which can timely respond to a large number of concurrent connection requests and performs well in most scenarios.
+若该参数为 `THREADED`, 则使用 `TThreadedSelectorServer` 模型，该模型为非阻塞式 I/O 模型，即主从 Reactor 模型，该模型能及时响应大量的并发连接请求，在多数场景下有较好的表现。
 
-If this parameter is `THREAD_POOL`, then the `TThreadPoolServer` model is used, the model for blocking I/O model, use the thread pool to handle user connections, the number of simultaneous connections are limited by the number of thread pool, if we can estimate the number of concurrent requests in advance, and tolerant enough thread resources cost, this model will have a better performance, the service model is used by default
+若该参数为 `THREAD_POOL`, 则使用 `TThreadPoolServer` 模型，该模型为阻塞式 I/O 模型，使用线程池处理用户连接，并发连接数受限于线程池的数量，如果能提前预估并发请求的数量，并且能容忍足够多的线程资源开销，该模型会有较好的性能表现，默认使用该服务模型
 
 #### `thrift_server_max_worker_threads`
 
-Default：4096
+默认值：4096
 
-The thrift server max worker threads
+Thrift Server 最大工作线程数
 
 #### `thrift_backlog_num`
 
-Default：1024
+默认值：1024
 
-The backlog_num for thrift server , When you enlarge this backlog_num, you should ensure it's value larger than the linux /proc/sys/net/core/somaxconn config
+thrift 服务器的 backlog_num 当你扩大这个 backlog_num 时，你应该确保它的值大于 linux `/proc/sys/net/core/somaxconn` 配置
 
 #### `thrift_client_timeout_ms`
 
-Default：0
+默认值：0
 
-The connection timeout and socket timeout config for thrift server.
+thrift 服务器的连接超时和套接字超时配置
 
-The value for thrift_client_timeout_ms is set to be zero to prevent read timeout.
+thrift_client_timeout_ms 的默认值设置为零以防止读取超时
 
 #### `thrift_max_message_size`
 
-Default: 100MB
+默认值：100MB
 
-The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
+thrift 服务器接收请求消息的大小（字节数）上限。如果客户端发送的消息大小超过该值，那么 thrift 服务器会拒绝该请求并关闭连接，这种情况下，client 会遇到错误：“connection has been closed by peer”，使用者可以尝试增大该参数以绕过上述限制。
 
 #### `use_compact_thrift_rpc`
 
-Default: true
+默认值：true
 
-Whether to use compressed format to send query plan structure. After it is turned on, the size of the query plan structure can be reduced by about 50%, thereby avoiding some "send fragment timeout" errors.
-However, in some high-concurrency small query scenarios, the concurrency may be reduced by about 10%.
+是否使用压缩格式发送查询计划结构体。开启后，可以降低约 50% 的查询计划结构体大小，从而避免一些 "send fragment timeout" 错误。
+但是在某些高并发小查询场景下，可能会降低约 10% 的并发度。
 
 #### `grpc_max_message_size_bytes`
 
-Default：1G
+默认值：1G
 
-Used to set the initial flow window size of the GRPC client channel, and also used to max message size.  When the result set is large, you may need to increase this value.
+用于设置 GRPC 客户端通道的初始流窗口大小，也用于设置最大消息大小。当结果集较大时，可能需要增大该值。
 
 #### `max_mysql_service_task_threads_num`
 
-Default：4096
+默认值：4096
 
-The number of threads responsible for Task events.
+mysql 中处理任务的最大线程数。
 
 #### `mysql_service_io_threads_num`
 
-Default：4
+默认值：4
 
-When FE starts the MySQL server based on NIO model, the number of threads responsible for IO events.
+mysql 中处理 io 事件的线程数。
 
 #### `mysql_nio_backlog_num`
 
-Default：1024
+默认值：1024
 
-The backlog_num for mysql nio server, When you enlarge this backlog_num, you should enlarge the value in the linux /proc/sys/net/core/somaxconn file at the same time
+mysql nio server 的 backlog_num 当你放大这个 backlog_num 时，你应该同时放大 linux `/proc/sys/net/core/somaxconn`文件中的值
 
 #### `broker_timeout_ms`
 
-Default：10000   （10s）
+默认值：10000（10 秒）
 
-Default broker RPC timeout
+Broker rpc 的默认超时时间
 
 #### `backend_rpc_timeout_ms`
 
-Timeout millisecond for Fe sending rpc request to BE
+FE 向 BE 的 BackendService 发送 rpc 请求时的超时时间，单位：毫秒。
 
-Default: 60000
+默认值：60000
 
-Is it possible to dynamically configure: false
+是否可以动态配置：false
 
-Is it a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
 #### `drop_backend_after_decommission`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-1. This configuration is used to control whether the system drops the BE after successfully decommissioning the BE. If true, the BE node will be deleted after the BE is successfully offline. If false, after the BE successfully goes offline, the BE will remain in the DECOMMISSION state, but will not be dropped.
+该配置用于控制系统在成功下线（Decommission）BE 后，是否 Drop 该 BE。如果为 true，则在 BE 成功下线后，会删除掉该 BE 节点。如果为 false，则在 BE 成功下线后，该 BE 会一直处于 DECOMMISSION 状态，但不会被删除。
 
-   This configuration can play a role in certain scenarios. Assume that the initial state of a Doris cluster is one disk per BE node. After running for a period of time, the system has been vertically expanded, that is, each BE node adds 2 new disks. Because Doris currently does not support data balancing among the disks within the BE, the data volume of the initial disk may always be much higher than the data volume of the newly added disk. At this time, we can perform manual inter-disk balancing by the following operations:
+该配置在某些场景下可以发挥作用。假设一个 Doris 集群的初始状态为每个 BE 节点有一块磁盘。运行一段时间后，系统进行了纵向扩容，即每个 BE 节点新增 2 块磁盘。因为 Doris 当前还不支持 BE 内部各磁盘间的数据均衡，所以会导致初始磁盘的数据量可能一直远高于新增磁盘的数据量。此时我们可以通过以下操作进行人工的磁盘间均衡：
 
-   1. Set the configuration item to false.
-   2. Perform a decommission operation on a certain BE node. This operation will migrate all data on the BE to other nodes.
-   3. After the decommission operation is completed, the BE will not be dropped. At this time, cancel the decommission status of the BE. Then the data will start to balance from other BE nodes back to this node. At this time, the data will be evenly distributed to all disks of the BE.
-   4. Perform steps 2 and 3 for all BE nodes in sequence, and finally achieve the purpose of disk balancing for all nodes
+1. 将该配置项置为 false。
+2. 对某一个 BE 节点，执行 decommission 操作，该操作会将该 BE 上的数据全部迁移到其他节点中。
+3. decommission 操作完成后，该 BE 不会被删除。此时，取消掉该 BE 的 decommission 状态。则数据会开始从其他 BE 节点均衡回这个节点。此时，数据将会均匀的分布到该 BE 的所有磁盘上。
+4. 对所有 BE 节点依次执行 2，3 两个步骤，最终达到所有节点磁盘均衡的目的。
 
 #### `max_backend_down_time_second`
 
-Default: 3600  (1 hour)
+默认值：3600（1 小时）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-If a backend is down for *max_backend_down_time_second*, a BACKEND_DOWN event will be triggered.
+如果 BE 关闭了 `max_backend_down_time_second`，将触发 BACKEND_DOWN 事件。
 
 #### `disable_backend_black_list`
 
-Used to disable the BE blacklist function. After this function is disabled, if the query request to the BE fails, the BE will not be added to the blacklist.
-This parameter is suitable for regression testing environments to reduce occasional bugs that cause a large number of regression tests to fail.
+用于禁止 BE 黑名单功能。禁止该功能后，如果向 BE 发送查询请求失败，也不会将这个 BE 添加到黑名单。
+该参数适用于回归测试环境，以减少偶发的错误导致大量回归测试失败。
 
-Default: false
+默认值：false
 
-Is it possible to configure dynamically: true
+是否可以动态配置：true
 
-Is it a configuration item unique to the Master FE node: false
+是否为 Master FE 节点独有的配置项：false
 
 #### `max_backend_heartbeat_failure_tolerance_count`
 
-The maximum tolerable number of BE node heartbeat failures. If the number of consecutive heartbeat failures exceeds this value, the BE state will be set to dead.
-This parameter is suitable for regression test environments to reduce occasional heartbeat failures that cause a large number of regression test failures.
+最大可容忍的 BE 节点心跳失败次数。如果连续心跳失败次数超过这个值，则会将 BE 状态置为 dead。
+该参数适用于回归测试环境，以减少偶发的心跳失败导致大量回归测试失败。
 
-Default: 1
+默认值：1
 
-Is it possible to configure dynamically: true
+是否可以动态配置：true
 
-Whether it is a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
-### `abort_txn_after_lost_heartbeat_time_second`
+#### `abort_txn_after_lost_heartbeat_time_second`
 
-Abort transaction time after lost heartbeat. The default value is 300, which means transactions of be will be aborted after lost heartbeat 300s.
+丢失 be 心跳后丢弃 be 事务的时间。默认时间为三百秒，当三百秒 fe 没有接收到 be 心跳时，会丢弃该 be 的所有事务。
 
-Default: 300(s)
+默认值：300(秒)
 
-Is it possible to configure dynamically: true
+是否可以动态配置：true
 
-Whether it is a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
 #### `enable_access_file_without_broker`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-This config is used to try skip broker when access bos or other cloud storage via broker
+此配置用于在通过代理访问 bos 或其他云存储时尝试跳过代理
 
 #### `agent_task_resend_wait_time_ms`
 
-Default：5000
+默认值：5000
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-This configuration will decide whether to resend agent task when create_time for agent_task is set, only when current_time - create_time > agent_task_resend_wait_time_ms can ReportHandler do resend agent task.
+当代理任务的创建时间被设置的时候，此配置将决定是否重新发送代理任务，当且仅当当前时间减去创建时间大于 `agent_task_task_resend_wait_time_ms` 时，ReportHandler 可以重新发送代理任务。
 
-This configuration is currently mainly used to solve the problem of repeated sending of `PUBLISH_VERSION` agent tasks. The current default value of this configuration is 5000, which is an experimental value.
+该配置目前主要用来解决 `PUBLISH_VERSION` 代理任务的重复发送问题，目前该配置的默认值是 5000，是个实验值。
 
-Because there is a certain time delay between submitting agent tasks to AgentTaskQueue and submitting to be, Increasing the value of this configuration can effectively solve the problem of repeated sending of agent tasks,
+由于把代理任务提交到代理任务队列和提交到 BE 存在一定的时间延迟，所以调大该配置的值可以有效解决代理任务的重复发送问题，
 
-But at the same time, it will cause the submission of failed or failed execution of the agent task to be executed again for an extended period of time
+但同时会导致提交失败或者执行失败的代理任务再次被执行的时间延长。
 
 #### `max_agent_task_threads_num`
 
-Default：4096
+默认值：4096
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-max num of thread to handle agent task in agent task thread-pool.
+代理任务线程池中处理代理任务的最大线程数。
 
 #### `remote_fragment_exec_timeout_ms`
 
-Default：30000  （ms）
+默认值：30000（ms）
 
-IsMutable：true
+是否可以动态配置：true
 
-The timeout of executing async remote fragment.  In normal case, the async remote fragment will be executed in a short time. If system are under high load condition, try to set this timeout longer.
+异步执行远程 fragment 的超时时间。在正常情况下，异步远程 fragment 将在短时间内执行。如果系统处于高负载状态，请尝试将此超时设置更长的时间。
 
 #### `auth_token`
 
-Default：empty
+默认值：空
 
-Cluster token used for internal authentication.
+用于内部身份验证的集群令牌。
 
 #### `enable_http_server_v2`
 
-Default: The default is true after the official 0.14.0 version is released, and the default is false before
+默认值：从官方 0.14.0 release 版之后默认是 true，之前默认 false
 
-HTTP Server V2 is implemented by SpringBoot. It uses an architecture that separates the front and back ends. Only when HTTPv2 is enabled can users use the new front-end UI interface.
+HTTP Server V2 由 SpringBoot 实现，并采用前后端分离的架构。只有启用 HTTPv2，用户才能使用新的前端 UI 界面
 
 #### `http_api_extra_base_path`
 
-In some deployment environments, user need to specify an additional base path as the unified prefix of the HTTP API. This parameter is used by the user to specify additional prefixes.
-After setting, user can get the parameter value through the `GET /api/basepath` interface. And the new UI will also try to get this base path first to assemble the URL. Only valid when `enable_http_server_v2` is true.
-
-The default is empty, that is, not set
+基本路径是所有 API 路径的 URL 前缀。
+一些部署环境需要配置额外的基本路径来匹配资源。
+此 Api 将返回在 Config.http_api_extra_base_path 中配置的路径。
+默认为空，表示未设置。
 
 #### `jetty_server_acceptors`
 
-Default：2
+默认值：2
 
 #### `jetty_server_selectors`
 
-Default：4
+默认值：4
 
 #### `jetty_server_workers`
 
-Default：0
+默认值：0
 
-With the above three parameters, Jetty's thread architecture model is very simple, divided into acceptors, selectors and workers three thread pools. Acceptors are responsible for accepting new connections, and then hand them over to selectors to process the unpacking of the HTTP message protocol, and finally workers process the request. The first two thread pools adopt a non-blocking model, and one thread can handle the read and write of many sockets, so the number of thread pools is small.
+Jetty 的线程数量由以上三个参数控制。Jetty 的线程架构模型非常简单，分为 acceptors、selectors 和 workers 三个线程池。acceptors 负责接受新连接，然后交给 selectors 处理 HTTP 消息协议的解包，最后由 workers 处理请求。前两个线程池采用非阻塞模型，一个线程可以处理很多 socket 的读写，所以线程池数量较小。
 
-For most projects, only 1-2 acceptors threads are required, and 2 to 4 selectors threads are sufficient. Workers are obstructive business logic, often have more database operations, and require a large number of threads. The specific number depends on the proportion of QPS and IO events of the application. The higher the QPS, the more threads are required, the higher the proportion of IO, the more threads waiting, and the more total threads required.
+大多数项目，acceptors 线程只需要 1～2 个，selectors 线程配置 2～4 个足矣。workers 是阻塞性的业务逻辑，往往有较多的数据库操作，需要的线程数量较多，具体数量随应用程序的 QPS 和 IO 事件占比而定。QPS 越高，需要的线程数量越多，IO 占比越高，等待的线程数越多，需要的总线程数也越多。
 
-Worker thread pool is not set by default, set according to your needs
+workers 线程池默认不做设置，根据自己需要进行设置
 
 #### `jetty_server_max_http_post_size`
 
-Default：`100 * 1024 * 1024`  （100MB）
+默认值：`100 * 1024 * 1024`  （100MB）
 
-This is the maximum number of bytes of the file uploaded by the put or post method, the default value: 100MB
+这个是 put 或 post 方法上传文件的最大字节数，默认值：100MB
 
 #### `jetty_server_max_http_header_size`
 
-Default：1048576  （1M）
+默认值：1048576（1M）
 
-http header size configuration parameter, the default value is 1M.
+http header size 配置参数
 
 #### `http_sql_submitter_max_worker_threads`
 
-Default：2
+默认值：2
 
-The max number work threads of http sql submitter
+http 请求处理/api/query 中 sql 任务的最大线程池
 
 #### `http_load_submitter_max_worker_threads`
 
-Default：2
+默认值：2
 
-The max number work threads of http upload submitter
+http 请求处理/api/upload 任务的最大线程池
 
-### Query Engine
+### 查询引擎
 
 #### `default_max_query_instances`
 
-The default value when user property max_query_instances is equal or less than 0. This config is used to limit the max number of instances for a user. This parameter is less than or equal to 0 means unlimited.
+默认值：-1
 
-The default value is -1
+用户属性 max_query_instances 小于等于 0 时，使用该配置，用来限制单个用户同一时刻可使用的查询 instance 个数。该参数小于等于 0 表示无限制。
 
 #### `max_query_retry_time`
 
-Default：3
+默认值：3
 
-IsMutable：true
+是否可以动态配置：true
 
-The number of query retries.  A query may retry if we encounter RPC exception and no result has been sent to user.  You may reduce this number to avoid Avalanche disaster
+查询重试次数。如果我们遇到 RPC 异常并且没有将结果发送给用户，则可能会重试查询。您可以减少此数字以避免雪崩灾难。
 
 #### `max_dynamic_partition_num`
 
-Default：500
+默认值：500
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Used to limit the maximum number of partitions that can be created when creating a dynamic partition table,  to avoid creating too many partitions at one time. The number is determined by "start" and "end" in the dynamic partition parameters.
+用于限制创建动态分区表时可以创建的最大分区数，避免一次创建过多分区。数量由动态分区参数中的“开始”和“结束”决定。
 
 #### `dynamic_partition_enable`
 
-Default：true
+默认值：true
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Whether to enable dynamic partition scheduler, enabled by default
+是否启用动态分区调度，默认启用
 
 #### `dynamic_partition_check_interval_seconds`
 
-Default：600 （s）
+默认值：600 秒，10 分钟
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Decide how often to check dynamic partition
+检查动态分区的频率
 
 #### `max_multi_partition_num`
 
-Default：4096
+默认值：4096
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Use this parameter to set the partition name prefix for multi partition,Only multi partition takes effect, not dynamic partitions. The default prefix is "p_".
+用于限制批量创建分区表时可以创建的最大分区数，避免一次创建过多分区。
 
 #### `multi_partition_name_prefix`
 
-Default：p_
+默认值：p_
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Use this parameter to set the partition name prefix for multi partition, Only multi partition takes effect, not dynamic partitions.The default prefix is "p_".
+使用此参数设置 multi partition 的分区名前缀，仅仅 multi partition 生效，不作用于动态分区，默认前缀是“p_”。
 
 #### `partition_in_memory_update_interval_secs`
 
-Default：300 (s)
+默认值：300 (s)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Time to update global partition information in memory
+更新内存中全局分区信息的时间
 
 #### `enable_concurrent_update`
 
-Default：false
+默认值：false
 
-IsMutable：false
+是否可以动态配置：false
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Whether to enable concurrent update
+是否启用并发更新
 
 #### `lower_case_table_names`
 
-Default：0
+默认值：0
 
-IsMutable：false
+是否可以动态配置：false
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-This configuration can only be configured during cluster initialization and cannot be modified during cluster
-restart and upgrade after initialization is complete.
+用于控制用户表表名大小写是否敏感。
+该配置只能在集群初始化时配置，初始化完成后集群重启和升级时不能修改。
 
-0: table names are stored as specified and comparisons are case sensitive.
-1: table names are stored in lowercase and comparisons are not case sensitive.
-2: table names are stored as given but compared in lowercase.
+0：表名按指定存储，比较区分大小写。
+1：表名以小写形式存储，比较不区分大小写。
+2：表名按指定存储，但以小写形式进行比较。
 
 #### `table_name_length_limit`
 
-Default：64
+默认值：64
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Used to control the maximum table name length
+用于控制最大的表名长度
 
 #### `cache_enable_sql_mode`
 
-Default：true
+默认值：true
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-If this switch is turned on, the SQL query result set will be cached. If the interval between the last visit version time in all partitions of all tables in the query is greater than cache_last_version_interval_second, and the result set is less than cache_result_max_row_count, and the data size is less than cache_result_max_data_size, the result set will be cached, and the next same SQL will hit the cache
+如果设置为 true，SQL 查询结果集将被缓存。如果查询中所有表的所有分区最后一次访问版本时间的间隔大于 cache_last_version_interval_second，且结果集行数小于 cache_result_max_row_count，且数据大小小于 cache_result_max_data_size，则结果集会被缓存，下一条相同的 SQL 会命中缓存
 
-If set to true, fe will enable sql result caching. This option is suitable for offline data update scenarios
+如果设置为 true，FE 会启用 sql 结果缓存，该选项适用于离线数据更新场景
 
 |                        | case1 | case2 | case3 | case4 |
 | ---------------------- | ----- | ----- | ----- | ----- |
@@ -827,1944 +827,1944 @@ If set to true, fe will enable sql result caching. This option is suitable for o
 
 #### `cache_enable_partition_mode`
 
-Default：true
+默认值：true
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-If set to true, fe will get data from be cache, This option is suitable for real-time updating of partial partitions.
+如果设置为 true，FE 将从 BE cache 中获取数据，该选项适用于部分分区的实时更新。
 
 #### `cache_result_max_row_count`
 
-Default：3000
+默认值：3000
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-In order to avoid occupying too much memory, the maximum number of rows that can be cached is 3000 by default. If this threshold is exceeded, the cache cannot be set
+设置可以缓存的最大行数，详细的原理可以参考官方文档：操作手册->分区缓存
 
 #### `cache_result_max_data_size`
 
-Default: 31457280
+默认值：31457280
 
-IsMutable: true
+是否可以动态配置：true
 
-MasterOnly: false
+是否为 Master FE 节点独有的配置项：false
 
-In order to avoid occupying too much memory, the maximum data size of rows that can be cached is 10MB by default. If this threshold is exceeded, the cache cannot be set
+设置可以缓存的最大数据大小，单位 Bytes
 
 #### `cache_last_version_interval_second`
 
-Default：30
+默认值：30
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-The time interval of the latest partitioned version of the table refers to the time interval between the data update and the current version. It is generally set to 900 seconds, which distinguishes offline and real-time import
+缓存结果时上一版本的最小间隔，该参数区分离线更新和实时更新
 
 #### `max_allowed_in_element_num_of_delete`
 
-Default：1024
+默认值：1024
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-This configuration is used to limit element num of InPredicate in delete statement.
+用于限制 delete 语句中 Predicate 的元素个数
 
 #### `max_running_rollup_job_num_per_table`
 
-Default：1
+默认值：1
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Control the concurrency limit of Rollup jobs
+控制 Rollup 作业并发限制
 
 #### `max_distribution_pruner_recursion_depth`
 
-Default：100
+默认值：100
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-This will limit the max recursion depth of hash distribution pruner.
-eg: where a in (5 elements) and b in (4 elements) and c in (3 elements) and d in (2 elements).
-a/b/c/d are distribution columns, so the recursion depth will be 5 *4* 3 * 2 = 120, larger than 100,
-So that distribution pruner will no work and just return all buckets.
-Increase the depth can support distribution pruning for more elements, but may cost more CPU.
+这将限制哈希分布修剪器的最大递归深度。例如：其中 a  in（5 个元素）和 b in（4 个元素）和 c in（3 个元素）和 d in（2 个元素）。a/b/c/d 是分布式列，所以递归深度为 5 *4* 3 * 2 = 120，大于 100，因此该分发修剪器将不起作用，只会返回所有 buckets。增加深度可以支持更多元素的分布修剪，但可能会消耗更多的 CPU
+
+通过 `SHOW FRONTEND CONFIG;` 可以查看到该配置项可以动态配置（`IsMutable` 为 true）。并且不是 Master FE 独有配置。
+
+同样，我们可以通过动态修改配置的命令修改该配置。因为该配置不是 Master FE 独有配置，所以需要单独连接到不同的 FE，进行动态修改配置的操作，这样才能保证所有 FE 都使用了修改后的配置值
 
 #### `enable_local_replica_selection`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-If set to true, Planner will try to select replica of tablet on same host as this Frontend.
-This may reduce network transmission in following case:
+如果设置为 true，Planner 将尝试在与此前端相同的主机上选择 tablet 的副本。
+在以下情况下，这可能会减少网络传输：
 
-* N hosts with N Backends and N Frontends deployed.
+1. N 个主机，部署了 N 个 BE 和 N 个 FE。
 
-* The data has N replicas.
+2. 数据有 N 个副本。
 
-* High concurrency queries are evenly sent to all Frontends evenly
+3. 高并发查询均匀发送到所有 Frontends
 
-In this case, all Frontends can only use local replicas to do the query. If you want to allow fallback to non-local replicas when no local replicas available, set enable_local_replica_selection_fallback to true.
+在这种情况下，所有 Frontends 只能使用本地副本进行查询。如果想当本地副本不可用时，使用非本地副本服务查询，请将 enable_local_replica_selection_fallback 设置为 true
 
 #### `enable_local_replica_selection_fallback`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-Used with enable_local_replica_selection. If the local replicas is not available, fallback to the non-local replicas.
+与 enable_local_replica_selection 配合使用，当本地副本不可用时，使用非本地副本服务查询。
 
 #### `expr_depth_limit`
 
-Default：3000
+默认值：3000
 
-IsMutable：true
+是否可以动态配置：true
 
-Limit on the depth of an expr tree.  Exceed this limit may cause long analysis time while holding db read lock.  Do not set this if you know what you are doing
+限制 expr 树的深度。超过此限制可能会导致在持有 db read lock 时分析时间过长。
 
 #### `expr_children_limit`
 
-Default：10000
+默认值：10000
 
-IsMutable：true
+是否可以动态配置：true
 
-Limit on the number of expr children of an expr tree.  Exceed this limit may cause long analysis time while holding database read lock.
+限制 expr 树的 expr 子节点的数量。超过此限制可能会导致在持有数据库读锁时分析时间过长。
 
 #### `be_exec_version`
 
-Used to define the serialization format for passing blocks between fragments.
+用于定义 fragment 之间传递 block 的序列化格式。
 
-Sometimes some of our code changes will change the data format of the block. In order to make the BE compatible with each other during the rolling upgrade process, we need to issue a data version from the FE to decide what format to send the data in.
+有时我们的一些代码改动会改变 block 的数据格式，为了使得 BE 在滚动升级的过程中能够相互兼容数据格式，我们需要从 FE 下发一个数据版本来决定以什么格式发送数据。
 
-Specifically, for example, there are 2 BEs in the cluster, one of which can support the latest $v_1$ after being upgraded, while the other only supports $v_0$. At this time, since the FE has not been upgraded yet, $v_0 is issued uniformly. $, BE interact in the old data format. After all BEs are upgraded, we will upgrade FE. At this time, the new FE will issue $v_1$, and the cluster will be uniformly switched to the new data format.
+具体的来说，例如集群中有 2 个 BE，其中一台经过升级能够支持最新的$v_1$，而另一台只支持$v_0$，此时由于 FE 还未升级，所以统一下发$v_0$，BE 之间以旧的数据格式进行交互。待 BE 都升级完成，我们再升级 FE，此时新的 FE 会下发$v_1$，集群统一切换到新的数据格式。
 
-The default value is `max_be_exec_version`. If there are special needs, we can manually set the format version to lower, but it should not be lower than `min_be_exec_version`.
+默认值为`max_be_exec_version`，如果有特殊需要，我们可以手动设置将格式版本降低，但不应低于`min_be_exec_version`。
 
-Note that we should always keep the value of this variable between `BeExecVersionManager::min_be_exec_version` and `BeExecVersionManager::max_be_exec_version` for all BEs. (That is to say, if a cluster that has completed the update needs to be downgraded, it should ensure the order of downgrading FE and then downgrading BE, or manually lower the variable in the settings and downgrade BE)
+需要注意的是，我们应该始终保持该变量的值处于**所有**BE 的`BeExecVersionManager::min_be_exec_version`和`BeExecVersionManager::max_be_exec_version`之间。（也就是说如果一个已经完成更新的集群如果需要降级，应该保证先降级 FE 再降级 BE 的顺序，或者手动在设置中将该变量调低再降级 BE）
 
 #### `max_be_exec_version`
 
-The latest data version currently supported, cannot be modified, and should be consistent with the `BeExecVersionManager::max_be_exec_version` in the BE of the matching version.
+目前支持的最新数据版本，不可修改，应与配套版本的 BE 中的`BeExecVersionManager::max_be_exec_version`一致。
 
 #### `min_be_exec_version`
 
-The oldest data version currently supported, which cannot be modified, should be consistent with the `BeExecVersionManager::min_be_exec_version` in the BE of the matching version.
+目前支持的最旧数据版本，不可修改，应与配套版本的 BE 中的`BeExecVersionManager::min_be_exec_version`一致。
 
 #### `max_query_profile_num`
 
-The max number of query profile.
+用于设置保存查询的 profile 的最大个数。
 
-Default: 100
+默认值：100
 
-Is it possible to dynamically configure: true
+是否可以动态配置：true
 
-Is it a configuration item unique to the Master FE node: false
+是否为 Master FE 节点独有的配置项：false
 
 #### `publish_version_interval_ms`
 
-Default：10 （ms）
+默认值：10（ms）
 
-minimal intervals between two publish version action
+两个发布版本操作之间的最小间隔
 
 #### `publish_version_timeout_second`
 
-Default：30 （s）
+默认值：30（s）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Maximal waiting time for all publish version tasks of one transaction to be finished
+一个事务的所有发布版本任务完成的最大等待时间
 
 #### `query_colocate_join_memory_limit_penalty_factor`
 
-Default：1
+默认值：1
 
-IsMutable：true
+是否可以动态配置：true
 
-Colocote join PlanFragment instance 的 memory_limit = exec_mem_limit / min (query_colocate_join_memory_limit_penalty_factor, instance_num)
+colocate join PlanFragment instance 的 memory_limit = exec_mem_limit / min (query_colocate_join_memory_limit_penalty_factor, instance_num)
 
 #### `rewrite_count_distinct_to_bitmap_hll`
 
-Default: true
+默认值：true
 
-This variable is a session variable, and the session level takes effect.
+该变量为 session variable，session 级别生效。
 
-* Type: boolean
-* Description: **Only for the table of the AGG model**, when the variable is true, when the user query contains aggregate functions such as count(distinct c1), if the type of the c1 column itself is bitmap, count distinct will be rewritten It is bitmap_union_count(c1). When the type of the c1 column itself is hll, count distinct will be rewritten as hll_union_agg(c1) If the variable is false, no overwriting occurs..
+- 类型：boolean
+- 描述：**仅对于 AGG 模型的表来说**，当变量为 true 时，用户查询时包含 count(distinct c1) 这类聚合函数时，如果 c1 列本身类型为 bitmap，则 count distinct 会改写为 bitmap_union_count(c1)。当 c1 列本身类型为 hll，则 count distinct 会改写为 hll_union_agg(c1) 如果变量为 false，则不发生任何改写。
 
-### Load And Export
+### 导入与导出
 
 #### `enable_pipeline_load`
 
-Default value: true
+默认值：true
 
-IsMutable: true
+是否可以动态配置：true
 
-Whether or not to enable the Pipeline engine to perform import tasks such as Streamload.
+是否开启 Pipeline 引擎执行 Streamload 等导入任务。
 
 #### `enable_vectorized_load`
 
-Default: true
+默认值：true
 
-Whether to enable vectorized load
+是否开启向量化导入
 
 #### `enable_new_load_scan_node`
 
-Default: true
+默认值：true
 
-Whether to enable file scan node
+是否开启新的 file scan node
 
 #### `default_max_filter_ratio`
 
-Default：0
+默认值：0
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Maximum percentage of data that can be filtered (due to reasons such as data is irregularly) , The default value is 0.
+可过滤数据（由于数据不规则等原因）的最大百分比。默认值为 0，表示严格模式，只要数据有一条被过滤掉整个导入失败
 
 #### `max_running_txn_num_per_db`
 
-Default：1000
+默认值：1000
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-This configuration is mainly used to control the number of concurrent load jobs of the same database.
+这个配置主要是用来控制同一个 DB 的并发导入个数的。
 
-When there are too many load jobs running in the cluster, the newly submitted load jobs may report errors:
+当集群中有过多的导入任务正在运行时，新提交的导入任务可能会报错：
 
 ```text
 current running txns on db xxx is xx, larger than limit xx
 ```
 
-When this error is encountered, it means that the load jobs currently running in the cluster exceeds the configuration value. At this time, it is recommended to wait on the business side and retry the load jobs.
+该遇到该错误时，说明当前集群内正在运行的导入任务超过了该配置值。此时建议在业务侧进行等待并重试导入任务。
 
-If you use the Connector, the value of this parameter can be adjusted appropriately, and there is no problem with thousands
+如果使用 Connector 方式写入，该参数的值可以适当调大，上千也没有问题
 
 #### `using_old_load_usage_pattern`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-If set to true, the insert stmt with processing error will still return a label to user.  And user can use this label to check the load job's status. The default value is false, which means if insert operation encounter errors,  exception will be thrown to user client directly without load label.
+如果设置为 true，处理错误的 insert stmt  仍将返回一个标签给用户。用户可以使用此标签来检查导入作业的状态。默认值为 false，表示插入操作遇到错误，不带导入标签，直接抛出异常给用户客户端。
 
 #### `disable_load_job`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-if this is set to true
+不禁用，如果这设置为 true
 
-* all pending load job will failed when call begin txn api
-* all prepare load job will failed when call commit txn api
-* all committed load job will waiting to be published
+- 调用开始 txn api 时，所有挂起的导入作业都将失败
+- 调用 commit txn api 时，所有准备导入作业都将失败
+- 所有提交的导入作业将等待发布
 
 #### `commit_timeout_second`
 
-Default：30
+默认值：30
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Maximal waiting time for all data inserted before one transaction to be committed
-This is the timeout second for the command "commit"
+在提交一个事务之前插入所有数据的最大等待时间
+这是命令“commit”的超时秒数
 
 #### `max_unfinished_load_job`
 
-Default：1000
+默认值：1000
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Max number of load jobs, include PENDING, ETL, LOADING, QUORUM_FINISHED. If exceed this number, load job is not allowed to be submitted
+最大加载任务数，包括 PENDING、ETL、LOADING、QUORUM_FINISHED。如果超过此数量，则不允许提交导入作业。
 
 #### `db_used_data_quota_update_interval_secs`
 
-Default：300 (s)
+默认值：300 (s)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-One master daemon thread will update database used data quota for db txn manager every `db_used_data_quota_update_interval_secs`
+一个主守护线程将每 `db_used_data_quota_update_interval_secs` 更新数据库 txn 管理器的数据库使用数据配额
 
-For better data load performance, in the check of whether the amount of data used by the database before data load exceeds the quota, we do not calculate the amount of data already used by the database in real time, but obtain the periodically updated value of the daemon thread.
+为了更好的数据导入性能，在数据导入之前的数据库已使用的数据量是否超出配额的检查中，我们并不实时计算数据库已经使用的数据量，而是获取后台线程周期性更新的值。
 
-This configuration is used to set the time interval for updating the value of the amount of data used by the database
+该配置用于设置更新数据库使用的数据量的值的时间间隔
 
 #### `disable_show_stream_load`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Whether to disable show stream load and clear stream load records in memory.
+是否禁用显示 stream load 并清除内存中的 stream load 记录。
 
 #### `max_stream_load_record_size`
 
-Default：5000
+默认值：5000
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default max number of recent stream load record that can be stored in memory.
+可以存储在内存中的最近 stream load 记录的默认最大数量
 
 #### `fetch_stream_load_record_interval_second`
 
-Default：120
+默认值：120
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-fetch stream load record interval.
+获取 stream load 记录间隔
 
 #### `max_bytes_per_broker_scanner`
 
-Default：`500 * 1024 * 1024 * 1024L`  （500G）
+默认值：`500 * 1024 * 1024 * 1024L`  （500G）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Max bytes a broker scanner can process in one broker load job. Commonly, each Backends has one broker scanner.
+broker scanner 程序可以在一个 broker 加载作业中处理的最大字节数。通常，每个 BE 都有一个 broker scanner 程序。
 
 #### `default_load_parallelism`
 
-Default: 8
+默认值：8
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default parallelism of the broker load execution plan on a single node.
-If the user to set the parallelism when the broker load is submitted, this parameter will be ignored.
-This parameter will determine the concurrency of import tasks together with multiple configurations such as `max broker concurrency`, `min bytes per broker scanner`.
+单个节点 broker load 导入的默认并发度。
+如果用户在提交 broker load 任务时，在 properties 中自行指定了并发度，则采用用户自定义的并发度。
+此参数将与`max_broker_concurrency`、`min_bytes_per_broker_scanner`等多个配置共同决定导入任务的并发度。
 
 #### `max_broker_concurrency`
 
-Default：10
+默认值：10
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Maximal concurrency of broker scanners.
+broker scanner 的最大并发数。
 
 #### `min_bytes_per_broker_scanner`
 
-Default：67108864L (64M)
+默认值：67108864L (64M)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Minimum bytes that a single broker scanner will read.
+单个 broker scanner 将读取的最小字节数。
 
 #### `period_of_auto_resume_min`
 
-Default：5 （s）
+默认值：5（s）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Automatically restore the cycle of Routine load
+自动恢复 Routine load 的周期
 
 #### `max_tolerable_backend_down_num`
 
-Default：0
+默认值：0
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-As long as one BE is down, Routine Load cannot be automatically restored
+只要有一个 BE 宕机，Routine Load 就无法自动恢复
 
 #### `max_routine_load_task_num_per_be`
 
-Default：5
+默认值：5
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-the max concurrent routine load task num per BE.  This is to limit the num of routine load tasks sending to a BE, and it should also less than BE config 'routine_load_thread_pool_size'(default 10), which is the routine load task thread pool size on BE.
+每个 BE 的最大并发例 Routine Load 任务数。这是为了限制发送到 BE 的 Routine Load 任务的数量，并且它也应该小于 BE config `routine_load_thread_pool_size`（默认 10），这是 BE 上的 Routine Load 任务线程池大小。
 
 #### `max_routine_load_task_concurrent_num`
 
-Default：5
+默认值：5
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-the max concurrent routine load task num of a single routine load job
+单个 Routine Load 作业的最大并发任务数
 
 #### `max_routine_load_job_num`
 
-Default：100
+默认值：100
 
-the max routine load job num, including NEED_SCHEDULED, RUNNING, PAUSE
+最大 Routine Load 作业数，包括 NEED_SCHEDULED, RUNNING, PAUSE
 
 #### `desired_max_waiting_jobs`
 
-Default：100
+默认值：100
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default number of waiting jobs for routine load and version 2 of load , This is a desired number.  In some situation, such as switch the master, the current number is maybe more than desired_max_waiting_jobs.
+routine load V2 版本加载的默认等待作业数，这是一个理想的数字。在某些情况下，例如切换 master，当前数量可能超过`desired_max_waiting_jobs`
 
 #### `disable_hadoop_load`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Load using hadoop cluster will be deprecated in future. Set to true to disable this kind of load.
+默认不禁用，将来不推荐使用 hadoop 集群 load。设置为 true 以禁用这种 load 方式。
 
 #### `enable_spark_load`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Whether to enable spark load temporarily, it is not enabled by default
+是否临时启用 spark load，默认不启用
 
-**Note:** This parameter has been deleted in version 1.2, spark_load is enabled by default
+**注意：** 这个参数在 1.2 版本中已经删除，默认开启 spark_load
 
 #### `spark_load_checker_interval_second`
 
-Default：60
+默认值：60
 
-Spark load scheduler run interval, default 60 seconds
+Spark 负载调度程序运行间隔，默认 60 秒
 
 #### `async_loading_load_task_pool_size`
 
-Default：10
+默认值：10
 
-IsMutable：false
+是否可以动态配置：false
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-The loading_load task executor pool size. This pool size limits the max running loading_load tasks.
+`loading_load`任务执行程序池大小。该池大小限制了正在运行的最大 `loading_load`任务数。
 
-Currently, it only limits the loading_load task of broker load
+当前，它仅限制 `broker load`的 `loading_load`任务的数量。
 
 #### `async_pending_load_task_pool_size`
 
-Default：10
+默认值：10
 
-IsMutable：false
+是否可以动态配置：false
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-The pending_load task executor pool size. This pool size limits the max running pending_load tasks.
+`pending_load`任务执行程序池大小。该池大小限制了正在运行的最大 `pending_load`任务数。
 
-Currently, it only limits the pending_load task of broker load and spark load.
+当前，它仅限制 `broker load`和 `spark load`的 `pending_load`任务的数量。
 
-It should be less than 'max_running_txn_num_per_db'
+它应该小于 `max_running_txn_num_per_db`的值
 
 #### `async_load_task_pool_size`
 
-Default：10
+默认值：10
 
-IsMutable：false
+是否可以动态配置：false
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-This configuration is just for compatible with old version, this config has been replaced by async_loading_load_task_pool_size, it will be removed in the future.
+此配置只是为了兼容旧版本，此配置已被 `async_loading_load_task_pool_size`取代，以后会被移除。
 
 #### `enable_single_replica_load`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Whether to enable to write single replica for stream load and broker load.
+是否启动单副本数据导入功能。
 
 #### `min_load_timeout_second`
 
-Default：1 （1s）
+默认值：1（1 秒）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Min stream load timeout applicable to all type of load
+最小超时时间，适用于所有类型的 load
 
 #### `max_stream_load_timeout_second`
 
-Default: 259200 (3 day)
+默认值：259200（3 天）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-This configuration is specifically used to limit timeout setting for stream load. It is to prevent that failed stream load transactions cannot be canceled within a short time because of the user's large timeout setting
+stream load 和 mini load 最大超时时间
 
 #### `max_load_timeout_second`
 
-Default: 259200 (3 day)
+默认值：259200（3 天）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Max load timeout applicable to all type of load except for stream load
+load 最大超时时间，适用于除 stream load 之外的所有类型的加载
 
 #### `stream_load_default_timeout_second`
 
-Default: 86400 * 3 (3 day)
+默认值：86400 * 3（3 天）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default stream load and streaming mini load timeout
+默认 stream load 和 mini load 超时时间
 
 #### `stream_load_default_precommit_timeout_second`
 
-Default：3600（s）
+默认值：3600（s）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default stream load pre-submission timeout
+默认 stream load 预提交超时时间
 
 #### `stream_load_default_memtable_on_sink_node`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Enable memtable on sink node for stream load by default.
-When HTTP header `memtable_on_sink_node` is not set.
+当 HTTP header 没有设置 `memtable_on_sink_node` 的时候，stream load 是否默认打开前移
 
 #### `insert_load_default_timeout_second`
 
-Default: 3600 (1 hour)
+默认值：3600（1 小时）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default insert load timeout
+默认 insert load 超时时间
 
 #### `mini_load_default_timeout_second`
 
-Default: 3600 (1 hour)
+默认值：3600（1 小时）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default non-streaming mini load timeout
+默认非 stream load 类型的 mini load 的超时时间
 
 #### `broker_load_default_timeout_second`
 
-Default: 14400 (4 hour)
+默认值：14400（4 小时）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default broker load timeout
+Broker load 的默认超时时间
 
 #### `spark_load_default_timeout_second`
 
-Default: 86400  (1 day)
+默认值：86400 (1 天)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default spark load timeout
+默认 Spark 导入超时时间
 
 #### `hadoop_load_default_timeout_second`
 
-Default: 86400 * 3   (3 day)
+默认值：86400 * 3 (3 天)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default hadoop load timeout
+Hadoop 导入超时时间
 
 #### `load_running_job_num_limit`
 
-Default：0
+默认值：0
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-The number of loading tasks is limited, the default is 0, no limit
+Load 任务数量限制，默认 0，无限制
 
 #### `load_input_size_limit_gb`
 
-Default：0
+默认值：0
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-The size of the data entered by the Load job, the default is 0, unlimited
+Load 作业输入的数据大小，默认是 0，无限制
 
 #### `load_etl_thread_num_normal_priority`
 
-Default：10
+默认值：10
 
-Concurrency of NORMAL priority etl load jobs. Do not change this if you know what you are doing.
+NORMAL 优先级 etl 加载作业的并发数。
 
 #### `load_etl_thread_num_high_priority`
 
-Default：3
+默认值：3
 
-Concurrency of HIGH priority etl load jobs. Do not change this if you know what you are doing
+高优先级 etl 加载作业的并发数。
 
 #### `load_pending_thread_num_normal_priority`
 
-Default：10
+默认值：10
 
-Concurrency of NORMAL priority pending load jobs.  Do not change this if you know what you are doing.
+NORMAL 优先级挂起加载作业的并发数。
 
 #### `load_pending_thread_num_high_priority`
 
-Default：3
+默认值：3
 
-Concurrency of HIGH priority pending load jobs. Load job priority is defined as HIGH or NORMAL.  All mini batch load jobs are HIGH priority, other types of load jobs are NORMAL priority.  Priority is set to avoid that a slow load job occupies a thread for a long time.  This is just a internal optimized scheduling policy.  Currently, you can not specified the job priority manually, and do not change this if you know what you are doing.
+高优先级挂起加载作业的并发数。加载作业优先级定义为 HIGH 或 NORMAL。所有小批量加载作业都是 HIGH 优先级，其他类型的加载作业是 NORMAL 优先级。设置优先级是为了避免慢加载作业长时间占用线程。这只是内部优化的调度策略。目前，您无法手动指定作业优先级。
 
 #### `load_checker_interval_second`
 
-Default：5 （s）
+默认值：5（s）
 
-The load scheduler running interval. A load job will transfer its state from PENDING to LOADING to FINISHED.  The load scheduler will transfer load job from PENDING to LOADING while the txn callback will transfer load job from LOADING to FINISHED.  So a load job will cost at most one interval to finish when the concurrency has not reached the upper limit.
+负载调度器运行间隔。加载作业将其状态从 PENDING 转移到 LOADING 到 FINISHED。加载调度程序将加载作业从 PENDING 转移到 LOADING  而 txn 回调会将加载作业从 LOADING 转移到 FINISHED。因此，当并发未达到上限时，加载作业最多需要一个时间间隔才能完成。
 
 #### `label_keep_max_second`
 
-Default：`3 * 24 * 3600`  (3 day)
+默认值：`3 * 24 * 3600`  (3 天)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-labels of finished or cancelled load jobs will be removed after `label_keep_max_second` ，
+`label_keep_max_second`后将删除已完成或取消的加载作业的标签，
 
-1. The removed labels can be reused.
-2. Set a short time will lower the FE memory usage.  (Because all load jobs' info is kept in memory before being removed)
+1. 去除的标签可以重复使用。
+2. 设置较短的时间会降低 FE 内存使用量（因为所有加载作业的信息在被删除之前都保存在内存中）
 
-In the case of high concurrent writes, if there is a large backlog of jobs and call frontend service failed, check the log. If the metadata write takes too long to lock, you can adjust this value to 12 hours, or 6 hours less
+在高并发写的情况下，如果出现大量作业积压，出现 `call frontend service failed`的情况，查看日志如果是元数据写占用锁的时间太长，可以将这个值调成 12 小时，或者更小 6 小时
 
 #### `streaming_label_keep_max_second`
 
-Default: 43200 (12 hour)
+默认值：43200（12 小时）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-For some high-frequency load work, such as: INSERT, STREAMING LOAD, ROUTINE_LOAD_TASK. If it expires, delete the completed job or task.
+对于一些高频负载工作，例如：INSERT、STREAMING LOAD、ROUTINE_LOAD_TASK。如果过期，则删除已完成的作业或任务。
 
 #### `label_clean_interval_second`
 
-Default：1 * 3600  (1 hour)
+默认值：1 * 3600（1 小时）
 
-Load label cleaner will run every *label_clean_interval_second* to clean the outdated jobs.
+load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清理过时的作业。
 
 #### `transaction_clean_interval_second`
 
-Default：30
+默认值：30
 
-the transaction will be cleaned after transaction_clean_interval_second seconds if the transaction is visible or aborted  we should make this interval as short as possible and each clean cycle as soon as possible
+如果事务 visible 或者 aborted 状态，事务将在 `transaction_clean_interval_second` 秒后被清除，我们应该让这个间隔尽可能短，每个清洁周期都尽快
 
 #### `sync_commit_interval_second`
 
-The maximum time interval for committing transactions. If there is still data in the channel that has not been submitted after this time, the consumer will notify the channel to submit the transaction.
+提交事务的最大时间间隔。若超过了这个时间 channel 中还有数据没有提交，consumer 会通知 channel 提交事务。
 
-Default: 10 (seconds)
+默认值：10（秒）
 
-Is it possible to configure dynamically: true
+是否可以动态配置：true
 
-Whether it is a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
 #### `sync_checker_interval_second`
 
-Data synchronization job running status check.
+数据同步作业运行状态检查
 
-Default: 10 (s)
+默认值：10（秒）
 
 #### `max_sync_task_threads_num`
 
-The maximum number of threads in the data synchronization job thread pool.
+数据同步作业线程池中的最大线程数量。
 
 默认值：10
 
 #### `min_sync_commit_size`
 
-The minimum number of events that must be satisfied to commit a transaction. If the number of events received by Fe is less than it, it will continue to wait for the next batch of data until the time exceeds `sync_commit_interval_second`. The default value is 10000 events. If you want to modify this configuration, please make sure that this value is smaller than the `canal.instance.memory.buffer.size` configuration on the canal side (default 16384), otherwise Fe will try to get the queue length longer than the store before ack More events cause the store queue to block until it times out.
+提交事务需满足的最小 event 数量。若 Fe 接收到的 event 数量小于它，会继续等待下一批数据直到时间超过了 `sync_commit_interval_second` 为止。默认值是 10000 个 events，如果你想修改此配置，请确保此值小于 canal 端的 `canal.instance.memory.buffer.size` 配置（默认 16384），否则在 ack 前 Fe 会尝试获取比 store 队列长度更多的 event，导致 store 队列阻塞至超时为止。
 
-Default: 10000
+默认值：10000
 
-Is it possible to configure dynamically: true
+是否可以动态配置：true
 
-Whether it is a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
 #### `min_bytes_sync_commit`
 
-The minimum data size required to commit a transaction. If the data size received by Fe is smaller than it, it will continue to wait for the next batch of data until the time exceeds `sync_commit_interval_second`. The default value is 15MB, if you want to modify this configuration, please make sure this value is less than the product of `canal.instance.memory.buffer.size` and `canal.instance.memory.buffer.memunit` on the canal side (default 16MB), otherwise Before the ack, Fe will try to obtain data that is larger than the store space, causing the store queue to block until it times out.
+提交事务需满足的最小数据大小。若 Fe 接收到的数据大小小于它，会继续等待下一批数据直到时间超过了 `sync_commit_interval_second` 为止。默认值是 15 MB，如果你想修改此配置，请确保此值小于 canal 端的 `canal.instance.memory.buffer.size` 和 `canal.instance.memory.buffer.memunit` 的乘积（默认 16 MB），否则在 ack 前 Fe 会尝试获取比 store 空间更大的数据，导致 store 队列阻塞至超时为止。
 
-Default: `15*1024*1024` (15M)
+默认值：`15 * 1024 * 1024`（15M）
 
-Is it possible to configure dynamically: true
+是否可以动态配置：true
 
-Whether it is a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
 #### `max_bytes_sync_commit`
 
-The maximum number of threads in the data synchronization job thread pool. There is only one thread pool in the entire FE, which is used to process all data synchronization tasks in the FE that send data to the BE. The implementation of the thread pool is in the `SyncTaskPool` class.
+数据同步作业线程池中的最大线程数量。此线程池整个 FE 中只有一个，用于处理 FE 中所有数据同步作业向 BE 发送数据的任务 task，线程池的实现在 `SyncTaskPool` 类。
 
-Default: 10
+默认值：10
 
-Is it possible to dynamically configure: false
+是否可以动态配置：false
 
-Is it a configuration item unique to the Master FE node: false
+是否为 Master FE 节点独有的配置项：false
 
 #### `enable_outfile_to_local`
 
-Default：false
+默认值：false
 
-Whether to allow the outfile function to export the results to the local disk.
+是否允许 outfile 函数将结果导出到本地磁盘
 
 #### `export_tablet_num_per_task`
 
-Default：5
+默认值：5
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Number of tablets per export query plan
+每个导出查询计划的 tablet 数量
 
 #### `export_task_default_timeout_second`
 
-Default: 2 * 3600   (2 hour)
+默认值：2 * 3600（2 小时）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default timeout of export jobs.
+导出作业的默认超时时间
 
 #### `export_running_job_num_limit`
 
-Default：5
+默认值：5
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Limitation of the concurrency of running export jobs.  Default is 5.  0 is unlimited
+运行导出作业的并发限制，默认值为 5，0 表示无限制
 
 #### `export_checker_interval_second`
 
-Default：5
+默认值：5
 
-Export checker's running interval.
+导出检查器的运行间隔
 
-### Log
+### 日志
 
 #### `log_roll_size_mb`
 
-Default：1024  （1G）
+默认值：1024（1G）
 
-The max size of one sys log and audit log
+一个系统日志和审计日志的最大大小
 
 #### `sys_log_dir`
 
-Default: DorisFE.DORIS_HOME_DIR + "/log"
+默认值：DorisFE.DORIS_HOME_DIR + "/log"
 
-This specifies FE log dir. FE will produces 2 log files:
+这指定了 FE 日志目录。FE 将产生 2 个日志文件：
 
-fe.log:      all logs of FE process.
-fe.warn.log  all WARNING and ERROR log of FE process.
+1. fe.log：FE 进程的所有日志。
+2. fe.warn.log FE 进程的所有警告和错误日志。
 
 #### `sys_log_level`
 
-Default：INFO
+默认值：INFO
 
-log level: INFO, WARN, ERROR, FATAL
+日志级别，可选项：INFO, WARN, ERROR, FATAL
 
 #### `sys_log_roll_num`
 
-Default：10
+默认值：10
 
-Maximal FE log files to be kept within an sys_log_roll_interval. default is 10, which means there will be at most 10 log files in a day
+要保存在  `sys_log_roll_interval` 内的最大 FE 日志文件。默认为 10，表示一天最多有 10 个日志文件
 
 #### `sys_log_verbose_modules`
 
-Default：{}
+默认值：{}
 
-Verbose modules. VERBOSE level is implemented by log4j DEBUG level.
+详细模块。VERBOSE 级别由 log4j DEBUG 级别实现。
 
-eg：
+例如：
    sys_log_verbose_modules = org.apache.doris.catalog
-   This will only print debug log of files in package org.apache.doris.catalog and all its sub packages.
+   这只会打印包 org.apache.doris.catalog 及其所有子包中文件的调试日志。
 
 #### `sys_log_roll_interval`
 
-Default：DAY
+默认值：DAY
 
-sys_log_roll_interval:
+可选项：
 
-* DAY:  log suffix is  yyyyMMdd
-* HOUR: log suffix is  yyyyMMddHH
+- DAY:  log 前缀是 yyyyMMdd
+- HOUR: log 前缀是 yyyyMMddHH
 
 #### `sys_log_delete_age`
 
-Default：7d
+默认值：7d
 
-default is 7 days, if log's last modify time is 7 days ago, it will be deleted.
+默认为 7 天，如果日志的最后修改时间为 7 天前，则将其删除。
 
-support format:
+支持格式：
 
-* 7d      7 day
-* 10h     10 hours
-* 60m     60 min
-* 120s    120 seconds
+- 7d: 7 天
+- 10h: 10 小时
+- 60m: 60 分钟
+- 120s: 120 秒
 
 #### `sys_log_roll_mode`
 
-Default：SIZE-MB-1024
+默认值：SIZE-MB-1024
 
-The size of the log split, split a log file every 1 G
+日志拆分的大小，每 1G 拆分一个日志文件
 
 #### `sys_log_enable_compress`
 
-Default: false
+默认值：false
 
-If true, will compress fe.log & fe.warn.log by gzip
+控制是否压缩 fe log, 包括 fe.log 及 fe.warn.log。如果开启，则使用 gzip 算法进行压缩。
 
 #### `audit_log_dir`
 
-Default：DORIS_HOME_DIR + "/log"
+默认值：DorisFE.DORIS_HOME_DIR + "/log"
 
-audit_log_dir：
-This specifies FE audit log dir..
-Audit log fe.audit.log contains all requests with related infos such as user, host, cost, status, etc
+审计日志目录：
+这指定了 FE 审计日志目录。
+审计日志 fe.audit.log 包含所有请求以及相关信息，如  `user, host, cost, status` 等。
 
 #### `audit_log_roll_num`
 
-Default：90
+默认值：90
 
-Maximal FE audit log files to be kept within an audit_log_roll_interval.
+保留在  `audit_log_roll_interval` 内的最大 FE 审计日志文件。
 
 #### `audit_log_modules`
 
-Default：{"slow_query", "query", "load", "stream_load"}
+默认值：{"slow_query", "query", "load", "stream_load"}
 
-Slow query contains all queries which cost exceed *qe_slow_log_ms*
+慢查询包含所有开销超过 *qe_slow_log_ms* 的查询
 
 #### `qe_slow_log_ms`
 
-Default: 5000 (5 seconds)
+默认值：5000（5 秒）
 
-If the response time of a query exceed this threshold, it will be recorded in audit log as slow_query.
+如果查询的响应时间超过此阈值，则会在审计日志中记录为 slow_query。
 
 #### `audit_log_roll_interval`
 
-Default：DAY
+默认值：DAY
 
-DAY:  logsuffix is : yyyyMMdd
-HOUR: logsuffix is : yyyyMMddHH
+DAY:  log 前缀是：yyyyMMdd
+HOUR: log 前缀是：yyyyMMddHH
 
 #### `audit_log_delete_age`
 
-Default：30d
+默认值：30d
 
-default is 30 days, if log's last modify time is 30 days ago, it will be deleted.
+默认为 30 天，如果日志的最后修改时间为 30 天前，则将其删除。
 
-support format:
-* 7d      7 day
-* 10h     10 hours
-* 60m     60 min
-* 120s    120 seconds
+支持格式：
+
+- 7d     7 天
+- 10 小时  10 小时
+- 60m    60 分钟
+- 120s   120 秒
 
 #### `audit_log_enable_compress`
 
-Default: false
+默认值：false
 
-If true, will compress fe.audit.log by gzip
+控制是否压缩 fe.audit.log。如果开启，则使用 gzip 算法进行压缩。
 
 #### `nereids_trace_log_dir`
 
-Default: DorisFE.DORIS_HOME_DIR + "/log/nereids_trace"
+默认值：DorisFE.DORIS_HOME_DIR + "/log/nereids_trace"
 
-Used to specify the directory of the nereids trace log
+用于存储 nereids trace 日志的目录
 
-### Storage
+### 存储
 
 #### `min_replication_num_per_tablet`
 
-Default: 1
+默认值：1
 
-Used to set minimal number of replication per tablet.
+用于设置单个 tablet 的最小 replication 数量。
 
 #### `max_replication_num_per_tablet`
 
-Default: 32767
+默认值：32767
 
-Used to set maximal number of replication per tablet.
+用于设置单个 tablet 的最大 replication 数量。
 
 #### `default_db_data_quota_bytes`
 
-Default：1PB
+默认值：1PB
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Used to set the default database data quota size. To set the quota size of a single database, you can use:
+用于设置默认数据库数据配额大小，设置单个数据库的配额大小可以使用：
 
 ```
-Set the database data quota, the unit is:B/K/KB/M/MB/G/GB/T/TB/P/PB
+设置数据库数据量配额，单位为B/K/KB/M/MB/G/GB/T/TB/P/PB
 ALTER DATABASE db_name SET DATA QUOTA quota;
-View configuration
-show data （Detail：HELP SHOW DATA）
+查看配置
+show data （其他用法：HELP SHOW DATA）
 ```
 
 #### `default_db_replica_quota_size`
 
-Default: 1073741824
+默认值：1073741824
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Used to set the default database replica quota. To set the quota size of a single database, you can use:
+用于设置默认数据库 Replica 数量配额大小，设置单个数据库配额大小可以使用：
 
 ```
-Set the database replica quota
+设置数据库Replica数量配额
 ALTER DATABASE db_name SET REPLICA QUOTA quota;
-View configuration
-show data （Detail：HELP SHOW DATA）
+查看配置
+show data （其他用法：HELP SHOW DATA）
 ```
 
 #### `recover_with_empty_tablet`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-In some very special circumstances, such as code bugs, or human misoperation, etc., all replicas of some tablets may be lost. In this case, the data has been substantially lost. However, in some scenarios, the business still hopes to ensure that the query will not report errors even if there is data loss, and reduce the perception of the user layer. At this point, we can use the blank Tablet to fill the missing replica to ensure that the query can be executed normally.
+在某些情况下，某些 tablet 可能会损坏或丢失所有副本。此时数据已经丢失，损坏的 tablet 会导致整个查询失败，无法查询剩余的健康 tablet。
 
-Set to true so that Doris will automatically use blank replicas to fill tablets which all replicas have been damaged or missing
+在这种情况下，您可以将此配置设置为 true。系统会将损坏的 tablet 替换为空 tablet，以确保查询可以执行。 （但此时数据已经丢失，所以查询结果可能不准确）
 
-#### `min_clone_task_timeout_sec` `And max_clone_task_timeout_sec`
+#### `min_clone_task_timeout_sec`  和 `max_clone_task_timeout_sec`
 
-Default: Minimum 3 minutes, maximum two hours
+默认值：最小 3 分钟，最大两小时
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Can cooperate with `mix_clone_task_timeout_sec` to control the maximum and minimum timeout of a clone task. Under normal circumstances, the timeout of a clone task is estimated by the amount of data and the minimum transfer rate (5MB/s). In some special cases, these two configurations can be used to set the upper and lower bounds of the clone task timeout to ensure that the clone task can be completed successfully.
+`min_clone_task_timeout_sec` 和 `max_clone_task_timeout_sec` 用于限制克隆任务的最小和最大超时间。一般情况下，克隆任务的超时时间是通过数据量和最小传输速度（5MB/s）来估计的。但在特殊情况下，您可能需要手动设置这两个配置，以确保克隆任务不会因超时而失败。
 
 #### `disable_storage_medium_check`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-If disable_storage_medium_check is true, ReportHandler would not check tablet's storage medium and disable storage cool down function, the default value is false. You can set the value true when you don't care what the storage medium of the tablet is.
+如果 disable_storage_medium_check 为 true，ReportHandler 将不会检查 tablet 的存储介质，并使得存储冷却功能失效，默认值为 false。当您不关心 tablet 的存储介质是什么时，可以将值设置为 true。
 
 #### `decommission_tablet_check_threshold`
 
-Default：5000
+默认值：5000
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-This configuration is used to control whether the Master FE need to check the status of tablets on decommissioned BE. If the size of tablets on decommissioned BE is lower than this threshold, FE will start a periodic check, if all tablets on decommissioned BE have been recycled, FE will drop this BE immediately.
+该配置用于控制 FE 是否执行检测（Decommission）BE 上 Tablets 状态的阈值。如果（Decommission）BE 上的 Tablets 个数大于 0 但小于该阈值，FE 会定时对该 BE 开启一项检测，
 
-For performance consideration, please don't set a very high value for this configuration.
+如果该 BE 上的 Tablets 数量大于 0 但是所有 Tablets 均处于被回收的状态，那么 FE 会立即下线该（Decommission）BE。注意，不要把该值配置的太大，不然在 Decommission 阶段可能会对 FE 造成性能压力。
 
 #### `partition_rebalance_max_moves_num_per_selection`
 
-Default：10
+默认值：10
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Valid only if use PartitionRebalancer,
+仅在使用  PartitionRebalancer  时有效，
 
 #### `partition_rebalance_move_expire_after_access`
 
-Default：600   (s)
+默认值：600   (s)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Valid only if use PartitionRebalancer. If this changed, cached moves will be cleared
+仅在使用  PartitionRebalancer  时有效。如果更改，缓存的移动将被清除
 
-#### `tablet_rebalancer_type`
+#### tablet_rebalancer_type
 
-Default：BeLoad
+默认值：BeLoad
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Rebalancer type(ignore case): BeLoad, Partition. If type parse failed, use BeLoad as default
+rebalancer 类型（忽略大小写）：BeLoad、Partition。如果类型解析失败，默认使用 BeLoad
 
 #### `max_balancing_tablets`
 
-Default：100
+默认值：100
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-if the number of balancing tablets in TabletScheduler exceed max_balancing_tablets, no more balance check
+如果 TabletScheduler 中的 balance tablet 数量超过 `max_balancing_tablets`，则不再进行 balance 检查
 
 #### `max_scheduling_tablets`
 
-Default：2000
+默认值：2000
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-if the number of scheduled tablets in TabletScheduler exceed max_scheduling_tablets skip checking.
+如果 TabletScheduler 中调度的 tablet 数量超过 `max_scheduling_tablets`，则跳过检查。
 
 #### `disable_balance`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-if set to true, TabletScheduler will not do balance.
+如果设置为 true，TabletScheduler 将不会做 balance
 
 #### `disable_disk_balance`
 
-Default：true
+默认值：true
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-if set to true, TabletScheduler will not do disk balance.
+如果设置为 true，TabletScheduler 将不会做单个 BE 上磁盘之间的 balance
 
 #### `balance_load_score_threshold`
 
-Default: 0.1 (10%)
+默认值：0.1 (10%)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-the threshold of cluster balance score, if a backend's load score is 10% lower than average score,  this backend will be marked as LOW load, if load score is 10% higher than average score, HIGH load  will be marked
+集群 balance 百分比的阈值，如果一个 BE 的负载分数比平均分数低 10%，这个后端将被标记为低负载，如果负载分数比平均分数高 10%，将被标记为高负载。
 
 #### `capacity_used_percent_high_water`
 
-Default: 0.75  (75%)
+默认值：0.75（75%）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-The high water of disk capacity used percent. This is used for calculating load score of a backend
+磁盘容量的高水位使用百分比。这用于计算后端的负载分数
 
 #### `clone_distribution_balance_threshold`
 
-Default: 0.2
+默认值：0.2
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Balance threshold of num of replicas in Backends.
+BE 副本数的平衡阈值。
 
 #### `clone_capacity_balance_threshold`
 
-Default: 0.2
+默认值：0.2
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-* Balance threshold of data size in BE.
+- BE 中数据大小的平衡阈值。
 
-   The balance algorithm is:
+  平衡算法为：
 
-     1. Calculate the average used capacity(AUC) of the entire cluster. (total data size / total backends num)
+   1. 计算整个集群的平均使用容量（AUC）（总数据大小/BE 数）
 
-     2. The high water level is (AUC * (1 + clone_capacity_balance_threshold))
+   2. 高水位为 (AUC * (1 + clone_capacity_balance_threshold))
 
-     3. The low water level is (AUC * (1 - clone_capacity_balance_threshold))
+   3. 低水位为 (AUC * (1 - clone_capacity_balance_threshold))
 
-     4. The Clone checker will try to move replica from high water level BE to low water level BE.
+   4. 克隆检查器将尝试将副本从高水位 BE 移动到低水位 BE。
 
 #### `disable_colocate_balance`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-This configs can set to true to disable the automatic colocate tables's relocate and balance.  If 'disable_colocate_balance' is set to true,   ColocateTableBalancer will not relocate and balance colocate tables.
+此配置可以设置为 true 以禁用自动 colocate 表的重新定位和平衡。如果 `disable_colocate_balance'`设置为 true，则 ColocateTableBalancer 将不会重新定位和平衡并置表。
 
-**Attention**:
+**注意：**
 
-1. Under normal circumstances, there is no need to turn off balance at all.
-2. Because once the balance is turned off, the unstable colocate table may not be restored
-3. Eventually the colocate plan cannot be used when querying.
+1. 一般情况下，根本不需要关闭平衡。
+2. 因为一旦关闭平衡，不稳定的 colocate 表可能无法恢复
+3. 最终查询时无法使用 colocate 计划。
 
 #### `balance_slot_num_per_path`
 
-Default: 1
+默认值：1
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default number of slots per path during balance.
+balance 时每个路径的默认 slot 数量
 
 #### `disable_tablet_scheduler`
 
-Default:false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-If set to true, the tablet scheduler will not work, so that all tablet repair/balance task will not work.
+如果设置为 true，将关闭副本修复和均衡逻辑。
 
 #### `enable_force_drop_redundant_replica`
 
-Default: false
+默认值：false
 
-Dynamically configured: true
+是否可以动态配置：true
 
-Only for Master FE: true
+是否为 Master FE 节点独有的配置项：true
 
-If set to true, the system will immediately drop redundant replicas in the tablet scheduling logic. This may cause some load jobs that are writing to the corresponding replica to fail, but it will speed up the balance and repair speed of the tablet.
-When there are a large number of replicas waiting to be balanced or repaired in the cluster, you can try to set this config to speed up the balance and repair of replicas at the expense of partial load success rate.
+如果设置为 true，系统会在副本调度逻辑中，立即删除冗余副本。这可能导致部分正在对对应副本写入的导入作业失败，但是会加速副本的均衡和修复速度。
+当集群中有大量等待被均衡或修复的副本时，可以尝试设置此参数，以牺牲部分导入成功率为代价，加速副本的均衡和修复。
 
 #### `colocate_group_relocate_delay_second`
 
-Default: 1800
+默认值：1800
 
-Dynamically configured: true
+是否可以动态配置：true
 
-Only for Master FE: true
+是否为 Master FE 节点独有的配置项：true
 
-The relocation of a colocation group may involve a large number of tablets moving within the cluster. Therefore, we should use a more conservative strategy to avoid relocation of colocation groups as much as possible.
-Relocation usually occurs after a BE node goes offline or goes down. This parameter is used to delay the determination of BE node unavailability. The default is 30 minutes, i.e., if a BE node recovers within 30 minutes, relocation of the colocation group will not be triggered.
+重分布一个 Colocation Group 可能涉及大量的 tablet 迁移。因此，我们需要一个更保守的策略来避免不必要的 Colocation 重分布。
+重分布通常发生在 Doris 检测到有 BE 节点宕机后。这个参数用于推迟对 BE 宕机的判断。如默认参数下，如果 BE 节点能够在 1800 秒内恢复，则不会触发 Colocation 重分布。
 
 #### `allow_replica_on_same_host`
 
-Default: false
+默认值：false
 
-Dynamically configured: false
+是否可以动态配置：false
 
-Only for Master FE: false
+是否为 Master FE 节点独有的配置项：false
 
-Whether to allow multiple replicas of the same tablet to be distributed on the same host. This parameter is mainly used for local testing, to facilitate building multiple BEs to test certain multi-replica situations. Do not use it for non-test environments.
+是否允许同一个 tablet 的多个副本分布在同一个 host 上。这个参数主要用于本地测试是，方便搭建多个 BE 已测试某些多副本情况。不要用于非测试环境。
 
 #### `repair_slow_replica`
 
-Default: false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly: true
+是否为 Master FE 节点独有的配置项：true
 
-If set to true, the replica with slower compaction will be automatically detected and migrated to other machines. The detection condition is that the version count of the fastest replica exceeds the value of `min_version_count_indicate_replica_compaction_too_slow`, and the ratio of the version count difference from the fastest replica exceeds the value of `valid_version_count_delta_ratio_between_replicas`
+如果设置为 true，会自动检测 compaction 比较慢的副本，并将迁移到其他机器，检测条件是 最慢副本的版本计数超过 `min_version_count_indicate_replica_compaction_too_slow` 的值，且与最快副本的版本计数差异所占比例超过 `valid_version_count_delta_ratio_between_replicas` 的值
 
 #### `min_version_count_indicate_replica_compaction_too_slow`
 
-Default: 200
+默认值：200
 
-Dynamically configured: true
+是否可以动态配置：true
 
-Only for Master FE: false
+是否为 Master FE 节点独有的配置项：false
 
-The version count threshold used to judge whether replica compaction is too slow
+版本计数阈值，用来判断副本做 compaction 的速度是否太慢
 
 #### `skip_compaction_slower_replica`
 
-Default: true
+默认值：true
 
-Dynamically configured: true
+是否可以动态配置：true
 
-Only for Master FE: false
+是否为 Master FE 节点独有的配置项：false
 
-If set to true, the compaction slower replica will be skipped when select get queryable replicas
+如果设置为 true，则在选择可查询副本时，将跳过 compaction 较慢的副本
 
 #### `valid_version_count_delta_ratio_between_replicas`
 
-Default: 0.5
+默认值：0.5
 
-Dynamically configured: true
+是否可以动态配置：true
 
-Only for Master FE: true
+是否为 Master FE 节点独有的配置项：true
 
-The valid ratio threshold of the difference between the version count of the slowest replica and the fastest replica. If `repair_slow_replica` is set to true, it is used to determine whether to repair the slowest replica
+最慢副本的版本计数与最快副本的差异有效比率阈值，如果设置 `repair_slow_replica` 为 true，则用于判断是否修复最慢的副本
 
 #### `min_bytes_indicate_replica_too_large`
 
-Default: `2 * 1024 * 1024 * 1024` (2G)
+默认值：`2 * 1024 * 1024 * 1024` (2G)
 
-Dynamically configured: true
+是否可以动态配置：true
 
-Only for Master FE: true
+是否为 Master FE 节点独有的配置项：true
 
-The data size threshold used to judge whether replica is too large
+数据大小阈值，用来判断副本的数据量是否太大
 
 #### `schedule_slot_num_per_hdd_path`
 
-Default：4
+默认值：4
 
-the default slot number per path in tablet scheduler for hdd , remove this config and dynamically adjust it by clone task statistic
+对于 hdd 盘，tablet 调度程序中每个路径的默认 slot 数量
 
 #### `schedule_slot_num_per_ssd_path`
 
-Default：8
+默认值：8
 
-the default slot number per path in tablet scheduler for ssd , remove this config and dynamically adjust it by clone task statistic
+对于 ssd 盘，tablet 调度程序中每个路径的默认 slot 数量
 
 #### `tablet_repair_delay_factor_second`
 
-Default：60 （s）
+默认值：60（s）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-the factor of delay time before deciding to repair tablet.
+决定修复 tablet 前的延迟时间因素。
 
-* if priority is VERY_HIGH, repair it immediately.
-* HIGH, delay tablet_repair_delay_factor_second * 1;
-* NORMAL: delay tablet_repair_delay_factor_second * 2;
-* LOW: delay tablet_repair_delay_factor_second * 3;
+1. 如果优先级为 VERY_HIGH，请立即修复。
+2. HIGH，延迟 tablet_repair_delay_factor_second  * 1；
+3. 正常：延迟 tablet_repair_delay_factor_second * 2；
+4. 低：延迟 tablet_repair_delay_factor_second * 3；
 
 #### `tablet_stat_update_interval_second`
 
-Default：300（5min）
+默认值：300，（5 分钟）
 
-update interval of tablet stat,
-All frontends will get tablet stat from all backends at each interval
+tablet 状态更新间隔
+所有 FE 将在每个时间间隔从所有 BE 获取 tablet 统计信息
 
 #### `storage_flood_stage_usage_percent`
 
-Default：95 （95%）
+默认值：95（95%）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-##### `storage_flood_stage_left_capacity_bytes`
+#### `storage_flood_stage_left_capacity_bytes`
 
-Default：`1 * 1024 * 1024 * 1024` (1GB)
+默认值： `1 * 1024 * 1024 * 1024` (1GB)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-If capacity of disk reach the 'storage_flood_stage_usage_percent' and  'storage_flood_stage_left_capacity_bytes', the following operation will be rejected:
+如果磁盘容量达到 `storage_flood_stage_usage_percent` 和 `storage_flood_stage_left_capacity_bytes` 以下操作将被拒绝：
 
-1. load job
-2. restore job
+1. load 作业
+2. restore 工作
 
 #### `storage_high_watermark_usage_percent`
 
-Default：85  (85%)
+默认值：85  (85%)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
 #### `storage_min_left_capacity_bytes`
 
-Default： `2 * 1024 * 1024 * 1024`  (2GB)
+默认值： `2 * 1024 * 1024 * 1024`  (2GB)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-'storage_high_watermark_usage_percent' limit the max capacity usage percent of a Backend storage path.  'storage_min_left_capacity_bytes' limit the minimum left capacity of a Backend storage path.  If both limitations are reached, this storage path can not be chose as tablet balance destination. But for tablet recovery, we may exceed these limit for keeping data integrity as much as possible.
+`storage_high_watermark_usage_percent` 限制 BE 端存储路径使用最大容量百的分比。  `storage_min_left_capacity_bytes`限制 BE 端存储路径的最小剩余容量。如果达到这两个限制，则不能选择此存储路径作为 tablet 存储目的地。但是对于 tablet 恢复，我们可能会超过这些限制以尽可能保持数据完整性。
 
 #### `catalog_trash_expire_second`
 
-Default: 86400L (1 day)
+默认值：86400L (1 天)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-After dropping database(table/partition), you can recover it by using RECOVER stmt. And this specifies the maximal data retention time. After time, the data will be deleted permanently.
+删除数据库（表/分区）后，您可以使用 RECOVER stmt 恢复它。这指定了最大数据保留时间。一段时间后，数据将被永久删除。
 
 #### `storage_cooldown_second`
 
-Default：`30 * 24 * 3600L`  （30 day）
+默认值：`30 * 24 * 3600L`  （30 天）
 
-When create a table(or partition), you can specify its storage medium(HDD or SSD). If set to SSD, this specifies the default duration that tablets will stay on SSD.  After that, tablets will be moved to HDD automatically.  You can set storage cooldown time in CREATE TABLE stmt.
+创建表（或分区）时，可以指定其存储介质（HDD 或 SSD）。如果设置为 SSD，这将指定 tablet 在 SSD 上停留的默认时间。之后，tablet 将自动移动到 HDD。您可以在 `CREATE TABLE stmt` 中设置存储冷却时间。
 
 #### `default_storage_medium`
 
-Default：HDD
+默认值：HDD
 
-When create a table(or partition), you can specify its storage medium(HDD or SSD). If not set, this specifies the default medium when create.
+创建表（或分区）时，可以指定其存储介质（HDD 或 SSD）。如果未设置，则指定创建时的默认介质。
 
 #### `enable_storage_policy`
 
-* Whether to enable the Storage Policy feature. This config allows users to separate hot and cold data.
-Default: false
+是否开启 Storage Policy 功能。该功能用户冷热数据分离功能。
 
-Is it possible to dynamically configure: true
+默认值：false。即不开启
 
-Is it a configuration item unique to the Master FE node: true
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
 
 #### `check_consistency_default_timeout_second`
 
-Default: 600 (10 minutes)
+默认值：600（10 分钟）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Default timeout of a single consistency check task. Set long enough to fit your tablet size
+单个一致性检查任务的默认超时。设置足够长以适合您的 tablet 大小。
 
 #### `consistency_check_start_time`
 
-Default：23
+默认值：23
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Consistency check start time
+一致性检查开始时间
 
-Consistency checker will run from *consistency_check_start_time* to *consistency_check_end_time*.
+一致性检查器将从 `consistency_check_start_time` 运行到 `consistency_check_end_time`。
 
-If the two times are the same, no consistency check will be triggered.
+如果两个时间相同，则不会触发一致性检查。
 
 #### `consistency_check_end_time`
 
-Default：23
+默认值：23
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Consistency check end time
+一致性检查结束时间
 
-Consistency checker will run from *consistency_check_start_time* to *consistency_check_end_time*.
+一致性检查器将从 `consistency_check_start_time` 运行到 `consistency_check_end_time`。
 
-If the two times are the same, no consistency check will be triggered.
+如果两个时间相同，则不会触发一致性检查。
 
 #### `replica_delay_recovery_second`
 
-Default：0
+默认值：0
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-the minimal delay seconds between a replica is failed and fe try to recovery it using clone.
+副本之间的最小延迟秒数失败，并且尝试使用克隆来恢复它。
 
 #### `tablet_create_timeout_second`
 
-Default：1（s）
+默认值：1（s）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Maximal waiting time for creating a single replica.
+创建单个副本的最长等待时间。
 
-eg.
-   if you create a table with #m tablets and #n replicas for each tablet,
-   the create table request will run at most (m *n* tablet_create_timeout_second) before timeout.
+例如。
+   如果您为每个表创建一个包含 m 个 tablet 和 n 个副本的表，
+   创建表请求将在超时前最多运行 (m *n* tablet_create_timeout_second)。
 
 #### `tablet_delete_timeout_second`
 
-Default：2
+默认值：2
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Same meaning as *tablet_create_timeout_second*, but used when delete a tablet.
+与 `tablet_create_timeout_second` 含义相同，但在删除 tablet 时使用
 
 #### `delete_job_max_timeout_second`
 
-Default: 300(s)
+默认值：300(s)
 
-Mutable: true
+是否可以动态配置：true
 
-Master only: true
+是否为 Master FE 节点独有的配置项：true
 
-Maximal timeout for delete job, in seconds.
+Delete 操作的最大超时时间，单位是秒
 
 #### `alter_table_timeout_second`
 
-Default: 86400 * 30 (1 month)
+默认值：86400 * 30（1 月）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Maximal timeout of ALTER TABLE request. Set long enough to fit your table data size.
+ALTER TABLE 请求的最大超时时间。设置足够长以适合您的表格数据大小
 
 #### `max_replica_count_when_schema_change`
 
-The maximum number of replicas allowed when OlapTable is doing schema changes. Too many replicas will lead to FE OOM.
+OlapTable 在做 schema change 时，允许的最大副本数，副本数过大会导致 FE OOM。
 
-Default: 100000
+默认值：100000
 
-Is it possible to configure dynamically: true
+是否可以动态配置：true
 
-Whether it is a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
 #### `history_job_keep_max_second`
 
-Default：`7 * 24 * 3600` （7 day）
+默认值：`7 * 24 * 3600`  （7 天）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-The max keep time of some kind of jobs. like schema change job and rollup job.
+某些作业的最大保留时间。像 schema 更改和 Rollup 作业。
 
 #### `max_create_table_timeout_second`
 
-Default：60 （s）
+默认值：1 * 3600（1 小时）
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-In order not to wait too long for create table(index), set a max timeout.
+为了在创建表（索引）不等待太久，设置一个最大超时时间
 
-### External Table
+### 外部表
 
 #### `file_scan_node_split_num`
 
-Default：128
+默认值：128
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-multi catalog concurrent file scanning threads
+multi catalog 并发文件扫描线程数
 
 #### `file_scan_node_split_size`
 
-Default：`256 * 1024 * 1024`
+默认值：`256 * 1024 * 1024`
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-multi catalog concurrent file scan size
+multi catalog 并发文件扫描大小
 
 #### `enable_odbc_mysql_broker_table`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-Starting from version 2.1, we no longer support create ODBC, JDBC and broker external table. For odbc and mysql external table, use JDBC table or JDBC catalog instead. For broker table, use table valued function instead.
+从 2.1 版本开始，我们不再支持创建 odbc, mysql 和 broker 外表。对于 odbc 外表，可以使用 jdbc 外表或者 jdbc catalog 替代。对于 broker 外表，可以使用 table valued function 替代。
 
 #### `max_hive_partition_cache_num`
 
-The maximum number of caches for the hive partition.
+hive partition 的最大缓存数量。
 
-Default: 100000
+默认值：100000
 
-Is it possible to dynamically configure: false
+是否可以动态配置：false
 
-Is it a configuration item unique to the Master FE node: false
+是否为 Master FE 节点独有的配置项：false
 
 #### `hive_metastore_client_timeout_second`
 
-The default connection timeout for hive metastore.
+hive metastore 的默认超时时间
 
-Default: 10
+默认值：10
 
-Is it possible to dynamically configure: true
+是否可以动态配置：true
 
-Is it a configuration item unique to the Master FE node: true
+是否为 Master FE 节点独有的配置项：true
 
 #### `max_external_cache_loader_thread_pool_size`
 
-Maximum thread pool size for loading external meta cache.
+用于 external 外部表的 meta 缓存加载线程池的最大线程数。
 
-Default: 10
+默认值：10
 
-Is it possible to dynamically configure: false
+是否可以动态配置：false
 
-Is it a configuration item unique to the Master FE node: false
+是否为 Master FE 节点独有的配置项：false
 
 #### `max_external_file_cache_num`
 
-Maximum number of file cache to use for external tables.
+用于 external 外部表的最大文件缓存数量。
 
-Default: 100000
+默认值：100000
 
-Is it possible to dynamically configure: false
+是否可以动态配置：false
 
-Is it a configuration item unique to the Master FE node: false
+是否为 Master FE 节点独有的配置项：false
 
 #### `max_external_schema_cache_num`
 
-Maximum number of schema cache to use for external external tables.
+用于 external 外部表的最大 schema 缓存数量。
 
-Default: 10000
+默认值：10000
 
-Is it possible to dynamically configure: false
+是否可以动态配置：false
 
-Is it a configuration item unique to the Master FE node: false
+是否为 Master FE 节点独有的配置项：false
 
 #### `external_cache_expire_time_minutes_after_access`
 
-Set how long the data in the cache expires after the last access. The unit is minutes.
-Applies to External Schema Cache as well as Hive Partition Cache.
+设置缓存中的数据，在最后一次访问后多久失效。单位为分钟。
+适用于 External Schema Cache 以及 Hive Partition Cache.
 
-Default: 1440
+默认值：1440
 
-Is it possible to dynamically configure: false
+是否可以动态配置：false
 
-Is it a configuration item unique to the Master FE node: false
+是否为 Master FE 节点独有的配置项：false
 
 #### `es_state_sync_interval_second`
 
-Default：10
+默认值：10
 
-fe will call es api to get es index shard info every es_state_sync_interval_secs
+FE 会在每隔 es_state_sync_interval_secs 调用 es api 获取 es 索引分片信息
 
-### External Resources
+### 外部资源
 
 #### `dpp_hadoop_client_path`
 
-Default：/lib/hadoop-client/hadoop/bin/hadoop
+默认值：/lib/hadoop-client/hadoop/bin/hadoop
 
 #### `dpp_bytes_per_reduce`
 
-Default：`100 * 1024 * 1024L` (100M)
+默认值：`100 * 1024 * 1024L` (100M)
 
 #### `dpp_default_cluster`
 
-Default：palo-dpp
+默认值：palo-dpp
 
 #### `dpp_default_config_str`
 
-Default：{
-               hadoop_configs : 'mapred.job.priority=NORMAL;mapred.job.map.capacity=50;mapred.job.reduce.capacity=50;mapred.hce.replace.streaming=false;abaci.long.stored.job=true;dce.shuffle.enable=false;dfs.client.authserver.force_stop=true;dfs.client.auth.method=0'
-         }
+默认值：{
+            hadoop_configs : 'mapred.job.priority=NORMAL;mapred.job.map.capacity=50;mapred.job.reduce.capacity=50;mapred.hce.replace.streaming=false;abaci.long.stored.job=true;dce.shuffle.enable=false;dfs.client.authserver.force_stop=true;dfs.client.auth.method=0'
+        }
 
 #### `dpp_config_str`
 
-Default：{
-               palo-dpp : {
-                     hadoop_palo_path : '/dir',
-                     hadoop_configs : 'fs.default.name=hdfs://host:port;mapred.job.tracker=host:port;hadoop.job.ugi=user,password'
-                  }
-      }
+默认值：{
+            palo-dpp : {
+                    hadoop_palo_path : '/dir',
+                    hadoop_configs : 'fs.default.name=hdfs://host:port;mapred.job.tracker=host:port;hadoop.job.ugi=user,password'
+                }
+        }
 
 #### `yarn_config_dir`
 
-Default: DorisFE.DORIS_HOME_DIR + "/lib/yarn-config"
+默认值：DorisFE.DORIS_HOME_DIR + "/lib/yarn-config"
 
-Default yarn config file directory , Each time before running the yarn command, we need to check that the  config file exists under this path, and if not, create them.
+默认的 Yarn 配置文件目录每次运行 Yarn 命令之前，我们需要检查一下这个路径下是否存在 config 文件，如果不存在，则创建它们。
 
 #### `yarn_client_path`
 
-Default：DORIS_HOME_DIR + "/lib/yarn-client/hadoop/bin/yarn"
+默认值：DorisFE.DORIS_HOME_DIR + "/lib/yarn-client/hadoop/bin/yarn"
 
-Default yarn client path
+默认 Yarn 客户端路径
 
 #### `spark_launcher_log_dir`
 
-Default： sys_log_dir + "/spark_launcher_log"
+默认值：sys_log_dir + "/spark_launcher_log"
 
-The specified spark launcher log dir
+指定的 Spark 启动器日志目录
 
 #### `spark_resource_path`
 
-Default：none
+默认值：空
 
-Default spark dependencies path
+默认值的 Spark 依赖路径
 
 #### `spark_home_default_dir`
 
-Default：DORIS_HOME_DIR + "/lib/spark2x"
+默认值：DorisFE.DORIS_HOME_DIR + "/lib/spark2x"
 
-Default spark home dir
+默认的 Spark home 路径
 
 #### `spark_dpp_version`
 
-Default: 1.0.0
+默认值：1.0.0
 
-Default spark dpp version
+Spark 默认版本号
 
-### Else
+### 其他参数
 
 #### `tmp_dir`
 
-Default: DorisFE.DORIS_HOME_DIR + "/temp_dir"
+默认值：DorisFE.DORIS_HOME_DIR + "/temp_dir"
 
-temp dir is used to save intermediate results of some process, such as backup and restore process.  file in this dir will be cleaned after these process is finished.
+temp dir 用于保存某些过程的中间结果，例如备份和恢复过程。这些过程完成后，将清除此目录中的文件。
 
 #### `custom_config_dir`
 
-Default: DorisFE.DORIS_HOME_DIR + "/conf"
+默认值：DorisFE.DORIS_HOME_DIR + "/conf"
 
-Custom configuration file directory
+自定义配置文件目录
 
-Configure the location of the `fe_custom.conf` file. The default is in the `conf/` directory.
+配置 `fe_custom.conf` 文件的位置。默认为 `conf/` 目录下。
 
-In some deployment environments, the `conf/` directory may be overwritten due to system upgrades. This will cause the user modified configuration items to be overwritten. At this time, we can store `fe_custom.conf` in another specified directory to prevent the configuration file from being overwritten.
+在某些部署环境下，`conf/` 目录可能因为系统的版本升级被覆盖掉。这会导致用户在运行是持久化修改的配置项也被覆盖。这时，我们可以将 `fe_custom.conf` 存储在另一个指定的目录中，以防止配置文件被覆盖。
 
 #### `plugin_dir`
 
-Default：DORIS_HOME + "/plugins
+默认值：DORIS_HOME + "/plugins
 
-plugin install directory
+插件安装目录
 
 #### `plugin_enable`
 
-Default:true
+默认值:true
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Whether the plug-in is enabled, enabled by default
+插件是否启用，默认启用
 
 #### `small_file_dir`
 
-Default：DORIS_HOME_DIR/small_files
+默认值：DORIS_HOME_DIR + “/small_files”
 
-Save small files
+保存小文件的目录
 
 #### `max_small_file_size_bytes`
 
-Default：1M
+默认值：1M
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-The max size of a single file store in SmallFileMgr
+SmallFileMgr 中单个文件存储的最大大小
 
 #### `max_small_file_number`
 
-Default：100
+默认值：100
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-The max number of files store in SmallFileMgr
+SmallFileMgr 中存储的最大文件数
 
 #### `enable_metric_calculator`
 
-Default：true
+默认值：true
 
-If set to true, metric collector will be run as a daemon timer to collect metrics at fix interval
+如果设置为 true，指标收集器将作为守护程序计时器运行，以固定间隔收集指标
 
 #### `report_queue_size`
 
-Default： 100
+默认值：100
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为  Master FE  节点独有的配置项：true
 
-This threshold is to avoid piling up too many report task in FE, which may cause OOM exception.  In some large Doris cluster, eg: 100 Backends with ten million replicas, a tablet report may cost  several seconds after some modification of metadata(drop partition, etc..). And one Backend will report tablets info every 1 min, so unlimited receiving reports is unacceptable. we will optimize the processing speed of tablet report in future, but now, just discard the report if queue size exceeding limit.
-   Some online time cost:
-      1. disk report: 0-1 msta
-      2. sk report: 0-1 ms
-      3. tablet report
-      4. 10000 replicas: 200ms
+这个阈值是为了避免在 FE 中堆积过多的报告任务，可能会导致 OOM 异常等问题。
+
+并且每个 BE 每 1 分钟会报告一次 tablet 信息，因此无限制接收报告是不可接受的。
+以后我们会优化 tablet 报告的处理速度
+
+**不建议修改这个值**
 
 #### `backup_job_default_timeout_ms`
 
-Default: 86400 * 1000  (1 day)
+默认值：86400 * 1000  (1 天)
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-default timeout of backup job
+备份作业的默认超时时间
 
 #### `backup_upload_task_num_per_be`
 
-Default：3
+默认值：3
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-The max number of upload tasks assigned to each be during the backup process, the default value is 3.
+备份过程中，分配给每个 be 的 upload 任务最大个数，默认值为 3 个。
 
 #### `restore_download_task_num_per_be`
 
-Default：3
+默认值：3
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-The max number of download tasks assigned to each be during the restore process, the default value is 3.
+恢复过程中，分配给每个 be 的 download 任务最大个数，默认值为 3 个。
 
 #### `max_backup_restore_job_num_per_db`
 
-Default: 10
+默认值：10
 
-This configuration is mainly used to control the number of backup/restore tasks recorded in each database.
+此配置用于控制每个 DB 能够记录的 backup/restore 任务的数量
 
 #### `max_backup_tablets_per_job`
 
-Default: 300000
+默认值：300000
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Control the max num of tablets per backup job involved, to avoid FE OOM caused by saving too much metadata.
+此配置用于控制每个 backup job 最大涉及的 tablets 数量，以避免因保存过多元数据导致 FE OOM。
 
 #### `enable_quantile_state_type`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Whether to enable the quantile_state data type
+是否开启 quantile_state 数据类型
 
 #### `enable_date_conversion`
 
-Default：true
+默认值：true
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-FE will convert date/datetime to datev2/datetimev2(0) automatically.
+FE 会自动将 Date/Datetime 转换为 DateV2/DatetimeV2(0)。
 
 #### `enable_decimal_conversion`
 
-Default：true
+默认值：true
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-FE will convert DecimalV2 to DecimalV3 automatically.
+FE 将自动将 DecimalV2 转换为 DecimalV3。
 
 #### `proxy_auth_magic_prefix`
 
-Default：x@8
+默认值：x@8
 
 #### `proxy_auth_enable`
 
-Default：false
+默认值：false
 
 #### `enable_func_pushdown`
 
-Default：true
+默认值：true
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-Whether to push the filter conditions with functions down to MYSQL, when execute query of ODBC, JDBC external tables
+在 ODBC、JDBC 的 MYSQL 外部表查询时，是否将带函数的过滤条件下推到 MYSQL 中执行
 
 #### `jdbc_drivers_dir`
 
-Default: `${DORIS_HOME}/jdbc_drivers`;
+默认值：`${DORIS_HOME}/jdbc_drivers`;
 
-IsMutable：false
+是否可以动态配置：false
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-The default dir to put jdbc drivers.
+用于存放默认的 jdbc drivers
 
 #### `max_error_tablet_of_broker_load`
 
-Default: 3;
+默认值：3;
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Maximum number of error tablet showed in broker load.
+broker load job 保存的失败 tablet 信息的最大数量
 
 #### `default_db_max_running_txn_num`
 
-Default：-1
+默认值：-1
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：true
+是否为 Master FE 节点独有的配置项：true
 
-Used to set the default database transaction quota size.
+用于设置默认数据库事务配额大小。
 
-The default value setting to -1 means using `max_running_txn_num_per_db` instead of `default_db_max_running_txn_num`.
+默认值设置为 -1 意味着使用 `max_running_txn_num_per_db` 而不是 `default_db_max_running_txn_num`。
 
-To set the quota size of a single database, you can use:
+设置单个数据库的配额大小可以使用：
 
 ```
-Set the database transaction quota
+设置数据库事务量配额
 ALTER DATABASE db_name SET TRANSACTION QUOTA quota;
-View configuration
-show data （Detail：HELP SHOW DATA）
+查看配置
+show data （其他用法：HELP SHOW DATA）
 ```
 
 #### `prefer_compute_node_for_external_table`
 
-Default：false
+默认值：false
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-If set to true, query on external table will prefer to assign to compute node. And the max number of compute node is controlled by `min_backend_num_for_external_table`.
-If set to false, query on external table will assign to any node.
+如果设置为 true，对外部表的查询将优先分配给计算节点。计算节点的最大数量由 `min_backend_num_for_external_table` 控制。如果设置为 false，对外部表的查询将分配给任何节点。
 
 #### `min_backend_num_for_external_table`
 
-Default：3
+默认值：3
 
-IsMutable：true
+是否可以动态配置：true
 
-MasterOnly：false
+是否为 Master FE 节点独有的配置项：false
 
-Only take effect when `prefer_compute_node_for_external_table` is true. If the compute node number is less than this value, query on external table will try to get some mix node to assign, to let the total number of node reach this value.
-If the compute node number is larger than this value, query on external table will assign to compute node only.
+仅在 `prefer_compute_node_for_external_table` 为 true 时生效。如果计算节点数小于此值，则对外部表的查询将尝试使用一些混合节点，让节点总数达到这个值。
+如果计算节点数大于这个值，外部表的查询将只分配给计算节点。
 
 #### `infodb_support_ext_catalog`
 
-Default: false
+默认值：false
 
-IsMutable: true
+是否可以动态配置：true
 
-MasterOnly: false
+是否为 Master FE 节点独有的配置项：false
 
-If false, when select from tables in information_schema database,
-the result will not contain the information of the table in external catalog.
-This is to avoid query time when external catalog is not reachable.
+当设置为 false 时，查询 `information_schema` 中的表时，将不再返回 external catalog 中的表的信息。
+
+这个参数主要用于避免因 external catalog 无法访问、信息过多等原因导致的查询 `information_schema` 超时的问题。
 
 #### `enable_query_hit_stats`
 
-Default: false
+默认值：false
 
-IsMutable: true
+是否可以动态配置：true
 
-MasterOnly: false
+是否为 Master FE 节点独有的配置项：false
 
-Controls whether to enable query hit statistics. The default is false.
+控制是否启用查询命中率统计。默认为 false。
 
 #### `div_precision_increment`
 
-Default: 4
+默认值：4
 
-This variable indicates the number of digits by which to increase the scale of the result of
-division operations performed with the `/` operator.
+此变量表示增加与/运算符执行的除法操作结果规模的位数。默认为 4。
 
 #### `enable_convert_light_weight_schema_change`
 
-Default：true
+默认值：true
 
-Temporary configuration option. After it is enabled, a background thread will be started to automatically modify all olap tables to light schema change. The modification results can be viewed through the command `show convert_light_schema_change [from db]`, and the conversion results of all non-light schema change tables will be displayed.
+暂时性配置项，开启后会启动后台线程自动将所有的 olap 表修改为可 light schema change，修改结果可通过命令`show convert_light_schema_change [from db]` 来查看，将会展示所有非 light schema change 表的转换结果
 
 #### `disable_local_deploy_manager_drop_node`
 
-Default：true
+默认值：true
 
-Forbid LocalDeployManager drop nodes to prevent errors in the cluster.info file from causing nodes to be dropped.
+禁止 LocalDeployManager 删除节点，防止 cluster.info 文件有误导致节点被删除。
 
 #### `mysqldb_replace_name`
 
-Default: mysql
+默认值：mysql
 
-To ensure compatibility with the MySQL ecosystem, Doris includes a built-in database called mysql. If this database conflicts with a user's own database, please modify this field to replace the name of the Doris built-in MySQL database with a different name.
+Doris 为了兼用 mysql 周边工具生态，会内置一个名为 mysql 的数据库，如果该数据库与用户自建数据库冲突，请修改这个字段，为 doris 内置的 mysql database 更换一个名字
 
 #### `max_auto_partition_num`
 
-Default value: 2000
+默认值：2000
 
-For auto-partitioned tables to prevent users from accidentally creating a large number of partitions, the number of partitions allowed per OLAP table is `max_auto_partition_num`. Default 2000.
+对于自动分区表，防止用户意外创建大量分区，每个 OLAP 表允许的分区数量为`max_auto_partition_num`。默认 2000。
 
-#### `profile_manager_gc_interval_seconds`
-
-Default value: 1
-
-Used to control the interval at which ProfileManager performs profile garbage collection. During garbage collection, ProfileManager purges excess and expired profiles from memory and disk to save memory.
-
-### Compute and Storage Disaggregated Mode
+### 计算与存储分离模式
 
 #### `cluster_id`
 
-Default：-1
+默认值：-1
 
-node(FE or BE) will be considered belonging to the same Doris cluster if they have same cluster id. You should specify one random int in compute and storage disaggregated mode.
+如果节点（FE 或 BE）具有相同的集群 ID，则将认为它们属于同一个 Doris 集群。您应该在计算和存储分离模式中指定一个随机整数。
 
 #### `deploy_mode`
 
-Default: ""
+默认值： ""
 
+描述：FE 运行的模式。`cloud` 表示解耦的存储 - 计算模式。
+
+#### `meta_service_endpoint`
+
+默认值： ""
+
+Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。此配置对于存储和计算分离模式是必要的。
 Description:  The mode in which FE runs. `cloud` indicates the decoupled storage-compute mode.
 
 #### `meta_service_endpoint`

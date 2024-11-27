@@ -34,7 +34,7 @@ EXPORT
 
 The `EXPORT` command is used to export the data of a specified table to a designated location as a file. Currently, it supports exporting to remote storage such as HDFS, S3, BOS, and COS (Tencent Cloud) through Broker process, S3 protocol, or HDFS protocol.
 
-`EXPORT` is an asynchronous operation, and the command submits an `EXPORT JOB` to Doris. The task will be successfully submitted and returns immediately. After execution, you can use the [SHOW EXPORT](../../Show-Statements/SHOW-EXPORT.md) to view the progress.
+`EXPORT` is an asynchronous operation, and the command submits an `EXPORT JOB` to Doris. The task will be successfully submitted and returns immediately. After execution, you can use the [SHOW EXPORT](../../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT) to view the progress.
 
 **grammar**
 

@@ -64,11 +64,10 @@ Stream Load 支持从本地或远程通过 HTTP 的方式导入 CSV、JSON、Par
 
 Stream Load 通过 HTTP 协议提交和传输。下例以 curl 工具为例，演示通过 Stream Load 提交导入作业。
 
-详细语法可以参见 [STREAM LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD)
 
 ### 前置检查
 
-Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
+Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) 命令给用户授权。
 
 ### 创建导入作业
 
@@ -1016,6 +1015,3 @@ Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。�
 
 关于导入时，如何表达部分列更新，可以参考 [数据操作/数据更新](../../../data-operate/update/unique-update) 文档
 
-## 更多帮助
-
-关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP STREAM LOAD` 获取更多帮助信息。

@@ -26,15 +26,15 @@ under the License.
 
 ## 创建表
 
-使用 [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md) 语句在 Doris 中创建一个表，也可以使用 [LIKE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE.md) 或 [AS](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AS-SELECT.md) 子句从另一个表派生表定义。
+使用 [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) 语句在 Doris 中创建一个表，也可以使用 [LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-LIKE) 或 [AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-AS-SELECT) 子句从另一个表派生表定义。
 
 ## 表名
 
-Doris 中表名默认是大小写敏感的，可以在第一次初始化集群时配置[lower_case_table_names](../admin-manual/config/fe-config.md)为大小写不敏感的。默认的表名最大长度为 64 字节，可以通过配置[table_name_length_limit](../admin-manual/config/fe-config.md)更改，不建议配置过大。创建表的语法请参考[CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md)。
+Doris 中表名默认是大小写敏感的，可以在第一次初始化集群时配置[lower_case_table_names](../admin-manual/config/fe-config.md)为大小写不敏感的。默认的表名最大长度为 64 字节，可以通过配置[table_name_length_limit](../admin-manual/config/fe-config.md)更改，不建议配置过大。创建表的语法请参考[CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)。
 
 ## 表属性
 
-Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties)，其中分桶数(buckets)、存储介质(storage_medium)、副本数(replication_num)、冷热分离存储策略(storage_policy)属性作用于分区，即分区创建之后，分区就会有自己的属性，修改表属性只对未来创建的分区生效，对已经创建好的分区不生效，关于属性更多的信息请参考[修改表属性](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY.md)
+Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)，其中分桶数 (buckets)、存储介质 (storage_medium)、副本数 (replication_num)、冷热分离存储策略 (storage_policy) 属性作用于分区，即分区创建之后，分区就会有自己的属性，修改表属性只对未来创建的分区生效，对已经创建好的分区不生效，关于属性更多的信息请参考[修改表属性](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY)
 
 
 ## 注意事项

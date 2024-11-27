@@ -43,7 +43,7 @@ Group Commit 写入有三种模式，分别是：
 
     Doris 首先将数据写入 WAL (`Write Ahead Log`)，然后导入立即返回。Doris 会根据负载和表的`group_commit_interval`属性异步提交数据，提交之后数据可见。为了防止 WAL 占用较大的磁盘空间，单次导入数据量较大时，会自动切换为`sync_mode`。这适用于写入延迟敏感以及高频写入的场景。
 
-    WAL的数量可以通过FE http接口查看，具体可见[这里](../../../admin-manual/fe/get-wal-size-action.md)，也可以在BE的metrics中搜索关键词`wal`查看。
+    WAL 的数量可以通过 FE http 接口查看，具体可见[这里](../../admin-manual/fe/get-wal-size-action.md)，也可以在 BE 的 metrics 中搜索关键词`wal`查看。
 
 ## Group Commit 使用方式
 
@@ -76,7 +76,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionStat
 * 通过 JDBC url 设置，增加`sessionVariables=group_commit=async_mode`
 
     ```
-    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false
+    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode
     ```
 
 * 通过执行 SQL 设置
@@ -91,14 +91,14 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionStat
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50$sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
 private static final String TBL = "dt";
 private static final String USER = "root";
 private static final String PASSWD = "";
-private static final int INSERT_BATCH_SIZE = 10;   
+private static final int INSERT_BATCH_SIZE = 10;
 
 private static void groupCommitInsertBatch() throws Exception {
     Class.forName(JDBC_DRIVER);
@@ -126,7 +126,7 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-注意：由于高频的insert into语句会打印大量的audit log，对最终性能有一定影响，默认关闭了打印prepared语句的audit log。可以通过设置session variable的方式控制是否打印prepared语句的audit log。
+注意：由于高频的 insert into 语句会打印大量的 audit log，对最终性能有一定影响，默认关闭了打印 prepared 语句的 audit log。可以通过设置 session variable 的方式控制是否打印 prepared 语句的 audit log。
 
 ```sql
 # 配置 session 变量开启打印parpared语句的audit log, 默认为false即关闭打印parpared语句的audit log。
@@ -135,109 +135,109 @@ set enable_prepared_stmt_audit_log=true;
 
 关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](./insert-into-manual.md)。
 
-### 使用Golang进行Group Commit
+### 使用 Golang 进行 Group Commit
 
-Golang的prepared语句支持有限，所以我们可以通过手动客户端攒批的方式提高Group Commit的性能，以下为一个示例程序。
+Golang 的 prepared 语句支持有限，所以我们可以通过手动客户端攒批的方式提高 Group Commit 的性能，以下为一个示例程序。
 
 ```Golang
 package main
 
 import (
-	"database/sql"
-	"fmt"
-	"math/rand"
-	"strings"
-	"sync"
-	"sync/atomic"
-	"time"
+    "database/sql"
+    "fmt"
+    "math/rand"
+    "strings"
+    "sync"
+    "sync/atomic"
+    "time"
 
-	_ "github.com/go-sql-driver/mysql"
+    _ "github.com/go-sql-driver/mysql"
 )
 
 const (
-	host     = "127.0.0.1"
-	port     = 9038
-	db       = "test"
-	user     = "root"
-	password = ""
-	table    = "async_lineitem"
+    host     = "127.0.0.1"
+    port     = 9038
+    db       = "test"
+    user     = "root"
+    password = ""
+    table    = "async_lineitem"
 )
 
 var (
-	threadCount = 20
-	batchSize   = 100
+    threadCount = 20
+    batchSize   = 100
 )
 
 var totalInsertedRows int64
 var rowsInsertedLastSecond int64
 
 func main() {
-	dbDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", user, password, host, port, db)
-	db, err := sql.Open("mysql", dbDSN)
-	if err != nil {
-		fmt.Printf("Error opening database: %s\n", err)
-		return
-	}
-	defer db.Close()
+    dbDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", user, password, host, port, db)
+    db, err := sql.Open("mysql", dbDSN)
+    if err != nil {
+        fmt.Printf("Error opening database: %s\n", err)
+        return
+    }
+    defer db.Close()
 
-	var wg sync.WaitGroup
-	for i := 0; i < threadCount; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			groupCommitInsertBatch(db)
-		}()
-	}
+    var wg sync.WaitGroup
+    for i := 0; i < threadCount; i++ {
+        wg.Add(1)
+        go func() {
+            defer wg.Done()
+            groupCommitInsertBatch(db)
+        }()
+    }
 
-	go logInsertStatistics()
+    go logInsertStatistics()
 
-	wg.Wait()
+    wg.Wait()
 }
 
 func groupCommitInsertBatch(db *sql.DB) {
-	for {
-		valueStrings := make([]string, 0, batchSize)
-		valueArgs := make([]interface{}, 0, batchSize*16)
-		for i := 0; i < batchSize; i++ {
-			for i = 0; i < batchSize; i++ {
-				valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-				valueArgs = append(valueArgs, rand.Intn(1000))
-				valueArgs = append(valueArgs, rand.Intn(1000))
-				valueArgs = append(valueArgs, rand.Intn(1000))
-				valueArgs = append(valueArgs, rand.Intn(1000))
-				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-				valueArgs = append(valueArgs, "N")
-				valueArgs = append(valueArgs, "O")
-				valueArgs = append(valueArgs, time.Now())
-				valueArgs = append(valueArgs, time.Now())
-				valueArgs = append(valueArgs, time.Now())
-				valueArgs = append(valueArgs, "DELIVER IN PERSON")
-				valueArgs = append(valueArgs, "SHIP")
-				valueArgs = append(valueArgs, "N/A")
-			}
-		}
-		stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
-			table, strings.Join(valueStrings, ","))
-		_, err := db.Exec(stmt, valueArgs...)
-		if err != nil {
-			fmt.Printf("Error executing batch: %s\n", err)
-			return
-		}
-		atomic.AddInt64(&rowsInsertedLastSecond, int64(batchSize))
-		atomic.AddInt64(&totalInsertedRows, int64(batchSize))
-	}
+    for {
+        valueStrings := make([]string, 0, batchSize)
+        valueArgs := make([]interface{}, 0, batchSize*16)
+        for i := 0; i < batchSize; i++ {
+            for i = 0; i < batchSize; i++ {
+                valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, "N")
+                valueArgs = append(valueArgs, "O")
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, "DELIVER IN PERSON")
+                valueArgs = append(valueArgs, "SHIP")
+                valueArgs = append(valueArgs, "N/A")
+            }
+        }
+        stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
+            table, strings.Join(valueStrings, ","))
+        _, err := db.Exec(stmt, valueArgs...)
+        if err != nil {
+            fmt.Printf("Error executing batch: %s\n", err)
+            return
+        }
+        atomic.AddInt64(&rowsInsertedLastSecond, int64(batchSize))
+        atomic.AddInt64(&totalInsertedRows, int64(batchSize))
+    }
 }
 
 func logInsertStatistics() {
-	for {
-		time.Sleep(1 * time.Second)
-		fmt.Printf("Total inserted rows: %d\n", totalInsertedRows)
-		fmt.Printf("Rows inserted in the last second: %d\n", rowsInsertedLastSecond)
-		rowsInsertedLastSecond = 0
-	}
+    for {
+        time.Sleep(1 * time.Second)
+        fmt.Printf("Total inserted rows: %d\n", totalInsertedRows)
+        fmt.Printf("Rows inserted in the last second: %d\n", rowsInsertedLastSecond)
+        rowsInsertedLastSecond = 0
+    }
 }
 
 ```
@@ -496,7 +496,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
   * 目前 WAL 文件只存储在一个 BE 上，如果这个 BE 磁盘损坏或文件误删等，可能导入丢失部分数据
 
-  * 当下线 BE 节点时，请使用[`DECOMMISSION`](../../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND)命令，安全下线节点，防止该节点下线前 WAL 文件还没有全部处理完成，导致部分数据丢失
+  * 当下线 BE 节点时，请使用[`DECOMMISSION`](../../../sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND)命令，安全下线节点，防止该节点下线前 WAL 文件还没有全部处理完成，导致部分数据丢失
 
   * 对于`async_mode`的 Group Commit 写入，为了保护磁盘空间，当遇到以下情况时，会切换成`sync_mode`
 
@@ -542,7 +542,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
 
-* 测试版本为Doris-3.0.1
+* 测试版本为 Doris-2.1.5
 
 **数据集**
 
@@ -558,20 +558,20 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **测试结果**
 
-| 导入方式    | 单并发数据量  | 并发数  | 耗时 (秒)     | 导入速率 (行/秒) | 导入吞吐 (MB/秒) |
-|----------------|---------|------|-----------|----------|-----------|
-| `group_commit` | 10 KB   | 10   | 2204      | 112,181   | 14.8 |
-| `group_commit` | 10 KB   | 30   | 2176      | 113,625   | 15.0 |
-| `group_commit` | 100 KB  | 10   | 283       | 873,671  | 115.1 |
-| `group_commit` | 100 KB  | 30   | 244       | 1,013,315  | 133.5 |
-| `group_commit` | 500 KB  | 10   | 125       | 1,977,992  | 260.6 |
-| `group_commit` | 500 KB  | 30   | 122       | 2,026,631  | 267.1 |
-| `group_commit` | 1 MB    | 10   | 119       | 2,077,723  | 273.8 |
-| `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
-| `group_commit` | 10 MB   | 10   | 118       | 2,095,331  | 276.1 |
-| `非group_commit` | 1 MB    | 10   | 1883  | 131,305 | 17.3|
-| `非group_commit` | 10 MB   | 10   | 294       | 840,983  | 105.4 |
-| `非group_commit` | 10 MB   | 30   | 118  | 2,095,331 | 276.1|
+| 导入方式          | 单并发数据量 | 并发数 | 耗时 (秒) | 导入速率 (行/秒) | 导入吞吐 (MB/秒) |
+|------------------|-------------|--------|-------------|--------------------|-------------------|
+| group_commit     | 10 KB       | 10     | 3306      | 74,787         | 9.8              |
+| group_commit     | 10 KB       | 30     | 3264      | 75,750         | 10.0            |
+| group_commit     | 100 KB      | 10     | 424       | 582,447        | 76.7             |
+| group_commit     | 100 KB      | 30     | 366       | 675,543        | 89.0             |
+| group_commit     | 500 KB      | 10     | 187       | 1,318,661       | 173.7            |
+| group_commit     | 500 KB      | 30     | 183       | 1,351,087       | 178.0            |
+| group_commit     | 1 MB        | 10     | 178       | 1,385,148       | 182.5            |
+| group_commit     | 1 MB        | 30     | 178       | 1,385,148       | 182.5            |
+| group_commit     | 10 MB       | 10     | 177       | 1,396,887       | 184.0            |
+| 非 group_commit   | 1 MB        | 10     | 2824      | 87,536          | 11.5             |
+| 非 group_commit   | 10 MB       | 10     | 450       | 549,442         | 68.9             |
+| 非 group_commit   | 10 MB       | 30     | 177       | 1,396,887       | 184.0            |
 
 在上面的`group_commit`测试中，BE 的 CPU 使用率在 10-40% 之间。
 
@@ -587,9 +587,9 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
 
-* 测试版本为Doris-3.0.1
+* 测试版本为 Doris-2.1.5
 
-* 关闭打印parpared语句的audit log以提高性能
+* 关闭打印 parpared 语句的 audit log 以提高性能
 
 **数据集**
 
@@ -606,11 +606,10 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 **测试结果**
 
 | 单个 insert 的行数 | 并发数 | 导入速率 (行/秒) | 导入吞吐 (MB/秒) |
-|-------------|-----|-----------|----------|
-| 100 | 10  | 160,758    | 17.21 |
-| 100 | 20  | 210,476    | 22.19 |
-| 100 | 30  | 214,323    | 22.92 |
-
+|-------------------|--------|--------------------|--------------------|
+| 100               | 10     | 107,172            | 11.47              |
+| 100               | 20     | 140,317            | 14.79              |
+| 100               | 30     | 142,882            | 15.28              |
 在上面的测试中，FE 的 CPU 使用率在 60-70% 左右，BE 的 CPU 使用率在 10-20% 左右。
 
 ### Insert into sync 模式小批量数据
@@ -623,7 +622,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
 
-* 测试版本为Doris-3.0.1
+* 测试版本为 Doris-2.1.5
 
 **数据集**
 
@@ -660,48 +659,45 @@ PROPERTIES (
 
 * [Jmeter](https://jmeter.apache.org/)
 
-需要设置的jmeter参数如下图所示
+需要设置的 jmeter 参数如下图所示
 
 ![jmeter1](/images/group-commit/jmeter1.jpg)
 ![jmeter2](/images/group-commit/jmeter2.jpg)
 
-1. 设置测试前的init语句，`set group_commit=async_mode`以及`set enable_nereids_planner=false`。
-2. 开启jdbc的prepared statement，完整的url为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false`。
-3. 设置导入类型为prepared update statement。
+1. 设置测试前的 init 语句，`set group_commit=async_mode`以及`set enable_nereids_planner=false`。
+2. 开启 jdbc 的 prepared statement，完整的 url 为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false`。
+3. 设置导入类型为 prepared update statement。
 4. 设置导入语句。
 5. 设置每次需要导入的值，注意，导入的值与导入值的类型要一一匹配。
 
 **测试方法**
 
-* 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过insert into写入1行数据。
+* 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过 insert into 写入 1 行数据。
 
 **测试结果**
 
 * 数据单位为行每秒。
 
-* 以下测试分为30，100，500并发。
+* 以下测试分为 30，100，500 并发。
 
-**30并发sync模式5个BE3副本性能测试**
-
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
-|-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 891.8      | 701.1      | 400.0     | 237.5    |
-|enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
-
-
-**100并发sync模式5个BE3副本性能测试**
+**30 并发 sync 模式 5 个 BE3 副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
-|enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
+|                       | 321.5      | 307.3      | 285.8    | 224.3    |
 
-**500并发sync模式5个BE3副本性能测试**
+
+**100 并发 sync 模式性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 5567.5     | 5713.2      | 4681.0    | 3131.2   |
-|enable_nereids_planner=false| 4471.6      | 5042.5     | 4932.2     | 3641.1 |
+|                       | 1175.2     | 1108.7     | 1016.3    | 704.5  |
+
+**500 并发 sync 模式性能测试**
+
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|                       | 3289.8    | 3686.7      | 3280.7    | 2609.2   |
 
 ### Insert into sync 模式大批量数据
 
@@ -709,11 +705,11 @@ PROPERTIES (
 
 * 1 台 FE：阿里云 16 核 CPU、64GB 内存、1 块 500GB ESSD PL1 云磁盘
 
-* 5 台 BE：阿里云 16 核 CPU、64GB 内存、1 块 1TB ESSD PL1 云磁盘。注：测试中分别用了1台，3台，5台BE进行测试。
+* 5 台 BE：阿里云 16 核 CPU、64GB 内存、1 块 1TB ESSD PL1 云磁盘。注：测试中分别用了 1 台，3 台，5 台 BE 进行测试。
 
 * 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
 
-* 测试版本为Doris-3.0.1
+* 测试版本为 Doris-2.1.5
 
 **数据集**
 
@@ -752,29 +748,33 @@ PROPERTIES (
 
 **测试方法**
 
-* 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过insert into写入1000行数据。
+* 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过 insert into 写入 1000 行数据。
 
 **测试结果**
 
 * 数据单位为行每秒。
 
-* 以下测试分为30，100，500并发。
+* 以下测试分为 30，100，500 并发。
 
-**30并发sync模式5个BE3副本性能测试**
-
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
-|-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 9.1K     | 11.1K     | 11.4K     | 11.1K     |
-|enable_nereids_planner=false| 157.8K      | 159.9K     | 154.1K     | 120.4K     |
-
-**100并发sync模式5个BE3副本性能测试**
+**30 并发 sync 模式性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 10.0K     |9.2K     | 8.9K      | 8.9K    |
-|enable_nereids_planner=false| 130.4k     | 131.0K     | 130.4K      | 124.1K     |
+|                       | 92.2K     | 85.9K     | 84K     | 83.2K     |
 
-**500并发sync模式5个BE3副本性能测试**
+**100 并发 sync 模式性能测试**
+
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|                       | 70.4K     |70.5K     | 73.2K      | 69.4K    |
+
+**500 并发 sync 模式性能测试**
+
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|                       | 46.3K      | 47.7K     | 47.4K      | 46.5K      |
+
+**500 并发 sync 模式 5 个 BE3 副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|

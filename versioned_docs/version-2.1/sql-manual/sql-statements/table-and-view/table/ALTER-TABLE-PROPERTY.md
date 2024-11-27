@@ -38,7 +38,7 @@ Differences between Partition Attributes and Table Attributes
   - For not-created auto partitions, you can use ALTER TABLE {tableName} SET ({key} = {value}) to modify their attributes.
   - If users want to modify partition attributes, they need to modify the attributes of the already created partitions, as well as the attributes of not-created partitions.
 - Aside from the above attributes, all others are at the table level.
-- For the specific attributes, please refer to [create table attributes](../../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties)
+- For the specific attributes, please refer to [create table attributes](../../../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)
 :::
 
 ### Description
@@ -275,13 +275,13 @@ ALTER TABLE example_db.mysql_table MODIFY ENGINE TO odbc PROPERTIES("driver" = "
 ```sql
  ALTER TABLE create_table_not_have_policy set ("storage_policy" = "created_create_table_alter_policy");
 ```
-NOTE：The table can be successfully added only if it hasn't been associated with a storage policy. A table just can have one storage policy.
+NOTE: The table can be successfully added only if it hasn't been associated with a storage policy. A table just can have one storage policy.
 
 13. Add a hot and cold data migration strategy to the partition of the table
 ```sql
 ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="created_create_table_partition_alter_policy");
 ```
-NOTE：The table's partition can be successfully added only if it hasn't been associated with a storage policy. A table just can have one storage policy.
+NOTE: The table's partition can be successfully added only if it hasn't been associated with a storage policy. A table just can have one storage policy.
 
 
 ### Keywords

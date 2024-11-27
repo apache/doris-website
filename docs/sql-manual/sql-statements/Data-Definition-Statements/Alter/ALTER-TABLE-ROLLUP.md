@@ -1,7 +1,7 @@
 ---
 {
-    "title": "ALTER-TABLE-ROLLUP",
-    "language": "en"
+    "title": "ALTER-TABLE-COLUMN",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,117 +24,211 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-TABLE-ROLLUP
+## ALTER-TABLE-COLUMN
 
 ### Name
 
-ALTER TABLE ROLLUP
+ALTER TABLE COLUMN
 
 ### Description
 
-This statement is used to perform a rollup modification operation on an existing table. The rollup is an asynchronous operation, and the task is returned when the task is submitted successfully. After that, you can use the [SHOW ALTER](../../Show-Statements/SHOW-ALTER.md) command to view the progress.
+该语句用于对已有 table 进行 Schema change 操作。schema change 是异步的，任务提交成功则返回，之后可使用[SHOW ALTER TABLE COLUMN](../../../../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE) 命令查看进度。
 
-grammar:
+语法：
 
 ```sql
 ALTER TABLE [database.]table alter_clause;
 ```
 
-The alter_clause of rollup supports the following creation methods
+schema change 的 alter_clause 支持如下几种修改方式：
 
-1. Create a rollup index
+1. 向指定 index 的指定位置添加一列
 
-grammar:
+语法：
 
 ```sql
-ADD ROLLUP rollup_name (column_name1, column_name2, ...)
-[FROM from_index_name]
+ADD COLUMN column_name column_type [KEY | agg_type] [DEFAULT "default_value"]
+[AFTER column_name|FIRST]
+[TO rollup_index_name]
 [PROPERTIES ("key"="value", ...)]
 ```
 
-properties: Support setting timeout time, the default timeout time is 1 day.
+ 注意：
 
-2. Create rollup indexes in batches
+- 聚合模型如果增加 value 列，需要指定 agg_type
+- 非聚合模型（如 DUPLICATE KEY）如果增加 key 列，需要指定 KEY 关键字
+-  不能在 rollup index 中增加 base index 中已经存在的列（如有需要，可以重新创建一个 rollup index）
 
-grammar:
+2. 向指定 index 添加多列
 
-```sql
-ADD ROLLUP [rollup_name (column_name1, column_name2, ...)
-                    [FROM from_index_name]
-                    [PROPERTIES ("key"="value", ...)],...]
-```
-
-Notice:
-
-- If from_index_name is not specified, it will be created from base index by default
-- Columns in rollup table must be columns already in from_index
-- In properties, the storage format can be specified. For details, see [CREATE TABLE](../Create/CREATE-TABLE.md)
-
-3. Delete rollup index
-
- grammar:
+语法：
 
 ```sql
-DROP ROLLUP rollup_name [PROPERTIES ("key"="value", ...)]
+ADD COLUMN (column_name1 column_type [KEY | agg_type] DEFAULT "default_value", ...)
+[TO rollup_index_name]
+[PROPERTIES ("key"="value", ...)]
 ```
 
-4. Batch delete rollup index
+注意：
 
-grammar:
+- 聚合模型如果增加 value 列，需要指定 agg_type
+- 聚合模型如果增加 key 列，需要指定 KEY 关键字
+- 不能在 rollup index 中增加 base index 中已经存在的列（如有需要，可以重新创建一个 rollup index）
+
+3. 从指定 index 中删除一列
+
+语法：
 
 ```sql
-DROP ROLLUP [rollup_name [PROPERTIES ("key"="value", ...)],...]
+DROP COLUMN column_name
+[FROM rollup_index_name]
 ```
 
-Notice:
+注意：
 
-- cannot delete base index
+- 不能删除分区列
+- 如果是从 base index 中删除列，则如果 rollup index 中包含该列，也会被删除
+
+4. 修改指定 index 的列类型以及列位置
+
+ 语法：
+
+```sql
+MODIFY COLUMN column_name column_type [KEY | agg_type] [NULL | NOT NULL] [DEFAULT "default_value"]
+[AFTER column_name|FIRST]
+[FROM rollup_index_name]
+[PROPERTIES ("key"="value", ...)]
+```
+
+注意：
+
+- 聚合模型如果修改 value 列，需要指定 agg_type
+- 非聚合类型如果修改 key 列，需要指定 KEY 关键字
+- 只能修改列的类型，列的其他属性维持原样（即其他属性需在语句中按照原属性显式的写出，参见 example 8）
+- 分区列和分桶列不能做任何修改
+- 目前支持以下类型的转换（精度损失由用户保证）
+  - TINYINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE 类型向范围更大的数字类型转换
+  - TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE/DECIMAL 转换成 VARCHAR
+  - VARCHAR 支持修改最大长度
+  - VARCHAR/CHAR 转换成 TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE
+  - VARCHAR/CHAR 转换成 DATE (目前支持"%Y-%m-%d", "%y-%m-%d", "%Y%m%d", "%y%m%d", "%Y/%m/%d, "%y/%m/%d"六种格式化格式)
+  - DATETIME 转换成 DATE(仅保留年 - 月-日信息，例如：`2019-12-09 21:47:05` <--> `2019-12-09`)
+  - DATE 转换成 DATETIME(时分秒自动补零，例如：`2019-12-09` <--> `2019-12-09 00:00:00`)
+  - FLOAT 转换成 DOUBLE
+  - INT 转换成 DATE (如果 INT 类型数据不合法则转换失败，原始数据不变)
+  - 除 DATE 与 DATETIME 以外都可以转换成 STRING，但是 STRING 不能转换任何其他类型
+
+5. 对指定 index 的列进行重新排序
+
+语法：
+
+```sql
+ORDER BY (column_name1, column_name2, ...)
+[FROM rollup_index_name]
+[PROPERTIES ("key"="value", ...)]
+```
+
+注意：
+
+- index 中的所有列都要写出来
+- value 列在 key 列之后
 
 ### Example
 
-1. Create index: example_rollup_index, based on base index (k1,k2,k3,v1,v2). Columnar storage.
+1. 向 example_rollup_index 的 col1 后添加一个 key 列 new_col(非聚合模型)
 
 ```sql
 ALTER TABLE example_db.my_table
-ADD ROLLUP example_rollup_index(k1, k3, v1, v2);
+ADD COLUMN new_col INT KEY DEFAULT "0" AFTER col1
+TO example_rollup_index;
 ```
 
-2. Create index: example_rollup_index2, based on example_rollup_index (k1,k3,v1,v2)
+2. 向 example_rollup_index 的 col1 后添加一个 value 列 new_col(非聚合模型)
+
+```sql
+ALTER TABLE example_db.my_table   
+ADD COLUMN new_col INT DEFAULT "0" AFTER col1    
+TO example_rollup_index;
+```
+
+3. 向 example_rollup_index 的 col1 后添加一个 key 列 new_col(聚合模型)
+
+```sql
+ALTER TABLE example_db.my_table   
+ADD COLUMN new_col INT DEFAULT "0" AFTER col1    
+TO example_rollup_index;
+```
+
+4. 向 example_rollup_index 的 col1 后添加一个 value 列 new_col SUM 聚合类型 (聚合模型)
+
+```sql
+ALTER TABLE example_db.my_table   
+ADD COLUMN new_col INT SUM DEFAULT "0" AFTER col1    
+TO example_rollup_index;
+```
+
+5. 向 example_rollup_index 添加多列 (聚合模型)
 
 ```sql
 ALTER TABLE example_db.my_table
-ADD ROLLUP example_rollup_index2 (k1, v1)
+ADD COLUMN (col1 INT DEFAULT "1", col2 FLOAT SUM DEFAULT "2.3")
+TO example_rollup_index;
+```
+
+6. 从 example_rollup_index 删除一列
+
+```sql
+ALTER TABLE example_db.my_table
+DROP COLUMN col2
 FROM example_rollup_index;
 ```
 
-3. Create index: example_rollup_index3, based on base index (k1,k2,k3,v1), with a custom rollup timeout of one hour.
+7. 修改 base index 的 key 列 col1 的类型为 BIGINT，并移动到 col2 列后面。
+
+```sql
+ALTER TABLE example_db.my_table 
+MODIFY COLUMN col1 BIGINT KEY DEFAULT "1" AFTER col2;
+```
+
+注意：无论是修改 key 列还是 value 列都需要声明完整的 column 信息
+
+8. 修改 base index 的 val1 列最大长度。原 val1 为 (val1 VARCHAR(32) REPLACE DEFAULT "abc")
+
+```sql
+ALTER TABLE example_db.my_table 
+MODIFY COLUMN val1 VARCHAR(64) REPLACE DEFAULT "abc";
+```
+注意：只能修改列的类型，列的其他属性维持原样
+
+9. 重新排序 example_rollup_index 中的列（设原列顺序为：k1,k2,k3,v1,v2）
 
 ```sql
 ALTER TABLE example_db.my_table
-ADD ROLLUP example_rollup_index(k1, k3, v1)
-PROPERTIES("timeout" = "3600");
+ORDER BY (k3,k1,k2,v2,v1)
+FROM example_rollup_index;
 ```
 
-4. Delete index: example_rollup_index2
+10. 同时执行两种操作
 
 ```sql
 ALTER TABLE example_db.my_table
-DROP ROLLUP example_rollup_index2;
+ADD COLUMN v2 INT MAX DEFAULT "0" AFTER k2 TO example_rollup_index,
+ORDER BY (k3,k1,k2,v2,v1) FROM example_rollup_index;
 ```
 
-5. Batch Delete rollup index
+11. 修改 Duplicate key 表 Key 列的某个字段的长度
 
 ```sql
-ALTER TABLE example_db.my_table
-DROP ROLLUP example_rollup_index2,example_rollup_index3;
+alter table example_tbl modify column k3 varchar(50) key null comment 'to 50'
 ```
 
-### 
 
-4. Keywords
+
+### Keywords
 
 ```text
-ALTER, TABLE, ROLLUP, ALTER TABLE
+ALTER, TABLE, COLUMN, ALTER TABLE
 ```
 
 ### Best Practice
+

@@ -38,7 +38,7 @@ Differences between Partition Attributes and Table Attributes
   - For not-created auto partitions, you can use ALTER TABLE {tableName} SET ({key} = {value}) to modify their attributes.
   - If users want to modify partition attributes, they need to modify the attributes of the already created partitions, as well as the attributes of not-created partitions.
 - Aside from the above attributes, all others are at the table level.
-- For the specific attributes, please refer to [create table attributes](../../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties)
+- For the specific attributes, please refer to [create table attributes](../../../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md#properties)
 :::
 
 ### Description

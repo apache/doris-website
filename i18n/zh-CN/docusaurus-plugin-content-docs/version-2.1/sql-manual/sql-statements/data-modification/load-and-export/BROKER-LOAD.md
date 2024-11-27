@@ -536,7 +536,7 @@ WITH BROKER broker_name
 
 1. 查看导入任务状态
 
-   Broker Load 是一个异步导入过程，语句执行成功仅代表导入任务提交成功，并不代表数据导入成功。导入状态需要通过 [SHOW LOAD](../../Show-Statements/SHOW-LOAD.md) 命令查看。
+   Broker Load 是一个异步导入过程，语句执行成功仅代表导入任务提交成功，并不代表数据导入成功。导入状态需要通过 [SHOW LOAD](../../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) 命令查看。
 
 2. 取消导入任务
 

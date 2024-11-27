@@ -83,7 +83,7 @@ Schema Change 的实现分为两个大类：轻量级Schema Change和重量级Sc
     ```
 5. 数据转换完成后，所有存放旧数据的tablet将会被删除，所有完成数据变更的新tablet将会取代旧tablet进行服务。
 
-创建 Schema Change 的具体语法可以查看帮助 [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 中 Schema Change 部分的说明。
+创建 Schema Change 的具体语法可以查看帮助 [ALTER TABLE COLUMN](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN) 中 Schema Change 部分的说明。
 
 ## 向指定 Index 的指定位置添加一列
 
@@ -591,4 +591,4 @@ ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
 
 ## 更多参考
 
-关于 Schema Change 使用的更多详细语法及最佳实践，请参阅 [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 命令手册。
+关于 Schema Change 使用的更多详细语法及最佳实践，请参阅 [ALTER TABLE COLUMN](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN) 命令手册。

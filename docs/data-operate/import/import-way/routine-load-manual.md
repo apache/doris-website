@@ -1,11 +1,11 @@
 ---
 {
-    "title": "Routine Load",
-    "language": "en"
+    "title": "Delete 操作",
+    "language": "zh-CN"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,266 +24,278 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris can continuously consume data from Kafka Topic through the Routine Load method. After submitting a Routine Load job, Doris will continuously run the load job, generating real-time loading tasks to constantly consume messages from the specified Topic in the Kafka cluster.
+Delete 操作语句通过 MySQL 协议，对指定的 table 或者 partition 中的数据进行按条件删除。Delete 删除操作不同于基于导入的批量删除，它类似 Insert into 语句，是一个同步过程。所有的 Delete 操作在 Doris 中是一个独立的导入作业，一般 Delete 语句需要指定表和分区以及删除的条件来筛选要删除的数据，并将会同时删除 base 表和 rollup 表的数据。
 
-Routine Load is a streaming load job that supports Exactly-Once semantics, ensuring that data is neither lost nor duplicated.
+Delete 操作的语法详见 [DELETE](../../sql-manual/sql-statements/data-modification/DML/DELETE) 语法。不同于 Insert into 命令，delete 不能手动指定`label`，有关 label 的概念可以查看 [Insert Into](../../data-operate/import/insert-into-manual) 文档。
 
-## Usage Scenarios
-
-### Supported Data Sources
-
-Routine Load supports consuming data from Kafka clusters.
-
-### Supported Data File Formats
-
-Routine Load supports consuming data in CSV and JSON formats.
-
-When loading CSV format, it is necessary to clearly distinguish between null values and empty strings:
-
-- Null values need to be represented with `\n`. For example, `a,\n,b` indicates that the middle column is a null value.
-
-- Empty strings can be represented by leaving the data field empty. For example, `a,,b` indicates that the middle column is an empty string.
-
-### Usage Limitations
-
-When using Routine Load to consume data from Kafka, there are the following limitations:
-
-- The supported message formats are CSV and JSON text formats. Each message in CSV should be on a separate line, and the line should not end with a newline character.
-
-- By default, it supports Kafka versions 0.10.0.0 and above. If you need to use a Kafka version below 0.10.0.0 (such as 0.9.0, 0.8.2, 0.8.1, 0.8.0), you need to modify the BE configuration by setting the value of `kafka_broker_version_fallback` to the compatible older version, or directly set the value of `property.broker.version.fallback` when creating the Routine Load. However, using an older version may mean that some new features of Routine Load, such as setting the offset of Kafka partitions based on time, may not be available.
-
-## Basic Principles
-
-Routine Load continuously consumes data from Kafka Topics and writes it into Doris.
-
-When a Routine Load job is created in Doris, it generates a resident import job that consists of several import tasks:
-
-- Load Job: A Routine Load Job is a resident import job that continuously consumes data from the data source.
-
-- Load Task: An import job is broken down into several import tasks for actual consumption, with each task being an independent transaction.
-
-The specific import process of Routine Load is shown in the following diagram:
-
-![Routine Load](/images/routine-load.png)
-
-1. The Client submits a request to create a Routine Load job to the FE, and the FE generates a resident import job (Routine Load Job) through the Routine Load Manager.
-
-2. The FE splits the Routine Load Job into several Routine Load Tasks through the Job Scheduler, which are then scheduled by the Task Scheduler and distributed to BE nodes.
-
-3. On the BE, after a Routine Load Task is completed, it submits the transaction to the FE and updates the Job's metadata.
-
-4. After a Routine Load Task is submitted, it continues to generate new Tasks or retries timed-out Tasks.
-
-5. The newly generated Routine Load Tasks continue to be scheduled by the Task Scheduler in a continuous cycle.
-
-## Quick Start
-
-### Create Job
-
-In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTINE LOAD` command. For detailed syntax, please refer to [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD). Routine Load supports consuming data in CSV and JSON formats.
-
-**Loading CSV Data**
-
-1. Loading data sample
-
-    In Kafka, there is the following sample data:
-
-    ```SQL
-    kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginnin
-    1,Emily,25
-    2,Benjamin,35
-    3,Olivia,28
-    4,Alexander,60
-    5,Ava,17
-    6,William,69
-    7,Sophia,32
-    8,James,64
-    9,Emma,37
-    10,Liam,64
-    ```
-
-2. Creating table
-
-    In Doris, create the table for loading with the following syntax:
-
-    ```sql
-    CREATE TABLE testdb.test_routineload_tbl(
-        user_id            BIGINT       NOT NULL COMMENT "User ID",
-        name               VARCHAR(20)           COMMENT "User Name",
-        age                INT                   COMMENT "User Age"
-    )
-    DUPLICATE KEY(user_id)
-    DISTRIBUTED BY HASH(user_id) BUCKETS 10;
-    ```
-
-3. Creating the Routine Load job
-
-    In Doris, use the `CREATE ROUTINE LOAD` command to create the load job:
-
-    ```sql
-    CREATE ROUTINE LOAD testdb.example_routine_load_csv ON test_routineload_tbl
-    COLUMNS TERMINATED BY ",",
-    COLUMNS(user_id, name, age)
-    FROM KAFKA(
-        "kafka_broker_list" = "192.168.88.62:9092",
-        "kafka_topic" = "test-routine-load-csv",
-        "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-    );
-    ```
-
-**Loading** **JSON** **Data**
-
-1. Loading sample data
-
-    In Kafka, there is the following sample data:
-
-    ```sql
-    kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-json --from-beginning
-    ```
-
-2. Creating table
-
-    In Doris, create the table for loading with the following syntax:
-
-    ```sql
-    CREATE TABLE testdb.test_routineload_tbl(
-        user_id            BIGINT       NOT NULL COMMENT "User ID",
-        name               VARCHAR(20)           COMMENT "User Name",
-        age                INT                   COMMENT "User Age"
-    )
-    DUPLICATE KEY(user_id)
-    DISTRIBUTED BY HASH(user_id) BUCKETS 10;
-    ```
-
-3. Creating the Routine Load job
-
-    In Doris, use the `CREATE ROUTINE LOAD` command to create the job:
-
-    ```sql
-    CREATE ROUTINE LOAD testdb.example_routine_load_json ON test_routineload_tbl
-    COLUMNS(user_id, name, age)
-    PROPERTIES(
-        "format"="json",
-        "jsonpaths"="[\"$.user_id\",\"$.name\",\"$.age\"]"
-    )
-    FROM KAFKA(
-        "kafka_broker_list" = "192.168.88.62:9092"
-    );
-    ```
-
-### Viewing Status
-
-In Doris, you can check the status of Routine Load jobs and tasks using the following methods:
-
-- Load Jobs: Used to view information about load tasks, such as the target table, number of subtasks, load delay status, load configuration, and load results.
-
-- Load Tasks: Used to view the status of individual load tasks, including task ID, transaction status, task status, execution start time, and BE (Backend) node assignment.
-
-**01 Viewing Running Jobs**
-
-You can use the `SHOW ROUTINE LOAD` command to check the status of jobs. The `SHOW ROUTINE LOAD` command provides information about the current job, including the target table, load delay status, load configuration, and error messages.
-
-For example, to view the status of the `testdb.example_routine_load_csv` job, you can run the following command:
+## 通过指定过滤谓词来删除
 
 ```sql
-mysql> SHOW ROUTINE LOAD FOR testdb.example_routine_load\G
-*************************** 1. row ***************************
-                  Id: 12025
-                Name: example_routine_load
-          CreateTime: 2024-01-15 08:12:42
-           PauseTime: NULL
-             EndTime: NULL
-              DbName: default_cluster:testdb
-           TableName: test_routineload_tbl
-        IsMultiTable: false
-               State: RUNNING
-      DataSourceType: KAFKA
-      CurrentTaskNum: 1
-       JobProperties: {"max_batch_rows":"200000","timezone":"America/New_York","send_batch_parallelism":"1","load_to_single_tablet":"false","column_separator":"','","line_delimiter":"\n","current_concurrent_number":"1","delete":"*","partial_columns":"false","merge_type":"APPEND","exec_mem_limit":"2147483648","strict_mode":"false","jsonpaths":"","max_batch_interval":"10","max_batch_size":"104857600","fuzzy_parse":"false","partitions":"*","columnToColumnExpr":"user_id,name,age","whereExpr":"*","desired_concurrent_number":"5","precedingFilter":"*","format":"csv","max_error_number":"0","max_filter_ratio":"1.0","json_root":"","strip_outer_array":"false","num_as_string":"false"}
-DataSourceProperties: {"topic":"test-topic","currentKafkaPartitions":"0","brokerList":"192.168.88.62:9092"}
-    CustomProperties: {"kafka_default_offsets":"OFFSET_BEGINNING","group.id":"example_routine_load_73daf600-884e-46c0-a02b-4e49fdf3b4dc"}
-           Statistic: {"receivedBytes":28,"runningTxns":[],"errorRows":0,"committedTaskNum":3,"loadedRows":3,"loadRowsRate":0,"abortedTaskNum":0,"errorRowsAfterResumed":0,"totalRows":3,"unselectedRows":0,"receivedBytesRate":0,"taskExecuteTimeMs":30069}
-            Progress: {"0":"2"}
-                 Lag: {"0":0}
-ReasonOfStateChanged:
-        ErrorLogUrls:
-            OtherMsg:
-                User: root
-             Comment:
-1 row in set (0.00 sec)
+DELETE FROM table_name [table_alias]
+    [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
+    WHERE column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
 ```
 
-**02 Viewing Running Tasks**
+### 必须的参数
 
-You can use the `SHOW ROUTINE LOAD TASK` command to check the status of load tasks. The `SHOW ROUTINE LOAD TASK` command provides information about the individual tasks under a specific load job, including task ID, transaction status, task status, execution start time, and BE ID.
+- table_name: 指定需要删除数据的表
 
-For example, to view the task status of the `example_routine_load_csv` job, you can run the following command:
+- column_name: 属于 table_name 的列
+
+- op: 逻辑比较操作符，可选类型包括：=, >, <, >=, <=, !=, in, not in
+
+- value | value_list: 做逻辑比较的值或值列表
+
+### 可选的参数
+
+- PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): 指定执行删除数据的分区名，如果表不存在此分区，则报错
+
+- table_alias: 表的别名
+
+### 注意事项
+
+- 使用表模型 Aggregate 时，只能指定 Key 列上的条件。
+
+- 当选定的 Key 列不存在于某个 Rollup 中时，无法进行 Delete。
+
+- 条件之间只能是“与”的关系。若希望达成“或”的关系，需要将条件分写在两个 DELETE 语句中；
+
+- 如果为分区表，需要指定分区，如果不指定，Doris 会从条件中推断出分区。两种情况下，Doris 无法从条件中推断出分区：1) 条件中不包含分区列；2) 分区列的 op 为 not in。当分区表未指定分区，或者无法从条件中推断分区的时候，需要设置会话变量 delete_without_partition 为 true，此时 Delete 会应用到所有分区。
+
+- 该语句可能会降低执行后一段时间内的查询效率。影响程度取决于语句中指定的删除条件的数量。指定的条件越多，影响越大。
+
+### 使用示例
+
+**1. 删除 my_table partition p1 中 k1 列值为 3 的数据行**
 
 ```sql
-mysql> SHOW ROUTINE LOAD TASK WHERE jobname = 'example_routine_load_csv';
-+-----------------------------------+-------+-----------+-------+---------------------+---------------------+---------+-------+----------------------+
-| TaskId                            | TxnId | TxnStatus | JobId | CreateTime          | ExecuteStartTime    | Timeout | BeId  | DataSourceProperties |
-+-----------------------------------+-------+-----------+-------+---------------------+---------------------+---------+-------+----------------------+
-| 8cf47e6a68ed4da3-8f45b431db50e466 | 195   | PREPARE   | 12177 | 2024-01-15 12:20:41 | 2024-01-15 12:21:01 | 20      | 10429 | {"4":1231,"9":2603}  |
-| f2d4525c54074aa2-b6478cf8daaeb393 | 196   | PREPARE   | 12177 | 2024-01-15 12:20:41 | 2024-01-15 12:21:01 | 20      | 12109 | {"1":1225,"6":1216}  |
-| cb870f1553864250-975279875a25fab6 | -1    | NULL      | 12177 | 2024-01-15 12:20:52 | NULL                | 20      | -1    | {"2":7234,"7":4865}  |
-| 68771fd8a1824637-90a9dac2a7a0075e | -1    | NULL      | 12177 | 2024-01-15 12:20:52 | NULL                | 20      | -1    | {"3":1769,"8":2982}  |
-| 77112dfea5e54b0a-a10eab3d5b19e565 | 197   | PREPARE   | 12177 | 2024-01-15 12:21:02 | 2024-01-15 12:21:02 | 20      | 12098 | {"0":3000,"5":2622}  |
-+-----------------------------------+-------+-----------+-------+---------------------+---------------------+---------+-------+----------------------+
+DELETE FROM my_table PARTITION p1
+    WHERE k1 = 3;
 ```
 
-### Pausing Jobs
-
-You can pause an load job using the [PAUSE ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/PAUSE-ROUTINE-LOAD) command. When a job is paused, it enters the PAUSED state, but the load job is not terminated and can be resumed using the RESUME ROUTINE LOAD command.
-
-To pause the `testdb.example_routine_load_csv` load job, you can use the following command:
+**2. 删除 my_table partition p1 中 k1 列值大于等于 3 且 k2 列值为 "abc" 的数据行**
 
 ```sql
-PAUSE ROUTINE LOAD FOR testdb.example_routine_load_csv;
+DELETE FROM my_table PARTITION p1
+WHERE k1 = 3 AND k2 = "abc";
 ```
 
-### Resuming Jobs
-
-You can resume a paused load job using the [RESUME ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/RESUME-ROUTINE-LOAD) command.
-
-To resume the `testdb.example_routine_load_csv` job, you can use the following command:
+**3. 删除 my_table partition p1, p2 中 k1 列值大于等于 3 且 k2 列值为 "abc" 的数据行**
 
 ```sql
-RESUME ROUTINE LOAD FOR testdb.example_routine_load_csv;
+DELETE FROM my_table PARTITIONS (p1, p2)
+WHERE k1 = 3 AND k2 = "abc";
 ```
 
-### Modifying Jobs
-
-You can modify a created loading job using the [ALTER ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/ALTER-ROUTINE-LOAD) command. Before modifying the job, you need to pause it using the` PAUSE ROUTINE LOAD` command, and after making the modifications, you can resume it using the `RESUME ROUTINE LOAD` command.
-
-To modify the `desired_concurrent_number` parameter for the job and update the Kafka topic information, you can use the following command:
+## 通过使用 Using 子句来删除
 
 ```sql
-ALTER ROUTINE LOAD FOR testdb.example_routine_load_csv
-PROPERTIES(
-    "desired_concurrent_number" = "3"
-)
-FROM KAFKA(
-    "kafka_broker_list" = "192.168.88.60:9092",
-    "kafka_topic" = "test-topic"
-);
+DELETE FROM table_name [table_alias]
+    [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
+    [USING additional_tables]
+    WHERE condition
 ```
 
-### Canceling Jobs
+### 必须的参数
 
-You can stop and delete a Routine Load job using the [STOP ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STOP-ROUTINE-LOAD) command. Once deleted, the load job cannot be recovered and cannot be viewed using the `SHOW ROUTINE LOAD` command.
+- table_name: 指定需要删除数据的表
 
-To stop and delete the `testdb.example_routine_load_csv` load job, you can use the following command:
+- WHERE condition: 指定一个用于选择删除行的条件
+
+### 可选的参数
+
+- PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): 指定执行删除数据的分区名，如果表不存在此分区，则报错
+
+- table_alias: 表的别名
+
+### 注意事项
+
+此种形式只能在 UNIQUE KEY 模型表上使用
+
+- 只能在表模型 UNIQUE Key 表模型上使用，只能指定 key 列上的条件。
+
+### 使用示例
+
+使用`t2`和`t3`表连接的结果，删除`t1`中的数据，删除的表只支持 unique 模型
+
+```sql
+-- 创建 t1, t2, t3 三张表
+CREATE TABLE t1
+  (id INT, c1 BIGINT, c2 STRING, c3 DOUBLE, c4 DATE)
+UNIQUE KEY (id)
+DISTRIBUTED BY HASH (id)
+PROPERTIES('replication_num'='1', "function_column.sequence_col" = "c4");
+
+CREATE TABLE t2
+  (id INT, c1 BIGINT, c2 STRING, c3 DOUBLE, c4 DATE)
+DISTRIBUTED BY HASH (id)
+PROPERTIES('replication_num'='1');
+
+CREATE TABLE t3
+  (id INT)
+DISTRIBUTED BY HASH (id)
+PROPERTIES('replication_num'='1');
+
+-- 插入数据
+INSERT INTO t1 VALUES
+  (1, 1, '1', 1.0, '2000-01-01'),
+  (2, 2, '2', 2.0, '2000-01-02'),
+  (3, 3, '3', 3.0, '2000-01-03');
+
+INSERT INTO t2 VALUES
+  (1, 10, '10', 10.0, '2000-01-10'),
+  (2, 20, '20', 20.0, '2000-01-20'),
+  (3, 30, '30', 30.0, '2000-01-30'),
+  (4, 4, '4', 4.0, '2000-01-04'),
+  (5, 5, '5', 5.0, '2000-01-05');
+
+INSERT INTO t3 VALUES
+  (1),
+  (4),
+  (5);
+
+-- 删除 t1 中的数据
+DELETE FROM t1
+  USING t2 INNER JOIN t3 ON t2.id = t3.id
+  WHERE t1.id = t2.id;
+```
+
+预期结果为，删除了`t1`表`id`为`1`的列
+
+```Plain
++----+----+----+--------+------------+
+| id | c1 | c2 | c3     | c4         |
++----+----+----+--------+------------+
+| 2  | 2  | 2  |    2.0 | 2000-01-02 |
+| 3  | 3  | 3  |    3.0 | 2000-01-03 |
++----+----+----+--------+------------+
+```
+
+## 结果返回
+
+Delete 命令是一个 SQL 命令，返回结果是同步的，分为以下几种：
+
+### 执行成功
+
+如果 Delete 顺利执行完成并可见，将返回下列结果，`Query OK`表示成功
+
+```sql
+mysql> delete from test_tbl PARTITION p1 where k1 = 1;
+Query OK, 0 rows affected (0.04 sec)
+{'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'VISIBLE', 'txnId':'4005'}
+```
+
+### 提交成功，但未可见
+
+Doris 的事务提交分为两步：提交和发布版本，只有完成了发布版本步骤，结果才对用户是可见的。若已经提交成功了，那么就可以认为最终一定会发布成功，Doris 会尝试在提交完后等待发布一段时间，如果超时后即使发布版本还未完成也会优先返回给用户，提示用户提交已经完成。若如果 Delete 已经提交并执行，但是仍未发布版本和可见，将返回下列结果
+
+```sql
+mysql> delete from test_tbl PARTITION p1 where k1 = 1;
+Query OK, 0 rows affected (0.04 sec)
+{'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'COMMITTED', 'txnId':'4005', 'err':'delete job is committed but may be taking effect later' }
+```
+
+结果会同时返回一个 json 字符串：
+
+- `affected rows`：表示此次删除影响的行，由于 Doris 的删除目前是逻辑删除，因此对于这个值是恒为 0；
+
+- `label`：自动生成的 label，是该导入作业的标识。每个导入作业，都有一个在单 Database 内部唯一的 Label；
+
+- `status`：表示数据删除是否可见，如果可见则显示`VISIBLE`，如果不可见则显示`COMMITTED`；
+
+- `txnId`：这个 Delete job 对应的事务 id；
+
+- `err`：字段会显示一些本次删除的详细信息。
+
+### 提交失败，事务取消
+
+如果 Delete 语句没有提交成功，将会被 Doris 自动中止，返回下列结果
+
+```sql
+mysql> delete from test_tbl partition p1 where k1 > 80;
+ERROR 1064 (HY000): errCode = 2, detailMessage = {错误原因}
+```
+
+比如说一个超时的删除，将会返回 `timeout` 时间和未完成的`(tablet=replica)`
+
+```sql
+mysql> delete from test_tbl partition p1 where k1 > 80;
+ERROR 1064 (HY000): errCode = 2, detailMessage = failed to delete replicas from job: 4005, Unfinished replicas:10000=60000, 10001=60000, 10002=60000
+```
+
+### 总结
+
+对于 Delete 操作返回结果的正确处理逻辑为：
+
+- 如果返回结果为`ERROR 1064 (HY000)`，则表示删除失败；
+
+- 如果返回结果为`Query OK`，则表示删除执行成功；
+
+  - 如果`status`为`COMMITTED`，表示数据仍不可见，用户可以稍等一段时间再用`show delete`命令查看结果；
+
+  - 如果`status`为`VISIBLE`，表示数据删除成功。
+
+## 相关 FE 配置
+
+**TIMEOUT 配置**
+
+总体来说，Doris 的删除作业的超时时间计算规则为如下（单位：秒）：
+
+```Plain
+TIMEOUT = MIN(delete_job_max_timeout_second, MAX(30, tablet_delete_timeout_second * tablet_num))
+```
+
+- tablet_delete_timeout_second
+
+  Delete 自身的超时时间是受指定分区下 Tablet 的数量弹性改变的，此项配置为平均一个 Tablet 所贡献的 `timeout` 时间，默认值为 2。
+
+  假设此次删除所指定分区下有 5 个 tablet，那么可提供给 delete 的 timeout 时间为 10 秒，由于低于最低超时时间 30 秒，因此最终超时时间为 30 秒。
+
+- query_timeout
+
+  因为 Delete 本身是一个 SQL 命令，因此删除语句也会受 Session 限制，`timeout` 还受 Session 中的`query_timeout`值影响，可以通过`SET query_timeout = xxx`来增加超时时间，单位是秒。
+
+**IN 谓词配置**
+
+- `max_allowed_in_element_num_of_delete`
+
+  如果用户在使用 in 谓词时需要占用的元素比较多，用户可以通过此项调整允许携带的元素上限，默认值为 1024。
+
+## 查看历史记录
+
+用户可以通过 show delete 语句查看历史上已执行完成的删除记录。
+
+语法如下
+
+```sql
+SHOW DELETE [FROM db_name]
+```
+
+使用示例
+
+```sql
+mysql> show delete from test_db;
++-----------+---------------+---------------------+-----------------+----------+
+| TableName | PartitionName | CreateTime          | DeleteCondition | State    |
++-----------+---------------+---------------------+-----------------+----------+
+| empty_tbl | p3            | 2020-04-15 23:09:35 | k1 EQ "1"       | FINISHED |
+| test_tbl  | p4            | 2020-04-15 23:09:53 | k1 GT "80"      | FINISHED |
++-----------+---------------+---------------------+-----------------+----------+
+2 rows in set (0.00 sec)
+```
+可以通过 [STOP ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STOP-ROUTINE-LOAD) 命令停止并删除 Routine Load 导入作业。删除后的导入作业无法被恢复，也无法通过 SHOW ROUTINE LOAD 命令查看。
+
+可以通过以下命令停止并删除导入作业 testdb.example_routine_load_csv：
 
 ```sql
 STOP ROUTINE LOAD FOR testdb.example_routine_load_csv;
 ```
 
-## Reference Manual
+## 参考手册
 
-### Load Commands
+### 导入命令
 
-The syntax for creating a Routine Load persistent load job is as follows:
+创建一个 Routine Load 常驻导入作业语法如下：
 
 ```sql
 CREATE ROUTINE LOAD [<db_name>.]<job_name> [ON <tbl_name>]
@@ -294,106 +306,106 @@ FROM KAFKA [data_source_properties]
 [COMMENT "<comment>"]
 ```
 
-The modules for creating a loading job are explained as follows:
+创建导入作业的模块说明如下：
 
-| Module                 | Description                                                  |
+| 模块                   | 说明                                                         |
 | ---------------------- | ------------------------------------------------------------ |
-| db_name                | Specifies the name of the database for creating the loading task. |
-| job_name               | Specifies the name of the created loading job. The job name must be unique within the same database. |
-| tbl_name               | Specifies the name of the table to be loaded. This parameter is optional. If not specified, the dynamic table mode will be used, where Kafka data should contain the table name information. |
-| merge_type             | Specifies the data merge type. The default value is APPEND. Possible merge_type options are: <ul><li>APPEND: Append load mode</li><li>MERGE: Merge load mode</li><li>DELETE: load data as delete records</li></ul> |
-| load_properties        | Describes the load properties, including:<ul><li>colum_spearator clause</li><li>columns_mapping clause</li><li>preceding_filter clause</li><li>where_predicates clause</li><li>partitions clause</li><li>delete_on clause</li><li>order_by clause</li></ul> |
-| job_properties         | Specifies the general load parameters for Routine Load.      |
-| data_source_properties | Describes the properties of Kafka data source.               |
-| comment                | Describes any additional comments for the loading job.       |
+| db_name                | 指定创建导入任务的数据库。                                   |
+| job_name               | 指定创建的导入任务名称，同一个 database 不能有名字相同的任务。 |
+| tbl_name               | 指定需要导入的表的名称，可选参数，如果不指定，则采用动态表的方式，这个时候需要 Kafka 中的数据包含表名的信息。 |
+| merge_type             | 数据合并类型。默认值为 APPEND。<p>merge_type 有三种选项：</p> <p>- APPEND：追加导入方式；</p> <p>- MERGE：合并导入方式；</p> <p>- DELETE：导入的数据皆为需要删除的数据。</p> |
+| load_properties        | 导入描述模块，包括以下组成部分：<p>- colum_spearator 子句</p> <p>- columns_mapping 子句</p> <p>- preceding_filter 子句</p> <p>- where_predicates 子句</p> <p>- partitions 子句</p> <p>- delete_on 子句</p> <p>- order_by 子句</p> |
+| job_properties         | 用于指定 Routine Load 的通用导入参数。                       |
+| data_source_properties | 用于描述 Kafka 数据源属性。                                  |
+| comment                | 用于描述导入作业的备注信息。                                 |
 
-### Load Parameter Description
+### 导入参数说明
 
-**01 FE Configuration Parameters**
+**01 FE 配置参数**
 
 **max_routine_load_task_concurrent_num**
 
-- Default Value: 256
+- 默认值：256
 
-- Dynamic Configuration: Yes
+- 动态配置：是
 
-- FE Master Exclusive: Yes
+- FE Master 独有配置：是
 
-- Parameter Description: Limits the maximum number of concurrent subtasks for Routine Load jobs. It is recommended to keep it at the default value. Setting it too high may result in excessive concurrent tasks and resource consumption.
+- 参数描述：限制 Routine Load 的导入作业最大子并发数量。建议维持在默认值。如果设置过大，可能导致并发任务数过多，占用集群资源。
 
 **max_routine_load_task_num_per_be**
 
-- Default Value: 1024
+- 默认值：1024
 
-- Dynamic Configuration: Yes
+- 动态配置：是
 
-- FE Master Exclusive: Yes
+- FE Master 独有配置：是
 
-- Parameter Description: Limits the maximum number of concurrent Routine Load tasks per backend (BE). `max_routine_load_task_num_per_be` should be smaller than the `routine_load_thread_pool_size` parameter.
+- 参数描述：每个 BE 限制的最大并发 Routine Load 任务数。`max_routine_load_task_num_per_be` 应该小 `routine_load_thread_pool_size` 于参数。
 
 **max_routine_load_job_num**
 
-- Default Value: 100
+- 默认值：100
 
-- Dynamic Configuration: Yes
+- 动态配置：是
 
-- FE Master Exclusive: Yes
+- FE Master 独有配置：是
 
-- Parameter Description: Limits the maximum number of Routine Load jobs, including those in NEED_SCHEDULED, RUNNING, and PAUSE states.
+- 参数描述：限制最大 Routine Load 作业数，包括 NEED_SCHEDULED，RUNNING，PAUSE
 
 **max_tolerable_backend_down_num**
 
-- Default Value: 0
+- 默认值：0
 
-- Dynamic Configuration: Yes
+- 动态配置：是
 
-- FE Master Exclusive: Yes
+- FE Master 独有配置：是
 
-- Parameter Description: If any BE goes down, Routine Load cannot automatically recover. Under certain conditions, Doris can reschedule PAUSED tasks and transition them to the RUNNING state. Setting this parameter to 0 means that re-scheduling is only allowed when all BE nodes are in the alive state.
+- 参数描述：只要有一个 BE 宕机，Routine Load 就无法自动恢复。在满足某些条件时，Doris 可以将 PAUSED 的任务重新调度，转换为 RUNNING 状态。该参数为 0 表示只有所有 BE 节点都是 alive 状态踩允许重新调度。
 
 **period_of_auto_resume_min**
 
-- Default Value: 5 (minutes)
+- 默认值：5（分钟）
 
-- Dynamic Configuration: Yes
+- 动态配置：是
 
-- FE Master Exclusive: Yes
+- FE Master 独有配置：是
 
-- Parameter Description: The period for automatically resuming Routine Load.
+- 参数描述：自动恢复 Routine Load 的周期
 
-**02 BE Configuration Parameters**
+**02 BE 配置参数**
 
 **max_consumer_num_per_group**
 
-- Default Value: 3
+- 默认值：3
 
-- Dynamic Configuration: Yes
+- 动态配置：是
 
-- Description: Specifies the maximum number of consumers generated per subtask. For Kafka data sources, a consumer can consume one or multiple Kafka partitions. For example, if a task needs to consume 6 Kafka partitions, it will generate 3 consumers, with each consumer consuming 2 partitions. If there are only 2 partitions, it will generate 2 consumers, with each consumer consuming 1 partition.
+- 描述：一个子任务重最多生成几个 consumer 消费数据。对于 Kafka 数据源，一个 consumer 可能消费一个或多个 Kafka Partition。假设一个任务需要消费 6 个 Kafka Partitio，则会生成 3 个 consumer，每个 consumer 消费 2 个 partition。如果只有 2 个 partition，则只会生成 2 个 consumer，每个 consumer 消费 1 个 partition。
 
-### Load Configuration Parameters
+**03 导入配置参数**
 
-When creating a Routine Load job, you can specify the load configuration parameters for different modules using the `CREATE ROUTINE LOAD` command.
+在创建 Routine Load 作业时，可以通过 CREATE ROUTINE LOAD 命令指定不同模块的导入配置参数。
 
-**tbl_name Clause**
+**tbl_name 子句**
 
-Specifies the name of the table to be loaded. This parameter is optional.
+指定需要导入的表的名称，可选参数。
 
-If not specified, the dynamic table mode is used, which requires the data in Kafka to contain the table name information. Currently, only extracting the table name from the Value field of Kafka is supported. The format should be as follows, using JSON as an example: `table_name|{"col1": "val1", "col2": "val2"}`, where `tbl_name` is the table name and `|` is used as the separator between the table name and the table data. The same format applies to CSV data, such as `table_name|val1,val2,val3`. Note that the `table_name` here must be consistent with the table name in Doris, otherwise the load will fail. Note that dynamic tables do not support the column_mapping configuration described later.
+如果不指定，则采用动态表的方式，这个时候需要 Kafka 中的数据包含表名的信息。目前仅支持从 Kafka 的 Value 中获取动态表名，且需要符合这种格式：以 json 为例：`table_name|{"col1": "val1", "col2": "val2"}`, 其中 `tbl_name` 为表名，以 `|` 作为表名和表数据的分隔符。CSV 格式的数据也是类似的，如：`table_name|val1,val2,val3`。注意，这里的 `table_name` 必须和 Doris 中的表名一致，否则会导致导入失败。注意，动态表不支持后面介绍的 column_mapping 配置。
 
-**merge_type Clause**
+**merge_type 子句**
 
-The merge_type module specifies the type of data merging. There are three options for merge_type:
+可以通过 merge_type 模块指定数据合并的类型。merge_type 有三种选项：
 
-- APPEND: Append load mode.
+- APPEND：追加导入方式
 
-- MERGE: Merge load mode. Only applicable to Unique Key models. It needs to be used together with the [DELETE ON] module to mark the Delete Flag column.
+- MERGE：合并导入方式。仅适用于 Unique Key 模型。需要配合 [DELETE ON] 模块，以标注 Delete Flag 列
 
-- DELETE: All loaded data is data that needs to be deleted.
+- DELETE：导入的数据皆为需要删除的数据
 
-**load_properties Clause**
+**load_properties 子句**
 
-The load_properties module describes the properties of the loaded data using the following syntax:
+可以通过 load_properties 模块描述导入数据的属性，具体语法如下
 
 ```sql
 [COLUMNS TERMINATED BY <column_separator>,]
@@ -404,79 +416,77 @@ The load_properties module describes the properties of the loaded data using the
 [ORDER BY <order_by_column1>[, <order_by_column2>, <order_by_column3>, ...]]
 ```
 
-The specific parameters for each module are as follows:
+具体模块对应参数如下：
 
-| Submodule             | Parameter            | Description                                                  |
-| --------------------- | -------------------- | ------------------------------------------------------------ |
-| COLUMNS TERMINATED BY | `<column_separator>` | Specifies the column delimiter, defaulting to `\t`. For example, to specify a comma as the delimiter, use `COLUMNS TERMINATED BY ","`. When handling empty values, note the following:<ul><li>Null values should be represented as `\n`. For example, `a,\n,b` represents a null value in the middle column.</li><li>Empty strings (`''`) are treated as empty values. For example, `a,,b` represents an empty string in the middle column.</li></ul>|
-| COLUMNS               | `<column_name>`      | Specifies the corresponding column names. For example, to specify the load columns as `(k1, k2, k3)`, use `COLUMNS(k1, k2, k3)`. The COLUMNS clause can be omitted in the following cases:<ul><li>When the columns in the CSV match the table columns one by one.</li><li>When the key columns in JSON have the same names as the table columns.</li></ul> |
-|                       | `<column_mapping>`   | During the load process, column mapping can be used to filter and transform columns. For example, if the target column needs to perform a derived calculation based on a column in the data source (e.g., the target column k4 is calculated as k3 + 1 based on the k3 column), you can use `COLUMNS(k1, k2, k3, k4 = k3 + 1)`. For more details, refer to the [Data Conversion](../../../data-operate/import/load-data-convert) documentation. |
-| WHERE                 | `<where_expr>`       | Specifies the condition to filter the loaded data source. For example, to load only data where age > 30, use `WHERE age > 30`. |
-| PARTITION             | `<partition_name>`   | Specifies which partitions in the target table to load. If not specified, it will automatically load into the corresponding partitions. For example, to load partitions p1 and p2 of the target table, use `PARTITION(p1, p2)`. |
-| DELETE ON             | `<delete_expr>`      | In the MERGE load mode, using delete_expr to mark which columns need to be deleted. For example, to delete columns where age > 30 during the MERGE process, use `DELETE ON age > 30`. |
-| ORDER BY              | `<order_by_column>`  | Only effective for Unique Key models. Specifies the Sequence Column in the loaded data to ensure the order of the data. For example, when loading into a Unique Key table and specifying create_time as the Sequence Column, use `ORDER BY create_time`. For more information on Sequence Columns in Unique Key models, refer to the [Data Update/Sequence Columns](../../../data-operate/update/update-of-unique-model) |
+| 子模块                | 参数                                                         | 说明                                                         |
+| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| COLUMNS TERMINATED BY | <column_separator>                                           | 用于指定列分隔符，默认为 `\t`。例如需要指定逗号为分隔符，可以使用以下命令：`COLUMN TERMINATED BY ","`对于空值处理，需要注意以下事项：<p>- 空值（null）需要用 `\n` 表示，`a,\n,b` 数据表示中间列是一个空值（null）</p> <p>- 空字符串（''）直接将数据置空，a,,b 数据表示中间列是一个空字符串（''）</p> |
+| COLUMNS               | <column_name>                                                | 用于指定对应的列名例如需要指定导入列 `(k1, k2, k3)`，可以使用以下命令：`COLUMNS(k1, k2, k3)`在以下情况下可以缺省 COLUMNS 子句：<p>- CSV 中的列与表中的列一一对应</p> <p>- JSON 中的 key 列与表中的列名相同</p> |   
+| &nbsp;&nbsp;               | <column_mapping>      | 在导入过程中，可以通过列映射进行列的过滤和转换。如在导入的过程中，目标列需要基于数据源的某一列进行衍生计算，目标列 k4 基于 k3 列使用公式 k3+1 计算得出，需要可以使用以下命令：`COLUMNS(k1, k2, k3, k4 = k3 + 1)`详细内容可以参考[数据转换](../../import/load-data-convert) |                                                              |
+| WHERE                 | <where_expr>                                                 | 指定 where_expr 可以根据条件过滤导入的数据源。如只希望导入 age > 30 的数据源，可以使用以下命令：`WHERE age > 30` |
+| PARTITION             | <partition_name>                                             | 指定导入目标表中的哪些 partition。如果不指定，会自动导入对应的 partition 中。如希望导入目标表 p1 与 p2 分区，可以使用以下命令：`PARTITION(p1, p2)` |
+| DELETE ON             | <delete_expr>                                                | 在 MERGE 导入模式下，使用 delete_expr 标记哪些列需要被删除。如需要在 MERGE 时删除 age > 30 的列，可以使用，可以使用以下命令：`DELETE ON age > 30` |
+| ORDER BY              | <order_by_column>                                            | 进针对 Unique Key 模型生效。用于指定导入数据中的 Sequence Column 列，以保证数据的顺序。如在 Unique Key 表导入时，需要指定导入的 Sequence Column 为 create_time，可以使用以下命令：`ORDER BY create_time`针对与 Unique Key 模型 Sequence Column 列的描述，可以参考文档[ 数据更新/Sequence 列 ](../../../data-operate/update/update-of-unique-model) |
 
-**job_properties Clause**
+**job_properties 子句**
 
-The job_properties clause is used to specify the properties of a Routine Load job when creating it. The syntax is as follows:
+在创建 Routine Load 导入作业时，可以指定 job_properties 子句以指定导入作业的属性。语法如下：
 
 ```sql
 PROPERTIES ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
 ```
 
-Here are the available parameters for the job_properties clause:
+job_properties 子句具体参数选项如下：
 
-| Parameter                   | Description                                                  |
-| --------------------------- | ------------------------------------------------------------ |
-| desired_concurrent_number   | <ul><li>Default value: 256</li><li>Description: Specifies the desired concurrency for a single load subtask (load task). It modifies the expected number of load subtasks for a Routine Load job. The actual concurrency during the load process may not be equal to the desired concurrency. The actual concurrency is determined based on factors such as the number of nodes in the cluster, the load on the cluster, and the characteristics of the data source. The actual number of loading subtasks can be calculated using the following formula:</li><li>`min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`</li> <li>where:</li><li>topic_partition_num: The number of partitions in the Kafka topic</li><li>desired_concurrent_number: The parameter value set</li><li>max_routine_load_task_concurrent_num: The parameter for setting the maximum task parallelism for Routine Load in the FE</li></ul> |
-| max_batch_interval          | The maximum running time for each subtask, in seconds. Must be greater than 0, with a default value of 60s. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
-| max_batch_rows              | The maximum number of rows read by each subtask. Must be greater than or equal to 200,000. The default value is 20,000,000. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
-| max_batch_size              | The maximum number of bytes read by each subtask. The unit is bytes, and the range is from 100MB to 10GB. The default value is 1G. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
-| max_error_number            | The maximum number of error rows allowed within a sampling window. Must be greater than or equal to 0. The default value is 0, which means no error rows are allowed. The sampling window is `max_batch_rows * 10`. If the number of error rows within the sampling window exceeds `max_error_number`, the regular job will be paused and manual intervention is required to check for data quality issues using the [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) command and `ErrorLogUrls`. Rows filtered out by the WHERE condition are not counted as error rows. |
-| strict_mode                 | Whether to enable strict mode. The default value is disabled. Strict mode applies strict filtering to type conversions during the load process. If enabled, non-null original data that results in a NULL after type conversion will be filtered out. The filtering rules in strict mode are as follows:<ul><li>Derived columns (generated by functions) are not affected by strict mode.</li><li>If a column's type needs to be converted, any data with an incorrect data type will be filtered out. You can check the filtered columns due to data type errors in the `ErrorLogUrls` of [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD).</li><li>For columns with range restrictions, if the original data can be successfully converted but falls outside the declared range, strict mode does not affect it. For example, if the type is decimal(1,0) and the original data is 10, it can be converted but is not within the range declared for the column. Strict mode does not affect this type of data. For more details, see [Strict Mode](../../../data-operate/import/error-data-handling#maximum-error-rate).</li></ul> |
-| timezone                    | Specifies the time zone used by the load job. The default is to use the session's timezone parameter. This parameter affects the results of all timezone-related functions involved in the load. |
-| format                      | Specifies the data format for the load. The default is CSV, and JSON format is supported. |
-| jsonpaths                   | When the data format is JSON, jsonpaths can be used to specify the JSON paths to extract data from nested structures. It is a JSON array of strings, where each string represents a JSON path. |
-| json_root                 | When importing JSON format data, you can specify the root node of the JSON data through json_root. Doris will extract and parse elements from the root node. Default is empty. For example, specify the JSON root node with: `"json_root" = "$.RECORDS"` |
-| strip_outer_array         | When importing JSON format data, if strip_outer_array is true, it indicates that the JSON data is presented as an array, and each element in the data will be treated as a row. Default value is false. Typically, JSON data in Kafka might be represented as an array with square brackets `[]` in the outermost layer. In this case, you can specify `"strip_outer_array" = "true"` to consume Topic data in array mode. For example, the following data will be parsed into two rows: `[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
-| send_batch_parallelism    | Used to set the parallelism of sending batch data. If the parallelism value exceeds the `max_send_batch_parallelism_per_job` in BE configuration, the coordinating BE will use the value of `max_send_batch_parallelism_per_job`. |
-| load_to_single_tablet     | Supports importing data to only one tablet in the corresponding partition per task. Default value is false. This parameter can only be set when importing data to OLAP tables with random bucketing. |
-| partial_columns           | Specifies whether to enable partial column update feature. Default value is false. This parameter can only be set when the table model is Unique and uses Merge on Write. Multi-table streaming does not support this parameter. For details, refer to [Partial Column Update](../../../data-operate/update/update-of-unique-model) |
-| max_filter_ratio          | The maximum allowed filter ratio within the sampling window. Must be between 0 and 1 inclusive. Default value is 1.0, indicating any error rows can be tolerated. The sampling window is `max_batch_rows * 10`. If the ratio of error rows to total rows within the sampling window exceeds `max_filter_ratio`, the routine job will be suspended and require manual intervention to check data quality issues. Rows filtered by WHERE conditions are not counted as error rows. |
-| enclose                   | Specifies the enclosing character. When CSV data fields contain line or column separators, a single-byte character can be specified as an enclosing character for protection to prevent accidental truncation. For example, if the column separator is "," and the enclosing character is "'", the data "a,'b,c'" will have "b,c" parsed as one field. |
-| escape                    | Specifies the escape character. Used to escape characters in fields that are identical to the enclosing character. For example, if the data is "a,'b,'c'", the enclosing character is "'", and you want "b,'c" to be parsed as one field, you need to specify a single-byte escape character, such as "\", and modify the data to "a,'b,\'c'". |
+| 参数                      | 说明                                                         |
+| ------------------------- | ------------------------------------------------------------ |
+| desired_concurrent_number | <p>默认值：5 </p> <p>参数描述：单个导入子任务（load task）期望的并发度，修改 Routine Load 导入作业切分的期望导入子任务数量。在导入过程中，期望的子任务并发度可能不等于实际并发度。实际的并发度会根据集群的节点数、负载情况，以及数据源的情况综合考虑，使用公式以下可以计算出实际的导入子任务数：</p> <p>` min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`，其中：</p> <p>- topic_partition_num 表示 Kafka Topic 的 parititon 数量</p> <p>- desired_concurrent_number 表示设置的参数大小</p> <p>- max_routine_load_task_concurrent_num 为 FE 中设置 Routine Load 最大任务并行度的参数</p> |
+| max_batch_interval        | 每个子任务的最大运行时间，单位是秒，必须大于 0，默认值为 60(s)。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
+| max_batch_rows            | 每个子任务最多读取的行数。必须大于等于 200000。默认是 20000000。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
+| max_batch_size            | 每个子任务最多读取的字节数。单位是字节，范围是 100MB 到 1GB。默认是 1G。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
+| max_error_number          | 采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数大于 `max_error_number`，则会导致例行作业被暂停，需要人工介入检查数据质量问题，通过 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) 命令中 `ErrorLogUrls` 检查数据的质量问题。被 where 条件过滤掉的行不算错误行。 |
+| strict_mode               | 是否开启严格模式，默认为关闭。严格模式表示对于导入过程中的列类型转换进行严格过滤。如果开启后，非空原始数据的列类型变换如果结果为 NULL，则会被过滤。<p>严格模式过滤策略如下：</p> <p>- 某衍生列（由函数转换生成而来），Strict Mode 对其不产生影响</p> <p>- 当列类型需要转换，错误的数据类型将被过滤掉，在 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) 的 `ErrorLogUrls` 中查看因为数据类型错误而被过滤掉的列</p> <p>- 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict mode 对其也不产生影响。例如：如果类型是 decimal(1,0), 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。详细内容参考[严格模式](../../import/error-data-handling/#严格模式)。</p> |
+| timezone                  | 指定导入作业所使用的时区。默认为使用 Session 的 timezone 参数。该参数会影响所有导入涉及的和时区有关的函数结果。 |
+| format                    | 指定导入数据格式，默认是 CSV，支持 JSON 格式。               |
+| jsonpaths                 | 当导入数据格式为 JSON 时，可以通过 jsonpaths 指定抽取 JSON 数据中的字段。例如通过以下命令指定导入 jsonpaths：`"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
+| json_root                 | 当导入数据格式为 JSON 时，可以通过 json_root 指定 JSON 数据的根节点。Doris 将通过 json_root 抽取根节点的元素进行解析。默认为空。例如通过一下命令指定导入 JSON 根节点：`"json_root" = "$.RECORDS"` |
+| strip_outer_array         | 当导入数据格式为 json 时，strip_outer_array 为 true 表示 JSON 数据以数组的形式展现，数据中的每一个元素将被视为一行数据。默认值是 false。通常情况下，Kafka 中的 JSON 数据可能以数组形式表示，即在最外层中包含中括号`[]`，此时，可以指定 `"strip_outer_array" = "true"`，以数组模式消费 Topic 中的数据。如以下数据会被解析成两行：`[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
+| send_batch_parallelism    | 用于设置发送批量数据的并行度。如果并行度的值超过 BE 配置中的 `max_send_batch_parallelism_per_job`，那么作为协调点的 BE 将使用 `max_send_batch_parallelism_per_job` 的值。 |
+| load_to_single_tablet     | 支持一个任务只导入数据到对应分区的一个 tablet，默认值为 false，该参数只允许在对带有 random 分桶的 olap 表导数的时候设置。 |
+| partial_columns           | 指定是否开启部分列更新功能。默认值为 false。该参数只允许在表模型为 Unique 且采用 Merge on Write 时设置。一流多表不支持此参数。具体参考文档[部分列更新](../../../data-operate/update/update-of-unique-model) |
+| max_filter_ratio          | 采样窗口内，允许的最大过滤率。必须在大于等于 0 到小于等于 1 之间。默认值是 1.0，表示可以容忍任何错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数/总行数大于 `max_filter_ratio`，则会导致例行作业被暂停，需要人工介入检查数据质量问题。被 where 条件过滤掉的行不算错误行。 |
+| enclose                   | 指定包围符。当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。 |
+| escape                    | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
 
-These parameters can be used to customize the behavior of a Routine Load job according to your specific requirements.
+**04 data_source_properties 子句**
 
-**04 data_source_properties Clause**
-
-When creating a Routine Load job, you can specify the data_source_properties clause to specify properties of the Kafka data source. The syntax is as follows:
+在创建 Routine Load 导入作业时，可以指定 data_source_properties 子句以指定 Kafka 数据源的属性。语法如下：
 
 ```sql
 FROM KAFKA ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
 ```
 
-The available options for the data_source_properties clause are as follows:
+data_source_properties 子句具体参数选项如下：
 
-| Parameter         | Description                                                  |
+| 参数              | 说明                                                         |
 | ----------------- | ------------------------------------------------------------ |
-| kafka_broker_list | Specifies the connection information for Kafka brokers. The format is `<kafka_broker_ip>:<kafka_port>`. Multiple brokers are separated by commas. For example, to specify a Broker List with the default port 9092, you can use the following command: `"kafka_broker_list" = "<broker1_ip>:9092,<broker2_ip>:9092"` |
-| kafka_topic       | Specifies the Kafka topic to subscribe to. A load job can only consume one Kafka topic. |
-| kafka_partitions  | Specifies the Kafka partitions to subscribe to. If not specified, all partitions are consumed by default. |
-| kafka_offsets     | Specifies the starting consumption offset for Kafka partitions. If a timestamp is specified, consumption starts from the nearest offset equal to or greater than that timestamp. The offset can be a specific offset greater than or equal to 0, or it can use the following formats:<ul><li>OFFSET_BEGINNING: Starts consuming from the position where there is data.</li><li>OFFSET_END: Starts consuming from the end.</li><li>Timestamp format, e.g., "2021-05-22 11:00:00"</li><li>If not specified, consumption starts from `OFFSET_END` for all partitions under the topic.</li><li>Multiple starting consumption offsets can be specified, separated by commas, such as `"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"` or `"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"`</li><li>Note that timestamp format cannot be mixed with OFFSET format.</li></ul> |
-| property          | Specifies custom Kafka parameters. This is equivalent to the "--property" parameter in the Kafka shell. When the value of a parameter is a file, the keyword "FILE:" needs to be added before the value. For creating a file, you can refer to the [CREATE FILE](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FILE) command documentation. For more supported custom parameters, you can refer to the client-side configuration options in the official [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) documentation of librdkafka. For example: `"property.client.id" = "12345"`, `"property.group.id" = "group_id_0"`, `"property.ssl.ca.location" = "FILE:ca.pem"` |
+| kafka_broker_list | 指定 Kafka 的 broker 连接信息。格式为 `<kafka_broker_ip>:<kafka port>`。多个 broker 之间以逗号分隔。例如在 Kafka Broker 中默认端口号为 9092，可以使用以下命令指定 Broker List：`"kafka_broker_list" = "<broker1_ip>:9092,<broker2_ip>:9092"` |
+| kafka_topic       | 指定要订阅的 Kafka 的 topic。一个导入作业仅能消费一个 Kafka Topic。 |
+| kafka_partitions  | 指定需要订阅的 Kafka Partition。如果不指定，则默认消费所有分区。 |
+| kafka_offsets     | 待销费的 Kakfa Partition 中起始消费点（offset）。如果指定时间，则会从大于等于该时间的最近一个 offset 处开始消费。offset 可以指定从大于等于 0 的具体 offset，也可以使用以下格式：<p>- OFFSET_BEGINNING: 从有数据的位置开始订阅。</p> <p>- OFFSET_END: 从末尾开始订阅。</p> <p>- 时间格式，如："2021-05-22 11:00:00"</p> <p>如果没有指定，则默认从 `OFFSET_END` 开始订阅 topic 下的所有 partition。</p> <p>可以指定多个其实消费点，使用逗号分隔，如：`"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"`或者`"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"`</p> <p>注意，时间格式不能和 OFFSET 格式混用。</p> |
+| property          | 指定自定义 kafka 参数。功能等同于 kafka shell 中 "--property" 参数。当参数的 Value 为一个文件时，需要在 Value 前加上关键词："FILE:"。创建文件可以参考 [CREATE FILE](../../../sql-manual/sql-statements/security/CREATE-FILE) 命令文档。更多支持的自定义参数，可以参考 librdkafka 的官方 [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) 文档中，client 端的配置项。如：`"property.client.id" = "12345"``"property.group.id" = "group_id_0"``"property.ssl.ca.location" = "FILE:ca.pem"` |
 
-By configuring the Kafka property parameter in the `data_source_properties`, you can set up security access options. Currently, Doris supports various Kafka security protocols such as plaintext (default), SSL, PLAIN, and Kerberos.
+通过配置 data_source_properties 中的 kafka property 参数，可以配置安全访问选项。目前 Doris 支持多种 Kafka 安全协议，如 plaintext（默认）、SSL、PLAIN、Kerberos 等。
 
-### Load Status
+### 导入状态
 
-You can check the status of a load job using the `SHOW ROUTINE LOAD` command. The syntax for the command is as follows:
+通过 SHOW ROUTINE LOAD 命令可以查看导入作业的状态，具体语法如下：
 
 ```sql
 SHOW [ALL] ROUTINE LOAD [FOR jobName];
 ```
 
-For example, executing `SHOW ROUTINE LOAD` will return a result set similar to the following:
+如通过 SHOW ROUTINE LOAD 会返回以下结果集示例：
 
 ```sql
 mysql> SHOW ROUTINE LOAD FOR testdb.example_routine_load\G
@@ -506,36 +516,36 @@ ReasonOfStateChanged:
 1 row in set (0.00 sec)
 ```
 
-The columns in the result set provide the following information:
+具体显示结果说明如下：
 
-| Column Name          | Description                                                  |
+| 结果列               | 列说明                                                       |
 | -------------------- | ------------------------------------------------------------ |
-| Id                   | The ID of the load job, automatically generated by Doris.    |
-| Name                 | The name of the load job.                                    |
-| CreateTime           | The time when the job was created.                           |
-| PauseTime            | The time when the job was last paused.                       |
-| EndTime              | The time when the job ended.                                 |
-| DbName               | The name of the associated database.                         |
-| TableName            | The name of the associated table. For multi-table scenarios, it is displayed as "multi-table". |
-| IsMultiTbl           | Indicates whether it is a multi-table load.                  |
-| State                | The running state of the job, which can have five values: <ul><li> NEED_SCHEDULE: The job is waiting to be scheduled. After the CREATE ROUTINE LOAD or RESUME ROUTINE LOAD command, the job enters the NEED_SCHEDULE state.</li><li>RUNNING: The job is currently running.</li><li>PAUSED: The job has been paused and can be resumed using the RESUME ROUTINE LOAD command.</li><li>STOPPED: The job has finished and cannot be restarted.</li><li>CANCELLED: The job has been canceled.</li></ul> |
-| DataSourceType       | The type of data source, which is KAFKA, in this example.    |
-| CurrentTaskNum       | The current number of subtasks.                              |
-| JobProperties        | Details of the job configuration.                            |
-| DataSourceProperties | Details of the data source configuration.                    |
-| CustomProperties     | Custom configuration properties.                             |
-| Statistic            | Statistics of the job's running status.                      |
-| Progress             | The job's progress. For Kafka data sources, it shows the offset consumed for each partition. For example, `{"0":"2"}` indicates that partition 0 has consumed 2 offsets. |
-| Lag                  | The lag of the job. For Kafka data sources, it shows the consumption lag for each partition. For example, `{"0":10}` indicates a consumption lag of 10 for partition 0. |
-| ReasonOfStateChanged | The reason for the state change of jobs.                     |
-| ErrorLogUrls         | The URL(s) to view the filtered low-quality data.            |
-| OtherMsg             | Other error messages.                                        |
+| Id                   | 作业 ID。由 Doris 自动生成。                                 |
+| Name                 | 作业名称。                                                   |
+| CreateTime           | 作业创建时间。                                               |
+| PauseTime            | 最近一次作业暂停时间。                                       |
+| EndTime              | 作业结束时间。                                               |
+| DbName               | 对应数据库名称                                               |
+| TableName            | 对应表名称。多表的情况下由于是动态表，因此不显示具体表名，会显示 multi-table。 |
+| IsMultiTbl           | 是是否为多表                                                 |
+| State                | 作业运行状态，有 5 种状态：<p>- NEED_SCHEDULE：作业等待被调度。在 CREATE ROUTINE LOAD 或 RESUME ROUTINE LOAD 后，作业会先进入到 NEED_SCHEDULE 状态；</p> <p>- RUNNING：作业运行中；</p> <p>- PAUSED：作业被暂停，可以通过 RESUME ROUTINE LOAD 恢复导入作业；</p> <p>- STOPPED：作业已结束，无法被重启；</p> <p>- CANCELLED：作业已取消。</p> |
+| DataSourceType       | 数据源类型：KAFKA。                                          |
+| CurrentTaskNum       | 当前子任务数量。                                             |
+| JobProperties        | 作业配置详情。                                               |
+| DataSourceProperties | 数据源配置详情。                                             |
+| CustomProperties     | 自定义配置。                                                 |
+| Statistic            | 作业运行状态统计信息。                                       |
+| Progress             | 作业运行进度。对于 Kafka 数据源，显示每个分区当前已消费的 offset。如 `{"0":"2"}` 表示 Kafka 分区 0 的消费进度为 2。 |
+| Lag                  | 作业延迟状态。对于 Kafka 数据源，显示每个分区的消费延迟。如 `{"0":10}` 表示 Kafka 分区 0 的消费延迟为 10。 |
+| ReasonOfStateChanged | 作业状态变更的原因                                           |
+| ErrorLogUrls         | 被过滤的质量不合格的数据的查看地址                           |
+| OtherMsg             | 其他错误信息                                                 |
 
-## Load example
+## 导入示例
 
-### Setting the Maximum Error Tolerance
+### 设置导入最大容错率
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     1,Benjamin,18
@@ -543,7 +553,7 @@ The columns in the result set provide the following information:
     3,Alexander,dirty_data
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test01 (
@@ -555,7 +565,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
@@ -574,7 +584,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test01;
@@ -587,9 +597,9 @@ The columns in the result set provide the following information:
     2 rows in set (0.01 sec)
     ```
 
-### Consuming Data from a Specified Offset
+### 从指定消费点消费数据
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     1,Benjamin,18
@@ -600,7 +610,7 @@ The columns in the result set provide the following information:
     6,Charlotte,28
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test02 (
@@ -612,7 +622,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job02 ON routine_test02
@@ -626,7 +636,7 @@ The columns in the result set provide the following information:
             );
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test02;
@@ -640,9 +650,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-### Specifying the Consumer Group's group.id and client.id
+### 指定 Consumer Group 的 group.id 与 client.id
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     1,Benjamin,18
@@ -650,7 +660,7 @@ The columns in the result set provide the following information:
     3,Alexander,22
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test03 (
@@ -662,7 +672,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job03 ON routine_test03
@@ -677,7 +687,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test03;
@@ -691,9 +701,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-### Setting load filtering conditions
+### 设置导入过滤条件
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     1,Benjamin,18
@@ -704,7 +714,7 @@ The columns in the result set provide the following information:
     6,Charlotte,28
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test04 (
@@ -716,7 +726,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job04 ON routine_test04
@@ -730,7 +740,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test04;
@@ -744,9 +754,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-### Loading specified partition data
+### 导入指定分区数据
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     1,Benjamin,18,2024-02-04 10:00:00
@@ -754,7 +764,7 @@ The columns in the result set provide the following information:
     3,Alexander,22,2024-02-06 12:00:00
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test05 (
@@ -771,7 +781,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job05 ON routine_test05
@@ -785,7 +795,7 @@ The columns in the result set provide the following information:
             );
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test05;
@@ -797,9 +807,9 @@ The columns in the result set provide the following information:
     1 rows in set (0.01 sec)
     ```
 
-### Setting Time Zone for load
+### 设置导入时区
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     1,Benjamin,18,2024-02-04 10:00:00
@@ -807,7 +817,7 @@ The columns in the result set provide the following information:
     3,Alexander,22,2024-02-06 12:00:00
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test06 (
@@ -820,7 +830,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job06 ON routine_test06
@@ -837,7 +847,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test06;
@@ -850,35 +860,34 @@ The columns in the result set provide the following information:
     +------+-------------+------+---------------------+
     3 rows in set (0.00 sec)
     ```
+### 设置 merge_type
 
-### Setting merge_type
+**指定 merge_type 进行 delete 操作**
 
-**Specify merge_type for delete operation**
+1. 导入数据样例
 
-1. Load sample data:
+```sql
+3,Alexander,22
+5,William,26
+```
 
-    ```sql
-    3,Alexander,22
-    5,William,26
-    ```
+导入前表中数据如下
 
-    Table data before load:
+```sql
+mysql> SELECT * FROM routine_test07;
++------+----------------+------+
+| id   | name           | age  |
++------+----------------+------+
+|    1 | Benjamin       |   18 |
+|    2 | Emily          |   20 |
+|    3 | Alexander      |   22 |
+|    4 | Sophia         |   24 |
+|    5 | William        |   26 |
+|    6 | Charlotte      |   28 |
++------+----------------+------+
+```
 
-    ```sql
-    mysql> SELECT * FROM routine_test07;
-    +------+----------------+------+
-    | id   | name           | age  |
-    +------+----------------+------+
-    |    1 | Benjamin       |   18 |
-    |    2 | Emily          |   20 |
-    |    3 | Alexander      |   22 |
-    |    4 | Sophia         |   24 |
-    |    5 | William        |   26 |
-    |    6 | Charlotte      |   28 |
-    +------+----------------+------+
-    ```
-
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test07 (
@@ -890,7 +899,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job07 ON routine_test07
@@ -904,7 +913,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> SELECT * FROM routine_test07;
@@ -918,37 +927,37 @@ The columns in the result set provide the following information:
     +------+----------------+------+
     ```
 
-**Specify merge_type for merge operation**
+**指定 merge_typpe 进行 merge 操作**
 
-1. Load sample data:
+1. 导入数据样例
 
-    ```sql
-    1,xiaoxiaoli,28
-    2,xiaoxiaowang,30
-    3,xiaoxiaoliu,32
-    4,dadali,34
-    5,dadawang,36
-    6,dadaliu,38
-    ```
+```sql
+1,xiaoxiaoli,28
+2,xiaoxiaowang,30
+3,xiaoxiaoliu,32
+4,dadali,34
+5,dadawang,36
+6,dadaliu,38
+```
 
-    Table data before load:
+导入前表中数据如下：
 
-    ```sql
-    mysql> SELECT * FROM routine_test08;
-    +------+----------------+------+
-    | id   | name           | age  |
-    +------+----------------+------+
-    |    1 | Benjamin       |   18 |
-    |    2 | Emily          |   20 |
-    |    3 | Alexander      |   22 |
-    |    4 | Sophia         |   24 |
-    |    5 | William        |   26 |
-    |    6 | Charlotte      |   28 |
-    +------+----------------+------+
-    6 rows in set (0.01 sec)
-    ```
+```sql
+mysql> SELECT * FROM routine_test08;
++------+----------------+------+
+| id   | name           | age  |
++------+----------------+------+
+|    1 | Benjamin       |   18 |
+|    2 | Emily          |   20 |
+|    3 | Alexander      |   22 |
+|    4 | Sophia         |   24 |
+|    5 | William        |   26 |
+|    6 | Charlotte      |   28 |
++------+----------------+------+
+6 rows in set (0.01 sec)
+```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test08 (
@@ -960,7 +969,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job08 ON routine_test08
@@ -975,36 +984,36 @@ The columns in the result set provide the following information:
             );   
     ```
 
-4. Load result:
+4. 导入结果
 
-    ```sql
-    mysql> SELECT * FROM routine_test08;
-    +------+-------------+------+
-    | id   | name        | age  |
-    +------+-------------+------+
-    |    1 | xiaoxiaoli  |   28 |
-    |    3 | xiaoxiaoliu |   32 |
-    |    4 | dadali      |   34 |
-    |    5 | dadawang    |   36 |
-    |    6 | dadaliu     |   38 |
-    +------+-------------+------+
-    5 rows in set (0.00 sec)
-    ```
+```sql
+mysql> SELECT * FROM routine_test08;
++------+-------------+------+
+| id   | name        | age  |
++------+-------------+------+
+|    1 | xiaoxiaoli  |   28 |
+|    3 | xiaoxiaoliu |   32 |
+|    4 | dadali      |   34 |
+|    5 | dadawang    |   36 |
+|    6 | dadaliu     |   38 |
++------+-------------+------+
+5 rows in set (0.00 sec)
+```
 
-**Specifying the sequence column to be merged**
+**指定导入需要 merge 的 sequence 列**
 
-1. Load sample data:
+1. 导入数据样例
 
-    ```sql
-    1,xiaoxiaoli,28
-    2,xiaoxiaowang,30
-    3,xiaoxiaoliu,32
-    4,dadali,34
-    5,dadawang,36
-    6,dadaliu,38
-    ```
+```sql
+1,xiaoxiaoli,28
+2,xiaoxiaowang,30
+3,xiaoxiaoliu,32
+4,dadali,34
+5,dadawang,36
+6,dadaliu,38
+```
 
-    Data in the table before loading:
+导入前表中数据如下：
 
     ```sql
     mysql> SELECT * FROM routine_test09;
@@ -1021,7 +1030,7 @@ The columns in the result set provide the following information:
     6 rows in set (0.01 sec)
     ```
 
-2. Create table
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test08 (
@@ -1036,7 +1045,7 @@ The columns in the result set provide the following information:
     );
     ```
 
-3. Load Command
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job09 ON routine_test09
@@ -1058,7 +1067,7 @@ The columns in the result set provide the following information:
             );   
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> SELECT * FROM routine_test09;
@@ -1074,9 +1083,9 @@ The columns in the result set provide the following information:
     5 rows in set (0.00 sec)
     ```
 
-### Load with column mapping and derived column calculation
+### 导入完成列影射与衍生列计算
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     1,Benjamin,18
@@ -1084,7 +1093,7 @@ The columns in the result set provide the following information:
     3,Alexander,22
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test10 (
@@ -1097,7 +1106,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job10 ON routine_test10
@@ -1111,7 +1120,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> SELECT * FROM routine_test10;
@@ -1125,9 +1134,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-### Load with enclosed data
+### 导入包含包围符的数据
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     1,"Benjamin",18
@@ -1135,7 +1144,7 @@ The columns in the result set provide the following information:
     3,"Alexander",22
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test11 (
@@ -1148,7 +1157,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job11 ON routine_test11
@@ -1166,7 +1175,7 @@ The columns in the result set provide the following information:
             );
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> SELECT * FROM routine_test11;
@@ -1180,11 +1189,11 @@ The columns in the result set provide the following information:
     3 rows in set (0.02 sec)
     ```
 
-### JSON Format Load
+### JSON 格式导入
 
-**Load JSON format data in simple mode**
+**以简单模式导入 JSON 格式数据**
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18 }
@@ -1192,7 +1201,7 @@ The columns in the result set provide the following information:
     { "id" : 3, "name" : "Alexander", "age":22 }
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test12 (
@@ -1204,7 +1213,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
@@ -1220,7 +1229,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test12;
@@ -1234,9 +1243,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.02 sec)
     ```
 
-**Load complex JSON format data in match mode**
+**匹配模式导入复杂的 JSON 格式数据**
 
-1. Load sample data
+1. 导入数据样例
 
     ```sql
     { "name" : "Benjamin", "id" : 1, "num":180 , "age":18 }
@@ -1244,7 +1253,7 @@ The columns in the result set provide the following information:
     { "name" : "Alexander", "id" : 3, "num":220 , "age":22 }
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test13 (
@@ -1257,7 +1266,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job13 ON routine_test13
@@ -1275,7 +1284,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test13;
@@ -1289,9 +1298,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Loading data with specified JSON root node**
+**指定 JSON 根节点导入数据**
 
-1. Load sample data
+1. 导入数据样例
 
     ```sql
     {"id": 1231, "source" :{ "id" : 1, "name" : "Benjamin", "age":18 }}
@@ -1299,7 +1308,7 @@ The columns in the result set provide the following information:
     {"id": 1233, "source" :{ "id" : 3, "name" : "Alexander", "age":22 }}
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test14 (
@@ -1311,7 +1320,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job14 ON routine_test14
@@ -1328,7 +1337,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test14;
@@ -1342,9 +1351,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Loading data with column mapping and derived column calculation**
+**导入完成列影射与衍生列计算**
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18 }
@@ -1352,7 +1361,7 @@ The columns in the result set provide the following information:
     { "id" : 3, "name" : "Alexander", "age":22 }
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test15 (
@@ -1365,7 +1374,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job15 ON routine_test15
@@ -1382,7 +1391,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test15;
@@ -1396,11 +1405,11 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-### Loading Complex Data Types
+### 导入复杂类型
 
-**Load Array Data Type**
+**导入 Array 数据类型**
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18, "array":[1,2,3,4,5]}
@@ -1408,7 +1417,7 @@ The columns in the result set provide the following information:
     { "id" : 3, "name" : "Alexander", "age":22, "array":[11,12,13,14,15]}
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test16
@@ -1422,7 +1431,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job16 ON routine_test16
@@ -1438,7 +1447,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test16;
@@ -1452,9 +1461,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.00 sec)
     ```
 
-**Loading Map Data Type**
+**导入 Map 数据类型**
 
-1. Load sample data:
+1. 导入数据样例
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18, "map":{"a": 100, "b": 200}}
@@ -1462,7 +1471,7 @@ The columns in the result set provide the following information:
     { "id" : 3, "name" : "Alexander", "age":22, "map":{"e": 500, "f": 600}}
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test17 (
@@ -1475,7 +1484,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job17 ON routine_test17
@@ -1491,7 +1500,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test17;
@@ -1505,9 +1514,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Loading Bitmap Data Type**
+**导入 Bitmap 数据类型**
 
-1. Load sample data
+1. 导入数据样例
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18, "bitmap_id":243}
@@ -1515,7 +1524,7 @@ The columns in the result set provide the following information:
     { "id" : 3, "name" : "Alexander", "age":22, "bitmap_id":8573}
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test18 (
@@ -1529,7 +1538,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job18 ON routine_test18
@@ -1546,7 +1555,7 @@ The columns in the result set provide the following information:
             );
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select id, BITMAP_UNION_COUNT(pv) over(order by id) uv from(
@@ -1564,9 +1573,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.00 sec)
     ```
 
-**Loading HLL Data Type**
+**导入 HLL 数据类型**
 
-1. Loading sample data:
+1. 导入数据样例
 
     ```sql
     2022-05-05,10001,Test01,Beijing,windows
@@ -1579,7 +1588,7 @@ The columns in the result set provide the following information:
     2022-05-06,10004,Test01,Shaanxi,windows
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     create table demo.routine_test19 (
@@ -1594,7 +1603,7 @@ The columns in the result set provide the following information:
     distributed by hash(id) buckets 10;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job19 ON routine_test19
@@ -1608,7 +1617,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test19;
@@ -1635,11 +1644,11 @@ The columns in the result set provide the following information:
     1 row in set (0.01 sec)
     ```
 
-### Kafka Security Authentication
+### Kafka 安全认证
 
-**Loading Kafka data with SSL authentication**
+**导入 SSL 认证的 Kafka 数据**
 
-1. Loading sample data:
+1. 导入数据样例
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18 }
@@ -1647,7 +1656,7 @@ The columns in the result set provide the following information:
     { "id" : 3, "name" : "Alexander", "age":22 }
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test20 (
@@ -1659,7 +1668,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
@@ -1679,7 +1688,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test20;
@@ -1693,9 +1702,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Loading Kafka data with Kerberos authentication**
+**导入 Kerberos 认证的 Kafka 数据**
 
-1. Loading sample data:
+1. 导入数据样例
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18 }
@@ -1703,7 +1712,7 @@ The columns in the result set provide the following information:
     { "id" : 3, "name" : "Alexander", "age":22 }
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test21 (
@@ -1715,7 +1724,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
@@ -1735,7 +1744,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result:
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test21;
@@ -1749,9 +1758,9 @@ The columns in the result set provide the following information:
     3 rows in set (0.01 sec)
     ```
 
-**Loading Kafka data with PLAIN authentication in Kafka cluster**
+**导入 PLAIN 认证的 Kafka 集群**
 
-1. Loading sample data:
+1. 导入数据样例
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18 }
@@ -1759,7 +1768,7 @@ The columns in the result set provide the following information:
     { "id" : 3, "name" : "Alexander", "age":22 }
     ```
 
-2. Create table:
+2. 建表结构
 
     ```sql
     CREATE TABLE demo.routine_test22 (
@@ -1771,7 +1780,7 @@ The columns in the result set provide the following information:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Load command:
+3. 导入命令
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
@@ -1790,7 +1799,7 @@ The columns in the result set provide the following information:
             );  
     ```
 
-4. Load result
+4. 导入结果
 
     ```sql
     mysql> select * from routine_test22;
@@ -1804,11 +1813,11 @@ The columns in the result set provide the following information:
     3 rows in set (0.02 sec)
     ```
 
-### Single-task Loading to Multiple Tables  
+### 一流多表导入
 
-Create a Kafka routine dynamic table load task named "test1" for the "example_db". Specify the column delimiter, group.id, and client.id. Automatically consume all partitions and start subscribing from the available data position (OFFSET_BEGINNING).
+为 example_db 创建一个名为 test1 的 Kafka 例行动态多表导入任务。指定列分隔符和 group.id 和 client.id，并且自动默认消费所有分区，且从有数据的位置（OFFSET_BEGINNING）开始订阅。
 
-Assuming we need to load data from Kafka into tables "tbl1" and "tbl2" in the "example_db", we create a Routine Load task named "test1". This task will load data from Kafka's topic `my_topic` into both "tbl1" and "tbl2" simultaneously. This way, we can load data from Kafka into two tables using a single routine load task.
+这里假设需要将 Kafka 中的数据导入到 example_db 中的 tbl1 以及 tbl2 表中，我们创建了一个名为 test1 的例行导入任务，同时将名为 `my_topic` 的 Kafka 的 Topic 数据同时导入到 tbl1 和 tbl2 中的数据中，这样就可以通过一个例行导入任务将 Kafka 中的数据导入到两个表中。
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1
@@ -1820,11 +1829,11 @@ FROM KAFKA
 );
 ```
 
-Currently, only extracting the table name from the Value field of Kafka is supported. The format should be as follows, using JSON as an example: `table_name|{"col1": "val1", "col2": "val2"}`, where `tbl_name` is the table name and `|` is used as the separator between the table name and the table data. The same format applies to CSV data, such as `table_name|val1,val2,val3`. Note that the `table_name` here must be consistent with the table name in Doris, otherwise the load will fail. Note that dynamic tables do not support the column_mapping configuration described later.
+这个时候需要 Kafka 中的数据包含表名的信息。目前仅支持从 Kafka 的 Value 中获取动态表名，且需要符合这种格式：以 JSON 为例：`table_name|{"col1": "val1", "col2": "val2"}`, 其中 `tbl_name` 为表名，以 `|` 作为表名和表数据的分隔符。CSV 格式的数据也是类似的，如：`table_name|val1,val2,val3`。注意，这里的 `table_name` 必须和 Doris 中的表名一致，否则会导致导入失败。注意，动态表不支持后面介绍的 column_mapping 配置。
 
-### Strict Mode Load
+### 严格模式导入
 
-Create a Kafka routine load task named "test1" for the "example_db" and "example_tbl". The load task is set to strict mode.
+为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。导入任务为严格模式。
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl
@@ -1842,6 +1851,6 @@ FROM KAFKA
 );
 ```
 
-## More Details
+## 更多帮助
 
-Refer to the SQL manual on [Routine Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD). You can also enter `HELP ROUTINE LOAD` in the client command line for more help.
+参考 SQL 手册 [Routine Load](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD)。也可以在客户端命令行下输入 `HELP ROUTINE LOAD` 获取更多帮助信息。

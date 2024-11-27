@@ -538,7 +538,7 @@ This feature is supported since the Apache Doris 1.2.3 version
 
 1. Check the import task status
 
-   Broker Load is an asynchronous import process. The successful execution of the statement only means that the import task is submitted successfully, and does not mean that the data import is successful. The import status needs to be viewed through the [SHOW LOAD](../../Show-Statements/SHOW-LOAD.md) command.
+   Broker Load is an asynchronous import process. The successful execution of the statement only means that the import task is submitted successfully, and does not mean that the data import is successful. The import status needs to be viewed through the [SHOW LOAD](../../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) command.
 
 2. Cancel the import task
 

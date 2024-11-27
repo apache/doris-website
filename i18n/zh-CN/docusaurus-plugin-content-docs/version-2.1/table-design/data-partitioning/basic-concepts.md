@@ -53,7 +53,7 @@ Doris 使用分区和分桶的两层划分方式来组织和管理数据。
 
 合理地根据数据分布特征和查询模式进行分区有许多好处：
 
-- 查询性能提升：通过分区，系统可以根据查询的条件裁剪不相关的分区，减少了数据扫描量，显著提高了查询效率。特别是在处理大规模数据集时，分区策略能大幅度降低I/O负担。
+- 查询性能提升：通过分区，系统可以根据查询的条件裁剪不相关的分区，减少了数据扫描量，显著提高了查询效率。特别是在处理大规模数据集时，分区策略能大幅度降低 I/O 负担。
 
 - 管理灵活性：分区使得数据可以按时间、地域等逻辑进行分割，方便数据的归档、清理和备份。例如，按时间分区可以有效地管理历史数据和新增数据，支持基于时间的高效数据维护策略。
 
@@ -75,7 +75,7 @@ Doris 使用分区和分桶的两层划分方式来组织和管理数据。
 
 ## 建表举例
 
-Doris 的建表是一个同步命令，SQL 执行完成即返回结果，命令返回成功即表示建表成功。具体建表语法可以参考[CREATE TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)，也可以通过 `HELP CREATE TABLE` 查看更多帮助。
+Doris 的建表是一个同步命令，SQL 执行完成即返回结果，命令返回成功即表示建表成功。具体建表语法可以参考[CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)，也可以通过 `HELP CREATE TABLE` 查看更多帮助。
 
 这里给出了一个采用了 Range 分区 和 Hash 分桶的建表举例。
 
@@ -112,9 +112,9 @@ PROPERTIES
 
 这里以 AGGREGATE KEY 数据模型为例进行说明。AGGREGATE KEY 数据模型中，所有没有指定聚合方式（SUM、REPLACE、MAX、MIN）的列视为 Key 列。而其余则为 Value 列。
 
-在建表语句的最后 PROPERTIES 中，关于 PROPERTIES 中可以设置的相关参数，可以查看[CREATE TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)中的详细介绍。
+在建表语句的最后 PROPERTIES 中，关于 PROPERTIES 中可以设置的相关参数，可以查看[CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)中的详细介绍。
 
-ENGINE 的类型是 OLAP，即默认的 ENGINE 类型。在 Doris 中，只有这个 ENGINE 类型是由 Doris 负责数据管理和存储的。其他 ENGINE 类型，如 MySQL、 Broker、ES 等等，本质上只是对外部其他数据库或系统中的表的映射，以保证 Doris 可以读取这些数据。而 Doris 本身并不创建、管理和存储任何非 OLAP ENGINE 类型的表和数据。
+ENGINE 的类型是 OLAP，即默认的 ENGINE 类型。在 Doris 中，只有这个 ENGINE 类型是由 Doris 负责数据管理和存储的。其他 ENGINE 类型，如 MySQL、Broker、ES 等等，本质上只是对外部其他数据库或系统中的表的映射，以保证 Doris 可以读取这些数据。而 Doris 本身并不创建、管理和存储任何非 OLAP ENGINE 类型的表和数据。
 
 `IF NOT EXISTS`表示如果没有创建过该表，则创建。注意这里只判断表名是否存在，而不会判断新建表 Schema 是否与已存在的表 Schema 相同。所以如果存在一个同名但不同 Schema 的表，该命令也会返回成功，但并不代表已经创建了新的表和新的 Schema。
 
@@ -131,7 +131,7 @@ Doris 支持包括动态分区、自动分区、自动分桶在内的高级数�
 ```sql
 CREATE TABLE IF NOT EXISTS example_range_tbl
 (
-    `user_id` LARGEINT NOT NULL COMMENT "用户id",
+    `user_id` LARGEINT NOT NULL COMMENT "用户 id",
     `date` DATE NOT NULL COMMENT "数据灌入日期时间",
     `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
     `city` VARCHAR(20) COMMENT "用户所在城市",
@@ -161,12 +161,12 @@ PROPERTIES
 <TabItem value="动态分区" label="动态分区">
 <p>
 
-[动态分区](./dynamic-partitioning)是根据现实时间进行自动的分区创建与回收的管理方式，将上例用动态分区改写如下：
+[动态分区](./dynamic-partitioning) 是根据现实时间进行自动的分区创建与回收的管理方式，将上例用动态分区改写如下：
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_range_tbl
 (
-    `user_id` LARGEINT NOT NULL COMMENT "用户id",
+    `user_id` LARGEINT NOT NULL COMMENT "用户 id",
     `date` DATE NOT NULL COMMENT "数据灌入日期时间",
     `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
     `city` VARCHAR(20) COMMENT "用户所在城市",
@@ -211,7 +211,7 @@ PROPERTIES
 ```sql
 CREATE TABLE IF NOT EXISTS example_range_tbl
 (
-    `user_id` LARGEINT NOT NULL COMMENT "用户id",
+    `user_id` LARGEINT NOT NULL COMMENT "用户 id",
     `date` DATE NOT NULL COMMENT "数据灌入日期时间",
     `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
     `city` VARCHAR(20) COMMENT "用户所在城市",
@@ -247,12 +247,12 @@ PROPERTIES
 <TabItem value="自动分桶" label="自动分桶">
 <p>
 
-当用户不确定合理的分桶数时，可以使用[自动分桶](./auto-bucket)由 Doris 完成估计，用户仅需提供估计的表数据量：
+当用户不确定合理的分桶数时，可以使用 [自动分桶](./auto-bucket) 由 Doris 完成估计，用户仅需提供估计的表数据量：
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_range_tbl
 (
-    `user_id` LARGEINT NOT NULL COMMENT "用户id",
+    `user_id` LARGEINT NOT NULL COMMENT "用户 id",
     `date` DATE NOT NULL COMMENT "数据灌入日期时间",
     `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
     `city` VARCHAR(20) COMMENT "用户所在城市",
@@ -297,7 +297,7 @@ PROPERTIES
 | Table             | Create Table                                                                                            |                                                                                                            
 +-------------------+---------------------------------------------------------------------------------------------------------+                                                                                                            
 | example_range_tbl | CREATE TABLE `example_range_tbl` (                                                                      |                                                                                                            
-|                   |   `user_id` largeint(40) NOT NULL COMMENT '用户id',                                                     |                                                                                                            
+|                   |   `user_id` largeint(40) NOT NULL COMMENT '用户 id',                                                     |                                                                                                            
 |                   |   `date` date NOT NULL COMMENT '数据灌入日期时间',                                                      |                                                                                                            
 |                   |   `timestamp` datetime NOT NULL COMMENT '数据灌入的时间戳',                                             |                                                                                                            
 |                   |   `city` varchar(20) NULL COMMENT '用户所在城市',                                                       |                                                                                                            
@@ -354,7 +354,7 @@ PROPERTIES
 ALTER TABLE example_range_tbl ADD  PARTITION p201704 VALUES LESS THAN("2020-05-01") DISTRIBUTED BY HASH(`user_id`) BUCKETS 5;
 ```
 
-其它更多分区修改操作，参见 SQL 手册 [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION)。
+其它更多分区修改操作，参见 SQL 手册 [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION)。
 
 ## 分区检索
 

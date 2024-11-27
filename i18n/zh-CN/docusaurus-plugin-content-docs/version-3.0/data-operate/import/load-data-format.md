@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris 支持对csv、json、parquet、orc格式的数据文件进行导入。本文对各种文件格式支持的导入方式、适用参数、使用方式进行详细的介绍。
+Doris 支持对 csv、json、parquet、orc 格式的数据文件进行导入。本文对各种文件格式支持的导入方式、适用参数、使用方式进行详细的介绍。
 
 ## CSV 格式
 ### 支持的导入方式
@@ -36,7 +36,7 @@ Doris 支持对csv、json、parquet、orc格式的数据文件进行导入。本
 - [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
 - [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
-### 支持的CSV格式
+### 支持的 CSV 格式
 - csv: 文件不带 header 和 type
 - csv_with_names: 文件带 header，会自动文件行首过滤
 - csv_with_names_and_types: 文件带 header 和 type，会自动对文件前两行过滤
@@ -45,12 +45,12 @@ Doris 支持对csv、json、parquet、orc格式的数据文件进行导入。本
 
 | 参数       | 参数说明                                                     | 指定方法                                                     |
 | :--------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 行分隔符   | 用于指定导入文件中的换行符，默认为 `\n`。可以使用做多个字符的组合作为换行符。对于Windows系统上的文本文件，可能需要指定换行符为 `\r\n`。某些程序在写入文件时可能会使用 `\r`作为行终止符，需要指定 `\r` 为换行符。| <p>- Stream     Load： `line_delimiter` Http Header</p> <p>- Broker Load :`LINES TERMINATED BY`</p> <p>- Routine Load : 不支持</p>  <p>- MySQL Load :`LINES TERMINATED BY`</p> |
-| 列分隔符   | 用于指定导入文件中的列分隔符，默认为 `\t`。如果是不可见字符，则需要加 `\x` 作为前缀，使用十六进制来表示分隔符。可以使用多个字符的组合作为列分隔符。因为 MySQL 协议会做转义处理，如果列分隔符是不可见字符，通过 MySQL 协议提交的导入请求需要在列分隔字符前面多加一个反斜线 `\`。例如，Hive的文件分隔符为 `\x01`，Broker Load 需要传入 `\\x01`。 | <p>- Stream     Load： `columns_delimiter` Http Header</p> <p>- Broker Load :`COLUMNS TERMINATED BY`</p> <p>- Routine Load :`COLUMNS TERMINATED BY`</p> <p>- MySQL Load :`COLUMNS TERMINATED BY`</p> |
+| 行分隔符   | 用于指定导入文件中的换行符，默认为 `\n`。可以使用做多个字符的组合作为换行符。对于 Windows 系统上的文本文件，可能需要指定换行符为 `\r\n`。某些程序在写入文件时可能会使用 `\r`作为行终止符，需要指定 `\r` 为换行符。| <p>- Stream     Load： `line_delimiter` Http Header</p> <p>- Broker Load :`LINES TERMINATED BY`</p> <p>- Routine Load : 不支持</p>  <p>- MySQL Load :`LINES TERMINATED BY`</p> |
+| 列分隔符   | 用于指定导入文件中的列分隔符，默认为 `\t`。如果是不可见字符，则需要加 `\x` 作为前缀，使用十六进制来表示分隔符。可以使用多个字符的组合作为列分隔符。因为 MySQL 协议会做转义处理，如果列分隔符是不可见字符，通过 MySQL 协议提交的导入请求需要在列分隔字符前面多加一个反斜线 `\`。例如，Hive 的文件分隔符为 `\x01`，Broker Load 需要传入 `\\x01`。 | <p>- Stream     Load： `columns_delimiter` Http Header</p> <p>- Broker Load :`COLUMNS TERMINATED BY`</p> <p>- Routine Load :`COLUMNS TERMINATED BY`</p> <p>- MySQL Load :`COLUMNS TERMINATED BY`</p> |
 | 包围符     | 当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用，默认值：`NONE`。最常用包围符为单引号 `'` 或双引号 `"`。例如列分隔符为 `,`，包围符为 `'`，数据为 `a,'b,c'`，则 `b,c` 会被解析为一个字段。 | <p>- Stream     Load： `enclose` Http Header</p> <p>- Broker Load : `PROPERTIES` 里指定 `enclose`</p> <p> Routine Load: `PROPERTIES` 里指定 `enclose`</p> <p> MySQL Load: `PROPERTIES` 里指定 `enclose`</p> |
 | 转义符     | 用于转义在字段中出现的与包围符相同的字符。例如数据为 `a,'b,'c'`，包围符为 `'`，希望 `b,'c` 被作为一个字段解析，则需要指定单字节转义符，例如`\`，将数据修改为 `a,'b,\'c'`。 | <p>- Stream     Load： `escape` Http Header</p> <p>- Broker Load : `PROPERTIES` 里指定 `escape`</p> <p> Routine Load: `PROPERTIES` 里指定 `escape`</p> <p> MySQL Load: `PROPERTIES` 里指定 `escape`</p> |
 | 跳过的行数 | 跳过 CSV 文件的前几行，整数类型，默认值为 0。当设置 format 设置为 `csv_with_names`或`csv_with_names_and_types`时，该参数会失效。 | <p>- Stream     Load： `skip_lines` Http Header</p> <p>- Broker Load : `PROPERTIES` 里指定 `skip_lines`</p> <p> MySQL Load: 不支持</p> <p> Routine Load: 不支持</p> |
-| 压缩格式   | CSV 格式数据支持以下压缩格式：plain, gz, lzo, bz2, lz4, LZ4FRAME,lzop, deflate。默认是plain，表示不压缩。不支持 tar 格式， tar 只是归档打包工具，不是压缩格式。 | <p>- Stream     Load： `compress_type` Http Header</p> <p>- Broker Load : `COMPRESS_TYPE AS`</p> <p> MySQL Load: 不支持</p> <p> Routine Load: 不支持</p> |
+| 压缩格式   | CSV 格式数据支持以下压缩格式：plain, gz, lzo, bz2, lz4, LZ4FRAME,lzop, deflate。默认是 plain，表示不压缩。不支持 tar 格式，tar 只是归档打包工具，不是压缩格式。 | <p>- Stream     Load： `compress_type` Http Header</p> <p>- Broker Load : `COMPRESS_TYPE AS`</p> <p> MySQL Load: 不支持</p> <p> Routine Load: 不支持</p> |
 
 #### 导入示例
 
@@ -204,7 +204,7 @@ Object 表示的一行数据即表示要导入的一行数据，示例如下：
 
 - fuzzy_parse 
 
-在 [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD.md)中，可以添加 `fuzzy_parse` 参数来加速 JSON 数据的导入效率。
+在 STREAM LOAD 中，可以添加 `fuzzy_parse` 参数来加速 JSON 数据的导入效率。
 
 这个参数通常用于导入 **以 Array 表示的多行数据** 这种格式，所以一般要配合 `strip_outer_array=true` 使用。
 

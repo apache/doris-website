@@ -1,7 +1,7 @@
 ---
 {
     "title": "Broker Load",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -24,62 +24,75 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Why introduce Broker Load?
+Broker Load 通过 MySQL API 发起，Doris 会根据 LOAD 语句中的信息，主动从数据源拉取数据。Broker Load 是一个异步导入方式，需要通过 SHOW LOAD 语句查看导入进度和导入结果。
 
-Stream Load is a push-based method, where the data to be imported relies on the client to read and push it to Doris. Broker Load, on the other hand, involves sending an import request to Doris, and Doris actively pulls the data. Therefore, if the data is stored in systems like HDFS or object storage, using Broker Load is the most convenient. This way, the data doesn't need to pass through the client but is directly read and imported by Doris.
+## 使用场景
 
-Direct reads from HDFS or S3 can also be imported through HDFS TVF or S3 TVF in the [Lakehouse/TVF](../../../lakehouse/file). The current "Insert Into" based on TVF is a synchronous import, while Broker Load is an asynchronous import method.
+Broker Load 适合源数据存储在远程存储系统，比如对象存储或 HDFS，并且数据量比较大的场景。与 Stream Load 不同，Broker Load 导入的数据无需经过客户端，而是由 Doris 主动拉取并处理。
 
-Broker Load is suitable for scenarios where the source data is stored in remote storage systems, such as HDFS, and the data volume is relatively large.
+从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF](../../../lakehouse/file) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
 
-## Basic Principles
+## 基本原理
 
-After a user submits an import task, the Frontend (FE) generates a corresponding plan. Based on the current number of Backend (BE) nodes and the size of the file, the plan is distributed to multiple BE nodes for execution, with each BE node handling a portion of the import data.
+用户在提交导入任务后，FE 会生成对应的 Plan 并根据目前 BE 的个数和文件的大小，将 Plan 分给 多个 BE 执行，每个 BE 执行一部分导入数据。
 
-During execution, the BE nodes pull data from the Broker, perform necessary transformations, and then import the data into the system. Once all BE nodes have completed the import, the FE makes the final determination on whether the import was successful.
+BE 在执行的过程中会从 Broker 拉取数据，在对数据 transform 之后将数据导入系统。所有 BE 均完成导入，由 FE 最终决定导入是否成功。
 
-![Broker Load](/images/broker-load.png)
+![Broker Load 基本原理](/images/broker-load.png)
 
+从上图中可以看到，BE 会依赖 Broker 进程来读取相应远程存储系统的数据。之所以引入 Broker 进程，主要是用来针对不同的远程存储系统，用户可以按照 Broker 进程的标准开发其相应的 Broker 进程，Broker 进程可以使用 Java 程序开发，更好的兼容大数据生态中的各类存储系统。由于 broker 进程和 BE 进程的分离，也确保了两个进程的错误隔离，提升 BE 的稳定性。
 
-As seen in the diagram, BE nodes rely on Broker processes to read data from corresponding remote storage systems. The introduction of Broker processes primarily aims to accommodate different remote storage systems. Users can develop their own Broker processes according to established standards. These Broker processes, which can be developed using Java, offer better compatibility with various storage systems in the big data ecosystem. The separation of Broker processes from BE nodes ensures error isolation between the two, enhancing the stability of the BE.
+当前 BE 内置了对 HDFS 和 S3 两个 Broker 的支持，所以如果从 HDFS 和 S3 中导入数据，则不需要额外启动 Broker 进程。如果有自己定制的 Broker 实现，则需要部署相应的 Broker 进程。
 
-Currently, BE nodes have built-in support for HDFS and S3 Brokers. Therefore, when importing data from HDFS or S3, there is no need to additionally start a Broker process. However, if a customized Broker implementation is required, the corresponding Broker process needs to be deployed.
+## 快速上手
 
-## SQL syntax for importing
+具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD)。
+
+### 前置检查
+
+Broker Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) 命令给用户授权。
+
+### 创建导入作业
+
+以 S3 Load 为例，
 
 ```sql
-LOAD LABEL load_label
-(
-data_desc1[, data_desc2, ...]
-)
-WITH [HDFS|S3|BROKER broker_name] 
-[broker_properties]
-[load_properties]
-[COMMENT "comments"];
+    LOAD LABEL broker_load_2022_04_15
+    (
+        DATA INFILE("s3://your_bucket_name/your_file.txt")
+        INTO TABLE load_test
+        COLUMNS TERMINATED BY ","
+    )
+    WITH S3
+    (
+        "provider" = "S3",
+        "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
+        "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
+        "AWS_SECRET_KEY"="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+        "AWS_REGION" = "us-west-2"
+    )
+    PROPERTIES
+    (
+        "timeout" = "3600"
+    );
 ```
 
-For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) in the SQL manual.
+其中 `provider` 字段需要根据实际的对象存储服务商填写。
+Doris 支持的 provider 列表：
 
-## Load Properties
+- "OSS" (阿里云)
+- "COS" (腾讯云)
+- "OBS" (华为云)
+- "BOS" (百度云)
+- "S3" (亚马逊 AWS)
+- "AZURE" (微软 Azure)
+- "GCP" (谷歌 GCP)
 
-| Property Name | Type | Default Value | Description |
-| --- | --- | --- | --- |
-| "timeout" | Long | 14400 | Used to specify the timeout for the import in seconds. The configurable range is from 1 second to 259200 seconds. |
-| "max_filter_ratio" | Float | 0.0 | Used to specify the maximum tolerable ratio of filterable (irregular or otherwise problematic) data, which defaults to zero tolerance. The value range is 0 to 1. If the error rate of the imported data exceeds this value, the import will fail. Irregular data does not include rows filtered out by the where condition. |
-| "exec_mem_limit" | Long | 2147483648 | The memory limit in bytes of the load task, which defaults to 2GB. |
-| "strict_mode" | Boolean | false | Used to specify whether to enable strict mode for this import. |
-| "partial_columns" | Boolean | false | Used to specify whether to enable partial column update, the default value is false, this parameter is only available for Unique Key + Merge on Write tables. |
-| "timezone" | String | "Asia/Shanghai" | Used to specify the timezone to be used for this import. This parameter affects the results of all timezone-related functions involved in the import. |
-| "load_parallelism" | Integer | 8 | Limits the maximum parallel instances on each backend. |
-| "send_batch_parallelism" | Integer | 1 | The parallelism for sink node to send data, when memtable_on_sink_node is disabled. |
-| "load_to_single_tablet" | Boolean | "false" | Used to specify whether to load data only to a single tablet corresponding to the partition. This parameter is only available when loading to an OLAP table with random bucketing. |
-| "skip_lines" | Integer | "0" | It will skip some lines in the head of a csv file. It will be ignored when the format is csv_with_names or csv_with_names_and_types. |
-| "trim_double_quotes" | Boolean | "false" | Used to specify whether to trim the outermost double quotes of each field in the source files. |
-| "priority" | oneof "HIGH", "NORMAL", "LOW" | "NORMAL" | The priority of the task. |
+如不在列表中 (例如 MinIO)，可以尝试使用 "S3" (兼容 AWS 模式)
 
-## Checking import status
+### 查看导入作业
 
-Broker Load is an asynchronous import method, and the specific import results can be viewed through the [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) command.
+Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) 命令查看
 
 ```sql
 mysql> show load order by createtime desc limit 1\G;
@@ -102,21 +115,153 @@ LoadFinishTime: 2022-04-01 18:59:11
 1 row in set (0.01 sec)
 ```
 
-## Cancelling an Import
+### 取消导入作业
 
-When the status of a Broker Load job is not CANCELLED or FINISHED, it can be manually cancelled by the user. To cancel, the user needs to specify the label of the import task to be cancelled. The syntax for the cancel import command can be viewed by executing [CANCEL LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CANCEL-LOAD).
+当 Broker load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label。取消导入命令语法可执行 [CANCEL LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD) 查看。
 
-For example: To cancel the import job with the label "broker_load_2022_03_23" on the DEMO database.
+例如：撤销数据库 DEMO 上，label 为 broker_load_2022_03_23 的导入作业
 
-```sql
+```SQL
 CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_03_23";
 ```
 
+## 参考手册
+
+### 导入命令
+
+```sql
+LOAD LABEL load_label
+(
+data_desc1[, data_desc2, ...]
+)
+WITH [HDFS|S3|BROKER broker_name] 
+[broker_properties]
+[load_properties]
+[COMMENT "comments"];
+```
+
+### 导入配置参数
+
+**load properties**
+
+| Property 名称 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| "timeout" | Long | 14400 | 导入的超时时间，单位秒。范围是 1 秒 ~ 259200 秒。 |
+| "max_filter_ratio" | Float | 0.0 | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。 |
+| "exec_mem_limit" | Long | 2147483648 | 导入内存限制。默认为 2GB。单位为字节。 |
+| "strict_mode" | Boolean | false | 是否开启严格模式。 |
+| "partial_columns" | Boolean | false | 是否使用部分列更新，只在表模型为 Unique Key 且采用 Merge on Write 时有效。 |
+| "timezone" | String | "Asia/Shanghai" | 本次导入所使用的时区。该参数会影响所有导入涉及的和时区有关的函数结果。 |
+| "load_parallelism" | Integer | 8 | 每个 BE 上并发 instance 数量的上限。 |
+| "send_batch_parallelism" | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
+| "load_to_single_tablet" | Boolean | "false" | 是否每个分区只导入一个 tablet，默认值为 false。该参数只允许在对带有 random 分桶的 OLAP 表导数的时候设置。 |
+| "skip_lines" | Integer | "0" | 跳过 CSV 文件的前几行。当设置 format 设置为 csv_with_names 或 csv_with_names_and_types 时，该参数会失效。 |
+| "trim_double_quotes" | Boolean | "false" | 是否裁剪掉导入文件每个字段最外层的双引号。 |
+| "priority" | "HIGH" 或 "NORMAL" 或 "LOW" | "NORMAL" | 导入任务的优先级。 |
+
+**fe.conf**
+
+下面几个配置属于 Broker load 的系统级别配置，也就是作用于所有 Broker load 导入任务的配置。主要通过修改 `fe.conf`来调整配置值。
+
+| Session Variable | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| min_bytes_per_broker_scanner | Long | 67108864 (64 MB) | 一个 Broker Load 作业中单 BE 处理的数据量的最小值，单位：字节。 |
+| max_bytes_per_broker_scanner | Long | 536870912000 (500 GB) | 一个 Broker Load 作业中单 BE 处理的数据量的最大值，单位：字节。通常一个导入作业支持的最大数据量为 `max_bytes_per_broker_scanner * BE 节点数`。如果需要导入更大数据量，则需要适当调整 `max_bytes_per_broker_scanner` 参数的大小。 |
+| max_broker_concurrency | Integer | 10 | 限制了一个作业的最大的导入并发数。 |
+| default_load_parallelism | Integer | 8 | 每个 BE 节点最大并发 instance 数 |
+| broker_load_default_timeout_second | 14400 | Broker Load 导入的默认超时时间，单位：秒。 |
+
+注：最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数共同决定了本次导入的并发数。
+
+```Plain
+本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
+本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
+```
+
+**session variable**
+
+| Session Variable | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| exec_mem_limit | Long | 2147483648 | 导入内存限制，单位：字节。 |
+| time_zone | String | "Asia/Shanghai" | 默认时区，会影响导入中时区相关的函数结果。 |
+| send_batch_parallelism | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
+
+## S3 Load
+
+Doris 支持通过 S3 协议直接从支持 S3 协议的对象存储系统导入数据。这里主要介绍如何导入 AWS S3 中存储的数据，支持导入其他支持 S3 协议的对象存储系统可以参考 AWS S3。 
+
+### 准备工作
+
+- AK 和 SK：首先需要找到或者重新生成 AWS `Access keys`，可以在 AWS console 的 `My Security Credentials` 找到生成方式。
+
+- REGION 和 ENDPOINT：REGION 可以在创建桶的时候选择也可以在桶列表中查看到。每个 REGION 的 S3 ENDPOINT 可以通过如下页面查到 [AWS 文档](https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_region)。
+
+### 导入示例
+
+```sql
+    LOAD LABEL example_db.example_label_1
+    (
+        DATA INFILE("s3://your_bucket_name/your_file.txt")
+        INTO TABLE load_test
+        COLUMNS TERMINATED BY ","
+    )
+    WITH S3
+    (
+        "provider" = "S3",
+        "AWS_ENDPOINT" = "AWS_ENDPOINT",
+        "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+        "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+        "AWS_REGION" = "AWS_REGION"
+    )
+    PROPERTIES
+    (
+        "timeout" = "3600"
+    );
+```
+
+其中 `provider` 参数指定了 S3 供应商，支持列表：
+
+- "OSS" (阿里云)
+- "COS" (腾讯云)
+- "OBS" (华为云)
+- "BOS" (百度云)
+- "S3" (亚马逊 AWS)
+- "AZURE" (微软 Azure)
+- "GCP" (谷歌 GCP)
+
+### 常见问题
+
+- S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式：
+
+  ```sql
+    WITH S3
+    (
+          "AWS_ENDPOINT" = "AWS_ENDPOINT",
+          "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+          "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+          "AWS_REGION" = "AWS_REGION",
+          "use_path_style" = "true"
+    )
+  ```
+
+- 支持使用临时秘钥 (TOKEN) 访问所有支持 S3 协议的对象存储，用法如下：
+
+  ```sql
+    WITH S3
+    (
+        "AWS_ENDPOINT" = "AWS_ENDPOINT",
+        "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
+        "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
+        "AWS_TOKEN" = "AWS_TEMP_TOKEN",
+        "AWS_REGION" = "AWS_REGION"
+    )
+  ```
+
 ## HDFS Load
 
-### Simple Authentication
+### 简单认证
 
-Simple authentication refers to the configuration of Hadoop where hadoop.security.authentication is set to "simple".
+简单认证即 Hadoop 配置 `hadoop.security.authentication` 为 `simple`。
 
 ```Plain
 (
@@ -125,21 +270,22 @@ Simple authentication refers to the configuration of Hadoop where hadoop.securit
 );
 ```
 
-The username should be configured as the user to be accessed, and the password can be left blank.
+username 配置为要访问的用户，密码置空即可。
 
-### Kerberos Authentication
+### Kerberos 认证
 
-This authentication method requires the following information:
+该认证方式需提供以下信息：
 
-- **hadoop.security.authentication:** Specifies the authentication method as Kerberos.
+- `hadoop.security.authentication`：指定认证方式为 Kerberos。
 
-- **hadoop.kerberos.principal:** Specifies the Kerberos principal.
+- `hadoop.kerberos.principal`：指定 Kerberos 的 principal。
 
-- **hadoop.kerberos.keytab:** Specifies the file path of the Kerberos keytab. The file must be an absolute path on the server where the Broker process is located and must be accessible by the Broker process.
+- `hadoop.kerberos.keytab`：指定 Kerberos 的 keytab 文件路径。该文件必须为 Broker 进程所在服务器上的文件的绝对路径。并且可以被 Broker 进程访问。
 
-- **kerberos_keytab_content:** Specifies the content of the Kerberos keytab file after being encoded in base64. This can be used as an alternative to the kerberos_keytab configuration.
+- `kerberos_keytab_content`：指定 Kerberos 中 keytab 文件内容经过 base64 编码之后的内容。这个跟 `kerberos_keytab` 配置二选一即可。
 
-Example configuration:
+
+示例如下：
 
 ```Plain
 (
@@ -154,7 +300,7 @@ Example configuration:
 )
 ```
 
-To use Kerberos authentication, the [krb5.conf (opens new window)](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) file is required. The krb5.conf file contains Kerberos configuration information. Typically, the krb5.conf file should be installed in the /etc directory. You can override the default location by setting the KRB5_CONFIG environment variable. An example of the krb5.conf file content is as follows:
+采用 Kerberos 认证方式，需要 [krb5.conf (opens new window)](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) 文件，krb5.conf 文件包含 Kerberos 的配置信息，通常，应该将 krb5.conf 文件安装在目录/etc 中。可以通过设置环境变量 KRB5_CONFIG 覆盖默认位置。krb5.conf 文件的内容示例如下：
 
 ```Plain
 [libdefaults]
@@ -170,19 +316,19 @@ To use Kerberos authentication, the [krb5.conf (opens new window)](https://web.m
     }
 ```
 
-### HDFS HA Mode
+### HDFS HA 模式
 
-This configuration is used to access HDFS clusters deployed in HA (High Availability) mode.
+这个配置用于访问以 HA 模式部署的 HDFS 集群。
 
-- **dfs.nameservices:** Specifies the name of the HDFS service, which can be customized. For example: "dfs.nameservices" = "my_ha".
+- `dfs.nameservices`：指定 HDFS 服务的名字，自定义，如："dfs.nameservices" = "my_ha"。
 
-- **dfs.ha.namenodes.xxx:** Customizes the names of the namenodes, with multiple names separated by commas. Here, xxx represents the custom name specified in dfs.nameservices. For example: "dfs.ha.namenodes.my_ha" = "my_nn".
+- `dfs.ha.namenodes.xxx`：自定义 namenode 的名字，多个名字以逗号分隔。其中 xxx 为 `dfs.nameservices` 中自定义的名字，如： "dfs.ha.namenodes.my_ha" = "my_nn"。
 
-- **dfs.namenode.rpc-address.xxx.nn:** Specifies the RPC address information for the namenode. In this context, nn represents the namenode name configured in dfs.ha.namenodes.xxx. For example: "dfs.namenode.rpc-address.my_ha.my_nn" = "host:port".
+- `dfs.namenode.rpc-address.xxx.nn`：指定 namenode 的 rpc 地址信息。其中 nn 表示 `dfs.ha.namenodes.xxx` 中配置的 namenode 的名字，如："dfs.namenode.rpc-address.my_ha.my_nn" = "host:port"。
 
-- **dfs.client.failover.proxy.provider.[nameservice ID]:** Specifies the provider for client connections to the namenode. The default is org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider.
+- `dfs.client.failover.proxy.provider.[nameservice ID]`：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider。
 
-An example configuration is as follows:
+示例如下：
 
 ```sql
 (
@@ -195,7 +341,7 @@ An example configuration is as follows:
 )
 ```
 
-HA mode can be combined with the previous two authentication methods for cluster access. For example, accessing HA HDFS through simple authentication:
+HA 模式可以和前面两种认证方式组合，进行集群访问。如通过简单认证访问 HA HDFS：
 
 ```sql
 (
@@ -210,9 +356,9 @@ HA mode can be combined with the previous two authentication methods for cluster
 )
 ```
 
-### Import Example
+### 导入示例
 
-- Importing TXT Files from HDFS
+- 导入 HDFS 上的 TXT 文件
 
   ```sql
   LOAD LABEL demo.label_20220402
@@ -234,7 +380,7 @@ HA mode can be combined with the previous two authentication methods for cluster
   );
   ```
 
--  HDFS requires the configuration of NameNode HA (High Availability)
+-  HDFS 需要配置 NameNode HA 的情况
 
   ```sql
   LOAD LABEL demo.label_20220402
@@ -261,7 +407,7 @@ HA mode can be combined with the previous two authentication methods for cluster
   );
   ```
 
-- Importing data from HDFS using wildcards to match two batches of files and importing them into two separate tables
+- 从 HDFS 导入数据，使用通配符匹配两批文件，分别导入到两个表中
 
   ```sql
   LOAD LABEL example_db.label2
@@ -287,9 +433,9 @@ HA mode can be combined with the previous two authentication methods for cluster
   );
   ```
 
-To import two batches of files matching the wildcards `file-10*` and `file-20*` from HDFS and load them into two separate tables `my_table1` and `my_table2`. In this case, my_table1 specifies that the data should be imported into partition p1, and the values in the second and third columns of the source files should be incremented by 1 before being imported.
+  使用通配符匹配导入两批文件 `file-10*` 和 `file-20*`。分别导入到 `my_table1` 和 `my_table2` 两张表中。其中 `my_table1` 指定导入到分区 `p1` 中，并且将导入源文件中第二列和第三列的值 +1 后导入。
 
-- Import a batch of data from HDFS using wildcards
+- 使用通配符从 HDFS 导入一批数据
 
   ```sql
   LOAD LABEL example_db.label3
@@ -305,28 +451,28 @@ To import two batches of files matching the wildcards `file-10*` and `file-20*` 
   );
   ```
 
-To specify the delimiter as the commonly used default delimiter for Hive, which is \x01, and to use the wildcard character * to refer to all files in all directories under the data directory.
+  指定分隔符为 Hive 经常用的默认分隔符 `\\x01`，并使用通配符 * 指定 `data` 目录下所有目录的所有文件。
 
-- Import Parquet format data and specify the FORMAT as `parquet`
+- 导入 Parquet 格式数据，指定 FORMAT 为 `parquet`
 
-  ```sql
-  LOAD LABEL example_db.label4
-  (
-      DATA INFILE("hdfs://host:port/input/file")
-      INTO TABLE `my_table`
-      FORMAT AS "parquet"
-      (k1, k2, k3)
-  )
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username" = "user"
-  );
-  ```
+    ```SQL
+    LOAD LABEL example_db.label4
+    (
+        DATA INFILE("hdfs://host:port/input/file")
+        INTO TABLE `my_table`
+        FORMAT AS "parquet"
+        (k1, k2, k3)
+    )
+    with HDFS
+    (
+      "fs.defaultFS"="hdfs://host:port",
+      "hadoop.username" = "user"
+    );
+    ```
 
-The default method is to determine by file extension.
+  默认是通过文件后缀判断。
 
-- Import the data and extract the partition field from the file path
+- 导入数据，并提取文件路径中的分区字段
 
   ```sql
   LOAD LABEL example_db.label5
@@ -344,20 +490,20 @@ The default method is to determine by file extension.
   );
   ```
 
-The columns in the `my_table` are `k1`, `k2`, `k3`, `city`, and `utc_date`.
+  `my_table` 表中的列为 `k1, k2, k3, city, utc_date`。
 
-The directory `hdfs://hdfs_host:hdfs_port/user/doris/data/input/dir/city=beijing` contains the following files:
+  其中 `hdfs://hdfs_host:hdfs_port/user/doris/data/input/dir/city=beijing` 目录下包括如下文件：
 
-```Plain
-hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-01/0000.csv
-hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-02/0000.csv
-hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-03/0000.csv
-hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-04/0000.csv
-```
+  ```Plain
+  hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-01/0000.csv
+  hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-02/0000.csv
+  hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-03/0000.csv
+  hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-04/0000.csv
+  ```
 
-The file only contains three columns of data:`k1`,`k2`, and `k3`. The other two columns,`city` and `utc_date`, will be extracted from the file path.
+  文件中只包含 `k1, k2, k3` 三列数据，`city, utc_date` 这两列数据会从文件路径中提取。
 
-- Filter the imported data
+- 对导入数据进行过滤
 
   ```sql
   LOAD LABEL example_db.label6
@@ -378,9 +524,9 @@ The file only contains three columns of data:`k1`,`k2`, and `k3`. The other two 
   );
   ```
 
-Only the rows where k1 = 1 in the original data and k1 > k2 after transformation will be imported.
+  只有原始数据中，k1 = 1，并且转换后，k1 > k2 的行才会被导入。
 
-- Import data and extract the time partition field from the file path.
+- 导入数据，提取文件路径中的时间分区字段
 
   ```sql
   LOAD LABEL example_db.label7
@@ -401,31 +547,31 @@ Only the rows where k1 = 1 in the original data and k1 > k2 after transformation
   );
   ```
 
-:::tip Tip
-The time contains "%3A". In HDFS paths, colons ":" are not allowed, so all colons are replaced with "%3A".
-:::
+  :::tip
+  时间包含 %3A。在 hdfs 路径中，不允许有 ':'，所有 ':' 会由 %3A 替换。
+  :::
 
-There are the following files under the path:
+  路径下有如下文件：
 
-```Plain
-/user/data/data_time=2020-02-17 00%3A00%3A00/test.txt
-/user/data/data_time=2020-02-18 00%3A00%3A00/test.txt
-```
+  ```Plain
+  /user/data/data_time=2020-02-17 00%3A00%3A00/test.txt
+  /user/data/data_time=2020-02-18 00%3A00%3A00/test.txt
+  ```
 
-The table structure is as follows:
+  表结构为：
 
-```sql
-CREATE TABLE IF NOT EXISTS tbl12 (
-    data_time DATETIME,
-    k2        INT,
-    k3        INT
-) DISTRIBUTED BY HASH(data_time) BUCKETS 10
-PROPERTIES (
-    "replication_num" = "3"
-);
-```
+  ```sql
+  CREATE TABLE IF NOT EXISTS tbl12 (
+      data_time DATETIME,
+      k2        INT,
+      k3        INT
+  ) DISTRIBUTED BY HASH(data_time) BUCKETS 10
+  PROPERTIES (
+      "replication_num" = "3"
+  );
+  ```
 
-- Use Merge mode for import
+- 使用 Merge 方式导入
 
   ```sql
   LOAD LABEL example_db.label8
@@ -447,9 +593,9 @@ PROPERTIES (
   );
   ```
 
-To use Merge mode for import, the "my_table" must be a Unique Key table. When the value of the "v2" column in the imported data is greater than 100, that row will be considered a deletion row. The timeout for the import task is 3600 seconds, and an error rate of up to 10% is allowed.
+  使用 Merge 方式导入。`my_table` 必须是一张 Unique Key 的表。当导入数据中的 v2 列的值大于 100 时，该行会被认为是一个删除行。导入任务的超时时间是 3600 秒，并且允许错误率在 10% 以内。
 
-- Specify the "source_sequence" column during import to ensure the order of replacements.
+- 导入时指定 source_sequence 列，保证替换顺序
 
   ```sql
   LOAD LABEL example_db.label9
@@ -465,10 +611,11 @@ To use Merge mode for import, the "my_table" must be a Unique Key table. When th
     "fs.defaultFS"="hdfs://host:port",
     "hadoop.username"="user"
   );
-  The "my_table" must be a Unique Key model table and have a specified Sequence column. The data will maintain its order based on the values in the "source_sequence" column in the source data.
   ```
 
-- Import the specified file format as `json`, and specify the `json_root` and jsonpaths accordingly.
+  `my_table` 必须是 Unique Key 模型表，并且指定了 Sequence 列。数据会按照源数据中 `source_sequence` 列的值来保证顺序性。
+
+- 导入指定文件格式为 `json`，并指定 `json_root`、`jsonpaths`
 
   ```sql
   LOAD LABEL example_db.label10
@@ -488,7 +635,7 @@ To use Merge mode for import, the "my_table" must be a Unique Key table. When th
   );
   ```
 
-The `jsonpaths` can also be used in conjunction with the column list and `SET (column_mapping)` :
+  `jsonpaths` 也可以与 `column list` 及 `SET (column_mapping)`配合使用：
 
   ```sql
   LOAD LABEL example_db.label10
@@ -510,105 +657,33 @@ The `jsonpaths` can also be used in conjunction with the column list and `SET (c
   );
   ```
 
-## S3 Load
+## 其他 Broker 导入
 
-Doris supports importing data directly from object storage systems that support the S3 protocol through the S3 protocol. Here, we mainly introduce how to import data stored in AWS S3. For importing data from other object storage systems that support the S3 protocol, you can refer to the steps for AWS S3.
+其他远端存储系统的 Broker 是 Doris 集群中一种可选进程，主要用于支持 Doris 读写远端存储上的文件和目录。目前提供了如下存储系统的 Broker 实现。
 
-### Preparation
+- 阿里云 OSS
 
-- AK and SK: First, you need to find or regenerate your AWS `Access Keys`. You can find instructions on how to generate them in the AWS console under `My Security Credentials`.
+- 百度云 BOS
 
-- REGION and ENDPOINT: The REGION can be selected when creating a bucket or viewed in the bucket list. The S3 ENDPOINT for each REGION can be found in the [AWS documentation](https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_region).
+- 腾讯云 CHDFS
 
-### Import example
+- 腾讯云 GFS
 
-```sql
-    LOAD LABEL example_db.example_label_1
-    (
-        DATA INFILE("s3://your_bucket_name/your_file.txt")
-        INTO TABLE load_test
-        COLUMNS TERMINATED BY ","
-    )
-    WITH S3
-    (
-        "provider" = "S3",
-        "AWS_ENDPOINT" = "AWS_ENDPOINT",
-        "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
-        "AWS_SECRET_KEY"="AWS_SECRET_KEY",
-        "AWS_REGION" = "AWS_REGION"
-    )
-    PROPERTIES
-    (
-        "timeout" = "3600"
-    );
-```
+- 华为云 OBS
 
-The `provider` specifies the vendor of the S3 Service.
-Supported S3 Provider list:
+- JuiceFS 
 
-- "S3" (AWS, Amazon Web Services)
-- "AZURE" (Microsoft Azure)
-- "GCP" (GCP, Google Cloud Platform)
-- "OSS" (Alibaba Cloud)
-- "COS" (Tencent Cloud)
-- "OBS" (Huawei Cloud)
-- "BOS" (Baidu Cloud)
+- GCS
 
-### Common Issues
+Broker 通过提供一个 RPC 服务端口来提供服务，是一个无状态的 Java 进程，负责为远端存储的读写操作封装一些类 POSIX 的文件操作，如 open，pread，pwrite 等等。除此之外，Broker 不记录任何其他信息，所以包括远端存储的连接信息、文件信息、权限信息等等，都需要通过参数在 RPC 调用中传递给 Broker 进程，才能使得 Broker 能够正确读写文件。
 
-- The S3 SDK defaults to using the virtual-hosted style method for accessing objects. However, some object storage systems may not have enabled or supported the virtual-hosted style access. In such cases, we can add the `use_path_style` parameter to force the use of the path style method:
+Broker 仅作为一个数据通路，并不参与任何计算，因此仅需占用较少的内存。通常一个 Doris 系统中会部署一个或多个 Broker 进程。并且相同类型的 Broker 会组成一个组，并设定一个 名称（Broker name）。
 
-  ```sql
-    WITH S3
-    (
-          "AWS_ENDPOINT" = "AWS_ENDPOINT",
-          "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
-          "AWS_SECRET_KEY"="AWS_SECRET_KEY",
-          "AWS_REGION" = "AWS_REGION",
-          "use_path_style" = "true"
-    )
-  ```
+这里主要介绍 Broker 在访问不同远端存储时需要的参数，如连接信息、权限认证信息等等。
 
-- Support for accessing all object storage systems that support the S3 protocol using temporary credentials (TOKEN) is available. The usage is as follows:
+### Broker 信息
 
-  ```sql
-    WITH S3
-    (
-          "AWS_ENDPOINT" = "AWS_ENDPOINT",
-          "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
-          "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
-          "AWS_TOKEN" = "AWS_TEMP_TOKEN",
-          "AWS_REGION" = "AWS_REGION"
-    )
-  ```
-
-Importing Data Using Other Brokers
-
-The Broker for other remote storage systems is an optional process in the Doris cluster, primarily used to support Doris in reading and writing files and directories on remote storage. Currently, the following storage system Broker implementations are provided:
-
-- Alibaba Cloud OSS
-
-- Baidu Cloud BOS
-
-- Tencent Cloud CHDFS
-
-- Tencent Cloud GFS
-
-- Huawei Cloud OBS
-
-- JuiceFS
-
-- Google Cloud Storage (GCS)
-
-The Broker provides services through an RPC service port and operates as a stateless Java process. Its primary responsibility is to encapsulate POSIX-like file operations for remote storage, such as open, pread, pwrite, and more. Additionally, the Broker does not keep track of any other information, which means that all the connection details, file information, and permission details related to the remote storage must be passed to the Broker process through parameters during RPC calls. This ensures that the Broker can correctly read and write files.
-
-The Broker serves solely as a data pathway and does not involve any computational tasks, thus requiring minimal memory usage. Typically, a Doris system would deploy one or more Broker processes. Furthermore, Brokers of the same type are grouped together and assigned a unique name (Broker name).
-
-This section primarily focuses on the parameters required by the Broker when accessing different remote storage systems, such as connection information, authentication details, and more. Understanding and correctly configuring these parameters is crucial for successful and secure data exchange between Doris and the remote storage systems.
-
-### Broker Information
-
-The information of the Broker consists of two parts: the name (Broker name) and the authentication information. The usual syntax format is as follows:
+Broker 的信息包括 名称（Broker name）和 认证信息 两部分。通常的语法格式如下：
 
 ```sql
 WITH BROKER "broker_name" 
@@ -620,140 +695,90 @@ WITH BROKER "broker_name"
 );
 ```
 
-**Broker Name**
+**名称**
 
-Typically, users need to specify an existing Broker Name through the `WITH BROKER "broker_name"` clause in the operation command. The Broker Name is a name designated by the user when adding a Broker process through the `ALTER SYSTEM ADD BROKER` command. One name usually corresponds to one or more Broker processes. Doris will select an available Broker process based on the name. Users can view the Brokers that currently exist in the cluster through the `SHOW BROKER` command.
+通常用户需要通过操作命令中的 `WITH BROKER "broker_name"` 子句来指定一个已经存在的 Broker Name。Broker Name 是用户在通过 `ALTER SYSTEM ADD BROKER` 命令添加 Broker 进程时指定的一个名称。一个名称通常对应一个或多个 Broker 进程。Doris 会根据名称选择可用的 Broker 进程。用户可以通过 `SHOW BROKER` 命令查看当前集群中已经存在的 Broker。
 
-:::info Note
-The Broker Name is merely a user-defined name and does not represent the type of Broker.
+:::info 备注
+Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 :::
 
-**Authentication Information**
-Different Broker types and access methods require different authentication information. The authentication information is usually provided in the Property Map in a Key-Value format after `WITH BROKER "broker_name"`.
+**认证信息**
 
-### Broker Examples
+不同的 Broker 类型，以及不同的访问方式需要提供不同的认证信息。认证信息通常在 `WITH BROKER "broker_name"` 之后的 Property Map 中以 Key-Value 的方式提供。
 
-- Alibaba Cloud OSS
+### Broker 举例
 
-  ```sql
-  (
-      "fs.oss.accessKeyId" = "",
-      "fs.oss.accessKeySecret" = "",
-      "fs.oss.endpoint" = ""
-  )
-  ```
+- 阿里云 OSS
+
+```sql
+(
+    "fs.oss.accessKeyId" = "",
+    "fs.oss.accessKeySecret" = "",
+    "fs.oss.endpoint" = ""
+)
+```
+
+- 百度云 BOS
+
+当前使用 BOS 时需要下载相应的 SDK 包，具体配置与使用，可以参考 [BOS HDFS 官方文档](https://cloud.baidu.com/doc/BOS/s/fk53rav99)。在下载完成并解压后将 jar 包放到 broker 的 lib 目录下。
+
+```sql
+(
+    "fs.bos.access.key" = "xx",
+    "fs.bos.secret.access.key" = "xx",
+    "fs.bos.endpoint" = "xx"
+)
+```
+
+- 华为云 OBS
+
+```sql
+(
+    "fs.obs.access.key" = "xx",
+    "fs.obs.secret.key" = "xx",
+    "fs.obs.endpoint" = "xx"
+)
+```
 
 - JuiceFS
 
-  ```sql
-  (
-      "fs.defaultFS" = "jfs://xxx/",
-      "fs.jfs.impl" = "io.juicefs.JuiceFileSystem",
-      "fs.AbstractFileSystem.jfs.impl" = "io.juicefs.JuiceFS",
-      "juicefs.meta" = "xxx",
-      "juicefs.access-log" = "xxx"
-  )
-  ```
+```sql
+(
+    "fs.defaultFS" = "jfs://xxx/",
+    "fs.jfs.impl" = "io.juicefs.JuiceFileSystem",
+    "fs.AbstractFileSystem.jfs.impl" = "io.juicefs.JuiceFS",
+    "juicefs.meta" = "xxx",
+    "juicefs.access-log" = "xxx"
+)
+```
 
 - GCS
 
-  When using a Broker to access GCS, the Project ID is required, while other parameters are optional. Please refer to the [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION.md) for all parameter configurations.
+在使用 Broker 访问 GCS 时，Project ID 是必须的，其他参数可选，所有参数配置请参考 [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION.md)
 
-  ```sql
-  (
-      "fs.gs.project.id" = "Your Project ID",
-      "fs.AbstractFileSystem.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
-      "fs.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem",
-  )
-  ```
-
-## Related Configurations
-
-### fe.conf
-
-The following configurations belong to the system-level settings for Broker load, which affect all Broker load import tasks. These configurations can be adjusted by modifying the `fe.conf `file.
-
-**min_bytes_per_broker_scanner**
-
-- Default: 64MB.
-
-- The minimum amount of data processed by a single BE in a Broker Load job.
-
-**max_bytes_per_broker_scanner**
-
-- Default: 500GB.
-
-- The maximum amount of data processed by a single BE in a Broker Load job.
-
-Typically, the maximum supported data volume for an import job is `max_bytes_per_broker_scanner * the number of BE nodes`. If you need to import a larger volume of data, you may need to adjust the size of the `max_bytes_per_broker_scanner` parameter appropriately.
-
-**max_broker_concurrency**
-
-- Default: 10.
-
-- Limits the maximum concurrency of imports for a job.
-
-- The minimum processed data volume, maximum concurrency, size of the source file, and the current number of BE nodes jointly determine the concurrency of this import.
-
-```Plain
-Import Concurrency = Math.min(Source File Size / min_bytes_per_broker_scanner, max_broker_concurrency, Current Number of BE Nodes * load_parallelism)
-Processing Volume per BE for this Import = Source File Size / Import Concurrency
+```sql
+(
+    "fs.gs.project.id" = "你的 Project ID",
+    "fs.AbstractFileSystem.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
+    "fs.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem",
+)
 ```
 
-**default_load_parallelism**
 
-- Default: 8.
+## 常见问题
 
-- Limits the maximum parallel instances on each backend.
+**1. 导入报错：`Scan bytes per broker scanner exceed limit:xxx`**
 
-- The minimum processed data volume, maximum concurrency, size of the source file, and the current number of BE nodes jointly determine the concurrency of this import.
+请参照文档中最佳实践部分，修改 FE 配置项 `max_bytes_per_broker_scanner` 和 `max_broker_concurrency`
 
-```Plain
-Import Concurrency = Math.min(Source File Size / min_bytes_per_broker_scanner, max_broker_concurrency, Current Number of BE Nodes * load_parallelism)
-Processing Volume per BE for this Import = Source File Size / Import Concurrency
-```
+**2. 导入报错：`failed to send batch` 或 `TabletWriter add batch with unknown id`**
 
-**broker_load_default_timeout_second**
+适当修改 `query_timeout` 和 `streaming_load_rpc_max_alive_time_sec`。
 
-- Default: 14400.
+**3. 导入报错：`LOAD_RUN_FAIL; msg:Invalid Column Name:xxx`**
 
-- The default broker load timeout in seconds.
-
-### session variables
-
-**exec_mem_limit**
-
-- Default: 2147483648.
-
-- The memory limit in bytes of the load.
-
-**time_zone**
-
-- Default: "Asia/Shanghai".
-
-- Default timezone, which affects time related functions in the load.
-
-**send_batch_parallelism**
-
-- Default: 1
-
-- The parallelism for sink node to send data, when memtable_on_sink_node is disabled.
-
-Set session variable `enable_memtable_on_sink_node` (defaults to true) to false to disable this feature.
-
-## Common Issues
-
-**1. Import Error: `Scan bytes per broker scanner exceed limit:xxx`**
-
-Please refer to the best practices section in the documentation and modify the FE configuration items `max_bytes_per_broker_scanner` and `max_broker_concurrency.`
-
-**2. Import Error: : `failed to send batch` or `TabletWriter add batch with unknown id`**
-
-Appropriately adjust the `query_timeout` and `streaming_load_rpc_max_alive_time_sec` settings.
-
-**3. Import Error: `LOAD_RUN_FAIL; msg:Invalid Column Name:xxx`**
-
-For PARQUET or ORC format data, the column names in the file header must match the column names in the Doris table. For example:
+如果是 PARQUET 或者 ORC 格式的数据，则文件头的列名需要与 doris 表中的列名保持一致，如：
 
 ```sql
 (tmp_c1,tmp_c2)
@@ -764,34 +789,28 @@ SET
 )
 ```
 
-This represents fetching columns named (tmp_c1, tmp_c2) in the parquet or orc file and mapping them to the (id, name) columns in the Doris table. If no set is specified, the columns in the file header will be used for mapping.
+代表获取在 parquet 或 orc 中以 (tmp_c1, tmp_c2) 为列名的列，映射到 doris 表中的 (id, name) 列。如果没有设置 set, 则以 column 中的列作为映射。
 
-:::info Note
+注：如果使用某些 hive 版本直接生成的 orc 文件，orc 文件中的表头并非 hive meta 数据，而是（_col0, _col1, _col2, ...）, 可能导致 Invalid Column Name 错误，那么则需要使用 set 进行映射
 
-If ORC files are generated directly using certain Hive versions, the column headers in the ORC file may not be the Hive metadata, but (_col0, _col1, _col2, ...), which may lead to the Invalid Column Name error. In this case, mapping using SET is necessary.
-:::
+**4. 导入报错：`Failed to get S3 FileSystem for bucket is null/empty`**
 
-**5. Import Error: `Failed to get S3 FileSystem for bucket is null/empty`**
+bucket 信息填写不正确或者不存在。或者 bucket 的格式不受支持。使用 GCS 创建带`_`的桶名时，比如：`s3://gs_bucket/load_tbl`，S3 Client 访问 GCS 会报错，建议创建 bucket 路径时不使用`_`。
 
-The bucket information is incorrect or does not exist. Or the bucket format is not supported. When creating a bucket name with an underscore using GCS, such as `s3://gs_bucket/load_tbl`, the S3 Client may report an error when accessing GCS. It is recommended not to use underscores when creating bucket paths.
+**5. 导入超时**
 
-**6. Import Timeout**
+导入的 timeout 默认超时时间为 4 小时。如果超时，不推荐用户将导入最大超时时间直接改大来解决问题。单个导入时间如果超过默认的导入超时时间 4 小时，最好是通过切分待导入文件并且分多次导入来解决问题。因为超时时间设置过大，那么单次导入失败后重试的时间成本很高。
 
-The default timeout for imports is 4 hours. If a timeout occurs, it is not recommended to directly increase the maximum import timeout to solve the problem. If the single import time exceeds the default import timeout of 4 hours, it is best to split the file to be imported and perform multiple imports to solve the problem. Setting an excessively long timeout time can lead to high costs for retrying failed imports.
+可以通过如下公式计算出 Doris 集群期望最大导入文件数据量：
 
-You can calculate the expected maximum import file data volume for the Doris cluster using the following formula:
+```Plain
+期望最大导入文件数据量 = 14400s * 10M/s * BE 个数
+比如：集群的 BE 个数为 10个
+期望最大导入文件数据量 = 14400s * 10M/s * 10 = 1440000M ≈ 1440G
 
-Expected Maximum Import File Data Volume = 14400s * 10M/s * Number of BEs
+注意：一般用户的环境可能达不到 10M/s 的速度，所以建议超过 500G 的文件都进行文件切分，再导入。
+```
 
-For example, if the cluster has 10 BEs:
+## 更多帮助
 
-Expected Maximum Import File Data Volume = 14400s * 10M/s * 10 = 1440000M ≈ 1440G
-
-:::info Note
-
-In general, user environments may not reach speeds of 10M/s, so it is recommended to split files exceeding 500G before importing.
-:::
-
-## More Help
-
-For more detailed syntax and best practices for using  [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.
+关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP BROKER LOAD` 获取更多帮助信息。

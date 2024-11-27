@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Workload Group",
-    "language": "en"
+    "title": "Broker Load",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,335 +24,793 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-You can use Workload Groups to manage the CPU, memory, and I/O resources used by queries and imports in the Doris cluster, and to control the maximum concurrency of queries in the cluster. Permissions for Workload Groups can be granted to specific roles and users.
+Broker Load 通过 MySQL API 发起，Doris 会根据 LOAD 语句中的信息，主动从数据源拉取数据。Broker Load 是一个异步导入方式，需要通过 SHOW LOAD 语句查看导入进度和导入结果。
 
-Workload Groups are particularly effective in the following scenarios:
-1. For scenarios where performance stability is preferred, and it is not required for query load to utilize all cluster resources, but stable query latency is desired. In such cases, you can set hard limits on CPU/I/O for Workload Groups.
-2. When overall cluster load is high and availability decreases, you can restore cluster availability by degrading Workload Groups that consume excessive resources. For example, reduce the maximum query concurrency and I/O throughput for these Workload Groups.
+## 使用场景
 
-Using hard limits for resource management usually results in better stability and performance, such as configuring maximum concurrency for FE and setting hard limits on CPU. Soft limits on CPU typically only have an effect when the CPU is fully utilized, which can lead to increased latency due to resource contention with other Doris components (RPC) and the operating system. Configuring hard limits for Doris query loads can effectively mitigate this issue. Additionally, setting maximum concurrency and queuing can help prevent the exhaustion of all available cluster resources during peak times with continuous incoming queries.
+Broker Load 适合源数据存储在远程存储系统，比如对象存储或 HDFS，并且数据量比较大的场景。与 Stream Load 不同，Broker Load 导入的数据无需经过客户端，而是由 Doris 主动拉取并处理。
 
-## Version Description
-Workload Group is a feature that has been supported since version 2.0. The main difference between version 2.0 and 2.1 is that the 2.0 version of Workload Group does not rely on CGroup, while the 2.1 version of Workload Group depends on CGroup. Therefore, when using the 2.1 version of Workload Group, the environment of CGroup needs to be configured.
+从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF](../../../lakehouse/file) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
 
-#### Upgrade to version 2.0
-If upgrading from version 1.2 to version 2.0, it is recommended to enable the WorkloadGroup after the overall upgrade of the Doris cluster is completed. Because if you only upgrade a single Follower and enable this feature, as the FE code of the Master has not been updated yet, there is no metadata information for Workload Group in the Doris cluster, which may cause queries for the upgraded Follower nodes to fail. The recommended upgrade process is as follows:
-* First, upgrade the overall code of the Doris cluster to version 2.0.
-* Start using this feature according to the section ***Workload group usage*** in the following text.
+## 基本原理
 
-#### Upgrade to version 2.1
-If the code version is upgraded from 2.0 to 2.1, there are two situations:
+用户在提交导入任务后，FE 会生成对应的 Plan 并根据目前 BE 的个数和文件的大小，将 Plan 分给 多个 BE 执行，每个 BE 执行一部分导入数据。
 
-Scenario 1: In version 2.1, if the Workload Group has already been used, you only need to refer to the process of configuring cgroup v1 in the following text to use the new version of the Workload Group.
+BE 在执行的过程中会从 Broker 拉取数据，在对数据 transform 之后将数据导入系统。所有 BE 均完成导入，由 FE 最终决定导入是否成功。
 
-Scenario 2: If the Workload Group is not used in version 2.0, it is also necessary to upgrade the Doris cluster as a whole to version 2.1, and then start using this feature according to the section ***Workload group usage*** in the following text.
+![Broker Load 基本原理](/images/broker-load.png)
 
-## Workload group properties
+从上图中可以看到，BE 会依赖 Broker 进程来读取相应远程存储系统的数据。之所以引入 Broker 进程，主要是用来针对不同的远程存储系统，用户可以按照 Broker 进程的标准开发其相应的 Broker 进程，Broker 进程可以使用 Java 程序开发，更好的兼容大数据生态中的各类存储系统。由于 broker 进程和 BE 进程的分离，也确保了两个进程的错误隔离，提升 BE 的稳定性。
 
-* cpu_share: Optional, The default value is 1024, with a range of positive integers. used to set how much cpu time the workload group can acquire, which can achieve soft isolation of cpu resources. cpu_share is a relative value indicating the weight of cpu resources available to the running workload group. For example, if a user creates 3 workload groups rg-a, rg-b and rg-c with cpu_share of 10, 30 and 40 respectively, and at a certain moment rg-a and rg-b are running tasks while rg-c has no tasks, then rg-a can get 25% (10 / (10 + 30)) of the cpu resources while workload group rg-b can get 75% of the cpu resources. If the system has only one workload group running, it gets all the cpu resources regardless of the value of its cpu_share.
+当前 BE 内置了对 HDFS 和 S3 两个 Broker 的支持，所以如果从 HDFS 和 S3 中导入数据，则不需要额外启动 Broker 进程。如果有自己定制的 Broker 实现，则需要部署相应的 Broker 进程。
 
-* memory_limit: Optional, default value is 0% which means unlimited, range of values from 1% to 100%. set the percentage of be memory that can be used by the workload group. The absolute value of the workload group memory limit is: `physical_memory * mem_limit * memory_limit`, where mem_limit is a be configuration item. The total memory_limit of all workload groups in the system must not exceed 100%. Workload groups are guaranteed to use the memory_limit for the tasks in the group in most cases. When the workload group memory usage exceeds this limit, tasks in the group with larger memory usage may be canceled to release the excess memory, refer to enable_memory_overcommit.
+## 快速上手
 
-* enable_memory_overcommit: Optional, enable soft memory isolation for the workload group, default is true. if set to false, the workload group is hard memory isolated and the tasks with the largest memory usage will be canceled immediately after the workload group memory usage exceeds the limit to release the excess memory. if set to true, the workload group is hard memory isolated and the tasks with the largest memory usage will be canceled immediately after the workload group memory usage exceeds the limit to release the excess memory. if set to true, the workload group is softly isolated, if the system has free memory resources, the workload group can continue to use system memory after exceeding the memory_limit limit, and when the total system memory is tight, it will cancel several tasks in the group with the largest memory occupation, releasing part of the excess memory to relieve the system memory pressure. It is recommended that when this configuration is enabled for a workload group, the total memory_limit of all workload groups should be less than 100%, and the remaining portion should be used for workload group memory overcommit.
+具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD)。
 
-* cpu_hard_limit: Optional, default value -1%, no limit. The range of values is from 1% to 100%. In CPU hard limit mode, the maximum available CPU percentage of Workload Group cannot exceed cpu_hard_limit value, regardless of whether the current machine's CPU resources are fully utilized.
-  Sum of all Workload Groups's cpu_hard_limit cannot exceed 100%. This is a new property added since version 2.1.
-* max_concurrency: Optional, maximum query concurrency, default value is the maximum integer value, which means there is no concurrency limit. When the number of running queries reaches this value, new queries will being queued.
-* max_queue_size: Optional, length of the query queue. When the queue is full, new queries will be rejected. The default value is 0, which means no queuing.
-* queue_timeout: Optional, query the timeout time in the queue, measured in milliseconds. If the query exceeds this value, an exception will be thrown directly to the client. The default value is 0, which means no queuing.
-* scan_thread_num: Optional, the number of threads used for scanning in the current workload group. The default value is -1, which means it does not take effect, the number of scan threads in the be configuration shall prevail. The value is an integer greater than 0.
-* max_remote_scan_thread_num: Optional. The maximum number of threads in the scan thread pool for reading external data sources. The default value is -1, which means the actual number of threads is determined by the BE and is typically related to the number of cores.
-* min_remote_scan_thread_num: Optional. The minimum number of threads in the scan thread pool for reading external data sources. The default value is -1, which means the actual number of threads is determined by the BE and is typically related to the number of cores.
-* tag: Optional. Default is empty. Assigns a tag to the Workload Group. The sum of resources for Workload Groups with the same tag cannot exceed 100%. If multiple values are desired, they can be separated by commas. Detailed description of the tagging function will follow.
-* read_bytes_per_second: Optional. Specifies the maximum I/O throughput when reading internal tables in Doris. The default value is -1, which means there is no limit on I/O bandwidth. Note that this value is not bound to disks but to folders. For example, if Doris is configured with two folders for storing internal table data, the maximum read I/O for each folder will not exceed this value. If these two folders are configured on the same disk, the maximum throughput control will be twice the read_bytes_per_second. The directory where files are written is also subject to this value.
-* remote_read_bytes_per_second: Optional. Specifies the maximum I/O throughput when reading external tables in Doris. The default value is -1, which means there is no limit on I/O bandwidth.
+### 前置检查
 
-Notes:
+Broker Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) 命令给用户授权。
 
-1. At present, the simultaneous use of CPU's soft and hard limits is not supported. A cluster can only have soft or hard limits at a certain time. The switching method will be described in the following text.
+### 创建导入作业
 
-2. All properties are optional, but at least one property needs to be specified when creating a Workload Group.
+以 S3 Load 为例，
 
-3. It is important to note that the default CPU soft limit values differ between cgroup v1 and cgroup v2. In cgroup v1, the default CPU soft limit value is 1024, with a range of 2 to 262144. In contrast, cgroup v2 has a default CPU soft limit value of 100, with a range of 1 to 10000.
-
-If a value outside of this range is specified for the soft limit, it can lead to a failure in modifying the CPU soft limit in the backend. Additionally, if you set the default value of 100 in a cgroup v1 environment, it might cause the priority of this workload group to be the lowest on the machine.
-
-## Grouping Workload Group By Tag
-The Workload Group feature divides the resource usage of a single BE. When a user creates a Workload Group (Group A), its metadata is by default sent to all BEs and threads are started on each BE, leading to the following issues:
-1. Multiple Clusters Issue: In a production environment, a Doris cluster is typically divided into several smaller clusters, such as a local storage cluster and a cluster with Compute Nodes for querying external storage. These two clusters operate independently. If a user wants to use the Workload Group feature, it would lead to the issue where the mem_limit of Workload Groups for external storage and local storage cannot exceed 100%, even though these two types of load are on completely different machines, which is obviously unreasonable.
-2. Thread Resource Management: The number of threads itself is a resource. If a process's thread quota is exhausted, it will cause the process to crash. Therefore, sending the Workload Group metadata to all nodes by default is also unreasonable.
-
-To address these issues, Doris implements a grouping feature for Workload Groups. The cumulative value of Workload Groups with the same tag cannot exceed 100%, but there can be multiple such tag groups within a cluster. When a BE node is tagged, it will match the corresponding Workload Groups based on specific rules.
-
-Example:
-1. Create a Workload Group named tag_wg with the tag cn1. If none of the BEs in the cluster have been tagged, the metadata for this Workload Group will be sent to all BEs. The tag attribute can specify multiple values, separated by commas.
-```
-create workload group tag_wg properties('tag'='cn1');
-```
-2. Modify the tag of a BE in the cluster to cn1. At this point, the tag_wg Workload Group will only be sent to this BE and any BE with no tag. The tag.workload_group attribute can specify multiple values, separated by commas.
-It is important to note that the alter interface currently does not support incremental updates. Each time the BE attributes are modified, the entire set of attributes needs to be provided. Therefore, in the statements below, the tag.location attribute is added, with 'default' as the system default value. In practice, the existing attributes of the BE should be specified accordingly.
-```
-alter system modify backend "localhost:9050" set ("tag.workload_group" = "cn1", "tag.location"="default");
+```sql
+    LOAD LABEL broker_load_2022_04_15
+    (
+        DATA INFILE("s3://your_bucket_name/your_file.txt")
+        INTO TABLE load_test
+        COLUMNS TERMINATED BY ","
+    )
+    WITH S3
+    (
+        "provider" = "S3",
+        "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
+        "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
+        "AWS_SECRET_KEY"="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+        "AWS_REGION" = "us-west-2"
+    )
+    PROPERTIES
+    (
+        "timeout" = "3600"
+    );
 ```
 
-Workload Group and BE Matching Rules:
-If the Workload Group's tag is empty, the Workload Group can be sent to all BEs, regardless of whether the BE has a tag or not.
-If the Workload Group's tag is not empty, the Workload Group will only be sent to BEs with the same tag.
+其中 `provider` 字段需要根据实际的对象存储服务商填写。
+Doris 支持的 provider 列表：
 
-You can refer to the recommended usage:[group-workload-groups](./group-workload-groups.md)
+- "OSS" (阿里云)
+- "COS" (腾讯云)
+- "OBS" (华为云)
+- "BOS" (百度云)
+- "S3" (亚马逊 AWS)
+- "AZURE" (微软 Azure)
+- "GCP" (谷歌 GCP)
 
+如不在列表中 (例如 MinIO)，可以尝试使用 "S3" (兼容 AWS 模式)
 
-## Configure GGroup
+### 查看导入作业
 
-The 2.0 version of Doris uses scheduling based on Doris itself to implement CPU resource limitations. However, starting from version 2.1, Doris defaults to using CGroup-based CPU resource limitations. Therefore, if you wish to enforce CPU resource constraints in version 2.1, the node where the BE (Backend) is located must have the CGroup environment already installed.
+Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) 命令查看
 
-Currently, supported CGroup versions are CGroup v1 and CGroup v2.
-
-If users use the Workload Group software limit in version 2.0 and upgrade to version 2.1, they also need to configure CGroup, Otherwise, cpu soft limit may not work.
-
-If using CGroup within a container, the container needs to have permission to operate the host.
-
-Without configuring GGroup, users can use all functions of the workload group except for CPU limitations.
-
-1. Firstly, confirm that the CGgroup has been installed on the node where BE is located.
-```
-cat /proc/filesystems | grep cgroup
-nodev	cgroup
-nodev	cgroup2
-nodev	cgroupfs
-```
-
-2. Check the cgroup version.
-```
-If this path exists, it indicates that cgroup v1 is currently active.
-/sys/fs/cgroup/cpu/
-
-
-If this path exists, it indicates that cgroup v2 is currently active.
-/sys/fs/cgroup/cgroup.controllers
-```
-
-3. Create a new directory named ```doris``` in CGroup path, user can specify their own directory name.
-
-```
-// If using CGroup v1, then mkdir as follow:
-mkdir /sys/fs/cgroup/cpu/doris
-
-// If using CGroup v2, then mkdir as follow:
-mkdir /sys/fs/cgroup/doris
+```sql
+mysql> show load order by createtime desc limit 1\G;
+*************************** 1. row ***************************
+         JobId: 41326624
+         Label: broker_load_2022_04_15
+         State: FINISHED
+      Progress: ETL:100%; LOAD:100%
+          Type: BROKER
+       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=0; dpp.norm.ALL=27
+      TaskInfo: cluster:N/A; timeout(s):1200; max_filter_ratio:0.1
+      ErrorMsg: NULL
+    CreateTime: 2022-04-01 18:59:06
+  EtlStartTime: 2022-04-01 18:59:11
+ EtlFinishTime: 2022-04-01 18:59:11
+ LoadStartTime: 2022-04-01 18:59:11
+LoadFinishTime: 2022-04-01 18:59:11
+           URL: NULL
+    JobDetails: {"Unfinished backends":{"5072bde59b74b65-8d2c0ee5b029adc0":[]},"ScannedRows":27,"TaskNumber":1,"All backends":{"5072bde59b74b65-8d2c0ee5b029adc0":[36728051]},"FileNumber":1,"FileSize":5540}
+1 row in set (0.01 sec)
 ```
 
-4. It is necessary to ensure that Doris's BE process has read/write/execute permissions for this directory
-```
-// If using CGroup v1, then do as follow:
-// 1.Modify the permissions of this directory to read, write, and execute
-chmod 770 /sys/fs/cgroup/cpu/doris
+### 取消导入作业
 
-// 2.Assign the ownership of this directory to Doris's account
-chown -R doris:doris /sys/fs/cgroup/cpu/doris
+当 Broker load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label。取消导入命令语法可执行 [CANCEL LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CANCEL-LOAD) 查看。
 
+例如：撤销数据库 DEMO 上，label 为 broker_load_2022_03_23 的导入作业
 
-// If using CGroup v2, then do as follow:
-// 1.Modify the permissions of this directory to read, write, and execute
-chmod 770 /sys/fs/cgroup/doris
-
-// 2.Assign the ownership of this directory to Doris's account
-chown -R doris:doris /sys/fs/cgroup/doris
-
+```SQL
+CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_03_23";
 ```
 
-5. If CGroup v2 is being used in the current environment, the following actions need to be taken. This is because cgroup v2 has stricter permission controls, requiring write access to the cgroup.procs file in the root directory in order to move processes between groups.
-This step can be skipped if using CGroup v1.
+## 参考手册
+
+### 导入命令
+
+```sql
+LOAD LABEL load_label
+(
+data_desc1[, data_desc2, ...]
+)
+WITH [HDFS|S3|BROKER broker_name] 
+[broker_properties]
+[load_properties]
+[COMMENT "comments"];
 ```
-chmod a+w /sys/fs/cgroup/cgroup.procs
+
+### 导入配置参数
+
+**load properties**
+
+| Property 名称 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| "timeout" | Long | 14400 | 导入的超时时间，单位秒。范围是 1 秒 ~ 259200 秒。 |
+| "max_filter_ratio" | Float | 0.0 | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。 |
+| "exec_mem_limit" | Long | 2147483648 | 导入内存限制。默认为 2GB。单位为字节。 |
+| "strict_mode" | Boolean | false | 是否开启严格模式。 |
+| "partial_columns" | Boolean | false | 是否使用部分列更新，只在表模型为 Unique Key 且采用 Merge on Write 时有效。 |
+| "timezone" | String | "Asia/Shanghai" | 本次导入所使用的时区。该参数会影响所有导入涉及的和时区有关的函数结果。 |
+| "load_parallelism" | Integer | 8 | 每个 BE 上并发 instance 数量的上限。 |
+| "send_batch_parallelism" | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
+| "load_to_single_tablet" | Boolean | "false" | 是否每个分区只导入一个 tablet，默认值为 false。该参数只允许在对带有 random 分桶的 OLAP 表导数的时候设置。 |
+| "skip_lines" | Integer | "0" | 跳过 CSV 文件的前几行。当设置 format 设置为 csv_with_names 或 csv_with_names_and_types 时，该参数会失效。 |
+| "trim_double_quotes" | Boolean | "false" | 是否裁剪掉导入文件每个字段最外层的双引号。 |
+| "priority" | "HIGH" 或 "NORMAL" 或 "LOW" | "NORMAL" | 导入任务的优先级。 |
+
+**fe.conf**
+
+下面几个配置属于 Broker load 的系统级别配置，也就是作用于所有 Broker load 导入任务的配置。主要通过修改 `fe.conf`来调整配置值。
+
+| Session Variable | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| min_bytes_per_broker_scanner | Long | 67108864 (64 MB) | 一个 Broker Load 作业中单 BE 处理的数据量的最小值，单位：字节。 |
+| max_bytes_per_broker_scanner | Long | 536870912000 (500 GB) | 一个 Broker Load 作业中单 BE 处理的数据量的最大值，单位：字节。通常一个导入作业支持的最大数据量为 `max_bytes_per_broker_scanner * BE 节点数`。如果需要导入更大数据量，则需要适当调整 `max_bytes_per_broker_scanner` 参数的大小。 |
+| max_broker_concurrency | Integer | 10 | 限制了一个作业的最大的导入并发数。 |
+| default_load_parallelism | Integer | 8 | 每个 BE 节点最大并发 instance 数 |
+| broker_load_default_timeout_second | 14400 | Broker Load 导入的默认超时时间，单位：秒。 |
+
+注：最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数共同决定了本次导入的并发数。
+
+```Plain
+本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
+本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
 ```
 
-6. Modify the configuration of BE and specify the path to cgroup
+**session variable**
+
+| Session Variable | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| exec_mem_limit | Long | 2147483648 | 导入内存限制，单位：字节。 |
+| time_zone | String | "Asia/Shanghai" | 默认时区，会影响导入中时区相关的函数结果。 |
+| send_batch_parallelism | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
+
+## S3 Load
+
+Doris 支持通过 S3 协议直接从支持 S3 协议的对象存储系统导入数据。这里主要介绍如何导入 AWS S3 中存储的数据，支持导入其他支持 S3 协议的对象存储系统可以参考 AWS S3。 
+
+### 准备工作
+
+- AK 和 SK：首先需要找到或者重新生成 AWS `Access keys`，可以在 AWS console 的 `My Security Credentials` 找到生成方式。
+
+- REGION 和 ENDPOINT：REGION 可以在创建桶的时候选择也可以在桶列表中查看到。每个 REGION 的 S3 ENDPOINT 可以通过如下页面查到 [AWS 文档](https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_region)。
+
+### 导入示例
+
+```sql
+    LOAD LABEL example_db.example_label_1
+    (
+        DATA INFILE("s3://your_bucket_name/your_file.txt")
+        INTO TABLE load_test
+        COLUMNS TERMINATED BY ","
+    )
+    WITH S3
+    (
+        "provider" = "S3",
+        "AWS_ENDPOINT" = "AWS_ENDPOINT",
+        "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+        "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+        "AWS_REGION" = "AWS_REGION"
+    )
+    PROPERTIES
+    (
+        "timeout" = "3600"
+    );
 ```
-// If using CGroup v1:
-doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
 
+其中 `provider` 参数指定了 S3 供应商，支持列表：
 
-// If using CGroup v2:
-doris_cgroup_cpu_path = /sys/fs/cgroup/doris
+- "OSS" (阿里云)
+- "COS" (腾讯云)
+- "OBS" (华为云)
+- "BOS" (百度云)
+- "S3" (亚马逊 AWS)
+- "AZURE" (微软 Azure)
+- "GCP" (谷歌 GCP)
+
+### 常见问题
+
+- S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式：
+
+  ```sql
+    WITH S3
+    (
+          "AWS_ENDPOINT" = "AWS_ENDPOINT",
+          "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+          "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+          "AWS_REGION" = "AWS_REGION",
+          "use_path_style" = "true"
+    )
+  ```
+
+- 支持使用临时秘钥 (TOKEN) 访问所有支持 S3 协议的对象存储，用法如下：
+
+  ```sql
+    WITH S3
+    (
+        "AWS_ENDPOINT" = "AWS_ENDPOINT",
+        "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
+        "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
+        "AWS_TOKEN" = "AWS_TEMP_TOKEN",
+        "AWS_REGION" = "AWS_REGION"
+    )
+  ```
+
+## HDFS Load
+
+### 简单认证
+
+简单认证即 Hadoop 配置 `hadoop.security.authentication` 为 `simple`。
+
+```Plain
+(
+    "username" = "user",
+    "password" = ""
+);
 ```
 
-7. restart BE, in the log (be. INFO), you can see the words "add thread xxx to group" indicating successful configuration.
+username 配置为要访问的用户，密码置空即可。
 
-:::tip
-NOTE:
+### Kerberos 认证
 
-1. The current workload group does not yet support the deployment of multiple BEs on a single machine.
-2. After the machine is restarted, the above cgroup configurations will be cleared. If you want the above configurations to take effect after a reboot, you can use systemd to set these operations as a custom system service, so that the creation and permission assignments are automatically completed each time the machine restarts.
+该认证方式需提供以下信息：
+
+- `hadoop.security.authentication`：指定认证方式为 Kerberos。
+
+- `hadoop.kerberos.principal`：指定 Kerberos 的 principal。
+
+- `hadoop.kerberos.keytab`：指定 Kerberos 的 keytab 文件路径。该文件必须为 Broker 进程所在服务器上的文件的绝对路径。并且可以被 Broker 进程访问。
+
+- `kerberos_keytab_content`：指定 Kerberos 中 keytab 文件内容经过 base64 编码之后的内容。这个跟 `kerberos_keytab` 配置二选一即可。
+
+
+示例如下：
+
+```Plain
+(
+    "hadoop.security.authentication" = "kerberos",
+    "hadoop.kerberos.principal" = "doris@YOUR.COM",
+    "hadoop.kerberos.keytab" = "/home/doris/my.keytab"
+)
+(
+    "hadoop.security.authentication" = "kerberos",
+    "hadoop.kerberos.principal" = "doris@YOUR.COM",
+    "kerberos_keytab_content" = "ASDOWHDLAWIDJHWLDKSALDJSDIWALD"
+)
+```
+
+采用 Kerberos 认证方式，需要 [krb5.conf (opens new window)](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) 文件，krb5.conf 文件包含 Kerberos 的配置信息，通常，应该将 krb5.conf 文件安装在目录/etc 中。可以通过设置环境变量 KRB5_CONFIG 覆盖默认位置。krb5.conf 文件的内容示例如下：
+
+```Plain
+[libdefaults]
+    default_realm = DORIS.HADOOP
+    default_tkt_enctypes = des3-hmac-sha1 des-cbc-crc
+    default_tgs_enctypes = des3-hmac-sha1 des-cbc-crc
+    dns_lookup_kdc = true
+    dns_lookup_realm = false
+
+[realms]
+    DORIS.HADOOP = {
+        kdc = kerberos-doris.hadoop.service:7005
+    }
+```
+
+### HDFS HA 模式
+
+这个配置用于访问以 HA 模式部署的 HDFS 集群。
+
+- `dfs.nameservices`：指定 HDFS 服务的名字，自定义，如："dfs.nameservices" = "my_ha"。
+
+- `dfs.ha.namenodes.xxx`：自定义 namenode 的名字，多个名字以逗号分隔。其中 xxx 为 `dfs.nameservices` 中自定义的名字，如： "dfs.ha.namenodes.my_ha" = "my_nn"。
+
+- `dfs.namenode.rpc-address.xxx.nn`：指定 namenode 的 rpc 地址信息。其中 nn 表示 `dfs.ha.namenodes.xxx` 中配置的 namenode 的名字，如："dfs.namenode.rpc-address.my_ha.my_nn" = "host:port"。
+
+- `dfs.client.failover.proxy.provider.[nameservice ID]`：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider。
+
+示例如下：
+
+```sql
+(
+    "fs.defaultFS" = "hdfs://my_ha",
+    "dfs.nameservices" = "my_ha",
+    "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
+    "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
+    "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
+    "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+)
+```
+
+HA 模式可以和前面两种认证方式组合，进行集群访问。如通过简单认证访问 HA HDFS：
+
+```sql
+(
+    "username"="user",
+    "password"="passwd",
+    "fs.defaultFS" = "hdfs://my_ha",
+    "dfs.nameservices" = "my_ha",
+    "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
+    "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
+    "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
+    "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+)
+```
+
+### 导入示例
+
+- 导入 HDFS 上的 TXT 文件
+
+  ```sql
+  LOAD LABEL demo.label_20220402
+  (
+      DATA INFILE("hdfs://host:port/tmp/test_hdfs.txt")
+      INTO TABLE `load_hdfs_file_test`
+      COLUMNS TERMINATED BY "\t"            
+      (id,age,name)
+  ) 
+  with HDFS
+  (
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+  )
+  PROPERTIES
+  (
+      "timeout"="1200",
+      "max_filter_ratio"="0.1"
+  );
+  ```
+
+-  HDFS 需要配置 NameNode HA 的情况
+
+  ```sql
+  LOAD LABEL demo.label_20220402
+  (
+      DATA INFILE("hdfs://hafs/tmp/test_hdfs.txt")
+      INTO TABLE `load_hdfs_file_test`
+      COLUMNS TERMINATED BY "\t"            
+      (id,age,name)
+  ) 
+  with HDFS
+  (
+      "hadoop.username" = "user",
+      "fs.defaultFS"="hdfs://hafs"，
+      "dfs.nameservices" = "hafs",
+      "dfs.ha.namenodes.hafs" = "my_namenode1, my_namenode2",
+      "dfs.namenode.rpc-address.hafs.my_namenode1" = "nn1_host:rpc_port",
+      "dfs.namenode.rpc-address.hafs.my_namenode2" = "nn2_host:rpc_port",
+      "dfs.client.failover.proxy.provider.hafs" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+  )
+  PROPERTIES
+  (
+      "timeout"="1200",
+      "max_filter_ratio"="0.1"
+  );
+  ```
+
+- 从 HDFS 导入数据，使用通配符匹配两批文件，分别导入到两个表中
+
+  ```sql
+  LOAD LABEL example_db.label2
+  (
+      DATA INFILE("hdfs://host:port/input/file-10*")
+      INTO TABLE `my_table1`
+      PARTITION (p1)
+      COLUMNS TERMINATED BY ","
+      (k1, tmp_k2, tmp_k3)
+      SET (
+          k2 = tmp_k2 + 1,
+          k3 = tmp_k3 + 1
+      ),
+      DATA INFILE("hdfs://host:port/input/file-20*")
+      INTO TABLE `my_table2`
+      COLUMNS TERMINATED BY ","
+      (k1, k2, k3)
+  )
+  with HDFS
+  (
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+  );
+  ```
+
+  使用通配符匹配导入两批文件 `file-10*` 和 `file-20*`。分别导入到 `my_table1` 和 `my_table2` 两张表中。其中 `my_table1` 指定导入到分区 `p1` 中，并且将导入源文件中第二列和第三列的值 +1 后导入。
+
+- 使用通配符从 HDFS 导入一批数据
+
+  ```sql
+  LOAD LABEL example_db.label3
+  (
+      DATA INFILE("hdfs://host:port/user/doris/data/*/*")
+      INTO TABLE `my_table`
+      COLUMNS TERMINATED BY "\\x01"
+  )
+  with HDFS
+  (
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+  );
+  ```
+
+  指定分隔符为 Hive 经常用的默认分隔符 `\\x01`，并使用通配符 * 指定 `data` 目录下所有目录的所有文件。
+
+- 导入 Parquet 格式数据，指定 FORMAT 为 `parquet`
+
+    ```SQL
+    LOAD LABEL example_db.label4
+    (
+        DATA INFILE("hdfs://host:port/input/file")
+        INTO TABLE `my_table`
+        FORMAT AS "parquet"
+        (k1, k2, k3)
+    )
+    with HDFS
+    (
+      "fs.defaultFS"="hdfs://host:port",
+      "hadoop.username" = "user"
+    );
+    ```
+
+  默认是通过文件后缀判断。
+
+- 导入数据，并提取文件路径中的分区字段
+
+  ```sql
+  LOAD LABEL example_db.label5
+  (
+      DATA INFILE("hdfs://host:port/input/city=beijing/*/*")
+      INTO TABLE `my_table`
+      FORMAT AS "csv"
+      (k1, k2, k3)
+      COLUMNS FROM PATH AS (city, utc_date)
+  )
+  with HDFS
+  (
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+  );
+  ```
+
+  `my_table` 表中的列为 `k1, k2, k3, city, utc_date`。
+
+  其中 `hdfs://hdfs_host:hdfs_port/user/doris/data/input/dir/city=beijing` 目录下包括如下文件：
+
+  ```Plain
+  hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-01/0000.csv
+  hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-02/0000.csv
+  hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-03/0000.csv
+  hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-04/0000.csv
+  ```
+
+  文件中只包含 `k1, k2, k3` 三列数据，`city, utc_date` 这两列数据会从文件路径中提取。
+
+- 对导入数据进行过滤
+
+  ```sql
+  LOAD LABEL example_db.label6
+  (
+      DATA INFILE("hdfs://host:port/input/file")
+      INTO TABLE `my_table`
+      (k1, k2, k3)
+      SET (
+          k2 = k2 + 1
+      )
+      PRECEDING FILTER k1 = 1
+      WHERE k1 > k2
+  )
+  with HDFS
+  (
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+  );
+  ```
+
+  只有原始数据中，k1 = 1，并且转换后，k1 > k2 的行才会被导入。
+
+- 导入数据，提取文件路径中的时间分区字段
+
+  ```sql
+  LOAD LABEL example_db.label7
+  (
+      DATA INFILE("hdfs://host:port/user/data/*/test.txt") 
+      INTO TABLE `tbl12`
+      COLUMNS TERMINATED BY ","
+      (k2,k3)
+      COLUMNS FROM PATH AS (data_time)
+      SET (
+          data_time=str_to_date(data_time, '%Y-%m-%d %H%%3A%i%%3A%s')
+      )
+  )
+  with HDFS
+  (
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+  );
+  ```
+
+  :::tip
+  时间包含 %3A。在 hdfs 路径中，不允许有 ':'，所有 ':' 会由 %3A 替换。
+  :::
+
+  路径下有如下文件：
+
+  ```Plain
+  /user/data/data_time=2020-02-17 00%3A00%3A00/test.txt
+  /user/data/data_time=2020-02-18 00%3A00%3A00/test.txt
+  ```
+
+  表结构为：
+
+  ```sql
+  CREATE TABLE IF NOT EXISTS tbl12 (
+      data_time DATETIME,
+      k2        INT,
+      k3        INT
+  ) DISTRIBUTED BY HASH(data_time) BUCKETS 10
+  PROPERTIES (
+      "replication_num" = "3"
+  );
+  ```
+
+- 使用 Merge 方式导入
+
+  ```sql
+  LOAD LABEL example_db.label8
+  (
+      MERGE DATA INFILE("hdfs://host:port/input/file")
+      INTO TABLE `my_table`
+      (k1, k2, k3, v2, v1)
+      DELETE ON v2 > 100
+  )
+  with HDFS
+  (
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username"="user"
+  )
+  PROPERTIES
+  (
+      "timeout" = "3600",
+      "max_filter_ratio" = "0.1"
+  );
+  ```
+
+  使用 Merge 方式导入。`my_table` 必须是一张 Unique Key 的表。当导入数据中的 v2 列的值大于 100 时，该行会被认为是一个删除行。导入任务的超时时间是 3600 秒，并且允许错误率在 10% 以内。
+
+- 导入时指定 source_sequence 列，保证替换顺序
+
+  ```sql
+  LOAD LABEL example_db.label9
+  (
+      DATA INFILE("hdfs://host:port/input/file")
+      INTO TABLE `my_table`
+      COLUMNS TERMINATED BY ","
+      (k1,k2,source_sequence,v1,v2)
+      ORDER BY source_sequence
+  ) 
+  with HDFS
+  (
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username"="user"
+  );
+  ```
+
+  `my_table` 必须是 Unique Key 模型表，并且指定了 Sequence 列。数据会按照源数据中 `source_sequence` 列的值来保证顺序性。
+
+- 导入指定文件格式为 `json`，并指定 `json_root`、`jsonpaths`
+
+  ```sql
+  LOAD LABEL example_db.label10
+  (
+      DATA INFILE("hdfs://host:port/input/file.json")
+      INTO TABLE `my_table`
+      FORMAT AS "json"
+      PROPERTIES(
+        "json_root" = "$.item",
+        "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
+      )       
+  )
+  with HDFS
+  (
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username"="user"
+  );
+  ```
+
+  `jsonpaths` 也可以与 `column list` 及 `SET (column_mapping)`配合使用：
+
+  ```sql
+  LOAD LABEL example_db.label10
+  (
+      DATA INFILE("hdfs://host:port/input/file.json")
+      INTO TABLE `my_table`
+      FORMAT AS "json"
+      (id, code, city)
+      SET (id = id * 10)
+      PROPERTIES(
+        "json_root" = "$.item",
+        "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
+      )       
+  )
+  with HDFS
+  (
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username"="user"
+  );
+  ```
+
+## 其他 Broker 导入
+
+其他远端存储系统的 Broker 是 Doris 集群中一种可选进程，主要用于支持 Doris 读写远端存储上的文件和目录。目前提供了如下存储系统的 Broker 实现。
+
+- 阿里云 OSS
+
+- 百度云 BOS
+
+- 腾讯云 CHDFS
+
+- 腾讯云 GFS
+
+- 华为云 OBS
+
+- JuiceFS 
+
+- GCS
+
+Broker 通过提供一个 RPC 服务端口来提供服务，是一个无状态的 Java 进程，负责为远端存储的读写操作封装一些类 POSIX 的文件操作，如 open，pread，pwrite 等等。除此之外，Broker 不记录任何其他信息，所以包括远端存储的连接信息、文件信息、权限信息等等，都需要通过参数在 RPC 调用中传递给 Broker 进程，才能使得 Broker 能够正确读写文件。
+
+Broker 仅作为一个数据通路，并不参与任何计算，因此仅需占用较少的内存。通常一个 Doris 系统中会部署一个或多个 Broker 进程。并且相同类型的 Broker 会组成一个组，并设定一个 名称（Broker name）。
+
+这里主要介绍 Broker 在访问不同远端存储时需要的参数，如连接信息、权限认证信息等等。
+
+### Broker 信息
+
+Broker 的信息包括 名称（Broker name）和 认证信息 两部分。通常的语法格式如下：
+
+```sql
+WITH BROKER "broker_name" 
+(
+    "username" = "xxx",
+    "password" = "yyy",
+    "other_prop" = "prop_value",
+    ...
+);
+```
+
+**名称**
+
+通常用户需要通过操作命令中的 `WITH BROKER "broker_name"` 子句来指定一个已经存在的 Broker Name。Broker Name 是用户在通过 `ALTER SYSTEM ADD BROKER` 命令添加 Broker 进程时指定的一个名称。一个名称通常对应一个或多个 Broker 进程。Doris 会根据名称选择可用的 Broker 进程。用户可以通过 `SHOW BROKER` 命令查看当前集群中已经存在的 Broker。
+
+:::info 备注
+Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 :::
 
-## Note for Using Workload Groups in K8S
-The CPU management for Workloads is implemented based on CGroup. To use Workload Groups within containers, you need to start the containers in privileged mode so that the Doris processes inside the container have permission to read and write CGroup files on the host.
+**认证信息**
 
-When Doris runs inside a container, the CPU resources for Workload Groups are allocated based on the container's available resources. For example, if the host machine has 64 cores and the container is allocated 8 cores, with a CPU hard limit of 50% configured for the Workload Group, the actual number of usable cores for the Workload Group would be 4 (8 cores * 50%).
+不同的 Broker 类型，以及不同的访问方式需要提供不同的认证信息。认证信息通常在 `WITH BROKER "broker_name"` 之后的 Property Map 中以 Key-Value 的方式提供。
 
-Memory and I/O management for Workload Groups are handled internally by Doris and do not rely on external components, so there is no difference in deployment between containers and physical machines.
+### Broker 举例
 
-If you want to use Doris on K8S, it is recommended to use the Doris Operator for deployment, as it can abstract away the underlying permission details.
+- 阿里云 OSS
 
-## Workload group usage
-1. First, create a custom workload group. 
-```
-create workload group if not exists g1
-properties (
-    "cpu_share"="1024",
-    "memory_limit"="30%",
-    "enable_memory_overcommit"="true"
-);
-```
-This is soft CPU limit. Since version 2.1, the system will automatically create a group named ```normal```, which cannot be deleted.
-For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP).
-
-2. show/alter/drop workload group statement as follows:
-```
-show workload groups;
-
-alter workload group g1 properties('memory_limit'='10%');
-
-drop workload group g1;
-```
-to view the workload group, you can visit doris system table ```information_schema.workload_groups``` or [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS);to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP).
-
-3. Bind the workload group.
-* Bind the user to the workload group by default by setting the user property to ```normal```.Note that the value here cannot be left blank, otherwise the statement will fail to execute. If you're unsure which group to set, you can set it to ```normal```, as ```normal``` is the global default group.
-```
-set property 'default_workload_group' = 'g1'.
-```
-After executing this statement, the current user's query will use 'g1' by default.
-
-* Specify the workload group via the session variable, which defaults to null.
-```
-set workload_group = 'g1'.
-```
-session variable `workload_group` takes precedence over user property `default_workload_group`, in case `workload_group` is empty, the query will be bound to `default_workload_group`, in case session variable ` workload_group` is not empty, the query will be bound to `workload_group`.
-
-If you are a non-admin user, you need to execute [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) to check if the current user can see the workload group, if not, the workload group may not exist or the current user does not have permission to execute the query. If you cannot see the workload group, the workload group may not exist or the current user does not have privileges. To authorize the workload group, refer to: [grant statement](../../sql-manual/sql-statements/Account-Management-Statements/GRANT).
-
-4. Execute the query, which will be associated with the g1 workload group.
-
-### Query Queue
-```
-create workload group if not exists queue_group
-properties (
-    "cpu_share"="10",
-    "memory_limit"="30%",
-    "max_concurrency" = "10",
-    "max_queue_size" = "20",
-    "queue_timeout" = "3000"
-);
-```
-1. It should be noted that the current queuing design is not aware of the number of FEs, and the queuing parameters only works in a single FE, for example:
-
-A Doris cluster is configured with a work load group and set max_concurrency=1,
-If there is only 1 FE in the cluster, then this workload group will only run one SQL at the same time from the Doris cluster perspective,
-If there are 3 FEs, the maximum number of query that can be run in Doris cluster is 3.
-
-2. In some operational scenarios, the administrator needs to bypass the queuing. This can be achieved by setting a session variable:
-```
-set bypass_workload_group = true;
+```sql
+(
+    "fs.oss.accessKeyId" = "",
+    "fs.oss.accessKeySecret" = "",
+    "fs.oss.endpoint" = ""
+)
 ```
 
-### Configure CPU hard limits
-At present, Doris defaults to running the CPU's soft limit. If you want to use Workload Group's hard limit, you can do as follows.
+- 百度云 BOS
 
-1 Enable the cpu hard limit in FE. If there are multiple FE, the same operation needs to be performed on each FE.
-```
-1 modify fe.conf in disk
-experimental_enable_cpu_hard_limit = true
+当前使用 BOS 时需要下载相应的 SDK 包，具体配置与使用，可以参考 [BOS HDFS 官方文档](https://cloud.baidu.com/doc/BOS/s/fk53rav99)。在下载完成并解压后将 jar 包放到 broker 的 lib 目录下。
 
-2 modify conf in memory
-ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
-```
-
-2 modify cpu_hard_limit
-```
-alter workload group g1 properties ( 'cpu_hard_limit'='20%' );
+```sql
+(
+    "fs.bos.access.key" = "xx",
+    "fs.bos.secret.access.key" = "xx",
+    "fs.bos.endpoint" = "xx"
+)
 ```
 
-3 Viewing the current configuration of the Workload Group, it can be seen that although the cpu_share may not be 0, but due to the hard limit mode being enabled, the query will also follow the CPU's hard limit during execution. That is to say, the switch of CPU software and hardware limits does not affect workload group modification.
-```
-mysql [information_schema]>select name, cpu_share,memory_limit,enable_memory_overcommit,cpu_hard_limit from information_schema.workload_groups where name='g1';
-+------+-----------+--------------+--------------------------+----------------+
-| name | cpu_share | memory_limit | enable_memory_overcommit | cpu_hard_limit |
-+------+-----------+--------------+--------------------------+----------------+
-| g1   |      1024 | 30%          | true                     | 20%            |
-+------+-----------+--------------+--------------------------+----------------+
-1 row in set (0.02 sec)
-```
+- 华为云 OBS
 
-### How to switch CPU limit node between soft limit and hard limit
-At present, Doris does not support running both the soft and hard limits of the CPU simultaneously. A Doris cluster can only have either the CPU soft limit or the CPU hard limit at any time.
-
-Users can switch between two modes, and the main switching methods are as follows:
-
-1 If the current cluster configuration is set to the default CPU soft limit and it is expected to be changed to the CPU hard limit, then cpu_hard_limit should be set to a valid value first.
-```
-alter workload group test_group properties ( 'cpu_hard_limit'='20%' );
-```
-It is necessary to modify cpu_hard_limit of all Workload Groups in the current cluster, sum of all Workload Group's cpu_hard_limit cannot exceed 100%.
-Due to the CPU's hard limit can not being able to provide a valid default value, if only the switch is turned on without modifying cpu_hard_limit, the CPU's hard limit will not work.
-
-2 Turn on the CPU hard limit switch in all FEs.
-```
-1 modify fe.conf
-experimental_enable_cpu_hard_limit = true
-
-2 modify conf in memory
-ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
+```sql
+(
+    "fs.obs.access.key" = "xx",
+    "fs.obs.secret.key" = "xx",
+    "fs.obs.endpoint" = "xx"
+)
 ```
 
-If user expects to switch back from cpu hard limit to cpu soft limit, then they only need to set ```enable_cpu_hard_limit=false```.
-CPU Soft Limit property ```cpu_share``` will be filled with a valid value of 1024 by default(If the user has never set the cpu_share before), and users can adjust cpu_share based on the priority of Workload Group.
+- JuiceFS
 
-# Workload Group Permissions Table
-You can view the Workload Groups that users or roles have access to through the Workload Group privilege table. Authorization related usage can refer to[grant statement](../../sql-manual/sql-statements/Account-Management-Statements/GRANT).
-
-This table currently has row level permission control. Root or admin accounts can view all data, while non root/admin accounts can only see data from Workload Groups that they have access to。
-
-Schema of Workload Group privilege table is as follow：
-```
-mysql [information_schema]>desc information_schema.workload_group_privileges;
-+---------------------+--------------+------+-------+---------+-------+
-| Field               | Type         | Null | Key   | Default | Extra |
-+---------------------+--------------+------+-------+---------+-------+
-| GRANTEE             | varchar(64)  | Yes  | false | NULL    |       |
-| WORKLOAD_GROUP_NAME | varchar(256) | Yes  | false | NULL    |       |
-| PRIVILEGE_TYPE      | varchar(64)  | Yes  | false | NULL    |       |
-| IS_GRANTABLE        | varchar(3)   | Yes  | false | NULL    |       |
-+---------------------+--------------+------+-------+---------+-------+
+```sql
+(
+    "fs.defaultFS" = "jfs://xxx/",
+    "fs.jfs.impl" = "io.juicefs.JuiceFileSystem",
+    "fs.AbstractFileSystem.jfs.impl" = "io.juicefs.JuiceFS",
+    "juicefs.meta" = "xxx",
+    "juicefs.access-log" = "xxx"
+)
 ```
 
-Column Description：
-1. grantee, user or role.
-2. workload_group_name, value is the name of Workload Group or '%', where '%' represents all Workload Group.
-3. privilege_type, type of privilege, at present, the value of this column is only Usage_priv。
-4. is_grantable, value is YES or NO, it means whether the user can grant access privilege of Workload Group to other user.Only root/admin user has grant privilege.
+- GCS
 
-Basic usage：
-1. Search for Workload Group with authorized access based on username.
-```
-mysql [information_schema]>select * from workload_group_privileges where GRANTEE like '%test_wlg_user%';
-+---------------------+---------------------+----------------+--------------+
-| GRANTEE             | WORKLOAD_GROUP_NAME | PRIVILEGE_TYPE | IS_GRANTABLE |
-+---------------------+---------------------+----------------+--------------+
-| 'test_wlg_user'@'%' | normal              | Usage_priv     | NO           |
-| 'test_wlg_user'@'%' | test_group          | Usage_priv     | NO           |
-+---------------------+---------------------+----------------+--------------+
-2 rows in set (0.04 sec)
+在使用 Broker 访问 GCS 时，Project ID 是必须的，其他参数可选，所有参数配置请参考 [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION.md)
+
+```sql
+(
+    "fs.gs.project.id" = "你的 Project ID",
+    "fs.AbstractFileSystem.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
+    "fs.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem",
+)
 ```
 
-2. Search for user which has access privilege by Workload Group name. 
+
+## 常见问题
+
+**1. 导入报错：`Scan bytes per broker scanner exceed limit:xxx`**
+
+请参照文档中最佳实践部分，修改 FE 配置项 `max_bytes_per_broker_scanner` 和 `max_broker_concurrency`
+
+**2. 导入报错：`failed to send batch` 或 `TabletWriter add batch with unknown id`**
+
+适当修改 `query_timeout` 和 `streaming_load_rpc_max_alive_time_sec`。
+
+**3. 导入报错：`LOAD_RUN_FAIL; msg:Invalid Column Name:xxx`**
+
+如果是 PARQUET 或者 ORC 格式的数据，则文件头的列名需要与 doris 表中的列名保持一致，如：
+
+```sql
+(tmp_c1,tmp_c2)
+SET
+(
+    id=tmp_c2,
+    name=tmp_c1
+)
 ```
-mysql [information_schema]>select * from workload_group_privileges where WORKLOAD_GROUP_NAME='test_group';
-+---------------------+---------------------+----------------+--------------+
-| GRANTEE             | WORKLOAD_GROUP_NAME | PRIVILEGE_TYPE | IS_GRANTABLE |
-+---------------------+---------------------+----------------+--------------+
-| 'test_wlg_user'@'%' | test_group          | Usage_priv     | NO           |
-+---------------------+---------------------+----------------+--------------+
-1 row in set (0.03 sec)
+
+代表获取在 parquet 或 orc 中以 (tmp_c1, tmp_c2) 为列名的列，映射到 doris 表中的 (id, name) 列。如果没有设置 set, 则以 column 中的列作为映射。
+
+注：如果使用某些 hive 版本直接生成的 orc 文件，orc 文件中的表头并非 hive meta 数据，而是（_col0, _col1, _col2, ...）, 可能导致 Invalid Column Name 错误，那么则需要使用 set 进行映射
+
+**4. 导入报错：`Failed to get S3 FileSystem for bucket is null/empty`**
+
+bucket 信息填写不正确或者不存在。或者 bucket 的格式不受支持。使用 GCS 创建带`_`的桶名时，比如：`s3://gs_bucket/load_tbl`，S3 Client 访问 GCS 会报错，建议创建 bucket 路径时不使用`_`。
+
+**5. 导入超时**
+
+导入的 timeout 默认超时时间为 4 小时。如果超时，不推荐用户将导入最大超时时间直接改大来解决问题。单个导入时间如果超过默认的导入超时时间 4 小时，最好是通过切分待导入文件并且分多次导入来解决问题。因为超时时间设置过大，那么单次导入失败后重试的时间成本很高。
+
+可以通过如下公式计算出 Doris 集群期望最大导入文件数据量：
+
+```Plain
+期望最大导入文件数据量 = 14400s * 10M/s * BE 个数
+比如：集群的 BE 个数为 10个
+期望最大导入文件数据量 = 14400s * 10M/s * 10 = 1440000M ≈ 1440G
+
+注意：一般用户的环境可能达不到 10M/s 的速度，所以建议超过 500G 的文件都进行文件切分，再导入。
 ```
+
+## 更多帮助
+
+关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP BROKER LOAD` 获取更多帮助信息。

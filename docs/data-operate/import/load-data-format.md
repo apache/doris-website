@@ -203,7 +203,7 @@ Currently only the following three JSON formats are supported:
   
 - fuzzy_parse parameters
 
-  In [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD.md) `fuzzy_parse` parameter can be added to speed up JSON Data import efficiency.
+  In STREAM LOAD `fuzzy_parse` parameter can be added to speed up JSON Data import efficiency.
   
   This parameter is usually used to import the format of **multi-line data represented by Array**, so it is generally used with `strip_outer_array=true`.
   

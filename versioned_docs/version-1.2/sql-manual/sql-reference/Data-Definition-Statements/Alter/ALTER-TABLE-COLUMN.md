@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-TABLE-COLUMN",
+    "title": "CREATE-MATERIALIZED-VIEW",
     "language": "en"
 }
 ---
@@ -24,207 +24,212 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-TABLE-COLUMN
+## CREATE-MATERIALIZED-VIEW
 
 ### Name
 
-ALTER TABLE COLUMN
+CREATE MATERIALIZED VIEW
 
 ### Description
 
-This statement is used to perform a schema change operation on an existing table. The schema change is asynchronous, and the task is returned when the task is submitted successfully. After that, you can use the [SHOW ALTER TABLE COLUMN](../../Show-Statements/SHOW-ALTER.md) command to view the progress.
+This statement is used to create a materialized view.
+
+This operation is an asynchronous operation. After the submission is successful, you need to view the job progress through [SHOW ALTER TABLE MATERIALIZED VIEW](../table/SHOW-ALTER-TABLE-MATERIALIZED-VIEW). After displaying FINISHED, you can use the `desc [table_name] all` command to view the schema of the materialized view.
 
 grammar:
 
 ```sql
-ALTER TABLE [database.]table alter_clause;
+CREATE MATERIALIZED VIEW [MV name] as [query]
+[PROPERTIES ("key" = "value")]
 ```
 
-The alter_clause of schema change supports the following modification methods:
+illustrate:
 
-1. Add a column to the specified position at the specified index
+- `MV name`: The name of the materialized view, required. Materialized view names for the same table cannot be repeated.
 
-grammar:
+- `query`: The query statement used to construct the materialized view, the result of the query statement is the data of the materialized view. Currently supported query formats are:
 
-```sql
-ADD COLUMN column_name column_type [KEY | agg_type] [DEFAULT "default_value"]
-[AFTER column_name|FIRST]
-[TO rollup_index_name]
-[PROPERTIES ("key"="value", ...)]
-```
+  ```sql
+  SELECT select_expr[, select_expr ...]
+  FROM [Base view name]
+  GROUP BY column_name[, column_name ...]
+  ORDER BY column_name[, column_name ...]
+  ```
 
- Notice:
+  The syntax is the same as the query syntax.
 
-- If you add a value column to the aggregation model, you need to specify agg_type
-- For non-aggregated models (such as DUPLICATE KEY), if you add a key column, you need to specify the KEY keyword
-- You cannot add columns that already exist in the base index to the rollup index (you can recreate a rollup index if necessary)
+  - `select_expr`: All columns in the schema of the materialized view.
+    - Contains at least one single column.
+  - `base view name`: The original table name of the materialized view, required.
+    - Must be a single table and not a subquery
+  - `group by`: The grouping column of the materialized view, optional.
+    - If not filled, the data will not be grouped.
+  - `order by`: the sorting column of the materialized view, optional.
+    - The declaration order of the sort column must be the same as the column declaration order in select_expr.
+    - If order by is not declared, the sorting column is automatically supplemented according to the rules. If the materialized view is an aggregate type, all grouping columns are automatically supplemented as sort columns. If the materialized view is of a non-aggregate type, the first 36 bytes are automatically supplemented as the sort column.
+    - If the number of auto-supplemented sorts is less than 3, the first three are used as the sort sequence. If query contains a grouping column, the sorting column must be the same as the grouping column.
 
-2. Add multiple columns to the specified index
+- properties
 
-grammar:
+  Declare some configuration of the materialized view, optional.
 
-```sql
-ADD COLUMN (column_name1 column_type [KEY | agg_type] DEFAULT "default_value", ...)
-[TO rollup_index_name]
-[PROPERTIES ("key"="value", ...)]
-```
+  ```text
+  PROPERTIES ("key" = "value", "key" = "value" ...)
+  ```
 
-Notice:
+  The following configurations can be declared here:
 
-- If you add a value column to the aggregation model, you need to specify agg_type
-- If you add a key column to the aggregation model, you need to specify the KEY keyword
-- You cannot add columns that already exist in the base index to the rollup index (you can recreate a rollup index if necessary)
-
-3. Delete a column from the specified index
-
-grammar:
-
-```sql
-DROP COLUMN column_name
-[FROM rollup_index_name]
-```
-
-Notice:
-
-- Cannot drop partition column
-- If the column is removed from the base index, it will also be removed if it is included in the rollup index
-
-4. Modify the column type and column position of the specified index
-
- grammar:
-
-```sql
-MODIFY COLUMN column_name column_type [KEY | agg_type] [NULL | NOT NULL] [DEFAULT "default_value"]
-[AFTER column_name|FIRST]
-[FROM rollup_index_name]
-[PROPERTIES ("key"="value", ...)]
-```
-
-Notice:
-
-- If you modify the value column in the aggregation model, you need to specify agg_type
-- If you modify the key column for non-aggregate types, you need to specify the KEY keyword
-- Only the type of the column can be modified, and other attributes of the column remain as they are (that is, other attributes need to be explicitly written in the statement according to the original attributes, see example 8)
-- Partitioning and bucketing columns cannot be modified in any way
-- The following types of conversions are currently supported (loss of precision is guaranteed by the user)
-  - Conversion of TINYINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE types to larger numeric types
-  - Convert TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE/DECIMAL to VARCHAR
-  - VARCHAR supports modifying the maximum length
-  - VARCHAR/CHAR converted to TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE
-  - Convert VARCHAR/CHAR to DATE (currently supports "%Y-%m-%d", "%y-%m-%d", "%Y%m%d", "%y%m%d", "%Y/%m/%d, "%y/%m/%d" six formats)
-  - Convert DATETIME to DATE (only keep year-month-day information, for example: `2019-12-09 21:47:05` <--> `2019-12-09`)
-  - DATE is converted to DATETIME (hours, minutes and seconds are automatically filled with zeros, for example: `2019-12-09` <--> `2019-12-09 00:00:00`)
-  - Convert FLOAT to DOUBLE
-  - INT is converted to DATE (if the INT type data is illegal, the conversion fails, and the original data remains unchanged)
-  - All can be converted to STRING except DATE and DATETIME, but STRING cannot be converted to any other type
-
-5. Reorder the column at the specified index
-
-grammar:
-
-```sql
-ORDER BY (column_name1, column_name2, ...)
-[FROM rollup_index_name]
-[PROPERTIES ("key"="value", ...)]
-```
-
-Notice:
-
-- All columns in index are written out
-- the value column comes after the key column
+  ```text
+   short_key: The number of sorting columns.
+   timeout: The timeout for materialized view construction.
+  ```
 
 ### Example
 
-1. Add a key column new_col after col1 of example_rollup_index (non-aggregated model)
+Base table structure is
 
 ```sql
-ALTER TABLE example_db.my_table
-ADD COLUMN new_col INT KEY DEFAULT "0" AFTER col1
-TO example_rollup_index;
+mysql> desc duplicate_table;
++-------+--------+------+------+---------+-------+
+| Field | Type | Null | Key | Default | Extra |
++-------+--------+------+------+---------+-------+
+| k1 | INT | Yes | true | N/A | |
+| k2 | INT | Yes | true | N/A | |
+| k3 | BIGINT | Yes | true | N/A | |
+| k4 | BIGINT | Yes | true | N/A | |
++-------+--------+------+------+---------+-------+
 ```
-
-2. Add a value column new_col after col1 of example_rollup_index (non-aggregation model)
-
 ```sql
-ALTER TABLE example_db.my_table
-ADD COLUMN new_col INT DEFAULT "0" AFTER col1
-TO example_rollup_index;
+create table duplicate_table(
+	k1 int null,
+	k2 int null,
+	k3 bigint null,
+	k4 bigint null
+)
+duplicate key (k1,k2,k3,k4)
+distributed BY hash(k4) buckets 3
+properties("replication_num" = "1");
 ```
+attention: If the materialized view contains partitioned and distributed columns of the Base table, these columns must be used as key columns in the materialized view
 
-3. Add a key column new_col (aggregation model) after col1 of example_rollup_index
+1. Create a materialized view that contains only the columns of the original table (k1, k2)
 
-```sql
-ALTER TABLE example_db.my_table
-ADD COLUMN new_col INT DEFAULT "0" AFTER col1
-TO example_rollup_index;
-```
+   ```sql
+   create materialized view k2_k1 as
+   select k2, k1 from duplicate_table;
+   ```
 
-4. Add a value column new_col SUM aggregation type (aggregation model) after col1 of example_rollup_index
+   The schema of the materialized view is as follows, the materialized view contains only two columns k1, k2 without any aggregation
 
-```sql
-ALTER TABLE example_db.my_table
-ADD COLUMN new_col INT SUM DEFAULT "0" AFTER col1
-TO example_rollup_index;
-```
+   ```text
+   +-------+-------+--------+------+------+ ---------+-------+
+   | IndexName | Field | Type | Null | Key | Default | Extra |
+   +-------+-------+--------+------+------+ ---------+-------+
+   | k2_k1 | k2 | INT | Yes | true | N/A | |
+   | | k1 | INT | Yes | true | N/A | |
+   +-------+-------+--------+------+------+ ---------+-------+
+   ```
 
-5. Add multiple columns to example_rollup_index (aggregation model)
+2. Create a materialized view with k2 as the sort column
 
-```sql
-ALTER TABLE example_db.my_table
-ADD COLUMN (col1 INT DEFAULT "1", col2 FLOAT SUM DEFAULT "2.3")
-TO example_rollup_index;
-```
+   ```sql
+   create materialized view k2_order as
+   select k2, k1 from duplicate_table order by k2;
+   ```
 
-6. Remove a column from example_rollup_index
+   The schema of the materialized view is shown in the figure below. The materialized view contains only two columns k2, k1, where k2 is the sorting column without any aggregation.
 
-```sql
-ALTER TABLE example_db.my_table
-DROP COLUMN col2
-FROM example_rollup_index;
-```
+   ```text
+   +-------+-------+--------+------+------- +---------+-------+
+   | IndexName | Field | Type | Null | Key | Default | Extra |
+   +-------+-------+--------+------+------- +---------+-------+
+   | k2_order | k2 | INT | Yes | true | N/A | |
+   | | k1 | INT | Yes | false | N/A | NONE |
+   +-------+-------+--------+------+------- +---------+-------+
+   ```
 
-7. Modify the type of the key column col1 of the base index to BIGINT and move it to the back of the col2 column.
+3. Create a materialized view with k1, k2 grouping and k3 column aggregated by SUM
 
-```sql
-ALTER TABLE example_db.my_table
-MODIFY COLUMN col1 BIGINT KEY DEFAULT "1" AFTER col2;
-```
+   ```sql
+   create materialized view k1_k2_sumk3 as
+   select k1, k2, sum(k3) from duplicate_table group by k1, k2;
+   ```
 
-Note: Whether you modify the key column or the value column, you need to declare complete column information
+   The schema of the materialized view is shown in the figure below. The materialized view contains two columns k1, k2, sum(k3) where k1, k2 are the grouping columns, and sum(k3) is the sum value of the k3 column grouped by k1, k2.
 
-8. Modify the maximum length of the val1 column of base index. The original val1 is (val1 VARCHAR(32) REPLACE DEFAULT "abc")
+   Since the materialized view does not declare a sorting column, and the materialized view has aggregated data, the system defaults to supplement the grouping columns k1 and k2 as sorting columns.
 
-```sql
-ALTER TABLE example_db.my_table
-MODIFY COLUMN val1 VARCHAR(64) REPLACE DEFAULT "abc";
-```
+   ```text
+   +-------+-------+--------+------+------- +---------+-------+
+   | IndexName | Field | Type | Null | Key | Default | Extra |
+   +-------+-------+--------+------+------- +---------+-------+
+   | k1_k2_sumk3 | k1 | INT | Yes | true | N/A | |
+   | | k2 | INT | Yes | true | N/A | |
+   | | k3 | BIGINT | Yes | false | N/A | SUM |
+   +-------+-------+--------+------+------- +---------+-------+
+   ```
 
-9. Reorder the columns in example_rollup_index (set the original column order as: k1,k2,k3,v1,v2)
+4. Create a materialized view that removes duplicate rows
 
-```sql
-ALTER TABLE example_db.my_table
-ORDER BY (k3,k1,k2,v2,v1)
-FROM example_rollup_index;
-```
+   ```sql
+   create materialized view deduplicate as
+   select k1, k2, k3, k4 from duplicate_table group by k1, k2, k3, k4;
+   ```
 
-10. Do Two Actions Simultaneously
+   The materialized view schema is as shown below. The materialized view contains columns k1, k2, k3, and k4, and there are no duplicate rows.
 
-```sql
-ALTER TABLE example_db.my_table
-ADD COLUMN v2 INT MAX DEFAULT "0" AFTER k2 TO example_rollup_index,
-ORDER BY (k3,k1,k2,v2,v1) FROM example_rollup_index;
-```
+   ```text
+   +-------+-------+--------+------+------- +---------+-------+
+   | IndexName | Field | Type | Null | Key | Default | Extra |
+   +-------+-------+--------+------+------- +---------+-------+
+   | deduplicate | k1 | INT | Yes | true | N/A | |
+   | | k2 | INT | Yes | true | N/A | |
+   | | k3 | BIGINT | Yes | true | N/A | |
+   | | k4 | BIGINT | Yes | true | N/A | |
+   +-------+-------+--------+------+------- +---------+-------+
+   ```
 
-11. Modify the length of a field in the Key column of the Duplicate key table
+5. Create a non-aggregate materialized view that does not declare a sort column
 
-```sql
-alter table example_tbl modify column k3 varchar(50) key null comment 'to 50'
-```
+   The schema of all_type_table is as follows
+
+   ```
+   +-------+--------------+------+-------+---------+- ------+
+   | Field | Type | Null | Key | Default | Extra |
+   +-------+--------------+------+-------+---------+- ------+
+   | k1 | TINYINT | Yes | true | N/A | |
+   | k2 | SMALLINT | Yes | true | N/A | |
+   | k3 | INT | Yes | true | N/A | |
+   | k4 | BIGINT | Yes | true | N/A | |
+   | k5 | DECIMAL(9,0) | Yes | true | N/A | |
+   | k6 | DOUBLE | Yes | false | N/A | NONE |
+   | k7 | VARCHAR(20) | Yes | false | N/A | NONE |
+   +-------+--------------+------+-------+---------+- ------+
+   ```
+
+   The materialized view contains k3, k4, k5, k6, k7 columns, and does not declare a sort column, the creation statement is as follows:
+
+   ```sql
+   create materialized view mv_1 as
+   select k3, k4, k5, k6, k7 from all_type_table;
+   ```
+
+   The default added sorting column of the system is k3, k4, k5 three columns. The sum of the bytes of these three column types is 4(INT) + 8(BIGINT) + 16(DECIMAL) = 28 < 36. So the addition is that these three columns are used as sorting columns. The schema of the materialized view is as follows, you can see that the key field of the k3, k4, k5 columns is true, that is, the sorting column. The key field of the k6, k7 columns is false, which is a non-sorted column.
+
+   ```sql
+   +----------------+-------+--------------+------+-- -----+---------+-------+
+   | IndexName | Field | Type | Null | Key | Default | Extra |
+   +----------------+-------+--------------+------+-- -----+---------+-------+
+   | mv_1 | k3 | INT | Yes | true | N/A | |
+   | | k4 | BIGINT | Yes | true | N/A | |
+   | | k5 | DECIMAL(9,0) | Yes | true | N/A | |
+   | | k6 | DOUBLE | Yes | false | N/A | NONE |
+   | | k7 | VARCHAR(20) | Yes | false | N/A | NONE |
+   +----------------+-------+--------------+------+-- -----+---------+-------+
+   ```
 
 ### Keywords
 
-```text
-ALTER, TABLE, COLUMN, ALTER TABLE
-```
+    CREATE, MATERIALIZED, VIEW
 
 ### Best Practice

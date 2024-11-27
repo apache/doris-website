@@ -1,7 +1,7 @@
 ---
 {
     "title": "EXPORT",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -32,210 +32,210 @@ EXPORT
 
 ### Description
 
-The `EXPORT` command is used to export the data of a specified table to a designated location as a file. Currently, it supports exporting to remote storage such as HDFS, S3, BOS, and COS (Tencent Cloud) through Broker process, S3 protocol, or HDFS protocol.
+该语句用于将指定表的数据导出到指定位置。
 
-`EXPORT` is an asynchronous operation, and the command submits an `EXPORT JOB` to Doris. The task will be successfully submitted and returns immediately. After execution, you can use the [SHOW EXPORT](../../Show-Statements/SHOW-EXPORT.md) to view the progress.
+这是一个异步操作，任务提交成功则返回。执行后可使用 [SHOW EXPORT](../../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT) 命令查看进度。
 
-**grammar**
+```sql
+EXPORT TABLE table_name
+[PARTITION (p1[,p2])]
+TO export_path
+[opt_properties]
+WITH BROKER
+[broker_properties];
+```
 
-  ```sql
-  EXPORT TABLE table_name
-  [PARTITION (p1[,p2])]
-  [WHERE]
-  TO export_path
-  [opt_properties]
-  WITH BROKER/S3/HDFS
-  [broker_properties];
-  ```
-
-**principle**
-
-The bottom layer of the `Export` statement actually executes the `select...outfile..` statement. The `Export` task will be decomposed into multiple `select...outfile..` statements to execute concurrently according to the value of the `parallelism` parameter. Each `select...outfile..` is responsible for exporting some tablets of table.
-
-**illustrate:**
+说明：
 
 - `table_name`
 
-  The table name of the table currently being exported. Only the export of Doris local table / View / External Table data is supported.
+  当前要导出的表的表名。仅支持 Doris 本地表数据的导出。
 
 - `partition`
 
-  It is possible to export only some specified partitions of the specified table
+  可以只导出指定表的某些指定分区
 
 - `export_path`
 
-  The exported file path can be a directory or a file directory with a file prefix, for example: `hdfs://path/to/my_file_`
+  导出的路径，需为目录。
 
 - `opt_properties`
 
-  Used to specify some export parameters.
+  用于指定一些导出参数。
 
   ```sql
   [PROPERTIES ("key"="value", ...)]
   ```
 
-  The following parameters can be specified:
+  可以指定如下参数：
 
-  - `label`: This parameter is optional, specifies the label of the export task. If this parameter is not specified, the system randomly assigns a label to the export task.
-
-  - `column_separator`: Specifies the exported column separator, default is `\t`, mulit-bytes is supported. This parameter is only used for `CSV` file format.
-
-  - `line_delimiter`: Specifies the line delimiter for export, the default is `\n`, mulit-bytes is supported. This parameter is only used for `CSV` file format.
-
-  - `timeout`: The timeout period of the export job, the default is 2 hours, the unit is seconds.
-
-  - `columns`: Specifies certain columns of the export job table
-
-  - `format`: Specifies the file format, support: parquet, orc, csv, csv_with_names, csv_with_names_and_types.The default is csv format.
-
-  - `parallelism`: The concurrency degree of the `export` job, the default is `1`. The export job will be divided into `select..outfile..` statements of the number of `parallelism` to execute concurrently. (If the value of `parallelism` is greater than the number of tablets in the table, the system will automatically set `parallelism` to the number of tablets, that is, each `select..outfile..` statement is responsible for one tablet)
-
-  - `delete_existing_files`: default `false`. If it is specified as true, you will first delete all files specified in the directory specified by the file_path, and then export the data to the directory.For example: "file_path" = "/user/tmp", then delete all files and directory under "/user/"; "file_path" = "/user/tmp/", then delete all files and directory under "/user/tmp/"
-
-  - `max_file_size`: it is the limit for the size of a single file in the export job. If the result file exceeds this value, it will be split into multiple files. The valid range for `max_file_size` is [5MB, 2GB], with a default value of 1GB. (When exporting to the ORC file format, the actual size of the split files will be multiples of 64MB, for example, if max_file_size is specified as 5MB, the actual split size will be 64MB; if max_file_size is specified as 65MB, the actual split size will be 128MB.)
-  
-  - `with_bom`: The default is false. If it is set to true, the exported file is encoded in UTF8 with BOM (valid only for CSV-related file format).
-
-  - `timeout`: This is the timeout parameter of the export job, the default timeout is 2 hours, and the unit is seconds.
-
-  - `compress_type`: (since 2.1.5) When specifying the export file format as Parquet or ORC, you can choose the compression method for the Parquet or ORC files. For Parquet file format, you can specify the compression method as SNAPPY, GZIP, BROTLI, ZSTD, LZ4, or PLAIN, with the default being SNAPPY. For ORC file format, you can specify the compression method as PLAIN, SNAPPY, ZLIB, or ZSTD, with the default being ZLIB. This parameter is supported starting from version 2.1.5. (PLAIN means no compression is used.)
-
-  > Note that to use the `delete_existing_files` parameter, you also need to add the configuration `enable_delete_existing_files = true` to the fe.conf file and restart the FE. Only then will the `delete_existing_files` parameter take effect. Setting `delete_existing_files = true` is a dangerous operation and it is recommended to only use it in a testing environment.
+  - `column_separator`：指定导出的列分隔符，默认为\t。仅支持单字节。
+  - `line_delimiter`：指定导出的行分隔符，默认为\n。仅支持单字节。
+  - `exec_mem_limit`：导出在单个 BE 节点的内存使用上限，默认为 2GB，单位为字节。
+  - `timeout`：导出作业的超时时间，默认为 2 小时，单位是秒。
+  - `tablet_num_per_task`：每个子任务能分配扫描的最大 Tablet 数量。
+  - `format`:指定导出的格式，当前只支持 csv、csv_with_names、csv_with_names_and_types。在不指定的情况下，默认为 csv。
 
 - `WITH BROKER`
 
-  The export function needs to write data to the remote storage through the Broker process. Here you need to define the relevant connection information for the broker to use.
+  导出功能需要通过 Broker 进程写数据到远端存储上。这里需要定义相关的连接信息供 Broker 使用。
 
   ```sql
-  WITH BROKER "broker_name"
-  ("key"="value"[,...])
-
-  Broker related properties:
-        username: user name
-        password: password
-        hadoop.security.authentication: specify the authentication method as kerberos
-        kerberos_principal: specifies the principal of kerberos
-        kerberos_keytab: specifies the path to the keytab file of kerberos. The file must be the absolute path to the file on the server where the broker process is located. and can be accessed by the Broker process
+  WITH BROKER hdfs|s3 ("key"="value"[,...])
   ```
 
-- `WITH HDFS`
+​       1. 如果导出是到 Amazon S3，需要提供一下属性
 
-  You can directly write data to the remote HDFS.
+```
+fs.s3a.access.key：AmazonS3的access key
+fs.s3a.secret.key：AmazonS3的secret key
+fs.s3a.endpoint：AmazonS3的endpoint
+```
+​       2. 如果使用 S3 协议直接连接远程存储时需要指定如下属性
 
-
-  ```sql
-  WITH HDFS ("key"="value"[,...])
-
-  HDFS related properties:
-        fs.defaultFS: namenode address and port
-        hadoop.username: hdfs username
-        dfs.nameservices: if hadoop enable HA, please set fs nameservice. See hdfs-site.xml
-        dfs.ha.namenodes.[nameservice ID]：unique identifiers for each NameNode in the nameservice. See hdfs-site.xml
-        dfs.namenode.rpc-address.[nameservice ID].[name node ID]: the fully-qualified RPC address for each NameNode to listen on. See hdfs-site.xml
-        dfs.client.failover.proxy.provider.[nameservice ID]：the Java class that HDFS clients use to contact the Active NameNode, usually it is org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider
-
-        For a kerberos-authentication enabled Hadoop cluster, additional properties need to be set:
-        dfs.namenode.kerberos.principal: HDFS namenode service principal
-        hadoop.security.authentication: kerberos
-        hadoop.kerberos.principal: the Kerberos pincipal that Doris will use when connectiong to HDFS.
-        hadoop.kerberos.keytab: HDFS client keytab location.
-  ```
-
-- `WITH S3`
-
-  You can directly write data to a remote S3 object store
-
-  ```sql
-  WITH S3 ("key"="value"[,...])
-
-  S3 related properties:
-    AWS_ENDPOINT
-    AWS_ACCESS_KEY
-    AWS_SECRET_KEY
-    AWS_REGION
-    use_path_style: (optional) default false . The S3 SDK uses the virtual-hosted style by default. However, some object storage systems may not be enabled or support virtual-hosted style access. At this time, we can add the use_path_style parameter to force the use of path style access method.
-  ```
+    (
+        "AWS_ENDPOINT" = "",
+        "AWS_ACCESS_KEY" = "",
+        "AWS_SECRET_KEY"="",
+        "AWS_REGION" = ""
+    )
 
 ### Example
 
-#### export to local
-
-> Export data to the local file system needs to add `enable_outfile_to_local = true` to the fe.conf and restart the Fe.
-
-1. You can export the `test` table to a local store. Export csv format file by default.
+1. 将 test 表中的所有数据导出到 hdfs 上
 
 ```sql
-EXPORT TABLE test TO "file:///home/user/tmp/";
-```
-
-2. You can export the k1 and k2 columns in `test` table to a local store, and set export label. Export csv format file by default.
-
-```sql
-EXPORT TABLE test TO "file:///home/user/tmp/"
-PROPERTIES (
-  "label" = "label1",
-  "columns" = "k1,k2"
+EXPORT TABLE test TO "hdfs://hdfs_host:port/a/b/c" 
+WITH BROKER "broker_name" 
+(
+  "username"="xxx",
+  "password"="yyy"
 );
 ```
 
-3. You can export the rows where `k1 < 50` in `test` table to a local store, and set column_separator to `,`. Export csv format file by default.
+2. 将 testTbl 表中的分区 p1,p2 导出到 hdfs 上
 
 ```sql
-EXPORT TABLE test WHERE k1 < 50 TO "file:///home/user/tmp/"
-PROPERTIES (
-  "columns" = "k1,k2",
-  "column_separator"=","
+EXPORT TABLE testTbl PARTITION (p1,p2) TO "hdfs://hdfs_host:port/a/b/c" 
+WITH BROKER "broker_name" 
+(
+  "username"="xxx",
+  "password"="yyy"
 );
 ```
 
-4. Export partitions p1 and p2 from the test table to local storage, with the default exported file format being csv.
+3. 将 testTbl 表中的所有数据导出到 hdfs 上，以","作为列分隔符，并指定 label
 
 ```sql
-EXPORT TABLE test PARTITION (p1,p2) TO "file:///home/user/tmp/" 
-PROPERTIES ("columns" = "k1,k2");
-  ```
-
-5. Export all data in the test table to local storage with a non-default file format.
-
-```sql
-// parquet file format
-EXPORT TABLE test TO "file:///home/user/tmp/"
-PROPERTIES (
-  "columns" = "k1,k2",
-  "format" = "parquet"
+EXPORT TABLE testTbl TO "hdfs://hdfs_host:port/a/b/c" 
+PROPERTIES ("label" = "mylabel", "column_separator"=",") 
+WITH BROKER "broker_name" 
+(
+  "username"="xxx",
+  "password"="yyy"
 );
-
-// orc file format
-EXPORT TABLE test TO "file:///home/user/tmp/"
-PROPERTIES (
-  "columns" = "k1,k2",
-  "format" = "orc"
-);
-
-// csv_with_names file format. Using 'AA' as the column delimiter and 'zz' as the line delimiter.
-EXPORT TABLE test TO "file:///home/user/tmp/"
-PROPERTIES (
-  "format" = "csv_with_names",
-  "column_separator"="AA",
-  "line_delimiter" = "zz"
-);
-
-// csv_with_names_and_types file format
-EXPORT TABLE test TO "file:///home/user/tmp/"
-PROPERTIES (
-  "format" = "csv_with_names_and_types"
-);
-
 ```
 
-6. set max_file_sizes
+4. 将 testTbl 表中 k1 = 1 的行导出到 hdfs 上。
 
 ```sql
-EXPORT TABLE test TO "file:///home/user/tmp/"
-PROPERTIES (
-  "format" = "parquet",
-  "max_file_size" = "5MB"
+EXPORT TABLE testTbl WHERE k1=1 TO "hdfs://hdfs_host:port/a/b/c" 
+WITH BROKER "broker_name" 
+(
+  "username"="xxx",
+  "password"="yyy"
 );
+```
+
+5. 将 testTbl 表中的所有数据导出到本地。
+
+```sql
+EXPORT TABLE testTbl TO "file:///home/data/a";
+```
+
+6. 将 testTbl 表中的所有数据导出到 hdfs 上，以不可见字符 "\x07" 作为列或者行分隔符。
+
+```sql
+EXPORT TABLE testTbl TO "hdfs://hdfs_host:port/a/b/c" 
+PROPERTIES (
+  "column_separator"="\\x07", 
+  "line_delimiter" = "\\x07"
+) 
+WITH BROKER "broker_name" 
+(
+  "username"="xxx", 
+  "password"="yyy"
+)
+```
+
+7. 将 testTbl 表的 k1, v1 列导出到本地。
+
+```sql
+EXPORT TABLE testTbl TO "file:///home/data/a" PROPERTIES ("columns" = "k1,v1");
+```
+
+8. 将 testTbl 表中的所有数据导出到 s3 上，以不可见字符 "\x07" 作为列或者行分隔符。
+
+```sql
+EXPORT TABLE testTbl TO "s3://hdfs_host:port/a/b/c" 
+PROPERTIES (
+  "column_separator"="\\x07", 
+  "line_delimiter" = "\\x07"
+) WITH s3 (
+  "AWS_ENDPOINT" = "xxxxx",
+  "AWS_ACCESS_KEY" = "xxxxx",
+  "AWS_SECRET_KEY"="xxxx",
+  "AWS_REGION" = "xxxxx"
+)
+```
+
+9. 将 testTbl 表中的所有数据导出到 cos(腾讯云) 上。
+
+```sql
+EXPORT TABLE testTbl TO "cosn://my_bucket/export/a/b/c"
+PROPERTIES (
+  "column_separator"=",",
+  "line_delimiter" = "\n"
+) WITH BROKER "broker_name"
+(
+  "fs.cosn.userinfo.secretId" = "xxx",
+  "fs.cosn.userinfo.secretKey" = "xxxx",
+  "fs.cosn.bucket.endpoint_suffix" = "cos.xxxxxxxxx.myqcloud.com"
+)
+```
+
+### Keywords
+
+    EXPORT
+
+### Best Practice
+
+#### 子任务的拆分
+
+一个 Export 作业会拆分成多个子任务（执行计划）去执行。有多少查询计划需要执行，取决于总共有多少 Tablet，以及一个查询计划最多可以分配多少个 Tablet。
+
+因为多个查询计划是串行执行的，所以如果让一个查询计划处理更多的分片，则可以减少作业的执行时间。
+
+但如果查询计划出错（比如调用 Broker 的 RPC 失败，远端存储出现抖动等），过多的 Tablet 会导致一个查询计划的重试成本变高。
+
+所以需要合理安排查询计划的个数以及每个查询计划所需要扫描的分片数，在执行时间和执行成功率之间做出平衡。
+
+一般建议一个查询计划扫描的数据量在 3-5 GB 内。
+
+#### 内存限制
+
+通常一个 Export 作业的查询计划只有 `扫描-导出` 两部分，不涉及需要太多内存的计算逻辑。所以通常 2GB 的默认内存限制可以满足需求。
+
+但在某些场景下，比如一个查询计划，在同一个 BE 上需要扫描的 Tablet 过多，或者 Tablet 的数据版本过多时，可能会导致内存不足。此时需要通过这个 `exec_mem_limit` 参数设置更大的内存，比如 4GB、8GB 等。
+
+#### 注意事项
+
+- 不建议一次性导出大量数据。一个 Export 作业建议的导出数据量最大在几十 GB。过大的导出会导致更多的垃圾文件和更高的重试成本。如果表数据量过大，建议按照分区导出。
+- 如果 Export 作业运行失败，在远端存储中产生的 `__doris_export_tmp_xxx` 临时目录，以及已经生成的文件不会被删除，需要用户手动删除。
+- 如果 Export 作业运行成功，在远端存储中产生的 `__doris_export_tmp_xxx` 目录，根据远端存储的文件系统语义，可能会保留，也可能会被清除。比如在 S3 对象存储中，通过 rename 操作将一个目录中的最后一个文件移走后，该目录也会被删除。如果该目录没有被清除，用户可以手动清除。
+- Export 作业只会导出 Base 表的数据，不会导出物化视图的数据。
+- Export 作业会扫描数据，占用 IO 资源，可能会影响系统的查询延迟。
+- 一个集群内同时运行的 Export 作业最大个数为 5。之后提交的作业将会排队。
 ```
 
 When the exported file size is larger than 5MB, the data will be split into multiple files, with each file containing a maximum of 5MB.
