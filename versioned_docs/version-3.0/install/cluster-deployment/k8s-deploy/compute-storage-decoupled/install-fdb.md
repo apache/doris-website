@@ -24,7 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-FoundationDB is a distributed database developed by Apple that provides strong consistency for structured data storage. In the Doris compute-storage decoupling model, FoundationDB is used as the metadata store, with the meta-service component managing the metadata within FoundationDB. When deploying a compute-storage decoupled cluster on Kubernetes, FoundationDB must be deployed in advance. Two deployment options are recommended: deploying FoundationDB directly on virtual machines (including physical machines), or using the [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) to deploy FoundationDB on Kubernetes.  
+FoundationDB is a distributed database developed by Apple that provides strong consistency for structured data storage. In the Doris compute-storage decoupling model, FoundationDB is used as the metadata store, with the meta-service component managing the metadata within FoundationDB. When deploying a compute-storage decoupled cluster on Kubernetes, FoundationDB must be deployed in advance. Two deployment options are recommended: deploying FoundationDB directly on virtual machines (including physical machines), or using the [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) to deploy FoundationDB on Kubernetes.
+
 For VM deployments, refer to the Doris [compute-storage decoupling documentation's Pre-deployment section](../../../../compute-storage-decoupled/before-deployment.md) to set up the FoundationDB cluster. Before deployment, ensure that FoundationDB can be accessed by the Doris Kubernetes cluster, i.e., the Kubernetes nodes should be on the same subnet as the machine where FoundationDB is deployed.  
 The following describes the use of the latest version of fdb-kubernetes-operator to deploy FDB.
 ## Create FDB CRDs
@@ -82,7 +83,8 @@ Deployment examples for FDB are available in the fdb-kubernetes-operator reposit
   ```
 
 - For private networks:  
-  If the environment cannot directly access Docker Hub, download the necessary images from the official FDB repository and push them to a private registry. The fdb-kubernetes-operator depends on the following Docker images:
+  If the environment cannot directly access Docker Hub, download the necessary images from the official FDB repository and push them to a private registry.  
+  The fdb-kubernetes-operator depends on the following Docker images:  
   [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator)  
   [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar)  
   The FDB images include:  

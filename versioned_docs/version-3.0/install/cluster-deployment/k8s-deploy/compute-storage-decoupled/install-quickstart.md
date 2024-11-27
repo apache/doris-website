@@ -58,7 +58,8 @@ To deploy a compute-storage decoupled cluster on Kubernetes, you need to deploy 
   ```shell
   curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/disaggregated/cluster/ddc-sample.yaml
   ```
-2. Configure FoundationDB access information: The compute-storage decoupled version of Doris uses FoundationDB to store metadata. The access details for FoundationDB can be provided in the DorisDisaggregatedCluster under spec.metaService.fdb in one of two ways: by directly specifying the access address or by using a ConfigMap that includes the access information.
+2. Configure FoundationDB access information.  
+  The compute-storage decoupled version of Doris uses FoundationDB to store metadata. The access details for FoundationDB can be provided in the DorisDisaggregatedCluster under `spec.metaService.fdb` in one of two ways: by directly specifying the access address or by using a ConfigMap that includes the access information.
 - Direct Access Address Configuration  
   If FoundationDB is deployed outside of Kubernetes, you can specify its access address directly:
   ```yaml
@@ -70,7 +71,7 @@ To deploy a compute-storage decoupled cluster on Kubernetes, you need to deploy 
   Here, ${fdbAddress} refers to the client access address for FoundationDB. On Linux VMs, this is typically stored in `/etc/foundationdb/fdb.cluster`. For more details, refer to the FoundationDB [cluster file documentation](https://apple.github.io/foundationdb/administration.html#foundationdb-cluster-file).  
 - Using a ConfigMap Containing Access Information  
   If FoundationDB is deployed using the [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator), it will automatically generate a ConfigMap containing the access details. The name of the generated ConfigMap is based on the resource name used for the deployment and appended with "-config".  
-  To obtain the ConfigMap, refer to the "Access Information" section in the FoundationDB on Kubernetes deployment guide. Once you have the ConfigMap name and namespace, configure the DorisDisaggregatedCluster as follows:
+  To obtain the ConfigMap, refer to the ["Access Information" section](install-fdb.md#retrieve-the-configmap-containing-foundationdb-access-information) in the FoundationDB on Kubernetes deployment guide. Once you have the ConfigMap name and namespace, configure the DorisDisaggregatedCluster as follows:
   ```yaml
   spec:
     metaService:
@@ -117,7 +118,7 @@ Once the compute-storage decoupled cluster is set up, you need to execute the ap
   mysql -uroot -P9030 -h test-disaggregated-cluster-fe 
   ```
 3. Create the Storage Backend.  
-  To create a storage backend using an S3-compatible object storage, use the following example:
+  To create a storage backend using an S3-compatible object storage, use the following example:  
   a. Create an S3 Storage Vault:
   ```mysql
   CREATE STORAGE VAULT IF NOT EXISTS s3_vault

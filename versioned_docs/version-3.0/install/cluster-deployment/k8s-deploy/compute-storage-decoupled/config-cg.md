@@ -71,7 +71,7 @@ In the default deployment, BE services use Kubernetes' [EmptyDir](https://kubern
 2. Deploy the ConfigMap containing the startup configuration.  
 3. Update the DorisDisaggregatedCluster resource.
 
-### Step 1: Customize the Startup Configuration
+### Step 1: Customize the startup configuration
 In the default deployment, each BE service in a compute group uses the default configuration file inside the image. To enable persistent cache, a custom startup configuration is required. Doris Operator uses Kubernetes' ConfigMap to mount the startup configuration file. Below is an example of a ConfigMap that can be used for BE services:
 ```yaml
 apiVersion: v1
@@ -96,7 +96,7 @@ kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml
 Where ${namespace} is the namespace where the DorisDisaggregatedCluster is deployed, and ${beConfigMapFileName} is the filename containing the custom ConfigMap.
 
 ### Step 3: Update the `DorisDisaggregatedCluster` resource
-To enable persistent storage, a storage template must be configured. The `DorisDisaggregatedCluster` resource uses `persistentVolume` to describe the persistent storage template. The template is defined using Kubernetes' [PersistentVolumeClaimSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec). In the persistent storage template, multiple mount paths can be specified through `mountPaths`. 
+To enable persistent storage, a storage template must be configured. The `DorisDisaggregatedCluster` resource uses `persistentVolume` to describe the persistent storage template. The template is defined using [PersistentVolumeClaimSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec). In the persistent storage template, multiple mount paths can be specified through `mountPaths`. 
 If `mountPaths` is not set, Doris Operator will automatically parse the `file_cache_path` from the startup configuration to determine the mount point and use the template to create persistent storage. The `annotations` field is where custom annotations can be added.  
 By default, Doris Operator creates persistent storage for logs. If the Kubernetes cluster has a log collection system that can collect logs from Doris services via standardized output, persistent storage for logs can be disabled by setting `logNotStore: true`. Below is an example of how to use a custom ConfigMap and set up a storage template for BE services:
 ```yaml

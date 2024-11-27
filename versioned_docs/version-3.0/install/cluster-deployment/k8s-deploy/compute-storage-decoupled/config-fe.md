@@ -88,12 +88,12 @@ Doris Operator uses Kubernetes' ConfigMap to mount the startup configuration.
       enable_fqdn_mode=true
   ```
   In Kubernetes deployments, `enable_fqdn_mode=true` must be set.
-2. Deploy the ConfigMap to the Namespace of DorisDisaggregatedCluster Use the following command to deploy the ConfigMap:
+2. Use the following command to deploy the ConfigMap:
   ```shell
   kubectl apply -n ${namespace} -f ${feConfigMapName}.yaml
   ```
   Where ${namespace} is the namespace of the DorisDisaggregatedCluster and ${feConfigMapName} is the filename containing the above configuration.  
-3. Update the DorisDisaggregatedCluster Resource To use the above ConfigMap, update the `DorisDisaggregatedCluster` resource as follows:
+3. Update the `DorisDisaggregatedCluster` resource as follows:
   ```yaml
   spec:
     feSpec:
