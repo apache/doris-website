@@ -36,6 +36,10 @@ Parameters:
 `expr`: required. The value is an integer (`bigint` at most).
 `p`: required. The const value is `[0.0,1.0]`.
 
+:::tip
+Since version Doris 3.0.3, expr supports more input types, such as float and double. This enables floating-point data to participate in calculations, reducing the overhead of casting data.
+:::
+
 ### Example
 
 ```sql
