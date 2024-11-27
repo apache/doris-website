@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Overview",
+    "title": "Reference",
     "language": "en"
 }
 ---
@@ -24,137 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Overview
-
-Cross Cluster Replication (CCR) enables the synchronization of data changes from a source cluster to a target cluster at the database/table level. This feature can be used to ensure data availability for online services, isolate offline and online workloads, and build multiple data centers across various sites.
-
-CCR is applicable to the following scenarios:
-
-- Disaster recovery: This involves backing up enterprise data to another cluster and data center. In the event of a sudden incident causing business interruption or data loss, companies can recover data from the backup or quickly switch to the backup cluster. Disaster recovery is typically a must-have feature in use cases with high SLA requirements, such as those in finance, healthcare, and e-commerce.
-- Read/write separation: This is to isolate querying and writing operations to reduce their mutual impact and improve resource utilization. For example, in cases of high writing pressure or high concurrency, read/write separation can distribute read and write operations to read-only and write-only database instances in various regions. This helps ensure high database performance and stability.
-- Data transfer between headquarters and branch offices: In order to have unified data control and analysis within a corporation, the headquarters usually requires timely data synchronization from branch offices located in different regions. This avoids management confusion and wrong decision-making based on inconsistent data.
-- Isolated upgrades: During system cluster upgrades, there might be a need to roll back to a previous version. Many traditional upgrade methods do not allow rolling back due to incompatible metadata. CCR in Doris can address this issue by building a standby cluster for upgrade and conducting dual-running verification. Users can ungrade the clusters one by one. CCR is not dependent on specific versions, making version rollback feasible.
-
-### Task Categories
-
-CCR supports two categories of tasks: database-level and table-level. Database-level tasks synchronize data for an entire database, while table-level tasks synchronize data for a single table.
-
-## Design
-
-### Concepts
-
-- Source cluster: the cluster where business data is written and originates from, requiring Doris version 2.0
-
-- Target cluster: the destination cluster for cross cluster replication, requiring version 2.0
-
-- Binlog: the change log of the source cluster, including schema and data changes
-
-- Syncer: a lightweight process
-
-### Architecture description
-
-![ccr-architecture-description](/images/ccr-architecture-description.png)
-
-CCR relies on a lightweight process called syncer. Syncers retrieve binlogs from the source cluster, directly apply the metadata to the target cluster, and notify the target cluster to pull data from the source cluster. CCR allows both full and incremental data migration.
-
-### Sync Methods
-
-CCR supports four synchronization methods:
-
-| Sync Method   | Principle                                   | Trigger Timing                                   |
-| --------------| ------------------------------------------- | ------------------------------------------------ |
-| Full Sync     | Full backup from upstream, restore downstream. | Triggered by the first synchronization or operation, see the feature list for details. |
-| Partial Sync  | Backup at the upstream table or partition level, restore at the downstream table or partition level. | Triggered by operations, see the feature list for details. |
-| TXN           | Incremental data synchronization, downstream starts syncing after upstream commits. | Triggered by operations, see the feature list for details. |
-| SQL           | Replay upstream operations' SQL at the downstream. | Triggered by operations, see the feature list for details. |
-
-### Usage
-
-The usage of CCR is straightforward. Simply start the syncer service and send a command, and the syncers will take care of the rest.
-
-1. Deploy the source Doris cluster.
-2. Deploy the target Doris cluster.
-3. Both the source and target clusters need to enable binlog. Configure the following information in the fe.conf and be.conf files of the source and target clusters:
-
-```SQL
-enable_feature_binlog=true
-```
-
-4. Deploy syncers
-
-​Build CCR syncer
-
-```shell
-git clone https://github.com/selectdb/ccr-syncer
-cd ccr-syncer   
-bash build.sh <-j NUM_OF_THREAD> <--output SYNCER_OUTPUT_DIR>
-cd SYNCER_OUTPUT_DIR# Contact the Doris community for a free CCR binary package
-```
-
-
-Start and stop syncer
-
-
-```shell
-# Start
-cd bin && sh start_syncer.sh --daemon
-   
-# Stop
-sh stop_syncer.sh
-```
-
-5. Enable binlog in the source cluster.
-
-```shell
--- If you want to synchronize the entire database, you can execute the following script:
-vim shell/enable_db_binlog.sh
-Modify host, port, user, password, and db in the source cluster
-Or ./enable_db_binlog.sh --host $host --port $port --user $user --password $password --db $db
-
--- If you want to synchronize a single table, you can execute the following script and enable binlog for the target table:
-ALTER TABLE enable_binlog SET ("binlog.enable" = "true");
-```
-
-6. Launch a synchronization task to the syncer
-
-```shell
-curl -X POST -H "Content-Type: application/json" -d '{
-    "name": "ccr_test",
-    "src": {
-      "host": "localhost",
-      "port": "9030",
-      "thrift_port": "9020",
-      "user": "root",
-      "password": "",
-      "database": "your_db_name",
-      "table": "your_table_name"
-    },
-    "dest": {
-      "host": "localhost",
-      "port": "9030",
-      "thrift_port": "9020",
-      "user": "root",
-      "password": "",
-      "database": "your_db_name",
-      "table": "your_table_name"
-    }
-}' http://127.0.0.1:9190/create_ccr
-```
-
-Parameter description:
-
-```shell
-name: name of the CCR synchronization task, should be unique
-host, port: host and mysql(jdbc) port for the master FE for the corresponding cluster
-user, password: the credentials used by the syncer to initiate transactions, fetch data, etc.
-If it is synchronization at the database level, specify your_db_name and leave your_table_name empty
-If it is synchronization at the table level, specify both your_db_name and your_table_name
-The synchronization task name can only be used once.
-```
-
-## Operation manual for syncer
-
-### Start syncer
+## Start syncer
 
 Start syncer according to the configurations and save a pid file in the default or specified path. The name of the pid file should follow `host_port.pid`.
 
@@ -277,7 +147,7 @@ bash bin/start_syncer.sh --pid_dir /path/to/pids
 
 The default value is `SYNCER_OUTPUT_DIR/bin`.
 
-### Stop syncer
+## Stop syncer
 
 Stop the syncer according to the process number in the pid file under the default or specified path. The name of the pid file should follow `host_port.pid`.
 
@@ -348,7 +218,7 @@ bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"
 
 The file names should be wrapped in `" "` and separated with spaces.
 
-### Syncer operations
+## Syncer operations
 
 **Template for requests**
 
@@ -482,7 +352,7 @@ curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
 {"success":true,"jobs":["ccr_db_table_alias"]}
 ```
 
-### Open binlog for all tables in the database
+## Open binlog for all tables in the database
 
 **Output file structure**
 
@@ -513,7 +383,7 @@ bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 
 The high availability of syncers relies on MySQL. If MySQL is used as the backend storage, the syncer can discover other syncers. If one syncer crashes, the others will take over its tasks.
 
-### Privilege requirements
+## Privilege requirements
 
 1. `select_priv`: read-only privileges for databases and tables
 2. `load_priv`: write privileges for databases and tables, including load, insert, delete, etc.
