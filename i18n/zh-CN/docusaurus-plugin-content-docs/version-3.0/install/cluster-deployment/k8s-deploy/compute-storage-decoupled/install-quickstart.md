@@ -1,6 +1,6 @@
 ---
 {
-"title": "Deploy Decoupled on Kubernetes",
+"title": "在 Kubernetes 上部署存算分离集群",
 "language": "zh-CN"
 }
 ---
