@@ -143,6 +143,7 @@ Column definition list:
             dt DATETIME DEFAULT CURRENT_TIMESTAMP
         ```
 
+
     *  `on update current_timestamp`
 
         To indicate that whether the value of this column should be updated to the current timestamp (`current_timestamp`) when there is an update on the row. The feature is only available on unique table with merge-on-write enabled. Columns with this feature enabled must declare a default value, and the default value must be `current_timestamp`. If the precision of the timestamp is declared here, the timestamp precision in the default value of the column must be the same as the precision declared here."
@@ -185,6 +186,7 @@ Index list definition:
 #### engine_type
 
 Table engine type. All types in this document are OLAP. Example:
+
 
     `ENGINE=olap`
 
@@ -241,6 +243,7 @@ Partition information supports three writing methods:
         PARTITION partition_name2 VALUES [("k1-lower1-2", "k2-lower1-2", ...), ("k1-upper1-2", MAXVALUE, ))
     )
     ```
+
            
 
     
@@ -249,6 +252,7 @@ Partition information supports three writing methods:
 :::tip Tips
 This feature is supported since the Apache Doris 1.2 version
 :::
+
 
     ```
     PARTITION BY RANGE(col)
@@ -259,7 +263,6 @@ This feature is supported since the Apache Doris 1.2 version
        FROM ("2023-01-03") TO ("2023-01-14") INTERVAL 1 DAY
     )
     ```
-    
 
 
 
@@ -390,6 +393,7 @@ Set table properties. The following attributes are currently supported:
 
     Wheather the unique table use merge-on-write implementation. 
 
+
     The property is disabled by default before version 2.1 and is enabled by default since version 2.1.
 
 * `light_schema_change`
@@ -492,7 +496,7 @@ Set table properties. The following attributes are currently supported:
 * Dynamic partition related
 
 References related to dynamic partitioning[Data Partitioning-Dynamic partitioning](../../../../table-design/data-partitioning/dynamic-partitioning)
-    
+
 ### Example
 
 1. Create a detailed model table
@@ -747,13 +751,12 @@ NOTE: Need to create the s3 resource and storage policy before the table can be 
     ```
 NOTE: Need to create the s3 resource and storage policy before the table can be successfully associated with the migration policy 
 
-
-
 13. Multi Partition by a partition desc
 
 :::tip Tips
 This feature is supported since the Apache Doris 1.2 version
 :::
+
 
     ```sql
         CREATE TABLE create_table_multi_partion_date
@@ -849,7 +852,9 @@ The dynamic partition function is mainly used to help users automatically manage
 
 #### Auto Partition
 
+
 See the [Auto Partition](../../../../table-design/data-partitioning/auto-partitioning) document.
+
 
 #### Materialized View
 
@@ -859,7 +864,9 @@ If the materialized view is created when the table is created, all subsequent da
 
 If you add a materialized view in the subsequent use process, if there is data in the table, the creation time of the materialized view depends on the current amount of data.
 
+
 For the introduction of materialized views, please refer to the [Materialized View](../../../../query/view-materialized-view/metarialized-view) document.
+
 
 #### Index
 

@@ -184,7 +184,11 @@ Index list definition:
 
 #### engine_type
 
+<<<<<<< HEAD
 Table engine type. Example:
+=======
+Table engine type. All types in this document are OLAP. Example:
+>>>>>>> 0e755d49db1671c07575a57b8e400ef62b0a5818
 
     `ENGINE=olap`
 
@@ -241,9 +245,21 @@ Partition information supports three writing methods:
         PARTITION partition_name2 VALUES [("k1-lower1-2", "k2-lower1-2", ...), ("k1-upper1-2", MAXVALUE, ))
     )
     ```
+<<<<<<< HEAD
     
 3. MULTI RANGE: Multi build RANGE partitions,Define the left closed and right open interval of the zone, Set the time unit and step size, the time unit supports year, month, day, week and hour.
 
+=======
+           
+
+    
+3. MULTI RANGE: Multi build RANGE partitions,Define the left closed and right open interval of the zone, Set the time unit and step size, the time unit supports year, month, day, week and hour.
+
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
+
+>>>>>>> 0e755d49db1671c07575a57b8e400ef62b0a5818
     ```
     PARTITION BY RANGE(col)
     (
@@ -253,6 +269,11 @@ Partition information supports three writing methods:
        FROM ("2023-01-03") TO ("2023-01-14") INTERVAL 1 DAY
     )
     ```
+<<<<<<< HEAD
+=======
+    
+
+>>>>>>> 0e755d49db1671c07575a57b8e400ef62b0a5818
 
 
 4. MULTI RANGE: Multi build integer RANGE partitions,Define the left closed and right open interval of the zone, and step size.
@@ -380,7 +401,11 @@ Set table properties. The following attributes are currently supported:
 
 * `enable_unique_key_merge_on_write`
 
+<<<<<<< HEAD
     Wheather the unique table use merge-on-write implementation.
+=======
+    Wheather the unique table use merge-on-write implementation. 
+>>>>>>> 0e755d49db1671c07575a57b8e400ef62b0a5818
 
     The property is disabled by default before version 2.1 and is enabled by default since version 2.1.
 
@@ -484,11 +509,15 @@ Set table properties. The following attributes are currently supported:
 * Dynamic partition related
 
 References related to dynamic partitioning[Data Partitioning-Dynamic partitioning](../../../../table-design/data-partitioning/dynamic-partitioning)
+<<<<<<< HEAD
 
 * `file_cache_ttl_seconds`: 
 
    Expiration time of TTL Cache in compute-storage decoupled mode.
 
+=======
+    
+>>>>>>> 0e755d49db1671c07575a57b8e400ef62b0a5818
 ### Example
 
 1. Create a detailed model table
@@ -743,7 +772,18 @@ NOTE: Need to create the s3 resource and storage policy before the table can be 
     ```
 NOTE: Need to create the s3 resource and storage policy before the table can be successfully associated with the migration policy 
 
+<<<<<<< HEAD
 1.  Multi Partition by a partition desc
+=======
+
+
+13. Multi Partition by a partition desc
+
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
+
+>>>>>>> 0e755d49db1671c07575a57b8e400ef62b0a5818
     ```sql
         CREATE TABLE create_table_multi_partion_date
         (
@@ -791,6 +831,10 @@ NOTE: Need to create the s3 resource and storage policy before the table can be 
 NOTE: Multi Partition can be mixed with conventional manual creation of partitions. When using, you need to limit the partition column to only one, The default maximum number of partitions created in multi partition is 4096, This parameter can be adjusted in fe configuration `max_multi_partition_num`.
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0e755d49db1671c07575a57b8e400ef62b0a5818
 1.  Add a duplicate without sorting column table
 
     ```sql
@@ -837,7 +881,11 @@ The dynamic partition function is mainly used to help users automatically manage
 
 #### Auto Partition
 
+<<<<<<< HEAD
 See in [Auto Partition](../../../../table-design/data-partitioning/auto-partitioning).
+=======
+See the [Auto Partition](../../../../table-design/data-partitioning/auto-partitioning) document.
+>>>>>>> 0e755d49db1671c07575a57b8e400ef62b0a5818
 
 #### Materialized View
 
@@ -847,7 +895,11 @@ If the materialized view is created when the table is created, all subsequent da
 
 If you add a materialized view in the subsequent use process, if there is data in the table, the creation time of the materialized view depends on the current amount of data.
 
+<<<<<<< HEAD
 For the introduction of materialized views, please refer to the [Materialized View](../../../../query/view-materialized-view/materialized-view) document.
+=======
+For the introduction of materialized views, please refer to the [Materialized View](../../../../query/view-materialized-view/metarialized-view) document.
+>>>>>>> 0e755d49db1671c07575a57b8e400ef62b0a5818
 
 #### Index
 

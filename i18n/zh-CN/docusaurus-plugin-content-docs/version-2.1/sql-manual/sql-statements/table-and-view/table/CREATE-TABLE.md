@@ -476,8 +476,8 @@ UNIQUE KEY(k1, k2)
 
 * 动态分区相关
 
-
     动态分区相关参考[数据划分 - 动态分区](../../../../table-design/data-partitioning/dynamic-partitioning)
+
 
 
 ### Example
