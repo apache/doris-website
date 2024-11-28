@@ -54,6 +54,7 @@ github:
   collaborators:
     - jeffreys-cat
     - KassieZ
+    - wangtianyi2004
 
 notifications:
     commits:              commits@doris.apache.org
