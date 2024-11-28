@@ -34,29 +34,13 @@ under the License.
 
 关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](../../data-operate/export/export-overview.md)。
 
-示例：
-
-```sql
-mysql> EXPORT TABLE tpch1.lineitem TO "s3://my_bucket/path/to/exp_"
-       PROPERTIES(
-           "format" = "csv",
-           "max_file_size" = "2048MB"
-       )
-       WITH s3 (
-         "s3.endpoint" = "${endpoint}",
-         "s3.region" = "${region}",
-         "s3.secret_key"="${sk}",
-         "s3.access_key" = "${ak}"
-       );
-```
-
 --- 
 
 ## 基本原理
 
 Export 任务的底层是执行`SELECT INTO OUTFILE` SQL 语句。用户发起一个 Export 任务后，Doris 会根据 Export 要导出的表构造出一个或多个 `SELECT INTO OUTFILE` 执行计划，随后将这些`SELECT INTO OUTFILE` 执行计划提交给 Doris 的 Job Schedule 任务调度器，Job Schedule 任务调度器会自动调度这些任务并执行。
 
-默认情况下，Export 任务是单线程执行的。为了提高导出的效率，Export 命令可以设置一个 `parallelism` 参数来并发导出数据。设置`parallelism` 大于 1 后，Export 任务会使用多个线程并发的去执行 `SELECT INTO OUTFILE` 查询计划。`parallelism`参数实际就是指定执行 EXPORT 作业的线程数量。
+默认情况下，Export 任务是单线程执行的。为了提高导出的效率，Export 命令可以设置 `parallelism` 参数来并发导出数据。设置`parallelism` 大于 1 后，Export 任务会使用多个线程并发的去执行 `SELECT INTO OUTFILE` 查询计划。`parallelism`参数实际就是指定执行 EXPORT 作业的线程数量。
 
 ## 使用场景
 `Export` 适用于以下场景：
@@ -65,7 +49,9 @@ Export 任务的底层是执行`SELECT INTO OUTFILE` SQL 语句。用户发起�
 - 需要异步提交任务的场景。
 
 使用 `Export` 时需要注意以下限制：
-1. 当前不支持压缩格式的导出。
+-  当前不支持压缩格式的导出。
+- 不支持 Select 结果集导出。若需要导出 Select 结果集，请使用[OUTFILE导出](../../data-operate/export/outfile.md)
+- 若希望导出到本地文件系统，需要在 fe.conf 中添加配置 `enable_outfile_to_local=true` 并重启FE。
 
 ## 快速上手
 ### 建表与导入数据
@@ -105,49 +91,9 @@ with HDFS (
 );
 ```
 
-如果 HDFS 开启了高可用，则需要提供 HA 信息，如：
+如果 HDFS 集群开启了高可用，则需要提供 HA 信息，参考案例：[导出到开启了高可用的 HDFS 集群](#高可用HDFS导出)
 
-```sql
-EXPORT TABLE tbl 
-TO "hdfs://HDFS8000871/path/to/export/" 
-PROPERTIES
-(
-    "line_delimiter" = ","
-)
-with HDFS (
-    "fs.defaultFS" = "hdfs://HDFS8000871",
-    "hadoop.username" = "hadoop",
-    "dfs.nameservices" = "your-nameservices",
-    "dfs.ha.namenodes.your-nameservices" = "nn1,nn2",
-    "dfs.namenode.rpc-address.HDFS8000871.nn1" = "ip:port",
-    "dfs.namenode.rpc-address.HDFS8000871.nn2" = "ip:port",
-    "dfs.client.failover.proxy.provider.HDFS8000871" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
-);
-```
-
-如果 Hadoop 集群开启了高可用并且启用了 Kerberos 认证，可以参考如下 SQL 语句：
-
-```sql
-EXPORT TABLE tbl 
-TO "hdfs://HDFS8000871/path/to/export/" 
-PROPERTIES
-(
-    "line_delimiter" = ","
-)
-with HDFS (
-    "fs.defaultFS"="hdfs://hacluster/",
-    "hadoop.username" = "hadoop",
-    "dfs.nameservices"="hacluster",
-    "dfs.ha.namenodes.hacluster"="n1,n2",
-    "dfs.namenode.rpc-address.hacluster.n1"="192.168.0.1:8020",
-    "dfs.namenode.rpc-address.hacluster.n2"="192.168.0.2:8020",
-    "dfs.client.failover.proxy.provider.hacluster"="org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
-    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM"
-    "hadoop.security.authentication"="kerberos",
-    "hadoop.kerberos.principal"="doris_test@REALM.COM",
-    "hadoop.kerberos.keytab"="/path/to/doris_test.keytab"
-);
-```
+如果 HDFS 集群开启了高可用并且启用了 Kerberos 认证，需要提供 Kerberos 认证信息，参考案例：[导出到开启了高可用及kerberos认证的 HDFS 集群](#高可用及kerberos集群导出)
 
 #### 导出到对象存储
 
@@ -288,6 +234,8 @@ CANCEL EXPORT FROM dbName WHERE LABEL like "%export_%";
 
 ## 导出示例
 
+- [导出到开启了高可用的 HDFS 集群](#高可用HDFS导出)
+- [导出到开启了高可用及kerberos认证的 HDFS 集群](#高可用及kerberos集群导出)
 - [指定分区导出](#指定分区导出)
 - [导出时过滤数据](#导出时过滤数据)
 - [导出外表数据](#导出外表数据)
@@ -295,6 +243,56 @@ CANCEL EXPORT FROM dbName WHERE LABEL like "%export_%";
 - [调整导出作业并发度](#调整导出作业并发度)
 - [导出前清空导出目录](#导出前清空导出目录)
 - [调整导出文件的大小](#调整导出文件的大小)
+
+<span id="高可用HDFS导出"></span>
+**导出到开启了高可用的 HDFS 集群**
+
+如果 HDFS 开启了高可用，则需要提供 HA 信息，如：
+
+```sql
+EXPORT TABLE tbl 
+TO "hdfs://HDFS8000871/path/to/export/" 
+PROPERTIES
+(
+    "line_delimiter" = ","
+)
+with HDFS (
+    "fs.defaultFS" = "hdfs://HDFS8000871",
+    "hadoop.username" = "hadoop",
+    "dfs.nameservices" = "your-nameservices",
+    "dfs.ha.namenodes.your-nameservices" = "nn1,nn2",
+    "dfs.namenode.rpc-address.HDFS8000871.nn1" = "ip:port",
+    "dfs.namenode.rpc-address.HDFS8000871.nn2" = "ip:port",
+    "dfs.client.failover.proxy.provider.HDFS8000871" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+);
+```
+
+<span id="高可用及kerberos集群导出"></span>
+**导出到开启了高可用及kerberos认证的 HDFS 集群**
+
+如果 Hadoop 集群开启了高可用并且启用了 Kerberos 认证，可以参考如下 SQL 语句：
+
+```sql
+EXPORT TABLE tbl 
+TO "hdfs://HDFS8000871/path/to/export/" 
+PROPERTIES
+(
+    "line_delimiter" = ","
+)
+with HDFS (
+    "fs.defaultFS"="hdfs://hacluster/",
+    "hadoop.username" = "hadoop",
+    "dfs.nameservices"="hacluster",
+    "dfs.ha.namenodes.hacluster"="n1,n2",
+    "dfs.namenode.rpc-address.hacluster.n1"="192.168.0.1:8020",
+    "dfs.namenode.rpc-address.hacluster.n2"="192.168.0.2:8020",
+    "dfs.client.failover.proxy.provider.hacluster"="org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
+    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM"
+    "hadoop.security.authentication"="kerberos",
+    "hadoop.kerberos.principal"="doris_test@REALM.COM",
+    "hadoop.kerberos.keytab"="/path/to/doris_test.keytab"
+);
+```
 
 <span id="指定分区导出"></span>
 **指定分区导出**
