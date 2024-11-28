@@ -23,7 +23,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
+//todo
 `-` 表示 Doris 2.0 及以上版本，CCR 所有版本。建议使用 Doris 使用 2.0.15 或者 2.1.6 或者更新的版本。
 
 ## 库
@@ -71,12 +71,12 @@ CCR 任务不同步修改库属性操作。
 | enable_single_replica_compaction          | 支持     | -             | -           | SQL      |                                                          |
 | disable_auto_compaction                   | 支持     | -             | -           | SQL      |                                                          |
 | compaction_policy                         | 支持     | -             | -           | SQL      |                                                          |
-| time_series_compaction 系列               | 支持     | -             | -           | SQL      |                                                          |
-| binlog 系列                               | 支持     | -             | -           | SQL      | 待确认                                                   |
+| time_series_compaction 系列               | 支持     | -             | -           | SQL      | 包含 goal_size_mbytes, file_count_threshold, time_threshold_seconds, level_threshold |
+| binlog 系列                               | 支持     | -             | -           | SQL      | 包含 binlog.enable, binlog.ttl_seconds, binlog.max_bytes, binlog.max_history_nums |
 | variant_enable_flatten_nested             | 支持     | -             | -           | SQL      |                                                          |
 | skip_write_index_on_load                  | 支持     | -             | -           | SQL      |                                                          |
-| row_strore 系列                            | 支持     | -             | -           | SQL      |                                                          |
-| seq 列                                    | 支持     | -             | -           | SQL      |                                                          |
+| row_strore 系列                            | 支持     | -             | -           | SQL      | 包含 row_store_columns, row_store_page_size |
+| seq 列                                    | 支持     | -             | -           | SQL      | 包含 function_column.sequence_type, function_column.sequence_col |
 | enable_light_schema_change                | 支持     | -             | -           | SQL      |                                                          |
 | compression_type                          | 支持     | -             | -           | SQL      |                                                          |
 | index                                      | 支持     | -             | -           | SQL      |                                                          |
