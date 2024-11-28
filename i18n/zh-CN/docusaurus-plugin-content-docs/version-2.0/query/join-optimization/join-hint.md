@@ -54,7 +54,7 @@ mysql> explain shape plan select * from t1 join t2 on t1.c1 = c2;
 7 rows in set (0.06 sec)
 ```
 
-在上述例子里面，在执行效率不理想的时候，我们希望调整下 join 顺序而不改变原始 sql 以免影响到用户原始场景且能达到调优的目的。我们可以使用 leading 任意改变 tableA 和 tableB 的 join 顺序。例如可以写成：
+在上述例子里面，在执行效率不理想的时候，我们希望调整下 join 顺序而不改变原始 sql 以免影响到用户原始场景且能达到调优的目的。我们可以使用 leading 任意改变 t1 和 t2 的 join 顺序。例如可以写成：
 
 ```sql
 mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 = c2;
@@ -114,7 +114,7 @@ mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 =
     
     - Used：leading hint 正常生效
     
-    - Unused：这里不支持的情况包含 leading 指定的 join order 与原 sql 不等价或本版本暂不支持特性（详见限制）
+    - Unused：这里不支持的情况包含 leading 指定的 join order 与原 sql 不等价或本版本暂不支持特性
     
     - SyntaxError：指 leading hint 语法错误，如找不到对应的表等
 

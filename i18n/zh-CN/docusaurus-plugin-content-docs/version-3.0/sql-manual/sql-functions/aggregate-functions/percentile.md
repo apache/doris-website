@@ -36,6 +36,10 @@ under the License.
 `expr`：必填。值为整数（最大为 `bigint`） 类型的列。
 `p`：常量，必填。需要精确的百分位数。取值为 `[0.0,1.0]`。
 
+:::tip
+自 Doris 3.0.3 版本开始支持, expr 支持了更多的输入类型, eg: float, double. 支持浮点数据参与计算，减少了cast 数据的开销。
+:::
+
 ### Example
 
 ```sql

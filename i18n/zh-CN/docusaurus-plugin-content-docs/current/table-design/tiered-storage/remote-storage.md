@@ -151,7 +151,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 -   Storage policy 关联的对象信息不支持修改数据存储 path 的信息，比如 bucket、endpoint、root_path 等信息
 
--   Storage policy 支持创建 和修改和支持删除，删除前需要先保证没有表引用此 Storage policy。
+-   Storage policy 支持创建、修改和删除，删除前需要先保证没有表引用此 Storage policy。
 
 -   Unique 模型在开启 Merge-on-Write 特性时，不支持设置 Storage policy。
 

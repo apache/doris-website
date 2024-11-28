@@ -32,7 +32,7 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 
     - 并发较高或者频次较高（大于 20 并发或者 1 分钟写入多次）时建议打开 [Group Commit](./import-way/group-commit-manual.md)，使用 JDBC INSERT 或者 Stream Load 写入数据。
 
-    - 吞吐较高时推荐使用 [Stream Load](./import-way/stream-load-manua) 通过 HTTP 写入数据。
+    - 吞吐较高时推荐使用 [Stream Load](./import-way/stream-load-manual) 通过 HTTP 写入数据。
 
 - **流式同步**：通过实时数据流（如 Flink、Kafka、事务数据库）将数据实时导入到 Doris 表中，适用于需要实时分析和查询的场景。
 
@@ -47,7 +47,7 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 
     - 可以使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将 S3、HDFS 和 NAS 中的文件同步写入到 Doris 中，配合 [JOB](../scheduler/job-scheduler.md) 可以异步写入。
 
-    - 可以使用 [Stream Load](./import-way/stream-load-manua) 或者 [Doris Streamloader](../../ecosystem/doris-streamloader.md) 将本地文件写入 Doris 中。
+    - 可以使用 [Stream Load](./import-way/stream-load-manual) 或者 [Doris Streamloader](../../ecosystem/doris-streamloader.md) 将本地文件写入 Doris 中。
 
 - **外部数据源集成**：通过与外部数据源（如 Hive、JDBC、Iceberg 等）的集成，实现对外部数据的查询和部分数据导入到 Doris 表中。
     - 可以创建 [Catalog](../../lakehouse/lakehouse-overview.md) 读取外部数据源中的数据，使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将外部数据源中的数据同步写入到 Doris 中，配合 [JOB](../scheduler/job-scheduler.md) 可以异步写入。

@@ -107,7 +107,7 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine
 在 Doris 中，创建被导入的表，具体语法如下
 
 ```sql
-CREATE TABLE testdb.test_streamload(
+CREATE TABLE testdb.test_routineload_tbl(
     user_id            BIGINT       NOT NULL COMMENT "user id",
     name               VARCHAR(20)           COMMENT "name",
     age                INT                   COMMENT "age"
@@ -156,7 +156,7 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine
 在 Doris 中，创建被导入的表，具体语法如下
 
 ```sql
-CREATE TABLE testdb.test_streamload(
+CREATE TABLE testdb.test_routineload_tbl(
     user_id            BIGINT       NOT NULL COMMENT "user id",
     name               VARCHAR(20)           COMMENT "name",
     age                INT                   COMMENT "age"

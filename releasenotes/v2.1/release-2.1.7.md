@@ -56,7 +56,7 @@ Dear community, **Apache Doris version 2.1.7 was officially released on November
 - The `count_substrings` function has been added. [#42055](https://github.com/apache/doris/pull/42055)
 - The `translate` and `url_encode` functions have been added. [#41051](https://github.com/apache/doris/pull/41051)
 - The `normal_cdf`, `to_iso8601`, and `from_iso8601_date` functions have been added. [#40695](https://github.com/apache/doris/pull/40695)
-- (Duplicate entry, but for completeness) Support for `trim_in`, `ltrim_in`, and `rtrim_in` functions has been added. [#42641](https://github.com/apache/doris/pull/42641)
+
 
 ### Storage Management
 

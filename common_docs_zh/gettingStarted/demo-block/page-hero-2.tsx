@@ -22,8 +22,8 @@ export default function PageHero2() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/query/nereids/nereids-new`}>
-                        <div className="home-page-hero-button-label"><div>数据查询</div></div>
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/query-acceleration/tuning/overview`}>
+                        <div className="home-page-hero-button-label"><div>查询加速</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
                                 <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -31,9 +31,9 @@ export default function PageHero2() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>全新优化器</div>
+                            <div style={{ marginBottom: 10 }}>查询调优原理与实践</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>现代架构的全新查询优化器，能够更高效处理当前 Doris 场景的查询请求，同时提供更好的扩展性。</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>查询性能调优是一个系统工程 Doris 为用户提供了各个维度的工具，方便从不同层面进行性能问题的诊断、定位、分析与解决。</div>
                     </a>
                     <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/table-design/index/inverted-index`}>
                         <div className="latest-button-title">

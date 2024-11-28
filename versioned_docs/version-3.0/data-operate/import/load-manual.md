@@ -32,7 +32,7 @@ Apache Doris offers various methods for importing and integrating data, allowing
 
     - For higher concurrency or frequency (more than 20 concurrent writes or multiple writes per minute), you can enable enable [Group Commit](./import-way/group-commit-manual.md) and use JDBC INSERT or Stream Load.
 
-    - For high throughput, you can use [Stream Load](./import-way/stream-load-manua) via HTTP.
+    - For high throughput, you can use [Stream Load](./import-way/stream-load-manual) via HTTP.
 
 - **Streaming Synchronization**: Real-time data streams (e.g., Flink, Kafka, transactional databases) are imported into Doris tables, ideal for real-time analysis and querying.
 
@@ -48,7 +48,7 @@ Apache Doris offers various methods for importing and integrating data, allowing
 
     - You can use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronously load files from S3, HDFS, and NAS into Doris, and you can perform the operation asynchronously using a [JOB](../scheduler/job-scheduler.md).
 
-    - You can use [Stream Load](./import-way/stream-load-manua) or [Doris Streamloader](../../ecosystem/doris-streamloader.md) to write local files into Doris.
+    - You can use [Stream Load](./import-way/stream-load-manual) or [Doris Streamloader](../../ecosystem/doris-streamloader.md) to write local files into Doris.
 
 - **External Data Source Integration**: Query and partially import data from external sources (e.g., Hive, JDBC, Iceberg) into Doris tables.
 

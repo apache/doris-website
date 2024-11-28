@@ -54,12 +54,12 @@ doris-operator-6b97df65c4-xwvw8   1/1     Running   0          19s
 ```
 
 ## 第二步：快速部署存算分离集群
-1. 下载 `ddc-sample.yaml` 部署样例:
+1. 下载 `ddc-sample.yaml` 部署样例：
 ```bash
 curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/disaggregated/cluster/ddc-sample.yaml
 ```
 
-2. 根据存算分离 K8s 部署文档中，[元数据配置章节](config-ms.md)配置 metaService ； [fe 集群配置章节](config-fe.md)进行 fe 终态规格配置；[计算资源组配置章节](config-cg.md)进行相关资源组的配置。配置完成后，使用如下命令部署资源：
+2. 根据存算分离 K8s 部署文档中，[元数据配置章节](config-ms.md)配置 metaService； [fe 集群配置章节](config-fe.md)进行 fe 终态规格配置；[计算资源组配置章节](config-cg.md)进行相关资源组的配置。配置完成后，使用如下命令部署资源：
 ```bash
 kubectl apply -f ddc-sample.yaml
 ```
@@ -75,7 +75,7 @@ MS 服务需要使用 FDB 作为后端元数据存储，部署 MS 服务必须�
 
 ## 第三步：创建远程存储后端
 存算分离集群搭建完毕后，需要通过客户端执行相应的 `CREATE STORAGE VAULT` SQL 语句创建存储后端来实现数据的持久化。
-集群访问方式可参考 [访问 Doris 集群](../compute-storage-coupled/install-access-cluster.md) 来连接 Doris 集群，下文提供其中一种实现方式。
+集群访问方式可参考 [访问 Doris 集群](../compute-storage-coupled/install-config-cluster.md#访问配置) 来连接 Doris 集群，下文提供其中一种实现方式。
 
 **1. 获取 Service**
 

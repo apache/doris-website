@@ -212,7 +212,7 @@ At different stages, data will be aggregated to varying degrees. For example, wh
 AGG_STATE cannot be used as a key column, and when creating a table, you need to declare the signature of the aggregation function. Users do not need to specify a length or default value. The actual storage size of the data depends on the function implementation.
 
 :::
-
+Details can be found in  [agg_state](../../sql-manual/sql-data-types/aggregate/AGG-STATE.md) 。
 
 CREATE TABLE
 

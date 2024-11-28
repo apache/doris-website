@@ -24,13 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 Doris currently supports two types of indexes:
 
-1. Built-in Indexes. These include prefix indexes, ZoneMap indexes, etc.
+1. Built-in Indexes: These include prefix indexes, ZoneMap indexes, etc.
 
-2. Secondary Indexes. These include inverted indexes, Bloom filter indexes, N-Gram Bloom filter indexes, and Bitmap indexes, etc.
+2. Secondary Indexes: These include inverted indexes, Bloom filter indexes, N-Gram Bloom filter indexes, and Bitmap indexes, etc.
 
-In the process of business optimization, fully analyzing business characteristics and effectively utilizing indexes can greatly enhance the effectiveness of queries and analyses, thereby achieving the purpose of performance tuning.
+In the process of business optimization, fully analyzing business characteristics and make effective use of indexes can greatly enhance the effectiveness of queries and analyses, thereby achieving the purpose of performance tuning.
 
 For a detailed introduction to various indexes, please refer to the [Table Index](../../../table-design/index/index-overview) section. This chapter will demonstrate index usage techniques in several typical scenarios from the perspective of actual cases and summarize optimization suggestions for reference in business tuning.
 
@@ -85,7 +86,7 @@ When defining the schema column order, reference the high-frequency and high-pri
 
 Doris supports inverted indexes as secondary indexes to accelerate business scenarios such as equal value, range, and full-text search of text types. The creation and management of inverted indexes are independent, allowing for convenient business performance optimization without affecting the original table schema and without the need to re-import table data.
 
-For typical usage scenarios, syntax, and cases, please refer to the Table Index - Inverted Index section for a detailed introduction, so this chapter will not repeat the explanation.
+For typical usage scenarios, syntax, and cases, please refer to the [Table Index - Inverted Index](../../../table-design/index/inverted-index) section for a detailed introduction, so this chapter will not repeat the explanation.
 
 :::tip
 

@@ -173,7 +173,7 @@ After deployment, you can access the service by `ip:8080` via your local browser
 2. The Doris SQL Convertor supports 239 UNION ALL conversions at most.
 :::
 
-Join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) to seek guidance from the Doris makers or provide your feedback!
+Join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) to seek guidance from the Doris makers or provide your feedback!
 
 
 

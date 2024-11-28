@@ -6,8 +6,6 @@
     'date': '2024-08-14',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-   'picked': "true",
-    'order': "4",
     "image": '/images/auto-partition-in-apache-doris.jpg'
 }
 
