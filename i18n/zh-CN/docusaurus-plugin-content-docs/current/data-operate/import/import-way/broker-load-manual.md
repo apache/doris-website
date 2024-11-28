@@ -46,16 +46,16 @@ Broker Load 适合源数据存储在远程存储系统，比如对象存储或 H
 
 支持的压缩类型：
 
-- PLAIN,
-- GZ,
-- LZO,
-- BZ2,
-- LZ4FRAME,
-- DEFLATE,
-- LZOP,
-- LZ4BLOCK,
-- SNAPPYBLOCK,
-- ZLIB,
+- PLAIN
+- GZ
+- LZO
+- BZ2
+- LZ4FRAME
+- DEFLATE
+- LZOP
+- LZ4BLOCK
+- SNAPPYBLOCK
+- ZLIB
 - ZSTD
 
 ## 基本原理
@@ -222,7 +222,7 @@ WITH [S3|HDFS|BROKER broker_name]
 | --- | --- | --- | --- |
 | "timeout" | Long | 14400 | 导入的超时时间，单位秒。范围是 1 秒 ~ 259200 秒。 |
 | "max_filter_ratio" | Float | 0.0 | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。 |
-| "exec_mem_limit" | Long | 2147483648 | 导入内存限制。默认为 2GB。单位为字节。 |
+| "exec_mem_limit" | Long | 2147483648 (2GB) | 导入内存限制。默认为 2GB。单位为字节。 |
 | "strict_mode" | Boolean | false | 是否开启严格模式。 |
 | "partial_columns" | Boolean | false | 是否使用部分列更新，只在表模型为 Unique Key 且采用 Merge on Write 时有效。 |
 | "timezone" | String | "Asia/Shanghai" | 本次导入所使用的时区。该参数会影响所有导入涉及的和时区有关的函数结果。 |
@@ -256,12 +256,14 @@ WITH [S3|HDFS|BROKER broker_name]
 
 | Session Variable | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| exec_mem_limit | Long | 2147483648 | 导入内存限制，单位：字节。 |
+| exec_mem_limit | Long | 2147483648 (2GB) | 导入内存限制，单位：字节。 |
 | time_zone | String | "Asia/Shanghai" | 默认时区，会影响导入中时区相关的函数结果。 |
 | send_batch_parallelism | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
 
 
 ## 常见问题
+
+### 常见报错
 
 **1. 导入报错：`Scan bytes per broker scanner exceed limit:xxx`**
 
