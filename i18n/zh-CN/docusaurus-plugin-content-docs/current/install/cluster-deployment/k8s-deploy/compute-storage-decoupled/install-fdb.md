@@ -104,7 +104,7 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
 
 - 环境可访问 dockerhub
 
-  根据官网提供的[用户手册](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md)定制化部署终态。如果使用 FQDN 部署，请将 `routing.useDNSInClusterFile` 字段设置为 true ,配置如下：  
+  根据官网提供的[用户手册](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md)定制化部署终态。如果使用 FQDN 部署，请将 `routing.useDNSInClusterFile` 字段设置为 true，配置如下：  
   doris-operator 的官方仓库中提供了使用 [FQDN 部署 FoundationDB 的部署样例](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/cluster.yaml)可直接下载使用。  
 
   ```yaml

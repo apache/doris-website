@@ -1,6 +1,6 @@
 ---
 {
-  "title": "在 Kubernetes 上部署",
+  "title": "部署集群",
   "language": "zh-CN"
 }
 ---

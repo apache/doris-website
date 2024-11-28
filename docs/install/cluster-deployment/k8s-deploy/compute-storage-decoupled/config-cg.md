@@ -69,58 +69,57 @@ Update the above configuration in the required [DorisDisaggregatedCluster resour
 In the default deployment, BE services use Kubernetes' [EmptyDir](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#emptydir) as the cache storage. The EmptyDir mode is non-persistent, meaning that cached data will be lost after a service restart, leading to a drop in query efficiency. The steps to configure persistent storage for the cache are as follows:  
 1. Customize the startup configuration.  
 2. Deploy the ConfigMap containing the startup configuration.  
-3. Update the DorisDisaggregatedCluster resource.
+3. Configure the DorisDisaggregatedCluster resource.
 
 ### Step 1: Customize the startup configuration
-In the default deployment, each BE service in a compute group uses the default configuration file inside the image. To enable persistent cache, a custom startup configuration is required. Doris Operator uses Kubernetes' ConfigMap to mount the startup configuration file. Below is an example of a ConfigMap that can be used for BE services:
-```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: be-configmap
-  labels:
-    app.kubernetes.io/component: be
-data:
-  be.conf: |
-    # For jdk 17, this JAVA_OPTS will be used as default JVM options
-    JAVA_OPTS_FOR_JDK_17="-Xmx1024m -DlogPath=$LOG_DIR/jni.log -Xlog:gc*:$LOG_DIR/be.gc.log.$CUR_DATE:time,uptime:filecount=10,filesize=50M -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.security.krb5.debug=true -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.management/sun.management=ALL-UNNAMED"
-    file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":107374182400,"query_limit":107374182400}]
-```
-In a storage-computation separation cluster, the BE service's startup configuration must set file_cache_path. For details on configuring be.conf for storage-computation separation, refer to the section on [Configuring be.conf](../../../../compute-storage-decoupled/compilation-and-deployment.md#541-configure-beconf). In the example above, a persistent cache is set to the directory `/mnt/disk1/doris_cloud/file_cache`, with a total persistent storage size of 100 Gi and a query cache size of 100 Gi.
+1. Create a custom ConfigMap containing the startup information.  
+  In the default deployment, each compute group’s BE service starts using the default configuration file from the image. To persist cache data, a custom startup configuration is needed. Doris Operator uses Kubernetes' ConfigMap to mount the startup configuration file. 
+  Below is an example of a ConfigMap that a BE service can use:
+  ```yaml
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: be-configmap
+    labels:
+      app.kubernetes.io/component: be
+  data:
+    be.conf: |
+      # For JDK 17, this JAVA_OPTS will be used as default JVM options
+      JAVA_OPTS_FOR_JDK_17="-Xmx1024m -DlogPath=$LOG_DIR/jni.log -Xlog:gc*:$LOG_DIR/be.gc.log.$CUR_DATE:time,uptime:filecount=10,filesize=50M -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.security.krb5.debug=true -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.management/sun.management=ALL-UNNAMED"
+      file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":107374182400,"query_limit":107374182400}]
+  ```
+  For decoupled compute-storage clusters, the BE service's startup configuration must include file_cache_path. For formatting details, refer to the [Decoupled Compute-Storage Configuration be.conf section](../../../../compute-storage-decoupled/compilation-and-deployment.md#541-configure-beconf). In the example above, a persistent cache is configured at the directory `/mnt/disk1/doris_cloud/file_cache`, with a total persistent capacity of 100Gi and a query cache limit of 100Gi.
 
-### Step 2: Deploy the ConfigMap containing the startup configuration
-Use the following command to deploy the ConfigMap with the custom startup configuration to the Kubernetes cluster:
-```shell
-kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml 
-```
-Where ${namespace} is the namespace where the DorisDisaggregatedCluster is deployed, and ${beConfigMapFileName} is the filename containing the custom ConfigMap.
-
-### Step 3: Update the `DorisDisaggregatedCluster` resource
-To enable persistent storage, a storage template must be configured. The `DorisDisaggregatedCluster` resource uses `persistentVolume` to describe the persistent storage template. The template is defined using [PersistentVolumeClaimSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec). In the persistent storage template, multiple mount paths can be specified through `mountPaths`. 
-If `mountPaths` is not set, Doris Operator will automatically parse the `file_cache_path` from the startup configuration to determine the mount point and use the template to create persistent storage. The `annotations` field is where custom annotations can be added.  
-By default, Doris Operator creates persistent storage for logs. If the Kubernetes cluster has a log collection system that can collect logs from Doris services via standardized output, persistent storage for logs can be disabled by setting `logNotStore: true`. Below is an example of how to use a custom ConfigMap and set up a storage template for BE services:
-```yaml
-spec:
-  computeGroups:
-  - uniqueId: cg1
-    configMaps:
-    - name: be-configmap
-      mountPath: "/etc/doris"
-    persistentVolume:
-      annotations:
-        doris.computegroup/id: cg1
-        doris.deployment/mode: disaggregated
-      logNotStore: true
-      persistentVolumeClaimSpec:
-        #storageClassName: ${storageClassName}
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 500Gi
-```
-In the `configMaps` configuration, the name of the custom ConfigMap is specified, along with the mount path within the container. In the storage template `persistentVolume`, `logNotStore: true` is set to disable persistent storage for logs. Two annotations are added for each persistent storage, and the persistent storage specifications are configured. Once the configuration is complete, update the required `DorisDisaggregatedCluster` resource.  
-Doris Operator will use the [default StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/#default-storageclass) in the Kubernetes cluster to create persistent storage for the service. You can specify the desired StorageClass by setting storageClassName.
+2. Deploy the ConfigMap.  
+  To deploy the ConfigMap containing the custom startup configuration to the Kubernetes cluster, use the following command:
+  ```shell
+  kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml 
+  ```
+  Here, ${namespace} refers to the namespace where the DorisDisaggregatedCluster is deployed, and ${beConfigMapFileName} is the filename of the custom ConfigMap.
+  ### Step 2: Configure the DorisDisaggregatedCluster Resource
+  Persistent storage requires a storage template configuration. The DorisDisaggregatedCluster resource uses persistentVolume to describe the persistent storage template. The template is specified using Kubernetes' [PersistentVolumeClaimSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec).  
+  Doris Operator will automatically parse the `file_cache_path` in the startup configuration to identify the mount points, and use the template to automatically generate persistent storage. The annotations will be added into [PersistentVolumeClaim](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/). By default, Doris Operator creates persistent storage for logs, but this can be disabled by setting `logNotStore: true`. Below is an example where a BE service uses a custom ConfigMap and specifies a storage template:
+  ```yaml
+  spec:
+    computeGroups:
+    - uniqueId: cg1
+      configMaps:
+      - name: be-configmap
+        mountPath: "/etc/doris"
+      persistentVolume:
+        annotations:
+          doris.computegroup/id: cg1
+          doris.deployment/mode: disaggregated
+        logNotStore: true
+        persistentVolumeClaimSpec:
+          #storageClassName: ${storageClassName}
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 500Gi
+  ```
+  Doris Operator will use the [default StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/#default-storageclass) in the Kubernetes cluster to create persistent storage for the service. You can specify a custom StorageClass by setting the storageClassName field.
 
 :::tip Tip  
 The startup configuration must be mounted to the "/etc/doris" directory.  

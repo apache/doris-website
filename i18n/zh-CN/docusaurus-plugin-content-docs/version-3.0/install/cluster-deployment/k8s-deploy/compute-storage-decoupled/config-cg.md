@@ -78,32 +78,33 @@ spec:
 3. 更新 `DorisDisaggregatedCluster` 资源。  
 
 ### 第1步：自定义启动配置
-默认部署中，每个计算组的 BE 服务使用镜像内的默认配置文件启动，持久化缓存数据需要自定义启动配置。Doris Operator 使用 Kubernetes 的 ConfigMap 来挂载启动配置文件。以下展示了一个 BE 服务可使用的 ConfigMap 示例：
-```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: be-configmap
-  labels:
-    app.kubernetes.io/component: be
-data:
-  be.conf: |
-    # For jdk 17, this JAVA_OPTS will be used as default JVM options
-    JAVA_OPTS_FOR_JDK_17="-Xmx1024m -DlogPath=$LOG_DIR/jni.log -Xlog:gc*:$LOG_DIR/be.gc.log.$CUR_DATE:time,uptime:filecount=10,filesize=50M -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.security.krb5.debug=true -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.management/sun.management=ALL-UNNAMED"
-    file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":107374182400,"query_limit":107374182400}]
-```
-存算分离集群 BE 服务的启动配置必须设置 `file_cache_path`，格式请参考[存算分离配置 `be.conf`](../../../../compute-storage-decoupled/compilation-and-deployment.md#541-配置-beconf) 章节。以上示例中，设置了一个目录为 `/mnt/disk1/doris_cloud/file_cache` 的持久化缓存，设置可使用持久化总容量大小为 100Gi，查询的缓存可使用的总容量大小也为 100Gi。
+1. 自定义包含启动信息的 ConfigMap。  
+  默认部署中，每个计算组的 BE 服务使用镜像内的默认配置文件启动，持久化缓存数据需要自定义启动配置。Doris Operator 使用 Kubernetes 的 ConfigMap 来挂载启动配置文件。以下展示了一个 BE 服务可使用的 ConfigMap 示例：
+  ```yaml
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: be-configmap
+    labels:
+      app.kubernetes.io/component: be
+  data:
+    be.conf: |
+      # For jdk 17, this JAVA_OPTS will be used as default JVM options
+      JAVA_OPTS_FOR_JDK_17="-Xmx1024m -DlogPath=$LOG_DIR/jni.log -Xlog:gc*:$LOG_DIR/be.gc.log.$CUR_DATE:time,uptime:filecount=10,filesize=50M -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.security.krb5.debug=true -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.management/sun.management=ALL-UNNAMED"
+      file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":107374182400,"query_limit":107374182400}]
+  ```
+  存算分离集群 BE 服务的启动配置必须设置 `file_cache_path`，格式请参考[存算分离配置 `be.conf`](../../../../compute-storage-decoupled/compilation-and-deployment.md#541-配置-beconf) 章节。以上示例中，设置了一个目录为 `/mnt/disk1/doris_cloud/file_cache` 的持久化缓存，设置可使用持久化总容量大小为 100Gi，查询的缓存可使用的总容量大小也为 100Gi。
 
-### 第2步：部署包含启动配置的 ConfigMap
-通过如下命令，将包含自定义启动配置信息的 ConfigMap 通过如下命令部署到 Kubernetes 集群中：
-```shell
-kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml 
-```
-${namespace} 为 `DorisDisaggregatedCluster` 部署的命名空间，${beConfigMapFileName} 为包含自定义 ConfigMap 的文件名称。
+2. 部署 ConfigMap。  
+  通过如下命令，将包含自定义启动配置信息的 ConfigMap 通过如下命令部署到 Kubernetes 集群中：
+  ```shell
+  kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml 
+  ```
+  ${namespace} 为 `DorisDisaggregatedCluster` 部署的命名空间，${beConfigMapFileName} 为包含自定义 ConfigMap 的文件名称。
 
-### 第3步：更新 `DorisDisaggregatedCluster` 资源
-持久化存储需要配置存储模板，`DorisDisaggregatedCluster` 使用 `persistentVolume` 描述持久化存储模板。模板中使用 Kubernetes 的 [PersistentVolumeClaimSpec](https://kubernetes.io/zh-cn/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec) 描述模板的规格。持久化模板配置中通过 `mountPaths` 设置多个挂载路径，如果不设置 `mountPaths` Doris Operator 会自动解析启动配置的 `file_cache_path` 找出挂载点，使用模板自动生成持久化存储。`annotations` 为自定义添加注解的地方。
-Doris Operator 默认为日志创建持久化存储，如果 Kubernetes 有日志收集系统，能够收集 Doris 服务通过标准化输出打印的日志，可通过设置 `logNotStore: true` 来禁止为日志创建持久化存储。以下展示了 BE 服务使用自定义的 ConfigMap，并设置存储模板的示例：
+### 第2步：更新 `DorisDisaggregatedCluster` 资源
+持久化存储需要配置存储模板，`DorisDisaggregatedCluster` 使用 `persistentVolume` 描述持久化存储模板。模板中使用 Kubernetes 的 [PersistentVolumeClaimSpec](https://kubernetes.io/zh-cn/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec) 描述模板的规格。  
+Doris Operator 会自动解析启动配置的 `file_cache_path` 找出挂载点，使用模板来自动生成持久化存储。`annotations` 可为使用的 [PersistentVolumeClaim](https://kubernetes.io/zh-cn/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/)。Doris Operator 默认为日志创建持久化存储，可通过设置 `logNotStore: true` 来禁止为日志创建持久化存储。以下展示了 BE 服务使用自定义的 ConfigMap，并设置存储模板的示例：
 ```yaml
 spec:
   computeGroups:
@@ -124,7 +125,6 @@ spec:
           requests:
             storage: 500Gi
 ```
-在 `configMaps` 配置中，指定了自定义的 ConfigMap 的名称以及它在容器内的挂载路径。存储模板 `persistentVolume` 中，设置 `logNotStore: true` 来禁止为日志创建持久化存储；为每一个持久化存储添加了两个注解；配置持久化存储的规格。配置完成后，更新到需要部署的 `DorisDisaggregatedCluster` 资源中。
 Doris Operator 会使用 Kubernetes 集群中默认的 [StorageClass](https://kubernetes.io/zh-cn/docs/concepts/storage/storage-classes/#default-storageclass) 来为服务创建持久化存储。请通过设置 `storageClassName` 来指定需要使用的 StorageClass。
 
 :::tip 提示  

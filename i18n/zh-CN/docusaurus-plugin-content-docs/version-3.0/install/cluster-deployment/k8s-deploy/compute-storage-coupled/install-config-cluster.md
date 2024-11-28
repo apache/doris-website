@@ -96,7 +96,7 @@ spec:
 ```
 将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中。
 
-:::tip Tip
+:::tip 提示  
 - FE 和 BE 所需要的最小启动资源为 4c 8Gi ，如果需要进行正常能力测试，建议配置为 8c 8Gi。  
 :::
 
@@ -156,7 +156,7 @@ spec:
       resolveKey: fe.conf
 ```
 
-:::tip Tip  
+:::tip 提示  
 Kubernetes 部署中，建议使用 FQDN 模式，启动配置中应添加 enable_fqdn_mode=true 。如果想用 IP 模式，且 Kubernetes 集群能够保证 pod 重启后 IP 不发生变化，请参照 issue [#138](https://github.com/apache/doris-operator/issues/138) 进行配置 IP 模式启动。
 :::
 
@@ -214,7 +214,7 @@ spec:
       resolveKey: be.conf
 ```
 
-:::tip Tip  
+:::tip 提示  
 如果需要将文件挂载到和启动配置同一目录下，需要将配置信息配置到启动配置所在的 ConfigMap 中。 ConfigMap 中的 key 为文件名称，value 为配置信息。  
 :::
 
