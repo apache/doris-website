@@ -58,7 +58,7 @@ spec:
           requests:
             storage: ${storageSize}
 ```
-其中，`{storageClassName}` 为需要使用的 StorageClass 的名称，如果不填写将使用集群默认的 StorageClass；${storageSize} 表示希望使用申请的存储容量大小，${storageSize} 的格式遵循 Kubernetes 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi。
+其中，`${storageClassName}` 为需要使用的 StorageClass 的名称，如果不填写将使用集群默认的 StorageClass；${storageSize} 表示希望使用申请的存储容量大小，${storageSize} 的格式遵循 Kubernetes 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi。
 
 ## 自定义配置文件
 Doris Operator 使用 Kubernetes 的 ConfigMap 挂载启动配置。
