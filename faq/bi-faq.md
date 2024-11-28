@@ -50,6 +50,23 @@ The new optimizer can be turned off in the current version or upgraded to versio
 
 This problem is easily encountered in version 2.1.x. If this problem occurs, you need to upgrade the JDBC Driver to 8.0.32.
 
+### Q5. An error occurred when the SQL Statment statement was used to connect Doris of 2.1x using JDBC :"Something went wrong Object reference not set to an instance of an object".
+
+You need to execute the following statement in the connected database. After the execution is successful, connect Doris again to work properly.
+
+```
+CREATE TABLE `bogus_table` (
+  `id` BIGINT NOT NULL,
+  `value` BIGINT NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`id`)
+COMMENT 'OLAP'
+DISTRIBUTED BY HASH(`id`) BUCKETS 10
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 1"
+);
+```
+
 ## Tableau
 
 ### Q1. Version 2.0.x reports that Tableau cannot connect to the data source with error code 37CE01A3.
