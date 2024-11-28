@@ -1,6 +1,6 @@
 ---
 {
-"title": "Quick Start",
+"title": "Deploy on Kubernetes",
 "language": "en"
 }
 ---
