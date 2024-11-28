@@ -33,24 +33,6 @@ under the License.
 关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](./export-overview.md)。
 
 
-示例：
-
-```sql
-mysql> SELECT * FROM tbl1 LIMIT 10 INTO OUTFILE "file:///home/work/path/result_";
-+------------+-----------+----------+--------------------------------------------------------------------+
-| FileNumber | TotalRows | FileSize | URL                                                                |
-+------------+-----------+----------+--------------------------------------------------------------------+
-|          1 |         2 |        8 | file:///192.168.1.10/home/work/path/result_{fragment_instance_id}_ |
-+------------+-----------+----------+--------------------------------------------------------------------+
-```
-
-返回结果说明：
-
-* FileNumber：最终生成的文件个数。
-* TotalRows：结果集行数。
-* FileSize：导出文件总大小。单位字节。
-* URL：导出的文件路径的前缀，多个文件会以后缀 `_0`,`_1` 依次编号。
-
 有关`SELECT INTO OUTFILE`命令的详细介绍，请参考：[SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md)
 
 --------------
@@ -59,19 +41,19 @@ mysql> SELECT * FROM tbl1 LIMIT 10 INTO OUTFILE "file:///home/work/path/result_"
 
 `SELECT INTO OUTFILE` 适用于以下场景：
 
-1. 导出数据需要经过复杂计算逻辑的，如过滤、聚合、关联等。
-2. 适合执行同步任务的场景。
+-  导出数据需要经过复杂计算逻辑的，如过滤、聚合、关联等。
+-  适合执行同步任务的场景。
 
 在使用 `SELECT INTO OUTFILE` 时需要注意以下限制：
 
-1. 不支持压缩格式的导出。
-2. 2.1 版本 pipeline 引擎不支持并发导出。
-3. 若希望导出到本地文件系统，需要在 fe.conf 中添加配置 `enable_outfile_to_local=true` 并重启FE。
+- 不支持压缩格式的导出。
+- 2.1 版本 pipeline 引擎不支持并发导出。
+- 若希望导出到本地文件系统，需要在 fe.conf 中添加配置 `enable_outfile_to_local=true` 并重启FE。
 
 
 ## 基本原理
 
-`SELECT INTO OUTFILE` 功能本质上是执行一个 SQL 查询命令，其原理基本同普通查询的原理一致，。唯一的不同是，普通查询将最后查询的结果集输出到 mysql 客户端，而 `SELECT INTO OUTFILE` 将最后的查询结果集输出到外部存储介质。
+`SELECT INTO OUTFILE` 功能本质上是执行一个 SQL 查询命令，其原理基本同普通查询的原理一致。唯一的不同是，普通查询将最后查询的结果集输出到 mysql 客户端，而 `SELECT INTO OUTFILE` 将最后的查询结果集输出到外部存储介质。
 
 `SELECT INTO OUTFILE`并发导出的原理是将大规模数据集划分为小块，并在多个节点上并行处理。在可以并发导出的场景下，并行的在多个 BE 节点上导出，每个 BE 处理结果集的一部分。
 
@@ -111,45 +93,9 @@ PROPERTIES
 );
 ```
 
-如果 HDFS 开启了高可用，则需要提供 HA 信息，如：
+如果 HDFS 集群开启了高可用，则需要提供 HA 信息，参考案例：[导出到开启了高可用的 HDFS 集群](#高可用HDFS导出)
 
-```sql
-SELECT c1, c2, c3 FROM tbl
-INTO OUTFILE "hdfs://HDFS8000871/path/to/result_"
-FORMAT AS PARQUET
-PROPERTIES
-(
-    "fs.defaultFS" = "hdfs://HDFS8000871",
-    "hadoop.username" = "hadoop",
-    "dfs.nameservices" = "your-nameservices",
-    "dfs.ha.namenodes.your-nameservices" = "nn1,nn2",
-    "dfs.namenode.rpc-address.HDFS8000871.nn1" = "ip:port",
-    "dfs.namenode.rpc-address.HDFS8000871.nn2" = "ip:port",
-    "dfs.client.failover.proxy.provider.HDFS8000871" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
-);
-```
-
-如果 Hadoop 集群开启了高可用并且启用了 Kerberos 认证，可以参考如下 SQL 语句：
-
-```sql
-SELECT * FROM tbl
-INTO OUTFILE "hdfs://path/to/result_"
-FORMAT AS PARQUET
-PROPERTIES
-(
-    "fs.defaultFS"="hdfs://hacluster/",
-    "hadoop.username" = "hadoop",
-    "dfs.nameservices"="hacluster",
-    "dfs.ha.namenodes.hacluster"="n1,n2",
-    "dfs.namenode.rpc-address.hacluster.n1"="192.168.0.1:8020",
-    "dfs.namenode.rpc-address.hacluster.n2"="192.168.0.2:8020",
-    "dfs.client.failover.proxy.provider.hacluster"="org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
-    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM"
-    "hadoop.security.authentication"="kerberos",
-    "hadoop.kerberos.principal"="doris_test@REALM.COM",
-    "hadoop.kerberos.keytab"="/path/to/doris_test.keytab"
-);
-```
+如果 HDFS 集群开启了高可用并且启用了 Kerberos 认证，需要提供 Kerberos 认证信息，参考案例：[导出到开启了高可用及kerberos认证的 HDFS 集群](#高可用及kerberos集群导出)
 
 ### 导出到对象存储 
 
@@ -241,11 +187,58 @@ PROPERTIES(
 
 ## 导出示例
 
+- [导出到开启了高可用的 HDFS 集群](#高可用HDFS导出)
+- [导出到开启了高可用及kerberos认证的 HDFS 集群](#高可用及kerberos集群导出)
 - [生成导出成功标识文件示例](#生成导出成功标识文件示例)
 - [并发导出示例](#并发导出示例)
 - [导出前清空导出目录示例](#导出前清空导出目录示例)
 - [设置导出文件的大小示例](#设置导出文件的大小示例)
 
+<span id="高可用HDFS导出"></span>
+**导出到开启了高可用的 HDFS 集群**
+
+如果 HDFS 开启了高可用，则需要提供 HA 信息，如：
+
+```sql
+SELECT c1, c2, c3 FROM tbl
+INTO OUTFILE "hdfs://HDFS8000871/path/to/result_"
+FORMAT AS PARQUET
+PROPERTIES
+(
+    "fs.defaultFS" = "hdfs://HDFS8000871",
+    "hadoop.username" = "hadoop",
+    "dfs.nameservices" = "your-nameservices",
+    "dfs.ha.namenodes.your-nameservices" = "nn1,nn2",
+    "dfs.namenode.rpc-address.HDFS8000871.nn1" = "ip:port",
+    "dfs.namenode.rpc-address.HDFS8000871.nn2" = "ip:port",
+    "dfs.client.failover.proxy.provider.HDFS8000871" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+);
+```
+
+<span id="高可用及kerberos集群导出"></span>
+**导出到开启了高可用及kerberos认证的 HDFS 集群**
+
+如果 Hdfs 集群开启了高可用并且启用了 Kerberos 认证，可以参考如下 SQL 语句：
+
+```sql
+SELECT * FROM tbl
+INTO OUTFILE "hdfs://path/to/result_"
+FORMAT AS PARQUET
+PROPERTIES
+(
+    "fs.defaultFS"="hdfs://hacluster/",
+    "hadoop.username" = "hadoop",
+    "dfs.nameservices"="hacluster",
+    "dfs.ha.namenodes.hacluster"="n1,n2",
+    "dfs.namenode.rpc-address.hacluster.n1"="192.168.0.1:8020",
+    "dfs.namenode.rpc-address.hacluster.n2"="192.168.0.2:8020",
+    "dfs.client.failover.proxy.provider.hacluster"="org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
+    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM"
+    "hadoop.security.authentication"="kerberos",
+    "hadoop.kerberos.principal"="doris_test@REALM.COM",
+    "hadoop.kerberos.keytab"="/path/to/doris_test.keytab"
+);
+```
 
 <span id="生成导出成功标识文件示例"></span>
 **生成导出成功标识文件示例**
