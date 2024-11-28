@@ -60,7 +60,7 @@ mysql> explain shape plan select * from t1 join t2 on t1.c1 = c2;
 7 rows in set (0.06 sec)
 ```
 
-此时，我们可以使用 Leading Hint 来任意改变 tableA 和 tableB 的 Join 顺序。例如：
+此时，我们可以使用 Leading Hint 来任意改变 t1 和 t2 的 Join 顺序。例如：
 
 ```sql
 mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 = c2;
@@ -150,7 +150,7 @@ mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 =
 
 - Used：Leading Hint 正常生效
 
-- Unused：这里不支持的情况包含 Leading Hint 指定的 join order 与原 SQL 不等价或本版本暂不支持特性（详见限制）
+- Unused：这里不支持的情况包含 Leading Hint 指定的 join order 与原 SQL 不等价或本版本暂不支持特性
 
 - SyntaxError：指 Leading Hint 语法错误，如找不到对应的表等
 
@@ -613,9 +613,9 @@ mysql> explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2 
   18 rows in set (0.02 sec)
 ```
 
-## DistrbuteHint 使用说明
+## DistributeHint 使用说明
 
-- 目前只能指定右表的 Distribute Type，而且只有 `[shuffle]` 和 `[broadcast]` 两种。需写在 Join 右表前面，且允许使用中括号 `[]` 和 `/`*`+`*`/`两种写法。
+- 目前只能指定右表的 Distribute Type，而且只有 `[shuffle]` 和 `[broadcast]` 两种。需写在 Join 右表前面 。
 
 - 目前能使用任意个 DistributeHint。
 
