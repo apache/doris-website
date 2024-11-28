@@ -1,13 +1,9 @@
-import lunr from "lunr";
-import { searchIndexUrl } from "../../utils/proxiedGenerated";
+import lunr from 'lunr';
+import { searchIndexUrl } from '../../utils/proxiedGenerated';
 const cache = new Map();
-const host = process.env.TEST_ENV_URL || 'https://cdnd.selectdb.com';
 
 export function fetchIndexes(baseUrl, searchContext) {
     const cacheKey = `${baseUrl}${searchContext}`;
-    console.log('cache',cache);
-    console.log('cacheKey',cacheKey);
-    
     let promise = cache.get(cacheKey);
     if (!promise) {
         promise = legacyFetchIndexes(baseUrl, searchContext);
@@ -16,14 +12,18 @@ export function fetchIndexes(baseUrl, searchContext) {
     return promise;
 }
 export async function legacyFetchIndexes(baseUrl, searchContext) {
-    if (process.env.NODE_ENV === "production") {
-        const url = `${host}${baseUrl}${searchIndexUrl.replace("{dir}", searchContext ? `-${searchContext.replace(/\//g, "-")}` : "")}`;
+    if (process.env.NODE_ENV === 'production') {
+        const host = process.env.TEST_ENV_URL || 'https://cdnd.selectdb.com';
+        const url = `${host}${baseUrl}${searchIndexUrl.replace(
+            '{dir}',
+            searchContext ? `-${searchContext.replace(/\//g, '-')}` : '',
+        )}`;
         // Catch potential attacks.
         const fullUrl = new URL(url, location.origin);
         if (fullUrl.origin !== location.origin) {
-            throw new Error("Unexpected version url");
+            throw new Error('Unexpected version url');
         }
-        const json = (await (await fetch(url)).json());
+        const json = await (await fetch(url)).json();
         const wrappedIndexes = json.map(({ documents, index }, type) => ({
             type: type,
             documents,

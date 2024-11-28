@@ -13,7 +13,6 @@ export default function BlogLayout(props: BlogLayoutProps): JSX.Element {
     const { sidebar, toc, children, pageType, ...layoutProps } = props;
     const hasSidebar = sidebar && sidebar.items.length > 0;
     const isBlogListPage = pageType === 'blogList';
-    console.log('pageType',pageType);
     
     return (
         <Layout {...layoutProps}>

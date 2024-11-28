@@ -28,18 +28,12 @@ async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
     const autoComplete = autoCompleteModule.default;
     if (autoComplete.noConflict) {
-        console.log('aaa');
-        
         // For webpack v5 since docusaurus v2.0.0-alpha.75
         autoComplete.noConflict();
     } else if (autoCompleteModule.noConflict) {
-        console.log('bbb');
-        
         // For webpack v4 before docusaurus v2.0.0-alpha.74
         autoCompleteModule.noConflict();
     }
-    console.log('ccc',autoComplete);
-    
     return autoComplete;
 }
 const SEARCH_PARAM_HIGHLIGHT = '_highlight';

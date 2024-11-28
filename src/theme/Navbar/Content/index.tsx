@@ -88,13 +88,9 @@ export default function NavbarContent(): JSX.Element {
     const [isDocsPage, setIsDocsPage] = useState(false);
     const [isCommunity, setIsCommunity] = useState(false);
     const searchBarItem = items.find(item => item.type === 'search');
-    console.log('searchBarItem',searchBarItem);
     
     const [isEN, setIsEN] = useState(true);
     const [currentVersion, setCurrentVersion] = useState('');
-    console.log('items',items);
-    
-    console.log('rightItems',rightItems);
     useEffect(() => {
         getGithubStar();
         if (typeof window !== 'undefined') {
