@@ -376,7 +376,9 @@
                             "label": "Cross Cluster Replication",
                             "items": [
                                 "admin-manual/data-admin/ccr/overview",
-                                "admin-manual/data-admin/ccr/feature"
+                                "admin-manual/data-admin/ccr/quickstart",
+                                "admin-manual/data-admin/ccr/feature",
+                                "admin-manual/data-admin/ccr/manual"
                             ]
                         },
                         "admin-manual/data-admin/recyclebin",

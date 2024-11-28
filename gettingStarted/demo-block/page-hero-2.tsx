@@ -22,8 +22,8 @@ export default function PageHero1() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/query/nereids/nereids-new`}>
-                        <div className="home-page-hero-button-label"><div>Data Query</div></div>
+                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/query-acceleration/tuning/overview`}>
+                        <div className="home-page-hero-button-label"><div>Query Acceleration</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
                                 <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -31,9 +31,9 @@ export default function PageHero1() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Cost-Based Optimizer </div>
+                            <div style={{ marginBottom: 10 }}>Best Practice of Tuning </div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>To build an open, high-performance, cost-effective and unified log storage and analysis platform.</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>Query performance tuning is systematic engineering that requires optimization of the database system from multiple levels and dimensions.</div>
                     </a>
                     <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/table-design/index/inverted-index`}>
                         <div className="latest-button-title">

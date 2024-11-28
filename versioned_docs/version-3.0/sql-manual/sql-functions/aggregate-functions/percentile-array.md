@@ -28,13 +28,17 @@ under the License.
 ### Description
 #### Syntax
 
-`ARRAY_DOUBLE PERCENTILE_ARRAY(BIGINT, ARRAY_DOUBLE p)`
+`ARRAY_DOUBLE PERCENTILE_ARRAY(expr, ARRAY_DOUBLE p)`
 
 Calculate exact percentiles, suitable for small data volumes. Sorts the specified column in descending order first, then takes the exact pth percentile.
 The return value is the result of sequentially taking the specified percentages in the array p.
 Parameter Description:
 expr: Required. Columns whose values are of type integer (up to bigint).
 p: The exact percentile is required, an array of constants, taking the value [0.0, 1.0].
+
+:::tip
+Since version Doris 3.0.3, expr supports more input types, such as float and double. This enables floating-point data to participate in calculations, reducing the overhead of casting data.
+:::
 
 ### example
 ```

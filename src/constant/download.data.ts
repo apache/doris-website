@@ -252,7 +252,7 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                     },
                 ],
             },
-        ]
+        ],
     },
     {
         label: '2.1',
@@ -1413,6 +1413,21 @@ export const OLD_VERSIONS: Option[] = [
     },
 ];
 
+const FLINK_SAME_SOURCE_162 =
+    'https://downloads.apache.org/doris/flink-connector/1.6.2/apache-doris-flink-connector-1.6.2-src.tar.gz';
+const FLINK_SAME_SOURCE_152 =
+    'https://downloads.apache.org/doris/flink-connector/1.5.2/apache-doris-flink-connector-1.5.2-src.tar.gz';
+const FLINK_SAME_SOURCE_140 =
+    'https://downloads.apache.org/doris/flink-connector/1.4.0/apache-doris-flink-connector-1.4.0-src.tar.gz';
+
+const FLINK_SAME_SOURCE_2401 =
+    'https://downloads.apache.org/doris/flink-connector/24.0.1/apache-doris-flink-connector-24.0.1-src.tar.gz';
+
+const SPARK_SAME_SOURCE_132 =
+    'https://downloads.apache.org/doris/spark-connector/1.3.2/apache-doris-spark-connector-1.3.2-src.tar.gz';
+const SPARK_SAME_SOURCE_120 =
+    'https://downloads.apache.org/doris/spark-connector/1.2.0/apache-doris-spark-connector-1.2.0-src.tar.gz';
+
 export const TOOL_VERSIONS = [
     {
         label: ToolsEnum.Kafka,
@@ -1423,7 +1438,14 @@ export const TOOL_VERSIONS = [
                 value: '1.0.0',
                 gz: 'https://downloads.apache.org/doris/kafka-connector/1.0.0-rc01/apache-doris-kafka-connector-1.0.0-src.tar.gz',
                 Source: 'https://downloads.apache.org/doris/kafka-connector/1.0.0-rc01/apache-doris-kafka-connector-1.0.0-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/doris-kafka-connector/1.0.0/doris-kafka-connector-1.0.0.jar'
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/doris-kafka-connector/1.0.0/doris-kafka-connector-1.0.0.jar',
+            },
+            {
+                label: '1.1.0',
+                value: '1.1.0',
+                gz: 'https://downloads.apache.org/doris/kafka-connector/1.1.0-rc01/apache-doris-kafka-connector-1.1.0-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/kafka-connector/1.1.0-rc01/apache-doris-kafka-connector-1.1.0-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/doris-kafka-connector/1.1.0/doris-kafka-connector-1.1.0.jar',
             },
         ],
     },
@@ -1432,53 +1454,248 @@ export const TOOL_VERSIONS = [
         value: ToolsEnum.Flink,
         children: [
             {
-                label: '1.6.1',
-                value: '1.6.1',
-                gz: 'https://downloads.apache.org/doris/flink-connector/1.6.1/apache-doris-flink-connector-1.6.1-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/flink-connector/1.6.1/apache-doris-flink-connector-1.6.1-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.19/1.6.1/flink-doris-connector-1.19-1.6.1.jar'
+                label: '24.0.1',
+                value: '24.0.1',
+                children: [
+                    {
+                        value: '1.20',
+                        label: 'For Flink 1.20',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.20/24.0.1/flink-doris-connector-1.20-24.0.1.jar',
+                    },
+                    {
+                        value: '1.19',
+                        label: 'For Flink 1.19',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.19/24.0.1/flink-doris-connector-1.19-24.0.1.jar',
+                    },
+                    {
+                        value: '1.18',
+                        label: 'For Flink 1.18',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.18/24.0.1/flink-doris-connector-1.18-24.0.1.jar',
+                    },
+                    {
+                        value: '1.17',
+                        label: 'For Flink 1.17',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.17/24.0.1/flink-doris-connector-1.17-24.0.1.jar',
+                    },
+                    {
+                        value: '1.16',
+                        label: 'For Flink 1.16',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.16/24.0.1/flink-doris-connector-1.16-24.0.1.jar',
+                    },
+                    {
+                        value: '1.15',
+                        label: 'For Flink 1.15',
+                        gz: FLINK_SAME_SOURCE_2401,
+                        Source: FLINK_SAME_SOURCE_2401,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.15/24.0.1/flink-doris-connector-1.15-24.0.1.jar',
+                    },
+                ],
+            },
+            {
+                label: '1.6.2',
+                value: '1.6.2',
+                children: [
+                    {
+                        value: '1.19',
+                        label: 'For Flink 1.19',
+                        gz: FLINK_SAME_SOURCE_162,
+                        Source: FLINK_SAME_SOURCE_162,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.19/1.6.2/flink-doris-connector-1.19-1.6.2.jar',
+                    },
+                    {
+                        value: '1.18',
+                        label: 'For Flink 1.18',
+                        gz: FLINK_SAME_SOURCE_162,
+                        Source: FLINK_SAME_SOURCE_162,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.18/1.6.2/flink-doris-connector-1.18-1.6.2.jar',
+                    },
+                    {
+                        value: '1.17',
+                        label: 'For Flink 1.17',
+                        gz: FLINK_SAME_SOURCE_162,
+                        Source: FLINK_SAME_SOURCE_162,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.17/1.6.2/flink-doris-connector-1.17-1.6.2.jar',
+                    },
+                    {
+                        value: '1.16',
+                        label: 'For Flink 1.16',
+                        gz: FLINK_SAME_SOURCE_162,
+                        Source: FLINK_SAME_SOURCE_162,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.16/1.6.2/flink-doris-connector-1.16-1.6.2.jar',
+                    },
+                    {
+                        value: '1.15',
+                        label: 'For Flink 1.15',
+                        gz: FLINK_SAME_SOURCE_162,
+                        Source: FLINK_SAME_SOURCE_162,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.15/1.6.2/flink-doris-connector-1.15-1.6.2.jar',
+                    },
+                ],
             },
             {
                 label: '1.5.2',
                 value: '1.5.2',
-                gz: 'https://downloads.apache.org/doris/flink-connector/1.5.2/apache-doris-flink-connector-1.5.2-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/flink-connector/1.5.2/apache-doris-flink-connector-1.5.2-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.18/1.5.2/flink-doris-connector-1.18-1.5.2.jar'
+                children: [
+                    {
+                        value: '1.18',
+                        label: 'For Flink 1.18',
+                        gz: FLINK_SAME_SOURCE_152,
+                        Source: FLINK_SAME_SOURCE_152,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.18/1.5.2/flink-doris-connector-1.18-1.5.2.jar',
+                    },
+                    {
+                        value: '1.17',
+                        label: 'For Flink 1.17',
+                        gz: FLINK_SAME_SOURCE_152,
+                        Source: FLINK_SAME_SOURCE_152,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.17/1.5.2/flink-doris-connector-1.17-1.5.2.jar',
+                    },
+                    {
+                        value: '1.16',
+                        label: 'For Flink 1.16',
+                        gz: FLINK_SAME_SOURCE_152,
+                        Source: FLINK_SAME_SOURCE_152,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.16/1.5.2/flink-doris-connector-1.16-1.5.2.jar',
+                    },
+                    {
+                        value: '1.15',
+                        label: 'For Flink 1.15',
+                        gz: FLINK_SAME_SOURCE_152,
+                        Source: FLINK_SAME_SOURCE_152,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.15/1.5.2/flink-doris-connector-1.15-1.5.2.jar',
+                    },
+                ],
             },
             {
                 label: '1.4.0',
                 value: '1.4.0',
-                gz: 'https://downloads.apache.org/doris/flink-connector/1.4.0/apache-doris-flink-connector-1.4.0-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/flink-connector/1.4.0/apache-doris-flink-connector-1.4.0-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.17/1.4.0/flink-doris-connector-1.17-1.4.0.jar'
+                children: [
+                    {
+                        value: '1.17',
+                        label: 'For Flink 1.17',
+                        gz: FLINK_SAME_SOURCE_140,
+                        Source: FLINK_SAME_SOURCE_140,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.17/1.4.0/flink-doris-connector-1.17-1.4.0.jar',
+                    },
+                    {
+                        value: '1.16',
+                        label: 'For Flink 1.16',
+                        gz: FLINK_SAME_SOURCE_140,
+                        Source: FLINK_SAME_SOURCE_140,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.16/1.4.0/flink-doris-connector-1.16-1.4.0.jar',
+                    },
+                    {
+                        value: '1.15',
+                        label: 'For Flink 1.15',
+                        gz: FLINK_SAME_SOURCE_140,
+                        Source: FLINK_SAME_SOURCE_140,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.15/1.4.0/flink-doris-connector-1.15-1.4.0.jar',
+                    },
+                ],
             },
             {
                 label: '1.3.0',
                 value: '1.3.0',
-                gz: 'https://downloads.apache.org/doris/flink-connector/1.3.0/apache-doris-flink-connector-1.16-1.3.0-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/flink-connector/1.3.0/apache-doris-flink-connector-1.16-1.3.0-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.16/1.3.0/flink-doris-connector-1.16-1.3.0.jar'
+                children: [
+                    {
+                        value: '1.16',
+                        label: 'For Flink 1.16',
+                        gz: 'https://downloads.apache.org/doris/flink-connector/1.3.0/apache-doris-flink-connector-1.16-1.3.0-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/flink-connector/1.3.0/apache-doris-flink-connector-1.16-1.3.0-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.16/1.3.0/flink-doris-connector-1.16-1.3.0.jar',
+                    },
+                ],
             },
             {
                 label: '1.2.1',
                 value: '1.2.1',
-                gz: 'https://downloads.apache.org/doris/flink-connector/1.2.1/apache-doris-flink-connector-1.15-1.2.1-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/flink-connector/1.2.1/apache-doris-flink-connector-1.15-1.2.1-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.15/1.2.1/flink-doris-connector-1.15-1.2.1.jar'
+                children: [
+                    {
+                        value: '1.15',
+                        label: 'For Flink 1.15',
+                        gz: 'https://downloads.apache.org/doris/flink-connector/1.2.1/apache-doris-flink-connector-1.15-1.2.1-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/flink-connector/1.2.1/apache-doris-flink-connector-1.15-1.2.1-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.15/1.2.1/flink-doris-connector-1.15-1.2.1.jar',
+                    },
+                ],
             },
             {
                 label: '1.1.1',
                 value: '1.1.1',
-                gz: 'https://downloads.apache.org/doris/flink-connector/1.1.1/apache-doris-flink-connector-1.14_2.11-1.1.1-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/flink-connector/1.1.1/apache-doris-flink-connector-1.14_2.11-1.1.1-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.14_2.12/1.1.1/flink-doris-connector-1.14_2.12-1.1.1.jar'
+                children: [
+                    {
+                        value: '1.14_2.12',
+                        label: 'For Flink 1.14_2.12',
+                        gz: 'https://downloads.apache.org/doris/flink-connector/1.1.1/apache-doris-flink-connector-1.14_2.12-1.1.1-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/flink-connector/1.1.1/apache-doris-flink-connector-1.14_2.12-1.1.1-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.14_2.12/1.1.1/flink-doris-connector-1.14_2.12-1.1.1.jar',
+                    },
+                    {
+                        value: '1.14_2.11',
+                        label: 'For Flink 1.14_2.11',
+                        gz: 'https://downloads.apache.org/doris/flink-connector/1.1.1/apache-doris-flink-connector-1.14_2.11-1.1.1-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/flink-connector/1.1.1/apache-doris-flink-connector-1.14_2.11-1.1.1-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.14_2.11/1.1.1/flink-doris-connector-1.14_2.11-1.1.1.jar',
+                    },
+                ],
             },
             {
                 label: '1.0.3',
                 value: '1.0.3',
-                gz: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.12_2.11-1.0.3-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.12_2.11-1.0.3-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.14_2.12/1.0.3/flink-doris-connector-1.14_2.12-1.0.3.jar'
+                children: [
+                    {
+                        value: '1.14_2.12',
+                        label: 'For Flink 1.14_2.12',
+                        gz: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.14_2.12-1.0.3-incubating-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.14_2.12-1.0.3-incubating-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.14_2.12/1.0.3/flink-doris-connector-1.14_2.12-1.0.3.jar',
+                    },
+                    {
+                        value: '1.13_2.12',
+                        label: 'For Flink 1.13_2.12',
+                        gz: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.13_2.12-1.0.3-incubating-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.13_2.12-1.0.3-incubating-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.13_2.12/1.0.3/flink-doris-connector-1.13_2.12-1.0.3.jar',
+                    },
+                    {
+                        value: '1.13_2.11',
+                        label: 'For Flink 1.13_2.11',
+                        gz: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.13_2.11-1.0.3-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.13_2.11-1.0.3-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.13_2.11/1.0.3/flink-doris-connector-1.13_2.11-1.0.3.jar',
+                    },
+                    {
+                        value: '1.12_2.12',
+                        label: 'For Flink 1.12_2.12',
+                        gz: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.12_2.12-1.0.3-incubating-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.12_2.12-1.0.3-incubating-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.12_2.12/1.0.3/flink-doris-connector-1.12_2.12-1.0.3.jar',
+                    },
+                    {
+                        value: '1.12_2.11',
+                        label: 'For Flink 1.12_2.11',
+                        gz: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.12_2.11-1.0.3-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.12_2.11-1.0.3-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.12_2.11/1.0.3/flink-doris-connector-1.12_2.11-1.0.3.jar',
+                    },
+                    {
+                        value: '1.11_2.12',
+                        label: 'For Flink 1.11_2.12',
+                        gz: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.11_2.12-1.0.3-incubating-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.11_2.12-1.0.3-incubating-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.11_2.12/1.0.3/flink-doris-connector-1.11_2.12-1.0.3.jar',
+                    },
+                ],
             },
         ],
     },
@@ -1489,37 +1706,131 @@ export const TOOL_VERSIONS = [
             {
                 label: '1.3.2',
                 value: '1.3.2',
-                gz: 'https://downloads.apache.org/doris/spark-connector/1.3.2/apache-doris-spark-connector-1.3.2-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/spark-connector/1.3.2/apache-doris-spark-connector-1.3.2-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.4_2.12/1.3.2/spark-doris-connector-3.4_2.12-1.3.2.jar'
+                children: [
+                    {
+                        value: '3.4_2.12',
+                        label: 'For Spark 3.4_2.12',
+                        gz: SPARK_SAME_SOURCE_132,
+                        Source: SPARK_SAME_SOURCE_132,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.4_2.12/1.3.2/spark-doris-connector-3.4_2.12-1.3.2.jar',
+                    },
+                    {
+                        value: '3.3_2.12',
+                        label: 'For Spark 3.3_2.12',
+                        gz: SPARK_SAME_SOURCE_132,
+                        Source: SPARK_SAME_SOURCE_132,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.3_2.12/1.3.2/spark-doris-connector-3.3_2.12-1.3.2.jar',
+                    },
+                    {
+                        value: '3.2_2.12',
+                        label: 'For Spark 3.2_2.12',
+                        gz: SPARK_SAME_SOURCE_132,
+                        Source: SPARK_SAME_SOURCE_132,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.2_2.12/1.3.2/spark-doris-connector-3.2_2.12-1.3.2.jar',
+                    },
+                    {
+                        value: '3.1_2.12',
+                        label: 'For Spark 3.1_2.12',
+                        gz: SPARK_SAME_SOURCE_132,
+                        Source: SPARK_SAME_SOURCE_132,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.1_2.12/1.3.2/spark-doris-connector-3.1_2.12-1.3.2.jar',
+                    },
+                    {
+                        value: '2.4_2.12',
+                        label: 'For Spark 2.4_2.12',
+                        gz: SPARK_SAME_SOURCE_132,
+                        Source: SPARK_SAME_SOURCE_132,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-2.4_2.12/1.3.2/spark-doris-connector-2.4_2.12-1.3.2.jar',
+                    },
+                    {
+                        value: '2.4_2.11',
+                        label: 'For Spark 2.4_2.11',
+                        gz: SPARK_SAME_SOURCE_132,
+                        Source: SPARK_SAME_SOURCE_132,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-2.4_2.11/1.3.2/spark-doris-connector-2.4_2.11-1.3.2.jar',
+                    },
+                    {
+                        value: '2.3_2.11',
+                        label: 'For Spark 2.3_2.11',
+                        gz: SPARK_SAME_SOURCE_132,
+                        Source: SPARK_SAME_SOURCE_132,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-2.3_2.11/1.3.2/spark-doris-connector-2.3_2.11-1.3.2.jar',
+                    },
+                ],
             },
             {
                 label: '1.2.0',
                 value: '1.2.0',
-                gz: 'https://downloads.apache.org/doris/spark-connector/1.2.0/apache-doris-spark-connector-1.2.0-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/spark-connector/1.2.0/apache-doris-spark-connector-1.2.0-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.2_2.12/1.2.0/spark-doris-connector-3.2_2.12-1.2.0.jar'
+                children: [
+                    {
+                        value: '3.2_2.12',
+                        label: 'For Spark 3.2_2.12',
+                        gz: SPARK_SAME_SOURCE_120,
+                        Source: SPARK_SAME_SOURCE_120,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.2_2.12/1.2.0/spark-doris-connector-3.2_2.12-1.2.0.jar',
+                    },
+                    {
+                        value: '3.1_2.12',
+                        label: 'For Spark 3.1_2.12',
+                        gz: SPARK_SAME_SOURCE_120,
+                        Source: SPARK_SAME_SOURCE_120,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.1_2.12/1.2.0/spark-doris-connector-3.1_2.12-1.2.0.jar',
+                    },
+                    {
+                        value: '2.3_2.11',
+                        label: 'For Spark 2.3_2.11',
+                        gz: SPARK_SAME_SOURCE_120,
+                        Source: SPARK_SAME_SOURCE_120,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-2.3_2.11/1.2.0/spark-doris-connector-2.3_2.11-1.2.0.jar',
+                    },
+                ],
             },
             {
                 label: '1.1.0',
-                value: '3.2_2.12-1.1.0',
-                gz: 'https://downloads.apache.org/doris/spark-connector/1.1.0/apache-doris-spark-connector-3.2_2.12-1.1.0-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/spark-connector/1.1.0/apache-doris-spark-connector-3.2_2.12-1.1.0-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.2_2.12/1.1.0/spark-doris-connector-3.2_2.12-1.1.0.jar'
+                value: '1.1.0',
+                children: [
+                    {
+                        label: 'For Spark 3.2_2.12',
+                        value: '3.2_2.12',
+                        gz: 'https://downloads.apache.org/doris/spark-connector/1.1.0/apache-doris-spark-connector-3.2_2.12-1.1.0-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/spark-connector/1.1.0/apache-doris-spark-connector-3.2_2.12-1.1.0-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.2_2.12/1.1.0/spark-doris-connector-3.2_2.12-1.1.0.jar',
+                    },
+                    {
+                        label: 'For Spark 3.1_2.12',
+                        value: '3.1_2.12',
+                        gz: 'https://downloads.apache.org/doris/spark-connector/1.1.0/apache-doris-spark-connector-3.1_2.12-1.1.0-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/spark-connector/1.1.0/apache-doris-spark-connector-3.1_2.12-1.1.0-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.1_2.12/1.1.0/spark-doris-connector-3.1_2.12-1.1.0.jar',
+                    },
+                    {
+                        label: 'For Spark 2.3_2.11',
+                        value: '2.3_2.11',
+                        gz: 'https://downloads.apache.org/doris/spark-connector/1.1.0/apache-doris-spark-connector-2.3_2.11-1.1.0-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/spark-connector/1.1.0/apache-doris-spark-connector-2.3_2.11-1.1.0-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-2.3_2.11/1.1.0/spark-doris-connector-2.3_2.11-1.1.0.jar',
+                    },
+                ],
             },
             {
-                label: '1.0.1 (For Spark 3.1)',
-                value: '3.1_2.12-1.0.1',
-                gz: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-3.1_2.12-1.0.1-incubating-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-3.1_2.12-1.0.1-incubating-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.1_2.12/1.0.1/spark-doris-connector-3.1_2.12-1.0.1.jar'
-            },
-            {
-                label: '1.0.1 (For Spark 2.x)',
-                value: '2.3_2.11-1.0.1',
-                gz: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-2.3_2.11-1.0.1-incubating-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-2.3_2.11-1.0.1-incubating-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases//org/apache/doris/spark-doris-connector-2.3_2.11/1.0.1/spark-doris-connector-2.3_2.11-1.0.1.jar'
+                label: '1.0.1',
+                value: '1.0.1',
+                children: [
+                    {
+                        label: 'For Spark 3.1_2.12',
+                        value: '3.1_2.12',
+                        gz: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-3.1_2.12-1.0.1-incubating-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-3.1_2.12-1.0.1-incubating-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.1_2.12/1.0.1/spark-doris-connector-3.1_2.12-1.0.1.jar',
+                    },
+                    {
+                        label: 'For Spark 2.3_2.11',
+                        value: '2.3_2.11',
+                        gz: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-2.3_2.11-1.0.1-incubating-src.tar.gz',
+                        Source: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-2.3_2.11-1.0.1-incubating-src.tar.gz',
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-2.3_2.11/1.0.1/spark-doris-connector-2.3_2.11-1.0.1.jar',
+                    },
+                ],
             },
         ],
     },
@@ -1535,13 +1846,13 @@ export const TOOL_VERSIONS = [
                         label: CPUEnum.X64,
                         value: CPUEnum.X64,
                         gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.2-bin-x64.tar.gz',
-                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.2-bin-x64.tar.gz'
+                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.2-bin-x64.tar.gz',
                     },
                     {
                         label: CPUEnum.ARM64,
                         value: CPUEnum.ARM64,
                         gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.2-bin-arm64.tar.gz',
-                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.2-bin-arm64.tar.gz'
+                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.2-bin-arm64.tar.gz',
                     },
                 ],
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.2/apache-doris-streamloader-1.0.2-src.tar.gz',
@@ -1554,13 +1865,13 @@ export const TOOL_VERSIONS = [
                         label: CPUEnum.X64,
                         value: CPUEnum.X64,
                         gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
-                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz'
+                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
                     },
                     {
                         label: CPUEnum.ARM64,
                         value: CPUEnum.ARM64,
                         gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
-                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz'
+                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
                     },
                 ],
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.1/apache-doris-streamloader-1.0.1-src.tar.gz',
@@ -1587,17 +1898,20 @@ export const RUN_ANYWHERE = [
     },
 ];
 
-
-export const DOWNLOAD_PDFS = [{
-    version: '3.0',
-    filename: 'Apache Doris 中文手册（v3.0）.pdf',
-    link: 'https://cdn.selectdb.com/static/Apache_Doris_v3_0_4412376f6e.pdf'
-}, {
-    version: '2.1',
-    filename: 'Apache Doris 中文手册（v2.1）.pdf',
-    link: 'https://cdn.selectdb.com/static/Apache_Doris_v2_1_c8bc030188.pdf'
-}, {
-    version: '2.0',
-    filename: 'Apache Doris 中文手册（v2.0）.pdf',
-    link: 'https://cdn.selectdb.com/static/Apache_Doris_v2_0_0b89998444.pdf'
-}];
+export const DOWNLOAD_PDFS = [
+    {
+        version: '3.0',
+        filename: 'Apache Doris 中文手册（v3.0）.pdf',
+        link: 'https://cdn.selectdb.com/static/Apache_Doris_v3_0_4412376f6e.pdf',
+    },
+    {
+        version: '2.1',
+        filename: 'Apache Doris 中文手册（v2.1）.pdf',
+        link: 'https://cdn.selectdb.com/static/Apache_Doris_v2_1_c8bc030188.pdf',
+    },
+    {
+        version: '2.0',
+        filename: 'Apache Doris 中文手册（v2.0）.pdf',
+        link: 'https://cdn.selectdb.com/static/Apache_Doris_v2_0_0b89998444.pdf',
+    },
+];
