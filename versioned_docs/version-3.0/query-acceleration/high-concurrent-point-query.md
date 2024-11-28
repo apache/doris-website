@@ -82,7 +82,7 @@ PROPERTIES (
 5. Enabling rowstore may lead to space expansion and occupy more disk space. For scenarios where querying only specific columns is needed, starting from Doris 2.1, it is recommended to use `"row_store_columns"="key,v1,v2"` to specify certain columns for rowstore storage. Queries can then selectively access these columns, for example:
 
    ```sql
-   SELECT key, v1, v2 FROM tbl_point_query WHERE key = 1
+   SELECT `key`, v1, v2 FROM tbl_point_query WHERE key = 1
    ```
 
 ## Using `PreparedStatement`
