@@ -392,8 +392,8 @@ DROP STATS table_name
 | auto_analyze_end_time               | 自动统计信息收集的结束时间                                   | 23:59:59                     |
 | enable_auto_analyze                 | 是否开启自动收集功能                                         | TRUE                         |
 | huge_table_default_sample_rows      | 对大表进行采样时的行数                                       | 4194304                      |
-| table_stats_health_threshold        | 取值范围 0-100，表示自上次统计信息收集后，数据更新达到 (100 - table_stats_health_threshold)%时，认为统计信息已过时 | 60                           |
-| auto_analyze_table_width_threshold  | 控制自动统计信息收集处理的最大表宽度，超过此列数的表不参与自动统计信息收集 | 100                          |
+| table_stats_health_threshold        | 取值范围 0-100，表示自上次统计信息收集后，数据更新达到 (100 - table_stats_health_threshold)%时，认为统计信息已过时 | 90                           |
+| auto_analyze_table_width_threshold  | 控制自动统计信息收集处理的最大表宽度，超过此列数的表不参与自动统计信息收集 | 300                          |
 | enable_get_row_count_from_file_list | Hive 表是否通过文件大小来估算行数                             | FALSE（2.1.5 之后默认为 TRUE） |
 
 ### FE 配置项
