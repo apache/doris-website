@@ -115,7 +115,6 @@ function DropdownNavbarItemMobile({
             <NavbarNavLink
                 role="button"
                 className={clsx(
-                    styles.dropdownNavbarItemMobile,
                     'menu__link menu__link--sublist menu__link--sublist-caret',
                     className,
                 )}
