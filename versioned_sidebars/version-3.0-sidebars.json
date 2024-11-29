@@ -1714,6 +1714,7 @@
                 "ecosystem/bi/tableau",
                 "ecosystem/bi/quicksight",
                 "ecosystem/bi/quickbi",
+                "ecosystem/bi/navicat",
                 "ecosystem/bi/smartbi"
             ]
         }
