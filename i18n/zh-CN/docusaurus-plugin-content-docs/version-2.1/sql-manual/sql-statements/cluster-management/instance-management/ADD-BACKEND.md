@@ -60,6 +60,14 @@ under the License.
 
    此命令将单个后端节点（host3，端口 9050）添加到集群中的资源组 `groupb`：
 
+2. 添加带有资源组的后端
+
+    ```sql
+    ALTER SYSTEM ADD BACKEND "host3:9050" PROPERTIES ("tag.location" = "groupb");
+    ```
+
+    此命令将单个后端节点（host3，端口 9050）添加到集群中的资源组 `groupb`：
+
 ## 关键词
 
     ALTER, SYSTEM, ADD, BACKEND, ALTER SYSTEM
