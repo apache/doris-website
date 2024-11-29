@@ -107,38 +107,14 @@ Doris uses ConfigMap to decouple configuration files from services, in Kubernete
 #### Step 1:  Create and deploy the FE ConfigMap
 The following example defines a ConfigMap named fe-conf for use with Doris FE:
 ```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: fe-conf
-  labels:
-    app.kubernetes.io/component: fe
-data:
-  fe.conf: |
-    CUR_DATE=`date +%Y%m%d-%H%M%S`
-
-    # the output dir of stderr and stdout
-    LOG_DIR = ${DORIS_HOME}/log
-
-    JAVA_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Xss4m -Xmx8192m -XX:+UseMembar -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=7 -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSClassUnloadingEnabled -XX:-CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SoftRefLRUPolicyMSPerMB=0 -Xloggc:$DORIS_HOME/log/fe.gc.log.$CUR_DATE"
-
-    # For jdk 9+, this JAVA_OPTS will be used as default JVM options
-    JAVA_OPTS_FOR_JDK_9="-Djavax.security.auth.useSubjectCredsOnly=false -Xss4m -Xmx8192m -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=7 -XX:+CMSClassUnloadingEnabled -XX:-CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SoftRefLRUPolicyMSPerMB=0 -Xlog:gc*:$DORIS_HOME/log/fe.gc.log.$CUR_DATE:time"
-
-    # INFO, WARN, ERROR, FATAL
-    sys_log_level = INFO
-
-    # NORMAL, BRIEF, ASYNC
-    sys_log_mode = NORMAL
-
-    # Default dirs to put jdbc drivers,default value is ${DORIS_HOME}/jdbc_drivers
-    # jdbc_drivers_dir = ${DORIS_HOME}/jdbc_drivers
-
-    http_port = 8030
-    rpc_port = 9020
-    query_port = 9030
-    edit_log_port = 9010
-    enable_fqdn_mode = true
+spec:
+  feSpec:
+    requests:
+      cpu: 8
+      memory: 16Gi
+    limits:
+      cpu: 8
+      memory: 16Gi
 ```
 When using the ConfigMap to mount FE startup configuration, the key corresponding to the configuration must be `fe.conf`. Write the ConfigMap to a file and deploy it to the namespace where the DorisCluster resource is deployed, using the following command:
 ```shell
@@ -155,6 +131,7 @@ spec:
       configMapName: fe-conf
       resolveKey: fe.conf
 ```
+Update the configuration to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) that needs to be deployed.
 
 :::tip Tip
 Please ensure that `enable_fqdn_mode=true` is included in the startup configuration.. If you want to use IP mode and K8s have the ability that the pod IP keep the same after restarted, please refer to the issue [#138](https://github.com/apache/doris-operator/issues/138) to config.

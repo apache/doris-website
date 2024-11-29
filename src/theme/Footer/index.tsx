@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { useThemeConfig } from '@docusaurus/theme-common';
 import FooterLinks from '@theme/Footer/Links';
 import FooterLogo from '@theme/Footer/Logo';
 import FooterCopyright from '@theme/Footer/Copyright';
+import FooterLayout from '@theme/Footer/Layout';
 import './styles.scss';
 import { MailIcon } from '@site/src/components/Icons/mail';
 import { GithubIcon } from '@site/src/components/Icons/github';
@@ -16,7 +18,7 @@ import { MediumIcon } from '@site/src/components/Icons/medium';
 import Translate from '@docusaurus/Translate';
 import Link from '@docusaurus/Link';
 
-function Footer() {
+function Footer(): JSX.Element | null {
     const { footer } = useThemeConfig();
     if (!footer) {
         return null;
@@ -34,7 +36,6 @@ function Footer() {
 
     const ResourcesItems = (links.find(e => e.title === 'Resources')?.items || []) as any[];
     const CommunityItems = (links.find(e => e.title === 'Community')?.items || []) as any[];
-
     if (isDocsPage) {
         return (
             <div className="docs-footer flex-col lg:flex-row">
@@ -65,6 +66,7 @@ function Footer() {
             </div>
         );
     }
+
     return (
         <div className="footer pt-16 pb-10">
             <div className="container">
@@ -150,4 +152,5 @@ function Footer() {
         </div>
     );
 }
+
 export default React.memo(Footer);

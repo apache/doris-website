@@ -97,7 +97,7 @@ try {
 
 Doris FE 内置 Web UI。用户无须安装 MySQL 客户端，即可通过内置的 Web UI 进行 SQL 查询和其它相关信息的查看。
 
-在浏览器中输入 http://fe_ip:fe_port,  比如 http://172.20.63.118:8030，打开 Doris 内置的 Web 控制台。
+在浏览器中输入 http://fe_ip:fe_port,  比如 `http://172.20.63.118:8030`，打开 Doris 内置的 Web 控制台。
 
 内置 Web 控制台，主要供集群 root 账户使用，默认安装后 root 账户密码为空。
 

@@ -19,12 +19,13 @@
         "typecheck": "tsc"
     },
     "dependencies": {
-        "@docusaurus/core": "^2.4.1",
-        "@docusaurus/plugin-client-redirects": "^2.4.1",
-        "@docusaurus/plugin-pwa": "^2.4.1",
-        "@docusaurus/preset-classic": "^2.4.1",
-        "@easyops-cn/docusaurus-search-local": "^0.30.2",
-        "@mdx-js/react": "^1.6.22",
+        "@docusaurus/core": "3.6.3",
+        "@docusaurus/faster": "^3.6.3",
+        "@docusaurus/plugin-client-redirects": "3.6.3",
+        "@docusaurus/plugin-pwa": "3.6.3",
+        "@docusaurus/preset-classic": "3.6.3",
+        "@easyops-cn/docusaurus-search-local": "^0.45.0",
+        "@mdx-js/react": "^3.0.0",
         "antd": "^5.12.2",
         "autoprefixer": "^10.4.16",
         "clsx": "^1.1.1",
@@ -32,9 +33,9 @@
         "docusaurus-plugin-matomo": "^0.0.8",
         "docusaurus-plugin-sass": "^0.2.3",
         "postcss": "^8.4.32",
-        "prism-react-renderer": "^2.0.4",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2",
+        "prism-react-renderer": "^2.1.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
         "react-github-button": "^0.1.11",
         "sass": "^1.63.2",
         "swiper": "^9.0.5",
@@ -42,9 +43,9 @@
         "vitpress-generate-pdf": "^1.1.4"
     },
     "devDependencies": {
-        "@docusaurus/module-type-aliases": "^2.4.1",
-        "@tsconfig/docusaurus": "^1.0.7",
-        "typescript": "^4.7.4"
+        "@docusaurus/module-type-aliases": "3.6.3",
+        "@tsconfig/docusaurus": "2.0.3",
+        "typescript": "^5.2.2"
     },
     "resolutions": {
         "cheerio": "1.0.0-rc.3"
@@ -63,5 +64,8 @@
     },
     "peerDependencies": {
         "semver": "^7.5.4"
+    },
+    "engines": {
+        "node": ">=18.0"
     }
 }

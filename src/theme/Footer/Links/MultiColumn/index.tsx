@@ -1,61 +1,44 @@
 import React from 'react';
 import LinkItem from '@theme/Footer/LinkItem';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Translate from '@docusaurus/Translate';
-import { useAlternatePageUtils } from '@docusaurus/theme-common/internal';
-import NavbarItem from '@theme/NavbarItem';
+import type {Props} from '@theme/Footer/Links/MultiColumn';
 
-function ColumnLinkItem({ item }) {
-    return item.html ? (
-        <li
-            className="footer__item"
-            // Developer provided the HTML, so assume it's safe.
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: item.html }}
-        />
-    ) : (
-        <li key={item.href ?? item.to} className="footer__item">
-            <LinkItem item={item} />
-        </li>
-    );
-}
-function Column({ column }) {
-    return (
-        <div className="col footer__col">
-            <div className="footer__title">{column.title}</div>
-            <ul className="footer__items clean-list">
-                {column.items.map((item, i) => (
-                    <ColumnLinkItem key={i} item={item} />
-                ))}
-            </ul>
-        </div>
-    );
-}
-export default function FooterLinksMultiColumn({ columns }) {
-    const {
-        i18n: { currentLocale, locales, localeConfigs },
-    } = useDocusaurusContext();
-    const alternatePageUtils = useAlternatePageUtils();
+type ColumnType = Props['columns'][number];
+type ColumnItemType = ColumnType['items'][number];
 
-    return (
-        <div className="row footer__links">
-            {columns.map((column, i) => (
-                <Column key={i} column={column} />
-            ))}
-            {/* <div className="col footer__col">
-                <div className="footer__title">
-                    <Translate id="footer.language" description="Footer Language">
-                        Language
-                    </Translate>
-                </div>
-                <ul className="footer__items clean-list">
-                    {localeItems.map((item, i) => (
-                        <li className="footer__item" key={i}>
-                            <NavbarItem {...item} className="footer__link-item" />
-                        </li>
-                    ))}
-                </ul>
-            </div> */}
-        </div>
-    );
+function ColumnLinkItem({item}: {item: ColumnItemType}) {
+  return item.html ? (
+    <li
+      className="footer__item"
+      // Developer provided the HTML, so assume it's safe.
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{__html: item.html}}
+    />
+  ) : (
+    <li key={item.href ?? item.to} className="footer__item">
+      <LinkItem item={item} />
+    </li>
+  );
+}
+
+function Column({column}: {column: ColumnType}) {
+  return (
+    <div className="col footer__col">
+      <div className="footer__title">{column.title}</div>
+      <ul className="footer__items clean-list">
+        {column.items.map((item, i) => (
+          <ColumnLinkItem key={i} item={item} />
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default function FooterLinksMultiColumn({columns}: Props): JSX.Element {
+  return (
+    <div className="row footer__links">
+      {columns.map((column, i) => (
+        <Column key={i} column={column} />
+      ))}
+    </div>
+  );
 }

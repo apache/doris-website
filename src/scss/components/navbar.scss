@@ -59,6 +59,7 @@
         font-weight: 500;
         padding: var(--ifm-navbar-item-padding-vertical) var(--global-gutter);
         position: relative;
+        color: var(--global-colors-text-primary);
 
         @media screen and (max-width: 1366px) {
             padding: var(--ifm-navbar-item-padding-vertical) 1.25rem;
@@ -73,8 +74,6 @@
             timing-function: ease-out;
             duration: 0.3s;
         }
-
-        color: var(--global-colors-text-primary);
 
         &:hover {
             color: var(--ifm-color-primary);

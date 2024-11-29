@@ -1,70 +1,78 @@
 .searchBar .dropdownMenu {
-    left: auto !important;
-    right: 0 !important;
+  left: auto !important;
+  right: 0 !important;
 
-    background: var(--search-local-modal-background, #f5f6f7);
-    border-radius: 6px;
-    box-shadow: var(--search-local-modal-shadow, inset 1px 1px 0 0 hsla(0, 0%, 100%, 0.5), 0 3px 8px 0 #555a64);
-    margin-top: 8px;
-    width: var(--search-local-modal-width, 560px);
-    position: relative;
-    padding: var(--search-local-spacing, 12px);
+  background: var(--search-local-modal-background, #f5f6f7);
+  border-radius: 6px;
+  box-shadow: var(
+    --search-local-modal-shadow,
+    inset 1px 1px 0 0 hsla(0, 0%, 100%, 0.5),
+    0 3px 8px 0 #555a64
+  );
+  margin-top: 8px;
+  width: var(--search-local-modal-width, 560px);
+  position: relative;
+
+  padding: var(--search-local-spacing, 12px);
 }
 
-.navbarSearchInput {
-    border: none !important;
-    background-color: #f7f9fe !important;
-    background-image: url('/static/images/search-icon.svg');
-    height: 2.5rem !important;
-    background-position: 0.625rem center !important;
-    padding-left: 2.25rem !important;
-    color: #4c576c !important;
-    width: 15.43rem !important;
-    border-radius: 0.5rem;
+@media not (max-width: 996px) {
+  .searchBar.searchBarLeft .dropdownMenu {
+    left: 0 !important;
+    right: auto !important;
+  }
 }
 
-@media (max-width: 996px) {
-    :global(.navbar__search-input):not(:focus) {
-        width: 2rem;
-    }
+@media (max-width: 576px) {
+  :global(.navbar__search-input):not(:focus) {
+    width: 2rem;
+  }
 
-    .searchBar .dropdownMenu {
-        width: 100%;
-    }
+  .searchBar .dropdownMenu {
+    width: var(--search-local-modal-width-sm, 340px);
+    max-width: calc(100vw - var(--ifm-navbar-padding-horizontal) * 2);
+  }
 }
 
-html[data-theme='dark'] .searchBar .dropdownMenu {
-    background: var(--search-local-modal-background, var(--ifm-background-color));
-    box-shadow: var(--search-local-modal-shadow, inset 1px 1px 0 0 #2c2e40, 0 3px 8px 0 #000309);
+html[data-theme="dark"] .searchBar .dropdownMenu {
+  background: var(--search-local-modal-background, var(--ifm-background-color));
+  box-shadow: var(
+    --search-local-modal-shadow,
+    inset 1px 1px 0 0 #2c2e40,
+    0 3px 8px 0 #000309
+  );
 }
 
 .searchBar .dropdownMenu .suggestion {
-    cursor: pointer;
-    background: var(--search-local-hit-background, #fff);
-    border-radius: 4px;
-    box-shadow: var(--search-local-hit-shadow, 0 1px 3px 0 #d4d9e1);
-    padding: 0 var(--search-local-spacing, 12px);
-    width: 100%;
+  cursor: pointer;
+  background: var(--search-local-hit-background, #fff);
+  border-radius: 4px;
+  box-shadow: var(--search-local-hit-shadow, 0 1px 3px 0 #d4d9e1);
+  padding: 0 var(--search-local-spacing, 12px);
+  width: 100%;
 
-    align-items: center;
-    color: var(--search-local-hit-color, #444950);
-    display: flex;
-    flex-direction: row;
-    height: var(--search-local-hit-height, 56px);
+  align-items: center;
+  color: var(--search-local-hit-color, #444950);
+  display: flex;
+  flex-direction: row;
+  height: var(--search-local-hit-height, 56px);
 }
 
-html[data-theme='dark'] .dropdownMenu .suggestion {
-    background: var(--search-local-hit-background, var(--ifm-color-emphasis-100));
-    box-shadow: var(--search-local-hit-shadow, none);
-    color: var(--search-local-hit-color, var(--ifm-font-color-base));
+html[data-theme="dark"] .dropdownMenu .suggestion {
+  background: var(--search-local-hit-background, var(--ifm-color-emphasis-100));
+  box-shadow: var(--search-local-hit-shadow, none);
+  color: var(--search-local-hit-color, var(--ifm-font-color-base));
 }
 
 .searchBar .dropdownMenu .suggestion:not(:last-child) {
-    margin-bottom: 4px;
+  margin-bottom: 4px;
 }
 
 .searchBar .dropdownMenu .suggestion.cursor {
-    background-color: var(--search-local-highlight-color, var(--ifm-color-primary));
+  background-color: var(
+    --search-local-highlight-color,
+    var(--ifm-color-primary)
+  );
 }
 
 .hitTree,
@@ -72,99 +80,99 @@ html[data-theme='dark'] .dropdownMenu .suggestion {
 .hitPath,
 .noResultsIcon,
 .hitFooter a {
-    color: var(--search-local-muted-color, #969faf);
+  color: var(--search-local-muted-color, #969faf);
 }
 
-html[data-theme='dark'] .hitTree,
-html[data-theme='dark'] .hitIcon,
-html[data-theme='dark'] .hitPath,
-html[data-theme='dark'] .noResultsIcon {
-    color: var(--search-local-muted-color, var(--ifm-color-secondary-darkest));
+html[data-theme="dark"] .hitTree,
+html[data-theme="dark"] .hitIcon,
+html[data-theme="dark"] .hitPath,
+html[data-theme="dark"] .noResultsIcon {
+  color: var(--search-local-muted-color, var(--ifm-color-secondary-darkest));
 }
 
 .hitTree {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
-.hitTree>svg {
-    height: var(--search-local-hit-height, 56px);
-    opacity: 0.5;
-    strokeWidth: var(--search-local-icon-strokeWidth, 1.4);
-    width: 24px;
+.hitTree > svg {
+  height: var(--search-local-hit-height, 56px);
+  opacity: 0.5;
+  stroke-width: var(--search-local-icon-stroke-width, 1.4);
+  width: 24px;
 }
 
 .hitIcon {
-    strokeWidth: var(--search-local-icon-strokeWidth, 1.4);
+  stroke-width: var(--search-local-icon-stroke-width, 1.4);
 
-    height: 20px;
-    width: 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .hitWrapper {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    font-weight: 500;
-    justify-content: center;
-    margin: 0 8px;
-    overflow-x: hidden;
-    width: 80%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  justify-content: center;
+  margin: 0 8px;
+  overflow-x: hidden;
+  width: 80%;
 }
 
 .hitWrapper mark {
-    background: none;
-    color: var(--search-local-highlight-color, var(--ifm-color-primary));
+  background: none;
+  color: var(--search-local-highlight-color, var(--ifm-color-primary));
 }
 
 .hitTitle {
-    font-size: 0.9em;
+  font-size: 0.9em;
 }
 
 .hitPath {
-    font-size: 0.75em;
+  font-size: 0.75em;
 }
 
 .hitPath,
 .hitTitle {
-    white-space: nowrap;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 .hitAction {
-    height: 20px;
-    width: 20px;
+  height: 20px;
+  width: 20px;
 }
 
-.hideAction>svg {
-    display: none;
+.hideAction > svg {
+  display: none;
 }
 
 .noResults {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: var(--search-local-spacing, 12px) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--search-local-spacing, 12px) 0;
 }
 
 .noResultsIcon {
-    margin-bottom: var(--search-local-spacing, 12px);
+  margin-bottom: var(--search-local-spacing, 12px);
 }
 
 .hitFooter {
-    text-align: center;
-    margin-top: var(--search-local-spacing, 12px);
-    font-size: 0.85em;
+  text-align: center;
+  margin-top: var(--search-local-spacing, 12px);
+  font-size: 0.85em;
 }
 
 .hitFooter a {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
-.cursor .hideAction>svg {
-    display: block;
+.cursor .hideAction > svg {
+  display: block;
 }
 
 .suggestion.cursor,
@@ -172,90 +180,104 @@ html[data-theme='dark'] .noResultsIcon {
 .suggestion.cursor .hitTree,
 .suggestion.cursor .hitIcon,
 .suggestion.cursor .hitPath {
-    color: var(--search-local-hit-active-color, var(--ifm-color-white)) !important;
+  color: var(
+    --search-local-hit-active-color,
+    var(--ifm-color-white)
+  ) !important;
 }
 
 .suggestion.cursor mark {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .searchBarContainer {
-    margin-left: 16px;
+  margin-left: 16px;
 }
 
 .searchBarContainer .searchBarLoadingRing {
-    display: none;
-    position: absolute;
-    left: 10px;
-    top: 10px;
+  display: none;
+  position: absolute;
+  left: 10px;
+  top: 6px;
 }
 
 .searchBarContainer .searchClearButton {
-    position: absolute;
-    right: 0.8rem;
-    top: 50%;
-    transform: translate(0, -50%);
-    padding: 0;
-    background: none;
-    border: none;
-    line-height: 1rem;
-    color: #4c576c;
-    font-size: 14px;
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translate(0, -50%);
+  padding: 0;
+  background: none;
+  border: none;
+  line-height: 1rem;
 }
 
 :global(.navbar__search) {
-    position: relative;
+  position: relative;
 }
 
 .searchIndexLoading :global(.navbar__search-input) {
-    background-image: none;
+  background-image: none;
 }
 
 .searchBarContainer.searchIndexLoading .searchBarLoadingRing {
-    display: inline-block;
+  display: inline-block;
 }
 
 .searchHintContainer {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    border: 1px solid #edf2fa;
-    padding: 5px 7px;
-    background-color: #ffffff;
-    gap: 2px;
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  pointer-events: none;
+  gap: 4px;
 }
 
 .searchHint {
-    color: #8592a6;
-    background-color: #ffffff;
-    border: none;
-    border-radius: none;
-    box-shadow: none;
-    font-size: 12px;
-    padding: 0;
+  color: var(--ifm-navbar-search-input-placeholder-color);
+  background-color: var(--ifm-navbar-search-input-background-color);
+  border: 1px solid var(--ifm-color-emphasis-500);
+  box-shadow: inset 0 -1px 0 var(--ifm-color-emphasis-500);
 }
 
 @media (max-width: 576px) {
-
-    .searchBarContainer:not(.focused) .searchClearButton,
-    .searchHintContainer {
-        display: none !important;
-    }
+  .searchBarContainer:not(.focused) .searchClearButton,
+  .searchHintContainer {
+    display: none;
+  }
 }
 
-.input {}
+html[dir="rtl"] .searchHintContainer {
+  right: auto;
+  left: 10px;
+}
 
-.hint {}
+html[dir="rtl"] .searchBarContainer .searchClearButton {
+  right: auto;
+  left: 0.8rem;
+}
 
-.suggestions {}
+html[dir="rtl"] .searchBarContainer .searchBarLoadingRing {
+  left: auto;
+  right: 10px;
+}
 
-.dataset {}
+html[dir="rtl"] :global(.navbar__search-input) {
+  padding: 0 2.25em 0 0.5em;
+}
 
-.empty {}
-
+/* For autocomplete.js only. */
+.input {
+}
+.hint {
+}
+.suggestions {
+}
+.dataset {
+}
+.empty {
+}
 /**/

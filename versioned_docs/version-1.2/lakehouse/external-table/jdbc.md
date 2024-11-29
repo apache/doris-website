@@ -87,7 +87,7 @@ Parameter Description:
 | **password**     | Password of the user                                         |
 | **jdbc_url**     | JDBC URL protocol, including the database type, IP address, port number, and database name; Please be aware of the different formats of different database protocols. For example, MySQL: "jdbc:mysql://127.0.0.1:3306/test?useCursorFetch=true". |
 | **driver_class** | Class of the driver used to access the external database. For example, to access MySQL data: com.mysql.jdbc.Driver. |
-| **driver_url**   | Driver URL for downloading the Jar file package that is used to access the external database, for example, http://IP:port/mysql-connector-java-5.1.47.jar. For local stand-alone testing, you can put the Jar file package in a local path: "driver_url"="file:///home/disk1/pathTo/mysql-connector-java-5.1.47.jar"; for local multi-machine testing, please ensure the consistency of the paths. |
+| **driver_url**   | Driver URL for downloading the Jar file package that is used to access the external database, for example, `http://IP:port/mysql-connector-java-5.1.47.jar`. For local stand-alone testing, you can put the Jar file package in a local path: "driver_url"="file:///home/disk1/pathTo/mysql-connector-java-5.1.47.jar"; for local multi-machine testing, please ensure the consistency of the paths. |
 | **resource**     | Name of the Resource that the Doris External Table depends on; should be the same as the name set in Resource creation. |
 | **table**        | Name of the external table to be mapped in Doris             |
 | **table_type**   | The database from which the external table comes, such as mysql, postgresql, sqlserver, and oracle. |
