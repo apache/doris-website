@@ -2,11 +2,8 @@ import React from 'react';
 import clsx from 'clsx';
 import TOCItems from '@theme/TOCItems';
 import type { Props } from '@theme/TOC';
-
-import styles from './styles.module.css';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Link from '@docusaurus/Link';
-import { ExternalLinkArrowIcon } from '../../components/Icons/external-link-arrow-icon';
+import styles from './styles.module.css';
 
 // Using a custom className
 // This prevents TOCInline/TOCCollapsible getting highlighted by mistake

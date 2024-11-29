@@ -2,8 +2,8 @@ const themes = require('prism-react-renderer').themes;
 const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
-const lightCodeTheme = themes.dracula;
 const VERSIONS = require('./versions.json');
+const lightCodeTheme = themes.dracula;
 
 const logoImg = process.env.TEST_ENV_URL
     ? `${process.env.TEST_ENV_URL}/images/logo.svg`
@@ -17,7 +17,7 @@ function getDocsVersions() {
                 label: 'Dev',
                 path: 'dev',
                 banner: 'unreleased',
-                badge: false,
+                // badge: false,
             };
         } else {
             result[version] = {
@@ -44,6 +44,9 @@ const config = {
     onBrokenMarkdownLinks: 'ignore',
     favicon: 'images/favicon.ico',
     organizationName: 'Apache',
+    markdown: {
+        format: 'detect',
+    },
     i18n: {
         defaultLocale: 'en',
         locales: ['en', 'zh-CN'],
@@ -66,6 +69,9 @@ const config = {
     organizationName: 'apache/doris-website', // Usually your GitHub org/user name.
     projectName: 'apache/doris-website', // Usually your repo name.
     customFields: {},
+    future: {
+        experimental_faster: true,
+    },
     plugins: [
         'docusaurus-plugin-sass',
         'docusaurus-plugin-matomo',

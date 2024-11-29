@@ -2,25 +2,36 @@ import React from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useAlternatePageUtils } from '@docusaurus/theme-common/internal';
 import { translate } from '@docusaurus/Translate';
+import { useLocation } from '@docusaurus/router';
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 import IconLanguage from '@theme/Icon/Language';
+import type { LinkLikeNavbarItemProps } from '@theme/NavbarItem';
+import type { Props } from '@theme/NavbarItem/LocaleDropdownNavbarItem';
 
 import './styles.scss';
-import NavbarItem from '@theme/NavbarItem';
-import { useLocation } from '@docusaurus/router';
-export default function LocaleDropdownNavbarItem({ mobile, dropdownItemsBefore, dropdownItemsAfter, ...props }) {
+export default function LocaleDropdownNavbarItem({
+    mobile,
+    dropdownItemsBefore,
+    dropdownItemsAfter,
+    queryString = '',
+    ...props
+}: Props): JSX.Element {
     const {
         i18n: { currentLocale, locales, localeConfigs },
     } = useDocusaurusContext();
     const alternatePageUtils = useAlternatePageUtils();
-    const location = useLocation();
-    const localeItems = locales.map(locale => {
-        const to = `pathname://${alternatePageUtils.createUrl({
+    const { search, hash } = useLocation();
+
+    const localeItems = locales.map((locale): LinkLikeNavbarItemProps => {
+        const baseTo = `pathname://${alternatePageUtils.createUrl({
             locale,
             fullyQualified: false,
         })}`;
+        // preserve ?search#hash suffix on locale switches
+        const to = `${baseTo}${search}${hash}${queryString}`;
         return {
-            label: localeConfigs[locale].label,
+            label: localeConfigs[locale]!.label,
+            lang: localeConfigs[locale]!.htmlLang,
             to,
             target: '_self',
             autoAddBaseUrl: false,
@@ -36,7 +47,9 @@ export default function LocaleDropdownNavbarItem({ mobile, dropdownItemsBefore, 
                     : '',
         };
     });
+
     const items = [...dropdownItemsBefore, ...localeItems, ...dropdownItemsAfter];
+
     // Mobile is handled a bit differently
     const dropdownLabel = mobile
         ? translate({
@@ -44,17 +57,17 @@ export default function LocaleDropdownNavbarItem({ mobile, dropdownItemsBefore, 
               id: 'theme.navbar.mobileLanguageDropdown.label',
               description: 'The label for the mobile language switcher dropdown',
           })
-        : localeConfigs[currentLocale].label;
-    const tempPath = ['get-starting', 'benchmark', 'ecosystem', 'faq', 'docs','releasenotes']
-    if (!tempPath.some(path => location.pathname.includes(path)) && !location.pathname.includes('community')) { //location.pathname.includes('docs')
-        return <></>;
-    }
+        : localeConfigs[currentLocale]!.label;
 
     return (
         <DropdownNavbarItem
             {...props}
             mobile={mobile}
             label={
+                // <>
+                //   <IconLanguage className={styles.iconLanguage} />
+                //   {dropdownLabel}
+                // </>
                 <>
                     <svg
                         className="icon-language"
@@ -74,23 +87,4 @@ export default function LocaleDropdownNavbarItem({ mobile, dropdownItemsBefore, 
             items={items}
         />
     );
-    // return mobile ? (
-    //     <DropdownNavbarItem
-    //         {...props}
-    //         mobile={mobile}
-    //         label={
-    //             <>
-    //                 <IconLanguage className="icon-language" />
-    //                 {dropdownLabel}
-    //             </>
-    //         }
-    //         items={items}
-    //     />
-    // ) : (
-    //     <div className="locale-box">
-    //         {items.map((item, index) => (
-    //             <NavbarItem {...item} key={index} />
-    //         ))}
-    //     </div>
-    // );
 }

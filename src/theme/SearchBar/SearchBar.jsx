@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import useIsBrowser from '@docusaurus/useIsBrowser';
 import { useHistory, useLocation } from '@docusaurus/router';
 import { translate } from '@docusaurus/Translate';
 import { ReactContextError, useDocsPreferredVersion } from '@docusaurus/theme-common';
@@ -15,8 +15,12 @@ import {
     Mark,
     searchBarShortcut,
     searchBarShortcutHint,
+    searchBarPosition,
     docsPluginIdForPreferredVersion,
     indexDocs,
+    searchContextByPaths,
+    hideSearchBarWithNoSearchContext,
+    useAllContextsWithNoSearchContext,
 } from '../../utils/proxiedGenerated';
 import LoadingRing from '../LoadingRing/LoadingRing';
 import styles from './SearchBar.module.css';
@@ -34,8 +38,10 @@ async function fetchAutoCompleteJS() {
 }
 const SEARCH_PARAM_HIGHLIGHT = '_highlight';
 export default function SearchBar({ handleSearchBarToggle }) {
+    const isBrowser = useIsBrowser();
     const {
         siteConfig: { baseUrl },
+        i18n: { currentLocale },
     } = useDocusaurusContext();
     // It returns undefined for non-docs pages
     const activePlugin = useActivePlugin();
@@ -65,22 +71,52 @@ export default function SearchBar({ handleSearchBarToggle }) {
     const history = useHistory();
     const location = useLocation();
     const searchBarRef = useRef(null);
-    const indexState = useRef('empty'); // empty, loaded, done
+    const indexStateMap = useRef(new Map());
     // Should the input be focused after the index is loaded?
     const focusAfterIndexLoaded = useRef(false);
     const [loading, setLoading] = useState(false);
     const [inputChanged, setInputChanged] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const search = useRef(null);
+    const prevSearchContext = useRef('');
+    const [searchContext, setSearchContext] = useState('');
+    useEffect(() => {
+        if (!Array.isArray(searchContextByPaths)) {
+            return;
+        }
+        let nextSearchContext = '';
+        if (location.pathname.startsWith(versionUrl)) {
+            const uri = location.pathname.substring(versionUrl.length);
+            let matchedPath;
+            for (const _path of searchContextByPaths) {
+                const path = typeof _path === 'string' ? _path : _path.path;
+                if (uri === path || uri.startsWith(`${path}/`)) {
+                    matchedPath = path;
+                    break;
+                }
+            }
+            if (matchedPath) {
+                nextSearchContext = matchedPath;
+            }
+        }
+        if (prevSearchContext.current !== nextSearchContext) {
+            // Reset index state map once search context is changed.
+            indexStateMap.current.delete(nextSearchContext);
+            prevSearchContext.current = nextSearchContext;
+        }
+        setSearchContext(nextSearchContext);
+    }, [location.pathname, versionUrl]);
+    const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
     const loadIndex = useCallback(async () => {
-        if (indexState.current !== 'empty') {
+        if (hidden || indexStateMap.current.get(searchContext)) {
             // Do not load the index (again) if its already loaded or in the process of being loaded.
             return;
         }
-        indexState.current = 'loading';
+        indexStateMap.current.set(searchContext, 'loading');
+        search.current?.autocomplete.destroy();
         setLoading(true);
         const [{ wrappedIndexes, zhDictionary }, autoComplete] = await Promise.all([
-            fetchIndexes(versionUrl),
+            fetchIndexes(versionUrl, searchContext),
             fetchAutoCompleteJS(),
         ]);
         search.current = autoComplete(
@@ -90,7 +126,9 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 autoselect: true,
                 openOnFocus: true,
                 cssClasses: {
-                    root: styles.searchBar,
+                    root: clsx(styles.searchBar, {
+                        [styles.searchBarLeft]: searchBarPosition === 'left',
+                    }),
                     noPrefix: true,
                     dropdownMenu: styles.dropdownMenu,
                     input: styles.input,
@@ -153,23 +191,21 @@ export default function SearchBar({ handleSearchBarToggle }) {
             .on('autocomplete:closed', () => {
                 searchBarRef.current?.blur();
             });
-        indexState.current = 'done';
+        indexStateMap.current.set(searchContext, 'done');
         setLoading(false);
         if (focusAfterIndexLoaded.current) {
             const input = searchBarRef.current;
             if (input.value) {
-                search.current.autocomplete.open();
+                search.current?.autocomplete.open();
             }
             input.focus();
         }
-    }, [baseUrl, versionUrl, history]);
+    }, [hidden, searchContext, versionUrl, baseUrl, history]);
     useEffect(() => {
         if (!Mark) {
             return;
         }
-        const keywords = ExecutionEnvironment.canUseDOM
-            ? new URLSearchParams(location.search).getAll(SEARCH_PARAM_HIGHLIGHT)
-            : [];
+        const keywords = isBrowser ? new URLSearchParams(location.search).getAll(SEARCH_PARAM_HIGHLIGHT) : [];
         // A workaround to fix an issue of highlighting in code blocks.
         // See https://github.com/easyops-cn/docusaurus-search-local/issues/92
         // Code blocks will be re-rendered after this `useEffect` ran.
@@ -188,7 +224,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
             setInputValue(keywords.join(' '));
             search.current?.autocomplete.setVal(keywords.join(' '));
         });
-    }, [location.search, location.pathname]);
+    }, [isBrowser, location.search, location.pathname]);
     const [focused, setFocused] = useState(false);
     const onInputFocus = useCallback(() => {
         focusAfterIndexLoaded.current = true;
@@ -210,16 +246,14 @@ export default function SearchBar({ handleSearchBarToggle }) {
         }
     }, []);
     // Implement hint icons for the search shortcuts on mac and the rest operating systems.
-    const isMac = ExecutionEnvironment.canUseDOM
-        ? /mac/i.test(navigator.userAgentData?.platform ?? navigator.platform)
-        : false;
+    const isMac = isBrowser ? /mac/i.test(navigator.userAgentData?.platform ?? navigator.platform) : false;
     useEffect(() => {
         if (!searchBarShortcut) {
             return;
         }
         // Add shortcuts command/ctrl + K
         const handleShortcut = event => {
-            if ((isMac ? event.metaKey : event.ctrlKey) && event.code === 'KeyK') {
+            if ((isMac ? event.metaKey : event.ctrlKey) && (event.key === 'k' || event.key === 'K')) {
                 event.preventDefault();
                 searchBarRef.current?.focus();
                 onInputFocus();
@@ -248,6 +282,9 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 [styles.searchIndexLoading]: loading && inputChanged,
                 [styles.focused]: focused,
             })}
+            // hidden={hidden}
+            // // Manually make the search bar be LTR even if in RTL
+            // dir="ltr"
         >
             <input
                 placeholder={translate({
@@ -256,7 +293,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                     description: 'The ARIA label and placeholder for search button',
                 })}
                 aria-label="Search"
-                className={clsx('navbar__search-input', styles.navbarSearchInput)}
+                className="navbar__search-input"
                 onMouseEnter={onInputMouseEnter}
                 onFocus={onInputFocus}
                 onBlur={onInputBlur}
@@ -266,15 +303,18 @@ export default function SearchBar({ handleSearchBarToggle }) {
             />
             <LoadingRing className={styles.searchBarLoadingRing} />
             {searchBarShortcut &&
+                searchBarShortcutHint &&
                 (inputValue !== '' ? (
                     <button className={styles.searchClearButton} onClick={onClearSearch}>
                         ✕
                     </button>
                 ) : (
-                    <div className={styles.searchHintContainer}>
-                        <kbd className={styles.searchHint}>{isMac ? '⌘' : 'ctrl'}</kbd>
-                        <kbd className={styles.searchHint}>K</kbd>
-                    </div>
+                    isBrowser && (
+                        <div className={styles.searchHintContainer}>
+                            <kbd className={styles.searchHint}>{isMac ? '⌘' : 'ctrl'}</kbd>
+                            <kbd className={styles.searchHint}>K</kbd>
+                        </div>
+                    )
                 ))}
         </div>
     );

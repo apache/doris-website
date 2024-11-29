@@ -1,34 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { useThemeConfig } from '@docusaurus/theme-common';
+import React, { useState, useEffect, type ReactNode } from 'react';
+import { useThemeConfig, ErrorCauseBoundary } from '@docusaurus/theme-common';
 import { splitNavbarItems, useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
-import NavbarItem from '@theme/NavbarItem';
+import NavbarItem, { type Props as NavbarItemConfig } from '@theme/NavbarItem';
+import DocsLogoNew from '@site/static/images/doc-logo-new.svg';
+import DocsLogoZH from '@site/static/images/doc-logo-zh.svg';
 import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle';
 import SearchBar from '@theme/SearchBar';
 import NavbarMobileSidebarToggle from '@theme/Navbar/MobileSidebar/Toggle';
-import NavbarLogo from '@theme/Navbar/Logo';
-import DocsLogoNew from '@site/static/images/doc-logo-new.svg';
-import DocsLogoZH from '@site/static/images/doc-logo-zh.svg';
-import NavbarSearch from '@theme/Navbar/Search';
-import styles from './styles.module.css';
 import Link from '@docusaurus/Link';
 import Translate from '@docusaurus/Translate';
-import DocsVersionDropdownNavbarItem from '../../NavbarItem/DocsVersionDropdownNavbarItem';
 import LocaleDropdownNavbarItem from '../../NavbarItem/LocaleDropdownNavbarItem';
-import BrowserOnly from '@docusaurus/BrowserOnly';
+import DocsVersionDropdownNavbarItem from '../../NavbarItem/DocsVersionDropdownNavbarItem';
+import NavbarLogo from '@theme/Navbar/Logo';
+import NavbarSearch from '@theme/Navbar/Search';
+
+import styles from './styles.module.css';
+
 function useNavbarItems() {
     // TODO temporary casting until ThemeConfig type is improved
-    return useThemeConfig().navbar.items;
+    return useThemeConfig().navbar.items as NavbarItemConfig[];
 }
-function NavbarItems({ items, isDocsPage }) {
+
+function NavbarItems({ items, isDocsPage }: { items: NavbarItemConfig[]; isDocsPage?: boolean }): JSX.Element {
     return (
         <>
             {items.map((item, i) => (
-                <NavbarItem {...item} key={i} isDocsPage={isDocsPage} />
+                <ErrorCauseBoundary
+                    key={i}
+                    onError={error =>
+                        new Error(
+                            `A theme navbar item failed to render.
+Please double-check the following navbar item (themeConfig.navbar.items) of your Docusaurus config:
+${JSON.stringify(item, null, 2)}`,
+                            { cause: error },
+                        )
+                    }
+                >
+                    <NavbarItem {...item} />
+                </ErrorCauseBoundary>
             ))}
         </>
     );
 }
-function NavbarContentLayout({ left, right, bottom, isDocsPage = false }) {
+
+function NavbarContentLayout({
+    left,
+    right,
+    bottom,
+    isDocsPage = false,
+}: {
+    left: ReactNode;
+    right: ReactNode;
+    bottom: ReactNode;
+    isDocsPage: boolean;
+}) {
     const [isEN, setIsEN] = useState(true);
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -37,12 +62,7 @@ function NavbarContentLayout({ left, right, bottom, isDocsPage = false }) {
     }, [typeof window !== 'undefined' && location.pathname]);
     return (
         <>
-            <div
-                className="navbar__inner"
-                style={{
-                    padding: isDocsPage && '0 1.6rem',
-                }}
-            >
+            <div className="navbar__inner">
                 <div className="navbar__items">{left}</div>
                 <div className="navbar__items navbar__items--right">{right}</div>
             </div>
@@ -58,32 +78,36 @@ function NavbarContentLayout({ left, right, bottom, isDocsPage = false }) {
         </>
     );
 }
-export default function NavbarContent({ mobile }) {
+
+export default function NavbarContent(): JSX.Element {
     const mobileSidebar = useNavbarMobileSidebar();
+    const [star, setStar] = useState<any>();
     const items = useNavbarItems();
     const docItems = useThemeConfig().docNavbarEN.items;
     const [leftItems, rightItems] = splitNavbarItems(items);
-    const searchBarItem = items.find(item => item.type === 'search');
-    const [star, setStar] = useState<any>();
     const [isDocsPage, setIsDocsPage] = useState(false);
     const [isCommunity, setIsCommunity] = useState(false);
+    const searchBarItem = items.find(item => item.type === 'search');
+    
     const [isEN, setIsEN] = useState(true);
-    const [currentVersion, setCurrentVersion] = useState('')
+    const [currentVersion, setCurrentVersion] = useState('');
     useEffect(() => {
         getGithubStar();
         if (typeof window !== 'undefined') {
             const tempPath = ['gettingStarted', 'benchmark', 'ecosystems', 'faq', 'docs', 'releasenotes'];
 
-            const secPath = location.pathname.includes('zh-CN/docs') ? location.pathname.split('/')[3] : location.pathname.split('/')[2]
+            const secPath = location.pathname.includes('zh-CN/docs')
+                ? location.pathname.split('/')[3]
+                : location.pathname.split('/')[2];
             if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
-                setCurrentVersion(secPath)
+                setCurrentVersion(secPath);
             } else {
-                setCurrentVersion('')
+                setCurrentVersion('');
             }
 
             const pathname = location.pathname.split('/')[1];
             location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
-            const docsPage = location.pathname.includes('docs')
+            const docsPage = location.pathname.includes('docs');
             const communityPage = pathname === 'community' || location.pathname.includes('zh-CN/community');
             setIsCommunity(communityPage);
             setIsDocsPage(docsPage);
@@ -91,11 +115,15 @@ export default function NavbarContent({ mobile }) {
     }, [typeof window !== 'undefined' && location.pathname]);
 
     async function getGithubStar() {
-        const res = await fetch('https://api.github.com/repos/apache/doris');
-        const data = await res.json();
-        if (data && data.stargazers_count) {
-            const starStr = (+parseFloat(formatStar(data.stargazers_count)).toFixed(1)).toString();
-            setStar(starStr);
+        try {
+            const res = await fetch('https://api.github.com/repos/apache/doris');
+            const data = await res.json();
+            if (data && data.stargazers_count) {
+                const starStr = (+parseFloat(formatStar(data.stargazers_count)).toFixed(1)).toString();
+                setStar(starStr);
+            }
+        } catch (err) {
+            console.error(err);
         }
     }
 
@@ -107,10 +135,10 @@ export default function NavbarContent({ mobile }) {
                 return (index % 3 ? next : next + '.') + prev;
             });
     }
-
     function getNavItem(type: string) {
         return items.find(item => item.type === type);
     }
+
     return (
         <NavbarContentLayout
             left={
@@ -121,7 +149,9 @@ export default function NavbarContent({ mobile }) {
                             <div
                                 className="cursor-pointer docs"
                                 onClick={() => {
-                                    window.location.href = `${isEN ? '' : '/zh-CN'}/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/what-is-new`;
+                                    window.location.href = `${isEN ? '' : '/zh-CN'}/docs${
+                                        currentVersion === '' ? '' : `/${currentVersion}`
+                                    }/gettingStarted/what-is-new`;
                                 }}
                             >
                                 {isEN ? <DocsLogoNew /> : <DocsLogoZH />}
@@ -152,7 +182,7 @@ export default function NavbarContent({ mobile }) {
                     <NavbarItems items={rightItems} />
                     <NavbarColorModeToggle className={styles.colorModeToggle} />
                     {!searchBarItem && (
-                        <NavbarSearch className="navbar-search">
+                        <NavbarSearch>
                             <SearchBar />
                         </NavbarSearch>
                     )}
@@ -170,7 +200,9 @@ export default function NavbarContent({ mobile }) {
                     ></Link>
                     <Link className="header-right-button-primary navbar-download-desktop" to="/download">
                         <Translate id="navbar.download">
-                            {typeof window !== 'undefined' && location.pathname.includes('zh-CN/docs') ? '下载' : 'Download'}
+                            {typeof window !== 'undefined' && location.pathname.includes('zh-CN/docs')
+                                ? '下载'
+                                : 'Download'}
                         </Translate>
                     </Link>
                 </>
