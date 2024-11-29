@@ -150,7 +150,7 @@ host 默认值为 127.0.0.1，port 的默认值为 9190
 
 用于指定 pid 文件的保存路径
 
-pid 文件是 stop_syncer.sh 脚本用于关闭 Syncer 的凭据，里面保存了对应 Syncer 的进程号，为了方便 Syncer 的集群化管理，可以指定 pid 文件的保存路径
+pid 文件是 stop_syncer.sh 脚本用于停止 Syncer 的凭据，里面保存了对应 Syncer 的进程号，为了方便 Syncer 的集群化管理，可以指定 pid 文件的保存路径
 
 ```sql
 bash bin/start_syncer.sh --pid_dir /path/to/pids
@@ -160,7 +160,7 @@ bash bin/start_syncer.sh --pid_dir /path/to/pids
 
 ## 停止 Syncer
 
-根据默认或指定路径下 pid 文件中的进程号关闭对应 Syncer，pid 文件的命名方式为`host_port.pid`。
+根据默认或指定路径下 pid 文件中的进程号停止对应 Syncer，pid 文件的命名方式为`host_port.pid`。
 
 **输出路径下的文件结构**
 
@@ -184,35 +184,35 @@ output_dir
 
 **停止选项**
 
-有三种关闭方法：
+有三种停止方法：
 
-1. 关闭目录下单个 Syncer
+1. 停止目录下单个 Syncer
 
-​    指定要关闭 Syncer 的 host && port，注意要与 start_syncer 时指定的 host 一致
+​    指定要停止 Syncer 的 host && port，注意要与 start_syncer 时指定的 host 一致
 
-2. 批量关闭目录下指定 Syncer
+2. 批量停止目录下指定 Syncer
 
-​    指定要关闭的 pid 文件名，以空格分隔，用`" "`包裹
+​    指定要停止的 pid 文件名，以空格分隔，用`" "`包裹
 
-3. 关闭目录下所有 Syncer
+3. 停止目录下所有 Syncer
 
 ​    默认即可
 
 1. --pid_dir
 
-指定 pid 文件所在目录，上述三种关闭方法都依赖于 pid 文件的所在目录执行
+指定 pid 文件所在目录，上述三种停止方法都依赖于 pid 文件的所在目录执行
 
 ```shell
 bash bin/stop_syncer.sh --pid_dir /path/to/pids
 ```
 
-例子中的执行效果就是关闭`/path/to/pids`下所有 pid 文件对应的 Syncer（**方法 3**），`--pid_dir`可与上面三种关闭方法组合使用。
+例子中的执行效果就是停止`/path/to/pids`下所有 pid 文件对应的 Syncer（**方法 3**），`--pid_dir`可与上面三种停止方法组合使用。
 
 默认值为`SYNCER_OUTPUT_DIR/bin`
 
 2. --host && --port
 
-关闭 pid_dir 路径下 host:port 对应的 Syncer
+停止 pid_dir 路径下 host:port 对应的 Syncer
 
 ```shell
 bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190
@@ -226,7 +226,7 @@ host 与 port 都不为空时**方法 1**才能生效
 
 3. --files
 
-关闭 pid_dir 路径下指定 pid 文件名对应的 Syncer
+停止 pid_dir 路径下指定 pid 文件名对应的 Syncer
 
 ```shell
 bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"

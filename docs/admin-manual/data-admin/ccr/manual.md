@@ -35,7 +35,7 @@ under the License.
 
 ## Start Syncer
 
-Start syncer according to the configurations and save a pid file in the default or specified path. The name of the pid file should follow `host_port.pid`.
+Start Syncer according to the configurations and save a pid file in the default or specified path. The name of the pid file should follow `host_port.pid`.
 
 **Output file structure**
 
@@ -60,7 +60,7 @@ output_dir
 
 **--daemon** 
 
-Run syncer in the background, set to false by default.
+Run Syncer in the background, set to false by default.
 
 ```SQL
 bash bin/start_syncer.sh --daemon
@@ -76,7 +76,7 @@ bash bin/start_syncer.sh --db_type mysql
 
 The default value is sqlite3.
 
-When using MySQL to store metadata, syncer will use `CREATE IF NOT EXISTS `to create a database called `ccr`, where the metadata table related to CCR will be saved.
+When using MySQL to store metadata, Syncer will use `CREATE IF NOT EXISTS `to create a database called `ccr`, where the metadata table related to CCR will be saved.
 
 **--db_dir** 
 
@@ -112,7 +112,7 @@ The default path is`SYNCER_OUTPUT_DIR/log` and the default file name is `ccr_syn
 
 **--log_level** 
 
-Used to specify the output level of syncer logs.
+Used to specify the output level of Syncer logs.
 
 ```SQL
 bash bin/start_syncer.sh --log_level info
@@ -136,7 +136,7 @@ When running in the foreground, log_level defaults to `trace`, and logs are save
 
 **--host && --port** 
 
-Used to specify the host and port of syncer, where host only plays the role of distinguishing itself in the cluster, which can be understood as the name of syncer, and the name of syncer in the cluster is `host: port`.
+Used to specify the host and port of Syncer, where host only plays the role of distinguishing itself in the cluster, which can be understood as the name of Syncer, and the name of Syncer in the cluster is `host: port`.
 
 ```SQL
 bash bin/start_syncer.sh --host 127.0.0.1 --port 9190
@@ -148,7 +148,7 @@ The default value of host is 127.0.0.1, and the default value of port is 9190.
 
 Used to specify the storage path of the pid file
 
-The pid file is the credentials for closing the syncer. It is used in the stop_syncer.sh script. It saves the corresponding syncer process number. In order to facilitate management of syncer, you can specify the storage path of the pid file.
+The pid file is the credentials for closing the Syncer. It is used in the stop_syncer.sh script. It saves the corresponding Syncer process number. In order to facilitate management of Syncer, you can specify the storage path of the pid file.
 
 ```SQL
 bash bin/start_syncer.sh --pid_dir /path/to/pids
@@ -158,7 +158,7 @@ The default value is `SYNCER_OUTPUT_DIR/bin`.
 
 ## Stop Syncer
 
-Stop the syncer according to the process number in the pid file under the default or specified path. The name of the pid file should follow `host_port.pid`.
+Stop the Syncer according to the process number in the pid file under the default or specified path. The name of the pid file should follow `host_port.pid`.
 
 **Output file structure**
 
@@ -183,15 +183,15 @@ output_dir
 
 Syncer can be stopped in three ways:
 
-1. Stop a single syncer in the directory
+1. Stop a single Syncer in the directory
 
-Specify the host and port of the syncer to be stopped. Be sure to keep it consistent with the host specified when start_syncer
+Specify the host and port of the Syncer to be stopped. Be sure to keep it consistent with the host specified when start_syncer
 
-2. Batch stop the specified syncer in the directory
+2. Batch stop the specified Syncer in the directory
 
 Specify the names of the pid files to be stopped, wrap the names in `""` and separate them with spaces.
 
-3. Stop syncer in the directory
+3. Stop all Syncers in the directory
 
 Follow the default configurations.
 
@@ -203,13 +203,13 @@ Specify the directory where the pid file is located. The above three stopping me
 bash bin/stop_syncer.sh --pid_dir /path/to/pids
 ```
 
-The effect of the above example is to close the Syncer corresponding to all pid files under `/path/to/pids `( **method 3** ). `-- pid_dir `can be used in combination with the above three syncer stopping methods.
+The effect of the above example is to close the Syncer corresponding to all pid files under `/path/to/pids `( **method 3** ). `-- pid_dir `can be used in combination with the above three Syncer stopping methods.
 
 The default value is `SYNCER_OUTPUT_DIR/bin`.
 
 **--host && --port** 
 
-Stop the syncer corresponding to host: port in the pid_dir path.
+Stop the Syncer corresponding to host: port in the pid_dir path.
 
 ```shell
 bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190
@@ -219,7 +219,7 @@ The default value of host is 127.0.0.1, and the default value of port is empty. 
 
 **--files** 
 
-Stop the syncer corresponding to the specified pid file name in the pid_dir path.
+Stop the Syncer corresponding to the specified pid file name in the pid_dir path.
 
 ```shell
 bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"
@@ -237,7 +237,7 @@ curl -X POST -H "Content-Type: application/json" -d {json_body} http://ccr_synce
 
 json_body: send operation information in JSON format
 
-operator: different operations for syncer
+operator: different operations for Syncer
 
 The interface returns JSON. If successful, the "success" field will be true. Conversely, if there is an error, it will be false, and then there will be an `ErrMsgs` field.
 
@@ -278,7 +278,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 - name: the name of the CCR synchronization task, should be unique
 - host, port: correspond to the host and mysql (jdbc) port of the cluster's master
 - thrift_port: corresponds to the rpc_port of the FE
-- user, password: the credentials used by the syncer to initiate transactions, fetch data, etc.
+- user, password: the credentials used by the Syncer to initiate transactions, fetch data, etc.
 - database, table:
   - If it is a database-level synchronization, fill in the database name and leave the table name empty.
   - If it is a table-level synchronization, specify both the database name and the table name.
@@ -390,7 +390,7 @@ bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 
 ## High availability of Syncer
 
-The high availability of Syncer relies on MySQL. If MySQL is used as the backend storage, the syncer can discover other Syncers. If one Syncer crashes, the others will take over its tasks.
+The high availability of Syncer relies on MySQL. If MySQL is used as the backend storage, the Syncer can discover other Syncers. If one Syncer crashes, the others will take over its tasks.
 
 ## Privilege requirements
 
