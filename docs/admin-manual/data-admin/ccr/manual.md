@@ -24,6 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Limitations
+
+### Network Constraints
+
+- Syncer needs to be able to communicate with both the upstream and downstream FE (Frontend) and BE (Backend).
+
+- The downstream BE and upstream BE are directly connected through the IP used by the Doris BE process (as seen in `show frontends/backends`).
+
+
 ## Start syncer
 
 Start syncer according to the configurations and save a pid file in the default or specified path. The name of the pid file should follow `host_port.pid`.
@@ -392,29 +401,6 @@ The high availability of syncers relies on MySQL. If MySQL is used as the backen
 5. `drop_priv`: privilege to drop databases, tables, and views
 
 Admin privileges are required (We are planning on removing this in future versions). This is used to check the `enable binlog config`.
-
-## Usage restrictions
-
-### Network constraints
-
-- Syncer needs to have connectivity to both the upstream and downstream FEs and BEs.
-- The downstream BE should have connectivity to the upstream BE.
-- The external IP and Doris internal IP should be the same. In other words, the IP address visible in the output of `show frontends/backends` should be the same IP that can be directly connected to. It should not involve IP forwarding or NAT for direct connections.
-
-### ThriftPool constraints
-
-It is recommended to increase the size of the Thrift thread pool to a number greater than the number of buckets involved in a single commit operation.
-
-### Version requirements
-
-Minimum required version: V2.0.3
-
-### Unsupported operations
-
-- Rename table
-- Operations such as table drop-recovery
-- Operations related to rename table, replace partition
-- Concurrent backup/restore within the same database
 
 ## Feature
 

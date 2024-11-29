@@ -24,6 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 使用限制
+
+### 网络约束
+
+- 需要 Syncer 与上下游的 FE 和 BE 是互通的
+
+- 下游 BE 与上游 BE 通过 Doris BE 进程使用的 IP （`show frontends/backends` 看到的） 是直通的。
+
+
 ## 启动 Syncer
 
 根据配置选项启动 Syncer，并且在默认或指定路径下保存一个 pid 文件，pid 文件的命名方式为`host_port.pid`。
@@ -409,33 +418,11 @@ Syncer 高可用依赖 mysql，如果使用 mysql 作为后端存储，Syncer �
 
 加上 Admin 权限 (之后考虑彻底移除), 这个是用来检测 enable binlog config 的，现在需要 admin
 
-## 使用限制
-
-### 网络约束
-
-- 需要 Syncer 与上下游的 FE 和 BE 都是通的
-
-- 下游 BE 与上游 BE 是通的
-
-- 对外 IP 和 Doris 内部 IP 是一样的，也就是说`show frontends/backends`看到的，和能直接连的 IP 是一致的，要是直连，不能是 IP 转发或者 nat
-
-### ThriftPool 限制
-
-开大 thrift thread pool 大小，最好是超过一次 commit 的 bucket 数目大小
 
 ### 版本要求
 
-版本最低要求：v2.0.3
+版本最低要求：v2.0.15
 
-### 不支持的操作
-
-- rename table 支持有点问题
-
-- 不支持一些 trash 的操作，比如 table 的 drop-recovery 操作
-
-- 和 rename table 有关的，replace partition 与
-
-- 不能发生在同一个 db 上同时 backup/restore
 
 ## Feature
 
