@@ -62,7 +62,7 @@ PROPERTIES ("key"="value", ...);
   - "meta_version" = 40：使用指定的 meta_version 来读取之前备份的元数据。注意，该参数作为临时方案，仅用于恢复老版本 Doris 备份的数据。最新版本的备份数据中已经包含 meta version，无需再指定。     
   -  "clean_tables": 表示是否清理不属于恢复目标的表。例如，如果恢复之前的目标数据库有备份中不存在的表，指定 `clean_tables` 就可以在恢复期间删除这些额外的表并将其移入回收站。该功能自 Apache Doris  1.2.6 版本起支持。
   - "clean_partitions "：表示是否清理不属于恢复目标的分区。例如，如果恢复之前的目标表有备份中不存在的分区，指定 `clean_partitions` 就可以在恢复期间删除这些额外的分区并将其移入回收站。该功能自 Apache Doris  1.2.6 版本起支持。
-  -  "reserve_storage_policy" = "true"：指定的恢复的表是否保留冷热分层属性。默认为true，备份集中保存的storage policy和对应的resource信息将在新集群中重建。恢复时数据都会下载到本地，再由降冷策略上传到远程。reserve_storage_policy设置为false，恢复后的表去除了冷热属性， 变为普通表。xxx 版本起支持。
+  -  "reserve_storage_policy" = "true"：指定的恢复的表是否保留冷热分层属性。默认为true，备份集中保存的storage policy信息将在新集群中重建。恢复时数据都会下载到本地，再由降冷策略上传到远程。reserve_storage_policy设置为false，恢复后的表去除了冷热属性， 变为普通表。xxx 版本起支持。
   - "storage_resource" = "resource_name"：指定恢复后表的冷数据使用的resource。建议在跨集群恢复时指定此属性。注意恢复后的storage policy中的storage_resource属性也会更新为指定的storage_resource。若指定了"reserve_storage_policy"="false"，则忽略storage_resource属性。xxx 版本起支持。
 
 ### Example
