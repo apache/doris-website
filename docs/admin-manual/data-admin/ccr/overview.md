@@ -62,7 +62,7 @@ CCR supports two types of jobs:
 
 ![CCR Architecture Overview](/images/ccr-architecture-description.png)
 
-CCR relies primarily on a lightweight process called `Syncers`. `Syncers` fetch binlogs from the source cluster, apply the metadata to the target cluster, and instruct the target cluster to pull data from the source cluster, enabling full and incremental synchronization.
+CCR relies primarily on a lightweight process called `Syncer`. `Syncer` fetch binlogs from the source cluster, apply the metadata to the target cluster, and instruct the target cluster to pull data from the source cluster, enabling full and incremental synchronization.
 
 ### Principles
 

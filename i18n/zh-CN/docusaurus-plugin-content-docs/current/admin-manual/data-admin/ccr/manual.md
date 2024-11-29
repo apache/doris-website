@@ -206,7 +206,7 @@ output_dir
 bash bin/stop_syncer.sh --pid_dir /path/to/pids
 ```
 
-例子中的执行效果就是关闭`/path/to/pids`下所有 pid 文件对应的 Syncers（**方法 3**），`--pid_dir`可与上面三种关闭方法组合使用。
+例子中的执行效果就是关闭`/path/to/pids`下所有 pid 文件对应的 Syncer（**方法 3**），`--pid_dir`可与上面三种关闭方法组合使用。
 
 默认值为`SYNCER_OUTPUT_DIR/bin`
 
@@ -288,7 +288,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 - thrift_port：对应 FE 的 rpc_port
 
-- user、password：syncer 以何种身份去开启事务、拉取数据等
+- user、password：Syncer 以何种身份去开启事务、拉取数据等
 
 - database、table：
 
@@ -402,7 +402,7 @@ bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 
 ## Syncer 高可用
 
-Syncer 高可用依赖 mysql，如果使用 mysql 作为后端存储，Syncer 可以发现其它 syncer，如果一个 crash 了，其他会分担他的任务
+Syncer 高可用依赖 mysql，如果使用 mysql 作为后端存储，Syncer 可以发现其它 Syncer，如果一个 crash 了，其他会分担他的任务
 
 ## 权限要求
 
@@ -452,7 +452,7 @@ CCR 功能在建立同步时，会在目标集群中创建源集群同步范围�
 
 - 源表中包含了可能没有被同步到目标集群的信息，如`storage_policy`等，可能会导致目标表创建失败或者行为异常。
 
-- 源表中可能包含一些动态功能，如动态分区等，可能导致目标表的行为不受 syncer 控制导致 partition 不一致。
+- 源表中可能包含一些动态功能，如动态分区等，可能导致目标表的行为不受 Syncer 控制导致 partition 不一致。
 
 在被复制时因失效而需要擦除的属性有：
 
@@ -468,15 +468,15 @@ CCR 功能在建立同步时，会在目标集群中创建源集群同步范围�
 
 ### 实现
 
-在创建目标表时，这条属性将会由 syncer 控制添加或者删除，在 CCR 功能中，创建一个目标表有两个途径：
+在创建目标表时，这条属性将会由 Syncer 控制添加或者删除，在 CCR 功能中，创建一个目标表有两个途径：
 
-1. 在表同步时，syncer 通过 backup/restore 的方式对源表进行全量复制来得到目标表。
+1. 在表同步时，Syncer 通过 backup/restore 的方式对源表进行全量复制来得到目标表。
 
-2. 在库同步时，对于存量表而言，syncer 同样通过 backup/restore 的方式来得到目标表，对于增量表而言，syncer 会通过携带有 CreateTableRecord 的 binlog 来创建目标表。
+2. 在库同步时，对于存量表而言，Syncer 同样通过 backup/restore 的方式来得到目标表，对于增量表而言，Syncer 会通过携带有 CreateTableRecord 的 binlog 来创建目标表。
 
 综上，对于插入`is_being_synced`属性有两个切入点：全量同步中的 restore 过程和增量同步时的 getDdlStmt。
 
-在全量同步的 restore 过程中，syncer 会通过 rpc 发起对原集群中 snapshot 的 restore，在这个过程中为会为 RestoreStmt 添加`is_being_synced`属性，并在最终的 restoreJob 中生效，执行`isBeingSynced`的相关逻辑。在增量同步时的 getDdlStmt 中，为 getDdlStmt 方法添加参数`boolean getDdlForSync`，以区分是否为受控转化为目标表 ddl 的操作，并在创建目标表时执行`isBeingSynced`的相关逻辑。
+在全量同步的 restore 过程中，Syncer 会通过 rpc 发起对原集群中 snapshot 的 restore，在这个过程中为会为 RestoreStmt 添加`is_being_synced`属性，并在最终的 restoreJob 中生效，执行`isBeingSynced`的相关逻辑。在增量同步时的 getDdlStmt 中，为 getDdlStmt 方法添加参数`boolean getDdlForSync`，以区分是否为受控转化为目标表 ddl 的操作，并在创建目标表时执行`isBeingSynced`的相关逻辑。
 
 对于失效属性的擦除无需多言，对于上述功能的失效需要进行说明：
 
@@ -486,4 +486,4 @@ CCR 功能在建立同步时，会在目标集群中创建源集群同步范围�
 
 ### 注意
 
-在未出现异常时，`is_being_synced`属性应该完全由 syncer 控制开启或关闭，用户不要自行修改该属性。
+在未出现异常时，`is_being_synced`属性应该完全由 Syncer 控制开启或关闭，用户不要自行修改该属性。

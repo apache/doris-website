@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The usage of CCR is straightforward. Simply start the syncer service and send a command, and the syncers will take care of the rest.
+The usage of CCR is straightforward. Simply start the syncer service and send a command, and the Syncer will take care of the rest.
 
 ## Step 1. Deploy the source Doris cluster
 ## Step 2. Deploy the target Doris cluster
@@ -36,9 +36,9 @@ Both the source and target clusters need to enable binlog. Configure the followi
 enable_feature_binlog=true
 ```
 
-## Step 4. Deploy syncers
+## Step 4. Deploy Syncer
 
-​Build CCR syncer
+​Build CCR Syncer
 
 ```shell
 git clone https://github.com/selectdb/ccr-syncer
@@ -48,7 +48,7 @@ cd SYNCER_OUTPUT_DIR# Contact the Doris community for a free CCR binary package
 ```
 
 
-Start and stop syncer
+Start and stop Syncer
 
 
 ```shell
@@ -71,7 +71,7 @@ Or ./enable_db_binlog.sh --host $host --port $port --user $user --password $pass
 ALTER TABLE enable_binlog SET ("binlog.enable" = "true");
 ```
 
-## Step 6. Launch a synchronization task to the syncer
+## Step 6. Launch a synchronization task to the Syncer
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -102,7 +102,7 @@ Parameter description:
 ```shell
 name: name of the CCR synchronization task, should be unique
 host, port: host and mysql(jdbc) port for the master FE for the corresponding cluster
-user, password: the credentials used by the syncer to initiate transactions, fetch data, etc.
+user, password: the credentials used by the Syncer to initiate transactions, fetch data, etc.
 If it is synchronization at the database level, specify your_db_name and leave your_table_name empty
 If it is synchronization at the table level, specify both your_db_name and your_table_name
 The synchronization task name can only be used once.

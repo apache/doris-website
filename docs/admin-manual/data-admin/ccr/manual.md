@@ -33,7 +33,7 @@ under the License.
 - The downstream BE and upstream BE are directly connected through the IP used by the Doris BE process (as seen in `show frontends/backends`).
 
 
-## Start syncer
+## Start Syncer
 
 Start syncer according to the configurations and save a pid file in the default or specified path. The name of the pid file should follow `host_port.pid`.
 
@@ -156,7 +156,7 @@ bash bin/start_syncer.sh --pid_dir /path/to/pids
 
 The default value is `SYNCER_OUTPUT_DIR/bin`.
 
-## Stop syncer
+## Stop Syncer
 
 Stop the syncer according to the process number in the pid file under the default or specified path. The name of the pid file should follow `host_port.pid`.
 
@@ -181,17 +181,17 @@ output_dir
 
 **Stop options**
 
-Syncers can be stopped in three ways: 
+Syncer can be stopped in three ways:
 
 1. Stop a single syncer in the directory
 
 Specify the host and port of the syncer to be stopped. Be sure to keep it consistent with the host specified when start_syncer
 
-2. Batch stop the specified syncers in the directory
+2. Batch stop the specified syncer in the directory
 
 Specify the names of the pid files to be stopped, wrap the names in `""` and separate them with spaces.
 
-3. Stop all syncers in the directory
+3. Stop syncer in the directory
 
 Follow the default configurations.
 
@@ -203,7 +203,7 @@ Specify the directory where the pid file is located. The above three stopping me
 bash bin/stop_syncer.sh --pid_dir /path/to/pids
 ```
 
-The effect of the above example is to close the syncers corresponding to all pid files under `/path/to/pids `( **method 3** ). `-- pid_dir `can be used in combination with the above three syncer stopping methods.
+The effect of the above example is to close the Syncer corresponding to all pid files under `/path/to/pids `( **method 3** ). `-- pid_dir `can be used in combination with the above three syncer stopping methods.
 
 The default value is `SYNCER_OUTPUT_DIR/bin`.
 
@@ -388,9 +388,9 @@ output_dir
 bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 ```
 
-## High availability of syncer
+## High availability of Syncer
 
-The high availability of syncers relies on MySQL. If MySQL is used as the backend storage, the syncer can discover other syncers. If one syncer crashes, the others will take over its tasks.
+The high availability of Syncer relies on MySQL. If MySQL is used as the backend storage, the syncer can discover other Syncers. If one Syncer crashes, the others will take over its tasks.
 
 ## Privilege requirements
 
@@ -440,14 +440,14 @@ The functionalities that need to be disabled during synchronization are:
 
 ### Implementation
 
-When creating the target table, the syncer controls the addition or deletion of the `is_being_synced` property. In CCR, there are two approaches to creating a target table:
+When creating the target table, the Syncer controls the addition or deletion of the `is_being_synced` property. In CCR, there are two approaches to creating a target table:
 
-1. During table synchronization, the syncer performs a full copy of the source table using backup/restore to obtain the target table.
-2. During database synchronization, for existing tables, the syncer also uses backup/restore to obtain the target table. For incremental tables, the syncer creates the target table using the CreateTableRecord binlog.
+1. During table synchronization, the Syncer performs a full copy of the source table using backup/restore to obtain the target table.
+2. During database synchronization, for existing tables, the Syncer also uses backup/restore to obtain the target table. For incremental tables, the Syncer creates the target table using the CreateTableRecord binlog.
 
 Therefore, there are two entry points for inserting the `is_being_synced` property: the restore process during full synchronization and the getDdlStmt during incremental synchronization.
 
-During the restoration process of full synchronization, the syncer initiates a restore operation of the snapshot from the source cluster via RPC. During this process, the `is_being_synced` property is added to the RestoreStmt and takes effect in the final restoreJob, executing the relevant logic for `is_being_synced`.
+During the restoration process of full synchronization, the Syncer initiates a restore operation of the snapshot from the source cluster via RPC. During this process, the `is_being_synced` property is added to the RestoreStmt and takes effect in the final restoreJob, executing the relevant logic for `is_being_synced`.
 
 During incremental synchronization, add the `boolean getDdlForSync` parameter to the getDdlStmt method to differentiate whether it is a controlled transformation to the target table DDL, and execute the relevant logic for isBeingSynced during the creation of the target table.
 
@@ -458,4 +458,4 @@ Regarding the disabling of the functionalities mentioned above:
 
 ### Note
 
-The `is_being_synced` property should be fully controlled by the syncer, and users should not modify this property manually unless there are exceptional circumstances.
+The `is_being_synced` property should be fully controlled by the Syncer, and users should not modify this property manually unless there are exceptional circumstances.
