@@ -1397,7 +1397,6 @@
                                     "label": "Backup and Restore",
                                     "items": [
                                         "sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY",
-                                        "sql-manual/sql-statements/data-modification/backup-and-restore/ALTER-REPOSITORY",
                                         "sql-manual/sql-statements/data-modification/backup-and-restore/DROP-REPOSITORY",
                                         "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-CREATE-REPOSITORY",
                                         "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-REPOSITORIES",

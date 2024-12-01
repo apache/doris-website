@@ -1,6 +1,6 @@
 ---
 {
-    "title": "PLAN REPLAYER PLAY",
+    "title": "SHOW PRIVILEGES",
     "language": "zh-CN"
 }
 ---
@@ -24,4 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## SHOW-PRIVILEGES
+
+### Name
+
+SHOW PRIVILEGES
+
+### Description
+
+该语句用于展示所有权限项。
+
+语法：
+
+```SQL
+SHOW PRIVILEGES
+```
+
+### Example
+
+1. 查看所有权限项
+
+   ```SQL
+   SHOW PRIVILEGES
+   ```
+
+### Keywords
+
+    SHOW, PRIVILEGES
+
+### Best Practice
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "PLAN REPLAYER PLAY",
+    "title": "SHOW-CACHE-HOTSPOT",
     "language": "zh-CN"
 }
 ---
@@ -24,4 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 描述
+
+该语句用于显示文件缓存的热点信息。
+
+## 语法
+
+```sql
+   SHOW CACHE HOTSPOT '/[compute_group_name/table_name]';
+```
+
+## 参数
+
+* compute_group_name : 计算组的名称。
+* table_name : 表的名称。
+
+## 示例
+
+1. 查看某个表的创建语句
+
+    ```sql
+    SHOW CACHE HOTSPOT '/';
+    ```
+
+## 相关命令
+
+ - [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
+
+## 参考
+
+ - [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
+
+## 关键词
+
+    SHOW, CACHE, HOTSPOT
 

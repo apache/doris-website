@@ -1,6 +1,6 @@
 ---
 {
-    "title": "PLAN REPLAYER PLAY",
+    "title": "SET LDAP_ADMIN_PASSWORD",
     "language": "zh-CN"
 }
 ---
@@ -24,4 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## LDAP
 
+### Name
+
+LDAP
+
+### Description
+
+SET LDAP_ADMIN_PASSWORD
+
+```sql
+ SET LDAP_ADMIN_PASSWORD = PASSWORD('plain password')
+```
+
+ SET LDAP_ADMIN_PASSWORD 命令用于设置 LDAP 管理员密码。使用 LDAP 认证时，doris 需使用管理员账户和密码来向 LDAP 服务查询登录用户的信息。
+
+### Example
+
+1. 设置 LDAP 管理员密码
+```sql
+SET LDAP_ADMIN_PASSWORD = PASSWORD('123456')
+```
+
+### Keywords
+
+    LDAP, PASSWORD, LDAP_ADMIN_PASSWORD
+
+### Best Practice

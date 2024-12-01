@@ -1,6 +1,6 @@
 ---
 {
-    "title": "PLAN REPLAYER PLAY",
+    "title": "DROP SQL_BLOCK_RULE",
     "language": "zh-CN"
 }
 ---
@@ -24,4 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
+
+### Name
+
+DROP SQL BLOCK RULE
+
+### Description
+
+删除 SQL 阻止规则，支持多规则，以，隔开
+
+语法：
+
+```sql
+DROP SQL_BLOCK_RULE test_rule1,...
+```
+
+### Example
+
+1. 删除 test_rule1、test_rule2 阻止规则
+
+   ```sql
+   mysql> DROP SQL_BLOCK_RULE test_rule1,test_rule2;
+   Query OK, 0 rows affected (0.00 sec)
+   ```
+
+### Keywords
+
+```text
+DROP, SQL_BLOCK_RULE
+```
+
+### Best Practice
 
