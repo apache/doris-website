@@ -1,7 +1,7 @@
 ---
 {
     "title": "SHOW-STATUS",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -32,9 +32,9 @@ SHOW STATUS
 
 ### Description
 
-This command is used to view the execution of the Create Materialized View job submitted through the [CREATE-MATERIALIZED-VIEW](../Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW.md) statement.
+该命令用于查看通过[创建物化视图](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-MATERIALIZED-VIEW)语句提交的创建物化视图作业的执行情况。
 
-> This statement is equivalent to `SHOW ALTER TABLE ROLLUP`;
+> 该语句相当于`SHOW ALTER TABLE ROLLUP`；
 
 ```sql
 SHOW ALTER TABLE MATERIALIZED VIEW
@@ -44,13 +44,13 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 [LIMIT OFFSET]
 ```
 
-- database: View jobs under the specified database. If not specified, the current database is used.
-- WHERE: You can filter the result column, currently only the following columns are supported:
-  - TableName: Only equal value filtering is supported.
-  - State: Only supports equivalent filtering.
-  - Createtime/FinishTime: Support =, >=, <=, >, <, !=
-- ORDER BY: The result set can be sorted by any column.
-- LIMIT: Use ORDER BY to perform page-turning query.
+- database：查看指定数据库下的作业。如果未指定，则使用当前数据库。
+- WHERE：您可以过滤结果列，目前仅支持以下列：
+   - TableName：仅支持等值过滤。
+   - State：仅支持等效过滤。
+   - Createtime/FinishTime：支持 =、>=、<=、>、<、!=
+- ORDER BY：结果集可以按任何列排序。
+- LIMIT：使用 ORDER BY 进行翻页查询。
 
 Return result description:
 
@@ -72,37 +72,37 @@ RollupIndexName: r1
 1 row in set (0.00 sec)
 ```
 
-- `JobId`: Job unique ID.
+- `JobId`：作业唯一 ID。
 
-- `TableName`: base table name
+- `TableName`：基表名称
 
-- `CreateTime/FinishTime`: Job creation time and end time.
+- `CreateTime/FinishTime`：作业创建时间和结束时间。
 
-- `BaseIndexName/RollupIndexName`: Base table name and materialized view name.
+- `BaseIndexName/RollupIndexName`：基表名称和物化视图名称。
 
-- `RollupId`: The unique ID of the materialized view.
+- `RollupId`：物化视图的唯一 ID。
 
-- `TransactionId`: See the description of the State field.
+- `TransactionId`：参见 State 字段的描述。
 
-- `State`: job status.
+- `State`：工作状态。
 
-  - PENDING: The job is in preparation.
+  - PENDING：工作正在准备中。
 
-  - WAITING_TXN:
+  - WAITING_TXN：
 
-    Before officially starting to generate materialized view data, it will wait for the current running import transaction on this table to complete. And the `TransactionId` field is the current waiting transaction ID. When all previous imports for this ID are complete, the job will actually start.
+    在正式开始生成物化视图数据之前，它会等待当前正在运行的该表上的导入事务完成。而 `TransactionId` 字段是当前等待的交易 ID。当此 ID 的所有先前导入完成后，作业将真正开始。
 
-  - RUNNING: The job is running.
+  - RUNNING：作业正在运行。
 
-  - FINISHED: The job ran successfully.
+  - FINISHED：作业成功运行。
 
-  - CANCELLED: The job failed to run.
+  - CANCELLED：作业运行失败。
 
-- `Msg`: error message
+- `Msg`：错误信息
 
-- `Progress`: job progress. The progress here means `completed tablets/total tablets`. Materialized views are created at tablet granularity.
+- `Progress`：作业进度。这里的进度是指 `完completed tablets/total tablets`。物化视图以 tablet 粒度创建。
 
-- `Timeout`: Job timeout, in seconds.
+- `Timeout`：作业超时，以秒为单位。
 
 ### Example
 

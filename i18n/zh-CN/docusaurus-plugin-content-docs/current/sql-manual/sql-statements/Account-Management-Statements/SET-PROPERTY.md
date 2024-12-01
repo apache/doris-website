@@ -119,7 +119,7 @@ SET PROPERTY [FOR 'user'] 'key' = 'value' [, 'key' = 'value']
 ## 相关命令
 
 - [CREATE USER](./CREATE-USER.md)
-- [SHOW PROPERTY](../Show-Statements/SHOW-PROPERTY.md)
+- [SHOW PROPERTY](../../../sql-manual/sql-statements/account-management/SHOW-PROPERTY)
 
 ## Keywords
 

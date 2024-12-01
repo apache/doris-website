@@ -34,7 +34,7 @@ CREATE MATERIALIZED VIEW
 
 该语句用于创建物化视图。
 
-该操作为异步操作，提交成功后，需通过 [SHOW ALTER TABLE MATERIALIZED VIEW](../../Show-Statements/SHOW-ALTER-TABLE-MATERIALIZED-VIEW.md) 查看作业进度。在显示 FINISHED 后既可通过 `desc [table_name] all` 命令来查看物化视图的 schema 了。
+该操作为异步操作，提交成功后，需通过 [SHOW ALTER TABLE MATERIALIZED VIEW](../table/SHOW-ALTER-TABLE-MATERIALIZED-VIEW.md) 查看作业进度。在显示 FINISHED 后既可通过 `desc [table_name] all` 命令来查看物化视图的 schema 了。
 
 语法：
 
@@ -47,7 +47,7 @@ CREATE MATERIALIZED VIEW [MV name] as [query]
 
 - `MV name`：物化视图的名称，必填项。相同表的物化视图名称不可重复。
 
-- `query`：用于构建物化视图的查询语句，查询语句的结果既物化视图的数据。目前支持的 query 格式为:
+- `query`：用于构建物化视图的查询语句，查询语句的结果既物化视图的数据。目前支持的 query 格式为：
 
   ```sql
   SELECT select_expr[, select_expr ...]
@@ -66,8 +66,8 @@ CREATE MATERIALIZED VIEW [MV name] as [query]
     - 不填则数据不进行分组。
   - `order by`：物化视图的排序列，选填项。  
     - 排序列的声明顺序必须和 select_expr 中列声明顺序一致。  
-    - 如果不声明 order by，则根据规则自动补充排序列。 如果物化视图是聚合类型，则所有的分组列自动补充为排序列。 如果物化视图是非聚合类型，则前 36 个字节自动补充为排序列。
-    - 如果自动补充的排序个数小于3个，则前三个作为排序列。 如果 query 中包含分组列的话，则排序列必须和分组列一致。
+    - 如果不声明 order by，则根据规则自动补充排序列。如果物化视图是聚合类型，则所有的分组列自动补充为排序列。如果物化视图是非聚合类型，则前 36 个字节自动补充为排序列。
+    - 如果自动补充的排序个数小于 3 个，则前三个作为排序列。如果 query 中包含分组列的话，则排序列必须和分组列一致。
 
 - properties
 
@@ -110,9 +110,9 @@ duplicate key (k1,k2,k3,k4)
 distributed BY hash(k4) buckets 3
 properties("replication_num" = "1");
 ```
-注意：如果物化视图包含了base表的分区列和分桶列,那么这些列必须作为物化视图中的key列
+注意：如果物化视图包含了 base 表的分区列和分桶列，那么这些列必须作为物化视图中的 key 列
 
-1. 创建一个仅包含原始表 （k1, k2）列的物化视图
+1. 创建一个仅包含原始表（k1, k2）列的物化视图
 
    ```sql
    create materialized view k1_k2 as
@@ -176,7 +176,7 @@ properties("replication_num" = "1");
    select k1, k2, k3, k4 from duplicate_table group by k1, k2, k3, k4;
    ```
 
-   物化视图 schema 如下图，物化视图包含 k1, k2, k3, k4列，且不存在重复行。
+   物化视图 schema 如下图，物化视图包含 k1, k2, k3, k4 列，且不存在重复行。
 
    ```text
    +-----------------+-------+--------+------+-------+---------+-------+
@@ -214,7 +214,7 @@ properties("replication_num" = "1");
    select k3, k4, k5, k6, k7 from all_type_table;
    ```
 
-   系统默认补充的排序列为 k3, k4, k5 三列。这三列类型的字节数之和为 4(INT) + 8(BIGINT) + 16(DECIMAL) = 28 < 36。所以补充的是这三列作为排序列。 物化视图的 schema 如下，可以看到其中 k3, k4, k5 列的 key 字段为 true，也就是排序列。k6, k7 列的 key 字段为 false，也就是非排序列。
+   系统默认补充的排序列为 k3, k4, k5 三列。这三列类型的字节数之和为 4(INT) + 8(BIGINT) + 16(DECIMAL) = 28 < 36。所以补充的是这三列作为排序列。物化视图的 schema 如下，可以看到其中 k3, k4, k5 列的 key 字段为 true，也就是排序列。k6, k7 列的 key 字段为 false，也就是非排序列。
 
    ```sql
    +----------------+-------+--------------+------+-------+---------+-------+

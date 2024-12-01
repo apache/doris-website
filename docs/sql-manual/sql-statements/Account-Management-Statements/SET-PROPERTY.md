@@ -121,7 +121,7 @@ The value to set for the specified key.
 ## Related Commands
 
 - [CREATE USER](./CREATE-USER.md)
-- [SHOW PROPERTY](../Show-Statements/SHOW-PROPERTY.md)
+- [SHOW PROPERTY](../../../sql-manual/sql-statements/account-management/SHOW-PROPERTY)
 
 ## Keywords
 

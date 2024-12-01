@@ -46,8 +46,8 @@ SHOW STORAGE VAULTS 命令用于显示系统中配置的所有storage vault的�
 ## 相关命令
 
 - [CREATE STORAGE VAULT](../Data-Definition-Statements/CREATE-STORAGE-VAULT.md)
-- [GRANT](../Account-Management-Statements/GRANT.md)
-- [REVOKE](../Account-Management-Statements/REVOKE.md)
+- [GRANT](../account-management/GRANT-TO.md)
+- [REVOKE](../account-management/REVOKE-FROM.md)
 - [SET DEFAULT STORAGE VAULT](../Data-Definition-Statements/SET-DEFAULT-STORAGE-VAULT.md)
 
 ## Keywords

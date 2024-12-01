@@ -175,7 +175,7 @@ func main() {
 
 ## 集群部署后设置 root 用户密码
 
-Doris 集群在部署后设置了 root 用户的密码，需要配置一个拥有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户到 DorisCluster 资源中，以便 Doris Operator 自动化的管理集群节点。此用户名不建议使用 root，请参考[用户新建和权限赋值章节](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 的方式指定新的管理用户和密码，并配置对应的 DorisCluster 资源。
+Doris 集群在部署后设置了 root 用户的密码，需要配置一个拥有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户到 DorisCluster 资源中，以便 Doris Operator 自动化的管理集群节点。此用户名不建议使用 root，请参考[用户新建和权限赋值章节](../../sql-manual/sql-statements/account-management/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 的方式指定新的管理用户和密码，并配置对应的 DorisCluster 资源。
   
 1. 新建拥有 Node_priv 权限用户
 

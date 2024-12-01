@@ -46,8 +46,8 @@ This command returns a result set with the following columns:
 ## Related Commands
 
 - [CREATE STORAGE VAULT](../Data-Definition-Statements/CREATE-STORAGE-VAULT.md)
-- [GRANT](../Account-Management-Statements/GRANT.md)
-- [REVOKE](../Account-Management-Statements/REVOKE.md)
+- [GRANT](../account-management/GRANT-TO.md)
+- [REVOKE](../account-management/REVOKE-FROM.md)
 - [SET DEFAULT STORAGE VAULT](../Data-Definition-Statements/SET-DEFAULT-STORAGE-VAULT.md)
 
 ## Keywords

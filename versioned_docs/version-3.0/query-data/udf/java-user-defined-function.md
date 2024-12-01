@@ -94,7 +94,7 @@ When the session is linked within the database, directly using the UDF name will
 
 ## Dropping UDF
 
-If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION).
+If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../../sql-manual/sql-statements/function/DROP-FUNCTION.md).
 
 ## Type Correspondence
 

@@ -176,7 +176,7 @@ GRANT role_list TO user_identity
 ## 相关命令
 
 - [REVOKE](./REVOKE.md)
-- [SHOW GRANTS](../Show-Statements/SHOW-GRANTS.md)
+- [SHOW GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
 - [CREATE ROLE](./CREATE-ROLE.md)
 - [CREATE WORKLOAD GROUP](../Administration-Statements/CREATE-WORKLOAD-GROUP.md)
 - [CREATE COMPUTE GROUP](../Administration-Statements/CREATE-COMPUTE-GROUP.md)

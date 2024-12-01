@@ -1,11 +1,11 @@
 ---
 {
     "title": "Workload Group",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,96 +24,100 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-You can use Workload Groups to manage the CPU, memory, and I/O resources used by queries and imports in the Doris cluster, and to control the maximum concurrency of queries in the cluster. Permissions for Workload Groups can be granted to specific roles and users.
+你可以使用 Workload Group 管理 Doris 集群中查询和导入负载所使用的 CPU/内存/IO 资源用量，控制集群中查询的最大并发。Workload Group 的使用权限可以授予给特定的角色和用户。
 
-Workload Groups are particularly effective in the following scenarios:
-1. For scenarios where performance stability is preferred, and it is not required for query load to utilize all cluster resources, but stable query latency is desired. In such cases, you can set hard limits on CPU/I/O for Workload Groups.
-2. When overall cluster load is high and availability decreases, you can restore cluster availability by degrading Workload Groups that consume excessive resources. For example, reduce the maximum query concurrency and I/O throughput for these Workload Groups.
+在以下场景使用 Workload Group 通常会取得不错的效果：
+1. 偏好性能稳定性的场景，不要求查询负载可以占满集群所有的资源，但是期望查询的延迟比较稳定，那么可以尝试把 Workload Group 的 CPU/IO 配置成硬限。
+2. 当集群整体负载过高导致可用性下降时，此时可以通过对集群中资源占用过高的 WorkloadGroup 进行降级处理来恢复集群的可用性，例如降低 Workload Group 的最大查询并发和 IO 吞吐。
 
-Using hard limits for resource management usually results in better stability and performance, such as configuring maximum concurrency for FE and setting hard limits on CPU. Soft limits on CPU typically only have an effect when the CPU is fully utilized, which can lead to increased latency due to resource contention with other Doris components (RPC) and the operating system. Configuring hard limits for Doris query loads can effectively mitigate this issue. Additionally, setting maximum concurrency and queuing can help prevent the exhaustion of all available cluster resources during peak times with continuous incoming queries.
+通常使用硬限对资源进行管理可以获得更好的稳定性和性能，例如配置 FE 的最大并发以及 CPU 的硬限。
+因为 CPU 的软限通常只有在 CPU 在用满时才能体现效果，而此时 Doris 内部的其他组件（RPC）以及操作系统可用的 CPU 资源会受到挤压，系统整体的延迟就会增加。
+对 Doris 的查询负载配置硬限能有效缓解这个问题。同时配置最大并发和排队，可以缓解高峰时持续不断地新查询进来耗尽集群中的所有可用资源的情况。
 
-## Version Description
-Workload Group is a feature that has been supported since version 2.0. The main difference between version 2.0 and 2.1 is that the 2.0 version of Workload Group does not rely on CGroup, while the 2.1 version of Workload Group depends on CGroup. Therefore, when using the 2.1 version of Workload Group, the environment of CGroup needs to be configured.
+## 版本说明
+Workload Group 是从 2.0 版本开始支持的功能，Workload Group 在 2.0 版本和 2.1 版本的主要区别在于，2.0 版本的 Workload Group 不依赖 CGroup，而 2.1 版本的 Workload Group 依赖 CGroup，因此使用 2.1 版本的 Workload Group 时要配置 CGroup 的环境。
 
-#### Upgrade to version 2.0
-If upgrading from version 1.2 to version 2.0, it is recommended to enable the WorkloadGroup after the overall upgrade of the Doris cluster is completed. Because if you only upgrade a single Follower and enable this feature, as the FE code of the Master has not been updated yet, there is no metadata information for Workload Group in the Doris cluster, which may cause queries for the upgraded Follower nodes to fail. The recommended upgrade process is as follows:
-* First, upgrade the overall code of the Doris cluster to version 2.0.
-* Start using this feature according to the section ***Workload group usage*** in the following text.
+#### 升级到 2.0 版本
+1 如果是从 1.2 版本升级到 2.0 版本时，建议 Doris 集群整体升级完成后，再开启 WorkloadGroup 功能。因为如果只升级单台 Follower 就开启此功能，由于 Master 的 FE 代码还没有更新，此时 Doris 集群中并没有 Workload Group 的元数据信息，这可能导致已升级的 Follower 节点的查询失败。建议的升级流程如下：
+* 先把 Doris 集群整体代码升级到 2.0 版本。
+* 再根据下文中***workload group 使用***的章节开始使用该功能。
 
-#### Upgrade to version 2.1
-If the code version is upgraded from 2.0 to 2.1, there are two situations:
+#### 升级到 2.1 版本
+2 如果代码版本是从 2.0 升级到 2.1 的，分为以下两种情况：
 
-Scenario 1: In version 2.1, if the Workload Group has already been used, you only need to refer to the process of configuring cgroup v1 in the following text to use the new version of the Workload Group.
+情况 1：在 2.1 版本如果已经使用了 Workload Group 功能，那么只需要参考下文中配置 cgroup v1 的流程即可使用新版本的 Workload Group 功能。
 
-Scenario 2: If the Workload Group is not used in version 2.0, it is also necessary to upgrade the Doris cluster as a whole to version 2.1, and then start using this feature according to the section ***Workload group usage*** in the following text.
+情况 2：如果在 2.0 版本没有使用 Workload Group 功能，那么也需要先把 Doris 集群整体升级到 2.1 版本后，再根据下文的***workload group 使用***的章节开始使用该功能。
 
-## Workload group properties
+## workload group 属性
 
-* cpu_share: Optional, The default value is 1024, with a range of positive integers. used to set how much cpu time the workload group can acquire, which can achieve soft isolation of cpu resources. cpu_share is a relative value indicating the weight of cpu resources available to the running workload group. For example, if a user creates 3 workload groups rg-a, rg-b and rg-c with cpu_share of 10, 30 and 40 respectively, and at a certain moment rg-a and rg-b are running tasks while rg-c has no tasks, then rg-a can get 25% (10 / (10 + 30)) of the cpu resources while workload group rg-b can get 75% of the cpu resources. If the system has only one workload group running, it gets all the cpu resources regardless of the value of its cpu_share.
+* cpu_share: 可选，默认值为 1024，取值范围是正整数。用于设置 workload group 获取 cpu 时间的多少，可以实现 cpu 资源软隔离。cpu_share 是相对值，表示正在运行的 workload group 可获取 cpu 资源的权重。例如，用户创建了 3 个 workload group g-a、g-b 和 g-c，cpu_share 分别为 10、30、40，某一时刻 g-a 和 g-b 正在跑任务，而 g-c 没有任务，此时 g-a 可获得 25% (10 / (10 + 30)) 的 cpu 资源，而 g-b 可获得 75% 的 cpu 资源。如果系统只有一个 workload group 正在运行，则不管其 cpu_share 的值为多少，它都可获取全部的 cpu 资源。
 
-* memory_limit: Optional, default value is 0% which means unlimited, range of values from 1% to 100%. set the percentage of be memory that can be used by the workload group. The absolute value of the workload group memory limit is: `physical_memory * mem_limit * memory_limit`, where mem_limit is a be configuration item. The total memory_limit of all workload groups in the system must not exceed 100%. Workload groups are guaranteed to use the memory_limit for the tasks in the group in most cases. When the workload group memory usage exceeds this limit, tasks in the group with larger memory usage may be canceled to release the excess memory, refer to enable_memory_overcommit.
+* memory_limit: 可选，默认值 0%，不限制，取值范围 1%~100%，用于设置 workload group 可以使用 be 内存的百分比。Workload Group 可用的最大内存，所有 group 的累加值不可以超过 100%，通常与 enable_memory_overcommit 配合使用。如果一个机器的内存为 64G，mem_limit=50%，那么该 group 的实际物理内存=64G * 90%(be conf mem_limit) * 50%= 28.8G，这里的 90% 是 BE 进程级别的 mem_limit 参数，限制整个 BE 进程的内存用量。一个集群中所有 Workload Group 的 memory_limit 的累加值不能超过 100%。
 
-* enable_memory_overcommit: Optional, enable soft memory isolation for the workload group, default is true. if set to false, the workload group is hard memory isolated and the tasks with the largest memory usage will be canceled immediately after the workload group memory usage exceeds the limit to release the excess memory. if set to true, the workload group is hard memory isolated and the tasks with the largest memory usage will be canceled immediately after the workload group memory usage exceeds the limit to release the excess memory. if set to true, the workload group is softly isolated, if the system has free memory resources, the workload group can continue to use system memory after exceeding the memory_limit limit, and when the total system memory is tight, it will cancel several tasks in the group with the largest memory occupation, releasing part of the excess memory to relieve the system memory pressure. It is recommended that when this configuration is enabled for a workload group, the total memory_limit of all workload groups should be less than 100%, and the remaining portion should be used for workload group memory overcommit.
+* enable_memory_overcommit: 可选，用于开启 workload group 内存软隔离，默认为 true。如果设置为 false，则该 workload group 为内存硬隔离，系统检测到 workload group 内存使用超出限制后将立即 cancel 组内内存占用最大的若干个任务，以释放超出的内存；如果设置为 true，则该 workload group 为内存软隔离，如果系统有空闲内存资源则该 workload group 在超出 memory_limit 的限制后可继续使用系统内存，在系统总内存紧张时会 cancel 组内内存占用最大的若干个任务，释放部分超出的内存以缓解系统内存压力。建议在有 workload group 开启该配置时，所有 workload group 的 memory_limit 总和低于 100%，剩余部分用于 workload group 内存超发。
 
-* cpu_hard_limit: Optional, default value -1%, no limit. The range of values is from 1% to 100%. In CPU hard limit mode, the maximum available CPU percentage of Workload Group cannot exceed cpu_hard_limit value, regardless of whether the current machine's CPU resources are fully utilized.
-  Sum of all Workload Groups's cpu_hard_limit cannot exceed 100%. This is a new property added since version 2.1.
-* max_concurrency: Optional, maximum query concurrency, default value is the maximum integer value, which means there is no concurrency limit. When the number of running queries reaches this value, new queries will being queued.
-* max_queue_size: Optional, length of the query queue. When the queue is full, new queries will be rejected. The default value is 0, which means no queuing.
-* queue_timeout: Optional, query the timeout time in the queue, measured in milliseconds. If the query exceeds this value, an exception will be thrown directly to the client. The default value is 0, which means no queuing.
-* scan_thread_num: Optional, the number of threads used for scanning in the current workload group. The default value is -1, which means it does not take effect, the number of scan threads in the be configuration shall prevail. The value is an integer greater than 0.
-* max_remote_scan_thread_num: Optional. The maximum number of threads in the scan thread pool for reading external data sources. The default value is -1, which means the actual number of threads is determined by the BE and is typically related to the number of cores.
-* min_remote_scan_thread_num: Optional. The minimum number of threads in the scan thread pool for reading external data sources. The default value is -1, which means the actual number of threads is determined by the BE and is typically related to the number of cores.
-* tag: Optional. Default is empty. Assigns a tag to the Workload Group. The sum of resources for Workload Groups with the same tag cannot exceed 100%. If multiple values are desired, they can be separated by commas. Detailed description of the tagging function will follow.
-* read_bytes_per_second: Optional. Specifies the maximum I/O throughput when reading internal tables in Doris. The default value is -1, which means there is no limit on I/O bandwidth. Note that this value is not bound to disks but to folders. For example, if Doris is configured with two folders for storing internal table data, the maximum read I/O for each folder will not exceed this value. If these two folders are configured on the same disk, the maximum throughput control will be twice the read_bytes_per_second. The directory where files are written is also subject to this value.
-* remote_read_bytes_per_second: Optional. Specifies the maximum I/O throughput when reading external tables in Doris. The default value is -1, which means there is no limit on I/O bandwidth.
+* cpu_hard_limit：可选，默认值 -1%，不限制。取值范围 1%~100%，CPU 硬限制模式下，Workload Group 最大可用的 CPU 百分比，不管当前机器的 CPU 资源是否被用满，Workload Group 的最大 CPU 用量都不能超过 cpu_hard_limit，
+  所有 Workload Group 的 cpu_hard_limit 累加值不能超过 100%。2.1 版本新增属性，2.0 版本不支持该功能。
+* max_concurrency：可选，最大查询并发数，默认值为整型最大值，也就是不做并发的限制。运行中的查询数量达到该值时，新来的查询会进入排队的逻辑。
+* max_queue_size：可选，查询排队队列的长度，当排队队列已满时，新来的查询会被拒绝。默认值为 0，含义是不排队。
+* queue_timeout：可选，查询在排队队列中的超时时间，单位为毫秒，如果查询在队列中的排队时间超过这个值，那么就会直接抛出异常给客户端。默认值为 0，含义是不排队。
+* scan_thread_num：可选，当前 workload group 用于 scan 的线程个数，默认值为 -1，含义是不生效，此时以 be 配置中的 scan 线程数为准。取值为大于 0 的整数。
+* max_remote_scan_thread_num：可选，读外部数据源的 scan 线程池的最大线程数，默认值为 -1，当该值为 -1 时，实际的线程数由 BE 自行决定，通常和核数相关。
+* min_remote_scan_thread_num：可选，读外部数据源的 scan 线程池的最小线程数，默认值为 -1，当该值为 -1 时，实际的线程数由 BE 自行决定，通常和核数相关。
+* tag：可选，默认为空，为 Workload Group 指定标签，相同标签的 Workload Group 资源累加值不能超过 100%，如果期望指定多个值，可以使用英文逗号分隔，关于打标功能下文会有详细描述。
+* read_bytes_per_second：可选，含义为读 Doris 内表时的最大 IO 吞吐，默认值为 -1，也就是不限制 IO 带宽。需要注意的是这个值并不绑定磁盘，而是绑定文件夹。
+  比如为 Doris 配置了 2 个文件夹用于存放内表数据，那么每个文件夹的最大读 IO 不会超过该值，如果这 2 个文件夹都配置到同一块盘上，最大吞吐控制就会变成 2 倍的 read_bytes_per_second。落盘的文件目录也受该值的约束。
+* remote_read_bytes_per_second：可选，含义为读 Doris 外表时的最大 IO 吞吐，默认值为 -1，也就是不限制 IO 带宽。
 
-Notes:
+注意事项：
 
-1. At present, the simultaneous use of CPU's soft and hard limits is not supported. A cluster can only have soft or hard limits at a certain time. The switching method will be described in the following text.
+1. 目前暂不支持 CPU 的软限和硬限的同时使用，一个集群某一时刻只能是软限或者硬限，下文中会描述切换方法。
 
-2. All properties are optional, but at least one property needs to be specified when creating a Workload Group.
+2. 所有属性均为可选，但是在创建 Workload Group 时需要指定至少一个属性。
 
-3. It is important to note that the default CPU soft limit values differ between cgroup v1 and cgroup v2. In cgroup v1, the default CPU soft limit value is 1024, with a range of 2 to 262144. In contrast, cgroup v2 has a default CPU soft limit value of 100, with a range of 1 to 10000.
+3. 需要注意 cgroup v1 和 cgroup v2 版本 cpu 软限默认值是有区别的，cgroup v1 的 cpu 软限默认值为 1024，取值范围为 2 到 262144。而 cgroup v2 的 cpu 软限默认值为 100，取值范围是 1 到 10000。
+   如果软限填了一个超出范围的值，这会导致 cpu 软限在 BE 修改失败。还有就是在 cgroup v1 的环境上如果按照 cgroup v2 的默认值 100 设置，这可能导致这个 workload group 的优先级在该机器上是最低的。
 
-If a value outside of this range is specified for the soft limit, it can lead to a failure in modifying the CPU soft limit in the backend. Additionally, if you set the default value of 100 in a cgroup v1 environment, it might cause the priority of this workload group to be the lowest on the machine.
 
-## Grouping Workload Group By Tag
-The Workload Group feature divides the resource usage of a single BE. When a user creates a Workload Group (Group A), its metadata is by default sent to all BEs and threads are started on each BE, leading to the following issues:
-1. Multiple Clusters Issue: In a production environment, a Doris cluster is typically divided into several smaller clusters, such as a local storage cluster and a cluster with Compute Nodes for querying external storage. These two clusters operate independently. If a user wants to use the Workload Group feature, it would lead to the issue where the mem_limit of Workload Groups for external storage and local storage cannot exceed 100%, even though these two types of load are on completely different machines, which is obviously unreasonable.
-2. Thread Resource Management: The number of threads itself is a resource. If a process's thread quota is exhausted, it will cause the process to crash. Therefore, sending the Workload Group metadata to all nodes by default is also unreasonable.
+## Workload Group 分组功能
+Workload Group 功能是对单台 BE 资源用量的划分。当用户创建了一个 Group A，默认情况下这个 Group A 的元信息会被发送到所有 BE 上并启动线程，这会带来以下问题：
+1. 生产环境下通常会在一个 Doris 集群内拆分出多个小集群，比如拆分出本地存储的集群和用于查外部存储的包含 ComputeNode 的集群，这两个集群间的查询是独立的。
+   此时用户如果期望使用 Workload Group 功能，那么就会出现查外部存储的负载使用的 Workload Group 和查本地存储的负载使用的 Workload Group 的 mem_limit 累加值不能超过 100%，然而实际上这两种负载完全位于不同的机器上，这显然是不合理的。
+2. 线程数本身也是一种资源，如果一个进程的线程数配额被耗尽，这会导致进程挂掉，默认把 Workload Group 的元信息发送给所有节点本身也是不合理的。
 
-To address these issues, Doris implements a grouping feature for Workload Groups. The cumulative value of Workload Groups with the same tag cannot exceed 100%, but there can be multiple such tag groups within a cluster. When a BE node is tagged, it will match the corresponding Workload Groups based on specific rules.
+基于以上原因，Doris 实现了对于 Workload Group 的分组功能，相同 Tag 分组下的 Workload Group 的累加值不能超过 100%，但是一个集群中就可以有多个这样的 Tag 分组。
+当一个 BE 节点也被打上了 Tag，那么这个 BE 会根据一定的规则匹配对应的 Workload Group。
 
-Example:
-1. Create a Workload Group named tag_wg with the tag cn1. If none of the BEs in the cluster have been tagged, the metadata for this Workload Group will be sent to all BEs. The tag attribute can specify multiple values, separated by commas.
+具体用法如下：
+1. 创建名为 tag_wg 的 Workload Group，指定其 tag 名为 cn1，此时如果集群中的 BE 都没有打标签的话，那么这个 Workload Group 的元信息会被发送到所有 BE 上。tag 属性可以指定多个，使用英文逗号分隔。
 ```
 create workload group tag_wg properties('tag'='cn1');
 ```
-2. Modify the tag of a BE in the cluster to cn1. At this point, the tag_wg Workload Group will only be sent to this BE and any BE with no tag. The tag.workload_group attribute can specify multiple values, separated by commas.
-   It is important to note that the alter interface currently does not support incremental updates. Each time the BE attributes are modified, the entire set of attributes needs to be provided. Therefore, in the statements below, the tag.location attribute is added, with 'default' as the system default value. In practice, the existing attributes of the BE should be specified accordingly.
+2. 修改集群中一个 BE 的标签为 cn1，此时 tag_wg 这个 Workload Group 就只会发送到这个 BE 以及标签为空的 BE 上。tag.workload_group 属性可以指定多个，使用英文逗号分隔。
+   需要注意的是，alter 接口目前不支持增量更新，每次修改 BE 的属性都需要增加全量的属性，因此下面语句中添加了 tag.location 属性，default 为系统默认值，实际修改时需要按照 BE 原有属性指定。
 ```
 alter system modify backend "localhost:9050" set ("tag.workload_group" = "cn1", "tag.location"="default");
 ```
 
-Workload Group and BE Matching Rules:
-If the Workload Group's tag is empty, the Workload Group can be sent to all BEs, regardless of whether the BE has a tag or not.
-If the Workload Group's tag is not empty, the Workload Group will only be sent to BEs with the same tag.
+Workload Group 和 BE 的匹配规则说明：
+1. 当 Workload Group 的 Tag 为空，那么这个 Workload Group 可以发送给所有的 BE，不管该 BE 是否指定了 tag。
+2. 当 Workload Group 的 Tag 不为空，那么 Workload Group 只会发送给具有相同标签的 BE。
 
-You can refer to the recommended usage:[group-workload-groups](./group-workload-groups.md)
+推荐用法可以参考：[Workload Group 分组功能](./group-workload-groups.md)
 
-## Configure GGroup
+## 配置 cgroup 的环境
+Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但是从 2.1 版本起，Doris 默认使用基于 CGroup 对 CPU 资源进行限制，因此如果期望在 2.1 版本对 CPU 资源进行约束，那么需要 BE 所在的节点上已经安装好 CGroup 的环境。
 
-The 2.0 version of Doris uses scheduling based on Doris itself to implement CPU resource limitations. However, starting from version 2.1, Doris defaults to using CGroup-based CPU resource limitations. Therefore, if you wish to enforce CPU resource constraints in version 2.1, the node where the BE (Backend) is located must have the CGroup environment already installed.
+目前支持的 CGroup 版本为 CGroup v1 和 CGroup v2。
 
-Currently, supported CGroup versions are CGroup v1 and CGroup v2.
+用户如果在 2.0 版本使用了 Workload Group 的软限并升级到了 2.1 版本，那么也需要配置 CGroup，否则可能导致软限失效。
 
-If users use the Workload Group software limit in version 2.0 and upgrade to version 2.1, they also need to configure CGroup, Otherwise, cpu soft limit may not work.
+如果是在容器内使用 CGroup，需要容器具备操作宿主机的权限。
 
-If using CGroup within a container, the container needs to have permission to operate the host.
+在不配置 CGroup 的情况下，用户可以使用 Workload Group 除 CPU 限制外的所有功能。
 
-Without configuring GGroup, users can use all functions of the workload group except for CPU limitations.
-
-1. Firstly, confirm that the CGgroup has been installed on the node where BE is located.
+1. 首先确认 BE 所在节点是否已经安装好 GGroup
 ```
 cat /proc/filesystems | grep cgroup
 nodev	cgroup
@@ -121,80 +125,74 @@ nodev	cgroup2
 nodev	cgroupfs
 ```
 
-2. Check the cgroup version.
+2. 确认目前生效的 CGroup 版本
 ```
-If this path exists, it indicates that cgroup v1 is currently active.
+如果存在这个路径说明目前生效的是cgroup v1
 /sys/fs/cgroup/cpu/
 
-
-If this path exists, it indicates that cgroup v2 is currently active.
+如果存在这个路径说明目前生效的是cgroup v2
 /sys/fs/cgroup/cgroup.controllers
 ```
 
-3. Create a new directory named ```doris``` in CGroup path, user can specify their own directory name.
+3. 在 CGroup 路径下新建一个名为 doris 的目录，这个目录名用户可以自行指定
 
 ```
-// If using CGroup v1, then mkdir as follow:
+如果是cgroup v1就在cpu目录下新建
 mkdir /sys/fs/cgroup/cpu/doris
 
-// If using CGroup v2, then mkdir as follow:
+如果是cgroup v2就在直接在cgroup目录下新建
 mkdir /sys/fs/cgroup/doris
 ```
 
-4. It is necessary to ensure that Doris's BE process has read/write/execute permissions for this directory
+4. 需要保证 Doris 的 BE 进程对于这个目录有读/写/执行权限
 ```
-// If using CGroup v1, then do as follow:
-// 1.Modify the permissions of this directory to read, write, and execute
+// 如果是CGroup v1，那么命令如下:
+// 1. 修改这个目录的权限为可读可写可执行
 chmod 770 /sys/fs/cgroup/cpu/doris
-
-// 2.Assign the ownership of this directory to Doris's account
+// 2. 把这个目录的归属划分给doris的账户
 chown -R doris:doris /sys/fs/cgroup/cpu/doris
 
-
-// If using CGroup v2, then do as follow:
-// 1.Modify the permissions of this directory to read, write, and execute
+// 如果是CGroup v2，那么命令如下:
+// 1. 修改这个目录的权限为可读可写可执行
 chmod 770 /sys/fs/cgroup/doris
-
-// 2.Assign the ownership of this directory to Doris's account
+// 2. 把这个目录的归属划分给doris的账户
 chown -R doris:doris /sys/fs/cgroup/doris
-
 ```
 
-5. If CGroup v2 is being used in the current environment, the following actions need to be taken. This is because cgroup v2 has stricter permission controls, requiring write access to the cgroup.procs file in the root directory in order to move processes between groups.
-   This step can be skipped if using CGroup v1.
+5. 如果目前环境里使用的是 GGroup v2 版本，那么需要做以下操作。这是因为 CGroup v2 对于权限管控比较严格，需要具备根目录的 cgroup.procs 文件的写权限才能实现进程在 group 之间的移动。
+   如果是 CGroup v1 那么不需要这一步。
 ```
 chmod a+w /sys/fs/cgroup/cgroup.procs
 ```
 
-6. Modify the configuration of BE and specify the path to cgroup
+6. 修改 BE 的配置，指定 cgroup 的路径
 ```
-// If using CGroup v1:
+如果是Cgroup v1，那么配置路径如下
 doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
 
-
-// If using CGroup v2:
+如果是Cgroup v2，那么配置路径如下
 doris_cgroup_cpu_path = /sys/fs/cgroup/doris
 ```
 
-7. restart BE, in the log (be. INFO), you can see the words "add thread xxx to group" indicating successful configuration.
+7. 重启 BE，在日志（be.INFO）可以看到"add thread xxx to group"的字样代表配置成功
 
 :::tip
-NOTE:
-1. The current workload group does not yet support the deployment of multiple BEs on a single machine.
-2. After the machine is restarted, the above cgroup configurations will be cleared. If you want the above configurations to take effect after a reboot, you can use systemd to set these operations as a custom system service, so that the creation and permission assignments are automatically completed each time the machine restarts.
+注意事项：
+1. 目前的 workload group 暂时不支持一个机器多个 BE 的部署方式。
+2. 当机器重启之后，上面的 cgroup 配置就会清空。如果期望上述配置重启之后可以也可以生效，可以使用 systemd 把以上操作设置成系统的自定义服务，这样在每次机器重启的时候，自动完成创建和授权操作。
 :::
 
-## Note for Using Workload Groups in K8S
-The CPU management for Workloads is implemented based on CGroup. To use Workload Groups within containers, you need to start the containers in privileged mode so that the Doris processes inside the container have permission to read and write CGroup files on the host.
+## 在 K8S 中使用 Workload Group 的注意事项
+Workload 的 CPU 管理是基于 CGroup 实现的，如果期望在容器中使用 Workload Group，那么需要以特权模式启动容器，容器内的 Doris 进程才能具备读写宿主机 CGroup 文件的权限。
+当 Doris 在容器内运行时，Workload Group 的 CPU 资源用量是在容器可用资源的情况下再划分的，例如宿主机整机是 64 核，容器被分配了 8 个核的资源，Workload Group 配置的 CPU 硬限为 50%，
+那么 Workload Group 实际可用核数为 4 个（8 核 * 50%）。
 
-When Doris runs inside a container, the CPU resources for Workload Groups are allocated based on the container's available resources. For example, if the host machine has 64 cores and the container is allocated 8 cores, with a CPU hard limit of 50% configured for the Workload Group, the actual number of usable cores for the Workload Group would be 4 (8 cores * 50%).
+WorkloadGroup 的内存管理和 IO 管理功能是 Doris 内部实现，不依赖外部组件，因此在容器和物理机上部署使用并没有区别。
 
-Memory and I/O management for Workload Groups are handled internally by Doris and do not rely on external components, so there is no difference in deployment between containers and physical machines.
+如果要在 K8S 上使用 Doris，建议使用 Doris Operator 进行部署，可以屏蔽底层的权限细节问题。
 
-If you want to use Doris on K8S, it is recommended to use the Doris Operator for deployment, as it can abstract away the underlying permission details.
-
-## Workload group usage
-1. First, create a custom workload group.
+## workload group 使用
+1. 首先创建一个自定义的 workload group。
 ```
 create workload group if not exists g1
 properties (
@@ -203,37 +201,37 @@ properties (
     "enable_memory_overcommit"="true"
 );
 ```
-This is soft CPU limit. Since version 2.1, the system will automatically create a group named ```normal```, which cannot be deleted.
-For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP).
+此时配置的 CPU 限制为软限。自 2.1 版本起，系统会自动创建一个名为```normal```的 group，不可删除。创建 workload group 详细使用可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-GROUP)，
 
-2. show/alter/drop workload group statement as follows:
+2. 查看/修改/删除 workload group 语句如下：
 ```
 show workload groups;
 
 alter workload group g1 properties('memory_limit'='10%');
 
 drop workload group g1;
-```
-to view the workload group, you can visit doris system table ```information_schema.workload_groups``` or [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS);to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-GROUP); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP).
 
-3. Bind the workload group.
-* Bind the user to the workload group by default by setting the user property to ```normal```.Note that the value here cannot be left blank, otherwise the statement will fail to execute. If you're unsure which group to set, you can set it to ```normal```, as ```normal``` is the global default group.
 ```
-set property 'default_workload_group' = 'g1'.
+查看 workload group 可访问 Doris 系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS)。删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP)。
+
+3. 绑定 workload group。
+* 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`，需要注意的这里的 value 不能填空，否则语句会执行失败，如果不知道要设置哪些 group，可以设置为`normal`，`normal`为全局默认的 group。
 ```
-After executing this statement, the current user's query will use 'g1' by default.
-
-* Specify the workload group via the session variable, which defaults to null.
+set property 'default_workload_group' = 'g1';
 ```
-set workload_group = 'g1'.
+执行完该语句后，当前用户的查询将默认使用'g1'。
+
+* 通过 session 变量指定 workload group, 默认为空：
 ```
-session variable `workload_group` takes precedence over user property `default_workload_group`, in case `workload_group` is empty, the query will be bound to `default_workload_group`, in case session variable ` workload_group` is not empty, the query will be bound to `workload_group`.
+set workload_group = 'g1';
+```
+session 变量`workload_group`优先于 user property `default_workload_group`, 在`workload_group`为空时，查询将绑定到`default_workload_group`, 在 session 变量`workload_group`不为空时，查询将绑定到`workload_group`。
 
-If you are a non-admin user, you need to execute [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS) to check if the current user can see the workload group, if not, the workload group may not exist or the current user does not have permission to execute the query. If you cannot see the workload group, the workload group may not exist or the current user does not have privileges. To authorize the workload group, refer to: [grant statement](../../sql-manual/sql-statements/account-management/GRANT-TO).
+如果是非 admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 workload group 授权参考：[grant 语句](../../sql-manual/sql-statements/account-management/GRANT-TO)。
 
-4. Execute the query, which will be associated with the g1 workload group.
+4. 执行查询，查询将关联到指定的 workload group。
 
-### Query Queue
+### 查询排队功能
 ```
 create workload group if not exists queue_group
 properties (
@@ -244,35 +242,36 @@ properties (
     "queue_timeout" = "3000"
 );
 ```
-1. It should be noted that the current queuing design is not aware of the number of FEs, and the queuing parameters only works in a single FE, for example:
 
-A Doris cluster is configured with a work load group and set max_concurrency=1,
-If there is only 1 FE in the cluster, then this workload group will only run one SQL at the same time from the Doris cluster perspective,
-If there are 3 FEs, the maximum number of query that can be run in Doris cluster is 3.
+1. 需要注意的是，目前的排队设计是不感知 FE 的个数的，排队的参数只在单 FE 粒度生效，例如：
 
-2. In some operational scenarios, the administrator needs to bypass the queuing. This can be achieved by setting a session variable:
+一个 Doris 集群配置了一个 work load group，设置 max_concurrency = 1
+如果集群中有 1FE，那么这个 workload group 在 Doris 集群视角看同时只会运行一个 SQL
+如果有 3 台 FE，那么在 Doris 集群视角看最大可运行的 SQL 个数为 3
+
+2. 在有些运维情况下，管理员账户需要绕开排队的逻辑，那么可以通过设置 session 变量：
 ```
 set bypass_workload_group = true;
 ```
 
-### Configure CPU hard limits
-At present, Doris defaults to running the CPU's soft limit. If you want to use Workload Group's hard limit, you can do as follows.
+### 配置 CPU 的硬限
+目前 Doris 默认运行 CPU 的软限，如果期望使用 Workload Group 的硬限功能，可以按照如下流程操作。
 
-1 Enable the cpu hard limit in FE. If there are multiple FE, the same operation needs to be performed on each FE.
+1 在 FE 中开启 CPU 的硬限的功能，如果有多个 FE，那么需要在每个 FE 上都进行相同操作。
 ```
-1 modify fe.conf in disk
+1 修改磁盘上fe.conf的配置
 experimental_enable_cpu_hard_limit = true
 
-2 modify conf in memory
+2 修改内存中的配置
 ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
 ```
 
-2 modify cpu_hard_limit
+2 修改 Workload Group 的 cpu_hard_limit 属性
 ```
 alter workload group g1 properties ( 'cpu_hard_limit'='20%' );
 ```
 
-3 Viewing the current configuration of the Workload Group, it can be seen that although the cpu_share may not be 0, but due to the hard limit mode being enabled, the query will also follow the CPU's hard limit during execution. That is to say, the switch of CPU software and hardware limits does not affect workload group modification.
+3 查看当前的 Workload Group 的配置，可以看到尽管此时 cpu_share 的值可能不为 0，但是由于开启了硬限模式，那么查询在执行时也会走 CPU 的硬限。也就是说 CPU 软硬限的开关不影响元数据的修改。
 ```
 mysql [information_schema]>select name, cpu_share,memory_limit,enable_memory_overcommit,cpu_hard_limit from information_schema.workload_groups where name='g1';
 +------+-----------+--------------+--------------------------+----------------+
@@ -283,36 +282,35 @@ mysql [information_schema]>select name, cpu_share,memory_limit,enable_memory_ove
 1 row in set (0.02 sec)
 ```
 
-### How to switch CPU limit node between soft limit and hard limit
-At present, Doris does not support running both the soft and hard limits of the CPU simultaneously. A Doris cluster can only have either the CPU soft limit or the CPU hard limit at any time.
+### CPU 软硬限模式切换的说明
+目前 Doris 暂不支持同时运行 CPU 的软限和硬限，一个 Doris 集群在任意时刻只能是 CPU 软限或者 CPU 硬限。
+用户可以在两种模式之间进行切换，主要切换方法如下：
 
-Users can switch between two modes, and the main switching methods are as follows:
-
-1 If the current cluster configuration is set to the default CPU soft limit and it is expected to be changed to the CPU hard limit, then cpu_hard_limit should be set to a valid value first.
+1 假如当前的集群配置是默认的 CPU 软限制，然后期望改成 CPU 的硬限，那么首先需要把 Workload Group 的 cpu_hard_limit 参数修改成一个有效的值
 ```
 alter workload group test_group properties ( 'cpu_hard_limit'='20%' );
 ```
-It is necessary to modify cpu_hard_limit of all Workload Groups in the current cluster, sum of all Workload Group's cpu_hard_limit cannot exceed 100%.
-Due to the CPU's hard limit can not being able to provide a valid default value, if only the switch is turned on without modifying cpu_hard_limit, the CPU's hard limit will not work.
+需要修改当前集群中所有的 Workload Group 的这个属性，所有 Workload Group 的 cpu_hard_limit 的累加值不能超过 100%
+由于 CPU 的硬限无法给出一个有效的默认值，因此如果只打开开关但是不修改属性，那么 CPU 的硬限也无法生效。
 
-2 Turn on the CPU hard limit switch in all FEs.
+2 在所有 FE 中打开 CPU 硬限的开关
 ```
-1 modify fe.conf
+1 修改磁盘上fe.conf的配置
 experimental_enable_cpu_hard_limit = true
 
-2 modify conf in memory
+2 修改内存中的配置
 ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
 ```
 
-If user expects to switch back from cpu hard limit to cpu soft limit, then they only need to set ```enable_cpu_hard_limit=false```.
-CPU Soft Limit property ```cpu_share``` will be filled with a valid value of 1024 by default(If the user has never set the cpu_share before), and users can adjust cpu_share based on the priority of Workload Group.
+如果用户期望从 CPU 的硬限切换回 CPU 的软限，那么只需要在 FE 修改 enable_cpu_hard_limit 的值为 false 即可。
+CPU 软限的属性 cpu_share 默认会填充一个有效值 1024(如果之前未指定 cpu_share 的值)，用户可以根据 group 的优先级对 cpu_share 的值进行重新调整。
 
-# Workload Group Permissions Table
-You can view the Workload Groups that users or roles have access to through the Workload Group privilege table. Authorization related usage can refer to[grant statement](../../sql-manual/sql-statements/account-management/GRANT-TO).
+# Workload Group 权限表
+可以通过 Workload Group 权限表查看 user 或者 role 有权限访问的 Workload Group，授权相关的用法可以参考[grant 语句](../../sql-manual/sql-statements/account-management/GRANT-TO)。
 
-This table currently has row level permission control. Root or admin accounts can view all data, while non root/admin accounts can only see data from Workload Groups that they have access to.
+该表目前存在行级别的权限控制，root 或者 admin 账户可以查看所有的数据，非 root/admin 账户只能看到自己有权限访问的 Workload Group 的数据。
 
-Schema of Workload Group privilege table is as follow:
+Workload Group 权限表结构如下：
 ```
 mysql [information_schema]>desc information_schema.workload_group_privileges;
 +---------------------+--------------+------+-------+---------+-------+
@@ -325,14 +323,14 @@ mysql [information_schema]>desc information_schema.workload_group_privileges;
 +---------------------+--------------+------+-------+---------+-------+
 ```
 
-Column Description:
-1. grantee, user or role.
-2. workload_group_name, value is the name of Workload Group or '%', where '%' represents all Workload Group.
-3. privilege_type, type of privilege, at present, the value of this column is only Usage_priv.
-4. is_grantable, value is YES or NO, it means whether the user can grant access privilege of Workload Group to other user.Only root/admin user has grant privilege.
+字段说明：
+1. grantee，代表 user 或者 role。
+2. workload_group_name，取值为 Workload Group 的名称或者%，%代表可以访问所有的 Workload Group。
+3. privilege_type，权限的类型，目前该列的值只有 Usage_priv。
+4. is_grantable，取值为 YES 或者 NO，字段含义为是否可以给其他用户授予 Workload Group 的访问权限。目前只有 root 用户或者 admin 用户这个字段为 YES，其他用户都为 NO。
 
-Basic usage:
-1. Search for Workload Group with authorized access based on username.
+基本用法：
+1. 根据用户名查找有权限访问的 Workload Group
 ```
 mysql [information_schema]>select * from workload_group_privileges where GRANTEE like '%test_wlg_user%';
 +---------------------+---------------------+----------------+--------------+
@@ -344,7 +342,7 @@ mysql [information_schema]>select * from workload_group_privileges where GRANTEE
 2 rows in set (0.04 sec)
 ```
 
-2. Search for user which has access privilege by Workload Group name.
+2. 查看某个 Workload Group 可以有哪些用户访问
 ```
 mysql [information_schema]>select * from workload_group_privileges where WORKLOAD_GROUP_NAME='test_group';
 +---------------------+---------------------+----------------+--------------+
@@ -352,6 +350,8 @@ mysql [information_schema]>select * from workload_group_privileges where WORKLOA
 +---------------------+---------------------+----------------+--------------+
 | 'test_wlg_user'@'%' | test_group          | Usage_priv     | NO           |
 +---------------------+---------------------+----------------+--------------+
+1 row in set (0.03 sec)
+```-------------------+---------------------+----------------+--------------+
 1 row in set (0.03 sec)
 ```ow in set (0.03 sec)
 ```

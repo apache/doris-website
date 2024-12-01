@@ -48,8 +48,8 @@ SHOW COMPUTE GROUPS 命令用于显示系统中所有已配置的计算组的信
 ## 相关命令
 
 - [ALTER SYSTEM ADD BACKEND](../Administration-Statements/ALTER-SYSTEM-ADD-BACKEND.md)
-- [GRANT](../Account-Management-Statements/GRANT.md)
-- [REVOKE](../Account-Management-Statements/REVOKE.md)
+- [GRANT](../account-management/GRANT-TO.md)
+- [REVOKE](../account-management/REVOKE-FROM.md)
 - [SET DEFAULT COMPUTE GROUP](../Administration-Statements/SET-DEFAULT-COMPUTE-GROUP.md)
 
 ### Keywords

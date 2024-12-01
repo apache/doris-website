@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SHOW COMPUTE GROUPS",
-    "language": "en"
+    "title": "SHOW STORAGE VAULTS",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,34 +24,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Description
+## 描述
 
-The SHOW COMPUTE GROUPS command is used to display information about all configured compute groups in the system. Compute groups are logical units used to manage and organize computational resources, helping users allocate and utilize system resources more effectively.
+SHOW STORAGE VAULTS 命令用于显示系统中配置的所有 storage vault 的信息。storage vault 用于管理数据外部存储位置。
 
-This command assists administrators and users in quickly understanding the existing compute group configurations in the system, including the name, attributes, and other relevant information for each compute group. This is particularly useful for resource management, performance optimization, and system monitoring.
-
-## Syntax
+## 语法
 
 ```sql
-    SHOW COMPUTE GROUPS
+    SHOW STORAGE VAULTS
 ```
 
 ## Return Values
 
-This command returns a result set containing the following columns:
+此命令返回一个结果集，包含以下列：
 
-- `Name`: The name of the compute group.
-- `IsCurrent`: Indicates whether it is the current working compute group.
-- `Users`: Displays the list of users who have permission to use this compute group.
-- `BackendNum`: Shows the number of backends (compute nodes) currently allocated to this compute group.
+- `StorageVaultName`: storage vault 的名称。
+- `StorageVaultId`: storage vault 的 ID。
+- `Properties`: 包含 storage vault 配置属性的 JSON 字符串。
+- `IsDefault`: 指示该 storage vault 是否设置为默认值（TRUE 或 FALSE）。
 
-## Related Commands
+## 相关命令
 
-- [ALTER SYSTEM ADD BACKEND](../Administration-Statements/ALTER-SYSTEM-ADD-BACKEND.md)
-- [GRANT](../Account-Management-Statements/GRANT.md)
-- [REVOKE](../Account-Management-Statements/REVOKE.md)
-- [SET DEFAULT COMPUTE GROUP](../Administration-Statements/SET-DEFAULT-COMPUTE-GROUP.md)
+- [CREATE STORAGE VAULT](../Data-Definition-Statements/CREATE-STORAGE-VAULT.md)
+- [GRANT](../account-management/GRANT-TO.md)
+- [REVOKE](../account-management/REVOKE-FROM.md)
+- [SET DEFAULT STORAGE VAULT](../Data-Definition-Statements/SET-DEFAULT-STORAGE-VAULT.md)
 
 ## Keywords
+
+    SHOW, STORAGE VAULTS
 
     SHOW, COMPUTE GROUPS

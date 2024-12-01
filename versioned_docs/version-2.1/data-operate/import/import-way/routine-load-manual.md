@@ -244,7 +244,7 @@ PAUSE ROUTINE LOAD FOR testdb.example_routine_load_csv;
 
 ### Resuming Jobs
 
-You can resume a paused load job using the [RESUME ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/RESUME-ROUTINE-LOAD) command.
+You can resume a paused load job using the [RESUME ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD) command.
 
 To resume the `testdb.example_routine_load_csv` job, you can use the following command:
 

@@ -204,7 +204,7 @@ properties (
 );
 ```
 This is soft CPU limit. Since version 2.1, the system will automatically create a group named ```normal```, which cannot be deleted.
-For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP).
+For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-GROUP).
 
 2. show/alter/drop workload group statement as follows:
 ```

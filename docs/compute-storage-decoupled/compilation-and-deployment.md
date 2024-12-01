@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Compilation and Deployment",
-    "language": "en"
+    "title": "编译部署",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,25 +24,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 1. Overview
+## 1. 概述
 
-This document details the compilation and deployment process of Doris in a decoupled storage-compute model, highlighting the differences from the integrated storage-compute model, especially the compilation, configuration, and management of the newly added Meta Service (MS) module.
+本文档详细介绍了 Doris 存算分离模式下的编译和部署流程，重点说明了与存算一体模式的区别，特别是新增 Meta Service (MS) 模块的编译、配置和管理。
 
-## 2. Obtaining Binaries
+## 2. 获取二进制
 
-### 2.1 Direct Download
+### 2.1 直接下载
 
-Compiled binaries (including all Doris modules) can be obtained from the [Doris Download Page](https://doris.apache.org/download/) (select version 3.0.2 or higher).
+已编译好的二进制文件（包含所有 Doris 模块）可从 [Doris 下载页面](https://doris.apache.org/download/) 获取（选择 3.0.2 或更高版本）。
 
-### 2.2 Compilation Output (Optional)
+### 2.2 编译产出 (可选)
 
-Compile using the `build.sh` script provided in the codebase. The new MS module is compiled with the `--cloud` parameter.
+使用代码库自带的 `build.sh` 脚本进行编译。新增的 MS 模块通过 `--cloud` 参数编译。
 
 ```shell
 sh build.sh --fe --be --cloud 
 ```
 
-After compilation, a new `ms` directory will be added in the `output` directory:
+编译完成后，在 `output` 目录下会新增 `ms` 目录：
 
 ```
 output
@@ -54,25 +54,25 @@ output
     └── lib
 ```
 
-## 3. Meta Service Deployment
+## 3. Meta Service 部署
 
-### 3.1 Configuration
+### 3.1 配置
 
-In the `./conf/doris_cloud.conf` file, you mainly need to modify the following two parameters:
+在 `./conf/doris_cloud.conf` 文件中，主要需要修改以下两个参数：
 
-1. `brpc_listen_port`: The listening port for the Meta Service, default is 5000.
-2. `fdb_cluster`: Connection information for the FoundationDB cluster, which can be obtained when deploying FoundationDB. (If using the `fdb_ctl.sh` provided by Doris for deployment, this value can be found in the `$FDB_HOME/conf/fdb.cluster` file.)
+1. `brpc_listen_port`：Meta Service 的监听端口，默认为 5000。
+2. `fdb_cluster`：FoundationDB 集群的连接信息，部署 FoundationDB 时可以获取。(如果使用 Doris 提供的 fdb_ctl.sh 部署的话，可在 `$FDB_HOME/conf/fdb.cluster` 文件里获取该值)。
 
-Example configuration:
+示例配置：
 
 ```Shell
 brpc_listen_port = 5000
 fdb_cluster = xxx:yyy@127.0.0.1:4500
 ```
 
-Note: The value of `fdb_cluster` should match the content of the `/etc/foundationdb/fdb.cluster` file on the FoundationDB deployment machine. (If using the `fdb_ctl.sh` provided by Doris for deployment, this value can be found in the `$FDB_HOME/conf/fdb.cluster` file.)
+注意：`fdb_cluster` 的值应与 FoundationDB 部署机器上的 `/etc/foundationdb/fdb.cluster` 文件内容一致 (如果使用 Doris 提供的 fdb_ctl.sh 部署的话，可在 `$FDB_HOME/conf/fdb.cluster` 文件里获取该值)。
 
-**Example: The last line of the file is the value to fill in the doris_cloud.conf for the fdb_cluster field**
+**示例，文件的最后一行就是要填到 doris_cloud.conf 里 fdb_cluster 字段的值**
 
 ```shell
 cat /etc/foundationdb/fdb.cluster
@@ -82,179 +82,178 @@ cat /etc/foundationdb/fdb.cluster
 cloud_ssb:A83c8Y1S3ZbqHLL4P4HHNTTw0A83CuHj@127.0.0.1:4500
 ```
 
-### 3.2 Start and Stop
+### 3.2 启动与停止
 
-*Environment Requirements*
+*环境要求*
 
-Ensure that the `JAVA_HOME` environment variable is correctly set to point to OpenJDK 17, and navigate to the `ms` directory.
+确保已正确设置 `JAVA_HOME` 环境变量，指向 OpenJDK 17，进入 `ms` 目录。
 
-*Start Command*
+*启动命令*
 
 ```Shell
 export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --daemon
 ```
 
-*Stop Command*
+*停止命令*
 
 ``` shell
 bin/stop.sh
 ```
 
-*Verify Start*
+*验证启动*
 
-Check the `doris_cloud.out` file for the output message `successfully started`.
+检查 `doris_cloud.out` 文件中是否有 `successfully started` 的输出信息。
 
-For production environment, please ensure that the total number of Meta Service is at least three.
+生产环境中请确保至少有 3 个 Meta Service 节点。
 
-## 4. Independent Deployment of Data Recycling Function (Optional)
+## 4. 数据回收功能独立部署（可选）
 
 :::info
-The Meta Service itself has metadata management and recycling functions, which can be deployed independently. If you want to deploy them independently, you can refer to this section.
+Meta Service 本身具备了元数据管理和回收功能，这两个功能可以独立部署，如果你想独立部署，可以参考这一节。
 :::
 
-*Preparation Work*
+*准备工作*
 
-1. Create a new working directory (e.g., `recycler`).
-2. Copy the contents of the `ms` directory to the new directory:
+1. 创建新的工作目录（如 `recycler`）。
+2. 复制 `ms` 目录内容到新目录：
 
    ```shell
    cp -r ms recycler
    ```
 
-*Configuration*
+*配置*
 
-Modify the BRPC listening port `brpc_listen_port` and the value of `fdb_cluster` in the configuration file of the new directory.
+在新目录的配置文件中修改 BRPC 监听端口 `brpc_listen_port` 和 `fdb_cluster` 的值。
 
-*Start Data Recycling Function*
+*启动数据回收功能*
 
 ```Shell
 export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --recycler --daemon
 ```
 
-*Start Only Metadata Operation Function*
+*启动仅元数据操作功能*
 
 ```Shell
 export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --meta-service --daemon
 ```
 
-## 5. Startup Process for FE and BE
+## 5. FE 和 BE 的启动流程
 
-This section details the steps to start FE (Frontend) and BE (Backend) in a decoupled storage-compute architecture.
+本节详细说明了在存算分离架构下启动 FE（Frontend）和 BE（Backend）的步骤。
 
-### 5.1 Startup Order
+### 5.1 启动顺序
 
-1. Start the first FE instance with the MASTER role.
-2. Add other FE and BE instances to the cluster.
-3. Add the first Storage Vault.
+1. 以 MASTER 角色启动实例的第一个 FE
+2. 向实例中添加其他 FE 和 BE
+3. 添加第一个 Storage Vault
 
-### 5.2 Start the MASTER Role FE
+### 5.2 启动 MASTER 角色的 FE
 
-#### 5.2.1 Configure fe.conf
+#### 5.2.1 配置 fe.conf
 
-In the `fe.conf` file, the following key parameters need to be configured:
+在 `fe.conf` 文件中，需要配置以下关键参数：
 
 1. `deploy_mode`
-   - Description: Specifies the Doris startup mode.
-   - Format: `cloud` indicates the decoupled storage-compute mode; others indicate the integrated storage-compute mode.
-   - Example: `cloud`
+   - 描述：指定 doris 启动模式
+   - 格式：cloud 表示存算分离模式，其它存算一体模式
+   - 示例：`cloud`
 
 2. `cluster_id`
-   - Description: A unique identifier for the cluster in the decoupled storage-compute architecture; different clusters must set different cluster_ids.
-   - Format: int type.
-   - Example: `12345678`
+   - 描述：存算分离架构下集群的唯一标识符，不同的集群必须设置不同的 cluster_id
+   - 格式：int 类型
+   - 示例：`12345678`
 
 3. `meta_service_endpoint`
-   - Description: The address and port of the Meta Service.
-   - Format: `IP address:port number`.
-   - Example: `127.0.0.1:5000`, multiple meta services can be configured separated by commas.
+   - 描述：Meta Service 的地址和端口
+   - 格式：`IP地址:端口号`
+   - 示例：`127.0.0.1:5000`, 可以用逗号分割配置多个 meta service。
 
-#### 5.2.2 Start FE
+#### 5.2.2 启动 FE
 
-Example start command:
+启动命令示例：
 
 ```bash
 bin/start_fe.sh --daemon
 ```
+第一个 FE 进程初始化集群并以 FOLLOWER 角色工作。使用 mysql 客户端连接 FE 使用 `show frontends` 确认刚才启动的 FE 是 master。
 
-The first FE process initializes the cluster and operates in the FOLLOWER role. Use a MySQL client to connect to the FE and use `show frontends` to confirm that the recently started FE is the master.
+### 5.3 添加其他 FE 节点
 
-### 5.3 Add Other FE Nodes
-
-Other nodes should also modify the configuration file and start according to the above steps. Use a MySQL client to connect to the FE with the MASTER role and use the following SQL command to add additional FE nodes:
+其他节点同样根据上述步骤修改配置文件并启动，使用 mysql 客户端连接 Master 角色的 FE，并用以下 SQL 命令添加额外的 FE 节点：
 
 ```sql
 ALTER SYSTEM ADD FOLLOWER "host:port";
 ```
 
-Replace `host:port` with the actual address and editlog port of the FE node. More information refer to [ADD FOLLOWER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER.md) and [ADD OBSERVER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER.md).
+将 `host:port` 替换为 FE 节点的实际地址和编辑日志端口。更多信息请参见 [ADD FOLLOWER](../sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER.md) 和 [ADD OBSERVER](../sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER.md)。
 
-For production environment, please ensure that the total number of Frontend (FE) nodes in the FOLLOWER role, including the first FE, remains an odd number. In general, three FOLLOWERS are sufficient. Frontend nodes in the OBSERVER role can be any number.
+生产环境中请确保在 FOLLOWER 角色中的前端 (FE) 节点总数，包括第一个 FE，保持为奇数。一般来说，三个 FOLLOWER 就足够了。OBSERVER 角色的前端节点可以是任意数量。
 
-### 5.4 Add BE Nodes
+### 5.4 添加 BE 节点
 
-To add Backend nodes to the cluster, perform the following steps for each Backend:
+要向集群添加 Backend 节点，请对每个 Backend 执行以下步骤：
 
-#### 5.4.1 Configure be.conf
+#### 5.4.1 配置 be.conf
 
-In the `be.conf` file, the following key parameters need to be configured:
+在 `be.conf` 文件中，需要配置以下关键参数：
 
 1. `deploy_mode`
-   - Description: Specifies the Doris startup mode.
-   - Format: `cloud` indicates the decoupled storage-compute mode; others indicate the integrated storage-compute mode.
-   - Example: `cloud`
+   - 描述：指定 doris 启动模式
+   - 格式：cloud 表示存算分离模式，其它存算一体模式
+   - 示例：`cloud`
 
 2. `file_cache_path`
-   - Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
-   - format: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
-   - Example: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
-   - Default: [{"path":"${DORIS_HOME}/file_cache"}]
+   - 描述：用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
+   - 格式：[{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+   - 示例：[{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+   - 默认：[{"path":"${DORIS_HOME}/file_cache"}]
 
-#### 5.4.1 Start and Add BE
+#### 5.4.1 启动和添加 BE
 
-1. Start the Backend:
+1. 启动 Backend：
 
-   Use the following command to start the Backend:
+   使用以下命令启动 Backend：
 
    ```bash
    bin/start_be.sh --daemon
    ```
 
-2. Add the Backend to the cluster:
+2. 将 Backend 添加到集群：
 
-   Connect to any Frontend using a MySQL client and execute:
+   使用 MySQL 客户端连接到任意 Frontend，并执行：
 
    ```sql
-   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROPERTIES properties];
+   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
    ```
 
-   Replace `<ip>` with the IP address of the new Backend and `<heartbeat_service_port>` with its configured heartbeat service port (default is 9050).
+   将 `<ip>` 替换为新 Backend 的 IP 地址，将 `<heartbeat_service_port>` 替换为其配置的心跳服务端口（默认为 9050）。
 
-   You can set the computing group for the BE using PROPERTIES.
+   可以通过 PROPERTIES 设置 BE 所在的 计算组。
 
-   For more detailed usage, please refer to [ADD BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) and [REMOVE BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND.md).
+   更详细的用法请参考 [ADD BACKEND](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND.md) 和 [REMOVE BACKEND](../sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND.md)。
 
-3. Verify Backend Status:
+3. 验证 Backend 状态：
 
-   Check the Backend log file (`be.log`) to ensure it has successfully started and joined the cluster.
+   检查 Backend 日志文件（`be.log`）以确保它已成功启动并加入集群。
 
-   You can also use the following SQL command to check the Backend status:
+   您还可以使用以下 SQL 命令检查 Backend 状态：
 
    ```sql
    SHOW BACKENDS;
    ```
 
-   This will display all Backends in the cluster and their current status.
+   这将显示集群中所有 Backend 及其当前状态。
 
-## 6. Create Storage Vault
+## 6. 创建 Storage Vault
 
-Storage Vault is an important component in the Doris decoupled storage and computing architecture. They represent a shared storage layer for storing data. You can create one or more Storage Vaults using HDFS or S3-compatible object storage. One Storage Vault can be set as the default Storage Vault, and system tables and tables without a specified Storage Vault will be stored in this default Storage Vault. The default Storage Vault cannot be deleted. Here are the methods to create a Storage Vault for your Doris cluster:
+ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个 Storage Vault。可以将一个 Storage Vault 设置为默认 Storage Vault，系统表和未指定 Storage Vault 的表都将存储在这个默认 Storage Vault 中。默认 Storage Vault 不能被删除。以下是为您的 Doris 集群创建 Storage Vault 的方法：
 
-### 6.1 Create HDFS Storage Vault 
+### 6.1 创建 HDFS  Storage Vault 
 
-To create a Storage Vault using SQL, connect to your Doris cluster using a MySQL client.
+要使用 SQL 创建 Storage Vault，请使用 MySQL 客户端连接到您的 Doris 集群
 
 ```sql
 CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
@@ -264,13 +263,13 @@ CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
     );
 ```
 
-### 6.2 Create S3 Storage Vault 
+### 6.2 创建 S3  Storage Vault 
 
-To create a Storage Vault using S3-compatible object storage, follow these steps:
+要使用兼容 S3 的对象存储创建 Storage Vault，请按照以下步骤操作：
 
-1. Connect to your Doris cluster using a MySQL client.
+1. 使用 MySQL 客户端连接到您的 Doris 集群。
 
-2. Execute the following SQL command to create an S3 Storage Vault:
+2. 执行以下 SQL 命令来创建 S3  Storage Vault：
 
 ```sql
 CREATE STORAGE VAULT IF NOT EXISTS s3_vault
@@ -286,17 +285,18 @@ CREATE STORAGE VAULT IF NOT EXISTS s3_vault
     );
 ```
 
-To create a Storage Vault on other object storage, please refer to [Create Storage Vault](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md).
+要在其他对象存储上创建 Storage Vault，请参考 [创建 Storage Vault ](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md)。
 
-### 6.3 Set Default Storage Vault 
+### 6.3 设置默认 Storage Vault 
 
-Use the following SQL statement to set a default Storage Vault.
+使用如下 SQL 语句设置一个默认 Storage Vault。
 
 ```sql
 SET <storage_vault_name> AS DEFAULT STORAGE VAULT
 ```
 
-## 7. Notes
+## 7. 注意事项
 
-- Only the Meta Service process for metadata operations should be configured as the `meta_service_endpoint` target for FE and BE.
-- The data recycling function process should not be configured as the `meta_service_endpoint` target.
+- 仅元数据操作功能的 Meta Service 进程应作为 FE 和 BE 的 `meta_service_endpoint` 配置目标。
+- 数据回收功能进程不应作为 `meta_service_endpoint` 配置目标。ta_service_endpoint` 配置目标。
+- 数据回收功能进程不应作为 `meta_service_endpoint` 配置目标。not be configured as the `meta_service_endpoint` target.
