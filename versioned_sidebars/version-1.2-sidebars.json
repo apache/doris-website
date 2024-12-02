@@ -3,6 +3,7 @@
         {
             "type": "category",
             "label": "Getting Started",
+            "collapsed": false,
             "items": [
                 "gettingStarted/what-is-new",
                 "gettingStarted/what-is-apache-doris",
@@ -29,6 +30,7 @@
         {
             "type": "category",
             "label": "Guides",
+            "collapsed": false,
             "items": [
                 {
                     "type": "category",
@@ -1187,11 +1189,13 @@
         {
             "type": "category",
             "label": "Benchmark",
+            "collapsed": false,
             "items": ["benchmark/ssb", "benchmark/tpch", "benchmark/tpcds"]
         },
         {
             "type": "category",
             "label": "Ecosystem",
+            "collapsed": false,
             "items": [
                 "ecosystem/cloudcanal",
                 "ecosystem/spark-doris-connector",
@@ -1210,7 +1214,7 @@
                 "ecosystem/hive-hll-udf",
                 {
                     "type": "category",
-                    "label": "BI and Database IDE",
+                    "label": "BI",
                     "items": [
                         "ecosystem/bi/apache-superset",
                         "ecosystem/bi/dbeaver",
@@ -1228,85 +1232,23 @@
         {
             "type": "category",
             "label": "FAQ",
+            "collapsed": false,
             "items": ["faq/install-faq", "faq/data-faq", "faq/sql-faq", "faq/lakehouse-faq", "faq/bi-faq"]
         },
         {
             "type": "category",
             "label": "Releases",
+            "collapsed": false,
             "items": [
-                "releasenotes/all-release",
-                {
-                    "type": "category",
-                    "label": "v3.0",
-                    "items": [
-                        "releasenotes/v3.0/release-3.0.0",
-                        "releasenotes/v3.0/release-3.0.1",
-                        "releasenotes/v3.0/release-3.0.2"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "v2.1",
-                    "items": [
-                        "releasenotes/v2.1/release-2.1.7",
-                        "releasenotes/v2.1/release-2.1.6",
-                        "releasenotes/v2.1/release-2.1.5",
-                        "releasenotes/v2.1/release-2.1.4",
-                        "releasenotes/v2.1/release-2.1.3",
-                        "releasenotes/v2.1/release-2.1.2",
-                        "releasenotes/v2.1/release-2.1.1",
-                        "releasenotes/v2.1/release-2.1.0"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "v2.0",
-                    "items": [
-                        "releasenotes/v2.0/release-2.0.15",
-                        "releasenotes/v2.0/release-2.0.14",
-                        "releasenotes/v2.0/release-2.0.13",
-                        "releasenotes/v2.0/release-2.0.12",
-                        "releasenotes/v2.0/release-2.0.11",
-                        "releasenotes/v2.0/release-2.0.10",
-                        "releasenotes/v2.0/release-2.0.9",
-                        "releasenotes/v2.0/release-2.0.8",
-                        "releasenotes/v2.0/release-2.0.7",
-                        "releasenotes/v2.0/release-2.0.6",
-                        "releasenotes/v2.0/release-2.0.5",
-                        "releasenotes/v2.0/release-2.0.4",
-                        "releasenotes/v2.0/release-2.0.3",
-                        "releasenotes/v2.0/release-2.0.2",
-                        "releasenotes/v2.0/release-2.0.1",
-                        "releasenotes/v2.0/release-2.0.0"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "v1.2",
-                    "items": [
-                        "releasenotes/v1.2/release-1.2.8",
-                        "releasenotes/v1.2/release-1.2.7",
-                        "releasenotes/v1.2/release-1.2.6",
-                        "releasenotes/v1.2/release-1.2.5",
-                        "releasenotes/v1.2/release-1.2.4",
-                        "releasenotes/v1.2/release-1.2.3",
-                        "releasenotes/v1.2/release-1.2.2",
-                        "releasenotes/v1.2/release-1.2.1",
-                        "releasenotes/v1.2/release-1.2.0"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "v1.1",
-                    "items": [
-                        "releasenotes/v1.1/release-1.1.5",
-                        "releasenotes/v1.1/release-1.1.4",
-                        "releasenotes/v1.1/release-1.1.3",
-                        "releasenotes/v1.1/release-1.1.2",
-                        "releasenotes/v1.1/release-1.1.1",
-                        "releasenotes/v1.1/release-1.1.0"
-                    ]
-                }
+                "releasenotes/v1.2/release-1.2.8",
+                "releasenotes/v1.2/release-1.2.7",
+                "releasenotes/v1.2/release-1.2.6",
+                "releasenotes/v1.2/release-1.2.5",
+                "releasenotes/v1.2/release-1.2.4",
+                "releasenotes/v1.2/release-1.2.3",
+                "releasenotes/v1.2/release-1.2.2",
+                "releasenotes/v1.2/release-1.2.1",
+                "releasenotes/v1.2/release-1.2.0"
             ]
         }
     ]

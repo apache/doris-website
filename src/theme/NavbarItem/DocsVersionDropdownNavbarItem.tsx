@@ -27,8 +27,8 @@ export default function DocsVersionDropdownNavbarItem({
     mobile,
     docsPluginId,
     dropdownActiveClassDisabled,
-    dropdownItemsBefore,
-    dropdownItemsAfter,
+    dropdownItemsBefore = [],
+    dropdownItemsAfter = [],
     ...props
 }: Props): JSX.Element {
     const { search, hash } = useLocation();
@@ -58,7 +58,6 @@ export default function DocsVersionDropdownNavbarItem({
             onClick: () => savePreferredVersionName(version.name),
         };
     }
-
     const items: LinkLikeNavbarItemProps[] = [...dropdownItemsBefore, ...versionLinks, ...dropdownItemsAfter];
 
     const dropdownVersion = useDocsVersionCandidates(docsPluginId)[0];

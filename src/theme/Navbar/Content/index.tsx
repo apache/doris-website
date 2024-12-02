@@ -83,13 +83,14 @@ export default function NavbarContent(): JSX.Element {
     const mobileSidebar = useNavbarMobileSidebar();
     const [star, setStar] = useState<any>();
     const items = useNavbarItems();
-    const docItems = useThemeConfig().docNavbarEN.items;
+    const [isEN, setIsEN] = useState(true);
+    const docItems = isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items;
     const [leftItems, rightItems] = splitNavbarItems(items);
+    const [leftDocItems,rightDocItems] = splitNavbarItems(docItems);
     const [isDocsPage, setIsDocsPage] = useState(false);
     const [isCommunity, setIsCommunity] = useState(false);
     const searchBarItem = items.find(item => item.type === 'search');
     
-    const [isEN, setIsEN] = useState(true);
     const [currentVersion, setCurrentVersion] = useState('');
     useEffect(() => {
         getGithubStar();
@@ -138,7 +139,14 @@ export default function NavbarContent(): JSX.Element {
     function getNavItem(type: string) {
         return items.find(item => item.type === type);
     }
-
+    console.log('leftItems',leftItems);
+    console.log('rightItems',rightItems);
+    console.log('leftDocItems',leftDocItems);
+    console.log('isDocsPage',isDocsPage);
+    console.log('rightDocItems',rightDocItems);
+    console.log('star',star);
+    
+    
     return (
         <NavbarContentLayout
             left={
@@ -165,7 +173,7 @@ export default function NavbarContent(): JSX.Element {
                             <NavbarItems items={leftItems} />
                         ) : (
                             <NavbarItems
-                                items={isEN ? docItems : useThemeConfig().docNavbarZH.items}
+                                items={leftDocItems}
                                 isDocsPage={isDocsPage}
                             />
                         )}
@@ -179,13 +187,13 @@ export default function NavbarContent(): JSX.Element {
                 // Ask the user to add the respective navbar items => more flexible
                 <>
                     {!mobileSidebar.disabled && <NavbarMobileSidebarToggle />}
-                    <NavbarItems items={rightItems} />
+                    <NavbarItems items={isDocsPage ? rightDocItems : rightItems} />
                     <NavbarColorModeToggle className={styles.colorModeToggle} />
-                    {!searchBarItem && (
+                    {/* {!searchBarItem && (
                         <NavbarSearch>
                             <SearchBar />
                         </NavbarSearch>
-                    )}
+                    )} */}
                     <Link
                         className="github-btn desktop header-right-button-github"
                         href="https://github.com/apache/doris"
