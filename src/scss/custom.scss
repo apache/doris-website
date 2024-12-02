@@ -1,3 +1,4 @@
+@use "sass:meta";
 /**
  * Any CSS included here will be global. The classic template
  * bundles Infima by default. Infima is a CSS framework designed to
@@ -8,16 +9,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import './variables';
-@import './components/sidebar';
-@import './components/breadcrumbs';
-@import './components/markdown';
-@import './components/pagination-nav';
-@import './components/navbar';
-@import './components/blog';
-@import './components/search';
-@import './components/toc.scss';
-@import './common';
+@include meta.load-css('variables');
+@include meta.load-css('components/sidebar');
+@include meta.load-css('components/breadcrumbs');
+@include meta.load-css('components/markdown');
+@include meta.load-css('components/pagination-nav');
+@include meta.load-css('components/navbar');
+@include meta.load-css('components/blog');
+@include meta.load-css('components/search');
+@include meta.load-css('components/toc.scss');
+@include meta.load-css('common');
 
 @layer utilities {
     .transition-slide {

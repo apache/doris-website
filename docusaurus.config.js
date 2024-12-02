@@ -201,6 +201,7 @@ const config = {
                     postsPerPage: 'ALL',
                     blogSidebarCount: 0,
                     showReadingTime: false,
+                    onUntruncatedBlogPosts: "ignore"
                 },
                 theme: {
                     customCss: require.resolve('./src/scss/custom.scss'),
@@ -221,7 +222,7 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: '/',
+                // docsRouteBasePath: '/docs',
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
