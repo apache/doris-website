@@ -52,6 +52,7 @@ spec:
 将配置更新到需要[部署的 DorisDisaggregatedCluster 资源](install-quickstart.md#第3步部署存算分离集群)中。
 
 ## 配置 FoundationDB 访问
+根据 FoundationDB 部署环境不同，需要调整一下配置项：
 - 配置包含 FoundationDB 访问地址的 ConfigMap  
   FoundationDB 集群通过 `fdb-kubernetes-operator` 部署，可直接配置 `fdb-kubernetes-operator` 生成的包含 FoundationDB 可访问地址的 ConfigMap，配置如下：
   ```yaml
@@ -64,8 +65,7 @@ spec:
   ```
   其中，${foundationdbConfigMapName} 为 ConfigMap 的名称，${namespace} 为 FoundationDB 部署的命名空间。查找 `fdb-kubernetes-operator` 生成的包含 FoundationDB 可访问信息的 ConfigMap 请参考部署 FoundationDB 章节的 [获取包含 FoundationDB 访问信息的 ConfigMap](install-fdb.md#获取包含-foundationdb-访问信息的-configmap)。  
 
-- 配置 FoundationDB 可访问地址  
-  若 FDB 是物理机部署，则可直接在 metaService 中配置 FoundationDB 访问地址信息：
+- 若 FDB 是机器直接部署，则可直接在 metaService 中配置 FoundationDB 访问地址信息：
   ```yaml
   spec:
     metaService:

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-In the storage-computation separation mode, the FE (Frontend) is primarily responsible for SQL parsing and interacts with the metadata management component, MetaService. FE supports distributed deployment, and by default, it uses a master-slave configuration. Doris Operator supports deploying the storage-computation separation mode on Kubernetes for Doris versions 3.0.2 and above.
+In the storage-computation separation mode, the FE (Frontend) is primarily responsible for SQL parsing and interacts with the metadata management component, MetaService. FE supports distributed deployment, and by default, it uses a master-observer configuration. Doris Operator supports deploying the storage-computation separation mode on Kubernetes for Doris versions 3.0.2 and above.
 ## Resource configuration
 ### Configuring compute resources
 By default, FE deployments on Kubernetes do not limit resource usage. The DorisDisaggregatedCluster uses Kubernetes' [requests and limits](https://kubernetes.io/zh-cn/docs/concepts/configuration/manage-resources-containers/) to configure compute resources. To allocate 8 CPU cores and 8 Gi of memory to the FE service, use the following configuration:

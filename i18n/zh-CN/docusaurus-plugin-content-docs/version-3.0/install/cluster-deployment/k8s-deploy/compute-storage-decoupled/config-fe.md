@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-FE 在存算分离模式下主要负责 SQL 解析相关工作，也负责跟元数据管理组件 MetaService 交互。FE 支持分布式模式部署，默认情况下使用主备模式部署。 Doris Operator 支持 Doris 3.0.2 及以上的版本在 Kubernetes 上部署存算分离模式。
+FE 在存算分离模式下主要负责 SQL 解析相关工作，也负责跟元数据管理组件 MetaService 交互。FE 支持分布式模式部署，默认情况下使用 master-observer 模式部署。 Doris Operator 支持 Doris 3.0.2 及以上的版本在 Kubernetes 上部署存算分离模式。
 
 ## 配置资源
 

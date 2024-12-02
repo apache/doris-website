@@ -71,7 +71,6 @@ In the default deployment, BE services use Kubernetes' [EmptyDir](https://kubern
 2. Deploy the ConfigMap containing the startup configuration.  
 3. Configure the DorisDisaggregatedCluster resource.
 
-### Step 1: Customize the startup configuration
 1. Create a custom ConfigMap containing the startup information.  
   In the default deployment, each compute group’s BE service starts using the default configuration file from the image. To persist cache data, a custom startup configuration is needed. Doris Operator uses Kubernetes' ConfigMap to mount the startup configuration file. 
   Below is an example of a ConfigMap that a BE service can use:
@@ -96,7 +95,7 @@ In the default deployment, BE services use Kubernetes' [EmptyDir](https://kubern
   kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml 
   ```
   Here, ${namespace} refers to the namespace where the DorisDisaggregatedCluster is deployed, and ${beConfigMapFileName} is the filename of the custom ConfigMap.
-  ### Step 2: Configure the DorisDisaggregatedCluster Resource
+3. Configure the DorisDisaggregatedCluster Resource  
   Persistent storage requires a storage template configuration. The DorisDisaggregatedCluster resource uses persistentVolume to describe the persistent storage template. The template is specified using Kubernetes' [PersistentVolumeClaimSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec).  
   Doris Operator will automatically parse the `file_cache_path` in the startup configuration to identify the mount points, and use the template to automatically generate persistent storage. The annotations will be added into [PersistentVolumeClaim](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/). By default, Doris Operator creates persistent storage for logs, but this can be disabled by setting `logNotStore: true`. Below is an example where a BE service uses a custom ConfigMap and specifies a storage template:
   ```yaml

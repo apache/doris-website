@@ -24,20 +24,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-FoundationDB is a distributed database developed by Apple that provides strong consistency for structured data storage. In the Doris compute-storage decoupling model, FoundationDB is used as the metadata store, with the meta-service component managing the metadata within FoundationDB. When deploying a compute-storage decoupled cluster on Kubernetes, FoundationDB must be deployed in advance. Two deployment options are recommended: deploying FoundationDB directly on virtual machines (including physical machines), or using the [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) to deploy FoundationDB on Kubernetes.
+FoundationDB is a distributed database developed by Apple that provides strong consistency for structured data storage. In the Doris compute-storage decoupling model, FoundationDB is used as the metadata store, with the meta-service component managing the metadata within FoundationDB. When deploying a compute-storage decoupled cluster on Kubernetes, FoundationDB must be deployed in advance. Two deployment options are recommended:  
+- Deploying FoundationDB directly on virtual machines (including physical machines).  
+- Using the [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) to deploy FoundationDB on Kubernetes.  
 
 For VM deployments, refer to the Doris [compute-storage decoupling documentation's Pre-deployment section](../../../../compute-storage-decoupled/before-deployment.md) to set up the FoundationDB cluster. Before deployment, ensure that FoundationDB can be accessed by the Doris Kubernetes cluster, i.e., the Kubernetes nodes should be on the same subnet as the machine where FoundationDB is deployed.  
-The following describes the use of the latest version of fdb-kubernetes-operator to deploy FoundationDB.
-## Create FoundationDBCluster CRDs
+
+## Deploy FoundationDB on Kubernetes
+The deployment of a FoundationDB cluster on Kubernetes involves four main steps:
+1. Create FoundationDBCluster CRDs.  
+2. Deploy fdb-kubernetes-operator service.  
+3. Deploy FoundationDB cluster.  
+4. Check FoundationDB status.  
+
+### Step 1: Create FoundationDBCluster CRDs
 ```shell
 kubectl create -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbclusters.yaml
 kubectl create -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbbackups.yaml
 kubectl create -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbrestores.yaml
 ```
 
-## Deploy fdb-kubernetes-operator service
+### Step 2: Deploy fdb-kubernetes-operator service
 
-The fdb-kubernetes-operator repository provides deployment samples for setting up an FoundationDB cluster in IP mode. The Doris-operator repository offers FoundationDB cluster deployment examples in FQDN mode, which can be downloaded as needed.
+The fdb-kubernetes-operator repository provides deployment samples for setting up an FoundationDB cluster in IP mode. The Doris-operator repository offers FoundationDB cluster deployment examples in [FQDN mode](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-sethostnameasfqdn-field), which can be downloaded as needed.
 1. Download the deployment sample:   
 - From the fdb-kubernetes-operator official repository:  
   The fdb-kubernetes-operator by default deploys FoundationDB in IP mode. You can download the [default deployment configuration](https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml) in YAML format. If you wish to deploy using FQDN mode, refer to the [official documentation's DNS section](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#using-dns) for customization.
@@ -65,7 +74,7 @@ The fdb-kubernetes-operator repository provides deployment samples for setting u
   deployment.apps/fdb-kubernetes-operator-controller-manager created
   ```
 
-## Deploy FoundationDB cluster
+### Step 3: Deploy FoundationDB cluster
 Deployment examples for FoundationDB are available in the fdb-kubernetes-operator repository. You can download and use them directly.  
 1. Download the IP mode deployment sample from the FoundationDB official website:
   ```shell
@@ -75,7 +84,7 @@ Deployment examples for FoundationDB are available in the fdb-kubernetes-operato
 2. Customized deployment example:  
 - For environments with access to Docker Hub:  
   Customize the final deployment state according to the [User Manual](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md) provided by the official website. If you use FQDN deployment, please set the `routing.useDNSInClusterFile` field to true and configure as follows:  
-  Doris Operator's official repository provides a sample for deploying FoundationDB with FQDN, which can be downloaded directly from [here](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/cluster.yaml).
+  Doris Operator's official repository provides a sample for deploying FoundationDB with [FQDN](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-sethostnameasfqdn-field), which can be downloaded directly from [here](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/cluster.yaml).
   ```yaml
   spec:
     routing:
@@ -111,7 +120,7 @@ Deployment examples for FoundationDB are available in the fdb-kubernetes-operato
 - When FoundationDB is deployed based on fdb-kubernetes-operator, at least three hosts are required to meet the high availability requirements of the production environment.  
 ::: 
 
-## Check FoundationDB status
+### Step 4: Check FoundationDB status
 After deploying FoundationDB via the fdb-kubernetes-operator, check the status of the FoundationDB cluster with the following command:
 ```shell
 kubectl get fdb
