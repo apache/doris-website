@@ -287,13 +287,14 @@ export default function SearchBar({ handleSearchBarToggle }) {
             // dir="ltr"
         >
             <input
+                style={{ width: '100% !important' }}
                 placeholder={translate({
                     id: 'theme.SearchBar.label',
                     message: 'Search',
                     description: 'The ARIA label and placeholder for search button',
                 })}
                 aria-label="Search"
-                className="navbar__search-input"
+                className={clsx('navbar__search-input', styles.navbarSearchInput)}
                 onMouseEnter={onInputMouseEnter}
                 onFocus={onInputFocus}
                 onBlur={onInputBlur}

@@ -5,12 +5,24 @@
     display: flex;
     border-bottom: 1px solid rgba(255, 255, 255, 0.4);
     box-shadow: 0px 6px 16px rgba(160, 170, 208, 0.15);
+    &.docs {
+        .navbar__inner {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+    }
+
     .navbar-left {
         display: flex;
     }
     .docs-search {
-        display: none;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 38vw;
+        top: 14px;
     }
+
     .custom-navbar-item {
         display: none;
     }

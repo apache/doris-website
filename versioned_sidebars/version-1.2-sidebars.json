@@ -3,6 +3,7 @@
         {
             "type": "category",
             "label": "Getting Started",
+            "collapsed": false,
             "items": [
                 "gettingStarted/what-is-new",
                 "gettingStarted/what-is-apache-doris",
@@ -29,6 +30,7 @@
         {
             "type": "category",
             "label": "Guides",
+            "collapsed": false,
             "items": [
                 {
                     "type": "category",
@@ -1187,11 +1189,13 @@
         {
             "type": "category",
             "label": "Benchmark",
+            "collapsed": false,
             "items": ["benchmark/ssb", "benchmark/tpch", "benchmark/tpcds"]
         },
         {
             "type": "category",
             "label": "Ecosystem",
+            "collapsed": false,
             "items": [
                 "ecosystem/cloudcanal",
                 "ecosystem/spark-doris-connector",
@@ -1210,7 +1214,7 @@
                 "ecosystem/hive-hll-udf",
                 {
                     "type": "category",
-                    "label": "BI and Database IDE",
+                    "label": "BI",
                     "items": [
                         "ecosystem/bi/apache-superset",
                         "ecosystem/bi/dbeaver",
@@ -1228,11 +1232,13 @@
         {
             "type": "category",
             "label": "FAQ",
+            "collapsed": false,
             "items": ["faq/install-faq", "faq/data-faq", "faq/sql-faq", "faq/lakehouse-faq", "faq/bi-faq"]
         },
         {
             "type": "category",
             "label": "Releases",
+            "collapsed": false,
             "items": [
                 "releasenotes/v1.2/release-1.2.8",
                 "releasenotes/v1.2/release-1.2.7",
