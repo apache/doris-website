@@ -67,9 +67,6 @@ Update the above configuration in the required [DorisDisaggregatedCluster resour
 
 ## Configure Cache persistent
 In the default deployment, BE services use Kubernetes' [EmptyDir](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#emptydir) as the cache storage. The EmptyDir mode is non-persistent, meaning that cached data will be lost after a service restart, leading to a drop in query efficiency. The steps to configure persistent storage for the cache are as follows:  
-1. Customize the startup configuration.  
-2. Deploy the ConfigMap containing the startup configuration.  
-3. Configure the DorisDisaggregatedCluster resource.
 
 1. Create a custom ConfigMap containing the startup information.  
   In the default deployment, each compute group’s BE service starts using the default configuration file from the image. To persist cache data, a custom startup configuration is needed. Doris Operator uses Kubernetes' ConfigMap to mount the startup configuration file. 
