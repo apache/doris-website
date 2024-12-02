@@ -24,7 +24,7 @@ under the License.
 
 ## Overview
 
-CCR (Cross Cluster Replication) is a cross-cluster data synchronization mechanism that synchronizes data changes from the source cluster to the target cluster at the database or table level. It is mainly used to improve data availability for online services, support offline load isolation, and build a dual-region, three-center architecture.
+CCR (Cross Cluster Replication) is a cross-cluster data synchronization mechanism that synchronizes data changes from the source cluster to the target cluster at the database or table level. It is mainly used to improve data availability for online services, support read-write load isolation, and build a dual-region, three-center architecture.
 
 ### Use Cases
 
@@ -32,7 +32,7 @@ CCR is applicable to the following common scenarios:
 
 - **Disaster Recovery and Backup**: Backing up enterprise data to another cluster and data center ensures that data can be restored or quickly switched to a backup in the event of business interruption or data loss. This high-SLA disaster recovery is commonly required in industries such as finance, healthcare, and e-commerce.
 
-- **Read/Write Separation**: By separating data query operations from data write operations, read/write impacts are reduced, and resource utilization is improved. In high-concurrency or high-write-pressure scenarios, read/write separation helps to distribute the load effectively, improving database performance and stability.
+- **Read/Write Separation**: By isolating data query operations from data write operations, the impact between read and write processes is minimized, enhancing service availability. In high-concurrency or high-write-pressure scenarios, read/write separation helps to distribute the load effectively, improving database performance and stability.
 
 - **Data Centralization**: Group headquarters need to centrally manage and analyze data from branch offices located in different regions, avoiding management confusion and decision-making errors caused by inconsistent data, thus improving the efficiency of group management and decision-making quality.
 
