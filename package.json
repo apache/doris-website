@@ -6,7 +6,7 @@
         "docusaurus": "docusaurus",
         "start": "docusaurus start",
         "start:zh-CN": "docusaurus start --locale zh-CN",
-        "build": "NODE_OPTIONS=--max_old_space_size=8192 PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js docusaurus build",
+        "build": "TEST_ENV_URL='http://localhost:3000' NODE_OPTIONS=--max_old_space_size=8192 PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js docusaurus build",
         "build:version": "docusaurus set-versions && docusaurus build",
         "swizzle": "docusaurus swizzle",
         "deploy": "docusaurus deploy",
@@ -24,7 +24,7 @@
         "@docusaurus/plugin-client-redirects": "3.6.3",
         "@docusaurus/plugin-pwa": "3.6.3",
         "@docusaurus/preset-classic": "3.6.3",
-        "@easyops-cn/docusaurus-search-local": "^0.45.0",
+        "@easyops-cn/docusaurus-search-local": "^0.46.1",
         "@mdx-js/react": "^3.0.0",
         "antd": "^5.12.2",
         "autoprefixer": "^10.4.16",
@@ -38,6 +38,7 @@
         "react-dom": "^18.2.0",
         "react-github-button": "^0.1.11",
         "sass": "^1.63.2",
+        "sass-migrator": "^2.2.1",
         "swiper": "^9.0.5",
         "tailwindcss": "^3.3.6",
         "vitpress-generate-pdf": "^1.1.4"
@@ -67,5 +68,6 @@
     },
     "engines": {
         "node": ">=18.0"
-    }
+    },
+    "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

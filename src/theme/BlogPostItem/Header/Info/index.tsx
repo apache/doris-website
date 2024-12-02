@@ -36,7 +36,6 @@ function DateTime({ date, formattedDate }: { date: string; formattedDate: string
 
 export default function BlogPostItemHeaderInfo({ className }: Props): JSX.Element {
     const { metadata } = useBlogPost();
-    console.log('metadata', metadata);
 
     const { date, readingTime, authors } = metadata;
 
