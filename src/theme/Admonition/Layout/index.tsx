@@ -28,7 +28,6 @@ function AdmonitionContainer({
 function AdmonitionHeading({ icon, title }: Pick<Props, 'icon' | 'title'>) {
     return (
         <div className={styles.admonitionHeading}>
-            <span className={styles.admonitionIcon}>{icon}</span>
             {title}
         </div>
     );

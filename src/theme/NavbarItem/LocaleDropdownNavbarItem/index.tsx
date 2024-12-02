@@ -11,8 +11,8 @@ import type { Props } from '@theme/NavbarItem/LocaleDropdownNavbarItem';
 import './styles.scss';
 export default function LocaleDropdownNavbarItem({
     mobile,
-    dropdownItemsBefore,
-    dropdownItemsAfter,
+    dropdownItemsBefore = [],
+    dropdownItemsAfter = [],
     queryString = '',
     ...props
 }: Props): JSX.Element {
@@ -47,7 +47,6 @@ export default function LocaleDropdownNavbarItem({
                     : '',
         };
     });
-
     const items = [...dropdownItemsBefore, ...localeItems, ...dropdownItemsAfter];
 
     // Mobile is handled a bit differently

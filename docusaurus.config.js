@@ -276,19 +276,19 @@ const config = {
                         to: '/community/join-community',
                         position: 'left',
                     },
-                    {
-                        type: 'search',
-                        position: 'right',
-                        className: 'docs-search',
-                    },
-                    {
-                        type: 'localeDropdown',
-                        position: 'right',
-                    },
-                    {
-                        type: 'docsVersionDropdown',
-                        position: 'right',
-                    },
+                    // {
+                    //     type: 'search',
+                    //     position: 'right',
+                    //     className: 'docs-search',
+                    // },
+                    // {
+                    //     type: 'localeDropdown',
+                    //     position: 'right',
+                    // },
+                    // {
+                    //     type: 'docsVersionDropdown',
+                    //     position: 'right',
+                    // },
                     // {
                     //     href: 'https://github.com/apache/doris',
                     //     className: 'header-right-button-github',
@@ -311,60 +311,73 @@ const config = {
                 },
                 items: [
                     {
-                        label: '快速开始',
+                        type: 'search',
                         position: 'left',
-                        // to: '/docs/gettingStarted/what-is-new',
-                        type: 'doc',
-                        docId: 'gettingStarted/what-is-new',
-                        activeBaseRegex: 'what-is-new|what-is-apache-doris|quick-start|tutorials',
+                        className: 'docs-search',
                     },
                     {
-                        label: '使用指南',
-                        position: 'left',
-                        // to: '/docs/install/source-install/compilation-with-docker',
-                        type: 'doc',
-                        docId: 'install/source-install/compilation-with-docker',
-                        activeBaseRegex:
-                            'summary|install/cluster-deployment|install/source-install|db-connect|table-design|data-operate|query|lakehouse|compute-storage-decoupled|admin-manual|practical-guide|sql-manual',
+                        type: 'localeDropdown',
+                        position: 'right',
                     },
                     {
-                        label: '性能测试',
-                        position: 'left',
-                        // to: '/docs/benchmark/ssb',
-                        type: 'doc',
-                        docId: 'benchmark/ssb',
-                        activeBaseRegex: 'benchmark',
+                        type: 'docsVersionDropdown',
+                        position: 'right',
                     },
-                    {
-                        label: '生态工具',
-                        position: 'left',
-                        // to: '/docs/ecosystem/spark-doris-connector',
-                        type: 'doc',
-                        docId: 'ecosystem/spark-doris-connector',
-                        activeBaseRegex: 'ecosystem',
-                    },
-                    {
-                        label: '常见问题',
-                        position: 'left',
-                        // to: '/docs/faq/install-faq',
-                        type: 'doc',
-                        docId: 'faq/install-faq',
-                        activeBaseRegex: 'faq',
-                    },
-                    {
-                        label: '版本发布',
-                        position: 'left',
-                        // to: '/docs/releasenotes/all-release',
-                        type: 'doc',
-                        docId: 'releasenotes/all-release',
-                        activeBaseRegex: 'releasenotes',
-                    },
-                    {
-                        type: 'html',
-                        position: 'left',
-                        value: `<a href="https://ask.selectdb.com/" target="_blank" style="display: flex; align-items: center; justify-content: center; text-decoration: none">技术论坛<img style="width: 1.2rem; height: 1.2rem; margin-left: 0.2rem;font-family: 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;" src="/images/forum-logo.svg">
-                    </a>`,
-                    },
+                    // {
+                    //     label: '快速开始',
+                    //     position: 'left',
+                    //     // to: '/docs/gettingStarted/what-is-new',
+                    //     type: 'doc',
+                    //     docId: 'gettingStarted/what-is-new',
+                    //     activeBaseRegex: 'what-is-new|what-is-apache-doris|quick-start|tutorials',
+                    // },
+                    // {
+                    //     label: '使用指南',
+                    //     position: 'left',
+                    //     // to: '/docs/install/source-install/compilation-with-docker',
+                    //     type: 'doc',
+                    //     docId: 'install/source-install/compilation-with-docker',
+                    //     activeBaseRegex:
+                    //         'summary|install/cluster-deployment|install/source-install|db-connect|table-design|data-operate|query|lakehouse|compute-storage-decoupled|admin-manual|practical-guide|sql-manual',
+                    // },
+                    // {
+                    //     label: '性能测试',
+                    //     position: 'left',
+                    //     // to: '/docs/benchmark/ssb',
+                    //     type: 'doc',
+                    //     docId: 'benchmark/ssb',
+                    //     activeBaseRegex: 'benchmark',
+                    // },
+                    // {
+                    //     label: '生态工具',
+                    //     position: 'left',
+                    //     // to: '/docs/ecosystem/spark-doris-connector',
+                    //     type: 'doc',
+                    //     docId: 'ecosystem/spark-doris-connector',
+                    //     activeBaseRegex: 'ecosystem',
+                    // },
+                    // {
+                    //     label: '常见问题',
+                    //     position: 'left',
+                    //     // to: '/docs/faq/install-faq',
+                    //     type: 'doc',
+                    //     docId: 'faq/install-faq',
+                    //     activeBaseRegex: 'faq',
+                    // },
+                    // {
+                    //     label: '版本发布',
+                    //     position: 'left',
+                    //     // to: '/docs/releasenotes/all-release',
+                    //     type: 'doc',
+                    //     docId: 'releasenotes/all-release',
+                    //     activeBaseRegex: 'releasenotes',
+                    // },
+                    // {
+                    //     type: 'html',
+                    //     position: 'left',
+                    //     value: `<a href="https://ask.selectdb.com/" target="_blank" style="display: flex; align-items: center; justify-content: center; text-decoration: none">技术论坛<img style="width: 1.2rem; height: 1.2rem; margin-left: 0.2rem;font-family: 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;" src="/images/forum-logo.svg">
+                    // </a>`,
+                    // },
                 ],
             },
             docNavbarEN: {
@@ -374,6 +387,19 @@ const config = {
                     src: logoImg,
                 },
                 items: [
+                    {
+                        type: 'search',
+                        position: 'left',
+                        className: 'docs-search',
+                    },
+                    {
+                        type: 'localeDropdown',
+                        position: 'right',
+                    },
+                    {
+                        type: 'docsVersionDropdown',
+                        position: 'right',
+                    },
                     // {
                     //     label: 'Getting Started',
                     //     position: 'left',
