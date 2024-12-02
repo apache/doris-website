@@ -20,27 +20,54 @@
 
     h1,
     h1:first-child {
-        font-size: 2rem;
         margin-bottom: 1.5rem;
         margin-top: 0;
+        font-size: 2.25rem;
+        font-weight: 700;
     }
 
     h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1.25rem;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #e6e7e9;
+        font-size: 1.625rem;
+        line-height: 2.625rem;
+        font-weight: 700;
+        // margin-bottom: 1.25rem;
+        // margin-top: 1.25rem;
+        // padding-top: 1.25rem;
+        margin-top: calc(var(--ifm-h2-font-size) * var(--ifm-leading));
     }
 
     h3 {
-        font-size: 1.125rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 2rem;
         margin-bottom: 1.25rem;
-        margin-top: 1rem;
+        margin-top: 1.25rem;
     }
+
+    h4 {
+        font-size: 1.125rem;
+        font-weight: 400;
+        line-height: 1.75rem;
+        margin-top: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
     p {
-        line-height: 1.875;
+        line-height: 1.625rem;
+        font-size: 1rem;
+        font-weight: 400;
+        margin-top: 0;
+        margin-bottom: 0.75rem;
     }
+
+    .theme-code-block,
+    img,
+    table,
+    .theme-admonition-tip {
+        margin-top: 0.625rem;
+        margin-bottom: 1.25rem;
+    }
+
     code {
         border-radius: 4px;
         background-color: #edf2fa;

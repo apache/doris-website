@@ -354,6 +354,9 @@
                     .navbar__item {
                         display: block;
                     }
+                    .docs-search{
+                        display: none;
+                    }
                 }
                 .docs-nav-mobile::-webkit-scrollbar {
                     display: none;
@@ -378,6 +381,9 @@
                         height: 1.5625rem;
                     }
                 }
+            }
+            .docs-search {
+                display: none;
             }
         }
         .navbar__toggle.clean-btn > svg {
