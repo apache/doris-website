@@ -7,6 +7,7 @@
         {
             "type": "category",
             "label": "How to Contribute",
+            "collapsed": false,
             "items": [
                 "how-to-contribute/how-to-contribute",
                 "how-to-contribute/contributor-guide",
@@ -23,6 +24,7 @@
         {
             "type": "category",
             "label": "Release Process & Verification",
+            "collapsed": false,
             "items": [
                 "release-and-verify/release-prepare",
                 "release-and-verify/release-doris-core",
@@ -37,6 +39,7 @@
         {
             "type": "category",
             "label": "Design Documents",
+            "collapsed": false,
             "items": [
                 "design/doris_storage_optimization",
                 "design/grouping_sets_design",
@@ -47,6 +50,7 @@
         {
             "type": "category",
             "label": "Developer Guide",
+            "collapsed": false,
             "items": [
                 "developer-guide/debug-tool",
                 "developer-guide/docker-dev",
@@ -84,9 +88,8 @@
         {
             "type": "category",
             "label": "Announcements",
-            "items": [
-                "doris-announcement/announcement-2401"
-            ]
+            "collapsed": false,
+            "items": ["doris-announcement/announcement-2401"]
         }
     ]
 }

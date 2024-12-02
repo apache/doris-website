@@ -66,14 +66,14 @@ function NavbarContentLayout({
                 <div className="navbar__items">{left}</div>
                 <div className="navbar__items navbar__items--right">{right}</div>
             </div>
-            <div className="navbar__bottom">
+            {/* <div className="navbar__bottom">
                 <div className="docs-nav-mobile">
                     <NavbarItems
                         items={isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items}
                         isDocsPage={isDocsPage}
                     />
                 </div>
-            </div>
+            </div> */}
             <div className="navbar__bottom">{bottom}</div>
         </>
     );
