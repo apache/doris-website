@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-使用非常简单，只需把 Syncers 服务启动，给他发一个命令，剩下的交给 Syncers 完成就行。
+使用非常简单，只需把 Syncer 服务启动，给他发一个命令，剩下的交给 Syncer 完成就行。
 
 ## 第一步. 部署源 Doris 集群
 
@@ -39,9 +39,9 @@ under the License.
 enable_feature_binlog=true
 ```
 
-## 第四步. 部署 syncers
+## 第四步. 部署 Syncer
 
-4.1. 构建 CCR syncer
+4.1. 构建 CCR Syncer
 
     ```shell
     git clone https://github.com/selectdb/ccr-syncer
@@ -53,7 +53,7 @@ enable_feature_binlog=true
     cd SYNCER_OUTPUT_DIR# 联系相关同学免费获取 ccr 二进制包
     ```
 
-4.2. 启动和停止 syncer
+4.2. 启动和停止 Syncer
 
     ```shell
     # 启动
@@ -75,7 +75,7 @@ vim shell/enable_db_binlog.sh
 ALTER TABLE enable_binlog SET ("binlog.enable" = "true");
 ```
 
-## 第六步. 向 syncer 发起同步任务
+## 第六步. 向 Syncer 发起同步任务
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{

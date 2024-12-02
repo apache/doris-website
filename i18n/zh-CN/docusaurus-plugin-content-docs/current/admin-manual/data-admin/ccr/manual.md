@@ -24,6 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 使用限制
+
+### 网络约束
+
+- 需要 Syncer 与上下游的 FE 和 BE 是互通的
+
+- 下游 BE 与上游 BE 通过 Doris BE 进程使用的 IP （`show frontends/backends` 看到的） 是直通的。
+
+
 ## 启动 Syncer
 
 根据配置选项启动 Syncer，并且在默认或指定路径下保存一个 pid 文件，pid 文件的命名方式为`host_port.pid`。
@@ -141,7 +150,7 @@ host 默认值为 127.0.0.1，port 的默认值为 9190
 
 用于指定 pid 文件的保存路径
 
-pid 文件是 stop_syncer.sh 脚本用于关闭 Syncer 的凭据，里面保存了对应 Syncer 的进程号，为了方便 Syncer 的集群化管理，可以指定 pid 文件的保存路径
+pid 文件是 stop_syncer.sh 脚本用于停止 Syncer 的凭据，里面保存了对应 Syncer 的进程号，为了方便 Syncer 的集群化管理，可以指定 pid 文件的保存路径
 
 ```sql
 bash bin/start_syncer.sh --pid_dir /path/to/pids
@@ -151,7 +160,7 @@ bash bin/start_syncer.sh --pid_dir /path/to/pids
 
 ## 停止 Syncer
 
-根据默认或指定路径下 pid 文件中的进程号关闭对应 Syncer，pid 文件的命名方式为`host_port.pid`。
+根据默认或指定路径下 pid 文件中的进程号停止对应 Syncer，pid 文件的命名方式为`host_port.pid`。
 
 **输出路径下的文件结构**
 
@@ -175,35 +184,35 @@ output_dir
 
 **停止选项**
 
-有三种关闭方法：
+有三种停止方法：
 
-1. 关闭目录下单个 Syncer
+1. 停止目录下单个 Syncer
 
-​    指定要关闭 Syncer 的 host && port，注意要与 start_syncer 时指定的 host 一致
+​    指定要停止 Syncer 的 host && port，注意要与 start_syncer 时指定的 host 一致
 
-2. 批量关闭目录下指定 Syncer
+2. 批量停止目录下指定 Syncer
 
-​    指定要关闭的 pid 文件名，以空格分隔，用`" "`包裹
+​    指定要停止的 pid 文件名，以空格分隔，用`" "`包裹
 
-3. 关闭目录下所有 Syncer
+3. 停止目录下所有 Syncer
 
 ​    默认即可
 
 1. --pid_dir
 
-指定 pid 文件所在目录，上述三种关闭方法都依赖于 pid 文件的所在目录执行
+指定 pid 文件所在目录，上述三种停止方法都依赖于 pid 文件的所在目录执行
 
 ```shell
 bash bin/stop_syncer.sh --pid_dir /path/to/pids
 ```
 
-例子中的执行效果就是关闭`/path/to/pids`下所有 pid 文件对应的 Syncers（**方法 3**），`--pid_dir`可与上面三种关闭方法组合使用。
+例子中的执行效果就是停止`/path/to/pids`下所有 pid 文件对应的 Syncer（**方法 3**），`--pid_dir`可与上面三种停止方法组合使用。
 
 默认值为`SYNCER_OUTPUT_DIR/bin`
 
 2. --host && --port
 
-关闭 pid_dir 路径下 host:port 对应的 Syncer
+停止 pid_dir 路径下 host:port 对应的 Syncer
 
 ```shell
 bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190
@@ -217,7 +226,7 @@ host 与 port 都不为空时**方法 1**才能生效
 
 3. --files
 
-关闭 pid_dir 路径下指定 pid 文件名对应的 Syncer
+停止 pid_dir 路径下指定 pid 文件名对应的 Syncer
 
 ```shell
 bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"
@@ -279,7 +288,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 - thrift_port：对应 FE 的 rpc_port
 
-- user、password：syncer 以何种身份去开启事务、拉取数据等
+- user、password：Syncer 以何种身份去开启事务、拉取数据等
 
 - database、table：
 
@@ -393,7 +402,7 @@ bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 
 ## Syncer 高可用
 
-Syncer 高可用依赖 mysql，如果使用 mysql 作为后端存储，Syncer 可以发现其它 syncer，如果一个 crash 了，其他会分担他的任务
+Syncer 高可用依赖 mysql，如果使用 mysql 作为后端存储，Syncer 可以发现其它 Syncer，如果一个 crash 了，其他会分担他的任务
 
 ## 权限要求
 
@@ -409,33 +418,11 @@ Syncer 高可用依赖 mysql，如果使用 mysql 作为后端存储，Syncer �
 
 加上 Admin 权限 (之后考虑彻底移除), 这个是用来检测 enable binlog config 的，现在需要 admin
 
-## 使用限制
-
-### 网络约束
-
-- 需要 Syncer 与上下游的 FE 和 BE 都是通的
-
-- 下游 BE 与上游 BE 是通的
-
-- 对外 IP 和 Doris 内部 IP 是一样的，也就是说`show frontends/backends`看到的，和能直接连的 IP 是一致的，要是直连，不能是 IP 转发或者 nat
-
-### ThriftPool 限制
-
-开大 thrift thread pool 大小，最好是超过一次 commit 的 bucket 数目大小
 
 ### 版本要求
 
-版本最低要求：v2.0.3
+版本最低要求：v2.0.15
 
-### 不支持的操作
-
-- rename table 支持有点问题
-
-- 不支持一些 trash 的操作，比如 table 的 drop-recovery 操作
-
-- 和 rename table 有关的，replace partition 与
-
-- 不能发生在同一个 db 上同时 backup/restore
 
 ## Feature
 
@@ -465,7 +452,7 @@ CCR 功能在建立同步时，会在目标集群中创建源集群同步范围�
 
 - 源表中包含了可能没有被同步到目标集群的信息，如`storage_policy`等，可能会导致目标表创建失败或者行为异常。
 
-- 源表中可能包含一些动态功能，如动态分区等，可能导致目标表的行为不受 syncer 控制导致 partition 不一致。
+- 源表中可能包含一些动态功能，如动态分区等，可能导致目标表的行为不受 Syncer 控制导致 partition 不一致。
 
 在被复制时因失效而需要擦除的属性有：
 
@@ -481,15 +468,15 @@ CCR 功能在建立同步时，会在目标集群中创建源集群同步范围�
 
 ### 实现
 
-在创建目标表时，这条属性将会由 syncer 控制添加或者删除，在 CCR 功能中，创建一个目标表有两个途径：
+在创建目标表时，这条属性将会由 Syncer 控制添加或者删除，在 CCR 功能中，创建一个目标表有两个途径：
 
-1. 在表同步时，syncer 通过 backup/restore 的方式对源表进行全量复制来得到目标表。
+1. 在表同步时，Syncer 通过 backup/restore 的方式对源表进行全量复制来得到目标表。
 
-2. 在库同步时，对于存量表而言，syncer 同样通过 backup/restore 的方式来得到目标表，对于增量表而言，syncer 会通过携带有 CreateTableRecord 的 binlog 来创建目标表。
+2. 在库同步时，对于存量表而言，Syncer 同样通过 backup/restore 的方式来得到目标表，对于增量表而言，Syncer 会通过携带有 CreateTableRecord 的 binlog 来创建目标表。
 
 综上，对于插入`is_being_synced`属性有两个切入点：全量同步中的 restore 过程和增量同步时的 getDdlStmt。
 
-在全量同步的 restore 过程中，syncer 会通过 rpc 发起对原集群中 snapshot 的 restore，在这个过程中为会为 RestoreStmt 添加`is_being_synced`属性，并在最终的 restoreJob 中生效，执行`isBeingSynced`的相关逻辑。在增量同步时的 getDdlStmt 中，为 getDdlStmt 方法添加参数`boolean getDdlForSync`，以区分是否为受控转化为目标表 ddl 的操作，并在创建目标表时执行`isBeingSynced`的相关逻辑。
+在全量同步的 restore 过程中，Syncer 会通过 rpc 发起对原集群中 snapshot 的 restore，在这个过程中为会为 RestoreStmt 添加`is_being_synced`属性，并在最终的 restoreJob 中生效，执行`isBeingSynced`的相关逻辑。在增量同步时的 getDdlStmt 中，为 getDdlStmt 方法添加参数`boolean getDdlForSync`，以区分是否为受控转化为目标表 ddl 的操作，并在创建目标表时执行`isBeingSynced`的相关逻辑。
 
 对于失效属性的擦除无需多言，对于上述功能的失效需要进行说明：
 
@@ -499,4 +486,4 @@ CCR 功能在建立同步时，会在目标集群中创建源集群同步范围�
 
 ### 注意
 
-在未出现异常时，`is_being_synced`属性应该完全由 syncer 控制开启或关闭，用户不要自行修改该属性。
+在未出现异常时，`is_being_synced`属性应该完全由 Syncer 控制开启或关闭，用户不要自行修改该属性。
