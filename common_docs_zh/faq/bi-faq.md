@@ -33,7 +33,7 @@ under the License.
 
 ### Q2. 2.1.x 版本 JDBC 连接 Power BI 时报错读取数据时报错，给定的关键字目前不在字典中。
 
-先在数据库中执行 show collation，一般情况下会只有 utf8mb4_900_bin，charset 为 utf8mb4 这一行结果。该报错的主要原因是在连接 Power BI 时需要找 33 号 ID，即需要该表中有 33 ID 的行，需要升级至 2.1.5 版本以上。
+该报错的主要原因是在连接 Power BI 时需要 33 号 ID，即需要在 show collation 中有 ID 值为 33 的结果，需要升级至 2.1.5 版本以上。
 
 ### Q3. 连接时报错从提供程序读取数据时出错：索引和计数必须引用该字符串内的位置。
 

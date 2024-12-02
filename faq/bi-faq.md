@@ -32,7 +32,7 @@ Usually, this is Power BI pulling the time timeout of the data source. When fill
 
 ### Q2. When the 2.1.x version uses JDBC to connect to Power BI, an error occurs "An error happened while reading data from the provider: the given key was not present in the dictionary".
 
-Run "show collation" in the database first. Generally, only utf8mb4_900_bin is displayed, and the charset is utf8mb4. The main reason for this error is that ID 33 needs to be found when connecting to Power BI. That is, rows with 33ids in the table need to be upgraded to version 2.1.5 or later.
+The main reason for the error is that when connecting to Power BI, ID 33 is required, meaning there needs to be a result with an ID value of 33 in the "show collation". You need to upgrade to version 2.1.5 or above.
 
 ### Q3. Connection Doris Times error "Reading data from the provider times error index and count must refer to the location within the string".
 
