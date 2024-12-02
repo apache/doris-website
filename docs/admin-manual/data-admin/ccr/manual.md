@@ -24,9 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Start syncer
+## Limitations
 
-Start syncer according to the configurations and save a pid file in the default or specified path. The name of the pid file should follow `host_port.pid`.
+### Network Constraints
+
+- Syncer needs to be able to communicate with both the upstream and downstream FE (Frontend) and BE (Backend).
+
+- The downstream BE and upstream BE are directly connected through the IP used by the Doris BE process (as seen in `show frontends/backends`).
+
+
+## Start Syncer
+
+Start Syncer according to the configurations and save a pid file in the default or specified path. The name of the pid file should follow `host_port.pid`.
 
 **Output file structure**
 
@@ -51,7 +60,7 @@ output_dir
 
 **--daemon** 
 
-Run syncer in the background, set to false by default.
+Run Syncer in the background, set to false by default.
 
 ```SQL
 bash bin/start_syncer.sh --daemon
@@ -67,7 +76,7 @@ bash bin/start_syncer.sh --db_type mysql
 
 The default value is sqlite3.
 
-When using MySQL to store metadata, syncer will use `CREATE IF NOT EXISTS `to create a database called `ccr`, where the metadata table related to CCR will be saved.
+When using MySQL to store metadata, Syncer will use `CREATE IF NOT EXISTS `to create a database called `ccr`, where the metadata table related to CCR will be saved.
 
 **--db_dir** 
 
@@ -103,7 +112,7 @@ The default path is`SYNCER_OUTPUT_DIR/log` and the default file name is `ccr_syn
 
 **--log_level** 
 
-Used to specify the output level of syncer logs.
+Used to specify the output level of Syncer logs.
 
 ```SQL
 bash bin/start_syncer.sh --log_level info
@@ -127,7 +136,7 @@ When running in the foreground, log_level defaults to `trace`, and logs are save
 
 **--host && --port** 
 
-Used to specify the host and port of syncer, where host only plays the role of distinguishing itself in the cluster, which can be understood as the name of syncer, and the name of syncer in the cluster is `host: port`.
+Used to specify the host and port of Syncer, where host only plays the role of distinguishing itself in the cluster, which can be understood as the name of Syncer, and the name of Syncer in the cluster is `host: port`.
 
 ```SQL
 bash bin/start_syncer.sh --host 127.0.0.1 --port 9190
@@ -139,7 +148,7 @@ The default value of host is 127.0.0.1, and the default value of port is 9190.
 
 Used to specify the storage path of the pid file
 
-The pid file is the credentials for closing the syncer. It is used in the stop_syncer.sh script. It saves the corresponding syncer process number. In order to facilitate management of syncer, you can specify the storage path of the pid file.
+The pid file is the credentials for closing the Syncer. It is used in the stop_syncer.sh script. It saves the corresponding Syncer process number. In order to facilitate management of Syncer, you can specify the storage path of the pid file.
 
 ```SQL
 bash bin/start_syncer.sh --pid_dir /path/to/pids
@@ -147,9 +156,9 @@ bash bin/start_syncer.sh --pid_dir /path/to/pids
 
 The default value is `SYNCER_OUTPUT_DIR/bin`.
 
-## Stop syncer
+## Stop Syncer
 
-Stop the syncer according to the process number in the pid file under the default or specified path. The name of the pid file should follow `host_port.pid`.
+Stop the Syncer according to the process number in the pid file under the default or specified path. The name of the pid file should follow `host_port.pid`.
 
 **Output file structure**
 
@@ -172,17 +181,17 @@ output_dir
 
 **Stop options**
 
-Syncers can be stopped in three ways: 
+Syncer can be stopped in three ways:
 
-1. Stop a single syncer in the directory
+1. Stop a single Syncer in the directory
 
-Specify the host and port of the syncer to be stopped. Be sure to keep it consistent with the host specified when start_syncer
+Specify the host and port of the Syncer to be stopped. Be sure to keep it consistent with the host specified when start_syncer
 
-2. Batch stop the specified syncers in the directory
+2. Batch stop the specified Syncer in the directory
 
 Specify the names of the pid files to be stopped, wrap the names in `""` and separate them with spaces.
 
-3. Stop all syncers in the directory
+3. Stop all Syncers in the directory
 
 Follow the default configurations.
 
@@ -194,13 +203,13 @@ Specify the directory where the pid file is located. The above three stopping me
 bash bin/stop_syncer.sh --pid_dir /path/to/pids
 ```
 
-The effect of the above example is to close the syncers corresponding to all pid files under `/path/to/pids `( **method 3** ). `-- pid_dir `can be used in combination with the above three syncer stopping methods.
+The effect of the above example is to close the Syncer corresponding to all pid files under `/path/to/pids `( **method 3** ). `-- pid_dir `can be used in combination with the above three Syncer stopping methods.
 
 The default value is `SYNCER_OUTPUT_DIR/bin`.
 
 **--host && --port** 
 
-Stop the syncer corresponding to host: port in the pid_dir path.
+Stop the Syncer corresponding to host: port in the pid_dir path.
 
 ```shell
 bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190
@@ -210,7 +219,7 @@ The default value of host is 127.0.0.1, and the default value of port is empty. 
 
 **--files** 
 
-Stop the syncer corresponding to the specified pid file name in the pid_dir path.
+Stop the Syncer corresponding to the specified pid file name in the pid_dir path.
 
 ```shell
 bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"
@@ -228,7 +237,7 @@ curl -X POST -H "Content-Type: application/json" -d {json_body} http://ccr_synce
 
 json_body: send operation information in JSON format
 
-operator: different operations for syncer
+operator: different operations for Syncer
 
 The interface returns JSON. If successful, the "success" field will be true. Conversely, if there is an error, it will be false, and then there will be an `ErrMsgs` field.
 
@@ -269,7 +278,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 - name: the name of the CCR synchronization task, should be unique
 - host, port: correspond to the host and mysql (jdbc) port of the cluster's master
 - thrift_port: corresponds to the rpc_port of the FE
-- user, password: the credentials used by the syncer to initiate transactions, fetch data, etc.
+- user, password: the credentials used by the Syncer to initiate transactions, fetch data, etc.
 - database, table:
   - If it is a database-level synchronization, fill in the database name and leave the table name empty.
   - If it is a table-level synchronization, specify both the database name and the table name.
@@ -379,9 +388,9 @@ output_dir
 bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 ```
 
-## High availability of syncer
+## High availability of Syncer
 
-The high availability of syncers relies on MySQL. If MySQL is used as the backend storage, the syncer can discover other syncers. If one syncer crashes, the others will take over its tasks.
+The high availability of Syncer relies on MySQL. If MySQL is used as the backend storage, the Syncer can discover other Syncers. If one Syncer crashes, the others will take over its tasks.
 
 ## Privilege requirements
 
@@ -392,29 +401,6 @@ The high availability of syncers relies on MySQL. If MySQL is used as the backen
 5. `drop_priv`: privilege to drop databases, tables, and views
 
 Admin privileges are required (We are planning on removing this in future versions). This is used to check the `enable binlog config`.
-
-## Usage restrictions
-
-### Network constraints
-
-- Syncer needs to have connectivity to both the upstream and downstream FEs and BEs.
-- The downstream BE should have connectivity to the upstream BE.
-- The external IP and Doris internal IP should be the same. In other words, the IP address visible in the output of `show frontends/backends` should be the same IP that can be directly connected to. It should not involve IP forwarding or NAT for direct connections.
-
-### ThriftPool constraints
-
-It is recommended to increase the size of the Thrift thread pool to a number greater than the number of buckets involved in a single commit operation.
-
-### Version requirements
-
-Minimum required version: V2.0.3
-
-### Unsupported operations
-
-- Rename table
-- Operations such as table drop-recovery
-- Operations related to rename table, replace partition
-- Concurrent backup/restore within the same database
 
 ## Feature
 
@@ -454,14 +440,14 @@ The functionalities that need to be disabled during synchronization are:
 
 ### Implementation
 
-When creating the target table, the syncer controls the addition or deletion of the `is_being_synced` property. In CCR, there are two approaches to creating a target table:
+When creating the target table, the Syncer controls the addition or deletion of the `is_being_synced` property. In CCR, there are two approaches to creating a target table:
 
-1. During table synchronization, the syncer performs a full copy of the source table using backup/restore to obtain the target table.
-2. During database synchronization, for existing tables, the syncer also uses backup/restore to obtain the target table. For incremental tables, the syncer creates the target table using the CreateTableRecord binlog.
+1. During table synchronization, the Syncer performs a full copy of the source table using backup/restore to obtain the target table.
+2. During database synchronization, for existing tables, the Syncer also uses backup/restore to obtain the target table. For incremental tables, the Syncer creates the target table using the CreateTableRecord binlog.
 
 Therefore, there are two entry points for inserting the `is_being_synced` property: the restore process during full synchronization and the getDdlStmt during incremental synchronization.
 
-During the restoration process of full synchronization, the syncer initiates a restore operation of the snapshot from the source cluster via RPC. During this process, the `is_being_synced` property is added to the RestoreStmt and takes effect in the final restoreJob, executing the relevant logic for `is_being_synced`.
+During the restoration process of full synchronization, the Syncer initiates a restore operation of the snapshot from the source cluster via RPC. During this process, the `is_being_synced` property is added to the RestoreStmt and takes effect in the final restoreJob, executing the relevant logic for `is_being_synced`.
 
 During incremental synchronization, add the `boolean getDdlForSync` parameter to the getDdlStmt method to differentiate whether it is a controlled transformation to the target table DDL, and execute the relevant logic for isBeingSynced during the creation of the target table.
 
@@ -472,4 +458,4 @@ Regarding the disabling of the functionalities mentioned above:
 
 ### Note
 
-The `is_being_synced` property should be fully controlled by the syncer, and users should not modify this property manually unless there are exceptional circumstances.
+The `is_being_synced` property should be fully controlled by the Syncer, and users should not modify this property manually unless there are exceptional circumstances.
