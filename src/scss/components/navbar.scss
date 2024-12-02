@@ -81,10 +81,12 @@
             padding: var(--ifm-navbar-item-padding-vertical) 1rem;
         }
 
-        transition: {
-            property: color;
-            timing-function: ease-out;
-            duration: 0.3s;
+        & {
+            transition: {
+                property: color;
+                timing-function: ease-out;
+                duration: 0.3s;
+            }
         }
 
         &:hover {

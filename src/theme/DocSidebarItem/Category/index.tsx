@@ -139,7 +139,6 @@ export default function DocSidebarItemCategory({
             setCollapsed(true);
         }
     }, [collapsible, expandedItem, index, setCollapsed, autoCollapseCategories]);
-    console.log('length',length,'level',level);
     
     return (
         <li

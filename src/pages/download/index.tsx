@@ -103,7 +103,6 @@ export default function Download() {
     }
 
     function onValuesChange(values: any) {
-        console.log(values.version, 'values.version')
         setReleaseFlag(values.version[0] === '1.1' ? false : true)
         if (!toDocsRelease(values.version[1])) {
             setReleaseNote('https://github.com/apache/doris/releases');

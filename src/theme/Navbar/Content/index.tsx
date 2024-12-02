@@ -139,12 +139,6 @@ export default function NavbarContent(): JSX.Element {
     function getNavItem(type: string) {
         return items.find(item => item.type === type);
     }
-    console.log('leftItems',leftItems);
-    console.log('rightItems',rightItems);
-    console.log('leftDocItems',leftDocItems);
-    console.log('isDocsPage',isDocsPage);
-    console.log('rightDocItems',rightDocItems);
-    console.log('star',star);
     
     
     return (
