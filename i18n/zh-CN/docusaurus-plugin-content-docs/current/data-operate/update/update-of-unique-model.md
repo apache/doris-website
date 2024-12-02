@@ -32,7 +32,7 @@ under the License.
 
 ## 部分列更新
 
-部分列更新，主要是指直接更新表中某些字段值，而不是全部的字段值。可以采用 Update 语句来进行更新，这种 Update 语句一般采用先将整行数据读出，然后再更新部分字段值，再写回。这种读写事务非常耗时，并且不适合大批量数据写入。Doris 在主键模型的导入更新，提供了可以直接插入或者更新部分列数据的功能，不需要先读取整行数据，这样更新效率就大幅提升了。
+部分列更新，主要是指直接更新表中某些字段值，而不是全部的字段值。可以采用 Update 语句来进行更新，这种 Update 语句一般采用先将整行数据读出，然后再更新部分字段值，再写回。这种读写事务非常耗时，并且不适合大批量数据写入。Doris 在主键模型的导入更新中，提供了可以直接插入或者更新部分列数据的功能，不需要先读取整行数据，这样更新效率就大幅提升了。
 
 :::caution
 注意
@@ -70,7 +70,7 @@ enable_unique_key_merge_on_write = true
 partial_columns:true
 ```
 
-同时在`columns`中指定要导入的列（必须包含所有 key 列，不然无法更新）, 下面是一个Stream Load的例子：
+同时在`columns`中指定要导入的列（必须包含所有 key 列，不然无法更新），下面是一个 Stream Load 的例子：
 
 ```sql
 curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
@@ -78,7 +78,7 @@ curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator
 
 **INSERT INTO**
 
-在所有的数据模型中，`INSERT INTO` 给定一部分列时默认行为都是整行写入，为了防止误用，在 Merge-on-Write 实现中，`INSERT INTO`默认仍然保持整行 UPSERT 的语意，如果需要开启部分列更新的语意，需要设置如下 session variable
+在所有的数据模型中，`INSERT INTO` 给定一部分列时默认行为都是整行写入，为了防止误用，在 Merge-on-Write 实现中，`INSERT INTO`默认仍然保持整行 UPSERT 的语义，如果需要开启部分列更新的语义，需要设置如下 session variable
 
 ```sql
 SET enable_unique_key_partial_update=true
@@ -116,7 +116,7 @@ INSERT INTO order_tbl (order_id, order_status) VALUES (1,'待发货');
 
 这时候，用户点击付款后，Doris 系统需要将订单 id 为 '1' 的订单状态变更为 '待发货'。
 
-使用`INSRT INTO`进行更新：
+使用`INSERT INTO`进行更新：
 
 ```sql
 set enable_unique_key_partial_update=true;
@@ -149,7 +149,6 @@ INSERT INTO order_tbl (order_id, order_status) VALUES (1,'待发货');
 ```
 
 目前，同一批次数据写入任务（无论是导入任务还是`INSERT INTO`）的所有行只能更新相同的列，如果需要更新不同列的数据，则需要分不同的批次进行写入。
-
 
 ## 灵活部分列更新
 
