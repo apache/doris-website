@@ -84,18 +84,9 @@ under the License.
 
 3. DUPLICATE 和 开启 Merge-on-Write 的 UNIQUE 表模型支持任意列建倒排索引。但是 AGGREGATE 和 未开启 Merge-on-Write 的 UNIQUE 模型仅支持 Key 列建倒排索引，非 Key 列不能建倒排索引，这是因为这两个模型需要读取所有数据后做合并，因此不能利用索引做提前过滤。
 
-
-如果要查看某个查询倒排索引效果，可以通过 Query Profile 中的相关指标进行分析。
-
-- InvertedIndexFilterTime 是倒排索引消耗的时间
-  - InvertedIndexSearcherOpenTime 是倒排索引打开索引的时间
-  - InvertedIndexSearcherSearchTime 是倒排索引内部查询的时间
-
-- RowsInvertedIndexFiltered 是倒排过滤掉的行数，可以与其他几个 Rows 值对比分析 BloomFilter 索引过滤效果
 :::
 
-
-## 使用语法
+## 管理索引
 
 ### 建表时定义倒排索引
 
@@ -269,6 +260,19 @@ ALTER TABLE table_name DROP INDEX idx_name;
 
 :::
 
+### 查看倒排索引
+
+```sql
+-- 语法 1，表的 schema 中 INDEX 部分 USING INVERTED 是倒排索引
+SHOW CREATE TABLE table_name;
+
+-- 语法 2，IndexType 为 INVERTED 的是倒排索引
+SHOW INDEX FROM idx_name;
+```
+
+
+## 使用索引
+
 ### 利用倒排索引加速查询
 
 ```sql
@@ -320,7 +324,16 @@ SELECT * FROM table_name WHERE ts > '2023-01-01 00:00:00';
 SELECT * FROM table_name WHERE op_type IN ('add', 'delete');
 ```
 
-### 分词函数
+倒排查询加速可以通过 session 变量 `enable_inverted_index_query` 开关，默认是 true 打开，有时为了验证索引加速效果可以设置为 false 关闭。
+
+可以通过 Query Profile 中的下面几个指标分析倒排索引的加速效果。
+- RowsInvertedIndexFiltered 倒排过滤掉的行数，可以与其他几个 Rows 值对比分析索引过滤效果
+- InvertedIndexFilterTime 倒排索引消耗的时间
+  - InvertedIndexSearcherOpenTime 倒排索引打开索引的时间
+  - InvertedIndexSearcherSearchTime 倒排索引内部查询的时间
+
+
+### 用分词函数验证分词效果
 
 如果想检查分词实际效果或者对一段文本进行分词行为，可以使用 TOKENIZE 函数进行验证。
 
