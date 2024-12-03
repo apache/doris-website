@@ -1,4 +1,4 @@
-@use "sass:meta";
+@use 'sass:meta';
 /**
  * Any CSS included here will be global. The classic template
  * bundles Infima by default. Infima is a CSS framework designed to
@@ -38,18 +38,33 @@
     color: white;
 }
 
-:root {
-    --font-family-base: 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+html[lang='zh-Hans-CN'] {
+    --font-family-base: 'MiSans';
+    font-family: 'MiSans', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
+html[lang='en-US'] {
+    --font-family-base: 'Inter';
+    font-family: 'Inter', 'MiSans Latin', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+// :root {
+//     --font-family-base: 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+// }
 .markdown :where(p, h1, h2, h3, h4, h5, h6, li, blockquote) {
     font-family: var(--font-family-base);
     color: #2a2f34;
+}
+
+body {
+    font-family: var(--font-family-base);
 }
 // body, .markdown {
 //     font-family: var(--font-family-base);
 //     font-weight: 400 !important;
 //     color: #2a2f34
 // }
+
 .navbar__link {
     font-family: var(--font-family-base);
     font-weight: 400 !important;
