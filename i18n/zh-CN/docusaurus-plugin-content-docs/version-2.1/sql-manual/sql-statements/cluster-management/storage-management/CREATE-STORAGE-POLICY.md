@@ -44,7 +44,7 @@ PROPERTIES(
 
 2. `<storage_resource_name>`:关联的存储资源名字，具体如何创建可参考 RESOURCE 章节
 
-## 可选参数（Optional Parameters）
+## 可选参数
 
 1. `<cooldown_datetime>`:指定创建数据迁移策略冷却的时间
 
@@ -58,7 +58,7 @@ PROPERTIES(
 | :---------------- | :--------------- | :-------------------------- |
 | ADMIN_PRIV        | 整个集群管理权限 | 除 NODE_PRIV 以外的所有权限 |
 
-## 示例（Example）
+## 示例
 
 1. 指定数据冷却时间创建数据迁移策略。
 
