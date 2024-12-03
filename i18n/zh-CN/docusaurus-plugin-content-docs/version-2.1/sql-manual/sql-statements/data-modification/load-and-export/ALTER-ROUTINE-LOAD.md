@@ -30,7 +30,7 @@ under the License.
 
 ALTER ROUTINE LOAD
 
-### Description
+## 描述
 
 该语法用于修改已经创建的例行导入作业。
 
@@ -120,9 +120,9 @@ FROM data_source
         "property.group.id" = "new_group"
     );
 
-### Keywords
+## 关键词
 
     ALTER, ROUTINE, LOAD
 
-### Best Practice
+## 最佳实践
 

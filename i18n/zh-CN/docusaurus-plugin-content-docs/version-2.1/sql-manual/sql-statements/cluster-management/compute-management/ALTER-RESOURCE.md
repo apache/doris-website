@@ -31,7 +31,7 @@ under the License.
 
 ALTER RESOURCE
 
-### Description
+## 描述
 
 该语句用于修改一个已有的资源。仅 root 或 admin 用户可以修改资源。
 语法：
@@ -70,10 +70,10 @@ ALTER RESOURCE 'remote_s3' PROPERTIES ("s3.connection.maximum" = "100");
 ```sql
   ALTER RESOURCE "showPolicy_1_resource" PROPERTIES("s3.connection.maximum" = "1111");
 ```
-### Keywords
+## 关键词
 
 ```sql
 ALTER, RESOURCE
 ```
 
-### Best Practice
+## 最佳实践

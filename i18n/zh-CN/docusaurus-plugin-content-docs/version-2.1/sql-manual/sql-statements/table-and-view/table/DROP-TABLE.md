@@ -30,7 +30,7 @@ under the License.
 
 DROP TABLE
 
-### Description
+## 描述
 
 该语句用于删除 table。
 语法：
@@ -60,9 +60,9 @@ DROP TABLE [IF EXISTS] [db_name.]table_name [FORCE];
     ```
     
 
-### Keywords
+## 关键词
 
     DROP, TABLE
 
-### Best Practice
+## 最佳实践
 

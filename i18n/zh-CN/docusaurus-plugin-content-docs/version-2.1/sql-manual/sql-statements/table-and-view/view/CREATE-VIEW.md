@@ -28,7 +28,7 @@ under the License.
 
 CREATE VIEW
 
-### Description
+## 描述
 
 该语句用于创建一个逻辑视图
 语法：
@@ -73,9 +73,9 @@ AS query_stmt
     WHERE k1 = 20160112 GROUP BY k1,k2,k3;
     ```
 
-### Keywords
+## 关键词
 
     CREATE, VIEW
 
-### Best Practice
+## 最佳实践
 

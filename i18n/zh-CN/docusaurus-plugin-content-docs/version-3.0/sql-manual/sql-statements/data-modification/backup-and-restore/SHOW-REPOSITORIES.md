@@ -30,7 +30,7 @@ under the License.
 
 SHOW REPOSITORIES
 
-### Description
+## 描述
 
 该语句用于查看当前已创建的仓库
 
@@ -51,7 +51,7 @@ SHOW REPOSITORIES;
             Broker：依赖的 Broker
             ErrMsg：Doris 会定期检查仓库的连通性，如果出现问题，这里会显示错误信息
 
-### Example
+## 例子
 
 1. 查看已创建的仓库：
 
@@ -59,9 +59,9 @@ SHOW REPOSITORIES;
  SHOW REPOSITORIES;
 ```
 
-### Keywords
+## 关键词
 
     SHOW, REPOSITORIES
 
-### Best Practice
+### 最佳实践
 

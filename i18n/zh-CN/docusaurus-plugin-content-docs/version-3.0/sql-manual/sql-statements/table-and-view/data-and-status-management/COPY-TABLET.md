@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN-COPY-TABLET",
+    "title": "COPY TABLET",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-COPY-TABLET
 
 ### Name
 
 ADMIN COPY TABLET
 
-### Description
+## 描述
 
 该语句用于为指定的 tablet 制作快照，主要用于本地加载 tablet 来复现问题。
 
@@ -50,7 +49,7 @@ PROPERTIES 支持如下属性：
 
 2. version：指定快照的版本。该版本需小于等于副本的最大版本。如不指定，则使用最大版本。
 
-3. expiration_minutes：快照保留时长。默认为1小时。超时后会自动清理。单位分钟。
+3. expiration_minutes：快照保留时长。默认为 1 小时。超时后会自动清理。单位分钟。
 
 结果展示如下：
 
@@ -79,7 +78,7 @@ PROPERTIES (
 * ExpirationMinutes: 快照过期时间
 * CreateTableStmt: tablet 对应的表的建表语句。该语句不是原始的建表语句，而是用于之后本地加载 tablet 的简化后的建表语句。
 
-### Example
+## 例子
 
 1. 对指定 BE 节点上的副本做快照
 
@@ -93,9 +92,9 @@ PROPERTIES (
     ADMIN COPY TABLET 10010 PROPERTIES("backend_id" = "10001", "version" = "10");
     ```
 
-### Keywords
+## 关键词
 
     ADMIN, COPY, TABLET
 
-### Best Practice
+### 最佳实践
 

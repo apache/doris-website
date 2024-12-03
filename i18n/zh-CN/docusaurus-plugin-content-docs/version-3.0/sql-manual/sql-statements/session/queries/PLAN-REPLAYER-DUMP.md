@@ -23,50 +23,44 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-# PLAN REPLAYER DUMP
+
 
 ## 描述
 
 PLAN REPLAYER DUMP 是 Doris 用户用来生成执行规划诊断文件的工具。用于捕捉查询优化器的状态和输入数据，方便调试和分析查询优化问题。其输出为对应诊断文件的 http 地址。
-PLAN REPLAYER DUMP is a tool for Doris users to generate execution plan diagnostic files. It captures the state and input data of the query optimizer, facilitating debugging and analysis of query optimization issues. The output is the http address of the corresponding diagnostic file.
+
 
 ## 语法
-## Syntax
+
 
 ```sql
 PLAN REPLAYER DUMP <query>
 ```
 
 ## 必选参数
-## Required Parameters
 
 `<query>`
 
 - 指的是对应的 DML 里面的 query 语句
 - 如果不是 query 语句则会报 parse 错误
 - 有关更多详细信息，请参阅[SELECT](https://doris.apache.org/zh-CN/docs/sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/SELECT/)语法
-- Refers to the query statement inside the corresponding DML.
-- If it is not a query statement, a parse error will be reported.
-- For more details, please refer to the [SELECT](https://doris.apache.org/en-US/docs/sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/SELECT/) syntax.
 
 ## 权限控制
-## Permission Control
+
 
 执行此 SQL 命令的用户必须至少具有以下权限：
-Users executing this SQL command must have at least the following permissions:
+
 
 | 权限（Privilege） | 对象（Object）            | 说明（Notes）                                                |
 | :---------------- | :------------------------ | :----------------------------------------------------------- |
 | SELECT_PRIV       | 表（Table）, 视图（View） | 当执行 <query_sql_statement> 时，需要拥有被查询的表，视图或物化视图的 SELECT_PRIV 权限 |
-| Privilege | Object | Notes |
-| :--: | :--: | :--: |
-| SELECT_PRIV | Table, View | When executing the <query_sql_statement>, the SELECT_PRIV permission for the queried table, view, or materialized view is required. |
+
 
 ## 示例
-## Examples
+
 
 ### 基础示例
-### Basic Example
+
 
 ```sql
 create database test_replayer;
@@ -76,7 +70,7 @@ plan replayer dump select * from t1;
 ```
 
 执行结果示例：
-Execution result example:
+
 
 ```sql
 +-------------------------------------------------------------------------------+
@@ -88,14 +82,14 @@ Execution result example:
 ```
 
 可以使用 curl 或者 wget 获取对应的文件，例如：
-You can use curl or wget to obtain the corresponding file, for example:
+
 
 ```sql
 wget http://127.0.0.1:8030/api/minidump?query_id=6e7441f741e94afd-ad3ba69429ad18ec
 ```
 
 当需要权限的时候可以把用户名和密码包含在
-When permissions are required, you can include the username and password in:
+
 
 ```sql
 wget --header="Authorization: Basic $(echo -n 'root:' | base64)" http://127.0.0.1:8030/api/minidump?query_id=6e7441f741e94afd-ad3ba69429ad18ec

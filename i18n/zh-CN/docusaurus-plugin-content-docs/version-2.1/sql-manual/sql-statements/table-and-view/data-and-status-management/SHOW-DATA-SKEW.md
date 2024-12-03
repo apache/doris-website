@@ -29,7 +29,7 @@ under the License.
 
 SHOW DATA SKEW
 
-### Description
+## 描述
 
     该语句用于查看表或某个分区的数据倾斜情况。
 
@@ -151,8 +151,8 @@ SHOW DATA SKEW
     +----------------------+-----------+-------------+-------------+---------------------------+---------+
     ```
 
-### Keywords
+## 关键词
 
     SHOW,DATA,SKEW
 
-### Best Practice
+## 最佳实践

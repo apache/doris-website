@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CLEAN-LABEL",
+    "title": "CLEAN LABEL",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CLEAN-LABEL
+
 
 ### Name
 
 CLEAN LABEL
 
-### Description
+## 描述
 
 用于手动清理历史导入作业的 Label。清理后，Label 可以重复使用。
 
@@ -40,7 +40,7 @@ CLEAN LABEL
 CLEAN LABEL [label] FROM db;
 ```
 
-### Example
+## 例子
 
 1. 清理 db1 中，Label 为 label1 的导入作业。
 
@@ -54,9 +54,9 @@ CLEAN LABEL [label] FROM db;
 	CLEAN LABEL FROM db1;
 	```
 
-### Keywords
+## 关键词
 
     CLEAN, LABEL
 
-### Best Practice
+### 最佳实践
 

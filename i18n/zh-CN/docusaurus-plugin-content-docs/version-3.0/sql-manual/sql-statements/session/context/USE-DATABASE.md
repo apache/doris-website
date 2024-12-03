@@ -43,7 +43,7 @@ USE <[CATALOG_NAME].DATABASE_NAME>
    Database changed
    ```
 
-2. 如果 demo 数据库在hms_catalog的Catalog下存在，尝试切换到hms_catalog, 并使用它：
+2. 如果 demo 数据库在 hms_catalog 的 Catalog 下存在，尝试切换到 hms_catalog, 并使用它：
 
     ```sql
     mysql> use hms_catalog.demo;

@@ -28,7 +28,7 @@ under the License.
 
 CREATE TABLE LIKE
 
-### Description
+## 描述
 
 该语句用于创建一个表结构和另一张表完全相同的空表，同时也能够可选复制一些 rollup。 
 
@@ -103,9 +103,9 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]ta
     CREATE TABLE test1.table2 LIKE test1.table1
     ```
 
-### Keywords
+## 关键词
 
     CREATE, TABLE, LIKE
 
-### Best Practice
+## 最佳实践
 

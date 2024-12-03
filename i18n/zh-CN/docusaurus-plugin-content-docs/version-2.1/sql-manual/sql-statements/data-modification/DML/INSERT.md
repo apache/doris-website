@@ -30,7 +30,7 @@ under the License.
 
 INSERT
 
-### Description
+## 描述
 
 该语句是完成数据插入操作。
 
@@ -115,11 +115,11 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 ```
 
 
-### Keywords
+## 关键词
 
     INSERT
 
-### Best Practice
+## 最佳实践
 
 1. 查看返回结果
 

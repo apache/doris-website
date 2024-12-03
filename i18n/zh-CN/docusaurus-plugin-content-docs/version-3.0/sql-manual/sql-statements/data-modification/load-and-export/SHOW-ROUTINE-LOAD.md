@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-ROUTINE-LOAD",
+    "title": "SHOW ROUTINE LOAD",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-ROUTINE-LOAD
+
 
 ### Name
 
 SHOW ROUTINE LOAD
 
-### Description
+## 描述
 
 该语句用于展示 Routine Load 作业运行状态
 
@@ -67,7 +67,7 @@ ReasonOfStateChanged: 作业状态变更的原因
 
 * State
   
-        有以下5种State：
+        有以下 5 种 State：
         * NEED_SCHEDULE：作业等待被调度
         * RUNNING：作业运行中
         * PAUSED：作业被暂停
@@ -76,13 +76,13 @@ ReasonOfStateChanged: 作业状态变更的原因
     
 * Progress
   
-        对于Kafka数据源，显示每个分区当前已消费的offset。如 {"0":"2"} 表示Kafka分区0的消费进度为2。
+        对于 Kafka 数据源，显示每个分区当前已消费的 offset。如 {"0":"2"} 表示 Kafka 分区 0 的消费进度为 2。
     
 * Lag
   
-        对于Kafka数据源，显示每个分区的消费延迟。如{"0":10} 表示Kafka分区0的消费延迟为10。
+        对于 Kafka 数据源，显示每个分区的消费延迟。如{"0":10} 表示 Kafka 分区 0 的消费延迟为 10。
 
-### Example
+## 例子
 
 1. 展示名称为 test1 的所有例行导入作业（包括已停止或取消的作业）。结果为一行或多行。
 
@@ -122,9 +122,9 @@ ReasonOfStateChanged: 作业状态变更的原因
     SHOW ALL ROUTINE LOAD FOR example_db.test1;
     ```
 
-### Keywords
+## 关键词
 
     SHOW, ROUTINE, LOAD
 
-### Best Practice
+### 最佳实践
 

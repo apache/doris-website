@@ -26,11 +26,8 @@ under the License.
 
 
 
-### Name
 
-DROP ROLE
-
-### Description
+## 描述
 
 语句用户删除角色
 
@@ -40,7 +37,7 @@ DROP ROLE
 
 删除角色不会影响以前属于角色的用户的权限。它仅相当于解耦来自用户的角色。用户从角色获得的权限不会改变
 
-### Example
+## 例子
 
 1. 删除一个角色
 
@@ -48,9 +45,9 @@ DROP ROLE
 DROP ROLE role1;
 ```
 
-### Keywords
+## 关键词
 
     DROP, ROLE
 
-### Best Practice
+### 最佳实践
 

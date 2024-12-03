@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DESCRIBE
 
-### Name
-
-DESCRIBE
-
-### Description
+## 描述
 
 该语句用于展示指定 table 的 schema 信息
 
@@ -44,9 +39,9 @@ DESC[RIBE] [db_name.]table_name [ALL];
 
 1. 如果指定 ALL，则显示该 table 的所有 index(rollup) 的 schema
 
-### Example
+## 例子
 
-1. 显示Base表Schema
+1. 显示 Base 表 Schema
 
     ```sql
     DESC table_name;
@@ -58,9 +53,9 @@ DESC[RIBE] [db_name.]table_name [ALL];
     DESC db1.table_name ALL;
     ```
 
-### Keywords
+## 关键词
 
-    DESCRIBE, DESC
+DESCRIBE, DESC
 
-### Best Practice
+
 

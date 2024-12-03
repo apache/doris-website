@@ -31,7 +31,7 @@ under the License.
 REFRESH
 
 
-### Description
+## 描述
 
 该语句用于刷新指定 Catalog/Database/Table 的元数据。
 
@@ -71,9 +71,9 @@ REFRESH TABLE [catalog_name.][database_name.]table_name;
     REFRESH TABLE table1;
     ```
 
-### Keywords
+## 关键词
 
 REFRESH, CATALOG, DATABASE, TABLE
 
-### Best Practice
+## 最佳实践
 

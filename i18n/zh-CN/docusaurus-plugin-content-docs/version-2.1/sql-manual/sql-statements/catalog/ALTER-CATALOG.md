@@ -36,7 +36,7 @@ ALTER CATALOG
 
 
 
-### Description
+## 描述
 
 该语句用于设置指定数据目录的属性。（仅管理员使用）
 
@@ -91,8 +91,8 @@ ALTER CATALOG hive SET PROPERTIES ('hive.metastore.uris'='thrift://172.21.0.1:90
 ALTER CATALOG hive MODIFY COMMENT "new catalog comment";
 ```
 
-### Keywords
+## 关键词
 
 ALTER,CATALOG,RENAME,PROPERTY
 
-### Best Practice
+## 最佳实践

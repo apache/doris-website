@@ -29,7 +29,7 @@ under the License.
 
 SHOW TABLE STATUS
 
-### Description
+## 描述
 
 该语句用于查看 Table 的一些信息。
 
@@ -58,9 +58,9 @@ SHOW TABLE STATUS
     SHOW TABLE STATUS FROM db LIKE "%example%";
     ```
 
-### Keywords
+## 关键词
 
     SHOW, TABLE, STATUS
 
-### Best Practice
+## 最佳实践
 

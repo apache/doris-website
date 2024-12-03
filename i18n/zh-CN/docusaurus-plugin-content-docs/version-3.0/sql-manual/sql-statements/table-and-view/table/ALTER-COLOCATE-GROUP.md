@@ -1,6 +1,6 @@
 ---
 {
-"title": "ALTER-COLOCATE-GROUP",
+"title": "ALTER COLOCATE GROUP",
 "language": "zh-CN"
 }
 ---
@@ -24,13 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-COLOCATE-GROUP
 
-### Name
 
-ALTER COLOCATE GROUP
-
-### Description
+## 描述
 
 该语句用于修改 Colocation Group 的属性。
 
@@ -53,7 +49,7 @@ SET (
 
 
 
-### Example
+## 例子
 
 1. 修改一个全局 group 的副本数
 
@@ -77,10 +73,10 @@ SET (
     );
     ```
 
-### Keywords
+## 关键词
 
 ```sql
 ALTER, COLOCATE , GROUP
 ```
 
-### Best Practice
+### 最佳实践

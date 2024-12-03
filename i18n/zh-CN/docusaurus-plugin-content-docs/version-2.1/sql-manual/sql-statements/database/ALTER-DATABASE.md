@@ -28,7 +28,7 @@ under the License.
 
 ALTER DATABASE
 
-### Description
+## 描述
 
 该语句用于设置指定数据库的属性。（仅管理员使用）
 
@@ -102,7 +102,7 @@ ALTER DATABASE db_name SET PROPERTIES ("key"="value", ...);
     ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "");
     ```
 
-### Keywords
+## 关键词
 
 
 ALTER,DATABASE,RENAME

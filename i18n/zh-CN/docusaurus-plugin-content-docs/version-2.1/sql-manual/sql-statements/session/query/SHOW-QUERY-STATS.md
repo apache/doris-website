@@ -32,7 +32,7 @@ under the License.
 SHOW QUERY STATS
 
 
-### Description
+## 描述
 
 该语句用于展示数据库中历史查询命中的库表列的情况
 
@@ -188,8 +188,8 @@ SHOW QUERY STATS [[FOR db_name]|[FROM table_name]] [ALL] [VERBOSE]];
    SHOW QUERY STATS;
    ```
 
-### Keywords
+## 关键词
 
      SHOW， QUERY, STATS;
 
-### Best Practice
+## 最佳实践

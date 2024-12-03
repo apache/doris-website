@@ -30,7 +30,7 @@ under the License.
 
 SHOW LOAD
 
-### Description
+## 描述
 
 该语句用于展示指定的导入任务的执行情况
 
@@ -110,9 +110,9 @@ SHOW LOAD
     curl --location-trusted -u {user}:{passwd} http://{hostname}:{port}/api/{database}/_load_info?label={labelname}
     ```
 
-### Keywords
+## 关键词
 
     SHOW, LOAD
 
-### Best Practice
+## 最佳实践
 

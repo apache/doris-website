@@ -28,7 +28,7 @@ under the License.
 
 SHOW CREATE FUNCTION
 
-### Description
+## 描述
 
 该语句用于展示用户自定义函数的创建语句
 
@@ -60,9 +60,9 @@ SHOW CREATE [GLOBAL] FUNCTION function_name(arg_type [, ...]) [FROM db_name]];
     SHOW CREATE GLOBAL FUNCTION my_add(INT, INT)
     ```
 
-### Keywords
+## 关键词
 
     SHOW, CREATE, FUNCTION
 
-### Best Practice
+## 最佳实践
 

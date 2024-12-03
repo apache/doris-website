@@ -43,7 +43,7 @@ SHOW ALTER
 SHOW ALTER TABLE
 
 
-### Description
+## 描述
 
 该语句用于展示当前正在进行的各类修改任务的执行情况
 
@@ -85,8 +85,8 @@ SHOW ALTER [CLUSTER | TABLE [COLUMN | ROLLUP] [FROM db_name]];
    SHOW ALTER CLUSTER;
    ```
 
-### Keywords
+## 关键词
 
     SHOW, ALTER
 
-### Best Practice
+## 最佳实践

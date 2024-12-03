@@ -1,6 +1,6 @@
 ---
 {
-    "title": "UNSET-VARIABLE",
+    "title": "UNSET VARIABLE",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## UNSET-VARIABLE
+
 
 ### Name
 
 UNSET VARIABLE
 
-### Description
+## 描述
 
 该语句主要是用来恢复 Doris 系统变量为默认值，可以是全局也可以是会话级别。
 
@@ -50,7 +50,7 @@ UNSET [SESSION|GLOBAL] VARIABLE (variable_name | ALL)
 > 2. 使用 `GLOBAL` 恢复变量值时仅在执行命令的当前会话和之后打开的会话中生效，不会恢复当前已有的其它会话中的值。
 
 
-### Example
+## 例子
 
 1. 恢复时区为默认值东八区
 
@@ -70,9 +70,9 @@ UNSET [SESSION|GLOBAL] VARIABLE (variable_name | ALL)
    UNSET GLOBAL VARIABLE ALL;
    ```
 
-### Keywords
+## 关键词
 
     UNSET, VARIABLE
 
-### Best Practice
+### 最佳实践
 

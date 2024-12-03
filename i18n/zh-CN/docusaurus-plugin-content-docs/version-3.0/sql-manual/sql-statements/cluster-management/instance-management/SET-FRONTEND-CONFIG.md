@@ -30,7 +30,7 @@ under the License.
 
 ADMIN SET CONFIG
 
-### Description
+## 描述
 
 该语句用于设置集群的配置项（当前仅支持设置 FE 的配置项）。
 
@@ -51,14 +51,14 @@ ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
 - 
 :::
 
-### Example
+## 例子
 
 1. 设置 `disable_balance` 为 true
 
     `ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");`
 
-### Keywords
+## 关键词
 
     ADMIN, SET, CONFIG
 
-### Best Practice
+### 最佳实践

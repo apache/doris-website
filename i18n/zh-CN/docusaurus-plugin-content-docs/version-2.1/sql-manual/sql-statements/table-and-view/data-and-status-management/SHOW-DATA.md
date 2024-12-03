@@ -28,7 +28,7 @@ under the License.
 
 SHOW DATA
 
-### Description
+## 描述
 
 该语句用于展示数据量、副本数量以及统计行数。
 
@@ -131,9 +131,9 @@ SHOW DATA [FROM [db_name.]table_name] [ORDER BY ...];
     +-----------+-------------+--------------+
     ```
 
-### Keywords
+## 关键词
 
     SHOW, DATA
 
-### Best Practice
+## 最佳实践
 

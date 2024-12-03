@@ -22,8 +22,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW TABLET DIAGNOSIS
-### Description
+
+## 描述
 
     该语句用于诊断指定 tablet。结果中将显示这个 tablet 的信息和一些潜在的问题。
 
@@ -47,12 +47,12 @@ under the License.
         11.ReplicaStatus:                       副本状态是否正常。
         12.ReplicaCompactionStatus:             副本 Compaction 状态是否正常。
 
-### Example
+## 例子
 
     1. 查看 Tablet 10001 的诊断结果
 
         SHOW TABLET DIAGNOSIS 10001;
 
-### keywords
+## 关键词
 
     SHOW, DIAGNOSIS, TABLET

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "BROKER-LOAD",
+    "title": "BROKER LOAD",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## BROKER-LOAD
+
 
 ### Name
 
 BROKER LOAD
 
-### Description
+## 描述
 
 该命令主要用于通过 Broker 服务进程读取远端存储（如 S3、HDFS）上的数据导入到 Doris 表里。
 
@@ -216,7 +216,7 @@ WITH BROKER broker_name
 
    指定导入任务的备注信息。可选参数。
 
-### Example
+## 例子
 
 1. 从 HDFS 导入一批数据
 
@@ -525,11 +525,11 @@ WITH BROKER broker_name
     )
     ```
 
-### Keywords
+## 关键词
 
     BROKER, LOAD
 
-### Best Practice
+### 最佳实践
 
 1. 查看导入任务状态
 

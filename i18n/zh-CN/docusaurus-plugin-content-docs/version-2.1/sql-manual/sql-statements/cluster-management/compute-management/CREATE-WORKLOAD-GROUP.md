@@ -31,7 +31,7 @@ CREATE WORKLOAD GROUP
 
  
 
-### Description
+## 描述
 
 
 该语句用于创建资源组。资源组可实现单个 be 上 cpu 资源和内存资源的隔离。
@@ -68,9 +68,9 @@ property_list 支持的属性：
     );
    ```
 
-### Keywords
+## 关键词
 
     CREATE, WORKLOAD, GROUP
 
-### Best Practice
+## 最佳实践
 

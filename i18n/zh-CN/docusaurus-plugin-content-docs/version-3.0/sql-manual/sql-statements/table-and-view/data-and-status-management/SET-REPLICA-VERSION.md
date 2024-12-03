@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN-SET-REPLICA-VERSION",
+    "title": "SET REPLICA VERSION",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-SET-REPLICA-VERSION
 
 ### Name
 
 ADMIN SET REPLICA VERSION
 
-### Description
+## 描述
 
 该语句用于设置指定副本的版本、最大成功版本、最大失败版本。
 
@@ -47,8 +46,8 @@ ADMIN SET REPLICA VERSION
 
 1. `tablet_id`：必需。指定一个 Tablet Id.
 2. `backend_id`：必需。指定 Backend Id.
-3. `version`：可选。设置副本的版本.
-4. `last_success_version`：可选。设置副本的最大成功版本.
+3. `version`：可选。设置副本的版本。
+4. `last_success_version`：可选。设置副本的最大成功版本。
 5. `last_failed_version`：可选。设置副本的最大失败版本。
 
 
@@ -60,10 +59,10 @@ ADMIN SET REPLICA VERSION
 > 
 >   修改之前先记录原来的值。修改完毕之后，对表进行读写验证，如果读写失败，请恢复原来的值！但可能会恢复失败！
 > 
->   严禁对正在写入数据的tablet进行操作 ！
+>   严禁对正在写入数据的 tablet 进行操作！
 
 
-### Example
+## 例子
 
  1. 清除 tablet 10003 在 BE 10001 上的副本状态失败标志。
 
@@ -77,9 +76,9 @@ ADMIN SET REPLICA VERSION PROPERTIES("tablet_id" = "10003", "backend_id" = "1000
 ADMIN SET REPLICA VERSION PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "version" = "1004");
 ```
 
-### Keywords
+## 关键词
 
     ADMIN, SET, REPLICA, VERSION
 
-### Best Practice
+### 最佳实践
 

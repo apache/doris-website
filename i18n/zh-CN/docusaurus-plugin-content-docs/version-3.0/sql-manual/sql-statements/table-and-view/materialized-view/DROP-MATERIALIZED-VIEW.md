@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-MATERIALIZED-VIEW",
+    "title": "DROP MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-MATERIALIZED-VIEW
-
-### Name
-
-DROP MATERIALIZED VIEW
-
-### Description
+## 描述
 
 该语句用于删除物化视图。同步语法
 
@@ -50,7 +44,7 @@ DROP MATERIALIZED VIEW [IF EXISTS] mv_name ON table_name;
 3. table_name:
         待删除的物化视图所属的表名。必填项。
 
-### Example
+## 例子
 
 表结构为
 
@@ -112,9 +106,9 @@ mysql> desc all_type_table all;
 
     存在则删除，不存在则不报错。
 
-### Keywords
+## 关键词
 
     DROP, MATERIALIZED, VIEW
 
-### Best Practice
+### 最佳实践
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-TABLE-COMMENT",
+    "title": "ALTER TABLE COMMENT",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-TABLE-COMMENT
 
-### Name
 
-ALTER TABLE COMMENT
 
-### Description
+## 描述
 
 该语句用于对已有 table 的 comment 进行修改。这个操作是同步的，命令返回表示执行完毕。
 
@@ -56,7 +53,7 @@ MODIFY COMMENT "new table comment";
 MODIFY COLUMN col1 COMMENT "new column comment";
 ```
 
-### Example
+## 例子
 
 1. 将名为 table1 的 comment 修改为 table1_comment
 
@@ -70,11 +67,11 @@ ALTER TABLE table1 MODIFY COMMENT "table1_comment";
 ALTER TABLE table1 MODIFY COLUMN col1 COMMENT "table1_col1_comment";
 ```
 
-### Keywords
+## 关键词
 
 ```text
 ALTER, TABLE, COMMENT, ALTER TABLE
 ```
 
-### Best Practice
+### 最佳实践
 

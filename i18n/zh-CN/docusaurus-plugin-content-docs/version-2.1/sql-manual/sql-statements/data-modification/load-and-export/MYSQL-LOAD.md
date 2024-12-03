@@ -31,7 +31,7 @@ under the License.
     MYSQL LOAD
 
 
-### Description
+## 描述
 
 mysql-load: 使用 MySql 客户端导入本地数据
 
@@ -169,6 +169,6 @@ INTO TABLE tbl_name
     PROPERTIES ("exec_mem_limit"="10737418240", "timeout"="600")
     ```
 
-### Keywords
+## 关键词
 
     MYSQL, LOAD

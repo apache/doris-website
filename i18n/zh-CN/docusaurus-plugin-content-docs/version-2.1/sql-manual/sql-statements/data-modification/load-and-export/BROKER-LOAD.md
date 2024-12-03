@@ -30,7 +30,7 @@ under the License.
 
 BROKER LOAD
 
-### Description
+## 描述
 
 该命令主要用于通过 Broker 服务进程读取远端存储（如 S3、HDFS）上的数据导入到 Doris 表里。
 
@@ -528,11 +528,11 @@ WITH BROKER broker_name
     )
     ```
 
-### Keywords
+## 关键词
 
     BROKER, LOAD
 
-### Best Practice
+## 最佳实践
 
 1. 查看导入任务状态
 

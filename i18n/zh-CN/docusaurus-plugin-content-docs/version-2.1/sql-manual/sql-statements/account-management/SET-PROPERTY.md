@@ -30,7 +30,7 @@ under the License.
 
 SET PROPERTY
 
-### Description
+## 描述
 
  设置用户的属性，包括分配给用户的资源、导入 cluster 等
 
@@ -104,9 +104,9 @@ key:
     SET PROPERTY FOR 'jack' 'query_timeout' = '500';
     ```
     
-### Keywords
+## 关键词
 
     SET, PROPERTY
 
-### Best Practice
+## 最佳实践
 

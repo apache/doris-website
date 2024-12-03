@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-TABLE-PARTITION",
+    "title": "ALTER TABLE PARTITION",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-TABLE-PARTITION
 
-### Name
-
-ALTER TABLE PARTITION
-
-### Description
+## 描述
 
 该语句用于对有 partition 的 table 进行修改操作。
 
@@ -61,10 +56,10 @@ partition_desc ["key"="value"]
   - VALUES [("value1", ...), ("value1", ...))
 - 分区为左闭右开区间，如果用户仅指定右边界，系统会自动确定左边界
 - 如果没有指定分桶方式，则自动使用建表使用的分桶方式和分桶数。
-- 如指定分桶方式，只能修改分桶数，不可修改分桶方式或分桶列。如果指定了分桶方式，但是没有指定分桶数，则分桶数会使用默认值10，不会使用建表时指定的分桶数。如果要指定分桶数，则必须指定分桶方式。
+- 如指定分桶方式，只能修改分桶数，不可修改分桶方式或分桶列。如果指定了分桶方式，但是没有指定分桶数，则分桶数会使用默认值 10，不会使用建表时指定的分桶数。如果要指定分桶数，则必须指定分桶方式。
 - ["key"="value"] 部分可以设置分区的一些属性，具体说明见 [CREATE TABLE](../Create/CREATE-TABLE.md)
-- 如果建表时用户未显式创建Partition,则不支持通过ALTER的方式增加分区
-- 如果用户使用的是List Partition则可以增加default partition，default partition将会存储所有不满足其他分区键要求的数据。
+- 如果建表时用户未显式创建 Partition，则不支持通过 ALTER 的方式增加分区
+- 如果用户使用的是 List Partition 则可以增加 default partition，default partition 将会存储所有不满足其他分区键要求的数据。
   -  ALTER TABLE table_name ADD PARTITION partition_name
 
 2. 删除分区
@@ -78,7 +73,7 @@ DROP PARTITION [IF EXISTS] partition_name [FORCE]
  注意：
 
 - 使用分区方式的表至少要保留一个分区。
-- 执行 DROP PARTITION 一段时间内，可以通过 RECOVER 语句恢复被删除的分区。详见 SQL手册-数据库管理-RECOVER 语句
+- 执行 DROP PARTITION 一段时间内，可以通过 RECOVER 语句恢复被删除的分区。详见 SQL 手册 - 数据库管理-RECOVER 语句
 - 如果执行 DROP PARTITION FORCE，则系统不会检查该分区是否存在未完成的事务，分区将直接被删除并且不能被恢复，一般不建议执行此操作
 
 3. 修改分区属性
@@ -98,9 +93,9 @@ MODIFY PARTITION p1|(p1[, p2, ...]) SET ("key" = "value", ...)
   - in_memory
 -  对于单分区表，partition_name 同表名。
 
-### Example
+## 例子
 
-1. 增加分区, 现有分区 [MIN, 2013-01-01)，增加分区 [2013-01-01, 2014-01-01)，使用默认分桶方式
+1. 增加分区，现有分区 [MIN, 2013-01-01)，增加分区 [2013-01-01, 2014-01-01)，使用默认分桶方式
 
 ```sql
 ALTER TABLE example_db.my_table
@@ -177,11 +172,11 @@ ALTER TABLE example_db.my_table ADD PARTITIONS FROM ("2023-01-01") TO ("2025-01-
 ALTER TABLE example_db.my_table ADD PARTITIONS FROM ("2023-01-01") TO ("2025-01-01") INTERVAL 1 DAY;
 ```
 
-### Keywords
+## 关键词
 
 ```text
 ALTER, TABLE, PARTITION, ALTER TABLE
 ```
 
-### Best Practice
+
 

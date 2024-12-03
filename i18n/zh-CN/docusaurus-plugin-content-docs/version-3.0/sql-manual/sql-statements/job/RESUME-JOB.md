@@ -1,6 +1,6 @@
 ---
 {
-"title": "RESUME-JOB",
+"title": "RESUME JOB",
 "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## RESUME-JOB
+
 
 ### Name
 
 RESUME JOB
 
-### Description
+## 描述
 
 将处于 PAUSED 状态的 JOB 恢复为 RUNNING 状态。RUNNING 状态的 JOB 将会根据既定的调度周期去执行。
 
@@ -38,7 +38,7 @@ RESUME JOB
 RESUME JOB where jobName = jobName;
 ```
 
-### Example
+## 例子
 
 1. 恢复运行名称为 example 的 JOB。
 
@@ -46,9 +46,9 @@ RESUME JOB where jobName = jobName;
    RESUME JOB where jobName= 'example';
    ```
 
-### Keywords
+## 关键词
 
         RESUME, JOB
 
-### Best Practice
+### 最佳实践
 

@@ -42,15 +42,15 @@ column_names
   (<column_name>, [ <column_name>... ])
 ```
 
-## 必选参数（Required Parameters）
+## 必选参数
 
 `<table_name>`: 表的标识符（即名称）
 
-## 可选参数（Optional Parameters）
+## 可选参数
 
 `<column_names>`: 列标识符列表（即名称列表）
 
-## 权限控制（Access Control Requirements）
+## 权限控制
 
 执行此 SQL 命令的用户必须至少具有以下权限：
 
@@ -58,7 +58,7 @@ column_names
 | :---------------- | :------------- | :------------ |
 | DROP_PRIV         | 表（Table）    |               |
 
-## 示例（Examples）
+## 示例
 
 - 删除 table1 中所有列的统计信息
 

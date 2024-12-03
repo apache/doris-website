@@ -30,7 +30,7 @@ under the License.
 
 ADMIN REPAIR TABLE
 
-### Description
+## 描述
 
 语句用于尝试优先修复指定的表或分区
 
@@ -55,9 +55,9 @@ ADMIN REPAIR TABLE table_name[ PARTITION (p1,...)]
 
         ADMIN REPAIR TABLE tbl1 PARTITION (p1, p2);
 
-### Keywords
+## 关键词
 
     ADMIN, REPAIR, TABLE
 
-### Best Practice
+## 最佳实践
 

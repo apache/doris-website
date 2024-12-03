@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-FUNCTION",
+    "title": "DROP FUNCTION",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-FUNCTION
+
 
 ### Name
 
 DROP FUNCTION
 
-### Description
+## 描述
 
 删除一个自定义函数。函数的名字、参数类型完全一致才能够被删除
 
@@ -46,7 +46,7 @@ DROP [GLOBAL] FUNCTION function_name
 - `function_name`: 要删除函数的名字
 - `arg_type`: 要删除函数的参数列表
 
-### Example
+## 例子
 
 1. 删除掉一个函数
 
@@ -59,9 +59,9 @@ DROP [GLOBAL] FUNCTION function_name
     DROP GLOBAL FUNCTION my_add(INT, INT)
     ```      
 
-### Keywords
+## 关键词
 
     DROP, FUNCTION
 
-### Best Practice
+### 最佳实践
 

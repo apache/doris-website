@@ -28,7 +28,7 @@ under the License.
 
 手动修改指定表中指定列的统计信息。请参阅[统计信息](../../../query-acceleration/statistics)章节
 
-## 语法（Syntax）
+## 语法
 
 ```sql
 ALTER TABLE <table_name>
@@ -45,7 +45,7 @@ column_stats
   ("key1" = "value1", "key2" = "value2" [...])
 ```
 
-## 必选参数（Required Parameters）
+## 必选参数
 
 1. `<table_name>`: 指定表的标识符（即名称）
 
@@ -69,11 +69,11 @@ column_stats
     
     其中 row_count 是必须指定的，其他属性为可选项。如果不设置，该列的对应统计信息属性值就为空。
 
-## 可选参数（Optional Parameters）
+## 可选参数
 
 1. `<index_name> `: 同步物化视图（请参阅“同步物化视图”章节）标识符（即名称）。一张表可以创建 0 到多个物化视图，如果需要设置某个物化视图中某一列的统计信息，需要使用 index_name 来制定物化视图的名称。不指定的情况下，设定的是基表中列的属性。
 
-## 权限控制（Access Control Requirements）
+## 权限控制
 
 执行此 SQL 命令的用户必须至少具有以下权限：
 
@@ -81,11 +81,11 @@ column_stats
 | :---------------- | :------------- | :------------ |
 | ALTER_PRIV        | 表（Table）    |               |
 
-## 注意事项（Usage Notes）
+## 注意事项
 
 用户手动对某张表注入统计信息后，这张表就不再参与统计信息的自动收集（请参阅“统计信息自动收集”章节），以免覆盖用户手动注入的信息。如果不再使用注入的统计信息，可以使用 drop stats 语句删掉已经注入的信息，这样可以让该表重新开启自动收集。
 
-## 示例（Examples）
+## 示例
 
 - 给 Part 表的 p_parkey 列（基表列，因为没有指定 index_name）注入统计信息。
 

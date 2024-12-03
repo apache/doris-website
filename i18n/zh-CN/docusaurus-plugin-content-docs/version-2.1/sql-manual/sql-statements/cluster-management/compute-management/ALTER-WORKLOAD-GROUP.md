@@ -31,7 +31,7 @@ ALTER WORKLOAD GROUP
 
  
 
-### Description
+## 描述
 
 该语句用于修改资源组。
 
@@ -61,10 +61,10 @@ PROPERTIES (
     );
     ```
 
-### Keywords
+## 关键词
 
 ```sql
 ALTER, WORKLOAD , GROUP
 ```
 
-### Best Practice
+## 最佳实践

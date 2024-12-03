@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-ROUTINE-LOAD",
+    "title": "ALTER ROUTINE LOAD",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-ROUTINE-LOAD
+
 
 ### Name
 
 ALTER ROUTINE LOAD
 
-### Description
+## 描述
 
 该语法用于修改已经创建的例行导入作业。
 
@@ -91,9 +91,9 @@ FROM data_source
 
     注：
 
-    1. `kafka_partitions` 和 `kafka_offsets` 用于修改待消费的 kafka partition 的offset，仅能修改当前已经消费的 partition。不能新增 partition。
+    1. `kafka_partitions` 和 `kafka_offsets` 用于修改待消费的 kafka partition 的 offset，仅能修改当前已经消费的 partition。不能新增 partition。
 
-### Example
+## 例子
 
 1. 将 `desired_concurrent_number` 修改为 1
 
@@ -105,7 +105,7 @@ FROM data_source
     );
     ```
 
-2.  将 `desired_concurrent_number` 修改为 10，修改 partition 的offset，修改 group id。
+2.  将 `desired_concurrent_number` 修改为 10，修改 partition 的 offset，修改 group id。
 
     ```sql
     ALTER ROUTINE LOAD FOR db1.label1
@@ -120,9 +120,9 @@ FROM data_source
         "property.group.id" = "new_group"
     );
 
-### Keywords
+## 关键词
 
     ALTER, ROUTINE, LOAD
 
-### Best Practice
+### 最佳实践
 

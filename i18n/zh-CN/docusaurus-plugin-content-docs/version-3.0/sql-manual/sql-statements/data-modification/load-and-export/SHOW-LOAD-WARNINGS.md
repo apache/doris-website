@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-LOAD-WARNINGS",
+    "title": "SHOW LOAD WARNINGS",
     "language": "zh-CN"
 }
 ---
@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-LOAD-WARNINGS
+
 
 ### Name
 
 SHOW LOAD WARNINGS
 
-### Description
+## 描述
 
-如果导入任务失败且错误信息为 `ETL_QUALITY_UNSATISFIED`，则说明存在导入质量问题, 如果想看到这些有质量问题的导入任务，该语句就是完成这个操作的。
+如果导入任务失败且错误信息为 `ETL_QUALITY_UNSATISFIED`，则说明存在导入质量问题，如果想看到这些有质量问题的导入任务，该语句就是完成这个操作的。
 
 语法：
 
@@ -46,11 +46,11 @@ SHOW LOAD WARNINGS
 ]
 ```
 
-1. 如果不指定 db_name，使用当前默认db
+1. 如果不指定 db_name，使用当前默认 db
 2. 如果使用 LABEL = ，则精确匹配指定的 label
 3. 如果指定了 LOAD_JOB_ID，则精确匹配指定的 JOB ID
 
-### Example
+## 例子
 
 1. 展示指定 db 的导入任务中存在质量问题的数据，指定 label 为 "load_demo_20210112" 
 
@@ -58,9 +58,9 @@ SHOW LOAD WARNINGS
    SHOW LOAD WARNINGS FROM demo WHERE LABEL = "load_demo_20210112" 
    ```
 
-### Keywords
+## 关键词
 
     SHOW, LOAD, WARNINGS
 
-### Best Practice
+### 最佳实践
 

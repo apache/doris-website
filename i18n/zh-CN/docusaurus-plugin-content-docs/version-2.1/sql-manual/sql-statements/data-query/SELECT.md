@@ -30,7 +30,7 @@ under the License.
 
 SELECT
 
-### description
+## 描述
 
 主要介绍 Select 语法使用
 
@@ -300,11 +300,11 @@ CTE 名称可以在其他 CTE 中引用，从而可以基于其他 CTE 定义 CT
     SELECT * FROM t1 TABLET(10001) TABLESAMPLE(1000 ROWS) REPEATABLE 2 limit 1000;
     ```
 
-### keywords
+## 关键词
 
     SELECT
 
-### Best Practice
+## 最佳实践
 
 1. 关于 SELECT 子句的一些附加知识
 

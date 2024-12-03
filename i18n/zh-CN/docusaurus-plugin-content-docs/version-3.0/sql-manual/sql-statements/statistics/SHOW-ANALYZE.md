@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-ANALYZE",
+    "title": "SHOW ANALYZE",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-ANALYZE
+
 
 ### Name
 
 SHOW ANALYZE
 
-### Description
+## 描述
 
 通过 `SHOW ANALYZE` 来查看统计信息收集作业的信息。
 
@@ -106,6 +106,6 @@ mysql> show analyze task status 20038 ;
 
 ```
 
-### Keywords
+## 关键词
 
 SHOW, ANALYZE

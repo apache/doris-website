@@ -28,7 +28,7 @@ under the License.
 
 REFRESH MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于手动刷新指定的异步物化视图
 
@@ -67,9 +67,9 @@ REFRESH MATERIALIZED VIEW mvName=multipartIdentifier (partitionSpec | COMPLETE |
     REFRESH MATERIALIZED VIEW mv1 complete;
     ```
    
-### Keywords
+## 关键词
 
     REFRESH, MATERIALIZED, VIEW
 
-### Best Practice
+## 最佳实践
 

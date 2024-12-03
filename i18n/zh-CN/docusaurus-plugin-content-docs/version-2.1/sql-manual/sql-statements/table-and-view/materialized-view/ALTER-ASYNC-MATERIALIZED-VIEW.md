@@ -29,7 +29,7 @@ under the License.
 
 ALTER ASYNC MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于修改异步物化视图。
 
@@ -96,7 +96,7 @@ ALTER MATERIALIZED VIEW db1.mv1 REPLACE WITH MATERIALIZED VIEW mv2
 PROPERTIES('swap' = 'false');
 ```
 
-### Keywords
+## 关键词
 
     ALTER, ASYNC, MATERIALIZED, VIEW
 

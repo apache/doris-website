@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-SQL-BLOCK-RULE",
+    "title": "ALTER SQL_BLOCK_RULE",
     "language": "zh-CN"
 }
 ---
@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-SQL-BLOCK-RULE
+
 
 ### Name
 
 ALTER SQL BLOCK RULE
 
-### Description
+## 描述
 
-修改SQL阻止规则，允许对sql/sqlHash/partition_num/tablet_num/cardinality/global/enable等每一项进行修改。
+修改 SQL 阻止规则，允许对 sql/sqlHash/partition_num/tablet_num/cardinality/global/enable 等每一项进行修改。
 
 语法：
 
@@ -43,27 +43,27 @@ ALTER SQL_BLOCK_RULE rule_name
 
 说明：
 
-- sql 和 sqlHash 不能同时被设置。这意味着，如果一个rule设置了sql或者sqlHash，则另一个属性将无法被修改；
-- sql/sqlHash 和 partition_num/tablet_num/cardinality 不能同时被设置。举个例子，如果一个rule设置了partition_num，那么sql或者sqlHash将无法被修改；
+- sql 和 sqlHash 不能同时被设置。这意味着，如果一个 rule 设置了 sql 或者 sqlHash，则另一个属性将无法被修改；
+- sql/sqlHash 和 partition_num/tablet_num/cardinality 不能同时被设置。举个例子，如果一个 rule 设置了 partition_num，那么 sql 或者 sqlHash 将无法被修改；
 
-### Example
+## 例子
 
-1. 根据SQL属性进行修改
+1. 根据 SQL 属性进行修改
 
 ```sql
 ALTER SQL_BLOCK_RULE test_rule PROPERTIES("sql"="select \\* from test_table","enable"="true")
 ```
 
-2. 如果一个rule设置了partition_num，那么sql或者sqlHash将无法被修改
+2. 如果一个 rule 设置了 partition_num，那么 sql 或者 sqlHash 将无法被修改
 
 ```sql
 ALTER SQL_BLOCK_RULE test_rule2 PROPERTIES("partition_num" = "10","tablet_num"="300","enable"="true")
 ```
 
-### Keywords
+## 关键词
 
 ```text
 ALTER,SQL_BLOCK_RULE
 ```
 
-### Best Practice
+### 最佳实践

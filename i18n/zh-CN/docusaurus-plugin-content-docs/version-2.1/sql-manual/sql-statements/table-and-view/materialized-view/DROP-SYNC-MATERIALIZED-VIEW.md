@@ -29,7 +29,7 @@ under the License.
 
 DROP MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于删除物化视图。同步语法
 
@@ -111,9 +111,9 @@ mysql> desc all_type_table all;
 
     存在则删除，不存在则不报错。
 
-### Keywords
+## 关键词
 
     DROP, MATERIALIZED, VIEW
 
-### Best Practice
+## 最佳实践
 

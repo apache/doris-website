@@ -26,11 +26,7 @@ under the License.
 
 
 
-### Name
-
-SHOW PRIVILEGES
-
-### Description
+## 描述
 
 该语句用于展示所有权限项。
 
@@ -40,7 +36,7 @@ SHOW PRIVILEGES
 SHOW PRIVILEGES
 ```
 
-### Example
+## 例子
 
 1. 查看所有权限项
 
@@ -48,9 +44,9 @@ SHOW PRIVILEGES
    SHOW PRIVILEGES
    ```
 
-### Keywords
+## 关键词
 
     SHOW, PRIVILEGES
 
-### Best Practice
+### 最佳实践
 

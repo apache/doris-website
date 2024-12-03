@@ -28,7 +28,7 @@ under the License.
 
 CREATE FUNCTION
 
-### Description
+## 描述
 
 此语句创建一个自定义函数。执行此命令需要用户拥有 `ADMIN` 权限。
 
@@ -121,9 +121,9 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
    CREATE GLOBAL ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
    ``` 
    
-### Keywords
+## 关键词
 
     CREATE, FUNCTION
 
-### Best Practice
+## 最佳实践
 

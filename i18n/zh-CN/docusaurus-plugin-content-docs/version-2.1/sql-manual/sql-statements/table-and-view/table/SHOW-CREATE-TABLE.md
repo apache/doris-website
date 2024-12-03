@@ -30,7 +30,7 @@ under the License.
 
 SHOW CREATE TABLE
 
-### Description
+## 描述
 
 该语句用于展示数据表的创建语句。
 
@@ -57,9 +57,9 @@ SHOW [BRIEF] CREATE TABLE [DBNAME.]TABLE_NAME
    SHOW CREATE TABLE demo.tb1
    ```
 
-### Keywords
+## 关键词
 
     SHOW, CREATE, TABLE
 
-### Best Practice
+## 最佳实践
 

@@ -30,7 +30,7 @@ under the License.
 
 ANALYZE
 
-### Description
+## 描述
 
 该语句用于收集各列的统计信息。
 
@@ -59,6 +59,6 @@ ANALYZE TABLE lineitem WITH SAMPLE PERCENT 10;
 ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;
 ```
 
-### Keywords
+## 关键词
 
 ANALYZE

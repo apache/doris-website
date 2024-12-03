@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-TABLE",
+    "title": "CREATE TABLE",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4
@@ -26,9 +26,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-TABLE
 
-### Description
+
+## 描述
 
 该命令用于创建一张表。本文档主要介绍创建 Doris 自维护的表的语法
 
@@ -482,13 +482,13 @@ UNIQUE KEY(k1, k2)
 
 * 动态分区相关
 
-    动态分区相关参考[数据划分-动态分区](../../../../table-design/data-partitioning/auto-partitioning)
+    动态分区相关参考[数据划分 - 动态分区](../../../../table-design/data-partitioning/auto-partitioning)
 
 * `file_cache_ttl_seconds`:
 
     TTL 在计算存储分离模式下的过期时间。
 
-### Example
+## 例子
 
 1. 创建一个明细模型的表
 
@@ -814,11 +814,11 @@ UNIQUE KEY(k1, k2)
     );
     ```
 
-### Keywords
+## 关键词
 
     CREATE, TABLE
 
-### Best Practice
+### 最佳实践
 
 #### 分区和分桶
 

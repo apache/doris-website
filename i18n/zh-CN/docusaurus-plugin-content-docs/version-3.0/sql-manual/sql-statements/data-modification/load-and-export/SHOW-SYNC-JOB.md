@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-SYNC-JOB",
+    "title": "SHOW SYNC JOB",
     "language": "zh-CN"
 }
 
@@ -25,13 +25,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-SYNC-JOB
+
 
 ### Name
 
 SHOW SYNC JOB
 
-### Description
+## 描述
 
 此命令用于当前显示所有数据库内的常驻数据同步作业状态。
 
@@ -41,7 +41,7 @@ SHOW SYNC JOB
 SHOW SYNC JOB [FROM db_name]
 ```
 
-### Example
+## 例子
 
 1. 展示当前数据库的所有数据同步作业状态。
 
@@ -55,9 +55,9 @@ SHOW SYNC JOB [FROM db_name]
 	SHOW SYNC JOB FROM `test_db`;
 	```
 
-### Keywords
+## 关键词
 
     SHOW, SYNC, JOB
 
-### Best Practice
+### 最佳实践
 

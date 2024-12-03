@@ -31,7 +31,7 @@ under the License.
 
 SHOW COLUMN STATS
 
-### Description
+## 描述
 
 通过 `SHOW COLUMN STATS` 来查看列的各项统计数据。
 
@@ -68,6 +68,6 @@ avg_size_byte: 8.0
 
 ```
 
-### Keywords
+## 关键词
 
 SHOW, COLUMN, STATS

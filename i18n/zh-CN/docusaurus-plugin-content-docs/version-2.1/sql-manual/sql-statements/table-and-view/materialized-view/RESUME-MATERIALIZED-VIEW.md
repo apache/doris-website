@@ -28,7 +28,7 @@ under the License.
 
 RESUME MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于暂恢复物化视图的定时调度
 
@@ -46,9 +46,9 @@ RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
     RESUME MATERIALIZED VIEW JOB ON mv1;
     ```
    
-### Keywords
+## 关键词
 
     RESUME, MATERIALIZED, VIEW
 
-### Best Practice
+## 最佳实践
 

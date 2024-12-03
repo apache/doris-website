@@ -30,7 +30,7 @@ under the License.
 
 PAUSE ROUTINE LOAD 
 
-### Description
+## 描述
 
 用于暂停一个 Routine Load 作业。被暂停的作业可以通过 RESUME 命令重新运行。
 
@@ -52,9 +52,9 @@ PAUSE [ALL] ROUTINE LOAD FOR job_name
    PAUSE ALL ROUTINE LOAD;
    ```
 
-### Keywords
+## 关键词
 
     PAUSE, ROUTINE, LOAD
 
-### Best Practice
+## 最佳实践
 

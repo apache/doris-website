@@ -38,7 +38,7 @@ DESCRIBE
 DESC TABLE
 
 
-### Description
+## 描述
 
 该语句用于展示指定 table 的 schema 信息
 
@@ -67,9 +67,9 @@ DESC[RIBE] [db_name.]table_name [ALL];
     DESC db1.table_name ALL;
     ```
 
-### Keywords
+## 关键词
 
     DESCRIBE, DESC
 
-### Best Practice
+## 最佳实践
 

@@ -30,7 +30,7 @@ under the License.
 
 OUTFILE
 
-### description
+## 描述
 
  `SELECT INTO OUTFILE` 命令用于将查询结果导出为文件。目前支持通过 Broker 进程, S3 协议或HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
 
@@ -382,10 +382,10 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
     )
     ```
 
-### keywords
+## 关键词
     SELECT, INTO, OUTFILE
 
-### Best Practice
+## 最佳实践
 
 1. 导出数据量和导出效率
 

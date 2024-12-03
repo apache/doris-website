@@ -30,7 +30,7 @@ under the License.
 
 ALTER SYSTEM ADD BROKER
 
-### Description
+## 描述
 
 该语句用于添加一个 BROKER 节点。（仅管理员使用！）
 
@@ -40,7 +40,7 @@ ALTER SYSTEM ADD BROKER
 ALTER SYSTEM ADD BROKER broker_name "broker_host1:broker_ipc_port1","broker_host2:broker_ipc_port2",...;
 ```
 
-### Example
+## 例子
 
 1. 增加两个 Broker
 
@@ -54,9 +54,9 @@ ALTER SYSTEM ADD BROKER broker_name "broker_host1:broker_ipc_port1","broker_host
    ```
 
 
-### Keywords
+## 关键词
 
     ALTER, SYSTEM, ADD, FOLLOWER, ALTER SYSTEM
 
-### Best Practice
+### 最佳实践
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-FUNCTION",
+    "title": "SHOW CREATE FUNCTION",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-FUNCTION
 
 ### Name
 
 SHOW CREATE FUNCTION
 
-### Description
+## 描述
 
 该语句用于展示用户自定义函数的创建语句
 
@@ -46,11 +45,11 @@ SHOW CREATE [GLOBAL] FUNCTION function_name(arg_type [, ...]) [FROM db_name]];
           3. `arg_type`: 要展示的函数的参数列表
           4. 如果不指定 db_name，使用当前默认 db
 
-**注意: "global"关键字在v2.0版本及以后才可用**
+**注意："global"关键字在 v2.0 版本及以后才可用**
 
-### Example
+## 例子
 
-1. 展示默认db下指定函数的创建语句
+1. 展示默认 db 下指定函数的创建语句
    
     ```sql
     SHOW CREATE FUNCTION my_add(INT, INT)
@@ -62,9 +61,9 @@ SHOW CREATE [GLOBAL] FUNCTION function_name(arg_type [, ...]) [FROM db_name]];
     SHOW CREATE GLOBAL FUNCTION my_add(INT, INT)
     ```
 
-### Keywords
+## 关键词
 
     SHOW, CREATE, FUNCTION
 
-### Best Practice
+### 最佳实践
 

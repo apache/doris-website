@@ -35,7 +35,7 @@ under the License.
 ADMIN SET TABLE <table_name> PARTITION VERSION PROPERTIES ("<partition_id>" = "visible_version>");
 ```
 
-## 必选参数（Required Parameters）
+## 必选参数
 
 1. `<table_name>`: 待设置的表名
 
@@ -43,7 +43,7 @@ ADMIN SET TABLE <table_name> PARTITION VERSION PROPERTIES ("<partition_id>" = "v
 
 3. `<visible_version>`: 指定 Version
 
-## 示例（Example）
+## 示例
 
 1. 设置 partition_id 为 10075 的分区在 FE 元数据上的版本为 100
 
@@ -51,7 +51,7 @@ ADMIN SET TABLE <table_name> PARTITION VERSION PROPERTIES ("<partition_id>" = "v
     ADMIN SET TABLE __internal_schema.audit_log PARTITION VERSION PROPERTIES("partition_id" = "10075", "visible_version" = "100");
     ```
 
-## 注意事项（Usage Note）
+## 注意事项
 
 1. 设置分区的版本需要先确认 BE 机器上实际副本的版本，此命令一般只用于紧急故障修复，请谨慎操作。
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-INDEX",
+    "title": "SHOW INDEX",
     "language": "zh-CN"
 }
 ---
@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-INDEX
+
 
 ### Name
 
 SHOW INDEX
 
-### Description
+## 描述
 
- 该语句用于展示一个表中索引的相关信息，目前只支持bitmap 索引
+ 该语句用于展示一个表中索引的相关信息，目前只支持 bitmap 索引
 
 语法：
 
@@ -42,7 +42,7 @@ SHOW INDEX[ES] FROM [db_name.]table_name [FROM database];
 SHOW KEY[S] FROM [db_name.]table_name [FROM database];
 ```
 
-### Example
+## 例子
 
  1. 展示指定 table_name 的下索引
      
@@ -50,9 +50,9 @@ SHOW KEY[S] FROM [db_name.]table_name [FROM database];
       SHOW INDEX FROM example_db.table_name;
      ```
 
-### Keywords
+## 关键词
 
     SHOW, INDEX
 
-### Best Practice
+### 最佳实践
 

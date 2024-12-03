@@ -28,7 +28,7 @@ under the License.
 
 CANCEL ALTER TABLE 
 
-### Description
+## 描述
 
 该语句用于撤销一个 ALTER 操作。
 
@@ -94,9 +94,9 @@ FROM db_name.table_name (jobid,...)
     FROM example_db.my_table (12801,12802);
     ```
 
-### Keywords
+## 关键词
 
     CANCEL, ALTER, TABLE, CANCEL ALTER
 
-### Best Practice
+## 最佳实践
 

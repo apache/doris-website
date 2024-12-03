@@ -30,7 +30,7 @@ under the License.
 
 REVOKE
 
-### Description
+## 描述
 
 REVOKE 命令有如下功能：
 
@@ -95,9 +95,9 @@ role_list 是需要撤销的角色列表，以逗号分隔，指定的角色必�
    REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'test_role';
    ```
 
-### Keywords
+## 关键词
 
     REVOKE
 
-### Best Practice
+## 最佳实践
 

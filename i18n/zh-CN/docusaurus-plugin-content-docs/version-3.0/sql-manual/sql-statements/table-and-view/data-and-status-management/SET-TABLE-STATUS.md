@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN-SET-TABLE-STATUS",
+    "title": "SET TABLE STATUS",
     "language": "zh-CN"
 }
 ---
@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-SET-TABLE-STATUS
+
 
 ### Name
 
 ADMIN SET TABLE STATUS
 
-### Description
+## 描述
 
-该语句用于设置指定表的状态，仅支持OLAP表。
+该语句用于设置指定表的状态，仅支持 OLAP 表。
 
 该命令目前仅用于手动将 OLAP 表状态设置为指定状态，从而使得某些由于表状态被阻碍的任务能够继续运行。
 
@@ -60,7 +60,7 @@ ADMIN SET TABLE table_name STATUS
 
 **注意：此命令一般只用于紧急故障修复，请谨慎操作。**
 
-### Example
+## 例子
 
 1. 设置表 tbl1 的状态为 NORMAL。
 
@@ -74,11 +74,11 @@ admin set table tbl1 status properties("state" = "NORMAL");
 admin set table test_set_table_status status properties("state" = "SCHEMA_CHANGE");
 ```
 
-### Keywords
+## 关键词
 
     ADMIN, SET, TABLE, STATUS
 
-### Best Practice
+### 最佳实践
 
 
 

@@ -28,7 +28,7 @@ under the License.
 
 SHOW DATABASES
 
-### Description
+## 描述
 
 该语句用于展示当前可见的 db
 
@@ -95,9 +95,9 @@ SHOW DATABASES [FROM catalog] [filter expr];
   +--------------------+
    ```
 
-### Keywords
+## 关键词
 
     SHOW, DATABASES
 
-### Best Practice
+## 最佳实践
 

@@ -29,7 +29,7 @@ under the License.
 
 INSTALL PLUGIN
 
-### Description
+## 描述
 
 该语句用于安装一个插件。
 
@@ -73,9 +73,9 @@ source 支持三种类型：
     INSTALL PLUGIN FROM "http://mywebsite.com/plugin.zip" PROPERTIES("md5sum" = "73877f6029216f4314d712086a146570");
     ```
 
-### Keywords
+## 关键词
 
     INSTALL, PLUGIN
 
-### Best Practice
+## 最佳实践
 

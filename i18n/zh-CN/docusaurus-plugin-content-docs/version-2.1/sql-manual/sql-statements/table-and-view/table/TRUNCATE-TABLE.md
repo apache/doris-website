@@ -29,7 +29,7 @@ under the License.
 
 TRUNCATE TABLE
 
-### Description
+## 描述
 
 该语句用于清空指定表和分区的数据
 语法：
@@ -61,9 +61,9 @@ TRUNCATE TABLE [db.]tbl[ PARTITION(p1, p2, ...)];
     TRUNCATE TABLE tbl PARTITION(p1, p2);
     ```
 
-### Keywords
+## 关键词
 
     TRUNCATE, TABLE
 
-### Best Practice
+## 最佳实践
 

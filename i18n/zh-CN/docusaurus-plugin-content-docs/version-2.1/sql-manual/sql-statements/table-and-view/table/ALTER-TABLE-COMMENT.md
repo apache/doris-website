@@ -30,7 +30,7 @@ under the License.
 
 ALTER TABLE COMMENT
 
-### Description
+## 描述
 
 该语句用于对已有 table 的 comment 进行修改。这个操作是同步的，命令返回表示执行完毕。
 
@@ -70,11 +70,11 @@ ALTER TABLE table1 MODIFY COMMENT "table1_comment";
 ALTER TABLE table1 MODIFY COLUMN col1 COMMENT "table1_col1_comment";
 ```
 
-### Keywords
+## 关键词
 
 ```text
 ALTER, TABLE, COMMENT, ALTER TABLE
 ```
 
-### Best Practice
+## 最佳实践
 

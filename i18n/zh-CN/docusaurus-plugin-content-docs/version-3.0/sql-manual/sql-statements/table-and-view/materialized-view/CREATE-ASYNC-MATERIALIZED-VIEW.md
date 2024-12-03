@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-ASYNC-MATERIALIZED-VIEW",
+    "title": "CREATE ASYNC MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-ASYNC-MATERIALIZED-VIEW
 
 ### 名称
 
 CREATE ASYNC MATERIALIZED VIEW
 
-### 描述
+## 描述
 
 该语句用于创建异步物化视图。
 
@@ -64,7 +63,7 @@ simpleColumnDef
     ;
 ```
 
-例如:定义两列 aa 和 bb，其中 aa 的注释为"name"
+例如：定义两列 aa 和 bb，其中 aa 的注释为"name"
 ```sql
 CREATE MATERIALIZED VIEW mv1
 (aa comment "name",bb)
@@ -149,7 +148,7 @@ mvRefreshUnit
 ;    
 ```
 
-例如：每2小时执行一次，从2023-12-13 21:07:09开始
+例如：每 2 小时执行一次，从 2023-12-13 21:07:09 开始
 ```sql
 CREATE MATERIALIZED VIEW mv1
 REFRESH ON SCHEDULE EVERY 2 HOUR STARTS "2023-12-13 21:07:09"
@@ -168,14 +167,14 @@ identifierSeq
 ;
 ```
 
-例如：指定k1，k2为排序列
+例如：指定 k1，k2 为排序列
 ```sql
 CREATE MATERIALIZED VIEW mv1
 KEY(k1,k2)
 ```
 
 `partition`
-物化视图有两种分区方式，如果不指定分区，默认只有一个分区，如果指定分区字段，会自动推导出字段来自哪个基表并同步基表(当前支持 `OlapTable` 和 `hive`)的所有分区（限制条件：基表如果是 `OlapTable`，那么只能有一个分区字段）。
+物化视图有两种分区方式，如果不指定分区，默认只有一个分区，如果指定分区字段，会自动推导出字段来自哪个基表并同步基表 (当前支持 `OlapTable` 和 `hive`) 的所有分区（限制条件：基表如果是 `OlapTable`，那么只能有一个分区字段）。
 
 例如：基表是 Range 分区，分区字段为 `create_time` 并按天分区，创建物化视图时指定 `partition by(ct) as select create_time as ct from t1`，那么物化视图也会是 Range 分区，分区字段为 `ct`，并且按天分区。
 
@@ -205,7 +204,7 @@ partition by (date_trunc(`k2`,'month'))
 
 物化视图特有的 Property 包括：
 
-`grace_period`：查询改写时允许物化视图数据的最大延迟时间（单位：秒）。如果分区 A 和基表的数据不一致，物化视图的分区 A 上次刷新时间为 1，系统当前时间为 2，那么该分区不会被透明改写。但是如果 `grace_period` 大于等于1，该分区就会被用于透明改写。
+`grace_period`：查询改写时允许物化视图数据的最大延迟时间（单位：秒）。如果分区 A 和基表的数据不一致，物化视图的分区 A 上次刷新时间为 1，系统当前时间为 2，那么该分区不会被透明改写。但是如果 `grace_period` 大于等于 1，该分区就会被用于透明改写。
 
 `excluded_trigger_tables`：数据刷新时忽略的表名，逗号分割。例如`table1,table2`
 
@@ -221,8 +220,8 @@ partition by (date_trunc(`k2`,'month'))
 
 `partition_date_format`：分区字段的时间格式，例如"%Y-%m-%d"
 
-`enable_nondeterministic_function`：物化视图定义 SQL 是否允许包含 nondeterministic 函数，比如 current_date(), now(), random()等，如果
-是 true, 允许包含，否则不允许包含, 默认不允许包含。
+`enable_nondeterministic_function`：物化视图定义 SQL 是否允许包含 nondeterministic 函数，比如 current_date(), now(), random() 等，如果
+是 true, 允许包含，否则不允许包含，默认不允许包含。
 
 `query`：创建物化视图的查询语句，其结果即为物化视图中的数据
 
@@ -251,6 +250,6 @@ partition by (date_trunc(`k2`,'month'))
     AS select user.k1,user.k3,com.k4 from user join com on user.k1=com.k1;
    ```
 
-### 关键词
+## 关键词
 
     CREATE, ASYNC, MATERIALIZED, VIEW

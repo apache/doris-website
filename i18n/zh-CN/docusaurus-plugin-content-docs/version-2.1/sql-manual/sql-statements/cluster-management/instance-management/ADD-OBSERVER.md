@@ -28,7 +28,7 @@ under the License.
 
 ALTER SYSTEM ADD OBSERVER
 
-### Description
+## 描述
 
 该语句是增加 FRONTEND 的 OBSERVER 角色的节点，（仅管理员使用！）
 
@@ -51,9 +51,9 @@ ALTER SYSTEM ADD OBSERVER "follower_host:edit_log_port"
    ALTER SYSTEM ADD OBSERVER "host_ip:9010"
    ```
 
-### Keywords
+## 关键词
 
     ALTER, SYSTEM, ADD, OBSERVER, ALTER SYSTEM
 
-### Best Practice
+## 最佳实践
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-ASYNC-MATERIALIZED-VIEW",
+    "title": "SHOW CREATE ASYNC MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-ASYNC-MATERIALIZED-VIEW
 
-### Name
-
-SHOW CREATE ASYNC MATERIALIZED VIEW
-
-### Description
+## 描述
 
 该语句用于展示异步物化视图的创建语句。
 
@@ -45,7 +40,7 @@ SHOW CREATE MATERIALIZED VIEW [DBNAME.]MV_NAME
 1. `DBNAMNE` : 数据库名称
 2. `MV_NAME` : 异步物化视图的名称
 
-### Example
+## 例子
 
 1. 查看 mv1 的创建语句
 
@@ -53,9 +48,9 @@ SHOW CREATE MATERIALIZED VIEW [DBNAME.]MV_NAME
    SHOW CREATE MATERIALIZED VIEW mv1;
    ```
 
-### Keywords
+## 关键词
 
     SHOW, CREATE, MATERIALIZED, VIEW, ASYNC
 
-### Best Practice
+### 最佳实践
 

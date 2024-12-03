@@ -30,7 +30,7 @@ under the License.
 
 CANCEL  RESTORE
 
-### Description
+## 描述
 
 该语句用于取消一个正在进行的 RESTORE 任务。
 
@@ -52,9 +52,9 @@ CANCEL RESTORE FROM db_name;
 CANCEL RESTORE FROM example_db;
 ```
 
-### Keywords
+## 关键词
 
     CANCEL, RESTORE
 
-### Best Practice
+## 最佳实践
 

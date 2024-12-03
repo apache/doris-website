@@ -26,11 +26,8 @@ under the License.
 
 
 
-### Name
 
-DROP USER
-
-### Description
+## 描述
 
 删除一个用户
 
@@ -45,7 +42,7 @@ DROP USER
 
  删除指定的 user identity.
 
-### Example
+## 例子
 
 1. 删除用户 jack@'192.%'
 
@@ -53,9 +50,9 @@ DROP USER
     DROP USER 'jack'@'192.%'
     ```
 
-### Keywords
+## 关键词
 
     DROP, USER
 
-### Best Practice
+### 最佳实践
 

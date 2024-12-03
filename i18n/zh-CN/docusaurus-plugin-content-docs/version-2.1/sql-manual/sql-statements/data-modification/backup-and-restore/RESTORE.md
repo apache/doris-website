@@ -30,7 +30,7 @@ under the License.
 
 RESTORE
 
-### Description
+## 描述
 
 该语句用于将之前通过 BACKUP 命令备份的数据，恢复到指定数据库下。该命令为异步操作。提交成功后，需通过 SHOW RESTORE 命令查看进度。仅支持恢复 OLAP 类型的表。
 
@@ -106,11 +106,11 @@ PROPERTIES
 );
 ```
 
-### Keywords
+## 关键词
 
     RESTORE
 
-### Best Practice
+## 最佳实践
 
 1. 同一数据库下只能有一个正在执行的恢复操作。
 

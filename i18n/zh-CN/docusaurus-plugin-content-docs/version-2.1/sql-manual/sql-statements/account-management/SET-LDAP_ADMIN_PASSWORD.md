@@ -30,7 +30,7 @@ under the License.
 
 LDAP
 
-### Description
+## 描述
 
 SET LDAP_ADMIN_PASSWORD
 
@@ -47,8 +47,8 @@ SET LDAP_ADMIN_PASSWORD
 SET LDAP_ADMIN_PASSWORD = PASSWORD('123456')
 ```
 
-### Keywords
+## 关键词
 
     LDAP, PASSWORD, LDAP_ADMIN_PASSWORD
 
-### Best Practice
+## 最佳实践

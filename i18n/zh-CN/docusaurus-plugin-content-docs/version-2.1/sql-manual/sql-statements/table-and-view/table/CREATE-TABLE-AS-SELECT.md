@@ -30,7 +30,7 @@ under the License.
 
 CREATE TABLE AS SELECT
 
-### Description
+## 描述
 
 该语句通过 Select 语句返回结果创建表结构，同时导入数据
 
@@ -93,9 +93,9 @@ CREATE TABLE table_name [( column_name_list )]
     AS SELECT cast('2020-05-20' as date) as dt, 1 as id, 'Tom' as name;
     ```
    
-### Keywords
+## 关键词
 
     CREATE, TABLE, AS, SELECT
 
-### Best Practice
+## 最佳实践
 

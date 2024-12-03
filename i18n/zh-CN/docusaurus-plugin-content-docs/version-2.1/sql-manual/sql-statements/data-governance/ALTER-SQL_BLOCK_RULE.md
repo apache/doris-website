@@ -29,7 +29,7 @@ under the License.
 
 ALTER SQL BLOCK RULE
 
-### Description
+## 描述
 
 
 修改 SQL 阻止规则，允许对 sql/sqlHash/partition_num/tablet_num/cardinality/global/enable 等每一项进行修改。
@@ -60,10 +60,10 @@ ALTER SQL_BLOCK_RULE rule_name
     ALTER SQL_BLOCK_RULE test_rule2 PROPERTIES("partition_num" = "10","tablet_num"="300","enable"="true")
     ```
 
-### Keywords
+## 关键词
 
 ```text
 ALTER,SQL_BLOCK_RULE
 ```
 
-### Best Practice
+## 最佳实践

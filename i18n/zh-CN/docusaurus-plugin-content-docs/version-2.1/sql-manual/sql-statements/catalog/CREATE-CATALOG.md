@@ -30,7 +30,7 @@ under the License.
 
 CREATE CATALOG
 
-### Description
+## 描述
 
 该语句用于创建外部数据目录（catalog）
 
@@ -172,9 +172,9 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
 	);
     ```
 
-### Keywords
+## 关键词
 
 CREATE, CATALOG
 
-### Best Practice
+## 最佳实践
 

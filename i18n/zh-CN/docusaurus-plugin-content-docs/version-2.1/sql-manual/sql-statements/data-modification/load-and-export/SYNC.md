@@ -30,7 +30,7 @@ under the License.
 
 SYNC
 
-### Description
+## 描述
 
 
 用于 fe 非 master 节点同步元数据。Doris 只有 master 节点才能写 fe 元数据，其他 fe 节点写元数据的操作都会转发到 master 节点。在 master 完成元数据写入操作后，非 master 节点 replay 元数据会有短暂的延迟，可以使用该语句同步元数据。
@@ -50,9 +50,9 @@ SYNC;
     SYNC;
     ```
 
-### Keywords
+## 关键词
 
     SYNC
 
-### Best Practice
+## 最佳实践
 

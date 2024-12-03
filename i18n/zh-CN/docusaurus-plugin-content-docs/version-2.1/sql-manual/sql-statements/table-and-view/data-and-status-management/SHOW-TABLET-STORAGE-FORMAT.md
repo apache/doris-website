@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### description
+## 描述
 
     该语句用于显示Backend上的存储格式信息（仅管理员使用）
     
@@ -55,6 +55,6 @@ under the License.
     4 rows in set (0.034 sec)
     ```
 
-### keywords
+## 关键词
     SHOW, TABLET, STORAGE, FORMAT
 

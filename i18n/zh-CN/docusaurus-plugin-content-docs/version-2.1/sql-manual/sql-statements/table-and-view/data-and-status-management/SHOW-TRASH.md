@@ -30,7 +30,7 @@ under the License.
 
 SHOW TRASH
 
-### Description
+## 描述
 
 该语句用于查看 backend 内的垃圾数据占用空间。
 
@@ -62,9 +62,9 @@ SHOW TRASH [ON BackendHost:BackendHeartBeatPort];
    SHOW TRASH ON "192.168.0.1:9050";
    ```
 
-### Keywords
+## 关键词
 
     SHOW, TRASH
 
-### Best Practice
+## 最佳实践
 

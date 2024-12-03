@@ -29,7 +29,7 @@ under the License.
 
 SHOW FUNCTIONS
 
-### Description
+## 描述
 
 查看数据库下所有的自定义 (系统提供) 的函数。如果用户指定了数据库，那么查看对应数据库的，否则直接查询当前会话所在数据库
 
@@ -124,9 +124,9 @@ mysql> show global functions ;
 
 ```
 
-### Keywords
+## 关键词
 
     SHOW, FUNCTIONS
 
-### Best Practice
+## 最佳实践
 

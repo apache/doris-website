@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Kill Query",
+    "title": "KILL QUERY",
     "language": "zh-CN"
 }
 ---
@@ -25,7 +25,6 @@ under the License.
 -->
 
 
-## Kill 连接
 
 每个 Doris 的连接都在一个单独的线程中运行。您可以使用 KILL processlist_id 语句终止线程。
 

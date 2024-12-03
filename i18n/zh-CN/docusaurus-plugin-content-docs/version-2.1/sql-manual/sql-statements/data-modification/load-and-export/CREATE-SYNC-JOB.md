@@ -30,7 +30,7 @@ under the License.
 
 CREATE SYNC JOB
 
-### Description
+## 描述
 
 
 数据同步 (Sync Job) 功能，支持用户提交一个常驻的数据同步作业，通过从指定的远端地址读取 Binlog 日志，增量同步用户在 Mysql 数据库的对数据更新操作的 CDC(Change Data Capture) 功能。
@@ -161,8 +161,8 @@ binlog_desc
    );
    ```
 
-### Keywords
+## 关键词
 
     CREATE, SYNC, JOB
 
-### Best Practice
+## 最佳实践

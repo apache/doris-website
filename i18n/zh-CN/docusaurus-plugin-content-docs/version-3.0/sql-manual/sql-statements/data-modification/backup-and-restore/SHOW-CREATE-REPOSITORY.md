@@ -30,7 +30,7 @@ under the License.
 
 SHOW CREATE REPOSITORY
 
-### Description
+## 描述
 
 该语句用于展示仓库的创建语句。
 
@@ -43,7 +43,7 @@ SHOW CREATE REPOSITORY for repository_name;
 说明：
 - `repository_name`: 仓库名称
 
-### Example
+## 例子
 
 1. 展示指定仓库的创建语句
 
@@ -51,9 +51,9 @@ SHOW CREATE REPOSITORY for repository_name;
    SHOW CREATE REPOSITORY for test_repository
    ```
 
-### Keywords
+## 关键词
 
     SHOW, CREATE, REPOSITORY
 
-### Best Practice
+### 最佳实践
 

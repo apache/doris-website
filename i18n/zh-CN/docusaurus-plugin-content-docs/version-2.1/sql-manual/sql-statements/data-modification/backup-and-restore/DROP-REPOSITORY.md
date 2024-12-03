@@ -30,7 +30,7 @@ under the License.
 
 DROP  REPOSITORY
 
-### Description
+## 描述
 
 该语句用于删除一个已创建的仓库。仅 root 或 superuser 用户可以删除仓库。
 
@@ -52,9 +52,9 @@ DROP REPOSITORY `repo_name`;
 DROP REPOSITORY `bos_repo`;
 ```
 
-### Keywords
+## 关键词
 
     DROP, REPOSITORY
 
-### Best Practice
+## 最佳实践
 

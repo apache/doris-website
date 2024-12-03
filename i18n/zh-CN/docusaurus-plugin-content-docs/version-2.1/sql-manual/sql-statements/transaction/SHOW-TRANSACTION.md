@@ -28,7 +28,7 @@ under the License.
 
 SHOW TRANSACTION
 
-### Description
+## 描述
 
 该语法用于查看指定 transaction id 或 label 的事务详情。
 
@@ -97,9 +97,9 @@ ErrorReplicasCount: 0
     SHOW TRANSACTION WHERE LABEL = 'label_name';
     ```
 
-### Keywords
+## 关键词
 
     SHOW, TRANSACTION
 
-### Best Practice
+## 最佳实践
 

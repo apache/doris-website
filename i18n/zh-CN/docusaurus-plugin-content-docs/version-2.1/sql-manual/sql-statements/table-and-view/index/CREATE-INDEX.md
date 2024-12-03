@@ -30,7 +30,7 @@ under the License.
 
 CREATE INDEX
 
-### Description
+## 描述
 
 该语句用于创建索引
 语法：
@@ -50,11 +50,11 @@ CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING I
    ```
 
 
-### Keywords
+## 关键词
 
 
 CREATE, INDEX
 
 
-### Best Practice
+## 最佳实践
 

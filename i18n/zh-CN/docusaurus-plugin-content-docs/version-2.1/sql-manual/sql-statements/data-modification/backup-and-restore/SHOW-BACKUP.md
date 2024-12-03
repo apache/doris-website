@@ -30,7 +30,7 @@ under the License.
 
 SHOW BACKUP
 
-### Description
+## 描述
 
 该语句用于查看 BACKUP 任务
 
@@ -75,9 +75,9 @@ SHOW BACKUP
      SHOW BACKUP FROM example_db;
     ```
 
-### Keywords
+## 关键词
 
     SHOW, BACKUP
 
-### Best Practice
+## 最佳实践
 

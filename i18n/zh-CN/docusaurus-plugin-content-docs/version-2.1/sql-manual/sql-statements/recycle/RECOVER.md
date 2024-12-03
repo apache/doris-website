@@ -28,7 +28,7 @@ under the License.
 
 RECOVER
 
-### Description
+## 描述
 
 
 该语句用于恢复之前删除的 database、table 或者 partition。支持通过 name、id 来恢复指定的元信息，并且支持将恢复的元信息重命名。
@@ -156,7 +156,7 @@ RECOVER
    RECOVER PARTITION p1 p1_id AS new_p1 FROM example_tbl;
    ```
 
-### Keywords
+## 关键词
 
     RECOVER
 

@@ -30,7 +30,7 @@ under the License.
 
 SHOW ENCRYPTKEYS
 
-### Description
+## 描述
 
 查看数据库下所有的自定义的密钥。如果用户指定了数据库，那么查看对应数据库的，否则直接查询当前会话所在数据库。
 
@@ -67,9 +67,9 @@ SHOW ENCRYPTKEYS [IN|FROM db] [LIKE 'key_pattern']
     1 row in set (0.00 sec)
  ```
 
-### Keywords
+## 关键词
 
     SHOW, ENCRYPT, KEY
 
-### Best Practice
+## 最佳实践
 

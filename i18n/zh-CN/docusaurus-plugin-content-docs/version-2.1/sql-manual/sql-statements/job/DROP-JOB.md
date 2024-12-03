@@ -28,7 +28,7 @@ under the License.
 
 DROP JOB
 
-### Description
+## 描述
 
 用户删除一个 JOB 作业。作业会被立即停止同时删除。
 
@@ -44,9 +44,9 @@ DROP JOB where jobName='jobname';
    DROP JOB where jobName='example';
    ```
 
-### Keywords
+## 关键词
 
     STOP, JOB
 
-### Best Practice
+## 最佳实践
 

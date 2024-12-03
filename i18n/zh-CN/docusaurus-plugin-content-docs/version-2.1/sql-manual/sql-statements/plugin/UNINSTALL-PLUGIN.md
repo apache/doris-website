@@ -29,7 +29,7 @@ under the License.
 
 UNINSTALL PLUGIN
 
-### Description
+## 描述
 
 该语句用于卸载一个插件。
 
@@ -51,9 +51,9 @@ UNINSTALL PLUGIN plugin_name;
     UNINSTALL PLUGIN auditdemo;
     ```
 
-### Keywords
+## 关键词
 
     UNINSTALL, PLUGIN
 
-### Best Practice
+## 最佳实践
 

@@ -26,11 +26,7 @@ under the License.
 
 
 
-### Name
-
-CREATE CATALOG
-
-### Description
+## 描述
 
 该语句用于删除外部数据目录（catalog）
 
@@ -40,7 +36,7 @@ CREATE CATALOG
 DROP CATALOG [IF EXISTS] catalog_name;
 ```
 
-### Example
+## 例子
 
 1. 删除数据目录 hive
 
@@ -48,9 +44,9 @@ DROP CATALOG [IF EXISTS] catalog_name;
    DROP CATALOG hive;
    ```
 
-### Keywords
+## 关键词
 
 DROP, CATALOG
 
-### Best Practice
+### 最佳实践
 

@@ -30,7 +30,7 @@ under the License.
 
 SHOW DELETE
 
-### Description
+## 描述
 
 该语句用于展示已执行成功的历史 delete 任务
 
@@ -48,9 +48,9 @@ SHOW DELETE [FROM db_name]
        SHOW DELETE FROM database;
       ```
 
-### Keywords
+## 关键词
 
     SHOW, DELETE
 
-### Best Practice
+## 最佳实践
 

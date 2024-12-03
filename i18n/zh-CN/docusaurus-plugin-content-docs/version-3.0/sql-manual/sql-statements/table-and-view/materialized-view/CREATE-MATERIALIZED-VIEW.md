@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-MATERIALIZED-VIEW",
+    "title": "CREATE MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-MATERIALIZED-VIEW
 
 ### Name
 
 CREATE MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于创建物化视图。
 
@@ -84,7 +83,7 @@ CREATE MATERIALIZED VIEW < MV name > as < query >
    timeout: 物化视图构建的超时时间。
   ```
 
-### Example
+## 例子
 
 Base 表结构为
 
@@ -228,9 +227,9 @@ properties("replication_num" = "1");
    +----------------+-------+--------------+------+-------+---------+-------+
    ```
 
-### Keywords
+## 关键词
 
     CREATE, MATERIALIZED, VIEW
 
-### Best Practice
+### 最佳实践
 

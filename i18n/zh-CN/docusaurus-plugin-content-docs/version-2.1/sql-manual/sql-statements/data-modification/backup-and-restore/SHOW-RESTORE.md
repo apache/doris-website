@@ -30,7 +30,7 @@ under the License.
 
 SHOW RESTORE
 
-### Description
+## 描述
 
 该语句用于查看 RESTORE 任务
 
@@ -82,9 +82,9 @@ SHOW [BRIEF] RESTORE [FROM DB_NAME]
     SHOW RESTORE FROM example_db;
     ```
 
-### Keywords
+## 关键词
 
     SHOW, RESTORE
 
-### Best Practice
+## 最佳实践
 

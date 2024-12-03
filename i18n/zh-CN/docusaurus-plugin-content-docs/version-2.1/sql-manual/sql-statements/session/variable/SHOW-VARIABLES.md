@@ -30,7 +30,7 @@ under the License.
 
 SHOW VARIABLES
 
-### Description
+## 描述
 
 该语句是用来显示 Doris 系统变量，可以通过条件查询
 
@@ -68,9 +68,9 @@ SHOW [GLOBAL | SESSION] VARIABLES
    show variables where variable_name = 'version';
    ```
 
-### Keywords
+## 关键词
 
     SHOW, VARIABLES
 
-### Best Practice
+## 最佳实践
 

@@ -30,7 +30,7 @@ under the License.
 
 ALTER ROLE
 
-### Description
+## 描述
 
 该语句用于修改一个角色
 
@@ -46,9 +46,9 @@ ALTER ROLE
     ALTER ROLE role1 COMMENT "this is my first role";
     ```
 
-### Keywords
+## 关键词
 
     ALTER, ROLE
 
-### Best Practice
+## 最佳实践
 

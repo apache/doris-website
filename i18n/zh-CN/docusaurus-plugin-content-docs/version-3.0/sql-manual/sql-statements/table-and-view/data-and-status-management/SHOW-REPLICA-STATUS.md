@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-REPLICA-STATUS",
+    "title": "SHOW REPLICA STATUS",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-REPLICA-STATUS
 
 ### Name
 
 SHOW REPLICA STATUS
 
-### Description
+## 描述
 
 该语句用于展示一个表或分区的副本状态信息。
 
@@ -53,7 +52,7 @@ SHOW REPLICA STATUS FROM [db_name.]tbl_name [PARTITION (p1, ...)]
             SCHEMA_ERROR:   replica 的 schema hash 不正确
             MISSING:                 replica 不存在
 
-### Example
+## 例子
 
 1. 查看表全部的副本状态
 
@@ -75,9 +74,9 @@ SHOW REPLICA STATUS FROM [db_name.]tbl_name [PARTITION (p1, ...)]
     WHERE STATUS != "OK";
     ```
 
-### Keywords
+## 关键词
 
     SHOW, REPLICA, STATUS
 
-### Best Practice
+### 最佳实践
 

@@ -26,11 +26,8 @@ under the License.
 
 
 
-### Name
 
-SHOW GRANTS
-
-### Description
+## 描述
 
  该语句用于查看用户权限。
 
@@ -46,7 +43,7 @@ SHOW [ALL] GRANTS [FOR user_identity];
 2. 如果指定 user_identity，则查看该指定用户的权限。且该 user_identity 必须为通过 CREATE USER 命令创建的。
 3. 如果不指定 user_identity，则查看当前用户的权限。
 
-### Example
+## 例子
 
 1. 查看所有用户权限信息
 
@@ -66,9 +63,9 @@ SHOW [ALL] GRANTS [FOR user_identity];
    SHOW GRANTS;
    ```
 
-### Keywords
+## 关键词
 
     SHOW, GRANTS
 
-### Best Practice
+### 最佳实践
 

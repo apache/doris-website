@@ -29,7 +29,7 @@ under the License.
 
 CREATE DATABASE
 
-### Description
+## 描述
 
 该语句用于新建数据库（database）
 
@@ -74,11 +74,11 @@ CREATE DATABASE [IF NOT EXISTS] db_name
 
 :::
 
-### Keywords
+## 关键词
 
 
 CREATE, DATABASE
 
 
-### Best Practice
+## 最佳实践
 

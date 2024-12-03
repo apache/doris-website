@@ -30,7 +30,7 @@ under the License.
 
 ADMIN CANCEL REPAIR
 
-### Description
+## 描述
 
 该语句用于取消以高优先级修复指定表或分区
 
@@ -52,9 +52,9 @@ ADMIN CANCEL REPAIR TABLE table_name[ PARTITION (p1,...)];
         ADMIN CANCEL REPAIR TABLE tbl PARTITION(p1);
        ```
 
-### Keywords
+## 关键词
 
     ADMIN, CANCEL, REPAIR
 
-### Best Practice
+## 最佳实践
 

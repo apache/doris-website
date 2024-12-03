@@ -28,7 +28,7 @@ under the License.
 
 CREATE FILE
 
-### Description
+## 描述
 
 该语句用于创建并上传一个文件到 Doris 集群。
 该功能通常用于管理一些其他命令中需要使用到的文件，如证书、公钥私钥等等。
@@ -81,13 +81,13 @@ PROPERTIES("key"="value", ...)
    );
    ```
 
-### Keywords
+## 关键词
 
 ```text
 CREATE, FILE
 ```
 
-### Best Practice
+## 最佳实践
 
 1. 该命令只有 amdin 权限用户可以执行。某个文件都归属与某一个的 database。对 database 拥有访问权限的用户都可以使用该文件。
 

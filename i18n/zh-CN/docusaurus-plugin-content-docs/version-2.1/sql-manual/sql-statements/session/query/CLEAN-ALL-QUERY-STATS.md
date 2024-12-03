@@ -32,7 +32,7 @@ under the License.
 CLEAN QUERY STATS
 
 
-### Description
+## 描述
 
 该语句用请空查询统计信息
 
@@ -67,9 +67,9 @@ CLEAN [ALL| DATABASE | TABLE] QUERY STATS [[FOR db_name]|[FROM|IN] table_name]];
     clean table query stats from test_query_db.baseall;
     ```
 
-### Keywords
+## 关键词
 
     CLEAN, QUERY, STATS
 
-### Best Practice
+## 最佳实践
 

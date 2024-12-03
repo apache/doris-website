@@ -29,7 +29,7 @@ under the License.
 
 SHOW WORKLOAD GROUPS
 
-### Description
+## 描述
 
 
 该语句用于展示当前用户具有 usage_priv 权限的资源组。
@@ -75,8 +75,8 @@ SHOW WORKLOAD GROUPS [LIKE "pattern"];
     +----------+--------+--------------------------+---------+
     ```
 
-### Keywords
+## 关键词
 
     SHOW, WORKLOAD, GROUPS, GROUP
 
-### Best Practice
+## 最佳实践

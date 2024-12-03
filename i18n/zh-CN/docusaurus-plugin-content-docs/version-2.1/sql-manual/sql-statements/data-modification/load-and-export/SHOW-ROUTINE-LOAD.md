@@ -30,7 +30,7 @@ under the License.
 
 SHOW ROUTINE LOAD
 
-### Description
+## 描述
 
 该语句用于展示 Routine Load 作业运行状态
 
@@ -123,9 +123,9 @@ ReasonOfStateChanged: 作业状态变更的原因
     SHOW ALL ROUTINE LOAD FOR example_db.test1;
     ```
 
-### Keywords
+## 关键词
 
     SHOW, ROUTINE, LOAD
 
-### Best Practice
+## 最佳实践
 

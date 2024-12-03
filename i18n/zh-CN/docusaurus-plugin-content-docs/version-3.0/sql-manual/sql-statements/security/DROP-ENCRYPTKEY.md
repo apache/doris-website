@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-ENCRYPTKEY",
+    "title": "DROP ENCRYPTKEY",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-ENCRYPTKEY
 
 ### Name
 
 DROP ENCRYPTKEY
 
-### Description
+## 描述
 
 语法：
 
@@ -46,7 +45,7 @@ DROP ENCRYPTKEY key_name
 
 执行此命令需要用户拥有 `ADMIN` 权限。
 
-### Example
+## 例子
 
 1. 删除掉一个密钥
 
@@ -54,9 +53,9 @@ DROP ENCRYPTKEY key_name
    DROP ENCRYPTKEY my_key;
    ```
 
-### Keywords
+## 关键词
 
     DROP, ENCRYPT, KEY
 
-### Best Practice
+### 最佳实践
 

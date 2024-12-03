@@ -30,7 +30,7 @@ under the License.
 
 ADMIN SET TABLE STATUS
 
-### Description
+## 描述
 
 该语句用于设置指定表的状态，仅支持 OLAP 表。
 
@@ -74,11 +74,11 @@ admin set table tbl1 status properties("state" = "NORMAL");
 admin set table test_set_table_status status properties("state" = "SCHEMA_CHANGE");
 ```
 
-### Keywords
+## 关键词
 
     ADMIN, SET, TABLE, STATUS
 
-### Best Practice
+## 最佳实践
 
 
 

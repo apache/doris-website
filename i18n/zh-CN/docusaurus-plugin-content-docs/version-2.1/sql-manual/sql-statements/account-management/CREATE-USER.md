@@ -30,7 +30,7 @@ under the License.
 
 CREATE USER
 
-### Description
+## 描述
 
 CREATE USER 命令用于创建一个 Doris 用户。
 
@@ -131,9 +131,9 @@ password_policy 是用于指定密码认证登录相关策略的子句，目前�
     CREATE USER 'jack' COMMENT "this is my first user";
     ```
 
-### Keywords
+## 关键词
 
     CREATE, USER
 
-### Best Practice
+## 最佳实践
 

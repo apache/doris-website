@@ -29,7 +29,7 @@ under the License.
 
 SHOW BROKER
 
-### Description
+## 描述
 
 该语句用于查看当前存在的 broker
 
@@ -48,9 +48,9 @@ SHOW BROKER;
 
 ### Example
 
-### Keywords
+## 关键词
 
     SHOW, BROKER
 
-### Best Practice
+## 最佳实践
 

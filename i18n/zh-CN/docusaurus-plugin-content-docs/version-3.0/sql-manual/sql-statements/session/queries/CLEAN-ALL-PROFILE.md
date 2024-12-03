@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CLEAN-PROFILE",
+    "title": "CLEAN PROFILE",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CLEAN-PROFILE
 
 ### Name
 
 CLEAN PROFILE
 
-### Description
+## 描述
 
 用于手动清理所有历史 query 或 load 的 profile 信息。
 
@@ -40,7 +39,7 @@ CLEAN PROFILE
 CLEAN ALL PROFILE;
 ```
 
-### Example
+## 例子
 
 1. 清理所有 profile 信息。
 
@@ -48,9 +47,9 @@ CLEAN ALL PROFILE;
 	CLEAN ALL PROFILE;
 	```
 
-### Keywords
+## 关键词
 
     CLEAN, PROFILE
 
-### Best Practice
+### 最佳实践
 

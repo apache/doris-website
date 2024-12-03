@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STOP-ROUTINE-LOAD",
+    "title": "STOP ROUTINE LOAD",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## STOP-ROUTINE-LOAD
+
 
 ### Name
 
 STOP ROUTINE LOAD
 
-### Description
+## 描述
 
 用户停止一个 Routine Load 作业。被停止的作业无法再重新运行。
 
@@ -38,7 +38,7 @@ STOP ROUTINE LOAD
 STOP ROUTINE LOAD FOR job_name;
 ```
 
-### Example
+## 例子
 
 1. 停止名称为 test1 的例行导入作业。
 
@@ -46,9 +46,9 @@ STOP ROUTINE LOAD FOR job_name;
    STOP ROUTINE LOAD FOR test1;
    ```
 
-### Keywords
+## 关键词
 
     STOP, ROUTINE, LOAD
 
-### Best Practice
+### 最佳实践
 

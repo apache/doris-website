@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-TYPECAST",
+    "title": "SHOW TYPECAST",
     "language": "zh-CN"
 }
 ---
@@ -24,29 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-TYPECAST
 
-### Name
-
-SHOW TYPECAST
-
-### Description
+## 描述
 
 查看数据库下所有的类型转换。如果用户指定了数据库，那么查看对应数据库的，否则直接查询当前会话所在数据库
 
 需要对这个数据库拥有 `SHOW` 权限
 
-语法
+## 语法
 
 ```sql
 SHOW TYPE_CAST [IN|FROM db]
 ```
 
- Parameters
+参数：
 
->`db`: database name to query
+`db`: database name to query
 
-### Example
+## 例子
 
 ```sql
 mysql> show type_cast in testDb\G
@@ -63,9 +58,9 @@ Origin Type: TIMEV2
 3 rows in set (0.00 sec)
 ```
 
-### Keywords
+## 关键词
 
-    SHOW, TYPECAST
+SHOW, TYPECAST
 
-### Best Practice
+
 

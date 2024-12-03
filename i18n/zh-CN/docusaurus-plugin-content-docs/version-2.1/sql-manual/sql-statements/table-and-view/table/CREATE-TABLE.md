@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## 描述
 
 该命令用于创建一张表。
 
@@ -811,11 +811,11 @@ UNIQUE KEY(k1, k2)
     );
     ```
 
-### Keywords
+## 关键词
 
     CREATE, TABLE
 
-### Best Practice
+## 最佳实践
 
 #### 分区和分桶
 

@@ -30,7 +30,7 @@ under the License.
 
 SET PASSWORD
 
-### Description
+## 描述
 
 SET PASSWORD 命令可以用于修改一个用户的登录密码。如果 [FOR user_identity] 字段不存在，那么修改当前用户的密码
 
@@ -59,9 +59,9 @@ PASSWORD() 方式输入的是明文密码; 而直接使用字符串，需要传�
     SET PASSWORD FOR 'jack'@['domain'] = '*6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9'
     ```
 
-### Keywords
+## 关键词
 
     SET, PASSWORD
 
-### Best Practice
+## 最佳实践
 

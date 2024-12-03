@@ -30,7 +30,7 @@ under the License.
 SWITCH
 
 
-### Description
+## 描述
 
 该语句用于切换数据目录（catalog）
 
@@ -48,9 +48,9 @@ SWITCH catalog_name
   	SWITCH hive;
   	```
 
-### Keywords
+## 关键词
 
 SWITCH, CATALOG
 
-### Best Practice
+## 最佳实践
 

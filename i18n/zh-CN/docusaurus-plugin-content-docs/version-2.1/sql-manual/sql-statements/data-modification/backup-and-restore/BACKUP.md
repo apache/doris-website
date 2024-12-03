@@ -30,7 +30,7 @@ under the License.
 
 BACKUP
 
-### Description
+## 描述
 
 该语句用于备份指定数据库下的数据。该命令为异步操作。
 
@@ -97,13 +97,13 @@ BACKUP SNAPSHOT example_db.snapshot_label3
 TO example_repo;
 ```
 
-### Keywords
+## 关键词
 
 ```text
 BACKUP
 ```
 
-### Best Practice
+## 最佳实践
 
 1. 同一个数据库下只能进行一个备份操作。
 

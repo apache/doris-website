@@ -34,7 +34,7 @@ under the License.
 
 UNSET VARIABLE
 
-### Description
+## 描述
 
 该语句主要是用来恢复 Doris 系统变量为默认值，可以是全局也可以是会话级别。
 
@@ -74,9 +74,9 @@ UNSET [SESSION|GLOBAL] VARIABLE (variable_name | ALL)
    UNSET GLOBAL VARIABLE ALL;
    ```
 
-### Keywords
+## 关键词
 
     UNSET, VARIABLE
 
-### Best Practice
+## 最佳实践
 

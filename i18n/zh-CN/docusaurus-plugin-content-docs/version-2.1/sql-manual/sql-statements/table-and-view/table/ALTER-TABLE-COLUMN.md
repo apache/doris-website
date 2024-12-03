@@ -28,7 +28,7 @@ under the License.
 
 ALTER TABLE COLUMN
 
-### Description
+## 描述
 
 该语句用于对已有 table 进行 Schema change 操作。schema change 是异步的，任务提交成功则返回，之后可使用[SHOW ALTER TABLE COLUMN](../../../../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE) 命令查看进度。
 
@@ -299,11 +299,11 @@ ALTER TABLE [database.]table table_name MODIFY COLUMN column_name column_type [K
   - key 列只能调整 key 列的范围内进行调整，value 列同理
 :::
 
-### Keywords
+## 关键词
 
 ```text
 ALTER, TABLE, COLUMN, ALTER TABLE
 ```
 
-### Best Practice
+## 最佳实践
 

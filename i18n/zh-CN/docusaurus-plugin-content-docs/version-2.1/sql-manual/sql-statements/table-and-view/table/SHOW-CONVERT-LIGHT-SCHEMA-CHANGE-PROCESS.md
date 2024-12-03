@@ -28,7 +28,7 @@ under the License.
 
 SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS
 
-### Description
+## 描述
 
 用来查看将非 light schema change 的 olpa 表转换为 light schema change 表的情况，需要开启配置`enable_convert_light_weight_schema_change`
 
@@ -54,8 +54,8 @@ SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [FROM db]
     ```
 
 
-### Keywords
+## 关键词
 
     SHOW, CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS
 
-### Best Practice
+## 最佳实践

@@ -29,7 +29,7 @@ under the License.
 
 DROP DATABASE
 
-### Description
+## 描述
 
 该语句用于删除数据库（database）
 语法：    
@@ -52,9 +52,9 @@ DROP DATABASE [IF EXISTS] db_name [FORCE];
     ```
     
 
-### Keywords
+## 关键词
 
     DROP, DATABASE
 
-### Best Practice
+## 最佳实践
 

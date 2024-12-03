@@ -30,7 +30,7 @@ under the License.
 
 CREATE RESOURCE
 
-### Description
+## 描述
 
 该语句用于创建资源。仅 root 或 admin 用户可以创建资源。目前支持 Spark, ODBC, S3, JDBC, HDFS, HMS, ES 外部资源。
 将来其他外部资源可能会加入到 Doris 中使用，如 Spark/GPU 用于查询，HDFS/S3 用于外部存储，MapReduce 用于 ETL 等。
@@ -240,9 +240,9 @@ Spark 用于 ETL 时需要指定 working_dir 和 broker。说明如下：
     - nodes_discovery: 是否开启 ES 节点发现，默认为 true，在网络隔离环境下设置为 false，只连接指定节点
     - http_ssl_enabled: ES 是否开启 https 访问模式，目前在 fe/be 实现方式为信任所有
 
-### Keywords
+## 关键词
 
     CREATE, RESOURCE
 
-### Best Practice
+## 最佳实践
 

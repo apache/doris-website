@@ -1,6 +1,6 @@
 ---
 {
-  "title": "ALTER-TABLE-AND-GENERATED-COLUMN",
+  "title": "ALTER TABLE AND GENERATED COLUMN",
   "language": "zh-CN"
 }
 ---
@@ -23,8 +23,9 @@ under the License.
 -->
 
 
-## ALTER TABLE和生成列
-不支持使用ALTER TABLE ADD COLUMN增加一个生成列，不支持使用ALTER TABLE MODIFY COLUMN修改生成列信息。支持使用ALTER TABLE对生成列顺序进行修改，修改生成列名称和删除生成列。
+## ALTER TABLE 和生成列
+
+不支持使用 ALTER TABLE ADD COLUMN 增加一个生成列，不支持使用 ALTER TABLE MODIFY COLUMN 修改生成列信息。支持使用 ALTER TABLE 对生成列顺序进行修改，修改生成列名称和删除生成列。
 
 不支持的场景报错如下：
 

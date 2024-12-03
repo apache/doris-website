@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-TRASH",
+    "title": "SHOW TRASH",
     "language": "zh-CN"
 }
 
@@ -25,13 +25,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-TRASH
 
 ### Name
 
 SHOW TRASH
 
-### Description
+## 描述
 
 该语句用于查看 backend 内的垃圾数据占用空间。
 
@@ -43,26 +42,26 @@ SHOW TRASH [ON BackendHost:BackendHeartBeatPort];
 
 说明：
 
-1. Backend 格式为该节点的BackendHost:BackendHeartBeatPort
+1. Backend 格式为该节点的 BackendHost:BackendHeartBeatPort
 2. TrashUsedCapacity 表示该节点垃圾数据占用空间。
 
-### Example
+## 例子
 
-1. 查看所有be节点的垃圾数据占用空间。
+1. 查看所有 be 节点的垃圾数据占用空间。
 
    ```sql
     SHOW TRASH;
    ```
 
-2. 查看'192.168.0.1:9050'的垃圾数据占用空间(会显示具体磁盘信息)。
+2. 查看'192.168.0.1:9050'的垃圾数据占用空间 (会显示具体磁盘信息)。
 
    ```sql
    SHOW TRASH ON "192.168.0.1:9050";
    ```
 
-### Keywords
+## 关键词
 
     SHOW, TRASH
 
-### Best Practice
+### 最佳实践
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-DATA",
+    "title": "SHOW DATA",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-DATA
+
 
 ### Name
 
 SHOW DATA
 
-### Description
+## 描述
 
 该语句用于展示数据量、副本数量以及统计行数。
 
@@ -54,9 +54,9 @@ SHOW DATA [FROM [db_name.]table_name] [ORDER BY ...];
 
 6. 可以使用 ORDER BY 对任意列组合进行排序。
 
-### Example
+## 例子
 
-1. 默认展示各个db的汇总数据量，RecycleBin中的数据量
+1. 默认展示各个 db 的汇总数据量，RecycleBin 中的数据量
 
     ```
     SHOW DATA;
@@ -133,9 +133,9 @@ SHOW DATA [FROM [db_name.]table_name] [ORDER BY ...];
     +-----------+-------------+--------------+
     ```
 
-### Keywords
+## 关键词
 
     SHOW, DATA
 
-### Best Practice
+### 最佳实践
 

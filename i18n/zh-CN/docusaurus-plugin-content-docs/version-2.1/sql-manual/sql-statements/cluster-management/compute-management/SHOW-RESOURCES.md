@@ -29,7 +29,7 @@ under the License.
 
 SHOW RESOURCES
 
-### Description
+## 描述
 
 该语句用于展示用户有使用权限的资源。普通用户仅能展示有使用权限的资源，root 或 admin 用户会展示所有的资源。
 
@@ -83,9 +83,9 @@ SHOW RESOURCES
     SHOW RESOURCES LIKE "jdbc%";
     ```
 
-### Keywords
+## 关键词
 
     SHOW, RESOURCES
 
-### Best Practice
+## 最佳实践
 

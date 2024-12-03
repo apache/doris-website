@@ -29,7 +29,7 @@ under the License.
 
 ALTER SYSTEM ADD FOLLOWER
 
-### Description
+## 描述
 
 该语句是增加 FRONTEND 的 FOLLOWER 角色的节点，（仅管理员使用！）
 
@@ -44,7 +44,7 @@ ALTER SYSTEM ADD FOLLOWER "follower_host:edit_log_port"
 1. host 可以是主机名或者 ip 地址
 2. edit_log_port : edit_log_port 在其配置文件 fe.conf
 
-### Example
+## 例子
 
 1. 添加一个 FOLLOWER 节点
 
@@ -52,9 +52,9 @@ ALTER SYSTEM ADD FOLLOWER "follower_host:edit_log_port"
    ALTER SYSTEM ADD FOLLOWER "host_ip:9010"
    ```
 
-### Keywords
+## 关键词
 
     ALTER, SYSTEM, ADD, FOLLOWER, ALTER SYSTEM
 
-### Best Practice
+### 最佳实践
 

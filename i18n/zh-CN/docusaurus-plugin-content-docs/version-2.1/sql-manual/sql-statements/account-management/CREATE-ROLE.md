@@ -30,7 +30,7 @@ under the License.
 
 CREATE ROLE
 
-### Description
+## 描述
 
 该语句用户创建一个角色
 
@@ -53,9 +53,9 @@ CREATE ROLE
     CREATE ROLE role2 COMMENT "this is my first role";
     ```
 
-### Keywords
+## 关键词
 
     CREATE, ROLE
 
-### Best Practice
+## 最佳实践
 

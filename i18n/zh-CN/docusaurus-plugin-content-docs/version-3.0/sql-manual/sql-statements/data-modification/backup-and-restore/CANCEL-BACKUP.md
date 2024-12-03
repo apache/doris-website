@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL-BACKUP",
+    "title": "CANCEL BACKUP",
     "language": "zh-CN"
 }
 ---
@@ -30,7 +30,7 @@ under the License.
 
 CANCEL  BACKUP
 
-### Description
+## 描述
 
 该语句用于取消一个正在进行的 BACKUP 任务。
 
@@ -40,7 +40,7 @@ CANCEL  BACKUP
 CANCEL BACKUP FROM db_name;
 ```
 
-### Example
+## 例子
 
 1. 取消 example_db 下的 BACKUP 任务。
 
@@ -48,9 +48,9 @@ CANCEL BACKUP FROM db_name;
 CANCEL BACKUP FROM example_db;
 ```
 
-### Keywords
+## 关键词
 
     CANCEL, BACKUP
 
-### Best Practice
+### 最佳实践
 

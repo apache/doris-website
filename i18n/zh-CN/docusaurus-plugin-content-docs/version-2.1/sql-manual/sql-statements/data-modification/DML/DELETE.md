@@ -30,7 +30,7 @@ under the License.
 
 DELETE
 
-### Description
+## 描述
 
 该语句用于按条件删除指定 table（base index）partition 中的数据。
 
@@ -199,9 +199,9 @@ DELETE FROM table_name [table_alias]
    where lineitem.o_orderkey = discount_orders.o_orderkey;
    ```
 
-### Keywords
+## 关键词
 
     DELETE
 
-### Best Practice
+## 最佳实践
 

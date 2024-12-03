@@ -30,7 +30,7 @@ under the License.
 
 CREATE ASYNC MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于创建异步物化视图。
 
@@ -237,6 +237,6 @@ partition by (date_trunc(`k2`,'month'))
     AS select user.k1,user.k3,com.k4 from user join com on user.k1=com.k1;
    ```
 
-### 关键词
+## 关键词
 
     CREATE, ASYNC, MATERIALIZED, VIEW

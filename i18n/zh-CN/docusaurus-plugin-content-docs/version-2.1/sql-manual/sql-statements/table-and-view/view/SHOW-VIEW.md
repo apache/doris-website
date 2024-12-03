@@ -28,7 +28,7 @@ under the License.
 
 SHOW VIEW
 
-### Description
+## 描述
 
 该语句用于展示基于给定表建立的所有视图
 
@@ -46,9 +46,9 @@ SHOW VIEW
     SHOW VIEW FROM testTbl;
     ```
 
-### Keywords
+## 关键词
 
     SHOW, VIEW
 
-### Best Practice
+## 最佳实践
 

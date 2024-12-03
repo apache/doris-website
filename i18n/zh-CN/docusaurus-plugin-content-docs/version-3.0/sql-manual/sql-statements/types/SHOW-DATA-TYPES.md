@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-DATA-TYPES",
+    "title": "SHOW DATA TYPES",
     "language": "zh-CN"
 }
 ---
@@ -24,29 +24,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-DATA-TYPES
 
-### Name
 
-SHOW DATA TYPES
+## 描述
 
-### Description
+该语句用于查看 DORIS 支持的所有数据类型。
 
-    该语句用于查看DORIS支持的所有数据类型。
+### 语法
 
-    语法：
-        ```sql
-        SHOW DATA TYPES;
-        ```
+```sql
+SHOW DATA TYPES;
+```
 
-### Example
+## 例子
 
-    1. 查看Doris支持的所有数据类型
+1. 查看 Doris 支持的所有数据类型
 
-        SHOW DATA TYPES;
+    SHOW DATA TYPES;
 
-### Keywords
+## 关键词
 
-    SHOW,DATA,TYPES
+SHOW,DATA,TYPES
 
-### Best Practice

@@ -30,7 +30,7 @@ under the License.
 
 ALTER TABLE RENAME
 
-### Description
+## 描述
 
 该语句用于对已有 table 属性的某些名称进行重命名操作。这个操作是同步的，命令返回表示执行完毕。
 
@@ -107,11 +107,11 @@ ALTER TABLE example_table RENAME PARTITION p1 p2;
 ALTER TABLE example_table RENAME COLUMN c1 c2;
 ```
 
-### Keywords
+## 关键词
 
 ```text
 ALTER, TABLE, RENAME, ALTER TABLE
 ```
 
-### Best Practice
+## 最佳实践
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN-CANCEL-REPAIR",
+    "title": "CANCEL REPAIR",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-CANCEL-REPAIR
+
 
 ### Name
 
 ADMIN CANCEL REPAIR
 
-### Description
+## 描述
 
 该语句用于取消以高优先级修复指定表或分区
 
@@ -44,7 +44,7 @@ ADMIN CANCEL REPAIR TABLE table_name[ PARTITION (p1,...)];
 
 1. 该语句仅表示系统不再以高优先级修复指定表或分区的分片副本。系统仍会以默认调度方式修复副本。
 
-### Example
+## 例子
 
  1. 取消高优先级修复
 
@@ -52,9 +52,9 @@ ADMIN CANCEL REPAIR TABLE table_name[ PARTITION (p1,...)];
         ADMIN CANCEL REPAIR TABLE tbl PARTITION(p1);
        ```
 
-### Keywords
+## 关键词
 
     ADMIN, CANCEL, REPAIR
 
-### Best Practice
+### 最佳实践
 

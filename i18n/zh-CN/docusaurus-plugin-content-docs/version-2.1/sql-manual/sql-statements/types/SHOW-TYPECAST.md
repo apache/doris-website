@@ -28,7 +28,7 @@ under the License.
 
 SHOW TYPECAST
 
-### Description
+## 描述
 
 查看数据库下所有的类型转换。如果用户指定了数据库，那么查看对应数据库的，否则直接查询当前会话所在数据库
 
@@ -61,9 +61,9 @@ Origin Type: TIMEV2
 3 rows in set (0.00 sec)
 ```
 
-### Keywords
+## 关键词
 
     SHOW, TYPECAST
 
-### Best Practice
+## 最佳实践
 

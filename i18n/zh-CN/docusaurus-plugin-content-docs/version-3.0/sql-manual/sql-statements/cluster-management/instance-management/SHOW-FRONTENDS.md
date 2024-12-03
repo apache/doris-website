@@ -30,7 +30,7 @@ under the License.
 
 SHOW FRONTENDS
 
-### Description
+## 描述
 
  该语句用于查看 FE 节点
 
@@ -50,11 +50,11 @@ SHOW FRONTENDS;
 7. ErrMsg 用于显示心跳失败时的错误信息。
 8. CurrentConnected 表示是否是当前连接的 FE 节点
 
-### Example
+## 例子
 
-### Keywords
+## 关键词
 
     SHOW, FRONTENDS
 
-### Best Practice
+### 最佳实践
 

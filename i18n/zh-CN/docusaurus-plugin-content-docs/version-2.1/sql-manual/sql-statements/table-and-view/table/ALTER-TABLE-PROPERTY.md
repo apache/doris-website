@@ -41,7 +41,7 @@ ALTER TABLE PROPERTY
 - 具体属性可以参考[建表属性](../../../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)
 :::
 
-### Description
+## 描述
 
 该语句用于对已有 table 的 property 进行修改操作。这个操作是同步的，命令返回表示执行完毕。
 
@@ -317,11 +317,11 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="cr
 
 注：表的 partition 没有关联过 storage policy，才能被添加成功，一个表只能添加一个 storage policy
 
-### Keywords
+## 关键词
 
 ```text
 ALTER, TABLE, PROPERTY, ALTER TABLE
 ```
 
-### Best Practice
+## 最佳实践
 
