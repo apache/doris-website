@@ -1,3 +1,23 @@
+:root {
+    --custom-h1-font-size: 2.25rem;
+    --custom-h2-font-size: 1.625rem;
+    --custom-h3-font-size: 1.25rem;
+    --custom-h4-font-size: 1.125rem;
+    --custom-navbar-search-input-icon: url('data:image/svg+xml;utf8,<svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"><path d="M11 2.5C15.6945 2.5 19.5 6.3055 19.5 11C19.5 13.0175 18.797 14.871 17.623 16.3285C17.7199 16.3471 17.8089 16.3945 17.8785 16.4645L21.0605 19.6465C21.1542 19.7403 21.2069 19.8674 21.2069 20C21.2069 20.1326 21.1542 20.2597 21.0605 20.3535L20.3535 21.0605C20.2597 21.1542 20.1326 21.2069 20 21.2069C19.8674 21.2069 19.7403 21.1542 19.6465 21.0605L16.4645 17.8785C16.3945 17.8088 16.3468 17.7199 16.3275 17.623C14.8191 18.8405 12.9384 19.5032 11 19.5C6.3055 19.5 2.5 15.6945 2.5 11C2.5 6.3055 6.3055 2.5 11 2.5ZM11 4.5C7.41 4.5 4.5 7.41 4.5 11C4.5 14.59 7.41 17.5 11 17.5C14.59 17.5 17.5 14.59 17.5 11C17.5 7.41 14.59 4.5 11 4.5Z" /></svg>');
+    --custom-navbar-item-padding-vertical: 0.4rem;
+    --custom-navbar-height: 5rem;
+    --custom-menu-color-background-active: #e4e8ee;
+    --custom-leading: 1rem;
+    --custom-heading-rhythm-bottom: 1.25;
+    --custom-heading-rhythm-top: 2.5;
+    --custom-tabs-rhythm-top: 1.25;
+    --custom-list-rhythm-bottom: 0.625;
+    --custom-h4-rhythm-bottom: 2;
+    --custom-other-rhythm-margin: 1.25; // table code tip details img
+    --custom-text-rhythm-bottom: 0.75;
+    --custom-text-line-height: 1.625rem;
+}
+
 .markdown {
     color: #4c576c;
     padding-left: 1rem;
@@ -18,54 +38,80 @@
         color: #1d1d1d;
     }
 
+    // h1,
+    // h1:first-child {
+    //     font-size: 2.25rem;
+    // }
+
     h1,
-    h1:first-child {
-        margin-bottom: 1.5rem;
-        margin-top: 0;
-        font-size: 2.25rem;
-        font-weight: 700;
-    }
-
-    h2 {
-        font-size: 1.625rem;
-        line-height: 2.625rem;
-        font-weight: 700;
-        // margin-bottom: 1.25rem;
-        // margin-top: 1.25rem;
-        // padding-top: 1.25rem;
-        margin-top: calc(var(--ifm-h2-font-size) * var(--ifm-leading));
-    }
-
+    h2,
     h3 {
-        font-size: 1.25rem;
         font-weight: 700;
-        line-height: 2rem;
-        margin-bottom: 1.25rem;
-        margin-top: 1.25rem;
     }
 
-    h4 {
-        font-size: 1.125rem;
-        font-weight: 400;
-        line-height: 1.75rem;
-        margin-top: 1.25rem;
-        margin-bottom: 1.25rem;
-    }
-
-    p {
-        line-height: 1.625rem;
+    p,
+    li {
+        margin-bottom: calc(var(--custom-leading) * var(--custom-text-rhythm-bottom));
         font-size: 1rem;
         font-weight: 400;
-        margin-top: 0;
-        margin-bottom: 0.75rem;
+        line-height: var(--custom-text-line-height);
+        margin-top: 0 !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        margin-bottom: calc(var(--custom-leading) * var(--custom-heading-rhythm-bottom));
+    }
+
+    ol,
+    ul,
+    li {
+        margin-bottom: calc(var(--custom-leading) * var(--custom-list-rhythm-bottom));
     }
 
     .theme-code-block,
-    img,
     table,
+    .theme-admonition-tip,
+    details,
+    img {
+        margin-bottom: calc(var(--custom-leading) * var(--custom-other-rhythm-margin));
+        margin-top: calc(var(--custom-leading) * var(--custom-other-rhythm-margin));
+    }
+
     .theme-admonition-tip {
-        margin-top: 0.625rem;
-        margin-bottom: 1.25rem;
+        padding: calc(var(--custom-leading) * 2);
+    }
+
+    h2,
+    h3 {
+        margin-top: calc(var(--custom-leading) * var(--custom-heading-rhythm-top));
+    }
+
+    h4 {
+        margin-top: calc(var(--custom-leading) * var(--custom-h4-rhythm-bottom));
+    }
+
+    h1 {
+        font-size: var(--custom-h1-font-size);
+    }
+
+    h2 {
+        font-size: var(--custom-h2-font-size);
+    }
+
+    h3 {
+        font-size: var(--custom-h3-font-size);
+    }
+
+    h4 {
+        font-size: var(--custom-h4-font-size);
+    }
+
+    .tabs {
+        margin-bottom: var(--custom-leading);
+        margin-top: calc(var(--custom-leading) * var(--custom-tabs-rhythm-top));
     }
 
     code {
@@ -114,21 +160,23 @@
     a {
         color: var(--ifm-color-primary);
     }
-    ul {
-        margin: 16px 0;
-        padding-left: 20px;
-        li {
-            margin-top: 4px;
-            position: relative;
-            list-style: initial;
-        }
-    }
+
+    ul,
     ol {
-        margin: 16px 0;
-        padding-left: 20px;
-        li {
-            list-style: decimal;
-        }
+        list-style-type: disc;
+        padding-left: 1.625rem;
+    }
+    ul ul {
+        list-style-type: circle;
+    }
+    ul ul ul {
+        list-style-type: square;
+    }
+    ol ul {
+        list-style-type: circle;
+    }
+    ol ul ul {
+        list-style-type: square;
     }
 }
 

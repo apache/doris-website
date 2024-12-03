@@ -5,7 +5,7 @@ import { useHideableNavbar, useNavbarMobileSidebar } from '@docusaurus/theme-com
 import { translate } from '@docusaurus/Translate';
 import NavbarMobileSidebar from '@theme/Navbar/MobileSidebar';
 import type { Props } from '@theme/Navbar/Layout';
-
+import useIsDocPage from '@site/src/hooks/use-is-doc';
 import styles from './styles.module.css';
 
 function NavbarBackdrop(props: ComponentProps<'div'>) {
@@ -17,8 +17,7 @@ export default function NavbarLayout({ children }: Props): JSX.Element {
         navbar: { hideOnScroll, style },
     } = useThemeConfig();
     const mobileSidebar = useNavbarMobileSidebar();
-
-    const [isDocsPage, setIsDocsPage] = useState(false);
+    const [isDocsPage] = useIsDocPage(false);
     const [isCommunity, setIsCommunity] = useState(false);
     const [withoutDoc, setWithoutDoc] = useState(false);
     const { navbarRef, isNavbarVisible } = useHideableNavbar(hideOnScroll);
@@ -28,8 +27,6 @@ export default function NavbarLayout({ children }: Props): JSX.Element {
             const tempPath = ['get-starting', 'benchmark', 'ecosystems', 'faq', 'releasenotes'];
             const isDocsPage =
                 tempPath.includes(pathname) || tempPath.some(path => location.pathname.includes(`zh-CN/${path}`));
-            const docsPage = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
-            setIsDocsPage(docsPage);
             setWithoutDoc(isDocsPage);
         }
 
