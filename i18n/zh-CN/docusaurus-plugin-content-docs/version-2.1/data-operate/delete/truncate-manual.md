@@ -38,7 +38,7 @@ TRUNCATE TABLE [db.]tbl[ PARTITION(p1, p2, ...)];
 
 - 不同于 DELETE，使用该方式清空数据不会对查询性能造成影响。
 
-- 该操作删除的数据不可恢复。
+- 该操作删除的数据不可从回收站恢复。
 
 - 使用该命令时，表状态需为 NORMAL，即不允许正在进行 SCHEMA CHANGE 等操作。
 
@@ -48,12 +48,12 @@ TRUNCATE TABLE [db.]tbl[ PARTITION(p1, p2, ...)];
 
 **1. 清空 example_db 下的表 tbl**
 
-```SQL
+```sql
 TRUNCATE TABLE example_db.tbl;
 ```
 
 **2. 清空表 tbl 的 p1 和 p2 分区**
 
-```SQL
+```sql
 TRUNCATE TABLE tbl PARTITION(p1, p2);
 ```
