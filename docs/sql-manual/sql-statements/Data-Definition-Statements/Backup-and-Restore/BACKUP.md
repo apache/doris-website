@@ -39,7 +39,7 @@ This statement is used to back up the data under the specified database. This co
 grammar:
 
 ```sql
-BACKUP SNAPSHOT [db_name].{snapshot_name}
+BACKUP [GLOBAL] SNAPSHOT [db_name].{snapshot_name}
 TO `repository_name`
 [ON|EXCLUDE] (
     `table_name` [PARTITION (`p1`, ...)],
@@ -56,6 +56,9 @@ illustrate:
 - PROPERTIES currently supports the following properties:
   - "type" = "full": indicates that this is a full update (default)
   - "timeout" = "3600": The task timeout period, the default is one day. in seconds.
+  - "backup_privilege" = "true"：Whether to backup privileges，use with BACKUP GLOBAL.    
+  - "backup_catalog" = "true"：Whether to backup catalogs，use with BACKUP GLOBAL.    
+  - "backup_workload_group" = "true"：Whether to backup workload groups，use with BACKUP GLOBAL.      
 
 ### Example
 
@@ -93,6 +96,21 @@ EXCLUDE (example_tbl);
 ```sql
 BACKUP SNAPSHOT example_db.snapshot_label3
 TO example_repo;
+```
+
+5. buckup privileges,catalog and workloadgroup to the repository example_repo:
+
+```sql
+BACKUP GLOBAL SNAPSHOT snapshot_label5
+TO example_repo;
+```
+
+6.buckup privileges and catalog to the repository example_repo:
+
+```sql
+BACKUP GLOBAL SNAPSHOT snapshot_label6
+TO example_repo
+PROPERTIES ("backup_privilege" = "true", "backup_catalog"="true");
 ```
 
 ### Keywords
