@@ -37,7 +37,7 @@ This statement is used to restore the data backed up by the BACKUP command to th
 grammar:
 
 ```sql
-RESTORE SNAPSHOT [db_name].{snapshot_name}
+RESTORE [GLOBAL] SNAPSHOT [db_name].{snapshot_name}
 FROM `repository_name`
 [ON|EXCLUDE] (
     `table_name` [PARTITION (`p1`, ...)] [AS `tbl_alias`],
@@ -63,6 +63,9 @@ illustrate:
   - "meta_version" = 40: Use the specified meta_version to read the previously backed up metadata. Note that this parameter is used as a temporary solution and is only used to restore the data backed up by the old version of Doris. The latest version of the backup data already contains the meta version, no need to specify it.
   - "clean_tables": Indicates whether to clean up tables that do not belong to the restore target. For example, if the target db before the restore has tables that are not present in the snapshot, specifying `clean_tables` can drop these extra tables and move them into the recycle bin during the restore.
   - "clean_partitions": Indicates whether to clean up partitions that do not belong to the restore target. For example, if the target table before the restore has partitions that are not present in the snapshot, specifying `clean_partitions` can drop these extra partitions and move them into the recycle bin during the restore.
+  - "reserve_privilege" = "true"：Whether to restore privileges，use with RESTORE GLOBAL.    
+  - "reserve_catalog" = "true"：Whether to restore catalogs，use with RESTORE GLOBAL.    
+  - "reserve_workload_group" = "true"：Whether to restore workload groups，use with RESTORE GLOBAL.      
 
 ### Example
 
@@ -106,6 +109,33 @@ PROPERTIES
     "backup_timestamp"="2018-05-04-18-12-18"
 );
 ```
+
+4. Restore privileges,catalogs, workload groups in backup snapshot_4 from example_rep，the time version is "2018-05-04-18-12-18".
+
+```sql
+RESTORE GLOBAL SNAPSHOT `snapshot_4`
+FROM `example_repo`
+EXCLUDE ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-18-12-18"
+);
+```
+
+5. Restore privileges and workload groups in backup snapshot_5 from example_rep，the time version is "2018-05-04-18-12-18".
+   
+```sql
+RESTORE GLOBAL SNAPSHOT `snapshot_5`
+FROM `example_repo`
+EXCLUDE ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-18-12-18",
+    "reserve_privilege" = "true",
+    "reserve_workload_group"="true"
+);
+```
+
 
 ### Keywords
 
