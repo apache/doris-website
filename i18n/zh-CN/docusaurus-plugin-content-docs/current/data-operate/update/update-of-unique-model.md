@@ -119,7 +119,7 @@ INSERT INTO order_tbl (order_id, order_status) VALUES (1,'待发货');
 使用`INSERT INTO`进行更新：
 
 ```sql
-set enable_unique_key_partial_update=true;
+SET enable_unique_key_partial_update=true;
 INSERT INTO order_tbl (order_id, order_status) VALUES (1,'待发货');
 ```
 

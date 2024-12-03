@@ -26,7 +26,7 @@ under the License.
 
 This document primarily introduces the updates based on the load data on the Doris Unique Key model.
 
-## Updates on All Columns
+## Full Row Update
 
 When load data into the primary key model (Unique model) in Doris using supported load methods such as Stream Load, Broker Load, Routine Load, Insert Into, etc., if there are no corresponding data rows with the primary key, new data will be inserted. If there are corresponding data rows with the primary key, the data will be updated. In other words, load data into the Doris primary key model follows an "upsert" mode. Based on the import, updating existing records is by default the same as load a new record. Therefore, you can refer to the data load documentation section for more details.
 
@@ -52,43 +52,50 @@ Note:
 
 ### Usage
 
-**Table Creation**
+#### Table Creation
 
 When creating the table, the following property needs to be specified to enable the Merge-on-Write implementation:
 
-```Plain
+```sql
 enable_unique_key_merge_on_write = true
 ```
+
+#### Load
 
 **StreamLoad/BrokerLoad/RoutineLoad**
 
 If you are using Stream Load/Broker Load/Routine Load, add the following header during the load:
 
-```Plain
+```sql
 partial_columns: true
 ```
 
-Also, specify the columns to be loaded in the `columns` section (all key columns must be included, otherwise updates won't be possible).
+Also, specify the columns to be loaded in the `columns` section (all key columns must be included, otherwise updates won't be possible). Below is an example of Stream Load:.
 
-**Flink Connector**
-
-If you are using the Flink Connector, add the following configuration:
-
-```Plain
-'sink.properties.partial_columns' = 'true',
+```sql
+$ curl --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
-
-Also, specify the columns to be loaded in `sink.properties.column` (all key columns must be included, otherwise updates won't be possible).
 
 **INSERT INTO**
 
 In all data models, when using `INSERT INTO` with a subset of columns, the default behavior is to insert the entire row. To enable partial column updates in the Merge-on-Write implementation, the following session variable needs to be set:
 
 ```sql
-set enable_unique_key_partial_update=true
+SET enable_unique_key_partial_update=true
+INSERT INTO order_tbl (order_id, order_status) VALUES (1,'To be shipped');
 ```
 
 Note that the default value for the session variable `enable_insert_strict`, which controls whether the insert statement operates in strict mode, is true. In strict mode, updating non-existing keys during partial column updates is not allowed. So, if you want to insert non-existing keys during partial column updates using the insert statement, you need to set `enable_unique_key_partial_update` to true and also set `enable_insert_strict` to false.
+
+**Flink Connector**
+
+If you are using the Flink Connector, add the following configuration:
+
+```sql
+'sink.properties.partial_columns' = 'true',
+```
+
+Also, specify the columns to be loaded in `sink.properties.column` (all key columns must be included, otherwise updates won't be possible).
 
 ### Example
 
@@ -109,21 +116,11 @@ Suppose there is an order table named `order_tbl` in Doris, where the order ID i
 
 Now, when a user clicks on payment, the Doris system needs to update the order status of the order with ID '1' to 'To be shipped'.
 
-If you are using Stream Load, you can update as follows:
+We use `INSERT INTO` to update the data.
 
 ```sql
-$ cat update.csv
-
-1,To be shipped
-
-$ curl --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
-```
-
-If you are using `INSERT INTO`, you can update as following methods:
-
-```sql
-set enable_unique_key_partial_update=true;
-INSERT INTO order_tbl (order_id, order_status) values (1,'To be shipped');
+SET enable_unique_key_partial_update=true;
+INSERT INTO order_tbl (order_id, order_status) VALUES (1,'To be shipped');
 ```
 
 The translated version in English:
