@@ -37,7 +37,7 @@ CANCEL  BACKUP
 语法：
 
 ```sql
-CANCEL BACKUP FROM db_name;
+CANCEL [GLOBAL] BACKUP [FROM db_name];
 ```
 
 ### Example
@@ -46,6 +46,12 @@ CANCEL BACKUP FROM db_name;
 
 ```sql
 CANCEL BACKUP FROM example_db;
+```
+
+2. 取消全局的BACKUP 任务。
+
+```sql
+CANCEL GLOBAL BACKUP;
 ```
 
 ### Keywords
