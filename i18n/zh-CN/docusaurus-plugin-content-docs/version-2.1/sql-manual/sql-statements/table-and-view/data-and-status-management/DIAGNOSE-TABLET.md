@@ -22,23 +22,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 描述（Description）
+## 描述
 
 存算一体模式中，该语句用于诊断指定 tablet。结果中将显示这个 tablet 的信息和一些潜在的问题。
 
 存算分离模式不支持这个命令。
 
-## 语法（Syntax）
+## 语法
 
 ```sql
 SHOW TABLET DIAGNOSIS <tablet_id>;
 ```
 
-## 必选参数（Required Parameters）
+## 必选参数
 
 1. `<tablet_id>`: 待诊断 tablet 的 id
 
-## 返回值（Return Value）
+## 返回值
 
 返回 tablet 相关信息
 
@@ -66,7 +66,7 @@ SHOW TABLET DIAGNOSIS <tablet_id>;
 
 - `ReplicaCompactionStatus`: 副本 Compaction 状态是否正常
 
-## 示例（Example）
+## 示例
 
 1. 诊断指定 tablet id 为 10078 的 tablet 信息
 
@@ -90,7 +90,7 @@ SHOW TABLET DIAGNOSIS <tablet_id>;
     +----------------------------------+---------------------------------------------+------------+
     ```
 
-## 权限控制（Access Control Requirements）
+## 权限控制
 
 执行此 SQL 命令成功的前置条件是，拥有 ADMIN_PRIV 权限，参考权限文档。
 
@@ -98,7 +98,7 @@ SHOW TABLET DIAGNOSIS <tablet_id>;
 | :---------------- | :--------------- | :-------------------------- |
 | ADMIN_PRIV        | 整个集群管理权限 | 除 NODE_PRIV 以外的所有权限 |
 
-## 注意事项（Usage Note）
+## 注意事项
 
 1. 存算分离模式不支持这个命令，在此模式下执行会报错，例如：
 
