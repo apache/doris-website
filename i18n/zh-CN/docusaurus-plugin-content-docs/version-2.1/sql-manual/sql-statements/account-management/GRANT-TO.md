@@ -30,7 +30,7 @@ under the License.
 
 GRANT
 
-### Description
+## 描述
 
 GRANT 命令有如下功能：
 
@@ -173,11 +173,11 @@ role_list 是需要赋予的角色列表，以逗号分隔，指定的角色必�
     GRANT SHOW_VIEW_PRIV ON db1.view1 TO 'jack'@'%';
     ```
 
-### Keywords
+## 关键词
 
 ```
 GRANT
 ```
 
-### Best Practice
+## 最佳实践
 

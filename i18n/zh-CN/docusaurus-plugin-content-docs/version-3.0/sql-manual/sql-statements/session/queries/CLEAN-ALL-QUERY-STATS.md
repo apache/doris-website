@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CLEAN-QUERY-STATS",
+    "title": "CLEAN QUERY STATS",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CLEAN-QUERY-STATS
 
 ### Name
 
 CLEAN QUERY STATS
 
-### Description
+## 描述
 
 该语句用请空查询统计信息
 
@@ -46,7 +45,7 @@ CLEAN [ALL| DATABASE | TABLE] QUERY STATS [[FOR db_name]|[FROM|IN] table_name]];
 2. 如果指定 DATABASE，则清空指定数据库的查询统计信息，需要对应 database 的 alter 权限
 3. 如果指定 TABLE，则清空指定表的查询统计信息，需要对应表的 alter 权限
 
-### Example
+## 例子
 
 1. 清空所有统计信息
 
@@ -65,9 +64,9 @@ CLEAN [ALL| DATABASE | TABLE] QUERY STATS [[FOR db_name]|[FROM|IN] table_name]];
     clean table query stats from test_query_db.baseall;
     ```
 
-### Keywords
+## 关键词
 
     CLEAN, QUERY, STATS
 
-### Best Practice
+### 最佳实践
 

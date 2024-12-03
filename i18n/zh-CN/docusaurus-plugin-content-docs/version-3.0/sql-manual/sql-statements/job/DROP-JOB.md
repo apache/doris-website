@@ -1,6 +1,6 @@
 ---
 {
-"title": "DROP-JOB",
+"title": "DROP JOB",
 "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-JOB
 
 ### Name
 
 DROP JOB
 
-### Description
+## 描述
 
 用户删除一个 JOB 作业。作业会被立即停止同时删除。
 
@@ -38,7 +37,7 @@ DROP JOB
 DROP JOB where jobName='jobname';
 ```
 
-### Example
+## 例子
 
 1. 停止名称为 example 的作业。
 
@@ -46,9 +45,9 @@ DROP JOB where jobName='jobname';
    DROP JOB where jobName='example';
    ```
 
-### Keywords
+## 关键词
 
     STOP, JOB
 
-### Best Practice
+### 最佳实践
 

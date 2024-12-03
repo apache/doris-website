@@ -32,7 +32,7 @@ under the License.
 SHOW CREATE CATALOG
 
 
-### Description
+## 描述
 
 该语句查看 doris 数据目录的创建语句。
 
@@ -54,9 +54,9 @@ SHOW CREATE CATALOG catalog_name;
    SHOW CREATE CATALOG hive;
    ```
 
-### Keywords
+## 关键词
 
     SHOW, CREATE, CATALOG
 
-### Best Practice
+## 最佳实践
 

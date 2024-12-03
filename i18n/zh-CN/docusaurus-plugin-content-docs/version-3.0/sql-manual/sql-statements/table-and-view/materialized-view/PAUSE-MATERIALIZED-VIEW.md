@@ -1,6 +1,6 @@
 ---
 {
-    "title": "PAUSE-MATERIALIZED-VIEW",
+    "title": "PAUSE MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## PAUSE-MATERIALIZED-VIEW
+
 
 ### Name
 
 PAUSE MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于暂停物化视图的定时调度
 
@@ -40,17 +40,17 @@ PAUSE MATERIALIZED VIEW
 PAUSE MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 ```
 
-### Example
+## 例子
 
-1. 暂停物化视图mv1的定时调度
+1. 暂停物化视图 mv1 的定时调度
 
     ```sql
     PAUSE MATERIALIZED VIEW JOB ON mv1;
     ```
    
-### Keywords
+## 关键词
 
     PAUSE, MATERIALIZED, VIEW
 
-### Best Practice
+### 最佳实践
 

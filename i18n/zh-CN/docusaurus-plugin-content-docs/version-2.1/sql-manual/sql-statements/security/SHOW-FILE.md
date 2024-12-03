@@ -29,7 +29,7 @@ under the License.
 
 SHOW FILE
 
-### Description
+## 描述
 
 该语句用于展示一个 database 内创建的文件
 
@@ -57,9 +57,9 @@ SHOW FILE [FROM database];
     SHOW FILE FROM my_database;
     ```
 
-### Keywords
+## 关键词
 
     SHOW, FILE
 
-### Best Practice
+## 最佳实践
 

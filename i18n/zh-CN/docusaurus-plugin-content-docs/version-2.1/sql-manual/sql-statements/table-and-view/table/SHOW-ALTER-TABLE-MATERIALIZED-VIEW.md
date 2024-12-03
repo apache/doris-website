@@ -30,7 +30,7 @@ under the License.
 
 SHOW ALTER TABLE MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该命令用于查看通过 [CREATE-MATERIALIZED-VIEW](../../sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW.md) 语句提交的创建物化视图作业的执行情况。
 
@@ -112,9 +112,9 @@ RollupIndexName: r1
    SHOW ALTER TABLE MATERIALIZED VIEW FROM example_db;
    ```
 
-### Keywords
+## 关键词
 
     SHOW, ALTER, TABLE, MATERIALIZED, VIEW
 
-### Best Practice
+## 最佳实践
 

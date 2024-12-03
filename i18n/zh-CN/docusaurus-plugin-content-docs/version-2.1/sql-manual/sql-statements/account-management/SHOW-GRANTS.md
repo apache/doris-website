@@ -30,7 +30,7 @@ under the License.
 
 SHOW GRANTS
 
-### Description
+## 描述
 
  该语句用于查看用户权限。
 
@@ -66,9 +66,9 @@ SHOW [ALL] GRANTS [FOR user_identity];
    SHOW GRANTS;
    ```
 
-### Keywords
+## 关键词
 
     SHOW, GRANTS
 
-### Best Practice
+## 最佳实践
 

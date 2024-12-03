@@ -30,7 +30,7 @@ under the License.
 
 SHOW BROKER
 
-### Description
+## 描述
 
 该语句用于查看当前存在的 broker
 
@@ -47,11 +47,11 @@ SHOW BROKER;
        3. Alive 表示节点是否存活。
        4. ErrMsg 用于显示心跳失败时的错误信息。
 
-### Example
+## 例子
 
-### Keywords
+## 关键词
 
     SHOW, BROKER
 
-### Best Practice
+### 最佳实践
 

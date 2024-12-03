@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-QUERY-STATS",
+    "title": "SHOW QUERY STATS",
     "language": "zh-CN"
 }
 ---
@@ -31,7 +31,7 @@ under the License.
 
 SHOW QUERY STATS
 
-### Description
+## 描述
 
 该语句用于展示数据库中历史查询命中的库表列的情况
 
@@ -49,7 +49,7 @@ SHOW QUERY STATS [[FOR db_name]|[FROM table_name]] [ALL] [VERBOSE]];
 5. 命中结果中可能有两列：
    QueryCount：该列被查询次数
    FilterCount: 该列作为 where 条件被查询的次数
-### Example
+## 例子
 
 1. 展示表`baseall` 的查询命中情况
 
@@ -187,8 +187,8 @@ SHOW QUERY STATS [[FOR db_name]|[FROM table_name]] [ALL] [VERBOSE]];
    SHOW QUERY STATS;
    ```
 
-### Keywords
+## 关键词
 
      SHOW， QUERY, STATS;
 
-### Best Practice
+### 最佳实践

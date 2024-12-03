@@ -30,7 +30,7 @@ under the License.
 
 DROP ENCRYPTKEY
 
-### Description
+## 描述
 
 语法：
 
@@ -54,9 +54,9 @@ DROP ENCRYPTKEY key_name
    DROP ENCRYPTKEY my_key;
    ```
 
-### Keywords
+## 关键词
 
     DROP, ENCRYPT, KEY
 
-### Best Practice
+## 最佳实践
 

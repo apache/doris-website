@@ -29,7 +29,7 @@ under the License.
 
 DELETE
 
-### Description
+## 描述
 
 该语句用于按条件删除指定 table（base index）partition 中的数据。
 
@@ -78,7 +78,7 @@ DELETE FROM table_name [table_alias]
 4. 语法一中，如果为分区表，需要指定分区，如果不指定，doris 会从条件中推断出分区。两种情况下，doris 无法从条件中推断出分区：1) 条件中不包含分区列；2) 分区列的 op 为 not in。当分区表未指定分区，或者无法从条件中推断分区的时候，需要设置会话变量 delete_without_partition 为 true，此时 delete 会应用到所有分区。
 5. 该语句可能会降低执行后一段时间内的查询效率。影响程度取决于语句中指定的删除条件的数量。指定的条件越多，影响越大。
 
-### Example
+## 例子
 
 1. 删除 my_table partition p1 中 k1 列值为 3 的数据行
     
@@ -197,9 +197,9 @@ DELETE FROM table_name [table_alias]
    where lineitem.o_orderkey = discount_orders.o_orderkey;
    ```
 
-### Keywords
+## 关键词
 
     DELETE
 
-### Best Practice
+### 最佳实践
 

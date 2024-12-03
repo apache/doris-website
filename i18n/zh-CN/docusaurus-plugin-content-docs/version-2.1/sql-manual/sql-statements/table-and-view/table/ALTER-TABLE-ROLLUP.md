@@ -28,7 +28,7 @@ under the License.
 
 ALTER TABLE ROLLUP
 
-### Description
+## 描述
 
 该语句用于对已有 table 进行 rollup 进行修改操作。rollup 是异步操作，任务提交成功则返回，之后可使用[SHOW ALTER](../../../../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE) 命令查看进度。
 
@@ -125,10 +125,10 @@ rollup 的 alter_clause 支持如下几种创建方式
     DROP ROLLUP example_rollup_index2,example_rollup_index3;
     ```
 
-### Keywords
+## 关键词
 
 
 ALTER, TABLE, ROLLUP, ALTER TABLE
 
-### Best Practice
+## 最佳实践
 

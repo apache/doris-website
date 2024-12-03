@@ -1,6 +1,6 @@
 ---
 {
-    "title": "REFRESH-MATERIALIZED-VIEW",
+    "title": "REFRESH MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## REFRESH-MATERIALIZED-VIEW
 
-### Name
 
-REFRESH MATERIALIZED VIEW
-
-### Description
+## 描述
 
 该语句用于手动刷新指定的异步物化视图
 
@@ -48,15 +44,15 @@ REFRESH MATERIALIZED VIEW mvName=multipartIdentifier (partitionSpec | COMPLETE |
 - COMPLETE：会强制刷新物化视图的所有分区，不会判断分区是否和基表同步
 - partitionSpec：会强制刷新指定的分区，不会判断分区是否和基表同步
 
-### Example
+## 例子
 
-1. 刷新物化视图mv1(自动计算要刷新的分区)
+1. 刷新物化视图 mv1(自动计算要刷新的分区)
 
     ```sql
     REFRESH MATERIALIZED VIEW mv1 AUTO;
     ```
 
-2. 刷新名字为p_19950801_19950901和p_19950901_19951001的分区
+2. 刷新名字为 p_19950801_19950901 和 p_19950901_19951001 的分区
 
     ```sql
     REFRESH MATERIALIZED VIEW mv1 partitions(p_19950801_19950901,p_19950901_19951001);
@@ -68,9 +64,9 @@ REFRESH MATERIALIZED VIEW mvName=multipartIdentifier (partitionSpec | COMPLETE |
     REFRESH MATERIALIZED VIEW mv1 complete;
     ```
    
-### Keywords
+## 关键词
 
     REFRESH, MATERIALIZED, VIEW
 
-### Best Practice
+### 最佳实践
 

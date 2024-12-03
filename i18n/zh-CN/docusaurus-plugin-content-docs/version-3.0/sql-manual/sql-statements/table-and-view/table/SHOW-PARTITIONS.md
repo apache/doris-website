@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-PARTITIONS",
+    "title": "SHOW PARTITIONS",
     "language": "zh-CN"
 }
 ---
@@ -24,20 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-PARTITIONS
 
-### Name
-
-SHOW PARTITIONS
-
-### Description
+## 描述
 
 该语句用于展示分区信息。支持 Internal catalog 和 Hive Catalog
 
 语法：
 
-```SQL
- SHOW [TEMPORARY] PARTITIONS FROM [db_name.]table_name [WHERE] [ORDER BY] [LIMIT];
+```sql
+SHOW [TEMPORARY] PARTITIONS FROM [db_name.]table_name [WHERE] [ORDER BY] [LIMIT];
 ```
 
 说明：
@@ -49,35 +44,35 @@ SHOW PARTITIONS
 对于 Hive Catalog：
 支持返回所有分区，包括多级分区
 
-### Example
+## 例子
 
 1. 展示指定 db 下指定表的所有非临时分区信息
 
-    ```SQL
+    ```sql
     SHOW PARTITIONS FROM example_db.table_name;
     ```
 
 2. 展示指定 db 下指定表的所有临时分区信
 
-    ```SQL
+    ```sql
     SHOW TEMPORARY PARTITIONS FROM example_db.table_name;
     ```
 
 3. 展示指定 db 下指定表的指定非临时分区的信息
 
-    ```SQL
+    ```sql
      SHOW PARTITIONS FROM example_db.table_name WHERE PartitionName = "p1";
     ```
 
 4. 展示指定 db 下指定表的最新非临时分区的信息
 
-    ```SQL
+    ```sql
     SHOW PARTITIONS FROM example_db.table_name ORDER BY PartitionId DESC LIMIT 1;
     ```
 
-### Keywords
+## 关键词
 
-    SHOW, PARTITIONS
+SHOW, PARTITIONS
 
-### Best Practice
+### 最佳实践
 

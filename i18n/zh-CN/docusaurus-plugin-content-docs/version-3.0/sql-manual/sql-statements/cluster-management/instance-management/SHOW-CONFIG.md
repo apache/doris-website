@@ -30,7 +30,7 @@ under the License.
 
 SHOW CONFIG
 
-### Description
+## 描述
 
 该语句用于展示当前集群的配置（当前仅支持展示 FE 的配置项）
 
@@ -49,7 +49,7 @@ SHOW FRONTEND CONFIG [LIKE "pattern"];
 5. MasterOnly：是否仅适用于 Master FE
 6. Comment：配置项说明
 
-### Example
+## 例子
 
 1. 查看当前 FE 节点的配置
 
@@ -69,9 +69,9 @@ SHOW FRONTEND CONFIG [LIKE "pattern"];
     1 row in set (0.01 sec)
     ```
 
-### Keywords
+## 关键词
 
     SHOW, CONFIG
 
-### Best Practice
+### 最佳实践
 

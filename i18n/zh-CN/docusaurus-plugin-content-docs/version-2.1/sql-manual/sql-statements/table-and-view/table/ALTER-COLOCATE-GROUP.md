@@ -32,7 +32,7 @@ ALTER COLOCATE GROUP
 
  
 
-### Description
+## 描述
 
 该语句用于修改 Colocation Group 的属性。
 
@@ -79,10 +79,10 @@ SET (
     );
     ```
 
-### Keywords
+## 关键词
 
 ```sql
 ALTER, COLOCATE , GROUP
 ```
 
-### Best Practice
+## 最佳实践

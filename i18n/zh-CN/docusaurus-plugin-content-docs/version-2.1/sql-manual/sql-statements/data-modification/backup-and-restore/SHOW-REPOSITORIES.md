@@ -30,7 +30,7 @@ under the License.
 
 SHOW REPOSITORIES
 
-### Description
+## 描述
 
 该语句用于查看当前已创建的仓库
 
@@ -60,9 +60,9 @@ SHOW REPOSITORIES;
  SHOW REPOSITORIES;
 ```
 
-### Keywords
+## 关键词
 
     SHOW, REPOSITORIES
 
-### Best Practice
+## 最佳实践
 

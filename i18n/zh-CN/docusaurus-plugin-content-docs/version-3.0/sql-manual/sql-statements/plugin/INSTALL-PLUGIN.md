@@ -1,6 +1,6 @@
 ---
 {
-    "title": "INSTALL-PLUGIN",
+    "title": "INSTALL PLUGIN",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## INSTALL-PLUGIN
 
 ### Name
 
 INSTALL PLUGIN
 
-### Description
+## 描述
 
 该语句用于安装一个插件。
 
@@ -46,7 +45,7 @@ source 支持三种类型：
 2. 指向一个插件目录的绝对路径。
 3. 指向一个 http 或 https 协议的 zip 文件下载路径
 
-### Example
+## 例子
 
 1. 安装一个本地 zip 文件插件：
 
@@ -66,17 +65,17 @@ source 支持三种类型：
     INSTALL PLUGIN FROM "http://mywebsite.com/plugin.zip";
     ```
 
-    注意需要放置一个和 `.zip` 文件同名的 md5 文件, 如 `http://mywebsite.com/plugin.zip.md5` 。其中内容为 .zip 文件的 MD5 值。
+    注意需要放置一个和 `.zip` 文件同名的 md5 文件，如 `http://mywebsite.com/plugin.zip.md5` 。其中内容为 .zip 文件的 MD5 值。
 
-4. 下载并安装一个插件,同时设置了zip文件的md5sum的值：
+4. 下载并安装一个插件，同时设置了 zip 文件的 md5sum 的值：
 
     ```sql
     INSTALL PLUGIN FROM "http://mywebsite.com/plugin.zip" PROPERTIES("md5sum" = "73877f6029216f4314d712086a146570");
     ```
 
-### Keywords
+## 关键词
 
     INSTALL, PLUGIN
 
-### Best Practice
+### 最佳实践
 

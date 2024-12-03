@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-ENCRYPTKEY",
+    "title": "SHOW ENCRYPTKEY",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-ENCRYPT-KEY
 
 ### Name
 
 SHOW ENCRYPTKEYS
 
-### Description
+## 描述
 
 查看数据库下所有的自定义的密钥。如果用户指定了数据库，那么查看对应数据库的，否则直接查询当前会话所在数据库。
 
@@ -47,7 +46,7 @@ SHOW ENCRYPTKEYS [IN|FROM db] [LIKE 'key_pattern']
 >`db`: 要查询的数据库名字
 >`key_pattern`: 用来过滤密钥名称的参数
 
-### Example
+## 例子
 
  ```sql
     mysql> SHOW ENCRYPTKEYS;
@@ -67,9 +66,9 @@ SHOW ENCRYPTKEYS [IN|FROM db] [LIKE 'key_pattern']
     1 row in set (0.00 sec)
  ```
 
-### Keywords
+## 关键词
 
     SHOW, ENCRYPT, KEY
 
-### Best Practice
+### 最佳实践
 

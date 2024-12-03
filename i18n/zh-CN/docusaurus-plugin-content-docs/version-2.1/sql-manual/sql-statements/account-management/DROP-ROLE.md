@@ -30,7 +30,7 @@ under the License.
 
 DROP ROLE
 
-### Description
+## 描述
 
 语句用户删除角色
 
@@ -48,9 +48,9 @@ DROP ROLE
 DROP ROLE role1;
 ```
 
-### Keywords
+## 关键词
 
     DROP, ROLE
 
-### Best Practice
+## 最佳实践
 

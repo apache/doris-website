@@ -30,7 +30,7 @@ under the License.
 
 SHOW LAST INSERT
 
-### Description
+## 描述
 
 该语法用于查看在当前 session 连接中，最近一次 insert 操作的结果。
 
@@ -73,9 +73,9 @@ TransactionStatus: VISIBLE
 
 ### Example
 
-### Keywords
+## 关键词
 
     SHOW, LAST, INSERT
 
-### Best Practice
+## 最佳实践
 

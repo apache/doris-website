@@ -30,7 +30,7 @@ under the License.
 
 CREATE WORKLOAD GROUP
 
-### Description
+## 描述
 
 该语句用于创建资源组。资源组可实现单个 be 上 cpu 资源和内存资源的隔离。
 
@@ -53,7 +53,7 @@ property_list 支持的属性：
 
 * enable_memory_overcommit: 可选，用于开启资源组内存软隔离，默认为 false。如果设置为 false，则该资源组为内存硬隔离，系统检测到资源组内存使用超出限制后将立即 cancel 组内内存占用最大的若干个任务，以释放超出的内存；如果设置为 true，则该资源组为内存软隔离，如果系统有空闲内存资源则该资源组在超出 memory_limit 的限制后可继续使用系统内存，在系统总内存紧张时会 cancel 组内内存占用最大的若干个任务，释放部分超出的内存以缓解系统内存压力。建议在有资源组开启该配置时，所有资源组的 memory_limit 总和低于 100%，剩余部分用于资源组内存超发。
 
-### Example
+## 例子
 
 1. 创建名为 g1 的资源组：
 
@@ -66,9 +66,9 @@ property_list 支持的属性：
     );
    ```
 
-### Keywords
+## 关键词
 
     CREATE, WORKLOAD, GROUP
 
-### Best Practice
+### 最佳实践
 

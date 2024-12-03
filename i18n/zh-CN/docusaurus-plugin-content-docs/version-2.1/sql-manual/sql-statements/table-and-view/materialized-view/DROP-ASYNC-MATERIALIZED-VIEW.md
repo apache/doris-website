@@ -28,7 +28,7 @@ under the License.
 
 DROP ASYNC MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于删除异步物化视图。
 
@@ -59,9 +59,9 @@ DROP MATERIALIZED VIEW mv1;
 DROP MATERIALIZED VIEW IF EXISTS db1.mv1;
 ```
 
-### Keywords
+## 关键词
 
     DROP, ASYNC, MATERIALIZED, VIEW
 
-### Best Practice
+## 最佳实践
 

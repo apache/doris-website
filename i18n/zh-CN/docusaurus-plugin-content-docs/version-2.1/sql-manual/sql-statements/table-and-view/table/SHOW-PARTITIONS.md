@@ -26,11 +26,8 @@ under the License.
 
 
 
-### Name
 
-SHOW PARTITIONS
-
-### Description
+## 描述
 
 该语句用于展示分区信息。支持 Internal catalog 和 Hive Catalog
 
@@ -77,9 +74,9 @@ SHOW PARTITIONS
     SHOW PARTITIONS FROM example_db.table_name ORDER BY PartitionId DESC LIMIT 1;
     ```
 
-### Keywords
+## 关键词
 
     SHOW, PARTITIONS
 
-### Best Practice
+## 最佳实践
 

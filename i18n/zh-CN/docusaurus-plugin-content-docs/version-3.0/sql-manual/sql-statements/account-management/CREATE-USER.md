@@ -26,11 +26,8 @@ under the License.
 
 
 
-### Name
 
-CREATE USER
-
-### Description
+## 描述
 
 CREATE USER 命令用于创建一个 Doris 用户。
 
@@ -73,7 +70,7 @@ password_policy 是用于指定密码认证登录相关策略的子句，目前�
 
     被锁定的账户可以通过 ALTER USER 语句主动解锁。
 
-### Example
+## 例子
 
 1. 创建一个无密码用户（不指定 host，则等价于 jack@'%'）
 
@@ -131,9 +128,9 @@ password_policy 是用于指定密码认证登录相关策略的子句，目前�
     CREATE USER 'jack' COMMENT "this is my first user";
     ```
 
-### Keywords
+## 关键词
 
     CREATE, USER
 
-### Best Practice
+### 最佳实践
 

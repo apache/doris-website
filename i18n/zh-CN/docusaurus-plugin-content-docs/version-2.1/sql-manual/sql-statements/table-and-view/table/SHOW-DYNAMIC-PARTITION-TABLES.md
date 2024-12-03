@@ -31,7 +31,7 @@ under the License.
 
 SHOW DYNAMIC PARTITION TABLES
 
-### Description
+## 描述
 
 该语句用于展示当前 db 下所有的动态分区表状态
 
@@ -40,7 +40,7 @@ SHOW DYNAMIC PARTITION TABLES
 
 SHOW DYNAMIC PARTITION TABLES
 
-### Description
+## 描述
 
 
 该语句用于展示当前 db 下所有的动态分区表状态
@@ -60,9 +60,9 @@ SHOW DYNAMIC PARTITION TABLES [FROM db_name];
      SHOW DYNAMIC PARTITION TABLES FROM database;
      ```
 
-### Keywords
+## 关键词
 
     SHOW, DYNAMIC, PARTITION
 
-### Best Practice
+## 最佳实践
 

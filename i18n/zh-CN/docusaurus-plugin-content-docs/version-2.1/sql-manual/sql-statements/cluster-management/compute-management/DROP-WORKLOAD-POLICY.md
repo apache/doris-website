@@ -34,15 +34,15 @@ under the License.
 DROP WORKLOAD POLICY [ IF EXISTS ] <workload_policy_name>
 ```
 
-## 必选参数（Required Parameters）
+## 必选参数
 
 1. `<workload_policy_name>`: Workload Policy 的 Name
 
-## 权限控制（Access Control Requirements）
+## 权限控制
 
 至少具有`ADMIN_PRIV`权限
 
-## 示例（Examples）
+## 示例
 
 1. 删除一个名为 `cancel_big_query` 的 Workload Policy
 

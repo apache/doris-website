@@ -30,7 +30,7 @@ under the License.
 
 SHOW FULL COLUMNS
 
-### Description
+## 描述
 
 该语句用于指定表的列信息
 
@@ -48,9 +48,9 @@ SHOW [FULL] COLUMNS FROM tbl;
     SHOW FULL COLUMNS FROM tbl;
    ```
 
-### Keywords
+## 关键词
 
     SHOW, FULL, COLUMNS
 
-### Best Practice
+## 最佳实践
 

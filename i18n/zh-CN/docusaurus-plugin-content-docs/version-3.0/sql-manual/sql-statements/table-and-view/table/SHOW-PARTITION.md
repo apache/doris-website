@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP ASYNC MATERIALIZED VIEW",
+    "title": "SHOW PARTITION",
     "language": "zh-CN"
 }
 ---
@@ -25,40 +25,40 @@ under the License.
 -->
 
 
-
 ## 描述
 
-该语句用于删除异步物化视图。
+SHOW PARTITION 用于展示指定分区的详细信息。包括所属数据库名字和 ID，所属表名字和 ID 以及分区名字。
 
-语法：
-
-```sql
-DROP MATERIALIZED VIEW (IF EXISTS)? mvName=multipartIdentifier
-```
-
-
-1. IF EXISTS:
-        如果物化视图不存在，不要抛出错误。如果不声明此关键字，物化视图不存在则报错。
-
-2. mv_name:
-        待删除的物化视图的名称。必填项。
-
-## 例子
-
-1. 删除表物化视图 mv1
+## 语法
 
 ```sql
-DROP MATERIALIZED VIEW mv1;
+SHOW PARTITION <partition_id>
 ```
-2.如果存在，删除指定 database 的物化视图
+
+## 必选参数
+
+`<partition_id>`
+
+> 分区的 ID。分区 ID 可以通过 SHOW PARTITIONS 等方式获得。更多信息请参阅“SHOW PARTITIONS”章节
+
+## 权限控制
+
+执行此 SQL 命令的用户至少具有`ADMIN_PRIV`权限
+
+## 示例
+
+查询分区 ID 为 13004 的分区信息：
 
 ```sql
-DROP MATERIALIZED VIEW IF EXISTS db1.mv1;
+SHOW PARTITION 13004;
 ```
 
-## 关键词
+结果如下：
 
-    DROP, ASYNC, MATERIALIZED, VIEW
-
-### 最佳实践
-
+```sql
++--------+-----------+---------------+-------+---------+
+| DbName | TableName | PartitionName | DbId  | TableId |
++--------+-----------+---------------+-------+---------+
+| ods    | sales     | sales         | 13003 | 13005   |
++--------+-----------+---------------+-------+---------+
+```

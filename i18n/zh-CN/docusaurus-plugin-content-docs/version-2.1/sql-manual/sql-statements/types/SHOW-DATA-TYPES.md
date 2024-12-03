@@ -29,7 +29,7 @@ under the License.
 
 SHOW DATA TYPES
 
-### Description
+## 描述
 
 该语句用于查看 DORIS 支持的所有数据类型。
 
@@ -45,8 +45,8 @@ SHOW DATA TYPES;
 
     `SHOW DATA TYPES;`
 
-### Keywords
+## 关键词
 
     SHOW,DATA,TYPES
 
-### Best Practice
+## 最佳实践

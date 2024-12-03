@@ -28,7 +28,7 @@ under the License.
 
 ALTER SYSTEM DROP BACKEND
 
-### Description
+## 描述
 
 该语句用于删除 BACKEND 节点（仅管理员使用！）
 
@@ -64,9 +64,9 @@ ALTER SYSTEM DROP BACKEND "id1","id2"...;
     ALTER SYSTEM DROP BACKEND "id1", "id2";
     ```
 
-### Keywords
+## 关键词
 
     ALTER, SYSTEM, DROP, BACKEND, ALTER SYSTEM
 
-### Best Practice
+## 最佳实践
 

@@ -26,7 +26,7 @@ under the License.
 
 ### Name
 ADMIN CANCEL REBALANCE DISK
-### Description
+## 描述
 
     该语句用于取消优先均衡BE的磁盘
 
@@ -48,9 +48,9 @@ ADMIN CANCEL REBALANCE DISK
 
         ADMIN CANCEL REBALANCE DISK ON ("192.168.1.1:1234", "192.168.1.2:1234");
 
-### Keywords
+## 关键词
 
     ADMIN,CANCEL,REBALANCE,DISK
 
-### Best Practice
+## 最佳实践
 

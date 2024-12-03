@@ -30,7 +30,7 @@ under the License.
 
 DROP FILE
 
-### Description
+## 描述
 
 该语句用于删除一个已上传的文件。
 
@@ -56,9 +56,9 @@ DROP FILE "file_name" [FROM database]
     DROP FILE "ca.pem" properties("catalog" = "kafka");
     ```
 
-### Keywords
+## 关键词
 
     DROP, FILE
 
-### Best Practice
+## 最佳实践
 

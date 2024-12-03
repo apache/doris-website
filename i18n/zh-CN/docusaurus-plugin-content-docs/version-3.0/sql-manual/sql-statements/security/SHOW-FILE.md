@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-FILE",
+    "title": "SHOW FILE",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-FILE
 
 ### Name
 
 SHOW FILE
 
-### Description
+## 描述
 
 该语句用于展示一个 database 内创建的文件
 
@@ -43,7 +42,7 @@ SHOW FILE [FROM database];
 说明：
 
 ```text
-FileId:     文件ID，全局唯一
+FileId:     文件 ID，全局唯一
 DbName:     所属数据库名称
 Catalog:    自定义分类
 FileName:   文件名
@@ -51,7 +50,7 @@ FileSize:   文件大小，单位字节
 MD5:        文件的 MD5
 ```
 
-### Example
+## 例子
 
 1. 查看数据库 my_database 中已上传的文件
 
@@ -59,9 +58,9 @@ MD5:        文件的 MD5
     SHOW FILE FROM my_database;
     ```
 
-### Keywords
+## 关键词
 
     SHOW, FILE
 
-### Best Practice
+### 最佳实践
 

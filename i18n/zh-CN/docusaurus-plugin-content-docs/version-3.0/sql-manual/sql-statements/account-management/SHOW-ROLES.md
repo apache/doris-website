@@ -26,11 +26,8 @@ under the License.
 
 
 
-### Name
 
-SHOW ROLES
-
-### Description
+## 描述
 
 该语句用于展示所有已创建的角色信息，包括角色名称，包含的用户以及权限。
 
@@ -40,7 +37,7 @@ SHOW ROLES
 SHOW ROLES
 ```
 
-### Example
+## 例子
 
 1. 查看已创建的角色
 
@@ -48,9 +45,9 @@ SHOW ROLES
    SHOW ROLES
    ```
 
-### Keywords
+## 关键词
 
     SHOW, ROLES
 
-### Best Practice
+### 最佳实践
 

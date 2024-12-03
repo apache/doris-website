@@ -30,7 +30,7 @@ under the License.
 
 USE
 
-### Description
+## 描述
 
 USE 命令可以让我们来使用数据库
 
@@ -58,9 +58,9 @@ USE <[CATALOG_NAME].DATABASE_NAME>
     mysql> use hms_catalog.demo;
     Database changed
     ```
-### Keywords
+## 关键词
 
     USE
 
-### Best Practice
+## 最佳实践
 

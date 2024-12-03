@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-PLUGINS",
+    "title": "SHOW PLUGINS",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-PLUGINS
+
 
 ### Name
 
 SHOW PLUGINS
 
-### Description
+## 描述
 
 该语句用于展示已安装的插件
 
@@ -42,7 +42,7 @@ SHOW PLUGINS
 
 该命令会展示所有用户安装的和系统内置的插件
 
-### Example
+## 例子
 
 1. 展示已安装的插件：
 
@@ -50,9 +50,9 @@ SHOW PLUGINS
     SHOW PLUGINS;
     ```
 
-### Keywords
+## 关键词
 
     SHOW, PLUGINS
 
-### Best Practice
+### 最佳实践
 

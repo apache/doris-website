@@ -30,7 +30,7 @@ under the License.
 
 SHOW STORAGE POLICY USING
 
-### Description
+## 描述
 
 查看所有/指定存储策略关联的表和分区
 
@@ -40,7 +40,7 @@ SHOW STORAGE POLICY USING
 SHOW STORAGE POLICY USING [FOR some_policy]
 ```
 
-### Example
+## 例子
 
 1. 查看所有启用了存储策略的对象
    ```sql
@@ -67,8 +67,8 @@ SHOW STORAGE POLICY USING [FOR some_policy]
     +---------------------+-----------+---------------------------------+------------+
    ```
 
-### Keywords
+## 关键词
 
     SHOW, STORAGE, POLICY, USING
 
-### Best Practice
+### 最佳实践

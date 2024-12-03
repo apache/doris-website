@@ -37,17 +37,17 @@ under the License.
 ALTER SYSTEM MODIFY FRONTEND "<frontend_hostname_port>" HOSTNAME "<frontend_new_hostname>"
 ```
 
-## 必选参数（Required Parameters）
+## 必选参数
 
 1. `<frontend_hostname_port>`: 需要变更主机名的 FE 注册的 hostname 和 edit log port。可以通过 SHOW FRONTENDS 命令查看集群中所有 FE 的相关信息。详细用法请参阅“SHOW FRONTENDS”章节。
 
 2. `<frontend_new_hostname>`: FE 的新主机名。
 
-## 权限控制（Access Control Requirements）
+## 权限控制
 
 执行此 SQL 命令的用户必须至少具有 NOD_PRIV 权限。
 
-## 示例（Examples）
+## 示例
 
 将集群中的一个 FE 实例的 hostname，从 10.10.10.1 变为 172.22.0.1：
 

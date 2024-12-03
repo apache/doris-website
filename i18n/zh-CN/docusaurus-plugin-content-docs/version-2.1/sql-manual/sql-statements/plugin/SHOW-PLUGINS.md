@@ -28,7 +28,7 @@ under the License.
 
 SHOW PLUGINS
 
-### Description
+## 描述
 
 该语句用于展示已安装的插件
 
@@ -48,9 +48,9 @@ SHOW PLUGINS
     SHOW PLUGINS;
     ```
 
-### Keywords
+## 关键词
 
     SHOW, PLUGINS
 
-### Best Practice
+## 最佳实践
 

@@ -30,7 +30,7 @@ under the License.
 
 ALTER SYSTEM ADD BACKEND
 
-### Description
+## 描述
 
 该语句用于操作一个系统内的节点。（仅管理员使用！）
 
@@ -55,9 +55,9 @@ ALTER SYSTEM ADD BACKEND
     ALTER SYSTEM ADD BACKEND "host:port";
     ```
 
-### Keywords
+## 关键词
 
     ALTER, SYSTEM, ADD, BACKEND, ALTER SYSTEM
 
-### Best Practice
+## 最佳实践
 

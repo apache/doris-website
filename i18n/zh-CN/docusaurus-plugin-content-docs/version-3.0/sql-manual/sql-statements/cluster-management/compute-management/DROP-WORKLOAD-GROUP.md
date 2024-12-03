@@ -30,7 +30,7 @@ under the License.
 
 DROP WORKLOAD GROUP
 
-### Description
+## 描述
 
 该语句用于删除资源组。
 
@@ -38,7 +38,7 @@ DROP WORKLOAD GROUP
 DROP WORKLOAD GROUP [IF EXISTS] 'rg_name'
 ```
 
-### Example
+## 例子
 
 1. 删除名为 g1 的资源组：
     
@@ -46,9 +46,9 @@ DROP WORKLOAD GROUP [IF EXISTS] 'rg_name'
     drop workload group if exists g1;
     ```
 
-### Keywords
+## 关键词
 
     DROP, WORKLOAD, GROUP
 
-### Best Practice
+### 最佳实践
 

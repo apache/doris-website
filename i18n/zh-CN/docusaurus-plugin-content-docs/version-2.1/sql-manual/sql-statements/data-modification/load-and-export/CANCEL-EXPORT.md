@@ -36,7 +36,7 @@ under the License.
 
 CANCEL EXPORT
 
-### Description
+## 描述
 
 该语句用于撤销指定 label 的 EXPORT 作业，或者通过模糊匹配批量撤销 EXPORT 作业
 
@@ -72,11 +72,11 @@ WHERE [LABEL = "export_label" | LABEL like "label_pattern" | STATE = "PENDING/IN
    WHERE STATE = "PENDING";
    ```
 
-### Keywords
+## 关键词
 
     CANCEL, EXPORT
 
-### Best Practice
+## 最佳实践
 
 1. 只能取消处于 PENDING、IN_QUEUE、EXPORTING 状态的未完成的导出作业。
 2. 当执行批量撤销时，Doris 不会保证所有对应的 EXPORT 作业原子的撤销。即有可能仅有部分 EXPORT 作业撤销成功。用户可以通过 SHOW EXPORT 语句查看作业状态，并尝试重复执行 CANCEL EXPORT 语句。

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-ROUTINE-LOAD-TASK",
+    "title": "SHOW ROUTINE LOAD TASK",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-ROUTINE-LOAD-TASK
+
 
 ### Name
 
 SHOW ROUTINE LOAD TASK
 
-### Description
+## 描述
 
 查看一个指定的 Routine Load 作业的当前正在运行的子任务情况。
 
@@ -63,7 +63,7 @@ DataSourceProperties: {"0":19}
 - `BeId`：执行这个子任务的 BE 节点 ID。
 - `DataSourceProperties`：子任务准备消费的 Kafka Partition 的起始 offset。是一个 Json 格式字符串。Key 为 Partition Id。Value 为消费的起始 offset。
 
-### Example
+## 例子
 
 1. 展示名为 test1 的例行导入任务的子任务信息。
 
@@ -71,10 +71,10 @@ DataSourceProperties: {"0":19}
     SHOW ROUTINE LOAD TASK WHERE JobName = "test1";
     ```
 
-### Keywords
+## 关键词
 
     SHOW, ROUTINE, LOAD, TASK
 
-### Best Practice
+### 最佳实践
 
 通过这个命令，可以查看一个 Routine Load 作业当前有多少子任务在运行，具体运行在哪个 BE 节点上。

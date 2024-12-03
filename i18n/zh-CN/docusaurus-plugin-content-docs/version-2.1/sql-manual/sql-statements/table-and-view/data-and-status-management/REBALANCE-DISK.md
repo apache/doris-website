@@ -26,7 +26,7 @@ under the License.
 
 ### Name
 ADMIN REBALANCE DISK
-### Description
+## 描述
 
 该语句用于尝试优先均衡指定的 BE 磁盘数据
 
@@ -56,9 +56,9 @@ ADMIN REBALANCE DISK
     ADMIN REBALANCE DISK ON ("192.168.1.1:1234", "192.168.1.2:1234");
     ```
 
-### Keywords
+## 关键词
 
     ADMIN,REBALANCE,DISK
 
-### Best Practice
+## 最佳实践
 

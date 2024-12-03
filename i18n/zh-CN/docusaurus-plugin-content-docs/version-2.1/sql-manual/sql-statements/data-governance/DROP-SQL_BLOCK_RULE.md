@@ -28,7 +28,7 @@ under the License.
 
 DROP SQL BLOCK RULE
 
-### Description
+## 描述
 
 查看已配置的 SQL 阻止规则，不指定规则名则为查看所有规则。
 
@@ -47,11 +47,11 @@ DROP SQL_BLOCK_RULE test_rule1,...
    Query OK, 0 rows affected (0.00 sec)
    ```
 
-### Keywords
+## 关键词
 
 ```text
 DROP, SQL_BLOCK_RULE
 ```
 
-### Best Practice
+## 最佳实践
 

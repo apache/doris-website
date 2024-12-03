@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-TABLE",
+    "title": "SHOW CREATE TABLE",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-TABLE
 
-### Name
 
-SHOW CREATE TABLE
 
-### Description
+
+## 描述
 
 该语句用于展示数据表的创建语句。
 
@@ -46,7 +44,7 @@ SHOW [BRIEF] CREATE TABLE [DBNAME.]TABLE_NAME
 2. `DBNAMNE` : 数据库名称
 3. `TABLE_NAME` : 表名
 
-### Example
+## 例子
 
 1. 查看某个表的建表语句
 
@@ -54,9 +52,8 @@ SHOW [BRIEF] CREATE TABLE [DBNAME.]TABLE_NAME
    SHOW CREATE TABLE demo.tb1
    ```
 
-### Keywords
+## 关键词
 
-    SHOW, CREATE, TABLE
+SHOW, CREATE, TABLE
 
-### Best Practice
 

@@ -30,7 +30,7 @@ under the License.
 
 STOP SYNC JOB
 
-### Description
+## 描述
 
 通过 `job_name` 停止一个数据库内非停止状态的常驻数据同步作业。
 
@@ -49,9 +49,9 @@ STOP SYNC JOB [db.]job_name
 	STOP SYNC JOB `job_name`;
 	```
 
-### Keywords
+## 关键词
 
     STOP, SYNC, JOB
 
-### Best Practice
+## 最佳实践
 

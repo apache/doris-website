@@ -30,7 +30,7 @@ under the License.
 
 ADMIN SET REPLICA STATUS
 
-### Description
+## 描述
 
 该语句用于设置指定副本的状态。
 
@@ -77,9 +77,9 @@ ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001
 ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "ok");
 ```
 
-### Keywords
+## 关键词
 
     ADMIN, SET, REPLICA, STATUS
 
-### Best Practice
+## 最佳实践
 

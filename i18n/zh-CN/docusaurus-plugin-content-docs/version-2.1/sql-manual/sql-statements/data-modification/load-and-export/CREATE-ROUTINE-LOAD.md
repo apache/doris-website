@@ -31,7 +31,7 @@ under the License.
 
 CREATE ROUTINE LOAD
 
-### Description
+## 描述
 
 例行导入（Routine Load）功能，支持用户提交一个常驻的导入任务，通过不断的从指定的数据源读取数据，将数据导入到 Doris 中。
 
@@ -604,11 +604,11 @@ FROM data_source [data_source_properties]
    );
    ```
 
-### Keywords
+## 关键词
 
     CREATE, ROUTINE, LOAD, CREATE LOAD
 
-### Best Practice
+## 最佳实践
 
 关于指定消费的 Partition 和 Offset
 

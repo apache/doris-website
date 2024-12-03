@@ -34,7 +34,7 @@ SHOW LOAD PROFILE
 自 2.1.1 起，此语法被弃用。
 :::
 
-### Description
+## 描述
 
 该语句是用来查看导入操作的 Profile 信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：
 
@@ -227,9 +227,9 @@ Instance:
 └-----------------------------------------------------┘
 ```
 
-### Keywords
+## 关键词
 
 SHOW, LOAD, PROFILE
 
-### Best Practice
+## 最佳实践
 

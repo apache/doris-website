@@ -30,7 +30,7 @@ under the License.
 
 SHOW WORKLOAD GROUPS
 
-### Description
+## 描述
 
 该语句用于展示当前用户具有 usage_priv 权限的资源组。
 
@@ -44,7 +44,7 @@ SHOW WORKLOAD GROUPS [LIKE "pattern"];
 
 该语句仅做资源组简单展示，更复杂的展示可参考 tvf workload_groups().
 
-### Example
+## 例子
 
 1. 展示所有资源组：
     
@@ -74,8 +74,8 @@ SHOW WORKLOAD GROUPS [LIKE "pattern"];
     +----------+--------+--------------------------+---------+
     ```
 
-### Keywords
+## 关键词
 
     SHOW, WORKLOAD, GROUPS, GROUP
 
-### Best Practice
+### 最佳实践

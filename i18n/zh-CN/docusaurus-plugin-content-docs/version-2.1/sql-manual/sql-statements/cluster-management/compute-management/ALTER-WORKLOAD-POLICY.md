@@ -48,7 +48,7 @@ ALTER WORKLOAD POLICY <workload_policy_name> PROPERTIES( <properties> )
 
 至少具有`ADMIN_PRIV`权限
 
-## 示例（Examples）
+## 示例
 
 1. 禁用一个 Workload Policy
 

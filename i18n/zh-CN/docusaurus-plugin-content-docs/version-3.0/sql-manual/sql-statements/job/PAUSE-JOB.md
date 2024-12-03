@@ -1,6 +1,6 @@
 ---
 {
-"title": "PAUSE-JOB",
+"title": "PAUSE JOB",
 "language": "zh-CN"
 }
 ---
@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## PAUSE-JOB
+
 
 ### Name
 
 PAUSE JOB
 
-### Description
+## 描述
 
-用户暂停一个正在 RUNNING 状态的 JOB ，正在运行的 TASK 会被中断，JOB 状态变更为 PAUSED。 被停止的 JOB 可以通过 RESUME 操作恢复运行。
+用户暂停一个正在 RUNNING 状态的 JOB，正在运行的 TASK 会被中断，JOB 状态变更为 PAUSED。被停止的 JOB 可以通过 RESUME 操作恢复运行。
 
 使用此命令需要 ADMIN 权限。
 
@@ -40,7 +40,7 @@ PAUSE JOB
 PAUSE JOB WHERE jobname= 'jobname';
 ```
 
-### Example
+## 例子
 
 1. 暂停名称为 example 的 JOB。
 
@@ -48,9 +48,9 @@ PAUSE JOB WHERE jobname= 'jobname';
    PAUSE JOB where jobname='example';
 ```
 
-### Keywords
+## 关键词
 
     PAUSE, JOB
 
-### Best Practice
+### 最佳实践
 

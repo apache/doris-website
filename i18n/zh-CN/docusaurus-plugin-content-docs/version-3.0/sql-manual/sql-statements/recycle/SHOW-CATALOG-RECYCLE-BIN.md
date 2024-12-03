@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CATALOG-RECYCLE-BIN",
+    "title": "SHOW CATALOG RECYCLE BIN",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CATALOG-RECYCLE-BIN
+
 
 ### Name
 
 SHOW CATALOG RECYCLE BIN
 
-### Description
+## 描述
 
 该语句用于展示回收站中可回收的库，表或分区元数据信息
 
@@ -55,7 +55,7 @@ SHOW CATALOG RECYCLE BIN [ WHERE NAME [ = "name" | LIKE "name_matcher"] ]
 ```
 
 
-### Example
+## 例子
 
  1. 展示所有回收站元数据
     
@@ -69,9 +69,9 @@ SHOW CATALOG RECYCLE BIN [ WHERE NAME [ = "name" | LIKE "name_matcher"] ]
        SHOW CATALOG RECYCLE BIN WHERE NAME = 'test';
       ```
 
-### Keywords
+## 关键词
 
     SHOW, CATALOG RECYCLE BIN
 
-### Best Practice
+### 最佳实践
 

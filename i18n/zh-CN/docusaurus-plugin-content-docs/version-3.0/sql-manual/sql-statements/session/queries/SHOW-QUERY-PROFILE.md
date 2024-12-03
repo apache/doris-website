@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-QUERY-PROFILE",
+    "title": "SHOW QUERY PROFILE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-QUERY-PROFILE
 
 ### Name
 
@@ -34,9 +33,9 @@ SHOW QUERY PROFILE
 自 2.1.1 起，此语法被弃用。你仍然可以从 http://<fe_ip>:<fe_http_port>/QueryProfile 上下载 profile 文件。
 :::
 
-### Description
+## 描述
 
-该语句是用来查看QUERY操作的树状Profile信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：
+该语句是用来查看 QUERY 操作的树状 Profile 信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：
 
 ```sql
 SET is_report_success=true;
@@ -53,16 +52,16 @@ SET [GLOBAL] enable_profile=true;
 ```sql
 show query profile "/";
 ```
-这个命令会列出当前保存的所有query操作的 Profile 。
+这个命令会列出当前保存的所有 query 操作的 Profile。
 
 ```sql
 show query profile "/queryId"\G;
 show query profile "/queryId/fragment_id/instance_id";
 ```
-获取指定query id树状profile信息,返回profile 简易树形图。指定fragment_id和instance_id则返回对应的详细profile树形图。
+获取指定 query id 树状 profile 信息，返回 profile 简易树形图。指定 fragment_id 和 instance_id 则返回对应的详细 profile 树形图。
 
 
-### Example
+## 例子
 
 1. 列出所有的 query Profile
 
@@ -76,7 +75,7 @@ show query profile "/queryId/fragment_id/instance_id";
    1 row in set (0.00 sec)
    ```
 
-2. 列出指定QueryId的 query Profile
+2. 列出指定 QueryId 的 query Profile
 
    ```sql
    mysql> show query profile "/327167e0db4749a9-adce3b3d770b2bb1"\G
@@ -215,11 +214,11 @@ show query profile "/queryId/fragment_id/instance_id";
    1 row in set (0.01 sec)
    ```
 
-### Keywords
+## 关键词
 
     SHOW, QUERY, PROFILE
 
-### Best Practice
+### 最佳实践
 
 
 

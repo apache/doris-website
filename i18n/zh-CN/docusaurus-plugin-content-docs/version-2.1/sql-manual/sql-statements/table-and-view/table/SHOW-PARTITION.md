@@ -34,7 +34,7 @@ SHOW PARTITION 用于展示指定分区的详细信息。包括所属数据库�
 SHOW PARTITION <partition_id>
 ```
 
-## 必选参数（Required Parameters）
+## 必选参数
 
 `<partition_id>`
 

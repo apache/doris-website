@@ -31,7 +31,7 @@ under the License.
 
 ADMIN CLEAN TRASH
 
-### Description
+## 描述
 
 该语句用于清理 backend 内的垃圾数据
 
@@ -55,9 +55,9 @@ ADMIN CLEAN TRASH [ON ("BackendHost1:BackendHeartBeatPort1", "BackendHost2:Backe
 
         ADMIN CLEAN TRASH ON ("192.168.0.1:9050","192.168.0.2:9050");
 
-### Keywords
+## 关键词
 
     ADMIN, CLEAN, TRASH
 
-### Best Practice
+## 最佳实践
 

@@ -29,7 +29,7 @@ under the License.
 
 SHOW BACKENDS
 
-### Description
+## 描述
 
 该语句用于查看 cluster 内的 BE 节点
 
@@ -55,9 +55,9 @@ SHOW BACKENDS
 14. NodeRole 用于展示节点角色，现在有两种类型：Mix 代表原来的节点类型，computation 代表只做计算的节点类型。
 
 
-### Keywords
+## 关键词
 
     SHOW, BACKENDS
 
-### Best Practice
+## 最佳实践
 

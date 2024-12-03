@@ -30,7 +30,7 @@ under the License.
 
 ALTER STORAGE POLICY
 
-### Description
+## 描述
 
 该语句用于修改一个已有的冷热分层迁移策略。仅 root 或 admin 用户可以修改资源。
 语法：
@@ -39,7 +39,7 @@ ALTER STORAGE POLICY  'policy_name'
 PROPERTIES ("key"="value", ...);
 ```
 
-### Example
+## 例子
 
 1. 修改名为 cooldown_datetime 冷热分层数据迁移时间点：
 ```sql
@@ -51,10 +51,10 @@ ALTER STORAGE POLICY has_test_policy_to_alter PROPERTIES ("cooldown_ttl" = "1000
 ALTER STORAGE POLICY has_test_policy_to_alter PROPERTIES ("cooldown_ttl" = "1h");
 ALTER STORAGE POLICY has_test_policy_to_alter PROPERTIES ("cooldown_ttl" = "3d");
 ```
-### Keywords
+## 关键词
 
 ```sql
 ALTER, STORAGE, POLICY
 ```
 
-### Best Practice
+### 最佳实践

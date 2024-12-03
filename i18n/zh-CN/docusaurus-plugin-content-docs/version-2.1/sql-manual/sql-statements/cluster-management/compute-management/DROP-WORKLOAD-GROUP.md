@@ -30,7 +30,7 @@ under the License.
 
 DROP WORKLOAD GROUP
 
-### Description
+## 描述
 
  
 
@@ -48,9 +48,9 @@ DROP WORKLOAD GROUP [IF EXISTS] 'rg_name'
     drop workload group if exists g1;
     ```
 
-### Keywords
+## 关键词
 
     DROP, WORKLOAD, GROUP
 
-### Best Practice
+## 最佳实践
 

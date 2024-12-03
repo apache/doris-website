@@ -29,7 +29,7 @@ under the License.
 
 ALTER SYSTEM ADD FOLLOWER
 
-### Description
+## 描述
 
 
 该语句是增加 FRONTEND 的 FOLLOWER 角色的节点，（仅管理员使用！）
@@ -53,9 +53,9 @@ ALTER SYSTEM ADD FOLLOWER "follower_host:edit_log_port"
    ALTER SYSTEM ADD FOLLOWER "host_ip:9010"
    ```
 
-### Keywords
+## 关键词
 
     ALTER, SYSTEM, ADD, FOLLOWER, ALTER SYSTEM
 
-### Best Practice
+## 最佳实践
 

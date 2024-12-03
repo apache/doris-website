@@ -30,7 +30,7 @@ under the License.
 
 ALTER TABLE PARTITION
 
-### Description
+## 描述
 
 该语句用于对有 partition 的 table 进行修改操作。
 
@@ -167,11 +167,11 @@ ALTER TABLE example_db.my_table
 ADD PARTITION p1 VALUES [("2014-01-01"), ("2014-02-01")); 
 ```
 
-### Keywords
+## 关键词
 
 ```text
 ALTER, TABLE, PARTITION, ALTER TABLE
 ```
 
-### Best Practice
+## 最佳实践
 

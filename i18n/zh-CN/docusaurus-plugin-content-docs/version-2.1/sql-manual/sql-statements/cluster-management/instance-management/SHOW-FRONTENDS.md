@@ -28,7 +28,7 @@ under the License.
 
 SHOW FRONTENDS
 
-### Description
+## 描述
 
  该语句用于查看 FE 节点
 
@@ -50,9 +50,9 @@ SHOW FRONTENDS;
 
 ### Example
 
-### Keywords
+## 关键词
 
     SHOW, FRONTENDS
 
-### Best Practice
+## 最佳实践
 

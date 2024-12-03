@@ -30,7 +30,7 @@ under the License.
 
 INSERT OVERWRITE
 
-### Description
+## 描述
 
 该语句的功能是重写表或表的某些分区
 
@@ -132,7 +132,7 @@ mysql> select * from auto_list;
 2 rows in set (0.15 sec)
 ```
 
-### Example
+## 例子
 
 假设有`test` 表。该表包含两个列`c1`, `c2`，两个分区`p1`,`p2`。建表语句如下所示
 
@@ -292,7 +292,7 @@ mysql> select * from test order by k0;
 
 可以看到，数据 3、1234 所在的分区 `p10` 和 `pMAX` 中的全部数据均被覆写，而 `p100` 分区未发生变化。该操作可以理解为 INSERT OVERWRITE 操作时通过 PARTITION 子句指定覆写特定分区的语法糖，它的实现原理与[指定重写特定分区](#overwrite-table-partition)相同。通过 `PARTITION(*)` 的语法，在覆写大量分区数据时我们可以免于手动填写全部分区名的繁琐。
 
-### Keywords
+## 关键词
 
     INSERT OVERWRITE, OVERWRITE, AUTO DETECT
 

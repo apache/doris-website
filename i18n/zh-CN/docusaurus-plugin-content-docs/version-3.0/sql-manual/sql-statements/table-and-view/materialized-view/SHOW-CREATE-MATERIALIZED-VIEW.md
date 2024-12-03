@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-MATERIALIZED-VIEW",
+    "title": "SHOW CREATE MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-MATERIALIZED-VIEW
 
-### Name
 
-SHOW CREATE MATERIALIZED VIEW
-
-### Description
+## 描述
 
 该语句用于查询创建物化视图的语句。
 
@@ -46,7 +42,7 @@ SHOW CREATE MATERIALIZED VIEW mv_name ON table_name
 2. table_name:
         物化视图所属的表名。必填项。
 
-### Example
+## 例子
 
 创建物化视图的语句为
 
@@ -66,9 +62,9 @@ mysql> show create materialized view id_col1 on table3;
 1 row in set (0.00 sec)
 ```
 
-### Keywords
+## 关键词
 
     SHOW, MATERIALIZED, VIEW
 
-### Best Practice
+### 最佳实践
 

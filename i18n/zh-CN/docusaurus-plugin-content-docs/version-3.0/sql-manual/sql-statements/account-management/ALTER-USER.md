@@ -26,11 +26,7 @@ under the License.
 
 
 
-### Name
-
-ALTER USER
-
-### Description
+## 描述
 
 ALTER USER 命令用于修改一个用户的账户属性，包括密码、和密码策略等
 
@@ -67,41 +63,39 @@ password_policy:
 4. 修改 `FAILED_LOGIN_ATTEMPTS` 和 `PASSWORD_LOCK_TIME`
 5. 解锁用户
 
-### Example
+## 例子
 
 1. 修改用户的密码
 
-    ```
+    ```sql
     ALTER USER jack@'%' IDENTIFIED BY "12345";
     ```
 	
 2. 修改用户的密码策略
 
-    ```
+    ```sql
     ALTER USER jack@'%' FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY;
     ```
 	
 3. 解锁一个用户
 
-    ```
+    ```sql
     ALTER USER jack@'%' ACCOUNT_UNLOCK
     ```
 
 4. 修改一个用户的注释
     
-    ```
+    ```sql
     ALTER USER jack@'%' COMMENT "this is my first user"
     ```
 
-### Keywords
+## 关键词 
 
-    ALTER, USER
+ALTER, USER
 
-### Best Practice
+### 最佳实践
 
 1. 修改密码策略
-
-    1. 修改 `PASSWORD_EXPIRE` 会重置密码过期时间的计时。
-
-    2. 修改 `FAILED_LOGIN_ATTEMPTS` 或 `PASSWORD_LOCK_TIME`，会解锁用户。
+    - 修改 `PASSWORD_EXPIRE` 会重置密码过期时间的计时。
+    - 修改 `FAILED_LOGIN_ATTEMPTS` 或 `PASSWORD_LOCK_TIME`，会解锁用户。
 

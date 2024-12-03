@@ -30,7 +30,7 @@ under the License.
 
 SHOW CREATE ROUTINE LOAD
 
-### Description
+## 描述
 
 该语句用于展示例行导入作业的创建语句。
 
@@ -54,9 +54,9 @@ SHOW [ALL] CREATE ROUTINE LOAD for load_name;
    SHOW CREATE ROUTINE LOAD for test_load
    ```
 
-### Keywords
+## 关键词
 
     SHOW, CREATE, ROUTINE, LOAD
 
-### Best Practice
+## 最佳实践
 

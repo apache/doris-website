@@ -29,7 +29,7 @@ under the License.
 
 SHOW REPLICA STATUS
 
-### Description
+## 描述
 
 该语句用于展示一个表或分区的副本状态信息。
 
@@ -74,9 +74,9 @@ SHOW REPLICA STATUS FROM [db_name.]tbl_name [PARTITION (p1, ...)]
     WHERE STATUS != "OK";
     ```
 
-### Keywords
+## 关键词
 
     SHOW, REPLICA, STATUS
 
-### Best Practice
+## 最佳实践
 

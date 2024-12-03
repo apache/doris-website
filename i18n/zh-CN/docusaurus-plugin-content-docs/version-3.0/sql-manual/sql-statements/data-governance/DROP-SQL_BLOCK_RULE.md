@@ -30,7 +30,7 @@ under the License.
 
 DROP SQL BLOCK RULE
 
-### Description
+## 描述
 
 删除 SQL 阻止规则，支持多规则，以，隔开
 
@@ -40,7 +40,7 @@ DROP SQL BLOCK RULE
 DROP SQL_BLOCK_RULE test_rule1,...
 ```
 
-### Example
+## 例子
 
 1. 删除 test_rule1、test_rule2 阻止规则
 
@@ -49,11 +49,11 @@ DROP SQL_BLOCK_RULE test_rule1,...
    Query OK, 0 rows affected (0.00 sec)
    ```
 
-### Keywords
+## 关键词
 
 ```text
 DROP, SQL_BLOCK_RULE
 ```
 
-### Best Practice
+### 最佳实践
 

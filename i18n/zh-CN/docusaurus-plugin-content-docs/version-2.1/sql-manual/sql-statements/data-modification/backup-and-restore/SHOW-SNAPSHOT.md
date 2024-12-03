@@ -30,7 +30,7 @@ under the License.
 
 SHOW SNAPSHOT
 
-### Description
+## 描述
 
 该语句用于查看仓库中已存在的备份。
 
@@ -72,9 +72,9 @@ SHOW SNAPSHOT ON `repo_name`
     WHERE SNAPSHOT = "backup1" AND TIMESTAMP = "2018-05-05-15-34-26";
     ```
 
-### Keywords
+## 关键词
 
     SHOW, SNAPSHOT
 
-### Best Practice
+## 最佳实践
 

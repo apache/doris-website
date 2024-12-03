@@ -1,6 +1,6 @@
 ---
 {
-    "title": "MYSQL-LOAD",
+    "title": "MYSQL LOAD",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MYSQL-LOAD
+
 
 ### Name
 
-    MYSQL LOAD
+MYSQL LOAD
 
-### Description
+## 描述
 
 mysql-load: 使用 MySql 客户端导入本地数据
 
@@ -81,7 +81,7 @@ INTO TABLE tbl_name
 
 8. escape: 转义符。用于转义在 csv 字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，然后将数据修改为"a,'b,\'c'"。
 
-### Example
+## 例子
 
 1. 将客户端本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表。指定超时时间为 100 秒
 
@@ -168,6 +168,6 @@ INTO TABLE tbl_name
     PROPERTIES ("exec_mem_limit"="10737418240", "timeout"="600")
     ```
 
-### Keywords
+## 关键词
 
     MYSQL, LOAD

@@ -30,7 +30,7 @@ under the License.
 
 SHOW SNAPSHOT
 
-### Description
+## 描述
 
 该语句用于查看仓库中已存在的备份。
 
@@ -50,7 +50,7 @@ SHOW SNAPSHOT ON `repo_name`
             Database：备份数据原属的数据库名称
             Details：以 Json 的形式，展示整个备份的数据目录及文件结构
 
-### Example
+## 例子
 
 1. 查看仓库 example_repo 中已有的备份
     
@@ -71,9 +71,9 @@ SHOW SNAPSHOT ON `repo_name`
     WHERE SNAPSHOT = "backup1" AND TIMESTAMP = "2018-05-05-15-34-26";
     ```
 
-### Keywords
+## 关键词
 
     SHOW, SNAPSHOT
 
-### Best Practice
+### 最佳实践
 

@@ -251,7 +251,7 @@ mysql> show partitions from `DAILY_TRADE_VALUE`;
 
 二者语法功能不存在冲突，同时设置对应的子句/属性即可。
 
-### 最佳实践
+## 最佳实践
 
 需要对分区生命周期设限的场景，可以**将 Dynamic Partition 的创建功能关闭，创建分区完全交由 Auto Partition 完成**，通过 Dynamic Partition 动态回收分区的功能完成分区生命周期的管理：
 

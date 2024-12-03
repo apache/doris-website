@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-TABLE-ROLLUP",
+    "title": "ALTER TABLE ROLLUP",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-TABLE-ROLLUP
 
-### Name
 
-ALTER TABLE ROLLUP
-
-### Description
+## 描述
 
 该语句用于对已有 table 进行 rollup 进行修改操作。rollup 是异步操作，任务提交成功则返回，之后可使用[SHOW ALTER](../../../../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE) 命令查看进度。
 
@@ -52,7 +48,7 @@ ADD ROLLUP rollup_name (column_name1, column_name2, ...)
 [PROPERTIES ("key"="value", ...)]
 ```
 
- properties: 支持设置超时时间，默认超时时间为1天。
+ properties: 支持设置超时时间，默认超时时间为 1 天。
 
 2. 批量创建 rollup index
 
@@ -90,7 +86,7 @@ DROP ROLLUP [rollup_name [PROPERTIES ("key"="value", ...)],...]
 
 - 不能删除 base index
 
-### Example
+## 例子
 
 1. 创建 index: example_rollup_index，基于 base index（k1,k2,k3,v1,v2）。列式存储。
 
@@ -122,18 +118,18 @@ ALTER TABLE example_db.my_table
 DROP ROLLUP example_rollup_index2;
 ```
 
-5. 批量删除Rollup
+5. 批量删除 Rollup
 
 ```sql
 ALTER TABLE example_db.my_table
 DROP ROLLUP example_rollup_index2,example_rollup_index3;
 ```
 
-### Keywords
+## 关键词
 
 ```text
 ALTER, TABLE, ROLLUP, ALTER TABLE
 ```
 
-### Best Practice
+
 

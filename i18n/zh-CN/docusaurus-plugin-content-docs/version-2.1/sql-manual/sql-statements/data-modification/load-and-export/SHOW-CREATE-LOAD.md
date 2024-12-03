@@ -30,7 +30,7 @@ under the License.
 
 SHOW CREATE LOAD
 
-### Description
+## 描述
 
 该语句用于展示导入作业的创建语句。
 
@@ -51,9 +51,9 @@ SHOW CREATE LOAD for load_name;
    SHOW CREATE LOAD for test_load
    ```
 
-### Keywords
+## 关键词
 
     SHOW, CREATE, LOAD
 
-### Best Practice
+## 最佳实践
 

@@ -30,7 +30,7 @@ under the License.
 
 SHOW ROUTINE LOAD TASK
 
-### Description
+## 描述
 
 查看一个指定的 Routine Load 作业的当前正在运行的子任务情况。
 
@@ -71,10 +71,10 @@ DataSourceProperties: {"0":19}
     SHOW ROUTINE LOAD TASK WHERE JobName = "test1";
     ```
 
-### Keywords
+## 关键词
 
     SHOW, ROUTINE, LOAD, TASK
 
-### Best Practice
+## 最佳实践
 
 通过这个命令，可以查看一个 Routine Load 作业当前有多少子任务在运行，具体运行在哪个 BE 节点上。

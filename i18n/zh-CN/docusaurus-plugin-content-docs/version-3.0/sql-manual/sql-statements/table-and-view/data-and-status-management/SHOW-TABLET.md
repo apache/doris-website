@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-TABLET",
+    "title": "SHOW TABLET",
     "language": "zh-CN"
 }
 ---
@@ -24,15 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-TABLET
 
 ### Name
 
 SHOW TABLET
 
-### Description
+## 描述
 
-该语句用于显示指定tablet id 信息（仅管理员使用）
+该语句用于显示指定 tablet id 信息（仅管理员使用）
 
 语法：
 
@@ -40,7 +39,7 @@ SHOW TABLET
 SHOW TABLET tablet_id
 ```
 
-### Example
+## 例子
 
 1.  显示指定 tablet id 为 10000 的 tablet 的父层级 id 信息
 
@@ -48,9 +47,9 @@ SHOW TABLET tablet_id
    SHOW TABLET 10000;
    ```
 
-### Keywords
+## 关键词
 
     SHOW, TABLET
 
-### Best Practice
+### 最佳实践
 

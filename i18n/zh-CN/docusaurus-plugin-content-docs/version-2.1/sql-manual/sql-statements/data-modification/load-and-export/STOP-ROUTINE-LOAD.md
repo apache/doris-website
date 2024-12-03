@@ -30,7 +30,7 @@ under the License.
 
 STOP ROUTINE LOAD
 
-### Description
+## 描述
 
 用户停止一个 Routine Load 作业。被停止的作业无法再重新运行。
 
@@ -46,9 +46,9 @@ STOP ROUTINE LOAD FOR job_name;
    STOP ROUTINE LOAD FOR test1;
    ```
 
-### Keywords
+## 关键词
 
     STOP, ROUTINE, LOAD
 
-### Best Practice
+## 最佳实践
 

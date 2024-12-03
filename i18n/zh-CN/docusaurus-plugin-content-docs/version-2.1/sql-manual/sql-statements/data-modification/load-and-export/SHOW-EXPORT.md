@@ -30,7 +30,7 @@ under the License.
 
 SHOW EXPORT
 
-### Description
+## 描述
 
 该语句用于展示指定的导出任务的执行情况
 
@@ -86,9 +86,9 @@ SHOW EXPORT
      SHOW EXPORT FROM example_db WHERE LABEL = "mylabel";
     ```
 
-### Keywords
+## 关键词
 
     SHOW, EXPORT
 
-### Best Practice
+## 最佳实践
 

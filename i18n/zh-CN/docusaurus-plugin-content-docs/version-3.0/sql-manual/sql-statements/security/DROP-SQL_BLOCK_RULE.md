@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-SQL-BLOCK-RULE",
+    "title": "DROP SQL_BLOCK_RULE",
     "language": "zh-CN"
 }
 ---
@@ -24,15 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-SQL-BLOCK-RULE
 
 ### Name
 
 DROP SQL BLOCK RULE
 
-### Description
+## 描述
 
-删除SQL阻止规则，支持多规则，以,隔开
+删除 SQL 阻止规则，支持多规则，以，隔开
 
 语法：
 
@@ -40,20 +39,20 @@ DROP SQL BLOCK RULE
 DROP SQL_BLOCK_RULE test_rule1,...
 ```
 
-### Example
+## 例子
 
-1. 删除test_rule1、test_rule2阻止规则
+1. 删除 test_rule1、test_rule2 阻止规则
 
    ```sql
    mysql> DROP SQL_BLOCK_RULE test_rule1,test_rule2;
    Query OK, 0 rows affected (0.00 sec)
    ```
 
-### Keywords
+## 关键词
 
 ```text
 DROP, SQL_BLOCK_RULE
 ```
 
-### Best Practice
+### 最佳实践
 

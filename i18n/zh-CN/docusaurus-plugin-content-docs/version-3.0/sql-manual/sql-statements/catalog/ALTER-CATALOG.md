@@ -26,11 +26,8 @@ under the License.
 
 
 
-### Name
 
-ALTER CATALOG
-
-### Description
+## 描述
 
 该语句用于设置指定数据目录的属性。（仅管理员使用）
 
@@ -65,7 +62,7 @@ ALTER CATALOG catalog_name MODIFY COMMENT "new catalog comment";
 注意：
 - `internal` 是内置数据目录，不允许修改注释
 
-### Example
+## 例子
 
 1. 将数据目录 ctlg_hive 重命名为 hive
 
@@ -85,8 +82,8 @@ ALTER CATALOG hive SET PROPERTIES ('hive.metastore.uris'='thrift://172.21.0.1:90
 ALTER CATALOG hive MODIFY COMMENT "new catalog comment";
 ```
 
-### Keywords
+## 关键词
 
 ALTER,CATALOG,RENAME,PROPERTY
 
-### Best Practice
+### 最佳实践

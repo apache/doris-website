@@ -28,7 +28,7 @@ under the License.
 
 SHOW REPLICA DISTRIBUTION
 
-### Description
+## 描述
 
 该语句用于展示一个表或分区副本分布状态
 
@@ -56,9 +56,9 @@ SHOW REPLICA DISTRIBUTION FROM [db_name.]tbl_name [PARTITION (p1, ...)];
       SHOW REPLICA DISTRIBUTION FROM db1.tbl1 PARTITION(p1, p2);
       ```
 
-### Keywords
+## 关键词
 
     SHOW, REPLICA, DISTRIBUTION
 
-### Best Practice
+## 最佳实践
 

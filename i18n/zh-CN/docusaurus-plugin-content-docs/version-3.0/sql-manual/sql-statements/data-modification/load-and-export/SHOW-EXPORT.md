@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-EXPORT",
+    "title": "SHOW EXPORT",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-EXPORT
+
 
 ### Name
 
 SHOW EXPORT
 
-### Description
+## 描述
 
 该语句用于展示指定的导出任务的执行情况
 
@@ -49,12 +49,12 @@ SHOW EXPORT
 [LIMIT limit];
 ```
 说明：
-      1. 如果不指定 db_name，使用当前默认db
+      1. 如果不指定 db_name，使用当前默认 db
       2. 如果指定了 STATE，则匹配 EXPORT 状态
       3. 可以使用 ORDER BY 对任意列组合进行排序
       4. 如果指定了 LIMIT，则显示 limit 条匹配记录。否则全部显示
 
-### Example
+## 例子
 
 1. 展示默认 db 的所有导出任务
    
@@ -74,21 +74,21 @@ SHOW EXPORT
     SHOW EXPORT FROM example_db WHERE STATE = "exporting" ORDER BY StartTime DESC;
     ```
     
-4. 展示指定db，指定job_id的导出任务
+4. 展示指定 db，指定 job_id 的导出任务
    
     ```sql
       SHOW EXPORT FROM example_db WHERE ID = job_id;
     ```
     
-5. 展示指定db，指定label的导出任务
+5. 展示指定 db，指定 label 的导出任务
    
     ```sql
      SHOW EXPORT FROM example_db WHERE LABEL = "mylabel";
     ```
 
-### Keywords
+## 关键词
 
     SHOW, EXPORT
 
-### Best Practice
+### 最佳实践
 

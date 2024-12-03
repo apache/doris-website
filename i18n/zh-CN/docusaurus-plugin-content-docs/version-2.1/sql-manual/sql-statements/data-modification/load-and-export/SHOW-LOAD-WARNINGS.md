@@ -30,7 +30,7 @@ under the License.
 
 SHOW LOAD WARNINGS
 
-### Description
+## 描述
 
 如果导入任务失败且错误信息为 `ETL_QUALITY_UNSATISFIED`，则说明存在导入质量问题，如果想看到这些有质量问题的导入任务，该语句就是完成这个操作的。
 
@@ -58,9 +58,9 @@ SHOW LOAD WARNINGS
    SHOW LOAD WARNINGS FROM demo WHERE LABEL = "load_demo_20210112" 
    ```
 
-### Keywords
+## 关键词
 
     SHOW, LOAD, WARNINGS
 
-### Best Practice
+## 最佳实践
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-VIEW",
+    "title": "SHOW VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-VIEW
-
-### Name
-
-SHOW VIEW
-
-### Description
+## 描述
 
 该语句用于展示基于给定表建立的所有视图
 
@@ -40,7 +34,7 @@ SHOW VIEW
  SHOW VIEW { FROM | IN } table [ FROM db ]
 ```
 
-### Example
+## 例子
 
 1. 展示基于表 testTbl 建立的所有视图 view
     
@@ -48,9 +42,8 @@ SHOW VIEW
     SHOW VIEW FROM testTbl;
     ```
 
-### Keywords
+## 关键词
 
-    SHOW, VIEW
+SHOW, VIEW
 
-### Best Practice
 

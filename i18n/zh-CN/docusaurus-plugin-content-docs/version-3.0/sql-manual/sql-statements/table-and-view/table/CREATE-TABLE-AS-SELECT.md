@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-TABLE-AS-SELECT",
+    "title": "CREATE TABLE AS SELECT",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-TABLE-AS-SELECT
-
-### Name
-
-CREATE TABLE AS SELECT
-
-### Description
+## 描述
 
 该语句通过 Select 语句返回结果创建表结构，同时导入数据
 
@@ -57,7 +51,7 @@ CREATE TABLE table_name [( column_name_list )]
 - 所有字符串类型的列 (varchar/var/string) 都会被创建为 string 类型。
 - 如果创建的来源为外部表，并且第一列为 String 类型，则会自动将第一列设置为 VARCHAR(65533)。因为 Doris 内部表，不允许 String 列作为第一列。
 
-### Example
+## 例子
 
 1. 使用 select 语句中的字段名
 
@@ -91,9 +85,9 @@ CREATE TABLE table_name [( column_name_list )]
     AS SELECT cast('2020-05-20' as date) as dt, 1 as id, 'Tom' as name;
     ```
    
-### Keywords
+## 关键词
 
-    CREATE, TABLE, AS, SELECT
+CREATE, TABLE, AS, SELECT
 
-### Best Practice
+
 

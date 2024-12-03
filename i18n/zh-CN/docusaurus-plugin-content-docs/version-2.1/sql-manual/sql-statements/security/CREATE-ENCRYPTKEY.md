@@ -30,7 +30,7 @@ under the License.
 
 CREATE ENCRYPTKEY
 
-### Description
+## 描述
 
 此语句创建一个自定义密钥。执行此命令需要用户拥有 `ADMIN` 权限。
 
@@ -78,9 +78,9 @@ CREATE ENCRYPTKEY key_name AS "key_string"
    1 row in set (0.01 sec)
    ```
 
-### Keywords
+## 关键词
 
     CREATE, ENCRYPTKEY
 
-### Best Practice
+## 最佳实践
 

@@ -24,15 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## OUTFILE
 
 ### Name
 
 OUTFILE
 
-### description
+## 描述
 
- `SELECT INTO OUTFILE` 命令用于将查询结果导出为文件。目前支持通过 Broker 进程, S3 协议或 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
+ `SELECT INTO OUTFILE` 命令用于将查询结果导出为文件。目前支持通过 Broker 进程，S3 协议或 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
 
 #### 语法：
 
@@ -52,7 +51,7 @@ INTO OUTFILE "file_path"
     ```
     file_path 指向文件存储的路径以及文件前缀。如 `hdfs://path/to/my_file_`。
     
-    最终的文件名将由 `my_file_`、文件序号以及文件格式后缀组成。其中文件序号由0开始，数量为文件被分割的数量。如：
+    最终的文件名将由 `my_file_`、文件序号以及文件格式后缀组成。其中文件序号由 0 开始，数量为文件被分割的数量。如：
     my_file_abcdefg_0.csv
     my_file_abcdefg_1.csv
     my_file_abcdegf_2.csv
@@ -66,14 +65,14 @@ INTO OUTFILE "file_path"
     FORMAT AS CSV
     ```
 
-   指定导出格式. 支持 CSV、PARQUET、CSV_WITH_NAMES、CSV_WITH_NAMES_AND_TYPES、ORC. 默认为 CSV。
+   指定导出格式。支持 CSV、PARQUET、CSV_WITH_NAMES、CSV_WITH_NAMES_AND_TYPES、ORC. 默认为 CSV。
 
    > 注：PARQUET、CSV_WITH_NAMES、CSV_WITH_NAMES_AND_TYPES、ORC 在 1.2 版本开始支持。
 
 3. properties
 
     ```
-    指定相关属性。目前支持通过 Broker 进程, 或通过 S3/HDFS 协议进行导出。
+    指定相关属性。目前支持通过 Broker 进程，或通过 S3/HDFS 协议进行导出。
     
     语法：
     [PROPERTIES ("key"="value", ...)]
@@ -82,32 +81,32 @@ INTO OUTFILE "file_path"
     文件相关的属性：
         `column_separator`: 列分隔符，只用于 CSV 相关格式。在 1.2 版本开始支持多字节分隔符，如："\\x01", "abc"。
         `line_delimiter`: 行分隔符，只用于 CSV 相关格式。在 1.2 版本开始支持多字节分隔符，如："\\x01", "abc"。
-        `max_file_size`: 单个文件大小限制，如果结果超过这个值，将切割成多个文件, `max_file_size` 取值范围是[5MB, 2GB], 默认为 `1GB`。（当指定导出为 OCR 文件格式时，实际切分文件的大小将是 64MB 的倍数，如：指定 `max_file_size = 5MB`, 实际将以 64 MB 为切分；指定 `max_file_size = 65MB`, 实际将以 128 MB 为切分）
+        `max_file_size`: 单个文件大小限制，如果结果超过这个值，将切割成多个文件，`max_file_size` 取值范围是[5MB, 2GB], 默认为 `1GB`。（当指定导出为 OCR 文件格式时，实际切分文件的大小将是 64MB 的倍数，如：指定 `max_file_size = 5MB`, 实际将以 64 MB 为切分；指定 `max_file_size = 65MB`, 实际将以 128 MB 为切分）
         `delete_existing_files`: 默认为 `false`，若指定为 `true`，则会先删除 `file_path` 指定的目录下的所有文件，然后导出数据到该目录下。例如："file_path" = "/user/tmp", 则会删除"/user/"下所有文件及目录；"file_path" = "/user/tmp/", 则会删除"/user/tmp/"下所有文件及目录。
         `file_suffix`: 指定导出文件的后缀，若不指定该参数，将使用文件格式的默认后缀。
         `compress_type`：当指定导出的文件格式为 Parquet / ORC 文件时，可以指定 Parquet / ORC 文件使用的压缩方式。Parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4 及 PLAIN，默认值为 SNAPPY。ORC 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自 2.1.5 版本开始支持。（PLAIN 就是不采用压缩）
     
     Broker 相关属性需加前缀 `broker.`：
-        broker.name: broker名称
+        broker.name: broker 名称
         broker.hadoop.security.authentication: 指定认证方式为 kerberos
         broker.kerberos_principal: 指定 kerberos 的 principal
         broker.kerberos_keytab: 指定 kerberos 的 keytab 文件路径。该文件必须为 Broker 进程所在服务器上的文件的绝对路径。并且可以被 Broker 进程访问
     
-    HDFS 相关属性:
+    HDFS 相关属性：
         fs.defaultFS: namenode 地址和端口
         hadoop.username: hdfs 用户名
-        dfs.nameservices: name service名称，与hdfs-site.xml保持一致
-        dfs.ha.namenodes.[nameservice ID]: namenode的id列表,与hdfs-site.xml保持一致
-        dfs.namenode.rpc-address.[nameservice ID].[name node ID]: Name node的rpc地址，数量与namenode数量相同，与hdfs-site.xml保持一致
-        dfs.client.failover.proxy.provider.[nameservice ID]: HDFS客户端连接活跃namenode的java类，通常是"org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+        dfs.nameservices: name service 名称，与 hdfs-site.xml 保持一致
+        dfs.ha.namenodes.[nameservice ID]: namenode 的 id 列表，与 hdfs-site.xml 保持一致
+        dfs.namenode.rpc-address.[nameservice ID].[name node ID]: Name node 的 rpc 地址，数量与 namenode 数量相同，与 hdfs-site.xml 保持一致
+        dfs.client.failover.proxy.provider.[nameservice ID]: HDFS 客户端连接活跃 namenode 的 java 类，通常是"org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
 
-        对于开启kerberos认证的Hadoop 集群，还需要额外设置如下 PROPERTIES 属性:
+        对于开启 kerberos 认证的 Hadoop 集群，还需要额外设置如下 PROPERTIES 属性：
         dfs.namenode.kerberos.principal: HDFS namenode 服务的 principal 名称
         hadoop.security.authentication: 认证方式设置为 kerberos
         hadoop.kerberos.principal: 设置 Doris 连接 HDFS 时使用的 Kerberos 主体
         hadoop.kerberos.keytab: 设置 keytab 本地文件路径
 
-    S3 协议则直接执行 S3 协议配置即可:
+    S3 协议则直接执行 S3 协议配置即可：
         s3.endpoint
         s3.access_key
         s3.secret_key
@@ -115,11 +114,11 @@ INTO OUTFILE "file_path"
         use_path_style: (选填) 默认为 `false` 。S3 SDK 默认使用 Virtual-hosted Style 方式。但某些对象存储系统可能没开启或不支持 Virtual-hosted Style 方式的访问，此时可以添加 `use_path_style` 参数来强制使用 Path Style 访问方式。
     ```
 
-    > 注意：若要使用 `delete_existing_files` 参数，还需要在 `fe.conf` 中添加配置`enable_delete_existing_files = true`并重启fe，此时delete_existing_files才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。
+    > 注意：若要使用 `delete_existing_files` 参数，还需要在 `fe.conf` 中添加配置`enable_delete_existing_files = true`并重启 fe，此时 delete_existing_files 才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。
 
 4. 导出的数据类型
 
-    所有文件类型都支持导出基本数据类型，而对于复杂数据类型（ARRAY/MAP/STRUCT），当前只有csv/orc/csv_with_names/csv_with_names_and_types支持导出复杂类型,且不支持嵌套复杂类型。
+    所有文件类型都支持导出基本数据类型，而对于复杂数据类型（ARRAY/MAP/STRUCT），当前只有 csv/orc/csv_with_names/csv_with_names_and_types 支持导出复杂类型，且不支持嵌套复杂类型。
 
 5. 并发导出
 
@@ -136,7 +135,7 @@ INTO OUTFILE "file_path"
 
 #### 数据类型映射
 
-Parquet、ORC 文件格式拥有自己的数据类型，Doris的导出功能能够自动将 Doris 的数据类型导出到 Parquet/ORC 文件格式的对应数据类型，以下是 Apache Doris 数据类型和 Parquet/ORC 文件格式的数据类型映射关系表：
+Parquet、ORC 文件格式拥有自己的数据类型，Doris 的导出功能能够自动将 Doris 的数据类型导出到 Parquet/ORC 文件格式的对应数据类型，以下是 Apache Doris 数据类型和 Parquet/ORC 文件格式的数据类型映射关系表：
 
 1. Doris 导出到 ORC 文件格式的数据类型映射表：
 
@@ -183,7 +182,7 @@ Parquet、ORC 文件格式拥有自己的数据类型，Doris的导出功能能�
     | map | map |
     | array | list |
 
-### example
+## 例子
 
 1. 使用 Broker 方式导出，将简单查询结果导出到文件 `hdfs://path/to/result.txt`。指定导出格式为 CSV。使用 `my_broker` 并设置 kerberos 认证信息。指定列分隔符为 `,`，行分隔符为 `\n`。
 
@@ -285,9 +284,9 @@ Parquet、ORC 文件格式拥有自己的数据类型，Doris的导出功能能�
 
    最终生成文件如如果不大于 1GB，则为：`my_file_0.csv`。
    如果大于 1GB，则可能为 `my_file_0.csv, result_1.csv, ...`。
-   在cos上验证
+   在 cos 上验证
 
-        1. 不存在的path会自动创建
+        1. 不存在的 path 会自动创建
         2. access.key/secret.key/endpoint需要和cos的同学确认。尤其是endpoint的值，不需要填写bucket_name。
 
 6. 使用 S3 协议导出到 bos，并且并发导出开启。
@@ -325,10 +324,10 @@ Parquet、ORC 文件格式拥有自己的数据类型，Doris的导出功能能�
     )
     ```
 
-8. 使用 HDFS 方式导出，将简单查询结果导出到文件 `hdfs://${host}:${fileSystem_port}/path/to/result.txt`。指定导出格式为 CSV，用户名为work。指定列分隔符为 `,`，行分隔符为 `\n`。
+8. 使用 HDFS 方式导出，将简单查询结果导出到文件 `hdfs://${host}:${fileSystem_port}/path/to/result.txt`。指定导出格式为 CSV，用户名为 work。指定列分隔符为 `,`，行分隔符为 `\n`。
 
     ```sql
-    -- fileSystem_port默认值为9000
+    -- fileSystem_port 默认值为 9000
     SELECT * FROM tbl
     INTO OUTFILE "hdfs://${host}:${fileSystem_port}/path/to/result_"
     FORMAT AS CSV
@@ -383,10 +382,10 @@ Parquet、ORC 文件格式拥有自己的数据类型，Doris的导出功能能�
     )
     ```
 
-### keywords
+## 关键词
     SELECT, INTO, OUTFILE
 
-### Best Practice
+### 最佳实践
 
 1. 导出数据量和导出效率
 

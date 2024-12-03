@@ -29,7 +29,7 @@ under the License.
 
 ALTER VIEW
 
-### Description
+## 描述
 
 该语句用于修改一个 view 的定义
 
@@ -65,7 +65,7 @@ AS query_stmt
     GROUP BY k1, k2
     ```
 
-### Keywords
+## 关键词
 
 
 ALTER, VIEW

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-INDEX",
+    "title": "DROP INDEX",
     "language": "zh-CN"
 }
 ---
@@ -24,22 +24,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-INDEX
+
 
 ### Name
 
 DROP INDEX
 
-### Description
+## 描述
 
-该语句用于从一个表中删除指定名称的索引，目前仅支持bitmap 索引
+该语句用于从一个表中删除指定名称的索引，目前仅支持 bitmap 索引
 语法：
 
 ```sql
 DROP INDEX [IF EXISTS] index_name ON [db_name.]table_name;
 ```
 
-### Example
+## 例子
 
 1. 删除索引
 
@@ -47,9 +47,9 @@ DROP INDEX [IF EXISTS] index_name ON [db_name.]table_name;
    DROP INDEX [IF NOT EXISTS] index_name ON table1 ;
    ```
 
-### Keywords
+## 关键词
 
     DROP, INDEX
 
-### Best Practice
+### 最佳实践
 

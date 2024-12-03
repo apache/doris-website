@@ -24,13 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SWITCH
 
 ### Name
 SWITCH
 
 
-### Description
+## 描述
 
 该语句用于切换数据目录（catalog）
 
@@ -40,7 +39,7 @@ SWITCH
 SWITCH catalog_name
 ```
 
-### Example
+## 例子
 
 1. 切换到数据目录 hive
 
@@ -48,9 +47,9 @@ SWITCH catalog_name
   	SWITCH hive;
   	```
 
-### Keywords
+## 关键词
 
 SWITCH, CATALOG
 
-### Best Practice
+### 最佳实践
 

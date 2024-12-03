@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-TABLES",
+    "title": "SHOW TABLES",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-TABLES
-
-### Name 
-
-SHOW TABLES
-
-### Description
+## 描述
 
 该语句用于展示当前 db 下所有的 table
 
@@ -40,13 +34,13 @@ SHOW TABLES
 SHOW [FULL] TABLES [LIKE]
 ```
 
-说明:
+说明：
 
 1. LIKE：可按照表名进行模糊查询
 
-### Example
+## 例子
 
- 1. 查看DB下所有表
+ 1. 查看 DB 下所有表
     
      ```sql
      mysql> show tables;
@@ -75,9 +69,9 @@ SHOW [FULL] TABLES [LIKE]
    2 rows in set (0.00 sec)
    ```
 
-### Keywords
+## 关键词
 
-    SHOW, TABLES
+SHOW, TABLES
 
-### Best Practice
+
 

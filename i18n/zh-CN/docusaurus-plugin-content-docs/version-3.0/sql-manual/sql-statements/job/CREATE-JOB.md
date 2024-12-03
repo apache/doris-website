@@ -1,6 +1,6 @@
 ---
 {
-"title": "CREATE-JOB",
+"title": "CREATE JOB",
 "language": "zh-CN"
 }
 
@@ -25,13 +25,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-JOB
 
 ### Name
 
 CREATE JOB
 
-### Description
+## 描述
 
 Doris Job 是根据既定计划运行的任务，用于在特定时间或指定时间间隔触发预定义的操作，从而帮助我们自动执行一些任务。从功能上来讲，它类似于操作系统上的
 定时任务（如：Linux 中的 cron、Windows 中的计划任务）。
@@ -125,7 +124,7 @@ SCHEDULE 语句用于定义作业的执行时间，频率以及持续时间，�
 
   用于指定作业触发时需要执行的操作，目前仅支持 ***INSERT 内表*** 操作。后续我们会支持更多的操作。
 
-### Example
+## 例子
 
 创建一个一次性的 Job，它会在 2020-01-01 00:00:00 时执行一次，执行的操作是将 db2.tbl2 中的数据导入到 db1.tbl1 中。
 
@@ -164,11 +163,11 @@ fe.conf
 
 - job_insert_task_consumer_thread_num = 10;用于执行 Insert 任务的线程数, 值应该大于0，否则默认为5.
 
-### Best Practice
+### 最佳实践
 
 - 合理的进行 Job 的管理，避免大量的 Job 同时触发，导致任务堆积，从而影响系统的正常运行。
 - 任务的执行间隔应该设置在一个合理的范围，至少应该大于任务执行时间。
 
-### Keywords
+## 关键词
 
         CREATE, JOB

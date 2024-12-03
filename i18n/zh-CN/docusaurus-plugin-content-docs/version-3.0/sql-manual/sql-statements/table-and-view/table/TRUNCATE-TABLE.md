@@ -1,6 +1,6 @@
 ---
 {
-    "title": "TRUNCATE-TABLE",
+    "title": "TRUNCATE TABLE",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TRUNCATE-TABLE
 
-### Name
-
-TRUNCATE TABLE
-
-### Description
+## 描述
 
 该语句用于清空指定表和分区的数据
 语法：
@@ -48,7 +43,7 @@ TRUNCATE TABLE [db.]tbl[ PARTITION(p1, p2, ...)];
 - 使用该命令时，表状态需为 NORMAL，即不允许正在进行 SCHEMA CHANGE 等操作。
 - 该命令可能会导致正在进行的导入失败。
 
-### Example
+## 例子
 
 1. 清空 example_db 下的表 tbl
 
@@ -62,9 +57,9 @@ TRUNCATE TABLE [db.]tbl[ PARTITION(p1, p2, ...)];
     TRUNCATE TABLE tbl PARTITION(p1, p2);
     ```
 
-### Keywords
+## 关键词
 
-    TRUNCATE, TABLE
+TRUNCATE, TABLE
 
-### Best Practice
+
 

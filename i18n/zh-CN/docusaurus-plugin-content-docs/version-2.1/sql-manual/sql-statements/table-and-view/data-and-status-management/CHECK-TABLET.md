@@ -30,7 +30,7 @@ under the License.
 
 ADMIN CHECK TABLET
 
-### Description
+## 描述
 
 该语句用于对一组 tablet 执行指定的检查操作
 
@@ -56,9 +56,9 @@ PROPERTIES("type" = "...");
     ADMIN CHECK TABLET (10000, 10001)
     PROPERTIES("type" = "consistency");
 
-### Keywords
+## 关键词
 
     ADMIN, CHECK, TABLET
 
-### Best Practice
+## 最佳实践
 

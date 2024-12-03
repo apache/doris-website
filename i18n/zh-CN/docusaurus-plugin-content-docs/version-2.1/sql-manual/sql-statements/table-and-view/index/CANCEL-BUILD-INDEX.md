@@ -76,7 +76,7 @@ job_list
 - 目前只对存算一体模式生效，存算分离模式不生效。
 - BUILD INDEX 的进度和索引构建任务可以通过 SHOW BUILD INDEX 查看
 
-## 示例（Examples）
+## 示例
 
 - 取消表 table1 上的所有索引构建任务
 

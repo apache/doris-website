@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-COLUMNS",
+    "title": "SHOW COLUMNS",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-COLUMNS
 
-### Name
-
-SHOW FULL COLUMNS
-
-### Description
+## 描述
 
 该语句用于指定表的列信息
 
@@ -40,7 +35,7 @@ SHOW FULL COLUMNS
 SHOW [FULL] COLUMNS FROM tbl;
 ```
 
-### Example
+## 例子
 
 1. 查看指定表的列信息
 
@@ -48,9 +43,8 @@ SHOW [FULL] COLUMNS FROM tbl;
     SHOW FULL COLUMNS FROM tbl;
    ```
 
-### Keywords
+## 关键词
 
-    SHOW, FULL, COLUMNS
+SHOW, FULL, COLUMNS
 
-### Best Practice
 

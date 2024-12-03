@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STOP-SYNC-JOB",
+    "title": "STOP SYNC JOB",
     "language": "zh-CN"
 }
 ---
@@ -24,23 +24,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## STOP-SYNC-JOB
+
 
 ### Name
 
 STOP SYNC JOB
 
-### Description
+## 描述
 
 通过 `job_name` 停止一个数据库内非停止状态的常驻数据同步作业。
 
-语法:
+语法：
 
 ```sql
 STOP SYNC JOB [db.]job_name
 ```
 
-### Example
+## 例子
 
 1. 停止名称为 `job_name` 的数据同步作业
 
@@ -48,9 +48,9 @@ STOP SYNC JOB [db.]job_name
 	STOP SYNC JOB `job_name`;
 	```
 
-### Keywords
+## 关键词
 
     STOP, SYNC, JOB
 
-### Best Practice
+### 最佳实践
 

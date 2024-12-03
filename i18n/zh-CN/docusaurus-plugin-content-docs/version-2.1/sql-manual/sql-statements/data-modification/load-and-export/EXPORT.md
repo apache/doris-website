@@ -30,7 +30,7 @@ under the License.
 
 EXPORT
 
-### Description
+## 描述
 
  `EXPORT` 命令用于将指定表的数据导出为文件到指定位置。目前支持通过 Broker 进程，S3 协议或 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
 
@@ -330,11 +330,11 @@ WITH BROKER "broker_name"
 )
 ```
 
-### Keywords
+## 关键词
 
     EXPORT
 
-### Best Practice
+## 最佳实践
 
 #### 并发执行
 

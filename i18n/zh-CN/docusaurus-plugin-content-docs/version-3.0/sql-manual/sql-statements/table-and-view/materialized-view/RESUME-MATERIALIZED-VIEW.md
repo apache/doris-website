@@ -1,6 +1,6 @@
 ---
 {
-    "title": "RESUME-MATERIALIZED-VIEW",
+    "title": "RESUME MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## RESUME-MATERIALIZED-VIEW
 
-### Name
 
-RESUME MATERIALIZED VIEW
-
-### Description
+## 描述
 
 该语句用于暂恢复物化视图的定时调度
 
@@ -40,17 +36,17 @@ RESUME MATERIALIZED VIEW
 RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 ```
 
-### Example
+## 例子
 
-1. 恢复物化视图mv1的定时调度
+1. 恢复物化视图 mv1 的定时调度
 
     ```sql
     RESUME MATERIALIZED VIEW JOB ON mv1;
     ```
    
-### Keywords
+## 关键词
 
     RESUME, MATERIALIZED, VIEW
 
-### Best Practice
+### 最佳实践
 

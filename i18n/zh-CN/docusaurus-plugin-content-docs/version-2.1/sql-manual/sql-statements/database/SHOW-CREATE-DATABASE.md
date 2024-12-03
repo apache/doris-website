@@ -30,7 +30,7 @@ under the License.
 
 SHOW CREATE DATABASE
 
-### Description
+## 描述
 
 该语句查看 Doris 内置数据库和 HMS Catalog 数据库的创建信息。
 
@@ -71,9 +71,9 @@ SHOW CREATE DATABASE db_name;
     +-----------+------------------------------------------------------------------------------------+                         
     1 row in set (0.01 sec)  
     ```
-### Keywords
+## 关键词
 
     SHOW, CREATE, DATABASE
 
-### Best Practice
+## 最佳实践
 

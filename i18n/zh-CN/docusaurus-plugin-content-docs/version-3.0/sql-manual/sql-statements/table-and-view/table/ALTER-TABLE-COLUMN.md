@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-TABLE-COLUMN",
+    "title": "ALTER TABLE COLUMN",
     "language": "zh-CN"
 }
 ---
@@ -24,11 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Name
 
-ALTER TABLE COLUMN
 
-### Description
+## 描述
 
 该语句用于对已有 table 进行 Schema change 操作。schema change 是异步的，任务提交成功则返回，之后可使用[SHOW ALTER TABLE COLUMN](../../../../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE) 命令查看进度。
 
@@ -95,7 +93,7 @@ ALTER TABLE [database.]table table_name ADD COLUMN column_name column_type [KEY 
   
 :::tip
   - 聚合模型如果增加 value 列，需要指定 agg_type
-  - 非聚合模型（如 DUPLICATE KEY）如果增加key列，需要指定KEY关键字
+  - 非聚合模型（如 DUPLICATE KEY）如果增加 key 列，需要指定 KEY 关键字
   - 不能在 rollup index 中增加 base index 中已经存在的列（如有需要，可以重新创建一个 rollup index）
 :::
 
@@ -111,14 +109,14 @@ ALTER TABLE [database.]table table_name ADD COLUMN column_name column_type [KEY 
   
 **Example**
   
-1. 向 example_db.my_table 中添加多列，new_col 和 new_col2 都是 SUM 聚合类型(聚合模型)
+1. 向 example_db.my_table 中添加多列，new_col 和 new_col2 都是 SUM 聚合类型 (聚合模型)
 
   ```sql
   ALTER TABLE example_db.my_table
   ADD COLUMN (new_col1 INT SUM DEFAULT "0" ,new_col2 INT SUM DEFAULT "0");
   ```
 
-2. 向 example_db.my_table 中添加多列(非聚合模型)，其中 new_col1 为 KEY 列，new_col2 为 value 列
+2. 向 example_db.my_table 中添加多列 (非聚合模型)，其中 new_col1 为 KEY 列，new_col2 为 value 列
 
   ```sql
   ALTER TABLE example_db.my_table
@@ -127,8 +125,8 @@ ALTER TABLE [database.]table table_name ADD COLUMN column_name column_type [KEY 
   
 :::tip
   
-  - 聚合模型如果增加 value 列，需要指定agg_type
-  - 聚合模型如果增加key列，需要指定KEY关键字
+  - 聚合模型如果增加 value 列，需要指定 agg_type
+  - 聚合模型如果增加 key 列，需要指定 KEY 关键字
   - 不能在 rollup index 中增加 base index 中已经存在的列（如有需要，可以重新创建一个 rollup index）
 :::
 
@@ -151,7 +149,7 @@ ALTER TABLE [database.]table table_name ADD COLUMN column_name column_type [KEY 
 
 :::tip
   - 不能删除分区列
-  - 聚合模型不能删除KEY列
+  - 聚合模型不能删除 KEY 列
   - 如果是从 base index 中删除列，则如果 rollup index 中包含该列，也会被删除
 :::
 
@@ -199,7 +197,7 @@ ALTER TABLE [database.]table table_name MODIFY COLUMN column_name column_type [K
   
 :::tip
   - 聚合模型如果修改 value 列，需要指定 agg_type
-  - 非聚合类型如果修改key列，需要指定KEY关键字
+  - 非聚合类型如果修改 key 列，需要指定 KEY 关键字
   - 只能修改列的类型，列的其他属性维持原样（即其他属性需在语句中按照原属性显式的写出，参见 example 8）
   - 分区列和分桶列不能做任何修改
   - 目前支持以下类型的转换（精度损失由用户保证）
@@ -208,11 +206,11 @@ ALTER TABLE [database.]table table_name MODIFY COLUMN column_name column_type [K
     - VARCHAR 支持修改最大长度
     - VARCHAR/CHAR 转换成 TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE
     - VARCHAR/CHAR 转换成 DATE (目前支持"%Y-%m-%d", "%y-%m-%d", "%Y%m%d", "%y%m%d", "%Y/%m/%d, "%y/%m/%d"六种格式化格式)
-    - DATETIME 转换成 DATE(仅保留年-月-日信息, 例如: `2019-12-09 21:47:05` <--> `2019-12-09`)
-    - DATE 转换成 DATETIME(时分秒自动补零， 例如: `2019-12-09` <--> `2019-12-09 00:00:00`)
+    - DATETIME 转换成 DATE(仅保留年 - 月 - 日信息，例如：`2019-12-09 21:47:05` <--> `2019-12-09`)
+    - DATE 转换成 DATETIME(时分秒自动补零，例如：`2019-12-09` <--> `2019-12-09 00:00:00`)
     - FLOAT 转换成 DOUBLE
-    - INT 转换成 DATE (如果INT类型数据不合法则转换失败，原始数据不变)
-    - 除DATE与DATETIME以外都可以转换成STRING，但是STRING不能转换任何其他类型
+    - INT 转换成 DATE (如果 INT 类型数据不合法则转换失败，原始数据不变)
+    - 除 DATE 与 DATETIME 以外都可以转换成 STRING，但是 STRING 不能转换任何其他类型
 :::
 
 **5. 对指定表的列进行重新排序**
@@ -298,11 +296,11 @@ ALTER TABLE [database.]table table_name MODIFY COLUMN column_name column_type [K
   - key 列只能调整 key 列的范围内进行调整，value 列同理
 :::
 
-### Keywords
+## 关键词
 
 ```text
 ALTER, TABLE, COLUMN, ALTER TABLE
 ```
 
-### Best Practice
+### 最佳实践
 

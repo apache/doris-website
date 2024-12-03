@@ -30,7 +30,7 @@ under the License.
 
 BACKUP
 
-### Description
+## 描述
 
 该语句用于备份指定数据库下的数据。该命令为异步操作。
 
@@ -59,7 +59,7 @@ PROPERTIES ("key"="value", ...);
   -  "type" = "full"：表示这是一次全量更新（默认）
   - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。          
 
-### Example
+## 例子
 
 1. 全量备份 example_db 下的表 example_tbl 到仓库 example_repo 中：
 
@@ -97,13 +97,13 @@ BACKUP SNAPSHOT example_db.snapshot_label3
 TO example_repo;
 ```
 
-### Keywords
+## 关键词
 
 ```text
 BACKUP
 ```
 
-### Best Practice
+### 最佳实践
 
 1. 同一个数据库下只能进行一个备份操作。
 

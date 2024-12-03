@@ -30,7 +30,7 @@ under the License.
 
 SHOW TABLES
 
-### Description
+## 描述
 
 该语句用于展示当前 db 下所有的 table
 
@@ -75,9 +75,9 @@ SHOW [FULL] TABLES [LIKE]
    2 rows in set (0.00 sec)
    ```
 
-### Keywords
+## 关键词
 
     SHOW, TABLES
 
-### Best Practice
+## 最佳实践
 

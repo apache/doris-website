@@ -28,7 +28,7 @@ under the License.
 
 SHOW CREATE MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于查询创建物化视图的语句。
 
@@ -64,9 +64,9 @@ mysql> show create materialized view id_col1 on table3;
 1 row in set (0.00 sec)
 ```
 
-### Keywords
+## 关键词
 
     SHOW, MATERIALIZED, VIEW
 
-### Best Practice
+## 最佳实践
 

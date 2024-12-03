@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-TABLE-PROPERTY",
+    "title": "ALTER TABLE PROPERTY",
     "language": "zh-CN"
 }
 ---
@@ -24,11 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-TABLE-PROPERTY
 
-### Name
 
-ALTER TABLE PROPERTY
+
 
 :::caution
 分区属性与表属性的一些区别
@@ -41,7 +39,7 @@ ALTER TABLE PROPERTY
 - 具体属性可以参考[建表属性](../../../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)
 :::
 
-### Description
+## 描述
 
 该语句用于对已有 table 的 property 进行修改操作。这个操作是同步的，命令返回表示执行完毕。
 
@@ -181,7 +179,7 @@ ALTER TABLE example_db.mysql_table SET ("default.replication_allocation" = "tag.
 ALTER TABLE example_db.mysql_table SET ("light_schema_change" = "true");
 ```
 
-### Example
+## 例子
 
 1. 修改表的 bloom filter 列
 
@@ -291,11 +289,12 @@ ALTER TABLE example_db.mysql_table MODIFY ENGINE TO odbc PROPERTIES("driver" = "
 ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="created_create_table_partition_alter_policy");
 ```
 注：表的 partition 没有关联过 storage policy，才能被添加成功，一个表只能添加一个 storage policy
-### Keywords
+
+## 关键词
 
 ```text
 ALTER, TABLE, PROPERTY, ALTER TABLE
 ```
 
-### Best Practice
+
 

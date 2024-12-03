@@ -1,6 +1,6 @@
 ---
 {
-    "title": "UNINSTALL-PLUGIN",
+    "title": "UNINSTALL PLUGIN",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## UNINSTALL-PLUGIN
+
 
 ### Name
 
 UNINSTALL PLUGIN
 
-### Description
+## 描述
 
 该语句用于卸载一个插件。
 
@@ -44,7 +44,7 @@ UNINSTALL PLUGIN plugin_name;
 
 只能卸载非 builtin 的插件。
 
-### Example
+## 例子
 
 1. 卸载一个插件：
 
@@ -52,9 +52,9 @@ UNINSTALL PLUGIN plugin_name;
     UNINSTALL PLUGIN auditdemo;
     ```
 
-### Keywords
+## 关键词
 
     UNINSTALL, PLUGIN
 
-### Best Practice
+### 最佳实践
 

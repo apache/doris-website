@@ -30,7 +30,7 @@ under the License.
 
 ADMIN SET REPLICA VERSION
 
-### Description
+## 描述
 
 该语句用于设置指定副本的版本、最大成功版本、最大失败版本。
 
@@ -77,9 +77,9 @@ ADMIN SET REPLICA VERSION PROPERTIES("tablet_id" = "10003", "backend_id" = "1000
 ADMIN SET REPLICA VERSION PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "version" = "1004");
 ```
 
-### Keywords
+## 关键词
 
     ADMIN, SET, REPLICA, VERSION
 
-### Best Practice
+## 最佳实践
 

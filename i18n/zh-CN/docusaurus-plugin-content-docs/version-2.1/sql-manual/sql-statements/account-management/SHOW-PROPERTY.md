@@ -30,7 +30,7 @@ under the License.
 
 SHOW PROPERTY
 
-### Description
+## 描述
 
 该语句用于查看用户的属性
 
@@ -117,8 +117,8 @@ mysql> show all properties like "%connection%";
    SHOW ALL PROPERTIES LIKE '%load_cluster%'
    ```
 
-### Keywords
+## 关键词
 
     SHOW, PROPERTY, ALL
 
-### Best Practice
+## 最佳实践

@@ -28,7 +28,7 @@ under the License.
 
 CREATE SQL BLOCK RULE
 
-### Description
+## 描述
 
 该语句创建 SQL 阻止规则，该功能可用于限制任何 sql 语句（包括 DDL 和 DML 语句）。
 
@@ -146,11 +146,11 @@ CREATE SQL_BLOCK_RULE rule_name
 >
 >     \w：匹配任何单词字符，包括字母、数字和下划线，相当于 [a-zA-Z0-9_]。
 
-### Keywords
+## 关键词
 
 ```text
 CREATE, SQL_BLCOK_RULE
 ```
 
-### Best Practice
+## 最佳实践
 

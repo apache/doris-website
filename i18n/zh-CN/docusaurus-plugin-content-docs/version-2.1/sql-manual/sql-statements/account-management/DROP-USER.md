@@ -30,7 +30,7 @@ under the License.
 
 DROP USER
 
-### Description
+## 描述
 
 删除一个用户
 
@@ -53,9 +53,9 @@ DROP USER
     DROP USER 'jack'@'192.%'
     ```
 
-### Keywords
+## 关键词
 
     DROP, USER
 
-### Best Practice
+## 最佳实践
 

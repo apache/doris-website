@@ -1,6 +1,6 @@
 ---
 {
-    "title": "PAUSE-SYNC-JOB",
+    "title": "PAUSE SYNC JOB",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## PAUSE-SYNC-JOB
+
 
 ### Name
 
 PAUSE SYNC JOB
 
-### Description
+## 描述
 
 通过 `job_name` 暂停一个数据库内正在运行的常驻数据同步作业，被暂停的作业将停止同步数据，保持消费的最新位置，直到被用户恢复。
 
@@ -40,7 +40,7 @@ PAUSE SYNC JOB
 PAUSE SYNC JOB [db.]job_name
 ```
 
-### Example
+## 例子
 
 1. 暂停名称为 `job_name` 的数据同步作业。
 
@@ -48,9 +48,9 @@ PAUSE SYNC JOB [db.]job_name
    PAUSE SYNC JOB `job_name`;
    ```
 
-### Keywords
+## 关键词
 
     PAUSE, SYNC, JOB
 
-### Best Practice
+### 最佳实践
 

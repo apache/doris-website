@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-LOAD-PROFILE",
+    "title": "SHOW LOAD PROFILE",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-LOAD-PROFILE
+
 
 ### Name
 
@@ -34,7 +34,7 @@ SHOW LOAD PROFILE
 自 2.1.1 起，此语法被弃用。
 :::
 
-### Description
+## 描述
 
 该语句是用来查看导入操作的 Profile 信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：
 
@@ -64,7 +64,7 @@ show load profile "/[queryId]/[TaskId]/[FragmentId]/[InstanceId]"
 
 这个命令会列出当前保存的所有导入 Profile。每行对应一个导入。其中 QueryId 列为导入作业的 ID。这个 ID 也可以通过 SHOW LOAD 语句查看拿到。我们可以选择我们想看的 Profile 对应的 QueryId，查看具体情况
 
-### Example
+## 例子
 
 **1. 列出所有的 Load Profile**
 
@@ -226,9 +226,9 @@ Instance:
 └-----------------------------------------------------┘
 ```
 
-### Keywords
+## 关键词
 
 SHOW, LOAD, PROFILE
 
-### Best Practice
+### 最佳实践
 

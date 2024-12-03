@@ -30,7 +30,7 @@ under the License.
 
 ALTER SYSTEM MKDIFY BACKEND
 
-### Description
+## 描述
 
 修改 BE 节点属性（仅管理员使用！）
 
@@ -95,9 +95,9 @@ ALTER SYSTEM MKDIFY BACKEND
    ALTER SYSTEM MODIFY BACKEND "id1" SET ("disable_load" = "true");
     ```   
 
-### Keywords
+## 关键词
 
     ALTER, SYSTEM, ADD, BACKEND, ALTER SYSTEM
 
-### Best Practice
+## 最佳实践
 

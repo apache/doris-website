@@ -30,7 +30,7 @@ under the License.
 
 ADMIN COPY TABLET
 
-### Description
+## 描述
 
 该语句用于为指定的 tablet 制作快照，主要用于本地加载 tablet 来复现问题。
 
@@ -93,9 +93,9 @@ PROPERTIES (
     ADMIN COPY TABLET 10010 PROPERTIES("backend_id" = "10001", "version" = "10");
     ```
 
-### Keywords
+## 关键词
 
     ADMIN, COPY, TABLET
 
-### Best Practice
+## 最佳实践
 

@@ -28,7 +28,7 @@ under the License.
 
 CREATE MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于创建物化视图。
 
@@ -229,9 +229,9 @@ properties("replication_num" = "1");
    +----------------+-------+--------------+------+-------+---------+-------+
    ```
 
-### Keywords
+## 关键词
 
     CREATE, MATERIALIZED, VIEW
 
-### Best Practice
+## 最佳实践
 

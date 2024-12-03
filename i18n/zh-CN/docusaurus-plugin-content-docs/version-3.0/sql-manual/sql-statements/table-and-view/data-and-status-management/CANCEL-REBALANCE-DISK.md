@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN-CANCEL-REBALANCE-DISK",
+    "title": "CANCEL REBALANCE DISK",
     "language": "zh-CN"
 }
 ---
@@ -22,11 +22,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-CANCEL-REBALANCE-DISK
+
 
 ### Name
 ADMIN CANCEL REBALANCE DISK
-### Description
+
+## 描述
 
     该语句用于取消优先均衡BE的磁盘
 
@@ -36,21 +37,21 @@ ADMIN CANCEL REBALANCE DISK
 
     说明：
 
-        1. 该语句仅表示系统不再优先均衡指定BE的磁盘数据。系统仍会以默认调度方式均衡BE的磁盘数据。
+        1. 该语句仅表示系统不再优先均衡指定 BE 的磁盘数据。系统仍会以默认调度方式均衡 BE 的磁盘数据。
 
-### Example
+## 例子
 
-    1. 取消集群所有BE的优先磁盘均衡
+    1. 取消集群所有 BE 的优先磁盘均衡
 
         ADMIN CANCEL REBALANCE DISK;
 
-    2. 取消指定BE的优先磁盘均衡
+    2. 取消指定 BE 的优先磁盘均衡
 
         ADMIN CANCEL REBALANCE DISK ON ("192.168.1.1:1234", "192.168.1.2:1234");
 
-### Keywords
+## 关键词
 
     ADMIN,CANCEL,REBALANCE,DISK
 
-### Best Practice
+### 最佳实践
 

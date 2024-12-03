@@ -28,7 +28,7 @@ under the License.
 
 DROP RESOURCE
 
-### Description
+## 描述
 
 该语句用于删除一个已有的资源。仅 root 或 admin 用户可以删除资源。
 语法：
@@ -47,9 +47,9 @@ DROP RESOURCE 'resource_name'
     DROP RESOURCE 'spark0';
     ```
 
-### Keywords
+## 关键词
 
     DROP, RESOURCE
 
-### Best Practice
+## 最佳实践
 

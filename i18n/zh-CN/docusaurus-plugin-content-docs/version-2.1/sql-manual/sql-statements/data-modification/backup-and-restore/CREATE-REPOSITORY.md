@@ -30,7 +30,7 @@ under the License.
 
 CREATE REPOSITORY
 
-### Description
+## 描述
 
 该语句用于创建仓库。仓库用于属于备份或恢复。仅 root 或 superuser 用户可以创建仓库。
 
@@ -126,11 +126,11 @@ PROPERTIES
 );
 ```
 
-### Keywords
+## 关键词
 
     CREATE, REPOSITORY
 
-### Best Practice
+## 最佳实践
 
 1. 一个集群可以创建过多个仓库。只有拥有 ADMIN 权限的用户才能创建仓库。
 2. 任何用户都可以通过 [SHOW REPOSITORIES](../../../../sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-REPOSITORIES) 命令查看已经创建的仓库。

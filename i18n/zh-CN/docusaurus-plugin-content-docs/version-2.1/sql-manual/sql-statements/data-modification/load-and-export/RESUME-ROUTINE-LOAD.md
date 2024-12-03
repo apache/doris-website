@@ -30,7 +30,7 @@ under the License.
 
 RESUME ROUTINE LOAD
 
-### Description
+## 描述
 
 用于重启一个被暂停的 Routine Load 作业。重启的作业，将继续从之前已消费的 offset 继续消费。
 
@@ -52,9 +52,9 @@ RESUME [ALL] ROUTINE LOAD FOR job_name
    RESUME ALL ROUTINE LOAD;
    ```
 
-### Keywords
+## 关键词
 
     RESUME, ROUTINE, LOAD
 
-### Best Practice
+## 最佳实践
 
