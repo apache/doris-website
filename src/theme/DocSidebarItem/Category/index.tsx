@@ -12,8 +12,13 @@ import { translate } from '@docusaurus/Translate';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import DocSidebarItems from '@theme/DocSidebarItems';
 import type { Props } from '@theme/DocSidebarItem/Category';
+import useIsDocPage from '../../../hooks/use-is-doc';
 
 import './style.scss';
+
+interface DocSidebarItemCategoryProps extends Props {
+    length: number;
+}
 
 // If we navigate to a category and it becomes active, it should automatically
 // expand itself
@@ -104,7 +109,8 @@ export default function DocSidebarItemCategory({
     index,
     length,
     ...props
-}: Props): JSX.Element {
+}: DocSidebarItemCategoryProps): JSX.Element {
+    const [isDocsPage] = useIsDocPage(false);
     const { items, label, collapsible, className, href } = item;
     const {
         docs: {
@@ -139,7 +145,7 @@ export default function DocSidebarItemCategory({
             setCollapsed(true);
         }
     }, [collapsible, expandedItem, index, setCollapsed, autoCollapseCategories]);
-    
+
     return (
         <li
             className={clsx(
@@ -157,7 +163,7 @@ export default function DocSidebarItemCategory({
                     'menu__list-item-collapsible--active': isCurrentPage,
                 })}
             >
-                {level === 1 ? (
+                {level === 1 && isDocsPage ? (
                     <p className={clsx('title_level_1')}>{label}</p>
                 ) : (
                     <>
@@ -207,7 +213,7 @@ export default function DocSidebarItemCategory({
             <Collapsible
                 lazy
                 as="ul"
-                className={`menu__list ${level === 1 ? 'menu__list_level_2' : ''}`}
+                className={`menu__list ${level === 1 ? 'menu__list_level_2' : ''} ${level === 1 && !isDocsPage ? 'community_level_2' : ''} `}
                 collapsed={collapsed}
             >
                 <DocSidebarItems
@@ -218,7 +224,7 @@ export default function DocSidebarItemCategory({
                     level={level + 1}
                 />
             </Collapsible>
-            {level === 1 && index !== length - 1 ? <div className='divider'></div> : null}
+            {level === 1 && index !== length - 1 && isDocsPage ? <div className="divider"></div> : null}
         </li>
     );
 }
