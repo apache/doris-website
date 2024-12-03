@@ -28,7 +28,7 @@ This document primarily introduces the updates based on the load data on the Dor
 
 ## Full Row Update
 
-When load data into the primary key model (Unique model) in Doris using supported load methods such as Stream Load, Broker Load, Routine Load, Insert Into, etc., if there are no corresponding data rows with the primary key, new data will be inserted. If there are corresponding data rows with the primary key, the data will be updated. In other words, load data into the Doris primary key model follows an "upsert" mode. Based on the import, updating existing records is by default the same as load a new record. Therefore, you can refer to the data load documentation section for more details.
+When loading data into the primary key model (Unique model) in Doris using supported load methods such as Stream Load, Broker Load, Routine Load, Insert Into, etc., if there are no corresponding data rows with the primary key, new data will be inserted. If there are corresponding data rows with the primary key, the data will be updated. In other words, loading data into the Doris primary key model follows an "upsert" mode. Based on the import, updating existing records is by default the same as loading a new record. Therefore, you can refer to the data load documentation section for more details.
 
 ## Partial Update
 
@@ -70,7 +70,7 @@ If you are using Stream Load/Broker Load/Routine Load, add the following header 
 partial_columns: true
 ```
 
-Also, specify the columns to be loaded in the `columns` section (all key columns must be included, otherwise updates won't be possible). Below is an example of Stream Load:.
+Also, specify the columns to be loaded in the `columns` section (all key columns must be included, otherwise updates won't be possible). Below is an example of Stream Load:
 
 ```sql
 $ curl --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
@@ -123,8 +123,6 @@ SET enable_unique_key_partial_update=true;
 INSERT INTO order_tbl (order_id, order_status) VALUES (1,'To be shipped');
 ```
 
-The translated version in English:
-
 After the update, the result is as follows:
 
 ```sql
@@ -150,6 +148,6 @@ Suggestions for improving load performance:
 "store_row_column" = "true"
 ```
 
-Now, all rows in a batch write task (whether it is an load task or `INSERT INTO`) can only update the same columns. If you need to update different columns, you will need to perform separate batch writes.
+Now, all rows in a batch write task (whether it is a load task or `INSERT INTO`) can only update the same columns. If you need to update different columns, you will need to perform separate batch writes.
 
 In the future, flexible column updates will be supported, allowing users to update different columns for each row within the same batch load.
