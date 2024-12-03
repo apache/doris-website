@@ -114,7 +114,7 @@ TO example_repo;
 ```sql
 BACKUP GLOBAL SNAPSHOT snapshot_label6
 TO example_repo
-PROPERTIES ("backup_privileges" = "true", "backup_catalogs"="true");
+PROPERTIES ("backup_privilege" = "true", "backup_catalog"="true");
 ```
 
 
