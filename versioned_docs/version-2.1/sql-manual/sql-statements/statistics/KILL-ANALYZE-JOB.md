@@ -26,7 +26,7 @@ under the License.
 
 
 
-# Description
+## Description
 
 Stop the statistical information collection job that is being executed in the background.
 

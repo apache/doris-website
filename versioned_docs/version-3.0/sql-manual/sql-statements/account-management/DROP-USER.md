@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-USER",
+    "title": "DROP USER",
     "language": "en"
 }
 ---
@@ -55,7 +55,7 @@ Delete a user
 
 ### Keywords
 
-    DROP, USER
+DROP, USER
 
-### Best Practice
+
 

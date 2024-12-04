@@ -26,11 +26,6 @@ under the License.
 -->
 
 
-
-### Name
-
-BACKUP
-
 ### Description
 
 This statement is used to back up the data under the specified database. This command is an asynchronous operation. After the submission is successful, you need to check the progress through the SHOW BACKUP command. Only backing up tables of type OLAP is supported.

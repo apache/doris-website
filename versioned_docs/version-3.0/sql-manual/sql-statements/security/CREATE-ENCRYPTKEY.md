@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-CREATE ENCRYPTKEY
-
 ### Description
 
 This statement creates a custom key. Executing this command requires the user to have `ADMIN` privileges.

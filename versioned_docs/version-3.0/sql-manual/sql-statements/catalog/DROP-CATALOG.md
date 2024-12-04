@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-CATALOG",
+    "title": "DROP CATALOG",
     "language": "en"
 }
 ---
@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-CATALOG
 
-### Name
-
-CREATE CATALOG
 
 ### Description
 

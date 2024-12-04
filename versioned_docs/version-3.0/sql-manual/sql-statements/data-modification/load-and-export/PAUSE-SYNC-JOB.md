@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-PAUSE SYNC JOB
-
 ### Description
 
 Pause a running resident data synchronization job in a database via `job_name`. The suspended job will stop synchronizing data and keep the latest position of consumption until it is resumed by the user.

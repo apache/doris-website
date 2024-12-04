@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-PAUSE ROUTINE LOAD
-
 ### Description
 
 Used to pause a Routine Load job. A suspended job can be rerun with the RESUME command.

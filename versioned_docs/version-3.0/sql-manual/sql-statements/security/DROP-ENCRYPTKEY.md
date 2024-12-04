@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-DROP ENCRYPTKEY
-
 ### Description
 
 grammar:

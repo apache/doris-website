@@ -26,14 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW LOAD PROFILE
-
-:::caution
-Since 2.1.1, this syntax is deprecated.
-:::
-
 ### Description
 
 This statement is used to view the Profile information of the import operation. This function requires the user to open the Profile settings. The versions before 0.15 perform the following settings:

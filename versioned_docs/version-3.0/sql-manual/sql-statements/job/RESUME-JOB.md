@@ -1,6 +1,6 @@
 ---
 {
-"title": "RESUME-JOB",
+"title": "RESUME JOB",
 "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## RESUME-JOB
-
-### Name
-
-RESUME JOB
 
 ### Description
 

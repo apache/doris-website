@@ -23,6 +23,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
 ## Description
 
 In the storage-computing coupled mode, this is used to trigger a compaction for all replicas under the specified table partition.

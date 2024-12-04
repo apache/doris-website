@@ -1,6 +1,6 @@
 ---
 {
-"title": "DROP-JOB",
+"title": "DROP JOB",
 "language": "en"
 }
 ---
@@ -23,12 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-## DROP-JOB
-
-### Name
-
-DROP JOB
 
 ### Description
 

@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ADMIN SET REPLICA VERSION
-
 ### Description
 
 This statement is used to set the version, maximum success version, and maximum failure version of the specified replica.

@@ -27,9 +27,6 @@ under the License.
 
 
 
-### Name
-
-SHOW PROCESSLIST
 
 ### Description
 

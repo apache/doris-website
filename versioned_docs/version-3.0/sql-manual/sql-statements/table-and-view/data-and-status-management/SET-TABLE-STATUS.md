@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN SET TABLE STATUS",
+    "title": "SET TABLE STATUS",
     "language": "en"
 }
 ---
@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-ADMIN SET TABLE STATUS
 
 ### Description
 

@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-DROP FILE
-
 ### Description
 
 This statement is used to delete an uploaded file.

@@ -24,15 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## REFRESH-LDAP
-
-### Name
-
-
-
-REFRESH-LDAP
-
-
 
 ### Description
 

@@ -26,15 +26,13 @@ under the License.
 
 
 
-### Name
 
-SHOW FRONTENDS
 
 ### Description
 
 This statement is used to view FE nodes
 
-  grammar:
+grammar:
 
 ```sql
 SHOW FRONTENDS;
@@ -51,11 +49,11 @@ illustrate:
 7. ErrMsg is used to display the error message when the heartbeat fails.
 8. CurrentConnected indicates whether the FE node is currently connected
 
-### Example
+
 
 ### Keywords
 
-    SHOW, FRONTENDS
+SHOW, FRONTENDS
 
-### Best Practice
+
 

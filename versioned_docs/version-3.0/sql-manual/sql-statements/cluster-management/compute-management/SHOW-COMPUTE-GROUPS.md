@@ -33,7 +33,7 @@ This command assists administrators and users in quickly understanding the exist
 ## Syntax
 
 ```sql
-    SHOW COMPUTE GROUPS
+SHOW COMPUTE GROUPS
 ```
 
 
@@ -55,4 +55,4 @@ This command returns a result set containing the following columns:
 
 ## Keywords
 
-    SHOW, COMPUTE GROUPS
+SHOW, COMPUTE GROUPS

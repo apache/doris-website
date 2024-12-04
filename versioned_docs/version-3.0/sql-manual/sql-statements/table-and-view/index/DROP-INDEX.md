@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-INDEX",
+    "title": "DROP INDEX",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-INDEX
-
-### Name
-
-DROP INDEX
 
 ### Description
 

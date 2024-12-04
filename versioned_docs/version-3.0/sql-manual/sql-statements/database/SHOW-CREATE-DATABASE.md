@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-DATABASE",
+    "title": "SHOW CREATE DATABASE",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-DATABASE
-
-### Name
-
-SHOW CREATE DATABASE
 
 ### Description
 

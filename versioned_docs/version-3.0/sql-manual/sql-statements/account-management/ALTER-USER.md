@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-USER",
+    "title": "ALTER USER",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER USER
-
-### Name
-
-ALTER USER
 
 ### Description
 
@@ -71,31 +66,31 @@ In an ALTER USER command, only one of the following account attributes can be mo
 
 1. Change the user's password
 
-    ```
+    ```sql
     ALTER USER jack@'%' IDENTIFIED BY "12345";
     ```
 
 2. Modify the user's password policy
 	
-    ```
+    ```sql
     ALTER USER jack@'%' FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY;
     ```
 
 3. Unlock a user
 
-    ```
+    ```sql
     ALTER USER jack@'%' ACCOUNT_UNLOCK
     ```
 
 4. Modify the user's comment
 
-    ```
+    ```sql
     ALTER USER jack@'%' COMMENT "this is my first user"
     ```
 
 ### Keywords
 
-    ALTER, USER
+ALTER, USER
 
 ### Best Practice
 

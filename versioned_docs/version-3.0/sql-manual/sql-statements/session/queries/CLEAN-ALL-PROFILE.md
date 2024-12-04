@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CLEAN-PROFILE
-
-### Name
-
-CLEAN PROFILE
-
 ### Description
 
 For manual cleanup all of historical query or load profile.

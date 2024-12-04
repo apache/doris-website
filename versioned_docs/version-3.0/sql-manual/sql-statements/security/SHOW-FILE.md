@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW FILE
-
 ### Description
 
 This statement is used to display a file created in a database

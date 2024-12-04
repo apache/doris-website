@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW SQL BLOCK RULE
-
 ### Description
 
 View the configured SQL blocking rules. If you do not specify a rule name, you will view all rules.

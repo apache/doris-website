@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN COPY TABLET",
+    "title": "COPY TABLET",
     "language": "en"
 }
 ---
@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-ADMIN COPY TABLET
 
 ### Description
 

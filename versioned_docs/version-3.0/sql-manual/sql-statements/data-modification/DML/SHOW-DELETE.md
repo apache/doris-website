@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW DELETE
-
 ### Description
 
 This statement is used to display the historical delete tasks that have been successfully executed

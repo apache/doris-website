@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN REBALANCE DISK",
+    "title": "REBALANCE DISK",
     "language": "en"
 }
 
@@ -25,9 +25,6 @@ under the License.
 
 
 
-:::tip Tips
-This feature is supported since the Apache Doris 1.2 version
-:::
 
 ### Name
 

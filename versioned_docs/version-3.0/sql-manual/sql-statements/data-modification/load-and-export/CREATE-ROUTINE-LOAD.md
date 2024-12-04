@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-CREATE ROUTINE LOAD
-
 ### Description
 
 The Routine Load function allows users to submit a resident import task, and import data into Doris by continuously reading data from a specified data source.

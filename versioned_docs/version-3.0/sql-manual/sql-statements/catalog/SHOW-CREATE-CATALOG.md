@@ -27,13 +27,6 @@ under the License.
 
 
 
-### Name
-
-:::tip Tips
-This feature is supported since the Apache Doris 1.2 version
-:::
-
-SHOW CREATE CATALOG
 
 ### Description
 
@@ -59,7 +52,7 @@ illustrate:
 
 ### Keywords
 
-    SHOW, CREATE, CATALOG
+SHOW, CREATE, CATALOG
 
 ### Best Practice
 

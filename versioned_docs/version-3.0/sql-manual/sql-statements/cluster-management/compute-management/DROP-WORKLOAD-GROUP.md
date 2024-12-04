@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-DROP WORKLOAD GROUP
-
  
 
 ### Description

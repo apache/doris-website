@@ -27,10 +27,6 @@ under the License.
 
 
 
-### Name
-
-USE
-
 ### Description
 
 The USE command allows us to use the database

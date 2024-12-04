@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CATALOG-RECYCLE-BIN",
+    "title": "SHOW CATALOG RECYCLE BIN",
     "language": "en"
 }
 ---
@@ -23,12 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-## SHOW-CATALOG-RECYCLE-BIN
-
-### Name
-
-SHOW CATALOG RECYCLE BIN
 
 ### Description
 

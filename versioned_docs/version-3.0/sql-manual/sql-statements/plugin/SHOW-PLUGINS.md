@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-PLUGINS",
+    "title": "SHOW PLUGINS",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-PLUGINS
-
-### Name
-
-SHOW PLUGINS
 
 ### Description
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-DATABASE",
+    "title": "ALTER DATABASE",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-DATABASE
-
-### Name
-
-ALTER DATABASE
 
 ### Description
 

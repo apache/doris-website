@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER SQL BLOCK RULE
-
 ### Description
 
 Modify SQL blocking rules to allow modification of each item such as sql/sqlHash/partition_num/tablet_num/cardinality/global/enable.

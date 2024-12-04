@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW REPLICA STATUS
-
 ### Description
 
 This statement is used to display replica status information for a table or partition.

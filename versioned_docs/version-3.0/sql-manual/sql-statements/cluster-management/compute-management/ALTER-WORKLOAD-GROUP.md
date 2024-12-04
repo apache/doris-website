@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-ALTER WORKLOAD GROUP
-
  
 
 ### Description

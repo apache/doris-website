@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-UPDATE
-
 ### Description
 
 This statement is used to update the data. The UPDATE statement currently only supports the UNIQUE KEY model.
