@@ -73,6 +73,11 @@
                 border: none !important;
                 outline: none !important;
             }
+            .navbar__search span span {
+                max-height: 580px !important;
+                overflow: scroll !important;
+                top: 2.5rem !important;
+            }
         }
     }
 
