@@ -141,7 +141,7 @@ Doris 支持将当前数据以文件的形式备份到 HDFS 和对象存储。�
    1 row in set (0.15 sec)
    ```
 
-BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md)。
+BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md)。
 
 ## 最佳实践
 
@@ -173,11 +173,11 @@ BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-De
 
 1. CREATE REPOSITORY
 
-   创建一个远端仓库路径，用于备份或恢复。具体参考 [创建远程仓库文档](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md)。
+   创建一个远端仓库路径，用于备份或恢复。具体参考 [创建远程仓库文档](./../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md)。
 
 2. BACKUP
 
-   执行一次备份操作。具体参考 [备份文档](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md)。
+   执行一次备份操作。具体参考 [备份文档](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md)。
 
 3. SHOW BACKUP
 
