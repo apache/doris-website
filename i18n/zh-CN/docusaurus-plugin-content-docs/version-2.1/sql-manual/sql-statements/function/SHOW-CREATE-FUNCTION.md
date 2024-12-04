@@ -46,7 +46,7 @@ SHOW CREATE [GLOBAL] FUNCTION function_name(arg_type [, ...]) [FROM db_name]];
 
 **注意："global"关键字在 v2.0 版本及以后才可用**
 
-### Example
+## Examples
 
 1. 展示默认 db 下指定函数的创建语句
    

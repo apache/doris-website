@@ -43,7 +43,7 @@ USE <[CATALOG_NAME].DATABASE_NAME>
 说明：
 1. 使用`USE CATALOG_NAME.DATABASE_NAME`, 会先将当前的 Catalog 切换为`CATALOG_NAME`, 然后再讲当前的 Database 切换为`DATABASE_NAME`
 
-### Example
+## Examples
 
 1. 如果 demo 数据库存在，尝试使用它：
 

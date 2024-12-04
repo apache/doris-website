@@ -48,7 +48,7 @@ AS query_stmt
 - 视图都是逻辑上的，其中的数据不会存储在物理介质上，在查询时视图将作为语句中的子查询，因此，修改视图的定义等价于修改 query_stmt。
 - query_stmt 为任意支持的 SQL 
 
-### Example
+## Examples
 
 
 1、修改 example_db 上的视图 example_view

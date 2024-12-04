@@ -38,7 +38,7 @@ ALTER ROLE
  ALTER ROLE role_name comment;
 ```
 
-### Example
+## Examples
 
 1. 修改一个角色的注释
 

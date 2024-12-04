@@ -29,7 +29,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to set properties of the specified catalog. (administrator only)
 
@@ -68,7 +68,7 @@ illustrate：
 
 - The builtin catalog `internal` cannot be modified
 
-### Example
+## Example
 
 1. rename catalog ctlg_hive to hive
 
@@ -88,9 +88,9 @@ illustrate：
   ALTER CATALOG hive MODIFY COMMENT "new catalog comment";
   ```
 
-### Keywords
+## Keywords
 
 ALTER,CATALOG,RENAME,PROPERTY
 
-### Best Practice
+## Best Practice
 

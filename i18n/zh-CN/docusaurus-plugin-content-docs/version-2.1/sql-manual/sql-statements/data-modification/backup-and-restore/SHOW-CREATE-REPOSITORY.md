@@ -44,7 +44,7 @@ SHOW CREATE REPOSITORY for repository_name;
 说明：
 - `repository_name`: 仓库名称
 
-### Example
+## Examples
 
 1. 展示指定仓库的创建语句
 

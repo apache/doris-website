@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to view BACKUP tasks
 
@@ -61,7 +61,7 @@ illustrate:
        - `Status`: If the job fails, display the failure message
        - `Timeout`: Job timeout, in seconds
 
-### Example
+## Example
 
 1. View the last BACKUP task under example_db.
 
@@ -69,9 +69,9 @@ illustrate:
     SHOW BACKUP FROM example_db;
    ```
 
-### Keywords
+## Keywords
 
     SHOW, BACKUP
 
-### Best Practice
+## Best Practice
 

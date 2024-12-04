@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This command is used to create a storage vault. The subject of this document describes the syntax for creating Doris self-maintained storage vault.
 
@@ -68,7 +68,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 | `hadoop.kerberos.keytab`         | optional    | The path to your kerberos keytab.                                                       |
 
 
-### Example
+## Example
 
 1. create a HDFS storage vault.
     ```sql
@@ -167,6 +167,6 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         );
    ```
 
-### Keywords
+## Keywords
 
     CREATE, STORAGE VAULT

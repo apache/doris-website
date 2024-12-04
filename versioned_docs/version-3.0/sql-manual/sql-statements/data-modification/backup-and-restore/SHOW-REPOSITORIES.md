@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to view the currently created warehouse
 
@@ -48,7 +48,7 @@ illustrate:
         Broker: Dependent Broker
         ErrMsg: Doris will regularly check the connectivity of the warehouse, if there is a problem, an error message will be displayed here
 
-### Example
+## Example
 
 1. View the created repository:
 
@@ -56,9 +56,9 @@ illustrate:
   SHOW REPOSITORIES;
 ```
 
-### Keywords
+## Keywords
 
     SHOW, REPOSITORIES
 
-### Best Practice
+## Best Practice
 

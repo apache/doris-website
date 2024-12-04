@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to delete the BACKEND node (administrator only!)
 
@@ -50,7 +50,7 @@ illustrate:
 2. heartbeat_port is the heartbeat port of the node
 3. Adding and deleting nodes is a synchronous operation. These two operations do not consider the existing data on the node, and the node is directly deleted from the metadata, please use it with caution.
 
-### Example
+## Examples
 
 1. Delete two nodes
 
@@ -62,9 +62,9 @@ illustrate:
     ALTER SYSTEM DROP BACKEND "ids1", "ids2";
     ```
 
-### Keywords
+## Keywords
 
     ALTER, SYSTEM, DROP, BACKEND, ALTER SYSTEM
 
-### Best Practice
+## Best Practice
 

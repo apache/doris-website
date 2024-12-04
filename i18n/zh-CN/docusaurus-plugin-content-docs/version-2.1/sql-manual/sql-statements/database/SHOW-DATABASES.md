@@ -46,7 +46,7 @@ SHOW DATABASES [FROM catalog] [filter expr];
 4. `SHOW DATABASES FROM catalog filter_expr` 这种语法不支持。
 
 
-### Example
+## Examples
 1. 展示当前所有的数据库名称。
 
 

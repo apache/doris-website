@@ -36,7 +36,7 @@ DROP JOB
 DROP JOB where jobName='jobname';
 ```
 
-### Example
+## Examples
 
 1. 停止名称为 example 的作业。
 

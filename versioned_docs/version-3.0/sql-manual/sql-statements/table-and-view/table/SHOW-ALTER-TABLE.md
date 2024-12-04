@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW ALTER",
+    "title": "SHOW ALTER TABLE",
     "language": "en"
 }
 ---
@@ -26,11 +26,7 @@ under the License.
 
 
 
-### Name
-
-SHOW ALTER
-
-### Description
+## Description
 
 This statement is used to display the execution of various modification tasks currently in progress
 
@@ -44,7 +40,7 @@ TABLE COLUMN: show ALTER tasks that modify columns
         If db_name is not specified, the current default db is used
         CLUSTER: Displays tasks related to cluster operations (only for administrators! To be implemented...)
 
-### Example
+## Example
 
 1. Display the task execution of all modified columns of the default db
 
@@ -70,9 +66,9 @@ TABLE COLUMN: show ALTER tasks that modify columns
    SHOW ALTER CLUSTER;
    ```
 
-### Keywords
+## Keywords
 
     SHOW, ALTER
 
-### Best Practice
+## Best Practice
 

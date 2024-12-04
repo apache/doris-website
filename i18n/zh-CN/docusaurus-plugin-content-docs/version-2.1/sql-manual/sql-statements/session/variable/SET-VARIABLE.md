@@ -51,7 +51,7 @@ SET variable_assignment [, variable_assignment] ...
 > 1. 只有 ADMIN 用户可以设置变量的全局生效
 > 2. 全局生效的变量影响当前会话和此后的新会话，不影响当前已经存在的其他会话。
 
-### Example
+## Examples
 
 1. 设置时区为东八区
 

@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to set properties of the specified catalog. (administrator only)
 
@@ -64,7 +64,7 @@ ALTER CATALOG catalog_name MODIFY COMMENT "new catalog comment";
 illustrate：
 - The builtin catalog `internal` cannot be modified
 
-### Example
+## Examples
 
 1. rename catalog ctlg_hive to hive
 
@@ -84,9 +84,9 @@ ALTER CATALOG hive SET PROPERTIES ('hive.metastore.uris'='thrift://172.21.0.1:90
 ALTER CATALOG hive MODIFY COMMENT "new catalog comment";
 ```
 
-### Keywords
+## Keywords
 
 ALTER,CATALOG,RENAME,PROPERTY
 
-### Best Practice
+## Best Practice
 

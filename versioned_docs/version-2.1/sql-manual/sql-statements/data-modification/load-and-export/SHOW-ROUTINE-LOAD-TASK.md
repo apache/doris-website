@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 View the currently running subtasks of a specified Routine Load job.
 
@@ -61,7 +61,7 @@ DataSourceProperties: {"0":19}
 - `BeId`: The ID of the BE node executing this subtask.
 - `DataSourceProperties`: The starting offset of the Kafka Partition that the subtask is ready to consume. is a Json format string. Key is Partition Id. Value is the starting offset of consumption.
 
-### Example
+## Examples
 
 1. Display the subtask information of the routine import task named test1.
 
@@ -69,11 +69,11 @@ DataSourceProperties: {"0":19}
    SHOW ROUTINE LOAD TASK WHERE JobName = "test1";
    ```
 
-### Keywords
+## Keywords
 
     SHOW, ROUTINE, LOAD, TASK
 
-### Best Practice
+## Best Practice
 
 With this command, you can view how many subtasks are currently running in a Routine Load job, and which BE node is running on.
 

@@ -39,7 +39,7 @@ DROP INDEX
 DROP INDEX [IF EXISTS] index_name ON [db_name.]table_name;
 ```
 
-### Example
+## Examples
 
 1. 删除索引
 

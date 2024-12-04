@@ -83,7 +83,7 @@ categories:
    sql-statements
 ```
 
-### Example
+## Examples
 
 1. 列出 Doris 所有的 SQL 帮助目录
 

@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to cancel the repair of the specified table or partition with high priority
 
@@ -39,7 +39,7 @@ illustrate:
 
 1. This statement simply means that the system will no longer repair shard copies of the specified table or partition with high priority. Replicas are still repaired with the default schedule.
 
-### Example
+## Example
 
   1. Cancel high priority repair
 
@@ -47,9 +47,9 @@ illustrate:
       ADMIN CANCEL REPAIR TABLE tbl PARTITION(p1);
      ```
 
-### Keywords
+## Keywords
 
     ADMIN, CANCEL, REPAIR
 
-### Best Practice
+## Best Practice
 

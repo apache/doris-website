@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement checks the creation of the doris database, support database from both internal catalog and hms catalog
 
@@ -40,7 +40,7 @@ illustrate:
 - `db_name`: The name of the database
 - if specific a database from hms catalog, will return same with this stmt in hive
 
-### Example
+## Example
 
 1. View the creation of the test database in doris internal catalog
 
@@ -66,8 +66,8 @@ illustrate:
     1 row in set (0.01 sec)  
     ```
    
-### Keywords
+## Keywords
 
      SHOW, CREATE, DATABASE
 
-### Best Practice
+## Best Practice

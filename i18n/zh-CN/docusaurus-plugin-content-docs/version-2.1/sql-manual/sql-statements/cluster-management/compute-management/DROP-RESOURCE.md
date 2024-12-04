@@ -39,7 +39,7 @@ DROP RESOURCE 'resource_name'
 
 注意：正在使用的 ODBC/S3 资源无法删除。
 
-### Example
+## Examples
 
 1. 删除名为 spark0 的 Spark 资源：
     

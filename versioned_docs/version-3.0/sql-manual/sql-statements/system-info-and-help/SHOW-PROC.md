@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The Proc system is a unique feature of Doris. Students who have used Linux may understand this concept better. In Linux systems, proc is a virtual file system, usually mounted in the /proc directory. Users can view the internal data structure of the system through this file system. For example, you can view the details of the specified pid process through /proc/pid.
 
@@ -106,7 +106,7 @@ illustrate:
 23. transactions : used to view the transaction details of the specified transaction id, equivalent to [SHOW TRANSACTION](./SHOW-TRANSACTION.md)
 24. trash: This statement is used to view the space occupied by garbage data in the backend. Equivalent to [SHOW TRASH](./SHOW-TRASH.md)
 
-### Example
+## Example
 
 1. For example, "/dbs" displays all databases, and "/dbs/10002" displays all tables under the database with id 10002
 
@@ -267,9 +267,9 @@ illustrate:
 	5 rows in set
 	```
 
-### Keywords
+## Keywords
 
     SHOW, PROC
 
-### Best Practice
+## Best Practice
 

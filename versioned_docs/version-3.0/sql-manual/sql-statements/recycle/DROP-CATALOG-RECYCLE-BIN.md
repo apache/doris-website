@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to delete db/table/partition in catalog recycle bin instantly.
 
@@ -58,7 +58,7 @@ illustrate:
 - `'DbId'`, `'TableId'` and `'PartitionId'` will be case-insensitive and not distinguish between `'` and `''`.
 - When drop a database which is not in catalog recycle bin, it will also delete all tables and partitions with same DbId in catalog recycle bin. Only if nothing is deleted, it will report an error. When drop a table which is not in catalog recycle bin, the treatment is similar.
 
-### Example
+## Example
 
 1. Delete the database(include tables and partitions with same DbId) with id example_db_id
 
@@ -78,9 +78,9 @@ illustrate:
   DROP CATALOG RECYCLE BIN WHERE 'PartitionId' = p1_id;
   ```
 
-### Keywords
+## Keywords
 
 DROP, CATALOG, RECYCLE, BIN
 
-### Best Practice
+## Best Practice
 

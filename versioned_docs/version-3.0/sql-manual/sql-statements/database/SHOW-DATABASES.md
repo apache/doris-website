@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to display the currently visible db
 
@@ -41,7 +41,7 @@ illustrate:
 3. `SHOW DATABASES filter_expr` will get filtered database names from current catalog.
 4. `SHOW DATABASES FROM catalog filter_expr` is not support yet.
 
-### Example
+## Example
 1. Display all the database names from current catalog.
 
    ```sql
@@ -86,9 +86,9 @@ illustrate:
   +--------------------+
    ```
 
-### Keywords
+## Keywords
 
     SHOW, DATABASES
 
-### Best Practice
+## Best Practice
 

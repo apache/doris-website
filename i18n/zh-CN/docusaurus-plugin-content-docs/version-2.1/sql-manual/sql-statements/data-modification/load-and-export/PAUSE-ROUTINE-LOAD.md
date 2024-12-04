@@ -38,7 +38,7 @@ PAUSE ROUTINE LOAD
 PAUSE [ALL] ROUTINE LOAD FOR job_name
 ```
 
-### Example
+## Examples
 
 1. 暂停名称为 test1 的例行导入作业。
 

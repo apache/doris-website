@@ -74,7 +74,7 @@ SHOW [BRIEF] RESTORE [FROM DB_NAME]
 
 
 
-### Example
+## Examples
 
 1. 查看 example_db 下最近一次 RESTORE 任务。
     

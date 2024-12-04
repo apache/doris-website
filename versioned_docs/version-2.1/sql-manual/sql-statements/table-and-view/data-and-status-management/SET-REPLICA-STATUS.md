@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to set the state of the specified replica.
 
@@ -53,7 +53,7 @@ If the specified replica does not exist, or the status is already bad, it will b
 >
 > A replica set to Drop, it can still be read and written. A healthy replica will be added to other machines first, and then this replica will be deleted. Compared with setting Bad, setting Drop is safer.
 
-### Example
+## Examples
 
  1. Set the replica status of tablet 10003 on BE 10001 to bad.
 
@@ -74,9 +74,9 @@ If the specified replica does not exist, or the status is already bad, it will b
    ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "ok");
    ```
 
-### Keywords
+## Keywords
 
     ADMIN, SET, REPLICA, STATUS
 
-### Best Practice
+## Best Practice
 

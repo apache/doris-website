@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 View all custom keys under the database. If the user specifies a database, check the corresponding database, otherwise directly query the database where the current session is located.
 
@@ -43,7 +43,7 @@ parameter
 >`db`: database name to query
 >`key_pattern`: parameter used to filter key names
 
-### Example
+## Example
 
  ```sql
     mysql> SHOW ENCRYPTKEYS;
@@ -63,9 +63,9 @@ parameter
     1 row in set (0.00 sec)
  ```
 
-### Keywords
+## Keywords
 
     SHOW, ENCRYPT, KEY
 
-### Best Practice
+## Best Practice
 

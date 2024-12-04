@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
   This statement is used to display information about indexes in a table.
 
@@ -37,7 +37,7 @@ or
 SHOW KEY[S] FROM [db_name.]table_name [FROM database];
 ```
 
-### Example
+## Examples
 
   1. Display the lower index of the specified table_name
 
@@ -45,9 +45,9 @@ SHOW KEY[S] FROM [db_name.]table_name [FROM database];
       SHOW INDEX FROM example_db.table_name;
      ```
 
-### Keywords
+## Keywords
 
     SHOW, INDEX
 
-### Best Practice
+## Best Practice
 

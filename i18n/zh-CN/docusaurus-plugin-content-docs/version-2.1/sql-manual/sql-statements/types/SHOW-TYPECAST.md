@@ -44,7 +44,7 @@ Parameters
 
 `db`: database name to query
 
-### Example
+## Examples
 
 ```sql
 mysql> show type_cast in testDb\G

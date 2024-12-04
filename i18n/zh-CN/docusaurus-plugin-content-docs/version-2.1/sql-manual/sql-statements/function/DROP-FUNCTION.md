@@ -44,7 +44,7 @@ DROP [GLOBAL] FUNCTION function_name
 - `function_name`: 要删除函数的名字
 - `arg_type`: 要删除函数的参数列表
 
-### Example
+## Examples
 
 1. 删除掉一个函数
 

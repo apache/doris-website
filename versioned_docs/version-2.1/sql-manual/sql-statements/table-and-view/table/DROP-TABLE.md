@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to drop a table.
 grammar:
@@ -42,7 +42,7 @@ illustrate:
 - After executing DROP TABLE for a period of time, the dropped table can be recovered through the RECOVER statement. See [RECOVER](../../../../sql-manual/sql-statements/recycle/RECOVER) statement for details
 - If you execute DROP TABLE FORCE, the system will not check whether there are unfinished transactions in the table, the table will be deleted directly and cannot be recovered, this operation is generally not recommended
 
-### Example
+## Examples
 
 1. Delete a table
    
@@ -56,8 +56,8 @@ illustrate:
      DROP TABLE IF EXISTS example_db.my_table;
      ```
 
-### Keywords
+## Keywords
 
      DROP, TABLE
 
-### Best Practice
+## Best Practice

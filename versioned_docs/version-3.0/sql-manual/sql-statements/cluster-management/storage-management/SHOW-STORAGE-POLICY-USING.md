@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 This command is used to show tables and partitions which is using storage policy
 
@@ -32,7 +32,7 @@ This command is used to show tables and partitions which is using storage policy
 SHOW STORAGE POLICY USING [FOR some_policy]
 ```
 
-### Example
+## Example
 
 1. get all objects which are using storage policy
 
@@ -61,8 +61,8 @@ SHOW STORAGE POLICY USING [FOR some_policy]
     +---------------------+-----------+---------------------------------+------------+
    ```
 
-### Keywords
+## Keywords
 
     SHOW, STORAGE, POLICY, USING
 
-### Best Practice
+## Best Practice

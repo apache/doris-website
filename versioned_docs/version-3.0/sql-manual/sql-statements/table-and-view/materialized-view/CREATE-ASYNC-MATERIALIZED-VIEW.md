@@ -1,6 +1,6 @@
 ---
 {
-"title": "CREATE-ASYNC-MATERIALIZED-VIEW",
+"title": "CREATE ASYNC MATERIALIZED VIEW",
 "language": "en"
 }
 ---
@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-ASYNC-MATERIALIZED-VIEW
-
-### Name
-
-CREATE ASYNC MATERIALIZED VIEW
-
-### Description
+## Description
 
 This statement is used to create an asynchronous materialized view.
 
@@ -74,9 +68,9 @@ CREATE MATERIALIZED VIEW mv1
 
 Used to define whether the materialized view is refreshed immediately after creation, default to IMMEDIATE
 
-IMMEDIATE：Refresh Now
+IMMEDIATE: Refresh Now
 
-DEFERRED：Delay refresh
+DEFERRED: Delay refresh
 
 ```sql
 buildMode
@@ -95,9 +89,9 @@ BUILD IMMEDIATE
 
 Used to define the refresh method for materialized views, default to AUTO
 
-COMPLETE：Full refresh
+COMPLETE: Full refresh
 
-AUTO：Try to refresh incrementally as much as possible. If incremental refresh is not possible, refresh in full
+AUTO: Try to refresh incrementally as much as possible. If incremental refresh is not possible, refresh in full
 
 The SQL definition and partition fields of the materialized view need to meet the following conditions for partition incremental updates:
 
@@ -127,9 +121,9 @@ REFRESH COMPLETE
 
 Trigger method for refreshing data in materialized views, default to MANUAL
 
-MANUAL：Manual refresh
+MANUAL: Manual refresh
 
-SCHEDULE：Timed refresh
+SCHEDULE: Timed refresh
 
 COMMIT: Trigger-based refresh. When the base table data changes, a task to refresh the materialized view is automatically generated.
 
@@ -220,7 +214,7 @@ The properties unique to materialized views include:
 functions, such as current_date(), now(), random(), etc. If true, they are allowed; otherwise, they are not allowed.
 By default, they are not allowed.
 
-### Example
+## Example
 
 1. Create a materialized view mv1 that refreshes immediately and then once a week, with the data source being the hive catalog
 
@@ -244,7 +238,7 @@ By default, they are not allowed.
     AS select user.k1,user.k3,com.k4 from user join com on user.k1=com.k1;
    ```
 
-### Keywords
+## Keywords
 
     CREATE, ASYNC, MATERIALIZED, VIEW
 

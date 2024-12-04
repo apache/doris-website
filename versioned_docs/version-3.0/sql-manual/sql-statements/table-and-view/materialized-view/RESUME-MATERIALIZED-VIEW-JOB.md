@@ -1,6 +1,6 @@
 ---
 {
-    "title": "RESUME-MATERIALIZED-VIEW",
+    "title": "RESUME MATERIALIZED VIEW",
     "language": "en"
 }
 ---
@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## RESUME-MATERIALIZED-VIEW
-
-### Name
-
-RESUME MATERIALIZED VIEW
-
-### Description
+## Description
 
 This statement is used to temporarily restore the scheduled scheduling of materialized views
 
@@ -40,7 +34,7 @@ syntax:
 RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 ```
 
-### Example
+## Example
 
 1. Timed scheduling for restoring materialized view mv1
 
@@ -48,9 +42,9 @@ RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
     RESUME MATERIALIZED VIEW JOB ON mv1;
     ```
    
-### Keywords
+## Keywords
 
     RESUME, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice
 

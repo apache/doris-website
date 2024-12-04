@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement creates a custom key. Executing this command requires the user to have `ADMIN` privileges.
 
@@ -43,7 +43,7 @@ illustrate:
 
 If `key_name` contains the database name, then the custom key will be created in the corresponding database, otherwise this function will create the database in the current session. The name of the new key cannot be the same as the existing key in the corresponding database, otherwise the creation will fail.
 
-### Example
+## Example
 
 1. Create a custom key
 
@@ -73,8 +73,8 @@ If `key_name` contains the database name, then the custom key will be created in
    1 row in set (0.01 sec)
    ```
 
-### Keywords
+## Keywords
 
     CREATE, ENCRYPTKEY
 
-### Best Practice
+## Best Practice

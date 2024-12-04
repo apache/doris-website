@@ -27,7 +27,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This command is used to currently display the status of resident data synchronization jobs in all databases.
 
@@ -37,7 +37,7 @@ grammar:
 SHOW SYNC JOB [FROM db_name]
 ```
 
-### Example
+## Examples
 
 1. Display the status of all data synchronization jobs in the current database.
 
@@ -51,9 +51,9 @@ SHOW SYNC JOB [FROM db_name]
     SHOW SYNC JOB FROM `test_db`;
     ```
 
-### Keywords
+## Keywords
 
     SHOW, SYNC, JOB
 
-### Best Practice
+## Best Practice
 

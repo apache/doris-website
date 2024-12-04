@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to create and upload a file to the Doris cluster.
 This function is usually used to manage files that need to be used in some other commands, such as certificates, public and private keys, and so on.
@@ -53,7 +53,7 @@ illustrate:
     - catalog: Required. The classification name of the file can be customized. However, in some commands, files in the specified catalog are looked up. For example, in the routine import, when the data source is kafka, the file under the catalog name kafka will be searched.
     - md5: optional. md5 of the file. If specified, verification will be performed after the file is downloaded.
 
-### Example
+## Example
 
 1. Create a file ca.pem , classified as kafka
 
@@ -79,13 +79,13 @@ illustrate:
    );
    ```
 
-### Keywords
+## Keywords
 
 ```text
 CREATE, FILE
 ```
 
-### Best Practice
+## Best Practice
 
 1. This command can only be executed by users with amdin privileges. A certain file belongs to a certain database. This file can be used by any user with access rights to database.
 

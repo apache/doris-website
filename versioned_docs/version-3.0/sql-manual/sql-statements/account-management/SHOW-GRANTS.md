@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
   This statement is used to view user permissions.
 
@@ -41,7 +41,7 @@ illustrate:
 2. If user_identity is specified, view the permissions of the specified user. And the user_identity must be created by the CREATE USER command.
 3. If user_identity is not specified, view the permissions of the current user.
 
-### Example
+## Example
 
 1. View all user permission information
 
@@ -61,9 +61,9 @@ illustrate:
     SHOW GRANTS;
     ```
 
-### Keywords
+## Keywords
 
     SHOW, GRANTS
 
-### Best Practice
+## Best Practice
 

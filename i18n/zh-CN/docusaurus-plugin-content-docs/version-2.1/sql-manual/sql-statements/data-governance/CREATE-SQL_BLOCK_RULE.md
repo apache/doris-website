@@ -55,7 +55,7 @@ CREATE SQL_BLOCK_RULE rule_name
 - global：是否全局 (所有用户) 生效，默认为 false
 - enable：是否开启阻止规则，默认为 true
 
-### Example
+## Examples
 
 1. 创建一个名称为 test_rule 的阻止规则
 

@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to display installed plugins
 
@@ -37,7 +37,7 @@ SHOW PLUGINS
 
 This command will display all user-installed and system built-in plugins
 
-### Example
+## Example
 
 1. Show installed plugins:
 
@@ -45,9 +45,9 @@ This command will display all user-installed and system built-in plugins
     SHOW PLUGINS;
     ```
 
-### Keywords
+## Keywords
 
     SHOW, PLUGINS
 
-### Best Practice
+## Best Practice
 

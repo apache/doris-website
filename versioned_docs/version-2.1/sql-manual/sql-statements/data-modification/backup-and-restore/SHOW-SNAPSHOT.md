@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to view backups that already exist in the repository.
 
@@ -47,7 +47,7 @@ illustrate:
                             Database: The name of the database to which the backup data originally belonged
                             Details: In the form of Json, the data directory and file structure of the entire backup are displayed
 
-### Example
+## Examples
 
 1. View the existing backups in the repository example_repo
 
@@ -68,9 +68,9 @@ illustrate:
    WHERE SNAPSHOT = "backup1" AND TIMESTAMP = "2018-05-05-15-34-26";
    ```
 
-### Keywords
+## Keywords
 
     SHOW, SNAPSHOT
 
-### Best Practice
+## Best Practice
 

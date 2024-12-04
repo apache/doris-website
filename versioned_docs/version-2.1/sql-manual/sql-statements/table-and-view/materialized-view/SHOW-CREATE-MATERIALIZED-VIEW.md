@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to query statements that create materialized views.
 
@@ -41,7 +41,7 @@ SHOW CREATE MATERIALIZED VIEW mv_name ON table_name
 2. table_name:
    The table name of materialized view. required.
 
-### Example
+## Examples
 
 Create materialized view
 
@@ -61,9 +61,9 @@ mysql> show create materialized view id_col1 on table3;
 1 row in set (0.00 sec)
 ```
 
-### Keywords
+## Keywords
 
     SHOW, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice
 

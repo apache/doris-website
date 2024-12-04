@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 Atomic substitution of two tables. This operation applies only to OLAP tables.
 
@@ -61,7 +61,7 @@ If `swap` is `false`, do as follows:
 3. The replacement operation can only occur between two OLAP tables and does not check whether the table structure of the two tables is consistent.
 4. The original permission Settings are not changed. Because the permission check is based on the table name.
 
-### Example
+## Examples
 
 1. Atomic swap `tbl1` with `tbl2` without dropping any tables(Note: if you delete it, you actually delete tbl1 and rename tbl2 to tbl1.)
 
@@ -81,13 +81,13 @@ ALTER TABLE tbl1 REPLACE WITH TABLE tbl2 PROPERTIES('swap' = 'false');
 
 
 
-### Keywords
+## Keywords
 
 ```text
 ALTER, TABLE, REPLACE, ALTER TABLE
 ```
 
-### Best Practice
+## Best Practice
 1. Atomic overlay write operations
 
   In some cases, the user wants to be able to rewrite the data of a certain table, but if the data is deleted first and then imported, the data cannot be viewed for a period of time in between. At this time, the user can first use the `CREATE TABLE LIKE` statement to create a new table with the same structure, import the new data into the new table, and use the replacement operation to atomically replace the old table to achieve the goal. Atomic overwrite write operations at the partition level, see [temp partition documentation](../../../../advanced/partition/table-temp-partition.md).

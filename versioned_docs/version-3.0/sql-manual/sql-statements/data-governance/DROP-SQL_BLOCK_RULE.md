@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 Delete SQL blocking rules, support multiple rules, separated by ,
 
@@ -34,7 +34,7 @@ grammar:
 DROP SQL_BLOCK_RULE test_rule1,...
 ```
 
-### Example
+## Example
 
 1. Delete the test_rule1 and test_rule2 blocking rules
 
@@ -43,10 +43,10 @@ DROP SQL_BLOCK_RULE test_rule1,...
     Query OK, 0 rows affected (0.00 sec)
     ```
 
-### Keywords
+## Keywords
 
 ```text
 DROP, SQL_BLOCK_RULE
 ```
 
-### Best Practice
+## Best Practice

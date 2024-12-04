@@ -43,7 +43,7 @@ UNINSTALL PLUGIN plugin_name;
 
 只能卸载非 builtin 的插件。
 
-### Example
+## Examples
 
 1. 卸载一个插件：
 

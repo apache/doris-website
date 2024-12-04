@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This syntax is used to view transaction details for the specified transaction id or label.
 
@@ -73,7 +73,7 @@ ErrorReplicasCount: 0
 * ListenerId: The id of the related import job
 * TimeoutMs: Transaction timeout, in milliseconds
 
-### Example
+## Examples
 
 1. View the transaction with id 4005:
 
@@ -93,9 +93,9 @@ ErrorReplicasCount: 0
    SHOW TRANSACTION WHERE LABEL = 'label_name';
    ```
 
-### Keywords
+## Keywords
 
     SHOW, TRANSACTION
 
-### Best Practice
+## Best Practice
 

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 This statement is used to manually refresh the specified asynchronous materialized view
 
@@ -42,7 +42,7 @@ Asynchronous refresh of data for a materialized view
 - COMPLETE: It will forcibly refresh all partitions of the materialized view without checking whether the partitions are synchronized with the base table.
 - partitionSpec: It will forcibly refresh the specified partitions without checking whether the partitions are synchronized with the base table.
 
-### Example
+## Examples
 
 1. Refresh materialized view mv1 (automatically calculate the partition to be refreshed)
 
@@ -62,9 +62,9 @@ Asynchronous refresh of data for a materialized view
     REFRESH MATERIALIZED VIEW mv1 complete;
     ```
    
-### Keywords
+## Keywords
 
     REFRESH, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice
 

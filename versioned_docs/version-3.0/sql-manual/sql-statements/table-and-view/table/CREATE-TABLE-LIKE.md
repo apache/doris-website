@@ -26,11 +26,7 @@ under the License.
 
 
 
-### Name
-
-CREATE TABLE LIKE
-
-### Description
+## Description
 
 This statement is used to create an empty table with the exact same table structure as another table, and can optionally replicate some rollups.
 
@@ -47,7 +43,7 @@ illustrate:
 - Support for copying external tables such as MySQL
 - Support the rollup of copying OLAP Table
 
-### Example
+## Example
 
 1. Create an empty table with the same table structure as table1 under the test1 library, the table name is table2
 
@@ -91,9 +87,9 @@ illustrate:
     CREATE TABLE test1.table2 LIKE test1.table1
     ```
 
-### Keywords
+## Keywords
 
     CREATE, TABLE, LIKE
 
-### Best Practice
+## Best Practice
 

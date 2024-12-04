@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This syntax is used to modify an already created routine import job.
 
@@ -89,7 +89,7 @@ FROM data_source
 
    1. `kafka_partitions` and `kafka_offsets` are used to modify the offset of the kafka partition to be consumed, only the currently consumed partition can be modified. Cannot add partition.
 
-### Example
+## Examples
 
 1. Change `desired_concurrent_number` to 1
 
@@ -117,9 +117,9 @@ FROM data_source
    );
    ```
 
-### Keywords
+## Keywords
 
     ALTER, ROUTINE, LOAD
 
-### Best Practice
+## Best Practice
 

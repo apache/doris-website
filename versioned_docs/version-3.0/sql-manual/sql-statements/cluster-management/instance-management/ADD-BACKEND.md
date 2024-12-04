@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 The ADD BACKEND command is used to add one or more backend nodes to a Doris OLAP database cluster. This command allows administrators to specify the host and port of the new backend nodes, along with optional properties that configure their behavior.
 
@@ -42,7 +42,7 @@ grammar:
 
   * tag.location: Specifies the resource group where the backend node belongs. For example, PROPERTIES ("tag.location" = "groupb").
 
-### Example
+## Example
 
  1. Adding Backends Without Additional Properties 
 
@@ -65,8 +65,8 @@ grammar:
 
    This command adds a single backend node (host3 with port 9020) to the cluster in resource group `groupb`:
 
-### Keywords
+## Keywords
 
 ALTER, SYSTEM, ADD, BACKEND, PROPERTIES
 
-### Best Practice
+## Best Practice

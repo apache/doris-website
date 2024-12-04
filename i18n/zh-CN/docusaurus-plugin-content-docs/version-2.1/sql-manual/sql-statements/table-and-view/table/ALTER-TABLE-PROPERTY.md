@@ -192,7 +192,7 @@ ALTER TABLE example_db.mysql_table SET ("default.replication_allocation" = "tag.
   ALTER TABLE example_db.mysql_table SET ("light_schema_change" = "true");
   ```
 
-### Example
+## Examples
 
 1. 修改表的 bloom filter 列
 

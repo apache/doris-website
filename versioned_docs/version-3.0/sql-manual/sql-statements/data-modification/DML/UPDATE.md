@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to update the data. The UPDATE statement currently only supports the UNIQUE KEY model.
 
@@ -56,7 +56,7 @@ UPDATE target_table [table_alias]
 
 The current UPDATE statement only supports row updates on the UNIQUE KEY model.
 
-### Example
+## Example
 
 The `test` table is a unique model table, which contains four columns: k1, k2, v1, v2. Where k1, k2 are keys, v1, v2 are values, and the aggregation method is Replace.
 
@@ -170,9 +170,9 @@ from discount_orders
 where lineitem.o_orderkey = discount_orders.o_orderkey;
 ```
 
-### Keywords
+## Keywords
 
     UPDATE
 
-### Best Practice
+## Best Practice
 

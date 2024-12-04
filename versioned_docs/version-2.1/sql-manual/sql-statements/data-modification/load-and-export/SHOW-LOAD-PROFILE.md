@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to view the Profile information of the import operation. This function requires the user to open the Profile settings. The versions before 0.15 perform the following settings:
 
@@ -55,7 +55,7 @@ show load profile "/[queryId]/[TaskId]/[FragmentId]/[InstanceId]"
 
 This command will list all currently saved import profiles. Each line corresponds to one import. where the QueryId column is the ID of the import job. This ID can also be viewed through the SHOW LOAD statement. We can select the QueryId corresponding to the Profile we want to see to see the specific situation
 
-### Example
+## Examples
 
 1. List all Load Profiles
 
@@ -218,9 +218,9 @@ WaitAndFetchResultTime: N/A
    └-----------------------------------------------------┘
    ```
 
-### Keywords
+## Keywords
 
     SHOW, LOAD, PROFILE
 
-### Best Practice
+## Best Practice
 

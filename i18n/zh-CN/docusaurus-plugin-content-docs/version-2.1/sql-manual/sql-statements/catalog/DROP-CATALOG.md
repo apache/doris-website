@@ -42,7 +42,7 @@ DROP CATALOG
 DROP CATALOG [IF EXISTS] catalog_name;
 ```
 
-### Example
+## Examples
 
 1. 删除数据目录 hive
 

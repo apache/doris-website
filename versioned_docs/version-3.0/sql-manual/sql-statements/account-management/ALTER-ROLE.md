@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 Statement used to modify a role
 
@@ -34,7 +34,7 @@ Statement used to modify a role
  ALTER ROLE role_name comment;
 ```
 
-### Example
+## Example
 
 1. Modify the role's comment
 
@@ -42,9 +42,9 @@ Statement used to modify a role
     ALTER ROLE role1 COMMENT "this is my first role";
     ```
 
-### Keywords
+## Keywords
 
 ALTER, ROLE
 
-### Best Practice
+## Best Practice
 

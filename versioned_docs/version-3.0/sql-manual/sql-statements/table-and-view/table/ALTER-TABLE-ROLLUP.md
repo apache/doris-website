@@ -26,11 +26,7 @@ under the License.
 
 
 
-### Name
-
-ALTER TABLE ROLLUP
-
-### Description
+## Description
 
 This statement is used to perform a rollup modification operation on an existing table. The rollup is an asynchronous operation, and the task is returned when the task is submitted successfully. After that, you can use the [SHOW ALTER](../../../../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE) command to view the progress.
 
@@ -90,7 +86,7 @@ Notice:
 
 - cannot delete base index
 
-### Example
+## Example
 
 1. Create index: example_rollup_index, based on base index (k1,k2,k3,v1,v2). Columnar storage.
 
@@ -137,4 +133,4 @@ DROP ROLLUP example_rollup_index2,example_rollup_index3;
 ALTER, TABLE, ROLLUP, ALTER TABLE
 ```
 
-### Best Practice
+## Best Practice

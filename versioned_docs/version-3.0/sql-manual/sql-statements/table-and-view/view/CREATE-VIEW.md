@@ -25,12 +25,7 @@ under the License.
 -->
 
 
-
-### Name
-
-CREATE VIEW
-
-### Description
+## Description
 
 This statement is used to create a logical view
 grammar:
@@ -48,7 +43,7 @@ illustrate:
 - Views are logical views and have no physical storage. All queries on the view are equivalent to the sub-queries corresponding to the view.
 - query_stmt is any supported SQL
 
-### Example
+## Example
 
 1. Create the view example_view on example_db
 
@@ -75,8 +70,8 @@ illustrate:
     WHERE k1 = 20160112 GROUP BY k1,k2,k3;
     ```
 
-### Keywords
+## Keywords
 
     CREATE, VIEW
 
-### Best Practice
+## Best Practice

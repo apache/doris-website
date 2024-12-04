@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used for view created catalogs
 
@@ -48,7 +48,7 @@ Return result:
 * Type: Catalog type.
 * IsCurrent: Show yes on the line of current using catalog.
 
-### Example
+## Example
 
 1. View the data catalogs that have been created currently
 
@@ -73,9 +73,9 @@ Return result:
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
        ```
    
-### Keywords
+## Keywords
 
 SHOW, CATALOG, CATALOGS
 
-### Best Practice
+## Best Practice
 

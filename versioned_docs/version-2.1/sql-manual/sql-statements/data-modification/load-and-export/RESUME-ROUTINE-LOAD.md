@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 Used to restart a suspended Routine Load job. The restarted job will continue to consume from the previously consumed offset.
 
@@ -35,7 +35,7 @@ Used to restart a suspended Routine Load job. The restarted job will continue to
 RESUME [ALL] ROUTINE LOAD FOR job_name
 ```
 
-### Example
+## Examples
 
 1. Restart the routine import job named test1.
 
@@ -49,9 +49,9 @@ RESUME [ALL] ROUTINE LOAD FOR job_name
     RESUME ALL ROUTINE LOAD;
     ```
 
-### Keywords
+## Keywords
 
     RESUME, ROUTINE, LOAD
 
-### Best Practice
+## Best Practice
 

@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display the resource groups for which the current user has usage_priv privileges.
 
@@ -41,7 +41,7 @@ Description:
 
 This statement only does a simple display of workload groups, for a more complex display refer to tvf workload_groups().
 
-### Example
+## Example
 
 1. Show all workload groups:
     
@@ -71,8 +71,8 @@ This statement only does a simple display of workload groups, for a more complex
     +----------+--------+--------------------------+---------+
     ```
 
-### Keywords
+## Keywords
 
     SHOW, WORKLOAD, GROUPS, GROUP
 
-### Best Practice
+## Best Practice

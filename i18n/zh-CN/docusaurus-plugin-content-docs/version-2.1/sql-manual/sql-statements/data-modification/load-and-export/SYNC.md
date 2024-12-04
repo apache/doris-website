@@ -42,7 +42,7 @@ SYNC
 SYNC;
 ```
 
-### Example
+## Examples
 
 1. 同步元数据
 

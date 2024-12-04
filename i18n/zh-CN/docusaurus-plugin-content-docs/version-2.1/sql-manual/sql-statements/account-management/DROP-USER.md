@@ -45,7 +45,7 @@ DROP USER
 
  删除指定的 user identity.
 
-### Example
+## Examples
 
 1. 删除用户 jack@'192.%'
 

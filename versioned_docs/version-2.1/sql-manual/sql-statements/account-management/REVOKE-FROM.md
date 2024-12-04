@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 The REVOKE command has the following functions:
 
@@ -51,7 +51,7 @@ It is also possible to revoke the permissions of the specified ROLE, the execute
 
 role_list is the list of roles to be revoked, separated by commas. The specified roles must exist.
 
-### Example
+## Examples
 
 1. Revoke the permission of user jack database testDb
 
@@ -88,9 +88,9 @@ role_list is the list of roles to be revoked, separated by commas. The specified
    REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'test_role';
    ```
 
-### Keywords
+## Keywords
 
     REVOKE
 
-### Best Practice
+## Best Practice
 

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 This statement creates a custom function. Executing this command requires the user to have `ADMIN` privileges.
 
@@ -83,7 +83,7 @@ Parameter Description:
     - `always_nullable`: Indicates whether NULL values may appear in the UDF return result, is an optional parameter, and the default value is true.
 
 
-### Example
+## Example
 
 1. Create a custom UDF function
 
@@ -120,8 +120,8 @@ Parameter Description:
     CREATE GLOBAL ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
     ```
 
-### Keywords
+## Keywords
 
     CREATE, FUNCTION
 
-### Best Practice
+## Best Practice

@@ -40,7 +40,7 @@ SHOW DELETE
 SHOW DELETE [FROM db_name]
 ```
 
-### Example
+## Examples
 
  1. 展示数据库 database 的所有历史 delete 任务
     

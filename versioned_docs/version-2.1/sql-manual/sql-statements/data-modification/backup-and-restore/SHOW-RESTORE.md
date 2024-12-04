@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to view RESTORE tasks
 
@@ -69,7 +69,7 @@ illustrate:
 
 
 
-### Example
+## Examples
 
 1. View the latest RESTORE task under example_db.
 
@@ -77,9 +77,9 @@ illustrate:
    SHOW RESTORE FROM example_db;
    ```
 
-### Keywords
+## Keywords
 
     SHOW, RESTORE
 
-### Best Practice
+## Best Practice
 

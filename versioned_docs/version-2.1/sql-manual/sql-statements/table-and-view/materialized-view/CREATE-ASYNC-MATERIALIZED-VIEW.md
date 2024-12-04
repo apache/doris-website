@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to create an asynchronous materialized view.
 
@@ -215,7 +215,7 @@ The properties unique to materialized views include:
 functions, such as current_date(), now(), random(), etc. If true, they are allowed; otherwise, they are not allowed.
 By default, they are not allowed.
 
-### Example
+## Examples
 
 1. Create a materialized view mv1 that refreshes immediately and then once a week, with the data source being the hive catalog
 
@@ -239,7 +239,7 @@ By default, they are not allowed.
     AS select user.k1,user.k3,com.k4 from user join com on user.k1=com.k1;
    ```
 
-### Keywords
+## Keywords
 
     CREATE, ASYNC, MATERIALIZED, VIEW
 

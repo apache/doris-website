@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to list tablets of the specified table (only for administrators)
 
@@ -51,7 +51,7 @@ IndexName = rollup_name
 ```
 or compound them with operator `AND`.
 
-### Example
+## Example
 
 1. list all tablets of the specified table
 
@@ -71,9 +71,9 @@ or compound them with operator `AND`.
     SHOW TABLETS FROM example_db.table_name WHERE state="DECOMMISSION" AND BackendId=11003;
     ```
 
-### Keywords
+## Keywords
 
     SHOW, TABLETS
 
-### Best Practice
+## Best Practice
 

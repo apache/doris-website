@@ -65,7 +65,7 @@ FROM db_name.table_name (jobid,...)
 - 该命令为异步操作，具体是否执行成功需要使用`show alter table rollup`查看任务状态确认
 
 
-### Example
+## Examples
 
 1. 撤销针对 my_table 的 ALTER COLUMN 操作。
 

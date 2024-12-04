@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 This statement is used to modify asynchronous materialized views.
 
@@ -86,7 +86,7 @@ ALTER MATERIALIZED VIEW db1.mv1 REPLACE WITH MATERIALIZED VIEW mv2
 PROPERTIES('swap' = 'false');
 ```
 
-### Keywords
+## Keywords
 
     ALTER, ASYNC, MATERIALIZED, VIEW
 

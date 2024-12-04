@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display the execution of the specified import task
 
@@ -66,7 +66,7 @@ illustrate:
    SHOW LOAD WARNINGS ON 'url'
    ```
 
-### Example
+## Example
 
 1. Show all import tasks for default db
 
@@ -105,9 +105,9 @@ illustrate:
    curl --location-trusted -u {user}:{passwd} http://{hostname}:{port}/api/{database}/_load_info?label={labelname}
    ```
 
-### Keywords
+## Keywords
 
     SHOW, LOAD
 
-### Best Practice
+## Best Practice
 

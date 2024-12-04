@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 View all custom (system-provided) functions under the database. If the user specifies a database, then view the corresponding database, otherwise directly query the database where the current session is located
 
@@ -60,7 +60,7 @@ Parameters
 
 **Note: the "global" keyword is only available after v2.0**
 
-### Example
+## Example
 
 ```sql
 mysql> show full functions in testDb\G
@@ -121,9 +121,9 @@ mysql> show global functions ;
     
 ```
 
-### Keywords
+## Keywords
 
     SHOW, FUNCTIONS
 
-### Best Practice
+## Best Practice
 

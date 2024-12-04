@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to display replica status information for a table or partition.
 
@@ -48,7 +48,7 @@ illustrate
        SCHEMA_ERROR: The schema hash of the replica is incorrect
        MISSING: replica does not exist
 
-### Example
+## Examples
 
 1. View the status of all replicas of the table
 
@@ -70,9 +70,9 @@ illustrate
    WHERE STATUS != "OK";
    ```
 
-### Keywords
+## Keywords
 
     SHOW, REPLICA, STATUS
 
-### Best Practice
+## Best Practice
 

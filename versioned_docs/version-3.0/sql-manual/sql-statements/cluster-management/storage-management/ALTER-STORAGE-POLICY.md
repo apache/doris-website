@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 This statement is used to modify an existing cold and hot separation migration strategy. Only root or admin users can modify resources.
 
@@ -33,7 +33,7 @@ ALTER STORAGE POLICY  'policy_name'
 PROPERTIES ("key"="value", ...);
 ```
 
-### Example
+## Example
 
 1. Modify the name to coolown_datetime Cold and hot separation data migration time point:
 ```sql
@@ -45,10 +45,10 @@ ALTER STORAGE POLICY has_test_policy_to_alter PROPERTIES ("cooldown_ttl" = "1000
 ALTER STORAGE POLICY has_test_policy_to_alter PROPERTIES ("cooldown_ttl" = "1h");
 ALTER STORAGE POLICY has_test_policy_to_alter PROPERTIES ("cooldown_ttl" = "3d");
 ```
-### Keywords
+## Keywords
 
 ```sql
 ALTER, STORAGE, POLICY
 ```
 
-### Best Practice
+## Best Practice

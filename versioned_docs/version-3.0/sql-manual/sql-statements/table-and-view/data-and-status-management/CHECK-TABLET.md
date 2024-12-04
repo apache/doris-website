@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to perform the specified check operation on a set of tablets.
 
@@ -45,7 +45,7 @@ illustrate:
     * consistency: Check the consistency of the replica of the tablet. This command is an asynchronous command. After sending, Doris will start to execute the consistency check job of the corresponding tablet. The final result will be reflected in the InconsistentTabletNum column in the result of `SHOW PROC "/cluster_health/tablet_health";`.
 
 
-### Example
+## Example
 
 1. Perform a replica data consistency check on a specified set of tablets.
 
@@ -54,10 +54,10 @@ illustrate:
    PROPERTIES("type" = "consistency");
    ```
 
-### Keywords
+## Keywords
 
     ADMIN, CHECK, TABLET
 
-### Best Practice
+## Best Practice
 
 

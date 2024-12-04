@@ -61,7 +61,7 @@ SHOW CATALOG RECYCLE BIN [ WHERE NAME [ = "name" | LIKE "name_matcher"] ]
 ```
 
 
-### Example
+## Examples
 
  1. 展示所有回收站元数据
     

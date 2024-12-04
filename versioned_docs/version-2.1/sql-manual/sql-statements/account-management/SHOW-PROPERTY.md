@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to view the attributes of the user
 
@@ -87,7 +87,7 @@ mysql> show all properties like "%connection%";
 
   Key: value corresponding to each property of the user.
 
-### Example
+## Examples
 
 1. View the attributes of the jack user
 
@@ -107,8 +107,8 @@ mysql> show all properties like "%connection%";
    SHOW ALL PROPERTIES LIKE '%load_cluster%'
    ```
 
-### Keywords
+## Keywords
 
     SHOW, PROPERTY, ALL
 
-### Best Practice
+## Best Practice

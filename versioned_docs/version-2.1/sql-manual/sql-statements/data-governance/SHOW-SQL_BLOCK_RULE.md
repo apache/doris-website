@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 View the configured SQL blocking rules. If you do not specify a rule name, you will view all rules.
 
@@ -37,7 +37,7 @@ grammar:
 SHOW SQL_BLOCK_RULE [FOR RULE_NAME];
 ```
 
-### Example
+## Examples
 
 1. View all rules.
 
@@ -66,8 +66,8 @@ SHOW SQL_BLOCK_RULE [FOR RULE_NAME];
     ```
     
 
-### Keywords
+## Keywords
 
     SHOW, SQL_BLOCK_RULE
 
-### Best Practice
+## Best Practice

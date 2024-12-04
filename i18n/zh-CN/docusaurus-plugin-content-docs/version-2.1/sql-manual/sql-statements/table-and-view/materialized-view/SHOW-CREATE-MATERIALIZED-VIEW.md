@@ -44,7 +44,7 @@ SHOW CREATE MATERIALIZED VIEW mv_name ON table_name
 2. table_name:
         物化视图所属的表名。必填项。
 
-### Example
+## Examples
 
 创建物化视图的语句为
 

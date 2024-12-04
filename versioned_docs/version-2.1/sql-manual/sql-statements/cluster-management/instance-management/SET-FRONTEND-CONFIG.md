@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to set the configuration items of the cluster (currently only supports setting FE configuration items).
 
@@ -47,15 +47,15 @@ ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
 - This syntax does not persistently modify the configuration. After an FE restarts, the modified configuration becomes invalid. To persist the changes, the configuration items need to be synchronously added in fe.conf.
 :::
 
-### Example
+## Examples
 
 1. Set `disable_balance` to true
 
     `ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");`
 
-### Keywords
+## Keywords
 
 ADMIN, SET, CONFIG
 
-### Best Practice
+## Best Practice
 

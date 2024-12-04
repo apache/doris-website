@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
   This statement is used to display partition information for tables in Internal catalog or Hive Catalog
 
@@ -47,7 +47,7 @@ Will return all partitions' name. Support multilevel partition table
 
 
 
-### Example
+## Examples
 
 1. Display all non-temporary partition information of the specified table under the specified db
 
@@ -73,9 +73,9 @@ Will return all partitions' name. Support multilevel partition table
     SHOW PARTITIONS FROM example_db.table_name ORDER BY PartitionId DESC LIMIT 1;
     ```
 
-### Keywords
+## Keywords
 
     SHOW, PARTITIONS
 
-### Best Practice
+## Best Practice
 

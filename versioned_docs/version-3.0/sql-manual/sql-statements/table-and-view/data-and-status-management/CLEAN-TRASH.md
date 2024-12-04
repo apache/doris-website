@@ -27,7 +27,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to clean up garbage data in the backend
 
@@ -41,7 +41,7 @@ illustrate:
 
 1. Use BackendHost:BackendHeartBeatPort to indicate the backend that needs to be cleaned up, and clean up all backends without adding the on limit.
 
-### Example
+## Example
 
 1. Clean up the junk data of all be nodes.
 
@@ -51,4 +51,4 @@ illustrate:
 
         ADMIN CLEAN TRASH ON ("192.168.0.1:9050","192.168.0.2:9050");
 
-### Keywords
+## Keywords

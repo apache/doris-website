@@ -49,7 +49,7 @@ SHOW FRONTEND CONFIG [LIKE "pattern"];
 5. MasterOnly：是否仅适用于 Master FE
 6. Comment：配置项说明
 
-### Example
+## Examples
 
 1. 查看当前 FE 节点的配置
 

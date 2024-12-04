@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display the configuration of the current cluster (currently only the configuration items of FE are supported)
 
@@ -46,7 +46,7 @@ The columns in the results have the following meanings:
 5. MasterOnly: Is it only applicable to Master FE
 6. Comment: Configuration item description
 
-### Example
+## Examples
 
 1. View the configuration of the current FE node
 
@@ -66,9 +66,9 @@ The columns in the results have the following meanings:
    1 row in set (0.01 sec)
    ```
 
-### Keywords
+## Keywords
 
     SHOW, CONFIG
 
-### Best Practice
+## Best Practice
 

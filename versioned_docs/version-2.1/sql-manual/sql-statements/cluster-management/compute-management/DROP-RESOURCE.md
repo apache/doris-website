@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to delete an existing resource. Only the root or admin user can delete resources.
 grammar:
@@ -37,7 +37,7 @@ DROP RESOURCE 'resource_name'
 
 Note: ODBC/S3 resources in use cannot be deleted.
 
-### Example
+## Examples
 
 1. Delete the Spark resource named spark0:
    
@@ -45,8 +45,8 @@ Note: ODBC/S3 resources in use cannot be deleted.
      DROP RESOURCE 'spark0';
      ```
 
-### Keywords
+## Keywords
 
      DROP, RESOURCE
 
-### Best Practice
+## Best Practice

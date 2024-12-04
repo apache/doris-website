@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to collect statistical information for various columns.
 
@@ -40,7 +40,7 @@ ANALYZE < TABLE | DATABASE table_name | db_name >
 - `sync`: Collect statistics synchronously. Returns after collection. If not specified, it executes asynchronously and returns a JOB ID.
 - `sample percent | rows`: Collect statistics with sampling. You can specify a sampling percentage or a number of sampling rows.
 
-### Example
+## Example
 
 Collect statistical data for a table with a 10% sampling rate:
 
@@ -54,6 +54,6 @@ Collect statistical data for a table with a sample of 100,000 rows:
 ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;
 ```
 
-### Keywords
+## Keywords
 
 ANALYZE

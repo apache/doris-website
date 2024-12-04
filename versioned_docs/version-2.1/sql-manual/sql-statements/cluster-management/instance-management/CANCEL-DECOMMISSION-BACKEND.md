@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to undo a node offline operation. (Administrator only!)
 
@@ -44,7 +44,7 @@ CANCEL DECOMMISSION BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...];
 CANCEL DECOMMISSION BACKEND "id1","id2","id3...";
 ```
 
-### Example
+## Examples
 
   1. Cancel the offline operation of both nodes:
 
@@ -58,9 +58,9 @@ CANCEL DECOMMISSION BACKEND "id1","id2","id3...";
         CANCEL DECOMMISSION BACKEND "1","2";
     ```
 
-### Keywords
+## Keywords
 
     CANCEL, DECOMMISSION, CANCEL ALTER
 
-### Best Practice
+## Best Practice
 

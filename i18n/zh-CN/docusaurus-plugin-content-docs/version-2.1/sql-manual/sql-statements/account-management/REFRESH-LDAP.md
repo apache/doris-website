@@ -46,7 +46,7 @@ REFRESH LDAP ALL;
 REFRESH LDAP [for user_name];
 ```
 
-### Example
+## Examples
 
 1. 刷新所有 LDAP 用户缓存信息
 

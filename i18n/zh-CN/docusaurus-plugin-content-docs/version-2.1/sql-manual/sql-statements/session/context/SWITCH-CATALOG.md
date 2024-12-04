@@ -40,7 +40,7 @@ SWITCH
 SWITCH catalog_name
 ```
 
-### Example
+## Examples
 
 1. 切换到数据目录 hive
 

@@ -40,7 +40,7 @@ SHOW FULL COLUMNS
 SHOW [FULL] COLUMNS FROM tbl;
 ```
 
-### Example
+## Examples
 
 1. 查看指定表的列信息
 

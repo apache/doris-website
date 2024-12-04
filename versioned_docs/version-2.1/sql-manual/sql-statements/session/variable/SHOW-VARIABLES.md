@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display Doris system variables, which can be queried by conditions
 
@@ -44,7 +44,7 @@ illustrate:
 - Use the like statement to match with variable_name.
 - The % percent wildcard can be used anywhere in the matching pattern
 
-### Example
+## Examples
 
 1. The default here is to match the Variable_name, here is the exact match
 
@@ -64,9 +64,9 @@ illustrate:
     show variables where variable_name = 'version';
     ```
 
-### Keywords
+## Keywords
 
     SHOW, VARIABLES
 
-### Best Practice
+## Best Practice
 

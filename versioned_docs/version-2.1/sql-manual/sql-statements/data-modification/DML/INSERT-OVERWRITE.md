@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The function of this statement is to overwrite a table or some partitions of a table
 
@@ -130,7 +130,7 @@ mysql> select * from auto_list;
 2 rows in set (0.15 sec)
 ```
 
-### Example
+## Examples
 
 Assuming there is a table named `test`. The table contains two columns `c1` and `c2`, and two partitions `p1` and `p2`
 
@@ -292,6 +292,6 @@ mysql> select * from test order by k0;
 
 As you can see, all data in partitions `p10` and `pMAX`, where data 3 and 1234 are located, are overwritten, while partition `p100` remains unchanged. This operation can be interpreted as syntactic sugar for specifying a specific partition to be overwritten by the PARTITION clause during an INSERT OVERWRITE operation, which is implemented in the same way as [specify a partition to overwrite](#overwrite-table-partition). The `PARTITION(*)` syntax eliminates the need to manually fill in all the partition names when overwriting a large number of partitions.
 
-### Keywords
+## Keywords
 
     INSERT OVERWRITE, OVERWRITE, AUTO DETECT

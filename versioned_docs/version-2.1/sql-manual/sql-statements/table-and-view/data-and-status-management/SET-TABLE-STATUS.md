@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to set the state of the specified table. Only supports OLAP tables.
 
@@ -55,7 +55,7 @@ The following properties are currently supported:
 
 **Note: This command is generally only used for emergency fault repair, please proceed with caution.**
 
-### Example
+## Examples
 
 1. Set the state of table tbl1 to NORMAL.
 
@@ -69,8 +69,8 @@ admin set table tbl1 status properties("state" = "NORMAL");
 admin set table test_set_table_status status properties("state" = "SCHEMA_CHANGE");
 ```
 
-### Keywords
+## Keywords
 
     ADMIN, SET, TABLE, STATUS
 
-### Best Practice
+## Best Practice

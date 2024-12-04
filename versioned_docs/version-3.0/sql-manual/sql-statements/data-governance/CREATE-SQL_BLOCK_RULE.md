@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement creates a SQL blocking rule. it can restrict any kind of sql statements(no matter DDL or DML statement).
 
@@ -52,7 +52,7 @@ Parameter Description:
 - global: Whether to take effect globally (all users), the default is false
 - enable: whether to enable blocking rules, the default is true
 
-### Example
+## Example
 
 1. Create a block rule named test_rule
 
@@ -143,11 +143,11 @@ Here are some commonly used regular expressions:
 >
 >     \w ：Matches any word character, including letters, digits, and underscores, equivalent to [a-zA-Z0-9_].
 
-### Keywords
+## Keywords
 
 ```text
 CREATE, SQL_BLCOK_RULE
 ```
 
-### Best Practice
+## Best Practice
 

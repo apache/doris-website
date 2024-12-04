@@ -23,7 +23,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to diagnose the specified tablet. The results will show information about the tablet and some potential problems.
 
@@ -47,7 +47,7 @@ The lines of information in the result are as follows:
 11. ReplicaStatus:                       Whether the replica status is normal.
 12. ReplicaCompactionStatus:             Whether the replica Compaction status is normal.
 
-### Example
+## Example
 
 1. Diagnose tablet 10001
 
@@ -55,6 +55,6 @@ The lines of information in the result are as follows:
     SHOW TABLET DIAGNOSE TABLET 10001;
     ```
 
-### Keywords
+## Keywords
 
 SHOW, DIAGNOSIS, TABLET

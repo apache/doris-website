@@ -102,7 +102,7 @@ ALTER TABLE table_name ADD COLUMN column_name column_type [KEY | agg_type] [DEFA
 
 - You cannot add a column to a rollup index that already exists in the base index (if needed, you can create a new rollup index).
 
-### Examples
+## Examples
 
 #### non-aggregate model
 
@@ -194,7 +194,7 @@ ALTER TABLE table_name ADD COLUMN (column_name1 column_type [KEY | agg_type] DEF
 
 - You cannot add a column to a rollup index that already exists in the base index (if needed, you can create a new rollup index).
 
-### Example
+## Example
 
 Adding multiple columns (aggregate model) to `example_rollup_index`:
 
@@ -217,7 +217,7 @@ ALTER TABLE table_name DROP COLUMN column_name
 
 - If you delete a column from the base index, it will also be removed from the rollup index if it contains the column.
 
-### Example
+## Example
 
 Removing column col2 from `example_rollup_index`:
 
@@ -268,7 +268,7 @@ ALTER TABLE table_name MODIFY COLUMN column_name column_type [KEY | agg_type] [N
 
   - All types except DATE and DATETIME can be converted to STRING, but STRING cannot be converted to any other type.
 
-### Examples
+## Examples
 
 table's DDL:
 
@@ -326,7 +326,7 @@ ALTER TABLE table_name ORDER BY (column_name1, column_name2, ...)
 
 - Value columns come after key columns.
 
-### Example
+## Example
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
@@ -358,7 +358,7 @@ FROM example_rollup_index;
 
 Schema change can modify multiple indexes in a single job.
 
-### Example 1
+## Example 1
 
 Source Schema:
 
@@ -413,7 +413,7 @@ As seen, the base table tbl1 automatically includes the columns k4 and k5. Any c
 
 Additionally, it is not allowed to add columns to a rollup that already exist in the base table. If a user needs to do so, they can create a new rollup with the additional columns and then delete the original rollup.
 
-### Example 2
+## Example 2
 
 table's DDL
 

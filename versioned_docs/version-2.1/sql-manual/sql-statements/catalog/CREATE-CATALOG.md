@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to create an external catalog
 
@@ -37,7 +37,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
 	PROPERTIES ("key"="value", ...);
 ```
 
-### Example
+## Examples
 
 1. Create catalog hive
 
@@ -163,9 +163,9 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
 	);
     ```
 
-### Keywords
+## Keywords
 
 CREATE, CATALOG
 
-### Best Practice
+## Best Practice
 

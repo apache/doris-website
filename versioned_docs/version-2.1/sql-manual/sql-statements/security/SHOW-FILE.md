@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to display a file created in a database
 
@@ -46,7 +46,7 @@ FileSize: file size, in bytes
 MD5: MD5 of the file
 ```
 
-### Example
+## Examples
 
 1. View the uploaded files in the database my_database
 
@@ -54,8 +54,8 @@ MD5: MD5 of the file
      SHOW FILE FROM my_database;
      ```
 
-### Keywords
+## Keywords
 
      SHOW, FILE
 
-### Best Practice
+## Best Practice

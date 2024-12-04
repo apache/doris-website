@@ -57,7 +57,7 @@ SHOW RESOURCES
 6. 如果指定了 OFFSET，则从偏移量 offset 开始显示查询结果。默认情况下偏移量为 0。
 7. 如果使用了 LIKE，则会忽略 WHERE 语句。
 
-### Example
+## Examples
 
 1. 展示当前用户拥有权限的所有 Resource
     

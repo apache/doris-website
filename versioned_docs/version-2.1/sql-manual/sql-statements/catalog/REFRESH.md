@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement refreshes the metadata of the specified Catalog/Database/Table.
 
@@ -42,7 +42,7 @@ When the Catalog is refreshed, the object-related Cache is forced to be invalida
 
 Including Partition Cache, Schema Cache, File Cache, etc.
 
-### Example
+## Examples
 
 1. Refresh hive catalog
 
@@ -65,9 +65,9 @@ Including Partition Cache, Schema Cache, File Cache, etc.
     REFRESH TABLE table1;
     ```
 
-### Keywords
+## Keywords
 
 REFRESH, CATALOG, DATABASE, TABLE
 
-### Best Practice
+## Best Practice
 

@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This command is used to view the execution of the Create Materialized View job submitted through the [CREATE-MATERIALIZED-VIEW](../../sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW.md) statement.
 
@@ -99,7 +99,7 @@ RollupIndexName: r1
 
 - `Timeout`: Job timeout, in seconds.
 
-### Example
+## Examples
 
 1. View the materialized view jobs under the database example_db
 
@@ -107,9 +107,9 @@ RollupIndexName: r1
    SHOW ALTER TABLE MATERIALIZED VIEW FROM example_db;
    ```
 
-### Keywords
+## Keywords
 
     SHOW, ALTER, TABLE, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice
 

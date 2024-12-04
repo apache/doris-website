@@ -26,11 +26,7 @@ under the License.
 
 
 
-### Name
-
-SHOW FULL COLUMNS
-
-### Description
+## Description
 
 This statement is used to specify the column information of the table
 
@@ -40,7 +36,7 @@ grammar:
 SHOW [FULL] COLUMNS FROM tbl;
 ```
 
-### Example
+## Example
 
 1. View the column information of the specified table
 
@@ -48,9 +44,9 @@ SHOW [FULL] COLUMNS FROM tbl;
      SHOW FULL COLUMNS FROM tbl;
     ```
 
-### Keywords
+## Keywords
 
     SHOW, COLUMNS
 
-### Best Practice
+## Best Practice
 

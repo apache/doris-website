@@ -30,7 +30,7 @@ under the License.
 
 DROP USER
 
-### Description
+## Description
 
 Delete a user
 
@@ -45,7 +45,7 @@ Delete a user
 
   Delete the specified user identitiy.
 
-### Example
+## Example
 
 1. Delete user jack@'192.%'
 
@@ -53,7 +53,7 @@ Delete a user
     DROP USER 'jack'@'192.%'
     ```
 
-### Keywords
+## Keywords
 
 DROP, USER
 

@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to view the currently existing broker
 
@@ -44,11 +44,11 @@ illustrate:
 3.  Alive indicates whether the node is alive or not.
 4.  ErrMsg is used to display the error message when the heartbeat fails.
 
-### Example
+## Example
 
-### Keywords
+## Keywords
 
 SHOW, BROKER
 
-### Best Practice
+## Best Practice
 

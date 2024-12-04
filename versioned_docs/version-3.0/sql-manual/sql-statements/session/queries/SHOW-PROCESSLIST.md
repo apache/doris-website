@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 Display the running threads of the user. It should be noted that except the root user who can see all running threads, other users can only see their own running threads, and cannot see the running threads of other users.
 
@@ -64,7 +64,7 @@ Common Command types are as follows:
 
 Other types can refer to [MySQL official website for explanation](https://dev.mysql.com/doc/refman/5.6/en/thread-commands.html)
 
-### Example
+## Example
 
 1. View the threads running by the current user
 
@@ -84,9 +84,9 @@ Other types can refer to [MySQL official website for explanation](https://dev.my
    +------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+
    ```
 
-### Keywords
+## Keywords
 
     SHOW, PROCESSLIST
 
-### Best Practice
+## Best Practice
 

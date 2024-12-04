@@ -38,7 +38,7 @@ SHOW VIEW
  SHOW VIEW { FROM | IN } table [ FROM db ]
 ```
 
-### Example
+## Examples
 
 1. 展示基于表 testTbl 建立的所有视图 view
     

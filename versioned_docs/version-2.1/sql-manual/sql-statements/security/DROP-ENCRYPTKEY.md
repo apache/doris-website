@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 grammar:
 
@@ -43,7 +43,7 @@ Delete a custom key. The name of the key is exactly the same to be deleted.
 
 Executing this command requires the user to have `ADMIN` privileges.
 
-### Example
+## Examples
 
 1. Delete a key
 
@@ -51,8 +51,8 @@ Executing this command requires the user to have `ADMIN` privileges.
     DROP ENCRYPTKEY my_key;
     ```
 
-### Keywords
+## Keywords
 
      DROP, ENCRYPT, KEY
 
-### Best Practice
+## Best Practice

@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to uninstall a plugin.
 
@@ -39,7 +39,7 @@ UNINSTALL PLUGIN plugin_name;
 
 Only non-builtin plugins can be uninstalled.
 
-### Example
+## Example
 
 1. Uninstall a plugin:
 
@@ -47,9 +47,9 @@ Only non-builtin plugins can be uninstalled.
     UNINSTALL PLUGIN auditdemo;
     ```
 
-### Keywords
+## Keywords
 
     UNINSTALL, PLUGIN
 
-### Best Practice
+## Best Practice
 

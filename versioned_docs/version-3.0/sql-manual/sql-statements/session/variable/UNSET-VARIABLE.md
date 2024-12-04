@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to restore Doris system variables. These system variables can be modified at global or session level.
 
@@ -46,7 +46,7 @@ illustrate:
 > 1. Only ADMIN users can unset variables to take effect globally
 > 2. When restore a variable with `GLOBAL`,  it only affect your current using session and new open sessions. It does not affect other current open sessions.
 
-### Example
+## Example
 
 1. Restore value of the time zone
 
@@ -66,9 +66,9 @@ illustrate:
    UNSET GLOBAL VARIABLE ALL;
    ```
 
-### Keywords
+## Keywords
 
     UNSET, VARIABLE
 
-### Best Practice
+## Best Practice
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "REFRESH-MATERIALIZED-VIEW",
+    "title": "REFRESH MATERIALIZED VIEW",
     "language": "en"
 }
 ---
@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## REFRESH-MATERIALIZED-VIEW
 
-### Name
-
-REFRESH MATERIALIZED VIEW
-
-### Description
+## Description
 
 This statement is used to manually refresh the specified asynchronous materialized view
 
@@ -48,7 +43,7 @@ Asynchronous refresh of data for a materialized view
 - COMPLETE: It will forcibly refresh all partitions of the materialized view without checking whether the partitions are synchronized with the base table.
 - partitionSpec: It will forcibly refresh the specified partitions without checking whether the partitions are synchronized with the base table.
 
-### Example
+## Example
 
 1. Refresh materialized view mv1 (automatically calculate the partition to be refreshed)
 
@@ -56,7 +51,7 @@ Asynchronous refresh of data for a materialized view
     REFRESH MATERIALIZED VIEW mv1 AUTO;
     ```
 
-2. Refresh partition named p_19950801_19950901和p_19950901_19951001
+2. Refresh partition named p_19950801_19950901 和 p_19950901_19951001
 
     ```sql
     REFRESH MATERIALIZED VIEW mv1 partitions(p_19950801_19950901,p_19950901_19951001);
@@ -68,9 +63,9 @@ Asynchronous refresh of data for a materialized view
     REFRESH MATERIALIZED VIEW mv1 complete;
     ```
    
-### Keywords
+## Keywords
 
     REFRESH, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice
 

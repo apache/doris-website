@@ -26,13 +26,8 @@ under the License.
 
 
 
-### Name
 
-ALTER COLOCATE GROUP
-
- 
-
-### Description
+## Description
 
 This statement is used to modify the colocation group.
 
@@ -51,7 +46,7 @@ NOTE:
 
 2. property_list is a colocation group attribute, currently only supports modifying `replication_num` and `replication_allocation`. After modifying these two attributes of the colocation group, at the same time, change the attribute `default.replication_allocation`, the attribute `dynamic.replication_allocation` of the table of the group, and the `replication_allocation` of the existing partition to be the same as it.
 
-### Example
+## Example
 
 1. Modify the number of copies of a global group
 
@@ -75,10 +70,10 @@ NOTE:
      );
      ```
 
-### Keywords
+## Keywords
 
 ```sql
 ALTER, COLOCATE, GROUP
 ```
 
-### Best Practice
+## Best Practice

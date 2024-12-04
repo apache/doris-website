@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 Set user attributes, including resources assigned to users, importing clusters, etc.
 
@@ -58,7 +58,7 @@ Super user privileges:
 
     Note: If the attributes `cpu_resource_limit`, `exec_mem_limit` are not set, the value in the session variable will be used by default.
 
-### Example
+## Example
 
 1. Modify the maximum number of user jack connections to 1000
 
@@ -102,9 +102,9 @@ Super user privileges:
    SET PROPERTY FOR 'jack' 'query_timeout' = '500';
    ```
 
-### Keywords
+## Keywords
 
     SET, PROPERTY
 
-### Best Practice
+## Best Practice
 

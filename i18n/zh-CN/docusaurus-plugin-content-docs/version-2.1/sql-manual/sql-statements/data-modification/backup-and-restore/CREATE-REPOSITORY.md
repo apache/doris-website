@@ -49,7 +49,7 @@ PROPERTIES ("key"="value", ...);
 - 根据 S3、HDFS 的不同类型，PROPERTIES 有所不同，具体见示例。
 - ON LOCATION ,如果是 S3 , 这里后面跟的是 Bucket Name。
 
-### Example
+## Examples
 
 1. 创建名为 s3_repo 的仓库。
 

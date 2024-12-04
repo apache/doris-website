@@ -45,7 +45,7 @@ CLEAN PROFILE
 CLEAN ALL PROFILE;
 ```
 
-### Example
+## Examples
 
 1. 清理所有 profile 信息。
 

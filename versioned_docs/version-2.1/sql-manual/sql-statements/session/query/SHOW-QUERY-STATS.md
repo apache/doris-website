@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to show the query hit statistics of the database and table
 
@@ -44,7 +44,7 @@ Remarks：
 5. The result may have two columns:
    QueryCount: The number of times the column was queried
    FilterCount: The number of times the column was queried as a where condition
-### Example
+## Examples
 
 1. Show the query hit statistics for `baseall`
 
@@ -182,8 +182,8 @@ Remarks：
    SHOW QUERY STATS;
    ```
 
-### Keywords
+## Keywords
 
      SHOW， QUERY, STATS;
 
-### Best Practice
+## Best Practice

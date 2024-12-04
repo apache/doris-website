@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display the historical delete tasks that have been successfully executed
 
@@ -36,7 +36,7 @@ grammar:
 SHOW DELETE [FROM db_name]
 ```
 
-### Example
+## Example
 
   1. Display all historical delete tasks of database database
 
@@ -44,9 +44,9 @@ SHOW DELETE [FROM db_name]
       SHOW DELETE FROM database;
       ```
 
-### Keywords
+## Keywords
 
     SHOW, DELETE
 
-### Best Practice
+## Best Practice
 

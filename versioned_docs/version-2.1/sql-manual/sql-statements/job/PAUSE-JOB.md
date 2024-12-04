@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 User suspends a JOB. A stopped job can be resumed with RESUME JOB.
 
@@ -35,7 +35,7 @@ User suspends a JOB. A stopped job can be resumed with RESUME JOB.
 PAUSE JOB where jobName = 'job_name';
 ```
 
-### Example
+## Examples
 
 1. Pause the job named test1.
 
@@ -43,8 +43,8 @@ PAUSE JOB where jobName = 'job_name';
    PAUSE JOB where jobName = 'test1';
    ```
 
-### Keywords
+## Keywords
 
         PAUSE, JOB
 
-### Best Practice
+## Best Practice

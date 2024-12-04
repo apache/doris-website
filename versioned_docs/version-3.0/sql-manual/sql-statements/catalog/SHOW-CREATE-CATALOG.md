@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement shows the creating statement of a doris catalog.
 
@@ -42,7 +42,7 @@ illustrate:
 
 - `catalog_name`: The name of the catalog which exist in doris.
 
-### Example
+## Example
 
 1. View the creating statement of the hive catalog in doris
 
@@ -50,9 +50,9 @@ illustrate:
    SHOW CREATE CATALOG hive;
    ```
 
-### Keywords
+## Keywords
 
 SHOW, CREATE, CATALOG
 
-### Best Practice
+## Best Practice
 

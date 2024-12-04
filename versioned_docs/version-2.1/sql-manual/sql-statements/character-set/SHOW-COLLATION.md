@@ -45,7 +45,7 @@ The `SHOW COLLATION` command returns the following fields:
 * Compiled: Whether the collation is compiled
 * Sortlen: Sort length
 
-### Example
+## Examples
 
 ```sql
 show collation;

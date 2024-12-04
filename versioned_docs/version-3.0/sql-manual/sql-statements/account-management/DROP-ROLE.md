@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The statement user removes a role
 
@@ -36,7 +36,7 @@ DROP ROLE [IF EXISTS] role1;
 
 Deleting a role does not affect the permissions of users who previously belonged to the role. It is only equivalent to decoupling the role from the user. The permissions that the user has obtained from the role will not change
 
-### Example
+## Example
 
 1. Drop a role1
 
@@ -44,7 +44,7 @@ Deleting a role does not affect the permissions of users who previously belonged
   DROP ROLE role1;
   ```
 
-### Keywords
+## Keywords
 
 DROP, ROLE
 

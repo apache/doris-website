@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to create a resource. Only the root or admin user can create resources. Currently supports Spark, ODBC, S3 external resources.
 In the future, other external resources may be added to Doris for use, such as Spark/GPU for query, HDFS/S3 for external storage, MapReduce for ETL, etc.
@@ -44,7 +44,7 @@ illustrate:
 - The type of resource needs to be specified in PROPERTIES "type" = "[spark|odbc_catalog|s3]", currently supports spark, odbc_catalog, s3.
 - PROPERTIES differs depending on the resource type, see the example for details.
 
-### Example
+## Examples
 
 1. Create a Spark resource named spark0 in yarn cluster mode.
 
@@ -238,8 +238,8 @@ illustrate:
    - nodes_discovery: Whether or not to enable ES node discovery, the default is true. In network isolation, set this parameter to false. Only the specified node is connected
    - http_ssl_enabled: Whether ES cluster enables https access mode, the current FE/BE implementation is to trust all
 
-### Keywords
+## Keywords
 
     CREATE, RESOURCE
 
-### Best Practice
+## Best Practice

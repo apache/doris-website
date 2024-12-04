@@ -26,7 +26,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to back up the data under the specified database. This command is an asynchronous operation. After the submission is successful, you need to check the progress through the SHOW BACKUP command. Only backing up tables of type OLAP is supported.
 
@@ -53,7 +53,7 @@ illustrate:
   - "type" = "full": indicates that this is a full update (default)
   - "timeout" = "3600": The task timeout period, the default is one day. in seconds.
 
-### Example
+## Example
 
 1. Fully backup the table example_tbl under example_db to the warehouse example_repo:
 
@@ -91,11 +91,11 @@ BACKUP SNAPSHOT example_db.snapshot_label3
 TO example_repo;
 ```
 
-### Keywords
+## Keywords
 
 BACKUP
 
-### Best Practice
+## Best Practice
 
 1. Only one backup operation can be performed under the same database.
 

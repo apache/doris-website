@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to view some information about the Table.
 
@@ -41,7 +41,7 @@ illustrate:
 
 1. This statement is mainly used to be compatible with MySQL syntax, currently only a small amount of information such as Comment is displayed
 
-### Example
+## Examples
 
   1. View the information of all tables under the current database
 
@@ -55,9 +55,9 @@ illustrate:
      SHOW TABLE STATUS FROM db LIKE "%example%";
      ```
 
-### Keywords
+## Keywords
 
     SHOW, TABLE, STATUS
 
-### Best Practice
+## Best Practice
 

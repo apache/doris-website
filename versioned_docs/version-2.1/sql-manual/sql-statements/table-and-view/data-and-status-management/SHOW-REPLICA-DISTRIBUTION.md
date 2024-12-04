@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display the distribution status of a table or partition replica
 
@@ -40,7 +40,7 @@ illustrate:
 
 1. The Graph column in the result shows the replica distribution ratio in the form of a graph
 
-### Example
+## Examples
 
 1. View the replica distribution of the table
 
@@ -54,9 +54,9 @@ illustrate:
      SHOW REPLICA DISTRIBUTION FROM db1.tbl1 PARTITION(p1, p2);
       ```
 
-### Keywords
+## Keywords
 
     ADMIN, SHOW, REPLICA, DISTRIBUTION
 
-### Best Practice
+## Best Practice
 

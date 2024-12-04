@@ -45,7 +45,7 @@ DROP MATERIALIZED VIEW (IF EXISTS)? mvName=multipartIdentifier
 2. mv_name:
         待删除的物化视图的名称。必填项。
 
-### Example
+## Examples
 
 1. 删除表物化视图 mv1
 

@@ -62,7 +62,7 @@ UPDATE target_table [table_alias]
 
 当前 UPDATE 语句仅支持在 UNIQUE KEY 模型上的行更新。
 
-### Example
+## Examples
 
 `test` 表是一个 unique 模型的表，包含: k1, k2, v1, v2  四个列。其中 k1, k2 是 key，v1, v2 是value，聚合方式是 Replace。
 

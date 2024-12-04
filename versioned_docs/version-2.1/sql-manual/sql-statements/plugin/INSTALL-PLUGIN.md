@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to install a plugin.
 
@@ -43,7 +43,7 @@ source supports three types:
 2. An absolute path to a plugin directory.
 3. Point to a zip file download path with http or https protocol
 
-### Example
+## Examples
 
 1. Install a local zip file plugin:
 
@@ -72,9 +72,9 @@ source supports three types:
     INSTALL PLUGIN FROM "http://mywebsite.com/plugin.zip" PROPERTIES("md5sum" = "73877f6029216f4314d712086a146570");
     ```
 
-### Keywords
+## Keywords
 
     INSTALL, PLUGIN
 
-### Best Practice
+## Best Practice
 

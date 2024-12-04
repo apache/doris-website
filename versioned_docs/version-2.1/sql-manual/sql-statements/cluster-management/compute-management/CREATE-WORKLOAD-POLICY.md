@@ -69,7 +69,7 @@ The name of the Workload Policy.
 
 Requires at least `ADMIN_PRIV` permissions.
 
-### Examples
+## Examples
 
 1. Create a new Workload Policy to kill all queries that exceed 3 seconds in query time.
 

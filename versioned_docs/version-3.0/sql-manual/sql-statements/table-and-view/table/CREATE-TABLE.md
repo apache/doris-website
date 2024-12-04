@@ -29,7 +29,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This command is used to create a table. The subject of this document describes the syntax for creating Doris self-maintained tables.
 
@@ -496,7 +496,7 @@ Set table properties. The following attributes are currently supported:
 References related to dynamic partitioning[Data Partitioning-Dynamic partitioning](../../../../table-design/data-partition.md#Dynamic partitioning)
     
 
-### Example
+## Example
 
 1. Create a detailed model table
 
@@ -835,11 +835,11 @@ NOTE: Multi Partition can be mixed with conventional manual creation of partitio
    );
    ```
 
-### Keywords
+## Keywords
 
     CREATE, TABLE
 
-### Best Practice
+## Best Practice
 
 #### Partitioning and bucketing
 

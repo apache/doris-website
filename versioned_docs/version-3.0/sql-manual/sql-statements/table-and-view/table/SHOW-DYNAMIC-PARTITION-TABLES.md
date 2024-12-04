@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW DYNAMIC PARTITION",
+    "title": "SHOW DYNAMIC PARTITION TABLES",
     "language": "en"
 }
 ---
@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-DYNAMIC-PARTITION
-
-### Name
-
-SHOW DYNAMIC
-
-### Description
+## Description
 
 This statement is used to display the status of all dynamic partition tables under the current db
 
@@ -40,7 +34,7 @@ grammar:
 SHOW DYNAMIC PARTITION TABLES [FROM db_name];
 ```
 
-### Example
+## Example
 
   1. Display all dynamic partition table status of database database
 
@@ -48,9 +42,9 @@ SHOW DYNAMIC PARTITION TABLES [FROM db_name];
      SHOW DYNAMIC PARTITION TABLES FROM database;
      ```
 
-### Keywords
+## Keywords
 
     SHOW, DYNAMIC, PARTITION
 
-### Best Practice
+## Best Practice
 

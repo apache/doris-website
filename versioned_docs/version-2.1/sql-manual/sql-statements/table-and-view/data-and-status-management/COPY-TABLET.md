@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to make a snapshot for the specified tablet, mainly used to load the tablet locally to reproduce the problem.
 
@@ -76,7 +76,7 @@ PROPERTIES (
 * ExpirationMinutes: snapshot expiration time
 * CreateTableStmt: The table creation statement for the table corresponding to the tablet. This statement is not the original table-building statement, but a simplified table-building statement for later loading the tablet locally.
 
-### Example
+## Examples
 
 1. Take a snapshot of the replica on the specified BE node
 
@@ -90,9 +90,9 @@ PROPERTIES (
     ADMIN COPY TABLET 10010 PROPERTIES("backend_id" = "10001", "version" = "10");
     ```
 
-### Keywords
+## Keywords
 
     ADMIN, COPY, TABLET
 
-### Best Practice
+## Best Practice
 
