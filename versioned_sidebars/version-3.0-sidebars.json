@@ -1371,6 +1371,7 @@
                                         "sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/MYSQL-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD",
+                                        "sql-manual/sql-statements/data-modification/load-and-export/SHOW-STREAM-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-CREATE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-PROFILE",
@@ -1510,7 +1511,8 @@
                                 "sql-manual/sql-statements/database/ALTER-DATABASE",
                                 "sql-manual/sql-statements/database/DROP-DATABASE",
                                 "sql-manual/sql-statements/database/SHOW-CREATE-DATABASE",
-                                "sql-manual/sql-statements/database/SHOW-DATABASES"
+                                "sql-manual/sql-statements/database/SHOW-DATABASES",
+                                "sql-manual/sql-statements/database/SHOW-DATABASES-ID"
                             ]
                         },
                         {
@@ -1540,9 +1542,11 @@
                                         "sql-manual/sql-statements/table-and-view/table/DROP-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-CREATE-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-TABLES",
+                                        "sql-manual/sql-statements/table-and-view/table/SHOW-TABLE-ID",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-TABLE-STATUS",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-CONVERT-LIGHT-SCHEMA-CHANGE-PROCESS",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-PARTITION",
+                                        "sql-manual/sql-statements/table-and-view/table/SHOW-PARTITION-ID",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-PARTITIONS",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-COLUMNS",
@@ -1604,6 +1608,7 @@
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/COPY-TABLET",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/CHECK-TABLET",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET",
+                                        "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLETS-BELONG",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET-STORAGE-FORMAT",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET-DIAGNOSIS",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SET-REPLICA-STATUS",
@@ -1643,6 +1648,9 @@
                                 "sql-manual/sql-statements/statistics/ANALYZE",
                                 "sql-manual/sql-statements/statistics/ALTER-STATS",
                                 "sql-manual/sql-statements/statistics/DROP-STATS",
+                                "sql-manual/sql-statements/statistics/SHOW-TABLE-STATS",
+                                "sql-manual/sql-statements/statistics/SHOW-STATS",
+                                "sql-manual/sql-statements/statistics/DROP-ANALYZE-JOB",
                                 "sql-manual/sql-statements/statistics/KILL-ANALYZE-JOB",
                                 "sql-manual/sql-statements/statistics/SHOW-ANALYZE"
                             ]
@@ -1663,6 +1671,7 @@
                                         "sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG",
                                         "sql-manual/sql-statements/cluster-management/instance-management/MODIFY-FRONTEND-HOSTNAME",
                                         "sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTENDS",
+                                        "sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTENDS-DISKS",
                                         "sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND",
                                         "sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND",
                                         "sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND",

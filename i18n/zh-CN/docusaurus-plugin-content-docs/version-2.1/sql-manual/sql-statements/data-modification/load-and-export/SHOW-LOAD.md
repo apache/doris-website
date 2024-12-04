@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-LOAD
-
-### Name
-
-SHOW LOAD
 
 ## 描述
 
