@@ -47,11 +47,11 @@ The [Flink Doris Connector](https://github.com/apache/doris-flink-connector) ena
 
 ## Installation and Configuration
 
-可在[这里](https://repo.maven.apache.org/maven2/org/apache/doris/)下载Flink Doris Connector对应版本的Jar包，将此文件复制到 `Flink` 的 `classpath` 中即可使用 `Flink-Doris-Connector` 。 `Standalone` 模式运行的 `Flink` ，将此文件放入 `lib/` 文件夹下。 `Yarn` 集群模式运行的 `Flink` ，则将此文件放入预部署包中。
+You can download the Jar package of the corresponding version of the Flink Doris Connector from [here](https://repo.maven.apache.org/maven2/org/apache/doris/). Copy this file to the `classpath` of `Flink` and then you can use the `Flink-Doris-Connector`. For `Flink` running in `Standalone` mode, put this file under the `lib/` folder. For `Flink` running in the `Yarn` cluster mode, put this file into the predeployment package.
 
 ## Maven
 
-Maven中使用的时候，可以直接在Pom文件中加入如下依赖
+When using it in Maven, you can directly add the following dependency to the Pom file.
 
 ```SQL
 <dependency>
@@ -96,7 +96,7 @@ INSERT INTO test.students values(1,"James",18);
 INSERT INTO test.students values(2,"Emily",28);
 ```
 
-## Reading
+## Read
 
 Flink reading supports reading through [Thrift](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md) and [ArrowFlightSQL](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/) methods (supported after version 24.0.0), and the ArrowFlightSQL method is recommended. At present, the Doris Source is a bounded stream and does not support continuous reading in the form of CDC.
 
@@ -174,7 +174,7 @@ env.execute("Doris Source Test");
 
 For the complete code, refer to：[DorisSourceDataStream.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSourceDataStream.java)
 
-## 写入
+## Write
 
 Flink writing uses the Stream Load method for writing and supports both streaming writing and batch writing modes.
 
