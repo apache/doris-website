@@ -26,14 +26,6 @@ under the License.
 
 
 
-### Name
-
-:::tip Tips
-This feature is supported since the Apache Doris 1.2 version
-:::
-
-ALTER CATALOG
-
 
 
 ### Description

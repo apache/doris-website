@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW FULL COLUMNS
-
 ### Description
 
 This statement is used to specify the column information of the table

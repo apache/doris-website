@@ -26,14 +26,6 @@ under the License.
 
 
 
-
-
-
-
-### Name
-
-UNSET VARIABLE
-
 ### Description
 
 This statement is used to restore Doris system variables. These system variables can be modified at global or session level.

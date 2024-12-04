@@ -23,39 +23,38 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+## Description
 
-## 描述（Description）
+Cancel a running task created by the CREATE JOB statement.
 
-取消通过 [CREATE JOB](https://doris.apache.org/zh-CN/docs/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB) 语句创建生成的正在运行中任务
+- The task must be created by the CREATE JOB statement.
+- It must be a running task.
+- This function is supported from version 2.1.0.
 
-- 任务必须是通过 CREATE JOB 语句创建生成的任务
-- 必须是正在运行中的任务
-- 该函数自 2.1.0 版本支持。
+## Syntax
 
-##  语法（Syntax）
-
-```SQL
+```sql
 CANCEL TASK WHERE jobName = '<job_name>' AND taskId = '<task_id>';
 ```
+## Required Parameters
 
-## 必选参数（Required Parameters）
+**<job_name>**
 
-<job_name>
+> The name of the job, of type string.
 
-> 作业名称，字符串类型。 
+**<task_id>**
 
-<task_id>
+> The task ID, of integer type. It can be queried through the tasks table-valued function. For example: SELECT * FROM tasks('type'='insert'). For more information, please refer to "task table-valued function".
 
-> 任务 ID，整型类型。可通过 tasks 表值函数查询。如：SELECT * FROM tasks('type'='insert')。详细信息请参阅“[task 表值函数](https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/table-valued-functions/tasks)”。
+## Access Control Requirements
 
-## 权限控制（Access Control Requirements）
+The user executing this SQL command must have at least ADMIN_PRIV privileges.
 
-执行此 SQL 命令的用户必须至少具有 ADMIN_PRIV 权限。
+## Examples
 
-## 示例（Examples）
+Cancel a background task with jobName 'example' and taskId 378912.
 
-取消一个 jobName 是 example，taskID 是 378912 的后台任务。
 
-```SQL
+```sql
 CANCEL TASK WHERE jobName='example' AND taskId=378912
 ```

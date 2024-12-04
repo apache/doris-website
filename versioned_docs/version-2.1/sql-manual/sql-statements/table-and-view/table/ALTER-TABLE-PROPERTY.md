@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-ALTER TABLE PROPERTY
-
 :::caution
 Differences between Partition Attributes and Table Attributes
 - Partition attributes generally focus on the number of buckets (buckets), storage medium (storage_medium), replication num (replication_num), and hot/cold data separation policies (storage_policy).

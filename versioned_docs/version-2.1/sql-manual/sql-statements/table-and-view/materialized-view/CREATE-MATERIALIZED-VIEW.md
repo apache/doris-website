@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-CREATE MATERIALIZED VIEW
-
 ### Description
 
 该语句用于创建物化视图。

@@ -25,13 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-
-SHOW QUERY STATS
-
-
 ### Description
 
 This statement is used to show the query hit statistics of the database and table

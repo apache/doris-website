@@ -27,10 +27,6 @@ under the License.
 
 
 
-### Name
-
-ALTER SYSTEM ADD BROKER
-
 ### Description
 
 This statement is used to add a BROKER node. (Administrator only!)

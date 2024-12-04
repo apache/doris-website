@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW PROCESSLIST
-
 ### Description
 
 Display the running threads of the user. It should be noted that except the root user who can see all running threads, other users can only see their own running threads, and cannot see the running threads of other users.

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-PARTITIONS",
+    "title": "SHOW PARTITIONS",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-PARTITIONS
-
-### Name
-
-SHOW PARTITIONS
 
 ### Description
 

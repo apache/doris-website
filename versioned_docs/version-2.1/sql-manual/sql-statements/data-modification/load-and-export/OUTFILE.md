@@ -24,12 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## OUTFILE
-### Name
 
-OUTFILE
-
-### description
+### Description
 
 This statement is used to export query results to a file using the `SELECT INTO OUTFILE` command. Currently, it supports exporting to remote storage, such as HDFS, S3, BOS, COS (Tencent Cloud), through the Broker process, S3 protocol, or HDFS protocol.
     

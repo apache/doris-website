@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW CATALOGS
-
 ### Description
 
 This statement is used for view created catalogs

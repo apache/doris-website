@@ -24,61 +24,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 描述（Description）
+## Description
 
-删除行安全策略。行安全策略的详细信息，请参阅“安全策略”章节
+Delete row security policy. For details about row security policies, please refer to the "Security Policies" chapter
 
-## 语法（Syntax）
 
-```SQL
+## Syntax
+
+```sql
 DROP ROW POLICY <policy_name> on <table_name>
   [ FOR { <user_name> | ROLE <role_name> } ];
 ```
 
-## 必选参数（Required Parameters）
-
+## Required Parameters
 **<policy_name>**
 
-> 行安全策略名称
+> Row security policy name
 
 **<table_name>**
 
-> 表名称
+> Table name
 
-## 可选参数（Optional Parameters）
+# Optional Parameters (Optional Parameters)
 
 **<user_name>**
 
-> 用户名称
+> User name
 
 **<role_name>**
 
-> 角色名称
+> Role name
 
-## 权限控制（Access Control Requirements）
+# Access Control Requirements (Access Control Requirements)
 
-执行此 SQL 命令的用户必须至少具有以下权限：
+The user executing this SQL command must have at least the following privileges:
 
-| 权限（Privilege）          | 对象（Object） | 说明（Notes） |
-| :------------------------- | :------------- | :------------ |
-| ADMIN_PRIV 或 *GRANT_PRIV* | 全局           |               |
+| Privilege                  | Object | Notes |
+| :------------------------- | :----- | :---- |
+| ADMIN_PRIV or *GRANT_PRIV* | Global |       |
 
-## 示例（Examples）
+# Examples (Examples)
 
-1. 删除 *db1.table1* 的 *policy1 行安全策略*
+1. Delete the *policy1 row security policy* for *db1.table1*
 
-```SQL
-DROP ROW POLICY policy1 ON db1.table1
-```
+  ```sql
+  DROP ROW POLICY policy1 ON db1.table1
+  ```
 
-1. 删除 db1.table1 作用于 user1 的 policy1 行安全策略
+1. Delete the policy1 row security policy for db1.table1 that applies to user1
 
-```SQL
-DROP ROW POLICY policy1 ON db1.table1 FOR user1
-```
+  ```sql
+  DROP ROW POLICY policy1 ON db1.table1 FOR user1
+  ```
 
-1. 删除 db1.table1 作用于 role1 的 policy1 行安全策略
+1. Delete the policy1 row security policy for db1.table1 that applies to role1
 
-```SQL
-DROP ROW POLICY policy1 ON db1.table1 FOR role role1
-```
+  ```sql
+  DROP ROW POLICY policy1 ON db1.table1 FOR role role1
+  ```

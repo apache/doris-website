@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW CREATE ASYNC MATERIALIZED VIEW
-
 ### Description
 
 This statement is used to display the creation statement of asynchronous materialized views.

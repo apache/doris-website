@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW VIEW
 
 ### Description
 
@@ -37,7 +34,7 @@ This statement is used to display all views based on the given table
 grammar:
 
 ```sql
-  SHOW VIEW { FROM | IN } table [ FROM db ]
+SHOW VIEW { FROM | IN } table [ FROM db ]
 ```
 
 ### Example
@@ -50,7 +47,7 @@ grammar:
 
 ### Keywords
 
-    SHOW, VIEW
+SHOW, VIEW
 
-### Best Practice
+
 

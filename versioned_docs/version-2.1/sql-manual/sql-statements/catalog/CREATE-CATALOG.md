@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE CATALOG
-
 ### Description
 
 This statement is used to create an external catalog

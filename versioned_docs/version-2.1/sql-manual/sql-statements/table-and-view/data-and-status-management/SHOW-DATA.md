@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW DATA
-
 ### Description
 
 This statement is used to display the amount of data, the number of replicas, and the number of statistical rows.

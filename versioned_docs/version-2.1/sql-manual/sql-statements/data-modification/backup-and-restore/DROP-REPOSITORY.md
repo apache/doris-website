@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-DROP REPOSITORY
-
 ### Description
 
 This statement is used to delete a created repository. Only root or superuser users can delete repositories.

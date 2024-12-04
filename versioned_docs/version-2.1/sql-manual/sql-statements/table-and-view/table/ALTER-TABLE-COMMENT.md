@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-ALTER TABLE COMMENT
-
 ### Description
 
 This statement is used to modify the comment of an existing table. The operation is synchronous, and the command returns to indicate completion.

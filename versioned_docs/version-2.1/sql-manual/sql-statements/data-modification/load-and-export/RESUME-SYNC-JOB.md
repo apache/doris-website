@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-RESUME SYNC JOB
-
 ### Description
 
 Resume a resident data synchronization job whose current database has been suspended by `job_name`, and the job will continue to synchronize data from the latest position before the last suspension.

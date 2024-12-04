@@ -27,10 +27,6 @@ under the License.
 
 
 
-### Name
-
-SHOW LAST INSERT
-
 ### Description
 
 This syntax is used to view the result of the latest insert operation in the current session connection

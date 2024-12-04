@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-GRANT
-
 ### Description
 
 The GRANT command has the following functions:

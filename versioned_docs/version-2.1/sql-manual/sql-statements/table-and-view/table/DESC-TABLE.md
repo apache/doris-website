@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-DESCRIBE
-
 ### Description
 
 This statement is used to display the schema information of the specified table

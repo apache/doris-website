@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-PAUSE ROUTINE LOAD
 
 ### Description
 

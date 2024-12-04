@@ -23,12 +23,6 @@ under the License.
 -->
 
 
-
-
-### Name
-
-ADMIN CANCEL REBALANCE DISK
-
 ### Description
 
 This statement is used to cancel rebalancing disks of specified backends with high priority

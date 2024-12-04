@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-SHOW TABLETS
-
-### Description
+## Description
 
 This statement is used to list tablets of the specified table (only for administrators)
 

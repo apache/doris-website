@@ -26,12 +26,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-ADMIN CLEAN TRASH
-
 ### Description
 
 This statement is used to clean up garbage data in the backend

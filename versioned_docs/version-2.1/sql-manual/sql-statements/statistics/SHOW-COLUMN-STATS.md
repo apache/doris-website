@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW COLUMN STATS
-
 ### Description
 
 Use `SHOW COLUMN STATS` to view various statistics data for columns.

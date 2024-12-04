@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-SHOW DATABASES
-
 ### Description
 
 This statement is used to display the currently visible db

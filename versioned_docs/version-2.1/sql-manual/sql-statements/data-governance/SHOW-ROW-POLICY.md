@@ -24,50 +24,50 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 描述（Description）
+## Description
 
-查看行安全策略。行安全策略的详细信息，请参阅“安全策略”章节
+View row security policies. For details on row security policies, refer to the "Security Policies" chapter
 
-## 语法（Syntax）
+## Syntax
 
-```SQL
+```sql
 SHOW ROW POLICY [ FOR { <user_name> | ROLE <role_name> } ];
 ```
-
-## 可选参数（Optional Parameters）
+## Optional Parameters
 
 **<user_name>**
 
-> 用户名称
+> User name
 
 **<role_name>**
 
-> 角色名称
+> Role name
 
-## 权限控制（Access Control Requirements）
+## Access Control Requirements
 
-执行此 SQL 命令的用户必须至少具有以下权限：
+The user executing this SQL command must have at least the following privileges:
 
-| 权限（Privilege） | 对象（Object） | 说明（Notes） |
-| :---------------- | :------------- | :------------ |
-| ADMIN_PRIV        | 全局           |               |
+| Privilege  | Object | Notes |
+| :--------- | :----- | :---- |
+| ADMIN_PRIV | Global |       |
 
-## 示例（Examples）
+## Examples
 
-1. 查看所有安全策略
+1. View all security policies
 
-```SQL
-SHOW ROW POLICY;
-```
 
-1. 指定用户名查询
+  ```sql
+  SHOW ROW POLICY;
+  ```
 
-```SQL
-SHOW ROW POLICY FOR user1;
-```
+1. Query by specifying a user name
 
-1. 指定角色名查询
+  ```sql
+  SHOW ROW POLICY FOR user1;
+  ```
 
-```SQL
-SHOW ROW POLICY for role role1;
-```
+1. Query by specifying a role name
+
+  ```sql
+  SHOW ROW POLICY for role role1;
+  ```

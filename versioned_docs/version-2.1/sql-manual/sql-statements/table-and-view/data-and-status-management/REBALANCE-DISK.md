@@ -23,11 +23,6 @@ under the License.
 -->
 
 
-
-### Name
-
-ADMIN REBALANCE DISK
-
 ### Description
 
 This statement is used to try to rebalance disks of the specified backends first, no matter if the cluster is balanced

@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW GRANTS
-
 ### Description
 
   This statement is used to view user permissions.

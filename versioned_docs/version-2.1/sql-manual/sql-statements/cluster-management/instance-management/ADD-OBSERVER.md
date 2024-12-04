@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER SYSTEM ADD OBSERVER
-
 ### Description
 
 This statement is to increase the node of the OBSERVER role of FRONTEND, (only for administrators!)

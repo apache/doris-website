@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW CREATE MATERIALIZED VIEW
-
 ### Description
 
 This statement is used to query statements that create materialized views.

@@ -24,42 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Description
 
-## 描述（Description）
+Delete a view in the current or specified database.
 
-在当前或指定的数据库中删除一个视图。
+## Syntax
 
-## 语法（Syntax）
-
-```Plain
+```sql
 DROP VIEW [ IF EXISTS ] <name>
 ```
+## Required Parameters
 
-## 必选参数（Required Parameters）
+The name of the view to be deleted.
 
-**<name>**  要删除的视图名称。
+## Optional Parameters
 
-## 可选参数（Optional Parameters）
+**[ IF EXISTS ]**
 
-**[** **IF EXISTS** **]**
+If this parameter is specified, no error will be thrown when the view does not exist, and the deletion operation will be skipped directly.
 
-如果指定此参数，当视图不存在时不会抛出错误，而是直接跳过删除操作。
+## Access Control Requirements
 
-## 权限控制（Access Control Requirements）
+The user executing this SQL command must have at least the following privileges:
 
-执行此 SQL 命令的用户必须至少具有以下权限：
+| Privilege | Object | Notes |
+| :-------- | :----- | :---- |
+| DROP_PRIV | Table  |       |
 
-| 权限（Privilege） | 对象（Object） | 说明（Notes） |
-| :---------------- | :------------- | :------------ |
-| DROP_PRIV         | 表（Table）    |               |
+## Usage Notes
 
-## 注意事项（Usage Notes）
+Deleted views cannot be restored and must be recreated.
 
-已删除的视图无法恢复，必须重新创建。
+## Examples
 
-## 示例（Examples）
-
-```SQL
+```sql
 CREATE VIEW vtest AS SELECT 1, 'test';
 DROP VIEW IF EXISTS vtest;
 ```

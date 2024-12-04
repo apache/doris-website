@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-CANCEL MATERIALIZED VIEW TASK
-
 ### Description
 
 This statement is used to cancel the task of materialized views

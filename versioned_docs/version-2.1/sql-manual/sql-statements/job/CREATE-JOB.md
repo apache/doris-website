@@ -26,13 +26,6 @@ under the License.
 -->
 
 
-### Name
-
-:::tip
-CREATE JOB
-- since 2.1
-:::
-
 ### Description
 
 Doris Job is a task that runs according to a predefined schedule, triggering predefined actions at specific times or intervals to help automate certain tasks. In terms of functionality, it is similar to scheduled tasks on operating systems (e.g., cron in Linux, scheduled tasks in Windows).↳

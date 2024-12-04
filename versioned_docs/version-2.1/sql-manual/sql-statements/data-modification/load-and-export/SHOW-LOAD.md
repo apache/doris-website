@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW LOAD
-
 ### Description
 
 This statement is used to display the execution of the specified import task

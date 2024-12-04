@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-DROP ASYNC MATERIALIZED VIEW
-
 ### Description
 
 This statement is used to delete asynchronous materialized views.

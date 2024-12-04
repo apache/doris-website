@@ -25,35 +25,34 @@ under the License.
 -->
 
 
+## Description
 
-## 描述（Description）
+Delete the history of the specified statistics collection job.
 
-删除指定的统计信息收集作业的历史记录。
+## Syntax
 
-## 语法（Syntax）
-
-```SQL
+```sql
 DROP ANALYZE JOB <job_id>
 ```
 
-## 必选参数（Required Parameters）
+# Required Parameters
 
 **<job_id>**
 
-> 指定作业的 id。可以通过 SHOW ANALYZE 获取作业的 job_id。详细用法，请参阅“SHOW ANALYZE”章节
+> Specifies the id of the job. You can obtain the job_id by running SHOW ANALYZE. For detailed usage, please refer to the "SHOW ANALYZE" section.
 
-## 权限控制（Access Control Requirements）
+## Access Control Requirements
 
-执行此 SQL 命令的用户必须至少具有以下权限：
+The user executing this SQL command must have at least the following privileges:
 
-| 权限（Privilege） | 对象（Object） | 说明（Notes） |
-| :---------------- | :------------- | :------------ |
-| SELECT_PRIV       | 表（Table）    |               |
+| Privilege | Object | Notes |
+| ----------- | ------ | ----- |
+| SELECT_PRIV | Table  |       |
 
-## 示例（Examples）
+## Examples
 
-删除 id 为 10036 的统计信息作业记录
+Delete the statistics information job record with id 10036
 
-```SQL
+```sql
 DROP ANALYZE JOB 10036
 ```

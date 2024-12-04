@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE SYNC JOB
-
 ### Description
 
 The data synchronization (Sync Job) function supports users to submit a resident data synchronization job, and incrementally synchronizes the CDC (Change Data Capture) of the user's data update operation in the Mysql database by reading the Binlog log from the specified remote address. Features.

@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW SNAPSHOT
-
 ### Description
 
 This statement is used to view backups that already exist in the repository.

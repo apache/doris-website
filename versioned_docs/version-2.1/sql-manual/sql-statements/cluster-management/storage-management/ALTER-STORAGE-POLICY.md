@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-POLICY
 
-### Name
-
-ALTER STORAGE POLICY
 
 ### Description
 

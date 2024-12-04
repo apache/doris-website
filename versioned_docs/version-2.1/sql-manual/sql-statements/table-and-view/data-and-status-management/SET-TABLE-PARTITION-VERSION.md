@@ -24,39 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 描述（Description）
+## Description
 
-存算一体模式，该语句用于手动改变指定分区的可见版本。在某些特殊情况下，元数据中分区的版本有可能和实际副本的版本不一致。该命令可手动改变元数据中分区的版本。此命令一般只用于紧急故障修复，请谨慎操作。
+In compute-storage coupled mode. This statement is used to manually change the visible version of the specified partition. In some special cases, the version of the partition in the metadata may be inconsistent with the version of the actual replica. 
 
-## 语法（Syntax）
+This command can manually change the version of the partition in the metadata. This command is generally only used for emergency failure recovery. Please operate with caution.
 
-```SQL
+## Syntax
+
+```sql
 ADMIN SET TABLE <table_name> PARTITION VERSION PROPERTIES ("<partition_id>" = "visible_version>");
 ```
 
-## 必选参数（Required Parameters）
+## Required Parameters
 
 <table_name>
 
-> 待设置的表名
+> The name of the table to be set.
 
 <partition_id>
 
-> 指定一个 Partition Id
+> Specify a Partition Id.
 
 <visible_version>
 
-> 指定 Version
+> Specify Version.
 
-## 示例（Example）
+## Examples
 
-1. 设置 partition_id 为 10075 的分区在 FE 元数据上的版本为 100
+1. Set the version of the partition with partition_id 10075 to 100 in the FE metadata.
 
-```SQL
-ADMIN SET TABLE __internal_schema.audit_log PARTITION VERSION PROPERTIES("partition_id" = "10075", "visible_version" = "100");
-```
+  ```sql
+  ADMIN SET TABLE __internal_schema.audit_log PARTITION VERSION PROPERTIES("partition_id" = "10075", "visible_version" = "100");
+  ```
+## Usage Note
 
-## 注意事项（Usage Note）
-
-1. 设置分区的版本需要先确认 BE 机器上实际副本的版本，此命令一般只用于紧急故障修复，请谨慎操作。
-2. 存算分离模式不支持这个命令，设置了不会生效
+1. Before setting the partition version, you need to confirm the version of the actual replica on the BE machine. This command is generally only used for emergency failure recovery. Please operate with caution.
+2. This command is not supported in the storage-computing separation mode. It will not take effect if set.

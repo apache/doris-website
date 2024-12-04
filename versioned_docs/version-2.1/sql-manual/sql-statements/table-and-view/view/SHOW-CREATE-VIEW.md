@@ -24,47 +24,47 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 描述（Description）
+## Description
 
-显示指定视图创建时的 CREATE VIEW 语句。
+Display the CREATE VIEW statement used to create the specified view.
 
-## 语法（Syntax）
+## Syntax
 
-```SQL
+```sql
 SHOW CREATE VIEW <name>
 ```
 
-## 必选参数（Required Parameters）
+## Required Parameters
 
-**<name>**  要查看的视图名称。
+**<name>**  The name of the view to view.
 
-## 返回结果（Result Description）
+## Result Description
 
-- View: 查询的视图名称。
-- Create View: 数据库中持久化的 SQL 语句。
-- character_set_client: 表示创建视图时会话中 character_set_client 系统变量的值。
-- collation_connection: 表示创建视图时会话中 collation_connection 系统变量的值。
+- View: The name of the queried view.
+- Create View: The persisted SQL statement in the database.
+- character_set_client: The value of the character_set_client system variable in the session when the view was created.
+- collation_connection: The value of the collation_connection system variable in the session when the view was created.
 
-## 权限控制（Access Control Requirements）
+## Access Control Requirements
 
-执行此 SQL 命令的用户必须至少具有以下权限：
+Users executing this SQL command must have at least the following privileges:
 
-| 权限（Privilege） | 对象（Object） | 说明（Notes） |
-| :---------------- | :------------- | :------------ |
-| SHOW_VIEW_PRIV    | 表（Table）    |               |
+| Privilege        | Object | Notes |
+| ---------------- | ------ | ----- |
+| SHOW_VIEW_PRIV   | Table  |       |
 
-视图信息还可以通过 INFORMATION_SCHEMA.VIEWS 表查询。
+View information can also be queried via the INFORMATION_SCHEMA.VIEWS table.
 
-## 示例（Examples）
+## Examples
 
-```SQL
+```sql
 CREATE VIEW vtest AS SELECT 1, 'test';
 SHOW CREATE VIEW vtest;
 ```
 
-查询结果：
+Query result:
 
-```SQL
+```sql
 +-------+------------------------------------------+----------------------+----------------------+
 | View  | Create View                              | character_set_client | collation_connection |
 +-------+------------------------------------------+----------------------+----------------------+

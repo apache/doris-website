@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-DELETE
-
 ### Description
 
 This statement is used to conditionally delete data in the specified table (base index) partition.

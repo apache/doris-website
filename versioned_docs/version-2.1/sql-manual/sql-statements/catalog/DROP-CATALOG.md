@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE CATALOG
 
 ### Description
 

@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW PROC
-
 ### Description
 
 The Proc system is a unique feature of Doris. Students who have used Linux may understand this concept better. In Linux systems, proc is a virtual file system, usually mounted in the /proc directory. Users can view the internal data structure of the system through this file system. For example, you can view the details of the specified pid process through /proc/pid.

@@ -25,36 +25,36 @@ under the License.
 -->
 
 
-## 描述
+## Description
 
-开启一个显式事务。用户可以指定 Label，如未指定，系统自动生成 Label。
+Users can specify a Label. If not specified, the system will generate a Label automatically.
 
-## 语法
+## Syntax
 
 ```sql
 BEGIN [ WITH LABEL <label> ]
 ```
 
-## 可选参数
+## Optional Parameter
 
 `[ WITH LABEL <label> ]`
 
-> 显式指定该事务关联的 Label，如未指定，系统自动生成 [label](../../../data-operate/transaction#不重不丢) 。
+> Explicitly specify the Label associated with the transaction. If not specified, the system will generate a [label](../../../data-operate/transaction) automatically.
 
-## 注意事项
+## Notes
 
-- 如果开启了一个显式事务，没有执行提交或回滚，再次执行 BEGIN 命令不生效
+- If an explicit transaction is started without a commit or rollback, executing the BEGIN command again will not take effect.
 
-## 示例
+## Examples
 
-使用系统自动生成的 Label 开启显式事务
+Start an explicit transaction using a system-generated Label
 
 ```sql
 mysql> BEGIN;
 {'label':'txn_insert_624a0e16ef4c43d4-9814c7fa3e83a705', 'status':'PREPARE', 'txnId':''}
 ```
 
-指定 Label 开启显式事务
+Start an explicit transaction with a specified Label
 
 ```sql
 mysql> BEGIN WITH LABEL load_1;

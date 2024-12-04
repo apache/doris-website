@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CLEAN-PROFILE
 
-### Name
-
-CLEAN PROFILE
 
 ### Description
 

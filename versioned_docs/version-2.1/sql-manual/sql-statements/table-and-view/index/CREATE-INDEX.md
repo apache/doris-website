@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-CREATE INDEX
-
 ### Description
 
 This statement is used to create an index

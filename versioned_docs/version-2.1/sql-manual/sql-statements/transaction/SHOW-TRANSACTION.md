@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW TRANSACTION
-
 ### Description
 
 This syntax is used to view transaction details for the specified transaction id or label.

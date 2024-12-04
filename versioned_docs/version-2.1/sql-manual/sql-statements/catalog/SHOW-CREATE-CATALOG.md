@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW CREATE CATALOG
-
 ### Description
 
 This statement shows the creating statement of a doris catalog.

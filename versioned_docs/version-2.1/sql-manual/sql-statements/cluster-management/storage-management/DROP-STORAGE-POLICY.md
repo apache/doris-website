@@ -23,34 +23,33 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-## 描述（Description）
+## Description
 
-删除存储策略。存储策略的详细说明，请参阅“存储策略”章节。
+Delete a storage policy. For detailed descriptions of storage policies, please refer to the "Storage Policy" chapter.
 
-## 语法（Syntax）
+## Syntax
 
-```SQL
+```sql
 DROP STORAGE POLICY <policy_name>
 ```
-
-## 必选参数（Required Parameters）
+## Required Parameters
 
 **<policy_name>**
 
-> 存储策略名称
+> Storage policy name
 
-## 权限控制（Access Control Requirements）
+## Access Control Requirements
 
-执行此 SQL 命令的用户必须至少具有以下权限：
+The user executing this SQL command must have at least the following privileges:
 
-| 权限（Privilege） | 对象（Object） | 说明（Notes） |
-| :---------------- | :------------- | :------------ |
-| ADMIN_PRIV        | 全局           |               |
+| Privilege  | Object | Notes |
+| ---------- | ------ | ----- |
+| ADMIN_PRIV | Global |       |
 
-## 示例（Examples）
+## Examples
 
-1. 删除名字为 policy1 的存储策略
+1. Delete a storage policy named policy1
 
-```SQL
-DROP STORAGE POLICY policy1
-```
+  ```sql
+  DROP STORAGE POLICY policy1
+  ```

@@ -26,17 +26,18 @@ under the License.
 
 
 
-## 描述（Description）
+## Description
 
-修改一个 Workload Group 的属性，目前只支持修改属性，不支持修改 action 和 condition。
+Modify the properties of a Workload Group. Currently, only property modifications are supported; modifications to actions and conditions are not supported.
 
-## 语法（Syntax）
 
-```SQL
+## Syntax
+
+```sql
 ALTER WORKLOAD POLICY <workload_policy_name> PROPERTIES( <properties> )
 ```
 
-## 必选参数（Required Parameters）
+## Required Parameters
 
 **<workload_policy_name>**
 
@@ -44,17 +45,17 @@ Workload Policy 的 name
 
 **<properties>**
 
-1. enabled，取值为 true 或 false，默认值为 true，表示当前 policy 处于启用状态，false 表示当前 policy 处于禁用状态。
-2.  priority，取值范围为 0 到 100 的正整数，默认值为 0，代表 policy 的优先级，该值越大，优先级越高。这个属性的主要作用是，当匹配到多个 policy 时，选择优先级最高的 policy。
-3. workload_group，目前一个 policy 可以绑定一个 workload group，代表这个 policy 只对某个 workload group 生效。默认为空，代表对所有查询生效。
+1. enabled: Can be true or false, with a default value of true, indicating that the current policy is enabled. false indicates that the current policy is disabled.
+2. priority: A positive integer ranging from 0 to 100, with a default value of 0. This represents the priority of the policy. The higher the value, the higher the priority. The main role of this property is to select the policy with the highest priority when multiple policies match.
+3. workload_group: Currently, a policy can be bound to one workload group, which means that this policy is only effective for a specific workload group. The default is empty, which means it is effective for all queries.
 
 ## 权限控制（Access Control Requirements）
 
-至少具有`ADMIN_PRIV`权限
+You must have at least ADMIN_PRIV permissions.
 
 ## 示例（Examples）
 
-1. 禁用一个 Workload Policy
+1. Disable a Workload Policy
 
 ```Java
 alter workload policy cancel_big_query properties('enabled'='false')

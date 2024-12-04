@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW PRIVILEGES
-
 ### Description
 
 This statement is used to display all permission items.

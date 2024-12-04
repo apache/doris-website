@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-PAUSE MATERIALIZED VIEW
-
 ### Description
 
 This statement is used to pause the scheduled scheduling of materialized views

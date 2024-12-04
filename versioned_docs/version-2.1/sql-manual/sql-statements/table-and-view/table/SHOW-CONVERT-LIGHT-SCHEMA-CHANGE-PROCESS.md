@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS
 
 ### Description
 

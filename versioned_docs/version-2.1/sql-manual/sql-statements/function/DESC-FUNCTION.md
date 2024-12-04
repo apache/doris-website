@@ -24,33 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 描述（Description）
+## Description
 
-利用 desc function table_valued_function 获取对应表值函数的 schema 信息。
+Use the desc function table_valued_function to obtain the schema information for the corresponding table-valued function.
 
-## 语法（Syntax）
+## Syntax
 
-```SQL
+```sql
 DESC FUNCTION <table_valued_function>
 ```
 
-## 必选参数（Required Parameters）
+## Required Parameters
 
 **<table_valued_function>**
 
-> table_valued_function，表值函数的名字，如 CATALOGS。支持的表值函数列表，请参阅“[表值函数](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/table-valued-functions/s3/)”章节
+> table_valued_function, the name of the table-valued function, such as CATALOGS. For a list of supported table-valued functions, please refer to the "[Table-Valued Functions](https://doris.apache.org/en/docs/dev/sql-manual/sql-functions/table-valued-functions/s3/)" section
 
-## 示例（Examples）
+## Examples
 
-查询表值函数 CATALOGS 的信息：
+Query the information of the table-valued function CATALOGS:
 
-```SQL
+```sql
 DESC FUNCTION catalogs();
 ```
 
-结果如下：
+The result is as follows:
 
-```SQL
+```sql
 +-------------+--------+------+-------+---------+-------+
 | Field       | Type   | Null | Key   | Default | Extra |
 +-------------+--------+------+-------+---------+-------+

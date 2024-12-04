@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-ADMIN SET TABLE STATUS
-
 ### Description
 
 This statement is used to set the state of the specified table. Only supports OLAP tables.

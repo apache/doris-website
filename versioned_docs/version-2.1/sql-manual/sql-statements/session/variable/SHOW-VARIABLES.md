@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW VARIABLES
-
 ### Description
 
 This statement is used to display Doris system variables, which can be queried by conditions

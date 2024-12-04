@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-ALTER COLOCATE GROUP
-
- 
 
 ### Description
 

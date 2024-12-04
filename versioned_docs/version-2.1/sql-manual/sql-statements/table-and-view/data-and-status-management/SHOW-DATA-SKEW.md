@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW DATA SKEW
-
 ### Description
 
     This statement is used to view the data skew of a table or a partition.

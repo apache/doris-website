@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW BROKER
-
 ### Description
 
 This statement is used to view the currently existing broker

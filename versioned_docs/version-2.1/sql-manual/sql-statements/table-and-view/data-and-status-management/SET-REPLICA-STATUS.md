@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ADMIN SET REPLICA STATUS
-
 ### Description
 
 This statement is used to set the state of the specified replica.

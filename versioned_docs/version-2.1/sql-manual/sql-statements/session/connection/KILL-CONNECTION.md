@@ -23,37 +23,38 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-## 描述（Description）
 
-杀死一个指定连接 ID 的连接。进而会杀死此连接对应的查询。
+## Description
 
-## 语法（Syntax）
+Kill a connection with a specified connection ID. This will also kill the query associated with this connection.
 
-```Plain
+## Syntax
+
+```sql
 KILL [ CONNECTION ] <connection_id>
 ```
 
-## 必选参数（Required Parameters）
+## Required Parameters
 
 **<connection_id>**
 
-> 链接的 ID。可以通过 SHOW PROCESSLIST 语句查询。
+> The ID of the connection. It can be queried through the SHOW PROCESSLIST statement.
 
-## 权限控制（Access Control Requirements）
+## Access Control Requirements
 
-执行此 SQL 命令的用户必须是此连接所属的用户，或者至少具有`ADMIN_PRIV`权限
+The user executing this SQL command must be the user who owns the connection or have at least `ADMIN_PRIV` permission.
 
-## 示例（Examples）
+## Examples
 
-查询 `connection_id`:
+Query `connection_id`:
 
-```SQL
+```sql
 show processlist;
 ```
 
-结果如下：
+Result:
 
-```SQL
+```sql
 +------------------+----+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+--------------+--------------+
 | CurrentConnected | Id | User | Host            | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info             | FE           | CloudCluster |
 +------------------+----+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+--------------+--------------+
@@ -61,8 +62,8 @@ show processlist;
 +------------------+----+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+--------------+--------------+
 ```
 
-发送 KILL 命令
+Send KILL command:
 
-```SQL
+```sql
 KILL CONNECTION 16;
 ```
