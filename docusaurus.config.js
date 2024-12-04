@@ -230,7 +230,7 @@ const config = {
             },
             announcementBar: {
                 id: 'apache_doris_meetup_singapore',
-                content: `<a href="https://5234442745174.huodongxing.com/event/5782312528011" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Join the Doris Summit Asia 2024 on December 14 ! </a>`,
+                content: `<a href="" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">All eyes of the community are on Shenzhen right now 🔥 Join the Doris Summit Asia 2024 on December 14! 🔥  </a>`,
                 backgroundColor: '#3C2FD4',
                 textColor: '#FFFFFF',
                 // isCloseable: false,
