@@ -45,9 +45,9 @@ Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/s
 
 - 从官网下载
   - 不包含依赖的安装包
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem
+https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.0.1.gem
   - 包含依赖的安装包
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.zip
+https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.0.1.zip
 
 - 从源码编译
 
@@ -99,7 +99,7 @@ Logstash Doris output plugin 的配置如下：
 `message_only` | 一种特殊的 mapping 形式，只将 Logstash 的 @message 字段输出到 Doris，默认为 false
 `max_retries` | Doris Stream Load 请求失败重试次数，默认为 -1 无限重试保证数据可靠性
 `log_request` | 日志中是否输出 Doris Stream Load 请求和响应元数据，用于排查问题，默认为 false
-`log_speed_interval` | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
+`log_progress_interval` | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
 
 
 ## 使用示例

@@ -45,9 +45,9 @@ You can download the plugin from the official website or compile it from the sou
 
 - Download from the official website
    - Installation package without dependencies
-   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem)
+   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.0.1.gem](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.0.1.gem)
    - Installation package with dependencies
-   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.zip](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.zip)
+   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.0.1.zip](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.0.1.zip)
 
 - Compile from source code
 
@@ -100,7 +100,7 @@ Configuration | Description
 `message_only` | A special form of mapping, only outputs the Logstash @message field to Doris, default is false
 `max_retries` | Number of retries for Doris Stream Load requests on failure, default is -1 for infinite retries to ensure data reliability
 `log_request` | Whether to output Doris Stream Load request and response metadata in logs for troubleshooting, default is false
-`log_speed_interval` | Time interval for outputting speed in logs, unit is seconds, default is 10, setting to 0 can disable this type of logging
+`log_progress_interval` | Time interval for outputting speed in logs, unit is seconds, default is 10, setting to 0 can disable this type of logging
 
 
 ## Usage Example

@@ -37,7 +37,7 @@ Fluent Bit Doris Output Plugin 调用 [Doris Stream Load](../data-operate/import
 
 ### 从官网下载
 
-https://github.com/joker-star-l/fluent-bit/releases/download/v3.1.9-alpha/fluent-bit
+https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/fluent-bit-3.1.9
 
 ### 从源码编译
 
