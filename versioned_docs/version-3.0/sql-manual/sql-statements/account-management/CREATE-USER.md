@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-USER",
+    "title": "CREATE USER",
     "language": "en"
 }
 ---
@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-USER
 
-### Name
-
-CREATE USER
 
 ### Description
 
@@ -133,7 +129,7 @@ If a role (ROLE) is specified, the newly created user will be automatically gran
 
 ### Keywords
 
-    CREATE, USER
+CREATE, USER
 
-### Best Practice
+
 

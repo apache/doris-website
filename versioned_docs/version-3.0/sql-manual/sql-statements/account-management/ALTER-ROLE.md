@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ALTER-ROLE",
+    "title": "ALTER ROLE",
     "language": "en"
 }
 ---
@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER ROLE
 
-### Name
-
-ALTER ROLE
 
 ### Description
 
@@ -48,7 +44,7 @@ Statement used to modify a role
 
 ### Keywords
 
-    ALTER, ROLE
+ALTER, ROLE
 
 ### Best Practice
 

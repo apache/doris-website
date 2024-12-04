@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW ROUTINE LOAD
-
 ### Description
 
 This statement is used to display the running status of the Routine Load job

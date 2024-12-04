@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-ROLE",
+    "title": "CREATE ROLE",
     "language": "en"
 }
 ---
@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-ROLE
 
-### Name
-
-CREATE ROLE
 
 ### Description
 
@@ -56,6 +52,6 @@ This statement creates an unprivileged role, which can be subsequently granted w
 
 ### Keywords
 
-     CREATE, ROLE
+CREATE, ROLE
 
 ### Best Practice

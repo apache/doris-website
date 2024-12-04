@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-CANCEL RESTORE
-
 ### Description
 
 This statement is used to cancel an ongoing RESTORE task.

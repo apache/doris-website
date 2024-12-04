@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-ADMIN CANCEL REPAIR
-
 ### Description
 
 This statement is used to cancel the repair of the specified table or partition with high priority

@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW BACKUP
-
 ### Description
 
 This statement is used to view BACKUP tasks

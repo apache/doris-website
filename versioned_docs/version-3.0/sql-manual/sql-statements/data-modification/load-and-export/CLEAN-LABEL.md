@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-CLEAN LABEL
-
 ### Description
 
 For manual cleanup of historical load jobs. After cleaning, the Label can be reused.

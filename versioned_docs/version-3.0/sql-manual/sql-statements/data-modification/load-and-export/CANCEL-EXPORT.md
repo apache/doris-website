@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL-EXPORT",
+    "title": "CANCEL EXPORT",
     "language": "en"
 }
 
@@ -26,14 +26,6 @@ under the License.
 -->
 
 
-
-### Name
-
-:::tip Tips
-This feature is supported since the Apache Doris 1.2.2 version
-:::
-
-CANCEL EXPORT 
 
 ### Description
 

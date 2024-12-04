@@ -27,9 +27,7 @@ under the License.
 
 
 
-### Name
 
-ALTER SYSTEM MKDIFY BACKEND
 
 ### Description
 

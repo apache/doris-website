@@ -29,9 +29,6 @@ under the License.
 
 
 
-### Name
-
-ALTER RESOURCE
 
 ### Description
 

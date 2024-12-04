@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-ROLES",
+    "title": "SHOW ROLES",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-ROLES
+
 
 ### Name
 
@@ -36,7 +36,7 @@ This statement is used to display all created role information, including role n
 
 grammar:
 
-```SQL
+```sql
 SHOW ROLES
 ```
 
@@ -44,7 +44,7 @@ SHOW ROLES
 
 1. View created roles
 
-    ```SQL
+    ```sql
     SHOW ROLES
     ```
 

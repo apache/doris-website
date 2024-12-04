@@ -1,6 +1,6 @@
 ---
 {
-"title": "PAUSE-JOB",
+"title": "PAUSE JOB",
 "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## PAUSE-JOB
-
-### Name
-
-PAUSE JOB
 
 ### Description
 

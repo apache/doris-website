@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-GRANTS",
+    "title": "SHOW GRANTS",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-GRANTS
-
-### Name
-
-SHOW GRANTS
 
 ### Description
 

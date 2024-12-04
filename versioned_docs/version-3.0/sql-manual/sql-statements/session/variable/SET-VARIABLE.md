@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SET-VARIABLE
-
-### Name
-
-SET VARIABLE
 
 ### Description
 

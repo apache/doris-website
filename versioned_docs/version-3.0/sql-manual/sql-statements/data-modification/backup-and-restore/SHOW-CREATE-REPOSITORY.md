@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW CREATE REPOSITORY
-
 ### Description
 
 This statement is used to demonstrate the creation statement of a repository.

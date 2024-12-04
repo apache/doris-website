@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW REPLICA DISTRIBUTION
-
 ### Description
 
 This statement is used to display the distribution status of a table or partition replica

@@ -27,14 +27,6 @@ under the License.
 
 
 
-### Name
-
-:::tip Tips
-This feature is supported since the Apache Doris 1.2 version
-:::
-
-ALTER CATALOG
-
 
 
 ### Description
@@ -80,21 +72,21 @@ illustrate：
 
 1. rename catalog ctlg_hive to hive
 
-```sql
-ALTER CATALOG ctlg_hive RENAME hive;
-```
+  ```sql
+  ALTER CATALOG ctlg_hive RENAME hive;
+  ```
 
 3. modify property `hive.metastore.uris` of catalog hive
 
-```sql
-ALTER CATALOG hive SET PROPERTIES ('hive.metastore.uris'='thrift://172.21.0.1:9083');
-```
+  ```sql
+  ALTER CATALOG hive SET PROPERTIES ('hive.metastore.uris'='thrift://172.21.0.1:9083');
+  ```
 
 4. modify comment of catalog hive
 
-```sql
-ALTER CATALOG hive MODIFY COMMENT "new catalog comment";
-```
+  ```sql
+  ALTER CATALOG hive MODIFY COMMENT "new catalog comment";
+  ```
 
 ### Keywords
 

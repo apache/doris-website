@@ -1,6 +1,6 @@
 ---
 {
-    "title": "REVOKE",
+    "title": "REVOKE FROM",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-REVOKE
 
 ### Description
 
@@ -78,25 +73,25 @@ role_list is the list of roles to be revoked, separated by commas. The specified
 
 4. Revoke user jack usage privilege on 'g1';
 
-    ```
+    ```sql
     REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'jack'@'%';
     ```
 
 5. Revoke user jack usage privilege on all Workload Group;
 
-    ```
+    ```sql
     REVOKE USAGE_PRIV ON WORKLOAD GROUP '%' FROM 'jack'@'%';
     ```
 
 6. Revoke role test_role usage privilege on Workload Group 'g1';
 
-    ```
+   ```sql
    REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'test_role';
    ```
 
 ### Keywords
 
-    REVOKE
+REVOKE
 
-### Best Practice
+
 

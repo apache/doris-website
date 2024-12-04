@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE WORKLOAD GORUP",
+    "title": "CREATE WORKLOAD GROUP",
     "language": "en"
 }
 ---
@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE WORKLOAD GROUP
 
  
 

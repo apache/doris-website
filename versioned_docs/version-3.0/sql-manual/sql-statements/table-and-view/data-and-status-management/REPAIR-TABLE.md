@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-ADMIN REPAIR TABLE
-
 ### Description
 
 statement used to attempt to preferentially repair the specified table or partition

@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW CONFIG
 
 ### Description
 
@@ -59,7 +56,7 @@ The columns in the results have the following meanings:
 
 2. Use the like predicate to search the configuration of the current Fe node
 
-   ```
+   ```sql
    mysql> SHOW FRONTEND CONFIG LIKE '%check_java_version%';
    +--------------------+-------+---------+---------- -+------------+---------+
    | Key | Value | Type | IsMutable | MasterOnly | Comment |
@@ -71,7 +68,7 @@ The columns in the results have the following meanings:
 
 ### Keywords
 
-    SHOW, CONFIG
+SHOW, CONFIG
 
 ### Best Practice
 

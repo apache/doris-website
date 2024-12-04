@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-STORAGE-POLICY-USING",
+    "title": "SHOW STORAGE POLICY USING",
     "language": "en"
 }
 ---
@@ -23,12 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-## SHOW-STORAGE-POLICY-USING
-
-### Name
-
-SHOW STORAGE POLICY USING
 
 ### Description
 

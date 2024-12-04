@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-INDEX",
+    "title": "SHOW INDEX",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-INDEX
-
-### Name
-
-SHOW INDEX
 
 ### Description
 

@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## EXPORT
-
-### Name
-
-EXPORT
-
 ### Description
 
 The `EXPORT` command is used to export the data of a specified table to a designated location as a file. Currently, it supports exporting to remote storage such as HDFS, S3, BOS, and COS (Tencent Cloud) through Broker process, S3 protocol, or HDFS protocol.

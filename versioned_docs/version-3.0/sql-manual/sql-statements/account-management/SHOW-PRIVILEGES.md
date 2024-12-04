@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Show Privileges",
+    "title": "SHOW PRIVILEGES",
     "language": "en"
 }
 ---
@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-PRIVILEGES
 
-### Name
-
-SHOW PRIVILEGES
 
 ### Description
 

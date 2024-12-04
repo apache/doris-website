@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SET-PASSWORD",
+    "title": "SET PASSWORD",
     "language": "en"
 }
 ---
@@ -23,12 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-## SET-PASSWORD
-
-### Name
-
-SET PASSWORD
 
 ### Description
 
@@ -62,7 +56,7 @@ To modify the passwords of other users, administrator privileges are required.
 
 ### Keywords
 
-    SET, PASSWORD
+SET, PASSWORD
 
-### Best Practice
+
 

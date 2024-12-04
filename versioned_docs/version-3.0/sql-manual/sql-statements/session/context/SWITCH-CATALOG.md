@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SWITCH
-
 ### Description
 
 This statement is used to switch catalog.

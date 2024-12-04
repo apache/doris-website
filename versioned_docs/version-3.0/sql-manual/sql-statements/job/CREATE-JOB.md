@@ -1,6 +1,6 @@
 ---
 {
-"title": "CREATE-JOB",
+"title": "CREATE JOB",
 "language": "en"
 }
 
@@ -24,13 +24,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-## CREATE-JOB
-
-### Name
 
 :::tip
-CREATE JOB
-- since 2.1
+
+This statement is supported since 2.1
+
 :::
 
 ### Description

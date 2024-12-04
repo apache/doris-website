@@ -24,15 +24,6 @@ under the License.
 -->
 
 
-
-:::tip Tips
-This feature is supported since the Apache Doris 1.2 version
-:::
-
-### Name
-
-ADMIN CANCEL REBALANCE DISK
-
 ### Description
 
 This statement is used to cancel rebalancing disks of specified backends with high priority

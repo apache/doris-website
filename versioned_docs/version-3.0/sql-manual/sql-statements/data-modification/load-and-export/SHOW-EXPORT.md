@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW EXPORT
-
 ### Description
 
 This statement is used to display the execution of the specified export task

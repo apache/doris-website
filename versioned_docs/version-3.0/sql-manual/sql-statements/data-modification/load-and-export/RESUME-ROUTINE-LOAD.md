@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-RESUME ROUTINE LOAD
-
 ### Description
 
 Used to restart a suspended Routine Load job. The restarted job will continue to consume from the previously consumed offset.

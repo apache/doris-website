@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-DATABASES",
+    "title": "SHOW DATABASES",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-DATABASES
-
-### Name
-
-SHOW DATABASES
 
 ### Description
 

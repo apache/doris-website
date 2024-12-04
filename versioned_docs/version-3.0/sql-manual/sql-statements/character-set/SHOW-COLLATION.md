@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-COLLATION",
+    "title": "SHOW COLLATION",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-COLLATION
+
 
 ### Description
 
@@ -52,7 +52,7 @@ mysql> show collation;
 
 ### Keywords
 
-    SHOW, COLLATION
+SHOW, COLLATION
 
 ### Best Practice
 

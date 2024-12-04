@@ -1,6 +1,6 @@
 ---
 {
-    "title": "INSTALL-PLUGIN",
+    "title": "INSTALL PLUGIN",
     "language": "en"
 }
 ---
@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## INSTALL-PLUGIN
 
-### Name
-
-INSTALL PLUGIN
 
 ### Description
 

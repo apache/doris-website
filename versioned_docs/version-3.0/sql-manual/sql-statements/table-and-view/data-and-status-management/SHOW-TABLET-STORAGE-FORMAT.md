@@ -25,34 +25,36 @@ under the License.
 -->
 
 
-### description
+### Description
 
-    This statement is used to display tablet storage foramt information (for administrators only)
-    Grammar:
-        SHOW TABLET STORAGE FORMAT [VERBOSE]
+This statement is used to display tablet storage foramt information (for administrators only)
 
-### example
+Grammar:
+    
+`SHOW TABLET STORAGE FORMAT [VERBOSE]`
 
-    ```
-    MySQL [(none)]> show tablet storage format;
-    +-----------+---------+---------+
-    | BackendId | V1Count | V2Count |
-    +-----------+---------+---------+
-    | 10002     | 0       | 2867    |
-    +-----------+---------+---------+
-    1 row in set (0.003 sec)
-    MySQL [test_query_qa]> show tablet storage format verbose;
-    +-----------+----------+---------------+
-    | BackendId | TabletId | StorageFormat |
-    +-----------+----------+---------------+
-    | 10002     | 39227    | V2            |
-    | 10002     | 39221    | V2            |
-    | 10002     | 39215    | V2            |
-    | 10002     | 39199    | V2            |
-    +-----------+----------+---------------+
-    4 rows in set (0.034 sec)
-    ```
+### Example
 
-### keywords
+```sql
+MySQL [(none)]> show tablet storage format;
++-----------+---------+---------+
+| BackendId | V1Count | V2Count |
++-----------+---------+---------+
+| 10002     | 0       | 2867    |
++-----------+---------+---------+
+1 row in set (0.003 sec)
+MySQL [test_query_qa]> show tablet storage format verbose;
++-----------+----------+---------------+
+| BackendId | TabletId | StorageFormat |
++-----------+----------+---------------+
+| 10002     | 39227    | V2            |
+| 10002     | 39221    | V2            |
+| 10002     | 39215    | V2            |
+| 10002     | 39199    | V2            |
++-----------+----------+---------------+
+4 rows in set (0.034 sec)
+```
+
+### Keywords
     SHOW, TABLET, STORAGE, FORMAT
 

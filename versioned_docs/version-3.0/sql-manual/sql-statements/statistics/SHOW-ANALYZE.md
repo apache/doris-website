@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW ANALYZE
-
 ### Description
 
 Use `SHOW ANALYZE` to view information about statistics collection jobs.

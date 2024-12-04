@@ -24,14 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-QUERY-STATS
-
-### Name
-
-
-SHOW QUERY STATS
-
-
 ### Description
 
 This statement is used to show the query hit statistics of the database and table

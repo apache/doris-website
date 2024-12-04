@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-DROP RESOURCE
-
 ### Description
 
 This statement is used to delete an existing resource. Only the root or admin user can delete resources.

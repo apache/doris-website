@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CHARSET",
+    "title": "SHOW CHARSET",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CHARSET
+
 
 ### Description
 
@@ -53,7 +53,7 @@ mysql> show charset;
 
 ### Keywords
 
-    SHOW, CHARSET
+SHOW, CHARSET
 
 ### Best Practice
 

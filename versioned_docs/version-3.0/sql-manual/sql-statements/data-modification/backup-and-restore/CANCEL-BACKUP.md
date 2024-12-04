@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-CANCEL BACKUP
-
 ### Description
 
 This statement is used to cancel an ongoing BACKUP task.

@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## GRANT
 
-### Name
-
-GRANT
 
 ## 描述
 

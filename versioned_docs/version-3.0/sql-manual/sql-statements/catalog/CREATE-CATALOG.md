@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-CATALOG",
+    "title": "CREATE CATALOG",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-CATALOG
-
-### Name
-
-CREATE CATALOG
 
 ### Description
 

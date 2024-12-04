@@ -1,6 +1,6 @@
 ---
 {
-    "title": "UNINSTALL-PLUGIN",
+    "title": "UNINSTALL PLUGIN",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## UNINSTALL-PLUGIN
-
-### Name
-
-UNINSTALL PLUGIN
 
 ### Description
 

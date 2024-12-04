@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW TRASH
-
 ### Description
 
 This statement is used to view the garbage data footprint within the backend.

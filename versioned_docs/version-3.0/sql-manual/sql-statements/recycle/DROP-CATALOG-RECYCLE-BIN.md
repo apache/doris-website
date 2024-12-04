@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-DROP CATALOG RECYCLE BIN
-
 ### Description
 
 This statement is used to delete db/table/partition in catalog recycle bin instantly.

@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW BROKER
 
 ### Description
 
@@ -51,7 +48,7 @@ illustrate:
 
 ### Keywords
 
-    SHOW, BROKER
+SHOW, BROKER
 
 ### Best Practice
 

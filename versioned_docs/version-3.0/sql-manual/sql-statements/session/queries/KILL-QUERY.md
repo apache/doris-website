@@ -25,7 +25,6 @@ under the License.
 -->
 
 
-## Kill connection
 
 In Doris, each connection runs in a separate thread. You can terminate a thread using the `KILL processlist_id`statement.
 
@@ -33,7 +32,7 @@ The `processlist_id` for the thread can be found in the Id column from the SHOW 
 
 Syntax:
 
-```SQL
+```sql
 KILL [CONNECTION] processlist_id
 ```
 
@@ -43,7 +42,7 @@ You can also terminate the query command under execution based on the processlis
 
 Syntax:
 
-```SQL
+```sql
 KILL QUERY processlist_id | query_id
 ```
 
@@ -51,7 +50,7 @@ KILL QUERY processlist_id | query_id
 
 1. Check the current connection id.
 
-```SQL
+```sql
 mysql select connection_id();
 +-----------------+
 | connection_id() |
@@ -63,7 +62,7 @@ mysql select connection_id();
 
 2. Check all connection id.
 
-```SQL
+```sql
 mysql SHOW PROCESSLIST;
 +------------------+------+------+--------------------+---------------------+----------+---------+---------+------+-------+-----------------------------------+---------------------------------------------------------------------------------------+
 | CurrentConnected | Id   | User | Host               | LoginTime           | Catalog  | Db      | Command | Time | State | QueryId                           | Info                                                                                  |
@@ -79,7 +78,7 @@ mysql SHOW PROCESSLIST;
 
 3. Kill the currently running query, which will then be displayed as canceled.
 
-```SQL
+```sql
 mysql kill query 55;
 Query OK, 0 rows affected (0.01 sec)
 ```

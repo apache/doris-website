@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER SYSTEM DROP BACKEND
 
 ### Description
 
