@@ -54,7 +54,11 @@ ALTER SYSTEM ADD BACKEND
      ```sql
     ALTER SYSTEM ADD BACKEND "host:port";
     ```
-
+2. 增加一个带有资源组的节点
+    
+     ```sql
+    ALTER SYSTEM ADD BACKEND "host2:9020" PROPERTIES ("tag.location" = "groupb");
+    ```
 ### Keywords
 
     ALTER, SYSTEM, ADD, BACKEND, ALTER SYSTEM
