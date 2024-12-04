@@ -29,10 +29,6 @@ function getDocsVersions() {
     return result;
 }
 
-function getLatestVersion() {
-    return VERSIONS.includes('2.1') ? '2.1' : VERSIONS[0];
-}
-
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: 'Apache Doris',
@@ -606,4 +602,3 @@ const config = {
     ssrTemplate,
 };
 
-module.exports = config;

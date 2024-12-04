@@ -48,7 +48,7 @@ Query FE catalog recycle bin
 SHOW CATALOG RECYCLE BIN [ WHERE NAME [ = "name" | LIKE "name_matcher"] ]
 ```
 
-For more detailed syntax and best practices, please refer to the [SHOW-CATALOG-RECYCLE-BIN](../../sql-manual/sql-statements/Show-Statements/SHOW-CATALOG-RECYCLE-BIN.md) command manual, You can also type `help SHOW CATALOG RECYCLE BIN` on the MySql client command line for more help.
+For more detailed syntax and best practices, please refer to the [SHOW-CATALOG-RECYCLE-BIN](../../sql-manual/sql-statements/recycle/SHOW-CATALOG-RECYCLE-BIN.md) command manual, You can also type `help SHOW CATALOG RECYCLE BIN` on the MySql client command line for more help.
 
 
 ### Start Data Recovery
@@ -71,7 +71,7 @@ RECOVER TABLE example_db.example_tbl;
 RECOVER PARTITION p1 FROM example_tbl;
 ```
 
-For more detailed syntax and best practices used by RECOVER, please refer to the [RECOVER](../../sql-manual/sql-statements/Database-Administration-Statements/RECOVER.md) command manual, You can also type `HELP RECOVER` on the MySql client command line for more help.
+For more detailed syntax and best practices used by RECOVER, please refer to the [RECOVER](../../sql-manual/sql-statements/recycle/RECOVER.md) command manual, You can also type `HELP RECOVER` on the MySql client command line for more help.
 
 ## Recover from Be Recycle Bin
 
