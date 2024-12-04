@@ -148,7 +148,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 ```
 
 Operation Connector
-```
+```shell
 # View connector status
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/status -X GET
 # Delete connector
@@ -168,7 +168,7 @@ Note that when kafka-connect is started for the first time, three topics `config
 
 ### Access an SSL-certified Kafka cluster
 Accessing an SSL-certified Kafka cluster through kafka-connect requires the user to provide a certificate file (client.truststore.jks) used to authenticate the Kafka Broker public key. You can add the following configuration in the `connect-distributed.properties` file:
-```
+```properties
 # Connect worker
 security.protocol=SSL
 ssl.truststore.location=/var/ssl/private/client.truststore.jks
@@ -184,7 +184,7 @@ For instructions on configuring a Kafka cluster connected to SSL authentication 
 
 ### Dead letter queue
 By default, any errors encountered during or during the conversion will cause the connector to fail. Each connector configuration can also tolerate such errors by skipping them, optionally writing the details of each error and failed operation as well as the records in question (with varying levels of detail) to a dead-letter queue for logging.
-```
+```properties
 errors.tolerance=all
 errors.deadletterqueue.topic.name=test_error_topic
 errors.deadletterqueue.context.headers.enable=true
@@ -268,7 +268,7 @@ Doris-kafka-connector uses logical or primitive type mapping to resolve the colu
 
 1. Import data sample<br />
    In Kafka, there is the following sample data
-   ```
+   ```shell
    kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-data-topic --from-beginning
    {"user_id":1,"name":"Emily","age":25}
    {"user_id":2,"name":"Benjamin","age":35}
@@ -284,7 +284,7 @@ Doris-kafka-connector uses logical or primitive type mapping to resolve the colu
 
 2. Create the table that needs to be imported<br />
    In Doris, create the imported table, the specific syntax is as follows
-    ```
+    ```sql
    CREATE TABLE test_db.test_kafka_connector_tbl(
    user_id            BIGINT       NOT NULL COMMENT "user id",
    name               VARCHAR(20)           COMMENT "name",
@@ -296,7 +296,7 @@ Doris-kafka-connector uses logical or primitive type mapping to resolve the colu
 
 3. Create an import task<br />
    On the machine where Kafka-connect is deployed, submit the following import task through the curl command
-    ```
+    ```shell
    curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
    "name":"test-doris-sink-cluster",
    "config":{
@@ -321,7 +321,7 @@ Doris-kafka-connector uses logical or primitive type mapping to resolve the colu
 
 ### Load data collected by Debezium components
 1. The MySQL database has the following table
-```
+```sql
    CREATE TABLE test.test_user (
    user_id int NOT NULL ,
    name varchar(20),
@@ -335,7 +335,7 @@ insert into test.test_user values(3,'wangwu',22);
 ```
 
 2. Create the imported table in Doris
-```
+```sql
    CREATE TABLE test_db.test_user(
    user_id            BIGINT       NOT NULL COMMENT "user id",
    name               VARCHAR(20)           COMMENT "name",
@@ -347,7 +347,7 @@ insert into test.test_user values(3,'wangwu',22);
 3. Deploy the Debezium connector for MySQL component, refer to: [Debezium connector for MySQL](https://debezium.io/documentation/reference/stable/connectors/mysql.html)
 4. Create doris-kafka-connector import task<br />
    Assume that the MySQL table data collected through Debezium is in the `mysql_debezium.test.test_user` Topic
-```
+```shell
    curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
    "name":"test-debezium-doris-sink",
    "config":{
@@ -373,7 +373,7 @@ insert into test.test_user values(3,'wangwu',22);
 ```
 
 ### Load Avro serialized data
-```
+```shell
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
   "name":"doris-avro-test", 
   "config":{ 
@@ -400,7 +400,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 ```
 
 ### Load Protobuf serialized data
-```
+```shell
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
   "name":"doris-protobuf-test", 
   "config":{ 
@@ -428,7 +428,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 
 ## FAQ
 **1. The following error occurs when reading Json type data:**
-```
+```shell
 Caused by: org.apache.kafka.connect.errors.DataException: JsonConverter with schemas.enable requires "schema" and "payload" fields and may not contain additional fields. If you are trying to deserialize plain JSON data, set schemas.enable=false in your converter configuration.
 	at org.apache.kafka.connect.json.JsonConverter.toConnectData(JsonConverter.java:337)
 	at org.apache.kafka.connect.storage.Converter.toConnectData(Converter.java:91)
@@ -446,7 +446,7 @@ This is because using the `org.apache.kafka.connect.json.JsonConverter` converte
 
 **2. The consumption times out and the consumer is kicked out of the consumption group:**
 
-```
+```shell
 org.apache.kafka.clients.consumer.CommitFailedException: Offset commit cannot be completed since the consumer is not part of an active group for auto partition assignment; it is likely that the consumer was kicked out of the group.
         at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.sendOffsetCommitRequest(ConsumerCoordinator.java:1318)
         at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.doCommitOffsetsAsync(ConsumerCoordinator.java:1127)
