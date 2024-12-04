@@ -63,7 +63,7 @@ Parameters
 **注意："global"关键字在 v2.0 版本及以后才可用**
 
 
-### Example
+## Examples
 
 ```sql
 mysql> show full functions in testDb\G

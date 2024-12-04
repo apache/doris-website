@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display the amount of data, the number of replicas, and the number of statistical rows.
 
@@ -50,7 +50,7 @@ illustrate:
 
 6. You can use ORDER BY to sort on any combination of columns.
 
-### Example
+## Example
 
 1. Display the data size and RecycleBin size of each database by default.
 
@@ -129,9 +129,9 @@ illustrate:
    +-----------+-------------+--------------+
    ```
 
-### Keywords
+## Keywords
 
     SHOW, DATA
 
-### Best Practice
+## Best Practice
 

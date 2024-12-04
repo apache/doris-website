@@ -39,7 +39,7 @@ SHOW SQL BLOCK RULE
 SHOW SQL_BLOCK_RULE [FOR RULE_NAME];
 ```
 
-### Example
+## Examples
 
 1. 查看所有规则。
 

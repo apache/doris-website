@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-MATERIALIZED-VIEW",
+    "title": "DROP MATERIALIZED VIEW",
     "language": "en"
 }
 ---
@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-MATERIALIZED-VIEW
-
-### Name
-
-DROP MATERIALIZED VIEW
-
-### Description
+## Description
 
 This statement is used to drop a materialized view. Synchronous syntax
 
@@ -50,7 +44,7 @@ DROP MATERIALIZED VIEW [IF EXISTS] mv_name ON table_name;
 3. table_name:
         The name of the table to which the materialized view to be deleted belongs. Required.
 
-### Example
+## Example
 
 The table structure is
 
@@ -112,8 +106,8 @@ mysql> desc all_type_table all;
 
     If it exists, delete it, if it does not exist, no error is reported.
 
-### Keywords
+## Keywords
 
     DROP, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice

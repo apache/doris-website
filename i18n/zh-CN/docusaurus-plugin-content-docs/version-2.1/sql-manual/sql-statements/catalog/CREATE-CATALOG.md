@@ -45,7 +45,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
 * es：Elasticsearch
 * jdbc：数据库访问的标准接口 (JDBC), 当前支持 MySQL 和 PostgreSQL
 
-### Example
+## Examples
 
 1. 新建数据目录 hive
 

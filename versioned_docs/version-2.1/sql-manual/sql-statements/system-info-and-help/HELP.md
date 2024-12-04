@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The directory of help can be queried by changing the command
 
@@ -82,7 +82,7 @@ categories:
    sql-statements
 ```
 
-### Example
+## Examples
 
 1. List all SQL help contents of Doris
 
@@ -103,9 +103,9 @@ categories:
    ```
 
 
-### Keywords
+## Keywords
 
     HELP
 
-### Best Practice
+## Best Practice
 

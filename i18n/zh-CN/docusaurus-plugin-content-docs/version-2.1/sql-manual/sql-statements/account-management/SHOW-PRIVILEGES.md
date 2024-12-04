@@ -40,7 +40,7 @@ SHOW PRIVILEGES
 SHOW PRIVILEGES
 ```
 
-### Example
+## Examples
 
 1. 查看所有权限项
 

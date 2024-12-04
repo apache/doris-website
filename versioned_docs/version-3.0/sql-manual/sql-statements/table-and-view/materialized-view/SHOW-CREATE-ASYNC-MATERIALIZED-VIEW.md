@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-ASYNC-MATERIALIZED-VIEW",
+    "title": "SHOW CREATE ASYNC MATERIALIZED VIEW",
     "language": "en"
 }
 ---
@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-ASYNC-MATERIALIZED-VIEW
 
-### Name
-
-SHOW CREATE ASYNC MATERIALIZED VIEW
-
-### Description
+## Description
 
 This statement is used to display the creation statement of asynchronous materialized views.
 
@@ -45,7 +40,7 @@ illustrate：
 1. `DBNAMNE` : 数据库名称
 2. `MV_NAME` : 异步物化视图的名称
 
-### Example
+## Example
 
 1. View the creation statement of mv1
 
@@ -53,9 +48,9 @@ illustrate：
    SHOW CREATE MATERIALIZED VIEW mv1;
    ```
 
-### Keywords
+## Keywords
 
     SHOW, CREATE, MATERIALIZED, VIEW, ASYNC
 
-### Best Practice
+## Best Practice
 

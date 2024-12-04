@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL-MATERIALIZED-VIEW-TASK",
+    "title": "CANCEL MATERIALIZED VIEW TASK",
     "language": "en"
 }
 ---
@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CANCEL-MATERIALIZED-VIEW-TASK
 
-### Name
-
-CANCEL MATERIALIZED VIEW TASK
-
-### Description
+## Description
 
 This statement is used to cancel the task of materialized views
 
@@ -40,7 +35,7 @@ syntax:
 CANCEL MATERIALIZED VIEW TASK taskId=INTEGER_VALUE ON mvName=multipartIdentifier
 ```
 
-### Example
+## Example
 
 1. Cancel the task with id 1 in materialized view mv1
 
@@ -48,9 +43,9 @@ CANCEL MATERIALIZED VIEW TASK taskId=INTEGER_VALUE ON mvName=multipartIdentifier
     CANCEL MATERIALIZED VIEW TASK 1 on mv1;
     ```
    
-### Keywords
+## Keywords
 
     CANCEL, MATERIALIZED, VIEW, TASK
 
-### Best Practice
+## Best Practice
 

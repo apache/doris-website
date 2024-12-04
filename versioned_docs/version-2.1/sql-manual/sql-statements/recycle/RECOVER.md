@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to restore a previously deleted database, table or partition. It supports recover meta information by name or id, and you can set new name for recovered meta information.
 
@@ -94,7 +94,7 @@ illustrate:
 - If you recover a meta information by name without id, it will recover the last dropped one which has same name.
 - You can get all meta informations that can be recovered by statement `SHOW CATALOG RECYCLE BIN`.
 
-### Example
+## Examples
 
 1. Restore the database named example_db
 
@@ -150,10 +150,10 @@ RECOVER TABLE example_db.example_tbl AS new_example_tbl;
 RECOVER PARTITION p1 p1_id AS new_p1 FROM example_tbl;
 ```
 
-### Keywords
+## Keywords
 
      RECOVER
 
-### Best Practice
+## Best Practice
 
 

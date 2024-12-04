@@ -81,7 +81,7 @@ RENAME COLUMN old_column_name new_column_name;
 该功能自 Apache Doris  1.2 版本起支持
 :::
 
-### Example
+## Examples
 
 1. 将名为 table1 的表修改为 table2
 

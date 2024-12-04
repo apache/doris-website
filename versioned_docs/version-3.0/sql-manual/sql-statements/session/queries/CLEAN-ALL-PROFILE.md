@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 For manual cleanup all of historical query or load profile.
 
@@ -34,7 +34,7 @@ Syntax:
 CLEAN ALL PROFILE;
 ```
 
-### Example
+## Example
 
 1. Clean all profile
 
@@ -42,9 +42,9 @@ CLEAN ALL PROFILE;
 	CLEAN ALL PROFILE;
 	```
 
-### Keywords
+## Keywords
 
     CLEAN, PROFILE
 
-### Best Practice
+## Best Practice
 

@@ -30,7 +30,7 @@ under the License.
 
 SHOW ROLES
 
-### Description
+## Description
 
 This statement is used to display all created role information, including role name, included users and permissions.
 
@@ -40,7 +40,7 @@ grammar:
 SHOW ROLES
 ```
 
-### Example
+## Example
 
 1. View created roles
 
@@ -48,9 +48,9 @@ SHOW ROLES
     SHOW ROLES
     ```
 
-### Keywords
+## Keywords
 
     SHOW, ROLES
 
-### Best Practice
+## Best Practice
 

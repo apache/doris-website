@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The ALTER USER command is used to modify a user's account attributes, including passwords, and password policies, etc.
 
@@ -65,7 +65,7 @@ In an ALTER USER command, only one of the following account attributes can be mo
 4. Modify `FAILED_LOGIN_ATTEMPTS` and `PASSWORD_LOCK_TIME`
 5. Unlock users
 
-### Example
+## Examples
 
 1. Change the user's password
 
@@ -91,11 +91,11 @@ In an ALTER USER command, only one of the following account attributes can be mo
     ALTER USER jack@'%' COMMENT "this is my first user"
     ```
 
-### Keywords
+## Keywords
 
     ALTER, USER
 
-### Best Practice
+## Best Practice
 
 1. Modify the password policy
 

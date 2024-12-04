@@ -32,7 +32,7 @@ under the License.
     语法：
         SHOW TABLET STORAGE FORMAT [VERBOSE]
 
-### example
+## Examples
 
     ```sql
     MySQL [(none)]> show tablet storage format;

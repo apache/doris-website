@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to delete an uploaded file.
 
@@ -43,7 +43,7 @@ illustrate:
 - properties supports the following parameters:
    - `catalog`: Required. The category the file belongs to.
 
-### Example
+## Example
 
 1. Delete the file ca.pem
 
@@ -51,8 +51,8 @@ illustrate:
      DROP FILE "ca.pem" properties("catalog" = "kafka");
      ```
 
-### Keywords
+## Keywords
 
      DROP, FILE
 
-### Best Practice
+## Best Practice

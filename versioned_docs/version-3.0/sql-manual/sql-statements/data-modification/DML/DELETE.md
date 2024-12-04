@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to conditionally delete data in the specified table (base index) partition.
 
@@ -80,7 +80,7 @@ This feature is supported since the Apache Doris 1.2 version
 
 5. This statement may reduce query efficiency for a period of time after execution. The degree of impact depends on the number of delete conditions specified in the statement. The more conditions you specify, the greater the impact.
 
-### Example
+## Example
 
 1. Delete the data row whose k1 column value is 3 in my_table partition p1
 
@@ -199,9 +199,9 @@ This feature is supported since the Apache Doris 1.2 version
    where lineitem.o_orderkey = discount_orders.o_orderkey;
    ```
 
-### Keywords
+## Keywords
 
     DELETE
 
-### Best Practice
+## Best Practice
 

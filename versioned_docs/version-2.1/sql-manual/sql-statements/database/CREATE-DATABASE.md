@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to create a new database (database)
 
@@ -48,7 +48,7 @@ CREATE DATABASE [IF NOT EXISTS] db_name
   )
   ```
 
-### Example
+## Examples
 
 1. Create a new database db_test
 
@@ -69,11 +69,11 @@ CREATE DATABASE [IF NOT EXISTS] db_name
 If the create table statement has attributes replication_allocation or replication_num, then the default replica distribution policy of the database will not take effect.
 :::
 
-### Keywords
+## Keywords
 
 ```text
 CREATE, DATABASE
 ```
 
-### Best Practice
+## Best Practice
 

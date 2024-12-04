@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to modify the comment of an existing table. The operation is synchronous, and the command returns to indicate completion.
 
@@ -51,7 +51,7 @@ grammar：
 MODIFY COLUMN col1 COMMENT "new column comment";
 ```
 
-### Example
+## Examples
 
 1. Change the table1's comment to table1_comment
 
@@ -65,11 +65,11 @@ ALTER TABLE table1 MODIFY COMMENT "table1_comment";
 ALTER TABLE table1 MODIFY COLUMN col1 COMMENT "table1_col1_comment";
 ```
 
-### Keywords
+## Keywords
 
 ```text
 ALTER, TABLE, COMMENT, ALTER TABLE
 ```
 
-### Best Practice
+## Best Practice
 

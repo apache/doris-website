@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The "SHOW CHARACTER" command is used to display the available character sets in the current database management system,
 along with some associated properties for each character set. These properties may include the name of the character set,
@@ -40,7 +40,7 @@ Default Collation: Default collation name
 Maxlen: Maximum byte length.
 
 
-### Example
+## Example
 
 ```sql
 mysql> show charset;
@@ -51,9 +51,9 @@ mysql> show charset;
 
 ```
 
-### Keywords
+## Keywords
 
 SHOW, CHARSET
 
-### Best Practice
+## Best Practice
 

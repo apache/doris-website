@@ -36,7 +36,7 @@ Differences between Partition Attributes and Table Attributes
 - For the specific attributes, please refer to [create table attributes](../../../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)
 :::
 
-### Description
+## Description
 
 This statement is used to modify the properties of an existing table. This operation is synchronous, and the return of the command indicates the completion of the execution.
 
@@ -183,7 +183,7 @@ changed.
 ALTER TABLE example_db.mysql_table SET ("light_schema_change" = "true");
 ```
 
-### Example
+## Examples
 
 1. Modify the bloom filter column of the table
 
@@ -279,11 +279,11 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="cr
 NOTE: The table's partition can be successfully added only if it hasn't been associated with a storage policy. A table just can have one storage policy.
 
 
-### Keywords
+## Keywords
 
 ```text
 ALTER, TABLE, PROPERTY, ALTER TABLE
 ```
 
-### Best Practice
+## Best Practice
 

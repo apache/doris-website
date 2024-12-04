@@ -49,7 +49,7 @@ DROP MATERIALIZED VIEW [IF EXISTS] mv_name ON table_name;
 3. table_name:
         待删除的物化视图所属的表名。必填项。
 
-### Example
+## Examples
 
 表结构为
 

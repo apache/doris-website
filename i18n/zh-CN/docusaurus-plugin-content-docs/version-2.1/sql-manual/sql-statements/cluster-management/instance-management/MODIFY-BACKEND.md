@@ -61,7 +61,7 @@ ALTER SYSTEM MKDIFY BACKEND
 注：
 1. 可以给一个 Backend 设置多种资源标签。但必须包含 "tag.location"。
 
-### Example
+## Examples
 
 1. 修改 BE 的资源标签
 

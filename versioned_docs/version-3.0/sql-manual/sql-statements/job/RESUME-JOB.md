@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 Used to restart a JOB in PAUSE state. The restarted job will continue to be executed periodically. A JOB in STOP state cannot be resumed.
 
@@ -33,7 +33,7 @@ Used to restart a JOB in PAUSE state. The restarted job will continue to be exec
 RESUME JOB WHERE jobName = 'job_name';
 ```
 
-### Example
+## Example
 
 1. Restart the JOB named test1.
 
@@ -41,11 +41,11 @@ RESUME JOB WHERE jobName = 'job_name';
    RESUME JOB WHERE jobName = 'test1';
    ```
 
-### Keywords
+## Keywords
 
         RESUME, JOB
 
-### Best Practice
+## Best Practice
 
 
 

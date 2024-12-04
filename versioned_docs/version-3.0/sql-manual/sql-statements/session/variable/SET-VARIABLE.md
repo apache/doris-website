@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is mainly used to modify Doris system variables. These system variables can be modified at the global and session level, and some can also be modified dynamically. You can also view these system variables with `SHOW VARIABLE`.
 
@@ -46,7 +46,7 @@ illustrate:
 > 1. Only ADMIN users can set variables to take effect globally
 > 2. The globally effective variable affects the current session and new sessions thereafter, but does not affect other sessions that currently exist.
 
-### Example
+## Example
 
 1. Set the time zone to Dongba District
 
@@ -60,7 +60,7 @@ illustrate:
    SET GLOBAL exec_mem_limit = 137438953472
    ```
 
-### Keywords
+## Keywords
 
     SET, VARIABLE
 

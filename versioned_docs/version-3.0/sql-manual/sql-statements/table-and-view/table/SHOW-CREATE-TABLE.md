@@ -27,11 +27,7 @@ under the License.
 
 
 
-### Name
-
-SHOW CREATE TABLE
-
-### Description
+## Description
 
 This statement is used to display the creation statement of the data table.
 
@@ -52,7 +48,7 @@ illustrate:
 2. `DBNAMNE` : database name
 3. `TABLE_NAME` : table name
 
-### Example
+## Example
 
 1. View the table creation statement of a table
 
@@ -60,9 +56,9 @@ illustrate:
    SHOW CREATE TABLE demo.tb1
    ```
 
-### Keywords
+## Keywords
 
     SHOW, CREATE, TABLE
 
-### Best Practice
+## Best Practice
 

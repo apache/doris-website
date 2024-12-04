@@ -39,7 +39,7 @@ SHOW DATA TYPES
 SHOW DATA TYPES;
 ```
 
-### Example
+## Examples
 
 1. 查看 Doris 支持的所有数据类型
 

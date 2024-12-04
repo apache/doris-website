@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display the schema information of the specified table
 
@@ -40,7 +40,7 @@ illustrate:
 
 1. If ALL is specified, the schemas of all indexes (rollup) of the table will be displayed
 
-### Example
+## Examples
 
 1. Display the Base table schema
 
@@ -54,9 +54,9 @@ illustrate:
     DESC db1.table_name ALL;
     ```
 
-### Keywords
+## Keywords
 
     DESCRIBE
 
-### Best Practice
+## Best Practice
 

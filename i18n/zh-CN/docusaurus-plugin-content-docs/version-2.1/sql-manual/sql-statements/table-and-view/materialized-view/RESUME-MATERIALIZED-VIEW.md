@@ -38,7 +38,7 @@ RESUME MATERIALIZED VIEW
 RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 ```
 
-### Example
+## Examples
 
 1. 恢复物化视图 mv1 的定时调度
 

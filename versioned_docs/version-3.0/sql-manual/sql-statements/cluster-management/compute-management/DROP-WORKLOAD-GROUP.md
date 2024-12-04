@@ -27,7 +27,7 @@ under the License.
 
  
 
-### Description
+## Description
 
 This statement is used to delete a workload group.
 
@@ -35,7 +35,7 @@ This statement is used to delete a workload group.
 DROP WORKLOAD GROUP [IF EXISTS] 'rg_name'
 ```
 
-### Example
+## Example
 
 1. Delete the workload group named g1:
     
@@ -43,9 +43,9 @@ DROP WORKLOAD GROUP [IF EXISTS] 'rg_name'
     drop workload group if exists g1;
     ```
 
-### Keywords
+## Keywords
 
     DROP, WORKLOAD, GROUP
 
-### Best Practice
+## Best Practice
 

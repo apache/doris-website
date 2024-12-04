@@ -46,7 +46,7 @@ SHOW BROKER;
 3. Alive 表示节点是否存活。
 4. ErrMsg 用于显示心跳失败时的错误信息。
 
-### Example
+## Examples
 
 ## 关键词
 

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 This statement is used to rename certain names of existing table properties. This operation is synchronous, and the return of the command indicates the completion of the execution.
 
@@ -80,7 +80,7 @@ Notice:
 - When creating a table, you need to set 'light_schema_change=true' in the property.
 
 
-### Example
+## Examples
 
 1. Modify the table named table1 to table2
 
@@ -106,11 +106,11 @@ ALTER TABLE example_table RENAME PARTITION p1 p2;
 ALTER TABLE example_table RENAME COLUMN c1 c2;
 ```
 
-### Keywords
+## Keywords
 
 ```text
 ALTER, TABLE, RENAME, ALTER TABLE
 ```
 
-### Best Practice
+## Best Practice
 

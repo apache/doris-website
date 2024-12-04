@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The node offline operation is used to safely log off the node. The operation is asynchronous. If successful, the node is eventually removed from the metadata. If it fails, the logout will not be done (only for admins!)
 
@@ -53,7 +53,7 @@ ALTER SYSTEM DECOMMISSION BACKEND "id1","id2"...;
 3. The node offline operation is used to safely log off the node. The operation is asynchronous. If successful, the node is eventually removed from the metadata. If it fails, the logout will not be completed.
 4. You can manually cancel the node offline operation. See CANCEL DECOMMISSION
 
-### Example
+## Example
 
 1. Offline two nodes
 
@@ -65,9 +65,9 @@ ALTER SYSTEM DECOMMISSION BACKEND "id1","id2"...;
     ALTER SYSTEM DECOMMISSION BACKEND "id1", "id2";
     ```
 
-### Keywords
+## Keywords
 
     ALTER, SYSTEM, DECOMMISSION, BACKEND, ALTER SYSTEM
 
-### Best Practice
+## Best Practice
 

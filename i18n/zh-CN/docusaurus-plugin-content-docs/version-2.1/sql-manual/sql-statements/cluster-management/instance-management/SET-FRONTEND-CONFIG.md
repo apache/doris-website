@@ -51,7 +51,7 @@ ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
 
 :::
 
-### Example
+## Examples
 
 1. 设置 `disable_balance` 为 true
 

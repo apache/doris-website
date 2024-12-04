@@ -86,7 +86,7 @@ rollup 的 alter_clause 支持如下几种创建方式
 
     注意：不能删除 base index
 
-### Example
+## Examples
 
 1. 创建 index: example_rollup_index，基于 base index（k1,k2,k3,v1,v2）。列式存储。
 

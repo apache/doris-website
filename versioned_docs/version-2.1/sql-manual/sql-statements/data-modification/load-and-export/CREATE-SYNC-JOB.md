@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The data synchronization (Sync Job) function supports users to submit a resident data synchronization job, and incrementally synchronizes the CDC (Change Data Capture) of the user's data update operation in the Mysql database by reading the Binlog log from the specified remote address. Features.
 
@@ -111,7 +111,7 @@ binlog_desc
       6. canal.password: the password of the instance
       7. canal.debug: optional, when set to true, the batch and details of each row of data will be printed out
 
-### Example
+## Examples
 
 1. Simply create a data synchronization job named `job1` for `test_tbl` of `test_db`, connect to the local Canal server, corresponding to the Mysql source table `mysql_db1.tbl1`.
 
@@ -150,8 +150,8 @@ binlog_desc
    );
    ```
 
-### Keywords
+## Keywords
 
     CREATE, SYNC, JOB
 
-### Best Practice
+## Best Practice

@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 Use `SHOW ANALYZE` to view information about statistics collection jobs.
 
@@ -100,6 +100,6 @@ mysql> show analyze task status 20038 ;
 +---------+----------+---------+----------------------+----------+
 ```
 
-### Keywords
+## Keywords
 
 SHOW, ANALYZE

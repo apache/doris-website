@@ -27,11 +27,8 @@ under the License.
 
 
 
-### Name
 
-ALTER TABLE PARTITION
-
-### Description
+## Description
 
 This statement is used to modify a table with a partition.
 
@@ -99,7 +96,7 @@ illustrate:
   - in_memory
 - For single-partition tables, partition_name is the same as the table name.
 
-### Example
+## Example
 
 1. Add partition, existing partition [MIN, 2013-01-01), add partition [2013-01-01, 2014-01-01), use default bucketing method
 
@@ -168,10 +165,10 @@ ALTER TABLE example_db.my_table
 ADD PARTITION p1 VALUES [("2014-01-01"), ("2014-02-01"));
 ```
 
-### Keywords
+## Keywords
 
 ```text
 ALTER, TABLE, PARTITION, ALTER TABLE
 ```
 
-### Best Practice
+## Best Practice

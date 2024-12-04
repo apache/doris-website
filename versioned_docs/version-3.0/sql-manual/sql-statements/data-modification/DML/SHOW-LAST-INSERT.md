@@ -26,7 +26,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This syntax is used to view the result of the latest insert operation in the current session connection
 
@@ -63,11 +63,11 @@ illustrate:
 * LoadedRows: Number of imported rows
 * FilteredRows: The number of rows being filtered
 
-### Example
+## Example
 
-### Keywords
+## Keywords
 
     SHOW, LASR ,INSERT
 
-### Best Practice
+## Best Practice
 

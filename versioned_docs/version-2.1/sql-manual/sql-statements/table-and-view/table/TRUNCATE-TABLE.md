@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to clear the data of the specified table and partition
 grammar:
@@ -43,7 +43,7 @@ illustrate:
 - When using this command, the table status needs to be NORMAL, that is, operations such as SCHEMA CHANGE are not allowed.
 - This command may cause the ongoing load to fail
 
-### Example
+## Examples
 
 1. Clear the table tbl under example_db
 
@@ -57,7 +57,7 @@ illustrate:
      TRUNCATE TABLE tbl PARTITION(p1, p2);
      ```
 
-### Keywords
+## Keywords
 
      TRUNCATE, TABLE
 

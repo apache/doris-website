@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to demonstrate the creation statement of a repository.
 
@@ -38,7 +38,7 @@ SHOW CREATE REPOSITORY for repository_name;
 illustrate:
 -  `repository_name`: repository name
 
-### Example
+## Example
 
 1. Show the creation statement of the specified repository
 
@@ -46,9 +46,9 @@ illustrate:
     SHOW CREATE REPOSITORY for test_repository
     ```
 
-### Keywords
+## Keywords
 
     SHOW, CREATE, REPOSITORY
 
-### Best Practice
+## Best Practice
 

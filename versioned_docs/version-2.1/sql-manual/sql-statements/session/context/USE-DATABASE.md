@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The USE command allows us to use the database
 
@@ -40,7 +40,7 @@ USE <[CATALOG_NAME].DATABASE_NAME>
 illustrate:
 1. `USE CATALOG_NAME.DATABASE_NAME` will switch the current catalog into `CATALOG_NAME` and then change the current database into `DATABASE_NAME`
 
-### Example
+## Examples
 
 1. If the demo database exists in current catalog, try accessing it:
 
@@ -55,9 +55,9 @@ illustrate:
     Database changed
     ```
 
-### Keywords
+## Keywords
 
     USE
 
-### Best Practice
+## Best Practice
 

@@ -28,7 +28,7 @@ under the License.
 
 
 
-### description
+## Description
 
 Mainly introduces the use of Select syntax
 
@@ -158,7 +158,7 @@ CTE names can be referenced in other CTEs, allowing CTEs to be defined based on 
 
 Recursive CTE is currently not supported.
 
-### example
+## Example
 
 1. Query the names of students whose ages are 18, 20, 25
 
@@ -300,11 +300,11 @@ Recursive CTE is currently not supported.
     SELECT * FROM t1 TABLET(10001) TABLESAMPLE(1000 ROWS) REPEATABLE 2 limit 1000;
     ```
 
-### keywords
+## Keywords
 
     SELECT
 
-### Best Practice
+## Best Practice
 
 1. ome additional knowledge about the SELECT clause
 

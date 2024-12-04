@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to undo an ALTER operation.
 
@@ -69,7 +69,7 @@ grammar:
 (To be implemented...)
 ```
 
-### Example
+## Examples
 
 1. Undo the ALTER COLUMN operation on my_table.
 
@@ -98,9 +98,9 @@ CANCEL ALTER TABLE ROLLUP
 FROM example_db.my_table(12801,12802);
 ```
 
-### Keywords
+## Keywords
 
     CANCEL, ALTER, TABLE, CANCEL ALTER
 
-### Best Practice
+## Best Practice
 

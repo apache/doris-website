@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-DATA-TYPES
 
-### Name
-
-SHOW DATA TYPES
-
-### Description
+## Description
 
     This statement is used to view all supported data types.
 
@@ -39,14 +34,14 @@ SHOW DATA TYPES
         SHOW DATA TYPES;
         ```
 
-### Example
+## Example
 
     1. Display all supported data types
 
         SHOW DATA TYPES;
 
-### Keywords
+## Keywords
 
     SHOW,DATA,TYPES
 
-### Best Practice
+## Best Practice

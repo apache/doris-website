@@ -23,7 +23,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to cancel rebalancing disks of specified backends with high priority
 
@@ -35,7 +35,7 @@ Explain:
 
 1. This statement only indicates that the system no longer rebalance disks of specified backends with high priority. The system will still rebalance disks by default scheduling.
 
-### Example
+## Examples
 
 1. Cancel High Priority Disk Rebalance of all of backends of the cluster
 
@@ -45,11 +45,11 @@ ADMIN CANCEL REBALANCE DISK;
 
 ADMIN CANCEL REBALANCE DISK ON ("192.168.1.1:1234", "192.168.1.2:1234");
 
-### Keywords
+## Keywords
 
 ADMIN,CANCEL,REBALANCE DISK
 
-### Best Practice
+## Best Practice
 
 
 

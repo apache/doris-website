@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement creates the table structure by returning the results from the Select statement and imports the data at the same time
 
@@ -60,7 +60,7 @@ This feature is supported since the Apache Doris 1.2 version
 
 
 
-### Example
+## Examples
 
 1. Using the field names in the SELECT statement
 
@@ -94,9 +94,9 @@ This feature is supported since the Apache Doris 1.2 version
     AS SELECT cast('2020-05-20' as date) as dt, 1 as id, 'Tom' as name;
     ```
    
-### Keywords
+## Keywords
 
     CREATE, TABLE, AS, SELECT
 
-### Best Practice
+## Best Practice
 

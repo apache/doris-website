@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to set properties of the specified database. (administrator only)
 
@@ -57,7 +57,7 @@ illustrate:
 ALTER DATABASE db_name SET PROPERTIES ("key"="value", ...); 
 ```
 
-### Example
+## Example
 
 1. Set the specified database data volume quota
 
@@ -95,11 +95,11 @@ ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "tag.locatio
 ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "");
 ```
 
-### Keywords
+## Keywords
 
 ```text
 ALTER,DATABASE,RENAME
 ```
 
-### Best Practice
+## Best Practice
 

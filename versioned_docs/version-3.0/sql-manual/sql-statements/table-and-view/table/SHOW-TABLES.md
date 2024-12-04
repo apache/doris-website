@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-TABLES
 
-### Name
-
-SHOW TABLES
-
-### Description
+## Description
 
 This statement is used to display all tables under the current db
 
@@ -44,7 +39,7 @@ illustrate:
 
 1. LIKE: Fuzzy query can be performed according to the table name
 
-### Example
+## Example
 
   1. View all tables under DB
 
@@ -75,9 +70,9 @@ illustrate:
     2 rows in set (0.00 sec)
     ```
 
-### Keywords
+## Keywords
 
     SHOW, TABLES
 
-### Best Practice
+## Best Practice
 

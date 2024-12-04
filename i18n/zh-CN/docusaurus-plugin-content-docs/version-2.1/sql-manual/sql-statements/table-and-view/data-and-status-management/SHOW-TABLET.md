@@ -39,7 +39,7 @@ SHOW TABLET
 SHOW TABLET tablet_id
 ```
 
-### Example
+## Examples
 
 1.  显示指定 tablet id 为 10000 的 tablet 的父层级 id 信息
 

@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to temporarily restore the scheduled scheduling of materialized views
 
@@ -36,7 +36,7 @@ syntax:
 RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 ```
 
-### Example
+## Examples
 
 1. Timed scheduling for restoring materialized view mv1
 
@@ -44,9 +44,9 @@ RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
     RESUME MATERIALIZED VIEW JOB ON mv1;
     ```
    
-### Keywords
+## Keywords
 
     RESUME, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice
 

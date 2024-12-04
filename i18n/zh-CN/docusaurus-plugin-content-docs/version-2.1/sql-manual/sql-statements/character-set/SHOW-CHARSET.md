@@ -37,7 +37,7 @@ SHOW CHARACTER 命令返回以下字段：
 4. Maxlen：最大字节长度
 
 
-### Example
+## Examples
 
 ```sql
 mysql> show charset;

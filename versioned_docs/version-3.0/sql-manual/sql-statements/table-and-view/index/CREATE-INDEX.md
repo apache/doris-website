@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to create an index
 grammar:
@@ -36,7 +36,7 @@ CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING I
 Notice:
 - INVERTED indexes are only created on a single column
 
-### Example
+## Example
 
 1. Create a inverted index for siteid on table1
 
@@ -45,11 +45,11 @@ Notice:
     ```
 
 
-### Keywords
+## Keywords
 
 ```text
 CREATE, INDEX
 ```
 
-### Best Practice
+## Best Practice
 

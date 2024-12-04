@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 该语句用于创建物化视图。
 
@@ -79,7 +79,7 @@ CREATE MATERIALIZED VIEW < MV name > as < query >
    timeout: 物化视图构建的超时时间。
   ```
 
-### Example
+## Examples
 
 Base 表结构为
 
@@ -223,9 +223,9 @@ properties("replication_num" = "1");
    +----------------+-------+--------------+------+-------+---------+-------+
    ```
 
-### Keywords
+## Keywords
 
     CREATE, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice
 

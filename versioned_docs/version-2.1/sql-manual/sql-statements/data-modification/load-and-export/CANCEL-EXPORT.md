@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to undo an export job for the specified label. Or batch undo export jobs via fuzzy matching
 
@@ -36,7 +36,7 @@ CANCEL EXPORT
 WHERE [LABEL = "export_label" | LABEL like "label_pattern" | STATE = "PENDING/IN_QUEUE/EXPORTING"]
 ```
 
-### Example
+## Examples
 
 1. Cancel the export job whose label is `example_db_test_export_label` on the database example_db
 
@@ -62,11 +62,11 @@ WHERE [LABEL = "export_label" | LABEL like "label_pattern" | STATE = "PENDING/IN
    WHERE STATE = "PENDING";
    ```
 
-### Keywords
+## Keywords
 
      CANCEL, EXPORT
 
-### Best Practice
+## Best Practice
 
 1. Only pending export jobs in PENDING, IN_QUEUE,EXPORTING state can be canceled.
 2. When performing batch undo, Doris does not guarantee the atomic undo of all corresponding export jobs. That is, it is possible that only some of the export jobs were successfully undone. The user can view the job status through the SHOW EXPORT statement and try to execute the CANCEL EXPORT statement repeatedly.

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-MATERIALIZED-VIEW",
+    "title": "CREATE MATERIALIZED VIEW",
     "language": "en"
 }
 ---
@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-MATERIALIZED-VIEW
 
-### Name
-
-CREATE MATERIALIZED VIEW
-
-### Description
+## Description
 
 This statement is used to create a materialized view.
 
@@ -84,7 +79,7 @@ illustrate:
    timeout: The timeout for materialized view construction.
   ```
 
-### Example
+## Example
 
 Base table structure is
 
@@ -110,7 +105,7 @@ duplicate key (k1,k2,k3,k4)
 distributed BY hash(k4) buckets 3
 properties("replication_num" = "1");
 ```
-attention：If the materialized view contains partitioned and distributed columns of the Base table, these columns must be used as key columns in the materialized view
+attention: If the materialized view contains partitioned and distributed columns of the Base table, these columns must be used as key columns in the materialized view
 
 1. Create a materialized view that contains only the columns of the original table (k1, k2)
 
@@ -228,8 +223,8 @@ attention：If the materialized view contains partitioned and distributed column
    +----------------+-------+--------------+------+-- -----+---------+-------+
    ```
 
-### Keywords
+## Keywords
 
     CREATE, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice

@@ -48,7 +48,7 @@ DROP FILE "file_name" [FROM database]
 - properties 支持以下参数：
   - `catalog`: 必须。文件所属分类。
 
-### Example
+## Examples
 
 1. 删除文件 ca.pem
 

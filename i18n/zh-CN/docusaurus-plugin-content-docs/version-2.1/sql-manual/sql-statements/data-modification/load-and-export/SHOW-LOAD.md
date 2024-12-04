@@ -71,7 +71,7 @@ SHOW LOAD
     SHOW LOAD WARNINGS ON 'url'
     ```
 
-### Example
+## Examples
 
 1. 展示默认 db 的所有导入任务
     

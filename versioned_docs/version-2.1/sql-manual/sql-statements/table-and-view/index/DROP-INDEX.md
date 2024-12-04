@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to delete the index of the specified name from a table.
 grammar:
@@ -34,7 +34,7 @@ grammar:
 DROP INDEX [IF EXISTS] index_name ON [db_name.]table_name;
 ```
 
-### Example
+## Examples
 
 1. Delete the index
 
@@ -42,8 +42,8 @@ DROP INDEX [IF EXISTS] index_name ON [db_name.]table_name;
     DROP INDEX [IF NOT EXISTS] index_name ON table1 ;
     ```
 
-### Keywords
+## Keywords
 
      DROP, INDEX
 
-### Best Practice
+## Best Practice

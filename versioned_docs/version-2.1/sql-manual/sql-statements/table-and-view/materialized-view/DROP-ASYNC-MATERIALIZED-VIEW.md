@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 This statement is used to delete asynchronous materialized views.
 
@@ -41,7 +41,7 @@ DROP MATERIALIZED VIEW (IF EXISTS)? mvName=multipartIdentifier
 2. mv_name:
    The name of the materialized view to be deleted. Required field.
 
-### Example
+## Examples
 
 1. Delete table materialized view mv1
 
@@ -54,9 +54,9 @@ DROP MATERIALIZED VIEW mv1;
 DROP MATERIALIZED VIEW IF EXISTS db1.mv1;
 ```
 
-### Keywords
+## Keywords
 
     DROP, ASYNC, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice
 

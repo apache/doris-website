@@ -47,7 +47,7 @@ under the License.
         11.ReplicaStatus:                       副本状态是否正常。
         12.ReplicaCompactionStatus:             副本 Compaction 状态是否正常。
 
-### Example
+## Examples
 
     1. 查看 Tablet 10001 的诊断结果
 

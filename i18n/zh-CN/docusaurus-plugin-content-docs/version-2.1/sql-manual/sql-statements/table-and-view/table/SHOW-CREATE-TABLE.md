@@ -49,7 +49,7 @@ SHOW [BRIEF] CREATE TABLE [DBNAME.]TABLE_NAME
 2. `DBNAMNE` : 数据库名称
 3. `TABLE_NAME` : 表名
 
-### Example
+## Examples
 
 1. 查看某个表的建表语句
 

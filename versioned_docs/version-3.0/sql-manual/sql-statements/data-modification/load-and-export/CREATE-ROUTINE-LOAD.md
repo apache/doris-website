@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 The Routine Load function allows users to submit a resident import task, and import data into Doris by continuously reading data from a specified data source.
 
@@ -369,7 +369,7 @@ FROM data_source [data_source_properties]
 This feature is supported since the Apache Doris 1.2.3 version
 :::
 
-### Example
+## Example
 
 1. Create a Kafka routine import task named test1 for example_tbl of example_db. Specify the column separator and group.id and client.id, and automatically consume all partitions by default, and start subscribing from the location where there is data (OFFSET_BEGINNING)
 
@@ -601,11 +601,11 @@ Assuming that we need to import data from Kafka into tables "test1" and "test2" 
    );
    ```
 
-### Keywords
+## Keywords
 
     CREATE, ROUTINE, LOAD, CREATE LOAD
 
-### Best Practice
+## Best Practice
 
 Partition and Offset for specified consumption
 

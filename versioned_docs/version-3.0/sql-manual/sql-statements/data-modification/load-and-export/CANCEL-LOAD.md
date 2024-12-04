@@ -26,7 +26,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to undo an import job for the specified label. Or batch undo import jobs via fuzzy matching
 
@@ -38,7 +38,7 @@ WHERE [LABEL = "load_label" | LABEL like "label_pattern" | STATE = "PENDING/ETL/
 
 Notice: Cancel by State is supported since 1.2.0.
 
-### Example
+## Example
 
 1. Cancel the import job whose label is `example_db_test_load_label` on the database example_db
 
@@ -71,11 +71,11 @@ This feature is supported since the Apache Doris 1.2 version
 :::
 
 
-### Keywords
+## Keywords
 
      CANCEL, LOAD
 
-### Best Practice
+## Best Practice
 
 1. Only pending import jobs in PENDING, ETL, LOADING state can be canceled.
 2. When performing batch undo, Doris does not guarantee the atomic undo of all corresponding import jobs. That is, it is possible that only some of the import jobs were successfully undone. The user can view the job status through the SHOW LOAD statement and try to execute the CANCEL LOAD statement repeatedly.

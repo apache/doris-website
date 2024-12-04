@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to view the BE nodes in the cluster
 
@@ -51,11 +51,11 @@ illustrate:
        13. HeartbeatFailureCounter: The current number of heartbeats that have failed consecutively. If the number exceeds the `max_backend_heartbeat_failure_tolerance_count` configuration, the isAlive will be set to false.
        14. NodeRole is used to display the role of Backend node. Now there are two roles: mix and computation. Mix node represent the origin Backend node and computation Node represent the compute only node.
 
-### Example
+## Examples
 
-### Keywords
+## Keywords
 
     SHOW, BACKENDS
 
-### Best Practice
+## Best Practice
 

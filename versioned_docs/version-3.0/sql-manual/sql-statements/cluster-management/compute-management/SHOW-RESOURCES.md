@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display resources that the user has permission to use. Ordinary users can only display resources with permission, and root or admin users will display all resources.
 
@@ -55,7 +55,7 @@ illustrate:
 6. If OFFSET is specified, the query results are displayed starting at offset offset. By default the offset is 0.
 7. If using LIKE, the WHERE clause will be ignored.
 
-### Example
+## Example
 
 1. Display all resources that the current user has permissions to
 
@@ -81,9 +81,9 @@ illustrate:
    SHOW RESOURCES LIKE "jdbc%";
    ```
 
-### Keywords
+## Keywords
 
     SHOW, RESOURCES
 
-### Best Practice
+## Best Practice
 

@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 Used to pause a Routine Load job. A suspended job can be rerun with the RESUME command.
 
@@ -35,7 +35,7 @@ Used to pause a Routine Load job. A suspended job can be rerun with the RESUME c
 PAUSE [ALL] ROUTINE LOAD FOR job_name
 ```
 
-### Example
+## Examples
 
 1. Pause the routine import job named test1.
 
@@ -49,9 +49,9 @@ PAUSE [ALL] ROUTINE LOAD FOR job_name
     PAUSE ALL ROUTINE LOAD;
     ```
 
-### Keywords
+## Keywords
 
     PAUSE, ROUTINE, LOAD
 
-### Best Practice
+## Best Practice
 

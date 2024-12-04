@@ -41,7 +41,7 @@ STOP SYNC JOB
 STOP SYNC JOB [db.]job_name
 ```
 
-### Example
+## Examples
 
 1. 停止名称为 `job_name` 的数据同步作业
 

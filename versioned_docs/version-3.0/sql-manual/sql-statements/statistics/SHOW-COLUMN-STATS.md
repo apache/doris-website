@@ -25,13 +25,13 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 Use `SHOW COLUMN STATS` to view various statistics data for columns.
 
 Syntax:
 
-```SQL
+```sql
 SHOW COLUMN [cached] STATS table_name [ (column_name [, ...]) ];
 ```
 
@@ -61,6 +61,6 @@ avg_size_byte: 8.0
  updated_time: 2023-11-07 11:00:46
 ```
 
-### Keywords
+## Keywords
 
 SHOW, TABLE, STATS

@@ -26,11 +26,8 @@ under the License.
 
 
 
-### Name
 
-ALTER VIEW
-
-### Description
+## Description
 
 This statement is used to modify the definition of a view
 
@@ -48,7 +45,7 @@ illustrate:
 - Views are all logical, and the data in them will not be stored on physical media. When querying, the view will be used as a subquery in the statement. Therefore, modifying the definition of the view is equivalent to modifying query_stmt.
 - query_stmt is any supported SQL
 
-### Example
+## Example
 
 1. Modify the view example_view on example_db
 
@@ -63,11 +60,11 @@ AS SELECT k1, k2, SUM(v1) FROM example_table
 GROUP BY k1, k2
 ```
 
-### Keywords
+## Keywords
 
 ```text
 ALTER, VIEW
 ```
 
-### Best Practice
+## Best Practice
 

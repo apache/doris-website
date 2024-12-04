@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to cancel an ongoing BACKUP task.
 
@@ -36,7 +36,7 @@ grammar:
 CANCEL BACKUP FROM db_name;
 ```
 
-### Example
+## Example
 
 1. Cancel the BACKUP task under example_db.
 
@@ -44,8 +44,8 @@ CANCEL BACKUP FROM db_name;
 CANCEL BACKUP FROM example_db;
 ```
 
-### Keywords
+## Keywords
 
      CANCEL, BACKUP
 
-### Best Practice
+## Best Practice

@@ -43,7 +43,7 @@ SHOW INDEX[ES] FROM [db_name.]table_name [FROM database];
 SHOW KEY[S] FROM [db_name.]table_name [FROM database];
 ```
 
-### Example
+## Examples
 
  1. 展示指定 table_name 的下索引
      

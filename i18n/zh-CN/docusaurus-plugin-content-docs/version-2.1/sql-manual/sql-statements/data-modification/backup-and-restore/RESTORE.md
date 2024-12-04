@@ -63,7 +63,7 @@ PROPERTIES ("key"="value", ...);
   -  "clean_tables": 表示是否清理不属于恢复目标的表。例如，如果恢复之前的目标数据库有备份中不存在的表，指定 `clean_tables` 就可以在恢复期间删除这些额外的表并将其移入回收站。该功能自 Apache Doris  1.2.6 版本起支持。
   - "clean_partitions "：表示是否清理不属于恢复目标的分区。例如，如果恢复之前的目标表有备份中不存在的分区，指定 `clean_partitions` 就可以在恢复期间删除这些额外的分区并将其移入回收站。该功能自 Apache Doris  1.2.6 版本起支持。
 
-### Example
+## Examples
 
 1. 从 example_repo 中恢复备份 snapshot_1 中的表 backup_tbl 到数据库 example_db1，时间版本为 "2018-05-04-16-45-08"。恢复为 1 个副本：
 

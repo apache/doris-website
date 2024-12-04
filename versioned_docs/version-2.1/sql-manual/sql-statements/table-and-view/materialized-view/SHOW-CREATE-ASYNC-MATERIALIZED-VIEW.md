@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display the creation statement of asynchronous materialized views.
 
@@ -41,7 +41,7 @@ illustrate：
 1. `DBNAMNE` : 数据库名称
 2. `MV_NAME` : 异步物化视图的名称
 
-### Example
+## Examples
 
 1. View the creation statement of mv1
 
@@ -49,9 +49,9 @@ illustrate：
    SHOW CREATE MATERIALIZED VIEW mv1;
    ```
 
-### Keywords
+## Keywords
 
     SHOW, CREATE, MATERIALIZED, VIEW, ASYNC
 
-### Best Practice
+## Best Practice
 

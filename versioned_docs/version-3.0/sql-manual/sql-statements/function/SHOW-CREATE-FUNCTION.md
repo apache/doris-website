@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display the creation statement of the user-defined function
 
@@ -45,7 +45,7 @@ illustrate:
 
 **Note: the "global" keyword is only available after v2.0**
 
-### Example
+## Example
 
 1. Show the creation statement of the specified function under the default db
 
@@ -58,9 +58,9 @@ illustrate:
     SHOW CREATE GLOBAL FUNCTION my_add(INT, INT)
     ```
 
-### Keywords
+## Keywords
 
     SHOW, CREATE, FUNCTION
 
-### Best Practice
+## Best Practice
 

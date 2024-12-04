@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The `EXPORT` command is used to export the data of a specified table to a designated location as a file. Currently, it supports exporting to remote storage such as HDFS, S3, BOS, and COS (Tencent Cloud) through Broker process, S3 protocol, or HDFS protocol.
 
@@ -152,7 +152,7 @@ The bottom layer of the `Export` statement actually executes the `select...outfi
     use_path_style: (optional) default false . The S3 SDK uses the virtual-hosted style by default. However, some object storage systems may not be enabled or support virtual-hosted style access. At this time, we can add the use_path_style parameter to force the use of path style access method.
   ```
 
-### Example
+## Examples
 
 #### export to local
 
@@ -337,11 +337,11 @@ WITH BROKER "broker_name"
 )
 ```
 
-### Keywords
+## Keywords
 
     EXPORT
 
-### Best Practice
+## Best Practice
 
   #### Concurrent Export
 

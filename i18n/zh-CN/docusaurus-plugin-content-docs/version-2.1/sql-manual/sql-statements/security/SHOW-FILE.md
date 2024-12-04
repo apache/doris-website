@@ -49,7 +49,7 @@ SHOW FILE [FROM database];
 - MD5: 文件的 MD5
 
 
-### Example
+## Examples
 
 1. 查看数据库 my_database 中已上传的文件
 

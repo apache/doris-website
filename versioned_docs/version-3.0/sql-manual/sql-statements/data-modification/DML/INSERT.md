@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The change statement is to complete the data insertion operation.
 
@@ -69,7 +69,7 @@ Notice:
 
 When executing the `INSERT` statement, the default behavior is to filter the data that does not conform to the target table format, such as the string is too long. However, for business scenarios that require data not to be filtered, you can set the session variable `enable_insert_strict` to `true` to ensure that `INSERT` will not be executed successfully when data is filtered out.
 
-### Example
+## Example
 
 The `test` table contains two columns `c1`, `c2`.
 
@@ -112,11 +112,11 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 ```
 
 
-### Keywords
+## Keywords
 
     INSERT
 
-### Best Practice
+## Best Practice
 
 1. View the returned results
 

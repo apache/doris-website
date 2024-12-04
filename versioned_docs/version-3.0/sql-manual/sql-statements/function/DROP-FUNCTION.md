@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 Delete a custom function. Function names and parameter types are exactly the same to be deleted.
 
@@ -43,7 +43,7 @@ Parameter Description:
 - `function_name`: the name of the function to delete
 - `arg_type`: the argument list of the function to delete
 
-### Example
+## Example
 
 1. Delete a function
 
@@ -56,8 +56,8 @@ Parameter Description:
     DROP GLOBAL FUNCTION my_add(INT, INT)
     ```   
 
-### Keywords
+## Keywords
 
      DROP, FUNCTION
 
-### Best Practice
+## Best Practice

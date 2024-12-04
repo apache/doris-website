@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to delete the external catalog.
 
@@ -37,7 +37,7 @@ Syntax:
 DROP CATALOG [I EXISTS] catalog_name;
 ```
 
-### Example
+## Examples
 
 1. Drop catalog hive
 
@@ -45,9 +45,9 @@ DROP CATALOG [I EXISTS] catalog_name;
    DROP CATALOG hive;
    ```
 
-### Keywords
+## Keywords
 
 DROP, CATALOG
 
-### Best Practice
+## Best Practice
 

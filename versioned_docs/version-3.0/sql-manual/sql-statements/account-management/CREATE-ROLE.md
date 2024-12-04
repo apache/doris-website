@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The statement user creates a role
 
@@ -36,7 +36,7 @@ The statement user creates a role
 
 This statement creates an unprivileged role, which can be subsequently granted with the GRANT command.
 
-### Example
+## Example
 
 1. Create a role
 
@@ -50,8 +50,8 @@ This statement creates an unprivileged role, which can be subsequently granted w
     CREATE ROLE role2 COMMENT "this is my first role";
     ```
 
-### Keywords
+## Keywords
 
 CREATE, ROLE
 
-### Best Practice
+## Best Practice

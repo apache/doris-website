@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to view FE nodes
 
@@ -47,11 +47,11 @@ illustrate:
 7. ErrMsg is used to display the error message when the heartbeat fails.
 8. CurrentConnected indicates whether the FE node is currently connected
 
-### Example
+## Examples
 
-### Keywords
+## Keywords
 
     SHOW, FRONTENDS
 
-### Best Practice
+## Best Practice
 

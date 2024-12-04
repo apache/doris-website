@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to switch catalog.
 
@@ -36,7 +36,7 @@ Syntax:
 SWITCH catalog_name
 ```
 
-### Example
+## Examples
 
 1. Switch to hive
 
@@ -44,9 +44,9 @@ SWITCH catalog_name
   	SWITCH hive;
   	```
 
-### Keywords
+## Keywords
 
 SWITCH, CATALOG
 
-### Best Practice
+## Best Practice
 

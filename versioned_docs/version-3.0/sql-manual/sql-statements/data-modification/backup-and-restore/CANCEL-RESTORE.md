@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to cancel an ongoing RESTORE task.
 
@@ -40,7 +40,7 @@ Notice:
 
 - When cancellation is around a COMMIT or later stage of recovery, the table being recovered may be rendered inaccessible. At this time, data recovery can only be performed by executing the recovery job again.
 
-### Example
+## Example
 
 1. Cancel the RESTORE task under example_db.
 
@@ -48,8 +48,8 @@ Notice:
 CANCEL RESTORE FROM example_db;
 ```
 
-### Keywords
+## Keywords
 
      CANCEL, RESTORE
 
-### Best Practice
+## Best Practice

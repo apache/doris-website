@@ -51,7 +51,7 @@ CREATE DATABASE [IF NOT EXISTS] db_name
   )
   ```
 
-### Example
+## Examples
 
 1. 新建数据库 db_test
 

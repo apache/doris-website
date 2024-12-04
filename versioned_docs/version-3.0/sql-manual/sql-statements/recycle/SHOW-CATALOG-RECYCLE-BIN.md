@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 This statement is used to display the dropped meta informations that can be recovered
 
@@ -48,7 +48,7 @@ The meaning of each column is as follows:
         RemoteDataSize：      the amount of data on remote storage(hdfs or object storage). If the type is database, this value includes the remote data size of the recycled tables and partitions in the database
 ```
 
-### Example
+## Example
 
  1. Display all meta informations that can be recovered
     
@@ -62,9 +62,9 @@ The meaning of each column is as follows:
        SHOW CATALOG RECYCLE BIN WHERE NAME = 'test';
       ```
 
-### Keywords
+## Keywords
 
     SHOW, CATALOG RECYCLE BIN
 
-### Best Practice
+## Best Practice
 

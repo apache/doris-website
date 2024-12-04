@@ -39,7 +39,7 @@ ALTER SYSTEM ADD BROKER
 ALTER SYSTEM ADD BROKER broker_name "broker_host1:broker_ipc_port1","broker_host2:broker_ipc_port2",...;
 ```
 
-### Example
+## Examples
 
 1. 增加两个 Broker
 

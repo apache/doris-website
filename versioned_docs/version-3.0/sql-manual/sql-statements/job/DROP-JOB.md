@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 User stops a JOB. A stopped job cannot be resumed.
 
@@ -32,7 +32,7 @@ User stops a JOB. A stopped job cannot be resumed.
 DROP JOB WHERE jobName = 'job_name';
 ```
 
-### Example
+## Example
 
 1. DROP the job named test1.
 
@@ -40,9 +40,9 @@ DROP JOB WHERE jobName = 'job_name';
    DROP JOB where jobName = 'test1';
    ```
 
-### Keywords
+## Keywords
 
         DROP, JOB
 
-### Best Practice
+## Best Practice
 

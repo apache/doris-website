@@ -43,7 +43,7 @@ SHOW DATA TYPES;
 
     `SHOW DATA TYPES`
 
-### Keywords
+## Keywords
 
 SHOW,DATA,TYPES
 

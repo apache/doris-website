@@ -219,7 +219,7 @@ WITH BROKER broker_name
   该功能自 Apache Doris  1.2.3 版本起支持
 
 
-### Example
+## Examples
 
 1. 从 HDFS 导入一批数据
 

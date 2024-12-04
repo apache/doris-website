@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display all views based on the given table
 
@@ -37,7 +37,7 @@ grammar:
 SHOW VIEW { FROM | IN } table [ FROM db ]
 ```
 
-### Example
+## Examples
 
 1. Show all views created based on table testTbl
 
@@ -45,7 +45,7 @@ SHOW VIEW { FROM | IN } table [ FROM db ]
     SHOW VIEW FROM testTbl;
     ```
 
-### Keywords
+## Keywords
 
 SHOW, VIEW
 

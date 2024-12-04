@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 Modify BE node properties (administrator only!)
 
@@ -59,7 +59,7 @@ ALTER SYSTEM MODIFY BACKEND "id1" SET ("key" = "value"[, ...]);
 Note:
 1. A backend can be set multi resource tags. But must contain "tag.location" type.
 
-### Example
+## Examples
 
 1. Modify the resource tag of BE
 
@@ -93,9 +93,9 @@ Note:
     ALTER SYSTEM MODIFY BACKEND "id1" SET ("disable_load" = "true");
     ```
 
-### Keywords
+## Keywords
 
     ALTER, SYSTEM, ADD, BACKEND, ALTER SYSTEM
 
-### Best Practice
+## Best Practice
 

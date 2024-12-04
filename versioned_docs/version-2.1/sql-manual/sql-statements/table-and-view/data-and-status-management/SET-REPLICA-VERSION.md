@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to set the version, maximum success version, and maximum failure version of the specified replica.
 
@@ -56,7 +56,7 @@ If the specified replica does not exist, it will be ignored.
 >
 > It is strictly prohibited to operate the tablet that is writing data!
 
-### Example
+## Examples
 
  1. Clear the replica failed version of tablet 10003 on BE 10001.
 
@@ -70,9 +70,9 @@ ADMIN SET REPLICA VERSION PROPERTIES("tablet_id" = "10003", "backend_id" = "1000
 ADMIN SET REPLICA VERSION PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "version" = "1004");
 ```
 
-### Keywords
+## Keywords
 
     ADMIN, SET, REPLICA, VERSION
 
-### Best Practice
+## Best Practice
 

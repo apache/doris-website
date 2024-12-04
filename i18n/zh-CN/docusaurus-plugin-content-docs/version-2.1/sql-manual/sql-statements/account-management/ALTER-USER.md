@@ -67,7 +67,7 @@ password_policy:
 4. 修改 `FAILED_LOGIN_ATTEMPTS` 和 `PASSWORD_LOCK_TIME`
 5. 解锁用户
 
-### Example
+## Examples
 
 1. 修改用户的密码
 

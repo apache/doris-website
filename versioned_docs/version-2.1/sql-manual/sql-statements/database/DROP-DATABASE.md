@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to delete the database (database)
 grammar:    
@@ -40,7 +40,7 @@ illustrate:
 - During the execution of DROP DATABASE, the deleted database can be recovered through the RECOVER statement. See the [RECOVER](../../Database-Administration-Statements/RECOVER.md) statement for details
 - If you execute DROP DATABASE FORCE, the system will not check the database for unfinished transactions, the database will be deleted directly and cannot be recovered, this operation is generally not recommended
 
-### Example
+## Examples
 
 1. Delete the database db_test
    
@@ -48,8 +48,8 @@ illustrate:
      DROP DATABASE db_test;
      ```
 
-### Keywords
+## Keywords
 
      DROP, DATABASE
 
-### Best Practice
+## Best Practice

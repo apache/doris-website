@@ -44,7 +44,7 @@ SHOW TABLE STATUS
 
 1. 该语句主要用于兼容 MySQL 语法，目前仅显示 Comment 等少量信息
 
-### Example
+## Examples
 
  1. 查看当前数据库下所有表的信息
 

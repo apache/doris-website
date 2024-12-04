@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to view the garbage data footprint within the backend.
 
@@ -41,7 +41,7 @@ illustrate:
 1. The Backend format is the node's BackendHost:BackendHeartBeatPort
 2. TrashUsedCapacity indicates the space occupied by the garbage data of the node.
 
-### Example
+## Example
 
 1. View the space occupied by garbage data of all be nodes.
 
@@ -55,8 +55,8 @@ illustrate:
    SHOW TRASH ON "192.168.0.1:9050";
    ```
 
-### Keywords
+## Keywords
 
     SHOW, TRASH
 
-### Best Practice
+## Best Practice

@@ -251,7 +251,7 @@ Since 3.0.3, Doris supports both Auto and Dynamic Partition. In this case, both 
 
 There is no conflict between the two syntaxes, just set the corresponding clauses/attributes at the same time.
 
-### Best Practice
+## Best Practice
 
 In scenarios where you need to set a limit on the partition lifecycle, you can **disable the creation of Dynamic Partition, leaving the creation of partitions to be completed by Auto Partition**, and complete the management of the partition lifecycle through the Dynamic Partition's function of dynamically reclaiming partitions:
 

@@ -48,7 +48,7 @@ IndexName = rollup_name
 ```
 or compound them with operator `AND`.
 
-### Example
+## Examples
 
 1. list all tablets of the specified table
 
@@ -68,9 +68,9 @@ or compound them with operator `AND`.
     SHOW TABLETS FROM example_db.table_name WHERE state="DECOMMISSION" AND BackendId=11003;
     ```
 
-### Keywords
+## Keywords
 
     SHOW, TABLETS
 
-### Best Practice
+## Best Practice
 

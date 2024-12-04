@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 Resume a resident data synchronization job whose current database has been suspended by `job_name`, and the job will continue to synchronize data from the latest position before the last suspension.
 
@@ -36,7 +36,7 @@ grammar:
 RESUME SYNC JOB [db.]job_name
 ```
 
-### Example
+## Examples
 
 1. Resume the data synchronization job named `job_name`
 
@@ -44,9 +44,9 @@ RESUME SYNC JOB [db.]job_name
     RESUME SYNC JOB `job_name`;
     ```
 
-### Keywords
+## Keywords
 
     RESUME, SYNC, LOAD
 
-### Best Practice
+## Best Practice
 

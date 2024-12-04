@@ -47,7 +47,7 @@ ALTER SYSTEM ADD BACKEND
 2. heartbeat_port 为该节点的心跳端口
 3. 增加和删除节点为同步操作。这两种操作不考虑节点上已有的数据，节点直接从元数据中删除，请谨慎使用。
 
-### Example
+## Examples
 
  1. 增加一个节点
     

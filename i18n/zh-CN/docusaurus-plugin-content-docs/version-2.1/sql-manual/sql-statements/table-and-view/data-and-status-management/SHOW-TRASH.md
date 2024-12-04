@@ -46,7 +46,7 @@ SHOW TRASH [ON BackendHost:BackendHeartBeatPort];
 1. Backend 格式为该节点的 BackendHost:BackendHeartBeatPort
 2. TrashUsedCapacity 表示该节点垃圾数据占用空间。
 
-### Example
+## Examples
 
 1. 查看所有 be 节点的垃圾数据占用空间。
 

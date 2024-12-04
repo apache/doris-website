@@ -39,7 +39,7 @@ SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS
 SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [FROM db]
 ```
 
-### Example
+## Examples
 
 1. 查看在 database test 上的转换情况
 

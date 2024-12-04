@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The GRANT command has the following functions:
 
@@ -95,7 +95,7 @@ user_identity:
 
 role_list is the list of roles to be assigned, separated by commas,the specified role must exist.
 
-### Example
+## Examples
 
 1. Grant permissions to all catalog and databases and tables to the user
 
@@ -169,9 +169,9 @@ This feature is supported since the Apache Doris 2.0 version
     GRANT SHOW_VIEW_PRIV ON db1.view1 TO 'jack'@'%';
     ```
 
-### Keywords
+## Keywords
 
     GRANT
 
-### Best Practice
+## Best Practice
 

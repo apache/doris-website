@@ -30,7 +30,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to modify an existing resource. Only the root or admin user can modify resources.
 Syntax:
@@ -42,7 +42,7 @@ PROPERTIES ("key"="value", ...);
 
 Note: The resource type does not support modification.
 
-### Example
+## Example
 
 1. Modify the working directory of the Spark resource named spark0:
 
@@ -75,10 +75,10 @@ ALTER RESOURCE 'remote_s3' PROPERTIES ("s3.connection.maximum" = "100");
   ALTER RESOURCE "showPolicy_1_resource" PROPERTIES("s3.connection.maximum" = "1111");
 ```
 
-### Keywords
+## Keywords
 
 ```text
 ALTER, RESOURCE
 ```
 
-### Best Practice
+## Best Practice

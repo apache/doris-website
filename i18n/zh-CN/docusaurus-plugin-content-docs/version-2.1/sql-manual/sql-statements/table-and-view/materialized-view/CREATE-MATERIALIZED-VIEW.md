@@ -82,7 +82,7 @@ CREATE MATERIALIZED VIEW < MV name > as < query >
    timeout: 物化视图构建的超时时间。
   ```
 
-### Example
+## Examples
 
 Base 表结构为
 

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 For manual cleanup of historical load jobs. After cleaning, the Label can be reused.
 
@@ -34,7 +34,7 @@ Syntax:
 CLEAN LABEL [label] FROM db;
 ```
 
-### Example
+## Example
 
 1. Clean label label1 from database db1
 
@@ -48,9 +48,9 @@ CLEAN LABEL [label] FROM db;
 	CLEAN LABEL FROM db1;
 	```
 
-### Keywords
+## Keywords
 
     CLEAN, LABEL
 
-### Best Practice
+## Best Practice
 

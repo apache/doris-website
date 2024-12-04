@@ -25,12 +25,7 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS
-
-### Description
+## Description
 
 This statement is used to show the process of converting light schema change process. should enable config `enable_convert_light_weight_schema_change`.
 
@@ -40,7 +35,7 @@ grammar:
 SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [FROM db]
 ```
 
-### Example
+## Example
 
 1. View the converting process in db named test 
 
@@ -55,8 +50,8 @@ SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [FROM db]
     ```
 
 
-### Keywords
+## Keywords
 
     SHOW, CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS
 
-### Best Practice
+## Best Practice

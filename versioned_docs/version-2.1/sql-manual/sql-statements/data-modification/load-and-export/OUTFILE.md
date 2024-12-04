@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to export query results to a file using the `SELECT INTO OUTFILE` command. Currently, it supports exporting to remote storage, such as HDFS, S3, BOS, COS (Tencent Cloud), through the Broker process, S3 protocol, or HDFS protocol.
     
@@ -176,7 +176,7 @@ Parquet and ORC file formats have their own data types. The export function of D
 
 
 
-### example
+## Examples
 
 1. Use the broker method to export, and export the simple query results to the file `hdfs://path/to/result.txt`. Specifies that the export format is CSV. Use `my_broker` and set kerberos authentication information. Specify the column separator as `,` and the row separator as `\n`.
 
@@ -375,11 +375,11 @@ Parquet and ORC file formats have their own data types. The export function of D
    )
    ```
 
-### keywords
+## Keywords
 
 OUTFILE
 
-### Best Practice
+## Best Practice
 
 1. Export data volume and export efficiency
 

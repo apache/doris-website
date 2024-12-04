@@ -31,7 +31,7 @@ This statement is supported since 2.1
 
 :::
 
-### Description
+## Description
 
 Doris Job is a task that runs according to a predefined schedule, triggering predefined actions at specific times or intervals to help automate certain tasks. In terms of functionality, it is similar to scheduled tasks on operating systems (e.g., cron in Linux, scheduled tasks in Windows).↳
 
@@ -130,7 +130,7 @@ Format: 'YYYY-MM-DD HH:MM:SS'. Used for one-time events, it specifies that the e
 
   It is used to specify the operation that needs to be performed when the job is triggered. Currently, all ***INSERT*** operations are supported. We will support more operations in the future.
 
-### Example
+## Example
 
 Create a one-time job, which will be executed once at 2020-01-01 00:00:00, and the operation performed is to import the data in db2.tbl2 into db1.tbl1.
 
@@ -161,11 +161,11 @@ CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2020-01-01 00:00:00' ENDS '202
 - finished_job_cleanup_threshold_time_hour: Time threshold, in hours, for cleaning up completed tasks. Default value is 24 hours.
 - job_insert_task_consumer_thread_num: Number of threads used for executing Insert tasks. The value should be greater than 0, otherwise the default value is 5.
 
-### Best Practice
+## Best Practice
 
 - Properly manage Jobs to avoid triggering a large number of Jobs simultaneously, which can lead to task accumulation and affect the normal operation of the system.
 - Set the execution interval of tasks within a reasonable range, ensuring that it is at least greater than the task execution time.
 
-### Keywords
+## Keywords
 
     CREATE, JOB, SCHEDULE

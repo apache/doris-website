@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is to increase the node of the OBSERVER role of FRONTEND, (only for administrators!)
 
@@ -41,7 +41,7 @@ illustrate:
 1. host can be a hostname or an ip address
 2. edit_log_port : edit_log_port in its configuration file fe.conf
 
-### Example
+## Examples
 
 1. Add an OBSERVER node
 
@@ -49,9 +49,9 @@ illustrate:
     ALTER SYSTEM ADD OBSERVER "host_ip:9010"
     ```
 
-### Keywords
+## Keywords
 
     ALTER, SYSTEM, ADD, OBSERVER, ALTER SYSTEM
 
-### Best Practice
+## Best Practice
 

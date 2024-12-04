@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to create a repository. Repositories are used for backup or restore. Only root or superuser users can create repositories.
 
@@ -46,7 +46,7 @@ illustrate:
 - PROPERTIES are different according to different types of S3 or hdfs, see the example for details.
 - ON LOCATION : if it is S3 , here followed by the Bucket Name.
 
-### Example
+## Examples
 
 1. Create a repository named s3_repo.
 
@@ -76,7 +76,7 @@ PROPERTIES
     "hadoop.username"="user"
 );
 
-### Keywords
+## Keywords
 
 ```
 6. Create a repository named minio_repo to link minio storage directly through the s3 protocol.
@@ -127,11 +127,11 @@ PROPERTIES
 );
 ```
 
-### Keywords
+## Keywords
 
 CREATE, REPOSITORY
 
-### Best Practice
+## Best Practice
 
 1. A cluster can create multiple warehouses. Only users with ADMIN privileges can create repositories.
 2. Any user can view the created repositories through the [SHOW REPOSITORIES](../../../../sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-REPOSITORIES) command.

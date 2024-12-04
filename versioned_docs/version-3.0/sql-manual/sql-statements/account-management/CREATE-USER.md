@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 The CREATE USER command is used to create a Doris user.
 
@@ -69,7 +69,7 @@ If a role (ROLE) is specified, the newly created user will be automatically gran
 
     A locked account can be actively unlocked through the `ALTER USER` statement.
 
-### Example
+## Example
 
 1. Create a passwordless user (if host is not specified, it is equivalent to jack@'%')
 
@@ -127,7 +127,7 @@ If a role (ROLE) is specified, the newly created user will be automatically gran
     CREATE USER 'jack' COMMENT "this is my first user";
     ```
 
-### Keywords
+## Keywords
 
 CREATE, USER
 

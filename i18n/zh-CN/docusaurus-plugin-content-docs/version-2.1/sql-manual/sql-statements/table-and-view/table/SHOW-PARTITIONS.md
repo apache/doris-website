@@ -48,7 +48,7 @@ under the License.
 支持返回所有分区，包括多级分区
 
 
-### Example
+## Examples
 
 1. 展示指定 db 下指定表的所有非临时分区信息
 

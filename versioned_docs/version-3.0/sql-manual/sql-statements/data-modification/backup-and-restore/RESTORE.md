@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to restore the data backed up by the BACKUP command to the specified database. This command is an asynchronous operation. After the submission is successful, you need to check the progress through the SHOW RESTORE command. Restoring tables of type OLAP is only supported.
 
@@ -64,7 +64,7 @@ illustrate:
   - "clean_partitions": Indicates whether to clean up partitions that do not belong to the restore target. For example, if the target table before the restore has partitions that are not present in the snapshot, specifying `clean_partitions` can drop these extra partitions and move them into the recycle bin during the restore.
     - This feature is supported since the Apache Doris 1.2.6  version
 
-### Example
+## Example
 
 1. Restore the table backup_tbl in backup snapshot_1 from example_repo to database example_db1, the time version is "2018-05-04-16-45-08". Revert to 1 copy:
 
@@ -107,13 +107,13 @@ PROPERTIES
 );
 ```
 
-### Keywords
+## Keywords
 
 ```
 RESTORE
 ```
 
-### Best Practice
+## Best Practice
 
 1. There can only be one ongoing recovery operation under the same database.
 

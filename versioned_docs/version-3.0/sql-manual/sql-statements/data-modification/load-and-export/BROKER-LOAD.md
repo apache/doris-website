@@ -24,7 +24,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-### Description
+## Description
 
 This command is mainly used to import data on remote storage (such as S3, HDFS) through the Broker service process.
 
@@ -214,7 +214,7 @@ WITH BROKER broker_name
 This feature is supported since the Apache Doris 1.2.3 version
 :::
 
-### Example
+## Example
 
 1. Import a batch of data from HDFS
 
@@ -524,11 +524,11 @@ This feature is supported since the Apache Doris 1.2.3 version
     )
     ```
 
-### Keywords
+## Keywords
 
     BROKER, LOAD
 
-### Best Practice
+## Best Practice
 
 1. Check the import task status
 

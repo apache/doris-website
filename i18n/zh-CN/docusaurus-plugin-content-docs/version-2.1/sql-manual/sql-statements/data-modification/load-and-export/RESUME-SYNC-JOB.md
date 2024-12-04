@@ -40,7 +40,7 @@ RESUME SYNC JOB
 RESUME SYNC JOB [db.]job_name
 ```
 
-### Example
+## Examples
 
 1. 恢复名称为 `job_name` 的数据同步作业
 

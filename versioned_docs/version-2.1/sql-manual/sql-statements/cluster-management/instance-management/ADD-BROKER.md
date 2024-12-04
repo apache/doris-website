@@ -27,7 +27,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to add a BROKER node. (Administrator only!)
 
@@ -37,7 +37,7 @@ grammar:
 ALTER SYSTEM ADD BROKER broker_name "broker_host1:broker_ipc_port1","broker_host2:broker_ipc_port2",...;
 ```
 
-### Example
+## Examples
 
 1. Add two brokers
 
@@ -50,9 +50,9 @@ ALTER SYSTEM ADD BROKER broker_name "broker_host1:broker_ipc_port1","broker_host
     ALTER SYSTEM ADD BROKER "broker_fqdn1:port";
    ```
 
-### Keywords
+## Keywords
 
     ALTER, SYSTEM, ADD, FOLLOWER, ALTER SYSTEM
 
-### Best Practice
+## Best Practice
 

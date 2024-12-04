@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to display all permission items.
 
@@ -36,7 +36,7 @@ grammar:
 SHOW PRIVILEGES
 ```
 
-### Example
+## Example
 
 1. display all permission items
 
@@ -44,9 +44,9 @@ SHOW PRIVILEGES
    SHOW PRIVILEGES
    ```
 
-### Keywords
+## Keywords
 
     SHOW, PRIVILEGES
 
-### Best Practice
+## Best Practice
 

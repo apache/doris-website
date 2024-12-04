@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is used to pause the scheduled scheduling of materialized views
 
@@ -36,7 +36,7 @@ syntax:
 PAUSE MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 ```
 
-### Example
+## Examples
 
 1. Pause scheduled scheduling of materialized view mv1
 
@@ -44,9 +44,9 @@ PAUSE MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
     PAUSE MATERIALIZED VIEW JOB ON mv1;
     ```
    
-### Keywords
+## Keywords
 
     PAUSE, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice
 

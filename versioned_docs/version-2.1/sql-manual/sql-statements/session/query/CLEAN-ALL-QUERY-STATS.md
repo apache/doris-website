@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-### Description
+## Description
 
 This statement is used to clear query statistics
 
@@ -41,7 +41,7 @@ Remarks：
 2. If DATABASE is specified, the query statistics of the specified database are cleared, alter privilege for this database is needed
 3. If TABLE is specified, the query statistics of the specified table are cleared, alter privilege for this table is needed
 
-### Example
+## Examples
 
 1. Clear all statistics
 2. 
@@ -60,9 +60,9 @@ Remarks：
     clean table query stats from test_query_db.baseall;
     ```
 
-### Keywords
+## Keywords
 
     CLEAN, QUERY, STATS
 
-### Best Practice
+## Best Practice
 

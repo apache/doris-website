@@ -28,7 +28,7 @@ under the License.
 
 
 
-### Description
+## Description
 
 This statement is to delete the BROKER node, (administrator only)
 
@@ -41,7 +41,7 @@ ALTER SYSTEM DROP ALL BROKER broker_name
 ALTER SYSTEM DROP BROKER broker_name "host:port"[,"host:port"...];
 ```
 
-### Example
+## Examples
 
 1. Delete all brokers
 
@@ -55,9 +55,9 @@ ALTER SYSTEM DROP BROKER broker_name "host:port"[,"host:port"...];
     ALTER SYSTEM DROP BROKER broker_name "host:port"[,"host:port"...];
     ```
 
-### Keywords
+## Keywords
 
     ALTER, SYSTEM, DROP, FOLLOWER, ALTER SYSTEM
 
-### Best Practice
+## Best Practice
 

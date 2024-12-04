@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-ASYNC-MATERIALIZED-VIEW",
+    "title": "DROP ASYNC MATERIALIZED VIEW",
     "language": "en"
 }
 ---
@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-ASYNC-MATERIALIZED-VIEW
 
-### Name
-
-DROP ASYNC MATERIALIZED VIEW
-
-### Description
+## Description
 
 This statement is used to delete asynchronous materialized views.
 
@@ -47,7 +42,7 @@ DROP MATERIALIZED VIEW (IF EXISTS)? mvName=multipartIdentifier
 2. mv_name:
    The name of the materialized view to be deleted. Required field.
 
-### Example
+## Example
 
 1. Delete table materialized view mv1
 
@@ -60,9 +55,9 @@ DROP MATERIALIZED VIEW mv1;
 DROP MATERIALIZED VIEW IF EXISTS db1.mv1;
 ```
 
-### Keywords
+## Keywords
 
     DROP, ASYNC, MATERIALIZED, VIEW
 
-### Best Practice
+## Best Practice
 
