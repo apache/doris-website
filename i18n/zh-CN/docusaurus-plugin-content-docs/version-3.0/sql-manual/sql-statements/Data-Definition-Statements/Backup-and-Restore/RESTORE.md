@@ -59,7 +59,9 @@ PROPERTIES ("key"="value", ...);
   - "reserve_replica" = "true"：默认为 false。当该属性为 true 时，会忽略 replication_num 属性，恢复的表或分区的副本数将与备份之前一样。支持多个表或表内多个分区有不同的副本数。
   - "reserve_dynamic_partition_enable" = "true"：默认为 false。当该属性为 true 时，恢复的表会保留该表备份之前的'dynamic_partition_enable'属性值。该值不为 true 时，则恢复出来的表的'dynamic_partition_enable'属性值会设置为 false。
   - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。
-  - "meta_version" = 40：使用指定的 meta_version 来读取之前备份的元数据。注意，该参数作为临时方案，仅用于恢复老版本 Doris 备份的数据。最新版本的备份数据中已经包含 meta version，无需再指定。     
+  - "meta_version" = 40：使用指定的 meta_version 来读取之前备份的元数据。注意，该参数作为临时方案，仅用于恢复老版本 Doris 备份的数据。最新版本的备份数据中已经包含 meta version，无需再指定。
+  - "reserve_storage_policy" = "true"：指定的恢复的表是否保留冷热分层属性。默认为true，备份集中保存的storage policy和对应的resource信息将在新集群中重建。恢复时数据都会下载到本地，再由降冷策略上传到远程。reserve_storage_policy设置为false，恢复后的表去除了冷热属性， 变为普通表。xxx 版本起支持。
+  - "storage_resource" = "resource_name"：指定恢复后表的冷数据使用的resource。建议在跨集群恢复时指定此属性。注意恢复后的storage policy中的storage_resource属性也会更新为指定的storage_resource。若指定了"reserve_storage_policy"="false"，则忽略storage_resource属性。xxx 版本起支持。
 
 ### Example
 
