@@ -237,16 +237,19 @@
             font-weight: 700;
         }
         .tabs__item {
+            border: 1px solid transparent;
             margin-bottom: 0;
             border-bottom: 1px;
             font-size: 0.875rem;
             height: 2.75rem;
             padding-top: 0.75rem;
             padding-bottom: 0.625rem;
+            margin-right: 0.25rem;
         }
         .tabs__item:hover {
             border-radius: 0.25rem 0.25rem 0 0;
-            background-color: rgb(229, 230, 237);
+            background-color: #edf2fa;
+            border: 1.2px solid var(---N5, #dfe5f0);
         }
     }
     .tabs-container .tabs {
