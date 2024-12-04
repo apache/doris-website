@@ -39,7 +39,7 @@ This document presents a summary of Apache Doris versions released within one ye
 
 <br />
 
-- [2024-11-10, Apache Doris 3.0.3 is released](../releasenotes/v3.0/release-3.0.3.md)
+- [2024-12-02, Apache Doris 3.0.3 is released](../releasenotes/v3.0/release-3.0.3.md)
 
 - [2024-11-10, Apache Doris 2.1.7 is released](../releasenotes/v2.1/release-2.1.7.md)
 
