@@ -25,10 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-SHOW ALTER TABLE MATERIALIZED VIEW
-
 ### Description
 
 This command is used to view the execution of the Create Materialized View job submitted through the [CREATE-MATERIALIZED-VIEW](../../sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW.md) statement.

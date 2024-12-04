@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SET VARIABLE
-
 ### Description
 
 This statement is mainly used to modify Doris system variables. These system variables can be modified at the global and session level, and some can also be modified dynamically. You can also view these system variables with `SHOW VARIABLE`.

@@ -24,14 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Description
 
-## 描述（Description）
+To create a storage policy, you must first create a storage resource, and then associate the created storage resource name when creating the migration policy. For details, refer to the RESOURCE section.
 
-创建一个存储策略，必须先创建存储资源，然后创建迁移策略时候关联创建的存储资源名，具体可参考 RESOURCE 章节。
+## Syntax
 
-## 语法（Syntax）
 
-```SQL
+
+```sql
 CREATE STORAGE POLICY <policy_name>
 PROPERTIES(
     "storage_resource" = "<storage_resource_name>"
@@ -39,53 +40,52 @@ PROPERTIES(
     ｜ ， "cooldown_ttl" = "<cooldown_ttl>"}]
 );
 ```
-
-## 必选参数（Required Parameters）
+## Required Parameters
 
 **<policy_name>**
 
-> 待创建的存储策略名字
+> The name of the storage policy to be created
 
 **<storage_resource_name>**
 
-> 关联的存储资源名字，具体如何创建可参考 RESOURCE 章节
+> The name of the associated storage resource. For details on how to create it, refer to the RESOURCE section
 
-## 可选参数（Optional Parameters）
+## Optional Parameters
 
 **<cooldown_datetime>**
 
-> 指定创建数据迁移策略冷却的时间
+> Specifies the cooldown time for creating the data migration policy
 
 **<cooldown_ttl>**
 
-> 指定创建数据迁移策略热数据持续时间
+> Specifies the duration of hot data for creating the data migration policy
 
-## 权限控制（Access Control Requirements）
+## Access Control Requirements
 
-执行此 SQL 命令成功的前置条件是，拥有 ADMIN_PRIV 权限，参考权限文档。
+The prerequisite for successfully executing this SQL command is to have ADMIN_PRIV privileges. Refer to the permission documentation.
 
-| 权限（Privilege） | 对象（Object）   | 说明（Notes）               |
-| :---------------- | :--------------- | :-------------------------- |
-| ADMIN_PRIV        | 整个集群管理权限 | 除 NODE_PRIV 以外的所有权限 |
+| Privilege  | Object                               | Notes                           |
+| :--------- | :----------------------------------- | :------------------------------ |
+| ADMIN_PRIV | Entire cluster management privileges | All privileges except NODE_PRIV |
 
-## 示例（Example）
+## Example
 
-1. 指定数据冷却时间创建数据迁移策略。
+1. Create a data migration policy with a specified data cooldown time.
 
-```SQL
-CREATE STORAGE POLICY testPolicy
-PROPERTIES(
-  "storage_resource" = "s3",
-  "cooldown_datetime" = "2022-06-08 00:00:00"
-);
-```
+  ```sql
+  CREATE STORAGE POLICY testPolicy
+  PROPERTIES(
+    "storage_resource" = "s3",
+    "cooldown_datetime" = "2022-06-08 00:00:00"
+  );
+  ```
 
-1. 指定热数据持续时间创建数据迁移策略
+2. Create a data migration policy with a specified duration of hot data
 
-```SQL
-CREATE STORAGE POLICY testPolicy
-PROPERTIES(
-  "storage_resource" = "s3",
-  "cooldown_ttl" = "1d"
-);
-```
+  ```sql
+  CREATE STORAGE POLICY testPolicy
+  PROPERTIES(
+    "storage_resource" = "s3",
+    "cooldown_ttl" = "1d"
+  );
+  ```

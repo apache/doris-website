@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER SYSTEM ADD BACKEND
-
 ### Description
 
 The ADD BACKEND command is used to add one or more backend nodes to a Doris OLAP database cluster. This command allows administrators to specify the host and port of the new backend nodes, along with optional properties that configure their behavior.

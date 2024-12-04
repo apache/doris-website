@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-ALTER TABLE RENAME
-
 ### Description
 
 This statement is used to rename certain names of existing table properties. This operation is synchronous, and the return of the command indicates the completion of the execution.

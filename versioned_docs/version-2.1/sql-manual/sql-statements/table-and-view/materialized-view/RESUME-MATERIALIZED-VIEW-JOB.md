@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-RESUME MATERIALIZED VIEW
-
 ### Description
 
 This statement is used to temporarily restore the scheduled scheduling of materialized views

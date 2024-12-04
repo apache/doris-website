@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE FUNCTION
-
 ### Description
 
 This statement creates a custom function. Executing this command requires the user to have `ADMIN` privileges.

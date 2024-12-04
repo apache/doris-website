@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER SQL BLOCK RULE
 
 ### Description
 

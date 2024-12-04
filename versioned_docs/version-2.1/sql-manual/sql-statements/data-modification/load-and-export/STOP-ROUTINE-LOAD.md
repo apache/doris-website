@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-STOP ROUTINE LOAD
-
 ### Description
 
 User stops a Routine Load job. A stopped job cannot be rerun.

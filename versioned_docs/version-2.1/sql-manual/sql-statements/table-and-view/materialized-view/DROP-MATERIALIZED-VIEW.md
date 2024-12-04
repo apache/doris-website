@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-DROP MATERIALIZED VIEW
-
 ### Description
 
 This statement is used to drop a materialized view. Synchronous syntax

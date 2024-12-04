@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW FUNCTIONS
-
 ### Description
 
 View all custom (system-provided) functions under the database. If the user specifies a database, then view the corresponding database, otherwise directly query the database where the current session is located

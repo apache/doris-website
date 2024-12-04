@@ -27,9 +27,6 @@ under the License.
 
 
 
-### Name
-
-INSERT OVERWRITE
 
 ### Description
 

@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-CREATE ROLE
-
 ### Description
 
 The statement user creates a role

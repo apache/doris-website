@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-STOP SYNC JOB
-
 ### Description
 
 Stop a non-stop resident data synchronization job in a database by `job_name`.

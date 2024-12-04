@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-BROKER LOAD
-
 ### Description
 
 This command is mainly used to import data on remote storage (such as S3, HDFS) through the Broker service process.

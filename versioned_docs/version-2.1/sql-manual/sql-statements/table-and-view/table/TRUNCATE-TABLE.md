@@ -1,6 +1,6 @@
 ---
 {
-    "title": "TRUNCATE-TABLE",
+    "title": "TRUNCATE TABLE",
     "language": "en"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TRUNCATE-TABLE
-
-### Name
-
-TRUNCATE TABLE
 
 ### Description
 
@@ -66,4 +61,4 @@ illustrate:
 
      TRUNCATE, TABLE
 
-### Best Practice
+

@@ -23,61 +23,60 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+## Description
 
-## 描述（Description）
+In the storage-computing coupled mode, this is used to trigger a compaction for all replicas under the specified table partition.
 
-存算一体模式中，用于对指定表分区下的所有副本触发一次 Compaction。
+This command is not supported in the storage-computing separation mode.
 
-存算分离模式不支持这个命令。
+## Syntax
 
-## 语法（Syntax）
-
-```SQL
+```sql
 ADMIN COMPACT TABLE <table_name> 
 PARTITION <partition_name> 
 WHERE TYPE={ BASE | CUMULATIVE }
 ```
 
-## 必选参数（Required Parameters）
+## Required Parameters
 
 <table_name>
 
-> 待触发 compaction 的表名
+> The name of the table for which compaction is to be triggered.
 
 <partition_name>
 
-> 待触发 compaction 的表名
+> The name of the partition for which compaction is to be triggered. (Note: This line should be corrected as it repeats the table name description, it should specify the partition name.)
 
 TYPE={ BASE | CUMULATIVE }
 
-> 其中 BASE 是指触发 base compaction，CUMULATIVE 是指触发 cumulative compaction，具体可以参考 COMPACTION 章节
+> Where BASE refers to triggering a base compaction, and CUMULATIVE refers to triggering a cumulative compaction. For details, refer to the COMPACTION section.
 
-## 权限控制（Access Control Requirements）
+## Access Control Requirements
 
-执行此 SQL 命令成功的前置条件是，拥有 ADMIN_PRIV 权限，参考权限文档。
+The prerequisite for successfully executing this SQL command is to have ADMIN_PRIV permissions. Refer to the permission documentation.
 
-| 权限（Privilege） | 对象（Object）   | 说明（Notes）               |
-| :---------------- | :--------------- | :-------------------------- |
-| ADMIN_PRIV        | 整个集群管理权限 | 除 NODE_PRIV 以外的所有权限 |
+| Privilege  | Object                               | Notes                           |
+| :--------- | :----------------------------------- | :------------------------------ |
+| ADMIN_PRIV | Entire cluster management privileges | All privileges except NODE_PRIV |
 
-## 示例（Example）
+## Example
 
-1. 触发表 tbl 分区 par01 的 cumulative compaction。
+1. Trigger cumulative compaction for partition par01 of table tbl.
 
-```SQL
-ADMIN COMPACT TABLE tbl PARTITION par01 WHERE TYPE='CUMULATIVE';
-```
+  ```sql
+  ADMIN COMPACT TABLE tbl PARTITION par01 WHERE TYPE='CUMULATIVE';
+  ```
 
-## 注意事项（Usage Note）
+## Usage Note
 
-1. 存算分离模式不支持这个命令，在此模式下执行会报错，例如：
+1. This command is not supported in the storage-computing separation mode. Executing it in this mode will result in an error, for example:
 
-```SQL
-ADMIN COMPACT TABLE tbl PARTITION par01 WHERE TYPE='CUMULATIVE';
-```
+  ```sql
+  ADMIN COMPACT TABLE tbl PARTITION par01 WHERE TYPE='CUMULATIVE';
+  ```
 
-报错信息如下：
+  The error message is as follows:
 
-```Plain
-ERROR 1105 (HY000): errCode = 2, detailMessage = Unsupported operation
-```
+  ```Plain
+  ERROR 1105 (HY000): errCode = 2, detailMessage = Unsupported operation
+  ```

@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE TABLE AS SELECT
-
 ### Description
 
 This statement creates the table structure by returning the results from the Select statement and imports the data at the same time

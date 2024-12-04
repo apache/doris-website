@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-ADMIN COPY TABLET
 
 ### Description
 

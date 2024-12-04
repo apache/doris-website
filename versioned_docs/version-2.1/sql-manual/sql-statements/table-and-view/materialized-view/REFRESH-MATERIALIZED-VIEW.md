@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-REFRESH MATERIALIZED VIEW
-
 ### Description
 
 This statement is used to manually refresh the specified asynchronous materialized view

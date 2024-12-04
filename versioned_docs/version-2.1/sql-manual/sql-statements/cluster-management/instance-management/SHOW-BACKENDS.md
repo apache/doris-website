@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW BACKENDS
-
 ### Description
 
 This statement is used to view the BE nodes in the cluster

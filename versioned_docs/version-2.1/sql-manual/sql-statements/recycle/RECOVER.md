@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## RECOVER
 
-### Name
-
-RECOVER
 
 ### Description
 

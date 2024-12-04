@@ -26,27 +26,25 @@ under the License.
 
 
 
-### Name
 
-SHOW DATA TYPES
+## Description
 
-### Description
+This statement is used to view all supported data types.
 
-    This statement is used to view all supported data types.
+## Syntax:
 
-    grammar:
-        ```sql
-        SHOW DATA TYPES;
-        ```
+```sql
+SHOW DATA TYPES;
+```
 
-### Example
+## Example
 
-    1. Display all supported data types
+1. Display all supported data types
 
-        SHOW DATA TYPES;
+    `SHOW DATA TYPES`
 
 ### Keywords
 
-    SHOW,DATA,TYPES
+SHOW,DATA,TYPES
 
-### Best Practice
+

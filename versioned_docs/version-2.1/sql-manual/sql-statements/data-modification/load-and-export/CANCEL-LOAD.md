@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-CANCEL LOAD
-
 ### Description
 
 This statement is used to undo an import job for the specified label. Or batch undo import jobs via fuzzy matching

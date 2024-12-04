@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-PARTITION",
+    "title": "SHOW PARTITION",
     "language": "en"
 }
 ---
@@ -23,37 +23,37 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-## 描述（Description）
+## Description
 
-SHOW PARTITION 用于展示指定分区的详细信息。包括所属数据库名字和 ID，所属表名字和 ID 以及分区名字。
+SHOW PARTITION is used to display detailed information about a specified partition. This includes the name and ID of the associated database, the name and ID of the associated table, and the partition name.
 
-## 语法（Syntax）
+## Syntax
 
-```SQL
+```sql
 SHOW PARTITION <partition_id>
 ```
 
-## 必选参数（Required Parameters）
+## Required Parameters
 
 **<partition_id>**
 
-> 分区的 ID。分区 ID 可以通过 SHOW PARTITIONS 等方式获得。更多信息请参阅“SHOW PARTITIONS”章节
+> The ID of the partition. The partition ID can be obtained through methods such as SHOW PARTITIONS. For more information, please refer to the "SHOW PARTITIONS" section.
 
-## 权限控制（Access Control Requirements）
+## Access Control Requirements
 
-执行此 SQL 命令的用户至少具有`ADMIN_PRIV`权限
+The user executing this SQL command must have at least `ADMIN_PRIV` permissions.
 
-## 示例（Examples）
+## Examples
 
-查询分区 ID 为 13004 的分区信息：
+Query partition information for partition ID 13004:
 
-```SQL
+```sql
 SHOW PARTITION 13004;
 ```
 
-结果如下：
+Results:
 
-```SQL
+```sql
 +--------+-----------+---------------+-------+---------+
 | DbName | TableName | PartitionName | DbId  | TableId |
 +--------+-----------+---------------+-------+---------+

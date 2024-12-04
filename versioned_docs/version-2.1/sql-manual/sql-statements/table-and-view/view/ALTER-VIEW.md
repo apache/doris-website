@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-ALTER VIEW
-
 ### Description
 
 This statement is used to modify the definition of a view

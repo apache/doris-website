@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-DROP JOB
-
 ### Description
 
 User stops a JOB. A stopped job cannot be resumed.

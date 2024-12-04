@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE REPOSITORY
-
 ### Description
 
 This statement is used to create a repository. Repositories are used for backup or restore. Only root or superuser users can create repositories.

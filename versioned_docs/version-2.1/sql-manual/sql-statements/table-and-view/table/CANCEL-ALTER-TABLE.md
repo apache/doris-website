@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-CANCEL ALTER TABLE
-
 ### Description
 
 This statement is used to undo an ALTER operation.

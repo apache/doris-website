@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW RESOURCES
-
 ### Description
 
 This statement is used to display resources that the user has permission to use. Ordinary users can only display resources with permission, and root or admin users will display all resources.

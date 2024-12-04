@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER ROUTINE LOAD
-
 ### Description
 
 This syntax is used to modify an already created routine import job.

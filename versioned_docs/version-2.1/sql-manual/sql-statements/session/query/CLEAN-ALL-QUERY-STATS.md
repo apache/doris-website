@@ -25,13 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-
-CLEAN QUERY STATS
-
-
 ### Description
 
 This statement is used to clear query statistics

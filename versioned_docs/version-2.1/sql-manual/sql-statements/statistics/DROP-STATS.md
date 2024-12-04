@@ -26,54 +26,53 @@ under the License.
 
 
 
-## 描述（Description）
+## Description
 
-删除指定表和列的统计信息。如果不指定列名，则删除所有列的统计信息。
+Delete statistics information for the specified table and columns. If no column names are specified, the statistics information for all columns will be deleted.
 
-## 语法（Syntax）
+## Syntax
 
-```SQL
+```sql
 DROP STATS <table_name> [ <column_names> ]
 ```
 
-其中：
+Where:
 
-```SQL
+```sql
 column_names
   :
   (<column_name>, [ <column_name>... ])
 ```
 
-## 必选参数（Required Parameters）
+## ## Required Parameters
 
 **<table_name>**
 
-> 表的标识符（即名称）
+> The identifier (name) of the table.
 
-## 可选参数（Optional Parameters）
+## Optional Parameters
 
 **<column_names>**
 
-> 列标识符列表（即名称列表）。
+> List of column identifiers (names).
 
-## 权限控制（Access Control Requirements）
+## Access Control Requirements
 
-执行此 SQL 命令的用户必须至少具有以下权限：
+Users executing this SQL command must have at least the following privileges:
 
-| 权限（Privilege） | 对象（Object） | 说明（Notes） |
-| :---------------- | :------------- | :------------ |
-| DROP_PRIV         | 表（Table）    |               |
+| Privilege | Object | Notes |
+| :-------- | :----- | :---- |
+| DROP_PRIV | Table  |       |
 
-## 示例（Examples）
+## Examples
 
-- 删除 table1 中所有列的统计信息
+- Delete statistics information for all columns in table1
 
-```SQL
-DROP STATS table1
-```
+  ```sql
+  DROP STATS table1
+  ```
+- Delete statistics information for col1 and col2 in table1
 
-- 删除 table1 中 col1 和 col2 的统计信息
-
-```SQL
-DROP STATS table1 (col1, col2)
-```
+  ```sql
+  DROP STATS table1 (col1, col2)
+  ```

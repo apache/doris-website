@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER TABLE REPLACE
-
 ### Description
 
 Atomic substitution of two tables. This operation applies only to OLAP tables.

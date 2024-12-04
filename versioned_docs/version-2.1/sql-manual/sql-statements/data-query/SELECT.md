@@ -27,11 +27,7 @@ under the License.
 
 
 
-### Name
-
-SELECT
-
-### description
+### Description
 
 Mainly introduces the use of Select syntax
 

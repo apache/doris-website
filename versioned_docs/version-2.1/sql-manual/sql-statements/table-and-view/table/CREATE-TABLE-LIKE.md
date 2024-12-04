@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE TABLE LIKE
 
 ### Description
 

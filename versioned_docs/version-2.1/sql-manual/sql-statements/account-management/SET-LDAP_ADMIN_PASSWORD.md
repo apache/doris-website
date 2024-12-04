@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-LDAP
-
 ### Description
 
 SET LDAP_ADMIN_PASSWORD

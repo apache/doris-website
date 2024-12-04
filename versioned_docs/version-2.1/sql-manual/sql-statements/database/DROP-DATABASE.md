@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-DOPR DATABASE
-
 ### Description
 
 This statement is used to delete the database (database)

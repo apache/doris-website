@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW FRONTENDS
-
 ### Description
 
 This statement is used to view FE nodes

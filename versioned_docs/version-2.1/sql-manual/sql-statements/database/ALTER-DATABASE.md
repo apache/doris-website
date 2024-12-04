@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER DATABASE
-
 ### Description
 
 This statement is used to set properties of the specified database. (administrator only)

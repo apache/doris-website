@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW INDEX
-
 ### Description
 
   This statement is used to display information about indexes in a table.

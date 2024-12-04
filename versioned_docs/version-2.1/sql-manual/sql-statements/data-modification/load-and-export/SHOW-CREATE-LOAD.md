@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW CREATE LOAD
-
 ### Description
 
 This statement is used to demonstrate the creation statement of a import job.

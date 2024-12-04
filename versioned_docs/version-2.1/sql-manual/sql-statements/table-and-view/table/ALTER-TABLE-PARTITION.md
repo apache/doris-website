@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-ALTER TABLE PARTITION
-
 ### Description
 
 This statement is used to modify a table with a partition.

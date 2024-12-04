@@ -26,17 +26,12 @@ under the License.
 
 
 
-### Name
-
-
-    MYSQL LOAD
-
 
 ### Description
 
 mysql-load: Import local data using the MySql client
 
-```
+```sql
 LOAD DATA
 [LOCAL]
 INFILE 'file_name'

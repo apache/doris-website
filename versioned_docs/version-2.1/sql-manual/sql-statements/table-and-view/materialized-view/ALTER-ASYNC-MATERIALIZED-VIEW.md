@@ -25,10 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-ALTER ASYNC MATERIALIZED VIEW
-
 ### Description
 
 This statement is used to modify asynchronous materialized views.

@@ -26,23 +26,23 @@ under the License.
 
 
 
-## 描述
+## Submit an Explicit Transaction
 
-提交一个显式事务。与 [BEGIN](./BEGIN) 成对使用。
+Used in pairs with [BEGIN](./BEGIN_en).
 
-## 语法
+## Syntax
 
 ```sql
 COMMIT
 ```
 
-## 注意事项
+## Notes
 
-- 如果没有开启显式事务，执行该命令不生效
+- If an explicit transaction is not enabled, executing this command will not take effect.
 
-## 示例
+## Example
 
-以下示例创建了一个名为 test 的表，开启事务，写入两行数据后，提交事务。然后执行查询。
+The following example creates a table named `test`, starts a transaction, inserts two rows of data, commits the transaction, and then executes a query.
 
 ```sql
 CREATE TABLE `test` (

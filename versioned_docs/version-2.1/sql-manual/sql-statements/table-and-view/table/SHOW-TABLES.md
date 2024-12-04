@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-TABLES",
+    "title": "SHOW TABLES",
     "language": "en"
 }
 ---
@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-TABLES
 
-### Name
-
-SHOW TABLES
 
 ### Description
 

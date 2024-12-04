@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-SQL-BLOCK-RULE
-
-### Name
-
-DROP SQL BLOCK RULE
 
 ### Description
 

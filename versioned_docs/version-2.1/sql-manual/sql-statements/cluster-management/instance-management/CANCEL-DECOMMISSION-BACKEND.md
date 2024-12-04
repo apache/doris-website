@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-CANCEL DECOMMISSION
-
 ### Description
 
 This statement is used to undo a node offline operation. (Administrator only!)

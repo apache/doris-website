@@ -23,55 +23,54 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-## 描述（Description）
 
-查看所有/指定存储策略关联的表和分区。
+## Description
 
-## 语法（Syntax）
+View tables and partitions associated with all/specified storage policies.
 
-```SQL
+## Syntax
+
+```sql
 SHOW STORAGE POLICY USING [FOR <storage_policy_name>]
 ```
 
-## 必选参数（Required Parameters）
+## Required Parameters
 
 <storage_policy_name>
 
-> 要查看的存储策略的名字。
+> The name of the storage policy to view.
 
-## 权限控制（Access Control Requirements）
+The prerequisite for successfully executing this SQL command is to have ADMIN_PRIV privileges. Please refer to the privilege document.
 
-执行此 SQL 命令成功的前置条件是，拥有 ADMIN_PRIV 权限，参考权限文档。
+| Privilege (Privilege) | Object (Object)                      | Notes (Notes)                   |
+| --------------------- | ------------------------------------ | ------------------------------- |
+| ADMIN_PRIV            | Entire cluster management privileges | All privileges except NODE_PRIV |
 
-| 权限（Privilege） | 对象（Object）   | 说明（Notes）               |
-| :---------------- | :--------------- | :-------------------------- |
-| ADMIN_PRIV        | 整个集群管理权限 | 除 NODE_PRIV 以外的所有权限 |
+## Example
 
-## 示例（Example）
+1. View all objects with enabled storage policies.
 
-1. 查看所有启用了存储策略的对象。
+  ```sql
+  mysql> show storage policy using;
+  +-----------------------+-----------------------------------------+----------------------------------------+------------+
+  | PolicyName            | Database                                | Table                                  | Partitions |
+  +-----------------------+-----------------------------------------+----------------------------------------+------------+
+  | test_storage_policy   | regression_test_cold_heat_separation_p2 | table_with_storage_policy_1            | ALL        |
+  | test_storage_policy   | regression_test_cold_heat_separation_p2 | partition_with_multiple_storage_policy | p201701    |
+  | test_storage_policy_2 | regression_test_cold_heat_separation_p2 | partition_with_multiple_storage_policy | p201702    |
+  | test_storage_policy_2 | regression_test_cold_heat_separation_p2 | table_with_storage_policy_2            | ALL        |
+  | test_policy           | db2                                     | db2_test_1                             | ALL        |
+  +-----------------------+-----------------------------------------+----------------------------------------+------------+
+  ```
 
-```SQL
-mysql> show storage policy using;
-+-----------------------+-----------------------------------------+----------------------------------------+------------+
-| PolicyName            | Database                                | Table                                  | Partitions |
-+-----------------------+-----------------------------------------+----------------------------------------+------------+
-| test_storage_policy   | regression_test_cold_heat_separation_p2 | table_with_storage_policy_1            | ALL        |
-| test_storage_policy   | regression_test_cold_heat_separation_p2 | partition_with_multiple_storage_policy | p201701    |
-| test_storage_policy_2 | regression_test_cold_heat_separation_p2 | partition_with_multiple_storage_policy | p201702    |
-| test_storage_policy_2 | regression_test_cold_heat_separation_p2 | table_with_storage_policy_2            | ALL        |
-| test_policy           | db2                                     | db2_test_1                             | ALL        |
-+-----------------------+-----------------------------------------+----------------------------------------+------------+
-```
+1. View objects using the storage policy test_storage_policy.
 
-1. 查看使用存储策略 test_storage_policy 的对象。
-
-```SQL
-mysql> show storage policy using for test_storage_policy;
-+---------------------+-----------+---------------------------------+------------+
-| PolicyName          | Database  | Table                           | Partitions |
-+---------------------+-----------+---------------------------------+------------+
-| test_storage_policy | db_1      | partition_with_storage_policy_1 | p201701    |
-| test_storage_policy | db_1      | table_with_storage_policy_1     | ALL        |
-+---------------------+-----------+---------------------------------+------------+
-```
+  ```sql
+  mysql> show storage policy using for test_storage_policy;
+  +---------------------+-----------+---------------------------------+------------+
+  | PolicyName          | Database  | Table                           | Partitions |
+  +---------------------+-----------+---------------------------------+------------+
+  | test_storage_policy | db_1      | partition_with_storage_policy_1 | p201701    |
+  | test_storage_policy | db_1      | table_with_storage_policy_1     | ALL        |
+  +---------------------+-----------+---------------------------------+------------+
+  ```

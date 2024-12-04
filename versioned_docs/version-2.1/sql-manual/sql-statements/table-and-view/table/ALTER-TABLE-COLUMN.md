@@ -24,10 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Name
-
-ALTER TABLE COLUMN
-
 ### Description
 
 This statement is used to perform a schema change operation on an existing table. The schema change is asynchronous, and the task is returned when the task is submitted successfully. After that, you can use the [SHOW ALTER TABLE COLUMN](../../../../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE) command to view the progress.

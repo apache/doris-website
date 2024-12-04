@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW RESTORE
-
 ### Description
 
 This statement is used to view RESTORE tasks

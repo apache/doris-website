@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-INSERT
-
 ### Description
 
 The change statement is to complete the data insertion operation.

@@ -26,17 +26,13 @@ under the License.
 
 
 
-### Name
-
-SHOW TYPECAST
-
-### Description
+## Description
 
 View all type cast under the database. If the user specifies a database, then view the corresponding database, otherwise directly query the database where the current session is located
 
 Requires `SHOW` permission on this database
 
-grammar
+## Syntax
 
 ```sql
 SHOW TYPE_CAST [IN|FROM db]
@@ -46,7 +42,7 @@ SHOW TYPE_CAST [IN|FROM db]
 
 >`db`: database name to query
 
-### Example
+## Example
 
 ```sql
 mysql> show type_cast in testDb\G
@@ -63,9 +59,9 @@ Origin Type: TIMEV2
 3 rows in set (0.00 sec)
 ```
 
-### Keywords
+## Keywords
 
-    SHOW, TYPECAST
+SHOW, TYPECAST
 
-### Best Practice
+
 

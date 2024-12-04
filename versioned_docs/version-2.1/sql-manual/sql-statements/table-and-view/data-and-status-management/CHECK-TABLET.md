@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-ADMIN CHECK TABLET
-
 ### Description
 
 This statement is used to perform the specified check operation on a set of tablets.

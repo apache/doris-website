@@ -23,100 +23,99 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+## Description
 
-## 描述（Description）
+Check the status of index build tasks.
 
-查看索引构建任务的状态。
+## Syntax
 
-## 语法（Syntax）
-
-```SQL
+```sql
 SHOW BUILD INDEX [ (FROM | IN) <database_name>
 [ where_clause ] [ sort_clause ] [ limit_clause ] ] 
 ```
 
-其中：
+Where:
 
-```SQL
+```sql
 where_clause
   : WHERE <output_column_name = value>
 ```
 
-其中：
+Where:
 
-```SQL
+```sql
 sort_clause
   :
    ORDER BY <output_column_name>
 ```
 
-其中：
+Where:
 
-```SQL
+```sql
 limit_clause
   :
    LIMIT <n>
 ```
-
-## 可选参数（Optional Parameters）
+## Optional Parameters
 
 **<database_name>**
 
-> 指定数据库的标识符（即名称），在其所在的集群（Cluster）中必须唯一。
+> Specifies the identifier (name) of the database, which must be unique within its cluster.
 >
-> 标识符必须以字母字符（如果开启 unicode 名字支持，则可以是任意语言文字的字符）开头，并且不能包含空格或特殊字符，除非整个标识符字符串用反引号括起来（例如`My Object`）。
+> The identifier must start with a letter character (or any language character if unicode name support is enabled) and cannot contain spaces or special characters unless the entire identifier string is enclosed in backticks (e.g., `My Object`).
 >
-> 标识符不能使用保留关键字。
+> Identifiers cannot use reserved keywords.
 >
-> 有关更多详细信息，请参阅标识符要求和保留关键字。
+> For more details, see Identifier Requirements and Reserved Keywords.
+
 
 **<WHERE output_column_name = value>**
 
-> 指定输出过滤条件，output_column_name 必须在输出的字段列表中。
+> Specifies the output filter condition, where output_column_name must be in the output field list.
 
 **<ORDER BY output_column_name>**
 
-> 指定输出排序列，output_column_name 必须在输出的字段列表中。
+> Specifies the output sort column, where output_column_name must be in the output field list.
 
-**LIMIT** **<****n>**
+**LIMIT <n>**
 
-> 指定输出行数限制，n 必须是数字。
+> Specifies the limit on the number of output rows, where n must be a number.
 
-## 权限控制（Access Control Requirements）
+## Access Control Requirements
 
-执行此 SQL 命令的用户必须至少具有以下权限：
+Users executing this SQL command must have at least the following privileges:
 
-| 权限（Privilege） | 对象（Object）     | 说明（Notes） |
-| :---------------- | :----------------- | :------------ |
-| SHOW_PRIV         | 数据库（Database） |               |
+| Privilege | Object   | Notes |
+| :-------- | :------- | :---- |
+| SHOW_PRIV | Database |       |
 
-## 注意事项（Usage Notes）
+## Usage Notes
 
-- 目前只对倒排索引生效，其他索引如 bloomfilter index 不生效。
-- 目前只对存算一体模式生效，存算分离模式不生效。
+- Currently only valid for inverted indexes, not other indexes such as bloomfilter index.
+- Currently only valid for the integrated storage and computing mode, not valid for the separated storage and computing mode.
 
-## 示例（Examples）
+## Examples
 
-- 查看所有索引构建任务
+- View all index build tasks
 
-```SQL
-SHOW BUILD INDEX
-```
+  ```sql
+  SHOW BUILD INDEX
+  ```
 
-- 查看数据库 database1 的索引构建任务
+- View index build tasks for database database1
 
-```SQL
-SHOW BUILD INDEX FROM database1
-```
+  ```sql
+  SHOW BUILD INDEX FROM database1
+  ```
 
-- 查看数据库 table1 的索引构建任务
+- View index build tasks for table table1
 
-```SQL
-SHOW BUILD INDEX WHERE TableName = 'table1'
-```
+  ```sql
+  SHOW BUILD INDEX WHERE TableName = 'table1'
+  ```
 
-- 查看数据库 table1 的索引构建任务，并按照输出的 JobId 排序取前 10 行
+- View index build tasks for table table1, sorted by JobId and taking the first 10 rows
 
-```SQL
-SHOW BUILD INDEX WHERE TableName = 'table1' ORDER BY JobId LIMIT 10
-```
+  ```sql
+  SHOW BUILD INDEX WHERE TableName = 'table1' ORDER BY JobId LIMIT 10
+  ```

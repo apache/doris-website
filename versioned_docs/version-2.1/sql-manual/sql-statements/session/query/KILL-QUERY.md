@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-
+## Description
 
 In Doris, each connection runs in a separate thread. You can terminate a thread using the `KILL processlist_id`statement.
 

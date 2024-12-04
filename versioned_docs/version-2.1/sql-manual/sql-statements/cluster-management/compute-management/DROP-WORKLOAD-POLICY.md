@@ -25,31 +25,29 @@ under the License.
 -->
 
 
+## Description
 
-## 描述（Description）
+Delete a Workload Policy
 
-删除一个 Workload Policy
+## Syntax
 
-## 语法（Syntax）
-
-```SQL
+```sql
 DROP WORKLOAD POLICY [ IF EXISTS ] <workload_policy_name>
 ```
-
-## 必选参数（Required Parameters）
+## Required Parameters
 
 **<workload_policy_name>**
 
-Workload Policy 的 name
+The name of the Workload Policy
 
-## 权限控制（Access Control Requirements）
+## Access Control Requirements
 
-至少具有`ADMIN_PRIV`权限
+Must have at least `ADMIN_PRIV` permissions
 
-## 示例（Examples）
+## Examples
 
-1. 删除一个名为 cancel_big_query 的 Workload Policy
+1. Delete a Workload Policy named cancel_big_query
 
-```SQL
-drop workload policy if exists cancel_big_query
-```
+  ```sql
+  drop workload policy if exists cancel_big_query
+  ```

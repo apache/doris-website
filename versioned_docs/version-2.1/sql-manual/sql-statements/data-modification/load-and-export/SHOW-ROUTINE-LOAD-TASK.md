@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW ROUTINE LOAD TASK
-
 ### Description
 
 View the currently running subtasks of a specified Routine Load job.

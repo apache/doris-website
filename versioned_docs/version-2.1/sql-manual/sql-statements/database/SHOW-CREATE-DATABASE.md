@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### Name
-
-SHOW CREATE DATABASE
-
 ### Description
 
 This statement checks the creation of the doris database, support database from both internal catalog and hms catalog

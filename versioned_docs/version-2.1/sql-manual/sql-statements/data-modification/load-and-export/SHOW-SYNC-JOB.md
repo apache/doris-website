@@ -27,11 +27,6 @@ under the License.
 -->
 
 
-
-### Name
-
-SHOW SYNC JOB
-
 ### Description
 
 This command is used to currently display the status of resident data synchronization jobs in all databases.

@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-REFRESH
-
 ### Description
 
 This statement refreshes the metadata of the specified Catalog/Database/Table.
