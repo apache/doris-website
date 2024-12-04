@@ -1,5 +1,6 @@
 import Link from '@docusaurus/Link';
 import React from 'react';
+import useFormatDate from '@site/src/hooks/use-format-date';
 
 export default function HeadItem(props: any) {
     const {
@@ -8,7 +9,6 @@ export default function HeadItem(props: any) {
         image,
         title,
         summary,
-        formattedDate,
         date,
         authorsExists,
         authors,
@@ -30,7 +30,7 @@ export default function HeadItem(props: any) {
                         </div>
                         <div className="mt-4 flex justify-start space-x-2 text-sm  leading-[1.375rem] text-[#8592a6]">
                             <time dateTime={date} itemProp="datePublished" className="mr-4">
-                                {formattedDate}
+                                {useFormatDate(date)}
                             </time>
                             {authorsExists && (
                                 <>
@@ -62,7 +62,7 @@ export default function HeadItem(props: any) {
                 src={image}
                 alt=""
             />
-            <div className="rounded-b-lg border border-t-0 border-[#DFE5F0] group-hover:border-[#0065FD] h-full   flex flex-col-reverse justify-between lg:flex-row lg:py-0 py-6 lg:space-x-10 px-6">
+            <div className="rounded-b-lg border border-t-0 border-[#DFE5F0] group-hover:border-[#0065FD] h-full   flex flex-col-reverse justify-between lg:flex-row lg:py-0 py-6 lg:pb-5 lg:space-x-10 px-6">
                 <div className="flex-1">
                     <h1 className=" mt-4 line-clamp-2 text-2xl font-medium text-black-dark lg:text-[2rem] lg:leading-[3rem]">
                         {title}
@@ -75,7 +75,7 @@ export default function HeadItem(props: any) {
                     <div className="mt-4 flex space-x-6">
                         <span className="text-sm text-[#8592a6]">
                             <time dateTime={date} itemProp="datePublished" className="mr-4">
-                                {formattedDate}
+                                {useFormatDate(date)}
                             </time>
                             {authorsExists && (
                                 <>

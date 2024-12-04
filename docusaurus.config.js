@@ -62,9 +62,37 @@ const config = {
         },
     },
     scripts: ['/js/custom-script.js'],
+    headTags: [
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'preconnect',
+                href: 'https://fonts.googleapis.com',
+            },
+        },
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'preconnect',
+                href: 'https://fonts.gstatic.com',
+                crossorigin: 'anonymous',
+            },
+        },
+        {
+            tagName: 'link',
+            attributes: {
+                href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap',
+                rel: 'stylesheet',
+            },
+        },
+    ],
     stylesheets: [
-        'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap',
-        'https://cdn-font.hyperos.mi.com/font/css?family=MiSans_Latin:100,200,300,400,450,500,600,650,700,900:Latin&display=swap',
+        // 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap',
+        // 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans_Latin:100,200,300,400,450,500,600,650,700,900:Latin&display=swap',
+        // 'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap',
+        // 'https://fonts.googleapis.com',
+        // 'https://fonts.gstatic.com',
+        // 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap'
     ],
     organizationName: 'apache/doris-website', // Usually your GitHub org/user name.
     projectName: 'apache/doris-website', // Usually your repo name.
@@ -201,7 +229,7 @@ const config = {
                     postsPerPage: 'ALL',
                     blogSidebarCount: 0,
                     showReadingTime: false,
-                    onUntruncatedBlogPosts: "ignore"
+                    onUntruncatedBlogPosts: 'ignore',
                 },
                 theme: {
                     customCss: require.resolve('./src/scss/custom.scss'),

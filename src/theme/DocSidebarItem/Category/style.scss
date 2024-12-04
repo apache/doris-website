@@ -1,13 +1,5 @@
 .theme-doc-sidebar-menu.menu__list {
     padding-left: 1rem;
-    .menu__link_level_2.menu__link {
-        color: #1d1d1d !important;
-    }
-    .theme-doc-sidebar-item-link-level-2 {
-        .menu__link {
-            color: #1d1d1d !important;
-        }
-    }
     .menu__link.menu__link--active:not(.menu__link--sublist) {
         color: #444fd9 !important;
         font-weight: 500;
@@ -17,6 +9,7 @@
         a.menu__link {
             line-height: 2rem;
             padding: 0 0.625rem;
+            color: #1d1d1d !important;
             // color: #4c576c;
             // font-size: 14px;
             font-weight: 400;
@@ -39,7 +32,6 @@
     .title_level_1 {
         color: #00000a;
         text-align: center;
-        font-family: Inter;
         font-size: 14px;
         font-style: normal;
         font-weight: 600;
@@ -55,6 +47,10 @@
 
     .menu__list_level_2 {
         padding-left: 0 !important;
+        margin-top: 0 !important;
+    }
+    .community_level_2 {
+        padding-left: 0.75rem !important;
     }
     .community_level_2 {
         padding-left: 0.75rem !important;
@@ -63,7 +59,7 @@
     .divider {
         width: calc(100% - 0.625rem);
         border: 0.5px solid #edf2fa;
-        margin: 0.625rem 0 1rem 0;
+        margin: 1rem 0 1rem 0;
         position: relative;
         left: 0.625rem;
     }

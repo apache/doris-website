@@ -6,6 +6,7 @@
     --custom-leading: 1rem;
     --custom-heading-rhythm-bottom: 1.25;
     --custom-heading-rhythm-top: 2.5;
+    --custom-h2-rhythm-top: 1.25;
     --custom-tabs-rhythm-top: 1.25;
     --custom-list-rhythm-bottom: 0.625;
     --custom-h4-rhythm-bottom: 2;
@@ -58,7 +59,7 @@
     h2,
     h3,
     h4 {
-        margin-bottom: calc(var(--custom-leading) * var(--custom-heading-rhythm-bottom));
+        margin-bottom: calc(var(--custom-leading) * var(--custom-heading-rhythm-bottom)) !important;
     }
 
     ol,
@@ -69,22 +70,64 @@
 
     .theme-code-block,
     table,
-    .theme-admonition-tip,
+    .theme-admonition,
     details,
     img {
         margin-bottom: calc(var(--custom-leading) * var(--custom-other-rhythm-margin));
         margin-top: calc(var(--custom-leading) * var(--custom-other-rhythm-margin));
     }
 
-    .theme-admonition-tip {
+    details {
+        border: 1px solid #dfe5f0;
+        border-radius: 0.25rem;
+        padding: 0;
+        background-color: #ffffff;
+        box-shadow: none;
+    }
+
+    details > summary {
+        padding: 0.75rem 1.625rem 0.75rem 3.25rem;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+        background-color: #f7f9fe;
+    }
+
+    details > summary::before {
+        left: 1.625rem;
+        top: 1.225rem;
+        border-color: transparent transparent transparent #8592a6;
+    }
+
+    details > div {
+        padding-left: 1.625rem;
+        padding-right: 1.625rem;
+        border-top: 1px solid #dfe5f0;
+    }
+
+    details > div > div {
+        margin-top: 0.75rem;
+        padding-top: 0;
+        padding-bottom: 1.25rem;
+        border: none;
+    }
+
+    .theme-admonition {
         padding: calc(var(--custom-leading) * 2);
     }
 
-    h2,
+    h2 {
+        margin-top: calc(var(--custom-leading) * var(--custom-h2-rhythm-top) * 2);
+        padding-top: calc(var(--custom-leading) * var(--custom-h2-rhythm-top));
+        border-top: 1px solid #e6e7e9;
+    }
+
     h3 {
         margin-top: calc(var(--custom-leading) * var(--custom-heading-rhythm-top));
     }
 
+    h1,
+    h2,
+    h3,
     h4 {
         margin-top: calc(var(--custom-leading) * var(--custom-h4-rhythm-bottom));
     }
@@ -159,11 +202,19 @@
 
     ul,
     ol {
-        list-style-type: disc;
         padding-left: 1.625rem;
+    }
+    ul {
+        list-style-type: disc;
+    }
+    ol {
+        list-style-type: decimal;
     }
     ul ul {
         list-style-type: circle;
+    }
+    ol ol {
+        list-style-type: lower-alpha;
     }
     ul ul ul {
         list-style-type: square;
@@ -173,6 +224,46 @@
     }
     ol ul ul {
         list-style-type: square;
+    }
+
+    .tabs-container {
+        .tabs__item--active {
+            z-index: 999;
+            border: 1.2px solid #ccd4e2 !important;
+            border-bottom-color: #ffffff !important;
+            border-top-left-radius: 0.25rem;
+            border-top-right-radius: 0.25rem;
+            color: #444fd9 !important;
+            font-weight: 700;
+        }
+        .tabs__item {
+            border: 1px solid transparent;
+            margin-bottom: 0;
+            border-bottom: 1px;
+            font-size: 0.875rem;
+            height: 2.75rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.625rem;
+            margin-right: 0.25rem;
+        }
+        .tabs__item:hover {
+            border-radius: 0.25rem 0.25rem 0 0;
+            background-color: #edf2fa;
+            border: 1.2px solid var(---N5, #dfe5f0);
+        }
+    }
+    .tabs-container .tabs {
+        position: relative;
+        padding-left: 0 !important;
+    }
+    .tabs-container .tabs::before {
+        position: absolute;
+        right: 0;
+        left: 0;
+        content: '';
+        border-bottom: 1.2px solid #ccd4e2;
+        box-sizing: border-box;
+        bottom: 0;
     }
 }
 
