@@ -62,7 +62,6 @@ def process_md_file(file_path):
                         from_base == to_base
                     ):
                         continue
-
                     # In md, the link relative path starts from the directory where the document is located, not the document
                     relative_to_path = os.path.relpath(
                         to_path, os.path.dirname(file_path)

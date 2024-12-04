@@ -9,6 +9,7 @@ import MDXContent from '@theme/MDXContent';
 import EditThisPage from '@theme/EditThisPage';
 import TagsListInline from '@theme/TagsListInline';
 import BlogPostAuthors from '@theme/BlogPostAuthors';
+import useFormatDate from '@site/src/hooks/use-format-date';
 import './styles.scss';
 import HeadItem from './HeadItem';
 // Very simple pluralization: probably good enough for now
@@ -34,7 +35,7 @@ export default function BlogListItem(props) {
     const readingTimePlural = useReadingTimePlural();
     const { withBaseUrl } = useBaseUrlUtils();
     const { children, frontMatter, assets, metadata, large = false } = props;
-    const { date, formattedDate, permalink, tags, readingTime, title, editUrl, authors } = metadata;
+    const { date, permalink, tags, readingTime, title, editUrl, authors } = metadata;
     const image = assets.image ?? frontMatter.image;
     const tagsExists = tags.length > 0;
     const summary = frontMatter.summary;
@@ -110,7 +111,7 @@ export default function BlogListItem(props) {
                         }  justify-start space-x-2  text-sm leading-[1.375rem] text-[#8592a6]`}
                     >
                         <time dateTime={date} itemProp="datePublished">
-                            {formattedDate}
+                            {useFormatDate(date)}
                         </time>
 
                         {authorsExists && (
