@@ -2,9 +2,9 @@ import React from 'react';
 import clsx from 'clsx';
 import { translate } from '@docusaurus/Translate';
 import { usePluralForm } from '@docusaurus/theme-common';
-import { useDateTimeFormat } from '@docusaurus/theme-common/internal';
 import { useBlogPost } from '@docusaurus/plugin-content-blog/client';
 import type { Props } from '@theme/BlogPostItem/Header/Info';
+import useFormatDate from '@site/src/hooks/use-format-date'
 
 // Very simple pluralization: probably good enough for now
 function useReadingTimePlural() {
@@ -34,19 +34,11 @@ function DateTime({ date, formattedDate }: { date: string; formattedDate: string
     );
 }
 
+
 export default function BlogPostItemHeaderInfo({ className }: Props): JSX.Element {
     const { metadata } = useBlogPost();
 
     const { date, readingTime, authors } = metadata;
-
-    const formatDate = (blogDate: string) => dateTimeFormat.format(new Date(blogDate));
-
-    const dateTimeFormat = useDateTimeFormat({
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        timeZone: 'UTC',
-    });
 
     const authorsExists = authors && authors.length > 0;
     return (
@@ -62,7 +54,7 @@ export default function BlogPostItemHeaderInfo({ className }: Props): JSX.Elemen
                     </span>
                 </>
             )}
-            <DateTime date={date} formattedDate={formatDate(date)} />
+            <DateTime date={date} formattedDate={useFormatDate(date)} />
         </div>
     );
 }

@@ -41,17 +41,14 @@ Inverted indexes have a wide range of applications and can accelerate equality, 
 
 The functionality of inverted indexes is briefly introduced as follows:
 
-**1. Accelerate full-text searches for string types**
+**1. Accelerate full-text searches for string types** 
+  - Support for keyword search, including matching multiple keywords simultaneously `MATCH_ALL` and matching any one keyword `MATCH_ANY`.
+  
+  - Support for phrase queries `MATCH_PHRASE`
 
-- Support for keyword search, including matching multiple keywords simultaneously `MATCH_ALL` and matching any one keyword `MATCH_ANY`.
+  - Support for tokenized regular expression queries `MATCH_REGEXP`
 
-- Support for phrase queries `MATCH_PHRASE`
-  - Support for specifying slop for word distence
-  - Support for phrase + prefix `MATCH_PHRASE_PREFIX`
-
-- Support for tokenized regular expression queries `MATCH_REGEXP`
-
-- Support for English, Chinese, and Unicode tokenizers
+  - Support for English, Chinese, and Unicode tokenizers
 
 **2. Accelerate normal equality and range queries, covering and replacing the functionality of BITMAP index**
 
@@ -166,7 +163,7 @@ Syntax explanation:
 ```sql
    INDEX idx_name(column_name) USING INVERTED PROPERTIES("parser" = "unicode", "char_filter_type" = "char_replace", "char_filter_pattern" = "._", "char_filter_replacement" = " ")
 ```
-`
+
 </details>
 
 <details>
