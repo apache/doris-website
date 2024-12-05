@@ -37,7 +37,7 @@ This statement is used to view RESTORE tasks
 grammar:
 
 ```SQL
-SHOW [BRIEF] RESTORE [FROM DB_NAME]
+SHOW [BRIEF] [GLOBAL] RESTORE [FROM DB_NAME]
 ```
 
 illustrate:
@@ -77,7 +77,11 @@ illustrate:
    ```sql
    SHOW RESTORE FROM example_db;
    ```
+2. View the latest GLOBAL RESTORE task.
 
+   ```sql
+   SHOW GLOBAL RESTORE;
+   ```
 ### Keywords
 
     SHOW, RESTORE
