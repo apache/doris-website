@@ -1508,6 +1508,12 @@ Default：1 * 3600  (1 hour)
 
 Load label cleaner will run every *label_clean_interval_second* to clean the outdated jobs.
 
+#### `label_regex_length`
+
+Default: 128 (character)
+
+The maximum character length of the load label, the default is 128 characters. 
+
 #### `transaction_clean_interval_second`
 
 Default：30

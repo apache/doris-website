@@ -1493,6 +1493,12 @@ NORMAL 优先级挂起加载作业的并发数。
 
 load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清理过时的作业。
 
+#### `label_regex_length`
+
+默认值: 128 (字符)
+
+导入 label 的最大字符长度，默认128个字符。
+
 #### `transaction_clean_interval_second`
 
 默认值：30
