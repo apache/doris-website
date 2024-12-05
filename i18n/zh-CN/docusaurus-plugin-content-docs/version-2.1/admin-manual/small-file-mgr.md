@@ -132,4 +132,6 @@ Examples:
 
 ## 更多帮助
 
+
 关于文件管理器使用的更多详细语法及最佳实践，请参阅 [CREATE FILE](../sql-manual/sql-statements/security/CREATE-FILE.md) 、[DROP FILE](../sql-manual/sql-statements/security/DROP-FILE.md) 和 [SHOW FILE](../sql-manual/sql-statements/security/SHOW-FILE.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP CREATE FILE` 、`HELP DROP FILE`和`HELP SHOW FILE`  获取更多帮助信息。
+

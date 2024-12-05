@@ -24,7 +24,7 @@ export default function Latest() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href="https://5234442745174.huodongxing.com/event/5782312528011">
+                    <a className="latest-button" href="https://doris-summit.org.cn/">
                         <div className="home-page-hero-button-label"><div>近期活动</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">

@@ -1761,7 +1761,8 @@
             "items": [
                 "releasenotes/v3.0/release-3.0.0",
                 "releasenotes/v3.0/release-3.0.1",
-                "releasenotes/v3.0/release-3.0.2"
+                "releasenotes/v3.0/release-3.0.2",
+                "releasenotes/v3.0/release-3.0.3"
             ]
         },
         {
