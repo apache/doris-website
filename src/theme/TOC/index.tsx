@@ -6,7 +6,9 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import HomeIcon from '@site/static/images/toc-icon/home.svg';
 import PdfIcon from '@site/static/images/toc-icon/pdf.svg';
 import GithubIcon from '@site/static/images/toc-icon/github.svg';
+import ConcatIcon from '@site/static/images/toc-icon/concat.svg';
 import { DOWNLOAD_PDFS } from '@site/src/constant/download.data';
+import { VERSIONS } from '@site/src/constant/common';
 import Link from '@docusaurus/Link';
 
 import styles from './styles.module.css';
@@ -37,14 +39,14 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
     const handleMouseEnter = (id: string) => {
         const dom = document.getElementById(id);
-        dom.style.color = '#444FD9';
-        dom.firstChild.style.fill = '#444FD9';
+        dom!.style.color = '#444FD9';
+        dom!.firstChild!.style.fill = '#444FD9';
     };
 
     const handleMouseLeave = (id: string) => {
         const dom = document.getElementById(id);
-        dom.style.color = '#1F1F26';
-        dom.firstChild.style.fill = '#7F7F83';
+        dom!.style.color = '#1F1F26';
+        dom!.firstChild!.style.fill = '#7F7F83';
     };
 
     useEffect(() => {
@@ -55,7 +57,7 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
             const secPath = location.pathname.includes('zh-CN/docs')
                 ? location.pathname.split('/')[3]
                 : location.pathname.split('/')[2];
-            if (pathname === 'docs' && ['dev', '3.0', '2.0', '1.2'].includes(secPath)) {
+            if (pathname === 'docs' && VERSIONS.includes(secPath)) {
                 setCurrentVersion(secPath);
             } else {
                 setCurrentVersion(DEFAULT_VERSION);
@@ -100,7 +102,7 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
                     onMouseEnter={() => handleMouseEnter('toc-icon-github')}
                     onMouseLeave={() => handleMouseLeave('toc-icon-github')}
                 >
-                    <GithubIcon />
+                    {isCN ? <ConcatIcon /> : <GithubIcon />}
                     <span>{isCN ? '技术论坛' : 'Ask Questions on Discussion'}</span>
                 </Link>
             </div>

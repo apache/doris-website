@@ -27,6 +27,14 @@
     "message": "快速体验",
     "description": "The label for category Quick Start in sidebar docs"
   },
+  "sidebar.docs.category.Tutorials": {
+    "message": "使用教程",
+    "description": "The label for category Tutorials in sidebar docs"
+  },
+  "sidebar.docs.category.Building lakehouse": {
+    "message": "构建 lakehouse",
+    "description": "The label for category Building lakehouse in sidebar docs"
+  },
   "sidebar.docs.category.Installation and Deployment": {
     "message": "安装部署",
     "description": "The label for category Install and Deploy in sidebar docs"

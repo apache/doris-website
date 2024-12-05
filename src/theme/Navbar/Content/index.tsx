@@ -86,11 +86,13 @@ export default function NavbarContent(): JSX.Element {
     const [isEN, setIsEN] = useState(true);
     const docItems = isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items;
     const [leftItems, rightItems] = splitNavbarItems(items);
-    const [leftDocItems,rightDocItems] = splitNavbarItems(docItems);
-    const [isDocsPage, setIsDocsPage] = useState(false);
+    const [leftDocItems, rightDocItems] = splitNavbarItems(docItems);
+    const [isDocsPage, setIsDocsPage] = useState(
+        typeof window !== 'undefined' ? location.pathname.includes('docs') : false,
+    );
     const [isCommunity, setIsCommunity] = useState(false);
     const searchBarItem = items.find(item => item.type === 'search');
-    
+
     const [currentVersion, setCurrentVersion] = useState('');
     useEffect(() => {
         getGithubStar();
@@ -139,8 +141,7 @@ export default function NavbarContent(): JSX.Element {
     function getNavItem(type: string) {
         return items.find(item => item.type === type);
     }
-    
-    
+
     return (
         <NavbarContentLayout
             left={
@@ -166,10 +167,7 @@ export default function NavbarContent(): JSX.Element {
                         {!isDocsPage ? (
                             <NavbarItems items={leftItems} />
                         ) : (
-                            <NavbarItems
-                                items={leftDocItems}
-                                isDocsPage={isDocsPage}
-                            />
+                            <NavbarItems items={leftDocItems} isDocsPage={isDocsPage} />
                         )}
                     </div>
                     {/*  */}
