@@ -299,6 +299,10 @@
     "message": "JSON 函数",
     "description": "The label for category JSON Functions in sidebar docs"
   },
+  "sidebar.docs.category.MAP Functions": {
+    "message": "MAP 函数",
+    "description": "The label for category MAP Functions in sidebar docs"
+  },
   "sidebar.docs.category.Hash Functions": {
     "message": "Hash 函数",
     "description": "The label for category Hash Functions in sidebar docs"
