@@ -954,11 +954,11 @@
                             "type": "category",
                             "label": "MAP Functions",
                             "items": [
-                                "sql-manual/sql-functions/map-functions/map.md",
-                                "sql-manual/sql-functions/map-functions/map-keys.md",
-                                "sql-manual/sql-functions/map-functions/map-values.md",
-                                "sql-manual/sql-functions/map-functions/map-contains-key.md",
-                                "sql-manual/sql-functions/map-functions/map-contains-value.md"
+                                "sql-manual/sql-functions/map-functions/map",
+                                "sql-manual/sql-functions/map-functions/map-keys",
+                                "sql-manual/sql-functions/map-functions/map-values",
+                                "sql-manual/sql-functions/map-functions/map-contains-key",
+                                "sql-manual/sql-functions/map-functions/map-contains-value"
                             ]
                         },
                         {
