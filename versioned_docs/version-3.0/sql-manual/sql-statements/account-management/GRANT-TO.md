@@ -178,7 +178,7 @@ A comma-separated list of roles to be assigned. The specified roles must exist.
 ## Related Commands
 
 - [REVOKE](./REVOKE.md)
-- [SHOW GRANTS](../Show-Statements/SHOW-GRANTS.md)
+- [SHOW GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
 - [CREATE ROLE](./CREATE-ROLE.md)
 - [CREATE WORKLOAD GROUP](../Administration-Statements/CREATE-WORKLOAD-GROUP.md)
 - [CREATE RESOURCE](../Administration-Statements/CREATE-RESOURCE.md)

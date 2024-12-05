@@ -71,7 +71,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
     );
 ```
 
-更多参数说明及示例可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
+更多参数说明及示例可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md)。
 
 ## 查看 Storage Vault 
 
@@ -129,7 +129,7 @@ HDFS Storage Vault 禁止修改的属性:
 - `path_prefix`
 - `fs.defaultFS`
 
-更多属性说明见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
+更多属性说明见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md)。
 
 **示例**
 

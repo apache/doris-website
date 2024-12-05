@@ -80,7 +80,7 @@ The specific import process of Routine Load is shown in the following diagram:
 
 ### Create Job
 
-In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTINE LOAD` command. For detailed syntax, please refer to [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD). Routine Load supports consuming data in CSV and JSON formats.
+In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTINE LOAD` command. For detailed syntax, please refer to [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD). Routine Load supports consuming data in CSV and JSON formats.
 
 **Loading CSV Data**
 
@@ -234,7 +234,7 @@ mysql> SHOW ROUTINE LOAD TASK WHERE jobname = 'example_routine_load_csv';
 
 ### Pausing Jobs
 
-You can pause an load job using the [PAUSE ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/PAUSE-ROUTINE-LOAD) command. When a job is paused, it enters the PAUSED state, but the load job is not terminated and can be resumed using the RESUME ROUTINE LOAD command.
+You can pause an load job using the [PAUSE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/PAUSE-ROUTINE-LOAD) command. When a job is paused, it enters the PAUSED state, but the load job is not terminated and can be resumed using the RESUME ROUTINE LOAD command.
 
 To pause the `testdb.example_routine_load_csv` load job, you can use the following command:
 
@@ -244,7 +244,7 @@ PAUSE ROUTINE LOAD FOR testdb.example_routine_load_csv;
 
 ### Resuming Jobs
 
-You can resume a paused load job using the [RESUME ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/RESUME-ROUTINE-LOAD) command.
+You can resume a paused load job using the [RESUME ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD) command.
 
 To resume the `testdb.example_routine_load_csv` job, you can use the following command:
 
@@ -254,7 +254,7 @@ RESUME ROUTINE LOAD FOR testdb.example_routine_load_csv;
 
 ### Modifying Jobs
 
-You can modify a created loading job using the [ALTER ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/ALTER-ROUTINE-LOAD) command. Before modifying the job, you need to pause it using the` PAUSE ROUTINE LOAD` command, and after making the modifications, you can resume it using the `RESUME ROUTINE LOAD` command.
+You can modify a created loading job using the [ALTER ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD) command. Before modifying the job, you need to pause it using the` PAUSE ROUTINE LOAD` command, and after making the modifications, you can resume it using the `RESUME ROUTINE LOAD` command.
 
 To modify the `desired_concurrent_number` parameter for the job and update the Kafka topic information, you can use the following command:
 
@@ -271,7 +271,7 @@ FROM KAFKA(
 
 ### Canceling Jobs
 
-You can stop and delete a Routine Load job using the [STOP ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STOP-ROUTINE-LOAD) command. Once deleted, the load job cannot be recovered and cannot be viewed using the `SHOW ROUTINE LOAD` command.
+You can stop and delete a Routine Load job using the [STOP ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/STOP-ROUTINE-LOAD) command. Once deleted, the load job cannot be recovered and cannot be viewed using the `SHOW ROUTINE LOAD` command.
 
 To stop and delete the `testdb.example_routine_load_csv` load job, you can use the following command:
 
@@ -432,8 +432,8 @@ Here are the available parameters for the job_properties clause:
 | max_batch_interval          | The maximum running time for each subtask, in seconds. Must be greater than 0, with a default value of 60s. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
 | max_batch_rows              | The maximum number of rows read by each subtask. Must be greater than or equal to 200,000. The default value is 20,000,000. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
 | max_batch_size              | The maximum number of bytes read by each subtask. The unit is bytes, and the range is from 100MB to 10GB. The default value is 1G. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
-| max_error_number            | The maximum number of error rows allowed within a sampling window. Must be greater than or equal to 0. The default value is 0, which means no error rows are allowed. The sampling window is `max_batch_rows * 10`. If the number of error rows within the sampling window exceeds `max_error_number`, the regular job will be paused and manual intervention is required to check for data quality issues using the [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) command and `ErrorLogUrls`. Rows filtered out by the WHERE condition are not counted as error rows. |
-| strict_mode                 | Whether to enable strict mode. The default value is disabled. Strict mode applies strict filtering to type conversions during the load process. If enabled, non-null original data that results in a NULL after type conversion will be filtered out. The filtering rules in strict mode are as follows:<ul><li>Derived columns (generated by functions) are not affected by strict mode.</li><li>If a column's type needs to be converted, any data with an incorrect data type will be filtered out. You can check the filtered columns due to data type errors in the `ErrorLogUrls` of [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD).</li><li>For columns with range restrictions, if the original data can be successfully converted but falls outside the declared range, strict mode does not affect it. For example, if the type is decimal(1,0) and the original data is 10, it can be converted but is not within the range declared for the column. Strict mode does not affect this type of data. For more details, see [Strict Mode](../../../data-operate/import/error-data-handling#maximum-error-rate).</li></ul> |
+| max_error_number            | The maximum number of error rows allowed within a sampling window. Must be greater than or equal to 0. The default value is 0, which means no error rows are allowed. The sampling window is `max_batch_rows * 10`. If the number of error rows within the sampling window exceeds `max_error_number`, the regular job will be paused and manual intervention is required to check for data quality issues using the [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) command and `ErrorLogUrls`. Rows filtered out by the WHERE condition are not counted as error rows. |
+| strict_mode                 | Whether to enable strict mode. The default value is disabled. Strict mode applies strict filtering to type conversions during the load process. If enabled, non-null original data that results in a NULL after type conversion will be filtered out. The filtering rules in strict mode are as follows:<ul><li>Derived columns (generated by functions) are not affected by strict mode.</li><li>If a column's type needs to be converted, any data with an incorrect data type will be filtered out. You can check the filtered columns due to data type errors in the `ErrorLogUrls` of [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD).</li><li>For columns with range restrictions, if the original data can be successfully converted but falls outside the declared range, strict mode does not affect it. For example, if the type is decimal(1,0) and the original data is 10, it can be converted but is not within the range declared for the column. Strict mode does not affect this type of data. For more details, see [Strict Mode](../../../data-operate/import/error-data-handling#maximum-error-rate).</li></ul> |
 | timezone                    | Specifies the time zone used by the load job. The default is to use the session's timezone parameter. This parameter affects the results of all timezone-related functions involved in the load. |
 | format                      | Specifies the data format for the load. The default is CSV, and JSON format is supported. |
 | jsonpaths                   | When the data format is JSON, jsonpaths can be used to specify the JSON paths to extract data from nested structures. It is a JSON array of strings, where each string represents a JSON path. |
@@ -1844,4 +1844,4 @@ FROM KAFKA
 
 ## More Details
 
-Refer to the SQL manual on [Routine Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD). You can also enter `HELP ROUTINE LOAD` in the client command line for more help.
+Refer to the SQL manual on [Routine Load](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD). You can also enter `HELP ROUTINE LOAD` in the client command line for more help.

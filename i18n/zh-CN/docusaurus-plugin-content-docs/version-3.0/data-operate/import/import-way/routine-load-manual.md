@@ -80,7 +80,7 @@ Routine Load 的导入具体流程如下图展示：
 
 ### 创建导入作业
 
-在 Doris 内可以通过 CREATE ROUTINE LOAD 命令创建常驻 Routine Load 导入任务。详细语法可以参考 [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD)。Routine Load 可以消费 CSV 和 JSON 的数据。
+在 Doris 内可以通过 CREATE ROUTINE LOAD 命令创建常驻 Routine Load 导入任务。详细语法可以参考 [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD)。Routine Load 可以消费 CSV 和 JSON 的数据。
 
 **导入 CSV 数据**
 
@@ -193,7 +193,7 @@ FROM KAFKA(
 
 **01 查看导入运行任务**
 
-可以通过 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) 命令查看导入作业情况。SHOW ROUTINE LOAD 描述了当前作业的基本情况，如导入目标表、导入延迟状态、导入配置信息、导入错误信息等。
+可以通过 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) 命令查看导入作业情况。SHOW ROUTINE LOAD 描述了当前作业的基本情况，如导入目标表、导入延迟状态、导入配置信息、导入错误信息等。
 
 如通过以下命令可以查看 testdb.example_routine_load_csv 的任务情况：
 
@@ -227,7 +227,7 @@ ReasonOfStateChanged:
 
 **02 查看导入运行作业**
 
-可以通过 [SHOW ROUTINE LOAD TASK](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD-TASK) 命令查看导入子任务情况。SHOW ROUTINE LOAD TASK 描述了当前作业下的子任务信息，如子任务状态，下发 BE id 等信息。
+可以通过 [SHOW ROUTINE LOAD TASK](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK) 命令查看导入子任务情况。SHOW ROUTINE LOAD TASK 描述了当前作业下的子任务信息，如子任务状态，下发 BE id 等信息。
 
 如通过以下命令可以查看 testdb.example_routine_load_csv 的任务情况：
 
@@ -246,7 +246,7 @@ mysql> SHOW ROUTINE LOAD TASK WHERE jobname = 'example_routine_load_csv';
 
 ### 暂停导入作业
 
-可以通过 [PAUSE ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/PAUSE-ROUTINE-LOAD) 命令暂停导入作业。暂停导入作业后，会进入 PAUSED 状态，但导入作业并未终止，可以通过 RESUME ROUTINE LOAD 命令重启导入作业。
+可以通过 [PAUSE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/PAUSE-ROUTINE-LOAD) 命令暂停导入作业。暂停导入作业后，会进入 PAUSED 状态，但导入作业并未终止，可以通过 RESUME ROUTINE LOAD 命令重启导入作业。
 
 如通过以下命令可以暂停 testdb.example_routine_load_csv 导入作业：
 
@@ -266,7 +266,7 @@ RESUME ROUTINE LOAD FOR testdb.example_routine_load_csv;
 
 ### 修改导入作业
 
-可以通过 [ALTER ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/ALTER-ROUTINE-LOAD) 命令修改已创建的导入作业。在修改导入作业前，需要使用 PAUSE ROUTINE LOAD 暂停导入作业，修改后需要使用 RESUME ROUTINE LOAD 恢复导入作业。
+可以通过 [ALTER ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD) 命令修改已创建的导入作业。在修改导入作业前，需要使用 PAUSE ROUTINE LOAD 暂停导入作业，修改后需要使用 RESUME ROUTINE LOAD 恢复导入作业。
 
 如通过以下命令可以修改期望导入任务并行度参数 desired_concurrent_number，并修改 Kafka Topic 信息：
 
@@ -444,8 +444,8 @@ job_properties 子句具体参数选项如下：
 | max_batch_interval        | 每个子任务的最大运行时间，单位是秒，必须大于0，默认值为 60(s)。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_batch_rows            | 每个子任务最多读取的行数。必须大于等于 200000。默认是 20000000。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_batch_size            | 每个子任务最多读取的字节数。单位是字节，范围是 100MB 到 1GB。默认是 1G。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
-| max_error_number          | 采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数大于 `max_error_number`，则会导致例行作业被暂停，需要人工介入检查数据质量问题，通过 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) 命令中 `ErrorLogUrls` 检查数据的质量问题。被 where 条件过滤掉的行不算错误行。 |
-| strict_mode               | 是否开启严格模式，默认为关闭。严格模式表示对于导入过程中的列类型转换进行严格过滤。如果开启后，非空原始数据的列类型变换如果结果为 NULL，则会被过滤。<p>严格模式过滤策略如下：</p> <p>- 某衍生列（由函数转换生成而来），Strict Mode 对其不产生影响</p> <p>- 当列类型需要转换，错误的数据类型将被过滤掉，在 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) 的 `ErrorLogUrls` 中查看因为数据类型错误而被过滤掉的列</p> <p>- 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict mode 对其也不产生影响。例如：如果类型是 decimal(1,0), 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。详细内容参考[严格模式](../../import/error-data-handling/#严格模式)。</p> |
+| max_error_number          | 采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数大于 `max_error_number`，则会导致例行作业被暂停，需要人工介入检查数据质量问题，通过 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) 命令中 `ErrorLogUrls` 检查数据的质量问题。被 where 条件过滤掉的行不算错误行。 |
+| strict_mode               | 是否开启严格模式，默认为关闭。严格模式表示对于导入过程中的列类型转换进行严格过滤。如果开启后，非空原始数据的列类型变换如果结果为 NULL，则会被过滤。<p>严格模式过滤策略如下：</p> <p>- 某衍生列（由函数转换生成而来），Strict Mode 对其不产生影响</p> <p>- 当列类型需要转换，错误的数据类型将被过滤掉，在 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) 的 `ErrorLogUrls` 中查看因为数据类型错误而被过滤掉的列</p> <p>- 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict mode 对其也不产生影响。例如：如果类型是 decimal(1,0), 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。详细内容参考[严格模式](../../import/error-data-handling/#严格模式)。</p> |
 | timezone                  | 指定导入作业所使用的时区。默认为使用 Session 的 timezone 参数。该参数会影响所有导入涉及的和时区有关的函数结果。 |
 | format                    | 指定导入数据格式，默认是 CSV，支持 JSON 格式。               |
 | jsonpaths                 | 当导入数据格式为 JSON 时，可以通过 jsonpaths 指定抽取 JSON 数据中的字段。例如通过以下命令指定导入 jsonpaths：`"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
@@ -1853,4 +1853,4 @@ FROM KAFKA
 
 ## 更多帮助
 
-参考 SQL 手册 [Routine Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD)。也可以在客户端命令行下输入 `HELP ROUTINE LOAD` 获取更多帮助信息。
+参考 SQL 手册 [Routine Load](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD)。也可以在客户端命令行下输入 `HELP ROUTINE LOAD` 获取更多帮助信息。

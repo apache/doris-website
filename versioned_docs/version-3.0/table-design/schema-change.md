@@ -83,7 +83,7 @@ For Heavy Weight Schema Change, after the user issues the Alter command, a task 
     ```
 5. After the data transformation is completed, all tablets storing old data will be deleted, and all new tablets that have completed the data change will replace the old tablets for service.
 
-The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
+The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN)
 
 ## Adding a column at a specified position to a specified index
 
@@ -589,4 +589,4 @@ ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
 
 ## More Details
 
-For more detailed syntax and best practices regarding Schema Change, please refer to the [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) command manual.
+For more detailed syntax and best practices regarding Schema Change, please refer to the [ALTER TABLE COLUMN](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN) command manual.

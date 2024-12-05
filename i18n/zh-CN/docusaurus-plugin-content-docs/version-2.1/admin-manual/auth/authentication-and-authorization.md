@@ -125,10 +125,10 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 - 修改角色：[ALTER ROLE](../../sql-manual/sql-statements/account-management/ALTER-ROLE.md)
 - 查看当前用户权限和角色：[SHOW GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
 - 查看所有用户权限和角色：[SHOW ALL GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
-- 查看已创建的角色：[SHOW ROLES](../../sql-manual/sql-statements/Show-Statements/SHOW-ROLES.md)
-- 设置用户属性：[SET PROPERTY](../../sql-manual/sql-statements/Account-Management-Statements/SET-PROPERTY.md)
-- 查看用户属性：[SHOW PROPERTY](../../sql-manual/sql-statements/Show-Statements/SHOW-PROPERTY.md)
-- 修改密码：[SET PASSWORD](../../sql-manual/sql-statements/Account-Management-Statements/SET-PASSWORD.md)
+- 查看已创建的角色：[SHOW ROLES](../../sql-manual/sql-statements/account-management/SHOW-ROLES.md)
+- 设置用户属性：[SET PROPERTY](../../sql-manual/sql-statements/account-management/SET-PROPERTY.md)
+- 查看用户属性：[SHOW PROPERTY](../../sql-manual/sql-statements/account-management/SHOW-PROPERTY.md)
+- 修改密码：[SET PASSWORD](../../sql-manual/sql-statements/account-management/SET-PASSWORD.md)
 - 查看支持的所有权限项：[SHOW PRIVILEGES]
 - 查看行权限策略 [SHOW ROW POLICY]
 - 创建行权限策略 [CREATE ROW POLICY]

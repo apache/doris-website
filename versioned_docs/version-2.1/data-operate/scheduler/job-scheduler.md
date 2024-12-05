@@ -50,7 +50,7 @@ Doris Job Scheduler is a task management system that runs based on preset schedu
 - **Traceable Scheduling Records:** Stores the latest task execution records (configurable), which can be viewed with simple commands to ensure traceability.
 - **High Availability:** Leveraging Doris’s high-availability mechanisms, Job Scheduler can easily achieve self-recovery and high availability.
 
-**Related Documentation:** [CREATE-JOB](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+**Related Documentation:** [CREATE-JOB](../../sql-manual/sql-statements/job/CREATE-JOB.md)
 
 ## Syntax Overview
 

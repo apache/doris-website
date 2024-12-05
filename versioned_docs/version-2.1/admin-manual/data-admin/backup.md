@@ -186,11 +186,11 @@ It is recommended to import the new and old clusters in parallel for a period of
 
    5. CANCEL BACKUP
 
-      Cancel the currently executing backup job. Please refer to [Cancel Backup Reference] (../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CANCEL-BACKUP.md).
+      Cancel the currently executing backup job. Please refer to [Cancel Backup Reference] (../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP.md).
 
    6. DROP REPOSITORY
 
-      Delete the created remote repository. Deleting a warehouse only deletes the mapping of the warehouse in Doris, and does not delete the actual warehouse data. Please refer to [Drop Repository Reference] (../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/DROP-REPOSITORY.md).
+      Delete the created remote repository. Deleting a warehouse only deletes the mapping of the warehouse in Doris, and does not delete the actual warehouse data. Please refer to [Drop Repository Reference] (../../sql-manual/sql-statements/data-modification/backup-and-restore/DROP-REPOSITORY.md).
 
 ## More Help
 
