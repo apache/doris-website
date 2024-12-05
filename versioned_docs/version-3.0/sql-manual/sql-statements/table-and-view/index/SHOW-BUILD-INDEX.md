@@ -60,7 +60,7 @@ limit_clause
 ```
 ## Optional Parameters
 
-**<database_name>**
+**`<database_name>`**
 
 > Specifies the identifier (name) of the database, which must be unique within its cluster.
 >
@@ -71,15 +71,15 @@ limit_clause
 > For more details, see Identifier Requirements and Reserved Keywords.
 
 
-**<WHERE output_column_name = value>**
+**`<WHERE output_column_name = value>`**
 
 > Specifies the output filter condition, where output_column_name must be in the output field list.
 
-**<ORDER BY output_column_name>**
+**`<ORDER BY output_column_name>`**
 
 > Specifies the output sort column, where output_column_name must be in the output field list.
 
-**LIMIT <n>**
+**`LIMIT <n>`**
 
 > Specifies the limit on the number of output rows, where n must be a number.
 

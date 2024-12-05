@@ -40,7 +40,7 @@ CONDITIONS(<conditions>) ACTIONS(<actions>)
 ```
 ### Required Parameters
 
-**<workload_policy_name>**
+`<workload_policy_name>`
 
 The name of the Workload Policy.
 
@@ -52,7 +52,7 @@ The name of the Workload Policy.
 4. **query_be_memory_bytes** (supported from version 2.1.5): The amount of memory used by an SQL query within a single BE process. If the SQL query is executed concurrently on multiple BEs, it is the cumulative value of these concurrent executions (in bytes).
 
 
-**<actions>**
+`<actions>`
 
 1. **set_session_variable**: This action executes a set session variable statement. Multiple **set_session_variable** actions can be specified in the same policy, allowing multiple session variable modification statements to be executed within one policy.
 2. **cancel_query**: Cancels the query.

@@ -26,7 +26,6 @@ under the License.
 
 
 
-
 ## Description
 
 Modify the properties of a Workload Group. Currently, only property modifications are supported; modifications to actions and conditions are not supported.
@@ -40,11 +39,12 @@ ALTER WORKLOAD POLICY <workload_policy_name> PROPERTIES( <properties> )
 
 ## Required Parameters
 
-**<workload_policy_name>**
+`<workload_policy_name>` 
+
+Workload Policy's Name
 
 
-
-**<properties>**
+`<properties>`
 
 1. enabled: Can be true or false, with a default value of true, indicating that the current policy is enabled. false indicates that the current policy is disabled.
 2. priority: A positive integer ranging from 0 to 100, with a default value of 0. This represents the priority of the policy. The higher the value, the higher the priority. The main role of this property is to select the policy with the highest priority when multiple policies match.
@@ -58,6 +58,6 @@ You must have at least ADMIN_PRIV permissions.
 
 1. Disable a Workload Policy
 
-    ```Java
-    alter workload policy cancel_big_query properties('enabled'='false')
-    ```
+  ```Java
+  alter workload policy cancel_big_query properties('enabled'='false')
+  ```
