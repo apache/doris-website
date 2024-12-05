@@ -39,10 +39,12 @@ ALTER WORKLOAD POLICY <workload_policy_name> PROPERTIES( <properties> )
 
 ## Required Parameters
 
-**<workload_policy_name>**
+`<workload_policy_name>` 
+
+Workload Policy's Name
 
 
-**<properties>**
+`<properties>`
 
 1. enabled: Can be true or false, with a default value of true, indicating that the current policy is enabled. false indicates that the current policy is disabled.
 2. priority: A positive integer ranging from 0 to 100, with a default value of 0. This represents the priority of the policy. The higher the value, the higher the priority. The main role of this property is to select the policy with the highest priority when multiple policies match.

@@ -36,7 +36,7 @@ SHOW CREATE VIEW <name>
 
 ## Required Parameters
 
-**<name>**  The name of the view to view.
+`**<name>**`  The name of the view to view.
 
 ## Result Description
 
