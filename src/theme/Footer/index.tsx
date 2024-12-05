@@ -25,11 +25,14 @@ function Footer(): JSX.Element | null {
     }
     const { copyright, links, logo, style } = footer;
 
-    const [isDocsPage, setIsDocsPage] = useState(false);
+    const [isDocsPage, setIsDocsPage] = useState(false); // docs page or community page
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const pathname = location.pathname.split('/')[1];
-            const docsPage = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
+            const docsPage =
+                pathname === 'docs' ||
+                location.pathname.includes('zh-CN/docs') ||
+                location.pathname.includes('community');
             setIsDocsPage(docsPage);
         }
     }, [typeof window !== 'undefined' && location.pathname]);
@@ -39,30 +42,13 @@ function Footer(): JSX.Element | null {
     if (isDocsPage) {
         return (
             <div className="docs-footer flex-col lg:flex-row">
-                <div className="logo w-full lg:w-[var(--doc-sidebar-width)] pt-28 lg:h-auto">
-                    <FooterLogo logo={logo} />
-                </div>
-                <div className="content container">
-                    <div className="my-7 text-[#8592A6] text-sm">
-                        {/* border-b border-[#F7F9FE] */}
-                        <div className="flex flex-col lg:flex-row pb-3 flex-wrap">
-                            <div className=" w-40 mb-3 lg:mb-0 font-medium">RESOURCES</div>
-                            {ResourcesItems.map(({ label, href }) => (
-                                <Link className="w-40 no-underline mb-2" href={href}>
-                                    {label}
-                                </Link>
-                            ))}
-                        </div>
-                        <div className="flex flex-col lg:flex-row pt-3 flex-wrap">
-                            <div className="w-40 mb-3 lg:mb-0 font-medium">COMMUNITY</div>
-                            {CommunityItems.map(({ label, href }) => (
-                                <Link className="w-40 no-underline mb-2" href={href}>
-                                    {label}
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                </div>
+                <p className='docs-footer-p'>
+                    The contents of this website are © 2024{' '}
+                    <Link href="https://www.apache.org/">Apache Software Foundation</Link> under the terms of the{' '}
+                    <Link href="https://www.apache.org/licenses/LICENSE-2.0.html">Apache License v2.</Link> Apache
+                    Doris, Doris, and the Doris logo are either registered trademarks or trademarks of The Apache
+                    Software Foundation in the United States and other countries.
+                </p>
             </div>
         );
     }
