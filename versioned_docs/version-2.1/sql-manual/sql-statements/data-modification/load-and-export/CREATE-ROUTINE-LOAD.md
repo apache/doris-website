@@ -370,19 +370,7 @@ FROM data_source [data_source_properties]
 This feature is supported since the Apache Doris 1.2.3 version
 :::
 
-<<<<<<< HEAD
-<<<<<<<< HEAD:versioned_docs/version-2.1/sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD.md
 ## Examples
-========
-## Example
->>>>>>>> ac43c88d43b68f907eafd82a2629cea01b097093:versioned_docs/version-3.0/sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD.md
-=======
-<<<<<<<< HEAD:versioned_docs/version-3.0/sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD.md
-## Example
-========
-## Examples
->>>>>>>> ac43c88d43b68f907eafd82a2629cea01b097093:versioned_docs/version-2.1/sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD.md
->>>>>>> ac43c88d43b68f907eafd82a2629cea01b097093
 
 1. Create a Kafka routine import task named test1 for example_tbl of example_db. Specify the column separator and group.id and client.id, and automatically consume all partitions by default, and start subscribing from the location where there is data (OFFSET_BEGINNING)
 
