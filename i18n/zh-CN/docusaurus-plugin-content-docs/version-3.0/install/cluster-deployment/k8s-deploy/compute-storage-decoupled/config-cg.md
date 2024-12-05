@@ -73,9 +73,6 @@ spec:
 
 ## 配置 Cache 持久化
 默认部署中，BE 服务使用 Kubernetes 的 [EmptyDir](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#emptydir) 作为服务的缓存。`EmptyDir` 模式是非持久化存储模式，服务重启后缓存的数据会丢失相应查询会效率会降低。配置持久化存储流程如下：
-1. 自定义启动配置。  
-2. 部署包含启动配置的 ConfigMap。  
-3. 更新 `DorisDisaggregatedCluster` 资源。  
 
 1. 自定义包含启动信息的 ConfigMap  
   默认部署中，每个计算组的 BE 服务使用镜像内的默认配置文件启动，持久化缓存数据需要自定义启动配置。Doris Operator 使用 Kubernetes 的 ConfigMap 来挂载启动配置文件。以下展示了一个 BE 服务可使用的 ConfigMap 示例：

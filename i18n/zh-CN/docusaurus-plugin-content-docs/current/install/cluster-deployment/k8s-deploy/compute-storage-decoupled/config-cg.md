@@ -73,12 +73,8 @@ spec:
 
 ## 配置 Cache 持久化
 默认部署中，BE 服务使用 Kubernetes 的 [EmptyDir](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#emptydir) 作为服务的缓存。`EmptyDir` 模式是非持久化存储模式，服务重启后缓存的数据会丢失相应查询会效率会降低。配置持久化存储流程如下：
-1. 定制化启动配置。  
-2. 部署包含启动配置的 ConfigMap。  
-3. 更新 `DorisDisaggregatedCluster` 资源。  
 
-### 第1步：自定义启动配置
-1. 自定义包含启动信息的 ConfigMap。  
+1. 自定义包含启动信息的 ConfigMap  
   默认部署中，每个计算组的 BE 服务使用镜像内的默认配置文件启动，持久化缓存数据需要自定义启动配置。Doris Operator 使用 Kubernetes 的 ConfigMap 来挂载启动配置文件。以下展示了一个 BE 服务可使用的 ConfigMap 示例：
   ```yaml
   apiVersion: v1
@@ -95,37 +91,37 @@ spec:
   ```
   存算分离集群 BE 服务的启动配置必须设置 `file_cache_path`，格式请参考[存算分离配置 `be.conf`](../../../../compute-storage-decoupled/compilation-and-deployment.md#541-配置-beconf) 章节。以上示例中，设置了一个目录为 `/mnt/disk1/doris_cloud/file_cache` 的持久化缓存，设置可使用持久化总容量大小为 100Gi，查询的缓存可使用的总容量大小也为 100Gi。
 
-2. 部署 ConfigMap。  
+2. 部署 ConfigMap  
   通过如下命令，将包含自定义启动配置信息的 ConfigMap 通过如下命令部署到 Kubernetes 集群中：
   ```shell
   kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml 
   ```
   ${namespace} 为 `DorisDisaggregatedCluster` 部署的命名空间，${beConfigMapFileName} 为包含自定义 ConfigMap 的文件名称。
 
-### 第2步：更新 `DorisDisaggregatedCluster` 资源
-持久化存储需要配置存储模板，`DorisDisaggregatedCluster` 使用 `persistentVolume` 描述持久化存储模板。模板中使用 Kubernetes 的 [PersistentVolumeClaimSpec](https://kubernetes.io/zh-cn/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec) 描述模板的规格。  
-Doris Operator 会自动解析启动配置的 `file_cache_path` 找出挂载点，使用模板来自动生成持久化存储。`annotations` 可为使用的 [PersistentVolumeClaim](https://kubernetes.io/zh-cn/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/)。Doris Operator 默认为日志创建持久化存储，可通过设置 `logNotStore: true` 来禁止为日志创建持久化存储。以下展示了 BE 服务使用自定义的 ConfigMap，并设置存储模板的示例：
-```yaml
-spec:
-  computeGroups:
-  - uniqueId: cg1
-    configMaps:
-    - name: be-configmap
-      mountPath: "/etc/doris"
-    persistentVolume:
-      annotations:
-        doris.computegroup/id: cg1
-        doris.deployment/mode: disaggregated
-      logNotStore: true
-      persistentVolumeClaimSpec:
-        #storageClassName：${storageClassName}
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 500Gi
-```
-Doris Operator 会使用 Kubernetes 集群中默认的 [StorageClass](https://kubernetes.io/zh-cn/docs/concepts/storage/storage-classes/#default-storageclass) 来为服务创建持久化存储。请通过设置 `storageClassName` 来指定需要使用的 StorageClass。
+3. 更新 `DorisDisaggregatedCluster` 资源  
+  持久化存储需要配置存储模板，`DorisDisaggregatedCluster` 使用 `persistentVolume` 描述持久化存储模板。模板中使用 Kubernetes 的 [PersistentVolumeClaimSpec](https://kubernetes.io/zh-cn/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec) 描述模板的规格。  
+  Doris Operator 会自动解析启动配置的 `file_cache_path` 找出挂载点，使用模板来自动生成持久化存储。`annotations` 可为使用的 [PersistentVolumeClaim](https://kubernetes.io/zh-cn/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/)。Doris Operator 默认为日志创建持久化存储，可通过设置 `logNotStore: true` 来禁止为日志创建持久化存储。以下展示了 BE 服务使用自定义的 ConfigMap，并设置存储模板的示例：
+  ```yaml
+  spec:
+    computeGroups:
+    - uniqueId: cg1
+      configMaps:
+      - name: be-configmap
+        mountPath: "/etc/doris"
+      persistentVolume:
+        annotations:
+          doris.computegroup/id: cg1
+          doris.deployment/mode: disaggregated
+        logNotStore: true
+        persistentVolumeClaimSpec:
+          #storageClassName：${storageClassName}
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 500Gi
+  ```
+  Doris Operator 会使用 Kubernetes 集群中默认的 [StorageClass](https://kubernetes.io/zh-cn/docs/concepts/storage/storage-classes/#default-storageclass) 来为服务创建持久化存储。请通过设置 `storageClassName` 来指定需要使用的 StorageClass。
 
 :::tip 提示  
 启动配置必须挂载到 "/etc/doris" 目录下。  
