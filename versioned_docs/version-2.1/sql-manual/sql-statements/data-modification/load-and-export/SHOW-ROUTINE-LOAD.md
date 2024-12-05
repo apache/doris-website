@@ -71,13 +71,31 @@ ReasonOfStateChanged: The reason for the job state change
 
 * Progress
 
+<<<<<<< HEAD
       For Kafka data sources, displays the currently consumed offset for each partition. For example, &#123;"0":"2"&#123; indicates that the consumption progress of Kafka partition 0 is 2.
 
 * Lag
 
       For Kafka data sources, shows the consumption latency of each partition. For example, &#123;"0":10&#123; means that the consumption delay of Kafka partition 0 is 10.
 
+<<<<<<<< HEAD:versioned_docs/version-2.1/sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD.md
 ## Examples
+========
+## Example
+>>>>>>>> ac43c88d43b68f907eafd82a2629cea01b097093:versioned_docs/version-3.0/sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD.md
+=======
+      For Kafka data sources, displays the currently consumed offset for each partition. For example, {"0":"2"} indicates that the consumption progress of Kafka partition 0 is 2.
+
+*Lag
+
+      For Kafka data sources, shows the consumption latency of each partition. For example, {"0":10} means that the consumption delay of Kafka partition 0 is 10.
+
+<<<<<<<< HEAD:versioned_docs/version-3.0/sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD.md
+## Example
+========
+## Examples
+>>>>>>>> ac43c88d43b68f907eafd82a2629cea01b097093:versioned_docs/version-2.1/sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD.md
+>>>>>>> ac43c88d43b68f907eafd82a2629cea01b097093
 
 1. Show all routine import jobs named test1 (including stopped or canceled jobs). The result is one or more lines.
 
