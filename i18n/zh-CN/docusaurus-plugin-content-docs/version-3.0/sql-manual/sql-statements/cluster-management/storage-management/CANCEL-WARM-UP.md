@@ -36,7 +36,7 @@ CANCEL WARM UP JOB WHERE id = <id>;
 
 ## 必选参数
 
-<id>
+`<id>`
 
 > 想要终止的预热任务的 id，可以通过命令 `SHOW WARM UP JOB` 查询得到。
 
