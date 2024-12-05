@@ -24,19 +24,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## APPROX_COUNT_DISTINCT
-### description
+### Description
 #### Syntax
 
 `APPROX_COUNT_DISTINCT(expr)`
 
+返回类似于 `COUNT(DISTINCT col)` 结果的近似值聚合函数。
 
-返回类似于 COUNT(DISTINCT col) 结果的近似值聚合函数。
+它基于 HyperLogLog 算法实现，使用固定大小的内存估算列基数。该算法基于尾部零分布假设进行计算，具体精确程度取决于数据分布。基于 Doris 使用的固定桶大小，该算法相对标准误差为 0.8125%
 
-它比 COUNT 和 DISTINCT 组合的速度更快，并使用固定大小的内存，因此对于高基数的列可以使用更少的内存。
+更详细具体的分析，详见[相关论文](https://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf)
 
-### example
-```
+### Example
+
+```sql
 MySQL > select approx_count_distinct(query_id) from log_statis group by datetime;
 +-----------------+
 | approx_count_distinct(`query_id`) |
@@ -44,5 +45,6 @@ MySQL > select approx_count_distinct(query_id) from log_statis group by datetime
 | 17721           |
 +-----------------+
 ```
-### keywords
-APPROX_COUNT_DISTINCT
+
+### Keywords
+  APPROX_COUNT_DISTINCT
