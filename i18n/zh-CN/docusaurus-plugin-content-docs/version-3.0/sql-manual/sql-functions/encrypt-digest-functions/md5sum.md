@@ -22,35 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MD5SUM
+### 描述
 
-### description
 计算 多个字符串 MD5 128-bit
-#### Syntax
 
-`MD5SUM(str[,str])`
+### 语法
 
-### example
+```sql
+MD5SUM(str[,str])
+```
+
+### 示例
+
+```sql
+select md5("abcd");
+```
 
 ```
-MySQL > select md5("abcd");
 +----------------------------------+
 | md5('abcd')                      |
 +----------------------------------+
 | e2fc714c4727ee9395f324cd2e7f331f |
 +----------------------------------+
-1 row in set (0.011 sec)
+```
 
-MySQL > select md5sum("ab","cd");
+```sql
+select md5sum("ab","cd");
+```
+
+```
 +----------------------------------+
 | md5sum('ab', 'cd')               |
 +----------------------------------+
 | e2fc714c4727ee9395f324cd2e7f331f |
 +----------------------------------+
-1 row in set (0.008 sec)
-
 ```
-
-### keywords
-
-    MD5SUM

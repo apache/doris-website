@@ -22,32 +22,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHA
-
 ### description
 
 Use SHA1 to digest the message.
 
-#### Syntax
+### Syntax
 
-`SHA(str)` or `SHA1(str)`
-
-#### Arguments
-
-- `str`: content to be encrypted
+``` sql
+{ SHA | SHA1 }(str)
+```
 
 ### example
 
 ```SQL
-mysql> select sha("123");
+select sha("123");
+```
+
+```
 +------------------------------------------+
 | sha1('123')                              |
 +------------------------------------------+
 | 40bd001563085fc35165329ea1ff5c5ecbdbbeef |
 +------------------------------------------+
-1 row in set (0.13 sec)
 ```
-
-### keywords
-
-    SHA,SHA1
