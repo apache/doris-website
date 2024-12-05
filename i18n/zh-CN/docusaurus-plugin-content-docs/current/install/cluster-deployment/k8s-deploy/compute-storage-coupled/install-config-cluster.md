@@ -85,14 +85,38 @@ spec:
 **BE 计算资源设定**
 默认部署的 BE 计算资源为 8c 16Gi, 如需修改为 16c 32Gi， 可按以下方式进行配置：
 ```yaml
-spec:
-  beSpec:
-    requests:
-      cpu: 16
-      memory: 32Gi
-    limits:
-      cpu: 16
-      memory: 32Gi
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fe-conf
+  labels:
+    app.kubernetes.io/component: fe
+data:
+  fe.conf: |
+    CUR_DATE=`date +%Y%m%d-%H%M%S`
+
+    # the output dir of stderr and stdout
+    LOG_DIR = ${DORIS_HOME}/log
+
+    JAVA_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Xss4m -Xmx8192m -XX:+UseMembar -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=7 -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSClassUnloadingEnabled -XX:-CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SoftRefLRUPolicyMSPerMB=0 -Xloggc:$DORIS_HOME/log/fe.gc.log.$CUR_DATE"
+
+    # For jdk 9+, this JAVA_OPTS will be used as default JVM options
+    JAVA_OPTS_FOR_JDK_9="-Djavax.security.auth.useSubjectCredsOnly=false -Xss4m -Xmx8192m -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=7 -XX:+CMSClassUnloadingEnabled -XX:-CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SoftRefLRUPolicyMSPerMB=0 -Xlog:gc*:$DORIS_HOME/log/fe.gc.log.$CUR_DATE:time"
+
+    # INFO, WARN, ERROR, FATAL
+    sys_log_level = INFO
+
+    # NORMAL, BRIEF, ASYNC
+    sys_log_mode = NORMAL
+
+    # Default dirs to put jdbc drivers,default value is ${DORIS_HOME}/jdbc_drivers
+    # jdbc_drivers_dir = ${DORIS_HOME}/jdbc_drivers
+
+    http_port = 8030
+    rpc_port = 9020
+    query_port = 9030
+    edit_log_port = 9010
+    enable_fqdn_mode = true
 ```
 将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中。
 
