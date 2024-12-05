@@ -1616,7 +1616,7 @@
                                 "sql-manual/sql-statements/database/DROP-DATABASE",
                                 "sql-manual/sql-statements/database/SHOW-CREATE-DATABASE",
                                 "sql-manual/sql-statements/database/SHOW-DATABASES",
-                                "sql-manual/sql-statements/database/SHOW-DATABASES-ID"
+                                "sql-manual/sql-statements/database/SHOW-DATABASE-ID"
                             ]
                         },
                         {
