@@ -27,10 +27,6 @@ under the License.
 
 
 
-### Name
-
-SHOW COLUMN STATS
-
 ## 描述
 
 通过 `SHOW COLUMN STATS` 来查看列的各项统计数据。

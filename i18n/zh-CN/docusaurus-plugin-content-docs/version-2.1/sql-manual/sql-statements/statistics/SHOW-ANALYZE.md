@@ -25,10 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-SHOW ANALYZE
-
 ## 描述
 
 通过 `SHOW ANALYZE` 来查看统计信息收集作业的信息。

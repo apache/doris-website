@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW COLUMN STATS",
+    "title": "SHOW STATS",
     "language": "en"
 }
 ---
