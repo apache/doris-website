@@ -3,7 +3,6 @@
     flex-grow: 1;
     padding: 0.5rem;
   }
-
   @supports (scrollbar-gutter: stable) {
     .menu {
       padding: 0.5rem 0 0.5rem 0.5rem;
@@ -14,14 +13,4 @@
   .menuWithAnnouncementBar {
     margin-bottom: var(--docusaurus-announcement-bar-height);
   }
-}
-
-.currentVersion {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #dfe5f0;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 0.5rem;
 }

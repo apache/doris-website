@@ -31,7 +31,6 @@ export default function CollapseBox({
     className,
     disabledExpand = false,
 }: CollapseBoxProps) {
-    console.log(popTrue,'poptrue')
     return (
         <div className={`mt-[5.5rem] w-full rounded-lg border border-[#DFE5F0]  ${className}`}>
             <CollapseBoxHeader title={title} defaultExpand={expand} disabled={disabledExpand} popTrue={popTrue}/>

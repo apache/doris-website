@@ -1,5 +1,5 @@
 const path = require('path');
-
+const publicPath = process.env.TEST_ENV_URL || 'https://cdnd.selectdb.com';
 module.exports = function (context, options) {
     return {
         name: 'custom-docusaurus-plugin',
@@ -7,10 +7,7 @@ module.exports = function (context, options) {
             return {
                 output: {
                     ...config.output,
-                    publicPath:
-                        context.i18n.currentLocale === 'en'
-                            ? 'https://cdnd.selectdb.com/'
-                            : 'https://cdnd.selectdb.com/zh-CN/',
+                    publicPath: context.i18n.currentLocale === 'en' ? `${publicPath}/` : `${publicPath}/zh-CN/`,
                 },
             };
         },

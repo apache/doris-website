@@ -232,6 +232,7 @@ spec:
     - configMapName: test-fe2
       mountPath: /etc/fe/config2
 ```
+上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
 
 **BE 挂载多 ConfigMap**  
 以下示例展示将 test-be1 ， test-be2 的 ConfigMap 分别挂载到 BE 容器 `/etc/be/config1/` 和 `/etc/be/config2` 目录下：
@@ -244,6 +245,7 @@ spec:
     - configMapName: test-be2
       mountPath: /etc/be/config2
 ```
+上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
 
 ## 配置持久化存储
 在 Doris 集群中，FE、BE 组件需要将数据持久化。Kubernetes 提供了 [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) 机制，将数据持久化到物理存储中。在 Kubernetes 环境中，Doris Operator 使用 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 自动创建 PersistentVolumeClaim 关联合适的 PersistentVolume 。
@@ -263,7 +265,7 @@ spec:
         # when use specific storageclass, the storageClassName should reConfig, example as annotation.
         storageClassName: ${your_storageclass}
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           # notice: if the storage size less 5G, fe will not start normal.
           requests:
@@ -283,7 +285,7 @@ spec:
         # when use specific storageclass, the storageClassName should reConfig, example as annotation.
         storageClassName: ${your_storageclass}
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           # notice: if the storage size less 5G, fe will not start normal.
           requests:
