@@ -37,7 +37,7 @@ SHOW BACKUP
 语法：
 
 ```sql
- SHOW BACKUP [FROM db_name]
+ SHOW [GLOBAL] BACKUP [FROM db_name]
      [WHERE SnapshotName ( LIKE | = ) 'snapshot name' ]
 ```
 
@@ -73,7 +73,11 @@ SHOW BACKUP
     ```sql
      SHOW BACKUP FROM example_db;
     ```
-
+2. 查看 最后一次 GLOBAL BACKUP 任务。
+   
+    ```sql
+     SHOW GLOBAL BACKUP;
+    ```
 ### Keywords
 
     SHOW, BACKUP
