@@ -1,4 +1,4 @@
-const fetchUrl = `'${process.env.TEST_ENV_URL}'` || 'https://cdnd.selectdb.com';
+const fetchUrl = 'https://cdnd.selectdb.com';
 
 module.exports = {
     ssrTemplate: `<!DOCTYPE html>
