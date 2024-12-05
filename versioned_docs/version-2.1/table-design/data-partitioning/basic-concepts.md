@@ -122,16 +122,16 @@ The default type of `ENGINE` is `OLAP`. Only OLAP is responsible for data manage
 Doris supports advanced data partitioning methods, including Dynamic Partition, Auto Partition, and Auto Bucket, which enable more flexible data management. The following are examples of implementations:
 more convenient. Rewrite the above example with Auto Range Partition as follows:
 
+<Tabs>
+<TabItem value="Auto Partition" label="Auto Partition" default>
+<p>
+[Auto Partition](./auto-partitioning) supports automatic creation of corresponding partitions according to user-defined rules during data import.
+
 ```sql
 CREATE TABLE IF NOT EXISTS example_range_tbl
 (
     `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Date when the data are im
-<Tabs>
-<TabItem value="Auto Partition" label="Auto Partition" default>
-<p>
-
-[Auto Partition](./auto-partitioning) supports automatic creation of corresponding partitions according to user-defined rules during data import, which is ported",
+    `date` DATE NOT NULL COMMENT "Date when the data are imported",
     `timestamp` DATETIME NOT NULL COMMENT "Timestamp when the data are imported",
     `city` VARCHAR(20) COMMENT "User location city",
     `age` SMALLINT COMMENT "User age",
@@ -238,7 +238,7 @@ PROPERTIES
 );
 ```
 
-For detailed suggestions on this feature, see [Auto Partition Conjunct with Dynamic Partition](./auto-partitioning#conjunct-with-dynamic-partition)。
+For detailed suggestions on this feature, see [Auto Partition Conjunct with Dynamic Partition](./auto-partitioning#conjunct-with-dynamic-partition).
 
 </p>
 </TabItem>
