@@ -1,31 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
+
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { PageMetadata, HtmlClassNameProvider, ThemeClassNames } from '@docusaurus/theme-common';
-import BlogLayout from '../BlogLayout';
+import BlogLayout from '@theme/BlogLayout';
 import BlogListItem from '../BlogListItem';
-import './styles.scss';
 import useIsBrowser from '@docusaurus/useIsBrowser';
+import BlogListFooter from '../BlogFooter';
+import BlogListPaginator from '@theme/BlogListPaginator';
+import SearchMetadata from '@theme/SearchMetadata';
 import HeadBlogs from '@site/src/components/blogs/components/head-blogs';
 import PageHeader from '@site/src/components/PageHeader';
-import BlogListFooter from '../BlogFooter';
+import type { Props } from '@theme/BlogListPage';
+import BlogPostItems from '@theme/BlogPostItems';
 import { useHistory, useLocation } from '@docusaurus/router';
+// import BlogListPageStructuredData from '@theme/BlogListPage/StructuredData';
 const allText = 'All';
-
-function BlogListPageMetadata(props) {
-    const { metadata } = props;
-    const {
-        siteConfig: { title: siteTitle },
-    } = useDocusaurusContext();
-    const { blogDescription, blogTitle, permalink } = metadata;
-    const isBlogOnlyMode = permalink === '/';
-    const title = isBlogOnlyMode ? siteTitle : blogTitle;
-    return (
-        <>
-            <PageMetadata title={title} description={blogDescription} keywords="lakehouse, adhoc analysis" />
-        </>
-    );
-}
 
 function getBlogCategories(props) {
     const { siteConfig } = useDocusaurusContext();
@@ -62,6 +52,20 @@ function getBlogCategories(props) {
     return categories;
 }
 
+function BlogListPageMetadata(props) {
+    const { metadata } = props;
+    const {
+        siteConfig: { title: siteTitle },
+    } = useDocusaurusContext();
+    const { blogDescription, blogTitle, permalink } = metadata;
+    const isBlogOnlyMode = permalink === '/';
+    const title = isBlogOnlyMode ? siteTitle : blogTitle;
+    return (
+        <>
+            <PageMetadata title={title} description={blogDescription} keywords="lakehouse, adhoc analysis" />
+        </>
+    );
+}
 function BlogListPageContent(props) {
     const { metadata, items, sidebar } = props;
     const isBrowser = useIsBrowser();
@@ -160,10 +164,11 @@ function BlogListPageContent(props) {
     );
 }
 
-export default function BlogListPage(props) {
+export default function BlogListPage(props: Props): JSX.Element {
     return (
         <HtmlClassNameProvider className={clsx(ThemeClassNames.wrapper.blogPages, ThemeClassNames.page.blogListPage)}>
             <BlogListPageMetadata {...props} />
+            {/* <BlogListPageStructuredData {...props} /> */}
             <BlogListPageContent {...props} />
         </HtmlClassNameProvider>
     );

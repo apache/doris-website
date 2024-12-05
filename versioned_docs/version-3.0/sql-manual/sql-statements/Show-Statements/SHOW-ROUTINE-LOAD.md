@@ -76,11 +76,11 @@ ReasonOfStateChanged: The reason for the job state change
 
 * Progress
 
-      For Kafka data sources, displays the currently consumed offset for each partition. For example, {"0":"2"} indicates that the consumption progress of Kafka partition 0 is 2.
+      For Kafka data sources, displays the currently consumed offset for each partition. For example, &#123;"0":"2"&#123; indicates that the consumption progress of Kafka partition 0 is 2.
 
-*Lag
+* Lag
 
-      For Kafka data sources, shows the consumption latency of each partition. For example, {"0":10} means that the consumption delay of Kafka partition 0 is 10.
+      For Kafka data sources, shows the consumption latency of each partition. For example, &#123;"0":10&#123; means that the consumption delay of Kafka partition 0 is 10.
 
 ### Example
 

@@ -2,12 +2,18 @@ import React from 'react';
 import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import BlogSidebar from '@theme/BlogSidebar';
-import './style.scss';
-export default function BlogLayout(props) {
+
+import type { Props } from '@theme/BlogLayout';
+
+interface BlogLayoutProps extends Props {
+    pageType: string;
+}
+
+export default function BlogLayout(props: BlogLayoutProps): JSX.Element {
     const { sidebar, toc, children, pageType, ...layoutProps } = props;
     const hasSidebar = sidebar && sidebar.items.length > 0;
     const isBlogListPage = pageType === 'blogList';
-
+    
     return (
         <Layout {...layoutProps}>
             <div className="mb-[4.875rem] container">

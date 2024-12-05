@@ -39,18 +39,18 @@ Special thanks to [Amos Bird](https://github.com/amosbird) for the contribution.
 This method applies to most Linux distributions (CentOS, Ubuntu, etc.).
 
 1. **Download** **`ldb_toolchain_gen.sh`**
+    
+    Download the latest `ldb_toolchain_gen.sh` from [here](https://github.com/amosbird/ldb_toolchain_gen/releases). This script is used to generate ldb toolchain.
 
-Download the latest `ldb_toolchain_gen.sh` from [here](https://github.com/amosbird/ldb_toolchain_gen/releases). This script is used to generate ldb toolchain.
-
-:::tip 
-For more information, please visit https://github.com/amosbird/ldb_toolchain_gen 
-:::
+    :::tip 
+    For more information, please visit https://github.com/amosbird/ldb_toolchain_gen 
+    :::
 
 2. **Execute the following command to generate ldb toolchain.**
 
-```Plain
-sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
-```
+    ```Plain
+    sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
+    ```
 
 `/path/to/ldb_toolchain/` is the installation directory for the toolchain. After successful execution, the following directory structure will be generated under `/path/to/ldb_toolchain/`:
 

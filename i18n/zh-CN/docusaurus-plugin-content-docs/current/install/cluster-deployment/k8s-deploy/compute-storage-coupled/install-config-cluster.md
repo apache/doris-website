@@ -85,28 +85,6 @@ spec:
 **BE 计算资源设定**
 默认部署的 BE 计算资源为 8c 16Gi, 如需修改为 16c 32Gi， 可按以下方式进行配置：
 ```yaml
-spec:
-  beSpec:
-    requests:
-      cpu: 16
-      memory: 32Gi
-    limits:
-      cpu: 16
-      memory: 32Gi
-```
-将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中。
-
-:::tip Tip
-- FE 和 BE 所需要的最小启动资源为 4c 8Gi ，如果需要进行正常能力测试，建议配置为 8c 8Gi。  
-:::
-
-## 定制化启动配置
-在 Kubernetes 中，Doris 使用 `ConfigMap` 将配置文件和服务分离。默认情况下，服务使用镜像里默认配置作为启动参数。请根据 [FE 配置文档](../../../../admin-manual/config/fe-config.md)和 [BE 配置文档](../../../../admin-manual/config/be-config.md)介绍，预先将定制好的启动参数配置到特定的 `ConfigMap` 中。配置完成后，将其部署到目标[ `DorisCluster` 资源](install-quickstart.md#第-2-步部署-doris-集群)所在的命名空间中。
-
-### FE 定制化启动配置
-#### 第 1 步：配置并部署 ConfigMap  
-以下示例定义了名为 `fe-conf` 的 ConfigMap，该配置可供 Doris FE 使用：
-```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -139,6 +117,28 @@ data:
     query_port = 9030
     edit_log_port = 9010
     enable_fqdn_mode = true
+```
+将配置更新到需要部署的 [DorisCluster 资源](install-quickstart.md#第-2-步部署-doris-集群)中。
+
+:::tip Tip
+- FE 和 BE 所需要的最小启动资源为 4c 8Gi ，如果需要进行正常能力测试，建议配置为 8c 8Gi。  
+:::
+
+## 定制化启动配置
+在 Kubernetes 中，Doris 使用 `ConfigMap` 将配置文件和服务分离。默认情况下，服务使用镜像里默认配置作为启动参数。请根据 [FE 配置文档](../../../../admin-manual/config/fe-config.md)和 [BE 配置文档](../../../../admin-manual/config/be-config.md)介绍，预先将定制好的启动参数配置到特定的 `ConfigMap` 中。配置完成后，将其部署到目标[ `DorisCluster` 资源](install-quickstart.md#第-2-步部署-doris-集群)所在的命名空间中。
+
+### FE 定制化启动配置
+#### 第 1 步：配置并部署 ConfigMap  
+以下示例定义了名为 `fe-conf` 的 ConfigMap，该配置可供 Doris FE 使用：
+```yaml
+spec:
+  beSpec:
+    requests:
+      cpu: 16
+      memory: 32Gi
+    limits:
+      cpu: 16
+      memory: 32Gi
 ```
 使用 ConfigMap 挂载 FE 启动配置信息时，配置信息对应的 key 必须为 `fe.conf` 。完成配置文件后，通过如下命令部署到 `DorisCluster` 资源将要部署的命名空间。
 ```shell
@@ -232,6 +232,7 @@ spec:
     - configMapName: test-fe2
       mountPath: /etc/fe/config2
 ```
+上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
 
 **BE 挂载多 ConfigMap**  
 以下示例展示将 test-be1 ， test-be2 的 ConfigMap 分别挂载到 BE 容器 `/etc/be/config1/` 和 `/etc/be/config2` 目录下：
@@ -244,6 +245,7 @@ spec:
     - configMapName: test-be2
       mountPath: /etc/be/config2
 ```
+上述配置中, ${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称, ${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi 。请在使用时按需替换。
 
 ## 配置持久化存储
 在 Doris 集群中，FE、BE 组件需要将数据持久化。Kubernetes 提供了 [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) 机制，将数据持久化到物理存储中。在 Kubernetes 环境中，Doris Operator 使用 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 自动创建 PersistentVolumeClaim 关联合适的 PersistentVolume 。
@@ -263,7 +265,7 @@ spec:
         # when use specific storageclass, the storageClassName should reConfig, example as annotation.
         storageClassName: ${your_storageclass}
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           # notice: if the storage size less 5G, fe will not start normal.
           requests:
@@ -283,7 +285,7 @@ spec:
         # when use specific storageclass, the storageClassName should reConfig, example as annotation.
         storageClassName: ${your_storageclass}
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           # notice: if the storage size less 5G, fe will not start normal.
           requests:

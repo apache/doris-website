@@ -5,12 +5,79 @@
     display: flex;
     border-bottom: 1px solid rgba(255, 255, 255, 0.4);
     box-shadow: 0px 6px 16px rgba(160, 170, 208, 0.15);
+    &.docs {
+        .navbar__inner {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+    }
+
     .navbar-left {
         display: flex;
+        .docs-search {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 38vw;
+            top: 12px;
+            max-width: 443px;
+
+            .navbar__search > :last-child {
+                position: absolute;
+                right: 10x;
+                top: 50%;
+                transform: translateY(-50%);
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                padding: 5px 7px;
+                background-color: #fff;
+                border: none;
+                gap: 2px;
+                height: auto;
+            }
+            .navbar__search kbd {
+                color: #8592a6 !important;
+                background-color: #ffffff !important;
+                border: none !important;
+                border-radius: none !important;
+                box-shadow: none !important;
+                font-size: 12px !important;
+                padding: 0 !important;
+            }
+            .navbar__search > span {
+                width: 100% !important;
+                left: auto !important;
+                right: 0 !important;
+                display: inline !important;
+                background: transparent;
+                border-radius: 6px;
+                margin-top: 8px;
+                width: var(--search-local-modal-width, 560px);
+                position: relative;
+                padding: 0 !important;
+            }
+            .navbar__search input {
+                width: 100% !important;
+                border: none !important;
+                background-color: #f7f9fe !important;
+                background-image: url('/static/images/search-icon.svg');
+                height: 2.5rem !important;
+                background-position: 0.625rem center !important;
+                padding-left: 2.25rem !important;
+                color: #4c576c !important;
+                border-radius: 0.5rem;
+            }
+            .navbar__search input:focus {
+                border: none !important;
+                outline: none !important;
+            }
+            .navbar__search span span {
+                top: 2.5rem !important;
+            }
+        }
     }
-    .docs-search {
-        display: none;
-    }
+
     .custom-navbar-item {
         display: none;
     }
@@ -59,6 +126,7 @@
         font-weight: 500;
         padding: var(--ifm-navbar-item-padding-vertical) var(--global-gutter);
         position: relative;
+        color: var(--global-colors-text-primary);
 
         @media screen and (max-width: 1366px) {
             padding: var(--ifm-navbar-item-padding-vertical) 1.25rem;
@@ -68,13 +136,13 @@
             padding: var(--ifm-navbar-item-padding-vertical) 1rem;
         }
 
-        transition: {
-            property: color;
-            timing-function: ease-out;
-            duration: 0.3s;
+        & {
+            transition: {
+                property: color;
+                timing-function: ease-out;
+                duration: 0.3s;
+            }
         }
-
-        color: var(--global-colors-text-primary);
 
         &:hover {
             color: var(--ifm-color-primary);
@@ -341,6 +409,9 @@
                     .navbar__item {
                         display: block;
                     }
+                    .docs-search {
+                        display: none;
+                    }
                 }
                 .docs-nav-mobile::-webkit-scrollbar {
                     display: none;
@@ -365,6 +436,9 @@
                         height: 1.5625rem;
                     }
                 }
+            }
+            .docs-search {
+                display: none;
             }
         }
         .navbar__toggle.clean-btn > svg {

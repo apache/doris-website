@@ -1,6 +1,6 @@
 ---
 {
-    "title": "What's New",
+    "title": "All Releases",
     "language": "en"
 }
 ---

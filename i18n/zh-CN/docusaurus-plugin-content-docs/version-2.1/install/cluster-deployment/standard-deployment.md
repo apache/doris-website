@@ -605,7 +605,7 @@ server1:apache-doris/fe doris$ curl http://127.0.0.1:8030/api/bootstrap
 
 是的，Doris FE 内置 Web UI。用户无须安装 MySQL 客户端，即可通过 Web UI 来完成诸如添加 BE/FE 节点，以及运行其它 SQL 查询等操作。
 
-在浏览器中输入 http://fe_ip:fe_port,  例如 http://172.20.63.118:8030，即可打开 Doris 内置的 Web 控制台。该控制台主要供集群 root 账户使用，默认安装后 root 账户密码为空。
+在浏览器中输入 http://fe_ip:fe_port,  例如 `http://172.20.63.118:8030`，即可打开 Doris 内置的 Web 控制台。该控制台主要供集群 root 账户使用，默认安装后 root 账户密码为空。
 
 ![内置 Web 控制台](/images/Doris-Web-UI.png)
 

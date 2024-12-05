@@ -55,7 +55,7 @@ FROM data_source [data_source_properties]
 
   Specifies the name of the table to be imported.Optional parameter, If not specified, the dynamic table method will 
   be used, which requires the data in Kafka to contain table name information. Currently, only the table name can be 
-  obtained from the Kafka value, and it needs to conform to the format of "table_name|{"col1": "val1", "col2": "val2"}" 
+  obtained from the Kafka value, and it needs to conform to the format of "table_name|&#123;"col1": "val1", "col2": "val2"&#123;" 
   for JSON data. The "tbl_name" represents the table name, and "|" is used as the delimiter between the table name and 
   the table data. The same format applies to CSV data, such as "table_name|val1,val2,val3". It is important to note that 
   the "table_name" must be consistent with the table name in Doris, otherwise it may cause import failures.
