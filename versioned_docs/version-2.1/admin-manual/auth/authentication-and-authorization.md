@@ -125,10 +125,10 @@ Please refer to [LDAP-based Authentication Scheme](./ldap.md).
 - Modify role: [ALTER ROLE](../../sql-manual/sql-statements/account-management/ALTER-ROLE.md)
 - View current user's permissions and roles: [SHOW GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
 - View all users' permissions and roles: [SHOW ALL GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
-- View created roles: [SHOW ROLES](../../sql-manual/sql-statements/Show-Statements/SHOW-ROLES.md)
-- Set user property: [SET PROPERTY](../../sql-manual/sql-statements/Account-Management-Statements/SET-PROPERTY.md)
-- View user property: [SHOW PROPERTY](../../sql-manual/sql-statements/Show-Statements/SHOW-PROPERTY.md)
-- Change password: [SET PASSWORD](../../sql-manual/sql-statements/Account-Management-Statements/SET-PASSWORD.md)
+- View created roles: [SHOW ROLES](../../sql-manual/sql-statements/account-management/SHOW-ROLES.md)
+- Set user property: [SET PROPERTY](../../sql-manual/sql-statements/account-management/SET-PROPERTY.md)
+- View user property: [SHOW PROPERTY](../../sql-manual/sql-statements/account-management/SHOW-PROPERTY.md)
+- Change password: [SET PASSWORD](../../sql-manual/sql-statements/account-management/SET-PASSWORD.md)
 - View all supported privileges: [SHOW PRIVILEGES]
 - View row policy: [SHOW ROW POLICY]
 - Create row policy: [CREATE ROW POLICY]

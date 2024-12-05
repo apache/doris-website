@@ -26,7 +26,7 @@ under the License.
 
 This document will introduce how to use the `EXPORT` command to export data stored in Doris.
 
-For a detailed description of the `EXPORT` command, please refer to: [EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md)
+For a detailed description of the `EXPORT` command, please refer to: [EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT.md)
 
 ## Overview
 
@@ -68,7 +68,7 @@ mysql> EXPORT TABLE tpch1.lineitem TO "s3://my_bucket/path/to/exp_"
     -> );
 ```
 
-After submitting a job, you can query the export job status using the [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md) command. An example result is as follows:
+After submitting a job, you can query the export job status using the [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT.md) command. An example result is as follows:
 
 ```sql
 mysql> show export\G
@@ -126,7 +126,7 @@ The meaning of each column in the result returned by the `show export` command i
 - ErrorMsg: If there is an error in the job, the error reason will be displayed here.
 - OutfileInfo: If the job is successfully exported, specific `SELECT INTO OUTFILE` result information will be displayed here.
 
-After submitting the Export job, you can cancel the export job using the [CANCEL EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md) command before the export task succeeds or fails. An example of the cancel command is as follows:
+After submitting the Export job, you can cancel the export job using the [CANCEL EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT.md) command before the export task succeeds or fails. An example of the cancel command is as follows:
 
 ```sql
 CANCEL EXPORT FROM tpch1 WHERE LABEL like "%export_%";

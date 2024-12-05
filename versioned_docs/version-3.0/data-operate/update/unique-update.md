@@ -137,4 +137,4 @@ The updated data is:
 
 ## More Details
 
-For more detailed syntax on data updates, please refer to the [UPDATE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/UPDATE) command manual. You can also enter `HELP UPDATE` in the MySQL client command line for more information and assistance.
+For more detailed syntax on data updates, please refer to the [UPDATE](../../sql-manual/sql-statements/data-modification/DML/UPDATE) command manual. You can also enter `HELP UPDATE` in the MySQL client command line for more information and assistance.
