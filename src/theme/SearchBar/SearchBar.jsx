@@ -49,7 +49,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
     const activePlugin = useActivePlugin();
     const [isDocsPage] = useIsDocPage(false);
     let versionUrl = baseUrl;
-    console.log('baseUrl', baseUrl);
     if (location?.pathname && location.pathname.includes('zh-CN') && !versionUrl.includes('zh-CN')) {
         versionUrl = baseUrl + 'zh-CN/';
     }
@@ -87,7 +86,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
     //         }
     //     }
     // }
-    console.log('versionUrl', versionUrl);
 
     const history = useHistory();
     const searchBarRef = useRef(null);
@@ -128,14 +126,10 @@ export default function SearchBar({ handleSearchBarToggle }) {
     }, [location.pathname, versionUrl]);
     const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
     const loadIndex = useCallback(async () => {
-        console.log('aa');
-        
         if (hidden || indexStateMap.current.get(searchContext)) {
             // Do not load the index (again) if its already loaded or in the process of being loaded.
             return;
         }
-        console.log('bb');
-        
         indexStateMap.current.set(searchContext, 'loading');
         search.current?.autocomplete.destroy();
         setLoading(true);
@@ -312,8 +306,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
         handleSearchBarToggle?.(true);
     }, [handleSearchBarToggle, loadIndex]);
     const onInputBlur = useCallback(() => {
-        console.log('onInputBlur', onInputBlur);
-
         setFocused(false);
         handleSearchBarToggle?.(false);
     }, [handleSearchBarToggle]);
@@ -347,17 +339,12 @@ export default function SearchBar({ handleSearchBarToggle }) {
     }, [isMac, onInputFocus]);
 
     useEffect(() => {
-        console.log('location.pathname',location.pathname);
-        console.log('isDocsPage',isDocsPage);
-        
         if (isDocsPage) {
             loadIndex();
         }
     }, [location.pathname, isDocsPage]);
 
     const onClearSearch = useCallback(() => {
-        console.log('aaa');
-
         const params = new URLSearchParams(location.search);
         params.delete(SEARCH_PARAM_HIGHLIGHT);
         const paramsStr = params.toString();
@@ -369,9 +356,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setInputValue('');
         search.current?.autocomplete.setVal('');
     }, [location.pathname, location.search, location.hash, history]);
-    useEffect(() => {
-        console.log('inputvalue', inputValue);
-    }, [inputValue]);
+  
     return (
         <div
             className={clsx('navbar__search', styles.searchBarContainer, {
