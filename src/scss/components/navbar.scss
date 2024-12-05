@@ -30,7 +30,6 @@
                 display: flex !important;
                 align-items: center;
                 justify-content: center;
-                pointer-events: none;
                 padding: 5px 7px;
                 background-color: #fff;
                 border: none;
@@ -74,8 +73,6 @@
                 outline: none !important;
             }
             .navbar__search span span {
-                max-height: 580px !important;
-                overflow: scroll !important;
                 top: 2.5rem !important;
             }
         }
