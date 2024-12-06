@@ -32,7 +32,7 @@ Usually, this is Power BI pulling the time timeout of the data source. When fill
 
 ### Q2. When the 2.1.x version uses JDBC to connect to Power BI, an error occurs "An error happened while reading data from the provider: the given key was not present in the dictionary".
 
-Run "show collation" in the database first. Generally, only utf8mb4_900_bin is displayed, and the charset is utf8mb4. The main reason for this error is that ID 33 needs to be found when connecting to Power BI. That is, rows with 33ids in the table need to be upgraded to version 2.1.5 or later.
+The main reason for the error is that when connecting to Power BI, ID 33 is required, meaning there needs to be a result with an ID value of 33 in the "show collation". You need to upgrade to version 2.1.5 or above.
 
 ### Q3. Connection Doris Times error "Reading data from the provider times error index and count must refer to the location within the string".
 
@@ -49,6 +49,23 @@ The new optimizer can be turned off in the current version or upgraded to versio
 ### Q4. JDBC connection version 2.1.x error message "Character set 'utf8mb3' is not supported by.net.Framework".
 
 This problem is easily encountered in version 2.1.x. If this problem occurs, you need to upgrade the JDBC Driver to 8.0.32.
+
+### Q5. An error occurred when the SQL Statment statement was used to connect Doris of 2.1x using JDBC :"Something went wrong Object reference not set to an instance of an object".
+
+You need to execute the following statement in the connected database. After the execution is successful, connect Doris again to work properly.
+
+```
+CREATE TABLE `bogus_table` (
+  `id` BIGINT NOT NULL,
+  `value` BIGINT NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`id`)
+COMMENT 'OLAP'
+DISTRIBUTED BY HASH(`id`) BUCKETS 10
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 1"
+);
+```
 
 ## Tableau
 
