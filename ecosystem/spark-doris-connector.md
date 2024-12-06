@@ -154,6 +154,27 @@ dorisSparkDF = spark.read.format("doris")
 dorisSparkDF.show(5)
 ```
 
+#### Reading via Arrow Flight SQL
+
+Starting from version 24.0.0, data can be read via Arrow Flight SQL (Doris version >= 2.1.0 is required).
+
+Set `doris.read.mode` to arrow, set `doris.read.arrow-flight-sql.port` to the Arrow Flight SQL port configured by FE. 
+
+For server configuration, refer to [High-speed data transmission link based on Arrow Flight SQL](https://doris.apache.org/zh-CN/docs/dev/db-connect/arrow-flight-sql-connect).
+
+```scala
+val df = spark.read.format("doris")
+        .option("doris.table.identifier", "$YOUR_DORIS_DATABASE_NAME.$YOUR_DORIS_TABLE_NAME")
+        .option("doris.fenodes", "$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT")
+        .option("doris.user", "$YOUR_DORIS_USERNAME")
+        .option("doris.password", "$YOUR_DORIS_PASSWORD")
+        .option("doris.read.mode", "arrow")
+        .option("doris.read.arrow-flight-sql.port", "12345")
+        .load()
+
+df.show()
+```
+
 ### Batch Write
 
 #### DataFrame
@@ -192,10 +213,10 @@ OPTIONS(
 );
 
 INSERT INTO spark_doris VALUES ("VALUE1", "VALUE2", ...);
--- or
-INSERT INTO spark_doris SELECT * FROM YOUR_TABLE
--- or
-INSERT OVERWRITE SELECT * FROM YOUR_TABLE 
+-- insert into select
+INSERT INTO spark_doris SELECT * FROM YOUR_TABLE;
+-- insert overwrite
+INSERT OVERWRITE SELECT * FROM YOUR_TABLE; 
 ```
 
 ### Streaming Write
@@ -263,6 +284,21 @@ kafkaSource.selectExpr("CAST(value as STRING)")
   .option("doris.sink.properties.format", "json")
   .start()
   .awaitTermination()
+```
+
+#### Write in JSON format 
+
+Set `doris.sink.properties.format` to json 
+
+```scala 
+val df = spark.readStream.format("your_own_stream_source").load() 
+df.write.format("doris")
+        .option("doris.fenodes", "$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT")
+        .option("doris.table.identifier", "$YOUR_DORIS_DATABASE_NAME.$YOUR_DORIS_TABLE_NAME") 
+        .option("user", "$YOUR_DORIS_USERNAME") 
+        .option("password", "$YOUR_DORIS_PASSWORD") 
+        .option("doris.sink.properties.format", "json")
+        .save()
 ```
 
 ### Spark Doris Catalog
@@ -446,7 +482,7 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 
 1. How to write Bitmap type
 
-    In Spark SQL, when writing data through insert into, if the target table of doris contains data of type `BITMAP` or `HLL`, you need to set the parameter `doris.ignore-type` to the corresponding type and map the columns through `doris.write.fields`. The usage is as follows:
+    In Spark SQL, when writing data through insert into, if the target table of doris contains data of type `BITMAP` or `HLL`, you need to set the option `doris.ignore-type` to the corresponding type and map the columns through `doris.write.fields`. The usage is as follows:
     
     **BITMAP**
     ```sql
