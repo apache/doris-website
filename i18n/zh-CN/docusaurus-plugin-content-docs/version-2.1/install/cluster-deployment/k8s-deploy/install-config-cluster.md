@@ -157,7 +157,7 @@ spec:
 ```
 上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。请在使用时按需替换。
 
-:::tip Tip  
+:::tip 提示  
 Kubernetes 部署中，建议使用 FQDN 模式，启动配置中应添加 enable_fqdn_mode=true 。如果想用 IP 模式，且 Kubernetes 集群能够保证 pod 重启后 IP 不发生变化，请参照 issue [#138](https://github.com/apache/doris-operator/issues/138) 进行配置 IP 模式启动。
 :::
 
@@ -193,7 +193,7 @@ spec:
       resolveKey: be.conf
 ```
 
-:::tip Tip  
+:::tip 提示  
 如果需要将文件挂载到和启动配置同一目录下，需要将配置信息配置到启动配置所在的 ConfigMap 中。 ConfigMap 中的 key 为文件名称，value 为配置信息。  
 :::
 

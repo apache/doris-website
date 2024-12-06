@@ -58,7 +58,7 @@ Doris Operator 提供了 `Debug` 的运行模式，下面描述了当服务进�
 $ kubectl delete pod ${pod_name} --namespace ${namespace}
 ```
 
-:::tip Tip  
+:::tip 提示  
 **进入 pod 内部后，需要修改配置文件的端口信息，才能手动启动 相应的 Doris 组件**  
 - FE 需要修改默认路径为：`/opt/apache-doris/fe/conf/fe.conf` 的 `query_port=9030` 配置。  
 - BE 需要修改默认路径为：`/opt/apache-doris/be/conf/be.conf` 的 `heartbeat_service_port=9050` 配置。  
