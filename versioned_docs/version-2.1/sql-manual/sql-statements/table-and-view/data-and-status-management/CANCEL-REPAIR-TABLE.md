@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN CANCEL REPAIR",
+    "title": "CANCEL REPAIR",
     "language": "en"
 }
 ---

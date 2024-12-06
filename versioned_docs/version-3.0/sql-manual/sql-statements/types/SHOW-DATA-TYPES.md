@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-DATA-TYPES",
+    "title": "SHOW DATA TYPES",
     "language": "en"
 }
 ---

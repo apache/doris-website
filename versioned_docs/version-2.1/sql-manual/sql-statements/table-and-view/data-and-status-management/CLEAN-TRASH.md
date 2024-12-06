@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN CLEAN TRASH",
+    "title": "CLEAN TRASH",
     "language": "en"
 }
 

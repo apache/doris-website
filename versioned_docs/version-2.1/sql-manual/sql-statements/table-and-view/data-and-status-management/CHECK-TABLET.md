@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN CHECK TABLET",
+    "title": "CHECK TABLET",
     "language": "en"
 }
 ---
