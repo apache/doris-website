@@ -162,9 +162,15 @@ In the `fe.conf` file, the following key parameters need to be configured:
    - Example: `cloud`
 
 2. `cluster_id`
-   - Description: A unique identifier for the cluster in the decoupled storage-compute architecture; different clusters must set different cluster_ids.
-   - Format: int type.
-   - Example: `12345678`
+   - Description: A unique identifier for the cluster in the decoupled storage-compute architecture. Each cluster must have a distinct cluster_id to avoid conflicts.
+   - Format: Integer (int type).
+   - Example: A random `cluster_id` can be generated using the following shell command.
+      ```shell
+      echo $(($((RANDOM << 15)) | $RANDOM))
+      ```
+     :::caution
+     **Each cluster must have a distinct cluster_id to avoid conflicts**
+     :::
 
 3. `meta_service_endpoint`
    - Description: The address and port of the Meta Service.
