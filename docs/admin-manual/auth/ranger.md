@@ -187,7 +187,7 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 3. Create a `log4j.properties` file in the conf directory of all FEs with the following content:
 
 	```
-	log4j.rootLogger = debug,stdout,D
+	log4j.rootLogger = warn,stdout,D
 
 	log4j.appender.stdout = org.apache.log4j.ConsoleAppender
 	log4j.appender.stdout.Target = System.out

@@ -187,7 +187,7 @@ Config Properties 部分参数含义如下：
 3. 在所有 FE 的 conf 目录创建 `log4j.properties` 文件，内容如下：
 
 	```
-	log4j.rootLogger = debug,stdout,D
+	log4j.rootLogger = warn,stdout,D
 
 	log4j.appender.stdout = org.apache.log4j.ConsoleAppender
 	log4j.appender.stdout.Target = System.out
