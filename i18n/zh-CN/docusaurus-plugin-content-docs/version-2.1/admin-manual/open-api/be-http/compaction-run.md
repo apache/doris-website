@@ -134,7 +134,7 @@ under the License.
 
 * run_status：获取当前手动 compaction 任务执行状态
 
-### Examples
+### 示例
 
 ```shell
 curl -X POST "http://127.0.0.1:8040/api/compaction/run?tablet_id=10015&compact_type=cumulative"

@@ -76,7 +76,7 @@ under the License.
 }
 ```
     
-## Examples
+## 示例
 
 1. 下载指定 id 的文件
 

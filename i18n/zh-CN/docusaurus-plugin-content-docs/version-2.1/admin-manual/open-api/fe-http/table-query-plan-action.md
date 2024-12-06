@@ -82,7 +82,7 @@ under the License.
 
 其中 `opaqued_query_plan` 为查询计划的二进制格式。
     
-## Examples
+## 示例
 
 1. 获取指定 sql 的查询计划
 

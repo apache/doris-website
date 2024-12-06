@@ -60,7 +60,7 @@ under the License.
 }
 ```
     
-## Examples
+## 示例
 
 1. 获取所有BE的WAL文件的数目。
 

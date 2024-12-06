@@ -68,7 +68,7 @@ under the License.
 
 其中 `data.size` 字段表示指定表的行数。
     
-## Examples
+## 示例
 
 1. 获取指定表的行数。
 

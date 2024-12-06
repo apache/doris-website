@@ -100,7 +100,7 @@ under the License.
 
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。
 
-### Examples
+### 示例
 
 ```json
 GET /rest/v2/manager/query/query_info
@@ -243,7 +243,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 }
 ```
     
-### Examples
+### 示例
 
 1. 获取 sql：
 
@@ -318,7 +318,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 }
 ```
     
-### Examples
+### 示例
 
 ```
 GET /rest/v2/manager/query/profile/fragments/d7c93d9275334c35-9e6ac5f295a7134b

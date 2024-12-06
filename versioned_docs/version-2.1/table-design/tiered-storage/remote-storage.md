@@ -143,7 +143,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 Note that if you specify different storage policies for the entire table and certain partitions, the storage policy of the table will take precedence for all partitions. If you need a partition to use a different storage policy, you can modify it using the method above for existing partitions.
 :::
 
-For more details, please refer to the documentation in the **Docs** directory, such as [RESOURCE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE), [POLICY](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-POLICY), [CREATE TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE), and [ALTER TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN), which provide detailed explanations.
+For more details, please refer to the documentation in the **Docs** directory, such as [RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), [POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY), [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE), and [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN), which provide detailed explanations.
 
 ### Limitations
 

@@ -43,7 +43,7 @@ SHOW COMPUTE GROUPS;
 
 ## 添加计算组
 
-使用[Add BE ](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md)命令添加 BE 并为 BE 指定计算组，示例：
+使用[Add BE ](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND.md)命令添加 BE 并为 BE 指定计算组，示例：
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");
