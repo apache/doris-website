@@ -61,7 +61,7 @@ export default function SearchBar({ handleSearchBarToggle, }) {
     const history = useHistory();
     const location = useLocation();
     const searchBarRef = useRef(null);
-    const indexState = useRef('empty'); // empty, loaded, done
+    const indexStateMap = useRef(new Map());
     // Should the input be focused after the index is loaded?
     const focusAfterIndexLoaded = useRef(false);
     const [loading, setLoading] = useState(false);
@@ -228,11 +228,11 @@ export default function SearchBar({ handleSearchBarToggle, }) {
         if (focusAfterIndexLoaded.current) {
             const input = searchBarRef.current;
             if (input.value) {
-                search.current.autocomplete.open();
+                search.current?.autocomplete.open();
             }
             input.focus();
         }
-    }, [baseUrl, versionUrl, history]);
+    }, [hidden, searchContext, versionUrl, baseUrl, history]);
     useEffect(() => {
         if (!Mark) {
             return;
@@ -258,7 +258,7 @@ export default function SearchBar({ handleSearchBarToggle, }) {
             setInputValue(keywords.join(" "));
             search.current?.autocomplete.setVal(keywords.join(" "));
         });
-    }, [location.search, location.pathname]);
+    }, [isBrowser, location.search, location.pathname]);
     const [focused, setFocused] = useState(false);
     const onInputFocus = useCallback(() => {
         focusAfterIndexLoaded.current = true;
