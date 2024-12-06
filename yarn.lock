@@ -2439,14 +2439,14 @@
   resolved "https://registry.npmmirror.com/@easyops-cn/docusaurus-search-local/-/docusaurus-search-local-0.45.0.tgz#7101d59c9359b50b1add306d2504a09bd7176adb"
   integrity sha512-ccJjeYmBHrv2v8Y9eQnH79S0PEKcogACKkEatEKPcad7usQj/14jA9POUUUYW/yougLSXghwe+uIncbuUBuBFg==
   dependencies:
-    "@docusaurus/plugin-content-docs" "^2.0.0-rc.1"
-    "@docusaurus/theme-translations" "^2.0.0-rc.1"
-    "@docusaurus/utils" "^2.0.0-rc.1"
-    "@docusaurus/utils-common" "^2.0.0-rc.1"
-    "@docusaurus/utils-validation" "^2.0.0-rc.1"
+    "@docusaurus/plugin-content-docs" "^2 || ^3"
+    "@docusaurus/theme-translations" "^2 || ^3"
+    "@docusaurus/utils" "^2 || ^3"
+    "@docusaurus/utils-common" "^2 || ^3"
+    "@docusaurus/utils-validation" "^2 || ^3"
     "@easyops-cn/autocomplete.js" "^0.38.1"
     "@node-rs/jieba" "^1.6.0"
-    cheerio "^1.0.0-rc.3"
+    cheerio "^1.0.0"
     clsx "^1.1.1"
     debug "^4.2.0"
     fs-extra "^10.0.0"
@@ -11604,11 +11604,6 @@ remark-stringify@^11.0.0:
     "@types/mdast" "^4.0.0"
     mdast-util-to-markdown "^2.0.0"
     unified "^11.0.0"
-
-remote-web-worker@0.0.9:
-  version "0.0.9"
-  resolved "https://registry.npmmirror.com/remote-web-worker/-/remote-web-worker-0.0.9.tgz#3a96a84063e6c1a5fa3792abe0fd97eb7a97aab3"
-  integrity sha512-TguJhQVWeeL2zWqLQpTfq/uIOpXRHHq7SI6fw6xTIJfSN/ojiKUqV16oAhPD8zH71MFy3FHqSoQEx2cks5gcAA==
 
 renderkid@^3.0.0:
   version "3.0.0"
