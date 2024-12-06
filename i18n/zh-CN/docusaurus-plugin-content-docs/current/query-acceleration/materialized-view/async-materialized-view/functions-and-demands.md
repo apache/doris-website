@@ -1,6 +1,6 @@
 ---
 {
-  "title": "异步物化视图功能描述",
+  "title": "创建、查询与维护异步物化视图",
   "language": "zh-CN"
 }
 ---
@@ -24,99 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-本文将详细说明物化视图 DDL 和基础运维、元数据查询、权限说明、物化刷新数据湖支持情况、与 OLAP 内表关系、直查、查询改写等功能以及基础命令。
+本文将详细说明物化视图 DDL，物化视图直查、查询改写和物化视图常见运维。
 
+## 物化视图 DDL
 
-
-## DDL 和基础运维
-
-### 物化视图创建
-
-**1. 详情参考** **[CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)**
-
-**2. 新增属性** 
-
-- use_for_rewrite：：标识此物化视图是否参与到透明改写中，如果为 false，不参与到透明改写，默认是 true。数据建模场景中，如果物化视图只是用于直查，物化视图可以设置此属性，从而不参与透明改写，提高查询响应速度。
-
-**3. 分区物化视图**
-
-创建分区物化视图时，对于分区字段引用的表达式，仅允许使用 `date_trunc` 函数和常量。以下语句是符合要求的：
-
-分区字段引用的列仅使用了 `date_trunc` 函数。
-
-```sql
-CREATE MATERIALIZED VIEW mv_1 BUILD IMMEDIATE REFRESH AUTO ON MANUAL   
-partition by (date_alias)   
-DISTRIBUTED BY RANDOM BUCKETS 2   
-PROPERTIES ('replication_num' = '1')   
-AS   
-SELECT   
-  l_linestatus,   
-  date_trunc(o_orderdate) as date_alias,   
-  o_shippriority   
-FROM   
-  orders   
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey;
-```
-
-以下示例则无法创建分区物化视图，因为分区字段引用的表达式使用了 `to_date` 函数：
-
-```sql
-CREATE MATERIALIZED VIEW mv_1 BUILD IMMEDIATE REFRESH AUTO ON MANUAL   
-partition by (date_alias)   
-DISTRIBUTED BY RANDOM BUCKETS 2   
-PROPERTIES ('replication_num' = '1')   
-AS   
-SELECT   
-  l_linestatus,   
-  to_date(o_orderdate) as date_alias,   
-  o_shippriority   
-FROM   
-  orders   
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey;
-```
-
-### 物化视图修改
-
-详情参考 [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW)
-
-### 物化视图删除
-
-详情参考 [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW)
-
-### 刷新物化视图
-
-详情参考 [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/REFRESH-MATERIALIZED-VIEW/)
-
-### 暂停物化视图
-
-详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/PAUSE-MATERIALIZED-VIEW)
-
-### 启用物化视图
-
-详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/RESUME-MATERIALIZED-VIEW)
-
-### 取消物化视图刷新任务
-
-详情参考 [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK)
-
-
-
-## 元数据查询
-
-- 查询物化视图信息：[MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv-infos)
-
-- 查询 TASK 信息：[TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks?_highlight=task)
-
-- 查询物化视图对应的 JOB 信息：[JOBS](../../../sql-manual/sql-functions/table-valued-functions/jobs)
-
-- 查询物化视图的分区信息：[SHOW PARTITIONS](../../../sql-manual/sql-statements/Show-Statements/SHOW-PARTITIONS)
-
-- 查看物化视图表结构：[DESCRIBE](../../../sql-manual/sql-statements/Utility-Statements/DESCRIBE)
-
-- 查看物化视图创建语句：[SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW/)
-
-## 权限说明
+### 权限说明
 
 - 创建物化视图：需要具有有物化视图的创建权限（与建表权限相同）以及创建物化视图查询语句的查询权限（与 SELECT 权限相同）。
 
@@ -124,46 +36,7 @@ FROM
 
 - 修改物化视图：需要具有物化视图的修改权限（与修改表权限相同）。
 
-- 暂停/恢复/取消/刷新物化视图：需要具有物化视图的创建权限。
-
-## 物化刷新数据湖支持情况
-
-对于物化刷新数据湖的支持情况，不同类型的表和 Catalog 有不同的支持程度：
-
-| 表类型  | Catalog 类型 | 全量刷新 | 分区刷新 | 触发刷新  |
-| ------- | ------------ | -------- | -------- | --------- |
-| 内表    | Internal     | 2.1 支持  | 2.1 支持  | 2.1.4 支持 |
-| 外表    | Hive         | 2.1 支持  | 2.1 支持  | 不支持    |
-| Iceberg | 支持         | 不支持   | 不支持   |           |
-| Paimon  | 支持         | 不支持   | 不支持   |           |
-| Hudi    | 支持         | 不支持   | 不支持   |           |
-| JDBC    | 支持         | 不支持   | 不支持   |           |
-| ES      | 支持         | 不支持   | 不支持   |           |
-
-## 物化视图和 OLAP 内表关系
-
-:::tips
-自 2.1.4 版本起，物化视图支持 Duplicate 模型
-:::
-
-物化视图的底层实现是一个 Duplicate 模型的 OLAP 表。这意味着，理论上物化视图支持 Duplicate 模型的所有功能。然而，为了确保物化视图能够正常且高效地刷新数据，对其功能进行了一些限制：
-
-1. 物化视图的分区是基于其基表自动创建和维护的，因此用户不能对物化视图进行分区操作。
-
-2. 由于物化视图背后有相关的作业（JOB）需要处理，所以不能使用删除表（DELETE TABLE）或重命名表（RENAME TABLE）的命令来操作物化视图。相反，需要使用物化视图自身的命令来进行这些操作。
-
-3. 物化视图的列数据类型是根据查询语句推导出来的，因此这些数据类型不能被修改。否则，可能会导致物化视图的刷新任务失败。
-
-4. 物化视图具有一些 Duplicate 表没有的属性（property），这些属性需要通过物化视图的命令进行修改。而其他公用的属性则需要使用 ALTER TABLE 命令进行修改。
-
-5. DESC、SHOW PARTITIONS 等命令同样适用于物化视图，可以用于查看物化视图的描述信息和分区信息。
-
-6. 物化视图支持创建索引。
-
-7. 用户可以基于一个物化视图创建同步物化视图。
-
-## 直查
-
+### 物化视图创建
 建表语句如下：
 
 ```sql
@@ -236,14 +109,235 @@ CREATE TABLE IF NOT EXISTS orders  (
     (2, 3, 10, 11.01, 'supply3');
 ```
 
-物化视图可以看作是表，可以像正常的表一样直接查询。
+#### 全量物化视图
+```sql
+CREATE MATERIALIZED VIEW mv_1 BUILD IMMEDIATE REFRESH AUTO ON MANUAL    
+DISTRIBUTED BY RANDOM BUCKETS 2   
+PROPERTIES ('replication_num' = '1')   
+AS   
+SELECT   
+  l_linestatus,   
+  to_date(o_orderdate) as date_alias,   
+  o_shippriority   
+FROM   
+  orders   
+  LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+```
 
-举例如下：
+#### 分区物化视图
 
-**1. 物化视图的定义：**
+创建分区物化视图时，需要指定 `partition by`，对于分区字段引用的表达式，仅允许使用 `date_trunc` 函数和标识符。以下语句是符合要求的：
+分区字段引用的列仅使用了 `date_trunc` 函数。
+
+```sql
+CREATE MATERIALIZED VIEW mv_2 BUILD IMMEDIATE REFRESH AUTO ON MANUAL   
+partition by (order_date_month)   
+DISTRIBUTED BY RANDOM BUCKETS 2   
+PROPERTIES ('replication_num' = '1')   
+AS   
+SELECT   
+  l_linestatus,
+  date_trunc(o_orderdate, 'month') as order_date_month,   
+  o_shippriority   
+FROM   
+  orders   
+  LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+```
+
+**基表有多列分区**
+
+:::tip 提示
+自 Doris 2.1.0 版本起支持多列分区
+:::
+
+目前仅支持 Hive 外表有多列分区。Hive 外表有很多多级分区的情况，例如一级分区按照日期，二级分区按照区域。物化视图可以选择 Hive 的某一级分区列作为物化视图的分区列。
+
+例如，Hive 的建表语句如下：
+
+```sql
+CREATE TABLE hive1 (
+`k1` int)
+PARTITIONED BY (
+`year` int,
+`region` string)
+STORED AS ORC;
+
+alter table hive1 add if not exists
+partition(year=2020,region="bj")
+partition(year=2020,region="sh")
+partition(year=2021,region="bj")
+partition(year=2021,region="sh")
+partition(year=2022,region="bj")
+partition(year=2022,region="sh")
+```
+
+当物化视图的创建语句如下时，物化视图`mv_hive`将有三个分区：`('2020')，('2021')，('2022')`
+
+```sql
+CREATE MATERIALIZED VIEW mv_hive
+BUILD DEFERRED REFRESH AUTO ON MANUAL
+partition by(`year`)
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES ('replication_num' = '1')
+AS
+SELECT k1,year,region FROM hive1;
+```
+
+当物化视图的建表语句如下时，那么物化视图`mv_hive2`将有如下两个分区：`('bj')`，`('sh')`：
+
+```sql
+CREATE MATERIALIZED VIEW mv_hive2
+BUILD DEFERRED REFRESH AUTO ON MANUAL
+partition by(`region`)
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES ('replication_num' = '1')
+AS
+SELECT k1,year,region FROM hive1;
+```
+
+**使用基表部分分区**
+
+:::tip 提示
+自 Doris 2.1.1 版本起支持此功能
+:::
+
+有些基表有很多分区，但是物化视图只关注最近一段时间的“热”数据，那么可以使用此功能。
+
+基表的建表语句如下：
+
+```sql
+CREATE TABLE t1 (
+    `k1` INT,
+    `k2` DATE NOT NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`k1`)
+COMMENT 'OLAP'
+PARTITION BY range(`k2`)
+(
+PARTITION p26 VALUES [("2024-03-26"),("2024-03-27")),
+PARTITION p27 VALUES [("2024-03-27"),("2024-03-28")),
+PARTITION p28 VALUES [("2024-03-28"),("2024-03-29"))
+)
+DISTRIBUTED BY HASH(`k1`) BUCKETS 2
+PROPERTIES (
+'replication_num' = '1'
+);
+```
+
+物化视图的创建语句如以下举例，代表物化视图只关注最近一天的数据。若当前时间为 2024-03-28 xx:xx:xx，这样物化视图会仅有一个分区 `[("2024-03-28"),("2024-03-29")]`：
 
 ```sql
 CREATE MATERIALIZED VIEW mv1
+BUILD DEFERRED REFRESH AUTO ON MANUAL
+partition by(`k2`)
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES (
+'replication_num' = '1',
+'partition_sync_limit'='1',
+'partition_sync_time_unit'='DAY'
+)
+AS
+SELECT * FROM t1;
+```
+
+若时间又过了一天，当前时间为` 2024-03-29 xx:xx:xx`，`t1`则会新增一个分区 `[("2024-03-29"),("2024-03-30")]`，若此时刷新物化视图，刷新完成后，物化视图会仅有一个分区 `[("2024-03-29"),("2024-03-30")]`。
+
+此外，分区字段是字符串类型时，可以设置物化视图属性 `partition_date_format`，例如 `%Y-%m-%d` 。
+
+**分区上卷**
+
+:::tip 提示
+自 Doris 2.1.5 版本起支持此功能
+:::
+
+当基表数据经过聚合处理后，各分区的数据量可能会显著减少。在这种情况下，可以采用分区上卷策略，以降低物化视图的分区数量。
+
+- Range 分区
+
+  假设基表的建表语句如下：
+
+    ```sql
+    CREATE TABLE `t1` (
+    `k1` LARGEINT NOT NULL,
+    `k2` DATE NOT NULL
+    ) ENGINE=OLAP
+    DUPLICATE KEY(`k1`)
+    COMMENT 'OLAP'
+    PARTITION BY range(`k2`)
+    (
+    PARTITION p_20200101 VALUES [("2020-01-01"),("2020-01-02")),
+    PARTITION p_20200102 VALUES [("2020-01-02"),("2020-01-03")),
+    PARTITION p_20200201 VALUES [("2020-02-01"),("2020-02-02"))
+    )
+    DISTRIBUTED BY HASH(`k1`) BUCKETS 2
+    PROPERTIES ('replication_num' = '1') ;
+    ```
+
+  若物化视图的创建语句如下，则该物化视图将包含两个分区：`[("2020-01-01","2020-02-01")] `和` [("2020-02-01","2020-03-01")]`
+
+    ```sql
+    CREATE MATERIALIZED VIEW mv_3
+        BUILD DEFERRED REFRESH AUTO ON MANUAL
+        partition by (date_trunc(`k2`,'month'))
+        DISTRIBUTED BY RANDOM BUCKETS 2
+        PROPERTIES (
+        'replication_num' = '1'
+        )
+        AS
+        SELECT * FROM t1;
+    ```
+
+  若物化视图的创建语句如下，则该物化视图将只包含一个分区：`[("2020-01-01","2021-01-01")]`
+
+    ```sql
+    CREATE MATERIALIZED VIEW mv_4
+        BUILD DEFERRED REFRESH AUTO ON MANUAL
+        partition by (date_trunc(`k2`,'year'))
+        DISTRIBUTED BY RANDOM BUCKETS 2
+        PROPERTIES (
+        'replication_num' = '1'
+        )
+        AS
+        SELECT * FROM t1;
+    ```
+
+此外，如果分区字段为字符串类型，可以通过设置物化视图的 `partition_date_format` 属性来指定日期格式，例如 `'%Y-%m-%d'`。
+
+**详情参考** **[CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)**
+
+### 物化视图修改
+```sql
+ALTER MATERIALIZED VIEW mv_1
+SET(
+  "grace_period" = "10"
+);
+```
+详情参考 [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW)
+
+
+### 物化视图删除
+```sql
+DROP MATERIALIZED VIEW mv_1;
+```
+
+详情参考 [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW)
+
+
+### 查看物化视图创建语句
+```sql
+SHOW CREATE MATERIALIZED VIEW mv_1;
+```
+
+详情参考 [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW/)
+
+## 查询异步物化视图
+
+物化视图可以看作是表，可以像正常的表一样直接查询。
+
+**物化视图的定义：**
+
+```sql
+CREATE MATERIALIZED VIEW mv_5
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
 DISTRIBUTED BY RANDOM BUCKETS 3
 PROPERTIES ('replication_num' = '1')
@@ -256,9 +350,7 @@ LEFT OUTER JOIN orders
 ON l_orderkey = o_orderkey;
 ```
 
-详情可参考 [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)
-
-**2. 查询语句：**
+**直接查询语句：**
 
 可以对物化视图添加过滤条件和聚合等，进行直接查询。
 
@@ -266,13 +358,13 @@ ON l_orderkey = o_orderkey;
 SELECT
 l_linenumber,
 o_custkey
-FROM mv1
+FROM mv_5
 WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 ```
 
-## 查询改写的能力边界
+### 查询改写的能力边界
 
-### 条件补偿
+#### 条件补偿
 
 当物化视图和查询的 `where` 条件是通过 `and` 连接的表达式时：
 
@@ -294,7 +386,7 @@ WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 
 2. 对于 `like` 这种非比较和范围表达式，不能进行条件补偿，必须一样才可以改写成功。
 
-### JOIN 改写
+#### JOIN 改写
 
 JOIN 改写指的是查询和物化使用的表相同，可以在物化视图和查询的 JOIN 输入或者 JOIN 的外层写 `where`，优化器对此模式的查询会尝试进行透明改写。
 
@@ -347,7 +439,7 @@ ON l_orderkey = o_orderkey
 WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 ```
 
-### JOIN 衍生
+#### JOIN 衍生
 
 当查询和物化视图的 JOIN 类型不一致时，如果物化视图能够提供查询所需的所有数据，那么通过在 JOIN 的外部补偿谓词，也可以进行透明改写。
 
@@ -395,7 +487,7 @@ l_suppkey,
 o_orderdate;
 ```
 
-### 聚合改写
+#### 聚合改写
 
 当查询和物化视图定义中的 group 维度一致时，如果物化视图使用的 group by 维度和查询的 group by 维度相同，并且查询使用的聚合函数可以使用物化视图的聚合函数来表示，那么可以进行透明改写。
 
@@ -443,7 +535,7 @@ o_shippriority,
 o_comment;
 ```
 
-### 聚合改写（上卷）
+#### 聚合改写（上卷）
 
 在查询和物化视图定义中，即使聚合的维度不一致，也可以进行改写。物化视图使用的 `group by` 维度需要包含查询的 `group by` 维度，而查询可以没有 `group by`。并且，查询使用的聚合函数可以用物化视图的聚合函数来表示。
 
@@ -495,18 +587,19 @@ l_suppkey;
 
 目前支持的聚合上卷函数列表如下：
 
-| 查询中函数                                            | 物化视图中函数             | 函数上卷后         |
-| ----------------------------------------------------- | -------------------------- | ------------------ |
-| max                                                   | max                        | max                |
-| min                                                   | min                        | min                |
-| sum                                                   | sum                        | sum                |
-| count                                                 | count                      | sum                |
-| count(distinct)                                       | bitmap_union               | bitmap_union_count |
-| bitmap_union                                          | bitmap_union               | bitmap_union       |
-| bitmap_union_count                                    | bitmap_union               | bitmap_union_count |
-| hll_union_agg, approx_count_distinct, hll_cardinality | hll_union 或者 hll_raw_agg | hll_union_agg      |
+| 查询中函数                                                 | 物化视图中函数                                  | 函数上卷后         |
+|-------------------------------------------------------|------------------------------------------| ------------------ |
+| max                                                   | max                                      | max                |
+| min                                                   | min                                      | min                |
+| sum                                                   | sum                                      | sum                |
+| count                                                 | count                                    | sum                |
+| count(distinct)                                       | bitmap_union                             | bitmap_union_count |
+| bitmap_union                                          | bitmap_union                             | bitmap_union       |
+| bitmap_union_count                                    | bitmap_union                             | bitmap_union_count |
+| hll_union_agg, approx_count_distinct, hll_cardinality | hll_union 或者 hll_raw_agg                 | hll_union_agg      |
+| any_value                                             | any_value 或者 select 后有any_value使用的列      | any_value      |
 
-### 多维聚合改写
+#### 多维聚合改写
 
 支持多维聚合的透明改写，即如果物化视图中没有使用 `GROUPING SETS`, `CUBE`, `ROLLUP`，而查询中有多维聚合，并且物化视图 `group by` 后的字段包含查询中多维聚合的所有字段，那么也可以进行透明改写。
 
@@ -543,7 +636,7 @@ group by
 GROUPING SETS ((o_orderstatus, o_orderdate), (o_orderpriority), (o_orderstatus), ());
 ```
 
-### 分区补偿改写
+#### 分区补偿改写
 
 当分区物化视图不足以提供查询的所有数据时，可以使用 `union all` 的方式，将查询原表和物化视图的数据 `union all` 作为最终返回结果。
 
@@ -611,7 +704,7 @@ group by
 比如，如果物化视图带有 `where` 条件，以上述为例，如果构建物化的过滤条件加上 ` WHERE l_shipdate > '2023-10-19'`，而查询是 `WHERE l_shipdate > '2023-10-18'`，目前这种还无法通过 `UNION ALL` 补偿，待支持。
 :::
 
-### 嵌套物化视图改写
+#### 嵌套物化视图改写
 
 物化视图的定义 SQL 可以使用物化视图，此物化视图称为嵌套物化视图。嵌套的层数理论上没有限制，此物化视图既可以直查，也可以进行透明改写。嵌套物化视图同样可以参与透明改写。
 
@@ -674,7 +767,7 @@ where o_orderstatus = 'o'
 
 2. 嵌套物化视图透明改写默认关闭，开启方式见下面的开关设置。
 
-## Explain 查询透明改写情况
+#### Explain 查询透明改写情况
 
 查询透明改写命中情况，用于查看和调试。
 
@@ -713,16 +806,265 @@ explain <query_sql>
 explain memo plan <query_sql>
 ```
 
-## 附录
 
-### 物化视图相关开关介绍
+## 维护物化视图
 
-| 开关                                                         | 说明                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| SET enable_nereids_planner = true;                           | 异步物化视图只有在新优化器下才支持，所以物化视图透明改写没有生效时，需要开启新优化器 |
-| SET enable_materialized_view_rewrite = true;                 | 开启或者关闭查询透明改写，默认开启                           |
-| SET materialized_view_rewrite_enable_contain_external_table = true; | 参与透明改写的物化视图是否允许包含外表，默认不允许，如果物化视图的定义 SQL 中包含外表，也想参与到透明改写，可以打开此开关。 |
-| SET materialized_view_rewrite_success_candidate_num = 3;     | 透明改写成功的结果集合，允许参与到 CBO 候选的最大数量，默认是 3。如果发现透明改写的性能很慢，可以考虑把这个值调小。 |
-| SET enable_materialized_view_union_rewrite = true;           | 当分区物化视图不足以提供查询的全部数据时，是否允许基表和物化视图 union all 来响应查询，默认允许。如果发现命中物化视图时数据错误，可以把此开关关闭。 |
-| SET enable_materialized_view_nest_rewrite = true;            | 是否允许嵌套改写，默认不允许。如果查询 SQL 很复杂，需要构建嵌套物化视图才可以命中，那么需要打开此开关。 |
-| SET materialized_view_relation_mapping_max_count = 8;        | 透明改写过程中，relation mapping 最大允许数量，如果超过，进行截取。relation mapping 通常由表自关联产生，数量一般会是笛卡尔积，比如 3 张表，可能会产生 8 种组合。默认是 8。如果发现透明改写时间很长，可以把这个值调低 |
+### 权限说明
+
+- 暂停/恢复/取消/刷新物化视图：需要具有物化视图的创建权限 。
+
+### 刷新物化视图
+
+物化视图是按照分区为单位进行刷新的。如果物化视图没有指定分区，那么每次都刷新物化视图的默认分区，即刷新物化视图的全部数据。
+物化视图有三种触发刷新机制：
+
+#### 1. 手动触发
+
+用户通过 SQL 语句触发物化视图的刷新，目前有三种策略：
+
+- 不关心具体刷新哪些分区，要求刷新完成后，物化视图的数据和基表保持同步。
+
+    ```sql
+    REFRESH MATERIALIZED VIEW mvName AUTO;
+    ```
+
+- 不管物化视图现存哪些数据，刷新物化视图的所有分区。
+
+    ```sql
+    REFRESH MATERIALIZED VIEW mvName COMPLETE;
+    ```
+
+- 不管物化视图现存哪些数据，只刷新指定的分区。
+
+    ```sql
+    REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
+    ```
+
+:::tip 提示
+`partitionName` 可以通过 `SHOW PARTITIONS FROM mvName` 获取。
+:::
+
+#### 2. 定时触发
+
+通过物化视图的创建语句指定间隔多久刷新一次数据
+
+- 如果物化视图的创建语句如下，要求全量刷新 (`REFRESH COMPLETE`)，那么物化视图每 10 小时刷新一次，并且刷新物化视图的所有分区。
+
+    ```sql
+    CREATE MATERIALIZED VIEW mv_6
+    REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
+    PROPERTIES ('replication_num' = '1')
+    AS
+    SELECT * FROM lineitem;
+    ```
+
+- 如果物化视图的创建语句如下，要求自动计算需要刷新的分区 (`REFRESH AUTO`)，那么物化视图每 10 小时刷新一次（从 2.1.3 版本开始能自动计算 Hive 需要刷新的分区）。
+
+    ```sql
+    CREATE MATERIALIZED VIEW mv_7
+    REFRESH AUTO ON SCHEDULE EVERY 10 hour
+    PARTITION by(l_shipdate)
+    PROPERTIES ('replication_num' = '1')
+    AS
+    SELECT * FROM lineitem;
+    ```
+
+#### 3. 自动触发
+
+:::tip 提示
+自 Apache Doris 2.1.4 版本起支持此功能。
+:::
+
+基表数据发生变更后，自动触发相关物化视图刷新，刷新的分区范围与“定时触发”一致。
+
+如果物化视图的创建语句如下，那么当 `t1` 的数据发生变化时，会自动触发物化视图的刷新。
+
+```sql
+CREATE MATERIALIZED VIEW mv_8
+    REFRESH AUTO ON COMMIT
+    PARTITION by(l_shipdate)
+    PROPERTIES ('replication_num' = '1')
+    AS
+SELECT * FROM lineitem;
+```
+
+详情参考 [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/REFRESH-MATERIALIZED-VIEW/)
+
+### 暂停物化视图
+
+详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/PAUSE-MATERIALIZED-VIEW)
+
+### 启用物化视图
+
+详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/RESUME-MATERIALIZED-VIEW)
+
+### 取消物化视图刷新任务
+
+详情参考 [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK)
+
+### 元数据查询
+
+#### 查询物化视图信息
+
+```sql
+select * from mv_infos('database'='db_name')
+where Name = 'mv_name' \G 
+```
+
+返回结果如下：
+```sql
+*************************** 1. row ***************************
+                Id: 139570
+              Name: mv11
+           JobName: inner_mtmv_139570
+             State: NORMAL
+SchemaChangeDetail: 
+      RefreshState: SUCCESS
+       RefreshInfo: BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+          QuerySql: SELECT l_shipdate, l_orderkey, O_ORDERDATE, count(*)
+FROM lineitem  
+LEFT OUTER JOIN orders on l_orderkey = o_orderkey
+GROUP BY l_shipdate, l_orderkey, O_ORDERDATE
+           EnvInfo: EnvInfo{ctlId='0', dbId='16813'}
+      MvProperties: {}
+   MvPartitionInfo: MTMVPartitionInfo{partitionType=FOLLOW_BASE_TABLE, relatedTable=lineitem, relatedCol='l_shipdate', partitionCol='l_shipdate'}
+SyncWithBaseTables: 1
+```
+
+- **SyncWithBaseTables：** 表示物化视图和基表的数据是否一致。
+
+  - 对于全量构建的物化视图，此字段为 1，表明此物化视图可用于透明改写。
+
+  - 对于分区增量的物化视图，分区物化视图是否可用，是以分区粒度去看的。也就是说，即使物化视图的部分分区不可用，但只要查询的是有效分区，那么此物化视图依旧可用于透明改写。是否能透明改写，主要看查询所用分区的 `SyncWithBaseTables` 字段是否一致。如果 `SyncWithBaseTables` 是 1，此分区可用于透明改写；如果是 0，则不能用于透明改写。
+
+- **JobName：** 物化视图构建 Job 的名称，每个物化视图有一个 Job，每次刷新会有一个新的 Task，Job 和 Task 是 1:n 的关系
+
+- **State：** 如果变为 SCHEMA_CHANGE，代表基表的 Schema 发生了变化，此时物化视图将不能用来透明改写 (但是不影响直接查询物化视图)，下次刷新任务如果执行成功，将恢复为 NORMAL。
+
+- **SchemaChangeDetail：** 表示 SCHEMA_CHANGE 发生的原因。
+
+- **RefreshState：** 物化视图最后一次任务刷新的状态。如果为 FAIL，代表执行失败，可以通过 `tasks() `命令进一步定位失败原因。Task 命令见本文[查看物化视图 Task 状态](#查看物化视图-task-状态)。
+
+- **SyncWithBaseTables：** 是否和基表数据同步。1 为同步，0 为不同步。如果不同步，可通过 `show partitions` 进一步判断哪个分区不同步。`show partitions` 见下文分区物化视图查看 SyncWithBaseTables 状态方法。
+
+对于透明改写，通常物化视图会出现两种状态：
+
+- **状态正常：**指的是当前物化视图是否可用于透明改写。
+
+- **不可用、状态不正常：**指的是物化视图不能用于透明改写的简称。尽管如此，该物化视图还是可以直查的。
+
+
+详情参考 [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv-infos)
+
+
+#### 查询刷新任务 TASK 信息 
+
+每个物化视图有一个 Job，每次刷新会有一个新的 Task，Job 和 Task 是 1:n 的关系。
+根据物化视图名称查看物化视图的 Task 状态，运行如下语句，可以查看刷新任务的状态和进度：
+
+```sql
+select * from tasks("type"="mv")
+where mvName = 'mv_name'
+order by CreateTime desc \G
+```
+
+返回结果如下：
+
+```sql
+*************************** 1. row ***************************
+               TaskId: 167019363907545
+                JobId: 139872
+              JobName: inner_mtmv_139570
+                 MvId: 139570
+               MvName: mv11
+         MvDatabaseId: 16813
+       MvDatabaseName: regression_test_nereids_rules_p0_mv
+               Status: SUCCESS
+             ErrorMsg: 
+           CreateTime: 2024-06-21 10:31:43
+            StartTime: 2024-06-21 10:31:43
+           FinishTime: 2024-06-21 10:31:45
+           DurationMs: 2466
+          TaskContext: {"triggerMode":"SYSTEM","isComplete":false}
+          RefreshMode: COMPLETE
+NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_20231021","p_20231027_20231028","p_20231030_20231031","p_20231018_20231019","p_20231024_20231025","p_20231021_20231022","p_20231029_20231030","p_20231028_20231029","p_20231025_20231026","p_20231022_20231023","p_20231031_20231101","p_20231016_20231017","p_20231026_20231027"]
+  CompletedPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_20231021","p_20231027_20231028","p_20231030_20231031","p_20231018_20231019","p_20231024_20231025","p_20231021_20231022","p_20231029_20231030","p_20231028_20231029","p_20231025_20231026","p_20231022_20231023","p_20231031_20231101","p_20231016_20231017","p_20231026_20231027"]
+             Progress: 100.00% (15/15)
+          LastQueryId: fe700ca3d6504521-bb522fc9ccf615e3
+```
+
+- NeedRefreshPartitions，CompletedPartitions 记录的是此次 Task 刷新的分区。
+
+- Status：如果为 FAILED，代表运行失败，可通过 ErrorMsg 查看失败原因，也可通过 LastQueryId 来搜索 Doris 的日志，获取更详细的错误信息。目前任务失败会导致已有物化视图不可用，后面会改成尽管任务失败，但是已存在的物化视图可用于透明改写。
+
+- ErrorMsg：失败原因。
+
+- RefreshMode：complete 代表刷新了全部分区，PARTIAL 代表刷新了部分分区，NOT_REFRESH 代表不需要刷新任何分区。
+
+:::info 备注
+- 如果物化视图创建的时候设置了 `grace_period` 属性，那么即使 `SyncWithBaseTables` 是 false 或者 0，有些情况下它依然可用于透明改写。
+
+- `grace_period` 的单位是秒，指的是容许物化视图和所用基表数据不一致的时间。
+
+- 如果设置成 0，意味着要求物化视图和基表数据保持一致，此物化视图才可用于透明改写。
+
+- 如果设置成 10，意味着物化视图和基表数据允许 10 秒的延迟，如果物化视图的数据和基表的数据有延迟，在 10 秒内，此物化视图都可以用于透明改写。
+  :::
+详情参考 [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks?_highlight=task)
+
+
+#### 查询物化视图对应的 JOB 
+
+```sql
+select * from jobs("type"="mv") where Name="inner_mtmv_75043";
+```
+
+详情参考 [JOBS](../../../sql-manual/sql-functions/table-valued-functions/jobs)
+
+
+#### 查询物化视图的分区信息：
+
+**分区物化视图查看 SyncWithBaseTables 状态方法**
+
+运行 `show partitions from mv_name`查看查询使用的分区是否有效，返回结果如下：
+
+```Plain
+show partitions from mv11;
++-------------+---------------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+| PartitionId | PartitionName       | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize  | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
++-------------+---------------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+| 140189      | p_20231016_20231017 | 1              | 2024-06-21 10:31:45 | NORMAL | l_shipdate   | [types: [DATEV2]; keys: [2023-10-16]; ..types: [DATEV2]; keys: [2023-10-17]; ) | l_orderkey      | 10      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 0.000     | false      | tag.location.default: 1 | true      | true               | []           |
+| 139995      | p_20231018_20231019 | 2              | 2024-06-21 10:31:44 | NORMAL | l_shipdate   | [types: [DATEV2]; keys: [2023-10-18]; ..types: [DATEV2]; keys: [2023-10-19]; ) | l_orderkey      | 10      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 880.000 B | false      | tag.location.default: 1 | true      | true               | []           |
+| 139898      | p_20231019_20231020 | 2              | 2024-06-21 10:31:43 | NORMAL | l_shipdate   | [types: [DATEV2]; keys: [2023-10-19]; ..types: [DATEV2]; keys: [2023-10-20]; ) | l_orderkey      | 10      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 878.000 B | false      | tag.location.default: 1 | true      | true               | []           |
++-------------+---------------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+```
+
+主要查看 `SyncWithBaseTables` 字段是否为 true。false 表示此分区不可用于透明改写。
+
+详情参考 [SHOW PARTITIONS](../../../sql-manual/sql-statements/Show-Statements/SHOW-PARTITIONS)
+
+
+#### 查看物化视图表结构
+
+详情参考 [DESCRIBE](../../../sql-manual/sql-statements/Utility-Statements/DESCRIBE)
+
+### 相关配置
+#### Session Variables 开关
+
+| 开关                                                                           | 说明                                                         |
+|------------------------------------------------------------------------------| ------------------------------------------------------------ |
+| SET enable_nereids_planner = true;                                           | 异步物化视图只有在新优化器下才支持，所以物化视图透明改写没有生效时，需要开启新优化器 |
+| SET enable_materialized_view_rewrite = true;                                 | 开启或者关闭查询透明改写，默认开启                           |
+| SET materialized_view_rewrite_enable_contain_external_table = true;          | 参与透明改写的物化视图是否允许包含外表，默认不允许，如果物化视图的定义 SQL 中包含外表，也想参与到透明改写，可以打开此开关。 |
+| SET materialized_view_rewrite_success_candidate_num = 3;                     | 透明改写成功的结果集合，允许参与到 CBO 候选的最大数量，默认是 3。如果发现透明改写的性能很慢，可以考虑把这个值调小。 |
+| SET enable_materialized_view_union_rewrite = true;                           | 当分区物化视图不足以提供查询的全部数据时，是否允许基表和物化视图 union all 来响应查询，默认允许。如果发现命中物化视图时数据错误，可以把此开关关闭。 |
+| SET enable_materialized_view_nest_rewrite = true;                            | 是否允许嵌套改写，默认不允许。如果查询 SQL 很复杂，需要构建嵌套物化视图才可以命中，那么需要打开此开关。 |
+| SET materialized_view_relation_mapping_max_count = 8;                        | 透明改写过程中，relation mapping 最大允许数量，如果超过，进行截取。relation mapping 通常由表自关联产生，数量一般会是笛卡尔积，比如 3 张表，可能会产生 8 种组合。默认是 8。如果发现透明改写时间很长，可以把这个值调低 |
+| SET enable_dml_materialized_view_rewrite = true;                             | DML 时, 是否开启基于结构信息的物化视图透明改写 |
+| SET enable_dml_materialized_view_rewrite_when_base_table_unawareness = true; | DML 时，当物化视图存在无法实时感知数据的外表时，是否开启基于结构信息的物化视图透明改写 |
+
+#### fe.conf 配置
+- **job_mtmv_task_consumer_thread_num：** 此参数控制同时运行的物化视图刷新任务数量，默认是10,超过这个数量的任务将处于pending状态
+修改这个参数需要重启 fe 才可以生效。
+
+
