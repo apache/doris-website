@@ -1,3 +1,4 @@
+import 'remote-web-worker';
 import * as Comlink from "comlink";
 let remoteWorkerPromise;
 function getRemoteWorker() {
