@@ -1,8 +1,24 @@
 import lunr from "lunr";
 import { searchIndexUrl } from "../../utils/proxiedGenerated";
-export async function fetchIndexes(baseUrl) {
+const cache = new Map();
+export function fetchIndexes(baseUrl, searchContext) {
+    const cacheKey = `${baseUrl}${searchContext}`;
+    let promise = cache.get(cacheKey);
+    if (!promise) {
+        promise = legacyFetchIndexes(baseUrl, searchContext);
+        cache.set(cacheKey, promise);
+    }
+    return promise;
+}
+export async function legacyFetchIndexes(baseUrl, searchContext) {
     if (process.env.NODE_ENV === "production") {
-        const json = (await (await fetch(`${baseUrl}${searchIndexUrl}`)).json());
+        const url = `${baseUrl}${searchIndexUrl.replace("{dir}", searchContext ? `-${searchContext.replace(/\//g, "-")}` : "")}`;
+        // Catch potential attacks.
+        const fullUrl = new URL(url, location.origin);
+        if (fullUrl.origin !== location.origin) {
+            throw new Error("Unexpected version url");
+        }
+        const json = (await (await fetch(url)).json());
         const wrappedIndexes = json.map(({ documents, index }, type) => ({
             type: type,
             documents,
