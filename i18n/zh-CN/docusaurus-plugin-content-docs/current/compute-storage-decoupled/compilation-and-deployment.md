@@ -162,9 +162,15 @@ bin/start.sh --meta-service --daemon
    - 示例：`cloud`
 
 2. `cluster_id`
-   - 描述：存算分离架构下集群的唯一标识符，不同的集群必须设置不同的 cluster_id
+   - 描述：存算分离架构下集群的唯一标识符，不同的集群必须设置不同的 cluster_id。
    - 格式：int 类型
-   - 示例：`12345678`
+   - 示例：可以使用如下 shell 脚本生成一个随机 id 使用。
+      ```shell
+      echo $(($((RANDOM << 15)) | $RANDOM))
+      ```
+     :::caution
+     **不同的集群必须设置不同的 cluster_id**
+     :::
 
 3. `meta_service_endpoint`
    - 描述：Meta Service 的地址和端口
