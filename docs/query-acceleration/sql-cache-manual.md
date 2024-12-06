@@ -24,6 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Description
+
 SQL Cache is a query optimization mechanism provided by Doris that can significantly enhance query performance. It reduces redundant computations by caching query results, making it suitable for scenarios where data update frequency is low.
 
 SQL Cache stores and retrieves caches based on the following key factors:
@@ -50,6 +52,18 @@ SQL Cache is highly suitable for T+1 update scenarios. Data is updated early in 
 
 Currently, SQL Cache supports both internal OlapTables and external Hive tables.
 
+## Usage Limitations
+
+### Non-Deterministic Functions
+
+Non-deterministic functions refer to those whose computation results do not form a fixed relationship with their input parameters.
+
+Take the common function `select now()` as an example. It returns the current date and time. Since this function returns different results when executed at different times, its return value is dynamically changing. The `now` function returns time at the second level, so SQL Cache from the previous second can be reused within the same second; however, a new SQL Cache needs to be created for the next second.
+
+To optimize cache utilization, it is recommended to convert such fine-grained time into coarse-grained time, such as using `select * from tbl where dt=date(now())`. In this case, queries within the same day can leverage the SQL Cache.
+
+In contrast, the `random()` function is difficult to utilize Cache because its results vary each time it is executed. Therefore, the use of such non-deterministic functions in queries should be avoided as much as possible.
+
 ## Principles
 
 ### BE Principle
@@ -70,7 +84,7 @@ When the BE returns the computation results to the FE, the FE is responsible for
 
 Additionally, if the SQL optimization phase determines that the query results contain only 0 or 1 row of data, the FE will choose to store these results in its memory to respond more quickly to potential future identical queries.
 
-## Best Practices
+## Get Started
 
 ### Enabling and Disabling SQL Cache
 
@@ -147,7 +161,7 @@ Execution  Summary:
 
 Both methods provide effective means for users to verify whether queries utilize the SQL Cache, helping users better assess query performance and optimize query strategies.
 
-### Statistics on Cache Metrics
+## Metrics and Monitor
 
 **1. The HTTP interface on the FE `http://${FE_IP}:${FE_HTTP_PORT}/metrics` returns two relevant metrics:**
 
@@ -180,6 +194,8 @@ doris_be_query_cache_memory_total_byte 44101
 Different caches may be stored in different BEs, so metrics from all BEs need to be collected for complete information.
 
 :::
+
+## Memory Control
 
 ### FE Memory Control
 
@@ -214,7 +230,7 @@ ADMIN SET FRONTEND CONFIG ('cache_result_max_row_count'='3000');
 ADMIN SET FRONTEND CONFIG ('cache_result_max_data_size'='31457280');
 ```
 
-### Troubleshooting Cache Invalidation
+## Troubleshooting Cache Invalidation
 
 The reasons for cache invalidation typically include the following:
 
@@ -233,15 +249,3 @@ The reasons for cache invalidation typically include the following:
 7. The result row count exceeds the FE-configured `cache_result_max_row_count`, with a default value of 3000 rows.
 
 8. The result size exceeds the FE-configured `cache_result_max_data_size`, with a default value of 30MB.
-
-## Usage Limitations
-
-### Non-Deterministic Functions
-
-Non-deterministic functions refer to those whose computation results do not form a fixed relationship with their input parameters.
-
-Take the common function `select now()` as an example. It returns the current date and time. Since this function returns different results when executed at different times, its return value is dynamically changing. The `now` function returns time at the second level, so SQL Cache from the previous second can be reused within the same second; however, a new SQL Cache needs to be created for the next second.
-
-To optimize cache utilization, it is recommended to convert such fine-grained time into coarse-grained time, such as using `select * from tbl where dt=date(now())`. In this case, queries within the same day can leverage the SQL Cache.
-
-In contrast, the `random()` function is difficult to utilize Cache because its results vary each time it is executed. Therefore, the use of such non-deterministic functions in queries should be avoided as much as possible.
