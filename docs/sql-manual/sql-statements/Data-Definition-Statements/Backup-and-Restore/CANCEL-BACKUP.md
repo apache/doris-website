@@ -37,7 +37,7 @@ This statement is used to cancel an ongoing BACKUP task.
 grammar:
 
 ```sql
-CANCEL BACKUP FROM db_name;
+CANCEL [GLOBAL] BACKUP [FROM db_name];
 ```
 
 ### Example
@@ -46,6 +46,12 @@ CANCEL BACKUP FROM db_name;
 
 ```sql
 CANCEL BACKUP FROM example_db;
+```
+
+2. Cancel the GLOBAL BACKUP task.
+
+```sql
+CANCEL GLOBAL BACKUP;
 ```
 
 ### Keywords
