@@ -46,7 +46,7 @@ ALTER SQL_BLOCK_RULE rule_name
 - sql 和 sqlHash 不能同时被设置。这意味着，如果一个 rule 设置了 sql 或者 sqlHash，则另一个属性将无法被修改；
 - sql/sqlHash 和 partition_num/tablet_num/cardinality 不能同时被设置。举个例子，如果一个 rule 设置了 partition_num，那么 sql 或者 sqlHash 将无法被修改；
 
-## 例子
+## 示例
 
 1. 根据 SQL 属性进行修改
 

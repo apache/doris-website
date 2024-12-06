@@ -41,7 +41,7 @@ illustrate：
 1. tablet-ids: one or more tablet-ids, with comma separated
 2. Columns of result keep same with result of `SHOW-DATA` for the same table
 
-### Example
+### 示例
 
 1. show information of four tablet-ids (actually, three tablet-ids. Result will be deduplicated)
 

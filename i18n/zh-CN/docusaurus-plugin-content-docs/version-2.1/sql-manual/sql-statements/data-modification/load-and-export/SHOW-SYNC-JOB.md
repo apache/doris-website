@@ -25,11 +25,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-SYNC-JOB
 
-### Name
-
-SHOW SYNC JOB
 
 ## 描述
 
@@ -41,7 +37,7 @@ SHOW SYNC JOB
 SHOW SYNC JOB [FROM db_name]
 ```
 
-## Examples
+## 示例
 
 1. 展示当前数据库的所有数据同步作业状态。
 

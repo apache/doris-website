@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## PAUSE-SYNC-JOB
 
-### Name
-
-PAUSE SYNC JOB
 
 ## 描述
 
@@ -40,7 +36,7 @@ PAUSE SYNC JOB
 PAUSE SYNC JOB [db.]job_name
 ```
 
-## Examples
+## 示例
 
 1. 暂停名称为 `job_name` 的数据同步作业。
 

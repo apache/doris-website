@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-REFRESH
-
 
 ## 描述
 
@@ -48,7 +44,7 @@ REFRESH TABLE [catalog_name.][database_name.]table_name;
 包括 Partition Cache、Schema Cache、File Cache 等。
 
 
-## Examples
+## 示例
 
 1. 刷新 hive catalog
 

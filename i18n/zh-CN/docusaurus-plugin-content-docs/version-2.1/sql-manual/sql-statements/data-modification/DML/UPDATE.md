@@ -24,17 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## UPDATE
 
-### Name
-
-UPDATE
 
 ## 描述
 
 该语句是为进行对数据进行更新的操作，UPDATE 语句目前仅支持 UNIQUE KEY 模型。
 
-UPDATE操作目前只支持更新Value列，Key列的更新可参考[使用FlinkCDC更新Key列](../../../../ecosystem/flink-doris-connector.md#使用flinkcdc更新key列)。
+UPDATE 操作目前只支持更新 Value 列，Key 列的更新可参考[使用 FlinkCDC 更新 Key 列](../../../../ecosystem/flink-doris-connector.md#使用flinkcdc更新key列)。
 
 #### Syntax
 
@@ -62,9 +58,9 @@ UPDATE target_table [table_alias]
 
 当前 UPDATE 语句仅支持在 UNIQUE KEY 模型上的行更新。
 
-## Examples
+## 示例
 
-`test` 表是一个 unique 模型的表，包含: k1, k2, v1, v2  四个列。其中 k1, k2 是 key，v1, v2 是value，聚合方式是 Replace。
+`test` 表是一个 unique 模型的表，包含：k1, k2, v1, v2  四个列。其中 k1, k2 是 key，v1, v2 是 value，聚合方式是 Replace。
 
 1. 将 'test' 表中满足条件 k1 =1 , k2 =2 的 v1 列更新为 1
 
@@ -72,7 +68,7 @@ UPDATE target_table [table_alias]
 UPDATE test SET v1 = 1 WHERE k1=1 and k2=2;
 ```
 
-2. 将 'test' 表中 k1=1 的列的 v1 列自增1
+2. 将 'test' 表中 k1=1 的列的 v1 列自增 1
 
 ```sql
 UPDATE test SET v1 = v1+1 WHERE k1=1;
@@ -81,7 +77,7 @@ UPDATE test SET v1 = v1+1 WHERE k1=1;
 3. 使用`t2`和`t3`表连接的结果，更新`t1`
 
 ```sql
--- 创建t1, t2, t3三张表
+-- 创建 t1, t2, t3 三张表
 CREATE TABLE t1
   (id INT, c1 BIGINT, c2 STRING, c3 DOUBLE, c4 DATE)
 UNIQUE KEY (id)

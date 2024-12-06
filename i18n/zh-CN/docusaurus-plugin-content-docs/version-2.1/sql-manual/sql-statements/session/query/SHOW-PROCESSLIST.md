@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-PROCESSLIST
 
-### Name
-
-SHOW PROCESSLIST
 
 ## 描述
 
@@ -66,7 +62,7 @@ SHOW [FULL] PROCESSLIST
 
 其他类型可以参考 [MySQL 官网解释](https://dev.mysql.com/doc/refman/5.6/en/thread-commands.html)
 
-## Examples
+## 示例
 
 1. 查看当前用户正在运行的线程
    ```SQL

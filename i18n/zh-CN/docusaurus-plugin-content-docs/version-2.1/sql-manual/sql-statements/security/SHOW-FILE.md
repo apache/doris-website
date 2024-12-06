@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-SHOW FILE
 
 ## 描述
 
@@ -49,7 +46,7 @@ SHOW FILE [FROM database];
 - MD5: 文件的 MD5
 
 
-## Examples
+## 示例
 
 1. 查看数据库 my_database 中已上传的文件
 

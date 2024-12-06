@@ -62,7 +62,7 @@ ALTER SYSTEM MODIFY BACKEND "id1" SET ("key" = "value"[, ...]);
 注：
 1. 可以给一个 Backend 设置多种资源标签。但必须包含 "tag.location"。
 
-## 例子
+## 示例
 
 1. 修改 BE 的资源标签
 

@@ -47,7 +47,7 @@ KILL [CONNECTION] processlist_id
 KILL QUERY processlist_id | query_id
 ```
 
-## 举例
+## 示例
 
 **1. 查看当前连接的 Connection ID。**
 

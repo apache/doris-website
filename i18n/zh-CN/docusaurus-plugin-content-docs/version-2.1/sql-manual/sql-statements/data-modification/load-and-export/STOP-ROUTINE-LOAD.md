@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## STOP-ROUTINE-LOAD
 
-### Name
-
-STOP ROUTINE LOAD
 
 ## 描述
 
@@ -38,7 +34,7 @@ STOP ROUTINE LOAD
 STOP ROUTINE LOAD FOR job_name;
 ```
 
-## Examples
+## 示例
 
 1. 停止名称为 test1 的例行导入作业。
 

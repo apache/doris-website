@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-### Name
 
-CREATE DATABASE
 
 ## 描述
 
@@ -51,7 +49,7 @@ CREATE DATABASE [IF NOT EXISTS] db_name
   )
   ```
 
-## Examples
+## 示例
 
 1. 新建数据库 db_test
 

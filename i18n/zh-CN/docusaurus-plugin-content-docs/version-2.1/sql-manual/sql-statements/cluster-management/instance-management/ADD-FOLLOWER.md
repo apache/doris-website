@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-ALTER SYSTEM ADD FOLLOWER
 
 ## 描述
 
@@ -45,7 +42,7 @@ ALTER SYSTEM ADD FOLLOWER "follower_host:edit_log_port"
 1. host 可以是主机名或者 ip 地址
 2. edit_log_port : edit_log_port 在其配置文件 fe.conf
 
-## Examples
+## 示例
 
 1. 添加一个 FOLLOWER 节点
 

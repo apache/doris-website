@@ -40,7 +40,7 @@ SHOW STORAGE POLICY USING
 SHOW STORAGE POLICY USING [FOR some_policy]
 ```
 
-## 例子
+## 示例
 
 1. 查看所有启用了存储策略的对象
    ```sql

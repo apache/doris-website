@@ -45,7 +45,7 @@ DROP ENCRYPTKEY key_name
 
 执行此命令需要用户拥有 `ADMIN` 权限。
 
-## 例子
+## 示例
 
 1. 删除掉一个密钥
 

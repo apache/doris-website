@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-RESUME MATERIALIZED VIEW
 
 ## 描述
 
@@ -38,7 +35,7 @@ RESUME MATERIALIZED VIEW
 RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 ```
 
-## Examples
+## 示例
 
 1. 恢复物化视图 mv1 的定时调度
 

@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-SHOW CREATE ASYNC MATERIALIZED VIEW
 
 ## 描述
 
@@ -43,7 +40,7 @@ SHOW CREATE MATERIALIZED VIEW [DBNAME.]MV_NAME
 1. `DBNAMNE` : 数据库名称
 2. `MV_NAME` : 异步物化视图的名称
 
-## Examples
+## 示例
 
 1. 查看 mv1 的创建语句
 

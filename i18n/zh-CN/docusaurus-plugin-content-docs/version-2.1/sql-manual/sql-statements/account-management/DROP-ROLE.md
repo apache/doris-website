@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-ROLE",
+    "title": "DROP ROLE",
     "language": "zh-CN"
 }
 ---
@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-ROLE
 
-### Name
-
-DROP ROLE
 
 ## 描述
 
@@ -40,7 +36,7 @@ DROP ROLE
 
 删除角色不会影响以前属于角色的用户的权限。它仅相当于解耦来自用户的角色。用户从角色获得的权限不会改变
 
-## Examples
+## 示例
 
 1. 删除一个角色
 

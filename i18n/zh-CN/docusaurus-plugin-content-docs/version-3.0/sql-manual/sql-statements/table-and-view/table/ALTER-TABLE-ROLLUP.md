@@ -86,7 +86,7 @@ DROP ROLLUP [rollup_name [PROPERTIES ("key"="value", ...)],...]
 
 - 不能删除 base index
 
-## 例子
+## 示例
 
 1. 创建 index: example_rollup_index，基于 base index（k1,k2,k3,v1,v2）。列式存储。
 

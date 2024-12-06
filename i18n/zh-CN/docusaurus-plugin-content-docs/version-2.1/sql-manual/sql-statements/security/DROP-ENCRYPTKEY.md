@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-DROP ENCRYPTKEY
 
 ## 描述
 
@@ -46,7 +43,7 @@ DROP ENCRYPTKEY key_name
 
 执行此命令需要用户拥有 `ADMIN` 权限。
 
-## Examples
+## 示例
 
 1. 删除掉一个密钥
 

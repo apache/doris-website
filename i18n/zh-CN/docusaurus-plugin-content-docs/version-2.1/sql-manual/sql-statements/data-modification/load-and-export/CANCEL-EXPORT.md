@@ -24,17 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip 提示
-该功能自 Apache Doris  1.2.2 版本起支持
-:::
 
-## CANCEL-EXPORT
-
-### Name
-
-
-
-CANCEL EXPORT
 
 ## 描述
 
@@ -46,7 +36,7 @@ CANCEL EXPORT
 WHERE [LABEL = "export_label" | LABEL like "label_pattern" | STATE = "PENDING/IN_QUEUE/EXPORTING"]
 ```
 
-## Examples
+## 示例
 
 1. 撤销数据库 example_db 上，label 为 `example_db_test_export_label` 的 EXPORT 作业
 

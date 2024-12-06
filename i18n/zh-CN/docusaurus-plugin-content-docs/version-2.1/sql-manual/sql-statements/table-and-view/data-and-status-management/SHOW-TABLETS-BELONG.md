@@ -42,7 +42,7 @@ SHOW TABLETS BELONG tablet-ids;
 1. tablet-ids：代表一到多个 tablet-id 构成的列表。如有多个，使用逗号分隔
 2. 结果中 table 相关的信息和 `SHOW-DATA` 语句的口径一致
 
-### 例子
+### 示例
 
 1. 展示 3 个 tablet-id 的相关信息（tablet-id 可去重）
 

@@ -41,7 +41,7 @@ SHOW SYNC JOB
 SHOW SYNC JOB [FROM db_name]
 ```
 
-## 例子
+## 示例
 
 1. 展示当前数据库的所有数据同步作业状态。
 

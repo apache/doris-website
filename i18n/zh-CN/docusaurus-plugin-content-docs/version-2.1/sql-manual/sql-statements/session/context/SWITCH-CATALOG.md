@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SWITCH
-
-### Name
-SWITCH
-
 
 ## 描述
 
@@ -40,7 +35,7 @@ SWITCH
 SWITCH catalog_name
 ```
 
-## Examples
+## 示例
 
 1. 切换到数据目录 hive
 

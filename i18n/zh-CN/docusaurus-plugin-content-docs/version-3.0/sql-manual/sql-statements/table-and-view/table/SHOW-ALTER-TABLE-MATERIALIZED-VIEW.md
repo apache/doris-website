@@ -100,7 +100,7 @@ RollupIndexName: r1
 
 - `Timeout`：作业超时时间，单位秒。
 
-## 例子
+## 示例
 
 1. 查看数据库 example_db 下的物化视图作业
 

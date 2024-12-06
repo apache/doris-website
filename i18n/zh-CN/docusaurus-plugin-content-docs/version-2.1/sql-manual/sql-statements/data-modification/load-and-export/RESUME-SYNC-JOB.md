@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## RESUME-SYNC-JOB
 
-### Name
-
-RESUME SYNC JOB
 
 ## 描述
 
@@ -40,7 +36,7 @@ RESUME SYNC JOB
 RESUME SYNC JOB [db.]job_name
 ```
 
-## Examples
+## 示例
 
 1. 恢复名称为 `job_name` 的数据同步作业
 

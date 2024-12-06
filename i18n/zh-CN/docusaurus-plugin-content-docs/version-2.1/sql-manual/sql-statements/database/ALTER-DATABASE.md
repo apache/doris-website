@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
 
-ALTER DATABASE
 
 ## 描述
 
@@ -63,13 +61,13 @@ ALTER DATABASE db_name SET REPLICA QUOTA quota;
 ALTER DATABASE db_name SET PROPERTIES ("key"="value", ...); 
 ```
 
-## Examples
+## 示例
 
 1. 设置指定数据库数据量配额
 
     ```sql
     ALTER DATABASE example_db SET DATA QUOTA 10995116277760;
-    上述单位为字节,等价于
+    上述单位为字节，等价于
     ALTER DATABASE example_db SET DATA QUOTA 10T;
 
     ALTER DATABASE example_db SET DATA QUOTA 100G;

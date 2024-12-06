@@ -85,7 +85,7 @@ categories:
    sql-statements
 ```
 
-## 例子
+## 示例
 
 1. 列出 Doris 所有的 SQL 帮助目录
 

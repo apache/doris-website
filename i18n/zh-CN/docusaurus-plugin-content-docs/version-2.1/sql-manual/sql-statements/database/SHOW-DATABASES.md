@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
 
-SHOW DATABASES
 
 ## 描述
 
@@ -46,7 +44,7 @@ SHOW DATABASES [FROM catalog] [filter expr];
 4. `SHOW DATABASES FROM catalog filter_expr` 这种语法不支持。
 
 
-## Examples
+## 示例
 1. 展示当前所有的数据库名称。
 
 

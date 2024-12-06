@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## REFRESH-LDAP
 
-### Name
-
-
-
-REFRESH-LDAP
 
 
 
@@ -46,7 +40,7 @@ REFRESH LDAP ALL;
 REFRESH LDAP [for user_name];
 ```
 
-## Examples
+## 示例
 
 1. 刷新所有 LDAP 用户缓存信息
 

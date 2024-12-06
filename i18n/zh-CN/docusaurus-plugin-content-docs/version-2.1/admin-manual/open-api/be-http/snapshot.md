@@ -52,7 +52,7 @@ under the License.
     ```
     /path/to/snapshot
     ```
-## Examples
+## 示例
 
 
     ```shell

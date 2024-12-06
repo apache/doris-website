@@ -38,7 +38,7 @@ Description：描述
 Default Collation：默认校对名称
 Maxlen：最大字节长度
 
-## 例子
+## 示例
 
 ```sql
 mysql> show charset;

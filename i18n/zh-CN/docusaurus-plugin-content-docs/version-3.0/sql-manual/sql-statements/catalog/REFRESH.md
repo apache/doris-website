@@ -45,7 +45,7 @@ REFRESH TABLE [catalog_name.][database_name.]table_name;
 
 包括 Partition Cache、Schema Cache、File Cache 等。
 
-## 例子
+## 示例
 
 1. 刷新 hive catalog
 

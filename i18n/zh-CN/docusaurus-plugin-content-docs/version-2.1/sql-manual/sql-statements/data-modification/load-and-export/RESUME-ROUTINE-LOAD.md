@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## RESUME-ROUTINE-LOAD
 
-### Name
-
-RESUME ROUTINE LOAD
 
 ## 描述
 
@@ -38,7 +34,7 @@ RESUME ROUTINE LOAD
 RESUME [ALL] ROUTINE LOAD FOR job_name
 ```
 
-## Examples
+## 示例
 
 1. 重启名称为 test1 的例行导入作业。
 

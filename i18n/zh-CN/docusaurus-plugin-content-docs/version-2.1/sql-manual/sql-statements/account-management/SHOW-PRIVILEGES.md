@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-PRIVILEGES
-
-### Name
-
-SHOW PRIVILEGES
 
 ## 描述
 
@@ -40,7 +35,7 @@ SHOW PRIVILEGES
 SHOW PRIVILEGES
 ```
 
-## Examples
+## 示例
 
 1. 查看所有权限项
 

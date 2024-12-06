@@ -39,7 +39,7 @@ CLEAN PROFILE
 CLEAN ALL PROFILE;
 ```
 
-## 例子
+## 示例
 
 1. 清理所有 profile 信息。
 

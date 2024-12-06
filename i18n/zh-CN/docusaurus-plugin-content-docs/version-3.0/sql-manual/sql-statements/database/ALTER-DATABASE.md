@@ -62,7 +62,7 @@ ALTER DATABASE db_name SET REPLICA QUOTA quota;
 ALTER DATABASE db_name SET PROPERTIES ("key"="value", ...); 
 ```
 
-## 例子
+## 示例
 
 1. 设置指定数据库数据量配额
 

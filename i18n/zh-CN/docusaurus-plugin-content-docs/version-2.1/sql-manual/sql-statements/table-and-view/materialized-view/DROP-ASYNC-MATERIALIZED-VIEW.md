@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-DROP ASYNC MATERIALIZED VIEW
 
 ## 描述
 
@@ -45,7 +42,7 @@ DROP MATERIALIZED VIEW (IF EXISTS)? mvName=multipartIdentifier
 2. mv_name:
         待删除的物化视图的名称。必填项。
 
-## Examples
+## 示例
 
 1. 删除表物化视图 mv1
 

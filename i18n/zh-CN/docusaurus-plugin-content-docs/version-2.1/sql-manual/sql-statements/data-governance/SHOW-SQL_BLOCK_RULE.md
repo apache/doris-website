@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-### Name
 
-SHOW SQL BLOCK RULE
 
 ## 描述
 
@@ -39,7 +37,7 @@ SHOW SQL BLOCK RULE
 SHOW SQL_BLOCK_RULE [FOR RULE_NAME];
 ```
 
-## Examples
+## 示例
 
 1. 查看所有规则。
 

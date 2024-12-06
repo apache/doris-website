@@ -24,15 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
 
-## CLEAN-PROFILE
 
-### Name
-
-CLEAN PROFILE
 
 
 ## 描述
@@ -45,7 +38,7 @@ CLEAN PROFILE
 CLEAN ALL PROFILE;
 ```
 
-## Examples
+## 示例
 
 1. 清理所有 profile 信息。
 

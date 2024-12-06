@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-BACKUP
 
-### Name
-
-SHOW BACKUP
 
 ## 描述
 
@@ -67,7 +63,7 @@ SHOW BACKUP
             Timeout：作业超时时间，单位秒
 
 
-## Examples
+## 示例
 
 1. 查看 example_db 下最后一次 BACKUP 任务。
    

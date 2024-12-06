@@ -70,7 +70,7 @@ SHOW LOAD
     SHOW LOAD WARNINGS ON 'url'
     ```
 
-## 例子
+## 示例
 
 1. 展示默认 db 的所有导入任务
     

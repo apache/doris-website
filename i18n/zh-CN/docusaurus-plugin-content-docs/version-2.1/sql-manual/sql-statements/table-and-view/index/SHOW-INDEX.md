@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW INDEX
 
 ## 描述
 
@@ -43,7 +40,7 @@ SHOW INDEX[ES] FROM [db_name.]table_name [FROM database];
 SHOW KEY[S] FROM [db_name.]table_name [FROM database];
 ```
 
-## Examples
+## 示例
 
  1. 展示指定 table_name 的下索引
      

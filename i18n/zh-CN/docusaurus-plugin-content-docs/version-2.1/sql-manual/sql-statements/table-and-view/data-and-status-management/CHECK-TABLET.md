@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-ADMIN CHECK TABLET
 
 ## 描述
 
@@ -48,7 +46,7 @@ PROPERTIES("type" = "...");
 
     * consistency: 对 tablet 的副本数据一致性进行检查。该命令为异步命令，发送后，Doris 会开始执行对应 tablet 的一致性检查作业。最终的结果，将体现在 `SHOW PROC "/cluster_health/tablet_health";` 结果中的 InconsistentTabletNum 列。
 
-## Examples
+## 示例
 
 1. 对指定的一组 tablet 进行副本数据一致性检查
 

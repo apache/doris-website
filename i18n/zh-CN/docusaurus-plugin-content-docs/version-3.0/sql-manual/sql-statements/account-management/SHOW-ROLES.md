@@ -37,7 +37,7 @@ under the License.
 SHOW ROLES
 ```
 
-## 例子
+## 示例
 
 1. 查看已创建的角色
 

@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-COLUMNS
-
-### Name
-
-SHOW FULL COLUMNS
-
 ## 描述
 
 该语句用于指定表的列信息
@@ -40,7 +34,7 @@ SHOW FULL COLUMNS
 SHOW [FULL] COLUMNS FROM tbl;
 ```
 
-## Examples
+## 示例
 
 1. 查看指定表的列信息
 

@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-SHOW REPLICA DISTRIBUTION
 
 ## 描述
 
@@ -42,7 +39,7 @@ SHOW REPLICA DISTRIBUTION FROM [db_name.]tbl_name [PARTITION (p1, ...)];
 
 1. 结果中的 Graph 列以图形的形式展示副本分布比例
 
-## Examples
+## 示例
 
 1. 查看表的副本分布
 

@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SYNC
 
-### Name
-
-SYNC
 
 ## 描述
 
@@ -42,7 +38,7 @@ SYNC
 SYNC;
 ```
 
-## Examples
+## 示例
 
 1. 同步元数据
 

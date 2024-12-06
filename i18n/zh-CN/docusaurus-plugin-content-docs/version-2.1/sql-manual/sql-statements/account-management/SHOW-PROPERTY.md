@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-PROPERTY
 
-### Name
-
-SHOW PROPERTY
 
 ## 描述
 
@@ -95,7 +91,7 @@ mysql> show all properties like "%connection%";
 
   对应用户各个 property 的 key:value. 用户名。
 
-## Examples
+## 示例
 
 1. 查看 jack 用户的属性
 

@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER COLOCATE GROUP 
-
  
 
 ## 描述
@@ -55,7 +51,7 @@ SET (
 
 
 
-## Examples
+## 示例
 
 1. 修改一个全局 group 的副本数
 

@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW ALTER TABLE MATERIALIZED VIEW
-
-### Name
-
-SHOW ALTER TABLE MATERIALIZED VIEW
 
 ## 描述
 
@@ -72,7 +67,7 @@ RollupIndexName: r1
 1 row in set (0.00 sec)
 ```
 
-- `JobId`：作业唯一ID。
+- `JobId`：作业唯一 ID。
 
 - `TableName`：基表名称
 
@@ -90,7 +85,7 @@ RollupIndexName: r1
 
   - WAITING_TXN：
 
-    在正式开始产生物化视图数据前，会等待当前这个表上的正在运行的导入事务完成。而 `TransactionId` 字段就是当前正在等待的事务ID。当这个ID之前的导入都完成后，就会实际开始作业。
+    在正式开始产生物化视图数据前，会等待当前这个表上的正在运行的导入事务完成。而 `TransactionId` 字段就是当前正在等待的事务 ID。当这个 ID 之前的导入都完成后，就会实际开始作业。
 
   - RUNNING：作业运行中。
 
@@ -104,7 +99,7 @@ RollupIndexName: r1
 
 - `Timeout`：作业超时时间，单位秒。
 
-## Examples
+## 示例
 
 1. 查看数据库 example_db 下的物化视图作业
 

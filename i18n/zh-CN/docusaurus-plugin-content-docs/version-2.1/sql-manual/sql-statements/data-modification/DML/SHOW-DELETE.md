@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-DELETE
 
-### Name
-
-SHOW DELETE
 
 ## 描述
 
@@ -40,7 +36,7 @@ SHOW DELETE
 SHOW DELETE [FROM db_name]
 ```
 
-## Examples
+## 示例
 
  1. 展示数据库 database 的所有历史 delete 任务
     

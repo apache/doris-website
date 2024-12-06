@@ -44,7 +44,7 @@ ALTER SYSTEM DROP ALL BROKER broker_name
 ALTER SYSTEM DROP BROKER broker_name "host:port"[,"host:port"...];
 ```
 
-## 例子
+## 示例
 
 1. 删除所有 Broker
 

@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-PAUSE JOB
 
 ## 描述
 
@@ -41,7 +38,7 @@ PAUSE JOB
 PAUSE JOB WHERE jobname= 'jobname';
 ```
 
-## Examples
+## 示例
 
 1. 暂停名称为 example 的 JOB。
 

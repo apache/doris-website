@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
 
-DROP SQL BLOCK RULE
 
 ## 描述
 
@@ -38,7 +36,7 @@ DROP SQL BLOCK RULE
 DROP SQL_BLOCK_RULE test_rule1,...
 ```
 
-## Examples
+## 示例
 
 1. 删除 test_rule1、test_rule2 阻止规则
 

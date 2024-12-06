@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-LOAD
 
-### Name
-
-SHOW CREATE LOAD
 
 ## 描述
 
@@ -43,7 +39,7 @@ SHOW CREATE LOAD for load_name;
 说明：
           1.  `load_name`: 例行导入作业名称
 
-## Examples
+## 示例
 
 1. 展示默认 db 下指定导入作业的创建语句
 

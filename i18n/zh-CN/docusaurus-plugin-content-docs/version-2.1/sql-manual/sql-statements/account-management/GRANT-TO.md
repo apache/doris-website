@@ -95,7 +95,7 @@ user_identity：
 
 role_list 是需要赋予的角色列表，以逗号分隔，指定的角色必须存在。
 
-## Examples
+## 示例
 
 1. 授予所有 catalog 和库表的权限给用户
    

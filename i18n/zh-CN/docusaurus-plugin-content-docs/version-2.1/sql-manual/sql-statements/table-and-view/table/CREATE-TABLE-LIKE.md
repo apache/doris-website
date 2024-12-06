@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
 
-CREATE TABLE LIKE
 
 ## 描述
 
@@ -45,7 +43,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]ta
 - 支持复制 MySQL 等外表 
 - 支持复制 OLAP Table 的 rollup
 
-## Examples
+## 示例
 
 1. 在 test1 库下创建一张表结构和 table1 相同的空表，表名为 table2
 
@@ -55,7 +53,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]ta
     - 支持复制 MySQL 等外表 
     - 支持复制 OLAP Table 的 rollup
 
-## Examples
+## 示例
 
 
 1. 在 test1 库下创建一张表结构和 table1 相同的空表，表名为 table2

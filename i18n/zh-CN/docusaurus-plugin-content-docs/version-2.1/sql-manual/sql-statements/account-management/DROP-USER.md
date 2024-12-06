@@ -24,11 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-USER
 
-### Name
 
-DROP USER
 
 ## 描述
 
@@ -45,7 +42,7 @@ DROP USER
 
  删除指定的 user identity.
 
-## Examples
+## 示例
 
 1. 删除用户 jack@'192.%'
 

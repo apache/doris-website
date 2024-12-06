@@ -27,9 +27,6 @@ under the License.
 
 
 
-### Name
-
-SHOW DYNAMIC PARTITION TABLES
 
 ## 描述
 
@@ -52,7 +49,7 @@ SHOW DYNAMIC PARTITION TABLES
 SHOW DYNAMIC PARTITION TABLES [FROM db_name];
 ```
 
-## Examples
+## 示例
 
  1. 展示数据库 database 的所有动态分区表状态
     

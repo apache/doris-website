@@ -24,11 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-LAST-INSERT
 
-### Name
 
-SHOW LAST INSERT
 
 ## 描述
 
@@ -71,7 +68,7 @@ TransactionStatus: VISIBLE
 * LoadedRows：导入的行数
 * FilteredRows：被过滤的行数
 
-## Examples
+## 示例
 
 ## 关键词
 

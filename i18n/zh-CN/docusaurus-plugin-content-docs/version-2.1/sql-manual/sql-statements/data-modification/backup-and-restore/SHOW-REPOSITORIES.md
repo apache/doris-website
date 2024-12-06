@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-REPOSITORIES
-
-### Name 
-
-SHOW REPOSITORIES
 
 ## 描述
 
@@ -52,7 +47,7 @@ SHOW REPOSITORIES;
             Broker：依赖的 Broker
             ErrMsg：Doris 会定期检查仓库的连通性，如果出现问题，这里会显示错误信息
 
-## Examples
+## 示例
 
 1. 查看已创建的仓库：
 

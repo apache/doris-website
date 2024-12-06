@@ -26,13 +26,6 @@ under the License.
 
 
 
-### Name
-
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
-
-ALTER CATALOG
 
 
 
@@ -71,7 +64,7 @@ ALTER CATALOG catalog_name MODIFY COMMENT "new catalog comment";
 注意：
 - `internal` 是内置数据目录，不允许修改注释
 
-## Examples
+## 示例
 
 1. 将数据目录 ctlg_hive 重命名为 hive
 

@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-ALTER ASYNC MATERIALIZED VIEW
 
 ## 描述
 

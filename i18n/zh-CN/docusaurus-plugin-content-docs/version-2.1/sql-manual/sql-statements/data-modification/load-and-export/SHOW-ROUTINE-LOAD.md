@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-ROUTINE-LOAD
 
-### Name
-
-SHOW ROUTINE LOAD
 
 ## 描述
 
@@ -83,7 +79,7 @@ ReasonOfStateChanged: 作业状态变更的原因
   
     对于 Kafka 数据源，显示每个分区的消费延迟。如{"0":10} 表示 Kafka 分区 0 的消费延迟为 10。
 
-## Examples
+## 示例
 
 1. 展示名称为 test1 的所有例行导入作业（包括已停止或取消的作业）。结果为一行或多行。
 

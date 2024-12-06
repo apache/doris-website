@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-DROP WORKLOAD GROUP
 
 ## 描述
 
@@ -40,7 +37,7 @@ DROP WORKLOAD GROUP
 DROP WORKLOAD GROUP [IF EXISTS] 'rg_name'
 ```
 
-## Examples
+## 示例
 
 1. 删除名为 g1 的资源组：
     

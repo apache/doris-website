@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## BROKER-LOAD
 
-### Name
-
-BROKER LOAD
 
 ## 描述
 
@@ -219,7 +215,7 @@ WITH BROKER broker_name
   该功能自 Apache Doris  1.2.3 版本起支持
 
 
-## Examples
+## 示例
 
 1. 从 HDFS 导入一批数据
 

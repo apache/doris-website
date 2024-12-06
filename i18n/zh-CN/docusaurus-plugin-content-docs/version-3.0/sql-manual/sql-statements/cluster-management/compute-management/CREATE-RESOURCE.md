@@ -47,7 +47,7 @@ PROPERTIES ("key"="value", ...);
 - PROPERTIES 中需要指定资源的类型 "type" = "[spark|odbc_catalog|s3|jdbc|hdfs|hms|es]"。
 - 根据资源类型的不同 PROPERTIES 有所不同，具体见示例。
 
-## 例子
+## 示例
 
 1. 创建 yarn cluster 模式，名为 spark0 的 Spark 资源。
 

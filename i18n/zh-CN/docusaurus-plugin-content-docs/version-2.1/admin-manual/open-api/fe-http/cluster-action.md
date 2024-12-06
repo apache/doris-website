@@ -68,7 +68,7 @@ under the License.
 }
 ```
     
-### Examples
+### 示例
 ```
 GET /rest/v2/manager/cluster/cluster_info/conn_info
 

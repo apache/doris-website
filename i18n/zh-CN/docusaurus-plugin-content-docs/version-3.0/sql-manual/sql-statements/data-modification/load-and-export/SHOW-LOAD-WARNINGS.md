@@ -50,7 +50,7 @@ SHOW LOAD WARNINGS
 2. 如果使用 LABEL = ，则精确匹配指定的 label
 3. 如果指定了 LOAD_JOB_ID，则精确匹配指定的 JOB ID
 
-## 例子
+## 示例
 
 1. 展示指定 db 的导入任务中存在质量问题的数据，指定 label 为 "load_demo_20210112" 
 

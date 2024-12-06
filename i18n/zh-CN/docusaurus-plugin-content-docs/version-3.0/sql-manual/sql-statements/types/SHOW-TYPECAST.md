@@ -41,7 +41,7 @@ SHOW TYPE_CAST [IN|FROM db]
 
 `db`: database name to query
 
-## 例子
+## 示例
 
 ```sql
 mysql> show type_cast in testDb\G

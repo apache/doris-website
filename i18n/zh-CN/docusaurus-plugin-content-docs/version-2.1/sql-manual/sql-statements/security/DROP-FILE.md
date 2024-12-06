@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-DROP FILE
 
 ## 描述
 
@@ -48,7 +46,7 @@ DROP FILE "file_name" [FROM database]
 - properties 支持以下参数：
   - `catalog`: 必须。文件所属分类。
 
-## Examples
+## 示例
 
 1. 删除文件 ca.pem
 

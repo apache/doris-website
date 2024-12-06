@@ -41,7 +41,7 @@ CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING I
 注意：
 - 倒排索引仅在单列上创建
 
-## 例子
+## 示例
 
 1. 在 table1 上为 siteid 创建倒排索引
 

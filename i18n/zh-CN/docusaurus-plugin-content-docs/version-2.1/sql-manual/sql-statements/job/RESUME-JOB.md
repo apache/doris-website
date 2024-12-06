@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-RESUME JOB
 
 ## 描述
 
@@ -36,7 +33,7 @@ RESUME JOB
 RESUME JOB where jobName = jobName;
 ```
 
-## Examples
+## 示例
 
 1. 恢复运行名称为 example 的 JOB。
 

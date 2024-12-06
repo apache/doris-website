@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-SHOW TABLET
 
 ## 描述
 
@@ -39,7 +36,7 @@ SHOW TABLET
 SHOW TABLET tablet_id
 ```
 
-## Examples
+## 示例
 
 1.  显示指定 tablet id 为 10000 的 tablet 的父层级 id 信息
 

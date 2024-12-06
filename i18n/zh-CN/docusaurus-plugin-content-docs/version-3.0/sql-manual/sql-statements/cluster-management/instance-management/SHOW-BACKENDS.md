@@ -55,7 +55,7 @@ SHOW BACKENDS
        13. HeartbeatFailureCounter：现在当前连续失败的心跳次数，如果次数超过 `max_backend_heartbeat_failure_tolerance_count` 配置，则 isAlive 字段会置为 false。
        14. NodeRole 用于展示节点角色，现在有两种类型：Mix 代表原来的节点类型，computation 代表只做计算的节点类型。
 
-## 例子
+## 示例
 
 ## 关键词
 

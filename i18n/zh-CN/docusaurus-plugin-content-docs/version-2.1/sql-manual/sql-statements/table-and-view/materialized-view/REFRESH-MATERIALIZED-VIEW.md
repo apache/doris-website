@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-REFRESH MATERIALIZED VIEW
 
 ## 描述
 
@@ -46,7 +43,7 @@ REFRESH MATERIALIZED VIEW mvName=multipartIdentifier (partitionSpec | COMPLETE |
 - COMPLETE：会强制刷新物化视图的所有分区，不会判断分区是否和基表同步
 - partitionSpec：会强制刷新指定的分区，不会判断分区是否和基表同步
 
-## Examples
+## 示例
 
 
 1. 刷新物化视图 mv1(自动计算要刷新的分区)

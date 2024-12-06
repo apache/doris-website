@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-ALTER ROLE
 
 ## 描述
 
@@ -38,7 +36,7 @@ ALTER ROLE
  ALTER ROLE role_name comment;
 ```
 
-## Examples
+## 示例
 
 1. 修改一个角色的注释
 

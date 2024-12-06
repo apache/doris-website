@@ -26,13 +26,6 @@ under the License.
 
 
 
-## UNSET-VARIABLE
-
-
-
-### Name
-
-UNSET VARIABLE
 
 ## 描述
 
@@ -54,7 +47,7 @@ UNSET [SESSION|GLOBAL] VARIABLE (variable_name | ALL)
 > 2. 使用 `GLOBAL` 恢复变量值时仅在执行命令的当前会话和之后打开的会话中生效，不会恢复当前已有的其它会话中的值。
 
 
-## Examples
+## 示例
 
 1. 恢复时区为默认值东八区
 

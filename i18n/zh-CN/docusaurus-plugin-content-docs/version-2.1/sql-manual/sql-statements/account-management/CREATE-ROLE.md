@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-ROLE",
+    "title": "CREATE ROLE",
     "language": "zh-CN"
 }
 ---
@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE ROLE
 
-### Name
 
 CREATE ROLE
 
@@ -40,7 +38,7 @@ CREATE ROLE
 
 该语句创建一个无权限的角色，可以后续通过 GRANT 命令赋予该角色权限。
 
-## Examples
+## 示例
 
 1. 创建一个角色
 

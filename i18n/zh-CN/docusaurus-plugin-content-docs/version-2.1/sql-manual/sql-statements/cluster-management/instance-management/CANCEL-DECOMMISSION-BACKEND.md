@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CANCEL-ALTER-SYSTEM
 
-### Name
-
-CANCEL DECOMMISSION
 
 ## 描述
 
@@ -48,7 +44,7 @@ CANCEL DECOMMISSION BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...];
 CANCEL DECOMMISSION BACKEND "id1","id2","id3...";
 ```
 
-## Examples
+## 示例
 
  1. 取消两个节点的下线操作：
     

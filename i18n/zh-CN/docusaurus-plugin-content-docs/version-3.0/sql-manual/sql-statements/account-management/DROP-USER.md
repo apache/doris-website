@@ -42,7 +42,7 @@ under the License.
 
  删除指定的 user identity.
 
-## 例子
+## 示例
 
 1. 删除用户 jack@'192.%'
 

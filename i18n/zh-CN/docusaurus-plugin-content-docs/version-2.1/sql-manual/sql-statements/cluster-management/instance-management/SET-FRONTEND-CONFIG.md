@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-ADMIN SET CONFIG
 
 ## 描述
 
@@ -51,7 +49,7 @@ ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
 
 :::
 
-## Examples
+## 示例
 
 1. 设置 `disable_balance` 为 true
 

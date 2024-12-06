@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-RECOVER
 
 ## 描述
 
@@ -100,7 +97,7 @@ RECOVER
 - 该操作仅能恢复之前一段时间内删除的元信息。默认为 1 天。（可通过 fe.conf 中`catalog_trash_expire_second`参数配置）
 - 可以通过 `SHOW CATALOG RECYCLE BIN` 来查询当前可恢复的元信息。
 
-## Examples
+## 示例
 
 1. 恢复名为 example_db 的 database
 

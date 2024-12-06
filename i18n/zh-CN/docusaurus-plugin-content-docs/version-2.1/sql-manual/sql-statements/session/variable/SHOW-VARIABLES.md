@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-VARIABLES
-
-### Name
-
-SHOW VARIABLES
 
 ## 描述
 
@@ -48,7 +43,7 @@ SHOW [GLOBAL | SESSION] VARIABLES
 - 使用 like 语句表示用 variable_name 进行匹配。
 - %百分号通配符可以用在匹配模式中的任何位置
 
-## Examples
+## 示例
 
 1. 这里默认的就是对 Variable_name 进行匹配，这里是准确匹配
 

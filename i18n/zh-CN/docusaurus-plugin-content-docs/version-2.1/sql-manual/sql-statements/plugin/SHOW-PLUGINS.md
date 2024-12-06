@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-SHOW PLUGINS
 
 ## 描述
 
@@ -40,7 +37,7 @@ SHOW PLUGINS
 
 该命令会展示所有用户安装的和系统内置的插件
 
-## Examples
+## 示例
 
 1. 展示已安装的插件：
 

@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-SHOW CREATE MATERIALIZED VIEW
 
 ## 描述
 
@@ -44,7 +41,7 @@ SHOW CREATE MATERIALIZED VIEW mv_name ON table_name
 2. table_name:
         物化视图所属的表名。必填项。
 
-## Examples
+## 示例
 
 创建物化视图的语句为
 

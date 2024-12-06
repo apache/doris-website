@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
 
-SHOW VIEW
 
 ## 描述
 
@@ -38,7 +36,7 @@ SHOW VIEW
  SHOW VIEW { FROM | IN } table [ FROM db ]
 ```
 
-## Examples
+## 示例
 
 1. 展示基于表 testTbl 建立的所有视图 view
     

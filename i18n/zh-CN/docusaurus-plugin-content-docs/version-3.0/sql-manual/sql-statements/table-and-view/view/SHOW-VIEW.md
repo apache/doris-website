@@ -34,7 +34,7 @@ under the License.
  SHOW VIEW { FROM | IN } table [ FROM db ]
 ```
 
-## 例子
+## 示例
 
 1. 展示基于表 testTbl 建立的所有视图 view
     

@@ -35,7 +35,7 @@ under the License.
 SHOW DATABASE [database_id]
 ```
 
-### 例子
+### 示例
 
 1. 根据 database id 查找对应的 database name
    

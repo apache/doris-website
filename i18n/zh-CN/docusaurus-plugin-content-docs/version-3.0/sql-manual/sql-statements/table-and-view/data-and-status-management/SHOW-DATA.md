@@ -54,7 +54,7 @@ SHOW DATA [FROM [db_name.]table_name] [ORDER BY ...];
 
 6. 可以使用 ORDER BY 对任意列组合进行排序。
 
-## 例子
+## 示例
 
 1. 默认展示各个 db 的汇总数据量，RecycleBin 中的数据量
 

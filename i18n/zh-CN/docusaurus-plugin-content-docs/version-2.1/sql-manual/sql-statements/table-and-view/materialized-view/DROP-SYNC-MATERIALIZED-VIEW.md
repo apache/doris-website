@@ -25,9 +25,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-DROP MATERIALIZED VIEW
 
 ## 描述
 
@@ -49,7 +46,7 @@ DROP MATERIALIZED VIEW [IF EXISTS] mv_name ON table_name;
 3. table_name:
         待删除的物化视图所属的表名。必填项。
 
-## Examples
+## 示例
 
 表结构为
 

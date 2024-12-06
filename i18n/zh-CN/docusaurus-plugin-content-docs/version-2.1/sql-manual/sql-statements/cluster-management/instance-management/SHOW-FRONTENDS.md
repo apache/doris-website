@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-SHOW FRONTENDS
 
 ## 描述
 
@@ -48,7 +45,7 @@ SHOW FRONTENDS;
 7. ErrMsg 用于显示心跳失败时的错误信息。
 8. CurrentConnected 表示是否是当前连接的 FE 节点
 
-## Examples
+## 示例
 
 ## 关键词
 

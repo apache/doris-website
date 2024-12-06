@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-SHOW ENCRYPTKEYS
 
 ## 描述
 
@@ -47,7 +45,7 @@ SHOW ENCRYPTKEYS [IN|FROM db] [LIKE 'key_pattern']
 >`db`: 要查询的数据库名字
 >`key_pattern`: 用来过滤密钥名称的参数
 
-## Examples
+## 示例
 
  ```sql
     mysql> SHOW ENCRYPTKEYS;

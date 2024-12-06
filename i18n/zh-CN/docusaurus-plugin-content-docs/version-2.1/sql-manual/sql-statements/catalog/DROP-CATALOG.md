@@ -27,9 +27,7 @@ under the License.
 
 
 
-### Name
 
-DROP CATALOG
 
 
 ## 描述
@@ -42,7 +40,7 @@ DROP CATALOG
 DROP CATALOG [IF EXISTS] catalog_name;
 ```
 
-## Examples
+## 示例
 
 1. 删除数据目录 hive
 

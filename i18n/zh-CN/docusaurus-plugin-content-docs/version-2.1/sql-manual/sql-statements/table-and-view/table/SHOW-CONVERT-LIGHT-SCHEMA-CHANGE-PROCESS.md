@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS
 
 ## 描述
 
@@ -39,7 +36,7 @@ SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS
 SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [FROM db]
 ```
 
-## Examples
+## 示例
 
 1. 查看在 database test 上的转换情况
 

@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE TABLE AS SELECT
 
 ## 描述
 
@@ -59,7 +56,7 @@ CREATE TABLE table_name [( column_name_list )]
 
 
 
-## Examples
+## 示例
 
 1. 使用 select 语句中的字段名
 

@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Name
-
-ALTER TABLE COLUMN
 
 ## 描述
 

@@ -89,7 +89,7 @@ hdfs(
 直接查询 TVF 或基于该 TVF 创建 View ，需要拥有该 Resource 的 USAGE 权限，查询基于 TVF 创建的 View ，只需要该 View 的 SELECT 权限
 :::
 
-### Examples
+### 示例
 
 读取并访问 HDFS 存储上的 CSV 格式文件
 ```sql

@@ -36,7 +36,7 @@ under the License.
 SHOW PRIVILEGES
 ```
 
-## 例子
+## 示例
 
 1. 查看所有权限项
 

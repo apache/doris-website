@@ -24,19 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DESCRIBE
-
-### Name
-
-DESCRIBE
->>>>>>> ca53887c1ec (2.1/3.0 CN)
-=======
-
-
-### Name
-
-DESC TABLE
-
 
 ## 描述
 
@@ -52,7 +39,7 @@ DESC[RIBE] [db_name.]table_name [ALL];
 
 1. 如果指定 ALL，则显示该 table 的所有 index(rollup) 的 schema
 
-## Examples
+## 示例
 
 
 1. 显示 Base 表 Schema

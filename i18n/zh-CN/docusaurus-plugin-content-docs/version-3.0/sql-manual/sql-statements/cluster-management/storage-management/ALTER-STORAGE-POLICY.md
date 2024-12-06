@@ -39,7 +39,7 @@ ALTER STORAGE POLICY  'policy_name'
 PROPERTIES ("key"="value", ...);
 ```
 
-## 例子
+## 示例
 
 1. 修改名为 cooldown_datetime 冷热分层数据迁移时间点：
 ```sql

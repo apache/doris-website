@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-GRANTS
 
-### Name
-
-SHOW GRANTS
 
 ## 描述
 
@@ -46,7 +42,7 @@ SHOW [ALL] GRANTS [FOR user_identity];
 2. 如果指定 user_identity，则查看该指定用户的权限。且该 user_identity 必须为通过 CREATE USER 命令创建的。
 3. 如果不指定 user_identity，则查看当前用户的权限。
 
-## Examples
+## 示例
 
 1. 查看所有用户权限信息
 

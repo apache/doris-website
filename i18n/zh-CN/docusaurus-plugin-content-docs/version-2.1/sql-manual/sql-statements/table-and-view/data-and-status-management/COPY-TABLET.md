@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-ADMIN COPY TABLET
 
 ## 描述
 
@@ -79,7 +77,7 @@ PROPERTIES (
 * ExpirationMinutes: 快照过期时间
 * CreateTableStmt: tablet 对应的表的建表语句。该语句不是原始的建表语句，而是用于之后本地加载 tablet 的简化后的建表语句。
 
-## Examples
+## 示例
 
 1. 对指定 BE 节点上的副本做快照
 

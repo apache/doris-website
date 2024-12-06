@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-REPOSITORY
 
-### Name
-
-SHOW CREATE REPOSITORY
 
 ## 描述
 
@@ -44,7 +40,7 @@ SHOW CREATE REPOSITORY for repository_name;
 说明：
 - `repository_name`: 仓库名称
 
-## Examples
+## 示例
 
 1. 展示指定仓库的创建语句
 

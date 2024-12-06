@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-CANCEL MATERIALIZED VIEW TASK
 
 ## 描述
 
@@ -39,7 +36,7 @@ CANCEL MATERIALIZED VIEW TASK
 CANCEL MATERIALIZED VIEW TASK taskId=INTEGER_VALUE ON mvName=multipartIdentifier
 ```
 
-## Examples
+## 示例
 
 1. 取消物化视图 mv1 的 id 为 1 的 task
 

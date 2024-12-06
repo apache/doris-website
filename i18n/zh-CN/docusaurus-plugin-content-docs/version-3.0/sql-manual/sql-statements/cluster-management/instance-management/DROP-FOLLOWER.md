@@ -47,7 +47,7 @@ ALTER SYSTEM DROP FOLLOWER "follower_host:edit_log_port"
 
 2. edit_log_port : edit_log_port 在其配置文件 fe.conf
 
-## Example
+## 示例
 
 1. 删除一个 FOLLOWER 节点
 

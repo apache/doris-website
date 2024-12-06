@@ -38,7 +38,7 @@ RESUME JOB
 RESUME JOB where jobName = jobName;
 ```
 
-## 例子
+## 示例
 
 1. 恢复运行名称为 example 的 JOB。
 

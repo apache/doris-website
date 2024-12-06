@@ -44,7 +44,7 @@ SHOW [TEMPORARY] PARTITIONS FROM [db_name.]table_name [WHERE] [ORDER BY] [LIMIT]
 对于 Hive Catalog：
 支持返回所有分区，包括多级分区
 
-## 例子
+## 示例
 
 1. 展示指定 db 下指定表的所有非临时分区信息
 

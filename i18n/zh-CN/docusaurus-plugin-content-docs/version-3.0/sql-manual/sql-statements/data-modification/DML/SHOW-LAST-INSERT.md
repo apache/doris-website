@@ -67,7 +67,7 @@ TransactionStatus: VISIBLE
 * LoadedRows：导入的行数
 * FilteredRows：被过滤的行数
 
-## 例子
+## 示例
 
 ## 关键词
 

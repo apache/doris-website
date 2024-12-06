@@ -46,7 +46,7 @@ SHOW [ALL] CREATE ROUTINE LOAD for load_name;
           1. `ALL`: 可选参数，代表获取所有作业，包括历史作业
           2.  `load_name`: 例行导入作业名称
 
-## 例子
+## 示例
 
 1. 展示默认 db 下指定例行导入作业的创建语句
 

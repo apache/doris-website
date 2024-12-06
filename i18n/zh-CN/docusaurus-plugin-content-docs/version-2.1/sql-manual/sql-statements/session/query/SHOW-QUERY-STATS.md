@@ -24,12 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-QUERY-STATS
 
-
-### Name
-
-SHOW QUERY STATS
 
 
 ## 描述
@@ -50,7 +45,7 @@ SHOW QUERY STATS [[FOR db_name]|[FROM table_name]] [ALL] [VERBOSE]];
 5. 命中结果中可能有两列：
    QueryCount：该列被查询次数
    FilterCount: 该列作为 where 条件被查询的次数
-## Examples
+## 示例
 
 1. 展示表`baseall` 的查询命中情况
 

@@ -40,7 +40,7 @@ DROP SQL BLOCK RULE
 DROP SQL_BLOCK_RULE test_rule1,...
 ```
 
-## 例子
+## 示例
 
 1. 删除 test_rule1、test_rule2 阻止规则
 

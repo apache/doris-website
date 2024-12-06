@@ -52,7 +52,7 @@ SHOW REPLICA STATUS FROM [db_name.]tbl_name [PARTITION (p1, ...)]
             SCHEMA_ERROR:   replica 的 schema hash 不正确
             MISSING:                 replica 不存在
 
-## 例子
+## 示例
 
 1. 查看表全部的副本状态
 

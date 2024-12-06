@@ -35,7 +35,7 @@ under the License.
 SHOW PARTITION [partition_id]
 ```
 
-## 例子
+## 示例
 
 1. 根据 partition id 查找对应的 database name, table name, partition name
 

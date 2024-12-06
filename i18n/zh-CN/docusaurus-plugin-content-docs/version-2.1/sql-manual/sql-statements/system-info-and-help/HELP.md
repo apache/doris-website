@@ -24,10 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-HELP
-
 ## 描述
 
 通过改命令可以查询到帮助的目录
@@ -83,7 +79,7 @@ categories:
    sql-statements
 ```
 
-## Examples
+## 示例
 
 1. 列出 Doris 所有的 SQL 帮助目录
 

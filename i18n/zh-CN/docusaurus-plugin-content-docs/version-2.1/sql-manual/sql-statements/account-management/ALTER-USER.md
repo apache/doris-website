@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER USER
 
-### Name
-
-ALTER USER
 
 ## 描述
 
@@ -67,7 +63,7 @@ password_policy:
 4. 修改 `FAILED_LOGIN_ATTEMPTS` 和 `PASSWORD_LOCK_TIME`
 5. 解锁用户
 
-## Examples
+## 示例
 
 1. 修改用户的密码
 

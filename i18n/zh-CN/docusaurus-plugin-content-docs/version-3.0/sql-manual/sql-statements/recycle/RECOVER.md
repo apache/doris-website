@@ -98,7 +98,7 @@ RECOVER
 - 如果恢复元信息时没有指定 id，则默认恢复最后一个删除的同名元数据。
 - 可以通过 `SHOW CATALOG RECYCLE BIN` 来查询当前可恢复的元信息。
 
-## 例子
+## 示例
 
 1. 恢复名为 example_db 的 database
 

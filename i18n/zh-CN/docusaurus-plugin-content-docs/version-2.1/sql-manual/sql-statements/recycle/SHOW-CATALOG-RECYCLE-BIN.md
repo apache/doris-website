@@ -28,13 +28,6 @@ under the License.
 
 
 
-### Name
-
-
-
-SHOW CATALOG RECYCLE BIN
-
-
 
 ## 描述
 
@@ -61,7 +54,7 @@ SHOW CATALOG RECYCLE BIN [ WHERE NAME [ = "name" | LIKE "name_matcher"] ]
 ```
 
 
-## Examples
+## 示例
 
  1. 展示所有回收站元数据
     

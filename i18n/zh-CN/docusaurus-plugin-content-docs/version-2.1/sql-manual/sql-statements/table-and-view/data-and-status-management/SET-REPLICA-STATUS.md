@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-SET-REPLICA-STATUS
 
-### Name
-
-ADMIN SET REPLICA STATUS
 
 ## 描述
 
@@ -57,7 +53,7 @@ ADMIN SET REPLICA STATUS
 >
 >  设置为 Drop 状态的副本，它仍然可以读写。会在其他机器先增加一个健康副本，再删除该副本。相比设置 Bad，设置 Drop 的操作是安全的。
 
-## Examples
+## 示例
 
  1. 设置 tablet 10003 在 BE 10001 上的副本状态为 bad。
 

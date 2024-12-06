@@ -40,7 +40,7 @@ CLEAN LABEL
 CLEAN LABEL [label] FROM db;
 ```
 
-## 例子
+## 示例
 
 1. 清理 db1 中，Label 为 label1 的导入作业。
 

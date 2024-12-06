@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-### Name
 
-SHOW WORKLOAD GROUPS
 
 ## 描述
 
@@ -45,7 +43,7 @@ SHOW WORKLOAD GROUPS [LIKE "pattern"];
 
 该语句仅做资源组简单展示，更复杂的展示可参考 tvf workload_groups().
 
-## Examples
+## 示例
 
 1. 展示所有资源组：
     

@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
 
-DROP FUNCTION
 
 ## 描述
 
@@ -44,7 +42,7 @@ DROP [GLOBAL] FUNCTION function_name
 - `function_name`: 要删除函数的名字
 - `arg_type`: 要删除函数的参数列表
 
-## Examples
+## 示例
 
 1. 删除掉一个函数
 

@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-RESTORE
 
-### Name
-
-SHOW RESTORE
 
 ## 描述
 
@@ -74,7 +70,7 @@ SHOW [BRIEF] RESTORE [FROM DB_NAME]
 
 
 
-## Examples
+## 示例
 
 1. 查看 example_db 下最近一次 RESTORE 任务。
     

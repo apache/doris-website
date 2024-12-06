@@ -38,7 +38,7 @@ RESUME ROUTINE LOAD
 RESUME [ALL] ROUTINE LOAD FOR job_name
 ```
 
-## 例子
+## 示例
 
 1. 重启名称为 test1 的例行导入作业。
 

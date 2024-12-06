@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-ALTER STORAGE POLICY
 
 ## 描述
 
@@ -38,7 +35,7 @@ ALTER STORAGE POLICY  'policy_name'
 PROPERTIES ("key"="value", ...);
 ```
 
-## Examples
+## 示例
 
 1. 修改名为 cooldown_datetime 冷热分层数据迁移时间点：
 

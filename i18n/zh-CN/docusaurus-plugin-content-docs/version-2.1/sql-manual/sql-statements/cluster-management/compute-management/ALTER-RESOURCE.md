@@ -27,9 +27,6 @@ under the License.
 
 
 
-### Name
-
-ALTER RESOURCE
 
 ## 描述
 
@@ -41,7 +38,7 @@ PROPERTIES ("key"="value", ...);
 ```
 注意：resource type 不支持修改。
 
-## Examples
+## 示例
 
 1. 修改名为 spark0 的 Spark 资源的工作目录：
 ```sql

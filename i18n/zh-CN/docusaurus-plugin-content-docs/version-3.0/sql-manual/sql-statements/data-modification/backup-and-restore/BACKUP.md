@@ -59,7 +59,7 @@ PROPERTIES ("key"="value", ...);
   -  "type" = "full"：表示这是一次全量更新（默认）
   - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。          
 
-## 例子
+## 示例
 
 1. 全量备份 example_db 下的表 example_tbl 到仓库 example_repo 中：
 

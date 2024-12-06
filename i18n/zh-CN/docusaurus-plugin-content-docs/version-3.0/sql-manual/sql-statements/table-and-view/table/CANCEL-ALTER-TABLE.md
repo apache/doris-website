@@ -69,7 +69,7 @@ FROM db_name.table_name (jobid,...)
 （待实现...）
 ```
 
-## 例子
+## 示例
 
 1. 撤销针对 my_table 的 ALTER COLUMN 操作。
 

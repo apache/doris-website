@@ -55,7 +55,7 @@ SHOW STREAM LOAD
 6.  如果指定了 LIMIT，则显示 limit 条匹配记录。否则全部显示
 7.  如果指定了 OFFSET，则从偏移量 offset 开始显示查询结果。默认情况下偏移量为 0。
 
-## 例子
+## 示例
 
 1. 展示默认 db 的所有 Stream Load 任务
    

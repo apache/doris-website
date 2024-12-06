@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-### Name
 
-SHOW DATA TYPES
 
 ## 描述
 
@@ -39,7 +37,7 @@ SHOW DATA TYPES
 SHOW DATA TYPES;
 ```
 
-## Examples
+## 示例
 
 1. 查看 Doris 支持的所有数据类型
 

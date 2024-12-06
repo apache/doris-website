@@ -47,7 +47,7 @@ SHOW FRONTENDS DISKS;
 9. UseRate 文件系统使用容量占比。
 10. MountOn 文件系统挂在目录。
 
-## 例子
+## 示例
 
 ```sql
 mysql> show frontends disks; 

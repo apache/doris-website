@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
 
-CREATE FILE
 
 ## 描述
 
@@ -55,7 +53,7 @@ PROPERTIES("key"="value", ...)
     - catalog：必须。对文件的分类名，可以自定义。但在某些命令中，会查找指定 catalog 中的文件。比如例行导入中的，数据源为 kafka 时，会查找 catalog 名为 kafka 下的文件。
     - md5: 可选。文件的 md5。如果指定，会在下载文件后进行校验。
 
-## Examples
+## 示例
 
 1. 创建文件 ca.pem，分类为 kafka
 

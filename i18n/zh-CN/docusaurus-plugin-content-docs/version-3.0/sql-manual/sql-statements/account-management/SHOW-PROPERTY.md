@@ -88,7 +88,7 @@ mysql> show all properties like "%connection%";
 
   对应用户各个 property 的 key:value.
 
-## 例子
+## 示例
 
 1. 查看 jack 用户的属性
 

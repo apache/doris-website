@@ -28,12 +28,6 @@ under the License.
 
 
 
-### Name
-
-
-SHOW CATALOGS
-
-
 
 ## 描述
 
@@ -56,7 +50,7 @@ LIKE：可按照 CATALOG 名进行模糊查询
 * Type：数据目录类型。
 * IsCurrent: 是否为当前正在使用的数据目录。
 
-## Examples
+## 示例
 
 1. 查看当前已创建的数据目录
 

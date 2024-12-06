@@ -40,7 +40,7 @@ PAUSE JOB
 PAUSE JOB WHERE jobname= 'jobname';
 ```
 
-## 例子
+## 示例
 
 1. 暂停名称为 example 的 JOB。
 

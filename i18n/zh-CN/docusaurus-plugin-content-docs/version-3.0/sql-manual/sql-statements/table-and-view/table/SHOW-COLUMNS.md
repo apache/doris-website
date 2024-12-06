@@ -35,7 +35,7 @@ under the License.
 SHOW [FULL] COLUMNS FROM tbl;
 ```
 
-## 例子
+## 示例
 
 1. 查看指定表的列信息
 

@@ -48,7 +48,7 @@ CANCEL DECOMMISSION BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...];
 CANCEL DECOMMISSION BACKEND "id1","id2","id3...";
 ```
 
-## 例子
+## 示例
 
  1. 取消两个节点的下线操作：
     

@@ -50,7 +50,7 @@ SHOW SNAPSHOT ON `repo_name`
             Database：备份数据原属的数据库名称
             Details：以 Json 的形式，展示整个备份的数据目录及文件结构
 
-## 例子
+## 示例
 
 1. 查看仓库 example_repo 中已有的备份
     

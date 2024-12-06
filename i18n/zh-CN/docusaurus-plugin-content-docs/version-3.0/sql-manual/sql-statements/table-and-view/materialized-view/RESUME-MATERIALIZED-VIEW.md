@@ -36,7 +36,7 @@ under the License.
 RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 ```
 
-## 例子
+## 示例
 
 1. 恢复物化视图 mv1 的定时调度
 

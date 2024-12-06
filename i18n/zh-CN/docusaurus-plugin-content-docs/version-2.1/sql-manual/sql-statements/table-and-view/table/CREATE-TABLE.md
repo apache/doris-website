@@ -479,7 +479,7 @@ UNIQUE KEY(k1, k2)
     动态分区相关参考[数据划分 - 动态分区](../../../../table-design/data-partitioning/dynamic-partitioning)
 
 
-## Examples
+## 示例
 
 1. 创建一个明细模型的表
 

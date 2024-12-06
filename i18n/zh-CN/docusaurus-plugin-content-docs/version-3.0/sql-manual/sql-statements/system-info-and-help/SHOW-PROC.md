@@ -109,7 +109,7 @@ mysql> show proc "/";
 23. transactions：用于查看指定 transaction id 的事务详情，等同于 [SHOW TRANSACTION](./SHOW-TRANSACTION.md)
 24. trash：该语句用于查看 backend 内的垃圾数据占用空间。等同于 [SHOW TRASH](./SHOW-TRASH.md)
 
-## 例子
+## 示例
 
 1. 如 "/dbs" 展示所有数据库，而 "/dbs/10002" 展示 id 为 10002 的数据库下的所有表
 

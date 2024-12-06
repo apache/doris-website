@@ -39,7 +39,7 @@ DESC[RIBE] [db_name.]table_name [ALL];
 
 1. 如果指定 ALL，则显示该 table 的所有 index(rollup) 的 schema
 
-## 例子
+## 示例
 
 1. 显示 Base 表 Schema
 

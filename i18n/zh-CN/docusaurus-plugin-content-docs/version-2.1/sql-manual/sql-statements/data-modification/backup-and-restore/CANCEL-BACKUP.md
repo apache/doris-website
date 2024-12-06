@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CANCEL-BACKUP
 
-### Name 
-
-CANCEL  BACKUP
 
 ## 描述
 
@@ -40,7 +36,7 @@ CANCEL  BACKUP
 CANCEL BACKUP FROM db_name;
 ```
 
-## Examples
+## 示例
 
 1. 取消 example_db 下的 BACKUP 任务。
 

@@ -45,7 +45,7 @@ CLEAN [ALL| DATABASE | TABLE] QUERY STATS [[FOR db_name]|[FROM|IN] table_name]];
 2. 如果指定 DATABASE，则清空指定数据库的查询统计信息，需要对应 database 的 alter 权限
 3. 如果指定 TABLE，则清空指定表的查询统计信息，需要对应表的 alter 权限
 
-## 例子
+## 示例
 
 1. 清空所有统计信息
 

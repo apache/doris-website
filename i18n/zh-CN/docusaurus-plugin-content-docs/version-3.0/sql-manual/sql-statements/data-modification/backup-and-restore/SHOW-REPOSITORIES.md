@@ -51,7 +51,7 @@ SHOW REPOSITORIES;
             Broker：依赖的 Broker
             ErrMsg：Doris 会定期检查仓库的连通性，如果出现问题，这里会显示错误信息
 
-## 例子
+## 示例
 
 1. 查看已创建的仓库：
 

@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-SHOW TYPECAST
 
 ## 描述
 
@@ -44,7 +41,7 @@ Parameters
 
 `db`: database name to query
 
-## Examples
+## 示例
 
 ```sql
 mysql> show type_cast in testDb\G

@@ -62,7 +62,7 @@ ALTER CATALOG catalog_name MODIFY COMMENT "new catalog comment";
 注意：
 - `internal` 是内置数据目录，不允许修改注释
 
-## 例子
+## 示例
 
 1. 将数据目录 ctlg_hive 重命名为 hive
 

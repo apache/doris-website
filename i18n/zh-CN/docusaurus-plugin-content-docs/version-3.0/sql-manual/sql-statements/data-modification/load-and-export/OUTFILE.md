@@ -182,7 +182,7 @@ Parquet、ORC 文件格式拥有自己的数据类型，Doris 的导出功能能
     | map | map |
     | array | list |
 
-## 例子
+## 示例
 
 1. 使用 Broker 方式导出，将简单查询结果导出到文件 `hdfs://path/to/result.txt`。指定导出格式为 CSV。使用 `my_broker` 并设置 kerberos 认证信息。指定列分隔符为 `,`，行分隔符为 `\n`。
 

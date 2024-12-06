@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name 
-
-SHOW TABLES
 
 ## 描述
 
@@ -44,7 +41,7 @@ SHOW [FULL] TABLES [LIKE]
 
 1. LIKE：可按照表名进行模糊查询
 
-## Examples
+## 示例
 
  1. 查看 DB 下所有表
     

@@ -44,7 +44,7 @@ SHOW WORKLOAD GROUPS [LIKE "pattern"];
 
 该语句仅做资源组简单展示，更复杂的展示可参考 tvf workload_groups().
 
-## 例子
+## 示例
 
 1. 展示所有资源组：
     

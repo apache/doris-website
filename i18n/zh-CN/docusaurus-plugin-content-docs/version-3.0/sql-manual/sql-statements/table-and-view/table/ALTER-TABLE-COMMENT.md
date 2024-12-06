@@ -53,7 +53,7 @@ MODIFY COMMENT "new table comment";
 MODIFY COLUMN col1 COMMENT "new column comment";
 ```
 
-## 例子
+## 示例
 
 1. 将名为 table1 的 comment 修改为 table1_comment
 

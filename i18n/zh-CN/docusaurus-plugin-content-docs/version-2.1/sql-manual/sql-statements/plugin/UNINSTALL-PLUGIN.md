@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-UNINSTALL PLUGIN
 
 ## 描述
 
@@ -43,7 +40,7 @@ UNINSTALL PLUGIN plugin_name;
 
 只能卸载非 builtin 的插件。
 
-## Examples
+## 示例
 
 1. 卸载一个插件：
 

@@ -70,7 +70,7 @@ SHOW [BRIEF] RESTORE [FROM DB_NAME]
 
         2. brief: 仅返回精简格式的 RESTORE 任务信息，不包含 RestoreObjs, Progress, TaskErrMsg 三列 
 
-## 例子
+## 示例
 
 1. 查看 example_db 下最近一次 RESTORE 任务。
     

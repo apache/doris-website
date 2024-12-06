@@ -46,7 +46,7 @@ SHOW DATABASES [FROM catalog] [filter expr];
 3. `SHOW DATABASES filter_expr` 会展示当前所有经过过滤后的数据库名称。
 4. `SHOW DATABASES FROM catalog filter_expr` 这种语法不支持。
 
-## 例子
+## 示例
 1. 展示当前所有的数据库名称。
 
    ```sql

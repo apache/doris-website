@@ -61,7 +61,7 @@ show query profile "/queryId/fragment_id/instance_id";
 获取指定 query id 树状 profile 信息，返回 profile 简易树形图。指定 fragment_id 和 instance_id 则返回对应的详细 profile 树形图。
 
 
-## 例子
+## 示例
 
 1. 列出所有的 query Profile
 

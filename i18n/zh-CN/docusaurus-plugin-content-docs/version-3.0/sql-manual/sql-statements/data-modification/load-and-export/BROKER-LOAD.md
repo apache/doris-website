@@ -216,7 +216,7 @@ WITH BROKER broker_name
 
    指定导入任务的备注信息。可选参数。
 
-## 例子
+## 示例
 
 1. 从 HDFS 导入一批数据
 

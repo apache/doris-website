@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-ADMIN SET REPLICA VERSION
 
 ## 描述
 
@@ -63,7 +61,7 @@ ADMIN SET REPLICA VERSION
 >   严禁对正在写入数据的 tablet 进行操作！
 
 
-## Examples
+## 示例
 
  1. 清除 tablet 10003 在 BE 10001 上的副本状态失败标志。
 

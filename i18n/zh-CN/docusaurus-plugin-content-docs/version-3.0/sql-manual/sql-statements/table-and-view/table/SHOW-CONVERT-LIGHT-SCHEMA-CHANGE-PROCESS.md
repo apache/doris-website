@@ -38,7 +38,7 @@ under the License.
 SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [FROM db]
 ```
 
-## 例子
+## 示例
 
 1. 查看在 database test 上的转换情况
 

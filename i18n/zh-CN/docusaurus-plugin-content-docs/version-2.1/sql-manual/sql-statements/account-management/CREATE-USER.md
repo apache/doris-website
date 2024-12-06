@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE-USER",
+    "title": "CREATE USER",
     "language": "zh-CN"
 }
 ---
@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE USER
-
-### Name
-
-CREATE USER
 
 ## 描述
 
@@ -73,7 +68,7 @@ password_policy 是用于指定密码认证登录相关策略的子句，目前�
 
     被锁定的账户可以通过 ALTER USER 语句主动解锁。
 
-## Examples
+## 示例
 
 1. 创建一个无密码用户（不指定 host，则等价于 jack@'%'）
 

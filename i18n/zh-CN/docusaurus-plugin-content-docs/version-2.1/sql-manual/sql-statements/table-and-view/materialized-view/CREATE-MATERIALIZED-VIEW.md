@@ -24,10 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-CREATE MATERIALIZED VIEW
-
 ## 描述
 
 该语句用于创建物化视图。
@@ -82,7 +78,7 @@ CREATE MATERIALIZED VIEW < MV name > as < query >
    timeout: 物化视图构建的超时时间。
   ```
 
-## Examples
+## 示例
 
 Base 表结构为
 

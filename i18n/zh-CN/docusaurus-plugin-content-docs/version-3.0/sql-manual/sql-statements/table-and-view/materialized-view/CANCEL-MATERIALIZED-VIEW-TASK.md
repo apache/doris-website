@@ -39,7 +39,7 @@ CANCEL MATERIALIZED VIEW TASK
 CANCEL MATERIALIZED VIEW TASK taskId=INTEGER_VALUE ON mvName=multipartIdentifier
 ```
 
-## 例子
+## 示例
 
 1. 取消物化视图 mv1 的 id 为 1 的 task
 

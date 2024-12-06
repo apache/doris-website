@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-ROUTINE-LOAD
 
-### Name
-
-ALTER ROUTINE LOAD
 
 ## 描述
 
@@ -93,7 +89,7 @@ FROM data_source
 
     1. `kafka_partitions` 和 `kafka_offsets` 用于修改待消费的 kafka partition 的 offset，仅能修改当前已经消费的 partition。不能新增 partition。
 
-## Examples
+## 示例
 
 1. 将 `desired_concurrent_number` 修改为 1
 

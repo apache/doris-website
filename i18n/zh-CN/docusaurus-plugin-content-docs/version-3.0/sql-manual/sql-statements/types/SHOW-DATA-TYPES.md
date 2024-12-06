@@ -36,7 +36,7 @@ under the License.
 SHOW DATA TYPES;
 ```
 
-## 例子
+## 示例
 
 1. 查看 Doris 支持的所有数据类型
 

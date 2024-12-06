@@ -25,16 +25,10 @@ under the License.
 -->
 
 
-### Name
-
-
-
-SHOW CREATE CATALOG
-
 
 ## 描述
 
-该语句查看 doris 数据目录的创建语句。
+该语句查看 Doris 数据目录的创建语句。
 
 语法：
 
@@ -44,11 +38,11 @@ SHOW CREATE CATALOG catalog_name;
 
 说明：
 
-- `catalog_name`: 为 doris 中存在的数据目录的名称。
+- `catalog_name`: 为 Doris 中存在的数据目录的名称。
 
-## Examples
+## 示例
 
-1. 查看 doris 中 hive 数据目录的创建语句
+1. 查看 Doris 中 hive 数据目录的创建语句
 
    ```sql
    SHOW CREATE CATALOG hive;

@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-TABLE-PROPERTY
 
-### Name
-
-ALTER TABLE PROPERTY
 
 :::caution
 分区属性与表属性的一些区别
@@ -192,7 +188,7 @@ ALTER TABLE example_db.mysql_table SET ("default.replication_allocation" = "tag.
   ALTER TABLE example_db.mysql_table SET ("light_schema_change" = "true");
   ```
 
-## Examples
+## 示例
 
 1. 修改表的 bloom filter 列
 

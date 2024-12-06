@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER TABLE PARTITION
 
 ## 描述
 
@@ -98,7 +95,7 @@ MODIFY PARTITION p1|(p1[, p2, ...]) SET ("key" = "value", ...)
   - in_memory
 -  对于单分区表，partition_name 同表名。
 
-## Examples
+## 示例
 
 1. 增加分区，现有分区 [MIN, 2013-01-01)，增加分区 [2013-01-01, 2014-01-01)，使用默认分桶方式
 

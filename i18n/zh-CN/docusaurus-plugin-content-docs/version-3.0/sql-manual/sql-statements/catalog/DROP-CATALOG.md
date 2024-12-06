@@ -36,7 +36,7 @@ under the License.
 DROP CATALOG [IF EXISTS] catalog_name;
 ```
 
-## 例子
+## 示例
 
 1. 删除数据目录 hive
 

@@ -25,9 +25,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-TRUNCATE TABLE
 
 ## 描述
 
@@ -47,7 +44,7 @@ TRUNCATE TABLE [db.]tbl[ PARTITION(p1, p2, ...)];
 - 使用该命令时，表状态需为 NORMAL，即不允许正在进行 SCHEMA CHANGE 等操作。
 - 该命令可能会导致正在进行的导入失败。
 
-## Examples
+## 示例
 
 1. 清空 example_db 下的表 tbl
 

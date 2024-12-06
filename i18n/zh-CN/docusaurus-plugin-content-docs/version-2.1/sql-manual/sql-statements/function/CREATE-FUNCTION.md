@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
 
-CREATE FUNCTION
 
 ## 描述
 
@@ -83,7 +81,7 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
 
   - `always_nullable`：表示的 UDF 返回结果中是否有可能出现 NULL 值，是可选参数，默认值为 true。
 
-## Examples
+## 示例
 
 
 1. 创建一个自定义 UDF 函数

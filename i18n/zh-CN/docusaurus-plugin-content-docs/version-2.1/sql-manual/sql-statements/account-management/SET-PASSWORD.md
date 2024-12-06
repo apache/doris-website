@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SET-PASSWORD
 
-### Name
-
-SET PASSWORD
 
 ## 描述
 
@@ -44,7 +40,7 @@ SET PASSWORD [FOR user_identity] =
 PASSWORD() 方式输入的是明文密码; 而直接使用字符串，需要传递的是已加密的密码。
 如果修改其他用户的密码，需要具有管理员权限。
 
-## Examples
+## 示例
 1. 修改当前用户的密码
 
     ```sql

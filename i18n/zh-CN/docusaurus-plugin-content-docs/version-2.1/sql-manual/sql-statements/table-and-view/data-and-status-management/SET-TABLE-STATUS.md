@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-ADMIN SET TABLE STATUS
 
 ## 描述
 
@@ -60,7 +58,7 @@ ADMIN SET TABLE table_name STATUS
 
 **注意：此命令一般只用于紧急故障修复，请谨慎操作。**
 
-## Examples
+## 示例
 
 1. 设置表 tbl1 的状态为 NORMAL。
 

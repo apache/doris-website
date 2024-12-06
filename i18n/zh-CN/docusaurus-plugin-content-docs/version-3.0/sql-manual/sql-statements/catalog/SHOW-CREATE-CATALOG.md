@@ -43,7 +43,7 @@ SHOW CREATE CATALOG catalog_name;
 
 - `catalog_name`: 为 doris 中存在的数据目录的名称。
 
-## 例子
+## 示例
 
 1. 查看 doris 中 hive 数据目录的创建语句
 

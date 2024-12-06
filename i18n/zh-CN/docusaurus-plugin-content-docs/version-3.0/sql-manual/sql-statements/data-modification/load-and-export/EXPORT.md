@@ -160,7 +160,7 @@ EXPORT
     use_path_style: (选填) 默认为 `false`。S3 SDK 默认使用 Virtual-hosted Style 方式。但某些对象存储系统可能没开启或不支持 Virtual-hosted Style 方式的访问，此时可以添加 `use_path_style` 参数来强制使用 Path Style 访问方式。
   ```
 
-## 例子
+## 示例
 
 #### Export 数据到本地
 > Export 数据到本地文件系统，需要在 `fe.conf` 中添加 `enable_outfile_to_local=true` 并且重启 FE。

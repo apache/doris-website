@@ -109,7 +109,7 @@ POST /api/debug_point/add/{debug_point_name}[?timeout=<int>&execute=<int>]
 }
 ```
     
-### Examples
+### 示例
 
 
 打开木桩 `foo`，最多执行 5 次。
@@ -147,7 +147,7 @@ POST /api/debug_point/add/{debug_point_name}[?k1=v1&k2=v2&k3=v3...]
 }
 ```
 
-### Examples
+### 示例
 
 假设 FE 在 fe.conf 中有配置 http_port=8030，则下面的请求激活 FE 中的木桩`foo`，并传递了两个参数 `percent` 和 `duration`：
 		
@@ -227,7 +227,7 @@ POST /api/debug_point/remove/{debug_point_name}
 }
 ```
     
-### Examples
+### 示例
 
 
 关闭木桩`foo`。
@@ -258,7 +258,7 @@ POST /api/debug_point/clear
 }
 ```
     
-### Examples
+### 示例
 
 
 清除所有木桩。
@@ -291,7 +291,7 @@ FE 或 BE 中开启的木桩是全局生效的，同一个 Pull Request 中，�
 为了避免这种情况，我们规定，使用木桩的回归测试，必须放在 regression-test/suites/fault_injection_p0 目录下，
 且组名必须设置为 `nonConcurrent`，社区 CI 系统对于这些用例，会串行运行。
 
-### Examples
+### 示例
 
 ```groovy
 // 测试用例的.groovy 文件必须放在 regression-test/suites/fault_injection_p0 目录下，

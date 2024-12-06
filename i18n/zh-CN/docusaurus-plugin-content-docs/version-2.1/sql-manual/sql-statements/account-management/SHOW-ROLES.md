@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-ROLES
 
-### Name
-
-SHOW ROLES
 
 ## 描述
 
@@ -40,7 +36,7 @@ SHOW ROLES
 SHOW ROLES
 ```
 
-## Examples
+## 示例
 
 1. 查看已创建的角色
 

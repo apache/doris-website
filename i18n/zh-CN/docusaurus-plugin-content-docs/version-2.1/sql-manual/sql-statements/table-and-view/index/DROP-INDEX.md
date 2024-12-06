@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
-
-DROP INDEX
 
 ## 描述
 
@@ -39,7 +36,7 @@ DROP INDEX
 DROP INDEX [IF EXISTS] index_name ON [db_name.]table_name;
 ```
 
-## Examples
+## 示例
 
 1. 删除索引
 

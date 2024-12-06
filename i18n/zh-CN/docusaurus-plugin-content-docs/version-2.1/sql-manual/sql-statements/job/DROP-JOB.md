@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Name
 
-DROP JOB
 
 ## 描述
 
@@ -36,7 +34,7 @@ DROP JOB
 DROP JOB where jobName='jobname';
 ```
 
-## Examples
+## 示例
 
 1. 停止名称为 example 的作业。
 

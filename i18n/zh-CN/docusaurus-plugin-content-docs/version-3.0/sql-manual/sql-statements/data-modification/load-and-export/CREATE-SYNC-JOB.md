@@ -115,7 +115,7 @@ binlog_desc
       6. canal.password: instance 的密码
       7. canal.debug: 可选，设置为 true 时，会将 batch 和每一行数据的详细信息都打印出来
 
-## 例子
+## 示例
 
 1. 简单为 `test_db` 的 `test_tbl` 创建一个名为 `job1` 的数据同步作业，连接本地的 Canal 服务器，对应 Mysql 源表 `mysql_db1.tbl1`。
 

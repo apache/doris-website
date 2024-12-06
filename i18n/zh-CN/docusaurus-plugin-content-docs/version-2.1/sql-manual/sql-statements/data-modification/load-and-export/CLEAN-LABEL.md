@@ -24,16 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
 
-## CLEAN-LABEL
-
-### Name
-
-
-CLEAN LABEL
 
 
 
@@ -47,7 +38,7 @@ CLEAN LABEL
 CLEAN LABEL [label] FROM db;
 ```
 
-## Examples
+## 示例
 
 1. 清理 db1 中，Label 为 label1 的导入作业。
 

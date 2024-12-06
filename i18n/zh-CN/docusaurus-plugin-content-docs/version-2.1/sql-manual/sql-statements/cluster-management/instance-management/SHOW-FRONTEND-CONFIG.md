@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-SHOW CONFIG
 
 ## 描述
 
@@ -49,7 +47,7 @@ SHOW FRONTEND CONFIG [LIKE "pattern"];
 5. MasterOnly：是否仅适用于 Master FE
 6. Comment：配置项说明
 
-## Examples
+## 示例
 
 1. 查看当前 FE 节点的配置
 
