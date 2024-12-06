@@ -22,5 +22,9 @@
   "sidebar.community.category.Mac Local Dev": {
     "message": "Mac Local 开发",
     "description": "The label for category Mac Local Dev in sidebar community"
+  },
+  "sidebar.community.category.Announcements": {
+    "message": "Doris 社区声明",
+    "description": "The label for category Mac Local Dev in sidebar community"
   }
 }

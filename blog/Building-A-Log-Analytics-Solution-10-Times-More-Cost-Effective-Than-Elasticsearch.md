@@ -247,4 +247,4 @@ For more feature introduction and usage guide, see documentation: [Inverted Inde
 
 In a word, what contributes to Apache Doris' 10-time higher cost-effectiveness than Elasticsearch is its OLAP-tailored optimizations for inverted indexing, supported by the columnar storage engine, massively parallel processing framework, vectorized query engine, and cost-based optimizer of Apache Doris. 
 
-As proud as we are about our own inverted indexing solution, we understand that self-published benchmarks can be controversial, so we are open to [feedback](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) from any third-party users and see how [Apache Doris](https://github.com/apache/doris) works in real-world cases.
+As proud as we are about our own inverted indexing solution, we understand that self-published benchmarks can be controversial, so we are open to [feedback](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) from any third-party users and see how [Apache Doris](https://github.com/apache/doris) works in real-world cases.

@@ -55,7 +55,7 @@ FE 的配置项有两种方式进行查看：
 
    - Key：配置项名称。
    - Value：当前配置项的值。
-   - Type：配置项值类型，如果整型、字符串。
+   - Type：配置项值类型，如整型、字符串。
    - IsMutable：是否可以动态配置。如果为 true，表示该配置项可以在运行时进行动态配置。如果 false，则表示该配置项只能在 `fe.conf` 中配置并且重启 FE 后生效。
    - MasterOnly：是否为 Master FE 节点独有的配置项。如果为 true，则表示该配置项仅在 Master FE 节点有意义，对其他类型的 FE 节点无意义。如果为 false，则表示该配置项在所有 FE 节点中均有意义。
    - Comment：配置项的描述。
@@ -2548,25 +2548,25 @@ SmallFileMgr 中存储的最大文件数
 
 备份作业的默认超时时间
 
-#### `backup_upload_task_num_per_be`
+#### `backup_upload_snapshot_batch_size`
 
-默认值：3
-
-是否可以动态配置：true
-
-是否为 Master FE 节点独有的配置项：true
-
-备份过程中，分配给每个 be 的 upload 任务最大个数，默认值为 3 个。
-
-#### `restore_download_task_num_per_be`
-
-默认值：3
+默认值：10
 
 是否可以动态配置：true
 
 是否为 Master FE 节点独有的配置项：true
 
-恢复过程中，分配给每个 be 的 download 任务最大个数，默认值为 3 个。
+备份过程中，一个 upload 任务上传的快照数量上限，默认值为10个。
+
+#### `restore_download_snapshot_batch_size`
+
+默认值：10
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+恢复过程中，一个 download 任务下载的快照数量上限，默认值为10个。
 
 #### `max_backup_restore_job_num_per_db`
 

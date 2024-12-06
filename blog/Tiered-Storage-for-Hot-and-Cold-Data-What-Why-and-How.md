@@ -353,7 +353,7 @@ Apache Doris 2.0 has been optimized for cold data queries. Only the first-time a
 
 In Apache Doris, each data ingestion leads to the generation of a new  Rowset, so the update of historical data will be put in a Rowset that is separated from those of newly loaded data. That’s how it makes sure the updating of cold data does not interfere with the ingestion of hot  data. Once the rowsets cool down, they will be moved to S3 and deleted  locally, and the updated historical data will go to the partition where  it belongs.
 
-If you any questions, come find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA). We will be happy to provide targeted support.
+If you any questions, come find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw). We will be happy to provide targeted support.
 
 
 

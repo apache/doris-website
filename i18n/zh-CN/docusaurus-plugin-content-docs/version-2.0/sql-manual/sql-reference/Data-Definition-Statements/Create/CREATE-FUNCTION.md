@@ -79,7 +79,8 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
 
 - `properties`: 用于设定函数相关属性，能够设置的属性包括：	
 
-  - `file`: 表示的包含用户UDF的jar包，当在多机环境时，也可以使用http的方式下载jar包。这个参数是必须设定的。
+  - `file`: 表示的包含用户UDF的jar包，实现的 jar 包可以放在本地也可以存放在远程服务端通过 HTTP 下载，但必须让每个 FE 和 BE 节点都能获取到 jar 包。
+            这个参数是必须设定的。
 
   - `symbol`: 表示的是包含UDF类的类名。这个参数是必须设定的
 

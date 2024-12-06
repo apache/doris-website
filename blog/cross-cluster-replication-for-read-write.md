@@ -111,6 +111,6 @@ In the grocery store brand's case, they need to synchronize a few tables from th
 
 Using CCR in Apache Doris, the grocery store brand separates reading and writing workloads into different clusters and thus improves overall system stability. This solution delivers a real-time data synchronization latency of about 1 second. To further ensure normal functioning, it has a real-time monitoring and alerting mechanism so any issue will be notified and attended to instantly, and a contingency plan to guarantee uninterrupted query services. It also supports partition-based data synchronization (e.g. `ALTER TABLE tbl1 REPLACE PARTITION`). With demonstrated effectiveness of CCR, they are planning to replicate more of their data assets for efficient and secure data usage.
 
-CCR is also applicable when you need to build multiple data centers or derive a test dataset from your production environment. For further guidance on CCR, join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).
+CCR is also applicable when you need to build multiple data centers or derive a test dataset from your production environment. For further guidance on CCR, join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw).
 
   

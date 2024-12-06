@@ -40,7 +40,7 @@ Dear Apache Doris community, we are thrilled to announce the advent of Apache Do
 
 - **Better workload management**: optimizations of the Workload Group mechanism for higher performance stability and the display of SQL resource consumption in the runtime.
 
-We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback. We will keep aiming for the stars with our agile release planning, and we appreciate your feedback in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA). 
+We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback. We will keep aiming for the stars with our agile release planning, and we appreciate your feedback in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw). 
 
 
 **Download from GitHub**: https://github.com/apache/doris/releases

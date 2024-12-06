@@ -9,10 +9,12 @@
         padding: 0;
         color: var(--ifm-color-primary);
 
-        transition: {
-            property: color;
-            timing-function: ease-out;
-            duration: 0.3s;
+        & {
+            transition: {
+                property: color;
+                timing-function: ease-out;
+                duration: 0.3s;
+            }
         }
     }
 

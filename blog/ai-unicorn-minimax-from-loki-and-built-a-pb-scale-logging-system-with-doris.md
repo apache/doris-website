@@ -1,14 +1,12 @@
 ---
 {
-    'title': 'How AI unicorn MiniMax migrated from Loki and built a PB-scale logging system with Apache Doris',
-    'summary': "Serving a PB-scale data size with over 99.9% availability, Apache Doris is the vital signs monitor of MiniMax, a generative AI startup backed by Alibaba.",
-    'description': "Serving a PB-scale data size with over 99.9% availability, Apache Doris is the vital signs monitor of MiniMax, a generative AI startup backed by Alibaba.",
+    'title': 'Creator of Talkie migrated from Loki and built a PB-scale logging system with Apache Doris',
+    'summary': "Serving a PB-scale data size with over 99.9% availability, Apache Doris is the vital signs monitor of MiniMax, the maker of Talkie-the soulful AI that is sweeping the world.",
+    'description': "Serving a PB-scale data size with over 99.9% availability, Apache Doris is the vital signs monitor of MiniMax, the maker of Talkie-the soulful AI that is sweeping the world.",
     'date': '2024-08-29',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
-    'picked': "true",
-    'order': "3",
-    "image": '/images/minimax-migrated-from-loki-to-doris.png'
+    "image": '/images/minimax-creator-of-talkie.jpeg'
 }
 
 ---
@@ -32,7 +30,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-MiniMax, [a generative AI startup backed by Alibaba, Tencent, miHoYo, etc.](https://fortune.com/asia/2024/03/05/alibaba-leads-financing-round-chinese-ai-startup-minimax/), has been investing most of its efforts in MoE (Mixture of Experts) before it became an industry consensus. In April 2024, MiniMax launched its first commercially deployed MoE-based LLM, **MiniMax-abab 6.5**, which contains over a trillion parameters and delivers performances comparable to GPT-4, Claude-3, and Gemini-1.5. 
+You might not have heard of [MiniMax](https://www.minimaxi.com/en), but you've probably heard of [Talkie](https://www.talkie-ai.com), the AI chatbot taking the world by storm. In the summer of 2024, Talkie ranked fifth among the most-downloaded free entertainment apps in the US, bringing its creator, MiniMax, into the global spotlight. As the maker of this market-stunning product, the AI unicorn maintains a low profile, but its history of smart decision-making dates back a long way.
+
+Before MoE (Mixture of Experts) became an industry consensus, MiniMax has been investing most of its efforts in it. In April 2024, MiniMax launched its first commercially deployed MoE-based LLM, **MiniMax-abab 6.5**, which contains over a trillion parameters and delivers performances comparable to GPT-4, Claude-3, and Gemini-1.5. 
 
 As their LLM is getting more complex and called upon more frequently, it generates an exploding amount of logs from model training and inference. These logs provide the basis for performance monitoring, optimization, and troubleshooting. The existing Grafana Loki-based logging system of MiniMax faced performance and stability issues, so they planned for an upgrade. After looking at the common industry solutions, they came to Apache Doris.
 

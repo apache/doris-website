@@ -47,29 +47,29 @@ DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 
 建表示例如下：
 
-```
- CREATE TABLE IF NOT EXISTS test.simple_map (
-              `id` INT(11) NULL COMMENT "",
-              `m` Map<STRING, INT> NULL COMMENT ""
-            ) ENGINE=OLAP
-            DUPLICATE KEY(`id`)
-            DISTRIBUTED BY HASH(`id`) BUCKETS 1
-            PROPERTIES (
-            "replication_allocation" = "tag.location.default: 1",
-            "storage_format" = "V2"
-            );
+```sql
+CREATE TABLE IF NOT EXISTS test.simple_map (
+  `id` INT(11) NULL COMMENT "",
+  `m` Map<STRING, INT> NULL COMMENT ""
+) ENGINE=OLAP
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 1",
+"storage_format" = "V2"
+);
 ```
 
 插入数据示例：
 
-```
+```sql
 mysql> INSERT INTO simple_map VALUES(1, {'a': 100, 'b': 200});
 ```
 
 stream_load示例：
-更多详细 stream_load 用法见 [STREAM TABLE](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/import-way/stream-load-manual) 
+更多详细 stream_load 用法见 [STREAM LOAD](../../../data-operate/import/import-way/stream-load-manual) 
 
-```
+```shell
 # load the map data from json file
 curl --location-trusted -uroot: -T events.json -H "format: json" -H "read_json_by_line: true" http://fe_host:8030/api/test/simple_map/_stream_load
 # 返回结果
@@ -97,7 +97,7 @@ curl --location-trusted -uroot: -T events.json -H "format: json" -H "read_json_b
 
 查询数据示例：
 
-```
+```sql
 mysql> SELECT * FROM simple_map;
 +------+-----------------------------+
 | id   | m                           |
@@ -110,7 +110,7 @@ mysql> SELECT * FROM simple_map;
 
 查询 map 列示例：
 
-```
+```sql
 mysql> SELECT m FROM simple_map;
 +-----------------------------+
 | m                           |
@@ -123,7 +123,7 @@ mysql> SELECT m FROM simple_map;
 
 map 取值示例：
 
-```
+```sql
 mysql> SELECT m['a'] FROM simple_map;
 +-----------------------------+
 | %element_extract%(`m`, 'a') |
@@ -136,7 +136,7 @@ mysql> SELECT m['a'] FROM simple_map;
 
 map 支持的functions示例：
 
-```
+```sql
 # map construct
 
 mysql> SELECT map('k11', 1000, 'k22', 2000)['k11'];

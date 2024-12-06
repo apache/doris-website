@@ -59,7 +59,7 @@ Go to the `apache-doris/fe/conf/fe.conf` file for FE configuration. Below are so
 # Add JAVA_HOME and point it to your JDK8 runtime environment. Suppose your JDK8 is at /home/doris/jdk8, set it as follows:
 JAVA_HOME=/home/doris/jdk8
 
-# The CIDR network segment of FE listening IP is empty by default. When started, Apache Doris will automatically select an available network segment. If you need to specify a segment, you can set priority_networks=92.168.0.0/24, for example.
+# The CIDR network segment of FE listening IP is empty by default. When started, Apache Doris will automatically select an available network segment. If you need to specify a segment, you can set priority_networks=192.168.0.0/24, for example.
 # priority_networks =
 
 # By default, FE metadata is stored in the doris-meta directory under DORIS_HOME. It is created already. You can change it to your specified path.

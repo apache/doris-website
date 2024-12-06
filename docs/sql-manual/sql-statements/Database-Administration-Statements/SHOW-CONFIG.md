@@ -32,15 +32,15 @@ SHOW CONFIG
 
 ### Description
 
-This statement is used to display the configuration of the current cluster (currently only the configuration items of FE are supported)
+This statement is used to display the configuration of the current cluster.
 
 grammar:
 
 ```sql
-SHOW FRONTEND CONFIG [LIKE "pattern"];
-```
+SHOW (FRONTEND|BACKEND)  CONFIG [LIKE "pattern"];
+````
 
-The columns in the results have the following meanings:
+The columns in the results of showing FE configuration have the following meanings:
 
 1. Key: Configuration item name
 2. Value: Configuration item value
@@ -48,6 +48,15 @@ The columns in the results have the following meanings:
 4. IsMutable: Whether it can be set by ADMIN SET CONFIG command
 5. MasterOnly: Is it only applicable to Master FE
 6. Comment: Configuration item description
+
+The columns in the results of showing BE configuration have the following meanings:
+
+1. BackendId: ID of a backend
+2. Host: Host of a backend 
+3. Key: Configuration item name
+4. Value: Configuration item value
+5. Type: Configuration item type
+6. IsMutable: Whether it can be modified
 
 ### Example
 
@@ -68,6 +77,22 @@ The columns in the results have the following meanings:
    +--------------------+-------+---------+---------- -+------------+---------+
    1 row in set (0.01 sec)
    ```
+
+3. View the configuration for a specific BE using the backend ID `10001`
+
+    ```sql
+    SHOW BACKEND CONFIG FROM 10001;
+    ```
+4. View the configuration useing both a pattern and a backend ID
+    ```
+    mysql> SHOW BACKEND CONFIG LIKE "be_port" FROM 10001;
+    +-----------+---------------+---------+-------+---------+-----------+
+    | BackendId | Host          | Key     | Value | Type    | IsMutable |
+    +-----------+---------------+---------+-------+---------+-----------+
+    | 10001     | xx.xx.xxx.xxx | be_port | 9060  | int32_t | false     |
+    +-----------+---------------+---------+-------+---------+-----------+
+    ```
+
 
 ### Keywords
 

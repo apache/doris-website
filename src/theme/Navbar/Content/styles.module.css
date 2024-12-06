@@ -5,17 +5,4 @@ Hide color mode toggle in small viewports
   .colorModeToggle {
     display: none;
   }
-  
-}
-
-@media (max-width: 996px) {
-  .navbarLeftToc {
-    display:none;
-    align-items: center;
-    padding:0 10px;
-    /* overflow-x-auto text-nowrap */
-  }
-  .navbarLeftToc::-webkit-scrollbar {
-    display: none;
-  }
 }

@@ -16,7 +16,7 @@
   - 集群部署
     - [手动部署](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/standard-deployment.md)
     - [Docker 部署](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/run-docker-cluster.md)
-    - K8s 部署
+    - Kubernetes 部署
       - [集群环境要求](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/install-env.md)
       - [部署 Doris Operator](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/install-operator.md)
       - [配置 Doris 集群](/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/install/cluster-deployment/k8s-deploy/install-config-cluster.md)
