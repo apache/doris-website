@@ -26,10 +26,6 @@ under the License.
 -->
 
 
-### Name
-
-INSERT OVERWRITE
-
 ## 描述
 
 该语句的功能是重写表或表的某些分区

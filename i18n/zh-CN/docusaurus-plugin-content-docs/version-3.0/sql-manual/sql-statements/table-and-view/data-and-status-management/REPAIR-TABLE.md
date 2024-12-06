@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-ADMIN REPAIR TABLE
 
 ## 描述
 

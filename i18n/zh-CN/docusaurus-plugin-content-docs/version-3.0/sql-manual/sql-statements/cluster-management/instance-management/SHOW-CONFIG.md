@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW CONFIG
 
 ## 描述
 

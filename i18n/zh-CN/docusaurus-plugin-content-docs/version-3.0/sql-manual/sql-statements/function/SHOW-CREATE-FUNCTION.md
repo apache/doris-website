@@ -25,10 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-SHOW CREATE FUNCTION
-
 ## 描述
 
 该语句用于展示用户自定义函数的创建语句

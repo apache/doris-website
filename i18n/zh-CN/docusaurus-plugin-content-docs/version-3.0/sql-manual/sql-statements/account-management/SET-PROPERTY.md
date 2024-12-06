@@ -115,6 +115,6 @@ SET PROPERTY 语句用于设置用户属性，包括分配给用户的资源和�
 - [CREATE USER](./CREATE-USER.md)
 - [SHOW PROPERTY](../../../sql-manual/sql-statements/account-management/SHOW-PROPERTY)
 
-## Keywords
+## 关键词
 
     SET, PROPERTY, WORKLOAD GROUP, COMPUTE GROUP

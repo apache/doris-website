@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-### Name
 
-CLEAN QUERY STATS
 
 ## 描述
 

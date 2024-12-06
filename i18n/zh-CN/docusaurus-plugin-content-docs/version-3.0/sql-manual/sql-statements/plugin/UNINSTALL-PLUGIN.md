@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-UNINSTALL PLUGIN
 
 ## 描述
 

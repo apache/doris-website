@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE FUNCTION
 
 ## 描述
 

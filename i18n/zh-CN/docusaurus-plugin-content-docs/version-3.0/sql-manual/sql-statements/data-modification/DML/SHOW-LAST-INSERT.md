@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW LAST INSERT
 
 ## 描述
 

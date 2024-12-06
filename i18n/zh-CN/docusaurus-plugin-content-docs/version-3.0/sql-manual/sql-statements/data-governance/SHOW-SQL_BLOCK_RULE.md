@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW SQL BLOCK RULE
 
 ## 描述
 

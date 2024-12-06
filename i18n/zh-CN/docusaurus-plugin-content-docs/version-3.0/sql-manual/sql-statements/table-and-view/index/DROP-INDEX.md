@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-DROP INDEX
 
 ## 描述
 

@@ -27,9 +27,6 @@ under the License.
 
 
 
-### Name
-
-SELECT
 
 ## 描述
 

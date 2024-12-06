@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name 
 
-SHOW REPOSITORIES
 
 ## 描述
 

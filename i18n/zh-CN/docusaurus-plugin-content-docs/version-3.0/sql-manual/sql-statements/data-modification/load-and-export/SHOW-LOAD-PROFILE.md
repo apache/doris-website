@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW LOAD PROFILE
-
 :::caution
 自 2.1.1 起，此语法被弃用。
 :::

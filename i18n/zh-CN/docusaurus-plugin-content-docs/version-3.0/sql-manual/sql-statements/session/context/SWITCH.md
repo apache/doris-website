@@ -25,10 +25,6 @@ under the License.
 -->
 
 
-### Name
-SWITCH
-
-
 ## 描述
 
 该语句用于切换数据目录（catalog）

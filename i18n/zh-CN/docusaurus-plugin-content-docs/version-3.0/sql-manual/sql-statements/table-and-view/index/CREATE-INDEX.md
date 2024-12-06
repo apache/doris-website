@@ -26,9 +26,8 @@ under the License.
 
 
 
-### Name
 
-CREATE INDEX
+
 
 ## 描述
 

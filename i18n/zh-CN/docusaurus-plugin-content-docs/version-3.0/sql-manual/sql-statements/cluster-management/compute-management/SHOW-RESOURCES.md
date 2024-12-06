@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW RESOURCES
 
 ## 描述
 

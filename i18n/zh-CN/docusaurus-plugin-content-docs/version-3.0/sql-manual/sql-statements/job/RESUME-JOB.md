@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-RESUME JOB
 
 ## 描述
 

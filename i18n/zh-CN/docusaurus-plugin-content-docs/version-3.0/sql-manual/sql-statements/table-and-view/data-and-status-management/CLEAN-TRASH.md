@@ -27,9 +27,7 @@ under the License.
 
 
 
-### Name
 
-ADMIN CLEAN TRASH
 
 ## 描述
 

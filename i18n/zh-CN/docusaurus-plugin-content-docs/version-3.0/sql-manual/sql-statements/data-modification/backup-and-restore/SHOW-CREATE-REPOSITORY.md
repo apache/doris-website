@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-SHOW CREATE REPOSITORY
 
 ## 描述
 

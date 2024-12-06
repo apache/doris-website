@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-### Name
 
-CREATE ENCRYPTKEY
 
 ## 描述
 

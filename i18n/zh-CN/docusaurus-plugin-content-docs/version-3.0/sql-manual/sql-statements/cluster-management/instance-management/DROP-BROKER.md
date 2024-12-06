@@ -27,10 +27,6 @@ under the License.
 
 
 
-### Name
-
-ALTER SYSTEM DROP BROKER
-
 ## 描述
 
 该语句是删除 BROKER 节点，（仅限管理员使用）

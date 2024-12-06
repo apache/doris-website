@@ -25,10 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-ADMIN SET REPLICA VERSION
-
 ## 描述
 
 该语句用于设置指定副本的版本、最大成功版本、最大失败版本。

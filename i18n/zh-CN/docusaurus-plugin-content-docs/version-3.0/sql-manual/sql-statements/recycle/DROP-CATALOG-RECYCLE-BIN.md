@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-DROP CATALOG RECYCLE BIN
 
 ## 描述
 

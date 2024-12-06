@@ -28,26 +28,26 @@ under the License.
 ## 描述
 删除行安全策略。
 
-## 语法（Syntax）
+## 语法
 
 ```sql
 DROP ROW POLICY <policy_name> on <table_name>
   [ FOR { <user_name> | ROLE <role_name> } ];
 ```
 
-## 必选参数（Required Parameters）
+## 必选参数
 
 1. `<policy_name>`:行安全策略名称
 
 2. `<table_name>`:表名称
 
-## 可选参数（Optional Parameters）
+## 可选参数
 
 1. `<user_name>`:用户名称
 
 2. `<role_name>`:角色名称
 
-## 权限控制（Access Control Requirements）
+## 权限控制
 
 执行此 SQL 命令的用户必须至少具有以下权限：
 
@@ -55,7 +55,7 @@ DROP ROW POLICY <policy_name> on <table_name>
 | :------------------------- | :------------- | :------------ |
 | ADMIN_PRIV 或 *GRANT_PRIV* | 全局           |               |
 
-## 示例（Examples）
+## 示例
 
 1. 删除 *db1.table1* 的 *policy1 行安全策略*
 

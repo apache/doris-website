@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-CLEAN LABEL
 
 ## 描述
 

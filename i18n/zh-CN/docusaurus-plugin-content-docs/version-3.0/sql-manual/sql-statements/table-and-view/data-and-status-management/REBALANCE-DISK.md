@@ -24,9 +24,6 @@ under the License.
 
 
 
-### Name
-ADMIN REBALANCE DISK
-
 ## 描述
 
 该语句用于尝试优先均衡指定的 BE 磁盘数据

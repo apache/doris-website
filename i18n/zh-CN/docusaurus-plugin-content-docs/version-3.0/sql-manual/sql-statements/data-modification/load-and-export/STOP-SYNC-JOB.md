@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-STOP SYNC JOB
 
 ## 描述
 

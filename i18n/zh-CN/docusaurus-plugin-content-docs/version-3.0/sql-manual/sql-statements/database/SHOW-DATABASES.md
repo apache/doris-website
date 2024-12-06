@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-SHOW DATABASES
 
 ## 描述
 

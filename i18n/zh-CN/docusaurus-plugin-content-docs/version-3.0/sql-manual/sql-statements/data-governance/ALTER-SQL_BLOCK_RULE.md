@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER SQL BLOCK RULE
-
 ## 描述
 
 修改 SQL 阻止规则，允许对 sql/sqlHash/partition_num/tablet_num/cardinality/global/enable 等每一项进行修改。

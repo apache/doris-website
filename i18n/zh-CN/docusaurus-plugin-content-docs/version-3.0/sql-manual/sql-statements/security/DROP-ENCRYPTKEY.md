@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-### Name
 
-DROP ENCRYPTKEY
 
 ## 描述
 

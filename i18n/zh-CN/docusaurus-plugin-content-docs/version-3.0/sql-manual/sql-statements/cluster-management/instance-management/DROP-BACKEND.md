@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER SYSTEM DROP BACKEND
-
 ## 描述
 
 该语句用于删除 BACKEND 节点（仅管理员使用！）

@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-UPDATE
-
 ## 描述
 
 该语句是为进行对数据进行更新的操作，UPDATE 语句目前仅支持 UNIQUE KEY 模型。

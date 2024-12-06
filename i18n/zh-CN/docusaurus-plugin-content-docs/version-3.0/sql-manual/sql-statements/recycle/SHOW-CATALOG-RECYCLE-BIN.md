@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW CATALOG RECYCLE BIN
 
 ## 描述
 

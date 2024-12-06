@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW CREATE DATABASE
 
 ## 描述
 

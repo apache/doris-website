@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-### Name
-
-DROP  REPOSITORY
-
 ## 描述
 
 该语句用于删除一个已创建的仓库。仅 root 或 superuser 用户可以删除仓库。

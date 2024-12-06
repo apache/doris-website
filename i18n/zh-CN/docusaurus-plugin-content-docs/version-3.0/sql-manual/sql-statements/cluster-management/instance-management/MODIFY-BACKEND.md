@@ -27,9 +27,6 @@ under the License.
 
 
 
-### Name
-
-ALTER SYSTEM MODIFY BACKEND
 
 ## 描述
 

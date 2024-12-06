@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER DATABASE
 
 ## 描述
 

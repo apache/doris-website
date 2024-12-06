@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-ADMIN SET CONFIG
 
 ## 描述
 

@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE SYNC JOB
 
 ## 描述
 

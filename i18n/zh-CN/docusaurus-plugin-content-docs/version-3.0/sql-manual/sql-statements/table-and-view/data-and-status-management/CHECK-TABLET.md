@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-### Name
 
-ADMIN CHECK TABLET
 
 ## 描述
 

@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW WORKLOAD GROUPS
 
 ## 描述
 

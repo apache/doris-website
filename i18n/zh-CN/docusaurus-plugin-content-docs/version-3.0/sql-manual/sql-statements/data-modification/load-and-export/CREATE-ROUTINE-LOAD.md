@@ -27,9 +27,7 @@ under the License.
 
 
 
-### Name 
 
-CREATE ROUTINE LOAD
 
 ## 描述
 

@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-CANCEL DECOMMISSION
 
 ## 描述
 

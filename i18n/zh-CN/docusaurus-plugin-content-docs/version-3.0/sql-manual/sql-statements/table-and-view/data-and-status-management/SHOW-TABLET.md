@@ -25,10 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-SHOW TABLET
-
 ## 描述
 
 该语句用于显示指定 tablet id 信息（仅管理员使用）

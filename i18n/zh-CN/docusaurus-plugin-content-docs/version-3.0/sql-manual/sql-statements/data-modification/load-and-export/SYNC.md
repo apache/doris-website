@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SYNC
 
 ## 描述
 

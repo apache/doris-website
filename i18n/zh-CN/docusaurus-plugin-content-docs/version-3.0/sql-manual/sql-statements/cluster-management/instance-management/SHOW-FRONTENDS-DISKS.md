@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-FRONTENDS-DISKS
 
-### Name
-
-SHOW FRONTENDS DISKS
-
-### Description
+## 描述
 
  该语句用于查看 FE 节点的重要目录如：元数据、日志、审计日志、临时目录对应的磁盘信息
 
@@ -42,10 +37,10 @@ SHOW FRONTENDS DISKS;
 
 说明：
 1. Name 表示该 FE 节点在 bdbje 中的名称。
-2. Host 表示该 FE 节点的IP。
+2. Host 表示该 FE 节点的 IP。
 3. DirType 表示要展示的目录类型，分别有四种类型：meta、log、audit-log、temp、deploy。
 4. Dir 表示要展示的目录类型的目录。
-5. FileSystem 表示要展示的目录类型所在的linux系统的文件系统。
+5. FileSystem 表示要展示的目录类型所在的 linux 系统的文件系统。
 6. Capacity 文件系统的容量。
 7. Used 文件系统已用大小。
 8. Available 文件系统剩余容量。
@@ -67,7 +62,7 @@ mysql> show frontends disks;
 5 rows in set (0.00 sec)
 `
 
-### Keywords
+### 关键词
 
     SHOW, FRONTENDS
 

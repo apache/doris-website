@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SET-PASSWORD",
+    "title": "SET PASSWORD",
     "language": "zh-CN"
 }
 ---

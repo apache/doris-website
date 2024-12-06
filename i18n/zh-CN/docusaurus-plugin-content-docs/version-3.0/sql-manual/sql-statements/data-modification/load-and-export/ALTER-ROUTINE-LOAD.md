@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ALTER ROUTINE LOAD
-
 ## 描述
 
 该语法用于修改已经创建的例行导入作业。

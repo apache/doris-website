@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-CANCEL MATERIALIZED VIEW TASK
 
 ## 描述
 

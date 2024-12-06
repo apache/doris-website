@@ -26,9 +26,7 @@ under the License.
 -->
 
 
-### Name
 
-ALTER SYSTEM ADD BROKER
 
 ## 描述
 

@@ -25,10 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-CREATE FILE
-
 ## 描述
 
 该语句用于创建并上传一个文件到 Doris 集群。

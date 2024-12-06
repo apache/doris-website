@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-ALTER SYSTEM ADD FOLLOWER
 
 ## 描述
 

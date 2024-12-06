@@ -24,30 +24,29 @@ under the License.
 
 
 
-### Name
-ADMIN CANCEL REBALANCE DISK
+
 
 ## 描述
 
-    该语句用于取消优先均衡BE的磁盘
+该语句用于取消优先均衡 BE 的磁盘
 
-    语法：
+语法：
 
-        ADMIN CANCEL REBALANCE DISK [ON ("BackendHost1:BackendHeartBeatPort1", "BackendHost2:BackendHeartBeatPort2", ...)];
+ADMIN CANCEL REBALANCE DISK [ON ("BackendHost1:BackendHeartBeatPort1", "BackendHost2:BackendHeartBeatPort2", ...)];
 
-    说明：
+说明：
 
-        1. 该语句仅表示系统不再优先均衡指定 BE 的磁盘数据。系统仍会以默认调度方式均衡 BE 的磁盘数据。
+1. 该语句仅表示系统不再优先均衡指定 BE 的磁盘数据。系统仍会以默认调度方式均衡 BE 的磁盘数据。
 
 ## 示例
 
-    1. 取消集群所有 BE 的优先磁盘均衡
+1. 取消集群所有 BE 的优先磁盘均衡
 
-        ADMIN CANCEL REBALANCE DISK;
+    ADMIN CANCEL REBALANCE DISK;
 
-    2. 取消指定 BE 的优先磁盘均衡
+2. 取消指定 BE 的优先磁盘均衡
 
-        ADMIN CANCEL REBALANCE DISK ON ("192.168.1.1:1234", "192.168.1.2:1234");
+    ADMIN CANCEL REBALANCE DISK ON ("192.168.1.1:1234", "192.168.1.2:1234");
 
 ## 关键词
 

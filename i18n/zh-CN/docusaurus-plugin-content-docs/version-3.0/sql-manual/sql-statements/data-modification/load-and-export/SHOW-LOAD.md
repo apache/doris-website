@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW LOAD
-
 ## 描述
 
 该语句用于展示指定的导入任务的执行情况

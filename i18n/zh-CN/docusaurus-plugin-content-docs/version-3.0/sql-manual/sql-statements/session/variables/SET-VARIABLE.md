@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SET VARIABLE
 
 ## 描述
 

@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW STORAGE POLICY USING
-
 ## 描述
 
 查看所有/指定存储策略关联的表和分区

@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-SHOW FUNCTIONS
 
 ## 描述
 

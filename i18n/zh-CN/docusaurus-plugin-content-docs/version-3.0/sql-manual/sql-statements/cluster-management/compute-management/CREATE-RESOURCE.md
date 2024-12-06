@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-CREATE RESOURCE
 
 ## 描述
 

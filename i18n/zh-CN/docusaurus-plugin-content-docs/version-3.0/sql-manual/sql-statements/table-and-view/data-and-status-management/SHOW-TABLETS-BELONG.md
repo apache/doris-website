@@ -26,7 +26,7 @@ under the License.
 
 
 
-### Description
+## 描述
 
 Used to show tablets and information of their belonging table
 
@@ -41,7 +41,7 @@ illustrate：
 1. tablet-ids: one or more tablet-ids, with comma separated
 2. Columns of result keep same with result of `SHOW-DATA` for the same table
 
-### 示例
+## 示例
 
 1. show information of four tablet-ids (actually, three tablet-ids. Result will be deduplicated)
 
@@ -58,9 +58,8 @@ illustrate：
     +---------------------+-----------+-----------+--------------+-----------+--------------+----------------+
     ```
 
-### Keywords
+## 关键词
 
     SHOW, TABLETS, BELONG
 
-### Best Practice
 

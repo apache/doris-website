@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-CREATE SQL BLOCK RULE
 
 ## 描述
 

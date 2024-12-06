@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-SHOW LOAD WARNINGS
 
 ## 描述
 

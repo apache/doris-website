@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-MYSQL LOAD
 
 ## 描述
 

@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## RESTORE
-
-### Name
-
-RESTORE
 
 ## 描述
 

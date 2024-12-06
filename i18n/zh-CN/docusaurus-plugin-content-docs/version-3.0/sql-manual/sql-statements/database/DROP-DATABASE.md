@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name 
-
-DOPR DATABASE
 
 ## 描述
 

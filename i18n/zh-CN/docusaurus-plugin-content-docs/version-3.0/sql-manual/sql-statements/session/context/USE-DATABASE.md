@@ -65,6 +65,6 @@ USE <[CATALOG_NAME].DATABASE_NAME>
 
 ## Relate Commands
 
-## Keywords
+## 关键词
 
     USE, DATABASE, USER, COMPUTE GROUP

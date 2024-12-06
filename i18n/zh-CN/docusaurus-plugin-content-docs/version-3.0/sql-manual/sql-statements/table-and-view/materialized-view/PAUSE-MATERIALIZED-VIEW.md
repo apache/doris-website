@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-PAUSE MATERIALIZED VIEW
 
 ## 描述
 

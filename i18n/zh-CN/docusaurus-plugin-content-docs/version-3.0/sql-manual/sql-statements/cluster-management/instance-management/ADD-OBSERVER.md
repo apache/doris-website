@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-SYSTEM-ADD-OBSERVER
-
-### Name
-
-ALTER SYSTEM ADD OBSERVER
 
 ## 描述
 

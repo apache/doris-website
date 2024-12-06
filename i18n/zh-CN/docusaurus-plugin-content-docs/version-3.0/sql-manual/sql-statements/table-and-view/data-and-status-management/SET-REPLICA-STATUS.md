@@ -26,10 +26,6 @@ under the License.
 
 
 
-### Name
-
-ADMIN SET REPLICA STATUS
-
 ## 描述
 
 该语句用于设置指定副本的状态。

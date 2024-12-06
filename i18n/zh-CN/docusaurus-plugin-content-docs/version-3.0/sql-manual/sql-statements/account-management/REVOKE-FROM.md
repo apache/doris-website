@@ -156,6 +156,6 @@ REVOKE role_list FROM user_identity
 - [CREATE RESOURCE](../Administration-Statements/CREATE-RESOURCE.md)
 - [CREATE STORAGE VAULT](../Administration-Statements/CREATE-STORAGE-VAULT.md)
 
-## Keywords
+## 关键词
 
     REVOKE, WORKLOAD GROUP, COMPUTE GROUP, RESOURCE 

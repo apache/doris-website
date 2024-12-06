@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-### Name
 
-SHOW REPLICA STATUS
 
 ## 描述
 

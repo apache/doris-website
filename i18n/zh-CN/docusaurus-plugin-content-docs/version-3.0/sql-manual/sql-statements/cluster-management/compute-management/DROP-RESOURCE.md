@@ -26,9 +26,7 @@ under the License.
 
 
 
-### Name
 
-DROP RESOURCE
 
 ## 描述
 

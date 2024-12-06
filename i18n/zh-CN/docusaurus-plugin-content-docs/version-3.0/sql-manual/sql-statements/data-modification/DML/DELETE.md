@@ -24,11 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-### Name
-
-DELETE
-
 ## 描述
 
 该语句用于按条件删除指定 table（base index）partition 中的数据。

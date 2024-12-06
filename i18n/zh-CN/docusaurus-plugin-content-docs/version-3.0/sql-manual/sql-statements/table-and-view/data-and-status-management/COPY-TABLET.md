@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### Name
-
-ADMIN COPY TABLET
 
 ## 描述
 

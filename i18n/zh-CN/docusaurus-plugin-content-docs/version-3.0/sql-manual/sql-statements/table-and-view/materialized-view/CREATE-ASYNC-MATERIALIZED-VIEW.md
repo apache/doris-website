@@ -25,9 +25,6 @@ under the License.
 -->
 
 
-### 名称
-
-CREATE ASYNC MATERIALIZED VIEW
 
 ## 描述
 

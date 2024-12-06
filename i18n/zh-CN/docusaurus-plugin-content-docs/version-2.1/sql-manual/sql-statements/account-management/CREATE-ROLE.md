@@ -26,7 +26,7 @@ under the License.
 
 
 
-CREATE ROLE
+
 
 ## 描述
 

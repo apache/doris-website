@@ -50,6 +50,6 @@ SHOW STORAGE VAULTS 命令用于显示系统中配置的所有 storage vault 的
 - [REVOKE](../account-management/REVOKE-FROM.md)
 - [SET DEFAULT STORAGE VAULT](../Data-Definition-Statements/SET-DEFAULT-STORAGE-VAULT.md)
 
-## Keywords
+## 关键词
 
     SHOW, STORAGE VAULTS

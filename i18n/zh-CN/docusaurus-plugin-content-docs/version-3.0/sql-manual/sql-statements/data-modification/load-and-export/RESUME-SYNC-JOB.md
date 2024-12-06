@@ -26,9 +26,6 @@ under the License.
 
 
 
-### Name
-
-RESUME SYNC JOB
 
 ## 描述
 
