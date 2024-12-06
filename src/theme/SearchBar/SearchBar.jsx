@@ -24,7 +24,7 @@ import LoadingRing from '../LoadingRing/LoadingRing';
 import styles from './SearchBar.module.css';
 import { normalizeContextByPath } from '../../utils/normalizeContextByPath';
 import useIsDocPage from '@site/src/hooks/use-is-doc';
-import { VERSIONS } from '@site/src/constant/common';
+import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/common';
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
     const autoComplete = autoCompleteModule.default;
@@ -41,6 +41,8 @@ const SEARCH_PARAM_HIGHLIGHT = '_highlight';
 export default function SearchBar({ handleSearchBarToggle }) {
     const isBrowser = useIsBrowser();
     const location = useLocation();
+    // const curVersion = useRef(DEFAULT_VERSION);
+    const [curVersion, setCurVersion] = useState(DEFAULT_VERSION);
     const {
         siteConfig: { baseUrl },
         i18n: { currentLocale },
@@ -125,8 +127,8 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setSearchContext(nextSearchContext);
     }, [location.pathname, versionUrl]);
     const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
-    const loadIndex = useCallback(async () => {
-        if (hidden || indexStateMap.current.get(searchContext)) {
+    const loadIndex = useCallback(async (forceLoad = false) => {
+        if ((hidden || indexStateMap.current.get(searchContext)) && !forceLoad) {
             // Do not load the index (again) if its already loaded or in the process of being loaded.
             return;
         }
@@ -339,10 +341,21 @@ export default function SearchBar({ handleSearchBarToggle }) {
     }, [isMac, onInputFocus]);
 
     useEffect(() => {
-        if (isDocsPage) {
-            loadIndex();
+        const pathHaveVer = VERSIONS.some(item => location.pathname.includes(item));
+        if (!pathHaveVer && curVersion !== '2.1') {
+            setCurVersion('2.1');
+        } else {
+            VERSIONS.forEach(item => {
+                if (location.pathname.includes(item) && item !== curVersion) {
+                    setCurVersion(item);
+                }
+            });
         }
-    }, [location.pathname, isDocsPage]);
+    }, [location.pathname]);
+
+    useEffect(() => {
+        loadIndex(true);
+    }, [curVersion]);
 
     const onClearSearch = useCallback(() => {
         const params = new URLSearchParams(location.search);
@@ -356,7 +369,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setInputValue('');
         search.current?.autocomplete.setVal('');
     }, [location.pathname, location.search, location.hash, history]);
-  
+
     return (
         <div
             className={clsx('navbar__search', styles.searchBarContainer, {
