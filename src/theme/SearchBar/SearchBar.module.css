@@ -16,26 +16,6 @@
   padding: var(--search-local-spacing, 12px);
 }
 
-.navbarSearchInput {
-  border: none !important;
-  background-color: #f7f9fe !important;
-  background-image: url('/static/images/search-icon.svg');
-  height: 2.5rem !important;
-  background-position: 0.625rem center !important;
-  padding-left: 2.25rem !important;
-  color: #4c576c !important;
-  width: 15.43rem !important;
-  border-radius: 0.5rem;
-}
-
-
-@media not (max-width: 996px) {
-  .searchBar.searchBarLeft .dropdownMenu {
-    left: 0 !important;
-    right: auto !important;
-  }
-}
-
 @media (max-width: 576px) {
   :global(.navbar__search-input):not(:focus) {
     width: 2rem;
@@ -263,33 +243,11 @@ html[data-theme="dark"] .noResultsIcon {
   }
 }
 
-html[dir="rtl"] .searchHintContainer {
-  right: auto;
-  left: 10px;
-}
-
-html[dir="rtl"] .searchBarContainer .searchClearButton {
-  right: auto;
-  left: 0.8rem;
-}
-
-html[dir="rtl"] .searchBarContainer .searchBarLoadingRing {
-  left: auto;
-  right: 10px;
-}
-
-html[dir="rtl"] :global(.navbar__search-input) {
-  padding: 0 2.25em 0 0.5em;
-}
-
-/* For autocomplete.js only. */
 .input {
 }
 .hint {
 }
 .suggestions {
-  max-height: 500px !important;
-  overflow: scroll !important;
 }
 .dataset {
 }
