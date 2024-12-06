@@ -46,11 +46,11 @@ The implementation of Schema Change is divided into two major categories: Light 
 
 - Heavy Weight Schema Change relies on the BE for data file transformation. The specific implementation methods are as follows:
 
-    |Schema change Implementation | Main Logic | Typical Scenario |
-    |-----------------|------|---------|----------|
-    | Direct Schema Change | Rewrites the data files holistically without involving reordering | Changing the data type of value columns |
-    | Sort Schema Change | Rewrites the data files holistically and reorders them | Changing the data type of key columns |
-    | Hard Linked Schema Change | Relinks the data files without directly modifying the data files | Replaced by Light Weight Schema Change for column changes |
+    | Schema Change Implementation | Main Logic | Usage Scenario |
+    |------------------|---------|----------|
+    | Direct Schema Change | Rewrites the entire data file without involving reordering | Changing the data type of a value column |
+    | Sort Schema Change | Rewrites the entire data file and involves reordering | Changing the data type of a key column |
+    | Hard Linked Schema Change | Relinks the data files without directly modifying them | Superseded by lightweight Schema Change for column modifications |
 
 **Main Process**
 
