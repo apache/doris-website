@@ -82,7 +82,7 @@ under the License.
 }
 ```
     
-## Examples
+## 示例
 
 1. 获取指定 label 的导入事务的状态。
 

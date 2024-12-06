@@ -64,7 +64,7 @@ under the License.
 
 如果表名后有内容，则会显示存储格式为行存的 base 或者 rollup 表。
 
-## Examples
+## 示例
 
 1. 检查指定数据库下表的存储格式是否为行存
 

@@ -32,7 +32,7 @@ under the License.
 
 获取当前的日期，以DATE类型返回
 
-### Examples
+### 示例
 
 ```
 mysql> SELECT CURDATE();

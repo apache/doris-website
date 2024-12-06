@@ -50,7 +50,7 @@ SHOW CATALOG RECYCLE BIN [ WHERE NAME [ = "name" | LIKE "name_matcher"] ]
 这里 name 可以是数据库/表/分区名。
 
 
-关于该命令使用的更多详细语法及最佳实践，请参阅 [SHOW-CATALOG-RECYCLE-BIN](../../sql-manual/sql-statements/Show-Statements/SHOW-CATALOG-RECYCLE-BIN.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `help SHOW CATALOG RECYCLE BIN ` 获取更多帮助信息。
+关于该命令使用的更多详细语法及最佳实践，请参阅 [SHOW-CATALOG-RECYCLE-BIN](../../sql-manual/sql-statements/recycle/SHOW-CATALOG-RECYCLE-BIN.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `help SHOW CATALOG RECYCLE BIN ` 获取更多帮助信息。
 
 ### 开始数据恢复
 
@@ -74,7 +74,7 @@ RECOVER PARTITION p1 FROM example_tbl;
 
 执行`RECOVER`命令之后，原来的数据将恢复可见。
 
-关于 RECOVER 使用的更多详细语法及最佳实践，请参阅 [RECOVER](../../sql-manual/sql-statements/Database-Administration-Statements/RECOVER.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `help RECOVER` 获取更多帮助信息。
+关于 RECOVER 使用的更多详细语法及最佳实践，请参阅 [RECOVER](../../sql-manual/sql-statements/recycle/RECOVER.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `help RECOVER` 获取更多帮助信息。
 
 ## 从 BE 回收站恢复 Tablet
 

@@ -159,7 +159,7 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
    1 row in set (0.15 sec)
    ```
 
-BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md)。
+BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md)。
 
 ## 最佳实践
 
@@ -191,7 +191,7 @@ BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-De
 
 1. CREATE REPOSITORY
 
-   创建一个远端仓库路径，用于备份或恢复。该命令需要借助 Broker 进程访问远端存储，不同的 Broker 需要提供不同的参数，具体请参阅 [Broker 文档](../../data-operate/import/broker-load-manual#其他-broker-导入)，也可以直接通过 S3 协议备份到支持 AWS S3 协议的远程存储上去，也可以直接备份到 HDFS，具体参考 [创建远程仓库文档](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md)
+   创建一个远端仓库路径，用于备份或恢复。该命令需要借助 Broker 进程访问远端存储，不同的 Broker 需要提供不同的参数，具体请参阅 [Broker 文档](../../data-operate/import/broker-load-manual#其他-broker-导入)，也可以直接通过 S3 协议备份到支持 AWS S3 协议的远程存储上去，也可以直接备份到 HDFS，具体参考 [创建远程仓库文档](./../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md)
 
 2. BACKUP
 
@@ -246,4 +246,4 @@ BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-De
 
 ## 更多帮助
 
- 关于 BACKUP 使用的更多详细语法及最佳实践，请参阅 [BACKUP](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP BACKUP` 获取更多帮助信息。
+ 关于 BACKUP 使用的更多详细语法及最佳实践，请参阅 [BACKUP](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP BACKUP` 获取更多帮助信息。

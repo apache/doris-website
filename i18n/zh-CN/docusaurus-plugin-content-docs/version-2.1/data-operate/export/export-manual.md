@@ -26,7 +26,7 @@ under the License.
 
 本文档将介绍如何使用`EXPORT`命令导出 Doris 中存储的数据。
 
-有关`EXPORT`命令的详细介绍，请参考：[EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md)
+有关`EXPORT`命令的详细介绍，请参考：[EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT.md)
 
 ## 概述
 
@@ -69,7 +69,7 @@ mysql> EXPORT TABLE tpch1.lineitem TO "s3://my_bucket/path/to/exp_"
     -> );
 ```
 
-提交作业后，可以通过 [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md) 命令查询导出作业状态，结果举例如下：
+提交作业后，可以通过 [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT.md) 命令查询导出作业状态，结果举例如下：
 
 ```sql
 mysql> show export\G
@@ -127,7 +127,7 @@ OutfileInfo: [
 * ErrorMsg：如果作业出现错误，这里会显示错误原因。
 * OutfileInfo：如果作业导出成功，这里会显示具体的`SELECT INTO OUTFILE`结果信息。
 
-提交 Export 作业后，在 Export 任务成功或失败之前可以通过 [CANCEL EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md) 命令取消导出作业。取消命令举例如下：
+提交 Export 作业后，在 Export 任务成功或失败之前可以通过 [CANCEL EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT.md) 命令取消导出作业。取消命令举例如下：
 
 ```sql
 CANCEL EXPORT FROM tpch1 WHERE LABEL like "%export_%";

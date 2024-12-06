@@ -105,7 +105,7 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 
     - `SET validate_password_policy=STRONG`
 
-更多帮助，请参阅[ALTER USER](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-USER.md)。
+更多帮助，请参阅[ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER.md)。
 
 ### 基于 LDAP 的认证方案
 
@@ -115,20 +115,20 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 
 ### 权限操作
 
-- 创建用户：[CREATE USER](../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md)
-- 修改用户：[ALTER USER](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-USER.md)
-- 删除用户：[DROP USER](../../sql-manual/sql-statements/Account-Management-Statements/DROP-USER.md)
-- 授权/分配角色：[GRANT](../../sql-manual/sql-statements/Account-Management-Statements/GRANT.md)
-- 撤权/撤销角色：[REVOKE](../../sql-manual/sql-statements/Account-Management-Statements/REVOKE.md)
-- 创建角色：[CREATE ROLE](../../sql-manual/sql-statements/Account-Management-Statements/CREATE-ROLE.md)
-- 删除角色：[DROP ROLE](../../sql-manual/sql-statements/Account-Management-Statements/DROP-ROLE.md)
-- 修改角色：[ALTER ROLE](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-ROLE.md)
-- 查看当前用户权限和角色：[SHOW GRANTS](../../sql-manual/sql-statements/Show-Statements/SHOW-GRANTS.md)
-- 查看所有用户权限和角色：[SHOW ALL GRANTS](../../sql-manual/sql-statements/Show-Statements/SHOW-GRANTS.md)
-- 查看已创建的角色：[SHOW ROLES](../../sql-manual/sql-statements/Show-Statements/SHOW-ROLES.md)
-- 设置用户属性：[SET PROPERTY](../../sql-manual/sql-statements/Account-Management-Statements/SET-PROPERTY.md)
-- 查看用户属性：[SHOW PROPERTY](../../sql-manual/sql-statements/Show-Statements/SHOW-PROPERTY.md)
-- 修改密码：[SET PASSWORD](../../sql-manual/sql-statements/Account-Management-Statements/SET-PASSWORD.md)
+- 创建用户：[CREATE USER](../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER.md)
+- 修改用户：[ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER.md)
+- 删除用户：[DROP USER](../../sql-manual/sql-statements/account-management/DROP-USER.md)
+- 授权/分配角色：[GRANT](../../sql-manual/sql-statements/account-management/GRANT-TO)
+- 撤权/撤销角色：[REVOKE](../../sql-manual/sql-statements/account-management/REVOKE-FROM.md)
+- 创建角色：[CREATE ROLE](../../sql-manual/sql-statements/account-management/CREATE-ROLE.md)
+- 删除角色：[DROP ROLE](../../sql-manual/sql-statements/account-management/DROP-ROLE.md)
+- 修改角色：[ALTER ROLE](../../sql-manual/sql-statements/account-management/ALTER-ROLE.md)
+- 查看当前用户权限和角色：[SHOW GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
+- 查看所有用户权限和角色：[SHOW ALL GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
+- 查看已创建的角色：[SHOW ROLES](../../sql-manual/sql-statements/account-management/SHOW-ROLES.md)
+- 设置用户属性：[SET PROPERTY](../../sql-manual/sql-statements/account-management/SET-PROPERTY.md)
+- 查看用户属性：[SHOW PROPERTY](../../sql-manual/sql-statements/account-management/SHOW-PROPERTY.md)
+- 修改密码：[SET PASSWORD](../../sql-manual/sql-statements/account-management/SET-PASSWORD.md)
 - 查看支持的所有权限项：[SHOW PRIVILEGES]
 - 查看行权限策略 [SHOW ROW POLICY]
 - 创建行权限策略 [CREATE ROW POLICY]

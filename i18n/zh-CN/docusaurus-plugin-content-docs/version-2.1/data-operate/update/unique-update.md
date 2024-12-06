@@ -137,4 +137,4 @@ WHERE transaction_date = '2024-11-24';
 
 ## 更多帮助
 
-关于数据更新使用的更多详细语法，请参阅 [UPDATE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/UPDATE) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP UPDATE` 获取更多帮助信息。
+关于数据更新使用的更多详细语法，请参阅 [UPDATE](../../sql-manual/sql-statements/data-modification/DML/UPDATE) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP UPDATE` 获取更多帮助信息。
