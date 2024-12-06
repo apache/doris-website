@@ -22,35 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SM3SUM
-
 ### description
-Calculates an SM3 128-bit checksum for the strings
-#### Syntax
 
-`SM3SUM(str[,str])`
+Calculates an SM3 128-bit checksum for the strings
+
+### Syntax
+
+```sql
+SM3SUM(str[,str])
+```
 
 ### example
 
+```sql
+select sm3("abcd");
 ```
-MySQL > select sm3("abcd");
+
+```
 +------------------------------------------------------------------+
 | sm3('abcd')                                                      |
 +------------------------------------------------------------------+
 | 82ec580fe6d36ae4f81cae3c73f4a5b3b5a09c943172dc9053c69fd8e18dca1e |
 +------------------------------------------------------------------+
-1 row in set (0.009 sec)
+```
 
-MySQL > select sm3sum("ab","cd");
+```sql
+select sm3sum("ab","cd");
+```
+
+```
 +------------------------------------------------------------------+
 | sm3sum('ab', 'cd')                                               |
 +------------------------------------------------------------------+
 | 82ec580fe6d36ae4f81cae3c73f4a5b3b5a09c943172dc9053c69fd8e18dca1e |
 +------------------------------------------------------------------+
-1 row in set (0.009 sec)
-
 ```
-
-### keywords
-
-    SM3SUM
