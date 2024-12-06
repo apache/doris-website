@@ -29,6 +29,7 @@
         "antd": "^5.12.2",
         "autoprefixer": "^10.4.16",
         "clsx": "^1.1.1",
+        "remote-web-worker": "0.0.9",
         "copy-to-clipboard": "^3.3.3",
         "docusaurus-plugin-matomo": "^0.0.8",
         "docusaurus-plugin-sass": "^0.2.3",
