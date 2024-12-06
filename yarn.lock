@@ -10177,6 +10177,11 @@ remark-stringify@^11.0.0:
     mdast-util-to-markdown "^2.0.0"
     unified "^11.0.0"
 
+remote-web-worker@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.npmmirror.com/remote-web-worker/-/remote-web-worker-0.0.9.tgz#3a96a84063e6c1a5fa3792abe0fd97eb7a97aab3"
+  integrity sha512-TguJhQVWeeL2zWqLQpTfq/uIOpXRHHq7SI6fw6xTIJfSN/ojiKUqV16oAhPD8zH71MFy3FHqSoQEx2cks5gcAA==
+
 renderkid@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmmirror.com/renderkid/-/renderkid-3.0.0.tgz#5fd823e4d6951d37358ecc9a58b1f06836b6268a"

@@ -1,9 +1,10 @@
+import 'remote-web-worker';
 import * as Comlink from "comlink";
 let remoteWorkerPromise;
 function getRemoteWorker() {
     if (process.env.NODE_ENV === "production" && !remoteWorkerPromise) {
         remoteWorkerPromise = (async () => {
-            const Remote = Comlink.wrap(new Worker(new URL("./worker.js", import.meta.url)));
+            const Remote = Comlink.wrap(new Worker(new URL("./worker.js", import.meta.url), { type: 'classic' }));
             return await new Remote();
         })();
     }
