@@ -110,6 +110,7 @@ If a UDF is no longer needed, it can be dropped using the following command, as 
 | Double                | Double                       |
 | Date                  | LocalDate                    |
 | Datetime              | LocalDateTime                |
+| IPV4/IPV6             | InetAddress                  |
 | String                | String                       |
 | Decimal               | BigDecimal                   |
 | `array<Type>`         | `ArrayList<Type>`            |
