@@ -646,7 +646,6 @@ PROPERTIES (
   "replication_num" = "1"
 );
 
-
 CREATE TABLE IF NOT EXISTS date_dim (
     d_date_sk bigint not null,
     d_date_id char(16) not null,
@@ -683,7 +682,6 @@ PROPERTIES (
   "replication_num" = "1"
 );
 
-
 CREATE TABLE IF NOT EXISTS customer_address (
     ca_address_sk bigint not null,
     ca_address_id char(16) not null,
@@ -705,14 +703,12 @@ PROPERTIES (
   "replication_num" = "1"
 );
 
-
 curl --location-trusted \
 -u "root:" \
 -H "column_separator:|" \
 -H "columns: i_item_sk, i_item_id, i_rec_start_date, i_rec_end_date, i_item_desc, i_current_price, i_wholesale_cost, i_brand_id, i_brand, i_class_id, i_class, i_category_id, i_category, i_manufact_id, i_manufact, i_size, i_formulation, i_color, i_units, i_container, i_manager_id, i_product_name" \
 -T "/path/to/data/item_1_10.dat" \
 http://127.0.0.1:8030/api/doc_tpcds/item/_stream_load
-
 
 curl --location-trusted \
 -u "root:" \
@@ -721,7 +717,6 @@ curl --location-trusted \
 -T "/path/to/data/date_dim_1_10.dat" \
 http://127.0.0.1:8030/api/doc_tpcds/date_dim/_stream_load
 
-
 curl --location-trusted \
 -u "root:" \
 -H "column_separator:|" \
@@ -729,15 +724,13 @@ curl --location-trusted \
 -T "/path/to/data/store_sales.csv" \
 http://127.0.0.1:8030/api/doc_tpcds/store_sales/_stream_load
 
-
-
 curl --location-trusted \
 -u "root:" \
 -H "column_separator:|" \
 -H "ca_address_sk, ca_address_id, ca_street_number, ca_street_name, ca_street_type, ca_suite_number, ca_city, ca_county, ca_state, ca_zip, ca_country, ca_gmt_offset, ca_location_type" \
 -T "/path/to/data/customer_address_1_10.dat" \
 http://127.0.0.1:8030/api/doc_tpcds/customer_address/_stream_load
-
-Path：
-/Users/${username}/Documents/file/docs_write/doc_ddl_dir.tar  
 ```
+
+The data files item_1_10.dat, date_dim_1_10.dat, store_sales.csv, customer_address_1_10.dat can be downloaded from the link below:
+https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar
