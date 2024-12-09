@@ -1,7 +1,7 @@
 ---
 {
     "title": "加密和脱敏函数",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
