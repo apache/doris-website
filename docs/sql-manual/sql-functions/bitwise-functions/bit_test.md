@@ -38,6 +38,7 @@ Integer value ranges: TINYINT, SMALLINT, INT, BIGINT, LARGEINT."
 
 ### example
 
+``` sql
 mysql [(none)]>SELECT bit_test(43, 1);
 +-----------------+
 | bit_test(43, 1) |
