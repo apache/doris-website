@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Encrption and Masking Function ",
+    "title": "加密和脱敏函数",
     "language": "en"
 }
 ---

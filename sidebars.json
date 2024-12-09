@@ -237,8 +237,7 @@
                             ]
                         },
                         "query-data/complex-type",
-                        "query-data/lateral-view",
-                        "query-data/encryption-function"
+                        "query-data/lateral-view"
                     ]
                 },
                 {
@@ -449,7 +448,8 @@
                         "admin-manual/auth/ldap",
                         "admin-manual/auth/ranger",
                         "admin-manual/auth/certificate",
-                        "admin-manual/auth/fe-certificate"
+                        "admin-manual/auth/fe-certificate",
+                        "admin-manual/auth/encryption-function"
                     ]
                 },
                 {
