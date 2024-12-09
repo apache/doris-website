@@ -79,13 +79,13 @@ grammar:
 8. restore table by name and id, and set new table name
 
    ```sql
-   RECOVER TABLE [db_name.]table_name table_id AS new_db_name;
+   RECOVER TABLE [db_name.]table_name table_id AS new_table_name;
    ```
 
 9. restore partition by name and id, and set new partition name
 
    ```sql
-   RECOVER PARTITION partition_name partition_id AS new_db_name FROM [db_name.]table_name;
+   RECOVER PARTITION partition_name partition_id AS new_partition_name FROM [db_name.]table_name;
    ```  
 
 illustrate:
