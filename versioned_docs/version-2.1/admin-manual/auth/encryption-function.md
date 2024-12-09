@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Encrption and Masking Function ",
+    "title": "Encryption and Masking Function",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris 内置了如下加密和脱敏函数。详细使用，请参考 SQL 手册。
+Doris provides the following built-in encryption and masking functions. For detailed usage, please refer to the SQL manual.
 
 - [AES_ENCRYPT](../sql-manual/sql-functions/encrypt-digest-functions/aes-encrypt)
 - [AES_DECRYPT](../sql-manual/sql-functions/encrypt-digest-functions/aes-decrypt)
