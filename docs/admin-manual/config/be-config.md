@@ -1356,30 +1356,6 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: The `max_filter_ratio` limit can only work if the total rows of `group commit` is less than this value. See [Group Commit](../../data-operate/import/group-commit-manual.md) for more details
 * Default: 10000
 
-### Compute and Storage Disaggregated Mode
-
-#### `deploy_mode`
-
-* Default: ""
-
-* Description:  The mode in which BE runs. `cloud` indicates the decoupled storage-compute mode.
-
-#### `meta_service_endpoint`
-
-Default: ""
-
-* Description: Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This value is usually delivered by the FE to the BE by the heartbeat, no need to configure.
-
-#### `enable_file_cache`
-
-Default: true for cloud mode, false for non-cloud mode.
-* Description: Whether to use file cache.
-
-#### `file_cache_path`
-
-Default: [{"path":"${DORIS_HOME}/file_cache"}]
-* Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
-* format: [{"path":"/path/to/file_cache","total_size":21474836480,{"path":"/path/to/file_cache2","total_size":21474836480}]
 #### `LZ4_HC_compression_level`
 * Description: level of compression when using LZ4_HC
 * Default: LZ4HC_CLEVEL_DEFAULT
@@ -1763,3 +1739,28 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 #### `wg_weighted_memory_ratio_refresh_interval_ms`
 * Description: Sleep time in milliseconds between refresh iterations of workload group weighted memory ratio
 * Default: 50
+
+### Compute and Storage Disaggregated Mode
+
+#### `deploy_mode`
+
+* Default: ""
+
+* Description:  The mode in which BE runs. `cloud` indicates the decoupled storage-compute mode.
+
+#### `meta_service_endpoint`
+
+Default: ""
+
+* Description: Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This value is usually delivered by the FE to the BE by the heartbeat, no need to configure.
+
+#### `enable_file_cache`
+
+Default: true for cloud mode, false for non-cloud mode.
+* Description: Whether to use file cache.
+
+#### `file_cache_path`
+
+Default: [{"path":"${DORIS_HOME}/file_cache"}]
+* Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
+* format: [{"path":"/path/to/file_cache","total_size":21474836480,{"path":"/path/to/file_cache2","total_size":21474836480}]
