@@ -89,7 +89,10 @@
                 {
                     "type": "category",
                     "label": "Database Connection",
-                    "items": ["db-connect/database-connect", "db-connect/arrow-flight-sql-connect"]
+                    "items": [
+                        "db-connect/database-connect",
+                        "db-connect/arrow-flight-sql-connect"
+                    ]
                 },
                 {
                     "type": "category",
@@ -208,7 +211,9 @@
                         {
                             "type": "category",
                             "label": "Job Scheduler",
-                            "items": ["data-operate/scheduler/job-scheduler"]
+                            "items": [
+                                "data-operate/scheduler/job-scheduler"
+                            ]
                         },
                         "data-operate/transaction"
                     ]
@@ -226,7 +231,10 @@
                         {
                             "type": "category",
                             "label": "User Defined Functions",
-                            "items": ["query-data/udf/alias-function", "query-data/udf/java-user-defined-function"]
+                            "items": [
+                                "query-data/udf/alias-function",
+                                "query-data/udf/java-user-defined-function"
+                            ]
                         },
                         "query-data/complex-type",
                         "query-data/lateral-view",
@@ -400,7 +408,10 @@
                         {
                             "type": "category",
                             "label": "Cross Cluster Replication",
-                            "items": ["admin-manual/data-admin/ccr/overview", "admin-manual/data-admin/ccr/feature"]
+                            "items": [
+                                "admin-manual/data-admin/ccr/overview",
+                                "admin-manual/data-admin/ccr/feature"
+                            ]
                         },
                         "admin-manual/data-admin/recyclebin",
                         "admin-manual/data-admin/repairing-data"
@@ -425,7 +436,10 @@
                 {
                     "type": "category",
                     "label": "Managing Query",
-                    "items": ["admin-manual/query-admin/sql-interception", "admin-manual/query-admin/kill-query"]
+                    "items": [
+                        "admin-manual/query-admin/sql-interception",
+                        "admin-manual/query-admin/kill-query"
+                    ]
                 },
                 {
                     "type": "category",
@@ -474,7 +488,10 @@
                 {
                     "type": "category",
                     "label": "Log Management",
-                    "items": ["admin-manual/log-management/fe-log", "admin-manual/log-management/be-log"]
+                    "items": [
+                        "admin-manual/log-management/fe-log",
+                        "admin-manual/log-management/be-log"
+                    ]
                 },
                 {
                     "type": "category",
@@ -675,7 +692,11 @@
             "type": "category",
             "label": "Benchmark",
             "collapsed": false,
-            "items": ["benchmark/ssb", "benchmark/tpch", "benchmark/tpcds"]
+            "items": [
+                "benchmark/ssb",
+                "benchmark/tpch",
+                "benchmark/tpcds"
+            ]
         },
         {
             "type": "category",
@@ -691,7 +712,6 @@
                     "label": "BI",
                     "items": [
                         "ecosystem/bi/apache-superset",
-                       
                         "ecosystem/bi/finebi",
                         "ecosystem/bi/powerbi",
                         "ecosystem/bi/tableau",
@@ -701,17 +721,17 @@
                     ]
                 },
                 {
-                    "type":"category",
-                    "label":"SQL Clients",
-                    "items":[
+                    "type": "category",
+                    "label": "SQL Clients",
+                    "items": [
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip"
                     ]
                 },
                 {
-                    "type":"category",
-                    "label":"More",
-                    "items":[
+                    "type": "category",
+                    "label": "More",
+                    "items": [
                         "ecosystem/cloudcanal",
                         "ecosystem/datax",
                         "ecosystem/dbt-doris-adapter",
@@ -732,7 +752,13 @@
             "type": "category",
             "label": "FAQ",
             "collapsed": false,
-            "items": ["faq/install-faq", "faq/data-faq", "faq/sql-faq", "faq/lakehouse-faq", "faq/bi-faq"]
+            "items": [
+                "faq/install-faq",
+                "faq/data-faq",
+                "faq/sql-faq",
+                "faq/lakehouse-faq",
+                "faq/bi-faq"
+            ]
         },
         {
             "type": "category",
@@ -801,7 +827,10 @@
                         {
                             "type": "category",
                             "label": "IP Data Type",
-                            "items": ["sql-manual/sql-data-types/ip/IPV4", "sql-manual/sql-data-types/ip/IPV6"]
+                            "items": [
+                                "sql-manual/sql-data-types/ip/IPV4",
+                                "sql-manual/sql-data-types/ip/IPV6"
+                            ]
                         }
                     ]
                 },
@@ -1732,7 +1761,9 @@
                         {
                             "type": "category",
                             "label": "Operators",
-                            "items": ["sql-manual/sql-statements/Operators/in"]
+                            "items": [
+                                "sql-manual/sql-statements/Operators/in"
+                            ]
                         },
                         {
                             "type": "category",
@@ -1766,10 +1797,10 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
-                        "releasenotes/v3.0/release-3.0.0",
-                        "releasenotes/v3.0/release-3.0.1",
+                        "releasenotes/v3.0/release-3.0.3",
                         "releasenotes/v3.0/release-3.0.2",
-                        "releasenotes/v3.0/release-3.0.3"
+                        "releasenotes/v3.0/release-3.0.1",
+                        "releasenotes/v3.0/release-3.0.0"
                     ]
                 },
                 {

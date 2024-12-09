@@ -1,5 +1,11 @@
 export const NEWSLETTER_DATA = [
-
+    {
+        tags: ['Release Note'],
+        title: "Apache Doris 3.0.3 just released",
+        content: `Dear community members, the Apache Doris 3.0.3 version was officially released on December 02, 2024, this version further enhances the performance and stability of the system.`,
+        to: '/blog/release-note-3.0.3',
+        image: '3.0.3.jpg',
+    },
     {
         tags: ['Best Practice'],
         title: "Scaling Bitcoin data to billions of records with Apache Doris: our journey to auto-partitioning",
@@ -13,14 +19,6 @@ export const NEWSLETTER_DATA = [
         content: `Ortege handles massive volumes of blockchain data to power its analytics platform, Ortege Studio. Apache Doris forms the backbone of its Lakehouse v2, enabling it to process billions of records and deliver real-time insights.`,
         to: '/blog/ortege-studio-2-fine-tuning-apache-doris-for-maximum-performance-and-resilience',
         image: 'ortege-2.jpg',
-    },
-
-    {
-        tags: ['Release Note'],
-        title: "New milestone: Apache Doris 3.0 has been released",
-        content: `Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode inaddition to the compute-storage mode for cluster deployment. `,
-        to: '/blog/release-note-3.0.0',
-        image: '3.0.0.jpeg',
     },
     {
         tags: ['Best Practice'],
