@@ -46,11 +46,11 @@ The implementation of Schema Change is divided into two major categories: Light 
 
 - Heavy Weight Schema Change relies on the BE for data file transformation. The specific implementation methods are as follows:
 
-    |Schema change Implementation | Main Logic | Typical Scenario |
-    |-----------------|------|---------|----------|
-    | Direct Schema Change | Rewrites the data files holistically without involving reordering | Changing the data type of value columns |
-    | Sort Schema Change | Rewrites the data files holistically and reorders them | Changing the data type of key columns |
-    | Hard Linked Schema Change | Relinks the data files without directly modifying the data files | Replaced by Light Weight Schema Change for column changes |
+    | Schema Change Implementation | Main Logic | Usage Scenario |
+    |------------------|---------|----------|
+    | Direct Schema Change | Rewrites the entire data file without involving reordering | Changing the data type of a value column |
+    | Sort Schema Change | Rewrites the entire data file and involves reordering | Changing the data type of a key column |
+    | Hard Linked Schema Change | Relinks the data files without directly modifying them | Superseded by lightweight Schema Change for column modifications |
 
 **Main Process**
 
@@ -83,7 +83,7 @@ For Heavy Weight Schema Change, after the user issues the Alter command, a task 
     ```
 5. After the data transformation is completed, all tablets storing old data will be deleted, and all new tablets that have completed the data change will replace the old tablets for service.
 
-The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
+The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN)
 
 ## Adding a column at a specified position to a specified index
 
@@ -589,4 +589,4 @@ ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
 
 ## More Details
 
-For more detailed syntax and best practices regarding Schema Change, please refer to the [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) command manual.
+For more detailed syntax and best practices regarding Schema Change, please refer to the [ALTER TABLE COLUMN](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN) command manual.

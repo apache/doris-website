@@ -204,7 +204,7 @@ Object 表示的一行数据即表示要导入的一行数据，示例如下：
 
 - fuzzy_parse 
 
-在 [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD.md)中，可以添加 `fuzzy_parse` 参数来加速 JSON 数据的导入效率。
+在 [STREAM LOAD](../../data-operate/import/import-way/stream-load-manual.md)中，可以添加 `fuzzy_parse` 参数来加速 JSON 数据的导入效率。
 
 这个参数通常用于导入 **以 Array 表示的多行数据** 这种格式，所以一般要配合 `strip_outer_array=true` 使用。
 

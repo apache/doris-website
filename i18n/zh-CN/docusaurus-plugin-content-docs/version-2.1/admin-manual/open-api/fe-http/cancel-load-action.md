@@ -79,7 +79,7 @@ under the License.
     }
     ```
     
-## Examples
+## 示例
 
 1. 取消指定 label 的导入事务
 

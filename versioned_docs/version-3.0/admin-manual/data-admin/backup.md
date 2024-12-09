@@ -160,7 +160,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    1 row in set (0.15 sec)
    ```
 
-For the detailed usage of BACKUP, please refer to [here](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md).
+For the detailed usage of BACKUP, please refer to [here](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md).
 
 ## Best Practices
 
@@ -192,7 +192,7 @@ It is recommended to import the new and old clusters in parallel for a period of
 
    1. CREATE REPOSITORY
 
-      Create a remote repository path for backup or restore. This command needs to use the Broker process to access the remote storage. Different brokers need to provide different parameters. For details, please refer to [Broker documentation](../../data-operate/import/broker-load-manual), or you can directly back up to support through the S3 protocol For the remote storage of AWS S3 protocol, or directly back up to HDFS, please refer to [Create Remote Warehouse Documentation](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md )
+      Create a remote repository path for backup or restore. This command needs to use the Broker process to access the remote storage. Different brokers need to provide different parameters. For details, please refer to [Broker documentation](../../data-operate/import/broker-load-manual), or you can directly back up to support through the S3 protocol For the remote storage of AWS S3 protocol, or directly back up to HDFS, please refer to [Create Remote Warehouse Documentation](./../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md )
 
    2. BACKUP
 
@@ -247,4 +247,4 @@ It is recommended to import the new and old clusters in parallel for a period of
 
 ## More Help
 
- For more detailed syntax and best practices used by BACKUP, please refer to the [BACKUP](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md) command manual, You can also type `HELP BACKUP` on the MySql client command line for more help.
+ For more detailed syntax and best practices used by BACKUP, please refer to the [BACKUP](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md) command manual, You can also type `HELP BACKUP` on the MySql client command line for more help.

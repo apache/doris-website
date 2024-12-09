@@ -57,11 +57,11 @@ WITH [HDFS|S3|BROKER broker_name]
 [COMMENT "comments"];
 ```
 
-具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD)。
+具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD)。
 
 ## 查看导入状态
 
-Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) 命令查看
+Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) 命令查看
 
 ```sql
 mysql> show load order by createtime desc limit 1\G;
@@ -86,7 +86,7 @@ LoadFinishTime: 2022-04-01 18:59:11
 
 ## 取消导入
 
-当 Broker load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label。取消导入命令语法可执行 [CANCEL LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CANCEL-LOAD) 查看。
+当 Broker load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label。取消导入命令语法可执行 [CANCEL LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD) 查看。
 
 例如：撤销数据库 DEMO 上，label 为 broker_load_2022_03_23 的导入作业
 
@@ -740,4 +740,4 @@ bucket 信息填写不正确或者不存在。或者 bucket 的格式不受支�
 
 ## 更多帮助
 
-关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP BROKER LOAD` 获取更多帮助信息。
+关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP BROKER LOAD` 获取更多帮助信息。

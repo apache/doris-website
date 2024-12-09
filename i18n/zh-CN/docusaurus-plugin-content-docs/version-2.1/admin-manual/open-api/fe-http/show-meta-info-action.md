@@ -94,7 +94,7 @@ under the License.
     }
     ```
     
-## Examples
+## 示例
 
 1. 查看集群各个数据库的数据量大小
 

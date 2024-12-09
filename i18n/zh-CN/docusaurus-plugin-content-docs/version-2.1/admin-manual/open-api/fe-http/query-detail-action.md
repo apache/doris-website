@@ -79,7 +79,7 @@ under the License.
 }
 ```
     
-## Examples
+## 示例
 
 1. 获取指定时间点之后的查询详情。
 

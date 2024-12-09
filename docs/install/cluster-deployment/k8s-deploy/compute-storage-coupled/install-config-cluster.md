@@ -27,7 +27,7 @@ under the License.
 ## Cluster planning
 In the default DorisCluster resource deployment, the FE and BE images may not be the latest versions, and  the default replica count for both FE and BE is set to 3. Additionally, Additionally, the default resource configuration for FE is 6 CPUs and 12Gi of memory, while for BE, it is 8 CPUs and 16Gi of memory. This section describes how to modify these default configurations according to your requirements.
 
-### Image settings
+### Image configuration
 Doris Operator is decoupled from the Doris version and supports deploying Doris versions 2.0 and above.
 
 **FE image configuration**  
@@ -48,8 +48,8 @@ spec:
 ```
 Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster).  Official BE images are available at [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.be-ubuntu).
 
-### Replicas settings
-**FE Replicas Setting**  
+### Replicas configuration
+**FE replicas configuration**  
 To modify the default FE replica count of 3 to 5, use the following configuration:
 ```yaml
 spec:
@@ -58,7 +58,7 @@ spec:
 ```
 Update the configuration in the target [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster).
 
-**BE Replicas Setting**  
+**BE replicas configuration**  
 To modify the default FE replica count of 3 to 5, use the following configuration:
 ```yaml
 spec:
@@ -67,7 +67,7 @@ spec:
 ```
 Update the configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) that needs to be deployed.
 
-### Computing resource settings
+### Computing resource configuration
 **FE computing resource configuration**  
 The default compute resource configuration for FE is 6 CPUs and 12Gi of memory. To modify it to 8CPUs and 16Gi, use the following configuration:
 ```yaml
@@ -82,7 +82,7 @@ spec:
 ```
 Update the configuration in the target [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster).
 
-**BE computing resource setting**    
+**BE computing resource configuration**    
 The default compute resource configuration for BE is 8 CPUs and 16Gi of memory. To modify it to 16 CPUs and 32Gi of memory, use the following configuration:  
 ```yaml
 spec:
@@ -356,7 +356,7 @@ beSpec:
 ```
 In the above configuration, ${your_storageclass} represents the name of the StorageClass you want to use, and ${storageSize} represents the storage size you want to use. The format of ${storageSize} follows the [quantity expression method](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/) of K8s, such as: 100Gi. Please replace them as needed when using.
 
-## Access Configuration
+## Access configuration
 Kubernetes provides the use of Service as VIP (Virtual IP) and load balancer. There are three external exposure modes for Service: ClusterIP, NodePort, and LoadBalancer.
 
 ### ClusterIP
@@ -517,7 +517,7 @@ To access Doris through the LoadBalancer, use the external IP (provided in the E
 mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 31545 -uroot
 ```
 
-## Configuring the Username and Password for the Management Cluster
+## Configuring the username and password for the management cluster
 Managing Doris nodes requires connecting to the live FE nodes via the MySQL protocol using a username and password for administrative operations. Doris implements [a permission management mechanism similar to RBAC](../../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac), where the user must have the [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to perform node management. By default, the Doris Operator deploys the cluster with the root user in passwordless mode.
 
 The process of configuring the username and password can be divided into three scenarios:  
@@ -529,7 +529,7 @@ To secure access, you must configure a username and password with Node_Priv perm
 - Using environment variables
 - Using a Kubernetes Secret
 
-### Configuring the Root User Password during Cluster Deployment
+### Configuring the root user password during cluster deployment
 To set the root user's password securely, Doris supports encrypting it in [`fe.conf`](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password) using a two-stage SHA-1 encryption process. Here's how to set up the password.
 
 #### Step 1: Generate the root encrypted password
@@ -618,7 +618,7 @@ After setting the root password in fe.conf, Doris will automatically apply the p
 
   Here, ${secretName} is the name of the Secret containing the root username and password.
 
-### Automatically Creating Non-Root Management Users and Passwords during Deployment (Recommended)
+### Automatically creating non-root management users and passwords during deployment (Recommended)
 For enhanced security, it is recommended to create a non-root user for management during the first deployment, rather than using the root user. In this method, the username and password for the non-root user are configured through environment variables or Secrets. The Doris container's auxiliary services will automatically create the user in the database, set the password, and grant the necessary Node_priv permission. After deployment, Doris Operator will use the newly created non-root username and password to manage the cluster nodes.
 
 - Using environment variables:
