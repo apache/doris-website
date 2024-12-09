@@ -69,7 +69,7 @@ TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套
 
 ## 4. 测试 SQL
 
-TPCH 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries/sf1000)
+TPCH 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
 
 
 ## 5. 测试结果
@@ -202,7 +202,7 @@ sh bin/run-tpch-queries.sh -s 1000
 
 ### 7.6.2 单个 SQL 执行
 
-下面是测试时使用的 SQL 语句，你也可以从代码库里获取最新的 SQL。最新测试查询语句地址：[TPC-H 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries/sf1000)
+下面是测试时使用的 SQL 语句，你也可以从代码库里获取最新的 SQL。最新测试查询语句地址：[TPC-H 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
 
 ```sql
 --Q1
