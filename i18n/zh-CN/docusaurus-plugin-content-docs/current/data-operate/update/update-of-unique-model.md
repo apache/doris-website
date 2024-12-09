@@ -34,8 +34,7 @@ under the License.
 
 部分列更新，主要是指直接更新表中某些字段值，而不是全部的字段值。可以采用 Update 语句来进行更新，这种 Update 语句一般采用先将整行数据读出，然后再更新部分字段值，再写回。这种读写事务非常耗时，并且不适合大批量数据写入。Doris 在主键模型的导入更新中，提供了可以直接插入或者更新部分列数据的功能，不需要先读取整行数据，这样更新效率就大幅提升了。
 
-:::caution
-注意
+:::caution 注意
 
 1. 2.0 版本仅在 Unique Key 的 Merge-on-Write 实现中支持了部分列更新能力
 2. 从 2.0.2 版本开始，支持使用 INSERT INTO 进行部分列更新
@@ -154,8 +153,7 @@ INSERT INTO order_tbl (order_id, order_status) VALUES (1,'待发货');
 
 在 x.x.x 版本之前，doris 支持的部分列更新功能限制了一次导入中每一行必须更新相同的列，从 x.x.x 版本开始，doris 支持一种更加灵活的更新方式，它使得一次导入中的每一行可以更新不同的列。
 
-:::caution
-注意
+:::caution 注意:
 
 1. 灵活列更新这一功能从 x.x.x 版本开始支持
 2. 目前只有 stream load 这一种导入方式以及使用 stream load 作为其导入方式的工具(如 doris-flink-connector)支持灵活列更新功能

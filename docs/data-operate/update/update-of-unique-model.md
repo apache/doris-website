@@ -34,8 +34,7 @@ When loading data into the primary key model (Unique model) in Doris using suppo
 
 Updating partial columns mainly refers to directly updating certain field values in a table instead of updating all field values. This can be done using the Update statement, which typically involves reading the entire row data, updating specific field values, and then writing it back. This read-write transaction is time-consuming and not suitable for writing large amounts of data. In the context of load updates on the primary key model, Doris provides a functionality to directly insert or update partial column data without reading the entire row data, significantly improving the update efficiency.
 
-:::caution
-Note:
+:::caution Note:
 
 1. Partial updates are only supported in the Merge-on-Write implementation of the Unique Key starting from version 2.0.
 2. Starting from version 2.0.2, partial updates are supported using INSERT INTO.
@@ -154,8 +153,7 @@ Now, all rows in a batch write task (whether it is a load task or `INSERT INTO`)
 
 Before version x.x.x, Doris's partial update feature required that every row in an import update the same columns. Starting from version x.x.x, Doris supports a more flexible partial update method that allows each row in a single import to update different columns.
 
-:::caution
-Note
+:::caution Note:
 
 1. The flexible partial update feature is supported since version x.x.x.
 2. Currently, only the Stream Load import method and tools using Stream Load (e.g. Doris-Flink-Connector) support this feature.
