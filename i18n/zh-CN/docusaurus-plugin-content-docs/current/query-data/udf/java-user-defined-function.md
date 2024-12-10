@@ -45,6 +45,7 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 | Double           | Double                                     |
 | Date             | LocalDate                                  |
 | Datetime         | LocalDateTime                              |
+| IPV4/IPV6        | InetAddress                                |
 | String           | String                                     |
 | Decimal          | BigDecimal                                 |
 | `array<Type>`      | `ArrayList<Type>`（支持嵌套）                  |
