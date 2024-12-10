@@ -22,49 +22,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+### 描述
 
-AES 解密函数。该函数与 MySQL 中的 `AES_DECRYPT` 函数行为一致。默认采用 `AES_128_ECB` 算法，padding 模式为 `PKCS7`。底层使用 OpenSSL 库进行解密。
+AES 解密函数。该函数与 MySQL 中的 `AES_DECRYPT` 函数行为一致。默认采用 `AES_128_ECB` 算法，padding 模式为 `PKCS7`。
 
-#### Syntax
+#### 语法
 
-`VARCHAR AES_DECRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHAR encryption_mode])`
+```
+VARCHAR AES_DECRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHAR encryption_mode])
+```
 
-返回解密后的结果，其中：
+### 参数
+
 - `str` 为待解密文本；
 - `key_str` 为密钥。注意此密钥并非 16 进制编码，而是编码后的字符串表示。例如对于 128 位密钥加密，`key_str` 长度应为 16。如果密钥长度不足，使用**零填充**补齐。如果长度超出，使用循环异或的方式求出最终密钥。例如算法使用的 128 位密钥为 `key`，则 `key[i] = key_str[i] ^ key_str[i+128] ^ key_str[i+256] ^ ...`
 - `init_vector` 为算法中使用到的初始向量，仅在特定算法下生效，如不指定，则 Doris 使用内置向量；
-- `encryption_mode` 为加密算法，可选值见于：[变量](../../../query/query-variables/variables)。
+- `encryption_mode` 为加密算法，可选值见于变量。
 
-:::warning
-两参数版本，会无视 session variable `block_encryption_mode`，始终使用 `AES_128_ECB` 算法进行解密。因此不推荐调用。
-:::
-
-### Example
+### 示例
 
 ```sql
+set block_encryption_mode='';
 select aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='),'F3229A0B371ED2D9441B830D21A390C3');
-+------------------------------------------------------+
-| aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA==')) |
-+------------------------------------------------------+
-| text                                                 |
-+------------------------------------------------------+
-1 row in set (0.01 sec)
 ```
 
-如果你想更换其他加密算法，可以
+```
++--------------------------------------------------------------------------------+
+| aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='), '***', '', 'AES_128_ECB') |
++--------------------------------------------------------------------------------+
+| text                                                                           |
++--------------------------------------------------------------------------------+
+```
 
 ```sql
 set block_encryption_mode="AES_256_CBC";
-
-select AES_DECRYPT(FROM_BASE64('tsmK1HzbpnEdR2//WhO+MA=='),'F3229A0B371ED2D9441B830D21A390C3', '0123456789');
-+---------------------------------------------------------------------------+
-| aes_decrypt(from_base64('tsmK1HzbpnEdR2//WhO+MA=='), '***', '0123456789') |
-+---------------------------------------------------------------------------+
-| text                                                                      |
-+---------------------------------------------------------------------------+
-1 row in set (0.01 sec)
+select aes_decrypt(from_base64('3dym0E7/+1zbrLIaBVNHSw=='),'F3229A0B371ED2D9441B830D21A390C3');
 ```
 
-### Keywords
-    AES_DECRYPT, AES, DECRYPT
+```
++--------------------------------------------------------------------------------+
+| aes_decrypt(from_base64('3dym0E7/+1zbrLIaBVNHSw=='), '***', '', 'AES_256_CBC') |
++--------------------------------------------------------------------------------+
+| text                                                                           |
++--------------------------------------------------------------------------------+
+```
+
+```sql
+select AES_DECRYPT(FROM_BASE64('tsmK1HzbpnEdR2//WhO+MA=='),'F3229A0B371ED2D9441B830D21A390C3', '0123456789');
+```
+
+```
++------------------------------------------------------------------------------------------+
+| aes_decrypt(from_base64('tsmK1HzbpnEdR2//WhO+MA=='), '***', '0123456789', 'AES_256_CBC') |
++------------------------------------------------------------------------------------------+
+| text                                                                                     |
++------------------------------------------------------------------------------------------+
+```

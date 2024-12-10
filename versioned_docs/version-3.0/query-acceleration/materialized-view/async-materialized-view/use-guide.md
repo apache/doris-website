@@ -51,7 +51,7 @@ When the following conditions are met, it is recommended to create a partitioned
 
 - Tables used by the materialized view, excluding partitioned tables, do not change frequently.
 
-- The SQL definition of the materialized view and partition fields meet the requirements for partition derivation, i.e., they satisfy the requirements for incremental partition updates. Detailed requirements can be found in: [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmetho)
+- The SQL definition of the materialized view and partition fields meet the requirements for partition derivation, i.e., they satisfy the requirements for incremental partition updates. Detailed requirements can be found in: [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmetho)
 
 - The number of partitions in the materialized view is not excessive.
 
@@ -59,7 +59,7 @@ When some partitions of the materialized view become invalid, transparent rewrit
 
 ## Usage of Partitioned Materialized Views
 
-When the base table of the materialized view has a large amount of data and is partitioned, and if the SQL definition and partition fields of the materialized view meet the requirements for partition derivation, this scenario is suitable for constructing a partitioned materialized view. Detailed requirements for partition derivation can be found in [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmethod) and [FAQ question 12 in the async-materialized view section](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12-error-encountered-when-building-a-partitioned-materialized-view).
+When the base table of the materialized view has a large amount of data and is partitioned, and if the SQL definition and partition fields of the materialized view meet the requirements for partition derivation, this scenario is suitable for constructing a partitioned materialized view. Detailed requirements for partition derivation can be found in [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmethod) and [FAQ question 12 in the async-materialized view section](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12-error-encountered-when-building-a-partitioned-materialized-view).
 
 The partitions of the materialized view are created following the partition mapping of the base table, generally in a 1:1 or 1:n relationship with the base table partitions.
 

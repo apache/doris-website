@@ -138,18 +138,16 @@ curl -X PUT "localhost:9200/doc/_mapping?pretty" -H 'Content-Type:application/js
 }'
 
 # ES 6.x and before
-curl -X PUT "localhost:9200/doc/_mapping?pretty" -H 'Content-Type: application/json' -d '
+curl -X PUT "localhost:9200/doc/_mapping/_doc?pretty" -H 'Content-Type: application/json' -d '
 {
-    "_doc": {
-        "_meta": {
-            "doris":{
-                "array_fields":[
-                    "array_int_field",
-                    "array_string_field",
-                    "array_object_field"
-                ]
-            }
-    }
+    "_meta": {
+        "doris":{
+            "array_fields":[
+                "array_int_field",
+                "array_string_field",
+                "array_object_field"
+            ]
+        }
     }
 }
 '

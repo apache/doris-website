@@ -32,7 +32,7 @@ under the License.
 
 ## Doris 支持的 JOIN 类型
 
-- INNER JOIN（内连接）：对左表每一行和右表所有行进行 JOIN 条件比较，返回两个表中满足 JOIN 条件的匹配行。详细信息请参考 [SELECT](../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/SELECT/) 中有关于联接查询的语法定义
+- INNER JOIN（内连接）：对左表每一行和右表所有行进行 JOIN 条件比较，返回两个表中满足 JOIN 条件的匹配行。详细信息请参考 [SELECT](../sql-manual/sql-statements/data-query/SELECT) 中有关于联接查询的语法定义
 
 - LEFT JOIN（左连接）：在 INNER JOIN 的结果集基础上。如果左表的行在右表中没有匹配，则返回左表的所有行，同时右表对应的列显示为 NULL。
 

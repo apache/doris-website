@@ -32,7 +32,7 @@ under the License.
 
 ### 创建规则
 
-更多创建语法请参阅[CREATE SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-SQL-BLOCK-RULE)
+更多创建语法请参阅[CREATE SQL BLOCK RULE](../../sql-manual/sql-statements/data-governance/CREATE-SQL_BLOCK_RULE)
 
 - `sql`：匹配规则 (基于正则匹配，特殊字符需要转译)，可选，默认值为 "NULL"
 - `sqlHash`: sql hash 值，用于完全匹配，我们会在`fe.audit.log`打印这个值，可选，这个参数和 SQL 只能二选一，默认值为 "NULL"
@@ -88,7 +88,7 @@ SET PROPERTY [FOR 'jack'] 'sql_block_rules' = 'test_rule1,test_rule2'
 
 - 查看已配置的 SQL 阻止规则
 
-	不指定规则名则为查看所有规则，具体语法请参阅 [SHOW SQL BLOCK RULE](../../sql-manual/sql-statements/Show-Statements/SHOW-SQL-BLOCK-RULE)
+	不指定规则名则为查看所有规则，具体语法请参阅 [SHOW SQL BLOCK RULE](../../sql-manual/sql-statements/data-governance/SHOW-SQL_BLOCK_RULE)
 
 	```sql
 	SHOW SQL_BLOCK_RULE [FOR RULE_NAME]
@@ -102,7 +102,7 @@ SET PROPERTY [FOR 'jack'] 'sql_block_rules' = 'test_rule1,test_rule2'
 
 ### 修改规则
 
-允许对 sql/sqlHash/partition_num/tablet_num/cardinality/global/enable 等每一项进行修改，具体语法请参阅[ALTER SQL BLOCK  RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-SQL-BLOCK-RULE)
+允许对 sql/sqlHash/partition_num/tablet_num/cardinality/global/enable 等每一项进行修改，具体语法请参阅[ALTER SQL BLOCK  RULE](../../sql-manual/sql-statements/data-governance/ALTER-SQL_BLOCK_RULE)
 
 - `sql` 和 `sqlHash` 不能同时被设置。
 
@@ -122,7 +122,7 @@ ALTER SQL_BLOCK_RULE test_rule2 PROPERTIES("partition_num" = "10","tablet_num"="
 
 ### 删除规则
 
-支持同时删除多个规则，以 `,` 隔开，具体语法请参阅 [DROP SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-SQL-BLOCK-RULE)
+支持同时删除多个规则，以 `,` 隔开，具体语法请参阅 [DROP SQL BLOCK RULE](../../sql-manual/sql-statements/data-governance/DROP-SQL_BLOCK_RULE)
 
 ```
 DROP SQL_BLOCK_RULE test_rule1,test_rule2

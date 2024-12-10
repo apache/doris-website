@@ -48,7 +48,7 @@ Doris 中的一些功能需要使用一些用户自定义的文件。比如用�
 
 ### CREATE FILE
 
-该语句用于创建并上传一个文件到 Doris 集群，具体操作可查看 [CREATE FILE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FILE.md) 。
+该语句用于创建并上传一个文件到 Doris 集群，具体操作可查看 [CREATE FILE](../sql-manual/sql-statements/security/CREATE-FILE) 。
 
 Examples:
 
@@ -76,7 +76,7 @@ Examples:
 
 ### SHOW FILE
 
-该语句可以查看已经创建成功的文件，具体操作可查看 [SHOW FILE](../sql-manual/sql-statements/Show-Statements/SHOW-FILE.md)。
+该语句可以查看已经创建成功的文件，具体操作可查看 [SHOW FILE](./sql-manual/sql-statements/security/SHOW-FILE.md)。
 
 Examples:
 
@@ -88,7 +88,7 @@ Examples:
 
 ### DROP FILE
 
-该语句可以查看可以删除一个已经创建的文件，具体操作可查看 [DROP FILE](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FILE.md)。
+该语句可以查看可以删除一个已经创建的文件，具体操作可查看 [DROP FILE](../sql-manual/sql-statements/security/DROP-FILE.md)。
 
 Examples:
 
@@ -134,4 +134,4 @@ Examples:
 
 ## 更多帮助
 
-关于文件管理器使用的更多详细语法及最佳实践，请参阅 [CREATE FILE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FILE.md) 、[DROP FILE](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FILE.md) 和 [SHOW FILE](../sql-manual/sql-statements/Show-Statements/SHOW-FILE.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP CREATE FILE` 、`HELP DROP FILE`和`HELP SHOW FILE`  获取更多帮助信息。
+关于文件管理器使用的更多详细语法及最佳实践，请参阅 [CREATE FILE](../sql-manual/sql-statements/security/CREATE-FILE) 、[DROP FILE](../sql-manual/sql-statements/security/DROP-FILE.md) 和 [SHOW FILE](./sql-manual/sql-statements/security/SHOW-FILE.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP CREATE FILE` 、`HELP DROP FILE`和`HELP SHOW FILE`  获取更多帮助信息。

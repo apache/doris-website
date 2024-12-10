@@ -22,49 +22,55 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHA2
-
 ### description
 
 Use SHA2 to digest the message.
 
-#### Syntax
+### Syntax
 
-`SHA2(str, digest_length)`
+```sql
+SHA2(str, digest_length)
+```
 
-#### Arguments
+### Paramters
 
 - `str`: content to be encrypted
-- `digest_length`: the length of the digest
+- `digest_length`: the length of the digest. Support 224, 256, 384, 512
 
 ### example
 
 ```SQL
-mysql> select sha2('abc', 224);
+select sha2('abc', 224);
+```
+
+```
 +----------------------------------------------------------+
 | sha2('abc', 224)                                         |
 +----------------------------------------------------------+
 | 23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7 |
 +----------------------------------------------------------+
-1 row in set (0.13 sec)
+```
 
-mysql> select sha2('abc', 384);
+```sql
+select sha2('abc', 384);
+```
+
+```
 +--------------------------------------------------------------------------------------------------+
 | sha2('abc', 384)                                                                                 |
 +--------------------------------------------------------------------------------------------------+
 | cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7 |
 +--------------------------------------------------------------------------------------------------+
-1 row in set (0.13 sec)
+```
 
-mysql> select sha2(NULL, 512);
+```sql
+select sha2(NULL, 512);
+```
+
+```
 +-----------------+
 | sha2(NULL, 512) |
 +-----------------+
 | NULL            |
 +-----------------+
-1 row in set (0.09 sec)
 ```
-
-### keywords
-
-    SHA2

@@ -162,9 +162,15 @@ In the `fe.conf` file, the following key parameters need to be configured:
    - Example: `cloud`
 
 2. `cluster_id`
-   - Description: A unique identifier for the cluster in the decoupled storage-compute architecture; different clusters must set different cluster_ids.
-   - Format: int type.
-   - Example: `12345678`
+   - Description: A unique identifier for the cluster in the decoupled storage-compute architecture. Each cluster must have a distinct cluster_id to avoid conflicts.
+   - Format: Integer (int type).
+   - Example: A random `cluster_id` can be generated using the following shell command.
+      ```shell
+      echo $(($((RANDOM << 15)) | $RANDOM))
+      ```
+     :::caution
+     **Each cluster must have a distinct cluster_id to avoid conflicts**
+     :::
 
 3. `meta_service_endpoint`
    - Description: The address and port of the Meta Service.
@@ -188,7 +194,7 @@ Other nodes should also modify the configuration file and start according to the
 ALTER SYSTEM ADD FOLLOWER "host:port";
 ```
 
-Replace `host:port` with the actual address and editlog port of the FE node. More information refer to [ADD FOLLOWER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER.md) and [ADD OBSERVER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER.md).
+Replace `host:port` with the actual address and editlog port of the FE node. More information refer to [ADD FOLLOWER](../sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER.md) and [ADD OBSERVER](../sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER.md).
 
 For production environment, please ensure that the total number of Frontend (FE) nodes in the FOLLOWER role, including the first FE, remains an odd number. In general, three FOLLOWERS are sufficient. Frontend nodes in the OBSERVER role can be any number.
 
@@ -233,7 +239,7 @@ In the `be.conf` file, the following key parameters need to be configured:
 
    You can set the computing group for the BE using PROPERTIES.
 
-   For more detailed usage, please refer to [ADD BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) and [REMOVE BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND.md).
+   For more detailed usage, please refer to [ADD BACKEND](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND.md) and [REMOVE BACKEND](../sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND).
 
 3. Verify Backend Status:
 
@@ -285,7 +291,7 @@ CREATE STORAGE VAULT IF NOT EXISTS s3_vault
     );
 ```
 
-To create a Storage Vault on other object storage, please refer to [Create Storage Vault](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md).
+To create a Storage Vault on other object storage, please refer to [Create Storage Vault](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md).
 
 ### 6.3 Set Default Storage Vault 
 

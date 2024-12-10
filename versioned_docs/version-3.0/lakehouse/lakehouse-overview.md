@@ -157,7 +157,7 @@ Existing databases and tables in Doris are all under the Internal Catalog, which
 
 - External Catalog
 
-Users can create an External Catalog using the [CREATE CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG/) command, and view the existing Catalogs via the [SHOW CATALOGS](../sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS/) command.
+Users can create an External Catalog using the [CREATE CATALOG](../sql-manual/sql-statements/catalog/CREATE-CATALOG/) command, and view the existing Catalogs via the [SHOW CATALOGS](../sql-manual/sql-statements/catalog/SHOW-CATALOG/) command.
 
 - Switch Catalog
 
@@ -174,7 +174,7 @@ After switching catalog, you can view or switch to your target database in that 
 
 - Delete Catalog
 
-You cand delete an External Catalog via the [DROP CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-CATALOG/) command. (The Internal Catalog cannot be deleted.) The deletion only removes the mapping in Doris to the corresponding catalog. It doesn't change the external catalog in external data sources by all means.
+You cand delete an External Catalog via the [DROP CATALOG](../sql-manual/sql-statements/catalog/DROP-CATALOG/) command. (The Internal Catalog cannot be deleted.) The deletion only removes the mapping in Doris to the corresponding catalog. It doesn't change the external catalog in external data sources by all means.
 
 ### Examples
 
@@ -193,7 +193,7 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
-Syntax help: [CREATE CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG/)
+Syntax help: [CREATE CATALOG](../sql-manual/sql-statements/catalog/CREATE-CATALOG/)
 
 2. View Catalog
 
@@ -209,11 +209,11 @@ mysql> SHOW CATALOGS;
 +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
 ```
 
-- [SHOW CATALOGS](../sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS/)
+- [SHOW CATALOGS](../sql-manual/sql-statements/catalog/SHOW-CATALOG/)
 
-- You can view the CREATE CATALOG statement via [SHOW CREATE CATALOG](../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG).
+- You can view the CREATE CATALOG statement via [SHOW CREATE CATALOG](../sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG).
 
-- You can modify the Catalog PROPERTIES via [ALTER CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-CATALOG).
+- You can modify the Catalog PROPERTIES via [ALTER CATALOG](../sql-manual/sql-statements/catalog/ALTER-CATALOG).
 
 4. Switch Catalog
 
@@ -236,7 +236,7 @@ mysql> SHOW DATABASES;
 +-----------+
 ```
 
-Syntax help: [SWITCH](../sql-manual/sql-statements/Utility-Statements/SWITCH/)
+Syntax help: [SWITCH](../sql-manual/sql-statements/session/context/SWITCH/)
 
 5. Use the Catalog
 

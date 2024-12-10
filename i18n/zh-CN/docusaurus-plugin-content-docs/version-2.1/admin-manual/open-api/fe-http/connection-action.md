@@ -63,7 +63,7 @@ connection id 可以通过 MySQL 命令 `show processlist;` 中的 id 列查看�
 }
 ```
     
-## Examples
+## 示例
 
 1. 获取指定 connection id 的 query id
 

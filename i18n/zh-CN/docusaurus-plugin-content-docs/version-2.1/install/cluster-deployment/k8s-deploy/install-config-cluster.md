@@ -155,8 +155,9 @@ spec:
       configMapName: fe-conf
       resolveKey: fe.conf
 ```
+上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 K8s 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。请在使用时按需替换。
 
-:::tip Tip  
+:::tip 提示  
 Kubernetes 部署中，建议使用 FQDN 模式，启动配置中应添加 enable_fqdn_mode=true 。如果想用 IP 模式，且 Kubernetes 集群能够保证 pod 重启后 IP 不发生变化，请参照 issue [#138](https://github.com/apache/doris-operator/issues/138) 进行配置 IP 模式启动。
 :::
 
@@ -164,39 +165,17 @@ Kubernetes 部署中，建议使用 FQDN 模式，启动配置中应添加 enabl
 #### 第 1 步：配置并部署 ConfigMap   
 以下定义了名为 `be-conf` ConfigMap，该配置可供 Doris BE 使用：
 ```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: be-conf
-  labels:
-    app.kubernetes.io/component: be
-data:
-  be.conf: |
-    CUR_DATE=`date +%Y%m%d-%H%M%S`
-
-    PPROF_TMPDIR="$DORIS_HOME/log/"
-
-    JAVA_OPTS="-Xmx1024m -DlogPath=$DORIS_HOME/log/jni.log -Xloggc:$DORIS_HOME/log/be.gc.log.$CUR_DATE -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -DJDBC_MIN_POOL=1 -DJDBC_MAX_POOL=100 -DJDBC_MAX_IDLE_TIME=300000 -DJDBC_MAX_WAIT_TIME=5000"
-
-    # For jdk 9+, this JAVA_OPTS will be used as default JVM options
-    JAVA_OPTS_FOR_JDK_9="-Xmx1024m -DlogPath=$DORIS_HOME/log/jni.log -Xlog:gc:$DORIS_HOME/log/be.gc.log.$CUR_DATE -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -DJDBC_MIN_POOL=1 -DJDBC_MAX_POOL=100 -DJDBC_MAX_IDLE_TIME=300000 -DJDBC_MAX_WAIT_TIME=5000"
-
-    # since 1.2, the JAVA_HOME need to be set to run BE process.
-    # JAVA_HOME=/path/to/jdk/
-
-    # https://github.com/apache/doris/blob/master/docs/zh-CN/community/developer-guide/debug-tool.md#jemalloc-heap-profile
-    # https://jemalloc.net/jemalloc.3.html
-    JEMALLOC_CONF="percpu_arena:percpu,background_thread:true,metadata_thp:auto,muzzy_decay_ms:15000,dirty_decay_ms:15000,oversize_threshold:0,lg_tcache_max:20,prof:false,lg_prof_interval:32,lg_prof_sample:19,prof_gdump:false,prof_accum:false,prof_leak:false,prof_final:false"
-    JEMALLOC_PROF_PRFIX=""
-
-    # INFO, WARNING, ERROR, FATAL
-    sys_log_level = INFO
-
-    # ports for admin, web, heartbeat service
-    be_port = 9060
-    webserver_port = 8040
-    heartbeat_service_port = 9050
-    brpc_port = 8060
+beSpec:
+  persistentVolumes:
+  - mountPath: /opt/apache-doris/be/log
+    name: belog
+    persistentVolumeClaimSpec:
+      storageClassName: ${your_storageclass}
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${storageSize}
 ```
 使用 ConfigMap 挂载 BE 启动配置信息时，配置信息对应的 key 必须为 `be.conf` 。完成配置文件后，将其部署到目标 `DorisCluster` 资源需要部署的命名空间。
 ```shell
@@ -214,7 +193,7 @@ spec:
       resolveKey: be.conf
 ```
 
-:::tip Tip  
+:::tip 提示  
 如果需要将文件挂载到和启动配置同一目录下，需要将配置信息配置到启动配置所在的 ConfigMap 中。 ConfigMap 中的 key 为文件名称，value 为配置信息。  
 :::
 
@@ -688,7 +667,7 @@ func main() {
 
 ### 集群部署后设置 root 用户密码
 
-Doris 集群在部署后，若未设置 root 用户的密码。需要配置一个具有 [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户，便于 Doris Operator 自动化的管理集群节点。建议不要使用 root 用户， 请参考[用户新建和权限赋值章节](../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 配置新的管理用户和密码，并在 DorisCluster 资源中配置。
+Doris 集群在部署后，若未设置 root 用户的密码。需要配置一个具有 [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户，便于 Doris Operator 自动化的管理集群节点。建议不要使用 root 用户， 请参考[用户新建和权限赋值章节](../../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 配置新的管理用户和密码，并在 DorisCluster 资源中配置。
 
 #### 第 1 步：新建拥有 Node_priv 权限用户
 
@@ -709,7 +688,7 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 ```
 
 其中，${DB_ADMIN_USER} 为新创建的用户名。  
-新建用户名密码，以及赋予权限详细使用，请参考官方文档 [CREATE-USER](../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) 部分。
+新建用户名密码，以及赋予权限详细使用，请参考官方文档 [CREATE-USER](../../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER.md) 部分。
 
 #### 第 3 步：配置 DorisCluster 资源
 

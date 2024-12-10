@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Dear community, **Apache Doris version 2.1.7 was officially released on November 10, 2024.** This version brings continuous upgrades and improvementsAdditionally, several fixes have been implemented in areas such as the  to the Lakehouse, Async Materialized Views, and Semi-Structured Data Management, Query Optimizer and Permission Management. 
+Dear community, **Apache Doris version 2.1.7 was officially released on November 10, 2024.** This version brings continuous upgrades and improvements. Additionally, several fixes have been implemented in areas such as the  to the Lakehouse, Async Materialized Views, and Semi-Structured Data Management, Query Optimizer and Permission Management. 
 
 **Quick Download:** https://doris.apache.org/download/
 

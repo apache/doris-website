@@ -212,23 +212,20 @@
 }
 
 .docs-footer {
-    height: 7.625rem;
+    height: 3.25rem;
     background-color: #fff;
-    display: flex;
-    border-top: 1px solid #edf2fa;
-    .logo {
-        position: relative;
-        .footer__logo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8.5625rem;
-            height: 3.5rem;
-            margin-top: 0;
-        }
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #EDF2FA;
+    .docs-footer-p {
+        text-align: center;
+        color: rgba(29, 29, 29, 0.4);
+        font-family: Inter;
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px;
     }
-    .content {
-        flex: 1;
+    .docs-footer-p a {
+        text-decoration: underline;
     }
 }

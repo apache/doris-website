@@ -1,5 +1,7 @@
+const fetchUrl = "https://cdnd.selectdb.com";
+
 module.exports = {
-    ssrTemplate: `<!DOCTYPE html>
+  ssrTemplate: `<!DOCTYPE html>
 <html <%~ it.htmlAttributes %>>
   <head>
     <meta charset="UTF-8">
