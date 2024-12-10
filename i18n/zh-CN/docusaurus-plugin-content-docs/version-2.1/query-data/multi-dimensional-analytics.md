@@ -547,3 +547,6 @@ HAVING grouping_id(YEAR(d_date), ca_state, i_category) = 0
     );
     ```
 
+## 附录
+
+建表语句和数据文件见[分析函数 (窗口函数）](window-function.md)附录。

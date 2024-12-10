@@ -549,3 +549,6 @@ Using `CUBE` computes all possible aggregation levels (eight in this case), but 
   );
   ```
 
+## APPENDIX
+
+For table creation statements and data files, see the [Window Function](window-function.md) appendix.
