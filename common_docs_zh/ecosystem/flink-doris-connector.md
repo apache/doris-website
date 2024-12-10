@@ -28,7 +28,7 @@ under the License.
 
 # 概述
 
-[Flink Doris Connector](https://github.com/apache/doris-flink-connector)是通过 Flink 来读取和写入数据到 Doris 集群，同时集成了了[FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)，可以更便捷的对上游 MySQL 等数据库进行整库同步。
+[Flink Doris Connector](https://github.com/apache/doris-flink-connector)是通过 Flink 来读取和写入数据到 Doris 集群，同时集成了[FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)，可以更便捷的对上游 MySQL 等数据库进行整库同步。
 
 本文档主要介绍 Flink Doris Connector 的使用。
 
