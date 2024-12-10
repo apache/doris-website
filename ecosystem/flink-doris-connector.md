@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Flink Doris Connector
-
-# **Overview**
+# Overview
 
 The [Flink Doris Connector](https://github.com/apache/doris-flink-connector) enables reading and writing data to the Doris cluster through Flink. Meanwhile, it integrates with [FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/), making it more convenient to perform full database synchronization for upstream databases like MySQL. This document mainly introduces the usage of the Flink Doris Connector.
 
@@ -47,7 +45,7 @@ The [Flink Doris Connector](https://github.com/apache/doris-flink-connector) ena
 
 ## Installation and Configuration
 
-You can download the Jar package of the corresponding version of the Flink Doris Connector from [here](https://repo.maven.apache.org/maven2/org/apache/doris/). Copy this file to the `classpath` of `Flink` and then you can use the `Flink-Doris-Connector`. For `Flink` running in `Standalone` mode, put this file under the `lib/` folder. For `Flink` running in the `Yarn` cluster mode, put this file into the predeployment package.
+You can download the Jar package of the corresponding version of the Flink Doris Connector from [here](https://doris.apache.org/download#doris-ecosystem). Copy this file to the `classpath` of `Flink` and then you can use the `Flink-Doris-Connector`. For `Flink` running in `Standalone` mode, put this file under the `lib/` folder. For `Flink` running in the `Yarn` cluster mode, put this file into the predeployment package.
 
 ## Maven
 
@@ -172,7 +170,7 @@ env.fromSource(dorisSource, WatermarkStrategy.noWatermarks(), "doris source").pr
 env.execute("Doris Source Test");
 ```
 
-For the complete code, refer to：[DorisSourceDataStream.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSourceDataStream.java)
+For the complete code, refer to:[DorisSourceDataStream.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSourceDataStream.java)
 
 ## Write
 
@@ -274,7 +272,7 @@ env.fromCollection(data).sinkTo(builder.build());
 env.execute("doris test");
 ```
 
-For the complete code, refer to：[DorisSinkExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkExample.java)
+For the complete code, refer to:[DorisSinkExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkExample.java)
 
 #### RowData Format
 
@@ -343,7 +341,7 @@ source.sinkTo(builder.build());
 env.execute("doris test");
 ```
 
-For the complete code, refer to：[DorisSinkExampleRowData.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkExampleRowData.java) 
+For the complete code, refer to:[DorisSinkExampleRowData.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkExampleRowData.java) 
 
 #### Debezium Format
 
@@ -377,7 +375,7 @@ env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL Source")
         .sinkTo(builder.build());
 ```
 
-For the complete code, refer to：[CDCSchemaChangeExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/CDCSchemaChangeExample.java)
+For the complete code, refer to:[CDCSchemaChangeExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/CDCSchemaChangeExample.java)
 
 #### Multi-Table Writing Format
 
@@ -416,7 +414,7 @@ RecordWithMeta record1 = new RecordWithMeta("test", "student_2", "1,Jack,28");
 env.fromCollection(Arrays.asList(record, record1)).sinkTo(builder.build());
 ```
 
-For the complete code, refer to：[DorisSinkMultiTableExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkMultiTableExample.java)
+For the complete code, refer to:[DorisSinkMultiTableExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkMultiTableExample.java)
 
 ## Lookup Join
 

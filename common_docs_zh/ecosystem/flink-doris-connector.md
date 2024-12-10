@@ -26,13 +26,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Flink Doris Connector
-
 # 概述
 
-[Flink Doris Connector](https://github.com/apache/doris-flink-connector) 是通过Flink来读取和写入数据到Doris集群，同时集成了[FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)，可以更便捷的对上游MySQL等数据库进行整库同步。
+[Flink Doris Connector](https://github.com/apache/doris-flink-connector)是通过 Flink 来读取和写入数据到 Doris 集群，同时集成了了[FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)，可以更便捷的对上游 MySQL 等数据库进行整库同步。
 
-本文档主要介绍Flink Doris Connector的使用。
+本文档主要介绍 Flink Doris Connector 的使用。
 
 # 版本说明
 
@@ -51,11 +49,11 @@ under the License.
 
 ## 安装配置
 
-可在[这里](https://repo.maven.apache.org/maven2/org/apache/doris/)下载Flink Doris Connector对应版本的Jar包，将此文件复制到 `Flink` 的 `classpath` 中即可使用 `Flink-Doris-Connector` 。 `Standalone` 模式运行的 `Flink` ，将此文件放入 `lib/` 文件夹下。 `Yarn` 集群模式运行的 `Flink` ，则将此文件放入预部署包中。
+可在[这里](https://doris.apache.org/download#doris-ecosystem)下载 Flink Doris Connector 对应版本的 Jar 包，将此文件复制到 `Flink` 的 `classpath` 中即可使用 `Flink-Doris-Connector` 。 `Standalone` 模式运行的 `Flink` ，将此文件放入 `lib/` 文件夹下。 `Yarn` 集群模式运行的 `Flink` ，则将此文件放入预部署包中。
 
 ## Maven
 
-Maven中使用的时候，可以直接在Pom文件中加入如下依赖
+Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
 
 ```SQL
 <dependency>
@@ -69,18 +67,18 @@ Maven中使用的时候，可以直接在Pom文件中加入如下依赖
 
 ## 准备工作
 
-### Flink集群部署
+### Flink 集群部署
 
-以Standalone集群为例
+以 Standalone 集群为例
 
 1. 下载 Flink 的安装包，[Flink 1.18.1](https://archive.apache.org/dist/flink/flink-1.18.1/flink-1.18.1-bin-scala_2.12.tgz) ；
-2. 解压后，将Flink Doris Connector包放到 <FLINK_HOME>/lib 下 ；
-3. 进入 <FLINK_HOME>目录，运行 bin/start-cluster.sh 启动Flink集群；
-4. 可通过jps命令验证Flink集群是否成功启动 。
+2. 解压后，将 Flink Doris Connector 包放到 <FLINK_HOME>/lib 下；
+3. 进入 <FLINK_HOME>目录，运行 bin/start-cluster.sh 启动 Flink 集群；
+4. 可通过 jps 命令验证 Flink 集群是否成功启动。
 
-### 初始化Doris表
+### 初始化 Doris 表
 
-1. 运行以下语句创建Doris表
+1. 运行以下语句创建 Doris 表
 
 ```SQL
 CREATE DATABASE test;
@@ -102,11 +100,11 @@ INSERT INTO test.students values(2,"Emily",28);
 
 ## 读取
 
-Flink 读取支持通过 [Thrift](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md) 和 [ArrowFlightSQL](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/) 方式(24.0.0版本之后支持)读取，推荐使用ArrowFlightSQL方式。同时目前Doris Source是有界流，不支持以CDC的方式持续读取。
+Flink 读取支持通过 [Thrift](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md) 和 [ArrowFlightSQL](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/)方式 (24.0.0 版本之后支持) 读取，推荐使用 ArrowFlightSQL 方式。同时目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。。
 
 ### FlinkSQL
 
-启动Flink的 [SQL Client](https://nightlies.apache.org/flink/flink-docs-master/docs/dev/table/sqlclient/)
+启动 Flink 的 [SQL Client](https://nightlies.apache.org/flink/flink-docs-master/docs/dev/table/sqlclient/)
 
 ```SQL
 bin/sql-client.sh
@@ -154,7 +152,7 @@ SELECT * FROM students;
 
 ### Flink DataStream
 
-使用DataStream API读取时，需要提前在程序POM文件中引入依赖，参考使用方式章节
+使用 DataStream API 读取时，需要提前在程序 POM 文件中引入依赖，参考使用方式章节
 
 ```Java
 final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -180,7 +178,7 @@ env.execute("Doris Source Test");
 
 ## 写入
 
-Flink 写入使用Stream Load的方式进行写入，支持流式写入和攒批写入模式。
+Flink 写入使用 Stream Load 的方式进行写入，支持流式写入和攒批写入模式。
 
 :::info 流式写入和攒批写入区别
 
@@ -190,7 +188,7 @@ Connector1.5.0 之后支持攒批写入，攒批写入不依赖 Checkpoint，将
 
 ### FlinkSQL
 
-写入测试使用Flink的 [Datagen](https://nightlies.apache.org/flink/flink-docs-master/docs/connectors/table/datagen/) 来模拟上游持续产生的数据
+写入测试使用 Flink 的 [Datagen](https://nightlies.apache.org/flink/flink-docs-master/docs/connectors/table/datagen/) 来模拟上游持续产生的数据
 
 ```SQL
 -- enable checkpoint
@@ -231,11 +229,11 @@ INSERT INTO student_sink SELECT * FROM student_source;
 
 ### Flink DataStream
 
-通过DataStream api写入的时候，可以使用不同的序列化方式对上游数据序列化后写入Doris表
+通过 DataStream api 写入的时候，可以使用不同的序列化方式对上游数据序列化后写入 Doris 表
 
-#### 普通String格式
+#### 普通 String 格式
 
-当上游是csv或json数据格式时，可以直接使用SimpleStringSerializer序列化数据。
+当上游是 csv 或 json 数据格式时，可以直接使用 SimpleStringSerializer 序列化数据。
 
 ```Java
 StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -280,9 +278,9 @@ env.execute("doris test");
 
 完整代码参考：[DorisSinkExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkExample.java)
 
-#### RowData格式
+#### RowData 格式
 
-RowData是Flink内部的格式，如果上游传入的是RowData格式，则需要使用RowDataSerializer序列化数据。
+RowData 是 Flink 内部的格式，如果上游传入的是 RowData 格式，则需要使用 RowDataSerializer 序列化数据。
 
 ```Java
 StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -349,9 +347,9 @@ env.execute("doris test");
 
 完整代码参考：[DorisSinkExampleRowData.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkExampleRowData.java) 
 
-#### Debezium格式
+#### Debezium 格式
 
-对于上游是Debezium数据格式的数据，如FlinkCDC 或 Kafka中Debezium格式数据，可以使用JsonDebeziumSchemaSerializer序列化。
+对于上游是 Debezium 数据格式的数据，如 FlinkCDC 或 Kafka 中 Debezium 格式数据，可以使用 JsonDebeziumSchemaSerializer 序列化。
 
 ```Java
 // enable checkpoint
@@ -385,7 +383,7 @@ env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL Source")
 
 #### 多表写入格式
 
-目前DorisSink支持单个Sink同步多张表，需要将数据以及库表一起传递给Sink，使用RecordWithMetaSerializer序列化即可。
+目前 DorisSink 支持单个 Sink 同步多张表，需要将数据以及库表一起传递给 Sink，使用 RecordWithMetaSerializer 序列化即可。
 
 ```Java
 StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -459,18 +457,18 @@ ON a.city = c.city
 
 ## 整库同步
 
-Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)，可以更便捷的将MySQL等关系型数据库同步到Doris中，同时包含自动创建表，Schema Change等。目前支持同步的数据库包括：MySQL、Oracle、PostgreSQL、SQLServer、MongoDB、DB2。
+Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)，可以更便捷的将 MySQL 等关系型数据库同步到 Doris 中，同时包含自动创建表，Schema Change 等。目前支持同步的数据库包括：MySQL、Oracle、PostgreSQL、SQLServer、MongoDB、DB2。
 
 :::info 注意
 
-1. 使用整库同步时需要在 `$FLINK_HOME/lib` 目录下添加对应的 Flink CDC 依赖，比如 **flink-sql-connector-mysql-cdc-${version}.jar**，**flink-sql-connector-oracle-cdc-${version}.jar** ，FlinkCDC从3.1 版本与之前版本不兼容，下载地址分别为[FlinkCDC3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，[FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/)。
-2. Connector 24.0.0 之后依赖的 Flink CDC 版本需要在 3.1 以上，下载地址见[这里](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，FlinkCDC如果需使用 Flink CDC 同步 MySQL 和 Oracle，还需要在 `$FLINK_HOME/lib` 下增加相关的 JDBC 驱动。
+1. 使用整库同步时需要在 `$FLINK_HOME/lib` 目录下添加对应的 Flink CDC 依赖，比如 **flink-sql-connector-mysql-cdc-${version}.jar**，**flink-sql-connector-oracle-cdc-${version}.jar**，FlinkCDC 从 3.1 版本与之前版本不兼容，下载地址分别为为[FlinkCDC3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，[FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/)。
+2. Connector 24.0.0 之后依赖的 Flink CDC 版本需要在 3.1 以上，下载地址见[这里](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，FlinkCDC 如果需使用 Flink CDC 同步 MySQL 和 Oracle，还需要在 `$FLINK_HOME/lib` 下增加相关的 JDBC 驱动。
 
 :::
 
-### MySQL整库同步
+### MySQL 整库同步
 
-启动Flink集群后，可直接运行一下命令。
+启动 Flink 集群后，可直接运行一下命令。
 
 ```Shell
 <FLINK_HOME>bin/flink run \
@@ -494,7 +492,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
     --table-conf replication_num=1 
 ```
 
-### Oracle整库同步
+### Oracle 整库同步
 
 ```Shell
 <FLINK_HOME>bin/flink run \
@@ -519,7 +517,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
      --table-conf replication_num=1
 ```
 
-### PostgreSQL整库同步
+### PostgreSQL 整库同步
 
 ```Shell
 <FLINK_HOME>/bin/flink run \
@@ -546,7 +544,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
      --table-conf replication_num=1
 ```
 
-### SQLServer整库同步
+### SQLServer 整库同步
 
 ```Shell
 <FLINK_HOME>/bin/flink run \
@@ -571,7 +569,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
      --table-conf replication_num=1
 ```
 
-### DB2整库同步
+### DB2 整库同步
 
 ```Shell
 <FLINK_HOME>bin/flink run \
@@ -598,7 +596,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
     --table-conf replication_num=1 
 ```
 
-### MongoDB整库同步
+### MongoDB 整库同步
 
 ```Shell
 <FLINK_HOME>/bin/flink run \
@@ -642,7 +640,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | doris.request.connect.timeout | 30s           | N        | 向 Doris 发送请求的连接超时时间                              |
 | doris.request.read.timeout    | 30s           | N        | 向 Doris 发送请求的读取超时时间                              |
 
-## Source配置项
+## Source 配置项
 
 | Key                           | Default Value | Required | Comment                                                      |
 | ----------------------------- | ------------- | -------- | ------------------------------------------------------------ |
@@ -655,32 +653,32 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | source.use-flight-sql         | FALSE         | N        | 是否使用 Arrow Flight SQL 读取                               |
 | source.flight-sql-port        | -             | N        | 使用 Arrow Flight SQL 读取时，FE 的 arrow_flight_sql_port    |
 
-### DataStream专有配置项
+### DataStream 专有配置项
 
 | Key                | Default Value | Required | Comment                                                      |
 | ------------------ | ------------- | -------- | ------------------------------------------------------------ |
 | doris.read.field   | --            | N        | 读取 Doris 表的列名列表，多列之间使用逗号分隔                |
 | doris.filter.query | --            | N        | 过滤读取数据的表达式，此表达式透传给 Doris。Doris 使用此表达式完成源端数据过滤。比如 age=18。 |
 
-## Sink配置项
+## Sink 配置项
 
 | Key                         | Default Value | Required | Comment                                                      |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------ |
 | sink.label-prefix           | --            | Y        | Stream load 导入使用的 label 前缀。2pc 场景下要求全局唯一，用来保证 Flink 的 EOS 语义。 |
-| sink.properties.*           | --            | N        | Stream Load 的导入参数。 例如： 'sink.properties.column_separator' = ', ' 定义列分隔符， 'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，\x01会被转换为二进制的 0x01 。 JSON 格式导入 'sink.properties.format' = 'json' , 'sink.properties.read_json_by_line' = 'true' 详细参数参考[这里](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/stream-load-manual.md)。  Group Commit 模式 例如：'sink.properties.group_commit' = 'sync_mode' 设置 group commit 为同步模式。flink connector 从 1.6.2 开始支持导入配置 group commit ，详细使用和限制参考 [group commit](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/group-commit-manual/) 。 |
+| sink.properties.*           | --            | N        | Stream Load 的导入参数。例如： 'sink.properties.column_separator' = ', ' 定义列分隔符， 'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，\x01 会被转换为二进制的 0x01。JSON 格式导入 'sink.properties.format' = 'json' , 'sink.properties.read_json_by_line' = 'true' 详细参数参考[这里](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/stream-load-manual.md)。Group Commit 模式 例如：'sink.properties.group_commit' = 'sync_mode' 设置 group commit 为同步模式。flink connector 从 1.6.2 开始支持导入配置 group commit，详细使用和限制参考 [group commit](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/group-commit-manual/) 。 |
 | sink.enable-delete          | TRUE          | N        | 是否启用删除。此选项需要 Doris 表开启批量删除功能 (Doris0.15+ 版本默认开启)，只支持 Unique 模型。 |
 | sink.enable-2pc             | TRUE          | N        | 是否开启两阶段提交 (2pc)，默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考[这里](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/stream-load-manual.md)。 |
 | sink.buffer-size            | 1MB           | N        | 写数据缓存 buffer 大小，单位字节。不建议修改，默认配置即可   |
 | sink.buffer-count           | 3             | N        | 写数据缓存 buffer 个数。不建议修改，默认配置即可             |
 | sink.max-retries            | 3             | N        | Commit 失败后的最大重试次数，默认 3 次                       |
-| sink.enable.batch-mode      | FALSE         | N        | 是否使用攒批模式写入 Doris，开启后写入时机不依赖 Checkpoint，通过 sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval 参数来控制写入时机。 同时开启后将不保证 Exactly-once 语义，可借助 Uniq 模型做到幂等 |
+| sink.enable.batch-mode      | FALSE         | N        | 是否使用攒批模式写入 Doris，开启后写入时机不依赖 Checkpoint，通过 sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval 参数来控制写入时机。同时开启后将不保证 Exactly-once 语义，可借助 Uniq 模型做到幂等 |
 | sink.flush.queue-size       | 2             | N        | 攒批模式下，缓存的队列大小。                                 |
 | sink.buffer-flush.max-rows  | 500000        | N        | 攒批模式下，单个批次最多写入的数据行数。                     |
 | sink.buffer-flush.max-bytes | 100MB         | N        | 攒批模式下，单个批次最多写入的字节数。                       |
 | sink.buffer-flush.interval  | 10s           | N        | 攒批模式下，异步刷新缓存的间隔                               |
 | sink.ignore.update-before   | TRUE          | N        | 是否忽略 update-before 事件，默认忽略。                      |
 
-## Lookup Join配置项
+## Lookup Join 配置项
 
 | Key                               | Default Value | Required | Comment                                      |
 | --------------------------------- | ------------- | -------- | -------------------------------------------- |
@@ -725,7 +723,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | --table-suffix          | 同上，Doris 表的后缀名。                                     |
 | --including-tables      | 需要同步的 MySQL 表，可以使用 \| 分隔多个表，并支持正则表达式。比如--including-tables table1 |
 | --excluding-tables      | 不需要同步的表，用法同上。                                   |
-| --mysql-conf            | MySQL CDCSource 配置，例如--mysql-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/mysql-cdc/)查看所有配置 MySQL-CDC，其中 hostname/username/password/database-name 是必需的。同步的库表中含有非主键表时，必须设置 scan.incremental.snapshot.chunk.key-column，且只能选择非空类型的一个字段。 例如：scan.incremental.snapshot.chunk.key-column=database.table:column,database.table1:column...，不同的库表列之间用,隔开。 |
+| --mysql-conf            | MySQL CDCSource 配置，例如--mysql-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/mysql-cdc/)查看所有配置 MySQL-CDC，其中 hostname/username/password/database-name 是必需的。同步的库表中含有非主键表时，必须设置 scan.incremental.snapshot.chunk.key-column，且只能选择非空类型的一个字段。例如：scan.incremental.snapshot.chunk.key-column=database.table:column,database.table1:column...，不同的库表列之间用，隔开。 |
 | --oracle-conf           | Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/)查看所有配置 Oracle-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。 |
 | --postgres-conf         | Postgres CDCSource 配置，例如--postgres-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/postgres-cdc/)查看所有配置 Postgres-CDC，其中 hostname/username/password/database-name/schema-name/slot.name 是必需的。 |
 | --sqlserver-conf        | SQLServer CDCSource 配置，例如--sqlserver-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/sqlserver-cdc/)查看所有配置 SQLServer-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。 |
@@ -735,7 +733,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | --table-conf            | Doris 表的配置项，即 properties 中包含的内容（其中 table-buckets 例外，非 properties 属性）。例如 --table-conf replication_num=1，而 --table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"表示按照正则表达式顺序指定不同表的 buckets 数量，如果没有匹配到则采用 BUCKETS AUTO 建表。 |
 | --ignore-default-value  | 关闭同步 MySQL 表结构的默认值。适用于同步 MySQL 数据到 Doris 时，字段有默认值，但实际插入数据为 null 情况。参考[#152](https://github.com/apache/doris-flink-connector/pull/152) |
 | --use-new-schema-change | 是否使用新的 schema change，支持同步 MySQL 多列变更、默认值，1.6.0 开始该参数默认为 true。参考[#167](https://github.com/apache/doris-flink-connector/pull/167) |
-| --schema-change-mode    | 解析 schema change 的模式，支持 debezium_structure、sql_parser 两种解析模式，默认采用 debezium_structure 模式。  debezium_structure 解析上游 CDC 同步数据时所使用的数据结构，通过解析该结构判断 DDL 变更操作。 sql_parser 通过解析上游 CDC 同步数据时的 DDL 语句，从而判断 DDL 变更操作，因此该解析模式更加准确。 使用例子：--schema-change-mode debezium_structure 本功能将在 1.6.2.1 后的版本中提供 |
+| --schema-change-mode    | 解析 schema change 的模式，支持 debezium_structure、sql_parser 两种解析模式，默认采用 debezium_structure 模式。debezium_structure 解析上游 CDC 同步数据时所使用的数据结构，通过解析该结构判断 DDL 变更操作。sql_parser 通过解析上游 CDC 同步数据时的 DDL 语句，从而判断 DDL 变更操作，因此该解析模式更加准确。使用例子：--schema-change-mode debezium_structure 本功能将在 1.6.2.1 后的版本中提供 |
 | --single-sink           | 是否使用单个 Sink 同步所有表，开启后也可自动识别上游新创建的表，自动创建表。 |
 | --multi-to-one-origin   | 将上游多张表写入同一张表时，源表的配置，比如：--multi-to-one-origin "a\_.\*\|b_.\*"，具体参考[#208](https://github.com/apache/doris-flink-connector/pull/208) |
 | --multi-to-one-target   | 与 multi-to-one-origin 搭配使用，目标表的配置，比如：--multi-to-one-target "a\ |
@@ -770,7 +768,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 
 # 监控指标
 
-Flink提供了多种[Metrics](https://nightlies.apache.org/flink/flink-docs-master/docs/ops/metrics/#metrics)用于监测Flink集群的指标，以下为Flink Doris Connector新增的监控指标。
+Flink 提供了多种[Metrics](https://nightlies.apache.org/flink/flink-docs-master/docs/ops/metrics/#metrics)用于监测 Flink 集群的指标，以下为 Flink Doris Connector 新增的监控指标。
 
 | Name                      | Metric Type | Description                                  |
 | ------------------------- | ----------- | -------------------------------------------- |
@@ -793,7 +791,7 @@ Flink提供了多种[Metrics](https://nightlies.apache.org/flink/flink-docs-mast
 
 # 最佳实践
 
-## FlinkSQL通过CDC快速接入MySQL数据
+## FlinkSQL 通过 CDC 快速接入 MySQL 数据
 
 ```SQL
 -- enable checkpoint
@@ -833,7 +831,7 @@ WITH (
 insert into doris_sink select id,name from cdc_mysql_source;
 ```
 
-## Flink进行部分列更新
+## Flink 进行部分列更新
 
 ```SQL
 CREATE TABLE doris_sink (
@@ -855,7 +853,7 @@ WITH (
 );
 ```
 
-## Flink导入Bitmap数据
+## Flink 导入 Bitmap 数据
 
 ```SQL
 CREATE TABLE bitmap_sink (
@@ -874,19 +872,19 @@ WITH (
 )
 ```
 
-## FlinkCDC更新key列
+## FlinkCDC 更新 key 列
 
-一般在业务数据库中，会使用编号来作为表的主键，比如 Student 表，会使用编号 (id) 来作为主键，但是随着业务的发展，数据对应的编号有可能是会发生变化的。 在这种场景下，使用 Flink CDC + Doris Connector 同步数据，便可以自动更新 Doris 主键列的数据。
+一般在业务数据库中，会使用编号来作为表的主键，比如 Student 表，会使用编号 (id) 来作为主键，但是随着业务的发展，数据对应的编号有可能是会发生变化的。在这种场景下，使用 Flink CDC + Doris Connector 同步数据，便可以自动更新 Doris 主键列的数据。
 
 ### 原理
 
-Flink CDC 底层的采集工具是 Debezium，Debezium 内部使用 op 字段来标识对应的操作：op 字段的取值分别为 c、u、d、r，分别对应 create、update、delete 和 read。 而对于主键列的更新，Flink CDC 会向下游发送 DELETE 和 INSERT 事件，同时数据同步到 Doris 中后，就会自动更新主键列的数据。
+Flink CDC 底层的采集工具是 Debezium，Debezium 内部使用 op 字段来标识对应的操作：op 字段的取值分别为 c、u、d、r，分别对应 create、update、delete 和 read。而对于主键列的更新，Flink CDC 会向下游发送 DELETE 和 INSERT 事件，同时数据同步到 Doris 中后，就会自动更新主键列的数据。
 
 ### 使用
 
 Flink 程序可参考上面 CDC 同步的示例，成功提交任务后，在 MySQL 侧执行 Update 主键列的语句 (update student set id = '1002' where id = '1001')，即可修改 Doris 中的数据。
 
-## Flink根据根据指定列删除数据
+## Flink 根据根据指定列删除数据
 
 一般 Kafka 中的消息会使用特定字段来标记操作类型，比如{"op_type":"delete",data:{...}}。针对这类数据，希望将 op_type=delete 的数据删除掉。
 
@@ -927,11 +925,11 @@ from KAFKA_SOURCE;
 
 1. **errCode = 2, detailMessage = Label [label_0_1] has already been used, relate to txn [19650]**
 
-   Exactly-Once 场景下，Flink Job 重启时必须从最新的 Checkpoint/Savepoint 启动，否则会报如上错误。 不要求 Exactly-Once 时，也可通过关闭 2PC 提交（sink.enable-2pc=false）或更换不同的 sink.label-prefix 解决。
+   Exactly-Once 场景下，Flink Job 重启时必须从最新的 Checkpoint/Savepoint 启动，否则会报如上错误。不要求 Exactly-Once 时，也可通过关闭 2PC 提交（sink.enable-2pc=false）或更换不同的 sink.label-prefix 解决。
 
 2. **errCode = 2, detailMessage = transaction [19650] not found**
 
-   发生在 Commit 阶段，checkpoint 里面记录的事务 ID，在 FE 侧已经过期，此时再次 commit 就会出现上述错误。 此时无法从 checkpoint 启动，后续可通过修改 fe.conf 的 streaming_label_keep_max_second 配置来延长过期时间，默认 12 小时。
+   发生在 Commit 阶段，checkpoint 里面记录的事务 ID，在 FE 侧已经过期，此时再次 commit 就会出现上述错误。此时无法从 checkpoint 启动，后续可通过修改 fe.conf 的 streaming_label_keep_max_second 配置来延长过期时间，默认 12 小时。
 
 3. **errCode = 2, detailMessage = current running txns on db 10006 is 100, larger than limit 100**
 
@@ -940,12 +938,12 @@ from KAFKA_SOURCE;
 
 4. **tablet writer write failed, tablet_id=190958, txn_id=3505530, err=-235**
 
-   通常发生在 Connector1.1.0 之前，是由于写入频率过快，导致版本过多。可以通过设置 sink.batch.size 和 sink.batch.interval 参数来降低 Streamload 的频率。在Connector1.1.0之后，默认写入时机是由Checkpoint控制，可以通过增加Checkpoint间隔来降低写入频率。
+通常发生在 Connector1.1.0 之前，是由于写入频率过快，导致版本过多。可以通过设置 sink.batch.size 和 sink.batch.interval 参数来降低 Streamload 的频率。在 Connector1.1.0 之后，默认写入时机是由 Checkpoint 控制，可以通过增加 Checkpoint 间隔来降低写入频率。频率。
 
 5. **Flink 导入有脏数据，如何跳过？**
 
    Flink 在数据导入时，如果有脏数据，比如字段格式、长度等问题，会导致 StreamLoad 报错，此时 Flink 会不断的重试。如果需要跳过，可以通过禁用 StreamLoad 的严格模式 (strict_mode=false,max_filter_ratio=1) 或者在 Sink 算子之前对数据做过滤。
 
-6. **Flink机器与BE机器的网络不通，如何配置？**
+6. **Flink 机器与 BE 机器的网络不通，如何配置？**
 
-   Flink向Doris发起写入时，Doris会重定向到BE进行写入，此时返回的地址是BE的内网IP，即通过`show backends`看到的IP，此时Flink与Doris网络不通的，会报错。这时可以在benodes中配置BE的外网IP即可。
+Flink 向 Doris 发起写入时，Doris 会重定向到 BE 进行写入，此时返回的地址是 BE 的内网 IP，即通过即通过`show backends`看到的 IP，此时 Flink 与 Doris 网络不通的，会报错。这时可以在 benodes 中配置 BE 的外网 IP 即可。
