@@ -6,12 +6,10 @@ import { useHistory, useLocation } from '@docusaurus/router';
 import { translate } from '@docusaurus/Translate';
 import { ReactContextError, useDocsPreferredVersion } from '@docusaurus/theme-common';
 import { useActivePlugin } from '@docusaurus/plugin-content-docs/client';
-import { fetchIndexes } from './fetchIndexes';
-import { SearchSourceFactory } from '../../utils/SearchSourceFactory';
+import { fetchIndexesByWorker, searchByWorker } from './searchByWorker';
 import { SuggestionTemplate } from './SuggestionTemplate';
 import { EmptyTemplate } from './EmptyTemplate';
 import {
-    searchResultLimits,
     Mark,
     searchBarShortcut,
     searchBarShortcutHint,
@@ -23,9 +21,10 @@ import {
     useAllContextsWithNoSearchContext,
 } from '../../utils/proxiedGenerated';
 import LoadingRing from '../LoadingRing/LoadingRing';
-import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/common';
 import styles from './SearchBar.module.css';
 import { normalizeContextByPath } from '../../utils/normalizeContextByPath';
+import useIsDocPage from '@site/src/hooks/use-is-doc';
+import { VERSIONS } from '@site/src/constant/common';
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
     const autoComplete = autoCompleteModule.default;
@@ -41,38 +40,54 @@ async function fetchAutoCompleteJS() {
 const SEARCH_PARAM_HIGHLIGHT = '_highlight';
 export default function SearchBar({ handleSearchBarToggle }) {
     const isBrowser = useIsBrowser();
-    const [curVersion, setCurVersion] = useState(DEFAULT_VERSION);
+    const location = useLocation();
     const {
         siteConfig: { baseUrl },
         i18n: { currentLocale },
     } = useDocusaurusContext();
     // It returns undefined for non-docs pages
     const activePlugin = useActivePlugin();
+    const [isDocsPage] = useIsDocPage(false);
     let versionUrl = baseUrl;
+    if (location?.pathname && location.pathname.includes('zh-CN') && !versionUrl.includes('zh-CN')) {
+        versionUrl = baseUrl + 'zh-CN/';
+    }
+    if (location?.pathname) {
+        VERSIONS.forEach(version => {
+            if (location.pathname.includes(version)) {
+                versionUrl += `docs/${version}/`;
+            }
+        });
+    }
+
     // For non-docs pages while using plugin-content-docs with custom ids,
     // this will throw an error of:
     //   > Docusaurus plugin global data not found for "docusaurus-plugin-content-docs" plugin with id "default".
     // It seems that we can not get the correct id for non-docs pages.
-    try {
-        // The try-catch is a hack because useDocsPreferredVersion just throws an
-        // exception when versions are not used.
-        // The same hack is used in SearchPage.tsx
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const { preferredVersion } = useDocsPreferredVersion(activePlugin?.pluginId ?? docsPluginIdForPreferredVersion);
-        if (preferredVersion && !preferredVersion.isLast) {
-            versionUrl = preferredVersion.path + '/';
-        }
-    } catch (e) {
-        if (indexDocs) {
-            if (e instanceof ReactContextError) {
-                /* ignore, happens when website doesn't use versions */
-            } else {
-                throw e;
-            }
-        }
-    }
+    // try {
+    //     // The try-catch is a hack because useDocsPreferredVersion just throws an
+    //     // exception when versions are not used.
+    //     // The same hack is used in SearchPage.tsx
+    //     // eslint-disable-next-line react-hooks/rules-of-hooks
+    //     const { preferredVersion } = useDocsPreferredVersion(activePlugin?.pluginId ?? docsPluginIdForPreferredVersion);
+    //     console.log('preferredVersion',preferredVersion);
+
+    //     if (preferredVersion && !preferredVersion.isLast) {
+    //         versionUrl = preferredVersion.path + "/";
+    //     }
+    // }
+    // catch (e) {
+    //     if (indexDocs) {
+    //         if (e instanceof ReactContextError) {
+    //             /* ignore, happens when website doesn't use versions */
+    //         }
+    //         else {
+    //             throw e;
+    //         }
+    //     }
+    // }
+
     const history = useHistory();
-    const location = useLocation();
     const searchBarRef = useRef(null);
     const indexStateMap = useRef(new Map());
     // Should the input be focused after the index is loaded?
@@ -110,17 +125,17 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setSearchContext(nextSearchContext);
     }, [location.pathname, versionUrl]);
     const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
-    const loadIndex = useCallback(async (forceLoad = false) => {
-        if ((hidden || indexStateMap.current.get(searchContext)) && !forceLoad) {
+    const loadIndex = useCallback(async () => {
+        if (hidden || indexStateMap.current.get(searchContext)) {
             // Do not load the index (again) if its already loaded or in the process of being loaded.
             return;
         }
         indexStateMap.current.set(searchContext, 'loading');
         search.current?.autocomplete.destroy();
         setLoading(true);
-        const [{ wrappedIndexes, zhDictionary }, autoComplete] = await Promise.all([
-            fetchIndexes(versionUrl, searchContext),
+        const [autoComplete] = await Promise.all([
             fetchAutoCompleteJS(),
+            fetchIndexesByWorker(versionUrl, searchContext),
         ]);
         const searchFooterLinkElement = ({ query, isEmpty }) => {
             const a = document.createElement('a');
@@ -210,7 +225,10 @@ export default function SearchBar({ handleSearchBarToggle }) {
             },
             [
                 {
-                    source: SearchSourceFactory(wrappedIndexes, zhDictionary, searchResultLimits),
+                    source: async (input, callback) => {
+                        const result = await searchByWorker(versionUrl, searchContext, input);
+                        callback(result);
+                    },
                     templates: {
                         suggestion: SuggestionTemplate,
                         empty: EmptyTemplate,
@@ -302,22 +320,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
     }, []);
     // Implement hint icons for the search shortcuts on mac and the rest operating systems.
     const isMac = isBrowser ? /mac/i.test(navigator.userAgentData?.platform ?? navigator.platform) : false;
-
-    useEffect(() => {
-        const pathHaveVer = VERSIONS.some(item => location.pathname.includes(item));
-        if (!pathHaveVer && curVersion !== '2.1') {
-            setCurVersion('2.1');
-        } else {
-            VERSIONS.forEach(item => {
-                if (location.pathname.includes(item) && item !== curVersion) {
-                    setCurVersion(item);
-                }
-            });
-        }
-    }, [location.pathname]);
-    useEffect(() => {
-        loadIndex(true);
-    }, [curVersion]);
     useEffect(() => {
         if (!searchBarShortcut) {
             return;
@@ -335,6 +337,13 @@ export default function SearchBar({ handleSearchBarToggle }) {
             document.removeEventListener('keydown', handleShortcut);
         };
     }, [isMac, onInputFocus]);
+
+    useEffect(() => {
+        if (isDocsPage) {
+            loadIndex();
+        }
+    }, [location.pathname, isDocsPage]);
+
     const onClearSearch = useCallback(() => {
         const params = new URLSearchParams(location.search);
         params.delete(SEARCH_PARAM_HIGHLIGHT);
@@ -347,6 +356,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setInputValue('');
         search.current?.autocomplete.setVal('');
     }, [location.pathname, location.search, location.hash, history]);
+  
     return (
         <div
             className={clsx('navbar__search', styles.searchBarContainer, {
@@ -364,7 +374,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                     description: 'The ARIA label and placeholder for search button',
                 })}
                 aria-label="Search"
-                className="navbar__search-input"
+                className={clsx('navbar__search-input', styles.navbarSearchInput)}
                 onMouseEnter={onInputMouseEnter}
                 onFocus={onInputFocus}
                 onBlur={onInputBlur}

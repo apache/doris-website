@@ -5,7 +5,9 @@ const versionsPlugin = require('./config/versions-plugin');
 const VERSIONS = require('./versions.json');
 const lightCodeTheme = themes.dracula;
 
-const logoImg = 'https://cdnd.selectdb.com/images/logo.svg';
+const logoImg = process.env.TEST_ENV_URL
+    ? `${process.env.TEST_ENV_URL}/images/logo.svg`
+    : 'https://cdnd.selectdb.com/images/logo.svg';
 
 function getDocsVersions() {
     const result = {};
