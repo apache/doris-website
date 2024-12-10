@@ -1518,7 +1518,7 @@ Load label cleaner will run every *label_clean_interval_second* to clean the out
 
 #### `label_regex_length`
 
-Default: 128 (character)
+Default Value: 128 (characters)
 
 The maximum character length of the load label, the default is 128 characters.
 
