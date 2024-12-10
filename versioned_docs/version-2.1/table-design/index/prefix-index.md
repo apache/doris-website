@@ -52,7 +52,7 @@ Since the KEY definition of a table is unique, a table can only have one type of
 
 ## Syntax
 
-There is no specific syntax for defining a prefix index. When creating a table, the first 36 bytes of the table's KEY are automatically taken as the prefix index.
+There is no specific syntax for defining a prefix index. When creating a table, the first 36 bytes of the table's KEY are automatically taken as the prefix index. If the prefix index encounters a varchar field, it automatically truncates the first 20 bytes.
 
 ## Example Usage
 
