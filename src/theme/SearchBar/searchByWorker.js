@@ -6,11 +6,7 @@ function getWorkerURL(url) {
 }
 function getRemoteWorker() {
     if (process.env.NODE_ENV === 'production' && !remoteWorkerPromise) {
-        // const url = getWorkerURL('http://');
         remoteWorkerPromise = (async () => {
-            // let url = new URL("./worker.js", import.meta.url);
-            // console.log('url',url);
-
             const Remote = Comlink.wrap(
                 new Worker(getWorkerURL('https://cdnd.selectdb.com/worker.js')),
             );

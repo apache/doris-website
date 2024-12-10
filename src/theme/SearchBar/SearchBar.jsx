@@ -21,10 +21,10 @@ import {
     useAllContextsWithNoSearchContext,
 } from '../../utils/proxiedGenerated';
 import LoadingRing from '../LoadingRing/LoadingRing';
+import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/common';
 import styles from './SearchBar.module.css';
 import { normalizeContextByPath } from '../../utils/normalizeContextByPath';
 import useIsDocPage from '@site/src/hooks/use-is-doc';
-import { VERSIONS } from '@site/src/constant/common';
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
     const autoComplete = autoCompleteModule.default;
@@ -40,6 +40,7 @@ async function fetchAutoCompleteJS() {
 const SEARCH_PARAM_HIGHLIGHT = '_highlight';
 export default function SearchBar({ handleSearchBarToggle }) {
     const isBrowser = useIsBrowser();
+    const [curVersion, setCurVersion] = useState(DEFAULT_VERSION);
     const location = useLocation();
     const {
         siteConfig: { baseUrl },
@@ -125,8 +126,8 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setSearchContext(nextSearchContext);
     }, [location.pathname, versionUrl]);
     const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
-    const loadIndex = useCallback(async () => {
-        if (hidden || indexStateMap.current.get(searchContext)) {
+    const loadIndex = useCallback(async (forceLoad = false) => {
+        if (hidden || indexStateMap.current.get(searchContext) && !forceLoad) {
             // Do not load the index (again) if its already loaded or in the process of being loaded.
             return;
         }
@@ -320,6 +321,22 @@ export default function SearchBar({ handleSearchBarToggle }) {
     }, []);
     // Implement hint icons for the search shortcuts on mac and the rest operating systems.
     const isMac = isBrowser ? /mac/i.test(navigator.userAgentData?.platform ?? navigator.platform) : false;
+
+    useEffect(() => {
+        const pathHaveVer = VERSIONS.some(item => location.pathname.includes(item));
+        if (!pathHaveVer && curVersion !== '2.1') {
+            setCurVersion('2.1');
+        } else {
+            VERSIONS.forEach(item => {
+                if (location.pathname.includes(item) && item !== curVersion) {
+                    setCurVersion(item);
+                }
+            });
+        }
+    }, [location.pathname]);
+    useEffect(() => {
+        loadIndex(true);
+    }, [curVersion]);
     useEffect(() => {
         if (!searchBarShortcut) {
             return;
@@ -337,12 +354,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
             document.removeEventListener('keydown', handleShortcut);
         };
     }, [isMac, onInputFocus]);
-
-    useEffect(() => {
-        if (isDocsPage) {
-            loadIndex();
-        }
-    }, [location.pathname, isDocsPage]);
 
     const onClearSearch = useCallback(() => {
         const params = new URLSearchParams(location.search);
