@@ -1,9 +1,13 @@
 .page-column {
-    padding: 6.25rem 0;
+    // padding: 6.25rem 0;
     font-size: 1.25rem;
     color: var(--global-colors-text-primary);
-    line-height: 2.0;
+    line-height: 2;
 
+    .page-column-title {
+        font-weight: 540;
+        line-height: 1.5;
+    }
     &.left {
         text-align: left;
 
@@ -28,9 +32,9 @@
         }
     }
 
-    &.has-footer {
-        padding-bottom: 2.5rem;
-    }
+    // &.has-footer {
+    //     padding-bottom: 2.5rem;
+    // }
 
     &-title {
         text-align: inherit;
@@ -47,11 +51,11 @@
 @media (max-width: 996px) {
     .page-column {
         &-title {
-            font-size: var(--global-font-size-larger)
+            font-size: var(--global-font-size-larger);
         }
 
         .col {
-            &+.col {
+            & + .col {
                 margin-top: 1rem;
             }
         }

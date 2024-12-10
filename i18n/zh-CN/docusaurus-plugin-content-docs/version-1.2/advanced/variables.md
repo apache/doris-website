@@ -71,7 +71,7 @@ SET GLOBAL exec_mem_limit = 137438953472
 - `sql_mode`
 - `enable_profile`
 - `query_timeout`
-- `insert_timeout`<version since="dev"></version>
+- `insert_timeout` 
 - `exec_mem_limit`
 - `batch_size`
 - `allow_partition_column_nullable`
@@ -172,6 +172,10 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
   用于兼容 MySQL 客户端。无实际作用。
 
 - `collation_server`
+
+  用于兼容 MySQL 客户端。无实际作用。
+
+- `have_query_cache`
 
   用于兼容 MySQL 客户端。无实际作用。
 
@@ -308,7 +312,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `max_allowed_packet`
 
-  用于兼容 JDBC 连接池 C3P0。 无实际作用。
+  用于兼容 JDBC 连接池 C3P0。对 Doris 本身无实际作用。如遇到 `Packet for query is too large (1,514,085 > 1,048,576). You can change this value on the server by setting the 'max_allowed_packet' variable.` 错误，可使用 `set GLOBAL max_allowed_packet = 1548576` 调大。
 
 - `max_pushdown_conditions_per_column`
 
@@ -359,7 +363,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
   用于设置查询超时。该变量会作用于当前连接中所有的查询语句，对于 INSERT 语句推荐使用insert_timeout。默认为 5 分钟，单位为秒。
 
 - `insert_timeout`
-  <version since="dev"></version>用于设置针对 INSERT 语句的超时。该变量仅作用于 INSERT 语句，建议在 INSERT 行为易持续较长时间的场景下设置。默认为 4 小时，单位为秒。由于旧版本用户会通过延长 query_timeout 来防止 INSERT 语句超时，insert_timeout 在 query_timeout 大于自身的情况下将会失效, 以兼容旧版本用户的习惯。
+   用于设置针对 INSERT 语句的超时。该变量仅作用于 INSERT 语句，建议在 INSERT 行为易持续较长时间的场景下设置。默认为 4 小时，单位为秒。由于旧版本用户会通过延长 query_timeout 来防止 INSERT 语句超时，insert_timeout 在 query_timeout 大于自身的情况下将会失效, 以兼容旧版本用户的习惯。
 
 - `resource_group`
 
@@ -503,7 +507,11 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 }
 ```
 
-- `block_encryption_mode` 可以通过block_encryption_mode参数，控制块加密模式，默认值为：空。当使用AES算法加密时相当于`AES_128_ECB`, 当时用SM3算法加密时相当于`SM3_128_ECB` 可选值：
+- `block_encryption_mode`
+可以通过该参数控制块加密模式，默认值为空。
+当为空时，使用 AES 算法加密相当于使用 `AES_128_ECB`, 当使用 SM4 算法加密时相当于 `SM4_128_ECB`。
+
+可选值：
 
 ```text
   AES_128_ECB,
@@ -557,6 +565,10 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
     用于调试目的。在Unique Key MoW表中，当发现读取表的数据结果有误的时候，把此变量的值设置为`true`，将会把被delete bitmap标记删除的数据当成正常数据读取。
 
+* `skip_missing_version`
+
+     有些极端场景下，表的 Tablet 下的所有的所有副本都有版本缺失，使得这些 Tablet 没有办法被恢复，导致整张表都不能查询。这个变量可以用来控制查询的行为，打设置为`true`时，查询会忽略 FE partition 中记录的 visibleVersion，使用 replica version。如果 Be 上的 Replica 有缺失的版本，则查询会直接跳过这些缺失的版本，只返回仍存在版本的数据。此外，查询将会总是选择所有存活的 BE 中所有 Replica 里 lastSuccessVersion 最大的那一个，这样可以尽可能的恢复更多的数据。这个变量应该只在上述紧急情况下才被设置为`true`，仅用于临时让表恢复查询。注意，此变量与 use_fix_replica 变量冲突，当 use_fix_replica 变量不等于 -1 时，此变量会不起作用
+
 * `default_password_lifetime`
 
  	默认的密码过期时间。默认值为 0，即表示不过期。单位为天。该参数只有当用户的密码过期属性为 DEFAULT 值时，才启用。如：
@@ -604,7 +616,7 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * `show_user_default_role`
 
-    <version since="dev"></version>
+     
 
     控制是否在 `show roles` 的结果里显示每个用户隐式对应的角色。默认为 false。
 
@@ -614,7 +626,7 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * `dry_run_query`
 
-    <version since="dev"></version>
+     
 
     如果设置为true，对于查询请求，将不再返回实际结果集，而仅返回行数。默认为 false。
 
@@ -628,6 +640,11 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
     | 10000000     |
     +--------------+
     ```
+ 
+* `enable_strong_consistency_read`
+
+  用以开启强一致读。Doris 默认支持同一个会话内的强一致性，即同一个会话内对数据的变更操作是实时可见的。如需要会话间的强一致读，则需将此变量设置为true。
+
 ***
 
 #### 关于语句执行超时控制的补充说明

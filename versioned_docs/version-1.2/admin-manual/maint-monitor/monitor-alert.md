@@ -42,7 +42,7 @@ Welcome to provide better dashboard.
 
 Doris uses [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/) to collect and display input monitoring items.
 
-![](/images/dashboard_overview.png)
+![组件](/images/dashboard_overview.png)
 
 1. Prometheus
 
@@ -123,7 +123,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 The entire monitoring architecture is shown in the following figure:
 
-![](/images/monitor_arch.png)
+![Monitoring Architecture](/images/monitor_arch.png)
 
 1. The yellow part is Prometheus related components. Prometheus Server is the main process of Prometheus. At present, Prometheus accesses the monitoring interface of Doris node by Pull, and then stores the time series data in the time series database TSDB (TSDB is included in the Prometheus process, and need not be deployed separately). Prometheus also supports building [Push Gateway](https://github.com/prometheus/pushgateway) to allow monitored data to be pushed to Push Gateway by Push by monitoring system, and then data from Push Gateway by Prometheus Server through Pull.
 2. [Alert Manager](https://github.com/prometheus/alertmanager) is a Prometheus alarm component, which needs to be deployed separately (no solution is provided yet, but can be built by referring to official documents). Through Alert Manager, users can configure alarm strategy, receive mail, short messages and other alarms.
@@ -136,7 +136,7 @@ Please start building the monitoring system after you have completed the deploym
 
 Prometheus
 
-1. Download the latest version of Prometheus on the [Prometheus Website](https://prometheus.io/download/) or [click to download](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/prometheus-2.43.0.linux-amd64.tar.gz). Here we take version 2.43.0-linux-amd64 as an example.
+1. Download the latest version of Prometheus on the [Prometheus Website](https://prometheus.io/download/). Here we take version 2.43.0-linux-amd64 as an example.
 2. Unzip the downloaded tar file on the machine that is ready to run the monitoring service.
 3. Open the configuration file prometheus.yml. Here we provide an example configuration and explain it (the configuration file is in YML format, pay attention to uniform indentation and spaces):
 
@@ -203,7 +203,7 @@ Prometheus
 
 ### Grafana
 
-1. Download the latest version of Grafana on [Grafana's official website](https://grafana.com/grafana/download) or [click to download](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/grafana-enterprise-8.5.22.linux-amd64.tar.gz). Here we take version 8.5.22.linux-amd64 as an example.
+1. Download the latest version of Grafana on [Grafana's official website](https://grafana.com/grafana/download). Here we take version 8.5.22.linux-amd64 as an example.
 
 2. Unzip the downloaded tar file on the machine that is ready to run the monitoring service.
 
@@ -267,7 +267,7 @@ Here we briefly introduce Doris Dashboard. The content of Dashboard may change w
 
 1. Top Bar
 
-	![](/images/dashboard_navibar.png)
+	![Top Bar](/images/dashboard_navibar.png)
 
 	* The upper left corner is the name of Dashboard.
 	* The upper right corner shows the current monitoring time range. You can choose different time ranges by dropping down. You can also specify a regular refresh page interval.
@@ -279,7 +279,7 @@ Here we briefly introduce Doris Dashboard. The content of Dashboard may change w
 
 2. Row.
 
-	![](/images/dashboard_row.png)
+	![Row](/images/dashboard_row.png)
 
 	In Grafana, the concept of Row is a set of graphs. As shown in the figure above, Overview and Cluster Overview are two different Rows. Row can be folded by clicking Row. Currently Dashboard has the following Rows (in continuous updates):
 
@@ -292,7 +292,7 @@ Here we briefly introduce Doris Dashboard. The content of Dashboard may change w
 
 3. Charts
 
-	![](/images/dashboard_panel.png)
+	![Charts](/images/dashboard_panel.png)
 
 	A typical icon is divided into the following parts:
 

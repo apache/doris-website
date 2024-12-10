@@ -322,7 +322,7 @@ A CTE can refer to itself to define a recursive CTE. Common applications of recu
      
      SELECT college, region, seed FROM tournament
        ORDER BY 2, 3;
-     ````
+     ```
 
    - If ORDER BY appears in a subquery and also applies to the outer query, the outermost ORDER BY takes precedence.
 
@@ -330,7 +330,7 @@ A CTE can refer to itself to define a recursive CTE. Common applications of recu
 
      ```sql
      SELECT a, COUNT(b) FROM test_table GROUP BY a ORDER BY NULL;
-     ````
+     ```
 
      
 
@@ -344,7 +344,7 @@ A CTE can refer to itself to define a recursive CTE. Common applications of recu
 
      ```sql
      SELECT COUNT(col1) AS col2 FROM t GROUP BY col2 HAVING col2 = 2;
-     ````
+     ```
 
    - Remember not to use HAVING where WHERE should be used. HAVING is paired with GROUP BY.
 
@@ -353,7 +353,7 @@ A CTE can refer to itself to define a recursive CTE. Common applications of recu
      ```sql
      SELECT user, MAX(salary) FROM users
        GROUP BY user HAVING MAX(salary) > 10;
-     ````
+     ```
 
    - The LIMIT clause can be used to constrain the number of rows returned by a SELECT statement. LIMIT can have one or two arguments, both of which must be non-negative integers.
 
@@ -363,7 +363,7 @@ A CTE can refer to itself to define a recursive CTE. Common applications of recu
      /*Then if you want to retrieve all rows after a certain offset is set, you can set a very large constant for the second parameter. The following query fetches all data from row 96 onwards */
      SELECT * FROM tbl LIMIT 95,18446744073709551615;
      /*If LIMIT has only one parameter, the parameter specifies the number of rows that should be retrieved, and the offset defaults to 0, that is, starting from the first row*/
-     ````
+     ```
 
    - SELECT...INTO allows query results to be written to a file
 
@@ -404,7 +404,7 @@ A CTE can refer to itself to define a recursive CTE. Common applications of recu
        | 21 |
        +-------------+
        4 rows in set (0.01 sec)
-       ````
+       ```
    
 6. JOIN
    

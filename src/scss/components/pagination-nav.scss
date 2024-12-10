@@ -1,7 +1,7 @@
 .pagination-nav {
-    border-top: 1px solid var(--global-colors-split);
-    margin-top: 3.75rem;
-    padding-top: 1.875rem;
+    padding-top: 5rem;
+    padding-bottom: 4.5rem;
+    margin-top: 0 !important;
 
     &__link {
         border: none;
@@ -9,13 +9,13 @@
         padding: 0;
         color: var(--ifm-color-primary);
 
-        transition: {
-            property: color;
-            timing-function: ease-out;
-            duration: 0.3s;
+        & {
+            transition: {
+                property: color;
+                timing-function: ease-out;
+                duration: 0.3s;
+            }
         }
-
-
     }
 
     &__sublabel {

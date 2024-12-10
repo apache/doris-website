@@ -48,8 +48,6 @@ ARRAY<T> array_repeat(T, n)
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_with_constant(2, "hello"), array_repeat("hello", 2);
 +---------------------------------+--------------------------+
 | array_with_constant(2, 'hello') | array_repeat('hello', 2) |

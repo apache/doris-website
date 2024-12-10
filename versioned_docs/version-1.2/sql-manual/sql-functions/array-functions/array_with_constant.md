@@ -24,11 +24,7 @@ under the License.
 
 ## array_with_constant
 
-<version since="1.2.0">
-
 array_with_constant
-
-</version>
 
 ### description
 
@@ -47,8 +43,6 @@ get array of constants with n length, array_repeat has the same function as arra
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_with_constant(2, "hello"), array_repeat("hello", 2);
 +---------------------------------+--------------------------+
 | array_with_constant(2, 'hello') | array_repeat('hello', 2) |

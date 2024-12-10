@@ -1,6 +1,6 @@
 ---
 {
-    "title": "行转列",
+    "title": "列转行",
     "language": "zh-CN"
 }
 ---
@@ -24,14 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 行转列
+# 列转行
 
 与生成器函数（例如 `EXPLODE`）结合使用，将生成包含一个或多个行的虚拟表。 `LATERAL VIEW` 将行应用于每个原始输出行。
 
 ## 语法
 
 ```sql
-LATERAL VIEW generator_function ( expression [, ...] ) [ table_identifier ] AS column_identifier [, ...]
+LATERAL VIEW generator_function ( expression [, ...] ) table_identifier AS column_identifier [, ...]
 ```
 
 ## 参数
@@ -42,7 +42,7 @@ LATERAL VIEW generator_function ( expression [, ...] ) [ table_identifier ] AS c
 
 - table_identifier
 
-  `generator_function` 的别名，它是可选项。
+  `generator_function` 的别名。
 
 - column_identifier
 

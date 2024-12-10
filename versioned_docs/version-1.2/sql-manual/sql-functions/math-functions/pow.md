@@ -25,6 +25,13 @@ under the License.
 ## pow
 
 ### description
+
+Returns the value of the first argument raised to the power of the second argument.
+
+:::tip
+The other aliases for this function are `power`, `fpow` and `dpow`.
+:::
+
 #### Syntax
 
 `DOUBLE pow(DOUBLE a, DOUBLE b)`
@@ -54,4 +61,4 @@ mysql> select pow(3,2.4);
 ```
 
 ### keywords
-	POW
+	POW, POWER, FPOW, DPOW

@@ -109,3 +109,98 @@ under the License.
     ```
     'fs.defaultFS' = 'hdfs://<your_nameservice_or_actually_HDFS_IP_and_port>'
     ```
+12. The values of the partition fields in the hudi table can be found on hive, but they cannot be found on doris.
+
+    Doris and hive currently query hudi differently. Doris needs to add partition fields to the avsc file of the hudi table structure. If not added, it will cause Doris to query partition_ Val is empty (even if home. datasource. live_sync. partition_fields=partition_val is set)
+
+    ```
+    {
+        "type": "record",
+        "name": "record",
+        "fields": [{
+            "name": "partition_val",
+            "type": [
+                "null",
+                "string"
+                ],
+            "doc": "Preset partition field, empty string when not partitioned",
+            "default": null
+            },
+            {
+            "name": "name",
+            "type": "string",
+            "doc": "名称"
+            },
+            {
+            "name": "create_time",
+            "type": "string",
+            "doc": "创建时间"
+            }
+        ]
+    }
+    ```
+
+13. The table in orc format of Hive 1.x may encounter system column names such as `_col0`, `_col1`, `_col2`... in the underlying orc file schema, which need to be specified in the catalog configuration. Add `hive.version` to 1.x.x so that it will use the column names in the hive table for mapping.
+
+    ```sql
+    CREATE CATALOG hive PROPERTIES (
+        'hive.version' = '1.x.x'
+    );
+    ```
+
+14. When using JDBC Catalog to synchronize MySQL data to Doris, the date data synchronization error occurs. It is necessary to check whether the MySQL version corresponds to the MySQL driver package. For example, the driver com.mysql.cj.jdbc.Driver is required for MySQL8 and above.
+
+15. If an error is reported while configuring Kerberos in the catalog: `SIMPLE authentication is not enabled. Available:[TOKEN, KERBEROS]`.
+
+    Need to put `core-site.xml` to the `"${DORIS_HOME}/be/conf"` directory.
+
+    If an error is reported while accessing HDFS: `No common protection layer between client and server`, check the `hadoop.rpc.protection` on the client and server to make them consistent.
+
+    ```
+        <?xml version="1.0" encoding="UTF-8"?>
+        <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+        
+        <configuration>
+        
+            <property>
+                <name>hadoop.security.authentication</name>
+                <value>kerberos</value>
+            </property>
+        
+        </configuration>
+    ```
+
+16. The solutions when configuring Kerberos in the catalog and encounter an error: `Unable to obtain password from user`.
+    - The principal used must exist in the klist, use `klist -kt your.keytab` to check.
+    - Ensure the catalog configuration correct, such as missing the `yarn.resourcemanager.principal`.
+    - If the preceding checks are correct, the JDK version installed by yum or other package-management utility in the current system maybe have an unsupported encryption algorithm. It is recommended to install JDK by yourself and set `JAVA_HOME` environment variable.
+
+17. If an error is reported while querying the catalog with Kerberos: `GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos Ticket)`.
+    - Restarting FE and BE can solve the problem in most cases. 
+    - Before the restart all the nodes, can put `-Djavax.security.auth.useSubjectCredsOnly=false` to the `JAVA_OPTS` in `"${DORIS_HOME}/be/conf/be.conf"`, which can obtain credentials through the underlying mechanism, rather than through the application.
+    - Get more solutions to common JAAS errors from the [JAAS Troubleshooting](https://docs.oracle.com/javase/8/docs/technotes/guides/security/jgss/tutorials/Troubleshooting.html).
+
+18. If an error related to the Hive Metastore is reported while querying the catalog: `Invalid method name`.
+
+    Configure the `hive.version`.
+
+    ```sql
+    CREATE CATALOG hive PROPERTIES (
+        'hive.version' = '2.x.x'
+    );
+    ```
+
+19. `BlockMissingExcetpion: Could not obtain block: BP-XXXXXXXXX No live nodes contain current block`
+
+    Possible solutions include:
+    - Use `hdfs fsck file -files -blocks -locations` to check if the file is healthy.
+    - Use telnet to check connectivity with the DataNode.
+    - Check the DataNode logs.
+
+    If encountering the following error:
+    `org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection`.
+    It indicates that HDFS is configured for encrypted transmission while the client is not, causing the error.
+
+    You can use any of the following solutions:
+    - Copying hdfs-site.xml and core-site.xml to the be/conf and fe/conf directories. (Recommended)
+    - In hdfs-site.xml, find the corresponding configuration `dfs.data.transfer.protection`, and set this parameter in the catalog.

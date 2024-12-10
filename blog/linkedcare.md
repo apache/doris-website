@@ -1,11 +1,12 @@
 ---
 {
-    'title': 'ClickHouse & Kudu to Doris: 10X Concurrency Increased, 70% Latency Down',
+    'title': 'ClickHouse & Kudu to Doris: 10X concurrency increased, 70% latency down',
     'language': 'en',
-    'summary': 'The value-added report provided by Linkedcare to customers was initially provided by ClickHouse, which was later replaced by Apache Doris',
+    'description': 'The value-added report provided by Linkedcare to customers was initially provided by ClickHouse, which was later replaced by Apache Doris',
     'date': '2023-01-28',
     'author': 'Yi Yang',
     'tags': ['Best Practice'],
+    "image": '/images/clickhouse-kudu-to-doris.png'
 }
 ---
 

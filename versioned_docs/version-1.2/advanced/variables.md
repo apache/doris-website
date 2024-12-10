@@ -69,7 +69,7 @@ Variables that support both session-level and global-level setting include:
 * `sql_mode`
 * `enable_profile`
 * `query_timeout`
-* `insert_timeout`<version since="dev"></version>
+* `insert_timeout` 
 * `exec_mem_limit`
 * `batch_size`
 * `parallel_fragment_exec_instance_num`
@@ -176,6 +176,10 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 * `collation_server`
 
     Used for compatibility with MySQL clients. No practical effect.
+
+* `have_query_cache`
+
+  Used for compatibility with MySQL clients. No practical effect.
 
 * `default_order_by_limit`
 
@@ -311,8 +315,8 @@ Translated with www.DeepL.com/Translator (free version)
 
 * `max_allowed_packet`
 
-    Used for compatible JDBC connection pool C3P0. No practical effect.
-    
+  For compatibility with JDBC connection pool C3P0. Has no real effect on Doris itself. If you encounter the error `Packet for query is too large (1,514,085 > 1,048,576). You can change this value on the server by setting the 'max_allowed_packet' variable.`, you can use `set GLOBAL max_allowed_packet = 1548576` to increase the value.
+
 * `max_pushdown_conditions_per_column`
 
     For the specific meaning of this variable, please refer to the description of `max_pushdown_conditions_per_column` in [BE Configuration](../admin-manual/config/be-config.md). This variable is set to -1 by default, which means that the configuration value in `be.conf` is used. If the setting is greater than 0, the query in the current session will use the variable value, and ignore the configuration value in `be.conf`.
@@ -363,7 +367,7 @@ Translated with www.DeepL.com/Translator (free version)
 
 * `insert_timeout`
 
-  <version since="dev"></version>Used to set the insert timeout. This variable applies to INSERT statements particularly in the current connection, and is recommended to manage long-duration INSERT action. The default is 4 hours, in seconds. It will lose effect when query_timeout is
+   Used to set the insert timeout. This variable applies to INSERT statements particularly in the current connection, and is recommended to manage long-duration INSERT action. The default is 4 hours, in seconds. It will lose effect when query_timeout is
     greater than itself to make it compatible with the habits of older version users to use query_timeout to control the timeout of INSERT statements.
 
 * `resource_group`
@@ -515,9 +519,10 @@ Translated with www.DeepL.com/Translator (free version)
   ```
 
 * `block_encryption_mode`
-  The block_encryption_mode variable controls the block encryption mode. The default setting is empty, when use AES equal to `AES_128_ECB`, when use SM4 equal to `SM3_128_ECB`
-  available values:
-  
+The block encryption mode can be controlled by this parameter, the default value is empty.
+When empty, using the AES algorithm is equivalent to using `AES_128_ECB`, and when using the SM4 algorithm is equivalent to `SM4_128_ECB`.
+
+Optional values:
   ```
     AES_128_ECB,
     AES_192_ECB,
@@ -570,23 +575,27 @@ Translated with www.DeepL.com/Translator (free version)
 
     For debugging purpose. In Unique Key MoW table, in case of problems of reading data, setting value to `true` will also read deleted data.
 
+* `skip_missing_version`
+
+     In some scenarios, all replicas of tablet are having missing versions, and the tablet is unable to recover. This config can control the behavior of query. When it is opened, the query will ignore the visible version recorded in FE partition, use the replica version. If the replica on be has missing versions, the query will directly skip this missing version, and only return the data of the existing version, In addition, the query will always try to select the one with the highest lastSuccessVersion among all surviving BE replicas, so as to recover as much data as possible. You should only open it in the emergency scenarios mentioned above, only used for temporary recovery queries. Note that, this variable conflicts with the a variable, when the a variable is not -1, this variable will not work.
+
 * `default_password_lifetime`
 
 	Default password expiration time. The default value is 0, which means no expiration. The unit is days. This parameter is only enabled if the user's password expiration property has a value of DEFAULT. like:
 
-   ````
+   ```
    CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_EXPIRE DEFAULT;
    ALTER USER user1 PASSWORD_EXPIRE DEFAULT;
-   ````
+   ```
 
 * `password_history`
 
 	The default number of historical passwords. The default value is 0, which means no limit. This parameter is enabled only when the user's password history attribute is the DEFAULT value. like:
 
-   ````
+   ```
    CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_HISTORY DEFAULT;
    ALTER USER user1 PASSWORD_HISTORY DEFAULT;
-   ````
+   ```
 
 * `validate_password_policy`
 
@@ -618,7 +627,7 @@ Translated with www.DeepL.com/Translator (free version)
 
 * `show_user_default_role`
 
-    <version since="dev"></version>
+     
 
     Controls whether to show each user's implicit roles in the results of `show roles`. Default is false.
 
@@ -628,7 +637,7 @@ Translated with www.DeepL.com/Translator (free version)
 
 * `dry_run_query`
 
-    <version since="dev"></version>
+     
 
     If set to true, for query requests, the actual result set will no longer be returned, but only the number of rows. The default is false.
 
@@ -642,6 +651,10 @@ Translated with www.DeepL.com/Translator (free version)
     | 10000000     |
     +--------------+
     ```
+
+* `enable_strong_consistency_read`
+
+  Used to enable strong consistent reading. By default, Doris supports strong consistency within the same session, that is, changes to data within the same session are visible in real time. If you want strong consistent reads between sessions, set this variable to true. 
 
 ***
 

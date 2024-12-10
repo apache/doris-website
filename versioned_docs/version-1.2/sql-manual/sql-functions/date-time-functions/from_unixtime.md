@@ -36,8 +36,6 @@ Input is an integer and return is a string type
 
 Support `date_format`'s format, and default is `%Y-%m-%d %H:%i:%s`
 
-Other `string_format` is illegal and will returns NULL.
-
 ### example
 
 ```

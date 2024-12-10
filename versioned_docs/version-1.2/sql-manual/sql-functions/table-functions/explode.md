@@ -41,8 +41,6 @@ explode_outer(expr)
 
 ### example
 ```
-mysql> set enable_vectorized_engine = true
-
 mysql> select e1 from (select 1 k1) as t lateral view explode([1,2,3]) tmp1 as e1;
 +------+
 | e1   |

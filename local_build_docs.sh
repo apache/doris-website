@@ -81,6 +81,22 @@ cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0.
 
 rm -rf doris
 
+# clone docs version 2.1
+git clone --branch branch-2.1 https://github.com/apache/doris.git --depth 1
+mkdir -p docs
+rm -rf versioned_docs/version-2.1
+mkdir -p versioned_docs/version-2.1
+cp -R doris/docs/en/docs/* versioned_docs/version-2.1/
+rm -rf versioned_sidebars/version-2.1-sidebars.json
+cp -R doris/docs/sidebars.json versioned_sidebars/version-2.1-sidebars.json
+rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1.json
+rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1
+mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1
+cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/
+cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1.json
+
+rm -rf doris
+
 npm install -g yarn
 yarn cache clean
 yarn && yarn build

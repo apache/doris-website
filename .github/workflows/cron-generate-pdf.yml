@@ -2,7 +2,7 @@ name: Cron Generate Pdf
 
 on: 
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 12,18,1 * * *'
 
 jobs:
   build-and-deploy:

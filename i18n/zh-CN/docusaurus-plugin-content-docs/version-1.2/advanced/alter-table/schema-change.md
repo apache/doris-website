@@ -26,7 +26,7 @@ under the License.
 
 # Schema Change
 
-用户可以通过 Schema Change 操作来修改已存在表的 Schema。目前 Doris 支持以下几种修改:
+用户可以通过 Schema Change 操作来修改已存在表的 Schema。目前 Doris 支持以下几种修改：
 
 - 增加、删除列
 - 修改列类型
@@ -71,7 +71,7 @@ under the License.
 
 ## 创建作业
 
-创建 Schema Change 的具体语法可以查看帮助 [ALTER TABLE COLUMN](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN.md) 中 Schema Change 部分的说明。
+创建 Schema Change 的具体语法可以查看帮助 [ALTER TABLE COLUMN](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 中 Schema Change 部分的说明。
 
 Schema Change 的创建是一个异步过程，作业提交成功后，用户需要通过 `SHOW ALTER TABLE COLUMN` 命令来查看作业进度。
 
@@ -102,7 +102,7 @@ TransactionId: 10023
 - TableName：Schema Change 对应的基表的表名。
 - CreateTime：作业创建时间。
 - FinishedTime：作业结束时间。如未结束，则显示 "N/A"。
-- IndexName： 本次修改所涉及的某一个 Index 的名称。
+- IndexName：本次修改所涉及的某一个 Index 的名称。
 - IndexId：新的 Index 的唯一 ID。
 - OriginIndexId：旧的 Index 的唯一 ID。
 - SchemaVersion：以 M:N 的格式展示。其中 M 表示本次 Schema Change 变更的版本，N 表示对应的 Hash 值。每次 Schema Change，版本都会递增。
@@ -219,7 +219,7 @@ alter table example_tbl modify column k3 varchar(50) key null comment 'to 50'
 +-----------+-------+-------------+------+------+---------+-------+
 ```
 
-因为Schema Chanage 作业是异步操作，同一个表同时只能进行一个Schema chanage 作业，查看作业运行情况，可以通过下面这个命令
+因为 Schema Chanage 作业是异步操作，同一个表同时只能进行一个 Schema chanage 作业，查看作业运行情况，可以通过下面这个命令
 
 ```sql
 SHOW ALTER TABLE COLUMN\G;
@@ -291,4 +291,4 @@ SHOW ALTER TABLE COLUMN\G;
 
 ## 更多帮助
 
-关于Schema Change使用的更多详细语法及最佳实践，请参阅 [ALTER TABLE COLUMN](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP ALTER TABLE COLUMN`  获取更多帮助信息。
+关于 Schema Change 使用的更多详细语法及最佳实践，请参阅 [ALTER TABLE COLUMN](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP ALTER TABLE COLUMN`  获取更多帮助信息。

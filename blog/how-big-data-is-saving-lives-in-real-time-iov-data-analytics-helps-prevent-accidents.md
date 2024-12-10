@@ -1,10 +1,11 @@
 ---
 {
-    'title': 'How Big Data Is Saving Lives in Real Time: IoV Data Analytics Helps Prevent Accidents',
-    'summary': "What needs to be taken care of in IoV data analysis? What's the difference between a near real-time analytic data platform and an actual real-time analytic data platform?",
+    'title': 'How big data is saving lives in real time: IoV data analytics helps prevent accidents',
+    'description': "What needs to be taken care of in IoV data analysis? What's the difference between a near real-time analytic data platform and an actual real-time analytic data platform?",
     'date': '2023-11-29',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
+    "image": '/images/Iov.png'
 }
 
 ---
@@ -57,7 +58,7 @@ Like Rome, a real-time data processing platform is not built in a day. The car m
 
 This is what used to work for them:
 
-![IoV-Hive-based-data-warehouse](../static/images/IoV-Hive-based-data-warehouse.png)
+![IoV-Hive-based-data-warehouse](/images/IoV-Hive-based-data-warehouse.png)
 
 Data from the CAN and vehicle sensors are uploaded via 4G network to the cloud gateway, which writes the data into Kafka. Then, Flink processes this data and forwards it to Hive. Going through several data warehousing layers in Hive, the aggregated data is exported to MySQL. At the end, Hive and MySQL provide data to the application layer for data analysis, dashboarding, etc.
 
@@ -70,7 +71,7 @@ Since Hive is primarily designed for batch processing rather than real-time anal
 
 This is what happens when they add a real-time analytic engine to the picture:
 
-![IoV-Doris-based-data-warehouse](../static/images/IoV-Doris-based-data-warehouse.png)
+![IoV-Doris-based-data-warehouse](/images/IoV-Doris-based-data-warehouse.png)
 
 Compared to the old Hive-based platform, this new one is more efficient in three ways:
 
@@ -86,7 +87,7 @@ In Kafka, CAN data was arranged by the dimension of CAN ID. However, for the sak
 
 In Apache Doris, all they need is to build the tables with the [Aggregate Key model](https://doris.apache.org/docs/data-table/data-model#aggregate-model), specify VIN (Vehicle Identification Number) and timestamp as the Aggregate Key, and define other data fields by `REPLACE_IF_NOT_NULL`. With Doris, they don't have to take care of the SQL statements or the flat table, but are able to extract real-time insights from real-time data.
 
-![IoV-CAN-data](../static/images/IoV-CAN-data.jpeg)
+![IoV-CAN-data](/images/IoV-CAN-data.jpeg)
 
 ### 2. DTC data query
 
@@ -96,7 +97,7 @@ What they used to do was to write the DTC data into Kafka every day, process it 
 
 As is mentioned, Apache Doris can work as a unified query gateway. This is supported by its [Multi-Catalog](https://doris.apache.org/docs/lakehouse/multi-catalog/) feature. They import their DTC data from Hive into Doris, and then they create a MySQL Catalog in Doris to map to the DTC configuration table in MySQL. When all this is done, they can simply join the two tables within Doris and get real-time query response.
 
-![IoV-DTC-data-query](../static/images/IoV-DTC-data-query.png)
+![IoV-DTC-data-query](/images/IoV-DTC-data-query.png)
 
 ## Conclusion
 
@@ -108,5 +109,5 @@ Building a data platform to suit your use case is not easy, I hope this post hel
 
 Apache Doris [GitHub repo](https://github.com/apache/doris)
 
-Find Apache Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1t3wfymur-0soNPATWQ~gbU8xutFOLog)
+Find Apache Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw)
 

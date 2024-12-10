@@ -42,7 +42,7 @@ Dashboard 模板会不定期更新。更新模板的方式见最后一小节。
 
 Doris 使用 [Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.com/) 进项监控项的采集和展示。
 
-![](/images/dashboard_overview.png)
+![组件](/images/dashboard_overview.png)
 
 1. Prometheus
     
@@ -52,7 +52,7 @@ Doris 使用 [Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.
     
     Grafana 是一款开源的数据分析和展示平台。支持包括 Prometheus 在内的多个主流时序数据库源。通过对应的数据库查询语句，从数据源中获取展现数据。通过灵活可配置的 Dashboard，快速的将这些数据以图表的形式展示给用户。
 
-> 注: 本文档仅提供一种使用 Prometheus 和 Grafana 进行 Doris 监控数据采集和展示的方式。原则上不开发、维护这些组件。更多关于这些组件的详细介绍，请移步对应官方文档进行查阅。
+> 注：本文档仅提供一种使用 Prometheus 和 Grafana 进行 Doris 监控数据采集和展示的方式。原则上不开发、维护这些组件。更多关于这些组件的详细介绍，请移步对应官方文档进行查阅。
 
 ## 监控数据
 
@@ -123,7 +123,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 整个监控架构如下图所示：
 
-![](/images/monitor_arch.png)
+![监控架构](/images/monitor_arch.png)
 
 1. 黄色部分为 Prometheus 相关组件。Prometheus Server 为 Prometheus 的主进程，目前 Prometheus 通过 Pull 的方式访问 Doris 节点的监控接口，然后将时序数据存入时序数据库 TSDB 中（TSDB 包含在 Prometheus 进程中，无需单独部署）。Prometheus 也支持通过搭建 [Push Gateway](https://github.com/prometheus/pushgateway) 的方式，允许被监控系统将监控数据通过 Push 的方式推到 Push Gateway, 再由 Prometheus Server 通过 Pull 的方式从 Push Gateway 中获取数据。
 2. [Alert Manager](https://github.com/prometheus/alertmanager) 为 Prometheus 报警组件，需单独部署（暂不提供方案，可参照官方文档自行搭建）。通过 Alert Manager，用户可以配置报警策略，接收邮件、短信等报警。
@@ -136,7 +136,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 ### Prometheus
 
-1. 在 [Prometheus 官网](https://prometheus.io/download/) 下载最新版本的 Prometheus 或者直接[点击下载](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/prometheus-2.43.0.linux-amd64.tar.gz)。这里我们以 2.43.0-linux-amd64 版本为例。
+1. 在 [Prometheus 官网](https://prometheus.io/download/) 下载最新版本的 Prometheus。这里我们以 2.43.0-linux-amd64 版本为例。
 2. 在准备运行监控服务的机器上，解压下载后的 tar 文件。
 3. 打开配置文件 prometheus.yml。这里我们提供一个示例配置并加以说明（配置文件为 yml 格式，一定注意统一的缩进和空格）：
 
@@ -203,7 +203,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 ### Grafana
 
-1. 在 [Grafana 官网](https://grafana.com/grafana/download) 下载最新版本的 Grafana 或者直接[点击下载](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/grafana-enterprise-8.5.22.linux-amd64.tar.gz)。这里我们以 8.5.22.linux-amd64 版本为例。
+1. 在 [Grafana 官网](https://grafana.com/grafana/download) 下载最新版本的 Grafana。这里我们以 8.5.22.linux-amd64 版本为例。
 
 2. 在准备运行监控服务的机器上，解压下载后的 tar 文件。
 
@@ -267,7 +267,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 1. 顶栏
 
-    ![](/images/dashboard_navibar.png)
+    ![顶栏](/images/dashboard_navibar.png)
     
     * 左上角为 Dashboard 名称。
     * 右上角显示当前监控时间范围，可以下拉选择不同的时间范围，还可以指定定时刷新页面间隔。
@@ -279,7 +279,7 @@ jvm_heap_size_bytes{type="used"} 156375280
     
 2. Row
 
-    ![](/images/dashboard_row.png)
+    ![Row](/images/dashboard_row.png)
 
     Grafana 中，Row 的概念，即一组图表的集合。如上图中的 Overview、Cluster Overview 即两个不同的 Row。可以通过点击 Row，对 Row 进行折叠。当前 Dashboard 有如下 Rows（持续更新中）：
     
@@ -292,7 +292,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 3. 图表
 
-    ![](/images/dashboard_panel.png)
+    ![图表](/images/dashboard_panel.png)
 
     一个典型的图标分为以下几部分：
     
@@ -300,7 +300,7 @@ jvm_heap_size_bytes{type="used"} 156375280
     2. 点击下方的图例，可以单独查看某一监控项。再次点击，则显示所有。
     3. 在图表中拖拽可以选定时间范围。
     4. 标题的 [] 中显示选定的集群名称。
-    5. 一些数值对应左边的Y轴，一些对应右边的，可以通过图例末尾的 `-right` 区分。
+    5. 一些数值对应左边的 Y 轴，一些对应右边的，可以通过图例末尾的 `-right` 区分。
     6. 点击图表名称->`Edit`，可以对图表进行编辑。
 
 ## Dashboard 更新

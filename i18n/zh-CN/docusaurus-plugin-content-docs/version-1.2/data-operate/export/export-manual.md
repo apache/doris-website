@@ -26,15 +26,15 @@ under the License.
 
 # 数据导出
 
-数据导出（Export）是 Doris 提供的一种将数据导出的功能。该功能可以将用户指定的表或分区的数据，以文本的格式，通过 Broker 进程导出到远端存储上，如 HDFS / 对象存储（支持S3协议） 等。
+数据导出（Export）是 Doris 提供的一种将数据导出的功能。该功能可以将用户指定的表或分区的数据，以文本的格式，通过 Broker 进程导出到远端存储上，如 HDFS / 对象存储（支持 S3 协议）等。
 
 本文档主要介绍 Export 的基本原理、使用方式、最佳实践以及注意事项。
 
 ## 原理
 
-用户提交一个 Export 作业后。Doris 会统计这个作业涉及的所有 Tablet。然后对这些 Tablet 进行分组，每组生成一个特殊的查询计划。该查询计划会读取所包含的 Tablet 上的数据，然后通过 Broker 将数据写到远端存储指定的路径中，也可以通过S3协议直接导出到支持S3协议的远端存储上。
+用户提交一个 Export 作业后。Doris 会统计这个作业涉及的所有 Tablet。然后对这些 Tablet 进行分组，每组生成一个特殊的查询计划。该查询计划会读取所包含的 Tablet 上的数据，然后通过 Broker 将数据写到远端存储指定的路径中，也可以通过 S3 协议直接导出到支持 S3 协议的远端存储上。
 
-总体的调度方式如下:
+总体的调度方式如下：
 
 ```
 +--------+
@@ -90,13 +90,13 @@ Doris 会首先在指定的远端存储的路径中，建立一个名为 `__dori
 
 ### Broker 参数
 
-Export 需要借助 Broker 进程访问远端存储，不同的 Broker 需要提供不同的参数，具体请参阅 [Broker文档](../../advanced/broker.md)
+Export 需要借助 Broker 进程访问远端存储，不同的 Broker 需要提供不同的参数，具体请参阅 [Broker 文档](../../advanced/broker.md)
 
 ## 开始导出
 
 Export 的详细用法可参考 [SHOW EXPORT](../../sql-manual/sql-reference/Show-Statements/SHOW-EXPORT.md) 。
 
-### 导出到HDFS
+### 导出到 HDFS
 
 ```sql
 EXPORT TABLE db1.tbl1 
@@ -122,13 +122,13 @@ WITH BROKER "hdfs"
 * `column_separator`：列分隔符。默认为 `\t`。支持不可见字符，比如 '\x07'。
 * `columns`：要导出的列，使用英文状态逗号隔开，如果不填这个参数默认是导出表的所有列。
 * `line_delimiter`：行分隔符。默认为 `\n`。支持不可见字符，比如 '\x07'。
-* `exec_mem_limit`： 表示 Export 作业中，一个查询计划在单个 BE 上的内存使用限制。默认 2GB。单位字节。
-* `timeout`：作业超时时间。默认 2小时。单位秒。
+* `exec_mem_limit`：表示 Export 作业中，一个查询计划在单个 BE 上的内存使用限制。默认 2GB。单位字节。
+* `timeout`：作业超时时间。默认 2 小时。单位秒。
 * `tablet_num_per_task`：每个查询计划分配的最大分片数。默认为 5。
 
 ### 导出到对象存储
 
-通过s3 协议直接将数据导出到指定的存储.
+通过 s3 协议直接将数据导出到指定的存储。
 
 ```sql
 
@@ -140,9 +140,9 @@ EXPORT TABLE test TO "s3://bucket/path/to/export/dir/" WITH S3  (
     );
 ```
 
-- `AWS_ACCESS_KEY`/`AWS_SECRET_KEY`：是您访问对象存储的ACCESS_KEY/SECRET_KEY
-- `AWS_ENDPOINT`：Endpoint表示对象存储对外服务的访问域名.
-- `AWS_REGION`：表示对象存储数据中心所在的地域.
+- `AWS_ACCESS_KEY`/`AWS_SECRET_KEY`：是您访问对象存储的 ACCESS_KEY/SECRET_KEY
+- `AWS_ENDPOINT`：Endpoint 表示对象存储对外服务的访问域名。
+- `AWS_REGION`：表示对象存储数据中心所在的地域。
 
 
 ### 查看导出状态
@@ -197,13 +197,13 @@ FinishTime: 2019-06-25 17:08:34
 CANCEL EXPORT
 FROM example_db
 WHERE LABEL like "%example%";
-````
+```
 
 ## 最佳实践
 
 ### 查询计划的拆分
 
-一个 Export 作业有多少查询计划需要执行，取决于总共有多少 Tablet，以及一个查询计划最多可以分配多少个 Tablet。因为多个查询计划是串行执行的，所以如果让一个查询计划处理更多的分片，则可以减少作业的执行时间。但如果查询计划出错（比如调用 Broker 的 RPC 失败，远端存储出现抖动等），过多的 Tablet 会导致一个查询计划的重试成本变高。所以需要合理安排查询计划的个数以及每个查询计划所需要扫描的分片数，在执行时间和执行成功率之间做出平衡。一般建议一个查询计划扫描的数据量在 3-5 GB内（一个表的 Tablet 的大小以及个数可以通过 `SHOW TABLETS FROM tbl_name;` 语句查看。）。
+一个 Export 作业有多少查询计划需要执行，取决于总共有多少 Tablet，以及一个查询计划最多可以分配多少个 Tablet。因为多个查询计划是串行执行的，所以如果让一个查询计划处理更多的分片，则可以减少作业的执行时间。但如果查询计划出错（比如调用 Broker 的 RPC 失败，远端存储出现抖动等），过多的 Tablet 会导致一个查询计划的重试成本变高。所以需要合理安排查询计划的个数以及每个查询计划所需要扫描的分片数，在执行时间和执行成功率之间做出平衡。一般建议一个查询计划扫描的数据量在 3-5 GB 内（一个表的 Tablet 的大小以及个数可以通过 `SHOW TABLETS FROM tbl_name;` 语句查看。）。
 
 ### exec\_mem\_limit
 
@@ -215,7 +215,7 @@ WHERE LABEL like "%example%";
 * 如果表数据量过大，建议按照分区导出。
 * 在 Export 作业运行过程中，如果 FE 发生重启或切主，则 Export 作业会失败，需要用户重新提交。
 * 如果 Export 作业运行失败，在远端存储中产生的 `__doris_export_tmp_xxx` 临时目录，以及已经生成的文件不会被删除，需要用户手动删除。
-* 如果 Export 作业运行成功，在远端存储中产生的 `__doris_export_tmp_xxx` 目录，根据远端存储的文件系统语义，可能会保留，也可能会被清除。比如对象存储（支持S3协议）中，通过 rename 操作将一个目录中的最后一个文件移走后，该目录也会被删除。如果该目录没有被清除，用户可以手动清除。
+* 如果 Export 作业运行成功，在远端存储中产生的 `__doris_export_tmp_xxx` 目录，根据远端存储的文件系统语义，可能会保留，也可能会被清除。比如对象存储（支持 S3 协议）中，通过 rename 操作将一个目录中的最后一个文件移走后，该目录也会被删除。如果该目录没有被清除，用户可以手动清除。
 * 当 Export 运行完成后（成功或失败），FE 发生重启或切主，则  [SHOW EXPORT](../../sql-manual/sql-reference/Show-Statements/SHOW-EXPORT.md) 展示的作业的部分信息会丢失，无法查看。
 * Export 作业只会导出 Base 表的数据，不会导出 Rollup Index 的数据。
 * Export 作业会扫描数据，占用 IO 资源，可能会影响系统的查询延迟。
@@ -228,7 +228,7 @@ WHERE LABEL like "%example%";
 * `export_running_job_num_limit`：正在运行的 Export 作业数量限制。如果超过，则作业将等待并处于 PENDING 状态。默认为 5，可以运行时调整。
 * `export_task_default_timeout_second`：Export 作业默认超时时间。默认为 2 小时。可以运行时调整。
 * `export_tablet_num_per_task`：一个查询计划负责的最大分片数。默认为 5。
-* `label`：用户手动指定的 EXPORT 任务 label ，如果不指定会自动生成一个 label 。
+* `label`：用户手动指定的 EXPORT 任务 label，如果不指定会自动生成一个 label。
 
 ## 更多帮助
 

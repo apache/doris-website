@@ -19,10 +19,9 @@
     }
 }
 
-
 .theme-doc-sidebar-menu {
     padding: 0.5rem;
-
+    
     .menu__list-item {
         .menu__link {
             font-size: var(--global-font-size-medium);
@@ -41,7 +40,9 @@
             }
         }
     }
-
+    .menu__link--sublist-caret{
+        color: #1F1F26 !important;
+    }
 
     .menu__list-item-collapsible {
         .menu__link--sublist-caret {

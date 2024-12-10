@@ -1,0 +1,146 @@
+.cases-tabs {
+    .ant-tabs-ink-bar {
+        background-color: #444fd9;
+    }
+    .ant-tabs-nav {
+        .ant-tabs-tab {
+            width: 17.5rem;
+            font-size: 1.25rem;
+            line-height: 1.6;
+            position: relative;
+            margin-top: 0 !important;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            &:hover {
+                color: #444fd9;
+            }
+            &.ant-tabs-tab-active {
+                background: linear-gradient(270deg, rgba(223, 224, 247, 0.4) 0%, rgba(223, 224, 247, 0.02) 100%);
+                .ant-tabs-tab-btn {
+                    color: #444fd9;
+                    .progress {
+                        display: block;
+                    }
+                }
+            }
+            .ant-tabs-tab-btn {
+                flex: 1;
+                color: #1d1d1d;
+                .progress {
+                    display: none;
+                }
+            }
+        }
+    }
+    .ant-tabs-content-holder {
+        border-left: 1px solid #f2f3fc;
+        .ant-tabs-content {
+            height: 100%;
+            min-height: 300px;
+            .ant-tabs-tabpane {
+                transition-property: opacity;
+                transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+                transition-duration: 300ms;
+                padding-left: 3.5rem;
+                height: 100%;
+                position: absolute;
+                .cases-bg-datalake {
+                    background: url('/static/images/cases-bg-datalake.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-ad-hoc {
+                    background: url('/static/images/cases-bg-ad-hoc.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-customer {
+                    background: url('/static/images/cases-bg-customer.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-ELT {
+                    background: url('/static/images/cases-bg-ELT.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-log {
+                    background: url('/static/images/cases-bg-log.png') no-repeat center;
+                    background-size: cover;
+                }
+
+                .cases-bg-real-time {
+                    background: url('/static/images/cases-bg-real-time.png') no-repeat center;
+                    background-size: cover;
+                }
+
+                &.ant-tabs-tabpane-active {
+                    opacity: 1;
+                    z-index: 1;
+                }
+                &.ant-tabs-tabpane-hidden {
+                    display: block;
+                    opacity: 0;
+                    z-index: 0;
+                }
+            }
+        }
+    }
+}
+
+.cases-collapse {
+    text-align: left;
+    .ant-collapse {
+        background-color: #fff;
+        .ant-collapse-item-active {
+            .ant-collapse-header-text {
+                color: #444fd9;
+            }
+            .ant-collapse-expand-icon {
+                transform: rotate(180deg);
+                color: #444fd9;
+            }
+        }
+        .ant-collapse-item {
+            border-bottom: 0.5px solid #dfe5f0;
+            .ant-collapse-header {
+                align-items: center;
+                padding: 1rem 0;
+                .ant-collapse-expand-icon {
+                    padding: 0;
+                    transition-property: all;
+                    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+                    transition-duration: 150ms;
+                }
+            }
+            .ant-collapse-content-box {
+                height: 12rem;
+                padding: 0;
+                margin-top: 0.75rem;
+                margin-bottom: 1rem;
+
+                .cases-bg-datalake {
+                    background: url('/static/images/cases-bg-datalake.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-ad-hoc {
+                    background: url('/static/images/cases-bg-ad-hoc.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-customer {
+                    background: url('/static/images/cases-bg-customer.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-ELT {
+                    background: url('/static/images/cases-bg-ELT.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-log {
+                    background: url('/static/images/cases-bg-log.png') no-repeat center;
+                    background-size: cover;
+                }
+
+                .cases-bg-real-time {
+                    background: url('/static/images/cases-bg-real-time.png') no-repeat center;
+                    background-size: cover;
+                }
+            }
+        }
+    }
+}

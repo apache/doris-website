@@ -30,6 +30,10 @@ under the License.
 `DOUBLE log10(DOUBLE x)`
 返回以`10`为底的`x`的自然对数.
 
+:::tip
+该函数的另一个别名为 `dlog10`。
+:::
+
 ### example
 
 ```
@@ -54,4 +58,4 @@ mysql> select log10(16);
 ```
 
 ### keywords
-	LOG10
+	LOG10, DLOG10

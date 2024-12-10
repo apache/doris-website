@@ -30,6 +30,10 @@ under the License.
 `DOUBLE ln(DOUBLE x)`
 返回以`e`为底的`x`的自然对数.
 
+:::tip
+该函数的另一个别名为 `dlog1`。
+:::
+
 ### example
 
 ```
@@ -54,4 +58,4 @@ mysql> select ln(10);
 ```
 
 ### keywords
-	LN
+	LN, DLOG1

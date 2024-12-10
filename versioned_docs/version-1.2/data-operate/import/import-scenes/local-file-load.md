@@ -27,11 +27,10 @@ under the License.
 # Import local data
 The following mainly introduces how to import local data in client.
 
-Now Doris support two way to load data from client local file:
-1. [Stream Load](../import-way/stream-load-manual.md)
-2. [MySql Load](../import-way/mysql-load-manual.md)
+Now Doris support using [Stream Load](../import-way/stream-load-manual.md) to load data from client local file. Read the following section to learn about how to use Stream Load.
+2
 
-## Stream Load
+## Use Stream Load to import local data
 
 Stream Load is used to import local files into Doris.
 
@@ -50,9 +49,9 @@ At the end of the document, we give a code example of importing data using Java
 
 The request body of Stream Load is as follows:
 
-````text
+```text
 PUT /api/{db}/{table}/_stream_load
-````
+```
 
 1. Create a table
 
@@ -67,15 +66,15 @@ PUT /api/{db}/{table}/_stream_load
    )
    unique key(id)
    DISTRIBUTED BY HASH(id) BUCKETS 3;
-   ````
+   ```
 
 2. Import data
 
    Execute the following curl command to import the local file:
 
-   ````text
+   ```text
     curl -u user:passwd -H "label:load_local_file_test" -T /path/to/local/demo.txt http://host:port/api/demo/load_local_file_test/_stream_load
-   ````
+   ```
 
    - user:passwd is the user created in Doris. The initial user is admin/root, and the password is blank in the initial state.
    - host:port is the HTTP protocol port of BE, the default is 8040, which can be viewed on the Doris cluster WEB UI page.
@@ -87,7 +86,7 @@ PUT /api/{db}/{table}/_stream_load
 
    The Stream Load command is a synchronous command, and a successful return indicates that the import is successful. If the imported data is large, a longer waiting time may be required. Examples are as follows:
 
-   ````json
+   ```json
    {
        "TxnId": 1003,
        "Label": "load_local_file_test",
@@ -106,7 +105,7 @@ PUT /api/{db}/{table}/_stream_load
        "CommitAndPublishTimeMs": 106,
        "ErrorURL": "http://192.168.1.1:8042/api/_load_error_log?file=__shard_0/error_log_insert_stmt_db18266d4d9b4ee5-abb00ddd64bdf005_db18266d4d9b4ee5_abb00ddd64bdf005"
    }
-   ````
+   ```
 
    - The status of the `Status` field is `Success`, which means the import is successful.
    - For details of other fields, please refer to the [Stream Load](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md) command documentation.
@@ -120,7 +119,7 @@ PUT /api/{db}/{table}/_stream_load
 
 Here is a simple JAVA example to execute Stream Load:
 
-````java
+```java
 package demo.doris;
 
 import org.apache.commons.codec.binary.Base64;
@@ -213,7 +212,7 @@ public class DorisStreamLoader {
         loader.load(file);
     }
 }
-````
+```
 
 > Note: The version of http client here is 4.5.13
 > ```xml
@@ -223,53 +222,3 @@ public class DorisStreamLoader {
 > <version>4.5.13</version>
 > </dependency>
 > ```
-
-## MySql LOAD
-<version since="dev">
-    Example of mysql load
-</version>
-
-### Import Data
-1. Create a table
-
-   Use the `CREATE TABLE` command to create a table in the `demo` database to store the data to be imported.
-
-   ```sql
-   CREATE TABLE IF NOT EXISTS load_local_file_test
-   (
-   id INT,
-   age TINYINT,
-   name VARCHAR(50)
-   )
-   unique key(id)
-   DISTRIBUTED BY HASH(id) BUCKETS 3;
-   ````
-
-2. Import data
-   Excute fellowing sql statmeent in the mysql client to load client local file:
-
-   ```sql
-   LOAD DATA
-   LOCAL
-   INFILE '/path/to/local/demo.txt'
-   INTO TABLE demo.load_local_file_test
-   ```
-
-   For more advanced operations of the MySQL Load command, see [MySQL Load](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/MYSQL-LOAD.md) Command documentation.
-
-3. Wait for the import result
-
-   The MySql Load command is a synchronous command, and a successful return indicates that the import is successful. If the imported data is large, a longer waiting time may be required. Examples are as follows:
-
-   ```text
-   Query OK, 1 row affected (0.17 sec)
-   Records: 1  Deleted: 0  Skipped: 0  Warnings: 0
-   ```
-
-   - Load success if the client show the return rows. Otherwise sql statement will throw an exception and show the error message in client.
-   - For details of other fields, please refer to the [MySQL Load](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/MYSQL-LOAD.md) command documentation.
-
-### Import suggestion
-
-   - MySql Load can only import local files(which can be client local file or fe local file) and only support csv format.
-   - It is recommended to limit the amount of data for an import request to 1 - 2 GB. If you have a large number of local files, you can submit them concurrently in batches.

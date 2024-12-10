@@ -24,7 +24,7 @@ under the License.
 
 ## ADMIN-REBALANCE-DISK
 
-<version since="1.2.0">
+
 
 ### Name
 
@@ -65,4 +65,4 @@ ADMIN,REBALANCE,DISK
 
 ### Best Practice
 
-</version>
+

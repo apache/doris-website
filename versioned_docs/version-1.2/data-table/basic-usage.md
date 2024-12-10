@@ -289,7 +289,7 @@ The Stream Load method transfers data to Doris via HTTP protocol. It can import 
 
 Example 1: Use "table1_20170707" as the Label, import the local file `table1_data` into `table1`.
 
-```bash
+```shell
 curl --location-trusted -u test:test_passwd -H "label:table1_20170707" -H "column_separator:," -T table1_data http://FE_HOST:8030/api/example_db/table1/_stream_load
 ```
 
@@ -308,7 +308,7 @@ The local file `table1_data` uses `,` as the separator between data. The details
 
 Example 2: Use "table2_20170707" as the Label, import the local file `table2_data` into `table2`.
 
-```bash
+```shell
 curl --location-trusted -u test:test -H "label:table2_20170707" -H "column_separator:|" -T table2_data http://127.0.0.1:8030/api/example_db/table2/_stream_load
 ```
 

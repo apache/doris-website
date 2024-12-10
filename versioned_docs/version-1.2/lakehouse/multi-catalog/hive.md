@@ -34,21 +34,24 @@ Besides Hive, many other systems, such as Iceberg and Hudi, use Hive Metastore t
 
 When connnecting to Hive, Doris:
 
-1. Supports Hive version 1/2/3;
-2. Supports both Managed Table and External Table;
-3. Can identify metadata of Hive, Iceberg, and Hudi stored in Hive Metastore;
-4. Supports Hive tables with data stored in JuiceFS, which can be used the same way as normal Hive tables (put `juicefs-hadoop-x.x.x.jar` in `fe/lib/` and `apache_hdfs_broker/lib/`).
-5. Supports Hive tables with data stored in CHDFS, which can be used the same way as normal Hive tables. Follow below steps to prepare doris environment：
+1. Need to put core-site.xml, hdfs-site.xml and hive-site.xml in the conf directory of FE and BE. First read the hadoop configuration file in the conf directory, and then read the related to the environment variable `HADOOP_CONF_DIR` configuration file.
+2. Supports Hive version 1/2/3;
+3. Supports both Managed Table and External Table;
+4. Can identify metadata of Hive, Iceberg, and Hudi stored in Hive Metastore;
+5. Supports Hive tables with data stored in JuiceFS, which can be used the same way as normal Hive tables (put `juicefs-hadoop-x.x.x.jar` in `fe/lib/` and `apache_hdfs_broker/lib/`).
+6. Supports Hive tables with data stored in CHDFS, which can be used the same way as normal Hive tables. Follow below steps to prepare doris environment：
     1. put chdfs_hadoop_plugin_network-x.x.jar in fe/lib/ and apache_hdfs_broker/lib/
     2. copy core-site.xml and hdfs-site.xml from hive cluster to fe/conf/ and apache_hdfs_broker/conf
 
 <version since="dev">
 
-6. Supports Hive / Iceberg tables with data stored in GooseFS(GFS), which can be used the same way as normal Hive tables. Follow below steps to prepare doris environment：
+7. Supports Hive / Iceberg tables with data stored in GooseFS(GFS), which can be used the same way as normal Hive tables. Follow below steps to prepare doris environment：
     1. put goosefs-x.x.x-client.jar in fe/lib/ and apache_hdfs_broker/lib/
     2. add extra properties 'fs.AbstractFileSystem.gfs.impl' = 'com.qcloud.cos.goosefs.hadoop.GooseFileSystem'， 'fs.gfs.impl' = 'com.qcloud.cos.goosefs.hadoop.FileSystem' when creating catalog
 
 </version>
+
+8. If the Hadoop node is configured with hostname, please ensure to add the corresponding mapping relationship to the /etc/hosts file.
 
 ## Create Catalog
 
@@ -167,7 +170,7 @@ CREATE CATALOG hive WITH RESOURCE hms_resource PROPERTIES(
 );
 ```
 
-<version since="dev"></version> 
+  
 
 You can use the config `file.meta.cache.ttl-second` to set TTL(Time-to-Live) config of File Cache, so that the stale file info will be invalidated automatically after expiring. The unit of time is second.
 

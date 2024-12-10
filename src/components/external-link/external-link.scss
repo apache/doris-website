@@ -1,0 +1,17 @@
+.external-link {
+    & + .external-link {
+        margin-left: 1.5rem;
+    }
+    > svg {
+        margin-left: 0.25rem;
+        margin-top: 1px;
+    }
+    &.primary-btn {
+        background: #444fd9;
+        color: #fff;
+        min-width: 10rem;
+        border-radius: 4px;
+        padding: 0 1.25rem;
+        height: 3rem;
+    }
+}

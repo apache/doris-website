@@ -30,6 +30,10 @@ under the License.
 `T round(T x[, d])`
 Rounds the argument `x` to `d` decimal places. `d` defaults to 0 if not specified. If d is negative, the left d digits of the decimal point are 0. If x or d is null, null is returned.
 
+:::tip
+Another alias for this function is `dround`.
+:::
+
 ### example
 
 ```
@@ -72,4 +76,4 @@ mysql> select round(1667.2725, -2);
 ```
 
 ### keywords
-	ROUND
+	ROUND, DROUND

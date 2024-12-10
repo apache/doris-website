@@ -1,163 +1,152 @@
-import clsx from 'clsx';
-import CodeBlock from '@theme/CodeBlock';
-import Layout from '../../theme/Layout';
-import Link from '@docusaurus/Link';
-import More from '@site/src/components/More';
-import PageColumn from '@site/src/components/PageColumn';
-import React, { useEffect, useState } from 'react';
 import Translate, { translate } from '@docusaurus/Translate';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import './index.scss';
+import React, { useEffect, useState, version } from 'react';
+import PageHeader from '@site/src/components/PageHeader';
+import Layout from '@site/src/theme/Layout';
+import DownloadFormAllRelease from '@site/src/components/download-form/download-form-all-release';
+import DownloadFormTools from '@site/src/components/download-form/download-form-tools';
 import {
     CPUEnum,
-    DownloadLinkProps,
-    JDKEnum,
+    DORIS_VERSIONS,
+    DownloadTypeEnum,
+    ORIGIN,
+    RUN_ANYWHERE,
     VersionEnum,
-    getAllDownloadLinks,
-    getAllFlinkConnectorDownloadLinks,
-    getAllSparkConnectorDownloadLinks,
-    getAllRelease,
 } from '@site/src/constant/download.data';
-import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
+import Link from '@docusaurus/Link';
+import './index.scss';
+import LinkWithArrow from '../../components/link-arrow';
+import PageColumn from '@site/src/components/PageColumn';
+import clsx from 'clsx';
+import { ALL_VERSIONS, TOOL_VERSIONS } from '../../constant/download.data';
+import * as semver from 'semver';
+import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
     { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
-    { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier },
+    { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier }
 ];
 
-const JDK = [
-    { label: 'JDK 8', value: JDKEnum.JDK8 },
-    { label: 'JDK 11', value: JDKEnum.JDK11 },
-];
-
-export default function Download(): JSX.Element {
-    const {
-        siteConfig,
-        i18n: { currentLocale, locales, localeConfigs },
-    } = useDocusaurusContext();
-
-    const [version, setVersion] = useState<string>(VersionEnum.Latest);
-    const [cpus, setCpus] = useState<any[]>([]);
-    const [cpu, setCPU] = useState<string>(CPUEnum.IntelAvx2);
-    const [jdk, setJDK] = useState<string>(JDKEnum.JDK8);
-    const [current, setCurrent] = useState<DownloadLinkProps>();
-    const [downloadWay, setDownloadWay] = useState<string>('all-in-one');
-
-    const FLINK_CONNECTOR = getAllFlinkConnectorDownloadLinks(currentLocale);
-    const SPARK_CONNECTOR = getAllSparkConnectorDownloadLinks(currentLocale);
-    const ALL_RELEASE = getAllRelease(currentLocale);
-    let ALL_RELEASE_VERSION = {};
-    ALL_RELEASE.forEach(item => {
-        const info: any = Array.isArray(item.download) ? item.download.find(item => item.cpu === 'X64 ( avx2 )') : {};
-        ALL_RELEASE_VERSION[item.version] = {
-            cpu: CPUEnum.IntelAvx2,
-            binary: info.binary,
-            source: info.source,
-        };
+function downloadFile(url: string) {
+    const a = document.createElement('a');
+    a.download = url;
+    a.href = url;
+    a.target = '_blank';
+    const clickEvt = new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true,
     });
-    const [releaseUrls, setReleaseUrls] = useState(ALL_RELEASE_VERSION);
+    a.dispatchEvent(clickEvt);
+    a.remove();
+}
+const CPU = [
+    { label: 'X64 ( avx2 )', value: CPUEnum.X64 },
+    { label: 'X64 ( no avx2 )', value: CPUEnum.X64NoAvx2 },
+    { label: 'ARM64', value: CPUEnum.ARM64 },
+];
+
+export default function Download() {
+    const [version, setVersion] = useState<string>(VersionEnum.Prev);
+    const [currentVersionInfo, setCurrentVersionInfo] = useState(() => {
+        return DORIS_VERSIONS.find(doris_version => doris_version.value === version);
+    });
+    const [cpus, setCpus] = useState<any[]>([]);
+    const [cpu, setCPU] = useState<string>(CPUEnum.X64);
+    const [downloadInfo, setDownloadInfo] = useState<any>({});
+    const [releaseFlag, setReleaseFlag] = useState<boolean>(true)
+    const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
+    // const [releaseNote, setReleaseNote] = useState('/docs/2.1/releasenotes/v2.1/release-2.1.5');
+    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/v3.0/release-3.0.2')
 
     const changeVersion = (val: string) => {
         setVersion(val);
     };
     const changeCPU = (val: string) => {
         setCPU(val);
-    };
-    const changeJDK = (val: string) => {
-        // if (version === VersionEnum.Latest && val !== JDKEnum.JDK8) return;
-        if (val !== JDKEnum.JDK8) return;
-        setJDK(val);
+        const downloadInfo = cpus.find(item => item.value === val);
+        const filename = downloadInfo.gz.split(ORIGIN)[1];
+        downloadInfo.filename = filename;
+        setDownloadInfo(downloadInfo);
     };
 
-    const getDownloadLinks = () => {
-        const text = `${version}-${cpu}-${jdk}`;
-        const linkObj = getAllDownloadLinks(currentLocale).find(item => item.id === text);
-        setCurrent(linkObj);
-        if (linkObj && !linkObj.sh) {
-            setDownloadWay('download');
+    const getIssueCode = (code: string) => {
+        switch (code) {
+            case '1.2.1':
+                return 15508;
+            case '1.2.2':
+                return 16446;
+            case '1.2.3':
+                return 17748;
+            case '1.2.4':
+                return 18762;
+            case '1.2.5':
+                return 20827;
+            case '1.2.6':
+                return 21805;
+            case '1.2.7':
+                return 23711;
+            case '1.2.8':
+                return 31673;
+            default:
+                return null
         }
-    };
-
-    function downloadFile(url: string) {
-        const a = document.createElement('a');
-        a.download = url;
-        a.href = url;
-        a.target = '_blank';
-        const clickEvt = new MouseEvent('click', {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-        });
-        a.dispatchEvent(clickEvt);
-        a.remove();
+    }
+    function toDocsRelease(version: string) {
+        const SUPPORTED_VERSION = '>=1.1.0';
+        const versionNumber = version.match(/[0-9].[0-9].[0-9]*/)?.[0] || '0.0.0';
+        if (semver.satisfies(versionNumber, SUPPORTED_VERSION)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    const downloadDocument = () => {
-        const url =
-            currentLocale === 'en'
-                ? 'https://cdnd.selectdb.com/assets/files/Apache Doris Docs (English).pdf'
-                : 'https://cdnd.selectdb.com/assets/files/Apache Doris Docs (中文).pdf';
-        downloadFile(url);
-    };
-
-    const CPU = [
-        { label: 'X64 ( avx2 )', value: CPUEnum.IntelAvx2 },
-        { label: 'X64 ( no avx2 )', value: CPUEnum.IntelNoAvx2 },
-        { label: 'ARM64', value: CPUEnum.ARM },
-    ];
-
-    const getCpus = version => {
-        const currentCpus = [];
-        getAllDownloadLinks(currentLocale).forEach(item => {
-            if (item.id.includes(version)) {
-                const matchCpu = CPU.find(cpu => item.id.includes(cpu.value));
-                currentCpus.push(matchCpu);
-            }
-        });
-        return currentCpus;
-    };
+    function onValuesChange(values: any) {
+        setReleaseFlag(values.version[0] === '1.1' ? false : true)
+        if (!toDocsRelease(values.version[1])) {
+            setReleaseNote('https://github.com/apache/doris/releases');
+        } else if (values.version[0] === '1.2') {
+            setReleaseNote(`https://github.com/apache/doris/issues/${getIssueCode(values.version[1])}`);
+        } else if (['2.1', '2.0'].includes(values.version[0])) {
+            setReleaseNote(`/docs/${values.version[0]}/releasenotes/release-${values.version[1]}`);
+        } else {
+            setReleaseNote(`/docs/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
+        }
+    }
 
     useEffect(() => {
-        getDownloadLinks();
-    }, [version, cpu, jdk]);
-
-    useEffect(() => {
-        const currentCpus = getCpus(version);
-        setCpus(currentCpus);
-        setCPU(CPUEnum.IntelAvx2);
-        setJDK(JDKEnum.JDK8);
+        const currentVersion = DORIS_VERSIONS.find(doris_version => doris_version.value === version);
+        setCpus(currentVersion.children);
+        setCPU(CPUEnum.X64);
+        const downloadInfo: any = currentVersion.children.find(item => item.value === CPUEnum.X64);
+        const filename = downloadInfo.gz.split(ORIGIN)[1];
+        downloadInfo.filename = filename;
+        setDownloadInfo(downloadInfo);
     }, [version]);
 
-    function handleCPUChange(cpu: any, currentVersionInfo: any) {
-        const info = currentVersionInfo.download.find(item => item.cpu === cpu);
-        setReleaseUrls({
-            ...releaseUrls,
-            [currentVersionInfo.version]: {
-                binary: info.binary,
-                source: info.source,
-            },
-        });
-    }
-
+    // function handleCPUChange(cpu: any, currentVersionInfo: any) {
+    //     const info = currentVersionInfo.download.find(item => item.cpu === cpu);
+    //     setReleaseUrls({
+    //         ...releaseUrls,
+    //         [currentVersionInfo.version]: {
+    //             binary: info.binary,
+    //             source: info.source,
+    //         },
+    //     });
+    // }
     return (
         <Layout
-            title={translate({ id: 'download.title', message: 'Download' })}
+            title={translate({ id: 'download.title', message: 'Apache Doris - Download | Easily deploy Doris anywhere' })}
             description={translate({
                 id: 'homepage.banner.subTitle',
-                message: 'An easy-to-use, high-performance and unified analytical database',
+                message: 'Download and explore precompiled binaries of different verisons. Apache Doris connects any device, at any scale, anywhere.',
             })}
             wrapperClassName="download"
         >
+            <PageHeader className="lg:pt-[5rem] g-white" title="Quick Download & Easy Deployment" />
             <section className="quick-download">
-                <PageColumn
-                    align="left"
-                    title={
-                        <Translate id="download.quick.download" description="Quick Download">
-                            Quick Download
-                        </Translate>
-                    }
-                >
+                <PageColumn align="center">
                     <div className="download-box">
                         <div className="download-type">
                             <label>
@@ -181,8 +170,8 @@ export default function Download(): JSX.Element {
                         </div>
                         <div className="download-type">
                             <label>
-                                <Translate id="download.cpu.model" description="CPU Model">
-                                    CPU Model
+                                <Translate id="download.cpu.model" description="Architecture">
+                                    Architecture
                                 </Translate>
                             </label>
                             <div className="tabs-radio">
@@ -199,408 +188,239 @@ export default function Download(): JSX.Element {
                                 ))}
                             </div>
                         </div>
-                        {/* <div className="download-type">
+                        <div className="download-type">
                             <label>
-                                <Translate id="download.jdk.version" description="JDK Version">
-                                    JDK Version
+                                <Translate id="download.download.link" description="Download">
+                                    Tarball
                                 </Translate>
                             </label>
                             <div className="tabs-radio">
-                                {JDK.map(item => (
-                                    <div
-                                        className={clsx('radio', {
-                                            checked: jdk === item.value,
-                                            // disabled: version === VersionEnum.Latest && item.value !== JDKEnum.JDK8,
-                                            disabled: item.value !== JDKEnum.JDK8,
-                                        })}
-                                        key={item.value}
-                                        onClick={() => changeJDK(item.value)}
-                                    >
-                                        {item.label}
-                                    </div>
-                                ))}
-                            </div>
-                        </div> */}
-                        {current && current?.sh && (
-                            <div className="download-type">
-                                <label>
-                                    <Translate id="download.download.link" description="Download">
-                                        Download
-                                    </Translate>
-                                </label>
-                                <div className="tabs-radio">
-                                    <div
-                                        onClick={() => setDownloadWay('all-in-one')}
-                                        className={clsx('radio', {
-                                            checked: downloadWay === 'all-in-one',
-                                        })}
-                                    >
-                                        <span>Binary</span>
-                                    </div>
+                                <div
+                                    onClick={() => {
+                                        setDownloadType(DownloadTypeEnum.Binary);
+                                    }}
+                                    className={clsx('radio', {
+                                        checked: downloadType === DownloadTypeEnum.Binary,
+                                    })}
+                                >
+                                    <span>Binary</span>
+                                </div>
 
-                                    <div
-                                        onClick={() => setDownloadWay('download')}
-                                        className={clsx('radio', {
-                                            checked: downloadWay === 'download',
-                                        })}
-                                    >
-                                        <span>Source</span>
-                                    </div>
+                                <div
+                                    onClick={() => {
+                                        setDownloadType(DownloadTypeEnum.Source);
+                                    }}
+                                    className={clsx('radio', {
+                                        checked: downloadType === DownloadTypeEnum.Source,
+                                    })}
+                                >
+                                    <span>Source</span>
                                 </div>
                             </div>
-                        )}
+                        </div>
 
                         <div className="download-type way">
-                            <label>
-                                {!current?.sh && (
-                                    <Translate id="download.download.link" description="Download">
-                                        Download
-                                    </Translate>
-                                )}
-                            </label>
-                            <div
-                                className={clsx('download-way all-in-one', {
-                                    show: downloadWay === 'all-in-one',
-                                })}
-                            >
-                                {current && current.sh && (
+                            <label></label>
+                            <div className={clsx('download-way all-in-one show')}>
+                                {downloadInfo && (
                                     <div className="tabs-radio">
                                         <div className="radio">
-                                            <div className="inner" key={current.sh?.label}>
-                                                <Link to={current.sh?.links.source}>{current.sh?.label}</Link>
-                                                <span> ( </span>
-                                                <Link to={current.sh?.links.signature}>asc</Link>,{' '}
-                                                <Link to={current.sh?.links.sha512}>sha512</Link>
-                                                <span> )</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                                {version === VersionEnum.Latest && (
-                                    <div className="tips">
-                                        <div className="title">
-                                            <Translate id="Notice">Notice:</Translate>
-                                        </div>
-                                        <div className="notice-text">
-                                            For detailed upgrade precautions, please refer to the
-                                            <Link to="https://github.com/apache/doris/issues/25011">2.0.2</Link>
-                                            and the
-                                            <Link to="/docs/dev/install/standard-deployment">deployment</Link> and
-                                            cluster
-                                            <Link to="/docs/dev/admin-manual/cluster-management/upgrade">upgrade</Link>
-                                            manual.
+                                            {downloadType === DownloadTypeEnum.Binary ? (
+                                                <div className="inner" key={downloadInfo.filename}>
+                                                    <Link to={downloadInfo.gz}>{downloadInfo.filename}</Link>
+                                                    <span> ( </span>
+                                                    <Link to={downloadInfo.asc}>ASC</Link>,{' '}
+                                                    <Link to={downloadInfo.sha512}>SHA-512</Link>
+                                                    <span> )</span>
+                                                </div>
+                                            ) : (
+                                                <div className="inner" key={downloadInfo.filename}>
+                                                    <Link
+                                                        to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz`}
+                                                    >{`apache-doris-${downloadInfo.version}-src.tar.gz`}</Link>
+                                                    <span> ( </span>
+                                                    <Link
+                                                        to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.asc`}
+                                                    >
+                                                        ASC
+                                                    </Link>
+                                                    ,{' '}
+                                                    <Link
+                                                        to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.sha512`}
+                                                    >
+                                                        SHA-512
+                                                    </Link>
+                                                    <span> )</span>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 )}
                             </div>
-                            <div
-                                className={clsx('download-way', {
-                                    show: downloadWay === 'download',
-                                })}
-                            >
-                                <div className="tabs-radio">
-                                    <div className="radio">
-                                        {current?.items.map(item => (
-                                            <div className="inner" key={item.label}>
-                                                <Link to={item?.links.source}>{item?.label}</Link>
-                                                <span> ( </span>
-                                                <Link to={item?.links.signature}>asc</Link>,{' '}
-                                                <Link to={item?.links.sha512}>sha512</Link>
-                                                <span> )</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                        <div className="all-download-note" style={{ textAlign: 'center', marginTop: '24px' }}>
+                            Note: For Apache Doris version specifics, please refer to the <Link
+                                to="https://doris.apache.org/community/release-versioning"
+                                style={{
+                                    color: '#444FD9',
+                                    cursor: 'pointer',
+                                    textDecoration: 'underline',
+                                }}
+                            >release versioning.
+                            </Link>
                         </div>
                     </div>
                 </PageColumn>
             </section>
-            <section className="table-content">
-                <PageColumn
-                    align="left"
-                    title={<Translate id="download.release">All Releases</Translate>}
-                    footer={
-                        <More
-                            text={<Translate id="download.release.more">More</Translate>}
-                            link="https://archive.apache.org/dist/doris/"
+            <PageColumn
+                title={
+                    <span
+                        className="font-normal"
+                        style={{ display: 'block', lineHeight: '64px', marginTop: 40, fontSize: 40 }}
+                    >
+                        Doris All Releases
+                    </span>
+                }
+            >
+                <div className="all-download">
+                    <div className="all-download-intro">
+                        <div className="all-download-intro-text">
+                            <div>
+                                Doris is released as source code tarballs with corresponding binary tarballs for
+                                convenience. The downloads should be verified for tampering using ASC or SHA-512.
+                            </div>
+                            <div className="mt-[32px]">
+                                For more information on the latest release, please refer to the Docs.
+                            </div>
+                            <div className="mt-[32px]">
+                                Kindly note that older releases (v1.2, v1.1, v0.x) are provided for archival purposes only,
+                                and are no longer supported.
+                            </div>
+                        </div>
+                        {releaseFlag && <div>
+                            <LinkWithArrow to={releaseNote} text="Release note" />
+                        </div>}
+                        <div className="all-download-note">
+                            Note: For detailed upgrade precautions, please refer to the{' '}
+                            <Link
+                                to="/docs/install/cluster-deployment/standard-deployment"
+                                style={{
+                                    color: '#444FD9',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                deployment
+                            </Link>{' '}
+                            manual and cluster{' '}
+                            <Link
+                                style={{
+                                    color: '#444FD9',
+                                    cursor: 'pointer',
+                                }}
+                                to="/docs/admin-manual/cluster-management/upgrade"
+                            >
+                                upgrade
+                            </Link>{' '}
+                            manual.
+                        </div>
+                    </div>
+                    <div className="all-download-card">
+                        <DownloadFormAllRelease
+                            versions={ALL_VERSIONS}
+                            onValuesChange={(values: any) => onValuesChange(values)}
                         />
-                    }
-                >
-                    <div className="content">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <Translate id="download.all.release.version">Version</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.all.release.date">Release Date</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.cpu.model">CPU Model</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.all.release.download">Download</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.all.release.note">Release Notes</Translate>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {ALL_RELEASE.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{item.version}</td>
-                                        <td>{item.date}</td>
-                                        <td>
-                                            {/* <DropdownNavbarItem items={item.download} />, */}
-
-                                            {Array.isArray(item.download) ? (
-                                                <select
-                                                    style={{ height: 30 }}
-                                                    onChange={e => handleCPUChange(e.target.value, item)}
-                                                >
-                                                    {item.download.map(item => (
-                                                        <option key={item.cpu} value={item.cpu}>
-                                                            {item.cpu}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            ) : (
-                                                <></>
-                                            )}
-                                        </td>
-                                        <td>
-                                            {Array.isArray(item.download) ? (
-                                                <div>
-                                                    <Link to={releaseUrls[item.version].source}>
-                                                        <Translate id="download.source">Source</Translate>
-                                                    </Link>
-                                                    <span style={{ padding: '0 0.28rem' }}>/</span>
-                                                    <Link to={releaseUrls[item.version].binary}>
-                                                        <Translate id="download.all.binary">Binary</Translate>
-                                                    </Link>
-                                                </div>
-                                            ) : (
-                                                <Link to={item.download}>
-                                                    <Translate id="download.source.binary">Source / Binary</Translate>
-                                                </Link>
-                                            )}
-                                        </td>
-                                        <td>
-                                            <Link to={item.note}>Release Notes</Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
                     </div>
-                </PageColumn>
-            </section>
-            <section className="table-content">
-                <PageColumn
-                    align="left"
-                    title={
-                        <Translate id="download.flink.connector" description="Flink Doris Connector">
-                            Flink Doris Connector
-                        </Translate>
-                    }
-                >
-                    <div className="content">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <Translate id="download.flink.connector.version">Version</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.flink.release.date">Release Date</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.flink.version">Flink Version</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.flink.scala.version">Scala Version</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.flink.doris.version">Doris Version</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.source">Source</Translate>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {FLINK_CONNECTOR.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{item.version}</td>
-                                        <td>{item.date}</td>
-                                        <td>{item.flink}</td>
-                                        <td>{item.scala}</td>
-                                        <td>{item.doris}</td>
-                                        <td>
-                                            <Link to={item.download}>
-                                                <Translate id="download">Download</Translate>
-                                            </Link>
-                                            <Link to={item.github}>GitHub</Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                </div>
+            </PageColumn>
+            <a id="doris-ecosystem" className="scroll-mt-20"></a>
+            <PageColumn
+                title={
+                    <span
+                        className="font-normal"
+                        style={{ display: 'block', lineHeight: '64px', marginTop: 40, fontSize: 40 }}
+                    >
+                        Doris Ecosystem
+                    </span>
+                }
+            >
+                <div className="all-download">
+                    <div className="all-download-intro">
+                        <div className="all-download-intro-text">
+                            <div>Streamline integration and data loading with Doris tools</div>
+                        </div>
+                        <div className="flex">
+                            <ul>
+                                <li className="mt-2 flex items-center space-x-2">
+                                    <CheckedIcon />
+                                    <div className="text-[#4C576C]  text-base">Kafka Doris Connector</div>
+                                </li>
+                                <li className="mt-2 flex items-center space-x-2">
+                                    <CheckedIcon />
+                                    <div className="text-[#4C576C]  text-base">Flink Doris Connector</div>
+                                </li>
+                                <li className="mt-2 flex items-center space-x-2">
+                                    <CheckedIcon />
+                                    <div className="text-[#4C576C]  text-base">Spark Doris Connector</div>
+                                </li>
+                                <li className="mt-2 flex items-center space-x-2">
+                                    <CheckedIcon />
+                                    <div className="text-[#4C576C]  text-base">Doris Streamloader</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <LinkWithArrow to="/docs/ecosystem/datax" text="More Tools" />
+                        </div>
+                        <div className="all-download-note">
+                            Note: For detailed upgrade precautions, please refer to the{' '}
+                            <Link
+                                to="/docs/install/cluster-deployment/standard-deployment"
+                                style={{
+                                    color: '#444FD9',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                deployment
+                            </Link>{' '}
+                            manual and cluster{' '}
+                            <Link
+                                style={{
+                                    color: '#444FD9',
+                                    cursor: 'pointer',
+                                }}
+                                to="/docs/admin-manual/cluster-management/upgrade"
+                            >
+                                upgrade
+                            </Link>{' '}
+                            manual.
+                        </div>
                     </div>
-                </PageColumn>
-            </section>
-            <section className="maven">
-                <PageColumn
-                    align="left"
-                    title={
-                        <Translate id="download.maven" description="Maven">
-                            Maven
-                        </Translate>
-                    }
-                >
-                    <CodeBlock language="xml" title="" showLineNumbers>
-                        {`<dependency>
-  <groupId>org.apache.doris</groupId>
-  <artifactId>flink-doris-connector-1.14_2.12</artifactId>
-  <!--artifactId>flink-doris-connector-1.13_2.12</artifactId-->
-  <!--artifactId>flink-doris-connector-1.12_2.12</artifactId-->
-  <!--artifactId>flink-doris-connector-1.11_2.12</artifactId-->
-  <!--version>1.0.3</version-->
-  <version>1.1.0</version>
-</dependency>`}
-                    </CodeBlock>
-                </PageColumn>
-            </section>
-            <section className="table-content">
-                <PageColumn
-                    align="left"
-                    title={
-                        <Translate id="download.spark.connector" description="Spark Doris Connector">
-                            Spark Doris Connector
-                        </Translate>
-                    }
-                >
-                    <div className="content">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <Translate id="download.spark.connector.version">Version</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.spark.release.date">Release Date</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.spark.version">Spark Version</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.spark.scala.version">Scala Version</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.spark.doris.version">Doris Version</Translate>
-                                    </th>
-                                    <th>
-                                        <Translate id="download.source">Source</Translate>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {SPARK_CONNECTOR.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{item.version}</td>
-                                        <td>{item.date}</td>
-                                        <td>{item.spark}</td>
-                                        <td>{item.scala}</td>
-                                        <td>{item.doris}</td>
-                                        <td>
-                                            <Link to={item.download}>
-                                                <Translate id="download">Download</Translate>
-                                            </Link>
-                                            <Link to={item.github}>GitHub</Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <div className="all-download-card">
+                        <DownloadFormTools data={TOOL_VERSIONS} />
                     </div>
-                </PageColumn>
-            </section>
-            <section className="maven">
-                <PageColumn
-                    align="left"
-                    title={
-                        <Translate id="download.maven" description="Maven">
-                            Maven
-                        </Translate>
-                    }
-                >
-                    <CodeBlock language="xml" title="" showLineNumbers>
-                        {`<dependency>
-  <groupId>org.apache.doris</groupId>
-  <artifactId>spark-doris-connector-3.2_2.12</artifactId>
-  <!--artifactId>spark-doris-connector-3.1_2.12</artifactId-->
-  <!--artifactId>spark-doris-connector-2.3_2.11</artifactId-->
-  <!--version>1.0.1</version-->
-  <version>1.1.0</version>
-</dependency>`}
-                    </CodeBlock>
-                </PageColumn>
-            </section>
-            {/* <section className="table-content">
-                <PageColumn
-                    align="left"
-                    title={
-                        <Translate id="download.document" description="文档">
-                            Document
-                        </Translate>
-                    }
-                >
-                    <div className="content">
-                        <p style={{ display: 'flex', alignItems: 'center' }}>
-                            Click to download the latest
-                            <span className="downlaod-document" onClick={downloadDocument}>
-                                offline documents{' '}
-                                <img
-                                    style={{ width: '1.2rem', height: '1.2rem', paddingLeft: '0.2rem' }}
-                                    src={require('@site/static/images/icon/download.png').default}
-                                    alt=""
-                                />
-                            </span>
-                        </p>
-                    </div>
-                </PageColumn>
-            </section> */}
-            <section className="verify">
-                <PageColumn
-                    align="left"
-                    title={
-                        <Translate id="download.verify" description="Verify">
-                            Verify
-                        </Translate>
-                    }
-                >
-                    <Translate id="download.verify.w1">To verify the downloaded files, please read</Translate>
-                    <Link to="/community/release-and-verify/release-verify">
-                        <Translate id="download.verify.w2"> Verify Apache Release </Translate>
-                    </Link>
-                    <Translate id="download.verify.w3"> and using these </Translate>
-                    <Link to="https://downloads.apache.org/doris/KEYS">
-                        <Translate id="download.verify.w4"> Keys</Translate>
-                    </Link>
-                    <Translate id="download.verify.w5">. After verification, please read</Translate>
-                    <Link to="/docs/install/source-install/compilation">
-                        <Translate id="download.verify.w6"> Compilation </Translate>
-                    </Link>
-                    <Translate id="download.verify.w7"> and </Translate>
-                    <Link to="/docs/install/install-deploy">
-                        <Translate id="download.verify.w8"> Installation and Deployment </Translate>
-                    </Link>
-                    <Translate id="download.verify.w9"> to compile and install Doris.</Translate>
-                </PageColumn>
-            </section>
+                </div>
+            </PageColumn>
+            <a id="runAnywhere" className="scroll-mt-20"></a>
+            <div className="run-anywhere bg-[#F7F9FE] pt-[5.5rem] pb-[7.5rem] mt-[80px]">
+                <div className="container mx-auto">
+                    <h3 className="text-center text-[#1D1D1D] text-[2.5rem] font-medium">Run anywhere</h3>
+                    <ul className="mt-10 grid gap-x-6 gap-y-3 lg:grid-cols-3 lg:gap-y-0">
+                        {RUN_ANYWHERE.map(item =>
+                            <div
+                                onClick={() => window.open(item.link)}
+                                key={item.title}
+                                className="run-anywhere-card relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-[#444FD9] py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#444FD9] hover:no-underline"
+                            >
+                                <div className="text-2xl text-[#1D1D1D]">{item.title}</div>
+                                <div className="mt-4 text-base text-center text-[#4C576C]">{item.description}</div>
+                                <div className="flex items-center mt-4 text-[#444FD9]">
+                                    <LinkWithArrow to={item.link} text="Learn more" />
+                                </div>
+                            </div>
+                        )}
+                    </ul>
+                </div>
+            </div>
         </Layout>
     );
 }

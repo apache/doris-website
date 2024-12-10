@@ -4,8 +4,16 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
+        "Cascader",
+        "colocation",
+        "lakehouse",
+        "Lakehouse",
+        "Linkedin",
         "Moka",
-        "releasenotes"
+        "releasenotes",
+        "swiper",
+        "Trino",
+        "Velo"
     ],
     "ignoreWords": [],
     "import": []

@@ -6,9 +6,14 @@
     }
 
     .breadcrumbs {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
         &__item {
+            display: flex;
+            align-items: center;
+            position: relative;
             &:first-child {
-
                 &:before {
                     content: '';
                     display: block;
@@ -16,7 +21,9 @@
                     height: 2rem;
                     position: absolute;
                     z-index: 1;
-
+                }
+                svg {
+                    color: #4c576c;
                 }
             }
 
@@ -24,15 +31,16 @@
                 background: transparent;
                 padding-left: 0;
                 padding-right: 0;
-
+                > svg {
+                    top: 0px;
+                }
                 @media (max-width: 996px) {
                     display: inline-flex;
                     align-items: center;
                     padding: 0;
                     vertical-align: middle;
 
-                    >svg {
-                        top: -1px;
+                    > svg {
                     }
                 }
             }

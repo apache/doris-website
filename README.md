@@ -80,556 +80,281 @@ $ GIT_USER=<Your GitHub username> yarn deploy
 
 If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
 
-## Modify the document
+# Modify the documentation
 
-### Use `<version>` to mark the document version
+For how to submit pull requests, please refer to
 
-How to use: [Doris 文档版本标记用法](https://selectdb.feishu.cn/docx/TdmDdhNTDoAKGbx1mkbcT3sbn8P)
+- [How to Contribute](https://doris.apache.org/zh-CN/community/how-to-contribute/)
 
+- [How to contribute docs](https://doris.apache.org/community/how-to-contribute/contribute-doc)
 
-### website directory structure
+- [Docs Format Specification](https://doris.apache.org/community/how-to-contribute/docs-format-specification)
 
-````
+## Doris Website Directory Structure
+
+```Plain
 .
-├── README.md
-├── babel.config.js
 ├── blog
-│ ├── 1.1 Release.md
-│ ├── Annoucing.md
-│ ├── jd.md
-│ ├── meituan.md
-│ ├── release-note-0.15.0.md
-│ ├── release-note-1.0.0.md
-│ └── xiaomi.md
-├── build.sh
+│   ├── 1.1 Release.md
+│   ├── Annoucing.md
+│   ├── jd.md
+│   ├── meituan.md
+│   ├── release-note-0.15.0.md
+│   ├── release-note-1.0.0.md
+│   └── xiaomi.md
 ├── community
-│ ├── design
-│ │ ├── Flink-doris-connector-Design.md
-│ │ ├── doris_storage_optimization.md
-│ │ ├── grouping_sets_design.md
-│ │ └── metadata-design.md
-│ ├──  
+│   ├── design
+│   │   ├── spark_load.md
+│   │   ├── doris_storage_optimization.md
+│   │   ├── grouping_sets_design.md
+│   │   └── metadata-design.md
+│   ├── ......
 ├── docs
-│ ├── admin-manual
-│ │ ├── cluster-management
-│ │ ├── config
-│ │ ├── data-admin
-│ │ ├── http-actions
-│ │ ├── maint-monitor
-│ │ ├── multi-tenant.md
-│ │ ├── optimization.md
-│ │ ├── privilege-ldap
-│ │ ├── query-profile.md
-│ │ └── sql-interception.md
-│ ├──  
-├── docusaurus.config.js
+│   ├── admin-manual
+│   │   ├── cluster-management
+│   │   ├── config
+│   │   ├── data-admin
+│   │   ├── http-actions
+│   │   ├── maint-monitor
+│   │   ├── privilege-ldap
+│   │   ├── multi-tenant.md
+│   │   ├── optimization.md
+│   │   ├── query-profile.md
+│   │   └── sql-interception.md
+│   │   └── workload-group.md
+│   ├── ......
 ├── i18n
-│ └── en-US
-│ ├── code.json
-│ ├── docusaurus-plugin-content-blog
-│ ├── docusaurus-plugin-content-docs
-│ ├── docusaurus-plugin-content-docs-community
-│ └── docusaurus-theme-classic
+│   └── zh-CN
+│       ├── docusaurus-plugin-content-docs
+│       │   ├── current
+│       │   ├── version-1.2
+│       │   ├── version-2.0
+│       │   ├── version-2.1
+│       │   ├── current.json
+│       │   ├── version-1.2.json
+│       │   ├── version-2.0.json
+│       │   ├── version-2.1.json
+│       ├── docusaurus-plugin-content-docs-community
+│       └── local_build_docs.sh
+├── src
+│   ├── components
+│   │   ├── Icons
+│   │   ├── More
+│   │   ├── PageBanner
+│   │   └── PageColumn
+│   ├── ......
+├── static
+│   ├── images
+│   │   ├── Bloom_filter.svg.png
+│   │   ├── .....
+│   └── js
+│       └── redirect.js
+├── versioned_docs
+│   ├── version-1.2
+│   │   ├── admin-manual
+│   │   ├── advanced
+│   │   ├── benchmark
+│   │   ├── data-operate
+│   │   ├── data-table
+│   │   ├── ecosystem
+│   │   ├── faq
+│   │   ├── get-starting
+│   │   ├── install
+│   │   ├── lakehouse
+│   │   ├── query-acceleration
+│   │   ├── releasenotes
+│   │   └── sql-manual
+│   └── version-2.0
+│       ├── admin-manual
+│       ├── benchmark
+│       ├── data-operate
+│       ├── db-connect
+│       ├── ecosystem
+│       ├── faq
+│       ├── get-starting
+│       ├── install
+│       ├── lakehouse
+│       ├── query
+│       ├── releasenotes
+│       ├── sql-manual
+│       └── table-design
+└── version-2.1
+│       ├── admin-manual
+│       ├── advanced
+│       ├── benchmark
+│       ├── data-operate
+│       ├── data-table
+│       ├── ecosystem
+│       ├── faq
+│       ├── get-starting
+│       ├── install
+│       ├── lakehouse
+│       ├── query-acceleration
+│       ├── releasenotes
+│       └── sql-manual
+├── versioned_sidebars
+│   ├── version-1.2-sidebars.json
+│   └── version-2.0-sidebars.json
+│   └── version-2.1-sidebars.json
+├── babel.config.js
+├── build.sh
+├── buildVersions.sh
+├── docusaurus.config.js
 ├── package.json
+├── README.md
 ├── sidebars.json
 ├── sidebarsCommunity.json
-├── src
-│ ├── components
-│ │ ├── Icons
-│ │ ├── More
-│ │ ├── PageBanner
-│ │ └── PageColumn
-│ ├──  
-├── static
-│ ├── images
-│ │ ├── Bloom_filter.svg.png
-│ │ ├── .....
-│ └── js
-│ └── redirect.js
 ├── tree.out
 ├── tsconfig.json
-├── versioned_docs
-│ ├── version-0.15
-│ │ ├── administrator-guide
-│ │ ├── best-practices
-│ │ ├── extending-doris
-│ │ ├── getting-started
-│ │ ├── installing
-│ │ ├── internal
-│ │ ├── sql-reference
-│ │ └── sql-reference-v2
-│ └── version-1.0
-│ ├── administrator-guide
-│ ├── benchmark
-│ ├── extending-doris
-│ ├── faq
-│ ├── getting-started
-│ ├── installing
-│ ├── internal
-│ ├── sql-reference
-│ └── sql-reference-v2
-├── versioned_sidebars
-│ ├── version-0.15-sidebars.json
-│ └── version-1.0-sidebars.json
 ├── versions.json
+```
 
-````
+The following describes the directory structure of the Doris Website site so that users can easily find the corresponding directory and submit changes.
 
-Directory structure description:
+### 01 Blog Directory
 
-1. Blog Directory
+The blog directory is located at `/blog`. All Blog Markdown should be placed in that directory. 
 
-   - The English blog directory is under the blog in the root directory, and the English files of all blogs are placed in this directory
-   - The directory of the Chinese blog is in the `i18n/zh-CN/docusaurus-plugin-content-blog` directory, all Chinese blog files are placed under this
-   - The file names of Chinese and English blogs should be the same
+If you would like to share your technical insights, welcome to directly submitting a Blog PR or contacting dev@doris.apache.org.
 
-2. Document Content Directory
+### 02 Docs Directory
 
-   - The latest version of the English document content is under docs in the root directory
+Here is the list of files if you need to submit docs changes:
 
-   - The version of the English documentation is under `versioned_docs/` in the root directory
+1. **Markdown Files:** When you want to modify existing content or add new documents, you need to place them to the respective folders and both update Master branch and Version docs (2.1/2.0/1.2) .
+2. **Sidebar Files:** These files control the directory structures. When adding new files or new directory, you should also update relative path in sidebar files that ensure the new document is displayed correctly in directory.  Currently, Master branch and other versions have separate sidebar files, including `sidebar.json, version-2.0-sidebars.json, and version-2.1-sidebars.json`.
 
-     - This directory only holds documents from historical versions
+Please make sure to update all the necessary files accordingly when modifying existing document content, adding new documents, or adding new directory sections.
 
-       ````
-       .
-       ├── version-0.15
-       │ ├── administrator-guide
-       │ ├── best-practices
-       │ ├── extending-doris
-       │ ├── getting-started
-       │ ├── installing
-       │ ├── internal
-       │ ├── sql-reference
-       │ └── sql-reference-v2
-       └── version-1.0
-           ├── administrator-guide
-           ├── benchmark
-           ├── extending-doris
-           ├── faq
-           ├── getting-started
-           ├── installing
-           ├── internal
-           ├── sql-reference
-           └── sql-reference-v2
-       ````
+The following are the detailed steps for explaining how and where modify the docs: 
 
-     - Versioning of English documents is under `versioned_sidebars` in the root directory
+**Updating Latest Version (Master Branch)**
 
-       ````
-       .
-       ├── version-0.15-sidebars.json
-       └── version-1.0-sidebars.json
-       ````
+**1. Update content**
 
-       The json file here is written according to the directory structure of the corresponding version
-   
-   - Chinese documentation at `i18n/zh-CN/docusaurus-plugin-content-docs`
-   
-        - Below this corresponds to different version directories and json files corresponding to the version, as follows
-   
-          current is the current latest version of the document. The example corresponds to version 1.1. When modifying, according to the document version to be modified, find the corresponding file modification in the corresponding directory and submit it.
-   
-          ````
-          .
-          ├── current
-          │ ├── admin-manual
-          │ ├── advanced
-          │ ├── benchmark
-          │ ├── data-operate
-          │ ├── data-table
-          │ ├── ecosystem
-          │ ├── faq
-          │ ├── get-starting
-          │ ├── install
-          │ ├── sql-manual
-          │ └── summary
-          ├── current.json
-          ├── version-0.15
-          │ ├── administrator-guide
-          │ ├── best-practices
-          │ ├── extending-doris
-          │ ├── getting-started
-          │ ├── installing
-          │ ├── internal
-          │ ├── sql-reference
-          │ └── sql-reference-v2
-          ├── version-0.15.json
-          ├── version-1.0
-          │ ├── administrator-guide
-          │ ├── benchmark
-          │ ├── extending-doris
-          │ ├── faq
-          │ ├── getting-started
-          │ ├── installing
-          │ ├── internal
-          │ ├── sql-reference
-          │ └── sql-reference-v2
-          └── version-1.0.json
-          ````
-   
-        - Version Json file
-   
-          Current.json corresponds to the Chinese translation of the latest version of the document, for example:
-   
-          ````json
-          {
-            "version.label": {
-              "message": "1.1",
-              "description": "The label for version current"
+This version is modified in the `/docs` directory
+
+```Plain
+.
+├── docs
+│   ├── admin-manual
+│   ├── ......
+```
+
+**2. Update sidebar**
+
+The docs directory structure of the latest version is edited by `sidebar.json`.
+
+```Plain
+.
+├── docs
+│   ├── admin-manua
+│   ├── ......
+├── i18n
+├── src
+├── static
+├── versioned_docs
+├── versioned_sidebars
+├── sidebars.json
+```
+
+Whether add new docs to existing directory or new directory, you need to update the relative path of the added docs in `sidebar.json`.
+
+```JSON
+{
+    "docs": [
+            {
+                "type": "category",
+                "label": "Getting Started",
+                "items": [
+                    "get-starting/quick-start",
+                    "get-starting/what-is-apache-doris"
+                ]
             },
-            "sidebar.docs.category.Getting Started": {
-              "message": "Quick Start",
-              "description": "The label for category Getting Started in sidebar docs"
-            }
-            .....
-          }
-          ````
-   
-          Here `sidebar.docs.category.Getting Started` corresponds to `label` in `sidebars.json` in the root directory
-   
-          For example, the `sidebar.docs.category.Getting Started` just now corresponds to the `sidebar` prefix and the structure in `sidebars.json`
-   
-          The first is `sidebar + "." + docs + ".'" + [ type ] + [ label ] `.
-   
-          ````json
-          {
-              "docs": [
-                  {
-                      "type": "category",
-                      "label": "Getting Started",
-                      "items": [
-                          "get-starting/get-starting"
-                      ]
-                  },
-                  {
-                      "type": "category",
-                      "label": "Doris Introduction",
-                      "items": [
-                          "summary/basic-summary"
-                      ]
-                  }
-                .....
-          }
-          ````
-   
-        - Support label translation in the Chinese version json file, no need to describe the document hierarchy, which is described in the `sidebar.json` file
-   
-        - All documents must be in English, and Chinese can only be displayed. If English is not written, you can create an empty file, otherwise Chinese documents will not be displayed. This applies to all blogs, documents, and community content
-   
-
-2. Community Documentation
-
-   This document does not distinguish between versions and is generic
-
-   - English documentation is under the `community/` directory in the root directory.
-
-   - Chinese documentation is under `i18n/zh-CN/docusaurus-plugin-content-docs-community/` directory.
-
-   - The directory structure of community documents is controlled in the `sidebarsCommunity.json` file in the root directory,
-
-   - The Chinese translation corresponding to the community documentation directory structure is in the `i18n/zh-CN/docusaurus-plugin-content-docs-community/current.json` file
-
-     ````json
-     {
-       "version.label": {
-         "message": "Next",
-         "description": "The label for version current"
-       },
-       "sidebar.community.category.How to Contribute": {
-         "message": "Contribution Guidelines",
-         "description": "The label for category How to Contribute in sidebar community"
-       },
-       "sidebar.community.category.Release Process & Verification": {
-         "message": "Version release and verification",
-         "description": "The label for category Release Process & Verification in sidebar community"
-       },
-       "sidebar.community.category.Design Documents": {
-         "message": "Design document",
-         "description": "The label for category Design Documents in sidebar community"
-       },
-       "sidebar.community.category.Developer Guide": {
-         "message": "Developer's Manual",
-         "description": "The label for category Developer Guide in sidebar community"
-       }
-     }
-     ````
-
-3. Pictures
-
-   All images are in the `static/images` directory
-
-
-
-## 修改文档（中文版）
-
-### website目录结构
-
-```
-.
-├── README.md
-├── babel.config.js
-├── blog
-│   ├── 1.1 Release.md
-│   ├── Annoucing.md
-│   ├── jd.md
-│   ├── meituan.md
-│   ├── release-note-0.15.0.md
-│   ├── release-note-1.0.0.md
-│   └── xiaomi.md
-├── build.sh
-├── community
-│   ├── design
-│   │   ├── Flink-doris-connector-Design.md
-│   │   ├── doris_storage_optimization.md
-│   │   ├── grouping_sets_design.md
-│   │   └── metadata-design.md
-│   ├── ......
-├── docs
-│   ├── admin-manual
-│   │   ├── cluster-management
-│   │   ├── config
-│   │   ├── data-admin
-│   │   ├── http-actions
-│   │   ├── maint-monitor
-│   │   ├── multi-tenant.md
-│   │   ├── optimization.md
-│   │   ├── privilege-ldap
-│   │   ├── query-profile.md
-│   │   └── sql-interception.md
-│   ├── ......
-├── docusaurus.config.js
-├── i18n
-│   └── zh-CN
-│       ├── code.json
-│       ├── docusaurus-plugin-content-blog
-│       ├── docusaurus-plugin-content-docs
-│       ├── docusaurus-plugin-content-docs-community
-│       └── docusaurus-theme-classic
-├── package.json
-├── sidebars.json
-├── sidebarsCommunity.json
-├── src
-│   ├── components
-│   │   ├── Icons
-│   │   ├── More
-│   │   ├── PageBanner
-│   │   └── PageColumn
-│   ├── ......
-├── static
-│   ├── images
-│   │   ├── Bloom_filter.svg.png
-│   │   ├── .....
-│   └── js
-│       └── redirect.js
-├── tree.out
-├── tsconfig.json
-├── versioned_docs
-│   ├── version-0.15
-│   │   ├── administrator-guide
-│   │   ├── best-practices
-│   │   ├── extending-doris
-│   │   ├── getting-started
-│   │   ├── installing
-│   │   ├── internal
-│   │   ├── sql-reference
-│   │   └── sql-reference-v2
-│   └── version-1.0
-│       ├── administrator-guide
-│       ├── benchmark
-│       ├── extending-doris
-│       ├── faq
-│       ├── getting-started
-│       ├── installing
-│       ├── internal
-│       ├── sql-reference
-│       └── sql-reference-v2
-├── versioned_sidebars
-│   ├── version-0.15-sidebars.json
-│   └── version-1.0-sidebars.json
-├── versions.json
-
-```
-
-目录结构说明：
-
-1. 博客目录
-
-   - 英文博客目录在根目录下的blog下面，所有博客的英文文件放到这个目录下
-   - 中文博客的目录在 `i18n/zh-CN/docusaurus-plugin-content-blog` 目录下，所有中文博客文件放到这个下面
-   - 中英文博客的文件名称要一致
-
-2. 文档内容目录
-
-   - 最新版本的英文文档内容在根目录下的docs下面
-
-   - 英文文档的版本在根目录下的 `versioned_docs/` 下面
-
-     - 这个目录只放历史版本的文档
-
-       ```
-       .
-       ├── version-0.15
-       │   ├── administrator-guide
-       │   ├── best-practices
-       │   ├── extending-doris
-       │   ├── getting-started
-       │   ├── installing
-       │   ├── internal
-       │   ├── sql-reference
-       │   └── sql-reference-v2
-       └── version-1.0
-           ├── administrator-guide
-           ├── benchmark
-           ├── extending-doris
-           ├── faq
-           ├── getting-started
-           ├── installing
-           ├── internal
-           ├── sql-reference
-           └── sql-reference-v2
-       ```
-
-     - 英文文档的版本控制在根目录下的 `versioned_sidebars` 下面
-
-       ```
-       .
-       ├── version-0.15-sidebars.json
-       └── version-1.0-sidebars.json
-       ```
-
-       这里的 json 文件按照对应版本的目录结构进行编写
-
-   - 中文文档在 `i18n/zh-CN/docusaurus-plugin-content-docs`
-
-     - 在这个下面对应不同的版本目录及版本对应的 json 文件 ，如下效果
-
-       current是当前最新版本的文档，示例中对应的是 1.1 版本，修改的时候，根据要修改的文档版本，在对应目录下找到相应的文件修改，提交即可。
-
-       ```
-       .
-       ├── current
-       │   ├── admin-manual
-       │   ├── advanced
-       │   ├── benchmark
-       │   ├── data-operate
-       │   ├── data-table
-       │   ├── ecosystem
-       │   ├── faq
-       │   ├── get-starting
-       │   ├── install
-       │   ├── sql-manual
-       │   └── summary
-       ├── current.json
-       ├── version-0.15
-       │   ├── administrator-guide
-       │   ├── best-practices
-       │   ├── extending-doris
-       │   ├── getting-started
-       │   ├── installing
-       │   ├── internal
-       │   ├── sql-reference
-       │   └── sql-reference-v2
-       ├── version-0.15.json
-       ├── version-1.0
-       │   ├── administrator-guide
-       │   ├── benchmark
-       │   ├── extending-doris
-       │   ├── faq
-       │   ├── getting-started
-       │   ├── installing
-       │   ├── internal
-       │   ├── sql-reference
-       │   └── sql-reference-v2
-       └── version-1.0.json
-       ```
-
-     - Version Json 文件
-
-       Current.json 对应的是最新版本文档的中文翻译内容，例如：
-
-       ```
-       {
-         "version.label": {
-           "message": "1.1",
-           "description": "The label for version current"
-         },
-         "sidebar.docs.category.Getting Started": {
-           "message": "快速开始",
-           "description": "The label for category Getting Started in sidebar docs"
+            {
+                "type": "category",
+                "label": "Install and Deploy",
+                "items": [
+                    "install/standard-deployment",
+                    {
+                        "type": "category",
+                        "label": "Docker Deployment",
+                        "items": [
+                            "install/construct-docker/build-docker-image",
+                            "install/construct-docker/run-docker-cluster"
+                        ]
+             }
+             ......
          }
-         .....
-       }
-       ```
+     ]
+ }
+```
 
-       这里的 `sidebar.docs.category.Getting Started` 和根目录下的 `sidebars.json`  里的 `label` 对应
+**Updating Version 2.1/2.0/1.2**
 
-       例如刚才这个 `sidebar.docs.category.Getting Started` ，是由 `sidebar` 前缀和 `sidebars.json` 里面的结构对应的
+**1. Update content**
 
-       首先是 `sidebar + "." + docs +  ".'" + [ type ] + [ label ] ` 组成.
+- 2.1 version is modified in the `/versioned_docs/version-2.1` directory
 
-       ```json
-       {
-           "docs": [
-               {
-                   "type": "category",
-                   "label": "Getting Started",
-                   "items": [
-                       "get-starting/get-starting"
-                   ]
-               },
-               {
-                   "type": "category",
-                   "label": "Doris Introduction",
-                   "items": [
-                       "summary/basic-summary"
-                   ]
-               }
-             .....
-       }
-       ```
+- 2.0 version is modified in the `/versioned_docs / version-2.0`directory
 
-     - 在中文的 version json 文件中支持 label 的翻译，不需要描述文档层级关系，文档层级关系是在 `sidebar.json` 文件里描述的
+- 1.2 version is modified in the `/versioned_docs / version-1.2` directory
 
-     - 所有的文档必须有英文的，中文才能显示，如果英文没写，可以创建一个空文件，不然中文文档也显示不出来，这个适用于所有博客、文档、社区内容
+```Plain
+.
+├── blog
+├── community
+├── docs
+├── i18n
+├── versioned_docs
+│   ├── version-1.2
+│   ├── version-2.0
+│   ├── version-2.1
+```
 
-3. 社区文档
+**2. Update sidbar**
 
-   这块的文档不区分版本，是通用的
+The docs directory structure of the version docs is edited by `version-X.X-sidebar.json`.
 
-   - 英文文档在根目录下的 `community/` 目录下面。
+```Plain
+.
+├── blog
+├── community
+├── docs
+├── i18n
+├── versioned_docs
+├── versioned_sidebars
+│   ├── version-1.2-sidebars.json
+│   └── version-2.0-sidebars.json
+│   └── version-2.1-sidebars.json
+```
 
-   - 中文文档在  `i18n/zh-CN/docusaurus-plugin-content-docs-community/` 目录下面。
+### 03 Community Docs Directory
 
-   - 社区文档的目录结构控制在根目录下的 `sidebarsCommunity.json` 文件中，
+If you want to modify the community docs, please go to `community/` directory. 
 
-   - 社区文档目录结构对应的中文翻译在 `i18n/zh-CN/docusaurus-plugin-content-docs-community/current.json` 文件中
+- For modifying the existing docs, please go to `community/` directory. 
 
-     ```json
-     {
-       "version.label": {
-         "message": "Next",
-         "description": "The label for version current"
-       },
-       "sidebar.community.category.How to Contribute": {
-         "message": "贡献指南",
-         "description": "The label for category How to Contribute in sidebar community"
-       },
-       "sidebar.community.category.Release Process & Verification": {
-         "message": "版本发布与校验",
-         "description": "The label for category Release Process & Verification in sidebar community"
-       },
-       "sidebar.community.category.Design Documents": {
-         "message": "设计文档",
-         "description": "The label for category Design Documents in sidebar community"
-       },
-       "sidebar.community.category.Developer Guide": {
-         "message": "开发者手册",
-         "description": "The label for category Developer Guide in sidebar community"
-       }
-     }
-     ```
+- For updating community docs directory, please modify the `sidebarsCommunity.json` to include appropriate relative path for the new document. 
 
-4. 图片
+```Markdown
+.
+├── blog
+├── community
+│   ├── design
+│   │   ├── spark_load.md
+│   │   ├── doris_storage_optimization.md
+│   │   ├── grouping_sets_design.md
+│   │   └── metadata-design.md
+│   ├── ......
+│   ......
+├── sidebarsCommunity.json
+```
 
-   所有图片都在 `static/images `目录下面
+### 04 Images Directory
+
+All images are located at `/static/images`.
+
+You can display images in simple syntax: ` ![Alt text for images description](co-locate file structure or link) `
+
+If the image file name consists of multiple English words, they should be separated by hyphens "-".

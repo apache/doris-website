@@ -45,8 +45,6 @@ Remove the first element from array.
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_popfront(['test', NULL, 'value']);
 +-----------------------------------------------------+
 | array_popfront(ARRAY('test', NULL, 'value'))        |

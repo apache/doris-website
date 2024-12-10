@@ -1,40 +1,57 @@
 .icon-language {
-  vertical-align: text-bottom;
-  margin-right: 0.3125rem;
+    vertical-align: text-bottom;
+}
+.dropdown__menu {
+    padding: 6px 0;
+    .dropdown__link {
+        color: #1d1d1d;
+        font-size: 14px;
+        font-weight: normal;
+        padding: 0.5rem 0.75rem;
+        line-height: 1.6;
+        &:hover {
+            background-color: #f7f9fe !important;
+            color: #1d1d1d !important;
+        }
+    }
+    .dropdown__link--active,
+    .dropdown__link--active:hover {
+        color: #444fd9 !important;
+        background-color: transparent !important;
+    }
 }
 
 .locale-box {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 
-  >a {
-    position: relative;
-    padding: 0 1rem;
-    color: var(--global-colors-text-primary);
-    font-size: var(--global-font-size-medium);
+    > a {
+        position: relative;
+        padding: 0 1rem;
+        color: var(--global-colors-text-primary);
+        font-size: var(--global-font-size-medium);
 
-    &.dropdown__link--active {
-      background-color: transparent;
-      color: var(--ifm-color-primary);
+        &.dropdown__link--active {
+            background-color: transparent;
+            color: var(--ifm-color-primary);
+        }
+
+        &:hover {
+            text-decoration: none;
+        }
+
+        & + a {
+            &::before {
+                content: '';
+                display: block;
+                width: 2px;
+                height: 0.75rem;
+                background-color: var(--global-colors-text-primary);
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 0;
+            }
+        }
     }
-
-    &:hover {
-      text-decoration: none;
-    }
-
-    &+a {
-
-      &::before {
-        content: '';
-        display: block;
-        width: 2px;
-        height: 0.75rem;
-        background-color: var(--global-colors-text-primary);
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 0;
-      }
-    }
-  }
 }

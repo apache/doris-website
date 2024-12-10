@@ -40,7 +40,7 @@ grammar:
 ```sql
 CREATE [EXTERNAL] RESOURCE "resource_name"
 PROPERTIES ("key"="value", ...);
-````
+```
 
 illustrate:
 
@@ -69,7 +69,7 @@ illustrate:
      "broker.username" = "user0",
      "broker.password" = "password0"
    );
-   ````
+   ```
 
    Spark related parameters are as follows:
    - spark.master: Required, currently supports yarn, spark://host:port.
@@ -100,7 +100,7 @@ illustrate:
    "odbc_type" = "oracle",
    "driver" = "Oracle 19 ODBC driver"
    );
-   ````
+   ```
 
    The relevant parameters of ODBC are as follows:
    - hosts: IP address of the external database
@@ -183,19 +183,18 @@ illustrate:
    ```sql
    CREATE RESOURCE hdfs_resource PROPERTIES (
       "type"="hdfs",
-      "username"="user",
-      "password"="passwd",
+      "hadoop.username"="user",
       "dfs.nameservices" = "my_ha",
       "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
       "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
       "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-      "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+      "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
    );
    ```
 
    HDFS related parameters are as follows:
    - fs.defaultFS: namenode address and port
-   - username: hdfs username
+   - hadoop.username: hdfs username
    - dfs.nameservices: if hadoop enable HA, please set fs nameservice. See hdfs-site.xml
    - dfs.ha.namenodes.[nameservice ID]：unique identifiers for each NameNode in the nameservice. See hdfs-site.xml
    - dfs.namenode.rpc-address.[nameservice ID].[name node ID]`：the fully-qualified RPC address for each NameNode to listen on. See hdfs-site.xml

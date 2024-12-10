@@ -50,7 +50,7 @@ WHERE [LABEL = "export_label" | LABEL like "label_pattern" | STATE = "PENDING/IN
     CANCEL EXPORT
     FROM example_db
     WHERE LABEL = "example_db_test_export_label" and STATE = "EXPORTING";
-    ````
+    ```
 
 2. Cancel all export jobs containing example* on the database example*db.
 
@@ -58,7 +58,7 @@ WHERE [LABEL = "export_label" | LABEL like "label_pattern" | STATE = "PENDING/IN
     CANCEL EXPORT
     FROM example_db
     WHERE LABEL like "%example%";
-    ````
+    ```
 
 3. Cancel all export jobs which state are "PENDING"
 

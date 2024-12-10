@@ -4,16 +4,21 @@
 
   background: var(--search-local-modal-background, #f5f6f7);
   border-radius: 6px;
-  box-shadow: var(
-    --search-local-modal-shadow,
-    inset 1px 1px 0 0 hsla(0, 0%, 100%, 0.5),
-    0 3px 8px 0 #555a64
-  );
+  box-shadow: var(--search-local-modal-shadow,
+      inset 1px 1px 0 0 hsla(0, 0%, 100%, 0.5),
+      0 3px 8px 0 #555a64);
   margin-top: 8px;
   width: var(--search-local-modal-width, 560px);
   position: relative;
 
   padding: var(--search-local-spacing, 12px);
+}
+
+@media not (max-width: 996px) {
+  .searchBar.searchBarLeft .dropdownMenu {
+    left: 0 !important;
+    right: auto !important;
+  }
 }
 
 @media (max-width: 576px) {
@@ -29,11 +34,9 @@
 
 html[data-theme="dark"] .searchBar .dropdownMenu {
   background: var(--search-local-modal-background, var(--ifm-background-color));
-  box-shadow: var(
-    --search-local-modal-shadow,
-    inset 1px 1px 0 0 #2c2e40,
-    0 3px 8px 0 #000309
-  );
+  box-shadow: var(--search-local-modal-shadow,
+      inset 1px 1px 0 0 #2c2e40,
+      0 3px 8px 0 #000309);
 }
 
 .searchBar .dropdownMenu .suggestion {
@@ -62,10 +65,8 @@ html[data-theme="dark"] .dropdownMenu .suggestion {
 }
 
 .searchBar .dropdownMenu .suggestion.cursor {
-  background-color: var(
-    --search-local-highlight-color,
-    var(--ifm-color-primary)
-  );
+  background-color: var(--search-local-highlight-color,
+      var(--ifm-color-primary));
 }
 
 .hitTree,
@@ -88,7 +89,7 @@ html[data-theme="dark"] .noResultsIcon {
   align-items: center;
 }
 
-.hitTree > svg {
+.hitTree>svg {
   height: var(--search-local-hit-height, 56px);
   opacity: 0.5;
   stroke-width: var(--search-local-icon-stroke-width, 1.4);
@@ -138,7 +139,7 @@ html[data-theme="dark"] .noResultsIcon {
   width: 20px;
 }
 
-.hideAction > svg {
+.hideAction>svg {
   display: none;
 }
 
@@ -164,7 +165,7 @@ html[data-theme="dark"] .noResultsIcon {
   text-decoration: underline;
 }
 
-.cursor .hideAction > svg {
+.cursor .hideAction>svg {
   display: block;
 }
 
@@ -173,10 +174,8 @@ html[data-theme="dark"] .noResultsIcon {
 .suggestion.cursor .hitTree,
 .suggestion.cursor .hitIcon,
 .suggestion.cursor .hitPath {
-  color: var(
-    --search-local-hit-active-color,
-    var(--ifm-color-white)
-  ) !important;
+  color: var(--search-local-hit-active-color,
+      var(--ifm-color-white)) !important;
 }
 
 .suggestion.cursor mark {
@@ -207,6 +206,65 @@ html[data-theme="dark"] .noResultsIcon {
 
 :global(.navbar__search) {
   position: relative;
+
+  .searchBar {
+    width: 100% !important;
+    left: auto !important;
+    right: 0 !important;
+    display: inline !important;
+    background: transparent;
+    border-radius: 6px;
+    margin-top: 8px;
+    width: var(--search-local-modal-width, 560px);
+    position: relative;
+    padding: 0 !important;
+  }
+
+  input {
+    width: 100% !important;
+    border: none !important;
+    background-color: #f7f9fe !important;
+    background-image: url('/static/images/search-icon.svg');
+    height: 2.5rem !important;
+    background-position: 0.625rem center !important;
+    padding-left: 2.25rem !important;
+    color: #4c576c !important;
+    border-radius: 0.5rem;
+  }
+
+  input:focus {
+    border: none !important;
+    outline: none !important;
+  }
+
+  .dropdownMenu {
+    top: 2.5rem !important;
+  }
+
+  kbd {
+    color: #8592a6 !important;
+    background-color: #ffffff !important;
+    border: none !important;
+    border-radius: none !important;
+    box-shadow: none !important;
+    font-size: 12px !important;
+    padding: 0 !important;
+  }
+
+  .searchHintContainer {
+    position: absolute;
+    right: 10x;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 7px;
+    background-color: #fff;
+    border: none;
+    gap: 2px;
+    height: auto;
+  }
 }
 
 .searchIndexLoading :global(.navbar__search-input) {
@@ -237,20 +295,45 @@ html[data-theme="dark"] .noResultsIcon {
 }
 
 @media (max-width: 576px) {
+
   .searchBarContainer:not(.focused) .searchClearButton,
   .searchHintContainer {
     display: none;
   }
 }
 
+html[dir="rtl"] .searchHintContainer {
+  right: auto;
+  left: 10px;
+}
+
+html[dir="rtl"] .searchBarContainer .searchClearButton {
+  right: auto;
+  left: 0.8rem;
+}
+
+html[dir="rtl"] .searchBarContainer .searchBarLoadingRing {
+  left: auto;
+  right: 10px;
+}
+
+html[dir="rtl"] :global(.navbar__search-input) {
+  padding: 0 2.25em 0 0.5em;
+}
+
+/* For autocomplete.js only. */
 .input {
 }
 .hint {
 }
+
 .suggestions {
+  max-height: 500px !important;
+  overflow: scroll !important;
 }
-.dataset {
-}
-.empty {
-}
+
+.dataset {}
+
+.empty {}
+
 /**/
