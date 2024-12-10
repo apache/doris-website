@@ -12,7 +12,7 @@ function getRemoteWorker() {
             // console.log('url',url);
 
             const Remote = Comlink.wrap(
-                new Worker(getWorkerURL('https://test-cdn-selectdb.oss-cn-beijing.aliyuncs.com/worker.js')),
+                new Worker(getWorkerURL('https://cdnd.selectdb.com/worker.js')),
             );
             return await new Remote();
         })();
