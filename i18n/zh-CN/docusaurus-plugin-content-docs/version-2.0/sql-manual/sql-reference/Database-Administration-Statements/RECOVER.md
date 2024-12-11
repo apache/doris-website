@@ -83,13 +83,13 @@ RECOVER
 8. 以name和id恢复 table 并设定新名字
 
    ```sql
-   RECOVER TABLE [db_name.]table_name table_id AS new_db_name;
+   RECOVER TABLE [db_name.]table_name table_id AS new_table_name;
    ```
 
 9. 以name和id恢复 partition 并设定新名字
 
    ```sql
-   RECOVER PARTITION partition_name partition_id AS new_db_name FROM [db_name.]table_name;
+   RECOVER PARTITION partition_name partition_id AS new_partition_name FROM [db_name.]table_name;
    ```  
 
 说明：
