@@ -29,7 +29,7 @@ under the License.
 Used to view the metric information related to data cache on each BE node. The metric information is sourced from the monitoring metrics related to BE's data cache.
 
 :::tip Tip
-This system table is supported from versions 2.1.6 and 3.0.2.
+This system table is supported from versions 2.1.6
 :::
 
 ## Database
@@ -84,9 +84,6 @@ Doris different version may have different metrics
 
     Cache hit ratio in the last 1 hour.
 
-### 3.0.x Metrics
-
-TODO
 
 ## Examples
 
