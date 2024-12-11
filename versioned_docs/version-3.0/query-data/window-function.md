@@ -733,5 +733,4 @@ curl --location-trusted \
 http://127.0.0.1:8030/api/doc_tpcds/customer_address/_stream_load
 ```
 
-The data files item_1_10.dat, date_dim_1_10.dat, store_sales.csv, customer_address_1_10.dat can be downloaded from the link below:
-https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar
+The data files ``item_1_10.dat``, ``date-dim_1_10.dat``, ``store_stales.csv``, and ``customer-address_1_10.dat`` can be downloaded by clicking on the [link](https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar).

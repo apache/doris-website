@@ -724,5 +724,4 @@ curl --location-trusted \
 http://127.0.0.1:8030/api/doc_tpcds/customer_address/_stream_load
 ```
 
-数据文件item_1_10.dat，date_dim_1_10.dat，store_sales.csv，customer_address_1_10.dat可以从下面的链接下载：
-https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar
+数据文件``item_1_10.dat``，``date_dim_1_10.dat``，``store_sales.csv``，``customer_address_1_10.dat``可以[点击链接](https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar)下载。
