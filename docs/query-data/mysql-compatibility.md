@@ -129,7 +129,7 @@ Doris has several unique data types. Here are the details:
 
 ### DDL
 
-**01 Create Table Syntax in Doris**
+#### 01 Create Table Syntax in Doris
 
 ```sql
 CREATE TABLE [IF NOT EXISTS] [database.]table
@@ -147,7 +147,7 @@ distribution_desc
 [extra_properties]
 ```
 
-**02 Differences with MySQL**
+#### 02 Differences with MySQL
 
 
 | Parameter              | Differences from MySQL                                       |
@@ -163,7 +163,7 @@ distribution_desc
 | Properties             | Table properties: They differ from MySQL's table properties, and the syntax for defining table properties also differs from MySQL. |
 
 
-**03 CREATE INDEX**
+#### 03 CREATE INDEX
 
 ```sql
 CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING BITMAP];
@@ -173,7 +173,7 @@ CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING B
 
 - MySQL supports index algorithms such as B+Tree and Hash.
 
-**04 CREATE VIEW**
+#### 04 CREATE VIEW
 
 ```sql
 CREATE VIEW [IF NOT EXISTS]
@@ -198,7 +198,7 @@ CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
 
 - MySQL only supports asynchronous materialized views.
 
-**05 ALTER TABLE / ALTER INDEX**
+#### 05 ALTER TABLE / ALTER INDEX
 
 The syntax of Doris ALTER is basically the same as that of MySQL.
 
@@ -208,7 +208,7 @@ The syntax of Doris DROP is basically the same as MySQL.
 
 ### DML
 
-**INSERT**
+#### INSERT
 
 ```sql
 INSERT INTO table_name
@@ -221,7 +221,7 @@ INSERT INTO table_name
 
 The Doris INSERT syntax is basically the same as MySQL.
 
-**UPDATE**
+#### UPDATE
 
 ```sql
 UPDATE target_table [table_alias]
@@ -240,7 +240,7 @@ value:
 
 The Doris UPDATE syntax is basically the same as MySQL, but it should be noted that the **`WHERE` condition must be added.**
 
-**Delete**
+#### Delete
 
 ```sql
 DELETE FROM table_name [table_alias] 
@@ -259,9 +259,9 @@ DELETE FROM table_name [table_alias]
 
 This syntax can only be used on the UNIQUE KEY model table.
 
-The Doris DELTE syntax is basically the same as MySQL. Due to Doris is an analytical database, deletions can't be too frequent.
+The DELETE syntax in Doris is basically the same as in MySQL. However, since Doris is an analytical database, deletions cannot be too frequent.
 
-**SELECT**
+#### SELECT
 
 ```sql
 SELECT

@@ -154,7 +154,7 @@ distribution_desc
 
 | 参数                   | 与 MySQL 不同之处                                            |
 | ---------------------- | ------------------------------------------------------------ |
-| column_definition_list | - 字段列表定义，其基本语法与 MySQL 类似，但会额外包含一个聚合类型的操作。<br />- 该聚合类型的操作，主要支持的数据模型为 Aggregate 和 Duplicate。<br />- 在创建表时，MySQL 允许在字段列表定义后添加 Index 等约束，如 Primary Key、Unique Key 等；而 Doris 则是通过定义数据模型来实现对这些约束和计算的支持。 |
+| column_definition_list | - 字段列表定义，其基本语法与 MySQL 类似，但会额外包含一个聚合类型的操作。<br />- 该聚合类型的操作，主要支持的数据模型为 Aggregate Key。<br />- 在创建表时，MySQL 允许在字段列表定义后添加 Index 等约束，如 Primary Key、Unique Key 等；而 Doris 则是通过定义数据模型来实现对这些约束和计算的支持。 |
 | index_definition_list  | - 索引列表定义，基本语法与 MySQL 类似，支持位图索引、倒排索引和 N-Gram 索引，但是布隆过滤器索引是通过属性设置。<br />- 而 MySQL 支持的 index 有 B+Tree，Hash。 |
 | engine_type            | - 表引擎类型，可选。<br />- 目前支持的表引擎主要是 OLAP 原生引擎。<br />- MySQL 支持的存储引擎有：Innodb，MyISAM 等 |
 | keys_type              | - 数据模型，可选。<br />- 支持的类型包括：1）DUPLICATE KEY（默认）：其后指定的列为排序列。2）AGGREGATE KEY：其后指定的列为维度列。3）UNIQUE KEY：其后指定的列为主键列。<br />- MySQL 则没有数据模型的概念。 |
