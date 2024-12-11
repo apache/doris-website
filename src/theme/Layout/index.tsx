@@ -29,9 +29,12 @@ export default function Layout(props: Props): JSX.Element {
         if (
             history.location.pathname?.length > 1 &&
             history.location.pathname[history.location.pathname.length - 1] === '/'
-        )
-            history.replace(history.location.pathname.slice(0, -1));
-    }, []);
+        ){
+            const params = location.href.split(history.location.pathname)[1];
+            history.replace(history.location.pathname.slice(0, -1) + params);
+        }
+           
+    }, [history.location]);
 
     return (
         <LayoutProvider>
