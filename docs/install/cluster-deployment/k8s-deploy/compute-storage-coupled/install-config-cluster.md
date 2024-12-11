@@ -37,7 +37,7 @@ spec:
   feSpec:
     image: ${image}
 ```
-Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster).  Official FE images are available at [FE Image](https://hub.docker.com/repository/docker/selectdb/doris.fe-ubuntu).
+Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official FE images are available at [FE Image](https://hub.docker.com/repository/docker/selectdb/doris.fe-ubuntu).
 
 **BE image configuration**  
 To specify the BE image version, use the following configuration:
@@ -46,7 +46,7 @@ spec:
   beSpec:
     image: ${image}
 ```
-Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster).  Official BE images are available at [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.be-ubuntu).
+Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official BE images are available at [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.be-ubuntu).
 
 ### Replicas configuration
 **FE replicas configuration**  
@@ -56,7 +56,7 @@ spec:
   feSpec:
     replicas: 5
 ```
-Update the configuration in the target [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster).
+Update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).
 
 **BE replicas configuration**  
 To modify the default FE replica count of 3 to 5, use the following configuration:
@@ -65,7 +65,7 @@ spec:
   beSpec:
     replicas: 5
 ```
-Update the configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) that needs to be deployed.
+Update the configuration to the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) that needs to be deployed.
 
 ### Computing resource configuration
 **FE computing resource configuration**  
@@ -80,7 +80,7 @@ spec:
       cpu: 8
       memory: 16Gi
 ```
-Update the configuration in the target [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster).
+Update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).
 
 **BE computing resource configuration**    
 The default compute resource configuration for BE is 8 CPUs and 16Gi of memory. To modify it to 16 CPUs and 32Gi of memory, use the following configuration:  
@@ -94,14 +94,14 @@ spec:
       cpu: 16
       memory: 32Gi
 ```
-Update the configuration in the target [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster).
+Update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).
 
 :::tip Tip  
 The minimum required resources for FE and BE to start are 4 CPUs and 8Gi of memory. For normal performance testing, it is recommended to configure  8 CPUs and 8Gi of memory.  
 :::
 
 ## Custom startup configuration
-Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations. To customize the startup parameters, create a specific ConfigMap following the instructions in the [FE Configuration Document](../../../../admin-manual/config/fe-config.md) and the [BE Configuration Document](../../../../admin-manual/config/be-config.md). Then deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) is to be deployed.
+Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations. To customize the startup parameters, create a specific ConfigMap following the instructions in the [FE Configuration Document](../../../../admin-manual/config/fe-config.md) and the [BE Configuration Document](../../../../admin-manual/config/be-config.md). Then deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) is to be deployed.
 
 ### Custom FE startup configuration
 #### Step 1:  Create and deploy the FE ConfigMap
@@ -140,7 +140,7 @@ kubectl -n ${namespace} apply -f ${feConfigMapFile}.yaml
 Here, ${namespace} refers to the namespace where the DorisCluster is to be deployed, and ${feConfigMapFile} is the name of the ConfigMap file for FE.  
 
 #### Step 2: Update the DorisCluster resource
-To use the ConfigMap named `fe-conf` for mounting the startup configuration, add the following config to the FE spec of the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster):
+To use the ConfigMap named `fe-conf` for mounting the startup configuration, add the following config to the FE spec of the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster):
 ```yaml
 spec:
   feSpec:
@@ -148,7 +148,7 @@ spec:
       configMapName: fe-conf
       resolveKey: fe.conf
 ```
-Update the configuration to the [DorisCluster resource](install-quickstart.md#step-3-deploy-doris-cluster) that needs to be deployed.
+Update the configuration to the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) that needs to be deployed.
 
 :::tip Tip
 Please ensure that `enable_fqdn_mode=true` is included in the startup configuration.. If you want to use IP mode and K8s have the ability that the pod IP keep the same after restarted, please refer to the issue [#138](https://github.com/apache/doris-operator/issues/138) to config.
@@ -192,14 +192,14 @@ data:
     heartbeat_service_port = 9050
     brpc_port = 8060
 ```
-When using the ConfigMap to mount BE startup configuration, the key corresponding to the configuration must be `be.conf`. Write the ConfigMap to a file and deploy it to the namespace where the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) is deployed using the following command:
+When using the ConfigMap to mount BE startup configuration, the key corresponding to the configuration must be `be.conf`. Write the ConfigMap to a file and deploy it to the namespace where the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) is deployed using the following command:
 ```shell
 kubectl -n ${namespace} apply -f ${beConfigMapFile}.yaml
 ```
 Here, ${namespace} refers to the namespace where the DorisCluster resource needs to be deployed, and ${beConfigMapFile} is the name of the ConfigMap file for BE.  
 
 #### Step 2: Update the DorisCluster resource
-To use the ConfigMap named `be-conf` for mounting the startup configuration, add the following config to the BE spec of the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster):
+To use the ConfigMap named `be-conf` for mounting the startup configuration, add the following config to the BE spec of the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster):
 ```yaml
 spec:
   feSpec:
@@ -239,7 +239,7 @@ Similarly, the following example shows how to mount two ConfigMaps `test-be1` an
 ```
 
 ## Persistent storage
-Kubernetes provides the [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) to persist data to physical storage. In Kubernetes, the Doris Operator automatically creates PersistentVolumeClaims associated with appropriate PersistentVolumes, based on the template that defined in the need deployed [DorisCluster Resource](install-quickstart.md#step-2-deploy-doris-cluster).
+Kubernetes provides the [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) to persist data to physical storage. In Kubernetes, the Doris Operator automatically creates PersistentVolumeClaims associated with appropriate PersistentVolumes, based on the template that defined in the need deployed [DorisCluster Resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).
 
 ### Persistent storage for FE
 In a Kubernetes-based Doris deployment, it is recommended to persist the following paths for FE:  
@@ -247,7 +247,7 @@ In a Kubernetes-based Doris deployment, it is recommended to persist the followi
 2. Logs: /opt/apache-doris/fe/log (if log persistence is required).
 
 #### Persistent metadata for FE
-To persist FE metadata using the default storage configuration, add the following configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster):
+To persist FE metadata using the default storage configuration, add the following configuration to the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster):
 ```yaml
 spec:
   feSpec:
@@ -267,7 +267,7 @@ spec:
 In the above configuration, ${your_storageclass} represents the name of the StorageClass you want to use, and ${storageSize} represents the storage size you want to allocation. The format is [quantity expression](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), such as: 100Gi. 
 
 #### Persistent FE log
-If your cluster lacks a centralized log collection system, persist the FE log directory by adding the following configuration to the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster):
+If your cluster lacks a centralized log collection system, persist the FE log directory by adding the following configuration to the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster):
 ```yaml
 spec:
   feSpec:
@@ -297,7 +297,7 @@ For BE nodes in a Doris deployment, it is recommended to persist the following p
 
 #### Persistent data
 - **Using default storage configuration**  
-  To persist data uses the default storage configuration, update the [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) with the following configuration:
+  To persist data uses the default storage configuration, update the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) with the following configuration:
   ```yaml
   beSpec:
     persistentVolumes:
@@ -340,7 +340,7 @@ For BE nodes in a Doris deployment, it is recommended to persist the following p
   In the above configuration, ${your_storageclass} represents the name of the StorageClass you want to use, and ${storageSize} represents the storage size you want to use. The format of ${storageSize} follows the [quantity expression method](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/) of K8s, such as: 100Gi. Please replace them as needed when using.
 
 #### Persistent BE log
-To persist BE logs when using the default configuration, update the DorisCluster resource [DorisCluster resource](install-quickstart.md#step-2-deploy-doris-cluster) as follows:
+To persist BE logs when using the default configuration, update the DorisCluster resource [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) as follows:
 ```yaml
 beSpec:
   persistentVolumes:
@@ -665,7 +665,7 @@ After deployment, please set the root password. Doris Operator will switch to us
 :::
 
 ### Setting the root user password after cluster deployment
-After deploying the Doris cluster and setting the root user's password, it's essential to create a management user with the necessary [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to allow Doris Operator to automatically manage the cluster nodes. Using the root user for this purpose is not recommended. Instead, please refer to [the User Creation and Permission Assignment Section](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) to create a new user and grant Node_priv permission.
+After deploying the Doris cluster and setting the root user's password, it's essential to create a management user with the necessary [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to allow Doris Operator to automatically manage the cluster nodes. Using the root user for this purpose is not recommended. Instead, please refer to [the User Creation and Permission Assignment Section](../../../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER.md) to create a new user and grant Node_priv permission.
 
 #### Step 1: Create a user with Node_priv permission
 First, connect to the Doris database using the MySQL protocol, then create a new user with the required permissions:
@@ -682,7 +682,7 @@ Grant the Node_priv permission to the newly created user:
 GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 ```
 ${DB_ADMIN_USER}: The username you created in the previous step.  
-For more details on creating users, setting passwords, and granting permissions, refer to the [CREATE-USER](../../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md) section.
+For more details on creating users, setting passwords, and granting permissions, refer to the [CREATE-USER](../../../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER.md) section.
 
 #### Step 3: Configure DorisCluster  
 - Using environment variables
