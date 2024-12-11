@@ -32,7 +32,7 @@ Used to view the metric information related to data cache on each BE node. The m
 This system table is supported from versions 2.1.6 and 3.0.2.
 :::
 
-## Belongs to Database
+## Database
 
 `information_schema`
 
