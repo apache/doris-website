@@ -71,7 +71,7 @@ under the License.
 - 数组函数 `array_agg` 支持在 ARRAY 中嵌套 ARRAY/MAP/STRUCT。[#42009](https://github.com/apache/doris/pull/42009) 
 - 新增近似聚合统计函数 `approx_top_k` 和 `approx_top_sum`。[#44082](https://github.com/apache/doris/pull/44082) 
 
-## 改进
+## 改进与优化
 
 ### 存储
 
@@ -142,7 +142,7 @@ under the License.
 
 - FE 监控项中的连接数信息支持按用户分别显示。[#39200](https://github.com/apache/doris/pull/39200)
 
-## 缺陷修复
+## 问题修复
 
 ### 存储
 

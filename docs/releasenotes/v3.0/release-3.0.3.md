@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Release 3.0.2",
+    "title": "Release 3.0.3",
     "language": "en"
 }
 ---
@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-Dear community members, the Apache Doris 3.0.2 version was officially released on December 02, 2024, this version further enhances the performance and stability of the system.
+Dear community members, the Apache Doris 3.0.3 version was officially released on December 02, 2024, this version further enhances the performance and stability of the system.
 
 **Quick Download:** https://doris.apache.org/download/
 
