@@ -23,13 +23,13 @@ under the License.
 -->
 
 在 Kubernetes 上部署 Doris 集群请提前[部署 Doris Operator](install-doris-operator.md)。  
-部署 Doris 集群分为下载部署模板，自定义部署模板，检查集群状态三个步骤。
+部署 Doris 集群分为下载部署模板，安装自定义部署模板，检查集群状态三个步骤。
 ## 第 1 步：下载 Doris 部署模板
 使用如下命令从 Doris Operator 官方仓库下载 Doris 部署模板：
 ```shell
 curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
 ```
-## 第 2 步：自定义部署模板
+## 第 2 步：安装自定义部署模板
 根据[集群配置章节](./install-config-cluster.md)按需进行定制化配置，配置完成后通过如下命令部署：
 ```shell
 kubectl apply -f doriscluster-sample.yaml

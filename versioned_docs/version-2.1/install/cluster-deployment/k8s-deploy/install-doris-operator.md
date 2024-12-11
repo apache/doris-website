@@ -23,7 +23,7 @@ under the License.
 -->
 Deploying the Doris Operator involves three steps: install the CustomResourceDefinitions, deploy the Operator service, verify the deployment status.
 
-## Install CustomResourceDefinitions
+## Step 1: Install CustomResourceDefinitions
 Add the custom resource (CRD) of Doris Operator using the following command:
 ```shell
 kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.apache.com_dorisclusters.yaml

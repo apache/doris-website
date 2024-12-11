@@ -43,7 +43,7 @@ In the above results, there are two types of services for FE and BE, with suffix
 - The services with the "internal" suffix can only be used for internal communication within Doris, such as heartbeat, data exchange, and other operations, and are not for external use.
 - The services with the "service" suffix can be used by users.
 
-### Step 2: Access doris from inside the container
+### Step 2: Access Doris
 
 You can create a pod containing the mysql client in the current Kubernetes cluster using the following command:
 ```shell
@@ -70,7 +70,7 @@ doriscluster-sample-fe-service    NodePort    10.152.183.58    <none>        803
 doriscluster-sample-be-internal   ClusterIP   None             <none>        9050/TCP                                                      2d
 doriscluster-sample-be-service    NodePort    10.152.183.244   <none>        9060:30940/TCP,8040:32713/TCP,9050:30621/TCP,8060:30926/TCP   2d
 ```
-### Step 3: Access service using NodePort
+### Step 2: Access Doris
 To access Doris via NodePort, you need to know the Node IP and the mapped port. You can retrieve the node IPs using:
 ```shell
   kubectl get nodes -owide
@@ -104,7 +104,7 @@ doriscluster-sample-be-internal   ClusterIP      None             <none>        
 doriscluster-sample-be-service    LoadBalancer   10.152.183.244   ac4828493dgrftb884g67wg4tb68gyut-1137823345.us-east-1.elb.amazonaws.com         9060:30940/TCP,8040:32713/TCP,9050:30621/TCP,8060:30926/TCP   2d
 ```
 
-### Step 2: Access service using LoadBalancer
+### Step 2: Access Doris
 To access Doris through the LoadBalancer, use the external IP (provided in the EXTERNAL-IP field) and the corresponding port. For example, using the `mysql` command:
 ```shell
 mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 31545 -uroot

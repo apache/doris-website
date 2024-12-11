@@ -22,12 +22,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 To deploy a Doris cluster on Kubernetes, ensure that [the Doris Operator is deployed](install-doris-operator.md).  
-The deployment process for a Doris cluster consists of three steps: download the deployment template, custom the template, and verify the cluster status.
-## Step 1: Download the template Doris deployment template:
+The deployment process for a Doris cluster consists of three steps: download the deployment template, custom the template and deploy cluster, and verify the cluster status.
+## Step 1: Download the Doris deployment template
 ```shell
 curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
 ```
-## Step 2: Custom the template
+## Step 2: Custom the template and deploy cluster
 Perform customized configuration as needed according to the doc of [Config Doris to Deploy](./install-config-cluster.md). After the configuration is completed, deploy it with the following command:
 ```shell
 kubectl apply -f doriscluster-sample.yaml
