@@ -1,6 +1,6 @@
 ---
 {
-    "title": "PAUSE MATERIALIZED VIEW JOB",
+    "title": "PAUSE MATERIALIZED VIEW",
     "language": "en"
 }
 ---
