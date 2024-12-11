@@ -24,9 +24,90 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Quick Start
-
 This guide is about how to download the latest stable version of Apache Doris, install it on a single node, and get it running, including steps for creating a database, data tables, importing data, and performing queries.
+
+# Docker Quick Experience
+
+- Starting from Apache Doris 2.1.8, the official image will meet the ability to quickly pull up 1 FE 1 BE using Docker or Docker-Compose
+
+- But please note that this solution is strongly not recommended for production deployment and is only suitable for rapid learning, development and function debugging!
+
+Use the Docker run command:
+
+```dockerfile 
+docker network create --driver bridge --subnet=172.20.80.0/24 doris-network
+
+docker run -itd \
+--name=fe \
+--env FE_MASTER_IP="172.20.80.2" \
+--env FE_CURRENT_IP="172.20.80.2" \
+--env FE_MASTER_PORT="9010" \
+--env FE_CURRENT_PORT="9010" \
+-p 8030:8030 \
+-p 9030:9030 \
+--network=doris-network \
+--ip=172.20.80.2 \
+apache/doris:doris-fe-2.1.8
+
+docker run -itd \
+--name=be \
+--env FE_MASTER_IP="172.20.80.2" \
+--env BE_IP="172.20.80.3" \
+--env BE_PORT="9050" \
+-p 8040:8040 \
+--network=doris-network \
+--ip=172.20.80.3 \
+apache/doris:doris-fe-2.1.8
+``` 
+
+Docker-Compose Yaml script:
+```dockerfile 
+version: "3"
+  services:
+    fe:
+      image:apache/doris:doris-fe-2.1.8
+      hostname:fe
+      networks:
+        my-network:
+          ipv4_address:172.20.80.2
+      ports:
+        -"8030:8030"
+        -"9030:9030"
+      environment:
+        -FE_MASTER_IP="172.20.80.2"
+        -FE_CURRENT_IP="172.20.80.4"
+        -FE_MASTER_PORT="9010"
+        -FE_CURRENT_PORT="9010"
+    be:
+      image:apache/doris:doris-be-2.1.8
+      hostname:be
+      networks:
+        my-network:
+      	  ipv4_address:172.20.80.3
+      ports:
+        -"8040:8040"
+      environment:
+        -FE_MASTER_IP="172.20.80.2"
+        -BE_IP="172.20.80.6"
+        -BE_PORT="9050"
+      depends_on:
+        -fe
+    networks:
+      doris-network:
+        driver:bridge
+        ipam:
+          config:
+            -subnet:172.20.80.0/24
+```
+
+Save it as `docker-compose.yaml` and execute the startup command:
+
+```shell
+docker-compose -f docker-compose.yaml up -d
+```
+**After running successfully, you can jump to the [Create database and table](#Create database and table) section to quickly start experiencing Apache Doris! **
+
+# Quick Start
 
 ## Environment requirements
 

@@ -27,6 +27,90 @@ under the License.
 
 这个简短的指南将告诉你如何下载 Apache Doris 最新稳定版本，在单节点上安装并运行它，包括创建数据库、数据表、导入数据及查询等。
 
+# Docker 快速体验
+
+-   自 Apache Doris 2.1.8 版本起，官方镜像将满足使用 Docker 或 Docker-Compose 快速拉起 1 FE 1 BE 的能力
+
+-   但请注意，该方案强烈不建议生产部署使用，仅适用于快速学习、开发以及功能调试所用！
+
+使用 Docker run 命令：
+
+```dockerfile
+docker network create --driver bridge --subnet=172.20.80.0/24 doris-network
+
+docker run -itd \
+--name=fe \
+--env FE_MASTER_IP="172.20.80.2" \
+--env FE_CURRENT_IP="172.20.80.2" \
+--env FE_MASTER_PORT="9010" \
+--env FE_CURRENT_PORT="9010" \
+-p 8030:8030 \
+-p 9030:9030 \
+--network=doris-network \
+--ip=172.20.80.2 \
+apache/doris:doris-fe-2.1.8
+
+docker run -itd \
+--name=be \
+--env FE_MASTER_IP="172.20.80.2" \
+--env BE_IP="172.20.80.3" \
+--env BE_PORT="9050" \
+-p 8040:8040 \
+--network=doris-network \
+--ip=172.20.80.3 \
+apache/doris:doris-fe-2.1.8
+```
+
+Docker-Compose Yaml 脚本：
+
+```dockerfile
+version: "3"
+  services:
+    fe:
+      image:apache/doris:doris-fe-2.1.8
+      hostname:fe
+      networks:
+        my-network:
+          ipv4_address:172.20.80.2
+      ports:
+        -"8030:8030"
+        -"9030:9030"
+      environment:
+        -FE_MASTER_IP="172.20.80.2"
+        -FE_CURRENT_IP="172.20.80.4"
+        -FE_MASTER_PORT="9010"
+        -FE_CURRENT_PORT="9010"
+    be:
+      image:apache/doris:doris-be-2.1.8
+      hostname:be
+      networks:
+        my-network:
+      	  ipv4_address:172.20.80.3
+      ports:
+        -"8040:8040"
+      environment:
+        -FE_MASTER_IP="172.20.80.2"
+        -BE_IP="172.20.80.6"
+        -BE_PORT="9050"
+      depends_on:
+        -fe
+    networks:
+      doris-network:
+        driver:bridge
+        ipam:
+          config:
+            -subnet:172.20.80.0/24
+```
+
+将其保存为 `docker-compose.yaml` 执行启动命令:
+
+```shell
+docker-compose -f docker-compose.yaml up -d
+```
+**运行成功后可跳转至 [建库建表](#建库建表) 小节快速开始体验 Apache Doris！**
+
+# 快速开始
+
 ## 环境准备
 
 -   选择一个 x86-64 上的主流 Linux 环境，推荐 CentOS 7.1 或者 Ubuntu 16.04 以上版本。更多运行环境请参考安装部署部分。
