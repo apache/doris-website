@@ -40,7 +40,7 @@ under the License.
 
 <br />
 
-- [2024-12-02, Apache Doris 3.0.2 版本发布](../releasenotes/v3.0/release-3.0.3.md) 
+- [2024-12-02, Apache Doris 3.0.3 版本发布](../releasenotes/v3.0/release-3.0.3.md) 
 
 - [2024-11-10, Apache Doris 2.1.7 版本发布](../releasenotes/v2.1/release-2.1.7.md) 
 
