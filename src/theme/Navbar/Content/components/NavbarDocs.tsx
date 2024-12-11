@@ -7,7 +7,7 @@ import DocsLogoNew from '@site/static/images/doc-logo-new.svg';
 import DocsLogoZH from '@site/static/images/doc-logo-zh.svg';
 import LocaleDropdownNavbarItem from '../../../NavbarItem/LocaleDropdownNavbarItem';
 import DocsVersionDropdownNavbarItem from '../../../NavbarItem/DocsVersionDropdownNavbarItem';
-import { NavbarItems } from '../index';
+import { NavbarItems,getNavItem } from '..';
 
 interface NavbarDocsProps {
     isEN: boolean;
@@ -55,17 +55,18 @@ export const NavbarDocsRight = ({ isEN }: NavbarDocsProps) => {
     return <NavbarItems items={rightDocItems} />;
 };
 
-export const NavbarDocsBottom = () => {
+export const NavbarDocsBottom = ({ isEN }: NavbarDocsProps) => {
+    const docItems = isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items;
+    const [, rightDocItems] = splitNavbarItems(docItems);
     return (
-        //     <div className="docs-nav-version-locale">
-        //         {/* getNavItem? */}
-        //     <LocaleDropdownNavbarItem mobile={false} {...(getNavItem('localeDropdown') as any)} />
-        //     <DocsVersionDropdownNavbarItem
-        //             mobile={false}
-        //             docsPluginId="default"
-        //             {...(getNavItem('docsVersionDropdown') as any)}
-        //         />
-        // </div>
-        null
+        <div className="docs-nav-version-locale">
+            {/* getNavItem? */}
+            <LocaleDropdownNavbarItem mobile={false} {...(getNavItem(rightDocItems,'localeDropdown') as any)} />
+            <DocsVersionDropdownNavbarItem
+                mobile={false}
+                docsPluginId="default"
+                {...(getNavItem(rightDocItems,'docsVersionDropdown') as any)}
+            />
+        </div>
     );
 };

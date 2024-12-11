@@ -31,19 +31,7 @@ export const NavbarCommunityLeft = () => {
 export const NavbarCommunityRight = () => {
     const items = useNavbarItems();
     const [, rightItems] = splitNavbarItems(items);
-    return (
-        <>
-            {/* {!mobileSidebar.disabled && <NavbarMobileSidebarToggle />} */}
-            <NavbarItems items={rightItems} />
-            {/* <Link className="header-right-button-primary navbar-download-desktop" to="/download">
-            <Translate id="navbar.download">
-                {typeof window !== 'undefined' && location.pathname.includes('zh-CN/docs')
-                    ? '下载'
-                    : 'Download'}
-            </Translate>
-        </Link> */}
-        </>
-    );
+    return <NavbarItems items={rightItems} />;
 };
 
 export const NavbarCommunityBottom = () => {

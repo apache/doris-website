@@ -106,7 +106,7 @@ export default function NavbarContent(): JSX.Element {
         [NavBar.DOCS]: {
             left: <NavbarDocsLeft isEN={isEN} />,
             right: <NavbarDocsRight isEN={isEN} />,
-            bottom: <NavbarDocsBottom />,
+            bottom: <NavbarDocsBottom isEN={isEN} />,
         },
         [NavBar.COMMUNITY]: {
             left: <NavbarCommunityLeft />,
