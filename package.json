@@ -24,7 +24,7 @@
         "@docusaurus/plugin-client-redirects": "3.6.3",
         "@docusaurus/plugin-pwa": "3.6.3",
         "@docusaurus/preset-classic": "3.6.3",
-        "@easyops-cn/docusaurus-search-local": "0.45",
+        "@easyops-cn/docusaurus-search-local": "^0.46.1",
         "@mdx-js/react": "^3.0.0",
         "antd": "^5.12.2",
         "autoprefixer": "^10.4.16",
@@ -45,7 +45,10 @@
     },
     "devDependencies": {
         "@docusaurus/module-type-aliases": "3.6.3",
+        "@rollup/plugin-commonjs": "^28.0.1",
+        "@rollup/plugin-node-resolve": "^15.3.0",
         "@tsconfig/docusaurus": "2.0.3",
+        "rollup": "^2.79.2",
         "typescript": "^5.2.2"
     },
     "resolutions": {
