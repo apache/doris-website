@@ -33,22 +33,22 @@ Perform customized configuration as needed according to the doc of [Config Doris
 kubectl apply -f doriscluster-sample.yaml
 ```
 ## Step 3: Verify the cluster status
-Check the status of the cluster by checking the status of pods:
-```shell
-kubectl get pods
-```
-Expected output:
-```shell
-NAME                       READY   STATUS    RESTARTS   AGE
-doriscluster-sample-fe-0   1/1     Running   0          2m
-doriscluster-sample-be-0   1/1     Running   0          3m
-```
-Check the status of the deployed resources:
-```shell
-kubectl get dcr -n doris
-```
-Expected output:
-```shell
-NAME                  FESTATUS    BESTATUS    CNSTATUS   BROKERSTATUS
-doriscluster-sample   available   available
-```
+- Check the status of the cluster by checking the status of pods
+  ```shell
+  kubectl get pods
+  ```
+  Expected output:
+  ```shell
+  NAME                       READY   STATUS    RESTARTS   AGE
+  doriscluster-sample-fe-0   1/1     Running   0          2m
+  doriscluster-sample-be-0   1/1     Running   0          3m
+  ```
+- Check the status of the deployed resources
+  ```shell
+  kubectl get dcr -n doris
+  ```
+  Expected output:
+  ```shell
+  NAME                  FESTATUS    BESTATUS    CNSTATUS   BROKERSTATUS
+  doriscluster-sample   available   available
+  ```
