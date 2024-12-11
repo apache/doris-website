@@ -93,7 +93,7 @@ TPC-DS 99 test query statements : [TPC-DS-Query-SQL](https://github.com/apache/d
 ## 5. Test Results
 
 Here we use Apache Doris 2.1.7-rc03 and Apache Doris 2.0.16-rc01 for comparative testing. In the test, we use Query Time(ms) as the main performance indicator.
-The test results are as follows: (Apache Doris 2.0.16-rc01 q78 q79 failed to execute due to memory issues and was removed when calculating the total sum)
+The test results are as follows: (Apache Doris 2.0.16-rc01 q78 q79 failed to execute due to lack of latest memory optimization and was removed when calculating the total sum)
 
 | Query     | Apache Doris 2.1.7-rc03  (ms) | Apache Doris 2.0.16-rc01  (ms) |
 |-----------|-------------------------------|--------------------------------|

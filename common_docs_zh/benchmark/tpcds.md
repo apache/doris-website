@@ -91,7 +91,7 @@ TPC-DS 99 个测试查询语句： [TPC-DS-Query-SQL](https://github.com/apache/
 
 ## 5. 测试结果
 
-这里我们使用 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.16 版本进行对比测试，测试结果如下：(由于内存问题，Apache Doris 2.0.16 q78 q79无法执行，在计算总和时被删除)
+这里我们使用 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.16 版本进行对比测试，测试结果如下：(由于缺少最新的内存优化，Apache Doris 2.0.16 q78 q79无法执行，在计算总和时被删除)
 
 | Query     | Apache Doris 2.1.7-rc03  (ms) | Apache Doris 2.0.16-rc01  (ms) |
 |-----------|-------------------------------|--------------------------------|
