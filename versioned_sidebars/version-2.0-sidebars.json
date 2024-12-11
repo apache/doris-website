@@ -1484,6 +1484,7 @@
             "label": "Releases",
             "collapsed": false,
             "items": [
+                "releasenotes/all-release",
                 "releasenotes/v2.0/release-2.0.15",
                 "releasenotes/v2.0/release-2.0.14",
                 "releasenotes/v2.0/release-2.0.13",
