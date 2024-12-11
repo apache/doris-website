@@ -1,7 +1,7 @@
 ---
 {
-  "title": "Deploy Doris Operator",
-  "language": "en"
+   "title": "部署 Doris Operator",
+   "language": "zh-CN"
 }
 ---
 
@@ -21,19 +21,19 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-Deploying the Doris Operator involves three steps: install the CustomResourceDefinitions, deploy the Operator service, verify the deployment status.
 
-## Step 1: Install CustomResourceDefinitions
-Add the custom resource (CRD) of Doris Operator using the following command:
+部署 Doris Operator 分为安装定义，部署 Operator 服务以及检查部署状态三个步骤。
+## 第 1 步：安装 Doris Operator CRD
+通过以下命令添加 Doris Operator 的自定义资源（CRD）：
 ```shell
 kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.apache.com_dorisclusters.yaml
 ```
-## Step 2: Install Doris Operator and RBAC rules
-Install Doris Operator using the following command:
+## 第 2 步：部署 Doris Operator
+通过以下命令安装 Doris Operator：
 ```shell
 kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
 ```
-Expected output:
+期望输出结果：
 ```shell
 namespace/doris created
 role.rbac.authorization.k8s.io/leader-election-role created
@@ -43,12 +43,15 @@ clusterrolebinding.rbac.authorization.k8s.io/doris-operator-rolebinding created
 serviceaccount/doris-operator created
 deployment.apps/doris-operator created
 ```
-## Step 3: Verify Doris Operator status
-Check the deployment status of Doris Operator using the following command:
+
+## 第 3 步：检查 Doris Operator 状态
+通过以下命令检查 Doris Operator 的部署状态：
+
 ```shell
 kubectl get pods -n doris
 ```
-Expected output:
+期望输出结果：
+
 ```shell
 NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-7f578c86cb-nz6jn   1/1     Running   0          19m
