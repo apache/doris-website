@@ -1,11 +1,11 @@
 ---
 {
-    "title": "Doris Announcement",
+    "title": "RESUME MATERIALIZED VIEW",
     "language": "en"
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,4 +24,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Coming soon
+
+
+## Description
+
+This statement is used to temporarily restore the scheduled scheduling of materialized views
+
+syntax:
+
+```sql
+RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
+```
+
+## Examples
+
+1. Timed scheduling for restoring materialized view mv1
+
+    ```sql
+    RESUME MATERIALIZED VIEW JOB ON mv1;
+    ```
+   
+## Keywords
+
+    RESUME, MATERIALIZED, VIEW
+
+## Best Practice
+

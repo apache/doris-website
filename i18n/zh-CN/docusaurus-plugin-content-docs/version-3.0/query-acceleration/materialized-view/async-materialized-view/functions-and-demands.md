@@ -112,7 +112,7 @@ FROM
 
 - 查询物化视图的分区信息：[SHOW PARTITIONS](../../../sql-manual/sql-statements/table-and-view/table/SHOW-PARTITIONS)
 
-- 查看物化视图表结构：[DESCRIBE](./../../sql-manual/sql-statements/table-and-view/table/DESC-TABLE)
+- 查看物化视图表结构：[DESCRIBE](../../../sql-manual/sql-statements/table-and-view/table/DESC-TABLE.md)
 
 - 查看物化视图创建语句：[SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
 
