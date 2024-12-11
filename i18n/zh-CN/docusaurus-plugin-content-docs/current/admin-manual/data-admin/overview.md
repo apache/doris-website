@@ -1,7 +1,7 @@
 ---
 {
     "title": "业务连续性和数据恢复",
-    "language": "en"
+    "language": "zh_CN"
 }
 ---
 
