@@ -126,7 +126,7 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
    1 row in set (0.01 sec)
    ```
 
-RESTORE 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/RESTORE.md)。
+RESTORE 的更多用法可参考 [这里](../../sql-manual/sql-statements/data-modification/backup-and-restore/RESTORE.md)。
 
 ## 相关命令
 
@@ -134,7 +134,7 @@ RESTORE 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-D
 
 **1. CREATE REPOSITORY**
 
-创建一个远端仓库路径，用于备份或恢复。该命令需要借助 Broker 进程访问远端存储，不同的 Broker 需要提供不同的参数，具体请参阅 [Broker 文档](../../data-operate/import/broker-load-manual)，也可以直接通过 S3 协议备份到支持 AWS S3 协议的远程存储上去，也可以直接备份到 HDFS，具体参考 [创建远程仓库文档](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY)
+创建一个远端仓库路径，用于备份或恢复。该命令需要借助 Broker 进程访问远端存储，不同的 Broker 需要提供不同的参数，具体请参阅 [Broker 文档](../../data-operate/import/broker-load-manual)，也可以直接通过 S3 协议备份到支持 AWS S3 协议的远程存储上去，也可以直接备份到 HDFS，具体参考 [创建远程仓库文档](./../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY)
 
 **2. RESTORE**
 
@@ -207,13 +207,13 @@ RESTORE 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-D
 
 1. RESTORE 报错：[20181: invalid md5 of downloaded file:/data/doris.HDD/snapshot/20220607095111.862.86400/19962/668322732/19962.hdr, expected: f05b63cca5533ea0466f62a9897289b5, get: d41d8cd98f00b204e9800998ecf8427e]
 
-   备份和恢复的表的副本数不一致导致的，执行恢复命令时需指定副本个数，具体命令请参阅[RESTORE](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/RESTORE) 命令手册
+   备份和恢复的表的副本数不一致导致的，执行恢复命令时需指定副本个数，具体命令请参阅[RESTORE](../../sql-manual/sql-statements/data-modification/backup-and-restore/RESTORE) 命令手册
 
 2. RESTORE 报错：[COMMON_ERROR, msg: Could not set meta version to 97 since it is lower than minimum required version 100]
 
-   备份和恢复不是同一个版本导致的，使用指定的 meta_version 来读取之前备份的元数据。注意，该参数作为临时方案，仅用于恢复老版本 Doris 备份的数据。最新版本的备份数据中已经包含 meta version，无需再指定，针对上述错误具体解决方案指定 meta_version = 100，具体命令请参阅[RESTORE](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/RESTORE) 命令手册
+   备份和恢复不是同一个版本导致的，使用指定的 meta_version 来读取之前备份的元数据。注意，该参数作为临时方案，仅用于恢复老版本 Doris 备份的数据。最新版本的备份数据中已经包含 meta version，无需再指定，针对上述错误具体解决方案指定 meta_version = 100，具体命令请参阅[RESTORE](../../sql-manual/sql-statements/data-modification/backup-and-restore/RESTORE) 命令手册
 
 ## 更多帮助
 
-关于 RESTORE 使用的更多详细语法及最佳实践，请参阅 [RESTORE](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/RESTORE) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP RESTORE` 获取更多帮助信息。
+关于 RESTORE 使用的更多详细语法及最佳实践，请参阅 [RESTORE](../../sql-manual/sql-statements/data-modification/backup-and-restore/RESTORE) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP RESTORE` 获取更多帮助信息。
 

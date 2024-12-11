@@ -141,7 +141,7 @@ Doris 支持将当前数据以文件的形式备份到 HDFS 和对象存储。�
    1 row in set (0.15 sec)
    ```
 
-BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md)。
+BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md)。
 
 ## 最佳实践
 
@@ -173,11 +173,11 @@ BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-De
 
 1. CREATE REPOSITORY
 
-   创建一个远端仓库路径，用于备份或恢复。具体参考 [创建远程仓库文档](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md)。
+   创建一个远端仓库路径，用于备份或恢复。具体参考 [创建远程仓库文档](./../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md)。
 
 2. BACKUP
 
-   执行一次备份操作。具体参考 [备份文档](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md)。
+   执行一次备份操作。具体参考 [备份文档](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md)。
 
 3. SHOW BACKUP
 
@@ -189,8 +189,8 @@ BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-De
 
 5. CANCEL BACKUP
 
-   取消当前正在执行的备份作业。具体参考 [取消备份作业文档](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CANCEL-BACKUP.md)。
+   取消当前正在执行的备份作业。具体参考 [取消备份作业文档](../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP.md)。
 
 6. DROP REPOSITORY
 
-   删除已创建的远端仓库。删除仓库，仅仅是删除该仓库在 Doris 中的映射，不会删除实际的仓库数据。具体参考 [删除远程仓库文档](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/DROP-REPOSITORY.md)。
+   删除已创建的远端仓库。删除仓库，仅仅是删除该仓库在 Doris 中的映射，不会删除实际的仓库数据。具体参考 [删除远程仓库文档](../../sql-manual/sql-statements/data-modification/backup-and-restore/DROP-REPOSITORY.md)。

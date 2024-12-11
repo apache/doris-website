@@ -164,7 +164,13 @@ bin/start.sh --meta-service --daemon
 2. `cluster_id`
    - 描述：存算分离架构下集群的唯一标识符，不同的集群必须设置不同的 cluster_id
    - 格式：int 类型
-   - 示例：`12345678`
+   - 示例：可以使用如下 shell 脚本生成一个随机 id 使用。
+      ```shell
+      echo $(($((RANDOM << 15)) | $RANDOM))
+      ```
+     :::caution
+     **不同的集群必须设置不同的 cluster_id**
+     :::
 
 3. `meta_service_endpoint`
    - 描述：Meta Service 的地址和端口
@@ -188,7 +194,7 @@ bin/start_fe.sh --daemon
 ALTER SYSTEM ADD FOLLOWER "host:port";
 ```
 
-将 `host:port` 替换为 FE 节点的实际地址和编辑日志端口。更多信息请参见 [ADD FOLLOWER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER.md) 和 [ADD OBSERVER](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER.md)。
+将 `host:port` 替换为 FE 节点的实际地址和编辑日志端口。更多信息请参见 [ADD FOLLOWER](../sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER.md) 和 [ADD OBSERVER](../sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER.md)。
 
 生产环境中请确保在 FOLLOWER 角色中的前端 (FE) 节点总数，包括第一个 FE，保持为奇数。一般来说，三个 FOLLOWER 就足够了。OBSERVER 角色的前端节点可以是任意数量。
 
@@ -233,7 +239,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
    可以通过 PROPERTIES 设置 BE 所在的 计算组。
 
-   更详细的用法请参考 [ADD BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) 和 [REMOVE BACKEND](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND.md)。
+   更详细的用法请参考 [ADD BACKEND](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND.md) 和 [REMOVE BACKEND](../sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND)。
 
 3. 验证 Backend 状态：
 
@@ -285,7 +291,7 @@ CREATE STORAGE VAULT IF NOT EXISTS s3_vault
     );
 ```
 
-要在其他对象存储上创建 Storage Vault ，请参考 [创建 Storage Vault ](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
+要在其他对象存储上创建 Storage Vault ，请参考 [创建 Storage Vault ](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md)。
 
 ### 6.3 设置默认 Storage Vault 
 

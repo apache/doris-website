@@ -109,5 +109,5 @@ Building a data platform to suit your use case is not easy, I hope this post hel
 
 Apache Doris [GitHub repo](https://github.com/apache/doris)
 
-Find Apache Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA)
+Find Apache Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw)
 

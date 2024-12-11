@@ -221,7 +221,7 @@ Doris instances communicate directly over the network, requiring the following p
 | Instance | Port                   | Default Port | Communication Direction     | Description                                                  |
 | -------- | ---------------------- | ------------ |-----------------------------| ------------------------------------------------------------ |
 | BE       | be_port                | 9060         | FE --> BE                   | thrift server port on BE, receiving requests from FE         |
-| BE       | webserver_port         | 8040         | BE <--> BE                  | http server port on BE                                       |
+| BE       | webserver_port         | 8040         | BE <--> BE, Client <--> FE                  | http server port on BE                                       |
 | BE       | heartbeat_service_port | 9050         | FE --> BE                   | heartbeat service port (thrift) on BE, receiving heartbeats from FE |
 | BE       | brpc_port              | 8060         | FE <--> BE，BE <--> BE       | brpc port on BE, used for communication between BEs          |
 | FE       | http_port              | 8030         | FE <--> FE，Client <--> FE   | http server port on FE                                       |

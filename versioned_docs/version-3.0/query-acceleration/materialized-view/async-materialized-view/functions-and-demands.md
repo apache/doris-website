@@ -31,7 +31,7 @@ This document provides a comprehensive overview of Materialized View DDL (Data D
 
 ### Create Materialized View:
 
-**1. Refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)**
+**1. Refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)**
 
 **2. New Attribute**
 
@@ -107,11 +107,11 @@ Refer to [CANCEL MATERIALIZED VIEW TASK](https://doris.apache.org/docs/sql-manua
 
 - Query Job Information Related to Materialized View: use [JOBS](../../../sql-manual/sql-functions/table-valued-functions/jobs)
 
-- Query Partition Information: use [SHOW PARTITIONS](../../../sql-manual/sql-statements/Show-Statements/SHOW-PARTITIONS)
+- Query Partition Information: use [SHOW PARTITIONS](../../../sql-manual/sql-statements/table-and-view/table/SHOW-PARTITIONS)
 
-- View Table Structure: use [DESCRIBE](../../../sql-manual/sql-statements/Utility-Statements/DESCRIBE)
+- View Table Structure: use [DESCRIBE](./../../sql-manual/sql-statements/table-and-view/table/DESC-TABLE)
 
-- View Creation Statement: use [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW/)
+- View Creation Statement: use [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
 
 ## Permission
 
@@ -253,7 +253,7 @@ LEFT OUTER JOIN orders
 ON l_orderkey = o_orderkey;
 ```
 
-For more details, refer to  [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)
+For more details, refer to  [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)
 
 **2. Query Statement:**
 

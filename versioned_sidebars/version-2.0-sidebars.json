@@ -2,286 +2,307 @@
     "docs": [
         {
             "type": "category",
-            "label": "Installation and Deployment",
+            "label": "Getting Started",
+            "collapsed": false,
             "items": [
+                "gettingStarted/what-is-new",
+                "gettingStarted/what-is-apache-doris",
+                "gettingStarted/quick-start",
                 {
                     "type": "category",
-                    "label": "Source Code Compilation",
+                    "label": "Tutorials",
                     "items": [
-                        "install/source-install/compilation-with-docker",
-                        "install/source-install/compilation-with-ldb-toolchain",
-                        "install/source-install/compilation-linux",
-                        "install/source-install/compilation-arm",
-                        "install/source-install/compilation-win",
-                        "install/source-install/compilation-mac"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Cluster Deployment",
-                    "items": [
-                        "install/cluster-deployment/standard-deployment",
-                        "install/cluster-deployment/run-docker-cluster",
                         {
                             "type": "category",
-                            "label": "Deploying on Kubernetes",
+                            "label": "Building lakehouse",
                             "items": [
-                                "install/cluster-deployment/k8s-deploy/install-env",
-                                "install/cluster-deployment/k8s-deploy/install-operator",
-                                "install/cluster-deployment/k8s-deploy/install-config-cluster",
-                                "install/cluster-deployment/k8s-deploy/install-doris-cluster",
-                                "install/cluster-deployment/k8s-deploy/install-access-cluster",
-                                "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
-                                "install/cluster-deployment/k8s-deploy/root-user-use",
-                                "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
-                                "install/cluster-deployment/k8s-deploy/debug-crash"
+                                "gettingStarted/tutorials/building-lakehouse/doris-hudi",
+                                "gettingStarted/tutorials/building-lakehouse/doris-paimon",
+                                "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
+                                "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
                             ]
                         },
-                        "install/cluster-deployment/doris-on-aws"
+                        "gettingStarted/tutorials/log-storage-analysis"
                     ]
                 }
             ]
         },
         {
             "type": "category",
-            "label": "Database Connection",
-            "items": [
-                "db-connect/database-connect"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Data Table Design",
-            "items": [
-                "table-design/data-type",
-                {
-                    "type": "category",
-                    "label": "Data Models",
-                    "items": [
-                        "table-design/data-model/overview",
-                        "table-design/data-model/duplicate",
-                        "table-design/data-model/unique",
-                        "table-design/data-model/aggregate",
-                        "table-design/data-model/tips"
-                    ]
-                },
-                "table-design/row-store",
-                {
-                    "type": "category",
-                    "label": "Data Partitioning",
-                    "items": [
-                        "table-design/data-partitioning/basic-concepts",
-                        "table-design/data-partitioning/manual-partitioning",
-                        "table-design/data-partitioning/dynamic-partitioning",
-                        "table-design/data-partitioning/manual-bucketing",
-                        "table-design/data-partitioning/auto-bucket",
-                        "table-design/data-partitioning/common-issues"
-                    ]
-                },
-                "table-design/schema-change",
-                "table-design/cold-hot-separation",
-                {
-                    "type": "category",
-                    "label": "Table Indexes",
-                    "items": [
-                        "table-design/index/index-overview",
-                        "table-design/index/prefix-index",
-                        "table-design/index/inverted-index",
-                        "table-design/index/bloomfilter",
-                        "table-design/index/ngram-bloomfilter-index"
-                    ]
-                },
-                "table-design/best-practice"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Data Manipulation",
+            "label": "Guides",
+            "collapsed": false,
             "items": [
                 {
                     "type": "category",
-                    "label": "Loading Data",
+                    "label": "Installation and Deployment",
                     "items": [
-                        "data-operate/import/load-manual",
-                        "data-operate/import/stream-load-manual",
-                        "data-operate/import/broker-load-manual",
-                        "data-operate/import/routine-load-manual",
-                        "data-operate/import/insert-into-manual",
-                        "data-operate/import/mysql-load-manual",
-                        "data-operate/import/load-json-format",
-                        "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/load-atomicity",
-                        "data-operate/import/load-data-convert",
-                        "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode"
+                        {
+                            "type": "category",
+                            "label": "Source Code Compilation",
+                            "items": [
+                                "install/source-install/compilation-with-docker",
+                                "install/source-install/compilation-with-ldb-toolchain",
+                                "install/source-install/compilation-linux",
+                                "install/source-install/compilation-arm",
+                                "install/source-install/compilation-win",
+                                "install/source-install/compilation-mac"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Cluster Deployment",
+                            "items": [
+                                "install/cluster-deployment/standard-deployment",
+                                "install/cluster-deployment/run-docker-cluster",
+                                {
+                                    "type": "category",
+                                    "label": "Deploying on Kubernetes",
+                                    "items": [
+                                        "install/cluster-deployment/k8s-deploy/install-env",
+                                        "install/cluster-deployment/k8s-deploy/install-operator",
+                                        "install/cluster-deployment/k8s-deploy/install-config-cluster",
+                                        "install/cluster-deployment/k8s-deploy/install-doris-cluster",
+                                        "install/cluster-deployment/k8s-deploy/install-access-cluster",
+                                        "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
+                                        "install/cluster-deployment/k8s-deploy/root-user-use",
+                                        "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
+                                        "install/cluster-deployment/k8s-deploy/debug-crash"
+                                    ]
+                                },
+                                "install/cluster-deployment/doris-on-aws"
+                            ]
+                        }
                     ]
                 },
                 {
                     "type": "category",
-                    "label": "Updating Data",
+                    "label": "Database Connection",
+                    "items": ["db-connect/database-connect"]
+                },
+                {
+                    "type": "category",
+                    "label": "Data Table Design",
                     "items": [
-                        "data-operate/update/update-overview",
-                        "data-operate/update/unique-update",
-                        "data-operate/update/update-of-unique-model",
-                        "data-operate/update/update-of-aggregate-model",
-                        "data-operate/update/unique-update-transaction"
+                        "table-design/data-type",
+                        {
+                            "type": "category",
+                            "label": "Data Models",
+                            "items": [
+                                "table-design/data-model/overview",
+                                "table-design/data-model/duplicate",
+                                "table-design/data-model/unique",
+                                "table-design/data-model/aggregate",
+                                "table-design/data-model/tips"
+                            ]
+                        },
+                        "table-design/row-store",
+                        {
+                            "type": "category",
+                            "label": "Data Partitioning",
+                            "items": [
+                                "table-design/data-partitioning/basic-concepts",
+                                "table-design/data-partitioning/manual-partitioning",
+                                "table-design/data-partitioning/dynamic-partitioning",
+                                "table-design/data-partitioning/manual-bucketing",
+                                "table-design/data-partitioning/auto-bucket",
+                                "table-design/data-partitioning/common-issues"
+                            ]
+                        },
+                        "table-design/schema-change",
+                        "table-design/cold-hot-separation",
+                        {
+                            "type": "category",
+                            "label": "Table Indexes",
+                            "items": [
+                                "table-design/index/index-overview",
+                                "table-design/index/prefix-index",
+                                "table-design/index/inverted-index",
+                                "table-design/index/bloomfilter",
+                                "table-design/index/ngram-bloomfilter-index"
+                            ]
+                        },
+                        "table-design/best-practice"
                     ]
                 },
                 {
                     "type": "category",
-                    "label": "Deleting Data",
+                    "label": "Data Manipulation",
                     "items": [
-                        "data-operate/delete/delete-manual",
-                        "data-operate/delete/batch-delete-manual",
-                        "data-operate/delete/truncate-manual",
-                        "data-operate/delete/atomicity-replace",
-                        "data-operate/delete/table-temp-partition"
+                        {
+                            "type": "category",
+                            "label": "Loading Data",
+                            "items": [
+                                "data-operate/import/load-manual",
+                                "data-operate/import/stream-load-manual",
+                                "data-operate/import/broker-load-manual",
+                                "data-operate/import/routine-load-manual",
+                                "data-operate/import/insert-into-manual",
+                                "data-operate/import/mysql-load-manual",
+                                "data-operate/import/load-json-format",
+                                "data-operate/import/migrate-data-from-other-olap",
+                                "data-operate/import/load-atomicity",
+                                "data-operate/import/load-data-convert",
+                                "data-operate/import/min-load-replica-num",
+                                "data-operate/import/load-strict-mode"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Updating Data",
+                            "items": [
+                                "data-operate/update/update-overview",
+                                "data-operate/update/unique-update",
+                                "data-operate/update/update-of-unique-model",
+                                "data-operate/update/update-of-aggregate-model",
+                                "data-operate/update/unique-update-transaction"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Deleting Data",
+                            "items": [
+                                "data-operate/delete/delete-manual",
+                                "data-operate/delete/batch-delete-manual",
+                                "data-operate/delete/truncate-manual",
+                                "data-operate/delete/atomicity-replace",
+                                "data-operate/delete/table-temp-partition"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Exporting Data",
+                            "items": [
+                                "data-operate/export/export-manual",
+                                "data-operate/export/outfile",
+                                "data-operate/export/export-with-mysql-dump"
+                            ]
+                        }
                     ]
                 },
                 {
                     "type": "category",
-                    "label": "Exporting Data",
+                    "label": "Data Queries",
                     "items": [
-                        "data-operate/export/export-manual",
-                        "data-operate/export/outfile",
-                        "data-operate/export/export-with-mysql-dump"
+                        {
+                            "type": "category",
+                            "label": "Quering Data",
+                            "items": [
+                                "query/query-data/mysql-compatibility",
+                                "query/query-data/select",
+                                "query/query-data/complex-type",
+                                "query/query-data/subquery",
+                                "query/query-data/cte",
+                                "query/query-data/lateral-view",
+                                "query/query-data/window-function",
+                                "query/query-data/encryption-function"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Quering Variables",
+                            "items": ["query/query-variables/variables", "query/query-variables/sql-mode"]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Cost-Based Optimizer",
+                            "items": ["query/nereids/nereids-new", "query/nereids/statistics"]
+                        },
+                        "query/pipeline-execution-engine",
+                        {
+                            "type": "category",
+                            "label": "Caches",
+                            "items": [
+                                "query/query-cache/query-cache",
+                                "query/query-cache/sql-cache-manual",
+                                "query/query-cache/partition-cache-manual"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "View and Materialize View",
+                            "items": [
+                                "query/view-materialized-view/create-view",
+                                "query/view-materialized-view/materialized-view"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Join Optimization",
+                            "items": [
+                                "query/join-optimization/doris-join-optimization",
+                                "query/join-optimization/bucket-shuffle-join",
+                                "query/join-optimization/colocation-join",
+                                "query/join-optimization/runtime-filter",
+                                "query/join-optimization/join-hint"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Distincting Counts",
+                            "items": ["query/duplicate/orthogonal-bitmap-manual", "query/duplicate/using-hll"]
+                        },
+                        "query/high-concurrent-point-query",
+                        "query/topn-query",
+                        {
+                            "type": "category",
+                            "label": "Analyzing Query",
+                            "items": [
+                                "query/query-analysis/query-profile",
+                                "query/query-analysis/query-analytics",
+                                "query/query-analysis/import-analysis"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "User Defined Functions",
+                            "items": ["query/udf/java-user-defined-function", "query/udf/remote-user-defined-function"]
+                        }
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Lakehouse",
+                    "items": [
+                        "lakehouse/lakehouse-overview",
+                        {
+                            "type": "category",
+                            "label": "Querying Data Lakes",
+                            "items": [
+                                "lakehouse/datalake-analytics/hive",
+                                "lakehouse/datalake-analytics/hudi",
+                                "lakehouse/datalake-analytics/iceberg",
+                                "lakehouse/datalake-analytics/paimon",
+                                "lakehouse/datalake-analytics/cloud-auth"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Querying Databases",
+                            "items": [
+                                "lakehouse/database/jdbc",
+                                "lakehouse/database/mysql",
+                                "lakehouse/database/postgresql",
+                                "lakehouse/database/oracle",
+                                "lakehouse/database/sqlserver",
+                                "lakehouse/database/clickhouse",
+                                "lakehouse/database/sap-hana",
+                                "lakehouse/database/oceanbase",
+                                "lakehouse/database/es",
+                                "lakehouse/database/max-compute"
+                            ]
+                        },
+                        "lakehouse/file",
+                        "lakehouse/filecache",
+                        "lakehouse/compute-node",
+                        "lakehouse/external-statistics"
                     ]
                 }
             ]
         },
         {
             "type": "category",
-            "label": "Data Queries",
-            "items": [
-                {
-                    "type": "category",
-                    "label": "Quering Data",
-                    "items": [
-                        "query/query-data/mysql-compatibility",
-                        "query/query-data/select",
-                        "query/query-data/complex-type",
-                        "query/query-data/subquery",
-                        "query/query-data/cte",
-                        "query/query-data/lateral-view",
-                        "query/query-data/window-function",
-                        "query/query-data/encryption-function"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Quering Variables",
-                    "items": [
-                        "query/query-variables/variables",
-                        "query/query-variables/sql-mode"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Cost-Based Optimizer",
-                    "items": [
-                        "query/nereids/nereids-new",
-                        "query/nereids/statistics"
-                    ]
-                },
-                "query/pipeline-execution-engine",
-                {
-                    "type": "category",
-                    "label": "Caches",
-                    "items": [
-                        "query/query-cache/query-cache",
-                        "query/query-cache/sql-cache-manual",
-                        "query/query-cache/partition-cache-manual"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "View and Materialize View",
-                    "items": [
-                        "query/view-materialized-view/create-view",
-                        "query/view-materialized-view/materialized-view"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Join Optimization",
-                    "items": [
-                        "query/join-optimization/doris-join-optimization",
-                        "query/join-optimization/bucket-shuffle-join",
-                        "query/join-optimization/colocation-join",
-                        "query/join-optimization/runtime-filter",
-                        "query/join-optimization/join-hint"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Distincting Counts",
-                    "items": [
-                        "query/duplicate/orthogonal-bitmap-manual",
-                        "query/duplicate/using-hll"
-                    ]
-                },
-                "query/high-concurrent-point-query",
-                "query/topn-query",
-                {
-                    "type": "category",
-                    "label": "Analyzing Query",
-                    "items": [
-                        "query/query-analysis/query-profile",
-                        "query/query-analysis/query-analytics",
-                        "query/query-analysis/import-analysis"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "User Defined Functions",
-                    "items": [
-                        "query/udf/java-user-defined-function",
-                        "query/udf/remote-user-defined-function"
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Lakehouse",
-            "items": [
-                "lakehouse/lakehouse-overview",
-                {
-                    "type": "category",
-                    "label": "Querying Data Lakes",
-                    "items": [
-                        "lakehouse/datalake-analytics/hive",
-                        "lakehouse/datalake-analytics/hudi",
-                        "lakehouse/datalake-analytics/iceberg",
-                        "lakehouse/datalake-analytics/paimon",
-                        "lakehouse/datalake-analytics/cloud-auth"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Querying Databases",
-                    "items": [
-                        "lakehouse/database/jdbc",
-                        "lakehouse/database/mysql",
-                        "lakehouse/database/postgresql",
-                        "lakehouse/database/oracle",
-                        "lakehouse/database/sqlserver",
-                        "lakehouse/database/clickhouse",
-                        "lakehouse/database/sap-hana",
-                        "lakehouse/database/oceanbase",
-                        "lakehouse/database/es",
-                        "lakehouse/database/max-compute"
-                    ]
-                },
-                "lakehouse/file",
-                "lakehouse/filecache",
-                "lakehouse/compute-node",
-                "lakehouse/external-statistics"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Managing Doris",
+            "label": "Management",
+            "collapsed": false,
             "items": [
                 {
                     "type": "category",
@@ -465,7 +486,66 @@
         },
         {
             "type": "category",
-            "label": "SQL Reference",
+            "label": "Benchmark",
+            "collapsed": false,
+            "items": ["benchmark/ssb", "benchmark/tpch", "benchmark/tpcds"]
+        },
+        {
+            "type": "category",
+            "label": "Ecosystem",
+            "collapsed": false,
+            "items": [
+                "ecosystem/spark-doris-connector",
+                "ecosystem/flink-doris-connector",
+                "ecosystem/doris-kafka-connector",
+                "ecosystem/doris-streamloader",
+                {
+                    "type": "category",
+                    "label": "BI",
+                    "items": [
+                        "ecosystem/bi/apache-superset",
+                        "ecosystem/bi/finebi",
+                        "ecosystem/bi/powerbi",
+                        "ecosystem/bi/tableau",
+                        "ecosystem/bi/quicksight",
+                        "ecosystem/bi/quickbi",
+                        "ecosystem/bi/smartbi"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "SQL Clients",
+                    "items": ["ecosystem/bi/dbeaver", "ecosystem/bi/datagrip"]
+                },
+                {
+                    "type": "category",
+                    "label": "More",
+                    "items": [
+                        "ecosystem/cloudcanal",
+                        "ecosystem/datax",
+                        "ecosystem/dbt-doris-adapter",
+                        "ecosystem/seatunnel",
+                        "ecosystem/kettle",
+                        "ecosystem/kyuubi",
+                        "ecosystem/logstash",
+                        "ecosystem/beats",
+                        "ecosystem/automq-load",
+                        "ecosystem/hive-bitmap-udf",
+                        "ecosystem/hive-hll-udf"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "category",
+            "label": "FAQ",
+            "collapsed": false,
+            "items": ["faq/install-faq", "faq/data-faq", "faq/sql-faq", "faq/lakehouse-faq", "faq/bi-faq"]
+        },
+        {
+            "type": "category",
+            "label": "Reference",
+            "collapsed": false,
             "items": [
                 {
                     "type": "category",
@@ -474,7 +554,18 @@
                         "sql-manual/sql-data-types/data-type-overview",
                         {
                             "type": "category",
-                            "label": "Numeric Data Type",
+                            "label": "MAP Functions",
+                            "items": [
+                                "sql-manual/sql-functions/map-functions/map",
+                                "sql-manual/sql-functions/map-functions/map-keys",
+                                "sql-manual/sql-functions/map-functions/map-values",
+                                "sql-manual/sql-functions/map-functions/map-contains-key",
+                                "sql-manual/sql-functions/map-functions/map-contains-value"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Hash Functions",
                             "items": [
                                 "sql-manual/sql-data-types/numeric/BOOLEAN",
                                 "sql-manual/sql-data-types/numeric/TINYINT",
@@ -529,10 +620,7 @@
                         {
                             "type": "category",
                             "label": "IP Data Type",
-                            "items": [
-                                "sql-manual/sql-data-types/ip/IPV4",
-                                "sql-manual/sql-data-types/ip/IPV6"
-                            ]
+                            "items": ["sql-manual/sql-data-types/ip/IPV4", "sql-manual/sql-data-types/ip/IPV6"]
                         }
                     ]
                 },
@@ -1372,9 +1460,7 @@
                         {
                             "type": "category",
                             "label": "Operators",
-                            "items": [
-                                "sql-manual/sql-reference/Operators/in"
-                            ]
+                            "items": ["sql-manual/sql-reference/Operators/in"]
                         },
                         {
                             "type": "category",
@@ -1392,101 +1478,11 @@
                     ]
                 }
             ]
-        }
-    ],
-    "get-starting": [
-        "gettingStarted/what-is-new",
-        "gettingStarted/what-is-apache-doris",
-        "gettingStarted/quick-start",
-        {
-            "type": "category",
-            "label": "Tutorials",
-            "items": [
-                {
-                    "type": "category",
-                    "label": "Building lakehouse",
-                    "items": [
-                        "gettingStarted/tutorials/building-lakehouse/doris-hudi",
-                        "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
-                    ]
-                },
-                "gettingStarted/tutorials/log-storage-analysis"
-            ]
-        }
-    ],
-    "benchmark": [
-        "benchmark/ssb",
-        "benchmark/tpch",
-        "benchmark/tpcds"
-    ],
-    "ecosystem": [
-        "ecosystem/cloudcanal",
-        "ecosystem/spark-doris-connector",
-        "ecosystem/flink-doris-connector",
-        "ecosystem/doris-kafka-connector",
-        "ecosystem/datax",
-        "ecosystem/dbt-doris-adapter",
-        "ecosystem/seatunnel",
-        "ecosystem/kettle",
-        "ecosystem/kyuubi",
-        "ecosystem/logstash",
-        "ecosystem/beats",
-        "ecosystem/automq-load",
-        "ecosystem/doris-streamloader",
-        "ecosystem/hive-bitmap-udf",
-        "ecosystem/hive-hll-udf",
-        {
-            "type": "category",
-            "label": "BI and Database IDE",
-            "items": [
-                "ecosystem/bi/apache-superset",
-                "ecosystem/bi/dbeaver",
-                "ecosystem/bi/datagrip",
-                "ecosystem/bi/finebi",
-                "ecosystem/bi/powerbi",
-                "ecosystem/bi/tableau",
-                "ecosystem/bi/quicksight",
-                "ecosystem/bi/quickbi",
-                "ecosystem/bi/smartbi"
-            ]
-        }
-    ],
-    "faq": [
-        "faq/install-faq",
-        "faq/data-faq",
-        "faq/sql-faq",
-        "faq/lakehouse-faq",
-        "faq/bi-faq"
-    ],
-    "releasenotes": [
-        "releasenotes/all-release",
-        {
-            "type": "category",
-            "label": "v3.0",
-            "items": [
-                "releasenotes/v3.0/release-3.0.0",
-                "releasenotes/v3.0/release-3.0.1",
-                "releasenotes/v3.0/release-3.0.2"
-            ]
         },
         {
             "type": "category",
-            "label": "v2.1",
-            "items": [
-                "releasenotes/v2.1/release-2.1.7",
-                "releasenotes/v2.1/release-2.1.6",
-                "releasenotes/v2.1/release-2.1.5",
-                "releasenotes/v2.1/release-2.1.4",
-                "releasenotes/v2.1/release-2.1.3",
-                "releasenotes/v2.1/release-2.1.2",
-                "releasenotes/v2.1/release-2.1.1",
-                "releasenotes/v2.1/release-2.1.0"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "v2.0",
+            "label": "Releases",
+            "collapsed": false,
             "items": [
                 "releasenotes/v2.0/release-2.0.15",
                 "releasenotes/v2.0/release-2.0.14",
@@ -1504,33 +1500,6 @@
                 "releasenotes/v2.0/release-2.0.2",
                 "releasenotes/v2.0/release-2.0.1",
                 "releasenotes/v2.0/release-2.0.0"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "v1.2",
-            "items": [
-                "releasenotes/v1.2/release-1.2.8",
-                "releasenotes/v1.2/release-1.2.7",
-                "releasenotes/v1.2/release-1.2.6",
-                "releasenotes/v1.2/release-1.2.5",
-                "releasenotes/v1.2/release-1.2.4",
-                "releasenotes/v1.2/release-1.2.3",
-                "releasenotes/v1.2/release-1.2.2",
-                "releasenotes/v1.2/release-1.2.1",
-                "releasenotes/v1.2/release-1.2.0"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "v1.1",
-            "items": [
-                "releasenotes/v1.1/release-1.1.5",
-                "releasenotes/v1.1/release-1.1.4",
-                "releasenotes/v1.1/release-1.1.3",
-                "releasenotes/v1.1/release-1.1.2",
-                "releasenotes/v1.1/release-1.1.1",
-                "releasenotes/v1.1/release-1.1.0"
             ]
         }
     ]

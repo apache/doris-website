@@ -76,7 +76,7 @@ under the License.
 
     以文本形式下载指定日志文件
     
-## Examples
+## 示例
 
 1. 获取对应类型的日志文件列表
 

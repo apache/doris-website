@@ -160,7 +160,7 @@ Doris 支持的 provider 列表：
 
 ### 查看导入作业
 
-Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) 命令查看
+Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) 命令查看
 
 ```sql
 mysql> show load order by createtime desc limit 1\G;
@@ -185,7 +185,7 @@ LoadFinishTime: 2022-04-01 18:59:11
 
 ### 取消导入作业
 
-当 Broker load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label。取消导入命令语法可执行 [CANCEL LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CANCEL-LOAD) 查看。
+当 Broker load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label。取消导入命令语法可执行 [CANCEL LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD) 查看。
 
 例如：取消数据库 demo 上，label 为 broker_load_2022_04_01 的导入作业
 
@@ -847,4 +847,4 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 ## 更多帮助
 
-关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP BROKER LOAD` 获取更多帮助信息。
+关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP BROKER LOAD` 获取更多帮助信息。

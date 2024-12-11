@@ -83,7 +83,7 @@ PROPERTIES (
 | **password**     | 该用户对应的密码信息 |
 | **jdbc_url**     | JDBC 的 URL 协议，包括数据库类型，IP 地址，端口号和数据库名，不同数据库协议格式不一样。例如 mysql: "jdbc:mysql://127.0.0.1:3306/test?useCursorFetch=true"。|
 | **driver_class** | 访问外表数据库的驱动包类名，例如 mysql 是:com.mysql.jdbc.Driver. |
-| **driver_url**   | 用于下载访问外部数据库的 jar 包驱动 URL。http://IP:port/mysql-connector-java-5.1.47.jar。本地单机测试时，可将 jar 包放在本地路径下，"driver_url"="file:///home/disk1/pathTo/mysql-connector-java-5.1.47.jar",多机时需保证具有完全相同的路径信息。 |
+| **driver_url**   | 用于下载访问外部数据库的 jar 包驱动 URL。`http://IP:port/mysql-connector-java-5.1.47.jar`。本地单机测试时，可将 jar 包放在本地路径下，"driver_url"="file:///home/disk1/pathTo/mysql-connector-java-5.1.47.jar",多机时需保证具有完全相同的路径信息。 |
 | **resource**     | 在 Doris 中建立外表时依赖的资源名，对应上步创建资源时的名字。|
 | **table**        | 在 Doris 中建立外表时，与外部数据库相映射的表名。|
 | **table_type**   | 在 Doris 中建立外表时，该表来自那个数据库。例如 mysql,postgresql,sqlserver,oracle|

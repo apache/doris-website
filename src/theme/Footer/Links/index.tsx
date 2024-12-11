@@ -1,11 +1,14 @@
 import React from 'react';
-import { isMultiColumnFooterLinks } from '@docusaurus/theme-common';
+
+import {isMultiColumnFooterLinks} from '@docusaurus/theme-common';
+import FooterLinksMultiColumn from '@theme/Footer/Links/MultiColumn';
 import FooterLinksSimple from '@theme/Footer/Links/Simple';
-import FooterLinksMultiColumn from './MultiColumn';
-export default function FooterLinks({ links }) {
-    return isMultiColumnFooterLinks(links) ? (
-        <FooterLinksMultiColumn columns={links} />
-    ) : (
-        <FooterLinksSimple links={links} />
-    );
+import type {Props} from '@theme/Footer/Links';
+
+export default function FooterLinks({links}: Props): JSX.Element {
+  return isMultiColumnFooterLinks(links) ? (
+    <FooterLinksMultiColumn columns={links} />
+  ) : (
+    <FooterLinksSimple links={links} />
+  );
 }

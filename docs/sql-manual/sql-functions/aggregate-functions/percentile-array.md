@@ -28,7 +28,7 @@ under the License.
 ### Description
 #### Syntax
 
-`ARRAY_DOUBLE PERCENTILE_ARRAY(BIGINT, ARRAY_DOUBLE p)`
+`ARRAY_DOUBLE PERCENTILE_ARRAY(expr, ARRAY_DOUBLE p)`
 
 Calculate exact percentiles, suitable for small data volumes. Sorts the specified column in descending order first, then takes the exact pth percentile.
 The return value is the result of sequentially taking the specified percentages in the array p.

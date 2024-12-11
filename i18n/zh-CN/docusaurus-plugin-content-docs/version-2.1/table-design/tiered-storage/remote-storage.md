@@ -142,7 +142,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 :::tip
 注意，如果用户在建表时给整张 Table 和部分 Partition 指定了不同的 Storage Policy，Partition 设置的 Storage policy 会被无视，整张表的所有 Partition 都会使用 table 的 Policy. 如果您需要让某个 Partition 的 Policy 和别的不同，则可以使用上文中对一个已存在的 Partition，关联 Storage policy 的方式修改。
 
-具体可以参考 Docs 目录下[RESOURCE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE)、 [POLICY](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-POLICY)、 [CREATE TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)、 [ALTER TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)等文档，里面有详细介绍。
+具体可以参考 Docs 目录下[RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE)、 [POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY)、 [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)、 [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN)等文档，里面有详细介绍。
 :::
 
 ### 一些限制
@@ -151,7 +151,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 -   Storage policy 关联的对象信息不支持修改数据存储 path 的信息，比如 bucket、endpoint、root_path 等信息
 
--   Storage policy 支持创建 和修改和支持删除，删除前需要先保证没有表引用此 Storage policy。
+-   Storage policy 支持创建、修改和删除，删除前需要先保证没有表引用此 Storage policy。
 
 -   Unique 模型在开启 Merge-on-Write 特性时，不支持设置 Storage policy。
 

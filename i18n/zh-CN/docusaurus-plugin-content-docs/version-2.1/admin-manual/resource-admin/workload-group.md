@@ -201,7 +201,7 @@ properties (
     "enable_memory_overcommit"="true"
 );
 ```
-此时配置的 CPU 限制为软限。自 2.1 版本起，系统会自动创建一个名为```normal```的 group，不可删除。创建 workload group 详细使用可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，
+此时配置的 CPU 限制为软限。自 2.1 版本起，系统会自动创建一个名为```normal```的 group，不可删除。创建 workload group 详细使用可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS)，
 
 2. 查看/修改/删除 workload group语句如下：
 ```
@@ -212,7 +212,7 @@ alter workload group g1 properties('memory_limit'='10%');
 drop workload group g1;
 
 ```
-查看 workload group 可访问 Doris 系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。 删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)。
+查看 workload group 可访问 Doris 系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS)。 删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP)。
 
 3. 绑定 workload group。
 * 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`，需要注意的这里的value不能填空，否则语句会执行失败，如果不知道要设置哪些group，可以设置为`normal`，`normal`为全局默认的group。
@@ -227,7 +227,7 @@ set workload_group = 'g1';
 ```
 session 变量`workload_group`优先于 user property `default_workload_group`, 在`workload_group`为空时，查询将绑定到`default_workload_group`, 在 session 变量`workload_group`不为空时，查询将绑定到`workload_group`。
 
-如果是非 admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 workload group 授权参考：[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
+如果是非 admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 workload group 授权参考：[grant 语句](../../sql-manual/sql-statements/account-management/GRANT-TO)。
 
 4. 执行查询，查询将关联到指定的 workload group。
 
@@ -306,7 +306,7 @@ ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
 CPU 软限的属性 cpu_share 默认会填充一个有效值 1024(如果之前未指定 cpu_share 的值)，用户可以根据 group 的优先级对 cpu_share 的值进行重新调整。
 
 # Workload Group权限表
-可以通过Workload Group权限表查看user或者role有权限访问的Workload Group，授权相关的用法可以参考[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
+可以通过Workload Group权限表查看user或者role有权限访问的Workload Group，授权相关的用法可以参考[grant 语句](../../sql-manual/sql-statements/account-management/GRANT-TO)。
 
 该表目前存在行级别的权限控制，root或者admin账户可以查看所有的数据，非root/admin账户只能看到自己有权限访问的Workload Group的数据。
 

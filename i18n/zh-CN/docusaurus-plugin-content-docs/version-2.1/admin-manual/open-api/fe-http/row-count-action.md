@@ -65,7 +65,7 @@ under the License.
 }
 ```
     
-## Examples
+## 示例
 
 1. 更新并获取指定 Table 的行数
 

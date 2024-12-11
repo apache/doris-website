@@ -40,9 +40,28 @@ The location of the `be_custom.conf` file can be configured in `be.conf` through
 
 ## View configuration items
 
-Users can view the current configuration items by visiting BE's web page:
+There are two ways to view the configuration items of BE:
 
-`http://be_host:be_webserver_port/varz`
+1. BE web page
+
+    Users can view the current configuration items by visiting BE's web page:
+
+    `http://be_host:be_webserver_port/varz`
+
+2. View by command
+
+   You can view the configuration items of the BE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md):
+
+    `SHOW BACKEND CONFIG;`
+
+    The meanings of the columns in the results are as follows:
+
+    1. BackendId: the id of backend.
+    2. Host: the IP of backend.
+    3. Key: the name of the configuration item.
+    4. Value: The value of the current configuration item.
+    5. Type: The configuration item value type, such as integer or string.
+    6. IsMutable: whether it can be dynamically configured. If true, the configuration item can be dynamically configured at runtime. If false, it means that the configuration item can only be configured in be.conf and takes effect after restarting BE.
 
 ## Set configuration items
 

@@ -52,29 +52,29 @@ DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 
 Create table example:
 
-```
- CREATE TABLE IF NOT EXISTS test.simple_map (
-              `id` INT(11) NULL COMMENT "",
-              `m` Map<STRING, INT> NULL COMMENT ""
-            ) ENGINE=OLAP
-            DUPLICATE KEY(`id`)
-            DISTRIBUTED BY HASH(`id`) BUCKETS 1
-            PROPERTIES (
-            "replication_allocation" = "tag.location.default: 1",
-            "storage_format" = "V2"
-            );
+```sql
+CREATE TABLE IF NOT EXISTS test.simple_map (
+  `id` INT(11) NULL COMMENT "",
+  `m` Map<STRING, INT> NULL COMMENT ""
+) ENGINE=OLAP
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 1",
+"storage_format" = "V2"
+);
 ```
 
 Insert data example:
 
-```
+```sql
 mysql> INSERT INTO simple_map VALUES(1, {'a': 100, 'b': 200});
 ```
 
 stream_load examples:
-See [STREAM TABLE](../../../data-operate/import/stream-load-manual.md) for syntax details.
+See [STREAM LOAD](../../../data-operate/import/stream-load-manual) for syntax details.
 
-```
+```shell
 # load the map data from json file
 curl --location-trusted -uroot: -T events.json -H "format: json" -H "read_json_by_line: true" http://fe_host:8030/api/test/simple_map/_stream_load
 # 返回结果
@@ -101,7 +101,7 @@ curl --location-trusted -uroot: -T events.json -H "format: json" -H "read_json_b
 
 Select all data example:
 
-```
+```sql
 mysql> SELECT * FROM simple_map;
 +------+-----------------------------+
 | id   | m                           |
@@ -114,7 +114,7 @@ mysql> SELECT * FROM simple_map;
 
 Select map column example:
 
-```
+```sql
 mysql> SELECT m FROM simple_map;
 +-----------------------------+
 | m                           |
@@ -127,7 +127,7 @@ mysql> SELECT m FROM simple_map;
 
 Select map value according given key example: 
 
-```
+```sql
 mysql> SELECT m['a'] FROM simple_map;
 +-----------------------------+
 | %element_extract%(`m`, 'a') |
@@ -140,7 +140,7 @@ mysql> SELECT m['a'] FROM simple_map;
 
 map functions examples: 
 
-```
+```sql
 # map construct
 
 mysql> SELECT map('k11', 1000, 'k22', 2000)['k11'];

@@ -28,7 +28,7 @@ under the License.
 ### description
 #### Syntax
 
-`ARRAY_DOUBLE PERCENTILE_ARRAY(BIGINT, ARRAY_DOUBLE p)`
+`ARRAY_DOUBLE PERCENTILE_ARRAY(expr, ARRAY_DOUBLE p)`
 
 计算精确的百分位数，适用于小数据量。先对指定列降序排列，然后取精确的第 p 位百分数。
 返回值为依次取数组p中指定的百分数组成的结果。

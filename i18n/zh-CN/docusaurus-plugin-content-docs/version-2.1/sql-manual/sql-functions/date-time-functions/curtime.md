@@ -34,7 +34,7 @@ under the License.
 
 获得当前的时间，以TIME类型返回
 
-### Examples
+### 示例
 
 ```sql
 mysql> select current_time();

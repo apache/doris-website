@@ -28,7 +28,7 @@
 在 K8s 环境中服务因为一些预期之外的事情会进入 `CrashLoopBackOff` 状态，通过 `kubectl get pod --namespace ${namespace}` 命令可以查看指定 namespace 下的 pod 状态和 pod_name。
 在这种状态下，单纯通过 describe 和 logs 命令无法判定服务出问题的原因。当服务进入 `CrashLoopBackOff` 状态时，需要有一种机制允许部署服务的 pod 进入 `running` 状态方便用户通过 exec 进入容器内进行 debug。
 
-Doris Operator 提供了 `Debug` 的运行模式，下面描述了当服务进入 `CrashLoopBackOff` 时如何进入 Debug 模式进行人工 Debug ，以及解决后如何恢复到正常启动状态。
+Doris Operator 提供了 `Debug` 的运行模式，下面描述了当服务进入 `CrashLoopBackOff` 时如何进入 Debug 模式进行人工 Debug，以及解决后如何恢复到正常启动状态。
 
 ### 启动 Debug 模式
 
@@ -58,7 +58,7 @@ Doris Operator 提供了 `Debug` 的运行模式，下面描述了当服务进�
 $ kubectl delete pod ${pod_name} --namespace ${namespace}
 ```
 
-:::tip Tip  
+:::tip 提示  
 **进入 pod 内部后，需要修改配置文件的端口信息，才能手动启动 相应的 Doris 组件**
 - FE 需要修改默认路径为：`/opt/apache-doris/fe/conf/fe.conf` 的 `query_port=9030` 配置。
 - BE 需要修改默认路径为：`/opt/apache-doris/be/conf/be.conf` 的 `heartbeat_service_port=9050` 配置。  
@@ -133,7 +133,7 @@ K8s 所有运维操作通过修改资源为最终状态，由 Operator 服务自
 
 ### 节点缩容
 
-关于节点缩容问题，Doris-Operator 目前并不能很好的支持节点安全下线，在这里仍能够通过减少集群组件的 replicas 属性来实现减少 FE 或 BE 的目的，这里是直接 stop 节点来实现节点下线，当前版本的 Doris-Operator 并未能实现 [decommission](../../../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) 安全转移副本后下线。由此可能引发一些问题及其注意事项如下
+关于节点缩容问题，Doris-Operator 目前并不能很好的支持节点安全下线，在这里仍能够通过减少集群组件的 replicas 属性来实现减少 FE 或 BE 的目的，这里是直接 stop 节点来实现节点下线，当前版本的 Doris-Operator 并未能实现 [decommission](../../../../sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND) 安全转移副本后下线。由此可能引发一些问题及其注意事项如下
 
 - 表存在单副本情况下贸然下线 BE 节点，一定会有数据丢失，尽可能避免此操作。
 - FE Follower 节点尽量避免随意下线，可能带来元数据损坏影响服务。
@@ -141,7 +141,7 @@ K8s 所有运维操作通过修改资源为最终状态，由 Operator 服务自
 - CN 节点不持有数据副本，可以随意下线，但因此会损失存在于该 CN 节点的远端数据缓存，导致数据查询短时间内存在一定的性能回退。
 
 ## 升级 Doris 集群
-Doris 集群整体升级需要先升级 BE ，再升级 FE。Doris Operator 基于 Kubernetes 的 [滚动更新功能](https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/) 实现每个组件的滚动平滑升级。
+Doris 集群整体升级需要先升级 BE，再升级 FE。Doris Operator 基于 Kubernetes 的 [滚动更新功能](https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/) 实现每个组件的滚动平滑升级。
 
 ### 升级前注意事项
 

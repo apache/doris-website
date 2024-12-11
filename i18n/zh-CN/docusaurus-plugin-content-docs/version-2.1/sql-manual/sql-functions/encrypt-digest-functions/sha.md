@@ -22,33 +22,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHA
-
-### description
+### 描述
 
 使用SHA1算法对信息进行摘要处理。
 
-#### Syntax
+### 语法
 
-`SHA(str)` 或 `SHA1(str)`
+``` sql
+{ SHA | SHA1 }(str)
+```
 
-#### Arguments
-
-- `str`: 待加密的内容
-
-### example
+### 示例
 
 ```SQL
-mysql> select sha("123");
+select sha("123");
+```
+
+```
 +------------------------------------------+
 | sha1('123')                              |
 +------------------------------------------+
 | 40bd001563085fc35165329ea1ff5c5ecbdbbeef |
 +------------------------------------------+
-1 row in set (0.13 sec)
 ```
-
-### keywords
-
-    SHA,SHA1
-

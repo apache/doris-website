@@ -41,13 +41,13 @@ Among the above indexes, the prefix index and ZoneMap index are built-in indexes
 
 - Comparison of characteristics of different types of indexes
 
-| Type       | Index             | Advantages                                | Limitations                              |
-|------------|-------------------|-------------------|-----------------------|-------------------|------------------|----------------------------------------|-------------------------------------------|-------------------------------------------|
-| Point Query | Prefix Index      | Built-in index, best performance      | Only one prefix index per table          |
-| Point Query | Inverted Index    | Supports tokenization and keyword matching, building index on any column, multi-condition combination and accelerating more functions | Large index storage space, similar to raw data |
-| Skip       | ZoneMap Index      | Built-in index, small index storage space | Only one prefix index per table          |
-| Skip       | BloomFilter Index  | More precise than ZoneMap, medium index space | Supports few query types, only supports equal, not others (not equal, range, LIKE, MATCH) |
-| Skip       | NGram BloomFilter  | Supports LIKE acceleration, medium index space | Supports few query types, only supports LIKE acceleration          |
+| Type       | Index             | Advantages                                                                                                                        | Limitations                                                                                                             |
+|------------|-------------------|---------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Point Query| Prefix Index      | Built-in index, best performance.<br />Only one prefix index per table.            | Only one prefix index per table.                                                                                   |
+| Point Query| Inverted Index    | Supports tokenization and keyword matching.<br />Building index on any column.<br />Multi-condition combination and accelerating more functions. | Large index storage space, similar to raw data.                                                                         |
+| Skip       | ZoneMap Index     | Built-in index, small index storage space.<br />Only one prefix index per table.    | Only one prefix index per table.                                                                                   |
+| Skip       | BloomFilter Index | More precise than ZoneMap, medium index space.                                   | Supports few query types.<br />Only supports equal (not others: not equal, range, LIKE, MATCH).                         |
+| Skip       | NGram BloomFilter | Supports LIKE acceleration, medium index space.                                  | Supports few query types.<br />Only supports LIKE acceleration.                                                         |
 
 - List of operators and functions for index acceleration
 

@@ -54,7 +54,7 @@ under the License.
     }
     ```
 
-## Examples
+## 示例
 
     ```bash
     curl -X POST "http://127.0.0.1:8040/api/glog/adjust?module=vrow_distribution&level=-1"

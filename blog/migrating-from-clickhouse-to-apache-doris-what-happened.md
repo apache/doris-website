@@ -159,4 +159,4 @@ In terms of CPU and memory consumption, Apache Doris maintained stable cluster l
 
 ## Future Directions
 
-As the migration goes on, the user works closely with the [Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA), and their feedback has contributed to the making of [Apache Doris 2.0.0](https://doris.apache.org/docs/dev/releasenotes/release-2.0.0/). We will continue assisting them in their migration from Kylin and Druid to Doris, and we look forward to see their Doris-based unified data platform come into being.
+As the migration goes on, the user works closely with the [Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw), and their feedback has contributed to the making of [Apache Doris 2.0.0](https://doris.apache.org/docs/dev/releasenotes/release-2.0.0/). We will continue assisting them in their migration from Kylin and Druid to Doris, and we look forward to see their Doris-based unified data platform come into being.

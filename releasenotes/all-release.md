@@ -1,6 +1,6 @@
 ---
 {
-    "title": "What's New",
+    "title": "All Releases",
     "language": "en"
 }
 ---
@@ -28,17 +28,18 @@ This document presents a summary of Apache Doris versions released within one ye
 
 :::tip Latest Release
 
-🔥 Apache Doris 2.1.7 is released !
+🎉 Version 3.0.3 released now. Check out the 🔗[Release Notes](../releasenotes/v3.0/release-3.0.3) here. Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. 
 
-- [Release Note](/releasenotes/v2.1/release-2.1.7.md)
+<br />
 
-
-- [Quick Download](https://doris.apache.org/download)
+🎉 Version 2.1.7 released now. Check out the 🔗[Release Notes](../releasenotes/v2.1/release-2.1.6) here. The 2.1 version delivers exceptional performance with 100% higher out-of-the-box queries proven by TPC-DS 1TB tests, enhanced data lake analytics that are 4-6 times speedier than Trino and Spark, solid support for semi-structured data analysis with new Variant types and suite of analytical functions, asynchronous materialized views for query acceleration, optimized real-time writing at scale, and better workload management with stability and runtime SQL resource tracking.
 
 :::
 
 
 <br />
+
+- [2024-12-02, Apache Doris 3.0.3 is released](../releasenotes/v3.0/release-3.0.3.md)
 
 - [2024-11-10, Apache Doris 2.1.7 is released](../releasenotes/v2.1/release-2.1.7.md)
 

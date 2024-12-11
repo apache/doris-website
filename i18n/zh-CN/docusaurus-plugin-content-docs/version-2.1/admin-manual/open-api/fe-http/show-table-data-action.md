@@ -105,7 +105,7 @@ under the License.
     }
     ```
     
-## Examples
+## 示例
 
 1. 获取指定数据库的数据量
 

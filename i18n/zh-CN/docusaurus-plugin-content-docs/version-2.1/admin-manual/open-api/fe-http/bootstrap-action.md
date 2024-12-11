@@ -88,7 +88,7 @@ under the License.
     * `maxReplayedJournal` 表示 FE 节点当前回放的最大元数据日志 id。
     * `arrowFlightSqlPort` 是 FE 节点的 Arrow Flight SQL 协议端口。
     
-## Examples
+## 示例
 
 1. 不提供参数
 

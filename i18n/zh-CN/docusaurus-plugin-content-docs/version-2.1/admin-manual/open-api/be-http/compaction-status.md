@@ -112,7 +112,7 @@ under the License.
 
 * stale version path：该 table 当前被合并 rowset 集合的合并版本路径，该结构是一个数组结构，每个元素表示一个合并路径。每个元素中包含了三个属性：path id 表示版本路径 id，last create time 表示当前路径上最近的 rowset 创建时间，默认在这个时间半个小时之后这条路径上的所有 rowset 会被过期删除。
 
-## Examples
+## 示例
 
 ```shell
 curl http://192.168.10.24:8040/api/compaction/show?tablet_id=10015

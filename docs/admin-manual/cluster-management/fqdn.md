@@ -71,7 +71,7 @@ After deploying the cluster according to 'Enable FQDN for new cluster', if you w
 
 ### Enable FQDN for old cluster
 
-Precondition: The current program supports the syntax 'Alter SYSTEM MODIFY FRONTEND'<fe_ip>:<edit_log_port>'HOSTNAME'<fe_hostname>',
+Precondition: The current program supports the syntax `ALTER SYSTEM MODIFY FRONTEND "<fe_ip>:<edit_log_port>" HOSTNAME "<fe_hostname>"`,
 If not, upgrade to a version that supports the syntax
 
 >Note that.

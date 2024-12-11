@@ -47,7 +47,7 @@ Doris 基于列存格式引擎构建，在高并发服务场景中，用户总�
 
 ```sql
 CREATE TABLE `tbl_point_query` (
-    `key` int(11) NULL,
+    `k1` int(11) NULL,
     `v1` decimal(27, 9) NULL,
     `v2` varchar(30) NULL,
     `v3` varchar(30) NULL,
@@ -56,9 +56,9 @@ CREATE TABLE `tbl_point_query` (
     `v6` float NULL,
     `v7` datev2 NULL
 ) ENGINE=OLAP
-UNIQUE KEY(`key`)
+UNIQUE KEY(`k1`)
 COMMENT 'OLAP'
-DISTRIBUTED BY HASH(`key`) BUCKETS 1
+DISTRIBUTED BY HASH(`k1`) BUCKETS 1
 PROPERTIES (
     "replication_allocation" = "tag.location.default: 1",
     "enable_unique_key_merge_on_write" = "true",
@@ -71,16 +71,16 @@ PROPERTIES (
 
 1. `enable_unique_key_merge_on_write`应该被开启，存储引擎需要根据主键来快速点查
 
-2. 当条件只包含主键时，如`select * from tbl_point_query where key = 123`，类似的查询会走短路径来优化查询
+2. 当条件只包含主键时，如`select * from tbl_point_query where k1 = 123`，类似的查询会走短路径来优化查询
 
 3. `light_schema_change`应该被开启，因为主键点查的优化依赖了轻量级 Schema Change 中的`column unique id`来定位列
 
 4. 只支持单表 key 列等值查询不支持 join、嵌套子查询， **where 条件里需要有且仅有 key 列的等值**，可以认为是一种 key value 查询
 
-5. 开启行存会导致空间膨胀，占用更多的磁盘空间，如果只需要查询部分列，在 Doris 2.1 后建议使用`"row_store_columns"="key,v1,v2"` 类似的方式指定部份列作为行存，查询的时候只查询这部份列，例如
+5. 开启行存会导致空间膨胀，占用更多的磁盘空间，如果只需要查询部分列，在 Doris 2.1 后建议使用`"row_store_columns"="k1,v1,v2"` 类似的方式指定部份列作为行存，查询的时候只查询这部份列，例如
 
     ```sql
-    SELECT key, v1, v2 FROM tbl_point_query WHERE key = 1
+    SELECT k1, v1, v2 FROM tbl_point_query WHERE k1 = 1
     ```
 
 ## 使用 PreparedStatement
@@ -97,7 +97,7 @@ PROPERTIES (
 
     ```java
     // use `?` for placement holders, readStatement should be reused
-    PreparedStatement readStatement = conn.prepareStatement("select * from tbl_point_query where key = ?");
+    PreparedStatement readStatement = conn.prepareStatement("select * from tbl_point_query where k1 = ?");
     ...
     readStatement.setInt(1,1234);
     ResultSet resultSet = readStatement.executeQuery();
@@ -130,13 +130,13 @@ Doris 中有针对 Page 级别的 Cache，每个 Page 中存的是某一列的�
 A：explain sql，当执行计划中出现 SHORT-CIRCUIT，证明使用了短路径优化
 
 ```sql
-mysql> explain select * from tbl_point_query where `key` = -2147481418 ; 
+mysql> explain select * from tbl_point_query where k1 = -2147481418 ; 
 +-----------------------------------------------------------------------------------------------+
 | Explain String(Old Planner)                                                                   |
 +-----------------------------------------------------------------------------------------------+
 | PLAN FRAGMENT 0                                                                               |
 |   OUTPUT EXPRS:                                                                               |
-|     `test`.`tbl_point_query`.`key`                                                            |
+|     `test`.`tbl_point_query`.`k1`                                                            |
 |     `test`.`tbl_point_query`.`v1`                                                             |
 |     `test`.`tbl_point_query`.`v2`                                                             |
 |     `test`.`tbl_point_query`.`v3`                                                             |
@@ -153,7 +153,7 @@ mysql> explain select * from tbl_point_query where `key` = -2147481418 ;
 |                                                                                               |
 |   0:VOlapScanNode                                                                             |
 |      TABLE: test.tbl_point_query(tbl_point_query), PREAGGREGATION: ON                         | 
-|      PREDICATES: `key` = -2147481418 AND `test`.`tbl_point_query`.`__DORIS_DELETE_SIGN__` = 0 |  
+|      PREDICATES: `k1` = -2147481418 AND `test`.`tbl_point_query`.`__DORIS_DELETE_SIGN__` = 0 |  
 |      partitions=1/1 (tbl_point_query), tablets=1/1, tabletList=360065                         | 
 |      cardinality=9452868, avgRowSize=833.31323, numNodes=1                                    |
 |      pushAggOp=NONE                                                                           |

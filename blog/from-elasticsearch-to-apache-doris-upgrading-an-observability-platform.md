@@ -161,8 +161,8 @@ Currently, the Variant type requires extra type assertion, we plan to automate t
 
 ## Conclusion
 
-GuanceDB's transition from Elasticsearch to Apache Doris showcases a big stride in improving data processing speed and reducing costs. For these purposes, Apache Doris has optimized itself in the two major aspects of data processing: data integration and data analysis. It has expanded its schemaless support to flexibly accommodate more data types, introduced features like inverted index and tiered storage to enable faster and more cost-effective queries. Evolution is an ongoing process. Apache Doris has never stopped improving itself. We have a lot of new features under development and the Doris [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) embrace any input and feedback.
+GuanceDB's transition from Elasticsearch to Apache Doris showcases a big stride in improving data processing speed and reducing costs. For these purposes, Apache Doris has optimized itself in the two major aspects of data processing: data integration and data analysis. It has expanded its schemaless support to flexibly accommodate more data types, introduced features like inverted index and tiered storage to enable faster and more cost-effective queries. Evolution is an ongoing process. Apache Doris has never stopped improving itself. We have a lot of new features under development and the Doris [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) embrace any input and feedback.
 
 Check Apache Doris GitHub [repo](https://github.com/apache/doris)
 
-Find Apache Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA)
+Find Apache Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw)
