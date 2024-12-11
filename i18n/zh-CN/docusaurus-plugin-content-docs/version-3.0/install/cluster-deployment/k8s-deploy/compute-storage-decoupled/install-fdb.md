@@ -96,7 +96,7 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
 
 ### 第 3 步：部署 FoundationDB 集群
 
-在 [fdb-kuberneteS-OPErator 仓库](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/config/samples/cluster.yaml)中提供了部署 FoundationDB 的部署样例，通过如下命令直接下载使用
+在 [fdb-kubernetes-operator 仓库](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/config/samples/cluster.yaml)中提供了部署 FoundationDB 的部署样例，通过如下命令直接下载使用
 
 1. 下载部署样例
 

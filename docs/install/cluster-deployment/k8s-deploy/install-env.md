@@ -66,8 +66,8 @@ sysctl -p
 
 ```shell
 vi /etc/security/limits.conf 
-* soft nofile 65536
-* hard nofile 65536
+* soft nofile 1000000
+* hard nofile 1000000
 ```
 
 ### Modify the number of virtual memory areas

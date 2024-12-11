@@ -67,8 +67,8 @@ sysctl -p
 
 ```shell
 vi /etc/security/limits.conf 
-* soft nofile 65536
-* hard nofile 65536
+* soft nofile 1000000
+* hard nofile 1000000
 ```
 
 ### 修改虚拟内存区域数量
