@@ -28,10 +28,10 @@ under the License.
 
 ## 1 确保拥有以下系统依赖
 
-GCC 10+, Oracle JDK 8+, Python 2.7+, Apache Maven 3.5+, CMake 3.19.2+ , Bison 3.0+
+GCC 10+, Oracle JDK 17+, Python 2.7+, Apache Maven 3.5+, CMake 3.19.2+ , Bison 3.0+
 
 ```Plain
-sudo apt install build-essential openjdk-8-jdk maven cmake byacc flex automake libtool-bin bison binutils-dev libiberty-dev zip unzip libncurses5-dev curl git ninja-build python
+sudo apt install build-essential openjdk-17-jdk maven cmake byacc flex automake libtool-bin bison binutils-dev libiberty-dev zip unzip libncurses5-dev curl git ninja-build python
 sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
 sudo apt update
 sudo apt install gcc-10 g++-10 
