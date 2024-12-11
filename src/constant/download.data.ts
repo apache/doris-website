@@ -1468,19 +1468,19 @@ export const TOOL_VERSIONS = [
         value: ToolsEnum.Kafka,
         children: [
             {
-                label: '1.0.0',
-                value: '1.0.0',
-                gz: 'https://downloads.apache.org/doris/kafka-connector/1.0.0-rc01/apache-doris-kafka-connector-1.0.0-src.tar.gz',
-                Source: 'https://downloads.apache.org/doris/kafka-connector/1.0.0-rc01/apache-doris-kafka-connector-1.0.0-src.tar.gz',
-                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/doris-kafka-connector/1.0.0/doris-kafka-connector-1.0.0.jar',
-            },
-            {
                 label: '1.1.0',
                 value: '1.1.0',
                 gz: 'https://downloads.apache.org/doris/kafka-connector/1.1.0-rc01/apache-doris-kafka-connector-1.1.0-src.tar.gz',
                 Source: 'https://downloads.apache.org/doris/kafka-connector/1.1.0-rc01/apache-doris-kafka-connector-1.1.0-src.tar.gz',
                 Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/doris-kafka-connector/1.1.0/doris-kafka-connector-1.1.0.jar',
             },
+            {
+                label: '1.0.0',
+                value: '1.0.0',
+                gz: 'https://downloads.apache.org/doris/kafka-connector/1.0.0-rc01/apache-doris-kafka-connector-1.0.0-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/kafka-connector/1.0.0-rc01/apache-doris-kafka-connector-1.0.0-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/doris-kafka-connector/1.0.0/doris-kafka-connector-1.0.0.jar',
+            }
         ],
     },
     {
