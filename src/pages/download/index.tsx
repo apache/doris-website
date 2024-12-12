@@ -57,7 +57,7 @@ export default function Download() {
     const [releaseFlag, setReleaseFlag] = useState<boolean>(true)
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
     // const [releaseNote, setReleaseNote] = useState('/docs/2.1/releasenotes/v2.1/release-2.1.5');
-    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/v3.0/release-3.0.2')
+    const [releaseNote, setReleaseNote] = useState('/docs/3.0/releasenotes/v3.0/release-3.0.3')
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -108,8 +108,8 @@ export default function Download() {
             setReleaseNote('https://github.com/apache/doris/releases');
         } else if (values.version[0] === '1.2') {
             setReleaseNote(`https://github.com/apache/doris/issues/${getIssueCode(values.version[1])}`);
-        } else if (['2.1', '2.0'].includes(values.version[0])) {
-            setReleaseNote(`/docs/${values.version[0]}/releasenotes/release-${values.version[1]}`);
+        } else if (['3.0', '2.0'].includes(values.version[0])) {
+            setReleaseNote(`/docs/${values.version[0]}/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
         } else {
             setReleaseNote(`/docs/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
         }
