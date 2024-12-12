@@ -67,6 +67,7 @@ sh ${MS_HOME}/bin/start_ms.sh --daemon
 
 1.5. Check status of the new MetaService:
 
+Verify that the new MetaService is running and that a new version number is present in `${MS_HOME}/log/doris_cloud.out`.
 
 ### Step 2: Upgrade Recycler (Optional)
 
@@ -100,6 +101,8 @@ sh ${RECYCLER_HOME}/bin/start_ms.sh --recycler --daemon
 ```
 
 2.5. Check status of the new Recycler:
+
+Verify that the new MetaService is running and that a new version number is present in `${RECYCLER_HOME}/log/doris_cloud.out`.
 
 ### Step 3: Upgrade BE
 
@@ -135,6 +138,9 @@ sh ${BE_HOME}/bin/start_be.sh --daemon
 ```
 
 3.5. Check status of the new BE:
+
+Confirm that the new BE is running and operational with the new version. The status and version can be obtained using the following SQL.
+
 ```sql
 show backends;
 ```
@@ -178,6 +184,9 @@ sh ${FE_HOME}/bin/start_fe.sh --daemon
 ```
 
 4.5. Check status of the new FE:
+
+Confirm that the new FE is running and operational with the new version. The status and version can be obtained using the following SQL.
+
 ```sql
 show frontends;
 ```

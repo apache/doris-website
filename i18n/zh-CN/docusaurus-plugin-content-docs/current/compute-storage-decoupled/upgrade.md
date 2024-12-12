@@ -45,7 +45,7 @@ under the License.
 1.1. 停止当前 MetaService：
 ```shell
 cd ${MS_HOME}
-sh bin/stop_ms.sh
+sh bin/stop.sh
 ```
 
 1.2. 备份现有 MetaService 二进制文件：
@@ -62,10 +62,12 @@ cp ${MS_PACKAGE_DIR}/lib ${MS_HOME}/lib
 
 1.4. 启动新的 MetaService：
 ```shell
-sh ${MS_HOME}/bin/start_ms.sh --daemon
+sh ${MS_HOME}/bin/start.sh --daemon
 ```
 
 1.5. 检查新 MetaService 的状态：
+
+确保新 MetaService 正在运行，并且在 `${MS_HOME}/log/doris_cloud.out` 中有新的版本号。
 
 ### 步骤 2：升级 Recycler（可选）
 
@@ -78,7 +80,7 @@ sh ${MS_HOME}/bin/start_ms.sh --daemon
 2.1. 停止当前 Recycler：
 ```shell
 cd ${RECYCLER_HOME}
-sh bin/stop_ms.sh
+sh bin/stop.sh
 ```
 
 2.2. 备份现有 Recycler 二进制文件：
@@ -95,10 +97,12 @@ cp ${RECYCLER_PACKAGE_DIR}/lib ${RECYCLER_HOME}/lib
 
 2.4. 启动新的 Recycler：
 ```shell
-sh ${RECYCLER_HOME}/bin/start_ms.sh --recycler --daemon
+sh ${RECYCLER_HOME}/bin/start.sh --recycler --daemon
 ```
 
 2.5. 检查新 Recycler 的状态：
+
+确保新 Recycler 正在运行，并且在 `${RECYCLER_HOME}/log/doris_cloud.out` 中有新的版本号。
 
 ### 步骤 3：升级 BE
 
@@ -134,6 +138,9 @@ sh ${BE_HOME}/bin/start_be.sh --daemon
 ```
 
 3.5. 检查新 BE 的状态：
+
+确认新的 BE 是否正在运行，并且使用新版本正常运行。可以使用以下 SQL 获取状态和版本。
+
 ```sql
 show backends;
 ```
@@ -177,6 +184,9 @@ sh ${FE_HOME}/bin/start_fe.sh --daemon
 ```
 
 4.5. 检查新 FE 的状态：
+
+确认新的 FE 是否正在运行，并且使用新版本正常运行。可以使用以下 SQL 获取状态和版本。
+
 ```sql
 show frontends;
 ```
