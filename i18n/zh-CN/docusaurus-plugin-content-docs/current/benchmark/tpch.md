@@ -30,7 +30,7 @@ TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套
 
 本文档主要介绍 Doris 在 TPC-H 1000G 测试集上的性能表现。
 
-在 TPC-H 标准测试数据集上的 22 个查询上，我们基于 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.16 版本进行了对比测试。
+在 TPC-H 标准测试数据集上的 22 个查询上，我们基于 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.15.1 版本进行了对比测试。
 
 ![TPCDS_1000G](/images/tpch_2.1.png)
 
@@ -48,12 +48,12 @@ TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套
 - Doris 部署 3BE 1FE
 - 内核版本：Linux version 5.15.0-101-generic 
 - 操作系统版本：Ubuntu 20.04 LTS (Focal Fossa)
-- Doris 软件版本：Apache Doris 2.1.7-rc03、Apache Doris 2.0.16
+- Doris 软件版本：Apache Doris 2.1.7-rc03、Apache Doris 2.0.15.1
 - JDK：openjdk version "1.8.0_352-352"
 
 ## 3. 测试数据量
 
-整个测试模拟生成 TPC-H 1000G 的数据分别导入到 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.16 版本进行测试，下面是表的相关说明及数据量。
+整个测试模拟生成 TPC-H 1000G 的数据分别导入到 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.15.1 版本进行测试，下面是表的相关说明及数据量。
 
 | TPC-H 表名 | 行数     | 备注     |
 |:---------|:-------|:-------|
@@ -68,38 +68,38 @@ TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套
 
 ## 4. 测试 SQL
 
-TPCH 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
+TPC-H 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
 
 
 ## 5. 测试结果
 
-这里我们使用 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.16 版本进行对比测试，测试结果如下：
+这里我们使用 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.15.1 版本进行对比测试，测试结果如下：
 
-| Query     | Apache Doris 2.1.7-rc03 (ms) | Apache Doris 2.0.16-rc01 (ms) |
-|-----------|------------------------------|-------------------------------|
-| Q1        | 11880                        | 12270                         |
-| Q2        | 280                          | 290                           |
-| Q3        | 3890                         | 4610                          |
-| Q4        | 2570                         | 3040                          |
-| Q5        | 6630                         | 8450                          |
-| Q6        | 170                          | 180                           |
-| Q7        | 2420                         | 4870                          |
-| Q8        | 3730                         | 3850                          |
-| Q9        | 15910                        | 25860                         |
-| Q10       | 7880                         | 8650                          |
-| Q11       | 560                          | 490                           |
-| Q12       | 500                          | 660                           |
-| Q13       | 9540                         | 9920                          |
-| Q14       | 590                          | 740                           |
-| Q15       | 1170                         | 1150                          |
-| Q16       | 910                          | 1520                          |
-| Q17       | 1920                         | 1770                          |
-| Q18       | 17700                        | 18760                         |
-| Q19       | 2370                         | 3240                          |
-| Q20       | 560                          | 830                           |
-| Q21       | 9150                         | 10150                         |
-| Q22       | 1130                         | 1390                          |
-| **Total** | **101460**                   | **122690**                    |
+| Query     | Apache Doris 2.1.7-rc03 (ms) | Apache Doris 2.0.15.1-rc01 (ms) |
+|-----------|------------------------------|---------------------------------|
+| Q1        | 11880                        | 12270                           |
+| Q2        | 280                          | 290                             |
+| Q3        | 3890                         | 4610                            |
+| Q4        | 2570                         | 3040                            |
+| Q5        | 6630                         | 8450                            |
+| Q6        | 170                          | 180                             |
+| Q7        | 2420                         | 4870                            |
+| Q8        | 3730                         | 3850                            |
+| Q9        | 15910                        | 25860                           |
+| Q10       | 7880                         | 8650                            |
+| Q11       | 560                          | 490                             |
+| Q12       | 500                          | 660                             |
+| Q13       | 9540                         | 9920                            |
+| Q14       | 590                          | 740                             |
+| Q15       | 1170                         | 1150                            |
+| Q16       | 910                          | 1520                            |
+| Q17       | 1920                         | 1770                            |
+| Q18       | 17700                        | 18760                           |
+| Q19       | 2370                         | 3240                            |
+| Q20       | 560                          | 830                             |
+| Q21       | 9150                         | 10150                           |
+| Q22       | 1130                         | 1390                            |
+| **Total** | **101460**                   | **122690**                      |
 
 ## 6. 环境准备
 
