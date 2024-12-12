@@ -76,7 +76,7 @@ WITH S3
 (
     "provider" = "AZURE",
     "AWS_ENDPOINT" = "StorageAccountA.blob.core.windows.net",  
-    "AWS_REGION" = "us-west-2",
+    "AWS_REGION" = "westus3",
     "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
     "AWS_SECRET_KEY"="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 )
@@ -155,7 +155,7 @@ FROM S3
     'format' = 'csv',
     'provider' = 'AZURE',
     's3.endpoint' = 'StorageAccountA.blob.core.windows.net',
-    's3.region' = 'us-west-2',
+    's3.region' = 'westus3',
     "s3.access_key"= "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
     "column_separator" = "|",
