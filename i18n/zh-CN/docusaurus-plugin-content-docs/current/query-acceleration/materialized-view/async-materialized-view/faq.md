@@ -362,19 +362,7 @@ Explain 显示的信息如下：
 
 ## 附录
 
-### 1 物化视图相关开关介绍
-
-| 开关                                                         | 说明                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| SET enable_nereids_planner = true;                           | 异步物化视图只有在新优化器下才支持，所以物化视图透明改写没有生效时，需要开启新优化器 |
-| SET enable_materialized_view_rewrite = true;                 | 开启或者关闭查询透明改写，默认开启                           |
-| SET materialized_view_rewrite_enable_contain_external_table = true; | 参与透明改写的物化视图是否允许包含外表，默认不允许，如果物化视图的定义 SQL 中包含外表，也想参与到透明改写，可以打开此开关。 |
-| SET materialized_view_rewrite_success_candidate_num = 3;     | 透明改写成功的结果集合，允许参与到 CBO 候选的最大数量，默认是 3。如果发现透明改写的性能很慢，可以考虑把这个值调小。 |
-| SET enable_materialized_view_union_rewrite = true;           | 当分区物化视图不足以提供查询的全部数据时，是否允许基表和物化视图 union all 来响应查询，默认允许。如果发现命中物化视图时数据错误，可以把这个开关关闭。 |
-| SET enable_materialized_view_nest_rewrite = true;            | 是否允许嵌套改写，默认不允许。如果查询 SQL 很复杂，需要构建嵌套物化视图才可以命中，那么需要打开此开关。 |
-| SET materialized_view_relation_mapping_max_count = 8;        | 透明改写过程中，relation mapping 最大允许数量，如果超过，进行截取。relation mapping 通常由表自关联产生，数量一般会是笛卡尔积，比如 3 张表，可能会产生 8 种组合。默认是 8。如果发现透明改写时间很长，可以把这个值调低 |
-
-### 2 透明改写失败摘要信息和说明
+### 1 透明改写失败摘要信息和说明
 
 | 摘要信息                                                     | 说明                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -405,7 +393,7 @@ Explain 显示的信息如下：
 | Both query and view have group sets, or query doesn't have but view has, not supported | 查询和物化视图都有 group sets 查询没有 group sets，但是物化视图有，这种不支持透明改写 |
 |                                                              |                                                              |
 
-### 3 异步物化视图分区构建物化视图失败原因和说明
+### 2 异步物化视图分区构建物化视图失败原因和说明
 
 分区物化视图的刷新原理是分区增量更新：
 
