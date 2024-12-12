@@ -238,8 +238,7 @@
                             ]
                         },
                         "query-data/complex-type",
-                        "query-data/lateral-view",
-                        "query-data/encryption-function"
+                        "query-data/lateral-view"
                     ]
                 },
                 {
@@ -442,7 +441,8 @@
                         "admin-manual/auth/ldap",
                         "admin-manual/auth/ranger",
                         "admin-manual/auth/certificate",
-                        "admin-manual/auth/fe-certificate"
+                        "admin-manual/auth/fe-certificate",
+                        "admin-manual/auth/encryption-function"
                     ]
                 },
                 {
@@ -536,6 +536,7 @@
                                 "admin-manual/system-tables/information_schema/columns",
                                 "admin-manual/system-tables/information_schema/engines",
                                 "admin-manual/system-tables/information_schema/events",
+                                "admin-manual/system-tables/information_schema/file_cache_statistics",
                                 "admin-manual/system-tables/information_schema/files",
                                 "admin-manual/system-tables/information_schema/global_variables",
                                 "admin-manual/system-tables/information_schema/key_column_usage",
