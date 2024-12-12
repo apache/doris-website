@@ -549,6 +549,6 @@ Using `CUBE` computes all possible aggregation levels (eight in this case), but 
   );
   ```
 
-## Design Document
+## APPENDIX
 
-For detailed information, please refer to [SQL for Aggregation in Data Warehouses](https://www.oracle.com/path-to-reference-documentation) on the Oracle official website.
+For table creation statements and data files, see the [Window Function](window-function.md) appendix.
