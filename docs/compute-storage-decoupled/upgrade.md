@@ -76,30 +76,30 @@ Assuming the following environment variables:
 
 Upgrade each Recycler instance by following these steps.
 
-1.1. Stop the current Recycler:
+2.1. Stop the current Recycler:
 ```shell
 cd ${RECYCLER_HOME}
 sh bin/stop_ms.sh
 ```
 
-1.2. Backup the existing Recycler binaries:
+2.2. Backup the existing Recycler binaries:
 ```shell
 mv ${RECYCLER_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${RECYCLER_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-1.3. Deploy the new package:
+2.3. Deploy the new package:
 ```shell
 cp ${RECYCLER_PACKAGE_DIR}/bin ${RECYCLER_HOME}/bin
 cp ${RECYCLER_PACKAGE_DIR}/lib ${RECYCLER_HOME}/lib
 ```
 
-1.4. Start the new Recycler:
+2.4. Start the new Recycler:
 ```shell
 sh ${RECYCLER_HOME}/bin/start_ms.sh --recycler --daemon
 ```
 
-1.5. Check status of the new Recycler:
+2.5. Check status of the new Recycler:
 
 ### Step 3: Upgrade BE
 
@@ -111,30 +111,30 @@ Assuming the following environment variables:
 
 Upgrade each BE instance by following these steps.
 
-1.1. Stop the current BE:
+3.1. Stop the current BE:
 ```shell
 cd ${BE_HOME}
 sh bin/stop_be.sh
 ```
 
-1.2. Backup the existing BE binaries:
+3.2. Backup the existing BE binaries:
 ```shell
 mv ${BE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${BE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-1.3. Deploy the new package:
+3.3. Deploy the new package:
 ```shell
 cp ${BE_PACKAGE_DIR}/bin ${BE_HOME}/bin
 cp ${BE_PACKAGE_DIR}/lib ${BE_HOME}/lib
 ```
 
-1.4. Start the new BE:
+3.4. Start the new BE:
 ```shell
 sh ${BE_HOME}/bin/start_be.sh --daemon
 ```
 
-1.5. Check status of the new BE:
+3.5. Check status of the new BE:
 ```sql
 show backends;
 ```
@@ -154,30 +154,30 @@ Upgrade the Frontend (FE) instances in the following order:
 
 Upgrade each Frontend (FE) node by following these steps.
 
-1.1. Stop the current FE:
+4.1. Stop the current FE:
 ```shell
 cd ${FE_HOME}
 sh bin/stop_fe.sh
 ```
 
-1.2. Backup the existing FE binaries:
+4.2. Backup the existing FE binaries:
 ```shell
 mv ${FE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${FE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-1.3. Deploy the new package:
+4.3. Deploy the new package:
 ```shell
 cp ${FE_PACKAGE_DIR}/bin ${FE_HOME}/bin
 cp ${FE_PACKAGE_DIR}/lib ${FE_HOME}/lib
 ```
 
-1.4. Start the new FE:
+4.4. Start the new FE:
 ```shell
 sh ${FE_HOME}/bin/start_fe.sh --daemon
 ```
 
-1.5. Check status of the new FE:
+4.5. Check status of the new FE:
 ```sql
 show frontends;
 ```

@@ -75,30 +75,30 @@ sh ${MS_HOME}/bin/start_ms.sh --daemon
 
 按照以下步骤升级每个 Recycler 实例。
 
-1.1. 停止当前 Recycler：
+2.1. 停止当前 Recycler：
 ```shell
 cd ${RECYCLER_HOME}
 sh bin/stop_ms.sh
 ```
 
-1.2. 备份现有 Recycler 二进制文件：
+2.2. 备份现有 Recycler 二进制文件：
 ```shell
 mv ${RECYCLER_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${RECYCLER_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-1.3. 部署新包：
+2.3. 部署新包：
 ```shell
 cp ${RECYCLER_PACKAGE_DIR}/bin ${RECYCLER_HOME}/bin
 cp ${RECYCLER_PACKAGE_DIR}/lib ${RECYCLER_HOME}/lib
 ```
 
-1.4. 启动新的 Recycler：
+2.4. 启动新的 Recycler：
 ```shell
 sh ${RECYCLER_HOME}/bin/start_ms.sh --recycler --daemon
 ```
 
-1.5. 检查新 Recycler 的状态：
+2.5. 检查新 Recycler 的状态：
 
 ### 步骤 3：升级 BE
 
@@ -110,30 +110,30 @@ sh ${RECYCLER_HOME}/bin/start_ms.sh --recycler --daemon
 
 按照以下步骤升级每个 BE 实例。
 
-1.1. 停止当前 BE：
+3.1. 停止当前 BE：
 ```shell
 cd ${BE_HOME}
 sh bin/stop_be.sh
 ```
 
-1.2. 备份现有 BE 二进制文件：
+3.2. 备份现有 BE 二进制文件：
 ```shell
 mv ${BE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${BE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-1.3. 部署新包：
+3.3. 部署新包：
 ```shell
 cp ${BE_PACKAGE_DIR}/bin ${BE_HOME}/bin
 cp ${BE_PACKAGE_DIR}/lib ${BE_HOME}/lib
 ```
 
-1.4. 启动新的 BE：
+3.4. 启动新的 BE：
 ```shell
 sh ${BE_HOME}/bin/start_be.sh --daemon
 ```
 
-1.5. 检查新 BE 的状态：
+3.5. 检查新 BE 的状态：
 ```sql
 show backends;
 ```
@@ -153,30 +153,30 @@ show backends;
 
 按照以下步骤升级每个 Frontend（FE）节点。
 
-1.1. 停止当前 FE：
+4.1. 停止当前 FE：
 ```shell
 cd ${FE_HOME}
 sh bin/stop_fe.sh
 ```
 
-1.2. 备份现有 FE 二进制文件：
+4.2. 备份现有 FE 二进制文件：
 ```shell
 mv ${FE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${FE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-1.3. 部署新包：
+4.3. 部署新包：
 ```shell
 cp ${FE_PACKAGE_DIR}/bin ${FE_HOME}/bin
 cp ${FE_PACKAGE_DIR}/lib ${FE_HOME}/lib
 ```
 
-1.4. 启动新的 FE：
+4.4. 启动新的 FE：
 ```shell
 sh ${FE_HOME}/bin/start_fe.sh --daemon
 ```
 
-1.5. 检查新 FE 的状态：
+4.5. 检查新 FE 的状态：
 ```sql
 show frontends;
 ```
