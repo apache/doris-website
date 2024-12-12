@@ -1,13 +1,16 @@
 import styles from '../styles.module.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from '@docusaurus/router';
 import { useThemeConfig } from '@docusaurus/theme-common';
+import { useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
 import { splitNavbarItems } from '@docusaurus/theme-common/internal';
 import DocsLogoNew from '@site/static/images/doc-logo-new.svg';
 import DocsLogoZH from '@site/static/images/doc-logo-zh.svg';
 import LocaleDropdownNavbarItem from '../../../NavbarItem/LocaleDropdownNavbarItem';
 import DocsVersionDropdownNavbarItem from '../../../NavbarItem/DocsVersionDropdownNavbarItem';
-import { NavbarItems,getNavItem } from '..';
+import { NavbarItems, getNavItem } from '..';
+import SearchIcon from '@site/static/images/search-icon.svg';
+import { DataContext } from '../../../Layout';
 
 interface NavbarDocsProps {
     isEN: boolean;
@@ -52,7 +55,25 @@ export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
 export const NavbarDocsRight = ({ isEN }: NavbarDocsProps) => {
     const docItems = isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items;
     const [, rightDocItems] = splitNavbarItems(docItems);
-    return <NavbarItems items={rightDocItems} />;
+    const { showSearchPageMobile, setShowSearchPageMobile } = useContext(DataContext);
+
+    const mobileSidebar = useNavbarMobileSidebar();
+    return (
+        <>
+            {showSearchPageMobile ? (
+                <button onClick={() => setShowSearchPageMobile(false)}>取消</button>
+            ) : (
+                <>
+                    {mobileSidebar.shouldRender ? (
+                        <span onClick={() => setShowSearchPageMobile(true)}>
+                            <SearchIcon />
+                        </span>
+                    ) : null}
+                    <NavbarItems items={[...rightDocItems]} />
+                </>
+            )}
+        </>
+    );
 };
 
 export const NavbarDocsBottom = ({ isEN }: NavbarDocsProps) => {
@@ -61,11 +82,12 @@ export const NavbarDocsBottom = ({ isEN }: NavbarDocsProps) => {
     return (
         <div className="docs-nav-version-locale">
             {/* getNavItem? */}
-            <LocaleDropdownNavbarItem mobile={false} {...(getNavItem(rightDocItems,'localeDropdown') as any)} />
+
+            <LocaleDropdownNavbarItem mobile={false} {...(getNavItem(rightDocItems, 'localeDropdown') as any)} />
             <DocsVersionDropdownNavbarItem
                 mobile={false}
                 docsPluginId="default"
-                {...(getNavItem(rightDocItems,'docsVersionDropdown') as any)}
+                {...(getNavItem(rightDocItems, 'docsVersionDropdown') as any)}
             />
         </div>
     );
