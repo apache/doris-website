@@ -68,7 +68,7 @@ TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套
 
 ## 4. 测试 SQL
 
-TPCH 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
+TPC-H 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
 
 
 ## 5. 测试结果
