@@ -303,7 +303,6 @@ mysql> SELECT * FROM iceberg.nyc.taxis FOR TIME AS OF "2024-07-29 03:40:22";
 4 rows in set (0.05 sec)
 ```
 
-
 ### 07 Interacting with PyIceberg
 
 Load an iceberg table:
