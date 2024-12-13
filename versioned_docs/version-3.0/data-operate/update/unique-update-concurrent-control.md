@@ -42,7 +42,7 @@ This poses a problem when multiple `UPDATE` operations are performed concurrentl
 
 However, in practical applications, if the user can ensure that concurrent updates will not affect the same row simultaneously, they can manually enable the concurrent update restriction. This can be done by modifying the FE (Frontend) configuration `enable_concurrent_update`. When this configuration is set to `true`, the update command will not have transaction guarantees.
 
-:::caution Note:
+:::caution Caution:
 Enabling the `enable_concurrent_update` configuration may introduce certain performance risks.
 :::
 
