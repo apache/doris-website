@@ -321,6 +321,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
     }, [loadIndex]);
     const onInputChange = useCallback(event => {
         setInputValue(event.target.value);
+
         if (event.target.value) {
             setInputChanged(true);
         }
@@ -360,6 +361,26 @@ export default function SearchBar({ handleSearchBarToggle }) {
             document.removeEventListener('keydown', handleShortcut);
         };
     }, [isMac, onInputFocus]);
+    useEffect(() => {
+        if (inputValue) {
+            const inputDoms = document.getElementsByClassName('navbar__search-input');
+            let inputDom = null;
+            for (let input of inputDoms) {
+                if (input.getAttribute('value')) {
+                    inputDom = input;
+                }
+            }
+            if (inputDom) {
+                const suggestionsContainer = inputDom.parentNode?.lastElementChild?.firstChild;
+                if (suggestionsContainer) {
+                    suggestionsContainer.addEventListener('click', () => {
+                        setInputValue('');
+                        setShowSearchPageMobile(false);
+                    });
+                }
+            }
+        }
+    }, [inputValue]);
 
     const onClearSearch = useCallback(() => {
         const params = new URLSearchParams(location.search);

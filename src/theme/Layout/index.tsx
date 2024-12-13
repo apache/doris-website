@@ -47,9 +47,8 @@ export default function Layout(props: Props): JSX.Element {
     }, [history.location]);
 
     useEffect(() => {
-        console.log('showSearchPageMobile',showSearchPageMobile);
-        
         if (showSearchPageMobile) {
+            window.scroll(0, 0);
             document.body.style.overflow = 'hidden';
             searchPageDom.current.style.height = '100vh';
             searchPageDom.current.style.display = 'block';

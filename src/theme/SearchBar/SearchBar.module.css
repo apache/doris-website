@@ -21,6 +21,13 @@
   }
 }
 
+@media (max-width: 996px) {
+  .searchHintContainer{
+    display: none !important;
+  }
+}
+
+
 @media (max-width: 576px) {
   :global(.navbar__search-input):not(:focus) {
     width: 2rem;
@@ -256,7 +263,7 @@ html[data-theme="dark"] .noResultsIcon {
     right: 10x;
     top: 50%;
     transform: translateY(-50%);
-    display: flex !important;
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 5px 7px;

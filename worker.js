@@ -4646,9 +4646,6 @@ var MyBundle = (function (exports) {
         }
       } else {
         const lunrLang = lunr[lang];
-        console.log("lunrLang", lunrLang);
-        console.log("lunr", lunr);
-
         if (lunrLang.stopWordFilter) {
           stopWordPipelines.unshift(lunrLang.stopWordFilter);
         }
@@ -4803,8 +4800,6 @@ var MyBundle = (function (exports) {
       return promise;
     }
     async search(baseUrl, searchContext, input) {
-      console.log('params',baseUrl, searchContext, input);
-      
       const rawTokens = tokenize(input, language);
       if (rawTokens.length === 0) {
         return [];
@@ -4861,8 +4856,6 @@ var MyBundle = (function (exports) {
       }
       sortSearchResults(results);
       processTreeStatusOfSearchResults(results);
-      console.log('result',results);
-      
       return results;
     }
   }

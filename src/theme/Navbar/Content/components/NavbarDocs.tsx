@@ -10,6 +10,7 @@ import LocaleDropdownNavbarItem from '../../../NavbarItem/LocaleDropdownNavbarIt
 import DocsVersionDropdownNavbarItem from '../../../NavbarItem/DocsVersionDropdownNavbarItem';
 import { NavbarItems, getNavItem } from '..';
 import SearchIcon from '@site/static/images/search-icon.svg';
+import CloseIcon from '@site/static/images/icon/close.svg';
 import { DataContext } from '../../../Layout';
 
 interface NavbarDocsProps {
@@ -61,11 +62,13 @@ export const NavbarDocsRight = ({ isEN }: NavbarDocsProps) => {
     return (
         <>
             {showSearchPageMobile ? (
-                <button onClick={() => setShowSearchPageMobile(false)}>取消</button>
+                <span onClick={() => setShowSearchPageMobile(false)}>
+                    <CloseIcon />
+                </span>
             ) : (
                 <>
                     {mobileSidebar.shouldRender ? (
-                        <span onClick={() => setShowSearchPageMobile(true)}>
+                        <span className='mr-2' onClick={() => setShowSearchPageMobile(true)}>
                             <SearchIcon />
                         </span>
                     ) : null}
