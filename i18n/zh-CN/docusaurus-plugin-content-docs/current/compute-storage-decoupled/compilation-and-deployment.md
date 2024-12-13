@@ -206,7 +206,6 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
    - 示例：`cloud`
 2. `file_cache_path`
    - 描述: 用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。`path` 指定磁盘路径，`total_size` 限制缓存的大小；0 将使用整个磁盘空间。还可以加上[各类型缓存](./file-cache)的空间比例限制。
-   - 格式: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
    - 示例: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
    - 示例: [{"path":"/path/to/file_cache","total_size":21474836480, "ttl_percent":50, "normal_percent":40, "disposable_percent":5, "index_percent":5}]
    - 默认: [{"path":"${DORIS_HOME}/file_cache"}]
