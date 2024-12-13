@@ -128,6 +128,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setSearchContext(nextSearchContext);
     }, [location.pathname, versionUrl]);
     const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
+
     const loadIndex = useCallback(
         async (forceLoad = false) => {
             if (hidden || (indexStateMap.current.get(searchContext) && !forceLoad)) {
@@ -218,7 +219,12 @@ export default function SearchBar({ handleSearchBarToggle }) {
                             [styles.searchBarLeft]: searchBarPosition === 'left',
                         }),
                         noPrefix: true,
-                        dropdownMenu: styles.dropdownMenu,
+                        dropdownMenu: clsx(
+                            {
+                                [styles.mobileDropdownMenu]: document.body.clientWidth < 996,
+                            },
+                            styles.dropdownMenu,
+                        ),
                         input: styles.input,
                         hint: styles.hint,
                         suggestions: styles.suggestions,

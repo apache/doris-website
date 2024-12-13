@@ -48,7 +48,6 @@
 
     p,
     li {
-        margin-bottom: calc(var(--custom-leading) * var(--custom-text-rhythm-bottom));
         font-size: 1rem;
         font-weight: 400;
         line-height: var(--custom-text-line-height);
@@ -58,7 +57,8 @@
     h1,
     h2,
     h3,
-    h4 {
+    h4,
+    p {
         margin-bottom: calc(var(--custom-leading) * var(--custom-heading-rhythm-bottom)) !important;
     }
 
@@ -222,6 +222,10 @@
     }
     ol ul ul {
         list-style-type: square;
+    }
+
+    li>* {
+        margin-bottom: calc(var(--custom-leading) * var(--custom-list-rhythm-bottom)) !important;
     }
 
     .tabs-container {
