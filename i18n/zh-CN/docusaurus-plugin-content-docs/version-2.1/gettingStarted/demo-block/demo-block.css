@@ -355,6 +355,9 @@ a:active {
     .latest-button {
         flex: 1 1 100%;
         margin-right: 0 !important;
+        max-width: calc(100vw - 2rem);
+        min-height: 170px;
+        height: auto !important;
     }
 
     .home-page-hero-right {
@@ -362,8 +365,8 @@ a:active {
     }
     .latest-button-CN{
         margin-right: 0 !important;
+        max-width: calc(100vw - 2rem);
     }
-
 }
 
 .latest-button-CN {

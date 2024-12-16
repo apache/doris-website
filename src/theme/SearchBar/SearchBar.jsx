@@ -25,6 +25,7 @@ import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/common';
 import styles from './SearchBar.module.css';
 import { normalizeContextByPath } from '../../utils/normalizeContextByPath';
 import useIsDocPage from '@site/src/hooks/use-is-doc';
+import { debounce } from '@site/src/utils/debounce';
 import { DataContext } from '../Layout';
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
@@ -236,10 +237,10 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 },
                 [
                     {
-                        source: async (input, callback) => {
+                        source: debounce(async (input, callback) => {
                             const result = await searchByWorker(versionUrl, searchContext, input);
                             callback(result);
-                        },
+                        }, 300),
                         templates: {
                             suggestion: SuggestionTemplate,
                             empty: EmptyTemplate,
@@ -318,7 +319,10 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setFocused(true);
         handleSearchBarToggle?.(true);
     }, [handleSearchBarToggle, loadIndex]);
-    const onInputBlur = useCallback(() => {
+    const onInputBlur = useCallback((e) => {
+        if(document.body.clientWidth < 996 && e.code === "Enter"){
+            return;
+        }
         setFocused(false);
         handleSearchBarToggle?.(false);
     }, [handleSearchBarToggle]);
@@ -327,11 +331,11 @@ export default function SearchBar({ handleSearchBarToggle }) {
     }, [loadIndex]);
     const onInputChange = useCallback(event => {
         setInputValue(event.target.value);
-
         if (event.target.value) {
             setInputChanged(true);
         }
     }, []);
+
     // Implement hint icons for the search shortcuts on mac and the rest operating systems.
     const isMac = isBrowser ? /mac/i.test(navigator.userAgentData?.platform ?? navigator.platform) : false;
 
