@@ -21,6 +21,13 @@
   }
 }
 
+@media (max-width: 996px) {
+  .searchHintContainer{
+    display: none !important;
+  }
+}
+
+
 @media (max-width: 576px) {
   :global(.navbar__search-input):not(:focus) {
     width: 2rem;
@@ -256,7 +263,7 @@ html[data-theme="dark"] .noResultsIcon {
     right: 10x;
     top: 50%;
     transform: translateY(-50%);
-    display: flex !important;
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 5px 7px;
@@ -292,14 +299,6 @@ html[data-theme="dark"] .noResultsIcon {
   background-color: var(--ifm-navbar-search-input-background-color);
   border: 1px solid var(--ifm-color-emphasis-500);
   box-shadow: inset 0 -1px 0 var(--ifm-color-emphasis-500);
-}
-
-@media (max-width: 576px) {
-
-  .searchBarContainer:not(.focused) .searchClearButton,
-  .searchHintContainer {
-    display: none;
-  }
 }
 
 html[dir="rtl"] .searchHintContainer {

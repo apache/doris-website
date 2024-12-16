@@ -51,7 +51,7 @@ export default function Home(): JSX.Element {
             <div
                 className="lg:leading-[78px]"
                 style={{
-                    fontWeight: 540,
+                    fontWeight: 700,
                 }}
             >
                 <p className="highlight">

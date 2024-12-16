@@ -77,27 +77,27 @@ FROM
 
 ### 2 Alter Materialized View
 
-Refer to [ALTER ASYNC MATERIALIZED VIEW](https://doris.apache.org/docs/sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW)
+Refer to [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW)
 
 ### 3 Drop Materialized View
 
-Refer to [DROP ASYNC MATERIALIZED VIEW](https://doris.apache.org/docs/sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW)
+Refer to [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
 
 ### 4 Refresh Materialized View
 
-Refer to [REFRESH MATERIALIZED VIEW](https://doris.apache.org/docs/sql-manual/sql-statements/Utility-Statements/REFRESH-MATERIALIZED-VIEW/)
+Refer to [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/REFRESH-MATERIALIZED-VIEW)
 
 ### 5 Pause Materialized View
 
-Refer to [PAUSE MATERIALIZED VIEW](https://doris.apache.org/docs/sql-manual/sql-statements/Utility-Statements/PAUSE-MATERIALIZED-VIEW)
+Refer to [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW.md)
 
 ### 6 Resume Materialized View
 
-Refer to [RESUME MATERIALIZED VIEW](https://doris.apache.org/docs/sql-manual/sql-statements/Utility-Statements/RESUME-MATERIALIZED-VIEW)
+Refer to [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW.md)
 
 ### 7 Cancel Refresh Task
 
-Refer to [CANCEL MATERIALIZED VIEW TASK](https://doris.apache.org/docs/sql-manual/sql-statements/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK)
+Refer to [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
 
 ## Metadata Querying
 
@@ -109,7 +109,7 @@ Refer to [CANCEL MATERIALIZED VIEW TASK](https://doris.apache.org/docs/sql-manua
 
 - Query Partition Information: use [SHOW PARTITIONS](../../../sql-manual/sql-statements/table-and-view/table/SHOW-PARTITIONS)
 
-- View Table Structure: use [DESCRIBE](./../../sql-manual/sql-statements/table-and-view/table/DESC-TABLE)
+- View Table Structure: use [DESCRIBE](../../../sql-manual/sql-statements/table-and-view/table/DESC-TABLE)
 
 - View Creation Statement: use [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
 

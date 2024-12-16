@@ -185,7 +185,7 @@
                                 "data-operate/update/unique-update",
                                 "data-operate/update/update-of-unique-model",
                                 "data-operate/update/update-of-aggregate-model",
-                                "data-operate/update/unique-update-transaction"
+                                "data-operate/update/unique-update-concurrent-control"
                             ]
                         },
                         {
@@ -536,6 +536,7 @@
                                 "admin-manual/system-tables/information_schema/columns",
                                 "admin-manual/system-tables/information_schema/engines",
                                 "admin-manual/system-tables/information_schema/events",
+                                "admin-manual/system-tables/information_schema/file_cache_statistics",
                                 "admin-manual/system-tables/information_schema/files",
                                 "admin-manual/system-tables/information_schema/global_variables",
                                 "admin-manual/system-tables/information_schema/key_column_usage",

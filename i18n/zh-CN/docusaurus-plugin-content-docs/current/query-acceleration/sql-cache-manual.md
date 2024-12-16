@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## 概念介绍
 
 SQL Cache 是 Doris 提供的一种查询优化机制，可以显著提升查询性能。它通过缓存查询结果来减少重复计算，适用于数据更新频率较低的场景。
@@ -53,6 +52,18 @@ SQL Cache 非常适合 T+1 更新场景。数据在凌晨更新，第一次查�
 
 目前，SQL Cache 支持 OlapTable 内部表和 Hive 外部表。
 
+## 使用限制
+
+### 非确定函数
+
+非确定函数是指其运算结果与输入参数之间无法形成固定关系的函数。
+
+以常见函数 `select now()` 为例，它返回当前的日期与时间。由于该函数在不同时间执行时会返回不同的结果，因此其返回值是动态变化。`now` 函数返回的是秒级别的时间，所以在同一秒内可以复用之前的 SQL Cache；但下一秒之后，就需要重新创建 SQL Cache。
+
+为了优化缓存利用率，建议将这种细粒度的时间转为粗粒度的时间，例如使用 `select * from tbl where dt=date(now())`。在这种情况下，同一天的查询都可以利用到 SQL Cache。
+
+相比之下，`random()` 函数则很难利用到 Cache，因为它每次运算的结果都是不同的。因此，应尽量避免在查询中使用这类非确定函数。
+
 ## 实现原理
 
 ### BE 实现原理
@@ -73,7 +84,7 @@ SQL Cache 非常适合 T+1 更新场景。数据在凌晨更新，第一次查�
 
 此外，如果 SQL 优化阶段判断出查询结果仅包含 0 行或 1 行数据，FE 会选择将这些结果保存在其内存中，以便更快速地响应未来可能的相同查询。
 
-## 最佳实践
+## 快速上手
 
 ### 开启和关闭 SQL Cache
 
@@ -150,7 +161,7 @@ Execution  Summary:
 
 这两种方法均为用户提供了有效的手段来验证查询是否利用了 SQL Cache，从而帮助用户更好地评估查询性能并优化查询策略。
 
-### 统计缓存的指标
+## 指标监控
 
 **1. 在 FE 的 HTTP 接口** **`http://${FE_IP}:${FE_HTTP_PORT}/metrics`** **会返回两个相关指标：**
 
@@ -183,6 +194,8 @@ doris_be_query_cache_memory_total_byte 44101
 不同的 Cache 可能会存放到不同的 BE 中，因此需收集所有 BE 的 Metrics 才能得到完整信息。
 
 :::
+
+## 内存控制
 
 ### FE 内存控制
 
@@ -217,7 +230,7 @@ ADMIN SET FRONTEND CONFIG ('cache_result_max_row_count'='3000');
 ADMIN SET FRONTEND CONFIG ('cache_result_max_data_size'='31457280');
 ```
 
-### 排查缓存失效原因
+## 排查缓存失效原因
 
 缓存失效原因一般包括以下几点：
 
@@ -236,15 +249,3 @@ ADMIN SET FRONTEND CONFIG ('cache_result_max_data_size'='31457280');
 7. 结果行数超过了 FE 配置的 `cache_result_max_row_count`，默认值为 3000 行。
 
 8. 结果大小超过了 FE 配置的 `cache_result_max_data_size`，默认值为 30MB。
-
-## 使用限制
-
-### 非确定函数
-
-非确定函数是指其运算结果与输入参数之间无法形成固定关系的函数。
-
-以常见函数 `select now()` 为例，它返回当前的日期与时间。由于该函数在不同时间执行时会返回不同的结果，因此其返回值是动态变化。`now` 函数返回的是秒级别的时间，所以在同一秒内可以复用之前的 SQL Cache；但下一秒之后，就需要重新创建 SQL Cache。
-
-为了优化缓存利用率，建议将这种细粒度的时间转为粗粒度的时间，例如使用 `select * from tbl where dt=date(now())`。在这种情况下，同一天的查询都可以利用到 SQL Cache。
-
-相比之下，`random()` 函数则很难利用到 Cache，因为它每次运算的结果都是不同的。因此，应尽量避免在查询中使用这类非确定函数。

@@ -1,27 +1,30 @@
-import React, { useState, useEffect, type ReactNode } from 'react';
-import { useThemeConfig, ErrorCauseBoundary } from '@docusaurus/theme-common';
-import { splitNavbarItems, useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
+import React, { useState, useEffect, useContext, type ReactNode } from 'react';
+import { ErrorCauseBoundary } from '@docusaurus/theme-common';
+import { useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
 import NavbarItem, { type Props as NavbarItemConfig } from '@theme/NavbarItem';
-import DocsLogoNew from '@site/static/images/doc-logo-new.svg';
-import DocsLogoZH from '@site/static/images/doc-logo-zh.svg';
 import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle';
-import SearchBar from '@theme/SearchBar';
 import NavbarMobileSidebarToggle from '@theme/Navbar/MobileSidebar/Toggle';
+import { useLocation } from '@docusaurus/router';
 import Link from '@docusaurus/Link';
 import Translate from '@docusaurus/Translate';
-import LocaleDropdownNavbarItem from '../../NavbarItem/LocaleDropdownNavbarItem';
-import DocsVersionDropdownNavbarItem from '../../NavbarItem/DocsVersionDropdownNavbarItem';
-import NavbarLogo from '@theme/Navbar/Logo';
-import NavbarSearch from '@theme/Navbar/Search';
+import { NavbarDocsLeft, NavbarDocsRight, NavbarDocsBottom } from './components/NavbarDocs';
+import { NavbarCommunityLeft, NavbarCommunityBottom, NavbarCommunityRight } from './components/NavbarCommunity';
+import { NavbarCommonLeft, NavbarCommonRight } from './components/NavbarCommon';
+import { DataContext } from '../../Layout';
 
 import styles from './styles.module.css';
 
-function useNavbarItems() {
-    // TODO temporary casting until ThemeConfig type is improved
-    return useThemeConfig().navbar.items as NavbarItemConfig[];
+enum NavBar {
+    DOCS = 'docs',
+    COMMUNITY = 'community',
+    COMMON = 'common',
 }
 
-function NavbarItems({ items, isDocsPage }: { items: NavbarItemConfig[]; isDocsPage?: boolean }): JSX.Element {
+export function getNavItem(items: NavbarItemConfig[], type: string) {
+    return items.find(item => item.type === type);
+}
+
+export function NavbarItems({ items, isDocsPage }: { items: NavbarItemConfig[]; isDocsPage?: boolean }): JSX.Element {
     return (
         <>
             {items.map((item, i) => (
@@ -47,12 +50,10 @@ function NavbarContentLayout({
     left,
     right,
     bottom,
-    isDocsPage = false,
 }: {
     left: ReactNode;
     right: ReactNode;
     bottom: ReactNode;
-    isDocsPage: boolean;
 }) {
     const [isEN, setIsEN] = useState(true);
     useEffect(() => {
@@ -66,56 +67,19 @@ function NavbarContentLayout({
                 <div className="navbar__items">{left}</div>
                 <div className="navbar__items navbar__items--right">{right}</div>
             </div>
-            {/* <div className="navbar__bottom">
-                <div className="docs-nav-mobile">
-                    <NavbarItems
-                        items={isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items}
-                        isDocsPage={isDocsPage}
-                    />
-                </div>
-            </div> */}
-            <div className="navbar__bottom">{bottom}</div>
+            {bottom && <div className="navbar__bottom">{bottom}</div>}
         </>
     );
 }
 
-export default function NavbarContent(): JSX.Element {
+export default function NavbarContent(): ReactNode {
+    const [currentNavbar, setCurrentNavbar] = useState(NavBar.DOCS);
     const mobileSidebar = useNavbarMobileSidebar();
-    const [star, setStar] = useState<any>();
-    const items = useNavbarItems();
+    const { showSearchPageMobile } = useContext(DataContext);
+    const location = useLocation();
+
     const [isEN, setIsEN] = useState(true);
-    const docItems = isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items;
-    const [leftItems, rightItems] = splitNavbarItems(items);
-    const [leftDocItems, rightDocItems] = splitNavbarItems(docItems);
-    const [isDocsPage, setIsDocsPage] = useState(
-        typeof window !== 'undefined' ? location.pathname.includes('docs') : false,
-    );
-    const [isCommunity, setIsCommunity] = useState(false);
-    const searchBarItem = items.find(item => item.type === 'search');
-
-    const [currentVersion, setCurrentVersion] = useState('');
-    useEffect(() => {
-        getGithubStar();
-        if (typeof window !== 'undefined') {
-            const tempPath = ['gettingStarted', 'benchmark', 'ecosystems', 'faq', 'docs', 'releasenotes'];
-
-            const secPath = location.pathname.includes('zh-CN/docs')
-                ? location.pathname.split('/')[3]
-                : location.pathname.split('/')[2];
-            if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
-                setCurrentVersion(secPath);
-            } else {
-                setCurrentVersion('');
-            }
-
-            const pathname = location.pathname.split('/')[1];
-            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
-            const docsPage = location.pathname.includes('docs');
-            const communityPage = pathname === 'community' || location.pathname.includes('zh-CN/community');
-            setIsCommunity(communityPage);
-            setIsDocsPage(docsPage);
-        }
-    }, [typeof window !== 'undefined' && location.pathname]);
+    const [star, setStar] = useState<string>('');
 
     async function getGithubStar() {
         try {
@@ -138,66 +102,51 @@ export default function NavbarContent(): JSX.Element {
                 return (index % 3 ? next : next + '.') + prev;
             });
     }
-    function getNavItem(type: string) {
-        return items.find(item => item.type === type);
-    }
+
+    const NavbarTypes = {
+        [NavBar.DOCS]: {
+            left: <NavbarDocsLeft isEN={isEN} />,
+            right: <NavbarDocsRight isEN={isEN} />,
+            bottom: <NavbarDocsBottom isEN={isEN} />,
+        },
+        [NavBar.COMMUNITY]: {
+            left: <NavbarCommunityLeft />,
+            right: <NavbarCommunityRight />,
+            bottom: <NavbarCommunityBottom />,
+        },
+        [NavBar.COMMON]: {
+            left: <NavbarCommonLeft />,
+            right: <NavbarCommonRight star={star} />,
+            bottom: null,
+        },
+    };
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const pathname = location.pathname.split('/')[1];
+            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
+            if (location.pathname.includes(NavBar.DOCS)) {
+                setCurrentNavbar(NavBar.DOCS);
+            } else if (pathname === NavBar.COMMUNITY || location.pathname.includes('zh-CN/community')) {
+                setCurrentNavbar(NavBar.COMMUNITY);
+            } else {
+                setCurrentNavbar(NavBar.COMMON);
+            }
+        }
+    }, [typeof window !== 'undefined' && location.pathname]);
+
+    useEffect(() => {
+        getGithubStar();
+    }, []);
 
     return (
         <NavbarContentLayout
-            left={
-                // TODO stop hardcoding items?
-                <div className={`navbar-left `}>
-                    <div className="navbar-logo-wrapper flex items-center">
-                        {isDocsPage ? (
-                            <div
-                                className="cursor-pointer docs"
-                                onClick={() => {
-                                    window.location.href = `${isEN ? '' : '/zh-CN'}/docs${
-                                        currentVersion === '' ? '' : `/${currentVersion}`
-                                    }/gettingStarted/what-is-new`;
-                                }}
-                            >
-                                {isEN ? <DocsLogoNew /> : <DocsLogoZH />}
-                            </div>
-                        ) : (
-                            <NavbarLogo />
-                        )}
-                    </div>
-                    <div className={`${styles.navbarLeftToc}`}>
-                        {!isDocsPage ? (
-                            <NavbarItems items={leftItems} />
-                        ) : (
-                            <NavbarItems items={leftDocItems} isDocsPage={isDocsPage} />
-                        )}
-                    </div>
-                    {/*  */}
-                </div>
-            }
-            isDocsPage={isDocsPage}
+            left={NavbarTypes[currentNavbar].left}
             right={
-                // TODO stop hardcoding items?
-                // Ask the user to add the respective navbar items => more flexible
                 <>
-                    {!mobileSidebar.disabled && <NavbarMobileSidebarToggle />}
-                    <NavbarItems items={isDocsPage ? rightDocItems : rightItems} />
+                    {NavbarTypes[currentNavbar].right}
+                    {!mobileSidebar.disabled && !showSearchPageMobile && <NavbarMobileSidebarToggle />}
                     <NavbarColorModeToggle className={styles.colorModeToggle} />
-                    {/* {!searchBarItem && (
-                        <NavbarSearch>
-                            <SearchBar />
-                        </NavbarSearch>
-                    )} */}
-                    <Link
-                        className="github-btn desktop header-right-button-github"
-                        href="https://github.com/apache/doris"
-                        target="_blank"
-                    >
-                        {star && <div className="gh-count">{star}k</div>}
-                    </Link>
-                    <Link
-                        className="slack-btn desktop header-right-button-slack"
-                        href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw"
-                        target="_blank"
-                    ></Link>
                     <Link className="header-right-button-primary navbar-download-desktop" to="/download">
                         <Translate id="navbar.download">
                             {typeof window !== 'undefined' && location.pathname.includes('zh-CN/docs')
@@ -207,22 +156,7 @@ export default function NavbarContent(): JSX.Element {
                     </Link>
                 </>
             }
-            bottom={
-                isDocsPage || isCommunity ? (
-                    <div className="docs-nav-version-locale">
-                        <LocaleDropdownNavbarItem mobile={false} {...(getNavItem('localeDropdown') as any)} />
-                        {isDocsPage && ( //startWithDoc
-                            <DocsVersionDropdownNavbarItem
-                                mobile={false}
-                                docsPluginId="default"
-                                {...(getNavItem('docsVersionDropdown') as any)}
-                            />
-                        )}
-                    </div>
-                ) : (
-                    <></>
-                )
-            }
+            bottom={!showSearchPageMobile ? NavbarTypes[currentNavbar].bottom : null}
         />
     );
 }

@@ -30,7 +30,7 @@ The following sections will describe in detail how to deploy and use Apache Dori
 
 ## **Compute-storage coupled VS decoupled**
 
-The overall architecture of Doris consists of two types of processes: Frontend (FE) and Backend (BE). The FE is primarily responsible for user request access, query parsing and planning, metadata management, and node management. The BE is responsible for data storage and query plan execution. ([More information](../../gettingStarted/what-is-apache-doris))
+The overall architecture of Doris consists of two types of processes: Frontend (FE) and Backend (BE). The FE is primarily responsible for user request access, query parsing and planning, metadata management, and node management. The BE is responsible for data storage and query plan execution. ([More information](../gettingStarted/what-is-apache-doris))
 
 ### **Compute-storage coupled**
 

@@ -103,6 +103,7 @@ UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函�
 | Double           | Double                                     |
 | Date             | LocalDate                                  |
 | Datetime         | LocalDateTime                              |
+| IPV4/IPV6        | InetAddress                                |
 | String           | String                                     |
 | Decimal          | BigDecimal                                 |
 | `array<Type>`      | `ArrayList<Type>`（支持嵌套）                  |

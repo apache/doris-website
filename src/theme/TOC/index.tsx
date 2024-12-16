@@ -97,13 +97,13 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
 
                 <Link
                     className="toc-icon-content"
-                    to={isCN ? 'https://ask.selectdb.com/' : 'https://github.com/apache/doris/discussions'}
+                    to={'https://github.com/apache/doris/discussions'}
                     id="toc-icon-github"
                     onMouseEnter={() => handleMouseEnter('toc-icon-github')}
                     onMouseLeave={() => handleMouseLeave('toc-icon-github')}
                 >
-                    {isCN ? <ConcatIcon /> : <GithubIcon />}
-                    <span>{isCN ? '技术论坛' : 'Ask Questions on Discussion'}</span>
+                    <GithubIcon />
+                    <span>Ask Questions on Discussion</span>
                 </Link>
             </div>
             <div>

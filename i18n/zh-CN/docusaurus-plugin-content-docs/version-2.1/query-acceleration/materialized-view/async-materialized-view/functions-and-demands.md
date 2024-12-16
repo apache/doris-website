@@ -90,11 +90,11 @@ FROM
 
 ### 暂停物化视图
 
-详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW)
+详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW.md)
 
 ### 启用物化视图
 
-详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW)
+详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW.md)
 
 ### 取消物化视图刷新任务
 
@@ -106,13 +106,13 @@ FROM
 
 - 查询物化视图信息：[MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv-infos)
 
-- 查询 TASK 信息：[TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks?_highlight=task)
+- 查询 TASK 信息：[TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks)
 
 - 查询物化视图对应的 JOB 信息：[JOBS](../../../sql-manual/sql-functions/table-valued-functions/jobs)
 
 - 查询物化视图的分区信息：[SHOW PARTITIONS](../../../sql-manual/sql-statements/table-and-view/table/SHOW-PARTITIONS)
 
-- 查看物化视图表结构：[DESCRIBE](./../../sql-manual/sql-statements/table-and-view/table/DESC-TABLE)
+- 查看物化视图表结构：[DESCRIBE](../../../sql-manual/sql-statements/table-and-view/table/DESC-TABLE)
 
 - 查看物化视图创建语句：[SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
 
