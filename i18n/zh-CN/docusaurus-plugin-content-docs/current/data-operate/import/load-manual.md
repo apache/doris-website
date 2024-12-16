@@ -30,7 +30,7 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 
     - 极少量数据（5 分钟一次）时可以使用 [JDBC INSERT](./import-way/insert-into-manual.md) 写入数据。
 
-    - 并发较高或者频次较高（大于 20 并发或者 1 分钟写入多次）时建议打开 [Group Commit](./import-way/group-commit-manual.md)，使用 JDBC INSERT 或者 Stream Load 写入数据。
+    - 并发较高或者频次较高（大于 20 并发或者 1 分钟写入多次）时建议打开 [Group Commit](./group-commit-manual.md)，使用 JDBC INSERT 或者 Stream Load 写入数据。
 
     - 吞吐较高时推荐使用 [Stream Load](./import-way/stream-load-manual) 通过 HTTP 写入数据。
 
@@ -68,5 +68,5 @@ Doris 的导入主要涉及数据源、数据格式、导入方式、错误数�
 | [INSERT INTO SELECT](./import-way/insert-into-manual.md) | 可以导入外部表或者对象存储、HDFS中的文件      | SQL                     | 根据内存大小而定  | 同步     |
 | [Routine Load](./import-way/routine-load-manual.md)      | 从kakfa实时导入                            | csv、json               | 微批导入 MB 到 GB | 异步     |
 | [MySQL Load](./import-way/mysql-load-manual.md)          | 从本地数据导入                             | csv                     | 小于10GB          | 同步     |
-| [Group Commit](./import-way/group-commit-manual.md)          | 高频小批量导入                             | 根据使用的导入方式而定                     |  微批导入KB         | -     |
+| [Group Commit](./group-commit-manual.md)          | 高频小批量导入                             | 根据使用的导入方式而定                     |  微批导入KB         | -     |
 

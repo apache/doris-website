@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Group Commit",
+    "title": "High Concurrency LOAD Optimization(Group Commit)",
     "language": "en"
 }
 ---
@@ -26,7 +26,7 @@ under the License.
 
 # Group Commit
 
-Group commit load does not introduce a new data import method, but an extension of `INSERT INTO tbl VALUS(...)`, `Stream Load` and `Http Stream`. It is a way to improve the write performance of Doris with high-concurrency and small-data writes. Your application can directly use JDBC to do high-concurrency insert operation into Doris, at the same time, combining PreparedStatement can get even higher performance. In logging scenarios, you can also do high-concurrency Stream Load or Http Stream into Doris. 
+Group commit load does not introduce a new data import method, but an extension of `INSERT INTO tbl VALUS(...)` and `Stream Load`. It is a way to improve the write performance of Doris with high-concurrency and small-data writes. Your application can directly use JDBC to do high-concurrency insert operation into Doris, at the same time, combining PreparedStatement can get even higher performance. In logging scenarios, you can also do high-concurrency Stream Load into Doris. 
 
 ## Group Commit Mode
 
@@ -34,7 +34,7 @@ Group Commit provides 3 modes:
 
 * `off_mode`
 
-Disable group commit, keep the original behavior for `INSERT INTO VALUES`, `Stream Load` and `Http Stream`.
+Disable group commit.
 
 * `sync_mode`
 
@@ -44,7 +44,7 @@ Doris groups multiple loads into one transaction commit based on the `group_comm
 
 Doris writes data to the Write Ahead Log (WAL) firstly, then the load is returned. Doris groups multiple loads into one transaction commit based on the `group_commit_interval` table property, and the data is visible after the commit. To prevent excessive disk space usage by the WAL, it automatically switches to `sync_mode`. This is suitable for latency-sensitive and high-frequency writing.
 
-The number of WALs can be viewed through the FE HTTP interface, as detailed [here](../../admin-manual/fe/get-wal-size-action.md). Alternatively, you can search for the keyword `wal` in the BE metrics.
+The number of WALs can be viewed through the FE HTTP interface, as detailed [here](../../admin-manual/open-api/fe-http/get-wal-size-action). Alternatively, you can search for the keyword `wal` in the BE metrics.
 
 ## Basic operations
 
@@ -69,7 +69,7 @@ To reduce the CPU cost of SQL parsing and query planning, we provide the `Prepar
 1. Setup JDBC url and enable server side prepared statement
 
 ```
-    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=enable_nereids_planner=false
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500
 ```
 
 2. Set `group_commit` session variable, there are two ways to do it:
@@ -77,7 +77,7 @@ To reduce the CPU cost of SQL parsing and query planning, we provide the `Prepar
 * Add `sessionVariables=group_commit=async_mode` in JDBC url
 
 ```
-    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=enable_nereids_planner=false&sessionVariables=group_commit=async_mode
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode
 ```
 
 * Use `SET group_commit = async_mode;` command
@@ -92,14 +92,14 @@ try (Statement statement = conn.createStatement()) {
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=enable_nereids_planner=false&sessionVariables=group_commit=async_mode";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
 private static final String TBL = "dt";
 private static final String USER = "root";
 private static final String PASSWD = "";
-private static final int INSERT_BATCH_SIZE = 10;  
+private static final int INSERT_BATCH_SIZE = 10;
 
 private static void groupCommitInsertBatch() throws Exception {
     Class.forName(JDBC_DRIVER);
@@ -134,7 +134,7 @@ private static void groupCommitInsertBatch() throws Exception {
 set enable_prepared_stmt_audit_log=true;
 ```
 
-For more usage on **JDBC**, refer to [Using Insert to Synchronize Data](./insert-into-manual).
+For more usage on **JDBC**, refer to [Using Insert to Synchronize Data](./import-way/insert-into-manual).
 
 ### Using Golang for Group Commit
 
@@ -200,25 +200,23 @@ func groupCommitInsertBatch(db *sql.DB) {
         valueStrings := make([]string, 0, batchSize)
         valueArgs := make([]interface{}, 0, batchSize*16)
         for i := 0; i < batchSize; i++ {
-            for i = 0; i < batchSize; i++ {
-                valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-                valueArgs = append(valueArgs, rand.Intn(1000))
-                valueArgs = append(valueArgs, rand.Intn(1000))
-                valueArgs = append(valueArgs, rand.Intn(1000))
-                valueArgs = append(valueArgs, rand.Intn(1000))
-                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-                valueArgs = append(valueArgs, "N")
-                valueArgs = append(valueArgs, "O")
-                valueArgs = append(valueArgs, time.Now())
-                valueArgs = append(valueArgs, time.Now())
-                valueArgs = append(valueArgs, time.Now())
-                valueArgs = append(valueArgs, "DELIVER IN PERSON")
-                valueArgs = append(valueArgs, "SHIP")
-                valueArgs = append(valueArgs, "N/A")
-            }
+            valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+            valueArgs = append(valueArgs, rand.Intn(1000))
+            valueArgs = append(valueArgs, rand.Intn(1000))
+            valueArgs = append(valueArgs, rand.Intn(1000))
+            valueArgs = append(valueArgs, rand.Intn(1000))
+            valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+            valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+            valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+            valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+            valueArgs = append(valueArgs, "N")
+            valueArgs = append(valueArgs, "O")
+            valueArgs = append(valueArgs, time.Now())
+            valueArgs = append(valueArgs, time.Now())
+            valueArgs = append(valueArgs, time.Now())
+            valueArgs = append(valueArgs, "DELIVER IN PERSON")
+            valueArgs = append(valueArgs, "SHIP")
+            valueArgs = append(valueArgs, "N/A")
         }
         stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
             table, strings.Join(valueStrings, ","))
@@ -369,65 +367,7 @@ curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mod
 # The retured label is start with 'group_commit', which is the label of the real load job
 ```
 
-See [Stream Load](./stream-load-manual.md) for more detailed syntax used by **Stream Load**.
-
-### Http Stream
-
-* async_mode
-```sql
-# Add 'group_commit:async_mode' configuration in the http header
-
-curl --location-trusted -u {user}:{passwd} -T data.csv  -H "group_commit:async_mode" -H "sql:insert into db.dt select * from http_stream('column_separator'=',', 'format' = 'CSV')"  http://{fe_host}:{http_port}/api/_http_stream
-{
-    "TxnId": 7011,
-    "Label": "group_commit_3b45c5750d5f15e5_703428e462e1ebb0",
-    "Comment": "",
-    "GroupCommit": true,
-    "Status": "Success",
-    "Message": "OK",
-    "NumberTotalRows": 2,
-    "NumberLoadedRows": 2,
-    "NumberFilteredRows": 0,
-    "NumberUnselectedRows": 0,
-    "LoadBytes": 19,
-    "LoadTimeMs": 65,
-    "StreamLoadPutTimeMs": 41,
-    "ReadDataTimeMs": 47,
-    "WriteDataTimeMs": 23
-}
-
-# The returned 'GroupCommit' is 'true', which means this is a group commit load
-# The retured label is start with 'group_commit', which is the label of the real load job
-```
-
-* sync_mode
-```sql
-# Add 'group_commit:sync_mode' configuration in the http header
-
-curl --location-trusted -u {user}:{passwd} -T data.csv  -H "group_commit:sync_mode" -H "sql:insert into db.dt select * from http_stream('column_separator'=',', 'format' = 'CSV')"  http://{fe_host}:{http_port}/api/_http_stream
-{
-    "TxnId": 3011,
-    "Label": "group_commit_fe470e6752aadbe6_a8f3ac328b02ea91",
-    "Comment": "",
-    "GroupCommit": true,
-    "Status": "Success",
-    "Message": "OK",
-    "NumberTotalRows": 2,
-    "NumberLoadedRows": 2,
-    "NumberFilteredRows": 0,
-    "NumberUnselectedRows": 0,
-    "LoadBytes": 19,
-    "LoadTimeMs": 10066,
-    "StreamLoadPutTimeMs": 31,
-    "ReadDataTimeMs": 32,
-    "WriteDataTimeMs": 10034
-}
-
-# The returned 'GroupCommit' is 'true', which means this is a group commit load
-# The retured label is start with 'group_commit', which is the label of the real load job
-```
-
-See [Stream Load](./stream-load-manual.md) for more detailed syntax used by **Http Stream**.
+See [Stream Load](./import-way/stream-load-manual.md) for more detailed syntax used by **Stream Load**.
 
 ## Group commit condition
 
@@ -487,21 +427,21 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * The limit of WAL
 
-  * For async_mode group commit, data is written to the Write Ahead Log (WAL). If the internal load succeeds, the WAL is immediately deleted. If the internal load fails, data is recovery by importing the WAL.
+  * For async_mode group commit, data is written to the Write Ahead Log (WAL). If the internal load succeeds, the WAL is immediately deleted. If the internal load fails, data is recovered by loading the WAL.
 
   * Currently, WAL files are stored only on one disk of one BE. If the BE's disk is damaged or the file is mistakenly deleted, it may result in data loss.
 
-  * When decommissioning a BE node, please use the [`DECOMMISSION`](../../../sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND) command to safely decommission the node. This prevents potential data loss if the WAL files are not processed before the node is taken offline.
+  * When decommissioning a BE node, please use the [`DECOMMISSION`](../../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) command to safely decommission the node. This prevents potential data loss if the WAL files are not processed before the node is taken offline.
 
   * For async_mode group commit writes, to protect disk space, it switches to sync_mode under the following conditions:
 
-    * For an import with large amount of data: exceeding 80% of the disk space of a WAL directory. 
+    * For a load with large amount of data: exceeding 80% of the disk space of a WAL directory. 
 
     * Chunked stream loads with an unknown data amount.
 
-    * Insufficient disk space, even with it is an import with small amount of data.
+    * Insufficient disk space, even if it is a load with small amount of data.
 
-  * During hard weight schema changes (adding or dropping columns, modifying varchar length, and renaming columns are lightweight schema changes, others are hard weight), to ensure WAL file is compatibility with the table's schema, the final stage of metadata modification in FE will reject group commit writes. Clients get `insert table ${table_name} is blocked on schema change` exception and can retry the import.
+  * During hard weight schema changes (adding or dropping columns, modifying varchar length, and renaming columns are lightweight schema changes, others are hard weight), to ensure WAL file is compatibility with the table's schema, the final stage of metadata modification in FE will reject group commit writes. Clients get `insert table ${table_name} is blocked on schema change` exception and can retry the load.
 
 ## Relevant system configuration
 
@@ -546,12 +486,12 @@ We have separately tested the write performance of group commit in high-concurre
 
 #### Test Method
 
-* Setting different single-concurrency data size and concurrency num between `non group_commit` and `group_commit=async mode` modes.
+* Testing with different data sizes per request and concurrency levels between `non group_commit` and `group_commit=async mode` modes.
 
-#### Test Result
+#### Test Results
 
 | Load Way           | Single-concurrency Data Size | Concurrency | Cost Seconds | Rows / Seconds | MB / Seconds |
-|--------------------|------------------------------|-------------|--------------------|----------------|--------------|
+|------------------|-------------|--------|-------------|--------------------|-------------------|
 | `group_commit` | 10 KB   | 10   | 2204      | 112,181   | 14.8 |
 | `group_commit` | 10 KB   | 30   | 2176      | 113,625   | 15.0 |
 | `group_commit` | 100 KB  | 10   | 283       | 873,671  | 115.1 |
@@ -567,7 +507,7 @@ We have separately tested the write performance of group commit in high-concurre
 
 In the above test, the CPU usage of BE fluctuates between 10-40%.
 
-The `group_commit` effectively enhances import performance while reducing the number of versions, thereby alleviating the pressure on compaction.
+The `group_commit` effectively enhances load performance while reducing the number of versions, thereby alleviating the pressure on compaction.
 
 ### JDBC
 
@@ -579,7 +519,7 @@ The `group_commit` effectively enhances import performance while reducing the nu
 
 1 Test Client: Alibaba Cloud with a 16-core CPU, 64GB RAM, and one 100GB ESSD PL1 SSD.
 
-The testing version is Doris-3.0.1.
+The testing version is Doris-2.1.5.
 
 Disable the printing of prepared statement audit logs to enhance performance.
 
@@ -595,11 +535,11 @@ Disable the printing of prepared statement audit logs to enhance performance.
 
 * Use `txtfilereader` wtite data to `mysqlwriter`, config different concurrenncy and rows for per `INSERT` sql.
 
-#### Test Result
+#### Test Results
 
 
 | Rows per insert | Concurrency | Rows / Second | MB / Second |
-|-----------------|-------------|---------------|-------------|
+|-------------------|--------|--------------------|--------------------|
 | 100 | 10  | 160,758    | 17.21 |
 | 100 | 20  | 210,476    | 22.19 |
 | 100 | 30  | 214,323    | 22.92 |
@@ -614,7 +554,7 @@ In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates 
 * 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
 * 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk.
 * 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
-* Test version: Doris-3.0.1
+* Test version: Doris-2.1.5
 
 **Dataset**
 
@@ -682,24 +622,24 @@ Ensure that the imported values match the data types one by one.
 
 **Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true | 891.8      | 701.1      | 400.0     | 237.5    |
-|enable_nereids_planner=false | 885.8      | 688.1      | 398.7      | 232.9     |
+|enable_nereids_planner=true| 891.8      | 701.1      | 400.0     | 237.5    |
+|enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
 
 **Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true | 2427.8     | 2068.9     | 1259.4     | 764.9  |
-|enable_nereids_planner=false | 2320.4     | 1899.3     | 1206.2     | 749.7 |
+|enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
+|enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
 
 **Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true | 5567.5     | 5713.2     | 4681.0     | 3131.2   |
-|enable_nereids_planner=false | 4471.6     | 5042.5     | 4932.2     | 3641.1 |
+|enable_nereids_planner=true| 5567.5     | 5713.2      | 4681.0    | 3131.2   |
+|enable_nereids_planner=false| 4471.6      | 5042.5     | 4932.2     | 3641.1 |
 
 ### Insert into Sync Mode Large Batch Data
 
