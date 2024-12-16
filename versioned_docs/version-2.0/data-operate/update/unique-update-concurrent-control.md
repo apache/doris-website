@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Updating Transaction",
+    "title": "Concurrency Control for Updates in the Primary Key Model",
     "language": "en"
 }
 ---
@@ -24,15 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Overview
+
+Doris adopts a Multi-Version Concurrency Control (MVCC) mechanism to manage concurrent updates. Each data load operation is assigned a transaction, which ensures atomicity (i.e., the operation either fully succeeds or completely fails). Upon transaction commit, the system assigns a version number. When using the Unique Key model and loading multiple batches of data with duplicate primary keys, Doris determines the overwrite order based on the version number: data with a higher version number will overwrite data with a lower version number.
+
+In certain scenarios, users may need to specify a sequence column in the table creation statement to customize the order in which data takes effect. For example, when synchronizing data into Doris using multiple concurrent processes, the data may arrive out of order. This could lead to older data overwriting newer data due to its delayed arrival. To address this, users can assign a lower sequence value to the older data and a higher sequence value to the newer data, enabling Doris to determine the update order based on the sequence values provided by the user.
+
+Additionally, `UPDATE` statements differ significantly from updates performed via data loads at the implementation level. An `UPDATE` operation involves two steps: reading the data to be updated from the database and writing the updated data back. By default, `UPDATE` statements use table-level locks to provide transaction capabilities with Serializable isolation, meaning multiple `UPDATE` statements must be executed serially. However, users can bypass this restriction by modifying the configuration. For detailed instructions, refer to the relevant section below.
+
 ## Update Concurrency Control
 
-By default, concurrent updates on the same table are not allowed in Doris.
+By default, concurrent `UPDATE`s on the same table are not allowed in Doris.
 
 The main reason is that Doris currently supports row-level updates, which means that even if the user specifies to update only a specific column (e.g., `SET v2 = 1`), all other value columns will be overwritten as well (even though their values remain unchanged).
 
-This poses a problem when multiple update operations are performed concurrently on the same row. The behavior becomes unpredictable, and it may lead to inconsistent or "dirty" data.
+This poses a problem when multiple `UPDATE` operations are performed concurrently on the same row. The behavior becomes unpredictable, and it may lead to inconsistent or "dirty" data.
 
 However, in practical applications, if the user can ensure that concurrent updates will not affect the same row simultaneously, they can manually enable the concurrent update restriction. This can be done by modifying the FE (Frontend) configuration `enable_concurrent_update`. When this configuration is set to `true`, the update command will not have transaction guarantees.
+
+:::caution Caution:
+Enabling the `enable_concurrent_update` configuration may introduce certain performance risks.
+:::
 
 ## Sequence Column
 
