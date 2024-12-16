@@ -113,7 +113,7 @@ For concurrent load updates, Doris determines the order of concurrent updates us
 
 Since the commit order of multiple concurrent load updates may be unpredictable, if these concurrent load jobs involve updates to the same primary key, the order in which they take effect is also uncertain. As a result, the final visible outcome may be indeterminate. To address this issue, Doris provides a `sequence` column mechanism, allowing users to specify a version for each row in concurrent load updates, thus ensuring determinism in the outcome of concurrent updates.
 
-For more detailed information on transaction mechanisms, refer to the documentation on [Transactional Updates in the Primary Key Model](../update/unique-update-transaction.md).
+For more detailed information on concurrency control, refer to the documentation on [Concurrency Control for Updates in the Primary Key Model](../update/unique-update-concurrent-control.md).
 
 ## Update in Aggregate Model
 
