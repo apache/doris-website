@@ -58,9 +58,10 @@
                                     "type": "category",
                                     "label": "Deploying on Kubernetes",
                                     "items": [
-                                        "install/cluster-deployment/k8s-deploy/install-env",
-                                        "install/cluster-deployment/k8s-deploy/install-quickstart",
+                                        "install/cluster-deployment/k8s-deploy/install-doris-operator",
                                         "install/cluster-deployment/k8s-deploy/install-config-cluster",
+                                        "install/cluster-deployment/k8s-deploy/install-doris-cluster",
+                                        "install/cluster-deployment/k8s-deploy/access-cluster",
                                         "install/cluster-deployment/k8s-deploy/cluster-operation"
                                     ]
                                 },
