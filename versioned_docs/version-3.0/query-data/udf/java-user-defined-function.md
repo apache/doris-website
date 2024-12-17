@@ -37,7 +37,7 @@ The implemented jar package can be placed locally or stored on a remote server f
 
 Otherwise, an error message `Couldn't open file ......` will be returned.
 
-For more syntax help, refer to [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+For more syntax help, refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION.md).
 
 ### UDF
 
@@ -94,7 +94,7 @@ When the session is linked within the database, directly using the UDF name will
 
 ## Dropping UDF
 
-If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION).
+If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../../sql-manual/sql-statements/function/DROP-FUNCTION).
 
 ## Type Correspondence
 
@@ -110,6 +110,7 @@ If a UDF is no longer needed, it can be dropped using the following command, as 
 | Double                | Double                       |
 | Date                  | LocalDate                    |
 | Datetime              | LocalDateTime                |
+| IPV4/IPV6             | InetAddress                  |
 | String                | String                       |
 | Decimal               | BigDecimal                   |
 | `array<Type>`         | `ArrayList<Type>`            |

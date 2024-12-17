@@ -32,7 +32,7 @@ under the License.
 
 ### 物化视图创建
 
-**1. 详情参考** **[CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)**
+**1. 详情参考** **[CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)**
 
 **2. 新增属性** 
 
@@ -78,27 +78,27 @@ FROM
 
 ### 物化视图修改
 
-详情参考 [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW)
+详情参考 [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW)
 
 ### 物化视图删除
 
-详情参考 [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW)
+详情参考 [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
 
 ### 刷新物化视图
 
-详情参考 [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/REFRESH-MATERIALIZED-VIEW/)
+详情参考 [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/REFRESH-MATERIALIZED-VIEW)
 
 ### 暂停物化视图
 
-详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/PAUSE-MATERIALIZED-VIEW)
+详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW)
 
 ### 启用物化视图
 
-详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/RESUME-MATERIALIZED-VIEW)
+详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW)
 
 ### 取消物化视图刷新任务
 
-详情参考 [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK)
+详情参考 [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
 
 
 
@@ -110,11 +110,11 @@ FROM
 
 - 查询物化视图对应的 JOB 信息：[JOBS](../../../sql-manual/sql-functions/table-valued-functions/jobs)
 
-- 查询物化视图的分区信息：[SHOW PARTITIONS](../../../sql-manual/sql-statements/Show-Statements/SHOW-PARTITIONS)
+- 查询物化视图的分区信息：[SHOW PARTITIONS](../../../sql-manual/sql-statements/table-and-view/table/SHOW-PARTITIONS)
 
-- 查看物化视图表结构：[DESCRIBE](../../../sql-manual/sql-statements/Utility-Statements/DESCRIBE)
+- 查看物化视图表结构：[DESCRIBE](../../../sql-manual/sql-statements/table-and-view/table/DESC-TABLE.md)
 
-- 查看物化视图创建语句：[SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW/)
+- 查看物化视图创建语句：[SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
 
 ## 权限说明
 
@@ -256,7 +256,7 @@ LEFT OUTER JOIN orders
 ON l_orderkey = o_orderkey;
 ```
 
-详情可参考 [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)
+详情可参考 [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)
 
 **2. 查询语句：**
 

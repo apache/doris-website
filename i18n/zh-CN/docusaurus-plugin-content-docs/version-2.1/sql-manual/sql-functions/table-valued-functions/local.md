@@ -98,7 +98,7 @@ local(
 - 其他参数：
     - `path_partition_keys`：（选填）指定文件路径中携带的分区列名，例如 `/path/to/city=beijing/date="2023-07-09"`, 则填写 `path_partition_keys="city,date"`，将会自动从路径中读取相应列名和列值进行导入。
 
-### Examples
+### 示例
 
 分析指定 BE 上的日志文件：
 

@@ -1,0 +1,25 @@
+.navbar-sidebar-container {
+    width: 100vw;
+    top: 0; 
+    left: 0;
+    right: 0; 
+    height: 100vh; 
+    transform: translateY(-100%);
+    position: fixed; 
+    background-color: #fff; 
+    z-index: 1000; 
+    transition: transform 0.3s ease-in-out; 
+    overflow-y: auto; 
+}
+
+.navbar-sidebar-container--open {
+    transform: translateY(0); 
+}
+
+.primary-menu,
+.secondary-menu {
+    width: 100vw;
+}
+.navbar-sidebar__items--show-secondary {
+    transform: translate3d(-100vw, 0, 0);
+}

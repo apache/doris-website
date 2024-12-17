@@ -43,7 +43,7 @@ SHOW COMPUTE GROUPS;
 
 ## Adding Compute Groups
 
-Using [Add BE ](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) to add a BE into a compute group, for example:
+Using [Add BE ](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND.md) to add a BE into a compute group, for example:
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");

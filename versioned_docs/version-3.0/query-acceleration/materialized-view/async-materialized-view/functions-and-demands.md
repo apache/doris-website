@@ -31,7 +31,7 @@ This document provides a comprehensive overview of Materialized View DDL (Data D
 
 ### Create Materialized View:
 
-**1. Refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)**
+**1. Refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)**
 
 **2. New Attribute**
 
@@ -77,27 +77,27 @@ FROM
 
 ### 2 Alter Materialized View
 
-Refer to [ALTER ASYNC MATERIALIZED VIEW](https://doris.apache.org/docs/sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW)
+Refer to [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW)
 
 ### 3 Drop Materialized View
 
-Refer to [DROP ASYNC MATERIALIZED VIEW](https://doris.apache.org/docs/sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW)
+Refer to [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
 
 ### 4 Refresh Materialized View
 
-Refer to [REFRESH MATERIALIZED VIEW](https://doris.apache.org/docs/sql-manual/sql-statements/Utility-Statements/REFRESH-MATERIALIZED-VIEW/)
+Refer to [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/REFRESH-MATERIALIZED-VIEW)
 
 ### 5 Pause Materialized View
 
-Refer to [PAUSE MATERIALIZED VIEW](https://doris.apache.org/docs/sql-manual/sql-statements/Utility-Statements/PAUSE-MATERIALIZED-VIEW)
+Refer to [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW.md)
 
 ### 6 Resume Materialized View
 
-Refer to [RESUME MATERIALIZED VIEW](https://doris.apache.org/docs/sql-manual/sql-statements/Utility-Statements/RESUME-MATERIALIZED-VIEW)
+Refer to [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW.md)
 
 ### 7 Cancel Refresh Task
 
-Refer to [CANCEL MATERIALIZED VIEW TASK](https://doris.apache.org/docs/sql-manual/sql-statements/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK)
+Refer to [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
 
 ## Metadata Querying
 
@@ -107,11 +107,11 @@ Refer to [CANCEL MATERIALIZED VIEW TASK](https://doris.apache.org/docs/sql-manua
 
 - Query Job Information Related to Materialized View: use [JOBS](../../../sql-manual/sql-functions/table-valued-functions/jobs)
 
-- Query Partition Information: use [SHOW PARTITIONS](../../../sql-manual/sql-statements/Show-Statements/SHOW-PARTITIONS)
+- Query Partition Information: use [SHOW PARTITIONS](../../../sql-manual/sql-statements/table-and-view/table/SHOW-PARTITIONS)
 
-- View Table Structure: use [DESCRIBE](../../../sql-manual/sql-statements/Utility-Statements/DESCRIBE)
+- View Table Structure: use [DESCRIBE](../../../sql-manual/sql-statements/table-and-view/table/DESC-TABLE)
 
-- View Creation Statement: use [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW/)
+- View Creation Statement: use [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
 
 ## Permission
 
@@ -253,7 +253,7 @@ LEFT OUTER JOIN orders
 ON l_orderkey = o_orderkey;
 ```
 
-For more details, refer to  [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)
+For more details, refer to  [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)
 
 **2. Query Statement:**
 

@@ -83,7 +83,7 @@ under the License.
 
 `set` 字段表示设置成功的配置。`err` 字段表示设置失败的配置。 `persist` 字段表示持久化信息。
     
-## Examples
+## 示例
 
 1. 设置 `storage_min_left_capacity_bytes` 、 `replica_ack_policy` 和 `agent_task_resend_wait_time_ms`  三个配置的值。
 

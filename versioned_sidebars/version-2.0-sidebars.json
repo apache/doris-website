@@ -154,7 +154,7 @@
                                 "data-operate/update/unique-update",
                                 "data-operate/update/update-of-unique-model",
                                 "data-operate/update/update-of-aggregate-model",
-                                "data-operate/update/unique-update-transaction"
+                                "data-operate/update/unique-update-concurrent-control"
                             ]
                         },
                         {
@@ -1484,6 +1484,7 @@
             "label": "Releases",
             "collapsed": false,
             "items": [
+                "releasenotes/all-release",
                 "releasenotes/v2.0/release-2.0.15",
                 "releasenotes/v2.0/release-2.0.14",
                 "releasenotes/v2.0/release-2.0.13",

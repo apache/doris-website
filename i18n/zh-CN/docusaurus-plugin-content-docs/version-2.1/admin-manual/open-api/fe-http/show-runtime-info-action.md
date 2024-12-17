@@ -62,7 +62,7 @@ under the License.
 }
 ```
     
-## Examples
+## 示例
 
 1. 获取当前 FE 节点的 JVM 信息
 

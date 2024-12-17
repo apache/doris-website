@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState, useContext } from 'react';
 import clsx from 'clsx';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useIsBrowser from '@docusaurus/useIsBrowser';
@@ -21,10 +21,11 @@ import {
     useAllContextsWithNoSearchContext,
 } from '../../utils/proxiedGenerated';
 import LoadingRing from '../LoadingRing/LoadingRing';
+import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/common';
 import styles from './SearchBar.module.css';
 import { normalizeContextByPath } from '../../utils/normalizeContextByPath';
 import useIsDocPage from '@site/src/hooks/use-is-doc';
-import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/common';
+import { DataContext } from '../Layout';
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
     const autoComplete = autoCompleteModule.default;
@@ -40,9 +41,9 @@ async function fetchAutoCompleteJS() {
 const SEARCH_PARAM_HIGHLIGHT = '_highlight';
 export default function SearchBar({ handleSearchBarToggle }) {
     const isBrowser = useIsBrowser();
-    const location = useLocation();
-    // const curVersion = useRef(DEFAULT_VERSION);
     const [curVersion, setCurVersion] = useState(DEFAULT_VERSION);
+    const location = useLocation();
+    const { setShowSearchPageMobile } = useContext(DataContext);
     const {
         siteConfig: { baseUrl },
         i18n: { currentLocale },
@@ -127,155 +128,159 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setSearchContext(nextSearchContext);
     }, [location.pathname, versionUrl]);
     const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
-    const loadIndex = useCallback(async (forceLoad = false) => {
-        if ((hidden || indexStateMap.current.get(searchContext)) && !forceLoad) {
-            // Do not load the index (again) if its already loaded or in the process of being loaded.
-            return;
-        }
-        indexStateMap.current.set(searchContext, 'loading');
-        search.current?.autocomplete.destroy();
-        setLoading(true);
-        const [autoComplete] = await Promise.all([
-            fetchAutoCompleteJS(),
-            fetchIndexesByWorker(versionUrl, searchContext),
-        ]);
-        const searchFooterLinkElement = ({ query, isEmpty }) => {
-            const a = document.createElement('a');
-            const params = new URLSearchParams();
-            params.set('q', query);
-            let linkText;
-            if (searchContext) {
-                const detailedSearchContext =
-                    searchContext && Array.isArray(searchContextByPaths)
-                        ? searchContextByPaths.find(item =>
-                              typeof item === 'string' ? item === searchContext : item.path === searchContext,
-                          )
+    const loadIndex = useCallback(
+        async (forceLoad = false) => {
+            if (hidden || (indexStateMap.current.get(searchContext) && !forceLoad)) {
+                // Do not load the index (again) if its already loaded or in the process of being loaded.
+                return;
+            }
+            indexStateMap.current.set(searchContext, 'loading');
+            search.current?.autocomplete.destroy();
+            setLoading(true);
+            const [autoComplete] = await Promise.all([
+                fetchAutoCompleteJS(),
+                fetchIndexesByWorker(versionUrl, searchContext),
+            ]);
+            const searchFooterLinkElement = ({ query, isEmpty }) => {
+                const a = document.createElement('a');
+                const params = new URLSearchParams();
+                params.set('q', query);
+                let linkText;
+                if (searchContext) {
+                    const detailedSearchContext =
+                        searchContext && Array.isArray(searchContextByPaths)
+                            ? searchContextByPaths.find(item =>
+                                  typeof item === 'string' ? item === searchContext : item.path === searchContext,
+                              )
+                            : searchContext;
+                    const translatedSearchContext = detailedSearchContext
+                        ? normalizeContextByPath(detailedSearchContext, currentLocale).label
                         : searchContext;
-                const translatedSearchContext = detailedSearchContext
-                    ? normalizeContextByPath(detailedSearchContext, currentLocale).label
-                    : searchContext;
-                if (useAllContextsWithNoSearchContext && isEmpty) {
-                    linkText = translate(
-                        {
-                            id: 'theme.SearchBar.seeAllOutsideContext',
-                            message: 'See all results outside "{context}"',
-                        },
-                        { context: translatedSearchContext },
-                    );
-                } else {
-                    linkText = translate(
-                        {
-                            id: 'theme.SearchBar.searchInContext',
-                            message: 'See all results within "{context}"',
-                        },
-                        { context: translatedSearchContext },
-                    );
-                }
-            } else {
-                linkText = translate({
-                    id: 'theme.SearchBar.seeAll',
-                    message: 'See all results',
-                });
-            }
-            if (
-                searchContext &&
-                Array.isArray(searchContextByPaths) &&
-                (!useAllContextsWithNoSearchContext || !isEmpty)
-            ) {
-                params.set('ctx', searchContext);
-            }
-            if (versionUrl !== baseUrl) {
-                if (!versionUrl.startsWith(baseUrl)) {
-                    throw new Error(
-                        `Version url '${versionUrl}' does not start with base url '${baseUrl}', this is a bug of \`@easyops-cn/docusaurus-search-local\`, please report it.`,
-                    );
-                }
-                params.set('version', versionUrl.substring(baseUrl.length));
-            }
-            const url = `${baseUrl}search/?${params.toString()}`;
-            a.href = url;
-            a.textContent = linkText;
-            a.addEventListener('click', e => {
-                if (!e.ctrlKey && !e.metaKey) {
-                    e.preventDefault();
-                    search.current?.autocomplete.close();
-                    history.push(url);
-                }
-            });
-            return a;
-        };
-        search.current = autoComplete(
-            searchBarRef.current,
-            {
-                hint: false,
-                autoselect: true,
-                openOnFocus: true,
-                cssClasses: {
-                    root: clsx(styles.searchBar, {
-                        [styles.searchBarLeft]: searchBarPosition === 'left',
-                    }),
-                    noPrefix: true,
-                    dropdownMenu: styles.dropdownMenu,
-                    input: styles.input,
-                    hint: styles.hint,
-                    suggestions: styles.suggestions,
-                    suggestion: styles.suggestion,
-                    cursor: styles.cursor,
-                    dataset: styles.dataset,
-                    empty: styles.empty,
-                },
-            },
-            [
-                {
-                    source: async (input, callback) => {
-                        const result = await searchByWorker(versionUrl, searchContext, input);
-                        callback(result);
-                    },
-                    templates: {
-                        suggestion: SuggestionTemplate,
-                        empty: EmptyTemplate,
-                        footer: ({ query, isEmpty }) => {
-                            if (isEmpty && (!searchContext || !useAllContextsWithNoSearchContext)) {
-                                return;
-                            }
-                            const a = searchFooterLinkElement({ query, isEmpty });
-                            const div = document.createElement('div');
-                            div.className = styles.hitFooter;
-                            div.appendChild(a);
-                            return div;
-                        },
-                    },
-                },
-            ],
-        )
-            .on('autocomplete:selected', function (event, { document: { u, h }, tokens }) {
-                searchBarRef.current?.blur();
-                let url = u;
-                if (Mark && tokens.length > 0) {
-                    const params = new URLSearchParams();
-                    for (const token of tokens) {
-                        params.append(SEARCH_PARAM_HIGHLIGHT, token);
+                    if (useAllContextsWithNoSearchContext && isEmpty) {
+                        linkText = translate(
+                            {
+                                id: 'theme.SearchBar.seeAllOutsideContext',
+                                message: 'See all results outside "{context}"',
+                            },
+                            { context: translatedSearchContext },
+                        );
+                    } else {
+                        linkText = translate(
+                            {
+                                id: 'theme.SearchBar.searchInContext',
+                                message: 'See all results within "{context}"',
+                            },
+                            { context: translatedSearchContext },
+                        );
                     }
-                    url += `?${params.toString()}`;
+                } else {
+                    linkText = translate({
+                        id: 'theme.SearchBar.seeAll',
+                        message: 'See all results',
+                    });
                 }
-                if (h) {
-                    url += h;
+                if (
+                    searchContext &&
+                    Array.isArray(searchContextByPaths) &&
+                    (!useAllContextsWithNoSearchContext || !isEmpty)
+                ) {
+                    params.set('ctx', searchContext);
                 }
-                history.push(url);
-            })
-            .on('autocomplete:closed', () => {
-                searchBarRef.current?.blur();
-            });
-        indexStateMap.current.set(searchContext, 'done');
-        setLoading(false);
-        if (focusAfterIndexLoaded.current) {
-            const input = searchBarRef.current;
-            if (input.value) {
-                search.current?.autocomplete.open();
+                if (versionUrl !== baseUrl) {
+                    if (!versionUrl.startsWith(baseUrl)) {
+                        throw new Error(
+                            `Version url '${versionUrl}' does not start with base url '${baseUrl}', this is a bug of \`@easyops-cn/docusaurus-search-local\`, please report it.`,
+                        );
+                    }
+                    params.set('version', versionUrl.substring(baseUrl.length));
+                }
+                const url = `${baseUrl}search/?${params.toString()}`;
+                a.href = url;
+                a.textContent = linkText;
+                a.addEventListener('click', e => {
+                    setShowSearchPageMobile(false);
+                    if (!e.ctrlKey && !e.metaKey) {
+                        e.preventDefault();
+                        search.current?.autocomplete.close();
+                        history.push(url);
+                    }
+                });
+                return a;
+            };
+            search.current = autoComplete(
+                searchBarRef.current,
+                {
+                    hint: false,
+                    autoselect: true,
+                    openOnFocus: true,
+                    cssClasses: {
+                        root: clsx(styles.searchBar, {
+                            [styles.searchBarLeft]: searchBarPosition === 'left',
+                        }),
+                        noPrefix: true,
+                        dropdownMenu: styles.dropdownMenu,
+                        input: styles.input,
+                        hint: styles.hint,
+                        suggestions: styles.suggestions,
+                        suggestion: styles.suggestion,
+                        cursor: styles.cursor,
+                        dataset: styles.dataset,
+                        empty: styles.empty,
+                    },
+                },
+                [
+                    {
+                        source: async (input, callback) => {
+                            const result = await searchByWorker(versionUrl, searchContext, input);
+                            callback(result);
+                        },
+                        templates: {
+                            suggestion: SuggestionTemplate,
+                            empty: EmptyTemplate,
+                            footer: ({ query, isEmpty }) => {
+                                if (isEmpty && (!searchContext || !useAllContextsWithNoSearchContext)) {
+                                    return;
+                                }
+                                const a = searchFooterLinkElement({ query, isEmpty });
+                                const div = document.createElement('div');
+                                div.className = styles.hitFooter;
+                                div.appendChild(a);
+                                return div;
+                            },
+                        },
+                    },
+                ],
+            )
+                .on('autocomplete:selected', function (event, { document: { u, h }, tokens }) {
+                    searchBarRef.current?.blur();
+                    let url = u;
+                    if (Mark && tokens.length > 0) {
+                        const params = new URLSearchParams();
+                        for (const token of tokens) {
+                            params.append(SEARCH_PARAM_HIGHLIGHT, token);
+                        }
+                        url += `?${params.toString()}`;
+                    }
+                    if (h) {
+                        url += h;
+                    }
+                    history.push(url);
+                })
+                .on('autocomplete:closed', () => {
+                    searchBarRef.current?.blur();
+                });
+            indexStateMap.current.set(searchContext, 'done');
+            setLoading(false);
+            if (focusAfterIndexLoaded.current) {
+                const input = searchBarRef.current;
+                if (input.value) {
+                    search.current?.autocomplete.open();
+                }
+                input.focus();
             }
-            input.focus();
-        }
-    }, [hidden, searchContext, versionUrl, baseUrl, history]);
+        },
+        [hidden, searchContext, versionUrl, baseUrl, history],
+    );
     useEffect(() => {
         if (!Mark) {
             return;
@@ -316,12 +321,29 @@ export default function SearchBar({ handleSearchBarToggle }) {
     }, [loadIndex]);
     const onInputChange = useCallback(event => {
         setInputValue(event.target.value);
+
         if (event.target.value) {
             setInputChanged(true);
         }
     }, []);
     // Implement hint icons for the search shortcuts on mac and the rest operating systems.
     const isMac = isBrowser ? /mac/i.test(navigator.userAgentData?.platform ?? navigator.platform) : false;
+
+    useEffect(() => {
+        const pathHaveVer = VERSIONS.some(item => location.pathname.includes(item));
+        if (!pathHaveVer && curVersion !== '2.1') {
+            setCurVersion('2.1');
+        } else {
+            VERSIONS.forEach(item => {
+                if (location.pathname.includes(item) && item !== curVersion) {
+                    setCurVersion(item);
+                }
+            });
+        }
+    }, [location.pathname]);
+    useEffect(() => {
+        loadIndex(true);
+    }, [curVersion]);
     useEffect(() => {
         if (!searchBarShortcut) {
             return;
@@ -339,23 +361,26 @@ export default function SearchBar({ handleSearchBarToggle }) {
             document.removeEventListener('keydown', handleShortcut);
         };
     }, [isMac, onInputFocus]);
-
     useEffect(() => {
-        const pathHaveVer = VERSIONS.some(item => location.pathname.includes(item));
-        if (!pathHaveVer && curVersion !== '2.1') {
-            setCurVersion('2.1');
-        } else {
-            VERSIONS.forEach(item => {
-                if (location.pathname.includes(item) && item !== curVersion) {
-                    setCurVersion(item);
+        if (inputValue) {
+            const inputDoms = document.getElementsByClassName('navbar__search-input');
+            let inputDom = null;
+            for (let input of inputDoms) {
+                if (input.getAttribute('value')) {
+                    inputDom = input;
                 }
-            });
+            }
+            if (inputDom) {
+                const suggestionsContainer = inputDom.parentNode?.lastElementChild?.firstChild;
+                if (suggestionsContainer) {
+                    suggestionsContainer.addEventListener('click', () => {
+                        setInputValue('');
+                        setShowSearchPageMobile(false);
+                    });
+                }
+            }
         }
-    }, [location.pathname]);
-
-    useEffect(() => {
-        loadIndex(true);
-    }, [curVersion]);
+    }, [inputValue]);
 
     const onClearSearch = useCallback(() => {
         const params = new URLSearchParams(location.search);
