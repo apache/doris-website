@@ -48,12 +48,11 @@ export default function Layout(props: Props): JSX.Element {
 
     useEffect(() => {
         if (showSearchPageMobile) {
-            window.scroll(0, 0);
+            window.scroll(0,0)
             document.body.style.overflow = 'hidden';
             searchPageDom.current.style.height = '100vh';
-            searchPageDom.current.style.display = 'block';
         } else {
-            searchPageDom.current.style.display = 'none';
+            window.scroll(0, 0);
             document.body.style.overflow = 'auto';
         }
     }, [showSearchPageMobile]);
@@ -66,11 +65,14 @@ export default function Layout(props: Props): JSX.Element {
                 <SkipToContent />
                 <AnnouncementBar />
                 <Navbar />
-                <div ref={searchPageDom}>
-                    <NavbarSearch>
-                        <SearchBar />
-                    </NavbarSearch>
-                </div>
+                {showSearchPageMobile ? (
+                    <div ref={searchPageDom}>
+                        <NavbarSearch>
+                            <SearchBar />
+                        </NavbarSearch>
+                    </div>
+                ) : null}
+
                 <div
                     id={SkipToContentFallbackId}
                     className={clsx(ThemeClassNames.wrapper.main, styles.mainWrapper, wrapperClassName)}
