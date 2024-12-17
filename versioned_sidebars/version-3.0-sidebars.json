@@ -767,17 +767,6 @@
                         "sql-manual/sql-data-types/data-type-overview",
                         {
                             "type": "category",
-                            "label": "MAP Functions",
-                            "items": [
-                                "sql-manual/sql-functions/map-functions/map",
-                                "sql-manual/sql-functions/map-functions/map-keys",
-                                "sql-manual/sql-functions/map-functions/map-values",
-                                "sql-manual/sql-functions/map-functions/map-contains-key",
-                                "sql-manual/sql-functions/map-functions/map-contains-value"
-                            ]
-                        },
-                        {
-                            "type": "category",
                             "label": "Numeric Data Type",
                             "items": [
                                 "sql-manual/sql-data-types/numeric/BOOLEAN",
@@ -1273,6 +1262,17 @@
                                 "sql-manual/sql-functions/json-functions/json-replace",
                                 "sql-manual/sql-functions/json-functions/json-set",
                                 "sql-manual/sql-functions/json-functions/json-keys"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "MAP Functions",
+                            "items": [
+                                "sql-manual/sql-functions/map-functions/map",
+                                "sql-manual/sql-functions/map-functions/map-keys",
+                                "sql-manual/sql-functions/map-functions/map-values",
+                                "sql-manual/sql-functions/map-functions/map-contains-key",
+                                "sql-manual/sql-functions/map-functions/map-contains-value"
                             ]
                         },
                         {
