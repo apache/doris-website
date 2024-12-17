@@ -767,6 +767,17 @@
                         "sql-manual/sql-data-types/data-type-overview",
                         {
                             "type": "category",
+                            "label": "MAP Functions",
+                            "items": [
+                                "sql-manual/sql-functions/map-functions/map",
+                                "sql-manual/sql-functions/map-functions/map-keys",
+                                "sql-manual/sql-functions/map-functions/map-values",
+                                "sql-manual/sql-functions/map-functions/map-contains-key",
+                                "sql-manual/sql-functions/map-functions/map-contains-value"
+                            ]
+                        },
+                        {
+                            "type": "category",
                             "label": "Numeric Data Type",
                             "items": [
                                 "sql-manual/sql-data-types/numeric/BOOLEAN",
@@ -1034,6 +1045,9 @@
                                 "sql-manual/sql-functions/string-functions/trim",
                                 "sql-manual/sql-functions/string-functions/ltrim",
                                 "sql-manual/sql-functions/string-functions/rtrim",
+                                "sql-manual/sql-functions/string-functions/trim_in",
+                                "sql-manual/sql-functions/string-functions/ltrim_in",
+                                "sql-manual/sql-functions/string-functions/rtrim_in",
                                 "sql-manual/sql-functions/string-functions/null-or-empty",
                                 "sql-manual/sql-functions/string-functions/not-null-or-empty",
                                 "sql-manual/sql-functions/string-functions/hex",
