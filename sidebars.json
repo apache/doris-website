@@ -169,6 +169,16 @@
                                         "data-operate/import/import-way/group-commit-manual"
                                     ]
                                 },
+                                {
+                                    "type": "category",
+                                    "label": "Data Type",
+                                    "items": [
+                                        "data-operate/import/data-type/array",
+                                        "data-operate/import/data-type/map",
+                                        "data-operate/import/data-type/struct",
+                                        "data-operate/import/data-type/json"
+                                    ]
+                                },
                                 "data-operate/import/load-data-format",
                                 "data-operate/import/error-data-handling",
                                 "data-operate/import/load-data-convert",
