@@ -33,10 +33,10 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Doris Summit Asia 2024｜12 月 14 日 深圳</div>
+                            <div style={{ marginBottom: 10 }}>Doris Summit Asia 2024 圆满落幕</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>一年一度的 Apache Doris 峰会再次启航，Doris Summit Asia 2024 现已开启报名，将于 12 月 14 日在深圳正式举办。</div>
-                        <div style={{ fontSize: 14, marginBottom: 10 }}>立即报名</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>2024 年 12 月 14 日，由飞轮科技主办，腾讯云和阿里云联合主办的 Doris Summit Asia 2024 在深圳圆满落幕。演讲回放及资料会在 10 个工作日内逐步释出，可通过 Doris Summit 官网获取。</div>
+                        <div style={{ fontSize: 14, marginBottom: 10 }}>回放生成中</div>
                     </a>
                     <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v3.0/release-3.0.2`}>
                         <div className="home-page-hero-button-label"><div>版本发布</div></div>
@@ -47,9 +47,9 @@ export default function Latest() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>Apache Doris 3.0.2 正式发布</div>
+                            <div style={{ marginBottom: 10 }}>Apache Doris 3.0.3 正式发布</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>3.0.2 版本在存算分离、存储、湖仓一体、查询优化器以及执行引擎持续升级改进，欢迎大家下载使用。</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>3.0.3 版本在存算分离、存储、湖仓一体、查询优化器以及执行引擎持续升级改进，欢迎大家下载使用。</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>查看详情</div>
                     </a>
 

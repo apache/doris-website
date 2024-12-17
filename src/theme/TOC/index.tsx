@@ -95,16 +95,18 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
                     </div>
                 ) : null}
 
-                <Link
-                    className="toc-icon-content"
-                    to={'https://github.com/apache/doris/discussions'}
-                    id="toc-icon-github"
-                    onMouseEnter={() => handleMouseEnter('toc-icon-github')}
-                    onMouseLeave={() => handleMouseLeave('toc-icon-github')}
-                >
-                    <GithubIcon />
-                    <span>Ask Questions on Discussion</span>
-                </Link>
+                {!isCN ? (
+                    <Link
+                        className="toc-icon-content"
+                        to={'https://github.com/apache/doris/discussions'}
+                        id="toc-icon-github"
+                        onMouseEnter={() => handleMouseEnter('toc-icon-github')}
+                        onMouseLeave={() => handleMouseLeave('toc-icon-github')}
+                    >
+                        <GithubIcon />
+                        <span>Ask Questions on Discussion</span>
+                    </Link>
+                ) : null}
             </div>
             <div>
                 <span className="ml-4 title-text">{!isCN ? 'On This Page' : '本页导航'}</span>

@@ -366,6 +366,16 @@ a:active {
     }
 }
 
+@media (max-width: 996px) {
+    .latest-button {
+        flex: 1 1 100%;
+        margin-right: 0 !important;
+        max-width: calc(100vw - 2rem);
+        min-height: 170px;
+        height: auto !important;
+    }
+}
+
 .banner-button {
     margin-right: 30px;
     border-radius: 10px;

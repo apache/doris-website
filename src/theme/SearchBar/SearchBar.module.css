@@ -1,5 +1,7 @@
+
+
 .searchBar .dropdownMenu {
-  left: auto !important;
+  left: -20% !important;
   right: 0 !important;
 
   background: var(--search-local-modal-background, #f5f6f7);
@@ -14,9 +16,12 @@
   padding: var(--search-local-spacing, 12px);
 }
 
+.searchBar .mobileDropdownMenu{
+  left: 0 !important;
+}
+
 @media not (max-width: 996px) {
   .searchBar.searchBarLeft .dropdownMenu {
-    left: 0 !important;
     right: auto !important;
   }
 }
@@ -26,7 +31,6 @@
     display: none !important;
   }
 }
-
 
 @media (max-width: 576px) {
   :global(.navbar__search-input):not(:focus) {
