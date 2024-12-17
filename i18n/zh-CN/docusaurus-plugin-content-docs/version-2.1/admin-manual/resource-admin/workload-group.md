@@ -45,7 +45,7 @@ Workload Group 是从 2.0 版本开始支持的功能，Workload Group 在 2.0 �
 #### 升级到 2.1 版本
 2 如果代码版本是从 2.0 升级到 2.1 的，分为以下两种情况：
 
-情况 1：在 2.1 版本如果已经使用了 Workload Group 功能，那么只需要参考下文中配置 cgroup v1 的流程即可使用新版本的 Workload Group 功能。
+情况 1：在 2.0 版本如果已经使用了 Workload Group 功能，那么只需要参考下文中配置 cgroup v1 的流程即可使用新版本的 Workload Group 功能。
 
 情况 2：如果在 2.0 版本没有使用 Workload Group 功能，那么也需要先把 Doris 集群整体升级到 2.1 版本后，再根据下文的***workload group 使用***的章节开始使用该功能。
 
