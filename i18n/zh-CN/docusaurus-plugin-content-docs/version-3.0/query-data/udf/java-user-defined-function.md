@@ -57,7 +57,7 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
     "file"="file:///pathTo/java-udaf.jar",
     "symbol"="org.apache.doris.udf.demo.MiddleNumberUDAF",
     "always_nullable"="true",
-    "type"="JAVA_UDAF"
+    "type"="JAVA_UDF"
 );
 ```
 
@@ -69,7 +69,7 @@ UDTF 自 Doris 3.0 版本开始支持
 
 ```sql
 CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
-    "file"="file:///pathTo/java-udaf.jar",
+    "file"="file:///pathTo/java-udtf.jar",
     "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
     "always_nullable"="true",
     "type"="JAVA_UDF"
