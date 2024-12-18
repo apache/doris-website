@@ -1,7 +1,7 @@
 ---
 {
-    "title": "S3 Compatible Storage",
-    "language": "en"
+    "title": "MinIO",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,21 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris provides two ways to load files from S3 Compatible Storage:
-- Use S3 Load to load S3 Compatible Storage files into Doris, which is an asynchronous load method.
-- Use TVF to load S3 Compatible Storage files into Doris, which is a synchronous load method.
+Doris 提供两种方式从 MinIO 导入文件：
+- 使用 S3 Load 将 MinIO 文件导入到 Doris 中，这是一个异步的导入方式。
+- 使用 TVF 将 MinIO 文件导入到 Doris 中，这是一个同步的导入方式。
 
-:::caution Caution
-The S3 SDK uses the virtual-hosted style by default. However, some object storage systems may not enable or support virtual-hosted style access. In this case, we can add the `use_path_style` parameter to force the use of the path style.
+:::caution 注意
+S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式。
 :::
 
-## load with S3 Load
+## 使用 S3 Load 导入 
 
-Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual.md)
+使用 S3 Load 导入对象存储上的文件，详细步骤可以参考 [Broker Load 手册](../import-way/broker-load-manual.md)
 
-### Step 1: Prepare the data
+### 第 1 步：准备数据
 
-Create a CSV file s3load_example.csv The file is stored on S3 Compatible Storage and its content is as follows:
+创建 CSV 文件 s3load_example.csv 文件存储在 MinIO 上，其内容如下：
 
 ```
 1,Emily,25
@@ -53,7 +53,7 @@ Create a CSV file s3load_example.csv The file is stored on S3 Compatible Storage
 10,Liam,64
 ```
 
-### Step 2: Create a table in Doris
+### 第 2 步：在 Doris 中创建表
 
 ```sql
 CREATE TABLE test_s3load(
@@ -65,7 +65,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### Step 3: Load data using S3 Load
+### 第 3 步：使用 S3 Load 导入数据
 
 ```sql
 LOAD LABEL s3_load_2022_04_01
@@ -81,8 +81,8 @@ WITH S3
     "provider" = "S3",
     "AWS_ENDPOINT" = "play.min.io:9000",  
     "AWS_REGION" = "us-east-1",
-    "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "AWS_ACCESS_KEY" = "myminioadmin",
+    "AWS_SECRET_KEY" = "minio-secret-key-change-me",
     "use_path_style" = "true"
 )
 PROPERTIES
@@ -91,13 +91,13 @@ PROPERTIES
 );
 ```
 
-### Step 4: Check the imported data
+### 第 4 步：检查导入数据
 
 ```sql
 SELECT * FROM test_s3load;
 ```
 
-Results:
+结果：
 
 ```
 mysql> select * from test_s3load;
@@ -118,11 +118,11 @@ mysql> select * from test_s3load;
 10 rows in set (0.04 sec)
 ```
 
-## Load with TVF
+## 使用 TVF 导入
 
-### Step 1: Prepare the data
+### 第 1 步：准备数据
 
-Create a CSV file s3load_example.csv The file is stored on S3 Compatible Storage and its content is as follows:
+创建 CSV 文件 s3load_example.csv 文件存储在 MinIO 上，其内容如下：
 
 ```
 1,Emily,25
@@ -137,7 +137,7 @@ Create a CSV file s3load_example.csv The file is stored on S3 Compatible Storage
 10,Liam,64
 ```
 
-### Step 2: Create a table in Doris
+### 第 2 步：在 Doris 中创建表
 
 ```sql
 CREATE TABLE test_s3load(
@@ -149,7 +149,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### Step 3: Load data using TVF
+### 第 3 步：使用 TVF 导入数据
 
 ```sql
 INSERT INTO test_s3load
@@ -160,21 +160,21 @@ SELECT * FROM S3
     'provider' = 'S3',
     's3.endpoint' = 'play.min.io:9000',
     's3.region' = 'us-east-1',
-    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
-    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "s3.access_key" = "myminioadmin",
+    "s3.secret_key" = "minio-secret-key-change-me",
     "column_separator" = ",",
     "csv_schema" = "user_id:int;name:string;age:int",
     "use_path_style" = "true"
 );
 ```
 
-### Step 4: Check the imported data
+### 第 4 步：检查导入数据
 
 ```sql
 SELECT * FROM test_s3load;
 ```
 
-Results:
+结果：
 
 ```
 mysql> select * from test_s3load;

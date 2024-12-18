@@ -1,6 +1,6 @@
 ---
 {
-    "title": "S3 兼容存储 (例如 MinIO)",
+    "title": "S3 兼容存储",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris 提供两种方式从 S3 兼容存储 (例如 MinIO) 导入文件：
+Doris 提供两种方式从 S3 兼容存储 导入文件：
 - 使用 S3 Load 将 S3 兼容存储 文件导入到 Doris 中，这是一个异步的导入方式。
 - 使用 TVF 将 S3 兼容存储 文件导入到 Doris 中，这是一个同步的导入方式。
 
@@ -38,7 +38,7 @@ S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统可
 
 ### 第 1 步：准备数据
 
-创建 CSV 文件 s3load_example.csv 文件存储在 S3 兼容存储 (MinIO) 上，其内容如下：
+创建 CSV 文件 s3load_example.csv 文件存储在 S3 兼容存储上，其内容如下：
 
 ```
 1,Emily,25
@@ -80,7 +80,7 @@ WITH S3
 (
     "provider" = "S3",
     "AWS_ENDPOINT" = "play.min.io:9000",  
-    "AWS_REGION" = "us-west-2",
+    "AWS_REGION" = "us-east-1",
     "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
     "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
     "use_path_style" = "true"
@@ -122,7 +122,7 @@ mysql> select * from test_s3load;
 
 ### 第 1 步：准备数据
 
-创建 CSV 文件 s3load_example.csv 文件存储在 S3 兼容存储 (MinIO) 上，其内容如下：
+创建 CSV 文件 s3load_example.csv 文件存储在 S3 兼容存储上，其内容如下：
 
 ```
 1,Emily,25
@@ -159,7 +159,7 @@ SELECT * FROM S3
     'format' = 'csv',
     'provider' = 'S3',
     's3.endpoint' = 'play.min.io:9000',
-    's3.region' = 'us-west-2',
+    's3.region' = 'us-east-1',
     "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
     "column_separator" = ",",

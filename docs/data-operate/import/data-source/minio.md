@@ -1,6 +1,6 @@
 ---
 {
-    "title": "S3 Compatible Storage",
+    "title": "MinIO",
     "language": "en"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris provides two ways to load files from S3 Compatible Storage:
-- Use S3 Load to load S3 Compatible Storage files into Doris, which is an asynchronous load method.
-- Use TVF to load S3 Compatible Storage files into Doris, which is a synchronous load method.
+Doris provides two ways to load files from MinIO:
+- Use S3 Load to load MinIO files into Doris, which is an asynchronous load method.
+- Use TVF to load MinIO files into Doris, which is a synchronous load method.
 
-:::caution Caution
+## Notes
+
 The S3 SDK uses the virtual-hosted style by default. However, some object storage systems may not enable or support virtual-hosted style access. In this case, we can add the `use_path_style` parameter to force the use of the path style.
-:::
 
 ## load with S3 Load
 
@@ -38,7 +38,7 @@ Use S3 Load to import files on object storage. For detailed steps, please refer 
 
 ### Step 1: Prepare the data
 
-Create a CSV file s3load_example.csv The file is stored on S3 Compatible Storage and its content is as follows:
+Create a CSV file s3load_example.csv The file is stored on MinIO and its content is as follows:
 
 ```
 1,Emily,25
@@ -68,7 +68,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### Step 3: Load data using S3 Load
 
 ```sql
-LOAD LABEL s3_load_2022_04_01
+LOAD LABEL s3_load_2022_04_05
 (
     DATA INFILE("s3://your_bucket_name/s3load_example.csv")
     INTO TABLE test_s3load
@@ -81,8 +81,8 @@ WITH S3
     "provider" = "S3",
     "AWS_ENDPOINT" = "play.min.io:9000",  
     "AWS_REGION" = "us-east-1",
-    "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "AWS_ACCESS_KEY" = "myminioadmin",
+    "AWS_SECRET_KEY" = "minio-secret-key-change-me",
     "use_path_style" = "true"
 )
 PROPERTIES
@@ -122,7 +122,7 @@ mysql> select * from test_s3load;
 
 ### Step 1: Prepare the data
 
-Create a CSV file s3load_example.csv The file is stored on S3 Compatible Storage and its content is as follows:
+Create a CSV file s3load_example.csv The file is stored on MinIO and its content is as follows:
 
 ```
 1,Emily,25
@@ -160,11 +160,10 @@ SELECT * FROM S3
     'provider' = 'S3',
     's3.endpoint' = 'play.min.io:9000',
     's3.region' = 'us-east-1',
-    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
-    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "s3.access_key" = "myminioadmin",
+    "s3.secret_key" = "minio-secret-key-change-me",
     "column_separator" = ",",
-    "csv_schema" = "user_id:int;name:string;age:int",
-    "use_path_style" = "true"
+    "csv_schema" = "user_id:int;name:string;age:int"
 );
 ```
 
