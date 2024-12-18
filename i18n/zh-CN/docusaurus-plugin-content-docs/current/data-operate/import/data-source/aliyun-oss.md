@@ -28,13 +28,13 @@ Doris 提供两种方式从 Aliyun OSS 导入文件：
 - 使用 S3 Load 将 Aliyun OSS 文件导入到 Doris 中，这是一个异步的导入方式。
 - 使用 TVF 将 Aliyun OSS 文件导入到 Doris 中，这是一个同步的导入方式。
 
-## 注意
-
-注意阿里云 OSS 公网和内网的 endpoint 是不同的。
+:::caution 注意
+阿里云 OSS 公网和内网的 endpoint 是不同的。
 
 例如：
-- 内网 endpoint: `oss-cn-hangzhou-internal.aliyuncs.com`
-- 公网 endpoint: `oss-cn-hangzhou.aliyuncs.com`
+- 内网 endpoint：`oss-cn-hangzhou-internal.aliyuncs.com`
+- 公网 endpoint：`oss-cn-hangzhou.aliyuncs.com`
+:::
 
 ## 使用 S3 Load 导入 
 

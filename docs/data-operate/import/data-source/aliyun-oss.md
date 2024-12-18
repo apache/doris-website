@@ -28,13 +28,13 @@ Doris provides two ways to load files from Aliyun OSS:
 - Use S3 Load to load Aliyun OSS files into Doris, which is an asynchronous load method.
 - Use TVF to load Aliyun OSS files into Doris, which is a synchronous load method.
 
-## Notes
-
-Note that the endpoint URLs for public and intranet access are different.
+:::caution Caution
+The endpoint URLs for public and intranet access are different.
 
 For example:
 - intranet endpoint: `oss-cn-hangzhou-internal.aliyuncs.com`
 - public endpoint: `oss-cn-hangzhou.aliyuncs.com`
+:::
 
 ## load with S3 Load
 
