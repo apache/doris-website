@@ -28,9 +28,9 @@ Doris provides two ways to load files from S3 Compatible Storage (e.g. MinIO):
 - Use S3 Load to load S3 Compatible Storage files into Doris, which is an asynchronous load method.
 - Use TVF to load S3 Compatible Storage files into Doris, which is a synchronous load method.
 
-## Notes
-
+:::caution Caution
 The S3 SDK uses the virtual-hosted style by default. However, some object storage systems may not enable or support virtual-hosted style access. In this case, we can add the `use_path_style` parameter to force the use of the path style.
+:::
 
 ## load with S3 Load
 

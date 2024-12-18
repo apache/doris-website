@@ -28,9 +28,9 @@ Doris 提供两种方式从 S3 兼容存储 (例如 MinIO) 导入文件：
 - 使用 S3 Load 将 S3 兼容存储 文件导入到 Doris 中，这是一个异步的导入方式。
 - 使用 TVF 将 S3 兼容存储 文件导入到 Doris 中，这是一个同步的导入方式。
 
-## 注意
-
+:::caution 注意
 S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式。
+:::
 
 ## 使用 S3 Load 导入 
 
