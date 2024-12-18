@@ -28,10 +28,6 @@ Doris provides two ways to load files from MinIO:
 - Use S3 Load to load MinIO files into Doris, which is an asynchronous load method.
 - Use TVF to load MinIO files into Doris, which is a synchronous load method.
 
-## Notes
-
-The S3 SDK uses the virtual-hosted style by default. However, some object storage systems may not enable or support virtual-hosted style access. In this case, we can add the `use_path_style` parameter to force the use of the path style.
-
 ## load with S3 Load
 
 Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual.md)
@@ -82,8 +78,7 @@ WITH S3
     "AWS_ENDPOINT" = "play.min.io:9000",  
     "AWS_REGION" = "us-east-1",
     "AWS_ACCESS_KEY" = "myminioadmin",
-    "AWS_SECRET_KEY" = "minio-secret-key-change-me",
-    "use_path_style" = "true"
+    "AWS_SECRET_KEY" = "minio-secret-key-change-me"
 )
 PROPERTIES
 (

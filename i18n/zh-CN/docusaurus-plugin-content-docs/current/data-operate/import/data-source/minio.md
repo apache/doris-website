@@ -28,10 +28,6 @@ Doris 提供两种方式从 MinIO 导入文件：
 - 使用 S3 Load 将 MinIO 文件导入到 Doris 中，这是一个异步的导入方式。
 - 使用 TVF 将 MinIO 文件导入到 Doris 中，这是一个同步的导入方式。
 
-:::caution 注意
-S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式。
-:::
-
 ## 使用 S3 Load 导入 
 
 使用 S3 Load 导入对象存储上的文件，详细步骤可以参考 [Broker Load 手册](../import-way/broker-load-manual.md)
@@ -82,8 +78,7 @@ WITH S3
     "AWS_ENDPOINT" = "play.min.io:9000",  
     "AWS_REGION" = "us-east-1",
     "AWS_ACCESS_KEY" = "myminioadmin",
-    "AWS_SECRET_KEY" = "minio-secret-key-change-me",
-    "use_path_style" = "true"
+    "AWS_SECRET_KEY" = "minio-secret-key-change-me"
 )
 PROPERTIES
 (
@@ -163,8 +158,7 @@ SELECT * FROM S3
     "s3.access_key" = "myminioadmin",
     "s3.secret_key" = "minio-secret-key-change-me",
     "column_separator" = ",",
-    "csv_schema" = "user_id:int;name:string;age:int",
-    "use_path_style" = "true"
+    "csv_schema" = "user_id:int;name:string;age:int"
 );
 ```
 
