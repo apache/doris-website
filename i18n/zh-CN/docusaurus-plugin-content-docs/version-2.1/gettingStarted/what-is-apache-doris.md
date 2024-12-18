@@ -37,7 +37,7 @@ Apache Doris 如今在中国乃至全球范围内都拥有着广泛的用户群�
 
 如下图所示，数据源经过各种数据集成和加工处理后，通常会入库到实时数据仓库 Doris 和离线湖仓（Hive、Iceberg 与 Hudi  等），广泛应用于 OLAP 分析场景。
 
-![image](https://github.com/user-attachments/assets/bdab636a-8999-40c2-92ec-17de75dc95d1)
+![Apache Doris 的使用场景](/images/getting-started/apache-doris-usage-scenarios-pipeline.png)
 
 
 Apache Doris 被广泛应用在以下场景中：
