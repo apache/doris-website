@@ -46,21 +46,7 @@ ${JSON.stringify(item, null, 2)}`,
     );
 }
 
-function NavbarContentLayout({
-    left,
-    right,
-    bottom,
-}: {
-    left: ReactNode;
-    right: ReactNode;
-    bottom: ReactNode;
-}) {
-    const [isEN, setIsEN] = useState(true);
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
-        }
-    }, [typeof window !== 'undefined' && location.pathname]);
+function NavbarContentLayout({ left, right, bottom }: { left: ReactNode; right: ReactNode; bottom: ReactNode }) {
     return (
         <>
             <div className="navbar__inner">
@@ -73,12 +59,16 @@ function NavbarContentLayout({
 }
 
 export default function NavbarContent(): ReactNode {
-    const [currentNavbar, setCurrentNavbar] = useState(NavBar.DOCS);
+    const location = useLocation();
+    const currentNavbar =  location.pathname.includes(NavBar.DOCS)
+    ? NavBar.DOCS
+    : location.pathname.split('/')[1] === NavBar.COMMUNITY || location.pathname.includes('zh-CN/community')
+    ? NavBar.COMMUNITY
+    : NavBar.COMMON;
+    const isEN = !location.pathname.includes('zh-CN');
+
     const mobileSidebar = useNavbarMobileSidebar();
     const { showSearchPageMobile } = useContext(DataContext);
-    const location = useLocation();
-
-    const [isEN, setIsEN] = useState(true);
     const [star, setStar] = useState<string>('');
 
     async function getGithubStar() {
@@ -120,20 +110,6 @@ export default function NavbarContent(): ReactNode {
             bottom: null,
         },
     };
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const pathname = location.pathname.split('/')[1];
-            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
-            if (location.pathname.includes(NavBar.DOCS)) {
-                setCurrentNavbar(NavBar.DOCS);
-            } else if (pathname === NavBar.COMMUNITY || location.pathname.includes('zh-CN/community')) {
-                setCurrentNavbar(NavBar.COMMUNITY);
-            } else {
-                setCurrentNavbar(NavBar.COMMON);
-            }
-        }
-    }, [typeof window !== 'undefined' && location.pathname]);
 
     useEffect(() => {
         getGithubStar();

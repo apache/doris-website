@@ -319,13 +319,16 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setFocused(true);
         handleSearchBarToggle?.(true);
     }, [handleSearchBarToggle, loadIndex]);
-    const onInputBlur = useCallback((e) => {
-        if(document.body.clientWidth < 996 && e.code === "Enter"){
-            return;
-        }
-        setFocused(false);
-        handleSearchBarToggle?.(false);
-    }, [handleSearchBarToggle]);
+    const onInputBlur = useCallback(
+        e => {
+            if (document.body.clientWidth < 996 && e.code === 'Enter') {
+                return;
+            }
+            setFocused(false);
+            handleSearchBarToggle?.(false);
+        },
+        [handleSearchBarToggle],
+    );
     const onInputMouseEnter = useCallback(() => {
         loadIndex();
     }, [loadIndex]);
@@ -440,7 +443,13 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 ) : (
                     isBrowser && (
                         <div className={styles.searchHintContainer}>
-                            <kbd className={styles.searchHint}>{isMac ? '⌘' : 'ctrl'}</kbd>
+                            <kbd
+                                className={clsx(styles.searchHint, {
+                                    [styles.macFontStyle]: isMac,
+                                })}
+                            >
+                                {isMac ? '⌘' : 'ctrl'}
+                            </kbd>
                             <kbd className={styles.searchHint}>K</kbd>
                         </div>
                     )
