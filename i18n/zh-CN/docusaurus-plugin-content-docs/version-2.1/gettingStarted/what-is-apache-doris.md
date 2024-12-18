@@ -54,17 +54,19 @@ Apache Doris 采用 MySQL 协议，高度兼容 MySQL 语法，支持标准 SQL�
 
 Apache Doris 存算一体架构精简易于维护，如下图所示，只有两类进程：
 
-- Frontend（FE）：主要负责用户请求的接入、查询解析规划、元数据的管理、节点管理相关工作。在生产环境中可以部署多个 FE 节点做容灾备份，每个 FE 中都会维护全量的元数据副本。FE 分为三种角色：
+- Frontend（FE）：主要负责用户请求的接入、查询解析规划、元数据的管理、节点管理相关工作。
+- 
+- Backend（BE）：主要负责数据存储、查询计划的执行。数据会被切分成分片，在 BE 中多副本存储。
+
+![整体架构和技术特点](/images/getting-started/apache-doris-technical-overview.png)
+
+在生产环境中可以部署多个 FE 节点做容灾备份，每个 FE 中都会维护全量的元数据副本。FE 分为三种角色：
 
   | 角色     | 功能                                                         |
   | -------- | ------------------------------------------------------------ |
   | Master   | FE Master 节点负责元数据的读写，在 Master 元数据发生变更后，会通过 BDB JE 协议同步给 Follower 或 Observer 节点。 |
   | Follower | Follower 节点负责读取元数据，在 Master 节点发生故障时，Follower 节点可以被选取作为新的 Master 节点。 |
   | Observer | Observer 节点负责读取元数据，主要为了增加集群的查询并发行。不参加集群选主。 |
-
-- Backend（BE）：主要负责数据存储、查询计划的执行。数据会被切分成分片，在 BE 中多副本存储。
-
-![整体架构和技术特点](/images/getting-started/apache-doris-technical-overview.png)
 
 FE 与 BE 进程都是可以横向扩展的，单集群可以支持到数百台机器，数十 PB 的存储容量。FE 与 BE 进程通过一致性协议来保证服务的高可用和数据的高可靠。存算一体架构高度集成，大幅降低了分布式系统的运维成本。
 
