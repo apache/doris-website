@@ -58,14 +58,16 @@ function NavbarContentLayout({ left, right, bottom }: { left: ReactNode; right: 
     );
 }
 
+const getCurrentNavBar = (pathname: string) => {
+    if (pathname.includes(NavBar.DOCS)) return NavBar.DOCS;
+    if (pathname.split('/')[1] === NavBar.COMMUNITY || pathname.includes('zh-CN/community')) return NavBar.COMMUNITY;
+    return NavBar.COMMON;
+};
+
 export default function NavbarContent(): ReactNode {
     const location = useLocation();
-    const currentNavbar =  location.pathname.includes(NavBar.DOCS)
-    ? NavBar.DOCS
-    : location.pathname.split('/')[1] === NavBar.COMMUNITY || location.pathname.includes('zh-CN/community')
-    ? NavBar.COMMUNITY
-    : NavBar.COMMON;
-    const isEN = !location.pathname.includes('zh-CN');
+    const [currentNavbar, setCurrentNavbar] = useState(getCurrentNavBar(location.pathname));
+    const [isEN, setIsEN] = useState(!location.pathname.includes('zh-CN'));
 
     const mobileSidebar = useNavbarMobileSidebar();
     const { showSearchPageMobile } = useContext(DataContext);
@@ -110,6 +112,20 @@ export default function NavbarContent(): ReactNode {
             bottom: null,
         },
     };
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const pathname = location.pathname.split('/')[1];
+            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
+            if (location.pathname.includes(NavBar.DOCS)) {
+                setCurrentNavbar(NavBar.DOCS);
+            } else if (pathname === NavBar.COMMUNITY || location.pathname.includes('zh-CN/community')) {
+                setCurrentNavbar(NavBar.COMMUNITY);
+            } else {
+                setCurrentNavbar(NavBar.COMMON);
+            }
+        }
+    }, [typeof window !== 'undefined' && location.pathname]);
 
     useEffect(() => {
         getGithubStar();
