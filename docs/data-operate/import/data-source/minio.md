@@ -28,13 +28,6 @@ Doris provides two ways to load files from MinIO:
 - Use S3 Load to load MinIO files into Doris, which is an asynchronous load method.
 - Use TVF to load MinIO files into Doris, which is a synchronous load method.
 
-:::caution Caution
-If you deployed MinIO in a local network and did not have TLS enabled, you need to explicitly add `http://` in the endpoint string.
-
-- S3 Load endpoint: `"AWS_ENDPOINT" = "http://localhost:9000"`
-- TVF endpoint: `"s3.endpoint" = "http://localhost:9000"`
-:::
-
 ## load with S3 Load
 
 Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual.md)
@@ -69,6 +62,12 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
 ### Step 3: Load data using S3 Load
+
+:::caution Caution
+If you deployed MinIO in a local network and did not have TLS enabled, you need to explicitly add `http://` in the endpoint string.
+
+- `"AWS_ENDPOINT" = "http://localhost:9000"`
+:::
 
 ```sql
 LOAD LABEL s3_load_2022_04_05
@@ -153,6 +152,12 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
 ### Step 3: Load data using TVF
+
+:::caution Caution
+If you deployed MinIO in a local network and did not have TLS enabled, you need to explicitly add `http://` in the endpoint string.
+
+- `"s3.endpoint" = "http://localhost:9000"`
+:::
 
 ```sql
 INSERT INTO test_s3load

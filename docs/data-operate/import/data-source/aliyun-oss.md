@@ -28,14 +28,6 @@ Doris provides two ways to load files from Aliyun OSS:
 - Use S3 Load to load Aliyun OSS files into Doris, which is an asynchronous load method.
 - Use TVF to load Aliyun OSS files into Doris, which is a synchronous load method.
 
-:::caution Caution
-The endpoint URLs for public and internal access are different.
-If the server and OSS are in the same region, it is recommended to use the internal endpoint link.
-
-- internal endpoint: `oss-cn-hangzhou-internal.aliyuncs.com`
-- public endpoint: `oss-cn-hangzhou.aliyuncs.com`
-:::
-
 ## load with S3 Load
 
 Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual.md)
@@ -71,6 +63,14 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
 ### Step 3: Load data using S3 Load
 
+:::caution Caution
+The endpoint URLs for public and internal access are different.
+If the server and OSS are in the same region, it is recommended to use the internal endpoint link.
+
+- internal endpoint: `oss-cn-hangzhou-internal.aliyuncs.com`
+- public endpoint: `oss-cn-hangzhou.aliyuncs.com`
+:::
+
 ```sql
 LOAD LABEL s3_load_2022_04_01
 (
@@ -83,7 +83,7 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "OSS",
-    "AWS_ENDPOINT" = "oss-cn-hangzhou-internal.aliyuncs.com",  
+    "AWS_ENDPOINT" = "oss-cn-hangzhou.aliyuncs.com",  
     "AWS_REGION" = "oss-cn-hangzhou",
     "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
     "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
@@ -154,6 +154,14 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
 ### Step 3: Load data using TVF
 
+:::caution Caution
+The endpoint URLs for public and internal access are different.
+If the server and OSS are in the same region, it is recommended to use the internal endpoint link.
+
+- internal endpoint: `oss-cn-hangzhou-internal.aliyuncs.com`
+- public endpoint: `oss-cn-hangzhou.aliyuncs.com`
+:::
+
 ```sql
 INSERT INTO test_s3load
 SELECT * FROM S3
@@ -161,7 +169,7 @@ SELECT * FROM S3
     "uri" = "s3://your_bucket_name/s3load_example.csv",
     'format' = 'csv',
     'provider' = 'OSS',
-    's3.endpoint' = 'oss-cn-hangzhou-internal.aliyuncs.com',
+    's3.endpoint' = 'oss-cn-hangzhou.aliyuncs.com',
     's3.region' = 'oss-cn-hangzhou',
     "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",

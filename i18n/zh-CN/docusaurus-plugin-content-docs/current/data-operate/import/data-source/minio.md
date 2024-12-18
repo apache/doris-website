@@ -28,13 +28,6 @@ Doris 提供两种方式从 MinIO 导入文件：
 - 使用 S3 Load 将 MinIO 文件导入到 Doris 中，这是一个异步的导入方式。
 - 使用 TVF 将 MinIO 文件导入到 Doris 中，这是一个同步的导入方式。
 
-:::caution 注意
-如果您在本地网络中部署了 MinIO 并且未启用 TLS，则需要在 endpoint 字符串中明确添加 `http://`。
-
-- S3 Load endpoint: `"AWS_ENDPOINT" = "http://localhost:9000"`
-- TVF endpoint: `"s3.endpoint" = "http://localhost:9000"`
-:::
-
 ## 使用 S3 Load 导入 
 
 使用 S3 Load 导入对象存储上的文件，详细步骤可以参考 [Broker Load 手册](../import-way/broker-load-manual.md)
@@ -69,6 +62,12 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
 ### 第 3 步：使用 S3 Load 导入数据
+
+:::caution 注意
+如果您在本地网络中部署了 MinIO 并且未启用 TLS，则需要在 endpoint 字符串中明确添加 `http://`。
+
+- `"AWS_ENDPOINT" = "http://localhost:9000"`
+:::
 
 ```sql
 LOAD LABEL s3_load_2022_04_01
@@ -153,6 +152,12 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
 ### 第 3 步：使用 TVF 导入数据
+
+:::caution 注意
+如果您在本地网络中部署了 MinIO 并且未启用 TLS，则需要在 endpoint 字符串中明确添加 `http://`。
+
+- `"s3.endpoint" = "http://localhost:9000"`
+:::
 
 ```sql
 INSERT INTO test_s3load

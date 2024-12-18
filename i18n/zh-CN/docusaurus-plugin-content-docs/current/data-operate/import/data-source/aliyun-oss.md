@@ -28,14 +28,6 @@ Doris 提供两种方式从 Aliyun OSS 导入文件：
 - 使用 S3 Load 将 Aliyun OSS 文件导入到 Doris 中，这是一个异步的导入方式。
 - 使用 TVF 将 Aliyun OSS 文件导入到 Doris 中，这是一个同步的导入方式。
 
-:::caution 注意
-阿里云 OSS 公网和内网的 endpoint 是不同的。
-如果服务器与 OSS 在同一个 region 下，建议使用内网的 endpoint 链接。
-
-- 内网 endpoint：`oss-cn-hangzhou-internal.aliyuncs.com`
-- 公网 endpoint：`oss-cn-hangzhou.aliyuncs.com`
-:::
-
 ## 使用 S3 Load 导入 
 
 使用 S3 Load 导入对象存储上的文件，详细步骤可以参考 [Broker Load 手册](../import-way/broker-load-manual.md)
@@ -71,6 +63,14 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
 ### 第 3 步：使用 S3 Load 导入数据
 
+:::caution 注意
+阿里云 OSS 公网和内网的 endpoint 是不同的。
+如果服务器与 OSS 在同一个 region 下，建议使用内网的 endpoint 链接。
+
+- 内网 endpoint：`oss-cn-hangzhou-internal.aliyuncs.com`
+- 公网 endpoint：`oss-cn-hangzhou.aliyuncs.com`
+:::
+
 ```sql
 LOAD LABEL s3_load_2022_04_01
 (
@@ -83,7 +83,7 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "OSS",
-    "AWS_ENDPOINT" = "oss-cn-hangzhou-internal.aliyuncs.com",  
+    "AWS_ENDPOINT" = "oss-cn-hangzhou.aliyuncs.com",  
     "AWS_REGION" = "oss-cn-hangzhou",
     "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
     "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
@@ -154,6 +154,14 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
 ### 第 3 步：使用 TVF 导入数据
 
+:::caution 注意
+阿里云 OSS 公网和内网的 endpoint 是不同的。
+如果服务器与 OSS 在同一个 region 下，建议使用内网的 endpoint 链接。
+
+- 内网 endpoint：`oss-cn-hangzhou-internal.aliyuncs.com`
+- 公网 endpoint：`oss-cn-hangzhou.aliyuncs.com`
+:::
+
 ```sql
 INSERT INTO test_s3load
 SELECT * FROM S3
@@ -161,7 +169,7 @@ SELECT * FROM S3
     "uri" = "s3://your_bucket_name/s3load_example.csv",
     'format' = 'csv',
     'provider' = 'OSS',
-    's3.endpoint' = 'oss-cn-hangzhou-internal.aliyuncs.com',
+    's3.endpoint' = 'oss-cn-hangzhou.aliyuncs.com',
     's3.region' = 'oss-cn-hangzhou',
     "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
