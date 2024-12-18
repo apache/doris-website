@@ -85,7 +85,8 @@ WITH S3
     "AWS_ENDPOINT" = "play.min.io:9000",  
     "AWS_REGION" = "us-east-1",
     "AWS_ACCESS_KEY" = "myminioadmin",
-    "AWS_SECRET_KEY" = "minio-secret-key-change-me"
+    "AWS_SECRET_KEY" = "minio-secret-key-change-me",
+    "use_path_style" = "true"
 )
 PROPERTIES
 (
@@ -165,7 +166,8 @@ SELECT * FROM S3
     "s3.access_key" = "myminioadmin",
     "s3.secret_key" = "minio-secret-key-change-me",
     "column_separator" = ",",
-    "csv_schema" = "user_id:int;name:string;age:int"
+    "csv_schema" = "user_id:int;name:string;age:int",
+    "use_path_style" = "true"
 );
 ```
 
