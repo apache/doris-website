@@ -162,7 +162,7 @@ SELECT * FROM S3
     's3.region' = 'us-west-2',
     "s3.access_key"= "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
-    "column_separator" = "|",
+    "column_separator" = ",",
     "csv_schema" = "user_id:int;name:string;age:int",
     "use_path_style" = "true"
 );
