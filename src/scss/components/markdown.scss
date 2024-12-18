@@ -24,7 +24,7 @@
     h4,
     h5,
     h6 {
-        color: #1d1d1d;
+        color: #00000a;
         margin-bottom: 0.3125rem;
         font-weight: 500;
     }
@@ -58,14 +58,10 @@
     h2,
     h3,
     h4,
-    p {
-        margin-bottom: calc(var(--custom-leading) * var(--custom-heading-rhythm-bottom)) !important;
-    }
-
+    p,
     ol,
-    ul,
-    li {
-        margin-bottom: calc(var(--custom-leading) * var(--custom-list-rhythm-bottom));
+    ul {
+        margin-bottom: calc(var(--custom-leading) * var(--custom-heading-rhythm-bottom)) !important;
     }
 
     .theme-code-block,
@@ -224,7 +220,7 @@
         list-style-type: square;
     }
 
-    li>* {
+    li > * {
         margin-bottom: calc(var(--custom-leading) * var(--custom-list-rhythm-bottom)) !important;
     }
 
