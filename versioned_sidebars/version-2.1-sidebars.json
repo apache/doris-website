@@ -58,9 +58,10 @@
                                     "type": "category",
                                     "label": "Deploying on Kubernetes",
                                     "items": [
-                                        "install/cluster-deployment/k8s-deploy/install-env",
-                                        "install/cluster-deployment/k8s-deploy/install-quickstart",
+                                        "install/cluster-deployment/k8s-deploy/install-doris-operator",
                                         "install/cluster-deployment/k8s-deploy/install-config-cluster",
+                                        "install/cluster-deployment/k8s-deploy/install-doris-cluster",
+                                        "install/cluster-deployment/k8s-deploy/access-cluster",
                                         "install/cluster-deployment/k8s-deploy/cluster-operation"
                                     ]
                                 },
@@ -149,6 +150,7 @@
                                         "data-operate/import/import-way/broker-load-manual",
                                         "data-operate/import/import-way/routine-load-manual",
                                         "data-operate/import/import-way/insert-into-manual",
+                                        "data-operate/import/import-way/insert-into-values-manual",
                                         "data-operate/import/import-way/mysql-load-manual",
                                         "data-operate/import/import-way/group-commit-manual"
                                     ]
@@ -168,7 +170,7 @@
                                 "data-operate/update/unique-update",
                                 "data-operate/update/update-of-unique-model",
                                 "data-operate/update/update-of-aggregate-model",
-                                "data-operate/update/unique-update-transaction"
+                                "data-operate/update/unique-update-concurrent-control"
                             ]
                         },
                         {

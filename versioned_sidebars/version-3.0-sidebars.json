@@ -63,8 +63,10 @@
                                             "type": "category",
                                             "label": "Compute storage coupled",
                                             "items": [
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-quickstart",
+                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator",
                                                 "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
+                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
+                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster",
                                                 "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
                                             ]
                                         },
@@ -166,6 +168,7 @@
                                         "data-operate/import/import-way/broker-load-manual",
                                         "data-operate/import/import-way/routine-load-manual",
                                         "data-operate/import/import-way/insert-into-manual",
+                                        "data-operate/import/import-way/insert-into-values-manual",
                                         "data-operate/import/import-way/mysql-load-manual",
                                         "data-operate/import/import-way/group-commit-manual"
                                     ]
@@ -185,7 +188,7 @@
                                 "data-operate/update/unique-update",
                                 "data-operate/update/update-of-unique-model",
                                 "data-operate/update/update-of-aggregate-model",
-                                "data-operate/update/unique-update-transaction"
+                                "data-operate/update/unique-update-concurrent-control"
                             ]
                         },
                         {

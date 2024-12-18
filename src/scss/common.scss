@@ -2,7 +2,6 @@
     .docs-wrapper {
         .navbar__inner {
             .navbar__items--right {
-                .docs-search,
                 .custom-navbar-item {
                     display: none;
                 }
@@ -48,6 +47,10 @@
         .versions {
             opacity: 0;
         }
+    }
+
+    .theme-doc-markdown{
+        padding-left: 0;
     }
 }
 

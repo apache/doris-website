@@ -56,9 +56,6 @@ p[class*='searchResultItemSummary'] {
 }
 
 @media screen and (max-width: 996px) {
-    .docs-search {
-        display: none;
-    }
     .docs-subnav-searchbar {
         .navbar-search {
             position: relative !important;
