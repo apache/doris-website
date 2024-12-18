@@ -66,8 +66,9 @@ Apache Doris 存算一体架构精简易于维护，如下图所示，只有两�
 - Backend（BE）：主要负责数据存储、查询计划的执行。数据会被切分成分片，在 BE 中多副本存储。
 
 FE 与 BE 进程都是可以横向扩展的，单集群可以支持到数百台机器，数十 PB 的存储容量。FE 与 BE 进程通过一致性协议来保证服务的高可用和数据的高可靠。存算一体架构高度集成，大幅降低了分布式系统的运维成本。
+![image](https://github.com/user-attachments/assets/34bfaa3c-087e-4883-af6d-1c174dee7128)
 
-![image](https://github.com/user-attachments/assets/33283503-e160-405e-a528-14140d69e240)
+
 
 
 ### 存算分离架构
