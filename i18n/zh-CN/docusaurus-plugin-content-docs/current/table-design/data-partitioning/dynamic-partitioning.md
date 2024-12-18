@@ -75,6 +75,10 @@ under the License.
 
   是否开启动态分区特性。可指定为 `TRUE` 或 `FALSE`。如果不填写，默认为 `TRUE`。如果为 `FALSE`，则 Doris 会忽略该表的动态分区规则。
 
+- `dynamic_partition.create_method`
+
+  分区创建由动态分区还是自动分区接管。默认为 `SCHEDULE`，即动态分区创建。当同时开启自动分区时，必须手动指定此项为 `AUTO`，此时动态分区不再为该表创建分区，均由自动分区功能接管。
+
 - `dynamic_partition.time_unit`**（必选参数）**
 
   动态分区调度的单位。可指定为 `HOUR`、`DAY`、`WEEK`、`MONTH`、`YEAR`。分别表示按小时、按天、按星期、按月、按年进行分区创建或删除。
@@ -354,7 +358,7 @@ Doris FE 中有固定的 dynamic partition 控制线程，持续以特定时间�
 
 因此，自动分区表在系统自动维护后，呈现的状态是：
 1. `START` 时间之前，除 `reserved_history_periods` 所指定范围以外，**不包含**任何分区；
-2. `END` 时间之后，保留所有**手动创建的**分区。
+2. `END` 时间之后，保留所有**已存在**分区。
 3. 除手动删除或意外丢失的分区外，表包含**特定范围**内的全部分区：
     - 如果 `create_history_partition` 为 `true`：
       - 若定义了 `history_partition_num`，则**特定范围**为 `[max(START, 当前时间 - history_partition_num * time_unit), END]`；
