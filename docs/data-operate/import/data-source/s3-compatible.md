@@ -153,8 +153,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
 ```sql
 INSERT INTO test_s3load
-SELECT * FROM
-FROM S3
+SELECT * FROM S3
 (
     "uri" = "s3://your_bucket_name/s3load_example.csv",
     'format' = 'csv',
