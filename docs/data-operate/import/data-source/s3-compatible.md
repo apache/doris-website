@@ -82,7 +82,7 @@ WITH S3
     "AWS_ENDPOINT" = "play.min.io:9000",  
     "AWS_REGION" = "us-west-2",
     "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY"="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
     "use_path_style" = "true"
 )
 PROPERTIES

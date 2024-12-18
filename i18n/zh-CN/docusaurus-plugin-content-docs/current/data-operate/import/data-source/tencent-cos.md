@@ -78,7 +78,7 @@ WITH S3
     "AWS_ENDPOINT" = "cos.ap-beijing.myqcloud.com",
     "AWS_REGION" = "ap-beijing",
     "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY"="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 )
 PROPERTIES
 (

@@ -68,7 +68,7 @@ Broker Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
         "provider" = "S3",
         "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
         "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-        "AWS_SECRET_KEY"="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+        "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
         "AWS_REGION" = "us-west-2"
     )
     PROPERTIES

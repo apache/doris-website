@@ -78,7 +78,7 @@ WITH S3
     "AWS_ENDPOINT" = "StorageAccountA.blob.core.windows.net",  
     "AWS_REGION" = "westus3",
     "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY"="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 )
 PROPERTIES
 (

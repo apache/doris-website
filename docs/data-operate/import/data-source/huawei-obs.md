@@ -78,7 +78,7 @@ WITH S3
     "AWS_ENDPOINT" = "obs.cn-north-1.myhuaweicloud.com",
     "AWS_REGION" = "cn-north-1",
     "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY"="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 )
 PROPERTIES
 (
