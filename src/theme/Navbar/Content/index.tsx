@@ -46,21 +46,7 @@ ${JSON.stringify(item, null, 2)}`,
     );
 }
 
-function NavbarContentLayout({
-    left,
-    right,
-    bottom,
-}: {
-    left: ReactNode;
-    right: ReactNode;
-    bottom: ReactNode;
-}) {
-    const [isEN, setIsEN] = useState(true);
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
-        }
-    }, [typeof window !== 'undefined' && location.pathname]);
+function NavbarContentLayout({ left, right, bottom }: { left: ReactNode; right: ReactNode; bottom: ReactNode }) {
     return (
         <>
             <div className="navbar__inner">
@@ -72,13 +58,19 @@ function NavbarContentLayout({
     );
 }
 
+const getCurrentNavBar = (pathname: string) => {
+    if (pathname.includes(NavBar.DOCS)) return NavBar.DOCS;
+    if (pathname.split('/')[1] === NavBar.COMMUNITY || pathname.includes('zh-CN/community')) return NavBar.COMMUNITY;
+    return NavBar.COMMON;
+};
+
 export default function NavbarContent(): ReactNode {
-    const [currentNavbar, setCurrentNavbar] = useState(NavBar.DOCS);
+    const location = useLocation();
+    const [currentNavbar, setCurrentNavbar] = useState(getCurrentNavBar(location.pathname));
+    const [isEN, setIsEN] = useState(!location.pathname.includes('zh-CN'));
+
     const mobileSidebar = useNavbarMobileSidebar();
     const { showSearchPageMobile } = useContext(DataContext);
-    const location = useLocation();
-
-    const [isEN, setIsEN] = useState(true);
     const [star, setStar] = useState<string>('');
 
     async function getGithubStar() {
