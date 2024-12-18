@@ -28,11 +28,11 @@ Doris provides two ways to load files from AWS S3:
 - Use S3 Load to load S3 files into Doris, which is an asynchronous load method.
 - Use TVF to load S3 files into Doris, which is a synchronous load method.
 
-# load with S3 Load
+## load with S3 Load
 
 Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual.md)
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create a CSV file s3load_example.csv The file is stored on S3 and its content is as follows:
 
@@ -49,7 +49,7 @@ Create a CSV file s3load_example.csv The file is stored on S3 and its content is
 10,Liam,64
 ```
 
-## Step 2: Create a table in Doris
+### Step 2: Create a table in Doris
 
 ```sql
 CREATE TABLE test_s3load(
@@ -61,7 +61,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-## Step 3: Load data using S3 Load
+### Step 3: Load data using S3 Load
 
 ```sql
 LOAD LABEL s3_load_2022_04_01
@@ -86,7 +86,7 @@ PROPERTIES
 );
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 SELECT * FROM test_s3load;
@@ -113,9 +113,9 @@ mysql> select * from test_s3load;
 10 rows in set (0.04 sec)
 ```
 
-# Load with TVF
+## Load with TVF
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create a CSV file s3load_example.csv The file is stored on S3 and its content is as follows:
 
@@ -132,7 +132,7 @@ Create a CSV file s3load_example.csv The file is stored on S3 and its content is
 10,Liam,64
 ```
 
-## Step 2: Create a table in Doris
+### Step 2: Create a table in Doris
 
 ```sql
 CREATE TABLE test_s3load(
@@ -144,7 +144,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-## Step 3: Load data using TVF
+### Step 3: Load data using TVF
 
 ```sql
 INSERT INTO test_s3load
@@ -162,7 +162,7 @@ FROM S3
 );
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 SELECT * FROM test_s3load;

@@ -28,11 +28,11 @@ Doris provides two ways to load files from HDFS:
 - Use HDFS Load to load HDFS files into Doris, which is an asynchronous load method.
 - Use TVF to load HDFS files into Doris, which is a synchronous load method.
 
-# load with HDFS Load
+## load with HDFS Load
 
 Use HDFS Load to import files on HDFS. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual.md)
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create a CSV file hdfsload_example.csv The file is stored on HDFS and its content is as follows:
 
@@ -49,7 +49,7 @@ Create a CSV file hdfsload_example.csv The file is stored on HDFS and its conten
 10,Liam,64
 ```
 
-## Step 2: Create a table in Doris
+### Step 2: Create a table in Doris
 
 ```sql
 CREATE TABLE test_hdfsload(
@@ -61,7 +61,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-## Step 3: Load data using HDFS Load
+### Step 3: Load data using HDFS Load
 
 ```sql
 LOAD LABEL hdfs_load_2022_04_01
@@ -83,7 +83,7 @@ PROPERTIES
 );
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 SELECT * FROM test_hdfsload;
@@ -110,9 +110,9 @@ mysql> select * from test_hdfsload;
 10 rows in set (0.04 sec)
 ```
 
-# Load with TVF
+## Load with TVF
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create a CSV file hdfsload_example.csv The file is stored on HDFS and its content is as follows:
 
@@ -129,7 +129,7 @@ Create a CSV file hdfsload_example.csv The file is stored on HDFS and its conten
 10,Liam,64
 ```
 
-## Step 2: Create a table in Doris
+### Step 2: Create a table in Doris
 
 ```sql
 CREATE TABLE test_hdfsload(
@@ -141,7 +141,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-## Step 3: Load data using TVF
+### Step 3: Load data using TVF
 
 ```sql
 INSERT INTO test_hdfsload
@@ -154,7 +154,7 @@ SELECT * FROM hdfs (
 );
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 SELECT * FROM test_hdfsload;

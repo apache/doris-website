@@ -28,7 +28,7 @@ Doris 提供两种方式从 Aliyun OSS 导入文件：
 - 使用 S3 Load 将 Aliyun OSS 文件导入到 Doris 中，这是一个异步的导入方式。
 - 使用 TVF 将 Aliyun OSS 文件导入到 Doris 中，这是一个同步的导入方式。
 
-# 注意
+## 注意
 
 注意阿里云 OSS 公网和内网的 endpoint 是不同的。
 
@@ -36,11 +36,11 @@ Doris 提供两种方式从 Aliyun OSS 导入文件：
 - 内网 endpoint: `oss-cn-hangzhou-internal.aliyuncs.com`
 - 公网 endpoint: `oss-cn-hangzhou.aliyuncs.com`
 
-# 使用 S3 Load 导入 
+## 使用 S3 Load 导入 
 
 使用 S3 Load 导入对象存储上的文件，详细步骤可以参考 [Broker Load 手册](../import-way/broker-load-manual.md)
 
-## 第 1 步：准备数据
+### 第 1 步：准备数据
 
 创建 CSV 文件 s3load_example.csv 文件存储在 Aliyun OSS 上，其内容如下：
 
@@ -57,7 +57,7 @@ Doris 提供两种方式从 Aliyun OSS 导入文件：
 10,Liam,64
 ```
 
-## 第 2 步：在 Doris 中创建表
+### 第 2 步：在 Doris 中创建表
 
 ```sql
 CREATE TABLE test_s3load(
@@ -69,7 +69,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-## 第 3 步：使用 S3 Load 导入数据
+### 第 3 步：使用 S3 Load 导入数据
 
 ```sql
 LOAD LABEL s3_load_2022_04_01
@@ -94,7 +94,7 @@ PROPERTIES
 );
 ```
 
-## 第 4 步：检查导入数据
+### 第 4 步：检查导入数据
 
 ```sql
 SELECT * FROM test_s3load;
@@ -121,9 +121,9 @@ mysql> select * from test_s3load;
 10 rows in set (0.04 sec)
 ```
 
-# 使用 TVF 导入
+## 使用 TVF 导入
 
-## 第 1 步：准备数据
+### 第 1 步：准备数据
 
 创建 CSV 文件 s3load_example.csv 文件存储在 Aliyun OSS 上，其内容如下：
 
@@ -140,7 +140,7 @@ mysql> select * from test_s3load;
 10,Liam,64
 ```
 
-## 第 2 步：在 Doris 中创建表
+### 第 2 步：在 Doris 中创建表
 
 ```sql
 CREATE TABLE test_s3load(
@@ -152,7 +152,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-## 第 3 步：使用 TVF 导入数据
+### 第 3 步：使用 TVF 导入数据
 
 ```sql
 INSERT INTO test_s3load
@@ -171,7 +171,7 @@ FROM S3
 );
 ```
 
-## 第 4 步：检查导入数据
+### 第 4 步：检查导入数据
 
 ```sql
 SELECT * FROM test_s3load;
