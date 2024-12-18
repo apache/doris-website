@@ -168,6 +168,7 @@
                                         "data-operate/import/data-source/aliyun-oss",
                                         "data-operate/import/data-source/huawei-obs",
                                         "data-operate/import/data-source/tencent-cos",
+                                        "data-operate/import/data-source/minio",
                                         "data-operate/import/data-source/s3-compatible"
                                     ]
                                 },
