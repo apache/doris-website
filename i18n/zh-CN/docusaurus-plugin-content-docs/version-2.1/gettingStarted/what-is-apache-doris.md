@@ -37,7 +37,8 @@ Apache Doris 如今在中国乃至全球范围内都拥有着广泛的用户群�
 
 如下图所示，数据源经过各种数据集成和加工处理后，通常会入库到实时数据仓库 Doris 和离线湖仓（Hive、Iceberg 与 Hudi  等），广泛应用于 OLAP 分析场景。
 
-![](static/U0egb7JmhoSFMOxVyMdcp8d0nmF.png)
+![image](https://github.com/user-attachments/assets/bdab636a-8999-40c2-92ec-17de75dc95d1)
+
 
 Apache Doris 被广泛应用在以下场景中：
 
@@ -49,11 +50,9 @@ Apache Doris 被广泛应用在以下场景中：
 
 ## 整体架构
 
-Apache Doris 采用 MySQL 协议，高度兼容 MySQL 语法，支持标准 SQL，用户可以通过各类客户端工具来访问 Apache Doris，并支持与 BI 工具的无缝对接。c 在部署 Apache 时，可以根据硬件环境与业务需求选择存算一体架构或存算分离架构。
+Apache Doris 采用 MySQL 协议，高度兼容 MySQL 语法，支持标准 SQL，用户可以通过各类客户端工具来访问 Apache Doris，并支持与 BI 工具的无缝对接。
 
-### 存算一体架构
-
-Apache Doris 存算一体架构精简易于维护，如下图所示，只有两类进程：
+Apache Doris 只有两类进程，易于管理维护：
 
 - Frontend（FE）：主要负责用户请求的接入、查询解析规划、元数据的管理、节点管理相关工作。在生产环境中可以部署多个 FE 节点做容灾备份，每个 FE 中都会维护全量的元数据副本。FE 分为三种角色：
 
@@ -66,17 +65,9 @@ Apache Doris 存算一体架构精简易于维护，如下图所示，只有两�
 
 FE 与 BE 进程都是可以横向扩展的，单集群可以支持到数百台机器，数十 PB 的存储容量。FE 与 BE 进程通过一致性协议来保证服务的高可用和数据的高可靠。存算一体架构高度集成，大幅降低了分布式系统的运维成本。
 
-![](static/OZcmbXQGLozpHcx2aDKcP4H9nfb.png)
+![image](https://github.com/user-attachments/assets/7f0989dc-94e3-47f8-a63f-874f9dbb7e1e)
 
-### 存算分离架构
 
-自 3.0 版本后，可以选择存算分离部署架构。Apache Doris 存算分离版使用统一的共享存储层作为数据存储空间。存储和计算分离，用户可以独立扩展存储容量和计算资源，从而实现最佳性能和成本效益。如下图所示，存算分离架构分为三层：
-
-- 元数据层：元数据层主要负责请求规划，查询解析规划与元数据的存储与管理；
-- 计算层：计算层由多个计算组组成，每个计算组可以作为一个独立的租户承担业务计算。在每一个计算组中，有多个无状态的 BE 节点，计算组中可以随时弹性扩缩容 BE 节点；
-- 存储层：存储层可以使用 S3、HDFS、OSS、COS、OBS、Minio、Ceph 等共享存储存放 Doris 的数据文件，包含包括 Segment 文件、反向索引的索引文件等。
-
-![](static/XcHWbHusPozIh1xSmstcugD9nsd.png)
 
 ## 技术特点
 
@@ -109,11 +100,13 @@ Apache Doris 也支持强一致的物化视图，物化视图的更新和选择�
 
 在查询引擎方面，Apache Doris 采用 MPP 的模型，节点间和节点内都并行执行，也支持多个大表的分布式 Shuffle Join，从而能够更好应对复杂查询。
 
-![查询引擎](https://cdnd.selectdb.com/zh-CN/assets/images/apache-doris-query-engine-1-9e2beb07704b905a1c44dae1c5b3bd04.png)
+![image](https://github.com/user-attachments/assets/cdf9db7c-d494-4492-961d-72fb5a14af3f)
+
 
 Apache Doris 查询引擎是向量化的查询引擎，所有的内存结构能够按照列式布局，能够达到大幅减少虚函数调用、提升 Cache 命中率，高效利用 SIMD 指令的效果。在宽表聚合场景下性能是非向量化引擎的 5-10 倍。
 
-![Doris 查询引擎是向量化](https://cdnd.selectdb.com/zh-CN/assets/images/apache-doris-query-engine-2-92a7d1bd709c09e437e90dfedf559803.png)
+![image](https://github.com/user-attachments/assets/60989ffd-b520-457a-9e7e-b21b1023dd33)
+
 
 Apache Doris 采用了自适应查询执行（Adaptive Query Execution）技术， 可以根据 Runtime Statistics 来动态调整执行计划，比如通过 Runtime Filter 技术能够在运行时生成 Filter 推到 Probe 侧，并且能够将 Filter 自动穿透到 Probe 侧最底层的 Scan 节点，从而大幅减少 Probe 的数据量，加速 Join 性能。Apache Doris 的 Runtime Filter 支持 In/Min/Max/Bloom Filter。
 
