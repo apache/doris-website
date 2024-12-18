@@ -29,10 +29,10 @@ Doris provides two ways to load files from Aliyun OSS:
 - Use TVF to load Aliyun OSS files into Doris, which is a synchronous load method.
 
 :::caution Caution
-The endpoint URLs for public and intranet access are different.
+The endpoint URLs for public and internal access are different.
+If the server and OSS are in the same region, it is recommended to use the internal endpoint link.
 
-For example:
-- intranet endpoint: `oss-cn-hangzhou-internal.aliyuncs.com`
+- internal endpoint: `oss-cn-hangzhou-internal.aliyuncs.com`
 - public endpoint: `oss-cn-hangzhou.aliyuncs.com`
 :::
 

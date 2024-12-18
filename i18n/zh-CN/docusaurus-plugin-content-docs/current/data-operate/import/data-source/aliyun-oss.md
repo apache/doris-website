@@ -30,8 +30,8 @@ Doris 提供两种方式从 Aliyun OSS 导入文件：
 
 :::caution 注意
 阿里云 OSS 公网和内网的 endpoint 是不同的。
+如果服务器与 OSS 在同一个 region 下，建议使用内网的 endpoint 链接。
 
-例如：
 - 内网 endpoint：`oss-cn-hangzhou-internal.aliyuncs.com`
 - 公网 endpoint：`oss-cn-hangzhou.aliyuncs.com`
 :::
