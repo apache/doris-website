@@ -160,7 +160,7 @@ SELECT * FROM S3
     'provider' = 'S3',
     's3.endpoint' = 'play.min.io:9000',
     's3.region' = 'us-west-2',
-    "s3.access_key"= "AKIAIOSFODNN7EXAMPLE",
+    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
     "column_separator" = ",",
     "csv_schema" = "user_id:int;name:string;age:int",

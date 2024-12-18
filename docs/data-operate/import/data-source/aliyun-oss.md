@@ -163,7 +163,7 @@ SELECT * FROM S3
     'provider' = 'OSS',
     's3.endpoint' = 'oss-cn-hangzhou-internal.aliyuncs.com',
     's3.region' = 'oss-cn-hangzhou',
-    "s3.access_key"= "AKIAIOSFODNN7EXAMPLE",
+    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
     "column_separator" = ",",
     "csv_schema" = "user_id:int;name:string;age:int"
