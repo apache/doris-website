@@ -52,7 +52,9 @@
                             "type": "category",
                             "label": "Installation Preparation",
                             "items": [
-                                "install/preparation/env-checking"
+                                "install/preparation/env-checking",
+                                "install/preparation/cluser-planning",
+                                "install/preparation/os-checking"
                             ]
                         },
                         {
