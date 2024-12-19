@@ -165,17 +165,39 @@ Kubernetes 部署中，建议使用 FQDN 模式，启动配置中应添加 enabl
 #### 第 1 步：配置并部署 ConfigMap   
 以下定义了名为 `be-conf` ConfigMap，该配置可供 Doris BE 使用：
 ```yaml
-beSpec:
-  persistentVolumes:
-  - mountPath: /opt/apache-doris/be/log
-    name: belog
-    persistentVolumeClaimSpec:
-      storageClassName: ${your_storageclass}
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: ${storageSize}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: be-conf
+  labels:
+    app.kubernetes.io/component: be
+data:
+  be.conf: |
+    CUR_DATE=`date +%Y%m%d-%H%M%S`
+
+    PPROF_TMPDIR="$DORIS_HOME/log/"
+
+    JAVA_OPTS="-Xmx1024m -DlogPath=$DORIS_HOME/log/jni.log -Xloggc:$DORIS_HOME/log/be.gc.log.$CUR_DATE -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -DJDBC_MIN_POOL=1 -DJDBC_MAX_POOL=100 -DJDBC_MAX_IDLE_TIME=300000 -DJDBC_MAX_WAIT_TIME=5000"
+
+    # For jdk 9+, this JAVA_OPTS will be used as default JVM options
+    JAVA_OPTS_FOR_JDK_9="-Xmx1024m -DlogPath=$DORIS_HOME/log/jni.log -Xlog:gc:$DORIS_HOME/log/be.gc.log.$CUR_DATE -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -DJDBC_MIN_POOL=1 -DJDBC_MAX_POOL=100 -DJDBC_MAX_IDLE_TIME=300000 -DJDBC_MAX_WAIT_TIME=5000"
+
+    # since 1.2, the JAVA_HOME need to be set to run BE process.
+    # JAVA_HOME=/path/to/jdk/
+
+    # https://github.com/apache/doris/blob/master/docs/zh-CN/community/developer-guide/debug-tool.md#jemalloc-heap-profile
+    # https://jemalloc.net/jemalloc.3.html
+    JEMALLOC_CONF="percpu_arena:percpu,background_thread:true,metadata_thp:auto,muzzy_decay_ms:15000,dirty_decay_ms:15000,oversize_threshold:0,lg_tcache_max:20,prof:false,lg_prof_interval:32,lg_prof_sample:19,prof_gdump:false,prof_accum:false,prof_leak:false,prof_final:false"
+    JEMALLOC_PROF_PRFIX=""
+
+    # INFO, WARNING, ERROR, FATAL
+    sys_log_level = INFO
+
+    # ports for admin, web, heartbeat service
+    be_port = 9060
+    webserver_port = 8040
+    heartbeat_service_port = 9050
+    brpc_port = 8060
 ```
 使用 ConfigMap 挂载 BE 启动配置信息时，配置信息对应的 key 必须为 `be.conf` 。完成配置文件后，将其部署到目标 `DorisCluster` 资源需要部署的命名空间。
 ```shell
