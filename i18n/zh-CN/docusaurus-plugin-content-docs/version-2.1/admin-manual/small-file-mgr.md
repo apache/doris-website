@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Workload Group",
+    "title": "文件管理器",
     "language": "zh-CN"
 }
 ---

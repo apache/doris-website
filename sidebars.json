@@ -431,18 +431,23 @@
                 },
                 {
                     "type": "category",
-                    "label": "Managing Resource",
+                    "label": "Managing Workload",
                     "items": [
-                        "admin-manual/resource-admin/workload-group",
-                        "admin-manual/resource-admin/group-workload-groups",
-                        "admin-manual/resource-admin/workload-policy",
-                        "admin-manual/resource-admin/workload-analysis",
-                        "admin-manual/resource-admin/multi-tenant",
-                        "admin-manual/resource-admin/workload-fusing",
-                        "admin-manual/resource-admin/use-workload-mem-limit",
-                        "admin-manual/resource-admin/use-workload-cpu-limit",
-                        "admin-manual/resource-admin/use-workload-local-io-limit",
-                        "admin-manual/resource-admin/use-workload-remote-io-limit"
+                        "admin-manual/workload-management/workload-management-summary",
+                        "admin-manual/workload-management/workload-group",
+                        "admin-manual/workload-management/resource-group",
+                        "admin-manual/workload-management/compute-group",
+                        "admin-manual/workload-management/sql-blocking",
+                        "admin-manual/workload-management/kill-query",
+                        "admin-manual/workload-management/job-scheduler",
+                        {
+                            "type": "category",
+                            "label": "Best Practices",
+                            "items": [
+                                "admin-manual/workload-management/best-practice/group-workload-groups",
+                                "admin-manual/workload-management/best-practice/workload-group-best-practice"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -1055,6 +1060,9 @@
                                 "sql-manual/sql-functions/string-functions/trim",
                                 "sql-manual/sql-functions/string-functions/ltrim",
                                 "sql-manual/sql-functions/string-functions/rtrim",
+                                "sql-manual/sql-functions/string-functions/trim_in",
+                                "sql-manual/sql-functions/string-functions/ltrim_in",
+                                "sql-manual/sql-functions/string-functions/rtrim_in",
                                 "sql-manual/sql-functions/string-functions/null-or-empty",
                                 "sql-manual/sql-functions/string-functions/not-null-or-empty",
                                 "sql-manual/sql-functions/string-functions/hex",
@@ -1285,6 +1293,17 @@
                                 "sql-manual/sql-functions/json-functions/json-replace",
                                 "sql-manual/sql-functions/json-functions/json-set",
                                 "sql-manual/sql-functions/json-functions/json-keys"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "MAP Functions",
+                            "items": [
+                                "sql-manual/sql-functions/map-functions/map",
+                                "sql-manual/sql-functions/map-functions/map-keys",
+                                "sql-manual/sql-functions/map-functions/map-values",
+                                "sql-manual/sql-functions/map-functions/map-contains-key",
+                                "sql-manual/sql-functions/map-functions/map-contains-value"
                             ]
                         },
                         {

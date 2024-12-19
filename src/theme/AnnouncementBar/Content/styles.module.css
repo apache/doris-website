@@ -8,3 +8,7 @@
   color: inherit;
   text-decoration: underline;
 }
+
+.content a:active {
+  background-color: #3C2FD4;
+}

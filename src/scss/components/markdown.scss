@@ -220,6 +220,7 @@
         list-style-type: square;
     }
 
+    li,
     li > * {
         margin-bottom: calc(var(--custom-leading) * var(--custom-list-rhythm-bottom)) !important;
     }
