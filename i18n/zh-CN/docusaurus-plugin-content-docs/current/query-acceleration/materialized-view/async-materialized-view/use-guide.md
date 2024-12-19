@@ -104,7 +104,7 @@ under the License.
   ) PARTITION BY RANGE(l_ordertime) (
     FROM 
       ('2024-05-01') TO ('2024-06-30') INTERVAL 1 DAY
-  ) DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3 PROPERTIES ("replication_num" = "1"); 
+  ) DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3; 
   
     insert into lineitem values      (1, 2, 3, 4, '2024-05-01 01:45:05', 5.5, 6.5, 0.1, 8.5, 'o', 'k', '2024-05-01', '2024-05-01', '2024-05-01', 'a', 'b', 'yyyyyyyyy'),    
      (1, 2, 3, 4, '2024-05-15 02:35:05', 5.5, 6.5, 0.15, 8.5, 'o', 'k', '2024-05-15', '2024-05-15', '2024-05-15', 'a', 'b', 'yyyyyyyyy'),     
@@ -121,7 +121,7 @@ under the License.
     ps_availqty INTEGER NOT NULL, 
     ps_supplycost DECIMALV3(15, 2) NOT NULL, 
     ps_comment VARCHAR(199) NOT NULL
-  ) DUPLICATE KEY(ps_partkey, ps_suppkey) DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3 PROPERTIES ("replication_num" = "1"); 
+  ) DUPLICATE KEY(ps_partkey, ps_suppkey) DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3; 
   
   
       insert into partsupp values     
@@ -163,7 +163,6 @@ CREATE MATERIALIZED VIEW rollup_partition_mv
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL 
 partition by(order_date) 
 DISTRIBUTED BY RANDOM BUCKETS 2 
-PROPERTIES ('replication_num' = '1') 
 AS 
 SELECT 
   l_linestatus, 
@@ -268,7 +267,6 @@ GROUP BY
 CREATE MATERIALIZED VIEW common_agg_mv
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES  ('replication_num' = '1')
 AS 
 SELECT 
   l_linestatus, 
@@ -357,7 +355,6 @@ FROM
 CREATE MATERIALIZED VIEW common_join_mv
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES  ('replication_num' = '1')
 AS 
 SELECT 
   l_linestatus, 
@@ -375,7 +372,6 @@ FROM
 CREATE MATERIALIZED VIEW target_agg_mv
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES  ('replication_num' = '1')
 AS 
 SELECT 
   l_linestatus, 
@@ -417,7 +413,7 @@ PARTITION BY RANGE(time)
     FROM ("2024-07-01 00:00:00") TO ("2024-07-15 00:00:00") INTERVAL 1 HOUR                                                                     
 )     
 DISTRIBUTED BY HASH(event_id)
-BUCKETS 3 PROPERTIES ("replication_num" = "1");
+BUCKETS 3;
 ```
 
 物化视图可以按照分钟聚合数据，这样也能达到一定的聚合效果。例如：
@@ -516,7 +512,6 @@ GROUP BY n_name, month;
 CREATE MATERIALIZED VIEW dwd_order_detail
 BUILD IMMEDIATE REFRESH AUTO ON COMMIT
 DISTRIBUTED BY RANDOM BUCKETS 16
-PROPERTIES ('replication_num' = '1')
 AS
 select
 o.o_orderkey,
@@ -545,7 +540,6 @@ join lineitem l on o.o_orderkey = l.l_orderkey;
 CREATE MATERIALIZED VIEW dws_daily_sales
 BUILD IMMEDIATE REFRESH AUTO ON COMMIT
 DISTRIBUTED BY RANDOM BUCKETS 16
-PROPERTIES ('replication_num' = '1')
 AS
 select
 date_trunc(o_orderdate, 'month') as month,
@@ -602,7 +596,6 @@ use hive_mv_db;
 CREATE MATERIALIZED VIEW external_hive_mv
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 DISTRIBUTED BY RANDOM BUCKETS 12
-PROPERTIES ('replication_num' = '1')
 AS
 SELECT
 n_name,
@@ -677,7 +670,6 @@ Doris 暂无法感知除 Hive 外的其他外表数据变更。当外表数据�
 CREATE MATERIALIZED VIEW common_schedule_join_mv
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 2 HOUR
 DISTRIBUTED BY RANDOM BUCKETS 16
-PROPERTIES  ('replication_num' = '1')
 AS
 SELECT
 l_linestatus,
@@ -701,10 +693,7 @@ linestatus     CHAR(1) NOT NULL,
 sale           DECIMALV3(15,2) NOT NULL
 )
 DUPLICATE KEY(orderdate, shippriority)
-DISTRIBUTED BY HASH(shippriority) BUCKETS 3
-PROPERTIES (
-"replication_num" = "1"
-);
+DISTRIBUTED BY HASH(shippriority) BUCKETS 3;
 ```
 
 B. common_schedule_join_mv:
@@ -712,7 +701,6 @@ B. common_schedule_join_mv:
 CREATE MATERIALIZED VIEW common_schedule_join_mv
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 2 HOUR
 DISTRIBUTED BY RANDOM BUCKETS 16
-PROPERTIES  ('replication_num' = '1')
 AS
 SELECT
 l_linestatus,

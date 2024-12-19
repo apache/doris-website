@@ -60,9 +60,8 @@ CREATE TABLE IF NOT EXISTS lineitem (
     )
     DUPLICATE KEY(l_orderkey, l_partkey, l_suppkey, l_linenumber)
     PARTITION BY RANGE(l_shipdate)
-(FROM ('2023-10-17') TO ('2023-11-01') INTERVAL 1 DAY)
-    DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3
-    PROPERTIES ("replication_num" = "1");
+    (FROM ('2023-10-17') TO ('2023-11-01') INTERVAL 1 DAY)
+    DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3;
 
 insert into lineitem values
 (1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-17', '2023-10-17', '2023-10-17', 'a', 'b', 'yyyyyyyyy'),
@@ -82,8 +81,7 @@ CREATE TABLE IF NOT EXISTS orders  (
     DUPLICATE KEY(o_orderkey, o_custkey)
     PARTITION BY RANGE(o_orderdate)(
     FROM ('2023-10-17') TO ('2023-11-01') INTERVAL 1 DAY)
-    DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3
-    PROPERTIES ("replication_num" = "1");
+    DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3;
 
     insert into orders values
     (1, 1, 'o', 9.5, '2023-10-17', 'a', 'b', 1, 'yy'),
@@ -98,10 +96,7 @@ CREATE TABLE IF NOT EXISTS orders  (
       ps_comment     VARCHAR(199) NOT NULL 
     )
     DUPLICATE KEY(ps_partkey, ps_suppkey)
-    DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3
-    PROPERTIES (
-      "replication_num" = "1"
-    );
+    DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3;
 
     insert into partsupp values
     (2, 3, 9, 10.01, 'supply1'),
@@ -110,10 +105,13 @@ CREATE TABLE IF NOT EXISTS orders  (
 ```
 
 #### 全量物化视图
+
+触发方式是手动，刷新方式是 AUTO，
+
 ```sql
-CREATE MATERIALIZED VIEW mv_1 BUILD IMMEDIATE REFRESH AUTO ON MANUAL    
+CREATE MATERIALIZED VIEW mv_1_0
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL    
 DISTRIBUTED BY RANDOM BUCKETS 2   
-PROPERTIES ('replication_num' = '1')   
 AS   
 SELECT   
   l_linestatus,   
@@ -124,20 +122,75 @@ FROM
   LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
+延迟刷新，首次刷新时间是 `2024-12-01 20:30:00`, 并且每隔一天刷新一次。如果 `BUILD DEFERRED` 指定为 `BUILD IMMEDIATE` 创建
+完物化视图会立即刷新一次。之后从 `2024-12-01 20:30:00` 每隔一天刷新一次
+注意 STARTS 的时间要晚于当前的时间。
+
+```sql
+CREATE MATERIALIZED VIEW mv_1_1
+BUILD DEFERRED
+REFRESH COMPLETE
+ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'  
+PROPERTIES ('replication_num' = '1')   
+AS   
+SELECT   
+l_linestatus,   
+to_date(o_orderdate) as date_alias,   
+o_shippriority   
+FROM   
+orders   
+LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+```
+
+刷新方式是触发式，当 orders 或者 lineitem 表数据发生变化的时候，会自动触发物化视图的刷新，
+注意：如果基表的数据频繁变更，不太适合使用此种方式刷新，因为会频繁构建物化刷新任务，消耗过多资源。
+
+```sql
+CREATE MATERIALIZED VIEW mv_1_1
+BUILD IMMEDIATE
+REFRESH COMPLETE
+ON COMMIT
+PROPERTIES ('replication_num' = '1')   
+AS   
+SELECT   
+l_linestatus,   
+to_date(o_orderdate) as date_alias,   
+o_shippriority   
+FROM   
+orders   
+LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+```
+
 #### 分区物化视图
 
 创建分区物化视图时，需要指定 `partition by`，对于分区字段引用的表达式，仅允许使用 `date_trunc` 函数和标识符。以下语句是符合要求的：
 分区字段引用的列仅使用了 `date_trunc` 函数。
 
 ```sql
-CREATE MATERIALIZED VIEW mv_2 BUILD IMMEDIATE REFRESH AUTO ON MANUAL   
+CREATE MATERIALIZED VIEW mv_2_0 BUILD IMMEDIATE REFRESH AUTO ON MANUAL   
 partition by (order_date_month)   
 DISTRIBUTED BY RANDOM BUCKETS 2   
-PROPERTIES ('replication_num' = '1')   
 AS   
 SELECT   
   l_linestatus,
   date_trunc(o_orderdate, 'month') as order_date_month,   
+  o_shippriority   
+FROM   
+  orders   
+  LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+```
+
+如下语句创建分区物化视图会失败，因为分区字段 `order_date_month` 使用了 `date_add()` 函数
+报错 `because column to check use invalid implicit expression, invalid expression is days_add(o_orderdate#4, 2)`
+
+```sql
+CREATE MATERIALIZED VIEW mv_2_1 BUILD IMMEDIATE REFRESH AUTO ON MANUAL   
+partition by (order_date_month)   
+DISTRIBUTED BY RANDOM BUCKETS 2   
+AS   
+SELECT   
+  l_linestatus,
+  date_trunc(date_add(o_orderdate, INTERVAL 2 DAY), 'month') as order_date_month,   
   o_shippriority   
 FROM   
   orders   
@@ -178,7 +231,6 @@ CREATE MATERIALIZED VIEW mv_hive
 BUILD DEFERRED REFRESH AUTO ON MANUAL
 partition by(`year`)
 DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES ('replication_num' = '1')
 AS
 SELECT k1,year,region FROM hive1;
 ```
@@ -190,7 +242,6 @@ CREATE MATERIALIZED VIEW mv_hive2
 BUILD DEFERRED REFRESH AUTO ON MANUAL
 partition by(`region`)
 DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES ('replication_num' = '1')
 AS
 SELECT k1,year,region FROM hive1;
 ```
@@ -218,10 +269,7 @@ PARTITION p26 VALUES [("2024-03-26"),("2024-03-27")),
 PARTITION p27 VALUES [("2024-03-27"),("2024-03-28")),
 PARTITION p28 VALUES [("2024-03-28"),("2024-03-29"))
 )
-DISTRIBUTED BY HASH(`k1`) BUCKETS 2
-PROPERTIES (
-'replication_num' = '1'
-);
+DISTRIBUTED BY HASH(`k1`) BUCKETS 2;
 ```
 
 物化视图的创建语句如以下举例，代表物化视图只关注最近一天的数据。若当前时间为 2024-03-28 xx:xx:xx，这样物化视图会仅有一个分区 `[("2024-03-28"),("2024-03-29")]`：
@@ -232,7 +280,6 @@ BUILD DEFERRED REFRESH AUTO ON MANUAL
 partition by(`k2`)
 DISTRIBUTED BY RANDOM BUCKETS 2
 PROPERTIES (
-'replication_num' = '1',
 'partition_sync_limit'='1',
 'partition_sync_time_unit'='DAY'
 )
@@ -269,8 +316,7 @@ SELECT * FROM t1;
     PARTITION p_20200102 VALUES [("2020-01-02"),("2020-01-03")),
     PARTITION p_20200201 VALUES [("2020-02-01"),("2020-02-02"))
     )
-    DISTRIBUTED BY HASH(`k1`) BUCKETS 2
-    PROPERTIES ('replication_num' = '1') ;
+    DISTRIBUTED BY HASH(`k1`) BUCKETS 2;
     ```
 
   若物化视图的创建语句如下，则该物化视图将包含两个分区：`[("2020-01-01","2020-02-01")] `和` [("2020-02-01","2020-03-01")]`
@@ -280,9 +326,6 @@ SELECT * FROM t1;
         BUILD DEFERRED REFRESH AUTO ON MANUAL
         partition by (date_trunc(`k2`,'month'))
         DISTRIBUTED BY RANDOM BUCKETS 2
-        PROPERTIES (
-        'replication_num' = '1'
-        )
         AS
         SELECT * FROM t1;
     ```
@@ -294,9 +337,6 @@ SELECT * FROM t1;
         BUILD DEFERRED REFRESH AUTO ON MANUAL
         partition by (date_trunc(`k2`,'year'))
         DISTRIBUTED BY RANDOM BUCKETS 2
-        PROPERTIES (
-        'replication_num' = '1'
-        )
         AS
         SELECT * FROM t1;
     ```
@@ -340,7 +380,6 @@ SHOW CREATE MATERIALIZED VIEW mv_1;
 CREATE MATERIALIZED VIEW mv_5
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
 DISTRIBUTED BY RANDOM BUCKETS 3
-PROPERTIES ('replication_num' = '1')
 AS
 SELECT t1.l_linenumber,
        o_custkey,
@@ -418,7 +457,6 @@ JOIN 改写指的是查询和物化使用的表相同，可以在物化视图和
 CREATE MATERIALIZED VIEW mv2
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
 DISTRIBUTED BY RANDOM BUCKETS 3
-PROPERTIES ('replication_num' = '1')
 AS
 SELECT t1.l_linenumber,
        o_custkey,
@@ -451,7 +489,6 @@ WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 CREATE MATERIALIZED VIEW mv3
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
 DISTRIBUTED BY RANDOM BUCKETS 3
-PROPERTIES ('replication_num' = '1')
 AS
 SELECT
     l_shipdate, l_suppkey, o_orderdate,
@@ -501,7 +538,6 @@ o_orderdate;
 CREATE MATERIALIZED VIEW mv4
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
 DISTRIBUTED BY RANDOM BUCKETS 3
-PROPERTIES ('replication_num' = '1')
 AS
 SELECT
     o_shippriority, o_comment,
@@ -549,7 +585,6 @@ o_comment;
 CREATE MATERIALIZED VIEW mv5
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
 DISTRIBUTED BY RANDOM BUCKETS 3
-PROPERTIES ('replication_num' = '1')
 AS
 SELECT
     l_shipdate, o_orderdate, l_partkey, l_suppkey,
@@ -611,7 +646,6 @@ l_suppkey;
 CREATE MATERIALIZED VIEW mv5_1
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
 DISTRIBUTED BY RANDOM BUCKETS 3
-PROPERTIES ('replication_num' = '1')
 AS
 select o_orderstatus, o_orderdate, o_orderpriority,
        sum(o_totalprice) as sum_total,
@@ -649,7 +683,6 @@ CREATE MATERIALIZED VIEW mv7
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 partition by(l_shipdate)
 DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES ('replication_num' = '1') 
 as
 select l_shipdate, o_orderdate, l_partkey,
        l_suppkey, sum(o_totalprice) as sum_total
@@ -716,7 +749,6 @@ group by
 CREATE MATERIALIZED VIEW mv8_0_inner_mv
 BUILD IMMEDIATE REFRESH COMPLETE ON MANUAL
 DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES ('replication_num' = '1')
 AS
 select
 l_linenumber,
@@ -853,7 +885,6 @@ explain memo plan <query_sql>
     ```sql
     CREATE MATERIALIZED VIEW mv_6
     REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
-    PROPERTIES ('replication_num' = '1')
     AS
     SELECT * FROM lineitem;
     ```
@@ -864,7 +895,6 @@ explain memo plan <query_sql>
     CREATE MATERIALIZED VIEW mv_7
     REFRESH AUTO ON SCHEDULE EVERY 10 hour
     PARTITION by(l_shipdate)
-    PROPERTIES ('replication_num' = '1')
     AS
     SELECT * FROM lineitem;
     ```
@@ -883,7 +913,6 @@ explain memo plan <query_sql>
 CREATE MATERIALIZED VIEW mv_8
     REFRESH AUTO ON COMMIT
     PARTITION by(l_shipdate)
-    PROPERTIES ('replication_num' = '1')
     AS
 SELECT * FROM lineitem;
 ```

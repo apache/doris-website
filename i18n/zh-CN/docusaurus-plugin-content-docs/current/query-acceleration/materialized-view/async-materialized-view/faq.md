@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS orders (
 ) DUPLICATE KEY(o_orderkey, o_custkey) PARTITION BY RANGE(o_orderdate) (
   FROM 
     ('2024-05-01') TO ('2024-06-30') INTERVAL 1 DAY
-) DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3 PROPERTIES ("replication_num" = "1");
+) DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3;
 
 
 CREATE TABLE IF NOT EXISTS lineitem (
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS lineitem (
 ) DUPLICATE KEY(
   l_orderkey, l_partkey, l_suppkey, 
   l_linenumber
-) DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3 PROPERTIES ("replication_num" = "1");
+) DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3;
 ```
 
 物化视图定义如下，可以进行分区增量更新。如果选择`orders.o_orderdate`作为物化视图的分区字段，那么它是可以支持增量分区更新的。相反，如果使用了`lineitem.l_shipdate`，则不能实现增量更新。
@@ -143,7 +143,12 @@ CREATE TABLE IF NOT EXISTS lineitem (
 2. `lineitem.l_shipdate`是`outer join`操作中产生`null`值那一端的列。
 
 ```sql
-CREATE MATERIALIZED VIEW mv_1 BUILD IMMEDIATE REFRESH AUTO ON MANUAL partition by(o_orderdate) DISTRIBUTED BY RANDOM BUCKETS 2 PROPERTIES ('replication_num' = '1') AS 
+CREATE MATERIALIZED VIEW mv_1 
+       BUILD IMMEDIATE 
+       REFRESH AUTO ON MANUAL 
+       partition by(o_orderdate) 
+       DISTRIBUTED BY RANDOM BUCKETS 2
+       AS 
 SELECT 
   l_linestatus, 
   sum(
@@ -193,7 +198,6 @@ CREATE MATERIALIZED VIEW mv11
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 partition by(l_shipdate)
 DISTRIBUTED BY HASH(l_orderkey) BUCKETS 10
-PROPERTIES ('replication_num' = '1') 
 AS
 SELECT l_shipdate, l_orderkey, O_ORDERDATE, count(*)
 FROM lineitem  
