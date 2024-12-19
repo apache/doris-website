@@ -24,14 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 在存算分离架构下，可以将一个或多个计算节点 (BE) 组成一个计算组 (Compute Group)。本文档介绍如何使用计算组，其中涉及的操作包括：
 
 - 查看所有计算组
 - 计算组授权
 - 在用户级别绑定计算组 (`default_compute_group`) 以达到用户级别的隔离效果
 
-*注意*
+:::caution 注意
 3.0.2 之前的版本中叫做计算集群（Compute Cluster）。
+:::
 
 ## 查看所有计算组
 
@@ -43,7 +45,7 @@ SHOW COMPUTE GROUPS;
 
 ## 添加计算组
 
-使用[Add BE ](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND.md)命令添加 BE 并为 BE 指定计算组，示例：
+使用[ADD BE ](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND.md)命令添加 BE 并为 BE 指定计算组，示例：
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");
@@ -58,16 +60,16 @@ ALTER SYSTEM ADD BACKEND 'host:9050';
 ## 授予计算组访问权限
 
 ```sql
-GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user}
+GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user};
 ```
 
 ## 撤销计算组访问权限
 
 ```sql
-REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user}
+REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user};
 ```
 
-## 设置默认计算组 
+## 设置默认计算组
 
 为当前用户设置默认计算组：
 
@@ -102,13 +104,21 @@ SHOW COMPUTE GROUPS;
 :::info 备注
 
 - 若当前用户拥有 Admin 角色，例如：`CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin"`，则：
-  - 可以为自身以及其他用户设置默认计算组；
-  - 可以查看自身以及其他用户的 `PROPERTY`。
+    
+    - 可以为自身以及其他用户设置默认计算组；
+    
+    - 可以查看自身以及其他用户的 `PROPERTY`。
+
 - 若当前用户无 Admin 角色，例如：`CREATE USER jack1 IDENTIFIED BY '123456'`，则：
-  - 可以为自身设置默认计算组；
-  - 可以查看自身的 `PROPERTY`；
-  - 无法查看所有计算组，因该操作需要 `GRANT ADMIN` 权限。
+
+    - 可以为自身设置默认计算组；
+
+    - 可以查看自身的 `PROPERTY`；
+
+    - 无法查看所有计算组，因该操作需要 `GRANT ADMIN` 权限。
+
 - 若当前用户未配置默认计算组，现有系统在执行数据读写操作时将会触发错误。为解决这一问题，用户可通过执行 `use @cluster` 命令来指定当前 Context 所使用的计算组，或者使用 `SET PROPERTY` 语句来设置默认计算组。
+
 - 若当前用户已配置默认计算组，但随后该集群被删除，则在执行数据读写操作时同样会触发错误。用户可通过执行 `use @cluster` 命令来重新指定当前 Context 所使用的计算组，或者利用 `SET PROPERTY` 语句来更新默认集群设置。
 
 :::
@@ -140,3 +150,6 @@ USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 ## 计算组扩缩容
 
 通过 `ALTER SYSTEM ADD BACKEND` 以及 `ALTER SYSTEM DECOMMISION BACKEND` 添加或者删除 BE 实现计算组的扩缩容。
+
+
+详细操作参考[存算分离相关操作](../../compute-storage-decoupled/overview.md)

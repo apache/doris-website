@@ -184,7 +184,7 @@ FE 不参与用户数据的处理计算等工作，因此是一个资源消耗�
 
 2. CPU 限制
 
-   >注：从Doris 2.1 之后，cpu_resource_limit 将逐渐被 workload group 替代，因此不建议使用该参数。
+   >注：从 Doris 2.1 之后，cpu_resource_limit 将逐渐被 workload group 替代，因此不建议使用该参数。
 
    用户可以通过以下方式限制查询的 CPU 资源：
 
@@ -271,4 +271,6 @@ FE 不参与用户数据的处理计算等工作，因此是一个资源消耗�
 
 table2，table3,table4 的建表语句无需再指定`replication_allocation`。
 
-注意事项：更改 database 的副本分布策略不会对已有的 table 产生影响。
+:::caution 注意
+更改 database 的副本分布策略不会对已有的 table 产生影响。
+:::

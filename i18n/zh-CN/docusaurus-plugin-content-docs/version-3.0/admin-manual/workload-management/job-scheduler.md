@@ -40,37 +40,49 @@ Doris Job Scheduler 是一种基于预设计划运行的任务管理系统，能
 - 调度记录可追溯：Job Scheduler 会存储最新的 Task 执行记录（可配置），通过简单的命令即可查看任务执行记录，确保过程可追溯。
 - 高可用：依托于 Doris 自身的高可用机制，Job Schedule 可以很轻松的做到自恢复、高可用。
 
-**相关文档:** [CREATE-JOB](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+**相关文档：** [CREATE-JOB](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
 
 ## 语法说明
 一条有效的 Job 语句需包含以下内容：
 - 关键字 CREATE JOB 需加作业名称，它在数据库中标识唯一事件。
-- ON SCHEDULE 子句用于指定 Job 作业的类型、触发时间和频率。
-    - AT timestamp用于一次性事件。它指定 JOB 仅在给定的日期和时间执行一次，AT current_timestamp  指定当前日期和时间。因 JOB 一旦创建则会立即运行，也可用于异步任务创建。
-    - EVERY：用于周期性作业，可指定作业的执行频率，关键字后需指定时间间隔（周、天、小时、分钟）。
-        - Interval：用于指定作业执行频率。1 DAY 表示每天执行一次， 1 HOUR表示每小时执行一次， 1 MINUTE 表示每分钟执行一次， 1 WEEK 表示每周执行一次。
-        - 子句EVERY包含可选 STARTS子句。STARTS后面为timestamp值，该值用于定义开始重复的时间，CURRENT_TIMESTAMP  用于指定当前日期和时间。JOB 一旦创建则会立即运行。
-        - 子句EVERY包含可选 ENDS子句。ENDS 关键字后面为timestamp 值，该值定义 JOB 事件停止运行的时间。
-- DO 子句用于指定 Job 作业触发时所需执行的操作，目前仅支持 Insert 语句。
-```sql 
-CREATE
-JOB
-  job_name
-  ON SCHEDULE schedule
-  [COMMENT 'string']
-  DO execute_sql;
 
-schedule: {
-    AT timestamp
-    | EVERY interval
-    [STARTS timestamp ]
-    [ENDS timestamp ]
-}
-interval:
-    quantity { WEEK |DAY | HOUR | MINUTE}
-```
+- ON SCHEDULE 子句用于指定 Job 作业的类型、触发时间和频率。
+
+    - AT timestamp 用于一次性事件。它指定 JOB 仅在给定的日期和时间执行一次，AT current_timestamp  指定当前日期和时间。因 JOB 一旦创建则会立即运行，也可用于异步任务创建。
+
+    - EVERY：用于周期性作业，可指定作业的执行频率，关键字后需指定时间间隔（周、天、小时、分钟）。
+
+        - Interval：用于指定作业执行频率。1 DAY 表示每天执行一次，1 HOUR 表示每小时执行一次，1 MINUTE 表示每分钟执行一次，1 WEEK 表示每周执行一次。
+
+        - 子句 EVERY 包含可选 STARTS 子句。STARTS 后面为 timestamp 值，该值用于定义开始重复的时间，CURRENT_TIMESTAMP  用于指定当前日期和时间。JOB 一旦创建则会立即运行。
+
+        - 子句 EVERY 包含可选 ENDS 子句。ENDS 关键字后面为 timestamp 值，该值定义 JOB 事件停止运行的时间。
+
+- DO 子句用于指定 Job 作业触发时所需执行的操作，目前仅支持 Insert 语句。
+
+    ```sql 
+    CREATE
+    JOB
+      job_name
+      ON SCHEDULE schedule
+      [COMMENT 'string']
+      DO execute_sql;
+
+    schedule: {
+        AT timestamp
+        | EVERY interval
+        [STARTS timestamp ]
+        [ENDS timestamp ]
+    }
+    interval:
+        quantity { WEEK |DAY | HOUR | MINUTE}
+    ```
 下方为简单的示例：
+
+```sql
 CREATE JOB my_job ON SCHEDULE EVERY 1 MINUTE DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
+```
+
 该语句表示创建一个名为 my_job 的作业，每分钟执行一次，执行的操作是将 db2.tbl2 中的数据导入到 db1.tbl1 中。
 
 ## 使用示例
@@ -88,7 +100,7 @@ CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2025-01-01 00:00:00' ENDS '202
 ```
 借助 Job 实现异步执行：由于 Job 在 Doris 中是以同步任务的形式创建的，但其执行过程却是异步进行的，这一特性使得 Job 非常适合用于实现异步任务，例如常见的 insert into select 任务。
 
-假设需要将db2.tbl2 中的数据导入到 db1.tbl1 中，这里只需要指定 JOB 为一次性任务，且开始时间设置为当前时间即可。
+假设需要将 db2.tbl2 中的数据导入到 db1.tbl1 中，这里只需要指定 JOB 为一次性任务，且开始时间设置为当前时间即可。
 ```sql
 CREATE JOB my_job ON SCHEDULE AT current_timestamp DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
 ```
@@ -131,53 +143,57 @@ INSERT INTO user.activity VALUES
 以上表为例，用户希望查询符合总消费金额、最后一次访问时间、性别、所在城市这几个数值条件的用户，并将满足条件的用户信息导入到 Doris 中，以便后续的定向推送。
 
 1. 首先，创建一张 Doris 表
-```sql
- CREATE TABLE IF NOT EXISTS user_activity
-   (
-   `user_id` LARGEINT NOT NULL COMMENT "用户id",
-   `date` DATE NOT NULL COMMENT "数据灌入日期时间",
-   `city` VARCHAR(20) COMMENT "用户所在城市",
-   `age` SMALLINT COMMENT "用户年龄",
-   `sex` TINYINT COMMENT "用户性别",
-   `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
-   `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
-   `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
-   `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
-   )
-   AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
-   DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
-   PROPERTIES (
-   "replication_allocation" = "tag.location.default: 1"
-   );
-```  
+  
+  ```sql
+  CREATE TABLE IF NOT EXISTS user_activity
+    (
+    `user_id` LARGEINT NOT NULL COMMENT "用户 id",
+    `date` DATE NOT NULL COMMENT "数据灌入日期时间",
+    `city` VARCHAR(20) COMMENT "用户所在城市",
+    `age` SMALLINT COMMENT "用户年龄",
+    `sex` TINYINT COMMENT "用户性别",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
+    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
+    )
+    AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
+    DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+    PROPERTIES (
+    "replication_allocation" = "tag.location.default: 1"
+    );
+  ```  
 2. 其次，创建对应 MySQL 库的 Catalog
-```sql    
-CREATE CATALOG activity PROPERTIES (
-   "type"="jdbc",
-   "user"="root",
-   "password"="123456",
-   "jdbc_url" = "jdbc:mysql://127.0.0.1:3306/user?useSSL=false",
-   "driver_url" = "mysql-connector-java-5.1.49.jar",
-   "driver_class" = "com.mysql.jdbc.Driver"
-   );
-```  
+  
+    ```sql    
+    CREATE CATALOG activity PROPERTIES (
+      "type"="jdbc",
+      "user"="root",
+      "password"="123456",
+      "jdbc_url" = "jdbc:mysql://127.0.0.1:3306/user?useSSL=false",
+      "driver_url" = "mysql-connector-java-5.1.49.jar",
+      "driver_class" = "com.mysql.jdbc.Driver"
+      );
+    ```  
 3. 最后，将 MySQL 数据导入到 Doris 中。采用 Catalog + Insert Into 的方式来导入全量数据，由于全量导入操作可能会引发系统服务波动，通常选择在业务闲暇时进行操作。
 
 - 一次性调度：如下方代码所示，使用一次性任务来定时触发全量导入任务，触发时间为凌晨 3:00。
-```sql    
-CREATE JOB one_time_load_job
-  ON SCHEDULE
-  AT '2024-8-10 03:00:00'
-  DO
-  INSERT INTO user_activity SELECT * FROM activity.user.activity
-```  
+
+    ```sql    
+    CREATE JOB one_time_load_job
+      ON SCHEDULE
+      AT '2024-8-10 03:00:00'
+      DO
+      INSERT INTO user_activity SELECT * FROM activity.user.activity
+    ```  
 - 周期调度：用户也可以创建一个周期性的调度任务，定期更新最新的数据。
-```sql    
-CREATE JOB schedule_load
-  ON SCHEDULE EVERY 1 DAY
-  DO
-  INSERT INTO user_activity SELECT * FROM activity.user.activity where last_visit_date >=  days_add(now(),-1)
-```  
+
+    ```sql    
+    CREATE JOB schedule_load
+      ON SCHEDULE EVERY 1 DAY
+      DO
+      INSERT INTO user_activity SELECT * FROM activity.user.activity where last_visit_date >=  days_add(now(),-1)
+    ```  
 ## 设计与实现
 高效的调度通常伴随着大量的资源消耗，高精度的调度更是如此。传统的实现方式是直接使用 Java 内置的定时调度能力——定时调度线程周期访问，或采用一些定时调度的工具类库，但其在精度以及内存占用上存在较大的问题。为更好保障性能的前提下降低资源的占用，我们选择 TimingWheel 算法与 Disruptor 结合，实现秒级别的任务调度。
 

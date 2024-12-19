@@ -1,6 +1,6 @@
 ---
 {
-"title": "查询阻断",
+"title": "Query Blocking",
 "language": "zh-CN"
 }
 ---
@@ -168,14 +168,14 @@ In the above regular expression:
 - \\(.+\\) matches the function arguments. Similarly, a similar approach can be used to block set global to prevent unintended variable changes, or to block truncate table to prevent unintended data deletion.
 
 ### FAQ
-#### Q：Can regex-based blocking rules have adverse effects on the cluster?
-A：Yes. Complex regex matching is computationally intensive. Using complex regexes or too many regex-based rules can significantly increase the CPU load on the FE. Therefore, add regex-based blocking rules cautiously and avoid complex regexes unless necessary.
+#### Q: Can regex-based blocking rules have adverse effects on the cluster?
+A: Yes. Complex regex matching is computationally intensive. Using complex regexes or too many regex-based rules can significantly increase the CPU load on the FE. Therefore, add regex-based blocking rules cautiously and avoid complex regexes unless necessary.
 
-#### Q：Can a blocking rule be temporarily disabled?
-A：Yes. Modify the rule by setting the "enable" property to "false".
+#### Q: Can a blocking rule be temporarily disabled?
+A: Yes. Modify the rule by setting the "enable" property to "false".
 
-#### Q：What regex syntax is used in blocking rules?
-A：The regular expression of the blocking rule uses the Java regular expression specification. For common expressions, refer to the SQL syntax manual. For a complete manual, refer to: https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
+#### Q: What regex syntax is used in blocking rules?
+A: The regular expression of the blocking rule uses the Java regular expression specification. For common expressions, refer to the SQL syntax manual. For a complete manual, refer to: https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
 
 ## Workload Group Policy
 ### NOTE
