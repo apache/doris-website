@@ -1302,6 +1302,11 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: Minimum download speed
 * Default value: 50 (KB/s)
 
+#### `enable_batch_download`
+
+* Description: Whether to download files in batch, recommend only opening it when the binlog is enabled.
+* Default value: false
+
 #### `priority_queue_remaining_tasks_increased_frequency`
 
 * Description: the increased frequency of priority for remaining tasks in BlockingPriorityQueue
