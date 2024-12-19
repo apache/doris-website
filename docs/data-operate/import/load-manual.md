@@ -30,7 +30,7 @@ Apache Doris offers various methods for importing and integrating data, allowing
 
     - For small amounts of data (once every 5 minutes), you can use [JDBC INSERT](./import-way/insert-into-manual.md).
 
-    - For higher concurrency or frequency (more than 20 concurrent writes or multiple writes per minute), you can enable enable [Group Commit](./import-way/group-commit-manual.md) and use JDBC INSERT or Stream Load.
+    - For higher concurrency or frequency (more than 20 concurrent writes or multiple writes per minute), you can enable enable [Group Commit](./group-commit-manual.md) and use JDBC INSERT or Stream Load.
 
     - For high throughput, you can use [Stream Load](./import-way/stream-load-manual) via HTTP.
 
@@ -70,4 +70,4 @@ Doris's import process mainly involves various aspects such as data sources, dat
 | [INSERT INTO SELECT](./import-way/insert-into-manual.md) | Importing from an external source like a table in a catalog or files in s3.      | SQL                     | Depending on memory size  | Synchronous, Asynchronous via Job     |
 | [Routine Load](./import-way/routine-load-manual.md)      | Real-time import from Kafka                            | csv, json               | Micro-batch import MB to GB | Asynchronous     |
 | [MySQL Load](./import-way/mysql-load-manual.md)          | Importing from local files.                             | csv                     | Less than 1GB          | Synchronous     |
-| [Group Commit](./import-way/group-commit-manual.md)          | Writing with high frequency.                            | Depending on the import method used                     |  Micro-batch import KB         | -     |
+| [Group Commit](./group-commit-manual.md)          | Writing with high frequency.                            | Depending on the import method used                     |  Micro-batch import KB         | -     |
