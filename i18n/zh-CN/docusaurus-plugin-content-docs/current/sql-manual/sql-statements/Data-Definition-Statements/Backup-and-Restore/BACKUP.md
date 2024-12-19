@@ -41,7 +41,7 @@ BACKUP
 语法：
 
 ```sql
-BACKUP SNAPSHOT [db_name].{snapshot_name}
+BACKUP [GLOBAL] SNAPSHOT [db_name].{snapshot_name}
 TO `repository_name`
 [ON|EXCLUDE] (
     `table_name` [PARTITION (`p1`, ...)],
@@ -57,7 +57,11 @@ PROPERTIES ("key"="value", ...);
 - EXCLUDE 子句中标识不需要备份的表和分区。备份除了指定的表或分区之外这个数据库中所有表的所有分区数据。
 - PROPERTIES 目前支持以下属性：
   -  "type" = "full"：表示这是一次全量更新（默认）
-  - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。          
+  - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。
+  - "backup_privilege" = "true"： 备份权限信息， 和BACKUP GLOBAL一起使用。          
+  - "backup_catalog" = "true"：备份catalog信息，和BACKUP GLOBAL一起使用。          
+  - "backup_workload_group" = "true"：备份workload group信息，和BACKUP GLOBAL一起使用。          
+       
 
 ### Example
 
@@ -93,9 +97,26 @@ EXCLUDE (example_tbl);
 4. 全量备份 example_db 下的表到仓库 example_repo 中：
 
 ```sql
-BACKUP SNAPSHOT example_db.snapshot_label3
+BACKUP SNAPSHOT example_db.snapshot_label4
 TO example_repo;
 ```
+
+
+5. 备份权限、catalog、workloadgroup信息到仓库 example_repo 中：
+
+```sql
+BACKUP GLOBAL SNAPSHOT snapshot_label5
+TO example_repo;
+```
+
+6. 备份权限和catalog信息到仓库 example_repo 中：
+
+```sql
+BACKUP GLOBAL SNAPSHOT snapshot_label6
+TO example_repo
+PROPERTIES ("backup_privilege" = "true", "backup_catalog"="true");
+```
+
 
 ### Keywords
 
