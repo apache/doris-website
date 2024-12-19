@@ -18,7 +18,7 @@ export default function AnnouncementBarCloseButton(
       })}
       {...props}
       className={clsx('clean-btn close', styles.closeButton, props.className)}>
-      <IconClose width={14} height={14} strokeWidth={3.1} />
+      <IconClose width={14} height={14} strokeWidth={3.1} color={'#ffffff'} />
     </button>
   );
 }
