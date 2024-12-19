@@ -155,7 +155,7 @@ DECOMMISSION 命令说明：
   命令取消。取消后，该 BE 上的数据将维持当前剩余的数据量。后续 Doris 重新进行负载均衡
 :::
 
-**对于多租户部署环境下，BE 节点的扩容和缩容，请参阅 [多租户设计文档](../resource-admin/multi-tenant)。**
+**对于多租户部署环境下，BE 节点的扩容和缩容，请参阅 [多租户设计文档](../workload-management/resource-group)。**
 
 ## Broker 扩容缩容
 
