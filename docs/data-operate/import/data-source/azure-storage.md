@@ -75,10 +75,10 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "AZURE",
-    "AWS_ENDPOINT" = "StorageAccountA.blob.core.windows.net",  
-    "AWS_REGION" = "westus3",
-    "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    "s3.endpoint" = "StorageAccountA.blob.core.windows.net",  
+    "s3.region" = "westus3",
+    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
+    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 )
 PROPERTIES
 (

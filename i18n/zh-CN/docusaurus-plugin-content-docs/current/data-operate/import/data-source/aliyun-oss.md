@@ -83,10 +83,10 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "OSS",
-    "AWS_ENDPOINT" = "oss-cn-hangzhou.aliyuncs.com",  
-    "AWS_REGION" = "oss-cn-hangzhou",
-    "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    "s3.endpoint" = "oss-cn-hangzhou.aliyuncs.com",  
+    "s3.region" = "oss-cn-hangzhou",
+    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
+    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 )
 PROPERTIES
 (

@@ -75,10 +75,10 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "S3",
-    "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",  
-    "AWS_REGION" = "us-west-2",
-    "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    "s3.endpoint" = "s3.us-west-2.amazonaws.com",  
+    "s3.region" = "us-west-2",
+    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
+    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 )
 PROPERTIES
 (

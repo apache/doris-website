@@ -75,10 +75,10 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "OBS",
-    "AWS_ENDPOINT" = "obs.cn-north-1.myhuaweicloud.com",
-    "AWS_REGION" = "cn-north-1",
-    "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    "s3.endpoint" = "obs.cn-north-1.myhuaweicloud.com",
+    "s3.region" = "cn-north-1",
+    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
+    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 )
 PROPERTIES
 (

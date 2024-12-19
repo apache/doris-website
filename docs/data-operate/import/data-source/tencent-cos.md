@@ -75,10 +75,10 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "COS",
-    "AWS_ENDPOINT" = "cos.ap-beijing.myqcloud.com",
-    "AWS_REGION" = "ap-beijing",
-    "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    "s3.endpoint" = "cos.ap-beijing.myqcloud.com",
+    "s3.region" = "ap-beijing",
+    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
+    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 )
 PROPERTIES
 (

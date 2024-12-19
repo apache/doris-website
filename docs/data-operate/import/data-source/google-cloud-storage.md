@@ -75,10 +75,10 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "GCP",
-    "AWS_ENDPOINT" = "storage.me-central2.rep.googleapis.com",  
-    "AWS_REGION" = "ME-CENTRAL2",
-    "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-    "AWS_SECRET_KEY" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    "s3.endpoint" = "storage.me-central2.rep.googleapis.com",  
+    "s3.region" = "ME-CENTRAL2",
+    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
+    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 )
 PROPERTIES
 (

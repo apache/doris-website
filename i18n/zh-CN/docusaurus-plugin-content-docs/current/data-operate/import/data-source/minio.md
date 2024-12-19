@@ -66,7 +66,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 :::caution 注意
 如果您在本地网络中部署了 MinIO 并且未启用 TLS，则需要在 endpoint 字符串中明确添加 `http://`。
 
-- `"AWS_ENDPOINT" = "http://localhost:9000"`
+- `"s3.endpoint" = "http://localhost:9000"`
 :::
 
 ```sql
@@ -81,10 +81,10 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "S3",
-    "AWS_ENDPOINT" = "play.min.io:9000",  
-    "AWS_REGION" = "us-east-1",
-    "AWS_ACCESS_KEY" = "myminioadmin",
-    "AWS_SECRET_KEY" = "minio-secret-key-change-me",
+    "s3.endpoint" = "play.min.io:9000",  
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "myminioadmin",
+    "s3.secret_key" = "minio-secret-key-change-me",
     "use_path_style" = "true"
 )
 PROPERTIES
