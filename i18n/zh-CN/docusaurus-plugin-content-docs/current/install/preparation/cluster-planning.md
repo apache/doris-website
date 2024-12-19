@@ -1,6 +1,6 @@
 ---
 {
-"title": "集群规划“,
+"title": "集群规划",
 "language": "zh-CN"
 }
 ---
