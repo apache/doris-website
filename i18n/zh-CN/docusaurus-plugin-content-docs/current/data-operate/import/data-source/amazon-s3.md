@@ -151,9 +151,9 @@ INSERT INTO test_s3load
 SELECT * FROM S3
 (
     "uri" = "s3://your_bucket_name/s3load_example.csv",
-    'format' = 'csv',
-    's3.endpoint' = 's3.us-west-2.amazonaws.com',
-    's3.region' = 'us-west-2',
+    "format" = "csv",
+    "s3.endpoint" = "s3.us-west-2.amazonaws.com",
+    "s3.region" = "us-west-2",
     "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
     "column_separator" = ",",

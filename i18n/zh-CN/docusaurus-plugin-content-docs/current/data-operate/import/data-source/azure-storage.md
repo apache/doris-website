@@ -151,10 +151,10 @@ INSERT INTO test_s3load
 SELECT * FROM S3
 (
     "uri" = "s3://your_bucket_name/s3load_example.csv",
-    'format' = 'csv',
-    'provider' = 'AZURE',
-    's3.endpoint' = 'StorageAccountA.blob.core.windows.net',
-    's3.region' = 'westus3',
+    "format" = "csv",
+    "provider" = "AZURE",
+    "s3.endpoint" = "StorageAccountA.blob.core.windows.net",
+    "s3.region" = "westus3",
     "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
     "column_separator" = ",",

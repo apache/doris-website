@@ -151,10 +151,10 @@ INSERT INTO test_s3load
 SELECT * FROM S3
 (
     "uri" = "s3://your_bucket_name/s3load_example.csv",
-    'format' = 'csv',
-    'provider' = 'GCP',
-    's3.endpoint' = "storage.me-central2.rep.googleapis.com",  
-    's3.region' = 'ME-CENTRAL2',
+    "format" = "csv",
+    "provider" = "GCP",
+    "s3.endpoint" = "storage.me-central2.rep.googleapis.com",  
+    "s3.region" = "ME-CENTRAL2",
     "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
     "column_separator" = ",",

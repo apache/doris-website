@@ -156,10 +156,10 @@ INSERT INTO test_s3load
 SELECT * FROM S3
 (
     "uri" = "s3://your_bucket_name/s3load_example.csv",
-    'format' = 'csv',
-    'provider' = 'S3',
-    's3.endpoint' = 'play.min.io:9000',
-    's3.region' = 'us-east-1',
+    "format" = "csv",
+    "provider" = "S3",
+    "s3.endpoint" = "play.min.io:9000",
+    "s3.region" = "us-east-1",
     "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
     "column_separator" = ",",
