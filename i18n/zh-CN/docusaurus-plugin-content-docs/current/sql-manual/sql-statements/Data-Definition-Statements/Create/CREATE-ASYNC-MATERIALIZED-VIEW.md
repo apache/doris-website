@@ -224,6 +224,11 @@ partition by (date_trunc(`k2`,'month'))
 `enable_nondeterministic_function`：物化视图定义 SQL 是否允许包含 nondeterministic 函数，比如 current_date(), now(), random()等，如果
 是 true, 允许包含，否则不允许包含, 默认不允许包含。
 
+:::tips
+自 2.1.7 版本起支持 use_for_rewrite
+:::
+`use_for_rewrite`：标识此物化视图是否参与到透明改写中，如果为 false，不参与到透明改写，默认是 true。数据建模场景中，如果物化视图只是用于直查，物化视图可以设置此属性，从而不参与透明改写，提高查询响应速度。
+
 `query`：创建物化视图的查询语句，其结果即为物化视图中的数据
 
 
