@@ -35,7 +35,9 @@
                 {
                     "type": "category",
                     "label": "Doris Introduction",
-                    "items": ["summary/basic-summary"]
+                    "items": [
+                        "summary/basic-summary"
+                    ]
                 },
                 {
                     "type": "category",
@@ -151,17 +153,25 @@
                         {
                             "type": "category",
                             "label": "Alter Table",
-                            "items": ["advanced/alter-table/schema-change", "advanced/alter-table/replace-table"]
+                            "items": [
+                                "advanced/alter-table/schema-change",
+                                "advanced/alter-table/replace-table"
+                            ]
                         },
                         {
                             "type": "category",
                             "label": "Doris Partition",
-                            "items": ["advanced/partition/dynamic-partition", "advanced/partition/table-temp-partition"]
+                            "items": [
+                                "advanced/partition/dynamic-partition",
+                                "advanced/partition/table-temp-partition"
+                            ]
                         },
                         {
                             "type": "category",
                             "label": "Data Cache",
-                            "items": ["advanced/cache/partition-cache"]
+                            "items": [
+                                "advanced/cache/partition-cache"
+                            ]
                         },
                         "advanced/autobucket",
                         "advanced/broker",
@@ -204,7 +214,9 @@
                         {
                             "type": "category",
                             "label": "Slow Query Analysis",
-                            "items": ["query-acceleration/slow-query-analysis/get-profile"]
+                            "items": [
+                                "query-acceleration/slow-query-analysis/get-profile"
+                            ]
                         }
                     ]
                 },
@@ -1008,7 +1020,9 @@
                                 {
                                     "type": "category",
                                     "label": "Operators",
-                                    "items": ["sql-manual/sql-reference/Operators/in"]
+                                    "items": [
+                                        "sql-manual/sql-reference/Operators/in"
+                                    ]
                                 },
                                 {
                                     "type": "category",
@@ -1097,12 +1111,17 @@
                         {
                             "type": "category",
                             "label": "User Privilege and Ldap",
-                            "items": ["admin-manual/privilege-ldap/user-privilege", "admin-manual/privilege-ldap/ldap"]
+                            "items": [
+                                "admin-manual/privilege-ldap/user-privilege",
+                                "admin-manual/privilege-ldap/ldap"
+                            ]
                         },
                         {
                             "type": "category",
                             "label": "System Table",
-                            "items": ["admin-manual/system-table/rowsets"]
+                            "items": [
+                                "admin-manual/system-table/rowsets"
+                            ]
                         },
                         "admin-manual/multi-tenant",
                         {
@@ -1190,7 +1209,11 @@
             "type": "category",
             "label": "Benchmark",
             "collapsed": false,
-            "items": ["benchmark/ssb", "benchmark/tpch", "benchmark/tpcds"]
+            "items": [
+                "benchmark/ssb",
+                "benchmark/tpch",
+                "benchmark/tpcds"
+            ]
         },
         {
             "type": "category",
@@ -1233,22 +1256,93 @@
             "type": "category",
             "label": "FAQ",
             "collapsed": false,
-            "items": ["faq/install-faq", "faq/data-faq", "faq/sql-faq", "faq/lakehouse-faq", "faq/bi-faq"]
+            "items": [
+                "faq/install-faq",
+                "faq/data-faq",
+                "faq/sql-faq",
+                "faq/lakehouse-faq",
+                "faq/bi-faq"
+            ]
         },
         {
             "type": "category",
             "label": "Releases",
             "collapsed": false,
             "items": [
-                "releasenotes/v1.2/release-1.2.8",
-                "releasenotes/v1.2/release-1.2.7",
-                "releasenotes/v1.2/release-1.2.6",
-                "releasenotes/v1.2/release-1.2.5",
-                "releasenotes/v1.2/release-1.2.4",
-                "releasenotes/v1.2/release-1.2.3",
-                "releasenotes/v1.2/release-1.2.2",
-                "releasenotes/v1.2/release-1.2.1",
-                "releasenotes/v1.2/release-1.2.0"
+                "releasenotes/all-release",
+                {
+                    "type": "category",
+                    "label": "v3.0",
+                    "items": [
+                        "releasenotes/v3.0/release-3.0.3",
+                        "releasenotes/v3.0/release-3.0.2",
+                        "releasenotes/v3.0/release-3.0.1",
+                        "releasenotes/v3.0/release-3.0.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v2.1",
+                    "items": [
+                        "releasenotes/v2.1/release-2.1.7",
+                        "releasenotes/v2.1/release-2.1.6",
+                        "releasenotes/v2.1/release-2.1.5",
+                        "releasenotes/v2.1/release-2.1.4",
+                        "releasenotes/v2.1/release-2.1.3",
+                        "releasenotes/v2.1/release-2.1.2",
+                        "releasenotes/v2.1/release-2.1.1",
+                        "releasenotes/v2.1/release-2.1.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v2.0",
+                    "items": [
+                        "releasenotes/v2.0/release-2.0.15",
+                        "releasenotes/v2.0/release-2.0.14",
+                        "releasenotes/v2.0/release-2.0.13",
+                        "releasenotes/v2.0/release-2.0.12",
+                        "releasenotes/v2.0/release-2.0.11",
+                        "releasenotes/v2.0/release-2.0.10",
+                        "releasenotes/v2.0/release-2.0.9",
+                        "releasenotes/v2.0/release-2.0.8",
+                        "releasenotes/v2.0/release-2.0.7",
+                        "releasenotes/v2.0/release-2.0.6",
+                        "releasenotes/v2.0/release-2.0.5",
+                        "releasenotes/v2.0/release-2.0.4",
+                        "releasenotes/v2.0/release-2.0.3",
+                        "releasenotes/v2.0/release-2.0.2",
+                        "releasenotes/v2.0/release-2.0.1",
+                        "releasenotes/v2.0/release-2.0.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v1.2",
+                    "items": [
+                        "releasenotes/v1.2/release-1.2.8",
+                        "releasenotes/v1.2/release-1.2.7",
+                        "releasenotes/v1.2/release-1.2.6",
+                        "releasenotes/v1.2/release-1.2.5",
+                        "releasenotes/v1.2/release-1.2.4",
+                        "releasenotes/v1.2/release-1.2.3",
+                        "releasenotes/v1.2/release-1.2.2",
+                        "releasenotes/v1.2/release-1.2.1",
+                        "releasenotes/v1.2/release-1.2.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v1.1",
+                    "items": [
+                        "releasenotes/v1.1/release-1.1.5",
+                        "releasenotes/v1.1/release-1.1.4",
+                        "releasenotes/v1.1/release-1.1.3",
+                        "releasenotes/v1.1/release-1.1.2",
+                        "releasenotes/v1.1/release-1.1.1",
+                        "releasenotes/v1.1/release-1.1.0"
+                    ]
+                }
             ]
         }
     ]

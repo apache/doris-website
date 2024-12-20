@@ -30,25 +30,24 @@ under the License.
 
 This document mainly introduces the performance of Doris on the SSB 1000G test set.
 
-We tested 13 queries on the SSB standard test dataset based on Apache Doris version 2.0.6.
+We tested 13 queries on the SSB standard test dataset based on Apache Doris version 2.0.15.1.
 
 ## 1. Hardware Environment
 
-| Hardware            | Configuration Instructions                |
-|---------------------|-------------------------------------------|
-| Number of mMachines | 4 Tencent Cloud Virtual Machine（1FE，3BEs） |
-| CPU                 | AMD EPYC™ Milan(2.55GHz/3.5GHz)  48C      |
-| Memory              | 192G                                      |
-| Network             | 21Gbps                                    |
-| Disk                | ESSD Cloud Hard Disk                      |
+| Hardware           | Configuration Instructions               |
+|--------------------|------------------------------------------|
+| Number of Machines | 4 Aliyun Virtual Machine (1FE，3BEs)      |
+| CPU                | Intel Xeon (Ice Lake) Platinum 8369B 32C |
+| Memory             | 128G                                     |
+| Disk               | Enterprise SSD (PL0)                     |
 
 ## 2. Software Environment
 
 - Doris Deployed 3BEs and 1FE
-- Kernel Version: Linux version 5.4.0-96-generic (buildd@lgw01-amd64-051)
+- Kernel Version: Linux version 5.15.0-101-generic 
 - OS version: Ubuntu 20.04 LTS (Focal Fossa)
-- Doris software version: Apache Doris 2.0.6.
-- JDK: openjdk version "1.8.0_131"
+- Doris software version: Apache Doris 2.0.15.1
+- JDK: openjdk version "1.8.0_352-352"
 
 ## 3. Test Data Volume
 
@@ -63,46 +62,46 @@ We tested 13 queries on the SSB standard test dataset based on Apache Doris vers
 
 ## 4. SSB Flat Test Results
 
-Here we use Apache Doris 2.0.6 for comparative testing. In the test, we use Query Time(ms) as the main performance indicator. The test results are as follows:
+Here we use Apache Doris 2.0.15.1 for comparative testing. In the test, we use Query Time(ms) as the main performance indicator. The test results are as follows:
 
-| Query | Doris 2.0.6 (ms) |
-|-------|------------------|
-| q1.1  | 86               |
-| q1.2  | 31               |
-| q1.3  | 87               |
-| q2.1  | 1046             |
-| q2.2  | 569              |
-| q2.3  | 480              |
-| q3.1  | 1339             |
-| q3.2  | 957              |
-| q3.3  | 215              |
-| q3.4  | 34               |
-| q4.1  | 1569             |
-| q4.2  | 174              |
-| q4.3  | 109              |
-| Total | 6696             |
+| Query     | Doris 2.0.15.1 (ms) |
+|-----------|---------------------|
+| q1.1      | 80                  |
+| q1.2      | 10                  |
+| q1.3      | 110                 |
+| q2.1      | 1680                |
+| q2.2      | 1210                |
+| q2.3      | 1060                |
+| q3.1      | 2010                |
+| q3.2      | 1560                |
+| q3.3      | 600                 |
+| q3.4      | 10                  |
+| q4.1      | 2380                |
+| q4.2      | 190                 |
+| q4.3      | 120                 |
+| **Total** | **11020**           |
 
 
 ## 5. Standard SSB Test Results
 
-Here we use Apache Doris 2.0.6 for comparative testing. In the test, we use Query Time(ms) as the main performance indicator. The test results are as follows:
+Here we use Apache Doris 2.0.15.1 for comparative testing. In the test, we use Query Time(ms) as the main performance indicator. The test results are as follows:
 
-| Query | Doris 2.0.6 (ms) |
-|-------|------------------|
-| q1.1  | 332              |
-| q1.2  | 86               |
-| q1.3  | 80               |
-| q2.1  | 985              |
-| q2.2  | 844              |
-| q2.3  | 768              |
-| q3.1  | 2924             |
-| q3.2  | 944              |
-| q3.3  | 766              |
-| q3.4  | 146              |
-| q4.1  | 3451             |
-| q4.2  | 829              |
-| q4.3  | 325              |
-| Total | 12480            |
+| Query     | Doris 2.0.15.1 (ms) |
+|-----------|---------------------|
+| q1.1      | 330                 |
+| q1.2      | 80                  |
+| q1.3      | 80                  |
+| q2.1      | 1780                |
+| q2.2      | 1970                |
+| q2.3      | 1510                |
+| q3.1      | 4000                |
+| q3.2      | 1720                |
+| q3.3      | 1510                |
+| q3.4      | 160                 |
+| q4.1      | 4010                |
+| q4.2      | 840                 |
+| q4.3      | 400                 |
+| **Total** | **19390**           |
 
 ## 6. Environment Preparation
 

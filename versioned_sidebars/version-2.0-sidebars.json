@@ -77,7 +77,9 @@
                 {
                     "type": "category",
                     "label": "Database Connection",
-                    "items": ["db-connect/database-connect"]
+                    "items": [
+                        "db-connect/database-connect"
+                    ]
                 },
                 {
                     "type": "category",
@@ -200,12 +202,18 @@
                         {
                             "type": "category",
                             "label": "Quering Variables",
-                            "items": ["query/query-variables/variables", "query/query-variables/sql-mode"]
+                            "items": [
+                                "query/query-variables/variables",
+                                "query/query-variables/sql-mode"
+                            ]
                         },
                         {
                             "type": "category",
                             "label": "Cost-Based Optimizer",
-                            "items": ["query/nereids/nereids-new", "query/nereids/statistics"]
+                            "items": [
+                                "query/nereids/nereids-new",
+                                "query/nereids/statistics"
+                            ]
                         },
                         "query/pipeline-execution-engine",
                         {
@@ -239,7 +247,10 @@
                         {
                             "type": "category",
                             "label": "Distincting Counts",
-                            "items": ["query/duplicate/orthogonal-bitmap-manual", "query/duplicate/using-hll"]
+                            "items": [
+                                "query/duplicate/orthogonal-bitmap-manual",
+                                "query/duplicate/using-hll"
+                            ]
                         },
                         "query/high-concurrent-point-query",
                         "query/topn-query",
@@ -255,7 +266,10 @@
                         {
                             "type": "category",
                             "label": "User Defined Functions",
-                            "items": ["query/udf/java-user-defined-function", "query/udf/remote-user-defined-function"]
+                            "items": [
+                                "query/udf/java-user-defined-function",
+                                "query/udf/remote-user-defined-function"
+                            ]
                         }
                     ]
                 },
@@ -488,7 +502,11 @@
             "type": "category",
             "label": "Benchmark",
             "collapsed": false,
-            "items": ["benchmark/ssb", "benchmark/tpch", "benchmark/tpcds"]
+            "items": [
+                "benchmark/ssb",
+                "benchmark/tpch",
+                "benchmark/tpcds"
+            ]
         },
         {
             "type": "category",
@@ -515,7 +533,10 @@
                 {
                     "type": "category",
                     "label": "SQL Clients",
-                    "items": ["ecosystem/bi/dbeaver", "ecosystem/bi/datagrip"]
+                    "items": [
+                        "ecosystem/bi/dbeaver",
+                        "ecosystem/bi/datagrip"
+                    ]
                 },
                 {
                     "type": "category",
@@ -540,7 +561,13 @@
             "type": "category",
             "label": "FAQ",
             "collapsed": false,
-            "items": ["faq/install-faq", "faq/data-faq", "faq/sql-faq", "faq/lakehouse-faq", "faq/bi-faq"]
+            "items": [
+                "faq/install-faq",
+                "faq/data-faq",
+                "faq/sql-faq",
+                "faq/lakehouse-faq",
+                "faq/bi-faq"
+            ]
         },
         {
             "type": "category",
@@ -554,18 +581,7 @@
                         "sql-manual/sql-data-types/data-type-overview",
                         {
                             "type": "category",
-                            "label": "MAP Functions",
-                            "items": [
-                                "sql-manual/sql-functions/map-functions/map",
-                                "sql-manual/sql-functions/map-functions/map-keys",
-                                "sql-manual/sql-functions/map-functions/map-values",
-                                "sql-manual/sql-functions/map-functions/map-contains-key",
-                                "sql-manual/sql-functions/map-functions/map-contains-value"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Hash Functions",
+                            "label": "Numeric Data Type",
                             "items": [
                                 "sql-manual/sql-data-types/numeric/BOOLEAN",
                                 "sql-manual/sql-data-types/numeric/TINYINT",
@@ -620,7 +636,10 @@
                         {
                             "type": "category",
                             "label": "IP Data Type",
-                            "items": ["sql-manual/sql-data-types/ip/IPV4", "sql-manual/sql-data-types/ip/IPV6"]
+                            "items": [
+                                "sql-manual/sql-data-types/ip/IPV4",
+                                "sql-manual/sql-data-types/ip/IPV6"
+                            ]
                         }
                     ]
                 },
@@ -1036,6 +1055,17 @@
                                 "sql-manual/sql-functions/json-functions/json-insert",
                                 "sql-manual/sql-functions/json-functions/json-replace",
                                 "sql-manual/sql-functions/json-functions/json-set"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "MAP Functions",
+                            "items": [
+                                "sql-manual/sql-functions/map-functions/map",
+                                "sql-manual/sql-functions/map-functions/map-keys",
+                                "sql-manual/sql-functions/map-functions/map-values",
+                                "sql-manual/sql-functions/map-functions/map-contains-key",
+                                "sql-manual/sql-functions/map-functions/map-contains-value"
                             ]
                         },
                         {
@@ -1460,7 +1490,9 @@
                         {
                             "type": "category",
                             "label": "Operators",
-                            "items": ["sql-manual/sql-reference/Operators/in"]
+                            "items": [
+                                "sql-manual/sql-reference/Operators/in"
+                            ]
                         },
                         {
                             "type": "category",
@@ -1485,22 +1517,79 @@
             "collapsed": false,
             "items": [
                 "releasenotes/all-release",
-                "releasenotes/v2.0/release-2.0.15",
-                "releasenotes/v2.0/release-2.0.14",
-                "releasenotes/v2.0/release-2.0.13",
-                "releasenotes/v2.0/release-2.0.12",
-                "releasenotes/v2.0/release-2.0.11",
-                "releasenotes/v2.0/release-2.0.10",
-                "releasenotes/v2.0/release-2.0.9",
-                "releasenotes/v2.0/release-2.0.8",
-                "releasenotes/v2.0/release-2.0.7",
-                "releasenotes/v2.0/release-2.0.6",
-                "releasenotes/v2.0/release-2.0.5",
-                "releasenotes/v2.0/release-2.0.4",
-                "releasenotes/v2.0/release-2.0.3",
-                "releasenotes/v2.0/release-2.0.2",
-                "releasenotes/v2.0/release-2.0.1",
-                "releasenotes/v2.0/release-2.0.0"
+                {
+                    "type": "category",
+                    "label": "v3.0",
+                    "items": [
+                        "releasenotes/v3.0/release-3.0.3",
+                        "releasenotes/v3.0/release-3.0.2",
+                        "releasenotes/v3.0/release-3.0.1",
+                        "releasenotes/v3.0/release-3.0.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v2.1",
+                    "items": [
+                        "releasenotes/v2.1/release-2.1.7",
+                        "releasenotes/v2.1/release-2.1.6",
+                        "releasenotes/v2.1/release-2.1.5",
+                        "releasenotes/v2.1/release-2.1.4",
+                        "releasenotes/v2.1/release-2.1.3",
+                        "releasenotes/v2.1/release-2.1.2",
+                        "releasenotes/v2.1/release-2.1.1",
+                        "releasenotes/v2.1/release-2.1.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v2.0",
+                    "items": [
+                        "releasenotes/v2.0/release-2.0.15",
+                        "releasenotes/v2.0/release-2.0.14",
+                        "releasenotes/v2.0/release-2.0.13",
+                        "releasenotes/v2.0/release-2.0.12",
+                        "releasenotes/v2.0/release-2.0.11",
+                        "releasenotes/v2.0/release-2.0.10",
+                        "releasenotes/v2.0/release-2.0.9",
+                        "releasenotes/v2.0/release-2.0.8",
+                        "releasenotes/v2.0/release-2.0.7",
+                        "releasenotes/v2.0/release-2.0.6",
+                        "releasenotes/v2.0/release-2.0.5",
+                        "releasenotes/v2.0/release-2.0.4",
+                        "releasenotes/v2.0/release-2.0.3",
+                        "releasenotes/v2.0/release-2.0.2",
+                        "releasenotes/v2.0/release-2.0.1",
+                        "releasenotes/v2.0/release-2.0.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v1.2",
+                    "items": [
+                        "releasenotes/v1.2/release-1.2.8",
+                        "releasenotes/v1.2/release-1.2.7",
+                        "releasenotes/v1.2/release-1.2.6",
+                        "releasenotes/v1.2/release-1.2.5",
+                        "releasenotes/v1.2/release-1.2.4",
+                        "releasenotes/v1.2/release-1.2.3",
+                        "releasenotes/v1.2/release-1.2.2",
+                        "releasenotes/v1.2/release-1.2.1",
+                        "releasenotes/v1.2/release-1.2.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v1.1",
+                    "items": [
+                        "releasenotes/v1.1/release-1.1.5",
+                        "releasenotes/v1.1/release-1.1.4",
+                        "releasenotes/v1.1/release-1.1.3",
+                        "releasenotes/v1.1/release-1.1.2",
+                        "releasenotes/v1.1/release-1.1.1",
+                        "releasenotes/v1.1/release-1.1.0"
+                    ]
+                }
             ]
         }
     ]

@@ -40,7 +40,7 @@ under the License.
 
 - https://github.com/apache/doris/pull/33282 
 
-3. Auto Partition 语法变化，详见 https://doris.apache.org/zh-CN/docs/table-design/data-partition#%E8%87%AA%E5%8A%A8%E5%88%86%E5%8C%BA
+3. Auto Partition 语法变化，详见[文档](../../table-design/data-partitioning/auto-partitioning.md)
 
 - https://github.com/apache/doris/pull/32737
 

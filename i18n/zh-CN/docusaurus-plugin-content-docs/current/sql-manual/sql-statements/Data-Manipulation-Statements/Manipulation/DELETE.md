@@ -71,6 +71,54 @@ DELETE FROM table_name [table_alias]
 + table_alias: 表的别名
 + USING additional_tables: 如果需要在 WHERE 语句中使用其他的表来帮助识别需要删除的行，则可以在 USING 中指定这些表或者查询。
 
+#### Returned Results
+
+Delete 命令是一个 SQL 命令，返回结果是同步的，分为以下几种：
+
+##### 执行成功
+
+如果 Delete 顺利执行完成并可见，将返回下列结果，`Query OK`表示成功
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+{'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'VISIBLE', 'txnId':'4005'}
+```
+
+##### 提交成功，但未可见
+
+Doris 的事务提交分为两步：提交和发布版本，只有完成了发布版本步骤，结果才对用户是可见的。若已经提交成功了，那么就可以认为最终一定会发布成功，Doris 会尝试在提交完后等待发布一段时间，如果超时后即使发布版本还未完成也会优先返回给用户，提示用户提交已经完成。若如果 Delete 已经提交并执行，但是仍未发布版本和可见，将返回下列结果
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+{'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'COMMITTED', 'txnId':'4005', 'err':'delete job is committed but may be taking effect later' }
+```
+
+结果会同时返回一个 json 字符串：
+
+- `affected rows`：表示此次删除影响的行，由于 Doris 的删除目前是逻辑删除，因此对于这个值是恒为 0；
+
+- `label`：自动生成的 label，是该导入作业的标识。每个导入作业，都有一个在单 Database 内部唯一的 Label；
+
+- `status`：表示数据删除是否可见，如果可见则显示`VISIBLE`，如果不可见则显示`COMMITTED`；
+
+- `txnId`：这个 Delete job 对应的事务 id；
+
+- `err`：字段会显示一些本次删除的详细信息。
+
+##### 提交失败，事务取消
+
+如果 Delete 语句没有提交成功，将会被 Doris 自动中止，返回下列结果
+
+```sql
+ERROR 1064 (HY000): errCode = 2, detailMessage = {错误原因}
+```
+
+比如说一个超时的删除，将会返回 `timeout` 时间和未完成的`(tablet=replica)`
+
+```sql
+ERROR 1064 (HY000): errCode = 2, detailMessage = failed to delete replicas from job: 4005, Unfinished replicas:10000=60000, 10001=60000, 10002=60000
+```
+
 #### Note
 
 1. 使用聚合类的表模型（AGGREGATE、UNIQUE）只能指定 key 列上的条件。
