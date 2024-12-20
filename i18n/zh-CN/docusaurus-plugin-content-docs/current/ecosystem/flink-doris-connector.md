@@ -26,7 +26,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 概述
+
 
 [Flink Doris Connector](https://github.com/apache/doris-flink-connector)是通过 Flink 来读取和写入数据到 Doris 集群，同时集成了[FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)，可以更便捷的对上游 MySQL 等数据库进行整库同步。
 
@@ -48,7 +48,9 @@ under the License.
 
 ## 使用方式
 
-#### 安装配置
+可以分别使用Jar方式和Maven方式使用Flink Doris Connector。
+
+#### Jar
 
 可在[这里](https://doris.apache.org/download#doris-ecosystem)下载 Flink Doris Connector 对应版本的 Jar 包，将此文件复制到 `Flink` 的 `classpath` 中即可使用 `Flink-Doris-Connector` 。 `Standalone` 模式运行的 `Flink` ，将此文件放入 `lib/` 文件夹下。 `Yarn` 集群模式运行的 `Flink` ，则将此文件放入预部署包中。
 
@@ -79,7 +81,7 @@ Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
 
 #### 初始化 Doris 表
 
-1. 运行以下语句创建 Doris 表
+运行以下语句创建 Doris 表
 
 ```SQL
 CREATE DATABASE test;
@@ -92,7 +94,7 @@ CREATE TABLE test.student (
 UNIQUE KEY(`id`)
 DISTRIBUTED BY HASH(`id`) BUCKETS 1
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
+"replication_allocation" = "tag.location.default: 3"
 );
 
 INSERT INTO test.student values(1,"James",18);
@@ -106,7 +108,7 @@ CREATE TABLE test.student_trans (
 UNIQUE KEY(`id`)
 DISTRIBUTED BY HASH(`id`) BUCKETS 1
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
+"replication_allocation" = "tag.location.default: 3"
 );
 ```
 
@@ -166,7 +168,7 @@ mysql> select * from test.student_trans;
 
 ## 场景与操作
 
-### 读取
+### 读取Doris中的数据
 
 Flink 读取支持通过 [Thrift](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md) 和 [ArrowFlightSQL](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/)方式 (24.0.0 版本之后支持) 读取，推荐使用 ArrowFlightSQL 方式。同时目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。。
 
@@ -236,7 +238,7 @@ env.execute("Doris Source Test");
 
 完整代码参考：[DorisSourceDataStream.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSourceDataStream.java)
 
-### 写入
+### 向Doris中写入数据
 
 Flink 写入使用 Stream Load 的方式进行写入，支持流式写入和攒批写入模式。
 
