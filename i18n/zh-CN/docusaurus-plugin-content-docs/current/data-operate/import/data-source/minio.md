@@ -67,6 +67,10 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 如果您在本地网络中部署了 MinIO 并且未启用 TLS，则需要在 endpoint 字符串中明确添加 `http://`。
 
 - `"s3.endpoint" = "http://localhost:9000"`
+
+S3 SDK 默认使用 virtual-hosted style 方式。但 MinIO 默认没开启 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式。
+
+- `"use_path_style" = "true"`
 :::
 
 ```sql
@@ -157,6 +161,10 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 如果您在本地网络中部署了 MinIO 并且未启用 TLS，则需要在 endpoint 字符串中明确添加 `http://`。
 
 - `"s3.endpoint" = "http://localhost:9000"`
+
+S3 SDK 默认使用 virtual-hosted style 方式。但 MinIO 默认没开启 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式。
+
+- `"use_path_style" = "true"`
 :::
 
 ```sql
