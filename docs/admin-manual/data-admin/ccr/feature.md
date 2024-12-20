@@ -5,8 +5,6 @@
 }
 ---
 
-## Cross-Cluster Replication (CCR) in Doris
-
 The Cross-Cluster Replication (CCR) feature in Doris is primarily used to efficiently synchronize data across multiple clusters, enhancing business continuity and disaster recovery. CCR supports various operations in Doris, ensuring data consistency across different clusters. Below are the details of the main Doris operations supported by CCR.
 
 :::note
