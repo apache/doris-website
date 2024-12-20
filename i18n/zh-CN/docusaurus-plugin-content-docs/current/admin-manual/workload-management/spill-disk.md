@@ -25,98 +25,102 @@ under the License.
 -->
 
 ## 概述
-Doris 的计算层是一个MPP的架构，所有的计算任务都是在BE的内存中完成的，各个BE之间也是通过内存来完成数据交换，所以内存管理对查询的稳定性有至关重要的影响，从线上查询统计看，有一大部分的查询报错也是跟内存相关。当前越来越多的用户将ETL 数据加工，多表物化视图处理，复杂的AdHoc查询等任务迁移到Doris 上运行，所以，需要将中间操作结果卸载到磁盘上，使那些所需内存量超出每个查询或每个节点限制的查询能够得以执行。具体来说，当处理大型数据集或执行复杂查询时，内存消耗可能会迅速增加，超出单个节点或整个查询处理过程中可用的内存限制。Doris通过将其中的中间结果（如聚合的中间状态、排序的临时数据等）写入磁盘，而不是完全依赖内存来存储这些数据，从而缓解了内存压力。这样做有几个好处：
-- 扩展性：允许Doris处理比单个节点内存限制大得多的数据集。
+Doris 的计算层是一个 MPP 的架构，所有的计算任务都是在 BE 的内存中完成的，各个 BE 之间也是通过内存来完成数据交换，所以内存管理对查询的稳定性有至关重要的影响，从线上查询统计看，有一大部分的查询报错也是跟内存相关。当前越来越多的用户将 ETL 数据加工，多表物化视图处理，复杂的 AdHoc 查询等任务迁移到 Doris 上运行，所以，需要将中间操作结果卸载到磁盘上，使那些所需内存量超出每个查询或每个节点限制的查询能够得以执行。具体来说，当处理大型数据集或执行复杂查询时，内存消耗可能会迅速增加，超出单个节点或整个查询处理过程中可用的内存限制。Doris 通过将其中的中间结果（如聚合的中间状态、排序的临时数据等）写入磁盘，而不是完全依赖内存来存储这些数据，从而缓解了内存压力。这样做有几个好处：
+- 扩展性：允许 Doris 处理比单个节点内存限制大得多的数据集。
 - 稳定性：减少因内存不足导致的查询失败或系统崩溃的风险。
 - 灵活性：使得用户能够在不增加硬件资源的情况下，执行更复杂的查询。
   
-为了避免申请内存时触发OOM，Doris 引入了reserve memory机制，这个机制的工作流程如下：
-- Doris在执行过程中，会预估每次处理一个Block 需要的内存大小，然后到一个统一的内存管理器中去申请；
-- 全局的内存分配器会判断当前内存申请，是否超过了Query的内存限制或者超过了整个进程的内存限制，如果超过了，那么就返回失败；
-- Doris 在收到失败消息时，会将当前Query 挂起，然后选择最大的算子进行落盘，等到落盘结束后，Query再继续执行。
+为了避免申请内存时触发 OOM，Doris 引入了 reserve memory 机制，这个机制的工作流程如下：
+- Doris 在执行过程中，会预估每次处理一个 Block 需要的内存大小，然后到一个统一的内存管理器中去申请；
+- 全局的内存分配器会判断当前内存申请，是否超过了 Query 的内存限制或者超过了整个进程的内存限制，如果超过了，那么就返回失败；
+- Doris 在收到失败消息时，会将当前 Query 挂起，然后选择最大的算子进行落盘，等到落盘结束后，Query 再继续执行。
   
 目前支持落盘的算子有：
-- Hash Join算子
+- Hash Join 算子
 - 聚合算子
 - 排序算子
 - CTE
 
-当查询触发落盘时，由于会有额外的硬盘读写操作，查询时间可能会显著增长，建议调大FE Session变量query_timeout。同时落盘会有比较大的磁盘IO，建议单独配置一个磁盘目录或者使用SSD磁盘降低查询落盘对正常的导入或者查询的影响。目前查询落盘功能默认关闭。
+当查询触发落盘时，由于会有额外的硬盘读写操作，查询时间可能会显著增长，建议调大 FE Session 变量 query_timeout。同时落盘会有比较大的磁盘 IO，建议单独配置一个磁盘目录或者使用 SSD 磁盘降低查询落盘对正常的导入或者查询的影响。目前查询落盘功能默认关闭。
 
 ## 内存管理机制
-Doris 的内存管理分为三个级别： 进程级别、WorkloadGroup 级别、Query 级别。
+Doris 的内存管理分为三个级别：进程级别、WorkloadGroup 级别、Query 级别。
 ![spill_disk_memory](/images/workload-management/spill_disk_memory.png)
 
 ### BE 进程内存配置
-整个BE 进程的内存由be.conf中的参数mem_limit 控制，一旦Doris 使用的内存超过这个阈值，Doris 就会把当前正在申请内存的Query 取消，同时后台也会有一个定时任务，异步的Kill 一部分 Query来释放内存 或者 释放一些Cache。所以Doris 内部的各种管理操作（比如spill disk ， flush memtable等）需要在快接近这个阈值的时候，就需要运行，尽可能的避免内存达到这个阈值，一旦到达这个阈值，为了避免整个进程OOM，Doris 会采取一些非常暴力的自我保护措施。
-当Doris的BE跟其他的进程混部（比如Doris FE 、Kafka、HDFS）的时候，会导致Doris BE 实际可用的内存远小于用户设置的mem_limit 导致内部的释放内存机制失效，然后导致Doris 进程被操作系统的OOM Killer 杀死。
-当Doris 进程部署在K8S里或者用Cgroup 管理的时候，Doris 会自动感知容器的内存配置。
+整个 BE 进程的内存由 be.conf 中的参数 mem_limit 控制，一旦 Doris 使用的内存超过这个阈值，Doris 就会把当前正在申请内存的 Query 取消，同时后台也会有一个定时任务，异步的 Kill 一部分 Query 来释放内存 或者 释放一些 Cache。所以 Doris 内部的各种管理操作（比如 spill disk，flush memtable 等）需要在快接近这个阈值的时候，就需要运行，尽可能的避免内存达到这个阈值，一旦到达这个阈值，为了避免整个进程 OOM，Doris 会采取一些非常暴力的自我保护措施。
+当 Doris 的 BE 跟其他的进程混部（比如 Doris FE、Kafka、HDFS）的时候，会导致 Doris BE 实际可用的内存远小于用户设置的 mem_limit 导致内部的释放内存机制失效，然后导致 Doris 进程被操作系统的 OOM Killer 杀死。
+当 Doris 进程部署在 K8S 里或者用 Cgroup 管理的时候，Doris 会自动感知容器的内存配置。
 
-### Workload group 内存配置
-- memory_limit，默认是30%。表示当前workload group 分配的内存占整个进程内存的百分比。
-- enable_memory_overcommit，默认是true。表示当前workload group的内存限制，是硬限还是软限。当这个值为 true时，表示这个workload group 内所有的任务使用的内存的大小可以超过memory_limit 的限制。但是当整个进程的内存不足时，为了保证能够快速的回收内存，BE 会优先从那些超过自身限制的workload group 中挑选Query 去cancel，此时并不会等待Spill Disk。当用户不知道如何给多个workload group 设置多少内存时，这种方式是一个比较易用的配置策略。
-- write_buffer_ratio，默认是20%。表示当前workload group 内write buffer的大小。Doris 为了加快导入速度，数据首先会在内存里攒批（也就是构建Memtable），然后到一定大小的时候，再整体排序，然后写入硬盘。但是如果内存里积攒太多的Memtable 又会影响正常Query 可用的内存，导致Query 被Cancel。所以Doris 在每个workload group 内都单独划分了一个write buffer。对于写入比较大的workload group，可以设置比较大的write buffer，可以有效的提升写入的吞吐；对于查询比较多的workload group 可以调小这个值。
-- low watermark: 默认是75%。
-- high watermark：默认是90%.
+### Workload Group 内存配置
+- memory_limit，默认是 30%。表示当前 Workload Group 分配的内存占整个进程内存的百分比。
+- enable_memory_overcommit，默认是 true。表示当前 Workload Group 的内存限制，是硬限还是软限。当这个值为 true 时，表示这个 Workload Group 内所有的任务使用的内存的大小可以超过 memory_limit 的限制。但是当整个进程的内存不足时，为了保证能够快速的回收内存，BE 会优先从那些超过自身限制的 Workload Group 中挑选 Query 去 cancel，此时并不会等待 Spill Disk。当用户不知道如何给多个 Workload Group 设置多少内存时，这种方式是一个比较易用的配置策略。
+- write_buffer_ratio，默认是 20%。表示当前 Workload Group 内 write buffer 的大小。Doris 为了加快导入速度，数据首先会在内存里攒批（也就是构建 Memtable），然后到一定大小的时候，再整体排序，然后写入硬盘。但是如果内存里积攒太多的 Memtable 又会影响正常 Query 可用的内存，导致 Query 被 Cancel。所以 Doris 在每个 Workload Group 内都单独划分了一个 write buffer。对于写入比较大的 Workload Group，可以设置比较大的 write buffer，可以有效的提升写入的吞吐；对于查询比较多的 Workload Group 可以调小这个值。
+- low watermark: 默认是 75%。
+- high watermark：默认是 90%.
 
 ## Query 内存管理
 ### 静态内存分配
-Query 运行的内存受以下2个参数控制：
-- exec_mem_limit，表示一个query 最大可以使用的内存，默认值2G；
-- enable_mem_overcommit，默认是true。表示一个query 使用的内存是否可以超过exec_mem_limit的限制，默认值是true，表示是可以超过这个限制的，此时当进程内存不足的时候，会去杀死那些超过内存限制的query；false 表示query 使用的内存不能超过这个限制，当超过的时候，会根据用户的设置选择落盘或者kill。
-  这两个参数是query 运行之前用户就需要在session variable 里设置好，运行期间不能够动态修改。
+Query 运行的内存受以下 2 个参数控制：
+- exec_mem_limit，表示一个 query 最大可以使用的内存，默认值 2G；
+- enable_mem_overcommit，默认是 true。表示一个 query 使用的内存是否可以超过 exec_mem_limit 的限制，默认值是 true，表示是可以超过这个限制的，此时当进程内存不足的时候，会去杀死那些超过内存限制的 query；false 表示 query 使用的内存不能超过这个限制，当超过的时候，会根据用户的设置选择落盘或者 kill。
+  这两个参数是 query 运行之前用户就需要在 session variable 里设置好，运行期间不能够动态修改。
 
-### 基于Slot的内存分配
-静态内存分配方式，在使用过程中我们发现，很多时候用户不知道一个query 应该分配多少内存，所以经常把exec_mem_limit 设置为整个BE 进程内存的一半，也就是整个BE内所有的query 使用的内存都不允许超过整个进程内存的一半，这个功能在这种场景下实际变成了一个类似熔断的功能。当我们要根据内存的大小做一些更精细的策略控制，比如spill disk时，由于这个值太大了，所以不能依赖它来做一些控制。
-所以我们基于workload group 实现了一个新的基于slot的内存限制方式，这个策略的原理如下：
-- 每个workload group 用户都配置了2个参数，memory_limit和max_concurrency，那么就认为整个be 的内存被划分为 max_concurrency 个slot，每个slot 占用的内存是memory_limit / max_concurrency。
-- 默认情况下，每个query 运行占用1个slot，如果用户想让一个query 使用更多的内存，那么就需要修改query_slot_count 的值。
-- 由于workload group 的slot的总数是固定的，假如用户调大query_slot_count，相当于每个query 占用了更多的slot，那么整个workload group 可同时运行的query的数量就动态减少了，新来的query 就自动排队。
+### 基于 Slot 的内存分配
+静态内存分配方式，在使用过程中我们发现，很多时候用户不知道一个 query 应该分配多少内存，所以经常把 exec_mem_limit 设置为整个 BE 进程内存的一半，也就是整个 BE 内所有的 query 使用的内存都不允许超过整个进程内存的一半，这个功能在这种场景下实际变成了一个类似熔断的功能。当我们要根据内存的大小做一些更精细的策略控制，比如 spill disk 时，由于这个值太大了，所以不能依赖它来做一些控制。
+所以我们基于 Workload Group 实现了一个新的基于 slot 的内存限制方式，这个策略的原理如下：
+- 每个 Workload Group 用户都配置了 2 个参数，memory_limit 和 max_concurrency，那么就认为整个 be 的内存被划分为 max_concurrency 个 slot，每个 slot 占用的内存是 memory_limit / max_concurrency。
+- 默认情况下，每个 query 运行占用 1 个 slot，如果用户想让一个 query 使用更多的内存，那么就需要修改 query_slot_count 的值。
+- 由于 Workload Group 的 slot 的总数是固定的，假如用户调大 query_slot_count，相当于每个 query 占用了更多的 slot，那么整个 Workload Group 可同时运行的 query 的数量就动态减少了，新来的 query 就自动排队。
   
-Workload group的slot_memory_policy，这个参数可以有3个可选的值：
+Workload Group 的 slot_memory_policy，这个参数可以有 3 个可选的值：
 - disabled，默认值，表示不启用，使用静态内存分配方式；
-- fixed，每个query 可以使用的的内存 = workload group的mem_limit * query_slot_count/ max_concurrency.
-- dynamic，每个query 可以使用的的内存 = workload group的mem_limit * query_slot_count/ sum(running query slots)，它主要是克服了fixed 模式下，会存在有一些slot 没有使用的情况。
-  fixed或者dynamic 都是设置的query的硬限，一旦超过，就会落盘或者kill；而且会覆盖用户设置的静态内存分配的参数。 所以当要设置slot_memory_policy时，一定要设置好workload group的max_concurrency，否则会出现内存不足的问题。
+- fixed，每个 query 可以使用的的内存 = Workload Group 的 mem_limit * query_slot_count/ max_concurrency.
+- dynamic，每个 query 可以使用的的内存 = Workload Group 的 mem_limit * query_slot_count/ sum(running query slots)，它主要是克服了 fixed 模式下，会存在有一些 slot 没有使用的情况。
+  fixed 或者 dynamic 都是设置的 query 的硬限，一旦超过，就会落盘或者 kill；而且会覆盖用户设置的静态内存分配的参数。所以当要设置 slot_memory_policy 时，一定要设置好 Workload Group 的 max_concurrency，否则会出现内存不足的问题。
 
 ## 落盘
 ### 开启查询中间结果落盘
-#### BE配置项
-```
+#### BE 配置项
+```sql
 spill_storage_root_path=/mnt/disk1/spilltest/doris/be/storage;/mnt/disk2/doris-spill;/mnt/disk3/doris-spill
 spill_storage_limit=100%
 ```
-- spill_storage_root_path：查询中间结果落盘文件存储路径，默认和storage_root_path一样。
-- spill_storage_limit: 落盘文件占用磁盘空间限制。可以配置具体的空间大小（比如100G, 1T）或者百分比，默认是20%。如果spill_storage_root_path配置单独的磁盘，可以设置为100%。这个参数主要是防止落盘占用太多的磁盘空间，导致无法进行正常的数据存储。
-  修改配置项之后，需要重启BE才能生效。
+- spill_storage_root_path：查询中间结果落盘文件存储路径，默认和 storage_root_path 一样。
+- spill_storage_limit: 落盘文件占用磁盘空间限制。可以配置具体的空间大小（比如 100G, 1T）或者百分比，默认是 20%。如果 spill_storage_root_path 配置单独的磁盘，可以设置为 100%。这个参数主要是防止落盘占用太多的磁盘空间，导致无法进行正常的数据存储。
+  修改配置项之后，需要重启 BE 才能生效。
 
 #### FE Session Variable
-```
+```sql
 set enable_spill=true;
 set exec_mem_limit = 10g
 set enable_mem_overcommit = false
 ```
-- enable_spill 表示一个query 是否开启落盘；
-- exec_mem_limit 表示一个query 使用的最大的内存大小；
-- enable_mem_overcommit query 是否可以使用超过exec_mem_limit大小的内存限制
+- enable_spill 表示一个 query 是否开启落盘；
+- exec_mem_limit 表示一个 query 使用的最大的内存大小；
+- enable_mem_overcommit query 是否可以使用超过 exec_mem_limit 大小的内存限制
 
 #### Workload Group
-默认workload group 的memory_limit默认是30%，可按实际的workload group的数量合理修改。如果只有一个workload group，可以调整为90%。
-```
-alter workload group normal properties ( 'memory_limit'='90%' );
+
+默认 Workload Group 的 memory_limit 默认是 30%，可按实际的 Workload Group 的数量合理修改。如果只有一个 Workload Group，可以调整为 90%。
+
+```sql
+alter Workload Group normal properties ( 'memory_limit'='90%' );
 ```
 
 ### 监测落盘
 #### 审计日志
-FE audit log中增加了SpillWriteBytesToLocalStorage和SpillReadBytesFromLocalStorage字段，分别表示落盘时写盘和读盘数据总量。
-```
+
+FE Audit Log 中增加了 SpillWriteBytesToLocalStorage 和 SpillReadBytesFromLocalStorage 字段，分别表示落盘时写盘和读盘数据总量。
+
+```sql
 SpillWriteBytesToLocalStorage=503412182|SpillReadBytesFromLocalStorage=503412182
 ```
 
 #### Profile
-如果查询过程中触发了落盘，在Query Profile中增加了Spill 前缀的一些Counter进行标记和落盘相关counter。以HashJoin时Build HashTable为例，可以看到下面的Counter：
+如果查询过程中触发了落盘，在 Query Profile 中增加了 Spill 前缀的一些 Counter 进行标记和落盘相关 counter。以 HashJoin 时 Build HashTable 为例，可以看到下面的 Counter：
 
-```
+```sql
 PARTITIONED_HASH_JOIN_SINK_OPERATOR  (id=4  ,  nereids_id=179):(ExecTime:  6sec351ms)
       -  Spilled:  true
       -  CloseTime:  528ns
@@ -149,10 +153,12 @@ PARTITIONED_HASH_JOIN_SINK_OPERATOR  (id=4  ,  nereids_id=179):(ExecTime:  6sec3
 ```
 
 #### 系统表
-##### backend_active_tasks
-增加了SPILL_WRITE_BYTES_TO_LOCAL_STORAGE和SPILL_READ_BYTES_FROM_LOCAL_STORAGE字段，分别表示一个查询目前落盘中间结果写盘数据和读盘数据总量。
 
-```
+##### backend_active_tasks
+
+增加了 `SPILL_WRITE_BYTES_TO_LOCAL_STORAGE` 和 `SPILL_READ_BYTES_FROM_LOCAL_STORAGE` 字段，分别表示一个查询目前落盘中间结果写盘数据和读盘数据总量。
+
+```sql
 mysql [information_schema]>select * from backend_active_tasks;
 +-------+------------+-------------------+-----------------------------------+--------------+------------------+-----------+------------+----------------------+---------------------------+--------------------+-------------------+------------+------------------------------------+-------------------------------------+
 | BE_ID | FE_HOST    | WORKLOAD_GROUP_ID | QUERY_ID                          | TASK_TIME_MS | TASK_CPU_TIME_MS | SCAN_ROWS | SCAN_BYTES | BE_PEAK_MEMORY_BYTES | CURRENT_USED_MEMORY_BYTES | SHUFFLE_SEND_BYTES | SHUFFLE_SEND_ROWS | QUERY_TYPE | SPILL_WRITE_BYTES_TO_LOCAL_STORAGE | SPILL_READ_BYTES_FROM_LOCAL_STORAGE |
@@ -164,8 +170,9 @@ mysql [information_schema]>select * from backend_active_tasks;
 ```
 
 ##### workload_group_resource_usage
-增加了WRITE_BUFFER_USAGE_BYTES字段，表示workload group中的导入任务Memtable内存占用。
-```
+增加了 WRITE_BUFFER_USAGE_BYTES 字段，表示 Workload Group 中的导入任务 Memtable 内存占用。
+
+```sql
 mysql [information_schema]>select * from workload_group_resource_usage;
 +-------+-------------------+--------------------+-------------------+-----------------------------+------------------------------+--------------------------+
 | BE_ID | WORKLOAD_GROUP_ID | MEMORY_USAGE_BYTES | CPU_USAGE_PERCENT | LOCAL_SCAN_BYTES_PER_SECOND | REMOTE_SCAN_BYTES_PER_SECOND | WRITE_BUFFER_USAGE_BYTES |
@@ -191,8 +198,8 @@ mysql [information_schema]>select * from workload_group_resource_usage;
 ```
 
 #### 测试数据
-测试数据使用TPC-DS 10TB作为数据输入，使用阿里云DLF数据源，使用Catalog的方式挂载到Doris 内，SQL 语句如下：
-```
+测试数据使用 TPC-DS 10TB 作为数据输入，使用阿里云 DLF 数据源，使用 Catalog 的方式挂载到 Doris 内，SQL 语句如下：
+```sql
 CREATE CATALOG dlf PROPERTIES (
 "type"="hms",
 "hive.metastore.type" = "dlf",
@@ -206,10 +213,10 @@ CREATE CATALOG dlf PROPERTIES (
 );
 ```
 
-参考官网链接: https://doris.apache.org/zh-CN/docs/dev/benchmark/tpcds
+参考官网链接：https://doris.apache.org/zh-CN/docs/dev/benchmark/tpcds
 
 ### 测试结果
-数据的规模是10TB。内存和数据规模的比例是1:52，整体运行时间32000s，能够跑出所有的99条query。未来我们将对更多的算子提供落盘能力（如window function， Intersect等），同时继续优化落盘情况下的性能，降低对磁盘的消耗，提升查询的稳定性。
+数据的规模是 10TB。内存和数据规模的比例是 1:52，整体运行时间 32000s，能够跑出所有的 99 条 query。未来我们将对更多的算子提供落盘能力（如 window function，Intersect 等），同时继续优化落盘情况下的性能，降低对磁盘的消耗，提升查询的稳定性。
 
 | query   |Time(ms)|
 |---------|---------|
