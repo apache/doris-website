@@ -37,7 +37,7 @@ CANCEL  RESTORE
 语法：
 
 ```sql
-CANCEL RESTORE FROM db_name;
+CANCEL [GLOBAL] RESTORE [FROM db_name];
 ```
 
 注意：
@@ -50,6 +50,12 @@ CANCEL RESTORE FROM db_name;
 
 ```sql
 CANCEL RESTORE FROM example_db;
+```
+
+2. 取消全局的RESTORE 任务。
+
+```sql
+CANCEL GLOBAL RESTORE;
 ```
 
 ### Keywords
