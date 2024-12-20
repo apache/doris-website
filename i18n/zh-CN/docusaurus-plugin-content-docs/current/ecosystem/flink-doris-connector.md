@@ -48,7 +48,7 @@ under the License.
 
 ## 使用方式
 
-可以分别使用Jar方式和Maven方式使用Flink Doris Connector。
+可以分别使用 Jar 方式和 Maven 方式使用 Flink Doris Connector。
 
 #### Jar
 
@@ -74,9 +74,9 @@ Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
 
 以 Standalone 集群为例
 
-1. 下载 Flink 的安装包，[Flink 1.18.1](https://archive.apache.org/dist/flink/flink-1.18.1/flink-1.18.1-bin-scala_2.12.tgz) ；
-2. 解压后，将 Flink Doris Connector 包放到 <FLINK_HOME>/lib 下；
-3. 进入 <FLINK_HOME>目录，运行 bin/start-cluster.sh 启动 Flink 集群；
+1. 下载 Flink 的安装包，[Flink 1.18.1](https://archive.apache.org/dist/flink/flink-1.18.1/flink-1.18.1-bin-scala_2.12.tgz);
+2. 解压后，将 Flink Doris Connector 包放到 <FLINK_HOME>/lib 下;
+3. 进入 <FLINK_HOME>目录，运行 bin/start-cluster.sh 启动 Flink 集群;
 4. 可通过 jps 命令验证 Flink 集群是否成功启动。
 
 #### 初始化 Doris 表
@@ -112,15 +112,15 @@ PROPERTIES (
 );
 ```
 
-#### 运行FlinkSQL任务
+#### 运行 FlinkSQL 任务
 
-**启动FlinkSQL Client**
+**启动 FlinkSQL Client**
 
 ```sql
 bin/sql-client.sh
 ```
 
-**运行FlinkSQL**
+**运行 FlinkSQL**
 
 ```sql
 CREATE TABLE Student (
@@ -168,11 +168,13 @@ mysql> select * from test.student_trans;
 
 ## 场景与操作
 
-### 读取Doris中的数据
+### 读取 Doris 中的数据
 
-Flink 读取支持通过 [Thrift](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md) 和 [ArrowFlightSQL](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/)方式 (24.0.0 版本之后支持) 读取，推荐使用 ArrowFlightSQL 方式。同时目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。。
+Flink 读取支持通过 [Thrift](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md) 和 [ArrowFlightSQL ](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/)方式 (24.0.0 版本之后支持) 读取，推荐使用 ArrowFlightSQL 方式。同时目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。
 
-##### Thrift方式
+#### 使用 FlinkSQL 读取数据
+
+##### Thrift 方式
 
 ```SQL
 CREATE TABLE students (
@@ -191,7 +193,7 @@ CREATE TABLE students (
 SELECT * FROM students;
 ```
 
-##### ArrowFlightSQL方式
+##### ArrowFlightSQL 方式
 
 ```SQL
 CREATE TABLE students (
@@ -212,7 +214,7 @@ CREATE TABLE students (
 SELECT * FROM students;
 ```
 
-#### 使用DataStream API读取数据
+#### 使用 DataStream API 读取数据
 
 使用 DataStream API 读取时，需要提前在程序 POM 文件中引入依赖，参考使用方式章节
 
@@ -238,7 +240,7 @@ env.execute("Doris Source Test");
 
 完整代码参考：[DorisSourceDataStream.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSourceDataStream.java)
 
-### 向Doris中写入数据
+### 向 Doris 中写入数据
 
 Flink 写入使用 Stream Load 的方式进行写入，支持流式写入和攒批写入模式。
 
@@ -248,7 +250,7 @@ Connector1.5.0 之后支持攒批写入，攒批写入不依赖 Checkpoint，将
 
 :::
 
-#### 使用FlinkSQL写入数据
+#### 使用 FlinkSQL 写入数据
 
 写入测试使用 Flink 的 [Datagen](https://nightlies.apache.org/flink/flink-docs-master/docs/connectors/table/datagen/) 来模拟上游持续产生的数据
 
@@ -289,7 +291,7 @@ CREATE TABLE student_sink (
 INSERT INTO student_sink SELECT * FROM student_source;
 ```
 
-#### 使用DataStream API写入数据
+#### 使用 DataStream API 写入数据
 
 通过 DataStream api 写入的时候，可以使用不同的序列化方式对上游数据序列化后写入 Doris 表
 
