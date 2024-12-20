@@ -25,7 +25,7 @@ under the License.
 
 ## 概述
 
-BITMAP 类型的列可以在 Aggregate 表、Unique 表或 Duplicate 表中使用。 在 Unique 表或 duplicate 表中使用时，其必须作为非 key 列使用。 在 Aggregate 表中使用时，其必须作为非 key 列使用，且建表时配合的聚合类型为 BITMAP_UNION。 用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。
+BITMAP 类型的列可以在 Aggregate 表、Unique 表或 Duplicate 表中使用。 在 Unique 表或 duplicate 表中使用时，其必须作为非 key 列使用。 在 Aggregate 表中使用时，其必须作为非 key 列使用，且建表时配合的聚合类型为 BITMAP_UNION。 用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。更多文档参考[Bitmap](../../../sql-manual/sql-data-types/aggregate/BITMAP.md)。
 
 ## 使用示例
 

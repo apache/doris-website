@@ -25,7 +25,7 @@ under the License.
 
 ## 概述
 
-HLL是用作模糊去重，在数据量大的情况性能优于 Count Distinct。HLL的导入需要结合hll_hash等函数来使用。
+HLL是用作模糊去重，在数据量大的情况性能优于 Count Distinct。HLL的导入需要结合hll_hash等函数来使用。更多文档参考[HLL](../../../sql-manual/sql-data-types/aggregate/HLL.md)。
 
 ## 使用示例
 

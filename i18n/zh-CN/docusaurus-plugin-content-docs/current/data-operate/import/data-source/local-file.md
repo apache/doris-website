@@ -29,15 +29,15 @@ Doris 提供如下方式从本地数据进行导入：
 
 ## Stream Load 
 
-Stream Load 是通过 HTTP 协议将本地文件或数据流导入到 Doris 中。Stream Load 是一个同步导入方式，执行导入后返回导入结果，可以通过请求的返回判断导入是否成功。支持导入 CSV、JSON、Parquet 与 ORC 格式的数据。
+Stream Load 是通过 HTTP 协议将本地文件或数据流导入到 Doris 中。Stream Load 是一个同步导入方式，执行导入后返回导入结果，可以通过请求的返回判断导入是否成功。支持导入 CSV、JSON、Parquet 与 ORC 格式的数据。更多文档参考[stream load](../import-way/stream-load-manual.md)。
 
 ## streamloader
 
-Streamloader (../../../ecosystem/doris-streamloader)工具是一款用于将数据导入 Doris 数据库的专用客户端工具，底层基于Stream Load实现，可以提供多并发导入的功能，降低大数据量导入的耗时。支持并发导入CSV格式的数据，导入其他格式（JSON、Parquet 与 ORC ）时，可以同时导入多个文件，但是无法并发。
+Streamloader工具是一款用于将数据导入 Doris 数据库的专用客户端工具，底层基于Stream Load实现，可以提供多并发导入的功能，降低大数据量导入的耗时。支持并发导入CSV格式的数据，导入其他格式（JSON、Parquet 与 ORC ）时，可以同时导入多个文件，但是无法并发。更多文档参考[Streamloader](../../../ecosystem/doris-streamloader)。
 
 ## MySQL Load
 
-Doris 兼容 MySQL 协议，可以使用 MySQL 标准的 [LOAD DATA](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) 语法导入本地文件。MySQL Load 是一种同步导入方式，执行导入后即返回导入结果，主要适用于导入客户端本地 CSV 文件。
+Doris 兼容 MySQL 协议，可以使用 MySQL 标准的 [LOAD DATA](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) 语法导入本地文件。MySQL Load 是一种同步导入方式，执行导入后即返回导入结果，主要适用于导入客户端本地 CSV 文件。更多文档参考[mysql load](../import-way/mysql-load-manual.md)。
 
 # 使用Stream Load导入
 
