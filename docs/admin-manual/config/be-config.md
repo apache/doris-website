@@ -1304,7 +1304,7 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 #### `enable_batch_download`
 
-* Description: Whether to download files in batch, recommend only opening it when the binlog is enabled.
+* Description: Whether to download files in batch, it is recommended to open it when the binlog is enabled.
 * Default value: false
 
 #### `priority_queue_remaining_tasks_increased_frequency`
