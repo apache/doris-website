@@ -151,7 +151,7 @@ under the License.
 
 :::info 备注
 
-参考文档：[存算分离](https://doris.apache.org/zh-CN/docs/3.0/compute-storage-decoupled/overview)
+参考文档：[存算分离](../../compute-storage-decoupled/overview)
 
 :::
 
@@ -200,15 +200,15 @@ under the License.
 
 - [接入 Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide)
 
-- [TPC-H](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/tpch/)
+- [TPC-H](../../lakehouse/datalake-analytics/tpch/)
 
-- [TPC-DS](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/tpcds/)
+- [TPC-DS](../../lakehouse/datalake-analytics/tpcds/)
 
-- [Delta Lake](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/deltalake)
+- [Delta Lake](../../lakehouse/datalake-analytics/deltalake)
 
-- [Kudu](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/kudu)
+- [Kudu](../../lakehouse/datalake-analytics/kudu)
 
-- [BigQuery](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/bigquery)
+- [BigQuery](../../lakehouse/datalake-analytics/bigquery)
 :::
 
 ### 2-3 数据湖构建
@@ -219,7 +219,7 @@ under the License.
 
 :::info 备注
 
-参考文档：[数据湖构建](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-building/hive-build/)
+参考文档：[数据湖构建](../../lakehouse/datalake-building/hive-build/)
 
 :::
 
@@ -277,7 +277,7 @@ Variant 数据类型在经过大规模生产打磨后，已具备充分的稳定
 
 参考文档：
 
-- [事务](https://doris.apache.org/zh-CN/docs/3.0/data-operate/transaction/)
+- [事务](../../data-operate/transaction/)
 
 - 目前 CCR 暂未支持显示事务同步。
 :::
@@ -329,9 +329,9 @@ Variant 数据类型在经过大规模生产打磨后，已具备充分的稳定
 :::info 备注
 参考文档：
 
-- [异步物化视图概览](https://doris.apache.org/zh-CN/docs/query/view-materialized-view/async-materialized-view)
+- [异步物化视图概览](../../query-acceleration/materialized-view/async-materialized-view/overview.md)
 
-- [查询异步物化视图](https://doris.apache.org/zh-CN/docs/3.0/query/view-materialized-view/query-async-materialized-view/)
+- [查询异步物化视图](../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md)
 :::
 
 ## 6. 性能提升
@@ -400,7 +400,7 @@ Runtime Filter 是否能够准确生成对查询性能的影响至关重要，�
   ```
 
 :::info 备注
-参考文档： [Java UDF - UDTF](https://doris.apache.org/zh-CN/docs/query/udf/java-user-defined-function#udtf-1)
+参考文档： [Java UDF - UDTF](../../query-data/udf/java-user-defined-function.md#java-udtf-实例介绍)
 :::
 
 ### 7-2 生成列
@@ -415,7 +415,7 @@ Runtime Filter 是否能够准确生成对查询性能的影响至关重要，�
 
 参考文档：
 
-[CREATE TABLE AND GENERATED COLUMN](https://doris.apache.org/zh-CN/docs/3.0/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AND-GENERATED-COLUMN/)
+[CREATE TABLE AND GENERATED COLUMN](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md)
 :::
 
 ## 8. 功能改进
