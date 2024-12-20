@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 亲爱的社区小伙伴们，**Apache Doris 2.1.6 版本已于 2024 年 9 月 10 日正式发布。**2.1.6 版本在湖仓一体、异步物化视图、半结构化数据管理持续升级改进，同时在查询优化器、执行引擎、存储管理、数据导入与导出以及权限管理等方面完成了若干修复。欢迎大家下载使用。
 
 - 官网下载：https://doris.apache.org/download
@@ -56,15 +57,15 @@ under the License.
 
 - 实现 Iceberg 表的写回功能。
   
-  - 更多信息，请查看文档数据湖构建-[Iceberg](https://doris.apache.org/zh-CN/docs/lakehouse/datalake-building/iceberg-build)
+  - 更多信息，请查看文档数据湖构建-[Iceberg](../../lakehouse/datalake-building/iceberg-build)
 
 - 增强 SQL 拦截规则，支持对外表的拦截处理。
 
-  - 更多信息，请查看文档查询管理-[SQL 拦截](https://doris.apache.org/zh-CN/docs/admin-manual/query-admin/sql-interception)
+  - 更多信息，请查看文档查询管理-[SQL 拦截](../../admin-manual/query-admin/sql-interception)
 
 - 新增系统表`file_cache_statistics`，用于查看 BE 节点的数据缓存性能指标。
 
-  - 更多信息，请查看文档系统表-[file_cache_statistics](https://doris.apache.org/docs/admin-manual/system-tables/file_cache_statistics/)
+  - 更多信息，请查看文档系统表-[file_cache_statistics](../../admin-manual/system-tables/information_schema/file_cache_statistics)
 
 ### 异步物化视图
 
@@ -108,10 +109,10 @@ under the License.
 
 - 新增系统表`table_properties`，便于用户查看和管理表的各项属性。
  
-  - 更多信息，请查看文档 [table_properties](https://doris.apache.org/zh-CN/docs/admin-manual/system-tables/information_schema/table_properties/)
+  - 更多信息，请查看文档 [table_properties](../../admin-manual/system-tables/information_schema/table_properties/)
 - 新增 FE 中死锁和慢锁检测功能。
  
-  - 更多信息，请查看文档 [FE 锁管理](https://doris.apache.org/zh-CN/docs/admin-manual/maint-monitor/frontend-lock-manager/)
+  - 更多信息，请查看文档 [FE 锁管理](../../admin-manual/maint-monitor/frontend-lock-manager/)
 
 ## 改进提升
 
@@ -119,7 +120,7 @@ under the License.
 
 - 革新外表元数据缓存机制。
   
-  - 更多信息，请查看文档 [元数据缓存](https://doris.apache.org/zh-CN/docs/lakehouse/metacache/)。
+  - 更多信息，请查看文档 [元数据缓存](../../lakehouse/metacache)。
 
 - 新增会话变量`keep_carriage_return`，默认关闭。读取 Hive Text 格式表时，默认将`\r\n`与`\n`均视为换行符。[#38099](https://github.com/apache/doris/pull/38099)
 

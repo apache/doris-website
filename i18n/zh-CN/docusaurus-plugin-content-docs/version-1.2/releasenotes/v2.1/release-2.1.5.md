@@ -131,7 +131,7 @@ under the License.
 
 - 数据导出（Export/Outfile）支持指定 Parquet 和 ORC 的压缩格式。
 
-  - 更多信息，请参考[文档](https://doris.apache.org/docs/sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT/?_highlight=compress_type)。
+  - 更多信息，请参考[文档](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT.md)。
 
 - 当使用 CTAS+TVF 创建表时，TVF 中的分区列将被自动映射为 Varchar（65533）而非 String，以便该分区列能够作为内表的分区列使用。 [#37161](https://github.com/apache/doris/pull/37161)
 
@@ -207,7 +207,7 @@ under the License.
 
 - 支持为 `INSERT INTO ... FROM TABLE VALUE FUNCTION` 语句设置 `max_filter_ratio` 参数。
 
-  - 更多信息，请参考[文档](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/insert-into-manual/)
+  - 更多信息，请参考[文档](../../data-operate/import/import-way/insert-into-manual)
 
 ## Bug 修复
 

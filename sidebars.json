@@ -117,10 +117,11 @@
                             "type": "category",
                             "label": "Data Models",
                             "items": [
-                                "admin-manual/data-admin/ccr/overview",
-                                "admin-manual/data-admin/ccr/quickstart",
-                                "admin-manual/data-admin/ccr/feature",
-                                "admin-manual/data-admin/ccr/manual"
+                                "table-design/data-model/overview",
+                                "table-design/data-model/duplicate",
+                                "table-design/data-model/unique",
+                                "table-design/data-model/aggregate",
+                                "table-design/data-model/tips"
                             ]
                         },
                         "table-design/row-store",
