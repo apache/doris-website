@@ -38,7 +38,7 @@ export default function Latest() {
                         <div style={{ fontSize: 12, marginBottom: 20 }}>2024 年 12 月 14 日，由飞轮科技主办，腾讯云和阿里云联合主办的 Doris Summit Asia 2024 在深圳圆满落幕。演讲回放及资料会在 10 个工作日内逐步释出，可通过 Doris Summit 官网获取。</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>回放生成中</div>
                     </a>
-                    <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v3.0/release-3.0.2`}>
+                    <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v3.0/release-3.0.3`}>
                         <div className="home-page-hero-button-label"><div>版本发布</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
