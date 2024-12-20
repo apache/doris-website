@@ -31,7 +31,7 @@
 
     b,
     strong {
-        font-weight: 500;
+        font-weight: 600;
         color: #1d1d1d;
     }
 
@@ -171,8 +171,8 @@
     table thead th {
         background-color: #f7f9fe;
         color: #1d1d1d;
-        font-size: 1rem;
-        font-weight: 500;
+        font-size: 0.875rem;
+        font-weight: 600;
     }
 
     table tr {
@@ -189,6 +189,9 @@
     table tr td {
         padding: 0.65rem 0.8125rem;
         border-color: #dfe5f0;
+        font-size: 0.875rem;
+        font-weight: 400;
+        color: #1F1F26;
     }
     a {
         color: var(--ifm-color-primary);
