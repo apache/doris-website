@@ -39,6 +39,21 @@ async function fetchAutoCompleteJS() {
     }
     return autoComplete;
 }
+
+function getVersionUrl(baseUrl, pathname) {
+    let versionUrl = baseUrl;
+    if (pathname && pathname.includes('zh-CN') && !versionUrl.includes('zh-CN')) {
+        versionUrl = baseUrl + 'zh-CN/';
+    }
+    if (pathname?.startsWith('/docs') || pathname?.startsWith('/zh-CN/docs')) {
+        let version = pathname?.startsWith('/docs') ? pathname.split('/')[2] : pathname.split('/')[3];
+        if (VERSIONS.includes(version)) {
+            versionUrl += `docs/${version}/`;
+        }
+    }
+    return versionUrl;
+}
+
 const SEARCH_PARAM_HIGHLIGHT = '_highlight';
 export default function SearchBar({ handleSearchBarToggle }) {
     const isBrowser = useIsBrowser();
@@ -52,17 +67,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
     // It returns undefined for non-docs pages
     const activePlugin = useActivePlugin();
     const [isDocsPage] = useIsDocPage(false);
-    let versionUrl = baseUrl;
-    if (location?.pathname && location.pathname.includes('zh-CN') && !versionUrl.includes('zh-CN')) {
-        versionUrl = baseUrl + 'zh-CN/';
-    }
-    if (location?.pathname) {
-        VERSIONS.forEach(version => {
-            if (location.pathname.includes(version)) {
-                versionUrl += `docs/${version}/`;
-            }
-        });
-    }
+    let versionUrl = getVersionUrl(baseUrl, location.pathname);
 
     // For non-docs pages while using plugin-content-docs with custom ids,
     // this will throw an error of:
