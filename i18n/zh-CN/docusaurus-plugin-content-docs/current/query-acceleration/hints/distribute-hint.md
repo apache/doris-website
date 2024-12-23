@@ -43,9 +43,9 @@ Distribute hint 用来控制 join 的 shuffle 方式。
 使用前：
 
 ```sql
-mysql> _explain_ shape _plan_ _select_ count(*) _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2;
+mysql> explain shape plan select count(*) from t1 join t2 on t1.c1 = t2.c2;
   +----------------------------------------------------------------------------------+
-  | _Explain_ String(Nereids Planner)                                                  |
+  | Explain String(Nereids Planner)                                                  |
   +----------------------------------------------------------------------------------+
   | PhysicalResultSink                                                               |
   | --hashAgg[GLOBAL]                                                                |
@@ -64,9 +64,9 @@ mysql> _explain_ shape _plan_ _select_ count(*) _from_ t1 _join_ t2 _on_ t1.c1 =
 使用后：
 
 ```sql
-mysql> _explain_ shape _plan_ _select_ /*+ ordered */ count(*) _from_ t2 _join_[broadcast] t1 _on_ t1.c1 = t2.c2;
+mysql> explain shape plan select /*+ ordered */ count(*) from t2 join[broadcast] t1 on t1.c1 = t2.c2;
 +----------------------------------------------------------------------------------+
-| _Explain_ String(Nereids Planner)                                                  |
+| Explain String(Nereids Planner)                                                  |
 +----------------------------------------------------------------------------------+
 | PhysicalResultSink                                                               |
 | --hashAgg[GLOBAL]                                                                |

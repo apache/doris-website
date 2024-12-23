@@ -91,13 +91,13 @@ PROPERTIES(
 
 
 
-:::tip
+:::tip 提示
 2.0 版本中，Doris 支持了跨 Database 的 Group。
 :::
 
 在建表时，需使用关键词 `__global__` 作为 Group 名称的前缀。如：
 
-```
+```sql
 CREATE TABLE tbl (k1 int, v1 int sum)
 DISTRIBUTED BY HASH(k1)
 BUCKETS 8
@@ -167,7 +167,7 @@ SHOW PROC '/colocation_group/10005.10008';
 
 - BackendIds：分桶中数据分片所在的 BE 节点 id 列表。
 
-:::note
+:::info 备注
 以上命令需要 ADMIN 权限。暂不支持普通用户查看。
 :::
 
@@ -207,7 +207,7 @@ Group 自身有一个 Stable 属性，当 Stable 为 true 时，表示当前 Gro
 
 Doris 会尽力将 Colocation 表的分片均匀分布在所有 BE 节点上。对于普通表的副本均衡，是以单副本为粒度的，即单独为每一个副本寻找负载较低的 BE 节点即可。而 Colocation 表的均衡是 Bucket 级别的，即一个 Bucket 内的所有副本都会一起迁移。我们采用一个简单的均衡算法，即在不考虑副本实际大小，而只根据副本数量，将 BucketsSequence 均匀的分布在所有 BE 上。具体算法可以参阅 `ColocateTableBalancer.java` 中的代码注释。
 
-:::caution
+:::caution 注意
 - 注 1：当前的 Colocation 副本均衡和修复算法，对于异构部署的 Doris 集群效果可能不佳。所谓异构部署，即 BE 节点的磁盘容量、数量、磁盘类型（SSD 和 HDD）不一致。在异构部署情况下，可能出现小容量的 BE 节点和大容量的 BE 节点存储了相同的副本数量。
 
 - 注 2：当一个 Group 处于 Unstable 状态时，其中的表的 Join 将退化为普通 Join。此时可能会极大降低集群的查询性能。如果不希望系统自动均衡，可以设置 FE 的配置项 `disable_colocate_balance` 来禁止自动均衡。然后在合适的时间打开即可。（具体参阅 `高级操作` 一节）
