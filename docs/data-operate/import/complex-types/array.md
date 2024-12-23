@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Overview
+## Overview
 
 `ARRAY<T>` An array of T-type items, it cannot be used as a key column.
 
@@ -38,9 +38,9 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE,
 DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-# CSV format import
+## CSV format import
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create the following csv file: `test_array.csv`
 The separator is `|` instead of comma to distinguish it from the comma in array.
@@ -52,7 +52,7 @@ The separator is `|` instead of comma to distinguish it from the comma in array.
 4|null
 ```
 
-## Step 2: Create a table in the database
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE `array_test` (
@@ -66,7 +66,7 @@ PROPERTIES (
 );
 ```
 
-## Step 3: Load data
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -77,7 +77,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/array_test/_stream_load
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM array_test;
@@ -92,9 +92,9 @@ mysql> SELECT * FROM array_test;
 4 rows in set (0.01 sec)
 ```
 
-# JSON format import
+## JSON format import
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create the following JSON file, `test_array.json`
 
@@ -107,7 +107,7 @@ Create the following JSON file, `test_array.json`
 ]
 ```
 
-## Step 2: Create a table in the database
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE `array_test` (
@@ -121,7 +121,7 @@ PROPERTIES (
 );
 ```
 
-## Step 3: Load data
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -133,7 +133,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/array_test/_stream_load
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM array_test;

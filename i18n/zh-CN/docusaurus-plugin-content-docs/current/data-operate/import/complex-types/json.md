@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 概述
+## 概述
 
 `JSON` 数据类型，用二进制格式高效存储 JSON 数据，通过 JSON 函数访问其内部字段。
 
@@ -39,9 +39,9 @@ under the License.
 在1.2.x版本中，JSON 类型的名字是 JSONB，为了尽量跟 MySQL 兼容，从 2.0.0 版本开始改名为 JSON，老的表仍然可以使用。
 :::
 
-# CSV格式导入
+## CSV格式导入
 
-## 第 1 步：准备数据
+### 第 1 步：准备数据
 
 创建如下的 csv 文件：`test_json.csv`
 其中分隔符使用 `|` 而不是逗号，以便和 json 中的逗号区分。
@@ -54,7 +54,7 @@ under the License.
 5|null
 ```
 
-## 第 2 步：在数据库中建表
+### 第 2 步：在数据库中建表
 
 ```sql
 CREATE TABLE json_test (
@@ -68,7 +68,7 @@ PROPERTIES (
 );
 ```
 
-## 第 3 步：导入数据
+### 第 3 步：导入数据
 
 ```bash
 curl --location-trusted \
@@ -79,7 +79,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/json_test/_stream_load
 ```
 
-## 第 4 步：检查导入数据
+### 第 4 步：检查导入数据
 
 ```sql
 SELECT * FROM json_test;
@@ -95,9 +95,9 @@ SELECT * FROM json_test;
 5 rows in set (0.01 sec)
 ```
 
-# JSON格式导入
+## JSON格式导入
 
-## 第 1 步：准备数据
+### 第 1 步：准备数据
 
 创建如下的 JSON 文件，`test_json.json`
 
@@ -111,7 +111,7 @@ SELECT * FROM json_test;
 ]
 ```
 
-## 第 2 步：在数据库中建表
+### 第 2 步：在数据库中建表
 
 ```sql
 CREATE TABLE json_test (
@@ -125,7 +125,7 @@ PROPERTIES (
 );
 ```
 
-## 第 3 步：导入数据
+### 第 3 步：导入数据
 
 ```bash
 curl --location-trusted \
@@ -137,7 +137,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/json_test/_stream_load
 ```
 
-## 第 4 步：检查导入数据
+### 第 4 步：检查导入数据
 
 ```sql
 mysql> SELECT * FROM json_test;

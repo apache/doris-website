@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Overview
+## Overview
 
 The JSON data type stores JSON data efficiently in a binary format and allows access to its internal fields through JSON functions.
 
@@ -36,9 +36,9 @@ JSON format validation during data insertion.
 More efficient binary storage format, enabling faster access to JSON internal fields using functions like json_extract, compared to get_json_xx functions.
 Note: In version 1.2.x, the JSON type was named JSONB. To maintain compatibility with MySQL, it was renamed to JSON starting from version 2.0.0. Older tables can still use the previous name.
 
-# CSV format import
+## CSV format import
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create the following csv file: `test_json.csv`
 The separator is `|` instead of comma to distinguish it from the comma in json.
@@ -51,7 +51,7 @@ The separator is `|` instead of comma to distinguish it from the comma in json.
 5|null
 ```
 
-## Step 2: Create a table in the database
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE json_test (
@@ -65,7 +65,7 @@ PROPERTIES (
 );
 ```
 
-## Step 3: Load data
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -76,7 +76,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/json_test/_stream_load
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 SELECT * FROM json_test;
@@ -92,9 +92,9 @@ SELECT * FROM json_test;
 5 rows in set (0.01 sec)
 ```
 
-# JSON format import
+## JSON format import
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create the following JSON file, `test_json.json`
 
@@ -108,7 +108,7 @@ Create the following JSON file, `test_json.json`
 ]
 ```
 
-## Step 2: Create a table in the database
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE json_test (
@@ -122,7 +122,7 @@ PROPERTIES (
 );
 ```
 
-## Step 3: Load data
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -134,7 +134,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/json_test/_stream_load
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM json_test;

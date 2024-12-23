@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Overview
+## Overview
 
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` Represents value with structure described by multiple fields, which can be viewed as a collection of multiple columns.
 
@@ -43,9 +43,9 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIM
 DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-# CSV format import
+## CSV format import
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create the following csv file: `test_struct.csv`
 The separator is `|` instead of comma to distinguish it from the comma in struct.
@@ -58,7 +58,7 @@ The separator is `|` instead of comma to distinguish it from the comma in struct
 5|null
 ```
 
-## Step 2: Create a table in the database
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE struct_test (
@@ -72,7 +72,7 @@ PROPERTIES (
 );
 ```
 
-## Step 3: Load data
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -83,7 +83,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/struct_test/_stream_load
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM struct_test;
@@ -99,9 +99,9 @@ mysql> SELECT * FROM struct_test;
 5 rows in set (0.01 sec)
 ```
 
-# JSON format import
+## JSON format import
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create the following JSON file, `test_struct.json`
 
@@ -115,7 +115,7 @@ Create the following JSON file, `test_struct.json`
 ]
 ```
 
-## Step 2: Create a table in the database
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE struct_test (
@@ -129,7 +129,7 @@ PROPERTIES (
 );
 ```
 
-## Step 3: Load data
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -141,7 +141,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/struct_test/_stream_load
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM struct_test;

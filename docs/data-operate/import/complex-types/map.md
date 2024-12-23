@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Overview
+## Overview
 
 `MAP<K, V>` A Map of K, V items, it cannot be used as a key column. Now MAP can only used in Duplicate and Unique Model Tables.
 
@@ -35,9 +35,9 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIM
 DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-# CSV format import
+## CSV format import
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create the following csv file: `test_map.csv`
 The separator is `|` instead of comma to distinguish it from the comma in map.
@@ -49,7 +49,7 @@ The separator is `|` instead of comma to distinguish it from the comma in map.
 4|null
 ```
 
-## Step 2: Create a table in the database
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE map_test (
@@ -63,7 +63,7 @@ PROPERTIES (
 );
 ```
 
-## Step 3: Load data
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -74,7 +74,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/map_test/_stream_load
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM map_test;
@@ -89,9 +89,9 @@ mysql> SELECT * FROM map_test;
 4 rows in set (0.01 sec)
 ```
 
-# JSON format import
+## JSON format import
 
-## Step 1: Prepare the data
+### Step 1: Prepare the data
 
 Create the following JSON file, `test_map.json`
 
@@ -104,7 +104,7 @@ Create the following JSON file, `test_map.json`
 ]
 ```
 
-## Step 2: Create a table in the database
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE map_test (
@@ -118,7 +118,7 @@ PROPERTIES (
 );
 ```
 
-## Step 3: Load data
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -130,7 +130,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/map_test/_stream_load
 ```
 
-## Step 4: Check the imported data
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM map_test;

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 概述
+## 概述
 
 `ARRAY<T>` 表示由 T 类型元素组成的数组，不能作为 key 列使用。
 
@@ -38,9 +38,9 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL,
 DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-# CSV格式导入
+## CSV格式导入
 
-## 第 1 步：准备数据
+### 第 1 步：准备数据
 
 创建如下的 csv 文件：`test_array.csv`
 其中分隔符使用 `|` 而不是逗号，以便和 array 中的逗号区分。
@@ -52,7 +52,7 @@ DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 4|null
 ```
 
-## 第 2 步：在数据库中建表
+### 第 2 步：在数据库中建表
 
 ```sql
 CREATE TABLE `array_test` (
@@ -66,7 +66,7 @@ PROPERTIES (
 );
 ```
 
-## 第 3 步：导入数据
+### 第 3 步：导入数据
 
 ```bash
 curl --location-trusted \
@@ -77,7 +77,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/array_test/_stream_load
 ```
 
-## 第 4 步：检查导入数据
+### 第 4 步：检查导入数据
 
 ```sql
 mysql> SELECT * FROM array_test;
@@ -92,9 +92,9 @@ mysql> SELECT * FROM array_test;
 4 rows in set (0.01 sec)
 ```
 
-# JSON格式导入
+## JSON格式导入
 
-## 第 1 步：准备数据
+### 第 1 步：准备数据
 
 创建如下的 JSON 文件，`test_array.json`
 
@@ -107,7 +107,7 @@ mysql> SELECT * FROM array_test;
 ]
 ```
 
-## 第 2 步：在数据库中建表
+### 第 2 步：在数据库中建表
 
 ```sql
 CREATE TABLE `array_test` (
@@ -121,7 +121,7 @@ PROPERTIES (
 );
 ```
 
-## 第 3 步：导入数据
+### 第 3 步：导入数据
 
 ```bash
 curl --location-trusted \
@@ -133,7 +133,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/array_test/_stream_load
 ```
 
-## 第 4 步：检查导入数据
+### 第 4 步：检查导入数据
 
 ```sql
 mysql> SELECT * FROM array_test;

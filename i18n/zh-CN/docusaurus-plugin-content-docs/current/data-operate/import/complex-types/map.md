@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 概述
+## 概述
 
 `MAP<K, V>` 表示由K, V类型元素组成的 map，不能作为 key 列使用。
 
@@ -37,9 +37,9 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIM
 DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-# CSV格式导入
+## CSV格式导入
 
-## 第 1 步：准备数据
+### 第 1 步：准备数据
 
 创建如下的 csv 文件：`test_map.csv`
 其中分隔符使用 `|` 而不是逗号，以便和 map 中的逗号区分。
@@ -51,7 +51,7 @@ DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 4|null
 ```
 
-## 第 2 步：在数据库中建表
+### 第 2 步：在数据库中建表
 
 ```sql
 CREATE TABLE map_test (
@@ -65,7 +65,7 @@ PROPERTIES (
 );
 ```
 
-## 第 3 步：导入数据
+### 第 3 步：导入数据
 
 ```bash
 curl --location-trusted \
@@ -76,7 +76,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/map_test/_stream_load
 ```
 
-## 第 4 步：检查导入数据
+### 第 4 步：检查导入数据
 
 ```sql
 mysql> SELECT * FROM map_test;
@@ -91,9 +91,9 @@ mysql> SELECT * FROM map_test;
 4 rows in set (0.01 sec)
 ```
 
-# JSON格式导入
+## JSON格式导入
 
-## 第 1 步：准备数据
+### 第 1 步：准备数据
 
 创建如下的 JSON 文件，`test_map.json`
 
@@ -106,7 +106,7 @@ mysql> SELECT * FROM map_test;
 ]
 ```
 
-## 第 2 步：在数据库中建表
+### 第 2 步：在数据库中建表
 
 ```sql
 CREATE TABLE map_test (
@@ -120,7 +120,7 @@ PROPERTIES (
 );
 ```
 
-## 第 3 步：导入数据
+### 第 3 步：导入数据
 
 ```bash
 curl --location-trusted \
@@ -132,7 +132,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/map_test/_stream_load
 ```
 
-## 第 4 步：检查导入数据
+### 第 4 步：检查导入数据
 
 ```sql
 mysql> SELECT * FROM map_test;
