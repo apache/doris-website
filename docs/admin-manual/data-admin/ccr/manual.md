@@ -24,14 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Limitations
+## Usage Requirements
 
-### Network Constraints
+### Network Requirements
 
-- Syncer needs to be able to communicate with both the upstream and downstream FE (Frontend) and BE (Backend).
+- The Syncer must be able to communicate with both the upstream and downstream FE (Frontend) and BE (Backend).
 
-- The downstream BE and upstream BE are directly connected through the IP used by the Doris BE process (as seen in `show frontends/backends`).
+- The downstream BE and upstream BE must use the IP of the Doris BE process (as seen in `show frontends/backends`), which must be directly accessible.
 
+### Permission Requirements
+
+When syncing, the user must provide accounts for both upstream and downstream, and these accounts must have the following permissions:
+
+1. **Select_priv**: Read-only permissions on databases and tables.
+2. **Load_priv**: Write permissions on databases and tables, including Load, Insert, Delete, etc.
+3. **Alter_priv**: Permissions to modify databases and tables, including renaming databases/tables, adding/deleting/changing columns, adding/removing partitions, etc.
+4. **Create_priv**: Permissions to create databases, tables, and views.
+5. **drop_priv**: Permissions to delete databases, tables, and views.
+
+Additionally, **Admin privileges** are required (this may be removed in the future). These are needed to check the enable binlog configuration, which currently requires admin rights.
+
+### Version Requirements
+
+Minimum version required: v2.0.15
+
+:::caution
+**Starting from versions 2.1.8/3.0.4, the minimum supported Doris version for the ccr syncer is 2.1. Version 2.0 will no longer be supported.**
+:::
+
+#### Versions Not Recommended for Use
+
+Doris Versions:
+- 2.1.5/2.0.14: If upgrading from previous versions to these two versions, and the user has a drop partition operation, an NPE may occur during upgrade or restart. This is due to a new field introduced in these versions, which older versions don't have, causing a default value of null. This issue was fixed in 2.1.6/2.0.15.
 
 ## Start Syncer
 
@@ -58,7 +82,7 @@ output_dir
 
 **Start options**
 
-**--daemon** 
+**--daemon**
 
 Run Syncer in the background, set to false by default.
 
@@ -66,7 +90,7 @@ Run Syncer in the background, set to false by default.
 bash bin/start_syncer.sh --daemon
 ```
 
-**--db_type** 
+**--db_type**
 
 Syncer can currently use two databases to store its metadata, `sqlite3 `(for local storage) and `mysql `(for local or remote storage).
 
@@ -78,7 +102,7 @@ The default value is sqlite3.
 
 When using MySQL to store metadata, Syncer will use `CREATE IF NOT EXISTS `to create a database called `ccr`, where the metadata table related to CCR will be saved.
 
-**--db_dir** 
+**--db_dir**
 
 **This option only works when db uses `sqlite3`.**
 
@@ -100,9 +124,9 @@ bash bin/start_syncer.sh --db_host 127.0.0.1 --db_port 3306 --db_user root --db_
 
 The default values of db_host and db_port are shown in the example. The default values of db_user and db_password are empty.
 
-**--log_dir** 
+**--log_dir**
 
-Output path of the logs: 
+Output path of the logs:
 
 ```SQL
 bash bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log
@@ -110,7 +134,7 @@ bash bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log
 
 The default path is`SYNCER_OUTPUT_DIR/log` and the default file name is `ccr_syncer.log`.
 
-**--log_level** 
+**--log_level**
 
 Used to specify the output level of Syncer logs.
 
@@ -134,7 +158,7 @@ Under --daemon, the default value of log_level is `info`.
 
 When running in the foreground, log_level defaults to `trace`, and logs are saved to log_dir using the tee command.
 
-**--host && --port** 
+**--host && --port**
 
 Used to specify the host and port of Syncer, where host only plays the role of distinguishing itself in the cluster, which can be understood as the name of Syncer, and the name of Syncer in the cluster is `host: port`.
 
@@ -144,7 +168,7 @@ bash bin/start_syncer.sh --host 127.0.0.1 --port 9190
 
 The default value of host is 127.0.0.1, and the default value of port is 9190.
 
-**--pid_dir** 
+**--pid_dir**
 
 Used to specify the storage path of the pid file
 
@@ -195,7 +219,7 @@ Specify the names of the pid files to be stopped, wrap the names in `""` and sep
 
 Follow the default configurations.
 
-**--pid_dir** 
+**--pid_dir**
 
 Specify the directory where the pid file is located. The above three stopping methods all depend on the directory where the pid file is located for execution.
 
@@ -207,7 +231,7 @@ The effect of the above example is to close the Syncer corresponding to all pid 
 
 The default value is `SYNCER_OUTPUT_DIR/bin`.
 
-**--host && --port** 
+**--host && --port**
 
 Stop the Syncer corresponding to host: port in the pid_dir path.
 
@@ -217,7 +241,7 @@ bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190
 
 The default value of host is 127.0.0.1, and the default value of port is empty. That is, specifying the host alone will degrade **method 1** to **method 3**. **Method 1** will only take effect when neither the host nor the port is empty.
 
-**--files** 
+**--files**
 
 Stop the Syncer corresponding to the specified pid file name in the pid_dir path.
 
@@ -298,7 +322,7 @@ The job_name is the name specified when create_ccr.
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
     "name": "job_name"
-}' http://ccr_syncer_host:ccr_syncer_port/pause 
+}' http://ccr_syncer_host:ccr_syncer_port/pause
 ```
 
 ### Resume Job
@@ -388,74 +412,114 @@ output_dir
 bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 ```
 
-## High availability of Syncer
+## Syncer High Availability
 
-The high availability of Syncer relies on MySQL. If MySQL is used as the backend storage, the Syncer can discover other Syncers. If one Syncer crashes, the others will take over its tasks.
+Syncer high availability relies on MySQL. If MySQL is used as the backend storage, Syncer can detect other Syncers. If one crashes, others will take over its tasks.
 
-## Privilege requirements
+## Usage Notes
 
-1. `select_priv`: read-only privileges for databases and tables
-2. `load_priv`: write privileges for databases and tables, including load, insert, delete, etc.
-3. `alter_priv`: privilege to modify databases and tables, including renaming databases/tables, adding/deleting/changing columns, adding/deleting partitions, etc.
-4. `create_priv`: privilege to create databases, tables, and views
-5. `drop_priv`: privilege to drop databases, tables, and views
+### `IS_BEING_SYNCED` Attribute
 
-Admin privileges are required (We are planning on removing this in future versions). This is used to check the `enable binlog config`.
+When the CCR (Cluster-to-Cluster Replication) feature is enabled, a replica table (referred to as the target table, located in the target cluster) is created in the target cluster for each table in the source cluster’s sync scope (referred to as the source table, located in the source cluster). However, some features and attributes need to be disabled or erased during the creation of the replica table to ensure the correctness of the sync process.
 
-## Feature
+For example:
 
-### Rate limit
+- The source table may contain information that might not be synced to the target cluster, such as `storage_policy`, which could cause the target table creation to fail or behave abnormally.
+- The source table may include dynamic features, such as dynamic partitions, which could result in behavior inconsistencies in the target table, causing partitions to be inconsistent.
 
-BE-side configuration parameter
-
-```shell
-download_binlog_rate_limit_kbs=1024 # Limits the download speed of Binlog (including Local Snapshot) from the source cluster to 1 MB/s in a single BE node
-```
-
-1. The `download_binlog_rate_limit_kbs` parameter is configured on the BE nodes of the source cluster. By setting this parameter, the data pull rate can be effectively limited.
-
-2. The `download_binlog_rate_limit_kbs` parameter primarily controls the speed of data transfer for each single BE node. To calculate the overall cluster rate, one would multiply the parameter value by the number of nodes in the cluster.
-
-
-## IS_BEING_SYNCED
-
-:::tip 
-Doris v2.0 "is_being_synced" = "true" 
-:::
-
-During data synchronization using CCR, replica tables (referred to as target tables) are created in the target cluster for the tables within the synchronization scope of the source cluster (referred to as source tables). However, certain functionalities and attributes need to be disabled or cleared when creating replica tables to ensure the correctness of the synchronization process. For example:
-
-- The source tables may contain information that is not synchronized to the target cluster, such as `storage_policy`, which may cause the creation of the target table to fail or result in abnormal behavior.
-- The source tables may have dynamic functionalities, such as dynamic partitioning, which can lead to uncontrolled behavior in the target table and result in inconsistent partitions.
-
-The attributes that need to be cleared during replication are:
+Attributes that need to be erased due to invalidation during replication include:
 
 - `storage_policy`
 - `colocate_with`
 
-The functionalities that need to be disabled during synchronization are:
+Features that need to be disabled during synchronization include:
 
 - Automatic bucketing
-- Dynamic partitioning
+- Dynamic partitions
 
-### Implementation
+#### Implementation
 
-When creating the target table, the Syncer controls the addition or deletion of the `is_being_synced` property. In CCR, there are two approaches to creating a target table:
+When creating the target table, these attributes will be controlled by Syncer, either added or removed. In the CCR functionality, there are two ways to create a target table:
 
-1. During table synchronization, the Syncer performs a full copy of the source table using backup/restore to obtain the target table.
-2. During database synchronization, for existing tables, the Syncer also uses backup/restore to obtain the target table. For incremental tables, the Syncer creates the target table using the CreateTableRecord binlog.
+1. During table synchronization, Syncer performs a full copy of the source table using backup/restore to create the target table.
+2. During database synchronization, for existing tables, Syncer also uses backup/restore to create the target table. For incremental tables, Syncer creates the target table via binlog containing CreateTableRecord.
 
-Therefore, there are two entry points for inserting the `is_being_synced` property: the restore process during full synchronization and the getDdlStmt during incremental synchronization.
+Thus, there are two points of insertion for adding the `is_being_synced` attribute: during the restore process in full synchronization and during incremental synchronization via `getDdlStmt`.
 
-During the restoration process of full synchronization, the Syncer initiates a restore operation of the snapshot from the source cluster via RPC. During this process, the `is_being_synced` property is added to the RestoreStmt and takes effect in the final restoreJob, executing the relevant logic for `is_being_synced`.
+During the restore process in full synchronization, Syncer triggers a restore of the snapshot in the original cluster via RPC. In this process, it will add the `is_being_synced` attribute to the RestoreStmt, which will be applied in the final `restoreJob`, executing the related `isBeingSynced` logic. In incremental synchronization, the `getDdlStmt` method will be enhanced with a `boolean getDdlForSync` parameter to distinguish if it’s a controlled transformation into target table DDL, and the `isBeingSynced` logic will be executed when creating the target table.
 
-During incremental synchronization, add the `boolean getDdlForSync` parameter to the getDdlStmt method to differentiate whether it is a controlled transformation to the target table DDL, and execute the relevant logic for isBeingSynced during the creation of the target table.
+The erasure of invalid attributes needs no further explanation, but the disabling of the above features requires clarification:
 
-Regarding the disabling of the functionalities mentioned above:
+- **Automatic Bucketing**: Automatic bucketing is applied when creating the table to compute the appropriate number of buckets. This might cause the source table and the target table to have a different number of buckets. Therefore, during synchronization, the bucket count of the source table is retrieved, and it’s also necessary to check whether the source table is an automatically bucketed table so that the feature can be restored after synchronization. The current approach sets the autobucket to `false` when getting the distribution information and checks the `_auto_bucket` attribute during table restoration. If the source table is an auto-bucketed table, the target table's `autobucket` field is set to `true`, bypassing the bucket count computation and directly applying the source table’s bucket count.
+- **Dynamic Partitions**: Dynamic partitions are controlled by adding `olapTable.isBeingSynced()` to the condition for performing add/drop partition operations. This ensures that during synchronization, the target table does not periodically perform add/drop partition operations.
 
-- Automatic bucketing: Automatic bucketing is enabled when creating a table. It calculates the appropriate number of buckets. This may result in a mismatch in the number of buckets between the source and target tables. Therefore, during synchronization, obtain the number of buckets from the source table, as well as the information about whether the source table is an automatic bucketing table in order to restore the functionality after synchronization. The current recommended approach is to default the autobucket attribute to false when retrieving distribution information. During table restoration, check the `_auto_bucket` attribute to find out if the source table is an automatic bucketing table. If it is, set the target table's autobucket field to true to bypass the calculation of bucket numbers and directly apply the number of buckets from the source table to the target table.
-- Dynamic partitioning: This is implemented by adding `olapTable.isBeingSynced()` to the condition for executing add/drop partition operations. This ensures that the target table does not perform periodic add/drop partition operations during synchronization.
+:::caution
 
-### Note
+Under normal circumstances, the `is_being_synced` attribute should be entirely controlled by Syncer, and users should not modify this attribute manually.
 
-The `is_being_synced` property should be fully controlled by the Syncer, and users should not modify this property manually unless there are exceptional circumstances.
+:::
+
+### Recommended Configuration Settings
+
+- `restore_reset_index_id`: If the table to be synced contains an inverted index, this must be set to `false` on the target cluster.
+- `ignore_backup_tmp_partitions`: If the upstream creates temporary partitions, Doris will prohibit performing backups, causing the ccr-syncer synchronization to break. This can be avoided by setting `ignore_backup_tmp_partitions=true` in the FE configuration.
+
+### Notes
+
+- During CCR synchronization, both backup/restore jobs and binlogs are stored in FE memory. Therefore, it is recommended to allocate at least 4GB of heap memory per CCR job (for both the source and target clusters). Additionally, consider modifying the following configurations to reduce memory consumption from unrelated jobs:
+    - Modify FE configuration `max_backup_restore_job_num_per_db`:
+        This configures the number of backup/restore jobs per DB stored in memory. The default value is 10, and setting it to 2 should suffice.
+    - Modify the source cluster's DB/table properties to set binlog retention limits:
+        - `binlog.max_bytes`: Maximum memory usage for binlogs. It is recommended to keep at least 4GB (default is unlimited).
+        - `binlog.ttl_seconds`: Binlog retention time. In versions prior to 2.0.5, the default is unlimited; in later versions, the default is one day (86400 seconds).
+        For example, to set binlog TTL to one hour: `ALTER TABLE table SET ("binlog.ttl_seconds"="3600")`
+- The correctness of CCR also depends on the transaction status in the target cluster. To ensure transactions are not prematurely reclaimed during synchronization, the following configurations should be increased:
+    - `label_num_threshold`: Controls the number of TXN labels.
+    - `stream_load_default_timeout_second`: Controls the TXN timeout duration.
+    - `label_keep_max_second`: Controls the retention time after TXN ends.
+    - `streaming_label_keep_max_second`: Same as above.
+- If it's a database synchronization and the source cluster has many tablets, the resulting CCR jobs may be very large. In this case, several FE configurations need to be adjusted:
+    - `max_backup_tablets_per_job`: The maximum number of tablets involved in a single backup job. Adjust this based on the tablet count (default is 300,000). Too many tablets could risk FE OOM (Out of Memory), so consider reducing the tablet count if possible.
+    - `thrift_max_message_size`: Maximum RPC packet size allowed by the FE thrift server. The default is 100MB. If the snapshot info exceeds 100MB due to too many tablets, this limit needs to be adjusted (maximum is 2GB).
+        - The snapshot info size can be found in the CCR syncer logs, using the keyword: `snapshot response meta size: %d, job info size: %d`. The snapshot info size is approximately `meta size + job info size`.
+    - `fe_thrift_max_pkg_bytes`: Another parameter for RPC packet size, which needs to be adjusted in version 2.0. The default value is 20MB.
+    - `restore_download_task_num_per_be`: The maximum number of download tasks per BE. The default is 3, which may be too small for restore jobs. It should be adjusted to 0 (i.e., disable this limit). From versions 2.1.8 and 3.0.4, this configuration is no longer needed.
+    - `backup_upload_task_num_per_be`: The maximum number of upload tasks per BE. The default is 3, which may be too small for backup jobs. It should be adjusted to 0 (i.e., disable this limit). From versions 2.1.8 and 3.0.4, this configuration is no longer needed.
+    - In addition to the above FE configurations, if the CCR job's DB type is MySQL, some MySQL configurations need to be adjusted:
+        - MySQL server limits the size of the data packet returned/inserted in a single `select/insert`. Increase the following configuration to relax this limit, for example, adjusting it to the maximum of 1GB:
+        ```ini
+        [mysqld]
+        max_allowed_packet = 1024MB
+        ```
+        - MySQL client also has this limit. In CCR syncer versions 2.1.6/2.0.15 and earlier, the limit is 128MB. In later versions, this can be adjusted via the `--mysql_max_allowed_packet` parameter (in bytes). The default value is 1024MB.
+        > Note: Starting from versions 2.1.8 and 3.0.4, CCR syncer no longer stores snapshot info in the DB, so the default data packet size is already sufficient.
+- Similarly, BE-side configurations need to be adjusted:
+    - `thrift_max_message_size`: The maximum RPC packet size allowed by the BE thrift server. The default is 100MB. If the agent task size exceeds 100MB due to too many tablets, this limit needs to be adjusted (maximum is 2GB).
+    - `be_thrift_max_pkg_bytes`: The same parameter as above, only needs adjustment in version 2.0. The default value is 20MB.
+- Even after modifying the above configurations, as the number of tablets increases, the resulting snapshot size might exceed 2GB, which is the threshold for Doris FE edit log and RPC message size, leading to synchronization failure. Starting from versions 2.1.8 and 3.0.4, Doris can compress the snapshot to further increase the number of tablets supported during backup and restore. Compression can be enabled with the following parameters:
+    - `restore_job_compressed_serialization`: Enable compression for restore jobs (affects metadata compatibility, default is off).
+    - `backup_job_compressed_serialization`: Enable compression for backup jobs (affects metadata compatibility, default is off).
+    - `enable_restore_snapshot_rpc_compression`: Enable compression for snapshot info, mainly affecting RPC (default is on).
+    > Note: Since identifying whether a backup/restore job is compressed requires additional code, and versions before 2.1.8 and 3.0.4 do not include this code, once a backup/restore job is generated, it cannot be rolled back to an earlier Doris version. There are two exceptions: Backup/restore jobs that are already canceled or finished will not be compressed. Therefore, waiting for the job to finish or canceling the job before rolling back will allow safe rollback.
+- Inside CCR, the database/table name is used as part of the internal job label. Therefore, if a CCR job exceeds the label length limit, the FE parameter `label_regex_length` can be adjusted to relax this limit (default value is 128).
+- Since backup does not currently support backing up tables with cooldown tablets, encountering such a table will cause synchronization to fail. Therefore, ensure that the `storage_policy` attribute is not set on any table before creating the CCR job.
+
+### Performance-Related Parameters
+
+- If the user's data volume is very large, and the time required for backup and restore exceeds one day (the default value), the following parameters need to be adjusted as needed:
+    - `backup_job_default_timeout_ms`: Timeout for backup/restore tasks. This needs to be configured on the FE of both the source and target clusters.
+    - Modify upstream binlog retention time: `ALTER DATABASE $db SET PROPERTIES ("binlog.ttl_seconds" = "xxxx")`
+
+- Downstream BE download speed is slow:
+    - `max_download_speed_kbps`: Maximum download speed limit for a single download thread on a downstream BE, the default is 50MB/s.
+    - `download_worker_count`: Number of threads performing download tasks on the downstream BE, the default is 1. This should be adjusted based on the customer’s machine type. The goal is to increase the thread count to the maximum without affecting normal read/write operations. If this parameter is adjusted, there's no need to modify `max_download_speed_kbps`.
+        - For example, if the customer's network card can provide a maximum bandwidth of 1GB, and the maximum allowed download speed per thread is 200MB, then `download_worker_count` should be set to 4, without changing the `max_download_speed_kbps`.
+
+- Limit downstream BE's binlog download speed:
+    - BE-side configuration parameter:
+    ```shell
+    download_binlog_rate_limit_kbs=1024 # Limit the speed of binlog (including Local Snapshot) download from the source cluster to 1MB/s for each BE node.
+    ```
+    Detailed parameters and explanations:
+    1. The `download_binlog_rate_limit_kbs` parameter is configured on the source cluster BE nodes. Setting this parameter effectively limits the data pull speed.
+    2. The `download_binlog_rate_limit_kbs` parameter mainly controls the speed of a single BE node. If the overall speed of the cluster is calculated, the parameter value should be multiplied by the number of BE nodes in the cluster.
