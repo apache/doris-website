@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-When importing data, **Doris** automatically assigns unique values to rows that do not have specified values in the **auto-increment column**. This feature simplifies data import workflows while maintaining flexibility.
+When importing data, Doris automatically assigns unique values to rows that do not have specified values in the **auto-increment column**. This feature simplifies data import workflows while maintaining flexibility.
 
 ---
 
