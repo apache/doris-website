@@ -1,7 +1,7 @@
 ---
 {
     "title": "Data Distribution Concept",
-    "language": "en_US"
+    "language": "en"
 }
 ---
 
