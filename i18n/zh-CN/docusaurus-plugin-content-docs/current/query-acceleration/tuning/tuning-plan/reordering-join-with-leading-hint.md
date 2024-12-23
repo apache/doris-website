@@ -1,4 +1,28 @@
-# 使用 Leading Hint 控制 Join 顺序
+---
+{
+    "title": "使用 Leading Hint 控制 Join 顺序",
+    "language": "zh-CN"
+}
+---
+
+<!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
 
 ## 概述
 
@@ -13,7 +37,7 @@ Leading Hint 特性允许用户手工指定查询中的表的连接顺序，在�
 对于如下查询：
 
 ```sql
-mysql> _explain_ shape _plan_ _select_ _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2;
+mysql> explain shape plan select from t1 join t2 on t1.c1 = t2.c2;
 +------------------------------------------------------------------------------+
 | _Explain_ String(Nereids Planner)                                              |
 +------------------------------------------------------------------------------+
@@ -30,7 +54,7 @@ mysql> _explain_ shape _plan_ _select_ _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2;
 可以使用 Leading Hint，强制指定 join order 为 t2 join t1，调整原始连接顺序。
 
 ```sql
-mysql> _explain_ shape _plan_ _select_ /*+ leading(t2 t1) */ * _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2;
+mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on t1.c1 = t2.c2;
 +------------------------------------------------------------------------------+
 | _Explain_ String(Nereids Planner)                                              |
 +------------------------------------------------------------------------------+
@@ -54,7 +78,7 @@ Hint log 展示了应用成功的 hint: `Used: leading(t2 t1)`。
 ## 案例 2：强制生成左深树
 
 ```sql
-mysql> _explain_ shape _plan_ _select_ /*+ leading(t1 t2 t3) */ * _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2 _join_ t3 _on_ t2.c2 = t3.c3;
+mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3;
 +--------------------------------------------------------------------------------+
 | _Explain_ String(Nereids Planner)                                                |
 +--------------------------------------------------------------------------------+
@@ -81,7 +105,7 @@ mysql> _explain_ shape _plan_ _select_ /*+ leading(t1 t2 t3) */ * _from_ t1 _joi
 ## 案例 3：强制生成右深树
 
 ```sql
-mysql> _explain_ shape _plan_ _select_ /*+ leading(t1 {t2 t3}) */ * _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2 _join_ t3 _on_ t2.c2 = t3.c3;
+mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3;
 +----------------------------------------------------------------------------------+
 | _Explain_ String(Nereids Planner)                                                  |
 +----------------------------------------------------------------------------------+
@@ -108,7 +132,7 @@ mysql> _explain_ shape _plan_ _select_ /*+ leading(t1 {t2 t3}) */ * _from_ t1 _j
 ## 案例 4：强制生成 bushy 树
 
 ```sql
-mysql> _explain_ shape _plan_ _select_ /*+ leading({t1 t2} {t3 t4}) */ * _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2 _join_ t3 _on_ t2.c2 = t3.c3 _join_ t4 _on_ t3.c3 = t4.c4;
+mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3 join t4 on t3.c3 = t4.c4;
 +-----------------------------------------------+
 | _Explain_ String                                |
 +-----------------------------------------------+
@@ -137,7 +161,7 @@ mysql> _explain_ shape _plan_ _select_ /*+ leading({t1 t2} {t3 t4}) */ * _from_ 
 ## 案例 5：view 作为整体参与连接
 
 ```sql
-mysql>  _explain_ shape _plan_ _select_ /*+ leading(alias t1) */ count(*) _from_ t1 _join_ (_select_ c2 _from_ t2 _join_ t3 _on_ t2.c2 = t3.c3) _as_ alias _on_ t1.c1 = alias.c2;
+mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
 +--------------------------------------------------------------------------------------+
 | _Explain_ String(Nereids Planner)                                                      |
 +--------------------------------------------------------------------------------------+
