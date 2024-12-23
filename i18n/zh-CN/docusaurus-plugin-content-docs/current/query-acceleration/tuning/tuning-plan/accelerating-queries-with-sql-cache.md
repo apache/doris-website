@@ -26,11 +26,11 @@ under the License.
 
 ## 概述
 
-关于 SQL Cache 详细实现原理，请参考 [查询缓存（SQL Cache）](https://selectdb.feishu.cn/wiki/GhRhwLOXNi5muzkb5PacLR4Wn6e)
+关于 SQL Cache 详细实现原理，请参考 [查询缓存（SQL Cache）](../../../query-acceleration/sql-cache-manual)
 
 ## 案例
 
-详细案例请参考 [查询缓存（SQL Cache）](https://selectdb.feishu.cn/wiki/GhRhwLOXNi5muzkb5PacLR4Wn6e)章节
+详细案例请参考 [查询缓存（SQL Cache）](../../../query-acceleration/sql-cache-manual)章节
 
 ## 总结
 

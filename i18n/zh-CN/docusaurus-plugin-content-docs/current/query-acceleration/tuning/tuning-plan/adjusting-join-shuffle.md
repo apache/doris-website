@@ -28,7 +28,7 @@ under the License.
 
 Doris 支持使用 Hint 来调整 Join 操作中数据 Shuffle 的类型，从而优化查询性能。本节将详细介绍如何在 Doris 中利用 Hint 来指定 Join Shuffle 的类型。
 
-目前，Doris 支持两种独立的 [DistributeHint](https://selectdb.feishu.cn/wiki/BpBxwpu07iL4jjkeai1cfs24nrn?open_in_browser=true)，`[shuffle] ` 和 `[broadcast]`，用来指定 Join 右表的 Distribute Type。Distribute Type 需置于 Join 右表之前，采用中括号 `[]` 的方式。同时，Doris 也可以通过 LeadingHint 配合 DistributeHint 的方式，指定 shuffle 方式（详见“使用 Leading Hint 控制 Join 顺序”章节相关介绍）。
+目前，Doris 支持两种独立的 [DistributeHint](../../../query-acceleration/hints/distribute-hint.md)，`[shuffle] ` 和 `[broadcast]`，用来指定 Join 右表的 Distribute Type。Distribute Type 需置于 Join 右表之前，采用中括号 `[]` 的方式。同时，Doris 也可以通过 LeadingHint 配合 DistributeHint 的方式，指定 shuffle 方式（详见[使用 Leading Hint 控制 Join 顺序](reordering-join-with-leading-hint.md)章节相关介绍）。
 
 示例如下：
 

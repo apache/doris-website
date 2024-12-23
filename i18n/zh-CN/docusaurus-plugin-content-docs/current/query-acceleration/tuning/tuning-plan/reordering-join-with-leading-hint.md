@@ -1,96 +1,218 @@
----
-{
-    "title": "使用 Hint 调整 Join Shuffle 方式",
-    "language": "zh-CN"
-}
----
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+# 使用 Leading Hint 控制 Join 顺序
 
 ## 概述
 
-Doris 支持使用 Hint 来调整 Join 操作中数据 Shuffle 的类型，从而优化查询性能。本节将详细介绍如何在 Doris 中利用 Hint 来指定 Join Shuffle 的类型。
+Leading Hint 特性允许用户手工指定查询中的表的连接顺序，在特定场景优化复杂查询性能。本文将详细介绍如何在 Doris 中使用 Leading Hint 来控制 join 的顺序。详细使用说明，可参考[leading hint](../../../query-acceleration/hints/leading-hint.md)文档。
 
-目前，Doris 支持两种独立的 [DistributeHint](https://selectdb.feishu.cn/wiki/BpBxwpu07iL4jjkeai1cfs24nrn?open_in_browser=true)，`[shuffle] ` 和 `[broadcast]`，用来指定 Join 右表的 Distribute Type。Distribute Type 需置于 Join 右表之前，采用中括号 `[]` 的方式。同时，Doris 也可以通过 LeadingHint 配合 DistributeHint 的方式，指定 shuffle 方式（详见“使用 Leading Hint 控制 Join 顺序”章节相关介绍）。
+:::caution 注意
+当前 Doris 已经具备良好的开箱即用的能力，也就意味着在绝大多数场景下，Doris 会自适应的优化各种场景下的性能，无需用户来手工控制 hint 来进行业务调优。本章介绍的内容主要面向专业调优人员，业务人员仅做简单了解即可。
+:::
 
-示例如下：
+## 案例 1：调整左右表顺序
+
+对于如下查询：
 
 ```sql
-SELECT COUNT(*) FROM t2 JOIN [broadcast] t1 ON t1.c1 = t2.c2;
-SELECT COUNT(*) FROM t2 JOIN [shuffle] t1 ON t1.c1 = t2.c2;
+mysql> _explain_ shape _plan_ _select_ _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2;
++------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                              |
++------------------------------------------------------------------------------+
+| PhysicalResultSink                                                           |
+| --PhysicalDistribute[DistributionSpecGather]                                 |
+| ----PhysicalProject                                                          |
+| ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+| --------PhysicalOlapScan[t1]                                                 |
+| --------PhysicalDistribute[DistributionSpecHash]                             |
+| ----------PhysicalOlapScan[t2]                                               |
++------------------------------------------------------------------------------+
 ```
 
-## 案例
-
-接下来将通过同一个例子来展示 DistributeHint 的使用方法：
+可以使用 Leading Hint，强制指定 join order 为 t2 join t1，调整原始连接顺序。
 
 ```sql
-EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN t2 ON t1.c1 = t2.c2;
+mysql> _explain_ shape _plan_ _select_ /*+ leading(t2 t1) */ * _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2;
++------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                              |
++------------------------------------------------------------------------------+
+| PhysicalResultSink                                                           |
+| --PhysicalDistribute[DistributionSpecGather]                                 |
+| ----PhysicalProject                                                          |
+| ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+| --------PhysicalOlapScan[t2]                                                 |
+| --------PhysicalDistribute[DistributionSpecHash]                             |
+| ----------PhysicalOlapScan[t1]                                               |
+|                                                                              |
+| Hint log:                                                                    |
+| Used: leading(t2 t1)                                                         |
+| UnUsed:                                                                      |
+| SyntaxError:                                                                 |
++------------------------------------------------------------------------------+
 ```
 
-原始 SQL 的计划如下，可见 t1 连接 t2 使用了 hash distribute（"DistributionSpecHash"）的方式。
+Hint log 展示了应用成功的 hint: `Used: leading(t2 t1)`。
+
+## 案例 2：强制生成左深树
 
 ```sql
-+----------------------------------------------------------------------------------+  
-| Explain String (Nereids Planner)                                                 |  
-+----------------------------------------------------------------------------------+  
-| PhysicalResultSink                                                               |  
-| --hashAgg [GLOBAL]                                                               |  
-| ----PhysicalDistribute [DistributionSpecGather]                                  |  
-| ------hashAgg [LOCAL]                                                            |  
-| --------PhysicalProject                                                          |  
-| ----------hashJoin [INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()|  
-| ------------PhysicalProject                                                      |  
-| --------------PhysicalOlapScan [t1]                                              |  
-| ------------PhysicalDistribute [DistributionSpecHash]                            |  
-| --------------PhysicalProject                                                    |  
-| ----------------PhysicalOlapScan [t2]                                            |  
+mysql> _explain_ shape _plan_ _select_ /*+ leading(t1 t2 t3) */ * _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2 _join_ t3 _on_ t2.c2 = t3.c3;
++--------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                                |
++--------------------------------------------------------------------------------+
+| PhysicalResultSink                                                             |
+| --PhysicalDistribute[DistributionSpecGather]                                   |
+| ----PhysicalProject                                                            |
+| ------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()   |
+| --------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+| ----------PhysicalOlapScan[t1]                                                 |
+| ----------PhysicalDistribute[DistributionSpecHash]                             |
+| ------------PhysicalOlapScan[t2]                                               |
+| --------PhysicalDistribute[DistributionSpecHash]                               |
+| ----------PhysicalOlapScan[t3]                                                 |
+|                                                                                |
+| Hint log:                                                                      |
+| Used: leading(t1 t2 t3)                                                        |
+| UnUsed:                                                                        |
+| SyntaxError:                                                                   |
++--------------------------------------------------------------------------------+
+```
+
+同样，Hint log 展示了应用成功的 hint: `Used: leading(t1 t2 t3)`。
+
+## 案例 3：强制生成右深树
+
+```sql
+mysql> _explain_ shape _plan_ _select_ /*+ leading(t1 {t2 t3}) */ * _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2 _join_ t3 _on_ t2.c2 = t3.c3;
++----------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                                  |
++----------------------------------------------------------------------------------+
+| PhysicalResultSink                                                               |
+| --PhysicalDistribute[DistributionSpecGather]                                     |
+| ----PhysicalProject                                                              |
+| ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()     |
+| --------PhysicalOlapScan[t1]                                                     |
+| --------PhysicalDistribute[DistributionSpecHash]                                 |
+| ----------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
+| ------------PhysicalOlapScan[t2]                                                 |
+| ------------PhysicalDistribute[DistributionSpecHash]                             |
+| --------------PhysicalOlapScan[t3]                                               |
+|                                                                                  |
+| Hint log:                                                                        |
+| Used: leading(t1 { t2 t3 })                                                      |
+| UnUsed:                                                                          |
+| SyntaxError:                                                                     |
 +----------------------------------------------------------------------------------+
 ```
 
-加入[broadcast] hint 后：
+同样，Hint log 展示了应用成功的 hint: `Used: leading(t1 { t2 t3 })`。
+
+## 案例 4：强制生成 bushy 树
 
 ```sql
-EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN [broadcast] t2 ON t1.c1 = t2.c2;
+mysql> _explain_ shape _plan_ _select_ /*+ leading({t1 t2} {t3 t4}) */ * _from_ t1 _join_ t2 _on_ t1.c1 = t2.c2 _join_ t3 _on_ t2.c2 = t3.c3 _join_ t4 _on_ t3.c3 = t4.c4;
++-----------------------------------------------+
+| _Explain_ String                                |
++-----------------------------------------------+
+| PhysicalResultSink                            |
+| --PhysicalDistribute                          |
+| ----PhysicalProject                           |
+| ------hashJoin[INNER_JOIN](t2.c2 = t3.c3)     |
+| --------hashJoin[INNER_JOIN](t1.c1 = t2.c2)   |
+| ----------PhysicalOlapScan[t1]                |
+| ----------PhysicalDistribute                  |
+| ------------PhysicalOlapScan[t2]              |
+| --------PhysicalDistribute                    |
+| ----------hashJoin[INNER_JOIN](t3.c3 = t4.c4) |
+| ------------PhysicalOlapScan[t3]              |
+| ------------PhysicalDistribute                |
+| --------------PhysicalOlapScan[t4]            |
+|                                               |
+| Used: leading({ t1 t2 } { t3 t4 })            |
+| UnUsed:                                       |
+| SyntaxError:                                  |
++-----------------------------------------------+
 ```
 
-可见 t1 连接 t2 的分发方式改为了 broadcast（"DistributionSpecReplicated"）的方式。
+同样，Hint log 展示了应用成功的 hint: `Used: leading({ t1 t2 } { t3 t4 })`。
+
+## 案例 5：view 作为整体参与连接
 
 ```sql
-+----------------------------------------------------------------------------------+  
-| Explain String (Nereids Planner)                                                 |  
-+----------------------------------------------------------------------------------+  
-| PhysicalResultSink                                                               |  
-| --hashAgg [GLOBAL]                                                               |  
-| ----PhysicalDistribute [DistributionSpecGather]                                  |  
-| ------hashAgg [LOCAL]                                                            |  
-| --------PhysicalProject                                                          |  
-| ----------hashJoin [INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()|  
-| ------------PhysicalProject                                                      |  
-| --------------PhysicalOlapScan [t1]                                              |  
-| ------------PhysicalDistribute [DistributionSpecReplicated]                      |  
-| --------------PhysicalProject                                                    |  
-| ----------------PhysicalOlapScan [t2]                                            | 
-+----------------------------------------------------------------------------------+
+mysql>  _explain_ shape _plan_ _select_ /*+ leading(alias t1) */ count(*) _from_ t1 _join_ (_select_ c2 _from_ t2 _join_ t3 _on_ t2.c2 = t3.c3) _as_ alias _on_ t1.c1 = alias.c2;
++--------------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                                      |
++--------------------------------------------------------------------------------------+
+| PhysicalResultSink                                                                   |
+| --hashAgg[GLOBAL]                                                                    |
+| ----PhysicalDistribute[DistributionSpecGather]                                       |
+| ------hashAgg[LOCAL]                                                                 |
+| --------PhysicalProject                                                              |
+| ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = alias.c2)) otherCondition=()  |
+| ------------PhysicalProject                                                          |
+| --------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
+| ----------------PhysicalProject                                                      |
+| ------------------PhysicalOlapScan[t2]                                               |
+| ----------------PhysicalDistribute[DistributionSpecHash]                             |
+| ------------------PhysicalProject                                                    |
+| --------------------PhysicalOlapScan[t3]                                             |
+| ------------PhysicalDistribute[DistributionSpecHash]                                 |
+| --------------PhysicalProject                                                        |
+| ----------------PhysicalOlapScan[t1]                                                 |
+|                                                                                      |
+| Hint log:                                                                            |
+| Used: leading(alias t1)                                                              |
+| UnUsed:                                                                              |
+| SyntaxError:                                                                         |
++--------------------------------------------------------------------------------------+
 ```
+
+同样，Hint log 展示了应用成功的 hint: `Used: leading(alias t1)`。
+
+## 案例 6：DistributeHint 与 LeadingHint 混用
+
+```sql
+explain shape plan
+    select 
+        nation,
+        o_year,
+        sum(amount) as sum_profit
+    from
+        (
+            select
+                /*+ leading(orders shuffle {lineitem shuffle part} shuffle {supplier broadcast nation} shuffle partsupp) */
+                n_name as nation,
+                extract(year from o_orderdate) as o_year,
+                l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
+            from
+                part,
+                supplier,
+                lineitem,
+                partsupp,
+                orders,
+                nation
+            where
+                s_suppkey = l_suppkey
+                and ps_suppkey = l_suppkey
+                and ps_partkey = l_partkey
+                and p_partkey = l_partkey
+                and o_orderkey = l_orderkey
+                and s_nationkey = n_nationkey
+                and p_name like '%green%'
+        ) as profit
+    group by
+        nation,
+        o_year
+    order by
+        nation,
+        o_year desc;
+```
+
+上述 `/*+ leading(orders shuffle {lineitem shuffle part} shuffle {supplier broadcast nation} shuffle partsupp) */` hint 指定方式，混用了 leading 和 distribute hint 两种格式。leading 用于控制总体的表之间的相对 join 顺序，而 `shuffle` 和 `broadcast` 分别用于指定特定 join 使用何种 shuffle 方式。通过两种结合使用，可以灵活的控制连接顺序和连接方式，便于手工控制用户期望的计划行为。
+
+:::caution 使用建议
+- 建议使用 EXPLAIN 来仔细分析执行计划，以确保 Leading Hint 能达到预期的效果。
+- Doris 版本升级或者业务数据变更时，应重新评估 Leading Hint 的效果，做到及时记录和调整。
+:::
 
 ## 总结
 
-通过合理使用 DistributeHint，可以优化 Join 操作的 Shuffle 方式，提升查询性能。在实践中，建议先通过 EXPLAIN 分析查询执行计划，再根据实际情况指定合适的 Shuffle 类型。
+Leading Hint 是一种强大的可以手工控制连接顺序的功能，于此同时，也可以和 shuffle hint 结合使用，同时控制 join 分发方式，进而优化查询性能。注意这种高级特性，应当在充分理解查询特性及数据分布的基础上谨慎使用。
