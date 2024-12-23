@@ -400,6 +400,7 @@
                     "type": "category",
                     "label": "Business continuity & data recovery",
                     "items": [
+                        "admin-manual/data-admin/overview",
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
                         {
