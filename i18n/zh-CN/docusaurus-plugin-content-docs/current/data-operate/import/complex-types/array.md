@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 

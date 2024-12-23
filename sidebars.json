@@ -171,12 +171,12 @@
                                 },
                                 {
                                     "type": "category",
-                                    "label": "Data Type",
+                                    "label": "Complex Data Types",
                                     "items": [
-                                        "data-operate/import/data-type/array",
-                                        "data-operate/import/data-type/map",
-                                        "data-operate/import/data-type/struct",
-                                        "data-operate/import/data-type/json"
+                                        "data-operate/import/complex-type/array",
+                                        "data-operate/import/complex-type/map",
+                                        "data-operate/import/complex-type/struct",
+                                        "data-operate/import/complex-type/json"
                                     ]
                                 },
                                 "data-operate/import/load-data-format",
