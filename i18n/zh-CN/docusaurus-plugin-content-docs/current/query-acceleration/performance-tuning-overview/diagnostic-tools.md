@@ -34,7 +34,7 @@ under the License.
 
 Doris Manager 的日志模块提供了慢 SQL 筛选功能。用户可以通过选择特定 FE 节点上的 `fe.audit.log` 来查看慢 SQL。只需在搜索框中输入“slow_query”，即可在页面上展示出当前系统的历史慢 SQL 信息，如下图所示：
 
-![](static/EbJobMOIso1vIgx5mYgcXTRrnYc.png)
+![Doris Manager 监控与日志](/images/doris-manage-trace-log-2.png)
 
 通过上述监控界面展示的问题时间点，和慢 SQL 中的详细信息如时间点/扫描条数/Shuffle 条数/peakMemory 大小等做交叉验证，确定问题 SQL 的来源。
 

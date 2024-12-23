@@ -26,7 +26,7 @@ under the License.
 
 ## 概述
 
-上节诊断工具已经帮助业务和运维人员定位到具体的慢 SQL，本章节开始介绍如何对慢 SQL 的性能瓶颈进行分析，以确定具体慢在 SQL 执行的哪个环节。所以强大的分析工具是性能问题定位的基础和保障。
+上节[诊断工具](diagnostic-tools.md)已经帮助业务和运维人员定位到具体的慢 SQL，本章节开始介绍如何对慢 SQL 的性能瓶颈进行分析，以确定具体慢在 SQL 执行的哪个环节。所以强大的分析工具是性能问题定位的基础和保障。
 
 一条 SQL 的执行过程大致可以分为计划生成和计划执行两个阶段，前一部分负责生成执行计划，后一部分负责具体计划的执行。这两个部分出现问题都可能导致性能瓶颈的发生。比如生成了差计划，那么即使再优秀的执行器也不可能获得很好的性能。同样一个正确的计划，如果相应的执行手段不合适，也容易产生性能瓶颈。此外，执行器的性能和当前运行的硬件和系统架构有紧密的关系，一些基础设施的缺陷或者配置不正确也会导致性能问题。
 
@@ -42,7 +42,7 @@ Doris 提供了多种不同粒度的 Explain 工具，如 Explain Verbose、Expl
 
 通过分析 Explain 的输出，业务人员和 DBA 就可以快速定位当前计划的性能瓶颈。例如，通过分析执行计划发现 Filter 没有下推到基表，导致没有提前过滤数据，使得参与计算的数据量过多，从而导致性能问题。又如，两表的 Inner 等值连接中，连接条件一侧的过滤条件没有推导到另外一侧，导致没有对另一侧的表数据进行提前过滤，也可能导致性能不优。此类性能瓶颈都可以通过分析 Explain 的输出来定位和解决。
 
-使用 Doris Explain 输出进行计划层调优的案例详见计划调优章节。
+使用 Doris Explain 输出进行计划层调优的案例详见[计划调优](../tuning/tuning-plan/optimizing-table-schema.md)章节。
 
 ## Doris Profile
 
@@ -156,7 +156,7 @@ PipelineTask  (index=1):(ExecTime:  4.773ms)
 2. 等待 Worker 的时间：63.868us（说明当前集群负载不高，task 就绪以后立即就有 worker 来执行）
 3. 等待执行依赖的时间（WaitForBroadcastBuffer + WaitForRpcBufferQueue + WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time）：10.495ms。当前 task 的所有 dependency 相加得到总的等待时间。
 
-使用 Profile 进行执行层调优的案例详见执行调优章节。
+使用 Profile 进行执行层调优的案例详见[执行调优](../tuning/tuning-execution/)章节。
 
 ## 系统级性能工具
 
