@@ -65,9 +65,9 @@ For Doris in local mode, refer to [Cluster Upgrade](../admin-manual/cluster-mana
 3. Upgrade Recycler (if have)
 4. Upgrade BE
 5. Upgrade FE
-1. Upgrade Observer FE first
-2. Then upgrade other non-Master FE
-3. Finally, upgrade Master FE
+   1. Upgrade Observer FE first
+   2. Then upgrade other non-Master FE
+   3. Finally, upgrade Master FE
 
 ### Upgrade Pre-work
 

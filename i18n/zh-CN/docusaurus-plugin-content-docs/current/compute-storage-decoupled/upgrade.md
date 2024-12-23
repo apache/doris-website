@@ -65,9 +65,9 @@ Doris 原则上支持从低版本升级到高版本，以及小版本降级，�
 3. 升级 Recycler（如有）
 4. 升级 BE
 5. 升级 FE
-1. 先升级 Observer 角色的 FE
-2. 再升级其他非 Master 角色的 FE
-3. 最后升级 Master 角色的 FE
+   1. 先升级 Observer 角色的 FE
+   2. 再升级其他非 Master 角色的 FE
+   3. 最后升级 Master 角色的 FE
 
 ### 升级前置工作
 
