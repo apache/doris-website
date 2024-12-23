@@ -1,0 +1,44 @@
+name: PR File Check
+
+on:
+    pull_request:
+
+jobs:
+    check-files:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Get changed files
+              id: changed-files
+              run: |
+                  git remote -v
+                  git fetch origin
+                  git diff --name-only origin/master  > changed_files.txt
+
+            - name: Check for .mdx files
+              id: check-mdx
+              run: |
+                  if grep -qE '\.mdx$' changed_files.txt; then
+                    echo "contains_mdx=true" >> $GITHUB_ENV
+                  else
+                    echo "contains_mdx=false" >> $GITHUB_ENV
+                  fi
+
+            - name: Continue if .mdx files exist
+              if: env.contains_mdx == 'true'
+              run: |
+                  echo "MDX files detected. Proceeding with the next step..."
+                  git clone --depth=1 https://github.com/slorber/docusaurus-mdx-checker.git
+                  cd docusaurus-mdx-checker && npm install
+                  node ../tools/modify_mdx_checker.js
+                  rm -rf __tests__
+                  npx docusaurus-mdx-checker -c ..
+                  cd ..
+                  rm -rf docusaurus-mdx-checker
+            - name: Skip task if no .mdx files
+              if: env.contains_mdx == 'false'
+              run: |
+                  echo "No MDX files detected. Skipping task."
