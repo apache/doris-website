@@ -44,9 +44,9 @@ doris 目前支持的几种 hint 类型，包括 leading hint，ordered hint，d
 以下面 SQL 查询为例，若执行效率不理想，我们希望调整 join 顺序，同时不改变原始 SQL，以免影响用户原始场景，并达到调优目的。
 
 ```sql
-mysql> _explain_ shape _plan_ _select_ * _from_ t1 _join_ t2 _on_ t1.c1 = c2;
+mysql> explain shape plan select * from t1 join t2 on t1.c1 = c2;
 +-------------------------------------------+
-| _Explain_ String                            |
+| Explain String                            |
 +-------------------------------------------+
 | PhysicalResultSink                        |
 | --PhysicalDistribute                      |
@@ -56,15 +56,14 @@ mysql> _explain_ shape _plan_ _select_ * _from_ t1 _join_ t2 _on_ t1.c1 = c2;
 | --------PhysicalDistribute                |
 | ----------PhysicalOlapScan[t1]            |
 +-------------------------------------------+
-7 _rows_ in _set_ (0.06 sec)
 ```
 
 此时，我们可以使用 Leading Hint 来任意改变 t1 和 t2 的 Join 顺序。例如：
 
 ```sql
-mysql> _explain_ shape _plan_ _select_ /*+ leading(t2 t1) */ * _from_ t1 _join_ t2 _on_ c1 = c2;
+mysql> explain shape plan select  /*+ leading(t2 t1) */ * from t1 join t2 on t1.c1 = c2;
 +-----------------------------------------------------------------------------------------------------+
-| _Explain_ String(Nereids Planner)                                                                     |
+| Explain String(Nereids Planner)                                                                     |
 +-----------------------------------------------------------------------------------------------------+
 | PhysicalResultSink                                                                                  |
 | --PhysicalDistribute                                                                                |
@@ -79,7 +78,6 @@ mysql> _explain_ shape _plan_ _select_ /*+ leading(t2 t1) */ * _from_ t1 _join_ 
 | UnUsed:                                                                                             |
 | SyntaxError:                                                                                        |
 +-----------------------------------------------------------------------------------------------------+
-12 _rows_ in _set_ (0.06 sec)
 ```
 
 在此示例中，使用了 `/*+ leading(t2 t1) */` 的 Leading Hint。Leading Hint 会告知优化器在执行计划中使用指定表（t2）作为驱动表，并将其置于（t1）之前。

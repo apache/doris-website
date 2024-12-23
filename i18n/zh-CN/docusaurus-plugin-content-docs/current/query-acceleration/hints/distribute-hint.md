@@ -31,12 +31,12 @@ Distribute hint 用来控制 join 的 shuffle 方式。
 ## 语法
 
 - 支持指定右表的 Distribute Type，分为 `[shuffle]` 和 `[broadcast]` 两种，需写在 Join 右表前面。
-- 支持任意个 DistributeHint。
-- 当遇到无法正确生成计划的 DistributeHint 时，系统不会显示错误，会按最大努力原则生效，最终以 EXPLAIN 显示的 Distribute 方式为准。
+- 支持任意个 Distribute Hint。
+- 当遇到无法正确生成计划的 Distribute Hint 时，系统不会显示错误，会按最大努力原则生效，最终以 EXPLAIN 显示的 Distribute 方式为准。
 
 ## 案例
 
-1. **与 OrderedHint 混用**
+1. **与 Ordered Hint 混用**
 
 把 Join 顺序固定为文本序，然后再指定相应的 Join 预期使用的 Distribute 方式。例如：
 
@@ -89,13 +89,13 @@ mysql> explain shape plan select /*+ ordered */ count(*) from t2 join[broadcast]
 
 Explain Shape Plan 里面会显示 Distribute 算子相关的信息。其中：
 
-- DistributionSpecReplicated 表示该算子将对应的数据复制到所有 BE 节点；
-- DistributionSpecGather 表示将数据 Gather 到 FE 节点；
-- DistributionSpecHash 表示将数据按照特定的 hashKey 以及算法打散到不同的 BE 节点。
+- `DistributionSpecReplicated` 表示该算子将对应的数据复制到所有 BE 节点；
+- `DistributionSpecGather` 表示将数据 Gather 到 FE 节点；
+- `DistributionSpecHash` 表示将数据按照特定的 hashKey 以及算法打散到不同的 BE 节点。
 
-1. **与 LeadingHint 混用**
+1. **与 Leading Hint 混用**
 
-在编写 SQL 查询时，可以在使用 `LEADING` 提示的同时，为每个 `JOIN` 操作指定相应的 `DISTRIBUTE` 方式。以下是一个具体的例子，展示了如何在 SQL 查询中混合使用 `DistributeHint` 和 `LeadingHint`。
+在编写 SQL 查询时，可以在使用 `LEADING` 提示的同时，为每个 `JOIN` 操作指定相应的 `DISTRIBUTE` 方式。以下是一个具体的例子，展示了如何在 SQL 查询中混合使用 `Distribute Hint` 和 `Leading Hint`。
 
 ```sql
 explain shape plan
