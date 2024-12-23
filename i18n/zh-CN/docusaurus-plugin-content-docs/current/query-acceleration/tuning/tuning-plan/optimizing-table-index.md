@@ -98,7 +98,7 @@ ZoneMap 索引是一种内置索引，它在列存数据上维护了如 Min/Max/
 
 默认情况下，ZoneMap 会选择 Schema 的第一列建立索引。因此，通过合理调整字段顺序，可以充分利用这一特性来加速存储层的数据过滤。
 
-以标准测试集 TPC-DS 中的 store_sales 表为例，其原始 Schema 定义如下：
+以标准测试集 TPC-DS 中的 `store_sales` 表为例，其原始 Schema 定义如下：
 
 ```sql
 CREATE TABLE IF NOT EXISTS store_sales (
@@ -125,7 +125,7 @@ where dt.d_date_sk = store_sales.ss_sold_date_sk
       and ss_sold_date_sk between 2450816 and 2451000;
 ```
 
-为了利用事实表 store_sales 上的范围过滤条件进行快速的存储层过滤，我们可以考虑调整字段定义顺序，以便使用 ZoneMap 索引。由于 ZoneMap 默认建立在第一个字段上，因此我们需要将过滤字段 `ss_sold_date_sk` 调整至 Schema 的第一个位置。
+为了利用事实表 `store_sales` 上的范围过滤条件进行快速的存储层过滤，我们可以考虑调整字段定义顺序，以便使用 ZoneMap 索引。由于 ZoneMap 默认建立在第一个字段上，因此我们需要将过滤字段 `ss_sold_date_sk` 调整至 Schema 的第一个位置。
 
 调整后的 Schema 如下：
 
