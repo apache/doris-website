@@ -80,7 +80,7 @@ To use auto-increment columns, you need to add the `AUTO_INCREMENT` attribute to
   "replication_allocation" = "tag.location.default: 3"
   );
 
-2. Creating a duplicate table with an auto-increment column as one of the key columns, and setting the starting value to 100.
+2. Creating a duplicate table with an auto-increment column as the key column, and setting the starting value to 100.
 
   ```sql
   CREATE TABLE `demo`.`tbl` (
