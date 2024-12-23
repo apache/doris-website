@@ -67,7 +67,7 @@ To use auto-increment columns, you need to add the `AUTO_INCREMENT` attribute to
 
 ### Examples
 
-1. Creating a duplicate table with an auto-increment column as one of the key columns.
+1. Creating a duplicate table with an auto-increment column as the key column.
 
   ```sql
   CREATE TABLE `demo`.`tbl` (
