@@ -1,7 +1,7 @@
 ---
 {
-"title": "Upgrade",
-"language": "en"
+   "title": "Upgrade",
+   "language": "en"
 }
 ---
 
@@ -54,7 +54,7 @@ In principle, Doris supports upgrading from a lower version to a higher version 
 ### Upgrade Instructions
 
 1. Make sure that your Doris is started in cloud mode. If you are not sure about the current deployment mode of Doris, refer to the instructions in the [previous section](#Doris-Version-Description).
-For Doris in local mode, refer to [Cluster Upgrade](../admin-manual/cluster-management/upgrade) for upgrade steps.
+   For Doris in local mode, refer to [Cluster Upgrade](../admin-manual/cluster-management/upgrade) for upgrade steps.
 2. Make sure that your Doris data import tasks have a retry mechanism to avoid task failures due to node restarts during the upgrade process.
 3. Before upgrading, we recommend checking the status of all Doris components (MetaService, Recycler, Frontend and Backend) to ensure they are operating normally and without exception logs to avoid affecting the upgrade process.
 
@@ -76,7 +76,7 @@ For Doris in local mode, refer to [Cluster Upgrade](../admin-manual/cluster-mana
 
 ### Upgrade Process
 
-#### Upgrade MetaService
+#### 1. Upgrade MetaService
 
 Assuming the following environment variables:
 - `${MS_HOME}`: Working directory of MetaService.
@@ -84,34 +84,34 @@ Assuming the following environment variables:
 
 Follow these steps to upgrade each MetaService instance.
 
-1. Stop the current MetaService:
+1.1. Stop the current MetaService:
 ```shell
 cd ${MS_HOME}
 sh bin/stop.sh
 ```
 
-2. Backup the existing MetaService binaries:
+1.2. Backup the existing MetaService binaries:
 ```shell
 mv ${MS_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${MS_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-3. Deploy the new package:
+1.3. Deploy the new package:
 ```shell
 cp ${MS_PACKAGE_DIR}/bin ${MS_HOME}/bin
 cp ${MS_PACKAGE_DIR}/lib ${MS_HOME}/lib
 ```
 
-4. Start the new MetaService:
+1.4. Start the new MetaService:
 ```shell
 sh ${MS_HOME}/bin/start.sh --daemon
 ```
 
-5. Check status of the new MetaService:
+1.5. Check status of the new MetaService:
 
 Verify that the new MetaService is running and that a new version number is present in `${MS_HOME}/log/doris_cloud.out`.
 
-#### Upgrade Recycler (if have)
+#### 2. Upgrade Recycler (if have)
 
 :::caution
 If you have not deployed the Recycler component separately, you can skip this step.
@@ -123,34 +123,34 @@ Assuming the following environment variables:
 
 Upgrade each Recycler instance by following these steps.
 
-1. Stop the current Recycler:
+2.1. Stop the current Recycler:
 ```shell
 cd ${RECYCLER_HOME}
 sh bin/stop.sh
 ```
 
-2. Backup existing Recycler binary files:
+2.2. Backup existing Recycler binary files:
 ```shell
 mv ${RECYCLER_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${RECYCLER_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-3. Deploy the new package:
+2.3. Deploy the new package:
 ```shell
 cp ${RECYCLER_PACKAGE_DIR}/bin ${RECYCLER_HOME}/bin
 cp ${RECYCLER_PACKAGE_DIR}/lib ${RECYCLER_HOME}/lib
 ```
 
-4. Start the new Recycler:
+2.4. Start the new Recycler:
 ```shell
 sh ${RECYCLER_HOME}/bin/start.sh --recycler --daemon
 ```
 
-5. Check status of the new Recycler:
+2.5. Check status of the new Recycler:
 
 Verify that the new MetaService is running and that a new version number is present in `${RECYCLER_HOME}/log/doris_cloud.out`.
 
-#### Upgrade BE
+#### 3. Upgrade BE
 
 Verify that all instances of MetaService and Recycler (if installed separately) have been upgraded.
 
@@ -160,30 +160,30 @@ Assuming the following environment variables:
 
 Upgrade each BE instance by following these steps.
 
-1. Stop the current BE:
+3.1. Stop the current BE:
 ```shell
 cd ${BE_HOME}
 sh bin/stop_be.sh
 ```
 
-2. Backup the existing BE binaries:
+3.2. Backup the existing BE binaries:
 ```shell
 mv ${BE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${BE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-3. Deploy the new package:
+3.3. Deploy the new package:
 ```shell
 cp ${BE_PACKAGE_DIR}/bin ${BE_HOME}/bin
 cp ${BE_PACKAGE_DIR}/lib ${BE_HOME}/lib
 ```
 
-4. Start the new BE:
+3.4. Start the new BE:
 ```shell
 sh ${BE_HOME}/bin/start_be.sh --daemon
 ```
 
-5. Check status of the new BE:
+3.5. Check status of the new BE:
 
 Confirm that the new BE is running and operational with the new version. The status and version can be obtained using the following SQL.
 
@@ -191,7 +191,7 @@ Confirm that the new BE is running and operational with the new version. The sta
 show backends;
 ```
 
-#### Upgrade FE
+#### 4. Upgrade FE
 
 Verify that all instances of BE have been upgraded.
 
@@ -206,30 +206,30 @@ Upgrade the Frontend (FE) instances in the following order:
 
 Upgrade each Frontend (FE) node by following these steps.
 
-1. Stop the current FE:
+4.1. Stop the current FE:
 ```shell
 cd ${FE_HOME}
 sh bin/stop_fe.sh
 ```
 
-2. Backup the existing FE binaries:
+4.2. Backup the existing FE binaries:
 ```shell
 mv ${FE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${FE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-3. Deploy the new package:
+4.3. Deploy the new package:
 ```shell
 cp ${FE_PACKAGE_DIR}/bin ${FE_HOME}/bin
 cp ${FE_PACKAGE_DIR}/lib ${FE_HOME}/lib
 ```
 
-4. Start the new FE:
+4.4. Start the new FE:
 ```shell
 sh ${FE_HOME}/bin/start_fe.sh --daemon
 ```
 
-5. Check status of the new FE:
+4.5. Check status of the new FE:
 
 Confirm that the new FE is running and operational with the new version. The status and version can be obtained using the following SQL.
 

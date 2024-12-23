@@ -1,7 +1,7 @@
 ---
 {
-"title": "升级",
-"language": "zh-CN"
+   "title": "升级",
+   "language": "zh-CN"
 }
 ---
 
@@ -54,7 +54,7 @@ Doris 原则上支持从低版本升级到高版本，以及小版本降级，�
 ### 升级说明
 
 1. 确保你的 Doris 是以存算分离模式启动的，如果你不清楚当前的 Doris 是什么部署方式，可以参考[上一小节](#doris-版本说明)的说明。
-对于存算一体模式的 Doris，升级步骤可参考[集群升级](../admin-manual/cluster-management/upgrade)。
+   对于存算一体模式的 Doris，升级步骤可参考[集群升级](../admin-manual/cluster-management/upgrade)。
 2. 确保你的 Doris 导数任务具备重试机制，以避免升级过程中，因节点重启而导致的导数任务失败。
 3. 在升级之前，我们建议你检查一下各个 Doris 组件（MetaService、Recycler、Frontend、Backend）的状态正常并且无异常日志，以免升级过程中受到影响。
 
@@ -76,7 +76,7 @@ Doris 原则上支持从低版本升级到高版本，以及小版本降级，�
 
 ### 升级流程
 
-#### 升级 MetaService
+#### 1. 升级 MetaService
 
 假设以下环境变量：
 - `${MS_HOME}`：MetaService 的工作目录。
@@ -84,34 +84,34 @@ Doris 原则上支持从低版本升级到高版本，以及小版本降级，�
 
 按照以下步骤升级每个 MetaService 实例。
 
-1. 停止当前 MetaService：
+1.1. 停止当前 MetaService：
 ```shell
 cd ${MS_HOME}
 sh bin/stop.sh
 ```
 
-2. 备份现有 MetaService 二进制文件：
+1.2. 备份现有 MetaService 二进制文件：
 ```shell
 mv ${MS_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${MS_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-3. 部署新包：
+1.3. 部署新包：
 ```shell
 cp ${MS_PACKAGE_DIR}/bin ${MS_HOME}/bin
 cp ${MS_PACKAGE_DIR}/lib ${MS_HOME}/lib
 ```
 
-4. 启动新的 MetaService：
+1.4. 启动新的 MetaService：
 ```shell
 sh ${MS_HOME}/bin/start.sh --daemon
 ```
 
-5. 检查新 MetaService 的状态：
+1.5. 检查新 MetaService 的状态：
 
 确保新 MetaService 正在运行，并且在 `${MS_HOME}/log/doris_cloud.out` 中有新的版本号。
 
-#### 升级 Recycler（如有）
+#### 2. 升级 Recycler（如有）
 
 :::caution
 如果你没有单独部署 Recycler 组件，那么可以跳过这一步。
@@ -123,34 +123,34 @@ sh ${MS_HOME}/bin/start.sh --daemon
 
 按照以下步骤升级每个 Recycler 实例。
 
-1. 停止当前 Recycler：
+2.1. 停止当前 Recycler：
 ```shell
 cd ${RECYCLER_HOME}
 sh bin/stop.sh
 ```
 
-2. 备份现有 Recycler 二进制文件：
+2.2. 备份现有 Recycler 二进制文件：
 ```shell
 mv ${RECYCLER_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${RECYCLER_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-3. 部署新包：
+2.3. 部署新包：
 ```shell
 cp ${RECYCLER_PACKAGE_DIR}/bin ${RECYCLER_HOME}/bin
 cp ${RECYCLER_PACKAGE_DIR}/lib ${RECYCLER_HOME}/lib
 ```
 
-4. 启动新的 Recycler：
+2.4. 启动新的 Recycler：
 ```shell
 sh ${RECYCLER_HOME}/bin/start.sh --recycler --daemon
 ```
 
-5. 检查新 Recycler 的状态：
+2.5. 检查新 Recycler 的状态：
 
 确保新 Recycler 正在运行，并且在 `${RECYCLER_HOME}/log/doris_cloud.out` 中有新的版本号。
 
-#### 升级 BE
+#### 3. 升级 BE
 
 验证所有 MetaService 和 Recycler（如果单独安装）实例已升级。
 
@@ -160,30 +160,30 @@ sh ${RECYCLER_HOME}/bin/start.sh --recycler --daemon
 
 按照以下步骤升级每个 BE 实例。
 
-1. 停止当前 BE：
+3.1. 停止当前 BE：
 ```shell
 cd ${BE_HOME}
 sh bin/stop_be.sh
 ```
 
-2. 备份现有 BE 二进制文件：
+3.2. 备份现有 BE 二进制文件：
 ```shell
 mv ${BE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${BE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-3. 部署新包：
+3.3. 部署新包：
 ```shell
 cp ${BE_PACKAGE_DIR}/bin ${BE_HOME}/bin
 cp ${BE_PACKAGE_DIR}/lib ${BE_HOME}/lib
 ```
 
-4. 启动新的 BE：
+3.4. 启动新的 BE：
 ```shell
 sh ${BE_HOME}/bin/start_be.sh --daemon
 ```
 
-5. 检查新 BE 的状态：
+3.5. 检查新 BE 的状态：
 
 确认新的 BE 是否正在运行，并且使用新版本正常运行。可以使用以下 SQL 获取状态和版本。
 
@@ -191,7 +191,7 @@ sh ${BE_HOME}/bin/start_be.sh --daemon
 show backends;
 ```
 
-#### 升级 FE
+#### 4. 升级 FE
 
 验证所有 BE 实例已升级。
 
@@ -206,30 +206,30 @@ show backends;
 
 按照以下步骤升级每个 Frontend（FE）节点。
 
-1. 停止当前 FE：
+4.1. 停止当前 FE：
 ```shell
 cd ${FE_HOME}
 sh bin/stop_fe.sh
 ```
 
-2. 备份现有 FE 二进制文件：
+4.2. 备份现有 FE 二进制文件：
 ```shell
 mv ${FE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${FE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-3. 部署新包：
+4.3. 部署新包：
 ```shell
 cp ${FE_PACKAGE_DIR}/bin ${FE_HOME}/bin
 cp ${FE_PACKAGE_DIR}/lib ${FE_HOME}/lib
 ```
 
-4. 启动新的 FE：
+4.4. 启动新的 FE：
 ```shell
 sh ${FE_HOME}/bin/start_fe.sh --daemon
 ```
 
-5. 检查新 FE 的状态：
+4.5. 检查新 FE 的状态：
 
 确认新的 FE 是否正在运行，并且使用新版本正常运行。可以使用以下 SQL 获取状态和版本。
 
@@ -245,4 +245,4 @@ show frontends;
 
 2. 有了独立的 MetaService 提供元数据服务，为什么 FE 还需要备份元数据？
 
-因为目前 MetaService 保存了一部分数据，FE 也保存了一部分数据，为了稳妥起见，我们建议备份 FE 的元数据。
+因为目前 MetaService 保存了一部分元数据，FE 也保存了一部分元数据，为了稳妥起见，我们建议备份 FE 的元数据。
