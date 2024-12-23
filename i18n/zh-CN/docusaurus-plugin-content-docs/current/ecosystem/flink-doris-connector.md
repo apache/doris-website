@@ -72,7 +72,7 @@ Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
 
 #### Flink 集群部署
 
-以 Standalone 集群为例
+以 Standalone 集群为例：
 
 1. 下载 Flink 的安装包，[Flink 1.18.1](https://archive.apache.org/dist/flink/flink-1.18.1/flink-1.18.1-bin-scala_2.12.tgz);
 2. 解压后，将 Flink Doris Connector 包放到 <FLINK_HOME>/lib 下;
@@ -170,7 +170,11 @@ mysql> select * from test.student_trans;
 
 ### 读取 Doris 中的数据
 
-Flink 读取支持通过 [Thrift](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md) 和 [ArrowFlightSQL ](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/)方式 (24.0.0 版本之后支持) 读取，推荐使用 ArrowFlightSQL 方式。同时目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。
+Flink 读取 Doris 中数据时，目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。可以通过 Thrift 和 ArrowFlightSQL 方式 (24.0.0 版本之后支持) 读取 Doris 中数据：
+
+- Thrift：通过调用 BE 的 thrift 接口读取数据，具体流程可参考 [通过 Thrift 接口读取数据](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md)
+
+- ArrowFlightSQL：基于 Doris2.1，通过Arrow Flight SQL 协议高速读取大批量数据，具体可参考 [基于 Arrow Flight SQL 的高速数据传输链路](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/)。
 
 #### 使用 FlinkSQL 读取数据
 
