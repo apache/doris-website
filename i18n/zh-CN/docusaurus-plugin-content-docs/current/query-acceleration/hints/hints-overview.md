@@ -25,15 +25,17 @@ under the License.
 -->
 
 数据库 Hint 是一种查询优化技术，用于指导数据库查询优化器如何生成指定的计划。通过提供 Hint，用户可以对查询优化器的默认行为进行微调，以期望获得更好的性能或满足特定需求。
+:::caution 注意
+当前 Doris 已经具备良好的开箱即用的能力，在绝大多数场景下，Doris 会自适应的优化各种场景下的性能，无需用户来手工控制 hint 来进行业务调优。本章介绍的内容主要面向专业调优人员，业务人员仅做简单了解即可。
+:::
 
 ## Hint 分类
 
-doris 目前支持的几种 hint 类型，包括 leading hint，ordered hint，distribute hint 以及 set var hint 等几种：
+doris 目前支持的几种 hint 类型，包括 leading hint，ordered hint，distribute hint等几种：
 
-- Leading Hint：用于指定 join order 为 leading 中提供的 order 顺序；
-- Ordered Hint：用于指定 join order 为原始文本序；
-- Distribute Hint：用于指定 join 的数据分发方式为 shuffle 还是 broadcast；
-- SetVar Hint：用于设置在单条 SQL 里面使用的 `sessionVariables` 仅在该条 SQL 的生命周期内生效。
+- [Leading Hint](leading-hint.md)：用于指定 join order 为 leading 中提供的 order 顺序；
+- [Ordered Hint](leading-hint.md)：一种特定的leading hint, 用于指定 join order 为原始文本序；
+- [Distribute Hint](distribute-hint.md)：用于指定 join 的数据分发方式为 shuffle 还是 broadcast。
 
 ## Hint 示例
 
@@ -104,4 +106,4 @@ Hint Log 分为三个状态：
 
 ## 总结
 
-Hint 是手动管理执行计划的强大工具。当前 Doris 支持的 leading hint, ordered hint, distribute hint, set var hint 等，可以支撑用户手动管理 join order, shuffle 方式以及其他变量配置，给用户提供更方便有效的的运维能力。
+Hint 是手动管理执行计划的强大工具。当前 Doris 支持的 leading hint, ordered hint, distribute hint等，可以支撑用户手动管理 join order, shuffle 方式以及其他变量配置，给用户提供更方便有效的的运维能力。
