@@ -46,7 +46,7 @@ Doris 提供了多种不同粒度的 Explain 工具，如 Explain Verbose、Expl
 
 ## Doris Profile
 
-上述 Explain 工具描述了一条 SQL 的执行的规划，比如一个 t1 和 t2 表的连接操作被规划成了 Hash Join 的执行方式，并且 t1 表被规划在 build 侧，t2 表被规划在 probe 侧。当 SQL 具体执行时，如何了解每个具体的执行分别耗费多少时间，比如 build 耗费多少时间，probe 耗费多少时间，profile 工具提供了详细的执行信息供性能分析和调优使用。下面部分先整体介绍 Profile 的文件结构，然后分别介绍 Merged Profile，Exection Profile 以及 PipelineTask 的执行时间含义：
+上述 Explain 工具描述了一条 SQL 的执行的规划，比如一个 t1 和 t2 表的连接操作被规划成了 Hash Join 的执行方式，并且 t1 表被规划在 build 侧，t2 表被规划在 probe 侧。当 SQL 具体执行时，如何了解每个具体的执行分别耗费多少时间，比如 build 耗费多少时间，probe 耗费多少时间，profile 工具提供了详细的执行信息供性能分析和调优使用。下面部分先整体介绍 Profile 的文件结构，然后分别介绍 Merged Profile，Execution Profile 以及 PipelineTask 的执行时间含义：
 
 ### Profile 文件结构
 
@@ -63,19 +63,19 @@ Profile 文件中包含几个主要的部分：
 
 为了帮助用户更准确的分析性能瓶颈，Doris 提供了各个 operator 聚合后的 profile 结果。以 EXCHANGE_OPERATOR 为例：
 
-```python
+```sql
 EXCHANGE_OPERATOR  (id=4):
     -  BlocksProduced:  sum  0,  avg  0,  max  0,  min  0
     -  CloseTime:  avg  34.133us,  max  38.287us,  min  29.979us
     -  ExecTime:  avg  700.357us,  max  706.351us,  min  694.364us
     -  InitTime:  avg  648.104us,  max  648.604us,  min  647.605us
     -  MemoryUsage:  sum  ,  avg  ,  max  ,  min  
-        -  PeakMemoryUsage:  sum  0.00  ,  avg  0.00  ,  max  0.00  ,  min  0.00  
+    -  PeakMemoryUsage:  sum  0.00  ,  avg  0.00  ,  max  0.00  ,  min  0.00  
     -  OpenTime:  avg  4.541us,  max  5.943us,  min  3.139us
     -  ProjectionTime:  avg  0ns,  max  0ns,  min  0ns
     -  RowsProduced:  sum  0,  avg  0,  max  0,  min  0
     -  WaitForDependencyTime:  avg  0ns,  max  0ns,  min  0ns
-        -  WaitForData0:  avg  9.434ms,  max  9.476ms,  min  9.391ms
+    -  WaitForData0:  avg  9.434ms,  max  9.476ms,  min  9.391ms
 ```
 
 Merged Profile 对每个 operator 的核心指标做了合并，核心指标和含义包括：
@@ -100,7 +100,7 @@ Doris 中，每个 operator 根据用户设置的并发数并发执行，所以 
 
 区别于 Merged Profile，Execution Profile 展示的是具体的某个并发中的详细指标。依以 id=4 的这个 exchange operator 为例：
 
-```python
+```sql
 EXCHANGE_OPERATOR  (id=4):(ExecTime:  706.351us)
       -  BlocksProduced:  0
       -  CloseTime:  38.287us
@@ -113,14 +113,14 @@ EXCHANGE_OPERATOR  (id=4):(ExecTime:  706.351us)
       -  InitTime:  647.605us
       -  LocalBytesReceived:  0.00  
       -  MemoryUsage:  
-          -  PeakMemoryUsage:  0.00  
+      -  PeakMemoryUsage:  0.00  
       -  OpenTime:  5.943us
       -  ProjectionTime:  0ns
       -  RemoteBytesReceived:  0.00  
       -  RowsProduced:  0
       -  SendersBlockedTotalTimer(*):  0ns
       -  WaitForDependencyTime:  0ns
-          -  WaitForData0:  9.476ms
+      -  WaitForData0:  9.476ms
 ```
 
 在这个 profile 中，例如 LocalBytesReceived 是 exchange operator 特化的一个指标，其他的 operator 中没有，所以没在 Merged Profile 中包含。
@@ -133,7 +133,7 @@ EXCHANGE_OPERATOR  (id=4):(ExecTime:  706.351us)
 2. WaitWorkerTime：task 等待执行 worker 的时间。当 task 处于 runnable 状态时，他要等待一个空闲 worker 来执行，这个耗时主要取决于集群负载。
 3. 等待执行依赖的时间：一个 task 可以执行的依赖条件是每个 operator 的 dependency 全部满足执行条件，而 task 等待执行依赖的时间就是将这些依赖的等待时间相加。例如简化这个例子中的其中一个 task：
 
-```python
+```sql
 PipelineTask  (index=1):(ExecTime:  4.773ms)
   -  ExecuteTime:  1.656ms
       -  CloseTime:  90.402us
