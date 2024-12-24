@@ -32,7 +32,7 @@ This documentation will provide a detailed introduction on how to use Leading Hi
 
 :::info Note
 
-For detailed usage instructions, please refer to the [Hint](../../../query-acceleration/tuning/join-hint) documentation.
+For detailed usage instructions, please refer to the [Leading Hint](../../../query-acceleration/hints/leading-hint.md) documentation.
 
 :::
 

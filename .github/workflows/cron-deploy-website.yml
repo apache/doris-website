@@ -2,7 +2,7 @@ name: Cron Deploy
 
 on:
     schedule:
-        - cron: '0 4,10,17 * * *' # UTC time
+        - cron: '0 * * * *' # Runs every hour.
 permissions: write-all
 jobs:
     build-and-deploy:
