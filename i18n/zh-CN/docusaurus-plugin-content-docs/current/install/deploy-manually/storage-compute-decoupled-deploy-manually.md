@@ -153,9 +153,7 @@ Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上
 
 2. 启动与停止
 
-   环境要求_
-
-   确保已正确设置 `JAVA_HOME` 环境变量，指向 OpenJDK 17，进入 `ms` 目录。
+   在启动前，需要确保已正确设置 `JAVA_HOME` 环境变量，指向 OpenJDK 17，进入 `ms` 目录。
 
    启动命令如下：
 
@@ -164,7 +162,7 @@ Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上
    bin/start.sh --daemon
    ```
 
-   启动脚本返回值为 0 表示启动成功， 否则启动失败。 启动成功同时标准输出的最后一行文本信息为"doris_clodu start successfully"。
+   启动脚本返回值为 0 表示启动成功， 否则启动失败。 启动成功同时标准输出的最后一行文本信息为 "doris_clodu start successfully"。
 
    停止命令如下：
 
