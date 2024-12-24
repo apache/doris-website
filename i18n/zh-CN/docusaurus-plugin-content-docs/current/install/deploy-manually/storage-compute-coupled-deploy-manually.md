@@ -23,6 +23,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+在完成前置检查及规划后，如环境检查、集群规划、操作系统检查后，可以开始部署集群。部署集群分为四步：
+- 第 1 步：部署 FE Master 节点
+  
+- 第 2 步：部署 FE 集群
+  
+- 第 3 步：部署 BE 节点
+
+- 第 4 步：验证集群正确性
+
 ## 第 1 步：部署 FE Master 节点
 
 1. 创建元数据路径
