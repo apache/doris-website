@@ -84,11 +84,11 @@ select * from t1 where t1.c1 in (select t2.c1 from t2);
 
 Subqueries can be classified into correlated subqueries and non-correlated subqueries based on whether they reference columns from the outer query:
 
-**1. Non-correlated Subquery**
+**3. Non-correlated Subquery**
 
 A subquery that does not reference any columns from the outer query. Non-correlated subqueries can often be computed independently and return the corresponding results once for the outer query to use.
 
-**2. Correlated Subquery**
+**4. Correlated Subquery**
 
 A subquery that references one or more columns from the main query (also known as the outer query) (the referenced outer columns are often in the WHERE condition of the subquery). Correlated subqueries can often be seen as a filtering operation on the externally associated table, as for each row of data in the outer table, the subquery is computed and returns the corresponding result.
 
@@ -302,7 +302,7 @@ The difference between `Mark Join` and a regular `left semi join` is that a regu
 
 With this flag, the `where` filtering condition can be rewritten as `where mark_join_flag or t1.c1 > 0` to obtain the correct results.
 
-## Usage notes
+## Common Issues
 
 Since the output of a scalar subquery must be a single value, a runtime error will be reported when the subquery returns more than one row of data.
 
