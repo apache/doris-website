@@ -22,6 +22,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
 在完成前置检查及规划后，如环境检查、集群规划、操作系统检查后，可以开始部署集群。部署集群分为八步：
 1. 准备 FoundationDB 集群：可以使用已有的 FoundationDB 集群，或新建 FoundationDB 集群；
    
@@ -85,7 +86,7 @@ under the License.
    ```
    此命令启动 FDB 服务，使集群工作并获取 FDB 集群连接字符串，后续可以用于配置 MetaService。
 
-## 第 2 步：部署 S3 或 HDFS 服务（可选）
+## 第 2 步：安装 S3 或 HDFS 服务（可选）
 
 Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上面，如果您已经有相关服务，直接使用即可。
 如果没有，本文档提供 MinIO 的简单部署教程：
