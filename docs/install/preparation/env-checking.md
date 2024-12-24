@@ -1,6 +1,6 @@
 ---
 {
-"title": "软硬件环境检查",
+"title": "Environment Checking",
 "language": "zh-CN"
 }
 ---
@@ -24,83 +24,86 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-部署 Doris 时，需要对软硬件环境进行以下检查：
+When deploying Doris, the following checks need to be performed for the hardware and software environment:
 
-- 硬件环境检查
+- Hardware Environment Check
   
-- 服务器建议配置
+- Recommended Server Configuration
   
-- 硬盘空间计算
+- Disk Space Calculation
   
-- Java 环境检查
+- Java Environment Check
 
-## 硬件环境检查
+## Hardware Environment Check
 
-在硬件环境检查中，要对以下硬件条件进行检查：
+During the hardware environment check, the following hardware conditions should be examined:
 
-| 检查项   | 预期结果               |
-| -------- | ---------------------- |
-| CPU      | 具有 AVX2 指令集。     |
-| 内存     | 建议至少 CPU 4 倍。    |
-| 存储     | 推荐 SSD 硬盘。        |
-| 文件系统 | ext4 或 xfs 文件系统。 |
-| 网卡     | 万兆网卡。             |
+| Check Item | Expected Result         |
+| ---------- | ----------------------- |
+| CPU        | Should support AVX2 instruction set. |
+| Memory     | Recommended at least 4 times the CPU size. |
+| Storage    | SSD recommended.         |
+| File System| ext4 or xfs file system.|
+| Network Card| 10 Gigabit network card. |
 
-### CPU 检查
+### CPU Check
 
-当安装 Doris 时，建议选择支持 AVX2 指令集的机器，以利用 AVX2 的向量化能力实现查询向量化加速。
+When installing Doris, it is recommended to choose a machine that supports the AVX2 instruction set to leverage the vectorization capabilities of AVX2 for query acceleration.
 
-运行以下命令，有输出结果，及表示机器支持 AVX2 指令集。
+Run the following command to check if the machine supports the AVX2 instruction set:
 
 ```bash
 cat /_proc_/cpuinfo | grep avx2
 ```
 
-如果机器不支持 AVX2 指令集，可以使用 no AVX2 的 Doris 安装包进行部署。
+If the machine does not support the AVX2 instruction set, you can use the no AVX2 Doris installation package for deployment.
 
-### 内存检查
+### Memory Check
 
-Doris 没有强制的内存限制。一般在生产环境中，可以根据以下建议选择内存大小：
+Doris does not have strict memory limits. Generally, for production environments, you can choose the memory size based on the following recommendations:
 
-| 组件 | 推荐内存配置                                                 |
-| ---- | ------------------------------------------------------------ |
-| FE   | 建议至少 16GB 以上。                                         |
-| BE   | 建议内存至少是 CPU 核数的 4 倍（例如，16 核机器至少配置 64G 内存）。在内存是 CPU 核数 8 倍时，会得到更好的性能。 |
+| Component | Recommended Memory Configuration |
+| --------- | --------------------------------- |
+| FE        | At least 16GB recommended.        |
+| BE        | Memory should be at least 4 times the number of CPU cores (for example, for a 16-core machine, at least 64GB memory is recommended). Better performance can be achieved with memory 8 times the number of CPU cores. |
 
-### 存储检查
 
-Doris 部署时数据可以存放在 SSD 或 HDD 硬盘或者对象存储中。
+### Storage Check
 
-在以下几种场景中建议使用 SSD 作为数据存储：
+Doris allows data to be stored on SSD, HDD, or object storage during deployment.
 
-- 大规模数据量下的高并发点查场景
+SSD is recommended for data storage in the following scenarios:
+
+- High-concurrency point query scenarios with large-scale data
   
-- 大规模数据量下的高频数据更新场景
+- High-frequency data update scenarios with large-scale data
 
-### 文件系统检查
+### File System Check
 
-Doris 推荐使用 EXT4 或 XFS 文件系统。EXT4 文件系统具有良好的稳定性、性能和较低的碎片化问题。XFS 文件系统在处理大规模数据和高并发写操作时表现优越，适合高吞吐量应用。
+Doris recommends using EXT4 or XFS file systems. The EXT4 file system offers good stability, performance, and lower fragmentation issues. The XFS file system performs excellently in handling large-scale data and high-concurrency write operations, making it suitable for high-throughput applications.
 
-### 网卡检查
+### Network Card Check
 
-Doris 在进行计算过程涉及将数据分片分发到不同的实例上进行并行处理，会导致一定的网络资源开销。为了最大程度优化 Doris 性能并降低网络资源开销，强烈建议在部署时选用万兆网卡（10 Gigabit Ethernet，即 10GbE）或者更快网络。如果有多块网卡，建议使用链路聚合方式将多块网卡绑定成一块网卡，提高网络带宽、冗余性和复杂均衡的能力。
+Doris involves distributing data partitions across different instances for parallel processing, which results in some network resource overhead. To optimize Doris performance and reduce network resource overhead, it is strongly recommended to use a 10 Gigabit Ethernet (10GbE) or faster network during deployment. If multiple network cards are available, it is recommended to use link aggregation to combine multiple network cards into one virtual interface, which improves network bandwidth, redundancy, and complex balancing capabilities.
 
-## 服务器建议配置
+## Server Configuration Recommendations
 
-Doris 支持运行和部署在 x86-64 架构的服务器平台或 ARM64 架构的服务器上。
+Doris can be deployed on x86-64 or ARM64 architecture server platforms.
 
-- 开发及测试环境
+- Development and Testing Environments
   
-- 生产环境
+- Production Environments
 
-## 硬盘空间计算
 
-在 Doris 集群中，FE 主要用于元数据存储，包括元数据 edit log 和 image。BE 的磁盘空间主要用于存放数据，需要根据业务需求计算。在 2.0 版本后，不再建议使用 Broker 组件进行数据导入。
+## Disk Space Calculation
 
-## Java 环境检查
+In the Doris cluster, FE (Frontend) is mainly used for metadata storage, including metadata edit logs and images. BE (Backend) disk space is primarily used for storing data, and it needs to be calculated based on business requirements. Starting from version 2.0, the use of the Broker component for data import is no longer recommended.
 
-Doris 的所有进程都依赖 Java。
+## Java Environment Check
 
-- 在 2.1（含）版本之前，请使用 Java 8，推荐版本：`openjdk-8u352-b08-linux-x64`。
+All Doris processes depend on Java.
+
+- For versions prior to 2.1, use Java 8. Recommended version: `openjdk-8u352-b08-linux-x64`.
   
-- 从 3.0（含）版本之后，请使用 Java 17，推荐版本：`jdk-17.0.10_linux-x64_bin.tar.gz`。
+- For versions 3.0 and later, use Java 17. Recommended version: `jdk-17.0.10_linux-x64_bin.tar.gz`.
+
