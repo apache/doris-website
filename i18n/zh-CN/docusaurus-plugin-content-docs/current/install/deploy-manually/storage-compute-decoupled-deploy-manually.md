@@ -237,7 +237,7 @@ Meta Service 本身具备了元数据管理和回收功能，这两个功能可�
 其他节点同样根据上述步骤修改配置文件并启动，使用 mysql 客户端连接 Master 角色的 FE，并用以下 SQL 命令添加额外的 FE 节点：
 
 ```sql
-_ALTER_ SYSTEM _ADD_ FOLLOWER "host:port";
+ALTER SYSTEM ADD FOLLOWER "host:port";
 ```
 
 将 `host:port` 替换为 FE 节点的实际地址和编辑日志端口。更多信息请参见 [ADD FOLLOWER](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER) 和 [ADD OBSERVER](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER)。
@@ -265,7 +265,7 @@ _ALTER_ SYSTEM _ADD_ FOLLOWER "host:port";
    使用 MySQL 客户端连接到任意 Frontend，并执行：
 
    ```sql
-   ALTER SYSTEM _ADD_ BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
+   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
    ```
 
    将 `<ip>` 替换为新 Backend 的 IP 地址，将 `<heartbeat_service_port>` 替换为其配置的心跳服务端口（默认为 9050）。
