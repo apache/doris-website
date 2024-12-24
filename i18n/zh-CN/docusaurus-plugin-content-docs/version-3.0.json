@@ -614,5 +614,9 @@
   "sidebar.get-starting.category.Building lakehouse": {
     "message": "构建 Lakehouse",
     "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.docs.category.Tiered Storage": {
+    "message": "分层存储",
+    "description": "The label for category Tiered Storage in sidebar docs"
   }
 }
