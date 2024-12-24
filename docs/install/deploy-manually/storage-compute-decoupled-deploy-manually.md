@@ -1,6 +1,6 @@
 ---
 {
-    "title": "手动部署存算分离集群",
+    "title": "deploy storage compute decoupled manually",
     "language": "zh-CN"
 }
 ---
@@ -41,7 +41,7 @@ After completing the prerequisite checks and planning, such as environment check
    
 8. Add Storage Vault: Create one or more Storage Vaults using shared storage.
 
-## 第 1 步：准备 FoundationDB
+## Step 1: Prepare FoundationDB
 
 This section provides step-by-step instructions for configuring, deploying, and starting the FoundationDB (FDB) service using the `fdb_vars.sh` and `fdb_ctl.sh` scripts. You can download the [doris tools](http://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-3.0.2-tools.tar.gz) and retrieve the `fdb_vars.sh` and `fdb_ctl.sh` from the `fdb` directory.
 
@@ -99,8 +99,8 @@ If not, this document provides a simple deployment guide for MinIO:
 
    ```bash
    export MINIO_REGION_NAME=us-east-1
-   export MINIO_ROOT_USER=minio # 在较老版本中，该配置为 MINIO_ACCESS_KEY=minio
-   export MINIO_ROOT_PASSWORD=minioadmin # 在较老版本中，该配置为 MINIO_SECRET_KEY=minioadmin
+   export MINIO_ROOT_USER=minio # In older versions, this configuration was MINIO_ACCESS_KEY=minio
+   export MINIO_ROOT_PASSWORD=minioadmin # In older versions, this configuration was MINIO_SECRET_KEY=minioadmin
    nohup ./minio server /mnt/data 2>&1 &
    ```
 
@@ -132,8 +132,8 @@ If not, this document provides a simple deployment guide for MinIO:
 
    In the `./conf/doris_cloud.conf` file, the following two parameters need to be modified:
 
-   - `brpc_listen_port`：Meta Service 的监听端口，默认为 5000。
-   - `fdb_cluster`：FoundationDB 集群的连接信息，部署 FoundationDB 时可以获取。（如果使用 Doris 提供的 fdb_ctl.sh 部署的话，可在 `$FDB_HOME/conf/fdb.cluster` 文件里获取该值）。
+   - `brpc_listen_port`：The listening port for Meta Service, default is 5000.
+   - `fdb_cluster`：The connection information for the FoundationDB cluster, which can be obtained during the FoundationDB deployment. (If you are using the `fdb_ctl.s`h provided by Doris, this value can be found in the `$FDB_HOME/conf/fdb.cluster` file).
 
    Example configuration:
 
