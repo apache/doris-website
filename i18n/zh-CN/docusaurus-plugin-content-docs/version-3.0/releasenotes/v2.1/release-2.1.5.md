@@ -56,7 +56,7 @@ under the License.
 
 - 会话变量 `read_csv_empty_line_as_null` 用于控制在读取 CSV 格式文件时，是否忽略空行。默认情况下忽略空行，当设置为 true 时，空行将被读取为所有列均为 Null 的行。[#37153](https://github.com/apache/doris/pull/37153)  
   
-  - 更多信息，请参考[文档](https://doris.apache.org/docs/lakehouse/datalake-analytics/hive?_highlight=compress_type)。
+  - 更多信息，请参考[文档](../../lakehouse/datalake-analytics/hive?_highlight=compress_type)。
 
 - 新增兼容 Presto 的复杂类型输出格式。通过设置 `set serde_dialect="presto"`，可以控制复杂类型的输出格式 与 Presto 一致，用于平滑迁移 Presto 业务。[#37253](https://github.com/apache/doris/pull/37253)
 
@@ -131,7 +131,7 @@ under the License.
 
 - 数据导出（Export/Outfile）支持指定 Parquet 和 ORC 的压缩格式。
 
-  - 更多信息，请参考[文档](https://doris.apache.org/docs/sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT/?_highlight=compress_type)。
+  - 更多信息，请参考[文档](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT.md)。
 
 - 当使用 CTAS+TVF 创建表时，TVF 中的分区列将被自动映射为 Varchar（65533）而非 String，以便该分区列能够作为内表的分区列使用。 [#37161](https://github.com/apache/doris/pull/37161)
 
@@ -207,7 +207,7 @@ under the License.
 
 - 支持为 `INSERT INTO ... FROM TABLE VALUE FUNCTION` 语句设置 `max_filter_ratio` 参数。
 
-  - 更多信息，请参考[文档](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/insert-into-manual/)
+  - 更多信息，请参考[文档](../../data-operate/import/import-way/insert-into-manual)
 
 ## Bug 修复
 

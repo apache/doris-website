@@ -45,11 +45,11 @@ under the License.
 
 - 新增 `table$partition` 语法，用于查询 Hive 表的分区信息。[#40774](https://github.com/apache/doris/pull/40774)  
   
-  - [查看文档](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/hive#查询-hive-分区) 
+  - [查看文档](../../lakehouse/datalake-analytics/hive#查询-hive-分区) 
 
 - 支持创建 Text 格式的 Hive 表。[#41860](https://github.com/apache/doris/pull/41860) [#42175](https://github.com/apache/doris/pull/42175)  
 
-  - [查看文档](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-building/hive-build#table) 
+  - [查看文档](../../lakehouse/datalake-building/hive-build#table) 
 
 ### 异步物化视图
 
@@ -96,7 +96,7 @@ under the License.
 
 - Paimon Catalog 支持阿里云 DLF 和 OSS-HDFS 存储。[#41247](https://github.com/apache/doris/pull/41247) [#42585](https://github.com/apache/doris/pull/42585) 
   
-  - [查看文档](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-analytics/paimon#基于-aliyun-dlf-创建-catalog)
+  - [查看文档](../../lakehouse/datalake-analytics/paimon#基于-aliyun-dlf-创建-catalog)
 
 - 支持读取 OpenCSV 格式的 Hive 表。[#42257](https://github.com/apache/doris/pull/42257) [#42942](https://github.com/apache/doris/pull/42942)
 - 优化了访问 External Catalog 中 `information_schema.columns` 表的性能。[#41659](https://github.com/apache/doris/pull/41659) [#41962](https://github.com/apache/doris/pull/41962)
@@ -224,4 +224,4 @@ under the License.
 
 - 补充了审计日志表和文件中缺失的审计日志字段。[#43303](https://github.com/apache/doris/pull/43303)
   
-  - [查看文档](https://doris.apache.org/zh-CN/docs/3.0/admin-manual/system-tables/internal_schema/audit_log)
+  - [查看文档](../../admin-manual/system-tables/internal_schema/audit_log)

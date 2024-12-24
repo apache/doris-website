@@ -30,36 +30,35 @@ TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套
 
 本文档主要介绍 Doris 在 TPC-H 1000G 测试集上的性能表现。
 
-在 TPC-H 标准测试数据集上的 22 个查询上，我们基于 Apache Doris 2.1.1-rc03 和 Apache Doris 2.0.6 版本进行了对比测试。
+在 TPC-H 标准测试数据集上的 22 个查询上，我们基于 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.15.1 版本进行了对比测试。
 
 ![TPCDS_1000G](/images/tpch_2.1.png)
 
 ## 1. 硬件环境
 
-| 硬件   | 配置说明                                 |
-|------|--------------------------------------|
-| 机器数量 | 4 台腾讯云主机（1 个 FE，3 个 BE）                  |
-| CPU  | AMD EPYC™ Milan(2.55GHz/3.5GHz)  48 核 |
-| 内存   | 192G                                 |
-| 网络带宽 | 21Gbps                               |
-| 磁盘   | 高性能云硬盘                               |
+| 硬件   | 配置说明                                     |
+|------|------------------------------------------|
+| 机器数量 | 4 台阿里云主机（1 个 FE，3 个 BE）                  |
+| CPU  | Intel Xeon (Ice Lake) Platinum 8369B 32核 |
+| 内存   | 128G                                     |
+| 磁盘   | 阿里云 ESSD (PL0)                           |
 
 ## 2. 软件环境
 
 - Doris 部署 3BE 1FE
-- 内核版本：Linux version 5.4.0-96-generic (buildd@lgw01-amd64-051)
+- 内核版本：Linux version 5.15.0-101-generic 
 - 操作系统版本：Ubuntu 20.04 LTS (Focal Fossa)
-- Doris 软件版本：Apache Doris 2.1.1-rc03、Apache Doris 2.0.6
-- JDK：openjdk version "1.8.0_131"
+- Doris 软件版本：Apache Doris 2.1.7-rc03、Apache Doris 2.0.15.1
+- JDK：openjdk version "1.8.0_352-352"
 
 ## 3. 测试数据量
 
-整个测试模拟生成 TPCH 1000G 的数据分别导入到 Apache Doris 2.1.1-rc03 和 Apache Doris 2.0.6 版本进行测试，下面是表的相关说明及数据量。
+整个测试模拟生成 TPC-H 1000G 的数据分别导入到 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.15.1 版本进行测试，下面是表的相关说明及数据量。
 
-| TPC-H 表名  | 行数    | 备注     |
-|:---------|:------|:-------|
-| REGION   | 5     | 区域表    |
-| NATION   | 25    | 国家表    |
+| TPC-H 表名 | 行数     | 备注     |
+|:---------|:-------|:-------|
+| REGION   | 5      | 区域表    |
+| NATION   | 25     | 国家表    |
 | SUPPLIER | 1000 万 | 供应商表   |
 | PART     | 2 亿    | 零部件表   |
 | PARTSUPP | 8 亿    | 零部件供应表 |
@@ -69,38 +68,38 @@ TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套
 
 ## 4. 测试 SQL
 
-TPCH 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries/sf1000)
+TPC-H 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
 
 
 ## 5. 测试结果
 
-这里我们使用 Apache Doris 2.1.1-rc03 和 Apache Doris 2.0.6 版本进行对比测试，测试结果如下：
+这里我们使用 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.15.1 版本进行对比测试，测试结果如下：
 
-| Query  | Apache Doris 2.1.1-rc03 (ms) | Apache Doris 2.0.6 (ms) |
-|--------|------------------------------|-------------------------|
-| Q1     | 7240                         | 7638                    |
-| Q2     | 249                          | 377                     |
-| Q3     | 3528                         | 4389                    |
-| Q4     | 1534                         | 1903                    |
-| Q5     | 5457                         | 6425                    |
-| Q6     | 159                          | 150                     |
-| Q7     | 1598                         | 3141                    |
-| Q8     | 2958                         | 2792                    |
-| Q9     | 14803                        | 24732                   |
-| Q10    | 6743                         | 7315                    |
-| Q11    | 414                          | 395                     |
-| Q12    | 371                          | 417                     |
-| Q13    | 6203                         | 8095                    |
-| Q14    | 485                          | 681                     |
-| Q15    | 2246                         | 1459                    |
-| Q16    | 1252                         | 1382                    |
-| Q17    | 1461                         | 1204                    |
-| Q18    | 10428                        | 11386                   |
-| Q19    | 2329                         | 2172                    |
-| Q20    | 569                          | 1455                    |
-| Q21    | 5574                         | 6570                    |
-| Q22    | 1042                         | 1517                    |
-| **合计** | **76643**                    | **95595**               |
+| Query     | Apache Doris 2.1.7-rc03 (ms) | Apache Doris 2.0.15.1-rc01 (ms) |
+|-----------|------------------------------|---------------------------------|
+| Q1        | 11880                        | 12270                           |
+| Q2        | 280                          | 290                             |
+| Q3        | 3890                         | 4610                            |
+| Q4        | 2570                         | 3040                            |
+| Q5        | 6630                         | 8450                            |
+| Q6        | 170                          | 180                             |
+| Q7        | 2420                         | 4870                            |
+| Q8        | 3730                         | 3850                            |
+| Q9        | 15910                        | 25860                           |
+| Q10       | 7880                         | 8650                            |
+| Q11       | 560                          | 490                             |
+| Q12       | 500                          | 660                             |
+| Q13       | 9540                         | 9920                            |
+| Q14       | 590                          | 740                             |
+| Q15       | 1170                         | 1150                            |
+| Q16       | 910                          | 1520                            |
+| Q17       | 1920                         | 1770                            |
+| Q18       | 17700                        | 18760                           |
+| Q19       | 2370                         | 3240                            |
+| Q20       | 560                          | 830                             |
+| Q21       | 9150                         | 10150                           |
+| Q22       | 1130                         | 1390                            |
+| **Total** | **101460**                   | **122690**                      |
 
 ## 6. 环境准备
 
@@ -202,7 +201,7 @@ sh bin/run-tpch-queries.sh -s 1000
 
 ### 7.6.2 单个 SQL 执行
 
-下面是测试时使用的 SQL 语句，你也可以从代码库里获取最新的 SQL。最新测试查询语句地址：[TPC-H 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries/sf1000)
+下面是测试时使用的 SQL 语句，你也可以从代码库里获取最新的 SQL。最新测试查询语句地址：[TPC-H 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
 
 ```sql
 --Q1
