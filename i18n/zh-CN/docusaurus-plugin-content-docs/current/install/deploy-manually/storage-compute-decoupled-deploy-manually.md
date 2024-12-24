@@ -162,7 +162,7 @@ Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上
    bin/start.sh --daemon
    ```
 
-   启动脚本返回值为 0 表示启动成功， 否则启动失败。 启动成功同时标准输出的最后一行文本信息为 "doris_clodu start successfully"。
+   启动脚本返回值为 0 表示启动成功， 否则启动失败。 启动成功同时标准输出的最后一行文本信息为 "doris_cloud start successfully"。
 
    停止命令如下：
 
@@ -295,7 +295,7 @@ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了�
    要使用 SQL 创建 Storage Vault ，请使用 MySQL 客户端连接到您的 Doris 集群
 
    ```sql
-   CREATE STORAGE VAULT IF_ NOT _EXISTS hdfs_vault
+   CREATE STORAGE VAULT IF_NOT_EXISTS hdfs_vault
        PROPERTIES (
        "type"="hdfs",
        "fs.defaultFS"="hdfs://127.0.0.1:8020"
@@ -310,7 +310,7 @@ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了�
    - 执行以下 SQL 命令来创建 S3 Storage Vault ：
 
    ```sql
-   CREATE STORAGE VAULT IF_ NOT _EXISTS s3_vault
+   CREATE STORAGE VAULT IF_NOT_EXISTS s3_vault
        PROPERTIES (
        "type"="S3",
        "s3.endpoint"="s3.us-east-1.amazonaws.com",
