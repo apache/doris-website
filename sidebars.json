@@ -59,40 +59,45 @@
                         },
                         {
                             "type": "category",
-                            "label": "Cluster Deployment",
+                            "label": "Cluster Deployment Manually",
                             "items": [
                                 "install/deploy-manually/storage-compute-coupled-deploy-manually",
-                                "install/deploy-manually/storage-compute-decoupled-deploy-manually",
-                                {
-                                    "type": "category",
-                                    "label": "Deploying on Kubernetes",
-                                    "items": [
-                                        "install/cluster-deployment/k8s-deploy/install-env",
-                                        {
-                                            "type": "category",
-                                            "label": "Compute storage coupled",
-                                            "items": [
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
-                                            ]
-                                        },
-                                        {
-                                            "type": "category",
-                                            "label": "Compute storage decoupled",
-                                            "items": [
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-cg"
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "install/cluster-deployment/doris-on-aws"
+                                "install/deploy-manually/storage-compute-decoupled-deploy-manually"
+                            ]
+                        },
+                        {
+                             "type": "category",
+                             "label": "Deploying on Kubernetes",
+                             "items": [
+                                 {
+                                     "type": "category",
+                                     "label": "Compute storage coupled",
+                                     "items": [
+                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator",
+                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
+                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
+                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster",
+                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
+                                     ]
+                                 },
+                                 {
+                                     "type": "category",
+                                     "label": "Compute storage decoupled",
+                                     "items": [
+                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart",
+                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
+                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
+                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
+                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-cg"
+                                     ]
+                                 }
+                             ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Deployment on Cloud",
+                            "items": [
+			        "install/cluster-deployment/doris-on-aws"
                             ]
                         }
                     ]
