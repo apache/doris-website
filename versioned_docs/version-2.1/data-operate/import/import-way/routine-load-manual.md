@@ -1719,20 +1719,19 @@ The columns in the result set provide the following information:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
-            PROPERTIES
-            (
-                "format" = "json"
-            )
-            FROM KAFKA
-            (
-                "kafka_broker_list" = "192.168.100.129:9092",
-                "kafka_topic" = "routineLoad21",
-                "property.security.protocol" = "SASL_PLAINTEXT",
-                "property.sasl.kerberos.service.name" = "kafka",
-                "property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
-                "property.sasl.kerberos.keytab"="/opt/third/kafka/kerberos/kafka_client.keytab",
-                "property.sasl.kerberos.principal" = "clients/stream.dt.local@EXAMPLE.COM"
-            );  
+    PROPERTIES
+    (
+        "format" = "json"
+    )
+    FROM KAFKA
+    (
+        "kafka_broker_list" = "192.168.100.129:9092",
+        "kafka_topic" = "routineLoad21",
+        "property.security.protocol" = "SASL_PLAINTEXT",
+        "property.sasl.kerberos.service.name" = "kafka",
+        "property.sasl.kerberos.keytab"="/path/to/kafka_client.keytab",
+        "property.sasl.kerberos.principal" = "clients/stream.dt.local@EXAMPLE.COM"
+    );  
     ```
 
 4. Load result:

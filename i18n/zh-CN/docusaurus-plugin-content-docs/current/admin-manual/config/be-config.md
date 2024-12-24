@@ -1283,6 +1283,11 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：下载最低限速
 * 默认值：50 (KB/s)
 
+#### `enable_batch_download`
+
+* 描述：是否允许批量下载文件，建议只在开启 binlog 的情况下打开
+* 默认值：false
+
 #### `priority_queue_remaining_tasks_increased_frequency`
 
 * 描述：BlockingPriorityQueue 中剩余任务的优先级频率增加
