@@ -75,3 +75,43 @@ dynamic_partition.end = 3
 
 - **注意**：
   - 当设置为 SSD 时，`hot_partition_num` 属性将不再生效，所有分区将默认为 SSD 存储介质并且冷却时间为 9999-12-31 23:59:59。
+
+## 示例
+
+### 1. 创建一个分层存储表
+
+```sql
+    CREATE TABLE tiered_table (k DATE)
+    PARTITION BY RANGE(k)()
+    DISTRIBUTED BY HASH (k) BUCKETS 5
+    PROPERTIES
+    (
+        "dynamic_partition.storage_medium" = "hdd",
+        "dynamic_partition.enable" = "true",
+        "dynamic_partition.time_unit" = "DAY",
+        "dynamic_partition.hot_partition_num" = "2",
+        "dynamic_partition.end" = "3",
+        "dynamic_partition.prefix" = "p",
+        "dynamic_partition.buckets" = "5",
+        "dynamic_partition.create_history_partition"= "true",
+        "dynamic_partition.start" = "-3"
+    );
+```
+
+### 2. 检查分区存储介质
+
+```sql
+    SHOW PARTITIONS FROM tiered_table;
+```
+
+可以看见 7 个分区, 5 个使用 SSD, 其它的 2 个使用 HDD。
+
+```Plain
+  p20210517：["2021-05-17", "2021-05-18") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
+  p20210518：["2021-05-18", "2021-05-19") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
+  p20210519：["2021-05-19", "2021-05-20") storage_medium=SSD storage_cooldown_time=2021-05-21 00:00:00
+  p20210520：["2021-05-20", "2021-05-21") storage_medium=SSD storage_cooldown_time=2021-05-22 00:00:00
+  p20210521：["2021-05-21", "2021-05-22") storage_medium=SSD storage_cooldown_time=2021-05-23 00:00:00
+  p20210522：["2021-05-22", "2021-05-23") storage_medium=SSD storage_cooldown_time=2021-05-24 00:00:00
+  p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
+```
