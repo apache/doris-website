@@ -72,7 +72,7 @@ under the License.
    使用 `fdb_vars.sh` 配置环境后，您可以在每个节点上使用 `fdb_ctl.sh` 脚本部署 FDB 集群。
 
    ```bash
-./fdb_ctl.sh deploy
+   ./fdb_ctl.sh deploy
    ```
 
    此命令启动 FDB 集群的部署过程。
