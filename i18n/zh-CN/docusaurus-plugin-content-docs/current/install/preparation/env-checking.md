@@ -53,7 +53,7 @@ under the License.
 运行以下命令，有输出结果，及表示机器支持 AVX2 指令集。
 
 ```bash
-cat /_proc_/cpuinfo | grep avx2
+cat /proc/cpuinfo | grep avx2
 ```
 
 如果机器不支持 AVX2 指令集，可以使用 no AVX2 的 Doris 安装包进行部署。
