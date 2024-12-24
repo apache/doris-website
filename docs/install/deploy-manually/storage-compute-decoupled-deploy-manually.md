@@ -23,76 +23,79 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在完成前置检查及规划后，如环境检查、集群规划、操作系统检查后，可以开始部署集群。部署集群分为八步：
-1. 准备 FoundationDB 集群：可以使用已有的 FoundationDB 集群，或新建 FoundationDB 集群；
+After completing the prerequisite checks and planning, such as environment checks, cluster planning, and operating system checks, you can begin deploying the cluster. The deployment process consists of eight steps:
+
+1. Prepare the FoundationDB cluster: You can use an existing FoundationDB cluster or create a new one;
    
-3. 部署 S3 或 HDFS 服务：可以使用已有的共享存储，或新建共享存储；
+2. Deploy S3 or HDFS service: You can use existing shared storage or create new shared storage;
    
-4. 部署 Meta Service：为 Doris 集群部署 Meta Service 服务；
+3. Deploy Meta Service: Deploy Meta Service for the Doris cluster;
    
-5. 部署数据回收进程：为 Doris 集群独立部署数据回收进程，可选操作；
+4. Deploy data reclamation process: Optionally, deploy a separate data reclamation process for the Doris cluster;
    
-6. 启动 FE Master 节点：启动第一个 FE 节点作为 Master FE 节点；
+5. Start the FE Master node: Start the first FE node as the Master FE node;
    
-7. 创建 FE Master 集群：添加 FE Follower/Observer 节点组成 FE 集群；
+6. Create the FE Master cluster: Add FE Follower/Observer nodes to form the FE cluster;
    
-8. 添加 BE 节点：向集群中添加并注册 BE 节点；
+7. Add BE nodes: Add and register BE nodes to the cluster;
    
-9. 添加 Storage Vault：使用共享存储创建一个或多个 Storage Vault。
+8. Add Storage Vault: Create one or more Storage Vaults using shared storage.
 
 ## 第 1 步：准备 FoundationDB
 
-本节提供了脚本 `fdb_vars.sh` 和 `fdb_ctl.sh` 配置、部署和启动 FDB（FoundationDB）服务的分步指南。您可以下载 [doris tools](http://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-3.0.2-tools.tar.gz) 并从 `fdb` 目录获取 `fdb_vars.sh` 和 `fdb_ctl.sh`。
+This section provides step-by-step instructions for configuring, deploying, and starting the FoundationDB (FDB) service using the `fdb_vars.sh` and `fdb_ctl.sh` scripts. You can download the [doris tools](http://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-3.0.2-tools.tar.gz) and retrieve the `fdb_vars.sh` and `fdb_ctl.sh` from the `fdb` directory.
 
-1. 机器要求
+1. Machine Requirements
 
-   通常，至少需要 3 台配备 SSD 的机器来形成具有双数据副本并允许单机故障的 FoundationDB 集群。如果在测试/开发环境中，可以使用单台机器搭建 FoundationDB。
+   Typically, at least 3 machines with SSDs are needed to form a FoundationDB cluster with double data replicas, allowing for a single machine failure. If in a testing/development environment, a single machine can be used to set up FoundationDB.
 
-2. 配置 `fdb_vars.sh` 脚本
+2. Configure the `fdb_vars.sh` script
 
-   在配置 `fdb_vars.sh` 脚本时，必须指定以下配置：
+   When configuring the fdb_vars.sh script, the following configurations must be specified:
 
-   | 参数             | 描述                             | 类型                           | 示例                                                         | 注意事项                                                     |
-   | ---------------- | -------------------------------- | ------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-   | DATA_DIRS        | 指定 FoundationDB 存储的数据目录 | 以逗号分隔的绝对路径列表       | /mnt/foundationdb/data1,/mnt/foundationdb/data2,/mnt/foundationdb/data3 | - 运行脚本前确保目录已创建- 生产环境建议使用 SSD 和独立目录  |
-   | FDB_CLUSTER_IPS  | 定义集群 IP                      | 字符串（以逗号分隔的 IP 地址） | 172.200.0.2,172.200.0.3,172.200.0.4                          | - 生产集群至少应有 3 个 IP 地址- 第一个 IP 地址将用作协调器- 为高可用性，将机器放置在不同机架上 |
-   | FDB_HOME         | 定义 FoundationDB 主目录         | 绝对路径                       | /fdbhome                                                     | - 默认路径为 /fdbhome- 确保此路径是绝对路径                  |
-   | FDB_CLUSTER_ID   | 定义集群 ID                      | 字符串                         | SAQESzbh                                                     | - 每个集群的 ID 必须唯一- 可使用 mktemp -u XXXXXXXX 生成     |
-   | FDB_CLUSTER_DESC | 定义 FDB 集群的描述              | 字符串                         | dorisfdb                                                     | - 建议更改为对部署有意义的内容                               |
+   | Parameter         | Description                        | Type                         | Example                                                      | Notes                                                         |
+   | ----------------- | ---------------------------------- | ---------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------- |
+   | DATA_DIRS         | Specifies the FoundationDB data directory | A comma-separated list of absolute paths | /mnt/foundationdb/data1,/mnt/foundationdb/data2,/mnt/foundationdb/data3 | - Ensure the directories are created before running the script - SSDs and separate directories are recommended in production |
+   | FDB_CLUSTER_IPS   | Defines the cluster IPs            | String (comma-separated IP addresses) | 172.200.0.2,172.200.0.3,172.200.0.4                          | - At least 3 IP addresses are required in production clusters - The first IP will be used as the coordinator - For high availability, place machines in different racks |
+   | FDB_HOME          | Defines the FoundationDB home directory | Absolute path                | /fdbhome                                                     | - Default path is /fdbhome - Ensure this path is absolute      |
+   | FDB_CLUSTER_ID    | Defines the cluster ID             | String                        | SAQESzbh                                                     | - The ID must be unique for each cluster - Use `mktemp -u XXXXXXXX` to generate it |
+   | FDB_CLUSTER_DESC  | Defines the description of the FDB cluster | String                        | dorisfdb                                                     | - It is recommended to change this to something meaningful for the deployment |
 
-   可以选择指定以下自定义配置：
 
-   | 参数            | 描述                               | 类型 | 示例               | 注意事项                                         |
-   | --------------- | ---------------------------------- | ---- | ------------------ | ------------------------------------------------ |
-   | MEMORY_LIMIT_GB | 定义 FDB 进程的内存限制，单位为 GB | 整数 | MEMORY_LIMIT_GB=16 | 根据可用内存资源和 FDB 进程的要求调整此值        |
-   | CPU_CORES_LIMIT | 定义 FDB 进程的 CPU 核心限制       | 整数 | CPU_CORES_LIMIT=8  | 根据可用的 CPU 核心数量和 FDB 进程的要求设置此值 |
+   You can also specify the following optional custom configurations:
 
-3. 部署 FDB 集群
+   | Parameter         | Description                        | Type                         | Example                                                      | Notes                                                         |
+   | ----------------- | ---------------------------------- | ---------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------- |
+   | MEMORY_LIMIT_GB   | Defines the FDB memory limit       | Integer                       | 32                                                           | - Set the memory limit based on the available system memory    |
 
-   使用 `fdb_vars.sh` 配置环境后，您可以在每个节点上使用 `fdb_ctl.sh` 脚本部署 FDB 集群。
+
+3. Deploy FDB Cluster
+
+   After configuring the environment using `fdb_vars.sh`, you can deploy the FDB cluster on each node using the `fdb_ctl.sh` script.
 
    ```bash
    ./fdb_ctl.sh deploy
    ```
+   
+   This command initiates the deployment process for the FDB cluster.
+   
+4. Start FDB Service
 
-   此命令启动 FDB 集群的部署过程。
-
-4. 启动 FDB 服务
-
-   FDB 集群部署完成后，您可以使用 `fdb_ctl.sh` 脚本启动 FDB 服务。
+   After the FDB cluster is deployed, you can use the `fdb_ctl.sh` script to start the FDB service.
 
    ```bash
    ./fdb_ctl.sh start
    ```
-   此命令启动 FDB 服务，使集群工作并获取 FDB 集群连接字符串，后续可以用于配置 MetaService。
+      This command starts the FDB service, bringing the cluster online and obtaining the FDB cluster connection string, which can be used for configuring MetaService.
 
-## 第 2 步：安装 S3 或 HDFS 服务（可选）
+## Step 2: Install S3 or HDFS Service (Optional)
 
-Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上面，如果您已经有相关服务，直接使用即可。
-如果没有，本文档提供 MinIO 的简单部署教程：
+Apache Doris in a storage-compute separation mode stores data on S3 or HDFS services. If you already have these services set up, you can directly use them.
+If not, this document provides a simple deployment guide for MinIO:
 
-1. 在 MinIO 的[下载页面](https://min.io/download?license=agpl&platform=linux)选择合适的版本以及操作系统，下载对应的 Server 以及 Client 的二进制包或安装包。
-2. 启动 MinIO Server
+1. Visit the [MinIO download page](https://min.io/download?license=agpl&platform=linux) to select the appropriate version and operating system, and download the corresponding Server and Client binary or installation packages.
+
+2. Start MinIO Server
 
    ```bash
    export MINIO_REGION_NAME=us-east-1
@@ -101,47 +104,48 @@ Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上
    nohup ./minio server /mnt/data 2>&1 &
    ```
 
-3. 配置 MinIO Client
+3. Configure MinIO Client
 
    ```bash
-   # 如果你使用的是安装包安装的客户端，那么客户端名为 mcli，直接下载客户端二进制包，则其名为 mc
+   # If you installed the client using the installation package, the client name is mcli. If you downloaded the client binary package, it is named mc  
    ./mc config host add myminio http://127.0.0.1:9000 minio minioadmin
    ```
 
-4. 创建一个桶
+4. Create a Bucket
 
    ```bash
    ./mc mb myminio/doris
    ```
 
-5. 验证是否正常工作
+5. Verify it's working correctly
 
    ```bash
-   # 上传一个文件
+   # Upload a file  
    ./mc mv test_file myminio/doris
-   # 查看这个文件
+   # List the file  
    ./mc ls myminio/doris
    ```
 
-## 第 3 步：Meta Service 部署
+## Step 3: Meta Service Deployment
 
-1. 配置
+1. Configuration
 
-   在 `./conf/doris_cloud.conf` 文件中，主要需要修改以下两个参数：
+   In the `./conf/doris_cloud.conf` file, the following two parameters need to be modified:
 
    - `brpc_listen_port`：Meta Service 的监听端口，默认为 5000。
    - `fdb_cluster`：FoundationDB 集群的连接信息，部署 FoundationDB 时可以获取。（如果使用 Doris 提供的 fdb_ctl.sh 部署的话，可在 `$FDB_HOME/conf/fdb.cluster` 文件里获取该值）。
 
-   示例配置：
+   Example configuration:
 
    ```shell
    brpc_listen_port = 5000
    fdb_cluster = xxx:yyy@127.0.0.1:4500
    ```
 
-   注意：`fdb_cluster` 的值应与 FoundationDB 部署机器上的 `/etc/foundationdb/fdb.cluster` 文件内容一致 （如果使用 Doris 提供的 fdb_ctl.sh 部署的话，可在 `$FDB_HOME/conf/fdb.cluster` 文件里获取该值）。
+   Note: The value of `fdb_cluster` should match the contents of the `/etc/foundationdb/fdb.cluster` file on the FoundationDB deployment machine (if using the fdb_ctl.sh provided by Doris, this value can be obtained from the `$FDB_HOME/conf/fdb.cluster` file).
 
-   示例，文件的最后一行就是要填到 doris_cloud.conf 里 fdb_cluster 字段的值：
+   Example, the last line of the file is the value to be filled in the `fdb_cluster` field in the doris_cloud.conf file:
+
 
    ```shell
    cat /etc/foundationdb/fdb.cluster
@@ -151,166 +155,166 @@ Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上
    cloud_ssb:A83c8Y1S3ZbqHLL4P4HHNTTw0A83CuHj@127.0.0.1:4500
    ```
 
-2. 启动与停止
+2. Start and Stop
 
-   在启动前，需要确保已正确设置 `JAVA_HOME` 环境变量，指向 OpenJDK 17，进入 `ms` 目录。
+   Before starting, ensure that the `JAVA_HOME` environment variable is correctly set to point to OpenJDK 17, and enter the `ms` directory.
 
-   启动命令如下：
+   The start command is as follows:
 
    ```shell
    export JAVA_HOME=${path_to_jdk_17}
    bin/start.sh --daemon
    ```
 
-   启动脚本返回值为 0 表示启动成功， 否则启动失败。 启动成功同时标准输出的最后一行文本信息为 "doris_clodu start successfully"。
+   A return value of 0 from the start script indicates a successful start; otherwise, the start has failed. If started successfully, the last line of the standard output will display "doris_cloud start successfully".
 
-   停止命令如下：
+   The stop command is as follows:
 
    ```shell
    bin/stop.sh
    ```
 
-   生产环境中请确保至少有 3 个 Meta Service 节点。
+   In a production environment, ensure that at least 3 Meta Service nodes are available.
 
-## 第 4 步：数据回收功能独立部署（可选）
+## Step 4: Independent Deployment of Data Recycling Function (Optional)
 
-：::info 信息
+:::info Information
 
-Meta Service 本身具备了元数据管理和回收功能，这两个功能可以独立部署，如果你想独立部署，可以参考这一节。
+Meta Service itself has metadata management and recycling functions, and these two functions can be deployed independently. If you want to deploy them independently, refer to this section.
 
 :::
 
-1. 创建新的工作目录（如 `recycler`），并复制 `ms` 目录内容到新目录：
+1. Create a new working directory (e.g., `recycler`) and copy the contents of the `ms` directory to the new directory:
 
    ```shell
    cp -r ms recycler
    ```
 
-2. 在新目录的配置文件中修改 BRPC 监听端口 `brpc_listen_port` 和 `fdb_cluster` 的值。
+2. Modify the BRPC listen port `brpc_listen_port` and `fdb_cluster` values in the configuration file of the new directory.
 
-   启动数据回收功能
-   
+   To start the data recycling function:
+
    ```shell
    export JAVA_HOME=${path_to_jdk_17}
    bin/start.sh --recycler --daemon
    ```
 
-   启动仅元数据操作功能
+   To start only the metadata operation function:
 
    ```shell
    export JAVA_HOME=${path_to_jdk_17}
    bin/start.sh --meta-service --daemon
    ```
 
-## 第 5 步：启动 FE Master 节点
+## Step 5: Start FE Master Node
 
-1. 配置 fe.conf 文件
+1. Configure the `fe.conf` File
 
-   在 `fe.conf` 文件中，需要配置以下关键参数：
+   In the `fe.conf` file, the following key parameters need to be configured:
 
    - `deploy_mode`
-     - 描述：指定 doris 启动模式
-     - 格式：cloud 表示存算分离模式，其它存算一体模式
-     - 示例：`cloud`
+     - Description: Specifies the Doris startup mode
+     - Format: `cloud` for storage-compute separation mode, other modes for storage-compute integration
+     - Example: `cloud`
    - `cluster_id`
-     - 描述：存算分离架构下集群的唯一标识符，不同的集群必须设置不同的 cluster_id。
-     - 格式：int 类型
-     - 示例：可以使用如下 shell 脚本 `echo $(($((RANDOM << 15)) | $RANDOM))` 生成一个随机 id 使用。
-     - 注意：不同的集群必须设置不同的 cluster_id
+     - Description: A unique identifier for the cluster in the storage-compute separation architecture. Different clusters must have different `cluster_id`.
+     - Format: Integer type
+     - Example: You can use the following shell script `echo $(($((RANDOM << 15)) | $RANDOM))` to generate a random ID.
+     - Note: Different clusters must have different `cluster_id`.
    - `meta_service_endpoint`
-     - 描述：Meta Service 的地址和端口
-     - 格式：`IP地址:端口号`
-     - 示例：`127.0.0.1:5000`， 可以用逗号分割配置多个 meta service。
+     - Description: The address and port of the Meta Service
+     - Format: `IP address:port`
+     - Example: `127.0.0.1:5000`, multiple Meta Services can be configured by separating them with commas.
 
-2. 启动 FE Master 节点
+2. Start FE Master Node
 
-   启动命令示例：
+   Example start command:
 
    ```bash
    bin/start_fe.sh --daemon
    ```
 
-   第一个 FE 进程初始化集群并以 FOLLOWER 角色工作。使用 mysql 客户端连接 FE 使用 `show frontends` 确认刚才启动的 FE 是 master。
+   The first FE process initializes the cluster and works as a FOLLOWER role. Use the MySQL client to connect to FE and use `show frontends` to confirm that the FE you just started is the master.
 
-## 第 6 步：注册并添加 FE Follower/Observer 节点
+## Step 6: Register and Add FE Follower/Observer Nodes
 
-其他节点同样根据上述步骤修改配置文件并启动，使用 mysql 客户端连接 Master 角色的 FE，并用以下 SQL 命令添加额外的 FE 节点：
+Other nodes should also modify their configuration files and start following the same steps. Connect to the Master role FE using the MySQL client and add additional FE nodes with the following SQL command:
 
 ```sql
 ALTER SYSTEM ADD FOLLOWER "host:port";
 ```
 
-将 `host:port` 替换为 FE 节点的实际地址和编辑日志端口。更多信息请参见 [ADD FOLLOWER](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER) 和 [ADD OBSERVER](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER)。
+Replace `host:port` with the actual address of the FE node and edit the log port. For more information, see [ADD FOLLOWER](https://doris.apache.org/en/docs/dev/sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER) and [ADD OBSERVER](https://doris.apache.org/en/docs/dev/sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER).
 
-生产环境中，请确保在 FOLLOWER 角色中的前端 （FE） 节点总数，包括第一个 FE，保持为奇数。一般来说，三个 FOLLOWER 就足够了。观察者角色的前端节点可以是任意数量。
+In a production environment, make sure the total number of FE nodes in the FOLLOWER role, including the first FE, remains odd. Typically, three FOLLOWER nodes are sufficient. The number of FE nodes in the OBSERVER role can be arbitrary.
 
-## 第 7 步：添加 BE 节点
+## Step 7: Add BE Nodes
 
-要向集群添加 Backend 节点，请对每个 Backend 执行以下步骤：
+To add Backend nodes to the cluster, perform the following steps for each Backend:
 
-1. 配置 be.conf
+1. Configure `be.conf`
 
-   在 `be.conf` 文件中，需要配置以下关键参数：
+   In the `be.conf` file, you need to configure the following key parameters:
 
-2. 启动 BE 进程
+2. Start the BE process
 
-   使用以下命令启动 Backend：
+   Use the following command to start the Backend:
 
    ```bash
    bin/start_be.sh --daemon
    ```
 
-3. 将 BE 添加到集群：
+3. Add BE to the cluster:
 
-   使用 MySQL 客户端连接到任意 Frontend，并执行：
+   Connect to any Frontend using MySQL client and execute:
 
    ```sql
-   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
+   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROPERTIES properties];
    ```
 
-   将 `<ip>` 替换为新 Backend 的 IP 地址，将 `<heartbeat_service_port>` 替换为其配置的心跳服务端口（默认为 9050）。
+   Replace `<ip>` with the IP address of the new Backend, and `<heartbeat_service_port>` with its configured heartbeat service port (default is 9050).
 
-   可以通过 PROPERTIES 设置 BE 所在的 计算组。
+   You can use PROPERTIES to specify the compute group where the BE is located.
 
-   更详细的用法请参考 [ADD BACKEND](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND) 和 [REMOVE BACKEND](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND)。
+   For more detailed usage, refer to [ADD BACKEND](https://doris.apache.org/en/docs/dev/sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND) and [REMOVE BACKEND](https://doris.apache.org/en/docs/dev/sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND).
 
-4. 验证 BE 状态
+4. Verify BE status
 
-   检查 Backend 日志文件（`be.log`）以确保它已成功启动并加入集群。
+   Check the Backend log files (`be.log`) to ensure it has successfully started and joined the cluster.
 
-   您还可以使用以下 SQL 命令检查 Backend 状态：
+   You can also check the Backend status using the following SQL command:
 
    ```sql
    SHOW BACKENDS;
    ```
 
-   这将显示集群中所有 Backend 及其当前状态。
+   This will display all the Backend nodes in the cluster and their current status.
 
-## 第 8 步：添加 Storage Vault
+## Step 8: Add Storage Vault
 
-Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个 Storage Vault 。可以将一个 Storage Vault 设置为默认 Storage Vault ，系统表和未指定 Storage Vault 的表都将存储在这个默认 Storage Vault 中。默认 Storage Vault 不能被删除。以下是为您的 Doris 集群创建 Storage Vault 的方法：
+Storage Vault is an important component in Doris' separation of storage and computing architecture. It represents the shared storage layer where data is stored. You can create one or more Storage Vaults using HDFS or S3-compatible object storage. One Storage Vault can be set as the default Storage Vault, and system tables and tables that do not specify a Storage Vault will be stored in this default Storage Vault. The default Storage Vault cannot be deleted. Below are the steps to create a Storage Vault for your Doris cluster:
 
-1. 创建 HDFS Storage Vault
+1. Create HDFS Storage Vault
 
-   要使用 SQL 创建 Storage Vault ，请使用 MySQL 客户端连接到您的 Doris 集群
+   To create a Storage Vault using SQL, connect to your Doris cluster using the MySQL client:
 
    ```sql
-   CREATE STORAGE VAULT IF_ NOT _EXISTS hdfs_vault
+   CREATE STORAGE VAULT IF_NOT_EXISTS hdfs_vault
        PROPERTIES (
        "type"="hdfs",
        "fs.defaultFS"="hdfs://127.0.0.1:8020"
    );
    ```
 
-2. 创建 S3 Storage Vault
+2. Create S3 Storage Vault
 
-   要使用兼容 S3 的对象存储创建 Storage Vault ，请按照以下步骤操作：
+   To create a Storage Vault using S3-compatible object storage, follow these steps:
 
-   - 使用 MySQL 客户端连接到您的 Doris 集群。
-   - 执行以下 SQL 命令来创建 S3 Storage Vault ：
+   - Connect to your Doris cluster using the MySQL client.
+   - Execute the following SQL command to create the S3 Storage Vault:
 
    ```sql
-   CREATE STORAGE VAULT IF_ NOT _EXISTS s3_vault
+   CREATE STORAGE VAULT IF_NOT_EXISTS s3_vault
        PROPERTIES (
        "type"="S3",
        "s3.endpoint"="s3.us-east-1.amazonaws.com",
@@ -323,17 +327,17 @@ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了�
    );
    ```
 
-   要在其他对象存储上创建 Storage Vault ，请参考 [创建 Storage Vault ](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT)。
+   To create a Storage Vault on other object storage, please refer to [Create Storage Vault](https://doris.apache.org/en/docs/dev/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT).
 
-3. 设置默认 Storage Vault
+3. Set Default Storage Vault
 
-   使用如下 SQL 语句设置一个默认 Storage Vault 。
+   Use the following SQL statement to set a default Storage Vault.
 
    ```sql
    SET <storage_vault_name> AS DEFAULT STORAGE VAULT
    ```
 
-## 注意事项
+## Notes
 
-- 仅元数据操作功能的 Meta Service 进程应作为 FE 和 BE 的 `meta_service_endpoint` 配置目标。
-- 数据回收功能进程不应作为 `meta_service_endpoint` 配置目标。
+- Only the Meta Service process with metadata operation functionality should be configured as the `meta_service_endpoint` for FE and BE.
+- The data recycling function process should not be configured as the `meta_service_endpoint`.
