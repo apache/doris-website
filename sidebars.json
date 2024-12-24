@@ -285,9 +285,9 @@
                             "type": "category",
                             "label": "Hints",
                             "items": [
-                                "query-acceleration/Hints/hints-overview",
-                                "query-acceleration/Hints/leading-hint",
-                                "query-acceleration/Hints/distribute-hint"
+                                "query-acceleration/hints/hints-overview",
+                                "query-acceleration/hints/leading-hint",
+                                "query-acceleration/hints/distribute-hint"
                             ]
                         },
                         {
