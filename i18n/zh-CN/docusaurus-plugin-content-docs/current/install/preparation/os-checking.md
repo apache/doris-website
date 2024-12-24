@@ -99,7 +99,7 @@ cat >> /etc/sysctl.conf << EOF
 vm.max_map_count = 2000000
 EOF
 
-_# Take effect immediately_
+# Take effect immediately
 sysctl -p
 ```
 
@@ -124,7 +124,7 @@ cat >> /etc/sysctl.conf << EOF
 net.ipv4.tcp_abort_on_overflow=1
 EOF
 
-_# Take effect immediately_
+# Take effect immediately_
 sysctl -p
 ```
 
