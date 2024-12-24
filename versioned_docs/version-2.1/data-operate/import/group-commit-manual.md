@@ -46,6 +46,58 @@ Doris writes data to the Write Ahead Log (WAL) firstly, then the load is returne
 
 The number of WALs can be viewed through the FE HTTP interface, as detailed [here](../../admin-manual/open-api/fe-http/get-wal-size-action). Alternatively, you can search for the keyword `wal` in the BE metrics.
 
+## Limitations
+
+* When the group commit is enabled, some `INSERT INTO VALUES` sqls are not executed in the group commit way if they meet the following conditions:
+
+  * Transaction insert, such as `BEGIN`, `INSERT INTO VALUES`, `COMMIT`
+
+  * Specify the label, such as `INSERT INTO dt WITH LABEL {label} VALUES`
+
+  * Expressions within VALUES, such as `INSERT INTO dt VALUES (1 + 100)`
+
+  * Column update
+
+  * Tables that do not support light schema changes
+
+* When the group commit is enabled, some `Stream Load` and `Http Stream` are not executed in the group commit way if they meet the following conditions:
+
+  * Two phase commit
+
+  * Specify the label  by set header `-H "label:my_label"`
+
+  * Column update
+
+  * Tables that do not support light schema changes
+
+* For unique table, because the group commit can not guarantee the commit order, users can use sequence column to ensure the data consistency.
+
+* The limit of `max_filter_ratio`
+
+  * For non group commit load, filter_ratio is calculated by the failed rows and total rows when load is finished. If the filter_ratio does not match, the transaction will not commit
+
+  * In the group commit mode, multiple user loads are executed by one internal load. The internal load will commit all user loads.
+
+  * Currently, group commit supports a certain degree of max_filter_ratio semantics. When the total number of rows does not exceed group_commit_memory_rows_for_max_filter_ratio (configured in `be.conf`, defaulting to `10000` rows), max_filter_ratio will work.
+
+* The limit of WAL
+
+  * For async_mode group commit, data is written to the Write Ahead Log (WAL). If the internal load succeeds, the WAL is immediately deleted. If the internal load fails, data is recovered by loading the WAL.
+
+  * Currently, WAL files are stored only on one disk of one BE. If the BE's disk is damaged or the file is mistakenly deleted, it may result in data loss.
+
+  * When decommissioning a BE node, please use the [`DECOMMISSION`](../../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) command to safely decommission the node. This prevents potential data loss if the WAL files are not processed before the node is taken offline.
+
+  * For async_mode group commit writes, to protect disk space, it switches to sync_mode under the following conditions:
+
+    * For a load with large amount of data: exceeding 80% of the disk space of a WAL directory. 
+
+    * Chunked stream loads with an unknown data amount.
+
+    * Insufficient disk space, even if it is a load with small amount of data.
+
+  * During hard weight schema changes (adding or dropping columns, modifying varchar length, and renaming columns are lightweight schema changes, others are hard weight), to ensure WAL file is compatibility with the table's schema, the final stage of metadata modification in FE will reject group commit writes. Clients get `insert table ${table_name} is blocked on schema change` exception and can retry the load.
+
 ## Basic operations
 
 If the table schema is:
@@ -390,58 +442,6 @@ The default group commit data size is 64 MB. Users can modify the configuration 
 # Modify the group commit data size to 128MB
 ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 ```
-
-## Limitations
-
-* When the group commit is enabled, some `INSERT INTO VALUES` sqls are not executed in the group commit way if they meet the following conditions:
-
-  * Transaction insert, such as `BEGIN`, `INSERT INTO VALUES`, `COMMIT`
-
-  * Specify the label, such as `INSERT INTO dt WITH LABEL {label} VALUES`
-
-  * Expressions within VALUES, such as `INSERT INTO dt VALUES (1 + 100)`
-
-  * Column update
-
-  * Tables that do not support light schema changes
-
-* When the group commit is enabled, some `Stream Load` and `Http Stream` are not executed in the group commit way if they meet the following conditions:
-
-  * Two phase commit
-
-  * Specify the label  by set header `-H "label:my_label"`
-
-  * Column update
-
-  * Tables that do not support light schema changes
-
-* For unique table, because the group commit can not guarantee the commit order, users can use sequence column to ensure the data consistency.
-
-* The limit of `max_filter_ratio`
-
-  * For non group commit load, filter_ratio is calculated by the failed rows and total rows when load is finished. If the filter_ratio does not match, the transaction will not commit
-
-  * In the group commit mode, multiple user loads are executed by one internal load. The internal load will commit all user loads.
-
-  * Currently, group commit supports a certain degree of max_filter_ratio semantics. When the total number of rows does not exceed group_commit_memory_rows_for_max_filter_ratio (configured in `be.conf`, defaulting to `10000` rows), max_filter_ratio will work.
-
-* The limit of WAL
-
-  * For async_mode group commit, data is written to the Write Ahead Log (WAL). If the internal load succeeds, the WAL is immediately deleted. If the internal load fails, data is recovered by loading the WAL.
-
-  * Currently, WAL files are stored only on one disk of one BE. If the BE's disk is damaged or the file is mistakenly deleted, it may result in data loss.
-
-  * When decommissioning a BE node, please use the [`DECOMMISSION`](../../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) command to safely decommission the node. This prevents potential data loss if the WAL files are not processed before the node is taken offline.
-
-  * For async_mode group commit writes, to protect disk space, it switches to sync_mode under the following conditions:
-
-    * For a load with large amount of data: exceeding 80% of the disk space of a WAL directory. 
-
-    * Chunked stream loads with an unknown data amount.
-
-    * Insufficient disk space, even if it is a load with small amount of data.
-
-  * During hard weight schema changes (adding or dropping columns, modifying varchar length, and renaming columns are lightweight schema changes, others are hard weight), to ensure WAL file is compatibility with the table's schema, the final stage of metadata modification in FE will reject group commit writes. Clients get `insert table ${table_name} is blocked on schema change` exception and can retry the load.
 
 ## Relevant system configuration
 
