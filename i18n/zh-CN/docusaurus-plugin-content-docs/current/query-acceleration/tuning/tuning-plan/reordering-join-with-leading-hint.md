@@ -24,174 +24,219 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Leading Hint 简介
+## 概述
 
-Leading Hint 是一种强大的查询优化技术，它允许用户指导 Doris 优化器确定查询计划中的表连接顺序。正确使用 Leading Hint 可以显著提升复杂查询的性能。本文将详细介绍如何在 Doris 中使用 Leading Hint 来控制 Join 的顺序。
+Leading Hint 特性允许用户手工指定查询中的表的连接顺序，在特定场景优化复杂查询性能。本文将详细介绍如何在 Doris 中使用 Leading Hint 来控制 join 的顺序。详细使用说明，可参考[leading hint](../../../query-acceleration/hints/leading-hint.md)文档。
 
-:::info 备注
-
-详细使用说明，可参考 [Hint](../../../query-acceleration/tuning/join-hint) 文档。
-
+:::caution 注意
+当前 Doris 已经具备良好的开箱即用的能力，也就意味着在绝大多数场景下，Doris 会自适应的优化各种场景下的性能，无需用户来手工控制 hint 来进行业务调优。本章介绍的内容主要面向专业调优人员，业务人员仅做简单了解即可。
 :::
 
-## 语法示例
+## 案例 1：调整左右表顺序
 
-查询示例如下：
-
-```sql
-SELECT * FROM t1 JOIN t2 ON t1.c1 = t2.c2;
-```
-
-默认情况下，Doris 可能会选择 t1 作为驱动表。如果我们想要交换 join 的顺序，使 t2 成为驱动表，可以使用 Leading Hint：
+对于如下查询：
 
 ```sql
-SELECT /*+ LEADING(t2 t1) */ * FROM t1 JOIN t2 ON t1.c1 = t2.c2;
+mysql> explain shape plan select from t1 join t2 on t1.c1 = t2.c2;
++------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                              |
++------------------------------------------------------------------------------+
+| PhysicalResultSink                                                           |
+| --PhysicalDistribute[DistributionSpecGather]                                 |
+| ----PhysicalProject                                                          |
+| ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+| --------PhysicalOlapScan[t1]                                                 |
+| --------PhysicalDistribute[DistributionSpecHash]                             |
+| ----------PhysicalOlapScan[t2]                                               |
++------------------------------------------------------------------------------+
 ```
 
-如果需要验证 Hint 是否生效，可以使用 EXPLAIN 命令可以查看查询计划并验证：
+可以使用 Leading Hint，强制指定 join order 为 t2 join t1，调整原始连接顺序。
 
 ```sql
-EXPLAIN SELECT /*+ LEADING(t2 t1) */ * FROM t1 JOIN t2 ON t1.c1 = t2.c2;
+mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on t1.c1 = t2.c2;
++------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                              |
++------------------------------------------------------------------------------+
+| PhysicalResultSink                                                           |
+| --PhysicalDistribute[DistributionSpecGather]                                 |
+| ----PhysicalProject                                                          |
+| ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+| --------PhysicalOlapScan[t2]                                                 |
+| --------PhysicalDistribute[DistributionSpecHash]                             |
+| ----------PhysicalOlapScan[t1]                                               |
+|                                                                              |
+| Hint log:                                                                    |
+| Used: leading(t2 t1)                                                         |
+| UnUsed:                                                                      |
+| SyntaxError:                                                                 |
++------------------------------------------------------------------------------+
 ```
 
-其中，在 EXPLAIN 的结果中会有一个 "Hint log" 部分，显示以下内容：
+Hint log 展示了应用成功的 hint: `Used: leading(t2 t1)`。
 
-1. Used: 表示成功应用的 `hint`
-
-2. Unused: 表示未使用的 `hint`
-
-3. SyntaxError: 表示存在语法错误的 `hint`
-
-## 调优案例
-
-
-**1. 左深树（默认行为）**
+## 案例 2：强制生成左深树
 
 ```sql
-SELECT /*+ LEADING(t1 t2 t3) */ *   
-FROM t1 JOIN t2 ON t1.c1 = t2.c2 JOIN t3 ON t2.c2 = t3.c3;
+mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3;
++--------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                                |
++--------------------------------------------------------------------------------+
+| PhysicalResultSink                                                             |
+| --PhysicalDistribute[DistributionSpecGather]                                   |
+| ----PhysicalProject                                                            |
+| ------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()   |
+| --------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+| ----------PhysicalOlapScan[t1]                                                 |
+| ----------PhysicalDistribute[DistributionSpecHash]                             |
+| ------------PhysicalOlapScan[t2]                                               |
+| --------PhysicalDistribute[DistributionSpecHash]                               |
+| ----------PhysicalOlapScan[t3]                                                 |
+|                                                                                |
+| Hint log:                                                                      |
+| Used: leading(t1 t2 t3)                                                        |
+| UnUsed:                                                                        |
+| SyntaxError:                                                                   |
++--------------------------------------------------------------------------------+
 ```
 
-树形结构：
+同样，Hint log 展示了应用成功的 hint: `Used: leading(t1 t2 t3)`。
+
+## 案例 3：强制生成右深树
 
 ```sql
-      join  
-     /    \  
-   join    t3  
-  /    \  
-t1      t2
+mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3;
++----------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                                  |
++----------------------------------------------------------------------------------+
+| PhysicalResultSink                                                               |
+| --PhysicalDistribute[DistributionSpecGather]                                     |
+| ----PhysicalProject                                                              |
+| ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()     |
+| --------PhysicalOlapScan[t1]                                                     |
+| --------PhysicalDistribute[DistributionSpecHash]                                 |
+| ----------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
+| ------------PhysicalOlapScan[t2]                                                 |
+| ------------PhysicalDistribute[DistributionSpecHash]                             |
+| --------------PhysicalOlapScan[t3]                                               |
+|                                                                                  |
+| Hint log:                                                                        |
+| Used: leading(t1 { t2 t3 })                                                      |
+| UnUsed:                                                                          |
+| SyntaxError:                                                                     |
++----------------------------------------------------------------------------------+
 ```
 
-**2. 右深树**
+同样，Hint log 展示了应用成功的 hint: `Used: leading(t1 { t2 t3 })`。
+
+## 案例 4：强制生成 bushy 树
 
 ```sql
-SELECT /*+ LEADING(t1 {t2 t3}) */ *   
-FROM t1 JOIN t2 ON t1.c1 = t2.c2 JOIN t3 ON t2.c2 = t3.c3;
+mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3 join t4 on t3.c3 = t4.c4;
++-----------------------------------------------+
+| _Explain_ String                                |
++-----------------------------------------------+
+| PhysicalResultSink                            |
+| --PhysicalDistribute                          |
+| ----PhysicalProject                           |
+| ------hashJoin[INNER_JOIN](t2.c2 = t3.c3)     |
+| --------hashJoin[INNER_JOIN](t1.c1 = t2.c2)   |
+| ----------PhysicalOlapScan[t1]                |
+| ----------PhysicalDistribute                  |
+| ------------PhysicalOlapScan[t2]              |
+| --------PhysicalDistribute                    |
+| ----------hashJoin[INNER_JOIN](t3.c3 = t4.c4) |
+| ------------PhysicalOlapScan[t3]              |
+| ------------PhysicalDistribute                |
+| --------------PhysicalOlapScan[t4]            |
+|                                               |
+| Used: leading({ t1 t2 } { t3 t4 })            |
+| UnUsed:                                       |
+| SyntaxError:                                  |
++-----------------------------------------------+
 ```
 
-树形结构：
+同样，Hint log 展示了应用成功的 hint: `Used: leading({ t1 t2 } { t3 t4 })`。
+
+## 案例 5：view 作为整体参与连接
 
 ```sql
-  join  
- /    \  
-t1    join  
-     /    \  
-    t2     t3
+mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
++--------------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                                      |
++--------------------------------------------------------------------------------------+
+| PhysicalResultSink                                                                   |
+| --hashAgg[GLOBAL]                                                                    |
+| ----PhysicalDistribute[DistributionSpecGather]                                       |
+| ------hashAgg[LOCAL]                                                                 |
+| --------PhysicalProject                                                              |
+| ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = alias.c2)) otherCondition=()  |
+| ------------PhysicalProject                                                          |
+| --------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
+| ----------------PhysicalProject                                                      |
+| ------------------PhysicalOlapScan[t2]                                               |
+| ----------------PhysicalDistribute[DistributionSpecHash]                             |
+| ------------------PhysicalProject                                                    |
+| --------------------PhysicalOlapScan[t3]                                             |
+| ------------PhysicalDistribute[DistributionSpecHash]                                 |
+| --------------PhysicalProject                                                        |
+| ----------------PhysicalOlapScan[t1]                                                 |
+|                                                                                      |
+| Hint log:                                                                            |
+| Used: leading(alias t1)                                                              |
+| UnUsed:                                                                              |
+| SyntaxError:                                                                         |
++--------------------------------------------------------------------------------------+
 ```
 
-**3. Bushy 树**
+同样，Hint log 展示了应用成功的 hint: `Used: leading(alias t1)`。
+
+## 案例 6：DistributeHint 与 LeadingHint 混用
 
 ```sql
-SELECT /*+ LEADING({t1 t2} {t3 t4}) */ *   
-FROM t1 JOIN t2 ON t1.c1 = t2.c2   
-JOIN t3 ON t2.c2 = t3.c3   
-JOIN t4 ON t3.c3 = t4.c4;
+explain shape plan
+    select 
+        nation,
+        o_year,
+        sum(amount) as sum_profit
+    from
+        (
+            select
+                /*+ leading(orders shuffle {lineitem shuffle part} shuffle {supplier broadcast nation} shuffle partsupp) */
+                n_name as nation,
+                extract(year from o_orderdate) as o_year,
+                l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
+            from
+                part,
+                supplier,
+                lineitem,
+                partsupp,
+                orders,
+                nation
+            where
+                s_suppkey = l_suppkey
+                and ps_suppkey = l_suppkey
+                and ps_partkey = l_partkey
+                and p_partkey = l_partkey
+                and o_orderkey = l_orderkey
+                and s_nationkey = n_nationkey
+                and p_name like '%green%'
+        ) as profit
+    group by
+        nation,
+        o_year
+    order by
+        nation,
+        o_year desc;
 ```
 
-树形结构：
+上述 `/*+ leading(orders shuffle {lineitem shuffle part} shuffle {supplier broadcast nation} shuffle partsupp) */` hint 指定方式，混用了 leading 和 distribute hint 两种格式。leading 用于控制总体的表之间的相对 join 顺序，而 `shuffle` 和 `broadcast` 分别用于指定特定 join 使用何种 shuffle 方式。通过两种结合使用，可以灵活的控制连接顺序和连接方式，便于手工控制用户期望的计划行为。
 
-```sql
-      join  
-      /    \  
-   join    join  
-  /    \  /    \  
- t1    t2 t3    t4
-```
-
-**4. Zig-Zag 树**
-
-```sql
-SELECT /*+ LEADING(t1 {t2 t3} t4) */ *   
-FROM t1 JOIN t2 ON t1.c1 = t2.c2   
-JOIN t3 ON t2.c2 = t3.c3   
-JOIN t4 ON t3.c3 = t4.c4;
-```
-
-树形结构：
-
-```sql
-    join  
-   /    \  
- join    t4  
-/    \  
-t1   join  
-    /    \  
-   t2     t3
-```
-
-**5. 特殊情况处理**
-
-对于非内连接（如 Outer Join、Semi/Anti Join），Leading Hint 会根据原始 SQL 语义自动推导各个 Join 的类型。如果指定的 Join 顺序与原 SQL 语义不兼容，Hint 将被忽略。
-
-**6. 视图和子查询**
-
-可以将视图或子查询的别名作为一个完整的子树进行指定。
-
-```sql
-SELECT /*+ LEADING(alias t1) */ COUNT(*)   
-FROM t1 JOIN (SELECT c2 FROM t2 JOIN t3 ON t2.c2 = t3.c3) AS alias   
-ON t1.c1 = alias.c2;
-```
-
-树形结构：在这个例子中，`alias` 被视为一个整体，其内部 Join 顺序由子查询本身决定。
-
-```sql
-       join  
-      /    \  
-   alias    t1  
-   /    \  
-  t2     t3
-```
-
-## 与 ORDERED Hint 混用
-
-当 LEADING 和 ORDERED Hint 同时使用时，ORDERED Hint 的优先级更高。
-
-```sql
-SELECT /*+ ORDERED */ t1.c1   
-FROM t2 JOIN t1 ON t1.c1 = t2.c2 JOIN t3 ON t2.c2 = t3.c3;
-```
-
-树形结构：
-
-```sql
-      join  
-     /    \  
-   join    t3  
-  /    \  
-t2      t1
-```
-
-在这里，ORDERED Hint 强制 Join 顺序必须严格按照 FROM 子句中表的出现顺序来执行。因此，在这种情况下，ORDERED Hint 会生效，而 LEADING hint 则会被忽略。
+:::caution 使用建议
+- 建议使用 EXPLAIN 来仔细分析执行计划，以确保 Leading Hint 能达到预期的效果。
+- Doris 版本升级或者业务数据变更时，应重新评估 Leading Hint 的效果，做到及时记录和调整。
+:::
 
 ## 总结
 
-通过合理使用 Leading Hint，我们可以更有效地控制 Doris 中的 Join 顺序，进而优化查询性能。然而需谨记，这是一项高级特性，应当在充分理解查询特性及数据分布的基础上谨慎使用。
-
-在使用时，需注意以下几点：
-
-1. 过度依赖 Hint 可能会导致产生次优的执行计划。因此，在使用前请确保已充分理解查询及数据的特性。
-
-2. 当升级 Doris 版本时，应重新评估 Leading Hint 的效果，因为优化器的策略可能会有所调整。
-
-3. 对于复杂的查询，建议使用 EXPLAIN 命令来仔细分析执行计划，以确保 Leading Hint 能达到预期的效果。
+Leading Hint 是一种强大的可以手工控制连接顺序的功能，于此同时，也可以和 shuffle hint 结合使用，同时控制 join 分发方式，进而优化查询性能。注意这种高级特性，应当在充分理解查询特性及数据分布的基础上谨慎使用。
