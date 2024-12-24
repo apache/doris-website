@@ -11,6 +11,7 @@ The Cross-Cluster Replication (CCR) feature in Doris is primarily used to effici
 
 1. The `-` in Doris Version indicates Doris 2.0 or higher versions, supporting all CCR versions. It is recommended to use Doris 2.0.15 or 2.1.6 or later versions.
 2. CCR Syncer and Doris version requirements: Syncer Version >= downstream Doris Version >= upstream Doris Version. Therefore, first upgrade Syncer, then the downstream Doris, and finally the upstream Doris.
+3. CCR currently does not support the storage-compute decoupling mode.
 
 :::
 

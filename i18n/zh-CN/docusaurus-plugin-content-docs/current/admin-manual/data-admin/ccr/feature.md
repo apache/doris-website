@@ -30,6 +30,7 @@ Doris 中的跨集群复制 (CCR) 功能，主要用于在多个集群之间高�
 
 1. Doris Version 中的 `-` 表示 Doris 2.0 及以上版本，CCR 所有版本。建议使用 Doris 使用 2.0.15 或者 2.1.6 或者更新的版本。
 2. CCR Syncer 和 Doris 的版本要求: Syncer Version >= 下游 Doris Version >= 上游 Doris Version。因此升级前先升 Syncer，再升下游 Doris，最后升上游 Doris。
+3. CCR 目前不支持存算分离模式。
 
 :::
 
