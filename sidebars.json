@@ -102,6 +102,7 @@
                     "items": [
                         "table-design/overview",
                         "table-design/data-type",
+                        "table-design/column-compression",
                         {
                             "type": "category",
                             "label": "Table Indexes",
