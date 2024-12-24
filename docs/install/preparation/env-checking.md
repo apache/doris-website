@@ -53,7 +53,7 @@ When installing Doris, it is recommended to choose a machine that supports the A
 Run the following command to check if the machine supports the AVX2 instruction set:
 
 ```bash
-cat /_proc_/cpuinfo | grep avx2
+cat /proc/cpuinfo | grep avx2
 ```
 
 If the machine does not support the AVX2 instruction set, you can use the no AVX2 Doris installation package for deployment.
@@ -93,7 +93,6 @@ Doris can be deployed on x86-64 or ARM64 architecture server platforms.
 - Development and Testing Environments
   
 - Production Environments
-
 
 ## Disk Space Calculation
 
