@@ -50,15 +50,6 @@
                         },
                         {
                             "type": "category",
-                            "label": "Installation Preparation",
-                            "items": [
-                                "install/preparation/env-checking",
-                                "install/preparation/cluser-planning",
-                                "install/preparation/os-checking"
-                            ]
-                        },
-                        {
-                            "type": "category",
                             "label": "Cluster Deployment",
                             "items": [
                                 "install/cluster-deployment/standard-deployment",
