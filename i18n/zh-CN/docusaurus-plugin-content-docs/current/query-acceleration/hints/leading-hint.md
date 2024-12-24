@@ -437,11 +437,11 @@ Ordered hint 可以看做 leading hint 的一种特例，用于控制 join order
 
 ### 语法
 
-OrderedHint 的语法为 `/*+ ORDERED */`，放置在 `SELECT` 语句中的 `SELECT` 关键字之后，紧接着查询的其余部分。
+Ordered Hint 的语法为 `/*+ ORDERED */`，放置在 `SELECT` 语句中的 `SELECT` 关键字之后，紧接着查询的其余部分。
 
 ### 案例
 
-以下是一个使用 OrderedHint 的示例：
+以下是一个使用 Ordered Hint 的示例：
 
 ```sql
 mysql> explain shape plan select /*+ ORDERED */ t1.c1 from t2 join t1 on t1.c1 = t2.c2 join t3 on c2 = c3;
@@ -469,9 +469,9 @@ mysql> explain shape plan select /*+ ORDERED */ t1.c1 from t2 join t1 on t1.c1 =
 +--------------------------------------------------------------------------------+
 ```
 
-与 LeadingHint 的关系：
+与 Leading Hint 的关系：
 
-当 OrderedHint 和 LeadingHint 同时使用时，OrderedHint 将优先于 LeadingHint。这意味着，即使指定了 LeadingHint，如果同时存在 OrderedHint，查询计划将按照 OrderedHint 的规则来执行，而 LeadingHint 将被忽略。以下是一个示例，展示了当两者同时使用时的情况：
+当 Ordered Hint 和 Leading Hint 同时使用时，Ordered Hint 将优先于 Leading Hint。这意味着，即使指定了 Leading Hint，如果同时存在 Ordered Hint，查询计划将按照 Ordered Hint 的规则来执行，而 Leading Hint 将被忽略。以下是一个示例，展示了当两者同时使用时的情况：
 
 ```sql
 mysql> explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2 join t1 on t1.c1 = t2.c2 join t3 on c2 = c3;
@@ -501,4 +501,4 @@ mysql> explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2 
 
 ## 总结
 
-Leading hint 是一个强大的手工控制 join order 的特性，在生产业务调优中应用广泛。使用好 leading hint 能够满足现场针对 join order 的调优需求，增加系统控制的灵活性。Ordered hint 是一种特殊的 leading hint，用于固定当前业务的 join order 为文本序，使用时需要注意和其他 Hint 之间的优先级关系。
+Leading Hint 是一个强大的手工控制 join order 的特性，在生产业务调优中应用广泛。使用好 leading hint 能够满足现场针对 join order 的调优需求，增加系统控制的灵活性。Ordered hint 是一种特殊的 leading hint，用于固定当前业务的 join order 为文本序，使用时需要注意和其他 Hint 之间的优先级关系。

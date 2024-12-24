@@ -36,7 +36,7 @@ Distribute hint 用来控制 join 的 shuffle 方式。
 
 ## 案例
 
-1. **与 Ordered Hint 混用**
+**与 Ordered Hint 混用**
 
 把 Join 顺序固定为文本序，然后再指定相应的 Join 预期使用的 Distribute 方式。例如：
 
@@ -93,7 +93,7 @@ Explain Shape Plan 里面会显示 Distribute 算子相关的信息。其中：
 - `DistributionSpecGather` 表示将数据 Gather 到 FE 节点；
 - `DistributionSpecHash` 表示将数据按照特定的 hashKey 以及算法打散到不同的 BE 节点。
 
-1. **与 Leading Hint 混用**
+**与 Leading Hint 混用**
 
 在编写 SQL 查询时，可以在使用 `LEADING` 提示的同时，为每个 `JOIN` 操作指定相应的 `DISTRIBUTE` 方式。以下是一个具体的例子，展示了如何在 SQL 查询中混合使用 `Distribute Hint` 和 `Leading Hint`。
 
