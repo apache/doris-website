@@ -124,7 +124,7 @@ cat >> /etc/sysctl.conf << EOF
 net.ipv4.tcp_abort_on_overflow=1
 EOF
 
-# Take effect immediately_
+# Take effect immediately
 sysctl -p
 ```
 
@@ -134,7 +134,7 @@ sysctl -p
 
 ```sql
 sudo systemctl stop firewalld.service
-sudo systemctl _disable_ firewalld.service
+sudo systemctl disable firewalld.service
 ```
 
 ## 确保系统有足够大的打开文件句柄数
@@ -156,6 +156,6 @@ Doris 的元数据要求时间精度要小于 5000ms，所以所有集群所有�
 通常情况下，可以通过配置 NTP 服务保证各节点时钟同步。
 
 ```sql
-sudo systemctl _start_ ntpd.service
-sudo systemctl _enable_ ntpd.service
+sudo systemctl start_ntpd.service
+sudo systemctl enable_ntpd.service
 ```
