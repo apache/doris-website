@@ -61,8 +61,8 @@
                             "type": "category",
                             "label": "Cluster Deployment",
                             "items": [
-                                "install/cluster-deployment/standard-deployment",
-                                "install/cluster-deployment/run-docker-cluster",
+                                "install/deploy-manually/storage-compute-coupled-deploy-manually",
+                                "install/deploy-manually/storage-compute-decoupled-deploy-manually",
                                 {
                                     "type": "category",
                                     "label": "Deploying on Kubernetes",
