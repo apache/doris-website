@@ -210,7 +210,7 @@ In a production cluster, it is recommended to deploy at least 3 Follower nodes. 
    bin/start_be.sh --daemon
    ```
 
-   BE 进程启动进入后台执行。日志默认存放在 `log/` 目录下。如果启动失败，请检查 `log/be.log` 或 `log/be.out` 文件以获取错误信息。
+   The BE process starts and runs in the background. Logs are stored by default in the `log/` directory. If the startup fails, check the `log/be.log` or `log/be.out` files for error messages.
 
 5. Check BE Startup Status
 
