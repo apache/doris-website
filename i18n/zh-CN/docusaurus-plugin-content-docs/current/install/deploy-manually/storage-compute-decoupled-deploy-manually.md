@@ -295,7 +295,7 @@ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了�
    要使用 SQL 创建 Storage Vault ，请使用 MySQL 客户端连接到您的 Doris 集群
 
    ```sql
-   CREATE STORAGE VAULT _IF_ NOT _EXISTS_ hdfs_vault
+   CREATE STORAGE VAULT IF_ NOT _EXISTS hdfs_vault
        PROPERTIES (
        "type"="hdfs",
        "fs.defaultFS"="hdfs://127.0.0.1:8020"
@@ -310,7 +310,7 @@ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了�
    - 执行以下 SQL 命令来创建 S3 Storage Vault ：
 
    ```sql
-   CREATE STORAGE VAULT _IF_ NOT _EXISTS_ s3_vault
+   CREATE STORAGE VAULT IF_ NOT _EXISTS s3_vault
        PROPERTIES (
        "type"="S3",
        "s3.endpoint"="s3.us-east-1.amazonaws.com",
@@ -330,7 +330,7 @@ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了�
    使用如下 SQL 语句设置一个默认 Storage Vault 。
 
    ```sql
-   SET <storage_vault_name> _AS_ _DEFAULT_ STORAGE VAULT
+   SET <storage_vault_name> AS DEFAULT STORAGE VAULT
    ```
 
 ## 注意事项
