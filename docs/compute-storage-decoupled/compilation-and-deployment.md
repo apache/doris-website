@@ -95,15 +95,14 @@ export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --daemon
 ```
 
+The startup script returns a value of 0 to indicate that the startup was successful; otherwise, the startup fails.
+Upon successful startup, the last line of the standard output text will be "doris_cloud start successfully."
+
 *Stop Command*
 
 ``` shell
 bin/stop.sh
 ```
-
-*Verify Start*
-
-Check the `doris_cloud.out` file for the output message `successfully started`.
 
 For production environment, please ensure that the total number of Meta Service is at least three.
 
