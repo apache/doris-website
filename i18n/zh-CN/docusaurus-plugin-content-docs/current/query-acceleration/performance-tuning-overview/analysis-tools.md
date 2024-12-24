@@ -156,7 +156,7 @@ PipelineTask  (index=1):(ExecTime:  4.773ms)
 2. 等待 Worker 的时间：63.868us（说明当前集群负载不高，task 就绪以后立即就有 worker 来执行）
 3. 等待执行依赖的时间（WaitForBroadcastBuffer + WaitForRpcBufferQueue + WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time）：10.495ms。当前 task 的所有 dependency 相加得到总的等待时间。
 
-使用 Profile 进行执行层调优的案例详见[执行调优](../tuning/tuning-execution/)章节。
+使用 Profile 进行执行层调优的案例详见[执行调优](../tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md)章节。
 
 ## 系统级性能工具
 
