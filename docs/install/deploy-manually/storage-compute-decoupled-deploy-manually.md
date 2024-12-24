@@ -1,7 +1,7 @@
 ---
 {
     "title": "deploy storage compute decoupled manually",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
