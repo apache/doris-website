@@ -95,10 +95,10 @@ Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上
 2. 启动 MinIO Server
 
    ```bash
-export MINIO_REGION_NAME=us-east-1
-export MINIO_ROOT_USER=minio # 在较老版本中，该配置为 MINIO_ACCESS_KEY=minio
-export MINIO_ROOT_PASSWORD=minioadmin # 在较老版本中，该配置为 MINIO_SECRET_KEY=minioadmin
-nohup ./minio server /mnt/data 2>&1 &
+   export MINIO_REGION_NAME=us-east-1
+   export MINIO_ROOT_USER=minio # 在较老版本中，该配置为 MINIO_ACCESS_KEY=minio
+   export MINIO_ROOT_PASSWORD=minioadmin # 在较老版本中，该配置为 MINIO_SECRET_KEY=minioadmin
+   nohup ./minio server /mnt/data 2>&1 &
    ```
 
 3. 配置 MinIO Client
@@ -111,7 +111,7 @@ nohup ./minio server /mnt/data 2>&1 &
 4. 创建一个桶
 
    ```bash
-./mc mb myminio/doris
+   ./mc mb myminio/doris
    ```
 
 5. 验证是否正常工作
@@ -185,7 +185,7 @@ Meta Service 本身具备了元数据管理和回收功能，这两个功能可�
 1. 创建新的工作目录（如 `recycler`），并复制 `ms` 目录内容到新目录：
 
    ```shell
-cp -r ms recycler
+   cp -r ms recycler
    ```
 
 2. 在新目录的配置文件中修改 BRPC 监听端口 `brpc_listen_port` 和 `fdb_cluster` 的值。
@@ -259,7 +259,7 @@ _ALTER_ SYSTEM _ADD_ FOLLOWER "host:port";
    使用以下命令启动 Backend：
 
    ```bash
-bin/start_be.sh --daemon
+   bin/start_be.sh --daemon
    ```
 
 3. 将 BE 添加到集群：
@@ -267,7 +267,7 @@ bin/start_be.sh --daemon
    使用 MySQL 客户端连接到任意 Frontend，并执行：
 
    ```sql
-_ALTER_ SYSTEM _ADD_ BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
+   ALTER SYSTEM _ADD_ BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
    ```
 
    将 `<ip>` 替换为新 Backend 的 IP 地址，将 `<heartbeat_service_port>` 替换为其配置的心跳服务端口（默认为 9050）。
@@ -283,7 +283,7 @@ _ALTER_ SYSTEM _ADD_ BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propert
    您还可以使用以下 SQL 命令检查 Backend 状态：
 
    ```sql
-   _SHOW_ BACKENDS;
+   SHOW BACKENDS;
    ```
 
    这将显示集群中所有 Backend 及其当前状态。
@@ -297,11 +297,11 @@ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了�
    要使用 SQL 创建 Storage Vault ，请使用 MySQL 客户端连接到您的 Doris 集群
 
    ```sql
-CREATE STORAGE VAULT _IF_ NOT _EXISTS_ hdfs_vault
-    PROPERTIES (
-    "type"="hdfs",
-    "fs.defaultFS"="hdfs://127.0.0.1:8020"
-    );
+   CREATE STORAGE VAULT _IF_ NOT _EXISTS_ hdfs_vault
+       PROPERTIES (
+       "type"="hdfs",
+       "fs.defaultFS"="hdfs://127.0.0.1:8020"
+   );
    ```
 
 2. 创建 S3 Storage Vault
@@ -312,17 +312,17 @@ CREATE STORAGE VAULT _IF_ NOT _EXISTS_ hdfs_vault
    - 执行以下 SQL 命令来创建 S3 Storage Vault ：
 
    ```sql
-CREATE STORAGE VAULT _IF_ NOT _EXISTS_ s3_vault
-    PROPERTIES (
-    "type"="S3",
-    "s3.endpoint"="s3.us-east-1.amazonaws.com",
-    "s3.access_key" = "ak",
-    "s3.secret_key" = "sk",
-    "s3.region" = "us-east-1",
-    "s3.root.path" = "ssb_sf1_p2_s3",
-    "s3.bucket" = "doris-build-1308700295",
-    "provider" = "S3"
-    );
+   CREATE STORAGE VAULT _IF_ NOT _EXISTS_ s3_vault
+       PROPERTIES (
+       "type"="S3",
+       "s3.endpoint"="s3.us-east-1.amazonaws.com",
+       "s3.access_key" = "ak",
+       "s3.secret_key" = "sk",
+       "s3.region" = "us-east-1",
+       "s3.root.path" = "ssb_sf1_p2_s3",
+       "s3.bucket" = "doris-build-1308700295",
+       "provider" = "S3"
+   );
    ```
 
    要在其他对象存储上创建 Storage Vault ，请参考 [创建 Storage Vault ](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT)。
@@ -332,7 +332,7 @@ CREATE STORAGE VAULT _IF_ NOT _EXISTS_ s3_vault
    使用如下 SQL 语句设置一个默认 Storage Vault 。
 
    ```sql
-   _SET_ <storage_vault_name> _AS_ _DEFAULT_ STORAGE VAULT
+   SET <storage_vault_name> _AS_ _DEFAULT_ STORAGE VAULT
    ```
 
 ## 注意事项
