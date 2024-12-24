@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The performance data in this document is based on the default configuration. If you are facing high network latency or high throughput write scenarios, you can refer to the operation manual (../manual.md) for optimization.
+The performance data in this document is based on the default configuration. If you are facing high network latency or high throughput write scenarios, you can refer to [the operation manual] (manual.md) for optimization.
 
 ## Test Dataset
 - **Dataset**: TPC-H 1T

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-本文档中的性能数据基于默认配置，如果您面临高网络延迟或高吞吐量写入场景，可以参考操作手册 (../manual.md) 进行优化。
+本文档中的性能数据基于默认配置，如果您面临高网络延迟或高吞吐量写入场景，可以参考[操作手册](manual.md)进行优化。
 
 ## 测试数据集
 - **数据集**：TPC-H 1T
