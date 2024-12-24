@@ -1,7 +1,7 @@
 ---
 {
-"title": "操作系统检查",
-"language": "zh-CN"
+"title": "OS Checking",
+"language": "en"
 }
 ---
 
@@ -24,31 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在部署 Doris 时，需要对以下操作系统项进行检查：
+When deploying Doris, the following operating system items need to be checked:
 
-- 确保关闭 swap 分区
-- 确保系统关闭透明大页
-- 确保系统有足够大的虚拟内存区域
-- 确保 CPU 不使用省电模式
-- 确保网络连接溢出时自动重置新连接
-- 确保 socket 队列足够大
-- 确保 Doris 相关端口畅通或关闭系统防火墙
-- 确保系统有足够大的打开文件句柄数
-- 确定部署集群机器安装 NTP 服务
+- Ensure swap partition is disabled
+- Ensure transparent huge pages are disabled
+- Ensure the system has a sufficiently large virtual memory area
+- Ensure CPU is not using power-saving mode
+- Ensure network connections automatically reset new connections when overflow occurs
+- Ensure socket queue is sufficiently large
+- Ensure Doris-related ports are open or the system firewall is disabled
+- Ensure the system has a sufficiently large number of open file descriptors
+- Ensure cluster deployment machines have NTP service installed
 
-## 确保关闭 swap 分区
+## Ensure Swap Partition is Disabled
 
-在部署 Doris 时，建议关闭 swap 分区。swap 分区是内核发现内存紧张时，会按照自己的策略将部分内存数据移动到配置的 swap 分区，由于内核策略不能充分了解应用的行为，会对 Doris 性能造成较大影响。所以建议关闭。
+When deploying Doris, it is recommended to disable the swap partition. The swap partition is used by the kernel to move some memory data to the configured swap area when it detects memory pressure. Since the kernel's strategy does not fully understand the application's behavior, it can significantly impact Doris's performance. Therefore, it is recommended to disable it.
 
-通过以下命令可以临时或者永久关闭。
+You can disable it temporarily or permanently using the following commands.
 
-临时关闭，下次机器启动时，swap 还会被打开。
+To disable temporarily, the swap will be re-enabled upon the next machine restart.
+
 
 ```bash
 swapoff -a
 ```
 
-永久关闭，使用 Linux root 账户，注释掉 `/etc/fstab` 中的 swap 分区，重启即可彻底关闭 swap 分区。
+To disable it permanently, use a Linux root account to comment out the swap partition in `/etc/fstab` and restart the machine to completely disable the swap partition.
 
 ```bash
 # /etc/fstab
@@ -59,19 +60,18 @@ tmpfs                  /tmp          tmpfs     nodev,nosuid          0      0
 /dev/sda3              /home         ext4      defaults,noatime      0      2
 ```
 
-## 确保系统关闭透明大页
+## Ensure Transparent Huge Pages are Disabled
 
-在高负载低延迟的场景中，建议关闭操作系统透明大页（Transparent Huge Pages, THP），避免其带来的性能波动和内存碎片问题，确保 Doris 能够稳定高效地使用内存。
+In high-load, low-latency scenarios, it is recommended to disable the operating system's Transparent Huge Pages (THP) to avoid performance fluctuations and memory fragmentation issues, ensuring that Doris can use memory in a stable and efficient manner.
 
-使用以下命令临时关闭透明大页：
+Use the following commands to temporarily disable Transparent Huge Pages:
 
 ```bash
 echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
 echo madvise > /sys/kernel/mm/transparent_hugepage/defrag
 ```
 
-如果需要永久关闭透明大页，可以使用以下命令，在下一次宿主机重启后生效：
-
+If you need to disable Transparent Huge Pages permanently, you can use the following command, which will take effect after the next host machine restart:
 ```bash
 cat >> /etc/rc.d/rc.local << EOF
    echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
@@ -80,11 +80,11 @@ EOF
 chmod +x /etc/rc.d/rc.local
 ```
 
-## 确保系统有足够大的虚拟内存区域
+## Ensure the System Has a Sufficiently Large Virtual Memory Area
 
-为了保证 Doris 有足够的内存映射区域来处理大量数据，需要修改虚拟内存区域的大小。如果没有足够的内存映射区域，Doris 在启动或运行时可能会遇到 `Too many open files` 或类似的错误。
+To ensure Doris has enough memory mapping area to handle large amounts of data, you need to modify the size of the virtual memory area. If there is not enough memory mapping area, Doris may encounter errors like `Too many open files` or similar during startup or runtime.
 
-通过以下命令可以永久修改虚拟内存区域至少为 2000000，并立即生效：
+You can permanently modify the virtual memory area to at least 2000000 with the following command, and it will take effect immediately:
 
 ```bash
 cat >> /etc/sysctl.conf << EOF
@@ -95,21 +95,21 @@ _# Take effect immediately_
 sysctl -p
 ```
 
-## 确保 CPU 不使用省电模式
+## Ensure CPU is Not Using Power-Saving Mode
 
-在部署 Doris 时检修关闭 CPU 的省电模式，以确保 Doris 在高负载时提供稳定的高性能，避免由于 CPU 频率降低导致的性能波动、响应延迟和系统瓶颈，提高 Doris 的可靠性和吞吐量。如果您的 CPU 不支持 Scaling Governor，可以跳过此项配置。
+When deploying Doris, ensure that the CPU's power-saving modes are disabled to guarantee stable high performance under high load. This prevents performance fluctuations, response delays, and system bottlenecks caused by reduced CPU frequencies, thereby enhancing Doris's reliability and throughput. If your CPU does not support Scaling Governor, you can skip this configuration.
 
-通过以下命令可以关闭 CPU 省电模式：
+You can disable CPU power-saving mode with the following commands:
 
 ```bash
 echo 'performance' | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 ```
 
-## 确保网络连接溢出时自动重置新连接
+## Ensure Network Connections Automatically Reset New Connections When Overflow Occurs
 
-在部署 Doris 时，需要确保在 TCP 连接的发送缓冲区溢出时，连接会被立即中断，以防止 Doris 在高负载或高并发情况下出现缓冲区阻塞，避免连接被长时间挂起，从而提高系统的响应性和稳定性。
+When deploying Doris, you need to ensure that when the TCP connection's send buffer overflows, the connection is immediately terminated. This prevents Doris from experiencing buffer blocking under high load or high concurrency, avoids connections being suspended for long periods, and thereby improves the system's responsiveness and stability.
 
-通过以下命令可以永久设置系统自动重置新链接，并立即生效：
+You can permanently configure the system to automatically reset new connections with the following commands, and it will take effect immediately:
 
 ```bash
 cat >> /etc/sysctl.conf << EOF
@@ -120,20 +120,20 @@ _# Take effect immediately_
 sysctl -p
 ```
 
-## 确保 Doris 相关端口畅通或关闭系统防火墙
+## Ensure Doris-related Ports are Open or the System Firewall is Disabled
 
-如果发现端口不通，可以试着关闭防火墙，确认是否是本机防火墙造成。如果是防火墙造成，可以根据配置的 Doris 各组件端口打开相应的端口通信。
+If you find that ports are not accessible, you can try disabling the firewall to confirm whether it is caused by the local firewall. If the firewall is the cause, you can open the corresponding ports for Doris's various components based on their configuration.
 
 ```sql
 sudo systemctl stop firewalld.service
 sudo systemctl _disable_ firewalld.service
 ```
 
-## 确保系统有足够大的打开文件句柄数
+## Ensure the System Has a Sufficiently Large Number of Open File Descriptors
 
-Doris 由于依赖大量文件来管理表数据，所以需要将系统对程序打开文件数的限制调高。
+Since Doris relies on a large number of files to manage table data, it is necessary to increase the system's limit on the number of open files per program.
 
-通过以下命令可以调整最大文件句柄数。在调整后，需要重启会话以生效配置：
+You can adjust the maximum number of file descriptors using the following commands. After making the adjustments, you need to restart the session for the configuration to take effect:
 
 ```sql
 vi /etc/security/limits.conf 
@@ -141,11 +141,11 @@ vi /etc/security/limits.conf
 * hard nofile 1000000
 ```
 
-## 确定部署集群机器安装 NTP 服务
+## Ensure NTP Service is Installed on Cluster Deployment Machines
 
-Doris 的元数据要求时间精度要小于 5000ms，所以所有集群所有机器要进行时钟同步，避免因为时钟问题引发的元数据不一致导致服务出现异常。
+Doris requires the metadata time accuracy to be less than 5000ms. Therefore, all machines in the cluster must synchronize their clocks to prevent metadata inconsistencies caused by clock issues, which could lead to service abnormalities.
 
-通常情况下，可以通过配置 NTP 服务保证各节点时钟同步。
+Typically, you can ensure clock synchronization across nodes by configuring the NTP service.
 
 ```sql
 sudo systemctl _start_ ntpd.service
