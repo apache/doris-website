@@ -1,7 +1,7 @@
 ---
 {
     "title": "Deploy Storage Compute Coupled Manually",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
