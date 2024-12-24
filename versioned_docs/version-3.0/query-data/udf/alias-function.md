@@ -69,7 +69,3 @@ CREATE ALIAS FUNCTION func(INT, INT) WITH PARAMETER(foo, bar) AS foo + bar;
 ### Parameter Requirements
 
 Currently, alias functions do not support variable-length parameters and must have at least one parameter.
-
-## More Content
-
-Apart from alias functions, Doris supports Java UDF and UDTF functionalities. For detailed information, please refer to the documentation [Java UDF](../../query-data/udf/java-user-defined-function).
