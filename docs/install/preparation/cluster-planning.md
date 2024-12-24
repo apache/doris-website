@@ -1,6 +1,6 @@
 ---
 {
-"title": "集群规划",
+"title": "Cluster Planning",
 "language": "zh-CN"
 }
 ---
@@ -25,39 +25,40 @@ under the License.
 -->
 
 
-## 端口规划
+## Port Planning
 
-Doris 的各个实例通过网络进行通信，其正常运行需要网络环境提供以下端口。管理员可以根据实际环境自行调整 Doris 的端口配置：
+Doris instances communicate over the network, and their proper functioning requires the following ports to be available. Administrators can adjust Doris' port configuration based on the actual environment:
 
-| 实例名称 | 端口名称               | 默认端口 | 通信方向                   | 说明                                                  |
-| -------- | ---------------------- | -------- | -------------------------- | ----------------------------------------------------- |
-| BE       | be_port                | 9060     | FE -> BE                   | BE 上 Thrift Server 的端口，用于接收来自 FE 的请求    |
-| BE       | webserver_port         | 8040     | BE <-> BE                  | BE 上的 HTTP Server 端口                              |
-| BE       | heartbeat_service_port | 9050     | FE -> BE                   | BE 上的心跳服务端口（Thrift），用于接收来自 FE 的心跳 |
-| BE       | brpc_port              | 8060     | FE <-> BE，BE <-> BE       | BE 上的 BRPC 端口，用于 BE 之间的通信                 |
-| FE       | http_port              | 8030     | FE <-> FE，Client <-> FE   | FE 上的 HTTP Server 端口                              |
-| FE       | rpc_port               | 9020     | BE -> FE，FE <-> FE        | FE 上的 Thrift Server 端口，每个 FE 的配置需保持一致  |
-| FE       | query_port             | 9030     | Client <-> FE              | FE 上的 MySQL Server 端口                             |
-| FE       | edit_log_port          | 9010     | FE <-> FE                  | FE 上的 bdbje 通信端口                                |
-| Broker   | broker_ipc_port        | 8000     | FE -> Broker，BE -> Broker | Broker 上的 Thrift Server 端口，用于接收请求          |
+| Instance Name | Port Name               | Default Port | Communication Direction        | Description                                            |
+| ------------- | ----------------------- | ------------ | ------------------------------ | ------------------------------------------------------ |
+| BE            | be_port                 | 9060         | FE -> BE                        | Thrift Server port on BE, used to receive requests from FE |
+| BE            | webserver_port          | 8040         | BE <-> BE                       | HTTP Server port on BE                                  |
+| BE            | heartbeat_service_port  | 9050         | FE -> BE                        | Heartbeat service port (Thrift) on BE, used to receive heartbeats from FE |
+| BE            | brpc_port               | 8060         | FE <-> BE, BE <-> BE            | BRPC port on BE, used for communication between BEs     |
+| FE            | http_port               | 8030         | FE <-> FE, Client <-> FE       | HTTP Server port on FE                                  |
+| FE            | rpc_port                | 9020         | BE -> FE, FE <-> FE            | Thrift Server port on FE, each FE should have the same configuration |
+| FE            | query_port              | 9030         | Client <-> FE                  | MySQL Server port on FE                                 |
+| FE            | edit_log_port           | 9010         | FE <-> FE                       | bdbje communication port on FE                         |
+| Broker        | broker_ipc_port         | 8000         | FE -> Broker, BE -> Broker     | Thrift Server port on Broker, used to receive requests from FE and BE |
 
-## 节点数量规划
 
-### FE 节点数量
+## Node Count Planning
 
-FE 节点主要负责用户请求的接入、查询解析规划、元数据管理及节点管理等工作。
+### FE Node Count
 
-对于生产集群，一般建议部署至少 3 个节点的 FE 以实现高可用环境。FE 节点分为以下两种角色：
+FE nodes are primarily responsible for user request handling, query parsing and planning, metadata management, and node management.
 
-- Follower 节点：参与选举操作，当 Master 节点宕机时，会选择一个可用的 Follower 节点成为新的 Master。
+For production clusters, it is generally recommended to deploy at least 3 FE nodes to achieve a high-availability environment. FE nodes are divided into the following two roles:
+
+- Follower nodes: Participate in election operations. When the Master node fails, a Follower node will be selected as the new Master.
   
-- Observer 节点：仅从 Leader 节点同步元数据，不参与选举，可用于横向扩展以提升元数据的读服务能力。
+- Observer nodes: Only sync metadata from the Leader node and do not participate in the election. These nodes can be used for horizontal scaling to improve the read service capacity of metadata.
 
-通常情况下，建议部署至少 3 个 Follower 节点。在高并发的场景中，可以通过增加 Observer 节点的数量来提高集群的连接数。
+In general, it is recommended to deploy at least 3 Follower nodes. In high-concurrency scenarios, increasing the number of Observer nodes can help improve the cluster's connection capacity.
 
-### BE 节点数量
+### BE Node Count
 
-BE 节点负责数据的存储与计算。在生产环境中，为了数据的可靠性和容错性，通常会使用 3 副本存储数据，因此建议部署至少 3 个 BE 节点。
+BE nodes are responsible for data storage and computation. In production environments, to ensure data reliability and fault tolerance, 3 copies of data are usually stored. Therefore, it is recommended to deploy at least 3 BE nodes.
 
-BE 节点支持横向扩容，通过增加 BE 节点的数量，可以有效提升查询的性能和并发处理能力。
+BE nodes support horizontal scaling, and by increasing the number of BE nodes, the query performance and concurrent processing capabilities of the cluster can be effectively improved.
 
