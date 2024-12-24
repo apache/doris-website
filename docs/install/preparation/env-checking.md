@@ -1,7 +1,7 @@
 ---
 {
 "title": "Environment Checking",
-"language": "zh-CN"
+"language": "en"
 }
 ---
 
