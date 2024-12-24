@@ -70,7 +70,7 @@ under the License.
 
     确认物化视图分区状态的命令详见查看物化视图状态，主要是`show partitions from mv_name`命令。
 
-- 如果物化视图引用的非分区表发生数据变更，会触发物化视图所有分区失效，导致此物化视图不能用于透明改写。需要刷新物化视图所有分区的数据，命令为`REFRESH MATERIALIZED VIEW mv1 AUTO;`。此命令会尝试刷新物化视图，如果满足分区增量构建的条件则进行分区增量构建，否则退化为全量构建。
+- 如果物化视图引用的非分区表发生数据变更，会触发物化视图所有分区失效，导致此物化视图不能用于透明改写。需要刷新物化视图所有分区的数据，命令为`REFRESH MATERIALIZED VIEW mv1 AUTO;`。此命令会尝试刷新物化视图所有数据变化的分区。
 
     因此，一般将数据频繁变化的表放在分区物化视图引用的分区表，将不经常变化的维表放在非引用分区表的位置。
 
@@ -124,11 +124,11 @@ under the License.
   ) DUPLICATE KEY(ps_partkey, ps_suppkey) DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3; 
   
   
-      insert into partsupp values     
-      (2, 3, 9, 10.01, 'supply1'),     
-      (4, 3, 9, 10.01, 'supply2'),     
-      (5, 6, 9, 10.01, 'supply3'),     
-      (6, 5, 10, 11.01, 'supply4');
+    insert into partsupp values     
+    (2, 3, 9, 10.01, 'supply1'),     
+    (4, 3, 9, 10.01, 'supply2'),     
+    (5, 6, 9, 10.01, 'supply3'),     
+    (6, 5, 10, 11.01, 'supply4');
 ```
 
 在这个例子中，`orders`表的`o_ordertime`字段是分区字段，类型是`DATETIME`，按照天分区。
@@ -259,7 +259,9 @@ GROUP BY
   l_suppkey;
 ```
 
-根据以上两个 SQL 查询，我们可以构建一个更为通用的包含 Aggregate 的物化视图。在这个物化视图中，我们将 l_partkey 和 l_suppkey 都作为聚合的 group by 维度，并将 o_orderdate 作为过滤条件。值得注意的是，o_orderdate 不仅在物化视图的条件补偿中使用，同时也需要被包含在物化视图的聚合 group by 维 度中。
+根据以上两个 SQL 查询，我们可以构建一个更为通用的包含 Aggregate 的物化视图。在这个物化视图中，我们将 l_partkey 和 l_suppkey 都作为聚合的 group by 
+维度，并将 o_orderdate 作为过滤条件。值得注意的是，o_orderdate 不仅在物化视图的条件补偿中使用，
+同时也需要被包含在物化视图的聚合 group by 维度中。
 
 通过这种方式构建的物化视图后，查询 1 和查询 2 都可以命中该物化视图，物化视图定义如下：
 
@@ -507,6 +509,7 @@ GROUP BY n_name, month;
 ```
 
 使用异步物化视图分层建模：
+
 1）构建 DWD 层（明细数据），处理订单明细宽表
 ```sql
 CREATE MATERIALIZED VIEW dwd_order_detail
@@ -578,6 +581,7 @@ GROUP BY nation_name, month;
 
 
 如下，以 Hive 示例说明：
+
 1）基于 Hive 创建 Catalog，使用 TPC-H 数据集
 ```sql
 CREATE CATALOG hive_catalog PROPERTIES (

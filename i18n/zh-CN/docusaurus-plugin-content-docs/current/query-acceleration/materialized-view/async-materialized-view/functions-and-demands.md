@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS orders  (
 
 #### 全量物化视图
 
-触发方式是手动，刷新方式是 AUTO，
+触发方式是手动，刷新方式是 AUTO，如下
 
 ```sql
 CREATE MATERIALIZED VIEW mv_1_0
@@ -124,7 +124,7 @@ FROM
 
 延迟刷新，首次刷新时间是 `2024-12-01 20:30:00`, 并且每隔一天刷新一次。如果 `BUILD DEFERRED` 指定为 `BUILD IMMEDIATE` 创建
 完物化视图会立即刷新一次。之后从 `2024-12-01 20:30:00` 每隔一天刷新一次
-注意 STARTS 的时间要晚于当前的时间。
+注意 STARTS 的时间要晚于当前的时间。如下
 
 ```sql
 CREATE MATERIALIZED VIEW mv_1_1
@@ -142,8 +142,7 @@ orders
 LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-刷新方式是触发式，当 orders 或者 lineitem 表数据发生变化的时候，会自动触发物化视图的刷新，
-注意：如果基表的数据频繁变更，不太适合使用此种方式刷新，因为会频繁构建物化刷新任务，消耗过多资源。
+刷新方式是触发式，当 orders 或者 lineitem 表数据发生变化的时候，会自动触发物化视图的刷新。如下
 
 ```sql
 CREATE MATERIALIZED VIEW mv_1_1
@@ -160,6 +159,8 @@ FROM
 orders   
 LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
+
+注意：**如果基表的数据频繁变更，不太适合使用此种方式刷新，因为会频繁构建物化刷新任务，消耗过多资源**。
 
 #### 分区物化视图
 
@@ -854,19 +855,19 @@ explain memo plan <query_sql>
 
 用户通过 SQL 语句触发物化视图的刷新，目前有三种策略：
 
-- 不关心具体刷新哪些分区，要求刷新完成后，物化视图的数据和基表保持同步。
+- 检测基表的分区数据自上次刷新后是否有变化，刷新数据变化的分区，要求刷新完成后，物化视图的数据和基表保持同步。
 
     ```sql
     REFRESH MATERIALIZED VIEW mvName AUTO;
     ```
 
-- 不管物化视图现存哪些数据，刷新物化视图的所有分区。
+- 不校验基表的分区数据自上次刷新后是否有变化，直接刷新物化视图的所有分区。
 
     ```sql
     REFRESH MATERIALIZED VIEW mvName COMPLETE;
     ```
 
-- 不管物化视图现存哪些数据，只刷新指定的分区。
+- 只刷新指定的分区。
 
     ```sql
     REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
@@ -874,6 +875,7 @@ explain memo plan <query_sql>
 
 :::tip 提示
 `partitionName` 可以通过 `SHOW PARTITIONS FROM mvName` 获取。
+从 2.1.3 版本开始支持 Hive 检测基表的分区数据自上次刷新后是否有变化，其他外表暂时还不支持。内表一直支持。
 :::
 
 #### 2. 定时触发
@@ -1028,7 +1030,7 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 
 - ErrorMsg：失败原因。
 
-- RefreshMode：complete 代表刷新了全部分区，PARTIAL 代表刷新了部分分区，NOT_REFRESH 代表不需要刷新任何分区。
+- RefreshMode：COMPLETE 代表刷新了全部分区，PARTIAL 代表刷新了部分分区，NOT_REFRESH 代表不需要刷新任何分区。
 
 :::info 备注
 - 如果物化视图创建的时候设置了 `grace_period` 属性，那么即使 `SyncWithBaseTables` 是 false 或者 0，有些情况下它依然可用于透明改写。
