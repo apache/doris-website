@@ -305,6 +305,8 @@ mysql> SELECT * FROM iceberg.nyc.taxis FOR TIME AS OF "2024-07-29 03:40:22";
 
 ### 07 Interacting with PyIceberg
 
+> Please use Doris 2.1.8/3.0.4 or above.
+
 Load an iceberg table:
 
 ```python
