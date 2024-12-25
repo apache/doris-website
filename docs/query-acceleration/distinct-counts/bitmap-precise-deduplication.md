@@ -35,7 +35,7 @@ Bitmap is an efficient bitmap indexing technique that uses bits to indicate the 
 
 ------
 
-## **Implementation of Count Distinct**
+## Implementation of Count Distinct
 
 Traditional precise deduplication relies on `COUNT DISTINCT`. Consider the following example where deduplication is performed on the `name` column:
 
@@ -81,7 +81,7 @@ Since `COUNT DISTINCT` requires storing detailed data and performing shuffling, 
 
 ------
 
-## **Use Cases**
+## Use Cases
 
 In large-scale data scenarios, the cost of deduplication using `COUNT DISTINCT` increases significantly, resulting in slower queries. Bitmap-based precise deduplication addresses these performance bottlenecks by mapping detailed data to bits. While sacrificing the flexibility of raw data, Bitmap greatly enhances computational efficiency. Consider using Bitmap in the following scenarios:
 
@@ -92,9 +92,9 @@ However, Bitmap can only perform precise deduplication on data types such as `TI
 
 ------
 
-## **Use BITMAP for Precise Deduplication**
+## Use BITMAP for Precise Deduplication
 
-### **Table Creation**
+### Table Creation
 
 1. When using Bitmap for deduplication, set the target column type to `BITMAP` in the table creation statement and specify `BITMAP_UNION` as the aggregate function.
 2. Columns of type Bitmap cannot be used as key columns.
@@ -116,7 +116,7 @@ DISTRIBUTED BY HASH(id) BUCKETS 10;
 
 ------
 
-### **Data Import**
+### Data Import
 
 Here is a sample dataset (`test_bitmap.csv`) that can be imported using Stream Load:
 
@@ -141,7 +141,7 @@ curl --location-trusted -u root: -H "label:label_test_bitmap_load" \
 
 ------
 
-### **Querying Data**
+### Querying Data
 
 Bitmap columns cannot directly return raw values. Instead, use the `BITMAP_UNION_COUNT` aggregate function for queries.
 
