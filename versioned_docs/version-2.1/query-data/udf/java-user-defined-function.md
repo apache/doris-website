@@ -57,7 +57,7 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
     "file"="file:///pathTo/java-udaf.jar",
     "symbol"="org.apache.doris.udf.demo.MiddleNumberUDAF",
     "always_nullable"="true",
-    "type"="JAVA_UDAF"
+    "type"="JAVA_UDF"
 );
 ```
 

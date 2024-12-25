@@ -58,9 +58,10 @@
                                     "type": "category",
                                     "label": "Deploying on Kubernetes",
                                     "items": [
-                                        "install/cluster-deployment/k8s-deploy/install-env",
-                                        "install/cluster-deployment/k8s-deploy/install-quickstart",
+                                        "install/cluster-deployment/k8s-deploy/install-doris-operator",
                                         "install/cluster-deployment/k8s-deploy/install-config-cluster",
+                                        "install/cluster-deployment/k8s-deploy/install-doris-cluster",
+                                        "install/cluster-deployment/k8s-deploy/access-cluster",
                                         "install/cluster-deployment/k8s-deploy/cluster-operation"
                                     ]
                                 },
@@ -149,15 +150,16 @@
                                         "data-operate/import/import-way/broker-load-manual",
                                         "data-operate/import/import-way/routine-load-manual",
                                         "data-operate/import/import-way/insert-into-manual",
-                                        "data-operate/import/import-way/mysql-load-manual",
-                                        "data-operate/import/import-way/group-commit-manual"
+                                        "data-operate/import/import-way/insert-into-values-manual",
+                                        "data-operate/import/import-way/mysql-load-manual"
                                     ]
                                 },
                                 "data-operate/import/load-data-format",
                                 "data-operate/import/error-data-handling",
                                 "data-operate/import/load-data-convert",
                                 "data-operate/import/load-high-availability",
-                                "data-operate/import/migrate-data-from-other-olap"
+                                "data-operate/import/migrate-data-from-other-olap",
+                                "data-operate/import/group-commit-manual"
                             ]
                         },
                         {
@@ -168,7 +170,7 @@
                                 "data-operate/update/unique-update",
                                 "data-operate/update/update-of-unique-model",
                                 "data-operate/update/update-of-aggregate-model",
-                                "data-operate/update/unique-update-transaction"
+                                "data-operate/update/unique-update-concurrent-control"
                             ]
                         },
                         {
@@ -190,13 +192,6 @@
                                 "data-operate/export/export-manual",
                                 "data-operate/export/outfile",
                                 "data-operate/export/export-with-mysql-dump"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Job Scheduler",
-                            "items": [
-                                "data-operate/scheduler/job-scheduler"
                             ]
                         },
                         "data-operate/transaction"
@@ -364,8 +359,9 @@
                 },
                 {
                     "type": "category",
-                    "label": "Managing Data",
+                    "label": "Business continuity & data recovery",
                     "items": [
+                        "admin-manual/data-admin/overview",
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
                         "admin-manual/data-admin/ccr",
@@ -375,26 +371,30 @@
                 },
                 {
                     "type": "category",
-                    "label": "Managing Resource",
+                    "label": "Managing Workload",
                     "items": [
-                        "admin-manual/resource-admin/workload-group",
-                        "admin-manual/resource-admin/group-workload-groups",
-                        "admin-manual/resource-admin/workload-policy",
-                        "admin-manual/resource-admin/workload-analysis",
-                        "admin-manual/resource-admin/multi-tenant",
-                        "admin-manual/resource-admin/workload-fusing",
-                        "admin-manual/resource-admin/use-workload-mem-limit",
-                        "admin-manual/resource-admin/use-workload-cpu-limit",
-                        "admin-manual/resource-admin/use-workload-local-io-limit",
-                        "admin-manual/resource-admin/use-workload-remote-io-limit"
+                        "admin-manual/workload-management/workload-management-summary",
+                        "admin-manual/workload-management/workload-group",
+                        "admin-manual/workload-management/resource-group",
+                        "admin-manual/workload-management/compute-group",
+                        "admin-manual/workload-management/sql-blocking",
+                        "admin-manual/workload-management/kill-query",
+                        "admin-manual/workload-management/job-scheduler",
+                        {
+                            "type": "category",
+                            "label": "Best Practices",
+                            "items": [
+                                "admin-manual/workload-management/best-practice/group-workload-groups",
+                                "admin-manual/workload-management/best-practice/workload-group-best-practice"
+                            ]
+                        }
                     ]
                 },
                 {
                     "type": "category",
                     "label": "Managing Query",
                     "items": [
-                        "admin-manual/query-admin/sql-interception",
-                        "admin-manual/query-admin/kill-query"
+                        "admin-manual/query-admin/sql-interception"
                     ]
                 },
                 {
@@ -994,6 +994,9 @@
                                 "sql-manual/sql-functions/string-functions/trim",
                                 "sql-manual/sql-functions/string-functions/ltrim",
                                 "sql-manual/sql-functions/string-functions/rtrim",
+                                "sql-manual/sql-functions/string-functions/trim_in",
+                                "sql-manual/sql-functions/string-functions/ltrim_in",
+                                "sql-manual/sql-functions/string-functions/rtrim_in",
                                 "sql-manual/sql-functions/string-functions/null-or-empty",
                                 "sql-manual/sql-functions/string-functions/not-null-or-empty",
                                 "sql-manual/sql-functions/string-functions/hex",
@@ -1218,6 +1221,17 @@
                                 "sql-manual/sql-functions/json-functions/json-insert",
                                 "sql-manual/sql-functions/json-functions/json-replace",
                                 "sql-manual/sql-functions/json-functions/json-set"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "MAP Functions",
+                            "items": [
+                                "sql-manual/sql-functions/map-functions/map",
+                                "sql-manual/sql-functions/map-functions/map-keys",
+                                "sql-manual/sql-functions/map-functions/map-values",
+                                "sql-manual/sql-functions/map-functions/map-contains-key",
+                                "sql-manual/sql-functions/map-functions/map-contains-value"
                             ]
                         },
                         {
@@ -1852,14 +1866,79 @@
             "collapsed": false,
             "items": [
                 "releasenotes/all-release",
-                "releasenotes/v2.1/release-2.1.7",
-                "releasenotes/v2.1/release-2.1.6",
-                "releasenotes/v2.1/release-2.1.5",
-                "releasenotes/v2.1/release-2.1.4",
-                "releasenotes/v2.1/release-2.1.3",
-                "releasenotes/v2.1/release-2.1.2",
-                "releasenotes/v2.1/release-2.1.1",
-                "releasenotes/v2.1/release-2.1.0"
+                {
+                    "type": "category",
+                    "label": "v3.0",
+                    "items": [
+                        "releasenotes/v3.0/release-3.0.3",
+                        "releasenotes/v3.0/release-3.0.2",
+                        "releasenotes/v3.0/release-3.0.1",
+                        "releasenotes/v3.0/release-3.0.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v2.1",
+                    "items": [
+                        "releasenotes/v2.1/release-2.1.7",
+                        "releasenotes/v2.1/release-2.1.6",
+                        "releasenotes/v2.1/release-2.1.5",
+                        "releasenotes/v2.1/release-2.1.4",
+                        "releasenotes/v2.1/release-2.1.3",
+                        "releasenotes/v2.1/release-2.1.2",
+                        "releasenotes/v2.1/release-2.1.1",
+                        "releasenotes/v2.1/release-2.1.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v2.0",
+                    "items": [
+                        "releasenotes/v2.0/release-2.0.15",
+                        "releasenotes/v2.0/release-2.0.14",
+                        "releasenotes/v2.0/release-2.0.13",
+                        "releasenotes/v2.0/release-2.0.12",
+                        "releasenotes/v2.0/release-2.0.11",
+                        "releasenotes/v2.0/release-2.0.10",
+                        "releasenotes/v2.0/release-2.0.9",
+                        "releasenotes/v2.0/release-2.0.8",
+                        "releasenotes/v2.0/release-2.0.7",
+                        "releasenotes/v2.0/release-2.0.6",
+                        "releasenotes/v2.0/release-2.0.5",
+                        "releasenotes/v2.0/release-2.0.4",
+                        "releasenotes/v2.0/release-2.0.3",
+                        "releasenotes/v2.0/release-2.0.2",
+                        "releasenotes/v2.0/release-2.0.1",
+                        "releasenotes/v2.0/release-2.0.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v1.2",
+                    "items": [
+                        "releasenotes/v1.2/release-1.2.8",
+                        "releasenotes/v1.2/release-1.2.7",
+                        "releasenotes/v1.2/release-1.2.6",
+                        "releasenotes/v1.2/release-1.2.5",
+                        "releasenotes/v1.2/release-1.2.4",
+                        "releasenotes/v1.2/release-1.2.3",
+                        "releasenotes/v1.2/release-1.2.2",
+                        "releasenotes/v1.2/release-1.2.1",
+                        "releasenotes/v1.2/release-1.2.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v1.1",
+                    "items": [
+                        "releasenotes/v1.1/release-1.1.5",
+                        "releasenotes/v1.1/release-1.1.4",
+                        "releasenotes/v1.1/release-1.1.3",
+                        "releasenotes/v1.1/release-1.1.2",
+                        "releasenotes/v1.1/release-1.1.1",
+                        "releasenotes/v1.1/release-1.1.0"
+                    ]
+                }
             ]
         }
     ]

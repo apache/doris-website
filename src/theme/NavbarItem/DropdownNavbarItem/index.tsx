@@ -51,7 +51,7 @@ function DropdownNavbarItemDesktop({ items, position, className, onClick, ...pro
     return (
         <div
             ref={dropdownRef}
-            className={clsx('custom-navbar-item', 'navbar__item', 'dropdown', 'dropdown--hoverable', {
+            className={clsx('navbar__item', 'dropdown', 'dropdown--hoverable', {
                 'dropdown--right': position === 'right',
                 'dropdown--show': showDropdown,
             })}

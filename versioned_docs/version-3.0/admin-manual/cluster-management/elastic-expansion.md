@@ -140,7 +140,7 @@ DECOMMISSION clause:
 > 		```CANCEL ALTER SYSTEM DECOMMISSION BACKEND "be_host:be_heartbeat_service_port";```
 > 	The order was cancelled. When cancelled, the data on the BE will maintain the current amount of data remaining. Follow-up Doris re-load balancing
 
-**For expansion and scaling of BE nodes in multi-tenant deployment environments, please refer to the [Multi-tenant Design Document](../../admin-manual/resource-admin/multi-tenant).**
+**For expansion and scaling of BE nodes in multi-tenant deployment environments, please refer to the [Multi-tenant Design Document](../../../version-2.1/admin-manual/workload-management/resource-group).**
 
 ## Broker Scaling
 

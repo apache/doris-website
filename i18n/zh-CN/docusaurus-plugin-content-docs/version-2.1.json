@@ -180,8 +180,8 @@
     "description": "The label for category Managing Cluster in sidebar docs"
   },
   "sidebar.docs.category.Managing Data": {
-    "message": "数据管理",
-    "description": "The label for category Managing Data in sidebar docs"
+    "message": "业务连续性与数据恢复",
+    "description": "The label for category Business continuity & data recovery in sidebar docs"
   },
   "sidebar.docs.category.Managing Resource": {
     "message": "资源管理",
@@ -350,6 +350,14 @@
   "sidebar.docs.category.Cluster Management": {
     "message": "集群管理",
     "description": "The label for category Statistics in sidebar docs"
+  },
+  "sidebar.docs.category.Managing Workload": {
+    "message": "负载管理",
+    "description": "The label for category Managing Workload in sidebar docs"
+  },
+  "sidebar.docs.category.Best Practices": {
+    "message": "最佳实践",
+    "description": "The label for category Best Practices in sidebar docs"
   },
   "sidebar.docs.category.Instance Management": {
     "message": "物理实例管理",
@@ -594,5 +602,9 @@
   "sidebar.get-starting.category.Building lakehouse": {
     "message": "构建 Lakehouse",
     "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.docs.category.Tiered Storage": {
+    "message": "分层存储",
+    "description": "The label for category Tiered Storage in sidebar docs"
   }
 }

@@ -67,7 +67,7 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                         <DocItemContent>{children}</DocItemContent>
                         <DocItemFooter />
                     </article>
-                    <div className="flex items-center justify-end col mt-10">
+                    <div className={`flex items-center text-sm lg:text-base justify-end lg:col mt-10`}>
                         {isNew ? (
                             <></>
                         ) : (
@@ -79,7 +79,7 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                             to={`https://github.com/apache/doris-website/issues/new?title=Issue on docs&body=Path:${
                                 typeof window !== 'undefined' && location.pathname
                             }`}
-                            className={`mr-6 ${styles.footerBtn}`}
+                            className={`lg:mr-6 ${styles.footerBtn}`}
                         >
                             <DocsAttention /> <span className="ml-2">{isZH ? '反馈问题' : 'Report issue'}</span>
                         </Link>

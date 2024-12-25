@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-分析函数，也称为窗口函数，是一种在 SQL 查询中对数据集中的行进行复杂计算的函数。窗口函数的特点在于，它们不会减少查询结果的行数，而是为每一行增加一个新的计算结果。窗口函数适用于多种分析场景，如计算运行总和、排名以及移动平均等。
+分析函数，也称为窗口函数，是一种在 SQL 查询中对数据集中的行进行复杂计算的函数。窗口函数的特点在于，它们不会减少查询结果的行数，而是为每一行增加一个新的计算结果。窗口函数适用于多种分析场景，如计算滚动合计、排名以及移动平均等。
 
 下面是一个使用窗口函数计算每个商店的前后三天的销售移动平均值的例子：
 
@@ -232,9 +232,9 @@ FROM
 
 在这个例子中，学生按班级进行分区，然后在每个班级内按成绩分成 3 个组。每个组的学生数量尽可能均匀。
 
-## 分析函数
+## 聚合函数
 
-### 使用分析函数 SUM 计算累计值
+### 使用聚合函数 SUM 计算累计值
 
 示例如下：
 
@@ -294,9 +294,9 @@ GROUP BY
 24 rows in set (0.13 sec)
 ```
 
-在此示例中，分析函数 SUM 为每一行定义一个窗口，该窗口从分区的开头（UNBOUNDED PRECEDING）开始，默认在当前行结束。在此示例中，需要嵌套使用 SUM，因为需要对本身就是 SUM 的结果执行 SUM。嵌套聚合在分析聚合函数中高频使用。
+在此示例中，聚合函数 SUM 为每一行定义一个窗口，该窗口从分区的开头（UNBOUNDED PRECEDING）开始，默认在当前行结束。在此示例中，需要嵌套使用 SUM，因为需要对本身就是 SUM 的结果执行 SUM。嵌套聚合在分析聚合函数中高频使用。
 
-### 使用分析函数 AVG 计算移动平均值
+### 使用聚合函数 AVG 计算移动平均值
 
 示例如下：
 
@@ -639,7 +639,6 @@ PROPERTIES (
   "replication_num" = "1"
 );
 
-
 CREATE TABLE IF NOT EXISTS date_dim (
     d_date_sk bigint not null,
     d_date_id char(16) not null,
@@ -676,7 +675,6 @@ PROPERTIES (
   "replication_num" = "1"
 );
 
-
 CREATE TABLE IF NOT EXISTS customer_address (
     ca_address_sk bigint not null,
     ca_address_id char(16) not null,
@@ -698,14 +696,12 @@ PROPERTIES (
   "replication_num" = "1"
 );
 
-
 curl --location-trusted \
 -u "root:" \
 -H "column_separator:|" \
 -H "columns: i_item_sk, i_item_id, i_rec_start_date, i_rec_end_date, i_item_desc, i_current_price, i_wholesale_cost, i_brand_id, i_brand, i_class_id, i_class, i_category_id, i_category, i_manufact_id, i_manufact, i_size, i_formulation, i_color, i_units, i_container, i_manager_id, i_product_name" \
 -T "/path/to/data/item_1_10.dat" \
 http://127.0.0.1:8030/api/doc_tpcds/item/_stream_load
-
 
 curl --location-trusted \
 -u "root:" \
@@ -714,7 +710,6 @@ curl --location-trusted \
 -T "/path/to/data/date_dim_1_10.dat" \
 http://127.0.0.1:8030/api/doc_tpcds/date_dim/_stream_load
 
-
 curl --location-trusted \
 -u "root:" \
 -H "column_separator:|" \
@@ -722,15 +717,12 @@ curl --location-trusted \
 -T "/path/to/data/store_sales.csv" \
 http://127.0.0.1:8030/api/doc_tpcds/store_sales/_stream_load
 
-
-
 curl --location-trusted \
 -u "root:" \
 -H "column_separator:|" \
 -H "ca_address_sk, ca_address_id, ca_street_number, ca_street_name, ca_street_type, ca_suite_number, ca_city, ca_county, ca_state, ca_zip, ca_country, ca_gmt_offset, ca_location_type" \
 -T "/path/to/data/customer_address_1_10.dat" \
 http://127.0.0.1:8030/api/doc_tpcds/customer_address/_stream_load
-
-数据路径：
-/Users/${username}/Documents/file/docs_write/doc_ddl_dir.tar  
 ```
+
+数据文件``item_1_10.dat``，``date_dim_1_10.dat``，``store_sales.csv``，``customer_address_1_10.dat``可以[点击链接](https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar)下载。

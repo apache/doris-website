@@ -1,4 +1,4 @@
-import React, { useState, useEffect, type ReactNode } from 'react';
+import React, { useState, useEffect, useContext, type ReactNode } from 'react';
 import { ErrorCauseBoundary } from '@docusaurus/theme-common';
 import { useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
 import NavbarItem, { type Props as NavbarItemConfig } from '@theme/NavbarItem';
@@ -10,6 +10,7 @@ import Translate from '@docusaurus/Translate';
 import { NavbarDocsLeft, NavbarDocsRight, NavbarDocsBottom } from './components/NavbarDocs';
 import { NavbarCommunityLeft, NavbarCommunityBottom, NavbarCommunityRight } from './components/NavbarCommunity';
 import { NavbarCommonLeft, NavbarCommonRight } from './components/NavbarCommon';
+import { DataContext } from '../../Layout';
 
 import styles from './styles.module.css';
 
@@ -45,40 +46,32 @@ ${JSON.stringify(item, null, 2)}`,
     );
 }
 
-function NavbarContentLayout({
-    left,
-    right,
-    bottom,
-    isDocsPage = false,
-}: {
-    left: ReactNode;
-    right: ReactNode;
-    bottom: ReactNode;
-    isDocsPage: boolean;
-}) {
-    const [isEN, setIsEN] = useState(true);
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
-        }
-    }, [typeof window !== 'undefined' && location.pathname]);
+function NavbarContentLayout({ left, right, bottom }: { left: ReactNode; right: ReactNode; bottom: ReactNode }) {
     return (
         <>
             <div className="navbar__inner">
                 <div className="navbar__items">{left}</div>
                 <div className="navbar__items navbar__items--right">{right}</div>
             </div>
-            <div className="navbar__bottom">{bottom}</div>
+            {bottom && <div className="navbar__bottom">{bottom}</div>}
         </>
     );
 }
 
-export default function NavbarContent(): JSX.Element {
-    const [currentNavbar, setCurrentNavbar] = useState(NavBar.DOCS);
-    const mobileSidebar = useNavbarMobileSidebar();
+const getCurrentNavBar = (pathname: string) => {
+    if (pathname.includes(NavBar.DOCS)) return NavBar.DOCS;
+    if (pathname.split('/')[1] === NavBar.COMMUNITY || pathname.includes('zh-CN/community')) return NavBar.COMMUNITY;
+    return NavBar.COMMON;
+};
+
+export default function NavbarContent(): ReactNode {
     const location = useLocation();
-    const [isEN, setIsEN] = useState(true);
-    const [star, setStar] = useState<string>();
+    const [currentNavbar, setCurrentNavbar] = useState(getCurrentNavBar(location.pathname));
+    const [isEN, setIsEN] = useState(!location.pathname.includes('zh-CN'));
+
+    const mobileSidebar = useNavbarMobileSidebar();
+    const { showSearchPageMobile } = useContext(DataContext);
+    const [star, setStar] = useState<string>('');
 
     async function getGithubStar() {
         try {
@@ -119,6 +112,7 @@ export default function NavbarContent(): JSX.Element {
             bottom: null,
         },
     };
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const pathname = location.pathname.split('/')[1];
@@ -140,11 +134,10 @@ export default function NavbarContent(): JSX.Element {
     return (
         <NavbarContentLayout
             left={NavbarTypes[currentNavbar].left}
-            isDocsPage={currentNavbar === NavBar.DOCS}
             right={
                 <>
-                    {!mobileSidebar.disabled && <NavbarMobileSidebarToggle />}
                     {NavbarTypes[currentNavbar].right}
+                    {!mobileSidebar.disabled && !showSearchPageMobile && <NavbarMobileSidebarToggle />}
                     <NavbarColorModeToggle className={styles.colorModeToggle} />
                     <Link className="header-right-button-primary navbar-download-desktop" to="/download">
                         <Translate id="navbar.download">
@@ -155,7 +148,7 @@ export default function NavbarContent(): JSX.Element {
                     </Link>
                 </>
             }
-            bottom={NavbarTypes[currentNavbar].bottom}
+            bottom={!showSearchPageMobile ? NavbarTypes[currentNavbar].bottom : null}
         />
     );
 }
