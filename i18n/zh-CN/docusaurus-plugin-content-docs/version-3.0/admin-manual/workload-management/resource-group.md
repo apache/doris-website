@@ -25,27 +25,31 @@ under the License.
 -->
 
 
-Doris 的多租户和资源隔离方案，主要目的是为了多用户在同一 Doris 集群内进行数据操作时，减少相互之间的干扰，能够将集群资源更合理的分配给各用户。
+## 原理
 
-该方案主要分为两部分，一是集群内节点级别的资源组划分，二是针对单个查询的资源限制。
+Resource Group 基本原理如下图所示：
 
-## Doris 中的节点
+![Resource Group](/images/resource_group.png)
 
-首先先简单介绍一下 Doris 的节点组成。一个 Doris 集群中有两类节点：Frontend(FE) 和 Backend(BE)。
+- 通过Tag的方式，把BE 划分为不同的组，每个组通过tag的名字来标识，比如上图中把host1,host2,host3 都设置为group a, 把host4,host5 都设置为group b；
+- 将表的不同的副本放到不同的分组中，比如上图中table1 所有的副本都位于group a 中， table2的一个副本位于group a中，一个副本位于group b 中；
+- 在查询时，根据不同的用户，使用不同的Resource Group，比如online 用户，只能访问host1,host2,host3 上的数据，所以他可以访问table1和table2；但是offline 用户只能访问host4，host5，所以只能访问table2的数据，由于table1 在group b 上没有对应的副本，所以访问会出错。
 
-FE 主要负责元数据管理、集群管理、用户请求的接入和查询计划的解析等工作。
+Resource Group本质上是一种Table副本的放置策略，所以它有以下优势和限制：
+- 不同的Resource Group 使用的是不同的BE，所以它们之间完全无干扰，即使一个group 内的某个BE 宕机了，也不会影响其他Group的查询；由于导入需要多副本成功，所以如果剩下的副本数量不满足Quoram，那么导入还是会失败；
+- 每个Resource Group 至少要有一个Table的一个副本，比如如果要建立5个Resource Group，并且每个Resource Group 都可能访问所有的Table，那么就需要Table 有5个副本，会带来比较大的存储开销。
 
-BE 主要负责数据存储、查询计划的执行等工作。
+## 典型使用场景
 
-FE 不参与用户数据的处理计算等工作，因此是一个资源消耗较低的节点。而 BE 负责所有的数据计算、任务处理，属于资源消耗型的节点。因此，本文所介绍的资源划分及资源限制方案，都是针对 BE 节点的。FE 节点因为资源消耗相对较低，并且还可以横向扩展，因此通常无需做资源上的隔离和限制，FE 节点由所有用户共享即可。
+- 读写隔离， 可以将一个集群划分为两个Resource Group，Offline Resource Group 用来执行ETL 作业，Online Resource Group 负责在线查询；数据以 3 副本的方式存储，其中 2 个副本存放在 Online 资源组，1 个副本存放在 Offline 资源组。Online 资源组主要用于高并发低延迟的在线数据服务，而一些大查询或离线 ETL 操作，则可以使用 Offline 资源组中的节点执行。从而实现在统一集群内同时提供在线和离线服务的能力。
+- 不同业务之间隔离，此时多个业务之间数据没有共享，可以为每个业务划分一个Resource Group，多个业务之间没有任何干扰，这实际上是把多个物理集群合并到统一的一个大集群管理；
+- 不同用户之间隔离，比如集群内有一张业务表需要共享给所有 3 个用户使用，但是希望能够尽量避免不同用户之间的资源抢占。则我们可以为这张表创建 3 个副本，分别存储在 3 个资源组中，为个用户绑定一个资源组。
 
-## 节点资源划分
+## 配置 Resource Group
 
-节点资源划分，是指将一个 Doris 集群内的 BE 节点设置标签（Tag），标签相同的 BE 节点组成一个资源组（Resource Group）。资源组可以看作是数据存储和计算的一个管理单元。下面我们通过一个具体示例，来介绍资源组的使用方式。
+### 为 BE 设置标签
 
-1. 为 BE 节点设置标签
-
-   假设当前 Doris 集群有 6 个 BE 节点。分别为 host[1-6]。在初始情况下，所有节点都属于一个默认资源组（Default）。
+   假设当前 Doris 集群有 6 个 BE 节点。分别为 host[1-6]。在初始情况下，所有BE节点都属于一个默认资源组（Default）。
 
    我们可以使用以下命令将这 6 个节点划分成 3 个资源组：group_a、group_b、group_c：
 
@@ -60,11 +64,11 @@ FE 不参与用户数据的处理计算等工作，因此是一个资源消耗�
 
    这里我们将 `host[1-2]` 组成资源组 `group_a`，`host[3-4]` 组成资源组 `group_b`，`host[5-6]` 组成资源组 `group_c`。
 
-   > 注：一个 BE 只支持设置一个 Tag。
+   > 注：一个 BE 只能属于一个资源组。
 
-2. 按照资源组分配数据分布
+### 按照资源组分配数据分布
 
-   资源组划分好后。我们可以将用户数据的不同副本分布在不同资源组内。假设一张用户表 UserTable。我们希望在 3 个资源组内各存放一个副本，则可以通过如下建表语句实现：
+   资源组划分好后可以将用户数据的不同副本分布在不同资源组。假设一张用户表 UserTable。我们希望在 3 个资源组内各存放一个副本，则可以通过如下建表语句实现：
 
    ```sql
    create table UserTable
@@ -115,19 +119,37 @@ FE 不参与用户数据的处理计算等工作，因此是一个资源消耗�
     └────────────────────────────────────────────────────┘
    ```
 
-   为了方便设置 table 的数据分布策略，可以在 database 层面设置统一的数据分布策略，但是 table 设置的优先级高于 database
+   当一个DB 下有非常多的Table时，修改每个Table的分布策略是非常繁琐的，所以Doris 还支持了在 database 层面设置统一的数据分布策略，但是 table 设置的优先级高于 database。比如有一个 db1, db1 下有四个 table，table1 需要的副本分布策略为 `group_a:1,group_b:2`，table2，table3, table4 需要的副本分布策略为 `group_c:1,group_b:2`
 
-   ```sql
-   CREATE DATABASE db_name PROPERTIES (
-   "replication_allocation" = "tag.location.group_a:1, tag.location.group_b:1"
-   )
-   ```
+   那么可以使用如下语句创建 db1：
 
-3. 使用不同资源组进行数据查询
+      ```sql
+      CREATE DATABASE db1 PROPERTIES (
+      "replication_allocation" = "tag.location.group_c:1, tag.location.group_b:2"
+      )
+      ```
 
-   在前两步执行完成后，我们就可以通过设置用户的资源使用权限，来限制某一用户的查询，只能使用指定资源组中的节点来执行。
+   使用如下语句创建 table1：
 
-   比如我们可以通过以下语句，限制 user1 只能使用 `group_a` 资源组中的节点进行数据查询，user2 只能使用 `group_b` 资源组，而 user3 可以同时使用 3 个资源组：
+      ```sql
+      CREATE TABLE table1
+      (k1 int, k2 int)
+      distributed by hash(k1) buckets 1
+      properties(
+      "replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
+      )
+      ```
+
+   table2，table3,table4 的建表语句无需再指定`replication_allocation`。
+
+   :::caution 注意
+   更改 database 的副本分布策略不会对已有的 table 产生影响。
+   :::
+
+
+## 为用户设置 ResourceGroup
+
+   可以通过以下语句，限制 user1 只能使用 `group_a` 资源组中的节点进行数据查询，user2 只能使用 `group_b` 资源组，而 user3 可以同时使用 3 个资源组：
 
    ```sql
    set property for 'user1' 'resource_tags.location' = 'group_a';
@@ -139,138 +161,19 @@ FE 不参与用户数据的处理计算等工作，因此是一个资源消耗�
 
    > 注：默认情况下，用户的 `resource_tags.location` 属性为空，在 2.0.2（含）之前的版本中，默认情况下，用户不受 tag 的限制，可以使用任意资源组。在 2.0.3 版本之后，默认情况下，普通用户只能使用 `default` 资源组。root 和 admin 用户可以使用任意资源组。
 
-   :::tip
-   需要注意的是，属性 `resource_tags.location` 每次修改完成之后，用户需要重新建立连接才能使变更生效。
+   :::caution 注意
+   属性 `resource_tags.location` 每次修改完成之后，用户需要重新建立连接才能使变更生效。
    :::
 
-   这样，我们通过对节点的划分，以及对用户的资源使用限制，实现了不同用户查询上的物理资源隔离。更进一步，我们可以给不同的业务部门创建不同的用户，并限制每个用户使用不同的资源组。以避免不同业务部分之间使用资源干扰。比如集群内有一张业务表需要共享给所有 9 个业务部门使用，但是希望能够尽量避免不同部门之间的资源抢占。则我们可以为这张表创建 3 个副本，分别存储在 3 个资源组中。接下来，我们为 9 个业务部门创建 9 个用户，每 3 个用户限制使用一个资源组。这样，资源的竞争程度就由 9 降低到了 3。
+   
 
-   另一方面，针对在线和离线任务的隔离。我们可以利用资源组的方式实现。比如我们可以将节点划分为 Online 和 Offline 两个资源组。表数据依然以 3 副本的方式存储，其中 2 个副本存放在 Online 资源组，1 个副本存放在 Offline 资源组。Online 资源组主要用于高并发低延迟的在线数据服务，而一些大查询或离线 ETL 操作，则可以使用 Offline 资源组中的节点执行。从而实现在统一集群内同时提供在线和离线服务的能力。
-
-4. 导入作业的资源组分配
+## 导入作业的资源组分配
 
    导入作业（包括 insert、broker load、routine load、stream load 等）的资源使用可以分为两部分：
-    1. 计算资源：负责读取数据源、数据转换和分发。
-    2. 写入资源：负责数据编码、压缩并写入磁盘。
+   
+   1. 计算资源：负责读取数据源、数据转换和分发；
+   
+   2. 写入资源：负责数据编码、压缩并写入磁盘。
 
-   其中写入资源必须是数据副本所在的节点，而计算资源理论上可以选择任意节点完成。所以对于导入作业的资源组的分配分成两个步骤：
-    1. 使用用户级别的 resource tag 来限定计算资源所能使用的资源组。
-    2. 使用副本的 resource tag 来限定写入资源所能使用的资源组。
+   其中写入资源必须是数据副本所在的节点，而计算资源理论上可以选择任意节点完成，所以在导入的场景下，Resource Group 只能限制计算部分使用的资源。
 
-   所以如果希望导入操作所使用的全部资源都限定在数据所在的资源组的话，只需将用户级别的 resource tag 设置为和副本的 resource tag 相同即可。
-
-## 单查询资源限制
-
-前面提到的资源组方法是节点级别的资源隔离和限制。而在资源组内，依然可能发生资源抢占问题。比如前文提到的将 3 个业务部门安排在同一资源组内。虽然降低了资源竞争程度，但是这 3 个部门的查询依然有可能相互影响。
-
-因此，除了资源组方案外，Doris 还提供了对单查询的资源限制功能。
-
-目前 Doris 对单查询的资源限制主要分为 CPU 和 内存限制两方面。
-
-1. 内存限制
-
-   Doris 可以限制一个查询被允许使用的最大内存开销。以保证集群的内存资源不会被某一个查询全部占用。我们可以通过以下方式设置内存限制：
-
-   ```sql
-   # 设置会话变量 exec_mem_limit。则之后该会话内（连接内）的所有查询都使用这个内存限制。
-   set exec_mem_limit=1G;
-   # 设置全局变量 exec_mem_limit。则之后所有新会话（新连接）的所有查询都使用这个内存限制。
-   set global exec_mem_limit=1G;
-   # 在 SQL 中设置变量 exec_mem_limit（单位：字节）。则该变量仅影响这个 SQL。
-   select /*+ SET_VAR(exec_mem_limit=1073741824) */ id, name from tbl where xxx;
-   ```
-
-   因为 Doris 的查询引擎是基于全内存的 MPP 查询框架。因此当一个查询的内存使用超过限制后，查询会被终止。因此，当一个查询无法在合理的内存限制下运行时，我们就需要通过一些 SQL 优化手段，或者集群扩容的方式来解决了。
-
-2. CPU 限制
-
-   >注：从 Doris 2.1 之后，cpu_resource_limit 将逐渐被 workload group 替代，因此不建议使用该参数。
-
-   用户可以通过以下方式限制查询的 CPU 资源：
-
-   ```sql
-   # 设置会话变量 cpu_resource_limit。则之后该会话内（连接内）的所有查询都使用这个 CPU 限制。
-   set cpu_resource_limit = 2
-   # 设置用户的属性 cpu_resource_limit，则所有该用户的查询情况都使用这个 CPU 限制。该属性的优先级高于会话变量 cpu_resource_limit
-   set property for 'user1' 'cpu_resource_limit' = '3';
-   ```
-
-   `cpu_resource_limit` 的取值是一个相对值，取值越大则能够使用的 CPU 资源越多。但一个查询能使用的 CPU 上限也取决于表的分区分桶数。原则上，一个查询的最大 CPU 使用量和查询涉及到的 tablet 数量正相关。极端情况下，假设一个查询仅涉及到一个 tablet，则即使 `cpu_resource_limit` 设置一个较大值，也仅能使用 1 个 CPU 资源。
-
-通过内存和 CPU 的资源限制。我们可以在一个资源组内，将用户的查询进行更细粒度的资源划分。比如我们可以让部分时效性要求不高，但是计算量很大的离线任务使用更少的 CPU 资源和更多的内存资源。而部分延迟敏感的在线任务，使用更多的 CPU 资源以及合理的内存资源。
-
-## 最佳实践和向前兼容
-
-### Tag 划分和 CPU 限制是 0.15 版本中的新功能。为了保证可以从老版本平滑升级，Doris 做了如下的向前兼容：
-
-1. 每个 BE 节点会有一个默认的 Tag：`"tag.location": "default"`。
-2. 通过 `alter system add backend` 语句新增的 BE 节点也会默认设置 Tag：`"tag.location": "default"`。
-3. 所有表的副本分布默认修改为：`"tag.location.default:xx`。其中 xx 为原副本数量。
-4. 用户依然可以通过 `"replication_num" = "xx"` 在建表语句中指定副本数，这种属性将会自动转换成：`"tag.location.default:xx`。从而保证无需修改原建表语句。
-5. 默认情况下，单查询的内存限制为单节点 2GB，CPU 资源无限制，和原有行为保持一致。且用户的 `resource_tags.location` 属性为空，即默认情况下，用户可以访问任意 Tag 的 BE，和原有行为保持一致。
-
-这里我们给出一个从原集群升级到 0.15 版本后，开始使用资源划分功能的步骤示例：
-
-1. 关闭数据修复与均衡逻辑
-
-   因为升级后，BE 的默认 Tag 为 `"tag.location": "default"`，而表的默认副本分布为：`"tag.location.default:xx`。所以如果直接修改 BE 的 Tag，系统会自动检测到副本分布的变化，从而开始数据重分布。这可能会占用部分系统资源。所以我们可以在修改 Tag 前，先关闭数据修复与均衡逻辑，以保证我们在规划资源时，不会有副本重分布的操作。
-
-   ```sql
-   ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
-   ADMIN SET FRONTEND CONFIG ("disable_tablet_scheduler" = "true");
-   ```
-
-2. 设置 Tag 和表副本分布
-
-   接下来可以通过 `alter system modify backend` 语句进行 BE 的 Tag 设置。以及通过 `alter table` 语句修改表的副本分布策略。示例如下：
-
-   ```sql
-   alter system modify backend "host1:9050" set ("tag.location" = "group_a");
-   alter table my_table modify partition p1 set ("replication_allocation" = "tag.location.group_a:2");
-   ```
-
-3. 开启数据修复与均衡逻辑
-
-   在 Tag 和副本分布都设置完毕后，我们可以开启数据修复与均衡逻辑来触发数据的重分布了。
-
-   ```sql
-   ADMIN SET FRONTEND CONFIG ("disable_balance" = "false");
-   ADMIN SET FRONTEND CONFIG ("disable_tablet_scheduler" = "false");
-   ```
-
-   该过程根据涉及到的数据量会持续一段时间。并且会导致部分 colocation table 无法进行 colocation 规划（因为副本在迁移中）。可以通过 `show proc "/cluster_balance/"` 来查看进度。也可以通过 `show proc "/statistic"` 中 `UnhealthyTabletNum` 的数量来判断进度。当 `UnhealthyTabletNum` 降为 0 时，则代表数据重分布完毕。
-
-4. 设置用户的资源标签权限。
-
-   等数据重分布完毕后。我们就可以开始设置用户的资源标签权限了。因为默认情况下，用户的 `resource_tags.location` 属性为空，即可以访问任意 Tag 的 BE。所以在前面步骤中，不会影响到已有用户的正常查询。当 `resource_tags.location` 属性非空时，用户将被限制访问指定 Tag 的 BE。
-
-通过以上 4 步，我们可以较为平滑的在原有集群升级后，使用资源划分功能。
-
-### table 数量很多时如何方便的设置副本分布策略
-
-比如有一个 db1,db1 下有四个 table，table1 需要的副本分布策略为 `group_a:1,group_b:2`，table2，table3, table4 需要的副本分布策略为 `group_c:1,group_b:2`
-
-那么可以使用如下语句创建 db1：
-
-  ```sql
-   CREATE DATABASE db1 PROPERTIES (
-   "replication_allocation" = "tag.location.group_c:1, tag.location.group_b:2"
-   )
-   ```
-
-使用如下语句创建 table1：
-
-   ```sql
-   CREATE TABLE table1
-   (k1 int, k2 int)
-   distributed by hash(k1) buckets 1
-   properties(
-   "replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
-   )
-   ```
-
-table2，table3,table4 的建表语句无需再指定`replication_allocation`。
-
-:::caution 注意
-更改 database 的副本分布策略不会对已有的 table 产生影响。
-:::
