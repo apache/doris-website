@@ -48,7 +48,7 @@ For cases of using Doris Explain output to perform plan-level tuning, please ref
 
 The Explain tool described above outlines the execution plan for an SQL query, such as planning a join operation between tables t1 and t2 as a Hash Join, with t1 designated as the build side and t2 as the probe side. When the SQL query is actually executed, understanding how much time each specific execution step takes—for instance, how long the build phase lasts and how long the probe phase lasts—is crucial for performance analysis and tuning. The Profile tool provides detailed execution information for this purpose. The following section first gives an overview of the Profile file structure and then introduces the meanings of execution times in Merged Profile, Execution Profile, and PipelineTask.
 
-## Profile File Structure
+### Profile File Structure
 
 A Profile file contains several main sections:
 
@@ -59,7 +59,7 @@ A Profile file contains several main sections:
 
 5. The detailed information about the execution side is mainly contained in the last part. Next, we will mainly introduce what information the Profile can provide for performance analysis.
 
-## Merged Profile
+### Merged Profile
 
 To help users more accurately analyze performance bottlenecks, Doris provides aggregated profile results for each operator. Taking the EXCHANGE_OPERATOR as an example:
 
@@ -96,7 +96,7 @@ In Doris, each operator executes concurrently based on the concurrency level set
 
 WaitForDependencyTime varies for each Operator, as the execution dependencies differ. For instance, in the case of an EXCHANGE_OPERATOR, the dependency is on data being sent by upstream operators via RPC. Thus, WaitForDependencyTime in this context specifically refers to the time spent waiting for upstream operators to send data.
 
-## Execution Profile
+### Execution Profile
 
 Unlike the Merged Profile, the Execution Profile displays detailed metrics for a specific concurrent execution. Taking the exchange operator with id=4 as an example:
 
@@ -125,7 +125,7 @@ EXCHANGE_OPERATOR  (id=4):(ExecTime:  706.351us)
 
 In this profile, for instance, LocalBytesReceived is a metric specific to the exchange operator and not found in other operators, hence it is not included in the Merged Profile.
 
-## PipelineTask Execution Time
+### PipelineTask Execution Time
 
 In Doris, a PipelineTask consists of multiple operators. When analyzing the execution time of a PipelineTask, several key aspects need to be focused on:
 
