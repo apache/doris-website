@@ -1,6 +1,6 @@
 ---
 {
-"title": "计算组操作",
+"title": "Compute Group",
 "language": "zh-CN"
 }
 ---
