@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Controlling Hints with CBO Rule",
-    "language": "zh-CN"
+    "title": "Controlling CBO Rule with Hint",
+    "language": "en"
 }
 ---
 
