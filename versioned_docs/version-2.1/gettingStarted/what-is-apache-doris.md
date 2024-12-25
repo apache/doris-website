@@ -1,7 +1,7 @@
 ---
 { 
-'title': 'Apache Doris 简介', 
-'language': 'zh-CN' 
+'title': 'Introduction to Apache Doris',
+'language': 'en' 
 }
 ---
 
@@ -37,7 +37,7 @@ Apache Doris has a wide user base. It has been used in production environments o
 
 As shown in the figure below, after various data integrations and processing, data sources are typically ingested into the real-time data warehouse Doris and offline lakehouses (such as Hive, Iceberg, and Hudi). These are widely used in OLAP analysis scenarios.
 
-![Apache Doris 的使用场景](/images/getting-started/apache-doris-usage-scenarios-pipeline.png)
+![Apache Doris usage scenarios](/images/getting-started/apache-doris-usage-scenarios-pipeline.png)
 
 Apache Doris is widely used in the following scenarios:
 

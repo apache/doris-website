@@ -1,6 +1,6 @@
 ---
 { 
-'title': 'Apache Doris 简介', 
+'title': 'Apache Doris 简介',
 'language': 'zh-CN' 
 }
 ---
