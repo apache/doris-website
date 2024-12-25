@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Overview
-
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` Represents value with structure described by multiple fields, which can be viewed as a collection of multiple columns.
 
 - It cannot be used as a Key column. Now STRUCT can only used in Duplicate Model Tables.

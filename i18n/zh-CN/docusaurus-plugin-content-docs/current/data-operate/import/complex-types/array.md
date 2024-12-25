@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 概述
-
 `ARRAY<T>` 表示由 T 类型元素组成的数组，不能作为 key 列使用。
 
 - 2.0 之前仅支持在 Duplicate 模型的表中使用。

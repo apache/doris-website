@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 概述
-
 `MAP<K, V>` 表示由K, V类型元素组成的 map，不能作为 key 列使用。
 
 - 目前支持在 Duplicate，Unique 模型的表中使用。

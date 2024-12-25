@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Overview
-
 `MAP<K, V>` A Map of K, V items, it cannot be used as a key column. Now MAP can only used in Duplicate and Unique Model Tables.
 
 K,V could be any of:
