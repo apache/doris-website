@@ -37,7 +37,7 @@ This statement is used to view BACKUP tasks
 grammar:
 
 ```sql
- SHOW BACKUP [FROM db_name]
+ SHOW [GLOBAL] BACKUP [FROM db_name]
     [WHERE SnapshotName ( LIKE | = ) 'snapshot name']
 ```
 
@@ -72,6 +72,12 @@ illustrate:
 
    ```sql
     SHOW BACKUP FROM example_db;
+   ```
+
+2. View the last GLOBAL BACKUP task.
+
+   ```sql
+    SHOW GLOBAL BACKUP;
    ```
 
 ### Keywords

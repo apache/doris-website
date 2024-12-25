@@ -37,7 +37,7 @@ This statement is used to cancel an ongoing RESTORE task.
 grammar:
 
 ```sql
-CANCEL RESTORE FROM db_name;
+CANCEL [GLOBAL] RESTORE [FROM db_name];
 ```
 
 Notice:
@@ -50,6 +50,12 @@ Notice:
 
 ```sql
 CANCEL RESTORE FROM example_db;
+```
+
+2. Cancel the GLOBAL RESTORE task.
+
+```sql
+CANCEL GLOBAL RESTORE;
 ```
 
 ### Keywords

@@ -37,7 +37,7 @@ SHOW RESTORE
 语法：
 
 ```SQL
-SHOW [BRIEF] RESTORE [FROM DB_NAME]
+SHOW [BRIEF] [GLOBAL] RESTORE [FROM DB_NAME]
 ```
 
 说明：
@@ -76,6 +76,11 @@ SHOW [BRIEF] RESTORE [FROM DB_NAME]
     
     ```sql
     SHOW RESTORE FROM example_db;
+    ```
+2. 查看 最后一次 GLOBAL RESTORE 任务。
+   
+    ```sql
+     SHOW GLOBAL RESTORE;
     ```
 
 ### Keywords
