@@ -1,7 +1,7 @@
 ---
 {
     "title": "Adjusting Join Shuffle with Hint",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
