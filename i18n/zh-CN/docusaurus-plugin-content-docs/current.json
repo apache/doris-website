@@ -510,5 +510,9 @@
   "sidebar.docs.category.Tiered Storage": {
     "message": "分层存储",
     "description": "The label for category Tiered Storage in sidebar docs"
+  },
+  "sidebar.docs.category.Business continuity & data recovery": {
+    "message": "业务连续性和数据恢复",
+    "description": "The label for category Business continuity & data recovery in sidebar docs"
   }
 }
