@@ -56,8 +56,8 @@ INSERT INTO table_name(id, json_column_name) VALUES (1, '{"k1": "100"}')
 14	[123, 456]
 ```
 
-- 在 JSON 中出现换行符 `"\n"` 时，在导入时需要通过 replace 函数讲 `"\n"` 替换为 `"\\n"`
-
+- 在 JSON 中出现转移符号 "\"，如 `"\n"` 或 `"\t"` 时，在导入时需要通过 replace 函数将 `"\"` 替换为 `"\\"`，例如将 `"\n"` 替换为 `"\\n"`
+  
 **查询**
 - 直接将整个 JSON 列 SELECT 出来
 ```sql
