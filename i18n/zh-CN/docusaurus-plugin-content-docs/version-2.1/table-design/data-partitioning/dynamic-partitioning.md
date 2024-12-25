@@ -125,7 +125,7 @@ under the License.
 
   当 `time_unit` 为 `MONTH` 时，该参数用于指定每月的起始日期。取值为 1 到 28。其中 1 表示每月 1 号，28 表示每月 28 号。默认为 1，即表示每月以 1 号为起始点。暂不支持以 29、30、31 号为起始日，以避免因闰年或闰月带来的歧义。
 
-- doris支持SSD和HDD层级存储，可参考[分层存储](./tiered-storage/diff-disk-medium-migration.md)
+- doris支持SSD和HDD层级存储，可参考[分层存储](./tiered-storage/tiered-ssd-hdd.md)
 
 - `dynamic_partition.create_history_partition`
 
