@@ -1,6 +1,6 @@
 ---
 {
-"title": "Query Circuit Breaking",
+"title": "Query Circuit Breaker",
 "language": "en"
 }
 ---
