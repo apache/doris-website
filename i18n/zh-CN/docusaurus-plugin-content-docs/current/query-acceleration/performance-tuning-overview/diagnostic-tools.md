@@ -36,8 +36,6 @@ Doris Manager 的日志模块提供了慢 SQL 筛选功能。用户可以通过�
 
 ![Doris Manager 监控与日志](/images/doris-manage-trace-log-2.png)
 
-通过上述监控界面展示的问题时间点，和慢 SQL 中的详细信息如时间点/扫描条数/Shuffle 条数/peakMemory 大小等做交叉验证，确定问题 SQL 的来源。
-
 ## Audit Log
 
 当前 Doris FE 提供了四种类型的 Audit Log，包括 `slow_query`、`query`、`load` 和 `stream_load`。Audit Log  除了在安装部署 Manager 服务的集群上通过日志页面访问获取之外，也可以直接访问 FE 所在节点的 `fe/log/fe.audit.log` 文件获取信息。
