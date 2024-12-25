@@ -41,7 +41,7 @@ After completing preliminary checks and planning, such as environment checks, cl
 
    When extracting the installation package, a doris-meta directory is included by default. It is recommended to create an independent metadata directory and create a symbolic link to doris-meta. In a production environment, it is strongly advised to specify a separate directory outside the Doris installation directory, preferably on a dedicated SSD. For testing and development environments, you can use the default configuration.
 
-   ```SQL
+   ```sql
    ## Use a separate disk for FE metadata
    mkdir -p <doris_meta_created>
       
