@@ -55,7 +55,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 | `s3.access_key`  | required    | The access key of your object storage account. (AccountName if you're using Azure).                                                                                                                                |
 | `s3.secret_key`  | required    | The secret key of your object storage account. (AccountKey if you're using Azure).                                                                                                                                |
 | `provider`       | required    | The cloud vendor which provides the object storage service. The supported values include `COS`, `OSS`, `S3`, `OBS`, `BOS`, `AZURE`, `GCP`                                                                                                                                |
-| `use_path_style` | optional    | Indicate using `path-style URL`(private cloud recommended) or `virtual-hosted-style URL`(public cloud recommended), default `true` (`path-style`)                                                                                                               |
+| `use_path_style` | optional    | Indicate using `path-style URL`(private environment recommended) or `virtual-hosted-style URL`(public cloud recommended), default `true` (`path-style`)                                                                                                               |
 
 ##### HDFS Vault
 

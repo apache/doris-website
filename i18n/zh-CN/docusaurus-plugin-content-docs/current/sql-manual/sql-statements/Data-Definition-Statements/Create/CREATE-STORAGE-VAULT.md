@@ -54,7 +54,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 | `s3.access_key`  | 必需   | 您的对象存储账户的访问密钥。(如果您使用 Azure,则为 AccountName)。 |
 | `s3.secret_key`  | 必需   | 您的对象存储账户的秘密密钥。(如果您使用 Azure,则为 AccountKey)。 |
 | `provider`       | 必需   | 提供对象存储服务的云供应商。支持的值有`COS`，`OSS`，`S3`，`OBS`，`BOS`，`AZURE`，`GCP` |
-| `use_path_style` | 可选   | 使用 `path-style URL`(私有云环境建议)或者`virtual-hosted-style URL`(公有云环境建议), 默认值 `true` (path-style)                                                                                      |
+| `use_path_style` | 可选   | 使用 `path-style URL`(私有化部署环境)或者`virtual-hosted-style URL`(公有云环境建议), 默认值 `true` (path-style)                                                                                      |
 
 ##### HDFS vault
 
