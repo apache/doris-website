@@ -169,15 +169,15 @@
                                         "data-operate/import/import-way/routine-load-manual",
                                         "data-operate/import/import-way/insert-into-manual",
                                         "data-operate/import/import-way/insert-into-values-manual",
-                                        "data-operate/import/import-way/mysql-load-manual",
-                                        "data-operate/import/import-way/group-commit-manual"
+                                        "data-operate/import/import-way/mysql-load-manual"
                                     ]
                                 },
                                 "data-operate/import/load-data-format",
                                 "data-operate/import/error-data-handling",
                                 "data-operate/import/load-data-convert",
                                 "data-operate/import/load-high-availability",
-                                "data-operate/import/migrate-data-from-other-olap"
+                                "data-operate/import/migrate-data-from-other-olap",
+                                "data-operate/import/group-commit-manual"
                             ]
                         },
                         {
