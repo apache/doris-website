@@ -39,7 +39,7 @@ For tables with an auto-increment column, Doris processes data writes as follows
   - **Null Values**: Doris replaces null values in the written data with system-generated unique values.
   - **Non-Null Values**: User-provided values remain unchanged.
   
-  :::caution Importance
+  :::caution Attention
   User-provided non-null values can disrupt the uniqueness of the auto-increment column.
   :::
   
