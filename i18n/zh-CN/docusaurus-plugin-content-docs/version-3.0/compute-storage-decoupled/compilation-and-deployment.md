@@ -95,7 +95,7 @@ export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --daemon
 ```
 启动脚本返回值为0表示启动成功, 否则启动失败.
-启动成功同时标准输出的最后一行文本信息为"doris_clodu start successfully".
+启动成功同时标准输出的最后一行文本信息为"doris_cloud start successfully".
 
 *停止命令*
 
