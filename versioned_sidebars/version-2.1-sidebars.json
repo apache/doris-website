@@ -365,8 +365,7 @@
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
                         "admin-manual/data-admin/ccr",
-                        "admin-manual/data-admin/recyclebin",
-                        "admin-manual/data-admin/data-recovery"
+                        "admin-manual/data-admin/recyclebin"
                     ]
                 },
                 {
