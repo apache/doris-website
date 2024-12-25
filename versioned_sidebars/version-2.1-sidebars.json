@@ -153,6 +153,16 @@
                                         "data-operate/import/import-way/group-commit-manual"
                                     ]
                                 },
+                                {
+                                    "type": "category",
+                                    "label": "Complex Data Types",
+                                    "items": [
+                                        "data-operate/import/complex-type/array",
+                                        "data-operate/import/complex-type/map",
+                                        "data-operate/import/complex-type/struct",
+                                        "data-operate/import/complex-type/json"
+                                    ]
+                                },
                                 "data-operate/import/load-data-format",
                                 "data-operate/import/error-data-handling",
                                 "data-operate/import/load-data-convert",
