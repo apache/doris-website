@@ -1,6 +1,6 @@
 ---
 {
-"title": "Query Blocking",
+"title": "Query Circuit Breaking",
 "language": "zh-CN"
 }
 ---
@@ -270,8 +270,8 @@ mysql [(none)]>show variables like '%parallel_fragment_exec_instance_num%';
 1 row in set (0.01 sec)
 ```
 
-### 2 big query fusing test
-Test fusing queries that have run for more than 3 seconds. The following is the audit log of a successful execution of q29 in Clickbench. It can be seen that it takes 4.5 seconds for this SQL to run.
+### 2 big query circuit breaking test
+Test query circuit breaker that have run for more than 3 seconds. The following is the audit log of a successful execution of q29 in Clickbench. It can be seen that it takes 4.5 seconds for this SQL to run.
 ```
 mysql [hits]>SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\.)?([^/]+)/.*$', '\1') AS k, AVG(length(Referer)) AS l, COUNT(*) AS c, MIN(Referer) FROM hits WHERE Referer <> '' GROUP BY k HAVING COUNT(*) > 100000 ORDER BY l DESC LIMIT 25;
 +-----------------------------------------------------------------------+------------------+----------+---------------------------------------------------------------------------------------------------------------------+
