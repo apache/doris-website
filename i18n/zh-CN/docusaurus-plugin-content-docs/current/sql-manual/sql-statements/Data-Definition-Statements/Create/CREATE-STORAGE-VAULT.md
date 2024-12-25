@@ -54,7 +54,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 | `s3.access_key`  | 必需   | 您的对象存储账户的访问密钥。(如果您使用 Azure,则为 AccountName)。 |
 | `s3.secret_key`  | 必需   | 您的对象存储账户的秘密密钥。(如果您使用 Azure,则为 AccountKey)。 |
 | `provider`       | 必需   | 提供对象存储服务的云供应商。支持的值有`COS`，`OSS`，`S3`，`OBS`，`BOS`，`AZURE`，`GCP` |
-| `use_path_style` | 可选   | 使用 path-style URL 或者 virtual-hosted-style URL, 默认值 false(virtual-hosted-style)                                                                                      |
+| `use_path_style` | 可选   | 使用 `path-style URL`(私有化部署环境)或者`virtual-hosted-style URL`(公有云环境建议), 默认值 `true` (path-style)                                                                                      |
 
 ##### HDFS vault
 
@@ -103,7 +103,8 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "s3.region" = "cn-hangzhou",
         "s3.root.path" = "ssb_sf1_p2_s3",
         "s3.bucket" = "doris-build-1308700295",
-        "provider" = "OSS"
+        "provider" = "OSS",
+        "use_path_style" = "false"
         );
     ```
 
@@ -118,7 +119,8 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "s3.region" = "ap-guangzhou",
         "s3.root.path" = "ssb_sf1_p2_s3",
         "s3.bucket" = "doris-build-1308700295",
-        "provider" = "COS"
+        "provider" = "COS",
+        "use_path_style" = "false"
         );
     ```
 
@@ -133,7 +135,8 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "s3.region" = "cn-north-4",
         "s3.root.path" = "ssb_sf1_p2_s3",
         "s3.bucket" = "doris-build-1308700295",
-        "provider" = "OBS"
+        "provider" = "OBS",
+        "use_path_style" = "false"
         );
     ```
 
@@ -148,7 +151,8 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "s3.region" = "us-east-1",
         "s3.root.path" = "ssb_sf1_p2_s3",
         "s3.bucket" = "doris-build-1308700295",
-        "provider" = "S3"
+        "provider" = "S3",
+        "use_path_style" = "false"
         );
     ```
 7. 创建 MinIO S3 storage vault。
@@ -162,7 +166,8 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "s3.region" = "us-east-1",
         "s3.root.path" = "ssb_sf1_p2_s3",
         "s3.bucket" = "doris-build-1308700295",
-        "provider" = "S3"
+        "provider" = "S3",
+        "use_path_style" = "true"
         );
    ```
 

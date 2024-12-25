@@ -45,7 +45,7 @@ Schema 设计调优基本可分为三个方面：
 
 - [表级别 Schema 设计调优](../tuning/tuning-plan/optimizing-table-schema.md)，如分区分桶个数和字段调优；
 - [索引的设计和调优](../tuning/tuning-plan/optimizing-table-index.md)；
-- 特定优化手段的使用，如使用 [Colocate Group 优化 Join](../tuning/tuning-plan/optimizing-join-with-colocate-group.md) 等。主要目的是排除因为 Schema 设计不合理或者没有充分利用 Doris 现有优化能力导致的性能问题。
+- 特定优化手段的使用，如[使用 Colocate Group 优化 Join](../tuning/tuning-plan/optimizing-join-with-colocate-group.md) 等。主要目的是排除因为 Schema 设计不合理或者没有充分利用 Doris 现有优化能力导致的性能问题。
 
 详细调优案例请参考文档 [计划调优](../tuning/tuning-plan/optimizing-table-schema.md)。
 
@@ -53,7 +53,7 @@ Schema 设计调优基本可分为三个方面：
 
 检查和优化完业务 Schema 后，将进入调优的主体工作，即计划调优与执行调优。如上所述，在性能调优工具中，这个阶段的主要工作是充分利用 Doris 所提供的各种层级的 Explain 工具，对慢 SQL 的执行计划进行系统分析，以找到关键优化点进行针对性优化。
 
-- 针对单表查询和分析场景，可以通过分析执行计划，查看[分区裁剪](../tuning/tuning-plan/optimizing-table-scanning.md)是否正常，使用[单表物化视图进行查询加速](../tuning/tuning-plan/transparent-rewriting-with-sync-mv.md)等。
+- 针对单表查询和分析场景，可以通过分析执行计划，查看[分区裁剪](../tuning/tuning-plan/optimizing-table-scanning.md)是否正常，[使用单表物化视图进行查询加速](../tuning/tuning-plan/transparent-rewriting-with-sync-mv.md)等。
 - 针对复杂多表分析场景，可以分析 Join Order 是否合理等定位具体的性能瓶颈，也可以[使用多表物化视图进行透明改写](../tuning/tuning-plan/transparent-rewriting-with-async-mv.md)，以加速查询。如果出现非预期的情况，比如 Join Order 不合理，通过观察 Explain 的结果，手工指定 Join Jint 进行执行计划的绑定，如[使用 Leading hint 控制 Join Order](../tuning/tuning-plan/reordering-join-with-leading-hint.md)，[使用 Shuffle Hint 调整 Join shuffle 方式](../tuning/tuning-plan/adjusting-join-shuffle.md)，[使用 Hint 控制代价改写行为](../tuning/tuning-plan/controlling-hints-with-cbo-rule.md)等，以达到调优执行计划的目的。
 - 针对部分特定场景，还可以通过使用 Doris 提供的高级功能，比如[使用 SQL Cache 加速查询](../tuning/tuning-plan/accelerating-queries-with-sql-cache.md)。
 
@@ -65,7 +65,7 @@ Schema 设计调优基本可分为三个方面：
 
 以多表分析的查询为例，我们可以通过分析 Profile，来检查计划规划的 Join 顺序是否合理，Runtime Filter 是否生效，并行度是否符合预期等。此外 Profile 还能反馈出一些机器负载的情况，例如 io 慢，网络传输性能不符合预期等。在对这类问题进行确认和定位时，需要使用系统级别的工具来辅助诊断和调优。
 
-详细调优案例请参考文档 [执行调优](../tuning/tuning-execution/)。
+详细调优案例请参考文档 [执行调优](../tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md)。
 
 :::tip 提示
 在分析具体性能问题的时候，推荐先检查计划，后调优执行的顺序。首先利用 Explain 工具进行执行计划的确认，然后再利用 Profile 工具进行执行性能的定位和调优。如果使用顺序颠倒，有可能会导致效率低下，不利于性能问题的快速定位。

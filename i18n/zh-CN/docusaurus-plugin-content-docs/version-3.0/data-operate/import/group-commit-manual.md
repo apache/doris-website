@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Group Commit",
+    "title": "高并发导入优化（Group Commit）",
     "language": "zh-CN"
 }
 ---
@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-Group Commit 不是一种新的导入方式，而是对`INSERT INTO tbl VALUES(...)`、`Stream Load`、`Http Stream`的扩展，大幅提升了高并发小写入的性能。您的应用程序可以直接使用 JDBC 将数据高频写入 Doris，同时通过使用 PreparedStatement 可以获得更高的性能。在日志场景下，您也可以利用 Stream Load 或者 Http Stream 将数据高频写入 Doris。
+Group Commit 不是一种新的导入方式，而是对`INSERT INTO tbl VALUES(...)`、`Stream Load`的扩展，大幅提升了高并发小写入的性能。您的应用程序可以直接使用 JDBC 将数据高频写入 Doris，同时通过使用 PreparedStatement 可以获得更高的性能。在日志场景下，您也可以利用 Stream Load 将数据高频写入 Doris。
 
 ## Group Commit 模式
 
@@ -33,7 +33,7 @@ Group Commit 写入有三种模式，分别是：
 
 * 关闭模式（`off_mode`）
 
-    不开启 Group Commit，保持以上三种导入方式的默认行为。
+    不开启 Group Commit。
 
 * 同步模式（`sync_mode`）
 
@@ -43,7 +43,59 @@ Group Commit 写入有三种模式，分别是：
 
     Doris 首先将数据写入 WAL (`Write Ahead Log`)，然后导入立即返回。Doris 会根据负载和表的`group_commit_interval`属性异步提交数据，提交之后数据可见。为了防止 WAL 占用较大的磁盘空间，单次导入数据量较大时，会自动切换为`sync_mode`。这适用于写入延迟敏感以及高频写入的场景。
 
-    WAL的数量可以通过FE http接口查看，具体可见[这里](../../../admin-manual/fe/get-wal-size-action.md)，也可以在BE的metrics中搜索关键词`wal`查看。
+    WAL的数量可以通过FE http接口查看，具体可见[这里](../../admin-manual/open-api/fe-http/get-wal-size-action)，也可以在BE的metrics中搜索关键词`wal`查看。
+
+## 使用限制
+
+* 当开启了 Group Commit 模式，系统会判断用户发起的`INSERT INTO VALUES`语句是否符合 Group Commit 的条件，如果符合，该语句的执行会进入到 Group Commit 写入中。符合以下条件会自动退化为非 Group Commit 方式：
+
+  + 事务写入，即`Begin`; `INSERT INTO VALUES`; `COMMIT`方式
+
+  + 指定 Label，即`INSERT INTO dt WITH LABEL {label} VALUES`
+
+  + VALUES 中包含表达式，即`INSERT INTO dt VALUES (1 + 100)`
+
+  + 列更新写入
+
+  + 表不支持 light schema change
+
+* 当开启了 Group Commit 模式，系统会判断用户发起的`Stream Load`和`Http Stream`是否符合 Group Commit 的条件，如果符合，该导入的执行会进入到 Group Commit 写入中。符合以下条件的会自动退化为非 Group Commit 方式：
+
+  + 两阶段提交
+
+  + 指定 Label，即通过 `-H "label:my_label"`设置
+
+  + 列更新写入
+
+  + 表不支持 light schema change
+
++ 对于 Unique 模型，由于 Group Commit 不能保证提交顺序，用户可以配合 Sequence 列使用来保证数据一致性
+
+* 对`max_filter_ratio`语义的支持
+
+  * 在默认的导入中，`filter_ratio`是导入完成后，通过失败的行数和总行数计算，决定是否提交本次写入
+
+  * 在 Group Commit 模式下，由于多个用户发起的导入会被一个内部导入执行，虽然可以计算出每个导入的`filter_ratio`，但是数据一旦进入内部导入，就只能 commit transaction
+
+  * Group Commit 模式支持了一定程度的`max_filter_ratio`语义，当导入的总行数不高于`group_commit_memory_rows_for_max_filter_ratio`(配置在`be.conf`中，默认为`10000`行)，`max_filter_ratio` 工作
+
+* WAL 限制
+
+  * 对于`async_mode`的 Group Commit 写入，会把数据写入 WAL。如果内部导入成功，则 WAL 被立刻删除；如果内部导入失败，通过导入 WAL 的方法来恢复数据
+
+  * 目前 WAL 文件只存储在一个 BE 上，如果这个 BE 磁盘损坏或文件误删等，可能导入丢失部分数据
+
+  * 当下线 BE 节点时，请使用[`DECOMMISSION`](../../sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND)命令，安全下线节点，防止该节点下线前 WAL 文件还没有全部处理完成，导致部分数据丢失
+
+  * 对于`async_mode`的 Group Commit 写入，为了保护磁盘空间，当遇到以下情况时，会切换成`sync_mode`
+
+    * 导入数据量过大，即超过 WAL 单目录的 80% 空间
+
+    * 不知道数据量的 chunked stream load
+
+    * 导入数据量不大，但磁盘可用空间不足
+
+  * 当发生重量级 Schema Change（目前加减列、修改 varchar 长度和重命名列是轻量级 Schema Change，其它的是重量级 Schema Change）时，为了保证 WAL 能够适配表的 Schema，在 Schema Change 最后的 FE 修改元数据阶段，会拒绝 Group Commit 写入，客户端收到 `insert table ${table_name} is blocked on schema change` 异常，客户端重试即可
 
 ## Group Commit 使用方式
 
@@ -98,7 +150,7 @@ private static final String DB = "db";
 private static final String TBL = "dt";
 private static final String USER = "root";
 private static final String PASSWD = "";
-private static final int INSERT_BATCH_SIZE = 10;
+private static final int INSERT_BATCH_SIZE = 10;   
 
 private static void groupCommitInsertBatch() throws Exception {
     Class.forName(JDBC_DRIVER);
@@ -133,7 +185,7 @@ private static void groupCommitInsertBatch() throws Exception {
 set enable_prepared_stmt_audit_log=true;
 ```
 
-关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](./insert-into-manual.md)。
+关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](./import-way/insert-into-manual.md)。
 
 ### 使用Golang进行Group Commit
 
@@ -199,25 +251,23 @@ func groupCommitInsertBatch(db *sql.DB) {
 		valueStrings := make([]string, 0, batchSize)
 		valueArgs := make([]interface{}, 0, batchSize*16)
 		for i := 0; i < batchSize; i++ {
-			for i = 0; i < batchSize; i++ {
-				valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-				valueArgs = append(valueArgs, rand.Intn(1000))
-				valueArgs = append(valueArgs, rand.Intn(1000))
-				valueArgs = append(valueArgs, rand.Intn(1000))
-				valueArgs = append(valueArgs, rand.Intn(1000))
-				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-				valueArgs = append(valueArgs, "N")
-				valueArgs = append(valueArgs, "O")
-				valueArgs = append(valueArgs, time.Now())
-				valueArgs = append(valueArgs, time.Now())
-				valueArgs = append(valueArgs, time.Now())
-				valueArgs = append(valueArgs, "DELIVER IN PERSON")
-				valueArgs = append(valueArgs, "SHIP")
-				valueArgs = append(valueArgs, "N/A")
-			}
+		    valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			valueArgs = append(valueArgs, rand.Intn(1000))
+			valueArgs = append(valueArgs, rand.Intn(1000))
+			valueArgs = append(valueArgs, rand.Intn(1000))
+			valueArgs = append(valueArgs, rand.Intn(1000))
+			valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+			valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+			valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+			valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+			valueArgs = append(valueArgs, "N")
+			valueArgs = append(valueArgs, "O")
+			valueArgs = append(valueArgs, time.Now())
+			valueArgs = append(valueArgs, time.Now())
+			valueArgs = append(valueArgs, time.Now())
+			valueArgs = append(valueArgs, "DELIVER IN PERSON")
+			valueArgs = append(valueArgs, "SHIP")
+			valueArgs = append(valueArgs, "N/A")
 		}
 		stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
 			table, strings.Join(valueStrings, ","))
@@ -372,67 +422,8 @@ func logInsertStatistics() {
     # 返回的 Label 是 group_commit 开头的，是真正消费数据的导入关联的 label
     ```
 
-    关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](./stream-load-manual)。
+    关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](./import-way/stream-load-manual)。
 
-### Http Stream
-
-* 异步模式
-
-    ```sql
-    # 导入时在 header 中增加"group_commit:async_mode"配置
-
-    curl --location-trusted -u {user}:{passwd} -T data.csv  -H "group_commit:async_mode" -H "sql:insert into db.dt select * from http_stream('column_separator'=',', 'format' = 'CSV')"  http://{fe_host}:{http_port}/api/_http_stream
-    {
-        "TxnId": 7011,
-        "Label": "group_commit_3b45c5750d5f15e5_703428e462e1ebb0",
-        "Comment": "",
-        "GroupCommit": true,
-        "Status": "Success",
-        "Message": "OK",
-        "NumberTotalRows": 2,
-        "NumberLoadedRows": 2,
-        "NumberFilteredRows": 0,
-        "NumberUnselectedRows": 0,
-        "LoadBytes": 19,
-        "LoadTimeMs": 65,
-        "StreamLoadPutTimeMs": 41,
-        "ReadDataTimeMs": 47,
-        "WriteDataTimeMs": 23
-    }
-
-    # 返回的 GroupCommit 为 true，说明进入了 group commit 的流程
-    # 返回的 Label 是 group_commit 开头的，是真正消费数据的导入关联的 label
-    ```
-
-* 同步模式
-
-    ```sql
-    # 导入时在 header 中增加"group_commit:sync_mode"配置
-
-    curl --location-trusted -u {user}:{passwd} -T data.csv  -H "group_commit:sync_mode" -H "sql:insert into db.dt select * from http_stream('column_separator'=',', 'format' = 'CSV')"  http://{fe_host}:{http_port}/api/_http_stream
-    {
-        "TxnId": 3011,
-        "Label": "group_commit_fe470e6752aadbe6_a8f3ac328b02ea91",
-        "Comment": "",
-        "GroupCommit": true,
-        "Status": "Success",
-        "Message": "OK",
-        "NumberTotalRows": 2,
-        "NumberLoadedRows": 2,
-        "NumberFilteredRows": 0,
-        "NumberUnselectedRows": 0,
-        "LoadBytes": 19,
-        "LoadTimeMs": 10066,
-        "StreamLoadPutTimeMs": 31,
-        "ReadDataTimeMs": 32,
-        "WriteDataTimeMs": 10034
-    }
-
-    # 返回的 GroupCommit 为 true，说明进入了 group commit 的流程
-    # 返回的 Label 是 group_commit 开头的，是真正消费数据的导入关联的 label
-    ```
-
-    关于 Http Stream 使用的更多详细语法及最佳实践，请参阅 [Stream Load](./stream-load-manual.md#tvf-在-stream-load-中的应用---http_stream-模式)。
 
 ## 自动提交条件
 
@@ -456,77 +447,25 @@ Group Commit 的默认提交数据量为 64 MB，用户可以通过修改表的�
 ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 ```
 
-## 使用限制
-
-* 当开启了 Group Commit 模式，系统会判断用户发起的`INSERT INTO VALUES`语句是否符合 Group Commit 的条件，如果符合，该语句的执行会进入到 Group Commit 写入中。符合以下条件会自动退化为非 Group Commit 方式：
-
-  + 事务写入，即`Begin`; `INSERT INTO VALUES`; `COMMIT`方式
-
-  + 指定 Label，即`INSERT INTO dt WITH LABEL {label} VALUES`
-
-  + VALUES 中包含表达式，即`INSERT INTO dt VALUES (1 + 100)`
-
-  + 列更新写入
-
-  + 表不支持 light schema change
-
-* 当开启了 Group Commit 模式，系统会判断用户发起的`Stream Load`和`Http Stream`是否符合 Group Commit 的条件，如果符合，该导入的执行会进入到 Group Commit 写入中。符合以下条件的会自动退化为非 Group Commit 方式：
-
-  + 两阶段提交
-
-  + 指定 Label，即通过 `-H "label:my_label"`设置
-
-  + 列更新写入
-
-  + 表不支持 light schema change
-
-+ 对于 Unique 模型，由于 Group Commit 不能保证提交顺序，用户可以配合 Sequence 列使用来保证数据一致性
-
-* 对`max_filter_ratio`语义的支持
-
-  * 在默认的导入中，`filter_ratio`是导入完成后，通过失败的行数和总行数计算，决定是否提交本次写入
-
-  * 在 Group Commit 模式下，由于多个用户发起的导入会被一个内部导入执行，虽然可以计算出每个导入的`filter_ratio`，但是数据一旦进入内部导入，就只能 commit transaction
-
-  * Group Commit 模式支持了一定程度的`max_filter_ratio`语义，当导入的总行数不高于`group_commit_memory_rows_for_max_filter_ratio`(配置在`be.conf`中，默认为`10000`行)，`max_filter_ratio` 工作
-
-* WAL 限制
-
-  * 对于`async_mode`的 Group Commit 写入，会把数据写入 WAL。如果内部导入成功，则 WAL 被立刻删除；如果内部导入失败，通过导入 WAL 的方法来恢复数据
-
-  * 目前 WAL 文件只存储在一个 BE 上，如果这个 BE 磁盘损坏或文件误删等，可能导入丢失部分数据
-
-  * 当下线 BE 节点时，请使用[`DECOMMISSION`](../../../sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND)命令，安全下线节点，防止该节点下线前 WAL 文件还没有全部处理完成，导致部分数据丢失
-
-  * 对于`async_mode`的 Group Commit 写入，为了保护磁盘空间，当遇到以下情况时，会切换成`sync_mode`
-
-    * 导入数据量过大，即超过 WAL 单目录的 80% 空间
-
-    * 不知道数据量的 chunked stream load
-
-    * 导入数据量不大，但磁盘可用空间不足
-
-  * 当发生重量级 Schema Change（目前加减列、修改 varchar 长度和重命名列是轻量级 Schema Change，其它的是重量级 Schema Change）时，为了保证 WAL 能够适配表的 Schema，在 Schema Change 最后的 FE 修改元数据阶段，会拒绝 Group Commit 写入，客户端收到 `insert table ${table_name} is blocked on schema change` 异常，客户端重试即可
-
 ## 相关系统配置
 
 ### BE 配置
 
 1. `group_commit_wal_path`
 
-* 描述：group commit 存放 WAL 文件的目录
+   * 描述：group commit 存放 WAL 文件的目录
 
-* 默认值：默认在用户配置的`storage_root_path`的各个目录下创建一个名为`wal`的目录。配置示例：
+   * 默认值：默认在用户配置的`storage_root_path`的各个目录下创建一个名为`wal`的目录。配置示例：
   
-  ```
-  group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
-  ```
+   ```
+   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
+   ```
 
-2. `group_commit_memory_rows_for_max_filter_ratio`**
+2. `group_commit_memory_rows_for_max_filter_ratio`
 
-* 描述：当 group commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作
+   * 描述：当 group commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作
 
-* 默认值：10000
+   * 默认值：10000
 
 ## 性能
 

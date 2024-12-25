@@ -32,7 +32,7 @@ INSERT INTO VALUES 支持将 Doris 查询的结果导入到另一个表中。INS
 ## 使用场景
 
 1. 用户希望仅导入几条假数据，验证一下 Doris 系统的功能。此时适合使用 INSERT INTO VALUES 的语法，语法和 MySQL 一样。
-2. 并发的 INSERT INTO VALUES 的性能会受到 commit 阶段的瓶颈限制。导入数据量较大时，可以打开 [group commit](../import-way/group-commit-manual.md) 达到更高的性能。
+2. 并发的 INSERT INTO VALUES 的性能会受到 commit 阶段的瓶颈限制。导入数据量较大时，可以打开 [group commit](../group-commit-manual.md) 达到更高的性能。
 
 ## 基本原理
 
