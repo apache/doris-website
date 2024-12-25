@@ -26,7 +26,7 @@ under the License.
 
 # HLL Approximate Deduplication
 
-## **Use Cases**
+## Use Cases
 
 In real-world business scenarios, as the volume of business data grows, the pressure of deduplication also increases. When the data reaches a certain scale, the cost of precise deduplication becomes increasingly high. **HLL** (HyperLogLog) stands out for its excellent space complexity of O(m⋅log⁡log⁡n) time complexity of O(n), and a controlled error rate of 1%–2%, depending on the dataset size and the hash function used.
 
@@ -34,7 +34,7 @@ When acceptable to the business, using approximate algorithms for fast deduplica
 
 ------
 
-## **What is HyperLogLog**
+## What is HyperLogLog
 
 HyperLogLog (HLL) is an enhanced version of the LogLog algorithm. It is used for approximate distinct counting and is mathematically based on **Bernoulli trials**.
 
@@ -60,9 +60,9 @@ Thus, by recording only k_max, the total number of unique items (cardinality) ca
 
 ------
 
-## **Use HLL for Approximate Deduplication**
+## Use HLL for Approximate Deduplication
 
-### **Creating a Table**
+### Creating a Table
 
 1. When using HLL for deduplication:
    - The target column type must be set to `HLL`.
@@ -91,7 +91,7 @@ PROPERTIES(
 
 ------
 
-### **Importing Data**
+### Importing Data
 
 Here is sample data (`test_hll.csv`) that can be imported using Stream Load:
 
@@ -139,7 +139,7 @@ curl --location-trusted -u root: -H "label:label_test_hll_load" \
 
 ------
 
-## **Querying Data**
+## Querying Data
 
 HLL columns cannot return raw values directly. Instead, HLL aggregate functions must be used for queries.
 
@@ -179,7 +179,7 @@ SELECT dt, HLL_UNION_AGG(uv) FROM test_hll GROUP BY dt;
 
 ------
 
-## **Related Functions**
+## Related Functions
 
 - **HLL_UNION_AGG(hll)**: An aggregate function to estimate the cardinality of all data meeting the conditions.
 - **HLL_CARDINALITY(hll)**: A function to calculate the cardinality of a single HLL column.
