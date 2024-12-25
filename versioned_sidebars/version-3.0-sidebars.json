@@ -169,15 +169,15 @@
                                         "data-operate/import/import-way/routine-load-manual",
                                         "data-operate/import/import-way/insert-into-manual",
                                         "data-operate/import/import-way/insert-into-values-manual",
-                                        "data-operate/import/import-way/mysql-load-manual",
-                                        "data-operate/import/import-way/group-commit-manual"
+                                        "data-operate/import/import-way/mysql-load-manual"
                                     ]
                                 },
                                 "data-operate/import/load-data-format",
                                 "data-operate/import/error-data-handling",
                                 "data-operate/import/load-data-convert",
                                 "data-operate/import/load-high-availability",
-                                "data-operate/import/migrate-data-from-other-olap"
+                                "data-operate/import/migrate-data-from-other-olap",
+                                "data-operate/import/group-commit-manual"
                             ]
                         },
                         {
@@ -373,6 +373,7 @@
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
                         "compute-storage-decoupled/file-cache",
+                        "compute-storage-decoupled/upgrade",
                         "compute-storage-decoupled/meta-service-api"
                     ]
                 }
@@ -396,8 +397,9 @@
                 },
                 {
                     "type": "category",
-                    "label": "Managing Data",
+                    "label": "Business continuity & data recovery",
                     "items": [
+                        "admin-manual/data-admin/overview",
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
                         "admin-manual/data-admin/ccr",

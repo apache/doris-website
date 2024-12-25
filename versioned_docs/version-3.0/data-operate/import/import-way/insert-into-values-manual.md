@@ -31,7 +31,7 @@ The INSERT INTO VALUES statement supports importing the results of a Doris query
 ## Applicable scenarios
 
 1. If a user wants to import only a few test data records to verify the functionality of the Doris system, the INSERT INTO VALUES syntax is applicable. It is similar to the MySQL syntax. However, it is not recommended to use INSERT INTO VALUES in a production environment.
-2. The performance of concurrent INSERT INTO VALUES jobs will be bottlenecked by commit stage. When loading large quantity of data, you can enable [group commit](../import-way/group-commit-manual.md) to achieve high performance. 
+2. The performance of concurrent INSERT INTO VALUES jobs will be bottlenecked by commit stage. When loading large quantity of data, you can enable [group commit](../group-commit-manual) to achieve high performance. 
 
 ## Implementation
 
