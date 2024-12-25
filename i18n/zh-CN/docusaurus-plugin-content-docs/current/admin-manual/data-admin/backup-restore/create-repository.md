@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Preparing Backup Storage",
-    "language": "en"
+    "title": "准备备份存储",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Overview
+## 概述
 
-In Doris, a **repository** is a remote storage location used for backing up and restoring data. Repositories support various storage systems including **S3**, **Azure**, **GCP**, **OSS**, **COS**, **MinIO**, **HDFS**, and other storages compatible with S3. This guide walks you through the steps of creating a repository to use for backup and restore operations in Doris.
+在Doris中，**存储库**是用于备份和恢复数据的远程存储位置。存储库支持多种存储系统，包括**S3**、**Azure**、**GCP**、**OSS**、**COS**、**MinIO**、**HDFS**以及其他与S3兼容的存储。此指南将引导您完成创建存储库以用于Doris中的备份和恢复操作的步骤。
 
-## Permission Requirements
+## 权限要求
 
-- Only users with **ADMIN** privileges are allowed to create repositories for backup and restore operations.
+- 只有具有**ADMIN**权限的用户才能创建用于备份和恢复操作的存储库。
 
-## Supported Storage Systems
+## 支持的存储系统
 
 - **S3**
 - **Azure**
@@ -41,15 +41,15 @@ In Doris, a **repository** is a remote storage location used for backing up and 
 - **COS**
 - **MinIO**
 - **HDFS**
-- Other storages compatible with S3
+- 其他与S3兼容的存储
 
-## Creating a Repository for S3
+## 为S3创建存储库
 
 <!--
 suites/backup_restore/test_create_and_drop_repository.groovy
 -->
 
-To create a repository for S3 storage, use the following SQL command:
+要为S3存储创建存储库，请使用以下SQL命令：
 
 ```sql
 CREATE REPOSITORY `s3_repo`
@@ -64,12 +64,12 @@ PROPERTIES
 );
 ```
 
-- Replace bucket_name with the name of your S3 bucket.
-- Provide the appropriate endpoint, access key, secret key, and region for your S3 setup.
+- 将bucket_name替换为您的S3存储桶名称。
+- 提供适当的端点、访问密钥、秘密密钥和区域以进行S3设置。
 
-## Creating a Repository for Azure
+## 为Azure创建存储库
 
-To create a repository for Azure storage, use the following SQL command:
+要为Azure存储创建存储库，请使用以下SQL命令：
 
 ```sql
 CREATE REPOSITORY `azure_repo`
@@ -85,12 +85,12 @@ PROPERTIES
 );
 ```
 
-- Replace bucket_name and container with your Azure container information.
-- Provide your Azure storage account and key for authentication.
+- 将bucket_name和container替换为您的Azure容器信息。
+- 提供您的Azure存储帐户和密钥以进行身份验证。
 
-## Creating a Repository for GCP
+## 为GCP创建存储库
 
-To create a repository for Google Cloud Platform (GCP) storage, use the following SQL command:
+要为Google Cloud Platform（GCP）存储创建存储库，请使用以下SQL命令：
 
 ```sql
 CREATE REPOSITORY `gcp_repo`
@@ -105,12 +105,12 @@ PROPERTIES
 );
 ```
 
-- Replace bucket_name with the name of your GCP bucket.
-- Provide your GCP endpoint, region, access key, and secret key.
+- 将bucket_name替换为您的GCP存储桶名称。
+- 提供您的GCP端点、区域、访问密钥和秘密密钥。
 
-## Creating a Repository for OSS (Alibaba Cloud Object Storage Service)
+## 为OSS（阿里云对象存储服务）创建存储库
 
-To create a repository for OSS, use the following SQL command:
+要为OSS创建存储库，请使用以下SQL命令：
 
 ```sql
 CREATE REPOSITORY `oss_repo`
@@ -124,12 +124,12 @@ PROPERTIES
     "s3.secret_key" = "sk"
 );
 ```
-- Replace bucket_name with the name of your OSS bucket.
-- Provide your OSS access key, secret key, and endpoint.
+- 将bucket_name替换为您的OSS存储桶名称。
+- 提供您的OSS访问密钥、秘密密钥和端点。
 
-## Creating a Repository for MinIO
+## 为MinIO创建存储库
 
-To create a repository for MinIO storage, use the following SQL command:
+要为MinIO存储创建存储库，请使用以下SQL命令：
 
 ```sql
 CREATE REPOSITORY `minio_repo`
@@ -145,10 +145,10 @@ PROPERTIES
 );
 ```
 
-- Replace bucket_name with the name of your MinIO bucket.
-- Provide your MinIO access key, secret key, and endpoint.
+- 将bucket_name替换为您的MinIO存储桶名称。
+- 提供您的MinIO访问密钥、秘密密钥和端点。
 
-## Creating a Repository for HDFS
+## 为HDFS创建存储库
 
 ```sql
 CREATE REPOSITORY `hdfs_repo`
@@ -161,7 +161,7 @@ PROPERTIES
 )
 ```
 
-- Replace prefix_path with the real path.
-- Provide your hdfs endpoint and username.
+- 将prefix_path替换为实际路径。
+- 提供您的hdfs端点和用户名。
 
-For more detailed usage instructions and examples, refer to the CREATE REPOSITORY documentation (../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY).
+有关更详细的使用说明和示例，请参阅CREATE REPOSITORY文档（../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY）。
