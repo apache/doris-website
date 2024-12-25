@@ -26,7 +26,7 @@ under the License.
 
 ## 原理
 
-Workload Group的原理如下图所示，用户可以通过Workload Group对BE内的资源（CPU，IO，Memory）进行细粒度的划分或者限制，达到资源隔离的目的。目前支持的能力包括：
+Workload Group的原理如下图所示，通过对BE内的资源（CPU，IO，Memory）进行细粒度的划分或者限制，达到资源隔离的目的。目前支持的能力包括：
 
 * 管理CPU资源，支持CPU硬限和CPU软限
 * 管理内存资源，支持内存硬限和内存软限
