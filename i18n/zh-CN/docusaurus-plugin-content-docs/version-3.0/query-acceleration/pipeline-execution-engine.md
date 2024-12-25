@@ -28,7 +28,7 @@ under the License.
 
 
 
-Doris的并行执行模型是一种Pipeline 执行模型，主要参考了Hyper论文中Pipeline的实现方式（https://db.in.tum.de/~leis/papers/morsels.pdf），Pipeline 执行模型能够充分释放多核 CPU 的计算能力，并对 Doris 的查询线程的数目进行限制，解决 Doris 的执行线程膨胀的问题。它的具体设计、实现和效果可以参阅 [DSIP-027](DSIP-027: Support Pipeline Exec Engine - DORIS - Apache Software Foundation) 以及 [DSIP-035](DSIP-035: PipelineX Execution Engine - DORIS - Apache Software Foundation)。
+Doris的并行执行模型是一种Pipeline 执行模型，主要参考了[Hyper](https://db.in.tum.de/~leis/papers/morsels.pdf)论文中Pipeline的实现方式，Pipeline 执行模型能够充分释放多核 CPU 的计算能力，并对 Doris 的查询线程的数目进行限制，解决 Doris 的执行线程膨胀的问题。它的具体设计、实现和效果可以参阅 [DSIP-027](DSIP-027: Support Pipeline Exec Engine - DORIS - Apache Software Foundation) 以及 [DSIP-035](DSIP-035: PipelineX Execution Engine - DORIS - Apache Software Foundation)。
 Doris 3.0 之后，Pipeline 执行模型彻底替换了原有的火山模型，基于Pipeline 执行模型，Doris 实现了 Query、DDL、DML 语句的并行处理。
 
 ## 物理计划
@@ -45,12 +45,13 @@ FE 首先会把它翻译成下面这种逻辑计划，计划中每个节点就�
 
 ![pip_exec_2](/images/pip_exec_2.png)
 
-所以Doris的规划分为3层：
-PLAN：执行计划，一个SQL会被执行规划器翻译成一个执行计划，之后执行计划会提供给执行引擎执行。
+Doris的规划分为3层：
 
-FRAGMENT：由于DORIS是一个分布式执行引擎。一个完整的执行计划会被切分为多个单机的执行片段。一个FRAGMENT表是一个完整的单机执行片段。多个FRAGMENT组合在一起，构成一个完整的PLAN。
+- PLAN：执行计划，一个SQL会被执行规划器翻译成一个执行计划，之后执行计划会提供给执行引擎执行。
 
-PLAN NODE：算子，是执行计划的最小单位。一个FRAGMENT由多个算子构成。每一个算子负责一个实际的执行逻辑，比如聚合，连接等
+- FRAGMENT：由于DORIS是一个分布式执行引擎。一个完整的执行计划会被切分为多个单机的执行片段。一个FRAGMENT表是一个完整的单机执行片段。多个FRAGMENT组合在一起，构成一个完整的PLAN。
+
+- PLAN NODE：算子，是执行计划的最小单位。一个FRAGMENT由多个算子构成。每一个算子负责一个实际的执行逻辑，比如聚合，连接等
 
 ## Pipeline 执行
 PlanFragment 是FE 发往BE 执行任务的最小单位。BE可能会收到同一个Query的多个不同的PlanFragment，每个PlanFragment都会被单独的处理。在收到PlanFragment 之后，BE会把PlanFragment 拆分为多个Pipeline，进而启动多个PipelineTask 来实现并行执行，提升查询效率。
