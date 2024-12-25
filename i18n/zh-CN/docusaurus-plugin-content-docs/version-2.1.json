@@ -67,6 +67,10 @@
     "message": "部署存算分离集群",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
+  "sidebar.docs.category.Deployment on Cloud": {
+    "message": "云上部署集群",
+    "description": "The label for category Deployment on Cloud in sidebar docs"
+  },
   "sidebar.docs.category.Database Connection": {
     "message": "数据库连接",
     "description": "The label for category Database Connection in sidebar docs"
