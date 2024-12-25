@@ -1,6 +1,6 @@
 ---
 { 
-'title': 'Apache Doris 简介', 
+'title': 'Introduction to Apache Doris',
 'language': 'zh-CN' 
 }
 ---
