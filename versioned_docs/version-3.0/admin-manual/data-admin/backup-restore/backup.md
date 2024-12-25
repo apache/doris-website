@@ -94,8 +94,6 @@ This feature requires Doris version 0.8.2+
    1 row in set (0.15 sec)
    ```
 
-For the detailed usage of BACKUP, please refer to [BACKUP](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md).
-
 ## More Help
 
  For more detailed syntax and best practices used by BACKUP, please refer to the [BACKUP](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md) command manual.
