@@ -30,13 +30,13 @@ Doris 的查询是一个MPP的执行框架，每一条查询都会在多个BE上
 
 单个BE内并行度的控制参数是：parallel_pipeline_task_num，是指单个Fragment在执行时所使用的工作任务数。
 
-## **并行度调优的原则**
+## 并行度调优的原则
 
 parallel_pipeline_task_num设定目的是为了充分利用多核资源，降低查询的延迟；但是，为了多核并行执行，通常会引入一些数据Shuffle算子，以及多线程之间同步的逻辑，这也会带来一些不必要的资源浪费。
 
 Doris中默认值为0，即BE的CPU核数目的一半，这个值考虑了单查询和并发的资源利用的情况，通常不需要用户介入调整。当存在性能瓶颈时可以参考下面示例进行必要的调整。Doris在持续完善自适应的策略，通常建议在特定场景或SQL级别进行必要的调整。
 
-### **示例**
+### 示例
 
 假设BE的CPU核数为16：
 
@@ -54,11 +54,11 @@ Doris中默认值为0，即BE的CPU核数目的一半，这个值考虑了单查
 
 4. 复杂查询的情况要根据Profile和机器负载，灵活调整，这里建议使用默认值，如果不合适可以尝试4-2-1的阶梯方式调整，观察查询表现和机器负载。
 
-## **并行度调优的方法**
+## 并行度调优的方法
 
 Doris可以手动指定查询的并行度，以调整查询执行时并行执行的效率。
 
-### **SQL级别调整：**
+### SQL级别调整：
 
 通过SQL HINT 来指定单个SQL的并行度，这样可以灵活控制不同SQL的并行度来取得最佳的执行效果
 
@@ -66,7 +66,7 @@ Doris可以手动指定查询的并行度，以调整查询执行时并行执行
 select /*SET_VAR("parallel_pipeline_task_num=8")*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
 ```
 
-#### **会话级别调整：**
+#### 会话级别调整：
 
 通过session variables来调整会话级别的并行度，session 中的所有查询语句都将以指定的并行度执行。请注意，即使是单行查询的 SQL，也会使用该并行度，可能导致性能下降。
 
@@ -74,7 +74,7 @@ select /*SET_VAR("parallel_pipeline_task_num=8")*/ * from nation, lineitem where
 set parallel_pipeline_task_num = 8;
 ```
 
-#### **全局调整：**
+#### 全局调整：
 
 如果需要全局调整，通常涉及cpu利用率的调整，可以global设置并行度
 
