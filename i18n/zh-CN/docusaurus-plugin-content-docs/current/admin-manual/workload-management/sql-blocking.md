@@ -1,6 +1,6 @@
 ---
 {
-"title": "查询阻断",
+"title": "查询熔断",
 "language": "zh-CN"
 }
 ---
