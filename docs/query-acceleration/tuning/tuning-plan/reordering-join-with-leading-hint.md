@@ -29,7 +29,7 @@ under the License.
 The Leading Hint feature allows users to manually specify the join order of tables in a query, optimizing the performance of complex queries in specific scenarios. This article will describe in detail how to use Leading Hint to control the join order in Doris. For detailed usage instructions, please refer to the [leading hint](../../../query-acceleration/hints/leading-hint.md) document.
 
 :::caution Note
-Currently, Doris has good out-of-the-box capabilities. This means that in most scenarios, Doris will adaptively optimize performance in various scenarios, and users do not need to manually control hints for business tuning. The content introduced in this chapter is mainly for professional tuners, and business personnel only need a simple understanding.
+Currently, Doris has good out-of-the-box capabilities. This means that in most scenarios, Doris will adaptively optimize performance in various scenarios, and users do not need to manually control hints for performance tuning. The content introduced in this chapter is mainly for professional tuners, and business personnel only need a simple understanding.
 :::
 
 ## Case 1: Adjusting the Left and Right Table Order
