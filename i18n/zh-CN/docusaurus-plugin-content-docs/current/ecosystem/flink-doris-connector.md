@@ -174,7 +174,7 @@ Flink 读取 Doris 中数据时，目前 Doris Source 是有界流，不支持�
 
 - Thrift：通过调用 BE 的 thrift 接口读取数据，具体流程可参考 [通过 Thrift 接口读取数据](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md)
 
-- ArrowFlightSQL：基于 Doris2.1，通过Arrow Flight SQL 协议高速读取大批量数据，具体可参考 [基于 Arrow Flight SQL 的高速数据传输链路](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/)。
+- ArrowFlightSQL：基于 Doris2.1，通过 Arrow Flight SQL 协议高速读取大批量数据，具体可参考 [基于 Arrow Flight SQL 的高速数据传输链路](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/)。
 
 #### 使用 FlinkSQL 读取数据
 

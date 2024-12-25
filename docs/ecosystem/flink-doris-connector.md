@@ -26,7 +26,9 @@ under the License.
 
 # Overview
 
-The [Flink Doris Connector](https://github.com/apache/doris-flink-connector) enables reading and writing data to the Doris cluster through Flink. Meanwhile, it integrates with [FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/), making it more convenient to perform full database synchronization for upstream databases like MySQL. This document mainly introduces the usage of the Flink Doris Connector.
+The [Flink Doris Connector](https://github.com/apache/doris-flink-connector) is used to read from and write data to a Doris cluster through Flink. It also integrates [FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/), which allows for more convenient full database synchronization with upstream databases such as MySQL.
+
+This document primarily introduces the usage of the Flink Doris Connector.
 
 # Version Description
 
@@ -44,15 +46,17 @@ The [Flink Doris Connector](https://github.com/apache/doris-flink-connector) ena
 
 # Usage
 
-## Installation and Configuration
+The Flink Doris Connector can be used in two ways: via Jar or Maven.
 
-You can download the Jar package of the corresponding version of the Flink Doris Connector from [here](https://doris.apache.org/download#doris-ecosystem). Copy this file to the `classpath` of `Flink` and then you can use the `Flink-Doris-Connector`. For `Flink` running in `Standalone` mode, put this file under the `lib/` folder. For `Flink` running in the `Yarn` cluster mode, put this file into the predeployment package.
+#### Jar
 
-## Maven
+You can download the corresponding version of the Flink Doris Connector Jar file [here](https://doris.apache.org/download#doris-ecosystem), then copy this file to the `classpath` of your `Flink` setup to use the `Flink-Doris-Connector`. For a `Standalone` mode Flink deployment, place this file under the `lib/` folder. For a Flink cluster running in `Yarn` mode, place the file into the pre-deployment package.
 
-When using it in Maven, you can directly add the following dependency to the Pom file.
+#### Maven
 
-```SQL
+To use it with Maven, simply add the following dependency to your Pom file:
+
+```xml
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
@@ -60,27 +64,27 @@ When using it in Maven, you can directly add the following dependency to the Pom
 </dependency> 
 ```
 
-# Quick Start
+## Quick Start
 
-## Preparation
+#### Preparation
 
-### Flink Cluster Deployment
+#### Flink Cluster Deployment
 
-Take the Standalone cluster as an example:
+Taking a Standalone cluster as an example:
 
-1. Download the installation package of Flink, [Flink 1.18.1](https://archive.apache.org/dist/flink/flink-1.18.1/flink-1.18.1-bin-scala_2.12.tgz).
-2. After decompression, put the Flink Doris Connector package under <FLINK_HOME>/lib.
-3. Enter the <FLINK_HOME> directory and run bin/start-cluster.sh to start the Flink cluster.
-4. You can use the jps command to verify whether the Flink cluster has been successfully started.
+1. Download the Flink installation package, e.g., [Flink 1.18.1](https://archive.apache.org/dist/flink/flink-1.18.1/flink-1.18.1-bin-scala_2.12.tgz);
+2. After extraction, place the Flink Doris Connector package in `<FLINK_HOME>/lib`;
+3. Navigate to the `<FLINK_HOME>` directory and run `bin/start-cluster.sh` to start the Flink cluster;
+4. You can verify if the Flink cluster started successfully using the `jps` command.
 
-### Initialization of Doris Tables
+#### Initialize Doris Tables
 
-1. Run the following statements to create Doris tables:
+Run the following statements to create Doris tables:
 
-```SQL
+```sql
 CREATE DATABASE test;
 
-CREATE TABLE students (
+CREATE TABLE test.student (
   `id` INT,
   `name` VARCHAR(256),
   `age` INT
@@ -88,26 +92,92 @@ CREATE TABLE students (
 UNIQUE KEY(`id`)
 DISTRIBUTED BY HASH(`id`) BUCKETS 1
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
+"replication_allocation" = "tag.location.default: 3"
 );
 
-INSERT INTO test.students values(1,"James",18);
-INSERT INTO test.students values(2,"Emily",28);
+INSERT INTO test.student values(1,"James",18);
+INSERT INTO test.student values(2,"Emily",28);
+
+CREATE TABLE test.student_trans (
+  `id` INT,
+  `name` VARCHAR(256),
+  `age` INT
+)
+UNIQUE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 3"
+);
 ```
 
-## Read
+#### Run FlinkSQL Task
 
-Flink reading supports reading through [Thrift](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md) and [ArrowFlightSQL](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/) methods (supported after version 24.0.0), and the ArrowFlightSQL method is recommended. At present, the Doris Source is a bounded stream and does not support continuous reading in the form of CDC.
+**Start FlinkSQL Client**
 
-### FlinkSQL
-
-Start the [SQL Client](https://nightlies.apache.org/flink/flink-docs-master/docs/dev/table/sqlclient/) of Flink:
-
-```SQL
+```bash
 bin/sql-client.sh
 ```
 
-#### Thrift
+**Run FlinkSQL**
+
+```sql
+CREATE TABLE Student (
+    id STRING,
+    name STRING,
+    age INT
+    ) 
+    WITH (
+      'connector' = 'doris',
+      'fenodes' = '127.0.0.1:8030',
+      'table.identifier' = 'test.student',
+      'username' = 'root',
+      'password' = ''
+);
+
+CREATE TABLE StudentTrans (
+    id STRING,
+    name STRING,
+    age INT
+    ) 
+    WITH (
+      'connector' = 'doris',
+      'fenodes' = '127.0.0.1:8030',
+      'table.identifier' = 'test.student_trans',
+      'username' = 'root',
+      'password' = '',
+      'sink.label-prefix' = 'doris_label'
+);
+
+INSERT INTO StudentTrans SELECT id, concat('prefix_',name), age+1 FROM Student;
+```
+
+#### Query Data
+
+```sql
+mysql> select * from test.student_trans;
++------+--------------+------+
+| id   | name         | age  |
++------+--------------+------+
+|    1 | prefix_James |   19 |
+|    2 | prefix_Emily |   29 |
++------+--------------+------+
+2 rows in set (0.02 sec)
+```
+
+
+
+## Scenarios and Operations
+
+### Reading Data from Doris
+
+When Flink reads data from Doris, currently the Doris Source is a bounded stream and does not support continuous reading in CDC mode. You can read data from Doris using Thrift or ArrowFlightSQL (supported from version 24.0.0 onwards):
+
+- **Thrift**: Data is read by calling the BE's Thrift interface. For detailed steps, refer to [Reading Data via Thrift Interface](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md).
+- **ArrowFlightSQL**: Based on Doris 2.1, this method allows high-speed reading of large volumes of data using the Arrow Flight SQL protocol. For more information, refer to [High-speed Data Transfer via Arrow Flight SQL](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/).
+
+#### Using FlinkSQL to Read Data
+
+##### Thrift Method
 
 ```SQL
 CREATE TABLE students (
@@ -126,7 +196,7 @@ CREATE TABLE students (
 SELECT * FROM students;
 ```
 
-#### ArrowFlightSQL
+##### ArrowFlightSQL
 
 ```SQL
 CREATE TABLE students (
@@ -147,9 +217,9 @@ CREATE TABLE students (
 SELECT * FROM students;
 ```
 
-### Flink DataStream
+#### Using DataStream API to Read Data
 
-When using the DataStream API to read, you need to introduce the dependency in the program POM file in advance. Refer to the Usage section.
+When using the DataStream API to read data, you need to include the dependencies in your program's POM file in advance, as described in the "Usage" section.
 
 ```Java
 final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -173,19 +243,19 @@ env.execute("Doris Source Test");
 
 For the complete code, refer to:[DorisSourceDataStream.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSourceDataStream.java)
 
-## Write
+### Writing Data to Doris
 
-Flink writing uses the Stream Load method for writing and supports both streaming writing and batch writing modes.
+Flink writes data to Doris using the Stream Load method, supporting both streaming and batch-insertion modes.
 
-:::info Difference between Streaming Writing and Batch Writing
+:::info Difference Between Streaming and Batch-insertion
 
-After Connector 1.5.0, batch writing is supported. Batch writing does not rely on Checkpoint. It caches data in memory and controls the writing timing according to batch parameters. Streaming writing must enable Checkpoint and continuously writes upstream data into Doris during the entire Checkpoint period. It will not always cache data in memory.
+Starting from Connector 1.5.0, batch-insertion is supported. Batch-insertion does not rely on Checkpoints; it buffers data in memory and controls the writing timing based on batch parameters. Streaming insertion requires Checkpoints to be enabled, continuously writing upstream data to Doris during the entire Checkpoint period, without keeping data in memory continuously.
 
 :::
 
-### FlinkSQL
+#### Using FlinkSQL to Write Data
 
-Use Flink's [Datagen](https://nightlies.apache.org/flink/flink-docs-master/docs/connectors/table/datagen/) to simulate the upstream continuously generated data for writing tests:
+For testing, Flink's [Datagen](https://nightlies.apache.org/flink/flink-docs-master/docs/connectors/table/datagen/) is used to simulate the continuously generated upstream data.
 
 ```SQL
 -- enable checkpoint
@@ -224,13 +294,13 @@ CREATE TABLE student_sink (
 INSERT INTO student_sink SELECT * FROM student_source;
 ```
 
-### Flink DataStream
+#### Using DataStream API to Write Data
 
-When writing through the DataStream api, different serialization methods can be used to serialize the upstream data and then write it into the Doris table.
+When using the DataStream API to write data, different serialization methods can be used to serialize the upstream data before writing it to the Doris table.
 
-#### Ordinary String Format
+##### Standard String Format
 
-When the upstream data is in csv or json format, you can directly use the SimpleStringSerializer to serialize the data.
+When the upstream data is in CSV or JSON format, you can directly use the `SimpleStringSerializer` to serialize the data.
 
 ```Java
 StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -275,9 +345,9 @@ env.execute("doris test");
 
 For the complete code, refer to:[DorisSinkExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkExample.java)
 
-#### RowData Format
+##### RowData Format
 
-RowData is the internal format of Flink. If the upstream incoming data is in the RowData format, you need to use the RowDataSerializer to serialize the data.
+RowData is the internal format of Flink. If the upstream data is in RowData format, you need to use the `RowDataSerializer` to serialize the data.
 
 ```Java
 StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -344,9 +414,9 @@ env.execute("doris test");
 
 For the complete code, refer to:[DorisSinkExampleRowData.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkExampleRowData.java) 
 
-#### Debezium Format
+##### Debezium Format
 
-For upstream data in the Debezium data format, such as FlinkCDC or Debezium format data in Kafka, you can use the JsonDebeziumSchemaSerializer to serialize it.
+For upstream data in Debezium format, such as data from FlinkCDC or Debezium format in Kafka, you can use the `JsonDebeziumSchemaSerializer` to serialize the data.
 
 ```Java
 // enable checkpoint
@@ -378,9 +448,9 @@ env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL Source")
 
 For the complete code, refer to:[CDCSchemaChangeExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/CDCSchemaChangeExample.java)
 
-#### Multi-Table Writing Format
+##### Multi-table Write Format
 
-Currently, DorisSink supports synchronizing multiple tables with a single Sink. You need to pass the data and the database and table information to the Sink together and use the RecordWithMetaSerializer to serialize it.
+Currently, DorisSink supports synchronizing multiple tables with a single Sink. You need to pass both the data and the database/table information to the Sink, and serialize it using the `RecordWithMetaSerializer`.
 
 ```Java
 StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -417,9 +487,9 @@ env.fromCollection(Arrays.asList(record, record1)).sinkTo(builder.build());
 
 For the complete code, refer to:[DorisSinkMultiTableExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkMultiTableExample.java)
 
-## Lookup Join
+### Lookup Join
 
-For the scenario where dimension tables are stored in Doris, you can use Flink's [Lookup Join](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/dev/table/sql/queries/joins/#lookup-join) to perform joins on the data in the real-time stream and the dimension tables in Doris.
+In scenarios where dimension tables are stored in Doris, you can use Flink's [Lookup Join](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/dev/table/sql/queries/joins/#lookup-join) to perform a join between real-time stream data and the dimension tables in Doris.
 
 ```SQL
 CREATE TABLE fact_table (
@@ -452,18 +522,16 @@ LEFT JOIN dim_city FOR SYSTEM_TIME AS OF a.process_time AS c
 ON a.city = c.city
 ```
 
-## Whole Database Synchronization
+### Full Database Synchronization
 
-The Flink Doris Connector integrates with [Flink CDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/), enabling more convenient synchronization of relational databases like MySQL to Doris. It also includes features such as automatic table creation and schema change. Currently, the databases supported for synchronization include MySQL, Oracle, PostgreSQL, SQLServer, MongoDB, and DB2.
+The Flink Doris Connector integrates **Flink CDC** ([Flink CDC Documentation](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)), making it easier to synchronize relational databases like MySQL to Doris. This integration also includes automatic table creation, schema changes, etc. Supported databases for synchronization include: MySQL, Oracle, PostgreSQL, SQLServer, MongoDB, and DB2.
 
 :::info Note
 
-1. When using whole database synchronization, you need to add the corresponding Flink CDC dependencies to the `$FLINK_HOME/lib` directory, such as **flink-sql-connector-mysql-cdc-${version}.jar**, **flink-sql-connector-oracle-cdc-${version}.jar**. FlinkCDC is incompatible between version 3.1 and previous versions. The download addresses are [FlinkCDC 3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/) and [FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/) respectively.
-2. After Connector version 24.0.0, the dependent Flink CDC version needs to be 3.1 or above. The download address can be found [here](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/). If FlinkCDC is used to synchronize MySQL and Oracle, relevant JDBC drivers also need to be added to the `$FLINK_HOME/lib` directory.
+1. When using full database synchronization, you need to add the corresponding Flink CDC dependencies in the `$FLINK_HOME/lib` directory, such as **flink-sql-connector-mysql-cdc-${version}.jar**, **flink-sql-connector-oracle-cdc-${version}.jar**. FlinkCDC version 3.1 and later is not compatible with previous versions. You can download the dependencies from the following links: [FlinkCDC 3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/), [FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/).
+2. For versions after Connector 24.0.0, the required Flink CDC version must be 3.1 or higher. You can download it [here](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/). If Flink CDC is used to synchronize MySQL and Oracle, you must also add the relevant JDBC drivers under `$FLINK_HOME/lib`.
 
-:::
-
-### MySQL Whole Database Synchronization
+#### MySQL Whole Database Synchronization
 
 After starting the Flink cluster, you can directly run the following command:
 
@@ -489,7 +557,7 @@ After starting the Flink cluster, you can directly run the following command:
     --table-conf replication_num=1 
 ```
 
-### Oracle Whole Database Synchronization
+#### Oracle Whole Database Synchronization
 
 ```Shell
 <FLINK_HOME>bin/flink run \
@@ -514,7 +582,7 @@ After starting the Flink cluster, you can directly run the following command:
      --table-conf replication_num=1
 ```
 
-### PostgreSQL Whole Database Synchronization
+#### PostgreSQL Whole Database Synchronization
 
 ```Shell
 <FLINK_HOME>/bin/flink run \
@@ -541,7 +609,7 @@ After starting the Flink cluster, you can directly run the following command:
      --table-conf replication_num=1
 ```
 
-### SQLServer Whole Database Synchronization
+#### SQLServer Whole Database Synchronization
 
 ```Shell
 <FLINK_HOME>/bin/flink run \
@@ -566,7 +634,7 @@ After starting the Flink cluster, you can directly run the following command:
      --table-conf replication_num=1
 ```
 
-### DB2 Whole Database Synchronization
+#### DB2 Whole Database Synchronization
 
 ```Shell
 <FLINK_HOME>bin/flink run \
@@ -593,7 +661,7 @@ After starting the Flink cluster, you can directly run the following command:
     --table-conf replication_num=1 
 ```
 
-### MongoDB Whole Database Synchronization
+#### MongoDB Whole Database Synchronization
 
 ```Shell
 <FLINK_HOME>/bin/flink run \
@@ -620,9 +688,11 @@ After starting the Flink cluster, you can directly run the following command:
     --table-conf replication_num=1
 ```
 
-# Parameter Configuration
+## Usage Instructions
 
-## General Configuration
+### Parameter Configuration
+
+#### General Configuration Items
 
 | Key                           | Default Value | Required | Comment                                                      |
 | ----------------------------- | ------------- | -------- | ------------------------------------------------------------ |
@@ -637,7 +707,7 @@ After starting the Flink cluster, you can directly run the following command:
 | doris.request.connect.timeout | 30s           | N        | The connection timeout for sending requests to Doris.        |
 | doris.request.read.timeout    | 30s           | N        | The read timeout for sending requests to Doris.              |
 
-## Source Configuration
+#### Source Configuration
 
 | Key                           | Default Value | Required | Comment                                                      |
 | ----------------------------- | ------------- | -------- | ------------------------------------------------------------ |
@@ -650,14 +720,14 @@ After starting the Flink cluster, you can directly run the following command:
 | source.use-flight-sql         | FALSE         | N        | Whether to use Arrow Flight SQL for reading.                 |
 | source.flight-sql-port        | -             | N        | The arrow_flight_sql_port of FE when using Arrow Flight SQL for reading. |
 
-### DataStream-Specific Configuration
+**DataStream-Specific Configuration**
 
 | Key                | Default Value | Required | Comment                                                      |
 | ------------------ | ------------- | -------- | ------------------------------------------------------------ |
 | doris.read.field   | --            | N        | The list of column names for reading Doris tables. Multiple columns should be separated by commas. |
 | doris.filter.query | --            | N        | The expression for filtering read data. This expression is passed to Doris. Doris uses this expression to complete source data filtering. For example, age=18. |
 
-## Sink Configuration
+#### Sink Configuration
 
 | Key                         | Default Value | Required | Comment                                                      |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------ |
@@ -675,7 +745,7 @@ After starting the Flink cluster, you can directly run the following command:
 | sink.buffer-flush.interval  | 10s           | N        | The interval for asynchronously flushing the cache in batch mode. |
 | sink.ignore.update-before   | TRUE          | N        | Whether to ignore the update-before event. The default is to ignore it. |
 
-## Lookup Join Configuration
+#### Lookup Join Configuration
 
 | Key                               | Default Value | Required | Comment                                                      |
 | --------------------------------- | ------------- | -------- | ------------------------------------------------------------ |
@@ -687,9 +757,9 @@ After starting the Flink cluster, you can directly run the following command:
 | lookup.jdbc.read.batch.queue-size | 256           | N        | The size of the intermediate buffer queue during asynchronous lookup. |
 | lookup.jdbc.read.thread-size      | 3             | N        | The number of jdbc threads for lookup in each task.          |
 
-## Whole Database Synchronization Configuration
+#### Full Database Synchronization Configuration
 
-### Syntax
+**Syntax**
 
 ```Shell
 <FLINK_HOME>bin/flink run \
@@ -710,7 +780,7 @@ After starting the Flink cluster, you can directly run the following command:
     [--table-conf <doris-table-conf> [--table-conf <doris-table-conf> ...]]
 ```
 
-### Configuration
+**Configuration**
 
 | Key                     | Comment                                                      |
 | ----------------------- | ------------------------------------------------------------ |
@@ -736,7 +806,7 @@ After starting the Flink cluster, you can directly run the following command:
 | --multi-to-one-target   | Used in combination with multi-to-one-origin, the configuration of the target table, for example: --multi-to-one-target "a\|b" |
 | --create-table-only     | Whether to only synchronize the structure of the table.      |
 
-# Type Mapping
+### Type Mapping
 
 | Doris Type | Flink Type |
 | ---------- | ---------- |
@@ -763,7 +833,7 @@ After starting the Flink cluster, you can directly run the following command:
 | IPV4       | STRING     |
 | IPV6       | STRING     |
 
-# Monitoring Metrics
+### Monitoring Metrics
 
 Flink provides multiple [Metrics](https://nightlies.apache.org/flink/flink-docs-master/docs/ops/metrics/#metrics) for monitoring the indicators of the Flink cluster. The following are the newly added monitoring metrics for the Flink Doris Connector.
 
@@ -786,9 +856,9 @@ Flink provides multiple [Metrics](https://nightlies.apache.org/flink/flink-docs-
 
  
 
-# Best Practices
+## Best Practices
 
-## FlinkSQL Quickly Connects to MySQL Data via CDC
+### FlinkSQL Quickly Connects to MySQL Data via CDC
 
 ```SQL
 -- enable checkpoint
@@ -828,7 +898,7 @@ WITH (
 insert into doris_sink select id,name from cdc_mysql_source;
 ```
 
-## Flink Performs Partial Column Updates
+### Flink Performs Partial Column Updates
 
 ```SQL
 CREATE TABLE doris_sink (
@@ -850,7 +920,7 @@ WITH (
 );
 ```
 
-## Flink Imports Bitmap Data
+### Flink Imports Bitmap Data
 
 ```SQL
 CREATE TABLE bitmap_sink (
@@ -869,19 +939,19 @@ WITH (
 )
 ```
 
-## FlinkCDC Updates Key Columns
+### FlinkCDC Updates Key Columns
 
 Generally, in a business database, a number is often used as the primary key of a table. For example, for the Student table, the number (id) is used as the primary key. However, as the business develops, the number corresponding to the data may change. In this scenario, when using Flink CDC + Doris Connector to synchronize data, the data of the primary key column in Doris can be automatically updated.
 
-### Principle
+**Principle**
 
 The underlying collection tool of Flink CDC is Debezium. Debezium internally uses the op field to identify corresponding operations. The values of the op field are c, u, d, and r, corresponding to create, update, delete, and read respectively. For the update of the primary key column, Flink CDC will send DELETE and INSERT events downstream, and the data of the primary key column in Doris will be automatically updated after the data is synchronized to Doris.
 
-### Usage
+**Usage**
 
 The Flink program can refer to the above CDC synchronization examples. After successfully submitting the task, execute the statement to update the primary key column on the MySQL side (for example, update student set id = '1002' where id = '1001'), and then the data in Doris can be modified.
 
-## Flink Deletes Data According to Specified Columns
+### Flink Deletes Data According to Specified Columns
 
 Generally, messages in Kafka use specific fields to mark the operation type, such as {"op_type":"delete",data:{...}}. For this kind of data, it is hoped to delete the data with op_type=delete.
 
@@ -920,7 +990,7 @@ if(op_type='delete',1,0) as __DORIS_DELETE_SIGN__
 from KAFKA_SOURCE;
 ```
 
-# Frequently Asked Questions (FAQ)
+## Frequently Asked Questions (FAQ)
 
 1. **errCode = 2, detailMessage = Label [label_0_1] has already been used, relate to txn [19650]**
 
