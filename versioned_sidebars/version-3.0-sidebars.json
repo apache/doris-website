@@ -412,8 +412,8 @@
                     "label": "Managing Workload",
                     "items": [
                         "admin-manual/workload-management/workload-management-summary",
-                        "admin-manual/workload-management/workload-group",
                         "admin-manual/workload-management/resource-group",
+                        "admin-manual/workload-management/workload-group",
                         "admin-manual/workload-management/compute-group",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
