@@ -278,8 +278,8 @@
                             "type": "category",
                             "label": "Distincting Counts",
                             "items": [
-                                "query-acceleration/distinct-counts/orthogonal-bitmap-manual",
-                                "query-acceleration/distinct-counts/using-hll"
+                                "query-acceleration/distinct-counts/bitmap-precise-deduplication",
+                                "query-acceleration/distinct-counts/hll-approximate-deduplication"
                             ]
                         },
                         "query-acceleration/colocation-join",
@@ -313,7 +313,17 @@
                                         "query-acceleration/tuning/tuning-plan/dml-tuning-plan"
                                     ]
                                 },
-                                "query-acceleration/tuning/tuning-parameters"
+				{
+                                    "type": "category",
+                                    "label": "Tuning Execution",
+                                    "items": [
+                                        "query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time",
+                                        "query-acceleration/tuning/tuning-execution/data-skew-handling",
+                                        "query-acceleration/tuning/tuning-execution/parallelism-adjustment"
+                                    ]
+                                },
+                                "query-acceleration/tuning/tuning-parameters",
+                                "query-acceleration/tuning/parallelism-tuning"
                             ]
                         },
                         {
