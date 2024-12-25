@@ -28,10 +28,10 @@ under the License.
 
 Workload Group的原理如下图所示，它通过对BE内的资源（CPU，IO，Memory）进行细粒度的划分或者限制，达到资源隔离的目的。目前支持的能力包括：
 
-* 管理CPU资源，支持CPU硬限和CPU软限
-* 管理内存资源，支持内存硬限和内存软限
-* 管理IO资源，包括读本地文件和远程文件产生的IO
-* 控制集群中的最大查询数量
+* 管理CPU资源，支持CPU硬限和CPU软限;
+* 管理内存资源，支持内存硬限和内存软限;
+* 管理IO资源，包括读本地文件和远程文件产生的IO;
+* 控制集群中的最大查询数量。
 
 ![workload_group](/images/workload_group_arch.png)
 
