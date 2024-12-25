@@ -61,8 +61,7 @@
                             "type": "category",
                             "label": "Cluster Deployment Manually",
                             "items": [
-                                "install/deploy-manually/storage-compute-coupled-deploy-manually",
-                                "install/deploy-manually/storage-compute-decoupled-deploy-manually"
+                                "install/deploy-manually/storage-compute-coupled-deploy-manually"
                             ]
                         },
                         {
