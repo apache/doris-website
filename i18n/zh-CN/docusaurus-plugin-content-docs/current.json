@@ -215,10 +215,6 @@
     "message": "负载管理",
     "description": "The label for category Managing Workload in sidebar docs"
   },
-  "sidebar.docs.category.Best Practices": {
-    "message": "最佳实践",
-    "description": "The label for category Best Practices in sidebar docs"
-  },
   "sidebar.docs.category.Managing Resource": {
     "message": "资源管理",
     "description": "The label for category Managing Resource in sidebar docs"
