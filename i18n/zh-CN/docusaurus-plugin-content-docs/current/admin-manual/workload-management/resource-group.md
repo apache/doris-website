@@ -123,22 +123,22 @@ Resource Group本质上是一种Table副本的放置策略，所以它有以下�
 
    那么可以使用如下语句创建 db1：
 
-      ```sql
-      CREATE DATABASE db1 PROPERTIES (
-      "replication_allocation" = "tag.location.group_c:1, tag.location.group_b:2"
-      )
-      ```
+   ```sql
+   CREATE DATABASE db1 PROPERTIES (
+   "replication_allocation" = "tag.location.group_c:1, tag.location.group_b:2"
+   )
+   ```
 
    使用如下语句创建 table1：
 
-      ```sql
-      CREATE TABLE table1
-      (k1 int, k2 int)
-      distributed by hash(k1) buckets 1
-      properties(
-      "replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
-      )
-      ```
+   ```sql
+   CREATE TABLE table1
+   (k1 int, k2 int)
+   distributed by hash(k1) buckets 1
+   properties(
+   "replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
+   )
+   ```
 
    table2，table3,table4 的建表语句无需再指定`replication_allocation`。
 
@@ -175,5 +175,5 @@ Resource Group本质上是一种Table副本的放置策略，所以它有以下�
    
    2. 写入资源：负责数据编码、压缩并写入磁盘。
 
-   其中写入资源必须是数据副本所在的节点，而计算资源理论上可以选择任意节点完成，所以在导入的场景下，Resource Group 只能限制计算部分使用的资源。
+   由于写入资源必须是数据副本所在的节点，而计算资源可以选择任意节点完成，所以在导入的场景下，Resource Group 只能限制计算部分使用的资源。
 
