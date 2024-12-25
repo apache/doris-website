@@ -75,7 +75,7 @@ mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on t1.c
 
 The Hint log shows the successfully applied hint: Used: `leading(t2 t1)`.
 
-Case 2: Forcing the Generation of a Left-Deep Tree
+## Case 2: Forcing the Generation of a Left-Deep Tree
 
 ```sql
 mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3;

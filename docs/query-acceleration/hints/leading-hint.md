@@ -308,7 +308,7 @@ mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join 
 +-----------------------------------------------+
 ```
 
-4. zig-zag 树
+4. zig-zag tree
 
 ```sql
 mysql> explain shape plan select /*+ leading(t1 {t2 t3} t4) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Use Cbo Rule Hint To Control",
+    "title": "Control CBO Rules With Hint",
     "language": "en"
 }
 ---
