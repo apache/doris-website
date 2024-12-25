@@ -1,7 +1,7 @@
 ---
 {
 "title": "Query Circuit Breaker",
-"language": "zh-CN"
+"language": "en"
 }
 ---
 
