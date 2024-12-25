@@ -1,7 +1,7 @@
 ---
 {
     "title": "Tiered Storage of SSD and HDD",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 
