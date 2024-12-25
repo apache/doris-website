@@ -56,7 +56,7 @@ INSERT INTO table_name(id, json_column_name) VALUES (1, '{"k1": "100"}')
 14	[123, 456]
 ```
 
-- When the newline character "\n" appears in JSON, you need to use the replace function to replace "\n" with "\\n" 
+- When the newline character "\n" appears in JSON, you need to use the replace function to replace `"\n"` with `"\\n"`
 
 **Query:**
 - Directly select the entire JSON column:
