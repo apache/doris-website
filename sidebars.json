@@ -145,7 +145,7 @@
                             "label": "Tiered Storage",
                             "items": [
                                 "table-design/tiered-storage/overview",
-                                "table-design/tiered-storage/diff-disk-medium-migration",
+                                "table-design/tiered-storage/tiered-ssd-hdd",
                                 "table-design/tiered-storage/remote-storage"
                             ]
                         },

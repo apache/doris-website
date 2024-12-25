@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Tiered Storage of SSD and HDD",
-    "language": "en-US"
+    "title": "SSD 和 HDD 层级存储",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,39 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris supports tiered storage between different disk types (SSD and HDD), combining dynamic partitioning features to dynamically migrate data from SSD to HDD based on the characteristics of hot and cold data. This approach reduces storage costs while maintaining high performance for hot data reads and writes.
+Doris 支持在不同磁盘类型（SSD 和 HDD）之间进行分层存储，结合动态分区功能，根据冷热数据的特性将数据从 SSD 动态迁移到 HDD。这种方式既降低了存储成本，又在热数据的读写上保持了高性能。
 
-## Dynamic Partitioning and Tiered Storage
+## 动态分区与层级存储
 
-By configuring dynamic partitioning parameters of a table, users can set which partitions are stored on SSD and automatically migrate to HDD after cooling.
+通过配置动态分区参数，用户可以设置哪些分区存储在 SSD 上，以及冷却后自动迁移到 HDD 上。
 
-- **Hot Partitions**: Recently active partitions, prioritized to be stored on SSD to ensure high performance.
-- **Cold Partitions**: Partitions that are accessed less frequently, which will gradually migrate to HDD to reduce storage costs.
+- **热分区**：最近活跃的分区，优先存储在 SSD 上，保证高性能。
+- **冷分区**：较少访问的分区，会逐步迁移到 HDD，以降低存储开销。
 
-For more information on dynamic partitioning, please refer to: [Data Partitioning - Dynamic Partitioning](../../table-design/data-partitioning/dynamic-partitioning).
+有关动态分区的更多信息，请参考：[数据划分 - 动态分区](../../table-design/data-partitioning/dynamic-partitioning)。
 
-## Parameter Description
+
+## 参数说明
 
 ### `dynamic_partition.hot_partition_num`
 
-- **Function**:
-  - Specifies how many of the most recent partitions are hot partitions, which are stored on SSD, while the remaining partitions are stored on HDD.
+- **功能**：
+  - 指定最近的多少个分区为热分区，这些分区存储在 SSD 上，其余分区存储在 HDD 上。
 
-- **Note**:
-  - `"dynamic_partition.storage_medium" = "HDD"` must be set simultaneously; otherwise, this parameter will not take effect.
-  - If there are no SSD devices in the storage path, this configuration will cause partition creation to fail.
+- **注意**：
+  - 必须同时设置 `dynamic_partition.storage_medium = HDD`，否则此参数不会生效。
+  - 如果存储路径下没有 SSD 设备，则该配置会导致分区创建失败。
 
-**Example Description**:
+**示例说明**：
 
-Assuming the current date is **2021-05-20**, with daily partitioning, the dynamic partitioning configuration is as follows:
+假设当前日期为 **2021-05-20**，按天分区，动态分区配置如下：
 ```sql
-    "dynamic_partition.time_unit" = "DAY",
-    "dynamic_partition.hot_partition_num" = 2
-    "dynamic_partition.start" = -3
-    "dynamic_partition.end" = 3
+dynamic_partition.hot_partition_num = 2
+dynamic_partition.start = -3
+dynamic_partition.end = 3
 ```
 
-The system will automatically create the following partitions and configure their storage medium and cooling time:
+系统会自动创建以下分区，并配置其存储介质和冷却时间：
 
   ```Plain
   p20210517：["2021-05-17", "2021-05-18") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
@@ -70,15 +70,15 @@ The system will automatically create the following partitions and configure thei
 
 ### `dynamic_partition.storage_medium`
 
-- **Function**:
-  - Specifies the final storage medium for dynamic partitions. The default is HDD, but SSD can be selected.
+- **功能**：
+  - 指定动态分区的最终存储介质。默认是 HDD，可选择 SSD。
 
-- **Note**:
-  - When set to SSD, the `hot_partition_num` attribute will no longer take effect, and all partitions will default to SSD storage medium with a cooling time of 9999-12-31 23:59:59.
+- **注意**：
+  - 当设置为 SSD 时，`hot_partition_num` 属性将不再生效，所有分区将默认为 SSD 存储介质并且冷却时间为 9999-12-31 23:59:59。
 
-## Example
+## 示例
 
-### 1. Create a table with dynamic_partition
+### 1. 创建一个分层存储表
 
 ```sql
     CREATE TABLE tiered_table (k DATE)
@@ -98,13 +98,13 @@ The system will automatically create the following partitions and configure thei
     );
 ```
 
-### 2. Check storage medium of partitions
+### 2. 检查分区存储介质
 
 ```sql
     SHOW PARTITIONS FROM tiered_table;
 ```
 
-You should have 7 partitions, 5 of which use SSD as the storage medium, while the other 2 use HDD.
+可以看见 7 个分区, 5 个使用 SSD, 其它的 2 个使用 HDD。
 
 ```Plain
   p20210517：["2021-05-17", "2021-05-18") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
