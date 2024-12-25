@@ -137,7 +137,7 @@
                             "type": "category",
                             "label": "Data Partitioning",
                             "items": [
-                                "table-design/data-partitioning/basic-concepts",
+                                "table-design/data-partitioning/data-distribution",
                                 "table-design/data-partitioning/manual-partitioning",
                                 "table-design/data-partitioning/dynamic-partitioning",
                                 "table-design/data-partitioning/auto-partitioning",
