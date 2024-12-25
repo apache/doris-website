@@ -51,7 +51,7 @@ Currently, the Doris optimizer supports several cost-based rewrites, which can b
 - PUSH_DOWN_AGG_THROUGH_JOIN_ONE_SIDE
 - PUSH_DOWN_DISTINCT_THROUGH_JOIN
 
-## Example
+## Case
 
 Here is a query example:
 

@@ -1,3 +1,4 @@
+---
 {
     "title": "Adjusting Join Shuffle Mode with Hint",
     "language": "en"
@@ -40,7 +41,7 @@ SELECT COUNT(*) FROM t2 JOIN [broadcast] t1 ON t1.c1 = t2.c2;
 SELECT COUNT(*) FROM t2 JOIN [shuffle] t1 ON t1.c1 = t2.c2;
 ```
 
-## Case Study
+## Case
 
 Next, we will demonstrate the usage of Distribute Hints through an example:
 
