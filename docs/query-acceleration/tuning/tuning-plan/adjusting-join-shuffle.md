@@ -1,3 +1,4 @@
+---
 {
     "title": "Adjusting Join Shuffle Mode with Hint",
     "language": "en"
@@ -27,6 +28,10 @@ under the License.
 
 Doris supports the use of hints to adjust the type of data shuffle in Join operations, thereby optimizing query performance. This section provides detailed instructions on how to specify the Join Shuffle type in Doris using hints.
 
+:::caution Note
+Currently, Doris has good out-of-the-box capabilities. This means that in most scenarios, Doris will adaptively optimize performance in various scenarios, and users do not need to manually control hints for performance tuning. The content introduced in this chapter is mainly for professional tuners, and business personnel only need a simple understanding.
+:::
+
 Currently, Doris supports two independent [Distribute Hint](../../../query-acceleration/hints/distribute-hint.md), `[shuffle]` and `[broadcast]`, to specify the Distribute Type for the right table in a Join. The Distribute Type should be placed before the right table in the Join, enclosed in square brackets `[]`. Additionally, Doris can specify the shuffle mode by using the Leading Hint in conjunction with the Distribute Hint (for more details, refer to [Reordering Join With Leading Hint](reordering-join-with-leading-hint.md)).
 
 Examples are as follows:
@@ -36,7 +41,7 @@ SELECT COUNT(*) FROM t2 JOIN [broadcast] t1 ON t1.c1 = t2.c2;
 SELECT COUNT(*) FROM t2 JOIN [shuffle] t1 ON t1.c1 = t2.c2;
 ```
 
-## Case Study
+## Case
 
 Next, we will demonstrate the usage of Distribute Hints through an example:
 

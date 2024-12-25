@@ -1,7 +1,7 @@
 ---
 { 
-'title': 'Apache Doris 简介', 
-'language': 'zh-CN' 
+'title': 'Introduction to Apache Doris',
+'language': 'en' 
 }
 ---
 

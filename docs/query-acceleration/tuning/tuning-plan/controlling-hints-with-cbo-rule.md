@@ -33,6 +33,10 @@ The query optimizer applies a series of rules when generating execution plans. T
 
 In some cases, database administrators or developers may need more granular control over the query optimization process. Based on this, this document will introduce how to use query hints to manage CBO rules.
 
+:::caution Note
+Currently, Doris has good out-of-the-box capabilities. This means that in most scenarios, Doris will adaptively optimize performance in various scenarios, and users do not need to manually control hints for performance tuning. The content introduced in this chapter is mainly for professional tuners, and business personnel only need a simple understanding.
+:::
+
 The basic syntax for CBO rule control hints is as follows:
 
 ```sql
@@ -47,7 +51,7 @@ Currently, the Doris optimizer supports several cost-based rewrites, which can b
 - PUSH_DOWN_AGG_THROUGH_JOIN_ONE_SIDE
 - PUSH_DOWN_DISTINCT_THROUGH_JOIN
 
-## Example
+## Case
 
 Here is a query example:
 
