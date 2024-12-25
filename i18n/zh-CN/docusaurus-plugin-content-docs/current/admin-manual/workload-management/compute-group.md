@@ -1,6 +1,6 @@
 ---
 {
-"title": "计算组操作",
+"title": "Compute Group",
 "language": "zh-CN"
 }
 ---
@@ -24,7 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在存算分离架构下，可以将一个或多个计算节点 (BE) 组成一个计算组 (Compute Group)。本文档介绍如何使用计算组，其中涉及的操作包括：
+
+在存算分离架构下，可以将一个或多个计算节点 (BE) 组成一个计算组 (Compute Group)。
+
+![compute_group](/images/compute_group_workload_management.png)
+
+在保持了Resource Group 强隔离的优点的同时，Compute Group与Resource Group 相比还有以下优势：
+
+- 成本更低，由于采用了存算分离的架构，数据位于共享存储中，所以Compute Group的数量不再受限于副本的数量，用户可以根据需求创建任意多的Compute Group，存储成本不会变多；
+- 更灵活，在存算分离架构下，BE 本地的数据都是缓存，所以增加Compute Group 时不需要做笨重的数据迁移过程，新的Compute Group 只需在查询时缓存预热即可；
+- 隔离更彻底，数据的多副本存储由共享的存储层解决，所以任何Compute Group内的BE 宕机不会像Resource Group 那样导致导入失败。
+
+
+本文档介绍如何使用计算组，其中涉及的操作包括：
 
 - 查看所有计算组
 - 计算组授权
@@ -44,7 +56,7 @@ SHOW COMPUTE GROUPS;
 
 ## 添加计算组
 
-使用[ADD BE ](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md)命令添加 BE 并为 BE 指定计算组，示例：
+使用[ADD BE ](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND.md)命令添加 BE 并为 BE 指定计算组，示例：
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");

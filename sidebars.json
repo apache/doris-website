@@ -145,7 +145,7 @@
                             "label": "Tiered Storage",
                             "items": [
                                 "table-design/tiered-storage/overview",
-                                "table-design/tiered-storage/diff-disk-medium-migration",
+                                "table-design/tiered-storage/tiered-ssd-hdd",
                                 "table-design/tiered-storage/remote-storage"
                             ]
                         },
@@ -446,8 +446,7 @@
                                 "admin-manual/data-admin/ccr/performance"
                             ]
                         },
-                        "admin-manual/data-admin/recyclebin",
-                        "admin-manual/data-admin/repairing-data"
+                        "admin-manual/data-admin/recyclebin"
                     ]
                 },
                 {
@@ -455,27 +454,12 @@
                     "label": "Managing Workload",
                     "items": [
                         "admin-manual/workload-management/workload-management-summary",
+			"admin-manual/workload-management/resource-group",
                         "admin-manual/workload-management/workload-group",
-                        "admin-manual/workload-management/resource-group",
                         "admin-manual/workload-management/compute-group",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
-                        "admin-manual/workload-management/job-scheduler",
-                        {
-                            "type": "category",
-                            "label": "Best Practices",
-                            "items": [
-                                "admin-manual/workload-management/best-practice/group-workload-groups",
-                                "admin-manual/workload-management/best-practice/workload-group-best-practice"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing Query",
-                    "items": [
-                        "admin-manual/query-admin/sql-interception"
+                        "admin-manual/workload-management/job-scheduler"
                     ]
                 },
                 {

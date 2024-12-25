@@ -215,10 +215,6 @@
     "message": "负载管理",
     "description": "The label for category Managing Workload in sidebar docs"
   },
-  "sidebar.docs.category.Best Practices": {
-    "message": "最佳实践",
-    "description": "The label for category Best Practices in sidebar docs"
-  },
   "sidebar.docs.category.Managing Resource": {
     "message": "资源管理",
     "description": "The label for category Managing Resource in sidebar docs"
@@ -514,5 +510,9 @@
   "sidebar.docs.category.Tiered Storage": {
     "message": "分层存储",
     "description": "The label for category Tiered Storage in sidebar docs"
+  },
+  "sidebar.docs.category.Business continuity & data recovery": {
+    "message": "业务连续性和数据恢复",
+    "description": "The label for category Business continuity & data recovery in sidebar docs"
   }
 }

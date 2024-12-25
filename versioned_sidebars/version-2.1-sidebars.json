@@ -99,7 +99,7 @@
                             "type": "category",
                             "label": "Tiered Storage",
                             "items": [
-                                "table-design/tiered-storage/diff-disk-medium-migration",
+                                "table-design/tiered-storage/tiered-ssd-hdd",
                                 "table-design/tiered-storage/remote-storage"
                             ]
                         },
@@ -119,7 +119,7 @@
                             "type": "category",
                             "label": "Data Partitioning",
                             "items": [
-                                "table-design/data-partitioning/basic-concepts",
+                                "table-design/data-partitioning/data-distribution",
                                 "table-design/data-partitioning/manual-partitioning",
                                 "table-design/data-partitioning/dynamic-partitioning",
                                 "table-design/data-partitioning/auto-partitioning",
@@ -365,8 +365,7 @@
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
                         "admin-manual/data-admin/ccr",
-                        "admin-manual/data-admin/recyclebin",
-                        "admin-manual/data-admin/data-recovery"
+                        "admin-manual/data-admin/recyclebin"
                     ]
                 },
                 {
@@ -374,27 +373,11 @@
                     "label": "Managing Workload",
                     "items": [
                         "admin-manual/workload-management/workload-management-summary",
-                        "admin-manual/workload-management/workload-group",
                         "admin-manual/workload-management/resource-group",
-                        "admin-manual/workload-management/compute-group",
+                        "admin-manual/workload-management/workload-group",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
-                        "admin-manual/workload-management/job-scheduler",
-                        {
-                            "type": "category",
-                            "label": "Best Practices",
-                            "items": [
-                                "admin-manual/workload-management/best-practice/group-workload-groups",
-                                "admin-manual/workload-management/best-practice/workload-group-best-practice"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing Query",
-                    "items": [
-                        "admin-manual/query-admin/sql-interception"
+                        "admin-manual/workload-management/job-scheduler"
                     ]
                 },
                 {
