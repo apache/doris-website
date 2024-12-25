@@ -92,7 +92,7 @@ Unable to find a suitable base table for partitioning
 
 - 最新的代码可以提示分区构建失败的原因，原因摘要和说明见附录 2
 
-**举例如下：**
+**例如：**
 
 ```sql
 CREATE TABLE IF NOT EXISTS orders (
@@ -225,7 +225,7 @@ GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 
 - 如果 explain 最后没有出现 `MaterializedView` 等信息，那么意味着此物化视图状态不可用，因此不能参与透明改写。（关于什么情况下会导致物化视图状态不可用，可详细参考使用与实践 - 查看物化视图状态）。
 
-举例如下：
+例如：
 
 ```sql
 | MaterializedView                                                                   |

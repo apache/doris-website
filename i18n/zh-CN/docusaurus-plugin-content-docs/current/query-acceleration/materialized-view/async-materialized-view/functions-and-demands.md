@@ -63,10 +63,11 @@ CREATE TABLE IF NOT EXISTS lineitem (
     (FROM ('2023-10-17') TO ('2023-11-01') INTERVAL 1 DAY)
     DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3;
 
-insert into lineitem values
+INSERT INTO lineitem VALUES
 (1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-17', '2023-10-17', '2023-10-17', 'a', 'b', 'yyyyyyyyy'),
 (2, 4, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-18', '2023-10-18', '2023-10-18', 'a', 'b', 'yyyyyyyyy'),
 (3, 2, 4, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-19', '2023-10-19', '2023-10-19', 'a', 'b', 'yyyyyyyyy');
+
 CREATE TABLE IF NOT EXISTS orders  (
     o_orderkey       integer not null,
     o_custkey        integer not null,
@@ -78,30 +79,31 @@ CREATE TABLE IF NOT EXISTS orders  (
     o_shippriority   integer not null,
     o_comment        varchar(79) not null
     )
-    DUPLICATE KEY(o_orderkey, o_custkey)
-    PARTITION BY RANGE(o_orderdate)(
-    FROM ('2023-10-17') TO ('2023-11-01') INTERVAL 1 DAY)
-    DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3;
+DUPLICATE KEY(o_orderkey, o_custkey)
+PARTITION BY RANGE(o_orderdate)(
+FROM ('2023-10-17') TO ('2023-11-01') INTERVAL 1 DAY)
+DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3;
 
-    insert into orders values
-    (1, 1, 'o', 9.5, '2023-10-17', 'a', 'b', 1, 'yy'),
-    (1, 1, 'o', 10.5, '2023-10-18', 'a', 'b', 1, 'yy'),
-    (2, 1, 'o', 11.5, '2023-10-19', 'a', 'b', 1, 'yy'),
-    (3, 1, 'o', 12.5, '2023-10-19', 'a', 'b', 1, 'yy');
-    CREATE TABLE IF NOT EXISTS partsupp (
+INSERT INTO orders VALUES
+(1, 1, 'o', 9.5, '2023-10-17', 'a', 'b', 1, 'yy'),
+(1, 1, 'o', 10.5, '2023-10-18', 'a', 'b', 1, 'yy'),
+(2, 1, 'o', 11.5, '2023-10-19', 'a', 'b', 1, 'yy'),
+(3, 1, 'o', 12.5, '2023-10-19', 'a', 'b', 1, 'yy');
+    
+CREATE TABLE IF NOT EXISTS partsupp (
       ps_partkey     INTEGER NOT NULL,
       ps_suppkey     INTEGER NOT NULL,
       ps_availqty    INTEGER NOT NULL,
       ps_supplycost  DECIMALV3(15,2)  NOT NULL,
       ps_comment     VARCHAR(199) NOT NULL 
     )
-    DUPLICATE KEY(ps_partkey, ps_suppkey)
-    DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3;
+DUPLICATE KEY(ps_partkey, ps_suppkey)
+DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3;
 
-    insert into partsupp values
-    (2, 3, 9, 10.01, 'supply1'),
-    (4, 3, 10, 11.01, 'supply2'),
-    (2, 3, 10, 11.01, 'supply3');
+INSERT INTO partsupp VALUES
+(2, 3, 9, 10.01, 'supply1'),
+(4, 3, 10, 11.01, 'supply2'),
+(2, 3, 10, 11.01, 'supply3');
 ```
 
 #### 全量物化视图
@@ -448,7 +450,7 @@ JOIN 改写指的是查询和物化使用的表相同，可以在物化视图和
 
 - RIGHT ANTI JOIN
 
-举例如下：
+例如：
 
 如下查询可进行透明改写，条件 `l_linenumber > 1` 可以上拉，从而进行透明改写，使用物化视图的预计算结果来表达查询。
 
@@ -482,7 +484,7 @@ WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 
 当查询和物化视图的 JOIN 类型不一致时，如果物化视图能够提供查询所需的所有数据，那么通过在 JOIN 的外部补偿谓词，也可以进行透明改写。
 
-举例如下：
+例如：
 
 **1. 物化视图定义：**
 
@@ -529,7 +531,7 @@ o_orderdate;
 
 当查询和物化视图定义中的 group 维度一致时，如果物化视图使用的 group by 维度和查询的 group by 维度相同，并且查询使用的聚合函数可以使用物化视图的聚合函数来表示，那么可以进行透明改写。
 
-举例如下：
+例如：
 
 如下查询可以进行透明改写，因为查询和物化视图使用的聚合维度一致，可以使用物化视图 `o_shippriority` 字段进行过滤结果。查询中的 group by 维度和聚合函数可以使用物化视图的 group by 维度和聚合函数来改写。
 
@@ -576,7 +578,7 @@ o_comment;
 
 在查询和物化视图定义中，即使聚合的维度不一致，也可以进行改写。物化视图使用的 `group by` 维度需要包含查询的 `group by` 维度，而查询可以没有 `group by`。并且，查询使用的聚合函数可以用物化视图的聚合函数来表示。
 
-举例如下：
+例如：
 
 以下查询可以进行透明改写。查询和物化视图使用的聚合维度不一致，但物化视图使用的维度包含了查询的维度。查询可以使用维度中的字段对结果进行过滤。查询会尝试使用物化视图 `SELECT` 后的函数进行上卷，例如，物化视图的 `bitmap_union` 最后会上卷成 `bitmap_union_count`，这和查询中的 `count(distinct)` 的语义保持一致。
 
@@ -639,7 +641,7 @@ l_suppkey;
 
 支持多维聚合的透明改写，即如果物化视图中没有使用 `GROUPING SETS`, `CUBE`, `ROLLUP`，而查询中有多维聚合，并且物化视图 `group by` 后的字段包含查询中多维聚合的所有字段，那么也可以进行透明改写。
 
-举例如下：
+例如：
 
 **1. 物化视图定义：**
 
@@ -675,7 +677,7 @@ GROUPING SETS ((o_orderstatus, o_orderdate), (o_orderpriority), (o_orderstatus),
 
 当分区物化视图不足以提供查询的所有数据时，可以使用 `union all` 的方式，将查询原表和物化视图的数据 `union all` 作为最终返回结果。
 
-举例如下：
+例如：
 
 **1. 物化视图定义：**
 
@@ -742,7 +744,7 @@ group by
 
 物化视图的定义 SQL 可以使用物化视图，此物化视图称为嵌套物化视图。嵌套的层数理论上没有限制，此物化视图既可以直查，也可以进行透明改写。嵌套物化视图同样可以参与透明改写。
 
-举例如下：
+例如：
 
 **1. 创建内层物化视图 `mv8_0_inner_mv`：**
 
@@ -938,8 +940,9 @@ SELECT * FROM lineitem;
 #### 查询物化视图信息
 
 ```sql
-select * from mv_infos('database'='db_name')
-where Name = 'mv_name' \G 
+SELECT * 
+FROM mv_infos('database'='db_name')
+WHERE Name = 'mv_name' \G 
 ```
 
 返回结果如下：
@@ -994,9 +997,10 @@ SyncWithBaseTables: 1
 根据物化视图名称查看物化视图的 Task 状态，运行如下语句，可以查看刷新任务的状态和进度：
 
 ```sql
-select * from tasks("type"="mv")
-where mvName = 'mv_name'
-order by CreateTime desc \G
+SELECT * 
+FROM tasks("type"="mv")
+WHERE mvName = 'mv_name'
+ORDER BY  CreateTime DESC \G
 ```
 
 返回结果如下：
@@ -1047,7 +1051,9 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 #### 查询物化视图对应的 JOB 
 
 ```sql
-select * from jobs("type"="mv") where Name="inner_mtmv_75043";
+SELECT * 
+FROM jobs("type"="mv") 
+WHERE Name="inner_mtmv_75043";
 ```
 
 详情参考 [JOBS](../../../sql-manual/sql-functions/table-valued-functions/jobs)

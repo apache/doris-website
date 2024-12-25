@@ -25,24 +25,25 @@ under the License.
 -->
 
 ## 异步物化视图使用原则
+- **时效性考虑：** 异步物化视图通常用于对数据时效性要求不高的场景，一般是 T+1 的数据。如果时效性要求高，应考虑使用同步物化视图。
 
-1. **时效性考虑：** 异步物化视图通常用于对数据时效性要求不高的场景，一般是 T+1 的数据。如果时效性要求高，应考虑使用同步物化视图。
+-  **加速效果与一致性考虑：** 在查询加速场景，创建物化视图时，DBA 应将常见查询 SQL 模式分组，尽量使组之间无重合。SQL 模式组划分越清晰，物化视图构建的质量越高。一个查询可能使用多个物化视图，同时一个物化视图也可能被多个查询使用。构建物化视图需要综合考虑命中物化视图的响应时间（加速效果）、构建成本、数据一致性要求等。
 
-2. **加速效果与一致性考虑：** 在查询加速场景，创建物化视图时，DBA 应将常见查询 SQL 模式分组，尽量使组之间无重合。SQL 模式组划分越清晰，物化视图构建的质量越高。一个查询可能使用多个物化视图，同时一个物化视图也可能被多个查询使用。构建物化视图需要综合考虑命中物化视图的响应时间（加速效果）、构建成本、数据一致性要求等。
-
-3. **物化视图定义与构建成本考虑：**
+-  **物化视图定义与构建成本考虑：**
     
     - 物化视图定义和原查询越接近，查询加速效果越好，但物化的通用性和复用性越差，意味着构建成本越高。
     
     - 物化视图定义越通用（例如没有 WHERE 条件和更多聚合维度），查询加速效果较低，但物化的通用性和复用性越好，意味着构建成本越低。
 
-**需要注意**
+:::tips 注意
+- **物化视图数量控制：** 物化视图并非越多越好。物化视图构建和刷新需要资源。物化视图参与透明改写， CBO 代价模型选择最优物化视图需要时间。理论上，物化视图越多，透明改写的时间越长。
 
-1. **物化视图数量控制：** 物化视图并非越多越好。物化视图构建和刷新需要资源。物化视图参与透明改写， CBO 代价模型选择最优物化视图需要时间。理论上，物化视图越多，透明改写的时间越长。
+- **定期检查物化视图使用状态：** 如果未使用，应及时删除。
 
-2. **定期检查物化视图使用状态：** 如果未使用，应及时删除。
+- **基表数据更新频率：** 如果物化视图的基表数据频繁更新，可能不太适合使用物化视图，因为这会导致物化视图频繁失效，不能用于透明改写（可直查）。如果需要使用此类物化视图进行透明改写，需要允许查询的数据有一定的时效延迟，并可以设定`grace_period`。具体见`grace_period`的适用介绍。
 
-3. **基表数据更新频率：** 如果物化视图的基表数据频繁更新，可能不太适合使用物化视图，因为这会导致物化视图频繁失效，不能用于透明改写（可直查）。如果需要使用此类物化视图进行透明改写，需要允许查询的数据有一定的时效延迟，并可以设定`grace_period`。具体见`grace_period`的适用介绍。
+:::
+
 
 ## 物化视图刷新方式选择原则
 
@@ -54,7 +55,7 @@ under the License.
 
 - 物化视图的定义 SQL 和分区字段满足分区推导的要求，即符合分区增量更新的要求。详细要求可参考：[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmethod)
 
-- 物化视图分区数不多。
+- 物化视图分区数不多，分区过多会导致分区多物化视图构建时间会过长。
 
 当物化视图的部分分区失效时，透明改写可以使用物化视图的有效分区 UNION ALL 基表返回数据。
 
@@ -77,10 +78,10 @@ under the License.
 
 分区物化视图的透明改写是分区粒度的，即使物化视图的部分分区失效，此物化视图仍然可用于透明改写。但如果只查询了一个分区，并且物化视图这个分区数据失效了，那么此物化视图不能用于透明改写。
 
-举例 1：
+例如：
 
 ```sql
-  CREATE TABLE IF NOT EXISTS lineitem (
+CREATE TABLE IF NOT EXISTS lineitem (
     l_orderkey INTEGER NOT NULL, 
     l_partkey INTEGER NOT NULL, 
     l_suppkey INTEGER NOT NULL, 
@@ -104,36 +105,40 @@ under the License.
   ) PARTITION BY RANGE(l_ordertime) (
     FROM 
       ('2024-05-01') TO ('2024-06-30') INTERVAL 1 DAY
-  ) DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3; 
+  )
+DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3;
+
+INSERT INTO lineitem VALUES      
+(1, 2, 3, 4, '2024-05-01 01:45:05', 5.5, 6.5, 0.1, 8.5, 'o', 'k', '2024-05-01', '2024-05-01', '2024-05-01', 'a', 'b', 'yyyyyyyyy'),    
+(1, 2, 3, 4, '2024-05-15 02:35:05', 5.5, 6.5, 0.15, 8.5, 'o', 'k', '2024-05-15', '2024-05-15', '2024-05-15', 'a', 'b', 'yyyyyyyyy'),     
+(2, 2, 3, 5, '2024-05-25 08:30:06', 5.5, 6.5, 0.2, 8.5, 'o', 'k', '2024-05-25', '2024-05-25', '2024-05-25', 'a', 'b', 'yyyyyyyyy'),     
+(3, 4, 3, 6, '2024-06-02 09:25:07', 5.5, 6.5, 0.3, 8.5, 'o', 'k', '2024-06-02', '2024-06-02', '2024-06-02', 'a', 'b', 'yyyyyyyyy'),     
+(4, 4, 3, 7, '2024-06-15 13:20:09', 5.5, 6.5, 0, 8.5, 'o', 'k', '2024-06-15', '2024-06-15', '2024-06-15', 'a', 'b', 'yyyyyyyyy'),     
+(5, 5, 6, 8, '2024-06-25 15:15:36', 5.5, 6.5, 0.12, 8.5, 'o', 'k', '2024-06-25', '2024-06-25', '2024-06-25', 'a', 'b', 'yyyyyyyyy'),     
+(5, 5, 6, 9, '2024-06-29 21:10:52', 5.5, 6.5, 0.1, 8.5, 'o', 'k', '2024-06-30', '2024-06-30', '2024-06-30', 'a', 'b', 'yyyyyyyyy'),     
+(5, 6, 5, 10, '2024-06-03 22:05:50', 7.5, 8.5, 0.1, 10.5, 'k', 'o', '2024-06-03', '2024-06-03', '2024-06-03', 'c', 'd', 'xxxxxxxxx');     
   
-    insert into lineitem values      (1, 2, 3, 4, '2024-05-01 01:45:05', 5.5, 6.5, 0.1, 8.5, 'o', 'k', '2024-05-01', '2024-05-01', '2024-05-01', 'a', 'b', 'yyyyyyyyy'),    
-     (1, 2, 3, 4, '2024-05-15 02:35:05', 5.5, 6.5, 0.15, 8.5, 'o', 'k', '2024-05-15', '2024-05-15', '2024-05-15', 'a', 'b', 'yyyyyyyyy'),     
-     (2, 2, 3, 5, '2024-05-25 08:30:06', 5.5, 6.5, 0.2, 8.5, 'o', 'k', '2024-05-25', '2024-05-25', '2024-05-25', 'a', 'b', 'yyyyyyyyy'),     
-     (3, 4, 3, 6, '2024-06-02 09:25:07', 5.5, 6.5, 0.3, 8.5, 'o', 'k', '2024-06-02', '2024-06-02', '2024-06-02', 'a', 'b', 'yyyyyyyyy'),     
-     (4, 4, 3, 7, '2024-06-15 13:20:09', 5.5, 6.5, 0, 8.5, 'o', 'k', '2024-06-15', '2024-06-15', '2024-06-15', 'a', 'b', 'yyyyyyyyy'),     
-     (5, 5, 6, 8, '2024-06-25 15:15:36', 5.5, 6.5, 0.12, 8.5, 'o', 'k', '2024-06-25', '2024-06-25', '2024-06-25', 'a', 'b', 'yyyyyyyyy'),     
-     (5, 5, 6, 9, '2024-06-29 21:10:52', 5.5, 6.5, 0.1, 8.5, 'o', 'k', '2024-06-30', '2024-06-30', '2024-06-30', 'a', 'b', 'yyyyyyyyy'),     
-     (5, 6, 5, 10, '2024-06-03 22:05:50', 7.5, 8.5, 0.1, 10.5, 'k', 'o', '2024-06-03', '2024-06-03', '2024-06-03', 'c', 'd', 'xxxxxxxxx');     
-  
-   CREATE TABLE IF NOT EXISTS partsupp (
+CREATE TABLE IF NOT EXISTS partsupp (
     ps_partkey INTEGER NOT NULL, 
     ps_suppkey INTEGER NOT NULL, 
     ps_availqty INTEGER NOT NULL, 
     ps_supplycost DECIMALV3(15, 2) NOT NULL, 
     ps_comment VARCHAR(199) NOT NULL
-  ) DUPLICATE KEY(ps_partkey, ps_suppkey) DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3; 
-  
-  
-    insert into partsupp values     
-    (2, 3, 9, 10.01, 'supply1'),     
-    (4, 3, 9, 10.01, 'supply2'),     
-    (5, 6, 9, 10.01, 'supply3'),     
-    (6, 5, 10, 11.01, 'supply4');
+  )
+DUPLICATE KEY(ps_partkey, ps_suppkey)
+DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3;
+
+
+INSERT INTO partsupp VALUES     
+(2, 3, 9, 10.01, 'supply1'),     
+(4, 3, 9, 10.01, 'supply2'),     
+(5, 6, 9, 10.01, 'supply3'),     
+(6, 5, 10, 11.01, 'supply4');
 ```
 
 在这个例子中，`orders`表的`o_ordertime`字段是分区字段，类型是`DATETIME`，按照天分区。
 
-查询主要是按照“天”的粒度
+查询主要是按照"天"的粒度
 
 ```sql
 SELECT 
@@ -154,9 +159,9 @@ GROUP BY
   ps_partkey;
 ```
 
-为了不让物化视图每次刷新的分区数量过多，物化视图的分区粒度可以和基表`orders`一致，按“天”分区。
+为了不让物化视图每次刷新的分区数量过多，物化视图的分区粒度可以和基表`orders`一致，也按"天"分区。
 
-物化视图的定义 SQL 的粒度可以按照“天”，并且按照“天”来聚合数据，
+物化视图的定义 SQL 的粒度可以按照"天"，并且按照"天"来聚合数据，
 
 ```sql
 CREATE MATERIALIZED VIEW rollup_partition_mv 
@@ -510,7 +515,7 @@ GROUP BY n_name, month;
 
 使用异步物化视图分层建模：
 
-1）构建 DWD 层（明细数据），处理订单明细宽表
+构建 DWD 层（明细数据），处理订单明细宽表
 ```sql
 CREATE MATERIALIZED VIEW dwd_order_detail
 BUILD IMMEDIATE REFRESH AUTO ON COMMIT
@@ -538,7 +543,7 @@ join region r on n.n_regionkey = r.r_regionkey
 join lineitem l on o.o_orderkey = l.l_orderkey;
 ```
 
-2）构建 DWS 层（汇总数据），进行每日订单汇总
+构建 DWS 层（汇总数据），进行每日订单汇总
 ```sql
 CREATE MATERIALIZED VIEW dws_daily_sales
 BUILD IMMEDIATE REFRESH AUTO ON COMMIT
@@ -558,7 +563,7 @@ region_name;
 ```
 
 
-3）使用物化视图优化查询如下：
+使用物化视图优化查询如下：
 ```sql
 SELECT
 nation_name,
@@ -582,7 +587,7 @@ GROUP BY nation_name, month;
 
 如下，以 Hive 示例说明：
 
-1）基于 Hive 创建 Catalog，使用 TPC-H 数据集
+基于 Hive 创建 Catalog，使用 TPC-H 数据集
 ```sql
 CREATE CATALOG hive_catalog PROPERTIES (
 'type'='hms', -- hive meta store 地址
@@ -590,7 +595,7 @@ CREATE CATALOG hive_catalog PROPERTIES (
 );
 ```
 
-2）基于 Hive Catalog 创建物化视图
+基于 Hive Catalog 创建物化视图
 ```sql
 -- 物化视图只能在 internal 的 catalog 上创建, 切换到内部 catalog
 switch internal;
@@ -625,7 +630,7 @@ n_name,
 o_orderdate;
 ```
 
-3）运行如下的查询，通过透明改写自动使用物化视图加速查询。
+运行如下的查询，通过透明改写自动使用物化视图加速查询。
 ```sql
 SELECT
 n_name,
@@ -655,8 +660,7 @@ revenue DESC;
 
 :::tip 提示
 Doris 暂无法感知除 Hive 外的其他外表数据变更。当外表数据不一致时，使用物化视图可能出现数据不一致的情况。以下开关表示：参与透明改写的物化视图是否允许包含外表，默认false。如接受数据不一致或者通过定时刷新来保证外表数据一致性，可以将此开关设置成true。
--- 设置包含外表的物化视图是否可用于透明改写，默认不允许，如果可以接受数据不一致或者可以自行保证数据一致，
--- 可以开启
+设置包含外表的物化视图是否可用于透明改写，默认不允许，如果可以接受数据不一致或者可以自行保证数据一致， 可以开启
 
 `SET materialized_view_rewrite_enable_contain_external_table = true;`
 :::
@@ -688,7 +692,7 @@ LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 透明改写能够对查询 SQL 的改写，实现了查询加速，同时也能对导入 SQL 进行改写，从而提升导入效率。
 从 2.1.6 版本开始，当物化视图和基表数据强一致时，可对 DML 操作如 Insert Into 或者 Insert Overwrite 进行透明改写，这对于数据导入场景的性能提升有显著效果。
 
-A. 创建 Insert Into 数据的目标表
+1. 创建 Insert Into 数据的目标表
 ```sql
 CREATE TABLE IF NOT EXISTS target_table  (
 orderdate      DATE NOT NULL,
@@ -700,7 +704,7 @@ DUPLICATE KEY(orderdate, shippriority)
 DISTRIBUTED BY HASH(shippriority) BUCKETS 3;
 ```
 
-B. common_schedule_join_mv:
+2. common_schedule_join_mv
 ```sql
 CREATE MATERIALIZED VIEW common_schedule_join_mv
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 2 HOUR
@@ -738,6 +742,7 @@ FROM common_schedule_join_mv;
 ```
 
 需要注意的是：如果 DML 操作的是无法感知数据变更的外表，透明改写可能导致基表最新数据无法实时导入目标表。如果用户可以接受数据不一致或能够自行保证数据一致性，可以打开如下开关
--- DML 时，当物化视图存在无法实时感知数据的外表时，是否开启基于结构信息的物化视图透明改写，默认关闭
+
+DML 时，当物化视图存在无法实时感知数据的外表时，是否开启基于结构信息的物化视图透明改写，默认关闭
 
 `SET enable_dml_materialized_view_rewrite_when_base_table_unawareness = true;`
