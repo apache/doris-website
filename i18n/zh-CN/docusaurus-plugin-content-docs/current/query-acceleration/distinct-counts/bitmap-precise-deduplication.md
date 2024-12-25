@@ -33,7 +33,7 @@ Bitmap 是一种高效的位图索引技术，它通过 bit 位来表示对应�
 -  提高查询速度 
 -  减少内存/磁盘占用
 
-## **Count Distinct的实现**
+## Count Distinct 的实现
 
 传统的精确去重依赖`count distinct`实现，表原始数据如下，假设要name列进行精确去重
 
@@ -71,7 +71,7 @@ Doris在计算时`select count(distinct name) from t`。会按照下图进行计
 
 由于Count Distinct需要保存计算明细数据，并且需要进行shuffle，当数据量增大时，查询也会越来越慢。用Bitmap来精确去重，可以解决count distinct 在大量数据场景下的性能问题。
 
-## **使用场景**
+## 使用场景
 
 在实际的业务场景中，当数据达到一定规模之后，通过 count distinct 去重的成本也越来越高。查询也会越来越慢。而使用 Bitmap 精确去重，就是为了解决 count distinct 在大量数据场景下的性能问题。Bitmap 将对应明细数据映射为 bit 位，放弃了明细数据的灵活性下，大幅度提升计算效率。所以在如下场景可以考虑利用 Bitmap 进行精确去重：
 
@@ -80,9 +80,9 @@ Doris在计算时`select count(distinct name) from t`。会按照下图进行计
 
 但 Bitmap 只能对 TINYINT，SMALLINT，INT 和 BIGINT 类型的数据进行精确去重。如想要使用 Bitmap 对其他类型的数据精确去重，则需要额外构建全局字典。Doris使用了RoaringBitmap实现了Bimap的精确去重，原理和细节可以参考[RoaringBitmap](https://roaringbitmap.org/)。
 
-## **使用 BITMAP 进行精确去重**
+## 使用 BITMAP 进行精确去重
 
-### **创建表**
+### 创建表
 
 1. 使用 Bitmap 去重的时候，需要在建表语句中将目标列类型设置成 Bitmap，聚合函数设置成 BITMAP_UNION
 2. Bitmap 类型的列不能作为 Key 列使用
@@ -102,7 +102,7 @@ Aggregate KEY (dt,id,name,province,os)
 distributed by hash(id) buckets 10;
 ```
 
-### **导入数据**
+### 导入数据
 
 示例数据如下（test_bitmap.csv），可以通过 Stream Load导入。
 
@@ -125,7 +125,7 @@ curl --location-trusted -u root: -H "label:label_test_bitmap_load" \
     -H "columns:dt,id,name,province,os, uv=to_bitmap(id)" -T test_bitmap.csv http://fe_IP:8030/api/demo/test_bitmap/_stream_load
 ```
 
-## **查询数据**
+## 查询数据
 
 Bitmap 列不允许直接查询原始值，只能通过 bitmap_union_count 的聚合函数进行查询。
 
