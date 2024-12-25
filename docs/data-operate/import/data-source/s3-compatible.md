@@ -34,7 +34,7 @@ The S3 SDK uses the virtual-hosted style by default. However, some object storag
 
 ## load with S3 Load
 
-Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual.md)
+Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual)
 
 ### Step 1: Prepare the data
 

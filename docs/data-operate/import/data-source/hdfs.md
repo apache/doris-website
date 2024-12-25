@@ -30,7 +30,7 @@ Doris provides two ways to load files from HDFS:
 
 ## load with HDFS Load
 
-Use HDFS Load to import files on HDFS. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual.md)
+Use HDFS Load to import files on HDFS. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual)
 
 ### Step 1: Prepare the data
 
