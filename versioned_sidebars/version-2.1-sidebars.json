@@ -379,7 +379,7 @@
                         "admin-manual/workload-management/compute-group",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
-                        "admin-manual/workload-management/job-scheduler",
+                        "admin-manual/workload-management/job-scheduler"
                     ]
                 },
                 {
