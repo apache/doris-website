@@ -608,7 +608,7 @@ OLAP 系统在做 ETL 或者大的 Adhoc 查询时，需要读取大量的数据
 2. 由于操作系统和 Doris 的 Page Cache 的存在，通过 linux 的 IO 监控脚本看到的 IO 通常要比系统表看到的要小。
 
 
-### 远程 IO 限制
+### 远程 IO 硬限
 BrokerLoad 和 S3Load 是常用的大批量数据导入方式，用户可以把数据先上传到 HDFS 或者 S3，然后通过 Brokerload 和 S3Load 对数据进行并行导入。Doris 为了加快导入速度，会使用多线程并行的方式从 HDFS/S3 拉取数据，此时会对 HDFS/S3 产生巨大的压力，会导致 HDFS/S3 上运行的别的作业不稳定。
 可以通过 Workload Group 远程 IO 的限制功能来限制导入过程中对 HDFS/S3 的带宽，降低对其他业务的影响。
 
