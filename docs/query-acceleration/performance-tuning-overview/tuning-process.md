@@ -65,7 +65,7 @@ In the execution tuning stage, you need to validate the effectiveness of plan tu
 
 Taking multi-table analysis queries as an example, you can analyze the Profile to check if the planned Join order is reasonable, if Runtime Filters are effective, and if the parallelism meets expectations. Furthermore, the Profile can provide feedback on machine load, such as slow I/O or unexpected network transmission performance. When confirming and diagnosing such issues, system-level tools are needed to assist in diagnosis and tuning.
 
-For detailed tuning examples, please refer to the documentation on [Execution Tuning](../tuning/tuning-query/adjustment-of-runtimefilter-wait-time.md).
+For detailed tuning examples, please refer to the documentation on [Execution Tuning](../tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md).
 
 :::tip
 When analyzing specific performance issues, it is recommended to first check the plan and then tune the execution. Start by using the Explain tool to confirm the execution plan, and then use the Profile tool to locate and tune execution performance. Reversing the order may lead to inefficiencies and hinder the rapid identification of performance issues.

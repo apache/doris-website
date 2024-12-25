@@ -133,7 +133,7 @@ In Doris, a PipelineTask consists of multiple operators. When analyzing the exec
 2. WaitWorkerTime: 63.868us (The time the task waits for an execution worker. When the task is in a runnable state, it waits for an available worker to execute it, and this duration primarily depends on the cluster load).
 3. Time Waiting for Execution Dependencies: 10.495ms (WaitForBroadcastBuffer + WaitForRpcBufferQueue + WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time). The time a task waits for execution dependencies is the sum of the waiting times for these dependencies.
 
-For cases of using Profile for execution-level tuning, please refer to the [Tuning Query](../tuning/tuning-query/adjustment-of-runtimefilter-wait-time.md) section.
+For cases of using Profile for execution-level tuning, please refer to the [Tuning Execution](../tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md) section.
 
 ## System-Level Performance Tools
 
