@@ -1226,7 +1226,7 @@ the max concurrent routine load task num per BE.  This is to limit the num of ro
 
 #### `max_routine_load_task_concurrent_num`
 
-Default：5
+Default：256
 
 IsMutable：true
 
