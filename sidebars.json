@@ -313,7 +313,7 @@
                                         "query-acceleration/tuning/tuning-plan/dml-tuning-plan"
                                     ]
                                 },
-				{
+                                {
                                     "type": "category",
                                     "label": "Tuning Execution",
                                     "items": [
@@ -1694,6 +1694,7 @@
                                     "items": [
                                         "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT",
                                         "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/SELECT",
+                                        "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPLAIN",
                                         "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE",
                                         "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/UPDATE",
                                         "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT",
