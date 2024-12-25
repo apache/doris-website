@@ -24,13 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 为什么引入 Broker Load？ 
+Broker Load 通过 MySQL API 发起，Doris 会根据 LOAD 语句中的信息，主动从数据源拉取数据。Broker Load 是一个异步导入方式，需要通过 SHOW LOAD 语句查看导入进度和导入结果。
 
-Stream Load 是一种推的方式，即导入的数据依靠客户端读取，并推送到 Doris。Broker Load 则是将导入请求发送给 Doris，有 Doris 主动拉取数据，所以如果数据存储在类似 HDFS 或者 对象存储中，则使用 Broker Load 是最方便的。这样，数据就不需要经过客户端，而有 Doris 直接读取导入。
-
+Broker Load 适合源数据存储在远程存储系统，比如对象存储或 HDFS，且数据量比较大的场景。 
 从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF](../../../lakehouse/file) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
 
-Broker Load 适合源数据存储在远程存储系统，比如 HDFS，并且数据量比较大的场景。
+## 使用限制
+
+支持的存储后端:
+
+- S3 协议
+- HDFS 协议
+- 其他协议（需要相应的 Broker 进程）
+
+支持的数据类型:
+
+- CSV
+- JSON
+- PARQUET
+- ORC
+
+支持的压缩类型：
+
+- PLAIN
+- GZ
+- LZO
+- BZ2
+- LZ4FRAME
+- DEFLATE
+- LZOP
+- LZ4BLOCK
+- SNAPPYBLOCK
+- ZLIB
+- ZSTD
 
 ## 基本原理
 
@@ -44,22 +70,95 @@ BE 在执行的过程中会从 Broker 拉取数据，在对数据 transform 之�
 
 当前 BE 内置了对 HDFS 和 S3 两个 Broker 的支持，所以如果从 HDFS 和 S3 中导入数据，则不需要额外启动 Broker 进程。如果有自己定制的 Broker 实现，则需要部署相应的 Broker 进程。
 
-## 导入语法
+## 快速上手
 
-```sql
-LOAD LABEL load_label
-(
-data_desc1[, data_desc2, ...]
-)
-WITH [HDFS|S3|BROKER broker_name] 
-[broker_properties]
-[load_properties]
-[COMMENT "comments"];
+本节演示了一个 S3 Load 的例子。具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD.md)。
+
+### 前置检查
+
+1. Doris 表权限
+
+Broker Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO.md) 命令给用户授权。
+
+2. S3 认证和连接信息
+
+这里以 AWS S3 为例，从其他对象存储系统导入也可以作为参考。
+
+- AK 和 SK：首先需要找到或者重新生成 AWS `Access keys`，可以在 AWS console 的 `My Security Credentials` 找到生成方式。
+
+- REGION 和 ENDPOINT：REGION 可以在创建桶的时候选择也可以在桶列表中查看到。每个 REGION 的 S3 ENDPOINT 可以通过如下页面查到 [AWS 文档](https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_region)。
+
+### 创建导入作业
+
+1. 创建 CSV 文件 brokerload_example.csv 文件存储在 S3 上，其内容如下：
+
+```
+1,Emily,25
+2,Benjamin,35
+3,Olivia,28
+4,Alexander,60
+5,Ava,17
+6,William,69
+7,Sophia,32
+8,James,64
+9,Emma,37
+10,Liam,64
 ```
 
-具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD)。
+2. 创建导入 Doris 表
 
-## 查看导入状态
+在 Doris 中创建被导入的表，具体语法如下：
+
+```sql
+CREATE TABLE testdb.test_brokerload(
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "name",
+    age                INT                   COMMENT "age"
+)
+DUPLICATE KEY(user_id)
+DISTRIBUTED BY HASH(user_id) BUCKETS 10;
+```
+
+3. 使用 Broker Load 从 S3 导入数据。其中 bucket 名称和 S3 认证信息要根据实际填写：
+
+```sql
+    LOAD LABEL broker_load_2022_04_01
+    (
+        DATA INFILE("s3://your_bucket_name/brokerload_example.csv")
+        INTO TABLE test_brokerload
+        COLUMNS TERMINATED BY ","
+        FORMAT AS "CSV"
+        (user_id, name, age)
+    )
+    WITH S3
+    (
+        "provider" = "S3",
+        "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
+        "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
+        "AWS_SECRET_KEY"="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+        "AWS_REGION" = "us-west-2",
+        "compress_type" = "PLAIN"
+    )
+    PROPERTIES
+    (
+        "timeout" = "3600"
+    );
+```
+
+其中 `provider` 字段需要根据实际的对象存储服务商填写。
+Doris 支持的 provider 列表：
+
+- "OSS" (阿里云)
+- "COS" (腾讯云)
+- "OBS" (华为云)
+- "BOS" (百度云)
+- "S3" (亚马逊 AWS)
+- "AZURE" (微软 Azure)
+- "GCP" (谷歌 GCP)
+
+如不在列表中 (例如 MinIO)，可以尝试使用 "S3" (兼容 AWS 模式)
+
+### 查看导入作业
 
 Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) 命令查看
 
@@ -67,7 +166,7 @@ Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHO
 mysql> show load order by createtime desc limit 1\G;
 *************************** 1. row ***************************
          JobId: 41326624
-         Label: broker_load_2022_04_15
+         Label: broker_load_2022_04_01
          State: FINISHED
       Progress: ETL:100%; LOAD:100%
           Type: BROKER
@@ -84,19 +183,164 @@ LoadFinishTime: 2022-04-01 18:59:11
 1 row in set (0.01 sec)
 ```
 
-## 取消导入
+### 取消导入作业
 
 当 Broker load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label。取消导入命令语法可执行 [CANCEL LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD) 查看。
 
-例如：撤销数据库 DEMO 上，label 为 broker_load_2022_03_23 的导入作业
+例如：取消数据库 demo 上，label 为 broker_load_2022_04_01 的导入作业
 
 ```SQL
-CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_03_23";
+CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_04_01";
 ```
 
-## HDFS Load
+## 参考手册
 
-### 简单认证
+### 导入命令
+
+```sql
+LOAD LABEL load_label
+(
+data_desc1[, data_desc2, ...]
+)
+WITH [S3|HDFS|BROKER broker_name] 
+[broker_properties]
+[load_properties]
+[COMMENT "comments"];
+```
+
+其中 WITH 子句指定了如何访问存储系统，`broker_properties` 则是该访问方式的配置参数
+
+- `S3`: 使用 S3 协议的存储系统
+- `HDFS`: 使用 HDFS 协议的存储系统
+- `BROKER broker_name`: 其他协议的存储系统。可以通过 `SHOW BROKER` 查看目前可选的 broker_name 列表。更多信息见常见问题中的 "其他 Broker 导入"
+
+### 导入配置参数
+
+**load properties**
+
+| Property 名称 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| "timeout" | Long | 14400 | 导入的超时时间，单位秒。范围是 1 秒 ~ 259200 秒。 |
+| "max_filter_ratio" | Float | 0.0 | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。 |
+| "exec_mem_limit" | Long | 2147483648 (2GB) | 导入内存限制。默认为 2GB。单位为字节。 |
+| "strict_mode" | Boolean | false | 是否开启严格模式。 |
+| "partial_columns" | Boolean | false | 是否使用部分列更新，只在表模型为 Unique Key 且采用 Merge on Write 时有效。 |
+| "timezone" | String | "Asia/Shanghai" | 本次导入所使用的时区。该参数会影响所有导入涉及的和时区有关的函数结果。 |
+| "load_parallelism" | Integer | 8 | 每个 BE 上并发 instance 数量的上限。 |
+| "send_batch_parallelism" | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
+| "load_to_single_tablet" | Boolean | "false" | 是否每个分区只导入一个 tablet，默认值为 false。该参数只允许在对带有 random 分桶的 OLAP 表导数的时候设置。 |
+| "skip_lines" | Integer | "0" | 跳过 CSV 文件的前几行。当设置 format 设置为 csv_with_names或csv_with_names_and_types时，该参数会失效。 |
+| "trim_double_quotes" | Boolean | "false" | 是否裁剪掉导入文件每个字段最外层的双引号。 |
+| "priority" | "HIGH" 或 "NORMAL" 或 "LOW" | "NORMAL" | 导入任务的优先级。 |
+
+**fe.conf**
+
+下面几个配置属于 Broker load 的系统级别配置，也就是作用于所有 Broker load 导入任务的配置。主要通过修改 `fe.conf`来调整配置值。
+
+| Session Variable | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| min_bytes_per_broker_scanner | Long | 67108864 (64 MB) | 一个 Broker Load 作业中单 BE 处理的数据量的最小值，单位：字节。 |
+| max_bytes_per_broker_scanner | Long | 536870912000 (500 GB) | 一个 Broker Load 作业中单 BE 处理的数据量的最大值，单位：字节。通常一个导入作业支持的最大数据量为 `max_bytes_per_broker_scanner * BE 节点数`。如果需要导入更大数据量，则需要适当调整 `max_bytes_per_broker_scanner` 参数的大小。 |
+| max_broker_concurrency | Integer | 10 | 限制了一个作业的最大的导入并发数。 |
+| default_load_parallelism | Integer | 8 | 每个 BE 节点最大并发 instance 数 |
+| broker_load_default_timeout_second | 14400 | Broker Load 导入的默认超时时间，单位：秒。 |
+
+注：最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数共同决定了本次导入的并发数。
+
+```Plain
+本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
+本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
+```
+
+**session variable**
+
+| Session Variable | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| exec_mem_limit | Long | 2147483648 (2GB) | 导入内存限制，单位：字节。 |
+| time_zone | String | "Asia/Shanghai" | 默认时区，会影响导入中时区相关的函数结果。 |
+| send_batch_parallelism | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
+
+
+## 常见问题
+
+### 常见报错
+
+**1. 导入报错：`Scan bytes per broker scanner exceed limit:xxx`**
+
+请参照文档中最佳实践部分，修改 FE 配置项 `max_bytes_per_broker_scanner` 和 `max_broker_concurrency`
+
+**2. 导入报错：`failed to send batch` 或 `TabletWriter add batch with unknown id`**
+
+适当修改 `query_timeout` 和 `streaming_load_rpc_max_alive_time_sec`。
+
+**3. 导入报错：`LOAD_RUN_FAIL; msg:Invalid Column Name:xxx`**
+
+如果是 PARQUET 或者 ORC 格式的数据，则文件头的列名需要与 doris 表中的列名保持一致，如：
+
+```sql
+(tmp_c1,tmp_c2)
+SET
+(
+    id=tmp_c2,
+    name=tmp_c1
+)
+```
+
+代表获取在 parquet 或 orc 中以 (tmp_c1, tmp_c2) 为列名的列，映射到 doris 表中的 (id, name) 列。如果没有设置 set, 则以 column 中的列作为映射。
+
+注：如果使用某些 hive 版本直接生成的 orc 文件，orc 文件中的表头并非 hive meta 数据，而是（_col0, _col1, _col2, ...）, 可能导致 Invalid Column Name 错误，那么则需要使用 set 进行映射
+
+**4. 导入报错：`Failed to get S3 FileSystem for bucket is null/empty`**
+
+bucket 信息填写不正确或者不存在。或者 bucket 的格式不受支持。使用 GCS 创建带`_`的桶名时，比如：`s3://gs_bucket/load_tbl`，S3 Client 访问 GCS 会报错，建议创建 bucket 路径时不使用`_`。
+
+**5. 导入超时**
+
+导入的 timeout 默认超时时间为 4 小时。如果超时，不推荐用户将导入最大超时时间直接改大来解决问题。单个导入时间如果超过默认的导入超时时间 4 小时，最好是通过切分待导入文件并且分多次导入来解决问题。因为超时时间设置过大，那么单次导入失败后重试的时间成本很高。
+
+可以通过如下公式计算出 Doris 集群期望最大导入文件数据量：
+
+```Plain
+期望最大导入文件数据量 = 14400s * 10M/s * BE 个数
+比如：集群的 BE 个数为 10个
+期望最大导入文件数据量 = 14400s * 10M/s * 10 = 1440000M ≈ 1440G
+
+注意：一般用户的环境可能达不到 10M/s 的速度，所以建议超过 500G 的文件都进行文件切分，再导入。
+```
+
+### S3 Load URL 访问方式
+
+- S3 SDK 默认使用 virtual-hosted-style 方式。但某些对象存储系统可能没开启或没支持 virtual-hosted-style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path-style 方式：
+
+  ```sql
+    WITH S3
+    (
+          "AWS_ENDPOINT" = "AWS_ENDPOINT",
+          "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+          "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+          "AWS_REGION" = "AWS_REGION",
+          "use_path_style" = "true"
+    )
+  ```
+
+### S3 Load 临时密钥
+
+- 支持使用临时秘钥 (TOKEN) 访问所有支持 S3 协议的对象存储，用法如下：
+
+  ```sql
+    WITH S3
+    (
+        "AWS_ENDPOINT" = "AWS_ENDPOINT",
+        "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
+        "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
+        "AWS_TOKEN" = "AWS_TEMP_TOKEN",
+        "AWS_REGION" = "AWS_REGION"
+    )
+  ```
+
+### HDFS 认证方式
+
+1. 简单认证
 
 简单认证即 Hadoop 配置 `hadoop.security.authentication` 为 `simple`。
 
@@ -109,7 +353,7 @@ CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_03_23";
 
 username 配置为要访问的用户，密码置空即可。
 
-### Kerberos 认证
+2. Kerberos 认证
 
 该认证方式需提供以下信息：
 
@@ -120,7 +364,6 @@ username 配置为要访问的用户，密码置空即可。
 - `hadoop.kerberos.keytab`：指定 Kerberos 的 keytab 文件路径。该文件必须为 Broker 进程所在服务器上的文件的绝对路径。并且可以被 Broker 进程访问。
 
 - `kerberos_keytab_content`：指定 Kerberos 中 keytab 文件内容经过 base64 编码之后的内容。这个跟 `kerberos_keytab` 配置二选一即可。
-
 
 示例如下：
 
@@ -193,9 +436,59 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
 )
 ```
 
-### 导入示例
+### 其他 Broker 导入
 
-- 导入 HDFS 上的 TXT 文件
+其他远端存储系统的 Broker 是 Doris 集群中一种可选进程，主要用于支持 Doris 读写远端存储上的文件和目录。目前提供了如下存储系统的 Broker 实现。
+
+- 阿里云 OSS
+
+- 百度云 BOS
+
+- 腾讯云 CHDFS
+
+- 腾讯云 GFS
+
+- 华为云 OBS
+
+- JuiceFS 
+
+- GCS
+
+Broker 通过提供一个 RPC 服务端口来提供服务，是一个无状态的 Java 进程，负责为远端存储的读写操作封装一些类 POSIX 的文件操作，如 open，pread，pwrite 等等。除此之外，Broker 不记录任何其他信息，所以包括远端存储的连接信息、文件信息、权限信息等等，都需要通过参数在 RPC 调用中传递给 Broker 进程，才能使得 Broker 能够正确读写文件。
+
+Broker 仅作为一个数据通路，并不参与任何计算，因此仅需占用较少的内存。通常一个 Doris 系统中会部署一个或多个 Broker 进程。并且相同类型的 Broker 会组成一个组，并设定一个 名称（Broker name）。
+
+这里主要介绍 Broker 在访问不同远端存储时需要的参数，如连接信息、权限认证信息等等。
+
+**Broker 信息**
+
+Broker 的信息包括 名称（Broker name）和 认证信息 两部分。通常的语法格式如下：
+
+```sql
+WITH BROKER "broker_name" 
+(
+    "username" = "xxx",
+    "password" = "yyy",
+    "other_prop" = "prop_value",
+    ...
+);
+```
+
+- 名称
+
+通常用户需要通过操作命令中的 `WITH BROKER "broker_name"` 子句来指定一个已经存在的 Broker Name。Broker Name 是用户在通过 `ALTER SYSTEM ADD BROKER` 命令添加 Broker 进程时指定的一个名称。一个名称通常对应一个或多个 Broker 进程。Doris 会根据名称选择可用的 Broker 进程。用户可以通过 `SHOW BROKER` 命令查看当前集群中已经存在的 Broker。
+
+:::info 备注
+Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
+:::
+
+- 认证信息
+
+不同的 Broker 类型，以及不同的访问方式需要提供不同的认证信息。认证信息通常在 `WITH BROKER "broker_name"` 之后的 Property Map 中以 Key-Value 的方式提供。
+
+## 导入示例
+
+### 导入 HDFS 上的 TXT 文件
 
   ```sql
   LOAD LABEL demo.label_20220402
@@ -217,7 +510,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
   );
   ```
 
--  HDFS 需要配置 NameNode HA 的情况
+###  HDFS 需要配置 NameNode HA 的情况
 
   ```sql
   LOAD LABEL demo.label_20220402
@@ -244,7 +537,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
   );
   ```
 
-- 从 HDFS 导入数据，使用通配符匹配两批文件，分别导入到两个表中
+### 从 HDFS 导入数据，使用通配符匹配两批文件，分别导入到两个表中
 
   ```sql
   LOAD LABEL example_db.label2
@@ -272,7 +565,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
 
   使用通配符匹配导入两批文件 `file-10*` 和 `file-20*`。分别导入到 `my_table1` 和 `my_table2` 两张表中。其中 `my_table1` 指定导入到分区 `p1` 中，并且将导入源文件中第二列和第三列的值 +1 后导入。
 
-- 使用通配符从 HDFS 导入一批数据
+### 使用通配符从 HDFS 导入一批数据
 
   ```sql
   LOAD LABEL example_db.label3
@@ -290,7 +583,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
 
   指定分隔符为 Hive 经常用的默认分隔符 `\\x01`，并使用通配符 * 指定 `data` 目录下所有目录的所有文件。
 
-- 导入 Parquet 格式数据，指定 FORMAT 为 `parquet`
+### 导入 Parquet 格式数据，指定 FORMAT 为 `parquet`
 
     ```SQL
     LOAD LABEL example_db.label4
@@ -309,7 +602,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
 
   默认是通过文件后缀判断。
 
-- 导入数据，并提取文件路径中的分区字段
+### 导入数据，并提取文件路径中的分区字段
 
   ```sql
   LOAD LABEL example_db.label5
@@ -340,7 +633,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
 
   文件中只包含 `k1, k2, k3` 三列数据，`city, utc_date` 这两列数据会从文件路径中提取。
 
-- 对导入数据进行过滤
+### 对导入数据进行过滤
 
   ```sql
   LOAD LABEL example_db.label6
@@ -363,7 +656,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
 
   只有原始数据中，k1 = 1，并且转换后，k1 > k2 的行才会被导入。
 
-- 导入数据，提取文件路径中的时间分区字段
+### 导入数据，提取文件路径中的时间分区字段
 
   ```sql
   LOAD LABEL example_db.label7
@@ -408,7 +701,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
   );
   ```
 
-- 使用 Merge 方式导入
+### 使用 Merge 方式导入
 
   ```sql
   LOAD LABEL example_db.label8
@@ -432,7 +725,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
 
   使用 Merge 方式导入。`my_table` 必须是一张 Unique Key 的表。当导入数据中的 v2 列的值大于 100 时，该行会被认为是一个删除行。导入任务的超时时间是 3600 秒，并且允许错误率在 10% 以内。
 
-- 导入时指定 source_sequence 列，保证替换顺序
+### 导入时指定 source_sequence 列，保证替换顺序
 
   ```sql
   LOAD LABEL example_db.label9
@@ -494,117 +787,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
   );
   ```
 
-## S3 Load
-
-Doris 支持通过 S3 协议直接从支持 S3 协议的对象存储系统导入数据。这里主要介绍如何导入 AWS S3 中存储的数据，支持导入其他支持 S3 协议的对象存储系统可以参考 AWS S3。 
-
-### 准备工作
-
-- AK 和 SK：首先需要找到或者重新生成 AWS `Access keys`，可以在 AWS console 的 `My Security Credentials` 找到生成方式。
-
-- REGION 和 ENDPOINT：REGION 可以在创建桶的时候选择也可以在桶列表中查看到。每个 REGION 的 S3 ENDPOINT 可以通过如下页面查到 [AWS 文档](https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_region)。
-
-### 导入示例
-
-```sql
-    LOAD LABEL example_db.example_label_1
-    (
-        DATA INFILE("s3://your_bucket_name/your_file.txt")
-        INTO TABLE load_test
-        COLUMNS TERMINATED BY ","
-    )
-    WITH S3
-    (
-        "AWS_ENDPOINT" = "AWS_ENDPOINT",
-        "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
-        "AWS_SECRET_KEY"="AWS_SECRET_KEY",
-        "AWS_REGION" = "AWS_REGION"
-    )
-    PROPERTIES
-    (
-        "timeout" = "3600"
-    );
-```
-
-### 常见问题
-
-- S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式：
-
-  ```sql
-    WITH S3
-    (
-          "AWS_ENDPOINT" = "AWS_ENDPOINT",
-          "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
-          "AWS_SECRET_KEY"="AWS_SECRET_KEY",
-          "AWS_REGION" = "AWS_REGION",
-          "use_path_style" = "true"
-    )
-  ```
-
-- 支持使用临时秘钥 (TOKEN) 访问所有支持 S3 协议的对象存储，用法如下：
-
-  ```sql
-    WITH S3
-    (
-          "AWS_ENDPOINT" = "AWS_ENDPOINT",
-          "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
-          "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
-          "AWS_TOKEN" = "AWS_TEMP_TOKEN",
-          "AWS_REGION" = "AWS_REGION"
-    )
-  ```
-
-## 其他 Broker 导入
-
-其他远端存储系统的 Broker 是 Doris 集群中一种可选进程，主要用于支持 Doris 读写远端存储上的文件和目录。目前提供了如下存储系统的 Broker 实现。
-
-- 阿里云 OSS
-
-- 百度云 BOS
-
-- 腾讯云 CHDFS
-
-- 腾讯云 GFS
-
-- 华为云 OBS
-
-- JuiceFS 
-
-- GCS
-
-Broker 通过提供一个 RPC 服务端口来提供服务，是一个无状态的 Java 进程，负责为远端存储的读写操作封装一些类 POSIX 的文件操作，如 open，pread，pwrite 等等。除此之外，Broker 不记录任何其他信息，所以包括远端存储的连接信息、文件信息、权限信息等等，都需要通过参数在 RPC 调用中传递给 Broker 进程，才能使得 Broker 能够正确读写文件。
-
-Broker 仅作为一个数据通路，并不参与任何计算，因此仅需占用较少的内存。通常一个 Doris 系统中会部署一个或多个 Broker 进程。并且相同类型的 Broker 会组成一个组，并设定一个 名称（Broker name）。
-
-这里主要介绍 Broker 在访问不同远端存储时需要的参数，如连接信息、权限认证信息等等。
-
-### Broker 信息
-
-Broker 的信息包括 名称（Broker name）和 认证信息 两部分。通常的语法格式如下：
-
-```sql
-WITH BROKER "broker_name" 
-(
-    "username" = "xxx",
-    "password" = "yyy",
-    "other_prop" = "prop_value",
-    ...
-);
-```
-
-**名称**
-
-通常用户需要通过操作命令中的 `WITH BROKER "broker_name"` 子句来指定一个已经存在的 Broker Name。Broker Name 是用户在通过 `ALTER SYSTEM ADD BROKER` 命令添加 Broker 进程时指定的一个名称。一个名称通常对应一个或多个 Broker 进程。Doris 会根据名称选择可用的 Broker 进程。用户可以通过 `SHOW BROKER` 命令查看当前集群中已经存在的 Broker。
-
-:::info 备注
-Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
-:::
-
-**认证信息**
-
-不同的 Broker 类型，以及不同的访问方式需要提供不同的认证信息。认证信息通常在 `WITH BROKER "broker_name"` 之后的 Property Map 中以 Key-Value 的方式提供。
-
-### Broker 举例
+### 从其他 Broker 导入
 
 - 阿里云 OSS
 
@@ -656,86 +839,10 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 ```sql
 (
-    "fs.gs.project.id" = "你的 Project ID",
+    "fs.gs.project.id" = "Your Project ID",
     "fs.AbstractFileSystem.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
     "fs.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem",
 )
-```
-
-## 相关配置
-
-下面几个配置属于 Broker load 的系统级别配置，也就是作用于所有 Broker load 导入任务的配置。主要通过修改 `fe.conf`来调整配置值。
-
-**min_bytes_per_broker_scanner**
-
-- 默认 64MB。
-
-- 一个 Broker Load 作业中单 BE 处理的数据量的最小值
-
-**max_bytes_per_broker_scanner**
-
-- 默认 500GB。
-
-- 一个 Broker Load 作业中单 BE 处理的数据量的最大值
-
-通常一个导入作业支持的最大数据量为 `max_bytes_per_broker_scanner * BE 节点数`。如果需要导入更大数据量，则需要适当调整 `max_bytes_per_broker_scanner` 参数的大小。
-
-**max_broker_concurrency**
-
-- 默认 10。
-
-- 限制了一个作业的最大的导入并发数。
-
-- 最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数共同决定了本次导入的并发数。
-
-```Plain
-本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
-本次导入单个BE的处理量 = 源文件大小/本次导入的并发数
-```
-
-## 常见问题
-
-**1. 导入报错：`Scan bytes per broker scanner exceed limit:xxx`**
-
-请参照文档中最佳实践部分，修改 FE 配置项 `max_bytes_per_broker_scanner` 和 `max_broker_concurrency`
-
-**2. 导入报错：`failed to send batch` 或 `TabletWriter add batch with unknown id`**
-
-适当修改 `query_timeout` 和 `streaming_load_rpc_max_alive_time_sec`。
-
-**3. 导入报错：`LOAD_RUN_FAIL; msg:Invalid Column Name:xxx`**
-
-如果是 PARQUET 或者 ORC 格式的数据，则文件头的列名需要与 doris 表中的列名保持一致，如：
-
-```sql
-(tmp_c1,tmp_c2)
-SET
-(
-    id=tmp_c2,
-    name=tmp_c1
-)
-```
-
-代表获取在 parquet 或 orc 中以 (tmp_c1, tmp_c2) 为列名的列，映射到 doris 表中的 (id, name) 列。如果没有设置 set, 则以 column 中的列作为映射。
-
-注：如果使用某些 hive 版本直接生成的 orc 文件，orc 文件中的表头并非 hive meta 数据，而是（_col0, _col1, _col2, ...）, 可能导致 Invalid Column Name 错误，那么则需要使用 set 进行映射
-
-**4. 导入报错：`Failed to get S3 FileSystem for bucket is null/empty`**
-
-bucket 信息填写不正确或者不存在。或者 bucket 的格式不受支持。使用 GCS 创建带`_`的桶名时，比如：`s3://gs_bucket/load_tbl`，S3 Client 访问 GCS 会报错，建议创建 bucket 路径时不使用`_`。
-
-**5. 导入超时**
-
-导入的 timeout 默认超时时间为 4 小时。如果超时，不推荐用户将导入最大超时时间直接改大来解决问题。单个导入时间如果超过默认的导入超时时间 4 小时，最好是通过切分待导入文件并且分多次导入来解决问题。因为超时时间设置过大，那么单次导入失败后重试的时间成本很高。
-
-可以通过如下公式计算出 Doris 集群期望最大导入文件数据量：
-
-```Plain
-期望最大导入文件数据量 = 14400s * 10M/s * BE 个数
-比如：集群的 BE 个数为 10个
-期望最大导入文件数据量 = 14400s * 10M/s * 10 = 1440000M ≈ 1440G
-
-注意：一般用户的环境可能达不到 10M/s 的速度，所以建议超过 500G 的文件都进行文件切分，再导入。
 ```
 
 ## 更多帮助

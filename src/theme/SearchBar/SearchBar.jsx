@@ -25,6 +25,7 @@ import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/common';
 import styles from './SearchBar.module.css';
 import { normalizeContextByPath } from '../../utils/normalizeContextByPath';
 import useIsDocPage from '@site/src/hooks/use-is-doc';
+import { debounce } from '@site/src/utils/debounce';
 import { DataContext } from '../Layout';
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
@@ -38,6 +39,21 @@ async function fetchAutoCompleteJS() {
     }
     return autoComplete;
 }
+
+function getVersionUrl(baseUrl, pathname) {
+    let versionUrl = baseUrl;
+    if (pathname && pathname.includes('zh-CN') && !versionUrl.includes('zh-CN')) {
+        versionUrl = baseUrl + 'zh-CN/';
+    }
+    if (pathname?.startsWith('/docs') || pathname?.startsWith('/zh-CN/docs')) {
+        let version = pathname?.startsWith('/docs') ? pathname.split('/')[2] : pathname.split('/')[3];
+        if (VERSIONS.includes(version)) {
+            versionUrl += `docs/${version}/`;
+        }
+    }
+    return versionUrl;
+}
+
 const SEARCH_PARAM_HIGHLIGHT = '_highlight';
 export default function SearchBar({ handleSearchBarToggle }) {
     const isBrowser = useIsBrowser();
@@ -51,17 +67,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
     // It returns undefined for non-docs pages
     const activePlugin = useActivePlugin();
     const [isDocsPage] = useIsDocPage(false);
-    let versionUrl = baseUrl;
-    if (location?.pathname && location.pathname.includes('zh-CN') && !versionUrl.includes('zh-CN')) {
-        versionUrl = baseUrl + 'zh-CN/';
-    }
-    if (location?.pathname) {
-        VERSIONS.forEach(version => {
-            if (location.pathname.includes(version)) {
-                versionUrl += `docs/${version}/`;
-            }
-        });
-    }
+    let versionUrl = getVersionUrl(baseUrl, location.pathname);
 
     // For non-docs pages while using plugin-content-docs with custom ids,
     // this will throw an error of:
@@ -128,6 +134,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setSearchContext(nextSearchContext);
     }, [location.pathname, versionUrl]);
     const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
+
     const loadIndex = useCallback(
         async (forceLoad = false) => {
             if (hidden || (indexStateMap.current.get(searchContext) && !forceLoad)) {
@@ -218,7 +225,12 @@ export default function SearchBar({ handleSearchBarToggle }) {
                             [styles.searchBarLeft]: searchBarPosition === 'left',
                         }),
                         noPrefix: true,
-                        dropdownMenu: styles.dropdownMenu,
+                        dropdownMenu: clsx(
+                            {
+                                [styles.mobileDropdownMenu]: document.body.clientWidth < 996,
+                            },
+                            styles.dropdownMenu,
+                        ),
                         input: styles.input,
                         hint: styles.hint,
                         suggestions: styles.suggestions,
@@ -230,10 +242,10 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 },
                 [
                     {
-                        source: async (input, callback) => {
+                        source: debounce(async (input, callback) => {
                             const result = await searchByWorker(versionUrl, searchContext, input);
                             callback(result);
-                        },
+                        }, 300),
                         templates: {
                             suggestion: SuggestionTemplate,
                             empty: EmptyTemplate,
@@ -312,20 +324,26 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setFocused(true);
         handleSearchBarToggle?.(true);
     }, [handleSearchBarToggle, loadIndex]);
-    const onInputBlur = useCallback(() => {
-        setFocused(false);
-        handleSearchBarToggle?.(false);
-    }, [handleSearchBarToggle]);
+    const onInputBlur = useCallback(
+        e => {
+            if (document.body.clientWidth < 996 && e.code === 'Enter') {
+                return;
+            }
+            setFocused(false);
+            handleSearchBarToggle?.(false);
+        },
+        [handleSearchBarToggle],
+    );
     const onInputMouseEnter = useCallback(() => {
         loadIndex();
     }, [loadIndex]);
     const onInputChange = useCallback(event => {
         setInputValue(event.target.value);
-
         if (event.target.value) {
             setInputChanged(true);
         }
     }, []);
+
     // Implement hint icons for the search shortcuts on mac and the rest operating systems.
     const isMac = isBrowser ? /mac/i.test(navigator.userAgentData?.platform ?? navigator.platform) : false;
 
@@ -430,7 +448,13 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 ) : (
                     isBrowser && (
                         <div className={styles.searchHintContainer}>
-                            <kbd className={styles.searchHint}>{isMac ? '⌘' : 'ctrl'}</kbd>
+                            <kbd
+                                className={clsx(styles.searchHint, {
+                                    [styles.macFontStyle]: isMac,
+                                })}
+                            >
+                                {isMac ? '⌘' : 'ctrl'}
+                            </kbd>
                             <kbd className={styles.searchHint}>K</kbd>
                         </div>
                     )

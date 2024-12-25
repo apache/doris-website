@@ -128,7 +128,7 @@ Note that if the user sets history_partition_num (> 0), the starting partition f
 
   When `time_unit` is` MONTH`, this parameter is used to specify the start date of each month. The value ranges from 1 to 28. 1 means the 1st of every month, and 28 means the 28th of every month. The default is 1, which means that every month starts at 1st. The 29, 30 and 31 are not supported at the moment to avoid ambiguity caused by lunar years or months.
 
-- Doris supports multi-level storage with SSD and HDD tiers. For more details, please refer to [tiered-storage](../tiered-storage/diff-disk-medium-migration.md)
+- Doris supports multi-level storage with SSD and HDD tiers. For more details, please refer to [tiered-storage](../tiered-storage/tiered-ssd-hdd.md)
 
 - `dynamic_partition.create_history_partition`
 

@@ -79,47 +79,40 @@ Doris has several unique data types. Here are the details:
 
 - **HyperLogLog**
 
-  HLL (HyperLogLog) is a data type that cannot be used as a key column. It can be used in aggregate, duplicate, and unique models. In an aggregate model table, the corresponding aggregation type for HLL is HLL_UNION. The length and default value do not need to be specified. The length is controlled internally based on the data aggregation level. HLL columns can only be queried or used with `HLL_UNION_AGG`, `HLL_RAW_AGG`, `HLL_CARDINALITY`, `HLL_HASH`, and other related functions. 
+  HLL (HyperLogLog) is a data type that cannot be used as a key column. In an aggregate model table, the corresponding aggregation type for HLL is HLL_UNION. The length and default value do not need to be specified. The length is controlled internally based on the data aggregation level. HLL columns can only be queried or used with `HLL_UNION_AGG`, `HLL_RAW_AGG`, `HLL_CARDINALITY`, `HLL_HASH`, and other related functions. 
 
   HLL is used for approximate fuzzy deduplication and performs better than count distinct when dealing with large amounts of data. The typical error rate of HLL is around 1%, sometimes reaching up to 2%.
 
 - **Bitmap**
 
-  Bitmap is another data type in Doris. It can be used in aggregate, unique, or duplicate models. In Unique or Duplicate models, it must be used as a non-key column. In aggregate models, it must also be used as a non-key column, and the corresponding aggregation type during table creation is BITMAP_UNION. Similar to HLL, the length and default values do not need to be specified, and the length is controlled internally based on the data aggregation level. Bitmap columns can only be queried or used with functions like `BITMAP_UNION_COUNT`, `BITMAP_UNION`, `BITMAP_HASH`, `BITMAP_HASH64` and others. 
+  Bitmap is a data type that cannot be used as a key column. In aggregate model table, the corresponding aggregation type for BITMAP is BITMAP_UNION. Similar to HLL, the length and default values do not need to be specified, and the length is controlled internally based on the data aggregation level. Bitmap columns can only be queried or used with functions like `BITMAP_UNION_COUNT`, `BITMAP_UNION`, `BITMAP_HASH`, `BITMAP_HASH64` and others. 
 
   Using BITMAP in traditional scenarios may impact loading speed, but it generally performs better than Count Distinct when dealing with large amounts of data. Please note that in real-time scenarios, using BITMAP without a global dictionary and with bitmap_hash() function may introduce an error of around 0.1%. If this error is not acceptable, you can use bitmap_hash64 instead.
 
 - **QUANTILE_PERCENT**
 
-  QUANTILE_STATE is another data type in Doris, which cannot be used as a key column. It can be used in aggregate, duplicate, and iuique models. In an aggregate model table, the corresponding aggregation type for QUANTILE_STATE is QUANTILE_UNION. The length and default value do not need to be specified, and the length is controlled internally based on the data aggregation level. QUANTILE_STATE columns can only be queried or used with functions like `QUANTILE_PERCENT`, `QUANTILE_UNION`, `TO_QUANTILE_STATE` and others. 
+  QUANTILE_STATE is a data type that cannot be used as a key column. In an aggregate model table, the corresponding aggregation type for QUANTILE_STATE is QUANTILE_UNION. The length and default value do not need to be specified, and the length is controlled internally based on the data aggregation level. QUANTILE_STATE columns can only be queried or used with functions like `QUANTILE_PERCENT`, `QUANTILE_UNION`, `TO_QUANTILE_STATE` and others. 
 
   QUANTILE_STATE is used for calculating approximate quantile values. During import, it performs pre-aggregation on the same key with different values. When the number of values does not exceed 2048, it stores all the data in detail. When the number of values exceeds 2048, it uses the TDigest algorithm to aggregate (cluster) the data and save the centroids of the clusters.
 
 - **Array<T\>**
 
-  Array is a data type in Doris that represents an array composed of elements of type T. It cannot be used as a key column. Currently, it supports usage in duplicate models and non-key column usage in unique models. 
-
-  The supported types for T are `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `DECIMAL`, `DATE`, DATETIME, CHAR, VARCHAR, and STRING.
+  Array is a data type in Doris that represents an array composed of elements of type T. It cannot be used as a key column.
 
 - **MAP<K, V\>**
 
-  MAP is a data type in Doris that represents a map composed of elements of types K and V. It cannot be used as a key column and can be used in both duplicate and unique models. 
-
-  The supported types for K and V are `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `DECIMAL`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR`, and `STRING`.
+  MAP is a data type in Doris that represents a map composed of elements of types K and V.
 
 - **STRUCT<field_name:field_type,...>**
 
-  A structure (STRUCT) is composed of multiple fields. It can also be identified as a collection of multiple columns. It cannot be used as a key and is currently only supported in tables of the duplicate model.
+  A structure (STRUCT) is composed of multiple fields. It can also be identified as a collection of multiple columns.
 
   - field_name: The identifier of the field, which must be unique.
-  
   - field_type: The type of field.
-
-  The supported types for fields are `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `DECIMAL`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR`, and `STRING`.
 
 - **Agg_State**
 
- AGG_STATE is a data type in Doris that cannot be used as a key column. During table creation, the signature of the aggregation function needs to be declared. 
+  AGG_STATE is a data type in Doris that cannot be used as a key column. During table creation, the signature of the aggregation function needs to be declared. 
 
   The length and default value do not need to be specified, and the actual storage size depends on the implementation of the function.
 
@@ -152,14 +145,14 @@ distribution_desc
 
 | Parameter              | Differences from MySQL                                       |
 | ---------------------- | ------------------------------------------------------------ |
-| Column_definition_list | - Field list definition: The basic syntax is similar to MySQL but includes an additional operation for aggregate types. <br />- The aggregate type operation primarily supports Aggregate and Duplicate data models. <br />- When creating a table, MySQL allows adding constraints like Index (e.g., Primary Key, Unique Key) after the field list definition, while Doris supports these constraints and computations by defining data models. |
+| Column_definition_list | - Field list definition: The basic syntax is similar to MySQL but includes an additional operation for aggregate types. <br />- The aggregate type operation primarily supports Aggregate. <br />- When creating a table, MySQL allows adding constraints like Index (e.g., Primary Key, Unique Key) after the field list definition, while Doris supports these constraints and computations by defining data models. |
 | Index_definition_list  | - Index list definition: The basic syntax is similar to MySQL, supporting bitmap indexes, inverted indexes, and N-Gram indexes, but Bloom filter indexes are set through properties. <br />- MySQL supports B+Tree and Hash indexes. |
 | Engine_type            | - Table engine type: Optional. <br />- The currently supported table engine is mainly the OLAP native engine. <br />- MySQL supports storage engines such as Innodb, MyISAM, etc. |
 | Keys_type              | - Data model: Optional. <br />- Supported types include: 1) DUPLICATE KEY (default): The specified columns are sort columns. 2) AGGREGATE KEY: The specified columns are dimension columns. 3) UNIQUE KEY: The specified columns are primary key columns. <br />- MySQL does not have the concept of a data model. |
 | Table_comment          | Table comment                                                |
-| Partition_info         | - Partitioning algorithm: Optional. Supported partitioning algorithms include: <br /> LESS THAN: Only defines the upper bound of partitions. The lower bound is determined by the upper bound of the previous partition. FIXED RANGE: Defines left-closed and right-open intervals for partitions. <br />- MULTI RANGE: Creates multiple RANGE partitions in bulk, defining left-closed and right-open intervals, setting time units and steps. Time units support years, months, days, weeks, and hours. MULTI RANGE: Creates numeric RANGE partitions in bulk, defining left-closed and right-open intervals, and setting steps. <br />- MySQL supports algorithms such as Hash, Range, List, and also supports subpartitions, with only Hash supported for subpartitions. |
+| Partition_info         | - Partitioning algorithm: Optional. Doris supported partitioning algorithms include: <br />- LESS THAN: Only defines the upper bound of partitions. The lower bound is determined by the upper bound of the previous partition.<br />- FIXED RANGE: Defines left-closed and right-open intervals for partitions. <br />- MULTI RANGE: Creates multiple RANGE partitions in bulk, defining left-closed and right-open intervals, setting time units and steps. Time units support years, months, days, weeks, and hours. <br />MySQL supports algorithms such as Hash, Range, List, Key. MySQL also supports subpartitions, with only Hash and Key supported for subpartitions. |
 | Distribution_desc      | - Bucketing algorithm: Required. Includes: 1) Hash bucketing syntax: DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num\|auto]. Description: Uses specified key columns for hash bucketing. 2) Random bucketing syntax: DISTRIBUTED BY RANDOM [BUCKETS num\|auto]. Description: Uses random numbers for bucketing. <br />- MySQL does not have a bucketing algorithm. |
-| Rollup_list            | - Multiple materialized views can be created while creating the table. <br />- Syntax: `rollup_name (col1[, col2, ...]) [DUPLICATE KEY(col1[, col2, ...])][PROPERTIES("key" = "value")]` <br />- MySQL does not support this. |
+| Rollup_list            | - Multiple sync materialized views can be created while creating the table. <br />- Syntax: `rollup_name (col1[, col2, ...]) [DUPLICATE KEY(col1[, col2, ...])][PROPERTIES("key" = "value")]` <br />- MySQL does not support this. |
 | Properties             | Table properties: They differ from MySQL's table properties, and the syntax for defining table properties also differs from MySQL. |
 
 
@@ -193,10 +186,8 @@ CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
 ```
 
 - The basic syntax is consistent with MySQL.
-
-- Doris supports two types of materialized views: synchronous materialized views and asynchronous materialized views (supported for v2.1). The asynchronous materialized views in Doris are more powerful.
-
-- MySQL only supports asynchronous materialized views.
+- Doris supports logical view and supports two types of materialized views: synchronous materialized views and asynchronous materialized views
+- MySQL do not supports asynchronous materialized views.
 
 #### 05 ALTER TABLE / ALTER INDEX
 
