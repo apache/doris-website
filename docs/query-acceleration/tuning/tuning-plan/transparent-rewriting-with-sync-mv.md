@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Transparent Rewriting with Sync-Materialized View",
+    "title": "Transparent Rewriting with Multi-table Materialized View",
     "language": "en"
 }
 ---
