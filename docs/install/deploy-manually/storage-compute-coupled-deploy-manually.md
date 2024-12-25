@@ -71,7 +71,7 @@ After completing preliminary checks and planning, such as environment checks, cl
    
    Parameter Descriptions: For more detailed parameters, refer to the documentation. [FE Configuration](../../admin-manual/config/fe-config)：
 
-   | 参数                                                         | 修改建议                                                  |
+   | Parameter                                                    | Suggestion                                                 |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
    | JAVA_OPTS                                                    | Specify the `-Xmx` parameter to adjust the Java Heap. It is recommended to set it to above 16G in production environments.   |
    | [lower_case_table_names ](../../admin-manual/config/fe-config#lower_case_table_names) | Set case sensitivity. It is recommended to adjust it to 1, meaning case-insensitive.            |
@@ -91,7 +91,7 @@ After completing preliminary checks and planning, such as environment checks, cl
 
    You can connect to the Doris cluster using MySQL Client. The default user is root, and the password is empty.
 
-   ```SQL
+   ```sql
    mysql -uroot -P<fe_query_port> -h<fe_ip_address>
    ```
 
@@ -246,7 +246,7 @@ In a production cluster, it is recommended to deploy at least 3 Follower nodes. 
 
    Use `show frontends` and `show backends` to view the status of each database instance.
 
-   ```SQL
+   ```Sql
    -- check fe status
    show frontends \G  
         
