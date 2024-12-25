@@ -417,22 +417,7 @@
                         "admin-manual/workload-management/compute-group",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
-                        "admin-manual/workload-management/job-scheduler",
-                        {
-                            "type": "category",
-                            "label": "Best Practices",
-                            "items": [
-                                "admin-manual/workload-management/best-practice/group-workload-groups",
-                                "admin-manual/workload-management/best-practice/workload-group-best-practice"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing Query",
-                    "items": [
-                        "admin-manual/query-admin/sql-interception"
+                        "admin-manual/workload-management/job-scheduler"
                     ]
                 },
                 {
