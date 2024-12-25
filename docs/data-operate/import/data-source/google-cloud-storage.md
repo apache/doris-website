@@ -75,8 +75,8 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "GCP",
-    "s3.endpoint" = "storage.me-central2.rep.googleapis.com",  
-    "s3.region" = "ME-CENTRAL2",
+    "s3.endpoint" = "storage.us-west2.rep.googleapis.com",  
+    "s3.region" = "US-WEST2",
     "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 )
@@ -153,8 +153,8 @@ SELECT * FROM S3
     "uri" = "s3://your_bucket_name/s3load_example.csv",
     "format" = "csv",
     "provider" = "GCP",
-    "s3.endpoint" = "storage.me-central2.rep.googleapis.com",  
-    "s3.region" = "ME-CENTRAL2",
+    "s3.endpoint" = "storage.us-west2.rep.googleapis.com",  
+    "s3.region" = "US-WEST2",
     "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
     "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
     "column_separator" = ",",
