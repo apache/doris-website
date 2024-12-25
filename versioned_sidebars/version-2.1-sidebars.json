@@ -70,17 +70,6 @@
                              "items": [
                                  {
                                      "type": "category",
-                                     "label": "Compute storage coupled",
-                                     "items": [
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
-                                     ]
-                                 },
-                                 {
-                                     "type": "category",
                                      "label": "Compute storage decoupled",
                                      "items": [
                                          "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart",
