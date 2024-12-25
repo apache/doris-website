@@ -69,13 +69,13 @@ After completing preliminary checks and planning, such as environment checks, cl
    JAVA_HOME = <your-java-home-path>
    ```
    
-   Parameter Descriptions: For more detailed parameters, refer to the documentation. [FE Configuration](https://doris.apache.org/zh-CN/docs/admin-manual/config/fe-config)：
+   Parameter Descriptions: For more detailed parameters, refer to the documentation. [FE Configuration](../../admin-manual/config/fe-config)：
 
    | 参数                                                         | 修改建议                                                  |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
    | JAVA_OPTS                                                    | Specify the `-Xmx` parameter to adjust the Java Heap. It is recommended to set it to above 16G in production environments.   |
-   | [lower_case_table_names ](https://doris.apache.org/zh-CN/docs/admin-manual/config/fe-config#lower_case_table_names) | Set case sensitivity. It is recommended to adjust it to 1, meaning case-insensitive.            |
-   | [priority_networks ](https://doris.apache.org/zh-CN/docs/admin-manual/config/fe-config#priority_networks) | Network CIDR is specified based on the network IP address. It can be ignored in an FQDN environment. |
+   | [lower_case_table_names ](../../admin-manual/config/fe-config#lower_case_table_names) | Set case sensitivity. It is recommended to adjust it to 1, meaning case-insensitive.            |
+   | [priority_networks ](../../admin-manual/config/fe-config#priority_networks) | Network CIDR is specified based on the network IP address. It can be ignored in an FQDN environment. |
    | JAVA_HOME                                                    | It is recommended to use a JDK environment independent of the operating system for Doris.                |
    
 3. Start FE Process
@@ -186,7 +186,7 @@ In a production cluster, it is recommended to deploy at least 3 Follower nodes. 
 
    | 参数                                                         | 修改建议                                                  |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
-   | [priority_networks](https://doris.apache.org/zh-CN/docs/admin-manual/config/be-config#priority_networks) | Network CIDR, specified by network IP address. Can be ignored in FQDN environments. |
+   | [priority_networks](../../admin-manual/config/be-config#priority_networks) | Network CIDR, specified by network IP address. Can be ignored in FQDN environments. |
    | JAVA_OPTS                                                    | Set the `-Xmx` parameter to adjust the Java heap size. It is recommended to set it to 16GB or more for production environments.   |
    | JAVA_HOME                                                    | It is recommended to use a JDK environment that is independent of the operating system for Doris.               |
 
