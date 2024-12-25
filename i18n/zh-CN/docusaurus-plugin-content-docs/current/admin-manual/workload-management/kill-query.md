@@ -24,44 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 获取查询列表
 
-## Kill 连接
-
-每个 Doris 的连接都在一个单独的线程中运行。您可以使用 KILL processlist_id 语句终止线程。
-
-线程进程列表标识符可以从 `SHOW PROCESSLIST` 输出的 Id 列查询 或者 `SELECT CONNECTION_ID()` 来查询当前 Connection ID。
-
-语法：
-
-```sql
-KILL [CONNECTION] processlist_id
-```
-
-## Kill 查询
-
-除此之外，您还可以使用 processlist_id 或者 query_id 终止正在执行的查询命令
-
-语法：
-
-```sql
-KILL QUERY processlist_id | query_id
-```
-
-## 举例
-
-1. 查看当前连接的 Connection ID。
-
+    语法：
     ```sql
-    select connection_id();
-    +-----------------+
-    | connection_id() |
-    +-----------------+
-    | 48              |
-    +-----------------+
-    1 row in set (0.00 sec)
+    SHOW PROCESSLIST;
     ```
-
-2. 查看所有连接的 Connection ID。
+    可以显示当前FE 所有的连接，以及每个连接上正在运行的Query 的列表，例如：
 
     ```sql
     SHOW PROCESSLIST;
@@ -77,9 +46,38 @@ KILL QUERY processlist_id | query_id
     5 rows in set (0.00 sec)
     ```
 
-3. 终止正在运行的查询，正在运行的查询会显示被取消。
+
+- Id 是连接的唯一标识，也可以称为processlist_id；
+- QueryId 是Query的唯一标识。  
+
+
+
+## Kill 查询
+
+    语法：
+
+    ```sql
+    KILL QUERY query_id | processlist_id
+    ```
+    用于Kill 某一个指定的Query，或者某一个连接上正在运行的Query，例如：
 
     ```sql
     kill query 55;
     Query OK, 0 rows affected (0.01 sec)
     ```
+    表示Kill 连接Id=55 上正在运行的Query，但是连接仍然有效。
+    
+    ```sql
+    kill query 'f02603dc163a4da3-beebbb5d1ced760c';
+    Query OK, 0 rows affected (0.01 sec)
+    ```
+    表示Kill QueryId=f02603dc163a4da3-beebbb5d1ced760c 的Query，与之前的processlist_id=55 实际是同一个Query。
+
+## Kill 连接
+
+    语法：
+
+    ```sql
+    KILL CONNECTION processlist_id
+    ```
+    表示断开processlist_id标识的客户端与FE 之间的连接，正在执行的Query也会被Cancel。
