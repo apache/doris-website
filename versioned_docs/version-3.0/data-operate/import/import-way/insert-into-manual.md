@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Insert Into",
+    "title": "Insert Into Select",
     "language": "en"
 }
 ---
@@ -25,8 +25,6 @@ under the License.
 -->
 
 The INSERT INTO statement supports importing the results of a Doris query into another table. INSERT INTO is a synchronous import method, where the import result is returned after the import is executed. Whether the import is successful can be determined based on the returned result. INSERT INTO ensures the atomicity of the import task, meaning that either all the data is imported successfully or none of it is imported.
-
-- INSERT INTO tbl SELECT...
 
 ## Applicable scenarios
 

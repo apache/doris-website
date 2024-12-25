@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The INSERT INTO VALUES statement supports importing the results of a Doris query into another table. INSERT INTO VALUES is a synchronous import method, where the import result is returned after the import is executed. Whether the import is successful can be determined based on the returned result. INSERT INTO VALUES ensures the atomicity of the import task, meaning that either all the data is imported successfully or none of it is imported.
-
-- INSERT INTO tbl (col1, col2, ...) VALUES (1, 2, ...), (1,3, ...)
+The INSERT INTO VALUES statement supports importing values from SQL into a Doris table. INSERT INTO VALUES is a synchronous import method, where the import result is returned after the import is executed. Whether the import is successful can be determined based on the returned result. INSERT INTO VALUES ensures the atomicity of the import task, meaning that either all the data is imported successfully or none of it is imported.
 
 ## Applicable scenarios
 
