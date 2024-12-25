@@ -1,7 +1,7 @@
 ---
 {
 "title": "Query Circuit Breaking",
-"language": "zh-CN"
+"language": "en"
 }
 ---
 
