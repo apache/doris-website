@@ -36,7 +36,7 @@ To improve performance, it's essential to analyze the current plan. This article
 
 ## Syntax
 
-```sql
+```plain text
 {EXPLAIN | DESC} [VERBOSE] <query_block>
 ```
 
@@ -44,7 +44,7 @@ To improve performance, it's essential to analyze the current plan. This article
 
 **<query_block>**
 
-> The query statement for which you want to view the execution plan.
+> This is the query statement for which you want the explain plan.
 
 ## Optional Parameters
 
@@ -144,9 +144,10 @@ Operators are linked to their child nodes with dashed lines. When an operator ha
 **Sink Methods**
 
 
+
 | Name               | Description                                                  |
 | :----------------- | :----------------------------------------------------------- |
-| STREAM DATA SINK   | Outputs data to the next Fragment. It includes two lines of information.<br />First line: The downstream EXCHANGE NODE to which data is sent.<br />Second line: The method of data distribution. UNPARTITIONED means each downstream instance receives the full data set.<br />This typically occurs in broadcast joins or when single-instance logic is required, such as global limit or order by.<br />RANDOM means each downstream instance receives a random subset of data without repetition.<br />HASH_PARTITIONED uses the listed slots as keys to hash and send data shards to the same downstream instance. This is often used upstream of partition hash joins or the second stage of two-phase aggregations. |
+| STREAM DATA SINK   | Outputs data to the next Fragment. It includes two lines of information.<br />First line: The downstream EXCHANGE NODE to which data is sent.<br />Second line: The method of data distribution. <br />  - UNPARTITIONED means each downstream instance receives the full data set. This typically occurs in broadcast joins or when single-instance logic is required, such as global limit or order by.<br /> - RANDOM means each downstream instance receives a random subset of data without repetition.<br /> - HASH_PARTITIONED uses the listed slots as keys to hash and send data shards to the same downstream instance. This is often used upstream of partition hash joins or the second stage of two-phase aggregations. |
 | RESULT SINK        | Sends result data to the FE. The first line indicates the protocol used for data transmission, currently supporting MySQL and arrow protocols. |
 | OLAP TABLE SINK    | Writes data to an OLAP table.                                |
 | MultiCastDataSinks | A multicast operator that contains multiple STREAM DATA SINKs. Each STREAM DATA SINK sends the full data set to its downstream. |
@@ -173,7 +174,7 @@ TupleDescriptor{id=0, tbl=t1}
 | Name | Description                                                  |
 | :--- | :----------------------------------------------------------- |
 | id   | The id of the tuple descriptor                               |
-| tbl  | The corresponding table of the tuple, or left blank if not applicable |
+| tbl  | The corresponding table of the tuple, or `null` if not applicable  |
 
 
 

@@ -31,7 +31,7 @@ EXPLAIN 语句用于展示 Doris 对于给定的查询所规划的查询计划�
 
 ## 语法
 
-```sql
+```plain text
 {EXPLAIN | DESC} [VERBOSE] <query_block>
 ```
 
@@ -132,9 +132,10 @@ Doris EXPLAIN 语句的结果是一个完整的 PLAN。PLAN 内部是按照执�
 
 Sink 方式
 
+
 | 名称               | 解释                                                         |
 | :----------------- | :----------------------------------------------------------- |
-| STREAM DATA SINK   | 向下一个 Fragment 输出数据。这里主要包含两行信息。<br /> 第一行：数据发送给哪个下游的 EXCHANGE NODE 节点。第二行：数据按照何种方式发送 UNPARTITIONED 下游的每个 instance 都会获得全量的数据。<br /> 这一般出现在两种情况下。一个是 broadcast join，另外一个是需要单 instance 计算的逻辑，比如全局的 limit，order by 等。<br /> RANDOM 下游的每个 instance 获得随机的一组数据，不同 instance 之间的数据不重复。HASH_PARTITIONED 以后续列出的 slot 为 key 做 hash，将同一个 hash 分片的数据发送到同一个下游的 instance 中。这多用于 partition hash join，两阶段聚合的第二阶段等算子的上游。 |
+| STREAM DATA SINK   | 向下一个 Fragment 输出数据。这里主要包含两行信息。<br /> 第一行：数据发送给哪个下游的 EXCHANGE NODE 节点。<br /> 第二行：数据按照何种方式发送 <br /> -  UNPARTITIONED 下游的每个 instance 都会获得全量的数据。这一般出现在两种情况下。一个是 broadcast join，另外一个是需要单 instance 计算的逻辑，比如全局的 limit，order by 等。<br /> - RANDOM 下游的每个 instance 获得随机的一组数据，不同 instance 之间的数据不重复。<br /> - HASH_PARTITIONED 以后续列出的 slot 为 key 做 hash，将同一个 hash 分片的数据发送到同一个下游的 instance 中。这多用于 partition hash join，两阶段聚合的第二阶段等算子的上游。 |
 | RESULT SINK        | 向 FE 发送结果数据。第一行，表名发送数据采用的协议。现在有 MySQL 协议和 arrow 协议 |
 | OLAP TABLE SINK    | 向 OLAP 表中写入数据                                         |
 | MultiCastDataSinks | 多发算子，下面包含多个 STREAM DATA SINK。每一个 STREAM DATA SINK 都发送全量的数据给下游。 |
