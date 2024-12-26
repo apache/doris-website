@@ -79,6 +79,10 @@
     "message": "数据导入",
     "description": "The label for category Loading Data in sidebar docs"
   },
+  "sidebar.docs.category.Complex Type": {
+    "message": "复杂类型",
+    "description": "The label for category Complex Type in sidebar docs"
+  },
   "sidebar.docs.category.Data Source": {
     "message": "数据源",
     "description": "The label for category Data Source in sidebar docs"
