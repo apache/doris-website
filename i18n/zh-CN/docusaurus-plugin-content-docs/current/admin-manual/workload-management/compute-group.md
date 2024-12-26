@@ -35,13 +35,6 @@ under the License.
 - 更灵活，在存算分离架构下，BE 本地的数据都是缓存，所以增加Compute Group 时不需要做笨重的数据迁移过程，新的Compute Group 只需在查询时缓存预热即可；
 - 隔离更彻底，数据的多副本存储由共享的存储层解决，所以任何Compute Group内的BE 宕机不会像Resource Group 那样导致导入失败。
 
-
-本文档介绍如何使用计算组，其中涉及的操作包括：
-
-- 查看所有计算组
-- 计算组授权
-- 在用户级别绑定计算组 (`default_compute_group`) 以达到用户级别的隔离效果
-
 :::caution 注意
 3.0.2 之前的版本中叫做计算集群（Compute Cluster）。
 :::
