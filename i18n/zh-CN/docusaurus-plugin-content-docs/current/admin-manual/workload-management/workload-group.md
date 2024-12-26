@@ -128,7 +128,7 @@ doris_cgroup_cpu_path = /sys/fs/cgroup/doris
 3. 如果是在容器内使用 CGroup，需要容器具备操作宿主机的权限。
 :::
 
-:::tip
+#### 在容器中使用Workload Group的注意事项
 Workload的CPU管理是基于CGroup实现的，如果期望在容器中使用Workload Group，那么需要以特权模式启动容器，容器内的Doris进程才能具备读写宿主机CGroup文件的权限。
 当Doris在容器内运行时，Workload Group的CPU资源用量是在容器可用资源的情况下再划分的，例如宿主机整机是64核，容器被分配了8个核的资源，Workload Group配置的CPU硬限为50%，
 那么Workload Group实际可用核数为4个（8核 * 50%）。
@@ -136,7 +136,6 @@ Workload的CPU管理是基于CGroup实现的，如果期望在容器中使用Wor
 WorkloadGroup的内存管理和IO管理功能是Doris内部实现，不依赖外部组件，因此在容器和物理机上部署使用并没有区别。
 
 如果要在K8S上使用Doris，建议使用Doris Operator进行部署，可以屏蔽底层的权限细节问题。
-:::
 
 ### 创建Workload Group
 ```
@@ -164,9 +163,9 @@ Query OK, 0 rows affected (0.03 sec)
 
 * max_concurrency：可选，最大查询并发数，默认值为整型最大值，也就是不做并发的限制。运行中的查询数量达到该值时，新来的查询会进入排队的逻辑。
 
-* max_queue_size：可选，查询排队队列的长度，当排队队列已满时，新来的查询会被拒绝。默认值为 0，含义是不排队。
+* max_queue_size：可选，查询排队队列的长度，当排队队列已满时，新来的查询会被拒绝。默认值为 0，含义是不排队，当查询数达到最大时查询会直接失败。
 
-* queue_timeout：可选，查询在排队队列中的超时时间，单位为毫秒，如果查询在队列中的排队时间超过这个值，那么就会直接抛出异常给客户端。默认值为 0，含义是不排队。
+* queue_timeout：可选，查询在排队队列中的超时时间，单位为毫秒，如果查询在队列中的排队时间超过这个值，那么就会直接抛出异常给客户端。默认值为 0，含义是不排队，查询进入队列后立即返回失败。
 
 * scan_thread_num：可选，当前 workload group 用于 scan 的线程个数，默认值为 -1，含义是不生效，此时以 be 配置中的 scan 线程数为准。取值为大于 0 的整数。
 
@@ -292,29 +291,6 @@ ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
 
 如果用户期望从 CPU 的硬限切换回 CPU 的软限，需要在所有 FE 修改 enable_cpu_hard_limit 的值为 false 即可。
 CPU 软限的属性 cpu_share 默认会填充一个有效值 1024(如果之前未指定 cpu_share 的值)，用户可以根据 group 的优先级对 cpu_share 的值进行重新调整。
-
-## 并发控制与排队
-```
-create workload group if not exists queue_group
-properties (
-    "max_concurrency" = "10",
-    "max_queue_size" = "20",
-    "queue_timeout" = "3000"
-);
-```
-如果集群中目前有1台FE，那么这个配置的含义为，集群中同时运行的查询数最大不超过10个，当最大并发已满时，新来的查询会排队，队列的长度不超过20。查询在队列中排队的时间最长为3s，排队超过3s的查询会直接返回失败给客户端。
-
-
-1. 需要注意的是，目前的排队设计是不感知 FE 的个数的，排队的参数只在单 FE 粒度生效，例如：
-
-一个 Doris 集群配置了一个 work load group，设置 max_concurrency = 1
-如果集群中有 1FE，那么这个 workload group 在 Doris 集群视角看同时只会运行一个 SQL
-如果有 3 台 FE，那么在 Doris 集群视角看最大可运行的 SQL 个数为 3
-
-2. 在有些运维情况下，管理员账户需要绕开排队的逻辑，那么可以通过设置session变量：
-```
-set bypass_workload_group = true;
-```
 
 ## 效果测试
 ### 内存硬限
