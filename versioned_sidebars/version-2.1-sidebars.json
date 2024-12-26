@@ -145,7 +145,6 @@
                                 "data-operate/import/data-source/hdfs",
                                 "data-operate/import/data-source/amazon-s3",
                                 "data-operate/import/data-source/google-cloud-storage",
-                                "data-operate/import/data-source/azure-storage",
                                 "data-operate/import/data-source/aliyun-oss",
                                 "data-operate/import/data-source/huawei-obs",
                                 "data-operate/import/data-source/tencent-cos",
