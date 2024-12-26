@@ -39,7 +39,7 @@ under the License.
 3.0.2 之前的版本中叫做计算集群（Compute Cluster）。
 :::
 
-## 查看所有Compute
+## 查看所有Compute Group
 
 可通过 `SHOW COMPUTE GROUPS` 查看当前仓库拥有的所有Compute Group。
 
