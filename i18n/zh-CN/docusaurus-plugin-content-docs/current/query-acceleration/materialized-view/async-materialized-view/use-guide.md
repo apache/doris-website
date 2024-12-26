@@ -664,15 +664,14 @@ Doris 暂无法感知除 Hive 外的其他外表数据变更。当外表数据�
 
 `SET materialized_view_rewrite_enable_contain_external_table = true;`
 
-如果发现物化视图在 MaterializedViewRewriteSuccessButNotChose 一栏， 改写成功但是 CBO 没选，可能是外表的统计信息没有收集全，导致使用外表的
-查询计划代价过小，没有选中包含物化视图的 plan，可以开启
+如果物化视图在 MaterializedViewRewriteSuccessButNotChose 状态，说明改写成功但 plan 未被 CBO 选择，可能是因为外表的统计信息不完整。
+启用统计信息从文件中获取行数 
 
-`SET enable_get_row_count_from_file_list = true;`
+``SET enable_get_row_count_from_file_list = true;``
+   
+查看外表统计信息，确认是否已收集完整 
 
-查看表的统计信息是否收集上来，如下命令可以触发采集表的统计信息。
-
-`SHOW TABLE STATS external_table_name;`
-
+``SHOW TABLE STATS external_table_name;``
 
 :::
 
