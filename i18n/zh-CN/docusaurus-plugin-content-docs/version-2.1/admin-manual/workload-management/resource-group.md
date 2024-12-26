@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-## 原理
-
-Resource Group 基本原理如下图所示：
+Resource Group 是存算一体架构下，实现不同的负载之间物理隔离的一种机制，它的基本原理如下图所示：
 
 ![Resource Group](/images/resource_group.png)
 
