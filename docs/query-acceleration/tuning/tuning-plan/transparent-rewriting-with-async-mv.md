@@ -26,11 +26,11 @@ under the License.
 
 ## Overview
 
-The [multi-table materialized view](../../materialized-view/async-materialized-view/overview.md) adopts a transparent rewriting algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern. This algorithm can analyze the structural information of the query SQL, automatically find the appropriate materialized views, and attempt to perform transparent rewriting to express the query SQL using the optimal materialized views. By using the pre-computed results of materialized views, the query performance can be significantly improved and the computing cost can be reduced.
+The [Async-materialized view](../../materialized-view/async-materialized-view/overview.md) adopts a transparent rewriting algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern. This algorithm can analyze the structural information of the query SQL, automatically find the appropriate materialized views, and attempt to perform transparent rewriting to express the query SQL using the optimal materialized views. By using the pre-computed results of materialized views, the query performance can be significantly improved and the computing cost can be reduced.
 
 ## Case
 
-Next, an example will be used to demonstrate in detail how to utilize multi-table materialized views to accelerate queries.
+Next, an example will be used to demonstrate in detail how to utilize async-materialized views to accelerate queries.
 
 ### Create Base Tables
 
@@ -103,7 +103,14 @@ BUILD IMMEDIATE REFRESH COMPLETE ON MANUAL
 PARTITION BY(l_shipdate)  
 DISTRIBUTED BY RANDOM BUCKETS 2  
 PROPERTIES ('replication_num' = '1')   
-	@@ -119,107 +114,55 @@ l_partkey,
+AS   
+SELECT l_shipdate, o_orderdate, l_partkey, l_suppkey, SUM(o_totalprice) AS sum_total  
+FROM lineitem  
+LEFT JOIN orders ON lineitem.l_orderkey = orders.o_orderkey AND l_shipdate = o_orderdate  
+GROUP BY  
+l_shipdate,  
+o_orderdate,  
+l_partkey,  
 l_suppkey;
 ```
 
@@ -147,7 +154,7 @@ It can be seen from the `explain shape plan` that the plan after being transpare
 
 ## Summary
 
-By using multi-table materialized views, the query performance can be significantly improved, especially for complex join and aggregation queries. When using them, the following points need to be noted:
+By using async-materialized views, the query performance can be significantly improved, especially for complex join and aggregation queries. When using them, the following points need to be noted:
 
 :::tip Usage Suggestions
 - Pre-computed Results: Materialized views pre-compute and store the query results, avoiding the overhead of repeated computations for each query. This is especially effective for complex queries that need to be executed frequently.
@@ -158,4 +165,4 @@ By using multi-table materialized views, the query performance can be significan
 - Applicable Scenarios: Materialized views are suitable for scenarios where the data change frequency is low and the query frequency is high. For frequently changing data, real-time computation may be more appropriate.
   :::
 
-Reasonable utilization of multi-table materialized views can significantly improve the query performance of the database, especially in the case of complex queries and large data volumes. Meanwhile, factors such as storage and maintenance also need to be considered comprehensively to achieve a balance between performance and cost. 
+Reasonable utilization of async-materialized views can significantly improve the query performance of the database, especially in the case of complex queries and large data volumes. Meanwhile, factors such as storage and maintenance also need to be considered comprehensively to achieve a balance between performance and cost. 

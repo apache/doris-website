@@ -24,19 +24,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Overview
+
 Doris currently supports two types of indexes:
 
 1. Built-in Indexes: These include prefix indexes, ZoneMap indexes, etc.
-
 2. Secondary Indexes: These include inverted indexes, Bloom filter indexes, N-Gram Bloom filter indexes, and Bitmap indexes, etc.
 
 In the process of business optimization, fully analyzing business characteristics and make effective use of indexes can greatly enhance the effectiveness of queries and analyses, thereby achieving the purpose of performance tuning.
 
-For a detailed introduction to various indexes, please refer to the [Table Index](../../../table-design/index/index-overview) section. This chapter will demonstrate index usage techniques in several typical scenarios from the perspective of actual cases and summarize optimization suggestions for reference in business tuning.
+For a detailed introduction to various indexes, please refer to the [Table Index](../../../table-design/index/index-overview.md) section. This chapter will demonstrate index usage techniques in several typical scenarios from the perspective of actual cases and summarize optimization suggestions for reference in business tuning.
 
 ## Case 1: Optimizing the Order of Key Columns to Leverage Prefix Indexes for Accelerated Queries
 
-In optimizing table schema design, we have introduced how to select appropriate fields as key fields and utilize Doris's key column sorting feature to accelerate queries. This case will further expand on this scenario.
+In [optimizing table schema design](optimizing-table-schema.md), we have introduced how to select appropriate fields as key fields and utilize Doris's key column sorting feature to accelerate queries. This case will further expand on this scenario.
 
 Due to Doris's built-in prefix index function, it automatically takes the first 36 bytes of the table's Key as a prefix index when creating the table. When query conditions match the prefix of the prefix index, it can significantly speed up the query. Below is an example of a table definition:
 

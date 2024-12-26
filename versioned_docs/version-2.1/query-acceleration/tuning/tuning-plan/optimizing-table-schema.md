@@ -24,9 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Overview
+
 In Schema design and tuning, table Schema design is a crucial part, encompassing table engine selection, partition and bucket column selection, partition and bucket size settings, key column and field type optimization, etc. Systems lacking proper Schema design may encounter issues such as data skew, failing to fully leverage system parallelism and sorting features, thereby hindering the Doris system from realizing its true performance advantages within business systems.
 
-Detailed design principles can be found in the [Data Table Design](../../../table-design/overview) section for further information. This chapter, from the perspective of practical cases, will showcase performance bottlenecks caused by Schema design issues in several typical scenarios and provide optimization suggestions for business tuning reference.
+Detailed design principles can be found in the [Data Table Design](../../../table-design/overview.md) section for further information. This chapter, from the perspective of practical cases, will showcase performance bottlenecks caused by Schema design issues in several typical scenarios and provide optimization suggestions for business tuning reference.
 
 ## Case 1: Table Engine Selection
 
@@ -36,7 +38,7 @@ The query performance of these table models, from best to worst, is: Duplicate >
 
 :::tip
 
-When the business has no data update requirements but high demands for query performance, the [Duplicate table](../../../table-design/data-model/duplicate) is recommended.
+When the business has no data update requirements but high demands for query performance, the [Duplicate table](../../../table-design/data-model/duplicate.md) is recommended.
 
 :::
 
@@ -69,11 +71,13 @@ Therefore, during the Schema design phase, business personnel need to design rea
 select c2，count(*) cnt from t1 group by c2 order by cnt desc limit 10;
 ```
 
-It is clear that good prior design can significantly reduce the cost of locating and correcting issues when they occur. Therefore, it is strongly recommended that business personnel conduct rigorous design and checks during the Schema design phase to avoid introducing unnecessary costs.
-
 :::tip
+
 Check whether the bucket column has data skew issues. If so, replace it with a field that has adequate hashing characteristics in business meaning as the bucket column.
+
 :::
+
+It is clear that good prior design can significantly reduce the cost of locating and correcting issues when they occur. Therefore, it is strongly recommended that business personnel conduct rigorous design and checks during the Schema design phase to avoid introducing unnecessary costs.
 
 ## Case 3: Key Column Optimization
 
@@ -102,7 +106,9 @@ PROPERTIES (
 ```
 
 :::tip
+
 Set columns frequently used in business queries as key columns to accelerate the query process.
+
 :::
 
 ## Case 4: Field Type Optimization
@@ -112,15 +118,14 @@ In database systems, the complexity of processing different types of data can va
 This characteristic provides important insights into the design and later optimization of business system Schemas:
 
 1. While meeting the expression and computation needs of business systems, priority should be given to fixed-length types, avoiding the use of variable-length types;
-
 2. At the same time, low-precision types should be adopted instead of high-precision types. Specific practices include using BIGINT to replace VARCHAR or STRING type fields and using FLOAT / INT / BIGINT to replace DECIMAL type fields. Reasonable design and optimization of such field types will greatly enhance business computation efficiency, thereby improving system performance.
 
 :::tip
+
 When defining Schema types, follow the principle of prioritizing fixed-length and low-precision types.
+
 :::
 
 ## Summary
 
 In summary, a well-designed Schema can maximize the utilization of Doris's features, thereby significantly enhancing business performance. Conversely, a non-optimized Schema design may have a global negative impact on the business, such as causing data skew. Therefore, the initial Schema design optimization work is particularly important.
-
-For performance tuning, you can also refer to using [Colocate Group to optimize Join](../../../query-data/join#colocate-join). This document will provide detailed instructions on how to fully leverage Doris's features for performance optimization, offering strong support for improving your business performance.
