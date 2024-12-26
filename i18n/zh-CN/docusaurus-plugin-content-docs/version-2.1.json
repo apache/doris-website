@@ -95,6 +95,10 @@
     "message": "数据删除",
     "description": "The label for category Deleting Data in sidebar docs"
   },
+  "sidebar.docs.category.Data Update and Delete": {
+    "message": "数据更新与删除",
+    "description": "The label for category Data Update and Delete in sidebar docs"
+  },
   "sidebar.docs.category.Exporting Data": {
     "message": "数据导出",
     "description": "The label for category Exporting Data in sidebar docs"
