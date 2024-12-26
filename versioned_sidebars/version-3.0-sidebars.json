@@ -152,49 +152,49 @@
                     ]
                 },
                 {
-                    "type": "category",
-                    "label": "Data Manipulation",
+		    "type": "category",
+                    "label": "Loading Data",
                     "items": [
+                        "data-operate/import/load-manual",
                         {
                             "type": "category",
-                            "label": "Loading Data",
+                            "label": "Data Source",
                             "items": [
-                                "data-operate/import/load-manual",
-                                {
-                                    "type": "category",
-                                    "label": "Data Source",
-                                    "items": [
-                                        "data-operate/import/data-source/hdfs",
-                                        "data-operate/import/data-source/amazon-s3",
-                                        "data-operate/import/data-source/google-cloud-storage",
-                                        "data-operate/import/data-source/azure-storage",
-                                        "data-operate/import/data-source/aliyun-oss",
-                                        "data-operate/import/data-source/huawei-obs",
-                                        "data-operate/import/data-source/tencent-cos",
-                                        "data-operate/import/data-source/minio",
-                                        "data-operate/import/data-source/s3-compatible"
-                                    ]
-                                },
-                                {
-                                    "type": "category",
-                                    "label": "Import Way",
-                                    "items": [
-                                        "data-operate/import/import-way/stream-load-manual",
-                                        "data-operate/import/import-way/broker-load-manual",
-                                        "data-operate/import/import-way/routine-load-manual",
-                                        "data-operate/import/import-way/insert-into-manual",
-                                        "data-operate/import/import-way/insert-into-values-manual",
-                                        "data-operate/import/import-way/mysql-load-manual"
-                                    ]
-                                },
-                                "data-operate/import/load-data-format",
-                                "data-operate/import/error-data-handling",
-                                "data-operate/import/load-data-convert",
-                                "data-operate/import/load-high-availability",
-                                "data-operate/import/migrate-data-from-other-olap",
-                                "data-operate/import/group-commit-manual"
+                                "data-operate/import/data-source/hdfs",
+                                "data-operate/import/data-source/amazon-s3",
+                                "data-operate/import/data-source/google-cloud-storage",
+                                "data-operate/import/data-source/azure-storage",
+                                "data-operate/import/data-source/aliyun-oss",
+                                "data-operate/import/data-source/huawei-obs",
+                                "data-operate/import/data-source/tencent-cos",
+                                "data-operate/import/data-source/minio",
+                                "data-operate/import/data-source/s3-compatible"
                             ]
                         },
+                        {
+                            "type": "category",
+                            "label": "Import Way",
+                            "items": [
+                                "data-operate/import/import-way/stream-load-manual",
+                                "data-operate/import/import-way/broker-load-manual",
+                                "data-operate/import/import-way/routine-load-manual",
+                                "data-operate/import/import-way/insert-into-manual",
+                                "data-operate/import/import-way/insert-into-values-manual",
+                                "data-operate/import/import-way/mysql-load-manual"
+                            ]
+                        },
+                        "data-operate/import/load-data-format",
+                        "data-operate/import/error-data-handling",
+                        "data-operate/import/load-data-convert",
+                        "data-operate/import/load-high-availability",
+                        "data-operate/import/migrate-data-from-other-olap",
+                        "data-operate/import/group-commit-manual"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Data Update and Delete",
+                    "items": [
                         {
                             "type": "category",
                             "label": "Updating Data",
@@ -210,6 +210,7 @@
                             "type": "category",
                             "label": "Deleting Data",
                             "items": [
+                                "data-operate/delete/delete-overview",
                                 "data-operate/delete/delete-manual",
                                 "data-operate/delete/batch-delete-manual",
                                 "data-operate/delete/truncate-manual",
@@ -217,18 +218,18 @@
                                 "data-operate/delete/table-temp-partition"
                             ]
                         },
-                        {
-                            "type": "category",
-                            "label": "Exporting Data",
-                            "items": [
-                                "data-operate/export/export-overview",
-                                "data-operate/export/export-manual",
-                                "data-operate/export/outfile",
-                                "data-operate/export/export-with-mysql-dump"
-                            ]
-                        },
-                        "data-operate/transaction"
+			            "data-operate/transaction"
                     ]
+                },
+	        	{
+                    "type": "category",
+                    "label": "Exporting Data",
+                    "items": [
+                        "data-operate/export/export-overview",
+                        "data-operate/export/export-manual",
+                        "data-operate/export/outfile",
+                        "data-operate/export/export-with-mysql-dump"
+                     ]
                 },
                 {
                     "type": "category",
