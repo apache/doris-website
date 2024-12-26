@@ -195,9 +195,8 @@
                 },
                 {
                     "type": "category",
-                    "label": "Data Manipulation",
+                    "label": "Data Update and Delete",
                     "items": [
-                        
                         {
                             "type": "category",
                             "label": "Updating Data",
@@ -221,18 +220,18 @@
                                 "data-operate/delete/table-temp-partition"
                             ]
                         },
-                        {
-                            "type": "category",
-                            "label": "Exporting Data",
-                            "items": [
-                                "data-operate/export/export-overview",
-                                "data-operate/export/export-manual",
-                                "data-operate/export/outfile",
-                                "data-operate/export/export-with-mysql-dump"
-                            ]
-                        },
-                        "data-operate/transaction"
+			"data-operate/transaction"
                     ]
+                },
+		{
+                    "type": "category",
+                    "label": "Exporting Data",
+                    "items": [
+                        "data-operate/export/export-overview",
+                        "data-operate/export/export-manual",
+                        "data-operate/export/outfile",
+                        "data-operate/export/export-with-mysql-dump"
+                     ]
                 },
                 {
                     "type": "category",
