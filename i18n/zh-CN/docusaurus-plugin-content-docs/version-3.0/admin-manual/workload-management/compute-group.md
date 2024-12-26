@@ -24,10 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-在存算分离架构下，可以将一个或多个计算节点 (BE) 组成一个Compute Group (Compute Group)。
+Compute Group 是存算分离架构下，实现不同的负载之间物理隔离的一种机制，它的基本原理如下图所示：
 
 ![compute_group](/images/compute_group_workload_management.png)
+
+- 一个或多个BE 可以组成一个Compute Group；
+- BE 节点本地无状态，数据都是存储在共享存储上；
+- 多个Compute Group 之间通过共享的存储的方式来访问数据。
 
 在保持了Resource Group 强隔离的优点的同时，Compute Group与Resource Group 相比还有以下优势：
 
