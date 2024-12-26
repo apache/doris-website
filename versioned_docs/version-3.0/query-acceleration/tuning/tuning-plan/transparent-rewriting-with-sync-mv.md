@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Transparent Rewriting with Sync-Materialized View",
-    "language": "en"
+  "title": "Transparent Rewriting with Single-table Materialized View",
+  "language": "en"
 }
 ---
 
@@ -24,73 +24,72 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Principle
+## Overview
 
-A sync-materialized view is a special type of table that precomputes and stores data based on a predefined SELECT statement. Its primary purpose is to satisfy users' analytical needs for arbitrary dimensions of raw detailed data while also enabling rapid fixed-dimension analytical queries.
+The [Materialized View](../../materialized-view/sync-materialized-view.md) is a special kind of table that pre-computes and stores data according to a predefined SELECT statement. Its main purpose is to meet users' needs for analyzing raw detailed data from any dimension and also enable quick analysis and queries on fixed dimensions.
 
-Materialized views are suitable for the following scenarios:
+The applicable scenarios for materialized views are as follows:
 
-1. Analytical requirements cover both detailed data queries and fixed-dimension queries.
+1. The analysis requirements cover both detailed data queries and fixed-dimension queries.
+2. The queries only involve a small number of columns or rows in the table.
+3. The queries include time-consuming processing operations, such as long-duration aggregation operations, etc.
+4. The queries need to match different prefix indexes.
 
-2. Queries only involve a small subset of columns or rows in the table.
+For queries that frequently and repeatedly use the results of the same subqueries, single-table synchronous materialized views can significantly improve performance. Doris will automatically maintain the data of materialized views to ensure data consistency between the base table and the materialized view table, without requiring additional manual maintenance costs. During a query, the system will automatically match the optimal materialized view and directly read data from it.
 
-3. Queries contain time-consuming processing operations, such as long aggregation operations.
+:::tip Precautions
+- In Doris 2.0 and subsequent versions, materialized views have some enhanced functions. It is recommended that users confirm in the test environment whether the expected queries can hit the materialized views they want to create before using materialized views in the formal production environment.
+- It is not recommended to create multiple materialized views with similar forms on the same table, as this may lead to conflicts among multiple materialized views and thus cause query hit failures.
+  :::
 
-4. Queries require matching different prefix indexes.
+## Case
 
-For queries that frequently reuse the same subquery results, a sync-materialized view can significantly enhance performance. Doris automatically maintains the data in the materialized view, ensuring data consistency between the base table and the materialized view without additional manual maintenance costs. During queries, the system automatically matches the optimal materialized view and reads data directly from it.
+The following uses a specific example to demonstrate the process of using single-table materialized views to accelerate queries:
 
-## Tuning Usage Case
+Suppose we have a detailed sales record table named `sales_records`, which records various pieces of information for each transaction in detail, including the transaction ID, salesperson ID, selling store ID, sales date, and transaction amount. Now, we often need to conduct analysis and queries on the sales volume of different stores.
 
-The following is a specific example to illustrate the use of single-table materialized views:
-
-Suppose we have a detailed sales record table `sales_records` that records various information for each transaction, including transaction ID, salesperson ID, store ID, sales date, and transaction amount. Now, we frequently need to perform analytical queries on sales volumes for different stores.
-
-To optimize the performance of these queries, we can create a materialized view `store_amt` that groups by store ID and sums the sales amounts for the same store. The specific steps are as follows:
+To optimize the performance of these queries, we can create a materialized view named `store_amt`. This view groups by the selling store and sums up the sales amounts of the same store. The specific steps are as follows:
 
 ### Create a Materialized View
 
-First, we use the following SQL statement to create the materialized view `store_amt`:
+Firstly, we use the following SQL statement to create the materialized view `store_amt`:
 
 ```sql
 CREATE MATERIALIZED VIEW store_amt AS 
-SELECT store_id, SUM(sale_amt) 
-FROM sales_records
+	@@ -59,38 +61,36 @@ FROM sales_records
 GROUP BY store_id;
 ```
 
-After submitting the creation task, Doris will asynchronously build this materialized view in the background. We can view the creation progress of the materialized view through the following command:
+After submitting the creation task, Doris will build this materialized view asynchronously in the background. We can use the following command to check the creation progress of the materialized view:
 
 ```sql
-SHOW ALTER TABLE MATERIALIZED VIEW FROM db_name; 
+SHOW ALTER TABLE MATERIALIZED VIEW FROM db_name;
 ```
 
-When the `State` field changes to `FINISHED`, it indicates that the `store_amt` materialized view has been successfully created.
+When the `State` field becomes `FINISHED`, it means that the `store_amt` materialized view has been successfully created.
 
-### Query Data
+### Transparent Rewriting
 
-After the materialized view is created, when we query the sales volumes of different stores, Doris will automatically match the `store_amt` materialized view and read the pre-aggregated data directly from it, significantly improving query efficiency.
-
-The query statement is as follows:
+After the materialized view is created, when we query the sales volume of different stores, Doris will automatically match the `store_amt` materialized view and directly read the pre-aggregated data from it, thus significantly improving the query efficiency. The query statement is as follows:
 
 ```sql
 SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
 ```
 
-We can also use the `EXPLAIN` command to check whether the query successfully hits the materialized view:
+We can also use the `EXPLAIN` command to check whether the query has successfully hit the materialized view:
 
 ```sql
 EXPLAIN SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
 ```
 
-At the end of the execution plan, if similar content is displayed, it indicates that the query successfully hits the `store_amt` materialized view:
+At the end of the execution plan, if something like the following is displayed, it means that the query has successfully hit the `store_amt` materialized view:
 
 ```sql
 TABLE: default_cluster:test.sales_records(store_amt), PREAGGREGATION: ON
 ```
 
-By following these steps, we can utilize single-table materialized views to optimize query performance and improve the efficiency of data analysis.
+Through the above steps, we can use single-table materialized views to optimize query performance and improve the efficiency of data analysis.
 
 ## Summary
 
-By creating materialized views, we can significantly enhance the query speed for related aggregation analyses. Materialized views not only enable us to perform statistical analyses quickly but also flexibly support the query requirements of detailed data, making them a very powerful feature in Doris.
+By creating single-table materialized views, we can significantly improve the query speed for relevant aggregation analysis. Single-table materialized views not only enable us to conduct statistical analysis quickly but also flexibly support the query needs for detailed data, which is a very powerful feature in Doris. 
