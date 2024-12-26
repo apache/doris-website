@@ -1451,7 +1451,8 @@
                             "type": "category",
                             "label": "Data Queries",
                             "items": [
-                                "sql-manual/sql-statements/data-query/SELECT"
+                                "sql-manual/sql-statements/data-query/SELECT",
+                                "sql-manual/sql-statements/data-query/EXPLAIN"
                             ]
                         },
                         {
