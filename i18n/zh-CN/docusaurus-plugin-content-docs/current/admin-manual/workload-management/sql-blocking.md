@@ -290,7 +290,7 @@ properties('workload_group'='normal')
 ### Workload Policy 效果演示
 
 #### 1 session 变量修改测试
-尝试修改 Admin 账户的 Aession 变量中的并发相关的参数
+尝试修改 Admin 账户的 session 变量中的并发相关的参数
 
 ```sql
 // 登录 admin账户查看并发参数

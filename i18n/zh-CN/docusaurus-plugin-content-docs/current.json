@@ -223,6 +223,10 @@
     "message": "资源管理",
     "description": "The label for category Managing Resource in sidebar docs"
   },
+  "sidebar.docs.category.Resource Isolation": {
+    "message": "资源隔离",
+    "description": "The label for category Resource Isolation in sidebar docs"
+  },
   "sidebar.docs.category.Managing Query": {
     "message": "查询管理",
     "description": "The label for category Managing Query in sidebar docs"
