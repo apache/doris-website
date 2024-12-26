@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Adjusting Join Shuffle with Hint",
+    "title": "Adjusting Join Shuffle Mode with Hint",
     "language": "en"
 }
 ---
@@ -24,42 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Principle
+## Overview
 
-Doris supports the use of hints to adjust the type of data shuffle in Join operations, thereby optimizing query performance. This section will introduce in detail how to use hints in Doris to specify the type of Join shuffle.
+Doris supports the use of hints to adjust the type of data shuffle in Join operations, thereby optimizing query performance. This section provides detailed instructions on how to specify the Join Shuffle type in Doris using hints.
 
-Currently, Doris is limited to specifying the Distribute Type for the right table in a Join and provides only two types to choose from: `[shuffle]` and `[broadcast]`. The Distribute Type needs to be placed before the right table in the Join, using square brackets `[]`.
+:::caution Note
+Currently, Doris has good out-of-the-box capabilities. This means that in most scenarios, Doris will adaptively optimize performance in various scenarios, and users do not need to manually control hints for performance tuning. The content introduced in this chapter is mainly for professional tuners, and business personnel only need a simple understanding.
+:::
 
+Currently, Doris supports two independent [Distribute Hint](../../../query-acceleration/hints/distribute-hint.md), `[shuffle]` and `[broadcast]`, to specify the Distribute Type for the right table in a Join. The Distribute Type should be placed before the right table in the Join, enclosed in square brackets `[]`. Additionally, Doris can specify the shuffle mode by using the Leading Hint in conjunction with the Distribute Hint (for more details, refer to [Reordering Join With Leading Hint](reordering-join-with-leading-hint.md)).
 
 Examples are as follows:
 
 ```sql
 SELECT COUNT(*) FROM t2 JOIN [broadcast] t1 ON t1.c1 = t2.c2;
 SELECT COUNT(*) FROM t2 JOIN [shuffle] t1 ON t1.c1 = t2.c2;
-SELECT /*+ ordered */ COUNT(*) FROM t2 JOIN [broadcast] t1 ON t1.c1 = t2.c2;
-SELECT /*+ ordered */ COUNT(*) FROM t2 JOIN [shuffle] t1 ON t1.c1 = t2.c2;
 ```
 
+## Case
 
-When using hints, please note the following:
-
-1. If Doris encounters a DistributeHint that cannot correctly generate an execution plan, it will not display the hint but will make it effective according to the "best effort" principle. Ultimately, the distribute method displayed by EXPLAIN shall be deemed as final.
-
-2. In the current version, DistributeHint does not support mixing with LEADING, and the hint will only take effect when the table specified by distribute is on the right side of the Join.
-
-3. It is recommended to mix DistributeHint with ORDERED. First, use ORDERED to fix the Join order, and then specify the expected distribute method in the corresponding Join.
-
-## Use Case
-
-Next, we will demonstrate the use of hints through the same example:
-
-**1. Before Using Hint:**
+Next, we will demonstrate the usage of Distribute Hints through an example:
 
 ```sql
 EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN t2 ON t1.c1 = t2.c2;
 ```
 
-Result:
+The plan for the original SQL is as follows, showing that the join between t1 and t2 uses the hash distribute method, indicated by `DistributionSpecHash`.
 
 ```sql
 +----------------------------------------------------------------------------------+  
@@ -79,13 +69,13 @@ Result:
 +----------------------------------------------------------------------------------+
 ```
 
-**2. After Using Hint:**
+After adding the [broadcast] hint:
 
 ```sql
-EXPLAIN SHAPE PLAN SELECT /*+ ordered */ COUNT(*) FROM t2 JOIN [broadcast] t1 ON t1.c1 = t2.c2;
+EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN [broadcast] t2 ON t1.c1 = t2.c2;
 ```
 
-Result:
+It can be seen that the distribution method for the join between t1 and t2 has been changed to the broadcast method, indicated by `DistributionSpecReplicated`.
 
 ```sql
 +----------------------------------------------------------------------------------+  
@@ -98,30 +88,13 @@ Result:
 | --------PhysicalProject                                                          |  
 | ----------hashJoin [INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()|  
 | ------------PhysicalProject                                                      |  
-| --------------PhysicalOlapScan [t2]                                              |  
+| --------------PhysicalOlapScan [t1]                                              |  
 | ------------PhysicalDistribute [DistributionSpecReplicated]                      |  
 | --------------PhysicalProject                                                    |  
-| ----------------PhysicalOlapScan [t1]                                            |  
-|                                                                                  |  
-| Hint log:                                                                        |  
-| Used: ORDERED                                                                    |  
-| UnUsed:                                                                          |  
-| SyntaxError:                                                                     |  
+| ----------------PhysicalOlapScan [t2]                                            | 
 +----------------------------------------------------------------------------------+
 ```
 
-In the EXPLAIN results, you can see the relevant information for the distribute operator:
-
-1. `DistributionSpecReplicated` indicates that the corresponding data is replicated to all BE nodes.
-
-2. `DistributionSpecGather` indicates that the data is gathered to the FE node.
-
-3. `DistributionSpecHash` indicates that the data is scattered to different BE nodes according to a specific HashKey and algorithm.
-
 ## Summary
 
-By reasonably using DistributeHint, you can optimize the Shuffle method for Join operations and enhance query performance. In practice, it is recommended to first analyze the query execution plan using EXPLAIN and then select the appropriate Shuffle type based on the actual situation. When using it, please pay attention to the following points:
-
-1. If a DistributeHint fails to correctly generate an execution plan, Doris will not display the Hint but will make it effective based on the principle of "best effort". Ultimately, the Distribute method displayed by EXPLAIN prevails.
-2. In the current version, DistributeHint temporarily does not support mixing with LEADING, and the Hint will only take effect when the table specified by Distribute is located on the right side of the Join.
-3. It is recommended to mix DistributeHint with ORDERED. First, use ORDERED to fix the Join order, and then specify the expected Distribute method for the corresponding Join.
+By appropriately using Distribute Hints, you can optimize the shuffle mode for Join operations and improve query performance. In practice, it is recommended to first analyze the query execution plan using EXPLAIN and then specify the appropriate shuffle type based on the actual situation.

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Reordering Join with Leading Hint",
+    "title": "Reordering Join With Leading Hint",
     "language": "en"
 }
 ---
@@ -24,175 +24,219 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Introduction 
+## Overview
 
-Leading Hint is a powerful query optimization technique that allows users to guide the Doris optimizer in determining the table join order in a query plan. Proper use of Leading Hint can significantly enhance the performance of complex queries. 
+The Leading Hint feature allows users to manually specify the join order of tables in a query, optimizing the performance of complex queries in specific scenarios. This article will describe in detail how to use Leading Hint to control the join order in Doris. For detailed usage instructions, please refer to the [leading hint](../../../query-acceleration/hints/leading-hint.md) document.
 
-This documentation will provide a detailed introduction on how to use Leading Hint in Doris to control the order of joins.
-
-:::info Note
-
-For detailed usage instructions, please refer to the [Leading Hint](../../../query-acceleration/hints/leading-hint.md) documentation.
-
+:::caution Note
+Currently, Doris has good out-of-the-box capabilities. This means that in most scenarios, Doris will adaptively optimize performance in various scenarios, and users do not need to manually control hints for performance tuning. The content introduced in this chapter is mainly for professional tuners, and business personnel only need a simple understanding.
 :::
 
-## Examples
+## Case 1: Adjusting the Left and Right Table Order
 
-Here is a query example:
-
-```sql
-SELECT * FROM t1 JOIN t2 ON t1.c1 = t2.c2;
-```
-
-By default, Doris may choose t1 as the driving table. If we want to swap the join order to make t2 the driving table, we can use Leading Hint:
+For the following query:
 
 ```sql
-SELECT /*+ LEADING(t2 t1) */ * FROM t1 JOIN t2 ON t1.c1 = t2.c2;
+mysql> explain shape plan select from t1 join t2 on t1.c1 = t2.c2;
++------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                              |
++------------------------------------------------------------------------------+
+| PhysicalResultSink                                                           |
+| --PhysicalDistribute[DistributionSpecGather]                                 |
+| ----PhysicalProject                                                          |
+| ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+| --------PhysicalOlapScan[t1]                                                 |
+| --------PhysicalDistribute[DistributionSpecHash]                             |
+| ----------PhysicalOlapScan[t2]                                               |
++------------------------------------------------------------------------------+
 ```
 
-To verify whether the Hint is effective, you can use the EXPLAIN command to view the query plan and validate:
+You can use Leading Hint to force the join order to be t2 join t1 and adjust the original join order.
 
 ```sql
-EXPLAIN SELECT /*+ LEADING(t2 t1) */ * FROM t1 JOIN t2 ON t1.c1 = t2.c2;
+mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on t1.c1 = t2.c2;
++------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                              |
++------------------------------------------------------------------------------+
+| PhysicalResultSink                                                           |
+| --PhysicalDistribute[DistributionSpecGather]                                 |
+| ----PhysicalProject                                                          |
+| ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+| --------PhysicalOlapScan[t2]                                                 |
+| --------PhysicalDistribute[DistributionSpecHash]                             |
+| ----------PhysicalOlapScan[t1]                                               |
+|                                                                              |
+| Hint log:                                                                    |
+| Used: leading(t2 t1)                                                         |
+| UnUsed:                                                                      |
+| SyntaxError:                                                                 |
++------------------------------------------------------------------------------+
 ```
 
-In the result of EXPLAIN, there will be a "Hint log" section, showing the following:
+The Hint log shows the successfully applied hint: Used: `leading(t2 t1)`.
 
-1. Used: Indicates successfully applied `hint`
-
-2. Unused: Indicates unused `hint`
-
-3. SyntaxError: Indicates `hint` with syntax errors
-
-## Tuning Cases
-
-**1. Left-Deep Tree (Default Behavior)**
+## Case 2: Forcing the Generation of a Left-Deep Tree
 
 ```sql
-SELECT /*+ LEADING(t1 t2 t3) */ *   
-FROM t1 JOIN t2 ON t1.c1 = t2.c2 JOIN t3 ON t2.c2 = t3.c3;
+mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3;
++--------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                                |
++--------------------------------------------------------------------------------+
+| PhysicalResultSink                                                             |
+| --PhysicalDistribute[DistributionSpecGather]                                   |
+| ----PhysicalProject                                                            |
+| ------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()   |
+| --------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+| ----------PhysicalOlapScan[t1]                                                 |
+| ----------PhysicalDistribute[DistributionSpecHash]                             |
+| ------------PhysicalOlapScan[t2]                                               |
+| --------PhysicalDistribute[DistributionSpecHash]                               |
+| ----------PhysicalOlapScan[t3]                                                 |
+|                                                                                |
+| Hint log:                                                                      |
+| Used: leading(t1 t2 t3)                                                        |
+| UnUsed:                                                                        |
+| SyntaxError:                                                                   |
++--------------------------------------------------------------------------------+
 ```
 
-Tree Structure:
+Similarly, the Hint log shows the successfully applied hint: `Used: leading(t1 t2 t3)`.
+
+## Case 3: Forcing the Generation of a Right-Deep Tree
 
 ```sql
-      join  
-     /    \  
-   join    t3  
-  /    \  
-t1      t2
+mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3;
++----------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                                  |
++----------------------------------------------------------------------------------+
+| PhysicalResultSink                                                               |
+| --PhysicalDistribute[DistributionSpecGather]                                     |
+| ----PhysicalProject                                                              |
+| ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()     |
+| --------PhysicalOlapScan[t1]                                                     |
+| --------PhysicalDistribute[DistributionSpecHash]                                 |
+| ----------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
+| ------------PhysicalOlapScan[t2]                                                 |
+| ------------PhysicalDistribute[DistributionSpecHash]                             |
+| --------------PhysicalOlapScan[t3]                                               |
+|                                                                                  |
+| Hint log:                                                                        |
+| Used: leading(t1 { t2 t3 })                                                      |
+| UnUsed:                                                                          |
+| SyntaxError:                                                                     |
++----------------------------------------------------------------------------------+
 ```
 
-**2. Right-Deep Tree**
+Similarly, the Hint log shows the successfully applied hint: `Used: leading(t1 { t2 t3 })`.
+
+## Case 4: Forcing the Generation of a Bushy Tree
 
 ```sql
-SELECT /*+ LEADING(t1 {t2 t3}) */ *   
-FROM t1 JOIN t2 ON t1.c1 = t2.c2 JOIN t3 ON t2.c2 = t3.c3;
+mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3 join t4 on t3.c3 = t4.c4;
++-----------------------------------------------+
+| _Explain_ String                                |
++-----------------------------------------------+
+| PhysicalResultSink                            |
+| --PhysicalDistribute                          |
+| ----PhysicalProject                           |
+| ------hashJoin[INNER_JOIN](t2.c2 = t3.c3)     |
+| --------hashJoin[INNER_JOIN](t1.c1 = t2.c2)   |
+| ----------PhysicalOlapScan[t1]                |
+| ----------PhysicalDistribute                  |
+| ------------PhysicalOlapScan[t2]              |
+| --------PhysicalDistribute                    |
+| ----------hashJoin[INNER_JOIN](t3.c3 = t4.c4) |
+| ------------PhysicalOlapScan[t3]              |
+| ------------PhysicalDistribute                |
+| --------------PhysicalOlapScan[t4]            |
+|                                               |
+| Used: leading({ t1 t2 } { t3 t4 })            |
+| UnUsed:                                       |
+| SyntaxError:                                  |
++-----------------------------------------------+
 ```
 
-Tree Structure:
+Similarly, the Hint log shows the successfully applied hint: `Used: leading({ t1 t2 } { t3 t4 })`.
+
+## Case 5: View Participating in the Join as a Whole
 
 ```sql
-  join  
- /    \  
-t1    join  
-     /    \  
-    t2     t3
+mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
++--------------------------------------------------------------------------------------+
+| _Explain_ String(Nereids Planner)                                                      |
++--------------------------------------------------------------------------------------+
+| PhysicalResultSink                                                                   |
+| --hashAgg[GLOBAL]                                                                    |
+| ----PhysicalDistribute[DistributionSpecGather]                                       |
+| ------hashAgg[LOCAL]                                                                 |
+| --------PhysicalProject                                                              |
+| ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = alias.c2)) otherCondition=()  |
+| ------------PhysicalProject                                                          |
+| --------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
+| ----------------PhysicalProject                                                      |
+| ------------------PhysicalOlapScan[t2]                                               |
+| ----------------PhysicalDistribute[DistributionSpecHash]                             |
+| ------------------PhysicalProject                                                    |
+| --------------------PhysicalOlapScan[t3]                                             |
+| ------------PhysicalDistribute[DistributionSpecHash]                                 |
+| --------------PhysicalProject                                                        |
+| ----------------PhysicalOlapScan[t1]                                                 |
+|                                                                                      |
+| Hint log:                                                                            |
+| Used: leading(alias t1)                                                              |
+| UnUsed:                                                                              |
+| SyntaxError:                                                                         |
++--------------------------------------------------------------------------------------+
 ```
 
-**3. Bushy Tree**
+Similarly, the Hint log shows the successfully applied hint: `Used: leading(alias t1)`.
+
+## Case 6: Mixing DistributeHint and LeadingHint
 
 ```sql
-SELECT /*+ LEADING({t1 t2} {t3 t4}) */ *   
-FROM t1 JOIN t2 ON t1.c1 = t2.c2   
-JOIN t3 ON t2.c2 = t3.c3   
-JOIN t4 ON t3.c3 = t4.c4;
+explain shape plan
+    select 
+        nation,
+        o_year,
+        sum(amount) as sum_profit
+    from
+        (
+            select
+                /*+ leading(orders shuffle {lineitem shuffle part} shuffle {supplier broadcast nation} shuffle partsupp) */
+                n_name as nation,
+                extract(year from o_orderdate) as o_year,
+                l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
+            from
+                part,
+                supplier,
+                lineitem,
+                partsupp,
+                orders,
+                nation
+            where
+                s_suppkey = l_suppkey
+                and ps_suppkey = l_suppkey
+                and ps_partkey = l_partkey
+                and p_partkey = l_partkey
+                and o_orderkey = l_orderkey
+                and s_nationkey = n_nationkey
+                and p_name like '%green%'
+        ) as profit
+    group by
+        nation,
+        o_year
+    order by
+        nation,
+        o_year desc;
 ```
 
-Tree Structure:
+The above hint specification `/*+ leading(orders shuffle {lineitem shuffle part} shuffle {supplier broadcast nation} shuffle partsupp) */` mixes the two formats of leading and distribute hint. Leading is used to control the relative join order among the overall tables, while shuffle and broadcast are used to specify the shuffle method for specific joins. By combining the two, the connection order and connection method can be flexibly controlled, making it convenient to manually control the expected plan behavior of the user.
 
-```sql
-      join  
-      /    \  
-   join    join  
-  /    \  /    \  
- t1    t2 t3    t4
-```
-
-**4. Zig-Zag Tree**
-
-```sql
-SELECT /*+ LEADING(t1 {t2 t3} t4) */ *   
-FROM t1 JOIN t2 ON t1.c1 = t2.c2   
-JOIN t3 ON t2.c2 = t3.c3   
-JOIN t4 ON t3.c3 = t4.c4;
-```
-
-Tree Structure:
-
-```sql
-    join  
-   /    \  
- join    t4  
-/    \  
-t1   join  
-    /    \  
-   t2     t3
-```
-
-**5. Special Case**
-
-For non-inner joins (such as Outer Join, Semi/Anti Join), Leading Hint will automatically derive the type of each join based on the original SQL semantics. If the specified join order is incompatible with the original SQL semantics, the Hint will be ignored.
-
-**6. Views and Subqueries**
-
-Aliases of views or subqueries can be specified as a complete subtree.
-
-```sql
-SELECT /*+ LEADING(alias t1) */ COUNT(*)   
-FROM t1 JOIN (SELECT c2 FROM t2 JOIN t3 ON t2.c2 = t3.c3) AS alias   
-ON t1.c1 = alias.c2;
-```
-
-Tree Structure: In this example, `alias` is treated as a whole, and its internal join order is determined by the subquery itself.
-
-```sql
-       join  
-      /    \  
-   alias    t1  
-   /    \  
-  t2     t3
-```
-
-## Combining with ORDERED Hint
-
-When both LEADING and ORDERED Hints are used, the ORDERED Hint has higher priority.
-
-```sql
-SELECT /*+ ORDERED */ t1.c1   
-FROM t2 JOIN t1 ON t1.c1 = t2.c2 JOIN t3 ON t2.c2 = t3.c3;
-```
-
-Tree Structure:
-
-```sql
-      join  
-     /    \  
-   join    t3  
-  /    \  
-t2      t1
-```
-
-Here, the ORDERED Hint forces the join order to strictly follow the order of table appearance in the FROM clause. Therefore, in this case, the ORDERED Hint will take effect, while the LEADING hint will be ignored.
+:::caution Usage Suggestions
+- It is recommended to use EXPLAIN to carefully analyze the execution plan to ensure that the Leading Hint can achieve the expected effect.
+- When the Doris version is upgraded or the business data changes, the effect of the Leading Hint should be re-evaluated, and timely recording and adjustment should be made.
+:::
 
 ## Summary
 
-By using Leading Hint appropriately, we can more effectively control the join order in Doris, thereby optimizing query performance. However, it should be remembered that this is an advanced feature and should be used cautiously with a thorough understanding of query characteristics and data distribution.
-
-When using it, please note the following points:
-
-1. Excessive dependence on Hints may lead to suboptimal execution plans. Therefore, please ensure a full understanding of query and data characteristics before use.
-
-2. When upgrading Doris versions, the effect of Leading Hint should be re-evaluated, as optimizer strategies may be adjusted.
-
-3. For complex queries, it is recommended to use the EXPLAIN command to carefully analyze the execution plan to ensure that Leading Hint can achieve the expected effect.
+Leading Hint is a powerful function that can manually control the connection order. At the same time, it can also be combined with the shuffle hint to control the join distribution method at the same time, thereby optimizing the query performance. Note that this advanced feature should be used with caution based on a full understanding of the query characteristics and data distribution.

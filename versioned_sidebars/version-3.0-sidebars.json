@@ -117,7 +117,7 @@
                             "type": "category",
                             "label": "Tiered Storage",
                             "items": [
-                                "table-design/tiered-storage/diff-disk-medium-migration",
+                                "table-design/tiered-storage/tiered-ssd-hdd",
                                 "table-design/tiered-storage/remote-storage"
                             ]
                         },
@@ -137,7 +137,7 @@
                             "type": "category",
                             "label": "Data Partitioning",
                             "items": [
-                                "table-design/data-partitioning/basic-concepts",
+                                "table-design/data-partitioning/data-distribution",
                                 "table-design/data-partitioning/manual-partitioning",
                                 "table-design/data-partitioning/dynamic-partitioning",
                                 "table-design/data-partitioning/auto-partitioning",
@@ -160,6 +160,21 @@
                             "label": "Loading Data",
                             "items": [
                                 "data-operate/import/load-manual",
+                                {
+                                    "type": "category",
+                                    "label": "Data Source",
+                                    "items": [
+                                        "data-operate/import/data-source/hdfs",
+                                        "data-operate/import/data-source/amazon-s3",
+                                        "data-operate/import/data-source/google-cloud-storage",
+                                        "data-operate/import/data-source/azure-storage",
+                                        "data-operate/import/data-source/aliyun-oss",
+                                        "data-operate/import/data-source/huawei-obs",
+                                        "data-operate/import/data-source/tencent-cos",
+                                        "data-operate/import/data-source/minio",
+                                        "data-operate/import/data-source/s3-compatible"
+                                    ]
+                                },
                                 {
                                     "type": "category",
                                     "label": "Import Way",
@@ -243,6 +258,16 @@
                     "items": [
                         {
                             "type": "category",
+                            "label": "Performance Tuning Overview",
+                            "items": [
+                                "query-acceleration/performance-tuning-overview/tuning-overview",
+                                "query-acceleration/performance-tuning-overview/diagnostic-tools",
+                                "query-acceleration/performance-tuning-overview/analysis-tools",
+                                "query-acceleration/performance-tuning-overview/tuning-process"
+                            ]
+                        },
+                        {
+                            "type": "category",
                             "label": "Materialize View",
                             "items": [
                                 "query-acceleration/materialized-view/overview",
@@ -269,40 +294,59 @@
                                 "query-acceleration/distinct-counts/using-hll"
                             ]
                         },
-                        "query-acceleration/query-optimizer",
-                        "query-acceleration/pipeline-execution-engine",
-                        "query-acceleration/statistics",
+                        "query-acceleration/colocation-join",
+                        {
+                            "type": "category",
+                            "label": "Hints",
+                            "items": [
+                                "query-acceleration/hints/hints-overview",
+                                "query-acceleration/hints/leading-hint",
+                                "query-acceleration/hints/distribute-hint"
+                            ]
+                        },
                         {
                             "type": "category",
                             "label": "Tuning",
                             "items": [
-                                "query-acceleration/tuning/overview",
-                                "query-acceleration/tuning/query-profile",
                                 {
                                     "type": "category",
                                     "label": "Tuning Plan",
                                     "items": [
                                         "query-acceleration/tuning/tuning-plan/optimizing-table-schema",
                                         "query-acceleration/tuning/tuning-plan/optimizing-table-index",
-                                        "query-acceleration/tuning/tuning-plan/accelerating-point-query",
                                         "query-acceleration/tuning/tuning-plan/optimizing-table-scanning",
                                         "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv",
                                         "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv",
-                                        "query-acceleration/tuning/tuning-plan/tuning-plan-with-statistics",
                                         "query-acceleration/tuning/tuning-plan/optimizing-join-with-colocate-group",
                                         "query-acceleration/tuning/tuning-plan/adjusting-join-shuffle",
                                         "query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule",
                                         "query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint",
                                         "query-acceleration/tuning/tuning-plan/accelerating-queries-with-sql-cache",
-                                        "query-acceleration/tuning/tuning-plan/accelerating-queries-with-runtime-filter",
-                                        "query-acceleration/tuning/tuning-plan/solving-unevenly-data-distribution",
                                         "query-acceleration/tuning/tuning-plan/dml-tuning-plan"
                                     ]
                                 },
-                                "query-acceleration/tuning/faq",
-                                "query-acceleration/tuning/join-hint",
-                                "query-acceleration/tuning/runtime-filter",
-                                "query-acceleration/tuning/topn-query"
+                                {
+                                    "type": "category",
+                                    "label": "Tuning Execution",
+                                    "items": [
+                                        "query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time",
+                                        "query-acceleration/tuning/tuning-execution/data-skew-handling",
+                                        "query-acceleration/tuning/tuning-execution/parallelism-adjustment"
+                                    ]
+                                },
+                                "query-acceleration/tuning/tuning-parameters",
+                                "query-acceleration/tuning/parallelism-tuning"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Optimization Technology Principle",
+                            "items": [
+                                "query-acceleration/optimization-technology-principle/query-optimizer",
+                                "query-acceleration/optimization-technology-principle/pipeline-execution-engine",
+                                "query-acceleration/optimization-technology-principle/runtime-filter",
+                                "query-acceleration/optimization-technology-principle/topn-optimization",
+                                "query-acceleration/optimization-technology-principle/statistics"
                             ]
                         }
                     ]
@@ -403,8 +447,7 @@
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
                         "admin-manual/data-admin/ccr",
-                        "admin-manual/data-admin/recyclebin",
-                        "admin-manual/data-admin/repairing-data"
+                        "admin-manual/data-admin/recyclebin"
                     ]
                 },
                 {
@@ -412,27 +455,13 @@
                     "label": "Managing Workload",
                     "items": [
                         "admin-manual/workload-management/workload-management-summary",
-                        "admin-manual/workload-management/workload-group",
                         "admin-manual/workload-management/resource-group",
                         "admin-manual/workload-management/compute-group",
+                        "admin-manual/workload-management/workload-group",
+                        "admin-manual/workload-management/concurrency-control-and-queuing",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
-                        "admin-manual/workload-management/job-scheduler",
-                        {
-                            "type": "category",
-                            "label": "Best Practices",
-                            "items": [
-                                "admin-manual/workload-management/best-practice/group-workload-groups",
-                                "admin-manual/workload-management/best-practice/workload-group-best-practice"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing Query",
-                    "items": [
-                        "admin-manual/query-admin/sql-interception"
+                        "admin-manual/workload-management/job-scheduler"
                     ]
                 },
                 {

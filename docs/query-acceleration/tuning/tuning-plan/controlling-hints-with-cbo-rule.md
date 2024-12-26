@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Controlling CBO Rule with Hint",
+    "title": "Control CBO Rules With Hint",
     "language": "en"
 }
 ---
@@ -24,15 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Principles
+## Overview
 
-The query optimizer applies a series of rules in the process of generating execution plans. These rules are mainly divided into two categories: Rule-Based Optimizer (RBO) and Cost-Based Optimizer (CBO).
+The query optimizer applies a series of rules when generating execution plans. These rules are mainly categorized into two types: Rule-Based Optimizer (RBO) and Cost-Based Optimizer (CBO).
 
-1. RBO: This type of optimization improves the query plan by applying a set of predefined heuristic rules without considering specific data statistics. Examples include strategies such as predicate pushdown and projection pushdown.
-
-2. CBO: This type of optimization utilizes data statistics to estimate the cost of different execution plans and selects the plan with the lowest cost for execution. This includes the selection of access paths and join algorithms.
+- RBO: This type of optimization improves query plans by applying a set of predefined heuristic rules without considering specific data statistics. Strategies such as predicate pushdown and projection pushdown fall into this category.
+- CBO: This type of optimization leverages data statistics to estimate the cost of different execution plans and selects the plan with the lowest cost for execution. This includes choices of access paths and join algorithms.
 
 In some cases, database administrators or developers may need more granular control over the query optimization process. Based on this, this document will introduce how to use query hints to manage CBO rules.
+
+:::caution Note
+Currently, Doris has good out-of-the-box capabilities. This means that in most scenarios, Doris will adaptively optimize performance in various scenarios, and users do not need to manually control hints for performance tuning. The content introduced in this chapter is mainly for professional tuners, and business personnel only need a simple understanding.
+:::
 
 The basic syntax for CBO rule control hints is as follows:
 
@@ -40,51 +43,46 @@ The basic syntax for CBO rule control hints is as follows:
 SELECT /*+ USE_CBO_RULE(rule1, rule2, ...) */ ...
 ```
 
-This hint should immediately follow the SELECT keyword, and the names of the rules to be enabled should be specified within parentheses (note: rule names are case-insensitive).
+This hint immediately follows the `SELECT` keyword and specifies the names of the rules to be enabled within parentheses (rule names are case-insensitive).
 
-In the optimizer, the following CBO rules are disabled by default and need to be explicitly enabled using the `USE_CBO_RULE hint`:
+Currently, the Doris optimizer supports several cost-based rewrites, which can be explicitly enabled using the `USE_CBO_RULE` hint, such as:
 
-1. PUSH_DOWN_AGG_THROUGH_JOIN
-2. PUSH_DOWN_AGG_THROUGH_JOIN_ONE_SIDE
-3. PUSH_DOWN_DISTINCT_THROUGH_JOIN
+- PUSH_DOWN_AGG_THROUGH_JOIN
+- PUSH_DOWN_AGG_THROUGH_JOIN_ONE_SIDE
+- PUSH_DOWN_DISTINCT_THROUGH_JOIN
 
-These rules mainly involve the optimization of aggregation operations and JOIN operations. The specific optimization logic is as follows:
-
-1. The system first checks whether the `USE_CBO_RULE hint` exists in the query.
-2. If the hint exists, the system will traverse all specified rules.
-3. For each rule, the system checks if it is on the whitelist. If it is, the rule will be enabled.
-4. If the specified rule is not on the whitelist, the system will further check if it is a valid rule name. If it is a valid rule, the rule will also be enabled.
-5. Any unrecognized rule names will be ignored by the system.
-
-## Tuning Usage Case
+## Case
 
 Here is a query example:
 
 ```sql
-SELECT /*+ USE_CBO_RULE(push_down_agg_through_join, push_down_agg_through_join_one_side) */    a.event_id,
-    b.experiment_id,
-    b.group_id,
-    COUNT(a.event_id)
-FROM
-    com_dd_library a
-JOIN shunt_log_com_dd_library b ON
-    a.device_id = b.device_id
-GROUP BY
-    b.group_id,
-    b.experiment_id,
-    a.event_id;
+explain shape plan
+    select /*+ USE_CBO_RULE(push_down_agg_through_join_one_side) */
+            a.event_id,
+            b.group_id,
+            COUNT(a.event_id)
+    from a
+    join b on
+            a.device_id = b.device_id
+    group by
+            a.event_id,
+            b.group_id
+    ;
 ```
 
-In this example, we have enabled two aggregation pushdown rules. This operation may enable the optimizer to generate a more efficient execution plan, especially when processing large datasets.
+In this example, a CBO rule for aggregation pushdown is enabled. This operation allows table a to be aggregated before the join operation, reducing the cost of the join and speeding up the query. The plan after pushdown is as follows:
 
-Best Practices:
-
-1. Use CBO rule hints cautiously. In most cases, the optimizer can make good decisions.
-2. Before applying hints, analyze query performance and identify bottlenecks.
-3. Verify the effect of hints in a test environment to ensure they actually improve performance.
-4. Regularly reevaluate applied hints, as changes in data distribution and system configuration may affect their effectiveness.
-5. Document all applied hints and their reasons to facilitate subsequent maintenance and optimization efforts.
+```sql
+PhysicalResultSink
+--hashAgg[GLOBAL]
+----hashAgg[LOCAL]
+------hashJoin[INNER_JOIN] hashCondition=((a.device_id = b.device_id)) otherCondition=()
+--------hashAgg[LOCAL]
+----------PhysicalOlapScan[a]
+--------filter((cast(experiment_id as DOUBLE) = 73.0))
+----------PhysicalOlapScan[b]
+```
 
 ## Summary
 
-By using the `USE_CBO_RULE hint` appropriately, you can fine-tune the behavior of the query optimizer in specific scenarios, potentially improving the performance of complex queries. However, this requires a deep understanding of the query optimization process and data characteristics. In most cases, relying on the optimizer's automatic decisions remains the best choice.
+Proper use of the `USE_CBO_RULE` hint can help manually enable certain advanced CBO optimization rules, optimizing performance in specific scenarios. However, using CBO optimization rules requires a deep understanding of the query optimization process and data characteristics. In most cases, relying on the automatic decisions of the Doris optimizer is still the best choice.

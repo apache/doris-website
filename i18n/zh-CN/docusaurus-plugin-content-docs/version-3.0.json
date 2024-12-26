@@ -87,6 +87,10 @@
     "message": "数据导入",
     "description": "The label for category Loading Data in sidebar docs"
   },
+  "sidebar.docs.category.Data Source": {
+    "message": "数据源",
+    "description": "The label for category Data Source in sidebar docs"
+  },
   "sidebar.docs.category.Import Way": {
     "message": "导入方式",
     "description": "The label for category Import Way in sidebar docs"
@@ -135,6 +139,10 @@
     "message": "查询加速",
     "description": "The label for category Queries Acceleration in sidebar docs"
   },
+  "sidebar.docs.category.Performance Tuning Overview": {
+    "message": "查询调优概述",
+    "description": "The label for category Performance Tuning Overview in sidebar docs"
+  },
   "sidebar.docs.category.Materialize View": {
     "message": "物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
@@ -147,13 +155,25 @@
     "message": "高效去重",
     "description": "The label for category Distincting Counts in sidebar docs"
   },
+  "sidebar.docs.category.Hints": {
+    "message": "Hints",
+    "description": "The label for category Hints in sidebar docs"
+  },
   "sidebar.docs.category.Tuning": {
-    "message": "查询调优原理与实践",
+    "message": "查询优化实践",
     "description": "The label for category Tuning in sidebar docs"
   },
   "sidebar.docs.category.Tuning Plan": {
     "message": "计划调优",
-    "description": "The label for category Tuning in sidebar docs"
+    "description": "The label for category Tuning Plan in sidebar docs"
+  },
+  "sidebar.docs.category.Tuning Execution": {
+    "message": "执行调优",
+    "description": "The label for category Tuning Execution in sidebar docs"
+  },
+  "sidebar.docs.category.Optimization Technology Principle": {
+    "message": "优化技术原理",
+    "description": "The label for category Optimization Technology Principle in sidebar docs"
   },
   "sidebar.docs.category.Alter Table": {
     "message": "表结构变更",
@@ -618,5 +638,9 @@
   "sidebar.docs.category.Tiered Storage": {
     "message": "分层存储",
     "description": "The label for category Tiered Storage in sidebar docs"
+  },
+  "sidebar.docs.category.Business continuity & data recovery": {
+    "message": "业务连续性和数据恢复",
+    "description": "The label for category Business continuity & data recovery in sidebar docs"
   }
 }
