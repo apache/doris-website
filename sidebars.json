@@ -153,50 +153,51 @@
                         "table-design/best-practice"
                     ]
                 },
+		{
+			"type": "category",
+                        "label": "Loading Data",
+                        "items": [
+                            "data-operate/import/load-manual",
+                            {
+                                "type": "category",
+                                "label": "Data Source",
+                                "items": [
+                                    "data-operate/import/data-source/hdfs",
+                                    "data-operate/import/data-source/amazon-s3",
+                                    "data-operate/import/data-source/google-cloud-storage",
+                                    "data-operate/import/data-source/azure-storage",
+                                    "data-operate/import/data-source/aliyun-oss",
+                                    "data-operate/import/data-source/huawei-obs",
+                                    "data-operate/import/data-source/tencent-cos",
+                                    "data-operate/import/data-source/minio",
+                                    "data-operate/import/data-source/s3-compatible"
+                                ]
+                            },
+                            {
+                                "type": "category",
+                                "label": "Import Way",
+                                "items": [
+                                    "data-operate/import/import-way/stream-load-manual",
+                                    "data-operate/import/import-way/broker-load-manual",
+                                    "data-operate/import/import-way/routine-load-manual",
+                                    "data-operate/import/import-way/insert-into-manual",
+                                    "data-operate/import/import-way/insert-into-values-manual",
+                                    "data-operate/import/import-way/mysql-load-manual"
+                                ]
+                            },
+                            "data-operate/import/load-data-format",
+                            "data-operate/import/error-data-handling",
+                            "data-operate/import/load-data-convert",
+                            "data-operate/import/load-high-availability",
+                            "data-operate/import/migrate-data-from-other-olap",
+                            "data-operate/import/group-commit-manual"
+                    ]
+                },
                 {
                     "type": "category",
                     "label": "Data Manipulation",
                     "items": [
-                        {
-                            "type": "category",
-                            "label": "Loading Data",
-                            "items": [
-                                "data-operate/import/load-manual",
-                                {
-                                    "type": "category",
-                                    "label": "Data Source",
-                                    "items": [
-                                        "data-operate/import/data-source/hdfs",
-                                        "data-operate/import/data-source/amazon-s3",
-                                        "data-operate/import/data-source/google-cloud-storage",
-                                        "data-operate/import/data-source/azure-storage",
-                                        "data-operate/import/data-source/aliyun-oss",
-                                        "data-operate/import/data-source/huawei-obs",
-                                        "data-operate/import/data-source/tencent-cos",
-                                        "data-operate/import/data-source/minio",
-                                        "data-operate/import/data-source/s3-compatible"
-                                    ]
-                                },
-                                {
-                                    "type": "category",
-                                    "label": "Import Way",
-                                    "items": [
-                                        "data-operate/import/import-way/stream-load-manual",
-                                        "data-operate/import/import-way/broker-load-manual",
-                                        "data-operate/import/import-way/routine-load-manual",
-                                        "data-operate/import/import-way/insert-into-manual",
-                                        "data-operate/import/import-way/insert-into-values-manual",
-                                        "data-operate/import/import-way/mysql-load-manual"
-                                    ]
-                                },
-                                "data-operate/import/load-data-format",
-                                "data-operate/import/error-data-handling",
-                                "data-operate/import/load-data-convert",
-                                "data-operate/import/load-high-availability",
-                                "data-operate/import/migrate-data-from-other-olap",
-                                "data-operate/import/group-commit-manual"
-                            ]
-                        },
+                        
                         {
                             "type": "category",
                             "label": "Updating Data",
