@@ -45,6 +45,12 @@
         align-self: stretch;
     }
 
+    @media (max-width: 996px) {
+        .title_level_1{
+            font-size: 1.125rem !important;
+        }
+    }
+
     .menu__list_level_2 {
         padding-left: 0 !important;
         margin-top: 0 !important;

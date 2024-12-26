@@ -129,9 +129,9 @@ Doris has several unique data types. Here are the details:
 
 ### DDL
 
-**01 Create Table Syntax in Doris**
+#### 01 Create Table Syntax in Doris
 
-```SQL
+```sql
 CREATE TABLE [IF NOT EXISTS] [database.]table
 (
     column_definition_list
@@ -147,15 +147,15 @@ distribution_desc
 [extra_properties]
 ```
 
-**02 Differences with MySQL**
+#### 02 Differences with MySQL
 
 - column_definition_list:
   
   - Defines the list of columns, and the basic syntax is similar to MySQL. However, there are additional operations for **aggregation types**.
   
-  - The **aggregation types** mainly support data models such as AGGREGATE and Duplicate.
+  - The **aggregation types** mainly support data models such as Aggregate Key.
   
-  - In MySQL, you can define constraints like primary key and unique key after each column in the column definition list. In Doris, these constraints are defined and calculated through data models.
+  - In MySQL, you can define constraints like Primary Key and Unique Key after each column in the column definition list. In Doris, these constraints are defined and calculated through data models.
 
 - index_definition_list:
   
@@ -231,7 +231,7 @@ distribution_desc
  
   - Table properties in Doris are different from MySQL, and the syntax for defining table properties is also different from MySQL.
 
-**03 Create-Index**
+#### 03 Create-Index
 
 ```sql
 CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING BITMAP];
@@ -241,7 +241,7 @@ CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING B
 
 - MySQL supports index algorithms such as B+Tree and Hash.
 
-**04 Create-View**
+#### 04 Create-View
 
 ```sql
 CREATE VIEW [IF NOT EXISTS]
@@ -266,17 +266,17 @@ CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
 
 - MySQL only supports asynchronous materialized views.
 
-**05 Alter-Table/Alter-Index**
+#### 05 Alter-Table/Alter-Index
 
 The syntax of Doris ALTER is basically the same as that of MySQL.
 
-### **Drop-Table/Drop-Index**
+### Drop-Table/Drop-Index
 
 The syntax of Doris DROP is basically the same as MySQL.
 
-### **DML**
+### DML
 
-**Insert**
+#### Insert
 
 ```sql
 INSERT INTO table_name
@@ -289,7 +289,7 @@ INSERT INTO table_name
 
 The Doris INSERT syntax is basically the same as MySQL.
 
-**Update**
+#### Update
 
 ```sql
 UPDATE target_table [table_alias]
@@ -308,7 +308,7 @@ value:
 
 The Doris UPDATE syntax is basically the same as MySQL, but it should be noted that the **`WHERE` condition must be added.**
 
-**Delete**
+#### Delete
 
 ```sql
 DELETE FROM table_name [table_alias] 
@@ -327,9 +327,9 @@ DELETE FROM table_name [table_alias]
 
 This syntax can only be used on the UNIQUE KEY model table.
 
-The Doris DELTE syntax is basically the same as MySQL. Due to Doris is an analytical database, deletions can't be too frequent.
+The DELETE syntax in Doris is basically the same as in MySQL. However, since Doris is an analytical database, deletions cannot be too frequent.
 
-**Select**
+#### Select
 
 ```sql
 SELECT

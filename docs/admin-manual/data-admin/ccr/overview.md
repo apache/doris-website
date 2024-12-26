@@ -1,6 +1,6 @@
 ---
 title: Overview
-language: en-US
+language: en
 ---
 
 <!--
@@ -24,7 +24,8 @@ under the License.
 
 ## Overview
 
-CCR (Cross Cluster Replication) is a cross-cluster data synchronization mechanism that synchronizes data changes from the source cluster to the target cluster at the database or table level. It is mainly used to improve data availability for online services, support read-write load isolation, and build a dual-region, three-center architecture.
+CCR (Cross Cluster Replication) is a cross-cluster data synchronization mechanism that synchronizes data changes from the source cluster to the target cluster at the database or table level. It is mainly used to improve data availability for online services, support read-write load isolation, and build a dual-region, three-center architecture. CCR currently does not support the storage-compute decoupling mode.
+
 
 ### Use Cases
 

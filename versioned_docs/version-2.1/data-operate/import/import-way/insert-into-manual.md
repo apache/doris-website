@@ -26,14 +26,10 @@ under the License.
 
 The INSERT INTO statement supports importing the results of a Doris query into another table. INSERT INTO is a synchronous import method, where the import result is returned after the import is executed. Whether the import is successful can be determined based on the returned result. INSERT INTO ensures the atomicity of the import task, meaning that either all the data is imported successfully or none of it is imported.
 
-There are primarily two main forms of the INSERT INTO command:
-
 - INSERT INTO tbl SELECT...
-- INSERT INTO tbl (col1, col2, ...) VALUES (1, 2, ...), (1,3, ...)
 
 ## Applicable scenarios
 
-1. If a user wants to import only a few test data records to verify the functionality of the Doris system, the INSERT INTO VALUES syntax is applicable. It is similar to the MySQL syntax. However, it is not recommended to use INSERT INTO VALUES in a production environment.
 2. If a user wants to perform ETL on existing data in a Doris table and then import it into a new Doris table, the INSERT INTO SELECT syntax is applicable.
 3. In conjunction with the Multi-Catalog external table mechanism, tables from MySQL or Hive systems can be mapped via Multi-Catalog. Then, data from external tables can be imported into Doris tables using the INSERT INTO SELECT syntax.
 4. Utilizing the Table Value Functions (TVFs), users can directly query data stored in object storage or files on HDFS as tables, with automatic column type inference. Then, data from external tables can be imported into Doris tables using the INSERT INTO SELECT syntax.
@@ -54,8 +50,6 @@ INSERT INTO requires INSERT permissions on the target table. You can grant permi
 
 ### Create an INSERT INTO job
 
-**INSERT INTO VALUES**
-
 1. Create a source table
 
 ```SQL
@@ -68,7 +62,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-2. Import data into the source table using `INSERT INTO VALUES` (not recommended for production environments).
+2. Import data into the source table using any load method. (Here we use `INSERT INTO VALUES` for example).
 
 ```SQL
 INSERT INTO testdb.test_table (user_id, name, age)
@@ -79,34 +73,13 @@ VALUES (1, "Emily", 25),
        (5, "Ava", 17);
 ```
 
-INSERT INTO is a synchronous import method, where the import result is directly returned to the user. You can enable [group commit](../import-way/group-commit-manual.md) to achieve high performance. 
-
-```JSON
-Query OK, 5 rows affected (0.308 sec)
-{'label':'label_3e52da787aab4222_9126d2fce8f6d1e5', 'status':'VISIBLE', 'txnId':'9081'}
-```
-
-3. View imported data.
-
-```SQL
-MySQL> SELECT COUNT(*) FROM testdb.test_table;
-+----------+
-| count(*) |
-+----------+
-|        5 |
-+----------+
-1 row in set (0.179 sec)
-```
-
-**INSERT INTO SELECT**
-
-1. Building upon the above operations, create a new table as the target table (with the same schema as the source table).
+3. Building upon the above operations, create a new table as the target table (with the same schema as the source table).
 
 ```SQL
 CREATE TABLE testdb.test_table2 LIKE testdb.test_table;
 ```
 
-2. Ingest data into the new table using `INSERT INTO SELECT`.
+4. Ingest data into the new table using `INSERT INTO SELECT`.
 
 ```SQL
 INSERT INTO testdb.test_table2
@@ -115,21 +88,23 @@ Query OK, 3 rows affected (0.544 sec)
 {'label':'label_9c2bae970023407d_b2c5b78b368e78a7', 'status':'VISIBLE', 'txnId':'9084'}
 ```
 
-3. View imported data.
+5. View imported data.
 
 ```SQL
-MySQL> SELECT COUNT(*) FROM testdb.test_table2;
-+----------+
-| count(*) |
-+----------+
-|        3 |
-+----------+
-1 row in set (0.071 sec)
+MySQL> SELECT * FROM testdb.test_table2 ORDER BY age;
++---------+--------+------+
+| user_id | name   | age  |
++---------+--------+------+
+|       5 | Ava    |   17 |
+|       1 | Emily  |   25 |
+|       3 | Olivia |   28 |
++---------+--------+------+
+3 rows in set (0.02 sec)
 ```
 
-4. You can use [JOB](../../scheduler/job-scheduler.md) make the INSERT operation execute asynchronously.
+6. You can use [JOB](../../scheduler/job-scheduler.md) make the INSERT operation execute asynchronously.
 
-5. Sources can be [tvf](../../../lakehouse/file.md) or tables in a [catalog](../../../lakehouse/database).
+7. Sources can be [tvf](../../../lakehouse/file.md) or tables in a [catalog](../../../lakehouse/database).
 
 ### View INSERT INTO jobs
 
@@ -165,15 +140,6 @@ INSERT INTO target_table SELECT ... FROM source_table;
 
 The SELECT statement above is similar to a regular SELECT query, allowing operations such as WHERE and JOIN.
 
-2. INSERT INTO VALUES
-
-INSERT INTO VALUES is typically used for testing purposes. It is not recommended for production environments.
-
-```SQL
-INSERT INTO target_table (col1, col2, ...)
-VALUES (val1, val2, ...), (val3, val4, ...), ...;
-```
-
 ### Parameter configuration
 
 **FE** **configuration**
@@ -194,7 +160,7 @@ enable_insert_strict
 
 - Default value: true
 - Description: If this is set to true, INSERT INTO will fail when the task involves invalid data. If set to false, INSERT INTO will ignore invalid rows, and the import will be considered successful as long as at least one row is imported successfully.
-- Explanation: INSERT INTO cannot control the error rate, so this parameter is used to either strictly check data quality or completely ignore invalid data. Common reasons for data invalidity include: source data column length exceeding destination column length, column type mismatch, partition mismatch, and column order mismatch.
+- Explanation: Until version 2.1.4. INSERT INTO cannot control the error rate, so this parameter is used to either strictly check data quality or completely ignore invalid data. Common reasons for data invalidity include: source data column length exceeding destination column length, column type mismatch, partition mismatch, and column order mismatch.
 
 insert_max_filter_ratio
 

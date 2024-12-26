@@ -71,6 +71,58 @@ DELETE FROM table_name
 + table_alias: alias of table
 + USING additional_tables: If you need to refer to additional tables in the WHERE clause to help identify the rows to be removed, then specify those table names in the USING clause. You can also use the USING clause to specify subqueries that identify the rows to be removed.
 
+#### Returned Results
+
+Delete command is a SQL command that return results synchronously. The results are classified as follows:
+
+##### Implementation Success
+
+If Delete completes successfully and is visible, the following results are returned.`Query OK`indicates success.
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+{'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'VISIBLE', 'txnId':'4005'}
+```
+
+##### Submitted Successfully but Invisible
+
+Doris transaction commit is divided into two steps: commit and release version, only after the completion of the release version step, the results will be visible to the user.
+
+If the commit has been successful, then it can be assumed that it will eventually be published successfully, Doris will try to wait for a certain period of time after the commit is completed, if the timeout period is exceeded even if the published version is not yet complete, it will be preferred to return to the user, prompting the user that the commit has been completed.
+
+ If Delete has been submitted and executed, but the release version is still not published and visible, the following result will be returned:
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+{'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'COMMITTED', 'txnId':'4005', 'err':'delete job is committed but may be taking effect later' }
+```
+
+The result will also return a json string:
+
+- `affected rows`：Indicates the rows affected by this deletion. Since Doris deletion is currently a logical deletion, this value is constant at 0;
+
+- `label`：The automatically generated label identifies the import job. Each import job has a Label that is unique within a single database;
+
+- `status`：Indicates whether the data deletion is visible. If it's visible, the result displays `VISIBLE`; if  it's invisible, the result displays `COMMITTED`;
+
+- `txnId`：The transaction id corresponding to Delete;
+
+- `err`：This field will display the details of Delete.
+
+##### Commit Failed, Transaction Cancelled
+
+If the Delete statement fails to commit, the transaction will be automatically aborted by Doris and the following result will be returned:
+
+```sql
+ERROR 1064 (HY000): errCode = 2, detailMessage = {Cause of error}
+```
+
+For example, a timeout deletion will return the timeout time and the outstanding `(tablet=replica)`
+
+```sql
+ERROR 1064 (HY000): errCode = 2, detailMessage = failed to delete replicas from job: 4005, Unfinished replicas:10000=60000, 10001=60000, 10002=60000
+```
+
 #### Note
 
 1. Only conditions on the key column can be specified when using AGGREGATE (UNIQUE) model.
