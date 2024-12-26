@@ -389,6 +389,7 @@
                         "admin-manual/workload-management/workload-management-summary",
                         "admin-manual/workload-management/resource-group",
                         "admin-manual/workload-management/workload-group",
+                        "admin-manual/workload-management/concurrency-control-and-queuing",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
                         "admin-manual/workload-management/job-scheduler"
