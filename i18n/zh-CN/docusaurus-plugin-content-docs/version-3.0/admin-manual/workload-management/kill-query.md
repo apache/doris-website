@@ -86,4 +86,11 @@ Query OK, 0 rows affected (0.01 sec)
 KILL CONNECTION processlist_id
 ```
 
-表示断开processlist_id标识的客户端与FE 之间的连接，正在执行的Query也会被Cancel。
+例如：
+
+```sql
+kill CONNECTION 55;
+Query OK, 0 rows affected (0.01 sec)
+```
+
+表示断开Id=55 这个连接，这个连接上正在执行的Query也会被Cancel。
