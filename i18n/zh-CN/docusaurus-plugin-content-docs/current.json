@@ -111,6 +111,10 @@
     "message": "导入方式",
     "description": "The label for category Import Way in sidebar docs"
   },
+  "sidebar.docs.category.Complex Data Types": {
+    "message": "复杂数据类型",
+    "description": "The label for category Complex Data Types in sidebar docs"
+  },
   "sidebar.docs.category.Updating Data": {
     "message": "数据更新",
     "description": "The label for category Update in sidebar docs"
