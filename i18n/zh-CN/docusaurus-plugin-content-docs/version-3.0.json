@@ -107,6 +107,10 @@
     "message": "导入方式",
     "description": "The label for category Import Way in sidebar docs"
   },
+  "sidebar.docs.category.Data Update and Delete": {
+    "message": "数据更新与删除",
+    "description": "The label for category Data Update and Delete in sidebar docs"
+  },
   "sidebar.docs.category.Complex Data Types": {
     "message": "复杂数据类型",
     "description": "The label for category Complex Data Types in sidebar docs"
