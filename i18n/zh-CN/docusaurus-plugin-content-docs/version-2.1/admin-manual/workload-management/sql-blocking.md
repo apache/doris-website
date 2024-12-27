@@ -29,14 +29,14 @@ under the License.
 在 Doris 内，有两种熔断策略：
 
 - 规划时熔断，即 SQL Block Rule，用于阻止符合特定模式的语句执行。阻止规则对任意的语句生效，包括 DDL 和 DML。通常，阻止规则由数据库管理员（DBA）进行配置，用以提升集群的稳定性。比如，
-    
-    - 阻止一个查询扫描过多行的数据
-    
-    - 阻止一个查询扫描过多的分区
-    
-    - 阻止一个修改全局变量的语句，以防止集群配置被意外的修改。
-    
-    - 阻止一个通常会占用非常多资源的查询模式
+
+  - 阻止一个查询扫描过多行的数据
+
+  - 阻止一个查询扫描过多的分区
+
+  - 阻止一个修改全局变量的语句，以防止集群配置被意外的修改。
+
+  - 阻止一个通常会占用非常多资源的查询模式
 
 - 运行时熔断，即 Workload Policy，它是在运行时，实时监测查询的执行时间，扫描的数据量，消耗的内存，实现基于规则的查询熔断。
 
@@ -249,26 +249,31 @@ properties('enabled'='true');
 ```
 
 在创建 Workload Policy 时需要指定以下内容：
-- Conditions 表示策略触发条件，可以多个 Condition 串联，使用逗号“,”隔开，表示“与”的关系。在上例中 query_time > 1000 表示在查询时间大于 1s 时触发 Policy；
-- Action 表示条件触发时采取的动作，目前一个 Policy 只能定义一个 Action（除 set_session_variable）。在上例中，cancel_query 表示取消查询；
+- Condition 表示策略触发条件，可以多个 Condition 串联，使用逗号“,”隔开，表示“与”的关系。在上例中 query_time > 1000 表示在查询时间大于 1s 时触发 Policy；目前支持的 Conditions 有：
+
+| Conditions            | 说明                                                                  |
+|-----------------------|---------------------------------------------------------------------|
+| username              | 查询携带的用户名，只会在FE触发 set_session_variable Action                        |
+| be_scan_rows          | 一个 SQL 在单个 BE 进程内 scan 的行数，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值。      |
+| be_scan_bytes         | 一个 SQL 在单个 BE 进程内 scan 的字节数，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。 |
+| query_time            | 一个 SQL 在单个 BE 进程上的运行时间，时间单位是毫秒。                                     |
+| query_be_memory_bytes | 一个 SQL 在单个 BE 进程内使用的内存用量，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。  |
+
+- Action 表示条件触发时采取的动作，目前一个 Policy 只能定义一个 Action（除 set_session_variable）。在上例中，cancel_query 表示取消查询；目前支持的 Actions 有：
+
+| Actions               | 说明                                                                                                   |
+|-----------------------|------------------------------------------------------------------------------------------------------|
+| cancel_query              | 取消查询。                                                                                                |
+| set_session_variable          | 触发 set session variable 语句。同一个 policy 可以有多个 set_session_variable 选项，目前只会在 FE 由 username Condition 触发 |
+
 
 - Properties，定义了当前 Policy 的属性，包括是否启用和优先级。
 
-一个 Policy 只能指定作用在 FE 或 BE 其中一个组件，无法同时作用在 FE 与 BE 上。这是因为 FE 与 BE 有独立的 Conditions 与 Actions 选项，Policy 不区分 FE 与 BE 组件。下表中列出 Policy 的子句选项：
-
-| 组件   | 子句         |   选项  |  说明   |
-|------|------------|-----|-----|
-| FE   | Conditions |  username   |  当一个查询的 username 为某个值时，就会触发相应的 Action。   |
-|      | Actions    | set_session_variable    | 触发 set session variable 语句。同一个 Policy 可以有多个 set_session_variable 选项。    |
-| BE   | Conditions |     be_scan_rows                | 一个 SQL 在单个 BE 进程内 scan 的行数，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值。                                                                    |
-|      |            |     be_scan_bytes               | 一个 SQL 在单个 BE 进程内 scan 的字节数，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。                                                                                                                        |
-|      |            |     query_time                  | 一个 SQL 在单个 BE 进程上的运行时间，时间单位是毫秒。                                                                                                                        |
-|      |            |      query_be_memory_bytes      | 一个 SQL 在单个 BE 进程内使用的内存用量，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。                                                                                                                        |
-|      | Actions    |    cancel_query                 | 取消查询。                                                                                                                        |
-| FE&BE | properties | enabled                                | 取值为 true 或 false，默认值为 true，表示当前 Policy 处于启用状态，false 表示当前 Policy 处于禁用状态。                                                                                                                        |
-|      |            | priority                                | 取值范围为 0 到 100 的正整数，默认值为 0，代表 Policy 的优先级，该值越大，优先级越高。这个属性的主要作用是，当匹配到多个 Policy 时，选择优先级最高的 Policy。                                                                                                                        |
-|      |            |  workload_group                         |  目前一个 Policy 可以绑定一个 workload group，代表这个 Policy 只对某个 workload group 生效。默认为空，代表对所有查询生效。                                                                                                                       |
-
+| Properties               | 说明                                                                                                 |
+|-----------------------|----------------------------------------------------------------------------------------------------|
+| enabled              | 取值为 true 或 false，默认值为 true，表示当前 Policy 处于启用状态，false 表示当前 Policy 处于禁用状态                             |
+| priority          | 取值范围为 0 到 100 的正整数，默认值为 0，代表 Policy 的优先级，该值越大，优先级越高。这个属性的主要作用是，当查询匹配到多个 Policy 时，只选择优先级最高的 Policy。 |
+| workload_group         | 目前一个 Policy 可以绑定一个 workload group，代表这个 Policy 只对某个 Workload Group 的查询生效。默认为空，代表对所有查询生效。            |
 
 ### 将熔断策略绑定 Workload Group
 默认情况下，Workload Policy 会对所有支持的查询生效。如果想指定 Policy 只针对与某一个 Workload Group，需要通过 workload_group 选项绑定 Workload Group。语句如下：
