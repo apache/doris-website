@@ -54,7 +54,7 @@ Apache Doris offers various methods for importing and integrating data, allowing
 
     - You can create a [Catalog](../../lakehouse/lakehouse-overview.md) to read data from external sources and use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronize this data into Doris, with asynchronous writing via [JOB](../scheduler/job-scheduler.md).
     
-    - You can use [X2Doris](./migrate-data-from-other-olap.md) to migrate data from other AP systems into Doris.
+    - You can use [X2Doris](data-source/migrate-data-from-other-olap.md) to migrate data from other AP systems into Doris.
 
 Each import method in Doris is an implicit transaction by default. For more information on transactions, refer to [Transactions](../transaction.md).
 
