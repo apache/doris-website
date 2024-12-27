@@ -85,4 +85,5 @@ While Doris provides powerful backup and restore capabilities, there are some li
 6. **Dynamic Partition Support**:
    While dynamic partitioning is supported in Doris, the dynamic partition attribute will be disabled during backup. When restoring data, this attribute needs to be manually enabled using the `ALTER TABLE` command.
 
-
+7. **Single Concurrency**:
+   Only one backup or restore task can run simultaneously under a single database.
