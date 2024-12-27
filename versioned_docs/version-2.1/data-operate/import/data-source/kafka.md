@@ -28,9 +28,7 @@ Doris provides the following methods to load data from Kafka:
 
 - **Using Routine Load to consume Kafka data**
 
-Doris continuously consumes data from Kafka Topics through Routine Load. After submitting a Routine Load job, Doris generates load tasks in real-time to consume messages from the specified Topic in the Kafka cluster. Routine Load supports CSV and JSON formats, with Exactly-Once semantics, ensuring that data is neither lost nor duplicated.
-
-For more documentation, please refer to [Routine Load](../import-way/routine-load-manual.md).
+Doris continuously consumes data from Kafka Topics through Routine Load. After submitting a Routine Load job, Doris generates load tasks in real-time to consume messages from the specified Topic in the Kafka cluster. Routine Load supports CSV and JSON formats, with Exactly-Once semantics, ensuring that data is neither lost nor duplicated.For more documentation, please refer to [Routine Load](../import-way/routine-load-manual.md).
 
 - **Doris Kafka Connector to consume Kafka data**
 
@@ -179,11 +177,11 @@ mysql> select * from test_multi_table_load2;
 
 For methods of configuring Kafka with authentication, please refer to [Kafka Security Authentication](../import-way/routine-load-manual.md#kafka-security-authentication).
 
-# Using Doris Kafka Connector to consume Kafka data
+## Using Doris Kafka Connector to consume Kafka data
 
 The Doris Kafka Connector is a tool for loading Kafka data streams into the Doris database. Users can easily load various serialization formats (such as JSON, Avro, Protobuf) through the Kafka Connect plugin, and it supports parsing data formats from the Debezium component.
 
-## Start in Distributed Mode
+### Start in Distributed Mode
 
 [Distributed](https://docs.confluent.io/platform/current/connect/index.html#distributed-workers) mode provides scalability and automatic fault tolerance for Kafka Connect. In this mode, multiple worker processes can be started using the same `group.id`, which will coordinate the execution of connectors and tasks across all available worker processes.
 
@@ -254,7 +252,7 @@ curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/tasks/0/restart
 
 For an introduction to Distributed mode, please refer to [Distributed Workers](https://docs.confluent.io/platform/current/connect/index.html#distributed-workers).
 
-## Load Ordinary Data
+### Load Ordinary Data
 
 1. Load sample data:
 
@@ -315,7 +313,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
-## Load Data Collected by Debezium Component
+### Load Data Collected by Debezium Component
 
 1. The MySQL database has the following table:
 
@@ -375,7 +373,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
-## Load Data in AVRO Serialization Format
+### Load Data in AVRO Serialization Format
 
 ```Bash
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
@@ -403,7 +401,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
-## Load Data in Protobuf Serialization Format
+### Load Data in Protobuf Serialization Format
 
 ```Bash
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
