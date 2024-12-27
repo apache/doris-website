@@ -42,14 +42,14 @@ Syncer 同步时需要用户提供上下游的账户，该账户需要拥有下�
 4. Create_priv 创建数据库、表、视图的权限。
 5. drop_priv 删除数据库、表、视图的权限。
 
-此外还需要加上 Admin 权限 (之后考虑彻底移除), 这个是用来检测 enable binlog config 的，现在需要 admin 权限。
+此外还需要加上 Admin 权限 (之后考虑彻底移除), 这个是用来检测 enable binlog config 的。
 
 ### 版本要求
 
 版本最低要求：v2.0.15
 
 :::caution
-**从 2.1.8/3.0.4 开始，ccr syncer 支持的最小 doris 版本是 2.1，2.0 版本将不再支持。**
+**从 2.1.8/3.0.4 开始，ccr syncer 支持的最小 Doris 版本是 2.1，2.0 版本将不再支持。**
 :::
 
 #### 不建议使用版本
@@ -57,206 +57,47 @@ Syncer 同步时需要用户提供上下游的账户，该账户需要拥有下�
 Doris 版本
 - 2.1.5/2.0.14：如果从之前的版本升级到这两个版本，且用户有 drop partition 操作，那么会在升级、重启时碰到 NPE，原因是这个版本引入了一个新字段，旧版本没有所以默认值为 null。这个问题在 2.1.6/2.0.15 修复。
 
+
+## 开启库中所有表的 binlog
+
+```shell
+bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
+```
+
 ## 启动 Syncer
 
-根据配置选项启动 Syncer，并且在默认或指定路径下保存一个 pid 文件，pid 文件的命名方式为`host_port.pid`。
+可以使用 `bin/start_syncer.sh` 启动 Syncer。
 
-**输出路径下的文件结构**
+| **选项** | **描述** | **命令示例** | **默认值** |
+|----------|----------|--------------|------------|
+| `--daemon` | 后台运行 Syncer | `bin/start_syncer.sh --daemon` | `false` |
+| `--db_type` | Syncer 可使用两种数据库保存元数据：`sqlite3`（本地存储）和 `mysql`（本地或远端存储）。当使用 `mysql` 存储元数据时，Syncer 会使用 `CREATE IF NOT EXISTS` 创建名为 `ccr` 的库，元数据表保存在其中。 | `bin/start_syncer.sh --db_type mysql` | `sqlite3` |
+| `--db_dir` | **仅在数据库使用 `sqlite3` 时生效**，可指定 SQLite3 生成的数据库文件名及路径。 | `bin/start_syncer.sh --db_dir /path/to/ccr.db` | `SYNCER_OUTPUT_DIR/db/ccr.db` |
+| `--db_host`<br>`--db_port`<br>`--db_user`<br>`--db_password` | **仅在数据库使用 `mysql` 时生效**，用于设置 MySQL 的主机、端口、用户和密码。 | `bin/start_syncer.sh --db_host 127.0.0.1 --db_port 3306 --db_user root --db_password "qwe123456"` | `db_host` 和 `db_port` 默认为示例值；`db_user` 和 `db_password` 默认为空。 |
+| `--log_dir` | 指定日志输出路径 | `bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log` | `SYNCER_OUTPUT_DIR/log/ccr_syncer.log` |
+| `--log_level` | 指定日志输出等级，日志格式如下：`time level msg hooks`。在 `--daemon` 下默认值为 `info`；前台运行时默认值为 `trace`，并通过 `tee` 保存日志到 `log_dir`。 | `bin/start_syncer.sh --log_level info` | `info`（后台运行）<br>`trace`（前台运行） |
+| `--host`<br>`--port` | 指定 Syncer 的 `host` 和 `port`。`host` 用于区分集群中 Syncer 的实例，可理解为 Syncer 的名称，集群中 Syncer 的名称格式为 `host:port`。 | `bin/start_syncer.sh --host 127.0.0.1 --port 9190` | `host` 默认为 `127.0.0.1`<br>`port` 默认为 `9190` |
+| `--pid_dir` | 指定 PID 文件保存路径。PID 文件为 `stop_syncer.sh` 脚本停止 Syncer 的凭据，保存对应 Syncer 的进程号。为方便集群化管理，可自定义路径。 | `bin/start_syncer.sh --pid_dir /path/to/pids` | `SYNCER_OUTPUT_DIR/bin` |
 
-在编译完成后的输出路径下，文件结构大致如下所示：
-
-```sql
-output_dir
-    bin
-        ccr_syncer
-        enable_db_binlog.sh
-        start_syncer.sh
-        stop_syncer.sh
-    db
-        [ccr.db] # 默认配置下运行后生成
-    log
-        [ccr_syncer.log] # 默认配置下运行后生成
-```
-
-:::caution
-**后文中的 start_syncer.sh 指的是该路径下的 start_syncer.sh！！！**
-:::
-
-**启动选项**
-
-1. --daemon
-
-后台运行 Syncer，默认为 false
-
-```sql
-bash bin/start_syncer.sh --daemon
-```
-
-2. --db_type
-
-Syncer 目前能够使用两种数据库来保存自身的元数据，分别为`sqlite3`（对应本地存储）和`mysql`（本地或远端存储）
-
-```sql
-bash bin/start_syncer.sh --db_type mysql
-```
-
-默认值为 sqlite3
-
-在使用 mysql 存储元数据时，Syncer 会使用`CREATE IF NOT EXISTS`来创建一个名为`ccr`的库，ccr 相关的元数据表都会保存在其中
-
-3. --db_dir
-
-**这个选项仅在 db 使用 `sqlite3` 时生效**
-
-可以通过此选项来指定 sqlite3 生成的 db 文件名及路径。
-
-```sql
-bash bin/start_syncer.sh --db_dir /path/to/ccr.db
-```
-
-默认路径为`SYNCER_OUTPUT_DIR/db`，文件名为`ccr.db`
-
-4. --db_host & db_port & db_user & db_password
-
-**这个选项仅在 db 使用 `mysql` 时生效**
-
-```sql
-bash bin/start_syncer.sh --db_host 127.0.0.1 --db_port 3306 --db_user root --db_password "qwe123456"
-```
-
-db_host、db_port 的默认值如例子中所示，db_user、db_password 默认值为空
-
-5. --log_dir
-
-日志的输出路径
-
-```sql
-bash bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log
-```
-
-默认路径为`SYNCER_OUTPUT_DIR/log`，文件名为`ccr_syncer.log`
-
-6. --log_level
-
-用于指定 Syncer 日志的输出等级。
-
-```sql
-bash bin/start_syncer.sh --log_level info
-```
-
-日志的格式如下，其中 hook 只会在`log_level > info`的时候打印：
-
-```sql
-#        time         level        msg                  hooks
-[2023-07-18 16:30:18] TRACE This is trace type. ccrName=xxx line=xxx
-[2023-07-18 16:30:18] DEBUG This is debug type. ccrName=xxx line=xxx
-[2023-07-18 16:30:18]  INFO This is info type. ccrName=xxx line=xxx
-[2023-07-18 16:30:18]  WARN This is warn type. ccrName=xxx line=xxx
-[2023-07-18 16:30:18] ERROR This is error type. ccrName=xxx line=xxx
-[2023-07-18 16:30:18] FATAL This is fatal type. ccrName=xxx line=xxx
-```
-
-在--daemon 下，log_level 默认值为`info`
-
-在前台运行时，log_level 默认值为`trace`，同时日志会通过 tee 来保存到 log_dir
-
-6. --host && --port
-
-用于指定 Syncer 的 host 和 port，其中 host 只起到在集群中的区分自身的作用，可以理解为 Syncer 的 name，集群中 Syncer 的名称为`host:port`
-
-```sql
-bash bin/start_syncer.sh --host 127.0.0.1 --port 9190
-```
-
-host 默认值为 127.0.0.1，port 的默认值为 9190
-
-7. --pid_dir
-
-用于指定 pid 文件的保存路径
-
-pid 文件是 stop_syncer.sh 脚本用于停止 Syncer 的凭据，里面保存了对应 Syncer 的进程号，为了方便 Syncer 的集群化管理，可以指定 pid 文件的保存路径
-
-```sql
-bash bin/start_syncer.sh --pid_dir /path/to/pids
-```
-
-默认值为`SYNCER_OUTPUT_DIR/bin`
 
 ## 停止 Syncer
 
-根据默认或指定路径下 pid 文件中的进程号停止对应 Syncer，pid 文件的命名方式为`host_port.pid`。
+可以使用 `bin/stop_syncer.sh` 停止 Syncer，有三种方法：
 
-**输出路径下的文件结构**
+| **方法/选项** | **描述** | **命令示例** | **默认值** |
+|---------------|----------|--------------|------------|
+| **方法 1** 停止单个 Syncer | 指定要停止的 Syncer 的 `host` 和 `port`，注意要与启动时的 `host` 一致。 | `bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190` | 无 |
+| **方法 2** 批量停止 Syncer | 指定要停止的 PID 文件名，以空格分隔并用 `"` 包裹。 | `bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"` | 无 |
+| **方法 3** 停止所有 Syncer | 默认停止 `pid_dir` 路径下所有 PID 文件对应的 Syncer。 | `bash bin/stop_syncer.sh --pid_dir /path/to/pids` | 无 |
 
-在编译完成后的输出路径下，文件结构大致如下所示：
+方法 3 的选项如下：
 
-```shell
-output_dir
-    bin
-        ccr_syncer
-        enable_db_binlog.sh
-        start_syncer.sh
-        stop_syncer.sh
-    db
-        [ccr.db] # 默认配置下运行后生成
-    log
-        [ccr_syncer.log] # 默认配置下运行后生成
-```
-:::caution
-**后文中的 stop_syncer.sh 指的是该路径下的 stop_syncer.sh！！！**
-:::
+| **选项** | **描述** | **命令示例** | **默认值** |
+|----------|----------|--------------|------------|
+| `--pid_dir` | 指定 PID 文件所在目录，上述三种停止方法都依赖于此选项执行。 | `bash bin/stop_syncer.sh --pid_dir /path/to/pids` | `SYNCER_OUTPUT_DIR/bin` |
+| `--host`<br>`--port` | 停止 `pid_dir` 路径下 `host:port` 对应的 Syncer。仅指定 `host` 时退化为**方法 3**；`host` 和 `port` 都不为空时生效为**方法 1**。 | `bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190` | `host`: 127.0.0.1<br>`port`: 空 |
+| `--files` | 停止 `pid_dir` 路径下指定 PID 文件名对应的 Syncer，文件之间用空格分隔，并整体用 `"` 包裹。 | `bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"` | 无 |
 
-**停止选项**
-
-有三种停止方法：
-
-1. 停止目录下单个 Syncer
-
-​    指定要停止 Syncer 的 host && port，注意要与 start_syncer 时指定的 host 一致
-
-2. 批量停止目录下指定 Syncer
-
-​    指定要停止的 pid 文件名，以空格分隔，用`" "`包裹
-
-3. 停止目录下所有 Syncer
-
-​    默认即可
-
-1. --pid_dir
-
-指定 pid 文件所在目录，上述三种停止方法都依赖于 pid 文件的所在目录执行
-
-```shell
-bash bin/stop_syncer.sh --pid_dir /path/to/pids
-```
-
-例子中的执行效果就是停止`/path/to/pids`下所有 pid 文件对应的 Syncer（**方法 3**），`--pid_dir`可与上面三种停止方法组合使用。
-
-默认值为`SYNCER_OUTPUT_DIR/bin`
-
-2. --host && --port
-
-停止 pid_dir 路径下 host:port 对应的 Syncer
-
-```shell
-bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190
-```
-
-host 的默认值为 127.0.0.1，port 默认值为空
-
-即，单独指定 host 时**方法 1**不生效，会退化为**方法 3**。
-
-host 与 port 都不为空时**方法 1**才能生效
-
-3. --files
-
-停止 pid_dir 路径下指定 pid 文件名对应的 Syncer
-
-```shell
-bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"
-```
-
-文件之间用空格分隔，整体需要用`" "`包裹住
 
 ## Syncer 操作列表
 
@@ -396,75 +237,12 @@ curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
 {"success":true,"jobs":["ccr_db_table_alias"]}
 ```
 
-### 开启库中所有表的 binlog
-
-**输出路径下的文件结构**
-
-在编译完成后的输出路径下，文件结构大致如下所示：
-
-```shell
-output_dir
-    bin
-        ccr_syncer
-        enable_db_binlog.sh
-        start_syncer.sh
-        stop_syncer.sh
-    db
-        [ccr.db] # 默认配置下运行后生成
-    log
-        [ccr_syncer.log] # 默认配置下运行后生成
-```
-:::caution
-**后文中的 enable_db_binlog.sh 指的是该路径下的 enable_db_binlog.sh！！！**
-:::
-
-**使用说明**
-
-```shell
-bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
-```
-
 ## Syncer 高可用
 
 Syncer 高可用依赖 mysql，如果使用 mysql 作为后端存储，Syncer 可以发现其它 Syncer，如果一个 crash 了，其他会分担它的任务。
 
 
 ## 使用须知
-
-### IS_BEING_SYNCED 属性
-
-CCR 功能在建立同步时，会在目标集群中创建源集群同步范围中表（后称源表，位于源集群）的副本表（后称目标表，位于目标集群），但是在创建副本表时需要失效或者擦除一些功能和属性以保证同步过程中的正确性。
-
-如：
-
-- 源表中包含了可能没有被同步到目标集群的信息，如`storage_policy`等，可能会导致目标表创建失败或者行为异常。
-- 源表中可能包含一些动态功能，如动态分区等，可能导致目标表的行为不受 Syncer 控制导致 partition 不一致。
-
-在被复制时因失效而需要擦除的属性有：
-
-- `storage_policy`
-- `colocate_with`
-
-在被同步时需要失效的功能有：
-
-- 自动分桶
-- 动态分区
-
-#### 实现
-
-在创建目标表时，这条属性将会由 Syncer 控制添加或者删除，在 CCR 功能中，创建一个目标表有两个途径：
-
-1. 在表同步时，Syncer 通过 backup/restore 的方式对源表进行全量复制来得到目标表。
-2. 在库同步时，对于存量表而言，Syncer 同样通过 backup/restore 的方式来得到目标表，对于增量表而言，Syncer 会通过携带有 CreateTableRecord 的 binlog 来创建目标表。
-
-综上，对于插入`is_being_synced`属性有两个切入点：全量同步中的 restore 过程和增量同步时的 getDdlStmt。
-
-在全量同步的 restore 过程中，Syncer 会通过 rpc 发起对原集群中 snapshot 的 restore，在这个过程中为会为 RestoreStmt 添加`is_being_synced`属性，并在最终的 restoreJob 中生效，执行`isBeingSynced`的相关逻辑。在增量同步时的 getDdlStmt 中，为 getDdlStmt 方法添加参数`boolean getDdlForSync`，以区分是否为受控转化为目标表 ddl 的操作，并在创建目标表时执行`isBeingSynced`的相关逻辑。
-
-对于失效属性的擦除无需多言，对于上述功能的失效需要进行说明：
-
-- 自动分桶 自动分桶会在创建表时生效，计算当前合适的 bucket 数量，这就可能导致源表和目的表的 bucket 数目不一致。因此在同步时需要获得源表的 bucket 数目，并且也要获得源表是否为自动分桶表的信息以便结束同步后恢复功能。当前的做法是在获取 distribution 信息时默认 autobucket 为 false，在恢复表时通过检查`_auto_bucket`属性来判断源表是否为自动分桶表，如是则将目标表的 autobucket 字段设置为 true，以此来达到跳过计算 bucket 数量，直接应用源表 bucket 数量的目的。
-- 动态分区 动态分区则是通过将`olapTable.isBeingSynced()`添加到是否执行 add/drop partition 的判断中来实现的，这样目标表在被同步的过程中就不会周期性的执行 add/drop partition 操作。
 
 :::caution
 

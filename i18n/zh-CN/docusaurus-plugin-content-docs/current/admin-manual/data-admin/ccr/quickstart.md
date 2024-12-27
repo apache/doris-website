@@ -27,11 +27,7 @@ under the License.
 
 使用非常简单，只需把 Syncer 服务启动，给他发一个命令，剩下的交给 Syncer 完成就行。
 
-## 第一步. 部署源 Doris 集群
-
-## 第二步. 部署目标 Doris 集群
-
-## 第三步. 打开源和目标集群的 binlog 配置
+## 1. 打开源和目标集群的 binlog 配置
 
 在源集群和目标集群的 fe.conf 和 be.conf 中配置如下信息：
 
@@ -39,21 +35,13 @@ under the License.
 enable_feature_binlog=true
 ```
 
-## 第四步. 部署 Syncer
+## 2. 部署 Syncer
 
-4.1. 构建 CCR Syncer
+2.1. 从如下链接下载最新的包
 
-    ```shell
-    git clone https://github.com/selectdb/ccr-syncer
+    `https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-syncer-2.1.4-x64.tar.xz`
 
-    cd ccr-syncer
-
-    bash build.sh <-j NUM_OF_THREAD> <--output SYNCER_OUTPUT_DIR>
-
-    cd SYNCER_OUTPUT_DIR# 联系相关同学免费获取 ccr 二进制包
-    ```
-
-4.2. 启动和停止 Syncer
+2.2. 启动和停止 Syncer
 
     ```shell
     # 启动
@@ -63,19 +51,17 @@ enable_feature_binlog=true
     sh stop_syncer.sh
     ```
 
-## 第五步. 打开源集群中同步库/表的 Binlog
+## 第三步. 打开源集群中同步库/表的 Binlog
 
 ```shell
 -- 如果是整库同步，可以执行如下脚本，使得该库下面所有的表都要打开 binlog.enable
-vim shell/enable_db_binlog.sh
-修改源集群的 host、port、user、password、db
-或者 ./enable_db_binlog.sh --host $host --port $port --user $user --password $password --db $db
+./enable_db_binlog.sh --host $host --port $port --user $user --password $password --db $db
 
 -- 如果是单表同步，则只需要打开 table 的 binlog.enable，在源集群上执行：
 ALTER TABLE enable_binlog SET ("binlog.enable" = "true");
 ```
 
-## 第六步. 向 Syncer 发起同步任务
+## 第四步. 向 Syncer 发起同步任务
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
