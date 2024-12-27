@@ -32,7 +32,7 @@ Currently, Memory Tracker does not accurately count the metadata memory size of 
 
 ### Doris BE Bvar
 
-You can see some metadata-related indicators counted by Bvar on the web page `http://http://{be_host}:{brpc_port}/vars`.
+You can see some metadata-related indicators counted by Bvar on the web page `http://{be_host}:{brpc_port}/vars`.
 
 ```
 - `doris_total_tablet_num`: The number of all tablets.
@@ -56,7 +56,7 @@ You can see some metadata-related indicators counted by Bvar on the web page `ht
 
 ### Doris BE Metrics
 
-Web page `http://http://{be_host}:{be_web_server_port}/metrics` can see some metadata indicators in BE process memory monitoring (Metrics). Among them, Metadata Cache related indicators refer to [Doris Cache Memory Analysis](./doris-cache-memory-analysis.md).
+Web page `http://{be_host}:{be_web_server_port}/metrics` can see some metadata indicators in BE process memory monitoring (Metrics). Among them, Metadata Cache related indicators refer to [Doris Cache Memory Analysis](./doris-cache-memory-analysis.md).
 
 ```
 - `doris_be_all_rowsets_num`: The number of all Rowsets.

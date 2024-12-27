@@ -92,7 +92,7 @@ There are three ways to view Doris Cache related indicators.
 
 1. Doris BE Metrics
 
-Web page `http://http://{be_host}:{be_web_server_port}/metrics` can see BE process memory monitoring (Metrics), including each cache capacity, usage, number of elements, search and hit times and other indicators.
+Web page `http://{be_host}:{be_web_server_port}/metrics` can see BE process memory monitoring (Metrics), including each cache capacity, usage, number of elements, search and hit times and other indicators.
 
 ```
 - `doris_be_cache_capacity{name="TabletSchemaCache"} 102400`: Cache capacity, two limiting methods: memory size or number of elements.
@@ -106,7 +106,7 @@ Web page `http://http://{be_host}:{be_web_server_port}/metrics` can see BE proce
 
 2. Doris BE Bvar
 
-Web page `http://http://{be_host}:{brpc_port}/vars/*cache*` can show some unique metrics of some caches.
+Web page `http://{be_host}:{brpc_port}/vars/*cache*` can show some unique metrics of some caches.
 
 > In the future, the indicators in Doris BE Metrics will be moved to Doris BE Bvar.
 
