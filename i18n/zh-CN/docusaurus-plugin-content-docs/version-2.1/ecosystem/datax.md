@@ -26,23 +26,23 @@ under the License.
 
 # DataX doriswriter
 
-[DataX](https://github.com/alibaba/DataX) Doriswriter 插件，支持将 MySQL、Oracle、SqlServer 等多种数据源中的数据通过 Stream Load的方式同步到 Doris 中。
+[DataX](https://github.com/alibaba/DataX) Doriswriter 插件，支持将 MySQL、Oracle、SqlServer 等多种数据源中的数据通过 Stream Load 的方式同步到 Doris 中。
 
 :::info 注意
 1. 需要配合 DataX 服务一起使用。
-2. DataX支持多种数据源，可参考[这里](https://github.com/alibaba/DataX#support-data-channels)。
+2. DataX 支持多种数据源，可参考[这里](https://github.com/alibaba/DataX#support-data-channels)。
 :::
 
 
 ## 使用
 
-### 直接下载DataX安装包
+### 直接下载 DataX 安装包
 
-DataX官方提供了安装包，已经包含了DataX可直接下载使用，可参考[这里](https://github.com/alibaba/DataX?tab=readme-ov-file#download-datax%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80)
+DataX 官方提供了安装包，已经包含了 DataX 可直接下载使用，可参考[这里](https://github.com/alibaba/DataX?tab=readme-ov-file#download-datax%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80)
 
-### 自行编译DorisWriter插件
+### 自行编译 DorisWriter 插件
 
-下载DorisWriter 的插件[源码](https://github.com/apache/doris/tree/master/extension/DataX)
+下载 DorisWriter 的插件[源码](https://github.com/apache/doris/tree/master/extension/DataX)
 
 1. 运行 `init-env.sh`
 2. 编译 doriswriter：
@@ -64,7 +64,7 @@ DataX官方提供了安装包，已经包含了DataX可直接下载使用，可�
        可尝试以下方式解决：
 
         1. 下载 [alibaba-datax-maven-m2-20210928.tar.gz](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/alibaba-datax-maven-m2-20210928.tar.gz)
-        2. 解压后，将得到的 `alibaba/datax/` 目录，拷贝到所使用的 maven 对应的 `.m2/repository/com/alibaba/` 下, 再次尝试编译。
+        2. 解压后，将得到的 `alibaba/datax/` 目录，拷贝到所使用的 maven 对应的 `.m2/repository/com/alibaba/` 下，再次尝试编译。
 
 ### Datax DorisWriter 参数介绍：
 
@@ -141,7 +141,7 @@ DataX官方提供了安装包，已经包含了DataX可直接下载使用，可�
 
 * **loadProps**
 
-  - 描述：StreamLoad 的请求参数，详情参照 StreamLoad 介绍页面。[Stream load - Apache Doris](https://doris.apache.org/zh-CN/docs/data-operate/import/stream-load-manual)
+  - 描述：StreamLoad 的请求参数，详情参照 StreamLoad 介绍页面。[Stream load](../data-operate/import/import-way/stream-load-manual)
 
     这里包括导入的数据格式：format 等，导入数据格式默认我们使用 csv，支持 JSON，具体可以参照下面类型转换部分，也可以参照上面 Stream load 官方信息
 
