@@ -505,7 +505,6 @@
                             "label": "Backup & Restore",
                             "items": [
                                 "admin-manual/data-admin/backup-restore/overview",
-                                "admin-manual/data-admin/backup-restore/create-repository",
                                 "admin-manual/data-admin/backup-restore/backup",
                                 "admin-manual/data-admin/backup-restore/restore"
                             ]

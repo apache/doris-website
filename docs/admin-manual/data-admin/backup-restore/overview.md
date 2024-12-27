@@ -26,26 +26,22 @@ under the License.
 
 ## Introduction
 
-Apache Doris provides robust support for backup and restore operations. These features enable users to back up data from tables or entire databases to remote storage systems and restore it as needed. The system supports snapshot-based backups, which capture the state of the data at a particular point in time, and these snapshots can be stored in remote repositories like HDFS, S3, and MinIO.
-
-Backup and restore operations are crucial for disaster recovery, data migration between clusters, and ensuring data integrity over time.
+Apache Doris provides robust support for backup and restore operations. These features enable users to back up data from tables or entire databases to remote storage systems and restore it as needed. The system supports snapshot-based backups, which capture the state of the data at a particular point in time, and these snapshots can be stored in remote repositories like HDFS and object storages.
 
 ## Requirements
 
-- **ADMIN Privileges**: Only users with **ADMIN** privileges are authorized to perform backup and restore operations. This ensures secure handling of sensitive data and prevents unauthorized access to backup processes.
-
-- Doris version 0.8.2 or higher.
+- **ADMIN Privileges**: Only users with **ADMIN** privileges are authorized to perform backup and restore operations.
 
 ## Key Concepts
 
 1. **Snapshot**:
-   A snapshot is a point-in-time capture of the data in a table or partition. It is an efficient operation, as it only creates a hard link to the existing data files.
+   A snapshot is a point-in-time capture of the data in a database, a table or partition, achieved by obtaining consistent version numbers and creating hard links to keep the data. A snapshot can be idetified by a repository name and timestamp.
 
 2. **Repository**:
-   A remote storage location where the backup files are stored. Supported repositories include HDFS, S3, MinIO and other object storages.
+   A remote storage location where the backup files are stored. Supported repositories include S3, Azure, GCP, OSS, COS,MinIO, HDFS and other object storages.
 
 3. **Backup Operation**:
-   A backup operation involves creating a snapshot of a table or partition, uploading the snapshot files to a remote repository, and storing the metadata related to the backup.
+   A backup operation involves creating a snapshot of a database, a table or partition, uploading the snapshot files to a remote repository, and storing the metadata related to the backup.
 
 4. **Restore Operation**:
    A restore operation involves downloading the backup from a remote repository and restoring it to a Doris cluster.
@@ -53,7 +49,7 @@ Backup and restore operations are crucial for disaster recovery, data migration 
 ## Key Features
 
 1. **Backup Data**:
-   Doris allows you to back up data from a table, partition, or an entire database by creating snapshots. The data is backed up in file format and stored on remote storage systems like HDFS, S3, or other compatible systems via the broker process.
+   Doris allows you to back up data from a table, partition, or an entire database by creating snapshots. The data is backed up in file format and stored on remote storage systems like HDFS, S3, or other compatible systems.
 
 2. **Restore Data**:
    You can restore the backup data from a remote repository to any Doris cluster. This includes full database restores, full table restores, and partition-level restores, allowing for flexibility in recovering data.
@@ -71,20 +67,22 @@ Backup and restore operations are crucial for disaster recovery, data migration 
 
 While Doris provides powerful backup and restore capabilities, there are some limitations and unsupported features in certain scenarios:
 
-1. **Async Materialized View (MTMV) Not Supported**:
-   Doris currently does not support backing up or restoring tables that are associated with **Async Materialized Views (MTMV)**. If such views are involved, the backup or restore operations may not work as expected, and users may encounter issues related to consistency or data integrity during the process.
+1. **Storage&Compute Decoupled**:
+   Storage and compute decoupling mode does not support backup and restore.
 
-2. **Tables with Storage Policy Not Supported**:
-   Tables that have a **storage policy** defined (e.g., tables configured with custom storage settings) are **not supported** for backup and restore operations. These tables may encounter issues during backup or restore, as their storage configurations may conflict with the snapshot process.
+2. **Async Materialized View (MTMV) Not Supported**:
+   Backing up or restoring **Async Materialized Views (MTMV)** is not supported in Doris. These views are not considered during backup and restore operations.
 
-3. **Incremental Backup**:
-   At present, Doris only supports full backups. Incremental backups (where only the changed data since the last backup is stored) are not yet supported, although this may be included in future versions.
+3. **Tables with Storage Policy Not Supported**:
+   Tables that have a [**storage policy**](../../../table-desgin/tiered-storage/remote-storage.md) defined are **not supported** for backup and restore operations.
 
-4. **Colocate With Property**:
+4. **Incremental Backup**:
+   At present, Doris only supports full backups. Incremental backups (where only the changed data since the last backup is stored) are not yet supported, although users can backup specific partitions.
+
+5. **Colocate With Property**:
    During a backup or restore operation, Doris will not preserve the `colocate_with` property of tables. This may require reconfiguring the colocated tables after restoring them.
 
-5. **Dynamic Partition Support**:
+6. **Dynamic Partition Support**:
    While dynamic partitioning is supported in Doris, the dynamic partition attribute will be disabled during backup. When restoring data, this attribute needs to be manually enabled using the `ALTER TABLE` command.
 
-For detailed usage instructions, please refer to the backup and restore user guides.
 

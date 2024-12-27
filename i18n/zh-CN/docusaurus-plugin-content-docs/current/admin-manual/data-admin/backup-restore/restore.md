@@ -5,7 +5,6 @@
 }
 ---
 
-
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -28,29 +27,55 @@ under the License.
 ## 前提条件
 
 1. 确保您拥有**管理员**权限以执行恢复操作。
-2. 确保您有一个现有的**存储库**来存储备份。如果没有，请按照[这里](create-repository.md)的步骤创建一个存储库，并执行[备份](backup.md)。
-3. 确保您有一个有效的**备份**快照可以恢复。
+2. 确保您有一个现有的**存储库**来存储备份。如果没有，请按照创建存储库的步骤并执行[备份](backup.md)。
+3. 确保您有一个有效的**备份**快照可供恢复。
 
-## 1. 从快照恢复
+## 1. 获取快照的备份时间戳
 
-### 选项1：从快照恢复单个表
+以下SQL语句可用于查看名为`example_repo`的存储库中的现有备份。
 
-从备份快照`snapshot_1`中将表`backup_tbl`恢复到数据库`example_db1`。指定时间版本为`"2018-05-04-16-45-08"`。恢复为1个副本：
+   ```sql
+   mysql> SHOW SNAPSHOT ON example_repo;
+   +-----------------+---------------------+--------+
+   | 快照            | 时间戳              | 状态   |
+   +-----------------+---------------------+--------+
+   | exampledb_20241225 | 2022-04-08-15-52-29 | OK     |
+   +-----------------+---------------------+--------+
+   1 row in set (0.15 sec)
+   ```
+
+## 2. 从快照恢复
+
+### 恢复快照
+
+以下SQL语句从名为`example_repo`的存储库中恢复具有特定备份时间戳的快照。
 
 ```sql
-RESTORE SNAPSHOT example_db1.`snapshot_1`
+RESTORE SNAPSHOT `restore_label1`
+FROM `example_repo`
+PROPERTIES
+(
+    "backup_timestamp"="2022-04-08-15-52-29"
+);
+```
+
+### 从快照恢复单个表
+
+从`example_repo`中的快照恢复表`backup_tbl`到数据库，指定时间版本为`"2018-05-04-16-45-08"`。
+
+```sql
+RESTORE SNAPSHOT `restore_label1`
 FROM `example_repo`
 ON ( `backup_tbl` )
 PROPERTIES
 (
-    "backup_timestamp"="2022-04-08-15-52-29",
-    "replication_num" = "1"
+    "backup_timestamp"="2022-04-08-15-52-29"
 );
 ```
 
-### 选项2：从快照恢复分区和表
+### 从快照恢复分区和表
 
-从`example_repo`中的备份快照`snapshot_2`恢复表`backup_tbl`的分区p1和p2，以及表`backup_tbl2`到数据库`example_db1`，并将其重命名为`new_tbl`，时间版本为`"2018-05-04-17-11-01"`。默认恢复为3个副本：
+从`example_repo`中的备份快照`snapshot_2`恢复表`backup_tbl`的分区p1和p2，以及表`backup_tbl2`到数据库`example_db1`，并将其重命名为`new_tbl`，时间版本为`"2018-05-04-17-11-01"`。
 
    ```sql
    RESTORE SNAPSHOT example_db1.`snapshot_2`
@@ -66,7 +91,7 @@ PROPERTIES
    );
    ```
 
-## 2. 查看恢复作业的执行情况：
+## 3. 查看恢复作业的执行情况：
 
    ```sql
    mysql> SHOW RESTORE\G;
@@ -77,4 +102,24 @@ PROPERTIES
                  DbName: default_cluster:example_db1
                   State: FINISHED
               AllowLoad: false
-         Replication
+         ReplicationNum: 3
+            RestoreObjs: {
+     "name": "snapshot_label1",
+     "database": "example_db",
+     "backup_time": 1649404349050,
+     "content": "ALL",
+     "olap_table_list": [
+       {
+         "name": "backup_tbl",
+         "partition_names": [
+           "p1",
+           "p2"
+         ]
+       }
+     ],
+     "view_list": [],
+     "odbc_table_list": [],
+     "odbc_resource_list": []
+   }
+             CreateTime: 2022
+</code_block_to_apply_changes_from>

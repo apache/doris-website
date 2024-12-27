@@ -496,8 +496,15 @@
                     "label": "Business continuity & data recovery",
                     "items": [
                         "admin-manual/data-admin/overview",
-                        "admin-manual/data-admin/backup",
-                        "admin-manual/data-admin/restore",
+                        {
+                            "type": "category",
+                            "label": "Backup & Restore",
+                            "items": [
+                                "admin-manual/data-admin/backup-restore/overview",
+                                "admin-manual/data-admin/backup-restore/backup",
+                                "admin-manual/data-admin/backup-restore/restore"
+                            ]
+                        },
                         "admin-manual/data-admin/ccr",
                         "admin-manual/data-admin/recyclebin"
                     ]
