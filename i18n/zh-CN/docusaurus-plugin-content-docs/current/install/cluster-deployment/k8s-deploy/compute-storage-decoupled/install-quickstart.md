@@ -1,6 +1,6 @@
 ---
 {
-"title": "在 Kubernetes 上部署存算分离集群",
+"title": "部署存算分离集群",
 "language": "zh-CN"
 }
 ---
@@ -30,17 +30,16 @@ under the License.
 3. 部署存算分离集群。
 4. 创建存储后端。
 
-## 第1步：部署前准备
-在 Kubernetes 上部署存算分离集群需要提前部署好 FoundationDB。如果使用虚机部署，需要确保虚机能够被 Kubernetes 集群上的服务访问。FoundationDB 在虚机上部署请参考存算分离部署文档中[部署前准备阶段的介绍](../../../../compute-storage-decoupled/before-deployment.md)。在 Kubernetes 上部署请参考 [FoundationDB 在 Kubernetes 上部署](install-fdb.md)。
+## 第 1 步：部署前准备
+在 Kubernetes 上部署存算分离集群需要提前部署好 FoundationDB。如果使用虚机部署，需要确保虚机能够被 Kubernetes 集群上的服务访问。FoundationDB 在虚机上部署请参考存算分离部署文档中[部署前准备阶段的介绍](../../../../compute-storage-decoupled/before-deployment.md)。在 Kubernetes 上部署请参考[在 Kubernetes 上部署 FoundationDB](install-fdb.md)。
 
-## 第2步：部署 Operator
-1. 下发资源定义：
+## 第 2 步：部署 Operator
+1. 下发资源定义  
   ```shell
   kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/crds.yaml
   ```
 
-2. 部署 Doris-Operator 以及依赖的 RBAC 规则：
-
+2. 部署 Doris-Operator 以及依赖的 RBAC 规则
   ```shell
   kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/disaggregated-operator.yaml
   ```
@@ -51,14 +50,14 @@ under the License.
   doris-operator-6b97df65c4-xwvw8   1/1     Running   0          19s
   ```
 
-## 第3步：部署存算分离集群
-1. 下载存算分离集群的部署样例:
+## 第 3 步：部署存算分离集群
+1. 下载存算分离集群的部署样例
   ```shell
   curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/disaggregated/cluster/ddc-sample.yaml
   ```
 
-2. 配置 FoundationDB 访问信息：
-  Doris 存算分离版本使用 FDB 存储元数据，在 `DorisDisaggregatedCluster` 的 `spec.metaService.fdb` 中提供两种方式配置 FDB 的可访问信息：直接配置访问地址，配置包含访问地址的 ConfigMap。
+2. 配置 FoundationDB 访问信息  
+  Doris 存算分离版本使用 FDB 存储元数据，在 `DorisDisaggregatedCluster` 的 `spec.metaService.fdb` 中提供两种方式配置 FDB 的可访问信息。
 - 配置访问地址  
   若 FoundationDB 部署在 Kubernetes 外部，可直接配置 FoundationDB 的访问地址：
   ```yaml
@@ -81,7 +80,8 @@ under the License.
   ```
   其中，${foundationdbConfigMapName} 为 `fdb-kubernetes-operator` 生成的 `ConfigMap` 名称。${namespace} 为 `ConfigMap` 所在的命名空间。  
 
-3. 根据存算分离 K8s 部署文档中，[元数据配置章节](config-ms.md)配置 metaService； [fe 集群配置章节](config-fe.md)进行 fe 终态规格配置；[计算资源组配置章节](config-cg.md)进行相关资源组的配置。配置完成后，使用如下命令部署资源：
+3. 配置存算分离集群   
+  根据存算分离 Kubernetes 部署文档中，[元数据配置章节](config-ms.md)配置 metaService； [FE 集群配置章节](config-fe.md)进行 FE 终态规格配置；[计算资源组配置章节](config-cg.md)进行相关资源组的配置。配置完成后，使用如下命令部署资源：
   ```shell
   kubectl apply -f ddc-sample.yaml
   ```
@@ -92,11 +92,11 @@ under the License.
   test-disaggregated-cluster   green           Ready     2         2                  2
   ```
 
-## 第4步：创建远程存储后端
+## 第 4 步：创建远程存储后端
 存算分离集群搭建完毕后，需要通过客户端执行相应的 `CREATE STORAGE VAULT` SQL 语句创建存储后端来实现数据的持久化。
 可以进入 FE 容器内部使用 MySQL Client 连接 Doris 进行创建操作。
 
-1. 获取 Service。  
+1. 获取 Service  
   在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
   
   ```shell
@@ -114,7 +114,7 @@ under the License.
   test-disaggregated-cluster-cg2           ClusterIP   10.96.50.199   <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   14m
   ```
 
-2. MySQL 客户端访问。  
+2. MySQL 客户端访问  
   使用以下命令，可以在当前的 Kubernetes 集群中创建一个包含 mysql client 的 pod：
   ```shell
   kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never -- /bin/bash
@@ -124,7 +124,7 @@ under the License.
   mysql -uroot -P9030 -h test-disaggregated-cluster-fe  
   ```
 
-3. 创建存储后端。  
+3. 创建存储后端  
   使用提供 S3 协议对象存储作为存储后端，创建示例如下：  
   a. 创建 S3 Storage Vault
   ```mysql
