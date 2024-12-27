@@ -146,7 +146,7 @@ Query OK, 0 rows affected (0.03 sec)
 | 属性名称                       | 数据类型  | 默认值 |  取值范围   | 说明                                                                                                                                                                                                                                                                                                                                                                       |
 |------------------------------|---------|-----|-----|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | cpu_share                    | 整型      | -1  |  [1, 10000]   | 可选，CPU软限模式下生效，取值范围和使用的CGroup版本有关，下文有详细描述。cpu_share 代表了 Workload Group 可获得CPU时间的权重，值越大，可获得的CPU时间越多。例如，用户创建了 3 个 Workload Group g-a、g-b 和 g-c，cpu_share 分别为 10、30、40，某一时刻 g-a 和 g-b 正在跑任务，而 g-c 没有任务，此时 g-a 可获得 25% (10 / (10 + 30)) 的 CPU 资源，而 g-b 可获得 75% 的 CPU 资源。如果系统只有一个 Workload Group 正在运行，则不管其 cpu_share 的值为多少，它都可获取全部的 CPU 资源 。                                   |
-| memory_limit                 | 浮点      | -1         | (0%, 100%]      | 可选，开启内存硬限时代表当前 Workload Group 最大可用内存百分比，默认值代表不限制内存。所有 Workload Group 的 memory_limit 累加值不可以超过 100%，通常与 enable_memory_overcommit 属性配合使用。如果一个机器的内存为 64G，Workload Group 的 memory_limit配置为50%，那么该 group 的实际物理内存=64G * 90% * 50%= 28.8G，这里的90%是 BE 进程可用内存配置的默认值。一个集群中所有 Workload Group 的 memory_limit 的累加值不能超过 100%。                                                           |
+| memory_limit                 | 浮点      | -1         | (0%, 100%]      | 可选，开启内存硬限时代表当前 Workload Group 最大可用内存百分比，默认值代表不限制内存。所有 Workload Group 的 memory_limit 累加值不可以超过 100%，通常与 enable_memory_overcommit 属性配合使用。如果一个机器的内存为 64G，Workload Group 的 memory_limit配置为50%，那么该 group 的实际物理内存=64G * 90% * 50%= 28.8G，这里的90%是 BE 进程可用内存配置的默认值。                                                                                                               |
 | enable_memory_overcommit     | 布尔      | true       | true, false      | 可选，用于控制当前 Workload Group 的内存限制是硬限还是软限，默认为 true。如果设置为 false，则该 workload group 为内存硬隔离，系统检测到 workload group 内存使用超出限制后将立即 cancel 组内内存占用最大的若干个任务，以释放超出的内存；如果设置为 true，则该 Workload Group 为内存软隔离，如果系统有空闲内存资源则该 Workload Group 在超出 memory_limit 的限制后可继续使用系统内存，在系统总内存紧张时会 cancel 组内内存占用最大的若干个任务，释放部分超出的内存以缓解系统内存压力。建议所有 workload group 的 memory_limit 总和低于 100%，为BE进程中的其他组件保留一些内存。 |
 | cpu_hard_limit               | 整型      | -1         | [1%, 100%]      | 可选，CPU 硬限制模式下生效，Workload Group 最大可用 CPU 百分比，不管当前机器的 CPU 资源是否被用满，Workload Group 的最大 CPU 用量都不能超过 cpu_hard_limit，所有 Workload Group 的 cpu_hard_limit 累加值不能超过 100%。2.1 版本新增属性，2.0版本不支持该功能。                                                                                                                                                                                    |
 | max_concurrency              | 整型      | 2147483647 | [0, 2147483647] | 可选，最大查询并发数，默认值为整型最大值，也就是不做并发的限制。运行中的查询数量达到最大并发时，新来的查询会进入排队的逻辑。                                                                                                                                                                                                                                                                                                           |
@@ -192,7 +192,7 @@ SELECT name FROM information_schema.workload_groups;
 更多授权操作可以参考[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
 
 **两种绑定方式**
-1. 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`，需要注意的这里的value不能填空，否则语句会执行失败，如果不知道要设置哪些group，可以设置为`normal`，`normal`为全局默认的group。
+1. 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`，需要注意的这里的value不能填空，否则语句会执行失败。
 ```
 set property 'default_workload_group' = 'g1';
 ```
@@ -558,7 +558,7 @@ OLAP 系统在做 ETL 或者大的 Adhoc 查询时，需要读取大量的数据
    ![use workload group io](/images/workload-management/use_wg_io_2.png)
 
 **注意事项**
-1. 系统表中的 LOCAL_SCAN_BYTES_PER_SECOND 字段代表的是当前 Workload Group 在进程粒度的统计汇总值，比如配置了 12 个文件路径，那么 LOCAL_SCAN_BYTES_PER_SECOND 就是这 12 个文件路径 IO 的最大值，如果期望查看每个文件路径分别的 IO 吞吐，可以在 grafana 上或者 BE 的 bvar 监控查看明细的值。
+1. 系统表中的 LOCAL_SCAN_BYTES_PER_SECOND 字段代表的是当前 Workload Group 在进程粒度的统计汇总值，比如配置了 12 个文件路径，那么 LOCAL_SCAN_BYTES_PER_SECOND 就是这 12 个文件路径 IO 的最大值，如果期望查看每个文件路径分别的 IO 吞吐，可以在 grafana 监控查看明细的值。
 
 2. 由于操作系统和 Doris 的 Page Cache 的存在，通过 linux 的 IO 监控脚本看到的 IO 通常要比系统表看到的要小。
 
