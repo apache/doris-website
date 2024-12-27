@@ -69,4 +69,4 @@ After successfully subscribing to the mailing list, if you want to initiate a di
 
 ## 6. Unsubscription Mailing Lists
 
-Send an email to `dev-unsubscribe@doris.apache.org` (subject and content are arbitrary)
+If you want unsubscription the mailing lists, you can send an email to `dev-unsubscribe@doris.apache.org` (subject and content are arbitrary)

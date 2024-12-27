@@ -66,6 +66,6 @@ under the License.
 
 ​成功订阅邮件列表后，若想发起讨论，直接往`dev@doris.apache.org`发送邮件即可。所有订阅了邮件列表的人都会收到邮件。
 ​
-## 6. Unsubscription Mailing Lists
+## 6. 发送退订邮件
 
-向`dev-unsubscribe@doris.apache.org`发送一封邮件（邮件主题和内容任意）
+如果想退订邮件列表，可以向`dev-unsubscribe@doris.apache.org`发送一封邮件（邮件主题和内容任意）
