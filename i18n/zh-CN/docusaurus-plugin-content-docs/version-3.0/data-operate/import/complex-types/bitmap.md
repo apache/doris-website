@@ -1,3 +1,4 @@
+---
 {
     "title": "Bitmap",
     "language": "zh-CN"

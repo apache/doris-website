@@ -178,6 +178,21 @@ const config = {
                     trackingID: 'G-DT7W9E9722',
                     anonymizeIP: true,
                 },
+                sitemap: {
+                    changefreq: 'weekly',
+                    priority: 0.5,
+                    filename: 'sitemap.xml',
+                    createSitemapItems: async (params) => {
+                      const {defaultCreateSitemapItems, ...rest} = params;
+                      const items = await defaultCreateSitemapItems(rest);
+                      for(let item of items){
+                        if(item.url.includes('docs/1.2')){
+                            item.priority = 0.2;
+                        }
+                      }
+                      return items;
+                    },
+                },
             }),
         ],
     ],

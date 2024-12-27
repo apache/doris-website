@@ -1,3 +1,4 @@
+---
 {
     "title": "Kafka",
     "language": "zh-CN"
@@ -27,9 +28,7 @@ Doris 提供以下方式从 Kafka 导入数据：
 
 - **使用 Routine Load 消费 Kafka 数据**
 
-Doris 通过 Routine Load 持续消费 Kafka Topic 中的数据。提交 Routine Load 作业后，Doris 会实时生成导入任务，消费 Kafka 集群中指定 Topic 的消息。Routine Load 支持 CSV 和 JSON 格式，具备 Exactly-Once 语义，确保数据不丢失且不重复。
-
-更多文档请参考 [Routine Load](../import-way/routine-load-manual.md)。
+Doris 通过 Routine Load 持续消费 Kafka Topic 中的数据。提交 Routine Load 作业后，Doris 会实时生成导入任务，消费 Kafka 集群中指定 Topic 的消息。Routine Load 支持 CSV 和 JSON 格式，具备 Exactly-Once 语义，确保数据不丢失且不重复。更多文档请参考 [Routine Load](../import-way/routine-load-manual.md)。
 
 - **Doris Kafka Connector 消费 Kafka 数据**
 
@@ -178,11 +177,11 @@ mysql> select * from test_multi_table_load2;
 
 有关带有认证的 Kafka 配置方法，请参见 [Kafka 安全认证](../import-way/routine-load-manual.md#kafka-安全认证)。
 
-# 使用 Doris Kafka Connector 消费 Kafka 数据
+## 使用 Doris Kafka Connector 消费 Kafka 数据
 
 Doris Kafka Connector 是将 Kafka 数据流导入 Doris 数据库的工具。用户可通过 Kafka Connect 插件轻松导入多种序列化格式（如 JSON、Avro、Protobuf），并支持解析 Debezium 组件的数据格式。
 
-## 以 Distributed 模式启动
+### 以 Distributed 模式启动
 
 [Distributed](https://docs.confluent.io/platform/current/connect/index.html#distributed-workers) 模式为 Kafka Connect 提供可扩展性和自动容错功能。在此模式下，可以使用相同的 `group.id` 启动多个工作进程，它们会协调在所有可用工作进程中安排连接器和任务的执行。
 
@@ -253,7 +252,7 @@ curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/tasks/0/restart
 
 关于 Distributed 模式的介绍请参见 [Distributed Workers](https://docs.confluent.io/platform/current/connect/index.html#distributed-workers)。
 
-## 消费普通数据
+### 消费普通数据
 
 1. 导入数据样本：
 
@@ -314,7 +313,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
-## 消费 Debezium 组件采集的数据
+### 消费 Debezium 组件采集的数据
 
 1. MySQL 数据库中有如下表：
 
@@ -374,7 +373,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
-## 消费 AVRO 序列化格式数据
+### 消费 AVRO 序列化格式数据
 
 ```Bash
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
@@ -402,7 +401,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
-## 消费 Protobuf 序列化格式数据
+### 消费 Protobuf 序列化格式数据
 
 ```Bash
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 

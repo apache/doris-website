@@ -179,6 +179,8 @@
                                     "type": "category",
                                     "label": "Data Source",
                                     "items": [
+                                        "data-operate/import/data-source/local-file",
+                                        "data-operate/import/data-source/kafka",
                                         "data-operate/import/data-source/hdfs",
                                         "data-operate/import/data-source/amazon-s3",
                                         "data-operate/import/data-source/google-cloud-storage",
@@ -202,6 +204,7 @@
                                         "data-operate/import/import-way/mysql-load-manual"
                                     ]
                                 },
+                                "data-operate/import/load-data-format",
                                 {
                                     "type": "category",
                                     "label": "Complex Data Types",
@@ -209,10 +212,12 @@
                                         "data-operate/import/complex-types/array",
                                         "data-operate/import/complex-types/map",
                                         "data-operate/import/complex-types/struct",
-                                        "data-operate/import/complex-types/json"
+                                        "data-operate/import/complex-types/json",
+                                        "data-operate/import/complex-types/bitmap",
+                                        "data-operate/import/complex-types/hll",
+                                        "data-operate/import/complex-types/variant"
                                     ]
                                 },
-                                "data-operate/import/load-data-format",
                                 "data-operate/import/error-data-handling",
                                 "data-operate/import/load-data-convert",
                                 "data-operate/import/load-high-availability",
