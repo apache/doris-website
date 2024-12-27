@@ -27,13 +27,19 @@ under the License.
 When deploying Doris, the following operating system items need to be checked:
 
 - Ensure swap partition is disabled
+  
 - Ensure transparent huge pages are disabled
+  
 - Ensure the system has a sufficiently large virtual memory area
+  
 - Ensure CPU is not using power-saving mode
+  
 - Ensure network connections automatically reset new connections when overflow occurs
-- Ensure socket queue is sufficiently large
+  
 - Ensure Doris-related ports are open or the system firewall is disabled
+  
 - Ensure the system has a sufficiently large number of open file descriptors
+  
 - Ensure cluster deployment machines have NTP service installed
 
 ## Ensure Swap Partition is Disabled
