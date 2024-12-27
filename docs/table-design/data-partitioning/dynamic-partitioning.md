@@ -75,6 +75,10 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
 
   Whether to enable the dynamic partition feature. Can be specified as `TRUE` or` FALSE`. If not filled, the default is `TRUE`. If it is `FALSE`, Doris will ignore the dynamic partitioning rules of the table.
 
+- `dynamic_partition.create_method`
+
+  Whether partition creation is taken over by dynamic or auto partition. The default is `SCHEDULE`, which means dynamic partition creation. When auto partition is enabled at the same time, you must manually specify this item as `AUTO`, at this time, dynamic partition no longer creates partitions for the table, which is taken over by the auto partition function.
+
 - `dynamic_partition.time_unit`(required parameters)
 
   The unit for dynamic partition scheduling. Can be specified as `HOUR`,`DAY`,` WEEK`, `MONTH` and `YEAR`, means to create or delete partitions by hour, day, week, month and year, respectively.

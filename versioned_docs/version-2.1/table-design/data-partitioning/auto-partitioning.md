@@ -245,38 +245,37 @@ It can be concluded that the partitions created by Auto Partition share the same
 
 ## Conjunct with Dynamic Partition
 
-Since 2.1.7, Doris supports both Auto and Dynamic Partition. In this case, both functions are in effect:
+Since 2.1.7, Doris supports both Auto and Dynamic Partition. Since 2.1.8, the functions of both work together on the table:
+
 1. Auto Partition will automatically create partitions on demand during data import;
-2. Dynamic Partition will automatically create, recycle and dump partitions.
+2. Dynamic Partition will reclaim and dump partitions as they were originally intended to function.
 
-There is no conflict between the two syntaxes, just set the corresponding clauses/attributes at the same time.
-
-## Best Practice
-
-In scenarios where you need to set a limit on the partition lifecycle, you can **disable the creation of Dynamic Partition, leaving the creation of partitions to be completed by Auto Partition**, and complete the management of the partition lifecycle through the Dynamic Partition's function of dynamically reclaiming partitions:
+`dynamic_partition.create_method` property must be set to `AUTO`，That is, the `dynamic_partition.end` attribute will be ignored and the partition creation function will be taken over by Auto Partition.
 
 ```sql
 create table auto_dynamic(
     k0 datetime(6) NOT NULL
 )
 auto partition by range (date_trunc(k0, 'year'))
-(
-)
+()
 DISTRIBUTED BY HASH(`k0`) BUCKETS 2
 properties(
     "dynamic_partition.enable" = "true",
     "dynamic_partition.prefix" = "p",
     "dynamic_partition.start" = "-50",
-    "dynamic_partition.end" = "0", --- Dynamic Partition No Partition Creation
+    "dynamic_partition.end" = "123", --- Will be ignored
     "dynamic_partition.time_unit" = "year",
+    "dynamic_partition.create_method" = "AUTO",
     "replication_num" = "1"
 );
 ```
 
+This gives us both partition lifecycle management capabilities in addition to Auto Partition, and partition name consistency.
+
 This way we have both the flexibility of Auto Partition and consistency in partition names.
 
-:::note
-In some early versions prior to 2.1.7, this feature was not disabled but not recommended.
+:::info Note
+In some early versions prior to 2.1.7, this feature was not disabled but not recommended. 2.1.7 the `end` property takes effect original and doesn't have the `create_method` property. 2.1.8 and later the `end` and `create_method` behaviour changes take effect.
 :::
 
 ## Partition Management

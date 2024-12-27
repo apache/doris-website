@@ -245,35 +245,36 @@ mysql> show partitions from `DAILY_TRADE_VALUE`;
 
 ## 与动态分区联用
 
-自 3.0.3 起，Doris 支持自动分区和动态分区同时使用。此时，二者的功能都生效：
+自 3.0.3 起，Doris 支持自动分区和动态分区同时使用。自 3.0.4 后，二者的功能共同作用于该表上：
+
 1. 自动分区将会自动在数据导入过程中按需创建分区；
-2. 动态分区将会自动创建、回收、转储分区。
+2. 动态分区将会按原功能回收、转储分区。
 
-二者语法功能不存在冲突，同时设置对应的子句/属性即可。
-
-### 最佳实践
-
-需要对分区生命周期设限的场景，可以**将 Dynamic Partition 的创建功能关闭，创建分区完全交由 Auto Partition 完成**，通过 Dynamic Partition 动态回收分区的功能完成分区生命周期的管理：
+`dynamic_partition.create_method` 属性必须被设置为 `AUTO`，即 `dynamic_partition.end` 属性将被忽略，分区创建功能全部由 Auto Partition 承担。
 
 ```sql
 create table auto_dynamic(
     k0 datetime(6) NOT NULL
 )
 auto partition by range (date_trunc(k0, 'year'))
-(
-)
+()
 DISTRIBUTED BY HASH(`k0`) BUCKETS 2
 properties(
     "dynamic_partition.enable" = "true",
     "dynamic_partition.prefix" = "p",
     "dynamic_partition.start" = "-50",
-    "dynamic_partition.end" = "0", --- Dynamic Partition 不创建分区
+    "dynamic_partition.end" = "123", --- 将被忽略
     "dynamic_partition.time_unit" = "year",
+    "dynamic_partition.create_method" = "AUTO",
     "replication_num" = "1"
 );
 ```
 
-这样我们同时具有了 Auto Partition 的灵活性，且分区名上保持了一致性。
+这样我们在 Auto Partition 的基础上同时拥有了分区生命周期管理能力，且分区名上保持了一致性。
+
+:::note
+在 3.0.3 之前的某些早期版本，该功能未禁止但不建议使用。3.0.3 时 `end` 属性正常生效，无 `create_method` 属性。3.0.4 及以后 `end` 与 `create_method` 行为变更生效
+:::
 
 ## 分区管理
 
