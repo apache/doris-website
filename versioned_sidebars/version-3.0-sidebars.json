@@ -201,6 +201,16 @@
                                         "data-operate/import/import-way/mysql-load-manual"
                                     ]
                                 },
+                                {
+                                    "type": "category",
+                                    "label": "Complex Data Types",
+                                    "items": [
+                                        "data-operate/import/complex-types/array",
+                                        "data-operate/import/complex-types/map",
+                                        "data-operate/import/complex-types/struct",
+                                        "data-operate/import/complex-types/json"
+                                    ]
+                                },
                                 "data-operate/import/load-data-format",
                                 "data-operate/import/error-data-handling",
                                 "data-operate/import/load-data-convert",
