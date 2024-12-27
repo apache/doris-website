@@ -1,6 +1,6 @@
 ---
 {
-    "title": "local file",
+    "title": "本地文件",
     "language": "zh-CN"
 }
 ---
