@@ -379,6 +379,8 @@ SHOW CREATE MATERIALIZED VIEW mv_1;
 
 **物化视图的定义：**
 
+### 直查物化视图
+
 ```sql
 CREATE MATERIALIZED VIEW mv_5
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -404,9 +406,7 @@ FROM mv_5
 WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 ```
 
-### 查询改写的能力边界
-
-#### 条件补偿
+### 条件补偿
 
 当物化视图和查询的 `where` 条件是通过 `and` 连接的表达式时：
 
@@ -428,7 +428,7 @@ WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 
 2. 对于 `like` 这种非比较和范围表达式，不能进行条件补偿，必须一样才可以改写成功。
 
-#### JOIN 改写
+### JOIN 改写
 
 JOIN 改写指的是查询和物化使用的表相同，可以在物化视图和查询的 JOIN 输入或者 JOIN 的外层写 `where`，优化器对此模式的查询会尝试进行透明改写。
 
@@ -480,7 +480,7 @@ ON l_orderkey = o_orderkey
 WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 ```
 
-#### JOIN 衍生
+### JOIN 衍生
 
 当查询和物化视图的 JOIN 类型不一致时，如果物化视图能够提供查询所需的所有数据，那么通过在 JOIN 的外部补偿谓词，也可以进行透明改写。
 
@@ -527,7 +527,7 @@ l_suppkey,
 o_orderdate;
 ```
 
-#### 聚合改写
+### 聚合改写
 
 当查询和物化视图定义中的 group 维度一致时，如果物化视图使用的 group by 维度和查询的 group by 维度相同，并且查询使用的聚合函数可以使用物化视图的聚合函数来表示，那么可以进行透明改写。
 
@@ -574,7 +574,7 @@ o_shippriority,
 o_comment;
 ```
 
-#### 聚合改写（上卷）
+### 聚合改写（上卷）
 
 在查询和物化视图定义中，即使聚合的维度不一致，也可以进行改写。物化视图使用的 `group by` 维度需要包含查询的 `group by` 维度，而查询可以没有 `group by`。并且，查询使用的聚合函数可以用物化视图的聚合函数来表示。
 
@@ -637,7 +637,7 @@ l_suppkey;
 | hll_union_agg, approx_count_distinct, hll_cardinality | hll_union 或者 hll_raw_agg                 | hll_union_agg      |
 | any_value                                             | any_value 或者 select 后有any_value使用的列      | any_value      |
 
-#### 多维聚合改写
+### 多维聚合改写
 
 支持多维聚合的透明改写，即如果物化视图中没有使用 `GROUPING SETS`, `CUBE`, `ROLLUP`，而查询中有多维聚合，并且物化视图 `group by` 后的字段包含查询中多维聚合的所有字段，那么也可以进行透明改写。
 
@@ -673,7 +673,7 @@ group by
 GROUPING SETS ((o_orderstatus, o_orderdate), (o_orderpriority), (o_orderstatus), ());
 ```
 
-#### 分区补偿改写
+### 分区补偿改写
 
 当分区物化视图不足以提供查询的所有数据时，可以使用 `union all` 的方式，将查询原表和物化视图的数据 `union all` 作为最终返回结果。
 
@@ -740,7 +740,7 @@ group by
 比如，如果物化视图带有 `where` 条件，以上述为例，如果构建物化的过滤条件加上 ` WHERE l_shipdate > '2023-10-19'`，而查询是 `WHERE l_shipdate > '2023-10-18'`，目前这种还无法通过 `UNION ALL` 补偿，待支持。
 :::
 
-#### 嵌套物化视图改写
+### 嵌套物化视图改写
 
 物化视图的定义 SQL 可以使用物化视图，此物化视图称为嵌套物化视图。嵌套的层数理论上没有限制，此物化视图既可以直查，也可以进行透明改写。嵌套物化视图同样可以参与透明改写。
 
@@ -802,7 +802,7 @@ where o_orderstatus = 'o'
 
 2. 嵌套物化视图透明改写默认关闭，开启方式见下面的开关设置。
 
-#### Explain 查询透明改写情况
+### Explain 查询透明改写情况
 
 查询透明改写命中情况，用于查看和调试。
 
@@ -983,9 +983,9 @@ SyncWithBaseTables: 1
 
 对于透明改写，通常物化视图会出现两种状态：
 
-- **状态正常：**指的是当前物化视图是否可用于透明改写。
+- **状态正常：** 指的是当前物化视图是否可用于透明改写。
 
-- **不可用、状态不正常：**指的是物化视图不能用于透明改写的简称。尽管如此，该物化视图还是可以直查的。
+- **不可用、状态不正常：** 指的是物化视图不能用于透明改写的简称。尽管如此，该物化视图还是可以直查的。
 
 
 详情参考 [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv-infos)
