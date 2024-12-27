@@ -38,6 +38,14 @@ historical massive data.
 Users need to create and execute import tasks through the Spark Load client. The execution status of the task will be
 output to the console, and the import results can also be viewed through SHOW LOAD.
 
+:::caution CAUTION
+
+This feature is experimental and is currently only available in the master branch.
+The current version only supports storage computing coupled clusters.
+If you encounter any problems during use, please provide feedback through the mailing group, [GitHub Issue](https://github.com/apache/doris/issues), etc.
+
+:::
+
 ## Applicable scenarios
 
 - The source data is in a storage system accessible to Spark, such as HDFS.

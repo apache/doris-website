@@ -35,6 +35,14 @@ Spark Load 是利用了 Spark 集群的资源对要导入的数据的进行了�
 
 用户需要通过 Spark Load 客户端创建并执行导入任务，任务的执行情况会输出至控制台，也可以通过 SHOW LOAD 查看导入结果。
 
+:::caution 注意
+
+此功能为实验性功能，目前仅 master 分支可用。
+当前版本仅支持存算一体集群。
+您在使用过程中如遇到任何问题，欢迎通过邮件组、[GitHub Issue](https://github.com/apache/doris/issues) 等方式进行反馈。
+
+:::
+
 ## 使用场景
 
 - 源数据在 Spark 可以访问的存储系统中，如 HDFS。

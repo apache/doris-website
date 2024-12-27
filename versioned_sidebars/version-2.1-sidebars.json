@@ -683,8 +683,7 @@
                         "ecosystem/beats",
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf",
-                        "ecosystem/hive-hll-udf",
-                        "ecosystem/spark-load"
+                        "ecosystem/hive-hll-udf"
                     ]
                 }
             ]
