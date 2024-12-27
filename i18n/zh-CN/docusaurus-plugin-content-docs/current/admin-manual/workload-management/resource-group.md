@@ -29,7 +29,7 @@ Resource Group 是存算一体架构下，实现不同的负载之间物理隔�
 ![Resource Group](/images/resource_group.png)
 
 - 通过Tag的方式，把BE 划分为不同的组，每个组通过tag的名字来标识，比如上图中把host1,host2,host3 都设置为group a, 把host4,host5 都设置为group b；
-- 将表的不同的副本放到不同的分组中，比如上图中table1 有3个副本，并且都位于group a 中， table2 有4的一个副本，其中2个位于group a中，2个副本位于group b 中；
+- 将表的不同的副本放到不同的分组中，比如上图中table1 有3个副本，都位于group a 中， table2 有4个副本，其中2个位于group a中，2个副本位于group b 中；
 - 在查询时，根据不同的用户，使用不同的Resource Group，比如online 用户，只能访问host1,host2,host3 上的数据，所以他可以访问table1和table2；但是offline 用户只能访问host4，host5，所以只能访问table2的数据，由于table1 在group b 上没有对应的副本，所以访问会出错。
 
 Resource Group本质上是一种Table副本的放置策略，所以它有以下优势和限制：
