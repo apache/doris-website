@@ -66,4 +66,7 @@ After completing the third step, you will receive a welcome email entitled **WEL
 
 After successfully subscribing to the mailing list, if you want to initiate a discussion, send an email directly to `dev@doris.apache.org`. Anyone who subscribes to the mailing list receives the mail.
 ​
-​
+
+## 6. Unsubscription Mailing Lists
+
+Send an email to `dev-unsubscribe@doris.apache.org` (subject and content are arbitrary)
