@@ -102,6 +102,7 @@
   "sidebar.docs.category.Data Update and Delete": {
     "message": "数据更新与删除",
     "description": "The label for category Data Update and Delete in sidebar docs"
+  },
   "sidebar.docs.category.Complex Type": {
     "message": "复杂类型",
     "description": "The label for category Complex Type in sidebar docs"
