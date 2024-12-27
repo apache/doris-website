@@ -24,241 +24,118 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Multi-tenancy
+Resource Group is a mechanism under the compute-storage integration architecture that achieves physical isolation between different workloads. Its basic principle is illustrated in this diagram:
 
-The main purpose of Doris's multi-tenant and resource isolation solution is to reduce interference between multiple users when performing data operations in the same Doris cluster, and to allocate cluster resources to each user more reasonably.
+![Resource Group](/images/resource_group.png)
 
-The scheme is mainly divided into two parts, one is the division of resource groups at the node level in the cluster, and the other is the resource limit for a single query.
+- By using tags, BEs are divided into different groups, each identified by the tag's name. For example, in the diagram above, host1, host2, and host3 are all set to group a, while host4 and host5 are set to group b.
 
-## Nodes in Doris
+- Different replicas of a table are placed in different groups. For instance, in the diagram above, table1 has 3 replicas, all located in group a, while table2 has 4 replicas, with 2 in group a and 2 in group b.
 
-First, let's briefly introduce the node composition of Doris. There are two types of nodes in a Doris cluster: Frontend (FE) and Backend (BE).
+- During queries, different Resource Groups are used based on the user. For example, online users can only access data on host1, host2, and host3, so they can access both table1 and table2. However, offline users can only access host4 and host5, so they can only access data from table2. Since table1 does not have corresponding replicas in group b, accessing it would result in an error.
 
-FE is mainly responsible for metadata management, cluster management, user request access and query plan analysis.
+Essentially, a Resource Group is a placement strategy for table replicas, so it has the following advantages and limitations:
 
-BE is mainly responsible for data storage and execution of query plans.
+- Different Resource Groups use different BEs, so they are completely isolated from each other. Even if a BE within a group fails, it will not affect queries in other groups. Since data loading require multiple replicas to succeed, if the remaining number of replicas does not meet the quorum, the data loading will still fail.
 
-FE does not participate in the processing and calculation of user data, so it is a node with low resource consumption. The BE is responsible for all data calculations and task processing, and is a resource-consuming node. Therefore, the resource division and resource restriction schemes introduced in this article are all aimed at BE nodes. Because the FE node consumes relatively low resources and can also be scaled horizontally, there is usually no need to isolate and restrict resources, and the FE node can be shared by all users.
+- Each Resource Group must have at least one replica of each table. For example, if you want to establish 5 Resource Groups and each group may access all tables, then each table needs 5 replicas, which can result in significant storage costs.
 
-## Node resource division
+## Typical Use Cases
 
-Node resource division refers to setting tags for BE nodes in a Doris cluster, and the BE nodes with the same tags form a resource group. Resource group can be regarded as a management unit of data storage and calculation. Below we use a specific example to introduce the use of resource groups.
+- Read-write isolation: A cluster can be divided into two Resource Groups, with an Offline Resource Group for executing ETL jobs and an Online Resource Group for handling online queries. Data is stored with 3 replicas, with 2 replicas in the Online Resource Group and 1 replica in the Offline Resource Group. The Online Resource Group is primarily used for high-concurrency, low-latency online data services, while large queries or offline ETL operations can be executed using nodes in the Offline Resource Group. This allows for the provision of both online and offline services within a unified cluster.
 
-1. Set labels for BE nodes
+- Isolation between different businesses: When data is not shared between multiple businesses, a Resource Group can be assigned to each business, ensuring no interference between them. This effectively consolidates multiple physical clusters into a single large cluster for management.
 
-    Assume that the current Doris cluster has 6 BE nodes. They are host[1-6] respectively. In the initial situation, all nodes belong to a default resource group (Default).
-    
-    We can use the following command to divide these 6 nodes into 3 resource groups: group_a, group_b, group_c:
-    
-    ```sql
-    alter system modify backend "host1:9050" set ("tag.location" = "group_a");
-    alter system modify backend "host2:9050" set ("tag.location" = "group_a");
-    alter system modify backend "host3:9050" set ("tag.location" = "group_b");
-    alter system modify backend "host4:9050" set ("tag.location" = "group_b");
-    alter system modify backend "host5:9050" set ("tag.location" = "group_c");
-    alter system modify backend "host6:9050" set ("tag.location" = "group_c");
-    ```
-    
-    Here we combine `host[1-2]` to form a resource group `group_a`, `host[3-4]` to form a resource group `group_b`, and `host[5-6]` to form a resource group `group_c`.
-    
-    > Note: One BE only supports setting one Tag.
-    
-2. Distribution of data according to resource groups
+- Isolation between different users: For example, if there is a business table within a cluster that needs to be shared among all three users, but it is desirable to minimize resource contention between them, we can create 3 replicas of the table, stored in 3 different Resource Groups, and bind each user to a specific Resource Group.
 
-    After the resource group is divided. We can distribute different copies of user data in different resource groups. Assume a user table UserTable. We want to store a copy in each of the three resource groups, which can be achieved by the following table creation statement:
-    
-    ```sql
-    create table UserTable
-    (k1 int, k2 int)
-    distributed by hash(k1) buckets 1
-    properties(
-        "replication_allocation"="tag.location.group_a:1, tag.location.group_b:1, tag.location.group_c:1"
-    )
-    ```
-    
-    In this way, the data in the UserTable table will be stored in the form of 3 copies in the nodes where the resource groups group_a, group_b, and group_c are located.
-    
-    The following figure shows the current node division and data distribution:
-    
-    ```
-     ┌────────────────────────────────────────────────────┐
-     │                                                    │
-     │         ┌──────────────────┐  ┌──────────────────┐ │
-     │         │ host1            │  │ host2            │ │
-     │         │  ┌─────────────┐ │  │                  │ │
-     │ group_a │  │   replica1  │ │  │                  │ │
-     │         │  └─────────────┘ │  │                  │ │
-     │         │                  │  │                  │ │
-     │         └──────────────────┘  └──────────────────┘ │
-     │                                                    │
-     ├────────────────────────────────────────────────────┤
-     ├────────────────────────────────────────────────────┤
-     │                                                    │
-     │         ┌──────────────────┐  ┌──────────────────┐ │
-     │         │ host3            │  │ host4            │ │
-     │         │                  │  │  ┌─────────────┐ │ │
-     │ group_b │                  │  │  │   replica2  │ │ │
-     │         │                  │  │  └─────────────┘ │ │
-     │         │                  │  │                  │ │
-     │         └──────────────────┘  └──────────────────┘ │
-     │                                                    │
-     ├────────────────────────────────────────────────────┤
-     ├────────────────────────────────────────────────────┤
-     │                                                    │
-     │         ┌──────────────────┐  ┌──────────────────┐ │
-     │         │ host5            │  │ host6            │ │
-     │         │                  │  │  ┌─────────────┐ │ │
-     │ group_c │                  │  │  │   replica3  │ │ │
-     │         │                  │  │  └─────────────┘ │ │
-     │         │                  │  │                  │ │
-     │         └──────────────────┘  └──────────────────┘ │
-     │                                                    │
-     └────────────────────────────────────────────────────┘
-    ```
+## Configure Resource Group
 
-   For the convenience of setting the data distribution strategy for tables, a unified data distribution strategy can be set at the database level, but the priority of setting tables is higher than that of the database
+### Setting Tags for BEs
+
+Assuming the current Doris cluster has 6 BE nodes, named host[1-6]. Initially, all BE nodes belong to a default resource group (Default).
+
+We can use the following commands to divide these 6 nodes into 3 resource groups: group_a, group_b, and group_c.
 
    ```sql
-   CREATE DATABASE db_name PROPERTIES (
-   "replication_allocation" = "tag.location.group_a:1, tag.location.group_b:1"
+   alter system modify backend "host1:9050" set ("tag.location" = "group_a");
+   alter system modify backend "host2:9050" set ("tag.location" = "group_a");
+   alter system modify backend "host3:9050" set ("tag.location" = "group_b");
+   alter system modify backend "host4:9050" set ("tag.location" = "group_b");
+   alter system modify backend "host5:9050" set ("tag.location" = "group_c");
+   alter system modify backend "host6:9050" set ("tag.location" = "group_c");
+   ```
+    
+    Here, we will form Resource Group group_a with host[1-2], Resource Group group_b with host[3-4], and Resource Group group_c with host[5-6].
+
+   > Note: A BE can only belong to one Resource Group.
+
+
+### Redistribution data by Resource Group
+
+After dividing the resource groups, you can distribute different replicas of user data across different resource groups. Assuming we have a user table named UserTable, and we want to store one replica in each of the three resource groups. This can be achieved through the following table creation statement:
+
+   ```sql
+   create table UserTable
+   (k1 int, k2 int)
+   distributed by hash(k1) buckets 1
+   properties(
+       "replication_allocation"="tag.location.group_a:1, tag.location.group_b:1, tag.location.group_c:1"
    )
    ```
- 
-3. Use different resource groups for data query
 
-    After the execution of the first two steps is completed, we can limit a user's query by setting the user's resource usage permissions, and can only use the nodes in the specified resource group to execute.
+In this way, the data in the UserTable will be stored in three replicas, each located on nodes within the resource groups group_a, group_b, and group_c, respectively.
 
-    For example, we can use the following statement to restrict user1 to only use nodes in the `group_a` resource group for data query, user2 can only use the `group_b` resource group, and user3 can use 3 resource groups at the same time:
-    
-    ```sql
-    set property for'user1''resource_tags.location' = 'group_a';
-    set property for'user2''resource_tags.location' = 'group_b';
-    set property for'user3''resource_tags.location' = 'group_a, group_b, group_c';
-    ```
-    
-    After the setting is complete, when user1 initiates a query on the UserTable table, it will only access the data copy on the nodes in the `group_a` resource group, and the query will only use the node computing resources in the `group_a` resource group. The query of user3 can use copies and computing resources in any resource group.
-    
-    > Note: By default, the user's `resource_tags.location` attribute is empty. In versions prior to 2.0.2 (inclusive), by default, users are not restricted by tags and can use any resource group. After version 2.0.3, normal users can only use the `default` resource group by default. Root and Admin user can use any resource group.
+The following diagram demonstrates the current division of nodes and data distribution:
 
-    In this way, we have achieved physical resource isolation for different user queries by dividing nodes and restricting user resource usage. Furthermore, we can create different users for different business departments and restrict each user from using different resource groups. In order to avoid the use of resource interference between different business parts. For example, there is a business table in the cluster that needs to be shared by all 9 business departments, but it is hoped that resource preemption between different departments can be avoided as much as possible. Then we can create 3 copies of this table and store them in 3 resource groups. Next, we create 9 users for 9 business departments, and limit the use of one resource group for every 3 users. In this way, the degree of competition for resources is reduced from 9 to 3.
-    
-    On the other hand, for the isolation of online and offline tasks. We can use resource groups to achieve this. For example, we can divide nodes into two resource groups, Online and Offline. The table data is still stored in 3 copies, of which 2 copies are stored in the Online resource group, and 1 copy is stored in the Offline resource group. The Online resource group is mainly used for online data services with high concurrency and low latency. Some large queries or offline ETL operations can be executed using nodes in the Offline resource group. So as to realize the ability to provide online and offline services simultaneously in a unified cluster.
+   ```text
+    ┌────────────────────────────────────────────────────┐
+    │                                                    │
+    │         ┌──────────────────┐  ┌──────────────────┐ │
+    │         │ host1            │  │ host2            │ │
+    │         │  ┌─────────────┐ │  │                  │ │
+    │ group_a │  │   replica1  │ │  │                  │ │
+    │         │  └─────────────┘ │  │                  │ │
+    │         │                  │  │                  │ │
+    │         └──────────────────┘  └──────────────────┘ │
+    │                                                    │
+    ├────────────────────────────────────────────────────┤
+    ├────────────────────────────────────────────────────┤
+    │                                                    │
+    │         ┌──────────────────┐  ┌──────────────────┐ │
+    │         │ host3            │  │ host4            │ │
+    │         │                  │  │  ┌─────────────┐ │ │
+    │ group_b │                  │  │  │   replica2  │ │ │
+    │         │                  │  │  └─────────────┘ │ │
+    │         │                  │  │                  │ │
+    │         └──────────────────┘  └──────────────────┘ │
+    │                                                    │
+    ├────────────────────────────────────────────────────┤
+    ├────────────────────────────────────────────────────┤
+    │                                                    │
+    │         ┌──────────────────┐  ┌──────────────────┐ │
+    │         │ host5            │  │ host6            │ │
+    │         │                  │  │  ┌─────────────┐ │ │
+    │ group_c │                  │  │  │   replica3  │ │ │
+    │         │                  │  │  └─────────────┘ │ │
+    │         │                  │  │                  │ │
+    │         └──────────────────┘  └──────────────────┘ │
+    │                                                    │
+    └────────────────────────────────────────────────────┘
+   ```
 
-4. Resource group assignments for load job
+   When a database contains a very large number of tables, modifying the distribution strategy for each table can be cumbersome. Therefore, Doris also supports setting a unified data distribution strategy at the database level, but the settings for individual tables have higher priority than those at the database level. For example, consider a database db1 with four tables: table1 requires a replica distribution strategy of group_a:1,group_b:2, while table2, table3, and table4 require a strategy of group_c:1,group_b:2.
 
-    The resource usage of load jobs (including insert, broker load, routine load, stream load, etc.) can be divided into two parts:
-    1. Computing resources: responsible for reading data sources, data transformation and distribution.
-    2. Write resource: responsible for data encoding, compression and writing to disk.
+    To create db1 with a default distribution strategy, you can use the following statement:
 
-    The write resource must be the node where the replica is located, and the computing resource can theoretically select any node to complete. Therefore, the allocation of resource groups for load jobs is divided into two steps:
-    1. Use user-level resource tags to limit the resource groups that computing resources can use.
-    2. Use the resource tag of the replica to limit the resource group that the write resource can use.
-
-    So if you want all the resources used by the load operation to be limited to the resource group where the data is located, you only need to set the resource tag of the user level to the same as the resource tag of the replica.
-    
-## Single query resource limit
-
-The resource group method mentioned earlier is resource isolation and restriction at the node level. In the resource group, resource preemption problems may still occur. For example, as mentioned above, the three business departments are arranged in the same resource group. Although the degree of resource competition is reduced, the queries of these three departments may still affect each other.
-
-Therefore, in addition to the resource group solution, Doris also provides a single query resource restriction function.
-
-At present, Doris's resource restrictions on single queries are mainly divided into two aspects: CPU and memory restrictions.
-
-1. Memory Limitation
-
-    Doris can limit the maximum memory overhead that a query is allowed to use. To ensure that the memory resources of the cluster will not be fully occupied by a query. We can set the memory limit in the following ways:
-    
-    ```sql
-    # Set the session variable exec_mem_limit. Then all subsequent queries in the session (within the connection) use this memory limit.
-    set exec_mem_limit=1G;
-    # Set the global variable exec_mem_limit. Then all subsequent queries of all new sessions (new connections) use this memory limit.
-    set global exec_mem_limit=1G;
-    # Set the variable exec_mem_limit in SQL(Unit bytes). Then the variable only affects this SQL.
-    select /*+ SET_VAR(exec_mem_limit=1073741824) */ id, name from tbl where xxx;
-    ```
-    
-    Because Doris' query engine is based on the full-memory MPP query framework. Therefore, when the memory usage of a query exceeds the limit, the query will be terminated. Therefore, when a query cannot run under a reasonable memory limit, we need to solve it through some SQL optimization methods or cluster expansion.
-    
-2. CPU limitations
-
-   > Note: Since Doris 2.1, cpu_resource_limit will gradually be replaced by workload group, so it is not recommended to use it.
-
-    Users can limit the CPU resources of the query in the following ways:
-    
-    ```sql
-    # Set the session variable cpu_resource_limit. Then all queries in the session (within the connection) will use this CPU limit.
-    set cpu_resource_limit = 2
-    # Set the user's attribute cpu_resource_limit, then all queries of this user will use this CPU limit. The priority of this attribute is higher than the session variable cpu_resource_limit
-    set property for'user1''cpu_resource_limit' = '3';
-    ```
-    
-    The value of `cpu_resource_limit` is a relative value. The larger the value, the more CPU resources can be used. However, the upper limit of the CPU that can be used by a query also depends on the number of partitions and buckets of the table. In principle, the maximum CPU usage of a query is positively related to the number of tablets involved in the query. In extreme cases, assuming that a query involves only one tablet, even if `cpu_resource_limit` is set to a larger value, only 1 CPU resource can be used.
-    
-
-Through memory and CPU resource limits. We can divide user queries into more fine-grained resources within a resource group. For example, we can make some offline tasks with low timeliness requirements, but with a large amount of calculation, use less CPU resources and more memory resources. Some delay-sensitive online tasks use more CPU resources and reasonable memory resources.
-
-## Best practices and forward compatibility
-
-### Tag division and CPU limitation are new features in version 0.15. In order to ensure a smooth upgrade from the old version, Doris has made the following forward compatibility:
-
-1. Each BE node will have a default Tag: `"tag.location": "default"`.
-2. The BE node added through the `alter system add backend` statement will also set Tag: `"tag.location": "default"` by default.
-2. The copy distribution of all tables is modified by default to: `"tag.location.default:xx`. xx is the number of original copies.
-3. Users can still specify the number of replicas in the table creation statement by `"replication_num" = "xx"`, this attribute will be automatically converted to: `"tag.location.default:xx`. This ensures that there is no need to modify the original creation. Table statement.
-4. By default, the memory limit for a single query is 2GB for a single node, and the CPU resources are unlimited, which is consistent with the original behavior. And the user's `resource_tags.location` attribute is empty, that is, by default, the user can access the BE of any Tag, which is consistent with the original behavior.
-
-Here we give an example of the steps to start using the resource division function after upgrading from the original cluster to version 0.15:
-
-1. Turn off data repair and balance logic
-
-    After the upgrade, the default Tag of BE is `"tag.location": "default"`, and the default copy distribution of the table is: `"tag.location.default:xx`. So if you directly modify the Tag of BE, the system will Automatically detect changes in the distribution of copies, and start data redistribution. This may occupy some system resources. So we can turn off the data repair and balance logic before modifying the tag to ensure that there will be no copies when we plan resources Redistribution operation.
-    
-    ```sql
-    ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
-    ADMIN SET FRONTEND CONFIG ("disable_tablet_scheduler" = "true");
-    ```
-    
-2. Set Tag and table copy distribution
-
-    Next, you can use the `alter system modify backend` statement to set the BE Tag. And through the `alter table` statement to modify the copy distribution strategy of the table. Examples are as follows:
-    
-    ```sql
-    alter system modify backend "host1:9050, 1212:9050" set ("tag.location" = "group_a");
-    alter table my_table modify partition p1 set ("replication_allocation" = "tag.location.group_a:2");
-    ```
-
-3. Turn on data repair and balance logic
-
-    After the tag and copy distribution are set, we can turn on the data repair and equalization logic to trigger data redistribution.
-    
-    ```sql
-    ADMIN SET FRONTEND CONFIG ("disable_balance" = "false");
-    ADMIN SET FRONTEND CONFIG ("disable_tablet_scheduler" = "false");
-    ```
-    
-    This process will continue for a period of time depending on the amount of data involved. And it will cause some colocation tables to fail colocation planning (because the copy is being migrated). You can view the progress by `show proc "/cluster_balance/"`. You can also judge the progress by the number of `UnhealthyTabletNum` in `show proc "/statistic"`. When `UnhealthyTabletNum` drops to 0, it means that the data redistribution is completed. .
-    
-4. Set the user's resource label permissions.
-   
-    After the data is redistributed. We can start to set the user's resource label permissions. Because by default, the user's `resource_tags.location` attribute is empty, that is, the BE of any tag can be accessed. Therefore, in the previous steps, the normal query of existing users will not be affected. When the `resource_tags.location` property is not empty, the user will be restricted from accessing the BE of the specified Tag.
-    
-
-Through the above 4 steps, we can smoothly use the resource division function after the original cluster is upgraded.
-
-### How to conveniently set replica distribution strategies when there are many tables
-
-   For example, there is a db1 with four tables under it, and the replica distribution strategy required for table1 is `group_a:1,group_b:2`, the replica distribution strategy required for tables 2, 3, and 4 is `group_c:1,group_b:2`
-
-   Then you can use the following statement to create db1:
-   
    ```sql
    CREATE DATABASE db1 PROPERTIES (
    "replication_allocation" = "tag.location.group_c:1, tag.location.group_b:2"
    )
    ```
 
-   Create table1 using the following statement:
-   
+    Create table1 with a specific distribution strategy:
+
+
    ```sql
    CREATE TABLE table1
    (k1 int, k2 int)
@@ -268,6 +145,39 @@ Through the above 4 steps, we can smoothly use the resource division function af
    )
    ```
 
-   The table creation statements for table2, table3, and table4 do not need to specify `replication_allocation` again.
+   For table2, table3, and table4, you do not need to specify replication_allocation in their creation statements, as they will inherit the database-level default strategy.
 
-   Note: Changing the replica distribution policy of the database will not affect existing tables.
+   :::caution
+   Changing the replica distribution strategy at the database level will not affect existing tables.
+   :::
+
+
+## Setting Resource Groups for Users
+
+You can use the following statements to restrict users' access to specific resource groups. For example, user1 can only use nodes in the group_a resource group, user2 can only use group_b, and user3 can use all three resource groups:
+
+   ```sql
+   set property for 'user1' 'resource_tags.location' = 'group_a';
+   set property for 'user2' 'resource_tags.location' = 'group_b';
+   set property for 'user3' 'resource_tags.location' = 'group_a, group_b, group_c';
+   ```
+
+   After setting, when user1 queries the UserTable, it will only access data replicas on nodes in the group_a resource group and use computing resources from this group. User3's queries can use replicas and computing resources from any resource group.
+
+   > Note: By default, the resource_tags.location property for users is empty. In versions before 2.0.2, users are not restricted by tags and can use any resource group. In versions 2.0.3 and later, ordinary users can only use the default resource group by default. Root and admin users can use any resource group.
+
+   :::caution Caution:
+    After modifying the resource_tags.location property, users need to re-establish connections for the changes to take effect.
+   :::
+
+   
+
+## Resource Group Allocation for Data Loading Jobs
+
+The resource usage for data loading jobs (including insert, broker load, routine load, stream load, etc.) can be divided into two parts:
+
+- Computing Part: responsible for reading data sources, data transformation, and distribution.
+
+- Writing Part: responsible for data encoding, compression, and writing to disk.
+
+Since writing resources must be on nodes where data replicas are located, and computing resources can be allocated from any node, Resource Groups can only restrict the resources used for the computing part in data loading scenarios.
