@@ -25,9 +25,7 @@ under the License.
 -->
 
 
-INSERT INTO VALUES 支持将 Doris 查询的结果导入到另一个表中。INSERT INTO VALUES 是一个同步导入方式，执行导入后返回导入结果。可以通过请求的返回判断导入是否成功。INSERT INTO VALUES 可以保证导入任务的原子性，要么全部导入成功，要么全部导入失败。
-
-- INSERT INTO tbl (col1, col2, ...) VALUES (1, 2, ...), (1,3, ...)
+INSERT INTO VALUES 语句支持将 SQL 中的值导入到 Doris 的表中。INSERT INTO VALUES 是一个同步导入方式，执行导入后返回导入结果。可以通过请求的返回判断导入是否成功。INSERT INTO VALUES 可以保证导入任务的原子性，要么全部导入成功，要么全部导入失败。
 
 ## 使用场景
 
