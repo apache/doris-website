@@ -84,7 +84,6 @@
                                      "type": "category",
                                      "label": "Compute storage decoupled",
                                      "items": [
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart",
                                          "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
                                          "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
                                          "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
