@@ -32,7 +32,7 @@ Doris BE 在内存中的元数据（Metadata）包括 `Tablet`、`Rowset`、`Seg
 
 ### Doris BE Bvar
 
-Web 页面 `http://http://{be_host}:{brpc_port}/vars` 可以看到 Bvar 统计的一些元数据相关指标。
+Web 页面 `http://{be_host}:{brpc_port}/vars` 可以看到 Bvar 统计的一些元数据相关指标。
 
 ```
 - `doris_total_tablet_num`：所有 Tablet 的数量。
@@ -56,7 +56,7 @@ Web 页面 `http://http://{be_host}:{brpc_port}/vars` 可以看到 Bvar 统计�
 
 ### Doris BE Metrics
 
-Web 页面 `http://http://{be_host}:{be_web_server_port}/metrics` 可以看到 BE 进程内存监（Metrics）中的一些元数据指标。其中 Metadata Cache 相关指标参考 [Cache 内存分析](./doris-cache-memory-analysis.md)。
+Web 页面 `http://{be_host}:{be_web_server_port}/metrics` 可以看到 BE 进程内存监（Metrics）中的一些元数据指标。其中 Metadata Cache 相关指标参考 [Cache 内存分析](./doris-cache-memory-analysis.md)。
 
 ```
 - `doris_be_all_rowsets_num`：所有 Rowset 的数量。

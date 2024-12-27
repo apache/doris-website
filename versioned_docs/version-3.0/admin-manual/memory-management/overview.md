@@ -95,7 +95,7 @@ For more information about Memory Tracker, refer to [Memory Tracker](./memory-fe
 
 ### Historical memory statistics
 
-Historical memory statistics can be viewed through Doris BE's Bvar page `http://http://{be_host}:{brpc_port}/vars/*memory_*`. Use the real-time memory statistics page `http://{be_host}:{be_web_server_port}/mem_tracker` to search for the Bvar page under the Memory Tracker Label to get the memory size change trend tracked by the corresponding Memory Tracker. `brpc_port` defaults to 8060.
+Historical memory statistics can be viewed through Doris BE's Bvar page `http://{be_host}:{brpc_port}/vars/*memory_*`. Use the real-time memory statistics page `http://{be_host}:{be_web_server_port}/mem_tracker` to search for the Bvar page under the Memory Tracker Label to get the memory size change trend tracked by the corresponding Memory Tracker. `brpc_port` defaults to 8060.
 
 ![Bvar Memory](/images/bvar-memory.png)
 
