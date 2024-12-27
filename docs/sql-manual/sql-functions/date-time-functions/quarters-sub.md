@@ -1,7 +1,7 @@
 ---
 {
-    "title": "DATE_SUB",
-    "language": "zh-CN"
+    "title": "QUARTERS_SUB",
+    "language": "en"
 }
 ---
 
@@ -27,27 +27,23 @@ under the License.
 ### Description
 #### Syntax
 
-`DATETIME DATE_SUB(DATETIME date, INTERVAL expr type)`
+`DATE/DATETIME QUARTERS_SUB(DATE/DATETIME date, INT years)`
 
-从日期减去指定的时间间隔
+Subtract a specified number of quarters for a given date
 
-`date` 参数是合法的日期表达式。
-
-`expr` 参数是您希望添加的时间间隔。
-
-`type` 参数可以是下列值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND
+The parameter `date` can be of type `DATETIME` or `DATE`, and the return type is the same as the type of the parameter `date`.
 
 ### Example
 
 ```sql
-mysql> select date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY);
-+-------------------------------------------------+
-| date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY) |
-+-------------------------------------------------+
-| 2010-11-28 23:59:59                             |
-+-------------------------------------------------+
+mysql> select quarters_sub("2020-01-31 02:02:02", 1);
++---------------------------------------------------------------+
+| quarters_sub(cast('2020-01-31 02:02:02' as DATETIMEV2(0)), 1) |
++---------------------------------------------------------------+
+| 2019-10-31 02:02:02                                           |
++---------------------------------------------------------------+
+1 row in set (0.10 sec)
 ```
 
-### Keywords
-
-    DATE_SUB,DATE,SUB
+### keywords
+  QUARTERS, SUB, QUARTERS_SUB
