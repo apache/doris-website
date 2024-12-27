@@ -261,7 +261,7 @@ properties('enabled'='true');
 
 - Action 表示条件触发时采取的动作，目前一个 Policy 只能定义一个 Action（除 set_session_variable）。在上例中，cancel_query 表示取消查询；目前支持的 Actions 有：
 
-| Conditions            | 说明                                                                  |
+| Actions               | 说明                                                                  |
 |-----------------------|---------------------------------------------------------------------|
 | username              | 查询携带的用户名，只会在FE触发 set_session_variable Action                        |
 | be_scan_rows          | 一个 SQL 在单个 BE 进程内 scan 的行数，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值。      |
@@ -271,9 +271,12 @@ properties('enabled'='true');
 
 
 - Properties，定义了当前 Policy 的属性，包括是否启用和优先级。
-  - enabled，取值为 true 或 false，默认值为 true，表示当前 Policy 处于启用状态，false 表示当前 Policy 处于禁用状态。
-  - priority，取值范围为 0 到 100 的正整数，默认值为 0，代表 Policy 的优先级，该值越大，优先级越高。这个属性的主要作用是，当匹配到多个 Policy 时，选择优先级最高的 Policy。
-  - workload_group，目前一个 Policy 可以绑定一个 workload group，代表这个 Policy 只对某个 workload group 生效。默认为空，代表对所有查询生效。
+
+| Properties               | 说明                                                                                                 |
+|-----------------------|----------------------------------------------------------------------------------------------------|
+| enabled              | 取值为 true 或 false，默认值为 true，表示当前 Policy 处于启用状态，false 表示当前 Policy 处于禁用状态                             |
+| priority          | 取值范围为 0 到 100 的正整数，默认值为 0，代表 Policy 的优先级，该值越大，优先级越高。这个属性的主要作用是，当查询匹配到多个 Policy 时，只选择优先级最高的 Policy。 |
+| workload_group         | 目前一个 Policy 可以绑定一个 workload group，代表这个 Policy 只对某个 Workload Group 的查询生效。默认为空，代表对所有查询生效。            |
 
 ### 将熔断策略绑定 Workload Group
 默认情况下，Workload Policy 会对所有支持的查询生效。如果想指定 Policy 只针对与某一个 Workload Group，需要通过 workload_group 选项绑定 Workload Group。语句如下：
