@@ -27,12 +27,12 @@ under the License.
 ## 前提条件
 
 1. 确保您拥有**管理员**权限以执行恢复操作。
-2. 确保您有一个现有的**存储库**来存储备份。如果没有，请按照创建存储库的步骤并执行[备份](backup.md)。
+2. 确保您有一个现有的** Repository **来存储备份。如果没有，请按照创建 Repository 的步骤并执行[备份](backup.md)。
 3. 确保您有一个有效的**备份**快照可供恢复。
 
 ## 1. 获取快照的备份时间戳
 
-以下SQL语句可用于查看名为`example_repo`的存储库中的现有备份。
+以下SQL语句可用于查看名为`example_repo`的 Repository 中的现有备份。
 
    ```sql
    mysql> SHOW SNAPSHOT ON example_repo;
@@ -48,7 +48,7 @@ under the License.
 
 ### 恢复快照
 
-以下SQL语句从名为`example_repo`的存储库中恢复具有特定备份时间戳的快照。
+以下SQL语句从名为`example_repo`的 Repository 中恢复具有特定备份时间戳的快照。
 
 ```sql
 RESTORE SNAPSHOT `restore_label1`
