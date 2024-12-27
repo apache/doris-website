@@ -249,7 +249,7 @@ properties('enabled'='true');
 ```
 
 在创建 Workload Policy 时需要指定以下内容：
-- Conditions 表示策略触发条件，可以多个 Condition 串联，使用逗号“,”隔开，表示“与”的关系。在上例中 query_time > 1000 表示在查询时间大于 1s 时触发 Policy；目前支持的 Conditions 有：
+- Condition 表示策略触发条件，可以多个 Condition 串联，使用逗号“,”隔开，表示“与”的关系。在上例中 query_time > 1000 表示在查询时间大于 1s 时触发 Policy；目前支持的 Conditions 有：
 
 | Conditions            | 说明                                                                  |
 |-----------------------|---------------------------------------------------------------------|
@@ -261,13 +261,10 @@ properties('enabled'='true');
 
 - Action 表示条件触发时采取的动作，目前一个 Policy 只能定义一个 Action（除 set_session_variable）。在上例中，cancel_query 表示取消查询；目前支持的 Actions 有：
 
-| Actions               | 说明                                                                  |
-|-----------------------|---------------------------------------------------------------------|
-| username              | 查询携带的用户名，只会在FE触发 set_session_variable Action                        |
-| be_scan_rows          | 一个 SQL 在单个 BE 进程内 scan 的行数，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值。      |
-| be_scan_bytes         | 一个 SQL 在单个 BE 进程内 scan 的字节数，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。 |
-| query_time            | 一个 SQL 在单个 BE 进程上的运行时间，时间单位是毫秒。                                     |
-| query_be_memory_bytes | 一个 SQL 在单个 BE 进程内使用的内存用量，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。  |
+| Actions               | 说明                                                                                                   |
+|-----------------------|------------------------------------------------------------------------------------------------------|
+| cancel_query              | 取消查询。                                                                                                |
+| set_session_variable          | 触发 set session variable 语句。同一个 policy 可以有多个 set_session_variable 选项，目前只会在 FE 由 username Condition 触发 |
 
 
 - Properties，定义了当前 Policy 的属性，包括是否启用和优先级。
