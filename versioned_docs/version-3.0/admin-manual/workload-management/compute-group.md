@@ -1,6 +1,6 @@
 ---
 {
-"title": "Compute Groups",
+"title": "Compute Group",
 "language": "en"
 }
 ---
