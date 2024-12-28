@@ -239,7 +239,6 @@
                         "data-operate/import/load-data-format",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
-                        "data-operate/import/migrate-data-from-other-olap",
                         "data-operate/import/group-commit-manual"
                     ]
                 },
