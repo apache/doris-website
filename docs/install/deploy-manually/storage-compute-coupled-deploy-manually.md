@@ -136,8 +136,6 @@ In a production cluster, it is recommended to deploy at least 3 Follower nodes. 
    - The number of FE Follower nodes (including Master) should be odd. It is recommended to deploy 3 nodes for high availability.
 
    - When FE is deployed in high availability mode (1 Master, 2 Followers), we recommend adding Observer FE nodes to extend the FE read service capacity.
-
-   - Typically, one FE node can handle 10-20 BE nodes. It is recommended that the total number of FE nodes be kept below 10. 
    :::
 4. Start FE Follower Node
 
