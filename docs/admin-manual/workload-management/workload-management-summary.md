@@ -1,6 +1,6 @@
 ---
 {
-"title": "Workload Overview",
+"title": "Overview",
 "language": "en"
 }
 ---
