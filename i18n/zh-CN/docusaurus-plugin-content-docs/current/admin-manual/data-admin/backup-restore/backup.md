@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-有关备份的概念，请参阅[备份与恢复](./overview.md)。本指南提供了创建 Repository 和备份数据的逐步过程。
+有关备份的概念，请参阅[备份与恢复](./overview.md)。本指南提供了创建 Repository 和备份数据的操作步骤。
 
 ## 1. 创建 Repository
 
@@ -32,9 +32,9 @@ under the License.
 suites/backup_restore/test_create_and_drop_repository.groovy
 -->
 
-根据您的存储选择适当的语句来创建 Repository 。有关详细用法，请参阅[创建 Repository ](../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md)
+根据您的存储选择适当的语句来创建 Repository。有关详细用法，请参阅[创建 Repository ](../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md)。在不同集群使用相同路径的 Repository 进行备份时，请确保使用不同的 label，以避免冲突造成数据错乱。
 
-### 在 S3 上创建 Repository
+### Option 1: 在 S3 上创建 Repository
 
 要在 S3 存储上创建 Repository ，请使用以下 SQL 命令：
 
@@ -52,9 +52,9 @@ PROPERTIES
 ```
 
 - 将 bucket_name 替换为您的 S3 存储桶名称。
-- 提供适当的端点、访问密钥、秘密密钥和区域以进行 S3 设置。
+- 提供适当的 endpoint、access key、 secret key 和 region 以进行 S3 设置。
 
-### 在 Azure 上创建 Repository
+### Option 2: 在 Azure 上创建 Repository
 
 要在 Azure 存储上创建 Repository ，请使用以下 SQL 命令：
 
@@ -72,12 +72,12 @@ PROPERTIES
 );
 ```
 
-- 将 bucket_name 和 container 替换为您的 Azure 容器名称。
+- 将 bucket_name 替换为您的 Azure 容器名称。
 - 提供您的 Azure 存储帐户和密钥以进行身份验证。
-- `s3.region` 只是一个虚假的区域。
+- `s3.region` 只是一个虚假的 region。
 - `provider` 必须为 `AZURE`。
 
-### 在 GCP 上创建 Repository
+### Option 3: 在 GCP 上创建 Repository
 
 要在 Google Cloud Platform (GCP) 存储上创建 Repository ，请使用以下 SQL 命令：
 
@@ -95,10 +95,10 @@ PROPERTIES
 ```
 
 - 将 bucket_name 替换为您的 GCP 存储桶名称。
-- 提供您的 GCP 端点、访问密钥和秘密密钥。
-- `s3.region` 只是一个虚假的区域。
+- 提供您的 GCP endpoint、access key 和 secret key。
+- `s3.region` 只是一个虚假的 region。
 
-### 在 OSS（阿里云对象存储服务）上创建 Repository
+### Option 4: 在 OSS（阿里云对象存储服务）上创建 Repository
 
 要在 OSS 上创建 Repository ，请使用以下 SQL 命令：
 
@@ -115,9 +115,9 @@ PROPERTIES
 );
 ```
 - 将 bucket_name 替换为您的 OSS 存储桶名称。
-- 提供您的 OSS 端点、区域访问密钥和秘密密钥。
+- 提供您的 OSS endpoint、region、access key 和 secret key。
 
-### 在 MinIO 上创建 Repository
+### Option 5: 在 MinIO 上创建 Repository
 
 要在 MinIO 存储上创建 Repository ，请使用以下 SQL 命令：
 
@@ -136,11 +136,13 @@ PROPERTIES
 ```
 
 - 将 bucket_name 替换为您的 MinIO 存储桶名称。
-- 提供您的 MinIO 端点、访问密钥和秘密密钥。
-- `s3.region` 只是一个虚假的区域。
-- 如果您不启用虚拟主机样式，则 'use_path_style' 必须为 true。
+- 提供您的 MinIO endpoint、access key和 secret key。
+- `s3.region` 只是一个虚假的 region。
+- 如果您不启用 Virtual Host-style，则 'use_path_style' 必须为 true。
 
-### 在 HDFS 上创建 Repository
+### Option 6: 在 HDFS 上创建 Repository
+
+要在 HDFS 存储上创建 Repository ，请使用以下 SQL 命令：
 
 ```sql
 CREATE REPOSITORY `hdfs_repo`
@@ -154,7 +156,7 @@ PROPERTIES
 ```
 
 - 将 prefix_path 替换为真实路径。
-- 提供您的 hdfs 端点和用户名。
+- 提供您的 hdfs endpoint 和用户名。
 
 ## 2. 备份
 
@@ -162,7 +164,7 @@ PROPERTIES
 
 建议使用有意义的标签名称，例如包含备份中包含的数据库和表。
 
-### 备份当前数据库
+### Option 1: 备份当前数据库
 
 以下 SQL 语句将当前数据库备份到名为 `example_repo` 的 Repository ，并使用快照标签 `exampledb_20241225`。
 
@@ -170,10 +172,17 @@ PROPERTIES
 BACKUP SNAPSHOT exampledb_20241225
 TO example_repo;
 ```
-- `exampledb_20241225` 是快照的唯一标识符。
-- `example_repo` 是 Repository 的名称。
 
-### 备份指定表
+### Option 2: 备份指定数据库
+
+以下 SQL 语句将名为 destdb 的数据库备份到名为 `example_repo` 的 Repository ，并使用快照标签 `destdb_20241225`。
+
+```sql
+BACKUP SNAPSHOT destdb.`destdb_20241225`
+TO example_repo;
+```
+
+### Option 3: 备份指定表
 
 以下 SQL 语句将两个表备份到名为 `example_repo` 的 Repository ，并使用快照标签 `exampledb_tbl_tbl1_20241225`。
 
@@ -182,11 +191,8 @@ BACKUP SNAPSHOT exampledb_tbl_tbl1_20241225
 TO example_repo
 ON (example_tbl, example_tbl1);
 ```
-- `exampledb_tbl_tbl1_20241225` 是快照的唯一标识符。
-- `example_repo` 是 Repository 的名称。
-- `example_tbl` 和 `example_tbl1` 是要备份的表的名称。
 
-### 备份指定分区
+### Option 4: 备份指定分区
 
 以下 SQL 语句将名为 `example_tbl2` 的表和名为 `p1` 和 `p2` 的两个分区备份到名为 `example_repo` 的 Repository ，并使用快照标签 `example_tbl_p1_p2_tbl1_20241225`。
 
@@ -200,11 +206,7 @@ ON
 );
 ```
 
-- `example_tbl_p1_p2_tbl1_20241225` 是快照的唯一标识符。
-- `example_repo` 是 Repository 的名称。
-- `example_tbl` 和 `example_tbl2` 是要备份的表的名称。
-
-### 备份当前数据库，排除某些表
+### Option 5: 备份当前数据库，排除某些表
 
 以下 SQL 语句将当前数据库备份到名为 `example_repo` 的 Repository ，并使用快照标签 `exampledb_20241225`，排除两个名为 `example_tbl` 和 `example_tbl1` 的表。
 
@@ -217,9 +219,6 @@ EXCLUDE
       example_tbl1
 );
 ```
-- `exampledb_20241225` 是快照的唯一标识符。
-- `example_repo` 是 Repository 的名称。
-- `example_tbl` 和 `example_tbl1` 是要排除的表的名称。
 
 ## 3. 查看最近备份作业的执行情况
 
@@ -247,7 +246,7 @@ mysql> show BACKUP\G;
 
 ## 4. 查看 Repository 中的现有备份
 
-以下 SQL 语句可用于查看名为 `example_repo` 的 Repository 中的现有备份。
+以下 SQL 语句可用于查看名为 `example_repo` 的 Repository 中的现有备份，其中 Snapshot 列是快照标签，Timestamp 是时间戳。
 
 ```sql
 mysql> SHOW SNAPSHOT ON example_repo;

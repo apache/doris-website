@@ -26,29 +26,29 @@ under the License.
 
 ## Prerequisites
 
-1. Ensure you have **ADMIN** privileges to perform restore operations.
-2. Ensure you have an existing **repository** that stores the backups. If not, follow the steps for creating a repository and execute a [backup](backup.md).
-3. Ensure that you have a valid **backup** snapshot to restore from.
+1. Ensure you have **administrator** privileges to perform the restore operation.
+2. Ensure you have an existing **Repository** to store the backup. If not, follow the steps to create a Repository and perform a [backup](backup.md).
+3. Ensure you have a valid **backup** snapshot available for restoration.
 
-## 1. Getting Backup Timestamp For a Snapshot
+## 1. Get the Backup Timestamp of the Snapshot
 
-  The following SQL statement can be used to view existing backups in a repository named `example_repo`.
+The following SQL statement can be used to view existing backups in the Repository named `example_repo`.
 
    ```sql
    mysql> SHOW SNAPSHOT ON example_repo;
    +-----------------+---------------------+--------+
-   | Snapshot        | Timestamp           | Status |
+   | Snapshot            | Timestamp              | Status   |
    +-----------------+---------------------+--------+
    | exampledb_20241225 | 2022-04-08-15-52-29 | OK     |
    +-----------------+---------------------+--------+
    1 row in set (0.15 sec)
    ```
 
-## 2. Restoring from a Snapshot
+## 2. Restore from Snapshot
 
-### Restoring a Snasphot
+### Option 1: Restore Snapshot to Current Database
 
-The following SQL statement restores a snapshot from a repository named `example_repo` with a specific backup timestamp.
+The following SQL statement restores the snapshot labeled `restore_label1` with the timestamp `2022-04-08-15-52-29` from the Repository named `example_repo` to the current database.
 
 ```sql
 RESTORE SNAPSHOT `restore_label1`
@@ -59,9 +59,22 @@ PROPERTIES
 );
 ```
 
-### Restore a Single Table from a Snapshot
+### Option 2: Restore Snapshot to Specified Database
 
-Restore the table `backup_tbl` from the snapshot in `example_repo` to database  Specify the time version as `"2018-05-04-16-45-08"`.
+The following SQL statement restores the snapshot labeled `restore_label1` with the timestamp `2022-04-08-15-52-29` from the Repository named `example_repo` to a database named `destdb`.
+
+```sql
+RESTORE SNAPSHOT destdb.`restore_label1`
+FROM `example_repo`
+PROPERTIES
+(
+    "backup_timestamp"="2022-04-08-15-52-29"
+);
+```
+
+### Option 3: Restore a Single Table from Snapshot
+
+Restore the table `backup_tbl` from the snapshot in `example_repo` to the current database, with the snapshot labeled `restore_label1` and timestamp `2022-04-08-15-52-29`.
 
 ```sql
 RESTORE SNAPSHOT `restore_label1`
@@ -73,12 +86,12 @@ PROPERTIES
 );
 ```
 
-### Restoring Partitions and Tables from a Snapshot
+### Option 4: Restore Partitions and Tables from Snapshot
 
-Restore partitions p1 and p2 of table backup_tbl in backup snapshot_2 from example_repo, and table backup_tbl2 to database example_db1, and rename it to new_tbl with time version "2018-05-04-17-11-01".
+Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `backup_tbl2` to the current database `example_db1`, renaming it to `new_tbl`, from the backup snapshot `snapshot_2`, with the snapshot label timestamp `"2018-05-04-17-11-01"`.
 
    ```sql
-   RESTORE SNAPSHOT example_db1.`snapshot_2`
+   RESTORE SNAPSHOT `restore_label1`
    FROM `example_repo`
    ON
    (
@@ -91,9 +104,9 @@ Restore partitions p1 and p2 of table backup_tbl in backup snapshot_2 from examp
    );
    ```
 
-## 3. View the execution of the restore job:
+## 3. Check the Execution Status of the Restore Job
 
-   ```sql
+      ```sql
    mysql> SHOW RESTORE\G;
    *************************** 1. row ***************************
                   JobId: 17891851
@@ -133,5 +146,3 @@ Restore partitions p1 and p2 of table backup_tbl in backup snapshot_2 from examp
                 Timeout: 86400
    1 row in set (0.01 sec)
    ```
-
-For detailed usage of RESTORE, please refer to [here](../../sql-manual/sql-statements/data-modification/backup-and-restore/RESTORE.md).

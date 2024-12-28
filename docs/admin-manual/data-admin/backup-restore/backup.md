@@ -24,19 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-For concepts related to backup, please refer to the [Backup & Restore](./overview.md). This guide provides a step-by-step process for creating a repository and backup data in Doris.
+For concepts related to backup, please refer to [Backup and Restore](./overview.md). This guide provides the steps to create a Repository and back up data.
 
-## 1. Creating a Repository
+## 1. Create Repository
 
 <!--
 suites/backup_restore/test_create_and_drop_repository.groovy
 -->
 
-Choose the appropriate statement to create a repository based on your storage. For detailed usage, please refer to [CREATE REPOSITORY](../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md)
+Use the appropriate statement to create a Repository based on your storage choice. For detailed usage, please refer to [Create Repository](../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md). When backing up using the same path for the Repository across different clusters, ensure to use different labels to avoid conflicts that may cause data confusion.
 
-### Creating a Repository on S3
+### Option 1: Create Repository on S3
 
-To create a repository on S3 storage, use the following SQL command:
+To create a Repository on S3 storage, use the following SQL command:
 
 ```sql
 CREATE REPOSITORY `s3_repo`
@@ -51,12 +51,12 @@ PROPERTIES
 );
 ```
 
-- Replace bucket_name with the name of your S3 bucket.
-- Provide the appropriate endpoint, access key, secret key, and region for your S3 setup.
+- Replace `bucket_name` with your S3 bucket name.
+- Provide the appropriate endpoint, access key, secret key, and region for S3 setup.
 
-### Creating a Repository on Azure
+### Option 2: Create Repository on Azure
 
-To create a repository on Azure storage, use the following SQL command:
+To create a Repository on Azure storage, use the following SQL command:
 
 ```sql
 CREATE REPOSITORY `azure_repo`
@@ -72,14 +72,14 @@ PROPERTIES
 );
 ```
 
-- Replace bucket_name and container with your Azure container name.
+- Replace `bucket_name` with your Azure container name.
 - Provide your Azure storage account and key for authentication.
-- `s3.region` is just a fake region.
+- `s3.region` is just a dummy region.
 - `provider` must be `AZURE`.
 
-### Creating a Repository on GCP
+### Option 3: Create Repository on GCP
 
-To create a repository on Google Cloud Platform (GCP) storage, use the following SQL command:
+To create a Repository on Google Cloud Platform (GCP) storage, use the following SQL command:
 
 ```sql
 CREATE REPOSITORY `gcp_repo`
@@ -94,13 +94,13 @@ PROPERTIES
 );
 ```
 
-- Replace bucket_name with the name of your GCP bucket.
+- Replace `bucket_name` with your GCP bucket name.
 - Provide your GCP endpoint, access key, and secret key.
-- `s3.region` is just a fake region.
+- `s3.region` is just a dummy region.
 
-### Creating a Repository on OSS (Alibaba Cloud Object Storage Service)
+### Option 4: Create Repository on OSS (Alibaba Cloud Object Storage Service)
 
-To create a repository on OSS, use the following SQL command:
+To create a Repository on OSS, use the following SQL command:
 
 ```sql
 CREATE REPOSITORY `oss_repo`
@@ -114,12 +114,12 @@ PROPERTIES
     "s3.secret_key" = "sk"
 );
 ```
-- Replace bucket_name with the name of your OSS bucket.
-- Provide your OSS endpoint, region access key and secret key.
+- Replace `bucket_name` with your OSS bucket name.
+- Provide your OSS endpoint, region, access key, and secret key.
 
-### Creating a Repository on MinIO
+### Option 5: Create Repository on MinIO
 
-To create a repository on MinIO storage, use the following SQL command:
+To create a Repository on MinIO storage, use the following SQL command:
 
 ```sql
 CREATE REPOSITORY `minio_repo`
@@ -135,12 +135,14 @@ PROPERTIES
 );
 ```
 
-- Replace bucket_name with the name of your MinIO bucket.
-- Provide your MinIO endpoint, access key and secret key.
-- `s3.region` is just a fake region.
-- If you do not enable Virtual Host-styple, 'use_path_style' must be true.
+- Replace `bucket_name` with your MinIO bucket name.
+- Provide your MinIO endpoint, access key, and secret key.
+- `s3.region` is just a dummy region.
+- If you do not enable Virtual Host-style, then `use_path_style` must be true.
 
-### Creating a Repository on HDFS
+### Option 6: Create Repository on HDFS
+
+To create a Repository on HDFS storage, use the following SQL command:
 
 ```sql
 CREATE REPOSITORY `hdfs_repo`
@@ -153,82 +155,78 @@ PROPERTIES
 )
 ```
 
-- Replace prefix_path with the real path.
-- Provide your hdfs endpoint and username.
+- Replace `prefix_path` with the actual path.
+- Provide your HDFS endpoint and username.
 
 ## 2. Backup
 
-Refer to the following statements to back up a database, tables, or partitions. For detailed usage, please refer to [backup](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md).
+Refer to the following statements to back up databases, tables, or partitions. For detailed usage, please refer to [Backup](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md).
 
-It is recommended to use meaningful names for labels, such as including which databases and tables are in the backup.
+It is recommended to use meaningful label names, such as those containing the databases and tables included in the backup.
 
-### Backup the current database
+### Option 1: Backup Current Database
 
-   The following SQL statement backs up the current database to a repository named `example_repo` with a snapshot label `exampledb_20241225`.
+The following SQL statement backs up the current database to a Repository named `example_repo`, using the snapshot label `exampledb_20241225`.
 
-   ```sql
-   BACKUP SNAPSHOT exampledb_20241225
-   TO example_repo;
-   ```
-   - `exampledb_20241225` is a unique identifer for the snapshot.
-   - `example_repo` is the name of a repository.
+```sql
+BACKUP SNAPSHOT exampledb_20241225
+TO example_repo;
+```
 
-### Backup specified tables
+### Option 2: Backup Specified Database
 
-   The following SQL statement backs up two tables to a repository named `example_repo` with a snapshot label `exampledb_tbl_tbl1_20241225`.
+The following SQL statement backs up a database named `destdb` to a Repository named `example_repo`, using the snapshot label `destdb_20241225`.
 
-   ```sql
-   BACKUP SNAPSHOT exampledb_tbl_tbl1_20241225
-   TO example_repo
-   ON (example_tbl, example_tbl1);
-   ```
-   - `exampledb_tbl_tbl1_20241225` is a unique identifer for the snapshot.
-   - `example_repo` is the name of a repository.
-   - `example_tbl` and `example_tbl1` are the name of tables to be backed up.
+```sql
+BACKUP SNAPSHOT destdb.`destdb_20241225`
+TO example_repo;
+```
 
-### Backup specified partitions
+### Option 3: Backup Specified Tables
 
-   The following SQL statement backs up a table named `example_tbl2` and two partitions named `p1` and `p2` in a table named `example_tbl` to  a repository named `example_repo` with a snapshot label `example_tbl_p1_p2_tbl1_20241225`.
+The following SQL statement backs up two tables to a Repository named `example_repo`, using the snapshot label `exampledb_tbl_tbl1_20241225`.
 
-   ```sql
-   BACKUP SNAPSHOT example_tbl_p1_p2_tbl1_20241225
-   TO example_repo
-   ON
-   (
+```sql
+BACKUP SNAPSHOT exampledb_tbl_tbl1_20241225
+TO example_repo
+ON (example_tbl, example_tbl1);
+```
+
+### Option 4: Backup Specified Partitions
+
+The following SQL statement backs up a table named `example_tbl2` and two partitions named `p1` and `p2` to a Repository named `example_repo`, using the snapshot label `example_tbl_p1_p2_tbl1_20241225`.
+
+```sql
+BACKUP SNAPSHOT example_tbl_p1_p2_tbl1_20241225
+TO example_repo
+ON
+(
       example_tbl PARTITION (p1,p2),
       example_tbl2
-   );
-   ```
+);
+```
 
-   - `example_tbl_p1_p2_tbl1_20241225` is a unique identifer for the snapshot.
-   - `example_repo` is the name of a repository.
-   - `example_tbl` and `example_tbl2` are the name of tables to be backed up.
+### Option 5: Backup Current Database Excluding Certain Tables
 
-### Backup current database excluding some tables
+The following SQL statement backs up the current database to a Repository named `example_repo`, using the snapshot label `exampledb_20241225`, excluding two tables named `example_tbl` and `example_tbl1`.
 
-   The following SQL statement backs up the current database to a repository named `example_repo` with a snapshot label `exampledb_20241225`, excluding two tables named `example_tbl` and `example_tbl1`.
-
-   ```sql
-   BACKUP SNAPSHOT exampledb_20241225
-   TO example_repo
-   EXCLUDE
-   (
+```sql
+BACKUP SNAPSHOT exampledb_20241225
+TO example_repo
+EXCLUDE
+(
       example_tbl,
       example_tbl1
-   );
-   ```
-   - `exampledb_20241225` is a unique identifer for the snapshot.
-   - `example_repo` is the name of a repository.
-   - `example_tbl` and `example_tbl1` are the name of tables to be excluded.
+);
+```
 
+## 3. View Recent Backup Job Execution Status
 
-## 3. View the execution of the most recent backup job
+The following SQL statement can be used to view the execution status of recent backup jobs.
 
-   The following SQL statement can be used to view the execution of the most recent backup job.
-
-   ```sql
-   mysql> show BACKUP\G;
-   *************************** 1. row ***************************
+```sql
+mysql> show BACKUP\G;
+*************************** 1. row ***************************
                   JobId: 17891847
            SnapshotName: exampledb_20241225
                  DbName: example_db
@@ -244,18 +242,18 @@ It is recommended to use meaningful names for labels, such as including which da
                  Status: [OK]
                 Timeout: 86400
    1 row in set (0.01 sec)
-   ```
+```
 
-## 4. View existing backup in a repository
+## 4. View Existing Backups in Repository
 
-   The following SQL statement can be used to view existing backups in a repository named `example_repo`.
+The following SQL statement can be used to view existing backups in a Repository named `example_repo`, where the Snapshot column is the snapshot label, and the Timestamp is the timestamp.
 
-   ```sql
-   mysql> SHOW SNAPSHOT ON example_repo;
-   +-----------------+---------------------+--------+
-   | Snapshot        | Timestamp           | Status |
-   +-----------------+---------------------+--------+
-   | exampledb_20241225 | 2022-04-08-15-52-29 | OK     |
-   +-----------------+---------------------+--------+
-   1 row in set (0.15 sec)
-   ```
+```sql
+mysql> SHOW SNAPSHOT ON example_repo;
++-----------------+---------------------+--------+
+| Snapshot        | Timestamp           | Status |
++-----------------+---------------------+--------+
+| exampledb_20241225 | 2022-04-08-15-52-29 | OK     |
++-----------------+---------------------+--------+
+1 row in set (0.15 sec)
+```
