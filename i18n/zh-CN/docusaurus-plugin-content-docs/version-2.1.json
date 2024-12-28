@@ -31,10 +31,6 @@
     "message": "使用教程",
     "description": "The label for category Tutorials in sidebar docs"
   },
-  "sidebar.docs.category.Building lakehouse": {
-    "message": "构建 lakehouse",
-    "description": "The label for category Building lakehouse in sidebar docs"
-  },
   "sidebar.docs.category.Installation and Deployment": {
     "message": "安装部署",
     "description": "The label for category Install and Deploy in sidebar docs"
@@ -142,6 +138,10 @@
   "sidebar.docs.category.Building Data Lakes": {
     "message": "数据湖构建",
     "description": "The label for category Building Data Lake in sidebar docs"
+  },
+  "sidebar.docs.category.Lakehouse Best Practices": {
+    "message": "湖仓一体最佳实践",
+    "description": "The label for category Lakehouse Best Practices in sidebar docs"
   },
   "sidebar.docs.category.Querying Databases": {
     "message": "数据库分析",

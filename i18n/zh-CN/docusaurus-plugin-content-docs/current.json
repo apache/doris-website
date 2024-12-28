@@ -532,7 +532,7 @@
     "description": "The label for category BI and Database IDE in sidebar docs"
   },
   "sidebar.get-starting.category.Building lakehouse": {
-    "message": "数据湖最佳实践",
+    "message": "数据湖构建",
     "description": "The label for category BI and Database IDE in sidebar docs"
   },
   "sidebar.docs.category.Cross Cluster Replication": {
