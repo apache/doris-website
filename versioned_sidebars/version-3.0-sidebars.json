@@ -189,8 +189,7 @@
                                         "data-operate/import/data-source/huawei-obs",
                                         "data-operate/import/data-source/tencent-cos",
                                         "data-operate/import/data-source/minio",
-                                        "data-operate/import/data-source/s3-compatible",
-                                        "data-operate/import/data-source/migrate-data-from-other-olap"
+                                        "data-operate/import/data-source/s3-compatible"
                                     ]
                                 },
                                 {
@@ -238,10 +237,8 @@
                             ]
                         },
                         "data-operate/import/load-data-format",
-                        "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
-                        "data-operate/import/migrate-data-from-other-olap",
                         "data-operate/import/group-commit-manual"
                     ]
                 },
