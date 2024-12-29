@@ -32,7 +32,7 @@ under the License.
 suites/backup_restore/test_create_and_drop_repository.groovy
 -->
 
-根据您的存储选择适当的语句来创建 Repository。有关详细用法，请参阅[创建 Repository ](../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md)。在不同集群使用相同路径的 Repository 进行备份时，请确保使用不同的 label，以避免冲突造成数据错乱。
+根据您的存储选择适当的语句来创建 Repository。有关详细用法，请参阅[创建 Repository ](../../../sql-manual/sql-statements/data-mo)。在不同集群使用相同路径的 Repository 进行备份时，请确保使用不同的 label，以避免冲突造成数据错乱。
 
 ### Option 1: 在 S3 上创建 Repository
 
@@ -56,6 +56,7 @@ PROPERTIES
 
 ### Option 2: 在 Azure 上创建 Repository
 
+**2.1.8 以及 3.1.4 开始支持**
 要在 Azure 存储上创建 Repository ，请使用以下 SQL 命令：
 
 ```sql
@@ -74,7 +75,7 @@ PROPERTIES
 
 - 将 bucket_name 替换为您的 Azure 容器名称。
 - 提供您的 Azure 存储帐户和密钥以进行身份验证。
-- `s3.region` 只是一个虚假的 region。
+- `s3.region` 只是一个虚假的 region，任意指定一个即可，但是必须要指定。
 - `provider` 必须为 `AZURE`。
 
 ### Option 3: 在 GCP 上创建 Repository
@@ -96,7 +97,7 @@ PROPERTIES
 
 - 将 bucket_name 替换为您的 GCP 存储桶名称。
 - 提供您的 GCP endpoint、access key 和 secret key。
-- `s3.region` 只是一个虚假的 region。
+- `s3.region` 只是一个虚假的 region，任意指定一个即可，但是必须要指定。
 
 ### Option 4: 在 OSS（阿里云对象存储服务）上创建 Repository
 
@@ -137,7 +138,7 @@ PROPERTIES
 
 - 将 bucket_name 替换为您的 MinIO 存储桶名称。
 - 提供您的 MinIO endpoint、access key和 secret key。
-- `s3.region` 只是一个虚假的 region。
+- `s3.region` 只是一个虚假的 region，任意指定一个即可，但是必须要指定。
 - 如果您不启用 Virtual Host-style，则 'use_path_style' 必须为 true。
 
 ### Option 6: 在 HDFS 上创建 Repository
@@ -160,7 +161,7 @@ PROPERTIES
 
 ## 2. 备份
 
-请参考以下语句以备份数据库、表或分区。有关详细用法，请参阅[备份](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md)。
+请参考以下语句以备份数据库、表或分区。有关详细用法，请参阅[备份](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md)。
 
 建议使用有意义的标签名称，例如包含备份中包含的数据库和表。
 
