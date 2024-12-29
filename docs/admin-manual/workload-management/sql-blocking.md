@@ -236,7 +236,7 @@ Since Doris version 2.1, Workload Policy can be used to implement circuit breaki
 | backup             | X   |
 | compaction         | X   |
 
-### Creating a Circuit Breaker Policy
+### Creating Workload Policy
 Use the `CREATE WORKLOAD Policy` command to create a resource management policy.
 
 In the example below, create a Policy named `test_cancel_Policy`, which will cancel queries running in the cluster for more than 1000ms. The current status is enabled. Creating a Workload Policy requires `admin_priv` privileges.
@@ -275,7 +275,7 @@ When creating a Workload Policy, the following must be specified:
 | priority        | An integer ranging from 0 to 100, default is 0, representing the Policy's priority. The higher the value, the higher the priority. This attribute mainly ensures that when a query matches multiple Policies, only the Policy with the highest priority is selected. |
 | workload_group  | Currently, a Policy can bind to one workload group, meaning this Policy only applies to queries from a specific Workload Group. The default is empty, meaning it applies to all queries. |
 
-### Binding the Circuit Breaker Policy to a Workload Group
+### Binding Workload Policy to Workload Group
 
 By default, Workload Policies apply to all supported queries. If you want to specify that a Policy only targets a specific Workload Group, you need to bind the Workload Group through the `workload_group` option. The statement is as follows:
 
