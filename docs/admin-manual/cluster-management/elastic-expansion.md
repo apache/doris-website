@@ -24,131 +24,123 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+Doris supports online elastic scaling, allowing users to dynamically add or remove nodes without interrupting services. This capability ensures businesses can meet growing demands or reduce idle resource waste. Scaling up or down BE nodes does not affect cluster availability but involves data migration, so it is recommended to perform scaling operations during periods of low business activity.
 
-# Elastic scaling
+## Scaling FE Clusters
 
-Doris can easily expand and shrink FE, BE, Broker instances.
+Doris FE nodes are divided into the following three roles, with each FE node containing a full set of metadata:
 
-## FE Scaling
+* Master Node: Responsible for reading and writing metadata. When metadata changes occur on the Master node, they are synchronized to non-Master nodes via the BDB JE protocol. There can be only one Master FE node in the cluster.
 
-High availability of FE can be achieved by expanding FE to three top-one nodes.
+* Follower Node: Responsible for reading metadata. In the event of a Master node failure, Follower nodes initiate a leader election to select a new Master node. Within the cluster, the total number of Master and Follower nodes is recommended to be an odd number.
 
-Users can login to Master FE through MySQL client. By:
+* Observer Node: Responsible for reading metadata but does not participate in leader election. It is used to extend the read service capacity of FE nodes.
 
-`SHOW PROC '/frontends';`
+Typically, each FE node can handle the load operations of 10-20 BE nodes. A configuration of 3 FE nodes is sufficient to meet the requirements of most business scenarios.
 
-To view the current FE node situation.
 
-You can also view the FE node through the front-end page connection: ``http://fe_hostname:fe_http_port/frontend`` or ```http://fe_hostname:fe_http_port/system?Path=//frontends```.
+### Scale the FE out
 
-All of the above methods require Doris's root user rights.
+::: info Note:
 
-The process of FE node expansion and contraction does not affect the current system operation.
+When adding a new FE node, please pay attention to the following:
 
-### Adding FE nodes
+* The `http_port` of the new FE node must match the `http_port` of all existing FE nodes in the cluster.
 
-FE is divided into two roles: Follower and Observer. The Follower role will elect a Follower node as the Master. By default, a cluster can only have one Follower role in the Master state, and there can be multiple Followers and Observers. At the same time, it is necessary to ensure that there are an odd number of Follower roles. All Follower roles form an election group. If the Follower in the Master state goes down, the remaining Followers will automatically elect a new Master to ensure high write availability. Observer synchronizes the data of Master, but does not participate in the election. If only one FE is deployed, the FE is the Master by default.
+* If adding a Follower node, it is recommended that the total number of Master and Follower nodes in the cluster be an odd number.
 
-The first FE to start automatically becomes Master. On this basis, several Followers and Observers can be added.
+* You can view the ports and roles of the current cluster nodes using the `show frontends` command.
 
-#### Configure and start Follower or Observer.
 
- Follower and Observer are configured with Master. The following commands need to be executed at the first startup:
+:::
 
-`bin/start_fe.sh --helper host:edit_log_port --daemon`
+1. Start FE Node:
 
-The host is the node IP of Master, and the edit\_log\_port in Lead's configuration file fe.conf. The --helper is only required when follower/observer is first startup.
+```bash
+fe/bin/start_fe.sh --helper <leader_fe_host>:<edit_log_port> --daemon
+```
 
-#### Add Follower or Observer to the cluster
+* Register FE Node:
 
-Add Follower or Observer. Connect to the started FE using mysql-client and execute:
+  * Register the node as a Follower FE:
 
-`ALTER SYSTEM ADD FOLLOWER "follower_host:edit_log_port";`
+    ```sql
+    ALTER SYSTEM ADD FOLLOWER "<follower_host>:<edit_log_port>";
+    ```
 
-or
+  * Register the node as a Observer FE:
 
-`ALTER SYSTEM ADD OBSERVER "observer_host:edit_log_port";`
+    ```sql
+    ALTER SYSTEM ADD OBSERVER "<observer_host>:<edit_log_port>";
+    ```
 
-The follower\_host and observer\_host is the node IP of Follower or Observer, and the edit\_log\_port in its configuration file fe.conf.
+* Check the status of the newly added FE node
 
-View the status of Follower or Observer. Connect to any booted FE using mysql-client and execute:
+  ```sql
+  show frontends;
+  ```
 
-```SHOW PROC '/frontends';```
 
-You can view the FE currently joined the cluster and its corresponding roles.
+### Scale In the FE Cluster
 
-> Notes for FE expansion:
->
-> 1. The number of Follower FEs (including Masters) must be odd. It is recommended that a maximum of three constituent high availability (HA) modes be deployed.
-> 2. When FE is in a highly available deployment (1 Master, 2 Follower), we recommend that the reading service capability of FE be extended by adding Observer FE. Of course, you can continue to add Follower FE, but it's almost unnecessary.
-> 3. Usually a FE node can handle 10-20 BE nodes. It is suggested that the total number of FE nodes should be less than 10. Usually three can meet most of the needs.
-> 4. The helper cannot point to the FE itself, it must point to one or more existing running Master/Follower FEs.
+When scaling in FE nodes, ensure that the total number of Master and Follower nodes in the cluster remains an odd number. Use the following commands to remove nodes:
 
-### Delete FE nodes
 
-Delete the corresponding FE node using the following command:
+```sql
+ALTER SYSTEM DROP FOLLOWER[OBSERVER] "<fe_host>:<edit_log_port>";
+```
 
-```ALTER SYSTEM DROP FOLLOWER[OBSERVER] "fe_host:edit_log_port";```
+After scaling in, you need to manually delete the FE directory.
 
-> Notes for FE contraction:
->
-> 1. When deleting Follower FE, make sure that the remaining Follower (including Master) nodes are odd.
+## Scale In/Out the BE Cluster
 
-## BE Scaling
+### Scale Out the BE Cluster
 
-Users can login to Master FE through mysql-client. By:
+1. Start the BE process:  
 
-```SHOW PROC '/backends';```
+   ```sql
+   be/bin/start_be.sh
+   ```
 
-To see the current BE node situation.
+2. Register the BE node:  
 
-You can also view the BE node through the front-end page connection: ``http://fe_hostname:fe_http_port/backend`` or ``http://fe_hostname:fe_http_port/system?Path=//backends``.
+   ```sql
+   ALTER SYSTEM ADD backend '<be_host>:<be_heartbeat_service_port>';
+   ```
 
-All of the above methods require Doris's root user rights.
+### Scale In the BE Cluster
 
-The expansion and scaling process of BE nodes does not affect the current system operation and the tasks being performed, and does not affect the performance of the current system. Data balancing is done automatically. Depending on the amount of data available in the cluster, the cluster will be restored to load balancing in a few hours to a day. For cluster load, see the [Tablet Load Balancing Document](../cluster-management/load-balancing).
+When scaling in BE nodes, you can choose between the DROP or DECOMMISSION methods:
 
-### Add BE nodes
+|          | DROP              | DECOMMISSION                                |
+| -------- | ----------------- | ------------------------------------------- |
+| Principle | Directly remove the node, deleting the BE node. | Initiates a command to migrate data on the BE node to other nodes. Once migration is complete, the BE node is automatically removed. |
+| Effective Time | Takes effect immediately after execution. | Takes effect after data migration is completed. Depending on the cluster's existing data volume, this can take hours to up to a day. |
+| Single Replica Table Handling | May result in data loss. | Does not result in data loss. |
+| Removing Multiple Nodes Simultaneously | May result in data loss. | Does not result in data loss. |
+| Production Recommendation | Not recommended for production environments. | Recommended for production environments. |
 
-The BE node is added in the same way as in the **BE deployment** section. The BE node is added by the `ALTER SYSTEM ADD BACKEND` command.
+* Use the following command to remove a BE node using the DROP method: 
 
-> Notes for BE expansion:
->
-> 1. After BE expansion, Doris will automatically balance the data according to the load, without affecting the use during the period.
+  ```sql
+  ALTER SYSTEM DROP backend "<be_host>:<be_heartbeat_service_port>";
+  ```
 
-### Delete BE nodes
+* Use the following command to remove a BE node using the DECOMMISSION method:  
 
-There are two ways to delete BE nodes: DROP and DECOMMISSION
+  ```sql
+  ALTER SYSTEM DECOMMISSION backend "<be_host>:<be_heartbeat_service_port>";
+  ```
 
-The DROP statement is as follows:
+### DECOMMISSION Command Description:
 
-```ALTER SYSTEM DROP BACKEND "be_host:be_heartbeat_service_port";```
+- DECOMMISSION is an asynchronous operation. After execution, you can see the BE node's `SystemDecommissioned` status set to `true` via `SHOW backends;`. This indicates the node is being removed.
 
-**Note: DROP BACKEND will delete the BE directly and the data on it will not be recovered!!! So we strongly do not recommend DROP BACKEND to delete BE nodes. When you use this statement, there will be corresponding error-proof operation hints.**
+- The DECOMMISSION command may fail. For instance, if there is insufficient storage space on the remaining BE nodes to accommodate the data from the BE being removed, or if the remaining nodes do not meet the minimum replication requirements, the command will not complete, and the BE will remain in a `SystemDecommissioned` state set to `true`.
 
-DECOMMISSION clause:
+- The progress of DECOMMISSION can be monitored using `SHOW PROC '/backends';`. If the operation is in progress, the `TabletNum` value will decrease continuously.
 
-```ALTER SYSTEM DECOMMISSION BACKEND "be_host:be_heartbeat_service_port";```
+- You can cancel the operation using the command `CANCEL DECOMMISSION BACKEND "be_host:be_heartbeat_service_port";`. After cancellation, the BE node will retain its current remaining data, and Doris will re-balance the load.
 
-> DECOMMISSION notes:
->
-> 1. This command is used to safely delete BE nodes. After the command is issued, Doris attempts to migrate the data on the BE to other BE nodes, and when all data is migrated, Doris automatically deletes the node.
-> 2. The command is an asynchronous operation. After execution, you can see that the BE node's `SystemDecommissioned` status is true through ``SHOW PROC '/backends';` Indicates that the node is offline.
-> 3. The order **does not necessarily carry out successfully**. For example, when the remaining BE storage space is insufficient to accommodate the data on the offline BE, or when the number of remaining machines does not meet the minimum number of replicas, the command cannot be completed, and the BE will always be in the state of `SystemDecommissioned` as true.
-> 4. The progress of DECOMMISSION can be viewed through `SHOW PROC '/backends';` Tablet Num, and if it is in progress, Tablet Num will continue to decrease.
-> 5. The operation can be carried out by:
-> 		```CANCEL ALTER SYSTEM DECOMMISSION BACKEND "be_host:be_heartbeat_service_port";```
-> 	The order was cancelled. When cancelled, the data on the BE will maintain the current amount of data remaining. Follow-up Doris re-load balancing
-
-**For expansion and scaling of BE nodes in multi-tenant deployment environments, please refer to the [Multi-tenant Design Document](docs/admin-manual/workload-management/multi-tenant).**
-
-## Broker Scaling
-
-There is no rigid requirement for the number of Broker instances. Usually one physical machine is deployed. Broker addition and deletion can be accomplished by following commands:
-
-```ALTER SYSTEM ADD BROKER broker_name "broker_host:broker_ipc_port";```
-```ALTER SYSTEM DROP BROKER broker_name "broker_host:broker_ipc_port";```
-```ALTER SYSTEM DROP ALL BROKER broker_name;```
-
-Broker is a stateless process that can be started or stopped at will. Of course, when it stops, the job running on it will fail. Just try again.
+- The data migration rate can be adjusted by modifying the `balance_slot_num_per_path` parameter.
 
