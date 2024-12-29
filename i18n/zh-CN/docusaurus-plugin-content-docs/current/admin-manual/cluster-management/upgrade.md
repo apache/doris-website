@@ -90,34 +90,34 @@ Doris 版本号由三维组成，第一位表示重大里程碑版本，第二�
 
 3. 将备份的 Master FE 元数据拷贝到新的兼容性测试环境中
 
-  ```bash
-  cp ${DORIS_OLD_HOME}/fe/doris-meta/* ${DORIS_NEW_HOME}/fe/doris-meta
-  ```
+   ```bash
+   cp ${DORIS_OLD_HOME}/fe/doris-meta/* ${DORIS_NEW_HOME}/fe/doris-meta
+   ```
 
 4. 将拷贝的元数据目文件中的 VERSION 文件中的 cluster\_id 修改为新的 cluster IP，如在上例中修改为 123456：
 
-  ```bash
-  vi ${DORIS_NEW_HOME}/fe/doris-meta/image/VERSION
-  clusterId=123456
-  ```
+   ```bash
+   vi ${DORIS_NEW_HOME}/fe/doris-meta/image/VERSION
+   clusterId=123456
+   ```
 
 5. 在测试环境中启动 FE 进程
  
-  ```bash
-  sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon --metadata_failure_recovery
-  ```
+   ```bash
+   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon --metadata_failure_recovery
+   ```
 
-  在 2.0.2 之前的版本，需要在 fe.conf 文件中加入 `metadata_failure_recovery` 后在启动 FE 进程：
-  ```bash
-  echo "metadata_failure_recovery=true" >> ${DORIS_NEW_HOME}/conf/fe.conf
-  sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon 
-  ```
+   在 2.0.2 之前的版本，需要在 fe.conf 文件中加入 `metadata_failure_recovery` 后在启动 FE 进程：
+   ```bash
+   echo "metadata_failure_recovery=true" >> ${DORIS_NEW_HOME}/conf/fe.conf
+   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon 
+   ```
 
 6. 验证 FE 启动成功，通过 mysql 命令链接当前 FE，如上文中使用 query port 为 19030：
-
-  ```bash
-  mysql -uroot -P19030 -h127.0.0.1
-  ```
+ 
+   ```bash
+   mysql -uroot -P19030 -h127.0.0.1
+   ```
 
 ## 升级步骤
 
