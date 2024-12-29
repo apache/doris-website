@@ -32,7 +32,7 @@ under the License.
 suites/backup_restore/test_create_and_drop_repository.groovy
 -->
 
-根据您的存储选择适当的语句来创建 Repository。有关详细用法，请参阅[创建 Repository ](../../../sql-manual/sql-statements/data-mo)。在不同集群使用相同路径的 Repository 进行备份时，请确保使用不同的 label，以避免冲突造成数据错乱。
+根据您的存储选择适当的语句来创建 Repository。有关详细用法，请参阅[创建 Repository ](../../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md)。在不同集群使用相同路径的 Repository 进行备份时，请确保使用不同的 Label，以避免冲突造成数据错乱。
 
 ### Option 1: 在 S3 上创建 Repository
 
@@ -161,13 +161,13 @@ PROPERTIES
 
 ## 2. 备份
 
-请参考以下语句以备份数据库、表或分区。有关详细用法，请参阅[备份](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md)。
+请参考以下语句以备份数据库、表或分区。有关详细用法，请参阅[备份](../../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md)。
 
-建议使用有意义的标签名称，例如包含备份中包含的数据库和表。
+建议使用有意义的 Label 名称，例如包含备份中包含的数据库和表。
 
 ### Option 1: 备份当前数据库
 
-以下 SQL 语句将当前数据库备份到名为 `example_repo` 的 Repository ，并使用快照标签 `exampledb_20241225`。
+以下 SQL 语句将当前数据库备份到名为 `example_repo` 的 Repository ，并使用快照 Label `exampledb_20241225`。
 
 ```sql
 BACKUP SNAPSHOT exampledb_20241225
@@ -176,7 +176,7 @@ TO example_repo;
 
 ### Option 2: 备份指定数据库
 
-以下 SQL 语句将名为 destdb 的数据库备份到名为 `example_repo` 的 Repository ，并使用快照标签 `destdb_20241225`。
+以下 SQL 语句将名为 destdb 的数据库备份到名为 `example_repo` 的 Repository ，并使用快照 Label `destdb_20241225`。
 
 ```sql
 BACKUP SNAPSHOT destdb.`destdb_20241225`
@@ -185,7 +185,7 @@ TO example_repo;
 
 ### Option 3: 备份指定表
 
-以下 SQL 语句将两个表备份到名为 `example_repo` 的 Repository ，并使用快照标签 `exampledb_tbl_tbl1_20241225`。
+以下 SQL 语句将两个表备份到名为 `example_repo` 的 Repository ，并使用快照 Label `exampledb_tbl_tbl1_20241225`。
 
 ```sql
 BACKUP SNAPSHOT exampledb_tbl_tbl1_20241225
@@ -195,7 +195,7 @@ ON (example_tbl, example_tbl1);
 
 ### Option 4: 备份指定分区
 
-以下 SQL 语句将名为 `example_tbl2` 的表和名为 `p1` 和 `p2` 的两个分区备份到名为 `example_repo` 的 Repository ，并使用快照标签 `example_tbl_p1_p2_tbl1_20241225`。
+以下 SQL 语句将名为 `example_tbl2` 的表和名为 `p1` 和 `p2` 的两个分区备份到名为 `example_repo` 的 Repository ，并使用快照 Label `example_tbl_p1_p2_tbl1_20241225`。
 
 ```sql
 BACKUP SNAPSHOT example_tbl_p1_p2_tbl1_20241225
@@ -209,7 +209,7 @@ ON
 
 ### Option 5: 备份当前数据库，排除某些表
 
-以下 SQL 语句将当前数据库备份到名为 `example_repo` 的 Repository ，并使用快照标签 `exampledb_20241225`，排除两个名为 `example_tbl` 和 `example_tbl1` 的表。
+以下 SQL 语句将当前数据库备份到名为 `example_repo` 的 Repository ，并使用快照 Label `exampledb_20241225`，排除两个名为 `example_tbl` 和 `example_tbl1` 的表。
 
 ```sql
 BACKUP SNAPSHOT exampledb_20241225
@@ -247,7 +247,7 @@ mysql> show BACKUP\G;
 
 ## 4. 查看 Repository 中的现有备份
 
-以下 SQL 语句可用于查看名为 `example_repo` 的 Repository 中的现有备份，其中 Snapshot 列是快照标签，Timestamp 是时间戳。
+以下 SQL 语句可用于查看名为 `example_repo` 的 Repository 中的现有备份，其中 Snapshot 列是快照 Label，Timestamp 是时间戳。
 
 ```sql
 mysql> SHOW SNAPSHOT ON example_repo;
@@ -258,3 +258,8 @@ mysql> SHOW SNAPSHOT ON example_repo;
 +-----------------+---------------------+--------+
 1 row in set (0.15 sec)
 ```
+
+## 5. 取消备份（如有需要）
+
+可以使用 `CANCEL BACKUP FROM db_name;` 取消一个数据库中的备份任务。更具体的用法可以参考[取消备份](../../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CANCEL-BACKUP.md)。
+
