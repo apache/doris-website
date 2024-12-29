@@ -61,13 +61,13 @@ If there are 3 FEs in the cluster, the maximum number of SQL queries in the clus
 
 ## Check the queue status
 
-**grammar**
+**Syntax**
 
 ```
 show workload groups
 ```
 
-**example**
+**Example**
 
 ```
 mysql [(none)]>show workload groups\G;
