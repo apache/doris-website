@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Restore",
-    "language": "en"
+    "title": "恢复",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,15 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Prerequisites
+## 前提条件
 
-1. Ensure you have **administrator** privileges to perform the restore operation.
-2. Ensure you have an existing **Repository** to store the backup. If not, follow the steps to create a Repository and perform a [backup](backup.md).
-3. Ensure you have a valid **backup** snapshot available for restoration.
+1. 确保您拥有**管理员**权限以执行恢复操作。
+2. 确保您有一个有效的**备份**快照可供恢复，请参考[备份](backup.md)。
 
-## 1. Get the Backup Timestamp of the Snapshot
+## 1. 获取快照的备份时间戳
 
-The following SQL statement can be used to view existing backups in the Repository named `example_repo`.
+以下SQL语句可用于查看名为`example_repo`的 Repository 中的现有备份。
 
    ```sql
    mysql> SHOW SNAPSHOT ON example_repo;
@@ -44,11 +43,11 @@ The following SQL statement can be used to view existing backups in the Reposito
    1 row in set (0.15 sec)
    ```
 
-## 2. Restore from Snapshot
+## 2. 从快照恢复
 
-### Option 1: Restore Snapshot to Current Database
+### Option 1：恢复快照到当前数据库
 
-The following SQL statement restores the snapshot labeled `restore_label1` with the timestamp `2022-04-08-15-52-29` from the Repository named `example_repo` to the current database.
+以下SQL语句从名为`example_repo`的 Repository 中恢复标签为 `restore_label1` 和时间戳为 `2022-04-08-15-52-29` 的快照到当前数据库。
 
 ```sql
 RESTORE SNAPSHOT `restore_label1`
@@ -59,9 +58,9 @@ PROPERTIES
 );
 ```
 
-### Option 2: Restore Snapshot to Specified Database
+### Option 2：恢复快照到指定数据库
 
-The following SQL statement restores the snapshot labeled `restore_label1` with the timestamp `2022-04-08-15-52-29` from the Repository named `example_repo` to a database named `destdb`.
+以下SQL语句从名为`example_repo`的 Repository 中恢复标签为 `restore_label1` 和时间戳为 `2022-04-08-15-52-29` 的快照到名为 `destdb` 的数据库。
 
 ```sql
 RESTORE SNAPSHOT destdb.`restore_label1`
@@ -72,9 +71,9 @@ PROPERTIES
 );
 ```
 
-### Option 3: Restore a Single Table from Snapshot
+### Option 3：从快照恢复单个表
 
-Restore the table `backup_tbl` from the snapshot in `example_repo` to the current database, with the snapshot labeled `restore_label1` and timestamp `2022-04-08-15-52-29`.
+从`example_repo`中的快照恢复表`backup_tbl`到当前数据库，快照的标签为 `restore_label1`，时间戳为 `2022-04-08-15-52-29`。
 
 ```sql
 RESTORE SNAPSHOT `restore_label1`
@@ -86,9 +85,9 @@ PROPERTIES
 );
 ```
 
-### Option 4: Restore Partitions and Tables from Snapshot
+### Option 4：从快照恢复分区和表
 
-Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `backup_tbl2` to the current database `example_db1`, renaming it to `new_tbl`, from the backup snapshot `snapshot_2`, with the snapshot label timestamp `"2018-05-04-17-11-01"`.
+从`example_repo`中的备份快照`snapshot_2`恢复表`backup_tbl`的分区p1和p2，以及表`backup_tbl2`到当前数据库`example_db1`，并将其重命名为`new_tbl`，快照标签为时间版本为`"2018-05-04-17-11-01"`。
 
    ```sql
    RESTORE SNAPSHOT `restore_label1`
@@ -104,7 +103,7 @@ Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `ba
    );
    ```
 
-## 3. Check the Execution Status of the Restore Job
+## 3. 查看恢复作业的执行情况
 
       ```sql
    mysql> SHOW RESTORE\G;
