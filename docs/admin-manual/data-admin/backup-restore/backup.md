@@ -32,7 +32,7 @@ For concepts related to backup, please refer to [Backup and Restore](./overview.
 suites/backup_restore/test_create_and_drop_repository.groovy
 -->
 
-Use the appropriate statement to create a Repository based on your storage choice. For detailed usage, please refer to [Create Repository](../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md). When backing up using the same path for the Repository across different clusters, ensure to use different labels to avoid conflicts that may cause data confusion.
+Use the appropriate statement to create a Repository based on your storage choice. For detailed usage, please refer to [Create Repository](../../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md). When backing up using the same path for the Repository across different clusters, ensure to use different labels to avoid conflicts that may cause data confusion.
 
 ### Option 1: Create Repository on S3
 
@@ -56,6 +56,8 @@ PROPERTIES
 
 ### Option 2: Create Repository on Azure
 
+**Azure is supported since 2.0.8 or 3.0.4.**
+
 To create a Repository on Azure storage, use the following SQL command:
 
 ```sql
@@ -74,8 +76,8 @@ PROPERTIES
 
 - Replace `bucket_name` with your Azure container name.
 - Provide your Azure storage account and key for authentication.
-- `s3.region` is just a dummy region.
-- `provider` must be `AZURE`.
+- `s3.region` is a dummy but required field.
+- The `provider` must be set to `AZURE` for Azure storage.
 
 ### Option 3: Create Repository on GCP
 
@@ -96,7 +98,7 @@ PROPERTIES
 
 - Replace `bucket_name` with your GCP bucket name.
 - Provide your GCP endpoint, access key, and secret key.
-- `s3.region` is just a dummy region.
+- `s3.region` is a dummy but required field.
 
 ### Option 4: Create Repository on OSS (Alibaba Cloud Object Storage Service)
 
@@ -137,7 +139,7 @@ PROPERTIES
 
 - Replace `bucket_name` with your MinIO bucket name.
 - Provide your MinIO endpoint, access key, and secret key.
-- `s3.region` is just a dummy region.
+- `s3.region` is a dummy but required field.
 - If you do not enable Virtual Host-style, then `use_path_style` must be true.
 
 ### Option 6: Create Repository on HDFS
@@ -160,7 +162,7 @@ PROPERTIES
 
 ## 2. Backup
 
-Refer to the following statements to back up databases, tables, or partitions. For detailed usage, please refer to [Backup](../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md).
+Refer to the following statements to back up databases, tables, or partitions. For detailed usage, please refer to [Backup](../../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md).
 
 It is recommended to use meaningful label names, such as those containing the databases and tables included in the backup.
 
@@ -257,3 +259,7 @@ mysql> SHOW SNAPSHOT ON example_repo;
 +-----------------+---------------------+--------+
 1 row in set (0.15 sec)
 ```
+
+## 5. Cancel Backup (if necessary)
+
+You can use `CANCEL BACKUP FROM db_name;` to cancel a backup task in a database. For more specific usage, refer to [Cancel Backup](../../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CANCEL-BACKUP.md).
