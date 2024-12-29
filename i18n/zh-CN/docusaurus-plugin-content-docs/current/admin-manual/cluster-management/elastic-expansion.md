@@ -88,6 +88,7 @@ Doris 的 FE 节点分为以下三种角色，每一个 FE 节点都有全量的
 ```sql
 ALTER SYSTEM DROP FOLLOWER[OBSERVER] "<fe_host>:<edit_log_port>";
 ```
+在缩容后，需要手动删除 FE 目录下的文件。
 
 ## 扩缩容 BE 集群
 
