@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Business continuity & data recovery Overview",
+    "title": "Business Continuity & Data Recovery Overview",
     "language": "en"
 }
 ---
@@ -24,72 +24,45 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-**Doris** provides robust disaster recovery features through three core functionalities: **cross-cluster data synchronization**, **backup and recovery**, and **recycle bin recovery**. These capabilities help users effectively address data loss caused by hardware failures, software errors, or human mistakes, ensuring high data availability and reliability.
-
----
+Doris provides powerful disaster recovery capabilities, helping users effectively respond to data loss issues caused by hardware failures, software errors, or human mistakes through three main functions: cross-cluster data synchronization, backup and recovery, and recycle bin recovery, ensuring high availability and reliability of data.
 
 ## 1. Cross-Cluster Data Synchronization
 
-Doris's cross-cluster data synchronization feature enables real-time replication of data across different Doris clusters. This ensures critical data is distributed across multiple physically or logically isolated clusters, achieving geographical disaster recovery.
+Doris's cross-cluster data synchronization feature supports real-time data replication between different Doris clusters, ensuring that important data is distributed across multiple physically isolated clusters, achieving regional disaster recovery.
 
 ### Key Features:
 
-- **Real-Time Synchronization**: Supports both full and incremental synchronization. Full synchronization replicates all data during the initial setup, while incremental synchronization continuously captures and syncs data changes, including data (inserts, updates, deletions) and schema changes (DDL).
-- **Data Consistency**: Tracks data changes using logging mechanisms (e.g., Binlog) to ensure that the target cluster mirrors the source cluster exactly.
-- **Geographical Disaster Recovery**: Supports synchronization between clusters located in different regions, allowing seamless failover to another cluster in case of failure.
-- **Multi-Scenario Application**: Suitable for disaster recovery, business separation (e.g., read/write splitting), and multi-active cluster scenarios.
+- **Real-time Synchronization**: Supports full and incremental synchronization. Full synchronization replicates all data in the initial phase; incremental synchronization continuously captures and synchronizes data changes, including data (addition, modification, deletion) and table structure changes (DDL).
+- **Data Consistency**: Records data changes through a logging mechanism (such as Binlog), ensuring that the target cluster's data is completely consistent with the source cluster's data.
+- **Regional Disaster Recovery**: Supports synchronization between clusters in different geographical locations, allowing other clusters to quickly take over business when one cluster fails.
+- **Multi-Scenario Applications**: Suitable for disaster recovery backups, business separation (such as read-write separation), active-active clusters, and other scenarios.
 
-### Use Case Example:
-A company deploys two Doris clusters in different cities: Cluster A as the primary cluster and Cluster B as the backup cluster. Using cross-cluster synchronization, if Cluster A is disrupted by a natural disaster, Cluster B can take over business operations seamlessly, minimizing downtime.
-
----
+### Application Scenario Example:
+A company has deployed two Doris clusters in different cities, with Cluster A as the primary cluster and Cluster B as the backup cluster. Through cross-cluster data synchronization, when Cluster A is interrupted due to a natural disaster, Cluster B can take over the business, minimizing downtime.
 
 ## 2. Backup and Recovery
 
-Doris provides comprehensive backup and recovery capabilities to periodically save data snapshots and prevent data loss due to unexpected events.
+Doris provides backup and recovery functions to regularly save data snapshots, preventing data loss due to unexpected events.
 
 ### Key Features:
 
-- **Full Backup**: Allows users to back up entire databases or tables, creating complete snapshots of the data.
+- **Backup**: Supports full backups of specified databases, tables, or partitions, saving complete data snapshots.
+- **Recovery**: Supports recovery of databases, tables, or partitions from snapshots.
 
-### Use Case Example:
-A company performs regular data backups and stores them in an object storage service (e.g., Amazon S3). When a critical table is accidentally deleted, the company quickly restores the data using the backup, ensuring business continuity.
-
----
+### Application Scenario Example:
+A company regularly backs up data and stores backup files in object storage services (such as Amazon S3). When an important table is accidentally deleted, the backup function quickly restores the lost data, ensuring normal business operations.
 
 ## 3. Recycle Bin Recovery
 
-Doris also offers a **recycle bin** feature that provides a straightforward way to recover recently deleted data, minimizing the impact of accidental operations.
+Doris provides a recycle bin feature, offering users a quick way to recover recently deleted data, reducing the impact of operational errors.
 
 ### Key Features:
 
-- **Temporary Deletion**: When a table or database is deleted, it is moved to the recycle bin instead of being permanently removed.
-- **Retention Period**: Data remains in the recycle bin for a configurable retention period, allowing users to restore it if needed.
-- **Quick Restoration**: Users can easily recover accidentally deleted data from the recycle bin without requiring a full backup restoration.
-- **Data Security**: If no recovery is needed, data in the recycle bin will be automatically cleaned up after the retention period.
+- **Temporary Deletion**: Tables or databases that are deleted are first moved to the recycle bin instead of being permanently deleted immediately.
+- **Retention Period**: Deleted data is retained in the recycle bin for a configurable period, during which users can choose to recover it.
+- **Quick Recovery**: Data can be easily retrieved from the recycle bin without needing a complete backup recovery.
+- **Data Security**: If recovery is not needed, data in the recycle bin will be automatically cleared after the retention period.
 
-### Use Case Example:
-A team accidentally deletes an important table during routine operations. By using the recycle bin, they quickly recover the table, avoiding the need for complex backup restoration processes and minimizing downtime.
+### Application Scenario Example:
+A team accidentally deleted an important table during routine operations. Using the recycle bin feature, they quickly recovered the deleted data, avoiding a complex backup recovery process while ensuring business continuity.
 
----
-
-## 4. Comprehensive Disaster Recovery Practices
-
-By combining cross-cluster synchronization, backup and recovery, and recycle bin recovery, Doris enables a complete and efficient disaster recovery strategy:
-
-- **Proactive Disaster Recovery**: Use cross-cluster synchronization for multi-active deployments, allowing business operations to switch to any cluster rapidly.
-- **Passive Disaster Recovery**: Regularly back up data to ensure that even in the worst-case scenario, data can be restored from backups.
-- **Quick Fixes**: Use the recycle bin to recover from accidental deletions swiftly.
-- **Testing and Validation**: Regularly verify backups, synchronization, and recycle bin functionality to ensure the disaster recovery plan's effectiveness.
-
----
-
-## Conclusion
-
-Doris’s disaster recovery capabilities, powered by cross-cluster synchronization, backup and recovery, and recycle bin recovery, offer users:
-
-- Comprehensive data protection.
-- Flexible disaster recovery options.
-- Rapid recovery from accidental deletions and system failures.
-
-Whether addressing everyday operational errors or preparing for catastrophic disasters, Doris is an ideal choice for building highly reliable data systems. Explore Doris’s features further to create a robust disaster recovery plan tailored to your business needs!
