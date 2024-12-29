@@ -69,34 +69,51 @@ Doris 版本号由三维组成，第一位表示重大里程碑版本，第二�
 
 2. 修改测试用的 FE 的配置文件 fe.conf
 
-   ```bash
-   vi ${DORIS_NEW_HOME}/conf/fe.conf
-   ```
+  ```bash
+  vi ${DORIS_NEW_HOME}/conf/fe.conf
+  ```
 
-修改以下端口信息，将所有端口设置为与线上不同，同时修改 clusterID 参数：
+  修改以下端口信息，将所有端口设置为与线上不同，同时修改 clusterID 参数：
+  ```
+  ...
+  ## modify port
+  http_port = 18030
+  rpc_port = 19020
+  query_port = 19030
+  arrow_flight_sql_port = 19040
+  edit_log_port = 19010
 
-* 将备份的 Master FE 元数据拷贝到新的兼容性测试环境中
+  ## modify clusterIP
+  clusterId=<a_new_clusterIP, such as 123456>
+  ...
+  ```
+
+3. 将备份的 Master FE 元数据拷贝到新的兼容性测试环境中
 
   ```bash
   cp ${DORIS_OLD_HOME}/fe/doris-meta/* ${DORIS_NEW_HOME}/fe/doris-meta
   ```
 
-* 将拷贝的元数据目文件中的 VERSION 文件中的 cluster\_id 修改为新的 cluster IP，如在上例中修改为 123456：
+4. 将拷贝的元数据目文件中的 VERSION 文件中的 cluster\_id 修改为新的 cluster IP，如在上例中修改为 123456：
 
   ```bash
   vi ${DORIS_NEW_HOME}/fe/doris-meta/image/VERSION
   clusterId=123456
   ```
 
-* 在测试环境中启动 FE 进程
-
+5. 在测试环境中启动 FE 进程
+ 
   ```bash
   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon --metadata_failure_recovery
   ```
 
-在 2.0.2 之前的版本，需要在 fe.conf 文件中加入 `metadata_failure_recovery` 后在启动 FE 进程：
+  在 2.0.2 之前的版本，需要在 fe.conf 文件中加入 `metadata_failure_recovery` 后在启动 FE 进程：
+  ```bash
+  echo "metadata_failure_recovery=true" >> ${DORIS_NEW_HOME}/conf/fe.conf
+  sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon 
+  ```
 
-* 验证 FE 启动成功，通过 mysql 命令链接当前 FE，如上文中使用 query port 为 19030：
+6. 验证 FE 启动成功，通过 mysql 命令链接当前 FE，如上文中使用 query port 为 19030：
 
   ```bash
   mysql -uroot -P19030 -h127.0.0.1
@@ -172,7 +189,7 @@ admin set frontend config("disable_tablet_scheduler" = "true");
    show backends\G
    ```
 
-若该 BE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功。
+  若该 BE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功。
 
 ### 第 3 步：升级 FE 节点
 
@@ -210,9 +227,9 @@ admin set frontend config("disable_tablet_scheduler" = "true");
    show frontends\G
    ```
 
-若该 FE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功。
+  若该 FE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功。
 
-* 依次完成其他 FE 节点升级，最后完成 Master 节点的升级
+6. 依次完成其他 FE 节点升级，最后完成 Master 节点的升级
 
 ### 第 4 步：打开副本修复与均衡功能
 
