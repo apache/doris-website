@@ -189,7 +189,7 @@ admin set frontend config("disable_tablet_scheduler" = "true");
    show backends\G
    ```
 
-  若该 BE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功。
+   若该 BE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功。
 
 ### 第 3 步：升级 FE 节点
 
@@ -227,7 +227,7 @@ admin set frontend config("disable_tablet_scheduler" = "true");
    show frontends\G
    ```
 
-  若该 FE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功。
+   若该 FE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功。
 
 6. 依次完成其他 FE 节点升级，最后完成 Master 节点的升级
 
