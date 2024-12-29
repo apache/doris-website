@@ -69,24 +69,24 @@ Doris 版本号由三维组成，第一位表示重大里程碑版本，第二�
 
 2. 修改测试用的 FE 的配置文件 fe.conf
 
-  ```bash
-  vi ${DORIS_NEW_HOME}/conf/fe.conf
-  ```
+   ```bash
+   vi ${DORIS_NEW_HOME}/conf/fe.conf
+   ```
 
-  修改以下端口信息，将所有端口设置为与线上不同，同时修改 clusterID 参数：
-  ```
-  ...
-  ## modify port
-  http_port = 18030
-  rpc_port = 19020
-  query_port = 19030
-  arrow_flight_sql_port = 19040
-  edit_log_port = 19010
+   修改以下端口信息，将所有端口设置为与线上不同，同时修改 clusterID 参数：
+   ```
+   ...
+   ## modify port
+   http_port = 18030
+   rpc_port = 19020
+   query_port = 19030
+   arrow_flight_sql_port = 19040
+   edit_log_port = 19010
 
-  ## modify clusterIP
-  clusterId=<a_new_clusterIP, such as 123456>
-  ...
-  ```
+   ## modify clusterIP
+   clusterId=<a_new_clusterIP, such as 123456>
+   ...
+   ```
 
 3. 将备份的 Master FE 元数据拷贝到新的兼容性测试环境中
 
