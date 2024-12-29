@@ -543,8 +543,12 @@
     "message": "分层存储",
     "description": "The label for category Tiered Storage in sidebar docs"
   },
-  "sidebar.docs.category.Business continuity & data recovery": {
+  "sidebar.docs.category.Business Continuity & Data Recovery": {
     "message": "业务连续性和数据恢复",
-    "description": "The label for category Business continuity & data recovery in sidebar docs"
+    "description": "The label for category Business Continuity & Data Recovery in sidebar docs"
+  },
+  "sidebar.docs.category.Backup & Restore": {
+    "message": "备份与恢复",
+    "description": "The label for category Backup & Restore in sidebar docs"
   }
 }
