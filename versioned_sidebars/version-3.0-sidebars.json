@@ -189,7 +189,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "Import Way",
+                            "label": "Loading Methods",
                             "items": [
                                 "data-operate/import/import-way/stream-load-manual",
                                 "data-operate/import/import-way/broker-load-manual",
@@ -199,22 +199,30 @@
                                 "data-operate/import/import-way/mysql-load-manual"
                             ]
                         },
-                        "data-operate/import/load-data-format",
-			{
+                        {
                             "type": "category",
-                            "label": "Complex Data Types",
-                             "items": [
-                                 "data-operate/import/complex-types/array",
-                                 "data-operate/import/complex-types/map",
-                                 "data-operate/import/complex-types/struct",
-                                 "data-operate/import/complex-types/json",
-                                 "data-operate/import/complex-types/bitmap",
-                                 "data-operate/import/complex-types/hll",
-                                 "data-operate/import/complex-types/variant"
-                                ]
+                            "label": "file formats",
+                            "items": [
+                                "data-operate/import/file-format/csv",
+                                "data-operate/import/file-format/json",
+                                "data-operate/import/file-format/parquet",
+                                "data-operate/import/file-format/orc"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "complex data types",
+                            "items": [
+                                "data-operate/import/complex-types/array",
+                                "data-operate/import/complex-types/map",
+                                "data-operate/import/complex-types/struct",
+                                "data-operate/import/complex-types/json",
+                                "data-operate/import/complex-types/bitmap",
+                                "data-operate/import/complex-types/hll",
+                                "data-operate/import/complex-types/variant"
+                            ]
                         },
                         "data-operate/import/handling-messy-data",
-
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
                         "data-operate/import/group-commit-manual"
