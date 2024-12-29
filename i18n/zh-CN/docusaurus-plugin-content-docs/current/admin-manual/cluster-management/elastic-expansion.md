@@ -57,29 +57,29 @@ Doris 的 FE 节点分为以下三种角色，每一个 FE 节点都有全量的
 
 1. 启动 FE 节点：
 
-```bash
-fe/bin/start_fe.sh --helper <leader_fe_host>:<edit_log_port> --daemon
-```
-
-* 注册 FE 节点：
-
-  * 将节点注册为 Follower FE：
-
-    ```sql
-    ALTER SYSTEM ADD FOLLOWER "<follower_host>:<edit_log_port>";
-    ```
-
-  * 将节点注册为 Observer FE：
-
-    ```sql
-    ALTER SYSTEM ADD OBSERVER "<observer_host>:<edit_log_port>";
-    ```
-
-* 查看新添加的 FE 节点状态：
-
-  ```sql
-  show frontends;
+  ```bash
+  fe/bin/start_fe.sh --helper <leader_fe_host>:<edit_log_port> --daemon
   ```
+
+  * 注册 FE 节点：
+
+    * 将节点注册为 Follower FE：
+
+      ```sql
+      ALTER SYSTEM ADD FOLLOWER "<follower_host>:<edit_log_port>";
+      ```
+
+    * 将节点注册为 Observer FE：
+
+      ```sql
+      ALTER SYSTEM ADD OBSERVER "<observer_host>:<edit_log_port>";
+      ```
+
+  * 查看新添加的 FE 节点状态：
+
+    ```sql
+    show frontends;
+    ```
 
 ### 缩容 FE 集群
 
