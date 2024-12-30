@@ -957,7 +957,7 @@ inner join partsupp on l_partkey = ps_partkey AND l_suppkey = ps_suppkey;
 
 对于以下查询，`mv8_0_inner_mv` 和 `mv8_0` 都会成功进行改写，最终代价模型会选择 `mv8_0`。
 
-嵌套物化视图常用于特别复杂的查询，如果单独构建一个物化视图无法透明改写，可以将复杂的查询拆分，构建嵌套物化视图，透明改写会尝试使用嵌套物化视图改写，
+嵌套物化视图常用于数据建模和特别复杂的查询，如果单独构建一个物化视图无法透明改写，可以将复杂的查询拆分，构建嵌套物化视图，透明改写会尝试使用嵌套物化视图改写，
 如果改写成功，会节省计算，提高查询性能。
 
 ```sql
@@ -1188,7 +1188,7 @@ WHERE Name="inner_mtmv_75043";
 
 #### 查询物化视图的分区信息：
 
-**分区物化视图查看 SyncWithBaseTables 状态方法**
+分区物化视图查看 SyncWithBaseTables 状态方法
 
 运行 `show partitions from mv_name`查看查询使用的分区是否有效，返回结果如下：
 

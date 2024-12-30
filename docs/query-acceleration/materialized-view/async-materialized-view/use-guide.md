@@ -60,6 +60,129 @@ When some partitions of the materialized view become invalid, transparent rewrit
 
 If partitioned materialized views cannot be constructed, you can consider choosing fully refreshed materialized views.
 
+## Common Usage of Partitioned Materialized Views
+
+When the materialized view's base table data volume is large and the base table is a partitioned table, if the materialized view's definition SQL and partition fields meet the requirements of partition derivation, this scenario is suitable for building partitioned materialized views. For detailed requirements of partition derivation, refer to [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmethod) and [Async Materialized View FAQ Building Question 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12-error-when-building-partitioned-materialized-view).
+
+The materialized view's partitions are created following the base table's partition mapping, generally having a 1:1 or 1:n relationship with the base table's partitions.
+
+- If the base table's partitions undergo data changes, such as adding partitions or deleting partitions, the corresponding partitions in the materialized view will also become invalid. Invalid partitions cannot be used for transparent rewriting but can be directly queried. When transparent rewriting discovers that the materialized view's partition data is invalid, the invalid partitions will be handled by joining with the base table to respond to queries.
+
+  For commands to check materialized view partition status, see viewing materialized view status, mainly using the `show partitions from mv_name` command.
+
+- If non-partitioned tables referenced by the materialized view undergo data changes, it will trigger all partitions of the materialized view to become invalid, preventing the materialized view from being used for transparent rewriting. You need to refresh all partition data of the materialized view using the command `REFRESH MATERIALIZED VIEW mv1 AUTO;`. This command will attempt to refresh all partitions of the materialized view where data has changed.
+
+  Therefore, it's generally recommended to place frequently changing data in partitioned tables referenced by the partitioned materialized view, and place infrequently changing dimension tables in non-referenced partition table positions.
+- If non-partitioned tables referenced by the materialized view undergo data changes, and the non-partitioned table data is only being added without modifications, you can specify the attribute `excluded_trigger_tables = 'non_partition_table_name1,non_partition_table_name2'` when creating the materialized view. This way, data changes in non-partitioned tables won't invalidate all partitions of the materialized view, and the next refresh will only refresh the invalid partitions of the materialized view corresponding to the partition table.
+
+Transparent rewriting of partitioned materialized views is at the partition granularity. Even if some partitions of the materialized view become invalid, the materialized view can still be used for transparent rewriting. However, if only one partition is queried and that partition's data in the materialized view is invalid, then the materialized view cannot be used for transparent rewriting.
+
+For example:
+```sql
+CREATE TABLE IF NOT EXISTS lineitem (
+    l_orderkey INTEGER NOT NULL, 
+    l_partkey INTEGER NOT NULL, 
+    l_suppkey INTEGER NOT NULL, 
+    l_linenumber INTEGER NOT NULL, 
+    l_ordertime DATETIME NOT NULL, 
+    l_quantity DECIMALV3(15, 2) NOT NULL, 
+    l_extendedprice DECIMALV3(15, 2) NOT NULL, 
+    l_discount DECIMALV3(15, 2) NOT NULL, 
+    l_tax DECIMALV3(15, 2) NOT NULL, 
+    l_returnflag CHAR(1) NOT NULL, 
+    l_linestatus CHAR(1) NOT NULL, 
+    l_shipdate DATE NOT NULL, 
+    l_commitdate DATE NOT NULL, 
+    l_receiptdate DATE NOT NULL, 
+    l_shipinstruct CHAR(25) NOT NULL, 
+    l_shipmode CHAR(10) NOT NULL, 
+    l_comment VARCHAR(44) NOT NULL
+  ) DUPLICATE KEY(
+    l_orderkey, l_partkey, l_suppkey, 
+    l_linenumber
+  ) PARTITION BY RANGE(l_ordertime) (
+    FROM 
+      ('2024-05-01') TO ('2024-06-30') INTERVAL 1 DAY
+  )
+DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3;
+
+INSERT INTO lineitem VALUES      
+(1, 2, 3, 4, '2024-05-01 01:45:05', 5.5, 6.5, 0.1, 8.5, 'o', 'k', '2024-05-01', '2024-05-01', '2024-05-01', 'a', 'b', 'yyyyyyyyy'),    
+(1, 2, 3, 4, '2024-05-15 02:35:05', 5.5, 6.5, 0.15, 8.5, 'o', 'k', '2024-05-15', '2024-05-15', '2024-05-15', 'a', 'b', 'yyyyyyyyy'),     
+(2, 2, 3, 5, '2024-05-25 08:30:06', 5.5, 6.5, 0.2, 8.5, 'o', 'k', '2024-05-25', '2024-05-25', '2024-05-25', 'a', 'b', 'yyyyyyyyy'),     
+(3, 4, 3, 6, '2024-06-02 09:25:07', 5.5, 6.5, 0.3, 8.5, 'o', 'k', '2024-06-02', '2024-06-02', '2024-06-02', 'a', 'b', 'yyyyyyyyy'),     
+(4, 4, 3, 7, '2024-06-15 13:20:09', 5.5, 6.5, 0, 8.5, 'o', 'k', '2024-06-15', '2024-06-15', '2024-06-15', 'a', 'b', 'yyyyyyyyy'),     
+(5, 5, 6, 8, '2024-06-25 15:15:36', 5.5, 6.5, 0.12, 8.5, 'o', 'k', '2024-06-25', '2024-06-25', '2024-06-25', 'a', 'b', 'yyyyyyyyy'),     
+(5, 5, 6, 9, '2024-06-29 21:10:52', 5.5, 6.5, 0.1, 8.5, 'o', 'k', '2024-06-30', '2024-06-30', '2024-06-30', 'a', 'b', 'yyyyyyyyy'),     
+(5, 6, 5, 10, '2024-06-03 22:05:50', 7.5, 8.5, 0.1, 10.5, 'k', 'o', '2024-06-03', '2024-06-03', '2024-06-03', 'c', 'd', 'xxxxxxxxx');     
+  
+CREATE TABLE IF NOT EXISTS partsupp (
+    ps_partkey INTEGER NOT NULL, 
+    ps_suppkey INTEGER NOT NULL, 
+    ps_availqty INTEGER NOT NULL, 
+    ps_supplycost DECIMALV3(15, 2) NOT NULL, 
+    ps_comment VARCHAR(199) NOT NULL
+  )
+DUPLICATE KEY(ps_partkey, ps_suppkey)
+DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3;
+
+
+INSERT INTO partsupp VALUES     
+(2, 3, 9, 10.01, 'supply1'),     
+(4, 3, 9, 10.01, 'supply2'),     
+(5, 6, 9, 10.01, 'supply3'),     
+(6, 5, 10, 11.01, 'supply4');
+```
+
+In this example, the o_ordertime field in the orders table is the partition field, with type DATETIME, partitioned by day.
+The main query is based on a "day" granularity:
+
+```sql
+SELECT 
+  l_linestatus, 
+  sum(
+    l_extendedprice * (1 - l_discount)
+  ) AS revenue, 
+  ps_partkey 
+FROM 
+  lineitem 
+  LEFT JOIN partsupp ON l_partkey = ps_partkey 
+  and l_suppkey = ps_suppkey 
+WHERE 
+  date_trunc(l_ordertime, 'day') <= DATE '2024-05-25' 
+  AND date_trunc(l_ordertime, 'day') >= DATE '2024-05-05' 
+GROUP BY 
+  l_linestatus, 
+  ps_partkey;
+```
+
+To avoid refreshing too many partitions each time in the materialized view, the partition granularity can be consistent with the base table orders, also partitioning by "day".
+
+The materialized view's definition SQL can use "day" granularity and aggregate data by "day":
+
+```sql
+CREATE MATERIALIZED VIEW rollup_partition_mv 
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL 
+partition by(order_date) 
+DISTRIBUTED BY RANDOM BUCKETS 2 
+AS 
+SELECT 
+  l_linestatus, 
+  sum(
+    l_extendedprice * (1 - l_discount)
+  ) AS revenue, 
+  ps_partkey, 
+  date_trunc(l_ordertime, 'day') as order_date 
+FROM 
+  lineitem 
+  LEFT JOIN partsupp ON l_partkey = ps_partkey 
+  and l_suppkey = ps_suppkey 
+GROUP BY 
+  l_linestatus, 
+  ps_partkey, 
+  date_trunc(l_ordertime, 'day');
+```
+
 ## How to Use Materialized Views to Accelerate Queries
 
 To use materialized views for query acceleration, first check the profile file to find the operation that consumes the most time in a query, which usually appears in Join, Aggregate, Filter, or Calculated Expressions.
@@ -166,23 +289,6 @@ Note that the materialized view should have fewer Filters than those appearing i
 Taking examples like case when and string processing functions, these expression calculations are very performance-intensive. If these can be pre-calculated in the materialized view, using the pre-calculated materialized view through transparent rewriting can improve query performance.
 
 It is recommended that the number of columns in the materialized view should not be too many. If a query uses multiple fields, you should build corresponding materialized views for different columns based on the initial SQL pattern grouping, avoiding too many columns in a single materialized view.
-
-## Common Usage of Partitioned Materialized Views
-
-When the materialized view's base table data volume is large and the base table is a partitioned table, if the materialized view's definition SQL and partition fields meet the requirements of partition derivation, this scenario is suitable for building partitioned materialized views. For detailed requirements of partition derivation, refer to [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmethod) and [Async Materialized View FAQ Building Question 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12-error-when-building-partitioned-materialized-view).
-
-The materialized view's partitions are created following the base table's partition mapping, generally having a 1:1 or 1:n relationship with the base table's partitions.
-
-- If the base table's partitions undergo data changes, such as adding partitions or deleting partitions, the corresponding partitions in the materialized view will also become invalid. Invalid partitions cannot be used for transparent rewriting but can be directly queried. When transparent rewriting discovers that the materialized view's partition data is invalid, the invalid partitions will be handled by joining with the base table to respond to queries.
-
-    For commands to check materialized view partition status, see viewing materialized view status, mainly using the `show partitions from mv_name` command.
-
-- If non-partitioned tables referenced by the materialized view undergo data changes, it will trigger all partitions of the materialized view to become invalid, preventing the materialized view from being used for transparent rewriting. You need to refresh all partition data of the materialized view using the command `REFRESH MATERIALIZED VIEW mv1 AUTO;`. This command will attempt to refresh all partitions of the materialized view where data has changed.
-
-    Therefore, it's generally recommended to place frequently changing data in partitioned tables referenced by the partitioned materialized view, and place infrequently changing dimension tables in non-referenced partition table positions.
-- If non-partitioned tables referenced by the materialized view undergo data changes, and the non-partitioned table data is only being added without modifications, you can specify the attribute `excluded_trigger_tables = 'non_partition_table_name1,non_partition_table_name2'` when creating the materialized view. This way, data changes in non-partitioned tables won't invalidate all partitions of the materialized view, and the next refresh will only refresh the invalid partitions of the materialized view corresponding to the partition table.
-
-Transparent rewriting of partitioned materialized views is at the partition granularity. Even if some partitions of the materialized view become invalid, the materialized view can still be used for transparent rewriting. However, if only one partition is queried and that partition's data in the materialized view is invalid, then the materialized view cannot be used for transparent rewriting.
 
 ## Usage Scenarios
 

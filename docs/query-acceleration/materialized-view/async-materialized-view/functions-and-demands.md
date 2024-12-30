@@ -963,8 +963,10 @@ inner join partsupp on l_partkey = ps_partkey AND l_suppkey = ps_suppkey;
 
 For the following query, both `mv8_0_inner_mv` and `mv8_0` will be successfully rewritten, and the cost model will ultimately choose `mv8_0`.
 
-Nested materialized views are commonly used for particularly complex queries. If a single materialized view cannot be transparently rewritten, the complex query can be split up and nested materialized views can be constructed. Transparent rewriting will attempt to use nested materialized views for rewriting,
-and if successful, will save computation and improve query performance.
+Nested materialized views are commonly used in data modeling and particularly complex queries. If a single materialized 
+view cannot be transparently rewritten, you can split the complex query and build nested materialized views. 
+The transparent rewriting process will attempt to use nested materialized views for rewriting. If the rewrite is successful, 
+it will save computation and improve query performance.
 
 ```sql
 select lineitem.l_linenumber
@@ -1183,7 +1185,7 @@ For more details, see [JOBS](../../../sql-manual/sql-functions/table-valued-func
 
 #### Querying Materialized View Partition Information
 
-**Checking SyncWithBaseTables Status for Partitioned Materialized Views**
+Checking SyncWithBaseTables Status for Partitioned Materialized Views
 
 Run `show partitions from mv_name` to check if queried partitions are valid. Example output:
 
