@@ -27,144 +27,117 @@ under the License.
 
 
 
-Doris 可以很方便的扩容和缩容 FE、BE、Broker 实例。
+Doris 支持在线弹性扩容，通过动态添加或移除节点，用户无需中断服务即可满足业务增长需求或降低空闲资源的浪费。扩缩容 BE 节点时，不影响集群可用性，但会涉及到数据搬迁，建议在业务闲事进行扩缩容操作。
 
-## FE 扩容和缩容
+## 扩缩容 FE 集群
 
-可以通过将 FE 扩容至 3 个以上节点来实现 FE 的高可用。
+Doris 的 FE 节点分为以下三种角色，每一个 FE 节点都有全量的元数据信息：
 
-用户可以通过 MySQL 客户端登陆 Master FE。通过：
+* Master 节点：负责元数据的读写操作，当 Master 的元数据发生变化，会通过 BDB JE 协议同步到非 Master 几点中，统一集群中只能有一个 Master FE 节点；
 
-`SHOW PROC '/frontends';`
+* Follower 节点：负责元数据的读取操作，当 Master 节点发生故障时，Follower 节点会发起选主操作，选举出一个新的 Master 节点。在集群内，Master 与 Follower 节点总和建议为奇数个；
 
-来查看当前 FE 的节点情况。
+* Observer 节点：负责元数据的读取操作，不参与选主操作。用于扩展 FE 的读服务能力。
 
-也可以通过前端页面连接：```http://fe_hostname:fe_http_port/frontend``` 或者 ```http://fe_hostname:fe_http_port/system?path=//frontends``` 来查看 FE 节点的情况。
+一般情况下，每台 FE 节点可以负责 10-20 台 BE 节点的负载操作，3 个 FE 节点可以满足大部分的业务需求。
 
-以上方式，都需要 Doris 的 root 用户权限。
+### 扩容 FE 集群
 
-FE 节点的扩容和缩容过程，不影响当前系统运行。
+:::info 提示：
 
-### 增加 FE 节点
+在新添加 FE 节点时，需要注意以下事项：
 
-FE 分为 Follower 和 Observer 两种角色，其中 Follower 角色会选举出一个 Follower 节点作为 Master。默认一个集群，只能有一个 Master 状态的 Follower 角色，可以有多个 Follower 和 Observer，同时需保证 Follower 角色为奇数个。其中所有 Follower 角色组成一个选举组，如果 Master 状态的 Follower 宕机，则剩下的 Follower 会自动选出新的 Master，保证写入高可用。Observer 同步 Master 的数据，但是不参加选举。如果只部署一个 FE，则 FE 默认就是 Master。
+* 新添加的 FE http_port 要与原集群中所有 FE 节点相同；
 
-第一个启动的 FE 自动成为 Master。在此基础上，可以添加若干 Follower 和 Observer。
+* 如果添加 Follower 节点，同一级群内 Master 与 Follower 节点数量总和建议为奇数个
 
-**配置及启动 Follower 或 Observer**
+* 通过 `show frontends` 命令可以看到当前集群内节点的端口及角色信息
 
-这里 Follower 和 Observer 的配置同 Master 的配置。
-
-首先第一次启动时，需执行以下命令：
-
-`./bin/start_fe.sh --helper leader_fe_host:edit_log_port --daemon`
-
-其中 leader\_fe\_host 为 Master 所在节点 ip, edit\_log\_port 在 Master 的配置文件 fe.conf 中。--helper 参数仅在 follower 和 observer 第一次启动时才需要。
-
-**将 Follower 或 Observer 加入到集群**
-
-添加 Follower 或 Observer。使用 mysql-client 连接到已启动的 FE，并执行：
-
-`ALTER SYSTEM ADD FOLLOWER "follower_host:edit_log_port";`
-
-或
-
-`ALTER SYSTEM ADD OBSERVER "observer_host:edit_log_port";`
-
-其中 follower\_host 和 observer\_host 为 Follower 或 Observer 所在节点 ip，edit\_log\_port 在其配置文件 fe.conf 中。
-
-查看 Follower 或 Observer 运行状态。使用 mysql-client 连接到任一已启动的 FE，并执行：SHOW PROC '/frontends'; 可以查看当前已加入集群的 FE 及其对应角色。
-
-:::caution
-FE 扩容注意事项：
-
-1. Follower FE（包括 Master）的数量必须为奇数，建议最多部署 3 个组成高可用（HA）模式即可。
-
-2. 当 FE 处于高可用部署时（1 个 Master，2 个 Follower），我们建议通过增加 Observer FE 来扩展 FE 的读服务能力。当然也可以继续增加 Follower FE，但几乎是不必要的。
-
-3. 通常一个 FE 节点可以应对 10-20 台 BE 节点。建议总的 FE 节点数量在 10 个以下。而通常 3 个即可满足绝大部分需求。
-
-4. helper 不能指向 FE 自身，必须指向一个或多个已存在并且正常运行中的 Master/Follower FE。
 :::
 
-### 删除 FE 节点
+1. 启动 FE 节点：
 
-使用以下命令删除对应的 FE 节点：
+  ```bash
+  fe/bin/start_fe.sh --helper <leader_fe_host>:<edit_log_port> --daemon
+  ```
 
-```ALTER SYSTEM DROP FOLLOWER[OBSERVER] "fe_host:edit_log_port";```
+  * 注册 FE 节点：
 
-:::caution
-FE 缩容注意事项：
+    * 将节点注册为 Follower FE：
 
-1. 删除 Follower FE 时，确保最终剩余的 Follower（包括 Master）节点为奇数。
-:::
+      ```sql
+      ALTER SYSTEM ADD FOLLOWER "<follower_host>:<edit_log_port>";
+      ```
 
-## BE 扩容和缩容
+    * 将节点注册为 Observer FE：
 
-用户可以通过 mysql-client 登陆 Master FE。通过：
+      ```sql
+      ALTER SYSTEM ADD OBSERVER "<observer_host>:<edit_log_port>";
+      ```
 
-```SHOW PROC '/backends';```
+  * 查看新添加的 FE 节点状态：
 
-来查看当前 BE 的节点情况。
+    ```sql
+    show frontends;
+    ```
 
-也可以通过前端页面连接：```http://fe_hostname:fe_http_port/backend``` 或者 ```http://fe_hostname:fe_http_port/system?path=//backends``` 来查看 BE 节点的情况。
+### 缩容 FE 集群
 
-以上方式，都需要 Doris 的 root 用户权限。
+在缩容 FE 节点时，也要保证最终集群内 Master 与 Follower 节点总和为奇数个，通过以下命令可以缩容节点：
 
-BE 节点的扩容和缩容过程，不影响当前系统运行以及正在执行的任务，并且不会影响当前系统的性能。数据均衡会自动进行。根据集群现有数据量的大小，集群会在几个小时到 1 天不等的时间内，恢复到负载均衡的状态。集群负载情况，可以参见 [Tablet 负载均衡文档](../maint-monitor/tablet-repair-and-balance.md)。
+```sql
+ALTER SYSTEM DROP FOLLOWER[OBSERVER] "<fe_host>:<edit_log_port>";
+```
+在缩容后，需要手动删除 FE 目录下的文件。
 
-### 增加 BE 节点
+## 扩缩容 BE 集群
 
-BE 节点的增加方式同 **BE 部署** 一节中的方式，通过 `ALTER SYSTEM ADD BACKEND` 命令增加 BE 节点。
+### 扩容 BE 集群
 
-:::note
-BE 扩容注意事项：
+1. 启动 BE 进程：
 
-1. BE 扩容后，Doris 会自动根据负载情况，进行数据均衡，期间不影响使用。
-:::
+   ```sql
+   be/bin/start_be.sh
+   ```
 
-### 删除 BE 节点
+2. 注册 BE 节点：
 
-删除 BE 节点有两种方式：DROP 和 DECOMMISSION
+   ```sql
+   ALTER SYSTEM ADD backend '<be_host>:<be_heartbeat_service_port>';
+   ```
 
-DROP 语句如下：
+### 缩容 BE 集群
 
-```ALTER SYSTEM DROP BACKEND "be_host:be_heartbeat_service_port";```
+在缩容 BE 节点时，可以选择 DROP 或 DECOMMISSION 两种方案：
 
-**注意：DROP BACKEND 会直接删除该 BE，并且其上的数据将不能再恢复！！！所以我们强烈不推荐使用 DROP BACKEND 这种方式删除 BE 节点。当你使用这个语句时，会有对应的防误操作提示。**
+|          | DROP              | DECOMMISSION                                |
+| -------- | ----------------- | ------------------------------------------- |
+| 下线原理     | 直接下线节点，删除掉 BE 节点。 | 发起命令后，会尝试将该 BE 数据迁移到其他节点上，当迁移完成后，BE 节点自动下线。 |
+| 生效周期     | 执行后立即生效。          | 待数据搬迁完成后，删除命令生效。根据集群现有数据量，可能在小时调到 1 天不等时间内。 |
+| 一副本表处理方案 | 可能会造成数据丢失。        | 不会造成数据丢失。                                   |
+| 同时下线多个节点 | 可能会造成数据丢失。        | 不会造成数据丢失。                                   |
+| 生产推荐     | 不建议生产环境使用。        | 推荐在生产环境使用。                                  |
 
-DECOMMISSION 语句如下：
+* 通过以下命令，可以使用 DROP 方式删除 BE 节点：
 
-```ALTER SYSTEM DECOMMISSION BACKEND "be_host:be_heartbeat_service_port";```
+  ```sql
+  ALTER SYSTEM DROP backend "<be_host>:<be_heartbeat_service_port>";
+  ```
 
-:::note
+* 通过以下命令，可以使用 DECOMMISSION 方式删除 BE 节点：
+
+  ```sql
+  ALTER SYSTEM DECOMMISSION backend "<be_host>:<be_heartbeat_service_port>";
+  ```
+
 DECOMMISSION 命令说明：
 
-1. 该命令用于安全删除 BE 节点。命令下发后，Doris 会尝试将该 BE 上的数据向其他 BE 节点迁移，当所有数据都迁移完成后，Doris 会自动删除该节点。
+- DECOMMISSION 是一个异步操作。执行后，可以通过 SHOW backends; 看到该 BE 节点的 SystemDecommissioned 状态为 true。表示该节点正在进行下线；
 
-2. 该命令是一个异步操作。执行后，可以通过 ```SHOW PROC '/backends';``` 看到该 BE 节点的 `SystemDecommissioned` 状态为 true。表示该节点正在进行下线。
+- DECOMMISSION 命令可能会执行失败，如剩余 BE 存储空间不足以容纳下线 BE 上的数据，或者剩余机器数量不满足最小副本数时，该命令都无法完成，并且 BE 会一直处于 SystemDecommissioned 为 true 的状态；
 
-3. 该命令**不一定执行成功**。比如剩余 BE 存储空间不足以容纳下线 BE 上的数据，或者剩余机器数量不满足最小副本数时，该命令都无法完成，并且 BE 会一直处于 `SystemDecommissioned` 为 true 的状态。
+- DECOMMISSION 的进度，可以通过 SHOW PROC '/backends'; 中的 TabletNum 查看，如果正在进行，TabletNum 将不断减少；
 
-4. DECOMMISSION 的进度，可以通过 ```SHOW PROC '/backends';``` 中的 TabletNum 查看，如果正在进行，TabletNum 将不断减少。
+- 可以通过 CANCEL DECOMMISSION BACKEND "be_host:be_heartbeat_service_port"; 命令取消。取消后，该 BE 上的数据将维持当前剩余的数据量。后续 Doris 重新进行负载均衡；
 
-5. 该操作可以通过： 
-	
-  ```CANCEL DECOMMISSION BACKEND "be_host:be_heartbeat_service_port";```  
-
-  命令取消。取消后，该 BE 上的数据将维持当前剩余的数据量。后续 Doris 重新进行负载均衡
-:::
-
-**对于多租户部署环境下，BE 节点的扩容和缩容，请参阅 [多租户设计文档](../../../version-3.0/admin-manual/workload-management/resource-group)。**
-
-## Broker 扩容缩容
-
-Broker 实例的数量没有硬性要求。通常每台物理机部署一个即可。Broker 的添加和删除可以通过以下命令完成：
-
-```ALTER SYSTEM ADD BROKER broker_name "broker_host:broker_ipc_port";```
-```ALTER SYSTEM DROP BROKER broker_name "broker_host:broker_ipc_port";```
-```ALTER SYSTEM DROP ALL BROKER broker_name;```
-
-Broker 是无状态的进程，可以随意启停。当然，停止后，正在其上运行的作业会失败，重试即可。
-
-
+- 可以调整 balance_slot_num_per_path 参数调整数据搬迁速率。

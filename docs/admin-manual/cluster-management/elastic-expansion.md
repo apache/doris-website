@@ -41,7 +41,7 @@ Typically, each FE node can handle the load operations of 10-20 BE nodes. A conf
 
 ### Scale the FE out
 
-::: info Note:
+:::info Note:
 
 When adding a new FE node, please pay attention to the following:
 
@@ -50,8 +50,6 @@ When adding a new FE node, please pay attention to the following:
 * If adding a Follower node, it is recommended that the total number of Master and Follower nodes in the cluster be an odd number.
 
 * You can view the ports and roles of the current cluster nodes using the `show frontends` command.
-
-
 :::
 
 1. Start FE Node:
