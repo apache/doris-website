@@ -3,6 +3,7 @@ const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
 const VERSIONS = require('./versions.json');
+const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const lightCodeTheme = themes.dracula;
 
 const logoImg = 'https://cdnd.selectdb.com/images/logo.svg';
@@ -161,6 +162,7 @@ const config = {
                     // },
                     showLastUpdateAuthor: false,
                     showLastUpdateTime: false,
+                    // remarkPlugins: [markdownBoldPlugin],
                 },
                 blog: {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
