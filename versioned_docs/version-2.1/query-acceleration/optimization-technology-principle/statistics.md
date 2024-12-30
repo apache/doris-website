@@ -28,7 +28,7 @@ Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabi
 
 ## Collection of Statistics
 
-Starting from the current version, Doris collects statistics at the column level for each table. The information collected includes:
+Doris enables the automatic sampling collection of internal tables by default. Therefore, in most cases, users don't need to pay attention to the collection of statistical information. Doris collects statistics at the column level for each table. The information collected includes:
 
 | Info of Statistics | Description                              |
 | ------------------ | ---------------------------------------- |
@@ -99,10 +99,10 @@ SET GLOBAL ENABLE_AUTO_ANALYZE = FALSE; // Disable automatic collection
 
 When enabled, a background thread periodically scans all tables in the `InternalCatalog` within the cluster. For tables requiring statistics collection, the system automatically creates and executes collection jobs without manual intervention.
 
-To avoid excessive resource usage for wide tables, tables with more than 100 columns are not automatically collected by default. Users can adjust this threshold by modifying the session variable `auto_analyze_table_width_threshold`:
+To avoid excessive resource usage for collection wide tables' statistics, tables with more than 300 columns are not automatically collected by default. Users can adjust this threshold by modifying the session variable `auto_analyze_table_width_threshold`:
 
 ```sql
-SET GLOBAL auto_analyze_table_width_threshold = 120;
+SET GLOBAL auto_analyze_table_width_threshold = 350;
 ```
 
 The default polling interval for automatic collection is 5 minutes (adjustable via the `auto_check_statistics_in_minutes` configuration in `fe.conf`). The first iteration starts 5 minutes after cluster startup. After all tables requiring collection are processed, the background thread sleeps for 5 minutes before starting the next iteration. Therefore, there is no guarantee that a table will have its statistics collected within 5 minutes, as the time to iterate through all tables can vary based on the number and size of tables.
@@ -111,7 +111,7 @@ When a table is polled, the system first determines if statistical collection is
 
 1. The table has columns without statistics.
 
-2. The table's health is below the threshold (default 60, adjustable via `table_stats_health_threshold`). Health indicates the percentage of data that has remained unchanged since the last statistics collection: 100 indicates no change; 0 indicates all changes; a health below 60 indicates significant deviation in current statistics, necessitating re-collection.
+2. The table's health is below the threshold (default 90, adjustable via `table_stats_health_threshold`). Health indicates the percentage of data that has remained unchanged since the last statistics collection: 100 indicates no change; 0 indicates all changes; a health below 90 indicates significant deviation in current statistics, necessitating re-collection.
 
 To reduce background job overhead and improve collection speed, automatic collection uses sampling by default, sampling 4,194,304 (`2^22`) rows. Users can adjust the sampling size by modifying `huge_table_default_sample_rows` for more accurate data distribution information.
 
@@ -143,37 +143,41 @@ By default, external tables do not collect statistics, but for Hive and Iceberg 
 
 **1. For Hive Tables:**
 
-The system first attempts to retrieve `numRows` or `totalSize` information from the Hive table's Parameters:
+Doris first attempts to retrieve `numRows` or `totalSize` information from the Hive table's Parameters:
 
 - If `numRows` is found, its value is used as the table's row count.
 
 - If `numRows` is not found but `totalSize` is available, the row count is estimated based on the table's schema and `totalSize`.
 
-- If neither `numRows` nor `totalSize` is available, the row count cannot be obtained by default. Users can enable row count estimation by setting the following variable (default is `false`):
+- If `totalSize` is also unavailable, by default, the system will estimate the number of rows based on the file size corresponding to the Hive table and its Schema. If there are concerns that obtaining the file size may consume excessive resources, this function can be disabled by setting the following variables.
 
   ```sql
-  SET GLOBAL enable_get_row_count_from_file_list = TRUE
+  SET GLOBAL enable_get_row_count_from_file_list = FALSE
   ```
-
-In versions after 2.1.5, the default value of this parameter changes to `true`, but it does not automatically update after upgrading from an older version. If needed, it can be manually changed. When enabled, the system estimates the row count based on the file sizes and schema of the Hive table. Due to the heavy operation of obtaining all file sizes, this feature is disabled by default to avoid excessive resource usage.
 
 **2. For Iceberg Tables:**
 
-The system calls the Iceberg snapshot API to retrieve `total-records` and `total-position-deletes` information to calculate the table's row count.
+Doris calls the Iceberg snapshot API to retrieve `total-records` and `total-position-deletes` information to calculate the table's row count.
 
-**3. For Other External Tables:**
+**3. For Paimon Tables:**
+
+Doris calls Paimon's scan API to obtain the number of rows contained in each Split and calculate the row count of the table by summing up the rows of the Splits.
+
+**4. For JDBC Tables:**
+
+Doris sends SQL of reading table statistics to remote database to get table row count. This can only be achieved when the remote database has collected the row count information of the table. Currently, Doris supports retrieving the row count of tables in MySQL, Oracle, Postgresql and SQLServer.
+
+**5. For Other External Tables:**
 
 Automatic row count acquisition and estimation are currently not supported.
 
-Users can view the estimated row count for external tables using the following command (see Section 2.4 for viewing table statistics):
+Users can view the estimated row count for external tables using the following command (see `Viewing Table Statistics Overview` for more detail):
 
 ```sql
 SHOW table stats table_name;
 ```
 
-- If `row_count` displays as `-1`, row count information could not be obtained.
-
-- If `row_count` displays as `0` but the table is not empty, users can execute the command multiple times to obtain the final result, as the operation retrieves values from a cache. If the cache is empty, the estimation logic for Hive and Iceberg tables is executed asynchronously. Before the estimation completes, `row_count` will display as `0`.
+- If `row_count` displays as `-1`, row count information could not be obtained or the table is empty.
 
 ## Statistics Job Management
 
@@ -386,8 +390,8 @@ DROP STATS table_name
 | auto_analyze_end_time               | End time for automatic statistics collection                 | 23:59:59                            |
 | enable_auto_analyze                 | Whether to enable automatic collection functionality         | TRUE                                |
 | huge_table_default_sample_rows      | Number of rows to sample for large tables                    | 4194304                             |
-| table_stats_health_threshold        | Value range 0-100, indicating the percentage of data updated since the last statistics collection (100 - table_stats_health_threshold)% at which statistics are considered outdated | 60                                  |
-| auto_analyze_table_width_threshold  | Controls the maximum table width for automatic statistics collection, tables exceeding this column count do not participate in automatic statistics collection | 100                                 |
+| table_stats_health_threshold        | Value range 0-100, indicating the percentage of data updated since the last statistics collection (100 - table_stats_health_threshold)% at which statistics are considered outdated | 90                                  |
+| auto_analyze_table_width_threshold  | Controls the maximum table width for automatic statistics collection, tables exceeding this column count do not participate in automatic statistics collection | 300                                 |
 | enable_get_row_count_from_file_list | Whether to estimate row counts for Hive tables based on file sizes | FALSE (TRUE by default after 2.1.5) |
 
 ### FE Configuration
@@ -463,7 +467,7 @@ Show variables like "auto_analyze_table_width_threshold"
 
 // If the value is less than the width of the table, you can modify it:
 
-Set global auto_analyze_table_width_threshold=200
+Set global auto_analyze_table_width_threshold=350
 ```
 
 If the number of columns does not exceed the threshold, execute `show auto analyze` to check if there are other collection tasks running (in the running state). Since automatic collection is executed serially by a single thread, the execution cycle may be long as it polls all databases and tables.
@@ -496,7 +500,7 @@ If any tablets are found to be abnormal, repair them first before re-collecting 
 
 The interval for automatic collection is uncertain and depends on the number and size of tables in the system. In urgent cases, manually execute an `analyze` operation on the table.
 
-If automatic collection is not triggered after importing large amounts of data, consider adjusting the `table_stats_health_threshold` parameter. Its default value is 60, meaning that automatic collection is triggered when more than 40% (100 - 60) of the table's data changes. You can increase this value, for example, to 80, so that statistics are recollected when more than 20% of the table's data changes.
+If automatic collection is not triggered after importing large amounts of data, consider adjusting the `table_stats_health_threshold` parameter. Its default value is 90, meaning that automatic collection is triggered when more than 10% (100 - 90) of the table's data changes. You can increase this value, for example, to 95, so that statistics are recollected when more than 5% of the table's data changes.
 
 ### Q6: How can I address excessive resource usage during automatic collection?
 
