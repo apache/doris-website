@@ -178,7 +178,7 @@ insert into aggstate select 3,sum_union(k2),group_concat_union(k3) from aggstate
 
 ![state-func-group-concat-state-result-2](/images/table-desigin/state-func-group-concat-state-result-2.png)
 
-可以通过查询
+查询结果如下：
 
 ```plain&#x20;text
 mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate;
