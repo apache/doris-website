@@ -181,7 +181,7 @@ COLUMNS TERMINATED BY ","
 FROM KAFKA (...);
 ```
 
-#### Query Results
+##### Query Results
 
 ```
 mysql> select * from example_table;
@@ -261,7 +261,7 @@ FROM KAFKA (...);
 
 The third column of the source file is named tmp_skip, which is a custom column name that does not exist in the table. It is ignored during loading and not written to the target table.
 
-#### Query Results
+##### Query Results
 
 ```
 mysql> select * from example_table;
@@ -346,7 +346,7 @@ Note:
 - If it is a nullable column, it will be filled with NULL.
 - If it is a non-nullable column without a default value, the load will fail.
 
-#### Query Results
+##### Query Results
 
 ```
 mysql> select * from example_table;
@@ -437,7 +437,7 @@ COLUMNS TERMINATED BY ","
 FROM KAFKA (...);
 ```
 
-#### Query Results
+##### Query Results
 
 ```
 mysql> select * from example_table;
@@ -512,7 +512,7 @@ COLUMNS TERMINATED BY ","
 FROM KAFKA (...);
 ```
 
-#### Query Results
+##### Query Results
 
 ```
 mysql> select * from example_table;
@@ -526,7 +526,7 @@ mysql> select * from example_table;
 +------+------+------+------+
 ```
 
-### Handling NULL Values in Source Files
+#### Handling NULL Values in Source Files
 
 Suppose the target table has four columns: k1, k2, k3, and k4. We want to transform the column values as follows:
 
@@ -535,7 +535,7 @@ Suppose the target table has four columns: k1, k2, k3, and k4. We want to transf
 - Column3 -> k3
 - Column4 -> k4
 
-#### Creating the Target Table
+##### Creating the Target Table
 
 ```sql
 CREATE TABLE example_table
@@ -550,7 +550,7 @@ DUPLICATE KEY(k1)
 DISTRIBUTED BY HASH(k1) BUCKETS 1;
 ```
 
-#### Loading Data
+##### Loading Data
 
 - Stream Load
 
@@ -588,7 +588,7 @@ COLUMNS TERMINATED BY ","
 FROM KAFKA (...);
 ```
 
-#### Query Results
+##### Query Results
 
 ```
 mysql> select * from example_table;
@@ -752,7 +752,7 @@ WHERE k4 > 1.2;
 FROM KAFKA (...);
 ```
 
-#### Query Results
+##### Query Results
 
 ```
 mysql> select * from example_table;
@@ -764,7 +764,7 @@ mysql> select * from example_table;
 +------+------+-----------+------+
 ```
 
-##### Filtering After Column Transformation
+#### Filtering After Column Transformation
 
 Suppose the target table has four columns: k1, k2, k3, and k4. We want to transform Column3 to area ID and filter out rows where the area ID is 3.
 
@@ -826,7 +826,7 @@ WHERE k3 != 3;
 FROM KAFKA (...);
 ```
 
-#### Query Results
+##### Query Results
 
 ```
 mysql> select * from example_table;
@@ -895,7 +895,7 @@ WHERE k1 is not null and k4 > 1.2
 FROM KAFKA (...);
 ```
 
-#### Query Results
+##### Query Results
 
 ```
 mysql> select * from example_table;
