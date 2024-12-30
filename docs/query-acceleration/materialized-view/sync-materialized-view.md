@@ -576,20 +576,19 @@ from
 
 ## FAQ
 
-If materialized views do not match queries as expected, check if the materialized view is still being built using:
 
+1. Why isn't the rewrite successful after creating a materialized view?
+
+If no matching data is found, it might be because the materialized view is still in the building process. In this case, you can use the following command to check the build status of the materialized view:
 ```sql
 show alter table materialized view from test_db;
 ```
 
-Wait until the status changes to `FINISHED` before expecting materialized views to be available.
+If the query result shows that the `status` field is not `FINISHED`, you need to wait until the status becomes `FINISHED` before the materialized view becomes available.
 
+2. When upgrading from 2.x to 3.0.0, why aren't the previous synchronous materialized views being hit?
 
-## Reference
+Starting from version 3.0.0, transparent rewriting of synchronous materialized views uses plan structure information by default. If you find that materialized views that previously worked in 2.x are not being hit in 3.0.0, you can disable the following switch (which is enabled by default):
 
-### 1. Introduction to materialized view related switches
-
-
-| Switch | Description |  
-| ------ | ------ |  
-| `SET enable_sync_mv_cost_based_rewrite = true;` | Determines whether to transparently rewrite synchronized materialized views based on structural information, with a default value of true. This property is supported from version 3.0.0 onwards. |
+```sql
+`SET enable_sync_mv_cost_based_rewrite = true;`
