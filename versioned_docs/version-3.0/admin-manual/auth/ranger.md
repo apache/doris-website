@@ -246,7 +246,7 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 #### Global Priv
 Equivalent to Doris' internal authorization statement `grant select_priv on *.*.* to user1`;
 - The global option can be found in the dropdown menu of the same level in the catalog
-- 输入框里只能输入 `*`
+- Only `*` can be entered in the input box
 
   ![global](/images/ranger/global.png)
 
