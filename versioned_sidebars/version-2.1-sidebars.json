@@ -164,6 +164,7 @@
                             "items": [
                                 "data-operate/import/data-source/local-file",
                                 "data-operate/import/data-source/kafka",
+                                "data-operate/import/data-source/flink",
                                 "data-operate/import/data-source/hdfs",
                                 "data-operate/import/data-source/amazon-s3",
                                 "data-operate/import/data-source/google-cloud-storage",
