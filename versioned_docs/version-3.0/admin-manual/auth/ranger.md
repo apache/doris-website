@@ -54,7 +54,7 @@ In version 2.1.0, Doris supports unified permission management by integrating Ap
 	
 3. Restart the Ranger service.
 
-4. Download [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-plugin/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
+4. Download [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-ranger-plugin-3.0/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
 
 5. Execute the following command to upload the definition file to the Ranger service:
 
