@@ -61,10 +61,6 @@ under the License.
 
 # 写时合并
 
-## 工作原理
-
-
-
 ## 创建写时合并表
 
 在建表时，使用 UNIQUE KEY 关键字可以指定主键表。通过显示开启 `enable_unique_key_merge_on_write` 属性可以指定写实合并模式。自 Doris 2.1 版本以后，默认开启读时合并：
@@ -86,10 +82,6 @@ PROPERTIES (
 ```
 
 # 读时合并
-
-## 工作原理
-
-
 
 ## 创建读时合并表
 
@@ -115,7 +107,7 @@ PROPERTIES (
 
 在明细表中，Key 列不仅会进行排序，还会基于 Key 列进行去重，插入数据后，新写入的数据会覆盖 Key 列相同的记录。
 
-![](images/diagram.png)
+![unique-key-model-insert](images/table-desigin/unique-key-model-insert.png)
 
 如在上例中，原表中有 4 行数据，在插入两行后，新插入的两行基于主键进行了更新操作：
 
