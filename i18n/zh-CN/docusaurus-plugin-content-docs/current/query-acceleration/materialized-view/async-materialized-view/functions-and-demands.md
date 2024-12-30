@@ -76,21 +76,21 @@ CREATE MATERIALIZED VIEW
 
 检测基表的分区数据自上次刷新后是否有变化，刷新数据变化的分区。
 
-    ```sql
-    REFRESH MATERIALIZED VIEW mvName AUTO;
-    ```
+```sql
+REFRESH MATERIALIZED VIEW mvName AUTO;
+```
 
 不校验基表的分区数据自上次刷新后是否有变化，直接刷新物化视图的所有分区。
 
-    ```sql
-    REFRESH MATERIALIZED VIEW mvName COMPLETE;
-    ```
+```sql
+REFRESH MATERIALIZED VIEW mvName COMPLETE;
+```
 
 只刷新指定的分区。
 
-    ```sql
-    REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
-    ```
+```sql
+REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
+```
 
 :::tip 提示
 `partitionName` 可以通过 `SHOW PARTITIONS FROM mvName` 获取。
@@ -104,22 +104,22 @@ CREATE MATERIALIZED VIEW
 如下，要求全量刷新 (`REFRESH COMPLETE`)，物化视图每 10 小时刷新一次，并且刷新物化视图的所有分区。
 
 
-    ```sql
-    CREATE MATERIALIZED VIEW mv_6
-    REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
-    AS
-    SELECT * FROM lineitem;
-    ```
+```sql
+CREATE MATERIALIZED VIEW mv_6
+REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
+AS
+SELECT * FROM lineitem;
+```
 
 如下，尽量增量刷新(`REFRESH AUTO`)，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区，物化视图每 10 小时刷新一次（从 2.1.3 版本开始能自动计算 Hive 需要刷新的分区）。
 
-    ```sql
-    CREATE MATERIALIZED VIEW mv_7
-    REFRESH AUTO ON SCHEDULE EVERY 10 hour
-    PARTITION by(l_shipdate)
-    AS
-    SELECT * FROM lineitem;
-    ```
+```sql
+CREATE MATERIALIZED VIEW mv_7
+REFRESH AUTO ON SCHEDULE EVERY 10 hour
+PARTITION by(l_shipdate)
+AS
+SELECT * FROM lineitem;
+```
 
 3. ON COMMIT 自动触发
 
@@ -133,9 +133,9 @@ CREATE MATERIALIZED VIEW
 
 ```sql
 CREATE MATERIALIZED VIEW mv_8
-    REFRESH AUTO ON COMMIT
-    PARTITION by(l_shipdate)
-    AS
+REFRESH AUTO ON COMMIT
+PARTITION by(l_shipdate)
+AS
 SELECT * FROM lineitem;
 ```
 
@@ -305,7 +305,7 @@ SELECT
   o_shippriority   
 FROM   
   orders   
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
 如下语句创建分区物化视图会失败，因为分区字段 `order_date_month` 使用了 `date_add()` 函数
@@ -322,7 +322,7 @@ SELECT
   o_shippriority   
 FROM   
   orders   
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
 #### 基表有多列分区
@@ -431,7 +431,7 @@ SELECT * FROM t1;
 
   假设基表的建表语句如下：
 
-    ```sql
+```sql
     CREATE TABLE `t1` (
     `k1` LARGEINT NOT NULL,
     `k2` DATE NOT NULL
@@ -445,29 +445,29 @@ SELECT * FROM t1;
     PARTITION p_20200201 VALUES [("2020-02-01"),("2020-02-02"))
     )
     DISTRIBUTED BY HASH(`k1`) BUCKETS 2;
-    ```
+```
 
   若物化视图的创建语句如下，则该物化视图将包含两个分区：`[("2020-01-01","2020-02-01")] `和` [("2020-02-01","2020-03-01")]`
 
-    ```sql
+```sql
     CREATE MATERIALIZED VIEW mv_3
     BUILD DEFERRED REFRESH AUTO ON MANUAL
     partition by (date_trunc(`k2`,'month'))
     DISTRIBUTED BY RANDOM BUCKETS 2
     AS
     SELECT * FROM t1;
-    ```
+```
 
   若物化视图的创建语句如下，则该物化视图将只包含一个分区：`[("2020-01-01","2021-01-01")]`
 
-    ```sql
+```sql
     CREATE MATERIALIZED VIEW mv_4
     BUILD DEFERRED REFRESH AUTO ON MANUAL
     partition by (date_trunc(`k2`,'year'))
     DISTRIBUTED BY RANDOM BUCKETS 2
     AS
     SELECT * FROM t1;
-    ```
+```
 
 此外，如果分区字段为字符串类型，可以通过设置物化视图的 `partition_date_format` 属性来指定日期格式，例如 `'%Y-%m-%d'`。
 
@@ -868,7 +868,7 @@ group by
 
 ```sql
 insert into lineitem values
-    (1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-21', '2023-10-21', '2023-10-21', 'a', 'b', 'yyyyyyyyy');
+(1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-21', '2023-10-21', '2023-10-21', 'a', 'b', 'yyyyyyyyy');
 ```
 
 **查询语句：**
