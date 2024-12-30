@@ -188,6 +188,21 @@
                             ]
                         },
                         "data-operate/import/load-data-format",
+			{
+                            "type": "category",
+                            "label": "Complex Data Types",
+                             "items": [
+                                 "data-operate/import/complex-types/array",
+                                 "data-operate/import/complex-types/map",
+                                 "data-operate/import/complex-types/struct",
+                                 "data-operate/import/complex-types/json",
+                                 "data-operate/import/complex-types/bitmap",
+                                 "data-operate/import/complex-types/hll",
+                                 "data-operate/import/complex-types/variant"
+                                ]
+                        },
+                        "data-operate/import/handling-messy-data",
+
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
                         "data-operate/import/group-commit-manual"
