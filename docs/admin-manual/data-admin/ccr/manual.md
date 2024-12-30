@@ -244,7 +244,7 @@ curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
 
 ## Syncer High Availability
 
-Syncer high availability relies on MySQL. If MySQL is used as backend storage, Syncer can discover other Syncers; if one crashes, others will take over its tasks.
+Syncer high availability relies on MySQL. If MySQL is used as backend storage, Syncer can discover other Syncers; if one crashes, others will take over its jobs.
 
 ## Usage Notes
 
@@ -270,16 +270,16 @@ The `is_being_synced` attribute should be fully controlled by Syncer to turn on 
     - `streaming_label_keep_max_second`: Same as above.
 - If it is a database synchronization and the source cluster has a large number of tablets, the resulting CCR job may be very large, requiring modifications to several FE configurations:
     - `max_backup_tablets_per_job`:
-        The upper limit of tablets involved in a single backup task; it needs to be adjusted based on the number of tablets (default value is 300,000; too many tablets may risk FE OOM, prioritize reducing the number of tablets).
+        The upper limit of tablets involved in a single backup job; it needs to be adjusted based on the number of tablets (default value is 300,000; too many tablets may risk FE OOM, prioritize reducing the number of tablets).
     - `thrift_max_message_size`:
         The maximum single RPC packet size allowed by the FE thrift server; the default is 100MB. If the number of tablets is too large, causing the snapshot info size to exceed 100MB, this limit needs to be adjusted, with a maximum of 2GB.
         - The snapshot info size can be found in the ccr syncer logs, with the keywords: `snapshot response meta size: %d, job info size: %d`; the snapshot info size is approximately meta size + job info size.
     - `fe_thrift_max_pkg_bytes`:
         Same as above, an additional parameter that needs to be adjusted in version 2.0, with a default value of 20MB.
-    - `restore_download_task_num_per_be`:
-        The upper limit of download tasks sent to each BE; the default is 3, which is too small for restore jobs and needs to be adjusted to 0 (i.e., disable this limit); this configuration is no longer needed starting from versions 2.1.8 and 3.0.4.
-    - `backup_upload_task_num_per_be`:
-        The upper limit of upload tasks sent to each BE; the default is 3, which is too small for backup jobs and needs to be adjusted to 0 (i.e., disable this limit); this configuration is no longer needed starting from versions 2.1.8 and 3.0.4.
+    - `restore_download_job_num_per_be`:
+        The upper limit of download jobs sent to each BE; the default is 3, which is too small for restore jobs and needs to be adjusted to 0 (i.e., disable this limit); this configuration is no longer needed starting from versions 2.1.8 and 3.0.4.
+    - `backup_upload_job_num_per_be`:
+        The upper limit of upload jobs sent to each BE; the default is 3, which is too small for backup jobs and needs to be adjusted to 0 (i.e., disable this limit); this configuration is no longer needed starting from versions 2.1.8 and 3.0.4.
     - In addition to the above FE configurations, if the CCR job's db type is MySQL, some MySQL configurations also need to be adjusted:
         - The MySQL server will limit the size of the data packets returned/inserted in a single select/insert. Increase the following configurations to relax this limit, for example, adjust to the upper limit of 1GB:
         ```
@@ -289,7 +289,7 @@ The `is_being_synced` attribute should be fully controlled by Syncer to turn on 
         - The MySQL client will also have this limit; in ccr syncer versions 2.1.6/2.0.15 and earlier, the upper limit is 128MB; later versions can adjust this through the parameter `--mysql_max_allowed_packet` (in bytes), with a default value of 1024MB.
         > Note: In versions 2.1.8 and 3.0.4 and later, ccr syncer no longer stores snapshot info in the database, so the default data packet size is sufficient.
 - Similarly, the BE side also needs to modify several configurations:
-    - `thrift_max_message_size`: The maximum single RPC packet size allowed by the BE thrift server; the default is 100MB. If the number of tablets is too large, causing the agent task size to exceed 100MB, this limit needs to be adjusted, with a maximum of 2GB.
+    - `thrift_max_message_size`: The maximum single RPC packet size allowed by the BE thrift server; the default is 100MB. If the number of tablets is too large, causing the agent job size to exceed 100MB, this limit needs to be adjusted, with a maximum of 2GB.
     - `be_thrift_max_pkg_bytes`: Same as above, only needs to be adjusted in version 2.0, with a default value of 20MB.
 - Even if the above configurations are modified, if the number of tablets continues to rise, the resulting snapshot size may exceed 2GB, which is the threshold for Doris FE edit log and RPC message size, causing synchronization to fail. Starting from versions 2.1.8 and 3.0.4, Doris can further increase the number of tablets supported for backup and recovery by compressing snapshots. This can be enabled through the following parameters:
     - `restore_job_compressed_serialization`: Enable compression for restore jobs (affects metadata compatibility, default is off).
@@ -300,11 +300,11 @@ The `is_being_synced` attribute should be fully controlled by Syncer to turn on 
 - Since backup does not currently support backing up tables with cooldown tablets, encountering this will cause synchronization to terminate, so it is necessary to check whether any tables have the `storage_policy` property set before creating the CCR job.
 ### Performance-Related Parameters
 - If the user's data volume is very large, the time required to complete backup and recovery may exceed one day (default value), so the following parameters need to be adjusted as needed:
-    - `backup_job_default_timeout_ms`: Timeout duration for backup/restore tasks; both source and target clusters' FE need to configure this.
+    - `backup_job_default_timeout_ms`: Timeout duration for backup/restore jobs; both source and target clusters' FE need to configure this.
     - The upstream modifies the binlog retention time: `ALTER DATABASE $db SET PROPERTIES ("binlog.ttl_seconds" = "xxxx")`.
 - Downstream BE download speed is slow:
     - `max_download_speed_kbps`: The download speed limit for a single download thread in a single downstream BE, default is 50MB/s.
-    - `download_worker_count`: The number of threads executing download tasks in the downstream; it should be adjusted based on the customer's machine type, maximizing without affecting normal read/write operations; if this parameter is adjusted, there is no need to adjust `max_download_speed_kbps`.
+    - `download_worker_count`: The number of threads executing download jobs in the downstream; it should be adjusted based on the customer's machine type, maximizing without affecting normal read/write operations; if this parameter is adjusted, there is no need to adjust `max_download_speed_kbps`.
         - For example, if the customer's machine network card provides a maximum bandwidth of 1GB, and the maximum allowed download thread utilizes 200MB of bandwidth, then without changing `max_download_speed_kbps`, `download_worker_count` should be configured to 4.
 - Limit the download speed of binlogs from the downstream BE:
     BE-side configuration parameter:

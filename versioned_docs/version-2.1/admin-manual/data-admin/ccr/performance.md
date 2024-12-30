@@ -43,7 +43,7 @@ The performance data in this document is based on the default configuration. If 
 ### Test Steps
 
 1. Create the library and table information for TPC-H 1T in the upstream cluster.
-2. Create a synchronization task for the TPC-H 1T database.
+2. Create a synchronization job for the TPC-H 1T database.
 3. Wait for the TPC-H 1T data import to complete and record the completion time.
 4. Wait for the downstream data synchronization to complete and record the completion time.
 
@@ -56,7 +56,7 @@ Incremental synchronization time difference: 33 seconds
 
 ### Test Steps
 1. Create the library and table information for TPC-H 1T in the upstream cluster and complete the data import, recording the completion time.
-2. Create a synchronization task for the TPC-H 1T database.
+2. Create a synchronization job for the TPC-H 1T database.
 3. Wait for the downstream data synchronization to complete and record the completion time.
 
 ### Test Conclusion
@@ -68,7 +68,7 @@ Full synchronization time difference: 6 minutes 1 second
 
 ### Test Steps
 1. Use Flink to import 100,000,000 records in the upstream.
-2. Create a synchronization task for the library and table.
+2. Create a synchronization job for the library and table.
 3. Observe the difference between the downstream synchronization completion time and the upstream import completion time at each stage (e.g., 1,000,000 records, 2,000,000 records, etc.).
 4. Record the last import completion time in the upstream.
 5. Record the downstream synchronization completion time.

@@ -59,7 +59,7 @@ sh stop_syncer.sh
 ALTER TABLE your_table_name ENABLE BINLOG SET ("binlog.enable" = "true");
 ```
 
-## Step 4. Initiate a synchronization task to Syncer
+## Step 4. Initiate a synchronization job to Syncer
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -85,14 +85,14 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://127.0.0.1:9190/create_ccr
 ```
 
-Explanation of the parameters for the synchronization task:
+Explanation of the parameters for the synchronization job:
 
 ```shell
-name: The name of the CCR synchronization task, must be unique
+name: The name of the CCR synchronization job, must be unique
 host, port: Correspond to the host and MySQL (JDBC) port of the cluster Master FE
 user, password: The identity used by Syncer to start transactions and pull data
 database, table:
 If synchronizing at the database level, fill in your_db_name, and leave your_table_name empty
 If synchronizing at the table level, fill in both your_db_name and your_table_name
-The name used to initiate the synchronization task can only be used once
+The name used to initiate the synchronization job can only be used once
 ```
