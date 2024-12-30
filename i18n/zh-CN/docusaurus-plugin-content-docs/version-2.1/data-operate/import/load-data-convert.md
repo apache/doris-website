@@ -173,7 +173,7 @@ COLUMNS(k1, k3, k2, k4),
 COLUMNS TERMINATED BY ","
 FROM KAFKA (...);
 ```
-#### 查询结果
+##### 查询结果
 ```
 mysql> select * from example_table;
 +------+-----------+------+------+
@@ -244,7 +244,7 @@ FROM KAFKA (...);
 
 源文件的第三列被命名为 tmp_skip，tmp_skip 为一个自定义的、表中不存在的列名，在导入过程中被忽略，不会写入目标表。
 
-#### 查询结果
+##### 查询结果
 ```
 mysql> select * from example_table;
 +------+------+------+
@@ -320,7 +320,7 @@ FROM KAFKA (...);
 - 如果是可空列（nullable），将填充 NULL 值
 - 如果是非空列且没有默认值，导入会失败
 
-#### 查询结果
+##### 查询结果
 ```
 mysql> select * from example_table;
 +------+-----------+------+------+------+
@@ -403,7 +403,7 @@ COLUMNS TERMINATED BY ","
 FROM KAFKA (...);
 ```
 
-#### 查询结果
+##### 查询结果
 ```
 mysql> select * from example_table;
 +------+-----------+-------+------+
@@ -470,7 +470,7 @@ COLUMNS(k1, k2, tmp_k3, k4, k3 = CASE tmp_k3 WHEN 'beijing' THEN 1 WHEN 'shangha
 COLUMNS TERMINATED BY ","
 FROM KAFKA (...);
 ```
-#### 查询结果
+##### 查询结果
 ```
 mysql> select * from example_table;
 +------+------+------+------+
@@ -483,7 +483,7 @@ mysql> select * from example_table;
 +------+------+------+------+
 ```
 
-### 源文件中的 NULL 值处理
+#### 源文件中的 NULL 值处理
 
 假设表中有 k1,k2,k3,k4 4 列。在对地区 id 转换的同时，我们也希望对于源数据中 k1 列的 null 值转换成 0 导入：
 
@@ -492,7 +492,7 @@ mysql> select * from example_table;
 列3                      -> k3
 列4                      -> k4
 
-#### 创建示例表
+##### 创建示例表
 ```sql
 CREATE TABLE example_table
 (
@@ -506,7 +506,7 @@ DUPLICATE KEY(k1)
 DISTRIBUTED BY HASH(k1) BUCKETS 1;
 ```
 
-#### 导入数据
+##### 导入数据
 - Stream Load
 ```sql
 curl --location-trusted -u user:passwd \
@@ -539,7 +539,7 @@ COLUMNS(k1, tmp_k2, tmp_k3, k4, k2 = ifnull(tmp_k2, 0), k3 = CASE tmp_k3 WHEN 'b
 COLUMNS TERMINATED BY ","
 FROM KAFKA (...);
 ``` 
-#### 查询结果
+##### 查询结果
 ```
 mysql> select * from example_table;
 +------+------+------+------+
@@ -693,7 +693,7 @@ WHERE k4 > 1.2;
 FROM KAFKA (...)
 ```
 
-#### 查询结果
+##### 查询结果
 ```
 mysql> select * from example_table;
 +------+------+-----------+------+
@@ -704,7 +704,7 @@ mysql> select * from example_table;
 +------+------+-----------+------+
 ```
 
-##### 对经过列转换的数据进行过滤
+#### 对经过列转换的数据进行过滤
 假设表中有 k1,k2,k3,k4 4 列。在列转换示例中，我们将省份名称转换成了 id。这里我们想过滤掉 id 为 3 的数据。
 
 ##### 创建示例表
@@ -760,7 +760,7 @@ WHERE k3 != 3;
 FROM KAFKA (...)
 ```
 
-#### 查询结果
+##### 查询结果
 ```
 mysql> select * from example_table;
 +------+------+------+------+
@@ -822,7 +822,7 @@ WHERE k1 is not null and k4 > 1.2
 FROM KAFKA (...);
 ```
 
-#### 查询结果
+##### 查询结果
 ```
 mysql> select * from example_table;
 +------+------+-----------+------+
