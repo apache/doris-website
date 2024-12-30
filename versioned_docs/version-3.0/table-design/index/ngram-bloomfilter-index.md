@@ -27,7 +27,7 @@ under the License.
 
 ## Indexing Principles
 
-The NGram BloomFilter index, similar to the BloomFilter index, is a skip list index based on BloomFilter. 
+The NGram BloomFilter index, similar to the BloomFilter index, is a skip index based on BloomFilter. 
 
 Unlike the BloomFilter index, the NGram BloomFilter index is used to accelerate text LIKE queries. Instead of storing the original text values, it tokenizes the text using NGram and stores each token in the BloomFilter. For LIKE queries, the pattern in LIKE '%pattern%' is also tokenized using NGram. Each token is checked against the BloomFilter, and if any token is not found, the corresponding data block does not meet the LIKE condition and can be skipped, reducing IO and accelerating the query.
 
