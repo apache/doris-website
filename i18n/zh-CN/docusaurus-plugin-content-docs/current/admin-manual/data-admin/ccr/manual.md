@@ -57,6 +57,15 @@ Syncer 同步时需要用户提供上下游的账户，该账户需要拥有下�
 Doris 版本
 - 2.1.5/2.0.14：如果从之前的版本升级到这两个版本，且用户有 drop partition 操作，那么会在升级、重启时碰到 NPE，原因是这个版本引入了一个新字段，旧版本没有所以默认值为 null。这个问题在 2.1.6/2.0.15 修复。
 
+### 配置和属性要求
+
+**属性要求**
+- `light_schema_change`：Syncer 要求上下游表都设置 `light_schema_table` 属性，否则会导致数据同步出错。注意：最新版本的 doris 在建表时会默认设置上 `light_schema_change` 属性，如果是使用老版本的 doris 或者从老版本升级上来的，需要在开启 Syncer 同步前，给存量 OLAP 表都设置上 `light_schema_change` 属性。
+
+**配置要求**
+- `restore_reset_index_id`：如果要同步的表中带有 inverted index，那么必须在目标集群上配置为 `false`。
+- `ignore_backup_tmp_partitions`：如果上游有创建 tmp partition，那么 doris 会禁止做 backup，因此 Syncer 同步会中断；通过在 FE 设置 `ignore_backup_tmp_partitions=true` 可以避免这个问题。
+
 ## 启动 Syncer
 
 根据配置选项启动 Syncer，并且在默认或指定路径下保存一个 pid 文件，pid 文件的命名方式为`host_port.pid`。
@@ -471,11 +480,6 @@ CCR 功能在建立同步时，会在目标集群中创建源集群同步范围�
 在未出现异常时，`is_being_synced`属性应该完全由 Syncer 控制开启或关闭，用户不要自行修改该属性。
 
 :::
-
-### 建议打开的配置
-
-- `restore_reset_index_id`：如果要同步的表中带有 inverted index，那么必须在目标集群上配置为 `false`。
-- `ignore_backup_tmp_partitions`：如果上游有创建 tmp partition，那么 doris 会禁止做 backup，因此 ccr-syncer 同步会中断；通过在 FE 设置 `ignore_backup_tmp_partitions=true` 可以避免这个问题。
 
 ### 注意事项
 

@@ -57,6 +57,15 @@ Minimum version required: v2.0.15
 Doris Versions:
 - 2.1.5/2.0.14: If upgrading from previous versions to these two versions, and the user has a drop partition operation, an NPE may occur during upgrade or restart. This is due to a new field introduced in these versions, which older versions don't have, causing a default value of null. This issue was fixed in 2.1.6/2.0.15.
 
+### Configuration and Attribute Requirements
+
+**Attribute Requirements**
+- `light_schema_change`: The Syncer requires both upstream and downstream tables to have the `light_schema_table` attribute set, otherwise, data synchronization will fail. Note: The latest version of Doris automatically sets the `light_schema_change` attribute when creating tables. If using an older version of Doris or upgrading from an older version, you need to manually set the `light_schema_change` attribute for existing OLAP tables before enabling Syncer synchronization.
+
+**Configuration Requirements**
+- `restore_reset_index_id`: If the table to be synchronized has an inverted index, this must be set to `false` on the target cluster.
+- `ignore_backup_tmp_partitions`: If temporary partitions are created upstream, Doris will prevent backups, causing the Syncer synchronization to fail. Setting `ignore_backup_tmp_partitions=true` in FE can avoid this issue.
+
 ## Start Syncer
 
 Start Syncer according to the configurations and save a pid file in the default or specified path. The name of the pid file should follow `host_port.pid`.
@@ -458,11 +467,6 @@ The erasure of invalid attributes needs no further explanation, but the disablin
 Under normal circumstances, the `is_being_synced` attribute should be entirely controlled by Syncer, and users should not modify this attribute manually.
 
 :::
-
-### Recommended Configuration Settings
-
-- `restore_reset_index_id`: If the table to be synced contains an inverted index, this must be set to `false` on the target cluster.
-- `ignore_backup_tmp_partitions`: If the upstream creates temporary partitions, Doris will prohibit performing backups, causing the ccr-syncer synchronization to break. This can be avoided by setting `ignore_backup_tmp_partitions=true` in the FE configuration.
 
 ### Notes
 
