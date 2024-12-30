@@ -40,12 +40,12 @@ CCR is suitable for the following common scenarios:
 
 - **Cluster Migration**: When relocating a Doris cluster or replacing equipment, using CCR can synchronize data from the old cluster to the new cluster, ensuring data consistency during the migration process.
 
-### Job Categories
+### Task Categories
 
-CCR supports two types of jobs:
+CCR supports two types of tasks:
 
-- **Database-Level jobs**: Synchronize data for the entire database.
-- **Table-Level jobs**: Only synchronize data for specified tables. Note that table-level synchronization does not support renaming or replacing tables. Each database in Doris can only run one snapshot job at a time, so full synchronization jobs for table-level synchronization need to be queued.
+- **Database-Level Tasks**: Synchronize data for the entire database.
+- **Table-Level Tasks**: Only synchronize data for specified tables. Note that table-level synchronization does not support renaming or replacing tables. Each database in Doris can only run one snapshot task at a time, so full synchronization tasks for table-level synchronization need to be queued.
 
 ## Principles and Architecture
 
@@ -55,8 +55,8 @@ CCR supports two types of jobs:
 - **Target Cluster**: The target cluster for cross-cluster synchronization.
 - **binlog**: The change log of the source cluster, which includes schema and data changes.
 - **Syncer**: A lightweight process responsible for synchronizing data.
-- **Upstream**: Refers to the upstream database in database-level jobs and the upstream table in table-level jobs.
-- **Downstream**: Refers to the downstream database in database-level jobs and the downstream table in table-level jobs.
+- **Upstream**: Refers to the upstream database in database-level tasks and the upstream table in table-level tasks.
+- **Downstream**: Refers to the downstream database in database-level tasks and the downstream table in table-level tasks.
 
 ### Architecture Description
 
@@ -67,13 +67,13 @@ CCR mainly relies on a lightweight process: `Syncer`. The `Syncer` is responsibl
 ### Principles
 
 1. **Full Synchronization**:
-   - CCR jobs will first perform full synchronization, copying the upstream data completely to the downstream.
+   - CCR tasks will first perform full synchronization, copying the upstream data completely to the downstream.
 
 2. **Incremental Synchronization**:
-   - After full synchronization is complete, CCR jobs will continue with incremental synchronization to maintain data consistency between upstream and downstream.
+   - After full synchronization is complete, CCR tasks will continue with incremental synchronization to maintain data consistency between upstream and downstream.
 
 3. **Restarting Full Synchronization**:
-   - When encountering DDL operations that do not support incremental synchronization, CCR jobs will restart full synchronization. For specific DDL operations that do not support incremental synchronization, please refer to [Feature Details](./feature.md).
+   - When encountering DDL operations that do not support incremental synchronization, CCR tasks will restart full synchronization. For specific DDL operations that do not support incremental synchronization, please refer to [Feature Details](./feature.md).
    - If the upstream binlog is interrupted due to expiration or other reasons, incremental synchronization will stop and restart full synchronization.
 
 4. **Restarting Full Synchronization**:
@@ -87,7 +87,7 @@ CCR supports four synchronization methods:
 
 | Synchronization Method | Principle                                               | Trigger Timing                                           |
 |------------------------|--------------------------------------------------------|---------------------------------------------------------|
-| **Full Sync**          | The upstream performs a full backup, and the downstream performs a restore. DB-level jobs trigger DB backups, and table-level jobs trigger table backups. | First synchronization or triggered by specific operations. For trigger conditions, please refer to [Feature Details](./feature.md). |
+| **Full Sync**          | The upstream performs a full backup, and the downstream performs a restore. DB-level tasks trigger DB backups, and table-level tasks trigger table backups. | First synchronization or triggered by specific operations. For trigger conditions, please refer to [Feature Details](./feature.md). |
 | **Partial Sync**       | The upstream performs table or partition-level backups, and the downstream performs table or partition-level restores. | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
 | **TXN**                | Incremental data synchronization, starting synchronization after the upstream commits. | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
 | **SQL**                | Replaying upstream SQL operations on the downstream.   | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
