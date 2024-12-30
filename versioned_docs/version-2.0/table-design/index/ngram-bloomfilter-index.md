@@ -43,7 +43,7 @@ The NGram BloomFilter index can only accelerate string LIKE queries, and the num
 
 :::
 
-## Syntax
+## Managing Indexes
 
 ### Creating an NGram BloomFilter Index
 
@@ -67,8 +67,14 @@ Explanation of the syntax:
 
 ### Viewing NGram BloomFilter Index
 
+-- Syntax 1: The INDEX section in the table schema with USING NGRAM_BF indicates an inverted index
 ```sql
-SHOW CREATE TABLE table_ngrambf;
+SHOW CREATE TABLE table_name;
+```
+
+-- Syntax 2: IndexType as NGRAM_BF indicates an inverted index
+```sql
+SHOW INDEX FROM idx_name;
 ```
 
 ### Deleting an NGram BloomFilter Index
@@ -84,6 +90,15 @@ CREATE INDEX idx_column_name2(column_name2) ON table_ngrambf USING NGRAM_BF PROP
 
 ALTER TABLE table_ngrambf ADD INDEX idx_column_name2(column_name2) USING NGRAM_BF PROPERTIES("gram_size"="3", "bf_size"="1024") COMMENT 'username ngram_bf index';
 ```
+
+## Using Indexes
+
+NGram BloomFilter index is used to accelerate LIKE queries, for example:
+SELECT count() FROM table1 WHERE message LIKE '%error%';
+
+The acceleration effect of the BloomFilter index (including NGram) can be analyzed using the following metrics in the Query Profile:
+- RowsBloomFilterFiltered: The number of rows filtered by the BloomFilter index, which can be compared with other Rows values to analyze the filtering effect of the index.
+- BlockConditionsFilteredBloomFilterTime: The time consumed by the BloomFilter inverted index.
 
 ## Usage Example
 

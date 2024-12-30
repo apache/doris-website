@@ -63,7 +63,7 @@ To check the effect of a BloomFilter index on a query, you can analyze relevant 
 
 :::
 
-## Syntax
+## Managing Indexes
 
 ### Creating a BloomFilter Index When Creating a Table
 
@@ -97,11 +97,17 @@ ALTER TABLE table_name SET ("bloom_filter_columns" = "column_name1,column_name2,
 ALTER TABLE table_name SET ("bloom_filter_columns" = "column_name2,column_name3");
 ```
 
+## Using Indexes
+
+BloomFilter index is used to accelerate equality queries in the WHERE clause. It automatically takes effect when applicable, and there is no special syntax required.
+
+The acceleration effect of the BloomFilter index can be analyzed using the following metrics in the Query Profile:
+- RowsBloomFilterFiltered: The number of rows filtered by the BloomFilter index, which can be compared with other Rows values to analyze the filtering effect of the index.
+- BlockConditionsFilteredBloomFilterTime: The time consumed by the BloomFilter inverted index.
+
 ## Usage Example
 
 Here is an example of how to create a BloomFilter index in Doris.
-
-### Creating a BloomFilter Index
 
 The BloomFilter index in Doris is created by adding the "bloom_filter_columns" property in the CREATE TABLE statement, with k1, k2, k3 being the key columns for the BloomFilter index. For example, the following creates BloomFilter indexes on saler_id and category_id.
 

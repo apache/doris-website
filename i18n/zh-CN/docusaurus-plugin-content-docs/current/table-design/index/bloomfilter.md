@@ -70,7 +70,7 @@ BloomFilter 的使用有下面一些限制：
 
 :::
 
-## 管理 BloomFilter 索引
+## 管理索引
 
 ### 建表时创建 BloomFilter 索引
 
@@ -102,7 +102,7 @@ ALTER TABLE table_name SET ("bloom_filter_columns" = "column_name1,column_name2,
 ALTER TABLE table_name SET ("bloom_filter_columns" = "column_name2,column_name3");
 ```
 
-## 使用 BloomFilter 索引
+## 使用索引
 
 BloomFilter 索引用于加速 WHERE 条件中的等值查询，能加速时自动生效，没有特殊语法。
 

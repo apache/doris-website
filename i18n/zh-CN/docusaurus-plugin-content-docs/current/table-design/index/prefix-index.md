@@ -66,7 +66,7 @@ Doris 的数据存储在类似 SSTable（Sorted String Table）的数据结构�
 
 前缀索引用于加速 WHERE 条件中的等值和范围查询，能加速时自动生效，没有特殊语法。
 
-可以通过 Query Profile 中的下面几个指标分析 BloomFilter 索引的加速效果。
+可以通过 Query Profile 中的下面几个指标分析前缀索引的加速效果。
 - RowsKeyRangeFiltered 前缀索引过滤掉的行数，可以与其他几个 Rows 值对比分析索引过滤效果
 
 
