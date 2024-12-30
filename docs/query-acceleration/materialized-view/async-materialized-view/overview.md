@@ -1,7 +1,7 @@
 ---
 {
   "title": "Overview of Asynchronous Materialized Views",
-  "language": "en-US"
+  "language": "en"
 }
 ---
 

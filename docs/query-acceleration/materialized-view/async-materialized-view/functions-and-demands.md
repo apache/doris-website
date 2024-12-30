@@ -1,7 +1,7 @@
 ---
 {
   "title": "Creating, Querying, and Maintaining Asynchronous Materialized Views",
-  "language": "en-US"
+  "language": "en"
 }
 ---
 
