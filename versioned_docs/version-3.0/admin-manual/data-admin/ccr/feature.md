@@ -38,7 +38,7 @@ The Cross-Cluster Replication (CCR) feature in Doris is primarily used for effic
 
 ### Database Properties
 
-Database-level jobs will synchronize the properties of the database during Full Sync.
+Database-level tasks will synchronize the properties of the database during Full Sync.
 
 | Property                | Supported | Doris Version | Sync Method | Description |
 | ----------------------- | --------- | ------------- | ----------- | ----------- |
@@ -48,11 +48,11 @@ Database-level jobs will synchronize the properties of the database during Full 
 
 ### Modify Database Properties
 
-CCR jobs do not synchronize operations that modify database properties.
+CCR tasks do not synchronize operations that modify database properties.
 
 | Property                | Supported | Can Upstream Operate | Can Downstream Operate | Description                              |
 | ----------------------- | --------- | -------------------- | ---------------------- | ---------------------------------------- |
-| replication_allocation  | Not Supported | No                 | No                     | Operations on both sides will cause CCR jobs to be interrupted |
+| replication_allocation  | Not Supported | No                 | No                     | Operations on both sides will cause CCR tasks to be interrupted |
 | data quota              | Not Supported | Yes                | Yes                    |                                          |
 | replica quota           | Not Supported | Yes                | Yes                    |                                          |
 
@@ -68,7 +68,7 @@ Renaming is not supported for upstream and downstream; if done, it may cause vie
 | Table Model (duplicate, unique, aggregate)    | Supported | -             | SQL         |                                                                |
 | Partition and Bucketing                        | Supported | -             | SQL         |                                                                |
 | replication_num                               | Supported | -             | SQL         |                                                                |
-| replication_allocation (resource group)       | Supported | -             | SQL         | Upstream must be consistent with downstream, BE tags must match; otherwise, CCR jobs will fail |
+| replication_allocation (resource group)       | Supported | -             | SQL         | Upstream must be consistent with downstream, BE tags must match; otherwise, CCR tasks will fail |
 | colocate_with                                 | Not Supported |           |             |                                                                |
 | storage_policy                                 | Not Supported |           |             |                                                                |
 | dynamic_partition                              | Supported | -             | SQL         |                                                                |
@@ -98,9 +98,9 @@ Renaming is not supported for upstream and downstream; if done, it may cause vie
 
 | Operation      | Supported | Doris Version | Sync Method | Can Downstream Operate Independently | Description |
 | -------------- | --------- | ------------- | ----------- | ------------------------------------ | ----------- |
-| create table   | Supported | -             | SQL/Partial Sync | Cannot operate on tables synchronized by CCR jobs. | Refer to the properties for creating tables; in most cases, use SQL for synchronization; for some operations, such as when users set certain session variables or when the create table statement includes inverted indexes, use partial sync |
+| create table   | Supported | -             | SQL/Partial Sync | Cannot operate on tables synchronized by CCR tasks. | Refer to the properties for creating tables; in most cases, use SQL for synchronization; for some operations, such as when users set certain session variables or when the create table statement includes inverted indexes, use partial sync |
 | drop table     | Supported | -             | SQL/Full Sync | Same as above | Before 2.0.15/2.1.6: Full Sync, after: SQL |
-| rename table   | Table-level jobs do not support database-level jobs | 2.1.8/3.0.4 | SQL | Same as above | Table-level job renames will cause CCR jobs to stop |
+| rename table   | Table-level tasks do not support database-level tasks | 2.1.8/3.0.4 | SQL | Same as above | Table-level task renames will cause CCR tasks to stop |
 | replace table  | Supported | 2.1.8/3.0.4 | SQL/Full Sync | Same as above | Use SQL for database-level synchronization; table-level triggers full synchronization |
 | truncate table | Supported | -             | SQL | Same as above | |
 | restore table  | Not Supported | | | Same as above | |
