@@ -38,13 +38,13 @@ under the License.
 
 在建表后，表模型的属性已经确认，无法修改。针对业务选择合适的模型至关重要：
 
-* Aggregate 模型可以通过预聚合，极大地降低聚合查询时所需扫描的数据量和查询的计算量，非常适合有固定模式的报表类查询场景。但是该模型对 count(\*) 查询很不友好。同时因为固定了 Value 列上的聚合方式，在进行其他类型的聚合查询时，需要考虑语意正确性。
+* Aggregate 模型可以通过预聚合，极大地降低聚合查询时所需扫描的数据量和查询的计算量，非常适合有固定模式的报表类查询场景。但是该模型对 count(*) 查询很不友好。同时因为固定了 Value 列上的聚合方式，在进行其他类型的聚合查询时，需要考虑语意正确性。
 
 * Unique 模型针对需要唯一主键约束的场景，可以保证主键唯一性约束。但是无法利用 ROLLUP 等预聚合带来的查询优势。对于聚合查询有较高性能需求的用户，推荐使用自 1.2 版本加入的写时合并实现。
 
 * Duplicate 适合任意维度的 Ad-hoc 查询。虽然同样无法利用预聚合的特性，但是不受聚合模型的约束，可以发挥列存模型的优势（只读取相关列，而不需要读取所有 Key 列）。
 
-* 如果有部分列更新的需求，请查阅文档[主键模型部分列更新](https://doris.apache.org/zh-CN/docs/data-operate/update/update-of-unique-model)与[聚合模型部份列更新](https://doris.apache.org/zh-CN/docs/data-operate/update/update-of-aggregate-model)获取相关使用建议。
+* 如果有部分列更新的需求，请查阅文档[主键模型部分列更新](../../data-operate/update/update-of-aggregate-model)与[聚合模型部份列更新](../../data-operate/update/update-of-aggregate-model)获取相关使用建议。
 
 ## 排序键
 
