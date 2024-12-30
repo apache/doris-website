@@ -36,17 +36,18 @@ enable_feature_binlog=true
 
 2.1. Download the latest package from the following link:
 
-    `https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-syncer-2.1.4-x64.tar.xz`
+`https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-syncer-2.1.4-x64.tar.xz`
 
 2.2. Start and stop Syncer
 
-    ```shell
-    # Start
-    cd bin && sh start_syncer.sh --daemon
-
-    # Stop
-    sh stop_syncer.sh
-    ```
+```shell
+# Start
+cd bin && sh start_syncer.sh --daemon
+```
+```shell
+# Stop
+sh stop_syncer.sh
+```
 
 ## Step 3. Open the Binlog for the synchronized database/table in the source cluster
 

@@ -36,17 +36,17 @@ enable_feature_binlog=true
 
 2.1. 从如下链接下载最新的包
 
-    `https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-syncer-2.1.4-x64.tar.xz`
+`https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-syncer-2.1.4-x64.tar.xz`
 
 2.2. 启动和停止 Syncer
 
-    ```shell
-    # 启动
-    cd bin && sh start_syncer.sh --daemon
+```shell
+# 启动
+cd bin && sh start_syncer.sh --daemon
 
-    # 停止
-    sh stop_syncer.sh
-    ```
+# 停止
+sh stop_syncer.sh
+```
 
 ## 第三步. 打开源集群中同步库/表的 Binlog
 
