@@ -180,7 +180,7 @@ insert into aggstate select 3,sum_union(k2),group_concat_union(k3) from aggstate
 
 查询结果如下：
 
-```plain&#x20;text
+```sql
 mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate;
 +---------------+------------------------+
 | sum_merge(k2) | group_concat_merge(k3) |
