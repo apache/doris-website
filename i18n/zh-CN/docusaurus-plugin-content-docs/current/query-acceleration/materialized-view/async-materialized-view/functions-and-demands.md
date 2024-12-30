@@ -106,9 +106,20 @@ INSERT INTO partsupp VALUES
 (2, 3, 10, 11.01, 'supply3');
 ```
 
+#### 刷新基础概念
+
+| 概念       | 说明                                                              |
+|----------|-----------------------------------------------------------------|
+| 刷新时机     | 物化视图创建完成是否立即刷新。IMMEDIATE：立即刷新，默认IMMEDIATE。DEFERRED：延迟刷新         |
+| 刷新方式     | COMPLETE：刷新所有分区。AUTO：尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区 |
+| 触发方式     | MANUAL：手动刷新。ON SCHEDULE：定时刷新。ON COMMIT：触发式刷新，基表数据变更，触发物化视图刷新    |
+
+
 #### 全量物化视图
 
-触发方式是手动，刷新方式是 AUTO，如下
+如下，刷新时机是创建完立即刷新，刷新方式是 AUTO，即尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区。
+触发方式是手动。
+对于非分区全量物化视图，只有一个分区，如果基表数据发生变化，意味着要全量刷新。
 
 ```sql
 CREATE MATERIALIZED VIEW mv_1_0
@@ -124,9 +135,9 @@ FROM
   LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-延迟刷新，首次刷新时间是 `2024-12-01 20:30:00`, 并且每隔一天刷新一次。如果 `BUILD DEFERRED` 指定为 `BUILD IMMEDIATE` 创建
-完物化视图会立即刷新一次。之后从 `2024-12-01 20:30:00` 每隔一天刷新一次
-注意 STARTS 的时间要晚于当前的时间。如下
+如下，刷新时机是延迟刷新，刷新方式是全量刷新，触发时机是定时刷新，首次刷新时间是 `2024-12-01 20:30:00`, 并且每隔一天刷新一次。如果 `BUILD DEFERRED` 指定为 `BUILD IMMEDIATE` 创建
+完物化视图会立即刷新一次。之后从 `2024-12-01 20:30:00` 每隔一天刷新一次。
+注意 STARTS 的时间要晚于当前的时间。
 
 ```sql
 CREATE MATERIALIZED VIEW mv_1_1
@@ -144,7 +155,7 @@ orders
 LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-刷新方式是触发式，当 orders 或者 lineitem 表数据发生变化的时候，会自动触发物化视图的刷新。如下
+如下，刷新时机是创建完立即刷新，刷新方式是全量刷新，触发方式是触发刷新，当 orders 或者 lineitem 表数据发生变化的时候，会自动触发物化视图的刷新。
 
 ```sql
 CREATE MATERIALIZED VIEW mv_1_1
@@ -166,8 +177,9 @@ LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 
 #### 分区物化视图
 
-创建分区物化视图时，需要指定 `partition by`，对于分区字段引用的表达式，仅允许使用 `date_trunc` 函数和标识符。以下语句是符合要求的：
-分区字段引用的列仅使用了 `date_trunc` 函数。
+如下，创建分区物化视图时，需要指定 `partition by`，对于分区字段引用的表达式，仅允许使用 `date_trunc` 函数和标识符。以下语句是符合要求的：
+分区字段引用的列仅使用了 `date_trunc` 函数。分区物化视图的刷新方式一般是 AUTO，即尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，
+如果不能增量刷新，就刷新所有分区。
 
 ```sql
 CREATE MATERIALIZED VIEW mv_2_0 BUILD IMMEDIATE REFRESH AUTO ON MANUAL   
@@ -255,7 +267,7 @@ SELECT k1,year,region FROM hive1;
 自 Doris 2.1.1 版本起支持此功能
 :::
 
-有些基表有很多分区，但是物化视图只关注最近一段时间的“热”数据，那么可以使用此功能。
+有些基表有很多分区，但是物化视图只关注最近一段时间的"热"数据，那么可以使用此功能。
 
 基表的建表语句如下：
 
@@ -275,7 +287,7 @@ PARTITION p28 VALUES [("2024-03-28"),("2024-03-29"))
 DISTRIBUTED BY HASH(`k1`) BUCKETS 2;
 ```
 
-物化视图的创建语句如以下举例，代表物化视图只关注最近一天的数据。若当前时间为 2024-03-28 xx:xx:xx，这样物化视图会仅有一个分区 `[("2024-03-28"),("2024-03-29")]`：
+物化视图的创建语句如以下，代表物化视图只关注最近一天的数据。若当前时间为 2024-03-28 xx:xx:xx，这样物化视图会仅有一个分区 `[("2024-03-28"),("2024-03-29")]`：
 
 ```sql
 CREATE MATERIALIZED VIEW mv1
@@ -346,7 +358,7 @@ SELECT * FROM t1;
 
 此外，如果分区字段为字符串类型，可以通过设置物化视图的 `partition_date_format` 属性来指定日期格式，例如 `'%Y-%m-%d'`。
 
-**详情参考** **[CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)**
+详情参考 [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)
 
 ### 物化视图修改
 ```sql
@@ -377,9 +389,9 @@ SHOW CREATE MATERIALIZED VIEW mv_1;
 
 物化视图可以看作是表，可以像正常的表一样直接查询。
 
-**物化视图的定义：**
-
 ### 直查物化视图
+
+**物化视图的定义：**
 
 ```sql
 CREATE MATERIALIZED VIEW mv_5
@@ -800,7 +812,7 @@ where o_orderstatus = 'o'
 
 1. 嵌套物化视图的层数越多，透明改写的耗时会相应增加。建议嵌套物化视图层数不要超过 3 层。
 
-2. 嵌套物化视图透明改写默认关闭，开启方式见下面的开关设置。
+2. 嵌套物化视图透明改写默认关闭，开启方式见下面的相关设置。
 
 ### Explain 查询透明改写情况
 
@@ -846,14 +858,26 @@ explain memo plan <query_sql>
 
 ### 权限说明
 
-- 暂停/恢复/取消/刷新物化视图：需要具有物化视图的创建权限 。
+- 暂停/恢复/取消/刷新物化视图：需要具有物化视图的创建权限。
 
 ### 刷新物化视图
 
-物化视图是按照分区为单位进行刷新的。如果物化视图没有指定分区，那么每次都刷新物化视图的默认分区，即刷新物化视图的全部数据。
-物化视图有三种触发刷新机制：
+#### 刷新时机
+物化视图创建完成是否立即刷新
+- IMMEDIATE：立即刷新，默认方式。
+- DEFERRED：延迟刷新。
 
-#### 1. 手动触发
+#### 刷新方式
+- COMPLETE：刷新所有分区。
+- AUTO：尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区。
+
+#### 触发方式
+物化视图是按照分区为单位进行刷新的。如果物化视图没有指定分区，那么每次都刷新物化视图的所有分区，对于非分区物化视图，
+只有一个分区，即刷新所有数据。
+
+物化视图有三种触发方式：
+
+**1. 手动触发**
 
 用户通过 SQL 语句触发物化视图的刷新，目前有三种策略：
 
@@ -880,11 +904,11 @@ explain memo plan <query_sql>
 从 2.1.3 版本开始支持 Hive 检测基表的分区数据自上次刷新后是否有变化，其他外表暂时还不支持。内表一直支持。
 :::
 
-#### 2. 定时触发
+**2. 定时触发**
 
 通过物化视图的创建语句指定间隔多久刷新一次数据
 
-- 如果物化视图的创建语句如下，要求全量刷新 (`REFRESH COMPLETE`)，那么物化视图每 10 小时刷新一次，并且刷新物化视图的所有分区。
+- 如下，要求全量刷新 (`REFRESH COMPLETE`)，物化视图每 10 小时刷新一次，并且刷新物化视图的所有分区。
 
     ```sql
     CREATE MATERIALIZED VIEW mv_6
@@ -893,7 +917,7 @@ explain memo plan <query_sql>
     SELECT * FROM lineitem;
     ```
 
-- 如果物化视图的创建语句如下，要求自动计算需要刷新的分区 (`REFRESH AUTO`)，那么物化视图每 10 小时刷新一次（从 2.1.3 版本开始能自动计算 Hive 需要刷新的分区）。
+- 如下，尽量增量刷新(`REFRESH AUTO`)，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区，物化视图每 10 小时刷新一次（从 2.1.3 版本开始能自动计算 Hive 需要刷新的分区）。
 
     ```sql
     CREATE MATERIALIZED VIEW mv_7
@@ -903,7 +927,7 @@ explain memo plan <query_sql>
     SELECT * FROM lineitem;
     ```
 
-#### 3. 自动触发
+**3. 自动触发**
 
 :::tip 提示
 自 Apache Doris 2.1.4 版本起支持此功能。
@@ -911,7 +935,7 @@ explain memo plan <query_sql>
 
 基表数据发生变更后，自动触发相关物化视图刷新，刷新的分区范围与“定时触发”一致。
 
-如果物化视图的创建语句如下，那么当 `t1` 的数据发生变化时，会自动触发物化视图的刷新。
+如果物化视图的创建语句如下，那么当 基表 `lineitem` 的 `t1` 分区数据发生变化时，会自动触发物化视图的对应分区刷新。
 
 ```sql
 CREATE MATERIALIZED VIEW mv_8
