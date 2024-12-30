@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Overview",
-    "language": "en"
+  "title": "Overview of Asynchronous Materialized Views",
+  "language": "en-US"
 }
 ---
 
@@ -24,8 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-Materialized views, as an efficient solution, combine the flexibility of views with the high performance advantages of physical tables. They can pre-compute and store the result sets of queries, allowing for quick retrieval of results directly from the stored materialized view when query requests arrive, thus avoiding the overhead of re-executing complex query statements.
+Materialized views, as an efficient solution, combine the flexibility of views with the high 
+performance advantages of physical tables. 
+They can pre-compute and store the result sets of queries, 
+allowing for quick retrieval of results directly from the stored materialized view 
+when query requests arrive, thus avoiding the overhead of re-executing complex query statements.
 
 ## Use Cases
 
@@ -47,11 +50,11 @@ Materialized views, as an advanced feature in databases, essentially function as
 **Refresh Mechanism**  
 Unlike the real-time incremental refresh used by synchronous materialized views, asynchronous materialized views offer more flexible refresh options.
 
-**Full Refresh**:  
-In this mode, the system recalculates all data involved in the SQL definition of the materialized view and writes the complete results into the materialized view. This process ensures that the data in the materialized view remains consistent with the base table data, but it may consume more computational resources and time.
+- **Full Refresh**:  
+  In this mode, the system recalculates all data involved in the SQL definition of the materialized view and writes the complete results into the materialized view. This process ensures that the data in the materialized view remains consistent with the base table data, but it may consume more computational resources and time.
 
-**Partition Incremental Refresh**:  
-When the partition data of the base table for the materialized view changes, the system can intelligently identify these changes and refresh only the affected partitions. This mechanism significantly reduces the computational resources and time required to refresh the materialized view while ensuring eventual data consistency.
+- **Partition Incremental Refresh**:  
+  When the partition data of the base table for the materialized view changes, the system can intelligently identify these changes and refresh only the affected partitions. This mechanism significantly reduces the computational resources and time required to refresh the materialized view while ensuring eventual data consistency.
 
 **Transparent Rewriting**:  
 Transparent rewriting is an important means for databases to optimize query performance. When processing user queries, the system can automatically optimize and rewrite the SQL to improve execution efficiency and reduce computational costs. This rewriting process is transparent to the user, requiring no intervention.
@@ -60,23 +63,74 @@ Doris asynchronous materialized views utilize a transparent rewriting algorithm 
 
 ## Support for Materialized Refresh Data Lake
 
-Regarding the support for materialized refresh data lakes, different types of tables and catalogs have varying levels of support:
+The support for materialized refresh data lakes varies by table type and catalog.
 
-| Table Type | Catalog Type | Full Refresh | Partition Refresh | Triggered Refresh |
-|------------|--------------|--------------|-------------------|--------------------|
-| Internal   | Internal     | Supported in 2.1 | Supported in 2.1 | Supported in 2.1.4 |
-| Hive       | Hive         | Supported in 2.1 | Supported in 2.1 | Not supported       |
-| Iceberg    | Iceberg      | Supported in 2.1 | Not supported     | Not supported       |
-| Paimon     | Paimon       | Supported in 2.1 | Not supported     | Not supported       |
-| Hudi       | Hudi         | Supported in 2.1 | Not supported     | Not supported       |
-| JDBC       | JDBC         | Supported in 2.1 | Not supported     | Not supported       |
-| ES         | ES           | Supported in 2.1 | Not supported     | Not supported       |
+<table>
+    <tr>
+        <th rowspan="2">Table Type</th>
+        <th rowspan="2">Catalog Type</th>
+        <th colspan="2">Refresh Method</th>
+        <th>Triggered Refresh</th>
+    </tr>
+    <tr>
+        <th>Full Refresh</th>
+        <th>Partition Refresh</th>
+        <th>Auto Trigger</th>
+    </tr>
+    <tr>
+        <td>Internal Table</td>
+        <td>Internal</td>
+        <td>Supported in 2.1</td>
+        <td>Supported in 2.1</td>
+        <td>Supported in 2.1.4</td>
+    </tr>
+    <tr>
+        <td>Hive</td>
+        <td>Hive</td>
+        <td>Supported in 2.1</td>
+        <td>Supported in 2.1</td>
+        <td>Not supported</td>
+    </tr>
+    <tr>
+        <td>Iceberg</td>
+        <td>Iceberg</td>
+        <td>Supported in 2.1</td>
+        <td>Not supported</td>
+        <td>Not supported</td>
+    </tr>
+    <tr>
+        <td>Paimon</td>
+        <td>Paimon</td>
+        <td>Supported in 2.1</td>
+        <td>Not supported</td>
+        <td>Not supported</td>
+    </tr>
+    <tr>
+        <td>Hudi</td>
+        <td>Hudi</td>
+        <td>Supported in 2.1</td>
+        <td>Not supported</td>
+        <td>Not supported</td>
+    </tr>
+    <tr>
+        <td>JDBC</td>
+        <td>JDBC</td>
+        <td>Supported in 2.1</td>
+        <td>Not supported</td>
+        <td>Not supported</td>
+    </tr>
+    <tr>
+        <td>ES</td>
+        <td>ES</td>
+        <td>Supported in 2.1</td>
+        <td>Not supported</td>
+        <td>Not supported</td>
+    </tr>
+</table>
 
 ## Relationship Between Materialized Views and OLAP Internal Tables
 
-:::tips
-Starting from version 2.1.4, materialized views support the Duplicate model.
-:::
+Asynchronous materialized views define SQL using the base table's table model without restrictions, which can be detail models, primary key models (merge-on-write and merge-on-read), aggregate models, etc.
 
 The underlying implementation of materialized views relies on OLAP tables of the Duplicate model, which theoretically allows them to support all core functionalities of the Duplicate model. However, to ensure that materialized views can execute data refresh tasks stably and efficiently, we have imposed a series of necessary restrictions on their functionality. The specific restrictions are as follows:
 
@@ -86,8 +140,8 @@ The underlying implementation of materialized views relies on OLAP tables of the
 - Materialized views have some properties that Duplicate tables do not possess, and these properties need to be modified through the commands of the materialized view. Other common properties should be modified using the ALTER TABLE command.
 
 ## More References
-For creating, querying, and maintaining asynchronous materialized views, you can refer to [Creating, Querying, and Maintaining Asynchronous Materialized Views](../functions-and-demands).
+For creating, querying, and maintaining asynchronous materialized views, you can refer to [Creating, Querying, and Maintaining Asynchronous Materialized Views](../async-materialized-view/functions-and-demands.md).
 
-For best practices, you can refer to [Best Practices](../use-guide).
+For best practices, you can refer to [Best Practices](../async-materialized-view/use-guide.md).
 
-For frequently asked questions, you can refer to [Frequently Asked Questions](../faq).
+For frequently asked questions, you can refer to [Frequently Asked Questions](../async-materialized-view/faq.md).
