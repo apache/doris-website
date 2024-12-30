@@ -33,7 +33,7 @@ Doris 支持在线弹性扩容，通过动态添加或移除节点，用户无�
 
 Doris 的 FE 节点分为以下三种角色，每一个 FE 节点都有全量的元数据信息：
 
-* Master 节点：负责元数据的读写操作，当 Master 的元数据发生变化，会通过 BDB JE 协议同步到非 Master 几点中，统一集群中只能有一个 Master FE 节点；
+* Master 节点：负责元数据的读写操作，当 Master 的元数据发生变化，会通过 BDB JE 协议同步到非 Master 几点中，同一集群中只能有一个 Master FE 节点；
 
 * Follower 节点：负责元数据的读取操作，当 Master 节点发生故障时，Follower 节点会发起选主操作，选举出一个新的 Master 节点。在集群内，Master 与 Follower 节点总和建议为奇数个；
 
