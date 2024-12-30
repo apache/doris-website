@@ -46,7 +46,7 @@ under the License.
 
 在建表时，可以通过 `DUPLICATE KEY` 关键字指定明细模型。明细表必须指定数据的 Key 列，用于在存储时对数据进行排序。下例的明细表中存储了日志信息，并针对于 `log_time`、`log_type` 及 `error_code` 三列进行了排序：
 
-![columnar_storage](images/table-desigin/columnar-storage.png)
+![columnar_storage](/images/table-desigin/columnar-storage.png)
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_duplicate
@@ -66,7 +66,7 @@ DISTRIBUTED BY HASH(log_type) BUCKETS 10;
 
 在明细表中，数据不进行去重与聚合，插入数据即存储数据。明细模型中 Key 列指做为排序。
 
-![columnar_storage](images/table-desigin/duplicate-table-insert.png)
+![columnar_storage](/images/table-desigin/duplicate-table-insert.png)
 
 如在上例中，表中原有 4 行数据，在插入 2 行数据后，以追加（APPEND）的方式插入到表中，明细表存储共 6 行数据：
 

@@ -107,7 +107,7 @@ PROPERTIES (
 
 在明细表中，Key 列不仅会进行排序，还会基于 Key 列进行去重，插入数据后，新写入的数据会覆盖 Key 列相同的记录。
 
-![unique-key-model-insert](images/table-desigin/unique-key-model-insert.png)
+![unique-key-model-insert](/images/table-desigin/unique-key-model-insert.png)
 
 如在上例中，原表中有 4 行数据，在插入两行后，新插入的两行基于主键进行了更新操作：
 

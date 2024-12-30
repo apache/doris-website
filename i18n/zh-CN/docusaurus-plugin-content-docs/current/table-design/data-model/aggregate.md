@@ -97,7 +97,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
 在聚合表中，数据基于主键进行聚合操作。数据插入后及完成聚合操作。
 
-![aggrate-key-model-insert](images/table-desigin/aggrate-key-model-insert.png)
+![aggrate-key-model-insert](/images/table-desigin/aggrate-key-model-insert.png)
 
 在上例中，表中原有 4 行数据，在插入 2 行数据后，基于 Key 列进行维度列的聚合操作：
 
@@ -155,7 +155,7 @@ insert into aggstate values(2, 4, group_concat_state('d'));
 
 此时表内计算方式如下图所示：
 
-![state-func-group-concat-state-result-1](images/table-desigin/state-func-group-concat-state-result-1.png)
+![state-func-group-concat-state-result-1](/images/table-desigin/state-func-group-concat-state-result-1.png)
 
 在查询表是，可以使用 [merge](../../sql-manual/sql-functions/combinators/merge/) 操作合并多个 state，并且返回最终聚合结果。因为 group_concat 对于顺序有要求，所以结果是不稳定的。
 
@@ -176,7 +176,7 @@ insert into aggstate select 3,sum_union(k2),group_concat_union(k3) from aggstate
 
 此时表中计算如下：
 
-![state-func-group-concat-state-result-2](images/table-desigin/state-func-group-concat-state-result-2.png)
+![state-func-group-concat-state-result-2](/images/table-desigin/state-func-group-concat-state-result-2.png)
 
 可以通过查询
 
