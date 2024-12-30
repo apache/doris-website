@@ -43,7 +43,8 @@ enable_feature_binlog=true
     ```shell
     # Start
     cd bin && sh start_syncer.sh --daemon
-
+    ```
+    ```shell
     # Stop
     sh stop_syncer.sh
     ```
