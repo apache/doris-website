@@ -93,16 +93,5 @@ The shared storage layer stores the data files, including segment files and the 
 - When you have already adopted public cloud services;
 - When you have reliable shared storage systems, such as HDFS, Ceph, and object storage;
 - When you require high elastic scalability, Kubernetes containerization, or to run on a private cloud;
+- High throughput shared storage capability, allowing multiple computing groups to share data
 - When you have a dedicated team responsible for maintaining the company's entire data warehouse platform.
-
-## Workload isolation across compute clusters
-
-As mentioned earlier, a compute cluster is formed by one or more stateless BE nodes. By using the compute cluster specification statement (`use @<compute_group_name>`), you can direct specific workloads to specific compute clusters, thus realizing physical isolation of data import and query workloads.
-
-Assuming there are 2 compute clusters: C1 and C2.
-
-**Read isolation**: Before initiating two large queries, you can leverage `use @c1` and `use @c2` respectively to make the two queries run on different compute nodes. In this way, the two queries will not interfere with each other due to competition for CPU and memory resources when accessing the same dataset.
-
-**Read-write isolation**: Data imports can consume resources, especially with large data volumes and high import frequency. To avoid resource contention between queries and imports, you can specify query requests to run on C1 and import requests to run on C2 using `use @c1` and `use @c2`. Meanwhile, the `c1` compute cluster can access the newly imported data in the `c2` compute cluster.
-
-**Write-write isolation**: Data import tasks can also be isolated from each other. In some cases, the system handles both high-frequency small imports and large-scale batch imports. The batch imports often take longer and have higher retry costs, while the high-frequency small imports are the opposite. To avoid small imports interfering with batch imports, you can direct the small imports to run on `c1` and the batch imports to run on `c2` via `use @c1` and `use @c2`.

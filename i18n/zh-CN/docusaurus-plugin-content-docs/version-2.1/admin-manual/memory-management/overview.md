@@ -95,7 +95,7 @@ Memory Tracker 拥有如下的属性：
 
 ### 历史内存统计
 
-历史的内存统计结果通过 Doris BE 的 Bvar 页面查看 `http://http://{be_host}:{brpc_port}/vars/*memory_*`，用实时内存统计页面 `http://{be_host}:{be_web_server_port}/mem_tracker` 中 Memory Tracker 的 Label 搜索 Bvar 页面，即可得到对应 Memory Tracker 跟踪的内存大小变化趋势，`brpc_port` 默认 8060。
+历史的内存统计结果通过 Doris BE 的 Bvar 页面查看 `http://{be_host}:{brpc_port}/vars/*memory_*`，用实时内存统计页面 `http://{be_host}:{be_web_server_port}/mem_tracker` 中 Memory Tracker 的 Label 搜索 Bvar 页面，即可得到对应 Memory Tracker 跟踪的内存大小变化趋势，`brpc_port` 默认 8060。
 
 ![Bvar Memory](/images/bvar-memory.png)
 

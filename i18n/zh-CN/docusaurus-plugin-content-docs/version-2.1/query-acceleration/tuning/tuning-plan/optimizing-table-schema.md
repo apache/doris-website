@@ -24,9 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 概述
+
 Schema 设计和调优中，表的 Schema 设计是其中重要的一部分，包括表引擎选择、分区分桶列选择、分区分桶大小设置、key 列和字段类型优化等。缺乏 Schema 设计的系统，有可能会导致数据倾斜等问题，不能充分利用系统并行和排序特性，从而影响 Doris 在业务系统中发挥真实的性能优势。
 
-详细的设计原则可以参考[数据表设计](../../../table-design/overview)章节了解详细信息。本章将从实际案例的角度，展示几种典型场景下因 Schema 设计问题导致的性能瓶颈，并给出优化建议，供业务调优参考。
+详细的设计原则可以参考[数据表设计](../../../table-design/overview.md)章节了解详细信息。本章将从实际案例的角度，展示几种典型场景下因 Schema 设计问题导致的性能瓶颈，并给出优化建议，供业务调优参考。
 
 ## 案例 1：表引擎选择
 
@@ -36,7 +38,7 @@ Doris 支持 Duplicate、Unique、Aggregate 三种表模型。其中，Unique �
 
 :::tip 优化建议
 
-当业务无数据更新需求，但对查询性能有较高要求时，推荐使用 [Duplicate 表](../../../table-design/data-model/duplicate)。
+当业务无数据更新需求，但对查询性能有较高要求时，推荐使用 [Duplicate 表](../../../table-design/data-model/duplicate.md)。
 
 :::
 
@@ -69,11 +71,11 @@ insert into t1 select number, null from numbers ('number'='10000000');
 select c2，count(*) cnt from t1 group by c2 order by cnt desc limit 10;
 ```
 
-可以明确的是，良好的事前设计能够显著降低事后问题发生时的定位和修正成本。因此，强烈推荐业务人员在 Schema 设计阶段进行严格的设计和检查，以避免引入不必要的成本。
-
 :::tip 优化建议
 检查分桶列是否存在数据倾斜问题，如果存在，则更换为在业务含义上具有充分散列特性的字段作为分桶列。
 :::
+
+可以明确的是，良好的事前设计能够显著降低事后问题发生时的定位和修正成本。因此，强烈推荐业务人员在 Schema 设计阶段进行严格的设计和检查，以避免引入不必要的成本。
 
 ## 案例 3：Key 列优化
 
@@ -112,7 +114,6 @@ PROPERTIES (
 这一特性对业务系统 Schema 的设计及后期优化提供了重要启示：
 
 1. 在满足业务系统表达和计算需求的前提下，应优先选择定长类型，避免使用变长类型；
-
 2. 尽量采用低精类型，避免高精类型。具体实践包括：使用 BIGINT 替代 VARCHAR 或 STRING 类型的字段，以及用 FLOAT / INT / BIGINT 替换 DECIMAL 类型的字段等。此类字段类型的合理设计和优化，将极大地提升业务的计算效率，从而增强系统性能。
 
 :::tip 优化建议

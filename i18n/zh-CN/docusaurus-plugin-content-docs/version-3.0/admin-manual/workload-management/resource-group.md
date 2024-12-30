@@ -24,15 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-## 原理
-
-Resource Group 基本原理如下图所示：
+Resource Group 是存算一体架构下，实现不同的负载之间物理隔离的一种机制，它的基本原理如下图所示：
 
 ![Resource Group](/images/resource_group.png)
 
 - 通过Tag的方式，把BE 划分为不同的组，每个组通过tag的名字来标识，比如上图中把host1,host2,host3 都设置为group a, 把host4,host5 都设置为group b；
-- 将表的不同的副本放到不同的分组中，比如上图中table1 所有的副本都位于group a 中， table2的一个副本位于group a中，一个副本位于group b 中；
+- 将表的不同的副本放到不同的分组中，比如上图中table1 有3个副本，都位于group a 中， table2 有4个副本，其中2个位于group a中，2个副本位于group b 中；
 - 在查询时，根据不同的用户，使用不同的Resource Group，比如online 用户，只能访问host1,host2,host3 上的数据，所以他可以访问table1和table2；但是offline 用户只能访问host4，host5，所以只能访问table2的数据，由于table1 在group b 上没有对应的副本，所以访问会出错。
 
 Resource Group本质上是一种Table副本的放置策略，所以它有以下优势和限制：
@@ -123,22 +120,22 @@ Resource Group本质上是一种Table副本的放置策略，所以它有以下�
 
    那么可以使用如下语句创建 db1：
 
-      ```sql
-      CREATE DATABASE db1 PROPERTIES (
-      "replication_allocation" = "tag.location.group_c:1, tag.location.group_b:2"
-      )
-      ```
+   ```sql
+   CREATE DATABASE db1 PROPERTIES (
+   "replication_allocation" = "tag.location.group_c:1, tag.location.group_b:2"
+   )
+   ```
 
    使用如下语句创建 table1：
 
-      ```sql
-      CREATE TABLE table1
-      (k1 int, k2 int)
-      distributed by hash(k1) buckets 1
-      properties(
-      "replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
-      )
-      ```
+   ```sql
+   CREATE TABLE table1
+   (k1 int, k2 int)
+   distributed by hash(k1) buckets 1
+   properties(
+   "replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
+   )
+   ```
 
    table2，table3,table4 的建表语句无需再指定`replication_allocation`。
 
@@ -175,5 +172,5 @@ Resource Group本质上是一种Table副本的放置策略，所以它有以下�
    
    2. 写入资源：负责数据编码、压缩并写入磁盘。
 
-   其中写入资源必须是数据副本所在的节点，而计算资源理论上可以选择任意节点完成，所以在导入的场景下，Resource Group 只能限制计算部分使用的资源。
+   由于写入资源必须是数据副本所在的节点，而计算资源可以选择任意节点完成，所以在导入的场景下，Resource Group 只能限制计算部分使用的资源。
 
