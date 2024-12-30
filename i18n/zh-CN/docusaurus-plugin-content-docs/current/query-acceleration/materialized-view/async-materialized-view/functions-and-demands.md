@@ -62,15 +62,15 @@ CREATE MATERIALIZED VIEW
 
 #### build_mode 刷新时机
 物化视图创建完成是否立即刷新。
-1. IMMEDIATE：立即刷新，默认方式。
-2. DEFERRED：延迟刷新。
+- IMMEDIATE：立即刷新，默认方式。
+- DEFERRED：延迟刷新。
 
 #### refresh_method 刷新方式
-1. COMPLETE：刷新所有分区。
-2. AUTO：尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果不能感知数据变化的分区，只能退化成全量刷新，刷新所有分区。
+- COMPLETE：刷新所有分区。
+- AUTO：尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果不能感知数据变化的分区，只能退化成全量刷新，刷新所有分区。
 
 #### refresh_trigger 触发方式
-1. ON MANUAL 手动触发
+- ON MANUAL 手动触发
 
 用户通过 SQL 语句触发物化视图的刷新，策略如下
 
@@ -97,7 +97,7 @@ REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
 从 2.1.3 版本开始支持 Hive 检测基表的分区数据自上次刷新后是否有变化，其他外表暂时还不支持。内表一直支持。
 :::
 
-2. ON SCHEDULE 定时触发
+- ON SCHEDULE 定时触发
 
 通过物化视图的创建语句指定间隔多久刷新一次数据
 
@@ -121,7 +121,7 @@ AS
 SELECT * FROM lineitem;
 ```
 
-3. ON COMMIT 自动触发
+- ON COMMIT 自动触发
 
 :::tip 提示
 自 Apache Doris 2.1.4 版本起支持此功能。

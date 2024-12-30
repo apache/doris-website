@@ -62,15 +62,15 @@ AS <query>
 
 #### build_mode Refresh Timing
 Determines whether to refresh immediately after materialized view creation.
-1. IMMEDIATE: Refresh immediately (default mode)
-2. DEFERRED: Delayed refresh
+- IMMEDIATE: Refresh immediately (default mode)
+- DEFERRED: Delayed refresh
 
 #### refresh_method Refresh Method
-1. COMPLETE: Refresh all partitions
-2. AUTO: Attempt incremental refresh, only refreshing partitions with data changes since the last materialization. Falls back to full refresh of all partitions if data changes cannot be detected.
+- COMPLETE: Refresh all partitions
+- AUTO: Attempt incremental refresh, only refreshing partitions with data changes since the last materialization. Falls back to full refresh of all partitions if data changes cannot be detected.
 
 #### refresh_trigger Trigger Methods
-1. ON MANUAL Manual Trigger
+- ON MANUAL Manual Trigger
 
 Users can trigger materialized view refreshes using SQL statements with the following strategies:
 
@@ -98,7 +98,7 @@ REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
 Starting from version 2.1.3, Hive supports detecting base table partition changes since last refresh. Other external tables don't support this yet. Internal tables have always supported this feature.
 :::
 
-2. ON SCHEDULE Scheduled Trigger
+- ON SCHEDULE Scheduled Trigger
 
 Specify refresh intervals in the materialized view creation statement.
 
@@ -124,7 +124,7 @@ SELECT FROM lineitem;
 ```
 
 
-3. ON COMMIT Automatic Trigger
+- ON COMMIT Automatic Trigger
 
 :::tip
 This feature is available from Apache Doris version 2.1.4 onwards.
