@@ -51,10 +51,6 @@ Configured in `be.conf`, for example, `thrift_max_message_size = 2000000000`.
 |`max_download_speed_kbps`|Download speed limit for each download worker in downstream BE, default is 50MB/s per thread.|50MB/s| All versions |
 |`download_worker_count`|Number of threads for download tasks, set according to network card, disk, and load.| 1 | All versions |
 
-## Syncer
-
-| **Name**|**Description**|**Default Value**| **Version** |
-|---|---|---|---|
 
 ## Table Attributes
 

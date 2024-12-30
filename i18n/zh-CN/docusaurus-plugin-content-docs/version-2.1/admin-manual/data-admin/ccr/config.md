@@ -51,11 +51,6 @@ under the License.
 |`max_download_speed_kbps`|下游 BE 每个 download worker 的下载限速，默认每线程 50MB/s。|50MB/s| 所有版本 |
 |`download_worker_count`|下载任务的线程数，结合网卡、磁盘和负载设置。| 1 | 所有版本 |
 
-## Syncer
-
-| **名称**|**说明**|**默认值**| **版本** |
-|---|---|---|---|
-
 ## 库表属性
 
 `Create Table` 或者 `Alter Table` 设置。
