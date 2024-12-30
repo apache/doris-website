@@ -25,52 +25,125 @@ under the License.
 -->
 
 
-## 概述
+Doris 提供了滚动升级的能力，在升级过程中逐步对 FE 与 BE 节点进行升级，减少停机时间，确保在升级过程中系统能够保持正常运行。
 
-升级请使用本章节中推荐的步骤进行集群升级，Doris 集群升级可使用**滚动升级**的方式进行升级，无需集群节点全部停机升级，极大程度上降低对上层应用的影响。
+## 版本兼容性说明
 
-## Doris 版本说明
+Doris 版本号由三维组成，第一位表示重大里程碑版本，第二位表示功能版本，第三位表示 bug 修复，不在三位版本中发布新的功能。如 Doris 2.1.3 版本，其中 2 表示第 2 个里程碑版本，1 表示该里程碑下的功能版本，3 表示该功能版本下的第三个 bug fix 版本。
 
-Doris 升级请遵守不要跨两个二位版本升级的原则，依次往后升级。
+在版本升级时，遵循以下规则：
 
-比如从 0.15.x 升级到 2.0.x 版本，则建议先升级至 1.1 最新版本，然后升级到最新的 1.2 版本，最后升级到最新的 2.0 版本。
+* 三位版本：相同的二位版本可以跨三位版本升级，如 2.1.3 版本可以直接升级到 2.1.7 版本；
 
+* 二位版本及一位版本：不建议跨二位版本升级，考虑到兼容性问题，建议按照二位版本号依次升级，如 3.0 版本升级到 3.3 版本，需要按照 3.0 -> 3.1 -> 3.2 -> 3.3 的执行路径升级。
+
+## 升级注意事项
+
+在升级时，需要注意以下事项：
+
+* 版本间行为变更：在升级前需要查看 Release Note 中的行为变更以确定版本间的兼容性。
+
+* 对集群内的任务添加重试机制：升级时节点需要依次重启，对于查询任务，Stream Load 导入作业需要添加重试机制，否则会导致任务失败；在 Routine Load 作业，通过 flink-doris-connector 或 spark-doris-connector 导入的作业，已经在代码中实现了重试机制，无需添加重试逻辑；
+
+* 关闭副本修复与均衡功能：在升级时需要关闭副本修复与均衡功能，无论升级是否成功，升级后都需要再次打开副本修复与均衡功能。
+
+
+## 元数据兼容性测试
+
+:::caution 注意
+
+在生产环境中，建议保持 3 个以上的 FE 做高可用配置。如果只有 1 个 FE 节点，需要先做元数据兼容性测试后，再进行升级操作。元数据兼容非常重要，如果因为元数据不兼容导致的升级失败，能会导致数据丢失。建议每次升级前都进行元数据兼容性测试，在做元数据兼容性测试时，注意以下几点：
+
+* 建议在开发机或 BE 节点上做元数据兼容性测试，尽量避免在 FE 节点上做兼容性测试
+
+* 如果只能在 FE 节点上做兼容性测试，建议选择非 Master 节点，并停止原有 FE 进程
+:::
+
+在升级前，建议进行元数据兼容性测试，防止升级过程中元数据不兼容导致的升级失败。
+
+1. 备份元数据信息：
+
+   在开始升级工作前，需要备份 Master FE 节点的元数据信息。
+
+   通过 `show frontends` 中 `IsMaster` 列可以判断 Master FE 节点。在备份 FE 元信息时，无需停止 FE 节点，可以直接热备份元信息。默认情况下，FE 元数据在 `fe/doris-meta` 目录下，可以通过 `fe.conf` 文件中 `meta_dir` 参数确定元数据目录。
+
+2. 修改测试用的 FE 的配置文件 fe.conf
+
+   ```bash
+   vi ${DORIS_NEW_HOME}/conf/fe.conf
+   ```
+
+   修改以下端口信息，将所有端口设置为与线上不同，同时修改 clusterID 参数：
+   ```
+   ...
+   ## modify port
+   http_port = 18030
+   rpc_port = 19020
+   query_port = 19030
+   arrow_flight_sql_port = 19040
+   edit_log_port = 19010
+
+   ## modify clusterIP
+   clusterId=<a_new_clusterIP, such as 123456>
+   ...
+   ```
+
+3. 将备份的 Master FE 元数据拷贝到新的兼容性测试环境中
+
+   ```bash
+   cp ${DORIS_OLD_HOME}/fe/doris-meta/* ${DORIS_NEW_HOME}/fe/doris-meta
+   ```
+
+4. 将拷贝的元数据目文件中的 VERSION 文件中的 cluster\_id 修改为新的 cluster IP，如在上例中修改为 123456：
+
+   ```bash
+   vi ${DORIS_NEW_HOME}/fe/doris-meta/image/VERSION
+   clusterId=123456
+   ```
+
+5. 在测试环境中启动 FE 进程
+ 
+   ```bash
+   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon --metadata_failure_recovery
+   ```
+
+   在 2.0.2 之前的版本，需要在 fe.conf 文件中加入 `metadata_failure_recovery` 后在启动 FE 进程：
+   ```bash
+   echo "metadata_failure_recovery=true" >> ${DORIS_NEW_HOME}/conf/fe.conf
+   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon 
+   ```
+
+6. 验证 FE 启动成功，通过 mysql 命令链接当前 FE，如上文中使用 query port 为 19030：
+ 
+   ```bash
+   mysql -uroot -P19030 -h127.0.0.1
+   ```
 
 ## 升级步骤
 
-### 升级说明
+升级过程具体流程如下：
 
-1. 在升级过程中，由于 Doris 的 RoutineLoad、Flink-Doris-Connector、Spark-Doris-Connector 都已在代码中实现了重试机制，所以在多 BE 节点的集群中，滚动升级不会导致任务失败。
+1. 关闭副本修复与均衡功能
 
-2. StreamLoad 任务需要您在自己的代码中实现重试机制，否则会导致任务失败。
+2. 升级 BE 节点
 
-3. 集群副本修复和均衡功能在单次升级任务中务必要前置关闭和结束后打开，无论您集群节点是否全部升级完成。
+3. 升级 FE 节点
 
-### 升级流程概览
+4. 打开副本修复与均衡功能
 
-1. 元数据备份
+升级过程中，要遵循先升级 BE、在升级 FE 的原则。在升级 FE 时，先升级 Observer FE 与 Follower FE 节点，再升级 Master FE 节点。
 
-2. 关闭集群副本修复和均衡功能
+:::caution 注意
 
-3. 兼容性测试
+一般而言，Doris 只需要升级 FE 目录下的 `/bin` 和 `/lib` 以及 BE 目录下的 `/bin` 和 `/lib`
 
-4. 升级 BE
+在 2.0.2 及之后的版本，FE 和 BE 部署路径下新增了 `custom_lib/` 目录（如没有可以手动创建）。`custom_lib/` 目录用于存放一些用户自定义的第三方 jar 包，如 `hadoop-lzo-*.jar`，`orai18n.jar` 等。这个目录在升级时不需要替换。
 
-5. 升级 FE
+:::
 
-6. 打开集群副本修复和均衡功能
+### 第 1 步：关闭副本修复与均衡功能
 
-### 升级前置工作
-
-请按升级流程顺次执行升级
-
-**01 元数据备份（重要）**
-
-**将 FE-Master 节点的 `doris-meta` 目录进行完整备份！**
-
-**02 关闭集群副本修复和均衡功能**
-
-升级过程中会有节点重启，所以可能会触发不必要的集群均衡和副本修复逻辑，先通过以下命令关闭：
+在升级过程中会有节点重启，可能会触发不必要的集群均衡和副本修复逻辑，先通过以下命令关闭：
 
 ```sql
 admin set frontend config("disable_balance" = "true");
@@ -78,216 +151,87 @@ admin set frontend config("disable_colocate_balance" = "true");
 admin set frontend config("disable_tablet_scheduler" = "true");
 ```
 
-**03 兼容性测试**
+### 第 2 步：升级 BE 节点
 
-:::caution
+:::info
 
-**元数据兼容非常重要，如果因为元数据不兼容导致的升级失败，那可能会导致数据丢失！建议每次升级前都进行元数据兼容性测试！**
-
+为了保证您的数据安全，请使用 3 副本来存储您的数据，以避免升级误操作或失败导致的数据丢失问题。
 :::
+1. 在多副本的集群中，可以选择一台 BE 节点停止进程，进行灰度升级：
 
-1. FE 兼容性测试
-
-:::tip
-
-**重要**
-
-1. 建议在自己本地的开发机，或者 BE 节点做 FE 兼容性测试。
-
-2. 不建议在 Follower 或者 Observer 节点上测试，避免出现链接异常
-
-3. 如果一定在 Follower 或者 Observer 节点上，需要停止已启动的 FE 进程
-
-:::
-
-a. 单独使用新版本部署一个测试用的 FE 进程
-
-   ```shell
-   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon
-   ```
-
-b. 修改测试用的 FE 的配置文件 fe.conf
-
-   ```shell
-   vi ${DORIS_NEW_HOME}/conf/fe.conf
-   ```
-
-   修改以下端口信息，将**所有端口**设置为**与线上不同**
-
-   ```shell
-   ...
-   http_port = 18030
-   rpc_port = 19020
-   query_port = 19030
-   arrow_flight_sql_port = 19040
-   edit_log_port = 19010
-   ...
-   ```
-
-   保存并退出
-
-c. 修改 fe.conf
-
-   - 在 fe.conf 添加 ClusterID 配置
-
-   ```shell
-   echo "cluster_id=123456" >> ${DORIS_NEW_HOME}/conf/fe.conf
-   ```
-
-   - 添加元数据故障恢复配置（**2.0.2 + 版本无需进行此操作**）
-
-   ```shell
-   echo "metadata_failure_recovery=true" >> ${DORIS_NEW_HOME}/conf/fe.conf
-   ```
-
-d. 拷贝线上环境 Master FE 的元数据目录 doris-meta 到测试环境
-
-   ```shell
-   cp ${DORIS_OLD_HOME}/fe/doris-meta/* ${DORIS_NEW_HOME}/fe/doris-meta
-   ```
-
-e. 将拷贝到测试环境中的 VERSION 文件中的 cluster_id 修改为 123456（即与第 3 步中相同）
-
-   ```shell
-   vi ${DORIS_NEW_HOME}/fe/doris-meta/image/VERSION
-   clusterId=123456
-   ```
-
-f. 在测试环境中，运行启动 FE（**请按照版本选择启动 FE 的方式**）
-
-   - 2.0.2(包含 2.0.2) + 版本
-   ```shell
-   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon --metadata_failure_recovery
-   ```
-   
-   - 2.0.1（包含 2.0.1）以前的版本
-   ```shell
-   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon 
-      ```
-
-g. 通过 FE 日志 fe.log 观察是否启动成功
-
-   ```shell
-   tail -f ${DORIS_NEW_HOME}/log/fe.log
-   ```
-
-h. 如果启动成功，则代表兼容性没有问题，停止测试环境的 FE 进程，准备升级
-
-   ```
-   sh ${DORIS_NEW_HOME}/bin/stop_fe.sh
-   ```
-
-2. BE 兼容性测试
-
-可利用灰度升级方案，先升级单个 BE，无异常和报错情况下即视为兼容性正常，可执行后续升级动作
-
-### 升级流程
-
-:::tip
-
-先升级 BE，后升级 FE
-
-一般而言，Doris 只需要升级 FE 目录下的 `/bin` 和 `/lib` 以及 BE 目录下的  `/bin` 和 `/lib`
-
-在 2.0.2 及之后的版本，FE 和 BE 部署路径下新增了 `custom_lib/` 目录（如没有可以手动创建）。`custom_lib/` 目录用于存放一些用户自定义的第三方 jar 包，如 `hadoop-lzo-*.jar`，`orai18n.jar` 等。
-
-这个目录在升级时不需要替换。
-
-但是在大版本升级时，可能会有新的特性增加或者老功能的重构，这些修改可能会需要升级时**替换/新增**更多的目录来保证所有新功能的可用性，请大版本升级时仔细关注该版本的 Release-Note，以免出现升级故障
-
-:::
-
-**04 升级 BE**
-
-:::tip
-
-为了保证您的数据安全，请使用 3 副本来存储您的数据，以避免升级误操作或失败导致的数据丢失问题
-
-:::
-
-1. 在多副本的前提下，选择一台 BE 节点停止运行，进行灰度升级
-
-   ```shell
+   ```bash
    sh ${DORIS_OLD_HOME}/be/bin/stop_be.sh
    ```
 
-2. 重命名 BE 目录下的 `/bin`，`/lib` 目录
+2. 重命名 BE 目录下的 `/bin`，`/lib` 目录：
 
-   ```shell
+   ```bash
    mv ${DORIS_OLD_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin_back
    mv ${DORIS_OLD_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib_back
    ```
 
-3. 复制新版本的  `/bin`，`/lib` 目录到原 BE 目录下
+3. 复制新版本的 `/bin`，`/lib` 目录到原 BE 目录下：
 
-   ```shell
+   ```bash
    cp -r ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
    cp -r ${DORIS_NEW_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib
    ```
 
-4. 启动该 BE 节点
+4. 启动该 BE 节点：
 
-   ```shell
+   ```bash
    sh ${DORIS_OLD_HOME}/be/bin/start_be.sh --daemon
    ```
 
-5. 链接集群，查看该节点信息
+5. 连接集群，查看该节点信息：
 
-   ```mysql
+   ```sql
    show backends\G
    ```
 
-   若该 BE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功
+   若该 BE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功。
 
-6. 依次完成其他 BE 节点升级
+### 第 3 步：升级 FE 节点
 
-**05 升级 FE**
+1. 多个 FE 节点情况下，选择一个非 Master 节点进行升级，先停止运行：
 
-:::tip
-
-先升级非 Master 节点，后升级 Master 节点。
-
-:::
-
-1. 多个 FE 节点情况下，选择一个非 Master 节点进行升级，先停止运行
-
-   ```shell
+   ```bash
    sh ${DORIS_OLD_HOME}/fe/bin/stop_fe.sh
    ```
 
-2. 重命名 FE 目录下的 `/bin`，`/lib`，`/mysql_ssl_default_certificate` 目录
+2. 重命名 FE 目录下的 `/bin`，`/lib`，`/mysql_ssl_default_certificate` 目录：
 
-   ```shell
+   ```bash
    mv ${DORIS_OLD_HOME}/fe/bin ${DORIS_OLD_HOME}/fe/bin_back
    mv ${DORIS_OLD_HOME}/fe/lib ${DORIS_OLD_HOME}/fe/lib_back
    mv ${DORIS_OLD_HOME}/fe/mysql_ssl_default_certificate ${DORIS_OLD_HOME}/fe/mysql_ssl_default_certificate_back
    ```
 
-3. 复制新版本的  `/bin`，`/lib`，`/mysql_ssl_default_certificate` 目录到原 FE 目录下
+3. 复制新版本的 `/bin`，`/lib`，`/mysql_ssl_default_certificate` 目录到原 FE 目录下：
 
-   ```shell
+   ```bash
    cp -r ${DORIS_NEW_HOME}/fe/bin ${DORIS_OLD_HOME}/fe/bin
    cp -r ${DORIS_NEW_HOME}/fe/lib ${DORIS_OLD_HOME}/fe/lib
    cp -r ${DORIS_NEW_HOME}/fe/mysql_ssl_default_certificate ${DORIS_OLD_HOME}/fe/mysql_ssl_default_certificate
    ```
 
-4. 启动该 FE 节点
+4. 启动该 FE 节点：
 
-   ```shell
+   ```sql
    sh ${DORIS_OLD_HOME}/fe/bin/start_fe.sh --daemon
    ```
 
-5. 链接集群，查看该节点信息
+5. 连接集群，查看该节点信息：
 
-   ```mysql
+   ```sql
    show frontends\G
    ```
 
-   若该 FE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功
+   若该 FE 节点 `alive` 状态为 `true`，且 `Version` 值为新版本，则该节点升级成功。
 
-6. 依次完成其他 FE 节点升级，**最后完成 Master 节点的升级**
+6. 依次完成其他 FE 节点升级，最后完成 Master 节点的升级
 
-**06 打开集群副本修复和均衡功能**
+### 第 4 步：打开副本修复与均衡功能
 
 升级完成，并且所有 BE 节点状态变为 `Alive` 后，打开集群副本修复和均衡功能：
 
