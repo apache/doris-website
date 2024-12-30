@@ -103,9 +103,13 @@
     "message": "数据源",
     "description": "The label for category Data Source in sidebar docs"
   },
-  "sidebar.docs.category.Import Way": {
+  "sidebar.docs.category.Loading Methods": {
     "message": "导入方式",
-    "description": "The label for category Import Way in sidebar docs"
+    "description": "The label for category Loading Methods in sidebar docs"
+  },
+  "sidebar.docs.category.File Formats": {
+    "message": "文件格式",
+    "description": "The label for category File Formats in sidebar docs"
   },
   "sidebar.docs.category.Complex Data Types": {
     "message": "复杂数据类型",
