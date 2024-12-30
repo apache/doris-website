@@ -104,4 +104,4 @@ Hint Log 分为三个状态：
 
 ## 总结
 
-Hint 是手动管理执行计划的强大工具。当前 Doris 支持的 leading hint, ordered hint, distribute hint等，可以支撑用户手动管理 join order, shuffle 方式以及其他变量配置，给用户提供更方便有效的的运维能力。
+Hint 是手动管理执行计划的强大工具。当前 Doris 支持的 leading hint, ordered hint, distribute hint等，可以支撑用户手动管理 join order, shuffle 方式以及其他变量配置，给用户提供更方便有效的运维能力。
