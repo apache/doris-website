@@ -67,17 +67,70 @@ Doris异步物化视图采用了基于SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模�
 
 ## 物化刷新数据湖支持情况
 
-物化刷新数据湖的支持情况，不同类型的表和 Catalog 有不同的支持程度：
+物化刷新数据湖的支持情况，不同类型的表和 Catalog 有不同的支持程度
 
-| 表类型  | Catalog 类型     | 刷新方式-全量刷新     | 刷新方式-分区刷新 | 刷新时机-触发刷新 |
-| ------- |----------------|---------------|-----------|-----------|
-| 内表    | Internal       | 2.1 支持        | 2.1 支持    | 2.1.4 支持  |
-| Hive    | Hive           | 2.1 支持        | 2.1 支持    | 不支持       |
-| Iceberg | Iceberg        | 2.1 支持        | 不支持       | 不支持       |
-| Paimon  | Paimon         | 2.1 支持        | 不支持       | 不支持       |
-| Hudi    | Hudi           | 2.1 支持        | 不支持       | 不支持       |
-| JDBC    | JDBC           | 2.1 支持        | 不支持       | 不支持       |
-| ES      | ES             | 2.1 支持        | 不支持       | 不支持       |
+<table>
+    <tr>
+        <th rowspan="2">表类型</th>
+        <th rowspan="2">Catalog 类型</th>
+        <th colspan="2">刷新方式</th>
+        <th >刷新时机</th>
+    </tr>
+    <tr>
+        <th>全量刷新</th>
+        <th>分区刷新</th>
+        <th>自动触发</th>
+    </tr>
+    <tr>
+        <td>内表</td>
+        <td>Internal</td>
+        <td>2.1 支持</td>
+        <td>2.1 支持</td>
+        <td>2.1.4 支持</td>
+    </tr>
+    <tr>
+        <td>Hive</td>
+        <td>Hive</td>
+        <td>2.1 支持</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+    </tr>
+    <tr>
+        <td>Iceberg</td>
+        <td>Iceberg</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+        <td>不支持</td>
+    </tr>
+    <tr>
+        <td>Paimon</td>
+        <td>Paimon</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+        <td>不支持</td>
+    </tr>
+    <tr>
+        <td>Hudi</td>
+        <td>Hudi</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+        <td>不支持</td>
+    </tr>
+    <tr>
+        <td>JDBC</td>
+        <td>JDBC</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+        <td>不支持</td>
+    </tr>
+    <tr>
+        <td>ES</td>
+        <td>ES</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+        <td>不支持</td>
+    </tr>
+</table>
 
 ## 物化视图和 OLAP 内表关系
 
