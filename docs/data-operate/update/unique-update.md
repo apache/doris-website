@@ -24,29 +24,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This document explains how to use the `UPDATE` command to update data in Doris. The `UPDATE` command is only applicable to tables with a Unique data model.
+This document explains how to use the `UPDATE` command to modify data in Doris. The `UPDATE` command is only applicable to tables with a Unique data model.
 
 ## Applicable Scenarios
 
-- Small-scale data updates: Suitable for scenarios where a small amount of data needs to be updated, such as correcting erroneous fields in certain records or updating the status of certain fields (e.g., order status updates).
+- Small-scale data updates: Ideal for scenarios where a small amount of data needs to be corrected, such as fixing erroneous fields in certain records or updating the status of specific fields (e.g., order status updates).
 
-- ETL batch processing of certain fields: Suitable for large-scale updates of a specific field, commonly seen in ETL processing scenarios. Note: Large-scale data updates are only suitable for infrequent calls.
+- ETL batch processing of certain fields: Suitable for large-scale updates of a specific field, commonly seen in ETL processing scenarios. Note: Large-scale data updates should be infrequent.
 
-## Basic Principles
+## How It Works
 
-The query engine's own where filtering logic is used to filter out the rows that need to be updated from the table to be updated. Then, using the logic of the Unique model's Value column to replace old data with new data, the rows to be updated are modified and reinserted into the table to achieve row-level updates.
+The query engine uses its own filtering logic to identify the rows that need to be updated. Then, using the Unique model's Value column logic, it replaces old data with new data. The rows to be updated are modified and reinserted into the table to achieve row-level updates.
 
 ### Synchronization
 
-The Update syntax in Doris is a synchronous syntax, meaning that once the Update statement is successfully executed, the update operation is also completed and the data is visible.
+The `UPDATE` syntax in Doris is synchronous, meaning that once the `UPDATE` statement is successfully executed, the update operation is completed and the data is immediately visible.
 
 ### Performance
 
-The performance of the Update statement is closely related to the number of rows to be updated and the retrieval efficiency of the query conditions.
+The performance of the `UPDATE` statement is closely related to the number of rows to be updated and the efficiency of the query conditions.
 
-- Number of rows to be updated: The more rows to be updated, the slower the Update statement will be. For small-scale updates, Doris supports a frequency similar to `INSERT INTO` statements. For large-scale updates, due to the long execution time of a single update, it is only suitable for infrequent calls.
+- Number of rows to be updated: The more rows that need updating, the slower the `UPDATE` statement will be. For small-scale updates, Doris supports a frequency similar to `INSERT INTO` statements. For large-scale updates, due to the long execution time, it is only suitable for infrequent calls.
 
-- Retrieval efficiency of query conditions: The implementation principle of Update is to first read the rows that meet the query conditions. Therefore, if the retrieval efficiency of the query conditions is high, the Update speed will also be fast. It is best if the condition columns can hit the index or partition bucket pruning, so Doris does not need to scan the entire table and can quickly locate the rows that need to be updated, thereby improving update efficiency. It is strongly recommended not to include value columns in the condition columns.
+- Efficiency of query conditions: The `UPDATE` implementation first reads the rows that meet the query conditions. Therefore, if the query conditions are efficient, the `UPDATE` speed will be fast. It is best if the condition columns can hit the index or partition bucket pruning, so Doris does not need to scan the entire table and can quickly locate the rows that need updating, thereby improving update efficiency. It is strongly recommended not to include value columns in the condition columns.
 
 ## Usage Example
 
