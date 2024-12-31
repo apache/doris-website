@@ -427,10 +427,6 @@
     "message": "存储资源管理",
     "description": "The label for category Storage in sidebar docs"
   },
-  "sidebar.docs.category.Security": {
-    "message": "安全",
-    "description": "The label for category Statistics in sidebar docs"
-  },
   "sidebar.docs.category.Data Governance": {
     "message": "数据治理",
     "description": "The label for category Governance in sidebar docs"
