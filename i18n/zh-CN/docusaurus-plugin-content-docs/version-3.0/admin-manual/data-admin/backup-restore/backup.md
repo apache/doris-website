@@ -56,7 +56,7 @@ PROPERTIES
 
 ### Option 2: 在 Azure 上创建 Repository
 
-**2.1.8 以及 3.1.4 开始支持**
+**3.0.4 开始支持**
 要在 Azure 存储上创建 Repository ，请使用以下 SQL 命令：
 
 ```sql

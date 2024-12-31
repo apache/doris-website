@@ -56,28 +56,7 @@ PROPERTIES
 
 ### Option 2: Create Repository on Azure
 
-**Azure is supported since 2.0.8 or 3.0.4.**
-
-To create a Repository on Azure storage, use the following SQL command:
-
-```sql
-CREATE REPOSITORY `azure_repo`
-WITH S3
-ON LOCATION "s3://bucket_name/azure_repo"
-PROPERTIES
-(
-    "s3.endpoint" = "selectdbcloudtestwestus3.blob.core.windows.net",
-    "s3.region" = "dummy_region",
-    "s3.access_key" = "ak",
-    "s3.secret_key" = "sk",
-    "provider" = "AZURE"
-);
-```
-
-- Replace `bucket_name` with your Azure container name.
-- Provide your Azure storage account and key for authentication.
-- `s3.region` is a dummy but required field.
-- The `provider` must be set to `AZURE` for Azure storage.
+**Not supported in 2.1.**
 
 ### Option 3: Create Repository on GCP
 
