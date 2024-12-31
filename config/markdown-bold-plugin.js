@@ -60,7 +60,7 @@ const plugin = options => {
                     });
                 }
                 console.warn(
-                    `The bold syntax of ${value} in ${file.path} is invalid and is being automatically optimized`,
+                    `The bold syntax of "${value}" in "${file.path}" is invalid and is being automatically optimized`,
                 );
             }
         });
