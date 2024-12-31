@@ -481,7 +481,6 @@
         	            "items": [
                 	        "admin-manual/auth/certificate",
                         	"admin-manual/auth/fe-certificate"
-
                             ]
 			},
 			"admin-manual/audit-plugin",
