@@ -278,6 +278,14 @@ cp ${SYNCER_PACKAGE_DIR}/bin ${SYNCER_HOME}/bin
 
 使用在 1.1 中保存的命令启动新的 Syncer。
 
+### 2. 升级下游 Doris（如有必要）
+
+按照 [升级 Doris](../../../admin-manual/cluster-management/upgrade.md) 指南中的说明升级上游系统。
+
+### 3. 升级上游 Doris（如有必要）
+
+按照 [升级 Doris](../../../admin-manual/cluster-management/upgrade.md) 指南中的说明升级上游系统。
+
 ## 使用须知
 
 :::caution

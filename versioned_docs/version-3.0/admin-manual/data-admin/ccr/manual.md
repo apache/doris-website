@@ -276,10 +276,13 @@ cp ${SYNCER_PACKAGE_DIR}/bin ${SYNCER_HOME}/bin
 
 Start the new Syncer using the command saved in 1.1.
 
-### 2. Upgrade downstream Doris
+### 2. Upgrade downstream Doris (If Necessary)
 
-### 3. Upgrade upstream Doris
+Upgrade the upstream system by following the instructions in the [Upgrade Doris](../../../admin-manual/cluster-management/upgrade.md) guide.
 
+### 3. Upgrade upstream Doris (If Necessary)
+
+Upgrade the upstream system by following the instructions in the [Upgrade Doris](../../../admin-manual/cluster-management/upgrade.md) guide.
 
 ## Usage Notes
 
