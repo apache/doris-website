@@ -29,7 +29,6 @@ under the License.
 ### Network Requirements
 
 - Syncer needs to be able to communicate with both upstream and downstream FE and BE.
-
 - The downstream BE must have direct access to the IP used by the Doris BE process (as seen in `show frontends/backends`).
 
 ### Permission Requirements
@@ -45,7 +44,9 @@ When Syncer synchronizes, the user needs to provide accounts for both upstream a
 
 ### Version Requirements
 
-Minimum version requirement: v2.0.15
+- Syncer Version >= Downstream Doris Version >= Upstream Doris Version. Therefore, upgrade Syncer first, then upgrade downstream Doris, and finally upgrade upstream Doris.
+- The minimum version for Doris 2.0 is 2.0.15, and the minimum version for Doris 2.1 is 2.1.6.
+- Starting from Syncer version 2.1.8 and 3.0.4, Syncer no longer supports Doris 2.0.
 
 ### Configuration and Property Requirements
 
@@ -56,15 +57,6 @@ Minimum version requirement: v2.0.15
 - `restore_reset_index_id`: If the table to be synchronized has an inverted index, it must be configured as `false` on the target cluster.
 - `ignore_backup_tmp_partitions`: If the upstream creates tmp partitions, Doris will prohibit backup, causing Syncer synchronization to be interrupted; setting `ignore_backup_tmp_partitions=true` in FE can avoid this issue.
 
-:::caution
-**Starting from versions 2.1.8/3.0.4, the minimum Doris version supported by ccr syncer is 2.1, and version 2.0 will no longer be supported.**
-:::
-
-#### Versions Not Recommended for Use
-
-Doris Versions
-- 2.1.5/2.0.14: If upgraded from previous versions to these two versions and the user has drop partition operations, they may encounter NPE during upgrade or restart due to a new field introduced in this version that older versions do not have, resulting in a default value of null. This issue is fixed in versions 2.1.6/2.0.15.
-
 ## Enable binlog for all tables in the database
 
 ```shell
@@ -73,18 +65,18 @@ bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 
 ## Start Syncer
 
-You can start Syncer using `bin/start_syncer.sh`.
+Assuming the environment variable ${SYNCER_HOME} is set to the working directory of Syncer. You can start Syncer using `bin/start_syncer.sh`.
 
 | **Option** | **Description** | **Command Example** | **Default Value** |
 |------------|-----------------|---------------------|--------------------|
 | `--daemon` | Run Syncer in the background | `bin/start_syncer.sh --daemon` | `false` |
 | `--db_type` | Syncer can use two types of databases to store metadata: `sqlite3` (local storage) and `mysql` (local or remote storage). When using `mysql` to store metadata, Syncer will create a database named `ccr` using `CREATE IF NOT EXISTS`, and the metadata table will be stored there. | `bin/start_syncer.sh --db_type mysql` | `sqlite3` |
-| `--db_dir` | **Effective only when using `sqlite3`**; specifies the filename and path of the SQLite3 generated database file. | `bin/start_syncer.sh --db_dir /path/to/ccr.db` | `SYNCER_OUTPUT_DIR/db/ccr.db` |
+| `--db_dir` | **Effective only when using `sqlite3`**; specifies the filename and path of the SQLite3 generated database file. | `bin/start_syncer.sh --db_dir /path/to/ccr.db` | `SYNCER_HOME/db/ccr.db` |
 | `--db_host`<br>`--db_port`<br>`--db_user`<br>`--db_password` | **Effective only when using `mysql`**; used to set the host, port, user, and password for MySQL. | `bin/start_syncer.sh --db_host 127.0.0.1 --db_port 3306 --db_user root --db_password "qwe123456"` | `db_host` and `db_port` default to example values; `db_user` and `db_password` default to empty. |
-| `--log_dir` | Specify the log output path | `bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log` | `SYNCER_OUTPUT_DIR/log/ccr_syncer.log` |
+| `--log_dir` | Specify the log output path | `bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log` | `SYNCER_HOME/log/ccr_syncer.log` |
 | `--log_level` | Specify the log output level; the log format is as follows: `time level msg hooks`. The default value is `info` when running in the background; when running in the foreground, the default value is `trace`, and logs are saved to `log_dir` using `tee`. | `bin/start_syncer.sh --log_level info` | `info` (background)<br>`trace` (foreground) |
 | `--host`<br>`--port` | Specify the `host` and `port` for Syncer. The `host` is used to distinguish instances of Syncer in the cluster and can be understood as the name of Syncer; the naming format for Syncer in the cluster is `host:port`. | `bin/start_syncer.sh --host 127.0.0.1 --port 9190` | `host` defaults to `127.0.0.1`<br>`port` defaults to `9190` |
-| `--pid_dir` | Specify the path to save the PID file. The PID file is the credential for the `stop_syncer.sh` script to stop Syncer, saving the corresponding Syncer's process number. For ease of cluster management, you can customize the path. | `bin/start_syncer.sh --pid_dir /path/to/pids` | `SYNCER_OUTPUT_DIR/bin` |
+| `--pid_dir` | Specify the path to save the PID file. The PID file is the credential for the `stop_syncer.sh` script to stop Syncer, saving the corresponding Syncer's process number. For ease of cluster management, you can customize the path. | `bin/start_syncer.sh --pid_dir /path/to/pids` | `SYNCER_HOME/bin` |
 
 ## Stop Syncer
 
@@ -100,7 +92,7 @@ Options for Method 3:
 
 | **Option** | **Description** | **Command Example** | **Default Value** |
 |------------|-----------------|---------------------|--------------------|
-| `--pid_dir` | Specify the directory where the PID files are located; all three stopping methods depend on this option to execute. | `bash bin/stop_syncer.sh --pid_dir /path/to/pids` | `SYNCER_OUTPUT_DIR/bin` |
+| `--pid_dir` | Specify the directory where the PID files are located; all three stopping methods depend on this option to execute. | `bash bin/stop_syncer.sh --pid_dir /path/to/pids` | `SYNCER_HOME/bin` |
 | `--host`<br>`--port` | Stop the Syncer corresponding to `host:port` in the `pid_dir` path. If only `host` is specified, it degrades to **Method 3**; if both `host` and `port` are not empty, it will be effective as **Method 1**. | `bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190` | `host`: 127.0.0.1<br>`port`: empty |
 | `--files` | Stop the Syncers corresponding to the specified PID file names in the `pid_dir` path, separated by spaces and enclosed in `"` quotes. | `bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"` | None |
 
@@ -245,6 +237,49 @@ curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
 ## Syncer High Availability
 
 Syncer high availability relies on MySQL. If MySQL is used as backend storage, Syncer can discover other Syncers; if one crashes, others will take over its jobs.
+
+## Upgrade
+
+### 1. Upgrade Syncer
+Assuming the following environment variables are set:
+- ${SYNCER_HOME}: Syncer's working directory.
+- ${SYNCER_PACKAGE_DIR}: Directory containing the new Syncer.
+
+Upgrade every Syncer by following these steps.
+
+1.1. Save start commands
+
+Save the output of the following command to a file.
+```
+ps -elf | grep ccr_syncer
+```
+
+1.2. Stop the current Syncer
+
+```shell
+sh bin/stop_syncer.sh --pid_dir ${SYNCER_HOME}/bin
+```
+
+1.3. Backup the existing MetaService binaries
+
+```shell
+mv ${SYNCER_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
+```
+
+1.4. Deploy the new package
+
+```shell
+cp ${SYNCER_PACKAGE_DIR}/bin ${SYNCER_HOME}/bin
+```
+
+1.5. Start the new Syncer
+
+Start the new Syncer using the command saved in 1.1.
+
+### 2. Upgrade downstream Doris
+
+### 3. Upgrade upstream Doris
+
 
 ## Usage Notes
 
