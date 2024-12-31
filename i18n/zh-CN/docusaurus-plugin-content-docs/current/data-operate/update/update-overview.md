@@ -49,7 +49,7 @@ under the License.
 | DELETE         | 支持           | 支持           | 不支持         |
 | sequence 列    | 支持           | 支持           | 不支持         |
 | delete_sign    | 支持           | 支持           | 不支持         |
-| 部分列更新     | 支持           | 不支持         | 支持(但无法更新 null 值) |
+| 部分列更新     | 支持           | 不支持         | 支持 (但无法更新 null 值) |
 | 倒排索引       | 支持           | 不支持         | 不支持         |
 
 ## 主键（Unique）模型的更新
@@ -62,7 +62,7 @@ Doris 主键 (unique) 模型，从 Doris 2.0 开始，除了原来的 Merge-on-R
 CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
 (
   `user_id` LARGEINT NOT NULL,
-  `username` VARCHAR(50) NOT NULL ,
+  `username` VARCHAR(50) NOT NULL,
   `city` VARCHAR(20),
   `age` SMALLINT,
   `sex` TINYINT,
@@ -120,9 +120,9 @@ Doris 对所有导入更新操作提供原子性保障，即每次导入数据�
 
 聚合模型的更新，主要是指用新的列值和旧的聚合值按照聚合函数的要求产出新的聚合值。
 
-New Agg Value = Agg Func ( Old Agg Value, New Column Value)
+New Agg Value = Agg Func (Old Agg Value, New Column Value)
 
-聚合模型只支持基于导入方式的更新，不支持使用 Update 语句更新。在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NOT_NULL，也可以间接实现类似主键表的部分列更新能力。更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
+聚合模型只支持基于导入方式的更新，不支持使用 `UPDATE` 语句更新。在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NOT_NULL，也可以间接实现类似主键表的部分列更新能力。更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
 
 ## 主键模型和聚合模型的选择建议
 - 大部分有数据更新需求的场景，都建议**首选主键模型**。例如从 TP 数据库 CDC 同步到 Doris，用户画像，人群圈选等。

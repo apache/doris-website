@@ -62,7 +62,7 @@ Doris 主键（unique）模型，从 Doris 2.0 开始，除了原来的 Merge-on
 CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
 (
   `user_id` LARGEINT NOT NULL,
-  `username` VARCHAR(50) NOT NULL ,
+  `username` VARCHAR(50) NOT NULL,
   `city` VARCHAR(20),
   `age` SMALLINT,
   `sex` TINYINT,
@@ -86,7 +86,7 @@ PROPERTIES (
 
 #### 使用 `UPDATE` 语句更新
 
-无论是 MoR 还是 MoW，语义都是完成对指定列的更新。这个适合少量数据，不频繁的更新。
+无论是 MoR 还是 MoW，语义都是完成对指定列的更新。单次 UPDATE 的耗时会随着被更新的数据量的增加而增长。
 
 #### 基于导入的批量更新
 
@@ -122,10 +122,10 @@ Doris 对所有导入更新操作提供原子性保障，即每次导入数据�
 
 New Agg Value = Agg Func (Old Agg Value, New Column Value)
 
-聚合模型只支持基于导入方式的更新，不支持使用 Update 语句更新。在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NOT_NULL，也可以间接实现类似主键表的部分列更新能力。更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
+聚合模型只支持基于导入方式的更新，不支持使用 `UPDATE` 语句更新。在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NOT_NULL，也可以间接实现类似主键表的部分列更新能力。更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
 
 ## 主键模型和聚合模型的选择建议
-- 大部分有数据更新需求的场景，都建议首选**主键模型**。例如从TP数据库CDC同步到Doris，用户画像，人群圈选等。
+- 大部分有数据更新需求的场景，都建议**首选主键模型**。例如从 TP 数据库 CDC 同步到 Doris，用户画像，人群圈选等。
 - 下面两类场景，建议使用聚合模型：
   - 部分字段需要做指标聚合，部分字段需要进行更新。
-  - 对部分列更新有需求，同时对写入性能非常敏感，对查询延迟要求不高的场景，建议使用聚合表 + REPLACE_IF_NOT_NULL聚合函数。
+  - 对部分列更新有需求，同时对写入性能非常敏感，对查询延迟要求不高的场景，建议使用聚合表 + REPLACE_IF_NOT_NULL 聚合函数。
