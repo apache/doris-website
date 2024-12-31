@@ -475,10 +475,12 @@ from
 
 ## FAQ
 
-If materialized views do not match queries as expected, check if the materialized view is still being built using:
 
+1. Why isn't the rewrite successful after creating a materialized view?
+
+If no matching data is found, it might be because the materialized view is still in the building process. In this case, you can use the following command to check the build status of the materialized view:
 ```sql
 show alter table materialized view from test_db;
 ```
 
-Wait until the status changes to `FINISHED` before expecting materialized views to be available.
+If the query result shows that the `status` field is not `FINISHED`, you need to wait until the status becomes `FINISHED` before the materialized view becomes available.
