@@ -42,7 +42,7 @@ The performance data in this document is based on the default configuration. If 
 
 ### Test Steps
 
-1. Create the library and table information for TPC-H 1T in the upstream cluster.
+1. Create the database and tables for TPC-H 1T in the upstream cluster.
 2. Create a synchronization job for the TPC-H 1T database.
 3. Wait for the TPC-H 1T data import to complete and record the completion time.
 4. Wait for the downstream data synchronization to complete and record the completion time.
