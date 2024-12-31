@@ -202,7 +202,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "file formats",
+                            "label": "File Formats",
                             "items": [
                                 "data-operate/import/file-format/csv",
                                 "data-operate/import/file-format/json",
@@ -212,7 +212,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "complex data types",
+                            "label": "Complex Data Types",
                             "items": [
                                 "data-operate/import/complex-types/array",
                                 "data-operate/import/complex-types/map",
