@@ -56,7 +56,7 @@ PROPERTIES
 
 ### Option 2: Create Repository on Azure
 
-**Azure is supported since 2.0.8 or 3.0.4.**
+**Azure is supported since 3.0.4.**
 
 To create a Repository on Azure storage, use the following SQL command:
 
