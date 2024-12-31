@@ -1,7 +1,7 @@
 ---
 {
     "title": "Best Practices",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
