@@ -77,8 +77,8 @@ WITH S3
     "provider" = "OBS",
     "s3.endpoint" = "obs.cn-north-1.myhuaweicloud.com",
     "s3.region" = "cn-north-1",
-    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
-    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    "s3.access_key" = "<your-ak>",
+    "s3.secret_key" = "<your-sk>"
 )
 PROPERTIES
 (
@@ -155,8 +155,8 @@ SELECT * FROM S3
     "provider" = "OBS",
     "s3.endpoint" = "obs.cn-north-1.myhuaweicloud.com",
     "s3.region" = "cn-north-1",
-    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
-    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "s3.access_key" = "<your-ak>",
+    "s3.secret_key" = "<your-sk>",
     "column_separator" = ",",
     "csv_schema" = "user_id:int;name:string;age:int"
 );

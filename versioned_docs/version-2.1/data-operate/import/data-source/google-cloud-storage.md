@@ -77,8 +77,8 @@ WITH S3
     "provider" = "GCP",
     "s3.endpoint" = "storage.us-west2.rep.googleapis.com",  
     "s3.region" = "US-WEST2",
-    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
-    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    "s3.access_key" = "<your-ak>",
+    "s3.secret_key" = "<your-sk>"
 )
 PROPERTIES
 (
@@ -155,8 +155,8 @@ SELECT * FROM S3
     "provider" = "GCP",
     "s3.endpoint" = "storage.us-west2.rep.googleapis.com",  
     "s3.region" = "US-WEST2",
-    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
-    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "s3.access_key" = "<your-ak>",
+    "s3.secret_key" = "<your-sk>",
     "column_separator" = ",",
     "csv_schema" = "user_id:int;name:string;age:int"
 );
