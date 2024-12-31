@@ -45,7 +45,7 @@ NGram BloomFilter 索引只能加速字符串 LIKE 查询，而且 LIKE pattern 
 :::
 
 
-## 使用语法
+## 管理索引
 
 ### 创建 NGram BloomFilter 索引
 
@@ -75,7 +75,11 @@ NGram BloomFilter 索引只能加速字符串 LIKE 查询，而且 LIKE pattern 
 ### 查看 NGram BloomFilter 索引
 
 ```sql
-SHOW CREATE TABLE table_ngrambf;
+-- 语法 1，表的 schema 中 INDEX 部分 USING NGRAM_BF 是倒排索引
+SHOW CREATE TABLE table_name;
+
+-- 语法 2，IndexType 为 NGRAM_BF 的是倒排索引
+SHOW INDEX FROM idx_name;
 ```
 
 ### 删除 NGram BloomFilter 索引
@@ -91,6 +95,17 @@ CREATE INDEX idx_column_name2(column_name2) ON table_ngrambf USING NGRAM_BF PROP
 
 ALTER TABLE table_ngrambf ADD INDEX idx_column_name2(column_name2) USING NGRAM_BF PROPERTIES("gram_size"="3", "bf_size"="1024") COMMENT 'username ngram_bf index';
 ```
+
+## 使用索引
+
+NGram BloomFilter 索引用于加速 LIKE 查询，比如：
+```sql
+SELECT count() FROM table1 WHERE message LIKE '%error%';
+```
+
+可以通过 Query Profile 中的下面几个指标分析 BloomFilter 索引（包括NGram）的加速效果。
+- RowsBloomFilterFiltered BloomFilter 索引过滤掉的行数，可以与其他几个 Rows 值对比分析索引过滤效果
+- BlockConditionsFilteredBloomFilterTime BloomFilter 倒排索引消耗的时间
 
 
 ## 使用示例
