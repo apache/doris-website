@@ -94,65 +94,6 @@ For full-text searches of text types and equal value or range queries on string,
 
 :::
 
-## Case 3: Adjusting Field Order to Leverage ZoneMap Index for Data Filtering
-
-The ZoneMap index is a built-in index that maintains statistical information such as Min/Max/Count on column-stored data. When Doris scans the storage layer for data, it can quickly filter out data blocks that do not meet the filtering conditions based on the ZoneMap statistical information (such as Min/Max) of the filtering field, thereby effectively reducing the amount of table scanning.
-
-By default, ZoneMap selects the first column of the schema to establish an index. Therefore, by reasonably adjusting the field order, this feature can be fully utilized to accelerate data filtering at the storage layer.
-
-Taking the `store_sales` table in the standard test set TPC-DS as an example, its original schema definition is as follows:
-
-```sql
-CREATE TABLE IF NOT EXISTS store_sales (
-    ss_item_sk bigint not null,
-    ss_ticket_number bigint not null,
-    ss_sold_date_sk bigint,
-    ......
-    ss_net_paid_inc_tax decimalv3(7,2),
-    ss_net_profit decimalv3(7,2)
-)
-DUPLICATE KEY(ss_item_sk, ss_ticket_number)
-DISTRIBUTED BY HASH(ss_item_sk, ss_ticket_number) BUCKETS 32
-PROPERTIES (
-  "replication_num" = "1"
-);
-```
-
-An example of a query fragment is as follows:
-
-```sql
-select *
-from store_sales, date_dim dt
-where dt.d_date_sk = store_sales.ss_sold_date_sk
-      and ss_sold_date_sk between 2450816 and 2451000;
-```
-
-To leverage the range filtering condition on the fact table `store_sales` for rapid storage layer filtering, we can consider adjusting the field definition order to use the ZoneMap index. Since ZoneMap is established on the first field by default, we need to adjust the filtering field `ss_sold_date_sk` to the first position in the schema.
-
-The adjusted schema is as follows:
-
-```sql
-CREATE TABLE IF NOT EXISTS store_sales (
-    ss_sold_date_sk bigint,
-    ss_item_sk bigint not null,
-    ss_ticket_number bigint not null,
-    ......
-    ss_net_paid_inc_tax decimalv3(7,2),
-    ss_net_profit decimalv3(7,2)
-)
-DUPLICATE KEY(ss_sold_date_sk, ss_item_sk, ss_ticket_number)
-DISTRIBUTED BY HASH(ss_sold_date_sk, ss_item_sk, ss_ticket_number) BUCKETS 32
-PROPERTIES (
-  "replication_num" = "1"
-);
-```
-
-:::tip
-
-Adjust the equal value or range filtering field to the first column of the schema to leverage the ZoneMap index for data block-level filtering. This can accelerate the table scanning process, thereby achieving the purpose of performance tuning.
-
-:::
-
 ## Summary
 
-In schema tuning, apart from table-level schema optimization, index optimization also occupies an important position. Doris provides multiple index types, including built-in indexes such as prefix and ZoneMap, as well as secondary indexes such as inverted indexes, which provide strong support for performance acceleration. By reasonably utilizing these indexes, we can significantly improve the speed of business queries and analyses in multiple scenarios, which is of great significance for multi-scenario business queries and analyses.
+In schema tuning, apart from table-level schema optimization, index optimization also occupies an important position. Doris provides multiple index types, including built-in indexes such as prefix index, as well as secondary indexes such as inverted indexes, which provide strong support for performance acceleration. By reasonably utilizing these indexes, we can significantly improve the speed of business queries and analyses in multiple scenarios, which is of great significance for multi-scenario business queries and analyses.
