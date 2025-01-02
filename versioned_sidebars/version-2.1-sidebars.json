@@ -427,6 +427,31 @@
                             ]
                         }
                     ]
+                },
+		{
+                    "type": "category",
+                    "label": "Security",
+                    "items": [
+			{
+                    	    "type": "category",
+                            "label": "Authentication and Authorization",
+        	            "items": [
+			        "admin-manual/auth/authentication-and-authorization",
+				"admin-manual/auth/ldap",
+				"admin-manual/auth/ranger"
+                    	    ]
+                	},
+			{
+                	    "type": "category",
+	                    "label": "Data Transmission Encryption",
+        	            "items": [
+                	        "admin-manual/auth/certificate",
+                        	"admin-manual/auth/fe-certificate"
+                            ]
+			},
+			"admin-manual/audit-plugin",
+			"admin-manual/auth/encryption-function"
+                    ]
                 }
             ]
         },
