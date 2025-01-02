@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-自 Doris 2.1 版本后，基于 Arrow Flight SQL 协议实现了高速数据链路，支持多种语言使用 SQL 从 Doris 高速读取大批量数据。部分场景相比 MySQL Client 或 JDBC/ODBC 驱动数据传输方案，性能提升百倍。
+自 Doris 2.1 版本后，基于 Arrow Flight SQL 协议实现了高速数据链路，支持多种语言使用 SQL 从 Doris 高速读取大批量数据。Arrow Flight SQL 还提供了通用的 JDBC 驱动，支持与同样遵循 Arrow Flight SQL 协议的数据库无缝交互。部分场景相比 MySQL Client 或 JDBC/ODBC 驱动数据传输方案，性能提升百倍。
 
 ## 实现原理
 
-在 Doris 中查询结果以列存格式的 Block 组织。在 2.1 以前版本，可以通过 MySQL Client 或 JDBC/ODBC 驱动传输至目标客户端，需要将行存格式的 Bytes 再反序列化为列存格式。基于 Arrow Flight SQL 构建高速数据传输链路，若目标客户端同样支持 Arrow 列存格式，整体传输过程将完全避免序列化/反序列化操作，彻底消除因此带来时间及性能损耗。Arrow Flight SQL 还提供了通用的 JDBC 驱动，支持与同样遵循 Arrow Flight SQL 协议的数据库无缝交互，这不仅增强了 Apache Doris 的兼容性，还为其拓展了更广泛的应用场景。
+在 Doris 中查询结果以列存格式的 Block 组织。在 2.1 以前版本，可以通过 MySQL Client 或 JDBC/ODBC 驱动传输至目标客户端，需要将行存格式的 Bytes 再反序列化为列存格式。基于 Arrow Flight SQL 构建高速数据传输链路，若目标客户端同样支持 Arrow 列存格式，整体传输过程将完全避免序列化/反序列化操作，彻底消除因此带来时间及性能损耗。
 
 ![Arrow_Flight_SQL](/images/db-connect/arrow-flight-sql/Arrow_Flight_SQL.png)
 
