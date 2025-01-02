@@ -43,10 +43,6 @@
     "message": "Docker 部署",
     "description": "Make docker image and quickly start Doris's Docker cluster"
   },
-  "sidebar.docs.category.Source Code Compilation": {
-    "message": "源码编译",
-    "description": "The label for category Compile in sidebar docs"
-  },
   "sidebar.docs.category.Table Design": {
     "message": "数据表设计",
     "description": "The label for category Table Design in sidebar docs"
