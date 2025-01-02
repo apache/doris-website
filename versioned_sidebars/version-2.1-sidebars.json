@@ -12,16 +12,6 @@
                     "type": "category",
                     "label": "Tutorials",
                     "items": [
-                        {
-                            "type": "category",
-                            "label": "Building lakehouse",
-                            "items": [
-                                "gettingStarted/tutorials/building-lakehouse/doris-hudi",
-                                "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                                "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
-                                "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
-                            ]
-                        },
                         "gettingStarted/tutorials/log-storage-analysis"
                     ]
                 }
@@ -164,6 +154,7 @@
                             "items": [
                                 "data-operate/import/data-source/local-file",
                                 "data-operate/import/data-source/kafka",
+                                "data-operate/import/data-source/flink",
                                 "data-operate/import/data-source/hdfs",
                                 "data-operate/import/data-source/amazon-s3",
                                 "data-operate/import/data-source/google-cloud-storage",
@@ -177,7 +168,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "Import Way",
+                            "label": "Loading Methods",
                             "items": [
                                 "data-operate/import/import-way/stream-load-manual",
                                 "data-operate/import/import-way/broker-load-manual",
@@ -187,7 +178,30 @@
                                 "data-operate/import/import-way/mysql-load-manual"
                             ]
                         },
-                        "data-operate/import/load-data-format",
+                        {
+                            "type": "category",
+                            "label": "File Formats",
+                            "items": [
+                                "data-operate/import/file-format/csv",
+                                "data-operate/import/file-format/json",
+                                "data-operate/import/file-format/parquet",
+                                "data-operate/import/file-format/orc"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Complex Data Types",
+                            "items": [
+                                "data-operate/import/complex-types/array",
+                                "data-operate/import/complex-types/map",
+                                "data-operate/import/complex-types/struct",
+                                "data-operate/import/complex-types/json",
+                                "data-operate/import/complex-types/bitmap",
+                                "data-operate/import/complex-types/hll",
+                                "data-operate/import/complex-types/variant"
+                            ]
+                        },
+                        "data-operate/import/handling-messy-data",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
                         "data-operate/import/group-commit-manual"
@@ -401,7 +415,42 @@
                         "lakehouse/compute-node",
                         "lakehouse/external-statistics",
                         "lakehouse/cloud-auth",
-                        "lakehouse/sql-dialect"
+                        "lakehouse/sql-dialect",
+			{
+                            "type": "category",
+                            "label": "Lakehouse Best Practices",
+                            "items": [
+                                "lakehouse/lakehouse-best-practices/doris-hudi",
+                                "lakehouse/lakehouse-best-practices/doris-paimon",
+                                "lakehouse/lakehouse-best-practices/doris-iceberg",
+                                "lakehouse/lakehouse-best-practices/doris-lakesoul"
+                            ]
+                        }
+                    ]
+                },
+		{
+                    "type": "category",
+                    "label": "Security",
+                    "items": [
+			{
+                    	    "type": "category",
+                            "label": "Authentication and Authorization",
+        	            "items": [
+			        "admin-manual/auth/authentication-and-authorization",
+				"admin-manual/auth/ldap",
+				"admin-manual/auth/ranger"
+                    	    ]
+                	},
+			{
+                	    "type": "category",
+	                    "label": "Data Transmission Encryption",
+        	            "items": [
+                	        "admin-manual/auth/certificate",
+                        	"admin-manual/auth/fe-certificate"
+                            ]
+			},
+			"admin-manual/audit-plugin",
+			"admin-manual/auth/encryption-function"
                     ]
                 }
             ]
@@ -436,7 +485,18 @@
                                 "admin-manual/data-admin/backup-restore/restore"
                             ]
                         },
-                        "admin-manual/data-admin/ccr",
+                        {
+                            "type": "category",
+                            "label": "Cross Cluster Replication",
+                            "items": [
+                                "admin-manual/data-admin/ccr/overview",
+                                "admin-manual/data-admin/ccr/quickstart",
+                                "admin-manual/data-admin/ccr/manual",
+                                "admin-manual/data-admin/ccr/feature",
+                                "admin-manual/data-admin/ccr/config",
+                                "admin-manual/data-admin/ccr/performance"
+                            ]
+                        },
                         "admin-manual/data-admin/recyclebin"
                     ]
                 },

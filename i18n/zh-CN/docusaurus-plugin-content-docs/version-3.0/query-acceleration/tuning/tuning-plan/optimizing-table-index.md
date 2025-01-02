@@ -92,63 +92,6 @@ Doris 支持倒排索引作为二级索引，以加速等值、范围及文本�
 
 :::
 
-## 案例 3: 调整字段顺序利用 ZoneMap 索引过滤数据
-
-ZoneMap 索引是一种内置索引，它在列存数据上维护了如 Min/Max/Count 等统计信息。当 Doris 对存储层进行数据扫描时，会根据过滤字段的 ZoneMap 统计信息（如 Min/Max）快速过滤掉不满足过滤条件的数据块，从而有效减少扫表量。
-
-默认情况下，ZoneMap 会选择 Schema 的第一列建立索引。因此，通过合理调整字段顺序，可以充分利用这一特性来加速存储层的数据过滤。
-
-以标准测试集 TPC-DS 中的 `store_sales` 表为例，其原始 Schema 定义如下：
-
-```sql
-CREATE TABLE IF NOT EXISTS store_sales (
-    ss_item_sk bigint not null,
-    ss_ticket_number bigint not null,
-    ss_sold_date_sk bigint,
-    ......
-    ss_net_paid_inc_tax decimalv3(7,2),
-    ss_net_profit decimalv3(7,2)
-)
-DUPLICATE KEY(ss_item_sk, ss_ticket_number)
-DISTRIBUTED BY HASH(ss_item_sk, ss_ticket_number) BUCKETS 32
-PROPERTIES (
-  "replication_num" = "1"
-);
-```
-
-查询片段示例如下：
-
-```sql
-select *
-from store_sales, date_dim dt
-where dt.d_date_sk = store_sales.ss_sold_date_sk
-      and ss_sold_date_sk between 2450816 and 2451000;
-```
-
-为了利用事实表 `store_sales` 上的范围过滤条件进行快速的存储层过滤，我们可以考虑调整字段定义顺序，以便使用 ZoneMap 索引。由于 ZoneMap 默认建立在第一个字段上，因此我们需要将过滤字段 `ss_sold_date_sk` 调整至 Schema 的第一个位置。
-
-调整后的 Schema 如下：
-
-```sql
-CREATE TABLE IF NOT EXISTS store_sales (
-    ss_sold_date_sk bigint,
-    ss_item_sk bigint not null,
-    ss_ticket_number bigint not null,
-    ......
-    ss_net_paid_inc_tax decimalv3(7,2),
-    ss_net_profit decimalv3(7,2)
-)
-DUPLICATE KEY(ss_sold_date_sk, ss_item_sk, ss_ticket_number)
-DISTRIBUTED BY HASH(ss_sold_date_sk, ss_item_sk, ss_ticket_number) BUCKETS 32
-PROPERTIES (
-  "replication_num" = "1"
-);
-```
-:::tip 优化建议
-
-将等值或范围过滤字段调整为 Schema 的第一个列，以便利用 ZoneMap 索引进行数据块级别的过滤。这样可以加速扫表过程，从而达到性能调优的目的。
-
-:::
 ## 总结
 
-在 Schema 调优中，除了表级 Schema 优化外，索引优化同样占据重要地位。Doris 提供了多种索引类型，包括前缀、ZoneMap 等内置索引，以及倒排等二级索引。这些索引为性能加速提供了强大的支持，通过合理利用这些索引，我们可以显著提升多场景下的业务查询和分析速度，这对于多场景业务查询和分析具有重要意义。
+在 Schema 调优中，除了表级 Schema 优化外，索引优化同样占据重要地位。Doris 提供了多种索引类型，包括前缀等内置索引，以及倒排等二级索引。这些索引为性能加速提供了强大的支持，通过合理利用这些索引，我们可以显著提升多场景下的业务查询和分析速度，这对于多场景业务查询和分析具有重要意义。

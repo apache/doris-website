@@ -39,7 +39,6 @@ Doris 的各个实例通过网络进行通信，其正常运行需要网络环�
 | FE       | rpc_port               | 9020     | BE -> FE，FE <-> FE        | FE 上的 Thrift Server 端口，每个 FE 的配置需保持一致  |
 | FE       | query_port             | 9030     | Client <-> FE              | FE 上的 MySQL Server 端口                             |
 | FE       | edit_log_port          | 9010     | FE <-> FE                  | FE 上的 bdbje 通信端口                                |
-| Broker   | broker_ipc_port        | 8000     | FE -> Broker，BE -> Broker | Broker 上的 Thrift Server 端口，用于接收请求          |
 
 ## 节点数量规划
 

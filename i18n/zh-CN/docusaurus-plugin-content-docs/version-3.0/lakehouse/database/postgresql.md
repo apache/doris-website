@@ -103,6 +103,7 @@ CREATE CATALOG postgresql PROPERTIES (
 | cidr/inet/macaddr                       | STRING          |                                                      |
 | bit                                     | BOOLEAN/STRING  |                                                      |
 | uuid                                    | STRING          |                                                      |
+|array                                    | ARRAY           |                                                      |
 | Other                                   | UNSUPPORTED     |                                                      |
 
 

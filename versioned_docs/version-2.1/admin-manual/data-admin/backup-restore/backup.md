@@ -26,7 +26,7 @@ under the License.
 
 For concepts related to backup, please refer to [Backup and Restore](./overview.md). This guide provides the steps to create a Repository and back up data.
 
-## 1. Create Repository
+## Step 1. Create Repository
 
 <!--
 suites/backup_restore/test_create_and_drop_repository.groovy
@@ -56,28 +56,7 @@ PROPERTIES
 
 ### Option 2: Create Repository on Azure
 
-**Azure is supported since 2.0.8 or 3.0.4.**
-
-To create a Repository on Azure storage, use the following SQL command:
-
-```sql
-CREATE REPOSITORY `azure_repo`
-WITH S3
-ON LOCATION "s3://bucket_name/azure_repo"
-PROPERTIES
-(
-    "s3.endpoint" = "selectdbcloudtestwestus3.blob.core.windows.net",
-    "s3.region" = "dummy_region",
-    "s3.access_key" = "ak",
-    "s3.secret_key" = "sk",
-    "provider" = "AZURE"
-);
-```
-
-- Replace `bucket_name` with your Azure container name.
-- Provide your Azure storage account and key for authentication.
-- `s3.region` is a dummy but required field.
-- The `provider` must be set to `AZURE` for Azure storage.
+**Not supported in Doris 2.1.**
 
 ### Option 3: Create Repository on GCP
 
@@ -160,7 +139,7 @@ PROPERTIES
 - Replace `prefix_path` with the actual path.
 - Provide your HDFS endpoint and username.
 
-## 2. Backup
+## Step 2. Backup
 
 Refer to the following statements to back up databases, tables, or partitions. For detailed usage, please refer to [Backup](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md).
 
@@ -222,7 +201,7 @@ EXCLUDE
 );
 ```
 
-## 3. View Recent Backup Job Execution Status
+## Step 3. View Recent Backup Job Execution Status
 
 The following SQL statement can be used to view the execution status of recent backup jobs.
 
@@ -246,7 +225,7 @@ mysql> show BACKUP\G;
    1 row in set (0.01 sec)
 ```
 
-## 4. View Existing Backups in Repository
+## Step 4. View Existing Backups in Repository
 
 The following SQL statement can be used to view existing backups in a Repository named `example_repo`, where the Snapshot column is the snapshot label, and the Timestamp is the timestamp.
 
@@ -260,6 +239,6 @@ mysql> SHOW SNAPSHOT ON example_repo;
 1 row in set (0.15 sec)
 ```
 
-## 5. Cancel Backup (if necessary)
+## Step 5. Cancel Backup (if necessary)
 
 You can use `CANCEL BACKUP FROM db_name;` to cancel a backup task in a database. For more specific usage, refer to [Cancel Backup](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP.md).

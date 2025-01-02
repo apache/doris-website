@@ -104,6 +104,7 @@ When mapping PostgreSQL, a Database in Doris corresponds to a Schema under the s
 | cidr/inet/macaddr                       | STRING         |                                      |
 | bit                                     | BOOLEAN/STRING |                                      |
 | uuid                                    | STRING         |                                      |
+| array                                   | ARRAY          |                                      |
 | Other                                   | UNSUPPORTED    |                                      |
 
 

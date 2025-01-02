@@ -40,6 +40,8 @@ under the License.
    
 9. 添加 Storage Vault：使用共享存储创建一个或多个 Storage Vault。
 
+在开始部署操作前，可以[下载](https://doris.apache.org/download)相应的 Doris 版本。
+
 ## 第 1 步：准备 FoundationDB
 
 本节提供了脚本 `fdb_vars.sh` 和 `fdb_ctl.sh` 配置、部署和启动 FDB（FoundationDB）服务的分步指南。您可以下载 [doris tools](http://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-3.0.2-tools.tar.gz) 并从 `fdb` 目录获取 `fdb_vars.sh` 和 `fdb_ctl.sh`。
@@ -174,7 +176,7 @@ Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上
 
 ## 第 4 步：数据回收功能独立部署（可选）
 
-：::info 信息
+::info 信息
 
 Meta Service 本身具备了元数据管理和回收功能，这两个功能可以独立部署，如果你想独立部署，可以参考这一节。
 

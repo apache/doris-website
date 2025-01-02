@@ -42,17 +42,30 @@ The first 36 bytes of a row in a data block are used as the prefix index for tha
 
 Prefix indexes can speed up equality queries and range queries.
 
+## Managing Indexes
+
+There is no specific syntax to define a prefix index. When creating a table, the first 36 bytes of the table's Key are automatically taken as the prefix index.
+
+### Recommendations for Prefix Index Selection
+
 :::tip
 
-Since the KEY definition of a table is unique, a table can only have one type of prefix index. For queries using other columns that cannot hit the prefix index as conditions, the efficiency might not meet the requirements. There are two solutions:
+Because the Key definition of a table is unique, a table has only one set of prefix indexes. Therefore, it is important to choose an appropriate prefix index when designing the table structure. The following recommendations can be considered:
+1. Choose the fields most commonly used in WHERE filtering conditions as the Key.
+2. Place the more frequently used fields at the front, as prefix indexes are only effective for fields in the WHERE condition that are part of the Key's prefix.
+
+For queries that use other columns not covered by the prefix index as conditions, the efficiency may not meet the requirements. There are two solutions:
 1. Create an inverted index on the columns that require accelerated queries, as a table can have many inverted indexes.
 2. For DUPLICATE tables, multi-prefix indexes can be indirectly achieved by creating corresponding strongly consistent materialized views with adjusted column orders. For more details, refer to query acceleration/materialized views.
 
 :::
 
-## Syntax
+## Using Indexes
 
-There is no specific syntax for defining a prefix index. When creating a table, the first 36 bytes of the table's KEY are automatically taken as the prefix index.
+Prefix indexes are used to accelerate equality and range queries in the WHERE clause. They automatically take effect when applicable, and there is no special syntax required.
+
+The acceleration effect of the prefix index can be analyzed using the following metrics in the Query Profile:
+- RowsKeyRangeFiltered: The number of rows filtered by the prefix index, which can be compared with other Rows values to analyze the filtering effect of the index.
 
 ## Example Usage
 

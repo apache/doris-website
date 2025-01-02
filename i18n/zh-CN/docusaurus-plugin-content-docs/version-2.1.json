@@ -31,10 +31,6 @@
     "message": "使用教程",
     "description": "The label for category Tutorials in sidebar docs"
   },
-  "sidebar.docs.category.Building lakehouse": {
-    "message": "构建 lakehouse",
-    "description": "The label for category Building lakehouse in sidebar docs"
-  },
   "sidebar.docs.category.Installation and Deployment": {
     "message": "安装部署",
     "description": "The label for category Install and Deploy in sidebar docs"
@@ -103,9 +99,13 @@
     "message": "数据源",
     "description": "The label for category Data Source in sidebar docs"
   },
-  "sidebar.docs.category.Import Way": {
+  "sidebar.docs.category.Loading Methods": {
     "message": "导入方式",
-    "description": "The label for category Import Way in sidebar docs"
+    "description": "The label for category Loading Methods in sidebar docs"
+  },
+  "sidebar.docs.category.File Formats": {
+    "message": "文件格式",
+    "description": "The label for category File Formats in sidebar docs"
   },
   "sidebar.docs.category.Complex Data Types": {
     "message": "复杂数据类型",
@@ -142,6 +142,10 @@
   "sidebar.docs.category.Building Data Lakes": {
     "message": "数据湖构建",
     "description": "The label for category Building Data Lake in sidebar docs"
+  },
+  "sidebar.docs.category.Lakehouse Best Practices": {
+    "message": "湖仓一体最佳实践",
+    "description": "The label for category Lakehouse Best Practices in sidebar docs"
   },
   "sidebar.docs.category.Querying Databases": {
     "message": "数据库分析",
@@ -198,6 +202,18 @@
   "sidebar.docs.category.Alter Table": {
     "message": "表结构变更",
     "description": "The label for category Alter Table in sidebar docs"
+  },
+  "sidebar.docs.category.Security": {
+    "message": "安全合规",
+    "description": "The label for category Security in sidebar docs"
+  },
+  "sidebar.docs.category.Data Transmission Encryption": {
+    "message": "传输加密",
+    "description": "The label for category Data Transmission Encryption in sidebar docs"
+  },
+  "sidebar.docs.category.Authentication and Authorization": {
+    "message": "认证与鉴权",
+    "description": "The label for category Authentication and Authorization in sidebar docs"
   },
   "sidebar.docs.category.Doris Partition": {
     "message": "Doris 表分区",
@@ -422,10 +438,6 @@
   "sidebar.docs.category.Storage Management": {
     "message": "存储资源管理",
     "description": "The label for category Storage in sidebar docs"
-  },
-  "sidebar.docs.category.Security": {
-    "message": "安全",
-    "description": "The label for category Statistics in sidebar docs"
   },
   "sidebar.docs.category.Data Governance": {
     "message": "数据治理",
@@ -654,6 +666,10 @@
   "sidebar.get-starting.category.Building lakehouse": {
     "message": "构建 Lakehouse",
     "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.docs.category.Cross Cluster Replication": {
+    "message": "跨集群复制",
+    "description": "The label for category Cross Cluster Replication in sidebar docs"
   },
   "sidebar.docs.category.Tiered Storage": {
     "message": "分层存储",
