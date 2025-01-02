@@ -247,6 +247,18 @@
     "message": "安全管理",
     "description": "The label for category Managing User Privilege in sidebar docs"
   },
+  "sidebar.docs.category.Security": {
+    "message": "安全合规",
+    "description": "The label for category Security in sidebar docs"
+  },
+  "sidebar.docs.category.Data Transmission Encryption": {
+    "message": "传输加密",
+    "description": "The label for category Data Transmission Encryption in sidebar docs"
+  },
+  "sidebar.docs.category.Authentication and Authorization": {
+    "message": "认证与鉴权",
+    "description": "The label for category Authentication and Authorization in sidebar docs"
+  },
   "sidebar.docs.category.Managing Memory": {
     "message": "内存管理",
     "description": "The label for category Managing Memory in sidebar docs"
@@ -414,10 +426,6 @@
   "sidebar.docs.category.Storage Management": {
     "message": "存储资源管理",
     "description": "The label for category Storage in sidebar docs"
-  },
-  "sidebar.docs.category.Security": {
-    "message": "安全",
-    "description": "The label for category Statistics in sidebar docs"
   },
   "sidebar.docs.category.Data Governance": {
     "message": "数据治理",
