@@ -26,6 +26,10 @@ under the License.
 
 本文介绍如何在 Windows 平台上编译源码，借助 Windows 的 WSL 功能，可以通过在 Windows 上启动 Linux 系统来编译 Doris。
 
+:::tip
+目前还不支持存算分离模式编译部署
+:::
+
 ## 环境要求
 
 1.  必须运行 Windows 10 版本 2004 及更高版本（内部版本 19041 及更高版本）或 Windows 11 才能使用。
@@ -42,7 +46,7 @@ under the License.
 
 -   [使用 LDB Toolchain 编译 (推荐) ](../../install/source-install/compilation-with-ldb-toolchain) 
 
--   [使用 Docker 开发镜像编译（推荐）](../../install/source-install/compilation-with-docker) 
+-   [使用 Docker 开发镜像编译（推荐）](../https://doris.apache.org/zh-CN/community/source-install/compilation-with-docker) 
 
 ## 注意事项
 

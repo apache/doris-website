@@ -35,10 +35,6 @@
     "message": "安装部署",
     "description": "The label for category Installation and Deployment in sidebar docs"
   },
-  "sidebar.docs.category.Source Code Compilation": {
-    "message": "源码编译",
-    "description": "The label for category Source Code Compilation in sidebar docs"
-  },
   "sidebar.docs.category.Cluster Deployment": {
     "message": "集群部署",
     "description": "The label for category Cluster Deployment in sidebar docs"
@@ -47,7 +43,7 @@
     "message": "手动部署集群",
     "description": "The label for category Cluster Deployment Manually in sidebar docs"
   },
-    "sidebar.docs.category.Installation Preparation": {
+  "sidebar.docs.category.Installation Preparation": {
     "message": "部署前准备",
     "description": "The label for category Installation Preparation in sidebar docs"
   },
