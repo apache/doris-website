@@ -33,6 +33,18 @@
                 "release-and-verify/release-verify"
             ]
         },
+        {
+            "type": "category",
+            "label": "Source Code Compilation",
+            "items": [
+                "source-install/compilation-with-docker",
+                "source-install/compilation-with-ldb-toolchain",
+                "source-install/compilation-linux",
+                "source-install/compilation-arm",
+                "source-install/compilation-win",
+                "source-install/compilation-mac"
+            ]
+        },
         "security",
         {
             "type": "category",

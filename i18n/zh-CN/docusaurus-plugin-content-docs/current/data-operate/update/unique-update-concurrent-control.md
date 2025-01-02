@@ -58,7 +58,7 @@ sequence 列目前只支持 Unique 模型。
 
 ### 基本原理
 
-通过增加一个隐藏列**__DORIS_SEQUENCE_COL__**实现，该列的类型由用户在建表时指定，在导入时确定该列具体值，并依据该值决定相同 Key 列下，哪一行生效。
+通过增加一个隐藏列**__DORIS_SEQUENCE_COL__** 实现，该列的类型由用户在建表时指定，在导入时确定该列具体值，并依据该值决定相同 Key 列下，哪一行生效。
 
 **建表**
 
@@ -72,7 +72,7 @@ sequence 列目前只支持 Unique 模型。
 
 **Sequence 列建表时有两种方式，一种是建表时设置`sequence_col`属性，一种是建表时设置`sequence_type`属性。**
 
-**1. 设置****`sequence_col`（推荐）**
+**1. 设置 `sequence_col`（推荐）**
 
 创建 Unique 表时，指定 sequence 列到表中其他 column 的映射
 
@@ -86,7 +86,7 @@ sequence_col 用来指定 sequence 列到表中某一列的映射，该列可以
 
 导入方式和没有 sequence 列时一样，使用相对比较简单，推荐使用。
 
-**2. 设置****`sequence_type`**
+**2. 设置 `sequence_type`**
 
 创建 Uniq 表时，指定 sequence 列类型
 

@@ -39,10 +39,6 @@
     "message": "安装部署",
     "description": "The label for category Installation and Deployment in sidebar docs"
   },
-  "sidebar.docs.category.Source Code Compilation": {
-    "message": "源码编译",
-    "description": "The label for category Compile in sidebar docs"
-  },
   "sidebar.docs.category.Cluster Deployment": {
     "message": "集群部署",
     "description": "The label for category Cluster Deployment in sidebar docs"
