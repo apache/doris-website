@@ -77,7 +77,7 @@ local(
 - File format parameters:
 
     - `format`: (required) Currently support `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`
-    - `column_separator`: (optional) default `,`.
+    - `column_separator`: (optional) default `\t`.
     - `line_delimiter`: (optional) default `\n`.
     - `compress_type`: (optional) Currently support `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Default value is `UNKNOWN`, it will automatically infer the type based on the suffix of `uri`.
 
