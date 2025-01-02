@@ -29,7 +29,6 @@ under the License.
 ### 网络要求
 
 - 需要 Syncer 与上下游的 FE 和 BE 是互通的
-
 - 下游 BE 与上游 BE 通过 Doris BE 进程使用的 IP （`show frontends/backends` 看到的） 是直通的。
 
 ### 权限要求
@@ -45,7 +44,9 @@ Syncer 同步时需要用户提供上下游的账户，该账户需要拥有下�
 
 ### 版本要求
 
-版本最低要求：v2.0.15
+- Syncer 版本 >= 下游 Doris 版本 >= 上游 Doris 版本。因此，首先升级 Syncer，然后升级下游 Doris，最后升级上游 Doris。
+- Doris 2.0 的最低版本为 2.0.15，Doris 2.1 的最低版本为 2.1.6。
+- 从 Syncer 版本 2.1.8 和 3.0.4 开始，Syncer 不再支持 Doris 2.0。
 
 ### 配置和属性要求
 
@@ -56,16 +57,6 @@ Syncer 同步时需要用户提供上下游的账户，该账户需要拥有下�
 - `restore_reset_index_id`：如果要同步的表中带有 inverted index，那么必须在目标集群上配置为 `false`。
 - `ignore_backup_tmp_partitions`：如果上游有创建 tmp partition，那么 doris 会禁止做 backup，因此 Syncer 同步会中断；通过在 FE 设置 `ignore_backup_tmp_partitions=true` 可以避免这个问题。
 
-:::caution
-**从 2.1.8/3.0.4 开始，ccr syncer 支持的最小 Doris 版本是 2.1，2.0 版本将不再支持。**
-:::
-
-#### 不建议使用版本
-
-Doris 版本
-- 2.1.5/2.0.14：如果从之前的版本升级到这两个版本，且用户有 drop partition 操作，那么会在升级、重启时碰到 NPE，原因是这个版本引入了一个新字段，旧版本没有所以默认值为 null。这个问题在 2.1.6/2.0.15 修复。
-
-
 ## 开启库中所有表的 binlog
 
 ```shell
@@ -74,18 +65,18 @@ bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 
 ## 启动 Syncer
 
-可以使用 `bin/start_syncer.sh` 启动 Syncer。
+假设环境变量 ${SYNCER_HOME} 被设置为 Syncer 的工作目录。可以使用 `bin/start_syncer.sh` 启动 Syncer。
 
 | **选项** | **描述** | **命令示例** | **默认值** |
 |----------|----------|--------------|------------|
 | `--daemon` | 后台运行 Syncer | `bin/start_syncer.sh --daemon` | `false` |
 | `--db_type` | Syncer 可使用两种数据库保存元数据：`sqlite3`（本地存储）和 `mysql`（本地或远端存储）。当使用 `mysql` 存储元数据时，Syncer 会使用 `CREATE IF NOT EXISTS` 创建名为 `ccr` 的库，元数据表保存在其中。 | `bin/start_syncer.sh --db_type mysql` | `sqlite3` |
-| `--db_dir` | **仅在数据库使用 `sqlite3` 时生效**，可指定 SQLite3 生成的数据库文件名及路径。 | `bin/start_syncer.sh --db_dir /path/to/ccr.db` | `SYNCER_OUTPUT_DIR/db/ccr.db` |
+| `--db_dir` | **仅在数据库使用 `sqlite3` 时生效**，可指定 SQLite3 生成的数据库文件名及路径。 | `bin/start_syncer.sh --db_dir /path/to/ccr.db` | `SYNCER_HOME/db/ccr.db` |
 | `--db_host`<br>`--db_port`<br>`--db_user`<br>`--db_password` | **仅在数据库使用 `mysql` 时生效**，用于设置 MySQL 的主机、端口、用户和密码。 | `bin/start_syncer.sh --db_host 127.0.0.1 --db_port 3306 --db_user root --db_password "qwe123456"` | `db_host` 和 `db_port` 默认为示例值；`db_user` 和 `db_password` 默认为空。 |
-| `--log_dir` | 指定日志输出路径 | `bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log` | `SYNCER_OUTPUT_DIR/log/ccr_syncer.log` |
+| `--log_dir` | 指定日志输出路径 | `bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log` | `SYNCER_HOME/log/ccr_syncer.log` |
 | `--log_level` | 指定日志输出等级，日志格式如下：`time level msg hooks`。在 `--daemon` 下默认值为 `info`；前台运行时默认值为 `trace`，并通过 `tee` 保存日志到 `log_dir`。 | `bin/start_syncer.sh --log_level info` | `info`（后台运行）<br>`trace`（前台运行） |
 | `--host`<br>`--port` | 指定 Syncer 的 `host` 和 `port`。`host` 用于区分集群中 Syncer 的实例，可理解为 Syncer 的名称，集群中 Syncer 的名称格式为 `host:port`。 | `bin/start_syncer.sh --host 127.0.0.1 --port 9190` | `host` 默认为 `127.0.0.1`<br>`port` 默认为 `9190` |
-| `--pid_dir` | 指定 PID 文件保存路径。PID 文件为 `stop_syncer.sh` 脚本停止 Syncer 的凭据，保存对应 Syncer 的进程号。为方便集群化管理，可自定义路径。 | `bin/start_syncer.sh --pid_dir /path/to/pids` | `SYNCER_OUTPUT_DIR/bin` |
+| `--pid_dir` | 指定 PID 文件保存路径。PID 文件为 `stop_syncer.sh` 脚本停止 Syncer 的凭据，保存对应 Syncer 的进程号。为方便集群化管理，可自定义路径。 | `bin/start_syncer.sh --pid_dir /path/to/pids` | `SYNCER_HOME/bin` |
 
 
 ## 停止 Syncer
@@ -102,7 +93,7 @@ bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 
 | **选项** | **描述** | **命令示例** | **默认值** |
 |----------|----------|--------------|------------|
-| `--pid_dir` | 指定 PID 文件所在目录，上述三种停止方法都依赖于此选项执行。 | `bash bin/stop_syncer.sh --pid_dir /path/to/pids` | `SYNCER_OUTPUT_DIR/bin` |
+| `--pid_dir` | 指定 PID 文件所在目录，上述三种停止方法都依赖于此选项执行。 | `bash bin/stop_syncer.sh --pid_dir /path/to/pids` | `SYNCER_HOME/bin` |
 | `--host`<br>`--port` | 停止 `pid_dir` 路径下 `host:port` 对应的 Syncer。仅指定 `host` 时退化为**方法 3**；`host` 和 `port` 都不为空时生效为**方法 1**。 | `bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190` | `host`: 127.0.0.1<br>`port`: 空 |
 | `--files` | 停止 `pid_dir` 路径下指定 PID 文件名对应的 Syncer，文件之间用空格分隔，并整体用 `"` 包裹。 | `bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"` | 无 |
 
@@ -249,6 +240,51 @@ curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
 
 Syncer 高可用依赖 mysql，如果使用 mysql 作为后端存储，Syncer 可以发现其它 Syncer，如果一个 crash 了，其他会分担它的任务。
 
+## Upgrade
+
+### 1. 升级 Syncer
+假设以下环境变量已设置：
+- ${SYNCER_HOME}：Syncer 的工作目录。
+- ${SYNCER_PACKAGE_DIR}：包含新 Syncer 的目录。
+
+通过以下步骤升级每个 Syncer。
+
+1.1. 保存启动命令
+
+将以下命令的输出保存到文件中。
+```
+ps -elf | grep ccr_syncer
+```
+
+1.2. 停止当前 Syncer
+
+```shell
+sh bin/stop_syncer.sh --pid_dir ${SYNCER_HOME}/bin
+```
+
+1.3. 备份现有的 MetaService 二进制文件
+
+```shell
+mv ${SYNCER_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
+```
+
+1.4. 部署新包
+
+```shell
+cp ${SYNCER_PACKAGE_DIR}/bin ${SYNCER_HOME}/bin
+```
+
+1.5. 启动新的 Syncer
+
+使用在 1.1 中保存的命令启动新的 Syncer。
+
+### 2. 升级下游 Doris（如有必要）
+
+按照 [升级 Doris](../../../admin-manual/cluster-management/upgrade.md) 指南中的说明升级上游系统。
+
+### 3. 升级上游 Doris（如有必要）
+
+按照 [升级 Doris](../../../admin-manual/cluster-management/upgrade.md) 指南中的说明升级上游系统。
 
 ## 使用须知
 
