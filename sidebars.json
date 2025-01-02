@@ -31,8 +31,8 @@
                             "label": "Installation Preparation",
                             "items": [
                                 "install/preparation/env-checking",
-                                "install/preparation/cluster-planning",
-                                "install/preparation/os-checking"
+				                "install/preparation/cluster-planning",
+				                "install/preparation/os-checking"
                             ]
                         },
                         {
@@ -540,18 +540,6 @@
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
                         "admin-manual/workload-management/job-scheduler"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing User Privilege",
-                    "items": [
-                        "admin-manual/auth/authentication-and-authorization",
-                        "admin-manual/auth/ldap",
-                        "admin-manual/auth/ranger",
-                        "admin-manual/auth/certificate",
-                        "admin-manual/auth/fe-certificate",
-                        "admin-manual/auth/encryption-function"
                     ]
                 },
                 {
