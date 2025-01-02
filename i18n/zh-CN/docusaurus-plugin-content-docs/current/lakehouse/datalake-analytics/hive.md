@@ -164,6 +164,22 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
+### Hive On OSS-HDFS
+
+首先，需要下载 [Jindo SDK](https://github.com/aliyun/alibabacloud-jindodata/blob/master/docs/user/6.x/6.7.8/jindodata_download.md) 然后将他们放置在 `${DORIS_HOME}/fe/lib` 和 `${DORIS_HOME}/be/lib/java_extensions/preload-extensions`，并重启 FE 和 BE。
+
+```
+CREATE CATALOG hive PROPERTIES (
+    "type"="hms",
+    "hive.metastore.uris" = "thrift://172.0.0.1:9083",
+    "oss.endpoint" = "cn-beijing.oss-dls.aliyuncs.com",
+    "oss.access_key" = "ak",
+    "oss.secret_key" = "sk"
+);
+```
+
+注意 OSS-HDFS 的 endpoint 和 OSS 的 endpoint 不同。
+
 ### Hive On OBS
 
 ```sql
