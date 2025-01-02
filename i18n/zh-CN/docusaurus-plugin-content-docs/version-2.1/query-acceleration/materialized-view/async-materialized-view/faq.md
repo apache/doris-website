@@ -213,9 +213,9 @@ GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 
 - 物化视图的命中信息在 plan 最后。
 
-- **MaterializedViewRewriteSuccessAndChose：**表示透明改写成功，并且 CBO 选择的物化视图名称列表。-
+- **MaterializedViewRewriteSuccessAndChose：** 表示透明改写成功，并且 CBO 选择的物化视图名称列表。-
 
-- **MaterializedViewRewriteSuccessButNotChose：**表示透明改写成功，但是最终 CBO 没有选择的物化视图名称列表，没有选择意味着执行计划不会使用物化视图。”
+- **MaterializedViewRewriteSuccessButNotChose：** 表示透明改写成功，但是最终 CBO 没有选择的物化视图名称列表，没有选择意味着执行计划不会使用物化视图。”
 
 - **MaterializedViewRewriteFail**：表示列举透明改写失败及原因摘要。
 

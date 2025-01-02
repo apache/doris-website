@@ -173,7 +173,7 @@ mysql> select * from test_multi_table_load2;
 1 rows in set (0.01 sec)
 ```
 
-#### **配置安全认证**
+#### 配置安全认证
 
 有关带有认证的 Kafka 配置方法，请参见 [Kafka 安全认证](../import-way/routine-load-manual.md#kafka-安全认证)。
 

@@ -358,7 +358,7 @@ GROUP BY YEAR, S_CITY, P_BRAND
 ORDER BY YEAR ASC, S_CITY ASC, P_BRAND ASC;
 ```
 
-#### **7.6.2 SSB 标准测试 SQL**
+#### 7.6.2 SSB 标准测试 SQL
 
 ```sql
 --Q1.1
