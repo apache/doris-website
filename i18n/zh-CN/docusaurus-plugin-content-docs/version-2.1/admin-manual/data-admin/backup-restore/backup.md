@@ -56,7 +56,7 @@ PROPERTIES
 
 ### Option 2: 在 Azure 上创建 Repository
 
-**Not supported in 2.1**
+**2.1 不支持 Azure**
 
 ### Option 3: 在 GCP 上创建 Repository
 
