@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## date_sub
 ### Description
 #### Syntax
 
@@ -33,15 +32,15 @@ under the License.
 
 Subtract the specified time interval from the date
 
-The date parameter is a valid date expression.
+The `date` parameter is a valid date expression.
 
-The expr parameter is the interval you want to add.
+The `expr` parameter is the interval you want to add.
 
-The type parameter can be the following values: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND
+The `type` parameter can be the following values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND
 
-### example
+### Example
 
-```
+```sql
 mysql> select date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY);
 +-------------------------------------------------+
 | date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY) |
@@ -49,5 +48,5 @@ mysql> select date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY);
 | 2010-11-28 23:59:59                             |
 +-------------------------------------------------+
 ```
-### keywords
+### Keywords
     Date, date, date
