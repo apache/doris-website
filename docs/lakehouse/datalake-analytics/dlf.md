@@ -69,7 +69,7 @@ Doris supports accessing Hive/Iceberg/Hudi metadata in DLF.
 ### Use OSS-HDFS as the datasource
 
 1. Enable OSS-HDFS. [Grant access to OSS or OSS-HDFS](https://www.alibabacloud.com/help/en/e-mapreduce/latest/oss-hdfsnew)
-2. Download the SDK. [JindoData SDK](https://github.com/aliyun/alibabacloud-jindodata/blob/master/docs/user/5.x/5.0.0-beta7/jindodata_download.md). If the Jindo SDK directory already exists on the cluster, skip this step.
+2. Download the SDK. [JindoData SDK](https://github.com/aliyun/alibabacloud-jindodata/blob/master/docs/user/6.x/6.7.8/jindodata_download.md). If the Jindo SDK directory already exists on the cluster, skip this step.
 3. Decompress the jindosdk.tar.gz or locate the Jindo SDK directory on the cluster, and then enter its lib directory and put `jindo-core.jar, jindo-sdk.jar` to both `${DORIS_HOME}/fe/lib` and `${DORIS_HOME}/be/lib/java_extensions/preload-extensions`.
 4. Create DLF Catalog, set `oss.hdfs.enabled` as `true`：
 
