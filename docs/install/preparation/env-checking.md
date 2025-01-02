@@ -91,12 +91,43 @@ Doris involves distributing data partitions across different instances for paral
 Doris can be deployed on x86-64 or ARM64 architecture server platforms.
 
 - Development and Testing Environments
-  
+
+  | Module    | CPU        | Memory  | Disk                         | Network              | Minimum Instance Count |
+  | --------- | ---------- | ------- | ---------------------------- | -------------------- | ---------------------- |
+  | Frontend  | 8 cores +  | 8 GB+   | SSD or SATA, 10 GB+          | Gigabit/Ten-Gigabit  | 1                      |
+  | Backend   | 8 cores +  | 16 GB+  | SSD or SATA, 50 GB+          | Gigabit/Ten-Gigabit  | 1                      |
+
+  :::info
+
+   * In the test validation environment, you can deploy FE and BE on the same server.
+   * It is generally recommended to deploy only one BE instance per machine and only one FE instance.
+   * If 3 replicas of data are required, at least 3 machines should each deploy one BE instance, instead of deploying 3 instances on a single machine.
+
+  :::
+
 - Production Environments
+
+  | Module    | CPU        | Memory   | Disk                         | Network   | Minimum Instance Count |
+  | --------- | ---------- | -------- | ---------------------------- | --------- | ---------------------- |
+  | Frontend  | 16 cores + | 64 GB+   | SSD or RAID card, 100 GB+     | 10-Gigabit | 1                      |
+  | Backend   | 16 cores + | 64 GB+   | SSD or SATA, 100 GB+          | 10-Gigabit | 3                      |
+
+  :::info
+
+  * In production environments, if FE and BE are mixed, attention should be paid to resource contention. It is recommended to store metadata and data on separate disks.
+  * BE nodes can be configured with multiple hard drives, binding multiple HDDs or SSDs on a single BE instance.
+  * The performance of the cluster depends on the resources of the BE nodes. The more BE nodes, the better the Doris performance. Typically, Doris can fully perform on clusters with 10 to 100 machines.
+
+  :::
 
 ## Disk Space Calculation
 
-In the Doris cluster, FE (Frontend) is mainly used for metadata storage, including metadata edit logs and images. BE (Backend) disk space is primarily used for storing data, and it needs to be calculated based on business requirements. Starting from version 2.0, the use of the Broker component for data import is no longer recommended.
+In the Doris cluster, FE (Frontend) is mainly used for metadata storage, including metadata edit logs and images. BE (Backend) disk space is primarily used for storing data, and it needs to be calculated based on business requirements. 
+| Component | Disk Space Description                                                                                             |
+| --------- | ------------------------------------------------------------------------------------------------------------------ |
+| FE        | It is recommended to reserve more than 100 GB of storage space, using SSD disks.                                      |
+| BE        | Doris uses LZ4 compression by default. The compression ratio is around 0.3 - 0.5. Disk space should be calculated as total data volume * 3 (for 3 replicas), and 40% of the space should be reserved for backend compaction and temporary data storage. |
+
 
 ## Java Environment Check
 
