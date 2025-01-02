@@ -24,22 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip
-- since 2.1
-:::
+自 Doris 2.1 版本后，基于 Arrow Flight SQL 协议实现了高速数据链路，支持多种语言使用 SQL 从 Doris 高速读取大批量数据。在 Doris 中查询结果以列存格式的 Block 组织。在 2.1 以前版本，可以通过 MySQL Client 或 JDBC/ODBC 驱动传输至目标客户端，需要将行存格式的 Bytes 再反序列化为列存格式。基于 Arrow Flight SQL 构建高速数据传输链路，若目标客户端同样支持 Arrow 列存格式，整体传输过程将完全避免序列化/反序列化操作，彻底消除因此带来时间及性能损耗。
+以 Python 读取 Apache Doris 中数据为例，Apache Doris 先将列存的 Block 快速转换为列存的 Arrow RecordBatch，随后在 Python 客户端中，将 Arrow RecordBatch 转换为同样列存的 Pandas DataFrame 中，转换速度极快，保障了数据传输的时效性。Arrow Flight SQL 还提供了通用的 JDBC 驱动，支持与同样遵循 Arrow Flight SQL 协议的数据库无缝交互，这不仅增强了 Apache Doris 的兼容性，还为其拓展了更广泛的应用场景。
+![Arrow_Flight_SQL](/images/db-connect/arrow-flight-sql.png)
 
-Doris 基于 Arrow Flight SQL 协议实现了高速数据链路，支持多种语言使用 SQL 从 Doris 高速读取大批量数据。
+安装 Apache Arrow 你可以去官方文档 [Apache Arrow](https://arrow.apache.org/install/) 找到详细的安装教程。更多关于 Doris 实现 Arrow Flight 协议的原理可以参考 [Doris support Arrow Flight SQL protocol](https://github.com/apache/doris/issues/25514)。
 
-## 用途
-
-从 Doris 加载大批量数据到其他组件，如 Python/Java/Spark/Flink，可以使用基于 Arrow Flight SQL 的 ADBC/JDBC 替代过去的 JDBC/PyMySQL/Pandas 来获得更高的读取性能，这在数据科学、数据湖分析等场景中经常遇到。
-
-Apache Arrow Flight SQL 是一个由 Apache Arrow 社区开发的与数据库系统交互的协议，用于 ADBC 客户端使用 Arrow 数据格式与实现了 Arrow Flight SQL 协议的数据库交互，具有 Arrow Flight 的速度优势以及 JDBC/ODBC 的易用性。
-
-Doris 支持 Arrow Flight SQL 的动机、设计与实现、性能测试结果、以及有关 Arrow Flight、ADBC 的更多概念可以看 [GitHub Issue](https://github.com/apache/doris/issues/25514)，这篇文档主要介绍 Doris Arrow Flight SQL 的使用方法，以及一些常见问题。
-
-安装 Apache Arrow 你可以去官方文档（
-[Apache Arrow](https://arrow.apache.org/install/)）找到详细的安装教程。
 
 ## Python 使用方法
 
