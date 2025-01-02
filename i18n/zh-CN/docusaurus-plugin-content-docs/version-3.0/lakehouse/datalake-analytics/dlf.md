@@ -69,7 +69,7 @@ CREATE CATALOG dlf PROPERTIES (
 ### 使用开启了 HDFS 服务的 OSS 存储数据
 
 1. 确认 OSS 开启了 HDFS 服务。[开通并授权访问 OSS-HDFS 服务](https://help.aliyun.com/document_detail/419505.html?spm=a2c4g.2357115.0.i0)。
-2. 下载 SDK。[JindoData SDK 下载](https://github.com/aliyun/alibabacloud-jindodata/blob/master/docs/user/5.x/5.0.0-beta7/jindodata_download.md)。如果集群上已有 SDK 目录，忽略这一步。
+2. 下载 SDK。[JindoData SDK 下载](https://github.com/aliyun/alibabacloud-jindodata/blob/master/docs/user/6.x/6.7.8/jindodata_download.md)。如果集群上已有 SDK 目录，忽略这一步。
 3. 解压下载后的 jindosdk.tar.gz 或者在集群上找到 Jindo SDK 的目录，将其 lib 目录下的`jindo-core.jar、jindo-sdk.jar`放到`${DORIS_HOME}/fe/lib`和`${DORIS_HOME}/be/lib/java_extensions/preload-extensions`目录下。
 4. 创建 DLF Catalog，并配置`oss.hdfs.enabled`为`true`：
 
