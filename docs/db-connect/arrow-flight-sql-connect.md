@@ -28,7 +28,7 @@ Since Doris 2.1, high-speed data links have been implemented based on the Arrow 
 
 Taking Python as an example for reading data from Apache Doris, Apache Doris first quickly converts the columnar format block into an Arrow RecordBatch in columnar format. Then, on the Python client side, the Arrow RecordBatch is converted into a Pandas DataFrame, which is also columnar. The conversion speed is extremely fast, ensuring the timeliness of data transfer. Arrow Flight SQL also provides a universal JDBC driver that supports seamless interaction with other databases that also adhere to the Arrow Flight SQL protocol. This not only enhances the compatibility of Apache Doris but also expands its application scenarios.
 
-![Arrow_Flight_SQL](/images/db-connect/arrow-flight-sql.png)
+![Arrow_Flight_SQL](/images/db-connect/arrow-flight-sql/Arrow_Flight_SQL.png)
 
 To install Apache Arrow, you can refer to the official documentation [Apache Arrow](https://arrow.apache.org/install/) for detailed installation instructions. For more information on how Doris implements the Arrow Flight protocol, refer to [Doris support Arrow Flight SQL protocol](https://github.com/apache/doris/issues/25514).
 
