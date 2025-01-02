@@ -40,7 +40,7 @@ under the License.
 
 ### 第 1 步：创建 docker-compose.yaml 文件
 
-复制以下内容到 docker-compose.yaml，替换 DORIS_QUICK_START_VERSION 参数为指定版本，如 `2.1.7`。
+复制以下内容到 docker-compose.yaml，替换 DORIS_QUICK_START_VERSION 参数为指定版本，如 `3.0.1`。
 
 ```text
 version: "3"
@@ -151,7 +151,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 2. 启动 FE
 
-   通过 start\_fe.sh 脚本运行 FE 进程：
+   通过 start_fe.sh 脚本运行 FE 进程：
 
    ```sql
    apache-doris/fe/bin/start_fe.sh --daemon

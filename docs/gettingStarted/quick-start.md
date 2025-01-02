@@ -40,7 +40,7 @@ Quick deployment **is only suitable for local development**. Do not use this dep
 
 ### Step 1: Create the docker-compose.yaml File
 
-Copy the following content into the docker-compose.yaml file, and replace the DORIS_QUICK_START_VERSION paramet
+Copy the following content into the docker-compose.yaml file, and replace the `DORIS_QUICK_START_VERSION` parameter with the specified version, such as `3.0.1`.
 
 ```text
 version: "3"
