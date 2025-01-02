@@ -24,17 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hudi_meta
 
-### Name
+## Description
 
-hudi_meta
+hudi_meta table-valued-function(tvf), using for read hudi metadata, operation history, timeline of table, instant state etc.
 
-### description
-
-hudi_meta table-valued-function(tvf), Use for read hudi metadata, operation history, timeline of table, instant state etc.
-
-#### syntax
+## Syntax
 
 ```sql
 hudi_meta(
@@ -52,7 +47,7 @@ Related parameters:
 - `table`： (required) Use hudi table name the format `catlog.database.table`.
 - `query_type`： (required) The type of hudi metadata. Only `timeline` is currently supported.
 
-### Example
+## Example
 
 Read and access the hudi tabular metadata for timeline.
 
@@ -67,11 +62,11 @@ Can be used with `desc function` :
 desc function hudi_meta("table" = "ctl.db.tbl", "query_type" = "timeline");
 ```
 
-### Keywords
+## Keywords
 
     hudi_meta, table-valued-function, tvf
 
-### Best Prac
+## Best Practice
 
 Inspect the hudi table timeline :
 
