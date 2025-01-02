@@ -24,17 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hudi_meta
 
-### Name
-
-hudi_meta
-
-### description
+## 描述
 
 hudi_meta 表函数（table-valued-function,tvf），可以用于读取 hudi 表的各类元数据信息，如操作历史、表的时间线、文件元数据等。
 
-#### syntax
+## 语法
+
 ```sql
 hudi_meta(
   "table" = "ctl.db.tbl", 
@@ -50,7 +46,7 @@ hudi_meta 表函数 tvf 中的每一个参数都是一个 `"key"="value"` 对。
 - `table`： (必填) 完整的表名，需要按照目录名。库名。表名的格式，填写需要查看的 hudi 表名。
 - `query_type`： (必填) 想要查看的元数据类型，目前仅支持 timeline。
 
-### Example
+## 举例
 
 读取并访问 hudi 表格式的 timeline 元数据。
 
@@ -65,11 +61,8 @@ select * from hudi_meta("table" = "ctl.db.tbl", "query_type" = "timeline");
 desc function hudi_meta("table" = "ctl.db.tbl", "query_type" = "timeline");
 ```
 
-### Keywords
 
-    hudi_meta, table-valued-function, tvf
-
-### Best Prac
+## 最佳实践
 
 查看 hudi 表的 timeline
 
