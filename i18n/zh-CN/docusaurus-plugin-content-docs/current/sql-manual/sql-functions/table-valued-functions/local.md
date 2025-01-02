@@ -77,7 +77,7 @@ local(
 - 文件格式相关参数：
 
     - `format`：(必填) 目前支持 `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`
-    - `column_separator`：(选填) 列分割符, 默认为`,`。 
+    - `column_separator`：(选填) 列分割符, 默认为`\t`。 
     - `line_delimiter`：(选填) 行分割符，默认为`\n`。
     - `compress_type`: (选填) 目前支持 `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`。 默认值为 `UNKNOWN`, 将会根据 `uri` 的后缀自动推断类型。
 

@@ -149,7 +149,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 ```
 
 操作 Connector
-```
+```shell
 # 查看 connector 状态
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/status -X GET
 # 删除当前 connector
@@ -169,7 +169,7 @@ curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/tasks/0/restart
 
 ### 访问 SSL 认证的 Kafka 集群
 通过 kafka-connect 访问 SSL 认证的 Kafka 集群需要用户提供用于认证 Kafka Broker 公钥的证书文件（client.truststore.jks）。您可以在 `connect-distributed.properties` 文件中增加以下配置：
-```
+```properties
 # Connect worker
 security.protocol=SSL
 ssl.truststore.location=/var/ssl/private/client.truststore.jks
@@ -185,7 +185,7 @@ consumer.ssl.truststore.password=test1234
 
 ### 死信队列
 默认情况下，转换过程中或转换过程中遇到的任何错误都会导致连接器失败。每个连接器配置还可以通过跳过它们来容忍此类错误，可选择将每个错误和失败操作的详细信息以及有问题的记录（具有不同级别的详细信息）写入死信队列以便记录。
-```
+```properties
 errors.tolerance=all
 errors.deadletterqueue.topic.name=test_error_topic
 errors.deadletterqueue.context.headers.enable=true
@@ -264,33 +264,116 @@ Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类�
 
 
 ## 最佳实践
-### 同步 JSON 序列化数据
+### 同步普通 JSON 数据
+
+1. 导入数据样本<br />
+   在 Kafka 中，有以下样本数据
+   ```bash
+   kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-data-topic --from-beginning
+   {"user_id":1,"name":"Emily","age":25}
+   {"user_id":2,"name":"Benjamin","age":35}
+   {"user_id":3,"name":"Olivia","age":28}
+   {"user_id":4,"name":"Alexander","age":60}
+   {"user_id":5,"name":"Ava","age":17}
+   {"user_id":6,"name":"William","age":69}
+   {"user_id":7,"name":"Sophia","age":32}
+   {"user_id":8,"name":"James","age":64}
+   {"user_id":9,"name":"Emma","age":37}
+   {"user_id":10,"name":"Liam","age":64}
+   ```
+
+2. 创建需要导入的表<br />
+   在 Doris 中，创建被导入的表，具体语法如下
+    ```sql
+   CREATE TABLE test_db.test_kafka_connector_tbl(
+   user_id            BIGINT       NOT NULL COMMENT "user id",
+   name               VARCHAR(20)           COMMENT "name",
+   age                INT                   COMMENT "age"
+   )
+   DUPLICATE KEY(user_id)
+   DISTRIBUTED BY HASH(user_id) BUCKETS 12;
+   ```
+   
+3. 创建导入任务<br />
+   在部署 Kafka-connect 的机器上，通过 curl 命令提交如下导入任务
+    ```shell
+   curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
+   "name":"test-doris-sink-cluster",
+   "config":{
+   "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector",
+   "tasks.max":"10",
+   "topics":"test-data-topic",
+   "doris.topic2table.map": "test-data-topic:test_kafka_connector_tbl",
+   "buffer.count.records":"10000",
+   "buffer.flush.time":"120",
+   "buffer.size.bytes":"5000000",
+   "doris.urls":"10.10.10.1",
+   "doris.user":"root",
+   "doris.password":"",
+   "doris.http.port":"8030",
+   "doris.query.port":"9030",
+   "doris.database":"test_db",
+   "key.converter":"org.apache.kafka.connect.storage.StringConverter",
+   "value.converter":"org.apache.kafka.connect.storage.StringConverter"
+   }
+   }'
+   ```
+
+### 同步 Debezium 组件采集的数据
+1. MySQL 数据库中有如下表
+```sql
+   CREATE TABLE test.test_user (
+   user_id int NOT NULL ,
+   name varchar(20),
+   age int,
+   PRIMARY KEY (user_id)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+insert into test.test_user values(1,'zhangsan',20);
+insert into test.test_user values(2,'lisi',21);
+insert into test.test_user values(3,'wangwu',22);
 ```
-curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
-  "name":"doris-json-test", 
-  "config":{ 
-    "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector", 
-    "topics":"json_topic", 
-    "tasks.max":"10",
-    "doris.topic2table.map": "json_topic:json_tab", 
-    "buffer.count.records":"100000", 
-    "buffer.flush.time":"120", 
-    "buffer.size.bytes":"10000000", 
-    "doris.urls":"127.0.0.1", 
-    "doris.user":"root", 
-    "doris.password":"", 
-    "doris.http.port":"8030", 
-    "doris.query.port":"9030", 
-    "doris.database":"test", 
-    "load.model":"stream_load",
-    "key.converter":"org.apache.kafka.connect.json.JsonConverter",
-    "value.converter":"org.apache.kafka.connect.json.JsonConverter"
-  } 
-}'
+
+2. 在 Doris 创建被导入的表
+```sql
+   CREATE TABLE test_db.test_user(
+   user_id            BIGINT       NOT NULL COMMENT "user id",
+   name               VARCHAR(20)           COMMENT "name",
+   age                INT                   COMMENT "age"
+   )
+   UNIQUE KEY(user_id)
+   DISTRIBUTED BY HASH(user_id) BUCKETS 12;
+```
+3. 部署 Debezium connector for MySQL 组件，参考：[Debezium connector for MySQL](https://debezium.io/documentation/reference/stable/connectors/mysql.html)
+4. 创建 doris-kafka-connector 导入任务<br />
+   假设通过 Debezium 采集到的 MySQL 表数据在 `mysql_debezium.test.test_user` Topic 中
+```shell
+   curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
+   "name":"test-debezium-doris-sink",
+   "config":{
+   "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector",
+   "tasks.max":"10",
+   "topics":"mysql_debezium.test.test_user",
+   "doris.topic2table.map": "mysql_debezium.test.test_user:test_user",
+   "buffer.count.records":"10000",
+   "buffer.flush.time":"120",
+   "buffer.size.bytes":"5000000",
+   "doris.urls":"10.10.10.1",
+   "doris.user":"root",
+   "doris.password":"",
+   "doris.http.port":"8030",
+   "doris.query.port":"9030",
+   "doris.database":"test_db",
+   "converter.mode":"debezium_ingestion",
+   "enable.delete":"true",
+   "key.converter":"org.apache.kafka.connect.json.JsonConverter",
+   "value.converter":"org.apache.kafka.connect.json.JsonConverter"
+   }
+   }'
 ```
 
 ### 同步 Avro 序列化数据
-```
+```shell
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
   "name":"doris-avro-test", 
   "config":{ 
@@ -317,7 +400,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 ```
 
 ### 同步 Protobuf 序列化数据
-```
+```shell
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
   "name":"doris-protobuf-test", 
   "config":{ 
@@ -345,7 +428,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 
 ## 常见问题
 **1. 读取 JSON 类型的数据报如下错误：**
-```
+```shell
 Caused by: org.apache.kafka.connect.errors.DataException: JsonConverter with schemas.enable requires "schema" and "payload" fields and may not contain additional fields. If you are trying to deserialize plain JSON data, set schemas.enable=false in your converter configuration.
 	at org.apache.kafka.connect.json.JsonConverter.toConnectData(JsonConverter.java:337)
 	at org.apache.kafka.connect.storage.Converter.toConnectData(Converter.java:91)
@@ -363,7 +446,7 @@ Caused by: org.apache.kafka.connect.errors.DataException: JsonConverter with sch
 
 **2. 消费超时，消费者被踢出消费群组：**
 
-```
+```shell
 org.apache.kafka.clients.consumer.CommitFailedException: Offset commit cannot be completed since the consumer is not part of an active group for auto partition assignment; it is likely that the consumer was kicked out of the group.
         at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.sendOffsetCommitRequest(ConsumerCoordinator.java:1318)
         at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.doCommitOffsetsAsync(ConsumerCoordinator.java:1127)
