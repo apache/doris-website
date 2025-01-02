@@ -25,7 +25,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
- :::caution 警告：
+:::caution 警告：
 
 快速部署**仅适用于本地开发**。请勿将该种部署方式用于生产环境：
 
@@ -36,7 +36,7 @@ under the License.
 3. 本示例中的建表均为单副本，在生产中请使用多副本存储数据。
 :::
 
-## 使用 Docker 快速部署【TAB-1】
+## 使用 Docker 快速部署
 
 ### 第 1 步：创建 docker-compose.yaml 文件
 
