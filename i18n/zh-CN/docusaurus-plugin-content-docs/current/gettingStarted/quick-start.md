@@ -42,40 +42,32 @@ under the License.
 
 复制以下内容到 docker-compose.yaml，替换 DORIS_QUICK_START_VERSION 参数为指定版本，如 `2.1.7`。
 
-```plain&#x20;text
+```text
 version: "3"
-  services:
-    fe:
-  image:apache/doris:${DORIS_QUICK_START_VERSION}
-      hostname:fe
-      networks_mode: host
-      ports:
-        -"8030:8030"
-        -"9030:9030"
-      environment:
-        -FE_MASTER_IP="127.0.0.1"
-        -FE_CURRENT_IP="127.0.0.1"
-        -FE_MASTER_PORT="9010"
-        -FE_CURRENT_PORT="9010"
-    be:
-      image:apache/doris:${DORIS_QUICK_START_VERSION}
-      hostname:be
-      networks_mode: host
-      ports:
-        -"8040:8040"
-      environment:
-        -FE_MASTER_IP="127.0.0.1"
-        -BE_IP="127.0.0.1"
-        -BE_PORT="9050"
-      depends_on:
-        -fe
+services:
+  fe:
+    image: apache/doris.fe-ubuntu:${DORIS_QUICK_START_VERSION}
+    hostname: fe
+    environment:
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - FE_ID=1
+    network_mode: host
+  be:
+    image: apache/doris.be-ubuntu:${DORIS_QUICK_START_VERSION}
+    hostname: be
+    environment:
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - BE_ADDR=127.0.0.1:9050
+    depends_on:
+      - fe
+    network_mode: host
 ```
 
 ### 第 2 步：启动集群
 
 使用 docker-compose 命令启动集群
 
-```plain&#x20;text
+```shell
 docker-compose -f ./docker-compose.yaml up -d
 ```
 
