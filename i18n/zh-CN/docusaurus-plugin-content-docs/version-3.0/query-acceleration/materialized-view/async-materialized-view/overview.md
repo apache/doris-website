@@ -1,7 +1,7 @@
 ---
 {
-    "title": "异步物化视图原理介绍",
-    "language": "zh-CN"
+  "title": "异步物化视图概述",
+  "language": "zh-CN"
 }
 ---
 
@@ -24,518 +24,133 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 异步物化视图构建
+物化视图作为一种高效的解决方案，兼具了视图的灵活性和物理表的高性能优势。
+它能够预先计算并存储查询的结果集，从而在查询请求到达时，直接从已存储的物化视图中快速获取结果，避免了重新执行复杂的查询语句所带来的开销。
+
+## 使用场景
+
+- 查询加速与并发提升：物化视图能够显著提高查询速度，同时增强系统的并发处理能力，有效减少资源消耗。
+- 简化ETL流程：在数据抽取、转换和加载（ETL）过程中，物化视图能够简化流程，提升开发效率，使数据处理更加顺畅。
+- 加速湖仓一体架构中的外表查询：在湖仓一体架构中，物化视图能够显著提升对外部数据源的查询速度，提高数据访问效率。
+- 提升写入效率：通过减少资源竞争，物化视图能够优化数据写入过程，提高写入效率，确保数据的一致性和完整性。
+
+## 使用限制
+- 异步物化视图与基表数据一致性：异步物化视图与基表的数据最终会保持一致，但无法实时同步，即无法保持实时一致性。
+- 窗口函数查询支持：当前，如果查询中包含了窗口函数，暂不支持将该查询透明地改写为利用物化视图的形式。
+- 包含ORDER BY的物化视图与查询：若物化视图本身包含了ORDER BY子句，则系统暂不支持将该物化视图用于透明改写查询。但请注意，查询本身仍然可以包含ORDER BY子句。
+- 物化视图连接表多于查询表：如果物化视图所连接的表数量多于查询所涉及的表（例如，查询仅涉及t1和t2，而物化视图则包含了t1、t2以及额外的t3），
+  则系统目前不支持将该查询透明地改写为利用该物化视图的形式。
+
+## 原理介绍
+
+物化视图，作为数据库中的一种高级特性，其实质为类型MTMV的内表。在创建物化视图时，系统会同时注册一个刷新任务。此任务会在需要时运行，执行INSERT OVERWRITE语句，以将最新的数据写入物化视图中。
+
+**刷新机制**
+与同步物化视图所采用的实时增量刷新不同，异步物化视图提供了更为灵活的刷新选项
+
+- **全量刷新：**
+  在此模式下，系统会重新计算物化视图定义SQL所涉及的所有数据，并将结果完整地写入物化视图。
+  此过程确保了物化视图中的数据与基表数据保持一致，但可能会消耗更多的计算资源和时间。
+
+- **分区增量刷新：**
+  当物化视图的基表分区数据发生变化时，系统能够智能地识别出这些变化，并仅针对受影响的分区进行刷新。
+  这种机制显著降低了刷新物化视图所需的计算资源和时间，同时保证了数据的最终一致性。
+
+**透明改写：**
+透明改写是数据库优化查询性能的一种重要手段。在处理用户查询时，系统能够自动对SQL进行优化和改写，
+以提高查询的执行效率和降低计算成本。这一改写过程对用户而言是透明的，无需用户进行任何干预。
+
+Doris异步物化视图采用了基于SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式的透明改写算法。
+该算法能够深入分析SQL的结构信息，自动寻找并选择合适的物化视图进行透明改写。在多个物化视图可供选择时，
+算法还会根据一定的策略（如成本模型）选择最优的物化视图来响应查询SQL，从而进一步提升查询性能。
+
+
+## 物化刷新数据湖支持情况
+
+物化刷新数据湖的支持情况，不同类型的表和 Catalog 有不同的支持程度
+
+<table>
+    <tr>
+        <th rowspan="2">表类型</th>
+        <th rowspan="2">Catalog 类型</th>
+        <th colspan="2">刷新方式</th>
+        <th >刷新时机</th>
+    </tr>
+    <tr>
+        <th>全量刷新</th>
+        <th>分区刷新</th>
+        <th>自动触发</th>
+    </tr>
+    <tr>
+        <td>内表</td>
+        <td>Internal</td>
+        <td>2.1 支持</td>
+        <td>2.1 支持</td>
+        <td>2.1.4 支持</td>
+    </tr>
+    <tr>
+        <td>Hive</td>
+        <td>Hive</td>
+        <td>2.1 支持</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+    </tr>
+    <tr>
+        <td>Iceberg</td>
+        <td>Iceberg</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+        <td>不支持</td>
+    </tr>
+    <tr>
+        <td>Paimon</td>
+        <td>Paimon</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+        <td>不支持</td>
+    </tr>
+    <tr>
+        <td>Hudi</td>
+        <td>Hudi</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+        <td>不支持</td>
+    </tr>
+    <tr>
+        <td>JDBC</td>
+        <td>JDBC</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+        <td>不支持</td>
+    </tr>
+    <tr>
+        <td>ES</td>
+        <td>ES</td>
+        <td>2.1 支持</td>
+        <td>不支持</td>
+        <td>不支持</td>
+    </tr>
+</table>
 
-物化视图创建分区有两种方式：自定义分区和依赖基表的分区自动创建分区
+## 物化视图和 OLAP 内表关系
 
-### 自定义分区
+异步物化视图定义 SQL 使用基表的表模型没有限制，可以是明细模型，主键模型（merge-on-write 和 merge-on-read），聚合模型等。
 
-创建物化视图时，如果不指定分区信息，物化视图将默认创建一个分区，所有数据都存放在这个分区中。
+物化视图自身的底层实现依托于Duplicate模型的OLAP表，这一设计使其理论上能够支持Duplicate模型的所有核心功能。然而，
+为了保障物化视图能够稳定且高效地执行数据刷新任务，我们对其功能进行了一系列必要的限制。以下是具体的限制内容：
 
-### 依赖基表进行分区
+- 物化视图的分区是基于其基表自动创建和维护的，因此用户不能对物化视图进行分区操作
+- 由于物化视图背后有相关的作业（JOB）需要处理，所以不能使用删除表（DELETE TABLE）或重命名表（RENAME TABLE）的命令来操作物化视图。
+  相反，需要使用物化视图自身的命令来进行这些操作。
+- 物化视图的列数据类型是根据创建时指定的查询语句自动推导得出的，因此这些数据类型不能被修改。否则，可能会导致物化视图的刷新任务失败。
+- 物化视图具有一些 Duplicate 表没有的属性（property），这些属性需要通过物化视图的命令进行修改。
+  而其他公用的属性则需要使用 ALTER TABLE 命令进行修改。
 
-物化视图可以通过多个基表 JOIN 关联创建，并可以选择追随其中一个基表进行分区（建议选择事实表）。
 
-例如，基表`t1`和`t2`的建表语句分别如下：
+## 更多参考
+创建、查询与维护异步物化视图，可以参考 [创建、查询与维护异步物化视图](../async-materialized-view/functions-and-demands.md)
 
-```sql
-CREATE TABLE `t1` (
-  `user_id` LARGEINT NOT NULL,
-  `o_date` DATE NOT NULL,
-  `num` SMALLINT NOT NULL
-) ENGINE=OLAP
-COMMENT 'OLAP'
-PARTITION BY RANGE(`o_date`)
-(
-PARTITION p20170101 VALUES [('2017-01-01'), ('2017-01-02')),
-PARTITION p20170102 VALUES [('2017-01-02'), ('2017-01-03')),
-PARTITION p20170201 VALUES [('2017-02-01'), ('2017-02-02'))
-)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 2
-PROPERTIES ('replication_num' = '1') ;
-CREATE TABLE `t2` (
-  `user_id` LARGEINT NOT NULL,
-  `age` SMALLINT NOT NULL
-) ENGINE=OLAP
-PARTITION BY LIST(`age`)
-(
-    PARTITION `p1` VALUES IN ('1'),
-    PARTITION `p2` VALUES IN ('2')
-)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 2
-PROPERTIES ('replication_num' = '1') ;
-```
+最佳实践，可以参考 [最佳实践](../async-materialized-view/use-guide.md)
 
-若物化视图的建表语句如下：
+常见问题，可以参考 [常见问题](../async-materialized-view/faq.md)
 
-```sql
-CREATE MATERIALIZED VIEW mv1
-BUILD DEFERRED REFRESH AUTO ON MANUAL
-partition by(`order_date`)
-DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES (
-'replication_num' = '1'
-)
-AS
-SELECT t1.o_date as order_date, t1.user_id as user_id, t1.num, t2.age FROM t1 join t2 on t1.user_id=t2.user_id;
-```
-
-那么物化视图`mv1`将和`t1`一样，有三个分区：
-
-- `[('2017-01-01'), ('2017-01-02'))`
-
-- `[('2017-01-02'), ('2017-01-03'))`
-
-- `[('2017-02-01'), ('2017-02-02'))`
-
-若物化视图的建表语句如下：
-
-```sql
-CREATE MATERIALIZED VIEW mv2
-BUILD DEFERRED REFRESH AUTO ON MANUAL
-partition by(`age`)
-DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES (
-'replication_num' = '1'
-)
-AS
-SELECT t1.o_date as order_date, t1.user_id as user_id, t1.num, t2.age FROM t1 join t2 on t1.user_id=t2.user_id;
-```
-
-那么物化视图`mv2`将和`t2`一样，有两个分区：
-
-- `('1')`
-
-- `('2')`
-
-在依赖基表分区创建物化视图时，不同场景需要合理设计不同的分区策略，下面将举例说明多列分区、部分分区与分区上卷三种情况。
-
-**1. 基表有多列分区**
-
-:::tip 提示
-自 Doris 2.1.0 版本起支持多列分区
-:::
-
-目前仅支持 Hive 外表有多列分区。Hive 外表有很多多级分区的情况，例如一级分区按照日期，二级分区按照区域。物化视图可以选择 Hive 的某一级分区列作为物化视图的分区列。
-
-例如，Hive 的建表语句如下：
-
-```sql
-CREATE TABLE hive1 (
-`k1` int)
-PARTITIONED BY (
-`year` int,
-`region` string)
-STORED AS ORC;
-
-alter table hive1 add if not exists
-partition(year=2020,region="bj")
-partition(year=2020,region="sh")
-partition(year=2021,region="bj")
-partition(year=2021,region="sh")
-partition(year=2022,region="bj")
-partition(year=2022,region="sh")
-```
-
-当物化视图的创建语句如下时，物化视图`mv_hive`将有三个分区：`('2020')，('2021')，('2022')`
-
-```sql
-CREATE MATERIALIZED VIEW mv_hive
-BUILD DEFERRED REFRESH AUTO ON MANUAL
-partition by(`year`)
-DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES ('replication_num' = '1')
-AS
-SELECT k1,year,region FROM hive1;
-```
-
-当物化视图的建表语句如下时，那么物化视图`mv_hive2`将有如下两个分区：`('bj')`，`('sh')`：
-
-```sql
-CREATE MATERIALIZED VIEW mv_hive2
-BUILD DEFERRED REFRESH AUTO ON MANUAL
-partition by(`region`)
-DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES ('replication_num' = '1')
-AS
-SELECT k1,year,region FROM hive1;
-```
-
-**2. 仅使用基表部分分区**
-
-:::tip 提示
-自 Doris 2.1.1 版本起支持此功能
-:::
-
-有些基表有很多分区，但是物化视图只关注最近一段时间的“热”数据，那么可以使用此功能。
-
-基表的建表语句如下：
-
-```sql
-CREATE TABLE t1 (
-    `k1` INT,
-    `k2` DATE NOT NULL
-) ENGINE=OLAP
-DUPLICATE KEY(`k1`)
-COMMENT 'OLAP'
-PARTITION BY range(`k2`)
-(
-PARTITION p26 VALUES [("2024-03-26"),("2024-03-27")),
-PARTITION p27 VALUES [("2024-03-27"),("2024-03-28")),
-PARTITION p28 VALUES [("2024-03-28"),("2024-03-29"))
-)
-DISTRIBUTED BY HASH(`k1`) BUCKETS 2
-PROPERTIES (
-'replication_num' = '1'
-);
-```
-
-物化视图的创建语句如以下举例，代表物化视图只关注最近一天的数据。若当前时间为 2024-03-28 xx:xx:xx，这样物化视图会仅有一个分区 `[("2024-03-28"),("2024-03-29")]`：
-
-```sql
-CREATE MATERIALIZED VIEW mv1
-BUILD DEFERRED REFRESH AUTO ON MANUAL
-partition by(`k2`)
-DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES (
-'replication_num' = '1',
-'partition_sync_limit'='1',
-'partition_sync_time_unit'='DAY'
-)
-AS
-SELECT * FROM t1;
-```
-
-若时间又过了一天，当前时间为` 2024-03-29 xx:xx:xx`，`t1`则会新增一个分区 `[("2024-03-29"),("2024-03-30")]`，若此时刷新物化视图，刷新完成后，物化视图会仅有一个分区 `[("2024-03-29"),("2024-03-30")]`。
-
-此外，分区字段是字符串类型时，可以设置物化视图属性 `partition_date_format`，例如 `%Y-%m-%d` 。
-
-**3. 分区上卷**
-
-:::tip 提示
-自 Doris 2.1.5 版本起支持此功能
-:::
-
-当基表数据经过聚合处理后，各分区的数据量可能会显著减少。在这种情况下，可以采用分区上卷策略，以降低物化视图的分区数量。
-
-- List 分区
-
-    需要注意的是，Hive 中的分区对应于 Doris 中的 list 分区。
-
-    假设基表的建表语句如下：
-
-    ```sql
-    CREATE TABLE `t1` (
-    `k1` INT NOT NULL,
-    `k2` DATE NOT NULL
-    ) ENGINE=OLAP
-    DUPLICATE KEY(`k1`)
-    COMMENT 'OLAP'
-    PARTITION BY list(`k2`)
-    (
-    PARTITION p_20200101 VALUES IN ("2020-01-01"),
-    PARTITION p_20200102 VALUES IN ("2020-01-02"),
-    PARTITION p_20200201 VALUES IN ("2020-02-01")
-    )
-    DISTRIBUTED BY HASH(`k1`) BUCKETS 2
-    PROPERTIES ('replication_num' = '1') ;
-    ```
-
-    若物化视图的创建语句如下，则该物化视图将包含两个分区：`("2020-01-01","2020-01-02")` 和 `("2020-02-01")`
-
-    ```sql
-    CREATE MATERIALIZED VIEW mv1
-        BUILD DEFERRED REFRESH AUTO ON MANUAL
-        partition by (date_trunc(`k2`,'month'))
-        DISTRIBUTED BY RANDOM BUCKETS 2
-        PROPERTIES (
-        'replication_num' = '1'
-        )
-        AS
-        SELECT * FROM t1;
-    ```
-
-    若物化视图的创建语句如下，则该物化视图将只包含一个分区：`("2020-01-01","2020-01-02","2020-02-01")`
-
-    ```sql
-    CREATE MATERIALIZED VIEW mv1
-        BUILD DEFERRED REFRESH AUTO ON MANUAL
-        partition by (date_trunc(`k2`,'year'))
-        DISTRIBUTED BY RANDOM BUCKETS 2
-        PROPERTIES (
-        'replication_num' = '1'
-        )
-        AS
-        SELECT * FROM t1;
-    ```
-
-- Range 分区
-
-    假设基表的建表语句如下：
-
-    ```sql
-    CREATE TABLE `t1` (
-    `k1` LARGEINT NOT NULL,
-    `k2` DATE NOT NULL
-    ) ENGINE=OLAP
-    DUPLICATE KEY(`k1`)
-    COMMENT 'OLAP'
-    PARTITION BY range(`k2`)
-    (
-    PARTITION p_20200101 VALUES [("2020-01-01"),("2020-01-02")),
-    PARTITION p_20200102 VALUES [("2020-01-02"),("2020-01-03")),
-    PARTITION p_20200201 VALUES [("2020-02-01"),("2020-02-02"))
-    )
-    DISTRIBUTED BY HASH(`k1`) BUCKETS 2
-    PROPERTIES ('replication_num' = '1') ;
-    ```
-
-    若物化视图的创建语句如下，则该物化视图将包含两个分区：`[("2020-01-01","2020-02-01")] `和` [("2020-02-01","2020-03-01")]`
-
-    ```sql
-    CREATE MATERIALIZED VIEW mv1
-        BUILD DEFERRED REFRESH AUTO ON MANUAL
-        partition by (date_trunc(`k2`,'month'))
-        DISTRIBUTED BY RANDOM BUCKETS 2
-        PROPERTIES (
-        'replication_num' = '1'
-        )
-        AS
-        SELECT * FROM t1;
-    ```
-
-    若物化视图的创建语句如下，则该物化视图将只包含一个分区：`[("2020-01-01","2021-01-01")]`
-
-    ```sql
-    CREATE MATERIALIZED VIEW mv1
-        BUILD DEFERRED REFRESH AUTO ON MANUAL
-        partition by (date_trunc(`k2`,'year'))
-        DISTRIBUTED BY RANDOM BUCKETS 2
-        PROPERTIES (
-        'replication_num' = '1'
-        )
-        AS
-        SELECT * FROM t1;
-    ```
-
-    此外，如果分区字段为字符串类型，可以通过设置物化视图的 `partition_date_format` 属性来指定日期格式，例如 `'%Y-%m-%d'`。
-
-## 异步物化视图刷新
-
-物化视图是按照分区为单位进行刷新的。如果物化视图没有指定分区，那么每次都刷新物化视图的默认分区，即刷新物化视图的全部数据。
-
-物化视图有三种触发刷新机制：
-
-### 手动触发
-
-用户通过 SQL 语句触发物化视图的刷新，目前有三种策略：
-
-- 不关心具体刷新哪些分区，要求刷新完成后，物化视图的数据和基表保持同步。
-
-    ```sql
-    REFRESH MATERIALIZED VIEW mvName AUTO;
-    ```
-
-- 不管物化视图现存哪些数据，刷新物化视图的所有分区。
-
-    ```sql
-    REFRESH MATERIALIZED VIEW mvName COMPLETE;
-    ```
-
-- 不管物化视图现存哪些数据，只刷新指定的分区。
-
-    ```sql
-    REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
-    ```
-
-:::tip 提示 
-`partitionName` 可以通过 `SHOW PARTITIONS FROM mvName` 获取。
-:::
-
-### 定时触发
-
-通过物化视图的创建语句指定间隔多久刷新一次数据
-
-- 如果物化视图的创建语句如下，要求全量刷新 (`REFRESH COMPLETE`)，那么物化视图每 10 小时刷新一次，并且刷新物化视图的所有分区。
-
-    ```sql
-    CREATE MATERIALIZED VIEW mv1
-    REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
-    partition by(`xxx`)
-    AS
-    select ...;
-    ```
-
-- 如果物化视图的创建语句如下，要求自动计算需要刷新的分区 (`REFRESH AUTO`)，那么物化视图每 10 小时刷新一次（从 2.1.3 版本开始能自动计算 Hive 需要刷新的分区）。
-
-    ```sql
-    CREATE MATERIALIZED VIEW mv1
-    REFRESH AUTO ON SCHEDULE EVERY 10 hour
-    partition by(`xxx`)
-    AS
-    select ...;
-    ```
-
-### 自动触发
-
-:::tip 提示
-自 Apache Doris 2.1.4 版本起支持此功能。
-:::
-
-基表数据发生变更后，自动触发相关物化视图刷新，刷新的分区范围与“定时触发”一致。
-
-如果物化视图的创建语句如下，那么当 `t1` 的数据发生变化时，会自动触发物化视图的刷新。
-
-```sql
-CREATE MATERIALIZED VIEW mv1
-REFRESH ON COMMIT
-partition by(`xxx`)
-AS
-select ... from t1;
-```
-
-## 透明改写能力
-
-Doris 的异步物化视图采用了基于 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式的结构信息来进行透明改写的算法。Doris 能够分析查询 SQL 的结构信息，自动寻找满足要求的物化视图，并尝试进行透明改写，使用最优的物化视图来表达查询 SQL。
-
-### 流程图
-
-![透明改写能力](/images/transparency-rewriting.jpg)
-
-### 基于结构信息透明改写
-
-如上述流程图所示，在获取物化对应的查询结构后，将基于结构信息进行透明改写。这时，需要做如下校验：
-
-**1. 校验物化视图是否包含查询所需的所有行**
-
-- 对于查询：`SELECT * FROM T1, T2, …, Tm WHERE Wq`
-
-- 对于物化视图：`SELECT * FROM T1, T2, …, Tm WHERE Wv`
-
-:::caution 注意
-查询的条件要强于或等于物化的条件。
-:::
-
-其中 T1, T2 是表、Wq 代表查询的 WHERE 过滤条件、Wv 代表物化视图 WHERE 过滤条件。要满足视图包含了查询所需要的所有行，就要满足过滤条件 Wq 能够推导出 Wv，即 `Wq -> Wv`（比如 `Wq > 20`, `Wv > 10`，Wq 就能够推导出 Wv。）
-
-对于表达式 W 还可以细化，过滤的表达式可以拆成三部分：PE ∧ PR ∧ PU。
-
-- PE 代表相等的表达式；
-
-- PR 代表范围过滤的表达式，使用“<”, “≤”, “=”, “≥”, “>”连接的操作符；
-
-- PU 代表除了前面表达式的其余补偿表达式。
-
-因此，基于 `Wq -> Wv` 推导出 `(PEq ∧ PRq ∧ PUq → PEv ∧ PRv ∧ PUv)`。其中 q 代表查询，v 代表物化视图。
-
-因为 A -> C，那么 AB -> C，上面的表达式可以进一步推导如下：
-
-```Plain
-(PEq∧ PRq∧PUq⇒ PEv )∧
-(PEq∧ PRq∧PUq⇒ PRv)∧
-(PEq∧ PRq∧PUq⇒ PUv)
-```
-
-可以进一步简化成：
-
-```Plain
-(PEq ⇒ PEv ) (Equijoin subsumption test 等值条件校验)
-(PEq ∧ PRq ⇒ PRv) (Range subsumption test 范围条件校验)
-(PEq ∧ PUq ⇒ PUv ) (Residual subsumption test 补偿条件校验)
-```
-
-- 等值条件校验：总体原则是物化视图的相等表达式是查询相等表达式的子集。等价表达式具有传递性，也应保持正确性。
-
-- 视图的范围表达式应包含查询的表达式。例如，T=常量值，可以转换成 T>= 常量值 and T<= 常量值的形式。
-
-- 采用 Expression Equals 的方式，校验物化视图中出现的补偿表达式是否是查询补偿表达式的子集。
-
-接下来，我们将通过举例进一步解释检验步骤：
-
-物化视图的定义：
-
-```sql
-Select l_orderkey, o_custkey, l_partkey,
-l_shipdate, o_orderdate,
-l_quantity*l_extendedprice as gross_revenue
-From dbo.lineitem, dbo.orders, dbo.part
-Where l_orderkey = o_orderkey
-And l_partkey = p_partkey
-And p_partkey >= 150
-And o_custkey >= 50 and o_custkey <= 500
-And p_name like ‘%abc%’
-```
-
-查询的定义：
-
-```sql
-Select l_orderkey, o_custkey, l_partkey,
-l_quantity*l_extendedprice
-From lineitem, orders, part
-Where l_orderkey = o_orderkey
-And l_partkey = p_partkey
-And l_partkey >= 150 and l_partkey <= 160
-And o_custkey = 123
-And o_orderdate = l_shipdate
-And p_name like ‘%abc%’
-And l_quantity*l_extendedprice > 100
-```
-
-第一步：计算等价类
-
-- 视图等价类：`{l_orderkey, o_orderkey},{l_partkey, p_partkey}, {o_orderdate}, {l_shipdate}`
-
-- 查询等价类：`{l_orderkey, o_orderkey},{l_partkey, p_partkey}, {o_orderdate, l_shipdate}`
-
-第二步：校验等值等价类
-
-- 若 视图等价表达式 = 查询等价表达式的子集，则通过校验。
-
-第三步：计算范围表达式
-
-- 视图范围表达式：`{l_partkey, p_partkey} ∈ (150, +∞), {o_custkey} ∈ (50, 500)`
-
-- 查询范围表达式： `{l_partkey, p_partkey} ∈ (150, 160), {o_custkey} ∈ (123, 123)`
-
-第四步：校验范围表达式
-
-- 视图范围表达式：(150, 160) 在 (150, +∞) 范围内
-
-- 查询范围表达式：(123, 123) 在 (50, 500) 范围内
-
-第五步：校验补偿表达式
-
-- 视图补偿表达式：p_name like‘%abc%’
-
-- 查询补偿表达式：p_name like‘%abc%’
-
-因为 `l_quantity*l_extendedprice > 100`，视图的补偿表达式是查询的子集。在经过以上步骤校验，可以保证所有的行从视图中获取，需要在视图上添加补偿条件，补偿条件如下：
-
-```sql
-(o_orderdate = l_shipdate), 
-({p_partkey,l_partkey} <= 160), 
-(o_custkey = 123), and
-(l_quantity*l_extendedprice > 100.00).
-```
-
-**2. 补偿的条件是否可以从物化视图获取**
-
-需要对视图添加补偿条件，才能保证最终获取的数据和原始查询一致。需要进行校验，验证补偿条件中选择的列或表达式可以从视图上获取。
-
-即需要校验列 `o_orderdate`，`l_shipdate`，`p_partkey`，`{p_partkey, l_partkey}`，`o_custkey` 以及表达式 `l_quantity*l_extendedprice` 是否可从视图中获取。
-
-**3. 表达式和列是否可从物化视图获取**
-
-与校验补偿条件相似，如果输出表达式是常量，可以直接在视图上复制常量；如果是简单的列引用，校验它是否可以从视图中获取；对于表达式，如果表达式的列可以从物化视图中获取，就直接获取，否则校验不通过。
-
-**4. 输出数据重复度一致校验**
-
-对于查询和使用物化视图后获取的数据，对于重复的行，需要有相同的重复行数。如果查询和物化视图引用的表相同，就不会出现上述问题。只有当查询和物化视图引用的表不同时，才有可能出现重复的行且重复行数不同的情况，比如星型查询多一个连接关系时，如果连接键不是主外键的关系，就容易造成数据膨胀，导致数据重复因数不一致。
-
-通常需要校验物化视图和查询在相同表情况下的 JOIN 类型，以及在不同表情况下是否满足 JOIN 消除。
-
-**5. 聚合校验**
-
-- 物化的维度是否比查询更细，是否包含查询的维度
-
-- 查询使用的聚合函数是否可以从物化视图获取，或者是否可以通过物化视图的函数上卷获得。
