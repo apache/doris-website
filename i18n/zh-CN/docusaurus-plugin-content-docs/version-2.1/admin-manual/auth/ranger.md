@@ -54,7 +54,7 @@ Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，�
 	
 3. 重启 Ranger 服务。
 
-4. 下载 [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-plugin/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
+4. 下载 [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-ranger-plugin-2.1/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
 
 5. 执行以下命令上传定义文件到 Ranger 服务：
 

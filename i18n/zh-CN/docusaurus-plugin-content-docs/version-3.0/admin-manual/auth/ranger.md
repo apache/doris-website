@@ -54,7 +54,7 @@ Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，�
 	
 3. 重启 Ranger 服务。
 
-4. 下载 [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-plugin/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
+4. 下载 [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-ranger-plugin-3.0/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
 
 5. 执行以下命令上传定义文件到 Ranger 服务：
 
@@ -239,20 +239,48 @@ Config Properties 部分参数含义如下：
 ## 最佳实践
 
 ### 配置权限
-
 1. 在 Doris 中创建 `user1`。
 2. 在 Doris 中，先使用 `admin` 用户创建一个 Catalog：`hive`。
 3. 在 Ranger 中创建 `user1`。
-4. 在 Ranger 中添加一个 Policy：`show_hive_catalog`
 
-	![ranger3](/images/ranger/ranger3.png)
+#### 全局权限
+相当于 Doris 内部授权语句的 `grant select_priv on *.*.* to user1`;
+- catalog 同级下拉框可以找到 global 选项
+- 输入框里只能输入 `*`
 
-5. 使用 `user1` 登录 Doris，执行 `show catalogs`，只能看到 `hive` catalog。
-6. 在 Ranger 中添加一个 Policy：`select_hive_catalog`
+  ![global](/images/ranger/global.png)
 
-	![ranger4](/images/ranger/ranger4.png)
+#### Catalog 权限
+相当于 Doris 内部授权语句的 `grant select_priv on hive.*.* to user1`;
 
-7. 使用 `user1` 登录 Doris。该用户可以查看或查询 `hive` catalog 下，所有以 `tpch` 开头的 database 下的所有表。
+![catalog](/images/ranger/catalog.png)
+
+#### Database 权限
+相当于 Doris 内部授权语句的 `grant select_priv on hive.tpch.* to user1`;
+
+![database](/images/ranger/database.png)
+
+#### Table 权限
+相当于 Doris 内部授权语句的 `grant select_priv on hive.tpch.user to user1`;
+
+![table](/images/ranger/table.png)
+
+#### Column 权限
+相当于 Doris 内部授权语句的 `grant select_priv(name,age) on hive.tpch.user to user1`;
+
+![column](/images/ranger/column.png)
+
+#### Resource 权限
+相当于 Doris 内部授权语句的 `grant usage_priv on resource 'resource1' to user1`;
+- catalog 同级下拉框可以找到 resource 选项
+
+![resource](/images/ranger/resource.png)
+
+#### Workload Group 权限
+相当于 Doris 内部授权语句的 `grant usage_priv on workload group 'group1' to user1`;
+- catalog 同级下拉框可以找到 workload group 选项
+
+![group1](/images/ranger/group1.png)
 
 ### Row Policy 示例
 
