@@ -499,7 +499,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Business Continuity & Data Recovery",
+                    "label": "Managing Disater Recovery",
                     "items": [
                         "admin-manual/data-admin/overview",
                         {
@@ -540,43 +540,11 @@
                                 "admin-manual/workload-management/workload-group"
                             ]
                         },
+                        "admin-manual/workload-management/analysis-diagnosis",
                         "admin-manual/workload-management/concurrency-control-and-queuing",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
                         "admin-manual/workload-management/job-scheduler"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing Memory",
-                    "items": [
-                        "admin-manual/memory-management/overview",
-                        "admin-manual/memory-management/memory-issue-faq",
-                        {
-                            "type": "category",
-                            "label": "Managing Memory Analysis",
-                            "items": [
-                                "admin-manual/memory-management/memory-analysis/jemalloc-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/global-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/doris-cache-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/metadata-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/query-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/load-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded",
-                                "admin-manual/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded",
-                                "admin-manual/memory-management/memory-analysis/oom-crash-analysis",
-                                "admin-manual/memory-management/memory-analysis/memory-log-analysis",
-                                "admin-manual/memory-management/memory-analysis/heap-profile-memory-analysis"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Managing Memory Feature",
-                            "items": [
-                                "admin-manual/memory-management/memory-feature/memory-tracker",
-                                "admin-manual/memory-management/memory-feature/memory-control-strategy"
-                            ]
-                        }
                     ]
                 },
                 {
@@ -591,21 +559,10 @@
                     "type": "category",
                     "label": "Maintenance",
                     "items": [
-                        {
-                            "type": "category",
-                            "label": "Monitor",
-                            "items": [
-                                "admin-manual/maint-monitor/monitor-metrics/metrics",
-                                "admin-manual/maint-monitor/monitor-alert"
-                            ]
-                        },
+                        "admin-manual/maint-monitor/monitor-metrics/metrics",
+                        "admin-manual/maint-monitor/monitor-alert"
                         "admin-manual/maint-monitor/disk-capacity",
-                        "admin-manual/maint-monitor/tablet-repair-and-balance",
-                        "admin-manual/maint-monitor/tablet-meta-tool",
-                        "admin-manual/maint-monitor/tablet-local-debug",
-                        "admin-manual/maint-monitor/metadata-operation",
-                        "admin-manual/maint-monitor/automatic-service-start",
-                        "admin-manual/maint-monitor/frontend-lock-manager"
+                        "admin-manual/maint-monitor/tablet-repair-and-balance"
                     ]
                 },
                 {
@@ -778,11 +735,57 @@
                         }
                     ]
                 },
+                {
+                    "type": "category",
+                    "label": "Trouble Shooting",
+                    "items": [
+                        {
+                            "type": "category",
+                            "label": "Managing Memory",
+                            "items": [
+                                "admin-manual/trouble-shooting/memory-management/overview",
+                                "admin-manual/trouble-shooting/memory-management/memory-issue-faq",
+                                {
+                                    "type": "category",
+                                    "label": "Managing Memory Analysis",
+                                    "items": [
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/jemalloc-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/global-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/doris-cache-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/query-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/oom-crash-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/memory-log-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/heap-profile-memory-analysis"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Managing Memory Feature",
+                                    "items": [
+                                        "admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker",
+                                        "admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy"
+                                    ]
+                                }
+                            ]
+                        },
+                        "admin-manual/trouble-shooting/compaction",
+                        "admin-manual/trouble-shooting/automatic-service-start",
+                        "admin-manual/trouble-shooting/metadata-operation",
+                        "admin-manual/trouble-shooting/frontend-lock-manager",
+                        "admin-manual/trouble-shooting/tablet-local-debug",
+                        "admin-manual/trouble-shooting/tablet-meta-tool",
+                        "admin-manual/trouble-shooting/repairing-data",
+                    ]
+                },
                 "admin-manual/plugin-development-manual",
                 "admin-manual/small-file-mgr",
-                "admin-manual/compaction"
             ]
         },
+    
         {
             "type": "category",
             "label": "Ecosystem",
