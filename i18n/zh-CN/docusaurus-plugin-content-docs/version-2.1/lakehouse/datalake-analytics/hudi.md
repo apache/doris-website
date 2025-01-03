@@ -105,8 +105,6 @@ SELECT * FROM hudi_tbl FOR TIME AS OF "2022-10-07";
 ```
 Hudi 表不支持 `FOR VERSION AS OF` 语句，使用该语法查询 Hudi 表将抛错。
 
-另外， 你可以使用 [hudi_meta](../../sql-manual/sql-functions/table-valued-functions/hudi-meta.md) 表函数查询 Hudi 表的时间线，获取 commitTime 和对应的快照时间。
-
 ## Incremental Read
 Incremental Read 可以查询在 startTime 和 endTime 之间变化的数据，返回的结果集是数据在 endTime 的最终状态。
 
