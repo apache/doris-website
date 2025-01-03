@@ -1,6 +1,6 @@
 ---
 {
-    "title": "High-speed data transmission link based on Arrow Flight SQL",
+    "title": "Connecting by Arrow Flight SQL Protocol",
     "language": "en"
 }
 ---

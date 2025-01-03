@@ -1,6 +1,6 @@
 ---
 {
-    "title": "构建日志存储与分析平台",
+    "title": "日志存储与分析",
     "language": "zh-CN"
 }
 ---
@@ -218,13 +218,13 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 更多关于分区分桶的信息，可参考 [数据划分](../../table-design/data-partitioning/basic-concepts)。
 
 **配置压缩参数**
-- 使用 zstd 压缩算法(`"compression" = "zstd"`), 提高数据压缩率。
+- 使用 zstd 压缩算法 (`"compression" = "zstd"`), 提高数据压缩率。
 
 **配置 Compaction 参数**
 
 按照以下说明配置 Compaction 参数：
 
-- 使用 time_series 策略(`"compaction_policy" = "time_series"`)，以减轻写放大效应，对于高吞吐日志写入的资源写入很重要。
+- 使用 time_series 策略 (`"compaction_policy" = "time_series"`)，以减轻写放大效应，对于高吞吐日志写入的资源写入很重要。
 
 **建立和配置索引参数**
 

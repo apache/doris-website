@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Select Into Outfile",
+    "title": "Using SELECT INTO OUTFILE Command",
     "language": "en"
 }
 ---
