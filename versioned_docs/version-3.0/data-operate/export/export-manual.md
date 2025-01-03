@@ -24,51 +24,113 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This document will introduce how to use the `EXPORT` command to export data stored in Doris.
+This document will introduce how to use the `EXPORT` command to export the data stored in Doris.
 
-For a detailed description of the `EXPORT` command, please refer to: [EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT.md)
+`Export` is a function provided by Doris for asynchronous data export. This function can export the data of tables or partitions specified by the user in a specified file format to the target storage system, including object storage, HDFS, or the local file system.
 
-## Overview
+`Export` is an asynchronously executed command. After the command is executed successfully, it immediately returns a result, and the user can view the detailed information of the Export task through the `Show Export` command.
 
-`Export` is a feature provided by Doris for asynchronously exporting data. This feature allows users to export data from specified tables or partitions in a specified file format to a target storage system, including object storage, HDFS, or the local file system.
+For a detailed introduction of the `EXPORT` command, please refer to: [EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT.md)
 
-`Export` is an asynchronous command. After the command is successfully executed, it immediately returns the result. Users can use the `Show Export` command to view detailed information about the export task.
+Regarding how to choose between `SELECT INTO OUTFILE` and `EXPORT`, please refer to [Export Overview](../../data-operate/export/export-overview.md).
 
-For guidance on choosing between `SELECT INTO OUTFILE` and `EXPORT`, please see [Export Overview](../../data-operate/export/export-overview.md).
+--- 
 
-`EXPORT` currently supports exporting the following types of tables or views:
+## Basic Principles
 
-- Doris internal tables
-- Doris logical views
-- Doris Catalog tables
+The underlying layer of the Export task is to execute the `SELECT INTO OUTFILE` SQL statement. After a user initiates an Export task, Doris will construct one or more `SELECT INTO OUTFILE` execution plans based on the table to be exported by Export, and then submit these `SELECT INTO OUTFILE` execution plans to Doris's Job Schedule task scheduler. The Job Schedule task scheduler will automatically schedule and execute these tasks.
 
-`EXPORT` currently supports the following export formats:
+By default, the Export task is executed in a single thread. To improve the export efficiency, the Export command can set the `parallelism` parameter to concurrently export data. After setting `parallelism` to be greater than 1, the Export task will use multiple threads to concurrently execute the `SELECT INTO OUTFILE` query plans. The `parallelism` parameter actually specifies the number of threads that execute the EXPORT operation.
 
-- Parquet
-- ORC
-- csv
-- csv\_with\_names
-- csv\_with\_names\_and\_types
+## Usage Scenarios
+`Export` is suitable for the following scenarios:
+- Exporting a single table with a large amount of data and only requiring simple filtering conditions.
+- Scenarios where tasks need to be submitted asynchronously.
 
-Exporting in compressed formats is not supported.
+The following limitations should be noted when using `Export`:
+- Currently, the export of compressed formats is not supported.
+- Exporting the Select result set is not supported. If you need to export the Select result set, please use [OUTFILE Export](../../data-operate/export/outfile.md).
+- If you want to export to the local file system, you need to add the configuration `enable_outfile_to_local = true` in `fe.conf` and restart the FE.
 
-Example:
+## Quick Start
+### Table Creation and Data Import
 
 ```sql
-mysql> EXPORT TABLE tpch1.lineitem TO "s3://my_bucket/path/to/exp_"
-    -> PROPERTIES(
-    ->     "format" = "csv",
-    ->     "max_file_size" = "2048MB"
-    -> )
-    -> WITH s3 (
-    ->   "s3.endpoint" = "${endpoint}",
-    ->   "s3.region" = "${region}",
-    ->   "s3.secret_key"="${sk}",
-    ->   "s3.access_key" = "${ak}"
-    -> );
+CREATE TABLE IF NOT EXISTS tbl (
+    `c1` int(11) NULL,
+    `c2` string NULL,
+    `c3` bigint NULL
+)
+DISTRIBUTED BY HASH(c1) BUCKETS 20
+PROPERTIES("replication_num" = "1");
+
+
+insert into tbl values
+    (1, 'doris', 18),
+    (2, 'nereids', 20),
+    (3, 'pipelibe', 99999),
+    (4, 'Apache', 122123455),
+    (5, null, null);
 ```
 
-After submitting a job, you can query the export job status using the [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT.md) command. An example result is as follows:
+### Create an Export Job
+
+#### Export to HDFS
+Export all data from the `tbl` table to HDFS. Set the file format of the export job to csv (the default format) and set the column delimiter to `,`. 
+
+```sql
+EXPORT TABLE tbl
+TO "hdfs://host/path/to/export/" 
+PROPERTIES
+(
+    "line_delimiter" = ","
+)
+with HDFS (
+    "fs.defaultFS"="hdfs://hdfs_host:port",
+    "hadoop.username" = "hadoop"
+);
+```
+
+If the HDFS cluster has high availability enabled, HA information needs to be provided. Refer to the example: [Export to an HDFS Cluster with High Availability Enabled](#high-availability-hdfs-export).
+
+If the HDFS cluster has both high availability enabled and Kerberos authentication enabled, Kerberos authentication information needs to be provided. Refer to the example: [Export to an HDFS Cluster with High Availability and Kerberos Authentication Enabled](#high-availability-and-kerberos-cluster-export).
+
+#### Export to Object Storage
+
+Export the query results to the directory `s3://path/to/` in the S3 storage, specify the export format as ORC, and information such as `sk` (secret key) and `ak` (access key) needs to be provided. 
+
+```sql
+EXPORT TABLE tbl TO "s3://bucket/a/b/c" 
+PROPERTIES (
+    "line_delimiter" = ","
+) WITH s3 (
+    "s3.endpoint" = "xxxxx",
+    "s3.region" = "xxxxx",
+    "s3.secret_key"="xxxx",
+    "s3.access_key" = "xxxxx"
+)
+```
+
+#### Export to the Local File System
+> If you need to export to a local file, you must add `enable_outfile_to_local = true` to `fe.conf` and restart the FE.
+
+Export the query results to the directory `file:///path/to/` on the BE, specify the export format as CSV, and specify the column separator as `,`. 
+
+```sql
+-- csv format
+EXPORT TABLE tbl TO "file:///home/user/tmp/"
+PROPERTIES (
+  "format" = "csv",
+  "line_delimiter" = ","
+);
+```
+
+> Note:
+The function of exporting to local files is not applicable to public cloud users, but only to users with private deployments. And it is assumed by default that the user has full control rights over the cluster nodes. Doris does not perform legality checks on the export paths filled in by the user. If the process user of Doris does not have write permissions for the path, or the path does not exist, an error will be reported. Also, for security reasons, if there is a file with the same name already existing in the path, the export will fail.
+Doris does not manage the files exported to the local system, nor does it check the disk space, etc. These files need to be managed by the user, such as cleaning them up. 
+
+### View Export Jobs
+After submitting a job, you can query the status of the export job via the [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT.md) command. An example of the result is as follows: 
 
 ```sql
 mysql> show export\G
@@ -97,80 +159,93 @@ OutfileInfo: [
 1 row in set (0.00 sec)
 ```
 
-The meaning of each column in the result returned by the `show export` command is as follows:
+For the detailed usage of the `show export` command and the meaning of each column in the returned results, please refer to [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md).
 
-- JobId: The unique ID of the job
-- Label: The label of the export job. If not specified in the export, the system will generate one by default.
-- State: Job status:
-  - PENDING: Job pending scheduling
-  - EXPORTING: Data export in progress
-  - FINISHED: Job successful
-  - CANCELLED: Job failed
-- Progress: Job progress. This progress is based on query plans. For example, if there are a total of 10 threads and 3 have been completed, the progress is 30%.
-- TaskInfo: Job information displayed in JSON format:
-  - db: Database name
-  - tbl: Table name
-  - partitions: Specified partitions for export. An empty list indicates all partitions.
-  - column\_separator: Column separator for the export file.
-  - line\_delimiter: Line delimiter for the export file.
-  - tablet num: Total number of tablets involved.
-  - broker: Name of the broker used.
-  - coord num: Number of query plans.
-  - max\_file\_size: Maximum size of an export file.
-  - delete\_existing\_files: Whether to delete existing files and directories in the export directory.
-  - columns: Specified column names to export, empty value represents exporting all columns.
-  - format: File format for export
-- Path: Export path on the remote storage.
-- CreateTime/StartTime/FinishTime: Job creation time, scheduling start time, and end time.
-- Timeout: Job timeout time in seconds. This time is calculated from CreateTime.
-- ErrorMsg: If there is an error in the job, the error reason will be displayed here.
-- OutfileInfo: If the job is successfully exported, specific `SELECT INTO OUTFILE` result information will be displayed here.
-
-After submitting the Export job, you can cancel the export job using the [CANCEL EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT.md) command before the export task succeeds or fails. An example of the cancel command is as follows:
+### Cancel Export Jobs
+After submitting an Export job, the export job can be cancelled via the [CANCEL EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT.md) command before the Export task succeeds or fails. An example of the cancellation command is as follows: 
 
 ```sql
-CANCEL EXPORT FROM tpch1 WHERE LABEL like "%export_%";
+CANCEL EXPORT FROM dbName WHERE LABEL like "%export_%";
 ```
 
-## Export File Column Type Mapping
+## Export Instructions
 
-`Export` supports exporting data in Parquet and ORC file formats. Parquet and ORC file formats have their own data types. Doris's export function can automatically export Doris's data types to the corresponding data types of Parquet and ORC file formats. For specific mapping relationships, please refer to the "Export File Column Type Mapping" section of the [Export Overview](../../data-operate/export/export-overview.md) document.
+### Export Data Sources
+`EXPORT` currently supports exporting the following types of tables or views:
+- Internal tables in Doris
+- Logical views in Doris
+- Tables in Doris Catalog
 
-## Examples
+### Export Data Storage Locations
+`Export` currently supports exporting to the following storage locations:
+- Object storage: Amazon S3, COS, OSS, OBS, Google GCS
+- HDFS
+- Local file system
 
-### Export to HDFS
+### Export File Types
+`EXPORT` currently supports exporting to the following file formats:
+- Parquet
+- ORC
+- csv
+- csv_with_names
+- csv_with_names_and_types
 
-Export data from the `col1` and `col2` columns in the `p1` and `p2` partitions of the db1.tbl1 table to HDFS, setting the label of the export job to `mylabel`. The export file format is csv (default format), the column delimiter is `,`, and the maximum size limit for a single export file is 512MB.
+### Column Type Mapping for Exported Files
+`Export` supports exporting to Parquet and ORC file formats. Parquet and ORC file formats have their own data types, and the export function of Doris can automatically convert the data types of Doris to the corresponding data types of Parquet and ORC file formats.
+
+The following is a mapping table of Doris data types to the data types of Parquet and ORC file formats: 
+| Doris Type | Arrow Type | Orc Type |
+| ---------- | ---------- | -------- |
+| boolean    | boolean | boolean |
+| tinyint    | int8 | tinyint |
+| smallint   | int16 | smallint |
+| int        | int32 | int |
+| bigint     | int64 | bigint |
+| largeInt   | utf8 | string |
+| date       | utf8 | string |
+| datev2     | Date32Type | string |
+| datetime   | utf8 | string |
+| datetimev2 | TimestampType | timestamp |
+| float      | float32 | float |
+| double     | float64 | double |
+| char / varchar / string| utf8 | string |
+| decimal    | decimal128 | decimal |
+| struct     | struct | struct |
+| map        | map | map |
+| array      | list | array |
+| json       | utf8 | string |
+| variant    | utf8 | string |
+| bitmap     | binary | binary |
+| quantile_state| binary | binary |
+| hll        | binary | binary |
+
+> Note: When Doris exports data to the Parquet file format, it first converts the in-memory data of Doris into the Arrow in-memory data format, and then writes it out to the Parquet file format via Arrow. 
+
+## Export Examples
+
+- [Export to an HDFS Cluster with High Availability Enabled](#high-availability-hdfs-export)
+- [Export to an HDFS Cluster with High Availability and Kerberos Authentication Enabled](#high-availability-and-kerberos-cluster-export)
+- [Specify Partition for Export](#specify-partition-for-export)
+- [Filter Data During Export](#filter-data-during-export)
+- [Export External Table Data](#export-external-table-data)
+- [Adjust Export Data Consistency](#adjust-export-data-consistency)
+- [Adjust Concurrency of Export Jobs](#adjust-concurrency-of-export-jobs)
+- [Example of Clearing the Export Directory Before Exporting](#example-of-clearing-the-export-directory-before-exporting)
+- [Example of Setting the Size of Exported Files](#example-of-setting-the-size-of-exported-files)
+
+
+
+<span id="high-availability-hdfs-export"></span>
+**Export to an HDFS Cluster with High Availability Enabled**
+
+If the HDFS has high availability enabled, HA information needs to be provided. For example:
 
 ```sql
-EXPORT TABLE db1.tbl1 
-PARTITION (p1,p2)
-TO "hdfs://host/path/to/export/" 
-PROPERTIES
-(
-    "label" = "mylabel",
-    "column_separator"=",",
-    "max_file_size" = "512MB",
-    "columns" = "col1,col2"
-)
-with HDFS (
-    "fs.defaultFS"="hdfs://hdfs_host:port",
-    "hadoop.username" = "hadoop"
-);
-```
-
-If HDFS is configured for high availability, HA information needs to be provided, as shown below:
-
-```sql
-EXPORT TABLE db1.tbl1 
-PARTITION (p1,p2)
+EXPORT TABLE tbl 
 TO "hdfs://HDFS8000871/path/to/export/" 
 PROPERTIES
 (
-    "label" = "mylabel",
-    "column_separator"=",",
-    "max_file_size" = "512MB",
-    "columns" = "col1,col2"
+    "line_delimiter" = ","
 )
 with HDFS (
     "fs.defaultFS" = "hdfs://HDFS8000871",
@@ -183,18 +258,17 @@ with HDFS (
 );
 ```
 
-If the Hadoop cluster is configured for high availability and Kerberos authentication is enabled, you can refer to the following SQL statement:
+<span id="high-availability-and-kerberos-cluster-export"></span>
+**Export to an HDFS Cluster with High Availability and Kerberos Authentication Enabled**
+
+If the HDFS cluster has both high availability enabled and Kerberos authentication enabled, you can refer to the following SQL statements: 
 
 ```sql
-EXPORT TABLE db1.tbl1 
-PARTITION (p1,p2)
+EXPORT TABLE tbl 
 TO "hdfs://HDFS8000871/path/to/export/" 
 PROPERTIES
 (
-    "label" = "mylabel",
-    "column_separator"=",",
-    "max_file_size" = "512MB",
-    "columns" = "col1,col2"
+    "line_delimiter" = ","
 )
 with HDFS (
     "fs.defaultFS"="hdfs://hacluster/",
@@ -211,66 +285,10 @@ with HDFS (
 );
 ```
 
-### Export to S3
+<span id="specify-partition-for-export"></span>
+**Specify Partition for Export**
 
-Export all data from the s3_test table to S3, with the export format as csv and using the invisible character `\x07` as the row delimiter.
-
-```sql
-EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 
-PROPERTIES (
-    "line_delimiter" = "\\x07"
-) WITH s3 (
-    "s3.endpoint" = "xxxxx",
-    "s3.region" = "xxxxx",
-    "s3.secret_key"="xxxx",
-    "s3.access_key" = "xxxxx"
-)
-```
-
-### Export to Local File System
-
->
-> To export data to the local file system, you need to add `enable_outfile_to_local=true` in fe.conf and restart FE.
-
-Export all data from the test table to local storage:
-
-```sql
--- parquet format
-EXPORT TABLE test TO "file:///home/user/tmp/"
-PROPERTIES (
-  "columns" = "k1,k2",
-  "format" = "parquet"
-);
-
--- orc format
-EXPORT TABLE test TO "file:///home/user/tmp/"
-PROPERTIES (
-  "columns" = "k1,k2",
-  "format" = "orc"
-);
-
--- csv_with_names format, using 'AA' as the column separator and 'zz' as the line delimiter
-EXPORT TABLE test TO "file:///home/user/tmp/"
-PROPERTIES (
-  "format" = "csv_with_names",
-  "column_separator"="AA",
-  "line_delimiter" = "zz"
-);
-
--- csv_with_names_and_types format
-EXPORT TABLE test TO "file:///home/user/tmp/"
-PROPERTIES (
-  "format" = "csv_with_names_and_types"
-);
-```
-
-> Note:
- The functionality of exporting to the local file system is not applicable to public cloud users, only for users of private deployments. Additionally, by default, users have full control permissions over the cluster nodes. Doris does not perform validity checks on the export path provided by the user. If the Doris process user does not have write permission to the path or the path does not exist, an error will occur. For security reasons, if a file with the same name already exists in the path, the export will also fail.
- Doris does not manage the files exported to the local file system or check disk space, etc. Users need to manage these files themselves, including cleaning them up.
-
-### Export Specific Partitions
-
-Export jobs support exporting only specific partitions of Doris internal tables, such as exporting only the p1 and p2 partitions of the test table.
+The export job supports exporting only some partitions of the internal tables in Doris. For example, only export partitions p1 and p2 of the `test` table. 
 
 ```sql
 EXPORT TABLE test
@@ -281,9 +299,10 @@ PROPERTIES (
 );
 ```
 
-### Filtering Data during Export
+<span id="filter-data-during-export"></span>
+**Filter Data During Export**
 
-Export jobs support filtering data based on predicate conditions during export, exporting only data that meets certain conditions, such as exporting data that satisfies the condition `k1 < 50`.
+The export job supports filtering data according to predicate conditions during the export process, exporting only the data that meets the conditions. For example, only export the data that satisfies the condition `k1 < 50`. 
 
 ```sql
 EXPORT TABLE test
@@ -295,12 +314,13 @@ PROPERTIES (
 );
 ```
 
-### Export External Table Data
+<span id="export-external-table-data"></span>
+**Export External Table Data**
 
-Export jobs support Doris Catalog external table data:
+The export job supports the data of external tables in Doris Catalog.
 
 ```sql
--- Create a catalog
+-- create a catalog
 CREATE CATALOG `tpch` PROPERTIES (
     "type" = "trino-connector",
     "trino.connector.name" = "tpch",
@@ -308,7 +328,7 @@ CREATE CATALOG `tpch` PROPERTIES (
     "trino.tpch.splits-per-node" = "32"
 );
 
--- Export data from the Catalog external table
+-- export Catalog data
 EXPORT TABLE tpch.sf1.lineitem TO "file:///path/to/exp_"
 PROPERTIES(
     "parallelism" = "5",
@@ -318,14 +338,13 @@ PROPERTIES(
 ```
 
 :::tip
-Exporting Catalog external table data does not support concurrent exports. Even if a parallelism greater than 1 is specified, it will still be a single-threaded export.
+Currently, when exporting data from external tables in the Catalog using Export, concurrent exports are not supported. Even if the parallelism is specified to be greater than 1, the export will still be performed in a single thread. 
 :::
 
-## Best Practices
+<span id="adjust-export-data-consistency"></span>
+**Adjust Export Data Consistency**
 
-### Export Consistency
-
-`Export` supports two granularities for export: partition / tablets. The `data_consistency` parameter is used to specify the granularity at which the table to be exported is split. `none` represents Tablets level, and `partition` represents Partition level.
+`Export` supports two granularities: partition and tablets. The `data_consistency` parameter is used to specify the granularity at which the table to be exported is sliced. `none` represents the Tablets level, and `partition` represents the Partition level. 
 
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp"
@@ -336,15 +355,16 @@ PROPERTIES (
 );
 ```
 
-If `"data_consistency" = "partition"` is set, the underlying Export task constructs multiple `SELECT INTO OUTFILE` statements to export different partitions.
+If `"data_consistency" = "partition"` is set, multiple `SELECT INTO OUTFILE` statements constructed at the underlying layer of the Export task will export different partitions.
 
-If `"data_consistency" = "none"` is set, the underlying Export task constructs multiple `SELECT INTO OUTFILE` statements to export different tablets. However, these different tablets may belong to the same partition.
+If `"data_consistency" = "none"` is set, multiple `SELECT INTO OUTFILE` statements constructed at the underlying layer of the Export task will export different tablets. However, these different tablets may belong to the same partition.
 
-For the logic behind Export's underlying construction of `SELECT INTO OUTFILE` statements, refer to the appendix.
+For the logic of constructing `SELECT INTO OUTFILE` at the underlying layer of Export, please refer to the appendix section. 
 
-### Export Job Concurrency
+<span id="adjust-concurrency-of-export-jobs"></span>
+**Adjust Concurrency of Export Jobs**
 
-Export allows setting different concurrency levels to export data concurrently. Specify a concurrency level of 5:
+Export can set different degrees of concurrency to export data concurrently. Specify the concurrency degree as 5: 
 
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp/"
@@ -355,9 +375,10 @@ PROPERTIES (
 );
 ```
 
-For more information on the principles of concurrent export in Export, refer to the appendix section.
+For the principle of concurrent export of Export, please refer to the appendix section.
 
-### Clear Export Directory Before Exporting
+<span id="example-of-clearing-the-export-directory-before-exporting"></span>
+**Example of Clearing the Export Directory Before Exporting**
 
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp"
@@ -368,14 +389,15 @@ PROPERTIES (
 );
 ```
 
-If `"delete_existing_files" = "true"` is set, the export job will first delete all files and directories under `/home/user/`, and then export data to that directory.
+If `"delete_existing_files" = "true"` is set, the export job will first delete all files and directories under the `/home/user/` directory, and then export data to that directory.
 
 > Note:
-To use the `delete_existing_files` parameter, you also need to add the configuration `enable_delete_existing_files = true` in fe.conf and restart the FE. Only then will `delete_existing_files` take effect. `delete_existing_files = true` is a risky operation and is recommended to be used only in a testing environment.
+If you want to use the delete_existing_files parameter, you also need to add the configuration `enable_delete_existing_files = true` in fe.conf and restart fe, then delete_existing_files will take effect. delete_existing_files = true is a dangerous operation and it is recommended to use it only in the test environment.
 
-### Set Export File Size
+<span id="example-of-setting-the-size-of-exported-files"></span>
+**Example of Setting the Size of Exported Files**
 
-Export jobs support setting the size of export files. If a single file exceeds the set value, it will be split into multiple files for export.
+The export job supports setting the size of the export file. If the size of a single file exceeds the set value, it will be divided into multiple files for export according to the specified size.
 
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp/"
@@ -385,91 +407,83 @@ PROPERTIES (
 );
 ```
 
-By setting `"max_file_size" = "512MB"`, the maximum size of a single export file will be 512MB.
+By setting `"max_file_size" = "512MB"`, the maximum size of a single exported file is 512MB.
 
-## Notes
-* Memory Limit
+## Precautions
+* Memory Limitation
 
-  Typically, an Export job's query plan consists of only `scan-export` two parts, without involving complex calculation logic that requires a lot of memory. Therefore, the default memory limit of 2GB usually meets the requirements.
+  Usually, the query plan of an Export job only consists of two parts: scanning and exporting, and does not involve computational logic that requires too much memory. Therefore, the default memory limit of 2GB usually meets the requirements.
 
-  However, in some scenarios, such as when a query plan needs to scan too many tablets on the same BE, or when there are too many data versions of tablets, it may lead to insufficient memory. You can adjust the session variable `exec_mem_limit` to increase the memory usage limit.
+  However, in some scenarios, for example, when a query plan needs to scan too many Tablets on the same BE or there are too many data versions of Tablets, it may lead to insufficient memory. You can adjust the session variable `exec_mem_limit` to increase the memory usage limit.
 
 * Export Data Volume
 
-  It is not recommended to export a large amount of data at once. It is suggested that the maximum export data volume for an Export job should be within tens of gigabytes. Exporting excessively large data can result in more garbage files and higher retry costs. If the table data volume is too large, it is recommended to export by partition.
+  It is not recommended to export a large amount of data at one time. The recommended maximum export data volume for an Export job is several tens of gigabytes. Excessive exports will lead to more junk files and higher retry costs. If the table data volume is too large, it is recommended to export by partitions.
 
-  Additionally, Export jobs scan data, consuming IO resources, which may impact the system's query latency.
+  In addition, the Export job will scan data and occupy IO resources, which may affect the query latency of the system.
 
 * Export File Management
 
-  If an Export job fails during execution, the generated files will not be deleted automatically and will need to be manually deleted by the user.
+  If the Export job fails, the files that have already been generated will not be deleted, and users need to delete them manually.
 
 * Data Consistency
 
-  Currently, during export, only a simple check is performed on tablet versions for consistency. It is recommended not to import data into the table during the export process.
+  Currently, only a simple check is performed on whether the tablet versions are consistent during export. It is recommended not to perform data import operations on the table during the export process.
 
 * Export Timeout
 
-  If the exported data volume is very large and exceeds the export timeout, the Export task will fail. In such cases, you can specify the `timeout` parameter in the Export command to increase the timeout and retry the Export command.
+  If the amount of exported data is very large and exceeds the export timeout period, the Export task will fail. At this time, you can specify the `timeout` parameter in the Export command to increase the timeout period and retry the Export command.
 
 * Export Failure
 
-  If the FE restarts or switches masters during the execution of an Export job, the Export job will fail, and the user will need to resubmit it. You can check the status of Export tasks using the `show export` command.
+  During the operation of the Export job, if the FE restarts or switches the master, the Export job will fail, and the user needs to resubmit it. You can check the status of the Export task through the `show export` command.
 
-* Number of Export Partitions
+* Number of Exported Partitions
 
-  An Export Job allows a maximum of 2000 partitions to be exported. You can modify this setting by adding the parameter `maximum_number_of_export_partitions` in fe.conf and restarting the FE.
+  The maximum number of partitions allowed to be exported by an Export Job is 2000. You can add the parameter `maximum_number_of_export_partitions` in fe.conf and restart the FE to modify this setting.
 
 * Concurrent Export
 
-  When exporting concurrently, it is important to configure the thread count and parallelism properly to fully utilize system resources and avoid performance bottlenecks. During the export process, monitor progress and performance metrics in real-time to promptly identify issues and optimize adjustments.
+  During concurrent export, please configure the number of threads and parallelism reasonably to make full use of system resources and avoid performance bottlenecks. During the export process, you can monitor the progress and performance indicators in real time to discover problems in time and make optimization adjustments.
 
 * Data Integrity
 
-  After the export operation is completed, it is recommended to verify the exported data for completeness and correctness to ensure data quality and integrity.
+  After the export operation is completed, it is recommended to verify whether the exported data is complete and correct to ensure the quality and integrity of the data.
 
-## Appendix
+* The specific logic for an Export task to construct one or more `SELECT INTO OUTFILE` execution plans is as follows:
 
-### Principles of Concurrent Export
+  1. Select the Consistency Model of Exported Data
 
-The underlying operation of an Export task is to execute the `SELECT INTO OUTFILE` SQL statement. When a user initiates an Export task, Doris constructs one or more `SELECT INTO OUTFILE` execution plans based on the table to be exported, and then submits these `SELECT INTO OUTFILE` execution plans to Doris's Job Schedule task scheduler, which automatically schedules and executes these tasks.
+      The consistency of export is determined according to the `data_consistency` parameter. This is only related to semantics and has nothing to do with the degree of concurrency. Users should first select a consistency model according to their own requirements.
 
-By default, Export tasks are executed single-threaded. To improve export efficiency, the Export command can set a `parallelism` parameter to export data concurrently. When `parallelism` is set to a value greater than 1, the Export task will use multiple threads to execute the `SELECT INTO OUTFILE` query plans concurrently. The `parallelism` parameter essentially specifies the number of threads to execute the EXPORT job.
+  2. Determine the Degree of Concurrency
 
-The specific logic of constructing one or more `SELECT INTO OUTFILE` execution plans for an Export task is as follows:
+      Determine the number of threads to run these `SELECT INTO OUTFILE` execution plans according to the `parallelism` parameter. The `parallelism` parameter determines the maximum possible number of threads.
 
-1. Select the consistency model for exporting data
+      > Note: Even if the Export command sets the `parallelism` parameter, the actual number of concurrent threads of the Export task is also related to Job Schedule. After setting multiple concurrency for the Export task, each concurrent thread is provided by Job Schedule. Therefore, if the Doris system tasks are busy at this time and the thread resources of Job Schedule are tight, the actual number of threads allocated to the Export task may not reach the `parallelism` number, which will affect the concurrent export of Export. At this time, you can alleviate this problem by reducing the system load or adjusting the FE configuration `async_task_consumer_thread_num` to increase the total number of threads of Job Schedule.
 
-    Based on the `data_consistency` parameter to determine the consistency of the export, which is only related to semantics and not concurrency. Users should first choose a consistency model based on their own requirements.
+  3. Determine the Task Amount of Each Outfile Statement
 
-2. Determine the Degree of Parallelism
+      Each thread will decide how many outfiles to split into according to `maximum_tablets_of_outfile_in_export` and the actual number of partitions/buckets of the data.
 
-    Determine how many threads will run the `SELECT INTO OUTFILE` execution plan based on the `parallelism` parameter. The `parallelism` parameter determines the maximum number of threads possible.
+      > `maximum_tablets_of_outfile_in_export` is an FE configuration with a default value of 10. This parameter is used to specify the maximum number of partitions/buckets allowed in a single OutFile statement split by the Export task. You need to restart the FE to modify this configuration.
 
-    > Note: Even if the Export command sets the `parallelism` parameter, the actual number of concurrent threads for the Export task depends on the Job Schedule. When an Export task sets a higher concurrency, each concurrent thread is provided by the Job Schedule. Therefore, if the Doris system tasks are busy and the Job Schedule's thread resources are tight, the actual number of threads assigned to the Export task may not reach the specified `parallelism` number, affecting the concurrent export of the Export task. To mitigate this issue, you can reduce system load or adjust the FE configuration `async_task_consumer_thread_num` to increase the total thread count of the Job Schedule.
+      Example: Suppose a table has a total of 20 partitions, and each partition has 5 buckets, then the table has a total of 100 buckets. Set `data_consistency = none` and `maximum_tablets_of_outfile_in_export = 10`.
 
-3. Determine the Workload of Each `outfile` Statement
+      1. In the case of `parallelism = 5`
 
-    Each thread will determine how many `outfile` statements to split based on `maximum_tablets_of_outfile_in_export` and the actual number of partitions / buckets in the data.
+          The Export task will divide the 100 buckets of the table into 5 parts, and each thread is responsible for 20 buckets. The 20 buckets responsible by each thread will be divided into 2 groups of 10 buckets each, and each group of buckets is responsible by one outfile query plan. So, finally, the Export task has 5 threads executing concurrently, each thread is responsible for 2 outfile statements, and the outfile statements responsible by each thread are executed serially.
 
-    > `maximum_tablets_of_outfile_in_export` is a configuration in the FE with a default value of 10. This parameter specifies the maximum number of partitions / buckets allowed in a single OutFile statement generated by an Export task. Modifying this configuration requires restarting the FE.
+      2. In the case of `parallelism = 3`
 
-    Example: Suppose a table has a total of 20 partitions, each partition has 5 buckets, resulting in a total of 100 buckets. Set `data_consistency = none` and `maximum_tablets_of_outfile_in_export = 10`.
+          The Export task will divide the 100 buckets of the table into 3 parts, and the 3 threads are responsible for 34, 33, and 33 buckets respectively. The buckets responsible by each thread will be divided into 4 groups of 10 buckets each (the last group has less than 10 buckets), and each group of buckets is responsible by one outfile query plan. So, finally, the Export task has 3 threads executing concurrently, each thread is responsible for 4 outfile statements, and the outfile statements responsible by each thread are executed serially.
 
-    1. Scenario with `parallelism = 5`
+      3. In the case of `parallelism = 120`
 
-        The Export task will divide the 100 buckets of the table into 5 parts, with each thread responsible for 20 buckets. Each thread's 20 buckets will be further divided into 2 groups of 10 buckets each, with each group handled by an outfile query plan. Therefore, the Export task will have 5 threads executing concurrently, with each thread handling 2 outfile statements that are executed serially.
+          Since there are only 100 buckets in the table, the system will force `parallelism` to be set to 100 and execute with `parallelism = 100`. The Export task will divide the 100 buckets of the table into 100 parts, and each thread is responsible for 1 bucket. The 1 bucket responsible by each thread will be divided into 1 group of 10 buckets (this group actually has only 1 bucket), and each group of buckets is responsible by one outfile query plan. So, finally, the Export task has 100 threads executing concurrently, each thread is responsible for 1 outfile statement, and each outfile statement actually exports only 1 bucket.
 
-    2. Scenario with `parallelism = 3`
+* For a better performance of Export in the current version, it is recommended to set the following parameters:
 
-        The Export task will divide the 100 buckets of the table into 3 parts, with 3 threads responsible for 34, 33, and 33 buckets respectively. Each thread's buckets will be further divided into 4 groups of 10 buckets each (the last group may have fewer than 10 buckets), with each group handled by an outfile query plan. Therefore, the Export task will have 3 threads executing concurrently, with each thread handling 4 outfile statements that are executed serially.
-
-    3. Scenario with `parallelism = 120`
-
-        Since the table has only 100 buckets, the system will force `parallelism` to be set to 100 and execute with `parallelism = 100`. The Export task will divide the 100 buckets of the table into 100 parts, with each thread responsible for 1 bucket. Each thread's 1 bucket will be further divided into 1 group of 1 bucket, with each group handled by an outfile query plan. Therefore, the Export task will have 100 threads executing concurrently, with each thread handling 1 outfile statement, where each outfile statement actually exports only 1 bucket.
-
-For optimal performance in the current version of Export, it is recommended to set the following parameters:
-
-1. Enable the session variable `enable_parallel_outfile`.
-2. Set the `parallelism` parameter of Export to a large value so that each thread is responsible for only one `SELECT INTO OUTFILE` query plan.
-3. Set the FE configuration `maximum_tablets_of_outfile_in_export` to a small value to export a smaller amount of data for each `SELECT INTO OUTFILE` query plan.
+  1. Open the session variable `enable_parallel_outfile`.
+  2. Set the `parallelism` parameter of Export to a larger value so that each thread is only responsible for one `SELECT INTO OUTFILE` query plan.
+  3. Set the FE configuration `maximum_tablets_of_outfile_in_export` to a smaller value so that the amount of data exported by each `SELECT INTO OUTFILE` query plan is smaller.
