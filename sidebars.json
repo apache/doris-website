@@ -28,23 +28,11 @@
                     "items": [
                         {
                             "type": "category",
-                            "label": "Source Code Compilation",
-                            "items": [
-                                "install/source-install/compilation-with-docker",
-                                "install/source-install/compilation-with-ldb-toolchain",
-                                "install/source-install/compilation-linux",
-                                "install/source-install/compilation-arm",
-                                "install/source-install/compilation-win",
-                                "install/source-install/compilation-mac"
-                            ]
-                        },
-                        {
-                            "type": "category",
                             "label": "Installation Preparation",
                             "items": [
                                 "install/preparation/env-checking",
-				"install/preparation/cluster-planning",
-				"install/preparation/os-checking"
+				                "install/preparation/cluster-planning",
+				                "install/preparation/os-checking"
                             ]
                         },
                         {
@@ -56,38 +44,38 @@
                             ]
                         },
                         {
-                             "type": "category",
-                             "label": "Deploying on Kubernetes",
-                             "items": [
-                                 {
-                                     "type": "category",
-                                     "label": "Compute storage coupled",
-                                     "items": [
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
-                                     ]
-                                 },
-                                 {
-                                     "type": "category",
-                                     "label": "Compute storage decoupled",
-                                     "items": [
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-cg",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart"
-                                     ]
-                                 }
-                             ]
+                            "type": "category",
+                            "label": "Deploying on Kubernetes",
+                            "items": [
+                                {
+                                    "type": "category",
+                                    "label": "Compute storage coupled",
+                                    "items": [
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Compute storage decoupled",
+                                    "items": [
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-cg",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart"
+                                    ]
+                                }
+                            ]
                         },
                         {
                             "type": "category",
                             "label": "Deployment on Cloud",
                             "items": [
-			        "install/cluster-deployment/doris-on-aws"
+                                "install/cluster-deployment/doris-on-aws"
                             ]
                         }
                     ]
@@ -157,8 +145,8 @@
                         "table-design/best-practice"
                     ]
                 },
-		{
-		    "type": "category",
+                {
+                    "type": "category",
                     "label": "Loading Data",
                     "items": [
                         "data-operate/import/load-manual",
@@ -248,10 +236,10 @@
                                 "data-operate/delete/table-temp-partition"
                             ]
                         },
-			"data-operate/transaction"
+                        "data-operate/transaction"
                     ]
                 },
-		{
+                {
                     "type": "category",
                     "label": "Exporting Data",
                     "items": [
@@ -259,7 +247,7 @@
                         "data-operate/export/export-manual",
                         "data-operate/export/outfile",
                         "data-operate/export/export-with-mysql-dump"
-                     ]
+                    ]
                 },
                 {
                     "type": "category",
@@ -436,7 +424,7 @@
                         "lakehouse/external-statistics",
                         "lakehouse/cloud-auth",
                         "lakehouse/sql-dialect",
-			{
+                        {
                             "type": "category",
                             "label": "Lakehouse Best Practices",
                             "items": [
@@ -462,29 +450,29 @@
                         "compute-storage-decoupled/meta-service-api"
                     ]
                 },
-		{
+                {
                     "type": "category",
                     "label": "Security",
                     "items": [
-			{
-                    	    "type": "category",
+                        {
+                            "type": "category",
                             "label": "Authentication and Authorization",
-        	            "items": [
-			        "admin-manual/auth/authentication-and-authorization",
-				"admin-manual/auth/ldap",
-				"admin-manual/auth/ranger"
-                    	    ]
-                	},
-			{
-                	    "type": "category",
-	                    "label": "Data Transmission Encryption",
-        	            "items": [
-                	        "admin-manual/auth/certificate",
-                        	"admin-manual/auth/fe-certificate"
+                            "items": [
+                                "admin-manual/auth/authentication-and-authorization",
+                                "admin-manual/auth/ldap",
+                                "admin-manual/auth/ranger"
                             ]
-			},
-			"admin-manual/audit-plugin",
-			"admin-manual/auth/encryption-function"
+                        },
+                        {
+                            "type": "category",
+                            "label": "Data Transmission Encryption",
+                            "items": [
+                                "admin-manual/auth/certificate",
+                                "admin-manual/auth/fe-certificate"
+                            ]
+                        },
+                        "admin-manual/audit-plugin",
+                        "admin-manual/auth/encryption-function"
                     ]
                 }
             ]
@@ -539,31 +527,19 @@
                     "label": "Managing Workload",
                     "items": [
                         "admin-manual/workload-management/workload-management-summary",
-			{
-	                    "type": "category",
-	                    "label": "Resource Isolation",
-	                    "items": [
-				"admin-manual/workload-management/resource-group",
-				"admin-manual/workload-management/compute-group",
-	                        "admin-manual/workload-management/workload-group"
-	                    ]
-	                },
-			"admin-manual/workload-management/concurrency-control-and-queuing",
+                        {
+                            "type": "category",
+                            "label": "Resource Isolation",
+                            "items": [
+                                "admin-manual/workload-management/resource-group",
+                                "admin-manual/workload-management/compute-group",
+                                "admin-manual/workload-management/workload-group"
+                            ]
+                        },
+                        "admin-manual/workload-management/concurrency-control-and-queuing",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
                         "admin-manual/workload-management/job-scheduler"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing User Privilege",
-                    "items": [
-                        "admin-manual/auth/authentication-and-authorization",
-                        "admin-manual/auth/ldap",
-                        "admin-manual/auth/ranger",
-                        "admin-manual/auth/certificate",
-                        "admin-manual/auth/fe-certificate",
-                        "admin-manual/auth/encryption-function"
                     ]
                 },
                 {
