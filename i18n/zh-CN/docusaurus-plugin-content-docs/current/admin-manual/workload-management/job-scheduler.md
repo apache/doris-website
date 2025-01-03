@@ -1,6 +1,6 @@
 ---
 {
-"title": "作业调度",
+"title": "调度管理",
 "language": "zh-CN"
 }
 ---
