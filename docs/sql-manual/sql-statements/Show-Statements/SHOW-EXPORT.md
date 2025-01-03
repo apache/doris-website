@@ -55,6 +55,35 @@ illustrate:
       3. You can use ORDER BY to sort any combination of columns
       4. If LIMIT is specified, limit matching records are displayed. Otherwise show all
 
+The meaning of each column in the result returned by the `show export` command is as follows:
+
+- JobId: The unique ID of the job
+- Label: The label of the export job. If not specified in the export, the system will generate one by default.
+- State: Job status:
+  - PENDING: Job pending scheduling
+  - EXPORTING: Data export in progress
+  - FINISHED: Job successful
+  - CANCELLED: Job failed
+- Progress: Job progress. This progress is based on query plans. For example, if there are a total of 10 threads and 3 have been completed, the progress is 30%.
+- TaskInfo: Job information displayed in JSON format:
+  - db: Database name
+  - tbl: Table name
+  - partitions: Specified partitions for export. An empty list indicates all partitions.
+  - column\_separator: Column separator for the export file.
+  - line\_delimiter: Line delimiter for the export file.
+  - tablet num: Total number of tablets involved.
+  - broker: Name of the broker used.
+  - coord num: Number of query plans.
+  - max\_file\_size: Maximum size of an export file.
+  - delete\_existing\_files: Whether to delete existing files and directories in the export directory.
+  - columns: Specified column names to export, empty value represents exporting all columns.
+  - format: File format for export
+- Path: Export path on the remote storage.
+- `CreateTime/StartTime/FinishTime`: Job creation time, scheduling start time, and end time.
+- Timeout: Job timeout time in seconds. This time is calculated from CreateTime.
+- ErrorMsg: If there is an error in the job, the error reason will be displayed here.
+- OutfileInfo: If the job is successfully exported, specific `SELECT INTO OUTFILE` result information will be displayed here.
+
 ### Example
 
 1. Show all export tasks of default db

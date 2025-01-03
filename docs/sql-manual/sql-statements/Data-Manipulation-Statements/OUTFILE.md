@@ -130,6 +130,13 @@ INTO OUTFILE "file_path"
     INTO OUTFILE "file:///home/work/path/result_";
     ```
 
+#### Explanation of the returned results:
+
+- **FileNumber**: The number of generated files.
+- **TotalRows**: The number of rows in the result set.
+- **FileSize**: The total size of the exported files in bytes.
+- **URL**: The prefix of the exported file paths. Multiple files will be numbered sequentially with suffixes `_0`, `_1`, etc.
+
 #### DataType Mapping
 
 Parquet and ORC file formats have their own data types. The export function of Doris can automatically export the Doris data types to the corresponding data types of the Parquet/ORC file format. The following are the data type mapping relationship of the Doris data types and the Parquet/ORC file format data types:
