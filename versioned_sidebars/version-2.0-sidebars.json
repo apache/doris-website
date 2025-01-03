@@ -735,7 +735,6 @@
                                 "sql-manual/sql-functions/date-time-functions/date-trunc",
                                 "sql-manual/sql-functions/date-time-functions/date-format",
                                 "sql-manual/sql-functions/date-time-functions/datediff",
-                                "sql-manual/sql-functions/date-time-functions/date-floor",
                                 "sql-manual/sql-functions/date-time-functions/second-floor",
                                 "sql-manual/sql-functions/date-time-functions/minute-floor",
                                 "sql-manual/sql-functions/date-time-functions/hour-floor",
