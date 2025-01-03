@@ -51,6 +51,35 @@ SHOW EXPORT
       3. 可以使用 ORDER BY 对任意列组合进行排序
       4. 如果指定了 LIMIT，则显示 limit 条匹配记录。否则全部显示
 
+`show export` 命令返回的结果各个列的含义如下：
+
+* JobId：作业的唯一 ID
+* Label：该导出作业的标签，如果 Export 没有指定，则系统会默认生成一个。
+* State：作业状态：
+  * PENDING：作业待调度
+  * EXPORTING：数据导出中
+  * FINISHED：作业成功
+  * CANCELLED：作业失败
+* Progress：作业进度。该进度以查询计划为单位。假设一共 10 个线程，当前已完成 3 个，则进度为 30%。
+* TaskInfo：以 Json 格式展示的作业信息：
+  * db：数据库名
+  * tbl：表名
+  * partitions：指定导出的分区。`空`列表 表示所有分区。
+  * column\_separator：导出文件的列分隔符。
+  * line\_delimiter：导出文件的行分隔符。
+  * tablet num：涉及的总 Tablet 数量。
+  * broker：使用的 broker 的名称。
+  * coord num：查询计划的个数。
+  * max\_file\_size：一个导出文件的最大大小。
+  * delete\_existing\_files：是否删除导出目录下已存在的文件及目录。
+  * columns：指定需要导出的列名，空值代表导出所有列。
+  * format：导出的文件格式
+* Path：远端存储上的导出路径。
+* CreateTime/StartTime/FinishTime：作业的创建时间、开始调度时间和结束时间。
+* Timeout：作业超时时间。单位是秒。该时间从 CreateTime 开始计算。
+* ErrorMsg：如果作业出现错误，这里会显示错误原因。
+* OutfileInfo：如果作业导出成功，这里会显示具体的`SELECT INTO OUTFILE`结果信息。
+
 ## 示例
 
 1. 展示默认 db 的所有导出任务
