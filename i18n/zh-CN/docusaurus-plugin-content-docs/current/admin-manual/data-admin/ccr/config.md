@@ -1,6 +1,8 @@
 ---
-title: 配置说明
-language: zh-CN
+{
+  "title": "配置说明",
+  "language": "zh-CN"
+}
 ---
 
 <!--
