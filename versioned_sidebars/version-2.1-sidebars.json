@@ -5,16 +5,8 @@
             "label": "Getting Started",
             "collapsed": false,
             "items": [
-                "gettingStarted/what-is-new",
                 "gettingStarted/what-is-apache-doris",
-                "gettingStarted/quick-start",
-                {
-                    "type": "category",
-                    "label": "Tutorials",
-                    "items": [
-                        "gettingStarted/tutorials/log-storage-analysis"
-                    ]
-                }
+                "gettingStarted/quick-start"
             ]
         },
         {
@@ -35,33 +27,21 @@
                                 "install/preparation/os-checking"
                             ]
                         },
-                        {
-                            "type": "category",
-                            "label": "Cluster Deployment Manually",
-                            "items": [
-                                "install/deploy-manually/storage-compute-coupled-deploy-manually"
-                            ]
-                        },
+                        "install/deploy-manually/storage-compute-coupled-deploy-manually",
                         {
                             "type": "category",
                             "label": "Deploying on Kubernetes",
                             "items": [
-                                {
-                                    "type": "category",
-                                    "label": "Compute storage coupled",
-                                    "items": [
-                                        "install/cluster-deployment/k8s-deploy/install-doris-operator",
-                                        "install/cluster-deployment/k8s-deploy/install-config-cluster",
-                                        "install/cluster-deployment/k8s-deploy/install-doris-cluster",
-                                        "install/cluster-deployment/k8s-deploy/access-cluster",
-                                        "install/cluster-deployment/k8s-deploy/cluster-operation"
-                                    ]
-                                }
+                                "install/cluster-deployment/k8s-deploy/install-doris-operator",
+                                "install/cluster-deployment/k8s-deploy/install-config-cluster",
+                                "install/cluster-deployment/k8s-deploy/install-doris-cluster",
+                                "install/cluster-deployment/k8s-deploy/access-cluster",
+                                "install/cluster-deployment/k8s-deploy/cluster-operation"
                             ]
                         },
                         {
                             "type": "category",
-                            "label": "Deployment on Cloud",
+                            "label": "Deploying on Cloud",
                             "items": [
                                 "install/cluster-deployment/doris-on-aws"
                             ]
@@ -148,6 +128,7 @@
                                 "data-operate/import/data-source/hdfs",
                                 "data-operate/import/data-source/amazon-s3",
                                 "data-operate/import/data-source/google-cloud-storage",
+                                "data-operate/import/data-source/azure-storage",
                                 "data-operate/import/data-source/aliyun-oss",
                                 "data-operate/import/data-source/huawei-obs",
                                 "data-operate/import/data-source/tencent-cos",
@@ -418,6 +399,7 @@
                         }
                     ]
                 },
+                "log-storage-analysis",
                 {
                     "type": "category",
                     "label": "Security",
@@ -443,6 +425,16 @@
                         "admin-manual/auth/encryption-function"
                     ]
                 }
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Benchmark",
+            "collapsed": false,
+            "items": [
+                "benchmark/ssb",
+                "benchmark/tpch",
+                "benchmark/tpcds"
             ]
         },
         {
@@ -744,16 +736,6 @@
                 "admin-manual/plugin-development-manual",
                 "admin-manual/small-file-mgr",
                 "admin-manual/compaction"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Benchmark",
-            "collapsed": false,
-            "items": [
-                "benchmark/ssb",
-                "benchmark/tpch",
-                "benchmark/tpcds"
             ]
         },
         {

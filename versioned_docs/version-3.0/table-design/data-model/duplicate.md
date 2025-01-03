@@ -1,7 +1,7 @@
 ---
 {
-    "title": "明细模型",
-    "language": "zh-CN"
+    "title": "Detail Model",
+    "language": "en"
 }
 ---
 
