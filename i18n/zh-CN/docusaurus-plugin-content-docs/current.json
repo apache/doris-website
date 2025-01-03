@@ -263,13 +263,13 @@
     "message": "资源隔离",
     "description": "The label for category Resource Isolation in sidebar docs"
   },
-  "sidebar.docs.category.Managing Query": {
-    "message": "查询管理",
-    "description": "The label for category Managing Query in sidebar docs"
-  },
   "sidebar.docs.category.Managing User Privilege": {
     "message": "安全管理",
     "description": "The label for category Managing User Privilege in sidebar docs"
+  },
+  "sidebar.docs.category.Trouble Shooting": {
+    "message": "故障诊断处理",
+    "description": "The label for category Trouble Shooting in sidebar docs"
   },
   "sidebar.docs.category.Managing Memory": {
     "message": "内存管理",
