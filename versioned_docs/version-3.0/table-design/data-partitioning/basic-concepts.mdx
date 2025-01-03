@@ -228,7 +228,8 @@ PROPERTIES
     "dynamic_partition.enable" = "true",
     "dynamic_partition.time_unit" = "month", --- Both must have the same granularity
     "dynamic_partition.start" = "-2", --- Dynamic Partition automatically cleans up partitions that are more than two weeks old
-    "dynamic_partition.end" = "0", --- Dynamic Partition does not create future partitions. it is left entirely to Auto Partition.
+    "dynamic_partition.create_method" = "AUTO", --- Required. Partition creation is handled entirely by Auto Partition
+    "dynamic_partition.end" = "0", --- Will be ignored.
     "dynamic_partition.prefix" = "p",
     "dynamic_partition.buckets" = "8"
 );

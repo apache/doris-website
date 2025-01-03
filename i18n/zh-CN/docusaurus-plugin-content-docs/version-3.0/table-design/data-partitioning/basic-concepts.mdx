@@ -202,6 +202,10 @@ PROPERTIES
 <TabItem value="自动分区+动态分区" label="自动分区+动态分区">
 <p>
 
+:::tip
+该功能自 3.0.3 支持，下列 `end` 与 `create_method` 行为变更自 3.0.4 生效。
+:::
+
 自动分区与动态分区各有其优点，将二者结合可以实现分区的灵活按需创建和自动回收：
 
 ```sql
@@ -229,7 +233,8 @@ PROPERTIES
     "dynamic_partition.enable" = "true",
     "dynamic_partition.time_unit" = "month", --- 二者粒度必须相同
     "dynamic_partition.start" = "-2", --- 动态分区自动清理超过两周的历史分区
-    "dynamic_partition.end" = "0", --- 动态分区不创建未来分区，完全交给自动分区
+    "dynamic_partition.create_method" = "AUTO", --- 必需。分区创建完全由自动分区负责
+    "dynamic_partition.end" = "123", --- 将被忽略
     "dynamic_partition.prefix" = "p",
     "dynamic_partition.buckets" = "8"
 );
