@@ -5,26 +5,8 @@
             "label": "Getting Started",
             "collapsed": false,
             "items": [
-                "gettingStarted/what-is-new",
                 "gettingStarted/what-is-apache-doris",
-                "gettingStarted/quick-start",
-                {
-                    "type": "category",
-                    "label": "Tutorials",
-                    "items": [
-                        {
-                            "type": "category",
-                            "label": "Building lakehouse",
-                            "items": [
-                                "gettingStarted/tutorials/building-lakehouse/doris-hudi",
-                                "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                                "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
-                                "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
-                            ]
-                        },
-                        "gettingStarted/tutorials/log-storage-analysis"
-                    ]
-                }
+                "gettingStarted/quick-start"
             ]
         },
         {

@@ -672,7 +672,7 @@
     "description": "The label for category Cross Cluster Replication in sidebar docs"
   },
   "sidebar.docs.category.Tiered Storage": {
-    "message": "分层存储",
+    "message": "冷热数据分层",
     "description": "The label for category Tiered Storage in sidebar docs"
   },
   "sidebar.docs.category.Business Continuity & Data Recovery": {

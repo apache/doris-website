@@ -37,7 +37,7 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button1">Get started</Translate>,
-            link: '/docs/gettingStarted/what-is-new',
+            link: '/docs/gettingStarted/what-is-apache-doris',
             type: 'ghost',
         },
         {
