@@ -999,7 +999,8 @@ from KAFKA_SOURCE;
 
 2. **errCode = 2, detailMessage = transaction [19650] not found**
 
-   发生在 Commit 阶段，checkpoint 里面记录的事务 ID，在 FE 侧已经过期，此时再次 commit 就会出现上述错误。此时无法从 checkpoint 启动，后续可通过修改 fe.conf 的 streaming_label_keep_max_second 配置来延长过期时间，默认 12 小时。
+    发生在 Commit 阶段，checkpoint 里面记录的事务 ID，在 FE 侧已经过期，此时再次 commit 就会出现上述错误。此时无法从 checkpoint 启动，后续可通过修改 fe.conf 的 `streaming_label_keep_max_second` 配置来延长过期时间，默认 12 小时。Doris2.0 版本后还会受到 fe.conf 中 `label_num_threshold` 配置的限制 (默认 2000) ，可以调大或者改为 -1（-1 表示只受时间限制）。
+
 
 3. **errCode = 2, detailMessage = current running txns on db 10006 is 100, larger than limit 100**
 
