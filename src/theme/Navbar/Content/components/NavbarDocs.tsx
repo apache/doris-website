@@ -1,6 +1,6 @@
 import styles from '../styles.module.css';
 import React, { useState, useEffect, useContext } from 'react';
-import { useLocation } from '@docusaurus/router';
+import { useHistory, useLocation } from '@docusaurus/router';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import { useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
 import { splitNavbarItems } from '@docusaurus/theme-common/internal';
@@ -20,6 +20,7 @@ interface NavbarDocsProps {
 export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
     const [currentVersion, setCurrentVersion] = useState('');
     const location = useLocation();
+    const history = useHistory();
     const docItems = isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items;
     const [leftDocItems] = splitNavbarItems(docItems);
     useEffect(() => {
@@ -38,9 +39,10 @@ export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
                 <div
                     className="cursor-pointer docs"
                     onClick={() => {
-                        window.location.href = `${isEN ? '' : '/zh-CN'}/docs${
+                        const url = `${isEN ? '' : '/zh-CN'}/docs${
                             currentVersion === '' ? '' : `/${currentVersion}`
-                        }/gettingStarted/what-is-new`;
+                        }/gettingStarted/what-is-apache-doris`;
+                        history.push(url);
                     }}
                 >
                     {isEN ? <DocsLogoNew /> : <DocsLogoZH />}
@@ -68,7 +70,7 @@ export const NavbarDocsRight = ({ isEN }: NavbarDocsProps) => {
             ) : (
                 <>
                     {mobileSidebar.shouldRender ? (
-                        <span className='mr-2' onClick={() => setShowSearchPageMobile(true)}>
+                        <span className="mr-2" onClick={() => setShowSearchPageMobile(true)}>
                             <SearchIcon />
                         </span>
                     ) : null}
