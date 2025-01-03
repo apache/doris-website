@@ -267,7 +267,7 @@ http {
 
 2. 集群内多数 Follower FE 节点未启动。比如有 3 个 Follower，只启动了一个。此时需要将另外至少一个 FE 也启动，FE 可选举组方能选举出 Master 已提供服务。
 
-如果以上情况都不能解决，可以按照 Doris 官网文档中的[元数据运维文档](../admin-manual/maint-monitor/metadata-operation.md)进行恢复。
+如果以上情况都不能解决，可以按照 Doris 官网文档中的[元数据运维文档](../admin-manual/trouble-shooting/metadata-operation.md)进行恢复。
 
 ### Q10. Lost connection to MySQL server at 'reading initial communication packet', system error: 0
 
@@ -277,7 +277,7 @@ http {
 
 有时重启 FE，会出现如上错误（通常只会出现在多 Follower 的情况下）。并且错误中的两个数值相差 2。导致 FE 启动失败。
 
-这是 bdbje 的一个 bug，尚未解决。遇到这种情况，只能通过[元数据运维文档](../admin-manual/maint-monitor/metadata-operation.md) 中的 故障恢复 进行操作来恢复元数据了。
+这是 bdbje 的一个 bug，尚未解决。遇到这种情况，只能通过[元数据运维文档](../admin-manual/trouble-shooting/metadata-operation.md) 中的 故障恢复 进行操作来恢复元数据了。
 
 ### Q12. Doris 编译安装 JDK 版本不兼容问题
 
