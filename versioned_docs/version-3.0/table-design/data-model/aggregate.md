@@ -1,7 +1,7 @@
 ---
 {
-    "title": "聚合模型",
-    "language": "zh-CN"
+    "title": "Aggregate Model",
+    "language": "en"
 }
 ---
 

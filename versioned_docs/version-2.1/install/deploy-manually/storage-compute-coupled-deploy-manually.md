@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Deploy Storage Compute Coupled Manually",
+    "title": "Deploying Manually",
     "language": "en"
 }
 ---

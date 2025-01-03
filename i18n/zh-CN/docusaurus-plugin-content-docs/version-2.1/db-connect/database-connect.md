@@ -1,6 +1,6 @@
 ---
 {
-    "title": "数据库连接",
+    "title": "通过 MySQL 协议连接",
     "language": "zh-CN"
 }
 ---

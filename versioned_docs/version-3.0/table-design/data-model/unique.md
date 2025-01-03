@@ -1,7 +1,7 @@
 ---
 {
-    "title": "主键模型",
-    "language": "zh-CN"
+    "title": "Primary Key Model",
+    "language": "en"
 }
 ---
 

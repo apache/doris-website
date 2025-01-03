@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Tiered Storage",
+    "title": "Tiered Storage Overview",
     "language": "en-US"
 }
 ---
