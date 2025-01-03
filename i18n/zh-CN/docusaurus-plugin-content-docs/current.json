@@ -63,9 +63,9 @@
     "message": "手动部署集群",
     "description": "The label for category Cluster Deployment Manually in sidebar docs"
   },
-  "sidebar.docs.category.Deployment on Cloud": {
+  "sidebar.docs.category.Deploying on Cloud": {
     "message": "云上部署集群",
-    "description": "The label for category Deployment on Cloud in sidebar docs"
+    "description": "The label for category Deploying on Cloud in sidebar docs"
   },
   "sidebar.docs.category.Database Connection": {
     "message": "数据库连接",

@@ -88,7 +88,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
 * BITMAP_UNION：BIMTAP 类型的列的聚合方式，进行位图的并集聚合。
 
-:::info 提示:
+:::info 提示：
 
 如果以上的聚合方式无法满足业务需求，可以选择使用 agg_state 类型。
 :::
@@ -129,7 +129,7 @@ SELECT * FROM example_tbl_agg;
 
 ## AGG_STATE
 
-::: info 提示：
+:::info 提示：
 AGG_STATE 是实验特性，建议在开发与测试环境中使用。
 :::
 

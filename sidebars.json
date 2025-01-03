@@ -65,7 +65,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "Deployment on Cloud",
+                            "label": "Deploying on Cloud",
                             "items": [
                                 "install/cluster-deployment/doris-on-aws"
                             ]

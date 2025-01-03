@@ -34,7 +34,7 @@ Doris supports three types of table models:
 
 * **Primary Key Model (Unique Key Model)**: Ensures that each row has a unique Key value, and guarantees that there are no duplicate rows for a given Key column. The Doris storage layer retains only the latest written data for each key, making this model suitable for scenarios that involve data updates.
 
-* **Aggregation Model (Aggregate Key Model)**: Allows data to be aggregated based on the Key columns. The Doris storage layer retains aggregated data, reducing storage space and improving query performance. This model is typically used in situations where summary or aggregated information (such as totals or averages) is required.
+* **Aggregate Model (Aggregate Key Model)**: Allows data to be aggregated based on the Key columns. The Doris storage layer retains aggregated data, reducing storage space and improving query performance. This model is typically used in situations where summary or aggregated information (such as totals or averages) is required.
 
 Once the table is created, the table model attributes are confirmed and cannot be modified. It is crucial to choose the appropriate model based on business requirements:
 

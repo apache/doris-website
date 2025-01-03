@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Unique Key Model",
+    "title": "Primary Key Model",
     "language": "en"
 }
 ---
