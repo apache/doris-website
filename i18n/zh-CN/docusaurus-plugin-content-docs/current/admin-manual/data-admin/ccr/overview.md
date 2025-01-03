@@ -1,6 +1,8 @@
 ---
-title: 概述
-language: zh-CN
+{
+   "title": "跨集群数据同步概述"
+   "language": "zh-CN",
+}
 ---
 
 <!--

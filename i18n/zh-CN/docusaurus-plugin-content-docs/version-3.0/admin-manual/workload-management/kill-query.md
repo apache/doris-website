@@ -1,6 +1,6 @@
 ---
 {
-"title": "Kill Query",
+"title": "终止查询",
 "language": "zh-CN"
 }
 ---
