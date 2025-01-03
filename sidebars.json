@@ -559,10 +559,11 @@
                     "type": "category",
                     "label": "Maintenance",
                     "items": [
-                        "admin-manual/maint-monitor/monitor-metrics/metrics",
+                        "admin-manual/maint-monitor/metrics",
                         "admin-manual/maint-monitor/monitor-alert"
                         "admin-manual/maint-monitor/disk-capacity",
-                        "admin-manual/maint-monitor/tablet-repair-and-balance"
+                        "admin-manual/maint-monitor/tablet-repair-and-balance",
+                        "admin-manual/maint-monitor/automatic-service-start"
                     ]
                 },
                 {
@@ -643,7 +644,6 @@
                         }
                     ]
                 },
-                "admin-manual/audit-plugin",
                 {
                     "type": "category",
                     "label": "OPEN API",
