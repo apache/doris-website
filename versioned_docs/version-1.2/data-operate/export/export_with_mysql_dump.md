@@ -1,6 +1,6 @@
 ---
 {
-"title": ""title": "Using MySQL Dump",
+"title": "Using MySQL Dump",
 "language": "en"
 }
 ---
