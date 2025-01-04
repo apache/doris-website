@@ -49,6 +49,7 @@ Doris supports the use of Java to develop UDFs, UDAFs, and UDTFs. Unless otherwi
 | Double                | Double                       |
 | Date                  | LocalDate                    |
 | Datetime              | LocalDateTime                |
+| IPV4/IPV6             | InetAddress                  |
 | String                | String                       |
 | Decimal               | BigDecimal                   |
 | `array<Type>`         | `ArrayList<Type>`            |
@@ -381,7 +382,7 @@ For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-
 
     ```sql
     CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
-        "file"="file:///pathTo/java-udaf.jar",
+        "file"="file:///pathTo/java-udtf.jar",
         "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
         "always_nullable"="true",
         "type"="JAVA_UDF"

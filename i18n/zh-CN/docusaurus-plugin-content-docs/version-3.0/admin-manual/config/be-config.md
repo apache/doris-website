@@ -46,7 +46,7 @@ BE 进程启动后，会先读取 `be.conf` 中的配置项，之后再读取 `b
 
 2. 通过命令行查看
 
-   可以在 MySQL 客户端中，通过以下命令查看 BE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md)：
+   可以在 MySQL 客户端中，通过以下命令查看 BE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md)：
 
     `SHOW BACKEND CONFIG;`
 
@@ -1428,6 +1428,15 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 描述：下载最低限速
 * 默认值：50 (KB/s)
+
+#### `enable_batch_download`
+
+:::tip 提示
+该功能自 Apache Doris 3.0.4 版本起支持
+:::
+
+* 描述：是否允许批量下载文件，建议只在开启 binlog 的情况下打开
+* 默认值：false
 
 #### `doris_cgroups`
 

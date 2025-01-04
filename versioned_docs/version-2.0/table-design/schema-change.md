@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Schema Evolution",
+    "title": "Schema Change",
     "language": "en"
 }
 ---
@@ -76,7 +76,7 @@ The basic process of executing schema change is to generate a new schema table f
 
 Before starting to convert historical data, Doris will obtain a latest transaction ID and wait for all import transactions before this transaction ID to complete. This transaction ID becomes a watershed. This means that Doris ensures that all import tasks after the watershed will generate data for the original table  /Index  and the new table  /Index  at the same time. This way, when the historical data conversion is completed, the data in the new table can be guaranteed to be complete.
 
-The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
+The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN)
 
 ## Adding a column at a specified position to a specified index
 

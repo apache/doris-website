@@ -105,7 +105,7 @@ Doris supports the following password policies to assist users in better passwor
 
     - `SET validate_password_policy=STRONG`
 
-For more help, please refer to [ALTER USER](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-USER.md).
+For more help, please refer to [ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER.md).
 
 ### LDAP-based Authentication Scheme
 
@@ -115,20 +115,20 @@ Please refer to [LDAP-based Authentication Scheme](./ldap.md).
 
 ### Permission Operations
 
-- Create user: [CREATE USER](../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md)
-- Modify user: [ALTER USER](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-USER.md)
-- Delete user: [DROP USER](../../sql-manual/sql-statements/Account-Management-Statements/DROP-USER.md)
-- Grant/Assign role: [GRANT](../../sql-manual/sql-statements/Account-Management-Statements/GRANT.md)
-- Revoke/Withdraw role: [REVOKE](../../sql-manual/sql-statements/Account-Management-Statements/REVOKE.md)
-- Create role: [CREATE ROLE](../../sql-manual/sql-statements/Account-Management-Statements/CREATE-ROLE.md)
-- Delete role: [DROP ROLE](../../sql-manual/sql-statements/Account-Management-Statements/DROP-ROLE.md)
-- Modify role: [ALTER ROLE](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-ROLE.md)
-- View current user's permissions and roles: [SHOW GRANTS](../../sql-manual/sql-statements/Show-Statements/SHOW-GRANTS.md)
-- View all users' permissions and roles: [SHOW ALL GRANTS](../../sql-manual/sql-statements/Show-Statements/SHOW-GRANTS.md)
-- View created roles: [SHOW ROLES](../../sql-manual/sql-statements/Show-Statements/SHOW-ROLES.md)
-- Set user property: [SET PROPERTY](../../sql-manual/sql-statements/Account-Management-Statements/SET-PROPERTY.md)
-- View user property: [SHOW PROPERTY](../../sql-manual/sql-statements/Show-Statements/SHOW-PROPERTY.md)
-- Change password: [SET PASSWORD](../../sql-manual/sql-statements/Account-Management-Statements/SET-PASSWORD.md)
+- Create user: [CREATE USER](../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER.md)
+- Modify user: [ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER.md)
+- Delete user: [DROP USER](../../sql-manual/sql-statements/account-management/DROP-USER.md)
+- Grant/Assign role: [GRANT](../../sql-manual/sql-statements/account-management/GRANT-TO)
+- Revoke/Withdraw role: [REVOKE](../../sql-manual/sql-statements/account-management/REVOKE-FROM.md)
+- Create role: [CREATE ROLE](../../sql-manual/sql-statements/account-management/CREATE-ROLE.md)
+- Delete role: [DROP ROLE](../../sql-manual/sql-statements/account-management/DROP-ROLE.md)
+- Modify role: [ALTER ROLE](../../sql-manual/sql-statements/account-management/ALTER-ROLE.md)
+- View current user's permissions and roles: [SHOW GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
+- View all users' permissions and roles: [SHOW ALL GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
+- View created roles: [SHOW ROLES](../../sql-manual/sql-statements/account-management/SHOW-ROLES.md)
+- Set user property: [SET PROPERTY](../../sql-manual/sql-statements/account-management/SET-PROPERTY.md)
+- View user property: [SHOW PROPERTY](../../sql-manual/sql-statements/account-management/SHOW-PROPERTY.md)
+- Change password: [SET PASSWORD](../../sql-manual/sql-statements/account-management/SET-PASSWORD.md)
 - View all supported privileges: [SHOW PRIVILEGES]
 - View row policy: [SHOW ROW POLICY]
 - Create row policy: [CREATE ROW POLICY]

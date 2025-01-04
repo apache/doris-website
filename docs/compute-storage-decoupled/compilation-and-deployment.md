@@ -95,15 +95,14 @@ export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --daemon
 ```
 
+The startup script returns a value of 0 to indicate that the startup was successful; otherwise, the startup fails.
+Upon successful startup, the last line of the standard output text will be "doris_cloud start successfully."
+
 *Stop Command*
 
 ``` shell
 bin/stop.sh
 ```
-
-*Verify Start*
-
-Check the `doris_cloud.out` file for the output message `successfully started`.
 
 For production environment, please ensure that the total number of Meta Service is at least three.
 
@@ -162,9 +161,15 @@ In the `fe.conf` file, the following key parameters need to be configured:
    - Example: `cloud`
 
 2. `cluster_id`
-   - Description: A unique identifier for the cluster in the decoupled storage-compute architecture; different clusters must set different cluster_ids.
-   - Format: int type.
-   - Example: `12345678`
+   - Description: A unique identifier for the cluster in the decoupled storage-compute architecture. Each cluster must have a distinct cluster_id to avoid conflicts.
+   - Format: Integer (int type).
+   - Example: A random `cluster_id` can be generated using the following shell command.
+      ```shell
+      echo $(($((RANDOM << 15)) | $RANDOM))
+      ```
+     :::caution
+     **Each cluster must have a distinct cluster_id to avoid conflicts**
+     :::
 
 3. `meta_service_endpoint`
    - Description: The address and port of the Meta Service.

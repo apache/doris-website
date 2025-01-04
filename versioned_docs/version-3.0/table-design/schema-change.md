@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Schema Evolution",
+    "title": "Schema Change",
     "language": "en"
 }
 ---
@@ -46,11 +46,11 @@ The implementation of Schema Change is divided into two major categories: Light 
 
 - Heavy Weight Schema Change relies on the BE for data file transformation. The specific implementation methods are as follows:
 
-    |Schema change Implementation | Main Logic | Typical Scenario |
-    |-----------------|------|---------|----------|
-    | Direct Schema Change | Rewrites the data files holistically without involving reordering | Changing the data type of value columns |
-    | Sort Schema Change | Rewrites the data files holistically and reorders them | Changing the data type of key columns |
-    | Hard Linked Schema Change | Relinks the data files without directly modifying the data files | Replaced by Light Weight Schema Change for column changes |
+    | Schema Change Implementation | Main Logic | Usage Scenario |
+    |------------------|---------|----------|
+    | Direct Schema Change | Rewrites the entire data file without involving reordering | Changing the data type of a value column |
+    | Sort Schema Change | Rewrites the entire data file and involves reordering | Changing the data type of a key column |
+    | Hard Linked Schema Change | Relinks the data files without directly modifying them | Superseded by lightweight Schema Change for column modifications |
 
 **Main Process**
 
@@ -83,7 +83,7 @@ For Heavy Weight Schema Change, after the user issues the Alter command, a task 
     ```
 5. After the data transformation is completed, all tablets storing old data will be deleted, and all new tablets that have completed the data change will replace the old tablets for service.
 
-The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
+The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN)
 
 ## Adding a column at a specified position to a specified index
 
@@ -102,7 +102,7 @@ ALTER TABLE table_name ADD COLUMN column_name column_type [KEY | agg_type] [DEFA
 
 - You cannot add a column to a rollup index that already exists in the base index (if needed, you can create a new rollup index).
 
-### Examples
+## Examples
 
 #### non-aggregate model
 
@@ -194,7 +194,7 @@ ALTER TABLE table_name ADD COLUMN (column_name1 column_type [KEY | agg_type] DEF
 
 - You cannot add a column to a rollup index that already exists in the base index (if needed, you can create a new rollup index).
 
-### Example
+## Example
 
 Adding multiple columns (aggregate model) to `example_rollup_index`:
 
@@ -217,7 +217,7 @@ ALTER TABLE table_name DROP COLUMN column_name
 
 - If you delete a column from the base index, it will also be removed from the rollup index if it contains the column.
 
-### Example
+## Example
 
 Removing column col2 from `example_rollup_index`:
 
@@ -268,7 +268,7 @@ ALTER TABLE table_name MODIFY COLUMN column_name column_type [KEY | agg_type] [N
 
   - All types except DATE and DATETIME can be converted to STRING, but STRING cannot be converted to any other type.
 
-### Examples
+## Examples
 
 table's DDL:
 
@@ -326,7 +326,7 @@ ALTER TABLE table_name ORDER BY (column_name1, column_name2, ...)
 
 - Value columns come after key columns.
 
-### Example
+## Example
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
@@ -358,7 +358,7 @@ FROM example_rollup_index;
 
 Schema change can modify multiple indexes in a single job.
 
-### Example 1
+## Example 1
 
 Source Schema:
 
@@ -413,7 +413,7 @@ As seen, the base table tbl1 automatically includes the columns k4 and k5. Any c
 
 Additionally, it is not allowed to add columns to a rollup that already exist in the base table. If a user needs to do so, they can create a new rollup with the additional columns and then delete the original rollup.
 
-### Example 2
+## Example 2
 
 table's DDL
 
@@ -589,4 +589,4 @@ ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
 
 ## More Details
 
-For more detailed syntax and best practices regarding Schema Change, please refer to the [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) command manual.
+For more detailed syntax and best practices regarding Schema Change, please refer to the [ALTER TABLE COLUMN](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN) command manual.

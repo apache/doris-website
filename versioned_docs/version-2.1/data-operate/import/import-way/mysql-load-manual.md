@@ -266,4 +266,4 @@ PROPERTIES ("exec_mem_limit"="10737418240");
 
 ## More help
 
-For more detailed syntax and best practices related to MySQL Load, refer to the [MySQL Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/MYSQL-LOAD/) command manual.
+For more detailed syntax and best practices related to MySQL Load, refer to the [MySQL Load](../../../sql-manual/sql-statements/data-modification/load-and-export/MYSQL-LOAD/) command manual.

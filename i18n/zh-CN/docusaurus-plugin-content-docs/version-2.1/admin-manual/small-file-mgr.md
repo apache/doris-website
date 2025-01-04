@@ -5,7 +5,7 @@
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-
 
 Doris 中的一些功能需要使用一些用户自定义的文件。比如用于访问外部数据源的公钥、密钥文件、证书文件等等。文件管理器提供这样一个功能，能够让用户预先上传这些文件并保存在 Doris 系统中，然后可以在其他命令中引用或访问。
 
@@ -48,7 +46,7 @@ Doris 中的一些功能需要使用一些用户自定义的文件。比如用�
 
 ### CREATE FILE
 
-该语句用于创建并上传一个文件到 Doris 集群，具体操作可查看 [CREATE FILE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FILE.md) 。
+该语句用于创建并上传一个文件到 Doris 集群，具体操作可查看 [CREATE FILE](../sql-manual/sql-statements/security/CREATE-FILE.md) 。
 
 Examples:
 
@@ -76,7 +74,7 @@ Examples:
 
 ### SHOW FILE
 
-该语句可以查看已经创建成功的文件，具体操作可查看 [SHOW FILE](../sql-manual/sql-statements/Show-Statements/SHOW-FILE.md)。
+该语句可以查看已经创建成功的文件，具体操作可查看 [SHOW FILE](../sql-manual/sql-statements/security/SHOW-FILE.md)。
 
 Examples:
 
@@ -88,7 +86,7 @@ Examples:
 
 ### DROP FILE
 
-该语句可以查看可以删除一个已经创建的文件，具体操作可查看 [DROP FILE](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FILE.md)。
+该语句可以查看可以删除一个已经创建的文件，具体操作可查看 [DROP FILE](../sql-manual/sql-statements/security/DROP-FILE.md)。
 
 Examples:
 
@@ -134,4 +132,4 @@ Examples:
 
 ## 更多帮助
 
-关于文件管理器使用的更多详细语法及最佳实践，请参阅 [CREATE FILE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FILE.md) 、[DROP FILE](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FILE.md) 和 [SHOW FILE](../sql-manual/sql-statements/Show-Statements/SHOW-FILE.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP CREATE FILE` 、`HELP DROP FILE`和`HELP SHOW FILE`  获取更多帮助信息。
+关于文件管理器使用的更多详细语法及最佳实践，请参阅 [CREATE FILE](../sql-manual/sql-statements/security/CREATE-FILE.md) 、[DROP FILE](../sql-manual/sql-statements/security/DROP-FILE.md) 和 [SHOW FILE](../sql-manual/sql-statements/security/SHOW-FILE.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP CREATE FILE` 、`HELP DROP FILE`和`HELP SHOW FILE`  获取更多帮助信息。

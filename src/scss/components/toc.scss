@@ -1,0 +1,29 @@
+.toc-container {
+    margin-top: 4.5rem;
+    .toc-icon-content {
+        display: flex;
+        margin-bottom: 0.5rem;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .toc-icon-content > span {
+        margin-left: 0.5rem;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 22px;
+    }
+
+    .title-text {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 26px;
+    }
+}
+.toc-container > div {
+    margin-bottom: 2rem;
+}
+.toc-container a {
+    text-decoration: none;
+}

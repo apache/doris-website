@@ -45,6 +45,7 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 | Double           | Double                                     |
 | Date             | LocalDate                                  |
 | Datetime         | LocalDateTime                              |
+| IPV4/IPV6        | InetAddress                                |
 | String           | String                                     |
 | Decimal          | BigDecimal                                 |
 | `array<Type>`      | `ArrayList<Type>`（支持嵌套）                  |
@@ -372,7 +373,7 @@ UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，�
 
     ```sql
     CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
-        "file"="file:///pathTo/java-udaf.jar",
+        "file"="file:///pathTo/java-udtf.jar",
         "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
         "always_nullable"="true",
         "type"="JAVA_UDF"

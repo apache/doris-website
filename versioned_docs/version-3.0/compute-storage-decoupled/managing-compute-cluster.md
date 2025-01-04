@@ -33,9 +33,37 @@ In a compute-storage decoupled architecture, one or more compute nodes (BE) can 
 *Note*
 In versions prior to 3.0.2, this was referred to as a Compute Cluster.
 
+## Compute Group Usage Scenarios
+
+In a multi-compute group architecture, you can group one or more stateless BE nodes into compute clusters. By using compute cluster specification statements (use @<compute_group_name>), you can allocate specific workloads to specific compute clusters, achieving physical isolation of multiple import and query workloads.
+
+Assume there are two compute clusters: C1 and C2.
+
+- **Read-Read Isolation**: Before initiating two large queries, use `use @c1` and `use @c2` respectively to ensure that the queries run on different compute nodes. This prevents resource contention (CPU, memory, etc.) when accessing the same dataset.
+
+- **Read-Write Isolation**: Doris data imports consume substantial resources, especially in scenarios with large data volumes and high-frequency imports. To avoid resource contention between queries and imports, you can use `use @c1` and `use @c2` to specify that queries execute on C1 and imports on C2. Additionally, the C1 compute cluster can access newly imported data in the C2 compute cluster.
+
+- **Write-Write Isolation**: Similar to read-write isolation, imports can also be isolated from each other. For example, when the system has both high-frequency small imports and large batch imports, batch imports typically take longer and have higher retry costs, while high-frequency small imports are quick with lower retry costs. To prevent small imports from interfering with batch imports, you can use `use @c1` and `use @c2` to specify small imports to execute on C1 and batch imports on C2.
+
+## Default Compute Group Selection Mechanism
+
+When a user has not explicitly [set a default compute group](#setting-default-compute-group), the system will automatically select a compute group with Active BE that the user has usage permissions for. Once the default compute group is determined in a specific session, it will remain unchanged during that session unless the user explicitly changes the default setting.
+
+In different sessions, if the following situations occur, the system may automatically change the user's default compute group:
+
+- The user has lost usage permissions for the default compute group selected in the last session
+- A compute group has been added or removed
+- The previously selected default compute group no longer has Alive BE
+
+Situations one and two will definitely lead to a change in the automatically selected default compute group, while situation three may lead to a change.
+
 ## Viewing All Compute Groups
 
-You can view all compute groups owned by the current repository using `SHOW COMPUTE GROUPS`.
+Use the `SHOW COMPUTE GROUPS` command to view all compute groups in the current repository. The returned results will display different content based on the user's permission level:
+
+- Users with `ADMIN` privileges can view all compute groups
+- Regular users can only view compute groups for which they have usage permissions (USAGE_PRIV)
+- If a user doesn't have usage permissions for any compute groups, an empty result will be returned
 
 ```sql
 SHOW COMPUTE GROUPS;
@@ -43,7 +71,8 @@ SHOW COMPUTE GROUPS;
 
 ## Adding Compute Groups
 
-Using [Add BE ](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) to add a BE into a compute group, for example:
+Managing compute groups requires `OPERATOR` privilege, which controls node management permissions. For more details, please refer to [Privilege Management](../sql-manual/sql-statements/Account-Management-Statements/GRANT.md). By default, only the root account has the `OPERATOR` privilege, but it can be granted to other accounts using the `GRANT` command.
+To add a BE and assign it to a compute group, use the [Add BE](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) command. For example:
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");
@@ -57,11 +86,15 @@ ALTER SYSTEM ADD BACKEND 'host:9050';
 
 ## Granting Compute Group Access
 
+Prerequisite: The current operating user has' ADMIN 'permission, or the current user belongs to the admin role.
+
 ```sql
 GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user}
 ```
 
 ## Revoking Compute Group Access
+
+Prerequisite: The current operating user has' ADMIN 'permission, or the current user belongs to the admin role.
 
 ```sql
 REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user}
@@ -69,7 +102,7 @@ REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user}
 
 ## Setting Default Compute Group 
 
-To set the default compute group for the current user:
+To set the default compute group for the current user(This operation requires the current user to already have permission to use the computing group):
 
 ```sql
 SET PROPERTY 'default_compute_group' = '{clusterName}';
@@ -87,7 +120,7 @@ To view the current user's default compute group, the value of `default_compute_
 SHOW PROPERTY;
 ```
 
-To view the default compute group of other users, this operation requires the current user to have relevant permissions, and the value of `default_compute_group` in the returned result is the default compute group:
+To view the default compute group of other users, This operation requires the current user to have admin privileges, and the value of `default_compute_group` in the returned result is the default compute group:
 
 ```sql
 SHOW PROPERTY FOR {user};
@@ -113,17 +146,6 @@ SHOW COMPUTE GROUPS;
 
 :::
 
-## Default Compute Group Selection Mechanism
-
-When a user has not explicitly set a default compute group, the system will automatically select a compute group with Active BE that the user has usage permissions for. Once the default compute group is determined in a specific session, it will remain unchanged during that session unless the user explicitly changes the default setting.
-
-In different sessions, if the following situations occur, the system may automatically change the user's default compute group:
-
-- The user has lost usage permissions for the default compute group selected in the last session
-- A compute group has been added or removed
-- The previously selected default compute group no longer has Active BE
-
-Situations one and two will definitely lead to a change in the automatically selected default compute group, while situation three may lead to a change.
 
 ## Switching Compute Groups
 

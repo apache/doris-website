@@ -24,33 +24,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DIGITAL_MASKING
-
 ### description
 
-#### Syntax
+An alias function with the original function being `CONCAT(LEFT(id,3),'****',RIGHT(id,4))`. Performs data masking on the input `digital_number` and returns the masked result. 
 
-```
+### Syntax
+
+```sql
 digital_masking(digital_number)
 ```
 
-Alias function, the original function is `concat(left(id,3),'****',right(id,4))`.
-
-Desensitizes the input `digital_number` and returns the result after masking desensitization. `digital_number` is `BIGINT` data type.
-
 ### example
 
-1. Desensitize the cell phone number
+Desensitize the cell phone number
 
-    ```sql
-    mysql> select digital_masking(13812345678);
-    +------------------------------+
-    | digital_masking(13812345678) |
-    +------------------------------+
-    | 138****5678                  |
-    +------------------------------+
-    ```
+```sql
+select digital_masking(13812345678);
+```
 
-### keywords
-
-DIGITAL_MASKING
+```
++------------------------------+
+| digital_masking(13812345678) |
++------------------------------+
+| 138****5678                  |
++------------------------------+
+```

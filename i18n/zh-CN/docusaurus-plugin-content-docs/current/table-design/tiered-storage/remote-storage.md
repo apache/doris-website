@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 功能简介
+## 概述
 
-远程存储支持把部分数据放到外部存储（例如对象存储，HDFS）上，节省成本，不牺牲功能。
+远程存储支持将冷数据放到外部存储（例如对象存储，HDFS）上。
 
 :::warning 注意
 远程存储的数据只有一个副本，数据可靠性依赖远程存储的数据可靠性，您需要保证远程存储有ec（擦除码）或者多副本技术确保数据可靠性。
@@ -34,7 +34,9 @@ under the License.
 
 ## 使用方法
 
-以S3对象存储为例，首先创建S3 RESOURCE：
+### 冷数据保存到 S3 兼容存储
+
+*第一步：* 创建 S3 Resource。
 
 ```sql
 CREATE RESOURCE "remote_s3"
@@ -57,7 +59,9 @@ PROPERTIES
 创建 S3 RESOURCE 的时候，会进行 S3 远端的链接校验，以保证 RESOURCE 创建的正确。
 :::
 
-之后创建STORAGE POLICY，关联上文创建的RESOURCE：
+*第二步：* 创建 STORAGE POLICY。
+
+之后创建 STORAGE POLICY，关联上文创建的 RESOURCE：
 
 ```sql
 CREATE STORAGE POLICY test_policy
@@ -67,7 +71,7 @@ PROPERTIES(
 );
 ```
 
-最后建表的时候指定STORAGE POLICY：
+*第三步：* 建表时使用 STORAGE POLICY。
 
 ```sql
 CREATE TABLE IF NOT EXISTS create_table_use_created_policy 
@@ -88,7 +92,9 @@ PROPERTIES(
 UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话，无法使用此功能。
 :::
 
-创建 HDFS RESOURCE：
+### 冷数据保存到 HDFS
+
+*第一步：* 创建 HDFS RESOURCE：
 
 ```sql
 CREATE RESOURCE "remote_hdfs" PROPERTIES (
@@ -102,30 +108,40 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
         "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
     );
+```
 
-    CREATE STORAGE POLICY test_policy PROPERTIES (
-        "storage_resource" = "remote_hdfs",
-        "cooldown_ttl" = "300"
-    )
+*第二步：* 创建 STORAGE POLICY。
 
-    CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
-        k1 BIGINT,
-        k2 LARGEINT,
-        v1 VARCHAR(2048)
-    )
-    UNIQUE KEY(k1)
-    DISTRIBUTED BY HASH (k1) BUCKETS 3
-    PROPERTIES(
-    "enable_unique_key_merge_on_write" = "false",
-    "storage_policy" = "test_policy"
-    );
+```sql
+CREATE STORAGE POLICY test_policy PROPERTIES (
+    "storage_resource" = "remote_hdfs",
+    "cooldown_ttl" = "300"
+)
+```
+
+*第三步：* 使用 STORAGE POLICY 创建表。
+
+```sql
+CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
+    k1 BIGINT,
+    k2 LARGEINT,
+    v1 VARCHAR(2048)
+)
+UNIQUE KEY(k1)
+DISTRIBUTED BY HASH (k1) BUCKETS 3
+PROPERTIES(
+"enable_unique_key_merge_on_write" = "false",
+"storage_policy" = "test_policy"
+);
 ```
 
 :::warning 注意
 UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话，无法使用此功能。
 :::
 
-除了新建表支持设置远程存储外，Doris还支持对一个已存在的表或者PARTITION，设置远程存储。
+### 存量表冷却到远程存储
+
+除了新建表支持设置远程存储外，Doris还支持对一个已存在的表或者 PARTITION，设置远程存储。
 
 对一个已存在的表，设置远程存储，将创建好的STORAGE POLICY与表关联：
 
@@ -142,66 +158,54 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 :::tip
 注意，如果用户在建表时给整张 Table 和部分 Partition 指定了不同的 Storage Policy，Partition 设置的 Storage policy 会被无视，整张表的所有 Partition 都会使用 table 的 Policy. 如果您需要让某个 Partition 的 Policy 和别的不同，则可以使用上文中对一个已存在的 Partition，关联 Storage policy 的方式修改。
 
-具体可以参考 Docs 目录下[RESOURCE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE)、 [POLICY](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-POLICY)、 [CREATE TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)、 [ALTER TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)等文档，里面有详细介绍。
+具体可以参考 Docs 目录下[RESOURCE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE)、 [POLICY](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-POLICY)、 [CREATE TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)、 [ALTER TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)等文档。
 :::
 
-### 一些限制
+### 配置 compaction
 
--   单表或单 Partition 只能关联一个 Storage policy，关联后不能 Drop 掉 Storage policy，需要先解除二者的关联。
+-   BE 参数`cold_data_compaction_thread_num`可以设置执行远程存储的 Compaction 的并发，默认是 2。
 
--   Storage policy 关联的对象信息不支持修改数据存储 path 的信息，比如 bucket、endpoint、root_path 等信息
+-   BE 参数`cold_data_compaction_interval_sec`可以设置执行远程存储的 Compaction 的时间间隔，默认是 1800，单位：秒，即半个小时。
+
+## 限制
+
+-   使用了远程存储的表不支持备份。
+
+-   不支持修改远程存储的位置信息，比如 endpoint、bucket、path。
+
+-   Unique 模型表在开启 Merge-on-Write 特性时，不支持设置远程存储。
 
 -   Storage policy 支持创建、修改和删除，删除前需要先保证没有表引用此 Storage policy。
 
--   Unique 模型在开启 Merge-on-Write 特性时，不支持设置 Storage policy。
+## 冷数据空间
 
-## 查看远程存储占用大小
+### 查看
 
 方式一：通过 show proc '/backends'可以查看到每个 BE 上传到对象的大小，RemoteUsedCapacity 项，此方式略有延迟。
 
 方式二：通过 show tablets from tableName 可以查看到表的每个 tablet 占用的对象大小，RemoteDataSize 项。
 
-## 远程存储的 cache
+### 垃圾回收
 
-为了优化查询的性能和对象存储资源节省，引入了 cache 的概念。在第一次查询远程存储的数据时，Doris 会将远程存储的数据加载到 BE 的本地磁盘做缓存，cache 有以下特性：
-
--   cache 实际存储于 BE 磁盘，不占用内存空间。
-
--   cache 可以限制膨胀，通过 LRU 进行数据的清理
-
--   cache 的实现和联邦查询 Catalog 的 cache 是同一套实现，文档参考[此处](../../lakehouse/filecache)
-
-## 远程存储的 Compaction
-
-远程存储数据传入的时间是 rowset 文件写入本地磁盘时刻起，加上冷却时间。由于数据并不是一次性写入和冷却的，因此避免在对象存储内的小文件问题，Doris 也会进行远程存储数据的 Compaction。但是，远程存储数据的 Compaction 的频次和资源占用的优先级并不是很高，也推荐本地热数据 compaction 后再执行冷却。具体可以通过以下 BE 参数调整：
-
--   BE 参数`cold_data_compaction_thread_num`可以设置执行远程存储的 Compaction 的并发，默认是 2。
-
--   BE 参数`cold_data_compaction_interval_sec`可以设置执行远程存储的 Compaction 的时间间隔，默认是 1800，单位：秒，即半个小时。。
-
-## 远程存储的 Schema Change
-
-远程存储支持 Schema Change 类型如下：
-
--   增加、删除列
-
--   修改列类型
-
--   调整列顺序
-
--   增加、修改索引
-
-## 远程存储的垃圾回收
-
-远程存储的垃圾数据是指没有被任何 Replica 使用的数据，对象存储上可能会有如下情况产生的垃圾数据：
+远程存储上可能会有如下情况产生垃圾数据：
 
 1.  上传 rowset 失败但是有部分 segment 上传成功。
 
-2.  FE 重新选 CooldownReplica 后，新旧 CooldownReplica 的 rowset version 不一致，FollowerReplica 都去同步新 CooldownReplica 的 CooldownMeta，旧 CooldownReplica 中 version 不一致的 rowset 没有 Replica 使用成为垃圾数据。
+2.  上传的 rowset 没有在多副本达成一致。
 
-3.  远程存储数据 Compaction 后，合并前的 rowset 因为还可能被其他 Replica 使用不能立即删除，但是最终 FollowerReplica 都使用了最新的合并后的 rowset，合并前的 rowset 成为垃圾数据。
+3.  Compaction 完成后，参与 compaction 的 rowset。
 
-另外，对象上的垃圾数据并不会立即清理掉。BE 参数`remove_unused_remote_files_interval_sec`可以设置远程存储的垃圾回收的时间间隔，默认是 21600，单位：秒，即 6 个小时。
+垃圾数据并不会立即清理掉。BE 参数`remove_unused_remote_files_interval_sec`可以设置远程存储的垃圾回收的时间间隔，默认是 21600，单位：秒，即 6 个小时。
+
+## 查询与性能优化
+
+为了优化查询的性能和对象存储资源节省，引入了本地 Cache。在第一次查询远程存储的数据时，Doris 会将远程存储的数据加载到 BE 的本地磁盘做缓存，Cache 有以下特性：
+
+-   Cache 实际存储于 BE 本地磁盘，不占用内存空间。
+
+-   Cache 是通过 LRU 管理的，不支持 TTL。
+
+具体配置请参考(../../lakehouse/filecache)。
 
 ## 常见问题
 
@@ -226,4 +230,3 @@ PROPERTIES
     "use_path_style" = "true"
 );
 ```
-

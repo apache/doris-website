@@ -47,7 +47,7 @@ systemctl disable firewalld
 如果无法关闭防火墙服务，可以根据规划，打开 FE 与 BE 端口：
 
 :::tip 提示
-如果无法关闭防火墙，需要根据 Kubernetes 映射规则打开 Doris 相应端口的防火墙。具体端口可以参考 [Doris 集群端口规划](../standard-deployment#检测和关闭系统防火墙)。
+如果无法关闭防火墙，需要根据 Kubernetes 映射规则打开 Doris 相应端口的防火墙。具体端口可以参考 [Doris 集群端口规划](../standard-deployment.md#端口规划)。
 :::
 
 
@@ -67,8 +67,8 @@ sysctl -p
 
 ```shell
 vi /etc/security/limits.conf 
-* soft nofile 65536
-* hard nofile 65536
+* soft nofile 1000000
+* hard nofile 1000000
 ```
 
 ### 修改虚拟内存区域数量

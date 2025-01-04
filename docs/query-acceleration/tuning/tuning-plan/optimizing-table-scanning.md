@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Principle
+## Overview
 
 Doris, as a high-performance real-time analytics data warehouse, offers a powerful partition pruning feature that can significantly enhance query performance. 
 
 Partition pruning is a query optimization technique that intelligently identifies partitions relevant to a query by analyzing its conditions, and scans only the data within these partitions, thereby avoiding unnecessary scans of irrelevant partitions. This approach can greatly reduce I/O operations and computational load, thus accelerating query execution.
 
-## Use Case
+## Case
 
 Here is a usage case to demonstrate Doris's partition pruning feature.
 
@@ -66,11 +66,8 @@ WHERE date BETWEEN '2023-01-15' AND '2023-02-15';
 For the above query, Doris's partition pruning optimization process is as follows:
 
 1. Doris intelligently analyzes the partition column `date` in the query conditions and identifies the date range of the query as being between '2023-01-15' and '2023-02-15'.
-
 2. By comparing the query conditions with the partition definitions, Doris precisely locates the range of partitions that need to be scanned. In this example, only partitions `p2` and `p3` need to be scanned, as their date ranges fully cover the query conditions.
-
 3. Doris automatically skips partitions unrelated to the query conditions, such as `p1` and `p4`, avoiding unnecessary data scans and thereby reducing I/O overhead.
-
 4. Finally, Doris performs data scanning and aggregation computations only within partitions `p2` and `p3`, quickly obtaining the query results.
 
 By using the `EXPLAIN` command, we can view the query execution plan and confirm that Doris's partition pruning optimization has taken effect. In the execution plan, the `partition` attribute of the `OlapScanNode` node will display the actually scanned partitions as `p2` and `p3`.

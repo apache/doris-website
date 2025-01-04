@@ -219,7 +219,7 @@ Doris 的各个实例通过网络进行通信，其正常运行需要网络环�
 | 实例名称 | 端口名称               | 默认端口 | 通信方向                   | 说明                                                  |
 | -------- | ---------------------- | -------- | -------------------------- | ----------------------------------------------------- |
 | BE       | be_port                | 9060     | FE -> BE                   | BE 上 Thrift Server 的端口，用于接收来自 FE 的请求    |
-| BE       | webserver_port         | 8040     | BE <-> BE                  | BE 上的 HTTP Server 端口                              |
+| BE       | webserver_port         | 8040     | BE <-> BE，Client <-> FE   | BE 上的 HTTP Server 端口                              |
 | BE       | heartbeat_service_port | 9050     | FE -> BE                   | BE 上的心跳服务端口（Thrift），用于接收来自 FE 的心跳 |
 | BE       | brpc_port              | 8060     | FE <-> BE，BE <-> BE       | BE 上的 BRPC 端口，用于 BE 之间的通信                 |
 | FE       | http_port              | 8030     | FE <-> FE，Client <-> FE   | FE 上的 HTTP Server 端口                              |
@@ -605,7 +605,7 @@ server1:apache-doris/fe doris$ curl http://127.0.0.1:8030/api/bootstrap
 
 是的，Doris FE 内置 Web UI。用户无须安装 MySQL 客户端，即可通过 Web UI 来完成诸如添加 BE/FE 节点，以及运行其它 SQL 查询等操作。
 
-在浏览器中输入 http://fe_ip:fe_port,  例如 http://172.20.63.118:8030，即可打开 Doris 内置的 Web 控制台。该控制台主要供集群 root 账户使用，默认安装后 root 账户密码为空。
+在浏览器中输入 http://fe_ip:fe_port,  例如 `http://172.20.63.118:8030`，即可打开 Doris 内置的 Web 控制台。该控制台主要供集群 root 账户使用，默认安装后 root 账户密码为空。
 
 ![内置 Web 控制台](/images/Doris-Web-UI.png)
 

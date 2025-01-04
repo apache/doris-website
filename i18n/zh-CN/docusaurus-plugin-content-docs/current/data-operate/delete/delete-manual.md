@@ -24,16 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Delete 操作语句通过 MySQL 协议，对指定的 table 或者 partition 中的数据进行按条件删除。Delete 删除操作不同于基于导入的批量删除，它类似 Insert into 语句，是一个同步过程。所有的 Delete 操作在 Doris 中是一个独立的导入作业，一般 Delete 语句需要指定表和分区以及删除的条件来筛选要删除的数据，并将会同时删除 base 表和 rollup 表的数据。
+Delete 操作语句通过 MySQL 协议，对指定的表或分区中的数据进行按条件删除。Delete 删除操作不同于基于导入的批量删除，它类似于 Insert into 语句，是一个同步过程。所有的 Delete 操作在 Doris 中是一个独立的导入作业，一般 Delete 语句需要指定表和分区以及删除的条件来筛选要删除的数据，并将会同时删除 base 表和 rollup 表的数据。
 
-Delete 操作的语法详见 [DELETE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE) 语法。不同于 Insert into 命令，delete 不能手动指定`label`，有关 label 的概念可以查看 [Insert Into](../../data-operate/import/insert-into-manual) 文档。
+Delete 操作的语法详见 [DELETE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE) 语法。不同于 Insert into 命令，Delete 不能手动指定 `label`，有关 label 的概念可以查看 [Insert Into](../../data-operate/import/insert-into-manual) 文档。
 
 ## 通过指定过滤谓词来删除
 
 ```sql
 DELETE FROM table_name [table_alias]
-    [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
-    WHERE column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
+  [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
+  WHERE column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
 ```
 
 ### 必须的参数
@@ -58,7 +58,7 @@ DELETE FROM table_name [table_alias]
 
 - 当选定的 Key 列不存在于某个 Rollup 中时，无法进行 Delete。
 
-- 条件之间只能是“与”的关系。若希望达成“或”的关系，需要将条件分写在两个 DELETE 语句中；
+- 条件之间只能是“与”的关系。若希望达成“或”的关系，需要将条件分写在两个 DELETE 语句中。
 
 - 如果为分区表，需要指定分区，如果不指定，Doris 会从条件中推断出分区。两种情况下，Doris 无法从条件中推断出分区：1) 条件中不包含分区列；2) 分区列的 op 为 not in。当分区表未指定分区，或者无法从条件中推断分区的时候，需要设置会话变量 delete_without_partition 为 true，此时 Delete 会应用到所有分区。
 
@@ -70,30 +70,30 @@ DELETE FROM table_name [table_alias]
 
 ```sql
 DELETE FROM my_table PARTITION p1
-    WHERE k1 = 3;
+  WHERE k1 = 3;
 ```
 
-**2. 删除 my_table partition p1 中 k1 列值大于等于 3 且 k2 列值为 "abc" 的数据行**
+**2. 删除 my_table partition p1 中 k1 列值大于等于 3 且 status 列值为 "outdated" 的数据行**
 
 ```sql
 DELETE FROM my_table PARTITION p1
-WHERE k1 = 3 AND k2 = "abc";
+WHERE k1 >= 3 AND status = "outdated";
 ```
 
-**3. 删除 my_table partition p1, p2 中 k1 列值大于等于 3 且 k2 列值为 "abc" 的数据行**
+**3. 删除 my_table partition p1, p2 中 k1 列值大于等于 3 且 dt 列值位于 "2024-10-01" 和 "2024-10-31" 之间的数据行**
 
 ```sql
 DELETE FROM my_table PARTITIONS (p1, p2)
-WHERE k1 = 3 AND k2 = "abc";
+WHERE k1 >= 3 AND dt >= "2024-10-01" AND dt <= "2024-10-31";
 ```
 
 ## 通过使用 Using 子句来删除
 
 ```sql
 DELETE FROM table_name [table_alias]
-    [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
-    [USING additional_tables]
-    WHERE condition
+  [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
+  [USING additional_tables]
+  WHERE condition
 ```
 
 ### 必须的参数
@@ -110,16 +110,16 @@ DELETE FROM table_name [table_alias]
 
 ### 注意事项
 
-此种形式只能在 UNIQUE KEY 模型表上使用
+此种形式只能在 UNIQUE KEY 模型表上使用。
 
 - 只能在表模型 UNIQUE Key 表模型上使用，只能指定 key 列上的条件。
 
 ### 使用示例
 
-使用`t2`和`t3`表连接的结果，删除`t1`中的数据，删除的表只支持 unique 模型
+使用 `t2` 和 `t3` 表连接的结果，删除 `t1` 中的数据，删除的表只支持 unique 模型。
 
 ```sql
--- 创建t1, t2, t3三张表
+-- 创建 t1, t2, t3 三张表
 CREATE TABLE t1
   (id INT, c1 BIGINT, c2 STRING, c3 DOUBLE, c4 DATE)
 UNIQUE KEY (id)
@@ -160,7 +160,7 @@ DELETE FROM t1
   WHERE t1.id = t2.id;
 ```
 
-预期结果为，删除了`t1`表`id`为`1`的列
+预期结果为，删除了 `t1` 表 `id` 为 `1` 的行。
 
 ```Plain
 +----+----+----+--------+------------+
@@ -171,77 +171,13 @@ DELETE FROM t1
 +----+----+----+--------+------------+
 ```
 
-## 结果返回
-
-Delete 命令是一个 SQL 命令，返回结果是同步的，分为以下几种：
-
-### 执行成功
-
-如果 Delete 顺利执行完成并可见，将返回下列结果，`Query OK`表示成功
-
-```sql
-mysql> delete from test_tbl PARTITION p1 where k1 = 1;
-Query OK, 0 rows affected (0.04 sec)
-{'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'VISIBLE', 'txnId':'4005'}
-```
-
-### 提交成功，但未可见
-
-Doris 的事务提交分为两步：提交和发布版本，只有完成了发布版本步骤，结果才对用户是可见的。若已经提交成功了，那么就可以认为最终一定会发布成功，Doris 会尝试在提交完后等待发布一段时间，如果超时后即使发布版本还未完成也会优先返回给用户，提示用户提交已经完成。若如果 Delete 已经提交并执行，但是仍未发布版本和可见，将返回下列结果
-
-```sql
-mysql> delete from test_tbl PARTITION p1 where k1 = 1;
-Query OK, 0 rows affected (0.04 sec)
-{'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'COMMITTED', 'txnId':'4005', 'err':'delete job is committed but may be taking effect later' }
-```
-
-结果会同时返回一个 json 字符串：
-
-- `affected rows`：表示此次删除影响的行，由于 Doris 的删除目前是逻辑删除，因此对于这个值是恒为 0；
-
-- `label`：自动生成的 label，是该导入作业的标识。每个导入作业，都有一个在单 Database 内部唯一的 Label；
-
-- `status`：表示数据删除是否可见，如果可见则显示`VISIBLE`，如果不可见则显示`COMMITTED`；
-
-- `txnId`：这个 Delete job 对应的事务 id；
-
-- `err`：字段会显示一些本次删除的详细信息。
-
-### 提交失败，事务取消
-
-如果 Delete 语句没有提交成功，将会被 Doris 自动中止，返回下列结果
-
-```sql
-mysql> delete from test_tbl partition p1 where k1 > 80;
-ERROR 1064 (HY000): errCode = 2, detailMessage = {错误原因}
-```
-
-比如说一个超时的删除，将会返回 `timeout` 时间和未完成的`(tablet=replica)`
-
-```sql
-mysql> delete from test_tbl partition p1 where k1 > 80;
-ERROR 1064 (HY000): errCode = 2, detailMessage = failed to delete replicas from job: 4005, Unfinished replicas:10000=60000, 10001=60000, 10002=60000
-```
-
-### 总结
-
-对于 Delete 操作返回结果的正确处理逻辑为：
-
-- 如果返回结果为`ERROR 1064 (HY000)`，则表示删除失败；
-
-- 如果返回结果为`Query OK`，则表示删除执行成功；
-
-  - 如果`status`为`COMMITTED`，表示数据仍不可见，用户可以稍等一段时间再用`show delete`命令查看结果；
-
-  - 如果`status`为`VISIBLE`，表示数据删除成功。
-
 ## 相关配置
 
 **TIMEOUT 配置**
 
 - insert_timeout
 
-  因为 Delete 本身是一个 SQL 命令且被视为一种特殊的导入，因此删除语句会受 Session 中的`insert_timeout`值影响，可以通过`SET insert_timeout = xxx`来增加超时时间，单位是秒。
+  因为 Delete 本身是一个 SQL 命令且被视为一种特殊的导入，因此删除语句会受 Session 中的 `insert_timeout` 值影响，可以通过 `SET insert_timeout = xxx` 来增加超时时间，单位是秒。
 
 **IN 谓词配置**
 
@@ -253,13 +189,13 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = failed to delete replicas from 
 
 用户可以通过 show delete 语句查看历史上已执行完成的删除记录。
 
-语法如下
+语法如下：
 
 ```sql
 SHOW DELETE [FROM db_name]
 ```
 
-使用示例
+使用示例：
 
 ```sql
 mysql> show delete from test_db;

@@ -1442,6 +1442,15 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：下载最低限速
 * 默认值：50 (KB/s)
 
+#### `enable_batch_download`
+
+:::tip 提示
+该功能自 Apache Doris 2.1.8 版本起支持
+:::
+
+* 描述：是否允许批量下载文件，建议只在开启 binlog 的情况下打开
+* 默认值：false
+
 #### `doris_cgroups`
 
 * 描述：分配给 doris 的 cgroups

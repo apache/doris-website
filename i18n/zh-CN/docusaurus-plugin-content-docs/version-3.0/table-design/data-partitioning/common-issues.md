@@ -60,4 +60,4 @@ Doris 建表是按照 Partition 粒度依次创建的。当一个 Partition 创�
 
 ## 更多帮助
 
-关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) 命令手册中查阅，也可以在 MySQL 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。
+关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) 命令手册中查阅，也可以在 MySQL 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。

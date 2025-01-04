@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cluster Upgrade",
+    "title": "Upgrading Cluster",
     "language": "en"
 }
 ---
@@ -24,54 +24,127 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+Doris provides the capability for rolling upgrades, enabling step-by-step upgrades of FE and BE nodes, minimizing downtime, and ensuring the system remains operational during the upgrade process.
 
-## Overview
+## Version Compatibility
 
-To upgrade, please use the steps recommended in this chapter to upgrade the cluster. The Doris cluster upgrade can be upgraded using the **rolling upgrade** method, which does not require all cluster nodes to be shut down for upgrade, which greatly reduces the impact on upper-layer applications.
+Doris versioning consists of three components: the first digit represents a major milestone version, the second digit indicates a feature version, and the third digit corresponds to a bug fix. New features are not introduced in bug fix versions. For example, in Doris version 2.1.3, "2" indicates the second milestone version, "1" represents the feature version under this milestone, and "3" denotes the third bug fix for this feature version.
 
-## Doris Release Notes
+During version upgrades, the following rules apply:
 
-When upgrading Doris, please follow the principle of **not skipping two minor versions** and upgrade sequentially.
+- **Three-digit versions:** Versions with the same first two digits can be directly upgraded across three-digit versions. For example, version 2.1.3 can be directly upgraded to version 2.1.7.
 
-For example, if you are upgrading from version 0.15.x to 2.0.x, it is recommended to first upgrade to the latest version of 1.1, then upgrade to the latest version of 1.2, and finally upgrade to the latest version of 2.0.
+- **Two-digit and one-digit versions:** Cross-version upgrades for two-digit versions are not recommended due to compatibility concerns. It is advised to upgrade sequentially through each two-digit version. For example, upgrading from version 3.0 to 3.3 should follow the sequence 3.0 -> 3.1 -> 3.2 -> 3.3.
 
+The detailed version information can be found in the [versioning rules](../../../../docusaurus-plugin-content-docs-community/current/release-versioning).
 
+## Upgrade Precautions
+
+When performing an upgrade, pay attention to the following:
+
+- **Behavioral changes between versions:** Review the Release Notes before upgrading to identify compatibility issues.
+
+- **Add retry mechanisms for tasks in the cluster:** Nodes are restarted sequentially during upgrades. Ensure that retry mechanisms are in place for query tasks and Stream Load import jobs to avoid task failures. Routine Load jobs using flink-doris-connector or spark-doris-connector already include retry mechanisms in their code and do not require additional logic.
+
+- **Disable replica repair and balance functions:** Disable these functions during the upgrade process. Regardless of the upgrade outcome, re-enable these functions after the upgrade is complete.
+
+## Metadata Compatibility Testing
+
+:::caution Note
+
+In a production environment, it is recommended to configure at least three FE nodes for high availability. If there is only one FE node, metadata compatibility testing must be performed before upgrading. Metadata compatibility is critical as incompatibility may cause upgrade failures and data loss. It is recommended to conduct metadata compatibility tests before each upgrade, keeping in mind the following:
+
+- Perform metadata compatibility testing on a development machine or BE node whenever possible to avoid using FE nodes.
+
+- If testing must be conducted on an FE node, use a non-Master node and stop the original FE process.
+
+:::
+
+Before upgrading, conduct metadata compatibility testing to prevent failures caused by metadata incompatibility.
+
+1. **Backup metadata information:**
+
+   Before starting the upgrade, back up the metadata of the Master FE node.
+
+   Use the `show frontends` command and refer to the `IsMaster` column to identify the Master FE node. FE metadata can be hot-backed up without stopping the FE node. By default, FE metadata is stored in the `fe/doris-meta` directory. This can be confirmed via the `meta_dir` parameter in the `fe.conf` configuration file.
+
+2. **Modify the `fe.conf` configuration file of the test FE node:**
+
+   ```bash
+   vi ${DORIS_NEW_HOME}/conf/fe.conf
+   ```
+
+   Modify the following port information, ensuring all ports are different from those in the production environment, and update the `clusterID` parameter:  
+   ```
+   ...
+   ## modify port
+   http_port = 18030
+   rpc_port = 19020
+   query_port = 19030
+   arrow_flight_sql_port = 19040
+   edit_log_port = 19010
+
+   ## modify clusterIP
+   clusterId=<a_new_clusterIP, such as 123456>
+   ...
+   ```
+
+3. Copy the backed-up Master FE metadata to the new compatibility testing environment.  
+
+   ```bash
+   cp ${DORIS_OLD_HOME}/fe/doris-meta/* ${DORIS_NEW_HOME}/fe/doris-meta
+   ```
+
+4. Edit the `VERSION` file in the copied metadata directory to update the `cluster_id` to a new cluster IP, for example, change it to `123456` as shown in the example:  
+
+   ```bash
+   vi ${DORIS_NEW_HOME}/fe/doris-meta/image/VERSION
+   clusterId=123456
+   ```
+
+5. Start the FE process in the testing environment.  
+ 
+   ```bash
+   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon --metadata_failure_recovery
+   ```
+
+   For versions earlier than 2.0.2, add the `metadata_failure_recovery` parameter to the `fe.conf` file before starting the FE process:  
+   ```bash
+   echo "metadata_failure_recovery=true" >> ${DORIS_NEW_HOME}/conf/fe.conf
+   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon 
+   ```
+
+6. Verify that the FE process has started successfully by connecting to the current FE using the MySQL command. For example, use the query port `19030` as mentioned above:  
+ 
+   ```bash
+   mysql -uroot -P19030 -h127.0.0.1
+   ```
 
 ## Upgrade Steps
 
-### Upgrade Instructions
+The detailed process for the upgrade is as follows:
 
-1. During the upgrade process, since Doris's RoutineLoad, Flink-Doris-Connector, and Spark-Doris-Connector have implemented a retry mechanism in the code, in a multi-BE node cluster, the rolling upgrade will not cause the task to fail .
+1. Disable replica repair and balance functions
 
-2. The StreamLoad task requires you to implement a retry mechanism in your own code, otherwise the task will fail.
+2. Upgrade BE nodes
 
-3. The cluster copy repair and balance function must be closed before and opened after the completion of a single upgrade task, regardless of whether all your cluster nodes have been upgraded.
+3. Upgrade FE nodes
 
-### Overview of the Upgrade Process
+4. Enable replica repair and balance functions
 
-1. Metadata backup
+During the upgrade process, the principle of upgrading BE nodes first, followed by upgrading FE nodes, should be followed. When upgrading FE, upgrade the Observer FE and Follower FE nodes first, and then upgrade the Master FE node.
 
-2. Turn off the cluster copy repair and balance function
+:::caution Note
 
-3. Compatibility testing
+In general, only the `/bin` and `/lib` directories under the FE directory and the `/bin` and `/lib` directories under the BE directory need to be upgraded.
 
-4. Upgrade BE
+For versions 2.0.2 and later, a `custom_lib/` directory has been added under the FE and BE deployment paths (if it doesn't exist, it can be manually created). The `custom_lib/` directory is used to store some user-defined third-party jar files, such as `hadoop-lzo-*.jar`, `orai18n.jar`, etc. This directory does not need to be replaced during the upgrade.
 
-5. Upgrade FE
+:::
 
-6. Turn on the cluster replica repair and balance function
+### Step 1: Disable Replica Repair and Balance Functions
 
-### Upgrade Pre-work
-
-Please perform the upgrade in sequence according to the upgrade process
-
-**01 Metadata Backup (Important)**
-
-**Make a full backup of the `doris-meta` directory of the FE-Master node!**
-
-**02 Turn off the cluster replica repair and balance function**
-
-There will be node restart during the upgrade process, so unnecessary cluster balancing and replica repair logic may be triggered, first close it with the following command:
+During the upgrade process, nodes will be restarted, which may trigger unnecessary cluster balancing and replica repair logic. Disable these functions first using the following command:
 
 ```sql
 admin set frontend config("disable_balance" = "true");
@@ -79,215 +152,94 @@ admin set frontend config("disable_colocate_balance" = "true");
 admin set frontend config("disable_tablet_scheduler" = "true");
 ```
 
-**03 Compatibility Testing**
 
-:::caution Warning 
+### Step 2: Upgrade BE Nodes
 
-**Metadata compatibility is very important, if the upgrade fails due to incompatible metadata, it may lead to data loss! It is recommended to perform a metadata compatibility test before each upgrade!**
+:::info Note:
 
+To ensure the safety of your data, please use 3 replicas to store your data to avoid data loss caused by upgrade mistakes or failures.
 :::
+1. In a multi-replica cluster, you can choose to stop the process on one BE node and perform a gradual upgrade:
 
-1. FE Compatibility Test
-
-:::tip Important
-1. It is recommended to do FE compatibility test on your local development machine or BE node.
-
-2. It is not recommended to test on Follower or Observer nodes to avoid link exceptions
-
-3. If it must be on the Follower or Observer node, the started FE process needs to be stopped
-:::
-
-
-a. Use the new version alone to deploy a test FE process
-
-    ```shell
-    sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon
-    ```
-
-b. Modify the FE configuration file fe.conf for testing
-
-    ```shell
-    vi ${DORIS_NEW_HOME}/conf/fe.conf
-    ```
-
-   Modify the following port information, set **all ports** to **different from online**
-
-    ```shell
-    ...
-    http_port = 18030
-    rpc_port = 19020
-    query_port = 19030
-    arrow_flight_sql_port = 19040
-    edit_log_port = 19010
-    ...
-    ```
-
-   Save and exit
-
-c. Modify fe.conf
-
-   - Add ClusterID configuration in fe.conf
-
-    ```shell
-    echo "cluster_id=123456" >> ${DORIS_NEW_HOME}/conf/fe.conf
-    ```
-
-   - Add metadata failover configuration in fe.conf (**>=2.0.2 + version does not require this operation**)
-   ```shell
-   echo "metadata_failure_recovery=true" >> ${DORIS_NEW_HOME}/conf/fe.conf
+   ```bash
+   sh ${DORIS_OLD_HOME}/be/bin/stop_be.sh
    ```
 
-d. Copy the metadata directory doris-meta of the online environment Master FE to the test environment
+2. Rename the `/bin` and `/lib` directories in the BE directory:
 
-    ```shell
-    cp ${DORIS_OLD_HOME}/fe/doris-meta/* ${DORIS_NEW_HOME}/fe/doris-meta
-    ```
-
-e. Change the cluster_id in the VERSION file copied to the test environment to 123456 (that is, the same as in step 3)
-
-    ```shell
-    vi ${DORIS_NEW_HOME}/fe/doris-meta/image/VERSION
-    clusterId=123456
-    ```
-
-f. In the test environment, run the startup FE
-
-- If the version is greater than or equal to 2.0.2, run the following command
-
-  ```shell
-  sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon --metadata_failure_recovery
-  ```
-
-- If the version is less than 2.0.2, run the following command
-   ```shell
-   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon
+   ```bash
+   mv ${DORIS_OLD_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin_back
+   mv ${DORIS_OLD_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib_back
    ```
 
-g. Observe whether the startup is successful through the FE log fe.log
+3. Copy the new version's `/bin` and `/lib` directories to the original BE directory:
 
-    ```shell
-    tail -f ${DORIS_NEW_HOME}/log/fe.log
-    ```
+   ```bash
+   cp -r ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
+   cp -r ${DORIS_NEW_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib
+   ```
 
-h. If the startup is successful, it means that there is no problem with the compatibility, stop the FE process of the test environment, and prepare for the upgrade
+4. Start the BE node:
 
-    ```
-    sh ${DORIS_NEW_HOME}/bin/stop_fe.sh
-    ```
+   ```bash
+   sh ${DORIS_OLD_HOME}/be/bin/start_be.sh --daemon
+   ```
 
-2. BE Compatibility Test
+5. Connect to the cluster and check the node information:
 
-You can use the grayscale upgrade scheme to upgrade a single BE first. If there is no exception or error, the compatibility is considered normal, and subsequent upgrade actions can be performed
+   ```sql
+   show backends\G
+   ```
 
-### Upgrade process
+   If the BE node's `alive` status is `true` and the `Version` value is the new version, the node has been successfully upgraded.
 
-:::tip Tip
+### Step 3: Upgrade FE Nodes
 
-Upgrade BE first, then FE
+1. In a multi-FE node setup, select a non-Master node for the upgrade and stop it first:
 
-Generally speaking, Doris only needs to upgrade `/bin` and `/lib` under the FE directory and `/bin` and `/lib` under the BE directory
+   ```bash
+   sh ${DORIS_OLD_HOME}/fe/bin/stop_fe.sh
+   ```
 
-In versions 2.0.2 and later, the `custom_lib/` directory is added to the FE and BE deployment paths (if not, it can be created manually). The `custom_lib/` directory is used to store some user-defined third-party jar packages, such as `hadoop-lzo-*.jar`, `orai18n.jar`, etc.
+2. Rename the `/bin`, `/lib`, and `/mysql_ssl_default_certificate` directories in the FE directory:
 
-This directory does not need to be replaced during upgrade.
+   ```bash
+   mv ${DORIS_OLD_HOME}/fe/bin ${DORIS_OLD_HOME}/fe/bin_back
+   mv ${DORIS_OLD_HOME}/fe/lib ${DORIS_OLD_HOME}/fe/lib_back
+   mv ${DORIS_OLD_HOME}/fe/mysql_ssl_default_certificate ${DORIS_OLD_HOME}/fe/mysql_ssl_default_certificate_back
+   ```
 
-However, when a major version is upgraded, new features may be added or old functions refactored. These modifications may require **replace/add** more directories during the upgrade to ensure the availability of all new features. Please Carefully pay attention to the Release-Note of this version when upgrading the version to avoid upgrade failures
+3. Copy the new version's `/bin`, `/lib`, and `/mysql_ssl_default_certificate` directories to the original FE directory:
 
-:::
+   ```bash
+   cp -r ${DORIS_NEW_HOME}/fe/bin ${DORIS_OLD_HOME}/fe/bin
+   cp -r ${DORIS_NEW_HOME}/fe/lib ${DORIS_OLD_HOME}/fe/lib
+   cp -r ${DORIS_NEW_HOME}/fe/mysql_ssl_default_certificate ${DORIS_OLD_HOME}/fe/mysql_ssl_default_certificate
+   ```
 
-#### Upgrade BE
+4. Start the FE node:
 
-:::tip Tip
+   ```sql
+   sh ${DORIS_OLD_HOME}/fe/bin/start_fe.sh --daemon
+   ```
 
-In order to ensure the safety of your data, please use 3 copies to store your data to avoid data loss caused by misoperation or failure of the upgrade
-:::
+5. Connect to the cluster and check the node information:
 
-1. Under the premise of multiple copies, select a BE node to stop running and perform grayscale upgrade
+   ```sql
+   show frontends\G
+   ```
 
-    ```shell
-    sh ${DORIS_OLD_HOME}/be/bin/stop_be.sh
-    ```
+   If the FE node's `alive` status is `true` and the `Version` value is the new version, the node has been successfully upgraded.
 
-2. Rename the `/bin`, `/lib` directories under the BE directory
+6. Complete the upgrade of the other FE nodes in sequence, and finally upgrade the Master node.
 
-    ```shell
-    mv ${DORIS_OLD_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin_back
-    mv ${DORIS_OLD_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib_back
-    ```
+### Step 4: Enable Replica Repair and Balance Functions
 
-3. Copy the new version of `/bin`, `/lib` directory to the original BE directory
-
-    ```shell
-    cp -r ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
-    cp -r ${DORIS_NEW_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib
-    ```
-
-4. Start the BE node
-
-    ```shell
-    sh ${DORIS_OLD_HOME}/be/bin/start_be.sh --daemon
-    ```
-
-5. Link the cluster to view the node information
-
-    ```mysql
-    show backends\G
-    ```
-
-   If the `alive` status of the BE node is `true`, and the value of `Version` is the new version, the node upgrade is successful
-
-6. Complete the upgrade of other BE nodes in sequence
-
-**05 Upgrade FE**
-
-:::tip Tip
-
-Upgrade the non-Master nodes first, and then upgrade the Master nodes.
-
-:::
-
-1. In the case of multiple FE nodes, select a non-Master node to upgrade and stop running first
-
-    ```shell
-    sh ${DORIS_OLD_HOME}/fe/bin/stop_fe.sh
-    ```
-
-2. Rename the `/bin`, `/lib` directories under the FE directory
-
-    ```shell
-    mv ${DORIS_OLD_HOME}/fe/bin ${DORIS_OLD_HOME}/fe/bin_back
-    mv ${DORIS_OLD_HOME}/fe/lib ${DORIS_OLD_HOME}/fe/lib_back
-    ```
-
-3. Copy the new version of `/bin`, `/lib` directory to the original FE directory
-
-    ```shell
-    cp -r ${DORIS_NEW_HOME}/fe/bin ${DORIS_OLD_HOME}/fe/bin
-    cp -r ${DORIS_NEW_HOME}/fe/lib ${DORIS_OLD_HOME}/fe/lib
-    ```
-
-4. Start the FE node
-
-    ```shell
-    sh ${DORIS_OLD_HOME}/fe/bin/start_fe.sh --daemon
-    ```
-
-5. Link the cluster to view the node information
-
-    ```mysql
-    show frontends\G
-    ```
-
-   If the FE node `alive` status is `true`, and the value of `Version` is the new version, the node is upgraded successfully
-
-6. Complete the upgrade of other FE nodes in turn, **finally complete the upgrade of the Master node**
-
-**06 Turn on the cluster replica repair and balance function**
-
-After the upgrade is complete and all BE nodes become `Alive`, enable the cluster copy repair and balance function:
+After the upgrade is complete and all BE nodes' status is `Alive`, enable the cluster's replica repair and balance functions:
 
 ```sql
 admin set frontend config("disable_balance" = "false");
 admin set frontend config("disable_colocate_balance" = "false");
 admin set frontend config("disable_tablet_scheduler" = "false");
 ```
+

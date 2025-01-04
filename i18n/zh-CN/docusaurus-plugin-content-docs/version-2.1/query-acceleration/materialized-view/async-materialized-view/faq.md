@@ -1,6 +1,6 @@
 ---
 {
-  "title": "常见问题",
+  "title": "异步物化视图常见问题",
   "language": "zh-CN"
 }
 ---
@@ -88,7 +88,7 @@ Unable to find a suitable base table for partitioning
 
 出现该报错通常指的是物化视图的 SQL 定义和物化视图分区字段的选择，导致不能分区增量更新，所以创建分区物化视图会报错。
 
-- 物化视图想要分区增量更新，需要满足以下要求，详情见[物化视图刷新模式](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW#refreshmethod)
+- 物化视图想要分区增量更新，需要满足以下要求，详情见[物化视图刷新模式](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#refreshmethod)
 
 - 最新的代码可以提示分区构建失败的原因，原因摘要和说明见附录 2
 
@@ -213,9 +213,9 @@ GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 
 - 物化视图的命中信息在 plan 最后。
 
-- **MaterializedViewRewriteSuccessAndChose：**表示透明改写成功，并且 CBO 选择的物化视图名称列表。-
+- **MaterializedViewRewriteSuccessAndChose：** 表示透明改写成功，并且 CBO 选择的物化视图名称列表。-
 
-- **MaterializedViewRewriteSuccessButNotChose：**表示透明改写成功，但是最终 CBO 没有选择的物化视图名称列表，没有选择意味着执行计划不会使用物化视图。”
+- **MaterializedViewRewriteSuccessButNotChose：** 表示透明改写成功，但是最终 CBO 没有选择的物化视图名称列表，没有选择意味着执行计划不会使用物化视图。”
 
 - **MaterializedViewRewriteFail**：表示列举透明改写失败及原因摘要。
 

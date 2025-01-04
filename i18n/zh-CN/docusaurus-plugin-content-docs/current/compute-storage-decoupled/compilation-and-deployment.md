@@ -95,15 +95,15 @@ export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --daemon
 ```
 
+启动脚本返回值为0表示启动成功, 否则启动失败.
+启动成功同时标准输出的最后一行文本信息为"doris_cloud start successfully".
+
+
 *停止命令*
 
 ``` shell
 bin/stop.sh
 ```
-
-*验证启动*
-
-检查 `doris_cloud.out` 文件中是否有 `successfully started` 的输出信息。
 
 生产环境中请确保至少有 3 个 Meta Service 节点。
 
@@ -162,9 +162,15 @@ bin/start.sh --meta-service --daemon
    - 示例：`cloud`
 
 2. `cluster_id`
-   - 描述：存算分离架构下集群的唯一标识符，不同的集群必须设置不同的 cluster_id
+   - 描述：存算分离架构下集群的唯一标识符，不同的集群必须设置不同的 cluster_id。
    - 格式：int 类型
-   - 示例：`12345678`
+   - 示例：可以使用如下 shell 脚本生成一个随机 id 使用。
+      ```shell
+      echo $(($((RANDOM << 15)) | $RANDOM))
+      ```
+     :::caution
+     **不同的集群必须设置不同的 cluster_id**
+     :::
 
 3. `meta_service_endpoint`
    - 描述：Meta Service 的地址和端口

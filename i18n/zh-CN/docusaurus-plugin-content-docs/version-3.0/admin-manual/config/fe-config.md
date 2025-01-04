@@ -47,7 +47,7 @@ FE 的配置项有两种方式进行查看：
 
 2. 通过命令查看
 
-   FE 启动后，可以在 MySQL 客户端中，通过以下命令查看 FE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md)：
+   FE 启动后，可以在 MySQL 客户端中，通过以下命令查看 FE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md)：
 
    `SHOW FRONTEND CONFIG;`
 
@@ -1496,6 +1496,12 @@ NORMAL 优先级挂起加载作业的并发数。
 默认值：1 * 3600（1 小时）
 
 load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清理过时的作业。
+
+#### `label_regex_length`
+
+默认值: 128 (字符)
+
+导入 label 的最大字符长度，默认128个字符。
 
 #### `transaction_clean_interval_second`
 

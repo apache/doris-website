@@ -56,6 +56,13 @@ def process_md_file(file_path):
                     full_path += ".md"
 
                 for [from_path, to_path] in move_pairs:
+                    # Skip change of suffix
+                    from_base, from_ext = os.path.splitext(from_path)
+                    to_base, to_ext = os.path.splitext(to_path)
+                    if (
+                        from_ext in [".md", ".mdx", ""] or to_ext in [".md", ".mdx", ""]
+                    ) and (from_base == to_base):
+                        continue
                     # In md, the link relative path starts from the directory where the document is located, not the document
                     relative_to_path = os.path.relpath(
                         to_path, os.path.dirname(file_path)

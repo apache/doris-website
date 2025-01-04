@@ -32,7 +32,7 @@ under the License.
 
 ## Doris 支持的 JOIN 类型
 
-- INNER JOIN（内连接）：对左表每一行和右表所有行进行 JOIN 条件比较，返回两个表中满足 JOIN 条件的匹配行。详细信息请参考 [SELECT](../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/SELECT/) 中有关于联接查询的语法定义
+- INNER JOIN（内连接）：对左表每一行和右表所有行进行 JOIN 条件比较，返回两个表中满足 JOIN 条件的匹配行。详细信息请参考 [SELECT](../sql-manual/sql-statements/data-query/SELECT) 中有关于联接查询的语法定义
 
 - LEFT JOIN（左连接）：在 INNER JOIN 的结果集基础上。如果左表的行在右表中没有匹配，则返回左表的所有行，同时右表对应的列显示为 NULL。
 
@@ -427,20 +427,16 @@ Bucket Shuffle Join 和 Colocate Join 在应用时对数据分布和 JOIN 条件
 
 2. 包含分桶列的等值条件：等值 Join 条件中须包含两张表的分桶列，当左表的分桶列作为等值 Join 条件时，更有可能被规划为 Bucket Shuffle Join。
 
-3. 数据类型一致性：由于不同的数据类型的 hash 值计算结果不同，左表的分桶列与右表的等值 Join 列的数据类型必须一致，否则将无法进行对应的规划。
+3. 表类型限制：Bucket Shuffle Join 仅适用于 Doris 原生的 OLAP 表。对于 ODBC、MySQL、ES 等外部表，当它们作为左表时，Bucket Shuffle Join 无法生效。
 
-4. 表类型限制：Bucket Shuffle Join 仅适用于 Doris 原生的 OLAP 表。对于 ODBC、MySQL、ES 等外部表，当它们作为左表时，Bucket Shuffle Join 无法生效。
-
-5. 单分区要求：对于分区表，由于每个分区的数据分布可能不同，Bucket Shuffle Join 仅在左表为单分区时保证有效。因此在执行 SQL 时，应尽可能使用 `WHERE` 条件来启用分区裁剪策略。
+4. 单分区要求：对于分区表，由于每个分区的数据分布可能不同，Bucket Shuffle Join 仅在左表为单分区时保证有效。因此在执行 SQL 时，应尽可能使用 `WHERE` 条件来启用分区裁剪策略。
 
 ### Colocate Join 的限制
 
 在直接扫描两张物理表时，Colocate Join 相较于 Bucket Shuffle Join 具有更严格的限制条件，除了满足 Bucket Shuffle Join 的所有条件外，还需满足以下要求：
 
-1. 不仅分桶列的类型必须一致，分桶的数量也必须相同，以确保数据分布的一致性。
+1. 分桶列的类型和分桶数量必须一致，以确保数据分布的一致性。
 
-2. 表的副本数必须保持一致。
+2. 需要显式指定 Colocation Group，只有处于相同 Colocation Group 的表才能进行 Colocate Join。
 
-3. 需要显式指定 Colocation Group，只有处于相同 Colocation Group 的表才能进行 Colocate Join。
-
-4. 在进行副本修复或副本均衡等操作时，Colocation Group 可能处于 Unstable 状态，此时 Colocate Join 将退化为普通的 Join 操作。
+3. 在进行副本修复或副本均衡等操作时，Colocation Group 可能处于 Unstable 状态，此时 Colocate Join 将退化为普通的 Join 操作。

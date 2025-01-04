@@ -28,7 +28,7 @@ In relational databases, data is distributed across multiple tables, which are i
 
 ## JOIN types supported by Doris
 
-- **INNER JOIN**: Comparing each row of the left table with all rows of the right table based on the JOIN condition, returning matching rows from both tables. For more details, refer to the syntax definition for JOIN queries in [SELECT](../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/SELECT/).
+- **INNER JOIN**: Comparing each row of the left table with all rows of the right table based on the JOIN condition, returning matching rows from both tables. For more details, refer to the syntax definition for JOIN queries in [SELECT](../sql-manual/sql-statements/data-query/SELECT).
 
 - **LEFT JOIN**: Building on the result set of an INNER JOIN, if a row from the left table does not have a match in the right table, all rows from the left table are returned, with corresponding columns from the right table shown as NULL.
 
@@ -59,9 +59,9 @@ Doris supports two implementation methods for JOIN: **Hash Join** and **Nested L
 
 As a distributed MPP database, Apache Doris requires data shuffling during the Hash Join process to ensure the correctness of the JOIN results. Below are several data shuffling methods:
 
-**Broadcast Join** As illustrated, the Broadcast Join process involves sending all data from the right table to all nodes participating in the JOIN computation, including the nodes scanning the left table data, while the left table data remains stationary. In this process, each node receives a complete copy of the right table's data (with a total volume of T(R)) to ensure that all nodes have the necessary data to perform the JOIN operation.
+**Broadcast Join** As illustrated, the Broadcast Join process involves sending all data from the right table to all nodes participating in the JOIN computation, including the nodes scanning the left table's data, while the left table's data remains stationary. In this process, each node receives a complete copy of the right table's data (with a total volume of T(R)) to ensure that all nodes have the necessary data to perform the JOIN operation.
 
-This method is suitable for various scenarios but is not applicable for RIGHT OUTER, RIGHT ANTI, and RIGHT SEMI types of Hash Join. Its network overhead is calculated as the number of JOIN nodes N multiplied by the volume of right table data T(R).
+This method is suitable for various scenarios but is not applicable for RIGHT OUTER, RIGHT ANTI, and RIGHT SEMI types of Hash Join. Its network overhead is calculated as the number of JOIN nodes N multiplied by the volume of right table's data T(R).
 
 ![Implementation of Hash Join in Doris](/images/broadcast-join.jpg)
 
@@ -69,13 +69,13 @@ This method is suitable for various scenarios but is not applicable for RIGHT OU
 
 This method computes hash values based on the JOIN conditions and performs bucketing. Specifically, the data from both the left and right tables is partitioned according to the hash values calculated from the JOIN conditions, and these partitioned data sets are then sent to the corresponding partition nodes (as illustrated).
 
-The network overhead of this method mainly includes two parts: the cost of transferring the left table data T(S) and the cost of transferring the right table data T(R). This method only supports Hash Join operations because it relies on the JOIN conditions to perform data bucketing.
+The network overhead of this method mainly includes two parts: the cost of transferring the left table's data T(S) and the cost of transferring the right table's data T(R). This method only supports Hash Join operations because it relies on the JOIN conditions to perform data bucketing.
 
 ![Partition Shuffle Join](/images/partition-shuffle-join.jpg)
 
 ### Bucket Shuffle Join
 
-When the JOIN condition includes the bucketed column from the left table, the left table's data remains unchanged while the right table's data is distributed to the left table's nodes for the JOIN, reducing network overhead.
+When the JOIN condition includes the bucketed column from the left table, the left table's data location remains unchanged while the right table's data is distributed to the left table's nodes for the JOIN, reducing network overhead.
 
 When one side of the table involved in the JOIN operation has its data already hash-distributed according to the JOIN condition column, users can choose to keep this side's data location unchanged while distributing the other side's data based on the same JOIN condition column and hash distribution. (The term "table" here refers not only to physically stored tables but also to the output results of any operators in SQL queries. Users can flexibly choose to keep either the left or right table's data location unchanged while only moving and distributing the other side's table.)
 
@@ -418,20 +418,16 @@ When directly scanning two physical tables for a Bucket Shuffle Join, the follow
 
 2. **Inclusion of bucketed columns in equality conditions**: The equality JOIN condition must include the bucketed columns from both tables. When the left table's bucketed column is used as the equality JOIN condition, it is more likely to be planned as a Bucket Shuffle Join.
 
-3. **Data type consistency**: Since the hash value computation results differ for different data types, the data types of the left table's bucketed column and the right table's equality JOIN column must match; otherwise, the corresponding planning cannot occur.
+3. **Table type restrictions**: Bucket Shuffle Join is only applicable to native OLAP tables in Doris. For external tables such as ODBC, MySQL, and ES, Bucket Shuffle Join cannot be effective when they are used as the left table.
 
-4. **Table type restrictions**: Bucket Shuffle Join is only applicable to native OLAP tables in Doris. For external tables such as ODBC, MySQL, and ES, Bucket Shuffle Join cannot be effective when they are used as the left table.
-
-5. **Single Partition Requirement**: For partitioned tables, since the data distribution may differ across partitions, Bucket Shuffle Join is only guaranteed to be effective when the left table is a single partition. Therefore, when executing SQL, it is advisable to use `WHERE` conditions to enable partition pruning strategies whenever possible.
+4. **Single Partition Requirement**: For partitioned tables, since the data distribution may differ across partitions, Bucket Shuffle Join is only guaranteed to be effective when the left table is a single partition. Therefore, when executing SQL, it is advisable to use `WHERE` conditions to enable partition pruning strategies whenever possible.
 
 ### Limitations of Colocate Join
 
 When directly scanning two physical tables, Colocate Join has stricter limitations compared to Bucket Shuffle Join. In addition to meeting all the conditions for Bucket Shuffle Join, the following requirements must also be satisfied:
 
-1. **Consistency of bucket column types and counts**: Not only must the types of the bucketed columns match, but the number of buckets must also be the same to ensure data distribution consistency.
+1. **bucket column types and counts are Same**: Not only must the types of the bucketed columns match, but the number of buckets must also be the same to ensure data distribution consistency.
 
-2. **Consistency of table replicas**: The number of replicas for the tables must be consistent.
+2. **Explicit specification of Colocation Group**: A Colocation Group must be explicitly specified; only tables within the same Colocation Group can participate in a Colocate Join.
 
-3. **Explicit specification of Colocation Group**: A Colocation Group must be explicitly specified; only tables within the same Colocation Group can participate in a Colocate Join.
-
-4. **Unstable state during replica repair or balancing**: During operations such as replica repair or balancing, the Colocation Group may be in an unstable state. In this case, the Colocate Join will degrade to a regular Join operation.
+3. **Unstable state during replica repair or balancing**: During operations such as replica repair or balancing, the Colocation Group may be in an unstable state. In this case, the Colocate Join will degrade to a regular Join operation.

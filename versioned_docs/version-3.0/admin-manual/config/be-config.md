@@ -50,7 +50,7 @@ There are two ways to view the configuration items of BE:
 
 2. View by command
 
-   You can view the configuration items of the BE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md):
+   You can view the configuration items of the BE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md):
 
     `SHOW BACKEND CONFIG;`
 
@@ -1301,6 +1301,15 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 * Description: Minimum download speed
 * Default value: 50 (KB/s)
+
+#### `enable_batch_download`
+
+:::tip Tips
+This configuration is supported since the Apache Doris 3.0.4 version
+:::
+
+* Description: Whether to download files in batch, it is recommended to open it when the binlog is enabled.
+* Default value: false
 
 #### `priority_queue_remaining_tasks_increased_frequency`
 

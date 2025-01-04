@@ -38,7 +38,7 @@ Alternatively, if changes to t2 can be accepted without triggering a refresh of 
 
 ### Q2: What can be done if a materialized view consumes too many resources, impacting other business operations?
 
-You can control the resources allocated to materialized view refresh tasks by specifying a [workload_group](../../../admin-manual/resource-admin/workload-group) through the materialized view's properties.
+You can control the resources allocated to materialized view refresh tasks by specifying a [workload_group](docs/admin-manual/workload-management/workload-group) through the materialized view's properties.
 
 It's important to note that if the memory allocation is too small and the refresh of a single partition requires more memory, the task may fail. This trade-off should be carefully considered based on business requirements.
 
@@ -186,7 +186,7 @@ Reasons may be:
 
 ### Q1: How to confirm if a Materialized View hits, and how to find the reasons for Non-Hits?
 
-You can use `explain query_sql` to view a summary of materialized view hits. 
+You can use `explain query_sql` to view a summary of materialized view hits.
 
 For example, consider the following materialized view:
 

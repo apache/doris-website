@@ -32,7 +32,7 @@ Supports per-user configuration of SQL interception rules, such as using regular
 
 ### Creating Rules
 
-For more syntax on creating rules, please refer to [CREATE SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-SQL-BLOCK-RULE).
+For more syntax on creating rules, please refer to [CREATE SQL BLOCK RULE](../../sql-manual/sql-statements/data-governance/CREATE-SQL_BLOCK_RULE).
 
 - `sql`: Matching rule (based on regular expression matching, special characters need to be escaped), optional, default value is "NULL".
 - `sqlHash`: SQL hash value for exact matching. This value will be printed in `fe.audit.log`, optional. This parameter and SQL are mutually exclusive, default value is "NULL".
@@ -88,7 +88,7 @@ SET PROPERTY [FOR 'jack'] 'sql_block_rules' = 'test_rule1,test_rule2'
 
 - View the configured SQL blocking rules.
 
-If no rule name is specified, all rules will be viewed. For specific syntax, please refer to [SHOW SQL BLOCK RULE](../../sql-manual/sql-statements/Show-Statements/SHOW-SQL-BLOCK-RULE)
+If no rule name is specified, all rules will be viewed. For specific syntax, please refer to [SHOW SQL BLOCK RULE](../../sql-manual/sql-statements/data-governance/SHOW-SQL_BLOCK_RULE)
 
 ```sql
 SHOW SQL_BLOCK_RULE [FOR RULE_NAME]
@@ -102,7 +102,7 @@ SHOW PROPERTY FOR user_name;
 
 ### Modifying Rules
 
-Allow modifications to each item such as sql/sqlHash/partition_num/tablet_num/cardinality/global/enable. For specific syntax, please refer to [ALTER SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-SQL-BLOCK-RULE)
+Allow modifications to each item such as sql/sqlHash/partition_num/tablet_num/cardinality/global/enable. For specific syntax, please refer to [ALTER SQL BLOCK RULE](../../sql-manual/sql-statements/data-governance/ALTER-SQL_BLOCK_RULE)
 
 - `sql` and `sqlHash` cannot be set simultaneously.
 
@@ -122,7 +122,7 @@ ALTER SQL_BLOCK_RULE test_rule2 PROPERTIES("partition_num" = "10","tablet_num"="
 
 ### Deleting Rules
 
-Support deleting multiple rules simultaneously, separated by `,`. For specific syntax, please refer to [DROP SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-SQL-BLOCK-RULE)
+Support deleting multiple rules simultaneously, separated by `,`. For specific syntax, please refer to [DROP SQL BLOCK RULE](../../sql-manual/sql-statements/data-governance/DROP-SQL_BLOCK_RULE)
 
 ```
 DROP SQL_BLOCK_RULE test_rule1,test_rule2
