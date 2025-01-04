@@ -162,7 +162,7 @@ const config = {
                     // },
                     showLastUpdateAuthor: false,
                     showLastUpdateTime: false,
-                    // remarkPlugins: [markdownBoldPlugin],
+                    remarkPlugins: [markdownBoldPlugin],
                 },
                 blog: {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
