@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-开启动态分区的表，将会按照设定的规则添加、删除分区，从而对表的分区实现生命周期管理(TTL)，减少用户的使用负担。
+开启动态分区的表，将会按照设定的规则添加、删除分区，从而对表的分区实现生命周期管理 (TTL)，减少用户的使用负担。
 
 动态分区只支持在 DATE/DATETIME 列上进行 Range 类型的分区。
 
@@ -99,7 +99,7 @@ under the License.
 
 
 :::caution
-  注意，若用户设置了history_partition_num（>0），创建动态分区的起始分区就会用max(start, -history_partition_num)，删除历史分区的时候仍然会保留到start的范围，其中start < 0。
+  注意，若用户设置了 history_partition_num（>0），创建动态分区的起始分区就会用 max(start, -history_partition_num)，删除历史分区的时候仍然会保留到 start 的范围，其中 start < 0。
 :::
 
 - `dynamic_partition.end`**（必选参数）**
@@ -126,7 +126,7 @@ under the License.
 
   当 `time_unit` 为 `MONTH` 时，该参数用于指定每月的起始日期。取值为 1 到 28。其中 1 表示每月 1 号，28 表示每月 28 号。默认为 1，即表示每月以 1 号为起始点。暂不支持以 29、30、31 号为起始日，以避免因闰年或闰月带来的歧义。
 
-- doris支持SSD和HDD层级存储，可参考[分层存储](./tiered-storage/diff-disk-medium-migration.md)
+- doris 支持 SSD 和 HDD 层级存储，可参考[分层存储](../../table-design/tiered-storage/tiered-ssd-hdd.md)
 
 - `dynamic_partition.create_history_partition`
 

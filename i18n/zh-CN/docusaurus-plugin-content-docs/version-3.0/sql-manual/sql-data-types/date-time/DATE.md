@@ -24,17 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DATE
 
-### name
 
-DATE
+## 描述
 
-### description
-    DATE类型
-        日期类型，目前的取值范围是['0000-01-01', '9999-12-31'], 默认的打印形式是'yyyy-MM-dd'
+DATE 类型
+    
+日期类型，目前的取值范围是['0000-01-01', '9999-12-31'], 默认的打印形式是'yyyy-MM-dd'
 
-### example
+## 举例
 
 ```sql
 SELECT DATE('2003-12-31 01:02:03');
@@ -45,6 +43,4 @@ SELECT DATE('2003-12-31 01:02:03');
 +-----------------------------+
 ```
 
-### keywords
 
-    DATE

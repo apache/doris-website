@@ -30,7 +30,7 @@ under the License.
 
 ADMIN COPY TABLET
 
-### Description
+## 描述
 
 该语句用于为指定的 tablet 制作快照，主要用于本地加载 tablet 来复现问题。
 
@@ -79,7 +79,7 @@ PROPERTIES (
 * ExpirationMinutes: 快照过期时间
 * CreateTableStmt: tablet 对应的表的建表语句。该语句不是原始的建表语句，而是用于之后本地加载 tablet 的简化后的建表语句。
 
-### Example
+## 举例
 
 1. 对指定 BE 节点上的副本做快照
 

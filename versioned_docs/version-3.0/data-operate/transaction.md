@@ -46,7 +46,7 @@ COMMIT; / ROLLBACK;
 
 Implicit transactions refer to SQL statements that are executed without explicitly adding statements to start and commit transactions before and after the statements.
 
-In Doris, except for [Group Commit](import/import-way/group-commit-manual.md), each import statement opens a transaction when it starts executing. The transaction is automatically committed after the statement is executed, or automatically rolled back if the statement fails. Each query or DDL statement is also an implicit transaction.
+In Doris, except for [Group Commit](../data-operate/import/group-commit-manual), each import statement opens a transaction when it starts executing. The transaction is automatically committed after the statement is executed, or automatically rolled back if the statement fails. Each query or DDL statement is also an implicit transaction.
 
 ### Isolation Level
 

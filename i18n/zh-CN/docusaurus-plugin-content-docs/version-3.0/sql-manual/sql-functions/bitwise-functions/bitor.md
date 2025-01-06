@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## bitor
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITOR(Integer-type lhs, Integer-type rhs)`
 
@@ -34,7 +34,7 @@ under the License.
 
 整数范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
-### example
+## 举例
 
 ```
 mysql> select bitor(3,5) ans;

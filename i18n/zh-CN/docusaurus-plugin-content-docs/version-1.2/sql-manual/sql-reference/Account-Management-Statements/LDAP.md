@@ -30,7 +30,7 @@ under the License.
 
 LDAP
 
-### Description
+## 描述
 
 SET LDAP_ADMIN_PASSWORD
 
@@ -40,7 +40,7 @@ SET LDAP_ADMIN_PASSWORD
 
  SET LDAP_ADMIN_PASSWORD 命令用于设置LDAP管理员密码。使用LDAP认证时，doris需使用管理员账户和密码来向LDAP服务查询登录用户的信息。
 
-### Example
+## 举例
 
 1. 设置LDAP管理员密码
 ```sql

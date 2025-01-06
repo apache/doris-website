@@ -30,7 +30,7 @@ under the License.
 
 EXPORT
 
-### Description
+## 描述
 
  `EXPORT` 命令用于将指定表的数据导出为文件到指定位置。目前支持通过 Broker 进程，S3 协议或 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
 
@@ -160,7 +160,7 @@ EXPORT
     use_path_style: (选填) 默认为 `false`。S3 SDK 默认使用 Virtual-hosted Style 方式。但某些对象存储系统可能没开启或不支持 Virtual-hosted Style 方式的访问，此时可以添加 `use_path_style` 参数来强制使用 Path Style 访问方式。
   ```
 
-### Example
+## 举例
 
 #### Export 数据到本地
 > Export 数据到本地文件系统，需要在 `fe.conf` 中添加 `enable_outfile_to_local=true` 并且重启 FE。

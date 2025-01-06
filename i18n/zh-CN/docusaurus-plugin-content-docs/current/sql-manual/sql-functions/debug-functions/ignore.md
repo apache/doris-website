@@ -25,19 +25,19 @@ under the License.
 -->
 
 ## ignore
-### description
+## 描述
 
 :::tip
 仅供开发者调试用，请勿在生产环境手动调用该函数。
 :::
 
-#### Syntax
+## 语法
 
 `BOOLEAN ignore(T expr...)`
 
 对于任意输入，返回 `false`。
 
-### example
+## 举例
 
 ```sql
 mysql> select m1, ignore(m1,m2,m1+m2,1) from t_nullable;

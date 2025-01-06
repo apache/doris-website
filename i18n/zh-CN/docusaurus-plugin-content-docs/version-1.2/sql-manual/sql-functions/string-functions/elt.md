@@ -23,14 +23,14 @@ under the License.
 -->
 
 ## elt
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR elt(INT, VARCHAR,...)`
 
 在指定的索引处返回一个字符串。如果指定的索引处没有字符串，则返回NULL。
 
-### example
+## 举例
 
 ```
 mysql> select elt(1, 'aaa', 'bbb');

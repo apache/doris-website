@@ -25,13 +25,13 @@ under the License.
 -->
 
 ## SHOW TABLET STORAGE FORMAT
-### description
+## 描述
 
     该语句用于显示Backend上的存储格式信息（仅管理员使用）
     语法：
         SHOW TABLET STORAGE FORMAT [VERBOSE]
 
-### example
+## 举例
 
     ```
     MySQL [(none)]> show tablet storage format;

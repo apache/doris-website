@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## repeat
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR repeat(VARCHAR str, INT count)`
 
@@ -40,7 +40,7 @@ set repeat_max_num = 20000
 ```
 :::
 
-### example
+## 举例
 
 ```
 mysql> SELECT repeat("a", 3);

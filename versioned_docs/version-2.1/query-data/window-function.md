@@ -582,9 +582,12 @@ This results in a consistent query output:
 
 ## Reference
 
-Create table and load data :
+The table creation statement used in the example is as follows:
 
 ```sql
+CREATE DATABASE IF NOT EXISTS doc_tpcds;
+USE doc_tpcds;
+
 CREATE TABLE IF NOT EXISTS item (
     i_item_sk bigint not null,
     i_item_id char(16) not null,
@@ -646,7 +649,6 @@ PROPERTIES (
   "replication_num" = "1"
 );
 
-
 CREATE TABLE IF NOT EXISTS date_dim (
     d_date_sk bigint not null,
     d_date_id char(16) not null,
@@ -683,7 +685,6 @@ PROPERTIES (
   "replication_num" = "1"
 );
 
-
 CREATE TABLE IF NOT EXISTS customer_address (
     ca_address_sk bigint not null,
     ca_address_id char(16) not null,
@@ -704,40 +705,40 @@ DISTRIBUTED BY HASH(ca_address_sk) BUCKETS 12
 PROPERTIES (
   "replication_num" = "1"
 );
+```
 
+Execute the following command on the terminal to download the data to the local computer and load the data into the table using the Stream Load method:
+
+```shell
+curl -L https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar -o - | tar -Jxf -
 
 curl --location-trusted \
 -u "root:" \
 -H "column_separator:|" \
 -H "columns: i_item_sk, i_item_id, i_rec_start_date, i_rec_end_date, i_item_desc, i_current_price, i_wholesale_cost, i_brand_id, i_brand, i_class_id, i_class, i_category_id, i_category, i_manufact_id, i_manufact, i_size, i_formulation, i_color, i_units, i_container, i_manager_id, i_product_name" \
--T "/path/to/data/item_1_10.dat" \
+-T "doc_ddl_dir/item_1_10.dat" \
 http://127.0.0.1:8030/api/doc_tpcds/item/_stream_load
-
 
 curl --location-trusted \
 -u "root:" \
 -H "column_separator:|" \
 -H "columns: d_date_sk, d_date_id, d_date, d_month_seq, d_week_seq, d_quarter_seq, d_year, d_dow, d_moy, d_dom, d_qoy, d_fy_year, d_fy_quarter_seq, d_fy_week_seq, d_day_name, d_quarter_name, d_holiday, d_weekend, d_following_holiday, d_first_dom, d_last_dom, d_same_day_ly, d_same_day_lq, d_current_day, d_current_week, d_current_month, d_current_quarter, d_current_year" \
--T "/path/to/data/date_dim_1_10.dat" \
+-T "doc_ddl_dir/date_dim_1_10.dat" \
 http://127.0.0.1:8030/api/doc_tpcds/date_dim/_stream_load
-
 
 curl --location-trusted \
 -u "root:" \
 -H "column_separator:|" \
 -H "columns: ss_sold_date_sk, ss_sold_time_sk, ss_item_sk, ss_customer_sk, ss_cdemo_sk, ss_hdemo_sk, ss_addr_sk, ss_store_sk, ss_promo_sk, ss_ticket_number, ss_quantity, ss_wholesale_cost, ss_list_price, ss_sales_price, ss_ext_discount_amt, ss_ext_sales_price, ss_ext_wholesale_cost, ss_ext_list_price, ss_ext_tax, ss_coupon_amt, ss_net_paid, ss_net_paid_inc_tax, ss_net_profit" \
--T "/path/to/data/store_sales.csv" \
+-T "doc_ddl_dir/store_sales.csv" \
 http://127.0.0.1:8030/api/doc_tpcds/store_sales/_stream_load
-
-
 
 curl --location-trusted \
 -u "root:" \
 -H "column_separator:|" \
 -H "ca_address_sk, ca_address_id, ca_street_number, ca_street_name, ca_street_type, ca_suite_number, ca_city, ca_county, ca_state, ca_zip, ca_country, ca_gmt_offset, ca_location_type" \
--T "/path/to/data/customer_address_1_10.dat" \
+-T "doc_ddl_dir/customer_address_1_10.dat" \
 http://127.0.0.1:8030/api/doc_tpcds/customer_address/_stream_load
-
-Path：
-/Users/${username}/Documents/file/docs_write/doc_ddl_dir.tar  
 ```
+
+The data files ``item_1_10.dat``, ``date-dim_1_10.dat``, ``store_stales.csv``, and ``customer-address_1_10.dat`` can be downloaded by clicking on the [link](https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar).

@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## bit_shift_left
-### description
-#### syntax
+## 描述
+## 语法
 
 `BIT_SHIFT_LEFT(BIGINT x, TINYINT c)`
 
 将 BIGINT 类型的 x 向左移动 c 位，并将结果作为 BIGINT 返回。
 如果 c 小于 0，则返回零。
 
-### example
+## 举例
 ```sql
 select 8 as x, number as c, bit_shift_left(8, number) as bit_shift_left from numbers("number"="5")
 --------------

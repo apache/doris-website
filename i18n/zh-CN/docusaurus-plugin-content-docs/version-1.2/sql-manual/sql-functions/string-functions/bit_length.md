@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## bit_length
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT bit_length(VARCHAR str)`
 
 
 返回字符串的位长度。
 
-### example
+## 举例
 
 ```
 mysql> select bit_length("abc");

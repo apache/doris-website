@@ -30,7 +30,7 @@ under the License.
 
 jobs
 
-### description
+## 描述
 
 表函数，生成任务临时表，可以查看某个任务类型中的job信息。
 
@@ -38,7 +38,7 @@ jobs
 
 该函数自 2.1.0 版本支持。
 
-#### syntax
+## 语法
 
 `jobs("type"="")`
 
@@ -118,7 +118,7 @@ mysql> desc function jobs("type"="mv");
 * Status：job状态
 * CreateTime：task创建时间
 
-### example
+## 举例
 
 1. 查看所有物化视图的job
 

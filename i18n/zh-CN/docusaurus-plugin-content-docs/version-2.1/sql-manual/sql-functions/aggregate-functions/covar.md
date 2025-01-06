@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## COVAR
-### Description
-#### Syntax
+## 描述
+## 语法
 
 ` double covar(x, y)`
 
 计算协方差, 即返回结果为: x和y的协方差。
 
 
-### example
+## 举例
 
 ```
 mysql> select covar(x,y) from baseall;

@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## second
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT SECOND(DATETIME date)`
 
@@ -35,7 +35,7 @@ under the License.
 
 参数为Date或者Datetime类型
 
-### example
+## 举例
 
 ```
 mysql> select second('2018-12-31 23:59:59');

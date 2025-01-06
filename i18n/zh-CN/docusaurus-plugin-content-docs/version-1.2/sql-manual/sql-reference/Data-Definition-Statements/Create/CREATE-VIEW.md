@@ -30,7 +30,7 @@ under the License.
 
 CREATE VIEW
 
-### Description
+## 描述
 
 该语句用于创建一个逻辑视图
 语法：
@@ -48,7 +48,7 @@ AS query_stmt
 - 视图为逻辑视图，没有物理存储。所有在视图上的查询相当于在视图对应的子查询上进行。
 - query_stmt 为任意支持的 SQL
 
-### Example
+## 举例
 
 1. 在 example_db 上创建视图 example_view
 

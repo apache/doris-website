@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## HISTOGRAM
-### description
-#### Syntax
+## 描述
+## 语法
 
 `histogram(expr[, INT num_buckets])`
 
@@ -39,13 +39,13 @@ histogram（直方图）函数用于描述数据分布情况，它使用“等�
 
 别名函数：`hist(expr[, INT num_buckets])`
 
-### notice
+## 注意事项
 
 ```
 仅支持向量化引擎中使用
 ```
 
-### example
+## 举例
 
 ```
 MySQL [test]> SELECT histogram(c_float) FROM histogram_test;

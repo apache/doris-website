@@ -5,26 +5,8 @@
             "label": "Getting Started",
             "collapsed": false,
             "items": [
-                "gettingStarted/what-is-new",
                 "gettingStarted/what-is-apache-doris",
-                "gettingStarted/quick-start",
-                {
-                    "type": "category",
-                    "label": "Tutorials",
-                    "items": [
-                        {
-                            "type": "category",
-                            "label": "Building lakehouse",
-                            "items": [
-                                "gettingStarted/tutorials/building-lakehouse/doris-hudi",
-                                "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                                "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
-                                "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
-                            ]
-                        },
-                        "gettingStarted/tutorials/log-storage-analysis"
-                    ]
-                }
+                "gettingStarted/quick-start"
             ]
         },
         {
@@ -38,49 +20,53 @@
                     "items": [
                         {
                             "type": "category",
-                            "label": "Source Code Compilation",
+                            "label": "Installation Preparation",
                             "items": [
-                                "install/source-install/compilation-with-docker",
-                                "install/source-install/compilation-with-ldb-toolchain",
-                                "install/source-install/compilation-linux",
-                                "install/source-install/compilation-arm",
-                                "install/source-install/compilation-win",
-                                "install/source-install/compilation-mac"
+                                "install/preparation/env-checking",
+                                "install/preparation/cluster-planning",
+                                "install/preparation/os-checking"
                             ]
                         },
                         {
                             "type": "category",
-                            "label": "Cluster Deployment",
+                            "label": "Cluster Deployment Manually",
                             "items": [
-                                "install/cluster-deployment/standard-deployment",
-                                "install/cluster-deployment/run-docker-cluster",
+                                "install/deploy-manually/storage-compute-coupled-deploy-manually",
+                                "install/deploy-manually/storage-compute-decoupled-deploy-manually"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Deploying on Kubernetes",
+                            "items": [
                                 {
                                     "type": "category",
-                                    "label": "Deploying on Kubernetes",
+                                    "label": "Compute storage coupled",
                                     "items": [
-                                        "install/cluster-deployment/k8s-deploy/install-env",
-                                        {
-                                            "type": "category",
-                                            "label": "Compute storage coupled",
-                                            "items": [
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-quickstart",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
-                                            ]
-                                        },
-                                        {
-                                            "type": "category",
-                                            "label": "Compute storage decoupled",
-                                            "items": [
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
-                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-cg"
-                                            ]
-                                        }
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
                                     ]
                                 },
+                                {
+                                    "type": "category",
+                                    "label": "Compute storage decoupled",
+                                    "items": [
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-cg",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Deploying on Cloud",
+                            "items": [
                                 "install/cluster-deployment/doris-on-aws"
                             ]
                         }
@@ -99,7 +85,44 @@
                     "label": "Data Table Design",
                     "items": [
                         "table-design/overview",
+                        {
+                            "type": "category",
+                            "label": "Data Models",
+                            "items": [
+                                "table-design/data-model/overview",
+                                "table-design/data-model/duplicate",
+                                "table-design/data-model/unique",
+                                "table-design/data-model/aggregate",
+                                "table-design/data-model/tips"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Data Partitioning",
+                            "items": [
+                                "table-design/data-partitioning/data-distribution",
+                                "table-design/data-partitioning/manual-partitioning",
+                                "table-design/data-partitioning/dynamic-partitioning",
+                                "table-design/data-partitioning/auto-partitioning",
+                                "table-design/data-partitioning/manual-bucketing",
+                                "table-design/data-partitioning/auto-bucket",
+                                "table-design/data-partitioning/common-issues"
+                            ]
+                        },
                         "table-design/data-type",
+                        "table-design/column-compression",
+                        "table-design/row-store",
+                        "table-design/schema-change",
+                        {
+                            "type": "category",
+                            "label": "Tiered Storage",
+                            "items": [
+                                "table-design/tiered-storage/overview",
+                                "table-design/tiered-storage/tiered-ssd-hdd",
+                                "table-design/tiered-storage/remote-storage"
+                            ]
+                        },
+                        "table-design/auto-increment",
                         {
                             "type": "category",
                             "label": "Table Indexes",
@@ -111,71 +134,78 @@
                                 "table-design/index/ngram-bloomfilter-index"
                             ]
                         },
-                        {
-                            "type": "category",
-                            "label": "Data Models",
-                            "items": [
-                                "admin-manual/data-admin/ccr/overview",
-                                "admin-manual/data-admin/ccr/quickstart",
-                                "admin-manual/data-admin/ccr/feature",
-                                "admin-manual/data-admin/ccr/manual"
-                            ]
-                        },
-                        "table-design/row-store",
-                        {
-                            "type": "category",
-                            "label": "Data Partitioning",
-                            "items": [
-                                "table-design/data-partitioning/basic-concepts",
-                                "table-design/data-partitioning/manual-partitioning",
-                                "table-design/data-partitioning/dynamic-partitioning",
-                                "table-design/data-partitioning/auto-partitioning",
-                                "table-design/data-partitioning/manual-bucketing",
-                                "table-design/data-partitioning/auto-bucket",
-                                "table-design/data-partitioning/common-issues"
-                            ]
-                        },
-                        "table-design/schema-change",
-                        {
-                            "type": "category",
-                            "label": "Tiered Storage",
-                            "items": [
-                                "table-design/tiered-storage/diff-disk-medium-migration",
-                                "table-design/tiered-storage/remote-storage"
-                            ]
-                        },
-                        "table-design/auto-increment",
                         "table-design/best-practice"
                     ]
                 },
                 {
                     "type": "category",
-                    "label": "Data Manipulation",
+                    "label": "Loading Data",
                     "items": [
+                        "data-operate/import/load-manual",
                         {
                             "type": "category",
-                            "label": "Loading Data",
+                            "label": "Data Source",
                             "items": [
-                                "data-operate/import/load-manual",
-                                {
-                                    "type": "category",
-                                    "label": "Import Way",
-                                    "items": [
-                                        "data-operate/import/import-way/stream-load-manual",
-                                        "data-operate/import/import-way/broker-load-manual",
-                                        "data-operate/import/import-way/routine-load-manual",
-                                        "data-operate/import/import-way/insert-into-manual",
-                                        "data-operate/import/import-way/mysql-load-manual",
-                                        "data-operate/import/import-way/group-commit-manual"
-                                    ]
-                                },
-                                "data-operate/import/load-data-format",
-                                "data-operate/import/error-data-handling",
-                                "data-operate/import/load-data-convert",
-                                "data-operate/import/load-high-availability",
-                                "data-operate/import/migrate-data-from-other-olap"
+                                "data-operate/import/data-source/local-file",
+                                "data-operate/import/data-source/kafka",
+                                "data-operate/import/data-source/flink",
+                                "data-operate/import/data-source/hdfs",
+                                "data-operate/import/data-source/amazon-s3",
+                                "data-operate/import/data-source/google-cloud-storage",
+                                "data-operate/import/data-source/azure-storage",
+                                "data-operate/import/data-source/aliyun-oss",
+                                "data-operate/import/data-source/huawei-obs",
+                                "data-operate/import/data-source/tencent-cos",
+                                "data-operate/import/data-source/minio",
+                                "data-operate/import/data-source/s3-compatible",
+                                "data-operate/import/data-source/migrate-data-from-other-olap"
                             ]
                         },
+                        {
+                            "type": "category",
+                            "label": "Loading Methods",
+                            "items": [
+                                "data-operate/import/import-way/stream-load-manual",
+                                "data-operate/import/import-way/broker-load-manual",
+                                "data-operate/import/import-way/routine-load-manual",
+                                "data-operate/import/import-way/insert-into-manual",
+                                "data-operate/import/import-way/insert-into-values-manual",
+                                "data-operate/import/import-way/mysql-load-manual"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "File Formats",
+                            "items": [
+                                "data-operate/import/file-format/csv",
+                                "data-operate/import/file-format/json",
+                                "data-operate/import/file-format/parquet",
+                                "data-operate/import/file-format/orc"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Complex Data Types",
+                            "items": [
+                                "data-operate/import/complex-types/array",
+                                "data-operate/import/complex-types/map",
+                                "data-operate/import/complex-types/struct",
+                                "data-operate/import/complex-types/json",
+                                "data-operate/import/complex-types/bitmap",
+                                "data-operate/import/complex-types/hll",
+                                "data-operate/import/complex-types/variant"
+                            ]
+                        },
+                        "data-operate/import/handling-messy-data",
+                        "data-operate/import/load-data-convert",
+                        "data-operate/import/load-high-availability",
+                        "data-operate/import/group-commit-manual"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Data Update and Delete",
+                    "items": [
                         {
                             "type": "category",
                             "label": "Updating Data",
@@ -184,13 +214,14 @@
                                 "data-operate/update/unique-update",
                                 "data-operate/update/update-of-unique-model",
                                 "data-operate/update/update-of-aggregate-model",
-                                "data-operate/update/unique-update-transaction"
+                                "data-operate/update/unique-update-concurrent-control"
                             ]
                         },
                         {
                             "type": "category",
                             "label": "Deleting Data",
                             "items": [
+                                "data-operate/delete/delete-overview",
                                 "data-operate/delete/delete-manual",
                                 "data-operate/delete/batch-delete-manual",
                                 "data-operate/delete/truncate-manual",
@@ -198,24 +229,17 @@
                                 "data-operate/delete/table-temp-partition"
                             ]
                         },
-                        {
-                            "type": "category",
-                            "label": "Exporting Data",
-                            "items": [
-                                "data-operate/export/export-overview",
-                                "data-operate/export/export-manual",
-                                "data-operate/export/outfile",
-                                "data-operate/export/export-with-mysql-dump"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Job Scheduler",
-                            "items": [
-                                "data-operate/scheduler/job-scheduler"
-                            ]
-                        },
                         "data-operate/transaction"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Exporting Data",
+                    "items": [
+                        "data-operate/export/export-overview",
+                        "data-operate/export/export-manual",
+                        "data-operate/export/outfile",
+                        "data-operate/export/export-with-mysql-dump"
                     ]
                 },
                 {
@@ -246,6 +270,16 @@
                     "items": [
                         {
                             "type": "category",
+                            "label": "Performance Tuning Overview",
+                            "items": [
+                                "query-acceleration/performance-tuning-overview/tuning-overview",
+                                "query-acceleration/performance-tuning-overview/diagnostic-tools",
+                                "query-acceleration/performance-tuning-overview/analysis-tools",
+                                "query-acceleration/performance-tuning-overview/tuning-process"
+                            ]
+                        },
+                        {
+                            "type": "category",
                             "label": "Materialize View",
                             "items": [
                                 "query-acceleration/materialized-view/overview",
@@ -268,44 +302,62 @@
                             "type": "category",
                             "label": "Distincting Counts",
                             "items": [
-                                "query-acceleration/distinct-counts/orthogonal-bitmap-manual",
-                                "query-acceleration/distinct-counts/using-hll"
+                                "query-acceleration/distinct-counts/bitmap-precise-deduplication",
+                                "query-acceleration/distinct-counts/hll-approximate-deduplication"
                             ]
                         },
-                        "query-acceleration/query-optimizer",
-                        "query-acceleration/pipeline-execution-engine",
-                        "query-acceleration/statistics",
+                        "query-acceleration/colocation-join",
+                        {
+                            "type": "category",
+                            "label": "Hints",
+                            "items": [
+                                "query-acceleration/hints/hints-overview",
+                                "query-acceleration/hints/leading-hint",
+                                "query-acceleration/hints/distribute-hint"
+                            ]
+                        },
                         {
                             "type": "category",
                             "label": "Tuning",
                             "items": [
-                                "query-acceleration/tuning/overview",
-                                "query-acceleration/tuning/query-profile",
                                 {
                                     "type": "category",
                                     "label": "Tuning Plan",
                                     "items": [
                                         "query-acceleration/tuning/tuning-plan/optimizing-table-schema",
                                         "query-acceleration/tuning/tuning-plan/optimizing-table-index",
-                                        "query-acceleration/tuning/tuning-plan/accelerating-point-query",
                                         "query-acceleration/tuning/tuning-plan/optimizing-table-scanning",
                                         "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv",
                                         "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv",
-                                        "query-acceleration/tuning/tuning-plan/tuning-plan-with-statistics",
                                         "query-acceleration/tuning/tuning-plan/optimizing-join-with-colocate-group",
                                         "query-acceleration/tuning/tuning-plan/adjusting-join-shuffle",
                                         "query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule",
                                         "query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint",
                                         "query-acceleration/tuning/tuning-plan/accelerating-queries-with-sql-cache",
-                                        "query-acceleration/tuning/tuning-plan/accelerating-queries-with-runtime-filter",
-                                        "query-acceleration/tuning/tuning-plan/solving-unevenly-data-distribution",
                                         "query-acceleration/tuning/tuning-plan/dml-tuning-plan"
                                     ]
                                 },
-                                "query-acceleration/tuning/faq",
-                                "query-acceleration/tuning/join-hint",
-                                "query-acceleration/tuning/runtime-filter",
-                                "query-acceleration/tuning/topn-query"
+                                {
+                                    "type": "category",
+                                    "label": "Tuning Execution",
+                                    "items": [
+                                        "query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time",
+                                        "query-acceleration/tuning/tuning-execution/data-skew-handling",
+                                        "query-acceleration/tuning/tuning-execution/parallelism-tuning"
+                                    ]
+                                },
+                                "query-acceleration/tuning/tuning-parameters"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Optimization Technology Principle",
+                            "items": [
+                                "query-acceleration/optimization-technology-principle/query-optimizer",
+                                "query-acceleration/optimization-technology-principle/pipeline-execution-engine",
+                                "query-acceleration/optimization-technology-principle/runtime-filter",
+                                "query-acceleration/optimization-technology-principle/topn-optimization",
+                                "query-acceleration/optimization-technology-principle/statistics"
                             ]
                         }
                     ]
@@ -364,9 +416,20 @@
                         "lakehouse/compute-node",
                         "lakehouse/external-statistics",
                         "lakehouse/cloud-auth",
-                        "lakehouse/sql-dialect"
+                        "lakehouse/sql-dialect",
+                        {
+                            "type": "category",
+                            "label": "Lakehouse Best Practices",
+                            "items": [
+                                "lakehouse/lakehouse-best-practices/doris-hudi",
+                                "lakehouse/lakehouse-best-practices/doris-paimon",
+                                "lakehouse/lakehouse-best-practices/doris-iceberg",
+                                "lakehouse/lakehouse-best-practices/doris-lakesoul"
+                            ]
+                        }
                     ]
                 },
+                "log-storage-analysis",
                 {
                     "type": "category",
                     "label": "Compute-Storage Decoupled",
@@ -377,9 +440,45 @@
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
                         "compute-storage-decoupled/file-cache",
+                        "compute-storage-decoupled/upgrade",
                         "compute-storage-decoupled/meta-service-api"
                     ]
+                },
+                {
+                    "type": "category",
+                    "label": "Security",
+                    "items": [
+                        {
+                            "type": "category",
+                            "label": "Authentication and Authorization",
+                            "items": [
+                                "admin-manual/auth/authentication-and-authorization",
+                                "admin-manual/auth/ldap",
+                                "admin-manual/auth/ranger"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Data Transmission Encryption",
+                            "items": [
+                                "admin-manual/auth/certificate",
+                                "admin-manual/auth/fe-certificate"
+                            ]
+                        },
+                        "admin-manual/audit-plugin",
+                        "admin-manual/auth/encryption-function"
+                    ]
                 }
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Benchmark",
+            "collapsed": false,
+            "items": [
+                "benchmark/ssb",
+                "benchmark/tpch",
+                "benchmark/tpcds"
             ]
         },
         {
@@ -400,89 +499,52 @@
                 },
                 {
                     "type": "category",
-                    "label": "Managing Data",
+                    "label": "Managing Workload",
                     "items": [
-                        "admin-manual/data-admin/backup",
-                        "admin-manual/data-admin/restore",
+                        "admin-manual/workload-management/workload-management-summary",
+                        {
+                            "type": "category",
+                            "label": "Resource Isolation",
+                            "items": [
+                                "admin-manual/workload-management/resource-group",
+                                "admin-manual/workload-management/compute-group",
+                                "admin-manual/workload-management/workload-group"
+                            ]
+                        },
+                        "admin-manual/workload-management/analysis-diagnosis",
+                        "admin-manual/workload-management/concurrency-control-and-queuing",
+                        "admin-manual/workload-management/sql-blocking",
+                        "admin-manual/workload-management/kill-query",
+                        "admin-manual/workload-management/job-scheduler"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Managing Disater Recovery",
+                    "items": [
+                        "admin-manual/data-admin/overview",
+                        {
+                            "type": "category",
+                            "label": "Backup & Restore",
+                            "items": [
+                                "admin-manual/data-admin/backup-restore/overview",
+                                "admin-manual/data-admin/backup-restore/backup",
+                                "admin-manual/data-admin/backup-restore/restore"
+                            ]
+                        },
                         {
                             "type": "category",
                             "label": "Cross Cluster Replication",
                             "items": [
                                 "admin-manual/data-admin/ccr/overview",
-                                "admin-manual/data-admin/ccr/feature"
+                                "admin-manual/data-admin/ccr/quickstart",
+                                "admin-manual/data-admin/ccr/manual",
+                                "admin-manual/data-admin/ccr/feature",
+                                "admin-manual/data-admin/ccr/config",
+                                "admin-manual/data-admin/ccr/performance"
                             ]
                         },
-                        "admin-manual/data-admin/recyclebin",
-                        "admin-manual/data-admin/repairing-data"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing Resource",
-                    "items": [
-                        "admin-manual/resource-admin/workload-group",
-                        "admin-manual/resource-admin/group-workload-groups",
-                        "admin-manual/resource-admin/workload-policy",
-                        "admin-manual/resource-admin/workload-analysis",
-                        "admin-manual/resource-admin/multi-tenant",
-                        "admin-manual/resource-admin/workload-fusing",
-                        "admin-manual/resource-admin/use-workload-mem-limit",
-                        "admin-manual/resource-admin/use-workload-cpu-limit",
-                        "admin-manual/resource-admin/use-workload-local-io-limit",
-                        "admin-manual/resource-admin/use-workload-remote-io-limit"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing Query",
-                    "items": [
-                        "admin-manual/query-admin/sql-interception",
-                        "admin-manual/query-admin/kill-query"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing User Privilege",
-                    "items": [
-                        "admin-manual/auth/authentication-and-authorization",
-                        "admin-manual/auth/ldap",
-                        "admin-manual/auth/ranger",
-                        "admin-manual/auth/certificate",
-                        "admin-manual/auth/fe-certificate",
-                        "admin-manual/auth/encryption-function"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing Memory",
-                    "items": [
-                        "admin-manual/memory-management/overview",
-                        "admin-manual/memory-management/memory-issue-faq",
-                        {
-                            "type": "category",
-                            "label": "Managing Memory Analysis",
-                            "items": [
-                                "admin-manual/memory-management/memory-analysis/jemalloc-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/global-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/doris-cache-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/metadata-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/query-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/load-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded",
-                                "admin-manual/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded",
-                                "admin-manual/memory-management/memory-analysis/oom-crash-analysis",
-                                "admin-manual/memory-management/memory-analysis/memory-log-analysis",
-                                "admin-manual/memory-management/memory-analysis/heap-profile-memory-analysis"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Managing Memory Feature",
-                            "items": [
-                                "admin-manual/memory-management/memory-feature/memory-tracker",
-                                "admin-manual/memory-management/memory-feature/memory-control-strategy"
-                            ]
-                        }
+                        "admin-manual/data-admin/recyclebin"
                     ]
                 },
                 {
@@ -497,21 +559,11 @@
                     "type": "category",
                     "label": "Maintenance",
                     "items": [
-                        {
-                            "type": "category",
-                            "label": "Monitor",
-                            "items": [
-                                "admin-manual/maint-monitor/monitor-metrics/metrics",
-                                "admin-manual/maint-monitor/monitor-alert"
-                            ]
-                        },
+                        "admin-manual/maint-monitor/metrics",
+                        "admin-manual/maint-monitor/monitor-alert",
                         "admin-manual/maint-monitor/disk-capacity",
                         "admin-manual/maint-monitor/tablet-repair-and-balance",
-                        "admin-manual/maint-monitor/tablet-meta-tool",
-                        "admin-manual/maint-monitor/tablet-local-debug",
-                        "admin-manual/maint-monitor/metadata-operation",
-                        "admin-manual/maint-monitor/automatic-service-start",
-                        "admin-manual/maint-monitor/frontend-lock-manager"
+                        "admin-manual/maint-monitor/automatic-service-start"
                     ]
                 },
                 {
@@ -543,6 +595,7 @@
                                 "admin-manual/system-tables/information_schema/columns",
                                 "admin-manual/system-tables/information_schema/engines",
                                 "admin-manual/system-tables/information_schema/events",
+                                "admin-manual/system-tables/information_schema/file_cache_statistics",
                                 "admin-manual/system-tables/information_schema/files",
                                 "admin-manual/system-tables/information_schema/global_variables",
                                 "admin-manual/system-tables/information_schema/key_column_usage",
@@ -591,7 +644,6 @@
                         }
                     ]
                 },
-                "admin-manual/audit-plugin",
                 {
                     "type": "category",
                     "label": "OPEN API",
@@ -683,19 +735,53 @@
                         }
                     ]
                 },
+                {
+                    "type": "category",
+                    "label": "Trouble Shooting",
+                    "items": [
+                        {
+                            "type": "category",
+                            "label": "Managing Memory",
+                            "items": [
+                                "admin-manual/trouble-shooting/memory-management/overview",
+                                "admin-manual/trouble-shooting/memory-management/memory-issue-faq",
+                                {
+                                    "type": "category",
+                                    "label": "Managing Memory Analysis",
+                                    "items": [
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/jemalloc-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/global-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/doris-cache-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/query-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/oom-crash-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/memory-log-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/heap-profile-memory-analysis"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Managing Memory Feature",
+                                    "items": [
+                                        "admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker",
+                                        "admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy"
+                                    ]
+                                }
+                            ]
+                        },
+                        "admin-manual/trouble-shooting/compaction",
+                        "admin-manual/trouble-shooting/metadata-operation",
+                        "admin-manual/trouble-shooting/frontend-lock-manager",
+                        "admin-manual/trouble-shooting/tablet-local-debug",
+                        "admin-manual/trouble-shooting/tablet-meta-tool",
+                        "admin-manual/trouble-shooting/repairing-data"
+                    ]
+                },
                 "admin-manual/plugin-development-manual",
-                "admin-manual/small-file-mgr",
-                "admin-manual/compaction"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Benchmark",
-            "collapsed": false,
-            "items": [
-                "benchmark/ssb",
-                "benchmark/tpch",
-                "benchmark/tpcds"
+                "admin-manual/small-file-mgr"
             ]
         },
         {
@@ -743,7 +829,8 @@
                         "ecosystem/fluentbit",
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf",
-                        "ecosystem/hive-hll-udf"
+                        "ecosystem/hive-hll-udf",
+                        "ecosystem/spark-load"
                     ]
                 }
             ]
@@ -981,6 +1068,8 @@
                                 "sql-manual/sql-functions/date-time-functions/months-add",
                                 "sql-manual/sql-functions/date-time-functions/months-diff",
                                 "sql-manual/sql-functions/date-time-functions/months-sub",
+                                "sql-manual/sql-functions/date-time-functions/quarters-sub",
+                                "sql-manual/sql-functions/date-time-functions/quarters-add",
                                 "sql-manual/sql-functions/date-time-functions/years-add",
                                 "sql-manual/sql-functions/date-time-functions/years-diff",
                                 "sql-manual/sql-functions/date-time-functions/years-sub"
@@ -1041,6 +1130,9 @@
                                 "sql-manual/sql-functions/string-functions/trim",
                                 "sql-manual/sql-functions/string-functions/ltrim",
                                 "sql-manual/sql-functions/string-functions/rtrim",
+                                "sql-manual/sql-functions/string-functions/trim_in",
+                                "sql-manual/sql-functions/string-functions/ltrim_in",
+                                "sql-manual/sql-functions/string-functions/rtrim_in",
                                 "sql-manual/sql-functions/string-functions/null-or-empty",
                                 "sql-manual/sql-functions/string-functions/not-null-or-empty",
                                 "sql-manual/sql-functions/string-functions/hex",
@@ -1271,6 +1363,17 @@
                                 "sql-manual/sql-functions/json-functions/json-replace",
                                 "sql-manual/sql-functions/json-functions/json-set",
                                 "sql-manual/sql-functions/json-functions/json-keys"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "MAP Functions",
+                            "items": [
+                                "sql-manual/sql-functions/map-functions/map",
+                                "sql-manual/sql-functions/map-functions/map-keys",
+                                "sql-manual/sql-functions/map-functions/map-values",
+                                "sql-manual/sql-functions/map-functions/map-contains-key",
+                                "sql-manual/sql-functions/map-functions/map-contains-value"
                             ]
                         },
                         {
@@ -1657,6 +1760,7 @@
                                     "items": [
                                         "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT",
                                         "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/SELECT",
+                                        "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPLAIN",
                                         "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE",
                                         "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/UPDATE",
                                         "sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT",

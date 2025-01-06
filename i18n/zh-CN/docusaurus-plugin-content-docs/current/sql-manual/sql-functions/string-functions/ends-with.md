@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## ends_with
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BOOLEAN ENDS_WITH(VARCHAR str, VARCHAR suffix)`
 
 如果字符串以指定后缀结尾，返回true。否则，返回false。任意参数为NULL，返回NULL。
 
-### example
+## 举例
 
 ```
 mysql> select ends_with("Hello doris", "doris");

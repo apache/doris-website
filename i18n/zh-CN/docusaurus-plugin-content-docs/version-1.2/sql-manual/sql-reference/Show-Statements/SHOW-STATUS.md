@@ -30,7 +30,7 @@ under the License.
 
 SHOW STATUS
 
-### Description
+## 描述
 
 该命令用于查看通过[创建物化视图](../Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW.md)语句提交的创建物化视图作业的执行情况。
 
@@ -104,7 +104,7 @@ RollupIndexName: r1
 
 - `Timeout`：作业超时，以秒为单位。
 
-### Example
+## 举例
 
 ### Keywords
 

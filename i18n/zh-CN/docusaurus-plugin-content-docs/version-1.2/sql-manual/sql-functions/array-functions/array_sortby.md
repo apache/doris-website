@@ -26,9 +26,9 @@ under the License.
 
 array_sortby
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 ```sql
 ARRAY<T> array_sortby(ARRAY<T> src,Array<T> key)
@@ -40,11 +40,11 @@ ARRAY<T> array_sortby(lambda,array....)
 如果输入数组 key 为 NULL，则直接返回 src 数组。
 如果输入数组 key 元素包含 NULL, 则输出的排序数组会将 NULL 放在最前面。
 
-### notice
+## 注意事项
 
 `仅支持向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 mysql [test]>select array_sortby(['a','b','c'],[3,2,1]);

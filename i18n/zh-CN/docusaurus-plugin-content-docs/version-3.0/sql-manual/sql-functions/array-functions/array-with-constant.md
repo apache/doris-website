@@ -27,9 +27,9 @@ under the License.
 array_with_constant
 array_repeat
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 ```sql
 ARRAY<T> array_with_constant(n, T)
@@ -37,7 +37,7 @@ ARRAY<T> array_repeat(T, n)
 ```
 返回一个数组，包含 n 个重复的 T 常量。array_repeat 与 array_with_constant 功能相同，用来兼容 hive 语法格式。
 
-### example
+## 举例
 
 ```
 mysql> select array_with_constant(2, "hello"), array_repeat("hello", 2);

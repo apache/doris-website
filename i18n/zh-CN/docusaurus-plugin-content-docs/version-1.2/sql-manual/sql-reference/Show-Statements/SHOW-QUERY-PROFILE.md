@@ -30,7 +30,7 @@ under the License.
 
 SHOW QUERY PROFILE
 
-### Description
+## 描述
 
 该语句是用来查看QUERY操作的树状Profile信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：
 
@@ -58,7 +58,7 @@ show query profile "/queryId/fragment_id/instance_id";
 获取指定query id树状profile信息,返回profile 简易树形图。指定fragment_id和instance_id则返回对应的详细profile树形图。
 
 
-### Example
+## 举例
 
 1. 列出所有的 query Profile
 

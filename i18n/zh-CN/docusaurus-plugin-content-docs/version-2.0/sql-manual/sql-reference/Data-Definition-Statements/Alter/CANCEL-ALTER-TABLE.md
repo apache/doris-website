@@ -30,7 +30,7 @@ under the License.
 
 CANCEL ALTER TABLE 
 
-### Description
+## 描述
 
 该语句用于撤销一个 ALTER 操作。
 
@@ -73,7 +73,7 @@ FROM db_name.table_name (jobid,...)
 （待实现...）
 ```
 
-### Example
+## 举例
 
 1. 撤销针对 my_table 的 ALTER COLUMN 操作。
 

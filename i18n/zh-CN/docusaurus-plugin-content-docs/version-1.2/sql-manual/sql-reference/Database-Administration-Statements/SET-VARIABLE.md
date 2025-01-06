@@ -30,7 +30,7 @@ under the License.
 
 SET VARIABLE
 
-### Description
+## 描述
 
 该语句主要是用来修改 Doris 系统变量，这些系统变量可以分为全局以及会话级别层面来修改，有些也可以进行动态修改。你也可以通过 `SHOW VARIABLE` 来查看这些系统变量。
 
@@ -69,7 +69,7 @@ SET variable_assignment [, variable_assignment] ...
 
 - `default_rowset_type`
 
-### Example
+## 举例
 
 1. 设置时区为东八区
 

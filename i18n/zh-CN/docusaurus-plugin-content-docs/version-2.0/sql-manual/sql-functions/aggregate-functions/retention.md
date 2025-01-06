@@ -28,8 +28,8 @@ under the License.
 
 RETENTION
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `retention(event1, event2, ... , eventN);`
 
@@ -39,11 +39,11 @@ RETENTION
 
 简单来讲，返回值数组第1位表示`event1`的真假，第二位表示`event1`真假与`event2`真假相与，第三位表示`event1`真假与`event3`真假相与，等等。如果`event1`为假，则返回全是0的数组。
 
-#### Arguments
+## 参数
 
 `event` — 返回`UInt8`结果（1或0）的表达式.
 
-##### Returned value
+## 返回值
 
 由1和0组成的最大长度为32位的数组，最终输出数组的长度与输入参数长度相同。
 
@@ -51,7 +51,7 @@ RETENTION
 
 0 — 条件不满足
 
-### example
+## 举例
 
 ```sql
 DROP TABLE IF EXISTS retention_test;

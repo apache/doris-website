@@ -30,7 +30,7 @@ under the License.
 
 RESTORE
 
-### Description
+## 描述
 
 该语句用于将之前通过 BACKUP 命令备份的数据，恢复到指定数据库下。该命令为异步操作。提交成功后，需通过 SHOW RESTORE 命令查看进度。仅支持恢复 OLAP 类型的表。
 
@@ -61,7 +61,7 @@ PROPERTIES ("key"="value", ...);
   - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。
   - "meta_version" = 40：使用指定的 meta_version 来读取之前备份的元数据。注意，该参数作为临时方案，仅用于恢复老版本 Doris 备份的数据。最新版本的备份数据中已经包含 meta version，无需再指定。     
 
-### Example
+## 举例
 
 1. 从 example_repo 中恢复备份 snapshot_1 中的表 backup_tbl 到数据库 example_db1，时间版本为 "2018-05-04-16-45-08"。恢复为 1 个副本：
 

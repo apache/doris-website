@@ -30,7 +30,7 @@ under the License.
 
 CREATE RESOURCE
 
-### Description
+## 描述
 
 该语句用于创建资源。仅 root 或 admin 用户可以创建资源。目前支持 Spark, ODBC, S3, JDBC, HDFS, HMS, ES 外部资源。
 将来其他外部资源可能会加入到 Doris 中使用，如 Spark/GPU 用于查询，HDFS/S3 用于外部存储，MapReduce 用于 ETL 等。
@@ -47,7 +47,7 @@ PROPERTIES ("key"="value", ...);
 - PROPERTIES中需要指定资源的类型 "type" = "[spark|odbc_catalog|s3|jdbc|hdfs|hms|es]"。
 - 根据资源类型的不同 PROPERTIES 有所不同，具体见示例。
 
-### Example
+## 举例
 
 1. 创建yarn cluster 模式，名为 spark0 的 Spark 资源。
 

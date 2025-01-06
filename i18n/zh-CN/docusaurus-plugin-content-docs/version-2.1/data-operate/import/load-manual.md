@@ -30,7 +30,7 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 
     - 极少量数据（5 分钟一次）时可以使用 [JDBC INSERT](./import-way/insert-into-manual.md) 写入数据。
 
-    - 并发较高或者频次较高（大于 20 并发或者 1 分钟写入多次）时建议打开 [Group Commit](./import-way/group-commit-manual.md)，使用 JDBC INSERT 或者 Stream Load 写入数据。
+    - 并发较高或者频次较高（大于 20 并发或者 1 分钟写入多次）时建议打开 [Group Commit](./group-commit-manual.md)，使用 JDBC INSERT 或者 Stream Load 写入数据。
 
     - 吞吐较高时推荐使用 [Stream Load](./import-way/stream-load-manual) 通过 HTTP 写入数据。
 
@@ -52,7 +52,7 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 - **外部数据源集成**：通过与外部数据源（如 Hive、JDBC、Iceberg 等）的集成，实现对外部数据的查询和部分数据导入到 Doris 表中。
     - 可以创建 [Catalog](../../lakehouse/lakehouse-overview.md) 读取外部数据源中的数据，使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将外部数据源中的数据同步写入到 Doris 中，配合 [JOB](../scheduler/job-scheduler.md) 可以异步写入。
 
-    - 可以使用 [X2Doris](./migrate-data-from-other-olap.md) 将其他 AP 系统的数据迁移到 Doris 中。
+    - 可以使用 [X2Doris](data-source/migrate-data-from-other-olap.md) 将其他 AP 系统的数据迁移到 Doris 中。
 
 Doris 的每个导入默认都是一个隐式事务，事务相关的更多信息请参考[事务](../transaction.md)。
 
@@ -68,5 +68,5 @@ Doris 的导入主要涉及数据源、数据格式、导入方式、错误数�
 | [INSERT INTO SELECT](./import-way/insert-into-manual.md) | 可以导入外部表或者对象存储、HDFS中的文件      | SQL                     | 根据内存大小而定  | 同步     |
 | [Routine Load](./import-way/routine-load-manual.md)      | 从kakfa实时导入                            | csv、json               | 微批导入 MB 到 GB | 异步     |
 | [MySQL Load](./import-way/mysql-load-manual.md)          | 从本地数据导入                             | csv                     | 小于10GB          | 同步     |
-| [Group Commit](./import-way/group-commit-manual.md)          | 高频小批量导入                             | 根据使用的导入方式而定                     |  微批导入KB         | -     |
+| [Group Commit](./group-commit-manual.md)          | 高频小批量导入                             | 根据使用的导入方式而定                     |  微批导入KB         | -     |
 

@@ -23,40 +23,39 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+Data update refers to modifying the value columns in data records with the same key. The approach to handling data updates varies depending on the data model:
 
-Data update refers to modifying the value columns in data records with the same key. The handling of data updates varies for different data models:
+- **Primary Key (Unique) Model**: This model is designed specifically for data updates. Doris supports two storage implementations: Merge-on-Read (MoR) and Merge-on-Write (MoW). MoR optimizes write performance, while MoW enhances analytical performance. From Doris version 2.1, MoW is the default storage implementation. The primary key model supports the `UPDATE` statement for small data updates and batch updates through data loading methods such as Stream Load, Broker Load, Routine Load, and Insert Into, all following "UPSERT" semantics. This means if the record does not exist, it is inserted; if it exists, it is updated. Both whole row updates (default) and partial column updates are supported.
 
-- **Primary Key (Unique) Model**: The primary key model is specifically designed for data updates. Doris supports two storage implementations: Merge-on-Read (MoR) and Merge-on-Write (MoW). MoR optimizes write performance, while MoW provides better analytical performance. From Doris version 2.1, the default storage method is MoW. The primary key model supports using the `UPDATE` statement for small data updates and also supports batch updates through data loading. Loading methods include Stream Load, Broker Load, Routine Load, and Insert Into, all following the "UPSERT" semantics, meaning if the record does not exist, it is inserted; if it exists, it is updated. Update operations support both full row updates and partial column updates, with full row updates being the default.
+- **Aggregate Model**: In this model, data updates are a special use case. When the aggregate function is set to REPLACE or REPLACE_IF_NOT_NULL, data updates can be performed. The aggregate model supports updates only through data loading and does not support the `UPDATE` statement. By setting the aggregate function to REPLACE_IF_NOT_NULL, partial column updates can be achieved.
 
-- **Aggregate Model**: In the aggregate model, data update is a special use case. When the aggregate function is set to REPLACE or REPLACE_IF_NOT_NULL, data updates can be achieved. The aggregate model only supports updates based on data loading and does not support using the `UPDATE` statement. By setting the aggregate function to REPLACE_IF_NOT_NULL, partial column update capability can be achieved.
-
-By understanding the data update methods of different models, you can better choose the appropriate update strategy to meet specific business needs.
+Understanding the data update methods for different models helps in selecting the appropriate update strategy to meet specific business needs.
 
 ## Comparison of Update Capabilities for Different Models/Implementations
 
 ### Performance Comparison
-|                | Unique Key MoW                                                                                                                                                                                                                                                                                                                                                                                | Unique Key MoR                                                                                                                                                                                                                                                                                                                                                                                  | Aggregate Key |
-|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| Import Speed   | Deduplication is performed during import. Small-batch real-time writes incur approximately 10%-20% performance loss compared to MoR, while large-batch imports (e.g., tens or hundreds of millions of records) have about 30%-50% performance loss compared to MoR.                                                                                                                           | Similar to Duplicate Key                                                                                                                                                                                                                                                                                                                                                                        | Similar to Duplicate Key |
-| Query Speed    | Similar to Duplicate Key                                                                                                                                                                                                                                                                                                                                                                      | Requires deduplication during queries, with query time approximately 3-10 times that of MoW                                                                                                                                                                                                                                                                                                     | If the aggregation function is REPLACE/REPLACE_IF_NOT_NULL, query speed is similar to MoR |
-| Predicate Pushdown | Supported                                                                                                                                                                                                                                                                                                                                                                                     | Not Supported                                                                                                                                                                                                                                                                                                                                                                                   | Not Supported |
-| Resource Consumption | - **Import Resource Consumption**: Consumes approximately 10%-30% more CPU compared to Duplicate Key/Unique Key MoR.<br /> - **Query Resource Consumption**: Similar to Duplicate Key with no additional resource consumption.<br /> - **Compaction Resource Consumption**: Higher memory and CPU usage compared to Duplicate Key, specific usage depends on data characteristics and volume. | - **Import Resource Consumption**: Similar to Duplicate Key with no additional resource consumption.<br /> - **Query Resource Consumption**: Higher CPU and memory consumption during queries compared to Duplicate Key/Unique Key MoW.<br /> - **Compaction Resource Consumption**: Higher memory and CPU usage than Duplicate Key, specific usage depends on data characteristics and volume. | Same as Unique Key MoR |
+|                | Unique Key MoW                                                                                                                                                                   | Unique Key MoR                                                                                                                                                                   | Aggregate Key |
+|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| Loading Speed   | Deduplication during data loading, small batch real-time writes have about 10%-20% performance loss compared to MoR, large batch data loading (e.g., tens of millions/billions of data) have about 30%-50% performance loss compared to MoR | Similar to Duplicate Key                                                                                                                                                         | Similar to Duplicate Key  |
+| Query Speed    | Similar to Duplicate Key                                                                                                                                                         | Deduplication during query, query time is about 3-10 times that of MoW                                                                                                                                                   | If the aggregate function is REPLACE/REPLACE_IF_NOT_NULL, query speed is similar to MoR |
+| Predicate Pushdown | Supported                                                                                                                                                                      | Not supported                                                                                                                                                                    | Not supported        |
+| Resource Consumption | - **Loading Resource Consumption**: Compared to Duplicate Key/Unique Key MoR, about 10%-30% additional CPU consumption.<br /><br /> - **Query Resource Consumption**: Similar to Duplicate Key, no additional resource consumption.<br /><br /> - **Compaction Resource Consumption**: Consumes more memory and CPU compared to Duplicate Key, depending on data characteristics and volume. | - **Loading Resource Consumption**: Similar to Duplicate Key, no additional resource consumption.<br /><br /> - **Query Resource Consumption**: Consumes more CPU and memory during query compared to Duplicate Key/Unique Key MoW.<br /><br /> - **Compaction Resource Consumption**: Consumes more memory and CPU compared to Duplicate Key, depending on data characteristics and volume. | Similar to Unique Key MoR |
 
-### Feature Support Comparison
-|                | Unique Key MoW | Unique Key MoR | Aggregate Key                      |
-|----------------|----------------|----------------|------------------------------------|
-| UPDATE         | Supported       | Supported      | Not Supported                      |
-| DELETE         | Supported       | Supported      | Not Supported                      |
-| sequence column| Supported       | Supported      | Not Supported                      |
-| delete_sign    | Supported       | Supported      | Not Supported                      |
-| Partial Column Updates | Supported | Not Supported | Supported (can't update null value) |
-| Inverted Index | Supported       | Not Supported  | Not Supported                      |
+### Supported Feature Comparison
+|                | Unique Key MoW | Unique Key MoR | Aggregate Key  |
+|----------------|----------------|----------------|----------------|
+| UPDATE         | Supported      | Supported      | Not supported  |
+| DELETE         | Supported      | Supported      | Not supported  |
+| Sequence Column| Supported      | Supported      | Not supported  |
+| Delete Sign    | Supported      | Supported      | Not supported  |
+| Partial Column Update | Supported      | Not supported  | Supported (but cannot update null values) |
+| Inverted Index | Supported      | Not supported  | Not supported  |
 
-## Update in Primary Key (Unique) Model
+## Updates in the Primary Key (Unique) Model
 
-Starting from Doris 2.0, Doris primary key (unique) model supports both Merge-on-Read (MoR) and Merge-on-Write (MoW) storage modes. MoR is optimized for write operations, while MoW is optimized for faster analysis performance. In actual tests, the analysis performance of MoW storage can be 5-10 times faster than MoR.
+Starting from Doris 2.0, the primary key (unique) model introduces the Merge-on-Write (MoW) storage implementation in addition to the original Merge-on-Read (MoR). MoR is optimized for write performance, while MoW is optimized for faster analytical performance. In practical tests, the analytical performance of typical tables using the MoW storage implementation can be 5-10 times that of the MoR implementation.
 
-By default, in Doris 2.0, the unique key model is still based on MoR. To create a MoW model, you need to manually specify the parameter "enable_unique_key_merge_on_write" as "true". Here's an example:
+In Doris 2.0, the default unique model created is still MoR. To create a MoW table, you need to manually specify it with the parameter "enable_unique_key_merge_on_write" = "true", as shown in the example below:
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
@@ -79,53 +78,53 @@ PROPERTIES (
 ```
 
 :::caution
-Starting from Doris 2.1, MoW is the default mode for the unique key model. So, if you are using Doris 2.1 or higher version, make sure to read the relevant table creation documentation.
+From Doris version 2.1, MoW is the default implementation for the primary key model. Therefore, if using Doris version 2.1 and above, be sure to read the relevant table creation documentation.
 :::
 
-### Two Update Methods in Unique Key Model
+### Two Update Methods for the Primary Key Model
 
-#### `UPDATE` statement
+#### Updating with the `UPDATE` Statement
 
-Whether it is MoR or MoW, the semantics ensure that the specified columns are updated. The time taken for a single UPDATE operation increases with the amount of data being updated.
+Whether using MoR or MoW, the semantics are to complete the update of the specified columns. The time taken for a single UPDATE increases with the amount of data being updated.
 
-#### Batch update based on load
+#### Update during Data Loading
 
-Doris supports multiple data load methods, including Stream Load, Broker Load, Routine Load, and Insert Into. For primary key tables, all load operations default to "UPSERT" semantics: if a record with the same key does not exist, it is inserted; if it already exists, it is updated. There are two types of updates: full row updates and partial column updates.
+Doris supports multiple data loading methods, including Stream Load, Broker Load, Routine Load, and Insert Into. For primary key tables, all loading operations use the "UPSERT" semantics by default: if the record with the same primary key does not exist, an insert operation is performed; if the record exists, an update operation is performed. Update methods include whole row updates and partial column updates:
 
-- **Full Row Update**: Updates for Unique Key tables default to full row updates. During data loading, users can choose to provide either all fields or only part of them. If only partial fields are provided, Doris will fill in the missing fields with default values to form a complete record for updating.
+- **Whole Row Update**: The default update method for Unique Key tables is whole row update. When loading data, users can choose to provide all fields or only some fields. If users only provide some fields, Doris will fill in the missing fields with default values, generate a complete record, and perform the update.
 
-- **Partial Column Update**: Unique Key MoW supports partial column updates. Users can enable this feature by setting the session variable `enable_unique_key_partial_update = true` or by specifying `partial_columns:true` in the HTTP Header. When enabled, if a record with the given primary key exists, only the specified fields are updated; if the primary key does not exist, the missing fields are filled with default values.
+- **Partial Column Update**: Unique Key MoW supports partial column updates. Users can enable this feature by setting the session variable `enable_unique_key_partial_update = true` or specifying `partial_columns:true` in the HTTP Header. Once enabled, if the primary key of the loaded data already exists, only the specified fields will be updated; if the primary key does not exist, the missing fields will be filled with default values.
 
-We will provide detailed explanations of these two update methods in the documentation: [Update in Unique Key Model](../update/unique-update) and [Load Update in Unique Key Model](../update/update-of-unique-model).
+We will introduce the two update methods in detail in the documents [Update of Primary Key Model](../update/unique-update) and [Load Update of Primary Key Model](../update/update-of-unique-model).
 
-### Concurrency Control for Primary Key Model Updates
+### Concurrency Control for Updates in the Primary Key Model
 
-#### Using `UPDATE` Statements to Update Data
+#### Updating Data with the `UPDATE` Statement
 
-By default, Doris does not allow multiple `UPDATE` operations on the same table at the same time. The `UPDATE` statement ensures isolation through table-level locking.
+By default, Doris does not allow multiple `UPDATE` operations on the same table at the same time. The `UPDATE` statement ensures isolation through table-level locks.
 
 Users can adjust the concurrency limit by modifying the FE configuration `enable_concurrent_update=true`. When the concurrency limit is relaxed, if multiple `UPDATE` statements update the same row of data, the result will be undefined.
 
-#### Batch Updates Based on Load
+#### Batch Updates Based on Data Loading
 
-Doris provides atomicity for all load update operations—each data load will either be fully applied or fully rolled back.
+Doris provides atomicity guarantees for all loading update operations, meaning that each load job is either fully applied or fully rolled back.
 
-For concurrent load updates, Doris determines the order of concurrent updates using an internal version control system (assigned based on the order of completed loading), using an MVCC mechanism.
+For concurrent load updates, Doris uses internal version control (assigned in the order of load completion) and the MVCC mechanism to determine the order of concurrent updates.
 
-Since the commit order of multiple concurrent load updates may be unpredictable, if these concurrent load jobs involve updates to the same primary key, the order in which they take effect is also uncertain. As a result, the final visible outcome may be indeterminate. To address this issue, Doris provides a `sequence` column mechanism, allowing users to specify a version for each row in concurrent load updates, thus ensuring determinism in the outcome of concurrent updates.
+Since the submission order of multiple concurrent loading may be unpredictable, if these concurrent loading involve updates to the same primary key, the effective order will also be unpredictable, resulting in uncertainty in the final visible result. To solve this problem, Doris provides a sequence column mechanism, allowing users to specify a version for each row of data during concurrent load updates to clearly control the order of concurrent updates and achieve determinism.
 
-For more detailed information on transaction mechanisms, refer to the documentation on [Transactional Updates in the Primary Key Model](../update/unique-update-transaction.md).
+We will introduce the concurrency control mechanism for updates in detail in the document [Concurrency Control for Updates in the Primary Key Model](../update/unique-update-concurrent-control.md).
 
-## Update in Aggregate Model
+## Updates in the Aggregate Model
 
-The update in the aggregate model refers to the process of generating new aggregate values by combining new column values with existing aggregate values, according to the requirements of the aggregate functions.
+Updates in the aggregate model mainly refer to producing new aggregate values using new column values and old aggregate values according to the requirements of the aggregate function.
 
 New Agg Value = Agg Func (Old Agg Value, New Column Value)
 
-The update in the aggregate model is only supported through load methods and does not support the use of Update statements. When defining a table in the aggregate model, if the aggregation function for the value column is defined as REPLACE_IF_NOT_NULL, it indirectly achieves partial column update capabilities similar to the unique key model. For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/update-of-aggregate-model).
+The aggregate model only supports updates based on load methods and does not support updates using the `UPDATE` statement. When defining an aggregate model table, if the aggregate function of the value column is defined as REPLACE_IF_NOT_NULL, it can indirectly achieve the ability to update partial columns similar to the primary key table. For more information, please refer to [Load Update of Aggregate Model](../update/update-of-aggregate-model).
 
 ## Recommendations for Choosing Between Primary Key and Aggregate Models
-- For most scenarios that require data updates, it is recommended to **prefer the primary key model**. Examples include synchronizing from TP databases to Doris via CDC, user profiling, and audience targeting.
-- The following scenarios are recommended to use the aggregate model:
-  1. Some fields need to be aggregated as metrics, while others need to be updated.
-  2. Scenarios where partial column updates are needed, while being very sensitive to write performance and having low requirements for query latency, it is recommended to use the aggregate table with the REPLACE_IF_NOT_NULL aggregate function.
+- For most scenarios with data update requirements, it is recommended to **prefer the primary key model**. For example, synchronizing from TP databases to Doris, user profiling, audience selection, etc.
+- The following two scenarios are recommended to use the aggregate model:
+  - Some fields need to be aggregated as metrics, and some fields need to be updated.
+  - For scenarios with partial column update requirements, high sensitivity to write performance, and low query latency requirements, it is recommended to use the aggregate table + REPLACE_IF_NOT_NULL aggregate function.

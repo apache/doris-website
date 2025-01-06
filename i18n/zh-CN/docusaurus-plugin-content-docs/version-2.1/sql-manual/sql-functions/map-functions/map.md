@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `MAP<K, V> map(K key0, V value0, K key1, V value1, ..., K keyn, V valuen)`
 
 使用若干组键值对构造一个特定类型的 `Map<K, V>`
 
-### Example
+## 举例
 
 ```sql
 mysql> select map(1, "100", 0.1, 2);

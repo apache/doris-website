@@ -24,15 +24,15 @@ under the License.
 
 ## bitmap_to_array
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `ARRAY_BIGINT bitmap_to_array(BITMAP input)`
 
 将一个bitmap转化成一个array 数组。
 输入是null的话会返回null。
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_to_array(null);

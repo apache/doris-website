@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## convert_tz
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME CONVERT_TZ(DATETIME dt, VARCHAR from_tz, VARCHAR to_tz)`
 
 转换datetime值，从 from_tz 给定时区转到 to_tz 给定时区，并返回结果值。 如果参数无效该函数返回NULL。
 
-### Example
+## 举例
 
 ```
 mysql> select convert_tz('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_Angeles');

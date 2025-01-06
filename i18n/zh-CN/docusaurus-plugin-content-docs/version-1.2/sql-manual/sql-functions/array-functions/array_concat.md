@@ -30,25 +30,25 @@ array_concat
 
 </version>
 
-### description
+## 描述
 
 将输入的所有数组拼接为一个数组
 
-#### Syntax
+## 语法
 
 `Array<T> array_concat(Array<T>, ...)`
 
-#### Returned value
+## 返回值
 
 拼接好的数组
 
 类型: Array.
 
-### notice
+## 注意事项
 
 `只支持在向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 mysql> select array_concat([1, 2], [7, 8], [5, 6]);

@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION SUM
-### description
+## 描述
 
 计算窗口内数据的和
 
@@ -20,7 +20,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 SUM([ALL] expression) [OVER (analytic_clause)]
 ```
 
-### example
+## 举例
 
 按照 property 进行分组，在组内计算当前行以及前后各一行的x列的和。
 

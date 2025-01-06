@@ -30,7 +30,7 @@ under the License.
 
 CREATE FUNCTION
 
-### Description
+## 描述
 
 此语句创建一个自定义函数。执行此命令需要用户拥有 `ADMIN` 权限。
 
@@ -88,7 +88,7 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
   - `always_nullable`：表示的 UDF 返回结果中是否有可能出现NULL值，是可选参数，默认值为true。
 
 
-### Example
+## 举例
 
 1. 创建一个自定义UDF函数
 

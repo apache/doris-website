@@ -30,7 +30,7 @@ under the License.
 
 CREATE INDEX
 
-### Description
+## 描述
 
 该语句用于创建索引
 语法：
@@ -42,7 +42,7 @@ CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING B
 - 目前只支持bitmap 索引
 - BITMAP 索引仅在单列上创建
 
-### Example
+## 举例
 
 1. 在table1 上为siteid 创建bitmap 索引
 

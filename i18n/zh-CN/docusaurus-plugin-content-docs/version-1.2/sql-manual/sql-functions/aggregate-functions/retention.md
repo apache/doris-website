@@ -28,8 +28,8 @@ under the License.
 
 RETENTION
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `retention(event1, event2, ... , eventN);`
 
@@ -37,11 +37,11 @@ RETENTION
 
 除了第一个以外，条件成对适用：如果第一个和第二个是真的，第二个结果将是真的，如果第一个和第三个是真的，第三个结果将是真的，等等。
 
-#### Arguments
+## 参数
 
 `event` — 返回`UInt8`结果（1或0）的表达式.
 
-##### Returned value
+## 返回值
 
 由1和0组成的数组。
 
@@ -49,7 +49,7 @@ RETENTION
 
 0 — 条件不满足
 
-### example
+## 举例
 
 ```sql
 DROP TABLE IF EXISTS retention_test;

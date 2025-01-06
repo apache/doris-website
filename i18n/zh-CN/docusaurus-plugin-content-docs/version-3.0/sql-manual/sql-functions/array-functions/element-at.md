@@ -28,9 +28,9 @@ under the License.
 
 element_at
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 ```sql
 T element_at(ARRAY<T> arr, BIGINT position)
@@ -39,7 +39,7 @@ T arr[position]
 
 返回数组中位置为 `position` 的元素。如果该位置上元素不存在，返回NULL。`position` 从1开始，并且支持负数。
 
-### example
+## 举例
 
 `position` 为正数使用范例:
 

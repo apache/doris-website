@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## microseconds_sub
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIMEV2 microseconds_sub(DATETIMEV2 basetime, INT delta)`
 - basetime: DATETIMEV2 类型起始时间
 - delta: 从 basetime 起需要扣减的微秒数
 - 返回类型为 DATETIMEV2
 
-### example
+## 举例
 ```
 mysql> select now(3), microseconds_sub(now(3), 100000);
 +-------------------------+----------------------------------+

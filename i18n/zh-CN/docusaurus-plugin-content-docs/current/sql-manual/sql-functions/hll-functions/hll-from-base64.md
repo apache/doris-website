@@ -24,14 +24,14 @@ under the License.
 
 ## hll_from_base64
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `HLL HLL_FROM_BASE64(VARCHAR input)`
 
 将一个base64字符串(`hll_to_base64`函数的结果)转化为一个HLL。当输入字符串不合法时，返回NULL。
 
-### example
+## 举例
 
 #### 查询示例
 ```

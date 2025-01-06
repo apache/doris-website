@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## jsonb_parse
-### description
-#### Syntax
+## 描述
+## 语法
 
 ```sql
 JSONB jsonb_parse(VARCHAR json_str)
@@ -41,7 +41,7 @@ JSONB jsonb_parse_error_to_value(VARCHAR json_str, VARCHAR default_json_str)
   - jsonb_parse_error_to_null返回NULL，
   - jsonb_parse_error_to_value返回参数default_json_str指定的默认值
 
-### example
+## 举例
 
 1. 正常JSON字符串解析
 

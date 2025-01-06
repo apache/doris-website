@@ -24,31 +24,14 @@
         }
     }
 
-    .custom-navbar-item {
-        display: none;
-    }
     &.docs {
         .docs-search {
-            display: block;
-        }
-        .custom-navbar-item {
-            display: block;
-        }
-    }
-    &.community {
-        .custom-navbar-item:nth-child(3) {
             display: block;
         }
     }
     &.withoutDoc {
         .docs-search {
             display: block;
-        }
-        .custom-navbar-item {
-            display: block;
-        }
-        .custom-navbar-item:nth-child(4) {
-            display: none;
         }
     }
     &__inner {
@@ -328,7 +311,7 @@
         height: 3.75rem;
         &.docs,
         &.community {
-            height: 8.1rem;
+            height: 6.5rem;
             flex-direction: column;
             .navbar__inner {
                 height: 3.75rem;
@@ -479,9 +462,6 @@
 
         .navbar__items--right {
             .docs-search {
-                display: none;
-            }
-            .custom-navbar-item {
                 display: none;
             }
             .navbar__search-input {

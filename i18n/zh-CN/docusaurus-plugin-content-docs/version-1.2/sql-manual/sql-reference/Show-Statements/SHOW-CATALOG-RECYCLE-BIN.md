@@ -34,7 +34,7 @@ SHOW CATALOG RECYCLE BIN
 
 </version>
 
-### Description
+## 描述
 
 该语句用于展示回收站中可回收的库,表或分区元数据信息
 
@@ -57,7 +57,7 @@ SHOW CATALOG RECYCLE BIN [ WHERE NAME [ = "name" | LIKE "name_matcher"] ]
 ```
 
 
-### Example
+## 举例
 
  1. 展示所有回收站元数据
     

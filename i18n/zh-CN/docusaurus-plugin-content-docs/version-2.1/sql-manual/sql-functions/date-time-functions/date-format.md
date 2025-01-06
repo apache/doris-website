@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## date_format
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR DATE_FORMAT(DATETIME date, VARCHAR format)`
 
@@ -110,7 +110,7 @@ yyyy-MM-dd
 
 yyyy-MM-dd HH:mm:ss
 
-### example
+## 举例
 
 ```
 mysql> select date_format('2009-10-04 22:23:00', '%W %M %Y');

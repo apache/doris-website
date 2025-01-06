@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## json_array
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR json_array(VARCHAR,...)`
 
 
 生成一个包含指定元素的json数组,未指定时返回空数组
 
-### example
+## 举例
 
 ```
 MySQL> select json_array();

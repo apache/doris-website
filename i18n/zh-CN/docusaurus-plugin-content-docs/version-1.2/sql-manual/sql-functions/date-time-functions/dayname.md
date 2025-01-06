@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## dayname
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR DAYNAME(DATE)`
 
@@ -35,7 +35,7 @@ under the License.
 
 参数为Date或者Datetime类型
 
-### example
+## 举例
 
 ```
 mysql> select dayname('2007-02-03 00:00:00');

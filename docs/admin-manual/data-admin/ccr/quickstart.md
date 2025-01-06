@@ -1,6 +1,6 @@
 ---
 {
-    "title": "QuickStart",
+    "title": "Quick Start",
     "language": "en"
 }
 ---
@@ -24,54 +24,42 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The usage of CCR is straightforward. Simply start the syncer service and send a command, and the Syncer will take care of the rest.
+## 1. Open the binlog configuration for the source and target clusters
 
-## Step 1. Deploy the source Doris cluster
-## Step 2. Deploy the target Doris cluster
-## Step 3. Enable binlog in both the source and target clusters
+Configure the following information in the fe.conf and be.conf of both the source and target clusters:
 
-Both the source and target clusters need to enable binlog. Configure the following information in the fe.conf and be.conf files of the source and target clusters:
-
-```SQL
+```sql
 enable_feature_binlog=true
 ```
 
-## Step 4. Deploy Syncer
+## 2. Deploy Syncer
 
-​Build CCR Syncer
+2.1. Download the latest package from the following link:
 
-```shell
-git clone https://github.com/selectdb/ccr-syncer
-cd ccr-syncer   
-bash build.sh <-j NUM_OF_THREAD> <--output SYNCER_OUTPUT_DIR>
-cd SYNCER_OUTPUT_DIR# Contact the Doris community for a free CCR binary package
-```
+`https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-syncer-2.1.4-x64.tar.xz`
 
-
-Start and stop Syncer
-
+2.2. Start and stop Syncer
 
 ```shell
 # Start
 cd bin && sh start_syncer.sh --daemon
-
+```
+```shell
 # Stop
 sh stop_syncer.sh
 ```
 
-## Step 5. Enable binlog in the source db or table
+## Step 3. Open the Binlog for the synchronized database/table in the source cluster
 
 ```shell
--- If you want to synchronize the entire database, you can execute the following script:
-vim shell/enable_db_binlog.sh
-Modify host, port, user, password, and db in the source cluster
-Or ./enable_db_binlog.sh --host $host --port $port --user $user --password $password --db $db
+-- If synchronizing the entire database, execute the following script to enable binlog for all tables in that database
+./enable_db_binlog.sh --host $host --port $port --user $user --password $password --db $db
 
--- If you want to synchronize a single table, you can execute the following script and enable binlog for the target table:
-ALTER TABLE enable_binlog SET ("binlog.enable" = "true");
+-- If synchronizing a single table, only enable the binlog for that table by executing:
+ALTER TABLE your_table_name ENABLE BINLOG SET ("binlog.enable" = "true");
 ```
 
-## Step 6. Launch a synchronization task to the Syncer
+## Step 4. Initiate a synchronization job to Syncer
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -97,13 +85,14 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://127.0.0.1:9190/create_ccr
 ```
 
-Parameter description:
+Explanation of the parameters for the synchronization job:
 
 ```shell
-name: name of the CCR synchronization task, should be unique
-host, port: host and mysql(jdbc) port for the master FE for the corresponding cluster
-user, password: the credentials used by the Syncer to initiate transactions, fetch data, etc.
-If it is synchronization at the database level, specify your_db_name and leave your_table_name empty
-If it is synchronization at the table level, specify both your_db_name and your_table_name
-The synchronization task name can only be used once.
+name: The name of the CCR synchronization job, must be unique
+host, port: Correspond to the host and MySQL (JDBC) port of the cluster Master FE
+user, password: The identity used by Syncer to start transactions and pull data
+database, table:
+If synchronizing at the database level, fill in your_db_name, and leave your_table_name empty
+If synchronizing at the table level, fill in both your_db_name and your_table_name
+The name used to initiate the synchronization job can only be used once
 ```

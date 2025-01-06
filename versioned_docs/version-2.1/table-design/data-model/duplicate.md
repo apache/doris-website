@@ -1,11 +1,11 @@
 ---
 {
-    "title": "Duplicate Key Model",
-    "language": "en"
+    "title": "Detail Model",
+    "language": "zh-CN"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,83 +24,78 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-In certain multidimensional analysis scenarios, it is necessary to retain all raw data records. For this requirement, the duplicated data model can be used. In the duplicated data model, the storage layer will preserve all written data. Even if two rows of data are identical, both will be retained. The Duplicate Key specified in the table creation statement is used to indicate the columns by which the data should be sorted, and it can be used to optimize common queries. It is recommended to choose the first 2-4 columns for the Duplicate Key.
+In Doris, the **Detail Model** is the default table model, and it can be used to store every individual raw data record. The `Duplicate Key` specified during table creation determines the columns by which the data is sorted and stored, which can be used to optimize common queries. It is generally recommended to choose no more than three columns as the sort key. For more specific selection guidelines, refer to [Sort Key](../index/prefix-index). The Detail Model has the following characteristics:
 
-For example, a table has the following data columns and requires the retention of all raw data records. There are two ways to create a duplicated data model table: by specifying sorting columns or by using the default duplicated data model.
+* **Preserving Raw Data**: The Detail Model retains all original data, making it suitable for storing and querying raw data. For use cases that require detailed data analysis later on, it is recommended to use the Detail Model to avoid the risk of data loss.
+
+* **No Deduplication or Aggregation**: Unlike the Aggregate and Primary Key models, the Detail Model does not perform deduplication or aggregation. Every data insertion, even if two records are identical, will be fully retained.
+
+* **Flexible Data Querying**: The Detail Model retains the complete original data, which allows detailed extraction from the full data set. This enables aggregation operations across any dimension on the full dataset, allowing for metadata auditing and fine-grained analysis.
+
+## Use Cases
+
+In the Detail Model, data is generally only appended, and old data is not updated. The Detail Model is typically used in scenarios where full raw data is required:
+
+* **Log Storage**: Used for storing various types of application logs, such as access logs, error logs, etc. Each piece of data needs to be detailed for future auditing and analysis.
+
+* **User Behavior Data**: When analyzing user behavior, such as click data or user access paths, it is necessary to retain detailed user actions. This helps in building user profiles and conducting detailed analysis of behavior patterns.
+
+* **Transaction Data**: For storing transaction or order data, once a transaction is completed, there is typically no need for data changes...
 
 
-| ColumnName | Type          | SortKey | Comment        |
-| ---------- | ------------- | ------- | -------------- |
-| timstamp   | DATETIME      | Yes     | Log time       |
-| type       | INT           | Yes     | Log type       |
-| error_code | INT           | Yes     | Error code     |
-| Error_msg  | VARCHAR (128) | No      | Error details  |
-| op_id      | BIGINT        | No      | Operator ID    |
-| op_time    | DATETIME      | No      | Operation time |
+## Table Creation Instructions
 
-## **Duplicate Model with Sort Columns **
+When creating a table, the **DUPLICATE KEY** keyword can be used to specify the Detail Model. The Detail table must specify the Key columns, which are used to sort the data during storage. In the following example, the Detail table stores log information and sorts the data based on the `log_time`, `log_type`, and `error_code` columns:
 
-In the table creation statement, the `Duplicate Key` can be designated to indicate that data storage should be sorted according to these key columns. When choosing the `Duplicate Key`, it is recommended to select the first 2-4 columns.
 
-An example of a table creation statement is as follows, specifying sorting based on the `timestamp`, `type`, and `error_code` columns.
+![columnar_storage](/images/table-desigin/columnar-storage.png)
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS example_tbl_duplicate
 (
-    `timestamp` DATETIME NOT NULL COMMENT "Log time",
-    `type` INT NOT NULL COMMENT "Log type",
-    `error_code` INT COMMENT "Error code",
-    `error_msg` VARCHAR(1024) COMMENT "Error detail message",
-    `op_id` BIGINT COMMENT "Operator ID",
-    `op_time` DATETIME COMMENT "Operation time"
+    log_time        DATETIME       NOT NULL,
+    log_type        INT            NOT NULL,
+    error_code      INT,
+    error_msg       VARCHAR(1024),
+    op_id           BIGINT,
+    op_time         DATETIME
 )
-DUPLICATE KEY(`timestamp`, `type`, `error_code`)
-DISTRIBUTED BY HASH(`type`) BUCKETS 10
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3"
-);
-
-MySQL> desc example_tbl_duplicate; 
-+------------+---------------+------+-------+---------+-------+
-| Field      | Type          | Null | Key   | Default | Extra |
-+------------+---------------+------+-------+---------+-------+
-| timestamp  | datetime      | No   | true  | NULL    |       |
-| type       | int           | No   | true  | NULL    |       |
-| error_code | int           | Yes  | true  | NULL    |       |
-| error_msg  | varchar(1024) | Yes  | false | NULL    | NONE  |
-| op_id      | bigint        | Yes  | false | NULL    | NONE  |
-| op_time    | datetime      | Yes  | false | NULL    | NONE  |
-+------------+---------------+------+-------+---------+-------+
+DUPLICATE KEY(log_time, log_type, error_code)
+DISTRIBUTED BY HASH(log_type) BUCKETS 10;
 ```
 
-## **Default Duplicate Model**
+## Data Insertion and Storage
 
-When no data model (Unique, Aggregate, or Duplicate) is specified during table creation, a Duplicate model table is created by default, and the sort columns are automatically selected according to certain rules. For example, in the following table creation statement, if no data model is specified, a Duplicate model table will be established, and the system will automatically select the first three columns as the sort columns.
+In a Detail table, data is not deduplicated or aggregated; inserting data directly stores it. The Key columns in the Detail Model are used for sorting.
 
+![columnar_storage](/images/table-desigin/duplicate-table-insert.png)
+
+In the example above, there are initially 4 rows of data in the table. After inserting 2 rows, the data is appended (APPEND) to the table, resulting in a total of 6 rows stored in the Detail table.
+
+```sql
+-- 4 rows raw data
+INSERT INTO example_tbl_duplicate VALUES
+('2024-11-01 00:00:00', 2, 2, 'timeout', 12, '2024-11-01 01:00:00'),
+('2024-11-02 00:00:00', 1, 2, 'success', 13, '2024-11-02 01:00:00'),
+('2024-11-03 00:00:00', 2, 2, 'unknown', 13, '2024-11-03 01:00:00'),
+('2024-11-04 00:00:00', 2, 2, 'unknown', 12, '2024-11-04 01:00:00');
+
+-- insert into 2 rows
+INSERT INTO example_tbl_duplicate VALUES
+('2024-11-01 00:00:00', 2, 2, 'timeout', 12, '2024-11-01 01:00:00'),
+('2024-11-01 00:00:00', 2, 2, 'unknown', 13, '2024-11-01 01:00:00');
+
+-- check the rows of table
+SELECT * FROM example_tbl_duplicate;
++---------------------+----------+------------+-----------+-------+---------------------+
+| log_time            | log_type | error_code | error_msg | op_id | op_time             |
++---------------------+----------+------------+-----------+-------+---------------------+
+| 2024-11-02 00:00:00 |        1 |          2 | success   |    13 | 2024-11-02 01:00:00 |
+| 2024-11-01 00:00:00 |        2 |          2 | timeout   |    12 | 2024-11-01 01:00:00 |
+| 2024-11-03 00:00:00 |        2 |          2 | unknown   |    13 | 2024-11-03 01:00:00 |
+| 2024-11-04 00:00:00 |        2 |          2 | unknown   |    12 | 2024-11-04 01:00:00 |
+| 2024-11-01 00:00:00 |        2 |          2 | unknown   |    13 | 2024-11-01 01:00:00 |
+| 2024-11-01 00:00:00 |        2 |          2 | timeout   |    12 | 2024-11-01 01:00:00 |
++---------------------+----------+------------+-----------+-------+---------------------+
 ```
-CREATE TABLE IF NOT EXISTS example_tbl_by_default
-(
-    `timestamp` DATETIME NOT NULL COMMENT "Log time",
-    `type` INT NOT NULL COMMENT "Log type",
-    `error_code` INT COMMENT "Error code",
-    `error_msg` VARCHAR(1024) COMMENT "Error detail message",
-    `op_id` BIGINT COMMENT "Operator ID",
-    `op_time` DATETIME COMMENT "Operation time"
-)
-DISTRIBUTED BY HASH(`type`) BUCKETS 10
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3"
-);
 
-MySQL > desc example_tbl_by_default; 
-+------------+---------------+------+-------+---------+-------+
-| Field      | Type          | Null | Key   | Default | Extra |
-+------------+---------------+------+-------+---------+-------+
-| timestamp  | datetime      | No   | true  | NULL    |       |
-| type       | int           | No   | true  | NULL    |       |
-| error_code | int           | Yes  | true  | NULL    |       |
-| error_msg  | varchar(1024) | Yes  | false | NULL    | NONE  |
-| op_id      | bigint        | Yes  | false | NULL    | NONE  |
-| op_time    | datetime      | Yes  | false | NULL    | NONE  |
-+------------+---------------+------+-------+---------+-------+
-```

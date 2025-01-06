@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## to_date
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATE TO_DATE(DATETIME)`
 
 返回 DATETIME 类型中的日期部分。
 
-### example
+## 举例
 
 ```
 mysql> select to_date("2020-02-02 00:00:00");

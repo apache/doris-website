@@ -31,7 +31,7 @@ under the License.
 
 INSERT OVERWRITE
 
-### Description
+## 描述
 
 该语句的功能是重写表或表的某些分区
 
@@ -72,7 +72,7 @@ INSERT OVERWRITE table table_name
 
 INSERT OVERWRITE语句会首先创建一个新表，将需要重写的数据插入到新表中，最后原子性的用新表替换旧表并修改名称。因此，在重写表的过程中，旧表中的数据在重写完毕之前仍然可以正常访问。
 
-### Example
+## 举例
 
 假设有`test` 表。该表包含两个列`c1`, `c2`，两个分区`p1`,`p2`。建表语句如下所示
 

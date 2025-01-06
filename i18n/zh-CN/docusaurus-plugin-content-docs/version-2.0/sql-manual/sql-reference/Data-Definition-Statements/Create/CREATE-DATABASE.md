@@ -30,7 +30,7 @@ under the License.
 
 CREATE DATABASE
 
-### Description
+## 描述
 
 该语句用于新建数据库（database）
 
@@ -67,7 +67,7 @@ CREATE DATABASE [IF NOT EXISTS] db_name
   )
   ```
 
-### Example
+## 举例
 
 1. 新建数据库 db_test
 

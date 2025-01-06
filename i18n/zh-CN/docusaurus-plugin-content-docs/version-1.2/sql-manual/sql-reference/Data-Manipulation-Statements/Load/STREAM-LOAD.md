@@ -30,7 +30,7 @@ under the License.
 
 STREAM LOAD
 
-### Description
+## 描述
 
 stream-load: load data to table in streaming
 
@@ -181,7 +181,7 @@ ERRORS:
 
 26. skip_lines:   整数类型，默认值为 0, 含义为跳过 csv 文件的前几行。当设置 format 设置为 `csv_with_names` 或、`csv_with_names_and_types` 时，该参数会失效。
 27. comment: <version since="1.2.3" type="inline"> 字符串类型，默认值为空。给任务增加额外的信息。</version>
-### Example
+## 举例
 
 1. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表，使用 Label 用于去重。指定超时时间为 100 秒
    

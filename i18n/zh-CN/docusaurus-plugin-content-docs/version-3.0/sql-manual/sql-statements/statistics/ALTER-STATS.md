@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-手动修改指定表中指定列的统计信息。请参阅[统计信息](../../../query-acceleration/statistics)章节
+手动修改指定表中指定列的统计信息。请参阅[统计信息](../../../query-acceleration/optimization-technology-principle/statistics)章节
 
 ## 语法
 

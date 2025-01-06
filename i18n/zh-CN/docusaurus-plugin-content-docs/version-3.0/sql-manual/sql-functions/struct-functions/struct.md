@@ -26,15 +26,15 @@ under the License.
 
 struct()
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `STRUCT<T1, T2, T3, ...> struct(T1, T2, T3, ...)`
 
 根据给定的值构造并返回struct，参数可以是多列或常量
 
-### example
+## 举例
 
 ```
 mysql> select struct(1, 'a', "abc");

@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## date_sub
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME DATE_SUB(DATETIME date, INTERVAL expr type)`
 
@@ -39,7 +39,7 @@ expr 参数是您希望添加的时间间隔。
 
 type 参数可以是下列值：YEAR, MONTH, DAY, HOUR, MINUTE, SECOND
 
-### example
+## 举例
 
 ```
 mysql> select date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY);

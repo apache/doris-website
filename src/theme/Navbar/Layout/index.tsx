@@ -1,4 +1,4 @@
-import React, { useState, useEffect, type ComponentProps } from 'react';
+import React, { useState, useEffect, useContext, type ComponentProps } from 'react';
 import clsx from 'clsx';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import { useHideableNavbar, useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
@@ -7,6 +7,7 @@ import NavbarMobileSidebar from '@theme/Navbar/MobileSidebar';
 import type { Props } from '@theme/Navbar/Layout';
 import useIsDocPage from '@site/src/hooks/use-is-doc';
 import styles from './styles.module.css';
+import { DataContext } from '../../Layout';
 
 function NavbarBackdrop(props: ComponentProps<'div'>) {
     return <div role="presentation" {...props} className={clsx('navbar-sidebar__backdrop', props.className)} />;
@@ -16,6 +17,7 @@ export default function NavbarLayout({ children }: Props): JSX.Element {
     const {
         navbar: { hideOnScroll, style },
     } = useThemeConfig();
+    const { showSearchPageMobile } = useContext(DataContext);
     const mobileSidebar = useNavbarMobileSidebar();
     const [isDocsPage] = useIsDocPage(false);
     const [isCommunity, setIsCommunity] = useState(false);
@@ -44,6 +46,7 @@ export default function NavbarLayout({ children }: Props): JSX.Element {
                 message: 'Main',
                 description: 'The ARIA label for the main navigation',
             })}
+            style={showSearchPageMobile ? { height: '3.75rem' } : {}}
             className={clsx(
                 'navbar',
                 'navbar--fixed-top',

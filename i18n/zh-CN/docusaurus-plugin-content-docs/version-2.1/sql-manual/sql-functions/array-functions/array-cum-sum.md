@@ -26,17 +26,17 @@ under the License.
 
 array_cum_sum
 
-### description
+## 描述
 
 返回数组的累计和。数组中的`NULL`值会被跳过，并在结果数组的相同位置设置`NULL`。
 
-#### Syntax
+## 语法
 
 ```sql
 Array<T> array_cum_sum(Array<T>)
 ```
 
-### example
+## 举例
 
 ```shell
 mysql> create table array_type_table(k1 INT, k2 Array<int>) duplicate key (k1) distributed by hash(k1) buckets 1 properties('replication_num' = '1');

@@ -24,13 +24,13 @@ under the License.
 
 ## degrees
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE degrees(DOUBLE x)`
 返回`x`的度, 从弧度转换为度.
 
-### example
+## 举例
 
 ```
 mysql> select degrees(0);

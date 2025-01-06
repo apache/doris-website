@@ -30,7 +30,7 @@ under the License.
 
 SHOW BACKUP
 
-### Description
+## 描述
 
 该语句用于查看 BACKUP 任务
 
@@ -66,7 +66,7 @@ SHOW BACKUP
             Status：                 如果作业失败，显示失败信息
             Timeout：                作业超时时间，单位秒
 
-### Example
+## 举例
 
 1. 查看 example_db 下最后一次 BACKUP 任务。
    

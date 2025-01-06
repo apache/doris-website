@@ -26,9 +26,9 @@ under the License.
 
 IS_IPV4_MAPPED
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `VARCHAR IS_IPV4_MAPPED(INET6_ATON(VARCHAR ipv4_addr))`
 
@@ -36,11 +36,11 @@ IS_IPV4_MAPPED
 如果参数是有效的IPv4映射IPv6地址，则返回1，否则返回0，除非expr为 NULL，在这种情况下该函数返回NULL。
 IPv4映射地址的格式为::ffff:ipv4_address
 
-#### Notice
+### 注意事项
 
 当源输入没有`'::ffff:'`前缀时，但如果它仍然是有效的 ipv4 地址，则该结果也将为 `1`，因为 `INET6_ATON()` 会自动为有效的 ipv4 地址添加前缀。
 
-### Example
+## 举例
 
 ```sql
 mysql> SELECT IS_IPV4_MAPPED(INET6_ATON('::ffff:10.0.5.9')) AS is_result;

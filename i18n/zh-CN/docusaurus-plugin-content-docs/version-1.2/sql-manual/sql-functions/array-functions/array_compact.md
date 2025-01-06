@@ -26,29 +26,29 @@ under the License.
 
 array_compact
 
-### description
+## 描述
 
 从数组中删除连续的重复元素,结果值的顺序由源数组中的顺序决定。
 
-#### Syntax
+## 语法
 
 `Array<T> array_compact(arr)`
 
-#### Arguments
+## 参数
 
 `arr` — 需要处理的数组.
 
-#### Returned value
+## 返回值
 
 不存在连续重复元素的数组.
 
 Type: Array.
 
-### notice
+## 注意事项
 
 `只支持在向量化引擎中使用。`
 
-### example
+## 举例
 
 ```
 select array_compact([1, 2, 3, 3, null, null, 4, 4]);

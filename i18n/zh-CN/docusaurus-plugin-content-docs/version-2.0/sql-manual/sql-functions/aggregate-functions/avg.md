@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## AVG
-### description
-#### Syntax
+## 描述
+## 语法
 
 `AVG([DISTINCT] expr)`
 
@@ -35,7 +35,7 @@ under the License.
 
 可选字段DISTINCT参数可以用来返回去重平均值
 
-### example
+## 举例
 
 ```
 mysql> SELECT datetime, AVG(cost_time) FROM log_statis group by datetime;

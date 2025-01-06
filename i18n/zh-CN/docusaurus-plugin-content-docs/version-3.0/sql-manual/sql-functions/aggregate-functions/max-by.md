@@ -24,16 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MAX_BY
-### description
-#### Syntax
+
+## 语法
 
 `MAX_BY(expr1, expr2)`
 
 
 返回与 expr2 的最大值关联的 expr1 的值。
 
-### example
+## 举例
 ```
 MySQL > select * from tbl;
 +------+------+------+------+
@@ -52,5 +51,4 @@ MySQL > select max_by(k1, k4) from tbl;
 |                  0 |
 +--------------------+ 
 ```
-### keywords
-MAX_BY
+

@@ -31,25 +31,37 @@
     "message": "使用教程",
     "description": "The label for category Tutorials in sidebar docs"
   },
-  "sidebar.docs.category.Building lakehouse": {
-    "message": "构建 lakehouse",
-    "description": "The label for category Building lakehouse in sidebar docs"
-  },
   "sidebar.docs.category.Installation and Deployment": {
     "message": "安装部署",
     "description": "The label for category Install and Deploy in sidebar docs"
-  },
-  "sidebar.docs.category.Source Code Compilation": {
-    "message": "源码编译",
-    "description": "The label for category Compile in sidebar docs"
   },
   "sidebar.docs.category.Cluster Deployment": {
     "message": "集群部署",
     "description": "The label for category Cluster Deployment in sidebar docs"
   },
+  "sidebar.docs.category.Cluster Deployment Manually": {
+    "message": "手动部署集群",
+    "description": "The label for category Cluster Deployment Manually in sidebar docs"
+  },
+  "sidebar.docs.category.Installation Preparation": {
+    "message": "部署前准备",
+    "description": "The label for category Installation Preparation in sidebar docs"
+  },
   "sidebar.docs.category.Deploying on Kubernetes": {
     "message": "在 Kubernetes 部署",
-    "description": "The label for category Deploying on Kubernets in sidebar docs"
+    "description": "The label for category Deploying on Kubernetes in sidebar docs"
+  },
+  "sidebar.docs.category.Compute storage coupled": {
+    "message": "部署存算一体集群",
+    "description": "The label for category Deploying on Kubernetes in sidebar docs"
+  },
+  "sidebar.docs.category.Compute storage decoupled": {
+    "message": "部署存算分离集群",
+    "description": "The label for category Deploying on Kubernetes in sidebar docs"
+  },
+  "sidebar.docs.category.Deploying on Cloud": {
+    "message": "云上部署集群",
+    "description": "The label for category Deploying on Cloud in sidebar docs"
   },
   "sidebar.docs.category.Database Connection": {
     "message": "数据库连接",
@@ -79,9 +91,21 @@
     "message": "数据导入",
     "description": "The label for category Loading Data in sidebar docs"
   },
-  "sidebar.docs.category.Import Way": {
+  "sidebar.docs.category.Data Source": {
+    "message": "数据源",
+    "description": "The label for category Data Source in sidebar docs"
+  },
+  "sidebar.docs.category.Loading Methods": {
     "message": "导入方式",
-    "description": "The label for category Import Way in sidebar docs"
+    "description": "The label for category Loading Methods in sidebar docs"
+  },
+  "sidebar.docs.category.File Formats": {
+    "message": "文件格式",
+    "description": "The label for category File Formats in sidebar docs"
+  },
+  "sidebar.docs.category.Complex Data Types": {
+    "message": "复杂数据类型",
+    "description": "The label for category Complex Data Types in sidebar docs"
   },
   "sidebar.docs.category.Updating Data": {
     "message": "数据更新",
@@ -90,6 +114,10 @@
   "sidebar.docs.category.Deleting Data": {
     "message": "数据删除",
     "description": "The label for category Deleting Data in sidebar docs"
+  },
+  "sidebar.docs.category.Data Update and Delete": {
+    "message": "数据更新与删除",
+    "description": "The label for category Data Update and Delete in sidebar docs"
   },
   "sidebar.docs.category.Exporting Data": {
     "message": "数据导出",
@@ -111,6 +139,10 @@
     "message": "数据湖构建",
     "description": "The label for category Building Data Lake in sidebar docs"
   },
+  "sidebar.docs.category.Lakehouse Best Practices": {
+    "message": "湖仓一体最佳实践",
+    "description": "The label for category Lakehouse Best Practices in sidebar docs"
+  },
   "sidebar.docs.category.Querying Databases": {
     "message": "数据库分析",
     "description": "The label for category Querying Databases in sidebar docs"
@@ -127,6 +159,10 @@
     "message": "查询加速",
     "description": "The label for category Queries Acceleration in sidebar docs"
   },
+  "sidebar.docs.category.Performance Tuning Overview": {
+    "message": "查询调优概述",
+    "description": "The label for category Performance Tuning Overview in sidebar docs"
+  },
   "sidebar.docs.category.Materialize View": {
     "message": "物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
@@ -139,17 +175,41 @@
     "message": "高效去重",
     "description": "The label for category Distincting Counts in sidebar docs"
   },
+  "sidebar.docs.category.Hints": {
+    "message": "Hints",
+    "description": "The label for category Hints in sidebar docs"
+  },
   "sidebar.docs.category.Tuning": {
-    "message": "查询调优原理与实践",
+    "message": "查询优化实践",
     "description": "The label for category Tuning in sidebar docs"
   },
   "sidebar.docs.category.Tuning Plan": {
     "message": "计划调优",
-    "description": "The label for category Tuning in sidebar docs"
+    "description": "The label for category Tuning Plan in sidebar docs"
+  },
+  "sidebar.docs.category.Tuning Execution": {
+    "message": "执行调优",
+    "description": "The label for category Tuning Execution in sidebar docs"
+  },
+  "sidebar.docs.category.Optimization Technology Principle": {
+    "message": "优化技术原理",
+    "description": "The label for category Optimization Technology Principle in sidebar docs"
   },
   "sidebar.docs.category.Alter Table": {
     "message": "表结构变更",
     "description": "The label for category Alter Table in sidebar docs"
+  },
+  "sidebar.docs.category.Security": {
+    "message": "安全合规",
+    "description": "The label for category Security in sidebar docs"
+  },
+  "sidebar.docs.category.Data Transmission Encryption": {
+    "message": "传输加密",
+    "description": "The label for category Data Transmission Encryption in sidebar docs"
+  },
+  "sidebar.docs.category.Authentication and Authorization": {
+    "message": "认证与鉴权",
+    "description": "The label for category Authentication and Authorization in sidebar docs"
   },
   "sidebar.docs.category.Doris Partition": {
     "message": "Doris 表分区",
@@ -180,8 +240,8 @@
     "description": "The label for category Managing Cluster in sidebar docs"
   },
   "sidebar.docs.category.Managing Data": {
-    "message": "数据管理",
-    "description": "The label for category Managing Data in sidebar docs"
+    "message": "业务连续性与数据恢复",
+    "description": "The label for category Business continuity & data recovery in sidebar docs"
   },
   "sidebar.docs.category.Managing Resource": {
     "message": "资源管理",
@@ -351,6 +411,18 @@
     "message": "集群管理",
     "description": "The label for category Statistics in sidebar docs"
   },
+  "sidebar.docs.category.Managing Workload": {
+    "message": "负载管理",
+    "description": "The label for category Managing Workload in sidebar docs"
+  },
+  "sidebar.docs.category.Resource Isolation": {
+    "message": "资源隔离",
+    "description": "The label for category Resource Isolation in sidebar docs"
+  },
+  "sidebar.docs.category.Best Practices": {
+    "message": "最佳实践",
+    "description": "The label for category Best Practices in sidebar docs"
+  },
   "sidebar.docs.category.Instance Management": {
     "message": "物理实例管理",
     "description": "The label for category Instance in sidebar docs"
@@ -362,10 +434,6 @@
   "sidebar.docs.category.Storage Management": {
     "message": "存储资源管理",
     "description": "The label for category Storage in sidebar docs"
-  },
-  "sidebar.docs.category.Security": {
-    "message": "安全",
-    "description": "The label for category Statistics in sidebar docs"
   },
   "sidebar.docs.category.Data Governance": {
     "message": "数据治理",
@@ -594,5 +662,21 @@
   "sidebar.get-starting.category.Building lakehouse": {
     "message": "构建 Lakehouse",
     "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.docs.category.Cross Cluster Replication": {
+    "message": "跨集群复制",
+    "description": "The label for category Cross Cluster Replication in sidebar docs"
+  },
+  "sidebar.docs.category.Tiered Storage": {
+    "message": "冷热数据分层",
+    "description": "The label for category Tiered Storage in sidebar docs"
+  },
+  "sidebar.docs.category.Business Continuity & Data Recovery": {
+    "message": "业务连续性和数据恢复",
+    "description": "The label for category Business Continuity & Data Recovery in sidebar docs"
+  },
+  "sidebar.docs.category.Backup & Restore": {
+    "message": "备份与恢复",
+    "description": "The label for category Backup & Restore in sidebar docs"
   }
 }

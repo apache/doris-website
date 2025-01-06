@@ -28,7 +28,7 @@ under the License.
 
 ADMIN CANCEL REBALANCE DISK
 
-### Description
+## 描述
 
     该语句用于取消优先均衡BE的磁盘
 
@@ -40,7 +40,7 @@ ADMIN CANCEL REBALANCE DISK
 
         1. 该语句仅表示系统不再优先均衡指定BE的磁盘数据。系统仍会以默认调度方式均衡BE的磁盘数据。
 
-### Example
+## 举例
 
     1. 取消集群所有BE的优先磁盘均衡
 

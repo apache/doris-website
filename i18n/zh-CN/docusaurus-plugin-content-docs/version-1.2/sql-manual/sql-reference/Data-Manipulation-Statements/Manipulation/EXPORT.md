@@ -30,7 +30,7 @@ under the License.
 
 EXPORT
 
-### Description
+## 描述
 
 该语句用于将指定表的数据导出到指定位置。
 
@@ -100,7 +100,7 @@ fs.s3a.endpoint：AmazonS3的endpoint
         "AWS_REGION" = ""
     )
 
-### Example
+## 举例
 
 1. 将 test 表中的所有数据导出到 hdfs 上
 

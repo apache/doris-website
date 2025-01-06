@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION RANK
-### description
+## 描述
 
 RANK() 函数用来表示排名，与 DENSE_RANK() 不同的是，RANK() 会出现空缺数字。比如，如果出现了两个并列的1， RANK() 的第三个数就是3，而不是2。
 
@@ -20,7 +20,7 @@ RANK() 函数用来表示排名，与 DENSE_RANK() 不同的是，RANK() 会出�
 RANK() OVER(partition_by_clause order_by_clause)
 ```
 
-### example
+## 举例
 
 根据 x 进行排名
 

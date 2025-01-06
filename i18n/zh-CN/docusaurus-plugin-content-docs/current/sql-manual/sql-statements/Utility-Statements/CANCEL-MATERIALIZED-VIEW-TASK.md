@@ -30,7 +30,7 @@ under the License.
 
 CANCEL MATERIALIZED VIEW TASK
 
-### Description
+## 描述
 
 该语句用于取消物化视图的task
 
@@ -40,7 +40,7 @@ CANCEL MATERIALIZED VIEW TASK
 CANCEL MATERIALIZED VIEW TASK taskId=INTEGER_VALUE ON mvName=multipartIdentifier
 ```
 
-### Example
+## 举例
 
 1. 取消物化视图mv1的id为1的task
 

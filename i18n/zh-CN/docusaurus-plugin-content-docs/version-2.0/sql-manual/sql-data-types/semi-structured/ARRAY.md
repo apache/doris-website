@@ -24,17 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ARRAY
 
-### name
 
-ARRAY
-
-### description
+## 描述
 
 `ARRAY<T>`
 
-由 T 类型元素组成的数组，不能作为 key 列使用。目前支持在 Duplicate 模型的表中使用。
+由 T 类型元素组成的数组，不能作为 key 列使用。目前支持在 Duplicate 和 Unique 模型的表中使用。
 
 2.0 版本之后支持在 Unique 模型的表中非 key 列使用。
 
@@ -45,7 +41,7 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE,
 DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-### example
+## 举例
 
 建表示例如下：
 
@@ -84,7 +80,3 @@ mysql> SELECT * FROM `array_test`;
 |    4 | NULL            |
 +------+-----------------+
 ```
-
-### keywords
-
-    ARRAY

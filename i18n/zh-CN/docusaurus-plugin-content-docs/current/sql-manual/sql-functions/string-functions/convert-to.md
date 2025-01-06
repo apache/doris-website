@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## convert_to
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR convert_to(VARCHAR column, VARCHAR character)`
 在 order by 子句中使用，例如 order by convert(column using gbk), 现在仅支持 character 转为'gbk'.
 因为当 order by column 中包含中文时，其排列不是按照汉语拼音的顺序。
 将 column 的字符编码转为 gbk 后，可实现按拼音的排列的效果。
 
-### example
+## 举例
 
 ```
 mysql> select * from class_test order by class_name;

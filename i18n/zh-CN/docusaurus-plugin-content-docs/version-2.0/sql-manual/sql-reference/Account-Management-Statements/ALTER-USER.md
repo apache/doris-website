@@ -30,7 +30,7 @@ under the License.
 
 ALTER USER
 
-### Description
+## 描述
 
 ALTER USER 命令用于修改一个用户的账户属性，包括密码、和密码策略等
 
@@ -72,7 +72,7 @@ password_policy:
 
 5. 解锁用户
 
-### Example
+## 举例
 
 1. 修改用户的密码
 

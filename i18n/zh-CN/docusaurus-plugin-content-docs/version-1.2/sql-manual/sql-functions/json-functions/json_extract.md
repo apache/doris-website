@@ -24,15 +24,15 @@ under the License.
 
 ## json_extract
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `VARCHAR json_extract(VARCHAR json_str, VARCHAR path[, VARCHAR path] ...))`
 
 json_extract函数从 JSON 文档中返回数据，这些数据是从与 `path` 参数所匹配的文档部分中选择的。如果任何参数为 NULL 或者 `json_str` 参数不是有效的 JSON 文档，则返回 NULL。如果 `path` 参数不是一个有效的路径(即这个路径没有出现在JSON文档中)，则返回的数组中对应的项为 NULL(见下面例子)。
 
-### example
+## 举例
 
 ```
 mysql> SELECT json_extract('{"id": 123, "name": "doris"}', '$.id');

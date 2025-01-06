@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## dayofmonth
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT DAYOFMONTH(DATETIME date)`
 
@@ -35,7 +35,7 @@ under the License.
 
 参数为Date或者Datetime类型
 
-### example
+## 举例
 
 ```
 mysql> select dayofmonth('1987-01-31');

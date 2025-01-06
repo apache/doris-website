@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## json_unquote
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR json_unquote(VARCHAR)`
 
@@ -47,7 +47,7 @@ under the License.
 
 
 
-### example
+## 举例
 
 ```sql
 mysql> SELECT json_unquote('"doris"');

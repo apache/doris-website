@@ -30,7 +30,7 @@ under the License.
 
 SET PROPERTY
 
-### Description
+## 描述
 
  设置用户的属性，包括分配给用户的资源、导入cluster等
 
@@ -82,7 +82,7 @@ key:
 
 ​        default_load_cluster: 默认的导入cluster。
 
-### Example
+## 举例
 
 1. 修改用户 jack 最大连接数为1000
    

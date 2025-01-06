@@ -30,7 +30,7 @@ under the License.
 
 SHOW CREATE DATABASE
 
-### Description
+## 描述
 
 该语句查看doris数据库的创建情况。
 
@@ -44,7 +44,7 @@ SHOW CREATE DATABASE db_name;
 
 - `db_name`: 为doris存在的数据库名称。
 
-### Example
+## 举例
 
 1. 查看doris中test数据库的创建情况
 
