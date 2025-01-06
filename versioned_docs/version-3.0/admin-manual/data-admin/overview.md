@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Business Continuity & Data Recovery Overview",
+    "title": "Disaster Recovery Management Overview",
     "language": "en"
 }
 ---
