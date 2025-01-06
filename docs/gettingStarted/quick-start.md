@@ -34,6 +34,8 @@ Quick deployment **is only suitable for local development**. Do not use this dep
 2. Deploying a single-instance Doris manually does not have data replication capability, and a single machine failure may result in data loss.
 
 3. The tables created in this example are single-instance. In production, please use multi-replica storage for data.
+
+4. The quick deployment using Docker is only applicable to versions `2.1.8`, `3.0.4`, and later versions.
 :::
 
 ## Use Docker for Quick Deployment
@@ -46,14 +48,14 @@ Copy the following content into the docker-compose.yaml file, and replace the `D
 version: "3"
 services:
   fe:
-    image: apache/doris.fe-ubuntu:${DORIS_QUICK_START_VERSION}
+    image: apache/doris:doris-fe-${DORIS_QUICK_START_VERSION}
     hostname: fe
     environment:
      - FE_SERVERS=fe1:127.0.0.1:9010
      - FE_ID=1
     network_mode: host
   be:
-    image: apache/doris.be-ubuntu:${DORIS_QUICK_START_VERSION}
+    image: apache/doris:doris-be-${DORIS_QUICK_START_VERSION}
     hostname: be
     environment:
      - FE_SERVERS=fe1:127.0.0.1:9010
