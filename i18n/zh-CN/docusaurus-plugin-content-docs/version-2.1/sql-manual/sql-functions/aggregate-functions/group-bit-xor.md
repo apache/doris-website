@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## GROUP_BIT_XOR
-### description
-#### Syntax
+## 描述
+## 语法
 
 `expr GROUP_BIT_XOR(expr)`
 
 对expr进行 xor 计算, 返回新的expr
 支持所有INT类型
 
-### example
+## 举例
 
 ```
 mysql> select * from group_bit;

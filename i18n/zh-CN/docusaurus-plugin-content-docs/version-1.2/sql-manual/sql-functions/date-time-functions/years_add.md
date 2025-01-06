@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## years_add
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME YEARS_ADD(DATETIME date, INT years)`
 
@@ -34,7 +34,7 @@ under the License.
 
 参数 date 可以是 DATETIME 或者 DATE 类型，返回类型与参数 date 的类型一致。
 
-### example
+## 举例
 
 ```
 mysql> select years_add("2020-01-31 02:02:02", 1);

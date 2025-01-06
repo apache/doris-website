@@ -28,14 +28,14 @@ under the License.
 
 array_enumerate
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `ARRAY<T> array_enumerate(ARRAY<T> arr)`
 
 返回数组下标, 例如  [1, 2, 3, …, length (arr) ]
 
-### example
+## 举例
 
 ```shell
 mysql> create table array_type_table(k1 INT, k2 Array<STRING>) duplicate key (k1)

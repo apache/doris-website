@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## MAP_AGG
-### description
-#### Syntax
+## 描述
+## 语法
 
 `MAP_AGG(expr1, expr2)`
 
 返回一个 map, 由 expr1 作为键，expr2 作为对应的值。
 
-### example
+## 举例
 ```
 MySQL > select `n_nationkey`, `n_name`, `n_regionkey` from `nation`;
 +-------------+----------------+-------------+

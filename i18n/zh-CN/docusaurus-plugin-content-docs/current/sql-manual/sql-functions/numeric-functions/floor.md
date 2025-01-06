@@ -24,8 +24,8 @@ under the License.
 
 ## floor
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BIGINT floor(DOUBLE x)`
 
@@ -42,7 +42,7 @@ under the License.
 该函数的另一个别名为 `dfloor`。
 :::
 
-### example
+## 举例
 
 ```
 mysql> select floor(1);

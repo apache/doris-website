@@ -30,7 +30,7 @@ under the License.
 
 CREATE DATABASE
 
-### Description
+## 描述
 
 该语句用于新建数据库（database）
 
@@ -59,7 +59,7 @@ CREATE DATABASE [IF NOT EXISTS] db_name
   - `iceberg.hive.metastore.uris` ：hive metastore 服务地址;
   - `iceberg.catalog.type`： 默认为 `HIVE_CATALOG`；当前仅支持 `HIVE_CATALOG`，后续会支持更多 Iceberg catalog 类型。
 
-### Example
+## 举例
 
 1. 新建数据库 db_test
 

@@ -34,7 +34,7 @@ under the License.
 
 `GET /rest/v2/manager/cluster/cluster_info/conn_info`
 
-### Description
+## 描述
 
 用于获取集群 http、mysql 连接信息。
 

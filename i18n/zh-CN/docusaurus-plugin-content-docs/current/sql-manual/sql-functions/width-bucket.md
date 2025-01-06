@@ -26,15 +26,15 @@ under the License.
 
 ## width_bucket
 
-### Description
+## 描述
 
 构造等宽直方图，其中直方图范围被划分为相同大小的区间，并在计算后返回表达式的值所在的桶号。该函数返回一个整数值或空值（如果任何输入为空值则返回空值）。
 
-#### Syntax
+## 语法
 
 `INT width_bucket(Expr expr, T min_value, T max_value, INT num_buckets)`
 
-#### Arguments
+## 参数
 `expr` -
 创建直方图的表达式。此表达式必须计算为数值或可隐式转换为数值的值。
 
@@ -48,7 +48,7 @@ under the License.
 `num_buckets` - 
 分桶的数量，必须是正整数值。将表达式中的一个值分配给每个存储桶，然后该函数返回相应的存储桶编号。
 
-#### Returned value
+## 返回值
 返回表达式值所在的桶号。
 
 当表达式超出范围时，函数返回规则如下：
@@ -59,7 +59,7 @@ under the License.
 
 如果任意参数为`null`返回`null`.
 
-### example
+## 举例
 
 ```sql
 DROP TABLE IF EXISTS width_bucket_test;

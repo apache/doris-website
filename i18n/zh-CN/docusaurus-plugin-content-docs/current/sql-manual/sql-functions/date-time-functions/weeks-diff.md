@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## weeks_diff
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT weeks_diff(DATETIME enddate, DATETIME startdate)`
 
 开始时间到结束时间相差几星期
 
-### example
+## 举例
 
 ```
 mysql> select weeks_diff('2020-12-25','2020-10-25');

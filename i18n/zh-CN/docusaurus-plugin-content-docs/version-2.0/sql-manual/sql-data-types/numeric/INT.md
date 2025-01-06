@@ -24,11 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## INT
-### description
+
+## 描述
     INT
     4字节有符号整数，范围[-2147483648, 2147483647]
 
-### keywords
-
-    INT

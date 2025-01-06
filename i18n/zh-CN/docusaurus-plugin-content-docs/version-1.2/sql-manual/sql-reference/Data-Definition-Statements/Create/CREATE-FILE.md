@@ -30,7 +30,7 @@ under the License.
 
 CREATE FILE
 
-### Description
+## 描述
 
 该语句用于创建并上传一个文件到 Doris 集群。
 该功能通常用于管理一些其他命令中需要使用到的文件，如证书、公钥私钥等等。
@@ -57,7 +57,7 @@ CREATE FILE "file_name" [IN database]
     - catalog：必须。对文件的分类名，可以自定义。但在某些命令中，会查找指定 catalog 中的文件。比如例行导入中的，数据源为 kafka 时，会查找 catalog 名为 kafka 下的文件。
     - md5: 可选。文件的 md5。如果指定，会在下载文件后进行校验。
 
-### Example
+## 举例
 
 1. 创建文件 ca.pem ，分类为 kafka
 

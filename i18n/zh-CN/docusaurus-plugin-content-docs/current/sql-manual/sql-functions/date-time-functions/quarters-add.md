@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `DATE/DATETIME QUARTERS_ADD(DATE/DATETIME date, INT years)`
 
@@ -33,7 +33,7 @@ under the License.
 
 参数 `date` 可以是 `DATETIME` 或者 `DATE` 类型，返回类型与参数 `date` 的类型一致。
 
-### Example
+## 举例
 
 ```sql
 mysql> select quarters_add("2020-01-31 02:02:02", 1);

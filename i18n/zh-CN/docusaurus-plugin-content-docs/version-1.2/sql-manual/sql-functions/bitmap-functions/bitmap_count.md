@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## bitmap_count
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITMAP BITMAP_COUNT(BITMAP lhs)`
 
 返回输入bitmap的个数。
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_count(to_bitmap(1)) cnt;

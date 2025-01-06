@@ -30,7 +30,7 @@ under the License.
 
 SHOW FULL COLUMNS
 
-### Description
+## 描述
 
 该语句用于指定表的列信息
 
@@ -40,7 +40,7 @@ SHOW FULL COLUMNS
 SHOW [FULL] COLUMNS FROM tbl;
 ```
 
-### Example
+## 举例
 
 1. 查看指定表的列信息
 

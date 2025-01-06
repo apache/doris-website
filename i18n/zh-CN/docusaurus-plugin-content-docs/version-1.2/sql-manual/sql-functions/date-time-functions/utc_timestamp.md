@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## utc_timestamp
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME UTC_TIMESTAMP()`
 
@@ -37,7 +37,7 @@ under the License.
 
 根据该函数是否用在字符串或数字语境中
 
-### example
+## 举例
 
 ```
 mysql> select utc_timestamp(),utc_timestamp() + 1;

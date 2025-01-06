@@ -24,8 +24,8 @@ under the License.
 
 ## murmur_hash3_32
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT MURMUR_HASH3_32(VARCHAR input, ...)`
 
@@ -33,7 +33,7 @@ under the License.
 
 注：在计算hash值时，更推荐使用`xxhash_32`，而不是`murmur_hash3_32`。
 
-### example
+## 举例
 
 ```
 mysql> select murmur_hash3_32(null);

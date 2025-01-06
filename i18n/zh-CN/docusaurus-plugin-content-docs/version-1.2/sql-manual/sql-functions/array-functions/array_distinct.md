@@ -28,19 +28,19 @@ under the License.
 
 array_distinct
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<T> array_distinct(ARRAY<T> arr)`
 
 返回去除了重复元素的数组，如果输入数组为NULL，则返回NULL。
 
-### notice
+## 注意事项
 
 `仅支持向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 mysql> select k1, k2, array_distinct(k2) from array_test;

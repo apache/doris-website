@@ -26,20 +26,20 @@ under the License.
 
 ## explode
 
-### description
+## 描述
 
 表函数，需配合 Lateral View 使用。
 
 将 array 列展开成多行。当 array 为NULL或者为空时，`explode_outer` 返回NULL。
 `explode` 和 `explode_outer` 均会返回 array 内部的NULL元素。
 
-#### syntax
+## 语法
 ```sql
 explode(expr)
 explode_outer(expr)
 ```
 
-### example
+## 举例
 
 ```
 mysql> select e1 from (select 1 k1) as t lateral view explode([1,2,3]) tmp1 as e1;

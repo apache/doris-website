@@ -30,7 +30,7 @@ under the License.
 
 SHOW PROCESSLIST
 
-### Description
+## 描述
 
 显示用户正在运行的线程，需要注意的是，除了 root 用户能看到所有正在运行的线程外，其他用户都只能看到自己正在运行的线程，看不到其它用户正在运行的线程
 
@@ -61,7 +61,7 @@ SHOW [FULL] PROCESSLIST
 
 其他类型可以参考 [MySQL 官网解释](https://dev.mysql.com/doc/refman/5.6/en/thread-commands.html)
 
-### Example
+## 举例
 
 1. 查看当前用户正在运行的线程
    ```SQL

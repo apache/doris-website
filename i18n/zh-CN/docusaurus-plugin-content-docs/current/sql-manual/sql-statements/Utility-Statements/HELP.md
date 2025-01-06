@@ -30,7 +30,7 @@ under the License.
 
 HELP
 
-### Description
+## 描述
 
 通过改命令可以查询到帮助的目录
 
@@ -85,7 +85,7 @@ categories:
    sql-statements
 ```
 
-### Example
+## 举例
 
 1. 列出 Doris 所有的 SQL 帮助目录
 

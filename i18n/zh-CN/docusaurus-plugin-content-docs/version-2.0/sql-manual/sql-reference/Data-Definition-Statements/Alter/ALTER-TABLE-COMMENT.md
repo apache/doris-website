@@ -30,7 +30,7 @@ under the License.
 
 ALTER TABLE COMMENT
 
-### Description
+## 描述
 
 该语句用于对已有 table 的 comment 进行修改。这个操作是同步的，命令返回表示执行完毕。
 
@@ -56,7 +56,7 @@ MODIFY COMMENT "new table comment";
 MODIFY COLUMN col1 COMMENT "new column comment";
 ```
 
-### Example
+## 举例
 
 1. 将名为 table1 的 comment 修改为 table1_comment
 

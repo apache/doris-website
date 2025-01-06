@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## not like
-### description
-#### syntax
+## 描述
+## 语法
 
 `BOOLEAN not like(VARCHAR str, VARCHAR pattern)`
 
@@ -48,7 +48,7 @@ like 匹配/模糊匹配，会与 % 和 _ 结合使用。
 'a_'     // 两位且开头字母是 a 的数据
 'a__b'  // 四位且以字符a开头、b结尾的数据
 ```
-### example
+## 举例
 
 ```
 // table test

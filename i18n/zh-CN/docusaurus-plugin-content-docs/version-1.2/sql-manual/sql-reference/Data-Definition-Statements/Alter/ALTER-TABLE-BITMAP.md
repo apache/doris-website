@@ -30,7 +30,7 @@ under the License.
 
 ALTER  TABLE  BITMAP
 
-### Description
+## 描述
 
 该语句用于对已有 table 进行 bitmap index 操作。
 
@@ -63,7 +63,7 @@ ADD INDEX [IF NOT EXISTS] index_name (column [, ...],) [USING BITMAP] [COMMENT '
 DROP INDEX [IF EXISTS] index_name；
 ```
 
-### Example
+## 举例
 
 1. 在table1 上为siteid 创建bitmap 索引
 

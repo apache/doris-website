@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## timestampdiff
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT TIMESTAMPDIFF(unit, DATETIME datetime_expr1, DATETIME datetime_expr2)`
 
@@ -36,7 +36,7 @@ under the License.
                    
 SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, or YEAR。
 
-### example
+## 举例
 
 ```
 

@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## seconds_sub
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME SECONDS_SUB(DATETIME date, INT seconds)`
 
@@ -34,7 +34,7 @@ under the License.
 
 参数 date 可以是 DATETIME 或者 DATE 类型，返回类型为 DATETIME。
 
-### example
+## 举例
 
 ```
 mysql> select seconds_sub("2020-01-01 00:00:00", 1);

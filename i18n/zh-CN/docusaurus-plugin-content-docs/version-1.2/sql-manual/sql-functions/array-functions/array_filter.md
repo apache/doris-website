@@ -32,9 +32,9 @@ array_filter(lambda,array)
 
 </version>
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 ```sql
 ARRAY<T> array_filter(lambda, ARRAY<T> arr1, ARRAY<T> arr2, ... )
 ARRAY<T> array_filter(ARRAY<T> arr)
@@ -50,7 +50,7 @@ array_filter(x->(abs(x)-2)>0, array1);
 
 ```
 
-### example
+## 举例
 
 ```shell
 mysql [test]>select array_filter(x->(x > 1),[1,2,3,0,null]);

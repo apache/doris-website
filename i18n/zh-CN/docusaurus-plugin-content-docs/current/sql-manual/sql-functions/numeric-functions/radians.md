@@ -24,13 +24,13 @@ under the License.
 
 ## radians
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE radians(DOUBLE x)`
 返回`x`的弧度值, 从度转换为弧度.
 
-### example
+## 举例
 
 ```
 mysql> select radians(0);

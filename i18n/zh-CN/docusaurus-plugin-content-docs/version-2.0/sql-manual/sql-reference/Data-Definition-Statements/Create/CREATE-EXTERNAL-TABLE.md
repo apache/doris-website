@@ -30,7 +30,7 @@ under the License.
 
 CREATE EXTERNAL TABLE
 
-### Description
+## 描述
 
 此语句用来创建外部表，具体语法参阅 [CREATE TABLE](./CREATE-TABLE.md)。
 
@@ -123,7 +123,7 @@ CREATE EXTERNAL TABLE
 
    其中 hudi.database 是 hive 表对应的库名字，hudi.table 是 hive 表的名字，hive.metastore.uris 是 hive metastore 服务地址。
 
-### Example
+## 举例
 
 1. 创建 MYSQL 外部表
 

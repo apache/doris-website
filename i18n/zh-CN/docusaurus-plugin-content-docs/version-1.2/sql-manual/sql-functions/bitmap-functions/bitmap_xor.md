@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## bitmap_xor
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITMAP BITMAP_XOR(BITMAP lhs, BITMAP rhs, ...)`
 
 计算两个及以上输入bitmap的差集，返回新的bitmap.
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_count(bitmap_xor(bitmap_from_string('2,3'),bitmap_from_string('1,2,3,4'))) cnt;

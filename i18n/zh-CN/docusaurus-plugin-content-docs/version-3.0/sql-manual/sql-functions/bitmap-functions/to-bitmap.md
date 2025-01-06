@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## to_bitmap
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITMAP TO_BITMAP(expr)`
 
@@ -38,7 +38,7 @@ under the License.
 cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,user_id, user_id=to_bitmap(user_id)"   http://host:8410/api/test/testDb/_stream_load
 ```
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_count(to_bitmap(10));

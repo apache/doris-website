@@ -30,7 +30,7 @@ under the License.
 
 SHOW PARTITION ID
 
-### Description
+## 描述
 
 该语句用于根据 partition id 查找对应的 database name, table name, partition name（仅管理员使用）
 
@@ -40,7 +40,7 @@ SHOW PARTITION ID
     SHOW PARTITION [partition_id]
 ```
 
-### Example
+## 举例
 
 1. 根据 partition id 查找对应的 database name, table name, partition name
 

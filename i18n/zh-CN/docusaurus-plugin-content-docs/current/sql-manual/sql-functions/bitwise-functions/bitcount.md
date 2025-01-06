@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## bit_count
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BIT_COUNT(Integer-type x)`
 
@@ -34,7 +34,7 @@ under the License.
 
 整型可以是：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
-### example
+## 举例
 
 ```
 select "0b11111111", bit_count(-1)

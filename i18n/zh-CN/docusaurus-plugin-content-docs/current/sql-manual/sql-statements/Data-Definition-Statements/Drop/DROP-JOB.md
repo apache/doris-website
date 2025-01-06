@@ -30,7 +30,7 @@ under the License.
 
 DROP JOB
 
-### Description
+## 描述
 
 用户删除一个 JOB 作业。作业会被立即停止同时删除。
 
@@ -38,7 +38,7 @@ DROP JOB
 DROP JOB where jobName='jobname';
 ```
 
-### Example
+## 举例
 
 1. 停止名称为 example 的作业。
 

@@ -30,7 +30,7 @@ under the License.
 
 SHOW CONFIG
 
-### Description
+## 描述
 
 该语句用于展示当前集群的配置
 
@@ -58,7 +58,7 @@ SHOW (FRONTEND|BACKEND)  CONFIG [LIKE "pattern"];
 5. Type：        配置型类型 
 6. IsMutable：   是否可以修改
 
-### Example
+## 举例
 
 1. 查看当前FE节点的配置
 

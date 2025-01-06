@@ -28,20 +28,20 @@ under the License.
 
 array_difference
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<T> array_difference(ARRAY<T> arr)`
 
 计算相邻数组元素之间的差异。返回一个数组，其中第一个元素将为0，第二个元素是a[1]-a[0]之间的差值。
 注意若 NULL 值存在，返回结果为NULL
 
-### notice
+## 注意事项
 
 `仅支持向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 mysql> select *,array_difference(k2) from array_type_table;

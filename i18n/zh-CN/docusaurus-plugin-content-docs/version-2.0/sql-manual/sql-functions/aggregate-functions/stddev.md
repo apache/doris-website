@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## STDDEV,STDDEV_POP
-### description
-#### Syntax
+## 描述
+## 语法
 
 `STDDEV(expr)`
 
 
 返回expr表达式的标准差
 
-### example
+## 举例
 ```
 MySQL > select stddev(scan_rows) from log_statis group by datetime;
 +---------------------+

@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## from_unixtime
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME FROM_UNIXTIME(INT unix_timestamp[, VARCHAR string_format])`
 
@@ -41,7 +41,7 @@ under the License.
 
 1970-01-01 00:00:00 ~ 9999-12-31 23:59:59
 
-### example
+## 举例
 
 ```
 mysql> select from_unixtime(1196440219);

@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
-#### Syntax
+
+## 语法
 
 `PERCENTILE(expr, DOUBLE p)`
 
@@ -33,14 +33,14 @@ under the License.
 如果 `p` 不指向精确的位置，则返回所指位置两侧相邻数值在 `p` 所指位置上产生的线性插值。注意这不是两数字的平均数。
 
 参数说明
-`expr`：必填。值为整数（最大为 `bigint`） 类型的列。
+`expr`：必填。值为整数（最大为 `bigint`）类型的列。
 `p`：常量，必填。需要精确的百分位数。取值为 `[0.0,1.0]`。
 
 :::tip
-自 Doris 3.0.3 版本开始支持, expr 支持了更多的输入类型, eg: float, double. 支持浮点数据参与计算，减少了cast 数据的开销。
+自 Doris 3.0.3 版本开始支持，expr 支持了更多的输入类型，eg: float, double. 支持浮点数据参与计算，减少了 cast 数据的开销。
 :::
 
-### Example
+## 举例
 
 ```sql
 MySQL > select `table`, percentile(cost_time,0.99) from log_statis group by `table`;
@@ -58,5 +58,3 @@ MySQL > select percentile(NULL,0.3) from table1;
 +-----------------------+
 ```
 
-### Keywords
-    PERCENTILE

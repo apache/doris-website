@@ -30,7 +30,7 @@ under the License.
 
 `DOUBLE ST_Angle_Sphere(DOUBLE x_lng, DOUBLE x_lat, DOUBLE y_lng, DOUBLE y_lat)`
 
-### description
+## 描述
 
 计算地球表面两点之间的圆心角，单位为 度。传入的参数分别为X点的经度，X点的纬度，Y点的经度，Y点的纬度。
 
@@ -38,7 +38,7 @@ x_lng 和 y_lng 都是经度数据，合理的取值范围是 [-180, 180]。
 
 x_lat 和 y_lat 都是纬度数据，合理的取值范围是 [-90, 90]。
 
-### example
+## 举例
 
 ```
 mysql> select ST_Angle_Sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219);

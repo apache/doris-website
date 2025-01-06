@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## TOPN_ARRAY
-### description
-#### Syntax
+## 描述
+## 语法
 
 `ARRAY<T> topn_array(expr, INT top_num[, INT space_expand_rate])`
 
@@ -38,7 +38,7 @@ counter numbers = top_num * space_expand_rate
 ```
 space_expand_rate的值越大，结果越准确，默认值为50
 
-### example
+## 举例
 ```
 mysql> select topn_array(k3,3) from baseall;
 +--------------------------+

@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION ROW_NUMBER
-### description
+## 描述
 
 为每个 Partition 的每一行返回一个从1开始连续递增的整数。与 RANK() 和 DENSE_RANK() 不同的是，ROW_NUMBER() 返回的值不会重复也不会出现空缺，是连续递增的。
 
@@ -20,7 +20,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 ROW_NUMBER() OVER(partition_by_clause order_by_clause)
 ```
 
-### example
+## 举例
 
 ```sql
 select x, y, row_number() over(partition by x order by y) as rank from int_t;

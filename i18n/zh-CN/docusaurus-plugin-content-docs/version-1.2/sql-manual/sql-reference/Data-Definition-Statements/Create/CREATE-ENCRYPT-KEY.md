@@ -30,7 +30,7 @@ under the License.
 
 CREATE ENCRYPTKEY
 
-### Description
+## 描述
 
 此语句创建一个自定义密钥。执行此命令需要用户拥有 `ADMIN` 权限。
 
@@ -48,7 +48,7 @@ CREATE ENCRYPTKEY key_name AS "key_string"
 
 如果 `key_name` 中包含了数据库名字，那么这个自定义密钥会创建在对应的数据库中，否则这个函数将会创建在当前会话所在的数据库。新密钥的名字不能够与对应数据库中已存在的密钥相同，否则会创建失败。
 
-### Example
+## 举例
 
 1. 创建一个自定义密钥
 

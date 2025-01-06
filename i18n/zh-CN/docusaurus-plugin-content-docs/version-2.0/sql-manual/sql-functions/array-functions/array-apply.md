@@ -26,28 +26,28 @@ under the License.
 
 array_apply
 
-### description
+## 描述
 数组以特定的二元条件符过滤元素， 并返回过滤后的结果
 
-#### Syntax
+## 语法
 
 ```sql
 array_apply(arr, op, val)
 ```
 
-#### Arguments
+## 参数
 
 `arr` — 输入的数组， 如果是null， 则返回null
 `op` — 过滤条件， 条件包括 `=`, `>=`, `<=`, `>`, `<`, `!=`，仅支持常量
 `val` — 过滤的条件值， 如果是null， 则返回null，仅支持常量
 
-#### Returned value
+## 返回值
 
 过滤后的数组
 
 类型: Array.
 
-### example
+## 举例
 
 ```
 mysql> select array_apply([1, 2, 3, 4, 5], ">=", 2);

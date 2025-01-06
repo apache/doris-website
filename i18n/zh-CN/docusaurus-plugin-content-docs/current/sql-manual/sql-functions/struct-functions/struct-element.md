@@ -26,17 +26,17 @@ under the License.
 
 struct_element
 
-### description
+## 描述
 
 返回 struct 数据列内的某一 field
 
-#### Syntax
+## 语法
 
 ```
 struct_element(struct, n/s)
 ```
 
-#### Arguments
+## 参数
 
 ```
 struct - 输入的struct列，如果是null，则返回null
@@ -44,11 +44,11 @@ n - field的位置，起始位置从1开始，仅支持常量
 s - field的名字，仅支持常量
 ```
 
-#### Returned value
+## 返回值
 
 返回指定的 field 列，类型为任意类型
 
-### example
+## 举例
 
 ```
 mysql> select struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2');

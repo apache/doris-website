@@ -30,7 +30,7 @@ under the License.
 
 tasks
 
-### description
+## 描述
 
 表函数，生成 tasks 临时表，可以查看当前 doris 集群中的 job 产生的 tasks 信息。
 
@@ -38,7 +38,7 @@ tasks
 
 该函数自 2.1.0 版本支持。
 
-#### syntax
+## 语法
 
 `tasks("type"="insert");`
 **参数说明**
@@ -130,7 +130,7 @@ mysql> desc function tasks("type"="mv");
 * CompletedPartitions：本次 task 刷新完成的分区信息
 * Progress：task 运行进度
 
-### example
+## 举例
 #### Insert Tasks
 ```
 mysql>  select * from tasks("type"="insert") limit 1 \G

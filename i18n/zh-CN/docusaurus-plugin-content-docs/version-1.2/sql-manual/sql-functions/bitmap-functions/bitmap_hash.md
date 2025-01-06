@@ -30,15 +30,15 @@ under the License.
 
 BITMAP_HASH
 
-### Description
+## 描述
 
 对任意类型的输入，计算其 32 位的哈希值，并返回包含该哈希值的 bitmap。该函数使用的哈希算法为 MurMur3。MurMur3 算法是一种高性能的、低碰撞率的散列算法，其计算出来的值接近于随机分布，并且能通过卡方分布测试。需要注意的是，不同硬件平台、不同 Seed 值计算出来的散列值可能不同。关于此算法的性能可以参考 [Smhasher](http://rurban.github.io/smhasher/) 排行榜。
 
-#### Syntax
+## 语法
 
 `BITMAP BITMAP_HASH(<any_value>)`
 
-#### Arguments
+## 参数
 
 `<any_value>`
 任何值或字段表达式。
@@ -68,7 +68,7 @@ SELECT bitmap_to_string(bitmap_hash('/System/Volumes/Data/Library/Developer/Comm
 +-----------+-----------+
 ```
 
-### Example
+## 举例
 
 如果你想计算某个值的 MurMur3，你可以：
 

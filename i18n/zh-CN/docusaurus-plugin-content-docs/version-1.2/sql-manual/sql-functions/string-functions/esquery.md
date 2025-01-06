@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## esquery
-### description
-#### Syntax
+## 描述
+## 语法
 
 `boolean esquery(varchar field, varchar QueryDSL)`
 
@@ -34,7 +34,7 @@ under the License.
 esquery的第一个列名参数用于关联index，第二个参数是ES的基本Query DSL的json表述，使用花括号{}包含，json的root key有且只能有一个，
 如match_phrase、geo_shape、bool等
 
-### example
+## 举例
 
 ```
 match_phrase查询：

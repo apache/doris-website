@@ -26,11 +26,11 @@ under the License.
 
 ## HDFS
 
-### Description
+## 描述
 
 HDFS 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 HDFS 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
 
-#### syntax
+## 语法
 ```sql
 hdfs(
   "uri" = "..",
@@ -89,7 +89,7 @@ hdfs(
 直接查询 TVF 或基于该 TVF 创建 View ，需要拥有该 Resource 的 USAGE 权限，查询基于 TVF 创建的 View ，只需要该 View 的 SELECT 权限
 :::
 
-### Examples
+## 举例s
 
 读取并访问 HDFS 存储上的 CSV 格式文件
 ```sql

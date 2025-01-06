@@ -30,7 +30,7 @@ under the License.
 
 DROP ASYNC MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于删除异步物化视图。
 
@@ -47,7 +47,7 @@ DROP MATERIALIZED VIEW (IF EXISTS)? mvName=multipartIdentifier
 2. mv_name:
         待删除的物化视图的名称。必填项。
 
-### Example
+## 举例
 
 1. 删除表物化视图mv1
 

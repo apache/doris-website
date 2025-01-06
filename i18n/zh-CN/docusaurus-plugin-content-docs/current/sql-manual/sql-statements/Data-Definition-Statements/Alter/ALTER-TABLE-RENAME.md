@@ -30,7 +30,7 @@ under the License.
 
 ALTER TABLE RENAME
 
-### Description
+## 描述
 
 该语句用于对已有 table 属性的某些名称进行重命名操作。这个操作是同步的，命令返回表示执行完毕。
 
@@ -80,7 +80,7 @@ RENAME COLUMN old_column_name new_column_name;
 - 建表时需要在 property 中设置 light_schema_change=true
 
 
-### Example
+## 举例
 
 1. 将名为 table1 的表修改为 table2
 

@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## years_diff
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT years_diff(DATETIME enddate, DATETIME startdate)`
 
 开始时间到结束时间相差几年
 
-### example
+## 举例
 
 ```
 mysql> select years_diff('2020-12-25','2019-10-25');

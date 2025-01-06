@@ -30,14 +30,14 @@ under the License.
 此函数不能在生产环境使用，将产生严重影响。
 :::
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BOOLEAN sleep(INT num)`
 
 使当前会话休眠 `num` 秒。
 
-### example
+## 举例
 
 ```sql
 mysql> select sleep(10);

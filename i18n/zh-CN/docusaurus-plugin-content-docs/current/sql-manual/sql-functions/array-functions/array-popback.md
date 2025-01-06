@@ -26,15 +26,15 @@ under the License.
 
 array_popback
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<T> array_popback(ARRAY<T> arr)`
 
 返回移除最后一个元素后的数组，如果输入参数为NULL，则返回NULL
 
-### example
+## 举例
 
 ```
 mysql> select array_popback(['test', NULL, 'value']);

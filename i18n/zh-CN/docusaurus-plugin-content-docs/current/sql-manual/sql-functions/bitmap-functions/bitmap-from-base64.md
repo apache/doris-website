@@ -24,14 +24,14 @@ under the License.
 
 ## bitmap_from_base64
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITMAP BITMAP_FROM_BASE64(VARCHAR input)`
 
 将一个base64字符串(`bitmap_to_base64`函数的结果)转化为一个BITMAP。当输入字符串不合法时，返回NULL。
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_to_string(bitmap_from_base64("AA=="));

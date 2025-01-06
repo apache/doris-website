@@ -30,7 +30,7 @@ under the License.
 
 ADMIN SET REPLICA STATUS
 
-### Description
+## 描述
 
 该语句用于设置指定副本的状态。
 
@@ -57,7 +57,7 @@ ADMIN SET REPLICA STATUS
 >
 >  设置为 Drop 状态的副本，它仍然可以读写。会在其他机器先增加一个健康副本，再删除该副本。相比设置Bad， 设置Drop的操作是安全的。
 
-### Example
+## 举例
 
  1. 设置 tablet 10003 在 BE 10001 上的副本状态为 bad。
 

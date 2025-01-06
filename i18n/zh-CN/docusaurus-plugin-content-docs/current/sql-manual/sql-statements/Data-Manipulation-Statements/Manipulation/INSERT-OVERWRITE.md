@@ -31,7 +31,7 @@ under the License.
 
 INSERT OVERWRITE
 
-### Description
+## 描述
 
 该语句的功能是重写表或表的某些分区
 
@@ -133,7 +133,7 @@ mysql> select * from auto_list;
 2 rows in set (0.15 sec)
 ```
 
-### Example
+## 举例
 
 假设有`test` 表。该表包含两个列`c1`, `c2`，两个分区`p1`,`p2`。建表语句如下所示
 

@@ -30,7 +30,7 @@ under the License.
 
 INSTALL PLUGIN
 
-### Description
+## 描述
 
 该语句用于安装一个插件。
 
@@ -46,7 +46,7 @@ source 支持三种类型：
 2. 指向一个插件目录的绝对路径。
 3. 指向一个 http 或 https 协议的 zip 文件下载路径
 
-### Example
+## 举例
 
 1. 安装一个本地 zip 文件插件：
 

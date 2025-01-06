@@ -25,20 +25,20 @@ under the License.
 ## split_by_regexp
 
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<STRING> split_by_regexp(STRING str, STRING pattern[, int max_limit])`
 将字符串 `str` ,根据输入的正则表达式 `pattern` 进行拆分，可选择保留的个数 `max_limit` ,默认全部保留, 最终返回一个拆分好的字符串数组。
 
-#### Arguments
+## 参数
 
 `str` — 需要分割的字符串. 类型: `String`
 `pattern` — 正则表达式. 类型: `String`
 `max_limit` — 保留个数，可选参数. 类型: `Int`
 
-### example
+## 举例
 
 ```
 mysql [test_query_qa]>select split_by_regexp('abcde',"");

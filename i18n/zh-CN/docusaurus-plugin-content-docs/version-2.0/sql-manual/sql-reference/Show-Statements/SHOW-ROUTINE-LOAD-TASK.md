@@ -30,7 +30,7 @@ under the License.
 
 SHOW ROUTINE LOAD TASK
 
-### Description
+## 描述
 
 查看一个指定的 Routine Load 作业的当前正在运行的子任务情况。
 
@@ -63,7 +63,7 @@ DataSourceProperties: {"0":19}
 - `BeId`：执行这个子任务的 BE 节点 ID。
 - `DataSourceProperties`：子任务准备消费的 Kafka Partition 的起始 offset。是一个 Json 格式字符串。Key 为 Partition Id。Value 为消费的起始 offset。
 
-### Example
+## 举例
 
 1. 展示名为 test1 的例行导入任务的子任务信息。
 

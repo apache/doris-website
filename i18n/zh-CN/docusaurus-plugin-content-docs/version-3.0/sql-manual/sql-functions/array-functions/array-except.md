@@ -28,15 +28,15 @@ under the License.
 
 array_except
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<T> array_except(ARRAY<T> array1, ARRAY<T> array2)`
 
 返回一个数组，包含所有在array1内但不在array2内的元素，不包含重复项，如果输入参数为NULL，则返回NULL
 
-### example
+## 举例
 
 ```
 mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table;

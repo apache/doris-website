@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## HLL_EMPTY
-### description
-#### Syntax
+## 描述
+## 语法
 
 `HLL_EMPTY(value)`
 
 HLL_EMPTY 返回一个 hll 类型的空值。
 
-### example
+## 举例
 ```
 MySQL > select hll_cardinality(hll_empty());
 +------------------------------+

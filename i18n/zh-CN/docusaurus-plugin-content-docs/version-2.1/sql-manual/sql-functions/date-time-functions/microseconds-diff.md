@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## microseconds_diff
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT microseconds_diff(DATETIME enddate, DATETIME startdate)`
 
 开始时间到结束时间相差几微秒
 
-### example
+## 举例
 
 ```
 mysql> select microseconds_diff('2020-12-25 21:00:00.623000','2020-12-25 21:00:00.123000');

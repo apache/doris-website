@@ -28,9 +28,9 @@ under the License.
 
 array_contains
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `BOOLEAN array_contains(ARRAY<T> arr, T value)`
 
@@ -42,11 +42,11 @@ array_contains
 NULL - arr为NULL时。
 ```
 
-### notice
+## 注意事项
 
 `仅支持向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 mysql> SELECT id,c_array,array_contains(c_array, 5) FROM `array_test`;

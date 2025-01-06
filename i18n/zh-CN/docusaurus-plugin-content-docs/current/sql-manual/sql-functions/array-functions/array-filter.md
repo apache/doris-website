@@ -30,9 +30,9 @@ array_filter(lambda,array)
 
 array array_filter(array arr, array_bool filter_column)
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 ```sql
 ARRAY<T> array_filter(lambda, ARRAY<T> arr)
 ARRAY<T> array_filter(ARRAY<T> arr, ARRAY<Bool> filter_column)
@@ -48,7 +48,7 @@ array_filter(x->(abs(x)-2)>0, array1);
 array_filter(c_array,[0,1,0]);
 ```
 
-### example
+## 举例
 
 ```shell
 mysql [test]>select c_array,array_filter(c_array,[0,1,0]) from array_test;

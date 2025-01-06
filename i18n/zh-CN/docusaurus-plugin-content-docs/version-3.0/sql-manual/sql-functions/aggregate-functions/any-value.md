@@ -24,21 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ANY_VALUE
-
-ANY_VALUE
 
 
-### description
-#### Syntax
+
+## 语法
 
 `ANY_VALUE(expr)`
 
-如果expr中存在非 NULL 值，返回任意非 NULL 值，否则返回 NULL。
+如果 expr 中存在非 NULL 值，返回任意非 NULL 值，否则返回 NULL。
 
 别名函数： `ANY(expr)`
 
-### example
+## 举例
 ```
 mysql> select id, any_value(name) from cost2 group by id;
 +------+-------------------+
@@ -48,5 +45,4 @@ mysql> select id, any_value(name) from cost2 group by id;
 |    2 | jack              |
 +------+-------------------+
 ```
-### keywords
-ANY_VALUE, ANY
+

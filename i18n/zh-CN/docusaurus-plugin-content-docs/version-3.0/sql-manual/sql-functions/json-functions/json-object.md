@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## json_object
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR json_object(VARCHAR,...)`
 
 
 生成一个包含指定Key-Value对的json object, 当Key值为NULL或者传入参数为奇数个时，返回异常错误
 
-### example
+## 举例
 
 ```
 MySQL> select json_object();

@@ -24,16 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## VARIANCE,VAR_POP,VARIANCE_POP
-### description
-#### Syntax
+
+## 语法
 
 `VARIANCE(expr)`
 
 
-返回expr表达式的方差
+返回 expr 表达式的方差
 
-### example
+## 举例
 ```
 MySQL > select variance(scan_rows) from log_statis group by datetime;
 +-----------------------+
@@ -50,5 +49,4 @@ MySQL > select var_pop(scan_rows) from log_statis group by datetime;
 +----------------------+
 ```
 
-### keywords
-VARIANCE,VAR_POP,VARIANCE_POP,VAR,POP
+

@@ -28,7 +28,7 @@ under the License.
 
 ## CREATE-STORAGE-VAULT
 
-### Description
+## 描述
 
 该命令用于创建存储库。本文档的主题描述了创建 Doris 自管理存储库的语法。
 

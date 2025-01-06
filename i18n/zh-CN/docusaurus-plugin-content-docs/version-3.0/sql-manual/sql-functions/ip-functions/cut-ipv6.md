@@ -26,9 +26,9 @@ under the License.
 
 CUT_IPV6
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `STRING CUT_IPV6(IPV4 ipv4, TinyInt cut_ipv6_bytes, TinyInt cut_ipv4_bytes)`
 
@@ -36,7 +36,7 @@ CUT_IPV6
 接受一个 IPv6 类型的地址，并以文本格式返回一个包含指定字节数的地址的字符串。
 
 
-### Example
+## 举例
 
 ```sql
 mysql [(none)]>select cut_ipv6(to_ipv6('2001:0DB8:AC10:FE01:FEED:BABE:CAFE:F00D'), 10, 0);

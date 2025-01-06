@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## HISTOGRAM
-### description
-#### Syntax
+## 描述
+## 语法
 
 `histogram(expr[, INT num_buckets])`
 
@@ -38,7 +38,7 @@ histogram（直方图）函数用于描述数据分布情况，它使用“等�
 - num_buckets：可选项。用于限制直方图桶（bucket）的数量，默认值 128。
 
 别名函数：`hist(expr[, INT num_buckets])`
-### example
+## 举例
 
 ```
 MySQL [test]> SELECT histogram(c_float) FROM histogram_test;

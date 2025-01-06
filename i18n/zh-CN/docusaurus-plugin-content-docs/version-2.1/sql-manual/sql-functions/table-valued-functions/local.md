@@ -30,13 +30,13 @@ under the License.
 
 local
 
-### Description
+## 描述
 
 Local表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
 
 该函数需要 ADMIN 权限。
 
-#### syntax
+## 语法
 
 ```sql
 local(

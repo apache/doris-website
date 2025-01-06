@@ -31,7 +31,7 @@ under the License.
 
 SELECT
 
-### description
+## 描述
 
 主要介绍 Select 语法使用
 
@@ -165,7 +165,7 @@ CTE 名称可以在其他 CTE 中引用，从而可以基于其他 CTE 定义 CT
 
 目前不支持递归的 CTE。
 
-### example
+## 举例
 
 1. 查询年龄分别是 18,20,25 的学生姓名
 

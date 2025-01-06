@@ -30,17 +30,17 @@ under the License.
 
 GROUPING_ID
 
-### Description
+## 描述
 
 这是一个用来计算分组级别的函数。当 SQL 语句中使用了 `GROUP BY` 子句时，`GROUPING_ID` 函数可以在 `SELECT <select> list`、`HAVING` 或 `ORDER BY` 子句中使用。
 
-#### Syntax
+## 语法
 
 ```sql
 GROUPING_ID ( <column_expression>[ ,...n ] )
 ```
 
-#### Arguments
+## 参数
 
 `<column_expression>`
 
@@ -98,7 +98,7 @@ SELECT 0 FROM T GROUP BY A,B
 
 对于只对一个字段（或字段表达式）进行分组查询，`GROUPING (<column_expression>)` 和 `GROUPING_ID(<column_expression>)` 是等价对。
 
-### Example
+## 举例
 
 在开始我们的例子之前，我们先准备好以下数据：
 

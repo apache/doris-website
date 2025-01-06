@@ -26,15 +26,15 @@ under the License.
 
 IS_IPV4_STRING
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `BOOLEAN IS_IPV4_STRING(STRING ipv4_str)`
 
 接收一个表示形式为字符串的IPv4地址作为参数，如果为格式正确且合法的IPv4地址，返回true；反之，返回false。
 
-### Example
+## 举例
 
 ```sql
 mysql> select is_ipv4_string(NULL);
