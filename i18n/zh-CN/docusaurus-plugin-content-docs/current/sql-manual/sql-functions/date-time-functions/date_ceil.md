@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## date_ceil
-### Description
+## 描述
 **Syntax**
 
 `DATETIME DATE_CEIL(DATETIME datetime, INTERVAL period type)`
@@ -39,7 +39,7 @@ period 参数是指定每个周期有多少个单位组成，开始的时间起�
 
 type 参数可以是下列值：YEAR, MONTH, DAY, HOUR, MINUTE, SECOND.
 
-### Example
+## 举例
 
 ```
 mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 second);

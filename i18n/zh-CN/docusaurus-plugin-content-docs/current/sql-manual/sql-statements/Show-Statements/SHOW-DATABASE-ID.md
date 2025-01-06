@@ -30,7 +30,7 @@ under the License.
 
 SHOW DATABASE ID
 
-### Description
+## 描述
 
 该语句用于根据 database id 查找对应的 database name（仅管理员使用）
 
@@ -40,7 +40,7 @@ SHOW DATABASE ID
 SHOW DATABASE [database_id]
 ```
 
-### Example
+## 举例
 
 1. 根据 database id 查找对应的 database name
    

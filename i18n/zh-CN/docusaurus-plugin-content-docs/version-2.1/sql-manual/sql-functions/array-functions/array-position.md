@@ -28,9 +28,9 @@ under the License.
 
 array_position
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `BIGINT array_position(ARRAY<T> arr, T value)`
 
@@ -42,7 +42,7 @@ position - value在array中的位置（从1开始计算）；
 NULL     - 如果数组为NULL。
 ```
 
-### example
+## 举例
 
 ```
 mysql> SELECT id,c_array,array_position(c_array, 5) FROM `array_test`;

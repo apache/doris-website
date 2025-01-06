@@ -30,13 +30,13 @@ under the License.
 
 `VARCHAR ST_AsBinary(GEOMETRY geo)`
 
-### Description
+## 描述
 
 将一个几何图形转化为一个标准 WKB（Well-known binary）的表示形式。
 
 目前支持对几何图形是：Point, LineString, Polygon。
 
-### example
+## 举例
 
 ```
 mysql> select ST_AsBinary(st_point(24.7, 56.7));

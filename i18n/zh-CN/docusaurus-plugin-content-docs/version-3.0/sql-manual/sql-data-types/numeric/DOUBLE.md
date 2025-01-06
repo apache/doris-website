@@ -24,11 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DOUBLE
-### description
-    DOUBLE
-    8字节浮点数
 
-### keywords
+## 描述
+DOUBLE
+8 字节浮点数
 
-    DOUBLE
+

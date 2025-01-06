@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## MAX
-### description
-#### Syntax
+## 描述
+## 语法
 
 `MAX(expr)`
 
 
 返回expr表达式的最大值
 
-### example
+## 举例
 ```
 MySQL > select max(scan_rows) from log_statis group by datetime;
 +------------------+

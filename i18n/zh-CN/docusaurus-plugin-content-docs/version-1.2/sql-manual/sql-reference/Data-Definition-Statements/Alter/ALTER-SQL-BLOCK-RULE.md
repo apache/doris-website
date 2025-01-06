@@ -30,7 +30,7 @@ under the License.
 
 ALTER SQL BLOCK RULE
 
-### Description
+## 描述
 
 修改SQL阻止规则，允许对sql/sqlHash/partition_num/tablet_num/cardinality/global/enable等每一项进行修改。
 
@@ -46,7 +46,7 @@ ALTER SQL_BLOCK_RULE rule_name
 - sql 和 sqlHash 不能同时被设置。这意味着，如果一个rule设置了sql或者sqlHash，则另一个属性将无法被修改；
 - sql/sqlHash 和 partition_num/tablet_num/cardinality 不能同时被设置。举个例子，如果一个rule设置了partition_num，那么sql或者sqlHash将无法被修改；
 
-### Example
+## 举例
 
 1. 根据SQL属性进行修改
 

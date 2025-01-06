@@ -30,7 +30,7 @@ under the License.
 
 GRANT
 
-### Description
+## 描述
 
 GRANT 命令有如下功能：
 
@@ -98,7 +98,7 @@ user_identity：
 
 role_list 是需要赋予的角色列表，以逗号分隔，指定的角色必须存在。
 
-### Example
+## 举例
 
 1. 授予所有 catalog 和库表的权限给用户
    

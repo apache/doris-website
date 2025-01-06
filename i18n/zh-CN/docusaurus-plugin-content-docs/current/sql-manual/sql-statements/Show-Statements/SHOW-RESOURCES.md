@@ -30,7 +30,7 @@ under the License.
 
 SHOW RESOURCES
 
-### Description
+## 描述
 
 该语句用于展示用户有使用权限的资源。普通用户仅能展示有使用权限的资源，root 或 admin 用户会展示所有的资源。
 
@@ -57,7 +57,7 @@ SHOW RESOURCES
 6. 如果指定了 OFFSET，则从偏移量 offset 开始显示查询结果。默认情况下偏移量为0。
 7. 如果使用了 LIKE，则会忽略 WHERE 语句。
 
-### Example
+## 举例
 
 1. 展示当前用户拥有权限的所有 Resource
     

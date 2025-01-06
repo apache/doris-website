@@ -24,15 +24,15 @@ under the License.
 
 ## bitmap_from_array
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITMAP BITMAP_FROM_ARRAY(ARRAY input)`
 
 将一个TINYINT/SMALLINT/INT/BIGINT类型的数组转化为一个BITMAP
 当输入字段不合法时，结果返回NULL
 
-### example
+## 举例
 
 ```
 mysql> select *, bitmap_to_string(bitmap_from_array(c_array)) from array_test;

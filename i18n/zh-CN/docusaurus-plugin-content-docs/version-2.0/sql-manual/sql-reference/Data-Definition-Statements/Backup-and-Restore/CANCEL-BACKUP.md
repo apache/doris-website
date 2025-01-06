@@ -30,7 +30,7 @@ under the License.
 
 CANCEL  BACKUP
 
-### Description
+## 描述
 
 该语句用于取消一个正在进行的 BACKUP 任务。
 
@@ -40,7 +40,7 @@ CANCEL  BACKUP
 CANCEL BACKUP FROM db_name;
 ```
 
-### Example
+## 举例
 
 1. 取消 example_db 下的 BACKUP 任务。
 

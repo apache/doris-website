@@ -30,7 +30,7 @@ under the License.
 
 ALTER SYSTEM DROP BACKEND
 
-### Description
+## 描述
 
 该语句用于删除 BACKEND 节点（仅管理员使用！）
 
@@ -46,7 +46,7 @@ ALTER SYSTEM DROP BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...]
 2. heartbeat_port 为该节点的心跳端口
 3. 增加和删除节点为同步操作。这两种操作不考虑节点上已有的数据，节点直接从元数据中删除，请谨慎使用。
 
-### Example
+## 举例
 
 1. 删除两个节点
 

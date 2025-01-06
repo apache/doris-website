@@ -26,9 +26,9 @@ under the License.
 
 IPV6_STRING_TO_NUM_OR_NULL
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `VARCHAR IPV6_STRING_TO_NUM_OR_NULL(VARCHAR ipv6_string)`
 
@@ -37,11 +37,11 @@ IPV6_STRING_TO_NUM_OR_NULL
 IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二进制格式的 IPv6 地址。
 如果输入字符串包含有效的 IPv4 地址，则返回其等效的 IPv6 地址。
 
-#### Notice
+### 注意事项
 
 如果输入非法的 IP 地址，会返回 `NULL`。该函数有一个别名为 `INET6_ATON`。
 
-### Example
+## 举例
 ```sql
 mysql> select hex(ipv6_string_to_num_or_null('1111::ffff'));
 +-----------------------------------------------+

@@ -24,14 +24,14 @@ under the License.
 
 ## array()
 array()
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<T> array(T, ...)`
 根据参数构造并返回array, 参数可以是多列或者常量
 
-### example
+## 举例
 
 ```
 mysql> select array("1", 2, 1.1);

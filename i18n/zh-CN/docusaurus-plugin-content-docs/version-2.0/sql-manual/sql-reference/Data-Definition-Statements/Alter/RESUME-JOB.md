@@ -30,7 +30,7 @@ under the License.
 
 RESUME JOB
 
-### Description
+## 描述
 
 用于重启一个 PAUSE 状态的 JOB 作业。重启的作业，将继续按照周期执行。STOP 状态的 JOB 无法被恢复。
 
@@ -38,7 +38,7 @@ RESUME JOB
 RESUME JOB FOR job_name;
 ```
 
-### Example
+## 举例
 
 1. 重启名称为 test1 的 JOB。
 

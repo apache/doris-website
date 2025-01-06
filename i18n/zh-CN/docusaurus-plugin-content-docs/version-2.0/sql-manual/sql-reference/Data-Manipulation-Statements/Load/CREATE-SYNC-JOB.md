@@ -30,7 +30,7 @@ under the License.
 
 CREATE SYNC JOB
 
-### Description
+## 描述
 
 数据同步(Sync Job)功能，支持用户提交一个常驻的数据同步作业，通过从指定的远端地址读取Binlog日志，增量同步用户在Mysql数据库的对数据更新操作的CDC(Change Data Capture)功能。
 
@@ -115,7 +115,7 @@ binlog_desc
       6. canal.password: instance的密码
       7. canal.debug: 可选，设置为true时，会将batch和每一行数据的详细信息都打印出来
 
-### Example
+## 举例
 
 1. 简单为 `test_db` 的 `test_tbl` 创建一个名为 `job1` 的数据同步作业，连接本地的Canal服务器，对应Mysql源表 `mysql_db1.tbl1`。
 

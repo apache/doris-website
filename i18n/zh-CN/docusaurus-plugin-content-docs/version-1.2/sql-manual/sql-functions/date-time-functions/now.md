@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## now
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME NOW()`
 
 
 获得当前的时间，以Datetime类型返回
 
-### example
+## 举例
 
 ```
 mysql> select now();
@@ -50,7 +50,7 @@ mysql> select now();
 获得当前的时间，以DatetimeV2类型返回
 precision代表了用户想要的秒精度，当前精度最多支持到微秒，即precision取值范围为[0, 6]。
 
-### example
+## 举例
 
 ```
 mysql> select now(3);

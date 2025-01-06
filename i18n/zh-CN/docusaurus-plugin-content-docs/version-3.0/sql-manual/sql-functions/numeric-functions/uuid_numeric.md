@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## uuid_numeric
-### description
-#### Syntax
+## 描述
+## 语法
 
 `LARGEINT uuid_numeric()`
 
 返回一个 `LARGEINT` 类型的 `uuid`。注意 `LARGEINT` 是一个 Int128，所以 `uuid_numeric()` 可能会得到负值。
 
-### example
+## 举例
 
 ```
 

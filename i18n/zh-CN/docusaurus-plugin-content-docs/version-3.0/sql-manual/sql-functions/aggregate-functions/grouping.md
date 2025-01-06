@@ -24,13 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## GROUPING
 
-### Name
-
-GROUPING
-
-### Description
+## 描述
 
 用在含有 CUBE、ROLLUP 或 GROUPING SETS 的 SQL 语句中，用于表示进行 CUBE、ROLLUP 或 GROUPING SETS 操作的列是否汇总。当结果集中的数据行是 CUBE、ROLLUP 或 GROUPING SETS 操作产生的汇总结果时，该函数返回 1，否则返回 0。GROUPING 函数可以在 `SELECT`、`HAVING` 和 `ORDER BY` 子句当中使用。
 
@@ -45,7 +40,7 @@ GROUPING( <column_expression> )
 
 返回值：BIGINT
 
-### Example
+## 举例
 
 下面的例子使用 `camp` 列进行分组操作，并对 `occupation` 的数量进行汇总，`GROUPING` 函数作用于 `camp` 列。
 
@@ -98,10 +93,9 @@ GROUP BY
 +----------+---------+----------+
 4 rows in set (0.01 sec)
 ```
-### Keywords
 
-GROUPING
 
-### Best Practice
+
+## 更多
 
 还可参阅 [GROUPING_ID](./grouping_id.md)

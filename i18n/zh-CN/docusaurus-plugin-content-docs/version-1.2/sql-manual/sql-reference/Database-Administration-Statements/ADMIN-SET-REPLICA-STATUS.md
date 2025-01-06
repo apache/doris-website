@@ -30,7 +30,7 @@ under the License.
 
 ADMIN SET REPLICA STATUS
 
-### Description
+## 描述
 
 该语句用于设置指定副本的状态。
 
@@ -55,7 +55,7 @@ ADMIN SET REPLICA STATUS
 >
 >  设置为 Bad 状态的副本可能立刻被删除，请谨慎操作。
 
-### Example
+## 举例
 
  1. 设置 tablet 10003 在 BE 10001 上的副本状态为 bad。
 

@@ -24,22 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ARRAY_AGG
 
-### description
-
-#### Syntax
+## 语法
 
 `ARRAY_AGG(col)`
 
 将一列中的值（包括空值 null）串联成一个数组，可以用于多行转一行（行转列）。
 
-### notice
+## 注意事项
 
 - 数组中元素不保证顺序。
 - 返回转换生成的数组。数组中的元素类型与 `col` 类型一致。
 
-### example
+## 举例
 
 ```sql
 mysql> select * from test_doris_array_agg;
@@ -79,6 +76,4 @@ mysql> select c1, array_agg(c2) from test_doris_array_agg group by c1;
 +------+-----------------+
 ```
 
-### keywords
 
-ARRAY_AGG

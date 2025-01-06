@@ -26,9 +26,9 @@ under the License.
 
 ## ENABLE-FEATURE
 
-### Description
+## 描述
 
-### Example
+## 举例
 
 ### Keywords
 

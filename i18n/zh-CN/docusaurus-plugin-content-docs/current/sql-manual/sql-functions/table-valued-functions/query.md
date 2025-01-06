@@ -30,7 +30,7 @@ under the License.
 
 query
 
-### description
+## 描述
 
 query 表函数（table-valued-function,tvf），可用于将查询语句直接透传到某个 catalog 进行数据查询
 
@@ -39,7 +39,7 @@ Doris 2.1.3 版本开始支持，当前仅支持透传查询 jdbc catalog。
 需要先在 Doris 中创建对应的 catalog。
 :::
 
-#### syntax
+## 语法
 
 ```sql
 query(
@@ -55,7 +55,7 @@ query表函数 tvf中的每一个参数都是一个 `"key"="value"` 对。
 - `catalog`： (必填) catalog名称，需要按照catalog的名称填写。
 - `query`： (必填) 需要执行的查询语句。
 
-### Example
+## 举例
 
 使用 query 函数查询 jdbc 数据源中的表
 

@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## from_days
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATE FROM_DAYS(INT N)`
 
 
 给定一个天数，返回一个DATE。注意，为了和mysql保持一致的行为，不存在0000-02-29这个日期。
 
-### example
+## 举例
 
 ```
 mysql> select from_days(730669);

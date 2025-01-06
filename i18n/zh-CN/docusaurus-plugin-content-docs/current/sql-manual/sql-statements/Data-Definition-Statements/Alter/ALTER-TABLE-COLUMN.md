@@ -28,7 +28,7 @@ under the License.
 
 ALTER TABLE COLUMN
 
-### Description
+## 描述
 
 该语句用于对已有 table 进行 Schema change 操作。schema change 是异步的，任务提交成功则返回，之后可使用[SHOW ALTER TABLE COLUMN](../../Show-Statements/SHOW-ALTER.md) 命令查看进度。
 

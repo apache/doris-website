@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## day_ceil
-### Description
+## 描述
 **Syntax**
 
 ```sql
@@ -41,7 +41,7 @@ Convert the date to the nearest rounding up time of the specified time interval 
 - period: specifies how many days each cycle consists of.
 - origin: starting from 0001-01-01T00:00:00.
 
-### Example
+## 举例
 
 ```
 mysql> select day_ceil("2023-07-13 22:28:18", 5);

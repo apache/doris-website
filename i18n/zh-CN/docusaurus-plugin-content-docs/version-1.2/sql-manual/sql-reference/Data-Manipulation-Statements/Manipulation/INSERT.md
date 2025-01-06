@@ -30,7 +30,7 @@ under the License.
 
 INSERT
 
-### Description
+## 描述
 
 该语句是完成数据插入操作。
 
@@ -68,7 +68,7 @@ INSERT INTO table_name
 
 当前执行 `INSERT` 语句时，对于有不符合目标表格式的数据，默认的行为是过滤，比如字符串超长等。但是对于有要求数据不能够被过滤的业务场景，可以通过设置会话变量 `enable_insert_strict` 为 `true` 来确保当有数据被过滤掉的时候，`INSERT` 不会被执行成功。
 
-### Example
+## 举例
 
 `test` 表包含两个列`c1`, `c2`。
 

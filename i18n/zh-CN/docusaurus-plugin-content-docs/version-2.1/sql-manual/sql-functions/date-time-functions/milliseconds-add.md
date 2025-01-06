@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## milliseconds_add
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIMEV2 milliseconds_add(DATETIMEV2 basetime, INT delta)`
 - basetime: DATETIMEV2 类型起始时间
 - delta: 从 basetime 起需要相加的毫秒数
 - 返回类型为 DATETIMEV2
 
-### example
+## 举例
 ```
 mysql> select milliseconds_add('2023-09-08 16:02:08.435123', 1);
 +--------------------------------------------------------------------------+

@@ -30,7 +30,7 @@ under the License.
 
 SHOW TABLE STATS
 
-### Description
+## 描述
 
 通过 `SHOW TABLE STATS` 查看表的统计信息收集概况。
 

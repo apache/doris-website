@@ -30,7 +30,7 @@ under the License.
 
 SHOW FUNCTIONS
 
-### Description
+## 描述
 
 查看数据库下所有的自定义(系统提供)的函数。如果用户指定了数据库，那么查看对应数据库的，否则直接查询当前会话所在数据库
 
@@ -63,7 +63,7 @@ Parameters
 
 **注意: "global"关键字在v2.0版本及以后才可用**
 
-### Example
+## 举例
 
 ```sql
 mysql> show full functions in testDb\G

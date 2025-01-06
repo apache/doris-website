@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `BOOLEAN assert_true(BOOLEAN condition, VarcharLiteral errmsg)`
 
 当 `condition` 为 `true` 时, 返回 `true`. 否则抛出一个异常，异常信息为 `errmsg`.
 `errmsg` 必须为字面量。
 
-### Example
+## 举例
 
 ```sql
 mysql> select assert_true(1, "wrong");

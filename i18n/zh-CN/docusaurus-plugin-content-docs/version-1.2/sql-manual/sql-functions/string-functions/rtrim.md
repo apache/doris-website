@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## rtrim
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR rtrim(VARCHAR str[, VARCHAR rhs])`
 
 
 当没有rhs参数时，将参数 str 中从右侧部分开始部分连续出现的空格去掉，否则去掉rhs
 
-### example
+## 举例
 
 ```
 mysql> SELECT rtrim('ab d   ') str;

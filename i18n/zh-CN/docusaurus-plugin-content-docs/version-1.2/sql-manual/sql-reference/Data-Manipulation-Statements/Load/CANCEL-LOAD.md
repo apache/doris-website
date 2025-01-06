@@ -30,7 +30,7 @@ under the License.
 
 CANCEL LOAD
 
-### Description
+## 描述
 
 该语句用于撤销指定 label 的导入作业。或者通过模糊匹配批量撤销导入作业
 
@@ -42,7 +42,7 @@ WHERE [LABEL = "load_label" | LABEL like "label_pattern" | STATE = "PENDING/ETL/
 
 注：1.2.0 版本之后支持根据 State 取消作业。
 
-### Example
+## 举例
 
 1. 撤销数据库 example_db 上， label 为 `example_db_test_load_label` 的导入作业
 

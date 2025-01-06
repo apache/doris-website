@@ -30,7 +30,7 @@ under the License.
 
 CREATE TABLE AS SELECT
 
-### Description
+## 描述
 
 该语句通过 Select 语句返回结果创建表结构，同时导入数据
 
@@ -65,7 +65,7 @@ CREATE TABLE table_name [( column_name_list )]
 
 
 
-### Example
+## 举例
 
 1. 使用 select 语句中的字段名
 

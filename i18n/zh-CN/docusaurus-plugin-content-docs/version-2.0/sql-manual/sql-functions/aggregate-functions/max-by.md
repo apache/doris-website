@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## MAX_BY
-### description
-#### Syntax
+## 描述
+## 语法
 
 `MAX_BY(expr1, expr2)`
 
 
 返回与 expr2 的最大值关联的 expr1 的值。
 
-### example
+## 举例
 ```
 MySQL > select * from tbl;
 +------+------+------+------+

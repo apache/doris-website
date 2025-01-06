@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## seconds_diff
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT seconds_diff(DATETIME enddate, DATETIME startdate)`
 
 开始时间到结束时间相差几秒
 
-### example
+## 举例
 
 ```
 mysql> select seconds_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');

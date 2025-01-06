@@ -23,8 +23,8 @@ under the License.
 -->
 
 ## running_difference
-### description
-#### Syntax
+## 描述
+## 语法
 
 `T running_difference(T x)`
 计算数据块中连续行值的差值。该函数的结果取决于受影响的数据块和块中数据的顺序。
@@ -39,13 +39,13 @@ SELECT running_difference(x) FROM t ORDER BY k;
 SELECT x - lag(x, 1, 0) OVER (ORDER BY k) FROM t;
 ```
 
-#### Arguments
+## 参数
 `x` - 一列数据.数据类型可以是TINYINT,SMALLINT,INT,BIGINT,LARGEINT,FLOAT,DOUBLE,DATE,DATETIME,DECIMAL
 
-#### Returned value
+## 返回值
 第一行返回 0，随后的每一行返回与前一行的差值。
 
-### example
+## 举例
 
 ```sql
 DROP TABLE IF EXISTS running_difference_test;

@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## hex
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR hex(VARCHAR str)`
 
@@ -37,7 +37,7 @@ under the License.
 如果输入参数是字符串，则将每个字符转化为两个十六进制的字符，将转化后的所有字符拼接为字符串输出
 
 
-### example
+## 举例
 
 ```
 输入字符串

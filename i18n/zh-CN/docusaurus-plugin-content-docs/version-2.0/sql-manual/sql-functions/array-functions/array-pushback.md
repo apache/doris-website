@@ -26,21 +26,21 @@ under the License.
 
 array_pushback
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `Array<T> array_pushback(Array<T> arr, T value)`
 
 将 value 添加到数组的尾部。
 
-#### Returned value
+## 返回值
 
 返回添加 value 后的数组
 
 类型：Array.
 
-### example
+## 举例
 
 ```
 mysql> select array_pushback([1, 2], 3);

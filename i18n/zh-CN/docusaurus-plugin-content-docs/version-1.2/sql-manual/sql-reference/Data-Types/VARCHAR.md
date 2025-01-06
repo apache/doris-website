@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## VARCHAR
-### description
+## 描述
     VARCHAR(M)
     变长字符串，M代表的是变长字符串的字节长度。M的范围是1-65533。
     

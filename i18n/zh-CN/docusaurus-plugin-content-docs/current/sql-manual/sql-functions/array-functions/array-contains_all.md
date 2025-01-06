@@ -28,9 +28,9 @@ under the License.
 
 array_contains_all
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `BOOLEAN array_contains_all(ARRAY<T> array1, ARRAY<T> array2)`
 
@@ -42,7 +42,7 @@ array_contains_all
 NULL - array1或array2为NULL。
 ```
 
-### example
+## 举例
 
 ```
 mysql [(none)]>select array_contains_all([1,2,3,4], [1,2,4]);

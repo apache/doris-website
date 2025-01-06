@@ -23,14 +23,14 @@ under the License.
 -->
 
 ## to_monday
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `DATE to_monday(DATETIME date)`
 
 将日期或带时间的日期向下舍入到最近的星期一。作为一种特殊情况，日期参数 1970-01-01、1970-01-02、1970-01-03 和 1970-01-04 返回日期 1970-01-01
 
-### example
+## 举例
 
 ```
 MySQL [(none)]> select to_monday('2022-09-10');

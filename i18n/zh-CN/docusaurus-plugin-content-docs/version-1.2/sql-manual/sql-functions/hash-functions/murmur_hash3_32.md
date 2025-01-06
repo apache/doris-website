@@ -24,14 +24,14 @@ under the License.
 
 ## murmur_hash3_32
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT MURMUR_HASH3_32(VARCHAR input, ...)`
 
 返回输入字符串的32位murmur3 hash值
 
-### example
+## 举例
 
 ```
 mysql> select murmur_hash3_32(null);

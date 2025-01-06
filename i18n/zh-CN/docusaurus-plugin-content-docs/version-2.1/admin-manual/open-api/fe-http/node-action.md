@@ -56,7 +56,7 @@ under the License.
 
 `GET /rest/v2/manager/node/brokers`
 
-### Description
+## 描述
 
 用于获取集群获取 fe, be, broker 节点信息。
 
@@ -172,7 +172,7 @@ brokers:
 
 `POST /rest/v2/manager/node/configuration_info`
 
-### Description
+## 描述
 
 configuration_name 用于获取节点配置项名称。  
 node_list 用于获取节点列表。  
@@ -349,7 +349,7 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
 
 `POST /rest/v2/manager/node/set_config/be`
 
-### Description
+## 描述
 
 用于修改 fe 或 be 节点配置值
 
@@ -443,7 +443,7 @@ failed 表示修改失败的配置信息。
 
 `POST /rest/v2/manager/node/{action}/be`
 
-### Description
+## 描述
 
 用于添加/删除/下线 be 节点
 
@@ -542,7 +542,7 @@ data ""/报错信息
 
 `POST /rest/v2/manager/node/{action}/fe`
 
-### Description
+## 描述
 
 用于添加/删除 fe 节点
 

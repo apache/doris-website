@@ -30,7 +30,7 @@ under the License.
 
 SHOW TABLE STATUS
 
-### Description
+## 描述
 
 该语句用于查看 Table 的一些信息。
 
@@ -45,7 +45,7 @@ SHOW TABLE STATUS
 
 1. 该语句主要用于兼容 MySQL 语法，目前仅显示 Comment 等少量信息
 
-### Example
+## 举例
 
  1. 查看当前数据库下所有表的信息
 

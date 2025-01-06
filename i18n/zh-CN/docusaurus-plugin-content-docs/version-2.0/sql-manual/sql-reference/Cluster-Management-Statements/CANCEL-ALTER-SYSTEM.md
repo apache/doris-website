@@ -30,7 +30,7 @@ under the License.
 
 CANCEL DECOMMISSION
 
-### Description
+## 描述
 
 该语句用于撤销一个节点下线操作。（仅管理员使用！）
 
@@ -48,7 +48,7 @@ CANCEL DECOMMISSION BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...];
 CANCEL DECOMMISSION BACKEND "id1","id2","id3...";
 ```
 
-### Example
+## 举例
 
  1. 取消两个节点的下线操作：
     

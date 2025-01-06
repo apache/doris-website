@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## group_bit_and
-### description
-#### Syntax
+## 描述
+## 语法
 
 `expr GROUP_BIT_AND(expr)`
 
 对expr进行 and 计算, 返回新的expr
 支持所有INT类型
 
-### example
+## 举例
 
 ```
 mysql> select * from group_bit;

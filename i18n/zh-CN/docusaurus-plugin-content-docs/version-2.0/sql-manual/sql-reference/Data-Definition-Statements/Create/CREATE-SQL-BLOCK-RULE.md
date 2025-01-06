@@ -30,7 +30,7 @@ under the License.
 
 CREATE SQL BLOCK RULE
 
-### Description
+## 描述
 
 该语句创建 SQL 阻止规则，该功能可用于限制任何 sql 语句（包括 DDL 和 DML 语句）。
 
@@ -57,7 +57,7 @@ CREATE SQL_BLOCK_RULE rule_name
 - global：是否全局 (所有用户) 生效，默认为 false
 - enable：是否开启阻止规则，默认为 true
 
-### Example
+## 举例
 
 1. 创建一个名称为 test_rule 的阻止规则
 

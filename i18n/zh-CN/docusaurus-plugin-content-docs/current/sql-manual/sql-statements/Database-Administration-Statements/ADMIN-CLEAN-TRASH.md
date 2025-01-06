@@ -31,7 +31,7 @@ under the License.
 
 ADMIN CLEAN TRASH
 
-### Description
+## 描述
 
 该语句用于清理 backend 内的垃圾数据
 
@@ -45,7 +45,7 @@ ADMIN CLEAN TRASH [ON ("BackendHost1:BackendHeartBeatPort1", "BackendHost2:Backe
 
 1. 以 BackendHost:BackendHeartBeatPort 表示需要清理的 backend ，不添加on限定则清理所有 backend 。
 
-### Example
+## 举例
 
 1. 清理所有be节点的垃圾数据。
 

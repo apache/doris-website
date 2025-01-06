@@ -30,24 +30,24 @@ array_pushfront
 
 </version>
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `Array<T> array_pushfront(Array<T> arr, T value)`
 将value添加到数组的开头.
 
-#### Returned value
+## 返回值
 
 返回添加value后的数组
 
 类型: Array.
 
-### notice
+## 注意事项
 
 `只支持在向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 mysql> select array_pushfront([1, 2], 3);

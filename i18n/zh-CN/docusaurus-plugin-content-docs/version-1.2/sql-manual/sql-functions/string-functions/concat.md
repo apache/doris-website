@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## concat
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR concat(VARCHAR,...)`
 
 
 将多个字符串连接起来, 如果参数中任意一个值是 NULL，那么返回的结果就是 NULL
 
-### example
+## 举例
 
 ```
 mysql> select concat("a", "b");

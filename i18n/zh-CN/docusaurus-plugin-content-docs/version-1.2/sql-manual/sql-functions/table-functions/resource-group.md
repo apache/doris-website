@@ -34,13 +34,13 @@ resource_groups
 
 </version>
 
-### description
+## 描述
 
 表函数，生成 resource_groups 临时表，可以查看当前资源组信息。
 
 该函数用于from子句中。
 
-#### syntax
+## 语法
 `resource_groups()`
 
 resource_groups()表结构：
@@ -56,7 +56,7 @@ mysql> desc function resource_groups();
 +-------+-------------+------+-------+---------+-------+
 ```
 
-### example
+## 举例
 ```
 mysql> select * from resource_groups()\G
 +-------+------------+-----------+-------+

@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## json_quote
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR json_quote(VARCHAR)`
 
 
 将json_value用双引号（"）括起来，跳过其中包含的特殊转义字符
 
-### example
+## 举例
 
 ```
 MySQL> SELECT json_quote('null'), json_quote('"null"');

@@ -26,20 +26,20 @@ under the License.
 
 array_pushfront
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `Array<T> array_pushfront(Array<T> arr, T value)`
 将 value 添加到数组的开头。
 
-#### Returned value
+## 返回值
 
 返回添加 value 后的数组
 
 类型：Array.
 
-### example
+## 举例
 
 ```
 mysql> select array_pushfront([1, 2], 3);

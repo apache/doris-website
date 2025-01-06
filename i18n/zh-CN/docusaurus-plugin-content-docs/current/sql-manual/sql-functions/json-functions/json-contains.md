@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## json_contains
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BOOLEAN json_contains(JSON json_str, JSON candidate)`
 
@@ -37,7 +37,7 @@ under the License.
 
 通过返回 1 或 0 来指示给定的 candidate JSON 文档是否包含在 json_str JSON json_path 路径下的文档中
 
-### example
+## 举例
 
 ```
 mysql> SET @j = '{"a": 1, "b": 2, "c": {"d": 4}}';

@@ -24,11 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## BIGINT
-### description
-    BIGINT
-    8字节有符号整数，范围[-9223372036854775808, 9223372036854775807]
+
+## 描述
+
+BIGINT
+8 字节有符号整数，范围[-9223372036854775808, 9223372036854775807]
 
 ### keywords
 
-    BIGINT
+BIGINT

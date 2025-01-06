@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Description
-### Syntax
+
+## 语法
 
 `LINEAR_HISTOGRAM(expr, DOUBLE interval[, DOUBLE offset)`
 
@@ -36,7 +36,7 @@ linear_histogram 函数用于描述数据分布情况，它使用“等宽”的
 - `interval`：必须项。桶的宽度。
 - `offset`：可选项。默认为 0，范围是 `[0, interval)`。
 
-## Example
+## 举例
 
 ```
 mysql> select linear_histogram(a, 2) from histogram_test;
@@ -64,6 +64,3 @@ mysql> select linear_histogram(a, 2, 1) from histogram_test;
   - `acc_count`：前面桶与当前桶元素的累计总量。
 
 
-## Keywords
-
-LINEAR_HISTOGRAM

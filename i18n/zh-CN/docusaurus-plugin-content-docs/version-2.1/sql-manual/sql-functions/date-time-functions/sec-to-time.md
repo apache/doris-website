@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## sec_to_time
-### description
-#### Syntax
+## 描述
+## 语法
 
 `TIME sec_to_time(INT timestamp)`
 
 参数为INT类型时间戳，函数返回TIME类型时间。
 
-### example
+## 举例
 
 ```
 mysql >select sec_to_time(time_to_sec(cast('16:32:18' as time)));

@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## MIN_BY
-### description
-#### Syntax
+## 描述
+## 语法
 
 `MIN_BY(expr1, expr2)`
 
 
 返回与 expr2 的最小值关联的 expr1 的值。
 
-### example
+## 举例
 ```
 MySQL > select * from tbl;
 +------+------+------+------+

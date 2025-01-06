@@ -30,7 +30,7 @@ under the License.
 
 ANALYZE
 
-### Description
+## 描述
 
 该语句用于收集各列的统计信息。
 
@@ -45,7 +45,7 @@ ANALYZE < TABLE | DATABASE table_name | db_name >
 - sync：同步收集统计信息。收集完后返回。若不指定则异步执行并返回 JOB ID。
 - sample percent | rows：抽样收集统计信息。可以指定抽样比例或者抽样行数。
 
-### Example
+## 举例
 
 对一张表按照 10% 的比例采样收集统计数据：
 

@@ -24,8 +24,8 @@ under the License.
 
 ## mod
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `mod(col_a, col_b)`  
 
@@ -33,7 +33,7 @@ under the License.
 
 求a / b的余数。浮点类型请使用fmod函数。
 
-### example
+## 举例
 
 ```
 mysql> select mod(10, 3);

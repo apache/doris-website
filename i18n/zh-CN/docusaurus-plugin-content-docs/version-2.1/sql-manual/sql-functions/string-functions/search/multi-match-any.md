@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## multi_match_any
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `TINYINT multi_match_any(VARCHAR haystack, ARRAY<VARCHAR> patterns)`
 
 
 检查字符串 `haystack` 是否与 re2 语法中的正则表达式 `patterns` 相匹配。如果都没有匹配的正则表达式返回 0，否则返回 1。
 
-### example
+## 举例
 
 ```
 mysql> select multi_match_any('Hello, World!', ['hello', '!', 'world']);

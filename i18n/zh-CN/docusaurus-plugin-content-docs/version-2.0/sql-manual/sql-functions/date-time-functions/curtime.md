@@ -30,11 +30,11 @@ under the License.
 
 `TIME CURTIME()`
 
-### Description
+## 描述
 
 获得当前的时间，以TIME类型返回
 
-### Examples
+## 举例s
 
 ```sql
 mysql> select current_time();

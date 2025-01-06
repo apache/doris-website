@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## bitmap_and
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITMAP BITMAP_AND(BITMAP lhs, BITMAP rhs)`
 
 计算两个及以上输入bitmap的交集，返回新的bitmap.
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_count(bitmap_and(to_bitmap(1), to_bitmap(2))) cnt;

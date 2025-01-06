@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## weekday
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `INT WEEKDAY (DATETIME date)`
 
@@ -46,7 +46,7 @@ dayofweek |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
           +-----+-----+-----+-----+-----+-----+-----+
 ```
 
-### example
+## 举例
 
 ```
 mysql> select weekday('2019-06-25');

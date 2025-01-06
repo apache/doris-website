@@ -30,7 +30,7 @@ under the License.
 
 SHOW DATA TYPES
 
-### Description
+## 描述
 
     该语句用于查看DORIS支持的所有数据类型。
 
@@ -39,7 +39,7 @@ SHOW DATA TYPES
         SHOW DATA TYPES;
         ```
 
-### Example
+## 举例
 
     1. 查看Doris支持的所有数据类型
 

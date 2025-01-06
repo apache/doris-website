@@ -30,7 +30,7 @@ under the License.
 
 PAUSE MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于暂停物化视图的定时调度
 
@@ -40,7 +40,7 @@ PAUSE MATERIALIZED VIEW
 PAUSE MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 ```
 
-### Example
+## 举例
 
 1. 暂停物化视图mv1的定时调度
 

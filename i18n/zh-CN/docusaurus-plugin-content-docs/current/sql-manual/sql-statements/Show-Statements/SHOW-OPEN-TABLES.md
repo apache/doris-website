@@ -30,7 +30,7 @@ under the License.
 
 SHOW TABLES
 
-### Description
+## 描述
 
 该语句用于展示当前 db 下所有的 table
 
@@ -40,7 +40,7 @@ SHOW TABLES
 SHOW TABLES
 ```
 
-### Example
+## 举例
 
 ### Keywords
 

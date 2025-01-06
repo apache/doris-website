@@ -26,19 +26,19 @@ under the License.
 
 TO_IPV4_OR_DEFAULT
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `IPV4 TO_IPV4_OR_DEFAULT(STRING ipv4_str)`
 
 与to_ipv4函数类似，但如果IPv4地址的格式非法，则返回0.0.0.0。
 
-#### Notice
+### 注意事项
 
 入参如果为 `NULL`，则返回 `0.0.0.0。`
 
-### Example
+## 举例
 
 ```sql
 mysql> select to_ipv4_or_default('.');

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## 描述
 
 使用CRC32算法计算结果。
 
@@ -34,7 +34,7 @@ under the License.
 
 返回字符串的CRC值。
 
-### Example
+## 举例
 
 ```sql
 mysql> select crc32("abc");

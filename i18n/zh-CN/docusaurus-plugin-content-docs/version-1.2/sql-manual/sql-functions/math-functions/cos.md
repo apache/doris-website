@@ -24,13 +24,13 @@ under the License.
 
 ## cos
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE cos(DOUBLE x)`
 返回`x`的余弦值，`x` 为弧度值.
 
-### example
+## 举例
 
 ```
 mysql> select cos(1);

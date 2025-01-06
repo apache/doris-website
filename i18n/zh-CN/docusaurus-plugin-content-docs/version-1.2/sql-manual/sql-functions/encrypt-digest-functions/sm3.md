@@ -24,13 +24,13 @@ under the License.
 
 ## SM3
 
-### description
+## 描述
 计算 SM3 256-bit
-#### Syntax
+## 语法
 
 `SM3(str)`
 
-### example
+## 举例
 
 ```
 MySQL > select sm3("abcd");

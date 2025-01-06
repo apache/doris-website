@@ -30,7 +30,7 @@ under the License.
 
 DROP TABLE
 
-### Description
+## 描述
 
 该语句用于删除 Table。
 语法：
@@ -45,7 +45,7 @@ DROP TABLE [IF EXISTS] [db_name.]table_name [FORCE];
 - 执行 `DROP TABLE` 一段时间内，可以通过 RECOVER 语句恢复被删除的表。详见 [RECOVER](../../../../sql-manual/sql-statements/Database-Administration-Statements/RECOVER) 语句。
 - 如果执行 `DROP TABLE FORCE`，则系统不会检查该表是否存在未完成的事务，表将直接被删除并且不能被恢复，一般不建议执行此操作。
 
-### Example
+## 举例
 
 1. 删除一个 Table
    
