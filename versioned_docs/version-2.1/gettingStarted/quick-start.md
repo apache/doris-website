@@ -1,7 +1,7 @@
 ---
 {
     "title": "Quick Start",
-    "language": "zh-CN"
+    "language": "en"
 }
 
 ---
@@ -96,7 +96,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 ## Local Quick Deployment
 
-::: info Environment Recommendations:
+:::info Environment Recommendations:
 
 * Choose a mainstream Linux environment on AMD/ARM, preferably CentOS 7.1 or Ubuntu 16.04 and above. For more supported environments, refer to the installation and deployment section.
 
