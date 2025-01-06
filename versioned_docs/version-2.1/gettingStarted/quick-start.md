@@ -1,6 +1,6 @@
 ---
 {
-    "title": "快速体验",
+    "title": "Quick Start",
     "language": "zh-CN"
 }
 
