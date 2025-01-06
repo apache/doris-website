@@ -34,17 +34,23 @@ under the License.
 2. 通过手动部署单副本 Doris 实例，不具有数据多副本存储能力，单台机器宕机可能会造成数据丢失。
 
 3. 本示例中的建表均为单副本，在生产中请使用多副本存储数据。
-
-4. 使用 Docker 快速部署仅适用于 `3.0.4` 及后续版本。
-
-5. 自 `3.0.4` 版本起，为使容器传参更清晰简单化，Doris 镜像新增一套接口逻辑，原有接口逻辑可正常使用，两套逻辑完全兼容。
 :::
 
 ## 使用 Docker 快速部署
 
-### 第 1 步：创建 docker-compose.yaml 文件
+### 第 1 步：调整宿主机环境变量
 
-复制以下内容到 docker-compose.yaml，替换 DORIS_QUICK_START_VERSION 参数为指定版本，如 `3.0.4`。
+复制以下内容，在宿主机上顺次执行，调整以下三处环境变量值，以满足进程运行最低需要。
+
+```text
+ulimit -n 65536
+swapoff -a
+sysctl -w vm.max_map_count=2000000
+```
+
+### 第 2 步：创建 docker-compose.yaml 文件
+
+复制以下内容到 docker-compose.yaml，替换 DORIS_QUICK_START_VERSION 参数为指定版本，如 `3.0.3`。
 
 ```text
 version: "3"
@@ -70,7 +76,7 @@ services:
     network_mode: host
 ```
 
-### 第 2 步：启动集群
+### 第 3 步：启动集群
 
 使用 docker-compose 命令启动集群
 
@@ -78,7 +84,7 @@ services:
 docker-compose -f ./docker-compose.yaml up -d
 ```
 
-### 第 3 步：使用 MySQL 客户端连接集群，并检查集群状态
+### 第 4 步：使用 MySQL 客户端连接集群，并检查集群状态
 
 ```sql
 ## 检查 FE 状态，确定 Join 与 Alive 列都为 true

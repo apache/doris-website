@@ -35,7 +35,7 @@ Quick deployment **is only suitable for local development**. Do not use this dep
 
 3. The tables created in this example are single-instance. In production, please use multi-replica storage for data.
 
-4. The quick deployment using Docker is only applicable to versions `2.1.8`, `3.0.4`, and later versions.
+4. The quick deployment of Docker without setting environment variables is only applicable to versions `2.1.8`, `3.0.4`, and later versions.
 
 5. Starting from version `3.0.4`, in order to make the passing of parameters to the container clearer and simpler, the Doris image has introduced a new set of interface logic. The original interface logic can still be used normally, and both sets of logic are fully compatible.
 :::
