@@ -32,17 +32,17 @@ HLL is used for approximate deduplication and performs better than Count Distinc
 
 Create the following CSV file: test_hll.csv
 
-```sql
-koga
-nijg
-lojn
-lofn
-jfin
-kon
-nhga
-nfubg
-huang
-buag
+```SQL
+1001|koga
+1002|nijg
+1003|lojn
+1004|lofn
+1005|jfin
+1006|kon
+1007|nhga
+1008|nfubg
+1009|huang
+1010|buag
 ```
 
 ### Step 2: Create Table in Database
