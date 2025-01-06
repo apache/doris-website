@@ -1,6 +1,9 @@
 ---
-title: Configuration Instructions
-language: en
+{
+  
+  "title": "ConfigurationInstructions", 
+  "language": "en"
+}
 ---
 
 <!--
