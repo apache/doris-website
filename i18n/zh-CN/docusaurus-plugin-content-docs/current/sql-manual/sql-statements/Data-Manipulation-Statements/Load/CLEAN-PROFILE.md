@@ -30,7 +30,7 @@ under the License.
 
 CLEAN PROFILE
 
-### Description
+## 描述
 
 用于手动清理所有历史 query 或 load 的 profile 信息。
 
@@ -40,7 +40,7 @@ CLEAN PROFILE
 CLEAN ALL PROFILE;
 ```
 
-### Example
+## 举例
 
 1. 清理所有 profile 信息。
 

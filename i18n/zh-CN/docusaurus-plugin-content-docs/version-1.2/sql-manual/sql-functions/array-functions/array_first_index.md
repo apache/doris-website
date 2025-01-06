@@ -30,9 +30,9 @@ array_first_index
 
 </version>
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<T> array_first_index(lambda, ARRAY<T> array1, ...)`
 
@@ -47,7 +47,7 @@ array_first_index(x->(abs(x)-1), array1);
 array_first_index((x,y)->(x = y), array1, array2);
 ```
 
-### example
+## 举例
 
 ```
 mysql> select array_first_index(x->x+1>3, [2, 3, 4]);

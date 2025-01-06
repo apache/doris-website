@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## HLL_UNION_AGG
-### description
-#### Syntax
+## 描述
+## 语法
 
 `HLL_UNION_AGG(hll)`
 
@@ -39,7 +39,7 @@ HLL是基于HyperLogLog算法的工程实现，用于保存HyperLogLog计算过�
 
 导入的时候通过hll_hash函数来指定数据中哪一列用于生成hll列，它常用于替代count distinct，通过结合rollup在业务上用于快速计算uv等
 
-### example
+## 举例
 ```
 MySQL > select HLL_UNION_AGG(uv_set) from test_uv;;
 +-------------------------+

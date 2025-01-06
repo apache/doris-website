@@ -24,21 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TOPN
-### description
-#### Syntax
+
+
+## 语法
 
 `topn(expr, INT top_num[, INT space_expand_rate])`
 
-该topn函数使用Space-Saving算法计算expr中的top_num个频繁项，结果为频繁项及其出现次数，该结果为近似值
+该 topn 函数使用 Space-Saving 算法计算 expr 中的 top_num 个频繁项，结果为频繁项及其出现次数，该结果为近似值
 
-space_expand_rate参数是可选项，该值用来设置Space-Saving算法中使用的counter个数
+space_expand_rate 参数是可选项，该值用来设置 Space-Saving 算法中使用的 counter 个数
 ```
 counter numbers = top_num * space_expand_rate
 ```
-space_expand_rate的值越大，结果越准确，默认值为50
+space_expand_rate 的值越大，结果越准确，默认值为 50
 
-### example
+## 举例
 ```
 MySQL [test]> select topn(keyword,10) from keyword_table where date>= '2020-06-01' and date <= '2020-06-19' ;
 +------------------------------------------------------------------------------------------------------------+
@@ -56,5 +56,5 @@ MySQL [test]> select date,topn(keyword,10,100) from keyword_table where date>= '
 | 2020-06-17 | a:9, b:8, c:8, j:8, d:7, e:7, f:7, h:7, i:7, k:7                                              |
 +------------+-----------------------------------------------------------------------------------------------+
 ```
-### keywords
-TOPN
+
+

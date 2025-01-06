@@ -30,7 +30,7 @@ under the License.
 
 CREATE REPOSITORY
 
-### Description
+## 描述
 
 该语句用于创建仓库。仓库用于属于备份或恢复。仅 root 或 superuser 用户可以创建仓库。
 
@@ -49,7 +49,7 @@ PROPERTIES ("key"="value", ...);
 - 根据 S3、HDFS 的不同类型，PROPERTIES 有所不同，具体见示例。
 - ON LOCATION ,如果是 S3 , 这里后面跟的是 Bucket Name。
 
-### Example
+## 举例
 
 1. 创建名为 s3_repo 的仓库。
 

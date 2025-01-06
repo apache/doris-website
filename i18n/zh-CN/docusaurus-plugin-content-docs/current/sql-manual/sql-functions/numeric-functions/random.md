@@ -24,8 +24,8 @@ under the License.
 
 ## random
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE random()`
 返回0-1之间的随机数。
@@ -40,7 +40,7 @@ under the License.
 
 注意：所有参数必须为常量。
 
-### example
+## 举例
 
 ```sql
 mysql> select random();

@@ -30,13 +30,13 @@ under the License.
 
 local
 
-### Description
+## 描述
 
 Local表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
 
 该函数需要 ADMIN 权限。
 
-#### syntax
+## 语法
 
 ```sql
 local(
@@ -98,7 +98,7 @@ local(
 - 其他参数：
     - `path_partition_keys`：（选填）指定文件路径中携带的分区列名，例如 `/path/to/city=beijing/date="2023-07-09"`, 则填写 `path_partition_keys="city,date"`，将会自动从路径中读取相应列名和列值进行导入。
 
-### Examples
+## 举例s
 
 分析指定 BE 上的日志文件：
 

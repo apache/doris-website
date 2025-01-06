@@ -24,15 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MAP_AGG
-### description
-#### Syntax
+
+## 语法
 
 `MAP_AGG(expr1, expr2)`
 
 返回一个 map, 由 expr1 作为键，expr2 作为对应的值。
 
-### example
+## 举例
 ```
 MySQL > select `n_nationkey`, `n_name`, `n_regionkey` from `nation`;
 +-------------+----------------+-------------+
@@ -87,5 +86,4 @@ MySQL > select n_regionkey, map_agg(`n_name`, `n_nationkey` % 5) from `nation` g
 |           4 | {"EGYPT":4, "IRAN":0, "IRAQ":1, "JORDAN":3, "SAUDI ARABIA":0}          |
 +-------------+------------------------------------------------------------------------+
 ```
-### keywords
-MAP_AGG
+

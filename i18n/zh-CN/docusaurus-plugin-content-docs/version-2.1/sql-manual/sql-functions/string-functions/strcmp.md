@@ -26,7 +26,7 @@ under the License.
 
 ## strcmp
 
-### description
+## 描述
 
 `TINYINT strcmp(VARCHAR str0, VARCHAR str1)`
 
@@ -38,7 +38,7 @@ under the License.
 如果 `str0` 在字典顺序上大于 `str1`，返回 1。
 如果 `str0` 在字典顺序上小于 `str1`，返回 -1。
 
-### example
+## 举例
 
 ```sql
 mysql> select strcmp("test", "test");

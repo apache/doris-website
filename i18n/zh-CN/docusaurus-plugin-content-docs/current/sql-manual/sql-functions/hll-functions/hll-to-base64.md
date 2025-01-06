@@ -24,14 +24,14 @@ under the License.
 
 ## hll_to_base64
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR HLL_TO_BASE64(HLL input)`
 
 将一个hll转化成一个base64字符串。输入是NULL的话返回NULL。
 
-### example
+## 举例
 
 ```
 mysql> select hll_to_base64(NULL);

@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## nullif
-### description
-#### Syntax
+## 描述
+## 语法
 
 `nullif(expr1, expr2)`
 
@@ -40,7 +40,7 @@ CASE
 END
 ```
 
-### example
+## 举例
 
 ```
 mysql> select nullif(1,1);

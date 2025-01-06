@@ -24,13 +24,13 @@ under the License.
 
 ## bin
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `STRING bin(BIGINT x)`
 将十进制数`x`转换为二进制数.
 
-### example
+## 举例
 
 ```
 mysql> select bin(0);

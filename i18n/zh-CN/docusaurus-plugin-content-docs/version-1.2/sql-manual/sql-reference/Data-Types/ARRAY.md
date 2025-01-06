@@ -30,7 +30,7 @@ under the License.
 
 ARRAY
 
-### description
+## 描述
 
 `ARRAY<T>`
 
@@ -43,7 +43,7 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE,
 DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-### example
+## 举例
 
 建表示例如下：
 

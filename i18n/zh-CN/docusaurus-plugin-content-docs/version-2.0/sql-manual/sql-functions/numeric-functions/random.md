@@ -24,13 +24,13 @@ under the License.
 
 ## random
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE random()`
 返回0-1的随机数。
 
-### example
+## 举例
 
 ```
 mysql> select random();

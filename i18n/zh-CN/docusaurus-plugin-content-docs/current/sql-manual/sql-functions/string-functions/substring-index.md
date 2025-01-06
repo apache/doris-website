@@ -28,9 +28,9 @@ under the License.
 
 SUBSTRING_INDEX
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `VARCHAR substring_index(VARCHAR content, VARCHAR delimiter, INT field)`
 
@@ -42,7 +42,7 @@ SUBSTRING_INDEX
 - delimiter 大小写敏感，且是多字节安全的。
 - `delimiter` 和 `field` 参数需要是常量，不支持变量。
 
-### example
+## 举例
 
 ```
 mysql> select substring_index("hello world", " ", 1);

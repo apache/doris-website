@@ -23,14 +23,14 @@ under the License.
 -->
 
 ## quote
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR quote(VARCHAR str)`
 
 将参数中所有的字符串按原样输出,并用''套起来
 
-### example
+## 举例
 
 ```sql
 mysql> select quote('hello world!\\t');

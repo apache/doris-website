@@ -27,8 +27,8 @@ under the License.
 <version since="1.2">
 
 ## convert_to
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR convert_to(VARCHAR column, VARCHAR character)`
 在order by子句中使用，例如order by convert(column using gbk), 现在仅支持character转为'gbk'.
@@ -37,7 +37,7 @@ under the License.
 
 </version>
 
-### example
+## 举例
 
 ```
 mysql> select * from class_test order by class_name;

@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## time_to_sec
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT time_to_sec(TIME datetime)`
 
 参数为Datetime类型
 将指定的时间值转为秒数，即返回结果为：小时×3600 + 分钟×60 + 秒。
 
-### example
+## 举例
 
 ```
 mysql >select current_time(),time_to_sec(current_time());

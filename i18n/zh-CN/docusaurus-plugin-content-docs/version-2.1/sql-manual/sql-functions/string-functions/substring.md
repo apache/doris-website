@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## substring
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR substring(VARCHAR str, INT pos, [INT len])`
 
@@ -39,7 +39,7 @@ under the License.
 
 该函数还有一个别名 `SUBSTR`
 
-### example
+## 举例
 
 ```
 mysql> select substring('abc1', 2);

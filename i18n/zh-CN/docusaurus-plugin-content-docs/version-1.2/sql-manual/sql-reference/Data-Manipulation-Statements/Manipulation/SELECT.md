@@ -31,7 +31,7 @@ under the License.
 
 SELECT
 
-### description
+## 描述
 
 主要介绍Select语法使用
 
@@ -157,7 +157,7 @@ CTE 名称可以在其他 CTE 中引用，从而可以基于其他 CTE 定义 CT
 
 CTE 可以引用自身来定义递归 CTE 。 递归 CTE 的常见应用包括分层或树状结构数据的序列生成和遍历。
 
-### example
+## 举例
 
 1. 查询年龄分别是 18,20,25 的学生姓名
 

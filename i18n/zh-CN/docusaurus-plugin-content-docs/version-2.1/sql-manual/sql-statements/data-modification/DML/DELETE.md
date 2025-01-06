@@ -32,7 +32,7 @@ under the License.
 
 该操作会同时删除和此 base index 相关的 rollup index 的数据。
 
-#### Syntax
+## 语法
 
 语法一：该语法只能指定过滤谓词
 

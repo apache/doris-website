@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## curdate,current_date
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATE CURDATE()`
 

@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## second_floor
-### description
-#### Syntax
+## 描述
+## 语法
 
 ```sql
 DATETIME SECOND_FLOOR(DATETIME datetime)
@@ -41,7 +41,7 @@ DATETIME SECOND_FLOOR(DATETIME datetime, INT period, DATETIME origin)
 - period：参数是指定每个周期有多少天组成。
 - origin：开始的时间起点，如果不填，默认是 0001-01-01T00:00:00。
 
-### example
+## 举例
 
 ```
 mysql> select second_floor("2023-07-13 22:28:18", 5);

@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## json_valid
-### description
+## 描述
 
 json_valid 函数返回0或1以表明是否为有效的JSON, 如果参数是NULL则返回NULL。
 
-#### Syntax
+## 语法
 
 `JSONB json_valid(VARCHAR json_str)`
 
-### example
+## 举例
 
 1. 正常JSON字符串
 

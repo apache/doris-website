@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## length
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT length(VARCHAR str)`
 
 
 返回字符串的字节。
 
-### example
+## 举例
 
 ```
 mysql> select length("abc");

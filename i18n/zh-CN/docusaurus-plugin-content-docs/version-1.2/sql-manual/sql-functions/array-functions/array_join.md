@@ -28,9 +28,9 @@ under the License.
 
 array_join
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `VARCHAR array_join(ARRAY<T> arr, VARCHAR sep[, VARCHAR null_replace])`
 
@@ -40,11 +40,11 @@ array_join
 若sep为空字符串，则不应用任何分隔符。
 若null_replace为空字符串或者不指定，则直接丢弃数组中的NULL元素。
 
-### notice
+## 注意事项
 
 `仅支持向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 

@@ -30,7 +30,7 @@ under the License.
 
 DROP MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于删除物化视图。同步语法
 
@@ -50,7 +50,7 @@ DROP MATERIALIZED VIEW [IF EXISTS] mv_name ON table_name;
 3. table_name:
         待删除的物化视图所属的表名。必填项。
 
-### Example
+## 举例
 
 表结构为
 

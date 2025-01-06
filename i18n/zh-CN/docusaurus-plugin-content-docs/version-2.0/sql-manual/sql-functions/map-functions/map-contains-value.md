@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `BOOLEAN map_contains_value(Map<K, V> map, V value)`
 
 判断给定 `map` 中是否包含特定的值 `value`
 
-### Example
+## 举例
 
 ```sql
 mysql> select map_contains_key(map(1, "100", 0.1, 2), "1");

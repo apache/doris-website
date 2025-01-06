@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## lcase
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT lcase(VARCHAR str)`
 

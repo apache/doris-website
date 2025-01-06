@@ -24,13 +24,13 @@ under the License.
 
 ## MD5SUM
 
-### description
+## 描述
 计算 多个字符串 MD5 128-bit
-#### Syntax
+## 语法
 
 `MD5SUM(str[,str])`
 
-### example
+## 举例
 
 ```
 MySQL > select md5("abcd");

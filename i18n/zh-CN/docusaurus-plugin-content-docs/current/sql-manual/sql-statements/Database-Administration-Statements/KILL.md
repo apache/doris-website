@@ -30,7 +30,7 @@ under the License.
 
 KILL
 
-### Description
+## 描述
 
 每个 Doris 的连接都在一个单独的线程中运行。 您可以使用 KILL processlist_id 语句终止线程。
 
@@ -52,7 +52,7 @@ KILL QUERY processlist_id | query_id
 
 
 
-### Example
+## 举例
 
 1. 查看当前连接的connection id。
 

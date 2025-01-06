@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## bitmap_or_count
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BigIntVal bitmap_or_count(BITMAP lhs, BITMAP rhs, ...)`
 
 计算两个及以上输入bitmap的并集，返回并集的个数.
 
-### example
+## 举例
 
 ```
 MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'),bitmap_empty());

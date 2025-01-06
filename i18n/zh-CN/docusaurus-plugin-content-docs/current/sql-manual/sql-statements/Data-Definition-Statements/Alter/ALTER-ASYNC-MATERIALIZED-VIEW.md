@@ -30,7 +30,7 @@ under the License.
 
 ALTER ASYNC MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于修改异步物化视图。
 

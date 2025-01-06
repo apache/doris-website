@@ -30,9 +30,9 @@ under the License.
 
 SHOW ENGINES
 
-### Description
+## 描述
 
-### Example
+## 举例
 
 ### Keywords
 

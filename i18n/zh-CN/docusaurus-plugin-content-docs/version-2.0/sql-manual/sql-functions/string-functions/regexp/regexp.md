@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## regexp
-### description
-#### syntax
+## 描述
+## 语法
 
 `BOOLEAN regexp(VARCHAR str, VARCHAR pattern)`
 
@@ -34,7 +34,7 @@ under the License.
 
 字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
 
-### example
+## 举例
 
 ```sql
 --- 查找 k1 字段中以 'billie' 为开头的所有数据

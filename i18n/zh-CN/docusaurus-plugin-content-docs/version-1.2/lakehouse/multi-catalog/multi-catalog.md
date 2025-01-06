@@ -383,7 +383,7 @@ Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参�
 - es：Elasticsearch
 - jdbc：数据库访问的标准接口 (JDBC)
 
-##### Example
+#### 举例
 
 ```
 -- 设置 catalog 刷新间隔为 20 秒

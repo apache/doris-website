@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## CAST
-### description
-#### Syntax
+## 描述
+## 语法
 
 `T cast (input as Type)`
 
 将 input 转成 指定的 Type类型
 
-### example
+## 举例
 
 1. 转常量，或表中某列
 

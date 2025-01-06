@@ -30,7 +30,7 @@ under the License.
 
 TRUNCATE TABLE
 
-### Description
+## 描述
 
 该语句用于清空指定表和分区的数据
 语法：
@@ -48,7 +48,7 @@ TRUNCATE TABLE [db.]tbl[ PARTITION(p1, p2, ...)];
 - 使用该命令时，表状态需为 NORMAL，即不允许正在进行 SCHEMA CHANGE 等操作。
 - 该命令可能会导致正在进行的导入失败。
 
-### Example
+## 举例
 
 1. 清空 example_db 下的表 tbl
 

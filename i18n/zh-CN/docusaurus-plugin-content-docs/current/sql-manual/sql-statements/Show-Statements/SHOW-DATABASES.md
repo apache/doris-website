@@ -30,7 +30,7 @@ under the License.
 
 SHOW DATABASES
 
-### Description
+## 描述
 
 该语句用于展示当前可见的 db
 
@@ -46,7 +46,7 @@ SHOW DATABASES [FROM catalog] [filter expr];
 3. `SHOW DATABASES filter_expr` 会展示当前所有经过过滤后的数据库名称.
 4. `SHOW DATABASES FROM catalog filter_expr` 这种语法不支持.
 
-### Example
+## 举例
 1. 展示当前所有的数据库名称.
 
    ```sql

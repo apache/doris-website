@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## months_sub
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME MONTHS_SUB(DATETIME date, INT months)`
 
@@ -34,7 +34,7 @@ under the License.
 
 参数 date 可以是 DATETIME 或者 DATE 类型，返回类型与参数 date 的类型一致。
 
-### example
+## 举例
 
 ```
 mysql> select months_sub("2020-02-02 02:02:02", 1);

@@ -33,7 +33,7 @@ DOUBLE ST_Area_Square_Meters(GEOMETRY geo)
 DOUBLE ST_Area_Square_Km(GEOMETRY geo)
 ```
 
-### description
+## 描述
 
 计算地球球面上区域的面积，目前参数geo支持St_Point,St_LineString,St_Circle和St_Polygon。
 
@@ -41,7 +41,7 @@ DOUBLE ST_Area_Square_Km(GEOMETRY geo)
 
 其中，ST_Area_Square_Meters(GEOMETRY geo)返回的单位是平方米，ST_Area_Square_Km(GEOMETRY geo)返回的单位是平方千米。
 
-### example
+## 举例
 
 ```
 mysql> SELECT ST_Area_Square_Meters(ST_Circle(0, 0, 1));

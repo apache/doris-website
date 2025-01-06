@@ -24,13 +24,13 @@ under the License.
 
 ## tan
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE tan(DOUBLE x)`
 返回`x`的正切值，`x`为弧度值.
 
-### example
+## 举例
 
 ```
 mysql> select tan(0);

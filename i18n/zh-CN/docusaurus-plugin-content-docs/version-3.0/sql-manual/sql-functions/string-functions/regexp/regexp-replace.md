@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## regexp_replace
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR regexp_replace(VARCHAR str, VARCHAR pattern, VARCHAR repl)`
 
@@ -34,7 +34,7 @@ under the License.
 
 字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
 
-### example
+## 举例
 
 ```sql
 mysql> SELECT regexp_replace('a b c', " ", "-");

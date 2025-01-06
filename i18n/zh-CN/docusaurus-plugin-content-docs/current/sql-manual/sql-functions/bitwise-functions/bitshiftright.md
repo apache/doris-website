@@ -24,14 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 ## bit_shift_right
-### description
-#### syntax
+## 描述
+## 语法
 
 `BIT_SHIFT_RIGHT(BIGINT x, TINYINT c)`
 
 返回对 BIGINT 类型 x 进行逻辑右移 c 位的结果。
 
-### example
+## 举例
 Normal case
 ```sql
 select 1024 as x, number as c, bit_shift_right(1024, number) as bit_shift_right from numbers("number"="5")

@@ -36,7 +36,7 @@ Meta Info Action 用于获取集群内的元数据信息。如数据库列表，
 GET /api/meta/namespaces/<ns_name>/databases
 ```
 
-### Description
+## 描述
 
 获取所有数据库名称列表，按字母序排列。
     
@@ -81,7 +81,7 @@ GET /api/meta/namespaces/<ns_name>/databases
 GET /api/meta/namespaces/<ns_name>/databases/<db_name>/tables
 ```
 
-### Description
+## 描述
 
 获取指定数据库中的表列表，按字母序排列。
     
@@ -128,7 +128,7 @@ GET /api/meta/namespaces/<ns_name>/databases/<db_name>/tables
 GET /api/meta/namespaces/<ns_name>/databases/<db_name>/tables/<tbl_name>/schema
 ```
 
-### Description
+## 描述
 
 获取指定数据库中，指定表的表结构信息。
     

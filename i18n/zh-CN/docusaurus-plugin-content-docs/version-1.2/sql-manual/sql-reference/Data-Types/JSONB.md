@@ -28,7 +28,7 @@ under the License.
 
 JSONB
 
-### description
+## 描述
     JSONB(JSON Binary)类型
         二进制JSON类型，采用二进制JSONB格式存储，通过jsonb函数访问JSON内部字段。最大（默认）支持1048576 字节（1MB），JSONB类型还受be配置`jsonb_type_length_soft_limit_bytes`限制
 
@@ -37,7 +37,7 @@ JSONB
     1. 数据写入时进行JSON格式校验
     2. 二进制存储格式更加高效，通过jsonb_extract等函数可以高效访问JSON内部字段，比get_json_xx函数快几倍
 
-### example
+## 举例
     用一个从建表、导数据、查询全周期的例子说明JSONB数据类型的功能和用法。
 
 #### 创建库表

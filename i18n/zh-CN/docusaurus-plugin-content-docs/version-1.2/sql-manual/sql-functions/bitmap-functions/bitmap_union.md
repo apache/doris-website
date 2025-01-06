@@ -26,17 +26,17 @@ under the License.
 
 ## bitmap_union function
 
-### description
+## 描述
 
 聚合函数，用于计算分组后的 bitmap 并集。常见使用场景如：计算PV，UV。
 
-#### Syntax
+## 语法
 
 `BITMAP BITMAP_UNION(BITMAP value)`
 
 输入一组 bitmap 值，求这一组 bitmap 值的并集，并返回。
 
-### example
+## 举例
 
 ```
 mysql> select page_id, bitmap_union(user_id) from table group by page_id;

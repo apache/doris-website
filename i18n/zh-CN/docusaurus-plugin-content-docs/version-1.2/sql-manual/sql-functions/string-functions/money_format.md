@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## money_format
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR money_format(Number)`
 
 
 将数字按照货币格式输出，整数部分每隔3位用逗号分隔，小数部分保留2位
 
-### example
+## 举例
 
 ```
 mysql> select money_format(17014116);

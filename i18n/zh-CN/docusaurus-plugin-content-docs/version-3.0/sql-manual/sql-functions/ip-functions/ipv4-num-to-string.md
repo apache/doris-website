@@ -26,9 +26,9 @@ under the License.
 
 IPV4_NUM_TO_STRING
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `VARCHAR IPV4_NUM_TO_STRING(BIGINT ipv4_num)`
 
@@ -36,11 +36,11 @@ IPV4_NUM_TO_STRING
 
 接受一个类型为Int16、Int32、Int64 且大端表示的 IPv4 的地址，返回相应 IPv4 的字符串表现形式，格式为A.B.C.D（以点分割的十进制数字）。
 
-#### Notice
+### 注意事项
 
 对于负数或超过 `4294967295`（即 `'255.255.255.255'`）的入参都返回 `NULL`，表示无效输入。该函数有一个别名为 `INET_NOTA`。
 
-### Example
+## 举例
 
 ```sql
 mysql> select ipv4_num_to_string(3232235521);

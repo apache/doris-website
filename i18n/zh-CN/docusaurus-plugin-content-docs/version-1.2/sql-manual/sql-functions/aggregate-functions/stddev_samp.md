@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## STDDEV_SAMP
-### description
-#### Syntax
+## 描述
+## 语法
 
 `STDDEV_SAMP(expr)`
 
 
 返回expr表达式的样本标准差
 
-### example
+## 举例
 ```
 MySQL > select stddev_samp(scan_rows) from log_statis group by datetime;
 +--------------------------+

@@ -30,7 +30,7 @@ under the License.
 
 MULTI LOAD
 
-### Description
+## 描述
 
 用户通过 HTTP 协议提交多个导入作业。Multi Load 可以保证多个导入作业的原子生效
 
@@ -93,7 +93,7 @@ NOTE:
     才会发生真实的导入行为，这中方式数据量也不能过大。
 ```
 
-### Example
+## 举例
 
 ```
 1. 将本地文件'testData1'中的数据导入到数据库'testDb'中'testTbl1'的表，并且

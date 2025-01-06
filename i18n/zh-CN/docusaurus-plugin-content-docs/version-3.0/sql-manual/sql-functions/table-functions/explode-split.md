@@ -26,16 +26,16 @@ under the License.
 
 ## explode_split
 
-### description
+## 描述
 
 表函数，需配合 Lateral View 使用。
 
 将一个字符串按指定的分隔符分割成多个子串。
 
-#### syntax
+## 语法
 `explode_split(str, delimiter)`
 
-### example
+## 举例
 
 原表数据：
 

@@ -30,7 +30,7 @@ under the License.
 
 RESUME MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于暂恢复物化视图的定时调度
 
@@ -40,7 +40,7 @@ RESUME MATERIALIZED VIEW
 RESUME MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 ```
 
-### Example
+## 举例
 
 1. 恢复物化视图mv1的定时调度
 

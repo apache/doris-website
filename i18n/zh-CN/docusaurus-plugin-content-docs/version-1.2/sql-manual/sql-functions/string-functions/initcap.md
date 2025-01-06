@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## initcap
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR initcap(VARCHAR str)`
 
 将参数中包含的单词首字母大写，其余字母转为小写。单词是由非字母数字字符分隔的字母数字字符序列。
 
-### example
+## 举例
 
 ```
 mysql> select initcap('hello hello.,HELLO123HELlo');

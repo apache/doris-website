@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## VARIANT
 
-### Description
+
+## 描述
 
 在 Doris 2.1 中引入一种新的数据类型 VARIANT，它可以存储半结构化 JSON 数据。它允许存储包含不同数据类型（如整数、字符串、布尔值等）的复杂数据结构，而无需在表结构中提前定义具体的列。VARIANT 类型特别适用于处理复杂的嵌套结构，而这些结构可能随时会发生变化。在写入过程中，该类型可以自动根据列的结构、类型推断列信息，动态合并写入的 schema，并通过将 JSON 键及其对应的值存储为列和动态子列。
 
@@ -56,7 +56,7 @@ under the License.
 
 **查询提速 8+ 倍，查询性能与静态列相当**
 
-### Example
+## 举例
 
 用一个从建表、导数据、查询全周期的例子说明 VARIANT 的功能和用法。
 
@@ -367,8 +367,5 @@ VARIANT 动态列与预定义静态列几乎一样高效。处理诸如日志之
 
 ### FAQ
 1. Stream Load 报错： [CANCELLED][INTERNAL_ERROR]tablet error: [DATA_QUALITY_ERROR]Reached max column size limit 2048。
-由于 Compaction 和元信息存储限制， VARIANT 类型会限制列数，默认 2048 列，可以适当调整 BE 配置 `variant_max_merged_tablet_schema_size` ， 但是不建议超过 4096
+由于 Compaction 和元信息存储限制，VARIANT 类型会限制列数，默认 2048 列，可以适当调整 BE 配置 `variant_max_merged_tablet_schema_size` ，但是不建议超过 4096
 
-### Keywords
-
-    VARIANT

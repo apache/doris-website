@@ -24,13 +24,13 @@ under the License.
 
 ## sin
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE sin(DOUBLE x)`
 返回`x`的正弦值，`x` 为弧度值.
 
-### example
+## 举例
 
 ```
 mysql> select sin(0);

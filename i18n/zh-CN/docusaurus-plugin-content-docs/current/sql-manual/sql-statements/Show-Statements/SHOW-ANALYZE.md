@@ -30,7 +30,7 @@ under the License.
 
 SHOW ANALYZE
 
-### Description
+## 描述
 
 通过 `SHOW ANALYZE` 来查看统计信息收集作业的信息。
 

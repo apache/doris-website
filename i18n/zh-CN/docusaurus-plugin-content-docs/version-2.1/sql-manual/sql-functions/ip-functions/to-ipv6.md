@@ -26,9 +26,9 @@ under the License.
 
 TO_IPV6
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `IPV6 TO_IPV6(STRING ipv6_str)`
 
@@ -36,11 +36,11 @@ TO_IPV6
 该值的二进制形式等于ipv6_string_to_num函数返回值的二进制形式。
 如果IPv6地址为非法格式，则抛出异常。
 
-#### Notice
+### 注意事项
 
 入参 `ipv6_str` 不能为 `NULL`，若为 `NULL`，则抛出异常。
 
-### Example
+## 举例
 
 ```sql
 mysql> select to_ipv6('::');

@@ -30,7 +30,7 @@ under the License.
 
 DROP USER
 
-### Description
+## 描述
 
 删除一个用户
 
@@ -45,7 +45,7 @@ DROP USER
 
  删除指定的 user identity.
 
-### Example
+## 举例
 
 1. 删除用户 jack@'192.%'
 

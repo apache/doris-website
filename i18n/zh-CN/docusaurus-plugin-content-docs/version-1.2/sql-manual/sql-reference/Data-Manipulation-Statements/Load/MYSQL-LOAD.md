@@ -31,7 +31,7 @@ under the License.
     MYSQL LOAD
 </version>
 
-### Description
+## 描述
 
 mysql-load: 使用MySql客户端导入本地数据
 
@@ -78,7 +78,7 @@ INTO TABLE tbl_name
 
 6. trim_double_quotes: 布尔类型，默认值为 false，为 true 时表示裁剪掉导入文件每个字段最外层的双引号。
 
-### Example
+## 举例
 
 1. 将客户端本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表。指定超时时间为 100 秒
 

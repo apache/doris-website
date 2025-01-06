@@ -26,11 +26,11 @@ under the License.
 
 ## `numbers`
 
-### description
+## 描述
 
 表函数，生成一张只含有一列的临时表，列名为`number`，如果指定了`const_value`，则所有元素值均为`const_value`，否则为[0,`number`)递增。
 
-#### syntax
+## 语法
 ```sql
 numbers(
   "number" = "n"
@@ -42,7 +42,7 @@ numbers(
 - `number`: 行数。
 - `const_value` : 常量值。
 
-### example
+## 举例
 ```
 mysql> select * from numbers("number" = "5");
 +--------+

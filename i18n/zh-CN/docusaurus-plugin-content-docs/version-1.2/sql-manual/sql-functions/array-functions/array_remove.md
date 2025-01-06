@@ -26,19 +26,19 @@ under the License.
 
 array_remove
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<T> array_remove(ARRAY<T> arr, T val)`
 
 返回移除所有的指定元素后的数组，如果输入参数为NULL，则返回NULL
 
-### notice
+## 注意事项
 
 `仅支持向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 mysql> select array_remove(['test', NULL, 'value'], 'value');

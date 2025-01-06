@@ -26,19 +26,19 @@ under the License.
 
 TO_IPV6_OR_DEFAULT
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `IPV6 TO_IPV6_OR_DEFAULT(STRING ipv6_str)`
 
 与to_ipv6函数类似，但如果IPv6地址的格式非法，则返回::。
 
-#### Notice
+### 注意事项
 
 入参 `ipv6_str` 如果为 `NULL`，则返回 `::`。
 
-### Example
+## 举例
 
 ```sql
 mysql> select to_ipv6_or_default('.');

@@ -28,10 +28,10 @@ under the License.
 
 array_first
 
-### description
+## 描述
 返回数组中的第一个 func(arr1[i]) 值不为 0 的元素。当数组中所有元素进行 func(arr1[i]) 都为 0 时，结果返回`NULL`值。
 
-#### Syntax
+## 语法
 
 ```
 T array_first(lambda, ARRAY<T>)
@@ -39,7 +39,7 @@ T array_first(lambda, ARRAY<T>)
 
 使用一个 lambda 表达式和一个 ARRAY 作为输入参数，lambda 表达式为布尔型，用于对 ARRAY 中的每个元素进行判断返回值。
 
-### example
+## 举例
 
 ```
 mysql> select array_first(x->x>2, [1,2,3,0]) ;

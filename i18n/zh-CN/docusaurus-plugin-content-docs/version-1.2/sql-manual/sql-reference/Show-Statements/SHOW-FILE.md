@@ -30,7 +30,7 @@ under the License.
 
 SHOW FILE
 
-### Description
+## 描述
 
 该语句用于展示一个 database 内创建的文件
 
@@ -51,7 +51,7 @@ FileSize:   文件大小，单位字节
 MD5:        文件的 MD5
 ```
 
-### Example
+## 举例
 
 1. 查看数据库 my_database 中已上传的文件
 

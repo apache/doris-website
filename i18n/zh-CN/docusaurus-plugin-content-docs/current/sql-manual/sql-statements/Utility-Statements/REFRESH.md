@@ -31,7 +31,7 @@ under the License.
 REFRESH
 
 
-### Description
+## 描述
 
 该语句用于刷新指定 Catalog/Database/Table 的元数据。
 
@@ -47,7 +47,7 @@ REFRESH TABLE [catalog_name.][database_name.]table_name;
 
 包括Partition Cache、Schema Cache、File Cache等。
 
-### Example
+## 举例
 
 1. 刷新 hive catalog
 

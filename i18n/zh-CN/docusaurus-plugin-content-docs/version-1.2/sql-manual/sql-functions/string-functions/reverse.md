@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## reverse
-### description
-#### Syntax
+## 描述
+## 语法
 
 ```sql
 VARCHAR reverse(VARCHAR str)
@@ -35,11 +35,11 @@ ARRAY<T> reverse(ARRAY<T> arr)
 
 将字符串或数组反转，返回的字符串或者数组的顺序和原来的顺序相反。
 
-### notice
+## 注意事项
 
 `对于数组类型，仅支持向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 mysql> SELECT REVERSE('hello');

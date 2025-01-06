@@ -26,9 +26,9 @@ under the License.
 
 ## bitmap_subset_limit
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `BITMAP BITMAP_SUBSET_LIMIT(BITMAP src, BIGINT range_start, BIGINT cardinality_limit)`
 
@@ -36,7 +36,7 @@ under the License.
 range_start：范围起始点（含）
 cardinality_limit：子 BITMAP 基数上限
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), 0, 3)) value;

@@ -30,7 +30,7 @@ under the License.
 
 UNINSTALL PLUGIN
 
-### Description
+## 描述
 
 该语句用于卸载一个插件。
 
@@ -44,7 +44,7 @@ UNINSTALL PLUGIN plugin_name;
 
 只能卸载非 builtin 的插件。
 
-### Example
+## 举例
 
 1. 卸载一个插件：
 

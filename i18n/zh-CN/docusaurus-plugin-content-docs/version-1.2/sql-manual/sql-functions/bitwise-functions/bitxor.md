@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## bitxor
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITXOR(Integer-type lhs, Integer-type rhs)`
 
@@ -34,7 +34,7 @@ under the License.
 
 整数范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
-### example
+## 举例
 
 ```
 mysql> select bitxor(3,5) ans;

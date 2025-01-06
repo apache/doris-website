@@ -26,9 +26,9 @@ under the License.
 
 TO_IPV4
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `IPV4 TO_IPV4(STRING ipv4_str)`
 
@@ -36,11 +36,11 @@ TO_IPV4
 该值的二进制形式等于ipv4_string_to_num函数返回值的二进制形式。
 如果IPv4地址为非法格式，则抛出异常。
 
-#### Notice
+### 注意事项
 
 入参 `ipv4_str` 不能为 `NULL`，若为 `NULL`，则抛出异常。
 
-### Example
+## 举例
 
 ```sql
 mysql> select to_ipv4('255.255.255.255');

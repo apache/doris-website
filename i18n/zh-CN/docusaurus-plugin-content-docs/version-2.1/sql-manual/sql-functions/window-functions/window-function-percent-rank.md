@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION PERCENT_RANK
-### description
+## 描述
 
 PERCENT_RANK()是一个窗口函数，用于计算分区或结果集中行的百分位数排名。
 
@@ -42,7 +42,7 @@ PERCENT_RANK()函数返回一个范围从0.0到1.0的小数。
 
 PERCENT_RANK()是一个顺序敏感的函数，因此，您应该始终需要使用ORDER BY子句。
 
-### example
+## 举例
 
 ```sql
 // create table

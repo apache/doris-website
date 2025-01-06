@@ -24,13 +24,13 @@ under the License.
 
 ## log
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE log(DOUBLE b, DOUBLE x)`
 返回基于底数`b`的`x`的对数.
 
-### example
+## 举例
 
 ```
 mysql> select log(5,1);

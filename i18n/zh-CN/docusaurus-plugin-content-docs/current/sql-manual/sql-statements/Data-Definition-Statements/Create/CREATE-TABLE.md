@@ -28,7 +28,7 @@ under the License.
 
 ## CREATE-TABLE
 
-### Description
+## 描述
 
 该命令用于创建一张表。本文档主要介绍创建 Doris 自维护的表的语法
 
@@ -488,7 +488,7 @@ UNIQUE KEY(k1, k2)
 
     存算分离模式下 TTL 类型 File Cache 的过期时间。
 
-### Example
+## 举例
 
 1. 创建一个明细模型的表
 
