@@ -96,7 +96,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 ## 本地快速部署
 
-::: info 环境建议：
+:::info 环境建议：
 
 * 选择一个 AMD/ARM 上的主流 Linux 环境，推荐 CentOS 7.1 或者 Ubuntu 16.04 以上版本。更多运行环境请参考安装部署部分。
 
