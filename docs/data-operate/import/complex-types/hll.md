@@ -32,7 +32,7 @@ HLL is used for approximate deduplication and performs better than Count Distinc
 
 Create the following CSV file: test_hll.csv
 
-```SQL
+```sql
 1001|koga
 1002|nijg
 1003|lojn
