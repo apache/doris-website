@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION LEAD
-### description
+## 描述
 
 LEAD() 方法用来计算当前行向后数若干行的值。
 
@@ -20,7 +20,7 @@ LEAD() 方法用来计算当前行向后数若干行的值。
 LEAD(expr, offset, default) OVER (partition_by_clause order_by_clause)
 ```
 
-### example
+## 举例
 
 计算第二天的收盘价对比当天收盘价的走势，即第二天收盘价比当天高还是低。
 

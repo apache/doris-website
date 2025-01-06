@@ -30,7 +30,7 @@ under the License.
 
 PAUSE JOB
 
-### Description
+## 描述
 
 用户暂停一个正在 RUNNING 状态的 JOB ，正在运行的 TASK 会被中断，JOB 状态变更为 PAUSED。 被停止的 JOB 可以通过 RESUME 操作恢复运行。
 
@@ -40,7 +40,7 @@ PAUSE JOB
 PAUSE JOB WHERE jobname= 'jobname';
 ```
 
-### Example
+## 举例
 
 1. 暂停名称为 example 的 JOB。
 

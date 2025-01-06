@@ -24,26 +24,26 @@ under the License.
 
 ## count_substrings
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `int count_substrings(STRING str, STRING pattern)`
 返回字符串str中包含子串pattern的总个数。
 注意: 当前实现为在str 中每匹配到子串时，就会偏移一个子串长度继续寻找
 所以当`str:ccc, pattern:cc` 时，返回结果为1
 
-#### Arguments
+## 参数
 
 `str` — 需要检测的字符串. 类型: `String`
 `pattern` — 是用来被匹配的子串. 类型: `String`
 
 
-#### Returned value(s)
+## 返回值(s)
 
 返回一个包含子字符串的总个数.
 
-### example
+## 举例
 
 ```
 mysql [(none)]>select count_substrings('a1b1c1d','1');

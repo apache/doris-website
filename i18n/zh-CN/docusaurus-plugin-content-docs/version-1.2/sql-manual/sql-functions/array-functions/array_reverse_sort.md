@@ -30,20 +30,20 @@ array_reverse_sort
 
 </version>
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<T> array_reverse_sort(ARRAY<T> arr)`
 
 返回按降序排列后的数组，如果输入数组为NULL，则返回NULL。
 如果数组元素包含NULL, 则输出的排序数组会将NULL放在最后面。
 
-### notice
+## 注意事项
 
 `仅支持向量化引擎中使用`
 
-### example
+## 举例
 
 ```mysql> select k1, k2, array_reverse_sort(k2) from array_test;
 +------+-----------------------------+-----------------------------+

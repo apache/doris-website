@@ -30,7 +30,7 @@ under the License.
 
 ALTER COLOCATE GROUP
 
-### Description
+## 描述
 
 该语句用于修改 Colocation Group 的属性。
 
@@ -53,7 +53,7 @@ SET (
 
 
 
-### Example
+## 举例
 
 1. 修改一个全局 group 的副本数
 

@@ -30,7 +30,7 @@ under the License.
 
 SHOW PARTITIONS
 
-### Description
+## 描述
 
 该语句用于展示分区信息。支持 Internal catalog 和 Hive Catalog
 
@@ -53,7 +53,7 @@ SHOW PARTITIONS
 
 
 
-### Example
+## 举例
 
 1. 展示指定 db 下指定表的所有非临时分区信息
 

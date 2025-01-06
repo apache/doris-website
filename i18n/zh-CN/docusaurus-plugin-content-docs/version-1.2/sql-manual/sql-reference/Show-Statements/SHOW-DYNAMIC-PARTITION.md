@@ -30,7 +30,7 @@ under the License.
 
 SHOW DYNAMIC
 
-### Description
+## 描述
 
 该语句用于展示当前db下所有的动态分区表状态
 
@@ -40,7 +40,7 @@ SHOW DYNAMIC
 SHOW DYNAMIC PARTITION TABLES [FROM db_name];
 ```
 
-### Example
+## 举例
 
  1. 展示数据库 database 的所有动态分区表状态
     

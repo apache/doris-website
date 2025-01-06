@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## QUANTILE_STATE
-### description
+## 描述
     QUANTILE_STATE
     QUANTILE_STATE不能作为key列使用，建表时配合聚合类型为QUANTILE_UNION。
     用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。
@@ -49,11 +49,11 @@ under the License.
 
     
 
-### example
+## 举例
     select QUANTILE_PERCENT(QUANTILE_UNION(v1)) from test_table group by k1, k2, k3;
     
 
-### notice
+## 注意事项
 
 使用前可以通过如下命令打开 QUANTILE_STATE 开关:
 

@@ -27,8 +27,8 @@ under the License.
 -->
 
 ## extract_url_parameter
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR  extract_url_parameter(VARCHAR url, VARCHAR  name)`
 

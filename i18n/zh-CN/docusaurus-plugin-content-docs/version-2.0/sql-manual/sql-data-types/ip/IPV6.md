@@ -24,16 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV6
 
-### description
+## 描述
 
 IPv6 类型，以 UInt128 的形式存储在 16 个字节中，用于表示 IPv6 地址。
 取值范围是 ['::', 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff']。
 
 `超出取值范围或者格式非法的输入将返回NULL`
 
-### example
+## 举例
     
 建表示例如下：
 
@@ -71,6 +70,4 @@ mysql> select * from ipv6_test order by id;
 +------+-----------------------------------------+
 ```
 
-### keywords
 
-IPV6

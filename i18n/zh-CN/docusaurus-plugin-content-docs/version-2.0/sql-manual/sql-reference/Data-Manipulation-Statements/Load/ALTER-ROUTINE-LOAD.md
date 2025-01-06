@@ -30,7 +30,7 @@ under the License.
 
 ALTER ROUTINE LOAD
 
-### Description
+## 描述
 
 该语法用于修改已经创建的例行导入作业。
 
@@ -93,7 +93,7 @@ FROM data_source
 
     1. `kafka_partitions` 和 `kafka_offsets` 用于修改待消费的 kafka partition 的offset，仅能修改当前已经消费的 partition。不能新增 partition。
 
-### Example
+## 举例
 
 1. 将 `desired_concurrent_number` 修改为 1
 

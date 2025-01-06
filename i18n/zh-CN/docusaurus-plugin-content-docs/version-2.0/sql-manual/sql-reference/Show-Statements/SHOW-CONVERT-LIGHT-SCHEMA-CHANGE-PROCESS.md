@@ -30,7 +30,7 @@ under the License.
 
 SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS
 
-### Description
+## 描述
 
 用来查看将非light schema change的olpa表转换为light schema change表的情况， 需要开启配置`enable_convert_light_weight_schema_change`
 
@@ -40,7 +40,7 @@ SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS
 SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [FROM db]
 ```
 
-### Example
+## 举例
 
 1. 查看在database test上的转换情况
 

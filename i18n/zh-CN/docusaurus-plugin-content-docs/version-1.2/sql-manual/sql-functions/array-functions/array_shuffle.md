@@ -29,9 +29,9 @@ under the License.
 array_shuffle
 shuffle
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 ```sql
 ARRAY<T> array_shuffle(ARRAY<T> array1, [INT seed])
@@ -48,7 +48,7 @@ shuffle(array1);
 shuffle(array1, 0);
 ```
 
-### example
+## 举例
 
 ```sql
 

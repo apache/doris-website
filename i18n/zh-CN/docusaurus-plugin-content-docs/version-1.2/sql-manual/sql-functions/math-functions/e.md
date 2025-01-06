@@ -24,13 +24,13 @@ under the License.
 
 ## e
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE e()`
 返回常量`e`值.
 
-### example
+## 举例
 
 ```
 mysql> select e();

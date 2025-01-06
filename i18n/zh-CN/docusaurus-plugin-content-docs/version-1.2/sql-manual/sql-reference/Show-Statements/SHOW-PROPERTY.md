@@ -30,7 +30,7 @@ under the License.
 
 SHOW PROPERTY
 
-### Description
+## 描述
 
 该语句用于查看用户的属性
 
@@ -68,7 +68,7 @@ mysql> show property like'%connection%';
 
   属性值.
 
-### Example
+## 举例
 
 1. 查看 jack 用户的属性
 

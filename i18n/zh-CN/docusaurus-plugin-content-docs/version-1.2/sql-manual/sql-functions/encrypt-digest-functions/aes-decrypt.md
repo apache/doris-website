@@ -22,11 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## 描述
 
 AES 解密函数。该函数与 MySQL 中的 `AES_DECRYPT` 函数行为一致。默认采用 `AES_128_ECB` 算法，padding 模式为 `PKCS7`。底层使用 OpenSSL 库进行解密。
 
-#### Syntax
+## 语法
 
 `VARCHAR AES_DECRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHAR encryption_mode])`
 
@@ -40,7 +40,7 @@ AES 解密函数。该函数与 MySQL 中的 `AES_DECRYPT` 函数行为一致。
 两参数版本，会无视 session variable `block_encryption_mode`，始终使用 `AES_128_ECB` 算法进行解密。因此不推荐调用。
 :::
 
-### Example
+## 举例
 
 ```sql
 select aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='),'F3229A0B371ED2D9441B830D21A390C3');

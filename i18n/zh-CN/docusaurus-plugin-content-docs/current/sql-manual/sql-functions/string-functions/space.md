@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## space
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR space(Int num)`
 
 返回由num个空格组成的字符串。
 
-### example
+## 举例
 
 ```
 mysql> select length(space(10));

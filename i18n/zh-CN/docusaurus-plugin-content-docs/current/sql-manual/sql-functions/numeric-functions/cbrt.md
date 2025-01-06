@@ -24,13 +24,13 @@ under the License.
 
 ## cbrt
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE cbrt(DOUBLE x)`
 返回`x`的立方根.
 
-### example
+## 举例
 
 ```
 mysql> select cbrt(8);

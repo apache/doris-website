@@ -31,7 +31,7 @@ under the License.
 
 ALTER SYSTEM DROP BROKER
 
-### Description
+## 描述
 
 该语句是删除 BROKER 节点，（仅限管理员使用）
 
@@ -44,7 +44,7 @@ ALTER SYSTEM DROP ALL BROKER broker_name
 ALTER SYSTEM DROP BROKER broker_name "host:port"[,"host:port"...];
 ```
 
-### Example
+## 举例
 
 1. 删除所有 Broker
 

@@ -24,8 +24,8 @@ under the License.
 
 ## abs
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 ```sql
 SMALLINT abs(TINYINT x)
@@ -40,7 +40,7 @@ DECIMAL abs(DECIMAL x)`
 
 返回`x`的绝对值.
 
-### example
+## 举例
 
 ```
 mysql> select abs(-2);

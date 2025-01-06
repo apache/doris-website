@@ -30,7 +30,7 @@ under the License.
 
 STOP JOB
 
-### Description
+## 描述
 
 用户停止一个 JOB 作业。被停止的作业无法再重新运行。
 
@@ -38,7 +38,7 @@ STOP JOB
 STOP JOB FOR job_name;
 ```
 
-### Example
+## 举例
 
 1. 停止名称为 test1 的作业。
 

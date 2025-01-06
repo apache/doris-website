@@ -30,7 +30,7 @@ under the License.
 
 DROP POLICY
 
-### Description
+## 描述
 
 删除安全策略
 
@@ -48,7 +48,7 @@ DROP ROW POLICY test_row_policy_1 on table1 [FOR user];
 DROP STORAGE POLICY policy_name1
 ```
 
-### Example
+## 举例
 
 1. 删除 table1 的 test_row_policy_1
 

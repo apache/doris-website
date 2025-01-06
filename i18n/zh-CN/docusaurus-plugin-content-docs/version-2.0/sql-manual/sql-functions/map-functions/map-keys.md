@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<K> map_keys(Map<K, V> map)`
 
 将给定 `map` 的键提取成一个对应类型的 `ARRAY`
 
-### Example
+## 举例
 
 ```sql
 mysql> select map_keys(map(1, "100", 0.1, 2));

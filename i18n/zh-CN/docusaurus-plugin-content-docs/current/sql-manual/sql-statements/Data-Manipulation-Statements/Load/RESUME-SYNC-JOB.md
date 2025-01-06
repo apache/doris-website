@@ -30,7 +30,7 @@ under the License.
 
 RESUME SYNC JOB
 
-### Description
+## 描述
 
 通过 `job_name`恢复一个当前数据库已被暂停的常驻数据同步作业，作业将从上一次被暂停前最新的位置继续同步数据。
 
@@ -40,7 +40,7 @@ RESUME SYNC JOB
 RESUME SYNC JOB [db.]job_name
 ```
 
-### Example
+## 举例
 
 1. 恢复名称为 `job_name` 的数据同步作业
 

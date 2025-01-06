@@ -26,15 +26,15 @@ under the License.
 
 IS_IP_ADDRESS_IN_RANGE
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `BOOLEAN IS_IP_ADDRESS_IN_RANGE(STRING ip_str, STRING cidr_prefix)`
 
 判断IP（IPv4或IPv6）地址是否包含在以CIDR表示法表示的网络中。如果是，则返回true，否则返回false。
 
-### Example
+## 举例
 
 ```sql
 mysql> SELECT is_ip_address_in_range('127.0.0.1', '127.0.0.0/8');

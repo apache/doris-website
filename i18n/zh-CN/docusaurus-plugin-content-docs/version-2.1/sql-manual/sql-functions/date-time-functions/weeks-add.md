@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## weeks_add
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME WEEKS_ADD(DATETIME date, INT weeks)`
 
@@ -34,7 +34,7 @@ under the License.
 
 参数 date 可以是 DATETIME 或者 DATE 类型，返回类型与参数 date 的类型一致。
 
-### example
+## 举例
 
 ```
 mysql> select weeks_add("2020-02-02 02:02:02", 1);

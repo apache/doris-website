@@ -28,14 +28,14 @@ under the License.
 
 array_max
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 `T array_max(ARRAY<T> array1)`
 
 返回数组中最大的元素，数组中的`NULL`值会被跳过。空数组以及元素全为`NULL`值的数组，结果返回`NULL`值。
 
-### example
+## 举例
 
 ```shell
 mysql> create table array_type_table(k1 INT, k2 Array<int>) duplicate key (k1)

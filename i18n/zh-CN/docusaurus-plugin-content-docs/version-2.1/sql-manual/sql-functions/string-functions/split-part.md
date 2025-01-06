@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## split_part
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR split_part(VARCHAR content, VARCHAR delimiter, INT field)`
 
@@ -34,7 +34,7 @@ under the License.
 根据分割符拆分字符串, 返回指定的分割部分(从一或负一开始计数)。field字段支持负数，代表从右往左倒着截取并取数。
 `delimiter` 和 `field` 参数需要是常量, 不支持变量。
 
-### example
+## 举例
 
 ```
 mysql> select split_part("hello world", " ", 1);

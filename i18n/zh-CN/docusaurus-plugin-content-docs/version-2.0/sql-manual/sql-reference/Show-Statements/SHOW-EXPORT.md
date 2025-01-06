@@ -30,7 +30,7 @@ under the License.
 
 SHOW EXPORT
 
-### Description
+## 描述
 
 该语句用于展示指定的导出任务的执行情况
 
@@ -54,7 +54,7 @@ SHOW EXPORT
       3. 可以使用 ORDER BY 对任意列组合进行排序
       4. 如果指定了 LIMIT，则显示 limit 条匹配记录。否则全部显示
 
-### Example
+## 举例
 
 1. 展示默认 db 的所有导出任务
    

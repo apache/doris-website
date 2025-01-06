@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## parse_url
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR  parse_url(VARCHAR url, VARCHAR  name)`
 

@@ -25,19 +25,19 @@ under the License.
 -->
 
 ## non_nullable
-### description
+## 描述
 
 :::tip
 仅供开发者调试用，请勿在生产环境手动调用该函数。
 :::
 
-#### Syntax
+## 语法
 
 `T non_nullable(T expr)`
 
 如果 `expr` 为非 nullable 类型，或为 nullable 类型且其中包含 `NULL` 值，则报错。否则返回该列的非 nullable 属性数据列。
 
-### example
+## 举例
 
 ```sql
 mysql> select k1, non_nullable(k1) from test_nullable_functions order by k1;

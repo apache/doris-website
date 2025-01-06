@@ -24,8 +24,8 @@ under the License.
 
 ## least
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `least(col_a, col_b, …, col_n)`  
 
@@ -33,7 +33,7 @@ under the License.
 
 比较`n`个`column`的大小返回其中的最小值.若`column`中有`NULL`，则返回`NULL`.
 
-### example
+## 举例
 
 ```
 mysql> select least(-1, 0, 5, 8);

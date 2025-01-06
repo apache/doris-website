@@ -24,8 +24,8 @@ under the License.
 
 ## sqrt
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE sqrt(DOUBLE x)`
 返回`x`的平方根，要求x大于或等于0.
@@ -34,7 +34,7 @@ under the License.
 该函数的另一个别名为 `dsqrt`。
 :::
 
-### example
+## 举例
 
 ```
 mysql> select sqrt(9);

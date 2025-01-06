@@ -30,7 +30,7 @@ under the License.
 
 SHOW ALTER TABLE MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该命令用于查看通过 [CREATE-MATERIALIZED-VIEW](../../sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW.md) 语句提交的创建物化视图作业的执行情况。
 
@@ -104,7 +104,7 @@ RollupIndexName: r1
 
 - `Timeout`：作业超时时间，单位秒。
 
-### Example
+## 举例
 
 1. 查看数据库 example_db 下的物化视图作业
 

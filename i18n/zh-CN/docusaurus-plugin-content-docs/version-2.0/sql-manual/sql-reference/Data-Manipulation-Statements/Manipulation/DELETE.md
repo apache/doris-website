@@ -30,13 +30,13 @@ under the License.
 
 DELETE
 
-### Description
+## 描述
 
 该语句用于按条件删除指定 table（base index）partition 中的数据。
 
 该操作会同时删除和此 base index 相关的 rollup index 的数据。
 
-#### Syntax
+## 语法
 
 语法一：该语法只能指定过滤谓词
 
@@ -100,7 +100,7 @@ DELETE FROM table_name [table_alias]
 
 5. 该语句可能会降低执行后一段时间内的查询效率。影响程度取决于语句中指定的删除条件的数量。指定的条件越多，影响越大。
 
-### Example
+## 举例
 
 1. 删除 my_table partition p1 中 k1 列值为 3 的数据行
     

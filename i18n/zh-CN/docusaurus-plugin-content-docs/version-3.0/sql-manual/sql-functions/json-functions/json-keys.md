@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## Json_keys
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `ARRAY<STRING> json_keys(JSON, [VARCHAR path])`
 
@@ -37,7 +37,7 @@ JSON_KEYS() 函数用于从 JSON 对象的顶级值中返回键。这些键作�
 >
 > 如果所选对象为空，则结果数组为空。如果顶级值包含嵌套的子对象，返回值不包括这些子对象的键。
 
-### Example
+## 举例
 
 ```sql
 

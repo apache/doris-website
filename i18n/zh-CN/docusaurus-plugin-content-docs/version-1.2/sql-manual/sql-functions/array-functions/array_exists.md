@@ -29,9 +29,9 @@ under the License.
 array_exists(lambda,array1,array2....)
 array_exists(array1)
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 ```sql
 BOOLEAN array_exists(lambda, ARRAY<T> arr1, ARRAY<T> arr2, ... )
 BOOLEAN array_exists(ARRAY<T> arr)
@@ -49,7 +49,7 @@ array_exists((x,y)->(x = y), array1, array2);
 array_exists(array1);
 ```
 
-### example
+## 举例
 
 ```sql
 

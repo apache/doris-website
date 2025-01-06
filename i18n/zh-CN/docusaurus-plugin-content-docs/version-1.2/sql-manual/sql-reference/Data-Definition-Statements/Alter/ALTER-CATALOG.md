@@ -34,7 +34,7 @@ ALTER CATALOG
 
 </version>
 
-### Description
+## 描述
 
 该语句用于设置指定数据目录的属性。（仅管理员使用）
 
@@ -60,7 +60,7 @@ ALTER CATALOG catalog_name SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2'
 - 不可更改数据目录类型，即 `type` 属性
 - 不可更改内置数据目录 `internal` 的属性
 
-### Example
+## 举例
 
 1. 将数据目录 ctlg_hive 重命名为 hive
 

@@ -30,7 +30,7 @@ under the License.
 
 SHOW JOB
 
-### Description
+## 描述
 
 该语句用于展示 JOB 作业运行状态
 
@@ -72,7 +72,7 @@ SHOW JOBS 用于展示当前 DB 下所有作业的运行状态，SHOW JOB FOR jo
         * STOPPED：结束（用户手动触发）
         * FINISHED: 完成
 
-### Example
+## 举例
 
 1. 展示当前 DB 下的所有 JOB。
 

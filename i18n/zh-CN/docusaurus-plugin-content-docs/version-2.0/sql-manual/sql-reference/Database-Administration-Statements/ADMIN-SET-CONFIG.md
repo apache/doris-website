@@ -30,7 +30,7 @@ under the License.
 
 ADMIN SET CONFIG
 
-### Description
+## 描述
 
 该语句用于设置集群的配置项（当前仅支持设置FE的配置项）。
 可设置的配置项，可以通过 ADMIN SHOW FRONTEND CONFIG; 命令查看。
@@ -46,7 +46,7 @@ ADMIN SET CONFIG
   
     1. 使用ALL关键字后配置参数将应用于所有FE(除 master_only 参数外)
     
-### Example
+## 举例
 
 1. 设置 'disable_balance' 为 true
 

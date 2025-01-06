@@ -24,20 +24,20 @@ under the License.
 
 ## split_by_string
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<STRING> split_by_string(STRING s, STRING separator)`
 将字符串拆分为由字符串分隔的子字符串。它使用多个字符的常量字符串分隔符作为分隔符。如果字符串分隔符为空，它将字符串拆分为单个字符数组。
 
-#### Arguments
+## 参数
 
 `separator` — 分隔符是一个字符串，是用来分割的标志字符. 类型: `String`
 
 `s` — 需要分割的字符串. 类型: `String`
 
-#### Returned value(s)
+## 返回值(s)
 
 返回一个包含子字符串的数组. 以下情况会返回空的子字符串:
 
@@ -49,7 +49,7 @@ under the License.
 
 Type: `Array(String)`
 
-### example
+## 举例
 
 ```
 select split_by_string('a1b1c1d','1');

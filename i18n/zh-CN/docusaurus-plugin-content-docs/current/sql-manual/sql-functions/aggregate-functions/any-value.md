@@ -29,8 +29,8 @@ under the License.
 ANY_VALUE
 
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `ANY_VALUE(expr)`
 
@@ -38,7 +38,7 @@ ANY_VALUE
 
 别名函数： `ANY(expr)`
 
-### example
+## 举例
 ```
 mysql> select id, any_value(name) from cost2 group by id;
 +------+-------------------+

@@ -28,9 +28,9 @@ under the License.
 
 array_range
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 ```sql
 ARRAY<Int> array_range(Int end)
@@ -40,11 +40,11 @@ ARRAY<Int> array_range(Int start, Int end, Int step)
 参数均为正整数 start 默认为 0, step 默认为 1。
 最终返回一个数组，从start 到 end - 1, 步长为 step。
 
-### notice
+## 注意事项
 
 `仅支持向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 mysql> select array_range(10);

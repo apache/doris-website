@@ -26,16 +26,16 @@ under the License.
 
 ## explode_numbers
 
-### description
+## 描述
 
 表函数，需配合 Lateral View 使用。
 
 获得一个[0,n)的序列。
 
-#### syntax
+## 语法
 `explode_numbers(n)`
 
-### example
+## 举例
 
 ```
 mysql> select e1 from (select 1 k1) as t lateral view explode_numbers(5) tmp1 as e1;

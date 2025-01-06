@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## localtime,localtimestamp
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME localtime()`
 `DATETIME localtimestamp()`
 
 获得当前的时间，以Datetime类型返回
 
-### Example
+## 举例
 
 ```
 mysql> select localtime();

@@ -30,7 +30,7 @@ under the License.
 
 mv_infos
 
-### description
+## 描述
 
 表函数，生成异步物化视图临时表，可以查看某个db中创建的异步物化视图信息。
 
@@ -38,7 +38,7 @@ mv_infos
 
 该函数自 2.1.0 版本支持。
 
-#### syntax
+## 语法
 
 `mv_infos("database"="")`
 
@@ -77,7 +77,7 @@ mysql> desc function mv_infos("database"="tpch100");
 * MvPartitionInfo：物化视图的分区信息
 * SyncWithBaseTables：是否和base表数据同步，如需查看哪个分区不同步，请使用[SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md)
 
-### example
+## 举例
 
 1. 查看db1下的所有物化视图
 

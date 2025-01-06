@@ -24,13 +24,13 @@ under the License.
 
 ## acos
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE acos(DOUBLE x)`
 返回`x`的反余弦值，若 `x`不在`-1`到 `1`的范围之内，则返回 `nan`.
 
-### example
+## 举例
 
 ```
 mysql> select acos(1);

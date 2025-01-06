@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## skewness,skew,skew_pop
+
 ### 描述
 
 返回表达式的 [斜度](https://en.wikipedia.org/wiki/Skewness)。
-用来计算斜度的公式是 `3阶中心矩 / ((方差)^{1.5})`, 当方差为零时, `skewness` 会返回 `NULL`.
+用来计算斜度的公式是 `3阶中心矩 / ((方差)^{1.5})`, 当方差为零时，`skewness` 会返回 `NULL`.
 
 ### 语法
 

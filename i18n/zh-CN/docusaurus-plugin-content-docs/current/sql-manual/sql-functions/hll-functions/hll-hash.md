@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## HLL_HASH
-### description
-#### Syntax
+## 描述
+## 语法
 
 `HLL_HASH(value)`
 
 HLL_HASH 将一个值转换为 hll 类型。通常用于导入数据时，将普通类型的值导入到 hll 列中。
 
-### example
+## 举例
 ```
 MySQL > select HLL_CARDINALITY(HLL_HASH('abc'));
 +----------------------------------+

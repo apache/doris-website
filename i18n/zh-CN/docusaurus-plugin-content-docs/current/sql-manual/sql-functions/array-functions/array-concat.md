@@ -26,21 +26,21 @@ under the License.
 
 array_concat
 
-### description
+## 描述
 
 将输入的所有数组拼接为一个数组
 
-#### Syntax
+## 语法
 
 `Array<T> array_concat(Array<T>, ...)`
 
-#### Returned value
+## 返回值
 
 拼接好的数组
 
 类型: Array.
 
-### example
+## 举例
 
 ```
 mysql> select array_concat([1, 2], [7, 8], [5, 6]);

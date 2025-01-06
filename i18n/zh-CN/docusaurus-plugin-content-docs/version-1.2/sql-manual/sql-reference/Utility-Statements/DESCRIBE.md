@@ -30,7 +30,7 @@ under the License.
 
 DESCRIBE
 
-### Description
+## 描述
 
 该语句用于展示指定 table 的 schema 信息
 
@@ -44,7 +44,7 @@ DESC[RIBE] [db_name.]table_name [ALL];
 
 1. 如果指定 ALL，则显示该 table 的所有 index(rollup) 的 schema
 
-### Example
+## 举例
 
 1. 显示Base表Schema
 

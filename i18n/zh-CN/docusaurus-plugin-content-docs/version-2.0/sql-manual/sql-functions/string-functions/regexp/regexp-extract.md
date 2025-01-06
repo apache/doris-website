@@ -23,8 +23,8 @@ under the License.
 -->
 
 ## regexp_extract
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR regexp_extract(VARCHAR str, VARCHAR pattern, int pos)`
 
@@ -32,7 +32,7 @@ under the License.
 
 字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
 
-### example
+## 举例
 
 ```sql
 mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 1);

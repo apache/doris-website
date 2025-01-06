@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## QUANTILE_STATE
-### description
+
+## 描述
     QUANTILE_STATE
 
 **在 2.0 中我们支持了[agg_state](AGG_STATE.md)功能，推荐使用 agg_state quantile_union(quantile_state not null) 来代替本类型。**
@@ -52,11 +52,11 @@ QUANTILE_STATE 是一种计算分位数近似值的类型，在导入时会对�
 
     
 
-### example
+## 举例
     select QUANTILE_PERCENT(QUANTILE_UNION(v1), 0.5) from test_table group by k1, k2, k3;
     
 
-### notice
+## 注意事项
 
 使用前可以通过如下命令打开 QUANTILE_STATE 开关：
 
@@ -66,6 +66,3 @@ $ mysql-client > admin set frontend config("enable_quantile_state_type"="true");
 
 这种方式下 QUANTILE_STATE 开关会在 Fe 进程重启后重置，或者在 fe.conf 中添加`enable_quantile_state_type=true`配置项可永久生效。
 
-### keywords
-
-    QUANTILE_STATE, QUANTILE_UNION, TO_QUANTILE_STATE, QUANTILE_PERCENT

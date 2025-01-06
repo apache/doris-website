@@ -30,7 +30,7 @@ under the License.
 
 SHOW BACKENDS
 
-### Description
+## 描述
 
 该语句用于查看 cluster 内的 BE 节点
 
@@ -55,7 +55,7 @@ SHOW BACKENDS
        13. HeartbeatFailureCounter：现在当前连续失败的心跳次数，如果次数超过 `max_backend_heartbeat_failure_tolerance_count` 配置，则 isAlive 字段会置为 false。
        14. NodeRole用于展示节点角色, 现在有两种类型: Mix代表原来的节点类型, computation代表只做计算的节点类型.
 
-### Example
+## 举例
 
 ### Keywords
 

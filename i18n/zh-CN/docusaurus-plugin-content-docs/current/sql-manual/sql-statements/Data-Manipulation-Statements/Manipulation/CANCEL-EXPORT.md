@@ -30,7 +30,7 @@ under the License.
 
 CANCEL EXPORT
 
-### Description
+## 描述
 
 该语句用于撤销指定 label 的 EXPORT 作业，或者通过模糊匹配批量撤销 EXPORT 作业
 
@@ -40,7 +40,7 @@ CANCEL EXPORT
 WHERE [LABEL = "export_label" | LABEL like "label_pattern" | STATE = "PENDING/IN_QUEUE/EXPORTING"]
 ```
 
-### Example
+## 举例
 
 1. 撤销数据库 example_db 上，label 为 `example_db_test_export_label` 的 EXPORT 作业
 

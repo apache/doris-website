@@ -30,7 +30,7 @@ under the License.
 
 ALTER DATABASE
 
-### Description
+## 描述
 
 该语句用于设置指定数据库的属性。（仅管理员使用）
 
@@ -56,7 +56,7 @@ ALTER DATABASE db_name SET REPLICA QUOTA quota;
     重命名数据库后，如需要，请使用 REVOKE 和 GRANT 命令修改相应的用户权限。
     数据库的默认数据量配额为1024GB，默认副本数量配额为1073741824。
 
-### Example
+## 举例
 
 1. 设置指定数据库数据量配额
 

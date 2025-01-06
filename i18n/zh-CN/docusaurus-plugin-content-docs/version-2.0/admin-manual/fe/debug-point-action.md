@@ -104,7 +104,7 @@ void Status foo() {
     }
     ```
     
-### Examples
+## 举例s
 
 
 打开木桩 `foo`，最多激活 5 次。
@@ -143,7 +143,7 @@ void Status foo() {
     }
 ```
     
-### Examples
+## 举例s
 
 
 关闭木桩`foo`。
@@ -177,7 +177,7 @@ void Status foo() {
     }
     ```
     
-### Examples
+## 举例s
 
 
 清除所有木桩。

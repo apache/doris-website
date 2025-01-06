@@ -29,8 +29,8 @@ under the License.
 :::
 
 ## function char
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR char(INT,..., [USING charset_name])`
 
@@ -43,7 +43,7 @@ under the License.
 `charset_name`目前只支持`utf8`。
 
 
-### example
+## 举例
 
 ```
 mysql> select char(68, 111, 114, 105, 115);

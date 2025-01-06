@@ -24,8 +24,8 @@ under the License.
 
 ## truncate
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE truncate(DOUBLE x, INT d)`
 按照保留小数的位数`d`对`x`进行数值截取。
@@ -35,7 +35,7 @@ under the License.
 当`d = 0`时：将`x`的小数部分去除，只保留整数部分
 当`d < 0`时：将`x`的小数部分去除，整数部分按照 `d`所指定的位数，采用数字`0`进行替换
 
-### example
+## 举例
 
 ```
 mysql> select truncate(124.3867, 2);

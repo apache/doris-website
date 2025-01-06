@@ -24,8 +24,8 @@ under the License.
 
 ## ln
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE ln(DOUBLE x)`
 返回以`e`为底的`x`的自然对数.
@@ -34,7 +34,7 @@ under the License.
 该函数的另一个别名为 `dlog1`。
 :::
 
-### example
+## 举例
 
 ```
 mysql> select ln(1);

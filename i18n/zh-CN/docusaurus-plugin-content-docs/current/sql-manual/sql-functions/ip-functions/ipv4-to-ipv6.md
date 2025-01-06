@@ -26,9 +26,9 @@ under the License.
 
 IPV4_TO_IPV6
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `IPV6 IPV4_TO_IPV6(IPV4 ipv4)`
 
@@ -36,7 +36,7 @@ IPV4_TO_IPV6
 接受一个类型为 IPv4 的地址，返回相应 IPv6 的形式。
 
 
-### Example
+## 举例
 
 ```sql
 mysql [(none)]>select ipv6_num_to_string(ipv4_to_ipv6(to_ipv4('192.168.0.1')));

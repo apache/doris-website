@@ -34,7 +34,7 @@ rowsets
 
 </version>
 
-### description
+## 描述
 
 `rowsets` 是doris内置的一张系统表，存放在`information_schema`数据库下。通过 `rowsets` 系统表可以查看各个`BE` 当前rowsets情况。
 
@@ -59,7 +59,7 @@ MySQL [(none)]> desc information_schema.rowsets;
 +------------------------+------------+------+-------+---------+-------+
 ```
 
-### Example
+## 举例
 
 ```sql
 select * from information_schema.rowsets where BACKEND_ID = 10004 limit 10;

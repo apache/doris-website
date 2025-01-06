@@ -30,7 +30,7 @@ under the License.
 
 SHOW CREATE TABLE
 
-### Description
+## 描述
 
 该语句用于展示数据表的创建语句。
 
@@ -51,7 +51,7 @@ SHOW [BRIEF] CREATE TABLE [DBNAME.]TABLE_NAME
 2. `DBNAMNE` : 数据库名称
 3. `TABLE_NAME` : 表名
 
-### Example
+## 举例
 
 1. 查看某个表的建表语句
 

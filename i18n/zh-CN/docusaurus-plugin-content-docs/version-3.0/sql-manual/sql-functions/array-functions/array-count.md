@@ -28,7 +28,7 @@ under the License.
 
 array_count
 
-### description
+## 描述
 
 ```sql
 array_count(lambda, array1, ...)
@@ -46,7 +46,7 @@ array_count(x->(abs(x)-1), array1);
 array_count((x,y)->(x = y), array1, array2);
 ```
 
-### example
+## 举例
 
 ```
 mysql> select array_count(x -> x, [0, 1, 2, 3]);

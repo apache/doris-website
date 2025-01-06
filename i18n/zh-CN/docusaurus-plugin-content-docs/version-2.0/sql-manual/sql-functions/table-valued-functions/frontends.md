@@ -30,13 +30,13 @@ under the License.
 
 frontends
 
-### description
+## 描述
 
 表函数，生成 frontends 临时表，可以查看当前 doris 集群中的 FE 节点信息。
 
 该函数用于 from 子句中。
 
-#### syntax
+## 语法
 `frontends()`
 
 frontends() 表结构：
@@ -71,7 +71,7 @@ mysql> desc function frontends();
 
 对 `frontends()` tvf 信息展示进行了鉴权，与 `show frontends` 行为保持一致，要求用户具有 ADMIN/OPERATOR 权限。
 
-### example
+## 举例
 ```
 mysql> select * from frontends()\G
 *************************** 1. row ***************************

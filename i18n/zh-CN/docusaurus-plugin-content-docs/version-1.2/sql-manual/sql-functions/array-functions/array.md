@@ -26,18 +26,18 @@ under the License.
 
 array()
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<T> array(T, ...)`
 根据参数构造并返回array, 参数可以是多列或者常量
 
-### notice
+## 注意事项
 
 `仅支持向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 mysql> select array("1", 2, 1.1);

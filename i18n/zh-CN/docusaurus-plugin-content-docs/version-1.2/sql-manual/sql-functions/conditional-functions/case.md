@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## case
-### description
-#### Syntax
+## 描述
+## 语法
 
 ```
 CASE expression
@@ -49,7 +49,7 @@ END
 
 将表达式和多个可能的值进行比较，当匹配时返回相应的结果
 
-### example
+## 举例
 
 ```
 mysql> select user_id, case user_id when 1 then 'user_id = 1' when 2 then 'user_id = 2' else 'user_id not exist' end test_case from test;

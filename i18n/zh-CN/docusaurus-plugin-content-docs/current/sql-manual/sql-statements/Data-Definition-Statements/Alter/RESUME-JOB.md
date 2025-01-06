@@ -30,7 +30,7 @@ under the License.
 
 RESUME JOB
 
-### Description
+## 描述
 
 将处于 PAUSED 状态的 JOB 恢复为 RUNNING 状态。RUNNING 状态的 JOB 将会根据既定的调度周期去执行。
 
@@ -38,7 +38,7 @@ RESUME JOB
 RESUME JOB where jobName = jobName;
 ```
 
-### Example
+## 举例
 
 1. 恢复运行名称为 example 的 JOB。
 

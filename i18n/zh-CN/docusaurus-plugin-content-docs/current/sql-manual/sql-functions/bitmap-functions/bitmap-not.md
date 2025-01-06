@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## bitmap_not
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITMAP BITMAP_NOT(BITMAP lhs, BITMAP rhs)`
 
 计算lhs减去rhs之后的集合，返回新的bitmap.
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_to_string(bitmap_not(bitmap_from_string('2,3'),bitmap_from_string('1,2,3,4')));
