@@ -1,7 +1,7 @@
 ---
 {
     "title": "Quick Start",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 
