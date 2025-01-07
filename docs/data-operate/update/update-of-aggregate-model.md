@@ -28,7 +28,7 @@ This document primarily introduces how to update the Doris Aggregate model based
 
 ## Whole Row Update
 
-When loading data into the Aggregate model (Agg model) using Doris-supported methods such as Stream Load, Broker Load, Routine Load, Insert Into, etc., the new values will be aggregated with the old values according to the column's aggregation function to produce new aggregated values. This value may be produced at the time of insertion or during asynchronous compaction, but users will get the same return value when querying.
+When loading data into the Aggregate model table using Doris-supported methods such as Stream Load, Broker Load, Routine Load, Insert Into, etc., the new values will be aggregated with the old values according to the column's aggregation function to produce new aggregated values. This value may be produced at the time of insertion or during asynchronous compaction, but users will get the same return value when querying.
 
 ## Partial Column Update of Aggregate Model
 
