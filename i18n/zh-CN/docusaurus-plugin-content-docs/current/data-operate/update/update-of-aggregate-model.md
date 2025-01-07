@@ -26,7 +26,7 @@ under the License.
 
 这篇文档主要介绍 Doris 聚合模型上基于导入的更新。
 
-## 所有列更新
+## 整行更新
 
 使用 Doris 支持的 Stream Load，Broker Load，Routine Load，Insert Into 等导入方式，往聚合模型（Agg 模型）中进行数据导入时，都会将新的值与旧的聚合值，根据列的聚合函数产出新的聚合值，这个值可能是插入时产出，也可能是异步 Compaction 时产出，但是用户查询时，都会得到一样的返回值。
 
@@ -50,12 +50,6 @@ DISTRIBUTED BY HASH(order_id) BUCKETS 1
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 1"
 );
-+----------+--------------+--------------+
-| order_id | order_amount | order_status |
-+----------+--------------+--------------+
-| 1        |          100 | 待付款        |
-+----------+--------------+--------------+
-1 row in set (0.01 sec)
 ```
 
 **数据写入**
