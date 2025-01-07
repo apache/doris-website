@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Hive Metastore",
     "language": "en"
 }
 ---

@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Lakehouse Overview",
-    "language": "en"
+    "title": "Data Cache",
+    "language": "zh-CN"
 }
 ---
 

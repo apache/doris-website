@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "MySQL JDBC Catalog",
     "language": "en"
 }
 ---

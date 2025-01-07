@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Lakehouse Overview",
-    "language": "en"
+    "title": "File System",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,5 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The document is under development, please refer to versioned doc 2.1 or 3.0
+Iceberg Catalog 和 Paimon Catalog 支持直接从文件系统访问元数据。
 
+相关的连接信息请参阅各自 Catalog 的文档，以及对应的存储系统相关的参数。

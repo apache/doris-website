@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "IBM Db2 JDBC Catalog",
     "language": "en"
 }
 ---

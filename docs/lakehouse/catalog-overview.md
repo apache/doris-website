@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Catalog Overview",
     "language": "en"
 }
 ---

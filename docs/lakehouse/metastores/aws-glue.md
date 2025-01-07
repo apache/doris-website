@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "AWS Glue",
     "language": "en"
 }
 ---

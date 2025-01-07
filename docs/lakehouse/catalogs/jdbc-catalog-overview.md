@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "JDBC Catalog Overview",
     "language": "en"
 }
 ---

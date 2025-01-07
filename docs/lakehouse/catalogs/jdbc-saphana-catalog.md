@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "SAP HANA JDBC Catalog",
     "language": "en"
 }
 ---

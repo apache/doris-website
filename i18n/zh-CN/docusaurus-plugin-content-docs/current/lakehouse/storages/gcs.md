@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Lakehouse Overview",
-    "language": "en"
+    "title": "Google Cloud Storage",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,5 +24,5 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The document is under development, please refer to versioned doc 2.1 or 3.0
+文章更新中，请先参阅 2.1/3.0 版本文档。
 

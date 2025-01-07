@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Lakehouse Overview",
-    "language": "en"
+    "title": "ORC",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,5 +24,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The document is under development, please refer to versioned doc 2.1 or 3.0
+
+本文档用于介绍 Doris 的 ORC 文件格式的读写支持情况。该文档适用于以下功能。
+
+* Catalog 中对数据的读取、写入操作。
+
+* Table Valued Function 中对数据的读取操作。
+
+* Broker Load 中对数据的读取操作。
+
+* Export 中对数据的写入操作。
+
+* Outfile 中对数据的写入操作。
+
+## 支持的压缩格式
+
+* umcomressed
+
+* snappy
+
+* lz4
+
+* zstd
+
+* lzo
+
+* zlib
 

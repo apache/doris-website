@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Baidu BOS",
     "language": "en"
 }
 ---

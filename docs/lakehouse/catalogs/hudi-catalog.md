@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Hudi Catalog",
     "language": "en"
 }
 ---

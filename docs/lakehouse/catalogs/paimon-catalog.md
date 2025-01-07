@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Paimon Catalog",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "BigQuery Catalog",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Iceberg Rest Catalog API",
     "language": "en"
 }
 ---

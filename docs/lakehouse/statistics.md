@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Query Statistics",
     "language": "en"
 }
 ---
