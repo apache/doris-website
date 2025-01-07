@@ -377,7 +377,7 @@
                                 "lakehouse/catalogs/hudi-catalog",
                                 "lakehouse/catalogs/paimon-catalog",
                                 "lakehouse/catalogs/maxcompute-catalog",
-                                "lakehouse/catalogs/detla-lake-catalog",
+                                "lakehouse/catalogs/delta-lake-catalog",
                                 "lakehouse/catalogs/bigquery-catalog",
                                 "lakehouse/catalogs/kudu-catalog",
                                 "lakehouse/catalogs/lakesoul-catalog",
