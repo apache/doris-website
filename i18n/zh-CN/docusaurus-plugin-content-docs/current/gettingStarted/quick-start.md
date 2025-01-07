@@ -36,8 +36,6 @@ under the License.
 3. 本示例中的建表均为单副本，在生产中请使用多副本存储数据。
 
 4. 不设置环境变量的 Docker 快速部署仅适用于 `2.1.8` 或 `3.0.4` 及后续版本。
-
-5. 自 `3.0.4` 版本起，为使容器传参更清晰简单化，Doris 镜像新增一套接口逻辑，原有接口逻辑可正常使用，两套逻辑完全兼容。
 :::
 
 ## 使用 Docker 快速部署
@@ -53,18 +51,15 @@ services:
     image: apache/doris:doris-fe-${DORIS_QUICK_START_VERSION}
     hostname: fe
     environment:
-      - FE_MASTER_IP=127.0.0.1
-      - FE_CURRENT_IP=127.0.0.1
-      - FE_MASTER_PORT=9010
-      - FE_CURRENT_PORT=9010
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - FE_ID=1
     network_mode: host
   be:
     image: apache/doris:doris-be-${DORIS_QUICK_START_VERSION}
     hostname: be
     environment:
-      - FE_MASTER_IP=127.0.0.1
-      - BE_IP=127.0.0.1
-      - BE_PORT=9050
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - BE_ADDR=127.0.0.1:9050
     depends_on:
       - fe
     network_mode: host

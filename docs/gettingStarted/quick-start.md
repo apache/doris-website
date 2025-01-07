@@ -36,8 +36,6 @@ Quick deployment **is only suitable for local development**. Do not use this dep
 3. The tables created in this example are single-instance. In production, please use multi-replica storage for data.
 
 4. The quick deployment of Docker without setting environment variables is only applicable to versions `2.1.8`, `3.0.4`, and later versions.
-
-5. Starting from version `3.0.4`, in order to make the passing of parameters to the container clearer and simpler, the Doris image has introduced a new set of interface logic. The original interface logic can still be used normally, and both sets of logic are fully compatible.
 :::
 
 ## Use Docker for Quick Deployment
@@ -53,18 +51,15 @@ services:
     image: apache/doris:doris-fe-${DORIS_QUICK_START_VERSION}
     hostname: fe
     environment:
-      - FE_MASTER_IP=127.0.0.1
-      - FE_CURRENT_IP=127.0.0.1
-      - FE_MASTER_PORT=9010
-      - FE_CURRENT_PORT=9010
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - FE_ID=1
     network_mode: host
   be:
     image: apache/doris:doris-be-${DORIS_QUICK_START_VERSION}
     hostname: be
     environment:
-      - FE_MASTER_IP=127.0.0.1
-      - BE_IP=127.0.0.1
-      - BE_PORT=9050
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - BE_ADDR=127.0.0.1:9050
     depends_on:
       - fe
     network_mode: host

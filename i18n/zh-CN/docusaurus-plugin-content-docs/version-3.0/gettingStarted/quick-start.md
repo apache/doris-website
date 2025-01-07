@@ -59,18 +59,15 @@ services:
     image: apache/doris:doris-fe-${DORIS_QUICK_START_VERSION}
     hostname: fe
     environment:
-      - FE_MASTER_IP=127.0.0.1
-      - FE_CURRENT_IP=127.0.0.1
-      - FE_MASTER_PORT=9010
-      - FE_CURRENT_PORT=9010
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - FE_ID=1
     network_mode: host
   be:
     image: apache/doris:doris-be-${DORIS_QUICK_START_VERSION}
     hostname: be
     environment:
-      - FE_MASTER_IP=127.0.0.1
-      - BE_IP=127.0.0.1
-      - BE_PORT=9050
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - BE_ADDR=127.0.0.1:9050
     depends_on:
       - fe
     network_mode: host
