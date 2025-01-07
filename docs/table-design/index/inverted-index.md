@@ -339,7 +339,7 @@ The acceleration effect of the inverted index can be analyzed using the followin
 To check the actual effect of tokenization or to tokenize a piece of text, you can use the `TOKENIZE` function for verification.
 
 The first parameter of the `TOKENIZE` function is the text to be tokenized, and the second parameter specifies the tokenization parameters used when creating the index.
-
+```sql
 mysql> SELECT TOKENIZE('I love Doris','"parser"="english"');
 +------------------------------------------------+
 | tokenize('I love Doris', '"parser"="english"') |
