@@ -40,19 +40,19 @@ under the License.
 
 ### 第 1 步：调整宿主机环境变量
 
-复制以下内容，在宿主机上顺次执行，调整以下三处环境变量值，以满足进程运行最低需要。
+通过以下命令，调整宿主机的环境变量：
 
-```text
+```bash
 ulimit -n 65536
 swapoff -a
 sysctl -w vm.max_map_count=2000000
 ```
 
-### 第 2 步：创建 docker-compose.yaml 文件
+### 第 2 步：创建 docker-compose.yaml
 
 复制以下内容到 docker-compose.yaml，替换 DORIS_QUICK_START_VERSION 参数为指定版本，如 `2.1.7`。
 
-```text
+```yaml
 version: "3"
 services:
   fe:
@@ -81,7 +81,7 @@ services:
 docker-compose -f ./docker-compose.yaml up -d
 ```
 
-### 第 4 步：使用 MySQL 客户端连接集群，并检查集群状态
+### 第 4 步：检查集群状态
 
 ```sql
 ## 检查 FE 状态，确定 Join 与 Alive 列都为 true

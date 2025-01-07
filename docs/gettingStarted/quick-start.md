@@ -34,17 +34,15 @@ Quick deployment **is only suitable for local development**. Do not use this dep
 2. Deploying a single-instance Doris manually does not have data replication capability, and a single machine failure may result in data loss.
 
 3. The tables created in this example are single-instance. In production, please use multi-replica storage for data.
-
-4. The quick deployment of Docker without setting environment variables is only applicable to versions `2.1.8`, `3.0.4`, and later versions.
 :::
 
 ## Use Docker for Quick Deployment
 
-### Step 1: Create the docker-compose.yaml File
+### Step 1: Create the docker-compose.yaml
 
 Copy the following content into the docker-compose.yaml file, and replace the `DORIS_QUICK_START_VERSION` parameter with the specified version, such as `3.0.4`.
 
-```text
+```yaml
 version: "3"
 services:
   fe:
@@ -73,7 +71,7 @@ Start the cluster using the docker-compose command.
 docker-compose -f ./docker-compose.yaml up -d
 ```
 
-### Step 3: Connect to the cluster using MySQL client and check the cluster status
+### Step 3: Check the cluster status
 
 ```sql
 ## Check the FE status to ensure that both the Join and Alive columns are true.

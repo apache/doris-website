@@ -38,21 +38,21 @@ Quick deployment **is only suitable for local development**. Do not use this dep
 
 ## Use Docker for Quick Deployment
 
-### Step 1: Adjust the Host Machine Environment Variables
+### Step 1: Set the Host Machine Environment Variables
 
-Copy the following commands and execute them sequentially on the host machine to adjust the values of the three environment variables to meet the minimum requirements for process operation.
+Set the environment variables of the host machine using the following command:
 
-```text
+```bash
 ulimit -n 65536
 swapoff -a
 sysctl -w vm.max_map_count=2000000
 ```
 
-### Step 2: Create the docker-compose.yaml File
+### Step 2: Create the docker-compose.yaml
 
 Copy the following content into the docker-compose.yaml file, and replace the `DORIS_QUICK_START_VERSION` parameter with the specified version, such as `2.1.7`.
 
-```text
+```yaml
 version: "3"
 services:
   fe:
@@ -81,7 +81,7 @@ Start the cluster using the docker-compose command.
 docker-compose -f ./docker-compose.yaml up -d
 ```
 
-### Step 4: Connect to the cluster using MySQL client and check the cluster status
+### Step 4: Check the cluster status
 
 ```sql
 ## Check the FE status to ensure that both the Join and Alive columns are true.

@@ -34,17 +34,15 @@ under the License.
 2. 通过手动部署单副本 Doris 实例，不具有数据多副本存储能力，单台机器宕机可能会造成数据丢失。
 
 3. 本示例中的建表均为单副本，在生产中请使用多副本存储数据。
-
-4. 不设置环境变量的 Docker 快速部署仅适用于 `2.1.8` 或 `3.0.4` 及后续版本。
 :::
 
 ## 使用 Docker 快速部署
 
-### 第 1 步：创建 docker-compose.yaml 文件
+### 第 1 步：创建 docker-compose.yaml
 
 复制以下内容到 docker-compose.yaml，替换 DORIS_QUICK_START_VERSION 参数为指定版本，如 `3.0.4`。
 
-```text
+```yaml
 version: "3"
 services:
   fe:
@@ -73,7 +71,7 @@ services:
 docker-compose -f ./docker-compose.yaml up -d
 ```
 
-### 第 3 步：使用 MySQL 客户端连接集群，并检查集群状态
+### 第 3 步：检查集群状态
 
 ```sql
 ## 检查 FE 状态，确定 Join 与 Alive 列都为 true
