@@ -24,57 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This document introduces how to use the `SELECT INTO OUTFILE` command to export query results.
+This document will introduce how to use the `SELECT INTO OUTFILE` command to export query results.
 
-For a detailed introduction to the `SELECT INTO OUTFILE` command, refer to: [SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md).
+The `SELECT INTO OUTFILE` command exports the result data of the `SELECT` part to the target storage system in the specified file format, including object storage, HDFS, or the local file system.
 
-## Overview
+The `SELECT INTO OUTFILE` is a synchronous command. When the command returns, it means that the export is completed. If the export is successful, information such as the number, size, and path of the exported files will be returned. If the export fails, an error message will be returned.
 
-The `SELECT INTO OUTFILE` command exports the result data of the `SELECT` statement to a target storage system, such as object storage, HDFS, or the local file system, in a specified file format.
+For information on how to choose between `SELECT INTO OUTFILE` and `EXPORT`, please refer to [Export Overview](./export-overview.md).
 
-`SELECT INTO OUTFILE` is a synchronous command, meaning it completes when the command returns. If successful, it returns information about the number, size, and paths of the exported files. If it fails, it returns error information.
+For a detailed introduction to the `SELECT INTO OUTFILE` command, please refer to: [SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md) 
 
-For guidance on choosing between `SELECT INTO OUTFILE` and `EXPORT`, see the [Export Overview](./export-overview.md).
+--------------
 
-### Supported Export Formats
+## Usage Scenarios
 
-`SELECT INTO OUTFILE` currently supports the following export formats:
+The `SELECT INTO OUTFILE` is applicable to the following scenarios:
+- When the exported data needs to go through complex calculation logics, such as filtering, aggregation, and joining.
+- For scenarios suitable for executing synchronous tasks.
 
-- Parquet
-- ORC
-- CSV
-- CSV with column names (`csv_with_names`)
-- CSV with column names and types (`csv_with_names_and_types`)
+When using the `SELECT INTO OUTFILE`, the following limitations should be noted:
+- It does not support exporting data in compressed formats.
+- The pipeline engine in version 2.1 does not support concurrent exports.
+- If you want to export data to the local file system, you need to add the configuration `enable_outfile_to_local = true` in the `fe.conf` file and then restart the FE. 
 
-Compressed formats are not supported.
 
-### Example
+## Basic Principles
+The `SELECT INTO OUTFILE` function essentially executes an SQL query command, and its principle is basically the same as that of an ordinary query. The only difference is that an ordinary query outputs the final query result set to the MySQL client, while the `SELECT INTO OUTFILE` outputs the final query result set to an external storage medium.
+
+The principle of concurrent export for `SELECT INTO OUTFILE` is to divide large-scale data sets into small pieces and process them in parallel on multiple nodes. In scenarios where concurrent export is possible, exports are carried out in parallel on multiple BE nodes, with each BE handling a part of the result set. 
+
+## Quick Start
+### Create Tables and Import Data
 
 ```sql
-mysql> SELECT * FROM tbl1 LIMIT 10 INTO OUTFILE "file:///home/work/path/result_";
-+------------+-----------+----------+--------------------------------------------------------------------+
-| FileNumber | TotalRows | FileSize | URL                                                                |
-+------------+-----------+----------+--------------------------------------------------------------------+
-|          1 |         2 |        8 | file:///192.168.1.10/home/work/path/result_{fragment_instance_id}_ |
-+------------+-----------+----------+--------------------------------------------------------------------+
+CREATE TABLE IF NOT EXISTS tbl (
+    `c1` int(11) NULL,
+    `c2` string NULL,
+    `c3` bigint NULL
+)
+DISTRIBUTED BY HASH(c1) BUCKETS 20
+PROPERTIES("replication_num" = "1");
+
+
+insert into tbl values
+    (1, 'doris', 18),
+    (2, 'nereids', 20),
+    (3, 'pipelibe', 99999),
+    (4, 'Apache', 122123455),
+    (5, null, null);
 ```
-
-Explanation of the returned results:
-
-- **FileNumber**: The number of generated files.
-- **TotalRows**: The number of rows in the result set.
-- **FileSize**: The total size of the exported files in bytes.
-- **URL**: The prefix of the exported file paths. Multiple files will be numbered sequentially with suffixes `_0`, `_1`, etc.
-
-## Export File Column Type Mapping
-
-`SELECT INTO OUTFILE` supports exporting to Parquet and ORC file formats. Parquet and ORC have their own data types, and Doris can automatically map its data types to corresponding Parquet and ORC data types. Refer to the "Export File Column Type Mapping" section in the [Export Overview](./export-overview.md) document for the specific mapping relationships.
-
-## Examples
 
 ### Export to HDFS
 
-Export query results to the `hdfs://path/to/` directory, specifying the export format as PARQUET:
+Export the query results to the directory `hdfs://path/to/` and specify the export format as Parquet: 
 
 ```sql
 SELECT c1, c2, c3 FROM tbl
@@ -87,7 +89,106 @@ PROPERTIES
 );
 ```
 
-If HDFS is configured for high availability, provide HA information, such as:
+If the HDFS cluster has high availability enabled, HA information needs to be provided. Refer to the example: [Export to an HDFS Cluster with High Availability Enabled](#high-availability-hdfs-export).
+
+If the HDFS cluster has both high availability enabled and Kerberos authentication enabled, Kerberos authentication information needs to be provided. Refer to the example: [Export to an HDFS Cluster with High Availability and Kerberos Authentication Enabled](#high-availability-and-kerberos-cluster-export).
+
+### Export to Object Storage
+
+Export the query results to the directory `s3://path/to/` in the S3 storage, specify the export format as ORC, and information such as `sk` (secret key) and `ak` (access key) needs to be provided. 
+
+```sql
+SELECT * FROM tbl
+INTO OUTFILE "s3://path/to/result_"
+FORMAT AS ORC
+PROPERTIES(
+    "s3.endpoint" = "https://xxx",
+    "s3.region" = "ap-beijing",
+    "s3.access_key"= "your-ak",
+    "s3.secret_key" = "your-sk"
+);
+```
+
+### Export to the Local File System
+> If you need to export to a local file, you must add `enable_outfile_to_local = true` to `fe.conf` and restart the FE.
+
+Export the query results to the directory `file:///path/to/` on the BE, specify the export format as CSV, and specify the column separator as `,`. 
+
+```sql
+SELECT c1, c2 FROM tbl FROM tbl1
+INTO OUTFILE "file:///path/to/result_"
+FORMAT AS CSV
+PROPERTIES(
+    "column_separator" = ","
+);
+```
+
+> Note:
+The function of exporting to local files is not applicable to public cloud users, but only to users with private deployments. And it is assumed by default that the user has full control rights over the cluster nodes. Doris does not perform legality checks on the export paths filled in by the user. If the process user of Doris does not have write permissions for the path, or the path does not exist, an error will be reported. Also, for security reasons, if there is a file with the same name already existing in the path, the export will fail.
+Doris does not manage the files exported to the local system, nor does it check the disk space, etc. These files need to be managed by the user, such as cleaning them up. 
+
+### More Usage
+For a detailed introduction to the `SELECT INTO OUTFILE` command, please refer to: [SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md)
+
+## Export Instructions
+### Storage Locations for Exported Data
+The `SELECT INTO OUTFILE` currently supports exporting data to the following storage locations:
+- Object storage: Amazon S3, COS, OSS, OBS, Google GCS
+- HDFS
+- Local file system
+
+### Export File Types
+The `SELECT INTO OUTFILE` currently supports exporting the following file formats:
+- Parquet
+- ORC
+- csv
+- csv_with_names
+- csv_with_names_and_types
+
+### Column Type Mapping for Exported Files
+The `SELECT INTO OUTFILE` supports exporting data in Parquet and ORC file formats. Parquet and ORC file formats have their own data types. The export function of Doris can automatically convert the data types in Doris to the corresponding data types in Parquet and ORC file formats. 
+
+The following is a mapping table of Doris data types and data types in Parquet and ORC file formats:
+| Doris Type | Arrow Type | Orc Type |
+| ---------- | ---------- | -------- |
+| boolean    | boolean | boolean |
+| tinyint    | int8 | tinyint |
+| smallint   | int16 | smallint |
+| int        | int32 | int |
+| bigint     | int64 | bigint |
+| largeInt   | utf8 | string |
+| date       | utf8 | string |
+| datev2     | Date32Type | string |
+| datetime   | utf8 | string |
+| datetimev2 | TimestampType | timestamp |
+| float      | float32 | float |
+| double     | float64 | double |
+| char / varchar / string| utf8 | string |
+| decimal    | decimal128 | decimal |
+| struct     | struct | struct |
+| map        | map | map |
+| array      | list | array |
+| json       | utf8 | string |
+| variant    | utf8 | string |
+| bitmap     | binary | binary |
+| quantile_state| binary | binary |
+| hll        | binary | binary |
+
+> Note: When Doris exports data to the Parquet file format, it first converts the in-memory data of Doris into the Arrow in-memory data format, and then writes it out to the Parquet file format via Arrow. 
+
+## Export Examples
+- [Export to an HDFS Cluster with High Availability Enabled](#high-availability-hdfs-export)
+- [Export to an HDFS Cluster with High Availability and Kerberos Authentication Enabled](#high-availability-and-kerberos-cluster-export)
+- [Example of Generating a File to Mark a Successful Export](#example-of-generating-a-file-to-mark-a-successful-export)
+- [Example of Concurrent Export](#example-of-concurrent-export)
+- [Example of Clearing the Export Directory Before Exporting](#example-of-clearing-the-export-directory-before-exporting)
+- [Example of Setting the Size of Exported Files](#example-of-setting-the-size-of-exported-files)
+
+
+<span id="high-availability-hdfs-export"></span>
+**Export to an HDFS Cluster with High Availability Enabled**
+
+If the HDFS has high availability enabled, HA information needs to be provided. For example:
 
 ```sql
 SELECT c1, c2, c3 FROM tbl
@@ -105,7 +206,10 @@ PROPERTIES
 );
 ```
 
-If the Hadoop cluster is configured for high availability and Kerberos authentication is enabled, you can refer to the following SQL statement:
+<span id="high-availability-and-kerberos-cluster-export"></span>
+**Export to an HDFS Cluster with High Availability and Kerberos Authentication Enabled**
+
+If the HDFS cluster has both high availability enabled and Kerberos authentication enabled, you can refer to the following SQL statements: 
 
 ```sql
 SELECT * FROM tbl
@@ -120,59 +224,24 @@ PROPERTIES
     "dfs.namenode.rpc-address.hacluster.n1"="192.168.0.1:8020",
     "dfs.namenode.rpc-address.hacluster.n2"="192.168.0.2:8020",
     "dfs.client.failover.proxy.provider.hacluster"="org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
-    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM",
+    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM"
     "hadoop.security.authentication"="kerberos",
     "hadoop.kerberos.principal"="doris_test@REALM.COM",
     "hadoop.kerberos.keytab"="/path/to/doris_test.keytab"
 );
 ```
 
-### Export to S3
+<span id="example-of-generating-a-file-to-mark-a-successful-export"></span>
+**Example of Generating a File to Mark a Successful Export**
 
-Export query results to the S3 storage at `s3://path/to/` directory, specifying the export format as ORC. Provide `sk`, `ak`, and other necessary information:
+The `SELECT INTO OUTFILE` command is a synchronous command. Therefore, it is possible that the task connection is disconnected during the execution of the SQL, making it impossible to know whether the exported data has ended normally or is complete. At this time, you can use the `success_file_name` parameter to require that a file marker be generated in the directory after a successful export.
 
-```sql
-SELECT * FROM tbl
-INTO OUTFILE "s3://path/to/result_"
-FORMAT AS ORC
-PROPERTIES(
-    "s3.endpoint" = "https://xxx",
-    "s3.region" = "ap-beijing",
-    "s3.access_key"= "your-ak",
-    "s3.secret_key" = "your-sk"
-);
-```
+Similar to Hive, users can determine whether the export has ended normally and whether the files in the export directory are complete by checking whether there is a file specified by the `success_file_name` parameter in the export directory.
 
-### Export to Local File System
->
-> To export to the local file system, add `enable_outfile_to_local=true` in `fe.conf` and restart FE.
-
-Export query results to the BE's `file:///path/to/` directory, specifying the export format as CSV, with a comma as the column separator:
+For example: Export the query results of the `select` statement to Tencent Cloud COS: `s3://${bucket_name}/path/my_file_`. Specify the export format as `csv`. Specify the name of the file marking a successful export as `SUCCESS`. After the export is completed, a marker file will be generated. 
 
 ```sql
-SELECT k1 FROM tbl1 UNION SELECT k2 FROM tbl1
-INTO OUTFILE "file:///path/to/result_"
-FORMAT AS CSV
-PROPERTIES(
-    "column_separator" = ","
-);
-```
-
-> Note:
-Exporting to local files is not suitable for public cloud users and is intended for private deployment users only. By default, users have full control over cluster nodes. Doris does not check the validity of the export path provided by the user. If the Doris process user does not have write permissions for the path, or the path does not exist, an error will be reported. Additionally, for security reasons, if a file with the same name already exists at the path, the export will fail. Doris does not manage exported local files or check disk space. Users need to manage these files themselves, including cleanup and other tasks.
-
-## Best Practices
-
-### Generate Export Success Indicator File
-
-The `SELECT INTO OUTFILE` command is synchronous, meaning that the task connection could be interrupted during SQL execution, leaving uncertainty about whether the export completed successfully or whether the data is complete. You can use the `success_file_name` parameter to generate an indicator file upon successful export.
-
-Similar to Hive, users can determine whether the export completed successfully and whether the files in the export directory are complete by checking for the presence of the file specified by the `success_file_name` parameter.
-
-For example, exporting the results of a `SELECT` statement to Tencent Cloud COS `s3://${bucket_name}/path/my_file_`, specifying the export format as CSV, and setting the success indicator file name to `SUCCESS`:
-
-```sql
-SELECT k1, k2, v1 FROM tbl1 LIMIT 100000
+SELECT k1,k2,v1 FROM tbl1 LIMIT 100000
 INTO OUTFILE "s3://my_bucket/path/my_file_"
 FORMAT AS CSV
 PROPERTIES
@@ -187,21 +256,55 @@ PROPERTIES
 )
 ```
 
-Upon completion, an additional file named `SUCCESS` will be generated.
+After the export is completed, an additional file named `SUCCESS` will be written.
 
-### Concurrent Export
+<span id="example-of-concurrent-export"></span>
+**Example of Concurrent Export**
 
-By default, the query results in the `SELECT` section are aggregated to a single BE node, which exports data single-threadedly. However, in some cases (e.g., queries without an `ORDER BY` clause), concurrent export can be enabled to have multiple BE nodes export data simultaneously, improving export performance.
+By default, the query results of the `SELECT` part will first be aggregated to a certain BE node, and this node will export the data in a single thread. However, in some cases, such as for query statements without an `ORDER BY` clause, concurrent exports can be enabled, allowing multiple BE nodes to export data simultaneously to improve export performance.
 
-Here’s an example demonstrating how to enable concurrent export:
+However, not all SQL query statements can be exported concurrently. Whether a query statement can be exported concurrently can be determined through the following steps:
 
-1. Enable the concurrent export session variable:
+* Make sure that the session variable is enabled: `set enable_parallel_outfile = true;`
+* Check the execution plan via `EXPLAIN` 
+
+```sql
+mysql> EXPLAIN SELECT ... INTO OUTFILE "s3://xxx" ...;
++-----------------------------------------------------------------------------+
+| Explain String                                                              |
++-----------------------------------------------------------------------------+
+| PLAN FRAGMENT 0                                                             |
+|  OUTPUT EXPRS:<slot 2> | <slot 3> | <slot 4> | <slot 5>                     |
+|   PARTITION: UNPARTITIONED                                                  |
+|                                                                             |
+|   RESULT SINK                                                               |
+|                                                                             |
+|   1:EXCHANGE                                                                |
+|                                                                             |
+| PLAN FRAGMENT 1                                                             |
+|  OUTPUT EXPRS:`k1` + `k2`                                                   |
+|   PARTITION: HASH_PARTITIONED: `default_cluster:test`.`multi_tablet`.`k1`   |
+|                                                                             |
+|   RESULT FILE SINK                                                          |
+|   FILE PATH: s3://ml-bd-repo/bpit_test/outfile_1951_                        |
+|   STORAGE TYPE: S3                                                          |
+|                                                                             |
+|   0:OlapScanNode                                                            |
+|      TABLE: multi_tablet                                                    |
++-----------------------------------------------------------------------------+
+```
+
+The `EXPLAIN` command will return the query plan of the statement. By observing the query plan, if `RESULT FILE SINK` appears in `PLAN FRAGMENT 1`, it indicates that the query statement can be exported concurrently. If `RESULT FILE SINK` appears in `PLAN FRAGMENT 0`, it means that the current query cannot be exported concurrently.
+
+Next, we will demonstrate how to correctly enable the concurrent export function through an example:
+
+1. Open the concurrent export session variable
 
 ```sql
 mysql> SET enable_parallel_outfile = true;
 ```
 
-2. Execute the export command:
+2. Execute the export command
 
 ```sql
 mysql> SELECT * FROM demo.tbl
@@ -221,9 +324,9 @@ mysql> SELECT * FROM demo.tbl
 +------------+-----------+----------+-------------------------------------------------------------------------------+
 ```
 
-With concurrent export successfully enabled, the result may consist of multiple rows, indicating that multiple threads exported data concurrently.
+It can be seen that after enabling and successfully triggering the concurrent export function, the returned result may consist of multiple lines, indicating that there are multiple threads exporting concurrently.
 
-Adding an `ORDER BY` clause to the query prevents concurrent export, as the top-level sorting node necessitates single-threaded export:
+If we modify the above statement, that is, add an `ORDER BY` clause to the query statement. Since the query statement has a top-level sorting node, even if the concurrent export function is enabled, this query cannot be exported concurrently:
 
 ```sql
 mysql> SELECT * FROM demo.tbl ORDER BY id
@@ -236,11 +339,10 @@ mysql> SELECT * FROM demo.tbl ORDER BY id
 +------------+-----------+----------+-------------------------------------------------------------------------------+
 ```
 
-Here, the result is a single row, indicating no concurrent export was triggered.
+It can be seen that there is only one final result line, and concurrent export has not been triggered.
 
-Refer to the appendix for more details on concurrent export principles.
-
-### Clear Export Directory Before Exporting
+<span id="example-of-clearing-the-export-directory-before-exporting"></span>
+**Example of Clearing the Export Directory Before Exporting**
 
 ```sql
 SELECT * FROM tbl1
@@ -258,12 +360,12 @@ PROPERTIES
 )
 ```
 
-If `"delete_existing_files" = "true"` is set, the export job will first delete all files and directories under `s3://my_bucket/export/`, then export data to that directory.
+If `"delete_existing_files" = "true"` is set, the export job will first delete all files and directories under the `s3://my_bucket/export/` directory, and then export data to this directory.
 
-> Note:
-To use the `delete_existing_files` parameter, add `enable_delete_existing_files = true` to `fe.conf` and restart FE. This parameter is potentially dangerous and should only be used in a testing environment.
+> Note: To use the `delete_existing_files` parameter, you also need to add the configuration `enable_delete_existing_files = true` in `fe.conf` and restart the `fe`, then `delete_existing_files` will take effect. `delete_existing_files = true` is a dangerous operation and it is recommended to use it only in a test environment.
 
-### Set Export File Size
+<span id="example-of-setting-the-size-of-exported-files"></span>
+**Example of Setting the Size of Exported Files**
 
 ```sql
 SELECT * FROM tbl
@@ -278,69 +380,25 @@ PROPERTIES(
 );
 ```
 
-Specifying `"max_file_size" = "2048MB"` ensures that the final file size does not exceed 2GB. If the total size exceeds 2GB, multiple files will be generated.
+Since `"max_file_size" = "2048MB"` is specified, if the final generated file is not larger than 2GB, there will be only one file. If it is larger than 2GB, there will be multiple files.
 
-## Considerations
+## Precautions
 
-- Export Data Volume and Efficiency
-    The `SELECT INTO OUTFILE` function executes a SQL query. Without concurrent export, a single BE node and thread export the query results. The total export time includes both the query execution time and the result set write-out time. Enabling concurrent export can reduce the export time.
+- Export Data Volume and Export Efficiency
+The `SELECT INTO OUTFILE` function essentially executes an SQL query command. If concurrent export is not enabled, the query result is exported by a single BE node in a single thread. Therefore, the total export time includes the time consumed by the query itself and the time required to write out the final result set. Enabling concurrent export can reduce the export time.
+
 - Export Timeout
-    The export command shares the same timeout as the query. If the data volume is large and causes the export to timeout, you can extend the query timeout by setting the session variable `query_timeout`.
-- Export File Management
-    Doris does not manage exported files, whether successfully exported or remaining from failed exports. Users must handle these files themselves.
-    Additionally, `SELECT INTO OUTFILE` does not check for the existence of files or file paths. Whether `SELECT INTO OUTFILE` automatically creates paths or overwrites existing files depends entirely on the semantics of the remote storage system.
-- Empty Result Sets
-    Exporting an empty result set still generates an empty file.
+The timeout time of the export command is the same as that of the query. If the data volume is large and causes the export data to time out, you can set the session variable `query_timeout` to appropriately extend the query timeout.
+
+- Management of Exported Files
+Doris does not manage the exported files. Whether they are successfully exported or residual files after a failed export, users need to handle them by themselves.
+In addition, the `SELECT INTO OUTFILE` command does not check whether the file and file path exist. Whether `SELECT INTO OUTFILE` will automatically create a path or overwrite an existing file is completely determined by the semantics of the remote storage system.
+
+- If the Query Result Set Is Empty
+For an export with an empty result set, an empty file will still be generated.
+
 - File Splitting
-    File splitting ensures that a single row of data is stored completely in one file. Thus, the file size may not exactly equal `max_file_size`.
-- Non-visible Character Functions
-    For functions outputting non-visible characters (e.g., BITMAP, HLL types), CSV output is `\N`, and Parquet/ORC output is NULL.
-    Currently, some geographic functions like `ST_Point` output VARCHAR but with encoded binary characters, causing garbled output. Use `ST_AsText` for geographic functions.
+File splitting ensures that a row of data is stored completely in a single file. Therefore, the file size is not strictly equal to `max_file_size`.
 
-## Appendix
-
-### Concurrent Export Principles
-
-- Principle Overview
-
-   Doris is a high-performance, real-time analytical database based on the MPP (Massively Parallel Processing) architecture. MPP divides large datasets into small chunks and processes them in parallel across multiple nodes.
-   Concurrent export in `SELECT INTO OUTFILE` leverages this parallel processing capability, allowing multiple BE nodes to export parts of the result set simultaneously.
-
-- How to Determine Concurrent Export Eligibility
-
-    - Ensure Session Variable is Enabled: `set enable_parallel_outfile = true;`
-    - Check Execution Plan with `EXPLAIN`:
-
-    ```sql
-    mysql> EXPLAIN SELECT ... INTO OUTFILE "s3://xxx" ...;
-    +-----------------------------------------------------------------------------+
-    | Explain String                                                              |
-    +-----------------------------------------------------------------------------+
-    | PLAN FRAGMENT 0                                                             |
-    |  OUTPUT EXPRS:<slot 2> | <slot 3> | <slot 4> | <slot 5>                     |
-    |   PARTITION: UNPARTITIONED                                                  |
-    |                                                                             |
-    |   RESULT SINK                                                               |
-    |                                                                             |
-    |   1:EXCHANGE                                                                |
-    |                                                                             |
-    | PLAN FRAGMENT 1                                                             |
-    |  OUTPUT EXPRS:`k1`
-
-    + `k2`                                                   |
-    |   PARTITION: HASH_PARTITIONED: `default_cluster:test`.`multi_tablet`.`k1`   |
-    |                                                                             |
-    |   RESULT FILE SINK                                                          |
-    |   FILE PATH: s3://ml-bd-repo/bpit_test/outfile_1951_                        |
-    |   STORAGE TYPE: S3                                                          |
-    |                                                                             |
-    |   0:OlapScanNode                                                            |
-    |      TABLE: multi_tablet                                                    |
-    +-----------------------------------------------------------------------------+
-    ```
-
-    The `EXPLAIN` command returns the query plan. If `RESULT FILE SINK` appears in `PLAN FRAGMENT 1`, the query can be exported concurrently. If it appears in `PLAN FRAGMENT 0`, concurrent export is not possible.
-
-- Export Concurrency
-   
-    When concurrent export conditions are met, the export task's concurrency is determined by: `BE nodes * parallel_fragment_exec_instance_num`.
+- Functions for Non-Visible Characters
+For some functions that output non-visible characters, such as BITMAP and HLL types, when exporting to the CSV file format, the output is `\N`.
