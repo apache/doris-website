@@ -1,6 +1,6 @@
 ---
 {
-    "title": "HDFS",
+    "title": "MINIO",
     "language": "zh-CN"
 }
 ---

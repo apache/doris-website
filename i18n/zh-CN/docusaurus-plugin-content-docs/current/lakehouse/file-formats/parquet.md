@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Hive Catalog",
+    "title": "Parquet",
     "language": "zh-CN"
 }
 ---

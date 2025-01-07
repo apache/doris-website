@@ -1,6 +1,6 @@
 ---
 {
-    "title": "HDFS",
+    "title": "Google Cloud Storage",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Hive Catalog",
+    "title": "Text/CSV/JSON",
     "language": "zh-CN"
 }
 ---

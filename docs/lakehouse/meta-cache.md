@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Metadata Cache",
     "language": "en"
 }
 ---

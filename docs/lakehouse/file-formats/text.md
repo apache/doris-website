@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Lakehouse Overview",
-    "language": "en"
+    "title": "Text/CSV/JSON",
+    "language": "zh-CN"
 }
 ---
 

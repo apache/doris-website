@@ -1,6 +1,6 @@
 ---
 {
-    "title": "HDFS",
+    "title": "Huawei OBS",
     "language": "zh-CN"
 }
 ---

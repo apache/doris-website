@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Hive Catalog",
+    "title": "ORC",
     "language": "zh-CN"
 }
 ---

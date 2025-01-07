@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "LakeSoul Catalog",
     "language": "en"
 }
 ---

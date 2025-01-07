@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Delta Lake Catalog",
     "language": "en"
 }
 ---

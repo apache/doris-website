@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Hive SQL Convertor Guide",
     "language": "en"
 }
 ---

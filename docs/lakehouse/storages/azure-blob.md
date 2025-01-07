@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Azure Blob",
     "language": "en"
 }
 ---

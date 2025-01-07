@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Lakehouse Overview",
-    "language": "en"
+    "title": "Google Cloud Storage",
+    "language": "zh-CN"
 }
 ---
 

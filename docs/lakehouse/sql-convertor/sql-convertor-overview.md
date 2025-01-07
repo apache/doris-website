@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Lakehouse Overview",
-    "language": "en"
+    "title": "SQL Convertor Overview",
+    "language": "zh-CN"
 }
 ---
 

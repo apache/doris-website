@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Oceanbase JDBC Catalog",
     "language": "en"
 }
 ---

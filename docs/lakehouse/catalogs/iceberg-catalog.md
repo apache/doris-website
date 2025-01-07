@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Iceberg Catalog",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Huawei OBS",
     "language": "en"
 }
 ---
