@@ -1,6 +1,6 @@
 ---
 {
-    "title": "湖仓一体概述",
+    "title": "统计信息",
     "language": "zh-CN"
 }
 ---

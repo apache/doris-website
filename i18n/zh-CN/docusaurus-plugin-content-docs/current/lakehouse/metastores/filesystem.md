@@ -1,6 +1,6 @@
 ---
 {
-    "title": "湖仓一体概述",
+    "title": "File System",
     "language": "zh-CN"
 }
 ---
@@ -24,5 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-文章更新中，请先参阅 2.1/3.0 版本文档。
+Iceberg Catalog 和 Paimon Catalog 支持直接从文件系统访问元数据。
 
+相关的连接信息请参阅各自 Catalog 的文档，以及对应的存储系统相关的参数。

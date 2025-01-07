@@ -1,6 +1,6 @@
 ---
 {
-    "title": "湖仓一体概述",
+    "title": "Baidu BOS",
     "language": "zh-CN"
 }
 ---
@@ -25,4 +25,3 @@ under the License.
 -->
 
 文章更新中，请先参阅 2.1/3.0 版本文档。
-

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "湖仓一体概述",
+    "title": "PostgreSQL SQL 转换指南",
     "language": "zh-CN"
 }
 ---
