@@ -84,4 +84,4 @@ INSERT INTO order_tbl (order_id, order_status) values (1,'待发货');
 
 Aggregate Key 模型在写入过程中不做任何额外处理，所以写入性能不受影响，与普通的数据导入相同。但是在查询时进行聚合的代价较大，典型的聚合查询性能相比 Unique Key 模型的 Merge-on-Write 实现会有 5-10 倍的下降。
 
-用户无法通过将某个字段由非 NULL 设置为 NULL，写入的 NULL 值在`REPLACE_IF_NOT_NULL`聚合函数的处理中会自动忽略。
+由于 `REPLACE_IF_NOT_NULL` 聚合函数仅在非 NULL 值时才会生效，因此用户无法将某个字段值修改为NULL值。
