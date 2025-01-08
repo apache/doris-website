@@ -291,6 +291,7 @@ SELECT * FROM table_name WHERE content MATCH_ALL 'keyword1 keyword2';
 -- 'keyword1 keyword2', 'wordx keyword1 keyword2', 'wordx keyword1 keyword2 wordy' all match because they contain 'keyword1 keyword2' with keyword2 immediately following keyword1
 -- 'keyword1 wordx keyword2' does not match because there is a word between keyword1 and keyword2
 -- 'keyword2 keyword1' does not match because the order is reversed
+-- To use MATCH_PHRASE, you need to enable "support_phrase" = "true" in PROPERTIES.
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2';
 
 -- 2.2 Rows in the content column containing both keyword1 and keyword2, with a slop (maximum word distance) of 3
