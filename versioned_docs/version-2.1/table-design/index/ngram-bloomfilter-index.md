@@ -58,7 +58,7 @@ Explanation of the syntax:
 1. **`idx_column_name(column_name)`** is mandatory. `column_name` is the column to be indexed and must appear in the column definitions above. `idx_column_name` is the index name, which must be unique at the table level. It is recommended to name it with a prefix `idx_` followed by the column name.
 2. **`USING NGRAM_BF`** is mandatory and specifies that the index type is an NGram BloomFilter index.
 3. **`PROPERTIES`** is optional and is used to specify additional properties for the NGram BloomFilter index. The supported properties are:
-   - **gram_size**: The N in NGram, specifying the number of consecutive characters to form a token. For example, 'an ngram example' with N = 3 would be tokenized into 'an ', 'n n', ' ng', 'ngr', 'gra', 'ram' (6 tokens).
+   - **gram_size**: The N in NGram, specifying the number of consecutive characters to form a token. For example, 'This is a simple ngram example' with N = 3 would be tokenized into 'This is a', 'is a simple', 'a simple ngram', 'simple ngram example' (4 tokens).
    - **bf_size**: The size of the BloomFilter in bits. bf_size determines the size of the index corresponding to each data block. The larger this value, the more storage space it occupies, but the lower the probability of hash collisions.
 
    It is recommended to set **gram_size** to the minimum length of the string in LIKE queries but not less than 2. Generally, "gram_size"="3", "bf_size"="1024" is recommended, then adjust based on the Query Profile.

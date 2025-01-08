@@ -64,7 +64,7 @@ NGram BloomFilter 索引只能加速字符串 LIKE 查询，而且 LIKE pattern 
 
 **3. `PROPERTIES` 是可选的，用于指定 NGram BloomFilter 索引的额外属性，目前支持的属性如下：**
 
-- gram_size：NGram 中的 N，指定 N 个连续字符分词一个词，比如 'an ngram example' 在 N = 3 的时候分成 'an ', 'n n', ' ng', 'ngr', 'gra', 'ram' 6 个词。
+- gram_size：NGram 中的 N，指定 N 个连续字符分词一个词，比如 'This is a simple ngram example' 在 N = 3 的时候分成 'This is a', 'is a simple', 'a simple ngram', 'simple ngram example' 4 个词。
 
 - bf_size：BloomFilter 的大小，单位是 Bit。bf_size 决定每个数据块对应的索引大小，这个值越大占用存储空间越大，同时 Hash 碰撞的概率也越低。
 
