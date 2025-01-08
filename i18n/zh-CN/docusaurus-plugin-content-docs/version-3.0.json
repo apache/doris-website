@@ -167,7 +167,7 @@
     "message": "物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },
-  "sidebar.docs.category.Async-Materialize View": {
+  "sidebar.docs.category.Async-Materialized View": {
     "message": "异步物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },
