@@ -72,7 +72,7 @@ PROPERTIES(
 
 上例中创建了动态分区表，指定以下
 
-详细 `dynamic_partition` 参数可以参考[动态分区参数说明](#dynamic-partition-properties)。
+详细 `dynamic_partition` 参数可以参考[动态分区参数说明](#动态分区属性参数)。
 
 ## 管理动态分区
 
@@ -108,7 +108,7 @@ ALTER TABLE test_partition SET (
 
 ### 查看动态分区调度情况
 
-通过 [SHOW-DYNAMIC-PARTITION](../..//sql-manual/sql-statements/Show-Statements/SHOW-DYNAMIC-PARTITION) 可以查看当前数据库下，所有动态分区表的调度情况：
+通过 [SHOW-DYNAMIC-PARTITION](../../sql-manual/sql-statements/Show-Statements/SHOW-DYNAMIC-PARTITION) 可以查看当前数据库下，所有动态分区表的调度情况：
 
 ```sql
 SHOW DYNAMIC PARTITION TABLES;
@@ -131,31 +131,31 @@ SHOW DYNAMIC PARTITION TABLES;
 
 例如当前日期为 2024-10-11，指定 start = -2，end = 2：
 
-* 如果指定了 `create_history_partition = true`，立即创建所有分区，即 \[10-09, 10-13] 五个分区；
+* 如果指定了 `create_history_partition = true`，立即创建所有分区，即 [10-09, 10-13] 五个分区；
 
-* 如果指定了 `create_history_partition = false`，只创建包含 10-11 以后的分区，即 \[10-11, 10-13] 三个分区。
+* 如果指定了 `create_history_partition = false`，只创建包含 10-11 以后的分区，即 [10-11, 10-13] 三个分区。
 
 ## 动态分区参数说明
 
-### 动态分区属性参数 {#dynamic-partition-properties}
+### 动态分区属性参数
 
-动态分区的规则参数以 dynamic\_partition 为前缀，可以设置以下规则参数：
+动态分区的规则参数以 dynamic_partition 为前缀，可以设置以下规则参数：
 
 | 参数                                            | 必选 | 说明                                                                                                                                                                                                                                                          |
 | --------------------------------------------- | -- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| dynamic\_partition.enable                     | 否  | 是否开启动态分区特性。可以指定为 TRUE 或 FALSE。如果指定了动态分区其他必填参数，默认为 TRUE。                                                                                                                                                                                                     |
-| dynamic\_partition.time\_unit                 | 是  | 动态分区调度的单位。可指定为 `HOUR`、`DAY`、`WEEK`、`MONTH`、`YEAR`。分别表示按小时、按天、按星期、按月、按年进行分区创建或删除：                                                                                                                                                                            |
-| dynamic\_partition.start                      | 否  | 动态分区的起始偏移，为负数。默认值为 -2147483648，即不删除历史分区。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，分区范围在此偏移之前的分区将会被删除。此偏移之后至当前时间的历史分区如不存在，是否创建取决于 `dynamic_partition.create_history_partition`。                                                                                      |
-| dynamic\_partition.end                        | 是  | 动态分区的结束偏移，为正数。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，提前创建对应范围的分区。                                                                                                                                                                                                |
-| dynamic\_partition.prefix                     | 是  | 动态创建的分区名前缀。                                                                                                                                                                                                                                                 |
-| dynamic\_partition.buckets                    | 否  | 动态创建的分区所对应的分桶数量。                                                                                                                                                                                                                                            |
-| dynamic\_partition.replication\_num           | 否  | 动态创建的分区所对应的副本数量，如果不填写，则默认为该表创建时指定的副本数量。                                                                                                                                                                                                                     |
-| dynamic\_partition.create\_history\_partition | 否  | 默认为 false。当置为 true 时，Doris 会自动创建所有分区，具体创建规则见下文。同时，FE 的参数 `max_dynamic_partition_num` 会限制总分区数量，以避免一次性创建过多分区。当期望创建的分区个数大于 `max_dynamic_partition_num` 值时，操作将被禁止。当不指定 `start` 属性时，该参数不生效。                                                                      |
-| dynamic\_partition.history\_partition\_num    | 否  | 当`create_history_partition` 为 `true` 时，该参数用于指定创建历史分区数量。默认值为 -1，即未设置。该变量与 `dynamic_partition.start` 作用相同，建议同时只设置一个。                                                                                                                                          |
-| dynamic\_partition.start\_day\_of\_week       | 否  | 当 `time_unit` 为 `WEEK` 时，该参数用于指定每周的起始点。取值为 1 到 7。其中 1 表示周一，7 表示周日。默认为 1，即表示每周以周一为起始点。                                                                                                                                                                       |
-| dynamic\_partition.start\_day\_of\_month      | 否  | 当 `time_unit` 为 `MONTH` 时，该参数用于指定每月的起始日期。取值为 1 到 28。其中 1 表示每月 1 号，28 表示每月 28 号。默认为 1，即表示每月以 1 号为起始点。暂不支持以 29、30、31 号为起始日，以避免因闰年或闰月带来的歧义。                                                                                                                    |
-| dynamic\_partition.reserved\_history\_periods |  否  | 需要保留的历史分区的时间范围。当`dynamic_partition.time_unit` 设置为 "DAY/WEEK/MONTH/YEAR" 时，需要以 `[yyyy-MM-dd,yyyy-MM-dd],[...,...]` 格式进行设置。当`dynamic_partition.time_unit` 设置为 "HOUR" 时，需要以 `[yyyy-MM-dd HH:mm:ss,yyyy-MM-dd HH:mm:ss],[...,...]` 的格式来进行设置。如果不设置，默认为 `"NULL"`。 |
-| dynamic\_partition.time\_zone                 | 否  | 动态分区时区，默认为当前服务器的系统时区，如 `Asia/Shanghai`。更多时区设置可以参考[时区管理](../../admin-manual/cluster-management/time-zone)。                                                                                                                 |
+| `dynamic_partition.enable`                     | 否  | 是否开启动态分区特性。可以指定为 TRUE 或 FALSE。如果指定了动态分区其他必填参数，默认为 TRUE。                                                                                                                                                                                                     |
+| `dynamic_partition.time_unit`                 | 是  | 动态分区调度的单位。可指定为 `HOUR`、`DAY`、`WEEK`、`MONTH`、`YEAR`。分别表示按小时、按天、按星期、按月、按年进行分区创建或删除：                                                                                                                                                                            |
+| `dynamic_partition.start`                      | 否  | 动态分区的起始偏移，为负数。默认值为 -2147483648，即不删除历史分区。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，分区范围在此偏移之前的分区将会被删除。此偏移之后至当前时间的历史分区如不存在，是否创建取决于 `dynamic_partition.create_history_partition`。                                                                                      |
+| `dynamic_partition.end`                        | 是  | 动态分区的结束偏移，为正数。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，提前创建对应范围的分区。                                                                                                                                                                                                |
+| `dynamic_partition.prefix`                     | 是  | 动态创建的分区名前缀。                                                                                                                                                                                                                                                 |
+| `dynamic_partition.buckets`                    | 否  | 动态创建的分区所对应的分桶数量。                                                                                                                                                                                                                                            |
+| `dynamic_partition.replication_num`           | 否  | 动态创建的分区所对应的副本数量，如果不填写，则默认为该表创建时指定的副本数量。                                                                                                                                                                                                                     |
+| `dynamic_partition.create_history_partition` | 否  | 默认为 false。当置为 true 时，Doris 会自动创建所有分区，具体创建规则见下文。同时，FE 的参数 `max_dynamic_partition_num` 会限制总分区数量，以避免一次性创建过多分区。当期望创建的分区个数大于 `max_dynamic_partition_num` 值时，操作将被禁止。当不指定 `start` 属性时，该参数不生效。                                                                      |
+| `dynamic_partition.history_partition_num`    | 否  | 当`create_history_partition` 为 `true` 时，该参数用于指定创建历史分区数量。默认值为 -1，即未设置。该变量与 `dynamic_partition.start` 作用相同，建议同时只设置一个。                                                                                                                                          |
+| `dynamic_partition.start_day_of_week`       | 否  | 当 `time_unit` 为 `WEEK` 时，该参数用于指定每周的起始点。取值为 1 到 7。其中 1 表示周一，7 表示周日。默认为 1，即表示每周以周一为起始点。                                                                                                                                                                       |
+| `dynamic_partition.start_day_of_month`      | 否  | 当 `time_unit` 为 `MONTH` 时，该参数用于指定每月的起始日期。取值为 1 到 28。其中 1 表示每月 1 号，28 表示每月 28 号。默认为 1，即表示每月以 1 号为起始点。暂不支持以 29、30、31 号为起始日，以避免因闰年或闰月带来的歧义。                                                                                                                    |
+| `dynamic_partition.reserved_history_periods` |  否  | 需要保留的历史分区的时间范围。当`dynamic_partition.time_unit` 设置为 "DAY/WEEK/MONTH/YEAR" 时，需要以 `[yyyy-MM-dd,yyyy-MM-dd],[...,...]` 格式进行设置。当`dynamic_partition.time_unit` 设置为 "HOUR" 时，需要以 `[yyyy-MM-dd HH:mm:ss,yyyy-MM-dd HH:mm:ss],[...,...]` 的格式来进行设置。如果不设置，默认为 `"NULL"`。 |
+| `dynamic_partition.time_zone`                 | 否  | 动态分区时区，默认为当前服务器的系统时区，如 `Asia/Shanghai`。更多时区设置可以参考[时区管理](../../admin-manual/cluster-management/time-zone)。                                                                                                                 |
 
 ### FE 配置参数
 
@@ -163,9 +163,9 @@ SHOW DYNAMIC PARTITION TABLES;
 
 | 参数                                           | 默认值   | 说明                                          |
 | -------------------------------------------- | ----- | ------------------------------------------- |
-| dynamic\_partition\_enable                   | false | 是否开启 Doris 的动态分区功能。该参数只影响动态分区表的分区操作，不影响普通表。 |
-| dynamic\_partition\_check\_interval\_seconds | 600   | 动态分区线程的执行频率，单位为秒。                           |
-| max\_dynamic\_partition\_num                 | 500   | 用于限制创建动态分区表时可以创建的最大分区数，避免一次创建过多分区。          |
+| `dynamic_partition_enable`                   | false | 是否开启 Doris 的动态分区功能。该参数只影响动态分区表的分区操作，不影响普通表。 |
+| `dynamic_partition_check_interval_seconds` | 600   | 动态分区线程的执行频率，单位为秒。                           |
+| `max_dynamic_partition_num`                 | 500   | 用于限制创建动态分区表时可以创建的最大分区数，避免一次创建过多分区。          |
 
 ## 动态分区最佳实践
 
@@ -209,7 +209,7 @@ PROPERTIES (
 );
 ```
 
-示例 3：按天分区，保留过去 10 天及未来 10 天分区，并且保留 \[2020-06-01,2020-06-20] 及 \[2020-10-31,2020-11-15] 期间的历史数据。
+示例 3：按天分区，保留过去 10 天及未来 10 天分区，并且保留 [2020-06-01,2020-06-20] 及 [2020-10-31,2020-11-15] 期间的历史数据。
 
 ```sql
 CREATE TABLE tbl1 (
