@@ -601,7 +601,7 @@ set group_commit=async_mode and set enable_nereids_planner=false.
 
 2. Enable JDBC Prepared Statement:
 Complete URL:
-jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false.
+jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false.
 
 3. Set the Import Type to Prepared Update Statement.
 
@@ -670,18 +670,18 @@ Ensure that the imported values match the data types one by one.
 
 **Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 92.2K     | 85.9K     | 84K     | 83.2K     |
 
 **Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 70.4K     |70.5K     | 73.2K      | 69.4K    |
 
 **Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 46.3K      | 47.7K     | 47.4K      | 46.5K      |
