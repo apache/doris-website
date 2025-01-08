@@ -103,7 +103,7 @@ PROPERTIES (
 
 ```sql
    CREATE TABLE `date_table` (
-       `TIME_STAMP` datev2 NOT NULL COMMENT '采集日期'
+       `TIME_STAMP` datev2 NOT NULL
    ) ENGINE=OLAP
    DUPLICATE KEY(`TIME_STAMP`)
    AUTO PARTITION BY RANGE (date_trunc(`TIME_STAMP`, 'month'))
@@ -203,8 +203,8 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = AUTO RANGE PARTITION doesn't su
 ```sql
 CREATE TABLE `DAILY_TRADE_VALUE`
 (
-    `TRADE_DATE`              datev2 NOT NULL COMMENT '交易日期',
-    `TRADE_ID`                varchar(40) NOT NULL COMMENT '交易编号',
+    `TRADE_DATE`              datev2 NOT NULL,
+    `TRADE_ID`                varchar(40) NOT NULL,
     ......
 )
 UNIQUE KEY(`TRADE_DATE`, `TRADE_ID`)
@@ -303,6 +303,4 @@ mysql> select * from partitions("catalog"="internal","database"="optest","table"
 - 在使用[insert-overwrite](../../sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE)插入数据时 AUTO PARTITION 表的行为详见 INSERT OVERWRITE 文档。
 - 如果导入创建分区时，该表涉及其他元数据操作（如 Schema Change、Rebalance），则导入可能失败。
 
-## 关键词
 
-AUTO, PARTITION, AUTO_PARTITION

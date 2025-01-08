@@ -375,11 +375,11 @@ mysql> SELECT TOKENIZE('I love Doris','"parser"="english"');
 +------------------------------------------------+
 1 row in set (0.02 sec)
 
-mysql> SELECT TOKENIZE('I love CHINA 我爱我的祖国','"parser"="unicode"');
+mysql> SELECT TOKENIZE('I love CHINA','"parser"="unicode"');
 +-------------------------------------------------------------------+
-| tokenize('I love CHINA 我爱我的祖国', '"parser"="unicode"')       |
+| tokenize('I love CHINA', '"parser"="unicode"')       |
 +-------------------------------------------------------------------+
-| ["i", "love", "china", "我", "爱", "我", "的", "祖", "国"]        |
+| ["i", "love", "china"]        |
 +-------------------------------------------------------------------+
 1 row in set (0.02 sec)
 ```
