@@ -30,7 +30,7 @@ under the License.
 
 SHOW PRIVILEGES
 
-### Description
+## 描述
 
 该语句用于展示所有权限项。
 
@@ -40,7 +40,7 @@ SHOW PRIVILEGES
 SHOW PRIVILEGES
 ```
 
-### Example
+## 举例
 
 1. 查看所有权限项
 

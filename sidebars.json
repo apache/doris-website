@@ -367,64 +367,91 @@
                     "label": "Data Lakehouse",
                     "items": [
                         "lakehouse/lakehouse-overview",
+                        "lakehouse/catalog-overview",
                         {
                             "type": "category",
-                            "label": "Querying Data Lakes",
+                            "label": "Catalogs",
                             "items": [
-                                "lakehouse/datalake-analytics/hive",
-                                "lakehouse/datalake-analytics/hudi",
-                                "lakehouse/datalake-analytics/iceberg",
-                                "lakehouse/datalake-analytics/paimon",
-                                "lakehouse/datalake-analytics/lakesoul",
-                                "lakehouse/datalake-analytics/bigquery",
-                                "lakehouse/datalake-analytics/deltalake",
-                                "lakehouse/datalake-analytics/kudu",
-                                "lakehouse/datalake-analytics/dlf",
-                                "lakehouse/datalake-analytics/tpch",
-                                "lakehouse/datalake-analytics/tpcds"
+                                "lakehouse/catalogs/hive-catalog",
+                                "lakehouse/catalogs/iceberg-catalog",
+                                "lakehouse/catalogs/hudi-catalog",
+                                "lakehouse/catalogs/paimon-catalog",
+                                "lakehouse/catalogs/maxcompute-catalog",
+                                "lakehouse/catalogs/delta-lake-catalog",
+                                "lakehouse/catalogs/bigquery-catalog",
+                                "lakehouse/catalogs/kudu-catalog",
+                                "lakehouse/catalogs/lakesoul-catalog",
+                                "lakehouse/catalogs/jdbc-catalog-overview",
+                                "lakehouse/catalogs/jdbc-mysql-catalog",
+                                "lakehouse/catalogs/jdbc-pg-catalog",
+                                "lakehouse/catalogs/jdbc-oracle-catalog",
+                                "lakehouse/catalogs/jdbc-sqlserver-catalog",
+                                "lakehouse/catalogs/jdbc-ibmdb2-catalog",
+                                "lakehouse/catalogs/jdbc-clickhouse-catalog",
+                                "lakehouse/catalogs/jdbc-saphana-catalog",
+                                "lakehouse/catalogs/jdbc-oceanbase-catalog"
+                            ]
+                        },
+                        "lakehouse/file-analysis",
+                        {
+                            "type": "category",
+                            "label": "Metastores",
+                            "items": [
+                                "lakehouse/metastores/hive-metastore",
+                                "lakehouse/metastores/aws-glue",
+                                "lakehouse/metastores/google-dataproc-metastore",
+                                "lakehouse/metastores/aliyun-dlf",
+                                "lakehouse/metastores/iceberg-rest",
+                                "lakehouse/metastores/filesystem"
                             ]
                         },
                         {
                             "type": "category",
-                            "label": "Building Data Lakes",
+                            "label": "Storages",
                             "items": [
-                                "lakehouse/datalake-building/hive-build",
-                                "lakehouse/datalake-building/iceberg-build"
+                                "lakehouse/storages/hdfs",
+                                "lakehouse/storages/s3",
+                                "lakehouse/storages/azure-blob",
+                                "lakehouse/storages/gcs",
+                                "lakehouse/storages/aliyun-oss",
+                                "lakehouse/storages/tencent-cos",
+                                "lakehouse/storages/huawei-obs",
+                                "lakehouse/storages/baidu-bos",
+                                "lakehouse/storages/minio"
                             ]
                         },
                         {
                             "type": "category",
-                            "label": "Querying Databases",
+                            "label": "File Foramt",
                             "items": [
-                                "lakehouse/database/jdbc",
-                                "lakehouse/database/mysql",
-                                "lakehouse/database/postgresql",
-                                "lakehouse/database/oracle",
-                                "lakehouse/database/sqlserver",
-                                "lakehouse/database/ibm-db2",
-                                "lakehouse/database/clickhouse",
-                                "lakehouse/database/sap-hana",
-                                "lakehouse/database/oceanbase",
-                                "lakehouse/database/gbase-8a",
-                                "lakehouse/database/es",
-                                "lakehouse/database/max-compute"
+                                "lakehouse/file-formats/parquet",
+                                "lakehouse/file-formats/orc",
+                                "lakehouse/file-formats/text"
                             ]
                         },
-                        "lakehouse/file",
-                        "lakehouse/filecache",
-                        "lakehouse/metacache",
+                        "lakehouse/data-cache",
+                        "lakehouse/meta-cache",
                         "lakehouse/compute-node",
-                        "lakehouse/external-statistics",
-                        "lakehouse/cloud-auth",
-                        "lakehouse/sql-dialect",
+                        "lakehouse/statistics",
+                        {
+                            "type": "category",
+                            "label": "SQL Dialect Convertor",
+                            "items": [
+                                "lakehouse/sql-convertor/sql-convertor-overview",
+                                "lakehouse/sql-convertor/presto-trino-guide",
+                                "lakehouse/sql-convertor/clickhouse-guide",
+                                "lakehouse/sql-convertor/hive-guide",
+                                "lakehouse/sql-convertor/pg-guide"
+                            ]
+                        },
                         {
                             "type": "category",
                             "label": "Lakehouse Best Practices",
                             "items": [
-                                "lakehouse/lakehouse-best-practices/doris-hudi",
-                                "lakehouse/lakehouse-best-practices/doris-paimon",
-                                "lakehouse/lakehouse-best-practices/doris-iceberg",
-                                "lakehouse/lakehouse-best-practices/doris-lakesoul"
+                                "lakehouse/best-practices/doris-hudi",
+                                "lakehouse/best-practices/doris-paimon",
+                                "lakehouse/best-practices/doris-iceberg",
+                                "lakehouse/best-practices/doris-lakesoul"
                             ]
                         }
                     ]
@@ -646,97 +673,6 @@
                 },
                 {
                     "type": "category",
-                    "label": "OPEN API",
-                    "items": [
-                        "admin-manual/open-api/overview",
-                        {
-                            "type": "category",
-                            "label": "FE HTTP API",
-                            "items": [
-                                "admin-manual/open-api/fe-http/config-action",
-                                "admin-manual/open-api/fe-http/ha-action",
-                                "admin-manual/open-api/fe-http/hardware-info-action",
-                                "admin-manual/open-api/fe-http/help-action",
-                                "admin-manual/open-api/fe-http/log-action",
-                                "admin-manual/open-api/fe-http/login-action",
-                                "admin-manual/open-api/fe-http/logout-action",
-                                "admin-manual/open-api/fe-http/query-profile-action-controller",
-                                "admin-manual/open-api/fe-http/session-action",
-                                "admin-manual/open-api/fe-http/system-action",
-                                "admin-manual/open-api/fe-http/colocate-meta-action",
-                                "admin-manual/open-api/fe-http/meta-action",
-                                "admin-manual/open-api/fe-http/cluster-action",
-                                "admin-manual/open-api/fe-http/node-action",
-                                "admin-manual/open-api/fe-http/query-profile-action",
-                                "admin-manual/open-api/fe-http/backends-action",
-                                "admin-manual/open-api/fe-http/bootstrap-action",
-                                "admin-manual/open-api/fe-http/cancel-load-action",
-                                "admin-manual/open-api/fe-http/check-decommission-action",
-                                "admin-manual/open-api/fe-http/check-storage-type-action",
-                                "admin-manual/open-api/fe-http/connection-action",
-                                "admin-manual/open-api/fe-http/extra-basepath-action",
-                                "admin-manual/open-api/fe-http/fe-version-info-action",
-                                "admin-manual/open-api/fe-http/get-ddl-stmt-action",
-                                "admin-manual/open-api/fe-http/get-load-info-action",
-                                "admin-manual/open-api/fe-http/get-load-state",
-                                "admin-manual/open-api/fe-http/get-log-file-action",
-                                "admin-manual/open-api/fe-http/get-small-file",
-                                "admin-manual/open-api/fe-http/health-action",
-                                "admin-manual/open-api/fe-http/meta-info-action",
-                                "admin-manual/open-api/fe-http/meta-replay-state-action",
-                                "admin-manual/open-api/fe-http/metrics-action",
-                                "admin-manual/open-api/fe-http/profile-action",
-                                "admin-manual/open-api/fe-http/query-detail-action",
-                                "admin-manual/open-api/fe-http/query-schema-action",
-                                "admin-manual/open-api/fe-http/query-stats-action",
-                                "admin-manual/open-api/fe-http/row-count-action",
-                                "admin-manual/open-api/fe-http/set-config-action",
-                                "admin-manual/open-api/fe-http/show-data-action",
-                                "admin-manual/open-api/fe-http/show-meta-info-action",
-                                "admin-manual/open-api/fe-http/show-proc-action",
-                                "admin-manual/open-api/fe-http/show-runtime-info-action",
-                                "admin-manual/open-api/fe-http/show-table-data-action",
-                                "admin-manual/open-api/fe-http/statement-execution-action",
-                                "admin-manual/open-api/fe-http/table-query-plan-action",
-                                "admin-manual/open-api/fe-http/table-row-count-action",
-                                "admin-manual/open-api/fe-http/table-schema-action",
-                                "admin-manual/open-api/fe-http/upload-action",
-                                "admin-manual/open-api/fe-http/import-action",
-                                "admin-manual/open-api/fe-http/meta-info-action-V2",
-                                "admin-manual/open-api/fe-http/debug-point-action",
-                                "admin-manual/open-api/fe-http/statistic-action"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "BE HTTP API",
-                            "items": [
-                                "admin-manual/open-api/be-http/check-rpc-channel",
-                                "admin-manual/open-api/be-http/reset-rpc-channel",
-                                "admin-manual/open-api/be-http/compaction-status",
-                                "admin-manual/open-api/be-http/compaction-run",
-                                "admin-manual/open-api/be-http/meta",
-                                "admin-manual/open-api/be-http/snapshot",
-                                "admin-manual/open-api/be-http/check-tablet-segment",
-                                "admin-manual/open-api/be-http/config",
-                                "admin-manual/open-api/be-http/metrics",
-                                "admin-manual/open-api/be-http/tablet-distribution",
-                                "admin-manual/open-api/be-http/tablet-migration",
-                                "admin-manual/open-api/be-http/tablet-info",
-                                "admin-manual/open-api/be-http/checksum",
-                                "admin-manual/open-api/be-http/download",
-                                "admin-manual/open-api/be-http/pad-rowset",
-                                "admin-manual/open-api/be-http/version-info",
-                                "admin-manual/open-api/be-http/health",
-                                "admin-manual/open-api/be-http/tablet-reload",
-                                "admin-manual/open-api/be-http/tablet-restore",
-                                "admin-manual/open-api/be-http/be-vlog"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type": "category",
                     "label": "Trouble Shooting",
                     "items": [
                         {
@@ -779,9 +715,7 @@
                         "admin-manual/trouble-shooting/tablet-meta-tool",
                         "admin-manual/trouble-shooting/repairing-data"
                     ]
-                },
-                "admin-manual/plugin-development-manual",
-                "admin-manual/small-file-mgr"
+                }
             ]
         },
         {

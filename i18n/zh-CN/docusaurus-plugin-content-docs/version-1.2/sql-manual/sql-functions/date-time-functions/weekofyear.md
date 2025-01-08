@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## weekofyear
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT WEEKOFYEAR(DATETIME date)`
 
@@ -36,7 +36,7 @@ under the License.
 
 参数为Date或者Datetime类型
 
-### example
+## 举例
 
 ```
 mysql> select weekofyear('2008-02-20 00:00:00');

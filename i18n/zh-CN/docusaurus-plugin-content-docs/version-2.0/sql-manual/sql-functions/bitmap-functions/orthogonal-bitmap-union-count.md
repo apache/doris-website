@@ -23,14 +23,14 @@ under the License.
 -->
 
 ## orthogonal_bitmap_union_count
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITMAP ORTHOGONAL_BITMAP_UNION_COUNT(bitmap_column, column_to_filter, filter_values)`
 求bitmap并集大小的函数, 参数类型是bitmap，是待求并集count的列
 
 
-### example
+## 举例
 
 ```
 mysql> select orthogonal_bitmap_union_count(members) from tag_map where  tag_group in ( 1150000, 1150001, 390006);

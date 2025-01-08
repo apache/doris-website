@@ -24,14 +24,14 @@ under the License.
 
 ## bitmap_to_string
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR BITMAP_TO_STRING(BITMAP input)`
 
 将一个bitmap转化成一个逗号分隔的字符串，字符串中包含所有设置的BIT位。输入是null的话会返回null。
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_to_string(null);

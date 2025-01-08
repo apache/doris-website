@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## bitmap_hash64
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITMAP BITMAP_HASH64(expr)`
 
@@ -36,7 +36,7 @@ under the License.
 cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,device_id, device_id=bitmap_hash64(device_id)"   http://host:8410/api/test/testDb/_stream_load
 ```
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_to_string(bitmap_hash64('hello'));

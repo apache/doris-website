@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## hour
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT HOUR(DATETIME date)`
 
@@ -35,7 +35,7 @@ under the License.
 
 参数为Date或者Datetime类型
 
-### example
+## 举例
 
 ```
 mysql> select hour('2018-12-31 23:59:59');

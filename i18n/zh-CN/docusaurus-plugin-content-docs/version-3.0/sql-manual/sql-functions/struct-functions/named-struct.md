@@ -26,9 +26,9 @@ under the License.
 
 named_struct
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `STRUCT<T1, T2, T3, ...> named_struct({VARCHAR, T1}, {VARCHAR, T2}, ...)`
 
@@ -36,7 +36,7 @@ named_struct
 
 参数个数必须为非0偶数，奇数位是field的名字，必须为常量字符串，偶数位是field的值，可以是多列或常量
 
-### example
+## 举例
 
 ```
 mysql> select named_struct('f1', 1, 'f2', 'a', 'f3', "abc");

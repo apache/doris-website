@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## yearweek
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT YEARWEEK(DATE date[, INT mode])`
 
@@ -48,7 +48,7 @@ under the License.
 
 参数为Date或者Datetime类型
 
-### example
+## 举例
 
 ```
 mysql> select yearweek('2021-1-1');

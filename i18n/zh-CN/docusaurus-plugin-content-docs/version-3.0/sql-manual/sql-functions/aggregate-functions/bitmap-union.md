@@ -24,11 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## BITMAP_UNION
 
-### description
 
-### example
+## 举例
 
 #### Create table
 
@@ -100,12 +98,12 @@ insert into bitmap_table1 select id, bitmap_hash(id_string) from table;
 ```
 
 #### Data Query
-##### Syntax
+## 语法
 
 
-`BITMAP_UNION(expr)` : 计算输入 Bitmap 的并集，返回新的bitmap
+`BITMAP_UNION(expr)` : 计算输入 Bitmap 的并集，返回新的 bitmap
 
-`BITMAP_UNION_COUNT(expr)`: 计算输入 Bitmap 的并集，返回其基数，和 BITMAP_COUNT(BITMAP_UNION(expr)) 等价。目前推荐优先使用 BITMAP_UNION_COUNT ，其性能优于 BITMAP_COUNT(BITMAP_UNION(expr))
+`BITMAP_UNION_COUNT(expr)`: 计算输入 Bitmap 的并集，返回其基数，和 BITMAP_COUNT(BITMAP_UNION(expr)) 等价。目前推荐优先使用 BITMAP_UNION_COUNT，其性能优于 BITMAP_COUNT(BITMAP_UNION(expr))
 
 `BITMAP_UNION_INT(expr)` : 计算 TINYINT,SMALLINT 和 INT 类型的列中不同值的个数，返回值和
 COUNT(DISTINCT expr) 相同
@@ -115,7 +113,7 @@ filter_column 过滤条件的多个 bitmap 的交集的基数值。
 bitmap_column_to_count 是 bitmap 类型的列，filter_column 是变化的维度列，filter_values 是维度取值列表
 
 
-##### Example
+## 举例
 
 下面的 SQL 以上面的 pv_bitmap table 为例：
 
@@ -133,7 +131,7 @@ select bitmap_count(bitmap_union(user_id)) from pv_bitmap;
 select bitmap_union_int(id) from pv_bitmap;
 ```
 
-计算 user_id 的 留存:
+计算 user_id 的 留存：
 
 ```
 select intersect_count(user_id, page, 'meituan') as meituan_uv,
@@ -143,6 +141,4 @@ from pv_bitmap
 where page in ('meituan', 'waimai');
 ```
 
-### keywords
 
-BITMAP,BITMAP_COUNT,BITMAP_EMPTY,BITMAP_UNION,BITMAP_UNION_INT,TO_BITMAP,BITMAP_UNION_COUNT,INTERSECT_COUNT

@@ -30,7 +30,7 @@ under the License.
 
 ALTER TABLE PARTITION
 
-### Description
+## 描述
 
 该语句用于对已有 table 的 partition 进行修改操作。
 
@@ -98,7 +98,7 @@ MODIFY PARTITION p1|(p1[, p2, ...]) SET ("key" = "value", ...)
   - in_memory
 -  对于单分区表，partition_name 同表名。
 
-### Example
+## 举例
 
 1. 增加分区, 现有分区 [MIN, 2013-01-01)，增加分区 [2013-01-01, 2014-01-01)，使用默认分桶方式
 

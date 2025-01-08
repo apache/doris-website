@@ -24,13 +24,13 @@ under the License.
 
 ## MD5
 
-### description
+## 描述
 计算 MD5 128-bit 
-#### Syntax
+## 语法
 
 `MD5(str)`
 
-### example
+## 举例
 
 ```
 MySQL [(none)]> select md5("abc");

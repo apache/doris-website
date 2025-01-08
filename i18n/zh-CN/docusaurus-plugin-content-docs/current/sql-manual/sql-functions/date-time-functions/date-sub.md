@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME DATE_SUB(DATETIME date, INTERVAL expr type)`
 
@@ -37,7 +37,7 @@ under the License.
 
 `type` 参数可以是下列值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND
 
-### Example
+## 举例
 
 ```sql
 mysql> select date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY);

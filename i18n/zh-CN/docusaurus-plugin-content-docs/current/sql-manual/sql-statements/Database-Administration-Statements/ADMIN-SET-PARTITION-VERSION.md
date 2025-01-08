@@ -30,7 +30,7 @@ under the License.
 
 ADMIN SET PARTITION VERSION
 
-### Description
+## 描述
 
 该语句用于手动改变指定分区的可见版本。
 
@@ -52,7 +52,7 @@ ADMIN SET TABLE table_name PARTITION VERSION
 >
 >  设置分区的版本需要先确认Be机器上实际副本的版本，此命令一般只用于紧急故障修复，请谨慎操作。
 
-### Example
+## 举例
 
 1. 设置 partition 1769152 在 FE 元数据上的版本为 100。
 

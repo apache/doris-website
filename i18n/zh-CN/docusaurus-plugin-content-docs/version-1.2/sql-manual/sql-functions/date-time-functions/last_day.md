@@ -23,8 +23,8 @@ under the License.
 -->
 
 ## last_day
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `DATE last_day(DATETIME date)`
 
@@ -34,7 +34,7 @@ under the License.
 '30'(四月，六月，九月，十一月),
 '31'(一月，三月，五月，七月，八月，十月，十二月)
 
-### example
+## 举例
 
 ```
 mysql > select last_day('2000-02-03');

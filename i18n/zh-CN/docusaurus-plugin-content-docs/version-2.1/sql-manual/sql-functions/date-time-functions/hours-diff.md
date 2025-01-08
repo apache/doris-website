@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## hours_diff
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT hours_diff(DATETIME enddate, DATETIME startdate)`
 
 开始时间到结束时间相差几小时
 
-### example
+## 举例
 
 ```
 mysql> select hours_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');

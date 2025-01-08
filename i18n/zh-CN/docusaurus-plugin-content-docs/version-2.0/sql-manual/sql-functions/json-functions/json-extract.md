@@ -28,8 +28,8 @@ under the License.
 
  
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 ```sql
 VARCHAR json_extract(VARCHAR json_str, VARCHAR path[, VARCHAR path] ...)
@@ -67,7 +67,7 @@ json path的语法如下
 - 如果 json_path 指定的字段在JSON中不存在，返回NULL
 - 如果 json_path 指定的字段在JSON中的实际类型和json_extract_t指定的类型不一致，如果能无损转换成指定类型返回指定类型t，如果不能则返回NULL
 
-### example
+## 举例
 
 参考 [json tutorial](../../sql-reference/Data-Types/JSON.md) 中的示例
 

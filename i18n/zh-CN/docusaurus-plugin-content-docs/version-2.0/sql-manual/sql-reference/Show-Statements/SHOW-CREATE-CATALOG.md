@@ -37,7 +37,7 @@ SHOW CREATE CATALOG
 
 
 
-### Description
+## 描述
 
 该语句查看 doris 数据目录的创建语句。
 
@@ -51,7 +51,7 @@ SHOW CREATE CATALOG catalog_name;
 
 - `catalog_name`: 为 doris 中存在的数据目录的名称。
 
-### Example
+## 举例
 
 1. 查看 doris 中 hive 数据目录的创建语句
 

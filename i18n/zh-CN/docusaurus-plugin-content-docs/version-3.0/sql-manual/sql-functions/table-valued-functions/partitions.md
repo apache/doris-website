@@ -30,13 +30,13 @@ under the License.
 
 partitions
 
-### Description
+## 描述
 
 表函数，生成分区临时表，可以查看某个 TABLE 的分区列表。
 
 该函数用于 From 子句中。
 
-#### Syntax
+## 语法
 
 `partitions("catalog"="","database"="","table"="")`
 
@@ -103,7 +103,7 @@ mysql> desc function partitions("catalog"="hive","database"="zdtest","table"="co
 
 * Partition：分区名字
 
-### Example
+## 举例
 
 1. 查看 internal CATALOG 下 db1 的 table1 的分区列表
 

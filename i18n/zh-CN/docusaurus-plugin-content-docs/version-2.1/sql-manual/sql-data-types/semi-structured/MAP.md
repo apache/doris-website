@@ -30,7 +30,7 @@ under the License.
 
 MAP
 
-### description
+## 描述
 
 `MAP<K, V>`
 
@@ -43,7 +43,7 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIM
 DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-### example
+## 举例
 
 建表示例如下：
 

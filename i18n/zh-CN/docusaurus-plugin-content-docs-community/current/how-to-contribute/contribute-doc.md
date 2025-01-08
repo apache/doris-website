@@ -452,11 +452,11 @@ under the License.
 
 SHOW ALTER
 
-### Description
+## 描述
 
 （描述命令语法。）
 
-### Example
+## 举例
 
 （提供命令示例。）
 

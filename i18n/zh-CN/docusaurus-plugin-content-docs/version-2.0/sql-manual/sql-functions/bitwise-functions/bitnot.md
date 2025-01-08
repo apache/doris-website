@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## bitnot
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITNOT(Integer-type value)`
 
@@ -34,7 +34,7 @@ under the License.
 
 整数范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
-### example
+## 举例
 
 ```
 mysql> select bitnot(7) ans;

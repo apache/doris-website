@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## CORR
-### Description
-#### Syntax
+## 描述
+## 语法
 
 ` double corr(x, y)`
 
@@ -34,7 +34,7 @@ under the License.
 如果x或y的标准差为0, 将返回0。
 
 
-### example
+## 举例
 
 ```
 mysql> select corr(x,y) from baseall;

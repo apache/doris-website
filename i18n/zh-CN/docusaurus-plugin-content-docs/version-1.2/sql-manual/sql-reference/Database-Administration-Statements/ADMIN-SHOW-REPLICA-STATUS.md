@@ -30,7 +30,7 @@ under the License.
 
 ADMIN SHOW REPLICA STATUS
 
-### Description
+## 描述
 
 该语句用于展示一个表或分区的副本状态信息。
 
@@ -53,7 +53,7 @@ ADMIN SHOW REPLICA STATUS
             SCHEMA_ERROR:   replica 的 schema hash 不正确
             MISSING:                 replica 不存在
 
-### Example
+## 举例
 
 1. 查看表全部的副本状态
 

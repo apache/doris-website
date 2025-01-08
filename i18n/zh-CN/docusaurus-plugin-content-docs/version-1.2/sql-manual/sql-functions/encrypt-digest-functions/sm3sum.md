@@ -24,13 +24,13 @@ under the License.
 
 ## SM3SUM
 
-### description
+## 描述
 计算 多个字符串 SM3 256-bit
-#### Syntax
+## 语法
 
 `SM3SUM(str[,str])`
 
-### example
+## 举例
 
 ```
 MySQL > select sm3("abcd");

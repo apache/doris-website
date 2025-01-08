@@ -30,7 +30,7 @@ under the License.
 
 REFRESH MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于手动刷新指定的异步物化视图
 
@@ -48,7 +48,7 @@ REFRESH MATERIALIZED VIEW mvName=multipartIdentifier (partitionSpec | COMPLETE |
 - COMPLETE：会强制刷新物化视图的所有分区，不会判断分区是否和基表同步
 - partitionSpec：会强制刷新指定的分区，不会判断分区是否和基表同步
 
-### Example
+## 举例
 
 1. 刷新物化视图mv1(自动计算要刷新的分区)
 

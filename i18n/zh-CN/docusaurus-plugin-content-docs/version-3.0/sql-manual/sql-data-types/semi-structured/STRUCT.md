@@ -24,13 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## STRUCT
 
-### name
 
-STRUCT
-
-### description
+## 描述
 
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >`
 
@@ -56,7 +52,7 @@ DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 TODO:支持嵌套 STRUCT 或其他的复杂类型
 ```
 
-### example
+## 举例
 
 建表示例如下：
 
@@ -88,7 +84,7 @@ INSERT INTO `struct_test` VALUES (3, named_struct('s_id', 3, 's_name', 'sn3', 's
 
 Stream load:
 
-test.csv：
+test.csv:
 
 ```
 1|{"s_id":1, "s_name":"sn1", "s_address":"sa1"}
@@ -116,6 +112,4 @@ mysql> select * from struct_test;
 3 rows in set (0.02 sec)
 ```
 
-### keywords
 
-    STRUCT

@@ -30,7 +30,7 @@ under the License.
 
 ALTER RESOURCE
 
-### Description
+## 描述
 
 该语句用于修改一个已有的资源。仅 root 或 admin 用户可以修改资源。
 语法：
@@ -40,7 +40,7 @@ PROPERTIES ("key"="value", ...);
 ```
 注意：resource type 不支持修改。
 
-### Example
+## 举例
 
 1. 修改名为 spark0 的 Spark 资源的工作目录：
 ```sql

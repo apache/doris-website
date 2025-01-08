@@ -30,7 +30,7 @@ under the License.
 
 CREATE TABLE LIKE
 
-### Description
+## 描述
 
 该语句用于创建一个表结构和另一张表完全相同的空表，同时也能够可选复制一些rollup。 
 
@@ -47,7 +47,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]ta
 - 支持复制MySQL等外表 
 - 支持复制OLAP Table的rollup
 
-### Example
+## 举例
 
 1. 在test1库下创建一张表结构和table1相同的空表，表名为table2
 

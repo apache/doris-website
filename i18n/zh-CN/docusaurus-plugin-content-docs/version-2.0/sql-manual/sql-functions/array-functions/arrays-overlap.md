@@ -28,9 +28,9 @@ under the License.
 
 arrays_overlap
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `BOOLEAN arrays_overlap(ARRAY<T> left, ARRAY<T> right)`
 
@@ -42,7 +42,7 @@ arrays_overlap
 NULL - left或者right数组为NULL；或者left和right数组中，任意元素为NULL；
 ```
 
-### example
+## 举例
 
 ```
 mysql> select c_left,c_right,arrays_overlap(c_left,c_right) from array_test;

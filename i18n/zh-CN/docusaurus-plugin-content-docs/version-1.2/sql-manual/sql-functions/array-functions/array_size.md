@@ -28,9 +28,9 @@ under the License.
 
 array_size (size, cardinality)
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 ```sql
 BIGINT size(ARRAY<T> arr)
@@ -40,11 +40,11 @@ BIGINT cardinality(ARRAY<T> arr)
 
 返回数组中元素数量，如果输入数组为NULL，则返回NULL
 
-### notice
+## 注意事项
 
 `仅支持向量化引擎中使用`
 
-### example
+## 举例
 
 ```
 mysql> select k1,k2,size(k2) from array_test;

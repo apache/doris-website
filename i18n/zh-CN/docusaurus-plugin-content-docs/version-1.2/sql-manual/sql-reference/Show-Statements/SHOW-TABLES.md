@@ -30,7 +30,7 @@ under the License.
 
 SHOW TABLES
 
-### Description
+## 描述
 
 该语句用于展示当前 db 下所有的 table
 
@@ -44,7 +44,7 @@ SHOW [FULL] TABLES [LIKE]
 
 1. LIKE：可按照表名进行模糊查询
 
-### Example
+## 举例
 
  1. 查看DB下所有表
     

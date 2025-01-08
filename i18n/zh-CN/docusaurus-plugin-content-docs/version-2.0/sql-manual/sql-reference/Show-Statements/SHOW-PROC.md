@@ -30,7 +30,7 @@ under the License.
 
 SHOW PROC 
 
-### Description
+## 描述
 
 Proc 系统是 Doris 的一个比较有特色的功能。使用过 Linux 的同学可能比较了解这个概念。在 Linux 系统中，proc 是一个虚拟的文件系统，通常挂载在 /proc 目录下。用户可以通过这个文件系统来查看系统内部的数据结构。比如可以通过 /proc/pid 查看指定 pid 进程的详细情况。
 
@@ -107,7 +107,7 @@ mysql> show proc "/";
 22. transactions：用于查看指定 transaction id 的事务详情，等同于 [SHOW TRANSACTION](./SHOW-TRANSACTION.md)
 23. trash：该语句用于查看 backend 内的垃圾数据占用空间。等同于 [SHOW TRASH](./SHOW-TRASH.md)    
 
-### Example
+## 举例
 
 1. 如 "/dbs" 展示所有数据库，而 "/dbs/10002" 展示 id 为 10002 的数据库下的所有表
 

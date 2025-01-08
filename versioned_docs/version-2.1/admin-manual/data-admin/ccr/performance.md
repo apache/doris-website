@@ -1,7 +1,7 @@
 ---
 {
     "title": "Performance",
-    "language": "en_US"
+    "language": "en"
 }
 ---
 

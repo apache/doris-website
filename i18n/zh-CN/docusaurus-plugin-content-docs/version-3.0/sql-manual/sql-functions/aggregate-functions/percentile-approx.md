@@ -24,9 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## PERCENTILE_APPROX
-### description
-#### Syntax
+
+## 语法
 
 `PERCENTILE_APPROX(expr, DOUBLE p[, DOUBLE compression])`
 
@@ -38,7 +37,7 @@ compression 参数未指定或设置的值在[2048, 10000]范围外，以 10000 
 
 该函数使用固定大小的内存，因此对于高基数的列可以使用更少的内存，可用于计算 tp99 等统计值
 
-### example
+## 举例
 
 ```
 MySQL > select `table`, percentile_approx(cost_time,0.99) from log_statis group by `table`;
@@ -56,5 +55,4 @@ MySQL > select `table`, percentile_approx(cost_time,0.99, 4096) from log_statis 
 +----------+--------------------------------------+
 ```
 
-### keywords
-PERCENTILE_APPROX,PERCENTILE,APPROX
+

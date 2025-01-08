@@ -31,7 +31,7 @@ under the License.
 
 SHOW SYNC JOB
 
-### Description
+## 描述
 
 此命令用于当前显示所有数据库内的常驻数据同步作业状态。
 
@@ -41,7 +41,7 @@ SHOW SYNC JOB
 SHOW SYNC JOB [FROM db_name]
 ```
 
-### Example
+## 举例
 
 1. 展示当前数据库的所有数据同步作业状态。
 

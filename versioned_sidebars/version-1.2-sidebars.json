@@ -1194,7 +1194,6 @@
                 "ecosystem/cloudcanal",
                 "ecosystem/spark-doris-connector",
                 "ecosystem/flink-doris-connector",
-                "ecosystem/doris-kafka-connector",
                 "ecosystem/datax",
                 "ecosystem/dbt-doris-adapter",
                 "ecosystem/seatunnel",

@@ -24,8 +24,8 @@ under the License.
 
 ## positive
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 ```sql
 BIGINT positive(BIGINT x)
@@ -34,7 +34,7 @@ DECIMAL positive(DECIMAL x)
 ```
 返回`x`.
 
-### example
+## 举例
 
 ```
 mysql> SELECT positive(-10);

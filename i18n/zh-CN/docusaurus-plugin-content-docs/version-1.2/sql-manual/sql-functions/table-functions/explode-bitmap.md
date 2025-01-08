@@ -26,16 +26,16 @@ under the License.
 
 ## explode_bitmap
 
-### description
+## 描述
 
 表函数，需配合 Lateral View 使用。
 
 展开一个bitmap类型。
 
-#### syntax
+## 语法
 `explode_bitmap(bitmap)`
 
-### example
+## 举例
 
 原表数据：
 

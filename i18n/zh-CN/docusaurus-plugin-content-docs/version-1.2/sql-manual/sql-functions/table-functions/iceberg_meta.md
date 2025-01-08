@@ -34,11 +34,11 @@ iceberg_meta
 
 </version>
 
-### description
+## 描述
 
 iceberg_meta表函数（table-valued-function,tvf），可以用于读取iceberg表的各类元数据信息，如操作历史、生成的快照、文件元数据等。
 
-#### syntax
+## 语法
 ```sql
 iceberg_meta(
   "table" = "ctl.db.tbl", 
@@ -54,7 +54,7 @@ iceberg_meta表函数 tvf中的每一个参数都是一个 `"key"="value"` 对�
 - `table`： (必填) 完整的表名，需要按照目录名.库名.表名的格式，填写需要查看的iceberg表名。
 - `query_type`： (必填) 想要查看的元数据类型，目前仅支持snapshots。
 
-### Example
+## 举例
 
 读取并访问iceberg表格式的snapshots元数据。
 

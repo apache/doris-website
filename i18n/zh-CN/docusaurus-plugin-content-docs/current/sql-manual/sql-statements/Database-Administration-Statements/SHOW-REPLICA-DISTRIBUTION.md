@@ -30,7 +30,7 @@ under the License.
 
 SHOW REPLICA DISTRIBUTION
 
-### Description
+## 描述
 
 该语句用于展示一个表或分区副本分布状态
 
@@ -44,7 +44,7 @@ SHOW REPLICA DISTRIBUTION FROM [db_name.]tbl_name [PARTITION (p1, ...)];
 
 1. 结果中的 Graph 列以图形的形式展示副本分布比例
 
-### Example
+## 举例
 
 1. 查看表的副本分布
 

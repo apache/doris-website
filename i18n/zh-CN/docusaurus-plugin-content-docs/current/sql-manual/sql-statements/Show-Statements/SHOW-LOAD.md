@@ -30,7 +30,7 @@ under the License.
 
 SHOW LOAD
 
-### Description
+## 描述
 
 该语句用于展示指定的导入任务的执行情况
 
@@ -70,7 +70,7 @@ SHOW LOAD
     SHOW LOAD WARNINGS ON 'url'
     ```
 
-### Example
+## 举例
 
 1. 展示默认 db 的所有导入任务
     

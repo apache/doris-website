@@ -32,7 +32,7 @@ under the License.
 
 UPDATE 操作目前只支持更新 Value 列，Key 列的更新可参考[使用 FlinkCDC 更新 Key 列](../../../../ecosystem/flink-doris-connector.md#使用flinkcdc更新key列)。
 
-#### Syntax
+## 语法
 
 ```sql
 [cte]

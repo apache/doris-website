@@ -24,8 +24,8 @@ under the License.
 
 ## round_bankers
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `T round_bankers(T x[, d])`
 将`x`使用银行家舍入法后，保留d位小数，`d`默认为0。如果`d`为负数，则小数点左边`d`位为0。如果`x`或`d`为null，返回null。
@@ -34,7 +34,7 @@ under the License.
 + 在其他情况下，该函数将数字四舍五入到最接近的整数。
 
 
-### example
+## 举例
 
 ```
 mysql> select round_bankers(0.4);

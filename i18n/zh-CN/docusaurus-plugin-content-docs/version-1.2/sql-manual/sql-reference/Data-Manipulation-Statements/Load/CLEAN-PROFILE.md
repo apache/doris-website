@@ -34,7 +34,7 @@ CLEAN PROFILE
 
 </version>
 
-### Description
+## 描述
 
 用于手动清理所有历史query或load的profile信息。
 
@@ -44,7 +44,7 @@ CLEAN PROFILE
 CLEAN ALL PROFILE;
 ```
 
-### Example
+## 举例
 
 1. 清理所有profile信息。
 

@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## ST_Distance_Sphere
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE ST_Distance_Sphere(DOUBLE x_lng, DOUBLE x_lat, DOUBLE y_lng, DOUBLE y_lat)`
 
@@ -36,7 +36,7 @@ under the License.
 x_lng 和 y_lng 都是经度数据，合理的取值范围是 [-180, 180]。
 x_lat 和 y_lat 都是纬度数据，合理的取值范围是 [-90, 90]。
 
-### example
+## 举例
 
 ```
 mysql> select st_distance_sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219);

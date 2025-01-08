@@ -30,7 +30,7 @@ under the License.
 
 CREATE FUNCTION
 
-### Description
+## 描述
 
 此语句创建一个自定义函数。执行此命令需要用户拥有 `ADMIN` 权限。
 
@@ -99,7 +99,7 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
 
   - `close_fn`: 自定义函数的close函数的函数签名，用于从动态库里面找到close函数入口。此选项对于自定义函数是可选项     
 
-### Example
+## 举例
 
 1. 创建一个自定义标量函数
 

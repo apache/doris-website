@@ -26,9 +26,9 @@ under the License.
 
 ## SHOW-PROCEDURE
 
-### Description
+## 描述
 
-### Example
+## 举例
 
 ### Keywords
 

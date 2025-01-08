@@ -30,7 +30,7 @@ under the License.
 
 REVOKE
 
-### Description
+## 描述
 
 REVOKE 命令有如下功能：
 
@@ -57,7 +57,7 @@ user_identity：
 
 role_list 是需要撤销的角色列表，以逗号分隔，指定的角色必须存在。
 
-### Example
+## 举例
 
 1. 撤销用户 jack 数据库 testDb 的权限
    

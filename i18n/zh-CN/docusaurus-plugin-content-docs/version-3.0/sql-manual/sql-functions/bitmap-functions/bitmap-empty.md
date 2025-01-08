@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## bitmap_empty
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITMAP BITMAP_EMPTY()`
 
@@ -36,7 +36,7 @@ under the License.
 cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,v1,v2=bitmap_empty()"   http://host:8410/api/test/testDb/_stream_load
 ```
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_count(bitmap_empty());

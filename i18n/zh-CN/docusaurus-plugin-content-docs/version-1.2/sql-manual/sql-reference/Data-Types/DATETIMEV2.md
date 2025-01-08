@@ -28,7 +28,7 @@ under the License.
 
 DATETIMEV2
 
-### description
+## 描述
 
     DATETIMEV2([P])
     日期时间类型，可选参数P表示时间精度，取值范围是[0, 6]，即最多支持6位小数（微秒）。不设置时为0。

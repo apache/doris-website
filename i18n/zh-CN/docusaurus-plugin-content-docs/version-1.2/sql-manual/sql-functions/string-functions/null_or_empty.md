@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## null_or_empty
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BOOLEAN NULL_OR_EMPTY (VARCHAR str)`
 
 如果字符串为空字符串或者NULL，返回true。否则，返回false。
 
-### example
+## 举例
 
 ```
 MySQL [(none)]> select null_or_empty(null);

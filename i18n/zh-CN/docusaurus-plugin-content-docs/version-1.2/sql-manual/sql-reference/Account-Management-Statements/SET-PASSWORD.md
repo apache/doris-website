@@ -30,7 +30,7 @@ under the License.
 
 SET PASSWORD
 
-### Description
+## 描述
 
 SET PASSWORD 命令可以用于修改一个用户的登录密码。如果 [FOR user_identity] 字段不存在，那么修改当前用户的密码
 
@@ -44,7 +44,7 @@ SET PASSWORD [FOR user_identity] =
 PASSWORD() 方式输入的是明文密码; 而直接使用字符串，需要传递的是已加密的密码。
 如果修改其他用户的密码，需要具有管理员权限。
 
-### Example
+## 举例
 1. 修改当前用户的密码
 
     ```sql

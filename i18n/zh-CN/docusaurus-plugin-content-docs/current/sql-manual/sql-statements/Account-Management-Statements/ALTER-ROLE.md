@@ -30,7 +30,7 @@ under the License.
 
 ALTER ROLE
 
-### Description
+## 描述
 
 该语句用于修改一个角色
 
@@ -38,7 +38,7 @@ ALTER ROLE
  ALTER ROLE role_name comment;
 ```
 
-### Example
+## 举例
 
 1. 修改一个角色的注释
 

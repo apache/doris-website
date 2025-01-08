@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## VARIANCE,VAR_POP,VARIANCE_POP
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARIANCE(expr)`
 
 
 返回expr表达式的方差
 
-### example
+## 举例
 ```
 MySQL > select variance(scan_rows) from log_statis group by datetime;
 +-----------------------+

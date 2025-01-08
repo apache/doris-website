@@ -107,8 +107,6 @@ You can use the `FOR TIME AS OF` statement, based on the time of the snapshot to
 
 Hudi table does not support the `FOR VERSION AS OF` statement. Using this syntax to query the Hudi table will throw an error.
 
-In addition, you can use the [hudi_meta](../../sql-manual/sql-functions/table-valued-functions/hudi-meta.md) table function to query the timeline information of the specified table.
-
 ## Incremental Read
 
 Incremental Read can query the data changed between startTime and endTime, and the returned result set is the final state of the data at endTime.

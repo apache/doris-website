@@ -37,7 +37,7 @@ SHOW CATALOGS
 
 
 
-### Description
+## 描述
 
 该语句用于显示已存在是数据目录（catalog）
 
@@ -58,7 +58,7 @@ LIKE：可按照 CATALOG 名进行模糊查询
 * Type：数据目录类型。
 * IsCurrent: 是否为当前正在使用的数据目录。
 
-### Example
+## 举例
 
 1. 查看当前已创建的数据目录
 

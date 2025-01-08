@@ -38,7 +38,7 @@ posexplode(expr)
 posexplode_outer(expr)
 ```
 
-### Example
+## 举例
 
 ``` sql
     CREATE TABLE IF NOT EXISTS `table_test`(

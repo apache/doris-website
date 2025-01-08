@@ -30,7 +30,7 @@ under the License.
 
 SHOW CREATE MATERIALIZED VIEW
 
-### Description
+## 描述
 
 该语句用于查询创建物化视图的语句。
 
@@ -46,7 +46,7 @@ SHOW CREATE MATERIALIZED VIEW mv_name ON table_name
 2. table_name:
         物化视图所属的表名。必填项。
 
-### Example
+## 举例
 
 创建物化视图的语句为
 

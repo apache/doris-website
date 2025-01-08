@@ -24,8 +24,8 @@ under the License.
 
 ## negative
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 ```sql
 BIGINT negative(BIGINT x)
@@ -34,7 +34,7 @@ DECIMAL negative(DECIMAL x)
 ```
 返回`-x`.
 
-### example
+## 举例
 
 ```
 mysql> SELECT negative(-10);

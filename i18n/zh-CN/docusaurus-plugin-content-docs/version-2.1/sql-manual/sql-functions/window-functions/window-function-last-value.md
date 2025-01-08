@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION LAST_VALUE
-### description
+## 描述
 
 LAST_VALUE() 返回窗口范围内的最后一个值。与 FIRST_VALUE() 相反。ignore_null 决定是否忽略 null 值，参数 ignore_null 默认值为 false 。
 
@@ -20,7 +20,7 @@ LAST_VALUE() 返回窗口范围内的最后一个值。与 FIRST_VALUE() 相反�
 LAST_VALUE(expr[, ignore_null]) OVER(partition_by_clause order_by_clause [window_clause])
 ```
 
-### example
+## 举例
 
 使用FIRST_VALUE()举例中的数据：
 

@@ -32,10 +32,10 @@ sequence
 
 
 
-### description
+## 描述
 函数 array_range 的别称
 
-#### Syntax
+## 语法
 
 ```sql
 ARRAY<Int> sequence(Int end)
@@ -54,11 +54,11 @@ ARRAY<Datetime> sequence(Datetime start_datetime, Datetime end_datetime, INTERVA
 UNIT 支持年/月/周/日/小时/分钟/秒。
 返回 start_datetime 和最接近 end_datetime 之间的 datetimev2 数组（按 Interval_step UNIT 计算）。
 
-### notice
+## 注意事项
 
 `如果第三个参数 step/interval_step 为负数或者零, 函数结果将为NULL`
 
-### example
+## 举例
 
 ```
 mysql> select sequence(10);
