@@ -93,7 +93,6 @@ const config = {
         // 'https://fonts.gstatic.com',
         // 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap'
     ],
-    organizationName: 'apache/doris-website', // Usually your GitHub org/user name.
     projectName: 'apache/doris-website', // Usually your repo name.
     customFields: {},
     future: {
@@ -142,6 +141,15 @@ const config = {
                         to: '/docs/gettingStarted/quick-start',
                     },
                 ],
+                createRedirects(existingPath) {
+                    if (existingPath.includes('/gettingStarted/what-is-apache-doris')) {
+                        // Redirect from /gettingStarted/what-is-new to /gettingStarted/what-is-apache-doris
+                        return [
+                            existingPath.replace('/gettingStarted/what-is-apache-doris', '/gettingStarted/what-is-new'),
+                        ];
+                    }
+                    return undefined; // Return a falsy value: no redirect created
+                },
             },
         ],
     ],
@@ -184,7 +192,7 @@ const config = {
                     changefreq: 'weekly',
                     priority: 0.5,
                     filename: 'sitemap.xml',
-                    createSitemapItems: async (params) => {
+                    createSitemapItems: async params => {
                         const { defaultCreateSitemapItems, ...rest } = params;
                         const items = await defaultCreateSitemapItems(rest);
                         for (let item of items) {
