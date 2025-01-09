@@ -40,6 +40,31 @@ TABLE COLUMN: show ALTER tasks that modify columns
         If db_name is not specified, the current default db is used
         CLUSTER: Displays tasks related to cluster operations (only for administrators! To be implemented...)
 
+## Result
+
+*SHOW ALTER TABLE COLUMN*
+
+| Field Name            | Description                                                         |
+|-----------------------|------------------------------------------------------------------|
+| JobId                 | The unique ID for each Schema Change job.                          |
+| TableName             | The table name of the base table corresponding to the Schema Change. |
+| CreateTime            | The job creation time.                                              |
+| FinishedTime          | The job completion time. If not completed, it displays "N/A".      |
+| IndexName             | The name of one of the indexes involved in this modification.        |
+| IndexId               | The unique ID of the new index.                                      |
+| OriginIndexId         | The unique ID of the old index.                                      |
+| SchemaVersion         | Displayed in the format of M:N. M represents the version of the Schema Change, and N represents the corresponding Hash value. The version increases with each Schema Change. |
+| TransactionId         | The Transaction ID for converting historical data.                  |
+| State                 | The stage of the job.                                               |
+|                       | - PENDING: The job is waiting to be scheduled in the queue.        |
+|                       | - WAITING_TXN: Waiting for the import task before the watershed Transaction ID to complete. |
+|                       | - RUNNING: Historical data conversion in progress.                |
+|                       | - FINISHED: Job completed successfully.                            |
+|                       | - CANCELLED: Job failed.                                          |
+| Msg                   | Displays failure information if the job fails.                        |
+| Progress              | Job progress. Only displayed in RUNNING state. Progress is displayed in the form of M/N. N is the total number of replicas involved in the Schema Change. M is the number of replicas that have completed historical data conversion. |
+| Timeout                | Job timeout time in seconds.                                       |
+
 ## Example
 
 1. Display the task execution of all modified columns of the default db
