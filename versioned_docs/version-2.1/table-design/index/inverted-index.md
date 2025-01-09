@@ -299,6 +299,7 @@ SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3';
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3+';
 
 -- 2.3 Prefix matching the last word keyword2, with a default limit of 50 prefixes (controlled by session variable inverted_index_max_expansions)
+-- It is necessary to ensure that keyword1 and keyword2 remain adjacent in the original text after tokenization, with no other words in between.
 -- 'keyword1 keyword2abc' matches because keyword1 is identical and keyword2abc is a prefix of keyword2
 -- 'keyword1 keyword2' also matches because keyword2 is a prefix of keyword2
 -- 'keyword1 keyword3' does not match because keyword3 is not a prefix of keyword2
