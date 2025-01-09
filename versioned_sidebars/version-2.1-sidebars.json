@@ -262,7 +262,7 @@
                                 "query-acceleration/materialized-view/sync-materialized-view",
                                 {
                                     "type": "category",
-                                    "label": "Async-Materialize View",
+                                    "label": "Async-Materialized View",
                                     "items": [
                                         "query-acceleration/materialized-view/async-materialized-view/overview",
                                         "query-acceleration/materialized-view/async-materialized-view/functions-and-demands",

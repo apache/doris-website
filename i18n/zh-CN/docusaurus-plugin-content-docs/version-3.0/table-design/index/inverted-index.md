@@ -294,6 +294,7 @@ SELECT * FROM table_name WHERE content MATCH_ALL 'keyword1 keyword2';
 -- 'keyword1 keyword2'，'wordx keyword1 keyword2'，'wordx keyword1 keyword2 wordy' 能匹配，因为他们都包含 keyword1 keyword2，而且 keyword2 紧跟在 keyword1 后面
 -- 'keyword1 wordx keyword2' 不能匹配，因为 keyword1 keyword2 之间隔了一个词 wordx
 -- 'keyword2 keyword1'，因为 keyword1 keyword2 的顺序反了
+-- 使用 MATCH_PHRASE 需要再 PROPERTIES 中开启 "support_phrase" = "true"
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2';
 
 -- 2.2 content 列中同时包含 keyword1 和 keyword2 的行，而且 keyword1 keyword2 的 `词距`（slop）不超过 3

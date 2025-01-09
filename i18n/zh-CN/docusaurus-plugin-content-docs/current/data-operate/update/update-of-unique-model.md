@@ -51,17 +51,7 @@ under the License.
 
 ### 使用方式
 
-#### 建表
-
-建表时需要指定如下 property，以开启 Merge-on-Write 实现
-
-```sql
-enable_unique_key_merge_on_write = true
-```
-
-#### 导入
-
-**StreamLoad/BrokerLoad/RoutineLoad**
+**StreamLoad/BrokerLoad/RoutineLoad 导入**
 
 如果使用的是 Stream Load/Broker Load/Routine Load，在导入时添加如下 header
 
@@ -75,7 +65,7 @@ partial_columns:true
 curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
 
-**INSERT INTO**
+**INSERT INTO 导入**
 
 在所有的数据模型中，`INSERT INTO` 给定一部分列时默认行为都是整行写入，为了防止误用，在 Merge-on-Write 实现中，`INSERT INTO`默认仍然保持整行 UPSERT 的语义，如果需要开启部分列更新的语义，需要设置如下 session variable
 
@@ -86,7 +76,7 @@ INSERT INTO order_tbl (order_id, order_status) VALUES (1,'待发货');
 
 需要注意的是，控制 insert 语句是否开启严格模式的会话变量`enable_insert_strict`的默认值为 true，即 insert 语句默认开启严格模式，而在严格模式下进行部分列更新不允许更新不存在的 key。所以，在使用 insert 语句进行部分列更新的时候如果希望能插入不存在的 key，需要在`enable_unique_key_partial_update`设置为 true 的基础上同时将`enable_insert_strict`设置为 false。
 
-**Flink Connector**
+**Flink Connector 导入**
 
 如果使用 Flink Connector, 需要添加如下配置：
 
@@ -96,42 +86,6 @@ INSERT INTO order_tbl (order_id, order_status) VALUES (1,'待发货');
 
 同时在`sink.properties.column`中指定要导入的列（必须包含所有 key 列，不然无法更新）
 
-### 示例
-
-假设 Doris 中存在一张订单表 order_tbl，其中订单 id 是 Key 列，订单状态，订单金额是 Value 列。数据状态如下：
-
-| 订单 id | 订单金额 | 订单状态 |
-| ------ | -------- | -------- |
-| 1      | 100      | 待付款   |
-
-```sql
-+----------+--------------+--------------+
-| order_id | order_amount | order_status |
-+----------+--------------+--------------+
-| 1        |          100 | 待付款        |
-+----------+--------------+--------------+
-1 row in set (0.01 sec)
-```
-
-这时候，用户点击付款后，Doris 系统需要将订单 id 为 '1' 的订单状态变更为 '待发货'。
-
-使用`INSERT INTO`进行更新：
-
-```sql
-SET enable_unique_key_partial_update=true;
-INSERT INTO order_tbl (order_id, order_status) VALUES (1,'待发货');
-```
-
-更新后结果如下
-
-```sql
-+----------+--------------+--------------+
-| order_id | order_amount | order_status |
-+----------+--------------+--------------+
-| 1        |          100 | 待发货        |
-+----------+--------------+--------------+
-1 row in set (0.01 sec)
-```
 
 ### 使用注意
 
