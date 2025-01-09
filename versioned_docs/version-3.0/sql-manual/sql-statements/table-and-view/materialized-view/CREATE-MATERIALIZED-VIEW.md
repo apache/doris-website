@@ -29,7 +29,7 @@ under the License.
 
 This statement is used to create a materialized view.
 
-This operation is an asynchronous operation. After the submission is successful, you need to view the job progress through [SHOW ALTER TABLE MATERIALIZED VIEW](../table/SHOW-ALTER-TABLE-MATERIALIZED-VIEW). After displaying FINISHED, you can use the `desc [table_name] all` command to view the schema of the materialized view.
+This operation is an asynchronous operation. After the submission is successful, you need to view the job progress through [SHOW ALTER TABLE MATERIALIZED VIEW](./SHOW-ALTER-TABLE-MATERIALIZED-VIEW). After displaying FINISHED, you can use the `desc [table_name] all` command to view the schema of the materialized view.
 
 grammar:
 
