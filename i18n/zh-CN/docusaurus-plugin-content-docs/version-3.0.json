@@ -167,7 +167,7 @@
     "message": "物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },
-  "sidebar.docs.category.Async-Materialize View": {
+  "sidebar.docs.category.Async-Materialized View": {
     "message": "异步物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },
@@ -615,9 +615,9 @@
     "message": "历史版本",
     "description": "The label for category Release notes in sidebar docs"
   },
-  "sidebar.docs.category.cluster management": {
-    "message": "集群管理",
-    "description": "The label for category cluster management in sidebar docs"
+  "sidebar.docs.category.Managing Disater Recovery": {
+    "message": "容灾管理",
+    "description": "The label for category Managing Disater Recovery in sidebar docs"
   },
   "sidebar.docs.category.Managing Workload": {
     "message": "负载管理",
@@ -626,6 +626,22 @@
   "sidebar.docs.category.Resource Isolation": {
     "message": "资源隔离",
     "description": "The label for category Resource Isolation in sidebar docs"
+  },
+  "sidebar.docs.category.Trouble Shooting": {
+    "message": "故障诊断处理",
+    "description": "The label for category Trouble Shooting in sidebar docs"
+  },
+  "sidebar.docs.category.information_schema": {
+    "message": "information_schema",
+    "description": "The label for category System Table in sidebar docs"
+  },
+  "sidebar.docs.category.mysql": {
+    "message": "mysql",
+    "description": "The label for category System Table in sidebar docs"
+  },
+  "sidebar.docs.category.__internal_schema": {
+    "message": "__internal_schema",
+    "description": "The label for category System Table in sidebar docs"
   },
   "sidebar.docs.category.Best Practices": {
     "message": "最佳实践",
