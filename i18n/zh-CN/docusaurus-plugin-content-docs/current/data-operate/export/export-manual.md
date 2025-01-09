@@ -34,7 +34,7 @@ under the License.
 
 关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](../../data-operate/export/export-overview.md)。
 
-## 使用场景
+## 适用场景
 
 `Export` 适用于以下场景：
 
@@ -158,7 +158,6 @@ CANCEL EXPORT FROM dbName WHERE LABEL like "%export_%";
 
 - 对象存储：Amazon S3、COS、OSS、OBS、Google GCS
 - HDFS
-- 本地文件系统
 
 ### 导出文件类型
 
