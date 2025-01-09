@@ -151,7 +151,7 @@ ALTER TABLE example_db.my_table
 DROP PARTITION p1;
 ```
 
-9. Add a partition specifying upper and lower bounds
+8. Add a partition specifying upper and lower bounds
 
 ```sql
 ALTER TABLE example_db.my_table
