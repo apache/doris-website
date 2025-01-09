@@ -270,7 +270,6 @@ CREATE CATALOG hive_catalog PROPERTIES (
 -- Export hive table
 EXPORT TABLE hive_catalog.sf1.lineitem TO "s3://bucket/export/export_"
 PROPERTIES(
-    "parallelism" = "5",
     "format" = "csv",
     "max_file_size" = "1024MB"
 ) WITH s3 (
@@ -280,10 +279,6 @@ PROPERTIES(
     "s3.access_key" = "xxxxx"
 )
 ```
-
-:::tip
-当前 Export 导出 Catalog 外表数据不支持并发导出，即使指定 parallelism 大于 1，仍然是单线程导出。
-:::
 
 关于 Export 并发导出的原理，可参阅附录部分。
 
@@ -359,8 +354,6 @@ PROPERTIES (
 ### 基本原理
 
 Export 任务的底层是执行`SELECT INTO OUTFILE` SQL 语句。用户发起一个 Export 任务后，Doris 会根据 Export 要导出的表构造出一个或多个 `SELECT INTO OUTFILE` 执行计划，随后将这些`SELECT INTO OUTFILE` 执行计划提交给 Doris 的 Job Schedule 任务调度器，Job Schedule 任务调度器会自动调度这些任务并执行。
-
-默认情况下，Export 任务是单线程执行的。为了提高导出的效率，Export 命令可以设置 `parallelism` 参数来并发导出数据。设置`parallelism` 大于 1 后，Export 任务会使用多个线程并发的去执行 `SELECT INTO OUTFILE` 查询计划。`parallelism`参数实际就是指定执行 EXPORT 作业的线程数量。
 
 ### 导出到本地文件系统
 
