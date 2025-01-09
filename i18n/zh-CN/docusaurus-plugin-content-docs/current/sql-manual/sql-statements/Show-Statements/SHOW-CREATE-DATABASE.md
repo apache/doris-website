@@ -30,7 +30,7 @@ under the License.
 
 SHOW CREATE DATABASE
 
-### Description
+## 描述
 
 该语句查看 doris 内置数据库和 hms catalog 数据库的创建信息。
 
@@ -45,7 +45,7 @@ SHOW CREATE DATABASE db_name;
 - `db_name`: 为 内置数据库或 hms catalog 数据库的名称。
 - 如果查看 hms catalog 内数据库，返回信息和 hive 中同名命令结果一样。
 
-### Example
+## 举例
 
 1. 查看doris中test数据库的创建情况
 

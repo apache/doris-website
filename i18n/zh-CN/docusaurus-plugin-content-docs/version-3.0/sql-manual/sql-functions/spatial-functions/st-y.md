@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## ST_Y
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE ST_Y(POINT point)`
 
 
 当point是一个合法的POINT类型时，返回对应的Y坐标值
 
-### example
+## 举例
 
 ```
 mysql> SELECT ST_Y(ST_Point(24.7, 56.7));

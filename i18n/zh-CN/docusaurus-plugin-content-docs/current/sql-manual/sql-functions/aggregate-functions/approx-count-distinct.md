@@ -24,8 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `APPROX_COUNT_DISTINCT(expr)`
 
@@ -35,7 +35,7 @@ under the License.
 
 更详细具体的分析，详见[相关论文](https://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf)
 
-### Example
+## 举例
 
 ```sql
 MySQL > select approx_count_distinct(query_id) from log_statis group by datetime;

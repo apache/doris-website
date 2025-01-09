@@ -1,7 +1,7 @@
 ---
 {
-"title": "Remote Storage",
-"language": "en"
+    "title": "Remote Storage",
+    "language": "en-US"
 }
 ---
 
@@ -24,17 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Feature Overview
+## Overview
 
-Remote storage supports placing some data in external storage (such as object storage or HDFS), which saves costs without sacrificing functionality.
+Remote storage supports placing cold data in external storage (such as object storage, HDFS).
 
 :::warning Note
-Data in remote storage only has one replica. The reliability of the data depends on the reliability of the remote storage. You need to ensure that the remote storage employs EC (Erasure Coding) or multi-replica technology to guarantee data reliability.
+The data in remote storage has only one copy, and the reliability of the data depends on the reliability of the remote storage. You need to ensure that the remote storage has erasure coding (EC) or multi-replica technology to ensure data reliability.
 :::
 
-### Usage Guide
+## Usage
 
-Using S3 object storage as an example, start by creating an S3 RESOURCE:
+### Saving Cold Data to S3 Compatible Storage
+
+*Step 1:* Create S3 Resource.
 
 ```sql
 CREATE RESOURCE "remote_s3"
@@ -54,10 +56,12 @@ PROPERTIES
 ```
 
 :::tip
-When creating the S3 RESOURCE, a remote connection check will be performed to ensure the resource is created correctly.
+When creating the S3 RESOURCE, a link verification to the S3 remote will be performed to ensure the correctness of the RESOURCE creation.
 :::
 
-Next, create a STORAGE POLICY and associate it with the previously created RESOURCE:
+*Step 2:* Create STORAGE POLICY.
+
+Then create a STORAGE POLICY associated with the RESOURCE created above:
 
 ```sql
 CREATE STORAGE POLICY test_policy
@@ -67,7 +71,7 @@ PROPERTIES(
 );
 ```
 
-Finally, specify the STORAGE POLICY when creating a table:
+*Step 3:* Use STORAGE POLICY when creating a table.
 
 ```sql
 CREATE TABLE IF NOT EXISTS create_table_use_created_policy 
@@ -84,11 +88,13 @@ PROPERTIES(
 );
 ```
 
-:::warning
-If the UNIQUE table has `"enable_unique_key_merge_on_write" = "true"`, this feature cannot be used.
+:::warning Note
+If the UNIQUE table is set with `"enable_unique_key_merge_on_write" = "true"`, this feature cannot be used.
 :::
 
-Create an HDFS RESOURCE:
+### Saving Cold Data to HDFS
+
+*Step 1:* Create HDFS RESOURCE:
 
 ```sql
 CREATE RESOURCE "remote_hdfs" PROPERTIES (
@@ -102,12 +108,20 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
         "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
     );
+```
 
+*Step 2:* Create STORAGE POLICY.
+
+```sql
 CREATE STORAGE POLICY test_policy PROPERTIES (
     "storage_resource" = "remote_hdfs",
     "cooldown_ttl" = "300"
-);
+)
+```
 
+*Step 3:* Use STORAGE POLICY to create a table.
+
+```sql
 CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
     k1 BIGINT,
     k2 LARGEINT,
@@ -116,105 +130,101 @@ CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
 UNIQUE KEY(k1)
 DISTRIBUTED BY HASH (k1) BUCKETS 3
 PROPERTIES(
-    "enable_unique_key_merge_on_write" = "false",
-    "storage_policy" = "test_policy"
+"enable_unique_key_merge_on_write" = "false",
+"storage_policy" = "test_policy"
 );
 ```
 
-:::warning
-If the UNIQUE table has `"enable_unique_key_merge_on_write" = "true"`, this feature cannot be used.
+:::warning Note
+If the UNIQUE table is set with `"enable_unique_key_merge_on_write" = "true"`, this feature cannot be used.
 :::
 
-In addition to creating tables with remote storage, Doris also supports setting remote storage for existing tables or partitions.
+### Cooling Existing Tables to Remote Storage
 
-For an existing table, associate a remote storage policy by running:
+In addition to new tables supporting the setting of remote storage, Doris also supports setting remote storage for an existing table or PARTITION.
+
+For an existing table, set remote storage by associating the created STORAGE POLICY with the table:
 
 ```sql
 ALTER TABLE create_table_not_have_policy set ("storage_policy" = "test_policy");
 ```
 
-For an existing PARTITION, associate a remote storage policy by running:
+For an existing PARTITION, set remote storage by associating the created STORAGE POLICY with the PARTITION:
 
 ```sql
 ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="test_policy");
 ```
 
 :::tip
-Note that if you specify different storage policies for the entire table and certain partitions, the storage policy of the table will take precedence for all partitions. If you need a partition to use a different storage policy, you can modify it using the method above for existing partitions.
+Note that if the user specifies different Storage Policies for the entire Table and some Partitions when creating the table, the Storage Policy set for the Partition will be ignored, and all Partitions of the table will use the table's Policy. If you need a Partition's Policy to differ from others, you can modify it using the method described above for associating a Storage Policy with an existing Partition.
+
+For more details, please refer to the Docs directory under [RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), [POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY), [CREATE TABLE](../../sql-statements/table-and-view/table/CREATE-TABLE), [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN), etc.
 :::
 
-For more details, please refer to the documentation in the **Docs** directory, such as [RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), [POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY), [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE), and [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN), which provide detailed explanations.
+### Configuring Compaction
 
-### Limitations
+-   The BE parameter `cold_data_compaction_thread_num` can set the concurrency for executing remote storage Compaction, with a default of 2.
 
-- A single table or partition can only be associated with one storage policy. Once associated, the storage policy cannot be dropped until the association is removed.
+-   The BE parameter `cold_data_compaction_interval_sec` can set the time interval for executing remote storage Compaction, with a default of 1800 seconds, which is half an hour.
 
-- The storage path information associated with a storage policy (e.g., bucket, endpoint, root_path) cannot be modified after the policy is created.
+## Limitations
 
-- Storage policies support creation, modification, and deletion. However, before deleting a policy, you need to ensure that no tables are referencing this storage policy.
+-   Tables using remote storage do not support backup.
 
-- The Unique model with Merge-on-write enabled may face restrictions... 
+-   Modifying the location information of remote storage, such as endpoint, bucket, and path, is not supported.
 
-## Viewing Remote Storage Usage
+-   Unique model tables do not support setting remote storage when the Merge-on-Write feature is enabled.
 
-Method 1: You can view the size uploaded to the object storage by each BE by using `show proc '/backends'`, specifically the `RemoteUsedCapacity` item. Note that this method may have some delay.
+## Cold Data Space
 
-Method 2: You can view the object size used by each tablet of a table by using `show tablets from tableName`, specifically the `RemoteDataSize` item.
+### Viewing
 
-## Remote Storage Cache
+Method 1: You can view the size uploaded to the object by each BE through `show proc '/backends'`, in the RemoteUsedCapacity item, this method has a slight delay.
 
-To optimize query performance and save object storage resources, the concept of cache is introduced. When querying data from remote storage for the first time, Doris will load the data from remote storage to the BE's local disk as a cache. The cache has the following characteristics:
+Method 2: You can view the size of each tablet occupied by the table through `show tablets from tableName`, in the RemoteDataSize item.
 
-- The cache is stored on the BE's disk and does not occupy memory space.
-- The cache can be limited in size, with data cleanup performed using an LRU (Least Recently Used) policy.
-- The implementation of the cache is the same as the federated query catalog cache. For more information, refer to the [documentation](../../lakehouse/filecache).
+### Garbage Collection
 
-## Remote Storage Compaction
+There may be situations that generate garbage data on remote storage:
 
-The data in remote storage is considered to be "ingested" at the moment the rowset file is written to the local disk, plus the cooldown time. Since data is not written and cooled all at once, to avoid the small file problem in object storage, Doris will perform compaction on remote storage data. However, the frequency and priority of remote storage compaction are not very high. It is recommended to perform compaction on local hot data before executing cooldown. The following BE parameters can be adjusted:
+1.  Rowset upload fails but some segments are successfully uploaded.
 
-- The BE parameter `cold_data_compaction_thread_num` sets the concurrency for performing compaction on remote storage. The default value is 2.
-- The BE parameter `cold_data_compaction_interval_sec` sets the time interval for executing remote storage compaction. The default value is 1800 seconds (30 minutes).
+2.  The uploaded rowset did not reach consensus in multiple replicas.
 
-## Remote Storage Schema Change
+3.  Rowsets participating in compaction after compaction is completed.
 
-Remote storage schema changes are supported. These include:
+Garbage data will not be cleaned up immediately. The BE parameter `remove_unused_remote_files_interval_sec` can set the time interval for garbage collection on remote storage, with a default of 21600 seconds, which is 6 hours.
 
-- Adding or removing columns
-- Modifying column types
-- Adjusting column order
-- Adding or modifying indexes
+## Query and Performance Optimization
 
-## Remote Storage Garbage Collection
+To optimize query performance and save object storage resources, local Cache has been introduced. When querying data from remote storage for the first time, Doris will load the data from remote storage to the local disk of the BE for caching. The Cache has the following characteristics:
 
-Remote storage garbage data refers to data that is not being used by any replica. Garbage data may occur on object storage in the following cases:
+-   The Cache is actually stored on the local disk of the BE and does not occupy memory space.
 
-1. Rowsets upload fails but some segments are successfully uploaded.
-2. The FE re-selects a CooldownReplica, causing an inconsistency between the rowset versions of the old and new CooldownReplica. FollowerReplicas synchronize the CooldownMeta of the new CooldownReplica, and the rowsets with version mismatches in the old CooldownReplica become garbage data.
-3. After a remote storage compaction, the rowsets before merging cannot be immediately deleted because they may still be used by other replicas. Eventually, once all FollowerReplicas use the latest merged rowset, the pre-merge rowsets become garbage data.
+-   The Cache is managed through LRU and does not support TTL.
 
-Additionally, garbage data on objects will not be cleaned up immediately. The BE parameter `remove_unused_remote_files_interval_sec` sets the time interval for remote storage garbage collection, with a default value of 21600 seconds (6 hours).
+For specific configurations, please refer to (../../lakehouse/filecache).
 
-## Common Issues
+## FAQ
 
-1. `ERROR 1105 (HY000): errCode = 2, detailMessage = Failed to create repository: connect to s3 failed: Unable to marshall request to JSON: host must not be null.`
+1.  `ERROR 1105 (HY000): errCode = 2, detailMessage = Failed to create repository: connect to s3 failed: Unable to marshall request to JSON: host must not be null.`
 
-   The S3 SDK uses the virtual-hosted style access method by default. However, some object storage systems (such as MinIO) may not have virtual-hosted style access enabled or supported. In this case, you can add the `use_path_style` parameter to force path-style access:
+The S3 SDK defaults to using the virtual-hosted style method. However, some object storage systems (such as MinIO) may not have virtual-hosted style access enabled or supported. In this case, we can add the `use_path_style` parameter to force the use of the path style method:
 
-   ```sql
-   CREATE RESOURCE "remote_s3"
-   PROPERTIES
-   (
-       "type" = "s3",
-       "s3.endpoint" = "bj.s3.com",
-       "s3.region" = "bj",
-       "s3.bucket" = "test-bucket",
-       "s3.root.path" = "path/to/root",
-       "s3.access_key" = "bbb",
-       "s3.secret_key" = "aaaa",
-       "s3.connection.maximum" = "50",
-       "s3.connection.request.timeout" = "3000",
-       "s3.connection.timeout" = "1000",
-       "use_path_style" = "true"
-   );
-   ```
+```sql
+CREATE RESOURCE "remote_s3"
+PROPERTIES
+(
+    "type" = "s3",
+    "s3.endpoint" = "bj.s3.com",
+    "s3.region" = "bj",
+    "s3.bucket" = "test-bucket",
+    "s3.root.path" = "path/to/root",
+    "s3.access_key" = "bbb",
+    "s3.secret_key" = "aaaa",
+    "s3.connection.maximum" = "50",
+    "s3.connection.request.timeout" = "3000",
+    "s3.connection.timeout" = "1000",
+    "use_path_style" = "true"
+);
+```

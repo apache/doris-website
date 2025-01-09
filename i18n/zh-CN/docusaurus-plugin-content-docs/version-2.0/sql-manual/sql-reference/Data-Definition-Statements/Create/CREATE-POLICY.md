@@ -36,7 +36,7 @@ CREATE POLICY
 
 
 
-### Description
+## 描述
 
 创建策略，包含以下几种：
 
@@ -71,7 +71,7 @@ PROPERTIES ("key"="value", ...);
         1h：1 小时
         50000: 50000 秒
 
-### Example
+## 举例
 
 1. 创建一组行安全策略
 

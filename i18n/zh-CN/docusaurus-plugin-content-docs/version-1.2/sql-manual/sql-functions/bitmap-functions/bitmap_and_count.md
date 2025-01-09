@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## bitmap_and_count
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BigIntVal bitmap_and_count(BITMAP lhs, BITMAP rhs, ...)`
 
 计算两个及以上输入bitmap的交集，返回交集的个数.
 
-### example
+## 举例
 
 ```
 MySQL> select bitmap_and_count(bitmap_from_string('1,2,3'),bitmap_empty());

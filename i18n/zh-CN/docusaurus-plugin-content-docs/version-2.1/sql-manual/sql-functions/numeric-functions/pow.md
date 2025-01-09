@@ -24,7 +24,7 @@ under the License.
 
 ## pow
 
-### description
+## 描述
 
 返回第一个参数的值，该值是第二个参数的幂。
 
@@ -32,12 +32,12 @@ under the License.
 该函数的其他别名为 `power`、`fpow`、`dpow`
 :::
 
-#### Syntax
+## 语法
 
 `DOUBLE pow(DOUBLE a, DOUBLE b)`
 返回`a`的`b`次方.
 
-### example
+## 举例
 
 ```
 mysql> select pow(2,0);

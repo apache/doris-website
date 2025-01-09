@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## TOPN
-### description
-#### Syntax
+## 描述
+## 语法
 
 `topn(expr, INT top_num[, INT space_expand_rate])`
 
@@ -38,7 +38,7 @@ counter numbers = top_num * space_expand_rate
 ```
 space_expand_rate的值越大，结果越准确，默认值为50
 
-### example
+## 举例
 ```
 MySQL [test]> select topn(keyword,10) from keyword_table where date>= '2020-06-01' and date <= '2020-06-19' ;
 +------------------------------------------------------------------------------------------------------------+

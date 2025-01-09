@@ -1,6 +1,6 @@
 ---
 {
-"title": "Use mysqldump data to export table structure or data",
+"title": "Using MySQL Dump",
 "language": "en"
 }
 ---

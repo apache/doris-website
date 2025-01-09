@@ -3,6 +3,7 @@
     "title": "Quick Start",
     "language": "en"
 }
+
 ---
 
 <!-- 
@@ -24,241 +25,257 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Quick Start
+:::caution Warning:
 
-This guide is about how to download the latest stable version of Apache Doris, install it on a single node, and get it running, including steps for creating a database, data tables, importing data, and performing queries.
+Quick deployment **is only suitable for local development**. Do not use this deployment method in production environments:
 
-## Environment requirements
+1. When deploying quickly using Docker, data will be released when the Docker instance is destroyed.
 
-- A mainstream Linux x86-64 environment. CentOS 7.1 or Ubuntu 16.04 or later versions are recommended. See the "Install and Deploy" section of the doc for guides on more environments.
-- Install Java 8 runtime environment. (If you are not an Oracle JDK commercial license user, we suggest using the free Oracle JDK 8u202. [Download now](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox).)
-- It is recommended to create a new user for Apache Doris on Linux (avoid using the root user to prevent accidental operations on the operating system).
+2. Deploying a single-instance Doris manually does not have data replication capability, and a single machine failure may result in data loss.
 
-## Download binary package
-
-Download the Apache Doris installation package from doris.apache.org and proceed with the following steps.
-
-```shell
-# Download the binary installation package of Apache Doris
-server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gz
-
-# Extract the installation package
-server1:~ doris$ tar zxf apache-doris-2.0.3-bin-x64.tar.gz
-
-# Rename the directory to apache-doris for simplicity
-server1:~ doris$ mv apache-doris-2.0.3-bin-x64 apache-doris
-```
-
-## Install Apache Doris
-
-### Configure FE
-
-Go to the `apache-doris/fe/conf/fe.conf` file for FE configuration. Below are some key configurations to pay attention to. Add JAVA_HOME manually and point it to your JDK8 runtime environment. For other configurations, you can go with the default values for a quick single-machine experience.
-
-```Shell
-# Add JAVA_HOME and point it to your JDK8 runtime environment. Suppose your JDK8 is at /home/doris/jdk8, set it as follows:
-JAVA_HOME=/home/doris/jdk8
-
-# The CIDR network segment of FE listening IP is empty by default. When started, Apache Doris will automatically select an available network segment. If you need to specify a segment, you can set priority_networks=192.168.0.0/24, for example.
-# priority_networks =
-
-# By default, FE metadata is stored in the doris-meta directory under DORIS_HOME. It is created already. You can change it to your specified path.
-# meta_dir = ${DORIS_HOME}/doris-meta
-```
-
-### Start FE
-
-Run the following command under apache-doris/fe to start FE.
-
-```shell
-# Start FE in the background to ensure that the process continues running even after exiting the terminal.
-server1:apache-doris/fe doris$ ./bin/start_fe.sh --daemon
-```
-
-### Configure BE
-
-Go to the `apache-doris/be/conf/be.conf` file for BE configuration. Below are some key configurations to pay attention to. Add JAVA_HOME manually and point it to your JDK8 runtime environment. For other configurations, you can go with the default values for a quick single-machine experience.
-
-```Shell
-# Add JAVA_HOME and point it to your JDK8 runtime environment. Suppose your JDK8 is at /home/doris/jdk8, set it as follows:
-JAVA_HOME=/home/doris/jdk8
-
-# The CIDR network segment of BE listening IP is empty by default. When started, Doris will automatically select an available network segment. If you need to specify a segment, you can set priority_networks=192.168.0.0/24, for example.
-# priority_networks =
-
-# By default, BE data is stored in the storage directory under DORIS_HOME. It is created already. You can change it to your specified path.
-# storage_root_path = ${DORIS_HOME}/storage
-```
-
-### Start BE
-
-Run the following command under apache-doris/be to start BE.
-
-```shell
-# Start BE in the background to ensure that the process continues running even after exiting the terminal.
-server1:apache-doris/be doris$ ./bin/start_be.sh --daemon
-```
-
-### Connect to Doris FE
-
-Download the [portable MySQL client](https://dev.mysql.com/downloads/mysql/) to connect to Doris FE.
-
-Unpack the client, find the `mysql` command-line tool in the `bin/` directory. Then execute the following command to connect to Apache Doris.
-
-```shell
-mysql -uroot -P9030 -h127.0.0.1
-```
-
-Note:
-
-- The root user here is the built-in super admin user of Apache Doris. See [Authentication and Authorization](../admin-manual/auth/authentication-and-authorization.md) for more information.
-- -P: This specifies the query port that is connected to. The default port is 9030. It corresponds to the `query_port`setting in fe.conf.
-- -h: This specifies the IP address of the FE that is connected to. If your client and FE are installed on the same node, you can use 127.0.0.1.
-
-### Add BE nodes to cluster
-
-An example SQL to execute in the MySQL client to add BE nodes to the cluster:
-
-```SQL
- ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
-```
-
-Note:
-
-1. be_host_ip: the IP address of the BE node to be added
-2. heartbeat_service_port: the heartbeat reporting port of the BE node to be added, which can be found in `be.conf`under `heartbeat_service_port`, set as `9050` by default
-3. You can use the "show backends" statement to view the newly added BE nodes.
-
-### Modify passwords for root and admin
-
-Example SQLs to execute in the MySQL client to set new passwords for root and admin users:
-
-```SQL
-mysql> SET PASSWORD FOR 'root' = PASSWORD('doris-root-password');                                                                                                                                                                                   
-Query OK, 0 rows affected (0.01 sec)                                                                                                                                                                                                       
-                                                                                                                                                                                                                                           
-mysql> SET PASSWORD FOR 'admin' = PASSWORD('doris-admin-password');                                                                                                                                                                                 
-Query OK, 0 rows affected (0.00 sec)        
-```
-
-:::tip
-Difference between root and admin users
-
-The root and admin users are two default accounts that are automatically created after Doris installation. The root user has superuser privileges for the entire cluster and can perform various management operations, such as adding or removing nodes. The admin user does not have administrative privileges but is a superuser within the cluster, possessing all permissions except those related to cluster management. It is recommended to use the root privileges only when necessary for cluster administration and maintenance.
+3. The tables created in this example are single-instance. In production, please use multi-replica storage for data.
 :::
 
-## Create database and table
+## Use Docker for Quick Deployment
 
-### Connect to Apache Doris
+### Step 1: Create the docker-compose.yaml File
 
-Use admin account to connect to Apache Doris FE.
+Copy the following content into the docker-compose.yaml file, and replace the `DORIS_QUICK_START_VERSION` parameter with the specified version, such as `2.1.7`.
 
-```shell
-mysql -uadmin -P9030 -h127.0.0.1
+```text
+version: "3"
+services:
+  fe:
+    image: apache/doris.fe-ubuntu:${DORIS_QUICK_START_VERSION}
+    hostname: fe
+    environment:
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - FE_ID=1
+    network_mode: host
+  be:
+    image: apache/doris.be-ubuntu:${DORIS_QUICK_START_VERSION}
+    hostname: be
+    environment:
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - BE_ADDR=127.0.0.1:9050
+    depends_on:
+      - fe
+    network_mode: host
 ```
 
-:::tip
-If the MySQL client connecting to 127.0.0.1 is on the same machine as FE, no password will be required.
+### Step 2：Start Cluster
+
+Start the cluster using the docker-compose command.
+
+```shell
+docker-compose -f ./docker-compose.yaml up -d
+```
+
+### Step 3: Connect to the cluster using MySQL client and check the cluster status
+
+```sql
+## Check the FE status to ensure that both the Join and Alive columns are true.
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
++-----------+------+-------+
+| host      | join | alive |
++-----------+------+-------+
+| 127.0.0.1 | true | true  |
++-----------+------+-------+
+
+## Check the BE status to ensure that the Alive column is true.
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
++-----------+-------+
+| host      | alive |
++-----------+-------+
+| 127.0.0.1 |     1 |
++-----------+-------+
+
+```
+
+
+
+## Local Quick Deployment
+
+:::info Environment Recommendations:
+
+* Choose a mainstream Linux environment on AMD/ARM, preferably CentOS 7.1 or Ubuntu 16.04 and above. For more supported environments, refer to the installation and deployment section.
+
+* Java 8 runtime environment (for non-Oracle JDK commercial license users, it is recommended to use the free Oracle JDK 8u300 or later versions, [Download Now](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox)).
+
+* It is recommended to create a new Doris user on Linux. Avoid using the root user to prevent accidental system operation errors.
+
 :::
 
-### Create database and table
+### Step 1: Download the Binary Package
 
-```SQL
-create database demo;
+Download the corresponding binary installation package from the Apache Doris website [here](https://doris.apache.org/en-us/download), and extract it.
 
-use demo; 
-create table mytable
-(
-    k1 TINYINT,
-    k2 DECIMAL(10, 2) DEFAULT "10.05",    
-    k3 CHAR(10) COMMENT "string column",    
-    k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
-) 
-COMMENT "my first table"
-DISTRIBUTED BY HASH(k1) BUCKETS 1
-PROPERTIES ('replication_num' = '1');
-```
+### Step 2: Modify the Environment Variables
 
-### Ingest data
+1. Modify the system's maximum open file descriptor limit
 
-Save the following example data to the local "data.csv" file:
+   Use the following command to adjust the maximum file descriptor limit. After making this change, you need to restart the session to apply the configuration:
 
-```Plaintext
-1,0.14,a1,20
-2,1.04,b2,21
-3,3.14,c3,22
-4,4.35,d4,23
-```
 
-Load the data from "data.csv" into the newly created table using the Stream Load method.
 
-```shell
-curl  --location-trusted -u admin:admin_password -T data.csv -H "column_separator:," http://127.0.0.1:8030/api/demo/mytable/_stream_load
-```
+   ```sql
+   vi /etc/security/limits.conf 
+   * soft nofile 1000000
+   * hard nofile 1000000
+   ```
 
-- -T data.csv: data file name
-- -u admin:admin_password: admin account and password
-- 127.0.0.1:8030: IP and http_port of FE
+2. Modify Virtual Memory Area
 
-Once it is executed successfully, a message like the following will be returned: 
+   Use the following command to permanently modify the virtual memory area to at least 2000000, and apply the change immediately:
 
-```shell
-{                                                     
-    "TxnId": 30,                                  
-    "Label": "a56d2861-303a-4b50-9907-238fea904363",        
-    "Comment": "",                                       
-    "TwoPhaseCommit": "false",                           
-    "Status": "Success",                                 
-    "Message": "OK",                                    
-    "NumberTotalRows": 4,                                
-    "NumberLoadedRows": 4,                               
-    "NumberFilteredRows": 0,                             
-    "NumberUnselectedRows": 0,                          
-    "LoadBytes": 52,                                     
-    "LoadTimeMs": 206,                                    
-    "BeginTxnTimeMs": 13,                                
-    "StreamLoadPutTimeMs": 141,                           
-    "ReadDataTimeMs": 0,                                 
-    "WriteDataTimeMs": 7,                                
-    "CommitAndPublishTimeMs": 42                         
-} 
-```
+   ```bash
+   cat >> /etc/sysctl.conf << EOF
+   vm.max_map_count = 2000000
+   EOF
 
-- `NumberLoadedRows`: the number of rows that have been loaded
-- `NumberTotalRows`: the total number of rows to be loaded
-- `Status`: "Success" means data has been loaded successfully.
+   Take effect immediately
+   sysctl -p
+   ```
 
-### Query data
+### Step 3: Install FE
 
-Execute the following SQL in the MySQL client to query the loaded data:
+1. Configure FE
 
-```SQL
-mysql> select * from mytable;                                                                                                                                                                                                              
-+------+------+------+------+                                                                                                                                                                                                              
-| k1   | k2   | k3   | k4   |                                                                                                                                                                                                              
-+------+------+------+------+                                                                                                                                                                                                              
-|    1 | 0.14 | a1   |   20 |                                                                                                                                                                                                              
-|    2 | 1.04 | b2   |   21 |                                                                                                                                                                                                              
-|    3 | 3.14 | c3   |   22 |                                                                                                                                                                                                              
-|    4 | 4.35 | d4   |   23 |                                                                                                                                                                                                              
-+------+------+------+------+                                                                                                                                                                                                              
-4 rows in set (0.01 sec)       
-```
+   Modify the following contents in the FE configuration file `apache-doris/fe/conf/fe.conf`:
 
-## Stop Apache Doris
+   ```sql
+   ## Specify Java environment
+   JAVA_HOME=/home/doris/jdk
 
-### Stop FE
+   ## Specify the CIDR block for FE listening IP
+   priority_networks=127.0.0.1/32
+   ```
 
-Execute the following command under apache-doris/fe to stop FE.
+2. Start FE
 
-```shell
-server1:apache-doris/fe doris$ ./bin/stop_fe.sh
-```
+   Run the FE process by executing the start_fe.sh script:
 
-### Stop BE
+   ```sql
+   apache-doris/fe/bin/start_fe.sh --daemon
+   ```
 
-Execute the following command under apache-doris/be to stop BE.
+3. Check FE Status
 
-```shell
-server1:apache-doris/be doris$ ./bin/stop_be.sh
-```
+   Connect to the cluster using MySQL client and check the cluster status:
+
+   ```sql
+   ## Check FE Status to ensure that both the Join and Alive columns are true
+   mysql -uroot -P9030 -h127.0.0.1 -e "show frontends;"
+   +-----------------------------------------+-----------+-------------+----------+-----------+---------+----------+----------+-----------+------+-------+-------------------+---------------------+----------+--------+-------------------------+------------------+
+   | Name                                    | Host      | EditLogPort | HttpPort | QueryPort | RpcPort | Role     | IsMaster | ClusterId | Join | Alive | ReplayedJournalId | LastHeartbeat       | IsHelper | ErrMsg | Version                 | CurrentConnected |
+   +-----------------------------------------+-----------+-------------+----------+-----------+---------+----------+----------+-----------+------+-------+-------------------+---------------------+----------+--------+-------------------------+------------------+
+   | fe_9d0169c5_b01f_478c_96ab_7c4e8602ec57 | 127.0.0.1 | 9010        | 8030     | 9030      | 9020    | FOLLOWER | true     | 656872880 | true | true  | 276               | 2024-07-28 18:07:39 | true     |        | doris-2.0.12-2971efd194 | Yes              |
+   +-----------------------------------------+-----------+-------------+----------+-----------+---------+----------+----------+-----------+------+-------+-------------------+---------------------+----------+--------+-------------------------+------------------+
+   ```
+
+### Step 4: Install BE
+
+1. Configure BE
+
+   Modify the following contents in the BE configuration file `apache-doris/be/conf/be.conf`:
+
+   ```sql
+   ## Specify Java environment
+   JAVA_HOME=/home/doris/jdk
+
+   ## Specify the CIDR block for BE's listening IP
+   priority_networks=127.0.0.1/32
+   ```
+
+2. Start BE
+
+   Start the BE process with the following command:
+
+   ```sql
+   apache-doris/fe/bin/start_be.sh --daemon
+   ```
+
+3. Register BE Node in the Cluster
+
+   Connect to the cluster using MySQL client:
+
+   ```sql
+   mysql -uroot -P9030 -h127.0.0.1
+   ```
+
+   Use the ADD BACKEND command to register the BE node:
+
+   ```sql
+   ALTER SYSTEM ADD BACKEND "127.0.0.1:9050";
+   ```
+
+4. Check BE Status
+
+   Connect to the cluster using MySQL client and check the cluster status:
+
+   ```sql
+   ## Check BE Status to ensure that the Alive column is true
+   mysql -uroot -P9030 -h127.0.0.1 -e "show backends;"
+   +-----------+-----------+---------------+--------+----------+----------+---------------------+---------------------+-------+----------------------+-----------+------------------+--------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-------------------------+-------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+
+   | BackendId | Host      | HeartbeatPort | BePort | HttpPort | BrpcPort | LastStartTime       | LastHeartbeat       | Alive | SystemDecommissioned | TabletNum | DataUsedCapacity | TrashUsedCapcacity | AvailCapacity | TotalCapacity | UsedPct | MaxDiskUsedPct | RemoteUsedCapacity | Tag                      | ErrMsg | Version                 | Status                                                                                                                        | HeartbeatFailureCounter | NodeRole |
+   +-----------+-----------+---------------+--------+----------+----------+---------------------+---------------------+-------+----------------------+-----------+------------------+--------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-------------------------+-------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+
+   | 10156     | 127.0.0.1 | 9050          | 9060   | 8040     | 8060     | 2024-07-28 17:59:14 | 2024-07-28 18:08:24 | true  | false                | 14        | 0.000            | 0.000              | 8.342 GB      | 19.560 GB     | 57.35 % | 57.35 %        | 0.000              | {"location" : "default"} |        | doris-2.0.12-2971efd194 | {"lastSuccessReportTabletsTime":"2024-07-28 18:08:14","lastStreamLoadTime":-1,"isQueryDisabled":false,"isLoadDisabled":false} | 0                       | mix      |
+   +-----------+-----------+---------------+--------+----------+----------+---------------------+---------------------+-------+----------------------+-----------+------------------+--------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-------------------------+-------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+
+   ```
+
+## Run Queries
+
+1. Connect to the cluster using MySQL client:
+
+   ```sql
+   mysql -uroot -P9030 -h127.0.0.1
+   ```
+
+2. Create database and test table:
+
+   ```sql
+   create database demo;
+
+   use demo; 
+   create table mytable
+   (
+       k1 TINYINT,
+       k2 DECIMAL(10, 2) DEFAULT "10.05",    
+       k3 CHAR(10) COMMENT "string column",    
+       k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
+   ) 
+   COMMENT "my first table"
+   DISTRIBUTED BY HASH(k1) BUCKETS 1;
+   ```
+
+3. Import test data:
+
+   Insert test data using the Insert Into statement
+
+   ```sql
+   insert into mytable values
+   (1,0.14,'a1',20),
+   (2,1.04,'b2',21),
+   (3,3.14,'c3',22),
+   (4,4.35,'d4',23);
+   ```
+
+4. Execute the following SQL query in the MySQL client to view the imported data:
+
+   ```sql
+   MySQL [demo]> select * from demo.mytable;
+   +------+------+------+------+
+   | k1   | k2   | k3   | k4   |
+   +------+------+------+------+
+   |    1 | 0.14 | a1   |   20 |
+   |    2 | 1.04 | b2   |   21 |
+   |    3 | 3.14 | c3   |   22 |
+   |    4 | 4.35 | d4   |   23 |
+   +------+------+------+------+
+   4 rows in set (0.10 sec)
+   ```
+
+
+
+
+

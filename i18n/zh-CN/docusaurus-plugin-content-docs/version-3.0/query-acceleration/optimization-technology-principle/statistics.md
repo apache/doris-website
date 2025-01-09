@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-从 2.0 版本开始，Doris 在优化器中加入了 CBO 的能力。统计信息是 CBO 的基石，其准确性直接决定了代价估算的准确性，对于选择最优 Plan 至关重要。本文是 Doris 2.1 版本的统计信息使用指南，主要介绍统计信息的收集和管理方法、相关配置项以及常见问题。
+从 2.0 版本开始，Doris 在优化器中加入了 CBO 的能力。统计信息是 CBO 的基石，其准确性直接决定了代价估算的准确性，对于选择最优 Plan 至关重要。本文是 Doris 3.0 版本的统计信息使用指南，主要介绍统计信息的收集和管理方法、相关配置项以及常见问题。
 
 ## 统计信息的收集
 
-从当前版本开始，Doris 收集统计信息的对象是列。它会在表级别收集每一列的统计信息，收集的内容包括：
+Doris 3.0 版本默认会开启内表的自动抽样收集，因此绝大多数情况下用户不用关注统计信息的收集。Doris 收集统计信息的对象是列，它会在表级别收集每一列的统计信息，收集的内容包括：
 
 | 信息          | 描述               |
 | ------------- | ------------------ |
@@ -105,10 +105,10 @@ SET GLOBAL ENABLE_AUTO_ANALYZE = FALSE; // 关闭自动收集
 
 在启用状态下，后台线程会定期扫描集群中 `InternalCatalog` 下的所有库表。对于需要收集统计信息的表，系统会自动创建并执行收集作业，无需用户手动干预。
 
-需要注意的是，为避免自动收集对大宽表造成过多资源占用，默认不收集宽度超过 100 列的表。用户可以通过修改 Session 变量 `auto_analyze_table_width_threshold` 的值来调整这一宽度上限，例如将其设置为 120：
+需要注意的是，为避免自动收集大宽表造成过多资源占用，默认不收集宽度超过 300 列的表。用户可以通过修改 Session 变量 `auto_analyze_table_width_threshold` 的值来调整这一宽度上限，例如将其设置为 350：
 
 ```sql
-SET GLOBAL auto_analyze_table_width_threshold = 120;
+SET GLOBAL auto_analyze_table_width_threshold = 350;
 ```
 
 自动收集的默认轮询间隔为 5 分钟（此间隔可通过 `fe.conf` 中的 `auto_check_statistics_in_minutes` 配置项进行调整）。默认情况下，集群启动 5 分钟后开始第一轮遍历。当所有需要收集的表完成收集后，后台线程会休眠 5 分钟，然后开启第二轮遍历，以此类推。因此不能保证一张表在 5 分钟内一定能收集到统计信息，因为遍历一轮库表的时间是不确定的。在表较多且数据量较大的情况下，遍历一轮的时间可能会较长。
@@ -117,7 +117,7 @@ SET GLOBAL auto_analyze_table_width_threshold = 120;
 
 1. 表中存在无统计信息的列；
 
-2. 表的健康度低于阈值（默认为 60，可通过 `table_stats_health_threshold` 变量进行调整）。健康度表示从上次收集统计信息到当前时刻，表中数据保持不变的比例：100 表示完全没有变化；0 表示全部改变；当健康度低于 60 时，表示当前的统计信息已有较大偏差，需要重新收集。通过健康度评估，可以降低不必要的重复收集，从而节省系统资源。
+2. 表的健康度低于阈值（默认为 90，可通过 `table_stats_health_threshold` 变量进行调整）。健康度表示从上次收集统计信息到当前时刻，表中数据保持不变的比例：100 表示完全没有变化；0 表示全部改变；当健康度低于 90 时，表示当前的统计信息已有较大偏差，需要重新收集。通过健康度评估，可以降低不必要的重复收集，从而节省系统资源。
 
 为了降低后台作业的开销并提高收集速度，自动收集采用采样收集方式，默认采样 4194304`（2^22）`行。如果用户希望采样更多行以获得更准确的数据分布信息，可通过调整参数 `huge_table_default_sample_rows` 来增加采样行数。
 
@@ -155,31 +155,35 @@ ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='false'); /
 
 - 如果没有找到 `numRows`，但找到了 `totalSize` 信息，则根据表的 Schema 和 `totalSize` 来估算表的行数。
 
-- 如果 `totalSize` 也没有，则默认情况下无法获取行数。用户可以通过设置以下变量（默认为 false）来启用这一功能：
+- 如果 `totalSize` 也没有，默认情况下，系统会根据 Hive 表对应的文件大小和 Schema 来估算行数。如果担心获取文件大小占用过多资源，可以通过设置以下变量来关闭这一功能：
 
   ```sql
-  SET GLOBAL enable_get_row_count_from_file_list = TRUE
+  SET GLOBAL enable_get_row_count_from_file_list = FALSE
   ```
-
-  在 2.1.5 版本之后，该参数的默认值变为 true。但是从旧版本升级后，其值不会自动更改，如果需要，可以手动修改。启用后，系统会根据 Hive 表对应的文件大小和 Schema 来估算行数。由于获取所有文件大小是一个较重的操作，为了避免过度占用系统资源，这个开关默认是关闭的。
 
 **2. 对于 Iceberg 表**
 
 系统会调用 Iceberg 的 snapshot API 来获取 `total-records` 和 `total-position-deletes` 信息，以计算表的行数。
 
-**3. 对于其他外表**
+**3. 对于 Paimon 表**
+
+系统会调用 Paimon 的 scan API 来获取每个 Split 包含的行数，并对 Split 行数求和来计算表的行数。
+
+**4. 对于 JDBC 表**
+
+系统会调用 JDBC 后端对应数据库的行数获取语句来获取表的行数。只有在后端数据库收集了表的行数信息的情况下，才可以获取到。 当前支持获取 MySQL, Oracle, Postgresql 和 SQLServer表的行数。
+
+**5. 对于其他外表**
 
 系统目前不支持行数的自动获取和估算。
 
-用户可以通过以下命令来查看外表估算的行数（见 2.4 查看表信息概况）：
+用户可以通过以下命令来查看外表估算的行数（见`查看表信息概况`章节）：
 
 ```sql
 SHOW table stats table_name;
 ```
 
-- 如果 `row_count` 显示为 -1，则表示未能获取到行数信息。
-
-- 如果 `row_count` 显示为 0，但表不为空，用户可以多次执行上述命令以获取最终结果。因为这个操作是从缓存中获取数值，如果缓存为空，则需要异步执行 Hive 和 Iceberg 表的估算逻辑。在估算完成之前，`row_count` 会显示为 0。
+- 如果 `row_count` 显示为 -1，则表示未能获取到行数信息或者表为空。
 
 ## 统计信息作业管理
 
@@ -392,9 +396,9 @@ DROP STATS table_name
 | auto_analyze_end_time               | 自动统计信息收集的结束时间                                   | 23:59:59                     |
 | enable_auto_analyze                 | 是否开启自动收集功能                                         | TRUE                         |
 | huge_table_default_sample_rows      | 对大表进行采样时的行数                                       | 4194304                      |
-| table_stats_health_threshold        | 取值范围 0-100，表示自上次统计信息收集后，数据更新达到 (100 - table_stats_health_threshold)%时，认为统计信息已过时 | 60                           |
-| auto_analyze_table_width_threshold  | 控制自动统计信息收集处理的最大表宽度，超过此列数的表不参与自动统计信息收集 | 100                          |
-| enable_get_row_count_from_file_list | Hive 表是否通过文件大小来估算行数                             | FALSE（2.1.5 之后默认为 TRUE） |
+| table_stats_health_threshold        | 取值范围 0-100，表示自上次统计信息收集后，数据更新达到 (100 - table_stats_health_threshold)%时，认为统计信息已过时 | 90                           |
+| auto_analyze_table_width_threshold  | 控制自动统计信息收集处理的最大表宽度，超过此列数的表不参与自动统计信息收集 | 300                          |
+| enable_get_row_count_from_file_list | Hive 表是否通过文件大小来估算行数                             | TRUE（2.1.5 之前默认为 FALSE） |
 
 ### FE 配置项
 
@@ -463,7 +467,7 @@ Set global enable_auto_analyze = true
 
 ```sql
 Show variables like "auto_analyze_table_width_threshold"  // 如果 Value 小于表的宽度，可以修改：
-Set global auto_analyze_table_width_threshold=200
+Set global auto_analyze_table_width_threshold=350
 ```
 
 如果列数没有超过阈值，可以执行`show auto analyze`，检查是否有其他收集任务正在执行（处于 running 状态）。由于自动收集是单线程串行执行，会轮询所有库表，因此执行周期可能较长。
@@ -496,7 +500,7 @@ ADMIN DIAGNOSE TABLET tablet_id
 
 自动收集的时间间隔具有不确定性，它与系统中表的数量及表的大小均有关联。若情况紧急，建议对表进行手动 `analyze` 操作。
 
-若在导入大量数据后仍未触发自动收集，可能需要调整 `table_stats_health_threshold` 参数。其默认值为 60，意味着表的数据变化量需超过 40%（即 100 - 60）才会触发自动收集。可适当提高此值，例如设为 80，这样当表中数据变化量超过 20% 时，便会重新收集统计信息。
+若在导入大量数据后仍未触发自动收集，可能需要调整 `table_stats_health_threshold` 参数。其默认值为 90，意味着表的数据变化量需超过 10%（即 100 - 90）才会触发自动收集。可适当提高此值，例如设为 95，这样当表中数据变化量超过 5% 时，便会重新收集统计信息。
 
 ### Q6：自动收集时资源占用太多，该如何解决？
 

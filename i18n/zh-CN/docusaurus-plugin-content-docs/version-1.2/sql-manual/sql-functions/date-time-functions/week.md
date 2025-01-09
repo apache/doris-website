@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## week
-### description
-#### Syntax
+## 描述
+## 语法
 `INT WEEK(DATE date[, INT mode])`
 
 返回指定日期的星期数。mode的值默认为0。
@@ -45,7 +45,7 @@ under the License.
 
 参数为Date或者Datetime类型
 
-### example
+## 举例
 ```
 mysql> select week('2020-1-1');
 +------------------+

@@ -28,18 +28,18 @@ under the License.
 
 COUNT_BY_ENUM
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `count_by_enum(expr1, expr2, ... , exprN);`
 
 将列中数据看作枚举值，统计每个枚举值的个数。返回各个列枚举值的个数，以及非 null 值的个数与 null 值的个数。
 
-#### Arguments
+## 参数
 
 `expr1` — 至少填写一个输入。值为字符串（STRING）类型的列。
 
-##### Returned value
+## 返回值
 
 返回一个 JSONArray 字符串。
 
@@ -80,7 +80,7 @@ COUNT_BY_ENUM
 * null：null 值个数
 * all：总数，包括 null 值与非 null 值
 
-### example
+## 举例
 
 ```sql
 DROP TABLE IF EXISTS count_by_enum_test;

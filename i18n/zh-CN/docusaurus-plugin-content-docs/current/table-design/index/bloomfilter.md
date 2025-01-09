@@ -70,7 +70,7 @@ BloomFilter 的使用有下面一些限制：
 
 :::
 
-## 使用语法
+## 管理索引
 
 ### 建表时创建 BloomFilter 索引
 
@@ -102,11 +102,17 @@ ALTER TABLE table_name SET ("bloom_filter_columns" = "column_name1,column_name2,
 ALTER TABLE table_name SET ("bloom_filter_columns" = "column_name2,column_name3");
 ```
 
+## 使用索引
+
+BloomFilter 索引用于加速 WHERE 条件中的等值查询，能加速时自动生效，没有特殊语法。
+
+可以通过 Query Profile 中的下面几个指标分析 BloomFilter 索引的加速效果。
+- RowsBloomFilterFiltered BloomFilter 索引过滤掉的行数，可以与其他几个 Rows 值对比分析索引过滤效果
+- BlockConditionsFilteredBloomFilterTime BloomFilter 倒排索引消耗的时间
+
 ## 使用示例
 
 下面通过实例来看看 Doris 怎么创建 BloomFilter 索引。
-
-### 创建 BloomFilter 索引
 
 Doris BloomFilter 索引的创建是通过在建表语句的 PROPERTIES 里加上 "bloom_filter_columns"="k1,k2,k3", 这个属性，k1,k2,k3 是要创建的 BloomFilter 索引的 Key 列名称，例如下面对表里的 saler_id,category_id 创建了 BloomFilter 索引。
 

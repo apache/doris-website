@@ -26,8 +26,8 @@ under the License.
 
 ## json_replace
 
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR json_replace(VARCHAR json_str, VARCHAR path, VARCHAR val[, VARCHAR path, VARCHAR val] ...)`
 
@@ -39,7 +39,7 @@ under the License.
 如果 JSON 中已存在某个路径，则路径值对会将现有 JSON 值覆盖为新值。
 否则，对于 JSON 中不存在的某个路径的路径值对将被忽略且不会产生任何影响。
 
-### example
+## 举例
 
 ```
 MySQL> select json_replace(null, null, null);

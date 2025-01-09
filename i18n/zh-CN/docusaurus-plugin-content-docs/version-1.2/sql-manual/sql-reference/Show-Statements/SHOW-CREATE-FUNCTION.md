@@ -30,7 +30,7 @@ under the License.
 
 SHOW CREATE FUNCTION
 
-### Description
+## 描述
 
 该语句用于展示用户自定义函数的创建语句
 
@@ -48,7 +48,7 @@ SHOW CREATE [GLOBAL] FUNCTION function_name(arg_type [, ...]) [FROM db_name]];
 
 **注意: "global"关键字在v2.0版本及以后才可用**
 
-### Example
+## 举例
 
 1. 展示默认db下指定函数的创建语句
    

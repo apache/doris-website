@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION MAX
-### description
+## 描述
 
 LEAD() 方法用来计算窗口内的最大值。
 
@@ -20,7 +20,7 @@ LEAD() 方法用来计算窗口内的最大值。
 MAX([DISTINCT | ALL] expression) [OVER (analytic_clause)]
 ```
 
-### example
+## 举例
 
 计算从第一行到当前行之后一行的最大值
 

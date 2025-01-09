@@ -38,7 +38,7 @@ For example, a table has the following data columns and requires the retention o
 | op_id      | BIGINT        | No      | Operator ID    |
 | op_time    | DATETIME      | No      | Operation time |
 
-## **Duplicate Model with Sort Columns **
+## Duplicate Model with Sort Columns 
 
 In the table creation statement, the `Duplicate Key` can be designated to indicate that data storage should be sorted according to these key columns. When choosing the `Duplicate Key`, it is recommended to select the first 2-4 columns.
 
@@ -73,7 +73,7 @@ MySQL> desc example_tbl_duplicate;
 +------------+---------------+------+-------+---------+-------+
 ```
 
-## **Default Duplicate Model**
+## Default Duplicate Model
 
 When no data model (Unique, Aggregate, or Duplicate) is specified during table creation, a Duplicate model table is created by default, and the sort columns are automatically selected according to certain rules. For example, in the following table creation statement, if no data model is specified, a Duplicate model table will be established, and the system will automatically select the first three columns as the sort columns.
 

@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## minutes_sub
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME MINUTES_SUB(DATETIME date, INT minutes)`
 
@@ -34,7 +34,7 @@ under the License.
 
 参数 date 可以是 DATETIME 或者 DATE 类型，返回类型为 DATETIME。
 
-### example
+## 举例
 
 ```
 mysql> select minutes_sub("2020-02-02 02:02:02", 1);

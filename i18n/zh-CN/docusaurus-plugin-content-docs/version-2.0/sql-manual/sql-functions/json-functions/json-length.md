@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## json_length
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT json_length(JSON json_str)`
 
@@ -38,7 +38,7 @@ under the License.
 * 数组的长度是数组元素的数量。例如: '[1, 2]' 的长度为2。
 * 对象的长度是对象成员的数量。例如: '{"x": 1}' 的长度为1
 
-### example
+## 举例
 
 ```
 mysql> SELECT json_length('{"k1":"v31","k2":300}');

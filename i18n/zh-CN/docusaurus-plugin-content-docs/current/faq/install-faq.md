@@ -267,7 +267,7 @@ http {
 
 2. 集群内多数 Follower FE 节点未启动。比如有 3 个 Follower，只启动了一个。此时需要将另外至少一个 FE 也启动，FE 可选举组方能选举出 Master 已提供服务。
 
-如果以上情况都不能解决，可以按照 Doris 官网文档中的[元数据运维文档](../admin-manual/maint-monitor/metadata-operation.md)进行恢复。
+如果以上情况都不能解决，可以按照 Doris 官网文档中的[元数据运维文档](../admin-manual/trouble-shooting/metadata-operation.md)进行恢复。
 
 ### Q10. Lost connection to MySQL server at 'reading initial communication packet', system error: 0
 
@@ -277,11 +277,11 @@ http {
 
 有时重启 FE，会出现如上错误（通常只会出现在多 Follower 的情况下）。并且错误中的两个数值相差 2。导致 FE 启动失败。
 
-这是 bdbje 的一个 bug，尚未解决。遇到这种情况，只能通过[元数据运维文档](../admin-manual/maint-monitor/metadata-operation.md) 中的 故障恢复 进行操作来恢复元数据了。
+这是 bdbje 的一个 bug，尚未解决。遇到这种情况，只能通过[元数据运维文档](../admin-manual/trouble-shooting/metadata-operation.md) 中的 故障恢复 进行操作来恢复元数据了。
 
 ### Q12. Doris 编译安装 JDK 版本不兼容问题
 
-在自己使用 Docker 编译 Doris 的时候，编译完成安装以后启动 FE，出现 `java.lang.Suchmethoderror: java.nio. ByteBuffer. limit (I)Ljava/nio/ByteBuffer;` 异常信息，这是因为 Docker 里默认是 JDK 11，如果你的安装环境是使用 JDK8，需要在 Docker 里 JDK 环境切换成 JDK8，具体切换方法参照[编译文档](../install/source-install/compilation-with-docker)
+在自己使用 Docker 编译 Doris 的时候，编译完成安装以后启动 FE，出现 `java.lang.Suchmethoderror: java.nio. ByteBuffer. limit (I)Ljava/nio/ByteBuffer;` 异常信息，这是因为 Docker 里默认是 JDK 11，如果你的安装环境是使用 JDK8，需要在 Docker 里 JDK 环境切换成 JDK8，具体切换方法参照[编译文档](https://doris.apache.org/zh-CN/community/source-install/compilation-with-docker)
 
 ### Q13. 本地启动 FE 或者启动单元测试报错 Cannot find external parser table action_table.dat
 执行如下命令

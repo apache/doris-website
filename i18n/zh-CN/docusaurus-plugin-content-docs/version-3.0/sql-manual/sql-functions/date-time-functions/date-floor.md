@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## date_floor
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME DATE_FLOOR(DATETIME datetime, INTERVAL period type)`
 
@@ -39,7 +39,7 @@ period 参数是指定每个周期有多少个单位组成，开始的时间起�
 
 type 参数可以是下列值：YEAR, MONTH, DAY, HOUR, MINUTE, SECOND.
 
-### example
+## 举例
 
 ```
 mysql>select date_floor("0001-01-01 00:00:16",interval 5 second);

@@ -30,11 +30,11 @@ under the License.
 
 `GEOMETRY ST_GeometryFromWKB(VARCHAR WKB)`
 
-### Description
+## 描述
 
 将一个标准 WKB（Well-known binary）转化为对应的内存的几何形式
 
-### example
+## 举例
 
 ```
 mysql> select ST_AsText(ST_GeometryFromWKB(ST_AsBinary(ST_Point(24.7, 56.7))));

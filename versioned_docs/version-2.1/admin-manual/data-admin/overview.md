@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Business Continuity & Data Recovery Overview",
+    "title": "Disaster Recovery Management Overview",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris provides powerful disaster recovery capabilities, helping users effectively respond to data loss issues caused by hardware failures, software errors, or human mistakes through three main functions: cross-cluster data synchronization, backup and recovery, and recycle bin recovery, ensuring high availability and reliability of data.
+Doris provides disaster recovery capabilities, helping users effectively respond to data loss issues caused by hardware failures, software errors, or human mistakes through three main functions: cross-cluster data synchronization, backup and recovery, and recycle bin recovery, ensuring high availability and reliability of data.
 
 ## 1. Cross-Cluster Data Synchronization
 

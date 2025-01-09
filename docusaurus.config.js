@@ -3,6 +3,7 @@ const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
 const VERSIONS = require('./versions.json');
+const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const lightCodeTheme = themes.dracula;
 
 const logoImg = 'https://cdnd.selectdb.com/images/logo.svg';
@@ -92,7 +93,6 @@ const config = {
         // 'https://fonts.gstatic.com',
         // 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap'
     ],
-    organizationName: 'apache/doris-website', // Usually your GitHub org/user name.
     projectName: 'apache/doris-website', // Usually your repo name.
     customFields: {},
     future: {
@@ -141,6 +141,15 @@ const config = {
                         to: '/docs/gettingStarted/quick-start',
                     },
                 ],
+                createRedirects(existingPath) {
+                    if (existingPath.includes('/gettingStarted/what-is-apache-doris')) {
+                        // Redirect from /gettingStarted/what-is-new to /gettingStarted/what-is-apache-doris
+                        return [
+                            existingPath.replace('/gettingStarted/what-is-apache-doris', '/gettingStarted/what-is-new'),
+                        ];
+                    }
+                    return undefined; // Return a falsy value: no redirect created
+                },
             },
         ],
     ],
@@ -161,6 +170,7 @@ const config = {
                     // },
                     showLastUpdateAuthor: false,
                     showLastUpdateTime: false,
+                    remarkPlugins: [markdownBoldPlugin],
                 },
                 blog: {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
@@ -182,15 +192,15 @@ const config = {
                     changefreq: 'weekly',
                     priority: 0.5,
                     filename: 'sitemap.xml',
-                    createSitemapItems: async (params) => {
-                      const {defaultCreateSitemapItems, ...rest} = params;
-                      const items = await defaultCreateSitemapItems(rest);
-                      for(let item of items){
-                        if(item.url.includes('docs/1.2')){
-                            item.priority = 0.2;
+                    createSitemapItems: async params => {
+                        const { defaultCreateSitemapItems, ...rest } = params;
+                        const items = await defaultCreateSitemapItems(rest);
+                        for (let item of items) {
+                            if (item.url.includes('docs/1.2')) {
+                                item.priority = 0.2;
+                            }
                         }
-                      }
-                      return items;
+                        return items;
                     },
                 },
             }),
@@ -243,7 +253,7 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/gettingStarted/what-is-new',
+                        to: '/docs/gettingStarted/what-is-apache-doris',
                         target: '_blank',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
@@ -344,7 +354,7 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/gettingStarted/what-is-new',
+                        to: '/docs/gettingStarted/what-is-apache-doris',
                         target: '_blank',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },

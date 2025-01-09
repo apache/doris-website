@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## timestampadd
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATETIME TIMESTAMPADD(unit, interval, DATETIME datetime_expr)`
 
@@ -37,7 +37,7 @@ interval的单位由unit参数给出，它应该是下列值之一:
 
 SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, or YEAR。
 
-### example
+## 举例
 
 ```
 

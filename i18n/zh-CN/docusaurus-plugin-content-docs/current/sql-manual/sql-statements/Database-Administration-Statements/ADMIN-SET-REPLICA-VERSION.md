@@ -30,7 +30,7 @@ under the License.
 
 ADMIN SET REPLICA VERSION
 
-### Description
+## 描述
 
 该语句用于设置指定副本的版本、最大成功版本、最大失败版本。
 
@@ -63,7 +63,7 @@ ADMIN SET REPLICA VERSION
 >   严禁对正在写入数据的tablet进行操作 ！
 
 
-### Example
+## 举例
 
  1. 清除 tablet 10003 在 BE 10001 上的副本状态失败标志。
 

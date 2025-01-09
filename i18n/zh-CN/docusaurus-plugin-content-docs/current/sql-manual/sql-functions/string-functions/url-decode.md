@@ -25,11 +25,11 @@ under the License.
 -->
 
 ## url_decode
-### description
+## 描述
 
 将URL转换为解码字符串。
 
-#### Syntax
+## 语法
 
 ```sql
 VARCHAR url_decode(VARCHAR url)
@@ -39,7 +39,7 @@ VARCHAR url_decode(VARCHAR url)
 
 - url: 待解码的url。
 
-### example
+## 举例
 
 ```
 mysql> mysql> select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');

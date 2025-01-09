@@ -26,9 +26,9 @@ under the License.
 
 ## BITMAP_UNION
 
-### description
+## 描述
 
-### example
+## 举例
 
 #### Create table
 
@@ -100,7 +100,7 @@ insert into bitmap_table1 select id, bitmap_hash(id_string) from table;
 ```
 
 #### Data Query
-##### Syntax
+### 语法
 
 
 `BITMAP_UNION(expr)` : 计算输入 Bitmap 的并集，返回新的bitmap
@@ -115,7 +115,7 @@ filter_column 过滤条件的多个 bitmap 的交集的基数值。
 bitmap_column_to_count 是 bitmap 类型的列，filter_column 是变化的维度列，filter_values 是维度取值列表
 
 
-##### Example
+#### 举例
 
 下面的 SQL 以上面的 pv_bitmap table 为例：
 

@@ -1,6 +1,9 @@
 ---
-title: Overview
-language: en
+{
+   "title": "Overview",
+    "language": "en"
+}
+  
 ---
 
 <!--
@@ -24,71 +27,70 @@ under the License.
 
 ## Overview
 
-CCR (Cross Cluster Replication) is a cross-cluster data synchronization mechanism that synchronizes data changes from the source cluster to the target cluster at the database or table level. It is mainly used to improve data availability for online services, support read-write load isolation, and build a dual-region, three-center architecture. CCR currently does not support the storage-compute decoupling mode.
+CCR (Cross Cluster Replication) is a cross-cluster data synchronization mechanism that synchronizes data changes from the source cluster to the target cluster at the database or table level. It is mainly used to enhance the data availability of online services, isolate read and write loads, and build a dual-site, three-center architecture. CCR currently does not support the separation of computing and storage modes.
 
+### Applicable Scenarios
 
-### Use Cases
+CCR is suitable for the following common scenarios:
 
-CCR is applicable to the following common scenarios:
+- **Disaster Recovery Backup**: Backing up enterprise data to another cluster and data center to ensure data recovery in case of business interruption or data loss. Industries such as finance, healthcare, and e-commerce typically require this high SLA disaster recovery backup.
 
-- **Disaster Recovery and Backup**: Backing up enterprise data to another cluster and data center ensures that data can be restored or quickly switched to a backup in the event of business interruption or data loss. This high-SLA disaster recovery is commonly required in industries such as finance, healthcare, and e-commerce.
+- **Read-Write Separation**: By separating data query operations from write operations, the mutual impact between reads and writes is reduced, enhancing service stability. In scenarios with high concurrency or heavy write pressure, adopting read-write separation can effectively distribute the load and improve database performance and stability.
 
-- **Read/Write Separation**: By isolating data query operations from data write operations, the impact between read and write processes is minimized, enhancing service availability. In high-concurrency or high-write-pressure scenarios, read/write separation helps to distribute the load effectively, improving database performance and stability.
+- **Data Centralization**: The headquarters of a group needs to manage and analyze data from branch offices located in different regions to avoid management chaos and decision-making errors caused by data inconsistency, thereby improving group management efficiency and decision quality.
 
-- **Data Centralization**: Group headquarters need to centrally manage and analyze data from branch offices located in different regions, avoiding management confusion and decision-making errors caused by inconsistent data, thus improving the efficiency of group management and decision-making quality.
+- **Isolated Upgrades**: When upgrading system clusters, using CCR allows for validation and testing in the new cluster, avoiding rollback difficulties caused by version compatibility issues. Users can gradually upgrade each cluster while ensuring data consistency.
 
-- **Isolated Upgrades**: During system cluster upgrades, CCR can be used to verify and test the new cluster to avoid rollback difficulties due to version compatibility issues. Users can upgrade each cluster incrementally while ensuring data consistency.
+- **Cluster Migration**: When relocating a Doris cluster or replacing equipment, using CCR can synchronize data from the old cluster to the new cluster, ensuring data consistency during the migration process.
 
-- **Cluster Migration**: When migrating a Doris cluster to a new data center or replacing hardware, CCR can be used to synchronize data from the old cluster to the new one, ensuring data consistency during the migration process.
-
-### Job Types
+### Job Categories
 
 CCR supports two types of jobs:
 
-- **Database-Level Jobs**: Synchronize data for the entire database.
-- **Table-Level Jobs**: Synchronize data for a specific table. Note that table-level synchronization does not support renaming or replacing tables. Additionally, Doris only supports one snapshot job running per database, so table-level full sync jobs must queue for execution.
+- **Database-Level jobs**: Synchronize data for the entire database.
+- **Table-Level jobs**: Only synchronize data for specified tables. Note that table-level synchronization does not support renaming or replacing tables. Each database in Doris can only run one snapshot job at a time, so full synchronization jobs for table-level synchronization need to be queued.
 
 ## Principles and Architecture
 
 ### Terminology
 
-- **Source Cluster**: The cluster where the data originates, typically where business data is written.
-- **Target Cluster**: The cluster where the data is synchronized to in a cross-cluster setup.
-- **Binlog**: The change log from the source cluster, containing schema and data changes.
+- **Source Cluster**: The cluster where the data source resides, usually the cluster where business data is written.
+- **Target Cluster**: The target cluster for cross-cluster synchronization.
+- **binlog**: The change log of the source cluster, which includes schema and data changes.
 - **Syncer**: A lightweight process responsible for synchronizing data.
-- **Upstream**: In a database-level job, this refers to the source database; in a table-level job, it refers to the source table.
-- **Downstream**: In a database-level job, this refers to the target database; in a table-level job, it refers to the target table.
+- **Upstream**: Refers to the upstream database in database-level jobs and the upstream table in table-level jobs.
+- **Downstream**: Refers to the downstream database in database-level jobs and the downstream table in table-level jobs.
 
-### Architecture Overview
+### Architecture Description
 
-![CCR Architecture Overview](/images/ccr-architecture-description.png)
+![CCR Architecture Description](/images/ccr-architecture-description.png)
 
-CCR relies primarily on a lightweight process called `Syncer`. `Syncer` fetch binlogs from the source cluster, apply the metadata to the target cluster, and instruct the target cluster to pull data from the source cluster, enabling full and incremental synchronization.
+CCR mainly relies on a lightweight process: `Syncer`. The `Syncer` is responsible for obtaining binlogs from the source cluster and applying metadata to the target cluster, notifying the target cluster to pull data from the source cluster, thus achieving full synchronization and incremental synchronization.
 
 ### Principles
 
 1. **Full Synchronization**:
-   - The CCR job first performs full synchronization, which copies all data from the upstream to the downstream in one complete operation.
+   - CCR jobs will first perform full synchronization, copying the upstream data completely to the downstream.
 
 2. **Incremental Synchronization**:
-   - After full synchronization is complete, the CCR job continues with incremental synchronization, keeping the data between the upstream and downstream clusters consistent.
+   - After full synchronization is complete, CCR jobs will continue with incremental synchronization to maintain data consistency between upstream and downstream.
 
-3. **Reinitiating Full Synchronization**:
-   - If the job encounters a DDL operation that does not support incremental synchronization, the CCR job will restart full synchronization. For a list of DDL operations that do not support incremental synchronization, refer to [Feature Details](../feature.md).
-   - If the upstream binlog is interrupted due to expiration or other reasons, the incremental synchronization will stop, triggering a restart of full synchronization.
+3. **Restarting Full Synchronization**:
+   - When encountering DDL operations that do not support incremental synchronization, CCR jobs will restart full synchronization. For specific DDL operations that do not support incremental synchronization, please refer to [Feature Details](./feature.md).
+   - If the upstream binlog is interrupted due to expiration or other reasons, incremental synchronization will stop and restart full synchronization.
 
-4. **During Synchronization**:
-   - Incremental synchronization will pause during the full synchronization process.
-   - After full synchronization is completed, the downstream tables will undergo atomic replacement to ensure data consistency.
+4. **Restarting Full Synchronization**:
+   - During full synchronization, incremental synchronization will be paused.
+   - After full synchronization is complete, the downstream data table will undergo atomic replacement to ensure data consistency.
    - After full synchronization is complete, incremental synchronization will resume.
 
-### Synchronization Modes
+### Synchronization Methods
 
-CCR supports four synchronization modes:
+CCR supports four synchronization methods:
 
-| Synchronization Mode | Principle                                               | Trigger Condition                                              |
-|----------------------|---------------------------------------------------------|----------------------------------------------------------------|
-| **Full Sync**         | Full backup of the upstream, restore on the downstream. DB-level jobs trigger DB backup, table-level jobs trigger table backup. | Initial synchronization or specific operations trigger this. See [Feature Details](../feature.md) for triggers. |
-| **Partial Sync**      | Backup at the table or partition level from the upstream, restore at the same level on the downstream. | Specific operations trigger this. See [Feature Details](../feature.md) for triggers. |
-| **TXN**               | Incremental data synchronization, downstream starts synchronization after upstream commit. | Specific operations trigger this. See [Feature Details](../feature.md) for triggers. |
-| **SQL**               | Replaying upstream SQL operations on the downstream.    | Specific operations trigger this. See [Feature Details](../feature.md) for triggers. |
+| Synchronization Method | Principle                                               | Trigger Timing                                           |
+|------------------------|--------------------------------------------------------|---------------------------------------------------------|
+| **Full Sync**          | The upstream performs a full backup, and the downstream performs a restore. DB-level jobs trigger DB backups, and table-level jobs trigger table backups. | First synchronization or triggered by specific operations. For trigger conditions, please refer to [Feature Details](./feature.md). |
+| **Partial Sync**       | The upstream performs table or partition-level backups, and the downstream performs table or partition-level restores. | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
+| **TXN**                | Incremental data synchronization, starting synchronization after the upstream commits. | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
+| **SQL**                | Replaying upstream SQL operations on the downstream.   | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |

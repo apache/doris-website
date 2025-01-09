@@ -24,34 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## RETENTION
 
-RETENTION
 
-### description
-#### Syntax
+
+## 语法
 
 `retention(event1, event2, ... , eventN);`
 
-留存函数将一组条件作为参数，类型为1到32个`UInt8`类型的参数，用来表示事件是否满足特定条件。 任何条件都可以指定为参数.
+留存函数将一组条件作为参数，类型为 1 到 32 个`UInt8`类型的参数，用来表示事件是否满足特定条件。任何条件都可以指定为参数。
 
 除了第一个以外，条件成对适用：如果第一个和第二个是真的，第二个结果将是真的，如果第一个和第三个是真的，第三个结果将是真的，等等。
 
-简单来讲，返回值数组第1位表示`event1`的真假，第二位表示`event1`真假与`event2`真假相与，第三位表示`event1`真假与`event3`真假相与，等等。如果`event1`为假，则返回全是0的数组。
+简单来讲，返回值数组第 1 位表示`event1`的真假，第二位表示`event1`真假与`event2`真假相与，第三位表示`event1`真假与`event3`真假相与，等等。如果`event1`为假，则返回全是 0 的数组。
 
-#### Arguments
+## 参数
 
-`event` — 返回`UInt8`结果（1或0）的表达式.
+`event` — 返回`UInt8`结果（1 或 0）的表达式。
 
-##### Returned value
+## 返回值
 
-由1和0组成的最大长度为32位的数组，最终输出数组的长度与输入参数长度相同。
+由 1 和 0 组成的最大长度为 32 位的数组，最终输出数组的长度与输入参数长度相同。
 
 1 — 条件满足。
 
 0 — 条件不满足
 
-### example
+## 举例
 
 ```sql
 DROP TABLE IF EXISTS retention_test;
@@ -136,6 +134,4 @@ SELECT
 
 ```
 
-### keywords
 
-RETENTION

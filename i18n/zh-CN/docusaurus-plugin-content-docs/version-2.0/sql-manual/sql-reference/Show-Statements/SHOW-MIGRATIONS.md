@@ -30,7 +30,7 @@ under the License.
 
 SHOW MIGRATIONS
 
-### Description
+## 描述
 
 该语句用于查看数据库迁移的进度
 
@@ -40,7 +40,7 @@ SHOW MIGRATIONS
 SHOW MIGRATIONS
 ```
 
-### Example
+## 举例
 
 ### Keywords
 

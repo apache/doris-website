@@ -28,9 +28,9 @@ under the License.
 
 countequal
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `BIGINT countequal(ARRAY<T> arr, T value)`
 
@@ -42,7 +42,7 @@ num      - value在array中的数量；
 NULL     - 如果数组为NULL。
 ```
 
-### example
+## 举例
 
 ```
 mysql> select *, countEqual(c_array,5) from array_test;

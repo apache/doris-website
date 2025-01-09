@@ -26,7 +26,7 @@ under the License.
 
 ### Name
 ADMIN REBALANCE DISK
-### Description
+## 描述
 
 该语句用于尝试优先均衡指定的BE磁盘数据
 
@@ -42,7 +42,7 @@ ADMIN REBALANCE DISK
     2. 默认的 timeout 是 24小时。超时意味着系统将不再优先均衡指定的BE磁盘数据。需要重新使用该命令设置。
 	3. 指定BE的磁盘数据均衡后，该BE的优先级将会失效。
 
-### Example
+## 举例
 
 1. 尝试优先均衡集群内的所有BE
 

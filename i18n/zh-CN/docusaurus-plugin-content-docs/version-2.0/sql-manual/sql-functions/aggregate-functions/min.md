@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## MIN
-### description
-#### Syntax
+## 描述
+## 语法
 
 `MIN(expr)`
 
 
 返回expr表达式的最小值
 
-### example
+## 举例
 ```
 MySQL > select min(scan_rows) from log_statis group by datetime;
 +------------------+

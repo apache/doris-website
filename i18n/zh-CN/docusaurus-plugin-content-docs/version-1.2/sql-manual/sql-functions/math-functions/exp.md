@@ -24,8 +24,8 @@ under the License.
 
 ## exp
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE exp(DOUBLE x)`
 返回以`e`为底的`x`的幂.
@@ -34,7 +34,7 @@ under the License.
 该函数的另一个别名为 `dexp`。
 :::
 
-### example
+## 举例
 
 ```
 mysql> select exp(2);

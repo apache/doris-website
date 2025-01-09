@@ -30,7 +30,7 @@ under the License.
 
 SHOW SQL  BLOCK RULE
 
-### Description
+## 描述
 
 查看已配置的SQL阻止规则，不指定规则名则为查看所有规则。
 
@@ -40,7 +40,7 @@ SHOW SQL  BLOCK RULE
 SHOW SQL_BLOCK_RULE [FOR RULE_NAME];
 ```
 
-### Example
+## 举例
 
 1. 查看所有规则。
 

@@ -81,8 +81,8 @@ WITH S3
     "provider" = "S3",
     "s3.endpoint" = "play.min.io:9000",  
     "s3.region" = "us-east-1",
-    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
-    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "s3.access_key" = "<your-ak>",
+    "s3.secret_key" = "<your-sk>",
     "use_path_style" = "true"
 )
 PROPERTIES
@@ -160,8 +160,8 @@ SELECT * FROM S3
     "provider" = "S3",
     "s3.endpoint" = "play.min.io:9000",
     "s3.region" = "us-east-1",
-    "s3.access_key" = "AKIAIOSFODNN7EXAMPLE",
-    "s3.secret_key" = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "s3.access_key" = "<your-ak>",
+    "s3.secret_key" = "<your-sk>",
     "column_separator" = ",",
     "csv_schema" = "user_id:int;name:string;age:int",
     "use_path_style" = "true"

@@ -24,13 +24,13 @@ under the License.
 
 ## atan2
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE atan2(DOUBLE y, DOUBLE x)`
 返回 'y' / 'x' 的反正切.
 
-### example
+## 举例
 
 ```
 mysql> select atan2(0.1, 0.2);

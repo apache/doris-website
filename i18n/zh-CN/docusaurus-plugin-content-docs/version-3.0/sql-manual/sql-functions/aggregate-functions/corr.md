@@ -24,17 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CORR
-### Description
-#### Syntax
+## 语法
 
 ` double corr(x, y)`
 
-计算皮尔逊系数, 即返回结果为: x和y的协方差，除x和y的标准差乘积。
-如果x或y的标准差为0, 将返回0。
+计算皮尔逊系数，即返回结果为：x 和 y 的协方差，除 x 和 y 的标准差乘积。
+如果 x 或 y 的标准差为 0, 将返回 0。
 
 
-### example
+## 举例
 
 ```
 mysql> select corr(x,y) from baseall;
@@ -46,5 +44,3 @@ mysql> select corr(x,y) from baseall;
 1 row in set (0.21 sec)
 
 ```
-### keywords
-CORR

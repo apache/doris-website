@@ -149,7 +149,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 ```
 
 操作 Connector
-```
+```shell
 # 查看 connector 状态
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/status -X GET
 # 删除当前 connector
@@ -169,7 +169,7 @@ curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/tasks/0/restart
 
 ### 访问 SSL 认证的 Kafka 集群
 通过 kafka-connect 访问 SSL 认证的 Kafka 集群需要用户提供用于认证 Kafka Broker 公钥的证书文件（client.truststore.jks）。您可以在 `connect-distributed.properties` 文件中增加以下配置：
-```
+```properties
 # Connect worker
 security.protocol=SSL
 ssl.truststore.location=/var/ssl/private/client.truststore.jks
@@ -185,7 +185,7 @@ consumer.ssl.truststore.password=test1234
 
 ### 死信队列
 默认情况下，转换过程中或转换过程中遇到的任何错误都会导致连接器失败。每个连接器配置还可以通过跳过它们来容忍此类错误，可选择将每个错误和失败操作的详细信息以及有问题的记录（具有不同级别的详细信息）写入死信队列以便记录。
-```
+```properties
 errors.tolerance=all
 errors.deadletterqueue.topic.name=test_error_topic
 errors.deadletterqueue.context.headers.enable=true
@@ -223,6 +223,7 @@ errors.deadletterqueue.topic.replication.factor=1
 | debezium.schema.evolution   | `none`,<br/> `basic`                 | none                                                                                 | N            | 通过 Debezium 采集上游数据库系统（如 MySQL），发生结构变更时，可以将增加的字段同步到 Doris 中。<br/>`none`表示上游数据库系统发生结构变更时，不同步变更后的结构到 Doris 中。 <br/>  `basic`表示同步上游数据库的数据变更操作。由于列结构变更是一个危险操作（可能会导致误删 Doris 表结构的列），目前仅支持同步上游增加列的操作。当列被重命名后，则旧列保持原样，Connector 会在目标表中新增一列，将重命名后的新增数据 Sink 到新列中。                                                                                                                                                                                                                                                                                       |
 | database.time_zone          | -                                    | UTC                                                                                  | N            | 当 `converter.mode` 为非 `normal` 模式时，对于日期数据类型（如 datetime, date, timestamp 等等）提供指定时区转换的方式，默认为 UTC 时区。                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | avro.topic2schema.filepath  | -                                    | -                                                                                    | N            | 通过读取本地提供的 Avro Schema 文件，来解析 Topic 中的 Avro 文件内容，实现与 Confluent 提供 Schema 注册中心解耦。<br/> 此配置需要与 `key.converter` 或 `value.converter` 前缀一起使用，例如配置 avro-user、avro-product Topic 的本地 Avro Schema 文件如下： `"value.converter.avro.topic2schema.filepath":"avro-user:file:///opt/avro_user.avsc, avro-product:file:///opt/avro_product.avsc"` <br/> 具体使用可以参考：[#32](https://github.com/apache/doris-kafka-connector/pull/32)                                                                                                                                 |
+| record.tablename.field      | -                                    | -                                                                                    | N            | 开启该参数后，可实现一个 Topic 的数据流向多个 Doris 表。 配置详情参考: [#58](https://github.com/apache/doris-kafka-connector/pull/58)                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 其他Kafka Connect Sink通用配置项可参考：[connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)
 
@@ -264,33 +265,116 @@ Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类�
 
 
 ## 最佳实践
-### 同步 JSON 序列化数据
+### 同步普通 JSON 数据
+
+1. 导入数据样本<br />
+   在 Kafka 中，有以下样本数据
+   ```bash
+   kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-data-topic --from-beginning
+   {"user_id":1,"name":"Emily","age":25}
+   {"user_id":2,"name":"Benjamin","age":35}
+   {"user_id":3,"name":"Olivia","age":28}
+   {"user_id":4,"name":"Alexander","age":60}
+   {"user_id":5,"name":"Ava","age":17}
+   {"user_id":6,"name":"William","age":69}
+   {"user_id":7,"name":"Sophia","age":32}
+   {"user_id":8,"name":"James","age":64}
+   {"user_id":9,"name":"Emma","age":37}
+   {"user_id":10,"name":"Liam","age":64}
+   ```
+
+2. 创建需要导入的表<br />
+   在 Doris 中，创建被导入的表，具体语法如下
+    ```sql
+   CREATE TABLE test_db.test_kafka_connector_tbl(
+   user_id            BIGINT       NOT NULL COMMENT "user id",
+   name               VARCHAR(20)           COMMENT "name",
+   age                INT                   COMMENT "age"
+   )
+   DUPLICATE KEY(user_id)
+   DISTRIBUTED BY HASH(user_id) BUCKETS 12;
+   ```
+   
+3. 创建导入任务<br />
+   在部署 Kafka-connect 的机器上，通过 curl 命令提交如下导入任务
+    ```shell
+   curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
+   "name":"test-doris-sink-cluster",
+   "config":{
+   "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector",
+   "tasks.max":"10",
+   "topics":"test-data-topic",
+   "doris.topic2table.map": "test-data-topic:test_kafka_connector_tbl",
+   "buffer.count.records":"10000",
+   "buffer.flush.time":"120",
+   "buffer.size.bytes":"5000000",
+   "doris.urls":"10.10.10.1",
+   "doris.user":"root",
+   "doris.password":"",
+   "doris.http.port":"8030",
+   "doris.query.port":"9030",
+   "doris.database":"test_db",
+   "key.converter":"org.apache.kafka.connect.storage.StringConverter",
+   "value.converter":"org.apache.kafka.connect.storage.StringConverter"
+   }
+   }'
+   ```
+
+### 同步 Debezium 组件采集的数据
+1. MySQL 数据库中有如下表
+```sql
+   CREATE TABLE test.test_user (
+   user_id int NOT NULL ,
+   name varchar(20),
+   age int,
+   PRIMARY KEY (user_id)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+insert into test.test_user values(1,'zhangsan',20);
+insert into test.test_user values(2,'lisi',21);
+insert into test.test_user values(3,'wangwu',22);
 ```
-curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
-  "name":"doris-json-test", 
-  "config":{ 
-    "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector", 
-    "topics":"json_topic", 
-    "tasks.max":"10",
-    "doris.topic2table.map": "json_topic:json_tab", 
-    "buffer.count.records":"100000", 
-    "buffer.flush.time":"120", 
-    "buffer.size.bytes":"10000000", 
-    "doris.urls":"127.0.0.1", 
-    "doris.user":"root", 
-    "doris.password":"", 
-    "doris.http.port":"8030", 
-    "doris.query.port":"9030", 
-    "doris.database":"test", 
-    "load.model":"stream_load",
-    "key.converter":"org.apache.kafka.connect.json.JsonConverter",
-    "value.converter":"org.apache.kafka.connect.json.JsonConverter"
-  } 
-}'
+
+2. 在 Doris 创建被导入的表
+```sql
+   CREATE TABLE test_db.test_user(
+   user_id            BIGINT       NOT NULL COMMENT "user id",
+   name               VARCHAR(20)           COMMENT "name",
+   age                INT                   COMMENT "age"
+   )
+   UNIQUE KEY(user_id)
+   DISTRIBUTED BY HASH(user_id) BUCKETS 12;
+```
+3. 部署 Debezium connector for MySQL 组件，参考：[Debezium connector for MySQL](https://debezium.io/documentation/reference/stable/connectors/mysql.html)
+4. 创建 doris-kafka-connector 导入任务<br />
+   假设通过 Debezium 采集到的 MySQL 表数据在 `mysql_debezium.test.test_user` Topic 中
+```shell
+   curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
+   "name":"test-debezium-doris-sink",
+   "config":{
+   "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector",
+   "tasks.max":"10",
+   "topics":"mysql_debezium.test.test_user",
+   "doris.topic2table.map": "mysql_debezium.test.test_user:test_user",
+   "buffer.count.records":"10000",
+   "buffer.flush.time":"120",
+   "buffer.size.bytes":"5000000",
+   "doris.urls":"10.10.10.1",
+   "doris.user":"root",
+   "doris.password":"",
+   "doris.http.port":"8030",
+   "doris.query.port":"9030",
+   "doris.database":"test_db",
+   "converter.mode":"debezium_ingestion",
+   "enable.delete":"true",
+   "key.converter":"org.apache.kafka.connect.json.JsonConverter",
+   "value.converter":"org.apache.kafka.connect.json.JsonConverter"
+   }
+   }'
 ```
 
 ### 同步 Avro 序列化数据
-```
+```shell
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
   "name":"doris-avro-test", 
   "config":{ 
@@ -317,7 +401,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 ```
 
 ### 同步 Protobuf 序列化数据
-```
+```shell
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
   "name":"doris-protobuf-test", 
   "config":{ 
@@ -345,7 +429,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 
 ## 常见问题
 **1. 读取 JSON 类型的数据报如下错误：**
-```
+```shell
 Caused by: org.apache.kafka.connect.errors.DataException: JsonConverter with schemas.enable requires "schema" and "payload" fields and may not contain additional fields. If you are trying to deserialize plain JSON data, set schemas.enable=false in your converter configuration.
 	at org.apache.kafka.connect.json.JsonConverter.toConnectData(JsonConverter.java:337)
 	at org.apache.kafka.connect.storage.Converter.toConnectData(Converter.java:91)
@@ -363,7 +447,7 @@ Caused by: org.apache.kafka.connect.errors.DataException: JsonConverter with sch
 
 **2. 消费超时，消费者被踢出消费群组：**
 
-```
+```shell
 org.apache.kafka.clients.consumer.CommitFailedException: Offset commit cannot be completed since the consumer is not part of an active group for auto partition assignment; it is likely that the consumer was kicked out of the group.
         at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.sendOffsetCommitRequest(ConsumerCoordinator.java:1318)
         at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.doCommitOffsetsAsync(ConsumerCoordinator.java:1127)
@@ -393,3 +477,54 @@ org.apache.kafka.clients.consumer.CommitFailedException: Offset commit cannot be
 
 调整参数后，重启kafka-connect
 
+**3. Doris-kafka-connector 从 1.0.0 或 1.1.0 升级到 24.0.0 版本报错**
+```
+org.apache.kafka.common.config.ConfigException: Topic 'connect-status' supplied via the 'status.storage.topic' property is required to have 'cleanup.policy=compact' to guarantee consistency and durability of connector and task statuses, but found the topic currently has 'cleanup.policy=delete'. Continuing would likely result in eventually losing connector and task statuses and problems restarting this Connect cluster in the future. Change the 'status.storage.topic' property in the Connect worker configurations to use a topic with 'cleanup.policy=compact'.
+	at org.apache.kafka.connect.util.TopicAdmin.verifyTopicCleanupPolicyOnlyCompact(TopicAdmin.java:581)
+	at org.apache.kafka.connect.storage.KafkaTopicBasedBackingStore.lambda$topicInitializer$0(KafkaTopicBasedBackingStore.java:47)
+	at org.apache.kafka.connect.util.KafkaBasedLog.start(KafkaBasedLog.java:247)
+	at org.apache.kafka.connect.util.KafkaBasedLog.start(KafkaBasedLog.java:231)
+	at org.apache.kafka.connect.storage.KafkaStatusBackingStore.start(KafkaStatusBackingStore.java:228)
+	at org.apache.kafka.connect.runtime.AbstractHerder.startServices(AbstractHerder.java:164)
+	at org.apache.kafka.connect.runtime.distributed.DistributedHerder.run
+```
+**解决方案：**
+调整 `connect-configs` `connect-status` Topic 的清除策略为 compact
+```
+$KAFKA_HOME/bin/kafka-configs.sh --alter --entity-type topics --entity-name connect-configs --add-config cleanup.policy=compact --bootstrap-server 127.0.0.1:9092
+$KAFKA_HOME/bin/kafka-configs.sh --alter --entity-type topics --entity-name connect-status --add-config cleanup.policy=compact --bootstrap-server 127.0.0.1:9092
+```
+
+**4. `debezium_ingestion` 转换模式下，表结构变更失败**
+```
+[2025-01-07 14:26:20,474] WARN [doris-normal_test_sink-connector|task-0] Table 'test_sink' cannot be altered because schema evolution is disabled. (org.apache.doris.kafka.connector.converter.RecordService:183)
+[2025-01-07 14:26:20,475] ERROR [doris-normal_test_sink-connector|task-0] WorkerSinkTask{id=doris-normal_test_sink-connector-0} Task threw an uncaught and unrecoverable exception. Task is being killed and will not recover until manually restarted. Error: Cannot alter table org.apache.doris.kafka.connector.model.TableDescriptor@67cd8027 because schema evolution is disabled (org.apache.kafka.connect.runtime.WorkerSinkTask:612)
+org.apache.doris.kafka.connector.exception.SchemaChangeException: Cannot alter table org.apache.doris.kafka.connector.model.TableDescriptor@67cd8027 because schema evolution is disabled
+	at org.apache.doris.kafka.connector.converter.RecordService.alterTableIfNeeded(RecordService.java:186)
+	at org.apache.doris.kafka.connector.converter.RecordService.checkAndApplyTableChangesIfNeeded(RecordService.java:150)
+	at org.apache.doris.kafka.connector.converter.RecordService.processStructRecord(RecordService.java:100)
+	at org.apache.doris.kafka.connector.converter.RecordService.getProcessedRecord(RecordService.java:305)
+	at org.apache.doris.kafka.connector.writer.DorisWriter.putBuffer(DorisWriter.java:155)
+	at org.apache.doris.kafka.connector.writer.DorisWriter.insertRecord(DorisWriter.java:124)
+	at org.apache.doris.kafka.connector.writer.StreamLoadWriter.insert(StreamLoadWriter.java:151)
+	at org.apache.doris.kafka.connector.service.DorisDefaultSinkService.insert(DorisDefaultSinkService.java:154)
+	at org.apache.doris.kafka.connector.service.DorisDefaultSinkService.insert(DorisDefaultSinkService.java:135)
+	at org.apache.doris.kafka.connector.DorisSinkTask.put(DorisSinkTask.java:97)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.deliverMessages(WorkerSinkTask.java:583)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.poll(WorkerSinkTask.java:336)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.iteration(WorkerSinkTask.java:237)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.execute(WorkerSinkTask.java:206)
+	at org.apache.kafka.connect.runtime.WorkerTask.doRun(WorkerTask.java:202)
+	at org.apache.kafka.connect.runtime.WorkerTask.run(WorkerTask.java:257)
+	at org.apache.kafka.connect.runtime.isolation.Plugins.lambda$withClassLoader$1(Plugins.java:177)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+```
+
+**解决方案：**
+
+在 `debezium_ingestion` 转换模式下，默认表结构变更是关闭的，需要配置 `debezium.schema.evolution` 为 `basic`	以便开启表结构变更。<br />
+需要注意的是：开启表结构变更并不能准确的保持此变更列为 Doris 表中的唯一列（详见 `debezium.schema.evolution` 参数说明）。如需要保持上下游只存在唯一列，最好是手动添加变更列到 Doris 表中，再重新启动 Connector 任务，Connector 将会接着未消费的 `offset` 继续消费，保持数据的一致性。

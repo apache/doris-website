@@ -30,7 +30,7 @@ under the License.
 
 CREATE INDEX
 
-### Description
+## 描述
 
 该语句用于创建索引
 语法：
@@ -41,7 +41,7 @@ CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING I
 注意：
 - 倒排索引仅在单列上创建
 
-### Example
+## 举例
 
 1. 在table1 上为siteid 创建倒排索引
 

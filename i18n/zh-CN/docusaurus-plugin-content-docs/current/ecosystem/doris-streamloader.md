@@ -99,7 +99,7 @@ doris-streamloader --source_file={FILE_LIST} --url={FE_OR_BE_SERVER_URL}:{PORT} 
 
 
 
-**2.** `STREAMLOAD_HEADER` **支持 Stream Load 的所有参数，多个参数之间用  '?' 分隔。**
+**2. `STREAMLOAD_HEADER` 支持 Stream Load 的所有参数，多个参数之间用  '?' 分隔。**
 
 用法举例：
 

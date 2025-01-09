@@ -186,7 +186,7 @@ Reasons may be:
 
 ### Q1: How to confirm if a Materialized View hits, and how to find the reasons for Non-Hits?
 
-You can use `explain query_sql` to view a summary of materialized view hits. 
+You can use `explain query_sql` to view a summary of materialized view hits.
 
 For example, consider the following materialized view:
 

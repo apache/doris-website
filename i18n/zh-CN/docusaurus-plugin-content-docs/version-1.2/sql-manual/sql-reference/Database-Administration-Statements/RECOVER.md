@@ -30,7 +30,7 @@ under the License.
 
 RECOVER
 
-### Description
+## 描述
 
 该语句用于恢复之前删除的 database、table 或者 partition。支持通过name、id来恢复指定的元信息，并且支持将恢复的元信息重命名。
 
@@ -98,7 +98,7 @@ RECOVER
 - 如果恢复元信息时没有指定id，则默认恢复最后一个删除的同名元数据。
 - 可以通过 `SHOW CATALOG RECYCLE BIN` 来查询当前可恢复的元信息。
 
-### Example
+## 举例
 
 1. 恢复名为 example_db 的 database
 

@@ -24,13 +24,13 @@ under the License.
 
 ## tanh
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE tanh(DOUBLE x)`
 返回`x`的双曲正切值，tanh(x) = sinh(x) / cosh(x).
 
-### example
+## 举例
 
 ```
 mysql> select tanh(0);

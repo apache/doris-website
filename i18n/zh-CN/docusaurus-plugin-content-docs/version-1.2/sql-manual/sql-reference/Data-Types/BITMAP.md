@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## BITMAP
-### description
+## 描述
     BITMAP
     BITMAP不能作为key列使用，建表时配合聚合类型为BITMAP_UNION。
     用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。
@@ -34,7 +34,7 @@ under the License.
     离线场景下使用BITMAP会影响导入速度，在数据量大的情况下查询速度会慢于HLL，并优于Count Distinct。
     注意：实时场景下BITMAP如果不使用全局字典，使用了bitmap_hash()可能会导致有千分之一左右的误差。如果这个误差不可接受，可以使用bitmap_hash64。
 
-### example
+## 举例
 
 建表示例如下：
 

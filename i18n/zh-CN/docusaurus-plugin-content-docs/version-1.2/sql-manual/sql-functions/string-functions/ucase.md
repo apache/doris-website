@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## ucase
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT ucase(VARCHAR str)`
 

@@ -5,26 +5,8 @@
             "label": "Getting Started",
             "collapsed": false,
             "items": [
-                "gettingStarted/what-is-new",
                 "gettingStarted/what-is-apache-doris",
-                "gettingStarted/quick-start",
-                {
-                    "type": "category",
-                    "label": "Tutorials",
-                    "items": [
-                        {
-                            "type": "category",
-                            "label": "Building lakehouse",
-                            "items": [
-                                "gettingStarted/tutorials/building-lakehouse/doris-hudi",
-                                "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                                "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
-                                "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
-                            ]
-                        },
-                        "gettingStarted/tutorials/log-storage-analysis"
-                    ]
-                }
+                "gettingStarted/quick-start"
             ]
         },
         {
@@ -36,18 +18,6 @@
                     "type": "category",
                     "label": "Installation and Deployment",
                     "items": [
-                        {
-                            "type": "category",
-                            "label": "Source Code Compilation",
-                            "items": [
-                                "install/source-install/compilation-with-docker",
-                                "install/source-install/compilation-with-ldb-toolchain",
-                                "install/source-install/compilation-linux",
-                                "install/source-install/compilation-arm",
-                                "install/source-install/compilation-win",
-                                "install/source-install/compilation-mac"
-                            ]
-                        },
                         {
                             "type": "category",
                             "label": "Cluster Deployment",
@@ -747,7 +717,6 @@
                                 "sql-manual/sql-functions/date-time-functions/date-trunc",
                                 "sql-manual/sql-functions/date-time-functions/date-format",
                                 "sql-manual/sql-functions/date-time-functions/datediff",
-                                "sql-manual/sql-functions/date-time-functions/date-floor",
                                 "sql-manual/sql-functions/date-time-functions/second-floor",
                                 "sql-manual/sql-functions/date-time-functions/minute-floor",
                                 "sql-manual/sql-functions/date-time-functions/hour-floor",

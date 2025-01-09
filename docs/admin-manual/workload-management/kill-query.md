@@ -24,46 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Kill Query
-## Kill connection
-
-In Doris, each connection runs in a separate thread. You can terminate a thread using the `KILL processlist_id`statement.
-
-The `processlist_id` for the thread can be found in the Id column from the SHOW PROCESSLIST output. Or you can use the `SELECT CONNECTION_ID()` command to query the current connection id.
+## Retrieve the List of Queries
 
 Syntax:
 
-```SQL
-KILL [CONNECTION] processlist_id
+
+```sql
+SHOW PROCESSLIST;
 ```
 
-## Kill query
+This command displays all current connections to the FE and the list of queries being executed on each connection. For example:
 
-You can also terminate the query command under execution based on the processlist_id or the query_id.
-
-Syntax:
-
-```SQL
-KILL QUERY processlist_id | query_id
-```
-
-## Example
-
-1. Check the current connection id.
-
-```SQL
-select connection_id();
-+-----------------+
-| connection_id() |
-+-----------------+
-| 48              |
-+-----------------+
-1 row in set (0.00 sec)
-```
-
-2. Check all connection id.
-
-```SQL
+```sql
 SHOW PROCESSLIST;
 +------------------+------+------+--------------------+---------------------+----------+---------+---------+------+-------+-----------------------------------+---------------------------------------------------------------------------------------+
 | CurrentConnected | Id   | User | Host               | LoginTime           | Catalog  | Db      | Command | Time | State | QueryId                           | Info                                                                                  |
@@ -77,10 +49,52 @@ SHOW PROCESSLIST;
 5 rows in set (0.00 sec)
 ```
 
-3. Kill the currently running query, which will then be displayed as canceled.
 
-```SQL
+- Id is the unique identifier for the connection, also known as processlist_id.
+- QueryId is the unique identifier for the query.
+
+
+
+## Kill Query
+
+Syntax:
+
+
+```sql
+KILL QUERY query_id | processlist_id
+```
+
+This command is used to terminate a specific query or the query being executed on a specific connection. For example:
+
+```sql
 kill query 55;
 Query OK, 0 rows affected (0.01 sec)
 ```
 
+This terminates the query currently running on the connection with Id=55, but the connection itself remains active.
+
+```sql
+kill query 'f02603dc163a4da3-beebbb5d1ced760c';
+Query OK, 0 rows affected (0.01 sec)
+```
+
+This terminates the query with QueryId=f02603dc163a4da3-beebbb5d1ced760c, which is actually the same query as the one with processlist_id=55.
+
+## Kill Connection
+
+Syntax:
+
+
+```sql
+KILL CONNECTION processlist_id
+```
+
+For example:
+
+
+```sql
+kill CONNECTION 55;
+Query OK, 0 rows affected (0.01 sec)
+```
+
+This command disconnects the connection with Id=55, and any query currently being executed on this connection will also be canceled.

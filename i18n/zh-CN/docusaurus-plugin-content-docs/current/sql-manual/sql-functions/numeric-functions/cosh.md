@@ -24,13 +24,13 @@ under the License.
 
 ## cosh
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE cosh(DOUBLE x)`
 返回“x”的双曲余弦.
 
-### example
+## 举例
 
 ```
 mysql> select cosh(0);

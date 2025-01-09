@@ -28,8 +28,8 @@ under the License.
 
 jsonb_extract
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 ```sql
 JSONB jsonb_extract(JSONB j, VARCHAR json_path)
@@ -54,7 +54,7 @@ jsonb_extract是一系列函数，从JSONB类型的数据中提取json_path指�
 - 如果json_path指定的字段在JSON中不存在，返回NULL
 - 如果json_path指定的字段在JSON中的实际类型和jsonb_extract_t指定的类型不一致，如果能无损转换成指定类型返回指定类型t，如果不能则返回NULL
 
-### example
+## 举例
 
 参考 [jsonb tutorial](../../sql-reference/Data-Types/JSONB.md) 中的示例
 

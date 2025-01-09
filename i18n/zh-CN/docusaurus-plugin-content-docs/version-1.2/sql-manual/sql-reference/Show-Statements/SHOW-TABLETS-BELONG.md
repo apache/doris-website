@@ -34,7 +34,7 @@ under the License.
 
 SHOW TABLETS BELONG
 
-### Description
+## 描述
 
 该语句用于展示指定Tablets归属的表的信息
 
@@ -49,7 +49,7 @@ SHOW TABLETS BELONG tablet-ids;
 1. tablet-ids：代表一到多个tablet-id构成的列表。如有多个，使用逗号分隔
 2. 结果中 table 相关的信息和 `SHOW-DATA` 语句的口径一致
 
-### Example
+## 举例
 
 1. 展示3个tablet-id的相关信息（tablet-id可去重）
 

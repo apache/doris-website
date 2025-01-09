@@ -12,7 +12,7 @@
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
 ## WINDOW FUNCTION CUME_DIST
-### description
+## 描述
 
 CUME_DIST (Cumulative Distribution) 是一种窗口函数，它常用于计算当前行值在排序后结果集中的相对排名。它返回的是当前行值在结果集中的百分比排名，即在排序后的结果中小于或等于当前行值的行数与结果集总行数的比例。
 
@@ -20,7 +20,7 @@ CUME_DIST (Cumulative Distribution) 是一种窗口函数，它常用于计算�
 CUME_DIST() OVER(partition_by_clause order_by_clause)
 ```
 
-### example
+## 举例
 假设有一个表格 sales 包含销售数据，其中包括销售员姓名 (sales_person)、销售额 (sales_amount) 和销售日期 (sales_date)。我们想要计算每个销售员在每个销售日期的销售额占当日总销售额的累积百分比。
 
 ```sql

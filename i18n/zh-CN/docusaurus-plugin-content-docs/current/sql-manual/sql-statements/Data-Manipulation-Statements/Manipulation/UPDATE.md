@@ -30,13 +30,13 @@ under the License.
 
 UPDATE
 
-### Description
+## 描述
 
 该语句是为进行对数据进行更新的操作，UPDATE 语句目前仅支持 UNIQUE KEY 模型。
 
 UPDATE操作目前只支持更新Value列，Key列的更新可参考[使用FlinkCDC更新Key列](../../../../ecosystem/flink-doris-connector.md#使用flinkcdc更新key列)。
 
-#### Syntax
+## 语法
 
 ```sql
 [cte]
@@ -62,7 +62,7 @@ UPDATE target_table [table_alias]
 
 当前 UPDATE 语句仅支持在 UNIQUE KEY 模型上的行更新。
 
-### Example
+## 举例
 
 `test` 表是一个 unique 模型的表，包含: k1, k2, v1, v2  四个列。其中 k1, k2 是 key，v1, v2 是value，聚合方式是 Replace。
 

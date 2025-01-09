@@ -30,7 +30,7 @@ under the License.
 
 SHOW ROW POLICY
 
-### Description
+## 描述
 
 查看当前 DB 下的行安全策略
 
@@ -40,7 +40,7 @@ SHOW ROW POLICY
 SHOW ROW POLICY [FOR user| ROLE role]
 ```
 
-### Example
+## 举例
 
 1. 查看所有安全策略。
 

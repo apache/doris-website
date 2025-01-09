@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Schema Evolution",
+    "title": "Schema Change",
     "language": "en"
 }
 ---

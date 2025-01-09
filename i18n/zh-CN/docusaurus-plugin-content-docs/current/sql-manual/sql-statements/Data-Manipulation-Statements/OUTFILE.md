@@ -30,7 +30,7 @@ under the License.
 
 OUTFILE
 
-### description
+## 描述
 
  `SELECT INTO OUTFILE` 命令用于将查询结果导出为文件。目前支持通过 Broker 进程, S3 协议或 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
 
@@ -134,6 +134,14 @@ INTO OUTFILE "file_path"
     INTO OUTFILE "file:///home/work/path/result_";
     ```
 
+#### 返回结果说明
+
+Outfile 语句返回的结果，各个列的含义如下：
+* FileNumber：最终生成的文件个数。
+* TotalRows：结果集行数。
+* FileSize：导出文件总大小。单位字节。
+* URL：导出的文件路径的前缀，多个文件会以后缀 `_0`,`_1` 依次编号。
+
 #### 数据类型映射
 
 Parquet、ORC 文件格式拥有自己的数据类型，Doris的导出功能能够自动将 Doris 的数据类型导出到 Parquet/ORC 文件格式的对应数据类型，以下是 Apache Doris 数据类型和 Parquet/ORC 文件格式的数据类型映射关系表：
@@ -183,7 +191,7 @@ Parquet、ORC 文件格式拥有自己的数据类型，Doris的导出功能能�
     | map | map |
     | array | list |
 
-### example
+## 举例
 
 1. 使用 Broker 方式导出，将简单查询结果导出到文件 `hdfs://path/to/result.txt`。指定导出格式为 CSV。使用 `my_broker` 并设置 kerberos 认证信息。指定列分隔符为 `,`，行分隔符为 `\n`。
 

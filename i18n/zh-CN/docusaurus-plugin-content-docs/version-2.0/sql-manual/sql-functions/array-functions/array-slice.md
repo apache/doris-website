@@ -26,9 +26,9 @@ under the License.
 
 array_slice
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<T> array_slice(ARRAY<T> arr, BIGINT off, BIGINT len)`
 
@@ -41,7 +41,7 @@ array_slice
 如果len是负数，则表示长度为0
 ```
 
-### example
+## 举例
 
 
 ```

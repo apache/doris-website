@@ -28,7 +28,7 @@ under the License.
 
 ## CREATE-TABLE
 
-### Description
+## 描述
 
 该命令用于创建一张表。本文档主要介绍创建 Doris 自维护的表的语法。外部表语法请参阅 [CREATE-EXTERNAL-TABLE](./CREATE-EXTERNAL-TABLE.md)文档。
 
@@ -448,7 +448,7 @@ UNIQUE KEY(k1, k2)
     * `dynamic_partition.history_partition_num`: 指定创建历史分区的数量。
     * `dynamic_partition.reserved_history_periods`: 用于指定保留的历史分区的时间段。
 
-### Example
+## 举例
 
 1. 创建一个明细模型的表
 

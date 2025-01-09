@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Connecting to Database",
+    "title": "Connecting by MySQL Protocol",
     "language": "en"
 }
 ---

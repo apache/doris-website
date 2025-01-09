@@ -30,7 +30,7 @@ under the License.
 
 DROP FILE
 
-### Description
+## 描述
 
 该语句用于删除一个已上传的文件。
 
@@ -48,7 +48,7 @@ DROP FILE "file_name" [FROM database]
 - properties 支持以下参数:
   - `catalog`: 必须。文件所属分类。
 
-### Example
+## 举例
 
 1. 删除文件 ca.pem
 

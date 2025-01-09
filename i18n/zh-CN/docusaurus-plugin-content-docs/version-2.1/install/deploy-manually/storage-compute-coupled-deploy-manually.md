@@ -1,6 +1,6 @@
 ---
 {
-    "title": "手动部署存算一体集群",
+    "title": "手动部署集群",
     "language": "zh-CN"
 }
 ---
@@ -31,6 +31,8 @@ under the License.
 3. 部署 BE 节点：向 FE 集群中注册 BE 节点；
 
 4. 验证集群正确性：部署完成后连接并验证集群正确性。
+
+在开始部署操作前，可以[下载](https://doris.apache.org/download)相应的 Doris 版本。
 
 ## 第 1 步：部署 FE Master 节点
 
@@ -138,8 +140,6 @@ under the License.
    - FE Follower（包括 Master）节点的数量建议为奇数，建议部署 3 个组成高可用模式。
 
    - 当 FE 处于高可用部署时（1 个 Master，2 个 Follower），我们建议通过增加 Observer FE 来扩展 FE 的读服务能力
-
-   - 通常一个 FE 节点可以应对 10-20 台 BE 节点。建议总的 FE 节点数量在 10 个以下
    :::
 4. 启动 FE Follower 节点
 

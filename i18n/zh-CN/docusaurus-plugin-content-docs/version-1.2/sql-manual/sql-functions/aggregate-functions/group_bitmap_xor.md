@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## group_bitmap_xor
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BITMAP GROUP_BITMAP_XOR(expr)`
 
 对expr进行 xor 计算, 返回新的bitmap。
 
-### example
+## 举例
 
 ```
 mysql>  select page, bitmap_to_string(user_id) from pv_bitmap;

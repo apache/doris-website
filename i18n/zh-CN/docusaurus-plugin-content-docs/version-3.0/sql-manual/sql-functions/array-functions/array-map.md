@@ -28,9 +28,9 @@ under the License.
 
 array_map(lambda,array1,array2....)
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 `ARRAY<T> array_map(lambda, ARRAY<T> array1, ARRAY<T> array2)`
 
 使用一个 lambda 表达式作为输入参数，对其他的输入 ARRAY 参数的内部数据做对应表达式计算。
@@ -47,7 +47,7 @@ array_map((x,y)->(power(x,2)+y), array1, array2);
 array_map((x,y,z)->(abs(x)+y*z), array1, array2, array3);
 ```
 
-### example
+## 举例
 
 ```shell
 

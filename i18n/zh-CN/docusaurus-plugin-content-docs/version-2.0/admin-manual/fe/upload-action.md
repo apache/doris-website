@@ -151,7 +151,7 @@ Header 中的可选项同 Stream Load 请求中 header 的可选项。
 }
 ```
 
-### Example
+## 举例
 
 ```
 PUT /api/default_cluster/db1/tbl1/upload?file_id=1&file_uuid=b87824a4-f6fd-42c9-b9f1-c6d68c5964c2

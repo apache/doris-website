@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## bitmap_contains
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BOOLEAN BITMAP_CONTAINS(BITMAP bitmap, BIGINT input)`
 
 计算输入值是否在Bitmap列中，返回值是Boolean值.
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_contains(to_bitmap(1),2) cnt;

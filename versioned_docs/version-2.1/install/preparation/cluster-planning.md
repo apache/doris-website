@@ -39,7 +39,6 @@ Doris instances communicate over the network, and their proper functioning requi
 | FE            | rpc_port                | 9020         | BE -> FE, FE <-> FE            | Thrift Server port on FE, each FE should have the same configuration |
 | FE            | query_port              | 9030         | Client <-> FE                  | MySQL Server port on FE                                 |
 | FE            | edit_log_port           | 9010         | FE <-> FE                       | bdbje communication port on FE                         |
-| Broker        | broker_ipc_port         | 8000         | FE -> Broker, BE -> Broker     | Thrift Server port on Broker, used to receive requests from FE and BE |
 
 
 ## Node Count Planning

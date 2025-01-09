@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## COVAR_SAMP
-### Description
-#### Syntax
+## 描述
+## 语法
 
 ` double covar_samp(x, y)`
 
 计算x和y的样本协方差。
 
 
-### example
+## 举例
 
 ```
 mysql> select covar_samp(x,y) from baseall;

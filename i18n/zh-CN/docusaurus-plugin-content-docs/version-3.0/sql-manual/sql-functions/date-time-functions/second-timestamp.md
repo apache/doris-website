@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## second_timestamp
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BIGINT SECOND_TIMESTAMP(DATETIME date)`
 `BIGINT MILLISECOND_TIMESTAMP(DATETIME date)`
@@ -37,7 +37,7 @@ under the License.
 传入的是DATETIME类型，返回的是整型
 
 
-### example
+## 举例
 
 ```
 mysql> select from_millisecond(89417891234789),millisecond_timestamp(from_millisecond(89417891234789));

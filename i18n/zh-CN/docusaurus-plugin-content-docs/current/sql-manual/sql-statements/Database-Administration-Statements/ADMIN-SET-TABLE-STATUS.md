@@ -30,7 +30,7 @@ under the License.
 
 ADMIN SET TABLE STATUS
 
-### Description
+## 描述
 
 该语句用于设置指定表的状态，仅支持OLAP表。
 
@@ -60,7 +60,7 @@ ADMIN SET TABLE table_name STATUS
 
 **注意：此命令一般只用于紧急故障修复，请谨慎操作。**
 
-### Example
+## 举例
 
 1. 设置表 tbl1 的状态为 NORMAL。
 

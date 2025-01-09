@@ -47,7 +47,7 @@ under the License.
 
 - 支持短语查询 `MATCH_PHRASE`
   - 支持指定词距 `slop`
-  - 支持短语+前缀 `MATCH_PHRASE_PREFIX`
+  - 支持短语 + 前缀 `MATCH_PHRASE_PREFIX`
 
 - 支持分词正则查询 `MATCH_REGEXP`
 
@@ -84,18 +84,9 @@ under the License.
 
 3. DUPLICATE 和 开启 Merge-on-Write 的 UNIQUE 表模型支持任意列建倒排索引。但是 AGGREGATE 和 未开启 Merge-on-Write 的 UNIQUE 模型仅支持 Key 列建倒排索引，非 Key 列不能建倒排索引，这是因为这两个模型需要读取所有数据后做合并，因此不能利用索引做提前过滤。
 
-
-如果要查看某个查询倒排索引效果，可以通过 Query Profile 中的相关指标进行分析。
-
-- InvertedIndexFilterTime 是倒排索引消耗的时间
-  - InvertedIndexSearcherOpenTime 是倒排索引打开索引的时间
-  - InvertedIndexSearcherSearchTime 是倒排索引内部查询的时间
-
-- RowsInvertedIndexFiltered 是倒排过滤掉的行数，可以与其他几个 Rows 值对比分析 BloomFilter 索引过滤效果
 :::
 
-
-## 使用语法
+## 管理索引
 
 ### 建表时定义倒排索引
 
@@ -175,7 +166,7 @@ table_properties;
 <details>
   <summary>ignore_above</summary>
 
-  **用于指定不分词字符串索引（没有指定parser）的长度限制**
+  **用于指定不分词字符串索引（没有指定 parser）的长度限制**
   <p>- 长度超过 ignore_above 设置的字符串不会被索引。对于字符串数组，ignore_above 将分别应用于每个数组元素，长度超过 ignore_above 的字符串元素将不被索引。</p>
   <p>- 默认为 256，单位是字节</p>
 
@@ -243,7 +234,7 @@ CANCEL BUILD INDEX ON table_name (job_id1,jobid_2,...);
 
 :::tip
 
-`BUILD INDEX` 会生成一个异步任务执行，在每个 BE 上有多个线程执行索引构建任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是3。
+`BUILD INDEX` 会生成一个异步任务执行，在每个 BE 上有多个线程执行索引构建任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是 3。
 
 2.0.12 和 2.1.4 之前的版本 `BUILD INDEX` 会一直重试直到成功，从这两个版本开始通过失败和超时机制避免一直重试。3.0 存算分离模式暂不支持此命令。
 
@@ -265,9 +256,22 @@ ALTER TABLE table_name DROP INDEX idx_name;
 
 :::tip
 
-`DROP INDEX` 会删除索引定义，新写入数据不会再写索引，同时会生成一个异步任务执行索引删除操作，在每个 BE 上有多个线程执行索引构建任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是3。
+`DROP INDEX` 会删除索引定义，新写入数据不会再写索引，同时会生成一个异步任务执行索引删除操作，在每个 BE 上有多个线程执行索引删除任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是 3。
 
 :::
+
+### 查看倒排索引
+
+```sql
+-- 语法 1，表的 schema 中 INDEX 部分 USING INVERTED 是倒排索引
+SHOW CREATE TABLE table_name;
+
+-- 语法 2，IndexType 为 INVERTED 的是倒排索引
+SHOW INDEX FROM idx_name;
+```
+
+
+## 使用索引
 
 ### 利用倒排索引加速查询
 
@@ -287,30 +291,32 @@ SELECT * FROM table_name WHERE content MATCH_ALL 'keyword1 keyword2';
 
 -- 2. 全文检索短语匹配，通过 MATCH_PHRASE 完成
 -- 2.1 content 列中同时包含 keyword1 和 keyword2 的行，而且 keyword2 必须紧跟在 keyword1 后面
--- 'keyword1 keyword2'，'wordx keyword1 keyword2'，'wordx keyword1 keyword2 wordy' 能匹配，因为他们都包含keyword1 keyword2，而且keyword2 紧跟在 keyword1 后面
+-- 'keyword1 keyword2'，'wordx keyword1 keyword2'，'wordx keyword1 keyword2 wordy' 能匹配，因为他们都包含 keyword1 keyword2，而且 keyword2 紧跟在 keyword1 后面
 -- 'keyword1 wordx keyword2' 不能匹配，因为 keyword1 keyword2 之间隔了一个词 wordx
 -- 'keyword2 keyword1'，因为 keyword1 keyword2 的顺序反了
+-- 使用 MATCH_PHRASE 需要再 PROPERTIES 中开启 "support_phrase" = "true"
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2';
 
--- 2.2 content 列中同时包含 keyword1 和 keyword2 的行，而且 keyword1 keyword2 的 `词距`（slop） 不超过3
--- 'keyword1 keyword2', 'keyword1 a keyword2', 'keyword1 a b c keyword2' 都能匹配，因为keyword1 keyword2中间隔的词分别是0 1 3 都不超过3
--- 'keyword1 a b c d keyword2' 不能能匹配，因为keyword1 keyword2中间隔的词有4个，超过3
--- 'keyword2 keyword1', 'keyword2 a keyword1', 'keyword2 a b c keyword1' 也能匹配，因为指定 slop > 0 时不再要求keyword1 keyword2 的顺序。这个行为参考了 ES，与直觉的预期不一样，因此 Doris 提供了在 slop 后面指定正数符号（+）表示需要保持 keyword1 keyword2 的先后顺序
+-- 2.2 content 列中同时包含 keyword1 和 keyword2 的行，而且 keyword1 keyword2 的 `词距`（slop）不超过 3
+-- 'keyword1 keyword2', 'keyword1 a keyword2', 'keyword1 a b c keyword2' 都能匹配，因为 keyword1 keyword2 中间隔的词分别是 0 1 3 都不超过 3
+-- 'keyword1 a b c d keyword2' 不能能匹配，因为 keyword1 keyword2 中间隔的词有 4 个，超过 3
+-- 'keyword2 keyword1', 'keyword2 a keyword1', 'keyword2 a b c keyword1' 也能匹配，因为指定 slop > 0 时不再要求 keyword1 keyword2 的顺序。这个行为参考了 ES，与直觉的预期不一样，因此 Doris 提供了在 slop 后面指定正数符号（+）表示需要保持 keyword1 keyword2 的先后顺序
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3';
 -- slop 指定正号，'keyword1 a b c keyword2' 能匹配，而 'keyword2 a b c keyword1' 不能匹配
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3+';
 
--- 2.3 在保持词顺序的前提下，对最后一个词keyword2做前缀匹配，默认找50个前缀词（session变量inverted_index_max_expansions控制）
--- 'keyword1 keyword2abc' 能匹配，因为keyword1完全一样，最后一个 keyword2abc 是 keyword2 的前缀
+-- 2.3 在保持词顺序的前提下，对最后一个词 keyword2 做前缀匹配，默认找 50 个前缀词（session 变量 inverted_index_max_expansions 控制）
+-- 需要保证 keyword1, keyword2 在原文分词后也是相邻的，不能中间有其他词
+-- 'keyword1 keyword2abc' 能匹配，因为 keyword1 完全一样，最后一个 keyword2abc 是 keyword2 的前缀
 -- 'keyword1 keyword2' 也能匹配，因为 keyword2 也是 keyword2 的前缀
 -- 'keyword1 keyword3' 不能匹配，因为 keyword3 不是 keyword2 的前缀
 -- 'keyword1 keyword3abc' 也不能匹配，因为 keyword3abc 也不是 keyword2 的前缀
 SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1 keyword2';
 
--- 2.4 如果只填一个词会退化为前缀查询，默认找50个前缀词（session变量inverted_index_max_expansions控制）
+-- 2.4 如果只填一个词会退化为前缀查询，默认找 50 个前缀词（session 变量 inverted_index_max_expansions 控制）
 SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1';
 
--- 2.5 对分词后的词进行正则匹配，默认匹配50个（session变量inverted_index_max_expansions控制）
+-- 2.5 对分词后的词进行正则匹配，默认匹配 50 个（session 变量 inverted_index_max_expansions 控制）
 -- 类似 MATCH_PHRASE_PREFIX 的匹配规则，只是前缀变成了正则
 SELECT * FROM table_name WHERE content MATCH_REGEXP 'key*';
 
@@ -320,7 +326,18 @@ SELECT * FROM table_name WHERE ts > '2023-01-01 00:00:00';
 SELECT * FROM table_name WHERE op_type IN ('add', 'delete');
 ```
 
-### 分词函数
+### 通过profile分析索引加速效果
+
+倒排查询加速可以通过 session 变量 `enable_inverted_index_query` 开关，默认是 true 打开，有时为了验证索引加速效果可以设置为 false 关闭。
+
+可以通过 Query Profile 中的下面几个指标分析倒排索引的加速效果。
+- RowsInvertedIndexFiltered 倒排过滤掉的行数，可以与其他几个 Rows 值对比分析索引过滤效果
+- InvertedIndexFilterTime 倒排索引消耗的时间
+  - InvertedIndexSearcherOpenTime 倒排索引打开索引的时间
+  - InvertedIndexSearcherSearchTime 倒排索引内部查询的时间
+
+
+### 用分词函数验证分词效果
 
 如果想检查分词实际效果或者对一段文本进行分词行为，可以使用 TOKENIZE 函数进行验证。
 
@@ -351,11 +368,11 @@ mysql> SELECT TOKENIZE('武汉市长江大桥','"parser"="chinese","parser_mode"
 +----------------------------------------------------------------------------------------+
 1 row in set (0.02 sec)
 
-mysql> SELECT TOKENIZE('I love CHINA','"parser"="english"');
+mysql> SELECT TOKENIZE('I love Doris','"parser"="english"');
 +------------------------------------------------+
-| tokenize('I love CHINA', '"parser"="english"') |
+| tokenize('I love Doris', '"parser"="english"') |
 +------------------------------------------------+
-| ["i", "love", "china"]                         |
+| ["i", "love", "doris"]                         |
 +------------------------------------------------+
 1 row in set (0.02 sec)
 

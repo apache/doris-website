@@ -111,7 +111,7 @@ under the License.
   - 更多信息，请查看文档 [table_properties](../../admin-manual/system-tables/information_schema/table_properties/)
 - 新增 FE 中死锁和慢锁检测功能。
  
-  - 更多信息，请查看文档 [FE 锁管理](../../admin-manual/maint-monitor/frontend-lock-manager/)
+  - 更多信息，请查看文档 [FE 锁管理](../../admin-manual/trouble-shooting/frontend-lock-manager)
 
 ## 改进提升
 

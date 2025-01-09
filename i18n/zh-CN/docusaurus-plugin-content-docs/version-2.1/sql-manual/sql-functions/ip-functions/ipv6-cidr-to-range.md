@@ -26,15 +26,15 @@ under the License.
 
 IPV6_CIDR_TO_RANGE
 
-### Description
+## 描述
 
-#### Syntax
+## 语法
 
 `STRUCT<IPV6, IPV6> IPV6_CIDR_TO_RANGE(IPV6 ip_v6, INT16 cidr)`
 
 接收一个IPv6和一个包含CIDR的Int16值。返回一个结构体，其中包含两个IPv6字段分别表示子网的较低范围（min）和较高范围（max）。
 
-### Example
+## 举例
 
 ```sql
 mysql> SELECT ipv6_cidr_to_range(ipv6_string_to_num('2001:0db8:0000:85a3:0000:0000:ac1f:8001'), 32);

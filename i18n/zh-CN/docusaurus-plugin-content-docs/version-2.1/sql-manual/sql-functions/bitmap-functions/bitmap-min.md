@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## bitmap_min
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BIGINT BITMAP_MIN(BITMAP input)`
 
 计算并返回 bitmap 中的最小值.
 
-### example
+## 举例
 
 ```
 mysql> select bitmap_min(bitmap_from_string('')) value;

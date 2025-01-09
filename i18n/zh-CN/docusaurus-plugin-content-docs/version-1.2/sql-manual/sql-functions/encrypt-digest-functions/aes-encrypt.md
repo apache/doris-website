@@ -23,12 +23,12 @@ under the License.
 -->
 
 
-### Description
+## 描述
 
 AES 加密函数。该函数与 MySQL 中的 `AES_ENCRYPT` 函数行为一致。默认采用 `AES_128_ECB` 算法，padding 模式为 `PKCS7`。底层使用 OpenSSL 库进行加密。
 Reference: https://dev.mysql.com/doc/refman/8.0/en/encryption-functions.html#function_aes-decrypt
 
-#### Syntax
+## 语法
 
 `VARCHAR AES_ENCRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHAR encryption_mode])`
 
@@ -49,7 +49,7 @@ AES_ENCRYPT 函数对于传入的密钥，并不是直接使用，而是会进�
 2. 然后针对用户输入的密钥，第 `i` 位和第 `16*k+i` 位进行异或，如果用户输入的密钥不足 16 位，则后面补 0；
 3. 最后，再使用新生成的密钥进行加密；
 
-### Example
+## 举例
 
 ```sql
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));

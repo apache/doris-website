@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## unhex
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR unhex(VARCHAR str)`
 
@@ -35,7 +35,7 @@ under the License.
 其他情况每两个字符为一组转化为16进制后的字符，然后拼接成字符串输出
 
 
-### example
+## 举例
 
 ```
 mysql> select unhex('@');

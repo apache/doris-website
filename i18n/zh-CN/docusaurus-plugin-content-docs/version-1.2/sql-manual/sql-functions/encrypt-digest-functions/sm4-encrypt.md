@@ -23,8 +23,8 @@ under the License.
 -->
 
 
-### Description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR SM4_ENCRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHAR encryption_mode])`
 
@@ -38,7 +38,7 @@ under the License.
 两参数版本，会无视 session variable `block_encryption_mode`，始终误用 `AES_128_ECB` 算法进行加密。因此强烈不推荐调用。
 :::
 
-### Example
+## 举例
 
 ```sql
 MySQL > select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));

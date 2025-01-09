@@ -137,8 +137,8 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
     (
         "provider" = "S3",
         "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
-        "AWS_ACCESS_KEY" = "AKIAIOSFODNN7EXAMPLE",
-        "AWS_SECRET_KEY"="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+        "AWS_ACCESS_KEY" = "<your-ak>",
+        "AWS_SECRET_KEY"="<your-sk>",
         "AWS_REGION" = "us-west-2",
         "compress_type" = "PLAIN"
     )

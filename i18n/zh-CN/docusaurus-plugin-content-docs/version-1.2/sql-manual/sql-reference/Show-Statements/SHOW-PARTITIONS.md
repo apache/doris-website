@@ -30,7 +30,7 @@ under the License.
 
 SHOW PARTITIONS
 
-### Description
+## 描述
 
 该语句用于展示分区信息
 
@@ -45,7 +45,7 @@ SHOW PARTITIONS
 1. 支持PartitionId,PartitionName,State,Buckets,ReplicationNum,LastConsistencyCheckTime等列的过滤
 2. TEMPORARY指定列出临时分区
 
-### Example
+## 举例
 
 1. 展示指定db下指定表的所有非临时分区信息
 

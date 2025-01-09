@@ -57,11 +57,11 @@ CANCELED 即取消状态，TASK 持久化最终状态，即 SUCCESS/FAILED，其
 
 #### 相关文档
 
-- [暂停-JOB](../Alter/PAUSE-JOB.md)
-- [恢复-JOB](../Alter/RESUME-JOB.md)
-- [删除-JOB](../Drop/DROP-JOB.md)
-- [查询-JOB](../../../sql-functions/table-valued-functions/jobs.md)
-- [查询-TASKS](../../../sql-functions/table-valued-functions/tasks.md)
+- [暂停-JOB](../job/PAUSE-JOB.md)
+- [恢复-JOB](../job/RESUME-JOB.md)
+- [删除-JOB](../job/DROP-JOB.md)
+- [查询-JOB](../../../sql-manual/sql-functions/table-valued-functions/jobs.md)
+- [查询-TASKS](../../sql-functions/table-valued-functions/jobs.md)
 
 ### 语法
 

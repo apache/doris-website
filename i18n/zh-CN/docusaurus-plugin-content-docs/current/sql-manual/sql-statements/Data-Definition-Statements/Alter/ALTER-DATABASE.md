@@ -30,7 +30,7 @@ under the License.
 
 ALTER DATABASE
 
-### Description
+## 描述
 
 该语句用于设置指定数据库的属性。（仅管理员使用）
 
@@ -62,7 +62,7 @@ ALTER DATABASE db_name SET REPLICA QUOTA quota;
 ALTER DATABASE db_name SET PROPERTIES ("key"="value", ...); 
 ```
 
-### Example
+## 举例
 
 1. 设置指定数据库数据量配额
 

@@ -24,13 +24,13 @@ under the License.
 
 ## asin
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DOUBLE asin(DOUBLE x)`
 返回`x`的反正弦值，若 `x`不在`-1`到 `1`的范围之内，则返回 `nan`.
 
-### example
+## 举例
 
 ```
 mysql> select asin(0.5);

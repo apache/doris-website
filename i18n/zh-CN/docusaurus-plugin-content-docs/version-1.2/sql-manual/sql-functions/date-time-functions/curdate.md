@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## curdate,current_date
-### description
-#### Syntax
+## 描述
+## 语法
 
 `DATE CURDATE()`
 
 获取当前的日期，以DATE类型返回
 
-### Examples
+## 举例s
 
 ```
 mysql> SELECT CURDATE();

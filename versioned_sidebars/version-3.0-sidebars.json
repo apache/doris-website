@@ -5,26 +5,8 @@
             "label": "Getting Started",
             "collapsed": false,
             "items": [
-                "gettingStarted/what-is-new",
                 "gettingStarted/what-is-apache-doris",
-                "gettingStarted/quick-start",
-                {
-                    "type": "category",
-                    "label": "Tutorials",
-                    "items": [
-                        {
-                            "type": "category",
-                            "label": "Building lakehouse",
-                            "items": [
-                                "gettingStarted/tutorials/building-lakehouse/doris-hudi",
-                                "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                                "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
-                                "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
-                            ]
-                        },
-                        "gettingStarted/tutorials/log-storage-analysis"
-                    ]
-                }
+                "gettingStarted/quick-start"
             ]
         },
         {
@@ -38,23 +20,11 @@
                     "items": [
                         {
                             "type": "category",
-                            "label": "Source Code Compilation",
-                            "items": [
-                                "install/source-install/compilation-with-docker",
-                                "install/source-install/compilation-with-ldb-toolchain",
-                                "install/source-install/compilation-linux",
-                                "install/source-install/compilation-arm",
-                                "install/source-install/compilation-win",
-                                "install/source-install/compilation-mac"
-                            ]
-                        },
-                        {
-                            "type": "category",
                             "label": "Installation Preparation",
                             "items": [
                                 "install/preparation/env-checking",
-				"install/preparation/cluster-planning",
-				"install/preparation/os-checking"
+                                "install/preparation/cluster-planning",
+                                "install/preparation/os-checking"
                             ]
                         },
                         {
@@ -66,38 +36,38 @@
                             ]
                         },
                         {
-                             "type": "category",
-                             "label": "Deploying on Kubernetes",
-                             "items": [
-                                 {
-                                     "type": "category",
-                                     "label": "Compute storage coupled",
-                                     "items": [
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
-                                     ]
-                                 },
-                                 {
-                                     "type": "category",
-                                     "label": "Compute storage decoupled",
-                                     "items": [
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-cg",
-                                         "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart"
-                                     ]
-                                 }
-                             ]
+                            "type": "category",
+                            "label": "Deploying on Kubernetes",
+                            "items": [
+                                {
+                                    "type": "category",
+                                    "label": "Compute storage coupled",
+                                    "items": [
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Compute storage decoupled",
+                                    "items": [
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-cg",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart"
+                                    ]
+                                }
+                            ]
                         },
                         {
                             "type": "category",
-                            "label": "Deployment on Cloud",
+                            "label": "Deploying on Cloud",
                             "items": [
-			                    "install/cluster-deployment/doris-on-aws"
+                                "install/cluster-deployment/doris-on-aws"
                             ]
                         }
                     ]
@@ -115,26 +85,6 @@
                     "label": "Data Table Design",
                     "items": [
                         "table-design/overview",
-                        "table-design/data-type",
-                        {
-                            "type": "category",
-                            "label": "Table Indexes",
-                            "items": [
-                                "table-design/index/index-overview",
-                                "table-design/index/prefix-index",
-                                "table-design/index/inverted-index",
-                                "table-design/index/bloomfilter",
-                                "table-design/index/ngram-bloomfilter-index"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Tiered Storage",
-                            "items": [
-                                "table-design/tiered-storage/tiered-ssd-hdd",
-                                "table-design/tiered-storage/remote-storage"
-                            ]
-                        },
                         {
                             "type": "category",
                             "label": "Data Models",
@@ -146,7 +96,6 @@
                                 "table-design/data-model/tips"
                             ]
                         },
-                        "table-design/row-store",
                         {
                             "type": "category",
                             "label": "Data Partitioning",
@@ -160,13 +109,36 @@
                                 "table-design/data-partitioning/common-issues"
                             ]
                         },
+                        "table-design/data-type",
+                        "table-design/column-compression",
+                        "table-design/row-store",
                         "table-design/schema-change",
+                        {
+                            "type": "category",
+                            "label": "Tiered Storage",
+                            "items": [
+                                "table-design/tiered-storage/overview",
+                                "table-design/tiered-storage/tiered-ssd-hdd",
+                                "table-design/tiered-storage/remote-storage"
+                            ]
+                        },
                         "table-design/auto-increment",
+                        {
+                            "type": "category",
+                            "label": "Table Indexes",
+                            "items": [
+                                "table-design/index/index-overview",
+                                "table-design/index/prefix-index",
+                                "table-design/index/inverted-index",
+                                "table-design/index/bloomfilter",
+                                "table-design/index/ngram-bloomfilter-index"
+                            ]
+                        },
                         "table-design/best-practice"
                     ]
                 },
                 {
-		    "type": "category",
+                    "type": "category",
                     "label": "Loading Data",
                     "items": [
                         "data-operate/import/load-manual",
@@ -180,6 +152,7 @@
                                 "data-operate/import/data-source/hdfs",
                                 "data-operate/import/data-source/amazon-s3",
                                 "data-operate/import/data-source/google-cloud-storage",
+                                "data-operate/import/data-source/azure-storage",
                                 "data-operate/import/data-source/aliyun-oss",
                                 "data-operate/import/data-source/huawei-obs",
                                 "data-operate/import/data-source/tencent-cos",
@@ -202,7 +175,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "file formats",
+                            "label": "File Formats",
                             "items": [
                                 "data-operate/import/file-format/csv",
                                 "data-operate/import/file-format/json",
@@ -212,7 +185,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "complex data types",
+                            "label": "Complex Data Types",
                             "items": [
                                 "data-operate/import/complex-types/array",
                                 "data-operate/import/complex-types/map",
@@ -256,10 +229,10 @@
                                 "data-operate/delete/table-temp-partition"
                             ]
                         },
-			            "data-operate/transaction"
+                        "data-operate/transaction"
                     ]
                 },
-	        	{
+                {
                     "type": "category",
                     "label": "Exporting Data",
                     "items": [
@@ -267,7 +240,7 @@
                         "data-operate/export/export-manual",
                         "data-operate/export/outfile",
                         "data-operate/export/export-with-mysql-dump"
-                     ]
+                    ]
                 },
                 {
                     "type": "category",
@@ -313,7 +286,7 @@
                                 "query-acceleration/materialized-view/sync-materialized-view",
                                 {
                                     "type": "category",
-                                    "label": "Async-Materialize View",
+                                    "label": "Async-Materialized View",
                                     "items": [
                                         "query-acceleration/materialized-view/async-materialized-view/overview",
                                         "query-acceleration/materialized-view/async-materialized-view/functions-and-demands",
@@ -443,9 +416,20 @@
                         "lakehouse/compute-node",
                         "lakehouse/external-statistics",
                         "lakehouse/cloud-auth",
-                        "lakehouse/sql-dialect"
+                        "lakehouse/sql-dialect",
+                        {
+                            "type": "category",
+                            "label": "Lakehouse Best Practices",
+                            "items": [
+                                "lakehouse/lakehouse-best-practices/doris-hudi",
+                                "lakehouse/lakehouse-best-practices/doris-paimon",
+                                "lakehouse/lakehouse-best-practices/doris-iceberg",
+                                "lakehouse/lakehouse-best-practices/doris-lakesoul"
+                            ]
+                        }
                     ]
                 },
+                "log-storage-analysis",
                 {
                     "type": "category",
                     "label": "Compute-Storage Decoupled",
@@ -459,7 +443,42 @@
                         "compute-storage-decoupled/upgrade",
                         "compute-storage-decoupled/meta-service-api"
                     ]
+                },
+                {
+                    "type": "category",
+                    "label": "Security",
+                    "items": [
+                        {
+                            "type": "category",
+                            "label": "Authentication and Authorization",
+                            "items": [
+                                "admin-manual/auth/authentication-and-authorization",
+                                "admin-manual/auth/ldap",
+                                "admin-manual/auth/ranger"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Data Transmission Encryption",
+                            "items": [
+                                "admin-manual/auth/certificate",
+                                "admin-manual/auth/fe-certificate"
+                            ]
+                        },
+                        "admin-manual/audit-plugin",
+                        "admin-manual/auth/encryption-function"
+                    ]
                 }
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Benchmark",
+            "collapsed": false,
+            "items": [
+                "benchmark/ssb",
+                "benchmark/tpch",
+                "benchmark/tpcds"
             ]
         },
         {
@@ -480,7 +499,28 @@
                 },
                 {
                     "type": "category",
-                    "label": "Business Continuity & Data Recovery",
+                    "label": "Managing Workload",
+                    "items": [
+                        "admin-manual/workload-management/workload-management-summary",
+                        {
+                            "type": "category",
+                            "label": "Resource Isolation",
+                            "items": [
+                                "admin-manual/workload-management/resource-group",
+                                "admin-manual/workload-management/compute-group",
+                                "admin-manual/workload-management/workload-group"
+                            ]
+                        },
+                        "admin-manual/workload-management/analysis-diagnosis",
+                        "admin-manual/workload-management/concurrency-control-and-queuing",
+                        "admin-manual/workload-management/sql-blocking",
+                        "admin-manual/workload-management/kill-query",
+                        "admin-manual/workload-management/job-scheduler"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Managing Disater Recovery",
                     "items": [
                         "admin-manual/data-admin/overview",
                         {
@@ -492,73 +532,19 @@
                                 "admin-manual/data-admin/backup-restore/restore"
                             ]
                         },
-                        "admin-manual/data-admin/ccr",
-                        "admin-manual/data-admin/recyclebin"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing Workload",
-                    "items": [
-                        "admin-manual/workload-management/workload-management-summary",
-                        {
-    	                    "type": "category",
-    	                    "label": "Resource Isolation",
-    	                    "items": [
-                				"admin-manual/workload-management/resource-group",
-                				"admin-manual/workload-management/compute-group",
-    	                        "admin-manual/workload-management/workload-group"
-    	                    ]
-    	                },
-                        "admin-manual/workload-management/concurrency-control-and-queuing",
-                        "admin-manual/workload-management/sql-blocking",
-                        "admin-manual/workload-management/kill-query",
-                        "admin-manual/workload-management/job-scheduler"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing User Privilege",
-                    "items": [
-                        "admin-manual/auth/authentication-and-authorization",
-                        "admin-manual/auth/ldap",
-                        "admin-manual/auth/ranger",
-                        "admin-manual/auth/certificate",
-                        "admin-manual/auth/fe-certificate",
-                        "admin-manual/auth/encryption-function"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Managing Memory",
-                    "items": [
-                        "admin-manual/memory-management/overview",
-                        "admin-manual/memory-management/memory-issue-faq",
                         {
                             "type": "category",
-                            "label": "Managing Memory Analysis",
+                            "label": "Cross Cluster Replication",
                             "items": [
-                                "admin-manual/memory-management/memory-analysis/jemalloc-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/global-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/doris-cache-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/metadata-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/query-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/load-memory-analysis",
-                                "admin-manual/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded",
-                                "admin-manual/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded",
-                                "admin-manual/memory-management/memory-analysis/oom-crash-analysis",
-                                "admin-manual/memory-management/memory-analysis/memory-log-analysis",
-                                "admin-manual/memory-management/memory-analysis/heap-profile-memory-analysis"
+                                "admin-manual/data-admin/ccr/overview",
+                                "admin-manual/data-admin/ccr/quickstart",
+                                "admin-manual/data-admin/ccr/manual",
+                                "admin-manual/data-admin/ccr/feature",
+                                "admin-manual/data-admin/ccr/config",
+                                "admin-manual/data-admin/ccr/performance"
                             ]
                         },
-                        {
-                            "type": "category",
-                            "label": "Managing Memory Feature",
-                            "items": [
-                                "admin-manual/memory-management/memory-feature/memory-tracker",
-                                "admin-manual/memory-management/memory-feature/memory-control-strategy"
-                            ]
-                        }
+                        "admin-manual/data-admin/recyclebin"
                     ]
                 },
                 {
@@ -573,21 +559,11 @@
                     "type": "category",
                     "label": "Maintenance",
                     "items": [
-                        {
-                            "type": "category",
-                            "label": "Monitor",
-                            "items": [
-                                "admin-manual/maint-monitor/monitor-metrics/metrics",
-                                "admin-manual/maint-monitor/monitor-alert"
-                            ]
-                        },
+                        "admin-manual/maint-monitor/metrics",
+                        "admin-manual/maint-monitor/monitor-alert",
                         "admin-manual/maint-monitor/disk-capacity",
                         "admin-manual/maint-monitor/tablet-repair-and-balance",
-                        "admin-manual/maint-monitor/tablet-meta-tool",
-                        "admin-manual/maint-monitor/tablet-local-debug",
-                        "admin-manual/maint-monitor/metadata-operation",
-                        "admin-manual/maint-monitor/automatic-service-start",
-                        "admin-manual/maint-monitor/frontend-lock-manager"
+                        "admin-manual/maint-monitor/automatic-service-start"
                     ]
                 },
                 {
@@ -668,111 +644,51 @@
                         }
                     ]
                 },
-                "admin-manual/audit-plugin",
                 {
                     "type": "category",
-                    "label": "OPEN API",
+                    "label": "Trouble Shooting",
                     "items": [
-                        "admin-manual/open-api/overview",
                         {
                             "type": "category",
-                            "label": "FE HTTP API",
+                            "label": "Managing Memory",
                             "items": [
-                                "admin-manual/open-api/fe-http/config-action",
-                                "admin-manual/open-api/fe-http/ha-action",
-                                "admin-manual/open-api/fe-http/hardware-info-action",
-                                "admin-manual/open-api/fe-http/help-action",
-                                "admin-manual/open-api/fe-http/log-action",
-                                "admin-manual/open-api/fe-http/login-action",
-                                "admin-manual/open-api/fe-http/logout-action",
-                                "admin-manual/open-api/fe-http/query-profile-action-controller",
-                                "admin-manual/open-api/fe-http/session-action",
-                                "admin-manual/open-api/fe-http/system-action",
-                                "admin-manual/open-api/fe-http/colocate-meta-action",
-                                "admin-manual/open-api/fe-http/meta-action",
-                                "admin-manual/open-api/fe-http/cluster-action",
-                                "admin-manual/open-api/fe-http/node-action",
-                                "admin-manual/open-api/fe-http/query-profile-action",
-                                "admin-manual/open-api/fe-http/backends-action",
-                                "admin-manual/open-api/fe-http/bootstrap-action",
-                                "admin-manual/open-api/fe-http/cancel-load-action",
-                                "admin-manual/open-api/fe-http/check-decommission-action",
-                                "admin-manual/open-api/fe-http/check-storage-type-action",
-                                "admin-manual/open-api/fe-http/connection-action",
-                                "admin-manual/open-api/fe-http/extra-basepath-action",
-                                "admin-manual/open-api/fe-http/fe-version-info-action",
-                                "admin-manual/open-api/fe-http/get-ddl-stmt-action",
-                                "admin-manual/open-api/fe-http/get-load-info-action",
-                                "admin-manual/open-api/fe-http/get-load-state",
-                                "admin-manual/open-api/fe-http/get-log-file-action",
-                                "admin-manual/open-api/fe-http/get-small-file",
-                                "admin-manual/open-api/fe-http/health-action",
-                                "admin-manual/open-api/fe-http/meta-info-action",
-                                "admin-manual/open-api/fe-http/meta-replay-state-action",
-                                "admin-manual/open-api/fe-http/metrics-action",
-                                "admin-manual/open-api/fe-http/profile-action",
-                                "admin-manual/open-api/fe-http/query-detail-action",
-                                "admin-manual/open-api/fe-http/query-schema-action",
-                                "admin-manual/open-api/fe-http/query-stats-action",
-                                "admin-manual/open-api/fe-http/row-count-action",
-                                "admin-manual/open-api/fe-http/set-config-action",
-                                "admin-manual/open-api/fe-http/show-data-action",
-                                "admin-manual/open-api/fe-http/show-meta-info-action",
-                                "admin-manual/open-api/fe-http/show-proc-action",
-                                "admin-manual/open-api/fe-http/show-runtime-info-action",
-                                "admin-manual/open-api/fe-http/show-table-data-action",
-                                "admin-manual/open-api/fe-http/statement-execution-action",
-                                "admin-manual/open-api/fe-http/table-query-plan-action",
-                                "admin-manual/open-api/fe-http/table-row-count-action",
-                                "admin-manual/open-api/fe-http/table-schema-action",
-                                "admin-manual/open-api/fe-http/upload-action",
-                                "admin-manual/open-api/fe-http/import-action",
-                                "admin-manual/open-api/fe-http/meta-info-action-V2",
-                                "admin-manual/open-api/fe-http/debug-point-action",
-                                "admin-manual/open-api/fe-http/statistic-action"
+                                "admin-manual/trouble-shooting/memory-management/overview",
+                                "admin-manual/trouble-shooting/memory-management/memory-issue-faq",
+                                {
+                                    "type": "category",
+                                    "label": "Managing Memory Analysis",
+                                    "items": [
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/jemalloc-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/global-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/doris-cache-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/query-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/oom-crash-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/memory-log-analysis",
+                                        "admin-manual/trouble-shooting/memory-management/memory-analysis/heap-profile-memory-analysis"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Managing Memory Feature",
+                                    "items": [
+                                        "admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker",
+                                        "admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy"
+                                    ]
+                                }
                             ]
                         },
-                        {
-                            "type": "category",
-                            "label": "BE HTTP API",
-                            "items": [
-                                "admin-manual/open-api/be-http/check-rpc-channel",
-                                "admin-manual/open-api/be-http/reset-rpc-channel",
-                                "admin-manual/open-api/be-http/compaction-status",
-                                "admin-manual/open-api/be-http/compaction-run",
-                                "admin-manual/open-api/be-http/meta",
-                                "admin-manual/open-api/be-http/snapshot",
-                                "admin-manual/open-api/be-http/check-tablet-segment",
-                                "admin-manual/open-api/be-http/config",
-                                "admin-manual/open-api/be-http/metrics",
-                                "admin-manual/open-api/be-http/tablet-distribution",
-                                "admin-manual/open-api/be-http/tablet-migration",
-                                "admin-manual/open-api/be-http/tablet-info",
-                                "admin-manual/open-api/be-http/checksum",
-                                "admin-manual/open-api/be-http/download",
-                                "admin-manual/open-api/be-http/pad-rowset",
-                                "admin-manual/open-api/be-http/version-info",
-                                "admin-manual/open-api/be-http/health",
-                                "admin-manual/open-api/be-http/tablet-reload",
-                                "admin-manual/open-api/be-http/tablet-restore",
-                                "admin-manual/open-api/be-http/be-vlog"
-                            ]
-                        }
+                        "admin-manual/trouble-shooting/compaction",
+                        "admin-manual/trouble-shooting/metadata-operation",
+                        "admin-manual/trouble-shooting/frontend-lock-manager",
+                        "admin-manual/trouble-shooting/tablet-local-debug",
+                        "admin-manual/trouble-shooting/tablet-meta-tool",
+                        "admin-manual/trouble-shooting/repairing-data"
                     ]
-                },
-                "admin-manual/plugin-development-manual",
-                "admin-manual/small-file-mgr",
-                "admin-manual/compaction"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Benchmark",
-            "collapsed": false,
-            "items": [
-                "benchmark/ssb",
-                "benchmark/tpch",
-                "benchmark/tpcds"
+                }
             ]
         },
         {
@@ -1056,6 +972,8 @@
                                 "sql-manual/sql-functions/date-time-functions/months-add",
                                 "sql-manual/sql-functions/date-time-functions/months-diff",
                                 "sql-manual/sql-functions/date-time-functions/months-sub",
+                                "sql-manual/sql-functions/date-time-functions/quarters-sub",
+                                "sql-manual/sql-functions/date-time-functions/quarters-add",
                                 "sql-manual/sql-functions/date-time-functions/years-add",
                                 "sql-manual/sql-functions/date-time-functions/years-diff",
                                 "sql-manual/sql-functions/date-time-functions/years-sub"
@@ -1740,7 +1658,6 @@
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-AND-GENERATED-COLUMN",
                                         "sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE",
-                                        "sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/table-and-view/table/TRUNCATE-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/DROP-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-CREATE-TABLE",
@@ -1789,6 +1706,7 @@
                                         "sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/table-and-view/materialized-view/REFRESH-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW-JOB",
                                         "sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW-JOB",
                                         "sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK"

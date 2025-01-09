@@ -11,6 +11,10 @@
     "message": "版本发布与校验",
     "description": "The label for category Doris Introduction in sidebar community"
   },
+  "sidebar.community.category.Source Code Compilation": {
+    "message": "源码编译",
+    "description": "The label for category Source Code Compilation in sidebar community"
+  },
   "sidebar.community.category.Design Documents": {
     "message": "设计文档",
     "description": "The label for category Developer Guide in sidebar community"

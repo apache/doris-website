@@ -86,3 +86,4 @@ For more information on point query usage, please refer to [High-Concurrent Poin
 
 1. Enabling row storage will increase the storage space used. The increase in storage space is related to the data characteristics and is generally 2 to 10 times the size of the original table. The exact space usage needs to be tested with actual data.
 2. The `page_size` of row storage also affects the storage space. You can adjust it based on the previous table attribute parameter `row_store_page_size`.
+3. Alter the `store_row_column` is not supported in 2.1

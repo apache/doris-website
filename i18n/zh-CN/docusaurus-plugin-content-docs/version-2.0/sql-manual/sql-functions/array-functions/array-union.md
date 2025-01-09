@@ -28,15 +28,15 @@ under the License.
 
 array_union
 
-### description
+## 描述
 
-#### Syntax
+## 语法
 
 `ARRAY<T> array_union(ARRAY<T> array1, ARRAY<T> array2)`
 
 返回一个数组，包含array1和array2的并集中的所有元素，不包含重复项，如果输入参数为NULL，则返回NULL
 
-### example
+## 举例
 
 ```
 mysql> select k1,k2,k3,array_union(k2,k3) from array_type_table;

@@ -5,26 +5,8 @@
             "label": "Getting Started",
             "collapsed": false,
             "items": [
-                "gettingStarted/what-is-new",
                 "gettingStarted/what-is-apache-doris",
-                "gettingStarted/quick-start",
-                {
-                    "type": "category",
-                    "label": "Tutorials",
-                    "items": [
-                        {
-                            "type": "category",
-                            "label": "Building lakehouse",
-                            "items": [
-                                "gettingStarted/tutorials/building-lakehouse/doris-hudi",
-                                "gettingStarted/tutorials/building-lakehouse/doris-paimon",
-                                "gettingStarted/tutorials/building-lakehouse/doris-iceberg",
-                                "gettingStarted/tutorials/building-lakehouse/doris-lakesoul"
-                            ]
-                        },
-                        "gettingStarted/tutorials/log-storage-analysis"
-                    ]
-                }
+                "gettingStarted/quick-start"
             ]
         },
         {
@@ -52,18 +34,7 @@
                                 "install/construct-docker/run-docker-cluster"
                             ]
                         },
-                        "install/k8s-deploy",
-                        {
-                            "type": "category",
-                            "label": "Source Code Compilation",
-                            "items": [
-                                "install/source-install/compilation-general",
-                                "install/source-install/compilation-with-ldb-toolchain",
-                                "install/source-install/compilation-arm",
-                                "install/source-install/compilation-win",
-                                "install/source-install/compilation-mac"
-                            ]
-                        }
+                        "install/k8s-deploy"
                     ]
                 },
                 {
@@ -1223,7 +1194,6 @@
                 "ecosystem/cloudcanal",
                 "ecosystem/spark-doris-connector",
                 "ecosystem/flink-doris-connector",
-                "ecosystem/doris-kafka-connector",
                 "ecosystem/datax",
                 "ecosystem/dbt-doris-adapter",
                 "ecosystem/seatunnel",

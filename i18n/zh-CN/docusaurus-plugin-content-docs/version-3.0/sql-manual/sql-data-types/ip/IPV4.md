@@ -24,16 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV4
 
-### description
+
+## 描述
 
 IPv4 类型，以 UInt32 的形式存储在 4 个字节中，用于表示 IPv4 地址。
 取值范围是 ['0.0.0.0', '255.255.255.255']。
 
 `超出取值范围或者格式非法的输入将返回NULL`
 
-### example
+## 举例
     
 建表示例如下：
 
@@ -73,6 +73,3 @@ mysql> select * from ipv4_test order by id;
 +------+-----------------+
 ```
 
-### keywords
-
-IPV4

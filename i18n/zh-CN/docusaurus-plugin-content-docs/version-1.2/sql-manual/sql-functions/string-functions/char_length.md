@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## char_length
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT char_length(VARCHAR str)`
 
 
 返回字符串的长度，对于多字节字符，返回字符数, 目前仅支持utf8 编码。这个函数还有一个别名 `character_length`。
 
-### example
+## 举例
 
 ```
 mysql> select char_length("abc");
