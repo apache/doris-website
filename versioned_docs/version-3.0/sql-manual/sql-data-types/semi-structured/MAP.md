@@ -36,16 +36,17 @@ MAP
 
 A Map of K, V items, it cannot be used as a key column. Now MAP can only used in Duplicate and Unique Model Tables.
 
-Need to manually enable the support, it is disabled by default.
-```
-admin set frontend config("enable_map_type" = "true");
-```
-
 K,V could be any of:
 
 ```
 BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIMALV3, DATE,
-DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
+DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING, IPV4, IPV6
+```
+
+V also could be any of:
+
+```
+ARRAY, MAP, STRUCT
 ```
 
 ### example
