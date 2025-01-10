@@ -95,10 +95,18 @@ chmod 770 /sys/fs/cgroup/doris
 chown -R doris:doris /sys/fs/cgroup/doris
 ```
 
-5. 如果目前环境里生效的是CGroup v2版本，那么还需要做以下操作。这是因为CGroup v2对于权限管控比较严格，需要具备根目录的cgroup.procs文件的写权限才能实现进程在group之间的移动。
-   如果是CGroup v1那么不需要这一步。
+5. 如果目前环境里生效的是 CGroup v2 版本，那么还需要进行以下两步操作。 如果是 CGroup v1 那么可以跳过当前步骤。
+* 修改根目录下的 cgroup.procs 文件权限，这是因为 CGroup v2 对于权限管控比较严格，需要具备根目录的 cgroup.procs 文件的写权限才能实现进程在 CGroup 目录之间的移动。
 ```shell
 chmod a+w /sys/fs/cgroup/cgroup.procs
+```
+* 在 CGroup V2 中，cgroup.controllers 保存了当前目录可用的控制器，cgroup.subtree_control 保存了当前目录的子目录的可用控制器。
+因此需要确认 doris 目录是否已经启用 cpu 控制器，如果 doris 目录下的 cgroup.controllers 中不包含 cpu ，那么说明 cpu 控制器未启用，可以在 doris 目录中执行以下命令，
+这个命令是通过修改父级目录的 cgroup.subtree_control 文件使得 doris 目录可以使用 cpu 控制器。
+```
+// 预期该命令执行完成之后，可以在 doris 目录下看到 cpu.max 文件，且 cgroup.controllers 的输出包含 cpu。
+// 如果该命令执行失败，则说明 doris 目录的父级目录也未启用 cpu 控制器，需要为父级目录启用 cpu 控制器。
+echo +cpu > ../cgroup.subtree_control
 ```
 
 6. 修改 BE 的配置，指定 cgroup 的路径
