@@ -156,7 +156,7 @@ In most cases, the GLOBAL strategy can optimize queries in a wider range of scen
 
 If the join query involved in the cluster does not improve performance due to Runtime Filter, you can change the setting to OFF to completely turn off the function.
 
-When building and applying Runtime Filters on different Fragments, the reasons and strategies for merging Runtime Filters can be found in [ISSUE 6116](https://github.com/apache/incubator-doris/issues/6116)
+When building and applying Runtime Filters on different Fragments, the reasons and strategies for merging Runtime Filters can be found in [ISSUE 6116](https://github.com/apache/doris/issues/6116)
 
 #### 3.runtime_filter_wait_time_ms
 Waiting for Runtime Filter is time consuming.
