@@ -180,7 +180,7 @@ GLOBAL：相对激进，除满足 LOCAL 策略的场景外，还可以将 Runtim
 
 如果集群中涉及的 join 查询不会因为 Runtime Filter 而提高性能，您可以将设置更改为 OFF，从而完全关闭该功能。
 
-在不同 Fragment 上构建和应用 Runtime Filter 时，需要合并 Runtime Filter 的原因和策略可参阅 [ISSUE 6116(opens new window)](https://github.com/apache/incubator-doris/issues/6116)
+在不同 Fragment 上构建和应用 Runtime Filter 时，需要合并 Runtime Filter 的原因和策略可参阅 [ISSUE 6116(opens new window)](https://github.com/apache/doris/issues/6116)
 
 **3. runtime_filter_wait_time_ms**
 
