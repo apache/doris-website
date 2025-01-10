@@ -28,7 +28,7 @@ under the License.
 
 Runtime Filter is a new feature officially added in Doris 0.15. It is designed to dynamically generate filter conditions for certain Join queries at runtime to reduce the amount of scanned data, avoid unnecessary I/O and network transmission, and speed up the query.
 
-It's design, implementation and effects, please refer to [ISSUE 6116](https://github.com/apache/incubator-doris/issues/6116).
+It's design, implementation and effects, please refer to [ISSUE 6116](https://github.com/apache/doris/issues/6116).
 
 ## Noun Interpretation
 
