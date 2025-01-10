@@ -180,6 +180,7 @@ const config = {
                     blogSidebarCount: 0,
                     showReadingTime: false,
                     onUntruncatedBlogPosts: 'ignore',
+                    onInlineAuthors: 'ignore',
                 },
                 theme: {
                     customCss: require.resolve('./src/scss/custom.scss'),
