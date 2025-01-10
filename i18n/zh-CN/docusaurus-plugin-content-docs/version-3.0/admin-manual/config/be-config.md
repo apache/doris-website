@@ -277,7 +277,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
 * 描述：该配置主要用来修改 brpc 中 bthreads 的数量。该配置的默认值被设置为 -1, 这意味着 bthreads 的数量将被设置为机器的 cpu 核数。
 
-  - 用户可以将该配置的值调大来获取更好的 QPS 性能。更多的信息可以参考`https://github.com/apache/incubator-brpc/blob/master/docs/cn/benchmark.md`。
+  - 用户可以将该配置的值调大来获取更好的 QPS 性能。更多的信息可以参考 `https://github.com/apache/brpc/blob/master/docs/cn/benchmark.md`。
 * 默认值：-1
 
 #### `thrift_rpc_timeout_ms`
