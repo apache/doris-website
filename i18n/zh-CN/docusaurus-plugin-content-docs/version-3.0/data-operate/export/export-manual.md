@@ -99,7 +99,7 @@ PROPERTIES (
     "s3.region" = "xxxxx",
     "s3.secret_key"="xxxx",
     "s3.access_key" = "xxxxx"
-)
+);
 ```
 
 ### 查看导出作业
@@ -150,7 +150,7 @@ CANCEL EXPORT FROM dbName WHERE LABEL like "%export_%";
 
 * Doris 内表
 * Doris 逻辑视图
-* Doris Catalog 表
+* External Catalog 中的表
 
 ### 导出数据存储位置
 
@@ -234,7 +234,7 @@ PROPERTIES (
     "s3.region" = "xxxxx",
     "s3.secret_key"="xxxx",
     "s3.access_key" = "xxxxx"
-)
+);
 ```
 
 ### 导出时过滤数据
@@ -253,12 +253,12 @@ PROPERTIES (
     "s3.region" = "xxxxx",
     "s3.secret_key"="xxxx",
     "s3.access_key" = "xxxxx"
-)
+);
 ```
 
 ### 导出外表数据
 
-导出作业支持 Doris Catalog 外表数据的导出：
+导出作业支持 Export Catalog 外表数据的导出：
 
 ```sql
 -- Create a hive catalog
@@ -277,10 +277,8 @@ PROPERTIES(
     "s3.region" = "xxxxx",
     "s3.secret_key"="xxxx",
     "s3.access_key" = "xxxxx"
-)
+);
 ```
-
-关于 Export 并发导出的原理，可参阅附录部分。
 
 ### 导出前清空导出目录
 
@@ -295,7 +293,7 @@ PROPERTIES (
     "s3.region" = "xxxxx",
     "s3.secret_key"="xxxx",
     "s3.access_key" = "xxxxx"
-)
+);
 ```
 
 如果设置了 `"delete_existing_files" = "true"`，导出作业会先将 `s3://bucket/export/` 目录下所有文件及目录删除，然后导出数据到该目录下。
@@ -316,7 +314,7 @@ PROPERTIES (
     "s3.region" = "xxxxx",
     "s3.secret_key"="xxxx",
     "s3.access_key" = "xxxxx"
-)
+);
 ```
 
 通过设置 `"max_file_size" = "512MB"`，则单个导出文件的最大大小为 512MB。

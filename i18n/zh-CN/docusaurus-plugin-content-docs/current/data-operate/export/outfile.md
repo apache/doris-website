@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Select Into Outfile",
+    "title": "SELECT INTO OUTFILE",
     "language": "zh-CN"
 }
 ---
@@ -39,7 +39,7 @@ under the License.
 `SELECT INTO OUTFILE` 适用于以下场景：
 
 -  导出数据需要经过复杂计算逻辑的，如过滤、聚合、关联等。
--  适合执行同步任务的场景。
+-  适合需要执行同步任务的场景。
 
 在使用 `SELECT INTO OUTFILE` 时需要注意以下限制：
 
@@ -168,7 +168,7 @@ PROPERTIES
 
 类似 Hive，用户可以通过判断导出目录中是否有`success_file_name` 参数指定的文件，来判断导出是否正常结束以及导出目录中的文件是否完整。
 
-例如：将 select 语句的查询结果导出到对象存储：`s3://${bucket_name}/path/my_file_`。指定导出格式为 csv。指定导出成功标识文件名为 `SUCCESS`。导出完成后，生成一个标识文件。
+例如：将 select 语句的查询结果导出到对象存储：`s3://bucket/export/`。指定导出格式为 `csv`。指定导出成功标识文件名为 `SUCCESS`。导出完成后，生成一个标识文件。
 
 ```sql
 SELECT k1,k2,v1 FROM tbl1 LIMIT 100000
@@ -183,12 +183,12 @@ PROPERTIES
     "column_separator" = ",",
     "line_delimiter" = "\n",
     "success_file_name" = "SUCCESS"
-)
+);
 ```
 
 在导出完成后，会多写出一个文件，该文件的文件名为 `SUCCESS`。
 
-### 导出前清空导出目录示例
+### 导出前清空导出目录
 
 ```sql
 SELECT * FROM tbl1
@@ -203,7 +203,7 @@ PROPERTIES
     "column_separator" = ",",
     "line_delimiter" = "\n",
     "delete_existing_files" = "true"
-)
+);
 ```
 
 如果设置了 `"delete_existing_files" = "true"`，导出作业会先将 `s3://bucket/export/` 目录下所有文件及目录删除，然后导出数据到该目录下。
