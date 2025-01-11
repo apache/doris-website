@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Huawei OBS",
+    "title": "华为云 OBS",
     "language": "zh-CN"
 }
 ---
@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris 提供两种方式从 Huawei OBS 导入文件：
-- 使用 S3 Load 将 Huawei OBS 文件导入到 Doris 中，这是一个异步的导入方式。
-- 使用 TVF 将 Huawei OBS 文件导入到 Doris 中，这是一个同步的导入方式。
+Doris 提供两种方式从华为云 OBS 导入文件：
+- 使用 S3 Load 将华为云 OBS 文件导入到 Doris 中，这是一个异步的导入方式。
+- 使用 TVF 将华为云 OBS 文件导入到 Doris 中，这是一个同步的导入方式。
 
 ## 使用 S3 Load 导入 
 
@@ -34,7 +34,7 @@ Doris 提供两种方式从 Huawei OBS 导入文件：
 
 ### 第 1 步：准备数据
 
-创建 CSV 文件 s3load_example.csv 文件存储在 Huawei OBS 上，其内容如下：
+创建 CSV 文件 s3load_example.csv 文件存储在华为云 OBS 上，其内容如下：
 
 ```
 1,Emily,25
@@ -117,7 +117,7 @@ mysql> select * from test_s3load;
 
 ### 第 1 步：准备数据
 
-创建 CSV 文件 s3load_example.csv 文件存储在 Huawei OBS 上，其内容如下：
+创建 CSV 文件 s3load_example.csv 文件存储在华为云 OBS 上，其内容如下：
 
 ```
 1,Emily,25
