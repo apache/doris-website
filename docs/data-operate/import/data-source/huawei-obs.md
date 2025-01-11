@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Huawei OBS",
+    "title": "Huawei Cloud OBS",
     "language": "en"
 }
 ---
@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris provides two ways to load files from Huawei OBS:
-- Use S3 Load to load Huawei OBS files into Doris, which is an asynchronous load method.
-- Use TVF to load Huawei OBS files into Doris, which is a synchronous load method.
+Doris provides two ways to load files from Huawei Cloud OBS:
+- Use S3 Load to load Huawei Cloud OBS files into Doris, which is an asynchronous load method.
+- Use TVF to load Huawei Cloud OBS files into Doris, which is a synchronous load method.
 
 ## load with S3 Load
 
@@ -34,7 +34,7 @@ Use S3 Load to import files on object storage. For detailed steps, please refer 
 
 ### Step 1: Prepare the data
 
-Create a CSV file s3load_example.csv The file is stored on Huawei OBS and its content is as follows:
+Create a CSV file s3load_example.csv The file is stored on Huawei Cloud OBS and its content is as follows:
 
 ```
 1,Emily,25
@@ -117,7 +117,7 @@ mysql> select * from test_s3load;
 
 ### Step 1: Prepare the data
 
-Create a CSV file s3load_example.csv The file is stored on Huawei OBS and its content is as follows:
+Create a CSV file s3load_example.csv The file is stored on Huawei Cloud OBS and its content is as follows:
 
 ```
 1,Emily,25
