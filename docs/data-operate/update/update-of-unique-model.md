@@ -138,8 +138,6 @@ Performance optimization suggestions:
 
 Currently, all rows in the same batch data writing task (whether a load task or `INSERT INTO`) can only update the same columns. To update data with different columns, write in different batches.
 
-Future versions will support flexible column updates, allowing users to update different columns for each row in the same batch load.
-
 ## Flexible Partial Column Updates
 
 Before version x.x.x, Doris's partial update feature required that every row in an import update the same columns. Starting from version x.x.x, Doris supports a more flexible partial update method that allows each row in a single import to update different columns.
@@ -326,10 +324,10 @@ The final data in the table is as follows:
 | k | v1     | v2     | v3  | v4   | v5     |
 +---+--------+--------+-----+------+--------+
 | 0 | 0      | 0      | 0   | 0    | 0      |
-| 1 | 1      | 1      | 1   | 1    | 1      |
-| 5 | 5      | 5      | 5   | 5    | 5      |
+| 1 | 1      | 1      | 1   | 1    | 10     |
+| 5 | 5      | 5      | 5   | 5    | 50     |
 | 2 | 2      | 222    | 2   | 2    | 25     |
-| 3 | 3      | 3      | 333 | 3    | 3      |
+| 3 | 3      | 3      | 333 | 3    | 30     |
 | 4 | 411    | <null> | 433 | 444  | 50     |
 | 6 | 611    | 9876   | 633 | 1234 | <null> |
 | 7 | <null> | 9876   | 733 | 1234 | 300    |
