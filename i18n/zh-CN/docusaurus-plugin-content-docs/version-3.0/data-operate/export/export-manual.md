@@ -124,7 +124,7 @@ OutfileInfo: [
     {
       "fileNumber": "1",
       "totalRows": "6001215",
-      "fileSize": "747503989bytes",
+      "fileSize": "747503989",
       "url": "s3://bucket/export/export_6555cd33e7447c1-baa9568b5c4eb0ac_*"
     }
   ]
