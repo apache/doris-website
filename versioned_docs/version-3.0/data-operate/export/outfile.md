@@ -278,19 +278,19 @@ PROPERTIES(
 
 This function will export and write data to the disk of the node where the BE is located. If there are multiple BE nodes, the data will be scattered on different BE nodes according to the concurrency of the export task, and each node will have a part of the data.
 
-As in this example, a set of files similar to `result_c719be39ae344ab2-984c1e1658d3e190_0.csv` will eventually be produced under `/path/to/` of the BE node.
+As in this example, a set of files similar to `result_c6df5f01bd664dde-a2168b019b6c2b3f_0.csv` will eventually be produced under `/path/to/` of the BE node.
 
 The specific BE node IP will be displayed in the returned results, such as:
 
 ```
-+------------+-----------+----------+---------------------------------------------------------------------------+
-| FileNumber | TotalRows | FileSize | URL                                                                       |
-+------------+-----------+----------+---------------------------------------------------------------------------+
-|          1 |   1195072 |  4780288 | file:///172.20.32.136/path/to/result2_c6df5f01bd664dde-a2168b019b6c2b3f_* |
-|          1 |   1202944 |  4811776 | file:///172.20.32.136/path/to/result2_c6df5f01bd664dde-a2168b019b6c2b40_* |
-|          1 |   1198880 |  4795520 | file:///172.20.32.137/path/to/result2_c6df5f01bd664dde-a2168b019b6c2b43_* |
-|          1 |   1198880 |  4795520 | file:///172.20.32.137/path/to/result2_c6df5f01bd664dde-a2168b019b6c2b45_* |
-+------------+-----------+----------+---------------------------------------------------------------------------+
++------------+-----------+----------+--------------------------------------------------------------------------+
+| FileNumber | TotalRows | FileSize | URL                                                                      |
++------------+-----------+----------+--------------------------------------------------------------------------+
+|          1 |   1195072 |  4780288 | file:///172.20.32.136/path/to/result_c6df5f01bd664dde-a2168b019b6c2b3f_* |
+|          1 |   1202944 |  4811776 | file:///172.20.32.136/path/to/result_c6df5f01bd664dde-a2168b019b6c2b40_* |
+|          1 |   1198880 |  4795520 | file:///172.20.32.137/path/to/result_c6df5f01bd664dde-a2168b019b6c2b43_* |
+|          1 |   1198880 |  4795520 | file:///172.20.32.137/path/to/result_c6df5f01bd664dde-a2168b019b6c2b45_* |
++------------+-----------+----------+--------------------------------------------------------------------------+
 ```
 
 :::caution

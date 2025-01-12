@@ -372,12 +372,29 @@ PROPERTIES (
 
 This function will export and write data to the disk of the node where the BE is located. If there are multiple BE nodes, the data will be scattered on different BE nodes according to the concurrency of the export task, and each node will have a part of the data.
 
-As in this example, a set of files similar to `result_c719be39ae344ab2-984c1e1658d3e190_0.csv` will eventually be produced under `/path/to/` of the BE node.
+As in this example, a set of files similar to `result_7052bac522d840f5-972079771289e392_0.csv` will eventually be produced under `/path/to/` of the BE node.
 
 The specific BE node IP can be viewed in the `OutfileInfo` column in the `SHOW EXPORT` result, such as:
 
 ```
-OutfileInfo: [[{"fileNumber":"1","totalRows":"8388608","fileSize":"33554432","url":"file:///172.20.32.136/path/to/result_aa902a1d29ac471b-b7bc7082025bd0f8_*"}]]
+[
+    [
+        {
+            "fileNumber": "1", 
+            "totalRows": "0", 
+            "fileSize": "8388608", 
+            "url": "file:///172.20.32.136/path/to/result_7052bac522d840f5-972079771289e392_*"
+        }
+    ], 
+    [
+        {
+            "fileNumber": "1", 
+            "totalRows": "0", 
+            "fileSize": "8388608", 
+            "url": "file:///172.20.32.137/path/to/result_22aba7ec933b4922-ba81e5eca12bf0c2_*"
+        }
+    ]
+]
 ```
 
 :::caution
