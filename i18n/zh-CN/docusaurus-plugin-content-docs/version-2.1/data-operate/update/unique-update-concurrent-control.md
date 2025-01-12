@@ -42,10 +42,6 @@ Doris 采用多版本并发控制机制（MVCC - Multi-Version Concurrency Contr
 
 但在实际应用中，如果用户自己可以保证即使并发更新，也不会同时对同一行进行操作的话，就可以手动打开并发限制。通过修改 FE 配置 `enable_concurrent_update`，当该配置值设置为 `true` 时，更新命令将不再提供事务保证。
 
-:::caution 注意
-开启 `enable_concurrent_update` 配置后，会有一定的性能风险
-:::
-
 ## Sequence 列
 
 Unique 模型主要针对需要唯一主键的场景，可以保证主键唯一性约束，在同一批次中导入或者不同批次中导入的数据，替换顺序不做保证。替换顺序无法保证则无法确定最终导入到表中的具体数据，存在了不确定性。
