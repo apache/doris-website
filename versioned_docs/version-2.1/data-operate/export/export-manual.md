@@ -363,13 +363,23 @@ If you want to enable this function, please add `enable_outfile_to_local=true` i
 Example: Export all the data in the `tbl` table to the local file system, set the file format of the export job to csv (the default format), and set the column delimiter to `,`.
 
 ```sql
-EXPORT TABLE tbl TO "file:///home/user/tmp/"
+EXPORT TABLE tbl TO "file:///path/to/result_"
 PROPERTIES (
   "format" = "csv",
   "line_delimiter" = ","
 );
 ```
 
+This function will export and write data to the disk of the node where the BE is located. If there are multiple BE nodes, the data will be scattered on different BE nodes according to the concurrency of the export task, and each node will have a part of the data.
+
+As in this example, a set of files similar to `result_c719be39ae344ab2-984c1e1658d3e190_0.csv` will eventually be produced under `/path/to/` of the BE node.
+
+The specific BE node IP can be viewed in the `OutfileInfo` column in the `SHOW EXPORT` result, such as:
+
+```
+OutfileInfo: [[{"fileNumber":"1","totalRows":"8388608","fileSize":"33554432","url":"file:///172.20.32.136/path/to/result_aa902a1d29ac471b-b7bc7082025bd0f8_*"}]]
+```
+
 :::caution
-This function will export and write the data to the disks of the nodes where the BE is located. If there are multiple BE nodes, the data will be distributed across different BE nodes according to the concurrency of the export tasks, and each node will have a portion of the data. This function is not applicable to the production environment, and please ensure the permissions of the export directory and data security on your own.
+This function is not applicable to the production environment, and please ensure the permissions of the export directory and data security on your own.
 :::

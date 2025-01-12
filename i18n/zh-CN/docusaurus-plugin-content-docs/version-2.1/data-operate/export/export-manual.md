@@ -362,14 +362,24 @@ Export 任务的底层是执行`SELECT INTO OUTFILE` SQL 语句。用户发起�
 示例：将 tbl 表中的所有数据导出到本地文件系统，设置导出作业的文件格式为 csv（默认格式），并设置列分割符为`,`。
 
 ```sql
-EXPORT TABLE tbl TO "file:///home/user/tmp/"
+EXPORT TABLE db.tbl TO "file:///path/to/result_"
 PROPERTIES (
   "format" = "csv",
   "line_delimiter" = ","
 );
 ```
 
+此功能会将数据导出并写入到 BE 所在节点的磁盘上，如果有多个 BE 节点，则数据会根据导出任务的并发度分散在不同 BE 节点上，每个节点有一部分数据。
+
+如在这个示例中，最终会在 BE 节点的 `/path/to/` 下生产一组类似 `result_c719be39ae344ab2-984c1e1658d3e190_0.csv` 的文件。
+
+具体的 BE 节点 IP 可以在 `SHOW EXPORT` 结果中的 `OutfileInfo` 列查看，如：
+
+```
+OutfileInfo: [[{"fileNumber":"1","totalRows":"8388608","fileSize":"33554432","url":"file:///172.20.32.136/path/to/result_aa902a1d29ac471b-b7bc7082025bd0f8_*"}]]
+```
+
 :::caution
-此功能会将数据导出并写入到 BE 所在节点的磁盘上，如果有多个 BE 节点，则数据会根据导出任务的并发度分散在不同 BE 节点上，每个节点有一部分数据。此功能不适用于生产环境，并且请自行确保导出目录的权限和数据安全性。
+此功能不适用于生产环境，并且请自行确保导出目录的权限和数据安全性。
 :::
 
