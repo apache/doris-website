@@ -24,59 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在 Apache Doris 中，删除操作（Delete）是一项关键功能，用于管理和清理数据，以满足用户在大规模数据分析场景中的灵活性需求。
+In Apache Doris, the delete operation is a critical feature used to manage and clean data to meet the flexibility needs of users in large-scale data analysis scenarios.
 
-Doris 提供了丰富多样的删除功能支持，包括：DELETE 语句、删除标记（delete sign）、分区删除、全表删除以及使用临时分区实现原子覆盖写等功能。下面将详细介绍每一项功能：
+Doris provides a rich variety of delete functionalities, including DELETE statements, delete signs, partition deletion, full table deletion, and atomic overwrite using temporary partitions. The following sections will introduce each feature in detail:
 
-### DELETE 语句
+### DELETE Statement
 
-删除数据时最常用的是 DELETE 语句，该功能支持所有表模型，用户可以使用它删除符合条件的数据。
+The most commonly used method for deleting data is the DELETE statement, which supports all table models. Users can use it to delete data that meets certain conditions.
 
-DELETE 语句的语法如下：
+The syntax of the DELETE statement is as follows:
 
 ```sql
 DELETE FROM table_name WHERE condition;
 ```
 
-DELETE 语句基本能满足大部分用户在使用 Doris 过程中的删除需求，但在某些场景下它并不是最高效的。为了灵活高效地满足用户在各类场景的删除需求，Doris 还提供了如下几种删除方式。
+The DELETE statement can meet most of the deletion needs of users when using Doris, but it is not the most efficient in some scenarios. To flexibly and efficiently meet the deletion needs of users in various scenarios, Doris also provides the following deletion methods.
 
-### 分区删除
+### Partition Deletion
 
-在 Doris 中，通过日期分区等方式来管理数据是很常见的实践。很多用户只需要保留最近一段时间的数据（例如 7 天），对于过期的数据分区，可以采用分区删除（truncate partition）功能来进行高效的删除。
+In Doris, it is common practice to manage data through date partitions and other methods. Many users only need to retain data for a recent period (e.g., 7 days). For expired data partitions, the partition deletion (truncate partition) feature can be used for efficient deletion.
 
-相比 DELETE 语句，分区删除只需要修改一些分区元数据即可完成删除，是这种场景下最佳的删除方式。
+Compared to the DELETE statement, partition deletion only needs to modify some partition metadata to complete the deletion, making it the best deletion method in this scenario.
 
-分区删除的语法如下：
+The syntax of partition deletion is as follows:
 
 ```sql
 TRUNCATE TABLE tbl PARTITION(p1, p2);
 ```
 
-### 整表删除
+### Full Table Deletion
 
-整表删除适用于快速清空表且保留表结构的场景，例如在离线分析场景中需要重做数据时。
+Full table deletion is suitable for quickly clearing a table while retaining the table structure, such as when redoing data in offline analysis scenarios.
 
-整表删除的语法如下：
+The syntax of full table deletion is as follows:
 
 ```sql
 TRUNCATE TABLE table_name;
 ```
 
-### 删除标记（Delete Sign）
+### Delete Sign
 
-数据删除可以视作数据更新的一种情况。因此，在具有更新能力的主键模型（Unique Key）上，用户可以通过删除标记功能，使用数据更新的方式实现删除操作。
+Data deletion can be considered a type of data update. Therefore, on the primary key model (Unique Key) with update capabilities, users can use the delete sign feature to perform delete operations in the form of data updates.
 
-例如在 CDC 数据同步场景中，CDC 程序可以将一条 DELETE 操作的 binlog 打上删除标记，当这条数据写入 Doris 时，就会删除掉对应的主键。
+For example, in CDC data synchronization scenarios, the CDC program can mark a DELETE operation binlog with a delete sign. When this data is written to Doris, the corresponding primary key will be deleted.
 
-这种方式相对于 DELETE 语句来说，可以批量进行大量主键的删除操作，效率较高。
+This method can perform batch deletion of a large number of primary keys, which is more efficient than the DELETE statement.
 
-删除标记属于高级功能，使用起来相比前几种要更复杂一些，详细的用法请参考文档[批量删除](./delete-overview.md)。
+The delete sign is an advanced feature and is more complex to use compared to the previous methods. For detailed usage, please refer to the document [Batch Deletion](./delete-overview.md).
 
-### 使用临时分区实现原子覆盖写
+### Atomic Overwrite Using Temporary Partitions
 
-某些情况下，用户希望能够重写某一分区的数据，但如果采用先删除再导入的方式进行，在中间会有一段时间无法查看数据。这时，用户可以先创建一个对应的临时分区，将新的数据导入到临时分区后，通过替换操作，原子性地替换原有分区，以达到目的。详细用法请参考文档[表原子替换](./atomicity-replace.md)。
+In some cases, users want to rewrite the data of a partition. However, if the data is deleted and then imported, there will be a period when the data cannot be viewed. In this case, users can first create a corresponding temporary partition, import the new data into the temporary partition, and then replace the original partition atomically to achieve the goal. For detailed usage, please refer to the document [Atomic Table Replacement](./atomicity-replace.md).
 
-## 注意事项
+## Precautions
 
-1. 删除操作会生成新的数据版本，因此频繁执行删除可能会导致版本数量增加，从而影响查询性能。
-2. 删除后的数据在合并压缩完成之前仍会占用存储，因此删除操作本身不会立即降低存储使用。
+1. The delete operation will generate new data versions, so frequent deletions may increase the number of versions, thereby affecting query performance.
+2. Deleted data will still occupy storage until the merge and compression are completed, so the delete operation itself will not immediately reduce storage usage.
