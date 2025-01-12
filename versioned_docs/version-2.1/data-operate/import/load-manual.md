@@ -42,11 +42,11 @@ Apache Doris offers various methods for importing and integrating data, allowing
 
     - You can use [Flink CDC](../../ecosystem/flink-doris-connector.md) or [Datax](../../ecosystem/datax.md) to write transactional database CDC data streams into Doris.
 
-- **Batch Import**: Data is batch-loaded from external storage systems (e.g., S3, HDFS, local files, NAS) into Doris tables, suitable for non-real-time data import needs.
+- **Batch Import**: Data is batch-loaded from external storage systems (e.g., Object Storage, HDFS, local files, NAS) into Doris tables, suitable for non-real-time data import needs.
 
-    - You can use [Broker Load](./import-way/broker-load-manual.md) to write files from S3 and HDFS into Doris.
+    - You can use [Broker Load](./import-way/broker-load-manual.md) to write files from Object Storage and HDFS into Doris.
 
-    - You can use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronously load files from S3, HDFS, and NAS into Doris, and you can perform the operation asynchronously using a [JOB](../scheduler/job-scheduler.md).
+    - You can use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronously load files from Object Storage, HDFS, and NAS into Doris, and you can perform the operation asynchronously using a [JOB](../scheduler/job-scheduler.md).
 
     - You can use [Stream Load](./import-way/stream-load-manual) or [Doris Streamloader](../../ecosystem/doris-streamloader.md) to write local files into Doris.
 
@@ -62,12 +62,12 @@ Each import method in Doris is an implicit transaction by default. For more info
 
 Doris's import process mainly involves various aspects such as data sources, data formats, import methods, error handling, data transformation, and transactions. You can quickly browse the scenarios suitable for each import method and the supported file formats in the table below.
 
-| Import Method                                      | Use Case                                   | Supported File Formats | Single Import Volume | Import Mode |
-| :-------------------------------------------- | :----------------------------------------- | ----------------------- | ----------------- | -------- |
-| [Stream Load](./import-way/stream-load-manual)           | Importing local files or push data in applications via http.                             | csv, json, parquet, orc | Less than 10GB          | Synchronous     |
-| [Broker Load](./import-way/broker-load-manual.md)        | Importing from object storage, HDFS, etc.                     | csv, json, parquet, orc | Tens of GB to hundreds of GB   | Asynchronous     |
-| [INSERT INTO VALUES](./import-way/insert-into-manual.md) | Writing data via JDBC. | SQL                     | Simple testing | Synchronous     |
-| [INSERT INTO SELECT](./import-way/insert-into-manual.md) | Importing from an external source like a table in a catalog or files in s3.      | SQL                     | Depending on memory size  | Synchronous, Asynchronous via Job     |
-| [Routine Load](./import-way/routine-load-manual.md)      | Real-time import from Kafka                            | csv, json               | Micro-batch import MB to GB | Asynchronous     |
-| [MySQL Load](./import-way/mysql-load-manual.md)          | Importing from local files.                             | csv                     | Less than 1GB          | Synchronous     |
-| [Group Commit](./group-commit-manual.md)          | Writing with high frequency.                            | Depending on the import method used                     |  Micro-batch import KB         | -     |
+| Import Method                                      | Use Case                                   | Supported File Formats | Import Mode |
+| :-------------------------------------------- | :----------------------------------------- | ----------------------- | -------- |
+| [Stream Load](./import-way/stream-load-manual)           | Importing local files or push data in applications via http.                             | csv, json, parquet, orc | Synchronous     |
+| [Broker Load](./import-way/broker-load-manual.md)        | Importing from object storage, HDFS, etc.                     | csv, json, parquet, orc | Asynchronous     |
+| [INSERT INTO VALUES](./import-way/insert-into-manual.md) | Writing data via JDBC. | SQL                     | Synchronous     |
+| [INSERT INTO SELECT](./import-way/insert-into-manual.md) | Importing from an external source like a table in a catalog or files in Object Storage, HDFS.      | SQL                     | Synchronous, Asynchronous via Job     |
+| [Routine Load](./import-way/routine-load-manual.md)      | Real-time import from Kafka                            | csv, json               | Asynchronous     |
+| [MySQL Load](./import-way/mysql-load-manual.md)          | Importing from local files.                             | csv                     | Synchronous     |
+| [Group Commit](./group-commit-manual.md)          | Writing with high frequency.                            | Depending on the import method used | -     |
