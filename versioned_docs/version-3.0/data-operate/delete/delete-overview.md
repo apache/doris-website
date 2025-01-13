@@ -72,6 +72,5 @@ In some cases, users may want to rewrite the data of a partition. If the data is
 ## Notes
 
 1. The delete operation generates new data versions, so frequent deletions may increase the number of versions, affecting query performance.
-2. Compaction is a key step in freeing up storage space. Users are advised to adjust the compaction strategy based on system load.
-3. Deleted data will still occupy storage until compaction is completed, so the delete operation itself will not immediately reduce storage usage.
+2. Deleted data will still occupy storage until compaction is completed, so the delete operation itself will not immediately reduce storage usage.
 

@@ -24,13 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Data Lifecycle
-
-When a user executes the `DROP DATABASE/TABLE/PARTITION` command without `FORCE`, Doris moves the deleted database, table, or partition to the recycle bin. The `RECOVER` command can be used to restore all data of the deleted database, table, or partition from the recycle bin, making them visible again.
-
 ## Recover from Recycle Bin
 
-In order to avoid disasters caused by misoperation, Doris supports data recovery of accidentally deleted databases, tables, and partitions. After dropping a table or database, Doris does not physically delete the data immediately. Instead, it is moved to the trash for a certain period of time (the default is 1 day, which can be configured through the `catalog_trash_expire_second` parameter in `fe.conf`). The administrator can use the `RECOVER` command to restore accidentally deleted data.
+To avoid disasters caused by accidental operations, Doris supports the recovery of accidentally deleted databases, tables, and partitions. After deleting a table or database, Doris does not immediately physically delete the data. When the user executes the `DROP DATABASE/TABLE/PARTITION` command without using `FORCE`, Doris moves the deleted database, table, or partition to the recycle bin. The `RECOVER` command can be used to restore all data of the deleted database, table, or partition from the recycle bin, making it visible again. 
 
 **Note:** If the deletion was performed using `DROP FORCE`, the data will be immediately deleted and cannot be recovered.
 
