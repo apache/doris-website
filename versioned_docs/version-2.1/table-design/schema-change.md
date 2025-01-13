@@ -208,7 +208,7 @@ DISTRIBUTED BY HASH(col1) BUCKETS 10;
 2. Delete the `col3` column from `example_db.my_table`
 
 ```sql
-ALTER TABLE example_db.my_table DROP COLUMN col3;
+ALTER TABLE example_db.my_table DROP COLUMN col4;
 ```
 
 ### Modify Column Type and Position
