@@ -223,6 +223,14 @@
     "message": "认证与鉴权",
     "description": "The label for category Authentication and Authorization in sidebar docs"
   },
+  "sidebar.docs.category.Authentication": {
+    "message": "认证",
+    "description": "The label for category Authentication in sidebar docs"
+  },
+  "sidebar.docs.category.Authorization": {
+    "message": "鉴权",
+    "description": "The label for category Authorization in sidebar docs"
+  },
   "sidebar.docs.category.Alter Table": {
     "message": "表结构变更",
     "description": "The label for category Alter Table in sidebar docs"
