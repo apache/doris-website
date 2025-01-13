@@ -268,7 +268,7 @@ If you want to enable this function, please add `enable_outfile_to_local=true` i
 Example: Export all the data in the tbl table to the local file system, set the file format of the export job to csv (the default format), and set the column separator to `,`.
 
 ```sql
-SELECT c1, c2 FROM tbl FROM tbl1
+SELECT c1, c2 FROM db.tbl
 INTO OUTFILE "file:///path/to/result_"
 FORMAT AS CSV
 PROPERTIES(
@@ -276,6 +276,24 @@ PROPERTIES(
 );
 ```
 
+This function will export and write data to the disk of the node where the BE is located. If there are multiple BE nodes, the data will be scattered on different BE nodes according to the concurrency of the export task, and each node will have a part of the data.
+
+As in this example, a set of files similar to `result_c6df5f01bd664dde-a2168b019b6c2b3f_0.csv` will eventually be produced under `/path/to/` of the BE node.
+
+The specific BE node IP will be displayed in the returned results, such as:
+
+```
++------------+-----------+----------+--------------------------------------------------------------------------+
+| FileNumber | TotalRows | FileSize | URL                                                                      |
++------------+-----------+----------+--------------------------------------------------------------------------+
+|          1 |   1195072 |  4780288 | file:///172.20.32.136/path/to/result_c6df5f01bd664dde-a2168b019b6c2b3f_* |
+|          1 |   1202944 |  4811776 | file:///172.20.32.136/path/to/result_c6df5f01bd664dde-a2168b019b6c2b40_* |
+|          1 |   1198880 |  4795520 | file:///172.20.32.137/path/to/result_c6df5f01bd664dde-a2168b019b6c2b43_* |
+|          1 |   1198880 |  4795520 | file:///172.20.32.137/path/to/result_c6df5f01bd664dde-a2168b019b6c2b45_* |
++------------+-----------+----------+--------------------------------------------------------------------------+
+```
+
 :::caution
-This function will export and write data to the disks of the nodes where the BE is located. If there are multiple BE nodes, the data will be scattered among different BE nodes according to the concurrency of the export tasks, and each node will have a part of the data. This function is not suitable for the production environment, and please ensure the permissions and data security of the export directory on your own.
+This function is not suitable for the production environment, and please ensure the permissions and data security of the export directory on your own.
 :::
+

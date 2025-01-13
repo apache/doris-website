@@ -125,7 +125,7 @@ OutfileInfo: [
     {
       "fileNumber": "1",
       "totalRows": "6001215",
-      "fileSize": "747503989bytes",
+      "fileSize": "747503989",
       "url": "s3://bucket/export/export_6555cd33e7447c1-baa9568b5c4eb0ac_*"
     }
   ]
@@ -363,13 +363,40 @@ If you want to enable this function, please add `enable_outfile_to_local=true` i
 Example: Export all the data in the `tbl` table to the local file system, set the file format of the export job to csv (the default format), and set the column delimiter to `,`.
 
 ```sql
-EXPORT TABLE tbl TO "file:///home/user/tmp/"
+EXPORT TABLE tbl TO "file:///path/to/result_"
 PROPERTIES (
   "format" = "csv",
   "line_delimiter" = ","
 );
 ```
 
+This function will export and write data to the disk of the node where the BE is located. If there are multiple BE nodes, the data will be scattered on different BE nodes according to the concurrency of the export task, and each node will have a part of the data.
+
+As in this example, a set of files similar to `result_7052bac522d840f5-972079771289e392_0.csv` will eventually be produced under `/path/to/` of the BE node.
+
+The specific BE node IP can be viewed in the `OutfileInfo` column in the `SHOW EXPORT` result, such as:
+
+```
+[
+    [
+        {
+            "fileNumber": "1", 
+            "totalRows": "0", 
+            "fileSize": "8388608", 
+            "url": "file:///172.20.32.136/path/to/result_7052bac522d840f5-972079771289e392_*"
+        }
+    ], 
+    [
+        {
+            "fileNumber": "1", 
+            "totalRows": "0", 
+            "fileSize": "8388608", 
+            "url": "file:///172.20.32.137/path/to/result_22aba7ec933b4922-ba81e5eca12bf0c2_*"
+        }
+    ]
+]
+```
+
 :::caution
-This function will export and write the data to the disks of the nodes where the BE is located. If there are multiple BE nodes, the data will be distributed across different BE nodes according to the concurrency of the export tasks, and each node will have a portion of the data. This function is not applicable to the production environment, and please ensure the permissions of the export directory and data security on your own.
+This function is not applicable to the production environment, and please ensure the permissions of the export directory and data security on your own.
 :::
