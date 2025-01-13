@@ -104,7 +104,7 @@ ALTER TABLE [database.]table RENAME COLUMN old_column_name new_column_name;
 
 *往非聚合表添加列*
 
-建表语句：
+1. 建表语句
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
@@ -114,29 +114,24 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
     col4 int,
     col5 int
 ) DUPLICATE KEY(col1, col2, col3)
-DISTRIBUTED BY RANDOM BUCKETS 10
-PROPERTIES (
-    "replication_num" = "3"
-)
+DISTRIBUTED BY RANDOM BUCKETS 10;
 ```
 
-1. 向 `example_db.my_table` 的 col1 后添加一个 Key 列 `new_col`
+2. 向 `example_db.my_table` 的 col1 后添加一个 Key 列 `key_col`
 
 ```sql
-ALTER TABLE example_db.my_table
-ADD COLUMN new_col INT KEY DEFAULT "0" AFTER col1;
+ALTER TABLE example_db.my_table ADD COLUMN key_col INT KEY DEFAULT "0" AFTER col1;
 ```
 
-2. 向 `example_db.my_table` 的 col1 后添加一个 Value 列 `new_col`
+3. 向 `example_db.my_table` 的 col4 后添加一个 Value 列 `value_col`*
 
 ```sql
-ALTER TABLE example_db.my_table   
-ADD COLUMN new_col INT DEFAULT "0" AFTER col1;
+ALTER TABLE example_db.my_table ADD COLUMN value_col INT DEFAULT "0" AFTER col4;
 ```
 
 *往聚合表添加列*
 
-建表语句：
+1. 建表语句
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
@@ -146,24 +141,19 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
     col4 int SUM,
     col5 varchar(32) REPLACE DEFAULT "abc"
 ) AGGREGATE KEY(col1, col2, col3)
-DISTRIBUTED BY HASH(col1) BUCKETS 10
-PROPERTIES (
-    "replication_num" = "3"
-)
+DISTRIBUTED BY HASH(col1) BUCKETS 10;
 ```
 
-向 `example_db.my_table` 的 col1 后添加一个 Key 列 `new_col`
+2. 向 `example_db.my_table` 的 col1 后添加一个 Key 列 `key_col`*
 
 ```sql
-ALTER TABLE example_db.my_table   
-ADD COLUMN new_col INT DEFAULT "0" AFTER col1;
+ALTER TABLE example_db.my_table ADD COLUMN key_col INT DEFAULT "0" AFTER col1;
 ```
 
-向 `example_db.my_table` 的 col1 后添加一个 Value 列 `new_co``l` SUM 聚合类型
+3. 向 `example_db.my_table` 的 col4 后添加一个 Value 列 `value_col` SUM 聚合类型
 
 ```sql
-ALTER TABLE example_db.my_table   
-ADD COLUMN new_col INT SUM DEFAULT "0" AFTER col1;
+ALTER TABLE example_db.my_table ADD COLUMN value_col INT SUM DEFAULT "0" AFTER col4;
 ```
 
 ### 添加多列
@@ -174,7 +164,20 @@ ADD COLUMN new_col INT SUM DEFAULT "0" AFTER col1;
 
 *向聚合表添加多列*
 
-向 `example_db.my_table`添加多列 (聚合模型)
+1. 建表语句
+
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col1 int,
+    col2 int,
+    col3 int,
+    col4 int SUM,
+    col5 varchar(32) REPLACE DEFAULT "abc"
+) AGGREGATE KEY(col1, col2, col3)
+DISTRIBUTED BY HASH(col1) BUCKETS 10;
+```
+
+2. 向 `example_db.my_table`添加多列 (聚合模型)
 
 ```sql
 ALTER TABLE example_db.my_table
@@ -188,6 +191,21 @@ ADD COLUMN (c1 INT DEFAULT "1", c2 FLOAT SUM DEFAULT "0");
 - 不能删除 UNIQUE 的 KEY 列。
 
 从 `example_db.my_table` 删除一列
+
+1. 建表语句
+
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col1 int,
+    col2 int,
+    col3 int,
+    col4 int SUM,
+    col5 varchar(32) REPLACE DEFAULT "abc"
+) AGGREGATE KEY(col1, col2, col3)
+DISTRIBUTED BY HASH(col1) BUCKETS 10;
+```
+
+2. 从 `example_db.my_table` 删除`col3`列
 
 ```sql
 ALTER TABLE example_db.my_table DROP COLUMN col3;
@@ -225,9 +243,8 @@ ALTER TABLE example_db.my_table DROP COLUMN col3;
 
   - 除 DATE 与 DATETIME 以外都可以转换成 STRING，但是 STRING 不能转换任何其他类型
 
-#### 示例
 
-建表语句：
+1. 建表语句
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
@@ -238,13 +255,10 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
     col4 int SUM,
     col5 varchar(32) REPLACE DEFAULT "abc"
 ) AGGREGATE KEY(col0, col1, col2, col3)
-DISTRIBUTED BY HASH(col0) BUCKETS 10
-PROPERTIES (
-    "replication_num" = "3"
-)
+DISTRIBUTED BY HASH(col0) BUCKETS 10;
 ```
 
-**1.  修改 Key 列 col1 的类型为 BIGINT，并移动到 col2 列后面。**
+2. 修改 Key 列 col1 的类型为 BIGINT，并移动到 col2 列后面
 
 ```sql
 ALTER TABLE example_db.my_table 
@@ -253,7 +267,7 @@ MODIFY COLUMN col1 BIGINT KEY DEFAULT "1" AFTER col2;
 
 注意：无论是修改 Key 列还是 Value 列都需要声明完整的 Column 信息
 
-**2. 修改 Base Table 的 val1 列最大长度。原 val1 为 (val1 VARCHAR(32) REPLACE DEFAULT "abc")**
+2. 修改 Base Table 的 val1 列最大长度。原 val1 为 (val1 VARCHAR(32) REPLACE DEFAULT "abc")
 
 ```sql
 ALTER TABLE example_db.my_table 
@@ -262,11 +276,11 @@ MODIFY COLUMN col5 VARCHAR(64) REPLACE DEFAULT "abc";
 
 注意：只能修改列的类型，列的其他属性需要维持原样
 
-**3. 修改 Duplicate Key 表 Key 列的某个字段的长度**
+3. 修改 Key 列的某个字段的长度
 
 ```sql
 ALTER TABLE example_db.my_table
-MODIFY COLUMN col3 varchar(50) KEY NULL comment 'to 50'
+MODIFY COLUMN col3 varchar(50) KEY NULL comment 'to 50';
 ```
 
 ### 重新排序
@@ -274,8 +288,7 @@ MODIFY COLUMN col3 varchar(50) KEY NULL comment 'to 50'
 - 所有列都要写出来
 - Value 列在 Key 列之后
 
-#### 示例
-
+1. 建表语句
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     k1 int DEFAULT "1",
@@ -285,17 +298,14 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
     v1 int SUM,
     v2 int MAX,
 ) AGGREGATE KEY(k1, k2, k3, k4)
-DISTRIBUTED BY HASH(k1) BUCKETS 1
-PROPERTIES (
-    "replication_num" = "1"
-)
+DISTRIBUTED BY HASH(k1) BUCKETS 10;
 ```
 
-重新排序 `example_db.my_table` 中的列
+2. 重新排序 `example_db.my_table` 中的列
 
 ```sql
 ALTER TABLE example_db.my_table
-ORDER BY (k3,k1,k2,k4,v2,v1)
+ORDER BY (k3,k1,k2,k4,v2,v1);
 ```
 
 ## 限制
