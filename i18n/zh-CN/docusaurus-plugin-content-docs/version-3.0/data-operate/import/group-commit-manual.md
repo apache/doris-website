@@ -128,7 +128,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionStat
 * 通过 JDBC url 设置，增加`sessionVariables=group_commit=async_mode`
 
     ```
-    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false
+    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode,enable_nereids_planner=false
     ```
 
 * 通过执行 SQL 设置
@@ -143,7 +143,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionStat
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode,enable_nereids_planner=false";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -605,7 +605,7 @@ PROPERTIES (
 ![jmeter2](/images/group-commit/jmeter2.jpg)
 
 1. 设置测试前的init语句，`set group_commit=async_mode`以及`set enable_nereids_planner=false`。
-2. 开启jdbc的prepared statement，完整的url为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false`。
+2. 开启jdbc的prepared statement，完整的url为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false`。
 3. 设置导入类型为prepared update statement。
 4. 设置导入语句。
 5. 设置每次需要导入的值，注意，导入的值与导入值的类型要一一匹配。
@@ -622,7 +622,7 @@ PROPERTIES (
 
 **30并发sync模式5个BE3副本性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 891.8      | 701.1      | 400.0     | 237.5    |
 |enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
@@ -630,14 +630,14 @@ PROPERTIES (
 
 **100并发sync模式5个BE3副本性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
 |enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
 
 **500并发sync模式5个BE3副本性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 5567.5     | 5713.2      | 4681.0    | 3131.2   |
 |enable_nereids_planner=false| 4471.6      | 5042.5     | 4932.2     | 3641.1 |
@@ -701,21 +701,21 @@ PROPERTIES (
 
 **30并发sync模式5个BE3副本性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 9.1K     | 11.1K     | 11.4K     | 11.1K     |
 |enable_nereids_planner=false| 157.8K      | 159.9K     | 154.1K     | 120.4K     |
 
 **100并发sync模式5个BE3副本性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 10.0K     |9.2K     | 8.9K      | 8.9K    |
 |enable_nereids_planner=false| 130.4k     | 131.0K     | 130.4K      | 124.1K     |
 
 **500并发sync模式5个BE3副本性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 2.5K      | 2.5K     | 2.3K      | 2.1K      |
 |enable_nereids_planner=false| 94.2K     | 95.1K    | 94.4K     | 94.8K     |

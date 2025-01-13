@@ -604,7 +604,7 @@ PROPERTIES (
 ![jmeter2](/images/group-commit/jmeter2.jpg)
 
 1. 设置测试前的init语句，`set group_commit=async_mode`以及`set enable_nereids_planner=false`。
-2. 开启jdbc的prepared statement，完整的url为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false`。
+2. 开启jdbc的prepared statement，完整的url为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false`。
 3. 设置导入类型为prepared update statement。
 4. 设置导入语句。
 5. 设置每次需要导入的值，注意，导入的值与导入值的类型要一一匹配。
@@ -621,20 +621,20 @@ PROPERTIES (
 
 **30并发sync模式5个BE3副本性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 321.5      | 307.3      | 285.8    | 224.3    |
 
 
 **100并发sync模式性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 1175.2     | 1108.7     | 1016.3    | 704.5  |
 
 **500并发sync模式性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 3289.8    | 3686.7      | 3280.7    | 2609.2   |
 
@@ -697,18 +697,18 @@ PROPERTIES (
 
 **30并发sync模式性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 92.2K     | 85.9K     | 84K     | 83.2K     |
 
 **100并发sync模式性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 70.4K     |70.5K     | 73.2K      | 69.4K    |
 
 **500并发sync模式性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 46.3K      | 47.7K     | 47.4K      | 46.5K      |
