@@ -110,7 +110,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [ MINIO](../storages/minio.md)
 
-> 如果需要通过 Doris 创建 Hive 表或写入数据，需要在 Catalog 属性中显式增加 `fs.defaultFS` 属性。如果创建 Catalog 仅用于查询，则该参数可以省略。
+> 如果需要通过 Doris 创建 Hive 表并写入数据，需要在 Catalog 属性中显式增加 `fs.defaultFS` 属性。如果创建 Catalog 仅用于查询，则该参数可以省略。
 
 ### 支持的数据格式
 
@@ -355,7 +355,7 @@ PROPERTIES (
 AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 ```
 
-### 相关参数（Configurations）
+### 相关参数
 
 * BE
 

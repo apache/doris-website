@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-数据目录（Catalog）用于描述一个数据源的属性。
+数据目录（Data Catalog）用于描述一个数据源的属性。
 
 在 Doris 中，可以创建多个数据目录指向不同的数据源（如 Hive、Iceberg、MySQL）。Doris 会通过数据目录，自动获取对应数据源的库、表、Schema、分区、数据位置等。用户可以通过标准的 SQL 语句访问这些数据目录进行数据分析，并且可以对多个数据目录中的数据进行关联查询。
 
@@ -101,7 +101,7 @@ SELECT k1, k4 FROM table;           -- Query OK.
 
 创建后，可以通过 `SHOW CATALOGS` 命令查看 catalog：
 
-```plain&#x20;text
+```text
 mysql> SHOW CATALOGS;
 +-----------+-----------------+----------+-----------+-------------------------+---------------------+------------------------+
 | CatalogId | CatalogName     | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |

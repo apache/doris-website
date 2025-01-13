@@ -143,9 +143,9 @@
     "message": "湖仓一体",
     "description": "The label for category Data Lakehouse in sidebar docs"
   },
-  "sidebar.docs.category.Catalogs": {
+  "sidebar.docs.category.Data Catalogs": {
     "message": "数据目录",
-    "description": "The label for category Catalogs in sidebar docs"
+    "description": "The label for category Data Catalogs in sidebar docs"
   },
   "sidebar.docs.category.Metastores": {
     "message": "元数据服务",
