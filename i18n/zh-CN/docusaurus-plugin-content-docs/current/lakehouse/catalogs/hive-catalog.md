@@ -52,7 +52,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 );
 ```
 
-* \<hive\_metastore\_type>
+* `<hive_metastore_type>`
 
   指定 Hive Metastore 的类型。
 
@@ -62,21 +62,21 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `dlf`：使用 Hive Metastore 兼容接口访问阿里云 DLF 元数据服务。
 
-* \<fs\_defaultfs>
+* `<fs_defaultfs>`
 
   当需要通过 Doris 写入数据到这个 Hive Catalog 中表时，此参数为必选项。示例：
 
-  `'fs.defaultFS' = 'hdfs://172.21.16.47:4007'`
+  `'fs.defaultFS' = 'hdfs://namenode:port'`
 
-* {MetaStoreProperties}
+* `{MetaStoreProperties}`
 
   MetaStoreProperties 部分用于填写 Metastore 元数据服务连接和认证信息。具体可参阅【支持的元数据服务】部分。
 
-* {StorageProperties}
+* `{StorageProperties}`
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
 
-* {CommonProperties}
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
@@ -96,8 +96,6 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 支持的存储系统
 
-> 如果需要通过 Doris 创建 Hive 表或写入数据，需要在 Catalog 属性中显式增加 `fs.defaultFS` 属性。如果创建 Catalog 仅用于查询，则该参数可以省略。
-
 * [ HDFS](../storages/hdfs.md)
 
 * [ AWS S3](../storages/s3.md)
@@ -112,6 +110,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [ MINIO](../storages/minio.md)
 
+> 如果需要通过 Doris 创建 Hive 表或写入数据，需要在 Catalog 属性中显式增加 `fs.defaultFS` 属性。如果创建 Catalog 仅用于查询，则该参数可以省略。
+
 ### 支持的数据格式
 
 * Hive
@@ -120,7 +120,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * [ ORC](../file-formats/orc.md)
 
-  * [ Text/CSV/Json](../file-formats/text.md)
+  * [ Text/CSV/JSON](../file-formats/text.md)
 
 * Hudi
 
@@ -233,23 +233,47 @@ SELECT * FROM hive_tbl LIMIT 10;
 SELECT * FROM hive_ctl.hive_db.hive_tbl LIMIT 10;
 ```
 
-### 查询 Hive 分区（Querying Hive Partitions）
+### 查询 Hive 分区
 
 可以通过下面两种方式查询 Hive 分区信息。
 
-* `SHOW PARTITIONS FROM hive_table`
+* `SHOW PARTITIONS FROM [catalog.][db.]hive_table`
 
   该语句可以列出指定 Hive 表的所有分区以及分区值信息。
 
+  ```sql
+  SHOW PARTITIONS FROM hive_table;
+
+  +--------------------------------+
+  | Partition                      |
+  +--------------------------------+
+  | pt1=2024-10-10/pt2=beijing     |
+  | pt1=2024-10-10/pt2=shanghai    |
+  | pt1=2024-10-11/pt2=beijing     |
+  | pt1=2024-10-11/pt2=shanghai    |
+  | pt1=2024-10-12/pt2=nanjing     |
+  +--------------------------------+
+  ```
+
 * 使用 `table$partitions` 元数据表
 
-  自 2.1.7 和 3.0.3 版本开始，用户可以通过 `table$partitions` 元数据表查询 Hive 分区信息。`table$partitions` 本质上是一个关系表，所以可以使用在任意 SELECT 语句中。
+  自 2.1.7 和 3.0.3 版本开始，用户可以通过 `table$partitions` 元数据表查询 Hive 分区信息。`table$partitions` 本质上是一个关系表，每个分区列为一列，所以可以使用在任意 SELECT 语句中。
 
   ```sql
   SELECT * FROM hive_table$partitions;
+
+  +------------+-------------+
+  | pt1        | pt2         |
+  +------------+-------------+
+  | 2024-10-10 | beijing     |
+  | 2024-10-10 | shanghai    |
+  | 2024-10-12 | nanjing     |
+  | 2024-10-11 | beijing     |
+  | 2024-10-11 | shanghai    |
+  +------------+-------------+
   ```
 
-### 查询 Hive 事务表（Hive Transactional Table）
+### 查询 Hive 事务表
 
 Hive Transactional 表是 Hive 中支持 ACID 语义的表。详情可见 [Hive Transactions](https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions)。
 
@@ -280,7 +304,7 @@ Hive Transactional 表是 Hive 中支持 ACID 语义的表。详情可见 [Hive 
 
 ### INSERT INTO
 
-INSERT 操作会数据以追加的方式写入到目标表中。当前不支持指定分区写入。
+INSERT 操作会将数据以追加的方式写入到目标表中。当前不支持指定分区写入。
 
 ```sql
 INSERT INTO hive_tbl values (val1, val2, val3, val4);
@@ -383,7 +407,7 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 ```
 
 :::caution
-注意 对于 Hive Database，必须先删除这个 Database 下的所有表后，才能删除 Database，否则会报错。这个操作会同步删除 Hive 中对应的 Database。
+对于 Hive Database，必须先删除这个 Database 下的所有表后，才能删除 Database，否则会报错。这个操作会同步删除 Hive 中对应的 Database。
 :::
 
 ### 创建和删除表
@@ -392,17 +416,89 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 
   Doris 支持在 Hive 中创建分区或非分区表。
 
+  ```sql
+  -- Create unpartitioned hive table
+  CREATE TABLE unpartitioned_table (
+    `col1` BOOLEAN COMMENT 'col1',
+    `col2` INT COMMENT 'col2',
+    `col3` BIGINT COMMENT 'col3',
+    `col4` CHAR(10) COMMENT 'col4',
+    `col5` FLOAT COMMENT 'col5',
+    `col6` DOUBLE COMMENT 'col6',
+    `col7` DECIMAL(9,4) COMMENT 'col7',
+    `col8` VARCHAR(11) COMMENT 'col8',
+    `col9` STRING COMMENT 'col9'
+  )  ENGINE=hive
+  PROPERTIES (
+    'file_format'='parquet'
+  );
+  
+  -- Create partitioned hive table
+  -- The partition columns must be in table's column definition list
+  CREATE TABLE partition_table (
+    `col1` BOOLEAN COMMENT 'col1',
+    `col2` INT COMMENT 'col2',
+    `col3` BIGINT COMMENT 'col3',
+    `col4` DECIMAL(2,1) COMMENT 'col4',
+    `pt1` VARCHAR COMMENT 'pt1',
+    `pt2` VARCHAR COMMENT 'pt2'
+  )  ENGINE=hive
+  PARTITION BY LIST (pt1, pt2) ()
+  PROPERTIES (
+    'file_format'='orc',
+    'compression'='zlib'
+  );
+  
+  -- Create text format table(Since 2.1.7 & 3.0.3)
+  CREATE TABLE text_table (
+      `id` INT,
+      `name` STRING
+  ) PROPERTIES (
+      'file_format'='text',
+      'compression'='gzip',
+      'field.delim'='\t',
+      'line.delim'='\n',
+      'collection.delim'=';',
+      'mapkey.delim'=':',
+      'serialization.null.format'='\\N',
+      'escape.delim'='\\'
+  );
+  ```
+
+  创建后，可以通过 `SHOW CREATE TABLE` 命令查看 Hive 的建表语句。
+
+  注意，不同于 Hive 中的建表语句。在 Doris 中创建 Hive 分区表时，分区列也必须写到 Table 的 Schema 中。同时，分区列必须在所有 Schema 的最后，且顺序保持一致。
+
+  :::tip
+  对于某些默认开启 ACID 事务特性的 Hive 集群，使用 Doris 建表后，表属性 `transactional` 会为 `true`。而 Doris 只支持部分 Hive 事务表的特性，因此可能会导致 Doris 创建的 Hive，Doris 本身无法读取的问题。因此，需要在建表的属性中，显式增加：`"transactional" = "false"`，来创建非事务的 Hive 表：
+
+  ```
+  CREATE TABLE non_acid_table(
+    `col1` BOOLEAN COMMENT 'col1',
+    `col2` INT COMMENT 'col2',
+    `col3` BIGINT COMMENT 'col3'
+  )  ENGINE=hive
+  PROPERTIES (
+    'transactional'='false',
+  );
+  ```
+  :::
+
 * 删除
 
   可以通过 `DROP TABLE` 语句删除一个 Hive 表。当前删除表后，会同时删除数据，包括分区数据。
 
 * 列类型映射
 
-  参考【列类型映射】部分
+  参考【列类型映射】部分。需要额外注意一下限制：
+
+  - 列类型只能为默认的 Nullable，不支持 `NOT NULL`。
+  - Hive 3.0 支持设置默认值。如果需要设置默认值，则需要在 Catalog 属性中显示的添加 `"hive.version" = "3.0.0"`。
+  - 插入数据后，如果类型不能够兼容，例如 `'abc'` 插入到数值类型，则会转为 `null` 值插入。
 
 * 分区
 
-  Hive 中的分区类型对应 Apache Doris 中的 List 分区。因此，在 Apache Doris 中 创建 Hive 分区表，需使用 List 分区的建表语句，但无需显式的枚举各个分区。在写入数据时，Apache Doris 会根据数据的值，自动创建对应的 Hive 分区。支持创建单列或多列分区表。
+  Hive 中的分区类型对应 Doris 中的 List 分区。因此，在 Doris 中 创建 Hive 分区表，需使用 List 分区的建表语句，但无需显式的枚举各个分区。在写入数据时，Doris 会根据数据的值，自动创建对应的 Hive 分区。支持创建单列或多列分区表。
 
 * 文件格式
 
@@ -442,7 +538,7 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 
 ## 订阅 Hive Metastore 事件
 
-通过让 FE 节点定时读取 HMS 的 Notification Event 来感知 Hive 表元数据的变更情况，目前支持处理如下 Event：
+通过让 FE 节点定时读取 HMS 的 Notification Event 来感知 Hive 表元数据的实时变更情况，以提高元数据的时效性。目前支持处理如下 Event：
 
 | 事件              | 事件行为和对应的动作                                                                |
 | --------------- | ------------------------------------------------------------------------- |
@@ -456,11 +552,13 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 | DROP PARTITION  | 在对应表缓存的分区列表里删除分区，并失效该分区的缓存。                                               |
 | ALTER PARTITION | 如果是重命名，先删除旧名字的分区，再用新名字创建分区，否则失效该分区的缓存。                                    |
 
-> 当导入数据导致文件变更，分区表会走 ALTER PARTITION Event 逻辑，不分区表会走 ALTER TABLE Event 逻辑。
->
-> 如果绕过 HMS 直接操作文件系统的话，HMS 不会生成对应事件，Doris 因此也无法感知。
+:::tip
+1. 当导入数据导致文件变更，分区表会触发 `ALTER PARTITION` 时间，非分区表会触发 `ALTER TABLE` 事件。
 
-该特性在 `fe.conf` 中有如下参数：
+2. 如果绕过 HMS 直接操作文件系统的话，HMS 不会生成对应事件，因此 Doris 也无法感知元数据变化。
+:::
+
+该特性在 `fe.conf` 中有如下相关参数：
 
 1. `enable_hms_events_incremental_sync`: 是否开启元数据自动增量同步功能，默认关闭。
 

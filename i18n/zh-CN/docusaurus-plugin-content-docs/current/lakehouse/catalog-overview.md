@@ -30,7 +30,6 @@ under the License.
 
 Doris 中的数据目录分为两种：
 
-
 | 类型                         | 说明 |
 | ---------------- | -------------------------------------------------------- |
 | Internal Catalog | 内置数据目录，名称固定为 `internal`，用于存储 Doris 内表数据。不可创建、更改和删除。      |
@@ -38,14 +37,13 @@ Doris 中的数据目录分为两种：
 
 数据目录主要适用于以下三类场景，但不同的数据目录适用场景不同，详见对应数据目录的文档。
 
-
 | 场景 | 说明      |
 | ---- | ------------------------------------------- |
 | 查询加速 | 针对湖仓数据如 Hive、Iceberg、Paimon 等进行直接查询加速。      |
 | 数据集成 | ZeroETL 方案，直接访问不同数据源生成结果数据，或让数据在不同数据源中便捷流转。 |
 | 数据写回 | 通过 Doris 进行数据加工处理后，写回到外部数据源。                |
 
-本文以 Iceberg Catalog 为例，重点介绍数据目录的基础操作。不同数据目录的详细介绍，请参阅对应的数据目录文档。
+本文以 [Iceberg Catalog](./catalogs/iceberg-catalog.md) 为例，重点介绍数据目录的基础操作。不同数据目录的详细介绍，请参阅对应的数据目录文档。
 
 ## 创建数据目录
 
@@ -70,16 +68,16 @@ CREATE CATALOG iceberg_catalog PROPERTIES (
 
 | 属性名                     | 描述                                                                        | 示例                                    |
 | ----------------------- | ------------------------------------------------------------------------- | ------------------------------------- |
-| include\_database\_list | 支持只同步指定的多个 Database，以 `,` 分隔。默认同步所有 Database。Database 名称是大小写敏感的。          | `'include_database_list' = 'db1,db2'` |
-| exclude\_database\_list | 支持指定不需要同步的多个 Database，以 `,` 分割。默认不做任何过滤，同步所有 Database。Database 名称是大小写敏感的。 | `'exclude_database_list' = 'db1,db2'` |
+| `include_database_list` | 支持只同步指定的多个 Database，以 `,` 分隔。默认同步所有 Database。Database 名称是大小写敏感的。当外部数据源有大量 Database，但仅需访问个别 Database 时，可以使用此参数，避免大量的元数据同步。          | `'include_database_list' = 'db1,db2'` |
+| `exclude_database_list` | 支持指定不需要同步的多个 Database，以 `,` 分割。默认不做任何过滤，同步所有 Database。Database 名称是大小写敏感的。适用场景同上，反向排除不需要访问的数据库。如果冲突，`exclude` 优先级高于 `include` | `'exclude_database_list' = 'db1,db2'` |
 
 ### 列类型映射
 
-用户创建数据目录后，Doris 会自动同步数据目录的数据库、表和 Schema。不同数据目录的列类型映射规则请参与对应的数据目录文档。
+用户创建数据目录后，Doris 会自动同步数据目录的数据库、表和 Schema。不同数据目录的列类型映射规则请参阅对应的数据目录文档。
 
 对于当前无法映射到 Doris 列类型的外部数据类型，如 `UNION`, `INTERVAL` 等，Doris 会将列类型映射为 `UNSUPPORTED` 类型。对于 `UNSUPPORTED` 类型的查询，示例如下：
 
-假设同步后的表 schema 为：
+假设同步后的表 Schema 为：
 
 ```text
 k1 INT,
@@ -119,7 +117,7 @@ mysql> SHOW CATALOGS;
 
 Doris 提供 `SWITCH` 语句用于将连接会话上下文切换到对应的数据目录。类似使用 `USE` 语句切换数据库。
 
-切换到数据目录后，可以 `USE` 语句继续切换到指定的数据库。或通过 `SHOW DATABASES` 查看当前数据目录下的数据库。
+切换到数据目录后，可以使用 `USE` 语句继续切换到指定的数据库。或通过 `SHOW DATABASES` 查看当前数据目录下的数据库。
 
 ```sql
 SWITCH iceberg_catalog;
@@ -134,7 +132,7 @@ SHOW DATABASES;
 | iceberg_db         |
 +--------------------+
 
-USE iceberg_tpcds100;
+USE iceberg_db;
 ```
 
 也可以通过 `USE` 语句，直接使用全限定名 `catalog_name.database_name` 切换到指定数据目录下的指定数据库：
@@ -168,7 +166,7 @@ GROUP BY id ORDER BY id;
 
 Doris 支持跨数据目录的关联查询。
 
-这里我们再创建一个 MySQL Catalog：
+这里我们再创建一个 [MySQL Catalog](./catalogs/jdbc-mysql-catalog.md)：
 
 ```sql
 CREATE CATALOG mysql_catalog properties(
@@ -213,9 +211,9 @@ Doris 支持通过 `INSERT` 语句直接将数据写回到外部数据源。具�
 
 * [ Hive Catalog ](./catalogs/hive-catalog.md)
 
-* [ Iceberg Catalog（PreviewV2）](./catalogs/iceberg-catalog.md)
+* [ Iceberg Catalog](./catalogs/iceberg-catalog.md)
 
-* [ JDBC Catalog 概述](./catalogs/jdbc-catalog-overview.md)
+* [ JDBC Catalog](./catalogs/jdbc-catalog-overview.md)
 
 ## 刷新数据目录
 
@@ -232,17 +230,22 @@ REFRESH DATABASE catalog_name.db_name;
 REFRESH TABLE catalog_name.db_name.table_name;
 ```
 
-关于元数据缓存的详细介绍，请参阅：[元数据缓存](./datacache.md)
+Doris 也支持关闭元数据缓存，以便能够实时访问到最新的元数据。
+
+关于元数据缓存的详细介绍和配置，请参阅：[元数据缓存](./meta-cache.md)
 
 ## 修改数据目录
 
 可以通过 `ALTER CATALOG` 对数据目录的属性或名称进行修改：
 
 ```sql
+-- Rename a catalog
 ALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;
 
+-- Modify properties of a catalog
 ALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']); 
 
+-- Modify the comment of a catalog
 ALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';
 ```
 
@@ -251,7 +254,7 @@ ALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';
 可以通过 `DROP CATALOG` 删除指定的外部数据目录。
 
 ```sql
-DROP CATALOG [IF NOT EXISTS] iceberg_catalog;
+DROP CATALOG [IF EXISTS] iceberg_catalog;
 ```
 
 从 Doris 中删除外部数据目录，并不会删除实际的数据，只是删除了 Doris 中存储的数据目录映射关系。
@@ -259,3 +262,4 @@ DROP CATALOG [IF NOT EXISTS] iceberg_catalog;
 ## 权限管理
 
 外部数据目录中库表的权限管理和内表一致。具体可参阅 [认证和鉴权](../admin-manual/auth/authentication-and-authorization.md) 文档。
+
