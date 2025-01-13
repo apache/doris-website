@@ -24,84 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Group Commit
+In high-frequency small batch write scenarios, traditional loading methods have the following issues:
 
-Group commit load does not introduce a new data import method, but an extension of `INSERT INTO tbl VALUS(...)` and `Stream Load`. It is a way to improve the write performance of Doris with high-concurrency and small-data writes. Your application can directly use JDBC to do high-concurrency insert operation into Doris, at the same time, combining PreparedStatement can get even higher performance. In logging scenarios, you can also do high-concurrency Stream Load into Doris. 
+- Each load creates an independent transaction, requiring FE to parse SQL and generate execution plans, affecting overall performance
+- Each load generates a new version, causing rapid version growth and increasing background compaction pressure
 
-## Group Commit Mode
+To solve these problems, Doris introduced the Group Commit mechanism. Group Commit is not a new loading method, but rather an optimization extension of existing loading methods, mainly targeting:
 
-Group Commit provides 3 modes:
+- `INSERT INTO tbl VALUES(...)` statements
+- Stream Load
 
-* `off_mode`
+By merging multiple small batch loads into one large transaction commit in the background, it significantly improves high-concurrency small batch write performance. Additionally, using Group Commit with PreparedStatement can achieve even higher performance improvements.
 
-Disable group commit.
+## Group Commit Modes
 
-* `sync_mode`
+Group Commit has three modes:
 
-Doris groups multiple loads into one transaction commit based on the `group_commit_interval` table property. The load is returned after the transaction commit. This mode is suitable for high-concurrency writing scenarios and requires immediate data visibility after the load is finished.
+* Off Mode (`off_mode`)
 
-* `async_mode`
+    Group Commit is disabled.
 
-Doris writes data to the Write Ahead Log (WAL) firstly, then the load is returned. Doris groups multiple loads into one transaction commit based on the `group_commit_interval` table property, and the data is visible after the commit. To prevent excessive disk space usage by the WAL, it automatically switches to `sync_mode`. This is suitable for latency-sensitive and high-frequency writing.
+* Synchronous Mode (`sync_mode`)
 
-The number of WALs can be viewed through the FE HTTP interface, as detailed [here](../../admin-manual/open-api/fe-http/get-wal-size-action). Alternatively, you can search for the keyword `wal` in the BE metrics.
+    Doris commits multiple loads in one transaction based on load and table's `group_commit_interval` property, returning after transaction commit. This is suitable for high-concurrency write scenarios requiring immediate data visibility after loading.
 
-## Limitations
+* Asynchronous Mode (`async_mode`)
 
-* When the group commit is enabled, some `INSERT INTO VALUES` sqls are not executed in the group commit way if they meet the following conditions:
+    Doris first writes data to WAL (Write Ahead Log), then returns immediately. Doris asynchronously commits data based on load and table's `group_commit_interval` property, making data visible after commit. To prevent WAL from occupying too much disk space, it automatically switches to `sync_mode` for large single loads. This is suitable for write latency-sensitive and high-frequency write scenarios.
 
-  * Transaction insert, such as `BEGIN`, `INSERT INTO VALUES`, `COMMIT`
+    WAL count can be viewed through FE http interface as shown [here](../../admin-manual/open-api/fe-http/get-wal-size-action), or by searching for `wal` keyword in BE metrics.
 
-  * Specify the label, such as `INSERT INTO dt WITH LABEL {label} VALUES`
+## How to Use Group Commit
 
-  * Expressions within VALUES, such as `INSERT INTO dt VALUES (1 + 100)`
-
-  * Column update
-
-  * Tables that do not support light schema changes
-
-* When the group commit is enabled, some `Stream Load` and `Http Stream` are not executed in the group commit way if they meet the following conditions:
-
-  * Two phase commit
-
-  * Specify the label  by set header `-H "label:my_label"`
-
-  * Column update
-
-  * Tables that do not support light schema changes
-
-* For unique table, because the group commit can not guarantee the commit order, users can use sequence column to ensure the data consistency.
-
-* The limit of `max_filter_ratio`
-
-  * For non group commit load, filter_ratio is calculated by the failed rows and total rows when load is finished. If the filter_ratio does not match, the transaction will not commit
-
-  * In the group commit mode, multiple user loads are executed by one internal load. The internal load will commit all user loads.
-
-  * Currently, group commit supports a certain degree of max_filter_ratio semantics. When the total number of rows does not exceed group_commit_memory_rows_for_max_filter_ratio (configured in `be.conf`, defaulting to `10000` rows), max_filter_ratio will work.
-
-* The limit of WAL
-
-  * For async_mode group commit, data is written to the Write Ahead Log (WAL). If the internal load succeeds, the WAL is immediately deleted. If the internal load fails, data is recovered by loading the WAL.
-
-  * Currently, WAL files are stored only on one disk of one BE. If the BE's disk is damaged or the file is mistakenly deleted, it may result in data loss.
-
-  * When decommissioning a BE node, please use the [`DECOMMISSION`](../../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) command to safely decommission the node. This prevents potential data loss if the WAL files are not processed before the node is taken offline.
-
-  * For async_mode group commit writes, to protect disk space, it switches to sync_mode under the following conditions:
-
-    * For a load with large amount of data: exceeding 80% of the disk space of a WAL directory. 
-
-    * Chunked stream loads with an unknown data amount.
-
-    * Insufficient disk space, even if it is a load with small amount of data.
-
-  * During hard weight schema changes (adding or dropping columns, modifying varchar length, and renaming columns are lightweight schema changes, others are hard weight), to ensure WAL file is compatibility with the table's schema, the final stage of metadata modification in FE will reject group commit writes. Clients get `insert table ${table_name} is blocked on schema change` exception and can retry the load.
-
-
-## Basic operations
-
-If the table schema is:
+Assuming the table structure is:
 ```sql
 CREATE TABLE `dt` (
     `id` int(11) NOT NULL,
@@ -115,25 +70,25 @@ PROPERTIES (
 );
 ```
 
-### Use `JDBC`
+### Using JDBC
 
-To reduce the CPU cost of SQL parsing and query planning, we provide the `PreparedStatement` in the FE. When using `PreparedStatement`, the SQL and its plan will be cached in the session level memory cache and will be reused later on, which reduces the CPU cost of FE. The following is an example of using PreparedStatement in JDBC:
+When users write using JDBC's `insert into values` method, to reduce SQL parsing and planning overhead, we support MySQL protocol's `PreparedStatement` feature on the FE side. When using `PreparedStatement`, SQL and its load plan are cached in session-level memory cache, and subsequent loads directly use the cached objects, reducing FE CPU pressure. Here's an example of using `PreparedStatement` in JDBC:
 
-1. Setup JDBC url and enable server side prepared statement
+**1. Set JDBC URL and enable Prepared Statement on Server side**
 
 ```
 url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500
 ```
 
-2. Set `group_commit` session variable, there are two ways to do it:
+**2. Configure `group_commit` session variable in one of two ways:**
 
-* Add `sessionVariables=group_commit=async_mode` in JDBC url
+* Through JDBC url by adding `sessionVariables=group_commit=async_mode`
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false
 ```
 
-* Use `SET group_commit = async_mode;` command
+* Through SQL execution
 
 ```
 try (Statement statement = conn.createStatement()) {
@@ -141,11 +96,11 @@ try (Statement statement = conn.createStatement()) {
 }
 ```
 
-3. Using `PreparedStatement`
+**3. Use `PreparedStatement`**
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50$sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -180,143 +135,143 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-**Note:** Due to the high frequency of `INSERT INTO` statements, a large amount of audit logs might be printed, which could impact overall performance. By default, the audit log for prepared statements is disabled. You can control whether to print the audit log for prepared statements by setting a session variable.
+Note: Since high-frequency insert into statements will print large amounts of audit logs affecting final performance, printing prepared statement audit logs is disabled by default. You can control whether to print prepared statement audit logs through session variable settings.
 
 ```sql
-# Configure the session variable to enable printing the audit log for prepared statements. By default, it is set to false, which disables printing the audit log for prepared statements.
+# Configure session variable to enable printing prepared statement audit log, default is false
 set enable_prepared_stmt_audit_log=true;
 ```
 
-For more usage on **JDBC**, refer to [Using Insert to Synchronize Data](./import-way/insert-into-manual).
+For more about **JDBC** usage, refer to [Using Insert Method to Synchronize Data](./import-way/insert-into-manual.md).
 
 ### Using Golang for Group Commit
 
-Golang has limited support for prepared statements, so we can manually batch the statements on the client side to improve the performance of Group Commit. Below is an example program. 
+Since Golang has limited support for prepared statements, we can improve Group Commit performance through manual client-side batching. Here's a sample program:
 
 ```Golang
 package main
 
 import (
-    "database/sql"
-    "fmt"
-    "math/rand"
-    "strings"
-    "sync"
-    "sync/atomic"
-    "time"
+	"database/sql"
+	"fmt"
+	"math/rand"
+	"strings"
+	"sync"
+	"sync/atomic"
+	"time"
 
-    _ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const (
-    host     = "127.0.0.1"
-    port     = 9038
-    db       = "test"
-    user     = "root"
-    password = ""
-    table    = "async_lineitem"
+	host     = "127.0.0.1"
+	port     = 9038
+	db       = "test"
+	user     = "root"
+	password = ""
+	table    = "async_lineitem"
 )
 
 var (
-    threadCount = 20
-    batchSize   = 100
+	threadCount = 20
+	batchSize   = 100
 )
 
 var totalInsertedRows int64
 var rowsInsertedLastSecond int64
 
 func main() {
-    dbDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", user, password, host, port, db)
-    db, err := sql.Open("mysql", dbDSN)
-    if err != nil {
-        fmt.Printf("Error opening database: %s\n", err)
-        return
-    }
-    defer db.Close()
+	dbDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", user, password, host, port, db)
+	db, err := sql.Open("mysql", dbDSN)
+	if err != nil {
+		fmt.Printf("Error opening database: %s\n", err)
+		return
+	}
+	defer db.Close()
 
-    var wg sync.WaitGroup
-    for i := 0; i < threadCount; i++ {
-        wg.Add(1)
-        go func() {
-            defer wg.Done()
-            groupCommitInsertBatch(db)
-        }()
-    }
+	var wg sync.WaitGroup
+	for i := 0; i < threadCount; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			groupCommitInsertBatch(db)
+		}()
+	}
 
-    go logInsertStatistics()
+	go logInsertStatistics()
 
-    wg.Wait()
+	wg.Wait()
 }
 
 func groupCommitInsertBatch(db *sql.DB) {
-    for {
-        valueStrings := make([]string, 0, batchSize)
-        valueArgs := make([]interface{}, 0, batchSize*16)
-        for i := 0; i < batchSize; i++ {
-            valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-            valueArgs = append(valueArgs, rand.Intn(1000))
-            valueArgs = append(valueArgs, rand.Intn(1000))
-            valueArgs = append(valueArgs, rand.Intn(1000))
-            valueArgs = append(valueArgs, rand.Intn(1000))
-            valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-            valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-            valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-            valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-            valueArgs = append(valueArgs, "N")
-            valueArgs = append(valueArgs, "O")
-            valueArgs = append(valueArgs, time.Now())
-            valueArgs = append(valueArgs, time.Now())
-            valueArgs = append(valueArgs, time.Now())
-            valueArgs = append(valueArgs, "DELIVER IN PERSON")
-            valueArgs = append(valueArgs, "SHIP")
-            valueArgs = append(valueArgs, "N/A")
-        }
-        stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
-            table, strings.Join(valueStrings, ","))
-        _, err := db.Exec(stmt, valueArgs...)
-        if err != nil {
-            fmt.Printf("Error executing batch: %s\n", err)
-            return
-        }
-        atomic.AddInt64(&rowsInsertedLastSecond, int64(batchSize))
-        atomic.AddInt64(&totalInsertedRows, int64(batchSize))
-    }
+	for {
+		valueStrings := make([]string, 0, batchSize)
+		valueArgs := make([]interface{}, 0, batchSize*16)
+		for i := 0; i < batchSize; i++ {
+		    valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			valueArgs = append(valueArgs, rand.Intn(1000))
+			valueArgs = append(valueArgs, rand.Intn(1000))
+			valueArgs = append(valueArgs, rand.Intn(1000))
+			valueArgs = append(valueArgs, rand.Intn(1000))
+			valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+			valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+			valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+			valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+			valueArgs = append(valueArgs, "N")
+			valueArgs = append(valueArgs, "O")
+			valueArgs = append(valueArgs, time.Now())
+			valueArgs = append(valueArgs, time.Now())
+			valueArgs = append(valueArgs, time.Now())
+			valueArgs = append(valueArgs, "DELIVER IN PERSON")
+			valueArgs = append(valueArgs, "SHIP")
+			valueArgs = append(valueArgs, "N/A")
+		}
+		stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
+			table, strings.Join(valueStrings, ","))
+		_, err := db.Exec(stmt, valueArgs...)
+		if err != nil {
+			fmt.Printf("Error executing batch: %s\n", err)
+			return
+		}
+		atomic.AddInt64(&rowsInsertedLastSecond, int64(batchSize))
+		atomic.AddInt64(&totalInsertedRows, int64(batchSize))
+	}
 }
 
 func logInsertStatistics() {
-    for {
-        time.Sleep(1 * time.Second)
-        fmt.Printf("Total inserted rows: %d\n", totalInsertedRows)
-        fmt.Printf("Rows inserted in the last second: %d\n", rowsInsertedLastSecond)
-        rowsInsertedLastSecond = 0
-    }
+	for {
+		time.Sleep(1 * time.Second)
+		fmt.Printf("Total inserted rows: %d\n", totalInsertedRows)
+		fmt.Printf("Rows inserted in the last second: %d\n", rowsInsertedLastSecond)
+		rowsInsertedLastSecond = 0
+	}
 }
 
 ```
 
-
 ### INSERT INTO VALUES
 
-* async_mode
+* Asynchronous Mode
+
 ```sql
-# Config session variable to enable the async group commit, the default value is off_mode
+# Configure session variable to enable group commit (default is off_mode), enable asynchronous mode
 mysql> set group_commit = async_mode;
 
-# The retured label is start with 'group_commit', which is the label of the real load job
+# The returned label is prefixed with group_commit, indicating whether group commit is used
 mysql> insert into dt values(1, 'Bob', 90), (2, 'Alice', 99);
 Query OK, 2 rows affected (0.05 sec)
 {'label':'group_commit_a145ce07f1c972fc-bd2c54597052a9ad', 'status':'PREPARE', 'txnId':'181508'}
 
-# The returned label and txn_id are the same as the above, which means they are handled in on load job  
+# The label, txn_id, and previous one are the same, indicating that they are accumulated into the same import task
 mysql> insert into dt(id, name) values(3, 'John');
 Query OK, 1 row affected (0.01 sec)
 {'label':'group_commit_a145ce07f1c972fc-bd2c54597052a9ad', 'status':'PREPARE', 'txnId':'181508'}
 
-# The data is not visible
+# Cannot query immediately
 mysql> select * from dt;
 Empty set (0.01 sec)
 
-# After about 10 seconds, the data is visible
+# 10 seconds later, data can be queried, and data visibility delay can be controlled by table attribute group_commit_interval.
 mysql> select * from dt;
 +------+-------+-------+
 | id   | name  | score |
@@ -328,18 +283,18 @@ mysql> select * from dt;
 3 rows in set (0.02 sec)
 ```
 
-* sync_mode
+* Synchronous Mode
+
 ```sql
-# Config session variable to enable the sync group commit
+# Configure session variable to enable group commit (default is off_mode), enable synchronous mode
 mysql> set group_commit = sync_mode;
 
-# The retured label is start with 'group_commit', which is the label of the real load job. 
-# The insert costs at least the group_commit_interval_ms of table property.
+# The returned label is prefixed with group_commit, indicating whether group commit is used, and import time is at least table attribute group_commit_interval.
 mysql> insert into dt values(4, 'Bob', 90), (5, 'Alice', 99);
 Query OK, 2 rows affected (10.06 sec)
 {'label':'group_commit_d84ab96c09b60587_ec455a33cb0e9e87', 'status':'PREPARE', 'txnId':'3007', 'query_id':'fc6b94085d704a94-a69bfc9a202e66e2'}
 
-# The data is visible after the insert is returned
+# Data can be read immediately
 mysql> select * from dt;
 +------+-------+-------+
 | id   | name  | score |
@@ -353,22 +308,25 @@ mysql> select * from dt;
 5 rows in set (0.03 sec)
 ```
 
-* off_mode
+* Off Mode
+
 ```sql
 mysql> set group_commit = off_mode;
 ```
 
 ### Stream Load
 
-If the content of `data.csv` is:
+Assuming `data.csv` contains:
+
 ```sql
 6,Amy,60
 7,Ross,98
 ```
 
-* async_mode
+* Asynchronous Mode
+
 ```sql
-# Add 'group_commit:async_mode' configuration in the http header
+# Import with "group_commit:async_mode" configuration in header
 
 curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:async_mode"  -H "column_separator:,"  http://{fe_host}:{http_port}/api/db/dt/_stream_load
 {
@@ -389,13 +347,14 @@ curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:async_mo
     "WriteDataTimeMs": 26
 }
 
-# The returned 'GroupCommit' is 'true', which means this is a group commit load
-# The retured label is start with 'group_commit', which is the label of the real load job
+# The returned GroupCommit is true, indicating that the group commit process is entered
+# The returned Label is prefixed with group_commit, indicating the label associated with the import that truly consumes data
 ```
 
-* sync_mode
+* Synchronous Mode
+
 ```sql
-# Add 'group_commit:sync_mode' configuration in the http header
+# Import with "group_commit:sync_mode" configuration in header
 
 curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mode"  -H "column_separator:,"  http://{fe_host}:{http_port}/api/db/dt/_stream_load
 {
@@ -416,50 +375,107 @@ curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mod
     "WriteDataTimeMs": 10038
 }
 
-# The returned 'GroupCommit' is 'true', which means this is a group commit load
-# The retured label is start with 'group_commit', which is the label of the real load job
+# The returned GroupCommit is true, indicating that the group commit process is entered
+# The returned Label is prefixed with group_commit, indicating the label associated with the import that truly consumes data
 ```
 
-See [Stream Load](./import-way/stream-load-manual.md) for more detailed syntax used by **Stream Load**.
+About Stream Load usage, please refer to [Stream Load](./import-way/stream-load-manual).
 
-## Group commit condition
 
-The data will be automatically committed either when the time interval (default is 10 seconds) or the data size (default is 64 MB) conditions meet.
+Data is automatically committed when either time interval (default 10 seconds) or data volume (default 64 MB) condition is met. These parameters should be used together and tuned based on actual scenarios.
 
-### Modify the time interval condition
+### Modifying Commit Interval
 
-The default group commit interval is 10 seconds. Users can modify the configuration of the table:
+Default commit interval is 10 seconds, users can adjust through table configuration:
 
 ```sql
-# Modify the group commit interval to 2 seconds
+# Modify commit interval to 2 seconds
 ALTER TABLE dt SET ("group_commit_interval_ms" = "2000");
 ```
 
-### Modify the data size condition
+**Parameter Adjustment Recommendations**:
+- Shorter intervals (e.g., 2 seconds):
+  - Pros: Lower data visibility latency, suitable for scenarios requiring high real-time performance
+  - Cons: More commits, faster version growth, higher background compaction pressure
 
-The default group commit data size is 64 MB. Users can modify the configuration of the table:
+- Longer intervals (e.g., 30 seconds):
+  - Pros: Larger commit batches, slower version growth, lower system overhead
+  - Cons: Higher data visibility latency
+
+Recommend setting based on business tolerance for data visibility delay. If system pressure is high, consider increasing the interval.
+
+### Modifying Commit Data Volume
+
+Group Commit's default commit data volume is 64 MB, users can adjust through table configuration:
 
 ```sql
-# Modify the group commit data size to 128MB
+# Modify commit data volume to 128MB
 ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 ```
 
-## Relevant system configuration
+**Parameter Adjustment Recommendations**:
+- Smaller threshold (e.g., 32MB):
+  - Pros: Less memory usage, suitable for resource-constrained environments
+  - Cons: Smaller commit batches, potentially limited throughput
 
-### BE configuration
+- Larger threshold (e.g., 256MB):
+  - Pros: Higher batch commit efficiency, greater system throughput
+  - Cons: Uses more memory
 
-#### `group_commit_wal_path`
+Recommend balancing based on system memory resources and data reliability requirements. If memory is sufficient and higher throughput is desired, consider increasing to 128MB or more.
 
-* The `WAL` directory of group commit.
-* Default: A directory named `wal` is created under each directory of the `storage_root_path`. Configuration examples:
-  ```
-  group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
-  ```
 
-#### `group_commit_memory_rows_for_max_filter_ratio`
+### BE Configuration
 
-* Description: The `max_filter_ratio` limit can only work if the total rows of `group commit` is less than this value.
-* Default: 10000
+1. `group_commit_wal_path`
+
+   * Description: Directory for storing group commit WAL files
+
+   * Default: Creates a `wal` directory under each configured `storage_root_path`. Configuration example:
+  
+   ```
+   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
+   ```
+
+2. `group_commit_memory_rows_for_max_filter_ratio`
+
+   * Description: `max_filter_ratio` works normally when group commit load total rows don't exceed this value, otherwise it doesn't work
+
+   * Default: 10000
+
+## Usage Limitations
+
+* **Group Commit Limitations**
+
+  * `INSERT INTO VALUES` statements degrade to non-Group Commit mode in these cases:
+    - Transaction writes (`Begin; INSERT INTO VALUES; COMMIT`)
+    - Specified Label (`INSERT INTO dt WITH LABEL {label} VALUES`)
+    - VALUES containing expressions (`INSERT INTO dt VALUES (1 + 100)`)
+    - Column update writes
+    - Table doesn't support lightweight mode changes
+
+  * `Stream Load` degrades to non-Group Commit mode in these cases:
+    - Using two-phase commit
+    - Specified Label (`-H "label:my_label"`)
+    - Column update writes
+    - Table doesn't support lightweight mode changes
+
+* **Unique Model**
+  - Group Commit doesn't guarantee commit order, recommend using Sequence column to ensure data consistency.
+
+* **max_filter_ratio Support**
+  - In default loads, `filter_ratio` is calculated through failed rows and total rows.
+  - In Group Commit mode, `max_filter_ratio` works when total rows don't exceed `group_commit_memory_rows_for_max_filter_ratio`.
+
+* **WAL Limitations**
+  - `async_mode` writes data to WAL, deletes after success, recovers through WAL on failure.
+  - WAL files are stored on only one BE, disk damage or file loss may cause data loss.
+  - When offlining BE nodes, use `DECOMMISSION` command to prevent data loss.
+  - `async_mode` switches to `sync_mode` in these cases:
+    - Load data volume too large (exceeds 80% of WAL single directory space)
+    - Unknown data volume chunked stream load
+    - Insufficient disk space
+  - During heavyweight Schema Change, Group Commit writes are rejected, client needs to retry.
 
 ## Performance
 
