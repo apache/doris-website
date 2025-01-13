@@ -113,7 +113,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [ AWS S3](../storages/s3.md)
 
-* [ Google Cloud Storage](../storages/google-cloud-storage.md)
+* [ Google Cloud Storage](../storages/gcs.md)
 
 * [ 阿里云 OSS](../storages/aliyun-oss.md)
 
@@ -421,7 +421,7 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 ### 创建和删除表
 
-* 创建
+* **创建**
 
   Doris 支持在 Iceberg 中创建分区或非分区表。
 
@@ -469,7 +469,7 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
   创建后，可以通过 `SHOW CREATE TABLE` 命令查看 Iceberg 的建表语句。关于分区表的分区函数，可以参阅后面的【分区】小节。
 
-* 删除
+* **删除**
 
   可以通过 `DROP TABLE` 语句删除一个 Iceberg 表。当前删除表后，会同时删除数据，包括分区数据。
 
@@ -479,11 +479,11 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
   DROP TABLE [IF EXISTS] iceberg_tbl;
   ```
 
-* 列类型映射
+* **列类型映射**
 
   参考【列类型映射】部分。
 
-* 分区
+* **分区**
 
   Iceberg 中的分区类型对应 Doris 中的 List 分区。因此，在 Doris 中 创建 Iceberg 分区表，需使用 List 分区的建表语句，但无需显式的枚举各个分区。在写入数据时，Doris 会根据数据的值，自动创建对应的 Iceberg 分区。
 
@@ -503,19 +503,19 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
       * `truncate(L, col)`
 
-* 文件格式
+* **文件格式**
 
   * Parquet（默认）
 
   * ORC
 
-* 压缩格式
+* **压缩格式**
 
   * Parquet：snappy，zstd（默认），plain。（plain 就是不采用压缩）
 
   * ORC：snappy，zlib（默认），zstd，plain。（plain 就是不采用压缩）
 
-* 存储介质
+* **存储介质**
 
   * HDFS
 

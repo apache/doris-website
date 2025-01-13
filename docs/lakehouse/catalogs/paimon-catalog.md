@@ -101,7 +101,7 @@ The currently dependent Paimon version is 0.8.1. Higher versions of Paimon table
 
 * [AWS S3](../storages/s3.md)
 
-* [Google Cloud Storage](../storages/google-cloud-storage.md)
+* [Google Cloud Storage](../storages/gcs.md)
 
 * [Alibaba Cloud OSS](../storages/aliyun-oss.md)
 

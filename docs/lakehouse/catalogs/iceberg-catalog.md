@@ -106,7 +106,7 @@ The current Iceberg dependency is version 1.4.3, which is compatible with higher
 
 * [HDFS](../storages/hdfs.md)
 * [AWS S3](../storages/s3.md)
-* [Google Cloud Storage](../storages/google-cloud-storage.md)
+* [Google Cloud Storage](../storages/gcs.md)
 * [Aliyun OSS](../storages/aliyun-oss.md)
 * [Tencent COS](../storages/tencent-cos.md)
 * [Huawei OBS](../storages/huawei-obs.md)
@@ -406,12 +406,12 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 ```
 
 :::caution
-For an Iceberg Database, you must first delete all tables under the database before you can delete the database itself; otherwise, an error will occur.
+For an Iceberg Database, you must first drop all tables under the database before you can drop the database itself; otherwise, an error will occur.
 :::
 
 ### Creating and Dropping Tables
 
-* Creating Tables
+* **Creating Tables**
 
   Doris supports creating both partitioned and non-partitioned tables in Iceberg.
 
@@ -459,7 +459,7 @@ For an Iceberg Database, you must first delete all tables under the database bef
 
   After creation, you can use the `SHOW CREATE TABLE` command to view the Iceberg table creation statement. For details about partition functions, see the [Partitioning](#) section.
 
-* Dropping Tables
+* **Dropping Tables**
 
   You can drop an Iceberg table using the `DROP TABLE` statement. Dropping a table will also remove its data, including partition data.
 
@@ -469,11 +469,11 @@ For an Iceberg Database, you must first delete all tables under the database bef
   DROP TABLE [IF EXISTS] iceberg_tbl;
   ```
 
-* Column Type Mapping
+* **Column Type Mapping**
 
   Refer to the [Column Type Mapping](#) section.
 
-* Partitioning
+* **Partitioning**
 
   Partition types in Iceberg correspond to List partitions in Doris. Therefore, when creating an Iceberg partitioned table in Doris, you should use the List partitioning syntax, but you don't need to explicitly enumerate each partition. Doris will automatically create the corresponding Iceberg partitions based on the data values during data insertion.
 
@@ -493,19 +493,19 @@ For an Iceberg Database, you must first delete all tables under the database bef
 
     * `truncate(L, col)`
 
-* File Formats
+* **File Formats**
 
   * Parquet (default)
 
   * ORC
 
-* Compression Formats
+* **Compression Formats**
 
   * Parquet: snappy, zstd (default), plain (no compression).
 
   * ORC: snappy, zlib (default), zstd, plain (no compression).
 
-* Storage Medium
+* **Storage Medium**
 
   * HDFS
 
