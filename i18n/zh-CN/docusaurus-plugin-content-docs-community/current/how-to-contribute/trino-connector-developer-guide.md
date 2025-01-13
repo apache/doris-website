@@ -39,7 +39,7 @@ Trino Connector 兼容框架的目的在于帮助 Doris 快速对接更多的数
 
 > 注：Trino 是一款由 [Trino 软件基金会](https://trino.io/foundation) 提供的 Apache License 2.0 协议开源软件，详情可访问 [Trino 官网](https://trino.io/docs/current/)。
 
-## 步骤一：编译 Kakfa Connector 插件
+## 步骤一：编译 Kafka Connector 插件
 
 Trino 没有提供官方编译好的 Connector 插件，所以需要我们自己编译所需 Connector 插件。
 
@@ -83,7 +83,7 @@ Trino 没有提供官方编译好的 Connector 插件，所以需要我们自己
     ```sql
     create catalog kafka_tpch properties (
         "type"="trino-connector",
-        -- 下面这四个属性来源于 trino，与 trino 的 etc/catalog/kakfa.properties 中的属性一致。但需要统一增加 "trino." 前缀
+        -- 下面这四个属性来源于 trino，与 trino 的 etc/catalog/kafka.properties 中的属性一致。但需要统一增加 "trino." 前缀
         "trino.connector.name"="kafka",
         "trino.kafka.table-names"="tpch.customer,tpch.orders,tpch.lineitem,tpch.part,tpch.partsupp,tpch.supplier,tpch.nation,tpch.region",
         "trino.kafka.nodes"="localhost:9092",

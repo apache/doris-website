@@ -41,7 +41,7 @@ The following takes Trino's kafka Connector plugin as an example to introduce in
 
 > Note: Trino is an Apache License 2.0 protocol open source software provided by [Trino Software Foundation](https://trino.io/foundation). For details, please visit [Trino official website](https://trino.io/docs/current/).
 
-## Step 1: Compile Kakfa connector plugin
+## Step 1: Compile Kafka connector plugin
 
 Trino does not provide officially compiled connector plugins, so we need to compile the required connector plugins ourselves.
 
@@ -84,7 +84,7 @@ After completing the previous two steps, we can use the Trino-Connector Catalog 
     ```sql
     create catalog kafka_tpch properties (
         "type"="trino-connector",
-        -- The following four properties are derived from trino and are consistent with the properties in etc/catalog/kakfa.properties of trino. But need to add "trino." prefix
+        -- The following four properties are derived from trino and are consistent with the properties in etc/catalog/kafka.properties of trino. But need to add "trino." prefix
         "trino.connector.name"="kafka",
         "trino.kafka.table-names"="tpch.customer,tpch.orders,tpch.lineitem,tpch.part,tpch.partsupp,tpch.supplier,tpch.nation,tpch.region",
         "trino.kafka.nodes"="localhost:9092",
