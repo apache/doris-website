@@ -26,6 +26,8 @@ under the License.
 
 Doris 支持通过存储在 PostgreSQL 中的元数据，访问并读取 LakeSoul 表数据。
 
+[使用 Docker 快速体验 Apache Doris & LakeSoul](../best-practices/doris-lakesoul.md)
+
 ## 适用场景
 
 | 场景 | 说明                 |

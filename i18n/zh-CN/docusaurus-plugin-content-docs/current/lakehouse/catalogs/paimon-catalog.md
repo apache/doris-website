@@ -28,6 +28,8 @@ Doris 支持通过多种元数据服务访问 Paimon 表元数据，并进行 Pa
 
 目前只支持 Paimon 表的读操作，未来会支持的写入 Paimon 表。
 
+[使用 Docker 快速体验 Apache Doris & Paimon](../best-practices/doris-paimon.md)
+
 ## 适用场景
 
 | 场景 | 说明                 |

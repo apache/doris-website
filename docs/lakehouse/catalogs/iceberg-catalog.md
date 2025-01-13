@@ -26,6 +26,8 @@ under the License.
 
 Doris supports accessing Iceberg table data through various metadata services. In addition to reading data, Doris also supports writing to Iceberg tables.
 
+[Quick start with Apache Doris and Apache Iceberg](../best-practices/doris-iceberg.md).
+
 :::tip
 Users can access Iceberg tables using Hive Metastore as metadata through the Hive Catalog. However, it is still recommended to use the Iceberg Catalog directly to avoid some compatibility issues.
 :::

@@ -28,6 +28,8 @@ Doris currently supports accessing Paimon table metadata through various metadat
 
 At present, only read operations on Paimon tables are supported. Write operations to Paimon tables will be supported in the future.
 
+[Quick start with Apache Doris and Apache Paimon](../best-practices/doris-paimon.md).
+
 ## Applicable Scenarios
 
 | Scenario     | Description                                                  |
