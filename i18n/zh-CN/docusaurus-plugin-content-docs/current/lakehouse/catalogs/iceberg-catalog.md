@@ -26,6 +26,8 @@ under the License.
 
 Doris 支持通过多种元数据服务访问 Iceberg 表数据。除支持数据读取外，Doris 也支持对 Iceberg 表进行写入操作。
 
+[使用 Docker 快速体验 Apache Doris & Iceberg](../best-practices/doris-iceberg.md)
+
 :::tip
 用户可以通过 Hive Catalog 访问使用 Hive Metastore 作为元数据的 Iceberg 表。但依然推荐直接使用 Iceberg Catalog 以避免一些兼容性问题。
 :::

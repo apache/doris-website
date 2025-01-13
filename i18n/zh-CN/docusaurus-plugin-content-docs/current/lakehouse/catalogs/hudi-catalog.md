@@ -26,6 +26,8 @@ under the License.
 
 Hudi Catalog 复用了 Hive Catalog。通过连接 Hive Metastore，或者兼容 Hive Metatore 的元数据服务，Doris 可以自动获取 Hudi 的库表信息，并进行数据查询。
 
+[使用 Docker 快速体验 Apache Doris & Hudi](../best-practices/doris-hudi.md)
+
 ## 适用场景
 
 | 场景 | 说明                 |

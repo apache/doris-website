@@ -26,6 +26,8 @@ under the License.
 
 Hudi Catalog reuses the Hive Catalog. By connecting to the Hive Metastore, or a metadata service compatible with the Hive Metastore, Doris can automatically obtain Hudi's database and table information and perform data queries.
 
+[Quick start with Apache Doris and Apache Hudi](../best-practices/doris-hudi.md).
+
 ## Applicable Scenarios
 
 | Scenario | Description |
