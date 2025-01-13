@@ -100,7 +100,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [ AWS S3](../storages/s3.md)
 
-* [ Google Cloud Storage](../storages/google-cloud-storage.md)
+* [ Google Cloud Storage](../storages/gcs.md)
 
 * [ 阿里云 OSS](../storages/aliyun-oss.md)
 
@@ -412,7 +412,7 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 
 ### 创建和删除表
 
-* 创建
+* **创建**
 
   Doris 支持在 Hive 中创建分区或非分区表。
 
@@ -484,11 +484,11 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
   ```
   :::
 
-* 删除
+* **删除**
 
   可以通过 `DROP TABLE` 语句删除一个 Hive 表。当前删除表后，会同时删除数据，包括分区数据。
 
-* 列类型映射
+* **列类型映射**
 
   参考【列类型映射】部分。需要额外注意一下限制：
 
@@ -496,11 +496,11 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
   - Hive 3.0 支持设置默认值。如果需要设置默认值，则需要在 Catalog 属性中显示的添加 `"hive.version" = "3.0.0"`。
   - 插入数据后，如果类型不能够兼容，例如 `'abc'` 插入到数值类型，则会转为 `null` 值插入。
 
-* 分区
+* **分区**
 
   Hive 中的分区类型对应 Doris 中的 List 分区。因此，在 Doris 中 创建 Hive 分区表，需使用 List 分区的建表语句，但无需显式的枚举各个分区。在写入数据时，Doris 会根据数据的值，自动创建对应的 Hive 分区。支持创建单列或多列分区表。
 
-* 文件格式
+* **文件格式**
 
   * ORC（默认）
 
@@ -522,7 +522,7 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 
       * `escape.delim`：转移字符。默认 `\`。
 
-* 压缩格式
+* **压缩格式**
 
   * Parquet：snappy（默认）、zstd、plain。（Plain 就是不采用压缩）
 
@@ -530,7 +530,7 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 
   * Text：gzipm、defalte、bzip2、zstd、lz4、lzo、snappy、plain（默认）。（Plain 就是不采用压缩）
 
-* 存储介质
+* **存储介质**
 
   * HDFS
 

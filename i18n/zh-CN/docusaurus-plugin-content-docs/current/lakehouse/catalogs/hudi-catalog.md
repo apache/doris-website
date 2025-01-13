@@ -88,7 +88,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [ AWS S3](../storages/s3.md)
 
-* [ Google Cloud Storage](../storages/google-cloud-storage.md)
+* [ Google Cloud Storage](../storages/gcs.md)
 
 * [ 阿里云 OSS](../storages/aliyun-oss.md)
 

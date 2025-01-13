@@ -94,7 +94,7 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 
 * [HDFS](../storages/hdfs.md)
 * [AWS S3](../storages/s3.md)
-* [Google Cloud Storage](../storages/google-cloud-storage.md)
+* [Google Cloud Storage](../storages/gcs.md)
 * [Alibaba Cloud OSS](../storages/aliyun-oss.md)
 * [Tencent Cloud COS](../storages/tencent-cos.md)
 * [Huawei Cloud OBS](../storages/huawei-obs.md)
@@ -404,7 +404,7 @@ For a Hive Database, you must first delete all tables under that Database before
 
 ### Creating and Dropping Tables
 
-- Creating Tables
+- **Creating Tables**
 
   Doris supports creating both partitioned and non-partitioned tables in Hive.
 
@@ -476,11 +476,11 @@ For a Hive Database, you must first delete all tables under that Database before
   ```
   :::
 
-- Dropping Tables
+- **Dropping Tables**
 
   You can delete a Hive table using the `DROP TABLE` statement. When a table is deleted, all data, including partition data, is also removed.
 
-- Column Type Mapping
+- **Column Type Mapping**
 
   Refer to the [Column Type Mapping] section for details. Note the following restrictions:
 
@@ -488,15 +488,15 @@ For a Hive Database, you must first delete all tables under that Database before
   - Hive 3.0 supports setting default values. To set default values, explicitly add `"hive.version" = "3.0.0"` in the catalog properties.
   - If inserted data types are incompatible (e.g., inserting `'abc'` into a numeric type), the value will be converted to `null`.
 
-- Partitioning
+- **Partitioning**
 
   In Hive, partition types correspond to List partitions in Doris. Therefore, when creating a Hive partitioned table in Doris, use the List partition syntax, but there is no need to explicitly enumerate each partition. Doris will automatically create the corresponding Hive partition based on data values during data insertion. Single-column or multi-column partitioned tables are supported.
 
-- File Formats
+- **File Formats**
 
-  - **ORC** (default)
-  - **Parquet**
-  - **Text** (supported from versions 2.1.7 and 3.0.3)
+  - ORC (default)
+  - Parquet
+  - Text (supported from versions 2.1.7 and 3.0.3)
 
       Text format supports the following table properties:
 
@@ -507,16 +507,16 @@ For a Hive Database, you must first delete all tables under that Database before
 		  - `serialization.null.format`: Format for storing `NULL` values. Default is `\N`.
 		  - `escape.delim`: Escape character. Default is `\`.
 
-- Compression Formats
+- **Compression Formats**
 
-  - **Parquet**: snappy (default), zstd, plain (no compression)
-  - **ORC**: snappy, zlib (default), zstd, plain (no compression)
-  - **Text**: gzip, deflate, bzip2, zstd, lz4, lzo, snappy, plain (default, no compression)
+  - Parquet: snappy (default), zstd, plain (no compression)
+  - ORC: snappy, zlib (default), zstd, plain (no compression)
+  - Text: gzip, deflate, bzip2, zstd, lz4, lzo, snappy, plain (default, no compression)
 
-- Storage Medium
+- **Storage Medium**
 
-  - **HDFS**
-  - **Object Storage**
+  - HDFS
+  - Object Storage
 
 ## Subscribing to Hive Metastore Events
 

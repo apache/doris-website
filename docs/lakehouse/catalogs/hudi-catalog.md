@@ -86,7 +86,7 @@ The current dependent Hudi version is 0.15. It is recommended to access Hudi dat
 
 * [HDFS](../storages/hdfs.md)
 * [AWS S3](../storages/s3.md)
-* [Google Cloud Storage](../storages/google-cloud-storage.md)
+* [Google Cloud Storage](../storages/gcs.md)
 * [Alibaba Cloud OSS](../storages/aliyun-oss.md)
 * [Tencent Cloud COS](../storages/tencent-cos.md)
 * [Huawei Cloud OBS](../storages/huawei-obs.md)
