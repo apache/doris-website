@@ -370,7 +370,7 @@
                         "lakehouse/catalog-overview",
                         {
                             "type": "category",
-                            "label": "Catalogs",
+                            "label": "Data Catalogs",
                             "items": [
                                 "lakehouse/catalogs/hive-catalog",
                                 "lakehouse/catalogs/iceberg-catalog",

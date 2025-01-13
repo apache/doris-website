@@ -227,7 +227,7 @@ SELECT * from hudi_table@incr('beginTime'='xxx', ['endTime'='xxx'], ['hoodie.rea
 |      inputSplitNum=1, totalFileSize=13099711, scanRanges=1              
 ```
 
-## 附录（Appendix）
+## 附录
 
 ### 版本更新记录
 

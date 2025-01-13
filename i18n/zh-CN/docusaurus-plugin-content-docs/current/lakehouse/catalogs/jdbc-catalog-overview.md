@@ -1,6 +1,6 @@
 ---
 {
-    "title": "JDBC Catalog 概述",
+    "title": "JDBC Catalog",
     "language": "zh-CN"
 }
 ---
