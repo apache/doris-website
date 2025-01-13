@@ -404,6 +404,7 @@
                     "type": "category",
                     "label": "Security",
                     "items": [
+                        "admin-manual/auth/security-overview",
                         {
                             "type": "category",
                             "label": "Authentication and Authorization",
