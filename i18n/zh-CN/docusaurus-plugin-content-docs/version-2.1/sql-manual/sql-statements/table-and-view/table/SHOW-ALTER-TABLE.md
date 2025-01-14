@@ -30,16 +30,15 @@ under the License.
 该语句用于展示当前正在进行的各类修改任务的执行情况
 
 ```sql
-SHOW ALTER [CLUSTER | TABLE [COLUMN | ROLLUP] [FROM db_name]];
+SHOW ALTER [TABLE [COLUMN | ROLLUP] [FROM db_name]];
 ```
 
 说明：
 
 1. TABLE COLUMN：展示修改列的 ALTER 任务
 2. 支持语法[WHERE TableName|CreateTime|FinishTime|State] [ORDER BY] [LIMIT]
-3. TABLE ROLLUP：展示创建或删除 ROLLUP index 的任务
+3. TABLE ROLLUP：展示创建或删除 ROLLUP 的任务
 4. 如果不指定 db_name，使用当前默认 db
-5. CLUSTER: 展示集群操作相关任务情况（仅管理员使用！待实现...）
 
 ## Result
 
@@ -51,9 +50,9 @@ SHOW ALTER [CLUSTER | TABLE [COLUMN | ROLLUP] [FROM db_name]];
 | TableName             | 对应 Schema Change 的基表的表名。 |
 | CreateTime            | 作业创建时间。                                              |
 | FinishedTime          | 作业完成时间。如果未完成，显示 "N/A"。      |
-| IndexName             | 此修改中涉及的一个索引的名称。        |
-| IndexId               | 新索引的唯一 ID。                                      |
-| OriginIndexId         | 旧索引的唯一 ID。                                      |
+| IndexName             | 此修改中涉及的一个基表/同步物化视图的名称。        |
+| IndexId               | 新基表/同步物化视图的 ID。                                      |
+| OriginIndexId         | 此修改中涉及的一个基表/同步物化视图的 ID。                                      |
 | SchemaVersion         | 以 M:N 的格式显示。M 代表 Schema Change 的版本，N 代表对应的 Hash 值。每次 Schema Change 都会增加版本。 |
 | TransactionId         | 用于转换历史数据的事务 ID。                  |
 | State                 | 作业的阶段。                                               |
@@ -81,16 +80,10 @@ SHOW ALTER [CLUSTER | TABLE [COLUMN | ROLLUP] [FROM db_name]];
    SHOW ALTER TABLE COLUMN WHERE TableName = "table1" ORDER BY CreateTime DESC LIMIT 1;
    ```
 
-3. 展示指定 db 的创建或删除 ROLLUP index 的任务执行情况
+3. 展示指定 db 的创建或删除 ROLLUP 的任务执行情况
 
    ```sql
    SHOW ALTER TABLE ROLLUP FROM example_db;
-   ```
-
-4. 展示集群操作相关任务（仅管理员使用！待实现...）
-
-   ```
-   SHOW ALTER CLUSTER;
    ```
 
 ## 关键词

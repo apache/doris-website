@@ -58,7 +58,7 @@ Doris支持两种类型的 Schema Change 操作：轻量级 Schema Change和重�
 ## 作业管理
 ### 查看作业
 
-用户可以通过 [`SHOW ALTER TABLE COLUMN`](../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE.md) 命令查看 Schema Change 作业进度。可以查看当前正在执行或已经完成的 Schema Change 作业。当一次 Schema Change 作业涉及到多个 Index 时，该命令会显示多行，每行对应一个 Index。举例如下：
+用户可以通过 [`SHOW ALTER TABLE COLUMN`](../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE.md) 命令查看 Schema Change 作业进度。可以查看当前正在执行或已经完成的 Schema Change 作业。当一次 Schema Change 作业涉及到物化视图时，该命令会显示多行，每行对应一个物化视图。举例如下：
 
 ```sql
 mysql > SHOW ALTER TABLE COLUMN\G;
@@ -123,7 +123,7 @@ DISTRIBUTED BY RANDOM BUCKETS 10;
 ALTER TABLE example_db.my_table ADD COLUMN key_col INT KEY DEFAULT "0" AFTER col1;
 ```
 
-3. 向 `example_db.my_table` 的 col4 后添加一个 Value 列 `value_col`*
+3. 向 `example_db.my_table` 的 col4 后添加一个 Value 列 `value_col`
 
 ```sql
 ALTER TABLE example_db.my_table ADD COLUMN value_col INT DEFAULT "0" AFTER col4;
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
 DISTRIBUTED BY HASH(col1) BUCKETS 10;
 ```
 
-2. 向 `example_db.my_table` 的 col1 后添加一个 Key 列 `key_col`*
+2. 向 `example_db.my_table` 的 col1 后添加一个 Key 列 `key_col`
 
 ```sql
 ALTER TABLE example_db.my_table ADD COLUMN key_col INT DEFAULT "0" AFTER col1;

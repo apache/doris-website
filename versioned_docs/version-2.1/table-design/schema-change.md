@@ -24,23 +24,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Users can modify the schema of Doris tables through the [Alter Table](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN.md) operation. Schema changes mainly involve column modifications and index changes. This article primarily introduces column-related schema changes; for index-related changes, please refer to [Table Index](./index/index-overview.md) to understand the different methods of changing indexes.
+Users can modify the schema of Doris tables through the [Alter Table](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN.md) operation. Schema changes mainly involve column modifications and index changes. This article mainly introduces column-related schema changes; for index-related changes, please refer to [Table Index](./index/index-overview.md) to understand the different methods of changing indexes.
 
-## Principle Introduction
+## Principles Introduction
 
-Doris supports two types of schema change operations: lightweight schema changes and heavyweight schema changes. The main differences lie in the complexity of the execution process, execution speed, and resource consumption.
+Doris supports two types of schema change operations: lightweight schema change and heavyweight schema change. The differences mainly lie in the complexity of the execution process, execution speed, and resource consumption.
 
 | Feature             | Lightweight Schema Change | Heavyweight Schema Change |
-|---------------------|--------------------------|---------------------------|
+|---------------------|---------------------------|---------------------------|
 | Execution Speed      | Seconds (almost real-time) | Minutes, hours, days (depends on the amount of data in the table; the larger the data, the slower the execution) |
-| Data Rewrite Needed  | No                       | Yes, involves rewriting data files |
+| Data Rewrite Needed  | No                        | Yes, involves rewriting data files |
 | System Performance Impact | Minimal               | May impact system performance, especially during data conversion |
-| Resource Consumption  | Low                      | High, will consume computing resources to reorganize data, and the storage space occupied by the table's data will double during the process. |
+| Resource Consumption  | Low                       | High, will consume computing resources to reorganize data, and the storage space occupied by the table's data involved in the process will double. |
 | Operation Types      | Add, delete value columns, rename columns, modify VARCHAR length | Modify column data types, change primary keys, modify column order, etc. |
 
 ### Lightweight Schema Change
 
-Lightweight schema change refers to simple schema modification operations that do not involve data rewriting. These operations are typically performed at the metadata level, requiring only modifications to the table's metadata without involving physical modifications to data files. Lightweight schema change operations can usually be completed in seconds and do not significantly impact system performance. Lightweight schema changes include:
+Lightweight schema change refers to simple schema modification operations that do not involve data rewriting. These operations are usually performed at the metadata level and only require modifying the table's metadata without involving physical modifications to data files. Lightweight schema change operations can typically be completed in seconds and do not significantly impact system performance. Lightweight schema changes include:
 
 - Adding or deleting value columns
 - Renaming columns
@@ -48,7 +48,7 @@ Lightweight schema change refers to simple schema modification operations that d
 
 ### Heavyweight Schema Change
 
-Heavyweight schema change involves rewriting or converting data files, and these operations are relatively complex, usually requiring the assistance of Doris's Backend (BE) to perform actual modifications or reorganizations of data. Heavyweight schema change operations typically involve deep changes to the table's data structure and may affect the physical layout of storage. All operations that do not support lightweight schema changes fall under heavyweight schema changes, such as:
+Heavyweight schema change involves rewriting or converting data files, and these operations are relatively complex, usually requiring the assistance of Doris's Backend (BE) to perform actual data modifications or reorganizations. Heavyweight schema change operations typically involve deep changes to the table's data structure and may affect the physical layout of storage. All operations that do not support lightweight schema changes fall under heavyweight schema changes, such as:
 
 - Changing the data type of a column
 - Modifying the order of columns
@@ -58,7 +58,7 @@ Heavyweight operations will start a task in the background for data conversion. 
 ## Job Management
 ### View Jobs
 
-Users can check the progress of schema change jobs using the [`SHOW ALTER TABLE COLUMN`](../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE.md) command. This command allows users to view the current executing or completed schema change jobs. When a schema change job involves multiple indexes, the command will display multiple rows, each corresponding to an index. For example:
+Users can view the progress of schema change jobs through the [`SHOW ALTER TABLE COLUMN`](../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE.md) command. This command allows users to see the currently executing or completed schema change jobs. When a schema change job involves materialized views, this command will display multiple rows, each corresponding to a materialized view. An example is as follows:
 
 ```sql
 mysql > SHOW ALTER TABLE COLUMN\G;
@@ -81,7 +81,7 @@ TransactionId: 10023
 
 ### Cancel Jobs
 
-Schema change jobs can be canceled using the following command when the job status is not FINISHED or CANCELLED:
+If the job status is not FINISHED or CANCELLED, you can cancel the schema change job using the following command:
 
 ```sql
 CANCEL ALTER TABLE COLUMN FROM tbl_name;
@@ -89,7 +89,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 
 ## Usage Examples
 
-### Rename a Column
+### Rename Column
 
 ```sql
 ALTER TABLE [database.]table RENAME COLUMN old_column_name new_column_name;
@@ -184,13 +184,13 @@ ALTER TABLE example_db.my_table
 ADD COLUMN (c1 INT DEFAULT "1", c2 FLOAT SUM DEFAULT "0");
 ```
 
-### Delete a Column
+### Delete Column
 
 - Partition columns cannot be deleted.
 
 - UNIQUE key columns cannot be deleted.
 
-Delete a column from `example_db.my_table`
+To delete a column from `example_db.my_table`
 
 1. Create table statement
 
@@ -205,7 +205,7 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
 DISTRIBUTED BY HASH(col1) BUCKETS 10;
 ```
 
-2. Delete the `col3` column from `example_db.my_table`
+2. Delete the `col4` column from `example_db.my_table`
 
 ```sql
 ALTER TABLE example_db.my_table DROP COLUMN col4;
@@ -217,11 +217,11 @@ ALTER TABLE example_db.my_table DROP COLUMN col4;
 
 - If a non-aggregate type modifies a key column, the **KEY** keyword must be specified.
 
-- Only the type of the column can be modified; other attributes of the column must remain the same (i.e., other attributes must be explicitly written in the statement, see Example 8).
+- Only the type of the column can be modified; other attributes of the column must remain the same (i.e., other attributes must be explicitly written out in the statement, see Example 8).
 
 - Partition columns and bucket columns cannot be modified.
 
-- The following type conversions are currently supported (users need to be aware of potential precision loss):
+- The following type conversions are currently supported (users need to be aware of precision loss):
 
   - TINYINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE types can be converted to larger numeric types.
 
@@ -231,7 +231,7 @@ ALTER TABLE example_db.my_table DROP COLUMN col4;
 
   - VARCHAR/CHAR can be converted to TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE.
 
-  - VARCHAR/CHAR can be converted to DATE (currently supports six formats: "%Y-%m-%d", "%y-%m-%d", "%Y%m%d", "%y%m%d", "%Y/%m/%d, "%y/%m/%d").
+  - VARCHAR/CHAR can be converted to DATE (currently supports six formats: "%Y-%m-%d", "%y-%m-%d", "%Y%m%d", "%y%m%d", "%Y/%m/%d", "%y/%m/%d").
 
   - DATETIME can be converted to DATE (only retains year-month-day information, e.g., `2019-12-09 21:47:05` <--> `2019-12-09`).
 
@@ -275,14 +275,14 @@ MODIFY COLUMN col5 VARCHAR(64) REPLACE DEFAULT "abc";
 
 Note: Only the type of the column can be modified; other attributes of the column must remain the same.
 
-4. Modify the length of a key column's field
+4. Modify the length of a field in a key column
 
 ```sql
 ALTER TABLE example_db.my_table
 MODIFY COLUMN col3 varchar(50) KEY NULL comment 'to 50';
 ```
 
-### Reorder Columns
+### Reorder
 
 - All columns must be listed.
 - Value columns must be after key columns.
@@ -309,32 +309,32 @@ ORDER BY (k3,k1,k2,k4,v2,v1);
 
 ## Limitations
 
-- Only one schema change job can run on a table at the same time.
+- A table can only have one schema change job running at the same time.
 
 - Partition columns and bucket columns cannot be modified.
 
 - If an aggregate table has value columns aggregated using the REPLACE method, key columns cannot be deleted.
 
-- Unique tables do not allow key columns to be deleted.
+- Unique tables cannot delete key columns.
 
 - When adding value columns with aggregation types of SUM or REPLACE, the default value of that column has no meaning for historical data.
 
-- Since historical data has lost detailed information, the value of the default cannot actually reflect the aggregated value.
+- Because historical data has lost detailed information, the value of the default cannot actually reflect the aggregated value.
 
-- When modifying column types, all fields except Type must be supplemented with information from the original column.
+- When modifying column types, all fields except Type must be supplemented with the original column's information.
 
-- Note that, except for the new column type, aggregation method, Nullable attribute, and default value must be supplemented with the original information.
+- Note that, except for the new column type, aggregation method, Nullable attribute, and default value must be supplemented according to the original information.
 
 - Modifying aggregation types, Nullable attributes, and default values is not supported.
 
-## Related Configuration
+## Related Configurations
 
 ### FE Configuration
 
-- `alter_table_timeout_second`: Default timeout for jobs, 86400 seconds.
+- `alter_table_timeout_second`: The default timeout for jobs, 86400 seconds.
 
 ### BE Configuration
 
-- `alter_tablet_worker_count`: The number of threads used on the BE side to execute historical data conversion. The default is 3. If you want to speed up schema change jobs, you can appropriately increase this parameter and restart BE. However, too many conversion threads may increase IO pressure, affecting other operations.
+- `alter_tablet_worker_count`: The number of threads used on the BE side to execute historical data conversion. The default is 3. If you want to speed up schema change jobs, you can appropriately increase this parameter and restart BE. However, too many conversion threads may increase IO pressure and affect other operations.
 
-- `alter_index_worker_count`: The number of threads used on the BE side to execute historical data index building (note: currently only supports inverted indexes). The default is 3. If you want to speed up index change jobs, you can appropriately increase this parameter and restart BE. However, too many threads may lead to increased IO pressure, affecting other operations.
+- `alter_index_worker_count`: The number of threads used on the BE side to execute historical data index building (Note: currently only supports inverted indexes). The default is 3. If you want to speed up index change jobs, you can appropriately increase this parameter and restart BE. However, too many threads may increase IO pressure and affect other operations.
