@@ -34,6 +34,8 @@ Doris continuously consumes data from Kafka Topics through Routine Load. After s
 
 The Doris Kafka Connector is a tool for loading Kafka data streams into the Doris database. Users can easily load various serialization formats (such as JSON, Avro, Protobuf) through the Kafka Connect plugin, and it supports parsing data formats from the Debezium component. For more documentation, please refer to [Doris Kafka Connector](../../../ecosystem/doris-kafka-connector.md).
 
+In most cases, you can directly choose Routine Load for loading data without the need to integrate external components to consume Kafka data. When you need to load data in Avro or Protobuf formats, or data collected from upstream databases via Debezium, you can use the Doris Kafka Connector.
+
 ## Using Routine Load to consume Kafka data
 
 ### Usage Restrictions
@@ -99,7 +101,7 @@ mysql> select * from test_routineload_tbl;
 
 #### Multi-Table Load
 
-For scenarios that require loading multiple tables simultaneously, the data in Kafka must contain table name information. It supports obtaining dynamic table names from the Kafka Value, formatted as: `table_name|{"col1": "val1", "col2": "val2"}`. The CSV format is similar: `table_name|val1,val2,val3`. Note that the table name must match the table name in Doris; otherwise, the load will fail, and dynamic tables do not support the column_mapping configuration introduced later.
+In scenarios where multiple tables need to be loaded simultaneously, the data in Kafka must include table name information, formatted as: `table_name|data`. For example, when loading CSV data, the format should be: `table_name|val1,val2,val3`. Please note that the table name must exactly match the table name in Doris; otherwise, the loading will fail, and the column_mapping configuration introduced later is not supported.
 
 **Step 1: Prepare Data**
 
