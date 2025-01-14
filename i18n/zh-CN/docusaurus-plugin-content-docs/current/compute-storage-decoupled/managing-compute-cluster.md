@@ -164,7 +164,7 @@ USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 
 ## 重命名计算组
 
-您可以使用 `ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>` 命令来重命名现有的计算组。
+您可以使用 `ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>` 命令来重命名现有的计算组。请参阅[重命名计算组SQL手册](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-RENAME-COMPUTE-GROUP.md)
 
 *注意*
 在重命名计算组后，拥有旧名称（old_name）计算组权限的用户，或将旧名称设置为默认计算组（default_compute_group）的用户，其权限不会自动更新为新名称（new_name）。需要由具有管理员权限的账户重新设置权限。这与 MySQL 数据库的权限体系保持一致。
