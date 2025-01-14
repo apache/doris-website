@@ -24,130 +24,119 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This document primarily introduces the updates based on the load data on the Doris Unique Key model.
+This document introduces how to update data in the Doris primary key model using various load methods.
 
-## Full Row Update
+## Whole Row Update
 
-When loading data into the primary key model (Unique model) in Doris using supported load methods such as Stream Load, Broker Load, Routine Load, Insert Into, etc., if there are no corresponding data rows with the primary key, new data will be inserted. If there are corresponding data rows with the primary key, the data will be updated. In other words, loading data into the Doris primary key model follows an "upsert" mode. Based on the import, updating existing records is by default the same as loading a new record. Therefore, you can refer to the data load documentation section for more details.
+When loading data into the primary key model (Unique model) using Doris-supported methods like Stream Load, Broker Load, Routine Load, Insert Into, etc., new data is inserted if there is no existing primary key data row. If there is an existing primary key data row, it is updated. This means the load operation in the Doris primary key model works in an "upsert" mode. The process of updating existing records is the same as loading new records by default, so you can refer to the data load documentation for more details.
 
-## Partial Update
+## Partial Column Update
 
-Updating partial columns mainly refers to directly updating certain field values in a table instead of updating all field values. This can be done using the Update statement, which typically involves reading the entire row data, updating specific field values, and then writing it back. This read-write transaction is time-consuming and not suitable for writing large amounts of data. In the context of load updates on the primary key model, Doris provides a functionality to directly insert or update partial column data without reading the entire row data, significantly improving the update efficiency.
+Partial column update allows you to update specific fields in a table without modifying all fields. You can use the Update statement to perform this operation, which typically involves reading the entire row, updating the desired fields, and writing it back. This read-write transaction is time-consuming and not suitable for large-scale data writing. Doris provides a feature to directly insert or update partial column data in the primary key model load update, bypassing the need to read the entire row first, thus significantly improving update efficiency.
 
-:::caution Note:
+:::caution Note
 
-1. Partial updates are only supported in the Merge-on-Write implementation of the Unique Key starting from version 2.0.
-2. Starting from version 2.0.2, partial updates are supported using INSERT INTO.
-3. Partial updates are not supported on tables with materialized views.
+1. Version 2.0 only supports partial column updates in the Merge-on-Write implementation of the Unique Key.
+2. Starting from version 2.0.2, partial column updates are supported using INSERT INTO.
+3. Partial column updates are not supported on tables with synchronized materialized views.
+
 :::
 
-### Use Cases
+### Applicable Scenarios
 
-- Real-time dynamic column updates that require high-frequency updates on certain fields in the table. For example, in a user tag table, there are fields containing the latest user behavior information that needs real-time updates to enable real-time analysis and decision-making in advertising/recommendation systems.
-
-- Combining multiple source tables into a large denormalized table.
-
+- Real-time dynamic column updates, requiring frequent updates of specific fields in the table. For example, updating fields related to the latest user behavior in a user tag table for real-time analysis and decision-making in advertising/recommendation systems.
+- Merging multiple source tables into one large wide table.
 - Data correction.
 
-### Usage
+### Usage Example
 
-#### Table Creation
+Assume there is an order table `order_tbl` in Doris, where the order id is the Key column, and the order status and order amount are the Value columns. The data status is as follows:
 
-When creating the table, the following property needs to be specified to enable the Merge-on-Write implementation:
+| Order id | Order Amount | Order Status |
+| -------- | -------------| -------------|
+| 1        | 100          | Pending Payment |
 
 ```sql
-enable_unique_key_merge_on_write = true
++----------+--------------+--------------+
+| order_id | order_amount | order_status |
++----------+--------------+--------------+
+| 1        |          100 | Pending Payment |
++----------+--------------+--------------+
+1 row in set (0.01 sec)
 ```
 
-#### Load
+After the user clicks to pay, the Doris system needs to change the order status of the order with order id '1' to 'Pending Shipment'.
+
+#### Partial Column Update Using Load Methods
 
 **StreamLoad/BrokerLoad/RoutineLoad**
 
-If you are using Stream Load/Broker Load/Routine Load, add the following header during the load:
+Prepare the following CSV file:
 
-```sql
-partial_columns: true
+```
+1,Pending Shipment
 ```
 
-Also, specify the columns to be loaded in the `columns` section (all key columns must be included, otherwise updates won't be possible). Below is an example of Stream Load:
+Add the following header during load:
 
 ```sql
-$ curl --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
+partial_columns:true
+```
+
+Specify the columns to be loaded in `columns` (must include all key columns). Below is an example of Stream Load:
+
+```sql
+curl --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
 
 **INSERT INTO**
 
-In all data models, when using `INSERT INTO` with a subset of columns, the default behavior is to insert the entire row. To enable partial column updates in the Merge-on-Write implementation, the following session variable needs to be set:
+In all data models, the default behavior of `INSERT INTO` when given partial columns is to write the entire row. To prevent misuse, in the Merge-on-Write implementation, `INSERT INTO` maintains the semantics of whole row UPSERT by default. To enable partial column updates, set the following session variable:
 
 ```sql
-SET enable_unique_key_partial_update=true
-INSERT INTO order_tbl (order_id, order_status) VALUES (1,'To be shipped');
+SET enable_unique_key_partial_update=true;
+INSERT INTO order_tbl (order_id, order_status) VALUES (1, 'Pending Shipment');
 ```
 
-Note that the default value for the session variable `enable_insert_strict`, which controls whether the insert statement operates in strict mode, is true. In strict mode, updating non-existing keys during partial column updates is not allowed. So, if you want to insert non-existing keys during partial column updates using the insert statement, you need to set `enable_unique_key_partial_update` to true and also set `enable_insert_strict` to false.
+Note that the session variable `enable_insert_strict` defaults to true, enabling strict mode by default. In strict mode, partial column updates do not allow updating non-existent keys. To insert non-existent keys using the insert statement for partial column updates, set `enable_unique_key_partial_update` to true and `enable_insert_strict` to false.
 
 **Flink Connector**
 
-If you are using the Flink Connector, add the following configuration:
+If using Flink Connector, add the following configuration:
 
 ```sql
 'sink.properties.partial_columns' = 'true',
 ```
 
-Also, specify the columns to be loaded in `sink.properties.column` (all key columns must be included, otherwise updates won't be possible).
+Specify the columns to be loaded in `sink.properties.column` (must include all key columns).
 
-### Example
+#### Update Result
 
-Suppose there is an order table named `order_tbl` in Doris, where the order ID is a key column, and the order status and order amount are value columns. The data is as follows:
-
-| Order ID | Order Amount | Order Status |
-| -------- | ------------ | ------------ |
-| 1        | 100          | Pending      |
+The result after the update is as follows:
 
 ```sql
 +----------+--------------+--------------+
 | order_id | order_amount | order_status |
 +----------+--------------+--------------+
-| 1        | 100          | Pending      |
+| 1        |          100 | Pending Shipment |
 +----------+--------------+--------------+
 1 row in set (0.01 sec)
 ```
 
-Now, when a user clicks on payment, the Doris system needs to update the order status of the order with ID '1' to 'To be shipped'.
+### Usage Notes
 
-We use `INSERT INTO` to update the data.
+Since the Merge-on-Write implementation needs to complete the entire row of data during writing to ensure optimal query performance, using it for partial column updates may decrease partial load performance.
 
-```sql
-SET enable_unique_key_partial_update=true;
-INSERT INTO order_tbl (order_id, order_status) VALUES (1,'To be shipped');
-```
+Performance optimization suggestions:
 
-After the update, the result is as follows:
-
-```sql
-+----------+--------------+--------------+
-| order_id | order_amount | order_status |
-+----------+--------------+--------------+
-| 1        |          100 | To be shipped |
-+----------+--------------+--------------+
-1 row in set (0.01 sec)
-```
-
-### Notes
-
-Due to the Merge-on-Write implementation requiring data completion during data writing to ensure optimal query performance, performing partial column updates using the Merge-on-Write implementation may result in a decrease in load performance.
-
-Suggestions for improving load performance:
-
-- Use SSDs equipped with NVMe or high-speed SSD cloud disks. Reading historical data in large quantities during data completion will generate high read IOPS and read throughput.
-
-- Enabling row storage can significantly reduce the IOPS generated during data completion, resulting in noticeable improvements in load performance. Users can enable row storage by using the following property when creating the table:
+- Use SSDs equipped with NVMe or high-speed SSD cloud disks, as completing data will read a large amount of historical data, generating high read IOPS and throughput.
+- Enabling row storage can reduce the IOPS generated when completing data, significantly improving load performance. Enable row storage by setting the following property when creating a table:
 
 ```Plain
 "store_row_column" = "true"
 ```
 
-Now, all rows in a batch write task (whether it is a load task or `INSERT INTO`) can only update the same columns. If you need to update different columns, you will need to perform separate batch writes.
+Currently, all rows in the same batch data writing task (whether a load task or `INSERT INTO`) can only update the same columns. To update data with different columns, write in different batches.
 
 ## Flexible Partial Column Updates
 
@@ -335,10 +324,10 @@ The final data in the table is as follows:
 | k | v1     | v2     | v3  | v4   | v5     |
 +---+--------+--------+-----+------+--------+
 | 0 | 0      | 0      | 0   | 0    | 0      |
-| 1 | 1      | 1      | 1   | 1    | 1      |
-| 5 | 5      | 5      | 5   | 5    | 5      |
+| 1 | 1      | 1      | 1   | 1    | 10     |
+| 5 | 5      | 5      | 5   | 5    | 50     |
 | 2 | 2      | 222    | 2   | 2    | 25     |
-| 3 | 3      | 3      | 333 | 3    | 3      |
+| 3 | 3      | 3      | 333 | 3    | 30     |
 | 4 | 411    | <null> | 433 | 444  | 50     |
 | 6 | 611    | 9876   | 633 | 1234 | <null> |
 | 7 | <null> | 9876   | 733 | 1234 | 300    |
