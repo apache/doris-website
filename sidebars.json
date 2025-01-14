@@ -370,7 +370,7 @@
                         "lakehouse/catalog-overview",
                         {
                             "type": "category",
-                            "label": "Catalogs",
+                            "label": "Data Catalogs",
                             "items": [
                                 "lakehouse/catalogs/hive-catalog",
                                 "lakehouse/catalogs/iceberg-catalog",
@@ -477,11 +477,19 @@
                     "items": [
                         {
                             "type": "category",
-                            "label": "Authentication and Authorization",
+                            "label": "Authentication",
                             "items": [
-                                "admin-manual/auth/authentication-and-authorization",
-                                "admin-manual/auth/ldap",
-                                "admin-manual/auth/ranger"
+                                "admin-manual/auth/authentication/internal",
+                                "admin-manual/auth/authentication/federation"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Authorization",
+                            "items": [
+                                "admin-manual/auth/authorization/internal",
+                                "admin-manual/auth/authorization/ranger",
+                                "admin-manual/auth/authorization/data"
                             ]
                         },
                         {

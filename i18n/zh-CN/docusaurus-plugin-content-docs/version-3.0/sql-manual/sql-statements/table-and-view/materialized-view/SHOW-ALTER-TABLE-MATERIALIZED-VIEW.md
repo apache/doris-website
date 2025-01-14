@@ -28,7 +28,7 @@ under the License.
 
 ## 描述
 
-该命令用于查看通过 [CREATE-MATERIALIZED-VIEW](../../sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW.md) 语句提交的创建物化视图作业的执行情况。
+该命令用于查看通过 [CREATE-MATERIALIZED-VIEW](../../../sql-statements/table-and-view/materialized-view/CREATE-MATERIALIZED-VIEW.md) 语句提交的创建物化视图作业的执行情况。
 
 > 该语句等同于 `SHOW ALTER TABLE ROLLUP`;
 
@@ -108,9 +108,6 @@ RollupIndexName: r1
    SHOW ALTER TABLE MATERIALIZED VIEW FROM example_db;
    ```
 
-## 关键词
-
-    SHOW, ALTER, TABLE, MATERIALIZED, VIEW
 
 
 

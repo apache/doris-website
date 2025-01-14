@@ -24,54 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-To migrate data from other OLAP systems to Doris, you have a variety of options:
+To migrate data from other OLAP systems to Doris, you have several options:
 
-- For systems like Hive/Iceberg/Hudi, you can leverage Multi-Catalog to map them as external tables and then use "Insert Into" to import the data into Doris.
+- For systems like Hive/Iceberg/Hudi, you can use Multi-Catalog to map them as external tables and then use "Insert Into" to load the data
 
-- You can export data from the OLAP system into formats like CSV, and then import the data files into Doris.
+- You can export data from the OLAP system into formats like CSV, and then load these data files into Doris
 
-- You can also leverage the connectors of the OLAP systems, use tools like Spark / Flink, and then call the corresponding Doris Connector to write data into Doris.
+- You can use systems like Spark/Flink, utilizing the OLAP system's Connector to read data, and then call the Doris Connector to write into Doris
 
-The following third-party migration tools are also available:
+Additionally, the following third-party migration tools are available:
 
-- [X2Doris](https://www.velodb.io/download/tools).
+- [X2Doris](https://www.selectdb.com/tools/x2doris)
 
-    X2Doris is a core tool specifically for migrating various offline data to Apache Doris. This tool integrates `automatic Doris table creation` and `data migration`. Currently, it supports the migration of data from Apache Doris/Hive/Kudu, and StarRocks databases to Doris. The entire process is visualized on a platform, making it very simple and easy to use, thereby lowering the threshold for synchronizing data to Doris.
-
-:::info NOTE
-All third-party tools are not maintained or endorsed by the Apache Doris, which is overseen by the Committers and the Doris PMC. Their use is entirely at your discretion, and the community is not responsible for verifying the licenses or validity of these tools.
-:::
+    X2Doris is a core tool specifically designed for migrating various offline data to Apache Doris. This tool combines `automatic Doris table creation` and `data migration`. Currently, it supports data migration from Apache Doris/Hive/Kudu and StarRocks databases to Doris. The entire process is operated through a visual platform, making it very simple and easy to use, reducing the barrier to synchronizing data to Doris.
 
 :::info NOTE
-If you know of the third-party migration tool for Doris that should be added to this list, please let us know at dev@doris.apache.org
+If you know of other migration tools that could be added to this list, please contact dev@doris.apache.org
 :::
 
-## X2Doris
+## X2Doris Core Features
 
-### Support multiple data sources
+### Multi-Source Support
 
-As a one-stop data migration tool, X2Doris supports Apache Hive, Apache Kudu, StarRocks, and Apache Doris itself as data source. What's more, there are more data sources such as Greenplum and Druid that are under development and will be released subsequently. Among them, the Hive version already supports Hive 1.x and 2.x, while Doris, StarRocks, Kudu, and other data sources also support multiple different versions.
+As a one-stop data migration tool, X2Doris currently supports Apache Hive, Apache Kudu, StarRocks, and Apache Doris itself as data sources. More data sources such as Greenplum and Druid are under development and will be released subsequently. The Hive version supports both Hive 1.x and 2.x versions, while Doris, StarRocks, Kudu, and other data sources also support multiple different versions.
 
-With X2Doris, users can build a complete database migration link from other OLAP systems to Apache Doris, and can also achieve data backup and recovery between different Doris clusters.
+Users can build complete database migration pipelines from other OLAP systems to Apache Doris using X2Doris, and achieve data backup and recovery between different Doris clusters.
 
-![x2doris-Support multiple data sources](/images/x2doris.jpg)
+### Automatic Table Creation
 
-### Auto table creation
+One of the biggest pain points in data migration is creating corresponding target tables in Apache Doris for the source tables to be migrated. In real business scenarios, with thousands of tables stored in Hive, manually creating target tables and converting corresponding DDL statements is inefficient and impractical.
 
-One of the biggest challenges in data migration is how to create corresponding target tables in Apache Doris for the source tables that need to be migrated. In real business scenarios, there are often thousands of tables stored in Hive, and it would be extremely inefficient and impractical for users to manually create tables and convert corresponding DDL statements.
+X2Doris has been adapted for this scenario. Taking Hive table migration as an example, when migrating Hive tables, X2Doris automatically creates Duplicate Key model tables (which can be manually modified) in Apache Doris and reads the Hive table's metadata information. It automatically identifies partition fields through field names and types, prompts for partition mapping if partitions are detected, and directly generates the corresponding Doris target table DDL.
 
-X2Doris has been adapted for this scenario. Taking Hive table migration as an example, when migrating Hive tables, X2Doris automatically creates Duplicate Key model tables (which can also be manually modified) in Apache Doris and reads the metadata information of Hive tables. It automatically identifies partition fields based on field names and types, and if partitions are detected, it prompts for partition mapping. Finally, it directly generates the corresponding Doris target table DDL.
+When the upstream data source is Doris/StarRocks, X2Doris automatically parses the table model based on source table information, maps source field types to corresponding target field types, and processes upstream Properties parameters, converting them into target table attribute parameters. Additionally, X2Doris has enhanced support for complex types, enabling migration of Array, Map, and Bitmap type data.
 
-When the upstream data source is Doris/StarRocks, X2Doris automatically parses the table model based on the source table information, maps the source table field types to the corresponding target field types, and identifies and processes upstream properties parameters, converting them into attribute parameters for the corresponding target table. In addition, X2Doris has also enhanced support for complex types, enabling data migration for Array, Map, and Bitmap types.
+### High Speed and Stability
 
-![Auto table creation](/images/auto-table-creation.jpeg)
+In terms of data writing, X2Doris has specifically optimized the data reading process. By optimizing data batching logic, it further reduces memory usage, while making significant improvements and enhancements to Stream Load write requests, optimizing memory usage and release, further improving data migration speed and stability.
 
-### High speed & stability
+Compared to other similar migration tools, X2Doris performs about 2-10 times faster. For example, when synchronizing 50 million records in full with 1GB memory on a single machine, other tools take about 90 seconds, while X2Doris completes it in less than 50 seconds, achieving nearly 100% performance improvement.
 
-For data writing, X2Doris has specifically optimized the reading process. By optimizing the data batching logic, it further reduces memory usage. Additionally, significant improvements and enhancements have been made to Stream Load write requests, optimizing memory usage and release, further enhancing the speed and stability of data migration.
+In a real-world large-scale log data migration scenario, with individual records of 1KB size, a single table containing nearly 100 million records, and total storage space of about 90 GB, X2Doris completed the full table migration in just 2 minutes, with an average write speed of nearly 800 MB/s.
 
-Compared to other similar migration tools, X2Doris offers a performance advantage of approximately 2-10 times. For example, when using a single machine with 1G of memory, other tools take approximately 90 seconds to synchronize 50 million rows of data in full, while X2Doris completes the task in less than 50 seconds, achieving a nearly 100% performance improvement.
+## Using X2Doris
 
-In a practical large-scale log data migration scenario, with individual data records averaging 1KB in size, a single table containing nearly 100 million records, and a total storage space of approximately 90 GB, X2Doris can complete the full table migration in just 2 minutes, with an average write speed of nearly 800 MB/s.
+- Product Introduction: https://www.selectdb.com/tools/x2doris
 
-![High speed & stability](/images/high-speed-stability.jpeg)
+- Download Now: https://www.selectdb.com/download/tools#x2doris
+
+- Documentation: https://docs.selectdb.com/docs/ecosystem/x2doris/x2doris-deployment-guide

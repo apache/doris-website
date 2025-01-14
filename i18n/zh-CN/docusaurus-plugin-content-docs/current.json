@@ -143,9 +143,9 @@
     "message": "湖仓一体",
     "description": "The label for category Data Lakehouse in sidebar docs"
   },
-  "sidebar.docs.category.Catalogs": {
+  "sidebar.docs.category.Data Catalogs": {
     "message": "数据目录",
-    "description": "The label for category Catalogs in sidebar docs"
+    "description": "The label for category Data Catalogs in sidebar docs"
   },
   "sidebar.docs.category.Metastores": {
     "message": "元数据服务",
@@ -222,6 +222,14 @@
   "sidebar.docs.category.Authentication and Authorization": {
     "message": "认证与鉴权",
     "description": "The label for category Authentication and Authorization in sidebar docs"
+  },
+  "sidebar.docs.category.Authentication": {
+    "message": "认证",
+    "description": "The label for category Authentication in sidebar docs"
+  },
+  "sidebar.docs.category.Authorization": {
+    "message": "鉴权",
+    "description": "The label for category Authorization in sidebar docs"
   },
   "sidebar.docs.category.Alter Table": {
     "message": "表结构变更",

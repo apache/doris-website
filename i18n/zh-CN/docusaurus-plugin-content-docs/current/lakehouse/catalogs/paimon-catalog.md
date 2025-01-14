@@ -26,7 +26,9 @@ under the License.
 
 Doris 支持通过多种元数据服务访问 Paimon 表元数据，并进行 Paimon 数据查询。
 
-目前只支持 Paimon 表的读操作，暂时不支持的写入 Paimon 表。
+目前只支持 Paimon 表的读操作，未来会支持的写入 Paimon 表。
+
+[使用 Docker 快速体验 Apache Doris & Paimon](../best-practices/doris-paimon.md)
 
 ## 适用场景
 
@@ -34,7 +36,7 @@ Doris 支持通过多种元数据服务访问 Paimon 表元数据，并进行 Pa
 | ---- | ------------------------------------------------------ |
 | 查询加速 | 利用 Doris 分布式计算引擎，直接访问 Paimon 数据进行查询加速。                 |
 | 数据集成 | 读取 Paimon 数据并写入到 Doris 内表。或通过 Doris 计算引擎进行 ZeroETL 操作。 |
-| 数据写回 | 不支持。                                                   |
+| 数据写回 | 暂不支持。                                                   |
 
 ## 配置 Catalog
 
@@ -51,7 +53,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 );
 ```
 
-* \<paimon\_catalog\_type>
+* `<paimon_catalog_type>`
 
   Paimon Catalog 的类型，支持以下几种：
 
@@ -61,21 +63,21 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `dlf`：使用阿里云 DLF 作为元数据服务。
 
-* \<paimon\_warehouse>
+* `<paimon_warehouse>`
 
   Paimon 的仓库路径。当 `<paimon_catalog_type>` 为 `filesystem` 时，需指定这个参数。
 
-  `warehouse` 的路径必须指向 `Database` 路径的上一级。如你的表路径是：`s3://bucket/path/to/db1/table1`，那么 `warehouse` 应该是：`s3://bucket/path/to/`。
+  `warehouse` 的路径必须指向 `Database` 路径的上一级。如您的表路径是：`s3://bucket/path/to/db1/table1`，那么 `warehouse` 应该是：`s3://bucket/path/to/`。
 
-* {MetaStoreProperties}
+* `{MetaStoreProperties}`
 
   MetaStoreProperties 部分用于填写 Metastore 元数据服务连接和认证信息。具体可参阅【支持的元数据服务】部分。
 
-* {StorageProperties}
+* `{StorageProperties}`
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
 
-* {CommonProperties}
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
@@ -101,7 +103,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [ AWS S3](../storages/s3.md)
 
-* [ Google Cloud Storage](../storages/google-cloud-storage.md)
+* [ Google Cloud Storage](../storages/gcs.md)
 
 * [ 阿里云 OSS](../storages/aliyun-oss.md)
 
@@ -210,5 +212,5 @@ SELECT * FROM paimon_tbl LIMIT 10;
 SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
 ```
 
-## 附录（Appendix）
+## 附录
 

@@ -24,8 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+在高频小批量写入场景下，传统的导入方式存在以下问题：
 
-Group Commit 不是一种新的导入方式，而是对`INSERT INTO tbl VALUES(...)`、`Stream Load`的扩展，大幅提升了高并发小写入的性能。您的应用程序可以直接使用 JDBC 将数据高频写入 Doris，同时通过使用 PreparedStatement 可以获得更高的性能。在日志场景下，您也可以利用 Stream Load 将数据高频写入 Doris。
+- 每个导入都会创建一个独立的事务，都需要经过 FE 解析 SQL 和生成执行计划，影响整体性能
+- 每个导入都会生成一个新的版本，导致版本数快速增长，增加了后台compaction的压力
+
+为了解决这些问题，Doris 引入了 Group Commit 机制。Group Commit 不是一种新的导入方式，而是对现有导入方式的优化扩展，主要针对：
+
+- `INSERT INTO tbl VALUES(...)` 语句
+- Stream Load 导入
+
+通过将多个小批量导入在后台合并成一个大的事务提交，显著提升了高并发小批量写入的性能。同时，Group Commit 与 PreparedStatement 结合使用可以获得更高的性能提升。
 
 ## Group Commit 模式
 
@@ -44,58 +53,6 @@ Group Commit 写入有三种模式，分别是：
     Doris 首先将数据写入 WAL (`Write Ahead Log`)，然后导入立即返回。Doris 会根据负载和表的`group_commit_interval`属性异步提交数据，提交之后数据可见。为了防止 WAL 占用较大的磁盘空间，单次导入数据量较大时，会自动切换为`sync_mode`。这适用于写入延迟敏感以及高频写入的场景。
 
     WAL的数量可以通过FE http接口查看，具体可见[这里](../../admin-manual/open-api/fe-http/get-wal-size-action)，也可以在BE的metrics中搜索关键词`wal`查看。
-
-## 使用限制
-
-* 当开启了 Group Commit 模式，系统会判断用户发起的`INSERT INTO VALUES`语句是否符合 Group Commit 的条件，如果符合，该语句的执行会进入到 Group Commit 写入中。符合以下条件会自动退化为非 Group Commit 方式：
-
-  + 事务写入，即`Begin`; `INSERT INTO VALUES`; `COMMIT`方式
-
-  + 指定 Label，即`INSERT INTO dt WITH LABEL {label} VALUES`
-
-  + VALUES 中包含表达式，即`INSERT INTO dt VALUES (1 + 100)`
-
-  + 列更新写入
-
-  + 表不支持 light schema change
-
-* 当开启了 Group Commit 模式，系统会判断用户发起的`Stream Load`和`Http Stream`是否符合 Group Commit 的条件，如果符合，该导入的执行会进入到 Group Commit 写入中。符合以下条件的会自动退化为非 Group Commit 方式：
-
-  + 两阶段提交
-
-  + 指定 Label，即通过 `-H "label:my_label"`设置
-
-  + 列更新写入
-
-  + 表不支持 light schema change
-
-+ 对于 Unique 模型，由于 Group Commit 不能保证提交顺序，用户可以配合 Sequence 列使用来保证数据一致性
-
-* 对`max_filter_ratio`语义的支持
-
-  * 在默认的导入中，`filter_ratio`是导入完成后，通过失败的行数和总行数计算，决定是否提交本次写入
-
-  * 在 Group Commit 模式下，由于多个用户发起的导入会被一个内部导入执行，虽然可以计算出每个导入的`filter_ratio`，但是数据一旦进入内部导入，就只能 commit transaction
-
-  * Group Commit 模式支持了一定程度的`max_filter_ratio`语义，当导入的总行数不高于`group_commit_memory_rows_for_max_filter_ratio`(配置在`be.conf`中，默认为`10000`行)，`max_filter_ratio` 工作
-
-* WAL 限制
-
-  * 对于`async_mode`的 Group Commit 写入，会把数据写入 WAL。如果内部导入成功，则 WAL 被立刻删除；如果内部导入失败，通过导入 WAL 的方法来恢复数据
-
-  * 目前 WAL 文件只存储在一个 BE 上，如果这个 BE 磁盘损坏或文件误删等，可能导入丢失部分数据
-
-  * 当下线 BE 节点时，请使用[`DECOMMISSION`](../../sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND)命令，安全下线节点，防止该节点下线前 WAL 文件还没有全部处理完成，导致部分数据丢失
-
-  * 对于`async_mode`的 Group Commit 写入，为了保护磁盘空间，当遇到以下情况时，会切换成`sync_mode`
-
-    * 导入数据量过大，即超过 WAL 单目录的 80% 空间
-
-    * 不知道数据量的 chunked stream load
-
-    * 导入数据量不大，但磁盘可用空间不足
-
-  * 当发生重量级 Schema Change（目前加减列、修改 varchar 长度和重命名列是轻量级 Schema Change，其它的是重量级 Schema Change）时，为了保证 WAL 能够适配表的 Schema，在 Schema Change 最后的 FE 修改元数据阶段，会拒绝 Group Commit 写入，客户端收到 `insert table ${table_name} is blocked on schema change` 异常，客户端重试即可
 
 ## Group Commit 使用方式
 
@@ -127,30 +84,30 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionStat
 
 * 通过 JDBC url 设置，增加`sessionVariables=group_commit=async_mode`
 
-    ```
-    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false
-    ```
+```
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false
+```
 
 * 通过执行 SQL 设置
 
-    ```
-    try (Statement statement = conn.createStatement()) {
-        statement.execute("SET group_commit = async_mode;");
-    }
-    ```
+```
+try (Statement statement = conn.createStatement()) {
+    statement.execute("SET group_commit = async_mode;");
+}
+```
 
 **3. 使用 `PreparedStatement`**
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50$sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
 private static final String TBL = "dt";
 private static final String USER = "root";
 private static final String PASSWD = "";
-private static final int INSERT_BATCH_SIZE = 10;   
+private static final int INSERT_BATCH_SIZE = 10;
 
 private static void groupCommitInsertBatch() throws Exception {
     Class.forName(JDBC_DRIVER);
@@ -296,66 +253,66 @@ func logInsertStatistics() {
 
 * 异步模式
 
-    ```sql
-    # 配置 session 变量开启 group commit (默认为 off_mode),开启异步模式
-    mysql> set group_commit = async_mode;
+```sql
+# 配置 session 变量开启 group commit (默认为 off_mode),开启异步模式
+mysql> set group_commit = async_mode;
 
-    # 这里返回的 label 是 group_commit 开头的，可以区分出是否使用了 group commit
-    mysql> insert into dt values(1, 'Bob', 90), (2, 'Alice', 99);
-    Query OK, 2 rows affected (0.05 sec)
-    {'label':'group_commit_a145ce07f1c972fc-bd2c54597052a9ad', 'status':'PREPARE', 'txnId':'181508'}
+# 这里返回的 label 是 group_commit 开头的，可以区分出是否使用了 group commit
+mysql> insert into dt values(1, 'Bob', 90), (2, 'Alice', 99);
+Query OK, 2 rows affected (0.05 sec)
+{'label':'group_commit_a145ce07f1c972fc-bd2c54597052a9ad', 'status':'PREPARE', 'txnId':'181508'}
 
-    # 可以看出这个 label, txn_id 和上一个相同，说明是攒到了同一个导入任务中
-    mysql> insert into dt(id, name) values(3, 'John');
-    Query OK, 1 row affected (0.01 sec)
-    {'label':'group_commit_a145ce07f1c972fc-bd2c54597052a9ad', 'status':'PREPARE', 'txnId':'181508'}
+# 可以看出这个 label, txn_id 和上一个相同，说明是攒到了同一个导入任务中
+mysql> insert into dt(id, name) values(3, 'John');
+Query OK, 1 row affected (0.01 sec)
+{'label':'group_commit_a145ce07f1c972fc-bd2c54597052a9ad', 'status':'PREPARE', 'txnId':'181508'}
 
-    # 不能立刻查询到
-    mysql> select * from dt;
-    Empty set (0.01 sec)
+# 不能立刻查询到
+mysql> select * from dt;
+Empty set (0.01 sec)
 
-    # 10 秒后可以查询到，可以通过表属性 group_commit_interval 控制数据可见延迟。
-    mysql> select * from dt;
-    +------+-------+-------+
-    | id   | name  | score |
-    +------+-------+-------+
-    |    1 | Bob   |    90 |
-    |    2 | Alice |    99 |
-    |    3 | John  |  NULL |
-    +------+-------+-------+
-    3 rows in set (0.02 sec)
-    ```
+# 10 秒后可以查询到，可以通过表属性 group_commit_interval 控制数据可见延迟。
+mysql> select * from dt;
++------+-------+-------+
+| id   | name  | score |
++------+-------+-------+
+|    1 | Bob   |    90 |
+|    2 | Alice |    99 |
+|    3 | John  |  NULL |
++------+-------+-------+
+3 rows in set (0.02 sec)
+```
 
 * 同步模式
 
-    ```sql
-    # 配置 session 变量开启 group commit (默认为 off_mode),开启同步模式
-    mysql> set group_commit = sync_mode;
+```sql
+# 配置 session 变量开启 group commit (默认为 off_mode),开启同步模式
+mysql> set group_commit = sync_mode;
 
-    # 这里返回的 label 是 group_commit 开头的，可以区分出是否谁用了 group commit，导入耗时至少是表属性 group_commit_interval。
-    mysql> insert into dt values(4, 'Bob', 90), (5, 'Alice', 99);
-    Query OK, 2 rows affected (10.06 sec)
-    {'label':'group_commit_d84ab96c09b60587_ec455a33cb0e9e87', 'status':'PREPARE', 'txnId':'3007', 'query_id':'fc6b94085d704a94-a69bfc9a202e66e2'}
+# 这里返回的 label 是 group_commit 开头的，可以区分出是否谁用了 group commit，导入耗时至少是表属性 group_commit_interval。
+mysql> insert into dt values(4, 'Bob', 90), (5, 'Alice', 99);
+Query OK, 2 rows affected (10.06 sec)
+{'label':'group_commit_d84ab96c09b60587_ec455a33cb0e9e87', 'status':'PREPARE', 'txnId':'3007', 'query_id':'fc6b94085d704a94-a69bfc9a202e66e2'}
 
-    # 数据可以立刻读出
-    mysql> select * from dt;
-    +------+-------+-------+
-    | id   | name  | score |
-    +------+-------+-------+
-    |    1 | Bob   |    90 |
-    |    2 | Alice |    99 |
-    |    3 | John  |  NULL |
-    |    4 | Bob   |    90 |
-    |    5 | Alice |    99 |
-    +------+-------+-------+
-    5 rows in set (0.03 sec)
-    ```
+# 数据可以立刻读出
+mysql> select * from dt;
++------+-------+-------+
+| id   | name  | score |
++------+-------+-------+
+|    1 | Bob   |    90 |
+|    2 | Alice |    99 |
+|    3 | John  |  NULL |
+|    4 | Bob   |    90 |
+|    5 | Alice |    99 |
++------+-------+-------+
+5 rows in set (0.03 sec)
+```
 
 * 关闭模式
 
-    ```sql
-    mysql> set group_commit = off_mode;
-    ```
+```sql
+mysql> set group_commit = off_mode;
+```
 
 ### Stream Load
 
@@ -368,66 +325,66 @@ func logInsertStatistics() {
 
 * 异步模式
 
-    ```sql
-    # 导入时在 header 中增加"group_commit:async_mode"配置
+```sql
+# 导入时在 header 中增加"group_commit:async_mode"配置
 
-    curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:async_mode"  -H "column_separator:,"  http://{fe_host}:{http_port}/api/db/dt/_stream_load
-    {
-        "TxnId": 7009,
-        "Label": "group_commit_c84d2099208436ab_96e33fda01eddba8",
-        "Comment": "",
-        "GroupCommit": true,
-        "Status": "Success",
-        "Message": "OK",
-        "NumberTotalRows": 2,
-        "NumberLoadedRows": 2,
-        "NumberFilteredRows": 0,
-        "NumberUnselectedRows": 0,
-        "LoadBytes": 19,
-        "LoadTimeMs": 35,
-        "StreamLoadPutTimeMs": 5,
-        "ReadDataTimeMs": 0,
-        "WriteDataTimeMs": 26
-    }
+curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:async_mode"  -H "column_separator:,"  http://{fe_host}:{http_port}/api/db/dt/_stream_load
+{
+    "TxnId": 7009,
+    "Label": "group_commit_c84d2099208436ab_96e33fda01eddba8",
+    "Comment": "",
+    "GroupCommit": true,
+    "Status": "Success",
+    "Message": "OK",
+    "NumberTotalRows": 2,
+    "NumberLoadedRows": 2,
+    "NumberFilteredRows": 0,
+    "NumberUnselectedRows": 0,
+    "LoadBytes": 19,
+    "LoadTimeMs": 35,
+    "StreamLoadPutTimeMs": 5,
+    "ReadDataTimeMs": 0,
+    "WriteDataTimeMs": 26
+}
 
-    # 返回的 GroupCommit 为 true，说明进入了 group commit 的流程
-    # 返回的 Label 是 group_commit 开头的，是真正消费数据的导入关联的 label
-    ```
+# 返回的 GroupCommit 为 true，说明进入了 group commit 的流程
+# 返回的 Label 是 group_commit 开头的，是真正消费数据的导入关联的 label
+```
 
 * 同步模式
 
-    ```sql
-    # 导入时在 header 中增加"group_commit:sync_mode"配置
+```sql
+# 导入时在 header 中增加"group_commit:sync_mode"配置
 
-    curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mode"  -H "column_separator:,"  http://{fe_host}:{http_port}/api/db/dt/_stream_load
-    {
-        "TxnId": 3009,
-        "Label": "group_commit_d941bf17f6efcc80_ccf4afdde9881293",
-        "Comment": "",
-        "GroupCommit": true,
-        "Status": "Success",
-        "Message": "OK",
-        "NumberTotalRows": 2,
-        "NumberLoadedRows": 2,
-        "NumberFilteredRows": 0,
-        "NumberUnselectedRows": 0,
-        "LoadBytes": 19,
-        "LoadTimeMs": 10044,
-        "StreamLoadPutTimeMs": 4,
-        "ReadDataTimeMs": 0,
-        "WriteDataTimeMs": 10038
-    }
+curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mode"  -H "column_separator:,"  http://{fe_host}:{http_port}/api/db/dt/_stream_load
+{
+    "TxnId": 3009,
+    "Label": "group_commit_d941bf17f6efcc80_ccf4afdde9881293",
+    "Comment": "",
+    "GroupCommit": true,
+    "Status": "Success",
+    "Message": "OK",
+    "NumberTotalRows": 2,
+    "NumberLoadedRows": 2,
+    "NumberFilteredRows": 0,
+    "NumberUnselectedRows": 0,
+    "LoadBytes": 19,
+    "LoadTimeMs": 10044,
+    "StreamLoadPutTimeMs": 4,
+    "ReadDataTimeMs": 0,
+    "WriteDataTimeMs": 10038
+}
 
-    # 返回的 GroupCommit 为 true，说明进入了 group commit 的流程
-    # 返回的 Label 是 group_commit 开头的，是真正消费数据的导入关联的 label
-    ```
+# 返回的 GroupCommit 为 true，说明进入了 group commit 的流程
+# 返回的 Label 是 group_commit 开头的，是真正消费数据的导入关联的 label
+```
 
-    关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](./import-way/stream-load-manual)。
+关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](./import-way/stream-load-manual)。
 
 
 ## 自动提交条件
 
-当满足时间间隔 (默认为 10 秒) 或数据量 (默认为 64 MB) 其中一个条件时，会自动提交数据。
+当满足时间间隔 (默认为 10 秒) 或数据量 (默认为 64 MB) 其中一个条件时，会自动提交数据。这两个参数需要配合使用，建议根据实际场景进行调优。
 
 ### 修改提交间隔
 
@@ -438,6 +395,17 @@ func logInsertStatistics() {
 ALTER TABLE dt SET ("group_commit_interval_ms" = "2000");
 ```
 
+**参数调整建议**:
+- 较短的间隔(如2秒):
+  - 优点：数据可见性延迟更低，适合对实时性要求较高的场景
+  - 缺点：提交次数增多，版本数增长更快，后台compaction压力更大
+
+- 较长的间隔(如30秒):
+  - 优点：提交批次更大，版本数增长更慢，系统开销更小
+  - 缺点：数据可见性延迟更高
+
+建议根据业务对数据可见性延迟的容忍度来设置，如果系统压力大，可以适当增加间隔。
+
 ### 修改提交数据量
 
 Group Commit 的默认提交数据量为 64 MB，用户可以通过修改表的配置调整：
@@ -446,6 +414,18 @@ Group Commit 的默认提交数据量为 64 MB，用户可以通过修改表的�
 # 修改提交数据量为 128MB
 ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 ```
+
+**参数调整建议**:
+- 较小的阈值(如32MB):
+  - 优点：内存占用更少，适合资源受限的环境
+  - 缺点：提交批次较小，吞吐量可能受限
+
+- 较大的阈值(如256MB):
+  - 优点：批量提交效率更高，系统吞吐量更大
+  - 缺点：占用更多内存
+
+建议根据系统内存资源和数据可靠性要求来权衡。如果内存充足且追求更高吞吐，可以适当增加到128MB或更大。
+
 
 ## 相关系统配置
 
@@ -466,6 +446,40 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
    * 描述：当 group commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作
 
    * 默认值：10000
+
+## 使用限制
+
+* **Group Commit 限制条件**
+
+  * `INSERT INTO VALUES` 语句在以下情况下会退化为非 Group Commit 方式：
+    - 使用事务写入 (`Begin; INSERT INTO VALUES; COMMIT`)
+    - 指定 Label (`INSERT INTO dt WITH LABEL {label} VALUES`)
+    - VALUES 中包含表达式 (`INSERT INTO dt VALUES (1 + 100)`)
+    - 列更新写入
+    - 表不支持轻量级模式更改
+
+  * `Stream Load` 在以下情况下会退化为非 Group Commit 方式：
+    - 使用两阶段提交
+    - 指定 Label (`-H "label:my_label"`)
+    - 列更新写入
+    - 表不支持轻量级模式更改
+
+* **Unique 模型**
+  - Group Commit 不保证提交顺序，建议使用 Sequence 列来保证数据一致性。
+
+* **max_filter_ratio 支持**
+  - 默认导入中，`filter_ratio` 通过失败行数和总行数计算。
+  - Group Commit 模式下，`max_filter_ratio` 在总行数不超过 `group_commit_memory_rows_for_max_filter_ratio` 时有效。
+
+* **WAL 限制**
+  - `async_mode` 写入会将数据写入 WAL，成功后删除，失败时通过 WAL 恢复。
+  - WAL 文件是单副本存储的，如果对应磁盘损坏或文件误删可能导致数据丢失。
+  - 下线 BE 节点时，使用 `DECOMMISSION` 命令以防数据丢失。
+  - `async_mode` 在以下情况下切换为 `sync_mode`：
+    - 导入数据量过大（超过 WAL 单目录 80% 空间）
+    - 不知道数据量的 chunked stream load
+    - 磁盘可用空间不足
+  - 重量级 Schema Change 时，拒绝 Group Commit 写入，客户端需重试。
 
 ## 性能
 

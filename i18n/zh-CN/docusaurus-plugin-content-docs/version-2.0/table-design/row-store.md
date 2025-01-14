@@ -77,3 +77,4 @@ SELECT * FROM tbl_point_query WHERE key = 100；
 ## 注意事项
 
 1. 开启行存后占用的存储空间会增加，存储空间的增加和数据特点有关，一般是原来表的 2 到 10 倍，具体空间占用需要使用实际数据测试。
+2. 2.0不支持 alter `store_row_column` 属性

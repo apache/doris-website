@@ -1603,7 +1603,6 @@
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT",
                                         "sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE",
-                                        "sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/table-and-view/table/TRUNCATE-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/DROP-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-CREATE-TABLE",
@@ -1652,6 +1651,7 @@
                                         "sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/table-and-view/materialized-view/REFRESH-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK"

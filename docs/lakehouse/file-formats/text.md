@@ -24,5 +24,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The document is under development, please refer to versioned doc 2.1 or 3.0
+This document introduces the support for reading and writing text file formats in Doris.
+
+## Text/CSV
+
+* Catalog
+
+  Supports reading Hive tables in the `org.apache.hadoop.mapred.TextInputFormat` format.
+
+  Supports reading Hive tables in the `org.apache.hadoop.hive.serde2.OpenCSVSerde` format. (Supported from version 2.1.7)
+
+* Table Valued Function
+
+* Import
+
+  Import functionality supports Text/CSV formats. See the import documentation for details.
+
+* Export
+
+  Export functionality supports Text/CSV formats. See the export documentation for details.
+
+### Supported Compression Formats
+
+* uncompressed
+* gzip
+* deflate
+* bzip2
+* zstd
+* lz4
+* snappy
+* lzo
+
+## JSON
+
+* Catalog
+
+  Supports reading Hive tables in the `org.apache.hive.hcatalog.data.JsonSerDe` format. (Supported from version 3.0.4)
+
+* Import
+
+  Import functionality supports JSON formats. See the import documentation for details.
 

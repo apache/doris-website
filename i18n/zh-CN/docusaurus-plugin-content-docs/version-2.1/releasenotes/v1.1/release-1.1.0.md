@@ -201,7 +201,7 @@ String 类型是 Apache Doris 在 0.15 版本中引入的新数据类型，在�
 
 如果您遇到任何使用上的问题，欢迎随时通过 GitHub Discussion 论坛或者 Dev 邮件组与我们取得联系。
 
-GitHub 论坛：[https://github.com/apache/incubator-doris/discussions](https://github.com/apache/incubator-doris/discussions)
+GitHub 论坛：[https://github.com/apache/incubator-doris/discussions](https://github.com/apache/doris/discussions)
 
 Dev 邮件组：[dev@doris.apache.org](dev@doris.apache.org)
 
