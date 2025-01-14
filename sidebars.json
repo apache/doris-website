@@ -477,25 +477,19 @@
                     "items": [
                         {
                             "type": "category",
-                            "label": "Authentication and Authorization",
+                            "label": "Authentication",
                             "items": [
-                                {
-                                    "type": "category",
-                                    "label": "Authentication",
-                                    "items": [
-                                        "admin-manual/auth/authentication/internal",
-                                        "admin-manual/auth/authentication/federation"
-                                    ]
-                                },
-                                {
-                                    "type": "category",
-                                    "label": "Authorization",
-                                    "items": [
-                                        "admin-manual/auth/authorization/internal",
-                                        "admin-manual/auth/authorization/ranger",
-                                        "admin-manual/auth/authorization/data"
-                                    ]
-                                }
+                                "admin-manual/auth/authentication/internal",
+                                "admin-manual/auth/authentication/federation"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Authorization",
+                            "items": [
+                                "admin-manual/auth/authorization/internal",
+                                "admin-manual/auth/authorization/ranger",
+                                "admin-manual/auth/authorization/data"
                             ]
                         },
                         {

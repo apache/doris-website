@@ -1,6 +1,6 @@
 ---
 {
-"title": "数据访问",
+"title": "数据访问控制",
 "language": "zh-CN"
 }
 ---
