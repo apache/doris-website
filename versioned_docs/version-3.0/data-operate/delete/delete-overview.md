@@ -25,52 +25,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-In Apache Doris, the delete operation is a key feature for managing and cleaning data to meet the flexibility needs of users in large-scale data analysis scenarios. Doris's deletion mechanism supports efficient logical deletion and multi-version data management, achieving a good balance between performance and flexibility.
+In Apache Doris, the delete operation is essential for managing and cleaning data to meet the flexible needs of users in large-scale data analysis scenarios.
 
-## Implementation Mechanism of Deletion
+Doris offers a variety of delete functionalities, including DELETE statements, delete sign, partition deletion, full table deletion, and atomic overwrite using temporary partitions. The following sections will detail each feature:
 
-Doris's delete operation uses **logical deletion** rather than directly physically deleting data. The core implementation mechanisms are as follows:
+### DELETE Statement
 
-1. **Logical Deletion**. The delete operation does not directly remove data from storage but adds a delete marker to the target data. There are two main ways to implement logical deletion: delete predicate and delete sign.
+The DELETE statement is the most commonly used method for deleting data and supports all table models. Users can use it to delete data that meets specific conditions.
 
-    1. Delete predicate is used for Duplicate and Aggregate models. Each deletion directly records a conditional predicate on the corresponding dataset to filter out the deleted data during queries.
-    2. Delete sign is used for the Unique Key model. Each deletion writes a new batch of data to overwrite the data to be deleted, and the hidden column `__DORIS_VERSION_COL__` of the new data is set to 1, indicating that the data has been deleted.
-    3. Performance comparison: The operation speed of "delete predicate" is very fast, whether deleting 1 row or 100 million rows, the speed is almost the same, it just write a conditional predicate to the dataset; the write speed of delete sign is proportional to the amount of data.
-
-2. **Multi-Version Data Management**. Doris supports multi-version data (MVCC, Multi-Version Concurrency Control), allowing concurrent operations on the same dataset without affecting query results. The delete operation creates a new version containing the delete marker, while the old version data is still retained.
-
-3. **Physical Deletion (Compaction)**. The periodically executed compaction process cleans up data marked for deletion, thereby freeing up storage space. This process is automatically completed by the system without user intervention. Note that only Base Compaction will physically delete data, while Cumulative Compaction only merges and reorders data, reducing the number of rowsets and segments.
-
-## Use Cases for Delete Operations
-
-Doris provides various deletion methods to meet different needs:
-
-### Conditional Deletion
-
-Users can delete rows that meet specified conditions. For example:
+The syntax of the DELETE statement is as follows:
 
 ```sql
 DELETE FROM table_name WHERE condition;
 ```
 
-### Batch Deletion via data loading
+While the DELETE statement can handle most deletion needs, it may not be the most efficient in some scenarios. To address various deletion requirements flexibly and efficiently, Doris also provides the following methods.
 
-During data loading, logical deletion can be achieved by overwriting. This method is suitable for batch deletion of a large number of keys or synchronizing TP database deletions during CDC binlog synchronization.
+### Truncate Partition 
 
-### Deleting All Data
+In Doris, managing data through date partitions and other methods is common. Many users only need to retain data for a recent period (e.g., 7 days). For expired data partitions, the truncate partition feature can be used for efficient deletion.
 
-In some cases, data can be deleted by directly truncating the table or partition. For example:
+Compared to the DELETE statement, truncate partition only requires modifying some partition metadata to complete the deletion, making it the best method in this scenario.
+
+The syntax of partition deletion is as follows:
+
+```sql
+TRUNCATE TABLE tbl PARTITION(p1, p2);
+```
+
+### Truncate Table
+
+Truncate table is suitable for quickly clearing a table while retaining its structure, such as when redoing data in offline analysis scenarios.
+
+The syntax of full truncate table is as follows:
 
 ```sql
 TRUNCATE TABLE table_name;
 ```
 
+### Delete Sign 
+
+Data deletion can be considered a type of data update. Therefore, on the primary key model (Unique Key) with update capabilities, users can use the delete sign feature to perform delete operations as data updates.
+
+For example, in CDC data synchronization scenarios, the CDC program can mark a DELETE operation binlog with a delete sign. When this data is written to Doris, the corresponding primary key will be deleted.
+
+This method can perform batch deletion of a large number of primary keys, which is more efficient than the DELETE statement.
+
+The delete sign is an advanced feature and is more complex to use compared to the previous methods. For detailed usage, please refer to the document [Batch Deletion](./delete-overview.md).
+
 ### Atomic Overwrite Using Temporary Partitions
 
-In some cases, users may want to rewrite the data of a partition. If the data is deleted and then imported, there will be a period when the data is unavailable. In this case, users can create a corresponding temporary partition, import the new data into the temporary partition, and then replace the original partition atomically to achieve the goal.
+In some cases, users want to rewrite the data of a partition. However, if the data is deleted and then loaded, there will be a period when the data is unavailable. In this case, users can first create a corresponding temporary partition, load the new data into the temporary partition, and then replace the original partition atomically. For detailed usage, please refer to the document [Atomic Table Replacement](./atomicity-replace.md).
 
-## Notes
+## Precautions
 
-1. The delete operation generates new data versions, so frequent deletions may increase the number of versions, affecting query performance.
-2. Deleted data will still occupy storage until compaction is completed, so the delete operation itself will not immediately reduce storage usage.
-
+1. The delete operation will generate new data versions, so frequent deletions may increase the number of versions, thereby affecting query performance.
+2. Deleted data will still occupy storage until merge and compression are completed, so the delete operation itself will not immediately reduce storage usage.
