@@ -32,7 +32,7 @@ Load local files or data streams into Doris via HTTP protocol. Supports CSV, JSO
 
 ### 2. Streamloader Tool
 
-Streamloader is a dedicated client tool based on Stream Load, supporting concurrent loads, making it suitable for large data loads. For more information, refer to the [Streamloader documentation](../../../ecosystem/doris-streamloader).
+The Streamloader tool is a dedicated client tool for loading data into the Doris database, based on Stream Load. It can provide multi-file and multi-concurrent load capabilities, reducing the time required for loading large volumes of data. For more documentation, refer to [Streamloader](../../../ecosystem/doris-streamloader).
 
 ### 3. MySQL Load
 
