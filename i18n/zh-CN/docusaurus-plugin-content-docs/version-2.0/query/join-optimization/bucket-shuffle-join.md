@@ -28,7 +28,7 @@ under the License.
 
 Bucket Shuffle Join 是在 Doris 0.14 版本中正式加入的新功能。旨在为某些 Join 查询提供本地性优化，来减少数据在节点间的传输耗时，来加速查询。
 
-它的设计、实现和效果可以参阅 [ISSUE 4394](https://github.com/apache/incubator-doris/issues/4394)。
+它的设计、实现和效果可以参阅 [ISSUE 4394](https://github.com/apache/doris/issues/4394)。
 
 ## 名词解释
 

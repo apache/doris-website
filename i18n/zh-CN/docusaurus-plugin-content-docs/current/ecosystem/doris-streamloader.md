@@ -36,7 +36,7 @@ under the License.
 ## 获取与安装
 
 源代码：https://github.com/apache/doris-streamloader
-二进制文件：https://doris.incubator.apache.org/zh-CN/download
+二进制文件：https://doris.apache.org/zh-CN/download
 
 :::note
 获取结果即为可执行二进制。
