@@ -469,7 +469,7 @@ Recommend balancing based on system memory resources and data reliability requir
 
 * **WAL Limitations**
   - `async_mode` writes data to WAL, deletes after success, recovers through WAL on failure.
-  - WAL files are stored on only one BE, disk damage or file loss may cause data loss.
+  - WAL files are stored with a single replica on one BE, disk damage or accidental file deletion may cause data loss.
   - When offlining BE nodes, use `DECOMMISSION` command to prevent data loss.
   - `async_mode` switches to `sync_mode` in these cases:
     - Load data volume too large (exceeds 80% of WAL single directory space)

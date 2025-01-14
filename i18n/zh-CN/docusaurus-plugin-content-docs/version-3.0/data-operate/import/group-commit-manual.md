@@ -473,7 +473,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * **WAL 限制**
   - `async_mode` 写入会将数据写入 WAL，成功后删除，失败时通过 WAL 恢复。
-  - WAL 文件仅存储在一个 BE 上，磁盘损坏或文件丢失可能导致数据丢失。
+  - WAL 文件是单副本存储的，如果对应磁盘损坏或文件误删可能导致数据丢失。
   - 下线 BE 节点时，使用 `DECOMMISSION` 命令以防数据丢失。
   - `async_mode` 在以下情况下切换为 `sync_mode`：
     - 导入数据量过大（超过 WAL 单目录 80% 空间）
