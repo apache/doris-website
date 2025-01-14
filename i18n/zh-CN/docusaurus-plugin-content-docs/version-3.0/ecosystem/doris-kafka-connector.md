@@ -495,3 +495,37 @@ $KAFKA_HOME/bin/kafka-configs.sh --alter --entity-type topics --entity-name conn
 $KAFKA_HOME/bin/kafka-configs.sh --alter --entity-type topics --entity-name connect-status --add-config cleanup.policy=compact --bootstrap-server 127.0.0.1:9092
 ```
 
+**4. `debezium_ingestion` 转换模式下，表结构变更失败**
+```
+[2025-01-07 14:26:20,474] WARN [doris-normal_test_sink-connector|task-0] Table 'test_sink' cannot be altered because schema evolution is disabled. (org.apache.doris.kafka.connector.converter.RecordService:183)
+[2025-01-07 14:26:20,475] ERROR [doris-normal_test_sink-connector|task-0] WorkerSinkTask{id=doris-normal_test_sink-connector-0} Task threw an uncaught and unrecoverable exception. Task is being killed and will not recover until manually restarted. Error: Cannot alter table org.apache.doris.kafka.connector.model.TableDescriptor@67cd8027 because schema evolution is disabled (org.apache.kafka.connect.runtime.WorkerSinkTask:612)
+org.apache.doris.kafka.connector.exception.SchemaChangeException: Cannot alter table org.apache.doris.kafka.connector.model.TableDescriptor@67cd8027 because schema evolution is disabled
+	at org.apache.doris.kafka.connector.converter.RecordService.alterTableIfNeeded(RecordService.java:186)
+	at org.apache.doris.kafka.connector.converter.RecordService.checkAndApplyTableChangesIfNeeded(RecordService.java:150)
+	at org.apache.doris.kafka.connector.converter.RecordService.processStructRecord(RecordService.java:100)
+	at org.apache.doris.kafka.connector.converter.RecordService.getProcessedRecord(RecordService.java:305)
+	at org.apache.doris.kafka.connector.writer.DorisWriter.putBuffer(DorisWriter.java:155)
+	at org.apache.doris.kafka.connector.writer.DorisWriter.insertRecord(DorisWriter.java:124)
+	at org.apache.doris.kafka.connector.writer.StreamLoadWriter.insert(StreamLoadWriter.java:151)
+	at org.apache.doris.kafka.connector.service.DorisDefaultSinkService.insert(DorisDefaultSinkService.java:154)
+	at org.apache.doris.kafka.connector.service.DorisDefaultSinkService.insert(DorisDefaultSinkService.java:135)
+	at org.apache.doris.kafka.connector.DorisSinkTask.put(DorisSinkTask.java:97)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.deliverMessages(WorkerSinkTask.java:583)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.poll(WorkerSinkTask.java:336)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.iteration(WorkerSinkTask.java:237)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.execute(WorkerSinkTask.java:206)
+	at org.apache.kafka.connect.runtime.WorkerTask.doRun(WorkerTask.java:202)
+	at org.apache.kafka.connect.runtime.WorkerTask.run(WorkerTask.java:257)
+	at org.apache.kafka.connect.runtime.isolation.Plugins.lambda$withClassLoader$1(Plugins.java:177)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+```
+
+**解决方案：**
+
+在 `debezium_ingestion` 转换模式下，默认表结构变更是关闭的，需要配置 `debezium.schema.evolution` 为 `basic`	以便开启表结构变更。<br />
+需要注意的是：开启表结构变更并不能准确的保持此变更列为 Doris 表中的唯一列（详见 `debezium.schema.evolution` 参数说明）。如需要保持上下游只存在唯一列，最好是手动添加变更列到 Doris 表中，再重新启动 Connector 任务，Connector 将会接着未消费的 `offset` 继续消费，保持数据的一致性。
+

@@ -106,7 +106,7 @@ PROPERTIES (["key"="value"][,...])
 
 1. PROPERTIES 中`symbol`表示的是 rpc 调用传递的方法名，这个参数是必须设定的。
 
-2. PROPERTIES 中`object_file`表示的 rpc 服务地址，目前支持单个地址和 brpc 兼容格式的集群地址，集群连接方式 参考 [格式说明](https://github.com/apache/incubator-brpc/blob/master/docs/cn/client.md#%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E9%9B%86%E7%BE%A4)。
+2. PROPERTIES 中`object_file`表示的 rpc 服务地址，目前支持单个地址和 brpc 兼容格式的集群地址，集群连接方式 参考 [格式说明](https://github.com/apache/brpc/blob/master/docs/cn/client.md#%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E9%9B%86%E7%BE%A4)。
 
 3. PROPERTIES 中`type`表示的 UDF 调用类型，默认为 Native，使用 Rpc UDF 时传 RPC。
 

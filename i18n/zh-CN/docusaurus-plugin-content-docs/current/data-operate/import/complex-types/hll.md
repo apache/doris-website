@@ -32,7 +32,7 @@ HLL是用作模糊去重，在数据量大的情况性能优于 Count Distinct�
 
 创建如下的 csv 文件：test_hll.csv
 
-```SQL
+```sql
 1001|koga
 1002|nijg
 1003|lojn
@@ -47,7 +47,7 @@ HLL是用作模糊去重，在数据量大的情况性能优于 Count Distinct�
 
 ### 第 2 步：在库中创建表
 
-```SQL
+```sql
 CREATE TABLE testdb.test_hll(
     typ_id           BIGINT          NULL   COMMENT "ID",
     typ_name         VARCHAR(10)     NULL   COMMENT "NAME",
@@ -59,7 +59,7 @@ DISTRIBUTED BY HASH(typ_id) BUCKETS 10;
 
 ### 第 3 步：导入数据
 
-```SQL
+```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "column_separator:|" \
     -H "columns:typ_id,typ_name,pv=hll_hash(typ_id)" \
@@ -71,7 +71,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 使用 hll_cardinality 进行查询：
 
-```SQL
+```sql
 mysql> select typ_id,typ_name,hll_cardinality(pv) from testdb.test_hll;
 +--------+----------+---------------------+
 | typ_id | typ_name | hll_cardinality(pv) |

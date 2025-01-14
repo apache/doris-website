@@ -303,6 +303,3 @@ For a detailed grammar description, see: [auto_partition_name](../../sql-manual/
 - When use [insert-overwrite](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT-OVERWRITE) to load data into Auto Partition table, the behaviour is detailed in the INSERT OVERWRITE documentation.
 - If metadata operations are involved when importing and creating partitions, the import process may fail.
 
-## Keywords
-
-AUTO, PARTITION, AUTO_PARTITION

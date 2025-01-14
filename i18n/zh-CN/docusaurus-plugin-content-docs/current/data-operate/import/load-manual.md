@@ -42,10 +42,10 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 
     - 可以使用 [Flink CDC](../../ecosystem/flink-doris-connector.md) 或 [ Datax](../../ecosystem/datax.md) 将事务数据库的 CDC 数据流写入到 Doris 中。
 
-- **批量导入**：将数据从外部存储系统（如 S3、HDFS、本地文件、NAS）批量加载到 Doris 表中，适用于非实时数据导入的需求。
-    - 可以使用 [Broker Load](./import-way/broker-load-manual.md) 将 S3 和 HDFS 中的文件写入到 Doris 中。
+- **批量导入**：将数据从外部存储系统（如对象存储、HDFS、本地文件、NAS）批量加载到 Doris 表中，适用于非实时数据导入的需求。
+    - 可以使用 [Broker Load](./import-way/broker-load-manual.md) 将对象存储和 HDFS 中的文件写入到 Doris 中。
 
-    - 可以使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将 S3、HDFS 和 NAS 中的文件同步写入到 Doris 中，配合 [JOB](../scheduler/job-scheduler.md) 可以异步写入。
+    - 可以使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将对象存储、HDFS 和 NAS 中的文件同步写入到 Doris 中，配合 [JOB](../scheduler/job-scheduler.md) 可以异步写入。
 
     - 可以使用 [Stream Load](./import-way/stream-load-manual) 或者 [Doris Streamloader](../../ecosystem/doris-streamloader.md) 将本地文件写入 Doris 中。
 
@@ -60,13 +60,12 @@ Doris 的每个导入默认都是一个隐式事务，事务相关的更多信�
 
 Doris 的导入主要涉及数据源、数据格式、导入方式、错误数据处理、数据转换、事务多个方面。您可以在如下表格中快速浏览各导入方式适合的场景和支持的文件格式。
 
-| 导入方式                                      | 使用场景                                   | 支持的文件格式          | 单次导入数据量    | 导入模式 |
-| :-------------------------------------------- | :----------------------------------------- | ----------------------- | ----------------- | -------- |
-| [Stream Load](./import-way/stream-load-manual)           | 导入本地文件或者应用程序写入         | csv、json、parquet、orc | 小于10GB          | 同步     |
-| [Broker Load](./import-way/broker-load-manual.md)        | 从对象存储、HDFS等导入                     | csv、json、parquet、orc | 数十GB到数百 GB   | 异步     |
-| [INSERT INTO VALUES](./import-way/insert-into-manual.md) | 通过JDBC等接口导入 | SQL                     | 简单测试用        | 同步     |
-| [INSERT INTO SELECT](./import-way/insert-into-manual.md) | 可以导入外部表或者对象存储、HDFS中的文件      | SQL                     | 根据内存大小而定  | 同步     |
-| [Routine Load](./import-way/routine-load-manual.md)      | 从kakfa实时导入                            | csv、json               | 微批导入 MB 到 GB | 异步     |
-| [MySQL Load](./import-way/mysql-load-manual.md)          | 从本地数据导入                             | csv                     | 小于10GB          | 同步     |
-| [Group Commit](./group-commit-manual.md)          | 高频小批量导入                             | 根据使用的导入方式而定                     |  微批导入KB         | -     |
-
+| 导入方式                                      | 使用场景                                   | 支持的文件格式          | 导入模式 |
+| :-------------------------------------------- | :----------------------------------------- | ----------------------- | -------- |
+| [Stream Load](./import-way/stream-load-manual)           | 导入本地文件或者应用程序写入         | csv、json、parquet、orc | 同步     |
+| [Broker Load](./import-way/broker-load-manual.md)        | 从对象存储、HDFS等导入                     | csv、json、parquet、orc | 异步     |
+| [INSERT INTO VALUES](./import-way/insert-into-manual.md) | 通过JDBC等接口导入 | SQL                     | 同步     |
+| [INSERT INTO SELECT](./import-way/insert-into-manual.md) | 可以导入外部表或者对象存储、HDFS中的文件      | SQL                     | 同步     |
+| [Routine Load](./import-way/routine-load-manual.md)      | 从kakfa实时导入                            | csv、json               | 异步     |
+| [MySQL Load](./import-way/mysql-load-manual.md)          | 从本地数据导入                             | csv                     | 同步     |
+| [Group Commit](./group-commit-manual.md)          | 高频小批量导入                             | 根据使用的导入方式而定  | -     |

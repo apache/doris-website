@@ -33,16 +33,16 @@ The BITMAP type can be used in Duplicate tables, Unique tables, and Aggregate ta
 Create the following CSV file: test_bitmap.csv
 
 ```sql
-koga|17723
-nijg|146285
-lojn|347890
-lofn|489871
-jfin|545679
-kon|676724
-nhga|767689
-nfubg|879878
-huang|969798
-buag|97997
+1|koga|17723
+2|nijg|146285
+3|lojn|347890
+4|lofn|489871
+5|jfin|545679
+6|kon|676724
+7|nhga|767689
+8|nfubg|879878
+9|huang|969798
+10|buag|97997
 ```
 
 ### Step 2: Create Table in Database

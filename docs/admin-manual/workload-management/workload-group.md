@@ -101,11 +101,21 @@ chmod 770 /sys/fs/cgroup/doris
 chown -R doris:doris /sys/fs/cgroup/doris
 ```
 
-5. If using CGroup V2, the following steps are required. 
-This is because CGroup V2 has stricter permission control, and write permissions to the cgroup.procs file in the root directory are necessary to move processes between groups.
-   If it is CGroup V1, this step is not required.
+5. If the current environment is using CGroup v2, the following steps are required. If it is CGroup v1, this step can be skipped.
+* Modify the permissions of the cgroup.procs file in the root directory. This is necessary because CGroup v2 has stricter permission controls, 
+and write permissions to the cgroup.procs file in the root directory are required to move processes between CGroup directories.
 ```shell
 chmod a+w /sys/fs/cgroup/cgroup.procs
+```
+* In CGroup v2, the cgroup.controllers file lists the available controllers for the current directory, and the cgroup.subtree_control file lists the controllers available for the subdirectories.
+  Therefore, it is necessary to check if the doris directory has the cpu controller enabled. If the cgroup.controllers file in the doris directory does not include cpu, it means the cpu controller is not enabled. You can enable it by executing the following command in the doris directory.
+  This command works by modifying the cgroup.subtree_control file in the parent directory to allow the doris directory to use the cpu controller.
+```
+// After running this command, you should be able to see the cpu.max file in the doris directory, 
+// and the output of cgroup.controllers should include cpu.
+// If the command fails, it means that the parent directory of doris also does not have the cpu controller enabled, 
+// and you will need to enable the cpu controller for the parent directory.
+echo +cpu > ../cgroup.subtree_control
 ```
 
 6. Modify the BE configuration to specify the path of the cgroup.

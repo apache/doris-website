@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Tencent COS",
+    "title": "Tencent Cloud COS",
     "language": "en"
 }
 ---
@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris provides two ways to load files from Tencent COS:
-- Use S3 Load to load Tencent COS files into Doris, which is an asynchronous load method.
-- Use TVF to load Tencent COS files into Doris, which is a synchronous load method.
+Doris provides two ways to load files from Tencent Cloud COS:
+- Use S3 Load to load Tencent Cloud COS files into Doris, which is an asynchronous load method.
+- Use TVF to load Tencent Cloud COS files into Doris, which is a synchronous load method.
 
 ## load with S3 Load
 
@@ -34,7 +34,7 @@ Use S3 Load to import files on object storage. For detailed steps, please refer 
 
 ### Step 1: Prepare the data
 
-Create a CSV file s3load_example.csv The file is stored on Tencent COS and its content is as follows:
+Create a CSV file s3load_example.csv The file is stored on Tencent Cloud COS and its content is as follows:
 
 ```
 1,Emily,25
@@ -117,7 +117,7 @@ mysql> select * from test_s3load;
 
 ### Step 1: Prepare the data
 
-Create a CSV file s3load_example.csv The file is stored on Tencent COS and its content is as follows:
+Create a CSV file s3load_example.csv The file is stored on Tencent Cloud COS and its content is as follows:
 
 ```
 1,Emily,25
