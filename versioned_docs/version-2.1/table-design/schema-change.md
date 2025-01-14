@@ -217,8 +217,7 @@ ALTER TABLE example_db.my_table DROP COLUMN col4;
 
 - If a non-aggregate type modifies a key column, the **KEY** keyword must be specified.
 
-- Only the type of the column can be modified; other attributes of the column must remain the same (i.e., other attributes must be explicitly written out in the statement, see Example 8).
-
+- Only the type of the column can be modified; other attributes of the column must remain the same.
 - Partition columns and bucket columns cannot be modified.
 
 - The following type conversions are currently supported (users need to be aware of precision loss):
