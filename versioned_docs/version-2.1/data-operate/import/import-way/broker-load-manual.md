@@ -226,7 +226,6 @@ The WITH clause specifies how to access the storage system, and `broker_properti
 | --- | --- | --- | --- |
 | "timeout" | Long | 14400 | Used to specify the timeout for the import in seconds. The configurable range is from 1 second to 259200 seconds. |
 | "max_filter_ratio" | Float | 0.0 | Used to specify the maximum tolerable ratio of filterable (irregular or otherwise problematic) data, which defaults to zero tolerance. The value range is 0 to 1. If the error rate of the imported data exceeds this value, the import will fail. Irregular data does not include rows filtered out by the where condition. |
-| "exec_mem_limit" | Long | 2147483648 (2GB) | The memory limit in bytes of the load task, which defaults to 2GB. |
 | "strict_mode" | Boolean | false | Used to specify whether to enable strict mode for this import. |
 | "partial_columns" | Boolean | false | Used to specify whether to enable partial column update, the default value is false, this parameter is only available for Unique Key + Merge on Write tables. |
 | "timezone" | String | "Asia/Shanghai" | Used to specify the timezone to be used for this import. This parameter affects the results of all timezone-related functions involved in the import. |
@@ -261,7 +260,6 @@ Processing Volume per BE for this Import = Source File Size / Import Concurrency
 
 | Session Variable | Type | Default | Description |
 | --- | --- | --- | --- |
-| exec_mem_limit | Long | 2147483648 (2GB) | Import memory limit, unit: bytes. |
 | time_zone | String | "Asia/Shanghai" | Default time zone, which will affect the results of time zone related functions in import. |
 | send_batch_parallelism | Integer | 1 | The concurrency of the sink node sending data, which takes effect only when `enable_memtable_on_sink_node` is set to false. |
 
