@@ -24,7 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## MAX_BY
+## 描述
 ## 语法
 
 `MAX_BY(expr1, expr2)`
@@ -51,4 +52,5 @@ MySQL > select max_by(k1, k4) from tbl;
 |                  0 |
 +--------------------+ 
 ```
-
+### keywords
+MAX_BY

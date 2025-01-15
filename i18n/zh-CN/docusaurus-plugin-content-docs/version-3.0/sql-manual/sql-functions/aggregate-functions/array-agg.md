@@ -24,6 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## ARRAY_AGG
+
+## 描述
 
 ## 语法
 
@@ -76,4 +79,6 @@ mysql> select c1, array_agg(c2) from test_doris_array_agg group by c1;
 +------+-----------------+
 ```
 
+### keywords
 
+ARRAY_AGG

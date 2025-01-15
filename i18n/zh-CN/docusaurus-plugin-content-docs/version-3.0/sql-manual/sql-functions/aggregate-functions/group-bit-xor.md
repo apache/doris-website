@@ -24,13 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## GROUP_BIT_XOR
+## 描述
 ## 语法
 
 `expr GROUP_BIT_XOR(expr)`
 
-对 expr 进行 xor 计算，返回新的 expr
-支持所有 INT 类型
+对expr进行 xor 计算, 返回新的expr
+支持所有INT类型
 
 ## 举例
 
@@ -54,4 +55,6 @@ mysql> select group_bit_xor(value) from group_bit;
 +------------------------+
 ```
 
+### keywords
 
+    GROUP_BIT_XOR,BIT

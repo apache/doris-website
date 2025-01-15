@@ -99,7 +99,6 @@ local(
 
     - `path_partition_keys`: (optional) Specifies the column names carried in the file path. For example, if the file path is /path/to/city=beijing/date="2023-07-09", you should fill in `path_partition_keys="city,date"`. It will automatically read the corresponding column names and values from the path during load process.
 
-
 ### Examples
 
 Analyze the log file on specified BE:

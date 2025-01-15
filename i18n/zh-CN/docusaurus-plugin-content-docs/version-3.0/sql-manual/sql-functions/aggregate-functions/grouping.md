@@ -24,6 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## GROUPING
+
+### Name
+
+GROUPING
 
 ## 描述
 
@@ -93,9 +98,10 @@ GROUP BY
 +----------+---------+----------+
 4 rows in set (0.01 sec)
 ```
+### Keywords
 
+GROUPING
 
-
-## 更多
+### Best Practice
 
 还可参阅 [GROUPING_ID](./grouping_id.md)

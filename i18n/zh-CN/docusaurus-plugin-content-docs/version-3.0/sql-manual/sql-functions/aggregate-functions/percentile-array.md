@@ -24,20 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## PERCENTILE_ARRAY
+## 描述
 ## 语法
 
 `ARRAY_DOUBLE PERCENTILE_ARRAY(expr, ARRAY_DOUBLE p)`
 
 计算精确的百分位数，适用于小数据量。先对指定列降序排列，然后取精确的第 p 位百分数。
-返回值为依次取数组 p 中指定的百分数组成的结果。
-参数说明：
-expr: 必填。值为整数（最大为 bigint）类型的列。
-p: 需要精确的百分位数，由常量组成的数组，取值为 [0.0,1.0]。
-
-:::tip
-自 Doris 3.0.3 版本开始支持，expr 支持了更多的输入类型，eg: float, double. 支持浮点数据参与计算，减少了 cast 数据的开销。
-:::
+返回值为依次取数组p中指定的百分数组成的结果。
+参数说明:
+expr: 必填。值为整数（最大为bigint） 类型的列。
+p: 需要精确的百分位数, 由常量组成的数组, 取值为 [0.0,1.0]。
 
 ## 举例
 ```
@@ -51,4 +48,5 @@ mysql> select percentile_array(k1,[0.3,0.5,0.9]) from baseall;
 
 ```
 
-
+### keywords
+PERCENTILE_ARRAY

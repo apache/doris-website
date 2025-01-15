@@ -24,13 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## STDDEV,STDDEV_POP
+## 描述
 ## 语法
 
 `STDDEV(expr)`
 
 
-返回 expr 表达式的标准差
+返回expr表达式的标准差
 
 ## 举例
 ```
@@ -48,4 +49,5 @@ MySQL > select stddev_pop(scan_rows) from log_statis group by datetime;
 |      2.3722760595994914 |
 +-------------------------+
 ```
-
+### keywords
+STDDEV,STDDEV_POP,POP
