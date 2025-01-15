@@ -63,7 +63,7 @@ ADD BACKEND 命令用于向 Doris OLAP 数据库集群添加一个或多个后�
     ALTER SYSTEM ADD BACKEND "host3:9050" PROPERTIES ("tag.location" = "groupb");
     ```
 
-    此命令将单个后端节点（host3，端口 9050）添加到集群中的资源组 `groupb`：
+    此命令将单个后端节点（host3，端口 9050）添加到集群中的资源组 `groupb`。
 
 3. 添加带有计算组的后端
 
@@ -71,7 +71,7 @@ ADD BACKEND 命令用于向 Doris OLAP 数据库集群添加一个或多个后�
     ALTER SYSTEM ADD BACKEND "host3:9050" PROPERTIES ("tag.compute_group_name" = "groupb");
     ```
 
-    此命令将单个后端节点（host3，端口 9050）添加到集群中的计算组 `groupb`：
+    此命令将单个后端节点（host3，端口 9050）添加到集群中的计算组 `groupb`，其中计算组的命名规则与DORIS中库表名的命名规则一致。
 
 ## 关键词
 

@@ -64,7 +64,7 @@ The ADD BACKEND command is used to add one or more backend nodes to a Doris OLAP
     ALTER SYSTEM ADD BACKEND "host3:9050" PROPERTIES ("tag.location" = "groupb");
     ````
 
-    This command adds a single backend node (host3 with port 9050) to the cluster in resource group `groupb`:
+    This command adds a single backend node (host3 with port 9050) to the cluster in resource group `groupb`.
 
 3. Adding Backends With Compute Group
 
@@ -72,7 +72,7 @@ The ADD BACKEND command is used to add one or more backend nodes to a Doris OLAP
     ALTER SYSTEM ADD BACKEND "host3:9050" PROPERTIES ("tag.compute_group_name" = "groupb");
     ````
 
-    This command adds a single backend node (host3 with port 9050) to the cluster in compute group `groupb`:
+    This command adds a single backend node (host3 with port 9050) to the cluster in compute group `groupb`. The naming rules for compute groups are consistent with the naming rules for database and table names in DORIS.
 
 ## Keywords
 
