@@ -148,13 +148,13 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 其中 `provider` 字段需要根据实际的对象存储服务商填写。
 Doris 支持的 provider 列表：
 
+- "S3" (亚马逊 AWS)
+- "AZURE" (微软 Azure)
+- "GCP" (谷歌 GCP)
 - "OSS" (阿里云)
 - "COS" (腾讯云)
 - "OBS" (华为云)
 - "BOS" (百度云)
-- "S3" (亚马逊 AWS)
-- "AZURE" (微软 Azure)
-- "GCP" (谷歌 GCP)
 
 如不在列表中 (例如 MinIO)，可以尝试使用 "S3" (兼容 AWS 模式)
 
