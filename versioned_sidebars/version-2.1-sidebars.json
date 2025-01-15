@@ -87,18 +87,6 @@
                         },
                         "table-design/data-type",
                         "table-design/column-compression",
-                        "table-design/row-store",
-                        "table-design/schema-change",
-                        {
-                            "type": "category",
-                            "label": "Tiered Storage",
-                            "items": [
-                                "table-design/tiered-storage/overview",
-                                "table-design/tiered-storage/tiered-ssd-hdd",
-                                "table-design/tiered-storage/remote-storage"
-                            ]
-                        },
-                        "table-design/auto-increment",
                         {
                             "type": "category",
                             "label": "Table Indexes",
@@ -110,6 +98,18 @@
                                 "table-design/index/ngram-bloomfilter-index"
                             ]
                         },
+                        "table-design/schema-change",
+                        "table-design/auto-increment",
+                        {
+                            "type": "category",
+                            "label": "Tiered Storage",
+                            "items": [
+                                "table-design/tiered-storage/overview",
+                                "table-design/tiered-storage/tiered-ssd-hdd",
+                                "table-design/tiered-storage/remote-storage"
+                            ]
+                        },
+                        "table-design/row-store",
                         "table-design/best-practice"
                     ]
                 },
@@ -404,6 +404,7 @@
                     "type": "category",
                     "label": "Security",
                     "items": [
+                        "admin-manual/auth/security-overview",
                         {
                             "type": "category",
                             "label": "Authentication and Authorization",
