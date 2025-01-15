@@ -1,11 +1,11 @@
 ---
 {
-    "title": "LOCALTIME,LOCALTIMESTAMP",
+    "title": "TO_ISO8601",
     "language": "zh-CN"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,33 +24,3 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## localtime,localtimestamp
-## 描述
-## 语法
-
-`DATETIME localtime()`
-`DATETIME localtimestamp()`
-
-获得当前的时间，以Datetime类型返回
-
-## 举例
-
-```
-mysql> select localtime();
-+---------------------+
-| localtime()         |
-+---------------------+
-| 2022-09-22 17:30:23 |
-+---------------------+
-
-mysql> select localtimestamp();
-+---------------------+
-| localtimestamp()    |
-+---------------------+
-| 2022-09-22 17:30:29 |
-+---------------------+
-```
-
-### keywords
-
-    localtime,localtimestamp
