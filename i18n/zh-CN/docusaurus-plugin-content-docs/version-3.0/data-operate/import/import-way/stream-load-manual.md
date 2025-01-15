@@ -358,7 +358,11 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 | ---------------------- | ------------------------------------------------------------ |
 | TxnId                  | 导入事务的 ID                                                |
 | Label                  | 导入作业的 label，通过 -H "label:<label_id>" 指定            |
-| Status                 | 导入的最终状态 Success：表示导入成功 Publish Timeout：该状态也表示导入已经完成，只是数据可能会延迟可见，无需重试 Label Already Exists：Label 重复，需要更换 labelFail：导入失败 |
+| Status                 | 导入的最终状态                                              |
+|                        | - Success：表示导入成功                                     |
+|                        | - Publish Timeout：该状态也表示导入已经完成，但数据可能会延迟可见，无需重试 |
+|                        | - Label Already Exists：Label 重复，需要更换 label         |
+|                        | - Fail：导入失败                                            |
 | ExistingJobStatus      | 已存在的 Label 对应的导入作业的状态。这个字段只有在当 Status 为 "Label Already Exists" 时才会显示。用户可以通过这个状态，知晓已存在 Label 对应的导入作业的状态。"RUNNING" 表示作业还在执行，"FINISHED" 表示作业成功。 |
 | Message                | 导入错误信息                                                 |
 | NumberTotalRows        | 导入总处理的行数                                             |
