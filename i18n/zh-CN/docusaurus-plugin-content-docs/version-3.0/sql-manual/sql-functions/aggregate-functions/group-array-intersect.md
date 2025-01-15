@@ -24,7 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## group_array_intersect
+## 描述
 ## 语法
 
 `expr GROUP_ARRAY_INTERSECT(expr)`
@@ -52,5 +53,5 @@ mysql> select group_array_intersect(c_array_string) from group_array_intersect_t
 1 row in set (0.03 sec)
 ```
 
-
-
+### keywords
+GROUP_ARRAY_INTERSECT, ARRAY

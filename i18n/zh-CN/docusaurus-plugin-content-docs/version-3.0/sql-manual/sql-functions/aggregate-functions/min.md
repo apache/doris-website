@@ -24,13 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## MIN
+## 描述
 ## 语法
 
 `MIN(expr)`
 
 
-返回 expr 表达式的最小值
+返回expr表达式的最小值
 
 ## 举例
 ```
@@ -41,4 +42,5 @@ MySQL > select min(scan_rows) from log_statis group by datetime;
 |                0 |
 +------------------+
 ```
-
+### keywords
+MIN

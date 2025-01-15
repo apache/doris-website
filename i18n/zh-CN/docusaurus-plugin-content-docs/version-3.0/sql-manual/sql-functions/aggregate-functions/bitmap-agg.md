@@ -24,7 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## BITMAP_AGG
+## 描述
 ## 语法
 
 `BITMAP_AGG(expr)`
@@ -83,4 +84,5 @@ MySQL > select bitmap_count(bitmap_agg(n_nationkey))  from nation;
 |                                      25 |
 +-----------------------------------------+
 ```
-
+### keywords
+BITMAP_AGG

@@ -24,7 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## MAP_AGG
+## 描述
 ## 语法
 
 `MAP_AGG(expr1, expr2)`
@@ -86,4 +87,5 @@ MySQL > select n_regionkey, map_agg(`n_name`, `n_nationkey` % 5) from `nation` g
 |           4 | {"EGYPT":4, "IRAN":0, "IRAQ":1, "JORDAN":3, "SAUDI ARABIA":0}          |
 +-------------+------------------------------------------------------------------------+
 ```
-
+### keywords
+MAP_AGG
