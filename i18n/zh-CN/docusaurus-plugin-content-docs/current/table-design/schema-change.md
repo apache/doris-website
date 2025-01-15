@@ -24,89 +24,87 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-用户可以通过 Schema Change 操作来修改已存在表的 Schema。表的 Schema，主要包括对列的修改和索引的改动，这里主要介绍列相关的 Scheme 变更，关于索引相关的变更，可以查看数据表设计/表索引来查看每种索引的变更方式。
-
-## 名词解释
-
-- Base Table：基表。使用建表语句创建出的原始表。
-
-- Rollup：基于基表或者其他 Rollup 创建出来的上卷表。
-
-- Index：物化索引。Rollup 和 Base Table 都被称为物化索引。
-
-- Transaction：事务。每一个导入任务都对应一个事务，每个事务有一个唯一递增的 Transaction ID。
+用户可以通过[Alter Table](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN.md) 操作来修改 Doris 表的 Schema。Schema 变更主要涉及列的修改和索引的变化。本文主要介绍列相关的 Schema 变更，关于索引相关的变更，请参考[表索引](./index/index-overview.md) 了解不同索引的变更方法。
 
 ## 原理介绍
 
-**概览**
+Doris支持两种类型的 Schema Change 操作：轻量级 Schema Change和重量级 Schema Change。它们的区别主要体现在执行过程的复杂性、执行速度和资源消耗上。
 
-Schema Change 的实现分为两个大类：轻量级 Schema Change 和重量级 Schema Change。
+| 特性               | 轻量级 Schema Change | 重量级 Schema Change |
+|--------------------|----------------------|----------------------|
+| 执行速度           | 秒级（几乎实时）     | 分钟级、小时级、天级（依赖表的数据量，数据量越大，执行越慢） |
+| 是否需要数据重写   | 不需要               | 需要，涉及数据文件的重写 |
+| 系统性能影响       | 影响较小             | 可能影响系统性能，尤其是在数据转换过程中 |
+| 资源消耗           | 较低                 | 较高，会占用计算资源重新组织数据，过程中涉及到的表的数据占用的存储空间翻倍。 |
+| 操作类型           | 增加、删除 Value 列，修改列名，修改 VARCHAR 长度 | 修改列的数据类型、更改主键、修改列的顺序等 |
 
-- 轻量级 Schema Change 完成速度很快，只会同步地修改 FE 的元数据，一般在秒级别完成。增加或删除 value 列、更改列名、增加除 DUP KEY 列和 UNIQUE KEY 列以外的 VARCHAR 列的长度，都会使用轻量级 Schema Change 的逻辑。
+### 轻量级 Schema Change
 
-- 重量级 Schema Change 需要依赖 BE 进行数据文件的转换。具体实现方式如下：
+轻量级 Schema Change 是指不涉及数据重写的简单模式更改操作。这些操作通常在元数据级别进行，仅需要修改表的元数据，而不涉及数据文件的物理修改。轻量级 Schema Change 操作通常能够在秒级别完成，不会对系统性能造成显著影响。轻量级 Schema Change 包括：
 
-    |Schema change 实现 | 主要逻辑 | 使用场景 |
-    |-----------------|---------|----------|
-    | Direct Schema Change | 对数据文件进行整体重写，但是不会涉及重排序 | 更改 value 列的数据类型 |
-    | Sort Schema Change | 对数据文件进行整体重写，并进行重排序 | 更改 key 列的数据类型 |
-    | Hard Linked Schema Change | 对数据文件进行重新链接，不需要直接修改数据文件 | 在列的变更中被轻量级 Schema Change 取代 |
+- 增加或删除 value 列
+- 更改列名
+- 修改 VARCHAR 列的长度（UNIQUE 和 DUP 表 Key 列除外）。
 
-**主要流程**
+### 重量级 Schema Change
 
-对于轻量级 Schema Change，只会在 Alter 命令发起后修改 FE 的相应元数据，Alter 命令的返回就代表 Schema 变更的结束。
+重量级 Schema Change 涉及到数据文件的重写或转换，这些操作相对复杂，通常需要借助 Doris 的Backend（BE）进行数据的实际修改或重新组织。重量级 Schema Change 操作通常涉及对表数据结构的深度变更，可能会影响到存储的物理布局。所有不支持轻量级 Schema Change 的操作，均属于重量级 Schema Change，比如：
 
-对于重量级 Schema Change，在用户发起 Alter 命令后，会在后台启动一个任务进行 Schema 的变更，命令的返回代表着 Schema 变更任务的提交成功。后台任务的执行将经过以下过程：
+- 更改列的数据类型
+- 修改列的排序顺序
 
-1. 对目标表的每个 tablet，都根据变更后的 schema 创建对应的 new tablet，用于存放转换后的数据。
-2. 等待先前的所有导入事务结束，才能开始数据转换。
-3. 开始数据转换，按 tablet 为任务单位，把每个旧 tablet 上的数据经过变更写入到之前新建的 tablet 上。三种重量级 Schema Change 的差异在这一步上，会通过上文提到的各自实现逻辑进行数据转换。
-4. 数据转换开始后，如果有新的导入事务创建，为保证数据完整性，新的导入事务将同时为旧 tablet 和新 tablet 生成数据，即数据双写。双写期间的数据必须兼容新、旧 Schema，否则会导入失败。
-    ```Plain
-    +----------+
-    | Load Job |
-    +----+-----+
-        |
-        | Load job generates both origin and new Index data
-        |
-        |      +------------------+ +---------------+
-        |      | Origin Index     | | Origin Index  |
-        +------> New Incoming Data| | History Data  |
-        |      +------------------+ +------+--------+
-        |                                  |
-        |                                  | Convert history data
-        |                                  |
-        |      +------------------+ +------v--------+
-        |      | New Index        | | New Index     |
-        +------> New Incoming Data| | History Data  |
-                +------------------+ +---------------+
-    ```
-5. 数据转换完成后，所有存放旧数据的 tablet 将会被删除，所有完成数据变更的新 tablet 将会取代旧 tablet 进行服务。
+重量级操作会在后台启动一个任务进行数据转换。后台任务会对表的每个tablet进行转换，按tablet为单位，将原始数据重写到新的数据文件中。数据转换过程中，可能会出现数据"双写"现象，即在转换期间，新数据同时写入新 tablet 旧 tablet 中。完成数据转换后，旧 tablet 会被删除，新 tablet 将取而代之。
 
-创建 Schema Change 的具体语法可以查看帮助 [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 中 Schema Change 部分的说明。
+## 作业管理
+### 查看作业
 
-## 向指定 Index 的指定位置添加一列
-
-### 语法
+用户可以通过 [`SHOW ALTER TABLE COLUMN`](../sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE.md) 命令查看 Schema Change 作业进度。可以查看当前正在执行或已经完成的 Schema Change 作业。当一次 Schema Change 作业涉及到物化视图时，该命令会显示多行，每行对应一个物化视图。举例如下：
 
 ```sql
-ALTER TABLE table_name ADD COLUMN column_name column_type [KEY | agg_type] [DEFAULT "default_value"]
-[AFTER column_name|FIRST]
-[TO rollup_index_name]
-[PROPERTIES ("key"="value", ...)]
+mysql > SHOW ALTER TABLE COLUMN\G;
+*************************** 1. row ***************************
+        JobId: 20021
+    TableName: tbl1
+   CreateTime: 2019-08-05 23:03:13
+   FinishTime: 2019-08-05 23:03:42
+    IndexName: tbl1
+      IndexId: 20022
+OriginIndexId: 20017
+SchemaVersion: 2:792557838
+TransactionId: 10023
+        State: FINISHED
+          Msg:
+     Progress: NULL
+      Timeout: 86400
+1 row in set (0.00 sec)
 ```
 
-- 聚合模型如果增加 Value 列，需要指定 `agg_type`
+### 取消作业
 
-- 非聚合模型（如 DUPLICATE KEY）如果增加 Key 列，需要指定 `KEY` 关键字
+在作业状态不为 FINISHED 或 CANCELLED 的情况下，可以通过以下命令取消 Schema Change 作业：
 
-- 不能在 Rollup Index 中增加 Base Index 中已经存在的列（如有需要，可以重新创建一个 Rollup Index）
+```sql
+CANCEL ALTER TABLE COLUMN FROM tbl_name;
+```
 
-### 示例
+## 使用举例
 
-#### 非聚合模型
+### 修改列名称
 
-建表语句：
+```sql
+ALTER TABLE [database.]table RENAME COLUMN old_column_name new_column_name;
+```
+具体语法参考[ALTER TABLE RENAME](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-RENAME.md)。
+
+### 添加一列
+
+- 聚合模型如果增加 Value 列，需要指定 `agg_type`。
+
+- 非聚合模型（如 DUPLICATE KEY）如果增加 Key 列，需要指定 KEY 关键字。
+
+*往非聚合表添加列*
+
+1. 建表语句
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
@@ -116,34 +114,24 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
     col4 int,
     col5 int
 ) DUPLICATE KEY(col1, col2, col3)
-DISTRIBUTED BY RANDOM BUCKETS 1
-ROLLUP (
-    example_rollup_index (col1, col3, col4, col5)
-)
-PROPERTIES (
-    "replication_num" = "1"
-)
+DISTRIBUTED BY RANDOM BUCKETS 10;
 ```
 
-**1. 向 `example_rollup_index` 的 col1 后添加一个 Key 列 `new_col`**
+2. 向 `example_db.my_table` 的 col1 后添加一个 Key 列 `key_col`
 
 ```sql
-ALTER TABLE example_db.my_table
-ADD COLUMN new_col INT KEY DEFAULT "0" AFTER col1
-TO example_rollup_index;
+ALTER TABLE example_db.my_table ADD COLUMN key_col INT KEY DEFAULT "0" AFTER col1;
 ```
 
-**2. 向 `example_rollup_index` 的 col1 后添加一个 Value 列 `new_col`**
+3. 向 `example_db.my_table` 的 col4 后添加一个 Value 列 `value_col`
 
 ```sql
-ALTER TABLE example_db.my_table   
-ADD COLUMN new_col INT DEFAULT "0" AFTER col1    
-TO example_rollup_index;
+ALTER TABLE example_db.my_table ADD COLUMN value_col INT DEFAULT "0" AFTER col4;
 ```
 
-#### 聚合模型
+*往聚合表添加列*
 
-建表语句：
+1. 建表语句
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
@@ -153,96 +141,83 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
     col4 int SUM,
     col5 varchar(32) REPLACE DEFAULT "abc"
 ) AGGREGATE KEY(col1, col2, col3)
-DISTRIBUTED BY HASH(col1) BUCKETS 1
-ROLLUP (
-    example_rollup_index (col1, col3, col4, col5)
-)
-PROPERTIES (
-    "replication_num" = "1"
-)
+DISTRIBUTED BY HASH(col1) BUCKETS 10;
 ```
 
-**3. 向 `example_rollup_index` 的 col1 后添加一个 Key 列 `new_col`**
+2. 向 `example_db.my_table` 的 col1 后添加一个 Key 列 `key_col`
 
 ```sql
-ALTER TABLE example_db.my_table   
-ADD COLUMN new_col INT DEFAULT "0" AFTER col1    
-TO example_rollup_index;
+ALTER TABLE example_db.my_table ADD COLUMN key_col INT DEFAULT "0" AFTER col1;
 ```
 
-**4. 向 `example_rollup_index` 的 col1 后添加一个 Value 列 `new_co``l` SUM 聚合类型**
+3. 向 `example_db.my_table` 的 col4 后添加一个 Value 列 `value_col` SUM 聚合类型
 
 ```sql
-ALTER TABLE example_db.my_table   
-ADD COLUMN new_col INT SUM DEFAULT "0" AFTER col1    
-TO example_rollup_index;
+ALTER TABLE example_db.my_table ADD COLUMN value_col INT SUM DEFAULT "0" AFTER col4;
 ```
 
-## 向指定 Index 添加多列
-
-### 语法
-
-```sql
-ALTER TABLE table_name ADD COLUMN (column_name1 column_type [KEY | agg_type] DEFAULT "default_value", ...)
-[TO rollup_index_name]
-[PROPERTIES ("key"="value", ...)]
-```
+### 添加多列
 
 - 聚合模型如果增加 Value 列，需要指定 `agg_type`
 
 - 聚合模型如果增加 Key 列，需要指定 KEY 关键字
 
-- 不能在 Rollup Index 中增加 Base Table 中已经存在的列（如有需要，可以重新创建一个 Rollup Index）
+*向聚合表添加多列*
 
-### 示例
+1. 建表语句
 
-向 `example_rollup_index`添加多列 (聚合模型)
+```sql
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col1 int,
+    col2 int,
+    col3 int,
+    col4 int SUM,
+    col5 varchar(32) REPLACE DEFAULT "abc"
+) AGGREGATE KEY(col1, col2, col3)
+DISTRIBUTED BY HASH(col1) BUCKETS 10;
+```
+
+2. 向 `example_db.my_table`添加多列 (聚合模型)
 
 ```sql
 ALTER TABLE example_db.my_table
-ADD COLUMN (c1 INT DEFAULT "1", c2 FLOAT SUM DEFAULT "0")
-TO example_rollup_index;
+ADD COLUMN (c1 INT DEFAULT "1", c2 FLOAT SUM DEFAULT "0");
 ```
 
-## 从指定 Index 中删除一列
-
-### 语法
-
-```sql
-ALTER TABLE table_name DROP COLUMN column_name
-[FROM rollup_index_name]
-```
+### 删除列
 
 - 不能删除分区列
 
-- 如果是从 Base Table 中删除列，则如果 Rollup Index 中包含该列，也会被删除
+- 不能删除 UNIQUE 的 KEY 列。
 
-### 示例
+从 `example_db.my_table` 删除一列
 
-从 `example_rollup_index` 删除一列
-
-```sql
-ALTER TABLE example_db.my_table
-DROP COLUMN col3
-FROM example_rollup_index;
-```
-
-## 修改指定 Index 的列类型以及列位置
-
-### 语法
+1. 建表语句
 
 ```sql
-ALTER TABLE table_name MODIFY COLUMN column_name column_type [KEY | agg_type] [NULL | NOT NULL] [DEFAULT "default_value"]
-[AFTER column_name|FIRST]
-[FROM rollup_index_name]
-[PROPERTIES ("key"="value", ...)]
+CREATE TABLE IF NOT EXISTS example_db.my_table(
+    col1 int,
+    col2 int,
+    col3 int,
+    col4 int SUM,
+    col5 varchar(32) REPLACE DEFAULT "abc"
+) AGGREGATE KEY(col1, col2, col3)
+DISTRIBUTED BY HASH(col1) BUCKETS 10;
 ```
+
+2. 从 `example_db.my_table` 删除`col3`列
+
+```sql
+ALTER TABLE example_db.my_table DROP COLUMN col4;
+```
+
+### 修改列类型和列位置
 
 - 聚合模型如果修改 Value 列，需要指定 `agg_type`
 
 - 非聚合类型如果修改 Key 列，需要指定 **KEY** 关键字
 
-- 只能修改列的类型，列的其他属性维持原样（即其他属性需在语句中按照原属性显式的写出，参见 Example 8）
+- 只能修改列的类型，列的其他属性维持原样
 
 - 分区列和分桶列不能做任何修改
 
@@ -268,9 +243,8 @@ ALTER TABLE table_name MODIFY COLUMN column_name column_type [KEY | agg_type] [N
 
   - 除 DATE 与 DATETIME 以外都可以转换成 STRING，但是 STRING 不能转换任何其他类型
 
-### 示例
 
-建表语句：
+1. 建表语句
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
@@ -281,13 +255,10 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
     col4 int SUM,
     col5 varchar(32) REPLACE DEFAULT "abc"
 ) AGGREGATE KEY(col0, col1, col2, col3)
-DISTRIBUTED BY HASH(col0) BUCKETS 1
-PROPERTIES (
-    "replication_num" = "1"
-)
+DISTRIBUTED BY HASH(col0) BUCKETS 10;
 ```
 
-**1.  修改 Base Index 的 Key 列 col1 的类型为 BIGINT，并移动到 col2 列后面。**
+2. 修改 Key 列 col1 的类型为 BIGINT，并移动到 col2 列后面
 
 ```sql
 ALTER TABLE example_db.my_table 
@@ -296,7 +267,7 @@ MODIFY COLUMN col1 BIGINT KEY DEFAULT "1" AFTER col2;
 
 注意：无论是修改 Key 列还是 Value 列都需要声明完整的 Column 信息
 
-**2. 修改 Base Index 的 val1 列最大长度。原 val1 为 (val1 VARCHAR(32) REPLACE DEFAULT "abc")**
+2. 修改 Base Table 的 val1 列最大长度。原 val1 为 (val1 VARCHAR(32) REPLACE DEFAULT "abc")
 
 ```sql
 ALTER TABLE example_db.my_table 
@@ -305,29 +276,19 @@ MODIFY COLUMN col5 VARCHAR(64) REPLACE DEFAULT "abc";
 
 注意：只能修改列的类型，列的其他属性需要维持原样
 
-**3. 修改 Duplicate Key 表 Key 列的某个字段的长度**
+3. 修改 Key 列的某个字段的长度
 
 ```sql
 ALTER TABLE example_db.my_table
-MODIFY COLUMN col3 varchar(50) KEY NULL comment 'to 50'
+MODIFY COLUMN col3 varchar(50) KEY NULL comment 'to 50';
 ```
 
-## 对指定 Index 的列进行重新排序
+### 重新排序
 
-### 语法
-
-```sql
-ALTER TABLE table_name ORDER BY (column_name1, column_name2, ...)
-[FROM rollup_index_name]
-[PROPERTIES ("key"="value", ...)]
-```
-
-- Index 中的所有列都要写出来
-
+- 所有列都要写出来
 - Value 列在 Key 列之后
 
-### 示例
-
+1. 建表语句
 ```sql
 CREATE TABLE IF NOT EXISTS example_db.my_table(
     k1 int DEFAULT "1",
@@ -337,199 +298,25 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
     v1 int SUM,
     v2 int MAX,
 ) AGGREGATE KEY(k1, k2, k3, k4)
-DISTRIBUTED BY HASH(k1) BUCKETS 1
-ROLLUP (
-   example_rollup_index(k1, k2, k3, v1, v2)
-)
-PROPERTIES (
-    "replication_num" = "1"
-)
+DISTRIBUTED BY HASH(k1) BUCKETS 10;
 ```
 
-重新排序 `example_rollup_index` 中的列（设原列顺序为：k1, k2, k3, v1, v2）
+2. 重新排序 `example_db.my_table` 中的列
 
 ```sql
 ALTER TABLE example_db.my_table
-ORDER BY (k3,k1,k2,v2,v1)
-FROM example_rollup_index;
+ORDER BY (k3,k1,k2,k4,v2,v1);
 ```
 
-## 一次提交进行多种变更
-
-Schema Change 可以在一个作业中，对多个 Index 进行不同的修改。
-
-### 示例 1
-
-源 Schema：
-
-```sql
-CREATE TABLE IF NOT EXISTS example_db.tbl1(
-    k1 int,
-    k2 int,
-    k3 int
-) AGGREGATE KEY(k1, k2, k3)
-DISTRIBUTED BY HASH(k1) BUCKETS 1
-ROLLUP (
-   rollup1 (k1, k2),
-   rollup2 (k2)
-)
-PROPERTIES (
-    "replication_num" = "1"
-)
-```
-
-可以通过以下命令给 rollup1 和 rollup2 都加入一列 k4，并且再给 rollup2 加入一列 k5：
-
-```sql
-ALTER TABLE tbl1
-ADD COLUMN k4 INT default "1" to rollup1,
-ADD COLUMN k4 INT default "1" to rollup2,
-ADD COLUMN k5 INT default "1" to rollup2;
-```
-
-完成后，Schema 变为：
-
-```Plain
-+-----------+-------+------+------+------+---------+-------+
-| IndexName | Field | Type | Null | Key  | Default | Extra |
-+-----------+-------+------+------+------+---------+-------+
-| tbl1      | k1    | INT  | No   | true | N/A     |       |
-|           | k2    | INT  | No   | true | N/A     |       |
-|           | k3    | INT  | No   | true | N/A     |       |
-|           | k4    | INT  | No   | true | 1       |       |
-|           | k5    | INT  | No   | true | 1       |       |
-|           |       |      |      |      |         |       |
-| rollup2   | k2    | INT  | No   | true | N/A     |       |
-|           | k4    | INT  | No   | true | 1       |       |
-|           | k5    | INT  | No   | true | 1       |       |
-|           |       |      |      |      |         |       |
-| rollup1   | k1    | INT  | No   | true | N/A     |       |
-|           | k2    | INT  | No   | true | N/A     |       |
-|           | k4    | INT  | No   | true | 1       |       |
-+-----------+-------+------+------+------+---------+-------+
-```
-
-可以看到，Base 表 tbl1 也自动加入了 k4, k5 列。即给任意 Rollup 增加的列，都会自动加入到 Base 表中。
-
-同时，不允许向 Rollup 中加入 Base 表已经存在的列。如果用户需要这样做，可以重新建立一个包含新增列的 Rollup，之后再删除原 Rollup。
-
-### 示例 2
-
-建表语句
-
-```sql
-CREATE TABLE IF NOT EXISTS example_db.my_table(
-    k1 int DEFAULT "1",
-    k2 int,
-    k3 varchar(32),
-    k4 date,
-    v1 int SUM,
-) AGGREGATE KEY(k1, k2, k3, k4)
-DISTRIBUTED BY HASH(k1) BUCKETS 1
-ROLLUP (
-    example_rollup_index(k1, k3, k2, v1)
-)
-PROPERTIES (
-    "replication_num" = "1"
-)
-```
-
-```sql
-ALTER TABLE example_db.my_table
-ADD COLUMN v2 INT MAX DEFAULT "0" TO example_rollup_index,
-ORDER BY (k3,k1,k2,v2,v1) FROM example_rollup_index;
-```
-
-## 修改列名称
-
-语法
-
-```sql
-ALTER TABLE RENAME COLUMN old_column_name new_column_name;    
-```
-
-## 查看作业
-
-用户可以通过 `SHOW ALTER TABLE COLUMN` 命令来查看 schema change 作业进度。
-
-`SHOW ALTER TABLE COLUMN` 可以查看当前正在执行或已经完成的 Schema Change 作业。当一次 Schema Change 作业涉及到多个 Index 时，该命令会显示多行，每行对应一个 Index。举例如下：
-
-```sql
-mysql > SHOW ALTER TABLE COLUMN\G;
-*************************** 1. row ***************************
-        JobId: 20021
-    TableName: tbl1
-   CreateTime: 2019-08-05 23:03:13
-   FinishTime: 2019-08-05 23:03:42
-    IndexName: tbl1
-      IndexId: 20022
-OriginIndexId: 20017
-SchemaVersion: 2:792557838
-TransactionId: 10023
-        State: FINISHED
-          Msg: 
-     Progress: NULL
-      Timeout: 86400
-1 row in set (0.00 sec)
-```
-
-- JobId：每个 Schema Change 作业的唯一 ID。
-
-- TableName：Schema Change 对应的基表的表名。
-
-- CreateTime：作业创建时间。
-
-- FinishedTime：作业结束时间。如未结束，则显示 "N/A"。
-
-- IndexName：本次修改所涉及的某一个 Index 的名称。
-
-- IndexId：新的 Index 的唯一 ID。
-
-- OriginIndexId：旧的 Index 的唯一 ID。
-
-- SchemaVersion：以 M:N 的格式展示。其中 M 表示本次 Schema Change 变更的版本，N 表示对应的 Hash 值。每次 Schema Change，版本都会递增。
-
-- TransactionId：转换历史数据的分水岭 Transaction ID。
-
-- State：作业所在阶段。
-
-  - PENDING：作业在队列中等待被调度。
-
-  - WAITING_TXN：等待分水岭 Transaction ID 之前的导入任务完成。
-
-  - RUNNING：历史数据转换中。
-
-  - FINISHED：作业成功。
-
-  - CANCELLED：作业失败。
-
-- Msg：如果作业失败，这里会显示失败信息。
-
-- Progress：作业进度。只有在 RUNNING 状态才会显示进度。进度是以 M/N 的形式显示。其中 N 为 Schema Change 涉及的总副本数。M 为已完成历史数据转换的副本数。
-
-- Timeout：作业超时时间。单位秒。
-
-## 取消作业
-
-在作业状态不为 FINISHED 或 CANCELLED 的情况下，可以通过以下命令取消 Schema Change 作业：
-
-```sql
-CANCEL ALTER TABLE COLUMN FROM tbl_name;
-```
-
-## 注意事项
+## 限制
 
 - 一张表在同一时间只能有一个 Schema Change 作业在运行。
 
-- Schema Change 操作不阻塞导入和查询操作。除非操作本身影响了表的元数据（例如自动分区表导入过程中创建了分区）
-
 - 分区列和分桶列不能修改。
 
-- 如果 Schema 中有 REPLACE 方式聚合的 Value 列，则不允许删除 Key 列。
+- 如果聚合表中有 REPLACE 方式聚合的 Value 列，则不允许删除 Key 列。
 
-- 如果删除 Key 列，Doris 无法决定 REPLACE 列的取值。
-
-- Unique 数据模型表的所有非 Key 列都是 REPLACE 聚合方式。
+- Unique 表不允许删除 Key 列。
 
 - 在新增聚合类型为 SUM 或者 REPLACE 的 Value 列时，该列的默认值对历史数据没有含义。
 
@@ -537,45 +324,9 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 
 - 当修改列类型时，除 Type 以外的字段都需要按原列上的信息补全。
 
-- 如修改列 `k1 INT SUM NULL DEFAULT "1"` 类型为 BIGINT，则需执行命令如下：
-
-- `ALTER TABLE tbl1 MODIFY COLUMN`k1`BIGINT SUM NULL DEFAULT "1";`
-
 - 注意，除新的列类型外，如聚合方式，Nullable 属性，以及默认值都要按照原信息补全。
 
-- 不支持修改聚合类型、Nullable 属性、默认值。
-
-## 常见问题
-
-**Schema Change 的执行速度**
-
-Light Schema Change，即如果是增加和删除 Value 列，则可以毫秒级返回。其它的 Schema Change 执行速度按照最差效率估计约为 10MB/s。保守起见，用户可以根据这个速率来设置作业的超时时间。
-
-**提交作业报错 `Table xxx is not stable. ...`**
-
-Schema Change 只有在表数据完整且非均衡状态下才可以开始。如果表的某些数据分片副本不完整，或者某些副本正在进行均衡操作，则提交会被拒绝。数据分片副本是否完整，可以通过以下命令查看：
-
-```sql
-SHOW REPLICA STATUS FROM tbl WHERE STATUS != "OK";
-```
-
-如果有返回结果，则说明有副本有问题。通常系统会自动修复这些问题，用户也可以通过以下命令优先修复这个表：
-
-```sql
-ADMIN REPAIR TABLE tbl1;
-```
-
-用户可以通过以下命令查看是否有正在运行的均衡任务：
-
-```sql
-SHOW PROC "/cluster_balance/pending_tablets";
-```
-
-可以等待均衡任务完成，或者通过以下命令临时禁止均衡操作：
-
-```sql
-ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
-```
+- 不支持修改聚合类型、Nullable 属性和默认值。
 
 ## 相关配置
 
@@ -585,10 +336,6 @@ ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
 
 ### BE 配置
 
-- `alter_tablet_worker_count`：在 BE 端用于执行历史数据转换的线程数。默认为 3。如果希望加快 Schema Change 作业的速度，可以适当调大这个参数后重启 BE。但过多的转换线程可能会导致 IO 压力增加，影响其他操作。该线程和 Rollup 作业共用。
+- `alter_tablet_worker_count`：在 BE 端用于执行历史数据转换的线程数。默认为 3。如果希望加快 Schema Change 作业的速度，可以适当调大这个参数后重启 BE。但过多的转换线程可能会导致 IO 压力增加，影响其他操作。
 
 - `alter_index_worker_count`：在 BE 端用于执行历史数据构建索引的线程数（注：当前只支持倒排索引）。默认为 3。如果希望加快 Index Change 作业的速度，可以适当调大这个参数后重启 BE。但过多的线程可能会导致 IO 压力增加，影响其他操作。
-
-## 更多参考
-
-关于 Schema Change 使用的更多详细语法及最佳实践，请参阅 [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 命令手册。
