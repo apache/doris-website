@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 The `CATALOGS()` function generates a temporary `catalogs` table, allowing you to view information about all the catalogs created in the current Doris instance. The result combines the information from `show catalogs` and `show catalog xxx`.
 
 This function is used in the `FROM` clause, making it easier to query and analyze catalog data in Doris.
 
-## syntax
+## Syntax
 ```sql
 CATALOGS()
 ```
