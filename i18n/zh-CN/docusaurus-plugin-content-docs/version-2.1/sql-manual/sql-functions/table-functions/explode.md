@@ -24,20 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode
-
 ## 描述
 
-表函数，需配合 Lateral View 使用。
-
-将 array 列展开成多行。当 array 为NULL或者为空时，`explode_outer` 返回NULL。
-`explode` 和 `explode_outer` 均会返回 array 内部的NULL元素。
+explode 函数接受一个数组，会将数组的每个元素映射为单独的行。通常与 LATERAL VIEW 配合使用，以将嵌套数据结构展开为标准的平面表格式。explode 和 explode_outer 区别主要在于空值处理。
 
 ## 语法
 ```sql
-explode(expr)
-explode_outer(expr)
+explode(<arr>)
+explode_outer(<arr>)
 ```
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<arr>` | array类型 |
+
+## 返回值
+
+当数组不为空或 NULL 时，`explode` 和 `explode_outer` 的返回值相同。
+
+当数据为空或 NULL 时：
+
+`explode` 不会产生任何行，并且会过滤掉这些记录。
+
+`explode_outer` 如果数组是空的，explode_outer 会生成一行记录，但展开的列值会是 NULL。如果数组为 NULL，同样会保留一行，并返回 NULL。
 
 ## 举例
 
