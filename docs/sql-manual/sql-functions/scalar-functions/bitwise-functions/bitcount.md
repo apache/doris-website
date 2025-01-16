@@ -44,12 +44,12 @@ Returns the number of 1s in the binary representation of `<x>`
 ## Examples
 
 ```sql
-select "0b11111111", bit_count(-1);
+select bit_count(8), bit_count(-1);
 ```
 ```text
 +--------------+---------------+
-| '0b11111111' | bit_count(-1) |
+| bit_count(8) | bit_count(-1) |
 +--------------+---------------+
-| 0b11111111   |             8 |
+|            1 |             8 |
 +--------------+---------------+
 ```

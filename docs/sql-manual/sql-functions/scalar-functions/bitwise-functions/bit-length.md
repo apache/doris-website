@@ -24,31 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_length
-### Description
-#### Syntax
+## Description
 
-`INT bit_length (VARCHAR str)`
+It is used to return the median of the binary representation of a string (that is, the total number of binary digits). It calculates the number of bits occupied by the binary encoding of the string.
 
-
-Return length of argument in bits.
-
-### example
-
+## Syntax
+```sql
+bit_length( <str>)
 ```
-mysql> select bit_length("abc");
-+-------------------+
-| bit_length('abc') |
-+-------------------+
-|                24 |
-+-------------------+
 
-mysql> select bit_length("中国");
-+----------------------+
-| bit_length('中国')    |
-+----------------------+
-|                   48 |
-+----------------------+
+## Parameters
+| parameter | description |
+|-----------|-------------|
+| `<str>`   | The string to be calculated     |
+
+## Return Value
+
+Returns the number of bits occupied by `<str>` in the binary representation, including all 0 and 1.
+
+## Examples
+
+```sql
+select bit_length("abc"), bit_length("中国"), bit_length(123);
 ```
-### keywords
-    BIT_LENGTH
+
+```text
++-------------------+----------------------+-----------------------------------------+
+| bit_length('abc') | bit_length('中国')   | bit_length(cast(123 as VARCHAR(65533))) |
++-------------------+----------------------+-----------------------------------------+
+|                24 |                   48 |                                      24 |
++-------------------+----------------------+-----------------------------------------+
+```
+
