@@ -35,10 +35,10 @@ BITOR( <lhs>, <rhs>)
 ```
 
 ## Parameters
-| parameter | description  |
-|-----------|--------------|
-| `<lhs>`   | The first number involved in the bitwise AND operation |
-| `<rhs>`   | The second number to be included in the bitwise AND operation |
+| parameter | description                                                             |
+|-----------|-------------------------------------------------------------------------|
+| `<lhs>`   | The first BOOLEAN value to be evaluated                                 |
+| `<rhs>`   | The second BOOLEAN value to be evaluated |
 
 ## Return Value
 

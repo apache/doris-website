@@ -23,26 +23,31 @@ under the License.
 -->
 
 ## 描述
-
-返回两个数的异或值。
+用于对两个BOOLEAN值进行按位异或操作。
 
 ## 语法
-`BOOLEAN xor BOOLEAN`
+```sql
+ <lhs> XOR <rhs>
+```
 
 ## 参数
+| 参数    | 说明           |
+|-------|--------------|
+| `<lhs>` | 参与按位与运算的第一个BOOLEAN值 |
+| `<rhs>` | 参与按位与运算的第二个BOOLEAN值 |
 
 ## 返回值
+返回两个BOOLEAN值的异或值。
 
 ## 示例
 ```sql
-mysql >select true xor false,true xor true;
+select true XOR false,true XOR true;
+```
+
+```text
 +------------------+-----------------+
-| (TRUE XOR FALSE) | (TRUE XOR TRUE) |
+| xor(TRUE, FALSE) | xor(TRUE, TRUE) |
 +------------------+-----------------+
 |                1 |               0 |
 +------------------+-----------------+
-
 ```
-
-## Keywords
-	XOR
