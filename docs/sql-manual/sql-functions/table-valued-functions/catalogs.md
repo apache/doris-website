@@ -26,9 +26,9 @@ under the License.
 
 ### description
 
-This table function generates a temporary catalogs table, allowing you to view the information of all the catalogs currently created in Apache Doris.
+The `CATALOGS()` function generates a temporary `catalogs` table, allowing you to view information about all the catalogs created in the current Doris instance. The result combines the information from `show catalogs` and `show catalog xxx`.
 
-It is used in the FROM clause, making it easier to query and analyze the catalog data in Doris.
+This function is used in the `FROM` clause, making it easier to query and analyze catalog data in Doris.
 
 #### syntax
 ```sql
@@ -36,15 +36,32 @@ CATALOGS()
 ```
 
 ## RETURN VALUE
-- **CatalogId**: The unique identifier of the `catalog`.
-- **CatalogName**: The name of the `catalog`.
-- **CatalogType**: The type of the `catalog`.
-- **Property**: The name of the `catalog` configuration property.
-- **Value**: The value of the configuration property.
+View the returned fields of the catalogs() function
+```sql
+desc function catalogs();
+```
+```text
++-------------+--------+------+-------+---------+-------+
+| Field       | Type   | Null | Key   | Default | Extra |
++-------------+--------+------+-------+---------+-------+
+| CatalogId   | BIGINT | No   | false | NULL    | NONE  |
+| CatalogName | TEXT   | No   | false | NULL    | NONE  |
+| CatalogType | TEXT   | No   | false | NULL    | NONE  |
+| Property    | TEXT   | No   | false | NULL    | NONE  |
+| Value       | TEXT   | No   | false | NULL    | NONE  |
++-------------+--------+------+-------+---------+-------+
+```
 
+The field meanings are as follows:
 
-## Usage Notes
-- The information returned by the `catalogs()` function is a combination of the results from the `show catalogs` and `show catalog xxx` statements.
+| Field        | Type    | Description                                                                                                              |
+|--------------|---------|--------------------------------------------------------------------------------------------------------------------------|
+| `CatalogId`  | BIGINT  | A unique identifier for each catalog. It is used to distinguish different catalogs.                                      |
+| `CatalogName`| TEXT    | The name of the catalog. This is the identifier for the catalog within Doris.                                            |
+| `CatalogType`| TEXT    | The type of the catalog (e.g., database, data source). It indicates the kind of catalog.                                 |
+| `Property`   | TEXT    | The name of a property related to the catalog (e.g., a configuration setting).                                           |
+| `Value`      | TEXT    | The value of the corresponding property for the catalog. It provides specific details about the catalog's configuration. |
+
 
 ### Examples
 View all catalog information of the doris cluster

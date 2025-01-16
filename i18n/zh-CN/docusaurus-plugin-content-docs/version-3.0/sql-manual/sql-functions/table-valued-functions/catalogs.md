@@ -1,7 +1,7 @@
 ---
 {
-    "title": "CATALOGS",
-    "language": "zh-CN"
+  "title": "CATALOGS",
+  "language": "zh-CN"
 }
 ---
 
@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-此表函数生成一个临时的 catalogs 表，允许查看当前 Apache Doris 中所有已创建的 catalogs 信息。
+`CATALOGS()` 函数生成一个临时的 catalogs 表，允许查看当前 Doris 中所有已创建的 catalogs 信息，其结果综合了 `show catalogs` 和 `show catalog xxx` 的信息。
 
 该函数用于 FROM 子句中，便于查询和分析 Doris 中的 catalog 数据。
 
@@ -36,15 +36,11 @@ CATALOGS()
 ```
 
 ## 返回值
-- **CatalogId**：`catalog` 的唯一标识符。
-- **CatalogName**：`catalog` 的名称。
-- **CatalogType**：`catalog` 的类型。
-- **Property**：`catalog` 配置项的名称。
-- **Value**：配置项的值。
-
-catalogs()表结构：
+查看 catalog() 函数的返回字段
+```sql
+desc function catalogs();
 ```
-mysql> desc function catalogs();
+```text
 +-------------+--------+------+-------+---------+-------+
 | Field       | Type   | Null | Key   | Default | Extra |
 +-------------+--------+------+-------+---------+-------+
@@ -54,12 +50,17 @@ mysql> desc function catalogs();
 | Property    | TEXT   | No   | false | NULL    | NONE  |
 | Value       | TEXT   | No   | false | NULL    | NONE  |
 +-------------+--------+------+-------+---------+-------+
-5 rows in set (0.04 sec)
 ```
 
-## 注意事项
-- `catalogs()` 函数返回的信息是 `show catalogs` 和 `show catalog xxx` 语句结果的综合。
+字段含义如下：
 
+| 字段名称        | 类型       | 说明                                                        | 
+|-----------------|----------|-----------------------------------------------------------| 
+| `CatalogId`     | BIGINT   | Catalog 的唯一标识符，用于区分不同的 catalog 实例。                        | 
+| `CatalogName`   | TEXT     | Catalog 的名称，用于标识 Doris 中的 catalog。                        | 
+| `CatalogType`   | TEXT     | Catalog 的类型，例如 `hms`（Hive Metastore）、`es`（Elasticsearch）。 | 
+| `Property`      | TEXT     | 与 catalog 相关的属性名称或配置项。                                    | 
+| `Value`         | TEXT     | 属性的值，描述 catalog 配置的具体内容。                                  |
 
 ## 示例
 查看 doris 集群所有 catalog 信息
