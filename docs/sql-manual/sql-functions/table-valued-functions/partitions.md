@@ -24,25 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `partitions`
-
-### Name
-
-partitions
-
-### Description
+## Description
 
 The table function generates a temporary partition TABLE, which allows you to view the PARTITION list of a certain TABLE.
 
 This function is used in the from clause.
 
-#### Syntax
+## Syntax
 
-`partitions("catalog"="","database"="","table"="")`
+```sql
+PARTITIONS(
+    "catalog"="<catalog>",
+    "database"="<database>",
+    "table"="<table>"
+)
+```
+
+## Required Parameters
+**`<catalog>`**
+> Specify the cluster catalog name to be queried
+
+**`<database>`**
+> Specify the cluster database name to be queried
+
+**`<table>`**
+> Specify the cluster table name to be queried
+
+## Return Value
 
 partitions() Table structure:
 ```sql
-mysql> desc function partitions("catalog"="internal","database"="zd","table"="user");
+ desc function partitions("catalog"="internal","database"="test","table"="user");
+```
+```text
 +--------------------------+---------+------+-------+---------+-------+
 | Field                    | Type    | Null | Key   | Default | Extra |
 +--------------------------+---------+------+-------+---------+-------+
@@ -67,62 +81,69 @@ mysql> desc function partitions("catalog"="internal","database"="zd","table"="us
 | SyncWithBaseTables       | BOOLEAN | No   | false | NULL    | NONE  |
 | UnsyncTables             | TEXT    | No   | false | NULL    | NONE  |
 +--------------------------+---------+------+-------+---------+-------+
-20 rows in set (0.02 sec)
 ```
 
-* PartitionId:partition id
-* PartitionName:partition name
-* VisibleVersion:visible version
-* VisibleVersionTime:visible version time
-* State:state
-* PartitionKey:partition key
-* Range:range
-* DistributionKey:distribution key
-* Buckets:bucket num
-* ReplicationNum:replication num
-* StorageMedium:storage medium
-* CooldownTime:cooldown time
-* RemoteStoragePolicy:remote storage policy
-* LastConsistencyCheckTime:last consistency check time
-* DataSize:data size
-* IsInMemory:is in memory
-* ReplicaAllocation:replica allocation
-* IsMutable:is mutable
-* SyncWithBaseTables:Is it synchronized with the base table data (for partitioning asynchronous materialized views)
-* UnsyncTables:Which base table data is not synchronized with (for partitions of asynchronous materialized views)
+The meaning of the fields is as follows:
+
+| Field                     | Description                                                                 |
+|---------------------------|-----------------------------------------------------------------------------|
+| PartitionId               | Partition ID                                                                 |
+| PartitionName             | Name of the partition                                                         |
+| VisibleVersion            | Partition version                                                              |
+| VisibleVersionTime        | Time when the partition version was committed                                 |
+| State                     | State of the partition                                                         |
+| PartitionKey              | Partition key                                                                 |
+| Range                     | Range of the partition                                                         |
+| DistributionKey           | Distribution key for partitioning                                             |
+| Buckets                   | Number of buckets in the partition                                            |
+| ReplicationNum            | Number of replicas in the partition                                           |
+| StorageMedium             | Storage medium used for the partition                                         |
+| CooldownTime              | Cooldown time for the partition                                               |
+| RemoteStoragePolicy       | Remote storage policy for the partition                                       |
+| LastConsistencyCheckTime  | Time of the last consistency check for the partition                          |
+| DataSize                  | Size of the data in the partition                                             |
+| IsInMemory                | Whether the partition is stored in memory                                    |
+| ReplicaAllocation         | Replication strategy for the partition                                        |
+| IsMutable                 | Whether the partition is mutable                                             |
+| SyncWithBaseTables        | Whether the partition is synchronized with the base table (for async materialized views) |
+| UnsyncTables              | Which base table is unsynchronized (for async materialized view partitions)   |
+  
+
 
 ```sql
-mysql> desc function partitions("catalog"="hive","database"="zdtest","table"="com2");
+desc function partitions("catalog"="hive","database"="zdtest","table"="com2");
+```
+```text
 +-----------+------+------+-------+---------+-------+
 | Field     | Type | Null | Key   | Default | Extra |
 +-----------+------+------+-------+---------+-------+
 | Partition | TEXT | No   | false | NULL    | NONE  |
 +-----------+------+------+-------+---------+-------+
-1 row in set (0.11 sec)
 ```
 
-* Partition:partition name
+The meaning of the fields is as follows:
 
-### Example
+| Field        | Description     |
+|--------------|-----------------|
+| Partition    | Partition Name  |
 
-1. View the partition list of table1 under db1 in the internal catalog
 
-```sql
-mysql> select * from partitions("catalog"="internal","database"="db1","table"="table1");
-```
+## Examples
+- View the partition list of user_tab under test in the internal catalog
+    
+    ```sql
+     select * from partitions("catalog"="internal","database"="test","table"="user_tab");
+    ```
 
-2. View the partition information with partition name partition1 under table1
+- View the partition information with partition name partition1 under user_tab
 
-```sql
-mysql> select * from partitions("catalog"="internal","database"="db1","table"="table1") where PartitionName = "partition1";
-```
+    ```sql
+    select * from partitions("catalog"="internal","database"="test","table"="user_tab") where PartitionName = "partition1";
+    ```
 
-3. View the partition ID with the partition name 'partition1' under Table 1
+- View the partition ID with the partition name 'partition1' under user_tab
 
-```sql
-mysql> select PartitionId from partitions("catalog"="internal","database"="db1","table"="table1") where PartitionName = "partition1";
-```
+  ```sql
+  mysql> select PartitionId from partitions("catalog"="internal","database"="test","table"="user_tab") where PartitionName = "partition1";
+  ```
 
-### Keywords
-
-    partitions
