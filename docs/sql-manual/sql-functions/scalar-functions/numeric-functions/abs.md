@@ -22,9 +22,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## abs
 
 ### description
+
+Returns the absolute value of `x`
+
 #### Syntax
 
 ```sql
@@ -38,7 +40,15 @@ FLOAT abs(FLOAT x)
 DECIMAL abs(DECIMAL x)` 
 ```
 
-Returns the absolute value of `x`.
+## Parameters  
+
+| Parameter | Description |  
+| -- | -- |  
+| x | The value for which the absolute value is to be calculated |  
+
+## Return Value  
+
+The absolute value of parameter `x`. 
 
 ### example
 

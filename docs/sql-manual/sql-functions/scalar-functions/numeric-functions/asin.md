@@ -22,13 +22,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## asin
-
 ### description
-#### Syntax
 
-`DOUBLE asin(DOUBLE x)`
 Returns the arc sine of `x`, or `nan` if `x` is not in the range `-1` to `1`.
+
+#### Syntax
+```sql
+DOUBLE asin(DOUBLE x)
+```
+
+## Parameters  
+
+| Parameter | Description |  
+| -- | -- |  
+| x | The value for which the asin value is to be calculated |  
+
+## Return Value  
+
+The asin value of parameter `x`. 
 
 ### example
 

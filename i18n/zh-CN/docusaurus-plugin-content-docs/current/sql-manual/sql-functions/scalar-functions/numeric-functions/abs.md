@@ -22,9 +22,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## abs
-
 ## 描述
+
+返回一个值的绝对值.
+
 ## 语法
 
 ```sql
@@ -38,7 +39,15 @@ FLOAT abs(FLOAT x)
 DECIMAL abs(DECIMAL x)` 
 ```
 
-返回`x`的绝对值.
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `x` | 需要被计算绝对值的值 |
+
+## 返回值
+
+参数 x 的绝对值
 
 ## 举例
 

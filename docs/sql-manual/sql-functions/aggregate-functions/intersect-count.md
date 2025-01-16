@@ -24,49 +24,32 @@ under the License.
 
 ## Description
 
-The INTERSECT_COUNT function is used to calculate the number of intersecting elements of the Bitmap data structure.
+`BITMAP INTERSECT_COUNT(bitmap_column, column_to_filter, filter_values)`
+Calculate the intersection of two or more bitmaps
+Usage: intersect_count(bitmap_column_to_count, filter_column, filter_values ...)
+Example: intersect_count(user_id, event, 'A', 'B', 'C'), meaning find the intersect count of user_id in all A/B/C 3 bitmaps
+Calculate the intersection count of elements in bitmap_column that match column_to_filter within filter_values, i.e., bitmap intersection count.
 
 ## Syntax
 
 ```sql
 INTERSECT_COUNT(<bitmap_column>, <column_to_filter>, <filter_values>)
 ```
+mysql [test]>select dt,bitmap_to_string(user_id) from pv_bitmap;
++------+---------------------------+
+| dt   | bitmap_to_string(user_id) |
++------+---------------------------+
+|    1 | 1,2                       |
+|    2 | 2,3                       |
+|    4 | 1,2,3,4,5                 |
+|    3 | 1,2,3                     |
++------+---------------------------+
+4 rows in set (0.02 sec)
 
-## Parameters
-
-| Parameters | Description |
-| -- | -- |
-| `<bitmap_column>` | The expression that needs to be obtained. |
-| `<column_to_filter>` | The dimension column that needs to be filtered. |
-| `<filter_values>` | Different values of the filtering dimension column. |
-
-## Return Value
-
-Returns a value of type BIGINT.
-
-## Example
-
-```sql
-select dt,bitmap_to_string(user_id) from pv_bitmap where dt in (3,4);
-```
-
-```text
-+------+-----------------------------+
-| dt   | bitmap_to_string(`user_id`) |
-+------+-----------------------------+
-| 4    | 1,2,3                       |
-| 3    | 1,2,3,4,5                   |
-+------+-----------------------------+
-```
-
-```sql
-select intersect_count(user_id,dt,3,4) from pv_bitmap;
-```
-
-```text
-+----------------------------------------+
-| intersect_count(`user_id`, `dt`, 3, 4) |
-+----------------------------------------+
-|                                      3 |
-+----------------------------------------+
+mysql [test]>select intersect_count(user_id,dt,3,4) from pv_bitmap;
++------------------------------------+
+| intersect_count(user_id, dt, 3, 4) |
++------------------------------------+
+|                                  3 |
++------------------------------------+
 ```

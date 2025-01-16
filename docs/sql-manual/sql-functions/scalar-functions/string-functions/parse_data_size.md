@@ -1,0 +1,92 @@
+---
+{
+    "title": "PARSE_DATA_SIZE",
+    "language": "en"
+}
+---
+
+<!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+## description
+
+Parse a string in the format of "value + unit" and convert the value into a number, where the value represents a fractional amount of the unit.
+
+If the input parameter is invalid, an error will be raised. The maximum return value is Int128 Max.
+
+Data Storage Unit Table
+
+| Unit  | Description        | Value          |
+|------|-----------|------------|
+| B    | Bytes      | 1          |
+| kB   | Kilobytes    | 1024       |
+| MB   | Megabytes    | 1024²      |
+| GB   | Gigabytes    | 1024³      |
+| TB   | Terabytes    | 1024⁴      |
+| PB   | Petabytes    | 1024⁵      |
+| EB   | Exabytes    | 1024⁶      |
+| ZB   | Zettabytes    | 1024⁷      |
+| YB   | Yottabytes    | 1024⁸      |
+
+## Syntax
+```sql
+largeint parse_data_size(VARCHAR str)
+```
+
+
+## Parameters  
+
+| Parameter | Description |  
+| -- | -- |  
+| str | The value is to be calculated |  
+
+## Return Value  
+
+The return number value represents a fractional amount of the unit . 
+
+
+## example
+
+```
+mysql [(none)]>SELECT parse_data_size('1B');
++-----------------------+
+| parse_data_size('1B') |
++-----------------------+
+| 1                     |
++-----------------------+
+1 row in set (0.02 sec)
+
+mysql [(none)]>SELECT parse_data_size('1kB');
++------------------------+
+| parse_data_size('1kB') |
++------------------------+
+| 1024                   |
++------------------------+
+1 row in set (0.01 sec)
+
+mysql [(none)]>SELECT parse_data_size('2.3MB');
++--------------------------+
+| parse_data_size('2.3MB') |
++--------------------------+
+| 2411724                  |
++--------------------------+
+1 row in set (0.02 sec)
+```
+### keywords
+    parse_data_size

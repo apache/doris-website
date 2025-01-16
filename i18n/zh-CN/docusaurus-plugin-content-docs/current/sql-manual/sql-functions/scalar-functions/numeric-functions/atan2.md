@@ -22,13 +22,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## atan2
-
 ## 描述
-## 语法
 
-`DOUBLE atan2(DOUBLE y, DOUBLE x)`
 返回 'y' / 'x' 的反正切.
+
+## 语法
+```sql
+DOUBLE atan2(DOUBLE y, DOUBLE x)
+```
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `y` | 参与计算的反正切的值 |
+| `x` | 参与计算的反正切的值 |
+
+## 返回值
+
+参数 y / x 的反正切值
 
 ## 举例
 
