@@ -22,35 +22,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### description
+## Description
 
-Calculates an SM3 128-bit checksum for the strings
+Calculate multiple strings SM3 256-bit
 
-### Syntax
-
-```sql
-SM3SUM(str[,str])
-```
-
-### example
+## Syntax
 
 ```sql
-select sm3("abcd");
+SM3SUM( VARCHAR <str> [ , <str> ... ] )
 ```
 
-```
-+------------------------------------------------------------------+
-| sm3('abcd')                                                      |
-+------------------------------------------------------------------+
-| 82ec580fe6d36ae4f81cae3c73f4a5b3b5a09c943172dc9053c69fd8e18dca1e |
-+------------------------------------------------------------------+
-```
+## Parameters
+
+| parameter | description |
+|-----------|-------------|
+| `<str>`   | The value of sm3 that needs to be calculated   |
+
+## Return Value
+
+Returns the sm3 value of the input multiple strings
+
+## Examples
 
 ```sql
 select sm3sum("ab","cd");
 ```
 
-```
+```text
 +------------------------------------------------------------------+
 | sm3sum('ab', 'cd')                                               |
 +------------------------------------------------------------------+
