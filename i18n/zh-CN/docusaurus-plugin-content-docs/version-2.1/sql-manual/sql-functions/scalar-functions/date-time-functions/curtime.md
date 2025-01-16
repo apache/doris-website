@@ -36,7 +36,7 @@ under the License.
 ## 语法
 
 ```sql
-TIME CURTIME()
+CURTIME()
 ```
 
 ## 返回值

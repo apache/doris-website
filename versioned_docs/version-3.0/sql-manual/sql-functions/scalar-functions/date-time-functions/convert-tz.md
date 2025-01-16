@@ -32,16 +32,20 @@ Converts a datetime value from the time zone specified by from_tz to the time zo
 ## Syntax
 
 ```sql
-DATETIME CONVERT_TZ(DATETIME dt, VARCHAR from_tz, VARCHAR to_tz)
+CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- | 
-| dt | The datetime value to be converted |
-| from_tz | The original time zone of dt |
-| to_tz | The target time zone to convert to |
+| `<dt>` | The datetime value to be converted |
+| `<from_tz>` | The original time zone of dt |
+| `<to_tz>` | The target time zone to convert to |
+
+## Return Value
+
+Returns the calculated date.
 
 ## Examples
 

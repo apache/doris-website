@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 ## Description
 
 Returns the weekday index of the date, where Sunday is 1, Monday is 2, and Saturday is 7.
@@ -31,15 +32,14 @@ Returns the weekday index of the date, where Sunday is 1, Monday is 2, and Satur
 ## Syntax
 
 ```sql
-INT DAYOFWEEK(DATE date)
-INT DAYOFWEEK(DATETIME date)
+DAYOFWEEK(<dt>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| dt | The date expression to be calculated |
+| `<dt>` | The date expression to be calculated |
 
 ## Return Value
 

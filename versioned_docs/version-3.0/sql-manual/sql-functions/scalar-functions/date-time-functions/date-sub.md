@@ -39,16 +39,16 @@ Subtracts a specified time interval to the date.
 ## Syntax
 
 ```sql
-DATETIME DATE_SUB(DATETIME date, INTERVAL expr type)
+DATE_SUB(<date>, <expr> <time_unit>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| date | A valid date value |
-| expr | The time interval you want to subtract |
-| type | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+| `<date>` | A valid date value |
+| `<expr>`| The time interval you want to subtract |
+| `<type>` | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
 
 ## Return Value
 

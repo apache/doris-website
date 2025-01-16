@@ -33,15 +33,15 @@ Converts a Unix timestamp to the corresponding TIME format. Special cases:
 ## Syntax
 
 ```sql
-DATETIME FROM_UNIXTIME(BIGINT unix_timestamp[, VARCHAR string_format])
+FROM_UNIXTIME(<unix_timestamp>[, <string_format>])
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| unix_timestamp | unix timestamp |
-| string_format | The format format, with the default being %Y-%m-%d %H:%i:%s.|
+| `<unix_timestamp>` | unix timestamp |
+| `<string_format>` | The format format, with the default being %Y-%m-%d %H:%i:%s.|
 
 ## Return Value
 

@@ -36,7 +36,7 @@ under the License.
 ## 语法
 
 ```sql
-DATE CURDATE()
+CURDATE()
 ```
 
 ## 返回值

@@ -36,7 +36,7 @@ Retrieves the current date and returns it as a DATE type.
 ## Syntax
 
 ```sql
-DATE CURDATE()
+CURDATE()
 ```
 
 ## Return Value

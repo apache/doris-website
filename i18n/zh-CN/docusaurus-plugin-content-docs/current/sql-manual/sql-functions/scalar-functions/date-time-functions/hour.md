@@ -31,16 +31,14 @@ under the License.
 ## 语法
 
 ```sql
-INT HOUR(DATE date)
-INT HOUR(TIME date)
-INT HOUR(DATETIME date)
+HOUR(<dt>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| date | 需要计算的日期 |
+| `<dt>` | 需要计算的日期 |
 
 ## 返回值
 

@@ -32,15 +32,14 @@ Returns the weekday index of the date, where Sunday is 1, Monday is 2, and Satur
 ## Syntax
 
 ```sql
-INT DAYOFWEEK(DATE date)
-INT DAYOFWEEK(DATETIME date)
+DAYOFWEEK(<dt>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| dt | The date expression to be calculated |
+| `<dt>` | The date expression to be calculated |
 
 ## Return Value
 

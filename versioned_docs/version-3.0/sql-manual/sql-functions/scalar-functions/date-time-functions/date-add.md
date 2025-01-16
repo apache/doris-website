@@ -37,16 +37,16 @@ Add a specified time interval to the date.
 ## Syntax
 
 ```sql
-DATETIME DATE_ADD(DATETIME date, INTERVAL expr type)
+DATE_ADD(<date>, <expr> <time_unit>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| date | A valid date value |
-| expr | The time interval you want to add |
-| type | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+| `<date>` | A valid date value |
+| `<expr>` | The time interval you want to add |
+| `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
 
 ## Return Value
 

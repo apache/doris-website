@@ -31,15 +31,15 @@ Truncates the datetime according to the specified time unit.
 ## Syntax
 
 ```sql
-DATETIME DATE_TRUNC(DATETIME datetime, VARCHAR unit)
+DATE_TRUNC(<datetime>, <time_unit>)
 ```
 
 ## Parameters
 
 | Parameter	 | Description |
 | -- | -- |
-| datetime | A valid date expression |
-| unit | The time interval to truncate to. The optional values are: [second, minute, hour, day, week, month, quarter, year] |
+| `<datetime>` | A valid date expression |
+| `<time_unit>` | The time interval to truncate to. The optional values are: [second, minute, hour, day, week, month, quarter, year] |
 
 ## Return Value
 

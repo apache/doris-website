@@ -37,16 +37,16 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME DATE_ADD(DATETIME date, INTERVAL expr type)
+DATE_ADD(<date>, <expr> <time_unit>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| date | 合法的日期值 |
-| expr | 希望添加的时间间隔 |
-| type | 枚举值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+| `<date>` | 合法的日期值 |
+| `<expr>` | 希望添加的时间间隔 |
+| `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
 
 ## 返回值
 

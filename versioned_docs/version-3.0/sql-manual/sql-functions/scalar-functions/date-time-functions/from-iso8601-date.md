@@ -30,14 +30,14 @@ Converts an ISO8601 formatted date expression to a DATE type date expression.
 ## Syntax
 
 ```sql
-DATE from_iso8601_date(VARCHAR date)
+from_iso8601_date(<dt>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| date | An ISO8601 formatted date |
+| `<dt>` | An ISO8601 formatted date |
 
 ## Return Value
 

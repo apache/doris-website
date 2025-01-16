@@ -30,14 +30,14 @@ under the License.
 ## 语法
 
 ```sql
-DATE DATE(DATETIME datetime)
+DATE(<datetime>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| datetime | 合法的日期表达式 |
+| `<datetime>` | 合法的日期表达式 |
 
 ## 返回值
 

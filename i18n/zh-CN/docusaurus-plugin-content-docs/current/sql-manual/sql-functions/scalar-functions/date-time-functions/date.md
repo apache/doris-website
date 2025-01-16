@@ -4,7 +4,6 @@
     "language": "zh-CN"
 }
 ---
-
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -31,14 +30,14 @@ under the License.
 ## 语法
 
 ```sql
-DATE DATE(DATETIME datetime)
+DATE(<datetime>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| datetime | 合法的日期表达式 |
+| `<datetime>` | 合法的日期表达式 |
 
 ## 返回值
 

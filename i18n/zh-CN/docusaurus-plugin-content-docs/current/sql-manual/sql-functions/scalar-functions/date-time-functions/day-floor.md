@@ -1,6 +1,6 @@
 ---
 {
-  "title": "day_floor",
+  "title": "DAY_FLOOR",
   "language": "zh-CN"
 }
 ---
@@ -31,19 +31,19 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME DAY_FLOOR(DATETIME datetime)
-DATETIME DAY_FLOOR(DATETIME datetime, DATETIME origin)
-DATETIME DAY_FLOOR(DATETIME datetime, INT period)
-DATETIME DAY_FLOOR(DATETIME datetime, INT period, DATETIME origin)
+DAY_FLOOR(<datetime>)
+DAY_FLOOR(<datetime>, <origin>)
+DAY_FLOOR(<datetime>, <period>)
+DAY_FLOOR(<datetime>, <period>, <origin>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| datetime | 合法的日期表达式 |
-| period | 参数是指定每个周期有多少天组成 |
-| origin | 开始的时间起点，如果不填，默认是 0001-01-01T00:00:00 |
+| `<datetime>` | 合法的日期表达式 |
+| `<period>` | 参数是指定每个周期有多少天组成 |
+| `<origin>` | 开始的时间起点，如果不填，默认是 0001-01-01T00:00:00 |
 
 ## 返回值
 

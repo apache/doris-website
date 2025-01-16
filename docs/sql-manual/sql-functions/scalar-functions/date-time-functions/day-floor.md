@@ -1,6 +1,6 @@
 ---
 {
-    "title": "day_floor",
+    "title": "DAY_FLOOR",
     "language": "en"
 }
 ---
@@ -31,19 +31,19 @@ Rounds the date down to the nearest timestamp of the specified time interval per
 ## Syntax
 
 ```sql
-DATETIME DAY_FLOOR(DATETIME datetime)
-DATETIME DAY_FLOOR(DATETIME datetime, DATETIME origin)
-DATETIME DAY_FLOOR(DATETIME datetime, INT period)
-DATETIME DAY_FLOOR(DATETIME datetime, INT period, DATETIME origin)
+DAY_FLOOR(<datetime>)
+DAY_FLOOR(<datetime>, <origin>)
+DAY_FLOOR(<datetime>, <period>)
+DAY_FLOOR(<datetime>, <period>, <origin>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| datetime | A valid date expression |
-| period | Specifies how many days make up each period |
-| origin | The starting point of time. If not provided, the default is 0001-01-01T00:00:00 |
+| `<datetime>` | A valid date expression |
+| `<period>` | Specifies how many days make up each period |
+| `<origin>` | The starting point of time. If not provided, the default is 0001-01-01T00:00:00 |
 
 ## Return Value
 

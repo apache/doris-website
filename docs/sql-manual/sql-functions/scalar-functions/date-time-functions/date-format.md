@@ -31,90 +31,58 @@ Convert the date type to a bit string according to the format type.
 ## Syntax
 
 ```sql
-VARCHAR DATE_FORMAT(DATETIME date, VARCHAR format)
+DATE_FORMAT(<date>, <format>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| date | A valid date value |
-| format | Specifies the output format for the date/time |
+| `<date>` | A valid date value |
+| `<format>` | Specifies the output format for the date/time |
 
 
 The formats available are:
 
-```text
-% a | Abbreviation for Sunday Name
-
-% B | Abbreviated Monthly Name
-
-% C | Month, numerical value
-
-% D | Sky in the Moon with English Prefix
-
-% d | Monthly day, numerical value (00-31)
-
-% e | Monthly day, numerical value (0-31)
-
-% f | microseconds
-
-% H | Hours (00-23)
-
-% h | hour (01-12)
-
-% I | Hours (01-12)
-
-% I | min, numerical value (00-59)
-
-% J | Days of Year (001-366)
-
-% k | hours (0-23)
-
-% L | Hours (1-12)
-
-% M | Moon Name
-
-% m | month, numerical value (00-12)
-
-%p | AM or PM
-
-% R | Time, 12 - hour (hh: mm: SS AM or PM)
-
-% S | seconds (00-59)
-
-% s | seconds (00-59)
-
-% T | Time, 24 - hour (hh: mm: ss)
-
-% U | Week (00-53) Sunday is the first day of the week
-
-% U | Week (00 - 53) Monday is the first day of the week
-
-% V | Week (01-53) Sunday is the first day of the week, and% X is used.
-
-% v | Week (01 - 53) Monday is the first day of the week, and% x is used
-
-% W | Sunday
-
-% w | Weekly day (0 = Sunday, 6 = Saturday)
-
-% X | Year, where Sunday is the first day of the week, 4 places, and% V use
-
-% X | year, of which Monday is the first day of the week, 4 places, and% V
-
-% Y | Year, 4
-
-% Y | Year, 2
-
-%%  | Represent %
+| Format  | Description                                                          |
+|---------|----------------------------------------------------------------------|
+| %a      | Abbreviation for Sunday Name                                          |
+| %b      | Abbreviated Monthly Name                                              |
+| %c      | Month, numerical value                                                |
+| %D      | Sky in the Moon with English Prefix                                    |
+| %d      | Monthly day, numerical value (00-31)                                  |
+| %e      | Monthly day, numerical value (0-31)                                   |
+| %f      | Microseconds                                                          |
+| %H      | Hours (00-23)                                                         |
+| %h      | Hour (01-12)                                                          |
+| %I      | Hours (01-12)                                                         |
+| %i      | Minutes, numerical value (00-59)                                      |
+| %j      | Days of Year (001-366)                                                |
+| %k      | Hours (0-23)                                                          |
+| %l      | Hours (1-12)                                                          |
+| %M      | Moon Name                                                            |
+| %m      | Month, numerical value (00-12)                                        |
+| %p      | AM or PM                                                              |
+| %r      | Time, 12-hour (hh:mm:ss AM or PM)                                     |
+| %S      | Seconds (00-59)                                                       |
+| %s      | Seconds (00-59)                                                       |
+| %T      | Time, 24-hour (hh:mm:ss)                                              |
+| %U      | Week (00-53) Sunday is the first day of the week                      |
+| %u      | Week (00-53) Monday is the first day of the week                      |
+| %V      | Week (01-53) Sunday is the first day of the week, and %X is used     |
+| %v      | Week (01-53) Monday is the first day of the week, and %x is used     |
+| %W      | Sunday                                                                |
+| %w      | Weekly day (0 = Sunday, 6 = Saturday)                                 |
+| %X      | Year, where Sunday is the first day of the week, 4 digits, and %V used|
+| %x      | Year, where Monday is the first day of the week, 4 digits, and %V used|
+| %Y      | Year, 4 digits                                                        |
+| %y      | Year, 2 digits                                                        |
+| %%      | Represent %                                                           |
 
 Also support 3 formats:
-
+```text
 yyyyMMdd
-
 yyyy-MM-dd
-
 yyyy-MM-dd HH:mm:ss
 ```
 

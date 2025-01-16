@@ -30,14 +30,14 @@ Extracts the date from the datetime.
 ## Syntax
 
 ```sql
-DATE DATE(DATETIME datetime)
+DATE(<datetime>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| datetime | A valid date expression |
+| `<datetime>` | A valid date expression |
 
 ## Return Value
 

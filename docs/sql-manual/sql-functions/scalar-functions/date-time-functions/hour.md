@@ -31,16 +31,14 @@ Obtains the hour information from the given datetime.
 ## Syntax
 
 ```sql
-INT HOUR(DATE date)
-INT HOUR(TIME date)
-INT HOUR(DATETIME date)
+HOUR(<dt>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| date | The date to be calculated. |
+| `<dt>` | The date to be calculated. |
 
 ## Return Value
 

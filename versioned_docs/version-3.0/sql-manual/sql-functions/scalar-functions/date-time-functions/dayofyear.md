@@ -31,15 +31,14 @@ Obtains the corresponding day of the year for the given date.
 ## Syntax
 
 ```sql
-INT DAYOFYEAR(DATE date)
-INT DAYOFYEAR(DATETIME date)
+DAYOFYEAR(<dt>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| dt | The date expression to be calculated |
+| `<dt>` | The date expression to be calculated |
 
 ## Return Value
 

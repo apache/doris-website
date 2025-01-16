@@ -31,19 +31,19 @@ Rounds the date up to the nearest specified time interval period.
 ## Syntax
 
 ```sql
-DATETIME DAY_CEIL(DATETIME datetime)
-DATETIME DAY_CEIL(DATETIME datetime, DATETIME origin)
-DATETIME DAY_CEIL(DATETIME datetime, INT period)
-DATETIME DAY_CEIL(DATETIME datetime, INT period, DATETIME origin)
+DAY_CEIL(<datetime>)
+DAY_CEIL(<datetime>, <origin>)
+DAY_CEIL(<datetime>, <period>)
+DAY_CEIL(<datetime>, <period>, <origin>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| datetime | A valid date expression |
-| period | Specifies how many days make up each period |
-| origin | The starting point of time. If not provided, the default is 0001-01-01T00:00:00 |
+| `<datetime>` | A valid date expression |
+| `<period>` | Specifies how many days make up each period |
+| `<origin>` | The starting point of time. If not provided, the default is 0001-01-01T00:00:00 |
 
 ## Return Value
 

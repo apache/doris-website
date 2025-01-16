@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 ## Description
 
 Calculates the name of the day corresponding to the given date expression.
@@ -31,15 +32,14 @@ Calculates the name of the day corresponding to the given date expression.
 ## Syntax
 
 ```sql
-VARCHAR DAYNAME(DATE dt)
-VARCHAR DAYNAME(DATETIME dt)
+DAYNAME(<dt>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| dt | The date expression to be calculated |
+| `<dt>` | The date expression to be calculated |
 
 ## Return Value
 

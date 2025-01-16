@@ -33,14 +33,14 @@ under the License.
 ## 语法
 
 ```sql
-DATE FROM_DAYS(INT N)
+FROM_DAYS(<dt>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| N | 天数 |
+| `<dt>` | 天数 |
 
 ## 返回值
 

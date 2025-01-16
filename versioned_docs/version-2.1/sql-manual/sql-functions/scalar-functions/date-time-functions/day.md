@@ -35,15 +35,14 @@ Obtain the day information from the date, with return values ranging from 1 to 3
 ## Syntax
 
 ```sql
-INT DAY(DATE date)
-INT DAY(DATETIME date)
+DAY(<dt>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| date | A valid date expression |
+| <`dt`> | A valid date expression |
 
 ## Return Value
 

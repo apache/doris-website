@@ -1,6 +1,6 @@
 ---
 {
-  "title": "hour_ceil",
+  "title": "HOUR_CEIL",
   "language": "zh-CN"
 }
 ---
@@ -31,19 +31,19 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME HOUR_CEIL(DATETIME datetime)
-DATETIME HOUR_CEIL(DATETIME datetime, DATETIME origin)
-DATETIME HOUR_CEIL(DATETIME datetime, INT period)
-DATETIME HOUR_CEIL(DATETIME datetime, INT period, DATETIME origin)
+HOUR_CEIL(<datetime>)
+HOUR_CEIL(<datetime>, <origin>)
+HOUR_CEIL(<datetime>, <period>)
+HOUR_CEIL(<datetime>, <period>, <origin>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| datetime | 合法的日期表达式 |
-| period | 指定每个周期有多少小时组成|
-| origin | 开始的时间起点，如果不填，默认是 0001-01-01T00:00:00 |
+| `<datetime>` | 合法的日期表达式 |
+| `<period>` | 指定每个周期有多少小时组成|
+| `<origin>` | 开始的时间起点，如果不填，默认是 0001-01-01T00:00:00 |
 
 ## 返回值
 

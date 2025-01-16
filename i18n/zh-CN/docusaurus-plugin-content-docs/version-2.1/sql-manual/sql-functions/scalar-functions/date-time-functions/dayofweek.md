@@ -31,15 +31,14 @@ under the License.
 ## 语法
 
 ```sql
-INT DAYOFWEEK(DATE date)
-INT DAYOFWEEK(DATETIME date)
+DAYOFWEEK(<dt>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| dt | 需要被计算的日期表达式 |
+| `<dt>` | 需要被计算的日期表达式 |
 
 ## 返回值
 

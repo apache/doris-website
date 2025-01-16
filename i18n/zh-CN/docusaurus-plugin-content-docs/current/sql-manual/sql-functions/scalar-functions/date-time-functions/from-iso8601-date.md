@@ -30,14 +30,14 @@ under the License.
 ## 语法
 
 ```sql
-DATE from_iso8601_date(VARCHAR date)
+from_iso8601_date(<dt>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| date | ISO8601 格式的日期 |
+| `<dt>` | ISO8601 格式的日期 |
 
 ## 返回值
 

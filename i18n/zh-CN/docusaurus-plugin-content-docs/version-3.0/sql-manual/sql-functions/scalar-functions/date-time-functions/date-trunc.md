@@ -31,15 +31,15 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME DATE_TRUNC(DATETIME datetime, VARCHAR unit)
+DATE_TRUNC(<datetime>, <time_unit>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| datetime | 合法的日期表达式 |
-| unit | 希望截断的时间间隔，可选的值如下：[`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`] |
+| `<datetime>` | 合法的日期表达式 |
+| `<time_unit>` | 希望截断的时间间隔，可选的值如下：[`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`] |
 
 ## 返回值
 

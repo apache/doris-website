@@ -32,16 +32,20 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME CONVERT_TZ(DATETIME dt, VARCHAR from_tz, VARCHAR to_tz)
+CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- | 
-| dt | 需要被转换的 datetime 值 |
-| from_tz | dt 的原始时区 |
-| to_tz | 需要转换的时区 |
+| `<dt>` | 需要被转换的 datetime 值 |
+| `<from_tz>` | dt 的原始时区 |
+| `<to_tz>` | 需要转换的时区 |
+
+## 返回值
+
+转换后的 datetime 值
 
 ## 示例
 
@@ -68,3 +72,5 @@ select CONVERT_TZ('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles');
 | 2019-07-31 22:21:03                                                |
 +--------------------------------------------------------------------+
 ```
+
+

@@ -31,15 +31,15 @@ under the License.
 ## 语法
 
 ```sql
-INT DATEDIFF(DATETIME expr1, DATETIME expr2)
+DATEDIFF(<expr1>, <expr2>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| expr1 | 日期被减数 |
-| expr2 | 日期减数 |
+| `<expr1>` | 日期被减数 |
+| `<expr2>` | 日期减数 |
 
 ## 返回值
 

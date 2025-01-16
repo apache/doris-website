@@ -32,15 +32,15 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME FROM_UNIXTIME(BIGINT unix_timestamp[, VARCHAR string_format])
+FROM_UNIXTIME(<unix_timestamp> [, <string_format>])
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| unix_timestamp | unix 时间戳 |
-| string_format | format 格式，默认为 %Y-%m-%d %H:%i:%s|
+| `<unix_timestamp>` | unix 时间戳 |
+| `<string_format>` | format 格式，默认为 %Y-%m-%d %H:%i:%s|
 
 ## 返回值
 

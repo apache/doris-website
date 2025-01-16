@@ -36,7 +36,7 @@ Retrieves the current time and returns it as a TIME type.
 ## Syntax
 
 ```sql
-TIME CURTIME()
+CURTIME()
 ```
 
 ## Return Value

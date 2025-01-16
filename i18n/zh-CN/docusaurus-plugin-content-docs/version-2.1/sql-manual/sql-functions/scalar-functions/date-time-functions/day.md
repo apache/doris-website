@@ -35,15 +35,14 @@ under the License.
 ## 语法
 
 ```sql
-INT DAY(DATE date)
-INT DAY(DATETIME date)
+DAY(<dt>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| date | 合法的日期表达式 |
+| `<dt>` | 合法的日期表达式 |
 
 ## 返回值
 

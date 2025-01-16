@@ -32,15 +32,15 @@ Calculates the difference between two given dates.
 ## Syntax
 
 ```sql
-INT DATEDIFF(DATETIME expr1, DATETIME expr2)
+DATEDIFF(<expr1>, <expr2>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| expr1 | The minuend (the date to be subtracted from) |
-| expr2 | The subtrahend (the date to subtract) |
+| `<expr1>` | The minuend (the date to be subtracted from) |
+| `<expr2>` | The subtrahend (the date to subtract) |
 
 ## Return Value
 

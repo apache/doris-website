@@ -33,14 +33,14 @@ Given a number of days, returns a DATE.
 ## Syntax
 
 ```sql
-DATE FROM_DAYS(INT N)
+FROM_DAYS(<dt>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| dt | Days |
+| `<dt>`| Days |
 
 ## Return Value
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "hour_floor",
+    "title": "HOUR_FLOOR",
     "language": "en"
 }
 ---
@@ -31,19 +31,19 @@ Converts the date to the nearest rounded-down timestamp of the specified time in
 ## Syntax
 
 ```sql
-DATETIME HOUR_FLOOR(DATETIME datetime)
-DATETIME HOUR_FLOOR(DATETIME datetime, DATETIME origin)
-DATETIME HOUR_FLOOR(DATETIME datetime, INT period)
-DATETIME HOUR_FLOOR(DATETIME datetime, INT period, DATETIME origin)
+HOUR_FLOOR(<datetime>)
+HOUR_FLOOR(<datetime>, <origin>)
+HOUR_FLOOR(<datetime>, <period>)
+HOUR_FLOOR(<datetime>, <period>, <origin>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| datetime | A valid date expression |
-| period | Specifies how many hours make up each period|
-| origin | The starting point of time. If not provided, the default is 0001-01-01T00:00:00 |
+| `<datetime>` | A valid date expression |
+| `<period>` | Specifies how many hours make up each period|
+| `<origin>` | The starting point of time. If not provided, the default is 0001-01-01T00:00:00 |
 
 ## Return Value
 
@@ -62,3 +62,4 @@ select hour_floor("2023-07-13 22:28:18", 5);
 | 2023-07-13 21:00:00                                         |
 +-------------------------------------------------------------+
 ```
+
