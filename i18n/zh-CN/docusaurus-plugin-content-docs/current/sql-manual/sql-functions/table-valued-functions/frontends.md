@@ -30,7 +30,7 @@ under the License.
 
 ## 语法
 ```sql
-frontends()
+FRONTENDS()
 ```
 
 ## 权限控制
@@ -39,10 +39,31 @@ frontends()
 | :----------------|:-----------| :------------ |
 | ADMIN_PRIV       | 全局         |               |
 
+## 返回值
+- **Name**：frontend 节点的唯一名称。
+- **Host**：frontend 节点的 IP 地址或主机名。
+- **EditLogPort**：用于编辑日志通信的端口。
+- **HttpPort**：frontend 节点的 HTTP 端口。
+- **QueryPort**：frontend 节点用于执行查询的端口。
+- **RpcPort**：用于 RPC 通信的端口。
+- **ArrowFlightSqlPort**：Arrow Flight SQL 端口（用于与 Apache Arrow 集成，进行高性能数据传输）。
+- **Role**：frontend 节点的角色（例如：`FOLLOWER`）。
+- **IsMaster**：表示该节点是否是主节点（true/false）。
+- **ClusterId**：该 frontend 节点所属集群的标识符。
+- **Join**：表示该 frontend 节点是否已经加入集群（true/false）。
+- **Alive**：表示该 frontend 节点是否存活（true/false）。
+- **ReplayedJournalId**：该 frontend 节点最后重放的日志 ID。
+- **LastStartTime**：该 frontend 节点最后一次启动的时间戳。
+- **LastHeartbeat**：该 frontend 节点接收到的最后一次心跳时间戳。
+- **IsHelper**：表示该 frontend 节点是否是辅助节点（true/false）。
+- **ErrMsg**：该 frontend 节点的错误信息。
+- **Version**：该 frontend 节点的版本。
+- **CurrentConnected**：表示该 frontend 节点当前是否连接到集群（Yes/No）。
+
+
 ## 示例
 查看 frontends 集群信息
 ```sql
-show frontends();
 select * from frontends();
 ```
 
@@ -52,34 +73,4 @@ select * from frontends();
 +-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
 | fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.xx.xx.90 | 9010        | 8030     | 9030      | 9020    | -1               | FOLLOWER | true     | 917153130 | true | true  | 555248            | 2025-01-13 14:11:31 | 2025-01-16 14:27:56 | true     |        | doris-0.0.0--83f899b32b | Yes              |
 +-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
-```
-
-frontends() 表结构：
-```sql
-desc function frontends();
-```
-```
-+--------------------+------+------+-------+---------+-------+
-| Field              | Type | Null | Key   | Default | Extra |
-+--------------------+------+------+-------+---------+-------+
-| Name               | text | No   | false | NULL    | NONE  |
-| Host               | text | No   | false | NULL    | NONE  |
-| EditLogPort        | text | No   | false | NULL    | NONE  |
-| HttpPort           | text | No   | false | NULL    | NONE  |
-| QueryPort          | text | No   | false | NULL    | NONE  |
-| RpcPort            | text | No   | false | NULL    | NONE  |
-| ArrowFlightSqlPort | text | No   | false | NULL    | NONE  |
-| Role               | text | No   | false | NULL    | NONE  |
-| IsMaster           | text | No   | false | NULL    | NONE  |
-| ClusterId          | text | No   | false | NULL    | NONE  |
-| Join               | text | No   | false | NULL    | NONE  |
-| Alive              | text | No   | false | NULL    | NONE  |
-| ReplayedJournalId  | text | No   | false | NULL    | NONE  |
-| LastStartTime      | text | No   | false | NULL    | NONE  |
-| LastHeartbeat      | text | No   | false | NULL    | NONE  |
-| IsHelper           | text | No   | false | NULL    | NONE  |
-| ErrMsg             | text | No   | false | NULL    | NONE  |
-| Version            | text | No   | false | NULL    | NONE  |
-| CurrentConnected   | text | No   | false | NULL    | NONE  |
-+--------------------+------+------+-------+---------+-------+
 ```
