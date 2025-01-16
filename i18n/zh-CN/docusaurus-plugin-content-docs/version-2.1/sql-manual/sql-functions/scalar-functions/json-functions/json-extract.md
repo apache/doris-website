@@ -86,7 +86,7 @@ JSON_EXTRACT_STRING(JSON j, VARCHAR json_path)
 
 ## 示例
 
-参考 [json tutorial](../../sql-reference/Data-Types/JSON.md) 中的示例
+参考 [json tutorial](../../../sql-data-types/semi-structured/JSON.md) 中的示例
 
 ```sql
 SELECT json_extract('{"id": 123, "name": "doris"}', '$.id');
