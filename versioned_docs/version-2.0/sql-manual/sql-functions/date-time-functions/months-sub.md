@@ -29,7 +29,7 @@ The MONTHS_SUB function is used to add or subtract a specified number of months 
 
 ## Syntax
 
-`DATETIME MONTHS_SUB(DATETIME/DATE <datetime/date>, INT <nums>)`
+`DATETIME MONTHS_SUB(<datetime/date>,  <nums>)`
 
 ## Parameters
 
@@ -57,7 +57,3 @@ select months_sub("2020-01-31 02:02:02", 1),months_sub("2020-01-31", 1),months_s
 | 2019-12-31 02:02:02                                         | 2019-12-31                                  | 2020-02-29                                   |
 +-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
 ```
-
-## keywords
-
-    MONTHS_SUB,months_sub

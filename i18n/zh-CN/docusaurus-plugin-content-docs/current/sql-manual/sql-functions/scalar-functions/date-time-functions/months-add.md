@@ -29,7 +29,7 @@ MONTHS_ADD 函数用于对指定日期添加或减去指定的月份数，并返
 
 ## 语法
 
-`DATETIME MONTHS_ADD(DATETIME/DATE <datetime/date>, INT <nums>)`
+`DATETIME MONTHS_ADD(<datetime/date>, <nums>)`
 
 ## 参数
 
@@ -58,7 +58,3 @@ select months_add("2020-01-31 02:02:02", 1),months_add("2020-01-31", 1),months_a
 | 2020-02-29 02:02:02                                         | 2020-02-29                                  | 2019-12-31                                   |
 +-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
 ```
-
-## keywords
-
-    MONTHS_ADD,months_add

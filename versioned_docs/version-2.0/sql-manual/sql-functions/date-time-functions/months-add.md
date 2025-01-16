@@ -29,7 +29,7 @@ The MONTHS_ADD function is used to add or subtract a specified number of months 
 
 ## Syntax
 
-`DATETIME MONTHS_ADD(DATETIME/DATE <datetime/date>, INT <nums>)`
+`DATETIME MONTHS_ADD(<datetime/date>, <nums>)`
 
 ## Parameters
 
@@ -57,7 +57,3 @@ select months_add("2020-01-31 02:02:02", 1),months_add("2020-01-31", 1),months_a
 | 2020-02-29 02:02:02                                         | 2020-02-29                                  | 2019-12-31                                   |
 +-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
 ```
-
-## keywords
-
-    MONTHS_ADD,months_add

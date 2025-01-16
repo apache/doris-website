@@ -29,7 +29,7 @@ MONTHS_SUB 函数用于对指定日期添加或减去指定的月份数，并返
 
 ## 语法
 
-`DATETIME MONTHS_SUB(DATETIME/DATE <datetime/date>, INT <nums>)`
+`DATETIME MONTHS_SUB(<datetime/date>,  <nums>)`
 
 ## 参数
 
@@ -58,7 +58,3 @@ select months_sub("2020-01-31 02:02:02", 1),months_sub("2020-01-31", 1),months_s
 | 2019-12-31 02:02:02                                         | 2019-12-31                                  | 2020-02-29                                   |
 +-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
 ```
-
-## keywords
-
-    MONTHS_SUB,months_sub
