@@ -24,18 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_map
-
-array_map(lambda,array,....)
-
 ### description
+
+Use a lambda expression as the input parameter to calculate the corresponding expression for the internal data of other input ARRAY parameters.
+The number of parameters entered the lambda expression is 1 or more, which must be consistent with the number of input array columns.
+The scalar functions can be executed in lambda, and aggregate functions are not supported.
 
 #### Syntax
 `ARRAY<T> array_map(lambda, ARRAY<T> array1, ARRAY<T> array2)`
-
-Use a lambda expression as the input parameter to calculate the corresponding expression for the internal data of other input ARRAY parameters.
-The number of parameters entered in the lambda expression is 1 or more, which must be consistent with the number of input array columns.
-The scalar functions can be executed in lambda, and aggregate functions are not supported.
 
 ```
 array_map(x->x, array1);
@@ -49,9 +45,27 @@ array_map((x,y,z)->(abs(x)+y*z), array1, array2, array3);
 
 ### example
 
-```shell
-
-mysql [test]>select *, array_map(x->x,[1,2,3]) from array_test2 order by id;
+```sql
+CREATE TABLE array_test2 (
+                             id INT,
+                             c_array1 ARRAY<INT>,
+                             c_array2 ARRAY<INT>
+)
+    duplicate key (id)
+distributed by hash(id) buckets 1
+properties(
+    'replication_num' = '1'
+    );
+INSERT INTO array_test2 (id, c_array1, c_array2) VALUES
+                                                     (1, [1, 2, 3, 4, 5], [10, 20, -40, 80, -100]),
+                                                     (2, [6, 7, 8], [10, 12, 13]),
+                                                     (3, [1], [-100]),
+                                                     (4, NULL, NULL);
+```
+```sql
+select *, array_map(x->x,[1,2,3]) from array_test2 order by id;
+```
+```text
 +------+-----------------+-------------------------+----------------------------------------+
 | id   | c_array1        | c_array2                | array_map([x] -> x(0), ARRAY(1, 2, 3)) |
 +------+-----------------+-------------------------+----------------------------------------+
@@ -60,9 +74,11 @@ mysql [test]>select *, array_map(x->x,[1,2,3]) from array_test2 order by id;
 |    3 | [1]             | [-100]                  | [1, 2, 3]                              |
 |    4 | NULL            | NULL                    | [1, 2, 3]                              |
 +------+-----------------+-------------------------+----------------------------------------+
-4 rows in set (0.02 sec)
-
-mysql [test]>select *, array_map(x->x+2,[1,2,3]) from array_test2 order by id;
+```
+```sql
+select *, array_map(x->x+2,[1,2,3]) from array_test2 order by id;
+```
+```text
 +------+-----------------+-------------------------+--------------------------------------------+
 | id   | c_array1        | c_array2                | array_map([x] -> x(0) + 2, ARRAY(1, 2, 3)) |
 +------+-----------------+-------------------------+--------------------------------------------+
@@ -71,9 +87,12 @@ mysql [test]>select *, array_map(x->x+2,[1,2,3]) from array_test2 order by id;
 |    3 | [1]             | [-100]                  | [3, 4, 5]                                  |
 |    4 | NULL            | NULL                    | [3, 4, 5]                                  |
 +------+-----------------+-------------------------+--------------------------------------------+
-4 rows in set (0.02 sec)
+```
 
-mysql [test]>select c_array1, c_array2, array_map(x->x,[1,2,3]) from array_test2 order by id;
+```sql
+select c_array1, c_array2, array_map(x->x,[1,2,3]) from array_test2 order by id;
+```
+```text
 +-----------------+-------------------------+----------------------------------------+
 | c_array1        | c_array2                | array_map([x] -> x(0), ARRAY(1, 2, 3)) |
 +-----------------+-------------------------+----------------------------------------+
@@ -82,9 +101,11 @@ mysql [test]>select c_array1, c_array2, array_map(x->x,[1,2,3]) from array_test2
 | [1]             | [-100]                  | [1, 2, 3]                              |
 | NULL            | NULL                    | [1, 2, 3]                              |
 +-----------------+-------------------------+----------------------------------------+
-4 rows in set (0.01 sec)
-
-mysql [test]>select c_array1, c_array2, array_map(x->power(x,2),[1,2,3]) from array_test2 order by id;
+```
+```sql
+select c_array1, c_array2, array_map(x->power(x,2),[1,2,3]) from array_test2 order by id;
+```
+```text
 +-----------------+-------------------------+----------------------------------------------------+
 | c_array1        | c_array2                | array_map([x] -> power(x(0), 2.0), ARRAY(1, 2, 3)) |
 +-----------------+-------------------------+----------------------------------------------------+
@@ -93,8 +114,11 @@ mysql [test]>select c_array1, c_array2, array_map(x->power(x,2),[1,2,3]) from ar
 | [1]             | [-100]                  | [1, 4, 9]                                          |
 | NULL            | NULL                    | [1, 4, 9]                                          |
 +-----------------+-------------------------+----------------------------------------------------+
-
-mysql [test]>select c_array1, c_array2, array_map((x,y)->x+y,c_array1,c_array2) from array_test2 order by id;
+```
+```sql
+select c_array1, c_array2, array_map((x,y)->x+y,c_array1,c_array2) from array_test2 order by id;
+```
+```text
 +-----------------+-------------------------+----------------------------------------------------------+
 | c_array1        | c_array2                | array_map([x, y] -> x(0) + y(1), `c_array1`, `c_array2`) |
 +-----------------+-------------------------+----------------------------------------------------------+
@@ -103,9 +127,12 @@ mysql [test]>select c_array1, c_array2, array_map((x,y)->x+y,c_array1,c_array2) 
 | [1]             | [-100]                  | [-99]                                                    |
 | NULL            | NULL                    | NULL                                                     |
 +-----------------+-------------------------+----------------------------------------------------------+
-4 rows in set (0.02 sec)
+```
 
-mysql [test]>select c_array1, c_array2, array_map((x,y)->power(x,2)+y,c_array1, c_array2) from array_test2 order by id;
+```sql
+select c_array1, c_array2, array_map((x,y)->power(x,2)+y,c_array1, c_array2) from array_test2 order by id;
+```
+```text
 +-----------------+-------------------------+----------------------------------------------------------------------+
 | c_array1        | c_array2                | array_map([x, y] -> power(x(0), 2.0) + y(1), `c_array1`, `c_array2`) |
 +-----------------+-------------------------+----------------------------------------------------------------------+
@@ -114,9 +141,12 @@ mysql [test]>select c_array1, c_array2, array_map((x,y)->power(x,2)+y,c_array1, 
 | [1]             | [-100]                  | [-99]                                                                |
 | NULL            | NULL                    | NULL                                                                 |
 +-----------------+-------------------------+----------------------------------------------------------------------+
-4 rows in set (0.03 sec)
+```
 
-mysql [test]>select *,array_map(x->x=3,c_array1) from array_test2 order by id;
+```sql
+select *,array_map(x->x=3,c_array1) from array_test2 order by id;
+```
+```text
 +------+-----------------+-------------------------+----------------------------------------+
 | id   | c_array1        | c_array2                | array_map([x] -> x(0) = 3, `c_array1`) |
 +------+-----------------+-------------------------+----------------------------------------+
@@ -125,9 +155,12 @@ mysql [test]>select *,array_map(x->x=3,c_array1) from array_test2 order by id;
 |    3 | [1]             | [-100]                  | [0]                                    |
 |    4 | NULL            | NULL                    | NULL                                   |
 +------+-----------------+-------------------------+----------------------------------------+
-4 rows in set (0.02 sec)
+```
 
-mysql [test]>select *,array_map(x->x>3,c_array1) from array_test2 order by id;
+```sql
+select *,array_map(x->x>3,c_array1) from array_test2 order by id;
+```
+```text
 +------+-----------------+-------------------------+----------------------------------------+
 | id   | c_array1        | c_array2                | array_map([x] -> x(0) > 3, `c_array1`) |
 +------+-----------------+-------------------------+----------------------------------------+
@@ -136,9 +169,12 @@ mysql [test]>select *,array_map(x->x>3,c_array1) from array_test2 order by id;
 |    3 | [1]             | [-100]                  | [0]                                    |
 |    4 | NULL            | NULL                    | NULL                                   |
 +------+-----------------+-------------------------+----------------------------------------+
-4 rows in set (0.02 sec)
+```
 
-mysql [test]>select *,array_map((x,y)->x>y,c_array1,c_array2) from array_test2 order by id;
+```sql
+select *,array_map((x,y)->x>y,c_array1,c_array2) from array_test2 order by id;
+```
+```text
 +------+-----------------+-------------------------+----------------------------------------------------------+
 | id   | c_array1        | c_array2                | array_map([x, y] -> x(0) > y(1), `c_array1`, `c_array2`) |
 +------+-----------------+-------------------------+----------------------------------------------------------+
@@ -147,9 +183,11 @@ mysql [test]>select *,array_map((x,y)->x>y,c_array1,c_array2) from array_test2 o
 |    3 | [1]             | [-100]                  | [1]                                                      |
 |    4 | NULL            | NULL                    | NULL                                                     |
 +------+-----------------+-------------------------+----------------------------------------------------------+
-4 rows in set (0.02 sec)
-
-mysql [test]>select array_map(x->cast(x as string), c_array1) from test_array_map_function;
+```
+```sql
+select array_map(x->cast(x as string), c_array1) from test_array_map_function;
+```
+```text
 +-----------------+-------------------------------------------------------+
 | c_array1        | array_map([x] -> CAST(x(0) AS CHARACTER), `c_array1`) |
 +-----------------+-------------------------------------------------------+
@@ -158,7 +196,6 @@ mysql [test]>select array_map(x->cast(x as string), c_array1) from test_array_ma
 | []              | []                                                    |
 | NULL            | NULL                                                  |
 +-----------------+-------------------------------------------------------+
-4 rows in set (0.01 sec)
 ```
 
 ### keywords

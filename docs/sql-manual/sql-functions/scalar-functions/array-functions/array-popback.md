@@ -22,28 +22,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_popback
-
-array_popback
-
 ### description
+
+Remove the last element from array.
 
 #### Syntax
 
 `ARRAY<T> array_popback(ARRAY<T> arr)`
 
-Remove the last element from array.
-
 ### example
 
+```sql
+select array_popback(['test', NULL, 'value']);
 ```
-mysql> select array_popback(['test', NULL, 'value']);
+
+```text
 +-----------------------------------------------------+
 | array_popback(ARRAY('test', NULL, 'value'))         |
 +-----------------------------------------------------+
-| [test, NULL]                                        |
+| ["test", NULL]                                        |
 +-----------------------------------------------------+
-
 ```
 
 ### keywords
