@@ -24,64 +24,54 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `frontends`
+## description
 
-### Name
+The `frontends_disks` table function generates a temporary table, allowing you to view the disk information of FE nodes in the current Doris cluster.
 
-frontends
+This function can be used in the `FROM` clause.
 
-### description
-
-Table-Value-Function, generate a temporary table named `frontends_disks`. This tvf is used to view the information of FE nodes 's disks in the doris cluster.
-
-This function is used in `FROM` clauses.
-
-#### syntax
-
-`frontends_disks()`
-
-The table schema of `frontends_disks()` tvf：
-```
-mysql> desc function frontends_disks();
-+-------------+------+------+-------+---------+-------+
-| Field       | Type | Null | Key   | Default | Extra |
-+-------------+------+------+-------+---------+-------+
-| Name        | TEXT | No   | false | NULL    | NONE  |
-| Host        | TEXT | No   | false | NULL    | NONE  |
-| DirType     | TEXT | No   | false | NULL    | NONE  |
-| Dir         | TEXT | No   | false | NULL    | NONE  |
-| Filesystem  | TEXT | No   | false | NULL    | NONE  |
-| Capacity    | TEXT | No   | false | NULL    | NONE  |
-| Used        | TEXT | No   | false | NULL    | NONE  |
-| Available   | TEXT | No   | false | NULL    | NONE  |
-| UseRate     | TEXT | No   | false | NULL    | NONE  |
-| MountOn     | TEXT | No   | false | NULL    | NONE  |
-+-------------+------+------+-------+---------+-------+
-11 rows in set (0.14 sec)
+## syntax
+```sql
+FRONTENDS_DISK()
 ```
 
-The information displayed by the `frontends_disks` tvf is basically consistent with the information displayed by the `show frontends disks` statement. However, the types of each field in the `frontends_disks` tvf are more specific, and you can use the `frontends_disks` tvf to perform operations such as filtering and joining.
+## Access Control Requirements
 
-The information displayed by the `frontends_disks` tvf is authenticated, which is consistent with the behavior of `show frontends disks`, user must have ADMIN/OPERATOR privelege.
+| Privilege  | Object | Notes |
+| :--------- |:-------|:------|
+| ADMIN_PRIV | global |       |
 
-### example
+
+## Return Value
+- **Name**: Name of the FE node.
+- **Host**: IP address of the FE node.
+- **DirType**: Type of disk directory (e.g., `meta`, `log`).
+- **Dir**: Path to the disk directory.
+- **Filesystem**: Filesystem type of the disk.
+- **Capacity**: Total capacity of the disk.
+- **Used**: Used space of the disk.
+- **Available**: Available space on the disk.
+- **UseRate**: Disk usage percentage.
+- **MountOn**: Mount path of the disk.
+
+
+## Usage Notes
+- The information displayed by the `frontends_disks` tvf is basically consistent with the information displayed by the `show frontends disks` statement. However, the types of each field in the `frontends_disks` tvf are more specific, and you can use the `frontends_disks` tvf to perform operations such as filtering and joining.
+
+- The information displayed by the `frontends_disks` tvf is authenticated, which is consistent with the behavior of `show frontends disks`.
+
+## example
+```sql
+select * from frontends_disks();
 ```
-mysql> select * from frontends_disk()\G
-*************************** 1. row ***************************
-       Name: fe_fe1d5bd9_d1e5_4ccc_9b03_ca79b95c9941
-       Host: 172.XX.XX.1
-    DirType: log
-        Dir: /data/doris/fe-github/log
- Filesystem: /dev/sdc5
-   Capacity: 366G
-       Used: 119G
-  Available: 228G
-    UseRate: 35%
-    MountOn: /data
-......    
-12 row in set (0.03 sec)
+```text
++-----------------------------------------+------------+-----------+-----------------------------------------------------------+--------------+----------+------+-----------+---------+------------+
+| Name                                    | Host       | DirType   | Dir                                                       | Filesystem   | Capacity | Used | Available | UseRate | MountOn    |
++-----------------------------------------+------------+-----------+-----------------------------------------------------------+--------------+----------+------+-----------+---------+------------+
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | meta      | /mnt/disk2/doris/fe/doris-meta | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | log       | /mnt/disk2/doris/fe/log        | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | audit-log | /mnt/disk2/doris/fe/log        | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | temp      | /mnt/disk2/doris/fe/temp_dir   | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | deploy    | /mnt/disk2/doris/fe            | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
++-----------------------------------------+------------+-----------+-----------------------------------------------------------+--------------+----------+------+-----------+---------+------------+
 ```
-
-### keywords
-
-    frontends_disks

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "frontends_disks",
+    "title": "FRONTENDS_DISK",
     "language": "zh-CN"
 }
 ---
@@ -24,63 +24,54 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `frontends_disks`
-
-### Name
-
-frontends_disks
-
 ## 描述
 
-表函数，生成 frontends_disks 临时表，可以查看当前 doris 集群中的 FE 节点的磁盘信息。
+`frontends_disks` 表函数会生成一个临时表，允许查看当前 Doris 集群中 FE 节点的磁盘信息。
 
-该函数用于 from 子句中。
+该函数可用于 `FROM` 子句中。
+
 
 ## 语法
-`frontends_disks()`
-
-frontends_disks() 表结构：
-```
-mysql> desc function frontends_disks();
-+-------------+------+------+-------+---------+-------+
-| Field       | Type | Null | Key   | Default | Extra |
-+-------------+------+------+-------+---------+-------+
-| Name        | TEXT | No   | false | NULL    | NONE  |
-| Host        | TEXT | No   | false | NULL    | NONE  |
-| DirType     | TEXT | No   | false | NULL    | NONE  |
-| Dir         | TEXT | No   | false | NULL    | NONE  |
-| Filesystem  | TEXT | No   | false | NULL    | NONE  |
-| Capacity    | TEXT | No   | false | NULL    | NONE  |
-| Used        | TEXT | No   | false | NULL    | NONE  |
-| Available   | TEXT | No   | false | NULL    | NONE  |
-| UseRate     | TEXT | No   | false | NULL    | NONE  |
-| MountOn     | TEXT | No   | false | NULL    | NONE  |
-+-------------+------+------+-------+---------+-------+
-11 rows in set (0.14 sec)
+```sql
+FRONTENDS_DISK()
 ```
 
-`frontends_disks()` tvf 展示出来的信息基本与 `show frontends disks` 语句展示出的信息一致，但是 `frontends_disks()` tvf 的各个字段类型更加明确，且可以利用 tvf 生成的表去做过滤、join 等操作。
+## 权限控制
 
-对 `frontends_disks()` tvf 信息展示进行了鉴权，与 `show frontends disks` 行为保持一致，要求用户具有 ADMIN/OPERATOR 权限。
+| 权限（Privilege） | 对象（Object） | 说明（Notes） |
+| :----------------|:-----------| :------------ |
+| ADMIN_PRIV       | 全局         |               |
 
-## 举例
+## 返回值
+- **Name**：FE 节点的名称。
+- **Host**：FE 节点的 IP 地址。
+- **DirType**：磁盘目录的类型（如 `meta`、`log` 等）。
+- **Dir**：磁盘目录的路径。
+- **Filesystem**：磁盘的文件系统类型。
+- **Capacity**：磁盘的总容量。
+- **Used**：磁盘已用空间。
+- **Available**：磁盘可用空间。
+- **UseRate**：磁盘使用率。
+- **MountOn**：磁盘挂载路径。
+
+## 注意事项
+
+- `frontends_disks()` tvf 展示出来的信息基本与 `show frontends disks` 语句展示出的信息一致，但是 `frontends_disks()` tvf 的各个字段类型更加明确，且可以利用 tvf 生成的表去做过滤、join 等操作。
+- 对 `frontends_disks()` tvf 信息展示进行了鉴权，与 `show frontends disks` 行为保持一致。
+
+## 示例
+查看 doris 集群 frontends 的磁盘信息
+```sql
+select * from frontends_disks();
 ```
-mysql> select * from frontends_disk()\G
-*************************** 1. row ***************************
-       Name: fe_fe1d5bd9_d1e5_4ccc_9b03_ca79b95c9941
-       Host: 172.XX.XX.1
-    DirType: log
-        Dir: /data/doris/fe-github/log
- Filesystem: /dev/sdc5
-   Capacity: 366G
-       Used: 119G
-  Available: 228G
-    UseRate: 35%
-    MountOn: /data
-......    
-12 row in set (0.03 sec)
+```text
++-----------------------------------------+------------+-----------+-----------------------------------------------------------+--------------+----------+------+-----------+---------+------------+
+| Name                                    | Host       | DirType   | Dir                                                       | Filesystem   | Capacity | Used | Available | UseRate | MountOn    |
++-----------------------------------------+------------+-----------+-----------------------------------------------------------+--------------+----------+------+-----------+---------+------------+
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | meta      | /mnt/disk2/doris/fe/doris-meta | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | log       | /mnt/disk2/doris/fe/log        | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | audit-log | /mnt/disk2/doris/fe/log        | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | temp      | /mnt/disk2/doris/fe/temp_dir   | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | deploy    | /mnt/disk2/doris/fe            | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
++-----------------------------------------+------------+-----------+-----------------------------------------------------------+--------------+----------+------+-----------+---------+------------+
 ```
-
-### keywords
-
-    frontends_disks
