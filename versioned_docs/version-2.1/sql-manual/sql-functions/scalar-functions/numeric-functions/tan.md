@@ -22,30 +22,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## tan
+## Description
 
-### description
-#### Syntax
+Returns the tangent of x, where x is the value in radians.
 
-`DOUBLE tan(DOUBLE x)`
-Returns the tangent of `x`, where `x` is in radians.
+## Syntax
 
-### example
-
-```
-mysql> select tan(0);
-+----------+
-| tan(0.0) |
-+----------+
-|        0 |
-+----------+
-mysql> select tan(1);
-+--------------------+
-| tan(1.0)           |
-+--------------------+
-| 1.5574077246549023 |
-+--------------------+
+```sql
+tan(DOUBLE <x>)
 ```
 
-### keywords
-	TAN
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<x>` | The value for which the tangent is to be calculated |
+
+## Return Value
+
+Returns the tangent of x.
+
+## Example
+
+```sql
+select tan(0),tan(1),tan(-1);
+```
+
+```text
++------------------------+------------------------+-------------------------+
+| tan(cast(0 as DOUBLE)) | tan(cast(1 as DOUBLE)) | tan(cast(-1 as DOUBLE)) |
++------------------------+------------------------+-------------------------+
+|                      0 |     1.5574077246549023 |     -1.5574077246549023 |
++------------------------+------------------------+-------------------------+
+```

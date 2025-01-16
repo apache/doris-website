@@ -22,40 +22,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sqrt
+## Description
 
-### description
-#### Syntax
+Returns the square root of a value, where the input value must be greater than or equal to 0. Special cases:
 
-`DOUBLE sqrt(DOUBLE x)`
-Returns the square root of `x`.`x` is required to be greater than or equal to `0`.
+- If the parameter is less than 0, returns NULL.
 
-:::tip
-Another alias for this function is `dsqrt`.
-:::
+## Aliases
 
-### example
+DSQRT
 
-```
-mysql> select sqrt(9);
-+-----------+
-| sqrt(9.0) |
-+-----------+
-|         3 |
-+-----------+
-mysql> select sqrt(2);
-+--------------------+
-| sqrt(2.0)          |
-+--------------------+
-| 1.4142135623730951 |
-+--------------------+
-mysql> select sqrt(100.0);
-+-------------+
-| sqrt(100.0) |
-+-------------+
-|          10 |
-+-------------+
+## Syntax
+
+```sql
+sqrt(DOUBLE <a>)
 ```
 
-### keywords
-	SQRT, DSQRT
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<a>` | The value whose square root is to be calculated |
+
+## Return Value
+
+The square root of parameter a. Special cases:
+
+- If the parameter is less than 0, returns NULL
+
+## Example
+
+```sql
+select sqrt(9),sqrt(2),sqrt(-1)
+```
+
+```text
++-------------------------+-------------------------+--------------------------+
+| sqrt(cast(9 as DOUBLE)) | sqrt(cast(2 as DOUBLE)) | sqrt(cast(-1 as DOUBLE)) |
++-------------------------+-------------------------+--------------------------+
+|                       3 |      1.4142135623730951 |                     NULL |
++-------------------------+-------------------------+--------------------------+
+```
