@@ -1,7 +1,7 @@
 ---
 {
-"title": "ICEBERG_META",
-"language": "zh-CN"
+  "title": "ICEBERG_META",
+  "language": "zh-CN"
 }
 ---
 
@@ -33,19 +33,18 @@ iceberg_meta 表函数（table-valued-function,tvf），可以用于读取 icebe
 ICEBERG_META(
     "table" = "<table>", 
     "query_type" = "<snapshots>"
-    [, ...]
   );
 ```
 
 ## 必填参数
+iceberg_meta 表函数 tvf 中的每一个参数都是一个 `"key"="value"` 对
+
 **1. `<table>`**
 - `table`： 完整的表名，需要按照目录名。库名。表名的格式，填写需要查看的 iceberg 表名。
 
 **2. `<query_type>`**
 - `query_type`： 想要查看的元数据类型，目前仅支持 snapshots。
 
-## 注意事项（Usage Notes）
-- iceberg_meta 表函数 tvf 中的每一个参数都是一个 `"key"="value"` 对
 
 ## 示例（Examples）
 

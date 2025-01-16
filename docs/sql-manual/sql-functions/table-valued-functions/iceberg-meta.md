@@ -1,7 +1,7 @@
 ---
 {
-"title": "ICEBERG_META",
-"language": "en"
+  "title": "ICEBERG_META",
+  "language": "en"
 }
 ---
 
@@ -33,19 +33,17 @@ iceberg_meta table-valued-function(tvf), Use for read iceberg metadata, operatio
 ICEBERG_META(
     "table" = "<table>", 
     "query_type" = "<snapshots>"
-    [, ...]
   );
 ```
 
 ## Required Parameters
+Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` pair.
+
 **1. `<table>`**
 - `table`: The full table name, which must be specified in the format of `database_name.table_name` for the Iceberg table that you want to view.
 
 **2. `<query_type>`**
 - `query_type`: The type of metadata you want to view. Currently, only `snapshots` is supported.
-
-## Usage Notes
-- Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` pair.
 
 ### Example
 
