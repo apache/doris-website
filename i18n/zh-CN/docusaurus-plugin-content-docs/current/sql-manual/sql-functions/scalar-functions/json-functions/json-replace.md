@@ -29,14 +29,14 @@ under the License.
 
 ## 语法
 ```sql
-JSON_REPLACE(VARCHAR json_str, VARCHAR path, VARCHAR val[, VARCHAR path, VARCHAR val]...)
+JSON_REPLACE(<json_str>, <path>, <val>[, <jsonPath>, <val>]...)
 ```
 ## 参数
-| 参数 | 描述                                                                                          |
-|------|---------------------------------------------------------------------------------------------|
-| `json_str` | 要替换的 JSON 数据。可以是任意类型元素的 JSON 对象，包括`NULL`，如果没有指定元素，则返回一个空数组。如果 `json_str` 不是有效的 JSON，则会返回错误 |
-| `path` | 要替换的 JSON 路径。                                                          |
-| `val` | 要替换 JSON_PATH Key 对应 value 的值。如果是 `NULL` ，则会在对应的位置插入 `NULL` 的 value 值。                      |
+| 参数           | 描述                                                                                          |
+|--------------|---------------------------------------------------------------------------------------------|
+| `<json_str>`  | 要替换的 JSON 数据。可以是任意类型元素的 JSON 对象，包括`NULL`，如果没有指定元素，则返回一个空数组。如果 `json_str` 不是有效的 JSON，则会返回错误 |
+| `<path>` | 要替换的 JSON 路径。                                                          |
+| `<val>`      | 要替换 JSON_PATH Key 对应 value 的值。如果是 `NULL` ，则会在对应的位置插入 `NULL` 的 value 值。                      |
 
 
 ## 返回值

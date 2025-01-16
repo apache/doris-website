@@ -38,38 +38,38 @@ JSON_EXTRACT 是一系列函数，从 JSON 类型的数据中提取 json_path �
 
 ## 语法
 ```sql
-JSON_EXTRACT(VARCHAR json_str, VARCHAR path[, VARCHAR path] ...)
+JSON_EXTRACT(<json_str>, <path>[, path] ...)
 ```
 ```sql
-JSONB_EXTRACT(JSON j, VARCHAR json_path)
+JSONB_EXTRACT(<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_ISNULL(JSON j, VARCHAR json_path)
+JSON_EXTRACT_ISNULL(<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_BOOL(JSON j, VARCHAR json_path)
+JSON_EXTRACT_BOOL(<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_INT(JSON j, VARCHAR json_path)
+JSON_EXTRACT_INT(<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_BIGINT(JSON j, VARCHAR json_path)
+JSON_EXTRACT_BIGINT(<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_LARGEINT(JSON j, VARCHAR json_path)
+JSON_EXTRACT_LARGEINT(<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_DOUBLE(JSON j, VARCHAR json_path)
+JSON_EXTRACT_DOUBLE(<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_STRING(JSON j, VARCHAR json_path)
+JSON_EXTRACT_STRING(<json_str>, <path>)
 ```
 
 ## 参数
-| 参数            | 描述                          |
-|---------------|-----------------------------|
-| `json j`      | 要提取的 JSON 类型的参数或者字段         |
-|   `json_path` | 要从目标 JSON 中提取目标元素的 JSON 路径。 |
+| 参数           | 描述                          |
+|--------------|-----------------------------|
+| `<json_str>` | 要提取的 JSON 类型的参数或者字段         |
+| `<path>`     | 要从目标 JSON 中提取目标元素的 JSON 路径。 |
 
 `json_path` 的语法如下
 * '$' 代表 json root

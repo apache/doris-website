@@ -32,15 +32,15 @@ under the License.
 ## 语法
 
 ```sql
-JSON_OBJECT(key,value[,key,value...])
+JSON_OBJECT(<key>, <value>[,<key>, <value>...])
 ```
 
 ## 参数
 
 | 参数      | 描述                                       |
 |---------|------------------------------------------|
-| `key`   | 指定生成的 json object 的 Key-Value 中的 Key 值   |
-| `value` | 指定生成的 json object 的 Key-Value 中的 Value 值 |
+| `<key>`   | 指定生成的 json object 的 Key-Value 中的 Key 值   |
+| `<value>` | 指定生成的 json object 的 Key-Value 中的 Value 值 |
 
 ## 返回值
 
