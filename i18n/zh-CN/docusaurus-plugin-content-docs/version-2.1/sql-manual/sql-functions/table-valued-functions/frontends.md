@@ -24,24 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `frontends`
-
-### Name
-
-frontends
-
 ## 描述
 
 表函数，生成 frontends 临时表，可以查看当前 doris 集群中的 FE 节点信息。
 
-该函数用于 from 子句中。
-
 ## 语法
-`frontends()`
+```sql
+frontends()
+```
+
+## 权限控制
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes） |
+| :----------------|:-----------| :------------ |
+| ADMIN_PRIV       | 全局         |               |
+
+## 示例
+查看 frontends 集群信息
+```sql
+show frontends();
+select * from frontends();
+```
+
+```text
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
+| Name                                    | Host       | EditLogPort | HttpPort | QueryPort | RpcPort | ArrowFlightSqlPort | Role     | IsMaster | ClusterId | Join | Alive | ReplayedJournalId | LastStartTime       | LastHeartbeat       | IsHelper | ErrMsg | Version                 | CurrentConnected |
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.xx.xx.90 | 9010        | 8030     | 9030      | 9020    | -1               | FOLLOWER | true     | 917153130 | true | true  | 555248            | 2025-01-13 14:11:31 | 2025-01-16 14:27:56 | true     |        | doris-0.0.0--83f899b32b | Yes              |
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
+```
 
 frontends() 表结构：
+```sql
+desc function frontends();
 ```
-mysql> desc function frontends();
+```
 +-------------------+------+------+-------+---------+-------+
 | Field             | Type | Null | Key   | Default | Extra |
 +-------------------+------+------+-------+---------+-------+
@@ -64,38 +81,4 @@ mysql> desc function frontends();
 | Version           | TEXT | No   | false | NULL    | NONE  |
 | CurrentConnected  | TEXT | No   | false | NULL    | NONE  |
 +-------------------+------+------+-------+---------+-------+
-17 rows in set (0.022 sec)
 ```
-
-`frontends()` tvf 展示出来的信息基本与 `show frontends` 语句展示出的信息一致，但是 `frontends()` tvf 的各个字段类型更加明确，且可以利用 tvf 生成的表去做过滤、join 等操作。
-
-对 `frontends()` tvf 信息展示进行了鉴权，与 `show frontends` 行为保持一致，要求用户具有 ADMIN/OPERATOR 权限。
-
-## 举例
-```
-mysql> select * from frontends()\G
-*************************** 1. row ***************************
-             Name: fe_5fa8bf19_fd6b_45cb_89c5_25a5ebc45582
-               IP: 10.xx.xx.14
-      EditLogPort: 9013
-         HttpPort: 8034
-        QueryPort: 9033
-          RpcPort: 9023
-ArrowFlightSqlPort: 9040
-             Role: FOLLOWER
-         IsMaster: true
-        ClusterId: 1258341841
-             Join: true
-            Alive: true
-ReplayedJournalId: 186
-    LastHeartbeat: 2023-06-15 16:53:12
-         IsHelper: true
-           ErrMsg: 
-          Version: doris-0.0.0-trunk-4b18cde0c7
- CurrentConnected: Yes
-1 row in set (0.060 sec)
-```
-
-### keywords
-
-    frontends

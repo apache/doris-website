@@ -24,79 +24,62 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `frontends`
+## Description
 
-### Name
+The table function generates the frontends temporary table, which allows you to view the FE node information in the current doris cluster.
 
-frontends
-
-### description
-
-Table-Value-Function, generate a temporary table named `frontends`. This tvf is used to view the information of BE nodes in the doris cluster.
-
-This function is used in `FROM` clauses.
-
-#### syntax
-
-`frontends()`
-
-The table schema of `frontends()` tvf：
-```
-mysql> desc function frontends();
-+-------------------+------+------+-------+---------+-------+
-| Field             | Type | Null | Key   | Default | Extra |
-+-------------------+------+------+-------+---------+-------+
-| Name              | TEXT | No   | false | NULL    | NONE  |
-| Host              | TEXT | No   | false | NULL    | NONE  |
-| EditLogPort       | TEXT | No   | false | NULL    | NONE  |
-| HttpPort          | TEXT | No   | false | NULL    | NONE  |
-| QueryPort         | TEXT | No   | false | NULL    | NONE  |
-| RpcPort           | TEXT | No   | false | NULL    | NONE  |
-| ArrowFlightSqlPort| TEXT | No   | false | NULL    | NONE  |
-| Role              | TEXT | No   | false | NULL    | NONE  |
-| IsMaster          | TEXT | No   | false | NULL    | NONE  |
-| ClusterId         | TEXT | No   | false | NULL    | NONE  |
-| Join              | TEXT | No   | false | NULL    | NONE  |
-| Alive             | TEXT | No   | false | NULL    | NONE  |
-| ReplayedJournalId | TEXT | No   | false | NULL    | NONE  |
-| LastHeartbeat     | TEXT | No   | false | NULL    | NONE  |
-| IsHelper          | TEXT | No   | false | NULL    | NONE  |
-| ErrMsg            | TEXT | No   | false | NULL    | NONE  |
-| Version           | TEXT | No   | false | NULL    | NONE  |
-| CurrentConnected  | TEXT | No   | false | NULL    | NONE  |
-+-------------------+------+------+-------+---------+-------+
-17 rows in set (0.022 sec)
+## Syntax
+```sql
+frontends()
 ```
 
-The information displayed by the `frontends` tvf is basically consistent with the information displayed by the `show frontends` statement. However, the types of each field in the `frontends` tvf are more specific, and you can use the `frontends` tvf to perform operations such as filtering and joining.
+## Access Control Requirements
 
-The information displayed by the `frontends` tvf is authenticated, which is consistent with the behavior of `show frontends`, user must have ADMIN/OPERATOR privelege.
+| Privilege  | Object | Notes |
+| :--------- |:-------|:------|
+| ALTER_PRIV | global |       |
 
-### example
-```
-mysql> select * from frontends()\G
-*************************** 1. row ***************************
-             Name: fe_5fa8bf19_fd6b_45cb_89c5_25a5ebc45582
-               IP: 10.xx.xx.14
-      EditLogPort: 9013
-         HttpPort: 8034
-        QueryPort: 9033
-          RpcPort: 9023
-ArrowFlightSqlPort: 9040
-             Role: FOLLOWER
-         IsMaster: true
-        ClusterId: 1258341841
-             Join: true
-            Alive: true
-ReplayedJournalId: 186
-    LastHeartbeat: 2023-06-15 16:53:12
-         IsHelper: true
-           ErrMsg: 
-          Version: doris-0.0.0-trunk-4b18cde0c7
- CurrentConnected: Yes
-1 row in set (0.060 sec)
+## Examples
+show frontends cluster information
+```sql
+show frontends();
+select * from frontends();
 ```
 
-### keywords
+```text
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
+| Name                                    | Host       | EditLogPort | HttpPort | QueryPort | RpcPort | ArrowFlightSqlPort | Role     | IsMaster | ClusterId | Join | Alive | ReplayedJournalId | LastStartTime       | LastHeartbeat       | IsHelper | ErrMsg | Version                 | CurrentConnected |
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.xx.xx.90 | 9010        | 8030     | 9030      | 9020    | -1               | FOLLOWER | true     | 917153130 | true | true  | 555248            | 2025-01-13 14:11:31 | 2025-01-16 14:27:56 | true     |        | doris-0.0.0--83f899b32b | Yes              |
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
+```
 
-    frontends
+frontends() table schema
+```sql
+desc function frontends();
+```
+```
++--------------------+------+------+-------+---------+-------+
+| Field              | Type | Null | Key   | Default | Extra |
++--------------------+------+------+-------+---------+-------+
+| Name               | text | No   | false | NULL    | NONE  |
+| Host               | text | No   | false | NULL    | NONE  |
+| EditLogPort        | text | No   | false | NULL    | NONE  |
+| HttpPort           | text | No   | false | NULL    | NONE  |
+| QueryPort          | text | No   | false | NULL    | NONE  |
+| RpcPort            | text | No   | false | NULL    | NONE  |
+| ArrowFlightSqlPort | text | No   | false | NULL    | NONE  |
+| Role               | text | No   | false | NULL    | NONE  |
+| IsMaster           | text | No   | false | NULL    | NONE  |
+| ClusterId          | text | No   | false | NULL    | NONE  |
+| Join               | text | No   | false | NULL    | NONE  |
+| Alive              | text | No   | false | NULL    | NONE  |
+| ReplayedJournalId  | text | No   | false | NULL    | NONE  |
+| LastStartTime      | text | No   | false | NULL    | NONE  |
+| LastHeartbeat      | text | No   | false | NULL    | NONE  |
+| IsHelper           | text | No   | false | NULL    | NONE  |
+| ErrMsg             | text | No   | false | NULL    | NONE  |
+| Version            | text | No   | false | NULL    | NONE  |
+| CurrentConnected   | text | No   | false | NULL    | NONE  |
++--------------------+------+------+-------+---------+-------+
+```
