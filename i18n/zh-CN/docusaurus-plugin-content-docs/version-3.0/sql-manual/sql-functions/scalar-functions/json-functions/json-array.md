@@ -24,47 +24,73 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_array
 ## 描述
+
+生成一个包含制定元素的 json 数组，未指定时返回空数组
+
 ## 语法
 
-`VARCHAR json_array(VARCHAR,...)`
-
-
-生成一个包含指定元素的json数组,未指定时返回空数组
-
-## 举例
-
+```sql
+VARCHAR JSON_ARRAY(<a>, ...)   
 ```
+
+## 参数
+
+| 参数 | 描述                                                         |
+|------|------------------------------------------------------------|
+| `<a>, ...` | 要包含在 JSON 数组中的元素。可以是单个或者多个任意类型的值，包括`NULL`。如果没有指定元素，则返回一个空数组。 |
+
+## 返回值
+
+返回一个包含指定元素的 JSON 数组。特殊情况：
+* 如果指定的元素为`NULL`，则返回`NULL`。
+
+## 示例
+
+```sql
 MySQL> select json_array();
+```
+
+```text
 +--------------+
 | json_array() |
 +--------------+
 | []           |
 +--------------+
+```
 
+```sql
 MySQL> select json_array(null);
+```
+
+```text
 +--------------------+
 | json_array('NULL') |
 +--------------------+
 | [NULL]             |
 +--------------------+
+```
 
-
+```sql
 MySQL> SELECT json_array(1, "abc", NULL, TRUE, CURTIME());
+```
+
+```text
 +-----------------------------------------------+
 | json_array(1, 'abc', 'NULL', TRUE, curtime()) |
 +-----------------------------------------------+
 | [1, "abc", NULL, TRUE, "10:41:15"]            |
 +-----------------------------------------------+
+```
 
-
+```sql
 MySQL> select json_array("a", null, "c");
+```
+
+```text
 +------------------------------+
 | json_array('a', 'NULL', 'c') |
 +------------------------------+
 | ["a", NULL, "c"]             |
 +------------------------------+
 ```
-### keywords
-json,array,json_array
