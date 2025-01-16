@@ -24,27 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-workload-GROUPS
-
-### Name
-
-SHOW workload GROUPS
-
-### Description
+## Description
 
 This statement is used to display the resource groups for which the current user has usage_priv privileges.
 
-grammar:
+## Syntax
 
 ```sql
 SHOW WORKLOAD GROUPS [LIKE "pattern"];
 ```
 
-Description:
+## Usage Notes
 
 This statement only does a simple display of workload groups, for a more complex display refer to tvf workload_groups().
 
-### Example
+## Examples
 
 1. Show all workload groups:
     
@@ -73,9 +67,3 @@ This statement only does a simple display of workload groups, for a more complex
     | 10343386 | normal | enable_memory_overcommit | true    |
     +----------+--------+--------------------------+---------+
     ```
-
-### Keywords
-
-    SHOW, WORKLOAD, GROUPS, GROUP
-
-### Best Practice

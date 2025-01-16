@@ -24,26 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## 描述
 
 该语句用于修改资源组。
 
-语法：
+## 语法
 
 ```sql
 ALTER WORKLOAD GROUP  "rg_name"
 PROPERTIES (
-    property_list
+  "key"="value", 
+  ...
 );
 ```
 
-注意：
+## 注意事项
 
-* 修改 memory_limit 属性时不可使所有 memory_limit 值的总和超过 100%；
-* 支持修改部分属性，例如只修改 cpu_share 的话，properties 里只填 cpu_share 即可。
+- 修改 memory_limit 属性时不可使所有 memory_limit 值的总和超过 100%；
+- 支持修改部分属性，例如只修改 cpu_share 的话，properties 里只填 cpu_share 即可。
 
 ## 示例
 
@@ -56,11 +54,3 @@ PROPERTIES (
         "memory_limit"="30%"
     );
     ```
-
-## 关键词
-
-```sql
-ALTER, WORKLOAD , GROUP
-```
-
-### 最佳实践

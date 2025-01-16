@@ -24,17 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-RESOURCES
-
-### Name
-
-SHOW RESOURCES
-
-### Description
+## Description
 
 This statement is used to display resources that the user has permission to use. Ordinary users can only display resources with permission, and root or admin users will display all resources.
 
-grammar:
+## Syntax
 
 ```sql
 SHOW RESOURCES
@@ -47,7 +41,7 @@ SHOW RESOURCES
 [LIMIT limit][OFFSET offset];
 ```
 
-illustrate:
+## Usage Notes
 
 1. If NAME LIKE is used, it will match Resource whose Name contains name_matcher in RESOURCES
 2. If NAME = is used, it will match the specified Name exactly
@@ -57,7 +51,7 @@ illustrate:
 6. If OFFSET is specified, the query results are displayed starting at offset offset. By default the offset is 0.
 7. If using LIKE, the WHERE clause will be ignored.
 
-### Example
+## Example
 
 1. Display all resources that the current user has permissions to
 
@@ -82,10 +76,3 @@ illustrate:
    ```sql
    SHOW RESOURCES LIKE "jdbc%";
    ```
-
-### Keywords
-
-    SHOW, RESOURCES
-
-### Best Practice
-

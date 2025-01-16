@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-RESOURCE",
+    "title": "DROP RESOURCE",
     "language": "en"
 }
 ---
@@ -24,33 +24,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-RESOURCE
 
-### Name
-
-DROP RESOURCE
-
-### Description
+## Description
 
 This statement is used to delete an existing resource. Only the root or admin user can delete resources.
-grammar:
+
+## Syntax
 
 ```sql
 DROP RESOURCE 'resource_name'
 ```
 
-Note: ODBC/S3 resources in use cannot be deleted.
+## Usage Notes
 
-### Example
+ODBC/S3 resources in use cannot be deleted.
+
+## Examples
 
 1. Delete the Spark resource named spark0:
    
      ```sql
      DROP RESOURCE 'spark0';
      ```
-
-### Keywords
-
-     DROP, RESOURCE
-
-### Best Practice

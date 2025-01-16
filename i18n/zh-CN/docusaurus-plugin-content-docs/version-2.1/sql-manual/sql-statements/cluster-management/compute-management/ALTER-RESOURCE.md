@@ -1,6 +1,5 @@
 ---
 {
-
 "title": "ALTER RESOURCE",
 "language": "zh-CN"
 }
@@ -25,16 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## 描述
 
 该语句用于修改一个已有的资源。仅 root 或 admin 用户可以修改资源。
-语法：
+
+## 语法
 ```sql
 ALTER RESOURCE 'resource_name'
-PROPERTIES ("key"="value", ...);
+PROPERTIES (
+  "key"="value", 
+  ...
+);
 ```
 注意：resource type 不支持修改。
 
@@ -48,7 +48,6 @@ ALTER RESOURCE 'spark0' PROPERTIES ("working_dir" = "hdfs://127.0.0.1:10000/tmp/
 ```sql
 ALTER RESOURCE 'remote_s3' PROPERTIES ("s3.connection.maximum" = "100");
 ```
-
 3. 修改冷热分层 S3 资源相关信息
 - 支持修改项
   - `s3.access_key` s3 的 ak 信息
@@ -57,7 +56,6 @@ ALTER RESOURCE 'remote_s3' PROPERTIES ("s3.connection.maximum" = "100");
   - `s3.connection.maximum` s3 最大连接数，默认 50
   - `s3.connection.timeout` s3 连接超时时间，默认 1000ms
   - `s3.connection.request.timeout` s3 请求超时时间，默认 3000ms
-
 - 禁止修改项
   - `s3.region`
   - `s3.bucket"`
@@ -67,10 +65,3 @@ ALTER RESOURCE 'remote_s3' PROPERTIES ("s3.connection.maximum" = "100");
 ```sql
   ALTER RESOURCE "showPolicy_1_resource" PROPERTIES("s3.connection.maximum" = "1111");
 ```
-## 关键词
-
-```sql
-ALTER, RESOURCE
-```
-
-## 最佳实践

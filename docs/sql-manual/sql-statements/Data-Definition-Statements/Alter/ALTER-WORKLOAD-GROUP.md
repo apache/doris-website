@@ -24,31 +24,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ALTER-WORKLOAD-GROUP
-
-### Name
-
-ALTER WORKLOAD GROUP
-
-### Description
+## Description
 
 This statement is used to modify the workload group.
 
-Syntax:
+## Syntax
 
 ```sql
 ALTER WORKLOAD GROUP "rg_name"
 PROPERTIES (
-    property_list
+  "key"="value", 
+  ...
 );
 ```
 
-NOTE:
+## Usage Notes
 
-* Modify the memory_limit property in such a way that the sum of all memory_limit values does not exceed 100%;
-* Support modifying some properties, for example, if only cpu_share is modified, just fill in cpu_share in properties.
+- Modify the memory_limit property in such a way that the sum of all memory_limit values does not exceed 100%;
+- Support modifying some properties, for example, if only cpu_share is modified, just fill in cpu_share in properties.
 
-### Example
+## Examples
 
 1. Modify the workload group named g1:
 
@@ -59,11 +54,3 @@ NOTE:
         "memory_limit"="30%"
     );
     ```
-
-### Keywords
-
-```sql
-ALTER, WORKLOAD, GROUP
-```
-
-### Best Practice

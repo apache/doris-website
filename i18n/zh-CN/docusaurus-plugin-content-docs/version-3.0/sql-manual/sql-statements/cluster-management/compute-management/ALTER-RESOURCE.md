@@ -24,15 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## 描述
 
 该语句用于修改一个已有的资源。仅 root 或 admin 用户可以修改资源。
-语法：
+
+## 语法
 ```sql
 ALTER RESOURCE 'resource_name'
-PROPERTIES ("key"="value", ...);
+PROPERTIES (
+  "key"="value", 
+  ...
+);
 ```
 注意：resource type 不支持修改。
 
@@ -63,10 +65,3 @@ ALTER RESOURCE 'remote_s3' PROPERTIES ("s3.connection.maximum" = "100");
 ```sql
   ALTER RESOURCE "showPolicy_1_resource" PROPERTIES("s3.connection.maximum" = "1111");
 ```
-## 关键词
-
-```sql
-ALTER, RESOURCE
-```
-
-### 最佳实践

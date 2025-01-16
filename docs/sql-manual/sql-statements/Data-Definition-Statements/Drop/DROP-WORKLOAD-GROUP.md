@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-WORKLOAD-GROUP",
+    "title": "DROP WORKLOAD GROUP",
     "language": "en"
 }
 ---
@@ -24,31 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DROP-WORKLOAD-GROUP
 
-### Name
-
-DROP WORKLOAD GROUP
-
-### Description
+## Description
 
 This statement is used to delete a workload group.
+
+## Syntax
 
 ```sql
 DROP WORKLOAD GROUP [IF EXISTS] 'rg_name'
 ```
 
-### Example
+## Examples
 
 1. Delete the workload group named g1:
     
     ```sql
     drop workload group if exists g1;
     ```
-
-### Keywords
-
-    DROP, WORKLOAD, GROUP
-
-### Best Practice
-

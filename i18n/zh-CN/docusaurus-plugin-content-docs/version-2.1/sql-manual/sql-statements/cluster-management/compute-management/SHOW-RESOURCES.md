@@ -24,14 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## 描述
 
 该语句用于展示用户有使用权限的资源。普通用户仅能展示有使用权限的资源，root 或 admin 用户会展示所有的资源。
 
-语法：
+## 语法
 
 ```sql
 SHOW RESOURCES
@@ -44,8 +41,7 @@ SHOW RESOURCES
 [LIMIT limit][OFFSET offset];
 ```
 
-说明：
-
+## 注意事项
 
 1. 如果使用 NAME LIKE，则会匹配 RESOURCES 的 Name 包含 name_matcher 的 Resource
 2. 如果使用 NAME = ，则精确匹配指定的 Name
@@ -80,10 +76,3 @@ SHOW RESOURCES
     ```sql
     SHOW RESOURCES LIKE "jdbc%";
     ```
-
-## 关键词
-
-    SHOW, RESOURCES
-
-## 最佳实践
-
