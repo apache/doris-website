@@ -24,8 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hour_ceil
 ## 描述
+
+将日期转化为指定的时间间隔周期的最近向上取整时刻。
+
 ## 语法
 
 ```sql
@@ -35,11 +37,17 @@ DATETIME HOUR_CEIL(DATETIME datetime, INT period)
 DATETIME HOUR_CEIL(DATETIME datetime, INT period, DATETIME origin)
 ```
 
-将日期转化为指定的时间间隔周期的最近上取整时刻。
+## 参数
 
-- datetime：参数是合法的日期表达式。
-- period：参数是指定每个周期有多少小时组成。
-- origin：开始的时间起点，如果不填，默认是 0001-01-01T00:00:00。
+| 参数 | 说明 |
+| -- | -- |
+| datetime | 合法的日期表达式 |
+| period | 指定每个周期有多少小时组成|
+| origin | 开始的时间起点，如果不填，默认是 0001-01-01T00:00:00 |
+
+## 返回值
+
+返回指定的时间间隔周期的最近向上取整时刻。
 
 ## 举例
 
@@ -52,11 +60,3 @@ mysql> select hour_ceil("2023-07-13 22:28:18", 5);
 +------------------------------------------------------------+
 1 row in set (0.03 sec)
 ```
-
-### keywords
-
-    HOUR_CEIL, HOUR, CEIL
-
-### Best Practice
-
-还可参阅 [date_ceil](./date_ceil)

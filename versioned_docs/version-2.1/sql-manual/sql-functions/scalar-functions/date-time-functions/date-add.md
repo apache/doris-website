@@ -24,27 +24,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## days_add
-### description
-#### Syntax
+## Description
 
-`DATETIME DAYS_ADD(DATETIME date, INT days)`
+Add a specified time interval to the date.
 
-From date time or date plus specified days
+## Alias
 
-The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
+- date_add
+- days_add
+- adddate
 
-### example
+## Syntax
 
-```
-mysql> select days_add(to_date("2020-02-02 02:02:02"), 1);
-+---------------------------------------------+
-| days_add(to_date('2020-02-02 02:02:02'), 1) |
-+---------------------------------------------+
-| 2020-02-03                                  |
-+---------------------------------------------+
+```sql
+DATETIME DATE_ADD(DATETIME date, INTERVAL expr type)
 ```
 
-### keywords
+## Parameters
 
-    DAYS_ADD
+| Parameter | Description |
+| -- | -- |
+| date | A valid date value |
+| expr | The time interval you want to add |
+| type | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+
+## Return Value
+
+Returns the calculated date.
+
+## Examples
+
+```sql
+select date_add('2010-11-30 23:59:59', INTERVAL 2 DAY);
+```
+
+```text
++-------------------------------------------------+
+| date_add('2010-11-30 23:59:59', INTERVAL 2 DAY) |
++-------------------------------------------------+
+| 2010-12-02 23:59:59                             |
++-------------------------------------------------+
+```

@@ -24,36 +24,49 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Description
 
-## datediff
-### Description
-#### Syntax
+Calculates the difference between two given dates.
 
-`INT DATEDIFF (DATETIME expr1, DATETIME expr2)`
+## Syntax
 
-
-Calculate expr1 - expr2, the result is accurate to the unit of a day.
-
-Expr1 and expr2 parameters are valid date or date/time expressions.
-
-Note: Only the date part of the value participates in the calculation.
-
-#### example
-
+```sql
+INT DATEDIFF(DATETIME expr1, DATETIME expr2)
 ```
-mysql> select datediff(CAST('2007-12-31 23:59:59' AS DATETIME), CAST('2007-12-30' AS DATETIME));
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| expr1 | The minuend (the date to be subtracted from) |
+| expr2 | The subtrahend (the date to subtract) |
+
+## Return Value
+
+Returns the value of `expr1 - expr2`, with the result rounded to the nearest day.
+
+## Examples
+
+```sql
+select datediff(CAST('2007-12-31 23:59:59' AS DATETIME), CAST('2007-12-30' AS DATETIME));
+```
+
+```text
 +-----------------------------------------------------------------------------------+
 | datediff(CAST('2007-12-31 23:59:59' AS DATETIME), CAST('2007-12-30' AS DATETIME)) |
 +-----------------------------------------------------------------------------------+
 |                                                                                 1 |
 +-----------------------------------------------------------------------------------+
+```
 
-mysql> select datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-31' AS DATETIME));
+```sql
+select datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-31' AS DATETIME));
+```
+
+```text
 +-----------------------------------------------------------------------------------+
 | datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-31' AS DATETIME)) |
 +-----------------------------------------------------------------------------------+
 |                                                                               -31 |
 +-----------------------------------------------------------------------------------+
 ```
-### keywords
-    DATEDIFF

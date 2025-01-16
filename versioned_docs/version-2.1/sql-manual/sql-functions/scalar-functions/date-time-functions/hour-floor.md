@@ -24,9 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hour_floor
-### description
-#### Syntax
+## Description
+
+Converts the date to the nearest rounded-down timestamp of the specified time interval period.
+
+## Syntax
 
 ```sql
 DATETIME HOUR_FLOOR(DATETIME datetime)
@@ -35,28 +37,28 @@ DATETIME HOUR_FLOOR(DATETIME datetime, INT period)
 DATETIME HOUR_FLOOR(DATETIME datetime, INT period, DATETIME origin)
 ```
 
-Convert the date to the nearest rounding down time of the specified time interval period.
+## Parameters
 
-- datetime: a valid date expression.
-- period: specifies how many hours each cycle consists of.
-- origin: starting from 0001-01-01T00:00:00.
+| Parameter | Description |
+| -- | -- |
+| datetime | A valid date expression |
+| period | Specifies how many hours make up each period|
+| origin | The starting point of time. If not provided, the default is 0001-01-01T00:00:00 |
 
-### example
+## Return Value
 
+Returns the nearest rounded-down timestamp of the specified time interval period.
+
+## Examples
+
+```sql
+select hour_floor("2023-07-13 22:28:18", 5);
 ```
-mysql> select hour_floor("2023-07-13 22:28:18", 5);
+
+```text
 +-------------------------------------------------------------+
 | hour_floor(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
 +-------------------------------------------------------------+
 | 2023-07-13 21:00:00                                         |
 +-------------------------------------------------------------+
-1 row in set (0.23 sec)
 ```
-
-### keywords
-
-    HOUR_FLOOR, HOUR, FLOOR
-
-### Best Practice
-
-See also [date_floor](./date_floor)

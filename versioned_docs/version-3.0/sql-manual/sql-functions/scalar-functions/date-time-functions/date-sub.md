@@ -24,27 +24,46 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## days_sub
-### description
-#### Syntax
+## Description
 
-`DATETIME DAYS_SUB(DATETIME date, INT days)`
+Subtracts a specified time interval to the date.
 
-Subtract a specified number of days from a datetime or date
+## Alias
 
-The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
+## 别名
 
-### example
+- days_sub
+- date_sub
+- subdate
 
-```
-mysql> select days_sub("2020-02-02 02:02:02", 1);
-+------------------------------------+
-| days_sub('2020-02-02 02:02:02', 1) |
-+------------------------------------+
-| 2020-02-01 02:02:02                |
-+------------------------------------+
+## Syntax
+
+```sql
+DATETIME DATE_SUB(DATETIME date, INTERVAL expr type)
 ```
 
-### keywords
+## Parameters
 
-    DAYS_SUB
+| Parameter | Description |
+| -- | -- |
+| date | A valid date value |
+| expr | The time interval you want to subtract |
+| type | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+
+## Return Value
+
+Returns the calculated date.
+
+## Examples
+
+```sql
+select date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY);
+```
+
+```text
++-------------------------------------------------+
+| date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY) |
++-------------------------------------------------+
+| 2010-11-28 23:59:59                             |
++-------------------------------------------------+
+```

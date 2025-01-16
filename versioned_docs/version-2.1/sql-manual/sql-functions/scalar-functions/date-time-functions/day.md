@@ -24,26 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## day
-### Description
-#### Syntax
+## Description
 
-`INT DAY(DATETIME date)`
+Obtain the day information from the date, with return values ranging from 1 to 31.
 
+## Alias
 
-Get the day information in the date, and return values range from 1 to 31.
+- dayofmonth
 
-The parameter is Date or Datetime type
+## Syntax
 
-### example
-
+```sql
+INT DAY(DATE date)
+INT DAY(DATETIME date)
 ```
-mysql> select day('1987-01-31');
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| date | A valid date expression |
+
+## Return Value
+
+Returns the day information from the given date.
+
+## Examples
+
+```sql
+select day('1987-01-31');
+```
+
+```text
 +----------------------------+
 | day('1987-01-31 00:00:00') |
 +----------------------------+
 |                         31 |
 +----------------------------+
 ```
-### keywords
-    DAY

@@ -4,7 +4,6 @@
     "language": "en"
 }
 ---
-
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -23,3 +22,37 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## Description
+
+Converts an ISO8601 formatted date expression to a DATE type date expression.
+
+## Syntax
+
+```sql
+DATE from_iso8601_date(VARCHAR date)
+```
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| date | An ISO8601 formatted date |
+
+## Return Value
+
+A DATE type date expression.
+
+## Examples
+
+```sql
+SELECT from_iso8601_date('0000-01'),from_iso8601_date('0000-W01'),from_iso8601_date('0000-059');
+```
+
+```text
++------------------------------+-------------------------------+-------------------------------+
+| from_iso8601_date('0000-01') | from_iso8601_date('0000-W01') | from_iso8601_date('0000-059') |
++------------------------------+-------------------------------+-------------------------------+
+| 0000-01-01                   | 0000-01-03                    | 0000-02-28                    |
++------------------------------+-------------------------------+-------------------------------+
+```

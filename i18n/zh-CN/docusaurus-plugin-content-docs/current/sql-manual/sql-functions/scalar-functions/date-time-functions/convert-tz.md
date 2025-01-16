@@ -24,32 +24,47 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## convert_tz
 ## 描述
+
+转换 datetime 值，从 from_tz 给定时区转到 to_tz 给定时区，并返回结果值。特殊情况：
+- 如果参数无效该函数返回 NULL。
+
 ## 语法
 
-`DATETIME CONVERT_TZ(DATETIME dt, VARCHAR from_tz, VARCHAR to_tz)`
-
-转换datetime值，从 from_tz 给定时区转到 to_tz 给定时区，并返回结果值。 如果参数无效该函数返回NULL。
-
-## 举例
-
+```sql
+DATETIME CONVERT_TZ(DATETIME dt, VARCHAR from_tz, VARCHAR to_tz)
 ```
-mysql> select convert_tz('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_Angeles');
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- | 
+| dt | 需要被转换的 datetime 值 |
+| from_tz | dt 的原始时区 |
+| to_tz | 需要转换的时区 |
+
+## 示例
+
+```sql
+select CONVERT_TZ('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_Angeles');
+```
+
+```text
 +---------------------------------------------------------------------------+
 | convert_tz('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_Angeles') |
 +---------------------------------------------------------------------------+
 | 2019-07-31 22:21:03                                                       |
 +---------------------------------------------------------------------------+
+```
 
-mysql> select convert_tz('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles');
+```sql
+select CONVERT_TZ('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles');
+```
+
+```text
 +--------------------------------------------------------------------+
 | convert_tz('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles') |
 +--------------------------------------------------------------------+
 | 2019-07-31 22:21:03                                                |
 +--------------------------------------------------------------------+
 ```
-
-### keywords
-
-    CONVERT_TZ

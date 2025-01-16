@@ -24,26 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## dayname
-### Description
-#### Syntax
+## Description
 
-`VARCHAR DAYNAME (DATE)`
+Calculates the name of the day corresponding to the given date expression.
 
+## Syntax
 
-Date name corresponding to return date
-
-The parameter is Date or Datetime type
-
-### example
-
+```sql
+VARCHAR DAYNAME(DATE dt)
+VARCHAR DAYNAME(DATETIME dt)
 ```
-mysql> select dayname('2007-02-03 00:00:00');
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| dt | The date expression to be calculated |
+
+## Return Value
+
+Returns the name of the day corresponding to the given date expression.
+
+## Examples
+
+```sql
+select dayname('2007-02-03 00:00:00');
+```
+
+```text
 +--------------------------------+
 | dayname('2007-02-03 00:00:00') |
 +--------------------------------+
 | Saturday                       |
 +--------------------------------+
 ```
-### keywords
-    DAYNAME

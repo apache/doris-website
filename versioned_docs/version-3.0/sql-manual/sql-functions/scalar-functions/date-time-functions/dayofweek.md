@@ -24,32 +24,50 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## dayofweek
-### Description
-#### Syntax
 
-`INT DAYOFWEEK (DATETIME date)`
+## Description
 
+Returns the weekday index of the date, where Sunday is 1, Monday is 2, and Saturday is 7.
 
-The DAYOFWEEK function returns the index value of the working day of the date, that is, 1 on Sunday, 2 on Monday, and 7 on Saturday.
+## Syntax
 
-The parameter is Date or Datetime type
-
-### example
+```sql
+INT DAYOFWEEK(DATE date)
+INT DAYOFWEEK(DATETIME date)
 ```
-mysql> select dayofweek('2019-06-25');
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| dt | The date expression to be calculated |
+
+## Return Value
+
+Returns the weekday index of the date.
+
+## Examples
+
+```sql
+select dayofweek('2019-06-25');
+```
+
+```text
 +----------------------------------+
 | dayofweek('2019-06-25 00:00:00') |
 +----------------------------------+
 |                                3 |
 +----------------------------------+
+```text
 
-mysql> select dayofweek(cast(20190625 as date)); 
+```sql
+select dayofweek(cast(20190625 as date)); 
+```
+
+```text
 +-----------------------------------+
 | dayofweek(CAST(20190625 AS DATE)) |
 +-----------------------------------+
 |                                 3 |
 +-----------------------------------+
 ```
-### keywords
-    DAYOFWEEK

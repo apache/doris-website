@@ -25,29 +25,43 @@ under the License.
 -->
 
 ## 描述
-## 语法
-
-`INT DATE_ADD(DATETIME date, INTERVAL expr type)`
 
 向日期添加指定的时间间隔。
 
-`date` 参数是合法的日期表达式。
+## 别名
 
-`expr` 参数是您希望添加的时间间隔。
+- date_add
+- days_add
+- adddate
 
-`type` 参数可以是下列值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND
+## 语法
+
+```sql
+DATETIME DATE_ADD(DATETIME date, INTERVAL expr type)
+```
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| date | 合法的日期值 |
+| expr | 希望添加的时间间隔 |
+| type | 枚举值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+
+## 返回值
+
+返回计算后的日期。
 
 ## 举例
 
 ```sql
-mysql> select date_add('2010-11-30 23:59:59', INTERVAL 2 DAY);
+select date_add('2010-11-30 23:59:59', INTERVAL 2 DAY);
+```
+
+```text
 +-------------------------------------------------+
 | date_add('2010-11-30 23:59:59', INTERVAL 2 DAY) |
 +-------------------------------------------------+
 | 2010-12-02 23:59:59                             |
 +-------------------------------------------------+
 ```
-
-### Keywords
-
-    DATE_ADD,DATE,ADD

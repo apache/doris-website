@@ -24,35 +24,49 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## datediff
 ## 描述
+
+计算给定日期之间的差值。
+
 ## 语法
 
-`INT DATEDIFF(DATETIME expr1, DATETIME expr2)`
+```sql
+INT DATEDIFF(DATETIME expr1, DATETIME expr2)
+```
 
+## 参数
 
-计算expr1 - expr2，结果精确到天。
+| 参数 | 说明 |
+| -- | -- |
+| expr1 | 日期被减数 |
+| expr2 | 日期减数 |
 
-expr1 和 expr2 参数是合法的日期或日期/时间表达式。
+## 返回值
 
-注释：只有值的日期部分参与计算。
+返回 expr1 - expr2 的值，结果精确到天。
 
 ## 举例
 
+```sql
+select datediff(CAST('2007-12-31 23:59:59' AS DATETIME), CAST('2007-12-30' AS DATETIME));
 ```
-mysql> select datediff(CAST('2007-12-31 23:59:59' AS DATETIME), CAST('2007-12-30' AS DATETIME));
+
+```text
 +-----------------------------------------------------------------------------------+
 | datediff(CAST('2007-12-31 23:59:59' AS DATETIME), CAST('2007-12-30' AS DATETIME)) |
 +-----------------------------------------------------------------------------------+
 |                                                                                 1 |
 +-----------------------------------------------------------------------------------+
+```
 
-mysql> select datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-31' AS DATETIME));
+```sql
+select datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-31' AS DATETIME));
+```
+
+```text
 +-----------------------------------------------------------------------------------+
 | datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-31' AS DATETIME)) |
 +-----------------------------------------------------------------------------------+
 |                                                                               -31 |
 +-----------------------------------------------------------------------------------+
 ```
-### keywords
-DATEDIFF
