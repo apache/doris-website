@@ -24,27 +24,47 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## microseconds_sub
+
 ## 描述
+
+从日期时间值中减去指定的微秒数，返回一个新的日期时间值。
+
 ## 语法
 
-`DATETIMEV2 microseconds_sub(DATETIMEV2 basetime, INT delta)`
-- basetime: DATETIMEV2 类型起始时间
-- delta: 从 basetime 起需要扣减的微秒数
-- 返回类型为 DATETIMEV2
+```sql
+DATETIMEV2 MICROSECONDS_SUB(DATETIMEV2 basetime, INT delta)
+```
+
+## 参数
+
+| 参数 | 说明 |
+| ---- | ---- |
+| basetime | 输入的日期时间值，类型为 DATETIMEV2 |
+| delta | 要减去的微秒数，类型为 INT，1 秒 = 1,000,000 微秒 |
+
+## 返回值
+
+返回类型为 DATETIMEV2，精度与输入参数 basetime 的精度相同。
 
 ## 举例
-```
-mysql> select now(3), microseconds_sub(now(3), 100000);
-+-------------------------+----------------------------------+
-| now(3)                  | microseconds_sub(now(3), 100000) |
-+-------------------------+----------------------------------+
-| 2023-02-25 02:03:05.174 | 2023-02-25 02:03:05.074          |
-+-------------------------+----------------------------------+
-```
-`now(3)` 返回精度位数 3 的 DATETIMEV2 类型当前时间，`microseconds_add(now(3), 100000)` 返回当前时间减去 100000 微秒后的 DATETIMEV2 类型时间
 
-### keywords
-    microseconds_sub
+```sql
+SELECT NOW(3) as current_time, MICROSECONDS_SUB(NOW(3), 100000) as after_sub;
+```
 
-    
+```plaintext
++-------------------------+----------------------------+
+| current_time            | after_sub                  |
++-------------------------+----------------------------+
+| 2025-01-16 11:52:22.296 | 2025-01-16 11:52:22.196000 |
++-------------------------+----------------------------+
+```
+
+注意：
+- NOW(3) 返回精度为 3 位小数的当前时间
+- 减去 100000 微秒（0.1 秒）后，时间减少了 0.1 秒
+- 函数的计算结果与输入时间的精度有关
+
+## 关键词
+
+    MICROSECONDS_SUB

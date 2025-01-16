@@ -24,17 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## makedate
+
 ## 描述
+
+根据指定的年份和一年中的天数（dayofyear）构建并返回一个日期。
+
+特殊情况：
+- 当 dayofyear 小于等于 0 时，返回 NULL
+- 当 dayofyear 超过当年天数时，会自动往后顺延到下一年
+
 ## 语法
 
-`DATE MAKEDATE(INT year, INT dayofyear)`
+```sql
+DATE MAKEDATE(INT year, INT dayofyear)
+```
 
-返回指定年份和dayofyear构建的日期。dayofyear必须大于0，否则结果为空。
+## 参数
+
+| 参数 | 说明 |
+| ---- | ---- |
+| year | 指定的年份，类型为 INT |
+| dayofyear | 一年中的第几天（1-366），类型为 INT |
+
+## 返回值
+
+返回类型为 DATE。
 
 ## 举例
+
+```sql
+SELECT MAKEDATE(2021, 1), MAKEDATE(2021, 100), MAKEDATE(2021, 400);
 ```
-mysql> select makedate(2021,1), makedate(2021,100), makedate(2021,400);
+
+```plaintext
 +-------------------+---------------------+---------------------+
 | makedate(2021, 1) | makedate(2021, 100) | makedate(2021, 400) |
 +-------------------+---------------------+---------------------+
@@ -42,6 +64,6 @@ mysql> select makedate(2021,1), makedate(2021,100), makedate(2021,400);
 +-------------------+---------------------+---------------------+
 ```
 
-### keywords
+## 关键词
 
     MAKEDATE
