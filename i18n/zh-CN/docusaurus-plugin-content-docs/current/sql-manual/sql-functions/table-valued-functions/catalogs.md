@@ -36,7 +36,7 @@ CATALOGS()
 ```
 
 ## 返回值
-查看 catalog() 函数的返回字段
+查看 catalog() 函数的描述字段
 ```sql
 desc function catalogs();
 ```
