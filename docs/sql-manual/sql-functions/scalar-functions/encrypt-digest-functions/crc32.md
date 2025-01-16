@@ -30,9 +30,10 @@ Use CRC32 to compute the result.
 
 ### Syntax
 ```sql
-BIGINT crc32 (VARCHAR <str>)
+BIGINT crc32( VARCHAR <str> )
 ```
 ## Parameter
+
 | parameter | description |
 | -- | -- |
 | `<str>` | The value to be used for CRC calculation |

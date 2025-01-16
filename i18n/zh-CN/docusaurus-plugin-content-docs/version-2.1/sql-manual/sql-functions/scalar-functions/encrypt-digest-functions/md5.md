@@ -22,23 +22,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### 描述
+## 描述
 
 计算 MD5 128-bit
 
-### 语法
+## 语法
 
 ```sql
-MD5(str)
+MD5( VARCHAR <str> )
 ```
 
-### 示例
+## 参数
+
+| 参数      | 说明 |
+|---------| -- |
+| `<str>` | 需要被计算MD5的值 |
+
+## 返回值
+返回字符串的MD5值。
+
+## 举例
 
 ```sql
 select md5("abc");
 ```
 
-```
+```text
 +----------------------------------+
 | md5('abc')                       |
 +----------------------------------+

@@ -22,23 +22,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### description
+## description
 
 Calculates an MD5 128-bit checksum for the string
 
-### Syntax
+## Syntax
 
-```
-MD5(str)
+```sql
+MD5( VARCHAR <str> )
 ```
 
-### example
+## Parameter
+
+| parameter | description |
+| -- | -- |
+| `<str>` | The MD5 value to be calculated |
+
+## Return
+
+Returns the MD5 value of a string。
+
+## example
 
 ```sql
 select md5("abc");
 ```
 
-```
+```text
 +----------------------------------+
 | md5('abc')                       |
 +----------------------------------+
