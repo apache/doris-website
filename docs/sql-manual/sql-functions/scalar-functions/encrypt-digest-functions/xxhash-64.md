@@ -22,64 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## xxhash_64
+## Description
 
-### description
-#### Syntax
+Calculates the 64-bit xxhash value of the input string
 
-`BIGINT XXHASH_64(VARCHAR input, ...)`
+-Note: After testing, the performance of `xxhash_64` is about twice that of `murmur_hash3_64`, so when calculating hash values, it is recommended to use `xxhash_64` instead of `murmur_hash3_64`.
 
-Return the 64 bits xxhash of input string.
+## Syntax
 
-Note: When calculating hash values, it is more recommended to use `xxhash_64` instead of `murmur_hash3_64`.
-
-### example
-
-```
-mysql> select xxhash_64(NULL);
-+-----------------+
-| xxhash_64(NULL) |
-+-----------------+
-|            NULL |
-+-----------------+
-
-mysql> select xxhash_64("hello");
-+----------------------+
-| xxhash_64('hello')   |
-+----------------------+
-| -7685981735718036227 |
-+----------------------+
-
-mysql> select xxhash_64("hello", "world");
-+-----------------------------+
-| xxhash_64('hello', 'world') |
-+-----------------------------+
-|         7001965798170371843 |
-+-----------------------------+
+```sql
+XXHASH_64( VARCHAR <str> [ , <str> ... ] )
 ```
 
-### benchmark
+## Parameters
 
-Through TPCH Benchmark testing, it was found that `xxhash_64` has significantly improved performance compared to `murmur_hash3_64`. Therefore, in scenarios where hash values need to be calculated, it is more recommended to use `xxhash_64`.
+| parameter | description      |
+|-----------|------------------|
+| `<str>`   | The 64-bit xxhash value to be calculated |
 
-```
-mysql> select count(murmur_hash3_64(l_comment)) from lineitem;
-+-----------------------------------+
-| count(murmur_hash3_64(l_comment)) |
-+-----------------------------------+
-|                         600037902 |
-+-----------------------------------+
-1 row in set (17.18 sec)
+## Return Value
 
-mysql> select count(xxhash_64(l_comment)) from lineitem;
-+-----------------------------+
-| count(xxhash_64(l_comment)) |
-+-----------------------------+
-|                   600037902 |
-+-----------------------------+
-1 row in set (8.41 sec)
+Returns the 64-bit xxhash value of the input string.
+
+## Examples
+
+```sql
+select xxhash_64(NULL), xxhash_64("hello"), xxhash_64("hello", "world");
 ```
 
-### keywords
-
-XXHASH_64,HASH
+```text
++-----------------+----------------------+-----------------------------+
+| xxhash_64(NULL) | xxhash_64('hello')   | xxhash_64('hello', 'world') |
++-----------------+----------------------+-----------------------------+
+|            NULL | -7685981735718036227 |         7001965798170371843 |
++-----------------+----------------------+-----------------------------+
+```

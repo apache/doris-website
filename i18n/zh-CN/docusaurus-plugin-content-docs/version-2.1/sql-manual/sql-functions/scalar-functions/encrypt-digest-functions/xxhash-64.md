@@ -22,63 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## xxhash_64
-
 ## 描述
+
+计算输入字符串的64位xxhash值
+
+-注：经过测试xxhash_64的性能大约是murmur_hash3_64的2倍，所以在计算hash值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
+
 ## 语法
 
-`BIGINT XXHASH_64(VARCHAR input, ...)`
+```sql
+XXHASH_64( VARCHAR <str> [ , <str> ... ] )
+```
+
+## 参数
+
+| 参数      | 说明               |
+|---------|------------------|
+| `<str>` | 需要被计算64位xxhash的值 |
+
+## 返回值
 
 返回输入字符串的64位xxhash值。
 
-注：在计算hash值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
-
 ## 举例
 
-```
-mysql> select xxhash_64(NULL);
-+-----------------+
-| xxhash_64(NULL) |
-+-----------------+
-|            NULL |
-+-----------------+
-
-mysql> select xxhash_64("hello");
-+----------------------+
-| xxhash_64('hello')   |
-+----------------------+
-| -7685981735718036227 |
-+----------------------+
-
-mysql> select xxhash_64("hello", "world");
-+-----------------------------+
-| xxhash_64('hello', 'world') |
-+-----------------------------+
-|         7001965798170371843 |
-+-----------------------------+
-```
-### benchmark
-
-通过TPCH Benchmark测试发现，`xxhash_64`相比`murmur_hash3_64`来说性能大幅提升，因此在需要计算hash值的场景下，更推荐使用`xxhash_64`。
-
-```
-mysql> select count(murmur_hash3_64(l_comment)) from lineitem;
-+-----------------------------------+
-| count(murmur_hash3_64(l_comment)) |
-+-----------------------------------+
-|                         600037902 |
-+-----------------------------------+
-1 row in set (17.18 sec)
-
-mysql> select count(xxhash_64(l_comment)) from lineitem;
-+-----------------------------+
-| count(xxhash_64(l_comment)) |
-+-----------------------------+
-|                   600037902 |
-+-----------------------------+
-1 row in set (8.41 sec)
+```sql
+select xxhash_64(NULL), xxhash_64("hello"), xxhash_64("hello", "world");
 ```
 
-### keywords
-
-XXHASH_64,HASH
+```text
++-----------------+----------------------+-----------------------------+
+| xxhash_64(NULL) | xxhash_64('hello')   | xxhash_64('hello', 'world') |
++-----------------+----------------------+-----------------------------+
+|            NULL | -7685981735718036227 |         7001965798170371843 |
++-----------------+----------------------+-----------------------------+
+```

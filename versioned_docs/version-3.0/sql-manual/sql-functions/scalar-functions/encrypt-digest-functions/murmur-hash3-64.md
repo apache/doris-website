@@ -26,7 +26,7 @@ under the License.
 
 Calculate 64-bit murmur3 hash value
 
--Note: When calculating hash values, it is recommended to use `xxhash_64` instead of `murmur_hash3_64`。
+-Note: After testing, the performance of `xxhash_64` is about twice that of `murmur_hash3_64`, so when calculating hash values, it is recommended to use `xxhash_64` instead of `murmur_hash3_64`.
 
 ## Syntax
 

@@ -26,7 +26,7 @@ under the License.
 
 计算 64位murmur3 hash值
 
--注：在计算hash值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
+-注：经过测试xxhash_64的性能大约是murmur_hash3_64的2倍，所以在计算hash值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
 
 ## 语法
 
