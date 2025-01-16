@@ -1,6 +1,6 @@
 ---
 {
-"title": "SHA",
+"title": "SHA1",
 "language": "en"
 }
 ---
@@ -22,26 +22,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### description
+## Description
 
-Use SHA1 to digest the message.
+Use the SHA1 algorithm to digest the information。
 
-### Syntax
+## Alias
+SHA
+
+## Syntax
 
 ``` sql
-{ SHA | SHA1 }(str)
+SHA1( VARCHAR <str> )
 ```
 
-### example
+## Parameters
 
-```SQL
-select sha("123");
+| parameter | description         |
+|-----------|-------------|
+| `<str>`   | The sha1 value to be calculated |
+
+## Return Value
+
+Returns the sha1 value of the input string
+
+
+## Examples
+
+```sql
+select sha("123"),sha1("123");
 ```
 
-```
-+------------------------------------------+
-| sha1('123')                              |
-+------------------------------------------+
-| 40bd001563085fc35165329ea1ff5c5ecbdbbeef |
-+------------------------------------------+
+```text
++------------------------------------------+------------------------------------------+
+| sha1('123')                              | sha1('123')                              |
++------------------------------------------+------------------------------------------+
+| 40bd001563085fc35165329ea1ff5c5ecbdbbeef | 40bd001563085fc35165329ea1ff5c5ecbdbbeef |
++------------------------------------------+------------------------------------------+
 ```
