@@ -39,7 +39,7 @@ explode_map_outer(<expr>)
 
 ## Parameters
 
-| 参数 | 说明 |
+| Parameter | Description |
 | -- | -- |
 | `map<k,v>` | map type |
 
