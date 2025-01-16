@@ -24,34 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitor
+
 ## 描述
-## 语法
-
-`BITOR(Integer-type lhs, Integer-type rhs)`
-
-返回两个整数或运算的结果.
+用于对两个整数进行按位或操作。
 
 整数范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
+## 语法
+```sql
+BITOR( <lhs>, <rhs>)
+```
+
+## 参数
+| 参数    | 说明           |
+|-------|--------------|
+| `<lhs>` | 参与按位与运算的第一个数 |
+| `<rhs>` | 参与按位与运算的第二个数 |
+
+## 返回值
+
+返回两个整数或运算的结果.
+
 ## 举例
-
-```
-mysql> select bitor(3,5) ans;
-+------+
-| ans  |
-+------+
-|    7 |
-+------+
-
-mysql> select bitor(4,7) ans;
-+------+
-| ans  |
-+------+
-|    7 |
-+------+
+```sql
+select BITOR(3,5), BITOR(4,7);
 ```
 
-### keywords
-
-    BITOR
+```text
++---------+---------+
+| (3 | 5) | (4 | 7) |
++---------+---------+
+|       7 |       7 |
++---------+---------+
+```
