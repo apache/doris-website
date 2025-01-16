@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-VARCHAR JSON_ARRAY(<a>, ...)   
+JSON_ARRAY(<a>, ...)   
 ```
 
 ## 参数
@@ -48,7 +48,7 @@ VARCHAR JSON_ARRAY(<a>, ...)
 ## 示例
 
 ```sql
-MySQL> select json_array();
+select json_array();
 ```
 
 ```text
@@ -60,7 +60,7 @@ MySQL> select json_array();
 ```
 
 ```sql
-MySQL> select json_array(null);
+select json_array(null);
 ```
 
 ```text
@@ -72,7 +72,7 @@ MySQL> select json_array(null);
 ```
 
 ```sql
-MySQL> SELECT json_array(1, "abc", NULL, TRUE, CURTIME());
+SELECT json_array(1, "abc", NULL, TRUE, CURTIME());
 ```
 
 ```text
@@ -84,7 +84,7 @@ MySQL> SELECT json_array(1, "abc", NULL, TRUE, CURTIME());
 ```
 
 ```sql
-MySQL> select json_array("a", null, "c");
+select json_array("a", null, "c");
 ```
 
 ```text
