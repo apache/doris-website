@@ -24,16 +24,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## outer combinator
+## Description
 
-### description
+The `explode_numbers_outer` table function takes an integer n and expands all numbers within the range into multiple rows, each containing a single number. It is commonly used to generate a sequence of consecutive numbers and is often paired with LATERAL VIEW. Unlike `explode_numbers`, it adds a row with NULL when the function generates 0 rows.
 
-#### syntax
-`explode_numbers(INT x)`
+## Syntax
 
-Adding the `_outer` suffix after the function name of the table function changes the function behavior from `non-outer` to `outer`, and adds a row of `Null` data when the table function generates 0 rows of data.
+`explode_numbers_outer(<n>)`
 
-### example
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<n>` | Integer type input |
+
+## Return Value
+
+Returns a sequence of [0, n).
+
+- Returns NULL when n is 0 or NULL.
+
+## Examples
 
 ```
 mysql> select e1 from (select 1 k1) as t lateral view explode_numbers(0) tmp1 as e1;
@@ -47,5 +59,4 @@ mysql> select e1 from (select 1 k1) as t lateral view explode_numbers_outer(0) t
 +------+
 ```
 ### keywords
-
-    outer
+explode,numbers,explode_numbers

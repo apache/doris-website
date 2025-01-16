@@ -24,16 +24,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode_numbers
-
 ## 描述
 
-表函数，需配合 Lateral View 使用。
-
-获得一个[0,n)的序列。
+ `explode_numbers` 表函数，接受一个整数 n ，将范围的所有数字展开为多行，每行一个数字。常用于生成连续数字的序列，配合 LATERAL VIEW 使用。
 
 ## 语法
-`explode_numbers(n)`
+`explode_numbers(<n>)`
+
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<n>` | 整数类型 |
+
+## 返回值
+
+返回一个[0,n)的序列
+
+- 当为 0 或者 NULL 时不返回
 
 ## 举例
 
