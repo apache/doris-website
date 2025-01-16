@@ -32,17 +32,17 @@ Calculates an MD5 128-bit checksum for the strings
 MD5SUM( VARCHAR <str> [ , <str> ... ] )
 ```
 
-## Parameter
+## Parameters
 
 |  parameter | description |
 |---------| -- |
 | `<str>` | The MD5 value to be calculated |
 
-## Return
+## Return Value
 
 Returns the MD5 value of multiple strings
 
-## Example
+## Examples
 
 ```sql
 select md5("abcd"),md5sum("ab","cd");

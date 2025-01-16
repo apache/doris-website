@@ -22,42 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## murmur_hash3_32
+## Description
 
-### description
-#### Syntax
+Calculate 32-bit murmur3 hash value
 
-`INT MURMUR_HASH3_32(VARCHAR input, ...)`
+## Syntax
 
-Return the 32 bits murmur3 hash of input string.
-
-Note: When calculating hash values, it is more recommended to use `xxhash_32` instead of `murmur_hash3_32`.
-
-### example
-
-```
-mysql> select murmur_hash3_32(null);
-+-----------------------+
-| murmur_hash3_32(NULL) |
-+-----------------------+
-|                  NULL |
-+-----------------------+
-
-mysql> select murmur_hash3_32("hello");
-+--------------------------+
-| murmur_hash3_32('hello') |
-+--------------------------+
-|               1321743225 |
-+--------------------------+
-
-mysql> select murmur_hash3_32("hello", "world");
-+-----------------------------------+
-| murmur_hash3_32('hello', 'world') |
-+-----------------------------------+
-|                         984713481 |
-+-----------------------------------+
+```sql
+MURMUR_HASH3_32( VARCHAR <str> [ , <str> ... ] )
 ```
 
-### keywords
+## Parameters
 
-    MURMUR_HASH3_32,HASH
+| parameter | description |
+|-----------| -- |
+| `<str>`   | The 32-bit murmur3 hash value to be calculated |
+
+## Return Value
+
+Returns the 32-bit murmur3 hash of the input string。
+
+-Note: When calculating hash values, it is recommended to use `xxhash_32` instead of `murmur_hash3_32`。
+
+## Examples
+
+```sql
+select murmur_hash3_32(null), murmur_hash3_32("hello"), murmur_hash3_32("hello", "world");
+```
+
+```text
++-----------------------+--------------------------+-----------------------------------+
+| murmur_hash3_32(NULL) | murmur_hash3_32('hello') | murmur_hash3_32('hello', 'world') |
++-----------------------+--------------------------+-----------------------------------+
+|                  NULL |               1321743225 |                         984713481 |
++-----------------------+--------------------------+-----------------------------------+
+```

@@ -42,7 +42,7 @@ BIGINT crc32( VARCHAR <str> )
 ## 返回值
 返回字符串的CRC值。
 
-## 举例
+## 示例
 
 ```sql
 select crc32("abc"),crc32("中国");

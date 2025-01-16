@@ -22,42 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## murmur_hash3_32
-
 ## 描述
+
+计算 32位murmur3 hash值
+
 ## 语法
 
-`INT MURMUR_HASH3_32(VARCHAR input, ...)`
+```sql
+MURMUR_HASH3_32( VARCHAR <str> [ , <str> ... ] )
+```
+
+## 参数
+
+| 参数      | 说明 |
+|---------| -- |
+| `<str>` | 需要被计算32位murmur3 hash的值 |
+
+## 返回值
 
 返回输入字符串的32位murmur3 hash值。
 
-注：在计算hash值时，更推荐使用`xxhash_32`，而不是`murmur_hash3_32`。
+-注：在计算hash值时，更推荐使用`xxhash_32`，而不是`murmur_hash3_32`。
 
-## 举例
+## 示例
 
-```
-mysql> select murmur_hash3_32(null);
-+-----------------------+
-| murmur_hash3_32(NULL) |
-+-----------------------+
-|                  NULL |
-+-----------------------+
-
-mysql> select murmur_hash3_32("hello");
-+--------------------------+
-| murmur_hash3_32('hello') |
-+--------------------------+
-|               1321743225 |
-+--------------------------+
-
-mysql> select murmur_hash3_32("hello", "world");
-+-----------------------------------+
-| murmur_hash3_32('hello', 'world') |
-+-----------------------------------+
-|                         984713481 |
-+-----------------------------------+
+```sql
+select murmur_hash3_32(null), murmur_hash3_32("hello"), murmur_hash3_32("hello", "world");
 ```
 
-### keywords
-
-    MURMUR_HASH3_32,HASH
+```text
++-----------------------+--------------------------+-----------------------------------+
+| murmur_hash3_32(NULL) | murmur_hash3_32('hello') | murmur_hash3_32('hello', 'world') |
++-----------------------+--------------------------+-----------------------------------+
+|                  NULL |               1321743225 |                         984713481 |
++-----------------------+--------------------------+-----------------------------------+
+```

@@ -29,19 +29,21 @@ under the License.
 Use CRC32 to compute the result.
 
 ## Syntax
+
 ```sql
 BIGINT crc32( VARCHAR <str> )
 ```
-## Parameter
+## Parameters
+
 | parameter | description |
 | -- | -- |
 | `<str>` | The value to be used for CRC calculation |
 
-## Return
+## Return Value
 
 Returns the Cyclic Redundancy Check value of this string.
 
-## Example
+## Examples
 
 ```sql
 select crc32("abc"),crc32("中国");

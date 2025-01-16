@@ -41,7 +41,7 @@ MD5SUM( VARCHAR <str> [ , <str> ... ] )
 ## 返回值
 返回多个字符串的MD5值。
 
-## 举例
+## 示例
 
 ```sql
 select md5("abcd"),md5sum("ab","cd");

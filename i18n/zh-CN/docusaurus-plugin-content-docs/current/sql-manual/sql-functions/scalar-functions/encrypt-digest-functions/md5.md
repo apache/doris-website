@@ -41,7 +41,7 @@ MD5( VARCHAR <str> )
 ## 返回值
 返回字符串的MD5值。
 
-## 举例
+## 示例
 
 ```sql
 select md5("abc");
