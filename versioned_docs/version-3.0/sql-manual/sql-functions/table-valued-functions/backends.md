@@ -24,89 +24,69 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `backends`
+## Description
 
-### Name
+The table function generates the backends temporary table, and you can view the BE node information in the current doris cluster.
 
-backends
-
-### description
-
-Table-Value-Function, generate a temporary table named `backends`. This tvf is used to view the information of BE nodes in the doris cluster.
-
-This function is used in `FROM` clauses.
-
-#### syntax
-
-`backends()`
-
-The table schema of `backends()` tvf：
+## Syntax
+```sql
+backends()
 ```
-mysql> desc function backends();
+
+## Access Control Requirements
+
+| Privilege  | Object | Notes |
+| :--------- |:-------|:------|
+| ALTER_PRIV | global |       |
+
+## Examples
+show backends cluster information
+```sql
+show backends();
+select * from backends();
+```
+
+```text
++-----------+-----------+---------------+--------+----------+----------+--------------------+---------------------+---------------------+-------+----------------------+-----------+------------------+-------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+----------+-----------+
+| BackendId | Host      | HeartbeatPort | BePort | HttpPort | BrpcPort | ArrowFlightSqlPort | LastStartTime       | LastHeartbeat       | Alive | SystemDecommissioned | TabletNum | DataUsedCapacity | TrashUsedCapacity | AvailCapacity | TotalCapacity | UsedPct | MaxDiskUsedPct | RemoteUsedCapacity | Tag                      | ErrMsg | Version                 | Status                                                                                                                                                                                                                 | HeartbeatFailureCounter | NodeRole | CpuCores | Memory    |
++-----------+-----------+---------------+--------+----------+----------+--------------------+---------------------+---------------------+-------+----------------------+-----------+------------------+-------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+----------+-----------+
+| 10020     | 10.xx.xx.90 | 9050          | 9060   | 8040     | 8060     | -1               | 2025-01-13 14:11:31 | 2025-01-16 13:24:55 | true  | false                | 359       | 295.328 MB       | 0.000             | 231.236 GB    | 3.437 TB      | 93.43 % | 93.43 %        | 0.000              | {"location" : "default"} |        | doris-0.0.0--83f899b32b | {"lastSuccessReportTabletsTime":"2025-01-16 13:24:07","lastStreamLoadTime":1737004982210,"isQueryDisabled":false,"isLoadDisabled":false,"isActive":true,"currentFragmentNum":0,"lastFragmentUpdateTime":1737004982195} | 0                       | mix      | 96       | 375.81 GB |
++-----------+-----------+---------------+--------+----------+----------+--------------------+---------------------+---------------------+-------+----------------------+-----------+------------------+-------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+----------+-----------+
+```
+
+backends() table schema
+```sql
+desc function backends();
+```
+
+```text
 +-------------------------+---------+------+-------+---------+-------+
 | Field                   | Type    | Null | Key   | Default | Extra |
 +-------------------------+---------+------+-------+---------+-------+
-| BackendId               | BIGINT  | No   | false | NULL    | NONE  |
-| Host                    | TEXT    | No   | false | NULL    | NONE  |
-| HeartbeatPort           | INT     | No   | false | NULL    | NONE  |
-| BePort                  | INT     | No   | false | NULL    | NONE  |
-| HttpPort                | INT     | No   | false | NULL    | NONE  |
-| BrpcPort                | INT     | No   | false | NULL    | NONE  |
-| LastStartTime           | TEXT    | No   | false | NULL    | NONE  |
-| LastHeartbeat           | TEXT    | No   | false | NULL    | NONE  |
-| Alive                   | BOOLEAN | No   | false | NULL    | NONE  |
-| SystemDecommissioned    | BOOLEAN | No   | false | NULL    | NONE  |
-| TabletNum               | BIGINT  | No   | false | NULL    | NONE  |
-| DataUsedCapacity        | BIGINT  | No   | false | NULL    | NONE  |
-| AvailCapacity           | BIGINT  | No   | false | NULL    | NONE  |
-| TotalCapacity           | BIGINT  | No   | false | NULL    | NONE  |
-| UsedPct                 | DOUBLE  | No   | false | NULL    | NONE  |
-| MaxDiskUsedPct          | DOUBLE  | No   | false | NULL    | NONE  |
-| RemoteUsedCapacity      | BIGINT  | No   | false | NULL    | NONE  |
-| Tag                     | TEXT    | No   | false | NULL    | NONE  |
-| ErrMsg                  | TEXT    | No   | false | NULL    | NONE  |
-| Version                 | TEXT    | No   | false | NULL    | NONE  |
-| Status                  | TEXT    | No   | false | NULL    | NONE  |
-| HeartbeatFailureCounter | INT     | No   | false | NULL    | NONE  |
-| NodeRole                | TEXT    | No   | false | NULL    | NONE  |
+| BackendId               | bigint  | No   | false | NULL    | NONE  |
+| Host                    | text    | No   | false | NULL    | NONE  |
+| HeartbeatPort           | int     | No   | false | NULL    | NONE  |
+| BePort                  | int     | No   | false | NULL    | NONE  |
+| HttpPort                | int     | No   | false | NULL    | NONE  |
+| BrpcPort                | int     | No   | false | NULL    | NONE  |
+| ArrowFlightSqlPort      | int     | No   | false | NULL    | NONE  |
+| LastStartTime           | text    | No   | false | NULL    | NONE  |
+| LastHeartbeat           | text    | No   | false | NULL    | NONE  |
+| Alive                   | boolean | No   | false | NULL    | NONE  |
+| SystemDecommissioned    | boolean | No   | false | NULL    | NONE  |
+| TabletNum               | bigint  | No   | false | NULL    | NONE  |
+| DataUsedCapacity        | bigint  | No   | false | NULL    | NONE  |
+| TrashUsedCapacity       | bigint  | No   | false | NULL    | NONE  |
+| AvailCapacity           | bigint  | No   | false | NULL    | NONE  |
+| TotalCapacity           | bigint  | No   | false | NULL    | NONE  |
+| UsedPct                 | double  | No   | false | NULL    | NONE  |
+| MaxDiskUsedPct          | double  | No   | false | NULL    | NONE  |
+| RemoteUsedCapacity      | bigint  | No   | false | NULL    | NONE  |
+| Tag                     | text    | No   | false | NULL    | NONE  |
+| ErrMsg                  | text    | No   | false | NULL    | NONE  |
+| Version                 | text    | No   | false | NULL    | NONE  |
+| Status                  | text    | No   | false | NULL    | NONE  |
+| HeartbeatFailureCounter | int     | No   | false | NULL    | NONE  |
+| NodeRole                | text    | No   | false | NULL    | NONE  |
 +-------------------------+---------+------+-------+---------+-------+
-23 rows in set (0.002 sec)
 ```
-
-The information displayed by the `backends` tvf is basically consistent with the information displayed by the `show backends` statement. However, the types of each field in the `backends` tvf are more specific, and you can use the `backends` tvf to perform operations such as filtering and joining.
-
-The information displayed by the `backends` tvf is authenticated, which is consistent with the behavior of `show backends`, user must have ADMIN/OPERATOR privelege.
-
-### example
-```
-mysql> select * from backends()\G
-*************************** 1. row ***************************
-              BackendId: 10002
-                   Host: 10.xx.xx.90
-          HeartbeatPort: 9053
-                 BePort: 9063
-               HttpPort: 8043
-               BrpcPort: 8069
-          LastStartTime: 2023-06-15 16:51:02
-          LastHeartbeat: 2023-06-15 17:09:58
-                  Alive: 1
-   SystemDecommissioned: 0
-              TabletNum: 21
-       DataUsedCapacity: 0
-          AvailCapacity: 5187141550081
-          TotalCapacity: 7750977622016
-                UsedPct: 33.077583202570978
-         MaxDiskUsedPct: 33.077583202583881
-     RemoteUsedCapacity: 0
-                    Tag: {"location" : "default"}
-                 ErrMsg: 
-                Version: doris-0.0.0-trunk-4b18cde0c7
-                 Status: {"lastSuccessReportTabletsTime":"2023-06-15 17:09:02","lastStreamLoadTime":-1,"isQueryDisabled":false,"isLoadDisabled":false}
-HeartbeatFailureCounter: 0
-               NodeRole: mix
-1 row in set (0.038 sec)
-```
-
-### keywords
-
-    backends
