@@ -24,26 +24,45 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## microseconds_diff
-### description
-#### Syntax
 
-`INT microseconds_diff(DATETIME enddate, DATETIME startdate)`
+## Description
 
-How many microseconds is the difference between the start time and the end time.
+Calculates the microsecond difference between two datetime values. The result is the number of microseconds from startdate subtracted from enddate.
 
-### example
+## Syntax
 
+```sql
+INT MICROSECONDS_DIFF(DATETIMEV2 enddate, DATETIMEV2 startdate)
 ```
-mysql> select microseconds_diff('2020-12-25 21:00:00.623000','2020-12-25 21:00:00.123000');
+
+## Parameters
+
+| Parameter  | Description                                     |
+|------------|-------------------------------------------------|
+| enddate    | The end time, of type DATETIMEV2               |
+| startdate  | The start time, of type DATETIMEV2             |
+
+## Return Value
+
+Returns an INT type representing the microsecond difference between the two times.
+- Returns a positive number if enddate is greater than startdate.
+- Returns a negative number if enddate is less than startdate.
+- 1 second = 1,000,000 microseconds.
+
+## Example
+
+```sql
+SELECT MICROSECONDS_DIFF('2020-12-25 21:00:00.623000', '2020-12-25 21:00:00.123000');
+```
+
+```text
 +-----------------------------------------------------------------------------------------------------------------------------+
-| microseconds_diff(cast('2020-12-25 21:00:00.623000' as DATETIMEV2(6)), cast('2020-12-25 21:00:00.123000' as DATETIMEV2(6))) |
+| microseconds_diff(cast('2020-12-25 21:00:00.623000' as DATETIMEV2(3)), cast('2020-12-25 21:00:00.123000' as DATETIMEV2(3))) |
 +-----------------------------------------------------------------------------------------------------------------------------+
 |                                                                                                                      500000 |
 +-----------------------------------------------------------------------------------------------------------------------------+
-1 row in set (0.12 sec)
 ```
 
-### keywords
+## Keywords
 
-    microseconds_diff
+    MICROSECONDS_DIFF

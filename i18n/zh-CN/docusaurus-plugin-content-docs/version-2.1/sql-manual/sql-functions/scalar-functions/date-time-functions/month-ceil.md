@@ -55,7 +55,7 @@ DATETIME MONTH_CEIL(DATETIME datetime, INT period, DATETIME origin)
 SELECT MONTH_CEIL("2023-07-13 22:28:18", 5);
 ```
 
-```plaintext
+```text
 +-------------------------------------------------------------+
 | month_ceil(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
 +-------------------------------------------------------------+

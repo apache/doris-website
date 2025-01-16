@@ -49,10 +49,10 @@ DATETIMEV2 MILLISECONDS_ADD(DATETIMEV2 basetime, INT delta)
 ## 举例
 
 ```sql
-select MILLISECONDS_ADD('2023-09-08 16:02:08.435123', 1);
+SELECT MILLISECONDS_ADD('2023-09-08 16:02:08.435123', 1);
 ```
 
-```plaintext
+```text
 +--------------------------------------------------------------------------+
 | milliseconds_add(cast('2023-09-08 16:02:08.435123' as DATETIMEV2(6)), 1) |
 +--------------------------------------------------------------------------+

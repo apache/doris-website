@@ -22,28 +22,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## last_day
-### Description
-#### Syntax
+## Description
 
-`DATE last_day(DATETIME date)`
+Returns the date of the last day of the month for the given input date. The returned day varies depending on the month:
+- 28th - For February in non-leap years
+- 29th - For February in leap years
+- 30th - For April, June, September, and November
+- 31st - For January, March, May, July, August, October, and December
 
-Return the last day of the month, the return day may be :
-'28'(February and not a leap year), 
-'29'(February and a leap year),
-'30'(April, June, September, November),
-'31'(January, March, May, July, August, October, December)
+## Syntax
 
-### example
-
-```
-mysql > select last_day('2000-02-03');
-+-------------------+
-| last_day('2000-02-03 00:00:00') |
-+-------------------+
-| 2000-02-29        |
-+-------------------+
+```sql
+DATE LAST_DAY(DATETIME date)
 ```
 
-### keywords
-    LAST_DAY,DAYS
+## Parameters
+
+| Parameter | Description |
+| ---- | ---- |
+| date | Input datetime value, type can be DATETIME or DATE |
+
+## Return Value
+
+Returns a DATE type value.
+
+## Examples
+
+```sql
+SELECT LAST_DAY('2000-02-03');
+```
+
+```text
++-----------------------------------------------+
+| last_day(cast('2000-02-03' as DATETIMEV2(0))) |
++-----------------------------------------------+
+| 2000-02-29                                    |
++-----------------------------------------------+
+```
+
+## Keywords
+
+    LAST_DAY

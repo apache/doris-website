@@ -55,7 +55,7 @@ DATETIME MINUTE_CEIL(DATETIME datetime, INT period, DATETIME origin)
 select MINUTE_CEIL("2023-07-13 22:28:18", 5);
 ```
 
-```plaintext
+```text
 +--------------------------------------------------------------+
 | minute_ceil(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
 +--------------------------------------------------------------+

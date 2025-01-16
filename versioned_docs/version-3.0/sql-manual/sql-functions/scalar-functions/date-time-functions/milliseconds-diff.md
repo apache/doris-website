@@ -24,26 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## milliseconds_diff
-### description
-#### Syntax
 
-`INT milliseconds_diff(DATETIME enddate, DATETIME startdate)`
+## Description
 
-How many milliseconds is the difference between the start time and the end time?
+Calculates the millisecond difference between two datetime values. The result is the number of milliseconds from startdate subtracted from enddate.
 
-### example
+## Syntax
 
+```sql
+INT MILLISECONDS_DIFF(DATETIMEV2 enddate, DATETIMEV2 startdate)
 ```
-mysql> select milliseconds_diff('2020-12-25 21:00:00.623000','2020-12-25 21:00:00.123000');
+
+## Parameters
+
+| Parameter  | Description                                     |
+|------------|-------------------------------------------------|
+| enddate    | The end time, of type DATETIMEV2               |
+| startdate  | The start time, of type DATETIMEV2             |
+
+## Return Value
+
+Returns an INT type representing the millisecond difference between the two times.
+- Returns a positive number if enddate is greater than startdate.
+- Returns a negative number if enddate is less than startdate.
+- 1 second = 1,000 milliseconds.
+- 1 millisecond = 1,000 microseconds.
+
+## Example
+
+```sql
+SELECT MILLISECONDS_DIFF('2020-12-25 21:00:00.623000', '2020-12-25 21:00:00.123000');
+```
+
+```text
 +-----------------------------------------------------------------------------------------------------------------------------+
-| milliseconds_diff(cast('2020-12-25 21:00:00.623000' as DATETIMEV2(6)), cast('2020-12-25 21:00:00.123000' as DATETIMEV2(6))) |
+| milliseconds_diff(cast('2020-12-25 21:00:00.623000' as DATETIMEV2(3)), cast('2020-12-25 21:00:00.123000' as DATETIMEV2(3))) |
 +-----------------------------------------------------------------------------------------------------------------------------+
 |                                                                                                                         500 |
 +-----------------------------------------------------------------------------------------------------------------------------+
-1 row in set (0.03 sec)
 ```
 
-### keywords
+**Note:**
+- The time difference in the example is 0.5 seconds, which equals 500 milliseconds.
+- The function's result is dependent on the precision of the input time; the example uses a precision of 3 decimal places.
+- The result only returns the millisecond difference and does not include the microsecond part.
 
-    milliseconds_diff
+## Keywords
+
+    MILLISECONDS_DIFF

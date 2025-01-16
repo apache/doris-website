@@ -1,6 +1,6 @@
 ---
 {
-    "title": "minute_floor",
+    "title": "MINUTE_FLOOR",
     "language": "en"
 }
 ---
@@ -24,9 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## minute_floor
-### description
-#### Syntax
+
+## Description
+
+Rounds down a datetime value to the nearest specified minute interval. If a starting time (origin) is provided, it uses that time as the reference for calculating the interval.
+
+## Syntax
 
 ```sql
 DATETIME MINUTE_FLOOR(DATETIME datetime)
@@ -35,28 +38,42 @@ DATETIME MINUTE_FLOOR(DATETIME datetime, INT period)
 DATETIME MINUTE_FLOOR(DATETIME datetime, INT period, DATETIME origin)
 ```
 
-Convert the date to the nearest rounding down time of the specified time interval period.
+## Parameters
 
-- datetime: a valid date expression.
-- period: specifies how many minutes each cycle consists of.
-- origin: starting from 0001-01-01T00:00:00.
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| datetime  | The datetime value to round down, of type DATETIME or DATETIMEV2 |
+| period    | The minute interval value, of type INT, representing the number of minutes in each interval |
+| origin    | The starting point for the interval, of type DATETIME or DATETIMEV2; defaults to 0001-01-01 00:00:00 |
 
-### example
+## Return Value
 
+Returns a value of type DATETIMEV2, representing the rounded-down datetime value.
+
+## Example
+
+```sql
+SELECT MINUTE_FLOOR("2023-07-13 22:28:18", 5);
 ```
-mysql> select minute_floor("2023-07-13 22:28:18", 5);
+
+```text
 +---------------------------------------------------------------+
 | minute_floor(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
 +---------------------------------------------------------------+
 | 2023-07-13 22:25:00                                           |
 +---------------------------------------------------------------+
-1 row in set (0.06 sec)
 ```
 
-### keywords
+**Note:**
+- If no period is specified, it defaults to a 1-minute interval.
+- The period must be a positive integer.
+- The result is always rounded down to a past time.
+- Unlike MINUTE_CEIL, MINUTE_FLOOR always discards the portion that exceeds the interval.
+
+## Keywords
 
     MINUTE_FLOOR, MINUTE, FLOOR
 
-### Best Practice
+## Best Practices
 
 See also [date_floor](./date_floor)

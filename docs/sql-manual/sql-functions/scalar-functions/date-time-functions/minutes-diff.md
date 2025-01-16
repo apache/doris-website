@@ -24,25 +24,49 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## minutes_diff
-### description
-#### Syntax
 
-`INT minutes_diff(DATETIME enddate, DATETIME startdate)`
+## Description
 
-The difference between the start time and the end time is a few minutes
+Calculates the minute difference between two datetime values. The result is the number of minutes from startdate subtracted from enddate.
 
-### example
+## Syntax
 
-```
-mysql> select minutes_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
-+------------------------------------------------------------+
-| minutes_diff('2020-12-25 22:00:00', '2020-12-25 21:00:00') |
-+------------------------------------------------------------+
-|                                                         60 |
-+------------------------------------------------------------+
+```sql
+INT MINUTES_DIFF(DATETIME enddate, DATETIME startdate)
 ```
 
-### keywords
+## Parameters
 
-    minutes_diff
+| Parameter  | Description                                     |
+|------------|-------------------------------------------------|
+| enddate    | The end time, which can be of type DATE, DATETIME, or DATETIMEV2 |
+| startdate  | The start time, which can be of type DATE, DATETIME, or DATETIMEV2 |
+
+## Return Value
+
+Returns an INT type representing the minute difference between the two times.
+- Returns a positive number if enddate is greater than startdate.
+- Returns a negative number if enddate is less than startdate.
+
+## Example
+
+```sql
+SELECT MINUTES_DIFF('2020-12-25 22:00:00', '2020-12-25 21:00:00');
+```
+
+```text
++----------------------------------------------------------------------------------------------------------+
+| minutes_diff(cast('2020-12-25 22:00:00' as DATETIMEV2(0)), cast('2020-12-25 21:00:00' as DATETIMEV2(0))) |
++----------------------------------------------------------------------------------------------------------+
+|                                                                                                       60 |
++----------------------------------------------------------------------------------------------------------+
+```
+
+**Note:**
+- The calculation only considers complete minutes; seconds and milliseconds are ignored.
+- If either input parameter is NULL, the function returns NULL.
+- It can handle time differences that span days, months, or years.
+
+## Keywords
+
+    MINUTES_DIFF

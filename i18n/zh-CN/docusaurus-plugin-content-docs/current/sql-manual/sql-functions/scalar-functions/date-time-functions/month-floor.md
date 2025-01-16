@@ -55,7 +55,7 @@ DATETIME MONTH_FLOOR(DATETIME datetime, INT period, DATETIME origin)
 SELECT MONTH_FLOOR("2023-07-13 22:28:18", 5);
 ```
 
-```plaintext
+```text
 +--------------------------------------------------------------+
 | month_floor(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
 +--------------------------------------------------------------+

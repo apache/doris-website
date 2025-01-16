@@ -56,7 +56,7 @@ DATE MAKEDATE(INT year, INT dayofyear)
 SELECT MAKEDATE(2021, 1), MAKEDATE(2021, 100), MAKEDATE(2021, 400);
 ```
 
-```plaintext
+```text
 +-------------------+---------------------+---------------------+
 | makedate(2021, 1) | makedate(2021, 100) | makedate(2021, 400) |
 +-------------------+---------------------+---------------------+

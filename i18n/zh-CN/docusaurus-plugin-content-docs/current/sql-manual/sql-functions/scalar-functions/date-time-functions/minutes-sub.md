@@ -52,7 +52,7 @@ DATETIME MINUTES_SUB(DATETIME date, INT minutes)
 SELECT MINUTES_SUB("2020-02-02 02:02:02", 1);
 ```
 
-```plaintext
+```text
 +--------------------------------------------------------------+
 | minutes_sub(cast('2020-02-02 02:02:02' as DATETIMEV2(0)), 1) |
 +--------------------------------------------------------------+

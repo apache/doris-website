@@ -52,7 +52,7 @@ DATETIMEV2 MICROSECONDS_SUB(DATETIMEV2 basetime, INT delta)
 SELECT NOW(3) as current_time, MICROSECONDS_SUB(NOW(3), 100000) as after_sub;
 ```
 
-```plaintext
+```text
 +-------------------------+----------------------------+
 | current_time            | after_sub                  |
 +-------------------------+----------------------------+

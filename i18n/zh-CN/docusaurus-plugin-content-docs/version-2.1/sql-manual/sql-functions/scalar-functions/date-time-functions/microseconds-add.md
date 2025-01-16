@@ -49,10 +49,10 @@ DATETIMEV2 MICROSECONDS_ADD(DATETIMEV2 basetime, INT delta)
 ## 举例
 
 ```sql
-SELECT NOW(3) as current_time, MICROSECONDS_ADD(NOW(3), 100000) as after_add;
+SELECT NOW(3) AS current_time, MICROSECONDS_ADD(NOW(3), 100000) AS after_add;
 ```
 
-```plaintext
+```text
 +-------------------------+----------------------------+
 | current_time            | after_add                  |
 +-------------------------+----------------------------+

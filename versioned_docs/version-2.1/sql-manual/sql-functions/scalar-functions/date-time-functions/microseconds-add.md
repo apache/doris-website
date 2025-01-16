@@ -24,27 +24,46 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## microseconds_add
-### description
-#### Syntax
 
-`DATETIMEV2 microseconds_add(DATETIMEV2 basetime, INT delta)`
-- basetime: Base time whose type is DATETIMEV2
-- delta: Microseconds to add to basetime
-- Return type of this function is DATETIMEV2
+## Description
 
-### example
+Adds a specified number of microseconds to a datetime value and returns a new datetime value.
+
+## Syntax
+
+```sql
+DATETIMEV2 MICROSECONDS_ADD(DATETIMEV2 basetime, INT delta)
 ```
-mysql> select now(3), microseconds_add(now(3), 100000);
-+-------------------------+----------------------------------+
-| now(3)                  | microseconds_add(now(3), 100000) |
-+-------------------------+----------------------------------+
-| 2023-02-21 11:35:56.556 | 2023-02-21 11:35:56.656          |
-+-------------------------+----------------------------------+
+
+## Parameters
+
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| basetime  | The input datetime value, of type DATETIMEV2    |
+| delta     | The number of microseconds to add, of type INT; 1 second = 1,000,000 microseconds |
+
+## Return Value
+
+Returns a value of type DATETIMEV2, with the same precision as the input parameter basetime.
+
+## Example
+
+```sql
+SELECT NOW(3) as current_time, MICROSECONDS_ADD(NOW(3), 100000) as after_add;
 ```
-`now(3)` returns current time as type DATETIMEV2 with precision 3d，`microseconds_add(now(3), 100000)` means 100000 microseconds after current time
 
-### keywords
-    microseconds_add
+```text
++-------------------------+----------------------------+
+| current_time            | after_add                  |
++-------------------------+----------------------------+
+| 2025-01-16 11:48:10.505 | 2025-01-16 11:48:10.605000 |
++-------------------------+----------------------------+
+```
 
-    
+**Note:**
+- NOW(3) returns the current time with a precision of 3 decimal places.
+- After adding 100000 microseconds (0.1 seconds), the time increases by 0.1 seconds.
+
+## Keywords
+
+    MICROSECONDS_ADD

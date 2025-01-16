@@ -51,7 +51,7 @@ INT MICROSECOND(DATETIMEV2 date)
 SELECT MICROSECOND(CAST('1999-01-02 10:11:12.000123' AS DATETIMEV2(6))) AS microsecond;
 ```
 
-```plaintext
+```text
 +-------------+
 | microsecond |
 +-------------+

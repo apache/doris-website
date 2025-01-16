@@ -55,7 +55,7 @@ DATETIME MINUTE_FLOOR(DATETIME datetime, INT period, DATETIME origin)
 select minute_floor("2023-07-13 22:28:18", 5);
 ```
 
-```plaintext
+```text
 +---------------------------------------------------------------+
 | minute_floor(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
 +---------------------------------------------------------------+

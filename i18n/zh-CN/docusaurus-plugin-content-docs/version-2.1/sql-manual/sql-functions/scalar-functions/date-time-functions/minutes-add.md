@@ -51,7 +51,7 @@ DATETIME MINUTES_ADD(DATETIME date, INT minutes)
 SELECT MINUTES_ADD("2020-02-02", 1);
 ```
 
-```plaintext
+```text
 +-----------------------------------------------------+
 | minutes_add(cast('2020-02-02' as DATETIMEV2(0)), 1) |
 +-----------------------------------------------------+

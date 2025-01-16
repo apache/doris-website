@@ -1,6 +1,6 @@
 ---
 {
-    "title": "month_ceil",
+    "title": "MONTH_CEIL",
     "language": "en"
 }
 ---
@@ -24,9 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## month_ceil
-### description
-#### Syntax
+
+## Description
+
+Rounds up a datetime value to the nearest specified month interval. If a starting time (origin) is provided, it uses that time as the reference for calculating the interval.
+
+## Syntax
 
 ```sql
 DATETIME MONTH_CEIL(DATETIME datetime)
@@ -35,28 +38,42 @@ DATETIME MONTH_CEIL(DATETIME datetime, INT period)
 DATETIME MONTH_CEIL(DATETIME datetime, INT period, DATETIME origin)
 ```
 
-Convert the date to the nearest rounding up time of the specified time interval period.
+## Parameters
 
-- datetime: a valid date expression.
-- period: specifies how many months each cycle consists of.
-- origin: starting from 0001-01-01T00:00:00.
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| datetime  | The datetime value to round up, of type DATETIME or DATETIMEV2 |
+| period    | The month interval value, of type INT, representing the number of months in each interval |
+| origin    | The starting point for the interval, of type DATETIME or DATETIMEV2; defaults to 0001-01-01 00:00:00 |
 
-### example
+## Return Value
 
+Returns a value of type DATETIME, representing the rounded-up datetime value. The time portion of the result will be set to 00:00:00.
+
+## Example
+
+```sql
+SELECT MONTH_CEIL("2023-07-13 22:28:18", 5);
 ```
-mysql> select month_ceil("2023-07-13 22:28:18", 5);
+
+```text
 +-------------------------------------------------------------+
 | month_ceil(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
 +-------------------------------------------------------------+
 | 2023-10-01 00:00:00                                         |
 +-------------------------------------------------------------+
-1 row in set (0.02 sec)
 ```
 
-### keywords
+**Note:**
+- If no period is specified, it defaults to a 1-month interval.
+- The period must be a positive integer.
+- The result is always rounded up to a future time.
+- The time portion of the returned value is always set to 00:00:00.
+
+## Keywords
 
     MONTH_CEIL, MONTH, CEIL
 
-### Best Practice
+## Best Practices
 
 See also [date_ceil](./date_ceil)

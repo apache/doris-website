@@ -24,28 +24,47 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## milliseconds_add
-### description
-#### Syntax
 
-`DATETIMEV2 milliseconds_add(DATETIMEV2 basetime, INT delta)`
-- basetime: Base time whose type is DATETIMEV2
-- delta:Milliseconds to add to basetime
-- Return type of this function is DATETIMEV2
+## Description
 
-### example
+Adds a specified number of milliseconds to a datetime value and returns a new datetime value.
+
+## Syntax
+
+```sql
+DATETIMEV2 MILLISECONDS_ADD(DATETIMEV2 basetime, INT delta)
 ```
-mysql> select milliseconds_add('2023-09-08 16:02:08.435123', 1);
+
+## Parameters
+
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| basetime  | The input datetime value, of type DATETIMEV2    |
+| delta     | The number of milliseconds to add, of type INT; 1 second = 1,000 milliseconds = 1,000,000 microseconds |
+
+## Return Value
+
+Returns a value of type DATETIMEV2, with the same precision as the input parameter basetime.
+
+## Example
+
+```sql
+SELECT MILLISECONDS_ADD('2023-09-08 16:02:08.435123', 1);
+```
+
+```text
 +--------------------------------------------------------------------------+
 | milliseconds_add(cast('2023-09-08 16:02:08.435123' as DATETIMEV2(6)), 1) |
 +--------------------------------------------------------------------------+
 | 2023-09-08 16:02:08.436123                                               |
 +--------------------------------------------------------------------------+
-1 row in set (0.04 sec)
 ```
 
+**Note:**
+- In the example, after adding 1 millisecond, the time increases from .435123 to .436123.
+- 1 millisecond equals 1000 microseconds.
+- The function's result is dependent on the precision of the input time; the example uses a precision of 6 decimal places.
 
-### keywords
-    milliseconds_add
+## Keywords
 
-    
+    MILLISECONDS_ADD

@@ -24,26 +24,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## month
-### Description
-#### Syntax
 
-`INT MONTH (DATETIME date)`
+## Description
 
+Extracts the month value from a datetime value. The returned value ranges from 1 to 12, representing the 12 months of the year.
 
-Returns month information in the time type, ranging from 1,12
+## Syntax
 
-The parameter is Date or Datetime type
-
-### example
-
+```sql
+INT MONTH(DATETIME date)
 ```
-mysql> select month('1987-01-01');
-+-----------------------------+
-| month('1987-01-01 00:00:00') |
-+-----------------------------+
-|                           1 |
-+-----------------------------+
+
+## Parameters
+
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| date      | The input datetime value, which can be of type DATE, DATETIME, or DATETIMEV2 |
+
+## Return Value
+
+Returns an INT type representing the month value:
+- Range: 1 to 12
+- 1 represents January, and 12 represents December.
+- If the input is NULL, the function returns NULL.
+
+## Example
+
+```sql
+SELECT MONTH('1987-01-01');
 ```
-### keywords
+
+```text
++--------------------------------------------+
+| month(cast('1987-01-01' as DATETIMEV2(0))) |
++--------------------------------------------+
+|                                          1 |
++--------------------------------------------+
+```
+
+## Keywords
+
     MONTH

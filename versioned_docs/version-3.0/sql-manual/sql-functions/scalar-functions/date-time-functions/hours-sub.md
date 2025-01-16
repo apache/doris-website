@@ -24,27 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hours_sub
-### description
-#### Syntax
+## Description
 
-`DATETIME HOURS_SUB(DATETIME date, INT hours)`
+Returns a new datetime value by subtracting the specified number of hours from the input datetime.
 
-Subtracts a specified number of hours from a datetime or date
+## Syntax
 
-The parameter date can be DATETIME or DATE, and the return type is DATETIME.
-
-### example
-
-```
-mysql> select hours_sub("2020-02-02 02:02:02", 1);
-+-------------------------------------+
-| hours_sub('2020-02-02 02:02:02', 1) |
-+-------------------------------------+
-| 2020-02-02 01:02:02                 |
-+-------------------------------------+
+```sql
+DATETIME HOURS_SUB(DATETIME date, INT hours)
 ```
 
-### keywords
+## Parameters
+
+| Parameter | Description |
+| ---- | ---- |
+| date | Input datetime value, type can be DATETIME or DATE |
+| hours | Number of hours to subtract, type is INT |
+
+## Return Value
+
+Returns a DATETIME type value.
+
+## Examples
+
+```sql
+SELECT HOURS_SUB('2020-02-02 02:02:02', 1);
+```
+
+```text
++------------------------------------------------------------+
+| hours_sub(cast('2020-02-02 02:02:02' as DATETIMEV2(0)), 1) |
++------------------------------------------------------------+
+| 2020-02-02 01:02:02                                        |
++------------------------------------------------------------+
+```
+
+## Keywords
 
     HOURS_SUB

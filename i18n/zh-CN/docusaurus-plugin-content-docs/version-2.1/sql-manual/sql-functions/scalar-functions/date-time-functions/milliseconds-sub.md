@@ -51,7 +51,7 @@ DATETIMEV2 MILLISECONDS_SUB(DATETIMEV2 basetime, INT delta)
 select MILLISECONDS_SUB('2023-09-08 16:02:08.435123', 1);
 ```
 
-```plaintext
+```text
 +--------------------------------------------------------------------------+
 | milliseconds_sub(cast('2023-09-08 16:02:08.435123' as DATETIMEV2(6)), 1) |
 +--------------------------------------------------------------------------+
