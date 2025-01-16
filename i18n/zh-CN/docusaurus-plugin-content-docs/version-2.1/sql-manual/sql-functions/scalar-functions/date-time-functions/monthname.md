@@ -24,28 +24,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## monthname
+
 ## 描述
+
+返回日期对应的英文月份名称。返回值为完整的英文月份名称（January 到 December）。
+
 ## 语法
 
-`VARCHAR MONTHNAME(DATE)`
+```sql
+VARCHAR MONTHNAME(DATETIME date)
+```
 
+## 参数
 
-返回日期对应的月份名字
+| 参数 | 说明 |
+| ---- | ---- |
+| date | 输入的日期时间值，类型可以是 DATE、DATETIME 或 DATETIMEV2 |
 
-参数为Date或者Datetime类型
+## 返回值
+
+返回类型为 VARCHAR，表示月份的英文名称：
+- 返回值范围：January, February, March, April, May, June, July, August, September, October, November, December
+- 如果输入为 NULL，返回 NULL
+- 返回值首字母大写，其余字母小写
 
 ## 举例
 
-```
-mysql> select monthname('2008-02-03 00:00:00');
-+----------------------------------+
-| monthname('2008-02-03 00:00:00') |
-+----------------------------------+
-| February                         |
-+----------------------------------+
+```sql
+select monthname('2008-02-03 00:00:00');
 ```
 
-### keywords
+```plaintext
++---------------------------------------------------------+
+| monthname(cast('2008-02-03 00:00:00' as DATETIMEV2(0))) |
++---------------------------------------------------------+
+| February                                                |
++---------------------------------------------------------+
+```
+
+## 关键词
 
     MONTHNAME

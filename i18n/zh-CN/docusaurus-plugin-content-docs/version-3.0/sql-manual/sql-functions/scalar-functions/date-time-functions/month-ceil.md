@@ -1,6 +1,6 @@
 ---
 {
-  "title": "month_ceil",
+  "title": "MONTH_CEIL",
   "language": "zh-CN"
 }
 ---
@@ -24,8 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## month_ceil
 ## 描述
+
+将日期时间值向上取整到最近的指定月份周期。如果指定了起始时间（origin），则以该时间为基准计算周期。
+
 ## 语法
 
 ```sql
@@ -35,28 +37,42 @@ DATETIME MONTH_CEIL(DATETIME datetime, INT period)
 DATETIME MONTH_CEIL(DATETIME datetime, INT period, DATETIME origin)
 ```
 
-将日期转化为指定的时间间隔周期的最近上取整时刻。
+## 参数
 
-- datetime：参数是合法的日期表达式。
-- period：参数是指定每个周期有几个月组成。
-- origin：开始的时间起点，如果不填，默认是 0001-01-01T00:00:00。
+| 参数 | 说明 |
+| ---- | ---- |
+| datetime | 需要向上取整的日期时间值，类型为 DATETIME 或 DATETIMEV2 |
+| period | 月份周期值，类型为 INT，表示每个周期包含的月数 |
+| origin | 周期的起始时间点，类型为 DATETIME 或 DATETIMEV2，默认值为 0001-01-01 00:00:00 |
+
+## 返回值
+
+返回类型为 DATETIME，表示向上取整后的日期时间值。结果的时间部分将被设置为 00:00:00。
 
 ## 举例
 
+```sql
+SELECT MONTH_CEIL("2023-07-13 22:28:18", 5);
 ```
-mysql> select month_ceil("2023-07-13 22:28:18", 5);
+
+```plaintext
 +-------------------------------------------------------------+
 | month_ceil(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
 +-------------------------------------------------------------+
 | 2023-10-01 00:00:00                                         |
 +-------------------------------------------------------------+
-1 row in set (0.02 sec)
 ```
 
-### keywords
+注意：
+- 不指定 period 时，默认以 1 个月为周期
+- period 必须为正整数
+- 结果总是向未来时间取整
+- 返回值的时间部分总是 00:00:00
+
+## 关键词
 
     MONTH_CEIL, MONTH, CEIL
 
-### Best Practice
+## 最佳实践
 
 还可参阅 [date_ceil](./date_ceil)
