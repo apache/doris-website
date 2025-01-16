@@ -44,9 +44,6 @@ MURMUR_HASH3_64( <str> [ , <str> ... ] )
 
 返回输入字符串的64位murmur3 hash值。
 
--当参数为NULL时，返回NULL
-
-
 ## 示例
 
 ```sql

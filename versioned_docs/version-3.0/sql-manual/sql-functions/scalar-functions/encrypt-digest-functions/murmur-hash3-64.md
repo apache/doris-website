@@ -44,7 +44,6 @@ MURMUR_HASH3_64( <str> [ , <str> ... ] )
 
 Returns the 64-bit murmur3 hash of the input string。
 
--When the parameter is NULL, it returns NULL
 
 
 ## Examples
