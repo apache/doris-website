@@ -37,6 +37,13 @@ This funciton is supported since 2.1.0.
 MV_INFOS("database"="<database>")
 ```
 
+## Required Parameters
+**`<database>`**
+> Specify the cluster database name to be queried
+
+
+## Return Value
+
 View mv_infos() Table schema:
 ```sql
 desc function mv_infos("database"="tpch100");
