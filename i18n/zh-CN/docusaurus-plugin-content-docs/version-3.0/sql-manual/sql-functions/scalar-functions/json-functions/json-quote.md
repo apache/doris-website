@@ -24,47 +24,66 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_quote
 ## 描述
+将 json_value 用双引号（"）括起来，跳过其中包含的特殊转义字符。
+
 ## 语法
+```sql
+JSON_QUOTE(<a>)
+```
 
-`VARCHAR json_quote(VARCHAR)`
+## 参数
+| 参数 | 描述                  |
+|------|---------------------|
+| `<a>` | 要括起来的 json_value 的值 |
 
 
-将json_value用双引号（"）括起来，跳过其中包含的特殊转义字符
+## 返回值
+返回一个 json_value。特殊情况如下：
+* 如果传入的参数为 NULL，返回 NULL。
 
 ## 举例
 
+```sql
+SELECT json_quote('null'), json_quote('"null"');
 ```
-MySQL> SELECT json_quote('null'), json_quote('"null"');
+
+```text
 +--------------------+----------------------+
 | json_quote('null') | json_quote('"null"') |
 +--------------------+----------------------+
 | "null"             | "\"null\""           |
 +--------------------+----------------------+
+```
 
-
-MySQL> SELECT json_quote('[1, 2, 3]');
+```sql
+SELECT json_quote('[1, 2, 3]');
+```
+```text
 +-------------------------+
 | json_quote('[1, 2, 3]') |
 +-------------------------+
 | "[1, 2, 3]"             |
 +-------------------------+
-
-
-MySQL> SELECT json_quote(null);
+```
+```sql
+SELECT json_quote(null);
+```
+```text
 +------------------+
 | json_quote(null) |
 +------------------+
 | NULL             |
 +------------------+
+```
 
-MySQL> select json_quote("\n\b\r\t");
+```sql
+select json_quote("\n\b\r\t");
+```
+```text
 +------------------------+
 | json_quote('\n\b\r\t') |
 +------------------------+
 | "\n\b\r\t"             |
 +------------------------+
 ```
-### keywords
-json,quote,json_quote

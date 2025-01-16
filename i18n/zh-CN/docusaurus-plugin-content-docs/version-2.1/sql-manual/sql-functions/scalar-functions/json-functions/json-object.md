@@ -24,47 +24,77 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_object
+
 ## 描述
+
+生成一个或者多个包含指定 Key-Value 对的 json object, 当 Key 值为 NULL 或者传入参数为奇数个时，返回异常错误。
+
 ## 语法
 
-`VARCHAR json_object(VARCHAR,...)`
-
-
-生成一个包含指定Key-Value对的json object, 当Key值为NULL或者传入参数为奇数个时，返回异常错误
-
-## 举例
-
+```sql
+JSON_OBJECT(key,value[,key,value...])
 ```
-MySQL> select json_object();
+
+## 参数
+
+| 参数      | 描述                                       |
+|---------|------------------------------------------|
+| `key`   | 指定生成的 json object 的 Key-Value 中的 Key 值   |
+| `value` | 指定生成的 json object 的 Key-Value 中的 Value 值 |
+
+## 返回值
+
+返回一个 json object。特殊情况如下：
+* 如果没有传入参数，返回一个空的 json object。
+* 如果传入的参数个数为奇数个，返回异常错误。
+* 如果传入的 Key 为 NULL，返回异常错误。
+* 如果传入的 Value 为 NULL，返回的 json object 中该 Key-Value 对的 Value 值为 NULL。
+
+## 示例
+
+```sql
+select json_object();
+```
+```text
 +---------------+
 | json_object() |
 +---------------+
 | {}            |
 +---------------+
-
-MySQL> select json_object('time',curtime());
+```
+```sql
+select json_object('time',curtime());
+```
+```text
 +--------------------------------+
 | json_object('time', curtime()) |
 +--------------------------------+
 | {"time": "10:49:18"}           |
 +--------------------------------+
-
-
-MySQL> SELECT json_object('id', 87, 'name', 'carrot');
+```
+```sql
+SELECT json_object('id', 87, 'name', 'carrot');
+```
+```text
 +-----------------------------------------+
 | json_object('id', 87, 'name', 'carrot') |
 +-----------------------------------------+
 | {"id": 87, "name": "carrot"}            |
 +-----------------------------------------+
-
-
-MySQL> select json_object('username',null);
+```
+```sql
+select json_object('username',null);
+```
+```text
 +---------------------------------+
 | json_object('username', 'NULL') |
 +---------------------------------+
 | {"username": NULL}              |
 +---------------------------------+
 ```
-### keywords
-json,object,json_object
+```sql
+select json_object(null,null);
+```
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = json_object key can't be NULL: json_object(NULL)
+```
