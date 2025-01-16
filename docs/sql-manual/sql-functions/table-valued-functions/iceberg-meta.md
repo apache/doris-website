@@ -33,6 +33,7 @@ iceberg_meta table-valued-function(tvf), Use for read iceberg metadata, operatio
 ICEBERG_META(
     "table" = "<table>", 
     "query_type" = "<snapshots>"
+    [, ...]
   );
 ```
 

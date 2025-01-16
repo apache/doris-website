@@ -35,6 +35,7 @@ hudi_meta 表函数（table-valued-function,tvf），可以用于读取 hudi 表
 HUDI_META(
     "table" = "<table>", 
     "query_type" = "<query_type>"
+    [, ...]
   );
 ```
 

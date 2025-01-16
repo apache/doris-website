@@ -33,6 +33,7 @@ iceberg_meta 表函数（table-valued-function,tvf），可以用于读取 icebe
 ICEBERG_META(
     "table" = "<table>", 
     "query_type" = "<snapshots>"
+    [, ...]
   );
 ```
 

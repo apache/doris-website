@@ -35,6 +35,7 @@ hudi_meta table-valued-function(tvf), using for read hudi metadata, operation hi
 HUDI_META(
     "table" = "<table>", 
     "query_type" = "<query_type>"
+    [, ...]
   );
 ```
 
