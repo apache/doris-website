@@ -26,23 +26,38 @@ under the License.
 
 ## ST_Point
 ## 描述
+
+通过给定的 X 坐标值，Y 坐标值返回对应的 Point。
+
+当前这个值只是在球面集合上有意义，X/Y 对应的是经度/纬度 (longitude/latitude);
+
 ## 语法
 
-`POINT ST_Point(DOUBLE x, DOUBLE y)`
+```sql
+POINT ST_Point(DOUBLE x, DOUBLE y)
+```
+## 参数
 
+| 参数  | 说明  |
+|-----|-----|
+| `x` | 横坐标 |
+| `y` | 纵坐标 |
 
-通过给定的X坐标值，Y坐标值返回对应的Point。
-当前这个值只是在球面集合上有意义，X/Y对应的是经度/纬度(longitude/latitude);
+## 返回值
+
+给定横坐标以及纵坐标对应的位置信息
 
 ## 举例
 
+```sql
+SELECT ST_AsText(ST_Point(24.7, 56.7));
 ```
-mysql> SELECT ST_AsText(ST_Point(24.7, 56.7));
+
+```text
 +---------------------------------+
 | st_astext(st_point(24.7, 56.7)) |
 +---------------------------------+
 | POINT (24.7 56.7)               |
 +---------------------------------+
 ```
-### keywords
-ST_POINT,ST,POINT
+

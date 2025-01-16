@@ -25,23 +25,36 @@ under the License.
 -->
 
 ## ST_LineFromText,ST_LineStringFromText
-### Description
-#### Syntax
+## 描述
 
-`GEOMETRY ST LineFromText (VARCHAR wkt)`
+将一个 WKT（Well Known Text）转化为一个 Line 形式的内存表现形式
 
+## 语法
 
-Converting a WKT (Well Known Text) into a Line-style memory representation
-
-### example
-
+```sql
+GEOMETRY ST_LineFromText(VARCHAR wkt)
 ```
-mysql> SELECT ST_AsText(ST_LineFromText("LINESTRING (1 1, 2 2)"));
+
+## 参数
+
+| 参数  | 说明         |
+|-----|------------|
+| `wkt` | 由两个坐标组成的线段 |
+
+## 返回值
+
+线段的内存形式。
+
+## 举例
+
+```sql
+SELECT ST_AsText(ST_LineFromText("LINESTRING (1 1, 2 2)"));
+```
+
+```text
 +---------------------------------------------------------+
 | st_astext(st_geometryfromtext('LINESTRING (1 1, 2 2)')) |
 +---------------------------------------------------------+
 | LINESTRING (1 1, 2 2)                                   |
 +---------------------------------------------------------+
 ```
-### keywords
-ST_LINEFROMTEXT, ST_LINESTRINGFROMTEXT,ST,LINEFROMTEXT,LINESTRINGFROMTEXT

@@ -26,22 +26,36 @@ under the License.
 
 ## ST_GeometryFromText,ST_GeomFromText
 ## 描述
+
+将一个线型 WKT（Well Known Text）转化为对应的内存的几何形式
+
 ## 语法
 
-`GEOMETRY ST_GeometryFromText(VARCHAR wkt)`
+```sql
+GEOMETRY ST_GeometryFromText(VARCHAR wkt)`
+```
+## 参数
 
+| 参数 | 说明      |
+| -- |---------|
+| `WKB` | 图形的内存形式 |
 
-将一个WKT（Well Known Text）转化为对应的内存的几何形式
+## 返回值
+
+WKB 的对应的几何存储形式
 
 ## 举例
 
+```sql
+SELECT ST_AsText(ST_GeometryFromText("LINESTRING (1 1, 2 2)"));
 ```
-mysql> SELECT ST_AsText(ST_GeometryFromText("LINESTRING (1 1, 2 2)"));
+
+```text
 +---------------------------------------------------------+
 | st_astext(st_geometryfromtext('LINESTRING (1 1, 2 2)')) |
 +---------------------------------------------------------+
 | LINESTRING (1 1, 2 2)                                   |
 +---------------------------------------------------------+
 ```
-### keywords
-ST_GEOMETRYFROMTEXT,ST_GEOMFROMTEXT,ST,GEOMETRYFROMTEXT,GEOMFROMTEXT
+
+

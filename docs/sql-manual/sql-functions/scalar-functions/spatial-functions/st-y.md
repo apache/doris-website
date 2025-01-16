@@ -25,23 +25,34 @@ under the License.
 -->
 
 ## ST_Y
-### Description
-#### Syntax
+## Description
+
+When point is a valid POINT type, return the corresponding y-coordinate value
+
+## Syntax
 
 `DOUBLE ST_Y(POINT point)`
 
+## Parameters
 
-When point is a valid POINT type, the corresponding Y coordinate value is returned.
+| Parameters | Instructions |
+|------|----------|
+| `point` | The geometric coordinates of a two-dimensional point |
 
-### example
+## Return Value
 
+Y value in geometric coordinates
+
+## Examples
+
+```sql
+SELECT ST_Y(ST_Point(24.7, 56.7));
 ```
-mysql> SELECT ST_Y(ST_Point(24.7, 56.7));
+
+```text
 +----------------------------+
-| st_y(st_point(24.7, 56.7)) |
+| st_x(st_point(24.7, 56.7)) |
 +----------------------------+
-|                       56.7 |
+|                       24.7 |
 +----------------------------+
 ```
-### keywords
-ST_Y,ST,Y
