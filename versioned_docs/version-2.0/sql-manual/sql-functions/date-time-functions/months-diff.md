@@ -24,25 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## months_diff
-### description
-#### Syntax
+## Description
+The `MONTHS_DIFF` function calculates the number of complete months between two dates. It accepts two date arguments and returns the difference in months as an integer.
 
-`INT months_diff(DATETIME enddate, DATETIME startdate)`
+## Syntax
 
-The difference between the start time and the end time is months
+`MONTHS_DIFF(<enddate>, <startdate>)`
 
-### example
+## Parameters
 
+| 参数            | 说明         |
+|---------------|------------|
+| `<enddate>`   | end date   |
+| `<startdate>` | start date |
+
+## Return Value
+
+returns the number of months resulting from `<enddate>` minus `<startdate>`
+- When either `<enddate>` or `<startdate>` is NULL, or both are NULL, it returns NULL
+- When either `<enddate>` or `<startdate>` is `0000-00-00`, or both are `0000-00-00`, it returns NULL
+
+## Example
+
+```sql
+select months_diff('2020-12-25','2020-10-25'),months_diff('2020-10-25 10:00:00','2020-12-25 11:00:00');
 ```
-mysql> select months_diff('2020-12-25','2020-10-25');
-+-----------------------------------------------------------+
-| months_diff('2020-12-25 00:00:00', '2020-10-25 00:00:00') |
-+-----------------------------------------------------------+
-|                                                         2 |
-+-----------------------------------------------------------+
+
+```text
++---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------+
+| months_diff(cast('2020-12-25' as DATETIMEV2(0)), cast('2020-10-25' as DATETIMEV2(0))) | months_diff(cast('2020-10-25 10:00:00' as DATETIMEV2(0)), cast('2020-12-25 11:00:00' as DATETIMEV2(0))) |
++---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------+
+|                                                                                     2 |                                                                                                      -2 |
++---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-
-    months_diff

@@ -25,6 +25,7 @@ under the License.
 -->
 
 ## Description
+
 The function calculates the time difference between two datetime values and returns the difference in seconds.
 
 ## Syntax
