@@ -24,13 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## group_bit_or
+## 描述
 ## 语法
 
 `expr GROUP_BIT_OR(expr)`
 
-对 expr 进行 or 计算，返回新的 expr
-支持所有 INT 类型
+对expr进行 or 计算, 返回新的expr
+支持所有INT类型
 
 ## 举例
 
@@ -54,4 +55,6 @@ mysql> select group_bit_or(value) from group_bit;
 +-----------------------+
 ```
 
+### keywords
 
+    GROUP_BIT_OR,BIT

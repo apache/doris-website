@@ -24,7 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## HISTOGRAM
+## 描述
 ## 语法
 
 `histogram(expr[, INT num_buckets])`
@@ -97,4 +98,6 @@ MySQL [test]> SELECT histogram(c_string, 2) FROM histogram_test;
 
 > 直方图总的元素数量 = 最后一个桶的元素数量（count）+ 前面桶的元素总量（pre_sum）。
 
+### keywords
 
+HISTOGRAM, HIST

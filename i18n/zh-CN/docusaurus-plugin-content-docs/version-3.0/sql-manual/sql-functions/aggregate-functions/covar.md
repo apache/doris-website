@@ -24,12 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## COVAR
+## 描述
 ## 语法
 
 ` double covar(x, y)`
 
-计算协方差，即返回结果为：x 和 y 的协方差。
+计算协方差, 即返回结果为: x和y的协方差。
 
 
 ## 举例
@@ -44,4 +45,5 @@ mysql> select covar(x,y) from baseall;
 1 row in set (0.21 sec)
 
 ```
-
+### keywords
+COVAR

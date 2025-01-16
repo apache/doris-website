@@ -24,7 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## SUM
+## 描述
 ## 语法
 
 `SUM(expr)`
@@ -41,4 +42,5 @@ MySQL > select sum(scan_rows) from log_statis group by datetime;
 |       8217360135 |
 +------------------+
 ```
-
+### keywords
+SUM

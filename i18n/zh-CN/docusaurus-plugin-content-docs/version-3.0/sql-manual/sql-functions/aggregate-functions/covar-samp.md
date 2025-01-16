@@ -24,12 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## COVAR_SAMP
+## 描述
 ## 语法
 
 ` double covar_samp(x, y)`
 
-计算 x 和 y 的样本协方差。
+计算x和y的样本协方差。
 
 
 ## 举例
@@ -44,4 +45,5 @@ mysql> select covar_samp(x,y) from baseall;
 1 row in set (0.21 sec)
 
 ```
-
+### keywords
+COVAR_SAMP

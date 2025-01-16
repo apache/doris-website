@@ -24,7 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+## MIN_BY
+## 描述
 ## 语法
 
 `MIN_BY(expr1, expr2)`
@@ -51,4 +52,5 @@ MySQL > select min_by(k1, k4) from tbl;
 |                  4 |
 +--------------------+ 
 ```
-
+### keywords
+MIN_BY
