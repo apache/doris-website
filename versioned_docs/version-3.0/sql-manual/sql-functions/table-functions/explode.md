@@ -24,20 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode
+## Description
 
-### description
+The explode function takes an array as input and maps each element of the array to a separate row. It is typically used in conjunction with LATERAL VIEW to flatten nested data structures into a standard tabular format. The main difference between explode and explode_outer lies in handling empty values.
 
-Table functions must be used in conjunction with Lateral View.
-
-explode array column to rows. `explode_outer` will return NULL, while `array` is NULL or empty.
-`explode` and `explode_outer` both keep the nested NULL elements of array.
-
-#### syntax
+## Syntax
 ```sql
 explode(expr)
 explode_outer(expr)
 ```
+
+## Required Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<arr>` | 	Array type |
+
+## Return Value
+
+When the array is not empty or NULL, the return values of `explode` and `explode_outer` are the same.
+
+When the data is empty or NULL:
+
+`explode` will not produce any rows and will filter out these records.
+
+`explode_outer` if the array is empty, will generate a single row, but the expanded column value will be NULL. If the array is NULL, it will also retain a row and return NULL.
 
 ### example
 ```

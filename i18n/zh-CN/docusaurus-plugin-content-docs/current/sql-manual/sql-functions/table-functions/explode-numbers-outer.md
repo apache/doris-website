@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Outer 组合器",
+    "title": "EXPLODE_NUMBERS_OUTER",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## outer组合器
-
 ## 描述
 
-在table function的函数名后面添加`_outer`后缀使得函数行为从`non-outer`变为`outer`,在表函数生成0行数据时添加一行`Null`数据。
+`explode_numbers_outer` 表函数，接受一个整数 n ，将范围的所有数字展开为多行，每行一个数字。常用于生成连续数字的序列，配合 LATERAL VIEW 使用。与 `explode_numbers` 不同的是，会在表函数生成0行数据时添加一行`Null`数据。
+
 ## 语法
-`explode_numbers(INT x)`
+`explode_numbers_outer(<n>)`
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<n>` | 整数类型 |
+
+## 返回值
+
+返回一个[0,n)的序列
+
+- 当为 0 或者 NULL 时返回 NULL
 
 ## 举例
 
@@ -47,4 +58,4 @@ mysql> select e1 from (select 1 k1) as t lateral view explode_numbers_outer(0) t
 ```
 ### keywords
 
-    outer
+explode,numbers,explode_numbers

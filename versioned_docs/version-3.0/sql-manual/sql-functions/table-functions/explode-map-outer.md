@@ -1,7 +1,7 @@
 ---
 {
-"title": "explode_map_outer",
-"language": "en"
+    "title": "EXPLODE_MAP_OUTER",
+    "language": "en"
 }
 ---
 
@@ -26,72 +26,119 @@ under the License.
 
 ## Description
 
-The table function is used in conjunction with Lateral View and can support multiple Lateral Views. It only supports the new optimizer.
+The `explode_map_outer` function takes a map (mapping type) and expands it into multiple rows, with each row containing a key-value pair. It is typically used in conjunction with LATERAL VIEW and can support multiple lateral views. It is supported only by the new optimizer.
 
-It expands an array column into multiple rows and adds a column indicating the position, returning a struct type. When the array is NULL or empty, posexplode_outer returns NULL. Both posexplode and posexplode_outer will return NULL elements within the array.
+The main difference between `explode_map` and `explode_map_outer` lies in the handling of null values.
 
 ## Syntax
-```sql
-posexplode(array)
-posexplode_outer(array)
-```
-
-### Example
 
 ```sql
-    CREATE TABLE IF NOT EXISTS `table_test`(
-                `id` INT NULL,
-                `name` TEXT NULL,
-                `score` array<string> NULL
-              ) ENGINE=OLAP
-        DUPLICATE KEY(`id`)
-        COMMENT 'OLAP'
-        DISTRIBUTED BY HASH(`id`) BUCKETS 1
-        PROPERTIES ("replication_allocation" = "tag.location.default: 1");
-
-mysql> insert into table_test values (0, "zhangsan", ["Chinese","Math","English"]),(1, "lisi", ["null"]),(2, "wangwu", ["88a","90b","96c"]),(3, "lisi2", [null]),(4, "amory", NULL);
-
-
-mysql [test_query_qa]>select * from table_test order by id;
-+------+----------+--------------------------------+
-| id   | name     | score                          |
-+------+----------+--------------------------------+
-|    0 | zhangsan | ["Chinese", "Math", "English"] |
-|    1 | lisi     | ["null"]                       |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |
-|    3 | lisi2    | [null]                         |
-|    4 | amory    | NULL                           |
-+------+----------+--------------------------------+
-
-mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view posexplode(score) tmp as k,v order by id;
-+------+----------+--------------------------------+------+---------+
-| id   | name     | score                          | k    | v       |
-+------+----------+--------------------------------+------+---------+
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    0 | Chinese |
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    1 | Math    |
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    2 | English |
-|    1 | lisi     | ["null"]                       |    0 | null    |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    0 | 88a     |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    1 | 90b     |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    2 | 96c     |
-|    3 | lisi2    | [null]                         |    0 | NULL    |
-+------+----------+--------------------------------+------+---------+
-
-mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view posexplode_outer(score) tmp as k,v order by id;
-+------+----------+--------------------------------+------+---------+
-| id   | name     | score                          | k    | v       |
-+------+----------+--------------------------------+------+---------+
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    0 | Chinese |
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    1 | Math    |
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    2 | English |
-|    1 | lisi     | ["null"]                       |    0 | null    |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    0 | 88a     |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    1 | 90b     |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    2 | 96c     |
-|    3 | lisi2    | [null]                         |    0 | NULL    |
-|    4 | amory    | NULL                           | NULL | NULL    |
-+------+----------+--------------------------------+------+---------+
+explode_map(<expr>)
+explode_map_outer(<expr>)
 ```
 
-### Keywords
-POSEXPLODE,POSEXPLODE_OUTER
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `map<k,v>` | map type |
+
+## Return Value
+
+When the map is not empty or NULL, the return values of `explode_map` and `explode_map_outer` are the same.
+
+When the data is empty or NULL:
+
+`explode_map` Only processes non-empty map types. If the map is empty or NULL, `explode_map` will not return any rows.
+`explode_map_outer` If the map is empty or NULL, explode_map_outer will retain the record with the empty or NULL map and return a row with NULL values.
+
+## Examples
+```
+mysql> SET enable_nereids_planner=true
+
+mysql> SET enable_fallback_to_original_planner=false
+
+mysql> CREATE TABLE IF NOT EXISTS `sdu`(
+                   `id` INT NULL,
+                   `name` TEXT NULL,
+                   `score` MAP<TEXT,INT> NULL
+                 ) ENGINE=OLAP
+                 DUPLICATE KEY(`id`)
+                 COMMENT 'OLAP'
+                 DISTRIBUTED BY HASH(`id`) BUCKETS 1
+                 PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> insert into sdu values (0, "zhangsan", {"Chinese":"80","Math":"60","English":"90"}), (1, "lisi", {"null":null}), (2, "wangwu", {"Chinese":"88","Math":"90","English":"96"}), (3, "lisi2", {null:null}), (4, "amory", NULL);
+Query OK, 5 rows affected (0.23 sec)
+{'label':'label_9b35d9d9d59147f5_bffb974881ed2133', 'status':'VISIBLE', 'txnId':'4005'}
+
+mysql> select * from sdu order by id;
++------+----------+-----------------------------------------+
+| id   | name     | score                                   |
++------+----------+-----------------------------------------+
+|    0 | zhangsan | {"Chinese":80, "Math":60, "English":90} |
+|    1 | lisi     | {"null":null}                           |
+|    2 | wangwu   | {"Chinese":88, "Math":90, "English":96} |
+|    3 | lisi2    | {null:null}                             |
+|    4 | amory    | NULL                                    |
++------+----------+-----------------------------------------+
+
+mysql> select name, k,v from sdu lateral view explode_map(score) tmp as k,v;
++----------+---------+------+
+| name     | k       | v    |
++----------+---------+------+
+| zhangsan | Chinese |   80 |
+| zhangsan | Math    |   60 |
+| zhangsan | English |   90 |
+| lisi     | null    | NULL |
+| wangwu   | Chinese |   88 |
+| wangwu   | Math    |   90 |
+| wangwu   | English |   96 |
+| lisi2    | NULL    | NULL |
++----------+---------+------+
+
+mysql> select name, k,v from sdu lateral view explode_map_outer(score) tmp as k,v;
++----------+---------+------+
+| name     | k       | v    |
++----------+---------+------+
+| zhangsan | Chinese |   80 |
+| zhangsan | Math    |   60 |
+| zhangsan | English |   90 |
+| lisi     | null    | NULL |
+| wangwu   | Chinese |   88 |
+| wangwu   | Math    |   90 |
+| wangwu   | English |   96 |
+| lisi2    | NULL    | NULL |
+| amory    | NULL    | NULL |
++----------+---------+------+
+
+mysql> select name, k,v,k1,v1 from sdu lateral view explode_map_outer(score) tmp as k,v lateral view explode_map(score) tmp2 as k1,v1;
++----------+---------+------+---------+------+
+| name     | k       | v    | k1      | v1   |
++----------+---------+------+---------+------+
+| zhangsan | Chinese |   80 | Chinese |   80 |
+| zhangsan | Chinese |   80 | Math    |   60 |
+| zhangsan | Chinese |   80 | English |   90 |
+| zhangsan | Math    |   60 | Chinese |   80 |
+| zhangsan | Math    |   60 | Math    |   60 |
+| zhangsan | Math    |   60 | English |   90 |
+| zhangsan | English |   90 | Chinese |   80 |
+| zhangsan | English |   90 | Math    |   60 |
+| zhangsan | English |   90 | English |   90 |
+| lisi     | null    | NULL | null    | NULL |
+| wangwu   | Chinese |   88 | Chinese |   88 |
+| wangwu   | Chinese |   88 | Math    |   90 |
+| wangwu   | Chinese |   88 | English |   96 |
+| wangwu   | Math    |   90 | Chinese |   88 |
+| wangwu   | Math    |   90 | Math    |   90 |
+| wangwu   | Math    |   90 | English |   96 |
+| wangwu   | English |   96 | Chinese |   88 |
+| wangwu   | English |   96 | Math    |   90 |
+| wangwu   | English |   96 | English |   96 |
+| lisi2    | NULL    | NULL | NULL    | NULL |
++----------+---------+------+---------+------+
+```
+
+### keywords
+EXPLODE_MAP,EXPLODE_MAP_OUTER,MAP
