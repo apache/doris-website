@@ -24,13 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `mv_infos`
-
-### Name
-
-mv_infos
-
-### description
+## Description
 
 Table function, generating temporary tables for asynchronous materialized views, which can view information about asynchronous materialized views created in a certain database.
 
@@ -38,13 +32,16 @@ This function is used in the from clause.
 
 This funciton is supported since 2.1.0.
 
-#### syntax
-
-`mv_infos("database"="")`
-
-mv_infos() Table structure:
+## Syntax
 ```sql
-mysql> desc function mv_infos("database"="tpch100");
+MV_INFOS("database"="<database>")
+```
+
+View mv_infos() Table schema:
+```sql
+desc function mv_infos("database"="tpch100");
+```
+```text
 +--------------------+---------+------+-------+---------+-------+
 | Field              | Type    | Null | Key   | Default | Extra |
 +--------------------+---------+------+-------+---------+-------+
@@ -61,42 +58,41 @@ mysql> desc function mv_infos("database"="tpch100");
 | MvPartitionInfo    | TEXT    | No   | false | NULL    | NONE  |
 | SyncWithBaseTables | BOOLEAN | No   | false | NULL    | NONE  |
 +--------------------+---------+------+-------+---------+-------+
-12 rows in set (0.01 sec)
 ```
 
-* Id: Materialized View ID
-* Name: Materialized View Name
-* JobName: The job name corresponding to the materialized view
-* State: Materialized View State
-* SchemaChangeDetail: The reason why the materialized view State becomes a SchemeChange
-* RefreshState: Materialized view refresh status
-* RefreshInfo: Refreshing strategy information defined by materialized views
-* QuerySql: Query statements defined by materialized views
-* EnvInfo: Environmental information during the creation of materialized views
-* MvProperties: Materialized visual attributes
-* MvPartitionInfo: Partition information of materialized views
-* SyncWithBaseTables：Is it synchronized with the base table data? To see which partition is not synchronized, please use [SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md)
+The meaning of the fields is as follows:
 
-### example
+| Field                  | Type    | Description                                                         |
+|------------------------|---------|---------------------------------------------------------------------|
+| Id                     | BIGINT  | Materialized view ID                                                |
+| Name                   | TEXT    | Materialized view name                                              |
+| JobName                | TEXT    | Job name corresponding to the materialized view                      |
+| State                  | TEXT    | State of the materialized view                                       |
+| SchemaChangeDetail     | TEXT    | Reason for the state change to SchemaChange                         |
+| RefreshState           | TEXT    | Refresh state of the materialized view                               |
+| RefreshInfo            | TEXT    | Refresh strategy information defined for the materialized view       |
+| QuerySql               | TEXT    | SQL query defined for the materialized view                          |
+| EnvInfo                | TEXT    | Environment information when the materialized view was created       |
+| MvProperties           | TEXT    | Materialized view properties                                         |
+| MvPartitionInfo        | TEXT    | Partition information of the materialized view                       |
+| SyncWithBaseTables     | BOOLEAN | Whether the data is synchronized with the base table. To check which partition is not synchronized, use [SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md) |
 
-1. View all materialized views under db1
+## Examples
 
-```sql
-mysql> select * from mv_infos("database"="db1");
-```
+- View all materialized views under db1
+    
+    ```sql
+    mysql> select * from mv_infos("database"="db1");
+    ```
 
-2. View the materialized view named mv1 under db1
+- View the materialized view named mv1 under db1
 
-```sql
-mysql> select * from mv_infos("database"="db1") where Name = "mv1";
-```
+    ```sql
+    mysql> select * from mv_infos("database"="db1") where Name = "mv1";
+    ```
 
-3. View the status of the materialized view named mv1 under db1
+- View the status of the materialized view named mv1 under db1
 
-```sql
-mysql> select State from mv_infos("database"="db1") where Name = "mv1";
-```
-
-### keywords
-
-    mv, infos
+    ```sql
+    mysql> select State from mv_infos("database"="db1") where Name = "mv1";
+   ```

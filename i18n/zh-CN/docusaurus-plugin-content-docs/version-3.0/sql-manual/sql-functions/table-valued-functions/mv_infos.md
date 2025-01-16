@@ -1,7 +1,7 @@
 ---
 {
-    "title": "MV_INFOS",
-    "language": "zh-CN"
+  "title": "MV_INFOS",
+  "language": "zh-CN"
 }
 ---
 
@@ -24,12 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `mv_infos`
-
-### Name
-
-mv_infos
-
 ## 描述
 
 表函数，生成异步物化视图临时表，可以查看某个db中创建的异步物化视图信息。
@@ -39,12 +33,22 @@ mv_infos
 该函数自 2.1.0 版本支持。
 
 ## 语法
-
-`mv_infos("database"="")`
-
-mv_infos()表结构：
 ```sql
-mysql> desc function mv_infos("database"="tpch100");
+MV_INFOS("database"="<database>")
+```
+
+## 必填参数 (Required Parameters)
+**`<database>`**
+> 指定需要查询的集群数据库名
+
+
+## 返回值
+
+查看 mv_infos() 表结构
+```sql
+desc function mv_infos("database"="tpch100");
+```
+```text
 +--------------------+---------+------+-------+---------+-------+
 | Field              | Type    | Null | Key   | Default | Extra |
 +--------------------+---------+------+-------+---------+-------+
@@ -61,42 +65,43 @@ mysql> desc function mv_infos("database"="tpch100");
 | MvPartitionInfo    | TEXT    | No   | false | NULL    | NONE  |
 | SyncWithBaseTables | BOOLEAN | No   | false | NULL    | NONE  |
 +--------------------+---------+------+-------+---------+-------+
-12 rows in set (0.01 sec)
 ```
 
-* Id：物化视图id
-* Name：物化视图Name
-* JobName：物化视图对应的job名称
-* State：物化视图状态
-* SchemaChangeDetail：物化视图State变为SchemaChange的原因
-* RefreshState：物化视图刷新状态
-* RefreshInfo：物化视图定义的刷新策略信息
-* QuerySql：物化视图定义的查询语句
-* EnvInfo：物化视图创建时的环境信息
-* MvProperties：物化视属性
-* MvPartitionInfo：物化视图的分区信息
-* SyncWithBaseTables：是否和base表数据同步，如需查看哪个分区不同步，请使用[SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md)
+字段含义如下：
 
-## 举例
+| 字段名称                | 类型    | 说明                                                               |
+|-------------------------|---------|--------------------------------------------------------------------|
+| Id                      | BIGINT  | 物化视图id                                                         |
+| Name                    | TEXT    | 物化视图Name                                                       |
+| JobName                 | TEXT    | 物化视图对应的job名称                                               |
+| State                   | TEXT    | 物化视图状态                                                       |
+| SchemaChangeDetail      | TEXT    | 物化视图State变为SchemaChange的原因                                 |
+| RefreshState            | TEXT    | 物化视图刷新状态                                                   |
+| RefreshInfo             | TEXT    | 物化视图定义的刷新策略信息                                         |
+| QuerySql                | TEXT    | 物化视图定义的查询语句                                             |
+| EnvInfo                 | TEXT    | 物化视图创建时的环境信息                                           |
+| MvProperties            | TEXT    | 物化视属性                                                         |
+| MvPartitionInfo         | TEXT    | 物化视图的分区信息                                                 |
+| SyncWithBaseTables      | BOOLEAN | 是否和base表数据同步，如需查看哪个分区不同步，请使用[SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md) |
 
-1. 查看db1下的所有物化视图
 
-```sql
-mysql> select * from mv_infos("database"="db1");
-```
+## 示例
 
-2. 查看db1下的物化视图名称为mv1的物化视图
+- 查看 db1 下的所有物化视图
 
-```sql
-mysql> select * from mv_infos("database"="db1") where Name = "mv1";
-```
+    ```sql
+    mysql> select * from mv_infos("database"="db1");
+    ```
 
-3. 查看db1下的物化视图名称为mv1的状态
+- 查看 db1 下的物化视图名称为 mv1 的物化视图
 
-```sql
-mysql> select State from mv_infos("database"="db1") where Name = "mv1";
-```
+    ```sql
+    mysql> select * from mv_infos("database"="db1") where Name = "mv1";
+    ```
 
-### keywords
+- 查看 db1 下的物化视图名称为 mv1 的状态
 
-    mv, infos
+    ```sql
+    mysql> select State from mv_infos("database"="db1") where Name = "mv1";
+    ```
+    
