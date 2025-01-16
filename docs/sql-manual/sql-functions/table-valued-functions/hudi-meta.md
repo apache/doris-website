@@ -35,19 +35,17 @@ hudi_meta table-valued-function(tvf), using for read hudi metadata, operation hi
 HUDI_META(
     "table" = "<table>", 
     "query_type" = "<query_type>"
-    [, ...]
   );
 ```
 
 ## Required Parameters
+Each parameter in the `hudi_meta` table function (tvf) is a `"key"="value"` pair.
+
 **1. `<table>`**
 - `table`: The full table name, which must be specified in the format of `database_name.table_name` for the hudi table that you want to view.
 
 **2. `<query_type>`**
 - `query_type`: The type of metadata you want to view. Currently, only `timeline` is supported.
-
-## Usage Notes
-- Each parameter in the `hudi_meta` table function (tvf) is a `"key"="value"` pair.
 
 
 ## Example
