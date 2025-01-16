@@ -46,7 +46,7 @@ SHA2( VARCHAR <str>, INT <digest_length>)
 ## 示例
 
 ```SQL
-select sha2('abc', 224),sha2('abc', 384),sha2(NULL, 512);
+select sha2('abc', 224), sha2('abc', 384), sha2(NULL, 512);
 ```
 
 ```text

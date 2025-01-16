@@ -22,41 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## xxhash_32
-
 ## 描述
+
+计算输入字符串的32位xxhash值
+
+-注：在计算hash值时，更推荐使用`xxhash_32`，而不是`murmur_hash3_32`。
+
 ## 语法
 
-`INT XXHASH_32(VARCHAR input, ...)`
+```sql
+XXHASH_32( VARCHAR <str> [ , <str> ... ] )
+```
+
+## 参数
+
+| 参数      | 说明               |
+|---------|------------------|
+| `<str>` | 需要被计算32位xxhash的值 |
+
+## 返回值
 
 返回输入字符串的32位xxhash值。
 
-注：在计算hash值时，更推荐使用`xxhash_32`，而不是`murmur_hash3_32`。
-
 ## 举例
 
-```
-mysql> select xxhash_32(NULL);
-+-----------------+
-| xxhash_32(NULL) |
-+-----------------+
-|            NULL |
-+-----------------+
-
-mysql> select xxhash_32("hello");
-+--------------------+
-| xxhash_32('hello') |
-+--------------------+
-|          -83855367 |
-+--------------------+
-
-mysql> select xxhash_32("hello", "world");
-+-----------------------------+
-| xxhash_32('hello', 'world') |
-+-----------------------------+
-|                  -920844969 |
-+-----------------------------+
+```sql
+select xxhash_32(NULL), xxhash_32("hello"), xxhash_32("hello", "world");
 ```
 
-### keywords
-HASH_32,HASH
+```text
++-----------------+--------------------+-----------------------------+
+| xxhash_32(NULL) | xxhash_32('hello') | xxhash_32('hello', 'world') |
++-----------------+--------------------+-----------------------------+
+|            NULL |          -83855367 |                  -920844969 |
++-----------------+--------------------+-----------------------------+
+```

@@ -50,7 +50,7 @@ Returns the 64-bit murmur3 hash of the input string。
 ## Examples
 
 ```sql
-select murmur_hash3_64(null),murmur_hash3_64("hello"),murmur_hash3_64("hello", "world");
+select murmur_hash3_64(null), murmur_hash3_64("hello"), murmur_hash3_64("hello", "world");
 ```
 
 ```text

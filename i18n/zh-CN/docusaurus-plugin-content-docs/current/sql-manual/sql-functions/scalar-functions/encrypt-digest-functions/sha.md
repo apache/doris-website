@@ -49,7 +49,7 @@ SHA1( VARCHAR <str> )
 ## 示例
 
 ```sql
-select sha("123"),sha1("123");
+select sha("123"), sha1("123");
 ```
 
 ```text

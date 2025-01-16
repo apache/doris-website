@@ -46,7 +46,7 @@ Returns the sha2 value of the input string
 ## Examples
 
 ```sql
-select sha2('abc', 224),sha2('abc', 384),sha2(NULL, 512);
+select sha2('abc', 224), sha2('abc', 384), sha2(NULL, 512);
 ```
 
 ```text

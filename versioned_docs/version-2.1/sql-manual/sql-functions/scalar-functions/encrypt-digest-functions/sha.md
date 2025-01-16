@@ -49,7 +49,7 @@ Returns the sha1 value of the input string
 ## Examples
 
 ```sql
-select sha("123"),sha1("123");
+select sha("123"), sha1("123");
 ```
 
 ```text

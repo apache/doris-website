@@ -50,7 +50,7 @@ MURMUR_HASH3_64( VARCHAR <str> [ , <str> ... ] )
 ## 示例
 
 ```sql
-select murmur_hash3_64(null),murmur_hash3_64("hello"),murmur_hash3_64("hello", "world");
+select murmur_hash3_64(null), murmur_hash3_64("hello"), murmur_hash3_64("hello", "world");
 ```
 
 ```text

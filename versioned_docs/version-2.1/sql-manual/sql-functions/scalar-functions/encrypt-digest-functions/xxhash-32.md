@@ -22,42 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## xxhash_32
+## Description
 
-### description
-#### Syntax
+Calculate the 32-bit xxhash value of the input string
 
-`INT XXHASH_32(VARCHAR input, ...)`
+-Note: When calculating hash values, it is recommended to use `xxhash_32` instead of `murmur_hash3_32`.
 
-Return the 32 bits xxhash of input string.
+## Syntax
 
-Note: When calculating hash values, it is more recommended to use `xxhash_32` instead of `murmur_hash3_32`.
-
-### example
-
-```
-mysql> select xxhash_32(NULL);
-+-----------------+
-| xxhash_32(NULL) |
-+-----------------+
-|            NULL |
-+-----------------+
-
-mysql> select xxhash_32("hello");
-+--------------------+
-| xxhash_32('hello') |
-+--------------------+
-|          -83855367 |
-+--------------------+
-
-mysql> select xxhash_32("hello", "world");
-+-----------------------------+
-| xxhash_32('hello', 'world') |
-+-----------------------------+
-|                  -920844969 |
-+-----------------------------+
+```sql
+XXHASH_32( VARCHAR <str> [ , <str> ... ] )
 ```
 
-### keywords
+## Parameters
 
-XXHASH_32,HASH
+| parameter | description      |
+|-----------|------------------|
+| `<str>`   | The 32-bit xxhash value to be calculated |
+
+## Return Value
+
+Returns the 32-bit xxhash value of the input string.
+
+## Examples
+
+```sql
+select xxhash_32(NULL), xxhash_32("hello"), xxhash_32("hello", "world");
+```
+
+```text
++-----------------+--------------------+-----------------------------+
+| xxhash_32(NULL) | xxhash_32('hello') | xxhash_32('hello', 'world') |
++-----------------+--------------------+-----------------------------+
+|            NULL |          -83855367 |                  -920844969 |
++-----------------+--------------------+-----------------------------+
+```
