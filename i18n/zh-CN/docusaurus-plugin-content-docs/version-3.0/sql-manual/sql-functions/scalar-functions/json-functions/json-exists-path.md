@@ -24,23 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_exists_path
-
 ## 描述
 
-用来判断json_path指定的字段在JSON数据中是否存在，如果存在返回TRUE，不存在返回FALSE
+用来判断 `json_path` 指定的字段在 JSON 数据中是否存在，如果存在返回 TRUE，不存在返回 FALSE
 
 ## 语法
 
 ```sql
-BOOLEAN json_exists_path(JSON j, VARCHAR json_path)
+JSON_EXISTS_PATH(JSON j, VARCHAR json_path)
 ```
+## 参数
+| 参数           | 描述                                                     |
+|--------------|--------------------------------------------------------|
+| `JSON j`     | 要包含在 JSON 数组中的元素。可以是任意类型的值，包括`NULL`。如果没有指定元素，则返回一个空数组。 
+|  `json_path` | 要插入的 JSON 路径。如果是 `NULL` ，则返回 NULL                      |
+
+## 返回值
+如果存在返回 TRUE，不存在返回 FALSE
 
 ## 举例
 
-参考 [json tutorial](../../sql-reference/Data-Types/JSON.md) 中的示例
+参考 [json tutorial](../../../sql-data-types/semi-structured/JSON.md) 中的示例
 
-### keywords
 
-json_exists_path
 

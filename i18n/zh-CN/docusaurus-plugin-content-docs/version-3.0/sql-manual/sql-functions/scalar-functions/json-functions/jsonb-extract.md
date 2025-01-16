@@ -1,6 +1,6 @@
 ---
 {
-    "title": "JSON_EXTRACT",
+    "title": "JSONB_EXTRACT",
     "language": "zh-CN"
 }
 ---
@@ -23,3 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## 描述
+同函数 `JSONB_EXTRACT`。具体用法参考 [JSONB_EXTRACT](./json-extract.md)
