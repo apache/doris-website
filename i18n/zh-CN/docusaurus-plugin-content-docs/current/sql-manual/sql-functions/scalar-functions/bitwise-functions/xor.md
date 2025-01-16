@@ -22,15 +22,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Description
-
+## 描述
 
 返回两个数的异或值。
 
-## Syntax
+## 语法
 `BOOLEAN xor BOOLEAN`
 
-## Example
+## 参数
+
+## 返回值
+
+## 示例
 ```sql
 mysql >select true xor false,true xor true;
 +------------------+-----------------+
