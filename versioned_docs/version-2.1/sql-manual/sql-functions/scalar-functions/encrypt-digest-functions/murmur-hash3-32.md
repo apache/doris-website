@@ -26,6 +26,8 @@ under the License.
 
 Calculate 32-bit murmur3 hash value
 
+-Note: When calculating hash values, it is recommended to use `xxhash_32` instead of `murmur_hash3_32`。
+
 ## Syntax
 
 ```sql
@@ -42,7 +44,7 @@ MURMUR_HASH3_32( VARCHAR <str> [ , <str> ... ] )
 
 Returns the 32-bit murmur3 hash of the input string。
 
--Note: When calculating hash values, it is recommended to use `xxhash_32` instead of `murmur_hash3_32`。
+-When the parameter is NULL, it returns NULL
 
 ## Examples
 
