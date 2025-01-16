@@ -42,7 +42,7 @@ MD5( VARCHAR <str> )
 
 Returns the MD5 value of a string。
 
-## example
+## Example
 
 ```sql
 select md5("abc");

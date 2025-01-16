@@ -24,15 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 Use CRC32 to compute the result.
 
-### Syntax
+## Syntax
+
 ```sql
 BIGINT crc32( VARCHAR <str> )
 ```
 ## Parameter
+
 | parameter | description |
 | -- | -- |
 | `<str>` | The value to be used for CRC calculation |
@@ -41,7 +43,7 @@ BIGINT crc32( VARCHAR <str> )
 
 Returns the Cyclic Redundancy Check value of this string.
 
-### Example
+## Example
 
 ```sql
 select crc32("abc"),crc32("中国");

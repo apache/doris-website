@@ -42,7 +42,7 @@ BIGINT crc32( VARCHAR <str> )
 
 Returns the Cyclic Redundancy Check value of this string.
 
-### Example
+## Example
 
 ```sql
 select crc32("abc"),crc32("中国");
