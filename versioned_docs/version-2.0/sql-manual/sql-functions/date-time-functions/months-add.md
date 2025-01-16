@@ -29,7 +29,7 @@ The MONTHS_ADD function is used to add or subtract a specified number of months 
 
 ## Syntax
 
-`DATETIME MONTHS_ADD(<datetime/date>, <nums>)`
+`MONTHS_ADD(<datetime/date>, <nums>)`
 
 ## Parameters
 

@@ -29,7 +29,7 @@ MONTHS_ADD 函数用于对指定日期添加或减去指定的月份数，并返
 
 ## 语法
 
-`DATETIME MONTHS_ADD(<datetime/date>, <nums>)`
+`MONTHS_ADD(<datetime/date>, <nums>)`
 
 ## 参数
 
