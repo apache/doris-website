@@ -30,7 +30,7 @@ under the License.
 
 ## 语法
 ```sql
-bit_length( <str>)
+BIT_LENGTH( <str>)
 ```
 
 ## 参数
@@ -45,7 +45,7 @@ bit_length( <str>)
 ## 举例
 
 ```sql
-select bit_length("abc"), bit_length("中国"), bit_length(123);
+select BIT_LENGTH("abc"), BIT_LENGTH("中国"), BIT_LENGTH(123);
 ```
 
 ```text

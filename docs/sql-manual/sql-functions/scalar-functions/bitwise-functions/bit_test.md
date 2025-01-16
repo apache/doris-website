@@ -24,42 +24,43 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_test
-### description
-#### Syntax
+## Description
+Convert the value of `<x>` to binary form and return the value of the specified position `<bits>`, where `<bits>` starts from 0 and goes from right to left.
 
-`bit_test(Integer-type value, Integer-type pos, '......')`
+If `<bits>` has multiple values, the values at multiple `<bits>` positions are combined using the AND operator and the final result is returned.
 
-"Convert the value of 'value' into binary form and return the value at the specified position 'pos', where 'pos' starts from 0 and goes from right to left. If there are multiple values for 'pos', combine the values at multiple 'pos' positions using the AND operator and return the final result. 
-If the value of pos is negative or exceeds the total number of bits in value, the result will be 0.
-Integer value ranges: TINYINT, SMALLINT, INT, BIGINT, LARGEINT."
+If the value of `<bits>` is negative or exceeds the total number of bits in `<x>`, the result will be 0.
 
-### example
+Integer `<x>` range: TINYINT, SMALLINT, INT, BIGINT, LARGEINT.
 
-### example
+## Alias
+BIT_TEST_ALL
 
-mysql [(none)]>SELECT bit_test(43, 1);
-+-----------------+
-| bit_test(43, 1) |
-+-----------------+
-|               1 |
-+-----------------+
-
-mysql [(none)]>select bit_test(43,-1);
-+------------------+
-| bit_test(43, -1) |
-+------------------+
-|                0 |
-+------------------+
-
-mysql [(none)]>SELECT bit_test(43, 0, 1, 3, 5,2);
-+-----------------------------+
-| bit_test(43, 0, 1, 3, 5, 2) |
-+-----------------------------+
-|                           0 |
-+-----------------------------+
+## Syntax
+```sql
+BIT_TEST( <x>, <bits>[, <bits> ... ])
 ```
 
-### keywords
+## Parameters
+| parameter | description |
+|-----------|-------------|
+| `<x>`     | The integer to be calculated     |
+| `<bits>`  | The value at the specified position      |
 
-    bit_test,bit_test_all
+## Return Value
+
+Returns the value at the specified position
+
+## Examples
+
+```sql
+select BIT_TEST(43, 1), BIT_TEST(43, -1), BIT_TEST(43, 0, 1, 3, 5,2);
+```
+
+```text
++-----------------+------------------+-----------------------------+
+| bit_test(43, 1) | bit_test(43, -1) | bit_test(43, 0, 1, 3, 5, 2) |
++-----------------+------------------+-----------------------------+
+|               1 |                0 |                           0 |
++-----------------+------------------+-----------------------------+
+```

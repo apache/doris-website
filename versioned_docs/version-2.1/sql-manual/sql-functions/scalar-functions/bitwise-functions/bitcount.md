@@ -44,7 +44,7 @@ Returns the number of 1s in the binary representation of `<x>`
 ## Examples
 
 ```sql
-select bit_count(8), bit_count(-1);
+select BIT_COUNT(8), BIT_COUNT(-1);
 ```
 ```text
 +--------------+---------------+

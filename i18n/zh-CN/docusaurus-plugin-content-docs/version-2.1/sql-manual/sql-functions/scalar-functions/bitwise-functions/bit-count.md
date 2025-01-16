@@ -43,7 +43,7 @@ BIT_COUNT( <x>)
 
 ## 举例
 ```sql
-select bit_count(8), bit_count(-1);
+select BIT_COUNT(8), BIT_COUNT(-1);
 ```
 ```text
 +--------------+---------------+

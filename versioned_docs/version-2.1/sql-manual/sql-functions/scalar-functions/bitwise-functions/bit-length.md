@@ -30,7 +30,7 @@ It is used to return the median of the binary representation of a string (that i
 
 ## Syntax
 ```sql
-bit_length( <str>)
+BIT_LENGTH( <str>)
 ```
 
 ## Parameters
@@ -45,7 +45,7 @@ Returns the number of bits occupied by `<str>` in the binary representation, inc
 ## Examples
 
 ```sql
-select bit_length("abc"), bit_length("中国"), bit_length(123);
+select BIT_LENGTH("abc"), BIT_LENGTH("中国"), BIT_LENGTH(123);
 ```
 
 ```text
