@@ -29,7 +29,7 @@ The MONTHS_SUB function is used to add or subtract a specified number of months 
 
 ## Syntax
 
-`DATETIME MONTHS_SUB(DATETIME/DATE <datetime/date>, INT <nums>)`
+`MONTHS_SUB(<datetime/date>, <nums>)`
 
 ## Parameters
 
