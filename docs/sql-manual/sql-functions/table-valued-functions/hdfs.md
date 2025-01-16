@@ -24,139 +24,117 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## HDFS
-
-### Name
-
-hdfs
-
-### Description
+## Description
 
 HDFS table-valued-function(tvf), allows users to read and access file contents on S3-compatible object storage, just like accessing relational table. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` file format.
 
-#### syntax
+## Syntax
 
 ```sql
-hdfs(
-  "uri" = "..",
-  "fs.defaultFS" = "...",
-  "hadoop.username" = "...",
-  "format" = "csv",
-  "keyn" = "valuen" 
-  ...
+HDFS(
+    "uri" = "<uri>",
+    "fs.defaultFS" = "<fs_defaultFS>",
+    "hadoop.username" = "<hadoop_username>",
+    "format" = "<format>",
+    [, "<optional_property_key>" = "<optional_property_value>" [, ...] ]
   );
 ```
 
-**parameter description**
+## Required Parameters
+| Parameter              | Description                                                                                                            |
+|------------------------|------------------------------------------------------------------------------------------------------------------------|
+| `uri`                  | The URI for accessing HDFS. If the URI path does not exist or the file is empty, the HDFS TVF will return an empty set. |
+| `fs.defaultFS`         | The default file system URI for HDFS                                                                                    |
+| `hadoop.username`      | Required, can be any string but cannot be empty.                                                                        |
+| `format`               | File format, required. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`.           |
 
-Related parameters for accessing hdfs:
+## Optional Parameters
+| Parameter                                   | Description                                                                                                                                  | Remarks                                                                             |
+|---------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| `hadoop.security.authentication`            | HDFS security authentication type                                                                                                            |                                                                                     |
+| `hadoop.username`                           | Alternative HDFS username                                                                                                                    |                                                                                     |
+| `hadoop.kerberos.principal`                 | Kerberos principal                                                                                                                           |                                                                                     |
+| `hadoop.kerberos.keytab`                    | Kerberos keytab                                                                                                                                 |                                                                                     |
+| `dfs.client.read.shortcircuit`              | Enable short-circuit read                                                                                                                    |                                                                                     |
+| `dfs.domain.socket.path`                   | Domain socket path                                                                                                                           |                                                                                     |
+| `dfs.nameservices`                          | The nameservice for HA mode                                                                                                                  |                                                                                     |
+| `dfs.ha.namenodes.your-nameservices`        | Configuration for namenode in HA mode                                                                                                        |                                                                                     |
+| `dfs.namenode.rpc-address.your-nameservices.your-namenode` | Specify the RPC address for the namenode                                                                                                     |                                                                                     |
+| `dfs.client.failover.proxy.provider.your-nameservices` | Specify the proxy provider for failover                                                                                                      |                                                                                     |
+| `column_separator`                          | Column separator, default is `\t`                                                                                                            |                                                                                     |
+| `line_delimiter`                            | Line separator, default is `\n`                                                                                                              |                                                                                     |
+| `compress_type`                             | Supported types: `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Default is `UNKNOWN`, and the type will be automatically inferred based on the URI suffix. |                                                                                     |
+| `read_json_by_line`                         | For JSON format imports, default is `true`                                                                                                   | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `strip_outer_array`                         | For JSON format imports, default is `false`                                                                                                  | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `json_root`                                 | For JSON format imports, default is empty                                                                                                   | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `json_paths`                                | For JSON format imports, default is empty                                                                                                   | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `num_as_string`                             | For JSON format imports, default is `false`                                                                                                 | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `fuzzy_parse`                               | For JSON format imports, default is `false`                                                                                                 | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `trim_double_quotes`                        | For CSV format imports, boolean type. Default is `false`. If `true`, removes the outermost double quotes from each field.                  |                                                                                     |
+| `skip_lines`                                | For CSV format imports, integer type. Default is 0. Skips the first few lines of the CSV file. This parameter is ignored if `csv_with_names` or `csv_with_names_and_types` is set. |                                                                                     |
+| `path_partition_keys`                       | Specify the partition column names carried in the file path, for example `/path/to/city=beijing/date="2023-07-09"`, then fill in `path_partition_keys="city,date"`, which will automatically read the corresponding column names and values from the path for import. |                                                                                     |
+| `resource`                                  | Specify the resource name. HDFS TVF can directly access HDFS using an existing HDFS resource. Refer to [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md) for creating HDFS resources. | Supported from version 2.1.4 and above.                                            |
 
-- `uri`: (required) hdfs uri. If the uri path does not exist or the files are empty files, hdfs tvf will return an empty result set.
-- `fs.defaultFS`: (required)
-- `hadoop.username`: (required) Can be any string, but cannot be empty.
-- `hadoop.security.authentication`: (optional)
-- `hadoop.username`: (optional)
-- `hadoop.kerberos.principal`: (optional)
-- `hadoop.kerberos.keytab`: (optional)
-- `dfs.client.read.shortcircuit`: (optional)
-- `dfs.domain.socket.path`: (optional)
+## Usage Notes
+- To directly query a TVF or create a View based on the TVF, you need to have the **USAGE** privilege on the respective Resource. When querying a View created based on the TVF, only the **SELECT** privilege on the View is required.
 
-Related parameters for accessing HDFS in HA mode:
+- For more detailed usage of HDFS TVF, please refer to the [S3](./s3.md) TVF, the only difference being the method of accessing the storage system.
 
-- `dfs.nameservices`: (optional)
-- `dfs.ha.namenodes.your-nameservices`: (optional)
-- `dfs.namenode.rpc-address.your-nameservices.your-namenode`: (optional)
-- `dfs.client.failover.proxy.provider.your-nameservices`: (optional)
 
-File format parameters:
+## Examples
 
-- `format`: (required) Currently support `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`
-- `column_separator`: (optional) default `\t`.
-- `line_delimiter`: (optional) default `\n`.
-- `compress_type`: (optional) Currently support `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Default value is `UNKNOWN`, it will automatically infer the type based on the suffix of `uri`.
+- Read and access csv format files on hdfs storage.
+  ```sql
+  select * from hdfs(
+                "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
+                "fs.defaultFS" = "hdfs://127.0.0.1:8424",
+                "hadoop.username" = "doris",
+                "format" = "csv");
+  ```
+  ```text
+    +------+---------+------+
+    | c1   | c2      | c3   |
+    +------+---------+------+
+    | 1    | alice   | 18   |
+    | 2    | bob     | 20   |
+    | 3    | jack    | 24   |
+    | 4    | jackson | 19   |
+    | 5    | liming  | 18   |
+    +------+---------+------+
+  ```
 
-    The following 6 parameters are used for loading in json format. For specific usage methods, please refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md)
+- Read and access csv format files on hdfs storage in HA mode.
 
-- `read_json_by_line`: (optional) default `"true"`
-- `strip_outer_array`: (optional) default `"false"`
-- `json_root`: (optional) default `""`
-- `json_paths`: (optional) default `""`
-- `num_as_string`: (optional) default `false`
-- `fuzzy_parse`: (optional) default `false`
+  ```sql
+  select * from hdfs(
+              "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
+              "fs.defaultFS" = "hdfs://127.0.0.1:8424",
+              "hadoop.username" = "doris",
+              "format" = "csv",
+              "dfs.nameservices" = "my_hdfs",
+              "dfs.ha.namenodes.my_hdfs" = "nn1,nn2",
+              "dfs.namenode.rpc-address.my_hdfs.nn1" = "nanmenode01:8020",
+              "dfs.namenode.rpc-address.my_hdfs.nn2" = "nanmenode02:8020",
+              "dfs.client.failover.proxy.provider.my_hdfs" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider");
+  ```
+  ```text
+    +------+---------+------+
+    | c1   | c2      | c3   |
+    +------+---------+------+
+    | 1    | alice   | 18   |
+    | 2    | bob     | 20   |
+    | 3    | jack    | 24   |
+    | 4    | jackson | 19   |
+    | 5    | liming  | 18   |
+    +------+---------+------+
+  ```
 
-  The following 2 parameters are used for loading in csv format:
+- Can be used with `desc function` :
 
-- `trim_double_quotes`: Boolean type (optional), the default value is `false`. True means that the outermost double quotes of each field in the csv file are trimmed.
-- `skip_lines`: Integer type (optional), the default value is 0. It will skip some lines in the head of csv file. It will be disabled when the format is `csv_with_names` or `csv_with_names_and_types`.
-
-other kinds of parameters:
-
-- `path_partition_keys`: (optional) Specifies the column names carried in the file path. For example, if the file path is /path/to/city=beijing/date="2023-07-09", you should fill in `path_partition_keys="city,date"`. It will automatically read the corresponding column names and values from the path during load process.
-- `resource`：（optional）Specify the resource name. Hdfs Tvf can use the existing Hdfs resource to directly access Hdfs. You can refer to the method for creating an Hdfs resource: [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md). This property is supported starting from version 2.1.4. 
-
-:::tip Tip
-To directly query a TVF or create a VIEW based on that TVF, you need to have usage permission for that resource. To query a VIEW created based on TVF, you only need select permission for that VIEW.
-:::
-
-### Examples
-
-Read and access csv format files on hdfs storage.
-
-```sql
-MySQL [(none)]> select * from hdfs(
-            "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
-            "fs.defaultFS" = "hdfs://127.0.0.1:8424",
-            "hadoop.username" = "doris",
-            "format" = "csv");
-+------+---------+------+
-| c1   | c2      | c3   |
-+------+---------+------+
-| 1    | alice   | 18   |
-| 2    | bob     | 20   |
-| 3    | jack    | 24   |
-| 4    | jackson | 19   |
-| 5    | liming  | 18   |
-+------+---------+------+
-```
-
-Read and access csv format files on hdfs storage in HA mode.
-
-```sql
-MySQL [(none)]> select * from hdfs(
-            "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
-            "fs.defaultFS" = "hdfs://127.0.0.1:8424",
-            "hadoop.username" = "doris",
-            "format" = "csv",
-            "dfs.nameservices" = "my_hdfs",
-            "dfs.ha.namenodes.my_hdfs" = "nn1,nn2",
-            "dfs.namenode.rpc-address.my_hdfs.nn1" = "nanmenode01:8020",
-            "dfs.namenode.rpc-address.my_hdfs.nn2" = "nanmenode02:8020",
-            "dfs.client.failover.proxy.provider.my_hdfs" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider");
-+------+---------+------+
-| c1   | c2      | c3   |
-+------+---------+------+
-| 1    | alice   | 18   |
-| 2    | bob     | 20   |
-| 3    | jack    | 24   |
-| 4    | jackson | 19   |
-| 5    | liming  | 18   |
-+------+---------+------+
-```
-
-Can be used with `desc function` :
-
-```sql
-MySQL [(none)]> desc function hdfs(
-            "uri" = "hdfs://127.0.0.1:8424/user/doris/csv_format_test/student_with_names.csv",
-            "fs.defaultFS" = "hdfs://127.0.0.1:8424",
-            "hadoop.username" = "doris",
-            "format" = "csv_with_names");
-```
-
-### Keywords
-
-    hdfs, table-valued-function, tvf
-
-### Best Practice
-
-  For more detailed usage of HDFS tvf, please refer to [S3](./s3.md) tvf, The only difference between them is the way of accessing the storage system.
+  ```sql
+  desc function hdfs(
+              "uri" = "hdfs://127.0.0.1:8424/user/doris/csv_format_test/student_with_names.csv",
+              "fs.defaultFS" = "hdfs://127.0.0.1:8424",
+              "hadoop.username" = "doris",
+              "format" = "csv_with_names");
+  ```
