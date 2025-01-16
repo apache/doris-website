@@ -29,7 +29,7 @@ The information is digested using SHA2.
 ## Syntax
 
 ```sql
-SHA2( VARCHAR <str>, INT <digest_length>)
+SHA2( <str>, <digest_length>)
 ```
 
 ## Parameters

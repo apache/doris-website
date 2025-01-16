@@ -31,7 +31,7 @@ Calculate 32-bit murmur3 hash value
 ## Syntax
 
 ```sql
-MURMUR_HASH3_32( VARCHAR <str> [ , <str> ... ] )
+MURMUR_HASH3_32( <str> [ , <str> ... ] )
 ```
 
 ## Parameters

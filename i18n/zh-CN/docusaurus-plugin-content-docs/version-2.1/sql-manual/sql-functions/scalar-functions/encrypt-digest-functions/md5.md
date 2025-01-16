@@ -29,7 +29,7 @@ under the License.
 ## 语法
 
 ```sql
-MD5( VARCHAR <str> )
+MD5( <str> )
 ```
 
 ## 参数

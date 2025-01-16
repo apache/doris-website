@@ -29,7 +29,7 @@ AES decryption function. This function behaves the same as the `AES_DECRYPT` fun
 ## Syntax
 
 ```sql
-VARCHAR AES_DECRYPT(VARCHAR <str>, VARCHAR <key_str>[, VARCHAR <init_vector>][, VARCHAR <encryption_mode>])
+AES_DECRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 ```
 
 ## Parameters

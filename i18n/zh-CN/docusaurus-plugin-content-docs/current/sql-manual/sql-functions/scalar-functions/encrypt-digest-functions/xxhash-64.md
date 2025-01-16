@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-XXHASH_64( VARCHAR <str> [ , <str> ... ] )
+XXHASH_64( <str> [ , <str> ... ] )
 ```
 
 ## 参数

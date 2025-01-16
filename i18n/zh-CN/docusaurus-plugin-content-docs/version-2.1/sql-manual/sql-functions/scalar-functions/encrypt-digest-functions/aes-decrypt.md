@@ -29,7 +29,7 @@ AES 解密函数。该函数与 MySQL 中的 `AES_DECRYPT` 函数行为一致。
 ## 语法
 
 ```sql
-VARCHAR AES_DECRYPT(VARCHAR <str>, VARCHAR <key_str>[, VARCHAR <init_vector>][, VARCHAR <encryption_mode>])
+AES_DECRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 ```
 
 ## 参数

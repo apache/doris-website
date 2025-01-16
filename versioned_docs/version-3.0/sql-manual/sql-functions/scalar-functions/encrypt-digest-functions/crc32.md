@@ -31,7 +31,7 @@ Use CRC32 to compute the result.
 ## Syntax
 
 ```sql
-BIGINT crc32( VARCHAR <str> )
+CRC32( <str> )
 ```
 ## Parameters
 

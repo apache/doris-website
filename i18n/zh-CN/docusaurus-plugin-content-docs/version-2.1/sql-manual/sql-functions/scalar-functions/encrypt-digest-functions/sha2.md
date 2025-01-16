@@ -29,7 +29,7 @@ under the License.
 ## 语法
 
 ```sql
-SHA2( VARCHAR <str>, INT <digest_length>)
+SHA2( <str>, <digest_length>)
 ```
 
 ## 参数

@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-BIGINT crc32( VARCHAR <str> )
+CRC32( <str> )
 ```
 
 ## 参数

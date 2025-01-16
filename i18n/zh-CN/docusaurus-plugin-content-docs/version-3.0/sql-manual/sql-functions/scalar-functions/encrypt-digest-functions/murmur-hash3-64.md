@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-MURMUR_HASH3_64( VARCHAR <str> [ , <str> ... ] )
+MURMUR_HASH3_64( <str> [ , <str> ... ] )
 ```
 
 ## 参数

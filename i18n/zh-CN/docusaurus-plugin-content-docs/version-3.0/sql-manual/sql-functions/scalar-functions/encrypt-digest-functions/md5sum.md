@@ -29,7 +29,7 @@ under the License.
 ## 语法
 
 ```sql
-MD5SUM( VARCHAR <str> [ , <str> ... ] )
+MD5SUM( <str> [ , <str> ... ] )
 ```
 
 ## 参数

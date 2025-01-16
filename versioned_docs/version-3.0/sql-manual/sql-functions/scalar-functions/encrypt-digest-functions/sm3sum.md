@@ -29,7 +29,7 @@ Calculate multiple strings SM3 256-bit
 ## Syntax
 
 ```sql
-SM3SUM( VARCHAR <str> [ , <str> ... ] )
+SM3SUM( <str> [ , <str> ... ] )
 ```
 
 ## Parameters

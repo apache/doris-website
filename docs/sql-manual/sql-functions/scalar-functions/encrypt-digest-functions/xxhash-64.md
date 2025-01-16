@@ -31,7 +31,7 @@ Calculates the 64-bit xxhash value of the input string
 ## Syntax
 
 ```sql
-XXHASH_64( VARCHAR <str> [ , <str> ... ] )
+XXHASH_64( <str> [ , <str> ... ] )
 ```
 
 ## Parameters

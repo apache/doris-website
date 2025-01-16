@@ -29,7 +29,7 @@ AES encryption function. This function behaves the same as the `AES_ENCRYPT` fun
 ## Syntax
 
 ```sql
-VARCHAR AES_ENCRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHAR encryption_mode])
+AES_ENCRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 ```
 
 ## Parameters

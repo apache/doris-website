@@ -29,7 +29,7 @@ SM4 is a national standard symmetric key encryption algorithm, widely used in fi
 ## Syntax
 
 ```sql
-VARCHAR SM4_ENCRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHAR encryption_mode])
+SM4_ENCRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 ```
 
 ## Parameters

@@ -29,7 +29,7 @@ Calculation SM3 256-bit
 ## Syntax
 
 ```sql
-SM3( VARCHAR <str> )
+SM3( <str> )
 ```
 
 ## Parameters

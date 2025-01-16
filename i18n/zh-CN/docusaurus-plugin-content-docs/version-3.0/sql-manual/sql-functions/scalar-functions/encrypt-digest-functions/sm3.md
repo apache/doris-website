@@ -29,7 +29,7 @@ under the License.
 ## 语法
 
 ```sql
-SM3( VARCHAR <str> )
+SM3( <str> )
 ```
 
 ## 参数

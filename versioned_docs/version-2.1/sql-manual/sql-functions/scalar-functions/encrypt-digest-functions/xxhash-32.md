@@ -31,7 +31,7 @@ Calculate the 32-bit xxhash value of the input string
 ## Syntax
 
 ```sql
-XXHASH_32( VARCHAR <str> [ , <str> ... ] )
+XXHASH_32( <str> [ , <str> ... ] )
 ```
 
 ## Parameters

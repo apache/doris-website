@@ -32,7 +32,7 @@ SHA
 ## 语法
 
 ``` sql
-SHA1( VARCHAR <str> )
+SHA1( <str> )
 ```
 
 ## 参数

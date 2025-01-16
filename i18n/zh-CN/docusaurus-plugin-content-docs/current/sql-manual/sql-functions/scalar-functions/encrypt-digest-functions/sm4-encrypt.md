@@ -30,7 +30,7 @@ SM4是一种国家标准的对称密钥加密算法，广泛应用于金融、�
 ## 语法
 
 ```sql
-VARCHAR SM4_ENCRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHAR encryption_mode])
+SM4_ENCRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 ```
 
 ## 参数

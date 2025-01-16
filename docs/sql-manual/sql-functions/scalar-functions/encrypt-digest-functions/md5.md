@@ -29,7 +29,7 @@ Calculates an MD5 128-bit checksum for the string
 ## Syntax
 
 ```sql
-MD5( VARCHAR <str> )
+MD5( <str> )
 ```
 
 ## Parameters

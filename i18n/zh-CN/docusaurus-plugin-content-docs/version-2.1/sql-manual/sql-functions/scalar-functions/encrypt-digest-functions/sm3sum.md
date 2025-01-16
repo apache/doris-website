@@ -29,7 +29,7 @@ under the License.
 ## 语法
 
 ```sql
-SM3SUM( VARCHAR <str> [ , <str> ... ] )
+SM3SUM( <str> [ , <str> ... ] )
 ```
 
 ## 参数
