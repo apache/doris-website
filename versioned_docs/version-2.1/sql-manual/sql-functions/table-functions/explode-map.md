@@ -24,23 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode
+## Description
 
-### description
+The `explode_map` function takes a map (mapping type) and expands it into multiple rows, with each row containing a key-value pair. It is typically used in conjunction with LATERAL VIEW and can support multiple lateral views. It is supported only by the new optimizer.
 
-Table functions must be used in conjunction with Lateral View, support multi conjunction with Lateral View,support new optimizer only.
+The main difference between `explode_map` and `explode_map_outer` lies in the handling of null values.
 
-explode map column to rows. `explode_map_outer` will return NULL, while `map` is NULL or empty.
-`explode_map` and `explode_map_outer` both keep the nested NULL elements of map.
+## Syntax
 
-#### syntax
 ```sql
-explode_map(expr)
-explode_map_outer(expr)
+explode_map(<expr>)
+explode_map_outer(<expr>)
 ```
 
-### example
-```mysql> SET enable_nereids_planner=true
+## Parameters
+
+| 参数 | 说明 |
+| -- | -- |
+| `map<k,v>` | map type |
+
+## Return Value
+
+When the map is not empty or NULL, the return values of `explode_map` and `explode_map_outer` are the same.
+
+When the data is empty or NULL:
+
+`explode_map` Only processes non-empty map types. If the map is empty or NULL, `explode_map` will not return any rows.
+`explode_map_outer` If the map is empty or NULL, explode_map_outer will retain the record with the empty or NULL map and return a row with NULL values.
+
+## Examples
+```
+mysql> SET enable_nereids_planner=true
+
 mysql> SET enable_fallback_to_original_planner=false
 
 mysql> CREATE TABLE IF NOT EXISTS `sdu`(
