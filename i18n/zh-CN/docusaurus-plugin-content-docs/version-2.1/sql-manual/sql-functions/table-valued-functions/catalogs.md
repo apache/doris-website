@@ -24,23 +24,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `catalogs`
-
-### Name
-
-
-catalogs
-
-
 ## 描述
 
-表函数，生成 catalogs 临时表，可以查看当前doris中的创建的 catalogs 信息。
+此表函数生成一个临时的 catalogs 表，允许查看当前 Apache Doris 中所有已创建的 catalogs 信息。
 
-该函数用于 from 子句中。
+该函数用于 FROM 子句中，便于查询和分析 Doris 中的 catalog 数据。
 
 ## 语法
+```sql
+CATALOGS()
+```
 
-`catalogs()`
+## 返回值
+- **CatalogId**：`catalog` 的唯一标识符。
+- **CatalogName**：`catalog` 的名称。
+- **CatalogType**：`catalog` 的类型。
+- **Property**：`catalog` 配置项的名称。
+- **Value**：配置项的值。
 
 catalogs()表结构：
 ```
@@ -57,16 +57,16 @@ mysql> desc function catalogs();
 5 rows in set (0.04 sec)
 ```
 
-`catalogs()` tvf展示的信息是综合了 `show catalogs` 与 `show catalog xxx` 语句的结果。
-
-可以利用tvf生成的表去做过滤、join等操作。
-
+## 注意事项
+- `catalogs()` 函数返回的信息是 `show catalogs` 和 `show catalog xxx` 语句结果的综合。
 
 
-## 举例
-
+## 示例
+查看 doris 集群所有 catalog 信息
+```sql
+select * from catalogs()
 ```
-mysql> select * from catalogs();
+```text
 +-----------+-------------+-------------+--------------------------------------------+---------------------------------------------------------------------------+
 | CatalogId | CatalogName | CatalogType | Property                                   | Value                                                                     |
 +-----------+-------------+-------------+--------------------------------------------+---------------------------------------------------------------------------+
@@ -84,9 +84,4 @@ mysql> select * from catalogs();
 |     16726 | es          | es          | type                                       | es                                                                        |
 |     16726 | es          | es          | hosts                                      | http://127.0.0.1:9200                                                     |
 +-----------+-------------+-------------+--------------------------------------------+---------------------------------------------------------------------------+
-13 rows in set (0.01 sec)
 ```
-
-### keywords
-
-    catalogs
