@@ -29,7 +29,7 @@ Returns the tangent of x, where x is the value in radians.
 ## Syntax
 
 ```sql
-tan(DOUBLE <x>)
+tan(<x>)
 ```
 
 ## Parameters

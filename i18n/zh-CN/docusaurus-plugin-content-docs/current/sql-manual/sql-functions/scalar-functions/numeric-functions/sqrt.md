@@ -30,12 +30,12 @@ under the License.
 
 ## 别名
 
-DSQRT
+- DSQRT
 
 ## 语法
 
 ```sql
-sqrt(DOUBLE <a>)
+sqrt(<a>)
 ```
 
 ## 参数

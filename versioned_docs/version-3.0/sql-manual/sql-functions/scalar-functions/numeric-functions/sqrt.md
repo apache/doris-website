@@ -30,12 +30,12 @@ Returns the square root of a value, where the input value must be greater than o
 
 ## Aliases
 
-DSQRT
+- DSQRT
 
 ## Syntax
 
 ```sql
-sqrt(DOUBLE <a>)
+sqrt(<a>)
 ```
 
 ## Parameters
