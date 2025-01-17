@@ -24,123 +24,87 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `jobs`
-
-### Name
-
-jobs
-
 ## 描述
 
 表函数，生成任务临时表，可以查看某个任务类型中的job信息。
 
-该函数用于 from 子句中。
-
-该函数自 2.1.0 版本支持。
-
 ## 语法
 
-`jobs("type"="")`
-
-**参数说明**
-
-| 参数名  | 说明   | 类型     | 是否必填 |
-|:-----|:-----|:-------|:-----|
-| type | 作业类型 | string | 是    |
-
-type 支持的类型：
-
-- insert：insert into 类型的任务。
-- mv：物化视图类型的任务。
-##### Insert 任务
-jobs("type"="insert")表结构：
 ```sql
-mysql> desc  function jobs("type"="insert");
-+-------------------+------+------+-------+---------+-------+
-| Field             | Type | Null | Key   | Default | Extra |
-+-------------------+------+------+-------+---------+-------+
-| Id                | TEXT | No   | false | NULL    | NONE  |
-| Name              | TEXT | No   | false | NULL    | NONE  |
-| Definer           | TEXT | No   | false | NULL    | NONE  |
-| ExecuteType       | TEXT | No   | false | NULL    | NONE  |
-| RecurringStrategy | TEXT | No   | false | NULL    | NONE  |
-| Status            | TEXT | No   | false | NULL    | NONE  |
-| ExecuteSql        | TEXT | No   | false | NULL    | NONE  |
-| CreateTime        | TEXT | No   | false | NULL    | NONE  |
-| SucceedTaskCount  | TEXT | No   | false | NULL    | NONE  |
-| FailedTaskCount   | TEXT | No   | false | NULL    | NONE  |
-| CanceledTaskCount | TEXT | No   | false | NULL    | NONE  |
-| Comment           | TEXT | No   | false | NULL    | NONE  |
-+-------------------+------+------+-------+---------+-------+
-12 rows in set (0.01 sec)
-```
-* Id：job id.
-* Name：job名称.
-* Definer：job定义者.
-* ExecuteType：执行类型
-* RecurringStrategy：循环策略
-* Status：job状态
-* ExecuteSql：执行SQL
-* CreateTime：job 创建时间
-* SucceedTaskCount：成功任务数量
-* FailedTaskCount：失败任务数量
-* CanceledTaskCount：取消任务数量
-* Comment：job 注释
-##### 物化视图任务
-jobs("type"="mv")表结构：
-```sql
-mysql> desc function jobs("type"="mv");
-+-------------------+------+------+-------+---------+-------+
-| Field             | Type | Null | Key   | Default | Extra |
-+-------------------+------+------+-------+---------+-------+
-| Id                | TEXT | No   | false | NULL    | NONE  |
-| Name              | TEXT | No   | false | NULL    | NONE  |
-| MvId              | TEXT | No   | false | NULL    | NONE  |
-| MvName            | TEXT | No   | false | NULL    | NONE  |
-| MvDatabaseId      | TEXT | No   | false | NULL    | NONE  |
-| MvDatabaseName    | TEXT | No   | false | NULL    | NONE  |
-| ExecuteType       | TEXT | No   | false | NULL    | NONE  |
-| RecurringStrategy | TEXT | No   | false | NULL    | NONE  |
-| Status            | TEXT | No   | false | NULL    | NONE  |
-| CreateTime        | TEXT | No   | false | NULL    | NONE  |
-+-------------------+------+------+-------+---------+-------+
-10 rows in set (0.00 sec)
+JOBS(
+    "type"="<type>"
+)
 ```
 
-* Id：job id.
-* Name：job名称.
-* MvId：物化视图id
-* MvName：物化视图名称
-* MvDatabaseId：物化视图所属db id
-* MvDatabaseName：物化视图所属db名称
-* ExecuteType：执行类型
-* RecurringStrategy：循环策略
-* Status：job状态
-* CreateTime：task创建时间
+## 必填参数 (Required Parameters)
+| 字段名          | 描述                                                             |
+|--------------|----------------------------------------------------------------|
+| **`<type>`** | 任务的类型。<br/> `insert`：insert into 类型的任务。 <br/> `mv`：物化视图类型的任务。  |
 
-## 举例
 
-1. 查看所有物化视图的job
+## 返回值
+
+- **`jobs("type"="insert")`** insert 类型的 job 返回值
+    
+    | 字段名             | 描述                           |
+    |--------------------|--------------------------------|
+    | Id                 | job id                        |
+    | Name               | job名称                       |
+    | Definer            | job定义者                     |
+    | ExecuteType        | 执行类型                       |
+    | RecurringStrategy  | 循环策略                       |
+    | Status             | job状态                       |
+    | ExecuteSql         | 执行SQL                       |
+    | CreateTime         | job 创建时间                   |
+    | SucceedTaskCount   | 成功任务数量                   |
+    | FailedTaskCount    | 失败任务数量                   |
+    | CanceledTaskCount  | 取消任务数量                   |
+    | Comment            | job 注释                       |
+
+
+- **`jobs("type"="mv")`** MV 类型的 job 返回值
+    
+    | 字段名              | 描述                                 |
+    |---------------------|--------------------------------------|
+    | Id                  | job id                               |
+    | Name                | job名称                              |
+    | MvId                | 物化视图id                           |
+    | MvName              | 物化视图名称                         |
+    | MvDatabaseId        | 物化视图所属db id                    |
+    | MvDatabaseName      | 物化视图所属db名称                   |
+    | ExecuteType         | 执行类型                             |
+    | RecurringStrategy   | 循环策略                             |
+    | Status              | job状态                              |
+    | CreateTime          | task创建时间                         |
+
+
+## 示例
+
+查看所有物化视图的job
 
 ```sql
-mysql> select * from jobs("type"="mv");
+select * from jobs("type"="mv");
+```
+```text
++-------+------------------+-------+--------------------------+--------------+--------------------------------------------------------+-------------+-------------------+---------+---------------------+
+| Id    | Name             | MvId  | MvName                   | MvDatabaseId | MvDatabaseName                                         | ExecuteType | RecurringStrategy | Status  | CreateTime          |
++-------+------------------+-------+--------------------------+--------------+--------------------------------------------------------+-------------+-------------------+---------+---------------------+
+| 23369 | inner_mtmv_23363 | 23363 | range_date_up_union_mv1  | 21805        | regression_test_nereids_rules_p0_mv_create_part_and_up | MANUAL      | MANUAL TRIGGER    | RUNNING | 2025-01-08 18:19:10 |
+| 23377 | inner_mtmv_23371 | 23371 | range_date_up_union_mv2  | 21805        | regression_test_nereids_rules_p0_mv_create_part_and_up | MANUAL      | MANUAL TRIGGER    | RUNNING | 2025-01-08 18:19:10 |
+| 21794 | inner_mtmv_21788 | 21788 | test_tablet_type_mtmv_mv | 16016        | zd                                                     | MANUAL      | MANUAL TRIGGER    | RUNNING | 2025-01-08 12:26:06 |
+| 19508 | inner_mtmv_19494 | 19494 | mv1                      | 16016        | zd                                                     | MANUAL      | MANUAL TRIGGER    | RUNNING | 2025-01-07 22:13:31 |
++-------+------------------+-------+--------------------------+--------------+--------------------------------------------------------+-------------+-------------------+---------+---------------------+
 ```
 
-2. 查看 name 为`inner_mtmv_75043`的 job
+查看所有 insert 任务的 job
 
 ```sql
-mysql> select * from jobs("type"="mv") where Name="inner_mtmv_75043";
+select * from jobs("type"="insert");
 ```
-3. 查看所有 insert 任务
-
-```sql
-mysql> select * from jobs("type"="insert");
+```text
++----------------+----------------+---------+-------------+--------------------------------------------+---------+--------------------------------------------------------------+---------------------+------------------+-----------------+-------------------+---------+
+| Id             | Name           | Definer | ExecuteType | RecurringStrategy                          | Status  | ExecuteSql                                                   | CreateTime          | SucceedTaskCount | FailedTaskCount | CanceledTaskCount | Comment |
++----------------+----------------+---------+-------------+--------------------------------------------+---------+--------------------------------------------------------------+---------------------+------------------+-----------------+-------------------+---------+
+| 78533940810334 | insert_tab_job | root    | RECURRING   | EVERY 10 MINUTE STARTS 2025-01-17 14:42:53 | RUNNING | INSERT INTO test.insert_tab SELECT * FROM test.example_table | 2025-01-17 14:32:53 | 0                | 0               | 0                 |         |
++----------------+----------------+---------+-------------+--------------------------------------------+---------+--------------------------------------------------------------+---------------------+------------------+-----------------+-------------------+---------+
 ```
-4. 查看 name 为`one_insert_job`的 job
-
-```sql
-mysql> select * from jobs("type"="insert") where Name='one_insert_job';
-```
-### keywords
-
-    jobs, job, insert, mv, materialized view, schedule
