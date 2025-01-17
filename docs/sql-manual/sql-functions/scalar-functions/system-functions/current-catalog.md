@@ -1,6 +1,6 @@
 ---
 {
-    "title": "current_catalog",
+    "title": "CURRENT_CATALOG",
     "language": "en"
 }
 ---
@@ -21,3 +21,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+
+## Description
+
+Get the catalog of the current sql client connection.
+
+## Syntax
+
+```sql
+current_catalog()
+```
+
+## Parameters
+
+none
+
+## Return Value
+
+The catalog name of the current sql client connection, string.
+
+## Examples
+
+```sql
+select current_catalog();
+```
+
+```text
++-------------------+
+| current_catalog() |
++-------------------+
+| internal          |
++-------------------+
+```

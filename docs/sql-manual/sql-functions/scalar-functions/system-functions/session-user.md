@@ -1,6 +1,6 @@
 ---
 {
-    "title": "session_user",
+    "title": "SESSION_USER",
     "language": "en"
 }
 ---
@@ -21,3 +21,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## Description
+
+Get the current username and IP of Doris connection, compatible with MySQL protocol.
+
+## Syntax
+
+```sql
+session_user()
+```
+
+## Parameters
+
+none
+
+## Return Value
+
+Returns the current username and IP Doris is connected to, string.
+Format:`<user_name>@<ip>`
+
+## Examples
+
+```sql
+select session_user();
+```
+
+```text
++----------------------+
+| session_user()       |
++----------------------+
+| 'root'@'10.244.2.10' |
++----------------------+
+```

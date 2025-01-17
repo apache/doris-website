@@ -1,6 +1,6 @@
 ---
 {
-    "title": "version",
+    "title": "VERSION",
     "language": "zh-CN"
 }
 ---
@@ -21,3 +21,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## 描述
+
+无实际意义，兼容 MySQL 协议。
+
+## 语法
+
+```sql
+version()
+```
+
+## 参数
+
+无
+
+## 返回值
+
+兼容 MySQL 协议，固定返回 “5.7.99”，string。
+
+## 举例
+
+```sql
+select version();
+```
+
+```text
++-----------+
+| version() |
++-----------+
+| 5.7.99    |
++-----------+
+```
+

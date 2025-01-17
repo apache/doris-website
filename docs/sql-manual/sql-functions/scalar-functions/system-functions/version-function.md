@@ -1,6 +1,6 @@
 ---
 {
-    "title": "version",
+    "title": "VERSION",
     "language": "en"
 }
 ---
@@ -21,3 +21,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## Description
+
+No practical meaning, for compatibility with MySQL protocol.
+
+## Syntax
+
+```sql
+version()
+```
+
+## Parameters
+
+none
+
+## Return Value
+
+Compatible with MySQL protocol, fixed return value is "5.7.99", string.
+
+## Examples
+
+```sql
+select version();
+```
+
+```text
++-----------+
+| version() |
++-----------+
+| 5.7.99    |
++-----------+
+```
+
