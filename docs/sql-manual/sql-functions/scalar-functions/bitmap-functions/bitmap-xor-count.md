@@ -29,7 +29,7 @@ Computes the symmetric difference (XOR operation) of two or more Bitmap sets and
 ## Syntax
 
 ```sql
-bitmap_xor_count(<bitmap1>, <bitmap2>, ..., <bitmapN>)
+BITMAP_XOR_COUNT(<bitmap1>, <bitmap2>, ..., <bitmapN>)
 ```
 
 ## Parameters

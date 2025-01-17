@@ -31,7 +31,7 @@ Computes the difference between the first Bitmap and the second Bitmap, and retu
 ## Syntax
 
 ```sql
-bitmap_not(<bitmap1>, <bitmap2>)
+BITMAP_NOT(<bitmap1>, <bitmap2>)
 ```
 
 ## Parameters

@@ -31,7 +31,7 @@ Computes the symmetric difference (XOR operation) of two or more input Bitmaps a
 ## Syntax
 
 ```sql
-bitmap_xor(<bitmap1>, <bitmap2>, ..., <bitmapN>)
+BITMAP_XOR(<bitmap1>, <bitmap2>, ..., <bitmapN>)
 ```
 
 ## Parameters

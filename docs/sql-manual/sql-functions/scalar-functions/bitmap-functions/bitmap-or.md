@@ -31,7 +31,7 @@ Computes the union of two or more Bitmaps and returns a new Bitmap.
 ## Syntax
 
 ```sql
-bitmap_or(<bitmap1>, <bitmap2>, ..., <bitmapN>)
+BITMAP_OR(<bitmap1>, <bitmap2>, ..., <bitmapN>)
 ```
 
 ## Parameters

@@ -31,7 +31,7 @@ Removes a specified value from a Bitmap column.
 ## Syntax
 
 ```sql
-bitmap_remove(<bitmap>, <value>)
+BITMAP_REMOVE(<bitmap>, <value>)
 ```
 
 ## Parameters

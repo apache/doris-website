@@ -31,7 +31,7 @@ Computes the 64-bit hash value of any input type and returns a Bitmap containing
 ## Syntax
 
 ```sql
-bitmap_hash64(<expr>)
+BITMAP_HASH64(<expr>)
 ```
 
 ## Parameters

@@ -31,7 +31,7 @@ Computes and returns the maximum value in a Bitmap.
 ## Syntax
 
 ```sql
-bitmap_max(<bitmap>)
+BITMAP_MAX(<bitmap>)
 ```
 
 ## Parameters

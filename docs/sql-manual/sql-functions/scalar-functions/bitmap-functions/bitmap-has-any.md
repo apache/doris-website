@@ -31,7 +31,7 @@ Determines whether two Bitmaps share any common elements.
 ## Syntax
 
 ```sql
-bitmap_has_any(<bitmap1>, <bitmap2>)
+BITMAP_HAS_ANY(<bitmap1>, <bitmap2>)
 ```
 
 ## Parameters

@@ -29,7 +29,7 @@ Converts a Bitmap into a comma-separated string containing all the set bit posit
 ## Syntax
 
 ```sql
-bitmap_to_string(<bitmap>)
+BITMAP_TO_STRING(<bitmap>)
 ```
 
 ## Parameters

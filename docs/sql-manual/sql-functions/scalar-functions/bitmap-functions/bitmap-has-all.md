@@ -31,7 +31,7 @@ Determines whether one Bitmap contains all the elements of another Bitmap.
 ## Syntax
 
 ```sql
-bitmap_has_all(<bitmap1>, <bitmap2>)
+BITMAP_HAS_ALL(<bitmap1>, <bitmap2>)
 ```
 
 ## Parameters

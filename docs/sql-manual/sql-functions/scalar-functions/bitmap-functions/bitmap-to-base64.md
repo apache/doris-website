@@ -29,7 +29,7 @@ Converts a Bitmap into a Base64 encoded string.
 ## Syntax
 
 ```sql
-bitmap_to_base64(<bitmap>)
+BITMAP_TO_BASE64(<bitmap>)
 ```
 
 ## Parameters

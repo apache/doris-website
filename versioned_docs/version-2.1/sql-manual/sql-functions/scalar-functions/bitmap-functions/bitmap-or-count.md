@@ -24,54 +24,108 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_or_count
-### description
-#### Syntax
+## Description
 
-`BigIntVal bitmap_or_count(BITMAP lhs, BITMAP rhs)`
+Computes the union of two or more input Bitmaps and returns the count of elements in the union.
 
-Calculates the union of two or more input bitmaps and returns the number of union sets.
+## Syntax
 
-### example
-
+```sql
+BITMAP_OR_COUNT(<bitmap1>, <bitmap2>, ..., <bitmapN>)
 ```
-MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'),bitmap_empty());
+
+## Parameters
+
+| Parameter   | Description    |
+|-------------|----------------|
+| `<bitmap1>` | The first Bitmap   |
+| `<bitmap2>` | The second Bitmap  |
+| ...         | ...            |
+| `<bitmapN>` | The N-th Bitmap   |
+
+## Return Value
+
+The count of elements in the union of multiple Bitmaps.  
+Returns `NULL` if any of the Bitmaps is `NULL`.
+
+## Examples
+
+To compute the count of elements in the union of a non-empty Bitmap and an empty Bitmap:
+
+```sql
+select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_empty());
+```
+
+The result will be:
+
+```text
 +--------------------------------------------------------------+
 | bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_empty()) |
 +--------------------------------------------------------------+
 |                                                            3 |
 +--------------------------------------------------------------+
+```
 
+To compute the count of elements in the union of two identical Bitmaps:
 
-MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'),bitmap_from_string('1,2,3'));
+```sql
+select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2,3'));
+```
+
+The result will be:
+
+```text
 +---------------------------------------------------------------------------+
 | bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2,3')) |
 +---------------------------------------------------------------------------+
 |                                                                         3 |
 +---------------------------------------------------------------------------+
+```
 
-MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5'));
+To compute the count of elements in the union of two different Bitmaps:
+
+```sql
+select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'));
+```
+
+The result will be:
+
+```text
 +---------------------------------------------------------------------------+
 | bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5')) |
 +---------------------------------------------------------------------------+
 |                                                                         5 |
 +---------------------------------------------------------------------------+
+```
 
-MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), bitmap_empty());
+To compute the count of elements in the union of multiple Bitmaps, including an empty Bitmap:
+
+```sql
+select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), bitmap_empty());
+```
+
+The result will be:
+
+```text
 +-----------------------------------------------------------------------------------------------------------+
 | bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), bitmap_empty()) |
 +-----------------------------------------------------------------------------------------------------------+
 |                                                                                                         6 |
 +-----------------------------------------------------------------------------------------------------------+
+```
 
-MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), NULL);
+To compute the count of elements in the union of multiple Bitmaps, including a `NULL` value:
+
+```sql
+select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), NULL);
+```
+
+The result will be:
+
+```text
 +-------------------------------------------------------------------------------------------------+
 | bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), NULL) |
 +-------------------------------------------------------------------------------------------------+
 |                                                                                            NULL |
 +-------------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-
-    BITMAP_OR_COUNT,BITMAP

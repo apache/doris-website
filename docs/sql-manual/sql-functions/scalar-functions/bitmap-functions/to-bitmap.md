@@ -33,7 +33,7 @@ The input is an unsigned bigint with a value in the range 0 to 18446744073709551
 ## Syntax
 
 ```sql
-to_bitmap(<expr>)
+TO_BITMAP(<expr>)
 ```
 
 ## Parameters

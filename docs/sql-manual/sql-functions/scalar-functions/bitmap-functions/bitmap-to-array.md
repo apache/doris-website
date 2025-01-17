@@ -29,7 +29,7 @@ Converts a Bitmap into an Array.
 ## Syntax
 
 ```sql
-bitmap_to_array(<bitmap>)
+BITMAP_TO_ARRAY(<bitmap>)
 ```
 
 ## Parameters

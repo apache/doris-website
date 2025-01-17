@@ -31,7 +31,7 @@ Extracts a subset of Bitmap elements starting from a specified position, with a 
 ## Syntax
 
 ```sql
-bitmap_subset_limit(<bitmap>, <position>, <cardinality_limit>)
+BITMAP_SUBSET_LIMIT(<bitmap>, <position>, <cardinality_limit>)
 ```
 
 ## Parameters

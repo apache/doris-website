@@ -31,7 +31,7 @@ Computes the union of two or more input Bitmaps and returns the count of element
 ## Syntax
 
 ```sql
-bitmap_or_count(<bitmap1>, <bitmap2>, ..., <bitmapN>)
+BITMAP_OR_COUNT(<bitmap1>, <bitmap2>, ..., <bitmapN>)
 ```
 
 ## Parameters

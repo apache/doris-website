@@ -31,7 +31,7 @@ Computes and returns the minimum value in a Bitmap.
 ## Syntax
 
 ```sql
-bitmap_min(<bitmap>)
+BITMAP_MIN(<bitmap>)
 ```
 
 ## Parameters

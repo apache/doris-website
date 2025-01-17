@@ -31,7 +31,7 @@ Returns a subset of the Bitmap within the specified range (excluding the range e
 ## Syntax
 
 ```sql
-bitmap_subset_in_range(<bitmap>, <range_start_include>, <range_end_exclude>)
+BITMAP_SUBSET_IN_RANGE(<bitmap>, <range_start_include>, <range_end_exclude>)
 ```
 
 ## Parameters
