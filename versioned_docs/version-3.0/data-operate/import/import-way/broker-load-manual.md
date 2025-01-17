@@ -30,6 +30,10 @@ Broker Load is suitable for scenarios where the source data is stored in remote 
 
 Direct reads from HDFS or S3 can also be imported through HDFS TVF or S3 TVF in the [Lakehouse/TVF](../../../lakehouse/file). The current "Insert Into" based on TVF is a synchronous import, while Broker Load is an asynchronous import method.
 
+In early versions of Doris, both S3 Load and HDFS Load were implemented by connecting to specific Broker processes using `WITH BROKER`.
+In newer versions, S3 Load and HDFS Load have been optimized as the most commonly used import methods, and they no longer depend on an additional Broker process, though they still use syntax similar to Broker Load.
+Due to historical reasons and the similarity in syntax, S3 Load, HDFS Load, and Broker Load are collectively referred to as Broker Load.
+
 ## Limitations
 
 Supported data sources:
@@ -443,21 +447,13 @@ HA mode can be combined with the previous two authentication methods for cluster
 
 ### Load with other brokers
 
-The Broker for other remote storage systems is an optional process in the Doris cluster, primarily used to support Doris in reading and writing files and directories on remote storage. Currently, the following storage system Broker implementations are provided:
-
-- Alibaba Cloud OSS
-
-- Baidu Cloud BOS
+The Broker for other remote storage systems is an optional process in the Doris cluster, primarily used to support Doris in reading and writing files and directories on remote storage.
+Currently, Doris provides Broker implementations for various remote storage systems.
+In earlier versions, different object storage Brokers were also available, but now it is recommended to use the `WITH S3` method to import data from object storage, and the `WITH BROKER` method is no longer recommended.
 
 - Tencent Cloud CHDFS
-
 - Tencent Cloud GFS
-
-- Huawei Cloud OBS
-
 - JuiceFS
-
-- Google Cloud Storage (GCS)
 
 The Broker provides services through an RPC service port and operates as a stateless Java process. Its primary responsibility is to encapsulate POSIX-like file operations for remote storage, such as open, pread, pwrite, and more. Additionally, the Broker does not keep track of any other information, which means that all the connection details, file information, and permission details related to the remote storage must be passed to the Broker process through parameters during RPC calls. This ensures that the Broker can correctly read and write files.
 
