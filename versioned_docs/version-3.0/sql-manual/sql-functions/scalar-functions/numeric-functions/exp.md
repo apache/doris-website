@@ -22,34 +22,54 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## exp
 
-### description
-#### Syntax
+## description
 
-`DOUBLE exp(DOUBLE x)`
 Returns `x` raised to the base `e`.
 
-:::tip
-Another alias for this function is `dexp`.
-:::
+## alias
 
-### example
+DEXP
 
+## Syntax
+
+```sql
+DOUBLE exp(DOUBLE <x>)
 ```
-mysql> select exp(2);
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<x>` | independent variable |
+
+## Return Value
+
+Return a value of type double
+- If the parameter has a null value, it returns NULL
+
+## example
+
+```sql
+select exp(2);
+```
+
+```text
 +------------------+
 | exp(2.0)         |
 +------------------+
 | 7.38905609893065 |
 +------------------+
-mysql> select exp(3.4);
+```
+
+```
+select exp(3.4);
+```
+
+```text
 +--------------------+
 | exp(3.4)           |
 +--------------------+
 | 29.964100047397011 |
 +--------------------+
 ```
-
-### keywords
-	EXP, DEXP
