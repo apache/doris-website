@@ -1,11 +1,11 @@
 ---
 {
-    "title": "http_stream",
-    "language": "zh-CN"
+    "title": "Colocate Meta Action",
+    "language": "en"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -23,3 +23,37 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+# Colocate Meta Action
+
+## Request
+
+`GET /api/colocate`
+`POST/DELETE /api/colocate/group_stable`
+`POST /api/colocate/bucketseq`
+
+## Description
+
+Used to obtain or modify colocate group information.
+    
+## Path parameters
+
+None
+
+## Query parameters
+
+* `db_id`
+
+    Specify database id
+
+* `group_id`
+    
+    Specify group id
+
+## Request body
+
+None
+
+## Response
+
+TO DO

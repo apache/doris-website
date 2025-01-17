@@ -1,11 +1,11 @@
 ---
 {
-    "title": "GROUP_COMMIT",
-    "language": "zh-CN"
+    "title": "Meta Action",
+    "language": "en"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -23,3 +23,42 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+# Meta Action
+
+## Request
+
+```
+GET /image
+GET /info
+GET /version
+GET /put
+GET /journal_id
+GET /role
+GET /check
+GET /dump
+```
+
+## Description
+
+This is a set of APIs related to FE metadata, except for `/dump`, they are all used for internal communication between FE nodes.
+    
+## Path parameters
+
+TODO
+
+## Query parameters
+
+TODO
+
+## Request body
+
+TODO
+
+## Response
+
+TODO
+    
+## Examples
+
+TODO

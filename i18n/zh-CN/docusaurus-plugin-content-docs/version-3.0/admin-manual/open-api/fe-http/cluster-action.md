@@ -34,7 +34,7 @@ under the License.
 
 `GET /rest/v2/manager/cluster/cluster_info/conn_info`
 
-## 描述
+### Description
 
 用于获取集群 http、mysql 连接信息。
 
@@ -68,7 +68,7 @@ under the License.
 }
 ```
     
-## 举例s
+### Examples
 ```
 GET /rest/v2/manager/cluster/cluster_info/conn_info
 

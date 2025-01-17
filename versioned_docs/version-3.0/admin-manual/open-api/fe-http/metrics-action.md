@@ -1,11 +1,11 @@
 ---
 {
-    "title": "http_stream",
-    "language": "zh-CN"
+    "title": "Metrics Action",
+    "language": "en"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -23,3 +23,33 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+# Metrics Action
+
+## Request
+
+`GET /api/metrics`
+
+## Description
+
+Used to obtain doris metrics infomation.
+    
+## Path parameters
+
+None
+
+## Query parameters
+
+* `type`
+
+    Optional parameter. Display all metrics by default, and with following values:
+    - `core` Output core metrics
+    - `json` Output metrics in json format
+
+## Request body
+
+None
+
+## Response
+
+TO DO

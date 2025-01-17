@@ -1,11 +1,11 @@
 ---
 {
-    "title": "http_stream",
-    "language": "zh-CN"
+    "title": "Restore Tablet",
+    "language": "en"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -23,3 +23,43 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+# Restore Tablet
+
+## Request
+
+`POST /api/restore_tablet?tablet_id={int}&schema_hash={int}"`
+
+## Description
+
+To restore the tablet data from trash dir on BE
+
+## Query parameters
+
+* `tablet_id`
+    ID of the tablet
+
+* `schema_hash`
+    Schema hash       
+
+
+## Request body
+
+None
+
+## Response
+
+    ```
+    {
+        msg: "OK",
+        code: 0
+    }
+    ```
+## Examples
+
+
+    ```
+    curl -X POST "http://127.0.0.1:8040/api/restore_tablet?tablet_id=123456&schema_hash=1111111"
+
+    ```
+

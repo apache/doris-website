@@ -870,7 +870,7 @@
                     "items": [
                         {
                             "type": "category",
-                            "label": "Scala Functions",
+                            "label": "Scalar Functions",
                             "items": [
                                 {
                                     "type": "category",
@@ -1505,7 +1505,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "Analytic(Window) Functions",
+                            "label": "Analytic (Window) Functions",
                             "items": [
                                 "sql-manual/sql-functions/window-functions/window-function",
                                 "sql-manual/sql-functions/window-functions/rank",
@@ -1564,9 +1564,7 @@
                                 "sql-manual/sql-functions/table-valued-functions/mv_infos",
                                 "sql-manual/sql-functions/table-valued-functions/partitions",
                                 "sql-manual/sql-functions/table-valued-functions/partition-values",
-                                "sql-manual/sql-functions/table-valued-functions/tasks",
-                                "sql-manual/sql-functions/table-valued-functions/group-commit",
-                                "sql-manual/sql-functions/table-valued-functions/http-stream"
+                                "sql-manual/sql-functions/table-valued-functions/tasks"
                             ]
                         }
                     ]

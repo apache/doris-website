@@ -1,11 +1,11 @@
 ---
 {
-    "title": "http_stream",
-    "language": "zh-CN"
+    "title": "Login Action",
+    "language": "en"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -23,3 +23,48 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+# Login Action
+
+## Request
+
+`POST /rest/v1/login`
+
+## Description
+
+Used to log in to the service.
+    
+## Path parameters
+
+None
+
+## Query parameters
+
+None
+
+## Request body
+
+None
+
+## Response
+
+* Login success
+
+    ```
+    {
+    	"msg": "Login success!",
+    	"code": 200
+    }
+    ```
+
+* Login failure
+
+    ```
+    {
+    	"msg": "Error msg...",
+    	"code": xxx,
+    	"data": "Error data...",
+    	"count": 0
+    }
+    ```
+

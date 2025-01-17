@@ -1,11 +1,11 @@
 ---
 {
-    "title": "GROUP_COMMIT",
-    "language": "zh-CN"
+    "title": "Meta Info Action",
+    "language": "en"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -23,3 +23,50 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+# Meta Info Action
+
+## Request
+
+`GET /api/meta/namespaces/<ns>/databases`
+`GET /api/meta/namespaces/<ns>/databases/<db>/tables`
+`GET /api/meta/namespaces/<ns>/databases/<db>/tables/<tbl>/schema`
+
+
+## Description
+
+Used to obtain metadata information about the cluster, including the database list, table list, and table schema.
+
+    
+## Path parameters
+
+* `ns`
+
+    Specify cluster name.
+
+* `db`
+
+    Specify database name.
+
+* `tbl`
+
+    Specify table name.
+
+## Query parameters
+
+None
+
+## Request body
+
+None
+
+## Response
+
+```
+{
+    "msg":"success",
+    "code":0,
+    "data":["database list" / "table list" / "table schema"],
+    "count":0
+}
+```

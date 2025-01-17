@@ -1,11 +1,11 @@
 ---
 {
-    "title": "GROUP_COMMIT",
-    "language": "zh-CN"
+    "title": "Meta Replay State Action",
+    "language": "en"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -23,3 +23,39 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+# Meta Replay State Action
+
+(Not Implemented)
+
+## Request
+
+`GET /api/_meta_replay_state`
+
+## Description
+
+Get the status of FE node metadata replay.
+    
+## Path parameters
+
+None
+
+## Query parameters
+
+None
+
+## Request body
+
+None
+
+## Response
+
+TODO
+    
+## Examples
+
+TODO
+
+
+
+
