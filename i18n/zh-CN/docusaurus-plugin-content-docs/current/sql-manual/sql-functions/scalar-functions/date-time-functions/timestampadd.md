@@ -24,36 +24,45 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## timestampadd
 ## 描述
+
+`timestampadd`  函数用于将指定的时间单位（如年、月、日、小时、分钟、秒等）添加到一个时间戳或日期上。这个函数通常用于日期和时间的计算。
+
 ## 语法
 
-`DATETIME TIMESTAMPADD(unit, interval, DATETIME datetime_expr)`
+`TIMESTAMPADD(unit, interval, DATETIME datetime_expr)`
 
+## 参数
 
-将整数表达式间隔添加到日期或日期时间表达式datetime_expr中。
+| 参数 | 说明 |
+| -- | -- |
+| `unit` | 时间单位，指定要添加的时间单位，常见的值有 SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR|
+|`interval`| 要添加的时间间隔，通常是一个整数，可以是正数或负数，表示添加或减去的时间长度 |
+| `DATETIME datetime_expr` | 合法的目标时间戳或日期 |
 
-interval的单位由unit参数给出，它应该是下列值之一: 
+## 返回值
 
-SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, or YEAR。
+返回新的日期时间，表示在指定时间点上添加或减去指定时间间隔后的结果。
 
 ## 举例
 
+```sql
+SELECT TIMESTAMPADD(MINUTE,1,'2019-01-02');
 ```
-
-mysql> SELECT TIMESTAMPADD(MINUTE,1,'2019-01-02');
+```text
 +------------------------------------------------+
 | timestampadd(MINUTE, 1, '2019-01-02 00:00:00') |
 +------------------------------------------------+
 | 2019-01-02 00:01:00                            |
 +------------------------------------------------+
-
-mysql> SELECT TIMESTAMPADD(WEEK,1,'2019-01-02');
+```
+```sql
+SELECT TIMESTAMPADD(WEEK,1,'2019-01-02');
+```
+```text
 +----------------------------------------------+
 | timestampadd(WEEK, 1, '2019-01-02 00:00:00') |
 +----------------------------------------------+
 | 2019-01-09 00:00:00                          |
 +----------------------------------------------+
 ```
-### keywords
-    TIMESTAMPADD

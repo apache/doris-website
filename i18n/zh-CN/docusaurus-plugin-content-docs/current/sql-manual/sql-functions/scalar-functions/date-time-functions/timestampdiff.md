@@ -24,44 +24,55 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## timestampdiff
 ## 描述
+
+`timestampdiff` 函数用于计算两个时间戳或日期之间的差值，返回两个时间戳之间的时间间隔。可以计算两者之间的差异，以指定的时间单位（如秒、分钟、小时、天、月、年等）返回结果。
+
 ## 语法
 
-`INT TIMESTAMPDIFF(unit, DATETIME datetime_expr1, DATETIME datetime_expr2)`
+`TIMESTAMPDIFF(unit, DATETIME datetime_expr1, DATETIME datetime_expr2)`
 
-返回datetime_expr2−datetime_expr1，其中datetime_expr1和datetime_expr2是日期或日期时间表达式。
+## 参数
 
-结果(整数)的单位由unit参数给出。interval的单位由unit参数给出，它应该是下列值之一: 
-                   
-SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, or YEAR。
+| 参数 | 说明 |
+| -- | -- |
+| `unit` | 时间单位，指定要返回差异的单位，常见的值有 SECOND、MINUTE、HOUR、DAY、MONTH、YEAR 等 |
+|`DATETIME datetime_expr1`| 第一个日期时间，合法的目标时间戳或日期 |
+|`DATETIME datetime_expr2`| 第二个日期时间，合法的目标时间戳或日期 |
+
+## 返回值
+
+ 返回两个日期时间之间的差异，单位根据 unit 参数确定。
 
 ## 举例
 
+```sql
+SELECT TIMESTAMPDIFF(MONTH,'2003-02-01','2003-05-01');
 ```
-
-MySQL> SELECT TIMESTAMPDIFF(MONTH,'2003-02-01','2003-05-01');
+```text
 +--------------------------------------------------------------------+
 | timestampdiff(MONTH, '2003-02-01 00:00:00', '2003-05-01 00:00:00') |
 +--------------------------------------------------------------------+
 |                                                                  3 |
 +--------------------------------------------------------------------+
-
-MySQL> SELECT TIMESTAMPDIFF(YEAR,'2002-05-01','2001-01-01');
+```
+```sql
+SELECT TIMESTAMPDIFF(YEAR,'2002-05-01','2001-01-01');
+```
+```text
 +-------------------------------------------------------------------+
 | timestampdiff(YEAR, '2002-05-01 00:00:00', '2001-01-01 00:00:00') |
 +-------------------------------------------------------------------+
 |                                                                -1 |
 +-------------------------------------------------------------------+
-
-
-MySQL> SELECT TIMESTAMPDIFF(MINUTE,'2003-02-01','2003-05-01 12:05:55');
+```
+```sql
+SELECT TIMESTAMPDIFF(MINUTE,'2003-02-01','2003-05-01 12:05:55');
+```
+```text
 +---------------------------------------------------------------------+
 | timestampdiff(MINUTE, '2003-02-01 00:00:00', '2003-05-01 12:05:55') |
 +---------------------------------------------------------------------+
 |                                                              128885 |
 +---------------------------------------------------------------------+
-
 ```
-### keywords
-    TIMESTAMPDIFF

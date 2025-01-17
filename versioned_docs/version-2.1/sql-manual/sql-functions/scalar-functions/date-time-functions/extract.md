@@ -24,31 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## extract
-### description
-#### Syntax
+## Description
 
-`INT extract(unit FROM DATETIME)`
+The `extract` function is used to extract a specified part of a date or time value, such as the year, month, day, hour, minute, second, etc. This function is commonly used to extract specific time components from a datetime field for calculation, comparison, or display.
 
-Extract DATETIME The value of a specified unit. The unit can be year, day, hour, minute, second or microsecond
+## Syntax
 
-### Example
+`EXTRACT(unit FROM DATETIME)`
 
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `unit` | The unit to extract from the DATETIME. Possible values are year, month, day, hour, minute, second, or microsecond |
+| `from` | Fixed syntax |
+| `period` | The argument is a valid date expression |
+
+## Return Value
+
+The return value is the extracted part of the date or time (such as an integer), depending on the unit being extracted.
+
+## Examples
+
+```sql
+select extract(year from '2022-09-22 17:01:30') as year,
+extract(month from '2022-09-22 17:01:30') as month,
+extract(day from '2022-09-22 17:01:30') as day,
+extract(hour from '2022-09-22 17:01:30') as hour,
+extract(minute from '2022-09-22 17:01:30') as minute,
+extract(second from '2022-09-22 17:01:30') as second,
+extract(microsecond from cast('2022-09-22 17:01:30.000123' as datetimev2(6))) as microsecond;
 ```
-mysql> select extract(year from '2022-09-22 17:01:30') as year,
-    -> extract(month from '2022-09-22 17:01:30') as month,
-    -> extract(day from '2022-09-22 17:01:30') as day,
-    -> extract(hour from '2022-09-22 17:01:30') as hour,
-    -> extract(minute from '2022-09-22 17:01:30') as minute,
-    -> extract(second from '2022-09-22 17:01:30') as second,
-    -> extract(microsecond from cast('2022-09-22 17:01:30.000123' as datetimev2(6))) as microsecond;
+```text
 +------+-------+------+------+--------+--------+-------------+
 | year | month | day  | hour | minute | second | microsecond |
 +------+-------+------+------+--------+--------+-------------+
 | 2022 |     9 |   22 |   17 |      1 |     30 |         123 |
 +------+-------+------+------+--------+--------+-------------+
 ```
-
-### keywords
-
-    extract
