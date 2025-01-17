@@ -17,20 +17,9 @@ PERCENT_RANK() is a window function that calculates the relative rank of a row w
 
 ## Syntax
 
-```sql:docs/sql-manual/sql-functions/window-functions/percent-rank.md
-PERCENT_RANK() OVER ( 
-    [ PARTITION BY <expr1> ] 
-    ORDER BY <expr2> [ ASC | DESC ] 
-    [ <window_frame> ]
-)
+```sql
+PERCENT_RANK()
 ```
-
-## Parameters
-| Parameter    | Description                                                                                                             |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| expr1        | Optional. Expression used for partitioning. For example, to rank farmers by yield within each state, partition by state |
-| expr2        | Required. Expression used for ordering. This determines how the percentage rank is calculated                           |
-| window_frame | Optional. Window frame clause, supports fixed range window frames                                                       |
 
 ## Return Value
 

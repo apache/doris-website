@@ -18,8 +18,7 @@ LAG() is a window function that accesses data from previous rows without perform
 ## Syntax
 
 ```sql
-LAG ( expr [, offset [, default ] ] ) [ { IGNORE | RESPECT } NULLS ]
-    OVER ( [ PARTITION BY partition_expr ] ORDER BY order_expr [ ASC | DESC ] )
+LAG ( <expr> [, <offset> [, <default> ] ] )
 ```
 
 ## Parameters
@@ -28,10 +27,6 @@ LAG ( expr [, offset [, default ] ] ) [ { IGNORE | RESPECT } NULLS ]
 | expr                | The expression whose value is to be retrieved                                                      |
 | offset              | Optional. Number of rows to look backward. Default is 1. When negative, behaves like LEAD function |
 | default             | Optional. Value to return when the offset goes beyond window bounds. Default is NULL               |
-| partition_by_clause | Optional. Specifies the columns for partitioning                                                   |
-| order_by_clause     | Required. Specifies the columns for ordering                                                       |
-| IGNORE NULLS        | Optional. When set, null value rows are ignored in offset calculation                              |
-| RESPECT NULLS       | Optional. Default value. Null value rows are included in offset calculation                        |
 
 ## Return Value
 

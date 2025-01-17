@@ -18,14 +18,8 @@ CUME_DIST (Cumulative Distribution) is a window function that calculates the rel
 ## Syntax
 
 ```sql
-CUME_DIST() OVER ( [ PARTITION BY <partition_expr> ] ORDER BY <order_expr> [ ASC | DESC ] )
+CUME_DIST()
 ```
-
-## Parameters
-| Parameter           | Description                                                                                                                                                                       |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| partition_by_clause | Optional. Specifies the columns for partitioning, format: `PARTITION BY column1, column2, ...`. If not specified, all rows are treated as one partition                           |
-| order_by_clause     | Required. Specifies the columns for ordering, format: `ORDER BY column1 [ASC\|DESC], column2 [ASC\|DESC], ...`. This determines the order for calculating cumulative distribution |
 
 ## Return Value
 

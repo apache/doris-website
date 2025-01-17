@@ -18,15 +18,13 @@ NTILE() is a window function that divides an ordered dataset into a specified nu
 ## Syntax
 
 ```sql
-NTILE( <constant_value> ) OVER ( [ PARTITION BY <expr1> ] ORDER BY <expr2> [ ASC | DESC ] )
+NTILE( <constant_value> )
 ```
 
 ## Parameters
 | Parameter      | Description                                                                                                                 |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| constant_value | Required. Specifies the number of buckets to create, must be a positive integer                                             |
-| expr1          | Optional. Expression (typically a column name) used for partitioning. If specified, bucketing is done within each partition |
-| expr2          | Required. Expression (typically a column name) used for ordering, which determines how data is distributed into buckets     |
+| constant_value | Required. Specifies the number of buckets to create, must be a positive integer                                             
 
 ## Return Value
 

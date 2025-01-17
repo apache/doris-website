@@ -18,17 +18,8 @@ ROW_NUMBER() is a window function that assigns a unique sequential number to eac
 ## Syntax
 
 ```sql
-ROW_NUMBER() OVER ( 
-    [ PARTITION BY <expr1> [, <expr2> ... ] ]
-    ORDER BY <expr3> [ , <expr4> ... ] [ ASC | DESC ]
-)
+ROW_NUMBER()
 ```
-
-## Parameters
-| Parameter    | Description                                                                                                                               |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| expr1, expr2 | Optional. One or more expressions used for partitioning. For example, to number employees within each department, partition by department |
-| expr3, expr4 | Required. One or more expressions used for ordering. This determines the order in which row numbers are assigned                          |
 
 ## Return Value
 

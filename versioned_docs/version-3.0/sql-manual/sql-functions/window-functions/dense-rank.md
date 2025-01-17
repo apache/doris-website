@@ -18,14 +18,8 @@ DENSE_RANK() is a window function used to calculate rankings within a group. Unl
 ## Syntax
 
 ```sql
-DENSE_RANK() OVER([ PARTITION BY <partition_expr> ] ORDER BY <order_expr> [ ASC | DESC ])
+DENSE_RANK()
 ```
-
-## Parameters
-| Parameter           | Description                                                                                                                                                  |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| partition_by_clause | Optional. Specifies the columns for partitioning, formatted as `PARTITION BY column1, column2, ...`. If not specified, all rows are treated as one partition |
-| order_by_clause     | Required. Specifies the columns for ordering, formatted as `ORDER BY column1 [ASC\|DESC], column2 [ASC\|DESC], ...`. This determines the ranking order       |
 
 ## Return Value
 

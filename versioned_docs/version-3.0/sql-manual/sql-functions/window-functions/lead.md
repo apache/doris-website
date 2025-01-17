@@ -18,8 +18,7 @@ LEAD() is a window function used to access data from subsequent rows without per
 ## Syntax
 
 ```sql
-LEAD ( <expr> [ , offset [ , default ] ] ) [ { IGNORE | RESPECT } NULLS ]
-    OVER ( [ PARTITION BY <partition_expr> ] ORDER BY <order_expr> [ ASC | DESC ] )
+LEAD ( <expr> [ , <offset> [ , <default> ] ] )
 ```
 
 ## Parameters
@@ -28,10 +27,6 @@ LEAD ( <expr> [ , offset [ , default ] ] ) [ { IGNORE | RESPECT } NULLS ]
 | expr                | The expression whose value needs to be retrieved                                                                                                          |
 | offset              | Optional. Number of rows to look ahead. Default is 1. When negative, behaves like LAG function. Maximum value is 1,000,000 when IGNORE NULLS is specified |
 | default             | Optional. Default value to return when the offset goes beyond the window range. Default is NULL                                                           |
-| partition_by_clause | Optional. Specifies the columns for partitioning                                                                                                          |
-| order_by_clause     | Required. Specifies the columns for ordering                                                                                                              |
-| IGNORE NULLS        | Optional. When set, null value rows are ignored when calculating the offset                                                                               |
-| RESPECT NULLS       | Optional. Default value. Null value rows are included when calculating the offset                                                                         |
 
 ## Return Value
 

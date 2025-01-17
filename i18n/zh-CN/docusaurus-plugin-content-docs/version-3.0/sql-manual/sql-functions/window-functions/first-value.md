@@ -13,23 +13,19 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ## 描述
 
-FIRST_VALUE() 是一个窗口函数，用于返回窗口分区中有序数据集的第一个值。可以通过 IGNORE NULLS 或 RESPECT NULLS 选项来控制是否忽略空值。
+FIRST_VALUE() 是一个窗口函数，用于返回窗口分区中有序数据集的第一个值。可以通过 IGNORE NULLS 选项来控制是否忽略空值。
 
 ## 语法
 
 ```sql
-FIRST_VALUE( <expr> ) [ { IGNORE | RESPECT } NULLS ]
-  OVER ( [ PARTITION BY <partition_expr> ] ORDER BY <order_expr> [ ASC | DESC ] [ window_frame ] )
+FIRST_VALUE(<expr>[, <ignore_null>])
 ```
 
 ## 参数
 | 参数                | 说明                                                                                    |
 | ------------------- | --------------------------------------------------------------------------------------- |
 | expr                | 需要获取第一个值的表达式                                                                |
-| partition_by_clause | 可选。用于指定分区的列，格式为 `PARTITION BY column1, column2, ...`                     |
-| order_by_clause     | 必需。用于指定排序的列，格式为 `ORDER BY column1 [ASC\|DESC], column2 [ASC\|DESC], ...` |
-| IGNORE NULLS        | 可选。设置后会忽略空值，返回第一个非空值                                                |
-| RESPECT NULLS       | 可选。默认值。如果第一个值为空，则返回空值                                              |
+| ignore_null         | 可选。参数 ignore_null 默认值为 false, 设置后会忽略空值                                              |
 
 ## 返回值
 
@@ -38,29 +34,47 @@ FIRST_VALUE( <expr> ) [ { IGNORE | RESPECT } NULLS ]
 ## 举例
 
 ```sql
+WITH example_data AS (
+    SELECT 1 as column1, NULL as column2, 'A' as group_name
+    UNION ALL
+    SELECT 1, 10, 'A'
+    UNION ALL
+    SELECT 1, NULL, 'A'
+    UNION ALL
+    SELECT 1, 20, 'A'
+    UNION ALL
+    SELECT 2, NULL, 'B'
+    UNION ALL
+    SELECT 2, 30, 'B'
+    UNION ALL
+    SELECT 2, 40, 'B'
+)
 SELECT 
+    group_name,
     column1,
     column2,
     FIRST_VALUE(column2) OVER (
         PARTITION BY column1 
         ORDER BY column2 NULLS LAST
-    ) AS column2_first
-FROM VALUES
-    (1, 10), (1, 11), (1, null), (1, 12),
-    (2, 20), (2, 21), (2, 22)
+    ) AS first_value_default,
+    FIRST_VALUE(column2, true) OVER (
+        PARTITION BY column1 
+        ORDER BY column2
+    ) AS first_value_ignore_null
+FROM example_data
 ORDER BY column1, column2;
 ```
 
 ```text
-+---------+---------+---------------+
-| COLUMN1 | COLUMN2 | COLUMN2_FIRST |
-|---------+---------+---------------|
-|       1 |      10 |            10 |
-|       1 |      11 |            10 |
-|       1 |      12 |            10 |
-|       1 |    NULL |            10 |
-|       2 |      20 |            20 |
-|       2 |      21 |            20 |
-|       2 |      22 |            20 |
-+---------+---------+---------------+
++------------+---------+---------+---------------------+-------------------------+
+| group_name | column1 | column2 | first_value_default | first_value_ignore_null |
++------------+---------+---------+---------------------+-------------------------+
+| A          |       1 |    NULL |                  10 |                    NULL |
+| A          |       1 |    NULL |                  10 |                    NULL |
+| A          |       1 |      10 |                  10 |                      10 |
+| A          |       1 |      20 |                  10 |                      10 |
+| B          |       2 |    NULL |                  30 |                    NULL |
+| B          |       2 |      30 |                  30 |                      30 |
+| B          |       2 |      40 |                  30 |                      30 |
++------------+---------+---------+---------------------+-------------------------+
 ```

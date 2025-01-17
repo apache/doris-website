@@ -18,17 +18,8 @@ RANK() is a window function that returns the rank of values in an ordered datase
 ## Syntax
 
 ```sql
-RANK() OVER ( 
-    [ PARTITION BY <expr1> ] 
-    ORDER BY <expr2> [ ASC | DESC ] 
-)
+RANK()
 ```
-
-## Parameters
-| Parameter | Description                                                                                                                          |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| expr1     | Optional. Expression used for partitioning. For example, to rank employees by salary within each department, partition by department |
-| expr2     | Required. Expression used for ordering. This determines the order of the rankings                                                    |
 
 ## Return Value
 

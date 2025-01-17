@@ -18,14 +18,8 @@ CUME_DIST (Cumulative Distribution) 是一种窗口函数，它计算当前行�
 ## 语法
 
 ```sql
-CUME_DIST() OVER ( [ PARTITION BY <partition_expr> ] ORDER BY <order_expr> [ ASC | DESC ] )
+CUME_DIST()
 ```
-
-## 参数
-| 参数                | 说明                                                                                                                  |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| partition_by_clause | 可选。用于指定分区的列，格式为 `PARTITION BY column1, column2, ...`。如果不指定，则将所有行视为一个分区               |
-| order_by_clause     | 必需。用于指定排序的列，格式为 `ORDER BY column1 [ASC\|DESC], column2 [ASC\|DESC], ...`。这决定了计算累积分布时的顺序 |
 
 ## 返回值
 

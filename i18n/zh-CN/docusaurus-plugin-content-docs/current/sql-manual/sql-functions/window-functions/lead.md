@@ -18,8 +18,7 @@ LEAD() 是一个窗口函数，用于访问当前行之后的行数据，而无�
 ## 语法
 
 ```sql
-LEAD ( <expr> [ , offset [ , default ] ] ) [ { IGNORE | RESPECT } NULLS ]
-    OVER ( [ PARTITION BY <partition_expr> ] ORDER BY <order_expr> [ ASC | DESC ] )
+LEAD ( <expr> [ , <offset> [ , <default> ] ] )
 ```
 
 ## 参数
@@ -28,10 +27,6 @@ LEAD ( <expr> [ , offset [ , default ] ] ) [ { IGNORE | RESPECT } NULLS ]
 | expr                | 需要获取值的表达式                                                                                                |
 | offset              | 可选。向后偏移的行数。默认值为 1。设置为负数时效果等同于使用 LAG 函数。当指定 IGNORE NULLS 时，最大值为 1,000,000 |
 | default             | 可选。当偏移超出窗口范围时返回的默认值。默认为 NULL                                                               |
-| partition_by_clause | 可选。用于指定分区的列                                                                                            |
-| order_by_clause     | 必需。用于指定排序的列                                                                                            |
-| IGNORE NULLS        | 可选。设置后会在计算偏移时忽略空值行                                                                              |
-| RESPECT NULLS       | 可选。默认值。计算偏移时包含空值行                                                                                |
 
 ## 返回值
 
