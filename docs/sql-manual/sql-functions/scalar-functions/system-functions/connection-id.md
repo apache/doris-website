@@ -29,16 +29,12 @@ Get the connection number of the current sql client.
 ## Syntax
 
 ```sql
-connection_id()
+CONNECTION_ID()
 ```
-
-## Parameters
-
-none
 
 ## Return Value
 
-The connection number of the current sql client, int.
+The connection number of the current sql client.
 
 ## Examples
 

@@ -29,16 +29,12 @@ under the License.
 ## 语法
 
 ```sql
-connection_id()
+CONNECTION_ID()
 ```
-
-## 参数
-
-无
 
 ## 返回值
 
-当前 sql 客户端的连接编号，int。
+当前 sql 客户端的连接编号。
 
 ## 举例
 

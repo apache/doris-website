@@ -22,7 +22,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## 描述
 
 获取当前用户上一次查询的 query id。
@@ -33,13 +32,9 @@ under the License.
 last_query_id()
 ```
 
-## 参数
-
-无
-
 ## 返回值
 
-返回当前用户上一次查询的 query id，string。
+返回当前用户上一次查询的 query id。
 
 ## 举例
 

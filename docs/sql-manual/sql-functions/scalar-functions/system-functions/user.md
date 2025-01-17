@@ -30,16 +30,12 @@ Get the current username and IP that Doris is connected to.
 ## Syntax
 
 ```sql
-user()
+USER()
 ```
-
-## Parameters
-
-none
 
 ## Return Value
 
-Returns the current username and IP Doris is connected to, string.
+Returns the current username and IP Doris is connected to.
 format:`<user_name>@<ip>`
 
 ## Examples

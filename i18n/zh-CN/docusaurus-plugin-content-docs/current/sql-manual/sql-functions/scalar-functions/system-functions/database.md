@@ -34,21 +34,17 @@ under the License.
 ## 语法
 
 ```sql
-database()
+DATABASE()
 ```
 或
 
 ```sql
-schema()
+SCHEMA()
 ```
-
-## 参数
-
-无
 
 ## 返回值
 
-当前 sql 客户端的连接的 database 的名称，string。
+当前 sql 客户端的连接的 database 的名称。
 
 ## 举例
 

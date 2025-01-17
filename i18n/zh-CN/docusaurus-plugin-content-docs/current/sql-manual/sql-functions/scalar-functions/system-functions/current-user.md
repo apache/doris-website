@@ -29,16 +29,12 @@ under the License.
 ## 语法
 
 ```sql
-current_user()
+CURRENT_USER()
 ```
-
-## 参数
-
-无
 
 ## 返回值
 
-返回当前的用户名及其 IP 白名单，string。
+返回当前的用户名及其 IP 白名单。
 
 格式：`<user_name>@<ip_white_list>`
 

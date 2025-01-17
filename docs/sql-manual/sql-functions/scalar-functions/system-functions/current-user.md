@@ -30,16 +30,12 @@ Get the current username and its IP rule whitelist.
 ## Syntax
 
 ```sql
-current_user()
+CURRENT_USER()
 ```
-
-## Parameters
-
-none
 
 ## Return Value
 
-Returns the current username and its IP whitelist, string.
+Returns the current username and its IP whitelist.
 
 Format:`<user_name>@<ip_white_list>`
 

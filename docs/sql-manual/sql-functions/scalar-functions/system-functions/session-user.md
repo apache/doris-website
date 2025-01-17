@@ -29,16 +29,12 @@ Get the current username and IP of Doris connection, compatible with MySQL proto
 ## Syntax
 
 ```sql
-session_user()
+SESSION_USER()
 ```
-
-## Parameters
-
-none
 
 ## Return Value
 
-Returns the current username and IP Doris is connected to, string.
+Returns the current username and IP Doris is connected to.
 Format:`<user_name>@<ip>`
 
 ## Examples

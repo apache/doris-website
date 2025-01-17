@@ -29,16 +29,12 @@ under the License.
 ## 语法
 
 ```sql
-version()
+VERSION()
 ```
-
-## 参数
-
-无
 
 ## 返回值
 
-兼容 MySQL 协议，固定返回 “5.7.99”，string。
+兼容 MySQL 协议，固定返回 “5.7.99”。
 
 ## 举例
 

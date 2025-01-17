@@ -30,16 +30,12 @@ Get the catalog of the current sql client connection.
 ## Syntax
 
 ```sql
-current_catalog()
+CURRENT_CATALOG()
 ```
-
-## Parameters
-
-none
 
 ## Return Value
 
-The catalog name of the current sql client connection, string.
+The catalog name of the current sql client connection.
 
 ## Examples
 

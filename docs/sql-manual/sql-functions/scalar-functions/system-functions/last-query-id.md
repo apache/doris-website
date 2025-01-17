@@ -30,16 +30,12 @@ Get the query id of the current user's last query.
 ## Syntax
 
 ```sql
-last_query_id()
+LAST_QUERY_ID()
 ```
-
-## Parameters
-
-none
 
 ## Return Value
 
-Returns the query id of the current user's last query, string;
+Returns the query id of the current user's last query;
 
 ## Examples
 

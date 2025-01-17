@@ -29,16 +29,12 @@ under the License.
 ## 语法
 
 ```sql
-current_catalog()
+CURRENT_CATALOG()
 ```
-
-## 参数
-
-无
 
 ## 返回值
 
-当前 sql 客户端的连接的 catalog 名称，string。
+当前 sql 客户端的连接的 catalog 名称。
 
 ## 举例
 

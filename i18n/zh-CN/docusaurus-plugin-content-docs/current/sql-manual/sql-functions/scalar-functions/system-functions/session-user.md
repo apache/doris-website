@@ -32,13 +32,9 @@ under the License.
 session_user()
 ```
 
-## 参数
-
-无
-
 ## 返回值
 
-返回 Doris 连接的当前用户名和 IP，string。
+返回 Doris 连接的当前用户名和 IP。
 格式：`<user_name>@<ip>`
 
 ## 举例

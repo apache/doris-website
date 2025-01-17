@@ -29,16 +29,12 @@ No practical meaning, for compatibility with MySQL protocol.
 ## Syntax
 
 ```sql
-version()
+VERSION()
 ```
-
-## Parameters
-
-none
 
 ## Return Value
 
-Compatible with MySQL protocol, fixed return value is "5.7.99", string.
+Compatible with MySQL protocol, fixed return value is "5.7.99".
 
 ## Examples
 

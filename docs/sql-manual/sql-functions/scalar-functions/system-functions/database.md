@@ -34,21 +34,17 @@ Get the database of the current sql client connection.
 ## Syntax
 
 ```sql
-database()
+DATABASE()
 ```
 or
 
 ```sql
-schema()
+SCHEMA()
 ```
-
-## Parameters
-
-none
 
 ## Return Value
 
-The name of the database connected to the current sql client, string.
+The name of the database connected to the current sql client.
 
 ## Examples
 
