@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Cluster Action",
-    "language": "zh-CN"
+    "title": "Check Storage Type Action",
+    "language": "en"
 }
 ---
 
@@ -24,66 +24,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+# Check Storage Type Action
 
 ## Request
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
+`GET /api/_check_storagetype`
 
-## 集群连接信息
+## Description
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
-
-### Description
-
-用于获取集群 http、mysql 连接信息。
-
+It is used to check whether the storage format of the table under the specified database is the row storage format. (The row format is deprecated)
+    
 ## Path parameters
 
-无
+None
 
 ## Query parameters
 
-无
+* `db`
+
+    Specify the database
 
 ## Request body
 
-无
+None
 
-### Response
+## Response
 
 ```
 {
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "fe_host:http_ip"
-        ],
-        "mysql": [
-            "fe_host:query_ip"
-        ]
-    },
-    "count": 0
+	"msg": "success",
+	"code": 0,
+	"data": {
+		"tbl2": {},
+		"tbl1": {}
+	},
+	"count": 0
 }
 ```
+
+If there is content after the table name, the base or rollup table whose storage format is row storage will be displayed.
+
+## Examples
+
+1. Check whether the storage format of the following table of the specified database is row format
+
+    ```
+    GET /api/_check_storagetype
     
-### Examples
-```
-GET /rest/v2/manager/cluster/cluster_info/conn_info
-
-Response:
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "127.0.0.1:8030"
-        ],
-        "mysql": [
-            "127.0.0.1:9030"
-        ]
-    },
-    "count": 0
-}
-```
+    Response:
+    {
+    	"msg": "success",
+    	"code": 0,
+    	"data": {
+    		"tbl2": {},
+    		"tbl1": {}
+    	},
+    	"count": 0
+    }
+    ```

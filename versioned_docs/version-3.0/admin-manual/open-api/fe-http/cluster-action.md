@@ -1,7 +1,7 @@
 ---
 {
     "title": "Cluster Action",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,31 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+# Cluster Action
 
 ## Request
 
 `GET /rest/v2/manager/cluster/cluster_info/conn_info`
 
-## 集群连接信息
+## Cluster Connection Information
 
 `GET /rest/v2/manager/cluster/cluster_info/conn_info`
 
 ### Description
 
-用于获取集群 http、mysql 连接信息。
+Used to get cluster http, mysql connection information.
 
 ## Path parameters
 
-无
+None
 
 ## Query parameters
 
-无
+None
 
 ## Request body
 
-无
+None
 
 ### Response
 
