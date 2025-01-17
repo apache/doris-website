@@ -24,40 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
+
+The CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN function extracts the effective part of a domain from a URL, including the top-level domain up to the "first significant subdomain". If the input URL is invalid, it returns an empty string.
 
 ## Syntax
 
-`VARCHAR  cut_to_first_significant_subdomain(VARCHAR url)`
+```sql
+VARCHAR CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN(VARCHAR url)
+```
 
-Extract the part of the domain in the URL from the top-level subdomain down to the "first valid subdomain." If invalid, return an empty string.
+## Parameters
+| Parameter | Description                                   |
+| --------- | --------------------------------------------- |
+| url       | The URL string to be processed. Type: VARCHAR |
+
+## Return Value
+
+Returns VARCHAR type, representing the extracted domain part.
+
+Special cases:
+- If url is NULL, returns NULL
+- If url is not a valid domain format, returns an empty string
 
 ## Examples
 
+1. Basic domain processing
 ```sql
-mysql [(none)]>select cut_to_first_significant_subdomain("www.baidu.com");
+SELECT cut_to_first_significant_subdomain('www.baidu.com');
+```
+```text
 +-----------------------------------------------------+
-| cut_to_first_significant_subdomain('www.baidu.com') |
+| cut_to_first_significant_subdomain('www.baidu.com')  |
 +-----------------------------------------------------+
-| baidu.com                                           |
+| baidu.com                                            |
 +-----------------------------------------------------+
-
-mysql [(none)]>select cut_to_first_significant_subdomain("www.google.com.cn");
-+---------------------------------------------------------+
-| cut_to_first_significant_subdomain('www.google.com.cn') |
-+---------------------------------------------------------+
-| google.com.cn                                           |
-+---------------------------------------------------------+
-
-mysql [(none)]>select cut_to_first_significant_subdomain("wwwwwwww");
-+------------------------------------------------+
-| cut_to_first_significant_subdomain('wwwwwwww') |
-+------------------------------------------------+
-|                                                |
-+------------------------------------------------+
 ```
 
-### Keywords
+2. Multi-level domain processing
+```sql
+SELECT cut_to_first_significant_subdomain('www.google.com.cn');
+```
+```text
++---------------------------------------------------------+
+| cut_to_first_significant_subdomain('www.google.com.cn')   |
++---------------------------------------------------------+
+| google.com.cn                                             |
++---------------------------------------------------------+
+```
 
-CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN
+3. Invalid domain processing
+```sql
+SELECT cut_to_first_significant_subdomain('wwwwwwww');
+```
+```text
++------------------------------------------------+
+| cut_to_first_significant_subdomain('wwwwwwww')  |
++------------------------------------------------+
+|                                                 |
++------------------------------------------------+
+```

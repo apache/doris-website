@@ -24,43 +24,81 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## strleft
-### Description
-#### Syntax
+## Description
 
-`VARCHAR STRLEFT (VARCHAR str, INT len)`
+The STRLEFT function returns a specified number of characters from the left side of a string. The length is measured in UTF8 characters.
 
+## Alias
 
-It returns the left part of a string of specified length, length is char length not the byte size. Another alias for this function is `left`.
-If the function parameters contain a NULL value, the function will always return NULL. If the integer parameter is less than or equal to 0, it will return an empty value.
+LEFT
 
-### example
+## Syntax
 
+```sql
+VARCHAR STRLEFT(VARCHAR str, INT len)
 ```
-mysql> select strleft("Hello doris",5);
+
+## Parameters
+| Parameter | Description                                   |
+| --------- | --------------------------------------------- |
+| str       | The string to extract from. Type: VARCHAR     |
+| len       | The number of characters to return. Type: INT |
+
+## Return Value
+
+Returns VARCHAR type, representing the extracted substring.
+
+Special cases:
+- Returns NULL if any argument is NULL
+- Returns empty string "" if len is less than or equal to 0
+- Returns the entire string if len is greater than the string length
+
+## Examples
+
+1. Basic usage
+```sql
+SELECT strleft('Hello doris', 5);
+```
+```text
 +------------------------+
 | strleft('Hello doris', 5) |
 +------------------------+
 | Hello                  |
 +------------------------+
-mysql> select strleft("Hello doris",-5);
+```
+
+2. Handling negative length
+```sql
+SELECT strleft('Hello doris', -5);
+```
+```text
 +----------------------------+
 | strleft('Hello doris', -5) |
 +----------------------------+
 |                            |
 +----------------------------+
-mysql> select strleft("Hello doris",NULL);
+```
+
+3. Handling NULL parameter
+```sql
+SELECT strleft('Hello doris', NULL);
+```
+```text
 +------------------------------+
 | strleft('Hello doris', NULL) |
 +------------------------------+
 | NULL                         |
 +------------------------------+
-mysql> select strleft(NULL,3);
+```
+
+4. Handling NULL string
+```sql
+SELECT strleft(NULL, 3);
+```
+```text
 +------------------+
 | strleft(NULL, 3) |
 +------------------+
 | NULL             |
 +------------------+
 ```
-### keywords
-    STRLEFT, LEFT
