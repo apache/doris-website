@@ -39,8 +39,8 @@ HOURS_SUB(<date>, <hours>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| date | 输入的日期时间值，类型为 DATETIME 或 DATE |
-| hours | 要减去的小时数，类型为 INT |
+| `<date>` | 输入的日期时间值，类型为 DATETIME 或 DATE |
+| `<hours>` | 要减去的小时数，类型为 INT |
 
 ## 返回值
 

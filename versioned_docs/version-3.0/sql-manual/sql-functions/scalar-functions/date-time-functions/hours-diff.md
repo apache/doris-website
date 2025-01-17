@@ -31,15 +31,15 @@ Calculates the difference in hours between the start time and the end time.
 ## Syntax
 
 ```sql
-HOURS_DIFF(<enddate>, <startdate>)
+HOURS_DIFF(<end_date>, <start_date>)
 ```
 
 ## Parameters
 
 | Parameter  | Description                                     |
 |------------|-------------------------------------------------|
-| enddate    | The end time, which can be of type DATETIME or DATE |
-| startdate  | The start time, which can be of type DATETIME or DATE |
+| `<end_date>`    | The end time, which can be of type DATETIME or DATE |
+| `<start_date>`  | The start time, which can be of type DATETIME or DATE |
 
 ## Return Value
 

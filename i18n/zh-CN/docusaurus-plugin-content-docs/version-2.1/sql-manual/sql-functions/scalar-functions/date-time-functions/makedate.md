@@ -30,21 +30,21 @@ under the License.
 根据指定的年份和一年中的天数（dayofyear）构建并返回一个日期。
 
 特殊情况：
-- 当 `dayofyear` 小于等于 0 时，返回 NULL
-- 当 `dayofyear` 超过当年天数时，会自动往后顺延到下一年
+- 当 `<day_of_year>` 小于等于 0 时，返回 NULL
+- 当 `<day_of_year>` 超过当年天数时，会自动往后顺延到下一年
 
 ## 语法
 
 ```sql
-MAKEDATE(<year>, <dayofyear>)
+MAKEDATE(<year>, <day_of_year>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| year | 指定的年份，类型为 INT |
-| dayofyear | 一年中的第几天（1-366），类型为 INT |
+| `<year>` | 指定的年份，类型为 INT |
+| `<day_of_year>` | 一年中的第几天（1-366），类型为 INT |
 
 ## 返回值
 

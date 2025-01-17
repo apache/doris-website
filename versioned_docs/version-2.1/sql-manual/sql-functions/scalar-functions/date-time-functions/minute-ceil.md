@@ -42,9 +42,9 @@ MINUTE_CEIL(<datetime>, <period>, <origin>)
 
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| datetime  | The datetime value to round up, of type DATETIME or DATETIMEV2 |
-| period    | The minute interval value, of type INT, representing the number of minutes in each interval |
-| origin    | The starting point for the interval, of type DATETIME or DATETIMEV2; defaults to 0001-01-01 00:00:00 |
+| `<datetime>`  | The datetime value to round up, of type DATETIME or DATETIMEV2 |
+| `<period>`    | The minute interval value, of type INT, representing the number of minutes in each interval |
+| `<origin>`    | The starting point for the interval, of type DATETIME or DATETIMEV2; defaults to 0001-01-01 00:00:00 |
 
 ## Return Value
 

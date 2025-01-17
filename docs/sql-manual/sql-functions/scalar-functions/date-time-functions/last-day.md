@@ -40,7 +40,7 @@ LAST_DAY(<date>)
 
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| date | Input datetime value, type can be DATETIME or DATE |
+| `<date>` | Input datetime value, type can be DATETIME or DATE |
 
 ## Return Value
 

@@ -39,7 +39,7 @@ MINUTE(<date>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| date | 输入的日期时间值，类型可以是 DATE、DATETIME、DATETIMEV2 或 TIME |
+| `<date>` | 输入的日期时间值，类型可以是 DATE、DATETIME、DATETIMEV2 或 TIME |
 
 ## 返回值
 

@@ -39,8 +39,8 @@ MINUTES_SUB(<date>, <minutes>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| date | 输入的日期时间值，类型可以是 DATE、DATETIME 或 DATETIMEV2 |
-| minutes | 要减去的分钟数，类型为 INT，可以为正数或负数 |
+| `<date>` | 输入的日期时间值，类型可以是 DATE、DATETIME 或 DATETIMEV2 |
+| `<minutes>` | 要减去的分钟数，类型为 INT，可以为正数或负数 |
 
 ## 返回值
 

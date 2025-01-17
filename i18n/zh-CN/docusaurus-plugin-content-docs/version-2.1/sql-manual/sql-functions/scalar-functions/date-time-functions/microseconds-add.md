@@ -39,8 +39,8 @@ MICROSECONDS_ADD(<basetime>, <delta>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| basetime | 输入的日期时间值，类型为 DATETIMEV2 |
-| delta | 要添加的微秒数，类型为 INT，1 秒 = 1,000,000 微秒 |
+| `<basetime>` | 输入的日期时间值，类型为 DATETIMEV2 |
+| `<delta>` | 要添加的微秒数，类型为 INT，1 秒 = 1,000,000 微秒 |
 
 ## 返回值
 

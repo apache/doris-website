@@ -39,8 +39,8 @@ MINUTES_SUB(<date>, <minutes>)
 
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| date      | The input datetime value, which can be of type DATE, DATETIME, or DATETIMEV2 |
-| minutes   | The number of minutes to subtract, of type INT; can be positive or negative |
+| `<datetime>`  | The input datetime value, which can be of type DATE, DATETIME, or DATETIMEV2 |
+| `<minutes>`   | The number of minutes to subtract, of type INT; can be positive or negative |
 
 ## Return Value
 

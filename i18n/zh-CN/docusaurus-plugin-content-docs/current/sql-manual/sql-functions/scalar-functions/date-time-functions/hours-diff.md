@@ -32,15 +32,15 @@ under the License.
 ## 语法
 
 ```sql
-HOURS_DIFF(<enddate>, <startdate>)
+HOURS_DIFF(<end_date>, <start_date>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| enddate | 结束时间，类型为 DATETIME 或 DATE |
-| startdate | 开始时间，类型为 DATETIME 或 DATE |
+| `<end_date>` | 结束时间，类型为 DATETIME 或 DATE |
+| `<start_date>` | 开始时间，类型为 DATETIME 或 DATE |
 
 ## 返回值
 

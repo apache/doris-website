@@ -39,7 +39,7 @@ MONTH(<date>)
 
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| date      | The input datetime value, which can be of type DATE, DATETIME, or DATETIMEV2 |
+| `<date>`  | The input datetime value, which can be of type DATE, DATETIME, or DATETIMEV2 |
 
 ## Return Value
 

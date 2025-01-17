@@ -38,8 +38,8 @@ HOURS_SUB(<date>, <hours>)
 
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| date      | The input datetime value, which can be of type DATETIME or DATE |
-| hours     | The number of hours to subtract, of type INT     |
+| `<date>`      | The input datetime value, which can be of type DATETIME or DATE |
+| `<hours>`     | The number of hours to subtract, of type INT     |
 
 ## Return Value
 

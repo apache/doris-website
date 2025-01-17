@@ -39,8 +39,8 @@ MICROSECONDS_SUB(<basetime>, <delta>)
 
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| basetime  | The input datetime value, of type DATETIMEV2    |
-| delta     | The number of microseconds to subtract, of type INT; 1 second = 1,000,000 microseconds |
+| `<basetime>`  | The input datetime value, of type DATETIMEV2    |
+| `<delta>`     | The number of microseconds to subtract, of type INT; 1 second = 1,000,000 microseconds |
 
 ## Return Value
 
@@ -61,6 +61,6 @@ SELECT NOW(3) AS current_time, MICROSECONDS_SUB(NOW(3), 100000) AS after_sub;
 ```
 
 **Note:**
-- NOW(3) returns the current time with a precision of 3 decimal places.
+- `NOW(3)` returns the current time with a precision of 3 decimal places.
 - After subtracting 100000 microseconds (0.1 seconds), the time decreases by 0.1 seconds.
 - The function's result is dependent on the precision of the input time.

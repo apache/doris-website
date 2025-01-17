@@ -36,15 +36,15 @@ Special cases:
 ## Syntax
 
 ```sql
-MAKEDATE(<year>, <dayofyear>)
+MAKEDATE(<year>, <day_of_year>)
 ```
 
 ## Parameters
 
 | Parameter   | Description                               |
 |-------------|-------------------------------------------|
-| year        | The specified year, of type INT          |
-| dayofyear   | The day of the year (1-366), of type INT |
+| `<year>`    | The specified year, of type INT          |
+| `<day_of_year>` | The day of the year (1-366), of type INT |
 
 ## Return Value
 

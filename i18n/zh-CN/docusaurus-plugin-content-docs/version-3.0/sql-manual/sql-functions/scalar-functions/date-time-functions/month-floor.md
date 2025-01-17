@@ -41,9 +41,9 @@ MONTH_FLOOR(<datetime>, <period>, <origin>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| datetime | 需要向下取整的日期时间值，类型为 DATETIME 或 DATETIMEV2 |
-| period | 月份周期值，类型为 INT，表示每个周期包含的月数 |
-| origin | 周期的起始时间点，类型为 DATETIME 或 DATETIMEV2，默认值为 0001-01-01 00:00:00 |
+| `<datetime>` | 需要向下取整的日期时间值，类型为 DATETIME 或 DATETIMEV2 |
+| `<period>` | 月份周期值，类型为 INT，表示每个周期包含的月数 |
+| `<origin>` | 周期的起始时间点，类型为 DATETIME 或 DATETIMEV2，默认值为 0001-01-01 00:00:00 |
 
 ## 返回值
 

@@ -26,26 +26,26 @@ under the License.
 
 ## 描述
 
-计算两个日期时间值之间的分钟差值。结果为 enddate 减去 startdate 的分钟数。
+计算两个日期时间值之间的分钟差值。结果为 `<end_date>` 减去 `<start_date>` 的分钟数。
 
 ## 语法
 
 ```sql
-MINUTES_DIFF(<enddate>, <startdate>)
+MINUTES_DIFF(<end_date>, <start_date>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| enddate | 结束时间，类型可以是 DATE、DATETIME 或 DATETIMEV2 |
-| startdate | 开始时间，类型可以是 DATE、DATETIME 或 DATETIMEV2 |
+| `<end_date>` | 结束时间，类型可以是 DATE、DATETIME 或 DATETIMEV2 |
+| `<start_date>` | 开始时间，类型可以是 DATE、DATETIME 或 DATETIMEV2 |
 
 ## 返回值
 
 返回类型为 INT，表示两个时间之间的分钟差值。
-- 如果 enddate 大于 startdate，返回正数
-- 如果 enddate 小于 startdate，返回负数
+- 如果 `<end_date>` 大于 `<start_date>`，返回正数
+- 如果 `<end_date>` 小于 `<start_date>`，返回负数
 
 ## 举例
 

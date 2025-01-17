@@ -38,12 +38,12 @@ MINUTES_ADD(<date>, <minutes>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| date | 输入的日期时间值，类型可以是 DATE、DATETIME 或 DATETIMEV2 |
-| minutes | 要添加的分钟数，类型为 INT，可以为正数或负数 |
+| `<date>` | 输入的日期时间值，类型可以是 DATE、DATETIME 或 DATETIMEV2 |
+| `<minutes>` | 要添加的分钟数，类型为 INT，可以为正数或负数 |
 
 ## 返回值
 
-返回类型为 DATETIME，表示添加指定分钟数后的日期时间值。
+返回类型为 DATETIMEV2，返回以输入日期时间为基准，添加指定分钟数后的时间值。返回值的精度与输入参数 date 的精度相同。
 
 ## 举例
 

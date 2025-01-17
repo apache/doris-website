@@ -39,8 +39,8 @@ MILLISECONDS_SUB(<basetime>, <delta>)
 
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| basetime  | The input datetime value, of type DATETIMEV2    |
-| delta     | The number of milliseconds to subtract, of type INT; 1 second = 1,000 milliseconds = 1,000,000 microseconds |
+| `<basetime>`  | The input datetime value, of type DATETIMEV2    |
+| `<delta>`     | The number of milliseconds to subtract, of type INT; 1 second = 1,000 milliseconds = 1,000,000 microseconds |
 
 ## Return Value
 

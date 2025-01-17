@@ -27,7 +27,7 @@ under the License.
 
 ## Description
 
-Calculates the minute difference between two datetime values. The result is the number of minutes from startdate subtracted from enddate.
+Calculates the minute difference between two datetime values. The result is the number of minutes from `<start_date>` subtracted from `<end_date>`.
 
 ## Syntax
 
@@ -39,14 +39,14 @@ MINUTES_DIFF(<enddate>, <startdate>)
 
 | Parameter  | Description                                     |
 |------------|-------------------------------------------------|
-| enddate    | The end time, which can be of type DATE, DATETIME, or DATETIMEV2 |
-| startdate  | The start time, which can be of type DATE, DATETIME, or DATETIMEV2 |
+| `<end_date>`  | The end time, which can be of type DATE, DATETIME, or DATETIMEV2 |
+| `<start_date>`  | The start time, which can be of type DATE, DATETIME, or DATETIMEV2 |
 
 ## Return Value
 
 Returns an INT type representing the minute difference between the two times.
-- Returns a positive number if enddate is greater than startdate.
-- Returns a negative number if enddate is less than startdate.
+- Returns a positive number if `<end_date>` is greater than `<start_date>`.
+- Returns a negative number if `<end_date>` is less than `<start_date>`.
 
 ## Example
 

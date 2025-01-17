@@ -42,7 +42,7 @@ LAST_DAY(<date>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| date | 输入的日期时间值，类型为 DATETIME 或 DATE |
+| `<date>` | 输入的日期时间值，类型为 DATETIME 或 DATE |
 
 ## 返回值
 

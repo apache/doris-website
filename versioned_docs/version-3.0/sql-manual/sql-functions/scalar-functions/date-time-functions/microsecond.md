@@ -39,7 +39,7 @@ MICROSECOND(<date>)
 
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| date      | The input datetime value, of type DATETIMEV2, with a precision greater than 0 |
+| `<date>`      | The input datetime value, of type DATETIMEV2, with a precision greater than 0 |
 
 ## Return Value
 

@@ -39,8 +39,8 @@ MICROSECONDS_SUB(<basetime>, <delta>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| basetime | 输入的日期时间值，类型为 DATETIMEV2 |
-| delta | 要减去的微秒数，类型为 INT，1 秒 = 1,000,000 微秒 |
+| `<basetime>` | 输入的日期时间值，类型为 DATETIMEV2 |
+| `<delta>` | 要减去的微秒数，类型为 INT，1 秒 = 1,000,000 微秒 |
 
 ## 返回值
 
@@ -61,6 +61,6 @@ SELECT NOW(3) AS current_time, MICROSECONDS_SUB(NOW(3), 100000) AS after_sub;
 ```
 
 注意：
-- NOW(3) 返回精度为 3 位小数的当前时间
+- `NOW(3)` 返回精度为 3 位小数的当前时间
 - 减去 100000 微秒（0.1 秒）后，时间减少了 0.1 秒
 - 函数的计算结果与输入时间的精度有关

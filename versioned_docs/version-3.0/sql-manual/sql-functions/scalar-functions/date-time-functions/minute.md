@@ -39,7 +39,7 @@ MINUTE(<datetime>)
 
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| datetime  | The input datetime value, which can be of type DATE, DATETIME, DATETIMEV2, or TIME |
+| `<datetime>`  | The input datetime value, which can be of type DATE, DATETIME, DATETIMEV2, or TIME |
 
 ## Return Value
 
