@@ -36,7 +36,7 @@ Doris 支持两种分桶方式：Hash 分桶与 Random 分桶。
 
 在创建表或新增分区时，用户需选择一列或多列作为分桶列，并明确指定分桶的数量。在同一分区内，系统会根据分桶键和分桶数量进行哈希计算。哈希值相同的数据会被分配到同一个分桶中。例如，在下图中，p250102 分区根据 region 列被划分为 3 个分桶，哈希值相同的行被归入同一个分桶。
 
-![hash-bucket](images/table-desigin/hash-bucket.png)
+![hash-bucket](/images/table-desigin/hash-bucket.png)
 
 在以下场景中，推荐使用 Hash 分桶：
 
@@ -104,7 +104,7 @@ DISTRIBUTED BY RANDOM BUCKETS 8;
 
 ## 选择分桶键
 
-:::tip 提示
+:::tip提示
 
 只有 Hash 分桶需要选择分桶键，Random 分桶不需要选择分桶键。
 
