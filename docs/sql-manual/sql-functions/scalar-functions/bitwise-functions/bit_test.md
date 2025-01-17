@@ -34,7 +34,7 @@ If the value of `<bits>` is negative or exceeds the total number of bits in `<x>
 Integer `<x>` range: TINYINT, SMALLINT, INT, BIGINT, LARGEINT.
 
 ## Alias
-BIT_TEST_ALL
+- BIT_TEST_ALL
 
 ## Syntax
 ```sql
