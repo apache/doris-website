@@ -26,17 +26,13 @@ under the License.
 
 ## uuid
 
-uuid
-
 ## 描述
+返回一个随机的 uuid 字符串
 ## 语法
 
 `VARCHAR uuid()`
 
-返回一个随机的 uuid 字符串
-
-
-## 举例
+## 示例
 
 ```
 mysql> select uuid();
@@ -45,8 +41,4 @@ mysql> select uuid();
 +--------------------------------------+
 | 29077778-fc5e-4603-8368-6b5f8fd55c24 |
 +--------------------------------------+
-
 ```
-
-### keywords
-    UUID
