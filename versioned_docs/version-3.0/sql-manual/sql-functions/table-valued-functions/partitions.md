@@ -28,8 +28,6 @@ under the License.
 
 The table function generates a temporary partition TABLE, which allows you to view the PARTITION list of a certain TABLE.
 
-This function is used in the from clause.
-
 ## Syntax
 
 ```sql
@@ -41,50 +39,14 @@ PARTITIONS(
 ```
 
 ## Required Parameters
-**`<catalog>`**
-> Specify the cluster catalog name to be queried
+| Field            | Description                                      |
+|------------------|--------------------------------------------------|
+| **`<catalog>`**  | Specify the cluster catalog name to be queried.  |
+| **`<database>`** | Specify the cluster database name to be queried. |
+| **`<table>`**    | Specify the cluster table name to be queried.    |
 
-**`<database>`**
-> Specify the cluster database name to be queried
-
-**`<table>`**
-> Specify the cluster table name to be queried
 
 ## Return Value
-
-partitions() Table structure:
-```sql
- desc function partitions("catalog"="internal","database"="test","table"="user");
-```
-```text
-+--------------------------+---------+------+-------+---------+-------+
-| Field                    | Type    | Null | Key   | Default | Extra |
-+--------------------------+---------+------+-------+---------+-------+
-| PartitionId              | BIGINT  | No   | false | NULL    | NONE  |
-| PartitionName            | TEXT    | No   | false | NULL    | NONE  |
-| VisibleVersion           | BIGINT  | No   | false | NULL    | NONE  |
-| VisibleVersionTime       | TEXT    | No   | false | NULL    | NONE  |
-| State                    | TEXT    | No   | false | NULL    | NONE  |
-| PartitionKey             | TEXT    | No   | false | NULL    | NONE  |
-| Range                    | TEXT    | No   | false | NULL    | NONE  |
-| DistributionKey          | TEXT    | No   | false | NULL    | NONE  |
-| Buckets                  | INT     | No   | false | NULL    | NONE  |
-| ReplicationNum           | INT     | No   | false | NULL    | NONE  |
-| StorageMedium            | TEXT    | No   | false | NULL    | NONE  |
-| CooldownTime             | TEXT    | No   | false | NULL    | NONE  |
-| RemoteStoragePolicy      | TEXT    | No   | false | NULL    | NONE  |
-| LastConsistencyCheckTime | TEXT    | No   | false | NULL    | NONE  |
-| DataSize                 | TEXT    | No   | false | NULL    | NONE  |
-| IsInMemory               | BOOLEAN | No   | false | NULL    | NONE  |
-| ReplicaAllocation        | TEXT    | No   | false | NULL    | NONE  |
-| IsMutable                | BOOLEAN | No   | false | NULL    | NONE  |
-| SyncWithBaseTables       | BOOLEAN | No   | false | NULL    | NONE  |
-| UnsyncTables             | TEXT    | No   | false | NULL    | NONE  |
-+--------------------------+---------+------+-------+---------+-------+
-```
-
-The meaning of the fields is as follows:
-
 | Field                     | Description                                                                 |
 |---------------------------|-----------------------------------------------------------------------------|
 | PartitionId               | Partition ID                                                                 |
@@ -110,40 +72,46 @@ The meaning of the fields is as follows:
 
 
 
+## Examples
+View the partition list of example_table under test in the internal catalog
+
 ```sql
-desc function partitions("catalog"="hive","database"="zdtest","table"="com2");
+select * from partitions("catalog"="internal","database"="test","table"="example_table");
 ```
 ```text
-+-----------+------+------+-------+---------+-------+
-| Field     | Type | Null | Key   | Default | Extra |
-+-----------+------+------+-------+---------+-------+
-| Partition | TEXT | No   | false | NULL    | NONE  |
-+-----------+------+------+-------+---------+-------+
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
+| PartitionId | PartitionName | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
+|       43209 | p1            |              1 | 2025-01-17 12:35:22 | NORMAL | created_at   | [types: [DATEV2]; keys: [0000-01-01]; ..types: [DATEV2]; keys: [2023-01-01]; ) | id              |      10 |              1 | HDD           | 9999-12-31 23:59:59 |                     | \N                       | 0.000    |          0 | tag.location.default: 1 |         1 |                  1 | \N           |
+|       43210 | p2            |              1 | 2025-01-17 12:35:22 | NORMAL | created_at   | [types: [DATEV2]; keys: [2023-01-01]; ..types: [DATEV2]; keys: [2024-01-01]; ) | id              |      10 |              1 | HDD           | 9999-12-31 23:59:59 |                     | \N                       | 0.000    |          0 | tag.location.default: 1 |         1 |                  1 | \N           |
+|       43211 | p3            |              1 | 2025-01-17 12:35:22 | NORMAL | created_at   | [types: [DATEV2]; keys: [2024-01-01]; ..types: [DATEV2]; keys: [2025-01-01]; ) | id              |      10 |              1 | HDD           | 9999-12-31 23:59:59 |                     | \N                       | 0.000    |          0 | tag.location.default: 1 |         1 |                  1 | \N           |
+|       43212 | p4            |              1 | 2025-01-17 12:35:22 | NORMAL | created_at   | [types: [DATEV2]; keys: [2025-01-01]; ..types: [DATEV2]; keys: [2026-01-01]; ) | id              |      10 |              1 | HDD           | 9999-12-31 23:59:59 |                     | \N                       | 0.000    |          0 | tag.location.default: 1 |         1 |                  1 | \N           |
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
 ```
 
-The meaning of the fields is as follows:
+View the partition information with partition name p1 under example_table
 
-| Field        | Description     |
-|--------------|-----------------|
-| Partition    | Partition Name  |
+```sql
+select * from partitions("catalog"="internal","database"="test","table"="example_table") where PartitionName = "p1";
+```
+```text
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
+| PartitionId | PartitionName | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
+|       43209 | p1            |              1 | 2025-01-17 12:35:22 | NORMAL | created_at   | [types: [DATEV2]; keys: [0000-01-01]; ..types: [DATEV2]; keys: [2023-01-01]; ) | id              |      10 |              1 | HDD           | 9999-12-31 23:59:59 |                     | \N                       | 0.000    |          0 | tag.location.default: 1 |         1 |                  1 | \N           |
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
+```
 
+View the partition ID with the partition name p1 under example_table
 
-## Examples
-- View the partition list of user_tab under test in the internal catalog
-
-    ```sql
-     select * from partitions("catalog"="internal","database"="test","table"="user_tab");
-    ```
-
-- View the partition information with partition name partition1 under user_tab
-
-    ```sql
-    select * from partitions("catalog"="internal","database"="test","table"="user_tab") where PartitionName = "partition1";
-    ```
-
-- View the partition ID with the partition name 'partition1' under user_tab
-
-  ```sql
-  mysql> select PartitionId from partitions("catalog"="internal","database"="test","table"="user_tab") where PartitionName = "partition1";
-  ```
+```sql
+select PartitionId from partitions("catalog"="internal","database"="test","table"="example_table") where PartitionName = "p1";
+```
+```text
++-------------+
+| PartitionId |
++-------------+
+|       43209 |
++-------------+
+```
 
