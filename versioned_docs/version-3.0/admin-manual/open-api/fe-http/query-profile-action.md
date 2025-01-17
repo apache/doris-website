@@ -1,7 +1,7 @@
 ---
 {
     "title": "Query Profile Action",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -46,59 +46,65 @@ under the License.
 
 `GET /rest/v2/manager/query/kill/{query_id}`
 
-## 获取查询信息
+## Get the query information
 
 `GET /rest/v2/manager/query/query_info`
 
 ### Description
 
-可获取集群所有 fe 节点 select 查询信息。
+Gets information about select queries for all fe nodes in the cluster.
 
 ### Query parameters
 
 * `query_id`
 
-    可选，指定返回查询的 queryID，默认返回所有查询的信息。
+    Optional, specifies the query ID of the query to be returned, default returns information for all queries.
     
 * `search`
 
-    可选，指定返回包含字符串的查询信息，目前仅进行字符串匹配。
+    Optional, specifies that query information containing strings is returned, currently only string matches are performed.
 
 * `is_all_node`
   
-    可选，若为 true 则返回所有 fe 节点的查询信息，若为 false 则返回当前 fe 节点的查询信息。默认为 true。
+    Optional, if true, returns query information for all fe nodes, if false, returns query information for the current fe node. The default is true.
 
 
 ### Response
 
 ```json
 {
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "column_names": [
-            "Query ID",
-            "FE节点",
-            "查询用户",
-            "执行数据库",
-            "Sql",
-            "查询类型",
-            "开始时间",
-            "结束时间",
-            "执行时长",
-            "状态"
-        ],
-        "rows": [
-            [
-                ...
-            ]
-        ]
-    },
-    "count": 0
+   "msg": "success",  
+    "code": 0,  
+    "data": {  
+        "column_names": [  
+            "Query ID",  
+            "FE Node",  
+            "Query User",  
+            "Execution Database",  
+            "Sql",  
+            "Query Type",  
+            "Start Time",  
+            "End Time",  
+            "Execution Duration",  
+            "Status"  
+        ],  
+        "rows": [  
+            [  
+                ...  
+            ]  
+        ]  
+    },  
+    "count": 0  
 }
 ```
 
-Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。
+:::info Note
+
+Since Doris Version 1.2, Admin and Root users can view all queries. Regular users can only view their own submitted queries.
+
+:::
+
+
 
 ### Examples
 
@@ -106,59 +112,59 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 GET /rest/v2/manager/query/query_info
 
 {
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "column_names": [
-            "Query ID",
-            "FE节点",
-            "查询用户",
-            "执行数据库",
-            "Sql",
-            "查询类型",
-            "开始时间",
-            "结束时间",
-            "执行时长",
-            "状态"
-        ],
-        "rows": [
-            [
-                "d7c93d9275334c35-9e6ac5f295a7134b",
-                "127.0.0.1:8030",
-                "root",
-                "default_cluster:testdb",
-                "select c.id, c.name, p.age, p.phone, c.date, c.cost from cost c join people p on c.id = p.id where p.age > 20 order by c.id",
-                "Query",
-                "2021-07-29 16:59:12",
-                "2021-07-29 16:59:12",
-                "109ms",
-                "EOF"
-            ]
-        ]
-    },
-    "count": 0
+    "msg": "success",  
+    "code": 0,  
+    "data": {  
+        "column_names": [  
+            "Query ID",  
+            "FE Node",  
+            "Query User",  
+            "Execution Database",  
+            "Sql",  
+            "Query Type",  
+            "Start Time",  
+            "End Time",  
+            "Execution Duration",  
+            "Status"  
+        ],  
+        "rows": [  
+            [  
+                "d7c93d9275334c35-9e6ac5f295a7134b",  
+                "127.0.0.1:8030",  
+                "root",  
+                "default_cluster:testdb",  
+                "select c.id, c.name, p.age, p.phone, c.date, c.cost from cost c join people p on c.id = p.id where p.age > 20 order by c.id",  
+                "Query",  
+                "2021-07-29 16:59:12",  
+                "2021-07-29 16:59:12",  
+                "109ms",  
+                "EOF"  
+            ]  
+        ]  
+    },  
+    "count": 0  
 }
 ```
 
-## 通过 Trace Id 获取 Query Id
+## Get Query Id By Trace Id
 
 `GET /rest/v2/manager/query/trace_id/{trace_id}`
 
 ### Description
 
-通过 Trace Id 获取 Query Id.
+Get query id by trance id.
 
-在执行一个 Query 前，先设置一个唯一的 trace id:
+Before executing a Query, set a unique trace id:
 
-`set session_context="trace_id:your_trace_id"`;
+`set session_context="trace_id:your_trace_id";`
 
-在同一个 Session 链接内执行 Query 后，可以通过 trace id 获取 query id。
+After executing the Query within the same Session, the query id can be obtained through the trace id.
     
 ### Path parameters
 
 * `{trace_id}`
 
-    用户设置的 trace id.
+    User specific trace id.
 
 ### Query parameters
 
@@ -173,7 +179,9 @@ GET /rest/v2/manager/query/query_info
 }
 ```
 
-Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 trace id 不存在或无权限，则返回 Bad Request：
+:::note Info
+
+Since Doris version 1.2, admin and root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
 
 ```json
 {
@@ -183,8 +191,10 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
+:::
 
-## 获取指定查询的 sql 和文本 profile
+
+## Get the sql and text profile for the specified query
 
 `GET /rest/v2/manager/query/sql/{query_id}`
 
@@ -192,23 +202,23 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 
 ### Description
 
-用于获取指定 Query ID 的 SQL 和 profile 文本。
+Get the sql and profile text for the specified query id.
     
 ### Path parameters
 
 * `query_id`
 
-    query id.
+    The query id.
 
 ### Query parameters
 
 * `is_all_node`
   
-    可选，若为 true 则在所有 FE 节点中查询指定 query id 的信息，若为 false 则在当前连接的 FE 节点中查询指定 query id 的信息。默认为 true。
+    Optional, if true then query for the specified query id in all fe nodes, if false then query for the specified query id in the currently connected fe nodes. The default is true.
 
 ### Response
 
-```
+```json
 {
     "msg": "success",
     "code": 0,
@@ -219,7 +229,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 }
 ```
 
-```
+```json
 {
     "msg": "success",
     "code": 0,
@@ -230,11 +240,11 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 }
 ```
 
+:::note Info
 
+Since Doris version 1.2, admin and root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
 
-Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 query id 不存在或无权限，则返回 Bad Request：
-
-```
+```json
 {
     "msg": "Bad Request", 
     "code": 403, 
@@ -242,12 +252,14 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
+
+:::
     
 ### Examples
 
-1. 获取 sql：
+1. get sql.
 
-    ```
+    ```json
     GET /rest/v2/manager/query/sql/d7c93d9275334c35-9e6ac5f295a7134b
     
     Response:
@@ -255,39 +267,41 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
         "msg": "success",
         "code": 0,
         "data": {
-            "sql": "select c.id, c.name, p.age, p.phone, c.date, c.cost from cost c join people p on c.id   = p.id where p.age > 20 order by c.id"
+            "sql": "select c.id, c.name, p.age, p.phone, c.date, c.cost from cost c join people p on c.id = p.id where p.age > 20 order by c.id"
         },
         "count": 0
     }
     ```
 
-## 获取指定查询 fragment 和 instance 信息
+## Get the specified query fragment and instance information
 
 `GET /rest/v2/manager/query/profile/fragments/{query_id}`
 
 :::caution
-自 2.1.1 起，此接口被弃用。你仍然可以从 http://<fe_ip>:<fe_http_port>/QueryProfile 上下载 profile 文件。
+
+Since 2.1.1, this API is deprecated. You can still download profile from http://<fe_ip>:<fe_http_port>/QueryProfile
+
 :::
 
 ### Description
 
-用于获取指定 query id 的 fragment 名称，instance id、主机 IP 及端口和执行时长。
+Get the fragment name, instance id, host ip/port and execution time for the specified query id.
     
 ### Path parameters
 
 * `query_id`
 
-    query id.
+    The query id.
 
 ### Query parameters
 
 * `is_all_node`
   
-    可选，若为 true 则在所有 fe 节点中查询指定 query id 的信息，若为 false 则在当前连接的 fe 节点中查询指定 query id 的信息。默认为 true。
+    Optional, if true then query for the specified query id in all fe nodes, if false then query for the specified query id in the currently connected fe nodes. The default is true.
 
 ### Response
 
-```
+```json
 {
     "msg": "success",
     "code": 0,
@@ -307,9 +321,11 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 }
 ```
 
-Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 query id 不存在或无权限，则返回 Bad Request：
+:::note Info
 
-```
+Since Doris version 1.2, admin and root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
+
+```json
 {
     "msg": "Bad Request", 
     "code": 403, 
@@ -317,10 +333,12 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
+:::
+
     
 ### Examples
 
-```
+```json
 GET /rest/v2/manager/query/profile/fragments/d7c93d9275334c35-9e6ac5f295a7134b
 
 Response:
@@ -367,35 +385,35 @@ Response:
 }
 ```
 
-## 获取指定 query id 树状 profile 信息
+## Get the specified query id tree profile information
 
 `GET /rest/v2/manager/query/profile/graph/{query_id}`
 
 ### Description
 
-获取指定 query id 树状 profile 信息，同 `show query profile` 指令。
+Get the tree profile information of the specified query id, same as `show query profile` command.
     
 ### Path parameters
 
 * `query_id`
 
-    query id.
+    The query id.
 
 ### Query parameters
 
-* `fragment_id` 和 `instance_id`
+* `fragment_id` and `instance_id`
 
-    可选，这两个参数需同时指定或同时不指定。  
-    同时不指定则返回 profile 简易树形图，相当于`show query profile '/query_id'`;  
-    同时指定则返回指定 instance 详细 profile 树形图，相当于`show query profile '/query_id/fragment_id/instance_id'`.
+    Optional, both parameters must be specified or not.  
+    If both are not specified, a simple tree of profiles is returned, equivalent to `show query profile '/query_id'`;  
+    If both are specified, a detailed profile tree is returned, which is equivalent to `show query profile '/query_id/fragment_id/instance_id'`.
 
 * `is_all_node`
   
-    可选，若为 true 则在所有 fe 节点中查询指定 query id 的信息，若为 false 则在当前连接的 fe 节点中查询指定 query id 的信息。默认为 true。
+    Optional, if true then query information about the specified query id in all fe nodes, if false then query information about the specified query id in the currently connected fe nodes. The default is true.
 
 ### Response
 
-```
+```json
 {
     "msg": "success",
     "code": 0,
@@ -406,9 +424,11 @@ Response:
 }
 ```
 
-Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 query id 不存在或无权限，则返回 Bad Request：
+:::note Info
 
-```
+Since Doris version 1.2, admin and root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
+
+```json
 {
     "msg": "Bad Request", 
     "code": 403, 
@@ -416,14 +436,17 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
+:::
 
-## 正在执行的 query
+
+
+## Current running queries
 
 `GET /rest/v2/manager/query/current_queries`
 
 ### Description
 
-同 `show proc "/current_query_stmts"`，返回当前正在执行的 query
+Same as `show proc "/current_query_stmts"`, return current running queries.
     
 ### Path parameters
 
@@ -431,7 +454,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 
 * `is_all_node`
   
-    可选，若为 true 则返回所有 FE 节点当前正在执行的 query 信息。默认为 true。
+    Optional. Return current running queries from all FE if set to true. Default is true.
 
 ### Response
 
@@ -450,19 +473,19 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 }
 ```
 
-## 取消 query
+## Cancel query
 
 `POST /rest/v2/manager/query/kill/{query_id}`
 
 ### Description
 
-取消执行连接中正在执行的 query
+Cancel query of specified connection.
     
 ### Path parameters
 
 * `{query_id}`
 
-    query id. 你可以通过 trace_id 接口，获取 query id。
+    query id. You can get query id by `trance_id` api.
 
 ### Query parameters
 
@@ -476,4 +499,3 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
-

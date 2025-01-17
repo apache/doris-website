@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Cluster Action",
-    "language": "zh-CN"
+    "title": "Pad Rowset",
+    "language": "en"
 }
 ---
 
@@ -24,66 +24,45 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+# Pad Rowset
 
 ## Request
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
+`POST /api/pad_rowset?tablet_id={int}&start_version={int}&end_version={int}`
 
-## 集群连接信息
+## Description
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
-
-### Description
-
-用于获取集群 http、mysql 连接信息。
-
-## Path parameters
-
-无
+Pad one empty rowset as one substitute for error replica.
 
 ## Query parameters
 
-无
+* `tablet_id`
+    ID of the tablet
+
+* `start_version`
+    Start version
+
+* `end_version`
+    End version       
+
 
 ## Request body
 
-无
+None
 
-### Response
+## Response
 
-```
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "fe_host:http_ip"
-        ],
-        "mysql": [
-            "fe_host:query_ip"
-        ]
-    },
-    "count": 0
-}
-```
-    
-### Examples
-```
-GET /rest/v2/manager/cluster/cluster_info/conn_info
+    ```
+    {
+        msg: "OK",
+        code: 0
+    }
+    ```
+## Examples
 
-Response:
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "127.0.0.1:8030"
-        ],
-        "mysql": [
-            "127.0.0.1:9030"
-        ]
-    },
-    "count": 0
-}
-```
+
+    ```
+    curl -X POST "http://127.0.0.1:8040/api/pad_rowset?tablet_id=123456&start_version=1111111&end_version=1111112"
+
+    ```
+

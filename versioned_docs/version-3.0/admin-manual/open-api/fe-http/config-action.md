@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Cluster Action",
-    "language": "zh-CN"
+    "title": "Config Action",
+    "language": "en"
 }
 ---
 
@@ -24,66 +24,62 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+# Config Action
 
 ## Request
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
+```
+GET /rest/v1/config/fe/
+```
 
-## 集群连接信息
+## Description
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
-
-### Description
-
-用于获取集群 http、mysql 连接信息。
-
+Config Action is used to obtain current FE configuration information.
+    
 ## Path parameters
 
-无
+None
 
 ## Query parameters
 
-无
+* `conf_item`
+
+    Optional parameters. Return specified item in FE configuration.
 
 ## Request body
 
-无
+None
 
-### Response
+## Response
 
 ```
 {
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "fe_host:http_ip"
-        ],
-        "mysql": [
-            "fe_host:query_ip"
-        ]
-    },
-    "count": 0
+	"msg": "success",
+	"code": 0,
+	"data": {
+		"column_names": ["Name", "Value"],
+		"rows": [{
+			"Value": "DAY",
+			"Name": "sys_log_roll_interval"
+		}, {
+			"Value": "23",
+			"Name": "consistency_check_start_time"
+		}, {
+			"Value": "4096",
+			"Name": "max_mysql_service_task_threads_num"
+		}, {
+			"Value": "1000",
+			"Name": "max_unfinished_load_job"
+		}, {
+			"Value": "100",
+			"Name": "max_routine_load_job_num"
+		}, {
+			"Value": "SYNC",
+			"Name": "master_sync_policy"
+		}]
+	},
+	"count": 0
 }
 ```
     
-### Examples
-```
-GET /rest/v2/manager/cluster/cluster_info/conn_info
-
-Response:
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "127.0.0.1:8030"
-        ],
-        "mysql": [
-            "127.0.0.1:9030"
-        ]
-    },
-    "count": 0
-}
-```
+The returned result is the same as `System Action`. Is a description of the table.
