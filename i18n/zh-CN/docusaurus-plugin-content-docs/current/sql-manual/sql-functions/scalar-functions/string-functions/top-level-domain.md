@@ -27,37 +27,62 @@ under the License.
 
 ## 描述
 
+TOP_LEVEL_DOMAIN 函数用于从 URL 中提取顶级域名。如果输入的 URL 不合法，则返回空字符串。
+
 ## 语法
 
-`VARCHAR  top_level_domain(VARCHAR url)`
-
-
-在 URL 中提取出顶级域名返回，若为不合法的 URL，则返回空字符串
-
 ```sql
-mysql [(none)]>select top_level_domain("www.baidu.com");
+VARCHAR TOP_LEVEL_DOMAIN(VARCHAR url)
+```
+
+## 参数
+| 参数 | 说明                                         |
+| ---- | -------------------------------------------- |
+| url  | 需要提取顶级域名的 URL 字符串。类型：VARCHAR |
+
+## 返回值
+
+返回 VARCHAR 类型，表示提取出的顶级域名。
+
+特殊情况：
+- 如果 url 为 NULL，返回 NULL
+- 如果 url 不是合法的 URL 格式，返回空字符串
+- 对于多级域名（如 .com.cn），返回最后一级域名
+
+## 示例
+
+1. 基本域名处理
+```sql
+SELECT top_level_domain('www.baidu.com');
+```
+```text
 +-----------------------------------+
 | top_level_domain('www.baidu.com') |
 +-----------------------------------+
 | com                               |
 +-----------------------------------+
+```
 
-mysql [(none)]>select top_level_domain("www.google.com.cn");
+2. 多级域名处理
+```sql
+SELECT top_level_domain('www.google.com.cn');
+```
+```text
 +---------------------------------------+
 | top_level_domain('www.google.com.cn') |
 +---------------------------------------+
 | cn                                    |
 +---------------------------------------+
+```
 
-mysql [(none)]>select top_level_domain("wwwwwwww");
+3. 无效 URL 处理
+```sql
+SELECT top_level_domain('wwwwwwww');
+```
+```text
 +------------------------------+
 | top_level_domain('wwwwwwww') |
 +------------------------------+
 |                              |
 +------------------------------+
-
 ```
-
-### 关键词
-
-TOP_LEVEL_DOMAIN

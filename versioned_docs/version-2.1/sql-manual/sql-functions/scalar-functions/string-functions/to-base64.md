@@ -24,31 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## to_base64
-### description
-#### Syntax
+## Description
 
-`VARCHAR to_base64(VARCHAR str)`
+The TO_BASE64 function is used to convert an input string to Base64 encoded format. Base64 encoding can convert any binary data into a string composed of 64 characters.
 
+## Syntax
 
-Returns the result of Base64 encoding the input string
-
-### example
-
+```sql
+VARCHAR TO_BASE64(VARCHAR str)
 ```
-mysql> select to_base64('1');
+
+## Parameters
+| Parameter | Description                                    |
+| --------- | ---------------------------------------------- |
+| str       | The string to be Base64 encoded. Type: VARCHAR |
+
+## Return Value
+
+Returns VARCHAR type, representing the Base64 encoded string.
+
+Special cases:
+- If input is NULL, returns NULL
+- If input is an empty string, returns an empty string
+
+## Examples
+
+1. Single character encoding
+```sql
+SELECT to_base64('1');
+```
+```text
 +----------------+
 | to_base64('1') |
 +----------------+
 | MQ==           |
 +----------------+
+```
 
-mysql> select to_base64('234');
+2. Multiple character encoding
+```sql
+SELECT to_base64('234');
+```
+```text
 +------------------+
 | to_base64('234') |
 +------------------+
 | MjM0             |
 +------------------+
 ```
-### keywords
-    to_base64

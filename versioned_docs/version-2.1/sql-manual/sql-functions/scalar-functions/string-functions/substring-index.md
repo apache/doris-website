@@ -22,67 +22,81 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## substring_index
+## Description
 
-### Name
+The SUBSTRING_INDEX function is used to extract a substring from a string based on a specified delimiter and occurrence count. This function supports counting from either left or right.
 
-SUBSTRING_INDEX
+## Syntax
 
-### description
-
-#### Syntax
-
-`VARCHAR substring_index(VARCHAR content, VARCHAR delimiter, INT field)`
-
-Split `content` to two parts at position where the `field`s of `delimiter` stays, return one of them according to below rules:
-if `field` is positive, return the left part;
-else if `field` is negative, return the right part;
-if `field` is zero, return an empty string when `content` is not null, else will return null.
-
-- `delimiter` is case sensitive and multi-byte safe.
-- `delimiter` and `field` parameter should be constant.
-
-
-### example
-
+```sql
+VARCHAR SUBSTRING_INDEX(VARCHAR content, VARCHAR delimiter, INT field)
 ```
-mysql> select substring_index("hello world", " ", 1);
+
+## Parameters
+| Parameter | Description                                                                                                     |
+| --------- | --------------------------------------------------------------------------------------------------------------- |
+| content   | The string to be extracted from. Type: VARCHAR                                                                  |
+| delimiter | The delimiter string, case-sensitive and multi-byte safe. Type: VARCHAR                                         |
+| field     | Number of delimiter occurrences. Positive numbers count from left, negative numbers count from right. Type: INT |
+
+Note: The delimiter and field parameters must be constants, variables are not supported.
+
+## Return Value
+
+Returns VARCHAR type, representing the extracted substring.
+
+Special cases:
+- If field > 0, returns the substring before the field-th delimiter from the left
+- If field < 0, returns the substring after the |field|-th delimiter from the right
+- If field = 0, returns empty string when content is not NULL, returns NULL when content is NULL
+- If any parameter is NULL, returns NULL
+
+## Examples
+
+1. Extract content before the first space from the left
+```sql
+SELECT substring_index('hello world', ' ', 1);
+```
+```text
 +----------------------------------------+
-| substring_index("hello world", " ", 1) |
+| substring_index('hello world', ' ', 1) |
 +----------------------------------------+
 | hello                                  |
 +----------------------------------------+
-mysql> select substring_index("hello world", " ", 2);
+```
+
+2. Extract all content from the left (delimiter count greater than actual occurrences)
+```sql
+SELECT substring_index('hello world', ' ', 2);
+```
+```text
 +----------------------------------------+
-| substring_index("hello world", " ", 2) |
+| substring_index('hello world', ' ', 2) |
 +----------------------------------------+
 | hello world                            |
 +----------------------------------------+
-mysql> select substring_index("hello world", " ", -1);
+```
+
+3. Extract content after the last space from the right
+```sql
+SELECT substring_index('hello world', ' ', -1);
+```
+```text
 +-----------------------------------------+
-| substring_index("hello world", " ", -1) |
+| substring_index('hello world', ' ', -1) |
 +-----------------------------------------+
 | world                                   |
 +-----------------------------------------+
-mysql> select substring_index("hello world", " ", -2);
-+-----------------------------------------+
-| substring_index("hello world", " ", -2) |
-+-----------------------------------------+
-| hello world                             |
-+-----------------------------------------+
-mysql> select substring_index("hello world", " ", -3);
-+-----------------------------------------+
-| substring_index("hello world", " ", -3) |
-+-----------------------------------------+
-| hello world                             |
-+-----------------------------------------+
-mysql> select substring_index("hello world", " ", 0);
+```
+
+4. Case when field is 0
+```sql
+SELECT substring_index('hello world', ' ', 0);
+```
+```text
 +----------------------------------------+
-| substring_index("hello world", " ", 0) |
+| substring_index('hello world', ' ', 0) |
 +----------------------------------------+
 |                                        |
 +----------------------------------------+
 ```
-### keywords
-
-    SUBSTRING_INDEX, SUBSTRING

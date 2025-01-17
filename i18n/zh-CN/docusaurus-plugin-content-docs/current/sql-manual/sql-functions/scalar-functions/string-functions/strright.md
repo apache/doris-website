@@ -24,43 +24,81 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## strright
 ## 描述
+
+STRRIGHT 函数用于返回字符串右边指定长度的部分。长度的单位为 UTF8 字符。
+
+## 别名
+
+RIGHT
+
 ## 语法
 
-`VARCHAR strright(VARCHAR str, INT len)`
-
-
-它返回具有指定长度的字符串的右边部分, 长度的单位为utf8字符。此函数的另一个别名为 `right`。
-如果参数中含有NULL值，那么函数始终返回NULL，如果整型参数为负数，那么会得到字符串从第 abs(len) 个字符开始向右的部分。
-
-## 举例
-
+```sql
+VARCHAR STRRIGHT(VARCHAR str, INT len)
 ```
-mysql> select strright("Hello doris",5);
+
+## 参数
+| 参数 | 说明 |
+| -- | -- |
+| str | 需要截取的字符串。类型：VARCHAR |
+| len | 要返回的字符数量。类型：INT |
+
+## 返回值
+
+返回 VARCHAR 类型，表示截取的字符串。
+
+特殊情况：
+- 如果任意参数为 NULL，返回 NULL
+- 如果 len 为负数，返回从第 abs(len) 个字符开始向右的部分
+- 如果 len 大于字符串长度，返回整个字符串
+
+## 示例
+
+1. 基本用法
+```sql
+SELECT strright('Hello doris', 5);
+```
+```text
 +-------------------------+
 | strright('Hello doris', 5) |
 +-------------------------+
 | doris                   |
 +-------------------------+
-mysql> select strright("Hello doris",-7);
+```
+
+2. 负数长度处理
+```sql
+SELECT strright('Hello doris', -7);
+```
+```text
 +--------------------------+
 | strright('Hello doris', -7) |
 +--------------------------+
 | doris                    |
 +--------------------------+
-mysql> select strright("Hello doris",NULL);
+```
+
+3. NULL 参数处理
+```sql
+SELECT strright('Hello doris', NULL);
+```
+```text
 +----------------------------+
 | strright('Hello doris', NULL) |
 +----------------------------+
 | NULL                       |
 +----------------------------+
-mysql> select strright(NULL,5);
+```
+
+4. NULL 字符串处理
+```sql
+SELECT strright(NULL, 5);
+```
+```text
 +----------------+
 | strright(NULL, 5) |
 +----------------+
 | NULL           |
 +----------------+
 ```
-### keywords
-    STRRIGHT, RIGHT

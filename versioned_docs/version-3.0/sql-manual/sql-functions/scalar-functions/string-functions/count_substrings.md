@@ -22,86 +22,89 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## count_substrings
+## Description
 
-### description
+The COUNT_SUBSTRINGS function counts the number of occurrences of a specified substring within a string. Note: The current implementation continues searching after shifting by the length of the substring when a match is found. For example, when str='ccc' and pattern='cc', the result returned is 1.
 
-#### Syntax
+## Syntax
 
-`int count_substrings(STRING str, STRING pattern)`
-Returns the total number of occurrences of the substring pattern in the string str.
-Note: The current implementation shifts by the length of the pattern after each match in the string.
-Therefore, when str: ccc and pattern: cc, the result returned is 1.
-
-#### Arguments
-
-`str` — The string to be checked. Type: `String`
-`pattern` — The substring to be matched. Type: `String`
-
-
-#### Returned value(s)
-
-Returns the total number of occurrences of the substring.
-
-### example
-
+```sql
+COUNT_SUBSTRINGS(str, pattern)
 ```
-mysql [(none)]>select count_substrings('a1b1c1d','1');
+
+## Parameters
+| Parameter | Description                             |
+| --------- | --------------------------------------- |
+| str       | The string to be searched. Type: STRING |
+| pattern   | The substring to match. Type: STRING    |
+
+## Return Value
+
+Returns an INT type, representing the number of times the substring appears in the string.
+
+Special cases:
+- If str is NULL, returns NULL
+- If pattern is an empty string, returns 0
+- If str is an empty string, returns 0
+
+## Examples
+
+1. Basic usage
+```sql
+SELECT count_substrings('a1b1c1d', '1');
+```
+```text
 +----------------------------------+
 | count_substrings('a1b1c1d', '1') |
 +----------------------------------+
 |                                3 |
 +----------------------------------+
+```
 
-mysql [(none)]>select count_substrings(',,a,b,c,',',');
+2. Case with consecutive commas
+```sql
+SELECT count_substrings(',,a,b,c,', ',');
+```
+```text
 +-----------------------------------+
 | count_substrings(',,a,b,c,', ',') |
 +-----------------------------------+
 |                                 5 |
 +-----------------------------------+
+```
 
-mysql [(none)]>select count_substrings('ccc','cc');
+3. Case with overlapping substrings
+```sql
+SELECT count_substrings('ccc', 'cc');
+```
+```text
 +--------------------------------+
 | count_substrings('ccc', 'cc')  |
 +--------------------------------+
 |                              1 |
 +--------------------------------+
+```
 
-mysql [(none)]>SELECT count_substrings(NULL,',');
+4. NULL value handling
+```sql
+SELECT count_substrings(NULL, ',');
+```
+```text
 +-----------------------------+
 | count_substrings(NULL, ',') |
 +-----------------------------+
 |                        NULL |
 +-----------------------------+
+```
 
-mysql [(none)]>select count_substrings('a,b,c,abcde','');
+5. Empty string handling
+```sql
+SELECT count_substrings('a,b,c,abcde', '');
+```
+```text
 +-------------------------------------+
 | count_substrings('a,b,c,abcde', '') |
 +-------------------------------------+
 |                                   0 |
 +-------------------------------------+
-
-mysql [(none)]>select count_substrings(NULL, 'a');
-+-----------------------------+
-| count_substrings(NULL, 'a') |
-+-----------------------------+
-|                        NULL |
-+-----------------------------+
-
-mysql [(none)]>select count_substrings('','asd');
-+-----------------------------+
-| count_substrings('', 'asd') |
-+-----------------------------+
-|                           0 |
-+-----------------------------+
-
-mysql [(none)]>select count_substrings('abccbaacb','c');
-+------------------------------------+
-| count_substrings('abccbaacb', 'c') |
-+------------------------------------+
-|                                  3 |
-+------------------------------------+
 ```
-### keywords
-
-COUNT_SUBSTRINGS,SUBSTRINGS

@@ -27,33 +27,65 @@ under the License.
 
 ## Description
 
+The RTRIM_IN function removes specified characters from the right side of a string. When no character set is specified, it removes trailing spaces by default. When a character set is specified, it removes all specified characters from the right side (regardless of their order in the set).
+The key feature of RTRIM_IN is that it removes any combination of characters from the specified set, while the RTRIM function removes characters based on exact string matching.
 
 ## Syntax
 
-`VARCHAR rtrim_in(VARCHAR str[, VARCHAR rhs])`
-
-When there is no rhs parameter, remove the spaces that appear consecutively in the parameter str starting from the right part; when there is an rhs parameter, search and remove any characters in the rhs character set at the right end of the string (regardless of order)
-
-
-
-## Example
-
 ```sql
-mysql> SELECT rtrim_in('ab d   ') str;
+VARCHAR RTRIM_IN(VARCHAR str[, VARCHAR rhs])
+```
+
+## Parameters
+| Parameter | Description                                                            |
+| --------- | ---------------------------------------------------------------------- |
+| str       | The string to be processed. Type: VARCHAR                              |
+| rhs       | Optional parameter, the set of characters to be removed. Type: VARCHAR |
+
+## Return Value
+
+Returns VARCHAR type, representing the processed string.
+
+Special cases:
+- If str is NULL, returns NULL
+- If rhs is not specified, removes all trailing spaces
+- If rhs is specified, removes all characters from the right side that appear in rhs until encountering the first character not in rhs
+
+## Examples
+
+1. Remove trailing spaces
+```sql
+SELECT rtrim_in('ab d   ') str;
+```
+```text
 +------+
 | str  |
 +------+
 | ab d |
 +------+
-
-mysql> SELECT rtrim_in('ababccaab','ab') str;
-+--------+
-| str    |
-+--------+
-| ababcc |
-+--------+
 ```
 
-## Keywords
+2. Remove specified character set
+```sql
+-- RTRIM_IN removes any 'a' and 'b' characters from the right end
+SELECT rtrim_in('ababccaab', 'ab') str;
+```
+```text
++---------+
+| str     |
++---------+
+| ababcc  |
++---------+
+```
 
-RTRIM_IN
+3. Comparison with RTRIM function
+```sql
+SELECT rtrim_in('ababccaab', 'ab'),rtrim('ababccaab', 'ab');
+```
+```text
++-----------------------------+--------------------------+
+| rtrim_in('ababccaab', 'ab') | rtrim('ababccaab', 'ab') |
++-----------------------------+--------------------------+
+| ababcc                      | ababcca                  |
++-----------------------------+--------------------------+
+```

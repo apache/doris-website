@@ -24,64 +24,96 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## substring
-### description
-#### Syntax
+## Description
 
-`VARCHAR substring(VARCHAR str, INT pos[, INT len])`
+The SUBSTRING function is used to extract a substring from a string. You can specify the starting position and length, supporting both forward and backward extraction. The position of the first character in the string is 1.
 
-The forms without a `len` argument return a substring from string `str` starting at position `pos`. 
-The forms with a `len` argument return a substring len characters long from string `str`, starting at position pos. 
-It is also possible to use a negative value for `pos`. In this case, 
-the beginning of the substring is `pos` characters from the end of the string, rather than the beginning. 
-A negative value may be used for `pos` in any of the forms of this function. 
-A value of 0 for `pos` returns an empty string.
+## Alias
 
-For all forms of SUBSTRING(), 
-the position of the first character in the string from which the substring is to be extracted is reckoned as 1.
+SUBSTR
 
-If len is less than 1, the result is the empty string.
+## Syntax
 
-The function have a alias named `substr`.
-
-### example
-
+```sql
+VARCHAR SUBSTRING(VARCHAR str, INT pos [, INT len])
 ```
-mysql> select substring('abc1', 2);
+
+## Parameters
+| Parameter | Description                                      |
+| --------- | ------------------------------------------------ |
+| str       | Source string. Type: VARCHAR                     |
+| pos       | Starting position, can be negative. Type: INT    |
+| len       | Optional parameter, length to extract. Type: INT |
+
+## Return Value
+
+Returns VARCHAR type, representing the extracted substring.
+
+Special cases:
+- If any parameter is NULL, returns NULL
+- If pos is 0, returns an empty string
+- If pos is negative, counts from the end of the string backwards
+- If pos exceeds the string length, returns an empty string
+- If len is not specified, returns all characters from pos to the end of the string
+
+## Examples
+
+1. Basic usage (specify starting position)
+```sql
+SELECT substring('abc1', 2);
+```
+```text
 +-----------------------------+
 | substring('abc1', 2)        |
 +-----------------------------+
 | bc1                         |
 +-----------------------------+
+```
 
-mysql> select substring('abc1', -2);
+2. Using negative position
+```sql
+SELECT substring('abc1', -2);
+```
+```text
 +-----------------------------+
 | substring('abc1', -2)       |
 +-----------------------------+
 | c1                          |
 +-----------------------------+
+```
 
-mysql> select substring('abc1', 0);
+3. Case when position is 0
+```sql
+SELECT substring('abc1', 0);
+```
+```text
 +----------------------+
 | substring('abc1', 0) |
 +----------------------+
 |                      |
 +----------------------+
+```
 
-mysql> select substring('abc1', 5);
+4. Position exceeds string length
+```sql
+SELECT substring('abc1', 5);
+```
+```text
 +-----------------------------+
 | substring('abc1', 5)        |
 +-----------------------------+
 |                             |
 +-----------------------------+
+```
 
-mysql> select substring('abc1def', 2, 2);
+5. Specifying length parameter
+```sql
+SELECT substring('abc1def', 2, 2);
+```
+```text
 +-----------------------------+
 | substring('abc1def', 2, 2)  |
 +-----------------------------+
 | bc                          |
 +-----------------------------+
 ```
-
-### keywords
-    SUBSTRING, STRING, SUBSTR

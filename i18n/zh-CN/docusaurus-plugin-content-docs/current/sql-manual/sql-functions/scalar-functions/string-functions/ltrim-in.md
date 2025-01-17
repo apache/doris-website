@@ -27,24 +27,49 @@ under the License.
 
 ## 描述
 
+LTRIM_IN 函数用于移除字符串左侧的指定字符。当不指定移除字符集合时，默认移除左侧的空格；当指定字符集合时，将移除左侧出现的所有指定字符（不考虑字符集合顺序）。
+LTRIM_IN 的特点是会移除指定字符集合中的任意字符组合，而 LTRIM 函数则是按照完整的字符串匹配进行移除。
+
 ## 语法
- 
-`VARCHAR ltrim_in(VARCHAR str[, VARCHAR rhs])`
-
-
-当没有 `rhs` 参数时，将参数 `str` 中从左侧部分开始部分连续出现的空格去掉；当有 `rhs` 参数时，在字符串的左端查找并移除 `rhs` 字符集合中的任何字符（不考虑顺序）
-
-## 举例
 
 ```sql
-mysql> SELECT ltrim_in('   ab d') str;
+VARCHAR LTRIM_IN(VARCHAR str[, VARCHAR rhs])
+```
+
+## 参数
+| 参数 | 说明                                      |
+| ---- | ----------------------------------------- |
+| str  | 需要处理的字符串。类型：VARCHAR           |
+| rhs  | 可选参数，要移除的字符集合。类型：VARCHAR |
+
+## 返回值
+
+返回 VARCHAR 类型，表示处理后的字符串。
+
+特殊情况：
+- 如果 str 为 NULL，返回 NULL
+- 如果不指定 rhs，移除左侧所有空格
+- 如果指定 rhs，移除左侧出现在 rhs 中的所有字符，直到遇到第一个不在 rhs 中的字符
+
+## 示例
+
+1. 移除左侧空格
+```sql
+SELECT ltrim_in('   ab d') str;
+```
+```text
 +------+
 | str  |
 +------+
 | ab d |
 +------+
+```
 
-mysql> SELECT ltrim_in('ababccaab','ab') str;
+2. 移除指定字符集合
+```sql
+SELECT ltrim_in('ababccaab', 'ab') str;
+```
+```text
 +-------+
 | str   |
 +-------+
@@ -52,6 +77,14 @@ mysql> SELECT ltrim_in('ababccaab','ab') str;
 +-------+
 ```
 
-## 关键词
-
-LTRIM_IN
+3. 与 LTRIM 函数的对比
+```sql
+SELECT ltrim_in('abcd', 'ae'),ltrim('abcd', 'abe');
+```
+```text
++------------------------+----------------------+
+| ltrim_in('abcd', 'ae') | ltrim('abcd', 'abe') |
++------------------------+----------------------+
+| bcd                    | abcd                 |
++------------------------+----------------------+
+```

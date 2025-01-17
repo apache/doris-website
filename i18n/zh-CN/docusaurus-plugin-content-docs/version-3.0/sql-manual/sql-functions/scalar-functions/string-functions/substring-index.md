@@ -22,66 +22,81 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## substring_index
-
-### Name
-
-SUBSTRING_INDEX
-
 ## 描述
+
+SUBSTRING_INDEX 函数用于截取字符串，根据指定的分隔符和出现次数来确定截取位置。该函数支持从左边或右边开始计数。
 
 ## 语法
 
-`VARCHAR substring_index(VARCHAR content, VARCHAR delimiter, INT field)`
-
-返回 content 的子字符串，在 delimiter 出现 field 次的位置按如下规则截取：  
-如果 field > 0，则从左边算起，返回截取位置前的子串；  
-如果 field < 0，则从右边算起，返回截取位置后的子串；
-如果 field = 0，返回一个空串（`content` 不为 null）, 或者 Null（`content` = null）。
-
-- delimiter 大小写敏感，且是多字节安全的。
-- `delimiter` 和 `field` 参数需要是常量，不支持变量。
-
-## 举例
-
+```sql
+VARCHAR SUBSTRING_INDEX(VARCHAR content, VARCHAR delimiter, INT field)
 ```
-mysql> select substring_index("hello world", " ", 1);
+
+## 参数
+| 参数      | 说明                                                    |
+| --------- | ------------------------------------------------------- |
+| content   | 需要截取的字符串。类型：VARCHAR                         |
+| delimiter | 分隔符，大小写敏感且多字节安全。类型：VARCHAR           |
+| field     | 分隔符出现的次数。正数从左计数，负数从右计数。类型：INT |
+
+注意：delimiter 和 field 参数需要是常量，不支持变量。
+
+## 返回值
+
+返回 VARCHAR 类型，表示截取后的子字符串。
+
+特殊情况：
+- 如果 field > 0，返回从左边起第 field 个分隔符之前的子串
+- 如果 field < 0，返回从右边起第 |field| 个分隔符之后的子串
+- 如果 field = 0，当 content 不为 NULL 时返回空串，content 为 NULL 时返回 NULL
+- 如果任意参数为 NULL，返回 NULL
+
+## 示例
+
+1. 从左边截取第一个空格之前的内容
+```sql
+SELECT substring_index('hello world', ' ', 1);
+```
+```text
 +----------------------------------------+
-| substring_index("hello world", " ", 1) |
+| substring_index('hello world', ' ', 1) |
 +----------------------------------------+
 | hello                                  |
 +----------------------------------------+
-mysql> select substring_index("hello world", " ", 2);
+```
+
+2. 从左边截取所有内容（分隔符次数大于实际出现次数）
+```sql
+SELECT substring_index('hello world', ' ', 2);
+```
+```text
 +----------------------------------------+
-| substring_index("hello world", " ", 2) |
+| substring_index('hello world', ' ', 2) |
 +----------------------------------------+
 | hello world                            |
 +----------------------------------------+
-mysql> select substring_index("hello world", " ", -1);
+```
+
+3. 从右边截取最后一个空格之后的内容
+```sql
+SELECT substring_index('hello world', ' ', -1);
+```
+```text
 +-----------------------------------------+
-| substring_index("hello world", " ", -1) |
+| substring_index('hello world', ' ', -1) |
 +-----------------------------------------+
 | world                                   |
 +-----------------------------------------+
-mysql> select substring_index("hello world", " ", -2);
-+-----------------------------------------+
-| substring_index("hello world", " ", -2) |
-+-----------------------------------------+
-| hello world                             |
-+-----------------------------------------+
-mysql> select substring_index("hello world", " ", -3);
-+-----------------------------------------+
-| substring_index("hello world", " ", -3) |
-+-----------------------------------------+
-| hello world                             |
-+-----------------------------------------+
-mysql> select substring_index("hello world", " ", 0);
+```
+
+4. field 为 0 的情况
+```sql
+SELECT substring_index('hello world', ' ', 0);
+```
+```text
 +----------------------------------------+
-| substring_index("hello world", " ", 0) |
+| substring_index('hello world', ' ', 0) |
 +----------------------------------------+
 |                                        |
 +----------------------------------------+
 ```
-### keywords
-
-    SUBSTRING_INDEX, SUBSTRING

@@ -27,32 +27,65 @@ under the License.
 
 ## Description
 
+The TRIM_IN function removes specified characters from both ends of a string. When no character set is specified, it removes leading and trailing spaces by default. When a character set is specified, it removes all specified characters from both ends (regardless of their order in the set).
+The key feature of TRIM_IN is that it removes any combination of characters from the specified set, while the TRIM function removes characters based on exact string matching.
 
 ## Syntax
 
-`VARCHAR trim_in(VARCHAR str[, VARCHAR rhs])`
+```sql
+VARCHAR trim_in(VARCHAR str[, VARCHAR rhs])
+```
 
-When there is no rhs parameter, remove the spaces that appear consecutively at the right and left beginning of the parameter str; when there is an rhs parameter, search and remove any characters in the rhs character set at both ends of the string (regardless of order)
+## Parameters
+| Parameter | Description                                                            |
+| --------- | ---------------------------------------------------------------------- |
+| str       | The string to be processed. Type: VARCHAR                              |
+| rhs       | Optional parameter, the set of characters to be removed. Type: VARCHAR |
 
+## Return Value
+
+Returns VARCHAR type, representing the processed string.
+
+Special cases:
+- If str is NULL, returns NULL
+- If rhs is not specified, removes all leading and trailing spaces
+- If rhs is specified, removes all characters from both ends that appear in rhs until encountering the first character not in rhs
 
 ## Examples
 
+1. Remove spaces from both ends:
 ```sql
-mysql> SELECT trim_in('   ab d   ') str;
+SELECT trim_in(' hello ');
+```
+```text
 +------+
 | str  |
 +------+
-| ab d |
-+------+
-
-mysql> SELECT trim_in('ababccaab','ab') str;
-+------+
-| str  |
-+------+
-| cc   |
+| hello|
 +------+
 ```
 
-## Keywords
+2. Remove specified character set:
+```sql
+-- TRIM_IN removes any 'c', 'd', or 'e' characters from both ends
+SELECT trim_in('abcd', 'cde');
+```
+```text
++------+
+| str  |
++------+
+| ab   |
++------+
+```
 
-TRIM_IN
+3. Comparison with TRIM function
+```sql
+SELECT trim_in('abcd', 'cde'),trim('abcd', 'cde');
+```
+```text
++------------------------+---------------------+
+| trim_in('abcd', 'cde') | trim('abcd', 'cde') |
++------------------------+---------------------+
+| ab                     | abcd                |
++------------------------+---------------------+
+```

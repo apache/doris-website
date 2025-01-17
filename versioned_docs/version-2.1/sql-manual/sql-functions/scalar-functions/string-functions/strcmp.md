@@ -1,7 +1,7 @@
 ---
 {
     "title": "STRCMP",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,35 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 描述
+## Description
 
-STRCMP 函数用于按照字典顺序比较两个字符串。该函数将返回一个整数值来表示两个字符串的比较结果。
+The STRCMP function compares two strings lexicographically. It returns an integer value indicating the result of the comparison.
 
-## 语法
+## Syntax
 
 ```sql
 TINYINT STRCMP(VARCHAR str0, VARCHAR str1)
 ```
 
-## 参数
-| 参数 | 说明 |
+## Parameters
+| Parameter | Description |
 | -- | -- |
-| str0 | 第一个要比较的字符串。类型：VARCHAR |
-| str1 | 第二个要比较的字符串。类型：VARCHAR |
+| str0 | The first string to compare. Type: VARCHAR |
+| str1 | The second string to compare. Type: VARCHAR |
 
-## 返回值
+## Return Value
 
-返回 TINYINT 类型，表示比较结果：
-- 返回 0：如果 str0 和 str1 相同
-- 返回 1：如果 str0 在字典顺序上大于 str1
-- 返回 -1：如果 str0 在字典顺序上小于 str1
+Returns a TINYINT value indicating the comparison result:
+- Returns 0: if str0 equals str1
+- Returns 1: if str0 is lexicographically greater than str1
+- Returns -1: if str0 is lexicographically less than str1
 
-特殊情况：
-- 如果任意参数为 NULL，返回 NULL
+Special cases:
+- Returns NULL if any argument is NULL
 
-## 示例
+## Examples
 
-1. 相同字符串比较
+1. Comparing identical strings
 ```sql
 SELECT strcmp('test', 'test');
 ```
@@ -64,7 +64,7 @@ SELECT strcmp('test', 'test');
 +------------------------+
 ```
 
-2. 第一个字符串较大
+2. First string is greater
 ```sql
 SELECT strcmp('test1', 'test');
 ```
@@ -76,7 +76,7 @@ SELECT strcmp('test1', 'test');
 +-------------------------+
 ```
 
-3. 第一个字符串较小
+3. First string is smaller
 ```sql
 SELECT strcmp('test', 'test1');
 ```
