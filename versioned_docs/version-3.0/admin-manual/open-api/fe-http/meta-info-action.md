@@ -1,7 +1,7 @@
 ---
 {
     "title": "Meta Info Action",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Meta Action
 
+Meta Info Action is used to obtain metadata information in the cluster. Such as database list, table structure, etc.
 
-Meta Info Action 用于获取集群内的元数据信息。如数据库列表，表结构等。
-
-## 数据库列表
+## List Database
 
 ### Request
 
@@ -38,25 +38,25 @@ GET /api/meta/namespaces/<ns_name>/databases
 
 ### Description
 
-获取所有数据库名称列表，按字母序排列。
+Get a list of all database names, arranged in alphabetical order.
     
 ### Path parameters
 
-无
+None
 
 ### Query parameters
 
 * `limit`
 
-    限制返回的结果行数
+    Limit the number of result rows returned
     
 * `offset`
 
-    分页信息，需要和 `limit` 一起使用
-
+    Pagination information, need to be used with `limit`
+    
 ### Request body
 
-无
+None
 
 ### Response
 
@@ -71,9 +71,9 @@ GET /api/meta/namespaces/<ns_name>/databases
 }
 ```
 
-* data 字段返回数据库名列表。
+* The data field returns a list of database names.
 
-## 表列表
+## List Table
 
 ### Request
 
@@ -83,27 +83,27 @@ GET /api/meta/namespaces/<ns_name>/databases/<db_name>/tables
 
 ### Description
 
-获取指定数据库中的表列表，按字母序排列。
+Get a list of tables in the specified database, arranged in alphabetical order.
     
 ### Path parameters
 
 * `<db_name>`
 
-    指定数据库名称
+    Specify database
 
 ### Query parameters
 
 * `limit`
 
-    限制返回的结果行数
+    Limit the number of result rows returned
     
 * `offset`
 
-    分页信息，需要和 `limit` 一起使用
+    Pagination information, need to be used with `limit`
 
 ### Request body
 
-无
+None
 
 ### Response
 
@@ -118,9 +118,9 @@ GET /api/meta/namespaces/<ns_name>/databases/<db_name>/tables
 }
 ```
 
-* data 字段返回表名称列表。
+* The data field returns a list of table names.
 
-## 表结构信息
+## Schema Info
 
 ### Request
 
@@ -130,27 +130,27 @@ GET /api/meta/namespaces/<ns_name>/databases/<db_name>/tables/<tbl_name>/schema
 
 ### Description
 
-获取指定数据库中，指定表的表结构信息。
+Get the table structure information of the specified table in the specified database.
     
 ### Path parameters
 
 * `<db_name>`
 
-    指定数据库名称
+    Specify the database name
     
 * `<tbl_name>`
 
-    指定表名称
+    Specify table name
 
 ### Query parameters
 
 * `with_mv`
 
-    可选项，如果未指定，默认返回 base 表的表结构。如果指定，则还会返回所有 rollup 的信息。
+    Optional. If not specified, the table structure of the base table is returned by default. If specified, all rollup index will also be returned.
 
 ### Request body
 
-无
+None
 
 ### Response
 
@@ -229,4 +229,4 @@ GET /api/meta/namespaces/default/databases/db1/tables/tbl1/schema?with_mv?=1
 }
 ```
 
-* data 字段返回 base 表或 rollup 表的表结构信息。
+* The data field returns the table structure information of the base table or rollup table.

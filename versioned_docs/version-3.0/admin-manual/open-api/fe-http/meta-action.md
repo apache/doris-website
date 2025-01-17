@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Cluster Action",
-    "language": "zh-CN"
+    "title": "Meta Action",
+    "language": "en"
 }
 ---
 
@@ -24,66 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+# Meta Action
 
 ## Request
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
+```
+GET /image
+GET /info
+GET /version
+GET /put
+GET /journal_id
+GET /role
+GET /check
+GET /dump
+```
 
-## 集群连接信息
+## Description
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
-
-### Description
-
-用于获取集群 http、mysql 连接信息。
-
+This is a set of APIs related to FE metadata, except for `/dump`, they are all used for internal communication between FE nodes.
+    
 ## Path parameters
 
-无
+TODO
 
 ## Query parameters
 
-无
+TODO
 
 ## Request body
 
-无
+TODO
 
-### Response
+## Response
 
-```
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "fe_host:http_ip"
-        ],
-        "mysql": [
-            "fe_host:query_ip"
-        ]
-    },
-    "count": 0
-}
-```
+TODO
     
-### Examples
-```
-GET /rest/v2/manager/cluster/cluster_info/conn_info
+## Examples
 
-Response:
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "127.0.0.1:8030"
-        ],
-        "mysql": [
-            "127.0.0.1:9030"
-        ]
-    },
-    "count": 0
-}
-```
+TODO
