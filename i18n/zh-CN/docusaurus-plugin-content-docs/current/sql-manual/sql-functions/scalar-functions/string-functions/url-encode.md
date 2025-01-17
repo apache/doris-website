@@ -43,6 +43,8 @@ URL_ENCODE(  <str>  )
 
 ## 返回值
 
+UTF-8 编码完成所提供文本的 URL 编码
+
 ## 示例
 
 ```sql

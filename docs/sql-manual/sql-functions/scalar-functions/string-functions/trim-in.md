@@ -27,32 +27,52 @@ under the License.
 
 ## Description
 
+When there is no `rhs` parameter, this function removes the leading and trailing spaces from the `str` string. When the `rhs` parameter is provided, it removes any characters from both ends of the string that are found in the `rhs` character set (order does not matter).
 
 ## Syntax
 
-`VARCHAR trim_in(VARCHAR str[, VARCHAR rhs])`
+```sql
+TRIM_IN( <str> [ , <rhs>])
+```
+## Required Parameters
 
-When there is no rhs parameter, remove the spaces that appear consecutively at the right and left beginning of the parameter str; when there is an rhs parameter, search and remove any characters in the rhs character set at both ends of the string (regardless of order)
+| Parameters | Description |
+|------|------|
+| `str` | Delete spaces at both ends of the string |
+
+
+## Optional Parameters
+
+| Parameters | Description |
+|------|------|
+| `rhs` | Remove the specified character |
+
+## Return Value
+Delete spaces at both ends or the string after the specified character
 
 
 ## Examples
 
 ```sql
-mysql> SELECT trim_in('   ab d   ') str;
+SELECT trim_in('   ab d   ') str;
+```
+
+```sql
 +------+
 | str  |
 +------+
 | ab d |
 +------+
+```
 
-mysql> SELECT trim_in('ababccaab','ab') str;
+```sql
+SELECT trim_in('ababccaab','ab') str;
+```
+
+```sql
 +------+
 | str  |
 +------+
 | cc   |
 +------+
 ```
-
-## Keywords
-
-TRIM_IN
