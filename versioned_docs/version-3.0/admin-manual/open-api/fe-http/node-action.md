@@ -1,7 +1,7 @@
 ---
 {
     "title": "Node Action",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -48,7 +48,7 @@ under the License.
 
 `POST /rest/v2/manager/node/{action}/fe`
 
-## 获取 fe, be, broker 节点信息
+## Get information about fe, be, broker nodes
 
 `GET /rest/v2/manager/node/frontends`
 
@@ -58,7 +58,7 @@ under the License.
 
 ### Description
 
-用于获取集群获取 fe, be, broker 节点信息。
+Used to get cluster to get fe, be, broker node information.
 
 ### Response
 
@@ -164,7 +164,7 @@ brokers:
 }
 ```
 
-## 获取节点配置信息
+## Get node configuration information
 
 `GET /rest/v2/manager/node/configuration_name`
 
@@ -174,29 +174,29 @@ brokers:
 
 ### Description
 
-configuration_name 用于获取节点配置项名称。  
-node_list 用于获取节点列表。  
-configuration_info 用于获取节点配置详细信息。
+configuration_name Used to get the name of the node configuration item.  
+node_list Get the list of nodes.  
+configuration_info to get the node configuration details.
 
 ### Query parameters
 `GET /rest/v2/manager/node/configuration_name`   
-无
+none
 
 `GET /rest/v2/manager/node/node_list`  
-无
+none
 
 `POST /rest/v2/manager/node/configuration_info`
 
 * type 
-  值为 fe 或 be，用于指定获取 fe 的配置信息或 be 的配置信息。
+  The value is fe or be, which specifies to get the configuration information of fe or the configuration information of be.
 
 ### Request body
 
 `GET /rest/v2/manager/node/configuration_name`   
-无
+none
 
 `GET /rest/v2/manager/node/node_list`  
-无
+none
 
 `POST /rest/v2/manager/node/configuration_info`
 ```
@@ -209,14 +209,15 @@ configuration_info 用于获取节点配置详细信息。
 	]
 }
 
-若不带body，body中的参数都使用默认值。  
-conf_name 用于指定返回哪些配置项的信息， 默认返回所有配置项信息；
-node 用于指定返回哪些节点的配置项信息，默认为全部fe节点或be节点配置项信息。
+If no body is included, the parameters in the body use the default values.  
+conf_name specifies which configuration items to return, the default is all configuration items.
+node is used to specify which node's configuration information is returned, the default is all fe nodes or be nodes configuration information.
 ```
 
 ### Response
 `GET /rest/v2/manager/node/configuration_name`  
-``` 
+
+```json 
 {
     "msg": "success",
     "code": 0,
@@ -233,7 +234,8 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
 ```
 
 `GET /rest/v2/manager/node/node_list` 
-``` 
+
+```json 
 {
     "msg": "success",
     "code": 0,
@@ -250,27 +252,28 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
 ```
 
 `POST /rest/v2/manager/node/configuration_info?type=fe`
-```
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "column_names": [
-            "配置项",
-            "节点",
-            "节点类型",
-            "配置值类型",
-            "MasterOnly",
-            "配置值",
-            "可修改"
-        ],
-        "rows": [
-            [
-                ""
-            ]
-        ]
-    },
-    "count": 0
+
+```json
+{  
+    "msg": "success",  
+    "code": 0,  
+    "data": {  
+        "column_names": [  
+            "Configuration Item",  
+            "Node",  
+            "Node Type",  
+            "Configuration Value Type",  
+            "MasterOnly",  
+            "Configuration Value",  
+            "Modifiable"  
+        ],  
+        "rows": [  
+            [  
+                ""  
+            ]  
+        ]  
+    },  
+    "count": 0  
 }
 ```
 
@@ -281,12 +284,12 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
     "code": 0,
     "data": {
         "column_names": [
-            "配置项",
-            "节点",
-            "节点类型",
-            "配置值类型",
-            "配置值",
-            "可修改"
+            "Configuration Item",
+            "Node",
+            "Node Type",
+            "Configuration Value Type",
+            "Configuration Value",
+            "Modifiable"
         ],
         "rows": [
             [
@@ -300,11 +303,12 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
     
 ### Examples
 
-1. 获取 fe agent_task_resend_wait_time_ms 配置项信息：
+1. Get the fe agent_task_resend_wait_time_ms configuration information:
 
     POST /rest/v2/manager/node/configuration_info?type=fe  
     body:
-    ```
+
+    ```json
     {
         "conf_name":[
             "agent_task_resend_wait_time_ms"
@@ -313,37 +317,38 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
     ```
     
     Response:
-    ```
-    {
-        "msg": "success",
-        "code": 0,
-        "data": {
-            "column_names": [
-                "配置项",
-                "节点",
-                "节点类型",
-                "配置值类型",
-                "MasterOnly",
-                "配置值",
-                "可修改"
-            ],
-            "rows": [
-                [
-                    "agent_task_resend_wait_time_ms",
-                    "127.0.0.1:8030",
-                    "FE",
-                    "long",
-                    "true",
-                    "50000",
-                    "true"
-                ]
-            ]
-        },
-        "count": 0
+
+    ```json
+    {  
+    "msg": "success",  
+    "code": 0,  
+    "data": {  
+        "column_names": [  
+            "Configuration Item",  
+            "Node",  
+            "Node Type",  
+            "Configuration Value Type",  
+            "MasterOnly",  
+            "Configuration Value",  
+            "Modifiable"  
+        ],  
+        "rows": [  
+            [  
+                "agent_task_resend_wait_time_ms",  
+                "127.0.0.1:8030",  
+                "FE",  
+                "long",  
+                "true",  
+                "50000",  
+                "true"  
+            ]  
+        ]  
+    },  
+    "count": 0  
     }
     ```
 
-## 修改配置值
+## Modify configuration values
 
 `POST /rest/v2/manager/node/set_config/fe`
 
@@ -351,10 +356,11 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
 
 ### Description
 
-用于修改 fe 或 be 节点配置值
+Used to modify fe or be node configuration values
 
 ### Request body
-```
+
+```json
 {
 	"config_name":{
 		"node":[
@@ -365,15 +371,16 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
 	}
 }
 
-config_name为对应的配置项；  
-node为关键字，表示要修改的节点列表;  
-value为配置的值；  
-persist为 true 表示永久修改， false 表示临时修改。永久修改重启后能生效， 临时修改重启后失效。
+config_name is the corresponding configuration item.  
+node is a keyword indicating the list of nodes to be modified;  
+value is the value of the configuration.  
+persist is true for permanent modification and false for temporary modification. persist means permanent modification, false means temporary modification. permanent modification takes effect after reboot, temporary modification fails after reboot.
 ```
 
 ### Response
 `GET /rest/v2/manager/node/configuration_name`  
-``` 
+
+``` json
 {
 	"msg": "",
 	"code": 0,
@@ -390,16 +397,17 @@ persist为 true 表示永久修改， false 表示临时修改。永久修改重
 	"count": 0
 }
 
-failed 表示修改失败的配置信息。
+failed Indicates a configuration message that failed to be modified.
 ```
     
 ### Examples
 
-1. 修改 fe 127.0.0.1:8030 节点中 agent_task_resend_wait_time_ms 和 alter_table_timeout_second 配置值：
+1. Modify the agent_task_resend_wait_time_ms and alter_table_timeout_second configuration values in the fe 127.0.0.1:8030 node:
 
     POST /rest/v2/manager/node/set_config/fe
     body:
-    ```
+
+    ```json
     {
         "agent_task_resend_wait_time_ms":{
             "node":[
@@ -436,21 +444,22 @@ failed 表示修改失败的配置信息。
         "count": 0
     }
 
-    agent_task_resend_wait_time_ms 配置值修改成功，alter_table_timeout_second 修改失败。
+    gent_task_resend_wait_time_ms configuration value modified successfully, alter_table_timeout_second modification failed.
     ```
-   
-## 操作 be 节点
+
+## Operate be node
 
 `POST /rest/v2/manager/node/{action}/be`
 
 ### Description
 
-用于添加/删除/下线 be 节点
+Used to add/drop/offline be node
 
 action：ADD/DROP/DECOMMISSION
 
 ### Request body
-```
+
+```json
 {
     "hostPorts": ["127.0.0.1:9050"],
     "properties": {
@@ -458,12 +467,13 @@ action：ADD/DROP/DECOMMISSION
     }
 }
 
-hostPorts 需要操作的一组 be 节点地址 ip:heartbeat_port
-properties 添加节点时传入的配置，目前只用于配置 tag, 不传使用默认 tag
+hostPorts A set of be node addresses to be operated, ip:heartbeat_port
+properties The configuration passed in when adding a node is only used to configure the tag. If not, the default tag is used
 ```
 
 ### Response
-```
+
+```json
 {
     "msg": "Error",
     "code": 1,
@@ -473,23 +483,25 @@ properties 添加节点时传入的配置，目前只用于配置 tag, 不传使
 
 msg Success/Error
 code 0/1
-data ""/报错信息
+data ""/Error message
 ```
 
 ### Examples
 
-1. 添加 be 节点
+1. add be node
 
    post /rest/v2/manager/node/ADD/be
    Request body
-    ```
+
+    ```json
     {
         "hostPorts": ["127.0.0.1:9050"]
     }
     ```
 
    Response
-    ```
+
+    ```json
     {
         "msg": "success",
         "code": 0,
@@ -498,18 +510,20 @@ data ""/报错信息
     }
     ```
 
-2. 删除 be 节点
+2. drop be node
 
    post /rest/v2/manager/node/DROP/be
    Request body
-    ```
+
+    ```json
     {
         "hostPorts": ["127.0.0.1:9050"]
     }
     ```
 
    Response
-    ```
+
+    ```json
     {
         "msg": "success",
         "code": 0,
@@ -518,18 +532,18 @@ data ""/报错信息
     }
     ```
 
-3. 下线 be 节点
+3. offline be node
 
    post /rest/v2/manager/node/DECOMMISSION/be
    Request body
-    ```
+    ```json
     {
         "hostPorts": ["127.0.0.1:9050"]
     }
     ```
 
    Response
-    ```
+    ```json
     {
         "msg": "success",
         "code": 0,
@@ -538,29 +552,29 @@ data ""/报错信息
     }
     ```
 
-## 操作 fe 节点
+## Operate fe node
 
 `POST /rest/v2/manager/node/{action}/fe`
 
 ### Description
 
-用于添加/删除 fe 节点
+Used to add/drop fe node
 
 action：ADD/DROP
 
 ### Request body
-```
+```json
 {
     "role": "FOLLOWER",
     "hostPort": "127.0.0.1:9030"
 }
 
 role FOLLOWER/OBSERVER
-hostPort 需要操作的 fe 节点地址 ip:edit_log_port
+hostPort The address of the fe node to be operated, ip:edit_log_port
 ```
 
 ### Response
-```
+```json
 {
     "msg": "Error",
     "code": 1,
@@ -570,24 +584,24 @@ hostPort 需要操作的 fe 节点地址 ip:edit_log_port
 
 msg Success/Error
 code 0/1
-data ""/报错信息
+data ""/Error message
 ```
 
 ### Examples
 
-1. 添加 FOLLOWER 节点
+1. add FOLLOWER node
 
-    post /rest/v2/manager/node/ADD/fe
-    Request body
-    ```
+   post /rest/v2/manager/node/ADD/fe
+   Request body
+    ```json
     {
         "role": "FOLLOWER",
         "hostPort": "127.0.0.1:9030"
     }
     ```
-   
-    Response
-    ```
+
+   Response
+    ```json
     {
         "msg": "success",
         "code": 0,
@@ -596,11 +610,11 @@ data ""/报错信息
     }
     ```
 
-2. 删除 FOLLOWER 节点
+2. drop FOLLOWER node
 
    post /rest/v2/manager/node/DROP/fe
    Request body
-    ```
+    ```json
     {
         "role": "FOLLOWER",
         "hostPort": "127.0.0.1:9030"
@@ -608,7 +622,7 @@ data ""/报错信息
     ```
 
    Response
-    ```
+    ```json
     {
         "msg": "success",
         "code": 0,

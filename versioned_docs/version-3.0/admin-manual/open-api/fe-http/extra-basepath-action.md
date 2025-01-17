@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Cluster Action",
-    "language": "zh-CN"
+    "title": "Extra Basepath Action",
+    "language": "en"
 }
 ---
 
@@ -24,66 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+# Extra Basepath Action
 
 ## Request
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
+`GET /api/basepath`
 
-## 集群连接信息
+## Description
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
-
-### Description
-
-用于获取集群 http、mysql 连接信息。
-
+Used to obtain http basepath.
+    
 ## Path parameters
 
-无
+None
 
 ## Query parameters
 
-无
+None
 
 ## Request body
 
-无
+None
 
-### Response
+## Response
 
 ```
 {
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "fe_host:http_ip"
-        ],
-        "mysql": [
-            "fe_host:query_ip"
-        ]
-    },
-    "count": 0
-}
-```
-    
-### Examples
-```
-GET /rest/v2/manager/cluster/cluster_info/conn_info
-
-Response:
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "127.0.0.1:8030"
-        ],
-        "mysql": [
-            "127.0.0.1:9030"
-        ]
-    },
-    "count": 0
+    "msg":"success",
+    "code":0,
+    "data":{"enable":false,"path":""},
+    "count":0
 }
 ```
