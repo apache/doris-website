@@ -24,40 +24,60 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## unhex
 ## 描述
+
+`unhex` 函数用于将十六进制字符串转换为原始字符串。将每两个十六进制字符转换为一个字节。
+
 ## 语法
 
-`VARCHAR unhex(VARCHAR str)`
+`UNHEX(<str>)`
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<str>` | 16进制字符字符串 |
+
+## 返回值
 
 输入字符串，如果字符串长度为0或者为奇数，返回空串；
 如果字符串中包含`[0-9]、[a-f]、[A-F]`之外的字符，返回空串；
-其他情况每两个字符为一组转化为16进制后的字符，然后拼接成字符串输出
-
+其他情况每两个字符为一组转化为16进制后的字符，然后拼接成字符串输出。
 
 ## 举例
 
+```sql
+select unhex('@');
 ```
-mysql> select unhex('@');
+
+```text
 +------------+
 | unhex('@') |
 +------------+
 |            |
 +------------+
+```
 
-mysql> select unhex('41');
+```sql
+select unhex('41');
+```
+
+```text
 +-------------+
 | unhex('41') |
 +-------------+
 | A           |
 +-------------+
+```
 
-mysql> select unhex('4142');
+```sql
+select unhex('4142');
+```
+
+```text
 +---------------+
 | unhex('4142') |
 +---------------+
 | AB            |
 +---------------+
 ```
-### keywords
-    UNHEX

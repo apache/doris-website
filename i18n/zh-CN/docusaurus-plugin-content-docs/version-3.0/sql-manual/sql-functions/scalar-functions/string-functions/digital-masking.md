@@ -24,27 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### 描述
+## 描述
 
-别名函数，原始函数为 `concat(left(id,3),'****',right(id,4))`。
+`digital_masking` 函数用于对数字进行脱敏处理。根据指定的脱敏规则，将数字的部分字符替换为 * 。别名函数，原始函数为 `concat(left(id,3),'****',right(id,4))`。
 
-将输入的 `digital_number` 进行脱敏处理，返回遮盖脱敏后的结果。
+## 语法
 
-### 语法
+`DIGITAL_MASKING( <digital_number> )`
 
-```sql
-digital_masking(digital_number)
-```
+## 参数
 
-### 示例
+| 参数 | 说明 |
+| -- | -- |
+| `<digital_number>` | 需要脱敏的数字字符串 |
 
-将手机号码进行脱敏处理
+## 返回值
+
+返回脱敏后的数字字符串。
+
+## 举例
 
 ```sql
 select digital_masking(13812345678);
 ```
 
-```
+```text
 +------------------------------+
 | digital_masking(13812345678) |
 +------------------------------+

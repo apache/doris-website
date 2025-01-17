@@ -24,37 +24,58 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## not_null_or_empty
-### description
-#### Syntax
+## Description
 
-`BOOLEAN NOT_NULL_OR_EMPTY (VARCHAR str)`
+The `not_null_or_empty` function checks if the given value is neither NULL nor empty. It returns true if the input value is not NULL and not an empty string, otherwise, it returns false.
 
-It returns false if the string is an empty string or NULL. Otherwise it returns true.
+## Syntax
 
-### example
+`NOT_NULL_OR_EMPTY (<str>)`
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<str>` | The string to check |
+
+## Return Value
+
+Returns false if the string is an empty string or NULL, otherwise returns true.
+
+## Examples
 
 ```
-MySQL [(none)]> select not_null_or_empty(null);
+select not_null_or_empty(null);
+```
+
+```
 +-------------------------+
 | not_null_or_empty(NULL) |
 +-------------------------+
 |                       0 |
 +-------------------------+
+```
 
-MySQL [(none)]> select not_null_or_empty("");
+```sql
+select not_null_or_empty("");
+```
+
+```text
 +-----------------------+
 | not_null_or_empty('') |
 +-----------------------+
 |                     0 |
 +-----------------------+
+```
 
-MySQL [(none)]> select not_null_or_empty("a");
+```sql
+select not_null_or_empty("a");
+```
+
+```text
 +------------------------+
 | not_null_or_empty('a') |
 +------------------------+
 |                      1 |
 +------------------------+
 ```
-### keywords
-    NOT_NULL_OR_EMPTY

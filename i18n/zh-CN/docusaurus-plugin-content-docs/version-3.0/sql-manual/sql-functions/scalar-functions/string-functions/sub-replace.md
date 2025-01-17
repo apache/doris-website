@@ -22,31 +22,49 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sub_replace
+
 ## 描述
+
+`sub_replace` 函数用于替换字符串中的子字符串。可以指定要替换的子字符串和替换的目标字符串，返回用`new_str` 字符串替换 `str` 中从 `start` 开始长度为len的新字符串。其中 `start`, `len` 为负整数，返回 NULL, 且 `len` 的默认值为 `new_str` 的长度。
+
 ## 语法
 
-`VARCHAR sub_replace(VARCHAR str, VARCHAR new_str, INT start[, INT len])`
+`VARCHAR sub_replace(<str>, <new_str>, <start[, len]>)`
 
-返回用new_str字符串替换str中从start开始长度为len的新字符串。
-其中start,len为负整数，返回NULL, 且len的默认值为new_str的长度。
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<str>` | 要进行替换操作的目标字符串 |
+| `<new_str>` | 用于替换的目标字符串 |
+| `<start[, len]>` | start 表示替换操作开始的位置，可选参数，表示要替换的子字符串长度 |
+
+## 返回值
+
+返回替换后的字符串。
 
 ## 举例
 
 ```
-mysql> select sub_replace("this is origin str","NEW-STR",1);
+select sub_replace("this is origin str","NEW-STR",1);
+```
+
+```text
 +-------------------------------------------------+
 | sub_replace('this is origin str', 'NEW-STR', 1) |
 +-------------------------------------------------+
 | tNEW-STRorigin str                              |
 +-------------------------------------------------+
+```
 
-mysql> select sub_replace("doris","***",1,2);
+```sql
+select sub_replace("doris","***",1,2);
+```
+
+```text
 +-----------------------------------+
 | sub_replace('doris', '***', 1, 2) |
 +-----------------------------------+
 | d***is                            |
 +-----------------------------------+
 ```
-### keywords
-    SUB_REPLACE
