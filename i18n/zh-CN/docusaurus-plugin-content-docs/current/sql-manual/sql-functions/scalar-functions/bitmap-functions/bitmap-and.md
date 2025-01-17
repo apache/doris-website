@@ -24,60 +24,58 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_and
 ## 描述
+
+计算两个及以上输入的 BITMAP 的交集，返回新的 BITMAP.
+
 ## 语法
 
-`BITMAP BITMAP_AND(BITMAP lhs, BITMAP rhs)`
+```sql
+BITMAP_AND(<bitmap>, <bitmap>,[, <bitmap>...])
+```
 
-计算两个及以上输入bitmap的交集，返回新的bitmap.
+## 参数
+
+| 参数         | 说明               |
+|------------|------------------|
+| `<bitmap>` | 被求交集的原 BITMAP 之一 |
+
+## 返回值
+
+返回一个 BITMAP  
+- 当参数存在空值时，返回 NULL
 
 ## 举例
 
-```
-mysql> select bitmap_count(bitmap_and(to_bitmap(1), to_bitmap(2))) cnt;
-+------+
-| cnt  |
-+------+
-|    0 |
-+------+
-
-mysql> select bitmap_to_string(bitmap_and(to_bitmap(1), to_bitmap(2)));
-+----------------------------------------------------------+
-| bitmap_to_string(bitmap_and(to_bitmap(1), to_bitmap(2))) |
-+----------------------------------------------------------+
-|                                                          |
-+----------------------------------------------------------+
-
-mysql> select bitmap_count(bitmap_and(to_bitmap(1), to_bitmap(1))) cnt;
-+------+
-| cnt  |
-+------+
-|    1 |
-+------+
-
-MySQL> select bitmap_to_string(bitmap_and(to_bitmap(1), to_bitmap(1)));
-+----------------------------------------------------------+
-| bitmap_to_string(bitmap_and(to_bitmap(1), to_bitmap(1))) |
-+----------------------------------------------------------+
-| 1                                                        |
-+----------------------------------------------------------+
-
+```sql
 MySQL> select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5')));
+```
+
+```text
 +-----------------------------------------------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'))) |
 +-----------------------------------------------------------------------------------------------------------------------+
 | 1,2                                                                                                                   |
 +-----------------------------------------------------------------------------------------------------------------------+
+```
 
+```sql
 MySQL> select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),bitmap_empty()));
+```
+
+```text
 +---------------------------------------------------------------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), bitmap_empty())) |
 +---------------------------------------------------------------------------------------------------------------------------------------+
 |                                                                                                                                       |
 +---------------------------------------------------------------------------------------------------------------------------------------+
+```
 
+```sql
 MySQL> select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),NULL));
+```
+
+```text
 +-----------------------------------------------------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), NULL)) |
 +-----------------------------------------------------------------------------------------------------------------------------+
@@ -85,6 +83,4 @@ MySQL> select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_fr
 +-----------------------------------------------------------------------------------------------------------------------------+
 ```
 
-### keywords
 
-    BITMAP_AND,BITMAP

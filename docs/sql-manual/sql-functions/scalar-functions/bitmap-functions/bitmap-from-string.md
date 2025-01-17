@@ -22,42 +22,62 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_from_string
+## Description
 
-### description
-#### Syntax
+Convert a string into a BITMAP. The string consists of a group of unsigned bigint numbers separated by commas. (The number values are between: 0 ~ 18446744073709551615)
+For example, the string "0, 1, 2" will be converted into a Bitmap, where the 0th, 1st, and 2nd bits are set. When the input field is invalid, NULL is returned
 
-`BITMAP BITMAP_FROM_STRING(VARCHAR input)`
+## Syntax
 
-Convert a string into a bitmap. The input string should be a comma separated unsigned bigint (ranging from 0 to 18446744073709551615).
-For example: input string "0, 1, 2" will be converted to a Bitmap with bit 0, 1, 2 set.
-If input string is invalid, return NULL.
-
-### example
-
-```
-mysql> select bitmap_to_string(bitmap_from_string("0, 1, 2"));
-+-------------------------------------------------+
-| bitmap_to_string(bitmap_from_string('0, 1, 2')) |
-+-------------------------------------------------+
-| 0,1,2                                           |
-+-------------------------------------------------+
-
-mysql> select bitmap_from_string("-1, 0, 1, 2");
-+-----------------------------------+
-| bitmap_from_string('-1, 0, 1, 2') |
-+-----------------------------------+
-| NULL                              |
-+-----------------------------------+
-
-mysql> select bitmap_to_string(bitmap_from_string("0, 1, 18446744073709551615"));
-+--------------------------------------------------------------------+
-| bitmap_to_string(bitmap_from_string('0, 1, 18446744073709551615')) |
-+--------------------------------------------------------------------+
-| 0,1,18446744073709551615                                           |
-+--------------------------------------------------------------------+
+```sql
+ BITMAP_FROM_STRING(<str>)
 ```
 
-### keywords
+## Parameters
 
-    BITMAP_FROM_STRING,BITMAP
+| Parameter | Description                                                                                    |
+|-----------|------------------------------------------------------------------------------------------------|
+| `<str>`   | Array string, for example "0, 1, 2" string will be converted to a Bitmap with bits 0, 1, 2 set |
+## Return Value
+
+Returns a BITMAP
+- When the input field is invalid, the result is NULL
+
+## Examples
+
+```sql
+select bitmap_to_string(bitmap_from_string("0, 1, 2")) bts;
+```
+
+```text
++-------+
+| bts   |
++-------+
+| 0,1,2 |
++-------+
+```
+
+```sql
+select bitmap_from_string("-1, 0, 1, 2") bfs;
+```
+
+```text
++------+
+| bfs  |
++------+
+| NULL |
++------+
+```
+
+```sql
+select bitmap_to_string(bitmap_from_string("0, 1, 18446744073709551615")) bts;
+```
+
+```text
++--------------------------+
+| bts                      |
++--------------------------+
+| 0,1,18446744073709551615 |
++--------------------------+
+```
+

@@ -24,67 +24,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_and
-### description
-#### Syntax
+## Description
 
-`BITMAP BITMAP_AND(BITMAP lhs, BITMAP rhs, ...)`
+Computes the intersection of two or more input BITMAPs and returns a new BITMAP.
 
-Compute intersection of two or more input bitmaps, return the new bitmap.
+## Syntax
 
-### example
-
+```sql
+BITMAP_AND(<bitmap>, <bitmap>,[, <bitmap>...])
 ```
-mysql> select bitmap_count(bitmap_and(to_bitmap(1), to_bitmap(2))) cnt;
-+------+
-| cnt  |
-+------+
-|    0 |
-+------+
 
-mysql> select bitmap_to_string(bitmap_and(to_bitmap(1), to_bitmap(2)));
-+----------------------------------------------------------+
-| bitmap_to_string(bitmap_and(to_bitmap(1), to_bitmap(2))) |
-+----------------------------------------------------------+
-|                                                          |
-+----------------------------------------------------------+
+## Parameters
 
-mysql> select bitmap_count(bitmap_and(to_bitmap(1), to_bitmap(1))) cnt;
-+------+
-| cnt  |
-+------+
-|    1 |
-+------+
+| Parameter  | Description                                                    |
+|------------|----------------------------------------------------------------|
+| `<bitmap>` | One of the original BITMAPs whose intersection is being sought |
 
-MySQL> select bitmap_to_string(bitmap_and(to_bitmap(1), to_bitmap(1)));
-+----------------------------------------------------------+
-| bitmap_to_string(bitmap_and(to_bitmap(1), to_bitmap(1))) |
-+----------------------------------------------------------+
-| 1                                                        |
-+----------------------------------------------------------+
+## Return Value
 
+Returns a BITMAP
+- If the parameter has a null value, it returns NULL
+
+## Examples
+
+```sql
 MySQL> select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5')));
+```
+
+```text
 +-----------------------------------------------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'))) |
 +-----------------------------------------------------------------------------------------------------------------------+
 | 1,2                                                                                                                   |
 +-----------------------------------------------------------------------------------------------------------------------+
+```
 
+```sql
 MySQL> select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),bitmap_empty()));
+```
+
+```text
 +---------------------------------------------------------------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), bitmap_empty())) |
 +---------------------------------------------------------------------------------------------------------------------------------------+
 |                                                                                                                                       |
 +---------------------------------------------------------------------------------------------------------------------------------------+
+```
 
+```sql
 MySQL> select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),NULL));
+```
+
+```text
 +-----------------------------------------------------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), NULL)) |
 +-----------------------------------------------------------------------------------------------------------------------------+
 | NULL                                                                                                                        |
 +-----------------------------------------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-
-    BITMAP_AND,BITMAP
