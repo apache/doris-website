@@ -28,10 +28,6 @@ under the License.
 
 Table function, generating temporary tables for asynchronous materialized views, which can view information about asynchronous materialized views created in a certain database.
 
-This function is used in the from clause.
-
-This funciton is supported since 2.1.0.
-
 ## Syntax
 ```sql
 MV_INFOS("database"="<database>")
@@ -43,31 +39,6 @@ MV_INFOS("database"="<database>")
 
 
 ## Return Value
-
-View mv_infos() Table schema:
-```sql
-desc function mv_infos("database"="tpch100");
-```
-```text
-+--------------------+---------+------+-------+---------+-------+
-| Field              | Type    | Null | Key   | Default | Extra |
-+--------------------+---------+------+-------+---------+-------+
-| Id                 | BIGINT  | No   | false | NULL    | NONE  |
-| Name               | TEXT    | No   | false | NULL    | NONE  |
-| JobName            | TEXT    | No   | false | NULL    | NONE  |
-| State              | TEXT    | No   | false | NULL    | NONE  |
-| SchemaChangeDetail | TEXT    | No   | false | NULL    | NONE  |
-| RefreshState       | TEXT    | No   | false | NULL    | NONE  |
-| RefreshInfo        | TEXT    | No   | false | NULL    | NONE  |
-| QuerySql           | TEXT    | No   | false | NULL    | NONE  |
-| EnvInfo            | TEXT    | No   | false | NULL    | NONE  |
-| MvProperties       | TEXT    | No   | false | NULL    | NONE  |
-| MvPartitionInfo    | TEXT    | No   | false | NULL    | NONE  |
-| SyncWithBaseTables | BOOLEAN | No   | false | NULL    | NONE  |
-+--------------------+---------+------+-------+---------+-------+
-```
-
-The meaning of the fields is as follows:
 
 | Field                  | Type    | Description                                                         |
 |------------------------|---------|---------------------------------------------------------------------|
@@ -86,20 +57,29 @@ The meaning of the fields is as follows:
 
 ## Examples
 
-- View all materialized views under db1
+View all materialized views under test
 
-    ```sql
-    mysql> select * from mv_infos("database"="db1");
-    ```
+```sql
+select * from mv_infos("database"="test");
+```
+```text
++-------+--------------------------+------------------+--------+--------------------+--------------+---------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| Id    | Name                     | JobName          | State  | SchemaChangeDetail | RefreshState | RefreshInfo                           | QuerySql                                                                                                                                                         | MvProperties                                              | MvPartitionInfo                                                                                           | SyncWithBaseTables |
++-------+--------------------------+------------------+--------+--------------------+--------------+---------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| 19494 | mv1                      | inner_mtmv_19494 | NORMAL |                    | SUCCESS      | BUILD DEFERRED REFRESH AUTO ON MANUAL | SELECT `internal`.`test`.`user`.`k2`, `internal`.`test`.`user`.`k3` FROM `internal`.`test`.`user`                                                                      | {partition_sync_limit=100, partition_sync_time_unit=YEAR} | MTMVPartitionInfo{partitionType=FOLLOW_BASE_TABLE, relatedTable=user, relatedCol='k2', partitionCol='k2'} |                  1 |
+| 21788 | test_tablet_type_mtmv_mv | inner_mtmv_21788 | NORMAL |                    | SUCCESS      | BUILD DEFERRED REFRESH AUTO ON MANUAL | SELECT `internal`.`test`.`test_tablet_type_mtmv_table`.`k2`, `internal`.`test`.`test_tablet_type_mtmv_table`.`k3` from `internal`.`test`.`test_tablet_type_mtmv_table` | {}                                                        | MTMVPartitionInfo{partitionType=SELF_MANAGE}                                                              |                  0 |
++-------+--------------------------+------------------+--------+--------------------+--------------+---------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+```
 
-- View the materialized view named mv1 under db1
+View the materialized view named mv1 under test
 
-    ```sql
-    mysql> select * from mv_infos("database"="db1") where Name = "mv1";
-    ```
-
-- View the status of the materialized view named mv1 under db1
-
-    ```sql
-    mysql> select State from mv_infos("database"="db1") where Name = "mv1";
-   ```
+```sql
+select * from mv_infos("database"="test") where Name = "mv1";
+```
+```text
++-------+------+------------------+--------+--------------------+--------------+---------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| Id    | Name | JobName          | State  | SchemaChangeDetail | RefreshState | RefreshInfo                           | QuerySql                                                                                    | MvProperties                                              | MvPartitionInfo                                                                                           | SyncWithBaseTables |
++-------+------+------------------+--------+--------------------+--------------+---------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| 19494 | mv1  | inner_mtmv_19494 | NORMAL |                    | SUCCESS      | BUILD DEFERRED REFRESH AUTO ON MANUAL | SELECT `internal`.`test`.`user`.`k2`, `internal`.`test`.`user`.`k3` FROM `internal`.`test`.`user` | {partition_sync_limit=100, partition_sync_time_unit=YEAR} | MTMVPartitionInfo{partitionType=FOLLOW_BASE_TABLE, relatedTable=user, relatedCol='k2', partitionCol='k2'} |                  1 |
++-------+------+------------------+--------+--------------------+--------------+---------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+```
