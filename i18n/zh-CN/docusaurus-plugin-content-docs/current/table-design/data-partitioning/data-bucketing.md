@@ -69,7 +69,7 @@ DISTRIBUTED BY HASH(region) BUCKETS 8;
 
 在导入数据时，单次导入作业的每个批次会被随机写入到一个 tablet 中，以此保证数据的均匀分布。例如，在一次操作中，8 个批次的数据被随机分配到 `p250102` 分区下的 3 个分桶中。
 
-![random-bucket](/images/random-bucket.png)
+![random-bucket](/images/table-desigin/random-bucket.png)
 
 在使用 Random 分桶时，可以开启单分片导入模式（将 `load_to_single_tablet` 设置为 `true`）。在进行大规模数据导入时，一个批次的数据只会写入到一个数据分片，这有助于提高数据导入的并发度和吞吐量，减少因数据导入和 Compaction 导致的写放大问题，从而保障集群的稳定性。
 
