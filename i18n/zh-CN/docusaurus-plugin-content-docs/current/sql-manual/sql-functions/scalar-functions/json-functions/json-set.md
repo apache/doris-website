@@ -30,7 +30,7 @@ under the License.
 
 ## 语法
 ```sql
-JSON_SET(<jsonStr>,  <jsonPath>,  <val> [, <a>,  <b>,  <c>] ...)
+JSON_SET (<json_str>,  <path>,  <val> [, <path>,  <val>, ...])
 ```
 
 ## 参数

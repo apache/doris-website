@@ -1,7 +1,7 @@
 ---
 {
-    "title": "JSON_EXTRACT",
-    "language": "zh-CN"
+  "title": "JSONB_EXTRACT",
+  "language": "zh-CN"
 }
 ---
 
@@ -24,4 +24,4 @@ specific language governing permissions and limitations
 under the License.
 -->
 ## 描述
-同函数 `JSONB_EXTRACT`。具体用法参考 [JSONB_EXTRACT](./json-extract.md)
+同函数 `JSON_EXTRACT`。具体用法参考 [JSON_EXTRACT](./json-extract.md)
