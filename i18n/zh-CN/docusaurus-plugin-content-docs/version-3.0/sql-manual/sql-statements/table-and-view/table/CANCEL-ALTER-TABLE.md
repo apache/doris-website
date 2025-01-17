@@ -33,14 +33,15 @@ under the License.
 ## 语法
 
 ```sql
-CANCEL ALTER TABLE { COLUMN | ROLLUP } FROM <db_name>.<table_name> [ <job_id1> [ , <job_id2> ... ]]
+CANCEL ALTER TABLE { COLUMN | MATERIALIZED VIEW | ROLLUP } FROM <db_name>.<table_name> [ <job_id1> [ , <job_id2> ... ]]
 ```
 
 ## 必选参数
-**1. `COLUMN|ROLLUP`**
+**1. `{ COLUMN | MATERIALIZED VIEW | ROLLUP }`**
 >指定要取消的修改类型，必须选择其中一个
 >- `COLUMN`：取消对表列的修改操作
->- `ROLLUP`：取消对物化视图的修改操作
+>- `ROLLUP`：取消对视图的修改操作
+>- `MATERIALIZED VIEW`: 取消对物化视图的修改操作
 
 **2.`<db_name>`**
 > 指定数据库的标识符（即名称）。
