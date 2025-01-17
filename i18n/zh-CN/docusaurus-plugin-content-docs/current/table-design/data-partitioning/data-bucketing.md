@@ -104,7 +104,7 @@ DISTRIBUTED BY RANDOM BUCKETS 8;
 
 ## 选择分桶键
 
-:::tip提示
+:::tip 提示
 
 只有 Hash 分桶需要选择分桶键，Random 分桶不需要选择分桶键。
 
@@ -156,7 +156,7 @@ DISTRIBUTED BY RANDOM BUCKETS 8
 | 500GB | 建议分区，每个分区 50GB，每个分区 16-32 个分桶 |
 | 5TB   | 建议分区，每个分区 50GB，每个分桶 16-32 个分桶 |
 
-::: tip 提示
+:::tip 提示
 
 表的数据量可以通过 `SHOW DATA` 命令查看。结果需要除以副本数，及表的数据量。
 
