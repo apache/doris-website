@@ -70,7 +70,7 @@ In each partition, Random Bucketing randomly distributes data to various buckets
 
 During data import, each batch of a single import job will be randomly written to a tablet, ensuring uniform data distribution. For example, in one operation, eight batches of data are randomly allocated to three buckets under partition `p250102`.
 
-![random-bucket](/images/random-bucket.png)
+![random-bucket](/images/table-desigin/random-bucket.png)
 
 When using Random Bucketing, you can enable the single-tablet import mode (set `load_to_single_tablet` to `true`). During large-scale data imports, one batch of data will only be written to one data tablet, helping to improve the concurrency and throughput of data imports, reducing write amplification caused by data imports and Compaction, thereby ensuring cluster stability.
 
