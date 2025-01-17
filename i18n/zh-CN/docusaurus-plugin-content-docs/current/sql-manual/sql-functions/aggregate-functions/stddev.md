@@ -26,6 +26,10 @@ under the License.
 
 返回 expr 表达式的标准差
 
+## 别名
+
+- STDDEV_POP
+
 ## 语法
 
 ```sql

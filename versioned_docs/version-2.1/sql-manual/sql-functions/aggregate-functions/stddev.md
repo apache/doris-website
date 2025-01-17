@@ -26,6 +26,10 @@ under the License.
 
 Returns the standard deviation of the expr expression
 
+## Alias
+
+- STDDEV_POP
+
 ## Syntax
 
 ```sql
