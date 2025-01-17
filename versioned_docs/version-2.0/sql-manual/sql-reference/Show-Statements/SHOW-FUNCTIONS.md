@@ -24,70 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-FUNCTIONS
+## Description
 
-### Name
+View all custom (system-provided) functions in the database.
 
-SHOW FUNCTIONS
+You need to have a 'SHOW' permission on this database
 
-### Description
-
-View all custom (system-provided) functions under the database. If the user specifies a database, then view the corresponding database, otherwise directly query the database where the current session is located
-
-Requires `SHOW` permission on this database
-
-grammar
+## Syntax
 
 ```sql
-SHOW [FULL] [BUILTIN] FUNCTIONS [IN|FROM db] [LIKE 'function_pattern']
+SHOW [<FULL>] [<BUILTIN>] FUNCTIONS IN|FROM <db> [LIKE '<function_pattern>']
 ```
 
-Parameters
+## Parameters
 
->`full`: Indicates the detailed information of the display function
->`builtin`: Indicates the functions provided by the display system
->`db`: database name to query
->`function_pattern`: parameter used to filter function names
+| Parameters | Instructions |
+| -- | -- |
+| `<FULL>` | indicates that detailed information about the function is displayed |
+| `<BUILTIN>` | Indicates a function provided by the display system |
+| `<db>` | Name of the database to be queried |
+| `<function_pattern>` | Parameters used to filter function names |
 
-grammar
+## Return Value
+
+Specifies the result of a function that matches the function name filter under the database
+
+## Examples
 
 ```sql
-SHOW GLOBAL [FULL] FUNCTIONS [LIKE 'function_pattern']
+show full functions in testDb
 ```
 
-Parameters
-
->`global`: Indicates it means that the show function is a global function
->`full`: Indicates the detailed information of the display function
->`function_pattern`: parameter used to filter function names
-
-**Note: the "global" keyword is only available after v2.0**
-
-### Example
+```text
+*************************** 1. row ***************************
+Signature: my_add(INT,INT)
+Return Type: INT
+Function Type: Scalar
+Intermediate Type: NULL
+Properties: {"symbol":"_ZN9doris_udf6AddUdfEPNS_15FunctionContextERKNS_6IntValES4_","object_file":"http://host:port/libudfsample.so","md5":"cfe7a362d10f3aaf6c49974ee0f1f878"}
+*************************** 2. row ***************************
+Signature: my_count(BIGINT)
+Return Type: BIGINT
+Function Type: Aggregate
+Intermediate Type: NULL
+Properties: {"object_file":"http://host:port/libudasample.so","finalize_fn":"_ZN9doris_udf13CountFinalizeEPNS_15FunctionContextERKNS_9BigIntValE","init_fn":"_ZN9doris_udf9CountInitEPNS_15FunctionContextEPNS_9BigIntValE","merge_fn":"_ZN9doris_udf10CountMergeEPNS_15FunctionContextERKNS_9BigIntValEPS2_","md5":"37d185f80f95569e2676da3d5b5b9d2f","update_fn":"_ZN9doris_udf11CountUpdateEPNS_15FunctionContextERKNS_6IntValEPNS_9BigIntValE"}
+*************************** 3. row ***************************
+Signature: id_masking(BIGINT)
+Return Type: VARCHAR
+Function Type: Alias
+Intermediate Type: NULL
+Properties: {"parameter":"id","origin_function":"concat(left(`id`, 3), `****`, right(`id`, 4))"}
+```
 
 ```sql
-mysql> show full functions in testDb\G
-**************************** 1. row ******************** ******
-        Signature: my_add(INT,INT)
-      Return Type: INT
-    Function Type: Scalar
-Intermediate Type: NULL
-       Properties: {"symbol":"_ZN9doris_udf6AddUdfEPNS_15FunctionContextERKNS_6IntValES4_","object_file":"http://host:port/libudfsample.so","md5":"cfe7a362d10f3aaf6c49974ee0f1f878"}
-**************************** 2. row ******************** ******
-        Signature: my_count(BIGINT)
-      Return Type: BIGINT
-    Function Type: Aggregate
-Intermediate Type: NULL
-       Properties: { "object_file": "http: // host: port / libudasample.so", "finalize_fn": "_ZN9doris_udf13CountFinalizeEPNS_15FunctionContextERKNS_9BigIntValE", "init_fn": "_ZN9doris_udf9CountInitEPNS_15FunctionContextEPNS_9BigIntValE", "merge_fn": "_ZN9doris_udf10CountMergeEPNS_15FunctionContextERKNS_9BigIntValEPS2_", "md5": " 37d185f80f95569e2676da3d5b5b9d2f","update_fn":"_ZN9doris_udf11CountUpdateEPNS_15FunctionContextERKNS_6IntValEPNS_9BigIntValE"}
-**************************** 3. row ******************** ******
-        Signature: id_masking(BIGINT)
-      Return Type: VARCHAR
-    Function Type: Alias
-Intermediate Type: NULL
-       Properties: {"parameter":"id","origin_function":"concat(left(`id`, 3), `****`, right(`id`, 4))"}
+show builtin functions in testDb like 'year%';
+```
 
-3 rows in set (0.00 sec)
-mysql> show builtin functions in testDb like 'year%';
+```text
 +---------------+
 | Function Name |
 +---------------+
@@ -96,9 +89,34 @@ mysql> show builtin functions in testDb like 'year%';
 | years_diff    |
 | years_sub     |
 +---------------+
-2 rows in set (0.00 sec)
+```
 
-mysql> show global full functions\G;
+
+## Syntax
+
+```sql
+SHOW GLOBAL [<FULL>] FUNCTIONS [LIKE '<function_pattern>']
+```
+
+## Parameters
+
+| Parameters | Instructions |
+| -- | -- |
+| `<FULL>` | Displays detailed information about the function |
+| `<function_pattern>` | Parameters used to filter function names |
+
+
+## Return Value
+
+Query the result of the function that matches the function name filtering in the database where the current session resides
+
+## Examples
+
+```sql
+show global full functions
+```
+
+```text
 *************************** 1. row ***************************
         Signature: decimal(ALL, INT, INT)
       Return Type: VARCHAR
@@ -111,22 +129,17 @@ Intermediate Type: NULL
     Function Type: Alias
 Intermediate Type: NULL
        Properties: {"parameter":"id","origin_function":"concat(left(`id`, 3), `****`, right(`id`, 4))"}
-2 rows in set (0.00 sec)
-    
-mysql> show global functions ;
+```
+
+```sql
+show global functions
+```
+
+```text
 +---------------+
 | Function Name |
 +---------------+
 | decimal       |
 | id_masking    |
 +---------------+
-2 rows in set (0.00 sec)    
-    
 ```
-
-### Keywords
-
-    SHOW, FUNCTIONS
-
-### Best Practice
-
