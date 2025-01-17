@@ -31,16 +31,16 @@ under the License.
 ## 语法
 
 ```sql
-DOUBLE ST_Angle(GEOPOINT point1, GEOPOINT point2, GEOPOINT point3)
+ST_Angle( <point1>, <point2>, <point3>)
 ```
 
 ## 参数
 
 | 参数       | 说明                       |
 |----------|--------------------------|
-| `point1` | 第一条直线的第一个端点              |
-| `point2` | 第一条直线的第二个端点且是第二条直线的第一个端点 |
-| `point3` | 第二条直线的第二个端点              |
+| `<point1>` | 第一条直线的第一个端点              |
+| `<point2>` | 第一条直线的第二个端点且是第二条直线的第一个端点 |
+| `<point3>` | 第二条直线的第二个端点              |
 
 ## 返回值
 

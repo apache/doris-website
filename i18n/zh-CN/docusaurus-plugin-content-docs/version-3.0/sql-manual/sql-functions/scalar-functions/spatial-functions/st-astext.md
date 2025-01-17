@@ -32,14 +32,14 @@ under the License.
 ## 语法
 
 ```sql
-VARCHAR ST_AsText(GEOMETRY geo)
+ST_AsText( <geo>)
 ```
 
 # 参数
 
 | 参数 | 说明       |
 | -- |----------|
-| `geo` | 待转换的几何图形 |
+| `<geo>` | 待转换的几何图形 |
 
 ## 返回值
 

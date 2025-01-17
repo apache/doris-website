@@ -31,17 +31,17 @@ Calculate the spherical distance in meters between two points on the Earth. The 
 ## Syntax
 
 ```sql
-DOUBLE ST_Distance_Sphere(DOUBLE x_lng, DOUBLE x_lat, DOUBLE y_lng, DOUBLE y_lat)
+ST_Distance_Sphere( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
 ```
 
 ## Parameters
 
 | Parameters | Instructions |
 | -- | -- |
-| `x_lng` | Longitude data, reasonable value range is [-180, 180] |
-| `y_lng` | Longitude data, reasonable value range is [-180, 180] |
-| `x_lat` | Latitude data, reasonable value range is [-90, 90] |
-| `y_lat` | Latitude data, reasonable value range is [-90, 90] |
+| `<x_lng>` | Longitude data, reasonable value range is [-180, 180] |
+| `<y_lng>` | Longitude data, reasonable value range is [-180, 180] |
+| `<x_lat>` | Latitude data, reasonable value range is [-90, 90] |
+| `<y_lat>` | Latitude data, reasonable value range is [-90, 90] |
 
 ## Return Value
 

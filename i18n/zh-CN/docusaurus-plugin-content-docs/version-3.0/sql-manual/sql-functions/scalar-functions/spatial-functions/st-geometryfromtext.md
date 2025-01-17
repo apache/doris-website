@@ -31,13 +31,13 @@ under the License.
 ## 语法
 
 ```sql
-GEOMETRY ST_GeometryFromText(VARCHAR wkt)`
+ST_GeometryFromText( <wkt>)`
 ```
 ## 参数
 
 | 参数 | 说明      |
 | -- |---------|
-| `WKB` | 图形的内存形式 |
+| `<wkt>` | 图形的内存形式 |
 
 ## 返回值
 

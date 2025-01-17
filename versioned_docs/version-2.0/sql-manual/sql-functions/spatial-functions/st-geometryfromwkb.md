@@ -32,13 +32,13 @@ Converts a standard figure WKB (Well-known binary) to the corresponding memory g
 ## Syntax
 
 ```sql
-GEOMETRY ST_GeometryFromWKB(VARCHAR )
+ST_GeometryFromWKB( <wkb>)
 ```
 ## Parameters
 
 | Parameters | Instructions |
-| -- |---------|
-| `WKB` | The memory form of the graph |
+|------------|---------|
+| `<wkb>`  | The memory form of the graph |
 
 ## Return Value
 

@@ -31,14 +31,14 @@ under the License.
 ## 语法
 
 ```sql
-DOUBLE ST_Azimuth(GEOPOINT point1, GEOPOINT point2)`
+ST_Azimuth( <point1>, <point2>)`
 ```
 ## 参数
 
 | 参数       | 说明           |
 |----------|--------------|
-| `point1` | 用于计算方位角的第一个点 |
-| `point2` | 用于计算方位角的第二个点 |
+| `<point1>` | 用于计算方位角的第一个点 |
+| `<point2>` | 用于计算方位角的第二个点 |
 
 ## 返回值
 

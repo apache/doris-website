@@ -31,14 +31,14 @@ Enter two points and return the azimuth of the line segment formed by points 1 a
 ## Syntax
 
 ```sql
-DOUBLE ST_Azimuth(GEOPOINT point1, GEOPOINT point2)`
+ST_Azimuth( <point1>, <point2>)`
 ```
 ## Parameters
 
 | Parameters | Instructions                                   |
 |----------|------------------------------------------------|
-| `point1` | The first point used to calculate the azimuth  |
-| `point2` | The second point used to calculate the azimuth |
+| `<point1>` | The first point used to calculate the azimuth  |
+| `<point2>` | The second point used to calculate the azimuth |
 
 ## Return Value
 

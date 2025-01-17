@@ -31,16 +31,16 @@ Convert a WKT (Well Known Text) to a circle on the sphere of the Earth.
 ## Syntax
 
 ```sql
-GEOMETRY ST_Circle(DOUBLE center_lng, DOUBLE center_lat, DOUBLE radius)
+ST_Circle( <center_lng>, <center_lat>, <radius>)
 ```
 
 ## Parameters
 
 | Parameters | Instructions |
 | -- | -- |
-| `center_lng` | Longitude of the center of the circle |
-| `center_lat` | The latitude of the center of the circle |
-| `radius` | Radius of a circle |
+| `<center_lng>` | Longitude of the center of the circle |
+| `<center_lat>` | The latitude of the center of the circle |
+| `<radius>` | Radius of a circle |
 
 - The unit of radius is meters. A maximum of 9999999 RADIUS is supported
 

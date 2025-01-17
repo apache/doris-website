@@ -31,14 +31,14 @@ under the License.
 ## 语法
 
 ```sql
-GEOMETRY ST_LineFromText(VARCHAR wkt)
+ST_LineFromText( <wkt>)
 ```
 
 ## 参数
 
 | 参数  | 说明         |
 |-----|------------|
-| `wkt` | 由两个坐标组成的线段 |
+| `<wkt>` | 由两个坐标组成的线段 |
 
 ## 返回值
 

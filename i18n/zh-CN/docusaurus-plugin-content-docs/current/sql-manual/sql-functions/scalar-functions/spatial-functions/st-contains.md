@@ -30,15 +30,15 @@ under the License.
 
 ## 语法
 ```sql
-BOOL ST_Contains(GEOMETRY shape1, GEOMETRY shape2)
+ST_Contains( <shape1>, <shape2>)
 ```
 
 ## 参数
 
 | 参数       | 说明                     |
 |----------|------------------------|
-| `shape1` | 传入的几何图形，用于判断是否包含 shape2 |
-| `shape2` | 传入的几何图形，用于判断是被 shape1 包含 |
+| `<shape1>` | 传入的几何图形，用于判断是否包含 shape2 |
+| `<shape2>` | 传入的几何图形，用于判断是被 shape1 包含 |
 
 ## 返回值
 

@@ -33,14 +33,14 @@ under the License.
 ## 语法
 
 ```sql
-VARCHAR ST_AsBinary(GEOMETRY geo)
+ST_AsBinary( <geo>)
 ```
 
 ## 参数
 
 | 参数 | 说明       |
 | -- |----------|
-| `geo` | 需要被转换的图形 |
+| `<geo>` | 需要被转换的图形 |
 
 ## 返回值
 

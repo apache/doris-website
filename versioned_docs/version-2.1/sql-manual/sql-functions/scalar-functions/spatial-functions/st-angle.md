@@ -31,16 +31,16 @@ Enter three points that represent two intersecting lines. Return the Angle betwe
 ## Syntax
 
 ```sql
-DOUBLE ST_Angle(GEOPOINT point1, GEOPOINT point2, GEOPOINT point3)
+ST_Angle( <point1>, <point2>, <point3>)
 ```
 
 ## Parameters
 
 | Parameters       | Instructions                                                              |
 |----------|---------------------------------------------------------------------------|
-| `point1` | The first point of the first line                                         |
-| `point2` | The second point of the first line and the first point of the second line |
-| `point3` | The second point of the second line                                       |
+| `<point1>` | The first point of the first line                                         |
+| `<point2>` | The second point of the first line and the first point of the second line |
+| `<point3>` | The second point of the second line                                       |
 
 ## Return Value
 

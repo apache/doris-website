@@ -31,13 +31,13 @@ Convert a linear WKT (Well Known Text) to the corresponding memory geometry
 ## Syntax
 
 ```sql
-GEOMETRY ST_GeometryFromText(VARCHAR wkt)`
+ST_GeometryFromText( <wkt>)`
 ```
 ## Parameters
 
 | Parameters | Instructions |
-| -- |---------|
-| `WKB` | The memory form of the graph |
+|------------|---------|
+| `<wkt>`    | The memory form of the graph |
 
 ## Return Value
 

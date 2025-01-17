@@ -31,14 +31,14 @@ Convert a geometric figure to a representation of WKT (Well Known Text)
 ## Syntax
 
 ```sql
-VARCHAR ST_AsText(GEOMETRY geo)
+ST_AsText( <geo>)
 ```
 
 ## Parameters
 
 | Parameters | Instructions |
 | -- |----------|
-| `geo` | The graph that needs to be converted |
+| `<geo>` | The graph that needs to be converted |
 
 ## Return Value
 

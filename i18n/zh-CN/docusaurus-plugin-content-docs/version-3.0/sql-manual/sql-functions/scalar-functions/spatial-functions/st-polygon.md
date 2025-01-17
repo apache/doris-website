@@ -31,14 +31,14 @@ under the License.
 ## 语法
 
 ```sql
-GEOMETRY ST_Polygon(VARCHAR wkt)
+ST_Polygon( <wkt>)
 ```
 
 ## 参数
 
 | 参数   | 说明                 |
 |------|--------------------|
-| `wkt` | 由 POLYGON 函数生成的一个多边形 |
+| `<wkt>` | 由 POLYGON 函数生成的一个多边形 |
 
 ## 返回值
 

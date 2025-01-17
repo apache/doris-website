@@ -27,20 +27,21 @@ under the License.
 ## Description
 
 Calculate the center Angle between two points on the Earth's surface in degrees. The parameters passed in are the longitude of point X, latitude of point X, longitude of point Y, and latitude of point Y.
+
 ## Syntax
 
 ```sql
-DOUBLE ST_Angle_Sphere(DOUBLE x_lng, DOUBLE x_lat, DOUBLE y_lng, DOUBLE y_lat)
+ST_Angle_Sphere( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
 ```
 
 ## Parameters
 
 | Parameters | Instructions |
 | -- | -- |
-| `x_lng` | Longitude data, reasonable value range is [-180, 180] |
-| `y_lng` | Longitude data, reasonable value range is [-180, 180] |
-| `x_lat` | Latitude data, reasonable value range is [-90, 90] |
-| `y_lat` | Latitude data, reasonable value range is [-90, 90] |
+| `<x_lng>` | Longitude data, reasonable value range is [-180, 180] |
+| `<y_lng>` | Longitude data, reasonable value range is [-180, 180] |
+| `<x_lat>` | Latitude data, reasonable value range is [-90, 90] |
+| `<y_lat>` | Latitude data, reasonable value range is [-90, 90] |
 
 ## Return Value
 

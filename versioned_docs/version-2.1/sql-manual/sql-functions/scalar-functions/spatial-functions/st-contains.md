@@ -31,15 +31,15 @@ Determines whether the geometry shape1 is fully capable of containing the geomet
 ## Syntax
 
 ```sql
-BOOL ST_Contains(GEOMETRY shape1, GEOMETRY shape2)
+ST_Contains( <shape1>, <shape2>)
 ```
 
 ## Parameters
 
 | Parameters | Instructions |
 |----------|------------------------|
-| `shape1` | The passed geometry used to determine whether shape2 is included |
-| `shape2` | The passed geometry is used to determine whether shape1 is included |
+| `<shape1>` | The passed geometry used to determine whether shape2 is included |
+| `<shape2>` | The passed geometry is used to determine whether shape1 is included |
 
 ## Return Value
 

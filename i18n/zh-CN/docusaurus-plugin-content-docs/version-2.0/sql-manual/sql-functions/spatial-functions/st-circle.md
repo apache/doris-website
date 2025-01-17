@@ -31,15 +31,15 @@ under the License.
 ## 语法
 
 ```sql
-GEOMETRY ST_Circle(DOUBLE center_lng, DOUBLE center_lat, DOUBLE radius)
+ST_Circle( <center_lng>, <center_lat>, <radius>)
 ```
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `center_lng` | 圆心的经度 |
-| `center_lat` | 圆心的纬度 |
-| `radius` | 圆的半径 |
+| `<center_lng>` | 圆心的经度 |
+| `<center_lat>` | 圆心的纬度 |
+| `<radius>` | 圆的半径 |
 
 - radius 单位是米，最大支持 9999999
 

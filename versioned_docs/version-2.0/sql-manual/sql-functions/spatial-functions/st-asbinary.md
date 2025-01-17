@@ -33,18 +33,18 @@ At present, the supported geometry is: Point, LineString, Polygon.
 ## Syntax
 
 ```sql
-VARCHAR ST_AsBinary(GEOMETRY geo)
+ST_AsBinary( <geo>)
 ```
 
 ## Parameters
 
 | Parameters | Instructions |
 | -- |----------|
-| `geo` | The graph that needs to be converted |
+| `<geo>` | The graph that needs to be converted |
 
 ## Return Value
 
-The WKB representation of the geometry:
+The WKB representation of the geometry
 
 ## Examples
 

@@ -31,13 +31,15 @@ When point is a valid POINT type, return the corresponding x-coordinate value
 
 ## Syntax
 
-`DOUBLE ST_X(POINT point)`
+```sql
+ST_X( <point>)
+```
 
 ## Parameters
 
 | Parameters | Instructions |
 |------|----------|
-| `point` | The geometric coordinates of a two-dimensional point |
+| `<point>` | The geometric coordinates of a two-dimensional point |
 
 ## Return Value
 

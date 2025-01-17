@@ -33,14 +33,14 @@ The current value is only meaningful in the sphere set, X/Y corresponds to longi
 ## Syntax
 
 ```sql
-POINT ST_Point(DOUBLE x, DOUBLE y)
+ST_Point( <x>, <y>)
 ```
 ## Parameters
 
 | Parameters | Instructions |
 |-----|--------------|
-| `x` | x-coordinate |
-| `y` | y-coordinate |
+| `<x>` | x-coordinate |
+| `<y>` | y-coordinate |
 
 ## Return Value
 

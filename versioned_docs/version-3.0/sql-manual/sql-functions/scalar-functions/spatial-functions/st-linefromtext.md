@@ -31,14 +31,14 @@ Converts a WKT (Well Known Text) to a memory representation in the form of a Lin
 ## Syntax
 
 ```sql
-GEOMETRY ST_LineFromText(VARCHAR wkt)
+ST_LineFromText( <wkt>)
 ```
 
 ## Parameters
 
 | Parameters  | Instructions         |
 |-----|------------|
-| `wkt` | A line segment consisting of two coordinates |
+| `<wkt>` | A line segment consisting of two coordinates |
 
 ## Return Value
 

@@ -30,13 +30,15 @@ under the License.
 
 ## 语法
 
-`DOUBLE ST_Y(POINT point)`
+```sql
+ST_Y( <point>)
+```
 
 ## 参数
 
 | 参数   | 说明       |
 |------|----------|
-| `point` | 二维点的几何坐标 |
+| `<point>` | 二维点的几何坐标 |
 
 ## 返回值
 

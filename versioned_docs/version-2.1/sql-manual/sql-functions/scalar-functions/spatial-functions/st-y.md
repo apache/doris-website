@@ -30,13 +30,15 @@ When point is a valid POINT type, return the corresponding y-coordinate value
 
 ## Syntax
 
-`DOUBLE ST_Y(POINT point)`
+```sql
+ST_Y( <point>)
+```
 
 ## Parameters
 
 | Parameters | Instructions |
 |------|----------|
-| `point` | The geometric coordinates of a two-dimensional point |
+| `<point>` | The geometric coordinates of a two-dimensional point |
 
 ## Return Value
 
