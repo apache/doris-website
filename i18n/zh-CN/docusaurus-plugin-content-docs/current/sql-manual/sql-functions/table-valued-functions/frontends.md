@@ -40,25 +40,28 @@ FRONTENDS()
 | ADMIN_PRIV       | 全局         |               |
 
 ## 返回值
-- **Name**：frontend 节点的唯一名称。
-- **Host**：frontend 节点的 IP 地址或主机名。
-- **EditLogPort**：用于编辑日志通信的端口。
-- **HttpPort**：frontend 节点的 HTTP 端口。
-- **QueryPort**：frontend 节点用于执行查询的端口。
-- **RpcPort**：用于 RPC 通信的端口。
-- **ArrowFlightSqlPort**：Arrow Flight SQL 端口（用于与 Apache Arrow 集成，进行高性能数据传输）。
-- **Role**：frontend 节点的角色（例如：`FOLLOWER`）。
-- **IsMaster**：表示该节点是否是主节点（true/false）。
-- **ClusterId**：该 frontend 节点所属集群的标识符。
-- **Join**：表示该 frontend 节点是否已经加入集群（true/false）。
-- **Alive**：表示该 frontend 节点是否存活（true/false）。
-- **ReplayedJournalId**：该 frontend 节点最后重放的日志 ID。
-- **LastStartTime**：该 frontend 节点最后一次启动的时间戳。
-- **LastHeartbeat**：该 frontend 节点接收到的最后一次心跳时间戳。
-- **IsHelper**：表示该 frontend 节点是否是辅助节点（true/false）。
-- **ErrMsg**：该 frontend 节点的错误信息。
-- **Version**：该 frontend 节点的版本。
-- **CurrentConnected**：表示该 frontend 节点当前是否连接到集群（Yes/No）。
+| Field                  | Description                                         |
+|------------------------|-----------------------------------------------------|
+| **Name**               | Frontend 节点的唯一名称。                                   |
+| **Host**               | Frontend 节点的 IP 地址或主机名。                             |
+| **EditLogPort**        | 用于编辑日志通信的端口。                                        |
+| **HttpPort**           | Frontend 节点的 HTTP 端口。                               |
+| **QueryPort**          | Frontend 节点用于执行查询的端口。                               |
+| **RpcPort**            | 用于 RPC 通信的端口。                                       |
+| **ArrowFlightSqlPort** | Arrow Flight SQL 端口（用于与 Apache Arrow 集成，进行高性能数据传输）。 |
+| **Role**               | Frontend 节点的角色（例如：`FOLLOWER`）。                      |
+| **IsMaster**           | 表示该节点是否是主节点（True/False）。                            |
+| **ClusterId**          | 该 Frontend 节点所属集群的标识符。                              |
+| **Join**               | 表示该 Frontend 节点是否已经加入集群（True/False）。                |
+| **Alive**              | 表示该 Frontend 节点是否存活（True/False）。                    |
+| **ReplayedJournalId**  | 该 Frontend 节点最后重放的日志 ID。                            |
+| **LastStartTime**      | 该 Frontend 节点最后一次启动的时间戳。                            |
+| **LastHeartbeat**      | 该 Frontend 节点接收到的最后一次心跳时间戳。                         |
+| **IsHelper**           | 表示该 Frontend 节点是否是辅助节点（True/False）。                 |
+| **ErrMsg**             | 该 Frontend 节点的错误信息。                                 |
+| **Version**            | 该 Frontend 节点的版本。                                   |
+| **CurrentConnected**   | 表示该 Frontend 节点当前是否连接到集群（Yes/No）。                   |
+
 
 
 ## 示例

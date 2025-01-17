@@ -40,24 +40,27 @@ FRONTENDS()
 | ADMIN_PRIV | global |       |
 
 ## Return Value
-- **Name**: The unique name of the frontend node.
-- **Host**: The IP address or hostname of the frontend node.
-- **EditLogPort**: The port used for edit log communication.
-- **HttpPort**: The HTTP port for the frontend node.
-- **QueryPort**: The port used for query execution on the frontend node.
-- **RpcPort**: The port used for RPC communication.
-- **ArrowFlightSqlPort**: The Arrow Flight SQL port (used for integration with Apache Arrow for high-performance data transport).
-- **Role**: The role of the frontend node (e.g., `FOLLOWER`).
-- **IsMaster**: Indicates whether the node is a master node (true/false).
-- **ClusterId**: The identifier for the cluster to which the frontend node belongs.
-- **Join**: Indicates if the frontend node is part of the cluster (true/false).
-- **Alive**: Indicates if the frontend node is alive (true/false).
-- **ReplayedJournalId**: The last journal ID that was replayed by the frontend node.
-- **LastStartTime**: The timestamp of the last start time of the frontend node.
-- **LastHeartbeat**: The timestamp for the last heartbeat received from the frontend node.
-- **IsHelper**: Indicates whether the frontend node is a helper node (true/false).
-- **ErrMsg**: Any error messages reported by the frontend node.
-- **Version**: The version of the frontend node.
+| Field                    | Description                                                                                             |
+|--------------------------|---------------------------------------------------------------------------------------------------------|
+| **Name**                 | The unique name of the frontend node.                                                                   |
+| **Host**                 | The IP address or hostname of the frontend node.                                                        |
+| **EditLogPort**          | The port used for edit log communication.                                                               |
+| **HttpPort**             | The HTTP port for the frontend node.                                                                    |
+| **QueryPort**            | The port used for query execution on the frontend node.                                                 |
+| **RpcPort**              | The port used for RPC communication.                                                                    |
+| **ArrowFlightSqlPort**   | The Arrow Flight SQL port (used for integration with Apache Arrow for high-performance data transport). |
+| **Role**                 | The role of the frontend node (e.g., `FOLLOWER`).                                                       |
+| **IsMaster**             | Indicates whether the node is a master node (true/false).                                               |
+| **ClusterId**            | The identifier for the cluster to which the frontend node belongs.                                      |
+| **Join**                 | Indicates if the frontend node is part of the cluster (true/false).                                     |
+| **Alive**                | Indicates if the frontend node is alive (true/false).                                                   |
+| **ReplayedJournalId**    | The last journal ID that was replayed by the frontend node.                                             |
+| **LastStartTime**        | The timestamp of the last start time of the frontend node.                                              |
+| **LastHeartbeat**        | The timestamp for the last heartbeat received from the frontend node.                                   |
+| **IsHelper**             | Indicates whether the frontend node is a helper node (true/false).                                      |
+| **ErrMsg**               | Any error messages reported by the frontend node.                                                       |
+| **Version**              | The version of the frontend node.                                                                       |
+
 
 ## Examples
 show frontends cluster information

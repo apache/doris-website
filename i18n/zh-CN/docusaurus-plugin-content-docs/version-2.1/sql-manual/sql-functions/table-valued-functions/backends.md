@@ -1,7 +1,7 @@
 ---
 {
-    "title": "BACKENDS",
-    "language": "zh-CN"
+  "title": "BACKENDS",
+  "language": "zh-CN"
 }
 ---
 
@@ -40,34 +40,36 @@ BACKENDS()
 | ADMIN_PRIV       | 全局         |               |
 
 ## 返回值
+| Field                       | Description                                         |
+|-----------------------------|-----------------------------------------------------|
+| **BackendId**               | 每个 Backend 节点的唯一标识符。                                |
+| **Host**                    | Backend 节点的 IP 地址或主机名。                              |
+| **HeartbeatPort**           | 用于健康检查（心跳）的端口。                                      |
+| **BePort**                  | Backend 节点与集群通信时使用的端口。                              |
+| **HttpPort**                | Backend 节点的 HTTP 端口。                                |
+| **BrpcPort**                | 用于 BRPC 通信的端口。                                      |
+| **ArrowFlightSqlPort**      | Arrow Flight SQL 端口（用于与 Apache Arrow 集成，进行高性能数据传输）。 |
+| **LastStartTime**           | Backend 节点最后一次启动的时间戳。                               |
+| **LastHeartbeat**           | 接收到的最后一次心跳时间戳。                                      |
+| **Alive**                   | Backend 节点是否处于活动状态（True/False）。                     |
+| **SystemDecommissioned**    | 该 Backend 节点是否已被弃用。                                 |
+| **TabletNum**               | 该 Backend 节点管理的 Tablet 数量。                          |
+| **DataUsedCapacity**        | 该 Backend 节点使用的磁盘空间（以 MB 为单位）。                      |
+| **TrashUsedCapacity**       | 该 Backend 节点垃圾空间的使用情况（以 MB 为单位）。                    |
+| **AvailCapacity**           | 该 Backend 节点的可用磁盘空间。                                |
+| **TotalCapacity**           | 该 Backend 节点的总磁盘容量。                                 |
+| **UsedPct**                 | 该 Backend 节点的磁盘使用百分比。                               |
+| **MaxDiskUsedPct**          | 所有 Tablet 的最大磁盘使用百分比。                               |
+| **RemoteUsedCapacity**      | 远程存储的磁盘空间使用情况（如果适用）。                                |
+| **Tag**                     | 与 Backend 节点关联的标签，通常用于节点分类（例如，位置等）。                 |
+| **ErrMsg**                  | Backend 节点的错误信息。                                    |
+| **Version**                 | Backend 节点的版本。                                      |
+| **Status**                  | Backend 节点的当前状态，包括 Tablet 的成功/失败报告、加载时间和查询状态等。      |
+| **HeartbeatFailureCounter** | 心跳失败的计数，如果有的话。                                      |
+| **NodeRole**                | Backend 节点的角色，例如 `mix` 表示节点同时处理存储和查询。               |
+| **CpuCores**                | Backend 节点的 CPU 核心数。                                |
+| **Memory**                  | Backend 节点的内存大小。                                    |
 
-- **BackendId**：每个 backend 节点的唯一标识符。
-- **Host**：backend 节点的 IP 地址或主机名。
-- **HeartbeatPort**：用于健康检查（心跳）的端口。
-- **BePort**：backend 节点与集群通信时使用的端口。
-- **HttpPort**：backend 节点的 HTTP 端口。
-- **BrpcPort**：用于 BRPC 通信的端口。
-- **ArrowFlightSqlPort**：Arrow Flight SQL 端口（用于与 Apache Arrow 集成，进行高性能数据传输）。
-- **LastStartTime**：backend 节点最后一次启动的时间戳。
-- **LastHeartbeat**：接收到的最后一次心跳时间戳。
-- **Alive**：backend 节点是否处于活动状态（true/false）。
-- **SystemDecommissioned**：该 backend 节点是否已被弃用。
-- **TabletNum**：该 backend 节点管理的 tablet 数量。
-- **DataUsedCapacity**：该 backend 节点使用的磁盘空间（以 MB 为单位）。
-- **TrashUsedCapacity**：该 backend 节点垃圾空间的使用情况（以 MB 为单位）。
-- **AvailCapacity**：该 backend 节点的可用磁盘空间。
-- **TotalCapacity**：该 backend 节点的总磁盘容量。
-- **UsedPct**：该 backend 节点的磁盘使用百分比。
-- **MaxDiskUsedPct**：所有 tablet 的最大磁盘使用百分比。
-- **RemoteUsedCapacity**：远程存储的磁盘空间使用情况（如果适用）。
-- **Tag**：与 backend 节点关联的标签，通常用于节点分类（例如，位置等）。
-- **ErrMsg**：backend 节点的错误信息。
-- **Version**：backend 节点的版本。
-- **Status**：backend 节点的当前状态，包括 tablet 的成功/失败报告、加载时间和查询状态等。
-- **HeartbeatFailureCounter**：心跳失败的计数，如果有的话。
-- **NodeRole**：backend 节点的角色，例如 `mix` 表示节点同时处理存储和查询。
-- **CpuCores**：backend 节点的 CPU 核心数。
-- **Memory**：backend 节点的内存大小。
 
 ## 示例
 查看 backends 集群信息

@@ -1,7 +1,7 @@
 ---
 {
-    "title": "BACKENDS",
-    "language": "en"
+  "title": "BACKENDS",
+  "language": "en"
 }
 ---
 
@@ -40,33 +40,36 @@ BACKENDS()
 | ADMIN_PRIV | global |       |
 
 ## Return Value
-- **BackendId**: The unique identifier for each backend node.
-- **Host**: The IP address or hostname of the backend node.
-- **HeartbeatPort**: The port used for health checks (heartbeat).
-- **BePort**: The port used for communication between the backend node and the cluster for query execution.
-- **HttpPort**: The HTTP port of the backend node.
-- **BrpcPort**: The port used for BRPC communication.
-- **ArrowFlightSqlPort**: The Arrow Flight SQL port (used for integration with Apache Arrow for high-performance data transport).
-- **LastStartTime**: The timestamp for the last start time of the backend node.
-- **LastHeartbeat**: The timestamp for the last heartbeat received from the backend node.
-- **Alive**: Whether the backend node is alive (true/false).
-- **SystemDecommissioned**: Whether the backend node has been decommissioned.
-- **TabletNum**: The number of tablets managed by the backend node.
-- **DataUsedCapacity**: The amount of disk space used by the backend node (in MB).
-- **TrashUsedCapacity**: The amount of disk space used by trash (in MB).
-- **AvailCapacity**: The available disk space on the backend node.
-- **TotalCapacity**: The total disk capacity of the backend node.
-- **UsedPct**: The percentage of disk capacity used by the backend node.
-- **MaxDiskUsedPct**: The maximum disk usage percentage across all tablets.
-- **RemoteUsedCapacity**: The disk space used by remote storage (if applicable).
-- **Tag**: Tags associated with the backend node, typically used for categorization (e.g., location).
-- **ErrMsg**: Error messages reported by the backend node.
-- **Version**: The version of the backend node.
-- **Status**: The current status of the backend node, including success/failure reports for tablets, load times, and query statuses.
-- **HeartbeatFailureCounter**: The count of heartbeat failures, if any.
-- **NodeRole**: The role of the backend node, such as `mix`, which means the node handles both storage and query processing.
-- **CpuCores**: The number of CPU cores on the backend node.
-- **Memory**: The amount of memory on the backend node.
+| Field                       | Description                                                                                                            |
+|-----------------------------|------------------------------------------------------------------------------------------------------------------------|
+| **BackendId**               | The unique identifier for each backend node.                                                                           |
+| **Host**                    | The IP address or hostname of the backend node.                                                                        |
+| **HeartbeatPort**           | The port used for health checks (heartbeat).                                                                           |
+| **BePort**                  | The port used for communication between the backend node and the cluster for query execution.                          |
+| **HttpPort**                | The HTTP port of the backend node.                                                                                     |
+| **BrpcPort**                | The port used for BRPC communication.                                                                                  |
+| **ArrowFlightSqlPort**      | The Arrow Flight SQL port (used for integration with Apache Arrow for high-performance data transport).                |
+| **LastStartTime**           | The timestamp for the last start time of the backend node.                                                             |
+| **LastHeartbeat**           | The timestamp for the last heartbeat received from the backend node.                                                   |
+| **Alive**                   | Whether the backend node is alive (true/false).                                                                        |
+| **SystemDecommissioned**    | Whether the backend node has been decommissioned.                                                                      |
+| **TabletNum**               | The number of tablets managed by the backend node.                                                                     |
+| **DataUsedCapacity**        | The amount of disk space used by the backend node (in MB).                                                             |
+| **TrashUsedCapacity**       | The amount of disk space used by trash (in MB).                                                                        |
+| **AvailCapacity**           | The available disk space on the backend node.                                                                          |
+| **TotalCapacity**           | The total disk capacity of the backend node.                                                                           |
+| **UsedPct**                 | The percentage of disk capacity used by the backend node.                                                              |
+| **MaxDiskUsedPct**          | The maximum disk usage percentage across all tablets.                                                                  |
+| **RemoteUsedCapacity**      | The disk space used by remote storage (if applicable).                                                                 |
+| **Tag**                     | Tags associated with the backend node, typically used for categorization (e.g., location).                             |
+| **ErrMsg**                  | Error messages reported by the backend node.                                                                           |
+| **Version**                 | The version of the backend node.                                                                                       |
+| **Status**                  | The current status of the backend node, including success/failure reports for tablets, load times, and query statuses. |
+| **HeartbeatFailureCounter** | The count of heartbeat failures, if any.                                                                               |
+| **NodeRole**                | The role of the backend node, such as `mix`, which means the node handles both storage and query processing.           |
+| **CpuCores**                | The number of CPU cores on the backend node.                                                                           |
+| **Memory**                  | The amount of memory on the backend node.                                                                              |
+
 
 ## Examples
 show backends cluster information
