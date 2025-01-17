@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-TRUNCATE TABLE [<db_name>.]<table_name>[ PARTITION ( <partition_name1> [, partition_name2 ... ] ) ];
+TRUNCATE TABLE [<db_name>.]<table_name>[ PARTITION ( <partition_name1> [, <partition_name2> ... ] ) ];
 ```
 ## 必选参数
 

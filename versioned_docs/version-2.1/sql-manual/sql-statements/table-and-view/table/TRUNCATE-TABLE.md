@@ -32,7 +32,7 @@ This statement is used to clear the data of the specified table and partition.
 ## Syntax
 
 ```sql
-TRUNCATE TABLE [<db_name>.]<table_name>[ PARTITION ( <partition_name1> [, partition_name2 ... ] ) ];
+TRUNCATE TABLE [<db_name>.]<table_name>[ PARTITION ( <partition_name1> [, <partition_name2> ... ] ) ];
 ```
 ## Required Parameters
 
