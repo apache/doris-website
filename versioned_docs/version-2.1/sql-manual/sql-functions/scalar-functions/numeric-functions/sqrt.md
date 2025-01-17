@@ -35,7 +35,7 @@ Returns the square root of a value, where the input value must be greater than o
 ## Syntax
 
 ```sql
-sqrt(<a>)
+SQRT(<a>)
 ```
 
 ## Parameters

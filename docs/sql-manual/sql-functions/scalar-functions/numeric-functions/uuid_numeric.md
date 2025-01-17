@@ -31,7 +31,7 @@ Return a LARGEINT type uuid
 ## Syntax
 
 ```sql
-uuid_numeric()
+UUID_NUMERIC()
 ```
 
 ## Return Value

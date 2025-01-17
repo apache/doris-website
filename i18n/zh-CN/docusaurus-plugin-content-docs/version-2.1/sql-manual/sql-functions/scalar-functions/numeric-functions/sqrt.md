@@ -35,7 +35,7 @@ under the License.
 ## 语法
 
 ```sql
-sqrt(<a>)
+SQRT(<a>)
 ```
 
 ## 参数

@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-uuid_numeric()
+UUID_NUMERIC()
 ```
 
 ## 返回值

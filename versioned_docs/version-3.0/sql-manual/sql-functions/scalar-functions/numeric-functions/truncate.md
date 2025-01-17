@@ -29,7 +29,7 @@ Perform numerical truncation on x to the number of decimal places d
 ## Syntax
 
 ```sql
-truncate(<x>,<d>)
+TRUNCATE(<x>, <d>)
 ```
 
 ## Parameters

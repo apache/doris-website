@@ -33,7 +33,7 @@ under the License.
 ## 语法
 
 ```sql
-width_bucket(<expr>,<min_value>,<max_value>,<num_buckets>)
+WIDTH_BUCKET(<expr>, <min_value>, <max_value>, <num_buckets>)
 ```
 
 ## 参数

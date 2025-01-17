@@ -29,7 +29,7 @@ under the License.
 ## 语法
 
 ```sql
-tan(<x>)
+TAN(<x>)
 ```
 
 ## 参数

@@ -33,7 +33,7 @@ Construct an equal-width histogram, where the histogram range is divided into eq
 ## Syntax
 
 ```sql
-width_bucket(<expr>,<min_value>,<max_value>,<num_buckets>)
+WIDTH_BUCKET(<expr>, <min_value>, <max_value>, <num_buckets>)
 ```
 
 ## Parameters

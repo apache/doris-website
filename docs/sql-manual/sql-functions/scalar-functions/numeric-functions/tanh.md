@@ -29,7 +29,7 @@ Returns the hyperbolic tangent of x.
 ## Syntax
 
 ```sql
-tanh(<x>)
+TANH(<x>)
 ```
 
 ## Parameters

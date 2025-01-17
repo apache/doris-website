@@ -29,7 +29,7 @@ under the License.
 ## 语法
 
 ```sql
-truncate(<x>,<d>)
+TRUNCATE(<x>, <d>)
 ```
 
 ## 参数
