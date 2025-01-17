@@ -18,7 +18,7 @@ FIRST_VALUE() is a window function that returns the first value in an ordered se
 ## Syntax
 
 ```sql
-FIRST_VALUE(expr[, ignore_null])
+FIRST_VALUE(<expr>, <ignore_null>)
 ```
 
 ## Parameters
