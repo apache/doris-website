@@ -322,10 +322,6 @@ const config = {
                         position: 'right',
                         dropdownItemsAfter: [
                             {
-                                type: 'html',
-                                value: '<hr class="dropdown-separator">',
-                            },
-                            {
                                 label: '归档文档',
                                 to: `/zh-CN/archive-docs`,
                             },
@@ -353,10 +349,6 @@ const config = {
                         type: 'docsVersionDropdown',
                         position: 'right',
                         dropdownItemsAfter: [
-                            {
-                                type: 'html',
-                                value: '<hr class="dropdown-separator">',
-                            },
                             {
                                 label: 'Archived Docs',
                                 to: `/archive-docs`,

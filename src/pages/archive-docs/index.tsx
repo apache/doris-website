@@ -75,7 +75,7 @@ export default function Archive() {
                                         onClick={() =>
                                             downloadFile(
                                                 isZH ? DOWNLOAD_LINK_ZH : DOWNLOAD_LINK_EN,
-                                                isZH ? 'Apache Doris v1.2 中文文档' : 'Apache Doris v1.2',
+                                                isZH ? 'Apache Doris v1.2 中文文档.pdf' : 'Apache Doris v1.2.pdf',
                                             )
                                         }
                                         className="download-link"
