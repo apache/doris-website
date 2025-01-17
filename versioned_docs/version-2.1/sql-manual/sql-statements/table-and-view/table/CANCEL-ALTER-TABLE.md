@@ -32,11 +32,11 @@ This statement is used to cancel (revoke) an ongoing ALTER TABLE operation. You 
 ## Syntax
 
 ```sql
-CANCEL ALTER TABLE <COLUMN|ROLLUP> FROM <db_name>.<table_name> [ <job_id1> [ , <job_id2> ... ]]
+CANCEL ALTER TABLE COLUMN|ROLLUP FROM <db_name>.<table_name> [ <job_id1> [ , <job_id2> ... ]]
 ```
 
 ## Required Parameters
-**1. `<COLUMN|ROLLUP>`**
+**1. `COLUMN|ROLLUP`**
 >Specify the type of modification to cancel, must choose one of:
 >- COLUMN: Cancel table column modification operations
 >- ROLLUP: Cancel materialized view modification operations
