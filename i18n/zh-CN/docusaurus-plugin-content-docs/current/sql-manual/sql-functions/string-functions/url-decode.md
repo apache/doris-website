@@ -25,30 +25,27 @@ under the License.
 -->
 
 ## url_decode
-### description
+## 描述
 
 将URL转换为解码字符串。
 
-#### Syntax
+## 语法
 
 ```sql
 VARCHAR url_decode(VARCHAR url)
 ```
 
-### Parameters
+## 必选参数
 
 - url: 待解码的url。
 
-### example
+## 示例
 
 ```
-mysql> mysql> select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
+mysql> select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
 +------------------------------------------------+
 | url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions') |
 +------------------------------------------------+
 | https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/string-functions                               |
 +------------------------------------------------+
 ```
-
-### keywords
-    URL DECODE
