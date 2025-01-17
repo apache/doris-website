@@ -33,18 +33,23 @@ under the License.
 ## 语法
 
 ```sql
-URL_DECODE(' STRING ') 
+URL_DECODE( <str> ) 
 ```
 
-### Parameters
+## 必选参数
+| 参数 | 描述 |
+|------|------|
+| `str` | 待解码的字符串 |
 
--  STRING: 待编码的字符串。
+## 返回值
 
-## 举例
+解码后的值
+
+## 示例
 
 ```sql
 
-mysql> select  URL_DECODE('Doris+Q%26A');
+select  URL_DECODE('Doris+Q%26A');
 +---------------------------+
 | url_decode('Doris+Q%26A') |
 +---------------------------+

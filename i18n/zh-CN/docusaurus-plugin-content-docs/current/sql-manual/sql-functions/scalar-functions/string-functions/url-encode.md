@@ -32,17 +32,21 @@ under the License.
 ## 语法
 
 ```sql
-URL_ENCODE(' STRING ') 
+URL_ENCODE(  <str>  ) 
 ```
 
 ## 必选参数
 
--  STRING: 待编码的字符串。
+| 参数 | 描述 |
+|------|------|
+| `str` | 待编码的字符串 |
+
+## 返回值
 
 ## 示例
 
 ```sql
-mysql> select  URL_ENCODE('Doris Q&A');
+select  URL_ENCODE('Doris Q&A');
 +-------------------------+
 | url_encode('Doris Q&A') |
 +-------------------------+

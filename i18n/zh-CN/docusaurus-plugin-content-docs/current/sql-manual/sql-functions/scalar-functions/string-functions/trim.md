@@ -27,28 +27,42 @@ under the License.
 
 ## 描述
 
-用于删除字符串两端的空格或指定字符
+用于删除字符串两端的空格或指定字符，当没有rhs参数时，将参数 str 中右侧和左侧开始部分连续出现的空格去掉，否则去掉rhs
 
 ## 语法
 
 ```sql
-trim( str [, VARCHAR rhs])
+RTIM( <str> [ , <rhs>])
 ```
+## 必选参数
 
-## 注意事项
-当没有rhs参数时，将参数 str 中右侧和左侧开始部分连续出现的空格去掉，否则去掉rhs
+| 参数 | 描述 |
+|------|------|
+| `str` | 删除该字符串两端的空格 |
 
-## 举例
+
+## 可选参数
+
+| 参数 | 描述 |
+|------|------|
+| `rhs` | 去掉该指定字符 |
+
+## 返回值
+
+删除两端的空格或指定字符后的字符串
+
+
+## 示例
 
 ```sql
-mysql> SELECT trim('   ab d   ') str;
+SELECT trim('   ab d   ') str;
 +------+
 | str  |
 +------+
 | ab d |
 +------+
 
-mysql> SELECT trim('ababccaab','ab') str;
+SELECT trim('ababccaab','ab') str;
 +------+
 | str  |
 +------+

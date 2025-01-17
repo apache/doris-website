@@ -36,13 +36,22 @@ under the License.
 ## 语法
 
 ```sql
-ucase(string)
+UCASE( <str> )
 ```
+## 必选参数
+
+| 参数 | 描述 |
+|------|------|
+| `str` | 需转换为大写字母的字符串 |
+
+## 返回值
+
+转换大写字母后的值
 
 ### 示例
 
 ```sql
-mysql> SELECT ucase("aBc123");
+SELECT ucase("aBc123");
 +-----------------+
 | ucase('aBc123') |
 +-----------------+
