@@ -24,31 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## url_decode
+## url_encode
 ## 描述
 
-将URL转换为解码字符串。
+使用 UTF-8 编码完成所提供文本的 URL 编码。通常用于对作为 URL 的一部分传递的参数信息进行编码
 
 ## 语法
 
 ```sql
-VARCHAR url_decode(VARCHAR url)
+URL_ENCODE('VARCHAR STRING ') 
 ```
 
-### Parameters
+## 必选参数
 
-- url: 待解码的url。
+- VARCHAR STRING: 待编码的字符串。
 
-## 举例
+## 示例
 
+```sql
+URL_ENCODE('Doris Q&A') 
 ```
-mysql> mysql> select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
-+------------------------------------------------+
-| url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions') |
-+------------------------------------------------+
-| https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/string-functions                               |
-+------------------------------------------------+
+## 返回值
+```sql
+Doris+Q%26A
 ```
-
-### keywords
-    URL DECODE

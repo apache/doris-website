@@ -35,7 +35,7 @@ under the License.
 
 ### 示例
 
-```
+```sql
 mysql> SELECT ucase("aBc123");
 +-----------------+
 | ucase('aBc123') |

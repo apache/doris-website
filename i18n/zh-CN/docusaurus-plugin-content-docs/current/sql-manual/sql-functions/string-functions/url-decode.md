@@ -41,7 +41,7 @@ VARCHAR url_decode(VARCHAR url)
 
 ## 示例
 
-```
+```sql
 mysql> select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
 +------------------------------------------------+
 | url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions') |

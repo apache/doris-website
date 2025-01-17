@@ -34,7 +34,7 @@ under the License.
 
 ## 示例
 
-```
+```sql
 mysql> select uuid();
 +--------------------------------------+
 | uuid()                               |

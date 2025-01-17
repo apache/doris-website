@@ -36,7 +36,7 @@ under the License.
 
 ## 示例
 
-```
+```sql
 mysql> SELECT trim('   ab d   ') str;
 +------+
 | str  |
