@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_Azimuth( <point1>, <point2>)`
+ST_Azimuth( <point1>, <point2>)
 ```
 ## 参数
 
