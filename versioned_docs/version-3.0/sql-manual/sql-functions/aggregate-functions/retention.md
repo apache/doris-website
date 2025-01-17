@@ -28,19 +28,19 @@ The `retention` function takes as arguments a set of conditions from 1 to 32 arg
 
 The conditions, except the first, apply in pairs: the result of the second will be true if the first and second are true, of the third if the first and third are true, etc.
 
-To put it simply, the first digit of the return value array indicates whether `event1` is true or false, the second digit represents the truth and falseness of `event1` and `event2`, and the third digit represents whether `event1` is true or false and `event3` is true False and, and so on. If `event1` is false, return an array full of zeros.
+To put it simply, the first digit of the return value array indicates whether `event_1` is true or false, the second digit represents the truth and falseness of `event_1` and `event_2`, and the third digit represents whether `event_1` is true or false and `event_3` is true False and, and so on. If `event_1` is false, return an array full of zeros.
 
 ## Syntax
 
 ```sql
-RETENTION(<event1> [, <event2>, ... , <eventN>]);
+RETENTION(<event_1> [, <event_2>, ... , <event_n>]);
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `<eventN>` | The `N`th event condition, of type `UInt8` and value 1 or 0. |
+| `<event_n>` | The `n`th event condition, of type `UInt8` and value 1 or 0. |
 
 ## Returned value
 
