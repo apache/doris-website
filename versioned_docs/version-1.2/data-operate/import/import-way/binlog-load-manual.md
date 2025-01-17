@@ -460,7 +460,7 @@ The parameters in the result set have the following meanings:
 	
 	User can control the status of the job by three commands: `stop/pause/resume`. After the operation, the job status is `cancelled/paused/running` respectively.
 	
-	There is only one final stage of the job, Cancelled. When the job status changes to Canceled, it cannot be resumed again. 
+	There is only one final stage of the job, Cancelled. When the job status changes to Canceled, it cannot be resumed again. 
 	
 	When an error occurs during SyncJob is running, if the error is unrecoverable, the status will change to cancelled, otherwise it will change to paused.
 	
@@ -537,7 +537,7 @@ The following configuration belongs to the system level configuration of SyncJob
 	
 2. Will the SyncJob continue to run after the database is deleted?
 
-	No. In this case, the SyncJob will be checked by the Fe's scheduler thread and be stopped.
+	No. In this case, the SyncJob will be checked by the Fe's scheduler thread and be stopped.
 	
 3. Can multiple SyncJobs be configured with the same `IP:Port + destination`?
 

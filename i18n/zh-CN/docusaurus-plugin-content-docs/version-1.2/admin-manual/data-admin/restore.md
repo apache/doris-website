@@ -56,7 +56,7 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
 
 1. 从 example_repo 中恢复备份 snapshot_1 中的表 backup_tbl 到数据库 example_db1，时间版本为 "2018-05-04-16-45-08"。恢复为 1 个副本：
 
-    ```sql
+```sql
     RESTORE SNAPSHOT example_db1.`snapshot_1`
     FROM `example_repo`
     ON ( `backup_tbl` )
@@ -65,11 +65,11 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
         "backup_timestamp"="2022-04-08-15-52-29",
         "replication_num" = "1"
     );
-    ```
+```
 
 2. 从 example_repo 中恢复备份 snapshot_2 中的表 backup_tbl 的分区 p1,p2，以及表 backup_tbl2 到数据库 example_db1，并重命名为 new_tbl，时间版本为 "2018-05-04-17-11-01"。默认恢复为 3 个副本：
 
-    ```sql
+```sql
     RESTORE SNAPSHOT example_db1.`snapshot_2`
     FROM `example_repo`
     ON
@@ -81,11 +81,11 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
     (
         "backup_timestamp"="2022-04-08-15-55-43"
     );
-    ```
+```
 
 3. 查看 restore 作业的执行情况:
 
-   ```sql
+```sql
    mysql> SHOW RESTORE\G;
    *************************** 1. row ***************************
                   JobId: 17891851
@@ -124,7 +124,7 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
                  Status: [OK]
                 Timeout: 86400
    1 row in set (0.01 sec)
-   ```
+```
 
 RESTORE的更多用法可参考 [这里](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/RESTORE.md)。
 

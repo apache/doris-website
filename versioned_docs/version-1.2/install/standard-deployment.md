@@ -231,11 +231,13 @@ See the `lower_case_table_names` section in [Variables](../advanced/variables.md
 * Set JAVA_HOME environment variable
 
   <version since="1.2.0"></version>  
+
   Java UDF is supported since version 1.2, so BEs are dependent on the Java environment. It is necessary to set the `JAVA_HOME` environment variable before starting. You can also do this by adding `export JAVA_HOME=your_java_home_path` to the first line of the `start_be.sh` startup script.
 
 * Install Java UDF
 
   <version since="1.2.0"></version>
+  
   Because Java UDF is supported since version 1.2, you need to download the JAR package of Java UDF from the official website and put them under the lib directory of BE, otherwise it may fail to start.
 	
 * Add all BE nodes to FE

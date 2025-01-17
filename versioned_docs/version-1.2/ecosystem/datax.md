@@ -276,7 +276,7 @@ my_import.json
 >}
 >```
 >
->**CSV format should pay special attention to row and column separators to avoid conflicts with special characters in the data. Hidden characters are recommended here. The default column separator is: \t, row separator: \n**
+>**CSV format should pay special attention to row and column separators to avoid conflicts with special characters in the data. Hidden characters are recommended here. The default column separator is: `\t`, row separator: `\n`**
 
 4.Execute the datax task, refer to the specific [datax official website](https://github.com/alibaba/DataX/blob/master/userGuid.md)
 

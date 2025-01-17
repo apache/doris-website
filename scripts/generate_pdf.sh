@@ -32,4 +32,4 @@ pandoc -N --toc --smart --latex-engine=xelatex \
 -V monofont="${MONOFONT}" \
 -V geometry:margin=1in \
 -V include-after="\\input{templates/copyright.tex}" \
-"doc-3.0.md" -s -o "doris-3.0.pdf"
+"doc-1.2.md" -s -o "doris-1.2.pdf"

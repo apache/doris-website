@@ -1,0 +1,34 @@
+{
+    "archive.page.title": {
+        "message": "归档文档中心",
+        "description": "The label for archived docs page title"
+    },
+    "archive.admonition.1": {
+        "message": "此为 Apache Doris 归档文档，已归档文档不再提供任何更新。",
+        "description": "The label for admonition in archived docs page"
+    },
+    "archive.admonition.2": {
+        "message": "建议使用",
+        "description": "The label for admonition in archived docs page"
+    },
+    "archive.page.2": {
+        "message": "建议使用 {stableLink}（2.1）或{latestLink}（3.0）。 ",
+        "description": "The label for admonition in archived docs page"
+    },
+    "archive.admonition.stable": {
+        "message": "稳定版本",
+        "description": "stable version"
+    },
+    "archive.admonition.latest": {
+        "message": "最新版本",
+        "description": "latest version"
+    },
+    "archive.admonition.and": {
+        "message": "或",
+        "description": "and"
+    },
+    "archive.page.version": {
+        "message": "版本：1.2",
+        "description": "The "
+    }
+}

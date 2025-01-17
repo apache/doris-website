@@ -120,7 +120,7 @@ When the cluster cannot access the external network normally, it needs to obtain
     100  1211    0  1211    0     0   168k      0 --:--:-- --:--:-- --:--:--  168k
     ```
 
-- The returned Profile line break is \ \n, which is inconvenient to analyze. You can replace \ \n with \n in a text editing tool.
+- The returned Profile line break is `\ \n`, which is inconvenient to analyze. You can replace `\ \n` with `\n` in a text editing tool.
 
     ```
     [user@VM-10-6-centos profile]$ cat test.profile
