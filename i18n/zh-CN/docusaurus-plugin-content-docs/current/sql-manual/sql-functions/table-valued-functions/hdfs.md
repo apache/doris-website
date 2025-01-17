@@ -48,6 +48,9 @@ HDFS(
 | `format`             | 文件格式，必填，目前支持 `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`                                                                                          |
 
 ## 可选参数 (Optional Parameters)
+
+上述语法中的 `optional_property_key` 可以按需从以下列表中选取对应的参数，`optional_property_value` 则为该参数的值
+
 | 参数                         | 说明                                                                                                                                                                            | 备注                                                                          |
 |------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
 | `hadoop.security.authentication` | HDFS 安全认证类型                                                                                                                                                                   |                                                                             |
@@ -75,10 +78,13 @@ HDFS(
 | `resource`                    | 指定 Resource 名，HDFS TVF 可以利用已有的 HFDS Resource 来直接访问 HDFS。创建 HDFS Resource 的方法可以参照 [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md) | 仅支持 2.1.4 及以上版本                                                                            |
 
 
-## 注意事项
-- 直接查询 TVF 或基于该 TVF 创建 View ，需要拥有该 Resource 的 USAGE 权限，查询基于 TVF 创建的 View ，只需要该 View 的 SELECT 权限
+## 权限控制
 
-- 关于 HDFS TVF 的更详细使用方法可以参照 [S3](./s3.md) TVF, 唯一不同的是访问存储系统的方式不一样。
+| 权限（Privilege）      | 对象（Object） | 说明（Notes） |
+|:-------------------|:-----------| :------------ |
+| USAGE_PRIV         | 表          |               |
+| SELECT_PRIV        | 表          |               |
+
 
 ## 示例
 

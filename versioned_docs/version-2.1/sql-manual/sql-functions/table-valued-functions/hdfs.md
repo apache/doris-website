@@ -49,6 +49,9 @@ HDFS(
 | `format`               | File format, required. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`.           |
 
 ## Optional Parameters
+
+`optional_property_key` in the above syntax can select the corresponding parameter from the following list as needed, and `optional_property_value` is the value of the parameter
+
 | Parameter                                   | Description                                                                                                                                  | Remarks                                                                             |
 |---------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | `hadoop.security.authentication`            | HDFS security authentication type                                                                                                            |                                                                                     |
@@ -75,10 +78,12 @@ HDFS(
 | `path_partition_keys`                       | Specify the partition column names carried in the file path, for example `/path/to/city=beijing/date="2023-07-09"`, then fill in `path_partition_keys="city,date"`, which will automatically read the corresponding column names and values from the path for import. |                                                                                     |
 | `resource`                                  | Specify the resource name. HDFS TVF can directly access HDFS using an existing HDFS resource. Refer to [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md) for creating HDFS resources. | Supported from version 2.1.4 and above.                                            |
 
-## Usage Notes
-- To directly query a TVF or create a View based on the TVF, you need to have the **USAGE** privilege on the respective Resource. When querying a View created based on the TVF, only the **SELECT** privilege on the View is required.
+## Access Control Requirements
 
-- For more detailed usage of HDFS TVF, please refer to the [S3](./s3.md) TVF, the only difference being the method of accessing the storage system.
+| Privilege     | Object | Notes |
+|:--------------|:-------|:------|
+| USAGE_PRIV    | table  |       |
+| SELECT_PRIV   | table  |       |
 
 
 ## Examples
