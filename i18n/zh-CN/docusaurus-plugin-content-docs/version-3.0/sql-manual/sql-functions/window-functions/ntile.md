@@ -11,33 +11,54 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION NTILE
 ## 描述
 
-对于NTILE(n), 该函数会将排序分区中的所有行按顺序分配到n个桶中(编号较小的桶满了之后才能分配编号较大的桶)。对于每一行, NTILE()函数会返回该行数据所在的桶的编号(从1到n)。对于不能平均分配的情况, 优先分配到编号较小的桶中。所有桶中的行数相差不能超过1。目前n只能是正整数。
+NTILE() 是一个窗口函数，用于将有序数据集平均分配到指定数量的桶中。桶的编号从 1 开始顺序编号，直到指定的桶数。当数据无法平均分配时，优先将多出的记录分配给编号较小的桶，使得各个桶中的行数最多相差 1。
+
+## 语法
 
 ```sql
-NTILE(n) OVER(partition_by_clause order_by_clause)
+NTILE( <constant_value> ) OVER ( [ PARTITION BY <expr1> ] ORDER BY <expr2> [ ASC | DESC ] )
 ```
+
+## 参数
+| 参数           | 说明                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------ |
+| constant_value | 必需。指定要分配的桶数量，必须是正整数                                               |
+| expr1          | 可选。用于指定分区的表达式（通常是列名）。如果指定了分区，则在每个分区内单独进行分桶 |
+| expr2          | 必需。用于指定排序的表达式（通常是列名），这决定了数据如何被分配到各个桶中           |
+
+## 返回值
+
+返回 BIGINT 类型的桶编号，范围从 1 到指定的桶数。
+
+## 使用说明
+
+如果语句中同时包含 NTILE 函数的 ORDER BY 子句和输出结果的 ORDER BY 子句，这两个排序是独立的：
+- NTILE 函数的 ORDER BY 决定了行被分配到哪个桶中
+- 输出的 ORDER BY 决定了结果的显示顺序
 
 ## 举例
 
 ```sql
-select x, y, ntile(2) over(partition by x order by y) as rank from int_t;
-
-| x | y    | rank     |
-|---|------|----------|
-| 1 | 1    | 1        |
-| 1 | 2    | 1        |
-| 1 | 2    | 2        |
-| 2 | 1    | 1        |
-| 2 | 2    | 1        |
-| 2 | 3    | 2        |
-| 3 | 1    | 1        |
-| 3 | 1    | 1        |
-| 3 | 2    | 2        |
+SELECT 
+    name,
+    score,
+    NTILE(4) OVER (ORDER BY score DESC) as quarter
+FROM student_scores;
 ```
 
-### keywords
-
-    WINDOW,FUNCTION,NTILE
+```text
++----------+-------+---------+
+| name     | score | quarter |
++----------+-------+---------+
+| Alice    | 98    | 1       |  -- 前 25% 的成绩
+| Bob      | 95    | 1       |
+| Charlie  | 90    | 2       |  -- 前 25-50% 的成绩
+| David    | 85    | 2       |
+| Eve      | 82    | 3       |  -- 前 50-75% 的成绩
+| Frank    | 78    | 3       |
+| Grace    | 75    | 4       |  -- 后 25% 的成绩
+| Henry    | 70    | 4       |
++----------+-------+---------+
+```

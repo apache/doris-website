@@ -11,33 +11,47 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION ROW_NUMBER
 ## 描述
 
-为每个 Partition 的每一行返回一个从1开始连续递增的整数。与 RANK() 和 DENSE_RANK() 不同的是，ROW_NUMBER() 返回的值不会重复也不会出现空缺，是连续递增的。
+ROW_NUMBER() 是一个窗口函数，用于为分区内的每一行分配一个唯一的序号。序号从 1 开始连续递增。与 RANK() 和 DENSE_RANK() 不同，ROW_NUMBER() 即使对于相同的值也会分配不同的序号，确保每行都有唯一的编号。
+
+## 语法
 
 ```sql
-ROW_NUMBER() OVER(partition_by_clause order_by_clause)
+ROW_NUMBER() OVER ( 
+    [ PARTITION BY <expr1> [, <expr2> ... ] ]
+    ORDER BY <expr3> [ , <expr4> ... ] [ ASC | DESC ]
+)
 ```
+
+## 参数
+| 参数         | 说明                                                                                           |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| expr1, expr2 | 可选。用于指定分区的一个或多个表达式。例如，如果要在每个部门内对员工进行编号，则按部门进行分区 |
+| expr3, expr4 | 必需。用于指定排序的一个或多个表达式。这决定了行号的分配顺序                                   |
+
+## 返回值
+
+返回 BIGINT 类型的序号，从 1 开始连续递增。在每个分区内，序号都是唯一的。
 
 ## 举例
 
 ```sql
 select x, y, row_number() over(partition by x order by y) as rank from int_t;
-
-| x | y    | rank     |
-|---|------|----------|
-| 1 | 1    | 1        |
-| 1 | 2    | 2        |
-| 1 | 2    | 3        |
-| 2 | 1    | 1        |
-| 2 | 2    | 2        |
-| 2 | 3    | 3        |
-| 3 | 1    | 1        |
-| 3 | 1    | 2        |
-| 3 | 2    | 3        |
 ```
 
-### keywords
-
-    WINDOW,FUNCTION,ROW_NUMBER
+```text
++-----+-----+------+
+| x   | y   | rank |
+| --- | --- | ---- |
+| 1   | 1   | 1    |
+| 1   | 2   | 2    |
+| 1   | 2   | 3    |
+| 2   | 1   | 1    |
+| 2   | 2   | 2    |
+| 2   | 3   | 3    |
+| 3   | 1   | 1    |
+| 3   | 1   | 2    |
+| 3   | 2   | 3    |
++-----+-----+------+
+```

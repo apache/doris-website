@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_ROW_NUMBER",
+    "title": "ROW_NUMBER",
     "language": "en"
 }
 ---
@@ -11,33 +11,47 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION ROW_NUMBER
-### description
+## Description
 
-Returns a continuously increasing integer starting from 1 for each row of each Partition. Unlike RANK() and DENSE_RANK(), the value returned by ROW_NUMBER() does not repeat or appear vacant, and is continuously incremented.
+ROW_NUMBER() is a window function that assigns a unique sequential number to each row within a partition. Numbers start at 1 and increment continuously. Unlike RANK() and DENSE_RANK(), ROW_NUMBER() assigns different numbers even for identical values, ensuring each row has a unique number.
+
+## Syntax
 
 ```sql
-ROW_NUMBER() OVER(partition_by_clause order_by_clause)
+ROW_NUMBER() OVER ( 
+    [ PARTITION BY <expr1> [, <expr2> ... ] ]
+    ORDER BY <expr3> [ , <expr4> ... ] [ ASC | DESC ]
+)
 ```
 
-### example
+## Parameters
+| Parameter    | Description                                                                                                                               |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| expr1, expr2 | Optional. One or more expressions used for partitioning. For example, to number employees within each department, partition by department |
+| expr3, expr4 | Required. One or more expressions used for ordering. This determines the order in which row numbers are assigned                          |
+
+## Return Value
+
+Returns a BIGINT sequence number, starting from 1 and incrementing continuously. Numbers are unique within each partition.
+
+## Examples
 
 ```sql
 select x, y, row_number() over(partition by x order by y) as rank from int_t;
-
-| x | y    | rank     |
-|---|------|----------|
-| 1 | 1    | 1        |
-| 1 | 2    | 2        |
-| 1 | 2    | 3        |
-| 2 | 1    | 1        |
-| 2 | 2    | 2        |
-| 2 | 3    | 3        |
-| 3 | 1    | 1        |
-| 3 | 1    | 2        |
-| 3 | 2    | 3        |
 ```
 
-### keywords
-
-    WINDOW,FUNCTION,ROW_NUMBER
+```text
++-----+-----+------+
+| x   | y   | rank |
+| --- | --- | ---- |
+| 1   | 1   | 1    |
+| 1   | 2   | 2    |
+| 1   | 2   | 3    |
+| 2   | 1   | 1    |
+| 2   | 2   | 2    |
+| 2   | 3   | 3    |
+| 3   | 1   | 1    |
+| 3   | 1   | 2    |
+| 3   | 2   | 3    |
++-----+-----+------+
+```

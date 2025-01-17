@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_LAG",
+    "title": "LAG",
     "language": "en"
 }
 ---
@@ -11,27 +11,47 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION LAG
-### description
+## Description
 
-The LAG() method is used to calculate the value of the current line several lines ahead.
+LAG() is a window function that accesses data from previous rows without performing a self-join. It retrieves values from a row that is N rows before the current row within a partition.
+
+## Syntax
 
 ```sql
-LAG(expr, offset, default) OVER (partition_by_clause order_by_clause)
+LAG ( expr [, offset [, default ] ] ) [ { IGNORE | RESPECT } NULLS ]
+    OVER ( [ PARTITION BY partition_expr ] ORDER BY order_expr [ ASC | DESC ] )
 ```
 
-### example
+## Parameters
+| Parameter           | Description                                                                                        |
+| ------------------- | -------------------------------------------------------------------------------------------------- |
+| expr                | The expression whose value is to be retrieved                                                      |
+| offset              | Optional. Number of rows to look backward. Default is 1. When negative, behaves like LEAD function |
+| default             | Optional. Value to return when the offset goes beyond window bounds. Default is NULL               |
+| partition_by_clause | Optional. Specifies the columns for partitioning                                                   |
+| order_by_clause     | Required. Specifies the columns for ordering                                                       |
+| IGNORE NULLS        | Optional. When set, null value rows are ignored in offset calculation                              |
+| RESPECT NULLS       | Optional. Default value. Null value rows are included in offset calculation                        |
 
-Calculate the previous day's closing price
+## Return Value
+
+Returns the same data type as the input expression.
+
+## Examples
+
+Calculate the difference between each salesperson's current sales amount and the previous day's sales amount:
 
 ```sql
 select stock_symbol, closing_date, closing_price,    
 lag(closing_price,1, 0) over (partition by stock_symbol order by closing_date) as "yesterday closing"   
 from stock_ticker   
 order by closing_date;
+```
 
+```text
++--------------+---------------------+---------------+-------------------+
 | stock_symbol | closing_date        | closing_price | yesterday closing |
-|--------------|---------------------|---------------|-------------------|
+| ------------ | ------------------- | ------------- | ----------------- |
 | JDR          | 2014-09-13 00:00:00 | 12.86         | 0                 |
 | JDR          | 2014-09-14 00:00:00 | 12.89         | 12.86             |
 | JDR          | 2014-09-15 00:00:00 | 12.94         | 12.89             |
@@ -39,8 +59,5 @@ order by closing_date;
 | JDR          | 2014-09-17 00:00:00 | 14.03         | 12.55             |
 | JDR          | 2014-09-18 00:00:00 | 14.75         | 14.03             |
 | JDR          | 2014-09-19 00:00:00 | 13.98         | 14.75             |
++--------------+---------------------+---------------+-------------------+
 ```
-
-### keywords
-
-    WINDOW,FUNCTION,LAG

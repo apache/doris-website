@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_DENSE_RANK",
+    "title": "DENSE_RANK",
     "language": "en"
 }
 ---
@@ -11,35 +11,44 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION DENSE_RANK
-### description
+## Description
 
-The DENSE_RANK() function is used to represent rankings. Unlike RANK(), DENSE_RANK() does not have vacancies. For example, if there are two parallel 1s, the third number of DENSE_RANK() is still 2, and the third number of RANK() is 3.
+DENSE_RANK() is a window function used to calculate rankings within a group. Unlike RANK(), DENSE_RANK() returns consecutive rankings without gaps. The ranking values start from 1 and increment sequentially. When there are identical values, they will receive the same rank.
 
-```sql
-DENSE_RANK() OVER(partition_by_clause order_by_clause)
-```
-
-### example
-
-Group by the property column to rank column x:
+## Syntax
 
 ```sql
- select x, y, dense_rank() over(partition by x order by y) as rank from int_t;
- 
- | x  | y    | rank     |
- |----|------|----------|
- | 1  | 1    | 1        |
- | 1  | 2    | 2        |
- | 1  | 2    | 2        |
- | 2  | 1    | 1        |
- | 2  | 2    | 2        |
- | 2  | 3    | 3        |
- | 3  | 1    | 1        |
- | 3  | 1    | 1        |
- | 3  | 2    | 2        |
+DENSE_RANK() OVER([ PARTITION BY <partition_expr> ] ORDER BY <order_expr> [ ASC | DESC ])
 ```
 
-### keywords
+## Parameters
+| Parameter           | Description                                                                                                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| partition_by_clause | Optional. Specifies the columns for partitioning, formatted as `PARTITION BY column1, column2, ...`. If not specified, all rows are treated as one partition |
+| order_by_clause     | Required. Specifies the columns for ordering, formatted as `ORDER BY column1 [ASC\|DESC], column2 [ASC\|DESC], ...`. This determines the ranking order       |
 
-    WINDOW,FUNCTION,DENSE_RANK
+## Return Value
+
+Returns a BIGINT type ranking value, starting from 1.
+
+## Examples
+
+```sql
+select x, y, dense_rank() over(partition by x order by y) as rank from int_t;
+```
+
+```text
++-----+-----+------+
+| x   | y   | rank |
+| --- | --- | ---- |
+| 1   | 1   | 1    |
+| 1   | 2   | 2    |
+| 1   | 2   | 2    | -- Same values receive the same rank |
+| 2   | 1   | 1    |
+| 2   | 2   | 2    |
+| 2   | 3   | 3    | -- Rankings are consecutive, no gaps |
+| 3   | 1   | 1    |
+| 3   | 1   | 1    |
+| 3   | 2   | 2    |
++-----+-----+------+
+```

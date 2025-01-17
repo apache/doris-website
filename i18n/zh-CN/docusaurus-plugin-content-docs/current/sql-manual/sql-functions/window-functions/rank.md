@@ -11,35 +11,55 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION RANK
 ## 描述
 
-RANK() 函数用来表示排名，与 DENSE_RANK() 不同的是，RANK() 会出现空缺数字。比如，如果出现了两个并列的1， RANK() 的第三个数就是3，而不是2。
+RANK() 是一个窗口函数，用于返回有序数据集中值的排名。排名从 1 开始按顺序递增。当出现相同值时，这些值获得相同的排名，但会导致排名序列出现间隔。例如，如果前两行并列排名第 1，则下一个不同的值将排名第 3（而不是第 2）。
+
+## 语法
 
 ```sql
-RANK() OVER(partition_by_clause order_by_clause)
+RANK() OVER ( 
+    [ PARTITION BY <expr1> ] 
+    ORDER BY <expr2> [ ASC | DESC ] 
+)
 ```
+
+## 参数
+| 参数  | 说明                                                                                       |
+| ----- | ------------------------------------------------------------------------------------------ |
+| expr1 | 可选。用于指定分区的表达式。例如，如果要在每个部门内对员工按工资进行排名，则按部门进行分区 |
+| expr2 | 必需。用于指定排序的表达式。这决定了排名的顺序                                             |
+
+## 返回值
+
+返回 BIGINT 类型的排名值。对于相同的值返回相同的排名，但会在序列中产生间隔。
 
 ## 举例
 
-根据 x 进行排名
-
 ```sql
-select x, y, rank() over(partition by x order by y) as rank from int_t;
-
-| x  | y    | rank     |
-|----|------|----------|
-| 1  | 1    | 1        |
-| 1  | 2    | 2        |
-| 1  | 2    | 2        |
-| 2  | 1    | 1        |
-| 2  | 2    | 2        |
-| 2  | 3    | 3        |
-| 3  | 1    | 1        |
-| 3  | 1    | 1        |
-| 3  | 2    | 3        |
+SELECT 
+    department,
+    employee_name,
+    salary,
+    RANK() OVER (
+        PARTITION BY department 
+        ORDER BY salary DESC
+    ) as salary_rank
+FROM employees;
 ```
 
-### keywords
+```text
++------------+---------------+--------+-------------+
+| department | employee_name | salary | salary_rank |
++------------+---------------+--------+-------------+
+| Sales      | Alice        | 10000  | 1           |
+| Sales      | Bob          | 10000  | 1           |
+| Sales      | Charlie      | 8000   | 3           |  -- 注意这里是3而不是2
+| IT         | David        | 12000  | 1           |
+| IT         | Eve          | 11000  | 2           |
+| IT         | Frank        | 11000  | 2           |
+| IT         | Grace        | 9000   | 4           |  -- 注意这里是4而不是3
++------------+---------------+--------+-------------+
+```
 
-    WINDOW,FUNCTION,RANK
+在这个例子中，数据按部门分区，并在每个部门内根据工资进行排名。当出现相同工资时（如 Alice 和 Bob、Eve 和 Frank），它们获得相同的排名，但会导致后续排名出现间隔。

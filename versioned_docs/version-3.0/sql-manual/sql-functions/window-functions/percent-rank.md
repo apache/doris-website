@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_PERCENT_RANK",
+    "title": "PERCENT_RANK",
     "language": "en"
 }
 ---
@@ -11,41 +11,37 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION PERCENT_RANK
-### description
+## Description
 
-The PERCENT_RANK() is a window function that calculates the percentile rank of a row within a partition or result set.
+PERCENT_RANK() is a window function that calculates the relative rank of a row within a partition or result set, returning values from 0.0 to 1.0. For a given row, it is calculated as: (rank - 1) / (total_rows - 1), where rank is the current row's rank and total_rows is the total number of rows in the partition.
 
-The following shows the syntax of the PERCENT_RANK() function:
+## Syntax
 
-```sql
-PERCENT_RANK() OVER (
-  PARTITION BY partition_expression 
-  ORDER BY 
-    sort_expression [ASC | DESC]
+```sql:docs/sql-manual/sql-functions/window-functions/percent-rank.md
+PERCENT_RANK() OVER ( 
+    [ PARTITION BY <expr1> ] 
+    ORDER BY <expr2> [ ASC | DESC ] 
+    [ <window_frame> ]
 )
 ```
 
-The PERCENT_RANK() function returns a number that ranges from zero to one.
+## Parameters
+| Parameter    | Description                                                                                                             |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| expr1        | Optional. Expression used for partitioning. For example, to rank farmers by yield within each state, partition by state |
+| expr2        | Required. Expression used for ordering. This determines how the percentage rank is calculated                           |
+| window_frame | Optional. Window frame clause, supports fixed range window frames                                                       |
 
-For a specified row, PERCENT_RANK() calculates the rank of that row minus one, divided by 1 less than the number of rows in the evaluated partition or query result set:
+## Return Value
 
-```sql
-(rank - 1) / (total_rows - 1)
-```
+Returns a DOUBLE value ranging from 0.0 to 1.0:
+- Always returns 0 for the first row in the partition
+- Always returns 1 for the last row in the partition
+- Returns the same percentage rank for identical values
 
-In this formula, rank is the rank of a specified row and total_rows is the number of rows being evaluated.
-
-The PERCENT_RANK() function always returns zero for the first row in a partition or result set. The repeated column values will receive the same PERCENT_RANK() value.
-
-Similar to other window functions, the PARTITION BY clause distributes the rows into partitions and the ORDER BY clause specifies the logical order of rows in each partition. The PERCENT_RANK() function is calculated for each ordered partition independently.
-
-Both PARTITION BY and ORDER BY clauses are optional. However, the PERCENT_RANK() is an order-sensitive function, therefore, you should always use the ORDER BY clause.
-
-### example
+## Examples
 
 ```sql
-// create table
 CREATE TABLE test_percent_rank (
     productLine VARCHAR,
     orderYear INT,
@@ -56,8 +52,9 @@ DISTRIBUTED BY HASH(`orderYear`) BUCKETS 4
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 1"
 );
+```
 
-// insert data into table
+```sql
 INSERT INTO test_percent_rank (productLine, orderYear, orderValue, percentile_rank) VALUES
 ('Motorcycles', 2003, 2440.50, 0.00),
 ('Trains', 2003, 2770.95, 0.17),
@@ -79,8 +76,9 @@ INSERT INTO test_percent_rank (productLine, orderYear, orderValue, percentile_ra
 ('Vintage Cars', 2005, 5346.50, 0.67),
 ('Classic Cars', 2005, 5971.35, 0.83),
 ('Trucks and Buses', 2005, 6295.03, 1.00);
+```
 
-// query
+```sql
 SELECT
     productLine,
     orderYear,
@@ -95,8 +93,9 @@ FROM
     test_percent_rank
 ORDER BY
     orderYear;
+```
 
-// result
+```text
 +------------------+-----------+------------+-----------------+
 | productLine      | orderYear | orderValue | percentile_rank |
 +------------------+-----------+------------+-----------------+
@@ -122,7 +121,3 @@ ORDER BY
 | Trucks and Buses |      2005 |    6295.03 |               1 |
 +------------------+-----------+------------+-----------------+
 ```
-
-### keywords
-
-    WINDOW,FUNCTION,PERCENT_RANK

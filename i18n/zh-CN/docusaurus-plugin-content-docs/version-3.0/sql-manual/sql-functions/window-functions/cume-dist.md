@@ -11,14 +11,25 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION CUME_DIST
 ## 描述
 
-CUME_DIST (Cumulative Distribution) 是一种窗口函数，它常用于计算当前行值在排序后结果集中的相对排名。它返回的是当前行值在结果集中的百分比排名，即在排序后的结果中小于或等于当前行值的行数与结果集总行数的比例。
+CUME_DIST (Cumulative Distribution) 是一种窗口函数，它计算当前行值在排序后结果集中的相对排名。它返回的是当前行值在结果集中的累积分布值，范围从 0 到 1。对于给定的行，其累积分布值等于：(小于或等于当前行值的行数) / (窗口分区中的总行数)。
+
+## 语法
 
 ```sql
-CUME_DIST() OVER(partition_by_clause order_by_clause)
+CUME_DIST() OVER ( [ PARTITION BY <partition_expr> ] ORDER BY <order_expr> [ ASC | DESC ] )
 ```
+
+## 参数
+| 参数                | 说明                                                                                                                  |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| partition_by_clause | 可选。用于指定分区的列，格式为 `PARTITION BY column1, column2, ...`。如果不指定，则将所有行视为一个分区               |
+| order_by_clause     | 必需。用于指定排序的列，格式为 `ORDER BY column1 [ASC\|DESC], column2 [ASC\|DESC], ...`。这决定了计算累积分布时的顺序 |
+
+## 返回值
+
+返回 DOUBLE 类型的数值，范围从 0 到 1。
 
 ## 举例
 假设有一个表格 sales 包含销售数据，其中包括销售员姓名 (sales_person)、销售额 (sales_amount) 和销售日期 (sales_date)。我们想要计算每个销售员在每个销售日期的销售额占当日总销售额的累积百分比。
@@ -48,8 +59,10 @@ FROM
 |    8 | Jerry        | 2024-02-03 |         2000 |
 +------+--------------+------------+--------------+
 ```
+
 执行上述 SQL 查询后，结果将显示每个销售员在每个销售日期的销售额以及其在该销售日期的累积百分比排名。
-```sql
+
+```text
 +--------------+------------+--------------+-----------------------------+
 | sales_person | sales_date | sales_amount | cumulative_sales_percentage |
 +--------------+------------+--------------+-----------------------------+
@@ -64,8 +77,3 @@ FROM
 +--------------+------------+--------------+-----------------------------+
 ```
 在这个例子中，CUME_DIST() 函数根据每个销售日期对销售额进行排序，然后计算每个销售员在该销售日期的销售额占当日总销售额的累积百分比。由于我们使用了 PARTITION BY sales_date，所以计算是在每个销售日期内进行的，销售员在不同日期的销售额被分别计算。
-
-### keywords
-
-    WINDOW,FUNCTION,CUME_DIST
-
