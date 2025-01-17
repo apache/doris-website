@@ -36,6 +36,33 @@ This statement is used to display the schema information of the specified table.
 DESC[RIBE] [db_name.]table_name [ALL];
 ```
 
+## Required Parameters
+**1.`<table_name>`**
+> Specifies the table identifier (name), which must be unique within the database in which it is located.
+>
+> Identifiers must begin with an alphabetic character (or any character in a language if unicode name support is enabled) and cannot contain spaces or special characters unless the entire identifier string is enclosed in backticks (e.g. `My Object`).
+>
+> Identifiers cannot use reserved keywords.
+>
+> For more details, see Identifier Requirements and Reserved Keywords.
+
+## Optional Parameters
+
+**1.`<db_name>`**
+> Specifies the identifier (i.e., name) for the database.
+>
+> Identifiers must begin with an alphabetic character (or any character in a given language if unicode name support is enabled) and cannot contain spaces or special characters unless the entire identifier string is enclosed in backticks (e.g., `My Database`).
+>
+> Identifiers cannot use reserved keywords.
+>
+> See Identifier Requirements and Reserved Keywords for more details.
+
+**2.`RIBE`**
+> Returns description information of all columns in a table
+
+**3.`ALL`**
+> Returns description information for all columns
+
 ## Return Value
 
 | column name | description                       |
@@ -61,7 +88,7 @@ Users executing this SQL command must have at least the following privileges:
 | SELECT_PRIV  | Table     | When executing DESC, you need to have the SELECT_PRIV privilege on the table being queried    |
 
 ## Usage Notes
-If ALL is specified, the schema of all indexes (rollup) of the table is displayed.
+- If ALL is specified, the schema of all indexes (rollup) of the table is displayed.
 
 
 ## Examples
