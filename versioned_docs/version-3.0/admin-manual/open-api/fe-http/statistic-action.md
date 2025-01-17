@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Cluster Action",
-    "language": "zh-CN"
+    "title": "Statistic Action",
+    "language": "en"
 }
 ---
 
@@ -24,20 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+# Statistic Action
 
 ## Request
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
+`GET /rest/v2/api/cluster_overview`
 
-## 集群连接信息
+## Description
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
-
-### Description
-
-用于获取集群 http、mysql 连接信息。
-
+获取集群统计信息、库表数量等。
+    
 ## Path parameters
 
 无
@@ -50,40 +46,13 @@ under the License.
 
 无
 
-### Response
+## Response
 
 ```
 {
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "fe_host:http_ip"
-        ],
-        "mysql": [
-            "fe_host:query_ip"
-        ]
-    },
-    "count": 0
-}
-```
-    
-### Examples
-```
-GET /rest/v2/manager/cluster/cluster_info/conn_info
-
-Response:
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "127.0.0.1:8030"
-        ],
-        "mysql": [
-            "127.0.0.1:9030"
-        ]
-    },
-    "count": 0
+    "msg":"success",
+    "code":0,
+    "data":{"diskOccupancy":0,"remainDisk":5701197971457,"feCount":1,"tblCount":27,"beCount":1,"dbCount":2},
+    "count":0
 }
 ```

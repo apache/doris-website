@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Cluster Action",
-    "language": "zh-CN"
+    "title": "View Meta",
+    "language": "en"
 }
 ---
 
@@ -24,66 +24,50 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+# View Meta
 
 ## Request
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
+`GET /api/meta/header/{tablet_id}?byte_to_base64={bool}`
 
-## 集群连接信息
+## Description
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
-
-### Description
-
-用于获取集群 http、mysql 连接信息。
+View meta of a tablet
 
 ## Path parameters
 
-无
+* `tablet_id`
+    ID of the tablet
 
 ## Query parameters
 
-无
+* `byte_to_base64`
+    Whether to encode by base64. Optional with default `false`.
 
 ## Request body
 
-无
+None
 
-### Response
+## Response
 
-```
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "fe_host:http_ip"
-        ],
-        "mysql": [
-            "fe_host:query_ip"
-        ]
-    },
-    "count": 0
-}
-```
-    
-### Examples
-```
-GET /rest/v2/manager/cluster/cluster_info/conn_info
+    ```
+    {
+        "table_id": 148107,
+        "partition_id": 148104,
+        "tablet_id": 148193,
+        "schema_hash": 2090621954,
+        "shard_id": 38,
+        "creation_time": 1673253868,
+        "cumulative_layer_point": -1,
+        "tablet_state": "PB_RUNNING",
+        ...
+    }
+    ```
+## Examples
 
-Response:
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "127.0.0.1:8030"
-        ],
-        "mysql": [
-            "127.0.0.1:9030"
-        ]
-    },
-    "count": 0
-}
-```
+
+    ```
+    curl "http://127.0.0.1:8040/api/meta/header/148193&byte_to_base64=true"
+
+    ```
+

@@ -1,7 +1,7 @@
 ---
 {
     "title": "Upload Action",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Upload Action
 
+Upload Action currently mainly serves the front-end page of FE, and is used for users to load small test files.
 
-Upload Action 目前主要服务于 FE 的前端页面，用于用户导入一些测试性质的小文件。
+## Upload load file
 
-## 上传导入文件
-
-用于将文件上传到 FE 节点，可在稍后用于导入该文件。目前仅支持上传最大 100MB 的文件。
+Used to upload a file to the FE node, which can be used to load the file later. Currently only supports uploading files up to 100MB.
 
 ### Request
 
@@ -42,29 +42,29 @@ POST /api/<namespace>/<db>/<tbl>/upload
 
 * `<namespace>`
 
-    命名空间，目前仅支持 `default_cluster`
-    
+    Namespace, currently only supports `default_cluster`
+        
 * `<db>`
 
-    指定的数据库
+    Specify database
     
 * `<tbl>`
 
-    指定的表
+    Specify table
 
 ### Query parameters
 
 * `column_separator`
 
-    可选项，指定文件的分隔符。默认为 `\t`
+    Optional, specify the column separator of the file. Default is `\t`
     
 * `preview`
 
-    可选项，如果设置为 `true`，则返回结果中会显示最多 10 行根据 `column_separator` 切分好的数据行。
+    Optional, if set to `true`, up to 10 rows of data rows split according to `column_separator` will be displayed in the returned result.
 
 ### Request body
 
-要上传的文件内容，Content-type 为 `multipart/form-data`
+The content of the file to be uploaded, the Content-type is `multipart/form-data`
 
 ### Response
 
@@ -84,7 +84,7 @@ POST /api/<namespace>/<db>/<tbl>/upload
 }
 ```
 
-## 导入已上传的文件
+## Load the uploaded file
 
 ### Request
 
@@ -96,33 +96,33 @@ PUT /api/<namespace>/<db>/<tbl>/upload
 
 * `<namespace>`
 
-    命名空间，目前仅支持 `default_cluster`
+    Namespace, currently only supports `default_cluster`
     
 * `<db>`
 
-    指定的数据库
+    Specify database
     
 * `<tbl>`
 
-    指定的表
+    Specify table
 
 ### Query parameters
 
 * `file_id`
 
-    指定导入的文件 id，文件 id 由上传导入文件的 API 返回。
+    Specify the load file id, which is returned by the API that uploads the file.
 
 * `file_uuid`
 
-    指定导入的文件 uuid，文件 uuid 由上传导入文件的 API 返回。
+    Specify the file uuid, which is returned by the API that uploads the file.
     
 ### Header
 
-Header 中的可选项同 Stream Load 请求中 header 的可选项。
+The options in the header are the same as those in the header in the Stream Load request.
 
 ### Request body
 
-要上传的文件内容，Content-type 为 `multipart/form-data`
+None
 
 ### Response
 

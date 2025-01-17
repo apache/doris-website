@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Cluster Action",
-    "language": "zh-CN"
+    "title": "Hardware Info Action",
+    "language": "en"
 }
 ---
 
@@ -24,66 +24,56 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+# Hardware Info Action
 
 ## Request
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
+```
+GET /rest/v1/hardware_info/fe/
+```
 
-## 集群连接信息
+## Description
 
-`GET /rest/v2/manager/cluster/cluster_info/conn_info`
-
-### Description
-
-用于获取集群 http、mysql 连接信息。
-
+Hardware Info Action is used to obtain the hardware information of the current FE.
+    
 ## Path parameters
 
-无
+None
 
 ## Query parameters
 
-无
+None
 
 ## Request body
 
-无
+None
 
-### Response
+## Response
 
 ```
 {
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "fe_host:http_ip"
-        ],
-        "mysql": [
-            "fe_host:query_ip"
-        ]
-    },
-    "count": 0
+	"msg": "success",
+	"code": 0,
+	"data": {
+		"VersionInfo": {
+			"Git": "git://host/core@5bc28f4c36c20c7b424792df662fc988436e679e",
+			"Version": "trunk",
+			"BuildInfo": "cmy@192.168.1",
+			"BuildTime": "Tuesday, 05 September 2019 11:07:42 CST"
+		},
+		"HardwareInfo": {
+			"NetworkParameter": "...",
+			"Processor": "...",
+			"OS": "...",
+			"Memory": "...",
+			"FileSystem": "...",
+			"NetworkInterface": "...",
+			"Processes": "...",
+			"Disk": "..."
+		}
+	},
+	"count": 0
 }
 ```
-    
-### Examples
-```
-GET /rest/v2/manager/cluster/cluster_info/conn_info
 
-Response:
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "http": [
-            "127.0.0.1:8030"
-        ],
-        "mysql": [
-            "127.0.0.1:9030"
-        ]
-    },
-    "count": 0
-}
-```
+* The contents of each value in the `HardwareInfo` field are all hardware information text displayed in html format.
