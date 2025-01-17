@@ -31,7 +31,7 @@ This statement is used to cancel (revoke) an ongoing ALTER TABLE operation. You 
 ## Syntax
 
 ```sql
-CANCEL ALTER TABLE COLUMN|ROLLUP FROM <db_name>.<table_name> [ <job_id1> [ , <job_id2> ... ]]
+CANCEL ALTER TABLE { COLUMN | ROLLUP } FROM <db_name>.<table_name> [ <job_id1> [ , <job_id2> ... ]]
 ```
 
 ## Required Parameters
