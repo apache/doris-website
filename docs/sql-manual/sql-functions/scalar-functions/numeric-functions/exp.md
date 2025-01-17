@@ -29,12 +29,12 @@ Returns `x` raised to the base `e`.
 
 ## alias
 
-DEXP
+- DEXP
 
 ## Syntax
 
 ```sql
-DOUBLE exp(DOUBLE <x>)
+EXP(<x>)
 ```
 
 ## Parameters

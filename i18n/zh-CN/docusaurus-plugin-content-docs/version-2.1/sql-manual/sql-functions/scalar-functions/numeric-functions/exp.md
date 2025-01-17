@@ -28,12 +28,12 @@ under the License.
 
 ## 别名
 
-DEXP
+- DEXP
 
 ## 语法
 
 ```sql
-DOUBLE exp(DOUBLE <x>)
+EXP(<x>)
 ```
 
 ## 参数
