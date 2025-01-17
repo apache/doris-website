@@ -327,7 +327,7 @@ const config = {
                             },
                             {
                                 label: '归档文档',
-                                to: '/zh-CN/archive',
+                                to: `/zh-CN/archive-docs`,
                             },
                         ],
                     },
@@ -359,7 +359,7 @@ const config = {
                             },
                             {
                                 label: 'Archived Docs',
-                                to: '/archive',
+                                to: `/archive-docs`,
                             },
                         ],
                     },

@@ -12,15 +12,15 @@
         "description": "The label for admonition in archived docs page"
     },
     "archive.page.2": {
-        "message": "建议使用 {stableLink}（2.1）或{latestLink}（3.0）。 ",
+        "message": "建议使用 {stableLink}或{latestLink}。",
         "description": "The label for admonition in archived docs page"
     },
     "archive.admonition.stable": {
-        "message": "稳定版本",
+        "message": "版本（2.1）",
         "description": "stable version"
     },
     "archive.admonition.latest": {
-        "message": "最新版本",
+        "message": "版本（3.0）",
         "description": "latest version"
     },
     "archive.admonition.and": {
@@ -29,6 +29,18 @@
     },
     "archive.page.version": {
         "message": "版本：1.2",
-        "description": "The "
+        "description": "Archive Download Version"
+    },
+    "archive.download.v12": {
+        "message": "归档文档链接：{downloadLink}",
+        "description": "Archive download link"
+    },
+    "archive.download.link": {
+        "message": "Apache Doris v1.2 中文文档",
+        "description": "Archive download link"
+    },
+    "archive.download.date": {
+        "message": "归档日期：{date}",
+        "description": "Archive date"
     }
 }

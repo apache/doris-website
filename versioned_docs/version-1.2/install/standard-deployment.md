@@ -114,17 +114,17 @@ Broker is a process for accessing external data sources, such as hdfs. Usually, 
 
 Doris instances communicate directly over the network. The following table shows all required ports.
 
-| Instance Name | Port Name | Default Port | Communication Direction | Description|
-| ---|---|---|---|---|
-| BE | be_port | 9060 | FE --> BE | Thrift server port on BE for receiving requests from FE |
-| BE | webserver\_port | 8040 | BE <--> BE | HTTP server port on BE |
-| BE | heartbeat\_service_port | 9050 | FE --> BE | Heart beat service port (thrift) on BE, used to receive heartbeat from FE |
-| BE | brpc\_port | 8060 | FE <--> BE, BE <--> BE | BRPC port on BE for communication between BEs |
-| FE | http_port | 8030 | FE <--> FE, user <--> FE | HTTP server port on FE |
-| FE | rpc_port | 9020 | BE --> FE, FE <--> FE | Thrift server port on FE; The configurations of each FE should be consistent. |
-| FE | query_port | 9030 | user <--> FE | MySQL server port on FE |
-| FE | edit\_log_port | 9010 | FE <--> FE | Port on FE for BDBJE communication |
-| Broker | broker ipc_port | 8000 | FE --> Broker, BE --> Broker | Thrift server port on Broker for receiving requests |
+| Instance Name | Port Name 			  | Default Port | Communication Direction 		| Description																	|
+| --------------|-------------------------|--------------|------------------------------|-------------------------------------------------------------------------------|
+| BE 			| be_port 			      | 9060 		 | FE --> BE		 	   		| Thrift server port on BE for receiving requests from FE 						|
+| BE 			| webserver\_port 		  | 8040 		 | BE <--> BE 					| HTTP server port on BE 														|
+| BE 			| heartbeat\_service_port | 9050 		 | FE --> BE 					| Heart beat service port (thrift) on BE, used to receive heartbeat from FE 	|
+| BE 			| brpc\_port 			  | 8060 		 | FE <--> BE, BE <--> BE 		| BRPC port on BE for communication between BEs 								|
+| FE 			| http_port 			  | 8030 		 | FE <--> FE, user <--> FE 	| HTTP server port on FE 														|
+| FE 			| rpc_port 				  | 9020 		 | BE --> FE, FE <--> FE 		| Thrift server port on FE; The configurations of each FE should be consistent. |
+| FE 			| query_port 			  | 9030 		 | user <--> FE 				| MySQL server port on FE 														|
+| FE 			| edit\_log_port 		  | 9010 		 | FE <--> FE 					| Port on FE for BDBJE communication 											|
+| Broker 		| broker ipc_port		  | 8000 		 | FE --> Broker, BE --> Broker | Thrift server port on Broker for receiving requests 							|
 
 > Note:
 > 

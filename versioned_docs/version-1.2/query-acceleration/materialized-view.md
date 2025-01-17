@@ -188,15 +188,15 @@ The table structure of this `sales_records` is as follows:
 
 ```
 MySQL [test]> desc sales_records;
-+-----------+--------+------+-------+---------+--- ----+
-| Field | Type | Null | Key | Default | Extra |
-+-----------+--------+------+-------+---------+--- ----+
-| record_id | INT | Yes | true | NULL | |
-| seller_id | INT | Yes | true | NULL | |
-| store_id | INT | Yes | true | NULL | |
-| sale_date | DATE | Yes | false | NULL | NONE |
-| sale_amt | BIGINT | Yes | false | NULL | NONE |
-+-----------+--------+------+-------+---------+--- ----+
++-----------+--------+------+-------+---------+-------+
+| Field     | Type   | Null | Key   | Default | Extra |
++-----------+--------+------+-------+---------+-------+
+| record_id | INT    | Yes  | true  | NULL    |       |
+| seller_id | INT    | Yes  | true  | NULL    |       |
+| store_id  | INT    | Yes  | true  | NULL    |       |
+| sale_date | DATE   | Yes  | false | NULL    | NONE  |
+| sale_amt  | BIGINT | Yes  | false | NULL    | NONE  |
++-----------+--------+------+-------+---------+-------+
 ```
 
 At this time, if the user often performs an analysis query on the sales volume of different stores, you can create a materialized view for the `sales_records` table to group the sales stores and sum the sales of the same sales stores. The creation statement is as follows:
@@ -223,11 +223,11 @@ SHOW ALTER TABLE MATERIALIZED VIEW FROM db_name; (Version 0.13)
 In this command, `db_name` is a parameter, you need to replace it with your real db name. The result of the command is to display all the tasks of creating a materialized view of this db. The results are as follows:
 
 ```
-+-------+---------------+---------------------+--- ------------------+---------------+--------------- --+----------+---------------+-----------+-------- -------------------------------------------------- -------------------------------------------------- -------------+----------+---------+
++-------+-----------+------------+--------------+---------------+-----------------+----------+
 | JobId | TableName | CreateTime | FinishedTime | BaseIndexName | RollupIndexName | RollupId | TransactionId | State | Msg | Progress | Timeout |
-+-------+---------------+---------------------+--- ------------------+---------------+--------------- --+----------+---------------+-----------+-------- -------------------------------------------------- -------------------------------------------------- -------------+----------+---------+
++-------+---------------+---------------------+---------------------+---------------+---------
 | 22036 | sales_records | 2020-07-30 20:04:28 | 2020-07-30 20:04:57 | sales_records | store_amt | 22037 | 5008 | FINISHED | | NULL | 86400 |
-+-------+---------------+---------------------+--- ------------------+---------------+--------------- --+----------+---------------+-----------+-------- ----------------------------------------
++-------+---------------+---------------------+---------------------+---------------+---------
 
 ```
 

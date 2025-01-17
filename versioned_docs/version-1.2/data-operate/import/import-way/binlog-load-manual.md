@@ -113,8 +113,8 @@ To enable the binlog of MySQL, you need to edit the my.cnf file and set it like:
 
 ```
 [mysqld]
-log-bin = mysql-bin # 开启 binlog
-binlog-format=ROW # 选择 ROW 模式
+log-bin = mysql-bin # Enable binlog
+binlog-format=ROW # Select ROW mode
 ```
 
 ### Principle Description

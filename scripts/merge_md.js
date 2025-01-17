@@ -19,10 +19,24 @@ const fs = require('fs');
 const path = require('path');
 const i18nJsonFile = require('../i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2.json');
 
+
+// v2.0 zh
+// const sidebarPath = 'versioned_sidebars/version-2.0-sidebars.json';
+// const docsBaseDir = 'i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0';
+// const outputPath = 'doc-2.0.md';
+// const excludes = [];
+
+// v1.2
 const sidebarPath = 'versioned_sidebars/version-1.2-sidebars.json';
+const excludes = ['SQL Manual'];
+
+// zh
 const docsBaseDir = 'i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2';
 const outputPath = 'doc-1.2.md';
-const excludes = ['SQL Manual'];
+
+// en
+// const docsBaseDir = 'versioned_docs/version-1.2';
+// const outputPath = 'doc-1.2-en.md';
 
 const fileLinkName = {};
 
@@ -155,9 +169,9 @@ function trimCodeFunc(mdContent) {
 }
 
 /**
- * 
+ *
  * @example
- * 
+ *
  * ---
  * {
  *   "title": "快速体验",
@@ -167,7 +181,7 @@ function trimCodeFunc(mdContent) {
  * ---
  *
  * # 快速体验
- * 
+ *
  * "# 快速体验" will be parsed as a title, which will cause title duplication, so remove it
  */
 function removeDuplicateTitle(mdContent) {
@@ -207,7 +221,8 @@ function translateTitle(mdContent) {
 
 function adjustHeaders(mdContent, level) {
     const match = mdContent.match(/{[^}]*}/);
-    const mainTitle = JSON.parse(match[0].replace(/'/g, '"')).title;
+    const specialTitle = `{ "title": "What's Apache Doris", "language": "en" }`;
+    const mainTitle = JSON.parse(match[0] === specialTitle ? match[0] : match[0].replace(/'/g, '"')).title;
     const lines = mdContent.split('\n');
 
     let hasMainTitle = false;
@@ -282,7 +297,6 @@ function filterSidebarTree(sidebar, excludes) {
 }
 
 function getI18nMap() {
-    // const data = i18nJsonFile.
     const map = new Map();
     Object.keys(i18nJsonFile).forEach(originKey => {
         const value = i18nJsonFile[originKey].message;
@@ -304,6 +318,7 @@ function mergeMarkdownFiles() {
         content += processItems(category.items, 1);
     });
     writeMarkdownContent(outputPath, translateTitle(content));
+    // writeMarkdownContent(outputPath, content);
 }
 
 mergeMarkdownFiles();
