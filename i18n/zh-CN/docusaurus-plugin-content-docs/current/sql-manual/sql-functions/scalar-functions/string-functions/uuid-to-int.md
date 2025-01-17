@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## uuid_to_int
 
 ## 描述
 
@@ -32,7 +31,9 @@ under the License.
 
 ## 语法
 
-`LARGEINT uuid_to_int(VARCHAR uuid)`
+```sql
+uuid_to_int(VARCHAR uuid)
+```
 
 
 ## 示例

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## url_encode
+
 ## 描述
 
 使用 UTF-8 编码完成所提供文本的 URL 编码。通常用于对作为 URL 的一部分传递的参数信息进行编码
@@ -32,19 +32,22 @@ under the License.
 ## 语法
 
 ```sql
-URL_ENCODE('VARCHAR STRING ') 
+URL_ENCODE(' STRING ') 
 ```
 
 ## 必选参数
 
-- VARCHAR STRING: 待编码的字符串。
+-  STRING: 待编码的字符串。
 
 ## 示例
 
 ```sql
-URL_ENCODE('Doris Q&A') 
+mysql> select  URL_ENCODE('Doris Q&A');
++-------------------------+
+| url_encode('Doris Q&A') |
++-------------------------+
+| Doris+Q%26A             |
++-------------------------+
+
 ```
-## 返回值
-```sql
-Doris+Q%26A
-```
+

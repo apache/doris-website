@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## url_decode
+
 ## 描述
 
 将URL转换为解码字符串。
@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-VARCHAR url_decode(VARCHAR url)
+url_decode( url )
 ```
 
 ## 必选参数

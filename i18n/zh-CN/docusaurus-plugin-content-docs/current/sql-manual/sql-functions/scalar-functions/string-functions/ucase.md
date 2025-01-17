@@ -23,14 +23,21 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-## ucase
+
+
 ## 描述
+
 用于将字符串转换为大写字母
+
 ## 别名
+
 - upper
+
 ## 语法
 
-`ucase(VARCHAR str)`
+```sql
+ucase(string)
+```
 
 ### 示例
 
