@@ -39,7 +39,7 @@ JOBS(
 ## Required Parameters
 | Field         | Description                                                                                   |
 |---------------|-----------------------------------------------------------------------------------------------|
-| **`<type>`**  | The type of the job. <br/> `insert`: Insert into type job. <br/> `mv`: Materialized view job. |
+| **`<type>`**  | The type of the job: <br/> `insert`: Insert into type job. <br/> `mv`: Materialized view job. |
 
 
 
