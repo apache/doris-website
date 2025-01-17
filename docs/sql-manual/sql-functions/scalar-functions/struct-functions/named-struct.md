@@ -22,48 +22,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## named_struct
+## description
 
-named_struct
+Construct and return a struct based on the given strings and values. Notes:
 
-### description
+- The number of parameters must be a non-zero even number.The odd-indexed elements are the names of the fields, which must be constant strings.The even-indexed elements are the values of the fields, which can be either multiple columns or constants.
 
-#### Syntax
+## Syntax
 
-`STRUCT<T1, T2, T3, ...> named_struct({VARCHAR, T1}, {VARCHAR, T2}, ...)`
-
-Construct a struct with the given field names and values. 
-
-The number of parameters must be non zero and even. With odd digits being the name of the field and could be string literal, with even digits being the value of the field and could be column or literal.
-
-### example
-
-```
-mysql> select named_struct('f1', 1, 'f2', 'a', 'f3', "abc");
-+-----------------------------------------------+
-| named_struct('f1', 1, 'f2', 'a', 'f3', 'abc') |
-+-----------------------------------------------+
-| {1, 'a', 'abc'}                               |
-+-----------------------------------------------+
-1 row in set (0.01 sec)
-
-mysql> select named_struct('a', null, 'b', "v");
-+-----------------------------------+
-| named_struct('a', NULL, 'b', 'v') |
-+-----------------------------------+
-| {NULL, 'v'}                       |
-+-----------------------------------+
-1 row in set (0.01 sec)
-
-mysql> select named_struct('f1', k1, 'f2', k2, 'f3', null) from test_tb;
-+--------------------------------------------------+
-| named_struct('f1', `k1`, 'f2', `k2`, 'f3', NULL) |
-+--------------------------------------------------+
-| {1, 'a', NULL}                                   |
-+--------------------------------------------------+
-1 row in set (0.02 sec)
+```sql
+NAMED_STRUCT( <field_name> , <filed_value> [ , <field_name> , <filed_value> ... ] )
 ```
 
-### keywords
+## Parameters
 
-NAMED, STRUCT, NAMED_STRUCT
+| Parameter | Description |
+| -- | -- |
+| `<field_name>` | The odd-indexed elements in constructing the struct are the field names, which must be constant strings |
+| `<filed_value>` | The even-indexed elements in constructing the struct represent the field values, which can be either multiple columns or constants |
+
+## Return Value
+
+Construct and return a struct based on the given strings and values.
+
+## example
+
+```sql
+select named_struct('f1', 1, 'f2', 'a', 'f3', "abc"),named_struct('a', null, 'b', "v");
+```
+
+```text
++-----------------------------------------------+-----------------------------------+
+| named_struct('f1', 1, 'f2', 'a', 'f3', 'abc') | named_struct('a', NULL, 'b', 'v') |
++-----------------------------------------------+-----------------------------------+
+| {"f1":1, "f2":"a", "f3":"abc"}                | {"a":null, "b":"v"}               |
++-----------------------------------------------+-----------------------------------+
+```
