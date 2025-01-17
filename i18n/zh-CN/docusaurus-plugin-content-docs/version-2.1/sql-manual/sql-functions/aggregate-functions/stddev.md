@@ -13,9 +13,7 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
-
   http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -24,30 +22,54 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## STDDEV,STDDEV_POP
 ## 描述
+
+返回 expr 表达式的标准差
+
 ## 语法
 
-`STDDEV(expr)`
+```sql
+STDDEV(<expr>)
+```
 
+## 参数
 
-返回expr表达式的标准差
+| 参数 | 说明 |
+| -- | -- |
+| `<expr>` | 需要被计算标准差的值 |
+
+## 返回值
+
+返回参数 expr 的标准差
 
 ## 举例
-```
-MySQL > select stddev(scan_rows) from log_statis group by datetime;
-+---------------------+
-| stddev(`scan_rows`) |
-+---------------------+
-|  2.3736656687790934 |
-+---------------------+
+```sql
+-- 创建示例表
+CREATE TABLE score_table (
+    student_id INT,
+    score DOUBLE
+) DISTRIBUTED BY HASH(student_id)
+PROPERTIES (
+    "replication_num" = "1"
+);
 
-MySQL > select stddev_pop(scan_rows) from log_statis group by datetime;
-+-------------------------+
-| stddev_pop(`scan_rows`) |
-+-------------------------+
-|      2.3722760595994914 |
-+-------------------------+
+-- 插入测试数据
+INSERT INTO score_table VALUES
+(1, 85),
+(2, 90),
+(3, 82),
+(4, 88),
+(5, 95);
+
+-- 计算所有学生分数的标准差
+SELECT STDDEV(score) as score_stddev
+FROM score_table;
 ```
-### keywords
-STDDEV,STDDEV_POP,POP
+
+```text
++-------------------+
+| score_stddev      |
++-------------------+
+| 4.427188724235729 |
++-------------------+
+```
