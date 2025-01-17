@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Construct and return a struct based on the given strings and values. Notes:
 
@@ -45,7 +45,7 @@ NAMED_STRUCT( <field_name> , <filed_value> [ , <field_name> , <filed_value> ... 
 
 Construct and return a struct based on the given strings and values.
 
-## example
+## Example
 
 ```sql
 select named_struct('f1', 1, 'f2', 'a', 'f3', "abc"),named_struct('a', null, 'b', "v");

@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 construct an struct with variadic elements and return it, Tn could be column or literal
 
@@ -42,7 +42,7 @@ STRUCT( <expr1> [ , <expr2> ... ] )
 
 construct an struct with variadic elements and return it, Tn could be column or literal
 
-## example
+## Example
 
 ```sql
 select struct(1, 'a', "abc"),struct(null, 1, null),struct(cast('2023-03-16' as datetime));

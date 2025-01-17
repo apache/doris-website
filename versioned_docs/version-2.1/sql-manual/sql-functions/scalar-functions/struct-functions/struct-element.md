@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Return a specific field within a data column of a struct.
 
@@ -44,7 +44,7 @@ STRUCT_ELEMENT( <struct>, `<filed_location>/<filed_name>`)
 
 Return the specified field column, with the type being any type
 
-## example
+## Example
 
 ```sql
 select struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2'),struct_element(named_struct('f1', 1, 'f2', 'a'), 1);
