@@ -56,13 +56,21 @@ RTIM( <str> [ , <rhs>])
 
 ```sql
 SELECT trim('   ab d   ') str;
+```
+```sql
+
 +------+
 | str  |
 +------+
 | ab d |
 +------+
+```
 
+```sql
 SELECT trim('ababccaab','ab') str;
+```
+
+```sql
 +------+
 | str  |
 +------+

@@ -55,13 +55,21 @@ TRIM_IN( <str> [ , <rhs>])
 
 ```sql
 SELECT trim_in('   ab d   ') str;
+```
+
+```sql
 +------+
 | str  |
 +------+
 | ab d |
 +------+
+```
 
+```sql
 SELECT trim_in('ababccaab','ab') str;
+```
+
+```sql
 +------+
 | str  |
 +------+

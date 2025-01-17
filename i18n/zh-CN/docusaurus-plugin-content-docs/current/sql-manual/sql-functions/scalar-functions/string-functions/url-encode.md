@@ -47,6 +47,9 @@ URL_ENCODE(  <str>  )
 
 ```sql
 select  URL_ENCODE('Doris Q&A');
+```
+
+```sql
 +-------------------------+
 | url_encode('Doris Q&A') |
 +-------------------------+

@@ -50,6 +50,9 @@ URL_DECODE( <str> )
 ```sql
 
 select  URL_DECODE('Doris+Q%26A');
+```
+
+```sql
 +---------------------------+
 | url_decode('Doris+Q%26A') |
 +---------------------------+
