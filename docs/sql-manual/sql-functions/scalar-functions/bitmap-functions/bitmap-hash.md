@@ -24,59 +24,43 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_hash
+## Description
 
-### Name
+Computes the 32-bit hash value of any input type and returns a Bitmap containing that hash value.
 
-BITMAP_HASH
-
-### Description
-
-Calculating hash value for what your input and return a BITMAP which contain the hash value. MurMur3 is used for this function because it is high-performance with low collision rate. More important, the MurMur3 distribution is "simili-random"; the Chi-Square distribution test is used to prove it. By the way, Different hardware platforms and different SEED may change the result of MurMur3. For more information about its performance, see [Smhasher](http://rurban.github.io/smhasher/).
-
-#### Syntax
-
-`BITMAP BITMAP_HASH(<any_value>)`
-
-#### Arguments
-
-`<any_value>`
-any value or expression. 
-
-#### Return Type
-
-BITMAP
-
-#### Remarks
-
-Generally, MurMurHash 32 is friendly to random, short STRING with low collision rate about one-billionth. But for longer STRING, such as your path of system, can cause more frequent collision. If you indexed your system path, you will find a lot of collisions.
-
-The following two values are the same.
+## Syntax
 
 ```sql
-SELECT bitmap_to_string(bitmap_hash('/System/Volumes/Data/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/KernelManagement.framework/KernelManagement.tbd')) AS a ,
-       bitmap_to_string(bitmap_hash('/System/Library/PrivateFrameworks/Install.framework/Versions/Current/Resources/es_419.lproj/Architectures.strings')) AS b;
+bitmap_hash(<expr>)
 ```
 
-Here is the result.
+## Parameters
 
-```text
-+-----------+-----------+
-| a         | b         |
-+-----------+-----------+
-| 282251871 | 282251871 |
-+-----------+-----------+
-```
+| Parameter | Description           |
+|-----------|-----------------------|
+| `<expr>`  | Any value or field expression |
 
-### Example
+## Return Value
 
-If you want to calculate MurMur3 of a certain value, you can
+Returns a Bitmap containing the 32-bit hash value of the parameter `<expr>`.
 
-```
+::: note
+
+The hash algorithm used is MurMur3.  
+MurMur3 is a high-performance, low-collision hashing algorithm that produces values close to a random distribution and can pass chi-squared distribution tests. Note that the hash values computed may differ across different hardware platforms and seed values.  
+For more details on the performance of this algorithm, see the [Smhasher](http://rurban.github.io/smhasher/) benchmark.
+
+:::
+
+## Examples
+
+To compute the MurMur3 hash of a value, you can use:
+
+```sql
 select bitmap_to_array(bitmap_hash('hello'))[1];
 ```
 
-Here is the result.
+The result will be:
 
 ```text
 +-------------------------------------------------------------+
@@ -86,13 +70,13 @@ Here is the result.
 +-------------------------------------------------------------+
 ```
 
-If you want to `count distinct` some columns, using bitmap has higher performance in some scenes. 
+To count the distinct values in a column using bitmaps, which can be more efficient than `count distinct` in some scenarios:
 
 ```sql
 select bitmap_count(bitmap_union(bitmap_hash(`word`))) from `words`;
 ```
 
-Here is the result.
+The result will be:
 
 ```text
 +-------------------------------------------------+
@@ -101,12 +85,3 @@ Here is the result.
 |                                        33263478 |
 +-------------------------------------------------+
 ```
-
-### Keywords
-
-    BITMAP_HASH,BITMAP
-
-### Best Practice
-
-For more information, see also:
-- [BITMAP_HASH64](./bitmap_hash64.md)

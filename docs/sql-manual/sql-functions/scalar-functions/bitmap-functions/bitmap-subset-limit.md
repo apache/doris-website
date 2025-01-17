@@ -24,36 +24,58 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_subset_limit
+## Description
 
-### Description
+Extracts a subset of Bitmap elements starting from a specified position, with a limit on the number of elements specified by the cardinality limit, and returns the subset as a new Bitmap.
 
-#### Syntax
+## Syntax
 
-`BITMAP BITMAP_SUBSET_LIMIT(BITMAP src, BIGINT range_start, BIGINT cardinality_limit)`
-
-Create subset of the BITMAP, begin with range from range_start, limit by cardinality_limit
-range_start: start value for the range
-cardinality_limit: subset upper limit
-
-### example
-
+```sql
+bitmap_subset_limit(<bitmap>, <position>, <cardinality_limit>)
 ```
-mysql> select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), 0, 3)) value;
+
+## Parameters
+
+| Parameter             | Description                   |
+|-----------------------|-------------------------------|
+| `<bitmap>`            | The Bitmap value              |
+| `<position>`          | The starting position (inclusive) |
+| `<cardinality_limit>` | The maximum number of elements |
+
+## Return Value
+
+A subset Bitmap within the specified range and limit.
+
+## Examples
+
+To get a subset of a Bitmap starting from position 0 with a cardinality limit of 3:
+
+```sql
+select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), 0, 3)) value;
+```
+
+The result will be:
+
+```text
 +-----------+
 | value     |
 +-----------+
-| 1,2,3 |
+| 1,2,3     |
 +-----------+
+```
 
-mysql> select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), 4, 3)) value;
+To get a subset of a Bitmap starting from position 4 with a cardinality limit of 3:
+
+```sql
+select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), 4, 3)) value;
+```
+
+The result will be:
+
+```text
 +-------+
 | value |
 +-------+
-| 4,5     |
+| 4,5   |
 +-------+
 ```
-
-### keywords
-
-    BITMAP_SUBSET_LIMIT,BITMAP_SUBSET,BITMAP

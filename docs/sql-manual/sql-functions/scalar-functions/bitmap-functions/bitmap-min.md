@@ -24,32 +24,57 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_min
-### description
-#### Syntax
+## Description
 
-`BIGINT BITMAP_MIN(BITMAP input)`
+Computes and returns the minimum value in a Bitmap.
 
-Calculate and return the min values of a bitmap.
+## Syntax
 
-### example
-
+```sql
+bitmap_min(<bitmap>)
 ```
-mysql> select bitmap_min(bitmap_from_string('')) value;
+
+## Parameters
+
+| Parameter  | Description                     |
+|------------|---------------------------------|
+| `<bitmap>` | A Bitmap type column or expression |
+
+## Return Value
+
+The minimum value in the Bitmap.  
+Returns `NULL` if the Bitmap is empty.
+
+## Examples
+
+To compute the minimum value in an empty Bitmap:
+
+```sql
+select bitmap_min(bitmap_from_string('')) value;
+```
+
+The result will be:
+
+```text
 +-------+
 | value |
 +-------+
 |  NULL |
 +-------+
+```
 
-mysql> select bitmap_min(bitmap_from_string('1,9999999999')) value;
+To compute the minimum value in a Bitmap with multiple elements:
+
+```sql
+select bitmap_min(bitmap_from_string('1,9999999999')) value;
+```
+
+The result will be:
+
+```text
 +-------+
 | value |
 +-------+
 |     1 |
 +-------+
 ```
-
-### keywords
-
-    BITMAP_MIN,BITMAP

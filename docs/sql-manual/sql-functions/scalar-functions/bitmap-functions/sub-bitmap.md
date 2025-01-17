@@ -22,40 +22,74 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sub_bitmap
+## Description
 
-### description
-#### Syntax
+Extracts a subset of Bitmap elements starting from a specified position and limited by a specified cardinality limit, returning the subset as a new Bitmap.
 
-`BITMAP SUB_BITMAP(BITMAP src, BIGINT offset, BIGINT cardinality_limit)`
+## Syntax
 
-Starting from the position specified by offset, intercept cardinality_limit bitmap elements and return a bitmap subset.
-
-### example
-
+```sql
+sub_bitmap(<bitmap>, <position>, <cardinality_limit>)
 ```
-mysql> select bitmap_to_string(sub_bitmap(bitmap_from_string('1,0,1,2,3,1,5'), 0, 3)) value;
+
+## Parameters
+
+| Parameter             | Description                   |
+|-----------------------|-------------------------------|
+| `<bitmap>`            | The Bitmap value              |
+| `<position>`          | The starting position (inclusive) |
+| `<cardinality_limit>` | The maximum number of elements |
+
+## Return Value
+
+A subset Bitmap within the specified range and limit.
+
+## Examples
+
+To get a subset of a Bitmap starting from position 0 with a cardinality limit of 3:
+
+```sql
+select bitmap_to_string(sub_bitmap(bitmap_from_string('1,0,1,2,3,1,5'), 0, 3)) value;
+```
+
+The result will be:
+
+```text
 +-------+
 | value |
 +-------+
 | 0,1,2 |
 +-------+
+```
 
-mysql> select bitmap_to_string(sub_bitmap(bitmap_from_string('1,0,1,2,3,1,5'), -3, 2)) value;
+To get a subset of a Bitmap starting from position -3 with a cardinality limit of 2:
+
+```sql
+select bitmap_to_string(sub_bitmap(bitmap_from_string('1,0,1,2,3,1,5'), -3, 2)) value;
+```
+
+The result will be:
+
+```text
 +-------+
 | value |
 +-------+
 | 2,3   |
 +-------+
+```
 
-mysql> select bitmap_to_string(sub_bitmap(bitmap_from_string('1,0,1,2,3,1,5'), 2, 100)) value;
+To get a subset of a Bitmap starting from position 2 with a cardinality limit of 100:
+
+```sql
+select bitmap_to_string(sub_bitmap(bitmap_from_string('1,0,1,2,3,1,5'), 2, 100)) value;
+```
+
+The result will be:
+
+```text
 +-------+
 | value |
 +-------+
 | 2,3,5 |
 +-------+
 ```
-
-### keywords
-
-    SUB_BITMAP,BITMAP_SUBSET,BITMAP

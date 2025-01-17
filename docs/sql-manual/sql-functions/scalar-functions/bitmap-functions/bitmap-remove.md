@@ -24,32 +24,60 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_remove
-### description
-#### Syntax
+## Description
 
-`BITMAP BITMAP_REMOVE(BITMAP bitmap, BIGINT input)`
+Removes a specified value from a Bitmap column.
 
-Remove the specified value from bitmap.
+## Syntax
 
-### example
-
+```sql
+bitmap_remove(<bitmap>, <value>)
 ```
-mysql [(none)]>select bitmap_to_string(bitmap_remove(bitmap_from_string('1, 2, 3'), 3)) res; 
+
+## Parameters
+
+| Parameter   | Description    |
+|-------------|----------------|
+| `<bitmap>`  | The Bitmap value |
+| `<value>`   | The value to remove |
+
+## Return Value
+
+Returns the Bitmap after removing the specified value.
+
+Returns the original Bitmap if the value to be removed does not exist;  
+Returns `NULL` if the value to be removed is `NULL`.
+
+## Examples
+
+To remove a value from a Bitmap:
+
+```sql
+select bitmap_to_string(bitmap_remove(bitmap_from_string('1, 2, 3'), 3)) res;
+```
+
+The result will be:
+
+```text
 +------+
 | res  |
 +------+
 | 1,2  |
 +------+
+```
 
-mysql [(none)]>select bitmap_to_string(bitmap_remove(bitmap_from_string('1, 2, 3'), null)) res;
+To remove a `NULL` value from a Bitmap:
+
+```sql
+select bitmap_to_string(bitmap_remove(bitmap_from_string('1, 2, 3'), null)) res;
+```
+
+The result will be:
+
+```text
 +------+
 | res  |
 +------+
 | NULL |
 +------+
 ```
-
-### keywords
-
-    BITMAP_REMOVE,BITMAP
