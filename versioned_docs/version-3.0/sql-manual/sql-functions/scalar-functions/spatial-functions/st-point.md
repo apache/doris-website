@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_Point
 ## Description
 
 With the given X coordinate value, the Y coordinate value returns the corresponding Point.

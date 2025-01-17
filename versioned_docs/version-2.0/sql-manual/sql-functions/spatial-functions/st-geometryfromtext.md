@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_GeometryFromText,ST_GeomFromText
 ## Description
 
 Convert a linear WKT (Well Known Text) to the corresponding memory geometry

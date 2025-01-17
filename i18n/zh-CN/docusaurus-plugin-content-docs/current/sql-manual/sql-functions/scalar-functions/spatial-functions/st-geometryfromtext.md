@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_GeometryFromText,ST_GeomFromText
 ## 描述
 
 将一个线型 WKT（Well Known Text）转化为对应的内存的几何形式

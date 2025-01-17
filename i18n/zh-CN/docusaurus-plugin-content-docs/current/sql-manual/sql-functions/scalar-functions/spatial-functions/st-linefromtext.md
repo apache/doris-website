@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_LineFromText,ST_LineStringFromText
 ## 描述
 
 将一个 WKT（Well Known Text）转化为一个 Line 形式的内存表现形式

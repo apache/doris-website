@@ -24,25 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_Circle
 ## 描述
+
+将一个 WKT（Well Known Text）转化为地球球面上的一个圆。
+
 ## 语法
 
-`GEOMETRY ST_Circle(DOUBLE center_lng, DOUBLE center_lat, DOUBLE radius)`
+```sql
+GEOMETRY ST_Circle(DOUBLE center_lng, DOUBLE center_lat, DOUBLE radius)
+```
+## 参数
 
+| 参数 | 说明 |
+| -- | -- |
+| `center_lng` | 圆心的经度 |
+| `center_lat` | 圆心的纬度 |
+| `radius` | 圆的半径 |
 
-将一个WKT（Well Known Text）转化为地球球面上的一个圆。其中`center_lng`表示的圆心的经度，
-`center_lat`表示的是圆心的纬度，`radius`表示的是圆的半径，单位是米,最大支持9999999
+- radius 单位是米，最大支持 9999999
+
+## 返回值
+
+根据圆的基本信息得到的球面上的一个圆
 
 ## 举例
 
+```sql
+SELECT ST_AsText(ST_Circle(111, 64, 10000));
 ```
-mysql> SELECT ST_AsText(ST_Circle(111, 64, 10000));
+
+```text
 +--------------------------------------------+
 | st_astext(st_circle(111.0, 64.0, 10000.0)) |
 +--------------------------------------------+
 | CIRCLE ((111 64), 10000)                   |
 +--------------------------------------------+
 ```
-### keywords
-ST_CIRCLE,ST,CIRCLE
+

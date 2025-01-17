@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_GeometryFromWKB,ST_GeomFromWKB
-
 ## 描述
 
 将一个标准图形 WKB（Well-known binary）转化为对应的内存的几何形式

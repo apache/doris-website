@@ -24,28 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_LineFromText,ST_LineStringFromText
-## 描述
+## Description
 
-将一个 WKT（Well Known Text）转化为一个 Line 形式的内存表现形式
+Converts a WKT (Well Known Text) to a memory representation in the form of a Line
 
-## 语法
+## Syntax
 
 ```sql
 GEOMETRY ST_LineFromText(VARCHAR wkt)
 ```
 
-## 参数
+## Parameters
 
-| 参数  | 说明         |
+| Parameters  | Instructions         |
 |-----|------------|
-| `wkt` | 由两个坐标组成的线段 |
+| `wkt` | A line segment consisting of two coordinates |
 
-## 返回值
+## Return Value
 
-线段的内存形式。
+The memory form of a line segment.
 
-## 举例
+## Examples
 
 ```sql
 SELECT ST_AsText(ST_LineFromText("LINESTRING (1 1, 2 2)"));

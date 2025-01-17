@@ -24,32 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_Contains
-### Description
-#### Syntax
+## Description
 
-`BOOL ST_Contains(GEOMETRY shape1, GEOMETRY shape2)`
+Determines whether the geometry shape1 is fully capable of containing the geometry shape2
 
+## Syntax
 
-Judging whether geometric shape 1 can contain geometric shape 2 completely
-
-### example
-
-
+```sql
+BOOL ST_Contains(GEOMETRY shape1, GEOMETRY shape2)
 ```
-mysql> SELECT ST_Contains(ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"), ST_Point(5, 5));
+
+## Parameters
+
+| Parameters | Instructions |
+|----------|------------------------|
+| `shape1` | The passed geometry used to determine whether shape2 is included |
+| `shape2` | The passed geometry is used to determine whether shape1 is included |
+
+## Return Value
+
+Return 1:shape1 The graph can contain the graph shape2
+
+Return 0:shape1 Graph cannot contain graph shape2
+
+
+## Examples
+
+```sql
+SELECT ST_Contains(ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"), ST_Point(5, 5));
+```
+
+```text
 +----------------------------------------------------------------------------------------+
 | st_contains(st_polygon('POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))'), st_point(5.0, 5.0)) |
 +----------------------------------------------------------------------------------------+
 |                                                                                      1 |
 +----------------------------------------------------------------------------------------+
+```
 
-mysql> SELECT ST_Contains(ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"), ST_Point(50, 50));
+```sql
+SELECT ST_Contains(ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"), ST_Point(50, 50));
+```
+
+```text
 +------------------------------------------------------------------------------------------+
 | st_contains(st_polygon('POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))'), st_point(50.0, 50.0)) |
 +------------------------------------------------------------------------------------------+
 |                                                                                        0 |
 +------------------------------------------------------------------------------------------+
 ```
-### keywords
-ST_CONTAINS,ST,CONTAINS

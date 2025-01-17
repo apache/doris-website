@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_Point
 ## 描述
 
 通过给定的 X 坐标值，Y 坐标值返回对应的 Point。

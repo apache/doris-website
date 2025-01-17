@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_Polygon,ST_PolyFromText,ST_PolygonFromText
 ## Description
 
 Convert a WKT (Well Known Text) to the corresponding polygonal memory form

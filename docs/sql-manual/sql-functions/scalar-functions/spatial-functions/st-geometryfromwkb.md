@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_GeometryFromWKB,ST_GeomFromWKB
-
 ## Description
 
 Converts a standard figure WKB (Well-known binary) to the corresponding memory geometry

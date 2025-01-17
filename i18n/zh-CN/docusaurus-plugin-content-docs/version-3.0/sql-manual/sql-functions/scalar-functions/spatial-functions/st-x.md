@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_X
-
 ## 描述
 
 当 point 是一个合法的 POINT 类型时，返回对应的 X 坐标值

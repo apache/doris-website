@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_Y
 ## Description
 
 When point is a valid POINT type, return the corresponding y-coordinate value

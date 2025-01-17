@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_X
-
 ## Description
 
 When point is a valid POINT type, return the corresponding x-coordinate value

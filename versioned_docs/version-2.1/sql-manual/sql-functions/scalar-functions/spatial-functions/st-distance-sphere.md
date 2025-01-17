@@ -24,27 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_Distance_Sphere
-### description
-#### Syntax
+## Description
 
-`DOUBLE ST_Distance_Sphere(DOUBLE x_lng, DOUBLE x_lat, DOUBLE y_lng, DOUBLE y_lat)`
+Calculate the spherical distance in meters between two points on the Earth. The parameters passed in are the longitude of point X, latitude of point X, longitude of point Y, and latitude of point Y.
 
+## Syntax
 
-Calculate the spherical distance between two points of the earth in meters. The incoming parameters are the longitude of point X, the latitude of point X, the longitude of point Y and the latitude of point Y.
-
-x_lng and y_lng are Longitude values, must be in the range [-180, 180].
-x_lat and y_lat are Latitude values, must be in the range [-90, 90].
-
-### example
-
+```sql
+DOUBLE ST_Distance_Sphere(DOUBLE x_lng, DOUBLE x_lat, DOUBLE y_lng, DOUBLE y_lat)
 ```
-mysql> select st_distance_sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219);
+
+## Parameters
+
+| Parameters | Instructions |
+| -- | -- |
+| `x_lng` | Longitude data, reasonable value range is [-180, 180] |
+| `y_lng` | Longitude data, reasonable value range is [-180, 180] |
+| `x_lat` | Latitude data, reasonable value range is [-90, 90] |
+| `y_lat` | Latitude data, reasonable value range is [-90, 90] |
+
+## Return Value
+
+The spherical distance between two points
+
+## Examples
+
+```sql
+select st_distance_sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219);
+```
+
+```text
 +----------------------------------------------------------------------------+
 | st_distance_sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219) |
 +----------------------------------------------------------------------------+
 |                                                         7336.9135549995917 |
 +----------------------------------------------------------------------------+
 ```
-### keywords
-ST_DISTANCE_SPHERE,ST,DISTANCE,SPHERE
+
