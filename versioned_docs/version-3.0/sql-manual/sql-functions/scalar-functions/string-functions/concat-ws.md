@@ -24,63 +24,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## concat_ws
-### Description
-#### Syntax
+## Description
+
+Use the first parameter sep as the connector to concatenate the second parameter and all subsequent parameters (or all strings in ARRAY) into a string. Special cases:
+
+- If the separator is NULL, return NULL.
+
+The `concat_ws` function does not skip empty strings, but skips NULL values.
+
+## Syntax
 
 ```sql
-VARCHAR concat_ws(VARCHAR sep, VARCHAR str,...)
-VARCHAR concat_ws(VARCHAR sep, ARRAY array)
+VARCHAR concat_ws(VARCHAR sep, VARCHAR str [, VARCHAR str])
+VARCHAR concat_ws(VARCHAR sep, ARRAY arr)
 ```
 
-Using the first parameter SEP as a connector, the second parameter and all subsequent parameters(or all string in an ARRAY) are spliced into a string.
-If the separator is NULL, return NULL.
-The `concat_ws` function does not skip empty strings, it skips NULL values.
+## Parameters
 
-### example
+| Parameter | Description |
+|-------|-----------------|
+| `sep` | Connector for concatenating strings |
+| `str` | String to be concatenated |
+| `arr` | Array to be concatenated |
 
+## Return value
+
+Parameter str or array The string after concatenation using sep. Special cases:
+
+- If delimiter is NULL, returns NULL.
+
+## Example
+
+Concatenate strings together using or
+
+```sql
+select concat_ws("or", "d", "is"),concat_ws(NULL, "d", "is"),concat_ws('or', 'd', NULL, 'is')
 ```
-mysql> select concat_ws("or", "d", "is");
-+----------------------------+
-| concat_ws('or', 'd', 'is') |
-+----------------------------+
-| doris                      |
-+----------------------------+
 
-mysql> select concat_ws(NULL, "d", "is");
-+----------------------------+
-| concat_ws(NULL, 'd', 'is') |
-+----------------------------+
-| NULL                       |
-+----------------------------+
-
-mysql> select concat_ws("or", "d", NULL,"is");
-+---------------------------------+
-| concat_ws("or", "d", NULL,"is") |
-+---------------------------------+
-| doris                           |
-+---------------------------------+
-
-mysql> select concat_ws("or", ["d", "is"]);
-+-----------------------------------+
-| concat_ws('or', ARRAY('d', 'is')) |
-+-----------------------------------+
-| doris                             |
-+-----------------------------------+
-
-mysql> select concat_ws(NULL, ["d", "is"]);
-+-----------------------------------+
-| concat_ws(NULL, ARRAY('d', 'is')) |
-+-----------------------------------+
-| NULL                              |
-+-----------------------------------+
-
-mysql> select concat_ws("or", ["d", NULL,"is"]);
-+-----------------------------------------+
-| concat_ws('or', ARRAY('d', NULL, 'is')) |
-+-----------------------------------------+
-| doris                                   |
-+-----------------------------------------+
+```text
++----------------------------+----------------------------+------------------------------------------+
+| concat_ws('or', 'd', 'is') | concat_ws(NULL, 'd', 'is') | concat_ws('or', 'd', NULL, 'is') |
++----------------------------+----------------------------+------------------------------------------+
+| doris                      | NULL                       | doris                              |
++----------------------------+----------------------------+------------------------------------------+
 ```
-### keywords
-    CONCAT_WS,CONCAT,WS,ARRAY
+
+Concatenate array arrays together using or
+
+```sql
+select concat_ws("or", ["d", "is"]),concat_ws(NULL, ["d", "is"]),concat_ws("or", ["d", NULL,"is"])
+```
+
+```text
++------------------------------+------------------------------+------------------------------------+
+| concat_ws('or', ['d', 'is']) | concat_ws(NULL, ['d', 'is']) | concat_ws('or', ['d', NULL, 'is']) |
++------------------------------+------------------------------+------------------------------------+
+| doris                        | NULL                         | doris                              |
++------------------------------+------------------------------+------------------------------------+
+```

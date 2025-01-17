@@ -24,38 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## locate
-### Description
-#### Syntax
+## Description
 
-`INT LOCATION (VARCHAR substrate, VARCHAR str [, INT pos]]`
+Returns the position of substr in str (counting from 1). If the third parameter pos is specified, the position of substr is searched from the string starting with the pos subscript. If not found, 0 is returned
 
+## Syntax
 
-Returns where substr appears in str (counting from 1). If the third parameter POS is specified, the position where substr appears is found from the string where STR starts with POS subscript. If not found, return 0
-
-### example
-
+```sql
+locate(VARCHAR substr, VARCHAR str [, INT pos])
 ```
-mysql> SELECT LOCATE('bar', 'foobarbar');
-+----------------------------+
-| locate('bar', 'foobarbar') |
-+----------------------------+
-|                          4 |
-+----------------------------+
 
-mysql> SELECT LOCATE('xbar', 'foobar');
-+--------------------------+
-| locate('xbar', 'foobar') |
-+--------------------------+
-|                        0 |
-+--------------------------+
+## Parameters
 
-mysql> SELECT LOCATE('bar', 'foobarbar', 5);
-+-------------------------------+
-| locate('bar', 'foobarbar', 5) |
-+-------------------------------+
-|                             7 |
-+-------------------------------+
+| Parameter | Description |
+| -- |-----------------|
+| `substr` | The substring to be searched |
+| `str` | The string to be searched |
+| `pos` | If this parameter is specified, str starts with the pos subscript and searches for the position of substr |
+
+## Return value
+
+The position of substr in str (counting from 1)
+
+## Example
+
+```sql
+SELECT locate('bar', 'foobarbar'),locate('xbar', 'foobar'),locate('bar', 'foobarbar', 5)
 ```
-### keywords
-    LOCATE
+
+```text
++----------------------------+--------------------------+-------------------------------+
+| locate('bar', 'foobarbar') | locate('xbar', 'foobar') | locate('bar', 'foobarbar', 5) |
++----------------------------+--------------------------+-------------------------------+
+|                          4 |                        0 |                             7 |
++----------------------------+--------------------------+-------------------------------+
+```

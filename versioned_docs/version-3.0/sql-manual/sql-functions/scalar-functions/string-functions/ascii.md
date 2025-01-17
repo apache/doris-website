@@ -24,31 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ascii
-### Description
-#### Syntax
+## Description
 
-`INT AXES (WARCHAR STR)`
+Returns the ASCII code of the first character of a string
 
+## Syntax
 
-Returns the ASCII code corresponding to the first character of the string
-
-### example
-
+```sql
+ascii(VARCHAR str)
 ```
-mysql> select ascii('1');
-+------------+
-| ascii('1') |
-+------------+
-|         49 |
-+------------+
 
-mysql> select ascii('234');
-+--------------+
-| ascii('234') |
-+--------------+
-|           50 |
-+--------------+
+## Parameters
+
+| Parameters | Description |
+| -- |-------------------------|
+| `str` | The string whose ASCII code of the first character needs to be calculated |
+
+## Return value
+
+Parameter str The ASCII code of the first character
+
+## Example
+
+```sql
+select ascii('1'),ascii('234')
 ```
-### keywords
-    ASCII
+
+```text
++------------+--------------+
+| ascii('1') | ascii('234') |
++------------+--------------+
+|         49 |           50 |
++------------+--------------+
+```

@@ -24,31 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## instr
-### Description
-#### Syntax
+## Description
 
-`INSTR (VARCHAR STR, VARCHAR substrate)`
+Returns the first occurrence position of substr in str (counting starts from 1). Special cases:
 
+- If substr does not appear in str, it returns 0.
 
-Returns the location where substr first appeared in str (counting from 1). If substr does not appear in str, return 0.
+## Syntax
 
-### example
-
+```sql
+instr(VARCHAR str, VARCHAR substr)
 ```
-mysql> select instr("abc", "b");
-+-------------------+
-| instr('abc', 'b') |
-+-------------------+
-|                 2 |
-+-------------------+
 
-mysql> select instr("abc", "d");
-+-------------------+
-| instr('abc', 'd') |
-+-------------------+
-|                 0 |
-+-------------------+
+## Parameters
+
+| Parameters | Description |
+|--------|-----------|
+| `str` | String to be searched |
+| `substr` | String to be searched |
+
+## Return value
+
+Parameters The first occurrence position of substr in str (counting starts from 1). Special cases:
+
+- If substr does not appear in str, it returns 0.
+
+## Example
+
+```sql
+select instr("abc", "b"),instr("abc", "d")
 ```
-### keywords
-    INSTR
+
+```text
++-------------------+-------------------+
+| instr('abc', 'b') | instr('abc', 'd') |
++-------------------+-------------------+
+|                 2 |                 0 |
++-------------------+-------------------+
+```

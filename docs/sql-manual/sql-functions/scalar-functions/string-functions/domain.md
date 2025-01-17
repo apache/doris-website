@@ -23,3 +23,37 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## Description
+
+Extract the domain name from the string URL
+
+## Syntax
+
+```sql
+domain(STRING <url>)
+```
+
+## Parameters
+
+| Parameters | Description |
+| -- |--------------------|
+| `<url>` | `URL` from which the domain name needs to be extracted |
+
+## Return value
+
+Domain name of parameter url
+
+## Example
+
+```sql
+select domain("https://doris.apache.org/docs/gettingStarted/what-is-apache-doris")
+```
+
+```text
++-----------------------------------------------------------------------------+
+| domain('https://doris.apache.org/docs/gettingStarted/what-is-apache-doris') |
++-----------------------------------------------------------------------------+
+| doris.apache.org                                                            |
++-----------------------------------------------------------------------------+
+```

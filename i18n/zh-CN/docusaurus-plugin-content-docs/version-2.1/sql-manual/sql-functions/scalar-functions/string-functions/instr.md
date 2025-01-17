@@ -24,31 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## instr
 ## 描述
+
+返回 substr 在 str 中第一次出现的位置（从1开始计数）。特殊情况：
+
+- 如果 substr 不在 str 中出现，则返回0。
+
 ## 语法
 
-`INT instr(VARCHAR str, VARCHAR substr)`
+```sql
+instr(VARCHAR str, VARCHAR substr)
+```
 
+## 参数
 
-返回 substr 在 str 中第一次出现的位置（从1开始计数）。如果 substr 不在 str 中出现，则返回0。
+| 参数     | 说明        |
+|--------|-----------|
+| `str`   | 需要查找的字符串  |
+| `substr` | 需要被查找的字符串 |
+
+## 返回值
+
+参数 substr 在 str 中第一次出现的位置（从1开始计数）。特殊情况：
+
+- 如果 substr 不在 str 中出现，则返回0。
 
 ## 举例
 
+```sql
+select instr("abc", "b"),instr("abc", "d")
 ```
-mysql> select instr("abc", "b");
-+-------------------+
-| instr('abc', 'b') |
-+-------------------+
-|                 2 |
-+-------------------+
 
-mysql> select instr("abc", "d");
-+-------------------+
-| instr('abc', 'd') |
-+-------------------+
-|                 0 |
-+-------------------+
+```text
++-------------------+-------------------+
+| instr('abc', 'b') | instr('abc', 'd') |
++-------------------+-------------------+
+|                 2 |                 0 |
++-------------------+-------------------+
 ```
-### keywords
-    INSTR

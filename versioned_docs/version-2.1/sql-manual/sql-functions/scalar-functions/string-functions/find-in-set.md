@@ -24,26 +24,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## find_in_set
-### description
-#### Syntax
+## Description
 
-`INT find_in_set(VARCHAR str, VARCHAR strlist)`
+Returns the position of the first occurrence of str in strlist (counting starts from 1).
 
-"NOT found in set (VARCHAR str., VARCHAR strlist)"
+strlist is a string separated by commas. Special cases:
 
+- If not found, returns 0.
+- If any parameter is NULL, returns NULL.
 
-Return to the location where the str first appears in strlist (counting from 1). Strlist is a comma-separated string. If not, return 0. Any parameter is NULL, returning NULL.
+## Syntax
 
-### example
-
+```sql
+find_in_set(VARCHAR str, VARCHAR strlist)
 ```
-mysql> select find_in_set("b", "a,b,c");
-+---------------------------+
+
+## Parameters
+
+| Parameters | Description |
+| -- |----------|
+| `str` | String to be searched |
+| `strlist` | String to be searched |
+
+## Return value
+
+Parameter str The position of the first occurrence of parameter strlist. Special cases:
+
+- If not found, returns 0.
+- If any parameter is NULL, returns NULL.
+
+## Example
+
+```sql
+select find_in_set("b", "a,b,c")
+```
+
+```text
 | find_in_set('b', 'a,b,c') |
 +---------------------------+
 |                         2 |
 +---------------------------+
 ```
-### keywords
-    FIND_IN_SET,FIND,IN,SET

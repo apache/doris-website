@@ -24,41 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
+
+Extract the "first valid subdomain" from the URL and return it. If it is illegal, an empty string will be returned.
 
 ## Syntax
 
-`VARCHAR  first_significant_subdomain(VARCHAR url)`
+```sql
+first_significant_subdomain(VARCHAR url)
+```
 
+## Parameters
 
-Extract the "first valid subdomain" from a URL and return it. If the URL is invalid, return an empty string.
+| Parameters | Description |
+| -- |----------------------|
+| `url` | The URL from which the "first valid subdomain" needs to be extracted |
+
+## Return value
+
+The first valid subdomain in `url`.
 
 ## Example
 
 ```sql
-mysql [(none)]>select first_significant_subdomain("www.baidu.com");
-+----------------------------------------------+
-| first_significant_subdomain('www.baidu.com') |
-+----------------------------------------------+
-| baidu                                        |
-+----------------------------------------------+
-
-mysql [(none)]>select first_significant_subdomain("www.google.com.cn");
-+--------------------------------------------------+
-| first_significant_subdomain('www.google.com.cn') |
-+--------------------------------------------------+
-| google                                           |
-+--------------------------------------------------
-
-mysql [(none)]>select first_significant_subdomain("wwwwwwww");
-+-----------------------------------------+
-| first_significant_subdomain('wwwwwwww') |
-+-----------------------------------------+
-|                                         |
-+-----------------------------------------+
+select first_significant_subdomain("www.baidu.com"),first_significant_subdomain("www.google.com.cn"),first_significant_subdomain("wwwwwwww")
 ```
 
-### Keywords
-
-FIRST_SIGNIFICANT_SUBDOMAIN
+```text
++----------------------------------------------+--------------------------------------------------+-----------------------------------------+
+| first_significant_subdomain('www.baidu.com') | first_significant_subdomain('www.google.com.cn') | first_significant_subdomain('wwwwwwww') |
++----------------------------------------------+--------------------------------------------------+-----------------------------------------+
+| baidu                                        | google                                           |                                         |
++----------------------------------------------+--------------------------------------------------+-----------------------------------------+
+```

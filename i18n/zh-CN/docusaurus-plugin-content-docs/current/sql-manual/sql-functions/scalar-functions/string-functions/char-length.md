@@ -24,31 +24,42 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## char_length
 ## 描述
+
+计算字符串的长度，对于多字节字符，返回字符数。
+
+目前仅支持 `utf8` 编码
+
+## 别名
+
+- character_length
+
 ## 语法
 
-`INT char_length(VARCHAR str)`
+```sql 
+char_length(VARCHAR str)
+```
 
+## 参数
 
-返回字符串的长度，对于多字节字符，返回字符数, 目前仅支持utf8 编码。这个函数还有一个别名 `character_length`。
+| 参数 | 说明         |
+| -- |------------|
+| `str` | 需要计算长度的字符串 |
+
+## 返回值
+
+字符串 str 的长度。
 
 ## 举例
 
+```sql
+select char_length("abc"),char_length("中国")
 ```
-mysql> select char_length("abc");
-+--------------------+
-| char_length('abc') |
-+--------------------+
-|                  3 |
-+--------------------+
 
-mysql> select char_length("中国");
-+------------------- ---+
-| char_length('中国')   |
-+-----------------------+
-|                     2 |
-+-----------------------+
+```text
++-------------------------+----------------------------+
+| character_length('abc') | character_length('中国')   |
++-------------------------+----------------------------+
+|                       3 |                          2 |
++-------------------------+----------------------------+
 ```
-### keywords
-    CHAR_LENGTH, CHARACTER_LENGTH

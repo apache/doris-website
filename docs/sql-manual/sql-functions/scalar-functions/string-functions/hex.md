@@ -24,62 +24,56 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hex
-### description
-#### Syntax
+## Description
 
-`VARCHAR hex(VARCHAR str)`
+If the input parameter is a number, return the string representation of the hexadecimal value.
 
-`VARCHAR hex(BIGINT num)`
+If the input parameter is a string, convert each character to two hexadecimal characters, concatenate all the converted characters into a string and output.
 
-If the input parameter is a number, the string representation of the hexadecimal value is returned;
+## Syntax
 
-If the input parameter is a string, each character will be converted into two hexadecimal characters, and all the characters after the conversion will be spliced into a string for output
+```sql
+hex(VARCHAR str)
 
-
-### example
-
-```
-input string
-
-mysql> select hex('1');
-+----------+
-| hex('1') |
-+----------+
-| 31       |
-+----------+
-
-mysql> select hex('@');
-+----------+
-| hex('@') |
-+----------+
-| 40       |
-+----------+
-
-mysql> select hex('12');
-+-----------+
-| hex('12') |
-+-----------+
-| 3132      |
-+-----------+
+hex(BIGINT num)
 ```
 
-```
-intput num
+## Parameters
 
-mysql> select hex(12);
-+---------+
-| hex(12) |
-+---------+
-| C       |
-+---------+
+| Parameter | Description |
+|-------|----------|
+| `num` | Input parameter is a number |
+| `str` | Input parameter is a string |
 
-mysql> select hex(-1);
-+------------------+
-| hex(-1)          |
-+------------------+
-| FFFFFFFFFFFFFFFF |
-+------------------+
+## Return value
+
+The hexadecimal result of parameter num or str.
+
+## Example
+
+The input parameter is a number
+```sql
+select hex(12),hex(-1)
 ```
-### keywords
-    HEX
+
+```text
++---------+------------------+
+| hex(12) | hex(-1)          |
++---------+------------------+
+| C       | FFFFFFFFFFFFFFFF |
++---------+------------------+
+```
+
+The input parameter is a string
+
+```sql
+select hex('1'),hex('@'),hex('12')
+```
+
+```text
++----------+----------+-----------+
+| hex('1') | hex('@') | hex('12') |
++----------+----------+-----------+
+| 31       | 40       | 3132      |
++----------+----------+-----------+
+```

@@ -24,41 +24,48 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## lpad
-### Description
-#### Syntax
+## Description
 
-`VARCHAR lpad (VARCHAR str, INT len, VARCHAR pad)`
+Returns a string of length len (starting from the first letter) in str.
 
+If len is greater than the length of str, pad characters are added to the front of str until the length of the string reaches len.
 
-Returns a string of length len in str, starting with the initials. If len is longer than str, pad characters are added to STR until the length of the string reaches len. If len is less than str's length, the function is equivalent to truncating STR strings and returning only strings of len's length. The len is character length not the bye size.
+If len is less than the length of str, this function is equivalent to truncating the str string and returning only a string of length len. len refers to the character length rather than the byte length.
 
-Except when it contains a NULL in parameters, when pad's length is 0, the return value is the empty string.
+Special cases:
 
-### example
+- In addition to containing NULL values, if pad is empty, the return value is an empty string.
 
-```
-mysql> SELECT lpad("hi", 5, "xy");
-+---------------------+
-| lpad('hi', 5, 'xy') |
-+---------------------+
-| xyxhi               |
-+---------------------+
+## Syntax
 
-mysql> SELECT lpad("hi", 1, "xy");
-+---------------------+
-| lpad('hi', 1, 'xy') |
-+---------------------+
-| h                   |
-+---------------------+
-
-mysql> SELECT lpad("", 0, "");
-+-----------------+
-| lpad('', 0, '') |
-+-----------------+
-|                 |
-+-----------------+
+```sql
+lpad(VARCHAR str, INT len, VARCHAR pad)
 ```
 
-### keywords
-    LPAD
+## Parameters
+
+| Parameter | Description |
+| -- |------------------------------|
+| `str` | The string to be padded |
+| `len` | The length of the string to be padded, which refers to the character length rather than the byte length |
+| `pad` | The string to be padded on the left side of the original string |
+
+## Return value
+
+The padded string. Special cases:
+
+- If pad is empty, the return value is an empty string, except when it contains NULL values.
+
+## Example
+
+```sql
+select lpad("hi", 5, "xy"),lpad("hi", 1, "xy"),lpad("", 0, "")
+```
+
+```text
++---------------------+---------------------+-----------------+
+| lpad('hi', 5, 'xy') | lpad('hi', 1, 'xy') | lpad('', 0, '') |
++---------------------+---------------------+-----------------+
+| xyxhi               | h                   |                 |
++---------------------+---------------------+-----------------+
+```

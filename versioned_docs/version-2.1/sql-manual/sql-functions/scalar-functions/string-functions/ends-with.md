@@ -24,31 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ends_with
-### Description
-#### Syntax
+## Description
 
-`BOOLEAN ENDS_WITH(VARCHAR str, VARCHAR suffix)`
+Returns true if the string ends with the specified suffix, otherwise returns false. Special cases:
 
-It returns true if the string ends with the specified suffix, otherwise it returns false. 
-If any parameter is NULL, it returns NULL.
+- If either of the two parameters is NULL, returns NULL.
 
-### example
+## Syntax
 
+```sql
+ends_with(VARCHAR str, VARCHAR suffix)
 ```
-mysql> select ends_with("Hello doris", "doris");
-+-----------------------------------+
-| ends_with('Hello doris', 'doris') |
-+-----------------------------------+
-|                                 1 | 
-+-----------------------------------+
 
-mysql> select ends_with("Hello doris", "Hello");
-+-----------------------------------+
-| ends_with('Hello doris', 'Hello') |
-+-----------------------------------+
-|                                 0 | 
-+-----------------------------------+
+## Parameters
+
+| Parameter | Description |
+| -- |--------------|
+| `str` | Specifies the original string to be judged |
+| `suffix` | Specifies the ending string to be judged |
+
+## Return value
+
+true or false, type is `BOOLEAN`. Special cases:
+
+- If either of the two parameters is NULL, returns NULL.
+
+## Example
+
+```sql
+select ends_with("Hello doris", "doris"),ends_with("Hello doris", "Hello")
 ```
-### keywords
-    ENDS_WITH
+
+```text
++-----------------------------------+-----------------------------------+
+| ends_with('Hello doris', 'doris') | ends_with('Hello doris', 'Hello') |
++-----------------------------------+-----------------------------------+
+|                                 1 |                                 0 |
++-----------------------------------+-----------------------------------+
+```

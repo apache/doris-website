@@ -23,3 +23,37 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## Description
+
+Extract the domain name without the prefix www from the string URL
+
+## Syntax
+
+```sql
+domain_without_www(STRING <url>)
+```
+
+## Parameters
+
+| Parameters | Description |
+| -- |----------------------|
+| `<url>` | Need to extract the `URL` without the www domain name |
+
+## Return value
+
+Parameter url Domain name without the prefix www
+
+## Example
+
+```sql
+select domain_without_www("https://www.apache.org/docs/gettingStarted/what-is-apache-doris")
+```
+
+```text
++---------------------------------------------------------------------------------------+
+| domain_without_www('https://www.apache.org/docs/gettingStarted/what-is-apache-doris') |
++---------------------------------------------------------------------------------------+
+| apache.org                                                                            |
++---------------------------------------------------------------------------------------+
+```

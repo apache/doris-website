@@ -23,3 +23,38 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## Description
+
+Returns the substring starting at the specified offset from the left side of string s.
+
+## Syntax
+
+```sql
+left(VARCHAR s,INT offset)
+```
+
+## Parameters
+
+| Parameter | Description |
+| -- |---------------|
+| `s` | The string to be searched |
+| `offset` | The offset to be calculated from the left side |
+
+## Return Value
+
+The substring starting at the specified offset from the left side of string s.
+
+## Example
+
+```sql
+SELECT left('Hello', 3)
+```
+
+```text
++------------------+
+| left('Hello', 3) |
++------------------+
+| Hel              |
++------------------+
+```

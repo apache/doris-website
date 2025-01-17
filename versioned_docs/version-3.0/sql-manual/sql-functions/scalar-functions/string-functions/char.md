@@ -24,44 +24,45 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Description
 
-## function char
-### description
-#### Syntax
+Interpret each argument as an integer and return a string consisting of the characters given by the code values ​​of those integers. Special cases:
 
-`VARCHAR char(INT,..., [USING charset_name])`
+- If the result string is illegal for the given character set, the corresponding conversion result is NULL.
 
-Interprets each argument as an integer and returns a string consisting of the characters given by the code values of those integers. `NULL` values are skipped.
+- Arguments greater than `255` are converted to multiple result bytes. For example, `char(15049882)` is equivalent to `char(229, 164, 154)`.
 
-If the result string is illegal for the given character set, the result from `CHAR()` becomes `NULL`.
+## Syntax
 
-Arguments larger than `255` are converted into multiple result bytes. For example, `char(15049882)` is equivalent to `char(229, 164, 154)`.
-
-Currently only `utf8` is supported for `charset_name`.
-
-### example
-
+```sql
+char(INT <expr1> [ , INT <expr2> ... ] [USING charset_name])
 ```
-mysql> select char(68, 111, 114, 105, 115);
-+--------------------------------------+
-| char('utf8', 68, 111, 114, 105, 115) |
-+--------------------------------------+
-| Doris                                |
-+--------------------------------------+
 
-mysql> select char(15049882, 15179199, 14989469);
-+--------------------------------------------+
-| char('utf8', 15049882, 15179199, 14989469) |
-+--------------------------------------------+
-| 多睿丝                                     |
-+--------------------------------------------+
+## Parameters
 
-mysql> select char(255);
-+-------------------+
-| char('utf8', 255) |
-+-------------------+
-| NULL              |
-+-------------------+
+| Parameters | Description |
+| -- |---------------------|
+| `<expr1>` | Integer to be evaluated as a character |
+| `charset_name` | Encoding of the return value, currently only `utf8` is supported |
+
+## Return value
+
+Parameter list expr1 The string consisting of the corresponding characters. Special cases:
+
+- If the result string is illegal for the given character set, the corresponding conversion result is NULL.
+
+- Arguments greater than `255` are converted to multiple result bytes. For example, `char(15049882)` is equivalent to `char(229, 164, 154)`.
+
+## Example
+
+```sql
+select char(68, 111, 114, 105, 115),char(15049882, 15179199, 14989469),char(255)
 ```
-### keywords
-    CHAR
+
+```text
++--------------------------------------+--------------------------------------------+-------------------+
+| char('utf8', 68, 111, 114, 105, 115) | char('utf8', 15049882, 15179199, 14989469) | char('utf8', 255) |
++--------------------------------------+--------------------------------------------+-------------------+
+| Doris                                | 多睿丝                                     | NULL              |
++--------------------------------------+--------------------------------------------+-------------------+
+```

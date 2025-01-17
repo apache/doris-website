@@ -22,41 +22,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## elt
-### Description
-#### Syntax
+## Description
 
-`VARCHAR elt(INT, VARCHAR,...)`
+Returns a string at the specified index. Special cases:
 
-Returns the string at specified index. Returns NULL if there is no string at specified index.
+- If there is no string at the specified index, NULL is returned.
 
-### example
+## Syntax
 
+```sql
+elt(INT <pos>, VARCHAR <str> [, VARCHAR <str>])
 ```
-mysql> select elt(1, 'aaa', 'bbb');
-+----------------------+
-| elt(1, 'aaa', 'bbb') |
-+----------------------+
-| aaa                  |
-+----------------------+
-mysql> select elt(2, 'aaa', 'bbb');
-+-----------------------+
-| elt(2, 'aaa', 'bbb')  |
-+-----------------------+
-| bbb                   |
-+-----------------------+
-mysql> select elt(0, 'aaa', 'bbb');
-+----------------------+
-| elt(0, 'aaa', 'bbb') |
-+----------------------+
-| NULL                 |
-+----------------------+
-mysql> select elt(2, 'aaa', 'bbb');
-+-----------------------+
-| elt(3, 'aaa', 'bbb')  |
-+-----------------------+
-| NULL                  |
-+-----------------------+
+
+## Parameters
+
+| Parameter | Description |
+| -- |------------|
+| `<pos>` | Specified index value |
+| `<str>` | String to be indexed |
+
+## Return value
+
+Parameter `str` String to be indexed. Special cases:
+
+- If there is no string at the specified index, NULL is returned.
+
+## Example
+
+```sql
+select elt(1, 'aaa', 'bbb'),elt(2, 'aaa', 'bbb'), elt(0, 'aaa', 'bbb'),elt(2, 'aaa', 'bbb')
 ```
-### keywords
-    ELT
+
+```text
++----------------------+----------------------+----------------------+----------------------+
+| elt(1, 'aaa', 'bbb') | elt(2, 'aaa', 'bbb') | elt(0, 'aaa', 'bbb') | elt(2, 'aaa', 'bbb') |
++----------------------+----------------------+----------------------+----------------------+
+| aaa                  | bbb                  | NULL                 | bbb                  |
++----------------------+----------------------+----------------------+----------------------+
+```
