@@ -23,29 +23,29 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-### description
+## Description
 
 iceberg_meta table-valued-function(tvf), Use for read iceberg metadata, operation history, snapshots of table, file metadata etc.
 
-#### syntax
+## Syntax
 
 ```sql
 ICEBERG_META(
     "table" = "<table>", 
-    "query_type" = "<snapshots>"
+    "query_type" = "<query_type>"
   );
 ```
 
 ## Required Parameters
 Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` pair.
 
-**1. `<table>`**
-- `table`: The full table name, which must be specified in the format of `database_name.table_name` for the Iceberg table that you want to view.
+| Field        | Description                                                                                                                           |
+|--------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| `<table>`    | The full table name, which must be specified in the format of `database_name.table_name` for the Iceberg table that you want to view. |
+| `<query_type>` | The type of metadata you want to view. Currently, only `snapshots` is supported.                                                      |
 
-**2. `<query_type>`**
-- `query_type`: The type of metadata you want to view. Currently, only `snapshots` is supported.
 
-### Example
+## Examples
 
 - Read and access the iceberg tabular metadata for snapshots.
 

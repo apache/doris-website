@@ -41,14 +41,13 @@ HUDI_META(
 ## Required Parameters
 Each parameter in the `hudi_meta` table function (tvf) is a `"key"="value"` pair.
 
-**1. `<table>`**
-- `table`: The full table name, which must be specified in the format of `database_name.table_name` for the hudi table that you want to view.
+| Field        | Description                                                                                                                        |
+|--------------|------------------------------------------------------------------------------------------------------------------------------------|
+| `<table>`    | The full table name, which must be specified in the format of `database_name.table_name` for the hudi table that you want to view. |
+| `<query_type>` | The type of metadata you want to view. Currently, only `timeline` is supported.                                                    |
 
-**2. `<query_type>`**
-- `query_type`: The type of metadata you want to view. Currently, only `timeline` is supported.
 
-
-## Example
+## Examples
 
 - Read and access the hudi tabular metadata for timeline.
 
