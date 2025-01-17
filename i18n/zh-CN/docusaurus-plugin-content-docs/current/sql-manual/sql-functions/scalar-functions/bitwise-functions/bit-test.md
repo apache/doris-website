@@ -35,7 +35,7 @@ under the License.
 整数`<x>`范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT。
 
 ## 别名
-BIT_TEST_ALL
+- BIT_TEST_ALL
 
 ## 语法
 ```sql
