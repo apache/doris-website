@@ -31,10 +31,10 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME MONTH_CEIL(DATETIME datetime)
-DATETIME MONTH_CEIL(DATETIME datetime, DATETIME origin)
-DATETIME MONTH_CEIL(DATETIME datetime, INT period)
-DATETIME MONTH_CEIL(DATETIME datetime, INT period, DATETIME origin)
+MONTH_CEIL(<datetime>)
+MONTH_CEIL(<datetime>, <origin>)
+MONTH_CEIL(<datetime>, <period>)
+MONTH_CEIL(<datetime>, <period>, <origin>)
 ```
 
 ## 参数
@@ -68,10 +68,6 @@ SELECT MONTH_CEIL("2023-07-13 22:28:18", 5);
 - period 必须为正整数
 - 结果总是向未来时间取整
 - 返回值的时间部分总是 00:00:00
-
-## 关键词
-
-    MONTH_CEIL, MONTH, CEIL
 
 ## 最佳实践
 

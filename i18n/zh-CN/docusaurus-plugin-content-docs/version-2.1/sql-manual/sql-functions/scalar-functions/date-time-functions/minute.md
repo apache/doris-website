@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-INT MINUTE(DATETIME date)
+MINUTE(<date>)
 ```
 
 ## 参数
@@ -43,7 +43,7 @@ INT MINUTE(DATETIME date)
 
 ## 返回值
 
-返回类型为 INT，表示分钟值（0-59）。
+返回类型为 INT，表示分钟值，取值范围为 0-59。
 
 ## 举例
 
@@ -63,7 +63,3 @@ SELECT MINUTE('2018-12-31 23:59:59');
 - 输入参数可以是多种时间相关类型
 - 返回值始终是 0-59 之间的整数
 - 如果输入参数为 NULL，则返回 NULL
-
-## 关键词
-
-    MINUTE

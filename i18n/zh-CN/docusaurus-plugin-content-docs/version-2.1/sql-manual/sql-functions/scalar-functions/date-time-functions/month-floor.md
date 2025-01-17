@@ -31,10 +31,10 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME MONTH_FLOOR(DATETIME datetime)
-DATETIME MONTH_FLOOR(DATETIME datetime, DATETIME origin)
-DATETIME MONTH_FLOOR(DATETIME datetime, INT period)
-DATETIME MONTH_FLOOR(DATETIME datetime, INT period, DATETIME origin)
+MONTH_FLOOR(<datetime>)
+MONTH_FLOOR(<datetime>, <origin>)
+MONTH_FLOOR(<datetime>, <period>)
+MONTH_FLOOR(<datetime>, <period>, <origin>)
 ```
 
 ## 参数
@@ -69,10 +69,6 @@ SELECT MONTH_FLOOR("2023-07-13 22:28:18", 5);
 - 结果总是向过去时间取整
 - 返回值的时间部分总是 00:00:00
 - 与 MONTH_CEIL 相反，MONTH_FLOOR 总是舍去超出周期的部分
-
-## 关键词
-
-    MONTH_FLOOR, MONTH, FLOOR
 
 ## 最佳实践
 

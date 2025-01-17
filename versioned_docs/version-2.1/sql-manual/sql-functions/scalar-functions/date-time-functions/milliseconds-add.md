@@ -32,7 +32,7 @@ Adds a specified number of milliseconds to a datetime value and returns a new da
 ## Syntax
 
 ```sql
-DATETIMEV2 MILLISECONDS_ADD(DATETIMEV2 basetime, INT delta)
+MILLISECONDS_ADD(<basetime>, <delta>)
 ```
 
 ## Parameters
@@ -44,7 +44,7 @@ DATETIMEV2 MILLISECONDS_ADD(DATETIMEV2 basetime, INT delta)
 
 ## Return Value
 
-Returns a value of type DATETIMEV2, with the same precision as the input parameter basetime.
+Returns a value of type DATETIMEV2, representing the time value after adding the specified number of milliseconds to the input datetime. The precision of the return value is the same as that of the input parameter basetime.
 
 ## Example
 
@@ -64,7 +64,3 @@ SELECT MILLISECONDS_ADD('2023-09-08 16:02:08.435123', 1);
 - In the example, after adding 1 millisecond, the time increases from .435123 to .436123.
 - 1 millisecond equals 1000 microseconds.
 - The function's result is dependent on the precision of the input time; the example uses a precision of 6 decimal places.
-
-## Keywords
-
-    MILLISECONDS_ADD

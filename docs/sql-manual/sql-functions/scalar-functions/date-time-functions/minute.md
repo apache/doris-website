@@ -32,18 +32,18 @@ Extracts the minute part from a datetime value. The returned value ranges from 0
 ## Syntax
 
 ```sql
-INT MINUTE(DATETIME date)
+MINUTE(<datetime>)
 ```
 
 ## Parameters
 
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| date      | The input datetime value, which can be of type DATE, DATETIME, DATETIMEV2, or TIME |
+| datetime  | The input datetime value, which can be of type DATE, DATETIME, DATETIMEV2, or TIME |
 
 ## Return Value
 
-Returns an INT type representing the minute value (0-59).
+Returns an INT type representing the minute value, with a range of 0-59.
 
 ## Example
 
@@ -63,7 +63,3 @@ SELECT MINUTE('2018-12-31 23:59:59');
 - The input parameter can be of various time-related types.
 - The returned value is always an integer between 0 and 59.
 - If the input parameter is NULL, the function returns NULL.
-
-## Keywords
-
-    MINUTE

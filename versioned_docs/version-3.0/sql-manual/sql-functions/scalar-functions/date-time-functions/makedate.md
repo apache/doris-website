@@ -36,7 +36,7 @@ Special cases:
 ## Syntax
 
 ```sql
-DATE MAKEDATE(INT year, INT dayofyear)
+MAKEDATE(<year>, <dayofyear>)
 ```
 
 ## Parameters
@@ -48,7 +48,7 @@ DATE MAKEDATE(INT year, INT dayofyear)
 
 ## Return Value
 
-Returns a value of type DATE.
+Returns a value of type DATE, constructed from the specified year and the given day of the year.
 
 ## Example
 
@@ -63,7 +63,3 @@ SELECT MAKEDATE(2021, 1), MAKEDATE(2021, 100), MAKEDATE(2021, 400);
 | 2021-01-01        | 2021-04-10          | 2022-02-04          |
 +-------------------+---------------------+---------------------+
 ```
-
-## Keywords
-
-    MAKEDATE

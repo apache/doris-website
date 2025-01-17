@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-VARCHAR MONTHNAME(DATETIME date)
+MONTHNAME(<date>)
 ```
 
 ## 参数
@@ -51,7 +51,7 @@ VARCHAR MONTHNAME(DATETIME date)
 ## 举例
 
 ```sql
-select monthname('2008-02-03 00:00:00');
+SELECT MONTHNAME('2008-02-03 00:00:00');
 ```
 
 ```text
@@ -61,7 +61,3 @@ select monthname('2008-02-03 00:00:00');
 | February                                                |
 +---------------------------------------------------------+
 ```
-
-## 关键词
-
-    MONTHNAME

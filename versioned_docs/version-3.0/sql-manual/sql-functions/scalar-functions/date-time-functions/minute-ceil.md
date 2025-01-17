@@ -32,10 +32,10 @@ Rounds up a datetime value to the nearest specified minute interval. If a starti
 ## Syntax
 
 ```sql
-DATETIME MINUTE_CEIL(DATETIME datetime)
-DATETIME MINUTE_CEIL(DATETIME datetime, DATETIME origin)
-DATETIME MINUTE_CEIL(DATETIME datetime, INT period)
-DATETIME MINUTE_CEIL(DATETIME datetime, INT period, DATETIME origin)
+MINUTE_CEIL(<datetime>)
+MINUTE_CEIL(<datetime>, <origin>)
+MINUTE_CEIL(<datetime>, <period>)
+MINUTE_CEIL(<datetime>, <period>, <origin>)
 ```
 
 ## Parameters
@@ -48,7 +48,7 @@ DATETIME MINUTE_CEIL(DATETIME datetime, INT period, DATETIME origin)
 
 ## Return Value
 
-Returns a value of type DATETIMEV2, representing the rounded-up datetime value.
+Returns a value of type DATETIMEV2, representing the rounded-up datetime value based on the specified minute interval. The precision of the return value is the same as that of the input parameter datetime.
 
 ## Example
 
@@ -68,10 +68,6 @@ SELECT MINUTE_CEIL("2023-07-13 22:28:18", 5);
 - If no period is specified, it defaults to a 1-minute interval.
 - The period must be a positive integer.
 - The result is always rounded up to a future time.
-
-## Keywords
-
-    MINUTE_CEIL, MINUTE, CEIL
 
 ## Best Practices
 

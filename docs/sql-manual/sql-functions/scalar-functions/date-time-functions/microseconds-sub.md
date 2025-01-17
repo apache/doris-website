@@ -32,7 +32,7 @@ Subtracts a specified number of microseconds from a datetime value and returns a
 ## Syntax
 
 ```sql
-DATETIMEV2 MICROSECONDS_SUB(DATETIMEV2 basetime, INT delta)
+MICROSECONDS_SUB(<basetime>, <delta>)
 ```
 
 ## Parameters
@@ -44,12 +44,12 @@ DATETIMEV2 MICROSECONDS_SUB(DATETIMEV2 basetime, INT delta)
 
 ## Return Value
 
-Returns a value of type DATETIMEV2, with the same precision as the input parameter basetime.
+Returns a value of type DATETIMEV2, representing the time value after subtracting the specified number of microseconds from the input datetime. The precision of the return value is the same as that of the input parameter basetime.
 
 ## Example
 
 ```sql
-SELECT NOW(3) as current_time, MICROSECONDS_SUB(NOW(3), 100000) as after_sub;
+SELECT NOW(3) AS current_time, MICROSECONDS_SUB(NOW(3), 100000) AS after_sub;
 ```
 
 ```text
@@ -64,7 +64,3 @@ SELECT NOW(3) as current_time, MICROSECONDS_SUB(NOW(3), 100000) as after_sub;
 - NOW(3) returns the current time with a precision of 3 decimal places.
 - After subtracting 100000 microseconds (0.1 seconds), the time decreases by 0.1 seconds.
 - The function's result is dependent on the precision of the input time.
-
-## Keywords
-
-    MICROSECONDS_SUB

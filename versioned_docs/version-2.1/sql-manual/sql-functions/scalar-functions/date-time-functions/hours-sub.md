@@ -26,26 +26,26 @@ under the License.
 
 ## Description
 
-Returns a new datetime value by subtracting the specified number of hours from the input datetime.
+Returns a new datetime value that is the result of subtracting a specified number of hours from the input datetime.
 
 ## Syntax
 
 ```sql
-DATETIME HOURS_SUB(DATETIME date, INT hours)
+HOURS_SUB(<date>, <hours>)
 ```
 
 ## Parameters
 
-| Parameter | Description |
-| ---- | ---- |
-| date | Input datetime value, type can be DATETIME or DATE |
-| hours | Number of hours to subtract, type is INT |
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| date      | The input datetime value, which can be of type DATETIME or DATE |
+| hours     | The number of hours to subtract, of type INT     |
 
 ## Return Value
 
-Returns a DATETIME type value.
+Returns a value of type DATETIME, representing the time value after subtracting the specified number of hours from the input datetime.
 
-## Examples
+## Example
 
 ```sql
 SELECT HOURS_SUB('2020-02-02 02:02:02', 1);
@@ -58,7 +58,3 @@ SELECT HOURS_SUB('2020-02-02 02:02:02', 1);
 | 2020-02-02 01:02:02                                        |
 +------------------------------------------------------------+
 ```
-
-## Keywords
-
-    HOURS_SUB

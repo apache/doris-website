@@ -32,7 +32,7 @@ Calculates the minute difference between two datetime values. The result is the 
 ## Syntax
 
 ```sql
-INT MINUTES_DIFF(DATETIME enddate, DATETIME startdate)
+MINUTES_DIFF(<enddate>, <startdate>)
 ```
 
 ## Parameters
@@ -66,7 +66,3 @@ SELECT MINUTES_DIFF('2020-12-25 22:00:00', '2020-12-25 21:00:00');
 - The calculation only considers complete minutes; seconds and milliseconds are ignored.
 - If either input parameter is NULL, the function returns NULL.
 - It can handle time differences that span days, months, or years.
-
-## Keywords
-
-    MINUTES_DIFF

@@ -32,7 +32,7 @@ Extracts the microsecond part from a datetime value. The returned range is from 
 ## Syntax
 
 ```sql
-INT MICROSECOND(DATETIMEV2 date)
+MICROSECOND(<date>)
 ```
 
 ## Parameters
@@ -43,7 +43,7 @@ INT MICROSECOND(DATETIMEV2 date)
 
 ## Return Value
 
-Returns an INT type representing the microsecond value (0-999999).
+Returns an INT type representing the microsecond part of the datetime value. The range is from 0 to 999999. For inputs with a precision less than 6, the missing digits are padded with zeros.
 
 ## Example
 
@@ -58,7 +58,3 @@ SELECT MICROSECOND(CAST('1999-01-02 10:11:12.000123' AS DATETIMEV2(6))) AS micro
 |         123 |
 +-------------+
 ```
-
-## Keywords
-
-    MICROSECOND

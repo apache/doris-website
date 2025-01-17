@@ -32,7 +32,7 @@ Adds a specified number of minutes to a datetime value and returns a new datetim
 ## Syntax
 
 ```sql
-DATETIME MINUTES_ADD(DATETIME date, INT minutes)
+MINUTES_ADD(<datetime>, <minutes>)
 ```
 
 ## Parameters
@@ -64,7 +64,3 @@ SELECT MINUTES_ADD("2020-02-02", 1);
 - When the number of minutes added is negative, it effectively subtracts the corresponding number of minutes.
 - The function automatically handles cases that cross hours and days.
 - If the input parameter is NULL, the function returns NULL.
-
-## Keywords
-
-    MINUTES_ADD

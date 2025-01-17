@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-INT MILLISECONDS_DIFF(DATETIMEV2 enddate, DATETIMEV2 startdate)
+MILLISECONDS_DIFF(<enddate>, <startdate>)
 ```
 
 ## 参数
@@ -52,7 +52,7 @@ INT MILLISECONDS_DIFF(DATETIMEV2 enddate, DATETIMEV2 startdate)
 ## 举例
 
 ```sql
-select milliseconds_diff('2020-12-25 21:00:00.623000','2020-12-25 21:00:00.123000');
+SELECT MILLISECONDS_DIFF('2020-12-25 21:00:00.623000', '2020-12-25 21:00:00.123000');
 ```
 
 ```text
@@ -67,7 +67,3 @@ select milliseconds_diff('2020-12-25 21:00:00.623000','2020-12-25 21:00:00.12300
 - 示例中的时间差为 0.5 秒，即 500 毫秒
 - 函数的计算结果与输入时间的精度有关，示例使用了 3 位小数精度
 - 结果只返回毫秒差值，不包含微秒部分
-
-## 关键词
-
-    MILLISECONDS_DIFF

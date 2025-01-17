@@ -27,12 +27,12 @@ under the License.
 
 ## 描述
 
-开始时间到结束时间相差几小时
+开始时间到结束时间相差几小时。
 
 ## 语法
 
 ```sql
-INT hours_diff(DATETIME enddate, DATETIME startdate)
+HOURS_DIFF(<enddate>, <startdate>)
 ```
 
 ## 参数
@@ -44,12 +44,12 @@ INT hours_diff(DATETIME enddate, DATETIME startdate)
 
 ## 返回值
 
-返回类型为 INT。
+返回类型为 INT，返回开始时间到结束时间相差的小时数。
 
 ## 举例
 
 ```sql
-select hours_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
+SELECT HOURS_DIFF('2020-12-25 22:00:00', '2020-12-25 21:00:00');
 ```
 
 ```text
@@ -59,7 +59,3 @@ select hours_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
 |                                                                                                      1 |
 +--------------------------------------------------------------------------------------------------------+
 ```
-
-## 关键词
-
-    hours_diff

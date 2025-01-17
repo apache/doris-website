@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-INT MINUTES_DIFF(DATETIME enddate, DATETIME startdate)
+MINUTES_DIFF(<enddate>, <startdate>)
 ```
 
 ## 参数
@@ -50,7 +50,7 @@ INT MINUTES_DIFF(DATETIME enddate, DATETIME startdate)
 ## 举例
 
 ```sql
-select minutes_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
+SELECT MINUTES_DIFF('2020-12-25 22:00:00', '2020-12-25 21:00:00');
 ```
 
 ```text
@@ -65,7 +65,3 @@ select minutes_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
 - 计算只考虑完整的分钟数，秒和毫秒部分会被忽略
 - 如果任一输入参数为 NULL，则返回 NULL
 - 可以处理跨天、跨月、跨年的时间差计算
-
-## 关键词
-
-    MINUTES_DIFF

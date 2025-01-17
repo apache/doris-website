@@ -32,7 +32,7 @@ Calculates the microsecond difference between two datetime values. The result is
 ## Syntax
 
 ```sql
-INT MICROSECONDS_DIFF(DATETIMEV2 enddate, DATETIMEV2 startdate)
+MICROSECONDS_DIFF(<enddate>, <startdate>)
 ```
 
 ## Parameters
@@ -62,7 +62,3 @@ SELECT MICROSECONDS_DIFF('2020-12-25 21:00:00.623000', '2020-12-25 21:00:00.1230
 |                                                                                                                      500000 |
 +-----------------------------------------------------------------------------------------------------------------------------+
 ```
-
-## Keywords
-
-    MICROSECONDS_DIFF

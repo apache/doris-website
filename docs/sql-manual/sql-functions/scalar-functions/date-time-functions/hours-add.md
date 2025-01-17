@@ -26,26 +26,26 @@ under the License.
 
 ## Description
 
-Returns a new datetime value by adding the specified number of hours to the input datetime.
+Returns a new datetime value that is the result of adding a specified number of hours to the input datetime.
 
 ## Syntax
 
 ```sql
-DATETIME HOURS_ADD(DATETIME date, INT hours)
+HOURS_ADD(<date>, <hours>)
 ```
 
 ## Parameters
 
-| Parameter | Description |
-| ---- | ---- |
-| date | Input datetime value, type can be DATETIME or DATE |
-| hours | Number of hours to add, type is INT |
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| date      | The input datetime value, which can be of type DATETIME or DATE |
+| hours     | The number of hours to add, of type INT         |
 
 ## Return Value
 
-Returns a DATETIME type value.
+Returns a value of type DATETIME, representing the time value after adding the specified number of hours to the input datetime.
 
-## Examples
+## Example
 
 ```sql
 SELECT HOURS_ADD('2020-02-02 02:02:02', 1);
@@ -58,7 +58,3 @@ SELECT HOURS_ADD('2020-02-02 02:02:02', 1);
 | 2020-02-02 03:02:02                                        |
 +------------------------------------------------------------+
 ```
-
-## Keywords
-
-    HOURS_ADD

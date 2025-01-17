@@ -32,7 +32,7 @@ Extracts the month value from a datetime value. The returned value ranges from 1
 ## Syntax
 
 ```sql
-INT MONTH(DATETIME date)
+MONTH(<date>)
 ```
 
 ## Parameters
@@ -61,7 +61,3 @@ SELECT MONTH('1987-01-01');
 |                                          1 |
 +--------------------------------------------+
 ```
-
-## Keywords
-
-    MONTH

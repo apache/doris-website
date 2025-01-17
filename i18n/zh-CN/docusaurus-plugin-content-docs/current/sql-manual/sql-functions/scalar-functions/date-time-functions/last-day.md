@@ -35,7 +35,7 @@ under the License.
 ## 语法
 
 ```sql
-DATE LAST_DAY(DATETIME date)
+LAST_DAY(<date>)
 ```
 
 ## 参数
@@ -46,7 +46,7 @@ DATE LAST_DAY(DATETIME date)
 
 ## 返回值
 
-返回类型为 DATE。
+返回类型为 DATE，返回输入日期所在月份的最后一天的日期。
 
 ## 举例
 
@@ -61,7 +61,3 @@ SELECT LAST_DAY('2000-02-03');
 | 2000-02-29                                    |
 +-----------------------------------------------+
 ```
-
-## 关键词
-
-    LAST_DAY,DAYS

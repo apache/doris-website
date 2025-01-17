@@ -32,7 +32,7 @@ Adds a specified number of microseconds to a datetime value and returns a new da
 ## Syntax
 
 ```sql
-DATETIMEV2 MICROSECONDS_ADD(DATETIMEV2 basetime, INT delta)
+MICROSECONDS_ADD(<basetime>, <delta>)
 ```
 
 ## Parameters
@@ -44,12 +44,12 @@ DATETIMEV2 MICROSECONDS_ADD(DATETIMEV2 basetime, INT delta)
 
 ## Return Value
 
-Returns a value of type DATETIMEV2, with the same precision as the input parameter basetime.
+Returns a value of type DATETIMEV2, representing the time value after adding the specified number of microseconds to the input datetime. The precision of the return value is the same as that of the input parameter basetime.
 
 ## Example
 
 ```sql
-SELECT NOW(3) as current_time, MICROSECONDS_ADD(NOW(3), 100000) as after_add;
+SELECT NOW(3) AS current_time, MICROSECONDS_ADD(NOW(3), 100000) AS after_add;
 ```
 
 ```text
@@ -63,7 +63,3 @@ SELECT NOW(3) as current_time, MICROSECONDS_ADD(NOW(3), 100000) as after_add;
 **Note:**
 - NOW(3) returns the current time with a precision of 3 decimal places.
 - After adding 100000 microseconds (0.1 seconds), the time increases by 0.1 seconds.
-
-## Keywords
-
-    MICROSECONDS_ADD

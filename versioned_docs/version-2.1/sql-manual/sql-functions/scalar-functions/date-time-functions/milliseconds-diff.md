@@ -32,7 +32,7 @@ Calculates the millisecond difference between two datetime values. The result is
 ## Syntax
 
 ```sql
-INT MILLISECONDS_DIFF(DATETIMEV2 enddate, DATETIMEV2 startdate)
+MILLISECONDS_DIFF(<enddate>, <startdate>)
 ```
 
 ## Parameters
@@ -68,7 +68,3 @@ SELECT MILLISECONDS_DIFF('2020-12-25 21:00:00.623000', '2020-12-25 21:00:00.1230
 - The time difference in the example is 0.5 seconds, which equals 500 milliseconds.
 - The function's result is dependent on the precision of the input time; the example uses a precision of 3 decimal places.
 - The result only returns the millisecond difference and does not include the microsecond part.
-
-## Keywords
-
-    MILLISECONDS_DIFF

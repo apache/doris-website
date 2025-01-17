@@ -26,26 +26,26 @@ under the License.
 
 ## Description
 
-Calculates the difference in hours between two datetime values. Returns the number of hours between enddate and startdate.
+Calculates the difference in hours between the start time and the end time.
 
 ## Syntax
 
 ```sql
-INT HOURS_DIFF(DATETIME enddate, DATETIME startdate)
+HOURS_DIFF(<enddate>, <startdate>)
 ```
 
 ## Parameters
 
-| Parameter | Description |
-| ---- | ---- |
-| enddate | End datetime value, type can be DATETIME or DATE |
-| startdate | Start datetime value, type can be DATETIME or DATE |
+| Parameter  | Description                                     |
+|------------|-------------------------------------------------|
+| enddate    | The end time, which can be of type DATETIME or DATE |
+| startdate  | The start time, which can be of type DATETIME or DATE |
 
 ## Return Value
 
-Returns an INT value representing the number of hours between the two datetime values.
+Returns an INT type representing the number of hours between the start time and the end time.
 
-## Examples
+## Example
 
 ```sql
 SELECT HOURS_DIFF('2020-12-25 22:00:00', '2020-12-25 21:00:00');
@@ -58,7 +58,3 @@ SELECT HOURS_DIFF('2020-12-25 22:00:00', '2020-12-25 21:00:00');
 |                                                                                                      1 |
 +--------------------------------------------------------------------------------------------------------+
 ```
-
-## Keywords
-
-    HOURS_DIFF

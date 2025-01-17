@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-INT MONTH(DATETIME date)
+MONTH(<date>)
 ```
 
 ## 参数
@@ -61,7 +61,3 @@ SELECT MONTH('1987-01-01');
 |                                          1 |
 +--------------------------------------------+
 ```
-
-## 关键词
-
-    MONTH

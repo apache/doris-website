@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-DATETIMEV2 MILLISECONDS_ADD(DATETIMEV2 basetime, INT delta)
+MILLISECONDS_ADD(<basetime>, <delta>)
 ```
 
 ## 参数
@@ -44,12 +44,12 @@ DATETIMEV2 MILLISECONDS_ADD(DATETIMEV2 basetime, INT delta)
 
 ## 返回值
 
-返回类型为 DATETIMEV2，精度与输入参数 basetime 的精度相同。
+返回类型为 DATETIMEV2，返回以输入日期时间为基准，增加指定毫秒数后的时间值。返回值的精度与输入参数 basetime 的精度相同。
 
 ## 举例
 
 ```sql
-select MILLISECONDS_ADD('2023-09-08 16:02:08.435123', 1);
+SELECT MILLISECONDS_ADD('2023-09-08 16:02:08.435123', 1);
 ```
 
 ```text
@@ -64,7 +64,3 @@ select MILLISECONDS_ADD('2023-09-08 16:02:08.435123', 1);
 - 示例中添加 1 毫秒后，时间从 .435123 增加到 .436123
 - 1 毫秒等于 1000 微秒
 - 函数的计算结果与输入时间的精度有关，示例使用了 6 位小数精度
-
-## 关键词
-
-    MILLISECONDS_ADD

@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME HOURS_ADD(DATETIME date, INT hours)
+HOURS_ADD(<date>, <hours>)
 ```
 
 ## 参数
@@ -44,7 +44,7 @@ DATETIME HOURS_ADD(DATETIME date, INT hours)
 
 ## 返回值
 
-返回类型为 DATETIME。
+返回类型为 DATETIME，返回以输入日期时间为基准，增加指定小时数后的时间值。
 
 ## 举例
 
@@ -59,7 +59,3 @@ SELECT HOURS_ADD('2020-02-02 02:02:02', 1);
 | 2020-02-02 03:02:02                                        |
 +------------------------------------------------------------+
 ```
-
-## 关键词
-
-    HOURS_ADD

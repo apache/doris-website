@@ -32,10 +32,10 @@ Rounds up a datetime value to the nearest specified month interval. If a startin
 ## Syntax
 
 ```sql
-DATETIME MONTH_CEIL(DATETIME datetime)
-DATETIME MONTH_CEIL(DATETIME datetime, DATETIME origin)
-DATETIME MONTH_CEIL(DATETIME datetime, INT period)
-DATETIME MONTH_CEIL(DATETIME datetime, INT period, DATETIME origin)
+MONTH_CEIL(<datetime>)
+MONTH_CEIL(<datetime>, <origin>)
+MONTH_CEIL(<datetime>, <period>)
+MONTH_CEIL(<datetime>, <period>, <origin>)
 ```
 
 ## Parameters
@@ -69,10 +69,6 @@ SELECT MONTH_CEIL("2023-07-13 22:28:18", 5);
 - The period must be a positive integer.
 - The result is always rounded up to a future time.
 - The time portion of the returned value is always set to 00:00:00.
-
-## Keywords
-
-    MONTH_CEIL, MONTH, CEIL
 
 ## Best Practices
 

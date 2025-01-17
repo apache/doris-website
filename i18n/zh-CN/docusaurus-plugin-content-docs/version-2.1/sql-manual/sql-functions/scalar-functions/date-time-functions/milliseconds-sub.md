@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-DATETIMEV2 MILLISECONDS_SUB(DATETIMEV2 basetime, INT delta)
+MILLISECONDS_SUB(<basetime>, <delta>)
 ```
 
 ## 参数
@@ -43,12 +43,12 @@ DATETIMEV2 MILLISECONDS_SUB(DATETIMEV2 basetime, INT delta)
 
 ## 返回值
 
-返回类型为 DATETIMEV2，精度与输入参数 basetime 的精度相同。
+返回类型为 DATETIMEV2，返回以输入日期时间为基准，减去指定毫秒数后的时间值。返回值的精度与输入参数 basetime 的精度相同。
 
 ## 举例
 
 ```sql
-select MILLISECONDS_SUB('2023-09-08 16:02:08.435123', 1);
+SELECT MILLISECONDS_SUB('2023-09-08 16:02:08.435123', 1);
 ```
 
 ```text
@@ -57,7 +57,6 @@ select MILLISECONDS_SUB('2023-09-08 16:02:08.435123', 1);
 +--------------------------------------------------------------------------+
 | 2023-09-08 16:02:08.434123                                               |
 +--------------------------------------------------------------------------+
-1 row in set (0.11 sec)
 ```
 
 注意：
@@ -65,7 +64,3 @@ select MILLISECONDS_SUB('2023-09-08 16:02:08.435123', 1);
 - 1 毫秒等于 1000 微秒
 - 函数的计算结果与输入时间的精度有关，示例使用了 6 位小数精度
 - 结果保留了微秒级别的精度
-
-## 关键词
-
-    MILLISECONDS_SUB

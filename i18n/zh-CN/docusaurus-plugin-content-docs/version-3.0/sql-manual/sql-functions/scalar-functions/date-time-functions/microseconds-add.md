@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-DATETIMEV2 MICROSECONDS_ADD(DATETIMEV2 basetime, INT delta)
+MICROSECONDS_ADD(<basetime>, <delta>)
 ```
 
 ## 参数
@@ -44,12 +44,12 @@ DATETIMEV2 MICROSECONDS_ADD(DATETIMEV2 basetime, INT delta)
 
 ## 返回值
 
-返回类型为 DATETIMEV2，精度与输入参数 basetime 的精度相同。
+返回类型为 DATETIMEV2，返回以输入日期时间为基准，增加指定微秒数后的时间值。返回值的精度与输入参数 basetime 的精度相同。
 
 ## 举例
 
 ```sql
-SELECT NOW(3) as current_time, MICROSECONDS_ADD(NOW(3), 100000) as after_add;
+SELECT NOW(3) AS current_time, MICROSECONDS_ADD(NOW(3), 100000) AS after_add;
 ```
 
 ```text
@@ -63,7 +63,3 @@ SELECT NOW(3) as current_time, MICROSECONDS_ADD(NOW(3), 100000) as after_add;
 注意：
 - NOW(3) 返回精度为 3 位小数的当前时间
 - 添加 100000 微秒（0.1 秒）后，时间增加了 0.1 秒
-
-## 关键词
-
-    MICROSECONDS_ADD

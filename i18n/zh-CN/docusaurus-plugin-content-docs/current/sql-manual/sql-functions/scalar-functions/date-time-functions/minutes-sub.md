@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME MINUTES_SUB(DATETIME date, INT minutes)
+MINUTES_SUB(<date>, <minutes>)
 ```
 
 ## 参数
@@ -65,7 +65,3 @@ SELECT MINUTES_SUB("2020-02-02 02:02:02", 1);
 - 函数会自动处理跨小时、跨天的情况
 - 如果输入参数为 NULL，则返回 NULL
 - 结果会保留原始时间的秒数部分
-
-## 关键词
-
-    MINUTES_SUB

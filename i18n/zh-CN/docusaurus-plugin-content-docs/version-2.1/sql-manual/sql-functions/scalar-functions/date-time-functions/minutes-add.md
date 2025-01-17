@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME MINUTES_ADD(DATETIME date, INT minutes)
+MINUTES_ADD(<date>, <minutes>)
 ```
 
 ## 参数
@@ -63,7 +63,3 @@ SELECT MINUTES_ADD("2020-02-02", 1);
 - 当添加的分钟数为负数时，相当于减去对应的分钟数
 - 函数会自动处理跨小时、跨天的情况
 - 如果输入参数为 NULL，则返回 NULL
-
-## 关键词
-
-    MINUTES_ADD

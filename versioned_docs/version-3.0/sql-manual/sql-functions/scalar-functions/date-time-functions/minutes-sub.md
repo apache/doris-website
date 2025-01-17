@@ -32,7 +32,7 @@ Subtracts a specified number of minutes from a datetime value and returns a new 
 ## Syntax
 
 ```sql
-DATETIME MINUTES_SUB(DATETIME date, INT minutes)
+MINUTES_SUB(<date>, <minutes>)
 ```
 
 ## Parameters
@@ -65,7 +65,3 @@ SELECT MINUTES_SUB("2020-02-02 02:02:02", 1);
 - The function automatically handles cases that cross hours and days.
 - If the input parameter is NULL, the function returns NULL.
 - The result retains the seconds portion of the original time.
-
-## Keywords
-
-    MINUTES_SUB

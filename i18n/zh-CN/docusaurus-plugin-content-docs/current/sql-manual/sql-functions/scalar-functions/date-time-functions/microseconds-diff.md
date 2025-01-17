@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-INT MICROSECONDS_DIFF(DATETIMEV2 enddate, DATETIMEV2 startdate)
+MICROSECONDS_DIFF(<enddate>, <startdate>)
 ```
 
 ## 参数
@@ -52,7 +52,7 @@ INT MICROSECONDS_DIFF(DATETIMEV2 enddate, DATETIMEV2 startdate)
 ## 举例
 
 ```sql
-select MICROSECONDS_DIFF('2020-12-25 21:00:00.623000','2020-12-25 21:00:00.123000');
+SELECT MICROSECONDS_DIFF('2020-12-25 21:00:00.623000','2020-12-25 21:00:00.123000');
 ```
 
 ```text
@@ -62,7 +62,3 @@ select MICROSECONDS_DIFF('2020-12-25 21:00:00.623000','2020-12-25 21:00:00.12300
 |                                                                                                                      500000 |
 +-----------------------------------------------------------------------------------------------------------------------------+
 ```
-
-## 关键词
-
-    MICROSECONDS_DIFF

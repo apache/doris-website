@@ -31,10 +31,10 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME MINUTE_FLOOR(DATETIME datetime)
-DATETIME MINUTE_FLOOR(DATETIME datetime, DATETIME origin)
-DATETIME MINUTE_FLOOR(DATETIME datetime, INT period)
-DATETIME MINUTE_FLOOR(DATETIME datetime, INT period, DATETIME origin)
+MINUTE_FLOOR(<datetime>)
+MINUTE_FLOOR(<datetime>, <origin>)
+MINUTE_FLOOR(<datetime>, <period>)
+MINUTE_FLOOR(<datetime>, <period>, <origin>)
 ```
 
 ## 参数
@@ -68,10 +68,6 @@ SELECT MINUTE_FLOOR("2023-07-13 22:28:18", 5);
 - period 必须为正整数
 - 结果总是向过去时间取整
 - 与 MINUTE_CEIL 相反，MINUTE_FLOOR 总是舍去超出周期的部分
-
-## 关键词
-
-    MINUTE_FLOOR, MINUTE, FLOOR
 
 ## 最佳实践
 

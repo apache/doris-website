@@ -32,7 +32,7 @@ Subtracts a specified number of milliseconds from a datetime value and returns a
 ## Syntax
 
 ```sql
-DATETIMEV2 MILLISECONDS_SUB(DATETIMEV2 basetime, INT delta)
+MILLISECONDS_SUB(<basetime>, <delta>)
 ```
 
 ## Parameters
@@ -44,7 +44,7 @@ DATETIMEV2 MILLISECONDS_SUB(DATETIMEV2 basetime, INT delta)
 
 ## Return Value
 
-Returns a value of type DATETIMEV2, with the same precision as the input parameter basetime.
+Returns a value of type DATETIMEV2, representing the time value after subtracting the specified number of milliseconds from the input datetime. The precision of the return value is the same as that of the input parameter basetime.
 
 ## Example
 
@@ -66,7 +66,3 @@ SELECT MILLISECONDS_SUB('2023-09-08 16:02:08.435123', 1);
 - 1 millisecond equals 1000 microseconds.
 - The function's result is dependent on the precision of the input time; the example uses a precision of 6 decimal places.
 - The result retains microsecond-level precision.
-
-## Keywords
-
-    MILLISECONDS_SUB

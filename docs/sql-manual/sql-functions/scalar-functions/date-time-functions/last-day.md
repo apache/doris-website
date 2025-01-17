@@ -33,20 +33,20 @@ Returns the date of the last day of the month for the given input date. The retu
 ## Syntax
 
 ```sql
-DATE LAST_DAY(DATETIME date)
+LAST_DAY(<date>)
 ```
 
 ## Parameters
 
-| Parameter | Description |
-| ---- | ---- |
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
 | date | Input datetime value, type can be DATETIME or DATE |
 
 ## Return Value
 
-Returns a DATE type value.
+Returns a value of type DATE representing the last day of the month for the given input date.
 
-## Examples
+## Example
 
 ```sql
 SELECT LAST_DAY('2000-02-03');
@@ -59,7 +59,3 @@ SELECT LAST_DAY('2000-02-03');
 | 2000-02-29                                    |
 +-----------------------------------------------+
 ```
-
-## Keywords
-
-    LAST_DAY

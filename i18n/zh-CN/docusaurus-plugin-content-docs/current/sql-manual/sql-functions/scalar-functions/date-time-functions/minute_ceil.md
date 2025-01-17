@@ -31,10 +31,10 @@ under the License.
 ## 语法
 
 ```sql
-DATETIME MINUTE_CEIL(DATETIME datetime)
-DATETIME MINUTE_CEIL(DATETIME datetime, DATETIME origin)
-DATETIME MINUTE_CEIL(DATETIME datetime, INT period)
-DATETIME MINUTE_CEIL(DATETIME datetime, INT period, DATETIME origin)
+MINUTE_CEIL(<datetime>)
+MINUTE_CEIL(<datetime>, <origin>)
+MINUTE_CEIL(<datetime>, <period>)
+MINUTE_CEIL(<datetime>, <period>, <origin>)
 ```
 
 ## 参数
@@ -47,12 +47,12 @@ DATETIME MINUTE_CEIL(DATETIME datetime, INT period, DATETIME origin)
 
 ## 返回值
 
-返回类型为 DATETIMEV2，表示向上取整后的日期时间值。
+返回类型为 DATETIMEV2，返回以输入日期时间为基准，向上取整到最近的指定分钟周期后的时间值。返回值的精度与输入参数 datetime 的精度相同。
 
 ## 举例
 
 ```sql
-select MINUTE_CEIL("2023-07-13 22:28:18", 5);
+SELECT MINUTE_CEIL("2023-07-13 22:28:18", 5);
 ```
 
 ```text
@@ -67,10 +67,6 @@ select MINUTE_CEIL("2023-07-13 22:28:18", 5);
 - 不指定 period 时，默认以 1 分钟为周期
 - period 必须为正整数
 - 结果总是向未来时间取整
-
-## 关键词
-
-    MINUTE_CEIL, MINUTE, CEIL
 
 ## 最佳实践
 

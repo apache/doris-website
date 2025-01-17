@@ -32,10 +32,10 @@ Rounds down a datetime value to the nearest specified month interval. If a start
 ## Syntax
 
 ```sql
-DATETIME MONTH_FLOOR(DATETIME datetime)
-DATETIME MONTH_FLOOR(DATETIME datetime, DATETIME origin)
-DATETIME MONTH_FLOOR(DATETIME datetime, INT period)
-DATETIME MONTH_FLOOR(DATETIME datetime, INT period, DATETIME origin)
+MONTH_FLOOR(<datetime>)
+MONTH_FLOOR(<datetime>, <origin>)
+MONTH_FLOOR(<datetime>, <period>)
+MONTH_FLOOR(<datetime>, <period>, <origin>)
 ```
 
 ## Parameters
@@ -70,10 +70,6 @@ SELECT MONTH_FLOOR("2023-07-13 22:28:18", 5);
 - The result is always rounded down to a past time.
 - The time portion of the returned value is always set to 00:00:00.
 - Unlike MONTH_CEIL, MONTH_FLOOR always discards the portion that exceeds the interval.
-
-## Keywords
-
-    MONTH_FLOOR, MONTH, FLOOR
 
 ## Best Practices
 

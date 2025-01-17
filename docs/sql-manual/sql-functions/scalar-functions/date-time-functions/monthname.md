@@ -32,7 +32,7 @@ Returns the English name of the month corresponding to a given date. The returne
 ## Syntax
 
 ```sql
-VARCHAR MONTHNAME(DATETIME date)
+MONTHNAME(<date>)
 ```
 
 ## Parameters
@@ -61,7 +61,3 @@ SELECT MONTHNAME('2008-02-03 00:00:00');
 | February                                                |
 +---------------------------------------------------------+
 ```
-
-## Keywords
-
-    MONTHNAME

@@ -32,10 +32,10 @@ Rounds down a datetime value to the nearest specified minute interval. If a star
 ## Syntax
 
 ```sql
-DATETIME MINUTE_FLOOR(DATETIME datetime)
-DATETIME MINUTE_FLOOR(DATETIME datetime, DATETIME origin)
-DATETIME MINUTE_FLOOR(DATETIME datetime, INT period)
-DATETIME MINUTE_FLOOR(DATETIME datetime, INT period, DATETIME origin)
+MINUTE_FLOOR(<datetime>)
+MINUTE_FLOOR(<datetime>, <origin>)
+MINUTE_FLOOR(<datetime>, <period>)
+MINUTE_FLOOR(<datetime>, <period>, <origin>)
 ```
 
 ## Parameters
@@ -69,10 +69,6 @@ SELECT MINUTE_FLOOR("2023-07-13 22:28:18", 5);
 - The period must be a positive integer.
 - The result is always rounded down to a past time.
 - Unlike MINUTE_CEIL, MINUTE_FLOOR always discards the portion that exceeds the interval.
-
-## Keywords
-
-    MINUTE_FLOOR, MINUTE, FLOOR
 
 ## Best Practices
 

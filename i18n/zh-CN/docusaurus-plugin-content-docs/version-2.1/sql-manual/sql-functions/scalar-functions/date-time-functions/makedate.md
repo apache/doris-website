@@ -30,13 +30,13 @@ under the License.
 根据指定的年份和一年中的天数（dayofyear）构建并返回一个日期。
 
 特殊情况：
-- 当 dayofyear 小于等于 0 时，返回 NULL
-- 当 dayofyear 超过当年天数时，会自动往后顺延到下一年
+- 当 `dayofyear` 小于等于 0 时，返回 NULL
+- 当 `dayofyear` 超过当年天数时，会自动往后顺延到下一年
 
 ## 语法
 
 ```sql
-DATE MAKEDATE(INT year, INT dayofyear)
+MAKEDATE(<year>, <dayofyear>)
 ```
 
 ## 参数
@@ -48,7 +48,7 @@ DATE MAKEDATE(INT year, INT dayofyear)
 
 ## 返回值
 
-返回类型为 DATE。
+返回类型为 DATE，返回以指定年份和一年中的第几天构建的日期。
 
 ## 举例
 
@@ -63,7 +63,3 @@ SELECT MAKEDATE(2021, 1), MAKEDATE(2021, 100), MAKEDATE(2021, 400);
 | 2021-01-01        | 2021-04-10          | 2022-02-04          |
 +-------------------+---------------------+---------------------+
 ```
-
-## 关键词
-
-    MAKEDATE
