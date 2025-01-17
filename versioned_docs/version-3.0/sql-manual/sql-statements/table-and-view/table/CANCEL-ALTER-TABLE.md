@@ -24,83 +24,91 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-This statement is used to undo an ALTER operation.
+This statement is used to cancel (revoke) an ongoing ALTER TABLE operation. You can use this command to terminate an ALTER TABLE operation while it is being executed.
 
-1. Undo the ALTER TABLE COLUMN operation
+## Syntax
 
-grammar:
+```sql
+CANCEL ALTER TABLE <COLUMN|ROLLUP> FROM <db_name>.<table_name> [ <job_id> [ ... ]]
+```
+
+## Required Parameters
+**1. `<COLUMN|ROLLUP>`**
+>Specify the type of modification to cancel, must choose one of:
+>- COLUMN: Cancel table column modification operations
+>- ROLLUP: Cancel materialized view modification operations
+
+**2.`<db_name>`**
+> Specifies the identifier (that is, the name) of the database.
+>
+> Identifier must begin with an alphabet character (if Unicode name support is enabled, any language character is allowed), and must not contain spaces or special characters, except for the entire identifier string enclosed in quotes (e.g., `My Database`).
+>
+> Identifier cannot use reserved keywords.
+>
+> For more information, see Identifier Requirements and Reserved Keywords.
+
+**3.`<table_name>`**
+> Specifies the identifier (that is, the name) of the table, within its database (Database).
+>
+> Identifier must begin with an alphabet character (if Unicode name support is enabled, any language character is allowed), and must not contain spaces or special characters, except for the entire identifier string enclosed in quotes (e.g., `My Object`).
+>
+> Identifier cannot use reserved keywords.
+>
+> For more information, see Identifier Requirements and Reserved Keywords.
+
+## Optional Parameters
+**1. `<job_id>`**
+> The specific job ID to cancel.
+>
+> If a job ID is specified, only the specified job is canceled; if not specified, all ongoing modifications of the specified type (COLUMN or ROLLUP) on the table are canceled.
+>
+> You can specify multiple job IDs, separated by commas.
+>
+> You can obtain job IDs by using the `SHOW ALTER TABLE COLUMN` or `SHOW ALTER TABLE ROLLUP` command.
+
+
+## Permission Control
+Users who execute this SQL command must have at least the following permissions:
+
+
+| Privilege | Object | Notes                    |
+| :---------------- | :------------- | :---------------------------- |
+| ALTER_PRIV        | Table   | CANCEL ALTER TABLE belongs to table ALTER operation |
+
+
+## Notes
+- This command is an asynchronous operation, and the actual execution result needs to be confirmed by using `SHOW ALTER TABLE COLUMN` or `SHOW ALTER TABLE ROLLUP` to check the status of the task.
+
+## Example
+
+1. Cancel ALTER TABLE COLUMN operation
 
 ```sql
 CANCEL ALTER TABLE COLUMN
 FROM db_name.table_name
 ```
 
-2. Undo the ALTER TABLE ROLLUP operation
+2. Cancel ALTER TABLE ROLLUP operation
 
-grammar:
 
 ```sql
 CANCEL ALTER TABLE ROLLUP
 FROM db_name.table_name
 ```
 
-3. Batch cancel rollup operations based on job id
+3. Cancel ALTER TABLE ROLLUP operation in batches based on job ID
 
-grammar:
 
 ```sql
 CANCEL ALTER TABLE ROLLUP
 FROM db_name.table_name (jobid,...)
 ```
 
-Notice:
 
-- This command is an asynchronous operation. You need to use `show alter table rollup` to check the task status to confirm whether the execution is successful or not.
+4. Cancel ALTER CLUSTER operation
 
-4. Undo the ALTER CLUSTER operation
-
-grammar:
-
-```
+```sql
 (To be implemented...)
 ```
-
-## Example
-
-1. Undo the ALTER COLUMN operation on my_table.
-
-   [CANCEL ALTER TABLE COLUMN]
-
-```sql
-CANCEL ALTER TABLE COLUMN
-FROM example_db.my_table;
-```
-
-1. Undo the ADD ROLLUP operation under my_table.
-
-   [CANCEL ALTER TABLE ROLLUP]
-
-```sql
-CANCEL ALTER TABLE ROLLUP
-FROM example_db.my_table;
-```
-
-1. Undo the ADD ROLLUP operation under my_table according to the job id.
-
-   [CANCEL ALTER TABLE ROLLUP]
-
-```sql
-CANCEL ALTER TABLE ROLLUP
-FROM example_db.my_table(12801,12802);
-```
-
-## Keywords
-
-    CANCEL, ALTER, TABLE, CANCEL ALTER
-
-## Best Practice
-
