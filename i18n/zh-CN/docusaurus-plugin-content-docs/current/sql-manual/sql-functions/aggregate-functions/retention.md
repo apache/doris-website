@@ -33,7 +33,7 @@ under the License.
 ## 语法
 
 ```sql
-retention(<event1> [, <event2>, ... , <eventN>]);
+RETENTION(<event1> [, <event2>, ... , <eventN>]);
 ```
 
 ## 参数
@@ -75,9 +75,9 @@ INSERT into retention_test values
 -- 计算用户留存
 SELECT 
     uid,     
-    retention(date = '2022-10-12') AS r,
-    retention(date = '2022-10-12', date = '2022-10-13') AS r2,
-    retention(date = '2022-10-12', date = '2022-10-13', date = '2022-10-14') AS r3 
+    RETENTION(date = '2022-10-12') AS r,
+    RETENTION(date = '2022-10-12', date = '2022-10-13') AS r2,
+    RETENTION(date = '2022-10-12', date = '2022-10-13', date = '2022-10-14') AS r3 
 FROM retention_test 
 GROUP BY uid 
 ORDER BY uid ASC;
