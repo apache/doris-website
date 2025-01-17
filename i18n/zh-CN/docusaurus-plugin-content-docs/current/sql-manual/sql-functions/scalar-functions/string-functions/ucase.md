@@ -24,14 +24,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ucase
+
 ## 描述
+
+用于将字符串转换为大写字母
+
+## 别名
+
+- upper
+
 ## 语法
 
-`VARCHAR ucase(VARCHAR str)`
+```sql
+ucase(string)
+```
 
+### 示例
 
-将参数中所有的字符串都转换成大写，此函数的另一个别名为[upper](./upper.md)。
-
-### keywords
-    UCASE
+```sql
+mysql> SELECT ucase("aBc123");
++-----------------+
+| ucase('aBc123') |
++-----------------+
+| ABC123          |
++-----------------+
+```

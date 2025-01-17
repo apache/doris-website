@@ -24,18 +24,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## trim
+
 ## 描述
+
+用于删除字符串两端的空格或指定字符
+
 ## 语法
 
-`VARCHAR trim(VARCHAR str[, VARCHAR rhs])`
+```sql
+trim( str [, VARCHAR rhs])
+```
 
-
+## 注意事项
 当没有rhs参数时，将参数 str 中右侧和左侧开始部分连续出现的空格去掉，否则去掉rhs
 
 ## 举例
 
-```
+```sql
 mysql> SELECT trim('   ab d   ') str;
 +------+
 | str  |
@@ -50,5 +55,4 @@ mysql> SELECT trim('ababccaab','ab') str;
 | cca  |
 +------+
 ```
-### keywords
-    TRIM
+
