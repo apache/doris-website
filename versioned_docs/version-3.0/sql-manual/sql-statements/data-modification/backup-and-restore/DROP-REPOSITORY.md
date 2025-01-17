@@ -3,7 +3,6 @@
     "title": "DROP REPOSITORY",
     "language": "en"
 }
-
 ---
 
 <!--
@@ -25,32 +24,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-This statement is used to delete a created repository. Only root or superuser users can delete repositories.
+This statement is used to delete a created repository.
 
-grammar:
+## Syntax
 
 ```sql
-DROP REPOSITORY `repo_name`;
+DROP REPOSITORY <repo_name>;
 ```
 
-illustrate:
+## Required Parameters
+**<repo_name>**
+> The unique name of the repository.
 
-- Deleting a warehouse just deletes the warehouse's mapping in Doris, not the actual warehouse data. Once deleted, it can be mapped to the repository again by specifying the same LOCATION.
+## Access Control Requirements
+
+| Privilege               | Object                         | Notes                                               |
+|:-------------------|:-----------------------------|:----------------------------------------------------|
+| ADMIN_PRIV         | Entire cluster management permissions | Only the root or superuser can create repositories  |
+
+
+## Usage notes
+- Deleting the repository only removes its mapping in Doris and does not delete the actual repository data. After deletion, the repository can be mapped again by specifying the same LOCATION.
 
 ## Example
 
-1. Delete the repository named example_repo:
+Delete the repository named example_repo:
 
 ```sql
 DROP REPOSITORY `example_repo`;
 ```
-
-## Keywords
-
-     DROP, REPOSITORY
-
-## Best Practice
