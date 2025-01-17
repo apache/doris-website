@@ -24,32 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## convert_tz
-### Description
-#### Syntax
+## Description
 
-`DATETIME CONVERT_TZ(DATETIME dt, VARCHAR from_tz, VARCHAR to_tz)`
+Converts a datetime value from the time zone specified by from_tz to the time zone specified by to_tz, and returns the resulting value. Special cases:
+- If the parameters are invalid, the function returns NULL.
 
-Convert datetime value. Go from the given input time zone to the specified time zone and return the result value. If the argument is invalid, the function returns null.
+## Syntax
 
-### Example
-
+```sql
+CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 ```
-mysql> select convert_tz('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_Angeles');
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- | 
+| `<dt>` | The datetime value to be converted |
+| `<from_tz>` | The original time zone of dt |
+| `<to_tz>` | The target time zone to convert to |
+
+## Return Value
+
+Returns the calculated date.
+
+## Examples
+
+```sql
+select CONVERT_TZ('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_Angeles');
+```
+
+```text
 +---------------------------------------------------------------------------+
 | convert_tz('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_Angeles') |
 +---------------------------------------------------------------------------+
 | 2019-07-31 22:21:03                                                       |
 +---------------------------------------------------------------------------+
+```
 
-mysql> select convert_tz('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles');
+```sql
+select CONVERT_TZ('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles');
+```
+
+```text
 +--------------------------------------------------------------------+
 | convert_tz('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles') |
 +--------------------------------------------------------------------+
 | 2019-07-31 22:21:03                                                |
 +--------------------------------------------------------------------+
 ```
-
-### keywords
-
-    CONVERT_TZ
