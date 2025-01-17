@@ -1,7 +1,7 @@
 ---
 {
-    "title": "PERCENTILE",
-    "language": "en"
+  "title": "PERCENTILE",
+  "language": "en"
 }
 ---
 
