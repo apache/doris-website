@@ -25,17 +25,18 @@ under the License.
 -->
 
 
+## trim-in
 ## 描述
-
+删除输入字符串两端的多余空格
 ## 语法
 
 `VARCHAR trim_in(VARCHAR str[, VARCHAR rhs])`
 
-
+## 注意事项
 当没有 `rhs` 参数时，将参数 `str` 中右侧和左侧开始部分连续出现的空格去掉；当有 `rhs` 参数时，在字符串的两端查找并移除 `rhs` 字符集合中的任何字符（不考虑顺序）
 
 
-## 举例
+## 示例
 
 ```sql
 mysql> SELECT trim_in('   ab d   ') str;
@@ -52,7 +53,3 @@ mysql> SELECT trim_in('ababccaab','ab') str;
 | cc   |
 +------+
 ```
-
-## 关键词
-
-TRIM_IN

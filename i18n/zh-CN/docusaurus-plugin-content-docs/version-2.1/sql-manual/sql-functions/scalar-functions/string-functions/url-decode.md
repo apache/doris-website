@@ -35,20 +35,17 @@ under the License.
 VARCHAR url_decode(VARCHAR url)
 ```
 
-### Parameters
+## 必选参数
 
 - url: 待解码的url。
 
-## 举例
+## 示例
 
-```
-mysql> mysql> select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
+```sql
+mysql> select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
 +------------------------------------------------+
 | url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions') |
 +------------------------------------------------+
 | https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/string-functions                               |
 +------------------------------------------------+
 ```
-
-### keywords
-    URL DECODE

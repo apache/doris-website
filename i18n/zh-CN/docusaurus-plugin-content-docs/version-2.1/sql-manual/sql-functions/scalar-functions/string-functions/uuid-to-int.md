@@ -27,10 +27,10 @@ under the License.
 ## uuid_to_int
 
 ## 描述
-
-`LARGEINT uuid_to_int(VARCHAR uuid)`
-
 对于输入的 uuid 字符串，返回一个 int128 表示。
+
+## 语法
+`LARGEINT uuid_to_int(VARCHAR uuid)`
 
 ## 举例
 
@@ -42,6 +42,3 @@ mysql> select uuid_to_int("6ce4766f-6783-4b30-b357-bba1c7600348");
 | 95721955514869408091759290071393952876              |
 +-----------------------------------------------------+
 ```
-
-### keywords
-    UUID_TO_INT
