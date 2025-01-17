@@ -22,34 +22,54 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## exp
-
 ## 描述
+
+返回以`e`为底的`x`的幂。
+
+## 别名
+
+DEXP
+
 ## 语法
 
-`DOUBLE exp(DOUBLE x)`
-返回以`e`为底的`x`的幂.
+```sql
+DOUBLE exp(DOUBLE <x>)
+```
 
-:::tip
-该函数的另一个别名为 `dexp`。
-:::
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<x>` | 自变量 |
+
+## 返回值
+
+返回一个double。特殊情况：
+
+- 当参数为`NULL`时，返回 NULL
 
 ## 举例
 
+```sql
+select exp(2);
 ```
-mysql> select exp(2);
+
+```text
 +------------------+
 | exp(2.0)         |
 +------------------+
 | 7.38905609893065 |
 +------------------+
-mysql> select exp(3.4);
+```
+
+```sql
+select exp(3.4);
+```
+
+```text
 +--------------------+
 | exp(3.4)           |
 +--------------------+
 | 29.964100047397011 |
 +--------------------+
 ```
-
-### keywords
-	EXP, DEXP
