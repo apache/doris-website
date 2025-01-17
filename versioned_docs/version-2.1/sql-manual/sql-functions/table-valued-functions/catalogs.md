@@ -35,7 +35,7 @@ This function is used in the `FROM` clause, making it easier to query and analyz
 CATALOGS()
 ```
 
-## RETURN VALUE
+## Return Value
 View the returned fields of the catalogs() function
 ```sql
 desc function catalogs();
