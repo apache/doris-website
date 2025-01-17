@@ -33,7 +33,7 @@ under the License.
 ## 语法
 
 ```sql
-CANCEL ALTER TABLE <COLUMN|ROLLUP> FROM <db_name>.<table_name> [ <job_id> [ ... ]]
+CANCEL ALTER TABLE <COLUMN|ROLLUP> FROM <db_name>.<table_name> [ <job_id1> [ , <job_id2> ... ]]
 ```
 
 ## 必选参数
