@@ -44,7 +44,7 @@ under the License.
 
 ## 语法
 ```sql
-JSON_UNQUOTE(<a>)
+JSON_UNQUOTE (<a>)
 ```
 
 ## 参数

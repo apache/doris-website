@@ -29,7 +29,7 @@ under the License.
 
 ## 语法
 ```sql
-JSON_REPLACE(<json_str>, <path>, <val>[, <jsonPath>, <val>]...)
+JSON_REPLACE (<json_str>, <path>, <val>[, <jsonPath>, <val>, ...])
 ```
 ## 参数
 | 参数           | 描述                                                                                          |

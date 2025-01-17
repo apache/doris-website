@@ -29,7 +29,7 @@ under the License.
 
 ## 语法
 ```sql
-JSON_INSERT(<json_str>, <path>,  <val>[, <path>,  <val>] ...)
+JSON_INSERT (<json_str>, <path>,  <val>[, <path>,  <val>, ...])
 ```
 
 ## 参数

@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-JSON_OBJECT(<key>, <value>[,<key>, <value>...])
+JSON_OBJECT (<key>, <value>[,<key>, <value>, ...])
 ```
 
 ## 参数

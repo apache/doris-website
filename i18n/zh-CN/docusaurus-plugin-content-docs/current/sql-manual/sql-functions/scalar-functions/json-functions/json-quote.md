@@ -29,7 +29,7 @@ under the License.
 
 ## 语法
 ```sql
-JSON_QUOTE(<a>)
+JSON_QUOTE (<a>)
 ```
 
 ## 参数

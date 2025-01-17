@@ -27,7 +27,6 @@ under the License.
 ## 描述
 JSON_EXTRACT 是一系列函数，从 JSON 类型的数据中提取 json_path 指定的字段，根据要提取的字段类型不同提供不同的系列函数。
 * JSON_EXTRACT 对 VARCHAR 类型的 json string 返回 VARCHAR 类型
-* JSONB_EXTRACT 返回 JSON 类型
 * JSON_EXTRACT_ISNULL 返回是否为 json null 的 BOOLEAN 类型
 * JSON_EXTRACT_BOOL 返回 BOOLEAN 类型
 * JSON_EXTRACT_INT 返回 INT 类型
@@ -36,34 +35,42 @@ JSON_EXTRACT 是一系列函数，从 JSON 类型的数据中提取 json_path �
 * JSON_EXTRACT_DOUBLE 返回 DOUBLE 类型
 * JSON_EXTRACT_STRING 返回 STRING 类型
 
+## 别名
+* JSONB_EXTRACT 同 `JSON_EXTRACT`
+* JSONB_EXTRACT_ISNULL 同 `JSON_EXTRACT_ISNULL`
+* JSONB_EXTRACT_BOOL 同 `JSON_EXTRACT_BOOL`
+* JSONB_EXTRACT_INT 同 `JSON_EXTRACT_INT`
+* JSONB_EXTRACT_BIGINT 同 `JSON_EXTRACT_BIGINT`
+* JSONB_EXTRACT_LARGEINT 同 `JSON_EXTRACT_LARGEINT`
+* JSONB_EXTRACT_DOUBLE 同 `JSON_EXTRACT_DOUBLE`
+* JSONB_EXTRACT_STRING 同 `JSON_EXTRACT_STRING`
+
 ## 语法
 ```sql
-JSON_EXTRACT(<json_str>, <path>[, path] ...)
+JSON_EXTRACT (<json_str>, <path>[, path] ...)
 ```
 ```sql
-JSONB_EXTRACT(<json_str>, <path>)
+JSON_EXTRACT_ISNULL (<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_ISNULL(<json_str>, <path>)
+JSON_EXTRACT_BOOL (<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_BOOL(<json_str>, <path>)
+JSON_EXTRACT_INT (<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_INT(<json_str>, <path>)
+JSON_EXTRACT_BIGINT (<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_BIGINT(<json_str>, <path>)
+JSON_EXTRACT_LARGEINT (<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_LARGEINT(<json_str>, <path>)
+JSON_EXTRACT_DOUBLE (<json_str>, <path>)
 ```
 ```sql
-JSON_EXTRACT_DOUBLE(<json_str>, <path>)
+JSON_EXTRACT_STRING (<json_str>, <path>)
 ```
-```sql
-JSON_EXTRACT_STRING(<json_str>, <path>)
-```
+别名函数除函数名称之外，语法和用法与上述函数保持一致。
 
 ## 参数
 | 参数           | 描述                          |
@@ -74,7 +81,7 @@ JSON_EXTRACT_STRING(<json_str>, <path>)
 `json_path` 的语法如下
 * '$' 代表 json root
 * '.k1' 代表 json object 中 key 为'k1'的元素
-  - 如果 key 列值包含 ".", json_path 中需要用双引号，例如 SELECT json_extract('{"k1.a":"abc","k2":300}', '$."k1.a"');
+  - 如果 key 列值包含 ".", json_path 中需要用双引号，例如 `SELECT json_extract('{"k1.a":"abc","k2":300}', '$."k1.a"');`
 * '[i]' 代表 json array 中下标为 i 的元素
   - 获取 json_array 的最后一个元素可以用'$[last]'，倒数第二个元素可以用'$[last-1]'，以此类推。
 
@@ -85,8 +92,6 @@ JSON_EXTRACT_STRING(<json_str>, <path>)
 
 
 ## 示例
-
-参考 [json tutorial](../../../sql-data-types/semi-structured/JSON.md) 中的示例
 
 ```sql
 SELECT json_extract('{"id": 123, "name": "doris"}', '$.id');
@@ -129,3 +134,54 @@ SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
 | [null,"doris"]                                                  |
 +-----------------------------------------------------------------+
 ```
+```sql
+SELECT JSON_EXTRACT_ISNULL('{"id": 123, "name": "doris"}', '$.id');
+```
+```text
++----------------------------------------------------------------------------+
+| jsonb_extract_isnull(cast('{"id": 123, "name": "doris"}' as JSON), '$.id') |
++----------------------------------------------------------------------------+
+|                                                                          0 |
++----------------------------------------------------------------------------+
+```
+```sql
+SELECT JSON_EXTRACT_BOOL('{"id": 123, "name": "NULL"}', '$.id');
+```
+```text
++-------------------------------------------------------------------------+
+| jsonb_extract_bool(cast('{"id": 123, "name": "NULL"}' as JSON), '$.id') |
++-------------------------------------------------------------------------+
+|                                                                    NULL |
++-------------------------------------------------------------------------+
+```
+```sql
+SELECT JSON_EXTRACT_INT('{"id": 123, "name": "NULL"}', '$.id');
+```
+```text
++------------------------------------------------------------------------+
+| jsonb_extract_int(cast('{"id": 123, "name": "NULL"}' as JSON), '$.id') |
++------------------------------------------------------------------------+
+|                                                                    123 |
++------------------------------------------------------------------------+
+```
+```sql
+SELECT JSON_EXTRACT_INT('{"id": 123, "name": "doris"}', '$.name');
+```
+```text
++---------------------------------------------------------------------------+
+| jsonb_extract_int(cast('{"id": 123, "name": "doris"}' as JSON), '$.name') |
++---------------------------------------------------------------------------+
+|                                                                      NULL |
++---------------------------------------------------------------------------+
+```
+```sql
+SELECT JSON_EXTRACT_STRING('{"id": 123, "name": "doris"}', '$.name');
+```
+```text
++------------------------------------------------------------------------------+
+| jsonb_extract_string(cast('{"id": 123, "name": "doris"}' as JSON), '$.name') |
++------------------------------------------------------------------------------+
+| doris                                                                        |
++------------------------------------------------------------------------------+
+```
+
