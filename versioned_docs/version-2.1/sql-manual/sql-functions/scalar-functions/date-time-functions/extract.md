@@ -30,15 +30,14 @@ The `extract` function is used to extract a specified part of a date or time val
 
 ## Syntax
 
-`EXTRACT(unit FROM DATETIME)`
+`EXTRACT(<unit> FROM <datetime>)`
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
 | `unit` | The unit to extract from the DATETIME. Possible values are year, month, day, hour, minute, second, or microsecond |
-| `from` | Fixed syntax |
-| `period` | The argument is a valid date expression |
+| `datetime` | The argument is a valid date expression |
 
 ## Return Value
 
@@ -55,6 +54,7 @@ extract(minute from '2022-09-22 17:01:30') as minute,
 extract(second from '2022-09-22 17:01:30') as second,
 extract(microsecond from cast('2022-09-22 17:01:30.000123' as datetimev2(6))) as microsecond;
 ```
+
 ```text
 +------+-------+------+------+--------+--------+-------------+
 | year | month | day  | hour | minute | second | microsecond |

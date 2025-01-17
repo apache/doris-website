@@ -30,7 +30,7 @@ The `timestampadd` function is used to add a specified time unit (such as year, 
 
 ## Syntax
 
-`TIMESTAMPADD(unit, interval, DATETIME datetime_expr)`
+`TIMESTAMPADD(<unit>, <interval>, <datetime_expr>)`
 
 ## Parameters
 
@@ -38,7 +38,7 @@ The `timestampadd` function is used to add a specified time unit (such as year, 
 | -- | -- |
 | `unit` | Time unit, specifies the time unit to add, common values include SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR |
 | `interval` | The time interval to add, typically an integer, which can be positive or negative to add or subtract the time length |
-| `DATETIME datetime_expr` | A valid target timestamp or date |
+| `datetime_expr` | A valid target timestamp or date |
 
 ## Return Value
 
@@ -49,6 +49,7 @@ The return value is the new date and time, representing the result of adding or 
 ```sql
 SELECT TIMESTAMPADD(MINUTE,1,'2019-01-02');
 ```
+
 ```text
 +------------------------------------------------+
 | timestampadd(MINUTE, 1, '2019-01-02 00:00:00') |
@@ -56,9 +57,11 @@ SELECT TIMESTAMPADD(MINUTE,1,'2019-01-02');
 | 2019-01-02 00:01:00                            |
 +------------------------------------------------+
 ```
+
 ```sql
 SELECT TIMESTAMPADD(WEEK,1,'2019-01-02');
 ```
+
 ```text
 +----------------------------------------------+
 | timestampadd(WEEK, 1, '2019-01-02 00:00:00') |

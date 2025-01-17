@@ -30,15 +30,15 @@ under the License.
 
 ## 语法
 
-`TIMESTAMPDIFF(unit, DATETIME datetime_expr1, DATETIME datetime_expr2)`
+`TIMESTAMPDIFF(<unit>, <datetime_expr1>, <datetime_expr2>)`
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
 | `unit` | 时间单位，指定要返回差异的单位，常见的值有 SECOND、MINUTE、HOUR、DAY、MONTH、YEAR 等 |
-|`DATETIME datetime_expr1`| 第一个日期时间，合法的目标时间戳或日期 |
-|`DATETIME datetime_expr2`| 第二个日期时间，合法的目标时间戳或日期 |
+|`datetime_expr1`| 第一个日期时间，合法的目标时间戳或日期 |
+|`datetime_expr2`| 第二个日期时间，合法的目标时间戳或日期 |
 
 ## 返回值
 
@@ -49,6 +49,7 @@ under the License.
 ```sql
 SELECT TIMESTAMPDIFF(MONTH,'2003-02-01','2003-05-01');
 ```
+
 ```text
 +--------------------------------------------------------------------+
 | timestampdiff(MONTH, '2003-02-01 00:00:00', '2003-05-01 00:00:00') |
@@ -56,9 +57,11 @@ SELECT TIMESTAMPDIFF(MONTH,'2003-02-01','2003-05-01');
 |                                                                  3 |
 +--------------------------------------------------------------------+
 ```
+
 ```sql
 SELECT TIMESTAMPDIFF(YEAR,'2002-05-01','2001-01-01');
 ```
+
 ```text
 +-------------------------------------------------------------------+
 | timestampdiff(YEAR, '2002-05-01 00:00:00', '2001-01-01 00:00:00') |
@@ -66,9 +69,11 @@ SELECT TIMESTAMPDIFF(YEAR,'2002-05-01','2001-01-01');
 |                                                                -1 |
 +-------------------------------------------------------------------+
 ```
+
 ```sql
 SELECT TIMESTAMPDIFF(MINUTE,'2003-02-01','2003-05-01 12:05:55');
 ```
+
 ```text
 +---------------------------------------------------------------------+
 | timestampdiff(MINUTE, '2003-02-01 00:00:00', '2003-05-01 12:05:55') |

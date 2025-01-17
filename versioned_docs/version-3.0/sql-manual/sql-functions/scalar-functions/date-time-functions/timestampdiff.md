@@ -30,15 +30,15 @@ The `timestampdiff` function is used to calculate the difference between two tim
 
 ## Syntax
 
-`TIMESTAMPDIFF(unit, DATETIME datetime_expr1, DATETIME datetime_expr2)`
+`TIMESTAMPDIFF(<unit>, <datetime_expr1>, <datetime_expr2>)`
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
 | `unit` | Time unit, specifies the unit in which to return the difference, common values include SECOND, MINUTE, HOUR, DAY, MONTH, YEAR |
-| `DATETIME datetime_expr1` | The first datetime, a valid target timestamp or date |
-| `DATETIME datetime_expr2` | The second datetime, a valid target timestamp or date |
+| `datetime_expr1` | The first datetime, a valid target timestamp or date |
+| `datetime_expr2` | The second datetime, a valid target timestamp or date |
 
 ## Return Value
 
@@ -49,6 +49,7 @@ The return value is the difference between the two date-times, with the unit det
 ```sql
 SELECT TIMESTAMPDIFF(MONTH,'2003-02-01','2003-05-01');
 ```
+
 ```text
 +--------------------------------------------------------------------+
 | timestampdiff(MONTH, '2003-02-01 00:00:00', '2003-05-01 00:00:00') |
@@ -56,9 +57,11 @@ SELECT TIMESTAMPDIFF(MONTH,'2003-02-01','2003-05-01');
 |                                                                  3 |
 +--------------------------------------------------------------------+
 ```
+
 ```sql
 SELECT TIMESTAMPDIFF(YEAR,'2002-05-01','2001-01-01');
 ```
+
 ```text
 +-------------------------------------------------------------------+
 | timestampdiff(YEAR, '2002-05-01 00:00:00', '2001-01-01 00:00:00') |
@@ -66,9 +69,11 @@ SELECT TIMESTAMPDIFF(YEAR,'2002-05-01','2001-01-01');
 |                                                                -1 |
 +-------------------------------------------------------------------+
 ```
+
 ```sql
 SELECT TIMESTAMPDIFF(MINUTE,'2003-02-01','2003-05-01 12:05:55');
 ```
+
 ```text
 +---------------------------------------------------------------------+
 | timestampdiff(MINUTE, '2003-02-01 00:00:00', '2003-05-01 12:05:55') |

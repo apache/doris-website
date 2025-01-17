@@ -30,15 +30,14 @@ under the License.
 
 ## 语法
 
-`EXTRACT(unit FROM DATETIME)`
+`EXTRACT(<unit> FROM <datetime>)`
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
 | `unit` | 提取DATETIME某个指定单位的值。单位可以为year, month, day, hour, minute, second 或者 microsecond |
-|`from`| 固定语法 |
-| `period` | 参数是合法的日期表达式 |
+| `datetime` | 参数是合法的日期表达式 |
 
 ## 返回值
 
@@ -55,6 +54,7 @@ extract(minute from '2022-09-22 17:01:30') as minute,
 extract(second from '2022-09-22 17:01:30') as second,
 extract(microsecond from cast('2022-09-22 17:01:30.000123' as datetimev2(6))) as microsecond;
 ```
+
 ```text
 +------+-------+------+------+--------+--------+-------------+
 | year | month | day  | hour | minute | second | microsecond |

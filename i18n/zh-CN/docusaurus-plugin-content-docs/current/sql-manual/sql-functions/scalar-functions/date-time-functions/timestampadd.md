@@ -30,7 +30,7 @@ under the License.
 
 ## 语法
 
-`TIMESTAMPADD(unit, interval, DATETIME datetime_expr)`
+`TIMESTAMPADD(<unit>, <interval>, <datetime_expr>)`
 
 ## 参数
 
@@ -38,7 +38,7 @@ under the License.
 | -- | -- |
 | `unit` | 时间单位，指定要添加的时间单位，常见的值有 SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR|
 |`interval`| 要添加的时间间隔，通常是一个整数，可以是正数或负数，表示添加或减去的时间长度 |
-| `DATETIME datetime_expr` | 合法的目标时间戳或日期 |
+| `datetime_expr` | 合法的目标时间戳或日期 |
 
 ## 返回值
 
@@ -49,6 +49,7 @@ under the License.
 ```sql
 SELECT TIMESTAMPADD(MINUTE,1,'2019-01-02');
 ```
+
 ```text
 +------------------------------------------------+
 | timestampadd(MINUTE, 1, '2019-01-02 00:00:00') |
@@ -56,9 +57,11 @@ SELECT TIMESTAMPADD(MINUTE,1,'2019-01-02');
 | 2019-01-02 00:01:00                            |
 +------------------------------------------------+
 ```
+
 ```sql
 SELECT TIMESTAMPADD(WEEK,1,'2019-01-02');
 ```
+
 ```text
 +----------------------------------------------+
 | timestampadd(WEEK, 1, '2019-01-02 00:00:00') |
