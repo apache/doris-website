@@ -37,9 +37,9 @@ TOPN(<expr>, <top_num> [, <space_expand_rate>])
 ## Parameters
 | Parameter | Description |
 | -- | -- |
-| expr | The column or expression to be counted. |
-| top_num | The number of the most frequent values to return. It must be a positive integer. |
-| space_expand_rate | Optional parameter, which is used to set the number of counters used in the Space-Saving algorithm. `counter_numbers = top_num * space_expand_rate` , the larger the value of space_expand_rate, the more accurate the result, and the default value is 50. |
+| `<expr>` | The column or expression to be counted. |
+| `<top_num>` | The number of the most frequent values to return. It must be a positive integer. |
+| `<space_expand_rate>` | Optional parameter, which is used to set the number of counters used in the Space-Saving algorithm. `counter_numbers = top_num * space_expand_rate` , the larger the value of space_expand_rate, the more accurate the result, and the default value is 50. |
 
 ## Return Value
 

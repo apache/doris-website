@@ -37,9 +37,9 @@ TOPN(<expr>, <top_num> [, <space_expand_rate>])
 ## 参数
 | 参数 | 说明 |
 | -- | -- |
-| expr | 要统计的列或表达式 |
-| top_num | 要返回的最高频率值的数量，必须是正整数 |
-| space_expand_rate | 可选项，该值用来设置 Space-Saving 算法中使用的 counter 个数`counter_numbers = top_num * space_expand_rate` space_expand_rate 的值越大，结果越准确，默认值为50 |
+| `<expr>` | 要统计的列或表达式 |
+| `<top_num>` | 要返回的最高频率值的数量，必须是正整数 |
+| `<space_expand_rate>` | 可选项，该值用来设置 Space-Saving 算法中使用的 counter 个数`counter_numbers = top_num * space_expand_rate` space_expand_rate 的值越大，结果越准确，默认值为50 |
 
 ## 返回值
 返回一个 JSON 字符串，包含值和对应的出现次数。
