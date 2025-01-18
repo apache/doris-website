@@ -24,52 +24,60 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_valid
-### description
+## Description
 
-json_valid functions returns 0 or 1 to indicate whether a value is valid JSON and Returns NULL if the argument is NULL.
+The JSON_VALID function returns 0 or 1 to indicate whether the input is a valid JSON. If the input is NULL, it returns NULL.
 
-#### Syntax
+## Syntax
 
-`JSONB json_valid(VARCHAR json_str)`
-
-### example
-
-1. parse valid JSON string
+```sql
+JSONB JSON_VALID( <str> )
 
 ```
-MySQL > SELECT json_valid('{"k1":"v31","k2":300}');
+
+Required Parameters
+| Parameter | Description |
+|------|------|
+| `<str>` | The input string in JSON format to be parsed. |
+
+## Alias
+
+- JSONB_VALID
+
+## Examples
+
+1. Valid JSON string
+
+```sql
+SELECT json_valid('{"k1":"v31","k2":300}');
 +-------------------------------------+
 | json_valid('{"k1":"v31","k2":300}') |
 +-------------------------------------+
 |                                   1 |
 +-------------------------------------+
-1 row in set (0.02 sec)
-```
-
-2. parse invalid JSON string
 
 ```
-MySQL > SELECT json_valid('invalid json');
+
+2. Invalid JSON string
+
+```sql
+SELECT json_valid('invalid json');
 +----------------------------+
 | json_valid('invalid json') |
 +----------------------------+
 |                          0 |
 +----------------------------+
-1 row in set (0.02 sec)
-```
-
-3. parse NULL
 
 ```
-MySQL > select json_valid(NULL);
+
+3. NULL参数
+
+```sql
+SELECT json_valid(NULL);
 +------------------+
 | json_valid(NULL) |
 +------------------+
 |             NULL |
 +------------------+
-1 row in set (0.02 sec)
-```
 
-### keywords
-JSON, VALID, JSON_VALID
+```

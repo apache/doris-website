@@ -24,45 +24,66 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_length
-### description
-#### Syntax
+## Description
+The JSON_LENGTH function returns the length or number of elements of a given JSON document. If the JSON document is an array, the number of elements in the array is returned; if the JSON document is an object, the number of key-value pairs in the object is returned. Returns NULL if the JSON document is empty or invalid.
 
-`INT json_length(JSON json_str)`
-`INT json_length(JSON json_str, VARCHAR json_path)`
+## Syntax
+`JSON_LENGTH(JSON <json_str>, <json_path>)`
 
-If specified path, the JSON_LENGTH() function returns the length of the data matching the path in the JSON document, otherwise it returns the length of the JSON document. The function calculates the length of the JSON document according to the following rules:
+## Required Parameters
 
-* The length of a scalar is 1. For example, the length of 1, '"x"', true, false, null is all 1.
-* The length of an array is the number of array elements. For example, the length of [1, 2] is 2.
-* The length of an object is the number of object members. For example, the length of {"x": 1} is 1.
+| parameters| described|
+|------|------|
+| `<json_str>`| The length of the JSON string needs to be checked. |
 
-### example
+## Optional Parameters
+| parameters| described|
+|------|------|
+| `<rhs>`| If a path is specified, the JSON_LENGTH() function returns the length of the data that matches the path in the JSON document, otherwise it returns the length of the JSON document|
 
+## Usage Notes
+This function calculates the length of a JSON document based on the following rules:
+- The length of the scalar is 1. For example: '1','"x "','true',' false', and 'null' are all of length 1.
+- The length of an array is the number of array elements. For example: '[1,2]' has length 2.
+- The length of an object is the number of object members. For example: '{"x": 1}' has length 1
+
+## Return Value
+
+- For a JSON array, returns the number of elements in the array.
+- For JSON objects, returns the number of key-value pairs in the object.
+- Returns NULL for invalid JSON strings.
+- For other types (such as strings, numbers, booleans, null, etc.), NULL is returned.
+
+## Examples
+
+```sql
+SELECT json_length('{"k1":"v31","k2":300}');
 ```
-mysql> SELECT json_length('{"k1":"v31","k2":300}');
+
+```sql
 +--------------------------------------+
 | json_length('{"k1":"v31","k2":300}') |
 +--------------------------------------+
-|                                    2 |
+| 2 |
 +--------------------------------------+
-1 row in set (0.26 sec)
-
-mysql> SELECT json_length('"abc"');
+```
+```sql
+SELECT json_length('"abc"');
+```
+```sql
 +----------------------+
 | json_length('"abc"') |
 +----------------------+
-|                    1 |
+| 1 |
 +----------------------+
-1 row in set (0.17 sec)
-
-mysql> SELECT json_length('{"x": 1, "y": [1, 2]}', '$.y');
+```
+```sql
+SELECT json_length('{"x": 1, "y": [1, 2]}', '$.y');
+```
+```sql
 +---------------------------------------------+
 | json_length('{"x": 1, "y": [1, 2]}', '$.y') |
 +---------------------------------------------+
-|                                           2 |
+| 2 |
 +---------------------------------------------+
-1 row in set (0.07 sec)
 ```
-### keywords
-json,json_length

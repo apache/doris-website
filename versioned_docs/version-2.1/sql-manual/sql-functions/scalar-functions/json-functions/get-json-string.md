@@ -24,67 +24,83 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## get_json_string
-### description
-#### Syntax
+## Description
 
-`VARCHAR get_json_string (VARCHAR json str, VARCHAR json path)`
+This function is used to extract a field's value from a JSON document and convert it to `STRING` type. It returns the field value at the specified path. If the value cannot be converted to a string, or if the field at the specified path does not exist, it returns `NULL`.
 
+## Syntax
 
-Parse and retrieve the string content of the specified path in the JSON string.
-Where json_path must start with the $symbol and use. as the path splitter. If the path contains..., double quotation marks can be used to surround it.
-Use [] to denote array subscripts, starting at 0.
-The content of path cannot contain ",[and].
-If the json_string format is incorrect, or the json_path format is incorrect, or matches cannot be found, NULL is returned.
+` GET_JSON_STRING( <json_str>, <json_path>)`
 
-In addition, it is recommended to use the jsonb type and jsonb_extract_XXX function performs the same function.
+## Required Parameters
 
-Exception handling is as follows:
-- if the field specified by json_path does not exist, return NULL
-- if datatype of the field specified by json_path is not the same with type of json_extract_t, return t if it can be cast to t else NULL
+| Parameter   | Description                                           |
+|-------------|-------------------------------------------------------|
+| `<json_str>` | The JSON string from which data needs to be extracted. |
+| `<json_path>` | JSON path that specifies the field's location. The path can use dot notation. |
 
-### example
+## Return Value
+It returns the `STRING` value of the field at the specified path.
+If the specified path does not point to a valid field or the field value cannot be converted to a `STRING` type, it returns `NULL`.
 
-1. Get the value of key as "k1"
+## Usage Notes
 
+Parses and retrieves the string content of the specified path in the JSON string.
+The `<json_path>` must start with the `$` symbol, using `.` as the path delimiter. If the path contains a `.`, it should be enclosed in double quotes.
+Use `[ ]` to indicate array indices, starting from 0.
+The path should not contain `", [`, and `]`.
+If the `<json_str>` format is incorrect, or if the `<json_path>` format is invalid, or if no matching field is found, `NULL` is returned.
+
+Additionally, it is recommended to use the `jsonb` type and `jsonb_extract_XXX` functions to achieve the same functionality.
+
+Special case handling as follows:
+- If the field specified by `<json_path>` does not exist in the JSON, return `NULL`.
+- If the actual type of the field specified by `<json_path>` differs from the type expected by `json_extract_t`, if it can be losslessly converted to the expected type, it will return the specified type. Otherwise, it will return `NULL`.
+
+## Examples
+
+1. Get the value for key "k1"
+
+```sql
+
+SELECT get_json_string('{"k1":"v1", "k2":"v2"}', "$.k1");
 ```
-mysql> SELECT get_json_string('{"k1":"v1", "k2":"v2"}', "$.k1");
+
+```sql
 +---------------------------------------------------+
 | get_json_string('{"k1":"v1", "k2":"v2"}', '$.k1') |
 +---------------------------------------------------+
 | v1                                                |
 +---------------------------------------------------+
 ```
+2. Get the second element of the array for key "my.key"
 
-2. Get the second element of the array whose key is "my. key"
+``` sql
+SELECT get_json_string('{"k1":"v1", "my.key":["e1", "e2", "e3"]}', '$."my.key"[1]');
 
 ```
-mysql> SELECT get_json_string('{"k1":"v1", "my.key":["e1", "e2", "e3"]}', '$."my.key"[1]');
+```sql
 +------------------------------------------------------------------------------+
 | get_json_string('{"k1":"v1", "my.key":["e1", "e2", "e3"]}', '$."my.key"[1]') |
 +------------------------------------------------------------------------------+
 | e2                                                                           |
 +------------------------------------------------------------------------------+
+
+```
+3. Get the first element of the array in the secondary path k1.key -> k2
+
+
+```sql
+ SELECT get_json_string('{"k1.key":{"k2":["v1", "v2"]}}', '$."k1.key".k2[0]');
+
 ```
 
-3. Get the first element in an array whose secondary path is k1. key - > K2
-```
-mysql> SELECT get_json_string('{"k1.key":{"k2":["v1", "v2"]}}', '$."k1.key".k2[0]');
+```sql
+
 +-----------------------------------------------------------------------+
 | get_json_string('{"k1.key":{"k2":["v1", "v2"]}}', '$."k1.key".k2[0]') |
 +-----------------------------------------------------------------------+
 | v1                                                                    |
 +-----------------------------------------------------------------------+
-```
 
-4. Get all the values in the array where the key is "k1"
 ```
-mysql> SELECT get_json_string('[{"k1":"v1"}, {"k2":"v2"}, {"k1":"v3"}, {"k1":"v4"}]', '$.k1');
-+---------------------------------------------------------------------------------+
-| get_json_string('[{"k1":"v1"}, {"k2":"v2"}, {"k1":"v3"}, {"k1":"v4"}]', '$.k1') |
-+---------------------------------------------------------------------------------+
-| ["v1","v3","v4"]                                                                |
-+---------------------------------------------------------------------------------+
-```
-### keywords
-GET_JSON_STRING,GET,JSON,STRING
