@@ -26,28 +26,28 @@ under the License.
 
 ## Description
 
-For the input encoded LARGEINT, translate it into the original uuid string.
+For an encoded LARGEINT input, convert it to a raw uuid string.
 
 ## Syntax
 
 ```sql
-int_to_uuid(LARGEINT int128)
+INT_TO_UUID ( <int128> )
 ```
 
 ## Parameters
 
-| Parameter | Description |
-| -- |-----------------|
-| `int128` | Encoded LARGEINT value |
+| Parameter  | Description |
+|------------|-----------------|
+| `<int128>` | Encoded LARGEINT value |
 
 ## Return value
 
-Parameter int128 Original uuid string.
+Parameter `<int128>` Raw uuid string.
 
 ## Example
 
 ```sql
-select int_to_uuid(95721955514869408091759290071393952876)
+SELECT INT_TO_UUID(95721955514869408091759290071393952876)
 ```
 
 ```text

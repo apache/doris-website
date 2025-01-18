@@ -33,14 +33,14 @@ under the License.
 ## 语法
 
 ```sql
-ends_with(VARCHAR str, VARCHAR suffix)
+ENDS_WITH ( <str> ,  <suffix> )
 ```
 
 ## 参数
 
-| 参数 | 说明           |
-| -- |--------------|
-| `str` | 指定需要判断的原始字符串 |
+| 参数       | 说明           |
+|----------|--------------|
+| `str`    | 指定需要判断的原始字符串 |
 | `suffix` | 指定需要判断的结尾字符串 |
 
 ## 返回值
@@ -52,7 +52,7 @@ true 或者 false，类型为 `BOOLEAN`。特殊情况：
 ## 举例
 
 ```sql
-select ends_with("Hello doris", "doris"),ends_with("Hello doris", "Hello")
+SELECT ENDS_WITH("Hello doris", "doris"),ENDS_WITH("Hello doris", "Hello")
 ```
 
 ```text

@@ -31,16 +31,16 @@ under the License.
 ## 语法
 
 ```sql
-locate(VARCHAR substr, VARCHAR str [, INT pos])
+LOCATE ( <substr> , <str> [, <pos> ] )
 ```
 
 ## 参数
 
-| 参数 | 说明              |
-| -- |-----------------|
+| 参数       | 说明              |
+|----------|-----------------|
 | `substr` | 需要查找的子字符串       |
-| `str` | 需要被查找的字符串       |
-| `pos` | 如果指定了此参数，则 str 以 pos 下标开始的字符串处开始查找 substr 出现的位置|
+| `str`    | 需要被查找的字符串       |
+| `pos`    | 如果指定了此参数，则 str 以 pos 下标开始的字符串处开始查找 substr 出现的位置|
 
 ## 返回值
 

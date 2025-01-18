@@ -39,24 +39,24 @@ If you want to get other parts of the URL, you can use [parse_url](parse-url.md)
 ## Syntax
 
 ```sql
-extract_url_parameter(VARCHAR url, VARCHAR name)
+EXTRACT_URL_PARAMETER ( <url> , <name> )
 ```
 
 ## Parameters
 
 | Parameters | Description |
-| -- |---------------|
-| `url` | String of the url to return the parameter |
-| `name` | Name of the parameter to return |
+|------------|---------------|
+| `<url>`    | The url string of the parameter to be returned |
+| `<name>`   | The name of the parameter to be returned |
 
 ## Return Value
 
-Parameter value of parameter name in url
+The value of the parameter `<name>` in `<url>`
 
 ## Example
 
 ```sql
-SELECT extract_url_parameter ("http://doris.apache.org?k1=aa&k2=bb&test=cc#999", "k2")
+SELECT EXTRACT_URL_PARAMETER("http://doris.apache.org?k1=aa&k2=bb&test=cc#999", "k2")
 ```
 
 ```text

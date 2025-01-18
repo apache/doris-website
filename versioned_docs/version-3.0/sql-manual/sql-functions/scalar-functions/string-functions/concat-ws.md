@@ -28,28 +28,28 @@ under the License.
 
 Use the first parameter sep as the connector to concatenate the second parameter and all subsequent parameters (or all strings in ARRAY) into a string. Special cases:
 
-- If the separator is NULL, return NULL.
+- If the separator is NULL, NULL is returned.
 
-The `concat_ws` function does not skip empty strings, but skips NULL values.
+The `CONCAT_WS` function does not skip empty strings, but skips NULL values.
 
 ## Syntax
 
 ```sql
-VARCHAR concat_ws(VARCHAR sep, VARCHAR str [, VARCHAR str])
-VARCHAR concat_ws(VARCHAR sep, ARRAY arr)
+CONCAT_WS ( <sep> , <str> [ , <str> ] )
+CONCAT_WS ( <sep> , <array> )
 ```
 
 ## Parameters
 
 | Parameter | Description |
 |-------|-----------------|
-| `sep` | Connector for concatenating strings |
-| `str` | String to be concatenated |
-| `arr` | Array to be concatenated |
+| `<sep>` | Connector for concatenating strings |
+| `<str>` | String to be concatenated |
+| `<array>` | Array to be concatenated |
 
 ## Return value
 
-Parameter str or array The string after concatenation using sep. Special cases:
+Parameter `<sep>` or `<array>` The string concatenated with `<str>`. Special cases:
 
 - If delimiter is NULL, returns NULL.
 
@@ -58,7 +58,7 @@ Parameter str or array The string after concatenation using sep. Special cases:
 Concatenate strings together using or
 
 ```sql
-select concat_ws("or", "d", "is"),concat_ws(NULL, "d", "is"),concat_ws('or', 'd', NULL, 'is')
+SELECT CONCAT_WS("or", "d", "is"),CONCAT_WS(NULL, "d", "is"),CONCAT_WS('or', 'd', NULL, 'is')
 ```
 
 ```text
@@ -72,7 +72,7 @@ select concat_ws("or", "d", "is"),concat_ws(NULL, "d", "is"),concat_ws('or', 'd'
 Concatenate array arrays together using or
 
 ```sql
-select concat_ws("or", ["d", "is"]),concat_ws(NULL, ["d", "is"]),concat_ws("or", ["d", NULL,"is"])
+SELECT CONCAT_WS("or", ["d", "is"]),CONCAT_WS(NULL, ["d", "is"]),CONCAT_WS("or", ["d", NULL,"is"])
 ```
 
 ```text

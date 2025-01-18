@@ -28,30 +28,30 @@ under the License.
 
 Returns the result of Base64 decoding the input string. Special cases:
 
-- When the input string is incorrect (a string that may not appear after Base64 encoding appears), NULL will be returned
+- When the input string is incorrect (a string that is not possible after Base64 encoding appears), NULL will be returned
 
 ## Syntax
 
 ```sql
-from_base64(VARCHAR str)
+FROM_BASE64 ( <str> )
 ```
 
 ## Parameters
 
 | Parameters | Description |
-| -- |-----------------|
-| `str` | The string to be Base64 decoded |
+|------------|-----------------|
+| `<str>`    | The string to be Base64 decoded |
 
 ## Return value
 
-Parameter str The result of Base64 decoding. Special cases:
+Parameter <str> The result of Base64 decoding. Special cases:
 
-- When the input string is incorrect (a string that may not appear after Base64 encoding appears), NULL will be returned
+- When the input string is incorrect (a string that is not possible after Base64 encoding appears), NULL will be returned.
 
 ## Example
 
 ```sql
-select from_base64('MQ=='),from_base64('MjM0'),from_base64(NULL)
+SELECT FROM_BASE64('MQ=='),FROM_BASE64('MjM0'),FROM_BASE64(NULL)
 ```
 
 ```text

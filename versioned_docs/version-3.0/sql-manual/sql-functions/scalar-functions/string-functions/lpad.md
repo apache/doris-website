@@ -39,16 +39,16 @@ Special cases:
 ## Syntax
 
 ```sql
-lpad(VARCHAR str, INT len, VARCHAR pad)
+LPAD ( <str> , <len> , <pad>)
 ```
 
 ## Parameters
 
-| Parameter | Description |
-| -- |------------------------------|
-| `str` | The string to be padded |
-| `len` | The length of the string to be padded, which refers to the character length rather than the byte length |
-| `pad` | The string to be padded on the left side of the original string |
+| Parameters | Description |
+|------------|------------------------------|
+| `<str>`    | The string to be padded |
+| `<len>`    | The length of the string to be padded, which refers to the length of characters rather than bytes |
+| `<pad>`    | The string to be padded on the left of the original string |
 
 ## Return value
 
@@ -59,7 +59,7 @@ The padded string. Special cases:
 ## Example
 
 ```sql
-select lpad("hi", 5, "xy"),lpad("hi", 1, "xy"),lpad("", 0, "")
+SELECT LPAD("hi", 5, "xy"),LPAD("hi", 1, "xy"),LPAD("", 0, "")
 ```
 
 ```text

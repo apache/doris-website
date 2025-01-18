@@ -33,15 +33,15 @@ Returns true if the string ends with the specified suffix, otherwise returns fal
 ## Syntax
 
 ```sql
-ends_with(VARCHAR str, VARCHAR suffix)
+ENDS_WITH ( <str> , <suffix> )
 ```
 
 ## Parameters
 
 | Parameter | Description |
-| -- |--------------|
-| `str` | Specifies the original string to be judged |
-| `suffix` | Specifies the ending string to be judged |
+|-----------|--------------|
+| `str`     | Specifies the original string to be judged |
+| `suffix`  | Specifies the ending string to be judged |
 
 ## Return value
 
@@ -52,7 +52,7 @@ true or false, type is `BOOLEAN`. Special cases:
 ## Example
 
 ```sql
-select ends_with("Hello doris", "doris"),ends_with("Hello doris", "Hello")
+SELECT ENDS_WITH("Hello doris", "doris"),ENDS_WITH("Hello doris", "Hello")
 ```
 
 ```text

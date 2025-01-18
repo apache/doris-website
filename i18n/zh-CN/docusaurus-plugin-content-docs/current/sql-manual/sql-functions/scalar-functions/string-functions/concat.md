@@ -34,25 +34,25 @@ under the License.
 ## 语法
 
 ```sql
-concat(STRING <expr1> [ ,STRING <expr2> ... ])
+CONCAT ( <expr> [ , <expr> ... ] )
 ```
 
 ## 参数
 
-| 参数 | 说明           |
-| -- |--------------|
-| `<expr1>` | 需要被连接到一起的字符串 |
+| 参数       | 说明           |
+|----------|--------------|
+| `<expr>` | 需要被连接到一起的字符串 |
 
 ## 返回值
 
-参数列表 expr1 连接到一起的字符串。特殊情况：
+参数列表 `<expr>` 连接到一起的字符串。特殊情况：
 
 - 如果参数中任意一个值是 NULL，那么返回的结果就是 NULL
 
 ## 举例
 
 ```sql
-select concat("a", "b"),concat("a", "b", "c"),concat("a", null, "c")
+SELECT  CONCAT("a", "b"),CONCAT("a", "b", "c"),CONCAT("a", null, "c")
 ```
 
 ```text

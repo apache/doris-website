@@ -28,30 +28,30 @@ under the License.
 
 Convert all strings in the parameter to lowercase. Another alias for this function is [lower](./lower.md).
 
-## Aliases
+## Alias
 
-- lower
+- LOWER
 
 ## Syntax
 
 ```sql
-lcase(VARCHAR str)
+LCASE ( <str> )
 ```
 
 ## Parameters
 
-| Parameters | Description |
-| -- |--------------|
-| `str` | String to be converted to lowercase |
+| Parameter | Description |
+|-----------|--------------|
+| `<str>`   | String to be converted to lowercase |
 
-## Return value
+## Return Value
 
-Parameter str String converted to lowercase
+Parameter `<str>` String converted to lowercase
 
 ## Example
 
 ```sql
-SELECT lcase("AbC123"),lower("AbC123")
+SELECT LCASE("AbC123"),LOWER("AbC123")
 ```
 
 ```text

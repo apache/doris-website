@@ -33,25 +33,25 @@ under the License.
 ## 语法
 
 ```sql
-from_base64(VARCHAR str)
+FROM_BASE64 ( <str> )
 ```
 
 ## 参数
 
-| 参数 | 说明              |
-| -- |-----------------|
-| `str` | 需要被Base64解码的字符串 |
+| 参数      | 说明              |
+|---------|-----------------|
+| `<str>` | 需要被Base64解码的字符串 |
 
 ## 返回值
 
-参数 str 通过Base64解码后的结果。 特殊情况：
+参数 <str> 通过Base64解码后的结果。 特殊情况：
 
 - 当输入字符串不正确时（出现非Base64编码后可能出现的字符串）将会返回NULL
 
 ## 举例
 
 ```sql
-select from_base64('MQ=='),from_base64('MjM0'),from_base64(NULL)
+SELECT FROM_BASE64('MQ=='),FROM_BASE64('MjM0'),FROM_BASE64(NULL)
 ```
 
 ```text

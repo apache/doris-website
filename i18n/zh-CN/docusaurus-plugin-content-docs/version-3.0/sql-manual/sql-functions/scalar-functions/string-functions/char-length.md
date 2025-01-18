@@ -32,28 +32,28 @@ under the License.
 
 ## 别名
 
-- character_length
+- CHARACTER_LENGTH
 
 ## 语法
 
 ```sql 
-char_length(VARCHAR str)
+CHAR_LENGTH ( <str> )
 ```
 
 ## 参数
 
-| 参数 | 说明         |
-| -- |------------|
-| `str` | 需要计算长度的字符串 |
+| 参数      | 说明         |
+|---------|------------|
+| `<str>` | 需要计算长度的字符串 |
 
 ## 返回值
 
-字符串 str 的长度。
+字符串 <str> 的长度。
 
 ## 举例
 
 ```sql
-select char_length("abc"),char_length("中国")
+select CHAR_LENGTH("abc"),CHAR_LENGTH("中国")
 ```
 
 ```text

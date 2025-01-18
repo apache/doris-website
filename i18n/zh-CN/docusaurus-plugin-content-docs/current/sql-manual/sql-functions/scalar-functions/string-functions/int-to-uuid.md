@@ -31,23 +31,23 @@ under the License.
 ## 语法
 
 ```sql
-int_to_uuid(LARGEINT int128)
+INT_TO_UUID ( <int128> )
 ```
 
 ## 参数
 
-| 参数 | 说明              |
-| -- |-----------------|
-| `int128` | 已编码的 LARGEINT 值 |
+| 参数         | 说明              |
+|------------|-----------------|
+| `<int128>` | 已编码的 LARGEINT 值 |
 
 ## 返回值
 
-参数 int128 原始的 uuid 字符串。
+参数 `<int128>` 原始的 uuid 字符串。
 
 ## 举例
 
 ```sql
-select int_to_uuid(95721955514869408091759290071393952876)
+SELECT INT_TO_UUID(95721955514869408091759290071393952876)
 ```
 
 ```text

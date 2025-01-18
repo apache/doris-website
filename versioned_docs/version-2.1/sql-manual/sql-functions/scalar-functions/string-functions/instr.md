@@ -28,31 +28,31 @@ under the License.
 
 Returns the first occurrence position of substr in str (counting starts from 1). Special cases:
 
-- If substr does not appear in str, it returns 0.
+- If substr does not appear in str, returns 0.
 
 ## Syntax
 
 ```sql
-instr(VARCHAR str, VARCHAR substr)
+INSTR ( <str> , <substr> )
 ```
 
 ## Parameters
 
-| Parameters | Description |
+| Parameter | Description |
 |--------|-----------|
-| `str` | String to be searched |
-| `substr` | String to be searched |
+| `<str>` | String to search for |
+| `<substr>` | String to be searched for |
 
 ## Return value
 
-Parameters The first occurrence position of substr in str (counting starts from 1). Special cases:
+Parameters The first occurrence position of `<substr>` in `<str>` (counting starts from 1). Special cases:
 
-- If substr does not appear in str, it returns 0.
+- If `<substr>` does not appear in `<str>`, returns 0.
 
 ## Example
 
 ```sql
-select instr("abc", "b"),instr("abc", "d")
+SELECT INSTR("abc", "b"),INSTR("abc", "d")
 ```
 
 ```text

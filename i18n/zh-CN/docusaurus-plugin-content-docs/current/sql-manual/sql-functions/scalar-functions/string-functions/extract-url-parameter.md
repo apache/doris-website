@@ -39,24 +39,24 @@ under the License.
 ## 语法
 
 ```sql
-extract_url_parameter(VARCHAR url, VARCHAR  name)
+EXTRACT_URL_PARAMETER ( <url> , <name> )
 ```
 
 ## 参数
 
-| 参数 | 说明            |
-| -- |---------------|
-| `url` | 需要返回参数的 url 字符串 |
-| `name` | 需要返回的参数名称     |
+| 参数       | 说明            |
+|----------|---------------|
+| `<url>`  | 需要返回参数的 url 字符串 |
+| `<name>` | 需要返回的参数名称     |
 
 ## 返回值
 
-参数 name 在 url 中的参数值
+参数 `<name>` 在 `<url>` 中的参数值
 
 ## 举例
 
 ```sql
-SELECT extract_url_parameter ("http://doris.apache.org?k1=aa&k2=bb&test=cc#999", "k2")
+SELECT EXTRACT_URL_PARAMETER ("http://doris.apache.org?k1=aa&k2=bb&test=cc#999", "k2")
 ```
 
 ```text

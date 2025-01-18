@@ -39,16 +39,16 @@ under the License.
 ## 语法
 
 ```sql
-lpad(VARCHAR str, INT len, VARCHAR pad)
+LPAD ( <str> , <len> , <pad>)
 ```
 
 ## 参数
 
-| 参数 | 说明                           |
-| -- |------------------------------|
-| `str` | 需要被补充的字符串                    |
-| `len` | 需要填充的字符串的长度，指的是 字符 长度而不是字节长度 |
-| `pad` | 需要在原始字符串左边补充的字符串             |
+| 参数      | 说明                           |
+|---------|------------------------------|
+| `<str>` | 需要被补充的字符串                    |
+| `<len>` | 需要填充的字符串的长度，指的是字符长度而不是字节长度 |
+| `<pad>` | 需要在原始字符串左边补充的字符串             |
 
 ## 返回值
 
@@ -59,7 +59,7 @@ lpad(VARCHAR str, INT len, VARCHAR pad)
 ## 举例
 
 ```sql
-select lpad("hi", 5, "xy"),lpad("hi", 1, "xy"),lpad("", 0, "")
+SELECT LPAD("hi", 5, "xy"),LPAD("hi", 1, "xy"),LPAD("", 0, "")
 ```
 
 ```text

@@ -31,16 +31,16 @@ Returns the position of substr in str (counting from 1). If the third parameter 
 ## Syntax
 
 ```sql
-locate(VARCHAR substr, VARCHAR str [, INT pos])
+LOCATE ( <substr> , <str> [, <pos> ] )
 ```
 
 ## Parameters
 
 | Parameter | Description |
-| -- |-----------------|
-| `substr` | The substring to be searched |
-| `str` | The string to be searched |
-| `pos` | If this parameter is specified, str starts with the pos subscript and searches for the position of substr |
+|-----------|-----------------|
+| `substr`  | The substring to be searched |
+| `str`     | The string to be searched |
+| `pos`     | If this parameter is specified, the position of substr is searched from the string starting with the pos subscript|
 
 ## Return value
 
@@ -49,7 +49,7 @@ The position of substr in str (counting from 1)
 ## Example
 
 ```sql
-SELECT locate('bar', 'foobarbar'),locate('xbar', 'foobar'),locate('bar', 'foobarbar', 5)
+SELECT LOCATE('bar', 'foobarbar'),LOCATE('xbar', 'foobar'),LOCATE('bar', 'foobarbar', 5)
 ```
 
 ```text

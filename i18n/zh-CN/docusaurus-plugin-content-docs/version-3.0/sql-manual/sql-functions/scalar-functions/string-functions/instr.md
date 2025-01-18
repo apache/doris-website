@@ -33,26 +33,26 @@ under the License.
 ## 语法
 
 ```sql
-instr(VARCHAR str, VARCHAR substr)
+INSTR ( <str> , <substr> )
 ```
 
 ## 参数
 
-| 参数     | 说明        |
-|--------|-----------|
-| `str`   | 需要查找的字符串  |
-| `substr` | 需要被查找的字符串 |
+|参数     | 说明        |
+|-------|-----------|
+| `<str>`  | 需要查找的字符串  |
+| `<substr>` | 需要被查找的字符串 |
 
 ## 返回值
 
-参数 substr 在 str 中第一次出现的位置（从1开始计数）。特殊情况：
+参数 `<substr>` 在 `<str>` 中第一次出现的位置（从1开始计数）。特殊情况：
 
-- 如果 substr 不在 str 中出现，则返回0。
+- 如果 `<substr>` 不在 `<str>` 中出现，则返回0。
 
 ## 举例
 
 ```sql
-select instr("abc", "b"),instr("abc", "d")
+SELECT INSTR("abc", "b"),INSTR("abc", "d")
 ```
 
 ```text

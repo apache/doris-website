@@ -31,23 +31,23 @@ under the License.
 ## 语法
 
 ```sql
-domain_without_www(STRING <url>)
+DOMAIN_WITHOUT_WWW ( <url> )
 ```
 
 ## 参数
 
-| 参数 | 说明                   |
-| -- |----------------------|
+| 参数      | 说明                   |
+|---------|----------------------|
 | `<url>` | 需要提取不带 www 域名的 `URL` |
 
 ## 返回值
 
-参数 url 不带前缀 www 的域名
+参数 `<url>` 不带前缀 www 的域名
 
 ## 举例
 
 ```sql
-select domain_without_www("https://www.apache.org/docs/gettingStarted/what-is-apache-doris")
+SELECT DOMAIN_WITHOUT_WWW("https://www.apache.org/docs/gettingStarted/what-is-apache-doris")
 ```
 
 ```text

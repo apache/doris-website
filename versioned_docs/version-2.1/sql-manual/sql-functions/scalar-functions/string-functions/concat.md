@@ -26,32 +26,32 @@ under the License.
 
 ## Description
 
-Concatenate multiple strings. Special cases:
+Concatenates multiple strings. Special cases:
 
 - If any of the parameter values ​​is NULL, the result returned is NULL
 
 ## Syntax
 
 ```sql
-concat(STRING <expr1> [ ,STRING <expr2> ... ])
+CONCAT ( <expr> [ , <expr> ... ] )
 ```
 
 ## Parameters
 
 | Parameter | Description |
-| -- |--------------|
-| `<expr1>` | The string to be concatenated |
+|-----------|--------------|
+| `<expr>`  | The strings to be concatenated |
 
 ## Return value
 
-Parameter list expr1 The string to be concatenated. Special cases:
+Parameter list `<expr>` The strings to be concatenated. Special cases:
 
 - If any of the parameter values ​​is NULL, the result returned is NULL
 
 ## Example
 
 ```sql
-select concat("a", "b"),concat("a", "b", "c"),concat("a", null, "c")
+SELECT  CONCAT("a", "b"),CONCAT("a", "b", "c"),CONCAT("a", null, "c")
 ```
 
 ```text

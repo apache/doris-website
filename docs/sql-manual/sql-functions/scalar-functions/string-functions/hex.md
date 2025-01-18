@@ -28,32 +28,29 @@ under the License.
 
 If the input parameter is a number, return the string representation of the hexadecimal value.
 
-If the input parameter is a string, convert each character to two hexadecimal characters, concatenate all the converted characters into a string and output.
+If the input parameter is a string, convert each character to two hexadecimal characters, concatenate all the converted characters into a string for output.
 
 ## Syntax
 
 ```sql
-hex(VARCHAR str)
-
-hex(BIGINT num)
+HEX ( <str> )
 ```
 
 ## Parameters
 
 | Parameter | Description |
-|-------|----------|
-| `num` | Input parameter is a number |
-| `str` | Input parameter is a string |
+|-------|--------------|
+| `<str>` | Input parameter is a number or a string |
 
 ## Return value
 
-The hexadecimal result of parameter num or str.
+The hexadecimal result of parameter `<str>`.
 
 ## Example
 
 The input parameter is a number
 ```sql
-select hex(12),hex(-1)
+SELECT HEX(12),HEX(-1)
 ```
 
 ```text
@@ -67,7 +64,7 @@ select hex(12),hex(-1)
 The input parameter is a string
 
 ```sql
-select hex('1'),hex('@'),hex('12')
+SELECT HEX('1'),HEX('@'),HEX('12')
 ```
 
 ```text

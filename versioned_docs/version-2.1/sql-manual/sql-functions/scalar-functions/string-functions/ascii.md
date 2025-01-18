@@ -31,23 +31,23 @@ Returns the ASCII code of the first character of a string
 ## Syntax
 
 ```sql
-ascii(VARCHAR str)
+ASCII ( <str> )
 ```
 
 ## Parameters
 
-| Parameters | Description |
-| -- |-------------------------|
-| `str` | The string whose ASCII code of the first character needs to be calculated |
+| Parameter | Description |
+|-----------|-------------------------|
+| `<str>`   | The string whose ASCII code of the first character needs to be calculated |
 
 ## Return value
 
-Parameter str The ASCII code of the first character
+Parameter <str> ASCII code of the first character
 
 ## Example
 
 ```sql
-select ascii('1'),ascii('234')
+SELECT ASCII('1'),ASCII('234')
 ```
 
 ```text

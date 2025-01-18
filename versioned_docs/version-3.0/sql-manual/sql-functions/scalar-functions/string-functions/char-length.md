@@ -32,28 +32,28 @@ Currently only supports `utf8` encoding
 
 ## Alias
 
-- character_length
+- CHARACTER_LENGTH
 
 ## Syntax
 
 ```sql
-char_length(VARCHAR str)
+CHAR_LENGTH ( <str> )
 ```
 
 ## Parameters
 
 | Parameter | Description |
-| -- |------------|
-| `str` | The string whose length needs to be calculated |
+|-----------|------------|
+| `<str>`   | The string to calculate the length of |
 
 ## Return value
 
-The length of the string str.
+The length of the string <str>.
 
 ## Example
 
 ```sql
-select char_length("abc"),char_length("中国")
+select CHAR_LENGTH("abc"),CHAR_LENGTH("中国")
 ```
 
 ```text

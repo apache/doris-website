@@ -31,24 +31,24 @@ Returns the substring starting at the specified offset from the left side of str
 ## Syntax
 
 ```sql
-left(VARCHAR s,INT offset)
+LEFT ( <str> , <offset> )
 ```
 
 ## Parameters
 
-| Parameter | Description |
-| -- |---------------|
-| `s` | The string to be searched |
-| `offset` | The offset to be calculated from the left side |
+| Parameter  | Description |
+|------------|---------------|
+| `<str>`    | String to search for |
+| `<offset>` | Offset to calculate from the left side |
 
 ## Return Value
 
-The substring starting at the specified offset from the left side of string s.
+The substring starting at the specified offset from the left side of string `<str>`.
 
 ## Example
 
 ```sql
-SELECT left('Hello', 3)
+SELECT LEFT('Hello', 3)
 ```
 
 ```text

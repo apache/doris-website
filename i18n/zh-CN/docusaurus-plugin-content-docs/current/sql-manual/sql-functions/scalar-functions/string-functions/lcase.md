@@ -30,28 +30,28 @@ under the License.
 
 ## 别名
 
-- lower
+- LOWER
 
 ## 语法
 
 ```sql
-lcase(VARCHAR str)
+LCASE ( <str> )
 ```
 
 ## 参数
 
-| 参数 | 说明           |
-| -- |--------------|
-| `str` | 需要被转换成小写的字符串 |
+| 参数      | 说明           |
+|---------|--------------|
+| `<str>` | 需要被转换成小写的字符串 |
 
 ## 返回值
 
-参数 str 转换成小写的字符串
+参数 `<str>`  转换成小写的字符串
 
 ## 举例
 
 ```sql
-SELECT lcase("AbC123"),lower("AbC123")
+SELECT LOWER("AbC123"),LCASE("AbC123")
 ```
 
 ```text

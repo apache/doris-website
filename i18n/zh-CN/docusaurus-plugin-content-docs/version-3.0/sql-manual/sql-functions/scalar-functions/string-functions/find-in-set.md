@@ -36,26 +36,26 @@ strlist 是用逗号分隔的字符串。特殊情况:
 ## 语法
 
 ```sql
-find_in_set(VARCHAR str, VARCHAR strlist)
+FIND_IN_SET ( <str> , <strlist> )
 ```
 
 ## 参数
 
-| 参数 | 说明       |
-| -- |----------|
-| `str` | 需要查找的字符串 |
-| `strlist` | 需要被查找的字符串 |
+| 参数          | 说明       |
+|-------------|----------|
+| `<str>`     | 需要查找的字符串 |
+| `<strlist>` | 需要被查找的字符串 |
 
 ## 返回值
 
-参数 str 在参数 strlist第一次出现的位置。特殊情况：
+参数 `<str>` 在参数 `<strlist>` 第一次出现的位置。特殊情况：
 - 如果没有找到，返回0。
 - 任一参数为 NULL ，返回 NULL。
 
 ## 举例
 
 ```sql
-select find_in_set("b", "a,b,c")
+SELECT FIND_IN_SET("b", "a,b,c")
 ```
 
 ```text

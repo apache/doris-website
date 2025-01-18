@@ -31,23 +31,23 @@ Extract the domain name from the string URL
 ## Syntax
 
 ```sql
-domain(STRING <url>)
+DOMAIN ( <url> )
 ```
 
 ## Parameters
 
-| Parameters | Description |
-| -- |--------------------|
-| `<url>` | `URL` from which the domain name needs to be extracted |
+| Parameter | Description |
+|-----------|--------------------|
+| `<url>`   | `URL` from which the domain name needs to be extracted |
 
 ## Return value
 
-Domain name of parameter url
+Domain name of parameter `<url>`
 
 ## Example
 
 ```sql
-select domain("https://doris.apache.org/docs/gettingStarted/what-is-apache-doris")
+SELECT DOMAIN("https://doris.apache.org/docs/gettingStarted/what-is-apache-doris")
 ```
 
 ```text

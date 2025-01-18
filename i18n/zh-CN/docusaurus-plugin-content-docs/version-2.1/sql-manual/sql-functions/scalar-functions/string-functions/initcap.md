@@ -31,23 +31,23 @@ under the License.
 ## 语法
 
 ```sql
-initcap(VARCHAR str)
+INITCAP ( <str> )
 ```
 
 ## 参数
 
-| 参数 | 说明        |
-| -- |-----------|
-| `str` | 需要被转化的字符串 |
+| 参数      | 说明        |
+|---------|-----------|
+| `<str>` | 需要被转化的字符串 |
 
 ## 返回值
 
-参数 str 中单词首字母大写，其余字母小写的结果。
+参数 `<str>` 中单词首字母大写，其余字母小写的结果。
 
 ## 举例
 
 ```sql
-select initcap('hello hello.,HELLO123HELlo')
+SELECT INITCAP('hello hello.,HELLO123HELlo')
 ```
 
 ```text

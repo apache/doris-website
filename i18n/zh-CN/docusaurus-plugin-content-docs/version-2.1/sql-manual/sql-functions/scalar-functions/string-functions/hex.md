@@ -34,27 +34,24 @@ under the License.
 ## 语法
 
 ```sql
-hex(VARCHAR str)
-
-hex(BIGINT num)
+HEX ( <str> )
 ```
 
 ## 参数
 
-| 参数    | 说明       |
-|-------|----------|
-| `num` | 输入参数是数字  |
-| `str` | 输入参数是字符串 |
+| 参数    | 说明           |
+|-------|--------------|
+| `<str>` | 输入参数是数字或者字符串 |
 
 ## 返回值
 
-参数 num 或者 str 的十六进制结果。
+参数 `<str>` 的十六进制结果。
 
 ## 举例
 
 输入参数是数字
 ```sql
-select hex(12),hex(-1)
+SELECT HEX(12),HEX(-1)
 ```
 
 ```text
@@ -68,7 +65,7 @@ select hex(12),hex(-1)
 输入参数是字符串
 
 ```sql
-select hex('1'),hex('@'),hex('12')
+SELECT HEX('1'),HEX('@'),HEX('12')
 ```
 
 ```text

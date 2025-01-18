@@ -26,9 +26,9 @@ under the License.
 
 ## Description
 
-Returns the position of the first occurrence of str in strlist (counting starts from 1).
+Returns the position of the first occurrence of str in strlist (counting starts at 1).
 
-strlist is a string separated by commas. Special cases:
+strlist is a comma-delimited string. Special cases:
 
 - If not found, returns 0.
 - If any parameter is NULL, returns NULL.
@@ -36,19 +36,19 @@ strlist is a string separated by commas. Special cases:
 ## Syntax
 
 ```sql
-find_in_set(VARCHAR str, VARCHAR strlist)
+FIND_IN_SET ( <str> , <strlist> )
 ```
 
 ## Parameters
 
-| Parameters | Description |
-| -- |----------|
-| `str` | String to be searched |
-| `strlist` | String to be searched |
+| Parameter   | Description |
+|-------------|----------|
+| `<str>`     | String to be searched |
+| `<strlist>` | String to be searched |
 
 ## Return value
 
-Parameter str The position of the first occurrence of parameter strlist. Special cases:
+The position of the first occurrence of parameter `<str>` in parameter `<strlist>`. Special cases:
 
 - If not found, returns 0.
 - If any parameter is NULL, returns NULL.
@@ -56,7 +56,7 @@ Parameter str The position of the first occurrence of parameter strlist. Special
 ## Example
 
 ```sql
-select find_in_set("b", "a,b,c")
+SELECT FIND_IN_SET("b", "a,b,c")
 ```
 
 ```text

@@ -31,23 +31,23 @@ under the License.
 ## 语法
 
 ```sql
-domain(STRING <url>)
+DOMAIN ( <url> )
 ```
 
 ## 参数
 
-| 参数 | 说明                 |
-| -- |--------------------|
+| 参数      | 说明                 |
+|---------|--------------------|
 | `<url>` | 需要提取域名的 `URL`        |
 
 ## 返回值
 
-参数 url 的域名
+参数 `<url>` 的域名
 
 ## 举例
 
 ```sql
-select domain("https://doris.apache.org/docs/gettingStarted/what-is-apache-doris")
+SELECT DOMAIN("https://doris.apache.org/docs/gettingStarted/what-is-apache-doris")
 ```
 
 ```text

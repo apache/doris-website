@@ -31,23 +31,23 @@ under the License.
 ## 语法
 
 ```sql
-first_significant_subdomain(VARCHAR url)
+FIRST_SIGNIFICANT_SUBDOMAIN ( <url> )
 ```
 
 ## 参数
 
-| 参数 | 说明                   |
-| -- |----------------------|
-| `url` | 需要提取 “第一个有效子域” 的 URL |
+| 参数      | 说明                   |
+|---------|----------------------|
+| `<url>` | 需要提取 “第一个有效子域” 的 URL |
 
 ## 返回值
 
-`url` 中第一个有效子域。
+`<url>` 中第一个有效子域。
 
 ## 举例
 
 ```sql
-select first_significant_subdomain("www.baidu.com"),first_significant_subdomain("www.google.com.cn"),first_significant_subdomain("wwwwwwww")
+SELECT FIRST_SIGNIFICANT_SUBDOMAIN("www.baidu.com"),first_significant_subdomain("www.google.com.cn"),first_significant_subdomain("wwwwwwww")
 ```
 
 ```text

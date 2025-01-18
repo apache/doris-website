@@ -31,26 +31,26 @@ under the License.
 ## 语法
 
 ```sql
-elt(INT <pos>, VARCHAR <str> [, VARCHAR <str>])
+ELT ( <pos> , <str> [ , <str> ] )
 ```
 
 ## 参数
 
-| 参数 | 说明         |
-| -- |------------|
+| 参数      | 说明         |
+|---------|------------|
 | `<pos>` | 指定的索引值     |
 | `<str>` | 需要指定索引的字符串 |
 
 ## 返回值
 
-参数 `str` 指定索引值的字符串。特殊情况：
+参数 `<str>` 指定索引值的字符串。特殊情况：
 
 - 如果指定的索引处没有字符串，则返回NULL。
 
 ## 举例
 
 ```sql
-select elt(1, 'aaa', 'bbb'),elt(2, 'aaa', 'bbb'), elt(0, 'aaa', 'bbb'),elt(2, 'aaa', 'bbb')
+SELECT ELT(1, 'aaa', 'bbb'),ELT(2, 'aaa', 'bbb'), ELT(0, 'aaa', 'bbb'),ELT(2, 'aaa', 'bbb')
 ```
 
 ```text

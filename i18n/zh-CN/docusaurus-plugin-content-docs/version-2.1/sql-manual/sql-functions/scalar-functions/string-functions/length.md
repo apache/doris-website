@@ -31,23 +31,23 @@ under the License.
 ## 语法
 
 ```sql
-length(VARCHAR str)
+LENGTH ( <str> )
 ```
 
 ## 参数
 
-| 参数 | 说明            |
-| -- |---------------|
-| `str` | 需要计算字节的字符串    |
+| 参数      | 说明            |
+|---------|---------------|
+| `<str>` | 需要计算字节的字符串    |
 
 ## 返回值
 
-字符串 strs 的字节数。
+字符串 `<str>` 的字节数。
 
 ## 举例
 
 ```sql
-select length("abc"),length("中国")
+SELECT LENGTH("abc"),length("中国")
 ```
 
 ```text

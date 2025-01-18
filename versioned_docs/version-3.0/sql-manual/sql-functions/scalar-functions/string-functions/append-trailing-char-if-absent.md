@@ -31,24 +31,24 @@ Used to add a specific character (such as a space, a specific symbol, etc.) to t
 ## Syntax
 
 ```sql
-append_trailing_char_if_absent(VARCHAR str, VARCHAR trailing_char)
+APPEND_TRAILING_CHAR_IF_ABSENT ( <str> , <trailing_char> )
 ```
 
 ## Parameters
 
-| Parameters | Description |
-| -- |-----------------------------|
-| `str` | Target string to be judged |
-| `trailing_char` | Character to be added to the end of the string (if the character does not exist) |
+| Parameters        | Description |
+|-------------------|-----------------------------|
+| `<str>`           | Target string to be judged |
+| `<trailing_char>` | Character to be added to the end of the string (if the character does not exist) |
 
 ## Return value
 
-The string after the concatenation of parameter str and trailing_char (if trailing_char does not exist in str)
+Parameters The string after concatenation of `<str>` and `<trailing_char>` (if `<trailing_char>` does not exist in `<str>`)
 
 ## Example
 
 ``` sql
-select append_trailing_char_if_absent('a','c'),append_trailing_char_if_absent('ac', 'c'),append_trailing_char_if_absent('ac', 'cd')
+SELECT APPEND_TRAILING_CHAR_IF_ABSENT('a','c'),APPEND_TRAILING_CHAR_IF_ABSENT('ac', 'c'),APPEND_TRAILING_CHAR_IF_ABSENT('ac', 'cd')
 ```
 
 ```text 

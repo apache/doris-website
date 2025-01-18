@@ -1,6 +1,6 @@
 ---
 {
-    "title": "domain-without-www",
+    "title": "DOMAIN_WITHOUT_WWW",
     "language": "en"
 }
 ---
@@ -26,28 +26,26 @@ under the License.
 
 ## Description
 
-Extract the domain name without the prefix www from the string URL
+Extract the domain name without the prefix www in the string URL
 
 ## Syntax
 
 ```sql
-domain_without_www(STRING <url>)
+DOMAIN_WITHOUT_WWW ( <url> )
 ```
 
 ## Parameters
 
-| Parameters | Description |
-| -- |----------------------|
-| `<url>` | Need to extract the `URL` without the www domain name |
+| Parameter | Description |
+|-----------|----------------------|
+| `<url>`   | Need to extract the `URL` without the www domain name |
 
 ## Return value
 
-Parameter url Domain name without the prefix www
-
-## Example
+Parameter `<url>` Domain name without the prefix www
 
 ```sql
-select domain_without_www("https://www.apache.org/docs/gettingStarted/what-is-apache-doris")
+SELECT DOMAIN_WITHOUT_WWW("https://www.apache.org/docs/gettingStarted/what-is-apache-doris")
 ```
 
 ```text

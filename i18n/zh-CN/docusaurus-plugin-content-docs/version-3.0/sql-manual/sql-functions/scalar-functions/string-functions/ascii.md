@@ -31,23 +31,23 @@ under the License.
 ## 语法
 
 ```sql
-ascii(VARCHAR str)
+ASCII ( <str> )
 ```
 
 ## 参数
 
 | 参数 | 说明                      |
-| -- |-------------------------|
-| `str` | 需要被计算第一个字符的 ascii 码的字符串 |
+|---------|-----------------------------|
+| `<str>` | 需要被计算第一个字符的 ascii 码的字符串 |
 
 ## 返回值
 
-参数 str 第一个字符的 ascii 码 
+参数 <str> 第一个字符的 ascii 码 
 
 ## 举例
 
 ```sql
-select ascii('1'),ascii('234')
+SELECT ASCII('1'),ASCII('234')
 ```
 
 ```text

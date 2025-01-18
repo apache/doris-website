@@ -30,27 +30,27 @@ under the License.
 
 - 如果分隔符是 NULL，返回 NULL。
 
-`concat_ws`函数不会跳过空字符串，会跳过 NULL 值。
+`CONCAT_WS`函数不会跳过空字符串，会跳过 NULL 值。
 
 ## 语法
 
 ```sql
-VARCHAR concat_ws(VARCHAR sep, VARCHAR str [ , VARCHAR str])
-VARCHAR concat_ws(VARCHAR sep, ARRAY arr)
+CONCAT_WS ( <sep> , <str> [ , <str> ] )
+CONCAT_WS ( <sep> , <array> )
 ```
 
 ## 参数
 
 | 参数    | 说明              |
 |-------|-----------------|
-| `sep` | 拼接字符串的连接符       |
-| `str` | 需要被拼接的字符串       |
-| `arr` | 需要被拼接的 array 数组 |
+| `<sep>` | 拼接字符串的连接符       |
+| `<str>` | 需要被拼接的字符串       |
+| `<array>` | 需要被拼接的 array 数组 |
 
 
 ## 返回值
 
-参数 str 或者 array 数组使用 sep 拼接后字符串。特殊情况：
+参数 `<sep>` 或者 `<array>` 数组使用 `<str>` 拼接后字符串。特殊情况：
 
 - 如果分隔符是 NULL，返回 NULL。
 
@@ -59,7 +59,7 @@ VARCHAR concat_ws(VARCHAR sep, ARRAY arr)
 将字符串通过 or 拼接到一起
 
 ```sql
-select concat_ws("or", "d", "is"),concat_ws(NULL, "d", "is"),concat_ws('or', 'd', NULL, 'is')
+SELECT CONCAT_WS("or", "d", "is"),CONCAT_WS(NULL, "d", "is"),CONCAT_WS('or', 'd', NULL, 'is')
 ```
 
 ```text
@@ -73,7 +73,7 @@ select concat_ws("or", "d", "is"),concat_ws(NULL, "d", "is"),concat_ws('or', 'd'
 将 array 数组通过 or 拼接到一起
 
 ```sql
-select concat_ws("or", ["d", "is"]),concat_ws(NULL, ["d", "is"]),concat_ws("or", ["d", NULL,"is"])
+SELECT CONCAT_WS("or", ["d", "is"]),CONCAT_WS(NULL, ["d", "is"]),CONCAT_WS("or", ["d", NULL,"is"])
 ```
 
 ```text
