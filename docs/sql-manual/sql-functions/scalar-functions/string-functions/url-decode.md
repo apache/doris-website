@@ -38,7 +38,7 @@ URL_DECODE( <str> )
 ## Required Parameters
 | Parameters | Description |
 |------|------|
-| `str` | the string to decode. If url is not a string type. |
+| `<str>` | the string to decode. If url is not a string type. |
 
 ##  Return Value
 

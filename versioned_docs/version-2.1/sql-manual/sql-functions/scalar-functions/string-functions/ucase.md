@@ -40,7 +40,7 @@ UCASE( <str> )
 ## Required Parameters
 | Parameters | Description |
 |------|------|
-| `str` | The string to convert to uppercase
+| `<str>` | The string to convert to uppercase
 
 ## Return Value
 

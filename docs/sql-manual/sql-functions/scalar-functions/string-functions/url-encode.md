@@ -19,7 +19,7 @@ URL_ENCODE(  <str>  )
 ## Required Parameters
 | Parameters | Description |
 |------|------|
-| `str` | String to be encoded |
+| `<str>` | String to be encoded |
 
 ##  Return Value
 

@@ -38,14 +38,14 @@ RTIM( <str> [ , <rhs>])
 
 | Parameters | Description |
 |------|------|
-| `str` | Deletes the Spaces  at both ends of the string
+| `<str>` | Deletes the Spaces  at both ends of the string
 
 
 ## Optional Parameters
 
 | Parameters | Description |
 |------|------|
-| `rhs` | removes the specified character |
+| `<rhs>` | removes the specified character |
 
 ## Return Value
 

@@ -38,14 +38,14 @@ TRIM_IN( <str> [ , <rhs>])
 
 | Parameters | Description |
 |------|------|
-| `str` | Delete spaces at both ends of the string |
+| `<str>` | Delete spaces at both ends of the string |
 
 
 ## Optional Parameters
 
 | Parameters | Description |
 |------|------|
-| `rhs` | Remove the specified character |
+| `<rhs>` | Remove the specified character |
 
 ## Return Value
 Delete spaces at both ends or the string after the specified character
