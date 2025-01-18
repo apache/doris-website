@@ -24,22 +24,45 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_except
-
-array_except
-
 ## 描述
+返回一个数组，包含所有在array1内但不在array2内的元素，不包含重复项，如果输入参数为NULL，则返回NULL
 
 ## 语法
 
-`ARRAY<T> array_except(ARRAY<T> array1, ARRAY<T> array2)`
+```sql
+ARRAY_EXCEPT(<arr1> , <arr2> )
+```
 
-返回一个数组，包含所有在array1内但不在array2内的元素，不包含重复项，如果输入参数为NULL，则返回NULL
+## 参数
+| Parameter | Description |
+|---|---|
+| `<arr1>` | ARRAY数组    |
+| `<arr2>` | ARRAY数组    |
+
+## 返回值
+返回一个数组，特殊情况：
+- 如果输入参数为NULL，则返回NULL
 
 ## 举例
 
+```sql
+CREATE TABLE array_type_table (
+    k1 INT,
+    k2 ARRAY<INT>,
+    k3 ARRAY<INT>
+)
+duplicate key (k1)
+distributed by hash(k1) buckets 1
+properties(
+  'replication_num' = '1'
+);
+INSERT INTO array_type_table VALUES
+(1, [1, 2, 3], [2, 4, 5]),
+(2, [2, 3], [1, 5]),
+(3, [1, 1, 1], [2, 2, 2]);
+select k1,k2,k3,array_except(k2,k3) from array_type_table;
 ```
-mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table;
+```text
 +------+-----------------+--------------+--------------------------+
 | k1   | k2              | k3           | array_except(`k2`, `k3`) |
 +------+-----------------+--------------+--------------------------+
@@ -47,8 +70,26 @@ mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table;
 |    2 | [2, 3]          | [1, 5]       | [2, 3]                   |
 |    3 | [1, 1, 1]       | [2, 2, 2]    | [1]                      |
 +------+-----------------+--------------+--------------------------+
+```
 
-mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table_nullable;
+```sql
+CREATE TABLE array_type_table_nullable (
+    k1 INT,
+    k2 ARRAY<INT>,
+    k3 ARRAY<INT>
+)
+duplicate key (k1)
+distributed by hash(k1) buckets 1
+properties(
+  'replication_num' = '1'
+);
+INSERT INTO array_type_table_nullable VALUES
+(1, [1, NULL, 3], [1, 3, 5]),
+(2, [NULL, NULL, 2], [2, NULL, 4]),
+(3, NULL, [1, 2, 3]);
+select k1,k2,k3,array_except(k2,k3) from array_type_table_nullable;
+```
+```text
 +------+-----------------+--------------+--------------------------+
 | k1   | k2              | k3           | array_except(`k2`, `k3`) |
 +------+-----------------+--------------+--------------------------+
@@ -56,28 +97,58 @@ mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table_nullable;
 |    2 | [NULL, NULL, 2] | [2, NULL, 4] | []                       |
 |    3 | NULL            | [1, 2, 3]    | NULL                     |
 +------+-----------------+--------------+--------------------------+
-
-mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table_varchar;
-+------+----------------------------+----------------------------------+--------------------------+
-| k1   | k2                         | k3                               | array_except(`k2`, `k3`) |
-+------+----------------------------+----------------------------------+--------------------------+
-|    1 | ['hello', 'world', 'c++']  | ['I', 'am', 'c++']               | ['hello', 'world']       |
-|    2 | ['a1', 'equals', 'b1']     | ['a2', 'equals', 'b2']           | ['a1', 'b1']             |
-|    3 | ['hasnull', NULL, 'value'] | ['nohasnull', 'nonull', 'value'] | ['hasnull', NULL]        |
-|    3 | ['hasnull', NULL, 'value'] | ['hasnull', NULL, 'value']       | []                       |
-+------+----------------------------+----------------------------------+--------------------------+
-
-mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table_decimal;
-+------+------------------+-------------------+--------------------------+
-| k1   | k2               | k3                | array_except(`k2`, `k3`) |
-+------+------------------+-------------------+--------------------------+
-|    1 | [1.1, 2.1, 3.44] | [2.1, 3.4, 5.4]   | [1.1, 3.44]              |
-|    2 | [NULL, 2, 5]     | [NULL, NULL, 5.4] | [2, 5]                   |
-|    1 | [1, NULL, 2, 5]  | [1, 3.1, 5.4]     | [NULL, 2, 5]             |
-+------+------------------+-------------------+--------------------------+
-
 ```
-
-### keywords
-
-ARRAY,EXCEPT,ARRAY_EXCEPT
+```sql
+CREATE TABLE array_type_table_varchar (
+    k1 INT,
+    k2 ARRAY<VARCHAR>,
+    k3 ARRAY<VARCHAR>
+)
+    duplicate key (k1)
+distributed by hash(k1) buckets 1
+properties(
+  'replication_num' = '1'
+);
+INSERT INTO array_type_table_varchar VALUES
+(1, ['hello', 'world', 'c++'], ['I', 'am', 'c++']),
+(2, ['a1', 'equals', 'b1'], ['a2', 'equals', 'b2']),
+(3, ['hasnull', NULL, 'value'], ['nohasnull', 'nonull', 'value']),
+(3, ['hasnull', NULL, 'value'], ['hasnull', NULL, 'value']);
+select k1,k2,k3,array_except(k2,k3) from array_type_table_varchar;
+```
+```text
++------+----------------------------+----------------------------------+----------------------+
+| k1   | k2                         | k3                               | array_except(k2, k3) |
++------+----------------------------+----------------------------------+----------------------+
+|    1 | ["hello", "world", "c++"]  | ["I", "am", "c++"]               | ["hello", "world"]   |
+|    2 | ["a1", "equals", "b1"]     | ["a2", "equals", "b2"]           | ["a1", "b1"]         |
+|    3 | ["hasnull", null, "value"] | ["hasnull", null, "value"]       | []                   |
+|    3 | ["hasnull", null, "value"] | ["nohasnull", "nonull", "value"] | ["hasnull", null]    |
++------+----------------------------+----------------------------------+----------------------+
+```
+```sql
+CREATE TABLE array_type_table_decimal (
+    k1 INT,
+    k2 ARRAY<DECIMAL(10, 2)>,
+    k3 ARRAY<DECIMAL(10, 2)>
+)
+duplicate key (k1)
+distributed by hash(k1) buckets 1
+properties(
+  'replication_num' = '1'
+);
+INSERT INTO array_type_table_decimal VALUES
+(1, [1.1, 2.1, 3.44], [2.1, 3.4, 5.4]),
+(2, [NULL, 2, 5], [NULL, NULL, 5.4]),
+(1, [1, NULL, 2, 5], [1, 3.1, 5.4]);
+select k1,k2,k3,array_except(k2,k3) from array_type_table_decimal;
+```
+```text
++------+--------------------------+--------------------+----------------------+
+| k1   | k2                       | k3                 | array_except(k2, k3) |
++------+--------------------------+--------------------+----------------------+
+|    1 | [1.00, null, 2.00, 5.00] | [1.00, 3.10, 5.40] | [null, 2.00, 5.00]   |
+|    1 | [1.10, 2.10, 3.44]       | [2.10, 3.40, 5.40] | [1.10, 3.44]         |
+|    2 | [null, 2.00, 5.00]       | [null, null, 5.40] | [2.00, 5.00]         |
++------+--------------------------+--------------------+----------------------+
+```
