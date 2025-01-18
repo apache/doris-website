@@ -45,7 +45,7 @@ VARIANCE(<expr>)
 | `<expr>` | The column or expression to calculate variance for. Must be numeric type |
 
 ## Return Value
-Returns a DOUBLE value representing the calculated variance. Returns NULL if all input values are NULL.
+Returns a DOUBLE value representing the calculated variance.
 
 ## Examples
 ```sql
