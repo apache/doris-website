@@ -24,56 +24,103 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_contains
-### description
-#### Syntax
+## Description
 
-`BOOLEAN json_contains(JSON json_str, JSON candidate)`
-`BOOLEAN json_contains(JSON json_str, JSON candidate, VARCHAR json_path)`
-`BOOLEAN json_contains(VARCHAR json_str, VARCHAR candidate, VARCHAR json_path)`
+This function is used to check whether a JSON document contains a specified JSON element. If the specified element exists in the JSON document, it returns 1; otherwise, it returns 0. If the JSON document or the queried element is invalid, it returns `NULL`.
 
+## Syntax
 
-Indicates by returning 1 or 0 whether a given candidate JSON document is contained at a specific path within the json_str JSON document
+`JSON_CONTAINS(<json_str>,  <candidate> [,  <json_path>])`
 
-### example
+## Required Parameters
+
+| Parameter   | Description                                         |
+|-------------|-----------------------------------------------------|
+| `<json_str>` | The JSON string to be checked.                      |
+| `<candidate>` | The JSON element to check for inclusion.            |
+
+## Optional Parameters
+
+| Parameter   | Description                                         |
+|-------------|-----------------------------------------------------|
+| `<json_path>` | An optional JSON path to specify the subdocument to check. If not provided, the root document is used by default. |
+
+## Return Value
+- If `json_elem` exists in `json_doc`, it returns 1.
+- If `json_elem` does not exist in `json_doc`, it returns 0.
+- If any parameter is invalid or the JSON document format is incorrect, it returns `NULL`.
+
+## Examples
+
+```sql
+
+SET @j = '{"a": 1, "b": 2, "c": {"d": 4}}';
+SET @j2 = '1';
+SELECT JSON_CONTAINS(@j, @j2, '$.a');
 
 ```
-mysql> SET @j = '{"a": 1, "b": 2, "c": {"d": 4}}';
-mysql> SET @j2 = '1';
-mysql> SELECT JSON_CONTAINS(@j, @j2, '$.a');
+
+```sql
+
 +-------------------------------+
 | JSON_CONTAINS(@j, @j2, '$.a') |
 +-------------------------------+
 |                             1 |
 +-------------------------------+
-mysql> SELECT JSON_CONTAINS(@j, @j2, '$.b');
+
+```
+```sql
+
+SELECT JSON_CONTAINS(@j, @j2, '$.b');
 +-------------------------------+
 | JSON_CONTAINS(@j, @j2, '$.b') |
 +-------------------------------+
 |                             0 |
 +-------------------------------+
 
-mysql> SET @j2 = '{"d": 4}';
-mysql> SELECT JSON_CONTAINS(@j, @j2, '$.a');
+```
+```sql
+
+SET @j2 = '{"d": 4}';
+SELECT JSON_CONTAINS(@j, @j2, '$.a');
+
+```
+
+```sql
+
 +-------------------------------+
 | JSON_CONTAINS(@j, @j2, '$.a') |
 +-------------------------------+
 |                             0 |
 +-------------------------------+
-mysql> SELECT JSON_CONTAINS(@j, @j2, '$.c');
+```
+
+```sql
+
+SELECT JSON_CONTAINS(@j, @j2, '$.c');
+
+```
+
+```sql
+
 +-------------------------------+
 | JSON_CONTAINS(@j, @j2, '$.c') |
 +-------------------------------+
 |                             1 |
 +-------------------------------+
 
-mysql> SELECT json_contains('[1, 2, {"x": 3}]', '1');
+```
+
+```sql
+
+SELECT json_contains('[1, 2, {"x": 3}]', '1');
 +----------------------------------------+
 | json_contains('[1, 2, {"x": 3}]', '1') |
 +----------------------------------------+
 |                                      1 |
 +----------------------------------------+
-1 row in set (0.04 sec)
+
 ```
-### keywords
-json,json_contains
+
+
+

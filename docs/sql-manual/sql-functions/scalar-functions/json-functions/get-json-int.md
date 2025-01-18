@@ -23,32 +23,43 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+## Description
 
-## get_json_int
-### Description
-#### Syntax
+Function is used to extract the value of a field from a JSON document and convert it to type INT. This function returns the value of the field on the specified path, or returns NULL if the value cannot be converted to type INT or the field pointed to by the path does not exist.
 
-`INT get_json_int(VARCHAR json_str, VARCHAR json_path)`
+## Syntax
 
+`GET_JSON_INT( <json_str>, <json_path>)`
 
-Parse and retrieve the integer content of the specified path in the JSON string.
-Where json_path must start with the $symbol and use. as the path splitter. If the path contains..., double quotation marks can be used to surround it.
-Use [] to denote array subscripts, starting at 0.
-The content of path cannot contain ",[and].
-If the json_string format is incorrect, or the json_path format is incorrect, or matches cannot be found, NULL is returned.
+## Required Parameters
 
-In addition, it is recommended to use the jsonb type and jsonb_extract_XXX function performs the same function.
+| parameters| described|
+|------|------|
+| `<json_str>`| The JSON string from which to extract data is needed. |
+| `<json_path>`| JSON path, specifying the location of the field. Paths can be denoted in dot notation. |
 
-Exception handling is as follows:
-- if the field specified by json_path does not exist, return NULL
-- if datatype of the field specified by json_path is not the same with type of json_extract_t, return t if it can be cast to t else NULL
+## Usage Notes
 
-### example
+Parses and obtains the integer content of the specified path within the json string.
+Where `<json_path>` `must start with the $symbol and use. As a path splitter. If the path contains. , you can use double quotes to enclose it.
+Use [ ] to represent the array index, starting from 0.
+The content of path cannot contain ", [and].
+Returns NULL if the <json_str>format is incorrect, or the <json_path>format is incorrect, or a match cannot be found.
+In addition, it is recommended to use the jsonb type and the jsonb_extract_XXX function to achieve the same functionality.
+Special circumstances will be handled as follows:
+- Returns <json_path>NULL if the specified field does not exist in JSON
+- If <json_path>the actual type of the specified field in JSON is inconsistent with the type specified by json_extract_t, the specified type t will be returned if it can be losslessly converted to the specified type, and NULL will be returned if it cannot.
 
-1. Get the value of key as "k1"
+## Examples
 
+1. Get the value with key as "k1"
+
+```sql
+SELECT get_json_int('{"k1":1, "k2":"2"}', "$.k1");
 ```
-mysql> SELECT get_json_int('{"k1":1, "k2":"2"}', "$.k1");
+
+```sql
+
 +--------------------------------------------+
 | get_json_int('{"k1":1, "k2":"2"}', '$.k1') |
 +--------------------------------------------+
@@ -56,25 +67,29 @@ mysql> SELECT get_json_int('{"k1":1, "k2":"2"}', "$.k1");
 +--------------------------------------------+
 ```
 
-2. Get the second element of the array whose key is "my. key"
+2. Gets the second element in the array with key "my.key"
 
+```sql
+SELECT get_json_int('{"k1":"v1", "my.key":[1, 2, 3]}', '$."my.key"[1]');
 ```
-mysql> SELECT get_json_int('{"k1":"v1", "my.key":[1, 2, 3]}', '$."my.key"[1]');
+
+```sql
 +------------------------------------------------------------------+
 | get_json_int('{"k1":"v1", "my.key":[1, 2, 3]}', '$."my.key"[1]') |
 +------------------------------------------------------------------+
 |                                                                2 |
 +------------------------------------------------------------------+
-```
 
-3. Get the first element in an array whose secondary path is k1. key - > K2
-```
-mysql> SELECT get_json_int('{"k1.key":{"k2":[1, 2]}}', '$."k1.key".k2[0]');
+3. Gets the first element in an array with secondary path k1.key -> k2
+
+```sql
+ SELECT get_json_int('{"k1.key":{"k2":[1, 2]}}', '$."k1.key".k2[0]');
+ ```
+
+ ```sql
 +--------------------------------------------------------------+
 | get_json_int('{"k1.key":{"k2":[1, 2]}}', '$."k1.key".k2[0]') |
 +--------------------------------------------------------------+
 |                                                            1 |
 +--------------------------------------------------------------+
 ```
-### keywords
-GET_JSON_INT,GET,JSON,INT
