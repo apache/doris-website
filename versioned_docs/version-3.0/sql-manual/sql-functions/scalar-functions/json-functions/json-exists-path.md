@@ -24,23 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_exists_path
-
-### description
+## Description
 
 It is used to judge whether the field specified by json_path exists in the JSON data. If it exists, it returns TRUE, and if it does not exist, it returns FALSE
 
-#### Syntax
+## Syntax
 
 ```sql
-BOOLEAN json_exists_path(JSON j, VARCHAR json_path)
+JSON_EXISTS_PATH (<json_str>,  <path>)
 ```
 
-### example
+## Alias
+```sql
+JSONB_EXISTS_PATH (<json_str>,  <path>)
+```
+## Parameters
+| Parameter           | Description                                                     |
+|--------------|--------------------------------------------------------|
+| `<json_str>` | The element to be included in the JSON array. It can be a value of any type, including NULL. If no element is specified, an empty array is returned.
+| `<path>`     | The JSON path to be judged. If it is NULL, then return NULL.                      |
 
-Refer to [json tutorial](../../sql-reference/Data-Types/JSON.md)
+## Return Values
+If it exists, return TRUE; if it does not exist, return FALSE.
 
-### keywords
+## Examples
 
-json_exists_path
+```sql
+SELECT JSON_EXISTS_PATH('{"id": 123, "name": "doris"}', '$.name');
+```
+```text
++---------------------------------------------------------------------------+
+| jsonb_exists_path(cast('{"id": 123, "name": "doris"}' as JSON), '$.name') |
++---------------------------------------------------------------------------+
+|                                                                         1 |
++---------------------------------------------------------------------------+
+```
+```sql
+SELECT JSON_EXISTS_PATH('{"id": 123, "name": "doris"}', '$.age');
+```
+```text
++--------------------------------------------------------------------------+
+| jsonb_exists_path(cast('{"id": 123, "name": "doris"}' as JSON), '$.age') |
++--------------------------------------------------------------------------+
+|                                                                        0 |
++--------------------------------------------------------------------------+
+```
+```sql
+SELECT JSONB_EXISTS_PATH('{"id": 123, "name": "doris"}', '$.age');
+```
+```text
++--------------------------------------------------------------------------+
+| jsonb_exists_path(cast('{"id": 123, "name": "doris"}' as JSON), '$.age') |
++--------------------------------------------------------------------------+
+|                                                                        0 |
++--------------------------------------------------------------------------+
+```
 

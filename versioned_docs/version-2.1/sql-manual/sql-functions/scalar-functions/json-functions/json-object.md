@@ -24,48 +24,75 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_object
-### Description
-#### Syntax
-
-`VARCHAR json_object(VARCHAR,...)`
-
-
+## Description
 Generate a json object containing the specified Key-Value,
 an exception error is returned when Key is NULL or the number of parameters are odd.
 
-### example
-
+## Syntax
+```sql
+JSON_OBJECT (<key>, <value>[,<key>, <value>, ...])
 ```
-MySQL> select json_object();
+
+## Parameters
+
+| Parameter      | Description                                       |
+|---------|------------------------------------------|
+| `<key>`   | The Key value in the Key-Value of the generated json object.   |
+| `<value>` | The Value value in the Key-Value of the generated json object. |                                                                                                  |
+
+## Return Values
+Return a json object. Special cases are as follows:
+* If no parameters are passed, return an empty json object.
+* If the number of parameters passed is odd, return an exception error.
+* If the passed Key is NULL, return an exception error.
+* If the passed Value is NULL, the Value value of the Key-Value pair in the returned json object is NULL.
+
+## Examples
+
+```sql
+select json_object();
+```
+```text
 +---------------+
 | json_object() |
 +---------------+
 | {}            |
 +---------------+
-
-MySQL> select json_object('time',curtime());
+```
+```sql
+select json_object('time',curtime());
+```
+```text
 +--------------------------------+
 | json_object('time', curtime()) |
 +--------------------------------+
 | {"time": "10:49:18"}           |
 +--------------------------------+
-
-
-MySQL> SELECT json_object('id', 87, 'name', 'carrot');
+```
+```sql
+SELECT json_object('id', 87, 'name', 'carrot');
+```
+```text
 +-----------------------------------------+
 | json_object('id', 87, 'name', 'carrot') |
 +-----------------------------------------+
 | {"id": 87, "name": "carrot"}            |
 +-----------------------------------------+
-
-
-MySQL> select json_object('username',null);
+```
+```sql
+select json_object('username',null);
+```
+```text
 +---------------------------------+
 | json_object('username', 'NULL') |
 +---------------------------------+
 | {"username": NULL}              |
 +---------------------------------+
 ```
-### keywords
-json,object,json_object
+```sql
+select json_object(null,null);
+```
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = json_object key can't be NULL: json_object(NULL)
+```
+
