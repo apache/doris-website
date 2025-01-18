@@ -22,15 +22,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### description
+## description
 
 Remove the first element from array.
 
-#### Syntax
+## Syntax
 
-`ARRAY<T> array_popfront(ARRAY<T> arr)`
+```sql
+ARRAY_POPFRONT(<arr>)
+```
 
-### example
+## Parameters
+
+| Parameter | Description |
+| --- | --- |
+| `<arr>` | ARRAY array |
+
+## Return Value
+
+Returns the array after removing the first element. Special cases:
+- If the input parameter is NULL, returns NULL.
+
+
+
+## example
 
 ```sql
 select array_popfront(['test', NULL, 'value']);
@@ -44,7 +59,4 @@ select array_popfront(['test', NULL, 'value']);
 +-----------------------------------------------------+
 ```
 
-### keywords
-
-ARRAY,POPFRONT,ARRAY_POPFRONT
 

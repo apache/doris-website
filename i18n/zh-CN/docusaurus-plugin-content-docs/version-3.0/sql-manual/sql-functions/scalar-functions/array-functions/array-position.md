@@ -30,13 +30,22 @@ under the License.
 
 ## 语法
 
-`BIGINT array_position(ARRAY<T> arr, T value)`
+```sql
+ARRAY_POSITION(<arr>, <vaule>)
+```
 
-```
-position - value在array中的位置（从1开始计算）；
-0        - 如果value在array中不存在；
-NULL     - 如果数组为NULL。
-```
+## 参数
+
+| 参数 | 说明 | 
+| --- | --- |
+| `<arr>` | ARRAY数组 |
+| `<vaule>` | 待查询的元素 |
+
+## 返回值
+
+value在arr中的位置（从1开始计算）。特殊情况：
+- 0，如果value在arr中不存在；
+- NULL， 如果数组为NULL。
 
 ## 举例
 
@@ -79,6 +88,3 @@ select array_position([1, null], null);
 +--------------------------------------+
 ```
 
-### keywords
-
-ARRAY,POSITION,ARRAY_POSITION

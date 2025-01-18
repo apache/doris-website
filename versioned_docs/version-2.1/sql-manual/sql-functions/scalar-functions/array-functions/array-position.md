@@ -24,21 +24,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### description
+## description
 
 Returns a position/index of first occurrence of the `value` in the given array.
 
-#### Syntax
+## Syntax
 
-`BIGINT array_position(ARRAY<T> arr, T value)`
-
-```
-position - value position in array (starts with 1);
-0        - if value does not present in the array;
-NULL     - when array is NULL.
+```sql
+ARRAY_POSITION(<arr>, <value>)
 ```
 
-### example
+## Parameters
+
+| Parameter | Description |
+| --- | --- |
+| `<arr>` | ARRAY array |
+| `<value>` | Element to search for |
+
+## Returns Value
+
+The position of the value in the array (starting from 1). Special cases:
+- 0, if the value does not exist in the array.
+- NULL, if the array is NULL.
+
+## example
 
 ```sql
 CREATE TABLE array_test (
@@ -79,7 +88,4 @@ select array_position([1, null], null);
 +--------------------------------------+
 ```
 
-### keywords
-
-ARRAY,POSITION,ARRAY_POSITION
 

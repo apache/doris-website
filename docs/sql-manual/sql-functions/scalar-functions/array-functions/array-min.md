@@ -24,15 +24,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### description
+## description
 
 Get the minimum element in an array (`NULL` values are skipped).
 When the array is empty or all elements in the array are `NULL` values, the function returns `NULL`.
 
-#### Syntax
-`T array_min(ARRAY<T> array1)`
+## Syntax
+```sql
+ARRAY_MIN(<arr>)
+```
 
-### example
+## Parameters
+
+| Parameter | Description |
+| --- | --- |
+| `<arr>` | ARRAY array |
+
+## Return Value
+
+Returns the smallest element in the array. Special cases:
+- `NULL` values in the array are skipped.
+- For an empty array or an array where all elements are `NULL`, the result is `NULL`.
+
+## example
 
 ```sql
 create table array_type_table(
@@ -57,7 +71,3 @@ select k2, array_min(k2) from array_type_table;
 | [1, NULL, 3] |               1 |
 +--------------+-----------------+
 ```
-
-### keywords
-
-ARRAY,MIN,ARRAY_MIN

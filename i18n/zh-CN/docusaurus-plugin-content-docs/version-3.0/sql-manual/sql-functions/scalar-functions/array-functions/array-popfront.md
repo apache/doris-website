@@ -27,8 +27,20 @@ under the License.
 返回移除第一个元素后的数组，如果输入参数为 NULL，则返回 NULL
 
 ## 语法
+```sql
+ARRAY_POPFRONT(<arr>)
+```
 
-`ARRAY<T> array_popfront(ARRAY<T> arr)`
+## 参数
+
+| 参数 | 说明 | 
+| --- | --- |
+| `<arr>` | ARRAY数组 |
+
+## 返回值
+
+返回移除第一个元素后的数组。特殊情况：
+- 如果输入参数为 NULL，则返回 NULL
 
 ## 举例
 
@@ -43,7 +55,3 @@ select array_popfront(['test', NULL, 'value']);
 | [NULL, "value"]                                       |
 +-----------------------------------------------------+
 ```
-
-### keywords
-
-ARRAY,POPFRONT,ARRAY_POPFRONT

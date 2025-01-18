@@ -31,17 +31,19 @@ under the License.
 在 lambda 中可以执行合法的标量函数，不支持聚合函数等。
 
 ## 语法
-`ARRAY<T> array_map(lambda, ARRAY<T> array1, ARRAY<T> array2)`
-
+```sql
+ARRAY_MAP(lambda, <arr> [ , <arr> ... ] )
 ```
-array_map(x->x, array1);
-array_map(x->(x+2), array1);
-array_map(x->(abs(x)-2), array1);
+## 参数
 
-array_map((x,y)->(x = y), array1, array2);
-array_map((x,y)->(power(x,2)+y), array1, array2);
-array_map((x,y,z)->(abs(x)+y*z), array1, array2, array3);
-```
+| 参数 | 说明 | 
+| --- |---|
+| `lambda` | lambda 表达式，表达式中输入的参数为 1 个或多个，必须和后面的输入 array 列数量一致。在 lambda 中可以执行合法的标量函数，不支持聚合函数等。 |
+| `<arr>` | ARRAY数组     |
+
+## 返回值
+
+经过表达式lambda计算之后ARRAY数组。
 
 ## 举例
 
@@ -61,8 +63,6 @@ INSERT INTO array_test2 (id, c_array1, c_array2) VALUES
                                                      (2, [6, 7, 8], [10, 12, 13]),
                                                      (3, [1], [-100]),
                                                      (4, NULL, NULL);
-```
-```sql
 select *, array_map(x->x,[1,2,3]) from array_test2 order by id;
 ```
 ```text
@@ -197,8 +197,4 @@ select array_map(x->cast(x as string), c_array1) from test_array_map_function;
 | NULL            | NULL                                                  |
 +-----------------+-------------------------------------------------------+
 ```
-
-### keywords
-
-ARRAY,MAP,ARRAY_MAP
 

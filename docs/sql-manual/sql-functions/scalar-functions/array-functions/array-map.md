@@ -24,26 +24,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### description
+## description
 
 Use a lambda expression as the input parameter to calculate the corresponding expression for the internal data of other input ARRAY parameters.
 The number of parameters entered the lambda expression is 1 or more, which must be consistent with the number of input array columns.
 The scalar functions can be executed in lambda, and aggregate functions are not supported.
 
-#### Syntax
-`ARRAY<T> array_map(lambda, ARRAY<T> array1, ARRAY<T> array2)`
-
-```
-array_map(x->x, array1);
-array_map(x->(x+2), array1);
-array_map(x->(abs(x)-2), array1);
-
-array_map((x,y)->(x = y), array1, array2);
-array_map((x,y)->(power(x,2)+y), array1, array2);
-array_map((x,y,z)->(abs(x)+y*z), array1, array2, array3);
+## Syntax
+```sql
+ARRAY_MAP(lambda, <arr> [ , <arr> ... ] )
 ```
 
-### example
+## Parameters
+
+| Parameter | Description |
+| --- |---|
+| `lambda` | A lambda expression with one or more input parameters, which must match the number of input arrays. The lambda can execute valid scalar functions but does not support aggregate functions. |
+| `<arr>` | ARRAY array |
+
+## Return Value
+
+An ARRAY processed through the lambda expression.
+
+## example
 
 ```sql
 CREATE TABLE array_test2 (
@@ -61,8 +64,6 @@ INSERT INTO array_test2 (id, c_array1, c_array2) VALUES
                                                      (2, [6, 7, 8], [10, 12, 13]),
                                                      (3, [1], [-100]),
                                                      (4, NULL, NULL);
-```
-```sql
 select *, array_map(x->x,[1,2,3]) from array_test2 order by id;
 ```
 ```text
@@ -198,7 +199,4 @@ select array_map(x->cast(x as string), c_array1) from test_array_map_function;
 +-----------------+-------------------------------------------------------+
 ```
 
-### keywords
-
-ARRAY,MAP,ARRAY_MAP
 
