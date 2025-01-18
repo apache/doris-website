@@ -31,6 +31,7 @@ under the License.
 * JSON_PARSE_ERROR_TO_NULL 解析 JSON 字符串，当输入的字符串不是合法的 JSON 字符串时，返回 NULL。
 * JSON_PARSE_ERROR_TO_VALUE 解析 JSON 字符串，当输入的字符串不是合法的 JSON 字符串时，返回参数 default_json_str 指定的默认值。
 * JSON_PARSE_NOTNULL 解析 JSON 字符串，当输入的字符串不是合法的 JSON 字符串时，返回 NULL。
+
 ## 别名
 * JSONB_PARSE 同 `JSON_PARSE`
 * JSONB_PARSE_ERROR_TO_INVALID 同 `JSON_PARSE_ERROR_TO_INVALID`
