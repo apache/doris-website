@@ -44,7 +44,7 @@ PROPERTIES
 To create an HDFS-based decoupled storage-compute Doris cluster, ensure that all nodes (including FE/BE nodes, Meta Service) have privilege to access the specified HDFS, including completing Kerberos authorization configuration and connectivity checks in advance (which can be tested using Hadoop Client on each corresponding node).
 
 ```sql
-CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
+CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault_demo
     PROPERTIES (
         "type"="hdfs",                                     -- required
         "fs.defaultFS"="hdfs://127.0.0.1:8020",            -- required
@@ -59,17 +59,18 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
 ### Create an S3 Storage Vault
 
 ```sql
-CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
-    PROPERTIES (
-        "type"="S3",                                   -- required
-        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
-        "s3.region" = "bj",                            -- required
-        "s3.bucket" = "bucket",                        -- required
-        "s3.root.path" = "big/data/prefix",            -- required
-        "s3.access_key" = "ak",                        -- required
-        "s3.secret_key" = "sk",                        -- required
-        "provider" = "OSS"                             -- required
-    );
+CREATE STORAGE VAULT IF NOT EXISTS s3_vault_demo
+PROPERTIES (
+    "type" = "S3",                                 -- required
+    "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
+    "s3.region" = "cn-beijing",                    -- required
+    "s3.bucket" = "bucket",                        -- required
+    "s3.root.path" = "big/data/prefix",            -- required
+    "s3.access_key" = "ak",                        -- required
+    "s3.secret_key" = "sk",                        -- required
+    "provider" = "OSS",                            -- required
+    "use_path_style" = "false"                     -- optional
+);
 ```
 
 More parameter explanations and examples can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md).
@@ -112,7 +113,7 @@ UNIQUE KEY (s_suppkey)
 DISTRIBUTED BY HASH(s_suppkey) BUCKETS 1
 PROPERTIES (
 "replication_num" = "1",
-"storage_vault_name" = "ssb_hdfs_vault"
+"storage_vault_name" = "hdfs_demo_vault"
 );
 ```
 
@@ -172,7 +173,7 @@ GRANT
 
 Only Admin users have the authority to execute the `GRANT` statement, which is used to grant specified Storage Vault privileges to User/Role. Users/Roles with `USAGE_PRIV` privilege for a certain Storage Vault can perform the following operations:
 
-- View the information of that Storage Vault through `SHOW STORAGE VAULT`;
+- View the information of that Storage Vault through `SHOW STORAGE VAULTS`;
 - Specify the use of that Storage Vault in `PROPERTIES` when creating tables.
 
 **Example**
