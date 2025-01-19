@@ -111,7 +111,7 @@ mysql> SHOW CATALOGS;
 +-----------+-----------------+----------+-----------+-------------------------+---------------------+------------------------+
 ```
 
-可以通过 [SHOW CREATE CATALOG](../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG.md) 查看创建 Catalog 的语句。
+可以通过 [SHOW CREATE CATALOG](../sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG) 查看创建 Catalog 的语句。
 
 ### 切换数据目录
 
