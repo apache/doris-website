@@ -72,7 +72,7 @@ PROPERTIES (
 );
 ```
 
-更多云厂商示例和参数说明可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
+更多云厂商示例和参数说明可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT)。
 
 ## 查看 Storage Vault 
 
@@ -130,7 +130,7 @@ HDFS Storage Vault 禁止修改的属性:
 - `path_prefix`
 - `fs.defaultFS`
 
-更多属性说明见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
+更多属性说明见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT)。
 
 **示例**
 

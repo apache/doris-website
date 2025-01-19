@@ -71,13 +71,13 @@ Doris supports the following password policies to help users manage passwords be
 Doris itself does not support a blacklist, only a whitelist function, but we can simulate a blacklist in some ways. Suppose a user named `user@'192.%'` is created, allowing users from 192.* to log in. If you want to prohibit users from 192.168.10.1 from logging in, you can create another user `cmy@'192.168.10.1'` and set a new password. Since 192.168.10.1 has a higher priority than 192.%, users from 192.168.10.1 will no longer be able to log in using the old password.
 
 ## Related Commands
-- Create User: [CREATE USER](../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md)
-- View User: [SHOW ALL GRANTS](../../../sql-manual/sql-statements/Show-Statements/SHOW-GRANTS.md)
-- Modify User: [ALTER USER](../../../sql-manual/sql-statements/Account-Management-Statements/ALTER-USER.md)
-- Change Password: [SET PASSWORD](../../../sql-manual/sql-statements/Account-Management-Statements/SET-PASSWORD.md)
-- Delete User: [DROP USER](../../../sql-manual/sql-statements/Account-Management-Statements/DROP-USER.md)
+- Create User: [CREATE USER](../../../sql-manual/sql-statements/account-management/CREATE-USER)
+- View User: [SHOW ALL GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
+- Modify User: [ALTER USER](../../../sql-manual/sql-statements/account-management/ALTER-USER)
+- Change Password: [SET PASSWORD](../../../sql-manual/sql-statements/account-management/SET-PASSWORD)
+- Delete User: [DROP USER](../../../sql-manual/sql-statements/account-management/DROP-USER)
 - Set User Attributes: [SET PROPERTY](../../../sql-manual/sql-statements/Account-Management-Statements/SET-PROPERTY.md)
-- View User Attributes: [SHOW PROPERTY](../../../sql-manual/sql-statements/Show-Statements/SHOW-PROPERTY.md)
+- View User Attributes: [SHOW PROPERTY](../../../sql-manual/sql-statements/account-management/SHOW-PROPERTY)
 
 ## Other Explanations
   1. User Identity Priority Selection Issue During Login
