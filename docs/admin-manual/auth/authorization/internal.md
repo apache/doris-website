@@ -108,15 +108,15 @@ userN has priv1 permission through role3 and priv2 and privN permissions through
 
 ## Related Commands
 
-- Grant/assign role: [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT.md)
+- Grant/assign role: [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO)
 - Revoke/revoke role: [REVOKE](../../../sql-manual/sql-statements/Account-Management-Statements/REVOKE.md)
-- Create role: [CREATE ROLE](../../../sql-manual/sql-statements/Account-Management-Statements/CREATE-ROLE.md)
-- Delete role: [DROP ROLE](../../../sql-manual/sql-statements/Account-Management-Statements/DROP-ROLE.md)
-- Modify role: [ALTER ROLE](../../../sql-manual/sql-statements/Account-Management-Statements/ALTER-ROLE.md)
-- View current user permissions and roles: [SHOW GRANTS](../../../sql-manual/sql-statements/Show-Statements/SHOW-GRANTS.md)
-- View all user permissions and roles: [SHOW ALL GRANTS](../../../sql-manual/sql-statements/Show-Statements/SHOW-GRANTS.md)
-- View created roles: [SHOW ROLES](../../../sql-manual/sql-statements/Show-Statements/SHOW-ROLES.md)
-- View supported permissions: [SHOW PRIVILEGES](../../../sql-manual/sql-statements/Show-Statements/SHOW-PRIVILEGES.md)
+- Create role: [CREATE ROLE](../../../sql-manual/sql-statements/account-management/CREATE-ROLE)
+- Delete role: [DROP ROLE](../../../sql-manual/sql-statements/account-management/DROP-ROLE)
+- Modify role: [ALTER ROLE](../../../sql-manual/sql-statements/account-management/ALTER-ROLE)
+- View current user permissions and roles: [SHOW GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
+- View all user permissions and roles: [SHOW ALL GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
+- View created roles: [SHOW ROLES](../../../sql-manual/sql-statements/account-management/SHOW-ROLES)
+- View supported permissions: [SHOW PRIVILEGES](../../../sql-manual/sql-statements/account-management/SHOW-PRIVILEGES)
 
 ## Best Practices
 
