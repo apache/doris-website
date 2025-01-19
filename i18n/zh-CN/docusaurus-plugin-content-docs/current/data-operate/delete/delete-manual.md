@@ -38,22 +38,29 @@ DELETE FROM table_name [table_alias]
 ### 必须参数
 
 - `table_name`: 指定需要删除数据的表
+
 - `column_name`: 属于 `table_name` 的列
+
 - `op`: 逻辑比较操作符，包括：=, >, <, >=, <=, !=, in, not in
+
 - `value | value_list`: 进行逻辑比较的值或值列表
 
 ### 可选参数
 
 - `PARTITION partition_name | PARTITIONS (partition_name [, partition_name])`: 指定执行删除数据的分区名，如果表不存在此分区，则报错
+
 - `table_alias`: 表的别名
 
 ### 使用限制
 
 - 使用表模型 Aggregate 时，只能指定 Key 列上的条件。当选定的 Key 列不存在于某个 Rollup 中时，无法进行删除。
+
 - 对于分区表，需要指定分区。如果不指定，Doris 会从条件中推断分区。
+
   - 两种情况下，Doris 无法从条件中推断分区：
     1. 条件中不包含分区列
     2. 分区列的 `op` 为 `not in`
+
   - 当分区表未指定分区，或无法从条件中推断分区时，需要设置会话变量 `delete_without_partition` 为 `true`，此时删除操作会应用到所有分区。
 
 ### 示例
@@ -197,6 +204,7 @@ mysql> show delete from test_db;
 ## 性能建议
 
 1. 在明细表（Duplicate Key）和聚合表（Aggregate Key）上，删除操作执行速度较快，但短时间内大量删除操作会影响查询性能。
+
 2. 在主键表（Unique Key）上，删除操作被转换成 `INSERT INTO` 语句，涉及大范围删除时执行速度较慢，但短时间内大量删除不会对查询性能有较大影响。
 
 ## 语法
