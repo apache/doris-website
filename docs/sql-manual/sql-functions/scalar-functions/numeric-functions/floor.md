@@ -22,66 +22,105 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## floor
+## Description
 
-### description
-#### Syntax
+It rounds a numerical value down to the nearest integer or an integer that is a specified multiple.
 
-`T floor(T x[, d])`
-
-If not specified `d`: returns the largest integer value less than or equal to `x`, which is **the most common usage**.
+If not specified `d`: returns the largest integer value less than or equal to `x`, which is the most common usage.
 Otherwise, returns the largest round number that is less than or equal to `x` and flowing the rules:
 
 If `d` is specified as literal:  
-`d` = 0: just like without `d`
-`d` > 0 or `d` < 0: the round number would be a multiple of `1/(10^d)`, or the nearest number of the appropriate data type if `1/(10^d)` isn't exact.
+- `d` = 0: just like without `d`.
+- `d` > 0 or `d` < 0: the round number would be a multiple of `1/(10^d)`, or the nearest number of the appropriate data type if `1/(10^d)` isn't exact.
+- `d` = NULL: return NULL. 
 
 Else if `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
 
-:::tip
-Another alias for this function is `dfloor`.
-:::
+## Alias
 
-### example
+- DFLOOR
 
+## Syntax
+
+```sql
+FLOOR(<x> [ , <d>])
 ```
-mysql> select floor(1);
-+------------+
-| floor(1.0) |
-+------------+
-|          1 |
-+------------+
-mysql> select floor(2.4);
+
+## Parameters
+
+| Parameter | Description |
+|-----------|------------|
+| `<x>`   | Independent Variable |
+| `<d>`   | Precision Parameter  |
+
+## Return value
+
+Returns an integer or a floating-point number.
+
+## Example
+
+```sql
+select floor(1);
+```
+
+```text
++-----------------------------------+
+| floor(cast(1 as DECIMALV3(3, 0))) |
++-----------------------------------+
+|                                 1 |
++-----------------------------------+
+```
+
+```sql
+select floor(2.4);
+```
+
+```text
 +------------+
 | floor(2.4) |
 +------------+
 |          2 |
 +------------+
-mysql> select floor(-10.3);
+```
+
+```sql
+select floor(-10.3);
+```
+
+```text
 +--------------+
 | floor(-10.3) |
 +--------------+
 |          -11 |
 +--------------+
-mysql> select floor(123.45, 1), floor(123.45), floor(123.45, 0), floor(123.45, -1);
+```
+
+```sql
+select floor(123.45, 1), floor(123.45), floor(123.45, 0), floor(123.45, -1);
+```
+
+```text
 +------------------+---------------+------------------+-------------------+
 | floor(123.45, 1) | floor(123.45) | floor(123.45, 0) | floor(123.45, -1) |
 +------------------+---------------+------------------+-------------------+
 |            123.4 |           123 |              123 |               120 |
 +------------------+---------------+------------------+-------------------+
-mysql> SELECT number
-    -> , floor(number * 2.5, number - 1) AS f_decimal_column
-    -> , floor(number * 2.5, 0) AS f_decimal_literal
-    -> , floor(cast(number * 2.5 AS DOUBLE), number - 1) AS f_double_column
-    -> , floor(cast(number * 2.5 AS DOUBLE), 0) AS f_double_literal
-    -> FROM test_enhanced_round
-    -> WHERE rid = 1;
+```
+
+```sql
+SELECT number
+, floor(number * 2.5, number - 1) AS f_decimal_column
+, floor(number * 2.5, 0) AS f_decimal_literal
+, floor(cast(number * 2.5 AS DOUBLE), number - 1) AS f_double_column
+, floor(cast(number * 2.5 AS DOUBLE), 0) AS f_double_literal
+FROM test_enhanced_round
+WHERE rid = 1;
+```
+
+```text
 +--------+------------------+-------------------+-----------------+------------------+
 | number | f_decimal_column | f_decimal_literal | f_double_column | f_double_literal |
 +--------+------------------+-------------------+-----------------+------------------+
 |      1 |              2.0 |                 2 |               2 |                2 |
 +--------+------------------+-------------------+-----------------+------------------+
 ```
-
-### keywords
-	FLOOR, DFLOOR
