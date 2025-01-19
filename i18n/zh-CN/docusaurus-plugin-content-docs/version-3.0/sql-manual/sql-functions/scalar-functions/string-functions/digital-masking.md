@@ -30,7 +30,9 @@ under the License.
 
 ## 语法
 
-`DIGITAL_MASKING( <digital_number> )`
+```sql
+DIGITAL_MASKING( <digital_number> )
+```
 
 ## 参数
 

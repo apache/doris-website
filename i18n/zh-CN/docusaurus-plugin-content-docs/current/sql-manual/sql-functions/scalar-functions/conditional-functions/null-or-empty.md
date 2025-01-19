@@ -30,7 +30,9 @@ under the License.
 
 ## 语法
 
-`NULL_OR_EMPTY (<str>)`
+```sql
+NULL_OR_EMPTY (<str>)
+```
 
 ## 参数
 

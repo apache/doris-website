@@ -28,7 +28,9 @@ The `sub_replace` function is used to replace substrings within a string. You ca
 
 ## Syntax
 
-`VARCHAR sub_replace(<str>, <new_str>, <start[, len]>)`
+```sql
+sub_replace(<str>, <new_str>, [ ,<start> [ , <len> ] ]
+```
 
 ## Parameters
 

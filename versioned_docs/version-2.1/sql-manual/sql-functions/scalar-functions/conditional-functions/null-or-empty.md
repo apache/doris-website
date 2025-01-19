@@ -30,7 +30,9 @@ The `null_or_empty` function checks if the given value is NULL or an empty strin
 
 ## Syntax
 
-`NULL_OR_EMPTY (<str>)`
+```sql
+NULL_OR_EMPTY (<str>)
+```
 
 ## Parameters
 

@@ -29,7 +29,9 @@ under the License.
 
 ## 语法
 
-`VARCHAR sub_replace(<str>, <new_str>, <start[, len]>)`
+```sql
+sub_replace(<str>, <new_str>, [ ,<start> [ , <len> ] ]
+```
 
 ## 参数
 
@@ -37,7 +39,7 @@ under the License.
 | -- | -- |
 | `<str>` | 要进行替换操作的目标字符串 |
 | `<new_str>` | 用于替换的目标字符串 |
-| `<start[, len]>` | start 表示替换操作开始的位置，可选参数，表示要替换的子字符串长度 |
+| `[ ,<start> [ , <len> ]` | `start` is the position where the replacement operation begins, indicating from which position in the string the replacement will start. `len` is an optional parameter that specifies the length of the substring to be replaced |
 
 ## 返回值
 

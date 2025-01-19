@@ -30,7 +30,9 @@ The `digital_masking` function is used for masking numbers. Based on the specifi
 
 ## Syntax
 
-`DIGITAL_MASKING( <digital_number> )`
+```sql
+DIGITAL_MASKING( <digital_number> )
+```
 
 ## Parameters
 

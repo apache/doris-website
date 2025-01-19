@@ -30,7 +30,9 @@ The `unhex` function is used to convert a hexadecimal string back into the origi
 
 ## Syntax
 
-`UNHEX(<str>)`
+```sql
+UNHEX(<str>)
+```
 
 ## Parameters
 

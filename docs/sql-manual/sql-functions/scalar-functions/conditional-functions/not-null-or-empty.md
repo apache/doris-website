@@ -30,7 +30,9 @@ The `not_null_or_empty` function checks if the given value is neither NULL nor e
 
 ## Syntax
 
-`NOT_NULL_OR_EMPTY (<str>)`
+```sql
+NOT_NULL_OR_EMPTY (<str>)
+```
 
 ## Parameters
 

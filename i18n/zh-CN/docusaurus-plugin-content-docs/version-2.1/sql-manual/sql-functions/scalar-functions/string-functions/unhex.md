@@ -30,7 +30,9 @@ under the License.
 
 ## 语法
 
-`UNHEX(<str>)`
+```sql
+UNHEX(<str>)
+```
 
 ## 参数
 
