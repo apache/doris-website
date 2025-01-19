@@ -109,7 +109,7 @@ userN has priv1 permission through role3 and priv2 and privN permissions through
 ## Related Commands
 
 - Grant/assign role: [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO)
-- Revoke/revoke role: [REVOKE](../../../sql-manual/sql-statements/Account-Management-Statements/REVOKE.md)
+- Revoke/revoke role: [REVOKE](../../../sql-manual/sql-statements/account-management/REVOKE-FROM.md)
 - Create role: [CREATE ROLE](../../../sql-manual/sql-statements/account-management/CREATE-ROLE)
 - Delete role: [DROP ROLE](../../../sql-manual/sql-statements/account-management/DROP-ROLE)
 - Modify role: [ALTER ROLE](../../../sql-manual/sql-statements/account-management/ALTER-ROLE)
