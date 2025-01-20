@@ -26,8 +26,6 @@ under the License.
 
 Returns the natural logarithm of `x` to base `2`.
 
-- If x <= 0: return `NULL`
-
 ## Syntax
 
 ```sql
@@ -38,13 +36,12 @@ LOG2(<x>)
 
 | Parameter | Description |
 |-----------|------------|
-| `<x>`   | Antilogarithm |
+| `<x>`   | Antilogarithm should be greater than 0 |
 
 ## Return value
 
 Returns a floating-point number.
 
-- If x <= 0: return `NULL`
 - If x IS NULL: return `NULL`
 
 ## Example
