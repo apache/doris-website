@@ -22,21 +22,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## split_by_regexp
-
-
 ## 描述
+
+将输入字符串按照指定的正则表达式拆分成字符串数组。
 
 ## 语法
 
-`ARRAY<STRING> split_by_regexp(STRING str, STRING pattern[, int max_limit])`
-将字符串 `str` ,根据输入的正则表达式 `pattern` 进行拆分，可选择保留的个数 `max_limit` ,默认全部保留, 最终返回一个拆分好的字符串数组。
+```sql
+SPLIT_BY_REGEXP ( <str>, <pattern> [, <max_limit>] )
+```
 
 ## 参数
 
 `str` — 需要分割的字符串. 类型: `String`
 `pattern` — 正则表达式. 类型: `String`
 `max_limit` — 保留个数，可选参数. 类型: `Int`
+
+## 参数
+
+| 参数      | 说明                           |
+|---------|------------------------------|
+| `<str>` | 需要分割的字符串                     |
+| `<pattern>` | 正则表达式                        |
+| `<max_limit>` | 可选参数，是否限制返回的字符串数组元素个数，默认是不限制 |
+
+## 返回值
+
+返回按照指定的正则表达式拆分成字符串数组。特殊情况：
+
+- 任意两个参数中有一个为 NULL，则返回 NULL
+- `<len>`小于 0 时，返回空字符串
 
 ## 举例
 

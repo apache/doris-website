@@ -24,32 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## space
 ## 描述
+
+生成由指定数量的空格组成的字符串。
+
 ## 语法
 
-`VARCHAR space(Int num)`
+```sql
+SPACE ( <len> )
+```
 
-返回由num个空格组成的字符串。
+## 参数
+
+| 参数      | 说明        |
+|---------|-----------|
+| `<len>` | 要生成的空格的数量 |
+
+## 返回值
+
+返回指定数量的空格组成的字符串。特殊情况：
+
+- 任意两个参数中有一个为 NULL，则返回 NULL
+- `<len>`小于 0 时，返回空字符串
 
 ## 举例
 
+```sql
+SELECT space(10);
 ```
-mysql> select length(space(10));
-+-------------------+
-| length(space(10)) |
-+-------------------+
-|                10 |
-+-------------------+
-1 row in set (0.01 sec)
 
-mysql> select length(space(-10));
-+--------------------+
-| length(space(-10)) |
-+--------------------+
-|                  0 |
-+--------------------+
-1 row in set (0.02 sec)
+```text
++------------+
+| space(10)  |
++------------+
+|            |
++------------+
 ```
-### keywords
-    space
+
+```sql
+SELECT space(null);
+```
+
+```text
++-------------+
+| space(NULL) |
++-------------+
+| NULL        |
++-------------+
+```
