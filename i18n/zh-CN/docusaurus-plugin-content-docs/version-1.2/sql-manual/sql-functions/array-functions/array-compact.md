@@ -1,7 +1,7 @@
 ---
 {
     "title": "array_compact",
-    "language": "zh-CN",
+    "language": "zh-CN"
 }
 ---
 

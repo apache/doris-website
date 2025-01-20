@@ -320,6 +320,12 @@ const config = {
                     {
                         type: 'docsVersionDropdown',
                         position: 'right',
+                        dropdownItemsAfter: [
+                            {
+                                label: '归档文档',
+                                to: `/zh-CN/archive-docs`,
+                            },
+                        ],
                     },
                 ],
             },
@@ -342,6 +348,12 @@ const config = {
                     {
                         type: 'docsVersionDropdown',
                         position: 'right',
+                        dropdownItemsAfter: [
+                            {
+                                label: 'Archived Docs',
+                                to: `/archive-docs`,
+                            },
+                        ],
                     },
                 ],
             },

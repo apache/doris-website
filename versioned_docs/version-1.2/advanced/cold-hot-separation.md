@@ -105,7 +105,7 @@ For details, please refer to the [resource](../sql-manual/sql-reference/Data-Def
 ### Some restrictions
 
 - A single table or a single partition can only be associated with one storage policy. After association, the storage policy cannot be dropped
-- The object information associated with the storage policy does not support modifying the data storage path information, such as bucket, endpoint, and root_ Path and other information
+- The object information associated with the storage policy does not support modifying the data storage path information, such as bucket, endpoint, and root_Path and other information
 - Currently, the storage policy only supports creation and modification, not deletion
 
 ## Show size of objects occupied by cold data
