@@ -39,8 +39,9 @@ JSON_EXISTS_PATH (<json_str>,  <path>)
 ## Alias
 
 ```sql
-JSONB_EXISTS_PATH (<json_str>,  <path>)
+JSONB_EXISTS_PATH
 ```
+
 ## Parameters
 | Parameter           | Description                                                     |
 |--------------|--------------------------------------------------------|
