@@ -24,26 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## day
 ## 描述
+
+获得日期中的天信息，返回值范围从 1-31。
+
+## 别名
+
+- dayofmonth
+
 ## 语法
 
-`INT DAY(DATETIME date)`
+```sql
+DAY(<dt>)
+```
 
+## 参数
 
-获得日期中的天信息，返回值范围从1-31。
+| 参数 | 说明 |
+| -- | -- |
+| `<dt>` | 合法的日期表达式 |
 
-参数为Date或者Datetime类型
+## 返回值
+
+返回日期中的天信息
 
 ## 举例
 
+```sql
+select day('1987-01-31');
 ```
-mysql> select day('1987-01-31');
+
+```text
 +----------------------------+
 | day('1987-01-31 00:00:00') |
 +----------------------------+
 |                         31 |
 +----------------------------+
 ```
-### keywords
-    DAY
