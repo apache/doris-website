@@ -36,7 +36,7 @@ RIGHT
 ## Syntax
 
 ```sql
-STRRIGHT(VARCHAR <str>, INT <len>)
+STRRIGHT(<str>, <len>)
 ```
 
 ## Parameters

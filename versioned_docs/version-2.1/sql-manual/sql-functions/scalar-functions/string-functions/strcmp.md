@@ -31,7 +31,7 @@ The STRCMP function compares two strings lexicographically. It returns an intege
 ## Syntax
 
 ```sql
-STRCMP(VARCHAR <str0>, VARCHAR <str1>)
+STRCMP(<str0>, <str1>)
 ```
 
 ## Parameters

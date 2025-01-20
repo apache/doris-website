@@ -31,7 +31,7 @@ TO_BASE64 函数用于将输入的字符串转换为 Base64 编码格式。Base6
 ## 语法
 
 ```sql
-TO_BASE64(VARCHAR <str>)
+TO_BASE64(<str>)
 ```
 
 ## 参数

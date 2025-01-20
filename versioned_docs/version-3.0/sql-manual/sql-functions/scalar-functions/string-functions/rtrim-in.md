@@ -33,7 +33,7 @@ The key feature of RTRIM_IN is that it removes any combination of characters fro
 ## Syntax
 
 ```sql
-RTRIM_IN(VARCHAR <str> [, VARCHAR <rhs>])
+RTRIM_IN(<str>[, <rhs>])
 ```
 
 ## Parameters

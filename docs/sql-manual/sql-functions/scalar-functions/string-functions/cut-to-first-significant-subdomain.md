@@ -31,7 +31,7 @@ The CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN function extracts the effective part of a
 ## Syntax
 
 ```sql
-CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN(VARCHAR <url>)
+CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN(<url>)
 ```
 
 ## Parameters

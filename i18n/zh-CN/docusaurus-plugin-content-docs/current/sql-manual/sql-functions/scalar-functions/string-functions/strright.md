@@ -35,7 +35,7 @@ RIGHT
 ## 语法
 
 ```sql
-STRRIGHT(VARCHAR <str>, INT <len>)
+STRRIGHT(<str>, <len>)
 ```
 
 ## 参数

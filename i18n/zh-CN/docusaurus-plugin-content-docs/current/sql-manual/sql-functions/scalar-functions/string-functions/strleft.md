@@ -35,7 +35,7 @@ LEFT
 ## 语法
 
 ```sql
-STRLEFT(VARCHAR <str>, INT <len>)
+STRLEFT(<str>, <len>)
 ```
 
 ## 参数

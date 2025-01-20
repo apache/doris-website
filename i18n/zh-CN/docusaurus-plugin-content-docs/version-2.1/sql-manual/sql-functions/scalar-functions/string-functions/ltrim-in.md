@@ -33,7 +33,7 @@ LTRIM_IN 的特点是会移除指定字符集合中的任意字符组合，而 L
 ## 语法
 
 ```sql
-LTRIM_IN(VARCHAR <str>[, VARCHAR <rhs>])
+LTRIM_IN(<str>[, <rhs>])
 ```
 
 ## 参数

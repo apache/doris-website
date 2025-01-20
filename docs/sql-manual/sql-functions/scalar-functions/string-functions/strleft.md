@@ -35,7 +35,7 @@ LEFT
 ## Syntax
 
 ```sql
-STRLEFT(VARCHAR <str>, INT <len>)
+STRLEFT(<str>, <len>)
 ```
 
 ## Parameters

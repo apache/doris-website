@@ -31,7 +31,7 @@ TRANSLATE 函数用于字符串替换，将源字符串中的字符按照映射�
 ## 语法
 
 ```sql
-TRANSLATE(VARCHAR <source>, VARCHAR <from>, VARCHAR <to>)
+TRANSLATE(<source>, <from>, <to>)
 ```
 
 ## 参数

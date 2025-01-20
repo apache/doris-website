@@ -31,7 +31,7 @@ The TRANSLATE function is used for string replacement, converting characters in 
 ## Syntax
 
 ```sql
-TRANSLATE(VARCHAR <source>, VARCHAR <from>, VARCHAR <to>)
+TRANSLATE(<source>, <from>, <to>)
 ```
 
 ## Parameters

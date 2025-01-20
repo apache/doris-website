@@ -35,7 +35,7 @@ SUBSTR
 ## Syntax
 
 ```sql
-SUBSTRING(VARCHAR <str>, INT <pos> [, INT <len>])
+SUBSTRING(<str>, <pos> [, <len>])
 ```
 
 ## Parameters

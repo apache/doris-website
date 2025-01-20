@@ -32,7 +32,7 @@ The TOP_LEVEL_DOMAIN function is used to extract the top-level domain from a URL
 ## Syntax
 
 ```sql
-TOP_LEVEL_DOMAIN(VARCHAR <url>)
+TOP_LEVEL_DOMAIN(<url>)
 ```
 
 ## Parameters

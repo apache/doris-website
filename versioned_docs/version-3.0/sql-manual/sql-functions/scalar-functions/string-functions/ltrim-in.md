@@ -33,7 +33,7 @@ The key feature of LTRIM_IN is that it removes any combination of characters fro
 ## Syntax
 
 ```sql
-LTRIM_IN(VARCHAR <str> [, VARCHAR <rhs>])
+LTRIM_IN(<str> [, <rhs>])
 ```
 
 ## Parameters

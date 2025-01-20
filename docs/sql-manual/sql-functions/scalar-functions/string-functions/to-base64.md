@@ -31,7 +31,7 @@ The TO_BASE64 function is used to convert an input string to Base64 encoded form
 ## Syntax
 
 ```sql
-TO_BASE64(VARCHAR <str>)
+TO_BASE64(<str>)
 ```
 
 ## Parameters

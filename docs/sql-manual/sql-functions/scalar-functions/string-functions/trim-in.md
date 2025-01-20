@@ -33,7 +33,7 @@ The key feature of TRIM_IN is that it removes any combination of characters from
 ## Syntax
 
 ```sql
-TRIM_IN(VARCHAR <str> [, VARCHAR <rhs>])
+TRIM_IN(<str>[, <rhs>])
 ```
 
 ## Parameters

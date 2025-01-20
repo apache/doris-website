@@ -33,7 +33,7 @@ TRIM_IN的特点是会移除指定字符集合中的任意字符组合，而TRIM
 ## 语法
 
 ```sql
-TRIM_IN(VARCHAR <str> [, VARCHAR <rhs>])
+TRIM_IN(<str>[, <rhs>])
 ```
 
 ## 参数

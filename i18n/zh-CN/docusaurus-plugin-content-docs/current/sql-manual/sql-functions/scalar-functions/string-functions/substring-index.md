@@ -29,7 +29,7 @@ SUBSTRING_INDEX 函数用于截取字符串，根据指定的分隔符和出现�
 ## 语法
 
 ```sql
-SUBSTRING_INDEX(VARCHAR <content>, VARCHAR <delimiter>, INT <field>)
+SUBSTRING_INDEX(<content>, <delimiter>, <field>)
 ```
 
 ## 参数

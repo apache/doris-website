@@ -33,7 +33,7 @@ RTRIM_IN 的特点是会移除指定字符集合中的任意字符组合，而 R
 ## 语法
 
 ```sql
-RTRIM_IN(VARCHAR <str>[, VARCHAR <rhs>])
+RTRIM_IN(<str>[, <rhs>])
 ```
 
 ## 参数

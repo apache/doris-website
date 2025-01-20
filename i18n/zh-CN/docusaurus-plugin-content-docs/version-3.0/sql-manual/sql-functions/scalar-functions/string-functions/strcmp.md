@@ -31,7 +31,7 @@ STRCMP 函数用于按照字典顺序比较两个字符串。该函数将返回�
 ## 语法
 
 ```sql
-STRCMP(VARCHAR <str0>, VARCHAR <str1>)
+STRCMP(<str0>, <str1>)
 ```
 
 ## 参数

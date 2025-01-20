@@ -29,7 +29,7 @@ The SUBSTRING_INDEX function is used to extract a substring from a string based 
 ## Syntax
 
 ```sql
-SUBSTRING_INDEX(VARCHAR <content>, VARCHAR <delimiter>, INT <field>)
+SUBSTRING_INDEX(<content>, <delimiter>, <field>)
 ```
 
 ## Parameters

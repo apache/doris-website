@@ -31,7 +31,7 @@ The STARTS_WITH function checks if a string starts with a specified prefix. Retu
 ## Syntax
 
 ```sql
-STARTS_WITH(VARCHAR <str>, VARCHAR <prefix>)
+STARTS_WITH(<str>, <prefix>)
 ```
 
 ## Parameters

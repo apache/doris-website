@@ -29,7 +29,7 @@ The COUNT_SUBSTRINGS function counts the number of occurrences of a specified su
 ## Syntax
 
 ```sql
-COUNT_SUBSTRINGS(VARCHAR <str>, VARCHAR <pattern>)
+COUNT_SUBSTRINGS(<str>, <pattern>)
 ```
 
 ## Parameters
