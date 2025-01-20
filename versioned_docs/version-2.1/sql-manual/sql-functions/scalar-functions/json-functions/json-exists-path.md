@@ -35,6 +35,7 @@ JSON_EXISTS_PATH (<json_str>,  <path>)
 ```
 
 ## Alias
+
 ```sql
 JSONB_EXISTS_PATH (<json_str>,  <path>)
 ```
