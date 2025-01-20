@@ -24,35 +24,48 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## dayofweek
 ## 描述
+
+返回日期的工作日索引值，即星期日为 1，星期一为 2，星期六为 7。
+
 ## 语法
 
-`INT DAYOFWEEK(DATETIME date)`
+```sql
+DAYOFWEEK(<dt>)
+```
 
+## 参数
 
-DAYOFWEEK函数返回日期的工作日索引值，即星期日为1，星期一为2，星期六为7
+| 参数 | 说明 |
+| -- | -- |
+| `<dt>` | 需要被计算的日期表达式 |
 
-参数为Date或者Datetime类型或者可以cast为Date或者Datetime类型的数字
+## 返回值
+
+返回日期的工作日索引值。
 
 ## 举例
 
+```sql
+select dayofweek('2019-06-25');
 ```
-mysql> select dayofweek('2019-06-25');
+
+```text
 +----------------------------------+
 | dayofweek('2019-06-25 00:00:00') |
 +----------------------------------+
 |                                3 |
 +----------------------------------+
+```text
 
-mysql> select dayofweek(cast(20190625 as date)); 
+```sql
+select dayofweek(cast(20190625 as date)); 
+```
+
+```text
 +-----------------------------------+
 | dayofweek(CAST(20190625 AS DATE)) |
 +-----------------------------------+
 |                                 3 |
 +-----------------------------------+
 ```
-
-### keywords
-
-    DAYOFWEEK

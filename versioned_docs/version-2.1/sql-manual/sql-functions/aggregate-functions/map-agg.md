@@ -24,18 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MAP_AGG
-### description
-#### Syntax
+## Description
 
-`MAP_AGG(expr1, expr2)`
+The MAP_AGG function is used to form a mapping structure based on key-value pairs from multiple rows of data.
 
+## Syntax
 
-Returns a map consists of expr1 as the key and expr2 as the corresponding value.
+`MAP_AGG(<expr1>, <expr2>)`
 
-### example
+## Parameters
+
+| Parameters | Description |
+| -- | -- |
+| `<expr1>` | The expression used to specify the key. |
+| `<expr2>` | The expression used to specify the corresponding value. |
+
+## Return Value
+
+Returns a value of the MAP type.
+
+## Example
+
+```sql
+select `n_nationkey`, `n_name`, `n_regionkey` from `nation`;
 ```
-MySQL > select `n_nationkey`, `n_name`, `n_regionkey` from `nation`;
+
+```text
 +-------------+----------------+-------------+
 | n_nationkey | n_name         | n_regionkey |
 +-------------+----------------+-------------+
@@ -65,8 +79,13 @@ MySQL > select `n_nationkey`, `n_name`, `n_regionkey` from `nation`;
 |          23 | UNITED KINGDOM |           3 |
 |          24 | UNITED STATES  |           1 |
 +-------------+----------------+-------------+
+```
 
-MySQL > select `n_regionkey`, map_agg(`n_nationkey`, `n_name`) from `nation` group by `n_regionkey`;
+```sql
+select `n_regionkey`, map_agg(`n_nationkey`, `n_name`) from `nation` group by `n_regionkey`;
+```
+
+```text
 +-------------+---------------------------------------------------------------------------+
 | n_regionkey | map_agg(`n_nationkey`, `n_name`)                                          |
 +-------------+---------------------------------------------------------------------------+
@@ -76,8 +95,13 @@ MySQL > select `n_regionkey`, map_agg(`n_nationkey`, `n_name`) from `nation` gro
 |           4 | {4:"EGYPT", 10:"IRAN", 11:"IRAQ", 13:"JORDAN", 20:"SAUDI ARABIA"}         |
 |           2 | {8:"INDIA", 9:"INDONESIA", 12:"JAPAN", 18:"CHINA", 21:"VIETNAM"}          |
 +-------------+---------------------------------------------------------------------------+
+```
 
-MySQL > select n_regionkey, map_agg(`n_name`, `n_nationkey` % 5) from `nation` group by `n_regionkey`;
+```sql
+select n_regionkey, map_agg(`n_name`, `n_nationkey` % 5) from `nation` group by `n_regionkey`;
+```
+
+```text
 +-------------+------------------------------------------------------------------------+
 | n_regionkey | map_agg(`n_name`, (`n_nationkey` % 5))                                 |
 +-------------+------------------------------------------------------------------------+
@@ -88,5 +112,3 @@ MySQL > select n_regionkey, map_agg(`n_name`, `n_nationkey` % 5) from `nation` g
 |           4 | {"EGYPT":4, "IRAN":0, "IRAQ":1, "JORDAN":3, "SAUDI ARABIA":0}          |
 +-------------+------------------------------------------------------------------------+
 ```
-### keywords
-MAP_AGG

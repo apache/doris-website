@@ -24,25 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_Circle
-### Description
-#### Syntax
+## Description
 
-`GEOMETRY ST_Circle(DOUBLE center_lng, DOUBLE center_lat, DOUBLE radius)`
+Convert a WKT (Well Known Text) to a circle on the sphere of the Earth.
 
+## Syntax
 
-Convert a WKT (Well Known Text) into a circle on the earth's sphere. Where `center_lng'denotes the longitude of the center of a circle,
-` Center_lat` denotes the latitude of the center of a circle, radius` denotes the radius of a circle in meters.
-
-### example
-
+```sql
+ST_Circle( <center_lng>, <center_lat>, <radius>)
 ```
-mysql> SELECT ST_AsText(ST_Circle(111, 64, 10000));
+
+## Parameters
+
+| Parameters | Instructions |
+| -- | -- |
+| `<center_lng>` | Longitude of the center of the circle |
+| `<center_lat>` | The latitude of the center of the circle |
+| `<radius>` | Radius of a circle |
+
+- The unit of radius is meters. A maximum of 9999999 RADIUS is supported
+
+## Return Value
+
+A circle on a sphere based on basic information about the circle
+
+## Examples
+
+```sql
+SELECT ST_AsText(ST_Circle(111, 64, 10000));
+```
+
+```text
 +--------------------------------------------+
 | st_astext(st_circle(111.0, 64.0, 10000.0)) |
 +--------------------------------------------+
 | CIRCLE ((111 64), 10000)                   |
 +--------------------------------------------+
 ```
-### keywords
-ST_CIRCLE,ST,CIRCLE
+
