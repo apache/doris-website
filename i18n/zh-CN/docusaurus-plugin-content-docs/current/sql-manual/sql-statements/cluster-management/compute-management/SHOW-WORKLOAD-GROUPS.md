@@ -33,7 +33,7 @@ under the License.
 ## 语法
 
 ```sql
-SHOW WORKLOAD GROUPS [LIKE "pattern"];
+SHOW WORKLOAD GROUPS [LIKE "<pattern>"];
 ```
 
 ## 注意事项

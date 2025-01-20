@@ -33,7 +33,7 @@ under the License.
 ```sql
 ALTER WORKLOAD GROUP  "rg_name"
 PROPERTIES (
-  "key"="value", 
+  "<key>"="<value>", 
   ...
 );
 ```

@@ -35,7 +35,7 @@ SHOW RESOURCES
 [
   WHERE
   [NAME [ = "your_resource_name" | LIKE "name_matcher"]]
-  [RESOURCETYPE = ["SPARK"]]
+  [RESOURCETYPE = "<type>"]
 ] | [LIKE "pattern"]
 [ORDER BY...]
 [LIMIT limit][OFFSET offset];
@@ -45,7 +45,7 @@ SHOW RESOURCES
 
 1. If NAME LIKE is used, it will match Resource whose Name contains name_matcher in RESOURCES
 2. If NAME = is used, it will match the specified Name exactly
-3. If RESOURCETYPE is specified, match the corresponding Resrouce type
+3. If RESOURCETYPE is specified, match the corresponding Resrouce type, The supported RESOURCETYPEs can be referred to in [CREATE-RESOURCE](./CREATE-RESOURCE.md);
 4. You can use ORDER BY to sort on any combination of columns
 5. If LIMIT is specified, limit matching records are displayed. Otherwise show all
 6. If OFFSET is specified, the query results are displayed starting at offset offset. By default the offset is 0.

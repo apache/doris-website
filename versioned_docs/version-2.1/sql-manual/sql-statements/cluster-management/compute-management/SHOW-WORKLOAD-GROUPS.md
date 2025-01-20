@@ -31,7 +31,7 @@ This statement is used to display the resource groups for which the current user
 ## Syntax
 
 ```sql
-SHOW WORKLOAD GROUPS [LIKE "pattern"];
+SHOW WORKLOAD GROUPS [LIKE "<pattern>"];
 ```
 
 ## Usage Notes

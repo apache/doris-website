@@ -33,7 +33,7 @@ under the License.
 ```sql
 CREATE WORKLOAD GROUP [IF NOT EXISTS] "rg_name"
 PROPERTIES (
-    "key"="value", 
+    "<key>"="<value>", 
     ...
 );
 ```

@@ -34,12 +34,14 @@ This statement is used to modify an existing resource. Only the root or admin us
 ```sql
 ALTER RESOURCE 'resource_name'
 PROPERTIES (
-  "key"="value", 
+  "<key>"="<value>", 
   ...
 );
 ```
 
-Note: The resource type does not support modification.
+Note: 
+- The resource type does not support modification.
+- The modified properties parameters can be referenced in the [CREATE-RESOURCE](./CREATE-RESOURCE.md) section.
 
 ## Examples
 

@@ -33,15 +33,17 @@ In the future, other external resources may be added to Doris for use, such as S
 
 ```sql
 CREATE [EXTERNAL] RESOURCE "resource_name"
-PROPERTIES ("key"="value", ...);
+PROPERTIES (
+   "<key>"="<value>", 
+   ...
+);
 ```
 
 ## Required Parameters
 1. `<type>`
-The type of resource needs to be specified in PROPERTIES "type" = "[spark|odbc_catalog|s3]", currently supports spark, odbc_catalog, s3.
+The type of resource needs to be specified in PROPERTIES "type" = "[spark|odbc_catalog|s3|jdbc|hdfs|hms|es]".
 
-2. `<properties>`
-   The PROPERTIES vary depending on the resource type, as shown in the example.
+The other parameters vary depending on the resource type, and the PROPERTIES differ accordingly. Please refer to the example for details.
 
 ## Examples
 
@@ -67,7 +69,7 @@ The type of resource needs to be specified in PROPERTIES "type" = "[spark|odbc_c
    );
    ```
 
-   Spark related parameters are as follows:
+Spark related parameters are as follows:
    - spark.master: Required, currently supports yarn, spark://host:port.
    - spark.submit.deployMode: The deployment mode of the Spark program, required, supports both cluster and client.
    - spark.hadoop.yarn.resourcemanager.address: Required when master is yarn.

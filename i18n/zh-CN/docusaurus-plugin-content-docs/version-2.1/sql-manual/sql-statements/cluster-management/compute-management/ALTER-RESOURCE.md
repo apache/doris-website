@@ -32,11 +32,14 @@ under the License.
 ```sql
 ALTER RESOURCE 'resource_name'
 PROPERTIES (
-  "key"="value", 
+  "<key>"="<value>", 
   ...
 );
 ```
-注意：resource type 不支持修改。
+注意：
+- resource type 不支持修改。
+- 修改的 properties 参数可参考 [CREATE-RESOURCE](./CREATE-RESOURCE.md) 章节;
+
 
 ## 示例
 

@@ -33,7 +33,7 @@ This statement is used to create a workload group. Workload groups enable the is
 ```sql
 CREATE WORKLOAD GROUP [IF NOT EXISTS] "rg_name"
 PROPERTIES (
-    "key"="value", 
+    "<key>"="<value>", 
     ...
 );
 ```

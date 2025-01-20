@@ -33,7 +33,7 @@ This statement is used to modify the workload group.
 ```sql
 ALTER WORKLOAD GROUP "rg_name"
 PROPERTIES (
-  "key"="value", 
+  "<key>"="<value>", 
   ...
 );
 ```
