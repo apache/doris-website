@@ -22,32 +22,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Description
 
-### Description
+SM4 is a national standard symmetric key encryption algorithm, widely used in finance, communications, e-commerce and other fields. The SM4_ENCRYPT function is used to encrypt data with SM4. The default algorithm is `SM4_128_ECB`.
 
-SM4 is a China's national standard symmetric key encryption algorithm, widely used in finance, communications, e-commerce, and other fields. The SM4_ENCRYPT function is used to encrypt data using the SM4 algorithm. By default, it uses the `SM4_128_ECB` algorithm.
-
-### Syntax
+## Syntax
 
 ```sql
-VARCHAR SM4_ENCRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHAR encryption_mode])
+SM4_ENCRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 ```
 
-### Parameters
+## Parameters
 
-- `str` is the text to be encrypted;
-- `key_str` is the key. Note that this key is not a hexadecimal encoding, but a string representation of the encoded key. For example, for 128-bit key encryption, `key_str` should be 16-length. If the key is not long enough, use **zero padding** to make it up. If it is longer than that, the final key is found using a cyclic xor method. For example, if the 128-bit key used by the algorithm finally is `key`, then `key[i] = key_str[i] ^ key_str[i+128] ^ key_str[i+256] ^ ...`
-- `init_vector` is the initial vector to be used in the algorithm, this is only valid for some algorithms, if not specified then Doris will use the built-in value;
-- `encryption_mode` is the encryption algorithm, optionally available in variable.
+| parameter           | description                                                                                                                                                                                         |
+|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<str>`             | The text to be encrypted                                                                                                                                                                                              |
+| `<key_str>`         | is the key. Note that this key is not a hexadecimal encoding, but an encoded string representation. For example, for 128-bit key encryption, the length of `key_str` should be 16. If the key length is insufficient, use **zero padding** to make it complete. If the length exceeds, use circular XOR to find the final key. For example, if the 128-bit key used by the algorithm is `key`, then `key[i] = key_str[i] ^ key_str[i+128] ^ key_str[i+256] ^ ...` |
+| `<init_vector>`     | It is the initial vector used in the algorithm. It is only effective under specific algorithms. If not specified, Doris uses the built-in vector                                                                                                                                                          |
+| `<encryption_mode>` | For encryption algorithms, optional values are given in variables                                                                                                                                                                                       |
 
-### Example
 
+## Return Value
+
+Returns the encrypted binary data
+
+## Examples
+
+Using the default algorithm
 ```sql
 set block_encryption_mode='';
 select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```
 
-```
+```text
 +----------------------------------------------------------+
 | to_base64(sm4_encrypt('text', '***', '', 'SM4_128_ECB')) |
 +----------------------------------------------------------+
@@ -55,12 +62,13 @@ select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 +----------------------------------------------------------+
 ```
 
+Using SM4_128_CBC algorithm
 ```sql
 set block_encryption_mode="SM4_128_CBC";
-select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3')); --- since 2.1.7
+select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```
 
-```
+```text
 +----------------------------------------------------------+
 | to_base64(sm4_encrypt('text', '***', '', 'SM4_128_CBC')) |
 +----------------------------------------------------------+
@@ -68,12 +76,15 @@ select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3')); --- si
 +----------------------------------------------------------+
 ```
 
+Use the SM4_128_CBC algorithm and set the initial vector
 ```sql
+set block_encryption_mode="SM4_128_CBC";
 select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', '0123456789'));
 ```
-+----------------------------------------------------------------------------------+
-| to_base64(sm4_encrypt('text', 'F3229A0B371ED2D9441B830D21A390C3', '0123456789')) |
-+----------------------------------------------------------------------------------+
-| G7yqOKfEyxdagboz6Qf01A==                                                         |
-+----------------------------------------------------------------------------------+
+```text
++--------------------------------------------------------------------+
+| to_base64(sm4_encrypt('text', '***', '0123456789', 'SM4_128_CBC')) |
++--------------------------------------------------------------------+
+| 1Y4NGIukSbv9OrkZnRD1bQ==                                           |
++--------------------------------------------------------------------+
 ```

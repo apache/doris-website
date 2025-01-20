@@ -65,6 +65,7 @@ jobs:
                   folder: build
                   onlyUpload: true
                   otherCacheControl: 0
+                  skipSetting: true
 
             - name: Remove pdf
               run: rm -rf ./build/assets/files/*.pdf

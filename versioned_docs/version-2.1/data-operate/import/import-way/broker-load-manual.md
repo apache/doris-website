@@ -30,6 +30,10 @@ Broker Load is suitable for scenarios where the source data is stored in remote 
 
 Direct reads from HDFS or S3 can also be imported through HDFS TVF or S3 TVF in the [Lakehouse/TVF](../../../lakehouse/file). The current "Insert Into" based on TVF is a synchronous import, while Broker Load is an asynchronous import method.
 
+In early versions of Doris, both S3 Load and HDFS Load were implemented by connecting to specific Broker processes using `WITH BROKER`.
+In newer versions, S3 Load and HDFS Load have been optimized as the most commonly used import methods, and they no longer depend on an additional Broker process, though they still use syntax similar to Broker Load.
+Due to historical reasons and the similarity in syntax, S3 Load, HDFS Load, and Broker Load are collectively referred to as Broker Load.
+
 ## Limitations
 
 Supported data sources:
@@ -226,7 +230,6 @@ The WITH clause specifies how to access the storage system, and `broker_properti
 | --- | --- | --- | --- |
 | "timeout" | Long | 14400 | Used to specify the timeout for the import in seconds. The configurable range is from 1 second to 259200 seconds. |
 | "max_filter_ratio" | Float | 0.0 | Used to specify the maximum tolerable ratio of filterable (irregular or otherwise problematic) data, which defaults to zero tolerance. The value range is 0 to 1. If the error rate of the imported data exceeds this value, the import will fail. Irregular data does not include rows filtered out by the where condition. |
-| "exec_mem_limit" | Long | 2147483648 (2GB) | The memory limit in bytes of the load task, which defaults to 2GB. |
 | "strict_mode" | Boolean | false | Used to specify whether to enable strict mode for this import. |
 | "partial_columns" | Boolean | false | Used to specify whether to enable partial column update, the default value is false, this parameter is only available for Unique Key + Merge on Write tables. |
 | "timezone" | String | "Asia/Shanghai" | Used to specify the timezone to be used for this import. This parameter affects the results of all timezone-related functions involved in the import. |
@@ -261,7 +264,6 @@ Processing Volume per BE for this Import = Source File Size / Import Concurrency
 
 | Session Variable | Type | Default | Description |
 | --- | --- | --- | --- |
-| exec_mem_limit | Long | 2147483648 (2GB) | Import memory limit, unit: bytes. |
 | time_zone | String | "Asia/Shanghai" | Default time zone, which will affect the results of time zone related functions in import. |
 | send_batch_parallelism | Integer | 1 | The concurrency of the sink node sending data, which takes effect only when `enable_memtable_on_sink_node` is set to false. |
 
@@ -446,21 +448,13 @@ HA mode can be combined with the previous two authentication methods for cluster
 
 ### Load with other brokers
 
-The Broker for other remote storage systems is an optional process in the Doris cluster, primarily used to support Doris in reading and writing files and directories on remote storage. Currently, the following storage system Broker implementations are provided:
-
-- Alibaba Cloud OSS
-
-- Baidu Cloud BOS
+The Broker for other remote storage systems is an optional process in the Doris cluster, primarily used to support Doris in reading and writing files and directories on remote storage.
+Currently, Doris provides Broker implementations for various remote storage systems.
+In earlier versions, different object storage Brokers were also available, but now it is recommended to use the `WITH S3` method to import data from object storage, and the `WITH BROKER` method is no longer recommended.
 
 - Tencent Cloud CHDFS
-
 - Tencent Cloud GFS
-
-- Huawei Cloud OBS
-
 - JuiceFS
-
-- Google Cloud Storage (GCS)
 
 The Broker provides services through an RPC service port and operates as a stateless Java process. Its primary responsibility is to encapsulate POSIX-like file operations for remote storage, such as open, pread, pwrite, and more. Additionally, the Broker does not keep track of any other information, which means that all the connection details, file information, and permission details related to the remote storage must be passed to the Broker process through parameters during RPC calls. This ensures that the Broker can correctly read and write files.
 

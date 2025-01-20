@@ -29,23 +29,28 @@ under the License.
 Use CRC32 to compute the result.
 
 ### Syntax
+```sql
+CRC32( <str> )
+```
+## Parameters
 
-`BIGINT crc32 (VARCHAR str)`
+| parameter | description |
+| -- | -- |
+| `<str>` | The value to be used for CRC calculation |
 
+## Return Value
 
 Returns the Cyclic Redundancy Check value of this string.
 
-### Example
+## Examples
 
 ```sql
-mysql> select crc32("abc");
-+--------------+
-| crc32('abc') |
-+--------------+
-|    891568578 |
-+--------------+
-
+select crc32("abc"),crc32("中国");
 ```
-
-### Keywords
-    CRC32
+```text
++--------------+-----------------+
+| crc32('abc') | crc32('中国')   |
++--------------+-----------------+
+|    891568578 |       737014929 |
++--------------+-----------------+
+```

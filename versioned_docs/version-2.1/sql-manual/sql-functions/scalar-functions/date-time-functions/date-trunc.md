@@ -24,81 +24,121 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## date_trunc
+## Description
 
-date_trunc
+Truncates the datetime according to the specified time unit.
 
-### Description
-#### Syntax
+## Syntax
 
-`DATETIME DATE_TRUNC(DATETIME datetime, VARCHAR unit)`
-
-
-Truncates datetime in the specified time unit.
-
-datetime is a legal date expression.
-
-unit is the time unit you want to truncate. The optional values are as follows: [`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`].
-
-### example
-
+```sql
+DATE_TRUNC(<datetime>, <time_unit>)
 ```
-mysql> select date_trunc('2010-12-02 19:28:30', 'second');
+
+## Parameters
+
+| Parameter	 | Description |
+| -- | -- |
+| `<datetime>` | A valid date expression |
+| `<time_unit>` | The time interval to truncate to. The optional values are: [second, minute, hour, day, week, month, quarter, year] |
+
+## Return Value
+
+The time truncated according to the specified time unit.
+
+## Examples
+
+```sql
+select date_trunc('2010-12-02 19:28:30', 'second');
+```
+
+```text
 +-------------------------------------------------+
 | date_trunc('2010-12-02 19:28:30', 'second')     |
 +-------------------------------------------------+
 | 2010-12-02 19:28:30                             |
 +-------------------------------------------------+
+```
 
-mysql> select date_trunc('2010-12-02 19:28:30', 'minute');
+```sql
+select date_trunc('2010-12-02 19:28:30', 'minute');
+```
+
+```text
 +-------------------------------------------------+
 | date_trunc('2010-12-02 19:28:30', 'minute')     |
 +-------------------------------------------------+
 | 2010-12-02 19:28:00                             |
 +-------------------------------------------------+
+```
 
-mysql> select date_trunc('2010-12-02 19:28:30', 'hour');
+```sql
+select date_trunc('2010-12-02 19:28:30', 'hour');
+```
+
+```text
 +-------------------------------------------------+
 | date_trunc('2010-12-02 19:28:30', 'hour')       |
 +-------------------------------------------------+
 | 2010-12-02 19:00:00                             |
 +-------------------------------------------------+
+```
 
-mysql> select date_trunc('2010-12-02 19:28:30', 'day');
+```sql
+select date_trunc('2010-12-02 19:28:30', 'day');
+```
+
+```text
 +-------------------------------------------------+
 | date_trunc('2010-12-02 19:28:30', 'day')        |
 +-------------------------------------------------+
 | 2010-12-02 00:00:00                             |
 +-------------------------------------------------+
+```
 
-mysql> select date_trunc('2010-12-02 19:28:30', 'week');
-+-------------------------------------------+
-| date_trunc('2010-12-02 19:28:30', 'week') |
-+-------------------------------------------+
-| 2010-11-29 00:00:00                       |
-+-------------------------------------------+
+```sql
+select date_trunc('2023-4-05 19:28:30', 'week');
+```
 
-mysql> select date_trunc('2010-12-02 19:28:30', 'month');
+```text
++-------------------------------------------+
+| date_trunc('2023-04-05 19:28:30', 'week') |
++-------------------------------------------+
+| 2023-04-03 00:00:00                       |
++-------------------------------------------+
+```
+
+```sql
+select date_trunc('2010-12-02 19:28:30', 'month');
+```
+
+```text
 +-------------------------------------------------+
 | date_trunc('2010-12-02 19:28:30', 'month')      |
 +-------------------------------------------------+
 | 2010-12-01 00:00:00                             |
 +-------------------------------------------------+
+```
 
-mysql> select date_trunc('2010-12-02 19:28:30', 'quarter');
+```sql
+select date_trunc('2010-12-02 19:28:30', 'quarter');
+```
+
+```text
 +-------------------------------------------------+
 | date_trunc('2010-12-02 19:28:30', 'quarter')    |
 +-------------------------------------------------+
 | 2010-10-01 00:00:00                             |
 +-------------------------------------------------+
+```
 
-mysql> select date_trunc('2010-12-02 19:28:30', 'year');
+```sql
+select date_trunc('2010-12-02 19:28:30', 'year');
+```
+
+```text
 +-------------------------------------------------+
 | date_trunc('2010-12-02 19:28:30', 'year')       |
 +-------------------------------------------------+
 | 2010-01-01 00:00:00                             |
 +-------------------------------------------------+
 ```
-### keywords
-
-DATE_TRUNC,DATE,DATETIME
