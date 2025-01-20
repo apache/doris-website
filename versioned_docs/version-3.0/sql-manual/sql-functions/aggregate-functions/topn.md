@@ -24,38 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TOPN
-### description
-#### Syntax
+## Description
 
-`topn(expr, INT top_num[, INT space_expand_rate])`
+The TOPN function returns the N most frequent values in the specified column. It is an approximate calculation function that returns results ordered by count in descending order.
 
-The topn function uses the Space-Saving algorithm to calculate the top_num frequent items in expr, and the result is the 
-frequent items and their occurrence times, which is an approximation
+## Syntax
 
-The space_expand_rate parameter is optional and is used to set the number of counters used in the Space-Saving algorithm
+```sql
+TOPN(<expr>, <top_num> [, <space_expand_rate>])
 ```
-counter numbers = top_num * space_expand_rate
-```
-The higher value of space_expand_rate, the more accurate result will be. The default value is 50
 
-### example
-```
-MySQL [test]> select topn(keyword,10) from keyword_table where date>= '2020-06-01' and date <= '2020-06-19' ;
-+------------------------------------------------------------------------------------------------------------+
-| topn(`keyword`, 10)                                                                                        |
-+------------------------------------------------------------------------------------------------------------+
-| a:157, b:138, c:133, d:133, e:131, f:127, g:124, h:122, i:117, k:117                                       |
-+------------------------------------------------------------------------------------------------------------+
+## Parameters
+| Parameter | Description |
+| -- | -- |
+| `<expr>` | The column or expression to be counted. |
+| `<top_num>` | The number of the most frequent values to return. It must be a positive integer. |
+| `<space_expand_rate>` | Optional parameter, which is used to set the number of counters used in the Space-Saving algorithm. `counter_numbers = top_num * space_expand_rate` , the larger the value of space_expand_rate, the more accurate the result, and the default value is 50. |
 
-MySQL [test]> select date,topn(keyword,10,100) from keyword_table where date>= '2020-06-17' and date <= '2020-06-19' group by date;
-+------------+-----------------------------------------------------------------------------------------------+
-| date       | topn(`keyword`, 10, 100)                                                                      |
-+------------+-----------------------------------------------------------------------------------------------+
-| 2020-06-19 | a:11, b:8, c:8, d:7, e:7, f:7, g:7, h:7, i:7, j:7                                             |
-| 2020-06-18 | a:10, b:8, c:7, f:7, g:7, i:7, k:7, l:7, m:6, d:6                                             |
-| 2020-06-17 | a:9, b:8, c:8, j:8, d:7, e:7, f:7, h:7, i:7, k:7                                              |
-+------------+-----------------------------------------------------------------------------------------------+
+## Return Value
+
+Returns a JSON string containing values and their corresponding occurrence counts.
+
+## Examples
+```sql
+-- Create sample table
+CREATE TABLE page_visits (
+    page_id INT,
+    user_id INT,
+    visit_date DATE
+) DISTRIBUTED BY HASH(page_id)
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+-- Insert test data
+INSERT INTO page_visits VALUES
+(1, 101, '2024-01-01'),
+(2, 102, '2024-01-01'),
+(1, 103, '2024-01-01'),
+(3, 101, '2024-01-01'),
+(1, 104, '2024-01-01'),
+(2, 105, '2024-01-01'),
+(1, 106, '2024-01-01'),
+(4, 107, '2024-01-01');
+
+-- Find top 3 most visited pages
+SELECT TOPN(page_id, 3) as top_pages
+FROM page_visits;
 ```
-### keywords
-TOPN
+
+```text
++---------------------+
+| top_pages           |
++---------------------+
+| {"1":4,"2":2,"4":1} |
++---------------------+
+```
