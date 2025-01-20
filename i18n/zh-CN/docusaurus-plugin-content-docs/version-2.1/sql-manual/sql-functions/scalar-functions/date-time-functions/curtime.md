@@ -24,27 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## curtime,current_time
-
-### Syntax
-
-`TIME CURTIME()`
-
 ## 描述
 
-获得当前的时间，以TIME类型返回
+获得当前的时间，以 TIME 类型返回
 
-## 举例s
+## 别名
+
+- CURTIME
+- CURRENT_TIME
+
+## 语法
+
+```sql
+CURTIME()
+```
+
+## 返回值
+
+返回当前的时间
+
+## 举例
 
 ```sql
 mysql> select current_time();
+```
+
+```text
 +----------------+
 | current_time() |
 +----------------+
 | 15:25:47       |
 +----------------+
 ```
-
-### keywords
-
-    CURTIME,CURRENT_TIME

@@ -24,23 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MAX
+
 ## 描述
+
+MAX 函数返回表达式的最大值。
+
 ## 语法
 
-`MAX(expr)`
+```sql
+MAX(<expr>)
+```
 
+## 参数说明
 
-返回expr表达式的最大值
+| 参数 | 说明 |
+| -- | -- |
+| `expr` | 需要获取值的表达式  |
+
+## 返回值
+
+返回与输入表达式相同的数据类型。
 
 ## 举例
+
+```sql
+select max(scan_rows) from log_statis group by datetime;
 ```
-MySQL > select max(scan_rows) from log_statis group by datetime;
+
+```text
 +------------------+
 | max(`scan_rows`) |
 +------------------+
 |          4671587 |
 +------------------+
 ```
-### keywords
-MAX

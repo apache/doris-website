@@ -22,42 +22,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## murmur_hash3_64
-
 ## 描述
+
+计算 64位murmur3 hash值
+
+-注：经过测试xxhash_64的性能大约是murmur_hash3_64的2倍，所以在计算hash值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
+
 ## 语法
 
-`BIGINT MURMUR_HASH3_64(VARCHAR input, ...)`
+```sql
+MURMUR_HASH3_64( <str> [ , <str> ... ] )
+```
+
+## 参数
+
+| 参数      | 说明                     |
+|---------|------------------------|
+| `<str>` | 需要被计算64位murmur3 hash的值 |
+
+## 返回值
 
 返回输入字符串的64位murmur3 hash值。
 
-注：在计算hash值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
 
-## 举例
+## 示例
 
-```
-mysql> select murmur_hash3_64(null);
-+-----------------------+
-| murmur_hash3_64(NULL) |
-+-----------------------+
-|                  NULL |
-+-----------------------+
-
-mysql> select murmur_hash3_64("hello");
-+--------------------------+
-| murmur_hash3_64('hello') |
-+--------------------------+
-|     -3215607508166160593 |
-+--------------------------+
-
-mysql> select murmur_hash3_64("hello", "world");
-+-----------------------------------+
-| murmur_hash3_64('hello', 'world') |
-+-----------------------------------+
-|               3583109472027628045 |
-+-----------------------------------+
+```sql
+select murmur_hash3_64(null), murmur_hash3_64("hello"), murmur_hash3_64("hello", "world");
 ```
 
-### keywords
-
-    MURMUR_HASH3_64,HASH
+```text
++-----------------------+--------------------------+-----------------------------------+
+| murmur_hash3_64(NULL) | murmur_hash3_64('hello') | murmur_hash3_64('hello', 'world') |
++-----------------------+--------------------------+-----------------------------------+
+|                  NULL |     -3215607508166160593 |               3583109472027628045 |
++-----------------------+--------------------------+-----------------------------------+
+```

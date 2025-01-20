@@ -30,6 +30,10 @@ Broker Load is suitable for scenarios where the source data is stored in remote 
 
 Direct reads from HDFS or S3 can also be imported through HDFS TVF or S3 TVF in the [Lakehouse/TVF](../../../lakehouse/file). The current "Insert Into" based on TVF is a synchronous import, while Broker Load is an asynchronous import method.
 
+In early versions of Doris, both S3 Load and HDFS Load were implemented by connecting to specific Broker processes using `WITH BROKER`.
+In newer versions, S3 Load and HDFS Load have been optimized as the most commonly used import methods, and they no longer depend on an additional Broker process, though they still use syntax similar to Broker Load.
+Due to historical reasons and the similarity in syntax, S3 Load, HDFS Load, and Broker Load are collectively referred to as Broker Load.
+
 ## Limitations
 
 Supported data sources:
@@ -75,13 +79,13 @@ Currently, BE nodes have built-in support for HDFS and S3 Brokers. Therefore, wh
 ## Quick start
 
 This section shows a demo for S3 Load.
-For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) in the SQL manual.
+For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) in the SQL manual.
 
 ### Prerequisite check
 
 1. Grant privileges on the table
 
-Broker Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) command.
+Broker Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) command.
 
 2. S3 authentication and connection info
 
@@ -163,7 +167,7 @@ If your service is not in the list (such as MinIO), you can try using "S3" (AWS 
 
 ## Checking import status
 
-Broker Load is an asynchronous import method, and the specific import results can be viewed through the [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) command.
+Broker Load is an asynchronous import method, and the specific import results can be viewed through the [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) command.
 
 ```sql
 mysql> show load order by createtime desc limit 1\G;
@@ -188,7 +192,7 @@ LoadFinishTime: 2022-04-01 18:59:11
 
 ## Cancelling an Import
 
-When the status of a Broker Load job is not CANCELLED or FINISHED, it can be manually cancelled by the user. To cancel, the user needs to specify the label of the import task to be cancelled. The syntax for the cancel import command can be viewed by executing [CANCEL LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CANCEL-LOAD).
+When the status of a Broker Load job is not CANCELLED or FINISHED, it can be manually cancelled by the user. To cancel, the user needs to specify the label of the import task to be cancelled. The syntax for the cancel import command can be viewed by executing [CANCEL LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD).
 
 For example: To cancel the import job with the label "broker_load_2022_04_01" on the DEMO database.
 
@@ -443,21 +447,13 @@ HA mode can be combined with the previous two authentication methods for cluster
 
 ### Load with other brokers
 
-The Broker for other remote storage systems is an optional process in the Doris cluster, primarily used to support Doris in reading and writing files and directories on remote storage. Currently, the following storage system Broker implementations are provided:
-
-- Alibaba Cloud OSS
-
-- Baidu Cloud BOS
+The Broker for other remote storage systems is an optional process in the Doris cluster, primarily used to support Doris in reading and writing files and directories on remote storage.
+Currently, Doris provides Broker implementations for various remote storage systems.
+In earlier versions, different object storage Brokers were also available, but now it is recommended to use the `WITH S3` method to import data from object storage, and the `WITH BROKER` method is no longer recommended.
 
 - Tencent Cloud CHDFS
-
 - Tencent Cloud GFS
-
-- Huawei Cloud OBS
-
 - JuiceFS
-
-- Google Cloud Storage (GCS)
 
 The Broker provides services through an RPC service port and operates as a stateless Java process. Its primary responsibility is to encapsulate POSIX-like file operations for remote storage, such as open, pread, pwrite, and more. Additionally, the Broker does not keep track of any other information, which means that all the connection details, file information, and permission details related to the remote storage must be passed to the Broker process through parameters during RPC calls. This ensures that the Broker can correctly read and write files.
 
@@ -827,4 +823,4 @@ The `jsonpaths` can also be used in conjunction with the column list and `SET (c
   ```
 ## More Help
 
-For more detailed syntax and best practices for using  [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.
+For more detailed syntax and best practices for using  [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.
