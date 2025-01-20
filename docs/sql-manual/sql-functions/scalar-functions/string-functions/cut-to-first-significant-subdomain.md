@@ -55,9 +55,9 @@ SELECT cut_to_first_significant_subdomain('www.baidu.com');
 ```
 ```text
 +-----------------------------------------------------+
-| cut_to_first_significant_subdomain('www.baidu.com')  |
+| cut_to_first_significant_subdomain('www.baidu.com') |
 +-----------------------------------------------------+
-| baidu.com                                            |
+| baidu.com                                           |
 +-----------------------------------------------------+
 ```
 
@@ -67,9 +67,9 @@ SELECT cut_to_first_significant_subdomain('www.google.com.cn');
 ```
 ```text
 +---------------------------------------------------------+
-| cut_to_first_significant_subdomain('www.google.com.cn')   |
+| cut_to_first_significant_subdomain('www.google.com.cn') |
 +---------------------------------------------------------+
-| google.com.cn                                             |
+| google.com.cn                                           |
 +---------------------------------------------------------+
 ```
 
@@ -79,8 +79,8 @@ SELECT cut_to_first_significant_subdomain('wwwwwwww');
 ```
 ```text
 +------------------------------------------------+
-| cut_to_first_significant_subdomain('wwwwwwww')  |
+| cut_to_first_significant_subdomain('wwwwwwww') |
 +------------------------------------------------+
-|                                                 |
+|                                                |
 +------------------------------------------------+
 ```
