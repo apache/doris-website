@@ -211,5 +211,4 @@ ALTER TABLE demo.dynamic_partition_tbl
 SET ("dynamic_partition.buckets"="16");
 ```
 
-在修改分桶数量后，可以通过 SHOW PARTITION 命令查看修改后的分桶数量。
-
+After modifying the number of buckets, you can use the SHOW PARTITION command to check the updated number of buckets.
