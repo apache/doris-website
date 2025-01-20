@@ -1,7 +1,7 @@
 ---
 {
-    "title": "FMOD",
-    "language": "en"
+    "title": "POW",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,51 +22,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Description
+## 描述
 
-Find the remainder of a / b for the floating-point type. For the integer type, please use the mod function.
+用于计算`a`的`b`次幂
 
-## Syntax
+## 别名
+
+- POWER
+- FPOW
+- DPOW
+
+## 语法
 
 ```sql
-MOD(<col_a> , <col_b>)
+POW(<a> , <b>)
 ```
 
-## Parameters
+## 参数
 
-| Parameter | Description |
-|-----------|------------|
-| `<col_a>`   | Dividend |
-| `<col_b>`   | Divisor should not be 0 |
+| 参数 | 说明 |
+| -- | -- |
+| `<a>`   | Base   |
+| `<b>`   | Power  |
 
-## Return value
+## 返回值
 
-Return a float-point type. Special cases:
+返回一个整型或浮点数。特殊情况：
 
-If col_a IS NULL or col_b IS NULL, return NULL.
+- 当`a`或`b`为`NULL`时，返回`NULL`。
+- 当b = 0 且 a不为`NULL`时，永远返回1
 
-## Example
+## 举例
 
 ```sql
-select fmod(10.1, 3.2);
+select mod(10, 3);
 ```
 
 ```text
-+-----------------+
-| fmod(10.1, 3.2) |
-+-----------------+
-|      0.50000024 |
-+-----------------+
++----------+
+| (10 % 3) |
++----------+
+|        1 |
++----------+
 ```
 
 ```sql
-select fmod(10.1, 0);
+select mod(10, 0);
 ```
 
 ```text
-+---------------+
-| fmod(10.1, 0) |
-+---------------+
-|          NULL |
-+---------------+
++----------+
+| (10 % 0) |
++----------+
+|     NULL |
++----------+
 ```
+
