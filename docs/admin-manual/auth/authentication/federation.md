@@ -137,7 +137,7 @@ Note: To log in using other clients, refer to the section "How Clients Use Clear
 
 ### LDAP Information Cache
 
-To avoid frequent access to the LDAP service, Doris caches LDAP information in memory. You can configure the `ldap_user_cache_timeout_s` parameter in the `ldap.conf` file to specify the cache time for LDAP users, which defaults to 12 hours. After modifying the information in the LDAP service or modifying the corresponding role permissions in Doris, the changes may not take effect immediately due to caching. You can use the `refresh ldap` statement to refresh the cache. For details, see [REFRESH-LDAP](../../../sql-manual/sql-statements/Utility-Statements/REFRESH-LDAP.md).
+To avoid frequent access to the LDAP service, Doris caches LDAP information in memory. You can configure the `ldap_user_cache_timeout_s` parameter in the `ldap.conf` file to specify the cache time for LDAP users, which defaults to 12 hours. After modifying the information in the LDAP service or modifying the corresponding role permissions in Doris, the changes may not take effect immediately due to caching. You can use the `refresh ldap` statement to refresh the cache. For details, see [REFRESH-LDAP](../../../sql-manual/sql-statements/account-management/REFRESH-LDAP).
 
 ### Limitations of LDAP Verification
 

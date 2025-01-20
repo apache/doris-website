@@ -144,7 +144,7 @@ mysql [information_schema]>create workload group if not exists g1
 Query OK, 0 rows affected (0.03 sec)
 
 ```
-可以参考 [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)。
+可以参考 [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-GROUP)。
 
 此时配置的 CPU 限制为软限。自 2.1 版本起，系统会自动创建一个名为```normal```的 group，不可删除。
 
@@ -197,7 +197,7 @@ SELECT name FROM information_schema.workload_groups;
 "GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'user_1'@'%';"
 ```
 这个语句的含义是把名为 g1 的 Workload Group的使用权限授予给名为 user_1 的账户。
-更多授权操作可以参考[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
+更多授权操作可以参考[grant 语句](../../sql-manual/sql-statements/account-management/GRANT-TO)。
 
 **两种绑定方式**
 1. 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`，需要注意的这里的value不能填空，否则语句会执行失败。
@@ -218,7 +218,7 @@ set workload_group = 'g1';
 ```
 show workload groups;
 ```
-可以参考[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。
+可以参考[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS)。
 
 2. 通过系统表查看
 ```
@@ -246,7 +246,7 @@ mysql [information_schema]>select cpu_share from information_schema.workload_gro
 
 ```
 
-可以参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)。
+可以参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP)。
 
 ## 删除Workload Group
 ```
@@ -254,7 +254,7 @@ mysql [information_schema]>drop workload group g1;
 Query OK, 0 rows affected (0.01 sec)
 ```
 
-可以参考：[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)。
+可以参考：[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-GROUP)。
 
 ## CPU 软硬限模式切换的说明
 目前 Doris 暂不支持同时运行 CPU 的软限和硬限，一个 Doris 集群在任意时刻只能是 CPU 软限或者 CPU 硬限。
