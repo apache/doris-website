@@ -32,7 +32,7 @@ under the License.
 
 通过format指定的方式将str转化为DATE类型，如果转化结果不对返回NULL。注意format指定的是第一个参数的格式。
 
-支持的format格式与[date_format](date_format.md)一致
+支持的format格式与[date_format](date-format.md)一致
 
 ## 举例
 
