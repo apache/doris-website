@@ -24,27 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-User stops a JOB. A stopped job cannot be resumed.
+The user deletes a JOB job. The job will be stopped and deleted immediately.
+
+## Syntax
 
 ```sql
-DROP JOB WHERE jobName = 'job_name';
+DROP JOB where jobName = <jobname> ;
 ```
+
+## Required parameters
+
+**1. `<job_name>`**
+> The job name of the task to be deleted.
+
+## Access Control Requirements
+
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege | Object | Notes |
+|:--------------|:-----------|:------------------------|
+| ADMIN_PRIV | Database | Currently only supports **ADMIN** permissions to perform this operation |
 
 ## Examples
 
-1. DROP the job named test1.
+- Delete the job named example.
 
-   ```sql
-   DROP JOB where jobName = 'test1';
-   ```
-
-## Keywords
-
-        DROP, JOB
-
-## Best Practice
-
+    ```sql
+    DROP JOB where jobName='example';
+    ```

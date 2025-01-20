@@ -24,27 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
-User suspends a JOB. A stopped job can be resumed with RESUME JOB.
+When a user pauses a job in the RUNNING state, the running task will be interrupted and the job state will be changed to PAUSED. The stopped job can be resumed by the RESUME operation.
+
+## Syntax
 
 ```sql
-PAUSE JOB where jobName = 'job_name';
+PAUSE JOB WHERE jobname = <jobname> ;
 ```
+
+## Required parameters
+
+**1. `<job_name>`**
+> The name of the job to be paused.
+
+## Access Control Requirements
+
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege | Object | Notes |
+|:--------------|:-----------|:------------------------|
+| ADMIN_PRIV | Database | Currently only supports **ADMIN** permissions to perform this operation |
 
 ## Examples
 
-1. Pause the job named test1.
+- Pause the job named example.
 
-   ```sql
-   PAUSE JOB where jobName = 'test1';
+   ```sql 
+   PAUSE JOB where jobname='example'; 
    ```
-
-## Keywords
-
-        PAUSE, JOB
-
-## Best Practice

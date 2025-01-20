@@ -25,147 +25,137 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip
-
-This statement is supported since 2.1
-
-:::
-
 ## Description
 
-Doris Job is a task that runs according to a predefined schedule, triggering predefined actions at specific times or intervals to help automate certain tasks. In terms of functionality, it is similar to scheduled tasks on operating systems (e.g., cron in Linux, scheduled tasks in Windows).↳
+Doris Job is a task that runs according to a set plan. It is used to trigger predefined operations at a specific time or a specified time interval, so as to help us automatically perform some tasks. Functionally, it is similar to the scheduled task on the operating system (such as cron in Linux and scheduled tasks in Windows).
 
-There are two types of Jobs: ONE_TIME and RECURRING. The ONE_TIME type of Job triggers at a specified time point and is mainly used for one-time tasks, while the RECURRING type of Job triggers at specified time intervals and is used for periodically recurring tasks. The RECURRING type of Job can specify a start time and an end time using STARTS\ENDS. If the start time is not specified, the first execution time is set to the current time plus one scheduling period. If the end time is specified and the task completes execution by reaching the end time (or exceeds it, or the next execution period exceeds the end time), the Job status is updated to FINISHED, and no more Tasks are generated.
+There are two types of jobs: `ONE_TIME` and `RECURRING`. Among them, the `ONE_TIME` type of job will be triggered at a specified time point. It is mainly used for one-time tasks, while the `RECURRING` type of job will be triggered cyclically within a specified time interval. This method is mainly used for periodic tasks.
+The `RECURRING` type of job can specify the start time and end time, that is, `STARTS\ENDS`. If the start time is not specified, the default first execution time is the current time + one scheduling cycle. If the end time is specified, the task execution is completed. If the end time is reached (or exceeded, or the next execution cycle will exceed the end time), it will be updated to the FINISHED state, and no more tasks will be generated at this time.
 
-#### Job Status
+There are 4 states for a job (`RUNNING`, `STOPPED`, `PAUSED`, `FINISHED`). The initial state is RUNNING. A job in the RUNNING state will generate a TASK for execution according to the established scheduling cycle. When the job is completed and reaches the end time, the state changes to `FINISHED`.
 
-A Job has four states (RUNNING, STOPPED, PAUSED, FINISHED), with the initial state being RUNNING. A Job in the RUNNING state generates Tasks based on the specified scheduling period. When a Job completes execution and reaches the end time, the status changes to FINISHED.
+A job in the RUNNING state can be paused, that is, it will be paused, and no more tasks will be generated.
 
-A Job in the RUNNING state can be paused, which means it will no longer generate Tasks.
+A job in the PAUSE state can be resumed through the RESUME operation and changed to the RUNNING state.
 
-A Job in the PAUSED state can be resumed by performing the RESUME operation, changing the state to RUNNING.
+A job in the STOP state is actively triggered by the user, and the running job will be canceled and the job will be deleted.
 
-A Job in the STOPPED state is triggered by the user, which cancels the running Job and then deletes it.
+A job in the Finished state will be retained in the system for 24 hours and will be deleted after 24 hours.
 
-A Job in the FINISHED state remains in the system for 24 hours and is deleted after that.
+JOB only describes job information. Execution will generate TASK. TASK status is divided into PENDING, RUNNING, SUCCEESS, FAILED, CANCELED
+PENDING means that the trigger time has arrived but the resource RUN is waiting. After the resource is allocated, the status changes to RUNNING. Success/failure of execution changes to SUCCESS/FAILED.
+CANCELED means cancellation status. TASK persists the final status, i.e. SUCCESS/FAILED. Other statuses can be checked during operation, but will not be visible if restarted.
 
-#### Task status
-
-A Job only describes the job information, and the execution generates Tasks. The Task status can be PENDING, RUNNING, SUCCESS, FAILED, or CANCELED.
-
-PENDING indicates that the trigger time has been reached but resources are awaited for running. Once resources are allocated, the status changes to RUNNING. When the execution is successful or fails, the status changes to SUCCESS or FAILED, respectively.
-
-CANCELED indicates the cancellation status. The final status of a Task is persisted as SUCCESS or FAILED. Other statuses can be queried while the Task is running, but they become invisible after a restart. Only the latest 100 Task records are retained.
-
-#### Permissions
-
-Currently, only users with the ADMIN role can perform this operation.
-
-#### Related Documentation
-
-- [PAUSE-JOB](../Alter/PAUSE-JOB.md)
-- [RESUME-JOB](../Alter/RESUME-JOB.md)
-- [DROP-JOB](../Drop/DROP-JOB.md)
-- [VIEW-JOB](../../../sql-functions/table-valued-functions/jobs.md),
-- [VIEW-TASKS](../../../sql-functions/table-valued-functions/tasks.md)
-
-### Grammar
+## Syntax
 
 ```sql
+
 CREATE
-     job
-     job_name
-     ON SCHEDULE schedule
-     [COMMENT 'string']
-     DO sql_body;
+JOB
+<job_name>
+ON SCHEDULE <schedule>
+[ COMMENT <string> ]
+DO <sql_body> ;
+```
 
-schedule: {
-    AT timestamp
-    | EVERY interval
-     [STARTS timestamp]
-     [ENDS timestamp ]
-}
+Where:
 
+```sql
+schedule:
+{ AT timestamp | EVERY interval [STARTS timestamp ] [ENDS timestamp ] }
+```
+
+Where:
+
+```sql
 interval:
-     quantity { DAY | HOUR | MINUTE |
-               WEEK | SECOND }
+quantity { WEEK | DAY | HOUR | MINUTE }
 ```
 
-A valid Job statement must contain the following
+## Required parameters
 
-- The keyword CREATE JOB plus the job name, which uniquely identifies the event within a database. The job name must be globally unique, and if a JOB with the same name already exists, an error will be reported. We reserve the inner_ prefix for internal use, so users cannot create names starting with ***inner_***.
-- The ON SCHEDULE clause, which specifies the type of Job and when and how often to trigger it.
-- The DO clause, which specifies the actions that need to be performed when the Job is triggered.
+**1. `<job_name>`**
+> Job name, which identifies a unique event in a db. The job name must be globally unique. If a job with the same name already exists, an error will be reported. We reserve the **inner_** prefix for internal use in the system, so users cannot create names starting with **inner_**.
 
-Here is a minimal example:
+**2. `<schedule>`**
+> The ON SCHEDULE clause specifies the type, triggering time and frequency of the job. It can specify a one-time job or a periodic job.
 
-```sql
-CREATE JOB my_job ON SCHEDULE EVERY 1 MINUTE DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
-```
+**3. `<sql_body>`**
+> The DO clause specifies the operation to be performed when the job is triggered, that is, a SQL statement.
 
-This statement means to create a job named my_job to be executed every minute, and the operation performed is to import the data in db2.tbl2 into db1.tbl1.
+## Optional parameters
 
-The SCHEDULE statement is used to define the execution time, frequency and duration of the job, which can specify a one-time job or a periodic job.
-- AT timestamp
+**1. `<AT timestamp>`**
+> Format: 'YYYY-MM-DD HH:MM:SS', used for **one-time events**, it specifies that the event is executed only once at a given date and time timestamp, and when the execution is completed, the job status will change to FINISHED.
 
-Format: 'YYYY-MM-DD HH:MM:SS'. Used for one-time events, it specifies that the event should only be executed once at the given date and time. Once the execution is complete, the Job status changes to FINISHED.
+**2. `<EVERY>`**
+> Indicates a regularly repeated operation, it specifies the execution frequency of the job, and a time interval must be specified after the keyword, which can be days, hours, minutes, seconds, or weeks.
+> * STARTS timestamp: Format: 'YYYY-MM-DD HH:MM:SS', used to specify the start time of the job. If not specified, it will be executed from the next time point after the current time. The start time must be greater than the current time.
+> * ENDS timestamp: Format: 'YYYY-MM-DD HH:MM:SS', used to specify the end time of the job. If not specified, it means permanent execution. The date must be greater than the current time. If the start time is specified, that is, STARTS, the end time must be greater than the start time.
 
-- EVERY
+## Access Control Requirements
 
-  Indicates that the operation is repeated periodically, which specifies the execution frequency of the job. After the keyword, a time interval should be specified, which can be days, hours, minutes, seconds, and weeks.
+The user who executes this SQL command must have at least the following permissions:
 
-  - interval
+| Privilege     | Object     | Notes                                                                   |
+|:--------------|:-----------|:------------------------------------------------------------------------|
+| ADMIN_PRIV    | Database   | Currently only supports **ADMIN** permissions to perform this operation |
 
-  Used to specify the Job execution frequency, which can be `day`, `hour`, `minute`, or `week`. For example, 1 `DAY` means the Job will run once every day, 1 `HOUR` means once every hour, 1 `MINUTE` means once every minute, and `1 The CREATE JOB statement is used to create a job in a database. A job is a task that can be scheduled to run at specific times or intervals to automate certain actions.
+## Usage Notes
 
-  - STARTS timestamp(optional)
+- TASK only retains the latest 100 records.
 
-    Format: 'YYYY-MM-DD HH:MM:SS'. It is used to specify the start time of the job. If not specified, the job starts executing from the next occurrence based on the current time. The start time must be greater than the current time.
+- Currently only supports **INSERT internal table** operations, and we will support more operations in the future.
 
-  - ENDS timestamp(optional)
+- When the next scheduled task time expires, that is, when the task needs to be scheduled for execution, if the current JOB still has historical tasks being executed, the current task scheduling will be skipped. Therefore, it is very important to control a reasonable execution interval.
 
-    Format: 'YYYY-MM-DD HH:MM:SS'. It is used to specify the end time of the job. If not specified, it means the job executes indefinitely. The end date must be greater than the current time. If a start time (↳STARTS) is specified, the end time must be greater than the start time.
+## Examples
 
-- DO
+- Create a job named my_job, which is executed once every minute. The operation performed is to import the data in db2.tbl2 into db1.tbl1.
 
-  It is used to specify the operation that needs to be performed when the job is triggered. Currently, all ***INSERT*** operations are supported. We will support more operations in the future.
+  ```sql
+  CREATE JOB my_job ON SCHEDULE EVERY 1 MINUTE DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
+  ```
 
-## Example
+- Create a one-time job that will be executed once at 2020-01-01 00:00:00 to import the data in db2.tbl2 into db1.tbl1.
 
-Create a one-time job, which will be executed once at 2020-01-01 00:00:00, and the operation performed is to import the data in db2.tbl2 into db1.tbl1.
+  ```sql
+  CREATE JOB my_job ON SCHEDULE AT '2020-01-01 00:00:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
+  ```
 
-```sql
+- Create a periodic Job that will start executing at 2020-01-01 00:00:00 and execute once a day. The operation performed is to import the data in db2.tbl2 into db1.tbl1.
 
-CREATE JOB my_job ON SCHEDULE AT '2020-01-01 00:00:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
+  ```sql
+  CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2020-01-01 00:00:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2 WHERE create_time >= days_add(now(),-1);
+  ```
 
-```
+- Create a periodic job that will start at 2020-01-01 00:00:00 and execute once a day. The operation is to import the data in db2.tbl2 into db1.tbl1. The job ends at 2020-01-01 00:10:00.
 
-Create a periodic Job, which will start to execute at 2020-01-01 00:00:00, once a day, and the operation is to import the data in db2.tbl2 into db1.tbl1.
+  ```sql
+  CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2020-01-01 00:00:00' ENDS '2020-01-01 00:10:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2 create_time >= days_add(now(),-1);
+  ```
 
-```sql
-CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2020-01-01 00:00:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2 WHERE create_time >= days_add(now(),-1);
-```
+## Best Practices
 
-Create a periodic Job, which will start to execute at 2020-01-01 00:00:00, and execute once a day. The operation performed is to import the data in db2.tbl2 into db1.tbl1. This Job will be executed in 2020 Ends at -01-01 00:10:00.
+- Manage jobs reasonably to avoid a large number of jobs being triggered at the same time, which will cause task accumulation and affect the normal operation of the system.
+- The task execution interval should be set within a reasonable range, at least greater than the task execution time.
 
-```sql
-CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2020-01-01 00:00:00' ENDS '2020-01-01 00:10:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2 create_time >= days_add (now(),-1);
-```
+## Related Documents
 
-### CONFIG
+- [Pause-JOB](../job/PAUSE-JOB.md)
+- [Resume-JOB](../job/RESUME-JOB.md)
+- [Delete-JOB](../job/DROP-JOB.md)
+- [Query-JOB](../../../sql-manual/sql-functions/table-valued-functions/jobs.md)
+- [Query-TASKS](../../sql-functions/table-valued-functions/jobs.md)
 
-#### fe.conf
+## CONFIG
 
-- job_dispatch_timer_job_thread_num: Number of threads used for dispatching scheduled tasks. Default value is 2. If there are a large number of periodically executed tasks, this parameter can be increased.
-- job_dispatch_timer_job_queue_size: Size of the queue used for storing scheduled tasks when there is task accumulation. Default value is 1024. If there are a large number of tasks triggered at the same time, this parameter can be increased. Otherwise, the queue may become full and submitting tasks will be blocked, causing subsequent tasks to be unable to submit.
-- finished_job_cleanup_threshold_time_hour: Time threshold, in hours, for cleaning up completed tasks. Default value is 24 hours.
-- job_insert_task_consumer_thread_num: Number of threads used for executing Insert tasks. The value should be greater than 0, otherwise the default value is 5.
+**fe.conf**
 
-## Best Practice
+- job_dispatch_timer_job_thread_num, the number of threads used to distribute timed tasks, the default value is 2, if there are a large number of periodic execution tasks, you can increase this parameter.
 
-- Properly manage Jobs to avoid triggering a large number of Jobs simultaneously, which can lead to task accumulation and affect the normal operation of the system.
-- Set the execution interval of tasks within a reasonable range, ensuring that it is at least greater than the task execution time.
+- job_dispatch_timer_job_queue_size, the queue size for storing timed tasks when tasks are accumulated, the default value is 1024. If a large number of tasks are triggered at the same time, this parameter can be increased. Otherwise, the queue will be full, and the submitted task will enter a blocked state, which will cause subsequent tasks to fail to submit.
 
-## Keywords
+- finished_job_cleanup_threshold_time_hour, the time threshold for cleaning up completed tasks, in hours, the default value is 24 hours.
 
-    CREATE, JOB, SCHEDULE
+- job_insert_task_consumer_thread_num = 10; the number of threads used to execute Insert tasks, the value should be greater than 0, otherwise the default value is 5.
