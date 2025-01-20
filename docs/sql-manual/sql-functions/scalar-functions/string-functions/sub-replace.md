@@ -29,7 +29,7 @@ The `sub_replace` function is used to replace substrings within a string. You ca
 ## Syntax
 
 ```sql
-sub_replace(<str>, <new_str>, [ ,<start> [ , <len> ] ]
+sub_replace(<str>, <new_str>, [ ,<start> [ , <len> ] ])
 ```
 
 ## Parameters
@@ -38,7 +38,8 @@ sub_replace(<str>, <new_str>, [ ,<start> [ , <len> ] ]
 | -- | -- |
 | `<str>` | The target string in which the replacement will occur |
 | `<new_str>` | The string that will replace the specified substring |
-| `<start[, len]>` | start specifies the position where the replacement starts. The optional len specifies the length of the substring to be replaced |
+| `<start>` | `start` is the position where the replacement operation begins, indicating from which position in the string the replacement will start |
+| `<len>` | `len` is an optional parameter that specifies the length of the substring to be replaced |
 
 ## Return Value
 

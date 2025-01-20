@@ -30,7 +30,7 @@ under the License.
 ## 语法
 
 ```sql
-sub_replace(<str>, <new_str>, [ ,<start> [ , <len> ] ]
+sub_replace(<str>, <new_str>, [ ,<start> [ , <len> ] ])
 ```
 
 ## 参数
@@ -39,7 +39,8 @@ sub_replace(<str>, <new_str>, [ ,<start> [ , <len> ] ]
 | -- | -- |
 | `<str>` | 要进行替换操作的目标字符串 |
 | `<new_str>` | 用于替换的目标字符串 |
-| `[ ,<start> [ , <len> ]` | `start` is the position where the replacement operation begins, indicating from which position in the string the replacement will start. `len` is an optional parameter that specifies the length of the substring to be replaced |
+| `<start>` | 是替换操作开始的位置，表示从字符串中的哪个位置开始进行替换 |
+| `<len>` |  是一个可选参数，表示要替换的子字符串的长度 |
 
 ## 返回值
 
