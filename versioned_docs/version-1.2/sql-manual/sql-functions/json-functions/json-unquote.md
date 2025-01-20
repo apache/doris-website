@@ -34,16 +34,16 @@ This function unquotes a JSON value and returns the result as a utf8mb4 string. 
 
 Escape sequences within a string as shown in the following table will be recognized. Backslashes will be ignored for all other escape sequences.
 
-| Escape Sequence | Character Represented by Sequence  |
-|-----------------|------------------------------------|
-| \"              | A double quote (") character       |
-| \b              | A backspace character              |
-| \f              | A formfeed character               |
-| \n              | A newline (linefeed) character     |
-| \r              | A carriage return character        |
-| \t              | A tab character                    |
-| \\              | A backslash (\) character          |
-| \uxxxx          | UTF-8 bytes for Unicode value XXXX |
+| Escape Sequence   | Character Represented by Sequence  |
+|-------------------|------------------------------------|
+| `\"`              | A double quote (") character       |
+| `\b`              | A backspace character              |
+| `\f`              | A formfeed character               |
+| `\n`              | A newline (linefeed) character     |
+| `\r`              | A carriage return character        |
+| `\t`              | A tab character                    |
+| `\\`              | A backslash (\) character          |
+| `\uxxxx`          | UTF-8 bytes for Unicode value XXXX |
 
 
 

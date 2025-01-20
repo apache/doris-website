@@ -36,7 +36,7 @@ Thanks to our community users and developers, 489 improvements and bug fixes hav
 - [Start the script to set metadata_failure_recovery #24308](https://github.com/apache/doris/pull/24308)
 
   Move metadata_failure_recovery from fe.conf to start_fe.sh argument to prevent being used unexpectedly.
-- [Change ordinary type null value is \N,complex type null value is null #24207](https://github.com/apache/doris/pull/24207)
+- [Change ordinary type null value is `\N`,complex type null value is null #24207](https://github.com/apache/doris/pull/24207)
 - [Optimize priority_ network matching logic for be #23795](https://github.com/apache/doris/pull/23795)
 - [Fix cancel load failed because Job could not be cancelled… #17730](https://github.com/apache/doris/pull/17730)
   
@@ -121,7 +121,7 @@ Improve performance of MATCH
 - [Need to call 'set_version' in nested functions #24381](https://github.com/apache/doris/pull/24381)
 - [windown_funnel compatibility issue with multi backends #24385](https://github.com/apache/doris/pull/24385)
 - [correlated anti join shouldn't be translated to null aware anti join #24290](https://github.com/apache/doris/pull/24290)
-- [Change ordinary type null value is \N,complex type null value is null #24207](https://github.com/apache/doris/pull/24207)
+- [Change ordinary type null value is `\N`,complex type null value is null #24207](https://github.com/apache/doris/pull/24207)
 - [Fix analyze failed when there are thousands of partitions. #24521](https://github.com/apache/doris/pull/24521)
 - [Do not use enum as the data type for JavaUdfDataType. #24460](https://github.com/apache/doris/pull/24460)
 - [Fix multi window projection issue temporarily #24568](https://github.com/apache/doris/pull/24568)

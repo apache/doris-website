@@ -1,7 +1,7 @@
 ---
 {
     "title": "parse_url",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -25,15 +25,13 @@ under the License.
 -->
 
 ## parse_url
-### description
-#### Syntax
+## 描述
+## 语法
 
 `VARCHAR  parse_url(VARCHAR url, VARCHAR  name)`
 
 
-From the URL, the field corresponding to name is resolved. The name options are as follows: 'PROTOCOL', 'HOST', 'PATH', 'REF', 'AUTHORITY', 'FILE', 'USERINFO', 'PORT', 'QUERY', and the result is returned.
-
-### example
+在url解析出name对应的字段，name可选项为：'PROTOCOL', 'HOST', 'PATH', 'REF', 'AUTHORITY', 'FILE', 'USERINFO', 'PORT', 'QUERY'，将结果返回。
 
 ```
 mysql> SELECT parse_url ('https://doris.apache.org/', 'HOST');
@@ -44,7 +42,7 @@ mysql> SELECT parse_url ('https://doris.apache.org/', 'HOST');
 +------------------------------------------------+
 ```
 
-If you want to get parameter in QUERY, you can use [extract_url_parameter](./extract_url_parameter.md).
+如果想获取 QUERY 中的特定参数，可使用[extract_url_parameter](./extract-url-parameter.md)。
 
 ### keywords
     PARSE URL

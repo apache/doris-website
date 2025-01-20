@@ -1,11 +1,11 @@
 ---
 {
     "title": "str_to_date",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,18 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Str_to_date
-### Description
-#### Syntax
+## str_to_date
+## 描述
+## 语法
 
-`DATETIME STR TWO DATES (VARCHAR STR, VARCHAR format)`
+`DATETIME STR_TO_DATE(VARCHAR str, VARCHAR format)`
 
+通过format指定的方式将str转化为DATE类型，如果转化结果不对返回NULL。注意format指定的是第一个参数的格式。
 
-Convert STR to DATE type by format specified, if the conversion result does not return NULL. Note that the 'format' parameter specifies the format of the first parameter.
+支持的format格式与[date_format](date-format.md)一致
 
-The `format` supported is consistent with [date_format](date_format.md)
-
-### example
+## 举例
 
 ```
 mysql> select str_to_date('2014-12-21 12:34:56', '%Y-%m-%d %H:%i:%s');
@@ -67,6 +66,7 @@ mysql> select str_to_date("2020-09-01", "%Y-%m-%d %H:%i:%s");
 +------------------------------------------------+
 1 row in set (0.01 sec)
 ```
+
 ### keywords
 
     STR_TO_DATE,STR,TO,DATE
