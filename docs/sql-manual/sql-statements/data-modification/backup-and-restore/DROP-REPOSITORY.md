@@ -49,7 +49,7 @@ DROP REPOSITORY <repo_name>;
 ## Usage notes
 - Deleting the repository only removes its mapping in Doris and does not delete the actual repository data. After deletion, the repository can be mapped again by specifying the same LOCATION.
 
-## Example
+## Examples
 
 Delete the repository named example_repo:
 
