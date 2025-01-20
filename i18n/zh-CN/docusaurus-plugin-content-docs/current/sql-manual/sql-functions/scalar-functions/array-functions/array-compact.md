@@ -34,7 +34,7 @@ ARRAY_COMPACT(<arr>)
 ## 参数
 | 参数 | 说明 |
 |---|---|
-| `<arr>` | The array to calculate the average values from |
+| `<arr>` | 用于删除其中连续重复元素的数组 |
 
 ## 返回值
 不存在连续重复元素的数组。

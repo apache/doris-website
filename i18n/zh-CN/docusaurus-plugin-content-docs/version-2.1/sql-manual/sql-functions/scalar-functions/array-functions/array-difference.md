@@ -36,7 +36,7 @@ ARRAY_DIFFERENCE(<arr>)
 ## 参数
 | 参数 | 说明 |
 |---|---|
-| `<arr>` | The array to calculate the average values from |
+| `<arr>` | 用于相邻数组元素之间的差异的数组 |
 
 ## 返回值
 返回一个数组。特殊情况：

@@ -34,7 +34,7 @@ ARRAY_COMPACT(<arr>)
 ## Parameters
 | Parameter | Description |
 |---|---|
-| `<arr>` | ARRAY        |
+| `<arr>` | The array to remove consecutive duplicate elements from |
 
 ## Return Value
 

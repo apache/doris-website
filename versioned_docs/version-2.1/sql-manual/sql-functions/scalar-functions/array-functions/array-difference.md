@@ -37,7 +37,7 @@ ARRAY_DIFFERENCE(<arr>)
 
 | Parameter | Description |
 |---|---|
-| `<arr>`   | ARRAY |
+| `<arr>`   | The array to calculate the difference from |
 
 ## Return Value
 
