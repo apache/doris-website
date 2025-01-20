@@ -29,7 +29,7 @@ Returns the arc sine of `x`, or `nan` if `x` is not in the range `-1` to `1`.
 ## Syntax
 
 ```sql
-asin(<x>)
+ASIN(<x>)
 ```
 
 ## Parameters  
@@ -67,6 +67,3 @@ select asin(2);
 |       nan |
 +-----------+
 ```
-
-## keywords
-	ASIN

@@ -30,7 +30,7 @@ Returns the absolute value of `x`
 ## Syntax
 
 ```sql
-abs(<x>) 
+ABS(<x>) 
 ```
 
 ## Parameters  
@@ -80,6 +80,3 @@ select abs(-3254654236547654354654767);
 | 3254654236547654354654767       |
 +---------------------------------+
 ```
-
-### keywords
-	ABS

@@ -28,7 +28,7 @@ under the License.
 ## 语法
 
 ```sql
-atan(<x>)
+ATAN(<x>)
 ```
 
 ## 参数
@@ -66,6 +66,3 @@ select atan(2);
 | 1.1071487177940904 |
 +--------------------+
 ```
-
-## keywords
-	ATAN

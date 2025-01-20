@@ -29,7 +29,7 @@ under the License.
 ## 语法
 
 ```sql
-acos(<x>)
+ACOS(<x>)
 ```
 
 ## 参数
@@ -79,6 +79,3 @@ select acos(-2);
 |        nan |
 +------------+
 ```
-
-## keywords
-	ACOS

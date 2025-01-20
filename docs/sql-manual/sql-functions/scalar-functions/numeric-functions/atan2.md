@@ -29,7 +29,7 @@ Returns the arc tangent of 'y' / 'x'.
 ## Syntax
 
 ```sql
-atan2(<y>, <x>)
+ATAN2(<y>, <x>)
 ```
 
 ## Parameters  
@@ -67,6 +67,3 @@ select atan2(1.0, 1.0);
 | 0.78539816339744828 |
 +---------------------+
 ```
-
-## keywords
-	ATAN2

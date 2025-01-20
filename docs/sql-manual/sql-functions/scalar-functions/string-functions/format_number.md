@@ -31,7 +31,7 @@ Returns a formatted string using a unit symbol, UNITS: "K", "M", "B", "T", "Q"
 ## Syntax
 
 ```sql
-format_number(<val>)
+FORMAT_NUMBER(<val>)
 ```
 
 ## Parameters  
@@ -81,6 +81,3 @@ select format_number(-1000000000000000);
 | -1Q                                              |
 +--------------------------------------------------+
 ```
-
-## keywords
-    format_number

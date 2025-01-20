@@ -29,7 +29,7 @@ Returns the arc cosine of `x`, or `NULL` if `x` is not in the range `-1` to `1`.
 ## Syntax
 
 ```sql
-acos(<x>)
+ACOS(<x>)
 ```
 
 ## Parameters  
@@ -79,6 +79,3 @@ select acos(-2);
 |        nan |
 +------------+
 ```
-
-## keywords
-	ACOS

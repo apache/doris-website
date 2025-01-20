@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-String format(String format, args ...)
+FORMAT(<format>, <args> [, ...])
 ```
 
 ## 参数
@@ -82,6 +82,3 @@ select format("{0}-{1}","second","first");
 | second-first                         |
 +--------------------------------------+
 ```
-
-## keywords
-    format

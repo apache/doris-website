@@ -29,7 +29,7 @@ Returns the arctangent of `x`, where `x` is in radians.
 ## Syntax
 
 ```sql
-atan(<x>)
+ATAN(<x>)
 ```
 
 ## Parameters  
@@ -67,6 +67,3 @@ select atan(2);
 | 1.1071487177940904 |
 +--------------------+
 ```
-
-## keywords
-	ATAN

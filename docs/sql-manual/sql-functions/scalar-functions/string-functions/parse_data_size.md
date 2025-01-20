@@ -30,7 +30,7 @@ Parse a string in the format of "value + unit" and convert the value into a numb
 
 If the input parameter is invalid, an error will be raised. The maximum return value is Int128 Max.
 
-## Data Storage Unit Table
+**Data Storage Unit Table**
 
 | Unit  | Description        | Value          |
 |------|-----------|------------|
@@ -47,7 +47,7 @@ If the input parameter is invalid, an error will be raised. The maximum return v
 ## Syntax
 
 ```sql
-parse_data_size(<str>)
+PARSE_DATA_SIZE(<str>)
 ```
 
 ## Parameters  
@@ -58,7 +58,7 @@ parse_data_size(<str>)
 
 ## Return Value  
 
-The return number value represents a fractional amount of the unit . 
+The return number value represents a fractional amount of the unit. 
 
 ## example
 
@@ -97,6 +97,3 @@ SELECT parse_data_size('2.3MB');
 | 2411724                  |
 +--------------------------+
 ```
-
-## keywords
-    parse_data_size

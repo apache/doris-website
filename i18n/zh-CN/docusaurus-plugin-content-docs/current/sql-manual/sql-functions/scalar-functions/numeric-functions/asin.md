@@ -29,7 +29,7 @@ under the License.
 ## 语法
 
 ```sql
-asin(<x>)
+ASIN(<x>)
 ```
 
 ## 参数
@@ -68,6 +68,3 @@ select asin(2);
 |       nan |
 +-----------+
 ```
-
-## keywords
-	ASIN

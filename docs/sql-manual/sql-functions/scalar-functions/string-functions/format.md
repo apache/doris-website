@@ -31,7 +31,7 @@ Returns a formatted string using the specified [format](https://fmt.dev/11.1/syn
 ## Syntax
 
 ```sql
-String format(String format, args ...)
+FORMAT(<format>, <args> [, ...])
 ```
 
 ## Parameters  
@@ -82,6 +82,3 @@ select format("{0}-{1}","second","first");
 | second-first                         |
 +--------------------------------------+
 ```
-
-## keywords
-    format

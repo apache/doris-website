@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-format_number(<val>)
+FORMAT_NUMBER(<val>)
 ```
 
 ## 参数
@@ -81,6 +81,3 @@ select format_number(-1000000000000000);
 | -1Q                                              |
 +--------------------------------------------------+
 ```
-
-## keywords
-    format_number
