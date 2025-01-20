@@ -24,18 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## GROUP_BITMAP_XOR
-### description
-#### Syntax
+## description
+
+Mainly used to merge the values of multiple bitmaps and perform bitwise xor calculations on the results.
+
+## Syntax
 
 `BITMAP GROUP_BITMAP_XOR(expr)`
 
-Perform an xor calculation on expr, and return a new bitmap.
+## Parameters
 
-### example
+| Parameter | Description |
+| -- | -- |
+| `expr` | Supported bitmap data types |
 
+## Return Value
+
+The data type of the return value is BITMAP.
+
+## example
+
+```sql
+ select page, bitmap_to_string(user_id) from pv_bitmap;
 ```
-mysql>  select page, bitmap_to_string(user_id) from pv_bitmap;
+
+```text
 +------+-----------------------------+
 | page | bitmap_to_string(`user_id`) |
 +------+-----------------------------+
@@ -43,15 +56,16 @@ mysql>  select page, bitmap_to_string(user_id) from pv_bitmap;
 | m    | 1,3,6,15                    |
 | m    | 4,7                         |
 +------+-----------------------------+
+```
 
-mysql> select page, bitmap_to_string(group_bitmap_xor(user_id)) from pv_bitmap group by page;
+```sql
+select page, bitmap_to_string(group_bitmap_xor(user_id)) from pv_bitmap group by page;
+```
+
+```text
 +------+-----------------------------------------------+
 | page | bitmap_to_string(group_bitmap_xor(`user_id`)) |
 +------+-----------------------------------------------+
 | m    | 1,3,6,8,15                                    |
 +------+-----------------------------------------------+
 ```
-
-### keywords
-
-    GROUP_BITMAP_XOR,BITMAP

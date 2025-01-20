@@ -24,19 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## group_bit_or
-### description
-#### Syntax
+## description
 
-`expr GROUP_BIT_OR(expr)`
+Performs a bitwise OR operation on all values in a single integer column or expression.
 
-Perform an or calculation on expr, and return a new expr.
-All ints are supported
+## Syntax
 
-### example
+`GROUP_BIT_OR(expr)`
 
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `expr` | Supports all INT types |
+
+## Return Value
+
+Returns an integer value
+
+## example
+
+```sql
+select * from group_bit;
 ```
-mysql> select * from group_bit;
+
+```text
 +-------+
 | value |
 +-------+
@@ -45,16 +57,16 @@ mysql> select * from group_bit;
 |     2 |
 |     4 |
 +-------+
-4 rows in set (0.02 sec)
+```
 
+```sql
 mysql> select group_bit_or(value) from group_bit;
+```
+
+```text
 +-----------------------+
 | group_bit_or(`value`) |
 +-----------------------+
 |                     7 |
 +-----------------------+
 ```
-
-### keywords
-
-    GROUP_BIT_OR,BIT

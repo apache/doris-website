@@ -1,7 +1,7 @@
 ---
 {
-    "title": "ANY_VALUE",
-    "language": "en"
+"title": "ANY_VALUE",
+"language": "en"
 }
 ---
 
@@ -24,23 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ANY_VALUE
+## description
 
-ANY_VALUE
+Returns any value from the expression or column in the group. If there is a non-NULL value, it returns any non-NULL value; otherwise, it returns NULL.
 
+## Alias
 
-### description
-#### Syntax
+`ANY`
+
+## Syntax
 
 `ANY_VALUE(expr)`
 
-If there is a non NULL value in expr, any non NULL value is returned; otherwise, NULL is returned.
+## Parameters
 
-Alias function: `ANY(expr)`
+| Parameter | Description |
+| -- | -- |
+| `expr` | The column or expression to be aggregated. |
 
-### example
+## Return Value
+
+Returns any non-NULL value if a non-NULL value exists, otherwise returns NULL.
+
+## example
+
 ```
-mysql> select id, any_value(name) from cost2 group by id;
+select id, any_value(name) from cost2 group by id;
+```
+
+```text
 +------+-------------------+
 | id   | any_value(`name`) |
 +------+-------------------+
@@ -48,5 +60,3 @@ mysql> select id, any_value(name) from cost2 group by id;
 |    2 | jack              |
 +------+-------------------+
 ```
-### keywords
-ANY_VALUE, ANY

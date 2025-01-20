@@ -24,19 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## group_bit_and
-### description
-#### Syntax
+## description
 
-`expr GROUP_BIT_AND(expr)`
+Performs a bitwise AND operation on all values in a single integer column or expression.
 
-Perform an and calculation on expr, and return a new expr.
-All ints are supported
+## Syntax
 
-### example
+`GROUP_BIT_AND(expr)`
 
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `expr` | Supports all INT types |
+
+## Return Value
+
+Returns an integer value.
+
+## example
+
+```sql
+select * from group_bit;
 ```
-mysql> select * from group_bit;
+
+```text
 +-------+
 | value |
 +-------+
@@ -45,16 +57,16 @@ mysql> select * from group_bit;
 |     2 |
 |     4 |
 +-------+
-4 rows in set (0.02 sec)
+```
 
-mysql> select group_bit_and(value) from group_bit;
+```sql
+select group_bit_and(value) from group_bit;
+```
+
+```text
 +------------------------+
 | group_bit_and(`value`) |
 +------------------------+
 |                      0 |
 +------------------------+
 ```
-
-### keywords
-
-    GROUP_BIT_AND,BIT

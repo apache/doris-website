@@ -1,7 +1,7 @@
 ---
 {
-    "title": "GROUP_ARRAY_INTERSECT",
-    "language": "zh-CN"
+"title": "GROUP_ARRAY_INTERSECT",
+"language": "zh-CN"
 }
 ---
 
@@ -24,34 +24,48 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## group_array_intersect
 ## 描述
-## 语法
-
-`expr GROUP_ARRAY_INTERSECT(expr)`
 
 求出所有行中输入数组中的交集元素，返回一个新的数组
 
+## 语法
+
+`GROUP_ARRAY_INTERSECT(expr)`
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `expr` | 需要求交集的数组列或数组值 |
+
+## 返回值
+
+返回一个包含交集结果的数组
+
 ## 举例
 
-```
-mysql> select c_array_string from group_array_intersect_test where id in (18, 20);
-+--------------------------------+
-| c_array_string                 |
-+--------------------------------+
-| ["a", "b", "c", "d", "e", "f"] |
-| ["a", null]                    |
-+--------------------------------+
-2 rows in set (0.02 sec)
-
-mysql> select group_array_intersect(c_array_string) from group_array_intersect_test where id in (18, 20);
-+---------------------------------------+
-| group_array_intersect(c_array_string) |
-+---------------------------------------+
-| ["a"]                                 |
-+---------------------------------------+
-1 row in set (0.03 sec)
+```sql
+select c_array_string from group_array_intersect_test where id in (18, 20);
 ```
 
-### keywords
-GROUP_ARRAY_INTERSECT, ARRAY
+```text
++------+---------------------------+
+| id   | col                       |
++------+---------------------------+
+|    1 | ["a", "b", "c", "d", "e"] |
+|    2 | ["a", "b"]                |
+|    3 | ["a", null]               |
++------+---------------------------+
+```
+
+```sql
+select group_array_intersect(col) from group_array_intersect_test;
+```
+
+```text
++----------------------------+
+| group_array_intersect(col) |
++----------------------------+
+| ["a"]                      |
++----------------------------+
+```

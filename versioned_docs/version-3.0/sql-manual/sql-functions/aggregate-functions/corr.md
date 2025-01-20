@@ -1,7 +1,7 @@
 ---
 {
-    "title": "CORR",
-    "language": "en"
+"title": "CORR",
+"language": "en"
 }
 ---
 
@@ -24,26 +24,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CORR
-### Description
-#### Syntax
+## Description
 
-` double corr(x, y)`
+Calculate the Pearson coefficient of two random variables.
 
-Calculate the Pearson correlation coefficient, which is returned as the covariance of x and y divided by the product of the standard deviations of x and y. 
-If the standard deviation of x or y is 0, the result will be 0.
+## Syntax
 
-### example
+` double corr(expr1, expr2)`
 
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `expr` | Numeric expression (column) |
+| `expr` | Numeric expression (column) |
+
+## Return Value
+
+The return value is of type DOUBLE, the covariance of expr1 and expr2, except the product of the standard deviation of expr1 and expr2, special case:
+
+- If the standard deviation of expr1 or expr2 is 0, 0 will be returned.
+- If a column of expr1 or expr2 is NULL, the row data will not be counted in the final result.
+
+## example
+
+```sql
+select * from test_corr;
 ```
-mysql> select corr(x,y) from baseall;
-+---------------------+
-| corr(x, y)          |
-+---------------------+
-| 0.89442719099991586 |
-+---------------------+
-1 row in set (0.21 sec)
 
+```text
++------+------+------+
+| id   | k1   | k2   |
++------+------+------+
+|    1 |   20 |   22 |
+|    1 |   10 |   20 |
+|    2 |   36 |   21 |
+|    2 |   30 |   22 |
+|    2 |   25 |   20 |
+|    3 |   25 | NULL |
+|    4 |   25 |   21 |
+|    4 |   25 |   22 |
+|    4 |   25 |   20 |
++------+------+------+
 ```
-### keywords
-CORR
+
+```sql
+select id,corr(k1,k2) from test_corr group by id;
+```
+
+```text
++------+--------------------+
+| id   | corr(k1, k2)       |
++------+--------------------+
+|    4 |                  0 |
+|    1 |                  1 |
+|    3 |               NULL |
+|    2 | 0.4539206495016019 |
++------+--------------------+
+```

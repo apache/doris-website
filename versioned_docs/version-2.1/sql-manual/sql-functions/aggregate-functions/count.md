@@ -1,7 +1,7 @@
 ---
 {
-    "title": "COUNT",
-    "language": "en"
+"title": "COUNT",
+"language": "en"
 }
 ---
 
@@ -24,38 +24,89 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## COUNT
-### Description
-#### Syntax
+## Description
 
-`COUNT([DISTINCT] expr)`
+Returns the number of non-NULL records in the specified column, or the total number of records.
 
+## Syntax
 
-Number of rows used to return the required rows
+`COUNT(DISTINCT expr [,expr,...])`
+`COUNT(*)`
+`COUNT(expr)`
 
-### example
+## Parameters
 
+| Parameter | Description |
+| -- | -- |
+| `expr` | Conditional expression (column name) |
+
+## Return Value
+
+The return value is of numeric type. If expr is NULL, there will be no parameter statistics.
+
+## example
+
+```sql
+select * from test_count;
 ```
-MySQL > select count(*) from log_statis group by datetime;
+
+```text
++------+------+------+
+| id   | name | sex  |
++------+------+------+
+|    1 | 1    |    1 |
+|    2 | 2    |    1 |
+|    3 | 3    |    1 |
+|    4 | 0    |    1 |
+|    4 | 4    |    1 |
+|    5 | NULL |    1 |
++------+------+------+
+```
+
+```sql
+select count(*) from test_count;
+```
+
+```text
 +----------+
 | count(*) |
 +----------+
-| 28515903 |
+|        6 |
 +----------+
-
-MySQL > select count(datetime) from log_statis group by datetime;
-+-------------------+
-| count(`datetime`) |
-+-------------------+
-|         28521682  |
-+-------------------+
-
-MySQL > select count(distinct datetime) from log_statis group by datetime;
-+-------------------------------+
-| count(DISTINCT `datetime`)    |
-+-------------------------------+
-|                       71045   |
-+-------------------------------+
 ```
-### keywords
-COUNT
+
+```sql
+select count(name) from test_insert;
+```
+
+```text
++-------------+
+| count(name) |
++-------------+
+|           5 |
++-------------+
+```
+
+```sql
+select count(distinct sex) from test_insert;
+```
+
+```text
++---------------------+
+| count(DISTINCT sex) |
++---------------------+
+|                   1 |
++---------------------+
+```
+
+```sql
+select count(distinct id,sex) from test_insert;
+```
+
+```text
++-------------------------+
+| count(DISTINCT id, sex) |
++-------------------------+
+|                       5 |
++-------------------------+
+```

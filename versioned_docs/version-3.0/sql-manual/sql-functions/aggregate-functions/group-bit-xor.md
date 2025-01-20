@@ -24,19 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## GROUP_BIT_XOR
-### description
-#### Syntax
+## description
 
-`expr GROUP_BIT_XOR(expr)`
+Performs a bitwise xor operation on all values in a single integer column or expression.
 
-Perform an xor calculation on expr, and return a new expr.
-All ints are supported
+## Syntax
 
-### example
+`GROUP_BIT_XOR(expr)`
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `expr` | Supports all INT types |
+
+## Return Value
+
+Returns an integer value
+
+## example
 
 ```
-mysql> select * from group_bit;
+select * from group_bit;
+```
+
+```text
 +-------+
 | value |
 +-------+
@@ -45,16 +57,16 @@ mysql> select * from group_bit;
 |     2 |
 |     4 |
 +-------+
-4 rows in set (0.02 sec)
+```
 
-mysql> select group_bit_xor(value) from group_bit;
+```text
+select group_bit_xor(value) from group_bit;
+```
+
+```text
 +------------------------+
 | group_bit_xor(`value`) |
 +------------------------+
 |                      4 |
 +------------------------+
 ```
-
-### keywords
-
-    GROUP_BIT_XOR,BIT

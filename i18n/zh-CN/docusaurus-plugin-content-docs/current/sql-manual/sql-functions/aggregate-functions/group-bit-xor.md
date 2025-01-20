@@ -24,19 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## GROUP_BIT_XOR
 ## 描述
+
+对单个整数列或表达式中的所有值执行按位 xor 运算
+
 ## 语法
 
-`expr GROUP_BIT_XOR(expr)`
+`GROUP_BIT_XOR(expr)`
 
-对expr进行 xor 计算, 返回新的expr
-支持所有INT类型
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `expr` | 支持所有INT类型 |
+
+## 返回值
+
+返回一个整数值
 
 ## 举例
 
 ```
-mysql> select * from group_bit;
+select * from group_bit;
+```
+
+```text
 +-------+
 | value |
 +-------+
@@ -45,9 +57,13 @@ mysql> select * from group_bit;
 |     2 |
 |     4 |
 +-------+
-4 rows in set (0.02 sec)
+```
 
-mysql> select group_bit_xor(value) from group_bit;
+```text
+select group_bit_xor(value) from group_bit;
+```
+
+```text
 +------------------------+
 | group_bit_xor(`value`) |
 +------------------------+
@@ -55,6 +71,3 @@ mysql> select group_bit_xor(value) from group_bit;
 +------------------------+
 ```
 
-### keywords
-
-    GROUP_BIT_XOR,BIT

@@ -24,19 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## COLLECT_LIST
-### description
-#### Syntax
+## description
 
-`ARRAY<T> collect_list(expr)`
+Aggregation function, used to aggregate all values of a column into an array.
 
-Returns an array consisting of all values in expr within the group, and ,with the optional `max_size` parameter limits the size of the resulting array to `max_size` elements.The order of elements in the array is non-deterministic. NULL values are excluded.
-It has an alias `group_array`.
+## Alias
 
-### example
+`group_array`
 
+## Syntax
+
+`ARRAY<T> collect_list(expr[,max_size])`
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `expr` | Column or expression to aggregate |
+| `max_size` | Optional parameter that can be set to limit the size of the resulting array to max_size elements |
+
+## Return Value
+
+The return type is ARRAY, which contains all values. Special circumstances:
+
+- If the value is NULL, it will filter
+
+## example
+
+```sql
+select k1,k2,k3 from collect_list_test order by k1;
 ```
-mysql> select k1,k2,k3 from collect_list_test order by k1;
+
+```text
 +------+------------+-------+
 | k1   | k2         | k3    |
 +------+------------+-------+
@@ -48,15 +67,25 @@ mysql> select k1,k2,k3 from collect_list_test order by k1;
 |    4 | 2023-01-02 | sql   |
 |    4 | 2023-01-03 | sql   |
 +------+------------+-------+
+```
 
-mysql> select collect_list(k1),collect_list(k1,3) from collect_list_test;
+```sql
+select collect_list(k1),collect_list(k1,3) from collect_list_test;
+```
+
+```text
 +-------------------------+--------------------------+
 | collect_list(`k1`)      | collect_list(`k1`,3)     |
 +-------------------------+--------------------------+
 | [1,2,2,3,3,4,4]         | [1,2,2]                  |
 +-------------------------+--------------------------+
+```
 
-mysql> select k1,collect_list(k2),collect_list(k3,1) from collect_list_test group by k1 order by k1;
+```sql
+select k1,collect_list(k2),collect_list(k3,1) from collect_list_test group by k1 order by k1;
+```
+
+```text
 +------+-------------------------+--------------------------+
 | k1   | collect_list(`k2`)      | collect_list(`k3`,1)     |
 +------+-------------------------+--------------------------+
@@ -65,8 +94,4 @@ mysql> select k1,collect_list(k2),collect_list(k3,1) from collect_list_test grou
 |    3 | [2023-01-02]            | [world]                  |
 |    4 | [2023-01-02,2023-01-03] | [sql]                    |
 +------+-------------------------+--------------------------+
-
 ```
-
-### keywords
-COLLECT_LIST,GROUP_ARRAY,COLLECT_SET,ARRAY

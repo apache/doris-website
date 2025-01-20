@@ -1,7 +1,7 @@
 ---
 {
-    "title": "CORR",
-    "language": "zh-CN"
+"title": "CORR",
+"language": "zh-CN"
 }
 ---
 
@@ -24,27 +24,62 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CORR
 ## 描述
+
+计算两个随机变量的皮尔逊系数
+
 ## 语法
 
-` double corr(x, y)`
+` double corr(expr1, expr2)`
 
-计算皮尔逊系数, 即返回结果为: x和y的协方差，除x和y的标准差乘积。
-如果x或y的标准差为0, 将返回0。
+## 参数
 
+| 参数 | 说明 |
+| -- | -- |
+| `expr1` | 数值型表达式（列） |
+| `expr2` | 数值型表达式（列） |
+
+## 返回值
+
+返回值为 DOUBLE 类型，expr1和expr2的协方差，除expr1和expr2的标准差乘积，特殊情况：
+
+- 如果expr1或expr2的标准差为0, 将返回0。
+- 如果expr1或者expr2某一列为NULL时，该行数据不会被统计到最终结果中。
 
 ## 举例
 
+```sql
+select * from test_corr;
 ```
-mysql> select corr(x,y) from baseall;
-+---------------------+
-| corr(x, y)          |
-+---------------------+
-| 0.89442719099991586 |
-+---------------------+
-1 row in set (0.21 sec)
 
+```text
++------+------+------+
+| id   | k1   | k2   |
++------+------+------+
+|    1 |   20 |   22 |
+|    1 |   10 |   20 |
+|    2 |   36 |   21 |
+|    2 |   30 |   22 |
+|    2 |   25 |   20 |
+|    3 |   25 | NULL |
+|    4 |   25 |   21 |
+|    4 |   25 |   22 |
+|    4 |   25 |   20 |
++------+------+------+
 ```
-### keywords
-CORR
+
+```sql
+select id,corr(k1,k2) from test_corr group by id;
+```
+
+```text
++------+--------------------+
+| id   | corr(k1, k2)       |
++------+--------------------+
+|    4 |                  0 |
+|    1 |                  1 |
+|    3 |               NULL |
+|    2 | 0.4539206495016019 |
++------+--------------------+
+```
+

@@ -1,7 +1,7 @@
 ---
 {
-    "title": "COLLECT_SET",
-    "language": "zh-CN"
+"title": "COLLECT_SET",
+"language": "zh-CN"
 }
 ---
 
@@ -24,21 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## COLLECT_SET
-
-COLLECT_SET
-
 ## 描述
+
+聚合函数，聚合指定列的所有唯一值，去除重复的元素，并返回一个集合类型的结果。
+
+## 别名
+
+`group_uniq_array`
+
 ## 语法
 
 `ARRAY<T> collect_set(expr[,max_size])`
 
-返回一个对`expr`去重后的数组。可选参数`max_size`，通过设置该参数能够将结果数组的大小限制为 `max_size` 个元素。
-得到的结果数组中不包含NULL元素，数组中的元素顺序不固定。该函数具有别名`group_uniq_array`。
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `expr` | 要聚合的列或表达式 |
+| `max_size` | 可选参数，通过设置该参数能够将结果数组的大小限制为 max_size 个元素 |
+
+## 返回值
+
+返回类型是 ARRAY，该数组包含去重后的所有值，特殊情况：
+
+- 如果值为NULL，则会过滤
+
 ## 举例
 
+```sql
+select k1,k2,k3 from collect_set_test order by k1;
 ```
-mysql> select k1,k2,k3 from collect_set_test order by k1;
+
+```text
 +------+------------+-------+
 | k1   | k2         | k3    |
 +------+------------+-------+
@@ -50,15 +67,25 @@ mysql> select k1,k2,k3 from collect_set_test order by k1;
 |    4 | 2023-01-02 | doris |
 |    4 | 2023-01-03 | sql   |
 +------+------------+-------+
+```
 
-mysql> select collect_set(k1),collect_set(k1,2) from collect_set_test;
+```sql
+select collect_set(k1),collect_set(k1,2) from collect_set_test;
+```
+
+```text
 +-------------------------+--------------------------+
 | collect_set(`k1`)       | collect_set(`k1`,2)      |
 +-------------------------+--------------------------+
 | [4,3,2,1]               | [1,2]                    |
 +----------------------------------------------------+
+```
 
-mysql> select k1,collect_set(k2),collect_set(k3,1) from collect_set_test group by k1 order by k1;
+```sql
+select k1,collect_set(k2),collect_set(k3,1) from collect_set_test group by k1 order by k1;
+```
+
+```text
 +------+-------------------------+--------------------------+
 | k1   | collect_set(`k2`)       | collect_set(`k3`,1)      |
 +------+-------------------------+--------------------------+
@@ -67,8 +94,4 @@ mysql> select k1,collect_set(k2),collect_set(k3,1) from collect_set_test group b
 |    3 | [2023-01-02]            | [world]                  |
 |    4 | [2023-01-02,2023-01-03] | [sql]                    |
 +------+-------------------------+--------------------------+
-
 ```
-
-### keywords
-COLLECT_SET,GROUP_UNIQ_ARRAY,COLLECT_LIST,ARRAY
