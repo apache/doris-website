@@ -29,20 +29,22 @@ The `MONTHS_DIFF` function calculates the number of complete months between two 
 
 ## Syntax
 
-`MONTHS_DIFF(<enddate>, <startdate>)`
+```sql
+MONTHS_DIFF(<enddate>, <startdate>)
+```
 
 ## Parameters
 
-| 参数            | 说明         |
-|---------------|------------|
-| `<enddate>`   | end date   |
-| `<startdate>` | start date |
+| 参数            | 说明                                                                                                                                                                      |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<enddate>`   | The ending date, representing the later date in the difference calculation. Supports `DATE` (e.g., `YYYY-MM-DD`) or `DATETIME` (e.g., `YYYY-MM-DD HH:MM:SS`) types.     |
+| `<startdate>` | The starting date, representing the earlier date in the difference calculation. Supports `DATE` (e.g., `YYYY-MM-DD`) or `DATETIME` (e.g., `YYYY-MM-DD HH:MM:SS`) types. |
 
 ## Return Value
 
 returns the number of months resulting from `<enddate>` minus `<startdate>`
 - When either `<enddate>` or `<startdate>` is NULL, or both are NULL, it returns NULL
-- When either `<enddate>` or `<startdate>` is `0000-00-00`, or both are `0000-00-00`, it returns NULL
+
 
 ## Example
 

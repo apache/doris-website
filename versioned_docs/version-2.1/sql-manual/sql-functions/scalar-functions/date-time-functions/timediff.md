@@ -29,7 +29,10 @@ The `TIMEDIFF` function calculates the difference between two datetime values. T
 
 ## Syntax
 
-`TIMEDIFF(<end_datetime>, <start_datetime>)`
+```sql
+TIMEDIFF(<end_datetime>, <start_datetime>)
+```
+
 
 ## Parameters
 

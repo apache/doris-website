@@ -29,7 +29,9 @@ under the License.
 
 ## 语法
 
-`TIMEDIFF(<end_datetime>, <start_datetime>)`
+```sql
+TIMEDIFF(<end_datetime>, <start_datetime>)
+```
 
 ## 参数
 

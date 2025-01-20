@@ -29,20 +29,22 @@ under the License.
 
 ## 语法
 
-`MONTHS_DIFF(<enddate>, <startdate>)`
+```sql
+MONTHS_DIFF(<enddate>, <startdate>)
+```
 
 ## 参数
 
-| 参数            | 说明   |
-|---------------|------|
-| `<enddate>`   | 结束日期 |
-| `<startdate>` | 开始日期 |
+| 参数            | 说明                                                      |
+|---------------|---------------------------------------------------------|
+| `<enddate>`   | 结束日期，表示计算差值时的较晚日期。支持日期类型（如 `DATE`）或日期时间类型（如 `DATETIME`） |
+| `<startdate>` | 开始日期，表示计算差值时的较早日期。支持日期类型（如 `DATE`）或日期时间类型（如 `DATETIME`） |
 
 ## 返回值
 
 返回 `<enddate>` 减去 `<startdate>` 所得月份数
 - 当`<enddate>`与`<startdate>`任意为NULL，或者两者都为NULL时，返回NULL
-- 当`<enddate>`与`<startdate>`任意为 `0000-00-00`，或者两者都为 `0000-00-00`时返回 NULL
+
 
 ## 举例
 
