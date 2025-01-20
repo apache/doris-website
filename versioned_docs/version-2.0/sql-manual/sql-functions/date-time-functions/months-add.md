@@ -29,7 +29,9 @@ The MONTHS_ADD function is used to add or subtract a specified number of months 
 
 ## Syntax
 
-`MONTHS_ADD(<datetime/date>, <nums>)`
+````sql
+MONTHS_ADD(<datetime/date>, <nums>)
+````
 
 ## Parameters
 

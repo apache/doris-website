@@ -29,7 +29,9 @@ MONTHS_SUB 函数用于对指定日期添加或减去指定的月份数，并返
 
 ## 语法
 
-`MONTHS_SUB(<datetime/date>,  <nums>)`
+```sql
+MONTHS_SUB(<datetime/date>,  <nums>)
+```
 
 ## 参数
 
