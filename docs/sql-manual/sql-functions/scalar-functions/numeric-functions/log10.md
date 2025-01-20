@@ -40,13 +40,13 @@ LOG10(<x>)
 
 | Parameter | Description |
 |-----------|------------|
-| `<x>`   | Antilogarithm |
+| `<x>`   | Antilogarithm should be greater than 0 |
 
 ## Return value
 
 Returns a floating-point number.
 
-- x <=0 or x IS NULL: return `NULL`
+- If x IS NULL: return `NULL`
 
 ## Example
 
