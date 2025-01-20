@@ -37,7 +37,7 @@ ARRAY_CUM_SUM(<arr>)
 
 | Parameter | Description |
 |---|---|
-| `<arr>` | ARRAY |
+| `<arr>` | The array to calculate the average values from |
 
 ## Return Value
 
