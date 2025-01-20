@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Returns the arc cosine of `x`, or `NULL` if `x` is not in the range `-1` to `1`.
 
@@ -42,7 +42,7 @@ ACOS(<x>)
 
 The acos value of parameter `x`. 
 
-### example
+## Example
 
 ```sql
 select acos(1);

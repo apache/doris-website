@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Parse a string in the format of "value + unit" and convert the value into a number, where the value represents a fractional amount of the unit.
 
@@ -60,7 +60,7 @@ PARSE_DATA_SIZE(<str>)
 
 The return number value represents a fractional amount of the unit. 
 
-## example
+## Example
 
 ```sql
 SELECT parse_data_size('1B');

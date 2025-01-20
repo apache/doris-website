@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Returns a formatted string using a unit symbol, UNITS: "K", "M", "B", "T", "Q"
 
@@ -44,7 +44,7 @@ FORMAT_NUMBER(<val>)
 
 The formatted string using a unit symbol. 
 
-## example
+## Example
 
 ```sql
 SELECT format_number(123456.0);

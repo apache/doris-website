@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Returns the arc tangent of 'y' / 'x'.
 
@@ -42,7 +42,7 @@ ATAN2(<y>, <x>)
 
 The atan2 value of parameter `y` / `x`. 
 
-## example
+## Example
 
 ```sql
 select atan2(0.1, 0.2);

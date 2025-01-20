@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Returns the arc sine of `x`, or `nan` if `x` is not in the range `-1` to `1`.
 
@@ -42,7 +42,7 @@ ASIN(<x>)
 
 The asin value of parameter `x`. 
 
-## example
+## Example
 
 ```sql
 select asin(0.5);

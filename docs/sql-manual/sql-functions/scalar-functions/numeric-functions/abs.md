@@ -23,7 +23,7 @@ under the License.
 -->
 
 
-## description
+## Description
 
 Returns the absolute value of `x`
 
@@ -43,7 +43,7 @@ ABS(<x>)
 
 The absolute value of parameter `x`. 
 
-## example
+## Example
 
 ```sql
 select abs(-2);

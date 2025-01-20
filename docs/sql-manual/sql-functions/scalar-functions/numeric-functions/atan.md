@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Returns the arctangent of `x`, where `x` is in radians.
 
@@ -42,7 +42,7 @@ ATAN(<x>)
 
 The atan value of parameter `x`. 
 
-## example
+## Example
 
 ```sql
 select atan(0);

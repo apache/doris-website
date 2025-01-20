@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Returns a formatted string using the specified [format](https://fmt.dev/11.1/syntax/#format-specification-mini-language) string and arguments:
 
@@ -45,7 +45,7 @@ FORMAT(<format>, <args> [, ...])
 
 The formatted string using a format mode. 
 
-## example
+## Example
 
 ```sql
 select format("{:.5}",pi());

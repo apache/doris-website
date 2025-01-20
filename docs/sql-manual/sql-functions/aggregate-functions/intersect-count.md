@@ -48,7 +48,7 @@ INTERSECT_COUNT(<bitmap_column>, <column_to_filter>, <filter_values> [, ...])
 
 Return the number of elements in the intersection of the given bitmaps.
 
-## example
+## Example
 
 ```sql
 select dt,bitmap_to_string(user_id) from pv_bitmap;
