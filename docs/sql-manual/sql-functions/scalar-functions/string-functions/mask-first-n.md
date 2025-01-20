@@ -24,35 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## mask_first_n
-### description
-#### syntax
+## Description
 
-`VARCHAR mask_first_n(VARCHAR str[, INT n])`
+The MASK_FIRST_N function is mainly used to mask the first N bytes of data to protect sensitive information, and is commonly used in data anonymization scenarios. Its behavior is to replace a uppercase letter with `X`, a lowercase letter with `x`, and a number with `n` in the first N bytes.
 
-Returns a masked version of str with the first n values masked. Upper case letters are converted to "X", lower case letters are converted to "x" and numbers are converted to "n". For example, mask_first_n("1234-5678-8765-4321", 4) results in nnnn-5678-8765-4321.
+## Syntax
 
-### example
-
-```
-// table test
-+-----------+
-| name      |
-+-----------+
-| abc123EFG |
-| NULL      |
-| 456AbCdEf |
-+-----------+
-
-mysql> select mask_first_n(name, 5) from test;
-+-------------------------+
-| mask_first_n(`name`, 5) |
-+-------------------------+
-| xxxnn3EFG               |
-| NULL                    |
-| nnnXxCdEf               |
-+-------------------------+
+```sql
+mask_first_n( <str> [, <n> ])
 ```
 
-### keywords
-    mask_first_n
+## Parameters
+
+| Parameter | Description                                                                                            |
+|-----------|--------------------------------------------------------------------------------------------------------|
+| `<str>`   | String that need to be masked                                                                          |
+| `<n>`     | Optional Parameter, limit data masking to only the first N bytes, default to masking the entire string |
+
+## Return Value
+
+Returns a string after masking uppercase character, lowercase character and lnumeric character in first N bytes. Special cases:
+
+- If any Parameter is NULL, NULL will be returned.
+- Non-alphabetic and non-numeric characters will do not masking
+
+## Examples
+
+```sql
+select mask_first_n("1234-5678-8765-4321", 4);
+```
+
+```text
++----------------------------------------+
+| mask_first_n('1234-5678-8765-4321', 4) |
++----------------------------------------+
+| nnnn-5678-8765-4321                    |
++----------------------------------------+
+```
+
+```sql
+select mask_first_n("1234-5678-8765-4321", null);
+```
+
+```text
++-------------------------------------------+
+| mask_first_n('1234-5678-8765-4321', NULL) |
++-------------------------------------------+
+| NULL                                      |
++-------------------------------------------+
+```

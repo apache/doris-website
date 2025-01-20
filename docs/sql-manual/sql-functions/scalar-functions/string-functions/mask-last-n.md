@@ -24,35 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## mask_last_n
-### description
-#### syntax
+## Description
 
-`VARCHAR mask_last_n(VARCHAR str[, INT n])`
+The MASK_LAST_N function is mainly used to mask the last N bytes of data to protect sensitive information, and is commonly used in data anonymization scenarios. Its behavior is to replace a uppercase letter with `X`, a lowercase letter with `x`, and a number with `n` in the first N bytes.
 
-Returns a masked version of str with the last n values masked. Upper case letters are converted to "X", lower case letters are converted to "x" and numbers are converted to "n". For example, mask_last_n("1234-5678-8765-4321", 4) results in 1234-5678-8765-nnnn.
+## Syntax
 
-### example
-
-```
-// table test
-+-----------+
-| name      |
-+-----------+
-| abc123EFG |
-| NULL      |
-| 456AbCdEf |
-+-----------+
-
-mysql> select mask_last_n(name, 5) from test;
-+------------------------+
-| mask_last_n(`name`, 5) |
-+------------------------+
-| abc1nnXXX              |
-| NULL                   |
-| 456AxXxXx              |
-+------------------------+
+```sql
+mask_last_n( <str> [, <n> ])
 ```
 
-### keywords
-    mask_last_n
+## Parameters
+
+| Parameter | Description                                                                                           |
+|-----------|-------------------------------------------------------------------------------------------------------|
+| `<str>`   | String that need to be masked                                                                         |
+| `<n>`     | Optional Parameter, limit data masking to only the last N bytes, default to masking the entire string |
+
+## Return Value
+
+Returns a string after masking uppercase character, lowercase character and lnumeric character in last N bytes. Special cases:
+
+- If any Parameter is NULL, NULL will be returned.
+- Non-alphabetic and non-numeric characters will do not masking
+
+## Examples
+
+```sql
+select mask_last_n("1234-5678-8765-4321", 4);
+```
+
+```text
++---------------------------------------+
+| mask_last_n('1234-5678-8765-4321', 4) |
++---------------------------------------+
+| 1234-5678-8765-nnnn                   |
++---------------------------------------+
+```
+
+```sql
+select mask_last_n("1234-5678-8765-4321", null);
+```
+
+```text
++-------------------------------------------+
+| mask_last_n('1234-5678-8765-4321', NULL) |
++-------------------------------------------+
+| NULL                                      |
++-------------------------------------------+
+```

@@ -24,19 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## parse_url
-### description
-#### Syntax
+## Description
 
-`VARCHAR  parse_url(VARCHAR url, VARCHAR  name)`
+The PARSE_URL function is mainly used to parse URL strings and extract various components from them, such as protocols, hosts, paths, query parameters, etc.
 
+## Syntax
 
-From the URL, the field corresponding to name is resolved. The name options are as follows: 'PROTOCOL', 'HOST', 'PATH', 'REF', 'AUTHORITY', 'FILE', 'USERINFO', 'PORT', 'QUERY', and the result is returned.
-
-### example
-
+```sql
+parse_url( <url>, <name> )
 ```
-mysql> SELECT parse_url ('https://doris.apache.org/', 'HOST');
+
+## Parameters
+
+| Parameter       | Description                                                                                      |
+|----------|--------------------------------------------------------------------------------------------------|
+| `<url>`  | URL that need to be parsed                                                                       |
+| `<name>` | The parts to be extracted, and the optional values include `PROTOCOL`, `HOST`, `PATH`, `REF`, `AUTHORITY`, `FILE`, `USERINFO`, `PORT`, `QUERY` (case insensitive). |
+
+## Return Value
+
+Returns a specified part of `<url>`. Special cases:
+
+- If any Parameter is NULL, NULL will be returned.
+- If `<name>` is passed with other illegal values, an error will be occurred.
+
+## Examples
+
+```sql
+SELECT parse_url ('https://doris.apache.org/', 'HOST');
+```
+
+```text
 +------------------------------------------------+
 | parse_url('https://doris.apache.org/', 'HOST') |
 +------------------------------------------------+
@@ -44,7 +62,18 @@ mysql> SELECT parse_url ('https://doris.apache.org/', 'HOST');
 +------------------------------------------------+
 ```
 
-If you want to get parameter in QUERY, you can use [extract_url_parameter](./extract_url_parameter.md).
+```sql
+SELECT parse_url ('https://doris.apache.org/', null);
+```
 
-### keywords
-    PARSE URL
+```text
++----------------------------------------------+
+| parse_url('https://doris.apache.org/', NULL) |
++----------------------------------------------+
+| NULL                                         |
++----------------------------------------------+
+```
+
+## 相关命令
+
+如果想获取 QUERY 中的特定Parameter，可使用[extract_url_parameter](./extract_url_parameter.md)。

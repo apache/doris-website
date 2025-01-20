@@ -24,31 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## rtrim
-### description
-#### Syntax
+## Description
 
-`VARCHAR rtrim(VARCHAR str[, VARCHAR rhs])`
+The RTRIM function is used to remove consecutive spaces or specified characters from the right side (trailing) of a string.
 
+## Syntax
 
-When the 'rhs' parameter is not present, remove the continuous spaces that appear from the ending of the 'str' parameter. Otherwise, remove 'rhs'.
-
-### example
-
+```sql
+rtrim( <str> [, <trim_chars> ] )
 ```
-mysql> SELECT rtrim('ab d   ') str;
+
+## Parameters
+
+| Parameter      | Description                                                                                                                                                                                                                                                                      |
+|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<str>`        | The string that needs to be trimmed.                                                                                                                                                                                                                                             |
+| `<trim_chars>` | Optional parameter. If this parameter is provided, the RTRIM function will remove all characters in `<trim_chars>` that appear on the right side of `<str>`. If this parameter is not provided, the RTRIM function will only remove the space characters on the right side of `<str>`. |
+
+## Return Value
+
+Returns a string with trailing spaces or `<trim_chars>` removed. Special cases:
+
+- If any Parameter is NULL, NULL will be returned.
+
+
+## Examples
+
+```sql
+SELECT rtrim('ab d   ') str;
+```
+
+```text
 +------+
 | str  |
 +------+
 | ab d |
 +------+
+```
 
-mysql> SELECT rtrim('ababccaab','ab') str;
+```sql
+SELECT rtrim('ababccaab','ab') str;
+```
+
+```text
 +---------+
 | str     |
 +---------+
 | ababcca |
 +---------+
 ```
-### keywords
-    RTRIM

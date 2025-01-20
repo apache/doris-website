@@ -34,44 +34,40 @@ SPLIT_BY_REGEXP ( <str>, <pattern> [, <max_limit>] )
 
 ## 参数
 
-`str` — 需要分割的字符串. 类型: `String`
-`pattern` — 正则表达式. 类型: `String`
-`max_limit` — 保留个数，可选参数. 类型: `Int`
-
-## 参数
-
-| 参数      | 说明                           |
-|---------|------------------------------|
-| `<str>` | 需要分割的字符串                     |
-| `<pattern>` | 正则表达式                        |
+| 参数           | 说明                           |
+|--------------|------------------------------|
+| `<str>`      | 需要分割的字符串                     |
+| `<pattern>`  | 正则表达式                        |
 | `<max_limit>` | 可选参数，是否限制返回的字符串数组元素个数，默认是不限制 |
 
 ## 返回值
 
 返回按照指定的正则表达式拆分成字符串数组。特殊情况：
 
-- 任意两个参数中有一个为 NULL，则返回 NULL
-- `<len>`小于 0 时，返回空字符串
+- 任意参数中有一个为 NULL，则返回 NULL
 
 ## 举例
 
+```sql
+SELECT split_by_regexp('abcde',"");
 ```
-mysql [test_query_qa]>select split_by_regexp('abcde',"");
+
+```text
 +------------------------------+
 | split_by_regexp('abcde', '') |
 +------------------------------+
 | ["a", "b", "c", "d", "e"]    |
 +------------------------------+
-1 row in set (0.02 sec)
+```
 
-mysql [test_query_qa]>select split_by_regexp('a12bc23de345f',"\\d+");
+```sql
+select split_by_regexp('a12bc23de345f',"\\d+");
+```
+
+```text
 +-----------------------------------------+
 | split_by_regexp('a12bc23de345f', '\d+') |
 +-----------------------------------------+
 | ["a", "bc", "de", "f"]                  |
 +-----------------------------------------+
-1 row in set (0.01 sec)
 ```
-### keywords
-
-SPLIT_BY_REGEXP

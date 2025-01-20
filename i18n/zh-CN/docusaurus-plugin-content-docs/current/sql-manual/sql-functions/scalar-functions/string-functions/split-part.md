@@ -46,7 +46,7 @@ SPLIT_PART ( <str>, <separator>, <part_index> )
 
 返回根据分割符拆分后的字符串的指定部分。特殊情况：
 
-- 任意两个参数中有一个为 NULL，则返回 NULL
+- 任意参数中有一个为 NULL，则返回 NULL
 - 当`<part_index>`为 0 时，返回 NULL
 
 ## 举例

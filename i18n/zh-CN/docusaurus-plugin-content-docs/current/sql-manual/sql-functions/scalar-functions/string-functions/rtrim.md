@@ -45,7 +45,7 @@ rtrim( <str> [, <trim_chars> ] )
 
 返回`<str>`右侧去除`<trim_chars>`后的字符串。特殊情况：
 
-- 任意两个参数中有一个为 NULL，则返回 NULL
+- 任意参数中有一个为 NULL，则返回 NULL
 
 ## 举例
 
