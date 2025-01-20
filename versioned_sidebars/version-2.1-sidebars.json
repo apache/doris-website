@@ -421,7 +421,7 @@
                             "items": [
                                 {
                                     "type": "category",
-                                    "label": "Encryption in transit",
+                                    "label": "Encryption in Transit",
                                     "items": [
                                         "admin-manual/auth/certificate",
                                         "admin-manual/auth/fe-certificate"
