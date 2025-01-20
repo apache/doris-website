@@ -32,7 +32,7 @@ under the License.
 
 关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](./export-overview.md)。
 
-有关`SELECT INTO OUTFILE`命令的详细介绍，请参考：[SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md)
+有关`SELECT INTO OUTFILE`命令的详细介绍，请参考：[SELECT INTO OUTFILE](../../sql-manual/sql-statements/data-modification/load-and-export/OUTFILE)
 
 ## 适用场景
 

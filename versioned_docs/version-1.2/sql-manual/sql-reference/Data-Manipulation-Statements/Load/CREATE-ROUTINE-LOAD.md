@@ -176,7 +176,7 @@ FROM data_source [data_source_properties]
 
      | source data | source data example | string to int | strict_mode   | result                 |
      | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-     | null        | \N                  | N/A           | true or false | NULL                   |
+     | null        | `\N`                | N/A           | true or false | NULL                   |
      | not null    | aaa or 2000         | NULL          | true          | invalid data(filtered) |
      | not null    | aaa                 | NULL          | false         | NULL                   |
      | not null    | 1                   | 1             | true or false | correct data           |
@@ -187,7 +187,7 @@ FROM data_source [data_source_properties]
 
      | source data | source data example | string to int | strict_mode   | result                 |
      | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-     | null        | \N                  | N/A           | true or false | NULL                   |
+     | null        | `\N`                | N/A           | true or false | NULL                   |
      | not null    | aaa                 | NULL          | true          | invalid data(filtered) |
      | not null    | aaa                 | NULL          | false         | NULL                   |
      | not null    | 1 or 10             | 1             | true or false | correct data           |

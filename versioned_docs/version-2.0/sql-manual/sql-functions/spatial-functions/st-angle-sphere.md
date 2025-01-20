@@ -24,36 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_Angle_Sphere
-### description
-#### Syntax
+## Description
 
-`DOUBLE ST_Angle_Sphere(DOUBLE x_lng, DOUBLE x_lat, DOUBLE y_lng, DOUBLE y_lat)`
+Calculate the center Angle between two points on the Earth's surface in degrees. The parameters passed in are the longitude of point X, latitude of point X, longitude of point Y, and latitude of point Y.
 
+## Syntax
 
-Calculates the central angle between two points on the Earth's surface. The incoming parameters are the longitude of point X, the latitude of point X, the longitude of point Y and the latitude of point Y.
-
-x_lng and y_lng are Longitude values, must be in the range [-180, 180].
-x_lat and y_lat are Latitude values, must be in the range [-90, 90].
-
-### example
-
+```sql
+ST_Angle_Sphere( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
 ```
-mysql> select ST_Angle_Sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219);
+
+## Parameters
+
+| Parameters | Instructions |
+| -- | -- |
+| `<x_lng>` | Longitude data, reasonable value range is [-180, 180] |
+| `<y_lng>` | Longitude data, reasonable value range is [-180, 180] |
+| `<x_lat>` | Latitude data, reasonable value range is [-90, 90] |
+| `<y_lat>` | Latitude data, reasonable value range is [-90, 90] |
+
+## Return Value
+
+The Angle of the center between two points
+
+## Examples
+
+```sql
+select ST_Angle_Sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219);
+```
+
+```text
 +---------------------------------------------------------------------------+
 | st_angle_sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219) |
 +---------------------------------------------------------------------------+
 |                                                        0.0659823452409903 |
 +---------------------------------------------------------------------------+
-1 row in set (0.06 sec)
+```
 
-mysql> select ST_Angle_Sphere(0, 0, 45, 0);
+```sql
+select ST_Angle_Sphere(0, 0, 45, 0);
+```
+
+```text
 +----------------------------------------+
 | st_angle_sphere(0.0, 0.0, 45.0, 0.0) |
 +----------------------------------------+
 |                                     45 |
 +----------------------------------------+
-1 row in set (0.06 sec)
 ```
-### keywords
-ST_ANGLE_SPHERE,ST,ANGLE,SPHERE
+

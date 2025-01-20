@@ -24,24 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_AsText,ST_AsWKT
-### Description
-#### Syntax
+## Description
 
-`VARCHAR ST_AsText (GEOMETRY geo)`
+Convert a geometric figure to a representation of WKT (Well Known Text)
 
+## Syntax
 
-Converting a geometric figure into a WKT (Well Known Text) representation
-
-### example
-
+```sql
+ST_AsText( <geo>)
 ```
-mysql> SELECT ST_AsText(ST_Point(24.7, 56.7));
+
+## Parameters
+
+| Parameters | Instructions |
+| -- |----------|
+| `<geo>` | The graph that needs to be converted |
+
+## Return Value
+
+The WKT representation of the geometry:
+
+## Examples
+
+```sql
+SELECT ST_AsText(ST_Point(24.7, 56.7));
+```
+
+```text
 +---------------------------------+
 | st_astext(st_point(24.7, 56.7)) |
 +---------------------------------+
 | POINT (24.7 56.7)               |
 +---------------------------------+
 ```
-### keywords
-ST_ASTEXT,ST_ASWKT,ST,ASTEXT,ASWKT
