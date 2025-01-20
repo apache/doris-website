@@ -24,11 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_count
-## 描述
-## 语法
 
-`BIT_COUNT(Integer-type x)`
+## 描述
+
+用于返回一个整数值的二进制表示中 1 的位数。这个函数可以用于快速统计某个整数在二进制表示中 “活跃” 的位数，通常用于分析数据的分布或进行某些位运算。
+
+## 语法
+```sql
+BIT_COUNT( Integer-type <int> )
+```
+
 
 统计整型 x 的二的补码表示中 1 的个数。
 

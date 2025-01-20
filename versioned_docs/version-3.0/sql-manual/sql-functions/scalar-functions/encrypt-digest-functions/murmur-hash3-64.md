@@ -22,42 +22,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## murmur_hash3_64
+## Description
 
-### description
-#### Syntax
+Calculate 64-bit murmur3 hash value
 
-`BIGINT MURMUR_HASH3_64(VARCHAR input, ...)`
+-Note: After testing, the performance of `xxhash_64` is about twice that of `murmur_hash3_64`, so when calculating hash values, it is recommended to use `xxhash_64` instead of `murmur_hash3_64`.
 
-Return the 64 bits murmur3 hash of input string.
+## Syntax
 
-Note: When calculating hash values, it is more recommended to use `xxhash_64` instead of `murmur_hash3_64`.
-
-### example
-
-```
-mysql> select murmur_hash3_64(null);
-+-----------------------+
-| murmur_hash3_64(NULL) |
-+-----------------------+
-|                  NULL |
-+-----------------------+
-
-mysql> select murmur_hash3_64("hello");
-+--------------------------+
-| murmur_hash3_64('hello') |
-+--------------------------+
-|     -3215607508166160593 |
-+--------------------------+
-
-mysql> select murmur_hash3_64("hello", "world");
-+-----------------------------------+
-| murmur_hash3_64('hello', 'world') |
-+-----------------------------------+
-|               3583109472027628045 |
-+-----------------------------------+
+```sql
+MURMUR_HASH3_64( <str> [ , <str> ... ] )
 ```
 
-### keywords
+## Parameters
 
-    MURMUR_HASH3_64,HASH
+| parameter      | description                                             |
+|---------|------------------------------------------------|
+| `<str>` | The 64-bit murmur3 hash value to be calculated |
+
+## Return Value
+
+Returns the 64-bit murmur3 hash of the input string。
+
+
+
+## Examples
+
+```sql
+select murmur_hash3_64(null), murmur_hash3_64("hello"), murmur_hash3_64("hello", "world");
+```
+
+```text
++-----------------------+--------------------------+-----------------------------------+
+| murmur_hash3_64(NULL) | murmur_hash3_64('hello') | murmur_hash3_64('hello', 'world') |
++-----------------------+--------------------------+-----------------------------------+
+|                  NULL |     -3215607508166160593 |               3583109472027628045 |
++-----------------------+--------------------------+-----------------------------------+
+```
