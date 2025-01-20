@@ -79,13 +79,13 @@ Currently, BE nodes have built-in support for HDFS and S3 Brokers. Therefore, wh
 ## Quick start
 
 This section shows a demo for S3 Load.
-For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) in the SQL manual.
+For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) in the SQL manual.
 
 ### Prerequisite check
 
 1. Grant privileges on the table
 
-Broker Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) command.
+Broker Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) command.
 
 2. S3 authentication and connection info
 
@@ -167,7 +167,7 @@ If your service is not in the list (such as MinIO), you can try using "S3" (AWS 
 
 ## Checking import status
 
-Broker Load is an asynchronous import method, and the specific import results can be viewed through the [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) command.
+Broker Load is an asynchronous import method, and the specific import results can be viewed through the [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) command.
 
 ```sql
 mysql> show load order by createtime desc limit 1\G;
@@ -192,7 +192,7 @@ LoadFinishTime: 2022-04-01 18:59:11
 
 ## Cancelling an Import
 
-When the status of a Broker Load job is not CANCELLED or FINISHED, it can be manually cancelled by the user. To cancel, the user needs to specify the label of the import task to be cancelled. The syntax for the cancel import command can be viewed by executing [CANCEL LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CANCEL-LOAD).
+When the status of a Broker Load job is not CANCELLED or FINISHED, it can be manually cancelled by the user. To cancel, the user needs to specify the label of the import task to be cancelled. The syntax for the cancel import command can be viewed by executing [CANCEL LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD).
 
 For example: To cancel the import job with the label "broker_load_2022_04_01" on the DEMO database.
 
@@ -823,4 +823,4 @@ The `jsonpaths` can also be used in conjunction with the column list and `SET (c
   ```
 ## More Help
 
-For more detailed syntax and best practices for using  [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.
+For more detailed syntax and best practices for using  [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.

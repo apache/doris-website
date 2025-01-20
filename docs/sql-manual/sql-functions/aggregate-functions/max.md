@@ -24,23 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MAX
-### description
-#### Syntax
+## Description
 
-`MAX(expr)`
+The MAX function returns the maximum value of the expression.
 
+## Syntax
 
-Returns the maximum value of an expr expression
-
-### example
+```sql
+MAX(<expr>)
 ```
-MySQL > select max(scan_rows) from log_statis group by datetime;
+
+## Parameters
+
+| Parameters | Description |
+| -- | -- |
+| `<expr>` | The expression needs to be obtained |
+
+## Return Value
+
+Returns the same data type as the input expression.
+
+## Example
+
+```sql
+select max(scan_rows) from log_statis group by datetime;
+```
+
+```text
 +------------------+
 | max(`scan_rows`) |
 +------------------+
 |          4671587 |
 +------------------+
 ```
-### keywords
-MAX

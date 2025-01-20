@@ -51,8 +51,8 @@ AS RESTRICTIVE TO test USING (c1 = 'a');
 目前列权限仅支持 Select_priv
 
 ### 相关命令
-- 授权：[GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT.md)
-- 回收权限： [REVOKE](../../../sql-manual/sql-statements/Account-Management-Statements/REVOKE.md)
+- 授权：[GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO)
+- 回收权限： [REVOKE](../../../sql-manual/sql-statements/account-management/REVOKE-FROM)
 
 ### 列权限示例
 

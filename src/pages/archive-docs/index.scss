@@ -1,0 +1,51 @@
+.archive-container {
+    padding: 0 1rem;
+    width: 100%;
+    margin: 0 auto 5.5rem auto;
+    .archive-admonition {
+        padding: 2rem;
+        margin-top: 1.25rem;
+        margin-bottom: 1.25rem;
+        background-color: rgb(255, 248, 230);
+        border-radius: 6px;
+        border: 0 solid rgb(230, 167, 0);
+        border-left-width: 5px;
+        p {
+            color: rgb(107, 88, 39);
+            font-weight: 600;
+        }
+    }
+    h1 {
+        font-size: 2.25rem;
+        font-weight: 700;
+        line-height: 45px;
+        margin-top: 2.875rem;
+    }
+    h2 {
+        padding-top: 1.25rem;
+        margin-top: 2.875rem;
+        margin-bottom: 1.25rem;
+        font-size: 1.625rem;
+        font-weight: 700;
+        line-height: 32px;
+    }
+
+    ul li {
+        margin-bottom: 1.25rem;
+        color: rgb(85, 95, 115);
+    }
+
+    .download-link:hover {
+        text-decoration: underline;
+        color: #444fd9;
+    }
+}
+
+@media (min-width: 1280px) {
+    .archive-container {
+        max-width: 1280px;
+        .archive-admonition {
+            max-width: 75%;
+        }
+    }
+}
