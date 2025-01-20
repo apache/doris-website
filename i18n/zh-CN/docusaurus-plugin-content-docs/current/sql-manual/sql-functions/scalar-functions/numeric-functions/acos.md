@@ -29,7 +29,7 @@ under the License.
 ## 语法
 
 ```sql
-DOUBLE acos(DOUBLE x)
+acos(<x>)
 ```
 
 ## 参数
@@ -44,22 +44,35 @@ DOUBLE acos(DOUBLE x)
 
 ## 举例
 
+```sql
+select acos(1);
 ```
-mysql> select acos(1);
+
+```text
 +-----------+
 | acos(1.0) |
 +-----------+
 |         0 |
 +-----------+
+```
 
-mysql> select acos(0);
+```sql
+select acos(0);
+```
+
+```text
 +--------------------+
 | acos(0.0)          |
 +--------------------+
 | 1.5707963267948966 |
 +--------------------+
+```
 
-mysql> select acos(-2);
+```sql
+select acos(-2);
+```
+
+```text
 +------------+
 | acos(-2.0) |
 +------------+
@@ -67,5 +80,5 @@ mysql> select acos(-2);
 +------------+
 ```
 
-### keywords
+## keywords
 	ACOS

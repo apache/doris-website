@@ -30,7 +30,7 @@ Parse a string in the format of "value + unit" and convert the value into a numb
 
 If the input parameter is invalid, an error will be raised. The maximum return value is Int128 Max.
 
-Data Storage Unit Table
+## Data Storage Unit Table
 
 | Unit  | Description        | Value          |
 |------|-----------|------------|
@@ -45,10 +45,10 @@ Data Storage Unit Table
 | YB   | Yottabytes    | 1024⁸      |
 
 ## Syntax
-```sql
-largeint parse_data_size(VARCHAR str)
-```
 
+```sql
+parse_data_size(<str>)
+```
 
 ## Parameters  
 
@@ -60,33 +60,43 @@ largeint parse_data_size(VARCHAR str)
 
 The return number value represents a fractional amount of the unit . 
 
-
 ## example
 
+```sql
+SELECT parse_data_size('1B');
 ```
-mysql [(none)]>SELECT parse_data_size('1B');
+
+```text
 +-----------------------+
 | parse_data_size('1B') |
 +-----------------------+
 | 1                     |
 +-----------------------+
-1 row in set (0.02 sec)
+```
 
-mysql [(none)]>SELECT parse_data_size('1kB');
+```sql
+SELECT parse_data_size('1kB');
+```
+
+```text
 +------------------------+
 | parse_data_size('1kB') |
 +------------------------+
 | 1024                   |
 +------------------------+
-1 row in set (0.01 sec)
+```
 
-mysql [(none)]>SELECT parse_data_size('2.3MB');
+```sql
+SELECT parse_data_size('2.3MB');
+```
+
+```text
 +--------------------------+
 | parse_data_size('2.3MB') |
 +--------------------------+
 | 2411724                  |
 +--------------------------+
-1 row in set (0.02 sec)
 ```
-### keywords
+
+## keywords
     parse_data_size

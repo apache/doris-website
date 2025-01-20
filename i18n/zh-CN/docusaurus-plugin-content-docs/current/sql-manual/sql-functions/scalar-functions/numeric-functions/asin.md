@@ -27,8 +27,9 @@ under the License.
 返回`x`的反正弦值，若 `x`不在`-1`到 `1`的范围之内，则返回 `nan`.
 
 ## 语法
+
 ```sql
-DOUBLE asin(DOUBLE x)
+asin(<x>)
 ```
 
 ## 参数
@@ -44,15 +45,23 @@ DOUBLE asin(DOUBLE x)
 
 ## 举例
 
+```sql
+select asin(0.5);
 ```
-mysql> select asin(0.5);
+
+```text
 +---------------------+
 | asin(0.5)           |
 +---------------------+
 | 0.52359877559829893 |
 +---------------------+
+```
 
-mysql> select asin(2);
+```sql
+select asin(2);
+```
+
+```text
 +-----------+
 | asin(2.0) |
 +-----------+
@@ -60,5 +69,5 @@ mysql> select asin(2);
 +-----------+
 ```
 
-### keywords
+## keywords
 	ASIN

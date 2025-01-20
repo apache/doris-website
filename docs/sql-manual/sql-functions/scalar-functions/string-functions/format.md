@@ -29,6 +29,7 @@ under the License.
 Returns a formatted string using the specified [format](https://fmt.dev/11.1/syntax/#format-specification-mini-language) string and arguments:
 
 ## Syntax
+
 ```sql
 String format(String format, args ...)
 ```
@@ -44,32 +45,43 @@ String format(String format, args ...)
 
 The formatted string using a format mode. 
 
-### example
+## example
 
+```sql
+select format("{:.5}",pi());
 ```
-mysql [(none)]>select format("{:.5}",pi());
+
+```text
 +-----------------------+
 | format('{:.5}', pi()) |
 +-----------------------+
 | 3.1416                |
 +-----------------------+
-1 row in set (0.01 sec)
+```
 
-mysql [(none)]>select format("{:08.2}",pi());
+```sql
+select format("{:08.2}",pi());
+```
+
+```text
 +-------------------------+
 | format('{:08.2}', pi()) |
 +-------------------------+
 | 000003.1                |
 +-------------------------+
-1 row in set (0.00 sec)
+```
 
-mysql [(none)]>select format("{0}-{1}","second","first");
+```sql
+select format("{0}-{1}","second","first");
+```
+
+```text
 +--------------------------------------+
 | format('{0}-{1}', 'second', 'first') |
 +--------------------------------------+
 | second-first                         |
 +--------------------------------------+
-1 row in set (0.01 sec)
 ```
-### keywords
+
+## keywords
     format

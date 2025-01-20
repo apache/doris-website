@@ -27,8 +27,9 @@ under the License.
 返回 'y' / 'x' 的反正切.
 
 ## 语法
+
 ```sql
-DOUBLE atan2(DOUBLE y, DOUBLE x)
+atan2(<y>, <x>)
 ```
 
 ## 参数
@@ -44,15 +45,23 @@ DOUBLE atan2(DOUBLE y, DOUBLE x)
 
 ## 举例
 
+```sql
+select atan2(0.1, 0.2);
 ```
-mysql> select atan2(0.1, 0.2);
+
+```text
 +---------------------+
 | atan2(0.1, 0.2)     |
 +---------------------+
 | 0.46364760900080609 |
 +---------------------+
+```
 
-mysql> select atan2(1.0, 1.0);
+```sql
+select atan2(1.0, 1.0);
+```
+
+```text
 +---------------------+
 | atan2(1.0, 1.0)     |
 +---------------------+
@@ -60,5 +69,5 @@ mysql> select atan2(1.0, 1.0);
 +---------------------+
 ```
 
-### keywords
+## keywords
 	ATAN2

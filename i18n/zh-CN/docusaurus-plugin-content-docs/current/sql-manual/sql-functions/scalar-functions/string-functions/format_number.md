@@ -29,8 +29,9 @@ under the License.
 返回一个使用单位符号格式化的字符串。具体单位有: "K", "M", "B", "T", "Q"
 
 ## 语法
+
 ```sql
-VARCHAR format_number(double val)`
+format_number(<val>)`
 ```
 
 ## 参数
@@ -45,30 +46,41 @@ VARCHAR format_number(double val)`
 
 ## 举例
 
+```sql
+SELECT format_number(123456.0);
 ```
-mysql [(none)]>SELECT format_number(123456.0);
+
+```text
 +-----------------------------------------+
 | format_number(cast(123456.0 as DOUBLE)) |
 +-----------------------------------------+
 | 123K                                    |
 +-----------------------------------------+
-1 row in set (0.06 sec)
+```
 
-mysql [(none)]>SELECT format_number(1000000.00);
+```sql
+SELECT format_number(1000000.00);
+```
+
+```text
 +-------------------------------------------+
 | format_number(cast(1000000.00 as DOUBLE)) |
 +-------------------------------------------+
 | 1M                                        |
 +-------------------------------------------+
-1 row in set (0.03 sec)
+```
 
-mysql [(none)]>select format_number(-1000000000000000);
+```sql
+select format_number(-1000000000000000);
+```
+
+```text
 +--------------------------------------------------+
 | format_number(cast(-1000000000000000 as DOUBLE)) |
 +--------------------------------------------------+
 | -1Q                                              |
 +--------------------------------------------------+
-1 row in set (0.06 sec)
 ```
-### keywords
+
+## keywords
     format_number

@@ -30,12 +30,13 @@ Usage: intersect_count(bitmap_column_to_count, filter_column, filter_values ...)
 Example: intersect_count(user_id, event, 'A', 'B', 'C'), meaning find the intersect count of user_id in all A/B/C 3 bitmaps
 Calculate the intersection count of elements in bitmap_column that match column_to_filter within filter_values, i.e., bitmap intersection count.
 
-## Syntax
+## example
 
 ```sql
-INTERSECT_COUNT(<bitmap_column>, <column_to_filter>, <filter_values>)
+select dt,bitmap_to_string(user_id) from pv_bitmap;
 ```
-mysql [test]>select dt,bitmap_to_string(user_id) from pv_bitmap;
+
+```text
 +------+---------------------------+
 | dt   | bitmap_to_string(user_id) |
 +------+---------------------------+
@@ -44,9 +45,13 @@ mysql [test]>select dt,bitmap_to_string(user_id) from pv_bitmap;
 |    4 | 1,2,3,4,5                 |
 |    3 | 1,2,3                     |
 +------+---------------------------+
-4 rows in set (0.02 sec)
+```
 
-mysql [test]>select intersect_count(user_id,dt,3,4) from pv_bitmap;
+```sql
+select intersect_count(user_id,dt,3,4) from pv_bitmap;
+```
+
+```text
 +------------------------------------+
 | intersect_count(user_id, dt, 3, 4) |
 +------------------------------------+

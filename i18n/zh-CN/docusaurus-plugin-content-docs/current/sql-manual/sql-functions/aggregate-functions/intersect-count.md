@@ -37,9 +37,10 @@ INTERSECT_COUNT 函数用于计算 Bitmap 数据结构的交集元素的数量�
 ## 举例
 
 ```sql
-select dt,bitmap_to_string(user_id) from pv_bitmap where dt in (3,4);
+select dt,bitmap_to_string(user_id) from pv_bitmap;
 ```
-mysql [test]>select dt,bitmap_to_string(user_id) from pv_bitmap;
+
+```text
 +------+---------------------------+
 | dt   | bitmap_to_string(user_id) |
 +------+---------------------------+
@@ -48,12 +49,17 @@ mysql [test]>select dt,bitmap_to_string(user_id) from pv_bitmap;
 |    4 | 1,2,3,4,5                 |
 |    3 | 1,2,3                     |
 +------+---------------------------+
-4 rows in set (0.02 sec)
+```
 
-mysql [test]>select intersect_count(user_id,dt,3,4) from pv_bitmap;
+```sql
+select intersect_count(user_id,dt,3,4) from pv_bitmap;
+```
+
+```text
 +------------------------------------+
 | intersect_count(user_id, dt, 3, 4) |
 +------------------------------------+
 |                                  3 |
 +------------------------------------+
 ```
+

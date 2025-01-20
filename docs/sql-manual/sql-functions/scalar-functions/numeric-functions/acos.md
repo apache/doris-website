@@ -22,13 +22,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### description
+## description
 
 Returns the arc cosine of `x`, or `NULL` if `x` is not in the range `-1` to `1`.
 
-#### Syntax
+## Syntax
+
 ```sql
-DOUBLE acos(DOUBLE x)
+acos(<x>)
 ```
 
 ## Parameters  
@@ -43,20 +44,35 @@ The acos value of parameter `x`.
 
 ### example
 
+```sql
+select acos(1);
 ```
-mysql> select acos(1);
+
+```text
 +-----------+
 | acos(1.0) |
 +-----------+
 |         0 |
 +-----------+
-mysql> select acos(0);
+```
+
+```sql
+select acos(0);
+```
+
+```text
 +--------------------+
 | acos(0.0)          |
 +--------------------+
 | 1.5707963267948966 |
 +--------------------+
-mysql> select acos(-2);
+```
+
+```sql
+select acos(-2);
+```
+
+```text
 +------------+
 | acos(-2.0) |
 +------------+
@@ -64,5 +80,5 @@ mysql> select acos(-2);
 +------------+
 ```
 
-### keywords
+## keywords
 	ACOS

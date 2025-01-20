@@ -29,7 +29,7 @@ under the License.
 解析格式为“数值+单位”的字符串，将其中的值解析为数字，其中值是单位值的分数.
 当输入参数不合法时，会进行报错，返回值的最大值为Int128 Max.
 
-# 数据存储单位对照表
+## 数据存储单位对照表
 
 | 单位  | 描述        | 值          |
 |------|-----------|------------|
@@ -46,7 +46,7 @@ under the License.
 ## 语法
 
 ```sql
-largeint parse_data_size(VARCHAR str)
+parse_data_size(<str>)
 ```
 
 ## 参数
@@ -61,30 +61,41 @@ largeint parse_data_size(VARCHAR str)
 
 ## 举例
 
+```sql
+SELECT parse_data_size('1B');
 ```
-mysql [(none)]>SELECT parse_data_size('1B');
+
+```text
 +-----------------------+
 | parse_data_size('1B') |
 +-----------------------+
 | 1                     |
 +-----------------------+
-1 row in set (0.02 sec)
+```
 
-mysql [(none)]>SELECT parse_data_size('1kB');
+```sql
+SELECT parse_data_size('1kB');
+```
+
+```text
 +------------------------+
 | parse_data_size('1kB') |
 +------------------------+
 | 1024                   |
 +------------------------+
-1 row in set (0.01 sec)
+```
 
-mysql [(none)]>SELECT parse_data_size('2.3MB');
+```sql
+SELECT parse_data_size('2.3MB');
+```
+
+```text
 +--------------------------+
 | parse_data_size('2.3MB') |
 +--------------------------+
 | 2411724                  |
 +--------------------------+
-1 row in set (0.02 sec)
 ```
-### keywords
+
+## keywords
     parse_data_size

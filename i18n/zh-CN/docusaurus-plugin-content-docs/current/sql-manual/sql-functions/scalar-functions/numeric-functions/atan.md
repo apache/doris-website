@@ -26,8 +26,9 @@ under the License.
 返回`x`的反正切值，`x`为弧度值.
 
 ## 语法
+
 ```sql
-DOUBLE atan(DOUBLE x)
+atan(<x>)
 ```
 
 ## 参数
@@ -42,15 +43,23 @@ DOUBLE atan(DOUBLE x)
 
 ## 举例
 
+```sql
+select atan(0);
 ```
-mysql> select atan(0);
+
+```text
 +-----------+
 | atan(0.0) |
 +-----------+
 |         0 |
 +-----------+
+```
 
-mysql> select atan(2);
+```sql
+select atan(2);
+```
+
+```text
 +--------------------+
 | atan(2.0)          |
 +--------------------+
@@ -58,5 +67,5 @@ mysql> select atan(2);
 +--------------------+
 ```
 
-### keywords
+## keywords
 	ATAN

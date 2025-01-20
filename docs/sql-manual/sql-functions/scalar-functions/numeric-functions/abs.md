@@ -23,21 +23,14 @@ under the License.
 -->
 
 
-### description
+## description
 
 Returns the absolute value of `x`
 
-#### Syntax
+## Syntax
 
 ```sql
-SMALLINT abs(TINYINT x)
-INT abs(SMALLINT x)
-BIGINT abs(INT x)
-LARGEINT abs(BIGINT x)
-LARGEINT abs(LARGEINT x)
-DOUBLE abs(DOUBLE x)
-FLOAT abs(FLOAT x)
-DECIMAL abs(DECIMAL x)` 
+abs(<x>) 
 ```
 
 ## Parameters  
@@ -50,22 +43,37 @@ DECIMAL abs(DECIMAL x)`
 
 The absolute value of parameter `x`. 
 
-### example
+## example
 
+```sql
+select abs(-2);
 ```
-mysql> select abs(-2);
+
+```text
 +---------+
 | abs(-2) |
 +---------+
 |       2 |
 +---------+
-mysql> select abs(3.254655654);
+```
+
+```sql
+select abs(3.254655654);
+```
+
+```text
 +------------------+
 | abs(3.254655654) |
 +------------------+
 |      3.254655654 |
 +------------------+
-mysql> select abs(-3254654236547654354654767);
+```
+
+```sql
+select abs(-3254654236547654354654767);
+```
+
+```text
 +---------------------------------+
 | abs(-3254654236547654354654767) |
 +---------------------------------+
