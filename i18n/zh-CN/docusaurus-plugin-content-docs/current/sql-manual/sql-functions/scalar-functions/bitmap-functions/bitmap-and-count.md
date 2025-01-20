@@ -48,7 +48,7 @@ BITMAP_AND_COUNT(<bitmap>, <bitmap>,[, <bitmap>...])
 ## 举例
 
 ```sql
-MySQL> select bitmap_and_count(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5'));
+select bitmap_and_count(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5'));
 ```
 
 ```text
@@ -60,7 +60,7 @@ MySQL> select bitmap_and_count(bitmap_from_string('1,2,3'),bitmap_from_string('3
 ```
 
 ```sql
-MySQL> select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'));
+select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'));
 ```
 
 ```text
@@ -72,7 +72,7 @@ MySQL> select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('
 ```
 
 ```sql
-MySQL> select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),bitmap_empty());
+select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),bitmap_empty());
 ```
 
 ```text
@@ -84,7 +84,7 @@ MySQL> select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('
 ```
 
 ```sql
-MySQL> select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), NULL);
+select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), NULL);
 ```
 
 ```text

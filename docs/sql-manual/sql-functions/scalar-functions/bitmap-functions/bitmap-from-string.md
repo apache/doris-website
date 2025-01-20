@@ -37,7 +37,8 @@ For example, the string "0, 1, 2" will be converted into a Bitmap, where the 0th
 
 | Parameter | Description                                                                                    |
 |-----------|------------------------------------------------------------------------------------------------|
-| `<str>`   | Array string, for example "0, 1, 2" string will be converted to a Bitmap with bits 0, 1, 2 set |
+| `<str>`   | Array string, for example "0, 1, 2" string will be converted to a Bitmap with bits 0, 1, 2 set |  
+
 ## Return Value
 
 Returns a BITMAP
