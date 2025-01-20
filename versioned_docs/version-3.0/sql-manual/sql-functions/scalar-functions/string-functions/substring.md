@@ -35,15 +35,15 @@ SUBSTR
 ## Syntax
 
 ```sql
-VARCHAR SUBSTRING(VARCHAR str, INT pos [, INT len])
+SUBSTRING(VARCHAR <str>, INT <pos> [, INT <len>])
 ```
 
 ## Parameters
 | Parameter | Description                                      |
 | --------- | ------------------------------------------------ |
-| str       | Source string. Type: VARCHAR                     |
-| pos       | Starting position, can be negative. Type: INT    |
-| len       | Optional parameter, length to extract. Type: INT |
+| `<str>` | Source string. Type: VARCHAR                     |
+| `<pos>` | Starting position, can be negative. Type: INT    |
+| `<len>` | Optional parameter, length to extract. Type: INT |
 
 ## Return Value
 

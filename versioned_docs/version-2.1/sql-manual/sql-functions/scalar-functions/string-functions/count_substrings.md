@@ -29,14 +29,14 @@ The COUNT_SUBSTRINGS function counts the number of occurrences of a specified su
 ## Syntax
 
 ```sql
-COUNT_SUBSTRINGS(str, pattern)
+COUNT_SUBSTRINGS(VARCHAR <str>, VARCHAR <pattern>)
 ```
 
 ## Parameters
 | Parameter | Description                             |
 | --------- | --------------------------------------- |
-| str       | The string to be searched. Type: STRING |
-| pattern   | The substring to match. Type: STRING    |
+| `<str>` | The string to be searched. Type: STRING |
+| `<pattern>` | The substring to match. Type: STRING    |
 
 ## Return Value
 

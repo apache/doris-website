@@ -33,14 +33,14 @@ The key feature of LTRIM_IN is that it removes any combination of characters fro
 ## Syntax
 
 ```sql
-VARCHAR LTRIM_IN(VARCHAR str[, VARCHAR rhs])
+LTRIM_IN(VARCHAR <str> [, VARCHAR <rhs>])
 ```
 
 ## Parameters
 | Parameter | Description                                                            |
 | --------- | ---------------------------------------------------------------------- |
-| str       | The string to be processed. Type: VARCHAR                              |
-| rhs       | Optional parameter, the set of characters to be removed. Type: VARCHAR |
+| `<str>` | The string to be processed. Type: VARCHAR                              |
+| `<rhs>` | Optional parameter, the set of characters to be removed. Type: VARCHAR |
 
 ## Return Value
 

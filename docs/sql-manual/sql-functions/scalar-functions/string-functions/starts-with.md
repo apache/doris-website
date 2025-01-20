@@ -31,14 +31,14 @@ The STARTS_WITH function checks if a string starts with a specified prefix. Retu
 ## Syntax
 
 ```sql
-BOOLEAN STARTS_WITH(VARCHAR str, VARCHAR prefix)
+STARTS_WITH(VARCHAR <str>, VARCHAR <prefix>)
 ```
 
 ## Parameters
 | Parameter | Description                               |
 | --------- | ----------------------------------------- |
-| str       | The string to check. Type: VARCHAR        |
-| prefix    | The prefix string to match. Type: VARCHAR |
+| `<str>` | The string to check. Type: VARCHAR        |
+| `<prefix>` | The prefix string to match. Type: VARCHAR |
 
 ## Return Value
 

@@ -35,14 +35,14 @@ LEFT
 ## Syntax
 
 ```sql
-VARCHAR STRLEFT(VARCHAR str, INT len)
+STRLEFT(VARCHAR <str>, INT <len>)
 ```
 
 ## Parameters
 | Parameter | Description                                   |
 | --------- | --------------------------------------------- |
-| str       | The string to extract from. Type: VARCHAR     |
-| len       | The number of characters to return. Type: INT |
+| `<str>` | The string to extract from. Type: VARCHAR     |
+| `<len>` | The number of characters to return. Type: INT |
 
 ## Return Value
 
@@ -60,11 +60,11 @@ Special cases:
 SELECT strleft('Hello doris', 5);
 ```
 ```text
-+------------------------+
++---------------------------+
 | strleft('Hello doris', 5) |
-+------------------------+
-| Hello                  |
-+------------------------+
++---------------------------+
+| Hello                     |
++---------------------------+
 ```
 
 2. Handling negative length

@@ -29,14 +29,14 @@ COUNT_SUBSTRINGS 函数用于计算一个字符串中指定子串出现的次数
 ## 语法
 
 ```sql
-COUNT_SUBSTRINGS(str, pattern)
+COUNT_SUBSTRINGS(<str>, <pattern>)
 ```
 
 ## 参数
 | 参数    | 说明                           |
 | ------- | ------------------------------ |
-| str     | 需要检测的字符串。类型：STRING |
-| pattern | 需要匹配的子串。类型：STRING   |
+| `<str>`     | 需要检测的字符串。类型：STRING |
+| `<pattern>` | 需要匹配的子串。类型：STRING   |
 
 ## 返回值
 

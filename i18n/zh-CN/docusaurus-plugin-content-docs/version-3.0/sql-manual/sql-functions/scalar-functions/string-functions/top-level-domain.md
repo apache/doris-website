@@ -32,13 +32,13 @@ TOP_LEVEL_DOMAIN 函数用于从 URL 中提取顶级域名。如果输入的 URL
 ## 语法
 
 ```sql
-VARCHAR TOP_LEVEL_DOMAIN(VARCHAR url)
+TOP_LEVEL_DOMAIN(VARCHAR <url>)
 ```
 
 ## 参数
 | 参数 | 说明                                         |
 | ---- | -------------------------------------------- |
-| url  | 需要提取顶级域名的 URL 字符串。类型：VARCHAR |
+| `<url>` | 需要提取顶级域名的 URL 字符串。类型：VARCHAR |
 
 ## 返回值
 

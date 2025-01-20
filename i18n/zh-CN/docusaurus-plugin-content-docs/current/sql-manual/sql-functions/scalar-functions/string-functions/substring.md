@@ -35,15 +35,15 @@ SUBSTR
 ## 语法
 
 ```sql
-VARCHAR SUBSTRING(VARCHAR str, INT pos [, INT len])
+SUBSTRING(VARCHAR <str>, INT <pos> [, INT <len>])
 ```
 
 ## 参数
 | 参数 | 说明                              |
-| ---- | --------------------------------- |
-| str  | 源字符串。类型：VARCHAR           |
-| pos  | 起始位置，可以为负数。类型：INT   |
-| len  | 可选参数，要提取的长度。类型：INT |
+| ------- | --------------------------------- |
+| `<str>` | 源字符串。类型：VARCHAR           |
+| `<pos>` | 起始位置，可以为负数。类型：INT   |
+| `<len>` | 可选参数，要提取的长度。类型：INT |
 
 ## 返回值
 

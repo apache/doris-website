@@ -35,14 +35,14 @@ LEFT
 ## 语法
 
 ```sql
-VARCHAR STRLEFT(VARCHAR str, INT len)
+STRLEFT(VARCHAR <str>, INT <len>)
 ```
 
 ## 参数
 | 参数 | 说明 |
-| -- | -- |
-| str | 需要截取的字符串。类型：VARCHAR |
-| len | 要返回的字符数量。类型：INT |
+| ------- | ----------------------------------------- |
+| `<str>` | 需要截取的字符串。类型：VARCHAR |
+| `<len>` | 要返回的字符数量。类型：INT |
 
 ## 返回值
 

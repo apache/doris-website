@@ -36,14 +36,14 @@ RIGHT
 ## Syntax
 
 ```sql
-VARCHAR STRRIGHT(VARCHAR str, INT len)
+STRRIGHT(VARCHAR <str>, INT <len>)
 ```
 
 ## Parameters
 | Parameter | Description                                   |
 | --------- | --------------------------------------------- |
-| str       | The string to extract from. Type: VARCHAR     |
-| len       | The number of characters to return. Type: INT |
+| `<str>` | The string to extract from. Type: VARCHAR     |
+| `<len>` | The number of characters to return. Type: INT |
 
 ## Return Value
 
@@ -61,11 +61,11 @@ Special cases:
 SELECT strright('Hello doris', 5);
 ```
 ```text
-+-------------------------+
++----------------------------+
 | strright('Hello doris', 5) |
-+-------------------------+
-| doris                   |
-+-------------------------+
++----------------------------+
+| doris                      |
++----------------------------+
 ```
 
 2. Handling negative length
@@ -73,11 +73,11 @@ SELECT strright('Hello doris', 5);
 SELECT strright('Hello doris', -7);
 ```
 ```text
-+--------------------------+
++-----------------------------+
 | strright('Hello doris', -7) |
-+--------------------------+
-| doris                    |
-+--------------------------+
++-----------------------------+
+| doris                       |
++-----------------------------+
 ```
 
 3. Handling NULL parameter
@@ -85,11 +85,11 @@ SELECT strright('Hello doris', -7);
 SELECT strright('Hello doris', NULL);
 ```
 ```text
-+----------------------------+
++-------------------------------+
 | strright('Hello doris', NULL) |
-+----------------------------+
-| NULL                       |
-+----------------------------+
++-------------------------------+
+| NULL                          |
++-------------------------------+
 ```
 
 4. Handling NULL string
@@ -97,9 +97,9 @@ SELECT strright('Hello doris', NULL);
 SELECT strright(NULL, 5);
 ```
 ```text
-+----------------+
++-------------------+
 | strright(NULL, 5) |
-+----------------+
-| NULL           |
-+----------------+
++-------------------+
+| NULL              |
++-------------------+
 ```

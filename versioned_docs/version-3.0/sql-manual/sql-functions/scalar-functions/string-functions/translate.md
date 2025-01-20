@@ -31,15 +31,15 @@ The TRANSLATE function is used for string replacement, converting characters in 
 ## Syntax
 
 ```sql
-VARCHAR TRANSLATE(VARCHAR source, VARCHAR from, VARCHAR to)
+TRANSLATE(VARCHAR <source>, VARCHAR <from>, VARCHAR <to>)
 ```
 
 ## Parameters
 | Parameter | Description                                         |
 | --------- | --------------------------------------------------- |
-| source    | The source string to be converted. Type: VARCHAR    |
-| from      | The set of characters to be replaced. Type: VARCHAR |
-| to        | The set of replacement characters. Type: VARCHAR    |
+| `<source>` | The source string to be converted. Type: VARCHAR    |
+| `<from>` | The set of characters to be replaced. Type: VARCHAR |
+| `<to>` | The set of replacement characters. Type: VARCHAR    |
 
 ## Return Value
 

@@ -32,13 +32,13 @@ CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN 函数用于从 URL 中提取域名的有效�
 ## 语法
 
 ```sql
-VARCHAR CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN(VARCHAR url)
+CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN(VARCHAR <url>)
 ```
 
 ## 参数
 | 参数 | 说明                                 |
 | ---- | ------------------------------------ |
-| url  | 需要处理的 URL 字符串。类型：VARCHAR |
+| `<url>` | 需要处理的 URL 字符串。类型：VARCHAR |
 
 ## 返回值
 

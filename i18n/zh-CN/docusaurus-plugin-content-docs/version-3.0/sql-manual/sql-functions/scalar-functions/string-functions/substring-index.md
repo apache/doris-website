@@ -29,15 +29,15 @@ SUBSTRING_INDEX 函数用于截取字符串，根据指定的分隔符和出现�
 ## 语法
 
 ```sql
-VARCHAR SUBSTRING_INDEX(VARCHAR content, VARCHAR delimiter, INT field)
+SUBSTRING_INDEX(VARCHAR <content>, VARCHAR <delimiter>, INT <field>)
 ```
 
 ## 参数
 | 参数      | 说明                                                    |
 | --------- | ------------------------------------------------------- |
-| content   | 需要截取的字符串。类型：VARCHAR                         |
-| delimiter | 分隔符，大小写敏感且多字节安全。类型：VARCHAR           |
-| field     | 分隔符出现的次数。正数从左计数，负数从右计数。类型：INT |
+| `<content>` | 需要截取的字符串。类型：VARCHAR                         |
+| `<delimiter>` | 分隔符，大小写敏感且多字节安全。类型：VARCHAR           |
+| `<field>` | 分隔符出现的次数。正数从左计数，负数从右计数。类型：INT |
 
 注意：delimiter 和 field 参数需要是常量，不支持变量。
 

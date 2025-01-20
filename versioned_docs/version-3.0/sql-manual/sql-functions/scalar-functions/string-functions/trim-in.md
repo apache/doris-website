@@ -33,14 +33,14 @@ The key feature of TRIM_IN is that it removes any combination of characters from
 ## Syntax
 
 ```sql
-VARCHAR trim_in(VARCHAR str[, VARCHAR rhs])
+TRIM_IN(VARCHAR <str> [, VARCHAR <rhs>])
 ```
 
 ## Parameters
 | Parameter | Description                                                            |
 | --------- | ---------------------------------------------------------------------- |
-| str       | The string to be processed. Type: VARCHAR                              |
-| rhs       | Optional parameter, the set of characters to be removed. Type: VARCHAR |
+| `<str>` | The string to be processed. Type: VARCHAR                              |
+| `<rhs>` | Optional parameter, the set of characters to be removed. Type: VARCHAR |
 
 ## Return Value
 

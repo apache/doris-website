@@ -31,15 +31,15 @@ TRANSLATE 函数用于字符串替换，将源字符串中的字符按照映射�
 ## 语法
 
 ```sql
-VARCHAR TRANSLATE(VARCHAR source, VARCHAR from, VARCHAR to)
+TRANSLATE(VARCHAR <source>, VARCHAR <from>, VARCHAR <to>)
 ```
 
 ## 参数
 | 参数   | 说明                                  |
 | ------ | ------------------------------------- |
-| source | 需要进行转换的源字符串。类型：VARCHAR |
-| from   | 要被替换的字符集合。类型：VARCHAR     |
-| to     | 替换后的字符集合。类型：VARCHAR       |
+| `<source>` | 需要进行转换的源字符串。类型：VARCHAR |
+| `<from>` | 要被替换的字符集合。类型：VARCHAR     |
+| `<to>` | 替换后的字符集合。类型：VARCHAR       |
 
 ## 返回值
 
@@ -59,11 +59,11 @@ VARCHAR TRANSLATE(VARCHAR source, VARCHAR from, VARCHAR to)
 SELECT translate('abcd', 'a', 'z');
 ```
 ```text
-+---------------------------+
++-----------------------------+
 | translate('abcd', 'a', 'z') |
-+---------------------------+
-| zbcd                      |
-+---------------------------+
++-----------------------------+
+| zbcd                        |
++-----------------------------+
 ```
 
 2. 多次替换相同字符
@@ -71,11 +71,11 @@ SELECT translate('abcd', 'a', 'z');
 SELECT translate('abcda', 'a', 'z');
 ```
 ```text
-+----------------------------+
++------------------------------+
 | translate('abcda', 'a', 'z') |
-+----------------------------+
-| zbcdz                      |
-+----------------------------+
++------------------------------+
+| zbcdz                        |
++------------------------------+
 ```
 
 3. 特殊字符替换

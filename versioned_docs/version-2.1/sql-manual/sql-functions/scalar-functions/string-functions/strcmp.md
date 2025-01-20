@@ -31,14 +31,14 @@ The STRCMP function compares two strings lexicographically. It returns an intege
 ## Syntax
 
 ```sql
-TINYINT STRCMP(VARCHAR str0, VARCHAR str1)
+STRCMP(VARCHAR <str0>, VARCHAR <str1>)
 ```
 
 ## Parameters
 | Parameter | Description |
 | -- | -- |
-| str0 | The first string to compare. Type: VARCHAR |
-| str1 | The second string to compare. Type: VARCHAR |
+| `<str0>` | The first string to compare. Type: VARCHAR |
+| `<str1>` | The second string to compare. Type: VARCHAR |
 
 ## Return Value
 

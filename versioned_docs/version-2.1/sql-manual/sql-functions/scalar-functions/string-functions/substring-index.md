@@ -29,15 +29,15 @@ The SUBSTRING_INDEX function is used to extract a substring from a string based 
 ## Syntax
 
 ```sql
-VARCHAR SUBSTRING_INDEX(VARCHAR content, VARCHAR delimiter, INT field)
+SUBSTRING_INDEX(VARCHAR <content>, VARCHAR <delimiter>, INT <field>)
 ```
 
 ## Parameters
 | Parameter | Description                                                                                                     |
 | --------- | --------------------------------------------------------------------------------------------------------------- |
-| content   | The string to be extracted from. Type: VARCHAR                                                                  |
-| delimiter | The delimiter string, case-sensitive and multi-byte safe. Type: VARCHAR                                         |
-| field     | Number of delimiter occurrences. Positive numbers count from left, negative numbers count from right. Type: INT |
+| `<content>` | The string to be extracted from. Type: VARCHAR                                                                  |
+| `<delimiter>` | The delimiter string, case-sensitive and multi-byte safe. Type: VARCHAR                                         |
+| `<field>` | Number of delimiter occurrences. Positive numbers count from left, negative numbers count from right. Type: INT |
 
 Note: The delimiter and field parameters must be constants, variables are not supported.
 

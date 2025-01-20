@@ -31,14 +31,14 @@ STRCMP 函数用于按照字典顺序比较两个字符串。该函数将返回�
 ## 语法
 
 ```sql
-TINYINT STRCMP(VARCHAR str0, VARCHAR str1)
+STRCMP(VARCHAR <str0>, VARCHAR <str1>)
 ```
 
 ## 参数
 | 参数 | 说明 |
-| -- | -- |
-| str0 | 第一个要比较的字符串。类型：VARCHAR |
-| str1 | 第二个要比较的字符串。类型：VARCHAR |
+| ------- | ----------------------------------------- |
+| `<str0>` | 第一个要比较的字符串。类型：VARCHAR |
+| `<str1>` | 第二个要比较的字符串。类型：VARCHAR |
 
 ## 返回值
 
