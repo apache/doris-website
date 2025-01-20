@@ -30,14 +30,16 @@ under the License.
 
 ## 语法
 
-` double covar_samp(expr1, expr2)`
+```sql
+double covar_samp(<expr1>, <expr2>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr1` | 数值型表达式或列 |
-| `expr2` | 数值型表达式或列 |
+| `<expr1>` | 数值型表达式或列 |
+| `<expr2>` | 数值型表达式或列 |
 
 ## 返回值
 

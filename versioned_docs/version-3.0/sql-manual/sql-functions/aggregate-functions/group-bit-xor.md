@@ -1,7 +1,7 @@
 ---
 {
-    "title": "GROUP_BIT_XOR",
-    "language": "en"
+"title": "GROUP_BIT_XOR",
+"language": "en"
 }
 ---
 
@@ -24,27 +24,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Performs a bitwise xor operation on all values in a single integer column or expression.
 
 ## Syntax
 
-`GROUP_BIT_XOR(expr)`
+```sql
+GROUP_BIT_XOR(<expr>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Supports all INT types |
+| `<expr>` | Supports all INT types |
 
 ## Return Value
 
 Returns an integer value
 
-## example
+## Example
 
-```
+```sql
 select * from group_bit;
 ```
 
@@ -59,7 +61,7 @@ select * from group_bit;
 +-------+
 ```
 
-```text
+```sql
 select group_bit_xor(value) from group_bit;
 ```
 

@@ -24,25 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Calculate the intersection elements of the input array across all rows and return a new array.
 
 ## Syntax
 
-`GROUP_ARRAY_INTERSECT(expr)`
+```sql
+GROUP_ARRAY_INTERSECT(<expr>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Array columns or array values that require intersection |
+| `<expr>` | Array columns or array values that require intersection |
 
 ## Return Value
 
 Returns an array containing the intersection results
 
-## example
+## Example
 
 ```sql
 select c_array_string from group_array_intersect_test where id in (18, 20);

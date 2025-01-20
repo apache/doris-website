@@ -30,13 +30,15 @@ under the License.
 
 ## 语法
 
-`BITMAP_AGG(expr)`
+```sql
+BITMAP_AGG(<expr>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` |待合并数值的列或表达式，expr 的类型需要为 TINYINT,SMALLINT,INT,LARGEINT 和 BIGINT 类型，也支持可以转化为以上类型的 VARCHAR。 |
+| `<expr>` |待合并数值的列或表达式，expr 的类型需要为 TINYINT,SMALLINT,INT,LARGEINT 和 BIGINT 类型，也支持可以转化为以上类型的 VARCHAR。 |
 
 ## 返回值
 

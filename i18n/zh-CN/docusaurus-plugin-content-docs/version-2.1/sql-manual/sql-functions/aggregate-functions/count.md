@@ -30,15 +30,17 @@ under the License.
 
 ## 语法
 
-`COUNT(DISTINCT expr [,expr,...])`
-`COUNT(*)`
-`COUNT(expr)`
+```sql
+COUNT(DISTINCT <expr> [,<expr>,...])
+COUNT(*)
+COUNT(<expr>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` | 条件表达式（列名） |
+| `<expr>` | 条件表达式（列名） |
 
 ## 返回值
 

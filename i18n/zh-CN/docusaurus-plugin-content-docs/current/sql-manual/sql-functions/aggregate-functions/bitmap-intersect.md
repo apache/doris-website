@@ -30,13 +30,15 @@ under the License.
 
 ## 语法
 
-`BITMAP BITMAP_INTERSECT(BITMAP value)`
+```sql
+BITMAP BITMAP_INTERSECT(BITMAP <value>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `value` | 支持bitmap的数据类型 |
+| `<value>` | 支持bitmap的数据类型 |
 
 ## 返回值
 

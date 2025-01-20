@@ -24,19 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Aggregate the values of a column (excluding any NULL values) and return a single row bitmap value, i.e., convert multiple rows into one.
 
 ## Syntax
 
-`BITMAP_AGG(expr)`
+```sql
+BITMAP_AGG(<expr>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | The column or expression of values to be aggregated. The type of expr must be TINYINT, SMALLINT, INT, LARGEINT, or BIGINT, and it also supports VARCHAR that can be converted to one of these types. |
+| `<expr>` | The column or expression of values to be aggregated. The type of expr must be TINYINT, SMALLINT, INT, LARGEINT, or BIGINT, and it also supports VARCHAR that can be converted to one of these types. |
 
 ## Return Value
 
@@ -44,7 +46,7 @@ Returns a BITMAP type value. Special cases:
 
 - If a value is less than 0 or greater than 18446744073709551615, the value will be ignored and will not be merged into the Bitmap.
 
-### example
+## Example
 
 ```sql
 select * from test_bitmap_agg;

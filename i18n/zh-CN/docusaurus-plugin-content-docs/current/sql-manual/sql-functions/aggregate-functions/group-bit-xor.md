@@ -30,13 +30,15 @@ under the License.
 
 ## 语法
 
-`GROUP_BIT_XOR(expr)`
+```sql
+GROUP_BIT_XOR(<expr>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` | 支持所有INT类型 |
+| `<expr>` | 支持所有INT类型 |
 
 ## 返回值
 

@@ -24,31 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Returns any value from the expression or column in the group. If there is a non-NULL value, it returns any non-NULL value; otherwise, it returns NULL.
 
 ## Alias
 
-`ANY`
+```sql
+ANY
+```
 
 ## Syntax
 
-`ANY_VALUE(expr)`
+```sql
+ANY_VALUE(<expr>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | The column or expression to be aggregated. |
+| `<expr>` | The column or expression to be aggregated. |
 
 ## Return Value
 
 Returns any non-NULL value if a non-NULL value exists, otherwise returns NULL.
 
-## example
+## Example
 
-```
+```sql
 select id, any_value(name) from cost2 group by id;
 ```
 

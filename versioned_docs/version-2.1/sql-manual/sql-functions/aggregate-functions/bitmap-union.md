@@ -24,27 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Calculate the union of input Bitmaps and return a new bitmap
 
 ## Syntax
 
 ```sql
-BITMAP_UNION(expr)
+BITMAP_UNION(<expr>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Supported data types of BITMAP |
+| `<expr>` | Supported data types of BITMAP |
 
 ## Return Value
 
 The data type of the return value is BITMAP.
 
-## example
+## Example
 
 ```sql
 select dt,page,bitmap_to_string(user_id) from pv_bitmap;
@@ -78,9 +78,9 @@ select bitmap_count(bitmap_union(user_id)) from pv_bitmap;
 The aggregation model needs to be used when creating the table. The data type is bitmap and the aggregation function is bitmap_union.
 ```
 CREATE TABLE `pv_bitmap` (
-  `dt` int (11) NULL COMMENT" ",
-  `page` varchar (10) NULL COMMENT" ",
-  `user_id` bitmap BITMAP_UNION NULL COMMENT" "
+  `dt` int (11) NULL COMMENT" ",
+  `page` varchar (10) NULL COMMENT" ",
+  `user_id` bitmap BITMAP_UNION NULL COMMENT" "
 ) ENGINE = OLAP
 AGGREGATE KEY (`dt`,` page`)
 COMMENT "OLAP"

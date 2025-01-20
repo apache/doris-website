@@ -30,14 +30,16 @@ Calculate the Pearson coefficient of two random variables.
 
 ## Syntax
 
-` double corr(expr1, expr2)`
+```sql
+double corr(<expr1>, <expr2>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Numeric expression (column) |
-| `expr` | Numeric expression (column) |
+| `<expr1>` | Numeric expression (column) |
+| `<expr2>` | Numeric expression (column) |
 
 ## Return Value
 
@@ -46,7 +48,7 @@ The return value is of type DOUBLE, the covariance of expr1 and expr2, except th
 - If the standard deviation of expr1 or expr2 is 0, 0 will be returned.
 - If a column of expr1 or expr2 is NULL, the row data will not be counted in the final result.
 
-## example
+## Example
 
 ```sql
 select * from test_corr;

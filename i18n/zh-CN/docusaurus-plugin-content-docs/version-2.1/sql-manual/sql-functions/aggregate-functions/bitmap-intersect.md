@@ -30,13 +30,15 @@ under the License.
 
 ## 语法
 
-`BITMAP BITMAP_INTERSECT(BITMAP value)`
+```sql
+BITMAP BITMAP_INTERSECT(BITMAP <value>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `value` | 支持bitmap的数据类型 |
+| `<value>` | 支持bitmap的数据类型 |
 
 ## 返回值
 
@@ -63,3 +65,4 @@ select tag, bitmap_intersect(user_id) from (select tag, date, bitmap_union(user_
 求今天和昨天不同 tag 下留存的用户都是哪些
 select tag, bitmap_to_string(bitmap_intersect(user_id)) from (select tag, date, bitmap_union(user_id) user_id from table where date in ('2020-05-18', '2020-05-19') group by tag, date) a group by tag;
 ```
+

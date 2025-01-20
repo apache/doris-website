@@ -1,7 +1,7 @@
 ---
 {
-    "title": "CORR",
-    "language": "zh-CN"
+"title": "CORR",
+"language": "zh-CN"
 }
 ---
 
@@ -30,14 +30,16 @@ under the License.
 
 ## 语法
 
-` double corr(expr1, expr2)`
+```sql
+double corr(<expr1>, <expr2>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr1` | 数值型表达式（列） |
-| `expr2` | 数值型表达式（列） |
+| `<expr1>` | 数值型表达式（列） |
+| `<expr2>` | 数值型表达式（列） |
 
 ## 返回值
 

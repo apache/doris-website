@@ -24,25 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Concatenates the values (including null values) in a column into an array, which can be used for pivoting rows into columns.
 
 ## Syntax
 
-`ARRAY_AGG(col)`
+```sql
+ARRAY_AGG(<col>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `col` | An expression that determines the values to be placed into the array (usually column names). |
+| `<col>` | An expression that determines the values to be placed into the array (usually column names). |
 
 ## Return Value
 
 Returns a value of ARRAY type.
 
-## example
+## Example
 
 ```sql
 select * from test_doris_array_agg;

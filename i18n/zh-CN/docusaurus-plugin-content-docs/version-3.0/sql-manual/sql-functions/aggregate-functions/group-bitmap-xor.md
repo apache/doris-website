@@ -1,7 +1,7 @@
 ---
 {
-    "title": "GROUP_BITMAP_XOR",
-    "language": "zh-CN"
+"title": "GROUP_BITMAP_XOR",
+"language": "zh-CN"
 }
 ---
 
@@ -30,13 +30,15 @@ under the License.
 
 ## 语法
 
-`BITMAP GROUP_BITMAP_XOR(expr)`
+```sql
+BITMAP GROUP_BITMAP_XOR(<expr>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` | 支持bitmap的数据类型 |
+| `<expr>` | 支持bitmap的数据类型 |
 
 ## 返回值
 

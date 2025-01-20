@@ -1,7 +1,7 @@
 ---
 {
-    "title": "GROUP_BITMAP_XOR",
-    "language": "en"
+"title": "GROUP_BITMAP_XOR",
+"language": "en"
 }
 ---
 
@@ -24,25 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Mainly used to merge the values of multiple bitmaps and perform bitwise xor calculations on the results.
 
 ## Syntax
 
-`BITMAP GROUP_BITMAP_XOR(expr)`
+```sql
+BITMAP GROUP_BITMAP_XOR(<expr>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Supported bitmap data types |
+| `<expr>` | Supported bitmap data types |
 
 ## Return Value
 
 The data type of the return value is BITMAP.
 
-## example
+## Example
 
 ```sql
  select page, bitmap_to_string(user_id) from pv_bitmap;

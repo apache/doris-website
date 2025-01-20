@@ -30,14 +30,16 @@ Computes the sample covariance between two numeric variables.
 
 ## Syntax
 
-` double covar_samp(expr1, expr2)`
+```sql
+double covar_samp(<expr1>, <expr2>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr1` | Numeric expression or column |
-| `expr2` | Numeric expression or column |
+| `<expr1>` | Numeric expression or column |
+| `<expr2>` | Numeric expression or column |
 
 ## Return Value
 
@@ -45,7 +47,7 @@ Returns the sample covariance of expr1 and expr2, special case:
 
 - If a column of expr1 or expr2 is NULL, the row data will not be counted in the final result.
 
-## example
+## Example
 
 ```
 select covar_samp(x,y) from baseall;

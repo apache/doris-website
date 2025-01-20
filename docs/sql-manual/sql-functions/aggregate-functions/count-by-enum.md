@@ -30,13 +30,15 @@ Treat the data in the column as enumeration values and count the number of each 
 
 ## Syntax
 
-`count_by_enum(expr1, expr2, ... , exprN);`
+```sql
+count_by_enum(<expr1>, <expr2>, ... , <exprN>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Fill in at least one input. Column whose value is of type STRING |
+| `<expr1>` | Fill in at least one input. Column whose value is of type STRING |
 
 ## Returned value
 
@@ -80,7 +82,7 @@ Description: The return value is a JSON array string and the order of the intern
 * all: total number, including both null and non-null values.
 
 
-## example
+## Example
 
 ```sql
 CREATE TABLE count_by_enum_test(

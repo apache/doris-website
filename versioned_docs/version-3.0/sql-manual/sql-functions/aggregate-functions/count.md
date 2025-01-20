@@ -1,7 +1,7 @@
 ---
 {
-    "title": "COUNT",
-    "language": "en"
+"title": "COUNT",
+"language": "en"
 }
 ---
 
@@ -30,21 +30,23 @@ Returns the number of non-NULL records in the specified column, or the total num
 
 ## Syntax
 
-`COUNT(DISTINCT expr [,expr,...])`
-`COUNT(*)`
-`COUNT(expr)`
+```sql
+COUNT(DISTINCT <expr> [,<expr>,...])
+COUNT(*)
+COUNT(<expr>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Conditional expression (column name) |
+| `<expr>` | Conditional expression (column name) |
 
 ## Return Value
 
 The return value is of numeric type. If expr is NULL, there will be no parameter statistics.
 
-## example
+## Example
 
 ```sql
 select * from test_count;
@@ -110,4 +112,3 @@ select count(distinct id,sex) from test_insert;
 |                       5 |
 +-------------------------+
 ```
-

@@ -1,7 +1,7 @@
 ---
 {
-    "title": "COLLECT_SET",
-    "language": "en"
+"title": "COLLECT_SET",
+"language": "en"
 }
 ---
 
@@ -24,24 +24,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Aggregation function aggregates all unique values of the specified column, removes duplicate elements, and returns a set type result.
 
 ## Alias
 
-`group_uniq_array`
+```sql
+group_uniq_array
+```
 
 ## Syntax
 
-`ARRAY<T> collect_set(expr[,max_size])`
+```sql
+ARRAY<T> collect_set(<expr> [,<max_size>])
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Column or expression to aggregate |
-| `max_size` | Optional parameter that can be set to limit the size of the resulting array to max_size elements |
+| `<expr>` | Column or expression to aggregate |
+| `<max_size>` | Optional parameter that can be set to limit the size of the resulting array to max_size elements |
 
 ## Return Value
 
@@ -49,7 +53,7 @@ The return type is ARRAY. This array contains all values after deduplication. Sp
 
 - If the value is NULL, it will filter
 
-## example
+## Example
 
 ```sql
 select k1,k2,k3 from collect_set_test order by k1;

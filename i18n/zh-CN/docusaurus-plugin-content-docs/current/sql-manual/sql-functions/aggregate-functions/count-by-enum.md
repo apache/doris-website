@@ -30,13 +30,15 @@ under the License.
 
 ## 语法
 
-`count_by_enum(expr1, expr2, ... , exprN);`
+```sql
+count_by_enum(<expr1>, <expr2>, ... , <exprN>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr1` | 至少填写一个输入。值为字符串（STRING）类型的列 |
+| `<expr1>` | 至少填写一个输入。值为字符串（STRING）类型的列 |
 
 ## 返回值
 

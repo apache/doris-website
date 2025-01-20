@@ -30,18 +30,22 @@ under the License.
 
 ## 别名
 
-`group_array`
+```sql
+group_array
+```
 
 ## 语法
 
-`ARRAY<T> collect_list(expr[,max_size])`
+```text
+ARRAY<T> collect_list(<expr> [,<max_size>])
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` | 要聚合的列或表达式 |
-| `max_size` | 可选参数，通过设置该参数能够将结果数组的大小限制为 max_size 个元素 |
+| `<expr>` | 要聚合的列或表达式 |
+| `<max_size>` | 可选参数，通过设置该参数能够将结果数组的大小限制为 max_size 个元素 |
 
 ## 返回值
 

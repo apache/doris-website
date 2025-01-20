@@ -31,14 +31,14 @@ under the License.
 ## 语法
 
 ```sql
-BITMAP_UNION_INT(expr)
+BITMAP_UNION_INT(<expr>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` | 支持 TINYINT，SMALLINT 和 INT 类型的列或列表达式 |
+| `<expr>` | 支持 TINYINT，SMALLINT 和 INT 类型的列或列表达式 |
 
 ## 返回值
 

@@ -30,13 +30,15 @@ under the License.
 
 ## 语法
 
-`GROUP_ARRAY_INTERSECT(expr)`
+```sql
+GROUP_ARRAY_INTERSECT(<expr>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` | 需要求交集的数组列或数组值 |
+| `<expr>` | 需要求交集的数组列或数组值 |
 
 ## 返回值
 

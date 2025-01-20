@@ -30,18 +30,22 @@ Calculate the covariance between two numeric variables.
 
 ## Alias
 
-`covar_pop`
+```sql
+covar_pop
+```
 
 ## Syntax
 
-` double covar(expr1, expr2)`
+```sql
+double covar(<expr1>, <expr2>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr1` | Numeric expression or column |
-| `expr2` | Numeric expression or column |
+| `<expr1>` | Numeric expression or column |
+| `<expr2>` | Numeric expression or column |
 
 ## Return Value
 
@@ -49,7 +53,7 @@ Returns the covariance value of expr1 and expr2, special case:
 
 - If a column of expr1 or expr2 is NULL, the row data will not be counted in the final result.
 
-### example
+## Example
 
 ```
 select covar(x,y) from baseall;

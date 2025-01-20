@@ -1,7 +1,7 @@
 ---
 {
-    "title": "BITMAP_INTERSECT",
-    "language": "en"
+"title": "BITMAP_INTERSECT",
+"language": "en"
 }
 ---
 
@@ -24,25 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Aggregation function, used to calculate the bitmap intersection after grouping. Common usage scenarios such as: calculating user retention rate.
 
 ## Syntax
 
-`BITMAP BITMAP_INTERSECT(BITMAP value)`
+```sql
+BITMAP BITMAP_INTERSECT(BITMAP <value>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `value` | Supported bitmap data types |
+| `<value>` | Supported bitmap data types |
 
 ## Return Value
 
 The data type of the return value is BITMAP.
 
-## example
+## Example
 
 Table schema
 

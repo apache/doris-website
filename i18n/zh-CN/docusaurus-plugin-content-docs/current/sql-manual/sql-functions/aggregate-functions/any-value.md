@@ -30,17 +30,21 @@ under the License.
 
 ## 别名
 
-`ANY`
+```sql
+ANY
+```
 
 ## 语法
 
-`ANY_VALUE(expr)`
+```sql
+ANY_VALUE(<expr>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` | 要聚合的列或表达式 |
+| `<expr>` | 要聚合的列或表达式 |
 
 ## 返回值
 
@@ -48,7 +52,7 @@ under the License.
 
 ## 举例
 
-```
+```sql
 select id, any_value(name) from cost2 group by id;
 ```
 
@@ -60,4 +64,3 @@ select id, any_value(name) from cost2 group by id;
 |    2 | jack              |
 +------+-------------------+
 ```
-

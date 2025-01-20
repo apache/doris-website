@@ -1,7 +1,7 @@
 ---
 {
-    "title": "GROUP_BIT_OR",
-    "language": "zh-CN"
+"title": "GROUP_BIT_OR",
+"language": "zh-CN"
 }
 ---
 
@@ -30,18 +30,20 @@ under the License.
 
 ## 语法
 
-`GROUP_BIT_OR(expr)`
+```sql
+GROUP_BIT_OR(<expr>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` | 支持所有INT类型 |
+| `<expr>` | 支持所有INT类型 |
 
 ## 返回值
 
 返回一个整数值
-   
+
 ## 举例
 
 ```sql

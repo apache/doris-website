@@ -1,7 +1,7 @@
 ---
 {
-    "title": "bitmap_union_count",
-    "language": "zh-CN"
+"title": "bitmap_union_count",
+"language": "zh-CN"
 }
 ---
 
@@ -31,14 +31,14 @@ under the License.
 ## 语法
 
 ```sql
-BITMAP_UNION_COUNT(expr)
+BITMAP_UNION_COUNT(<expr>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` | 支持BITMAP的数据类型 |
+| `<expr>` | 支持BITMAP的数据类型 |
 
 ## 返回值
 

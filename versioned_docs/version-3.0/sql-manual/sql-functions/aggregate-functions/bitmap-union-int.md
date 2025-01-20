@@ -24,27 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Counts the number of distinct values in columns of type TINYINT, SMALLINT and INT. The return value is the same as COUNT(DISTINCT expr)
 
 ## Syntax
 
 ```sql
-BITMAP_UNION_INT(expr)
+BITMAP_UNION_INT(<expr>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Supports columns or column expressions of type TINYINT, SMALLINT and INT |
+| `<expr>` | Supports columns or column expressions of type TINYINT, SMALLINT and INT |
 
 ## Return Value
 
 Returns the number of distinct values in a column.
 
-## example
+## Example
 
 ```sql
 select dt,page,bitmap_to_string(user_id) from pv_bitmap;
@@ -60,7 +60,7 @@ select dt,page,bitmap_to_string(user_id) from pv_bitmap;
 +------+------+---------------------------+
 ```
 
-```
+```sql
 select bitmap_union_int(dt) from pv_bitmap;
 ```
 

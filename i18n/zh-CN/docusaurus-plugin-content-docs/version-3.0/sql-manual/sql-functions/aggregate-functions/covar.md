@@ -30,18 +30,22 @@ under the License.
 
 ## 别名
 
-`covar_pop`
+```sql
+covar_pop
+```
 
 ## 语法
 
-` double covar(expr1, expr1)`
+```sql
+double covar(<expr1>, <expr2>)
+```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr1` | 数值型表达式或列 |
-| `expr2` | 数值型表达式或列 |
+| `<expr1>` | 数值型表达式或列 |
+| `<expr2>` | 数值型表达式或列 |
 
 ## 返回值
 
@@ -62,3 +66,4 @@ select covar(x,y) from baseall;
 | 0.89442719099991586 |
 +---------------------+
 ```
+

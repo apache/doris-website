@@ -1,7 +1,7 @@
 ---
 {
-    "title": "COLLECT_LIST",
-    "language": "en"
+"title": "COLLECT_LIST",
+"language": "en"
 }
 ---
 
@@ -24,24 +24,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Aggregation function, used to aggregate all values of a column into an array.
 
 ## Alias
 
-`group_array`
+```sql
+group_array
+```
 
 ## Syntax
 
-`ARRAY<T> collect_list(expr[,max_size])`
+```sql
+ARRAY<T> collect_list(<expr> [,<max_size>])
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Column or expression to aggregate |
-| `max_size` | Optional parameter that can be set to limit the size of the resulting array to max_size elements |
+| `<expr>` | Column or expression to aggregate |
+| `<max_size>` | Optional parameter that can be set to limit the size of the resulting array to max_size elements |
 
 ## Return Value
 
@@ -49,7 +53,7 @@ The return type is ARRAY, which contains all values. Special circumstances:
 
 - If the value is NULL, it will filter
 
-## example
+## Example
 
 ```sql
 select k1,k2,k3 from collect_list_test order by k1;

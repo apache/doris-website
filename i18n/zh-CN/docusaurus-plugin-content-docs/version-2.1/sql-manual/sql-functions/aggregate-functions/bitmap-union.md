@@ -31,14 +31,14 @@ under the License.
 ## 语法
 
 ```sql
-BITMAP_UNION(expr)
+BITMAP_UNION(<expr>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` | 支持BITMAP的数据类型 |
+| `<expr>` | 支持BITMAP的数据类型 |
 
 ## 返回值
 

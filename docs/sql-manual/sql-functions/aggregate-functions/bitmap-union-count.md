@@ -24,27 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Computes the union of input Bitmaps and returns their cardinality.
 
 ## Syntax
 
 ```sql
-BITMAP_UNION_COUNT(expr)
+BITMAP_UNION_COUNT(<expr>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Supported data types of BITMAP |
+| `<expr>` | Supported data types of BITMAP |
 
 ## Return Value
 
 Returns the size of the Bitmap union, that is, the number of elements after deduplication
 
-## example
+## Example
 
 ```sql
 select dt,page,bitmap_to_string(user_id) from pv_bitmap;

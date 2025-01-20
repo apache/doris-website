@@ -24,25 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Performs a bitwise OR operation on all values in a single integer column or expression.
 
 ## Syntax
 
-`GROUP_BIT_OR(expr)`
+```sql
+GROUP_BIT_OR(<expr>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `expr` | Supports all INT types |
+| `<expr>` | Supports all INT types |
 
 ## Return Value
 
 Returns an integer value
 
-## example
+## Example
 
 ```sql
 select * from group_bit;

@@ -30,20 +30,22 @@ Calculates the weighted arithmetic mean, i.e., the result is the sum of the prod
 
 ## Syntax
 
-` double avg_weighted(x, weight)`
+```sql
+double avg_weighted(<x>, <weight>)
+```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `x` | It is the numeric expression for which the average needs to be calculated, and can be a column name, constant, or a complex numeric expression. |
-| `expr` | It is a numeric expression, typically a column name, constant, or the result of another numeric calculation. |
+| `<x>` | It is the numeric expression for which the average needs to be calculated, and can be a column name, constant, or a complex numeric expression. |
+| `<weight>` | It is a numeric expression, typically a column name, constant, or the result of another numeric calculation. |
 
 ## Return Value
 
 The sum of the products of corresponding values and weights is accumulated, divided by the total sum of weights. If the total sum of weights equals 0, NaN will be returned.
 
-## example
+## Example
 
 ```sql
 select k1,k2 from test_doris_avg_weighted;
