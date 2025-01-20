@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-format_number(<val>)`
+format_number(<val>)
 ```
 
 ## 参数
