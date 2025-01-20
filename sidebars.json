@@ -1006,8 +1006,8 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace-one",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/format",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/format_number",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/parse_data_size",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/format-number",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/digital-masking"
                                     ]
                                 },
