@@ -29,7 +29,9 @@ The `SECONDS_DIFF` function calculates the time difference in seconds between tw
 
 ## Syntax
 
-`seconds_diff(<end_datetime>, <start_datetime>)`
+```sql
+SECONDS_DIFF(<end_datetime>, <start_datetime>)
+```
 
 ## Parameters
 

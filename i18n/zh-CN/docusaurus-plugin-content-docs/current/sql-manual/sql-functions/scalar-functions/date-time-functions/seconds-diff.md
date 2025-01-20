@@ -29,7 +29,9 @@ under the License.
 
 ## 语法
 
-`seconds_diff(<end_datetime>, <start_datetime>)`
+```sql
+SECONDS_DIFF(<end_datetime>, <start_datetime>)
+```
 
 ## 参数
 
