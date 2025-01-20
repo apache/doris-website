@@ -24,47 +24,43 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-CREATE-FUNCTION
-
-### Name
-
-SHOW CREATE FUNCTION
-
 ## 描述
 
 该语句用于展示用户自定义函数的创建语句
 
-语法：
+## 语法
 
 ```sql
-SHOW CREATE [GLOBAL] FUNCTION function_name(arg_type [, ...]) [FROM db_name]];
+SHOW CREATE [<GLOBAL>] FUNCTION <function_name>(<arg_type>) [FROM db_name]];
 ```
 
-说明：
-          1. `global`: 要展示的是全局函数
-          2. `function_name`: 要展示的函数名称
-          3. `arg_type`: 要展示的函数的参数列表
-          4. 如果不指定 db_name，使用当前默认 db
+## 参数
 
-**注意: "global"关键字在v2.0版本及以后才可用**
+| 参数 | 说明 |
+| -- | -- |
+| `<function_name>` | 要展示的函数名称 |
+| `<arg_type>` | 要展示的函数的参数列表 |
+
+## 返回值
+
+自定义函数的建表语句
 
 ## 举例
 
-1. 展示默认db下指定函数的创建语句
-   
-    ```sql
-    SHOW CREATE FUNCTION my_add(INT, INT)
-    ```
+1. 展示默认 db 下指定函数的创建语句
 
-2. 展示指定的全局函数的创建语句
+```sql
+SHOW CREATE FUNCTION add_one(INT)
+```
 
-    ```sql
-    SHOW CREATE GLOBAL FUNCTION my_add(INT, INT)
-    ```
-
-### Keywords
-
-    SHOW, CREATE, FUNCTION
-
-### Best Practice
-
+```text
+| Function Signature | Create Function
++--------------------+-------------------------------------------------------
+| add_one(INT)       | CREATE FUNCTION add_one(INT) RETURNS INT PROPERTIES (
+  "SYMBOL"="org.apache.doris.udf.AddOne",
+  "FILE"="file:///xxx.jar",
+  "ALWAYS_NULLABLE"="true",
+  "TYPE"="JAVA_UDF"
+  ); |
++--------------------+-------------------------------------------------------
+```

@@ -24,40 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
-Delete a custom function. Function names and parameter types are exactly the same to be deleted.
+Delete a custom function.
 
-grammar:
+## Syntax
 
 ```sql
-DROP [GLOBAL] FUNCTION function_name
-     (arg_type [, ...])
+DROP [GLOBAL] FUNCTION <function_name> ( <arg_type>)
 ```
 
-Parameter Description:
+## Parameters
 
-- `function_name`: the name of the function to delete
-- `arg_type`: the argument list of the function to delete
+| Parameters | Instructions |
+| -- | -- |
+| `<function_name>` | The name of the function to delete |
+| `<arg_type>` | To delete the argument list of the function |
+
+## Return Value
+
+The statement can be deleted if executed successfully. Special cases:
+
+- A function can be deleted only when its name and parameter types are the same
 
 ## Examples
 
-1. Delete a function
+```sql
+DROP FUNCTION my_add(INT, INT)
+```
 
-    ```sql
-    DROP FUNCTION my_add(INT, INT)
-    ```
-2. Delete a global function
-
-    ```sql
-    DROP GLOBAL FUNCTION my_add(INT, INT)
-    ```   
-
-## Keywords
-
-     DROP, FUNCTION
-
-## Best Practice
+```sql
+DROP GLOBAL FUNCTION my_add(INT, INT)
+```
