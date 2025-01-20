@@ -1,7 +1,7 @@
 ---
 {
-    "title": "数据分桶",
-    "language": "zh-CN"
+    "title": "Data Bucketing",
+    "language": "en"
 }
 ---
 
