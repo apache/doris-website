@@ -24,17 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-LOAD
-
-### Name
-
-SHOW LOAD
-
 ## 描述
 
-该语句用于展示指定的导入任务的执行情况
+该语句用于展示指定的导入任务的执行情况。
 
-语法：
+## 语法
 
 ```sql
 SHOW LOAD
@@ -48,27 +42,51 @@ SHOW LOAD
 [LIMIT limit][OFFSET offset];
 ```
 
-说明：
+## 可选参数
 
-1) 如果不指定 db_name，使用当前默认db
-    
-2)  如果使用 LABEL LIKE，则会匹配导入任务的 label 包含 label_matcher 的导入任务
-    
-3)  如果使用 LABEL = ，则精确匹配指定的 label
-    
-4) 如果指定了 STATE，则匹配 LOAD 状态
-    
-5) 可以使用 ORDER BY 对任意列组合进行排序
-    
-6)  如果指定了 LIMIT，则显示 limit 条匹配记录。否则全部显示
-    
-7) 如果指定了 OFFSET，则从偏移量offset开始显示查询结果。默认情况下偏移量为0。
-    
-8)  如果是使用 broker/mini load，则 URL 列中的连接可以使用以下命令查看：
-    
-    ```sql
-    SHOW LOAD WARNINGS ON 'url'
-    ```
+**1. `<db_name>`**
+
+> 如果不指定 db_name，使用当前默认数据库。
+
+**2. `<LABEL LIKE>`**
+
+> 如果使用 `LABEL LIKE`，则会匹配导入任务的 label 包含 label_matcher 的导入任务。
+
+**3. `<LABEL = >`**
+
+> 如果使用 `LABEL =`，则精确匹配指定的 label。
+
+**4. `<STATE>`**
+
+> 如果指定了 `STATE`，则匹配 LOAD 状态。
+
+**5. `<ORDER BY>`**
+
+> 可以使用 `ORDER BY` 对任意列组合进行排序。
+
+**6. `<LIMIT>`**
+
+> 如果指定了 `LIMIT`，则显示 limit 条匹配记录。否则全部显示。
+
+**7. `<OFFSET>`**
+
+> 如果指定了 `OFFSET`，则从偏移量 offset 开始显示查询结果。默认情况下偏移量为 0。
+
+**8. `<broker/mini load>`**
+
+> 如果是使用 `broker/mini load`，则 URL 列中的连接可以使用以下命令查看：
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
+| :---------------- | :------------- | :---------------------------- |
+| SELECT_PRIV        | 库（Database）    | 需要对数据库、表的只读权限。 |
+
+## 返回值
+
+返回指定导入任务的详细状态。
 
 ## 举例
 
@@ -105,13 +123,6 @@ SHOW LOAD
     
 6. 小批量导入是查看导入状态的命令
     
-    ```
+    ```text
     curl --location-trusted -u {user}:{passwd} http://{hostname}:{port}/api/{database}/_load_info?label={labelname}
     ```
-
-### Keywords
-
-    SHOW, LOAD
-
-### Best Practice
-

@@ -24,15 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CANCEL-LOAD
-
-### Name
-
-CANCEL LOAD
-
 ## 描述
 
 该语句用于撤销指定 label 的导入作业。或者通过模糊匹配批量撤销导入作业
+
+## 语法
 
 ```sql
 CANCEL LOAD
@@ -40,7 +36,41 @@ CANCEL LOAD
 WHERE [LABEL = "load_label" | LABEL like "label_pattern" | STATE = "PENDING/ETL/LOADING"]
 ```
 
-注：1.2.0 版本之后支持根据 State 取消作业。
+## 必选参数
+
+**1. `<db_name>`**
+
+> `db_name`: 撤销导入作业名称
+
+## 可选参数
+
+**1. `<LABEL = >`**
+
+> 如果使用 `LABEL =`，则精确匹配指定的 label。
+
+**2. `<LABEL like >`**
+
+> 如果使用 `LABEL LIKE`，则会匹配导入任务的 label 包含 label_matcher 的导入任务。
+
+**3. `< STATE = >`**
+
+> 如果指定了 `STATE`，则匹配 LOAD 状态。
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
+| :---------------- | :------------- | :---------------------------- |
+| SELECT_PRIV        | 库（Database）    | CANCEL LOAD 需要对数据库有查询权限 |
+
+## 注意事项
+
+- 1.2.0 版本之后支持根据 State 取消作业。
+
+- 只能取消处于 PENDING、ETL、LOADING 状态的未完成的导入作业。
+
+- 当执行批量撤销时，Doris 不会保证所有对应的导入作业原子的撤销。即有可能仅有部分导入作业撤销成功。用户可以通过 SHOW LOAD 语句查看作业状态，并尝试重复执行 CANCEL LOAD 语句。
 
 ## 举例
 
@@ -67,12 +97,3 @@ WHERE [LABEL = "load_label" | LABEL like "label_pattern" | STATE = "PENDING/ETL/
    FROM example_db
    WHERE STATE = "loading";
    ```
-
-### Keywords
-
-    CANCEL, LOAD
-
-### Best Practice
-
-1. 只能取消处于 PENDING、ETL、LOADING 状态的未完成的导入作业。
-2. 当执行批量撤销时，Doris 不会保证所有对应的导入作业原子的撤销。即有可能仅有部分导入作业撤销成功。用户可以通过 SHOW LOAD 语句查看作业状态，并尝试重复执行 CANCEL LOAD 语句。
