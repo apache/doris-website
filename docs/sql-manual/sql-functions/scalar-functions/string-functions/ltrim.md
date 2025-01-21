@@ -31,7 +31,7 @@ The LTRIM function is used to remove consecutive spaces or specified characters 
 ## Syntax
 
 ```sql
-ltrim( <str> [, <trim_chars> ] )
+LTRIM( <str> [, <trim_chars> ] )
 ```
 
 ## Parameters
