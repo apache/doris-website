@@ -66,7 +66,7 @@ This command will list all currently saved import profiles. Each line correspond
 
    ```sql
    mysql> show load profile "/"\G
-*************************** 1. row ***************************
+   *************************** 1. row ***************************
                  JobId: 20010
                QueryId: 980014623046410a-af5d36f23381017f
                   User: root
@@ -83,8 +83,8 @@ This command will list all currently saved import profiles. Each line correspond
           ScheduleTime: NULL
        FetchResultTime: NULL
        WriteResultTime: NULL
-WaitAndFetchResultTime: NULL
-*************************** 2. row ***************************
+   WaitAndFetchResultTime: NULL
+   *************************** 2. row ***************************
                  JobId: N/A
                QueryId: 7cc2d0282a7a4391-8dd75030185134d8
                   User: root
@@ -101,7 +101,7 @@ WaitAndFetchResultTime: NULL
           ScheduleTime: N/A
        FetchResultTime: 0ns
        WriteResultTime: 0ns
-WaitAndFetchResultTime: N/A
+   WaitAndFetchResultTime: N/A
    ```
 
 2. View an overview of the subtasks with imported jobs:
@@ -157,7 +157,7 @@ WaitAndFetchResultTime: N/A
                                     │Fragment: 1      │ │Fragment: 1  │
                                     └─────────────────┘ └─────────────┘
 
-   ```sql
+   ```
 
    This will show the plan tree and fragment id on it
 
@@ -226,6 +226,4 @@ WaitAndFetchResultTime: N/A
 ### Keywords
 
     SHOW, LOAD, PROFILE
-
-### Best Practice
 

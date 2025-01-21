@@ -24,25 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hours_diff
-### description
-#### Syntax
+## Description
 
-`INT hours_diff(DATETIME enddate, DATETIME startdate)`
+Calculates the difference in hours between the start time and the end time.
 
-The difference between the start time and the end time is a few hours
+## Syntax
 
-### example
-
-```
-mysql> select hours_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
-+----------------------------------------------------------+
-| hours_diff('2020-12-25 22:00:00', '2020-12-25 21:00:00') |
-+----------------------------------------------------------+
-|                                                        1 |
-+----------------------------------------------------------+
+```sql
+HOURS_DIFF(<end_date>, <start_date>)
 ```
 
-### keywords
+## Parameters
 
-    hours_diff
+| Parameter  | Description                                     |
+|------------|-------------------------------------------------|
+| `<end_date>`    | The end time, which can be of type DATETIME or DATE |
+| `<start_date>`  | The start time, which can be of type DATETIME or DATE |
+
+## Return Value
+
+Returns an INT type representing the number of hours between the start time and the end time.
+
+## Example
+
+```sql
+SELECT HOURS_DIFF('2020-12-25 22:00:00', '2020-12-25 21:00:00');
+```
+
+```text
++--------------------------------------------------------------------------------------------------------+
+| hours_diff(cast('2020-12-25 22:00:00' as DATETIMEV2(0)), cast('2020-12-25 21:00:00' as DATETIMEV2(0))) |
++--------------------------------------------------------------------------------------------------------+
+|                                                                                                      1 |
++--------------------------------------------------------------------------------------------------------+
+```

@@ -46,6 +46,7 @@ jobs:
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/
                   cp worker.js ./build/
+                  cp .htaccess ./build/
                   ls build
                   export DORIS_COMMIT=`git rev-parse HEAD`
 

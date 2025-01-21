@@ -22,38 +22,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### description
+## description
 
 Calculates an MD5 128-bit checksum for the strings
 
-### Syntax
+## Syntax
 
 ```sql
-MD5SUM(str[,str])
+MD5SUM( <str> [ , <str> ... ] )
 ```
 
-### example
+## Parameters
 
-```sql
-select md5("abcd");
-```
+|  parameter | description |
+|---------| -- |
+| `<str>` | The MD5 value to be calculated |
 
-```
-+----------------------------------+
-| md5('abcd')                      |
-+----------------------------------+
-| e2fc714c4727ee9395f324cd2e7f331f |
-+----------------------------------+
-```
+## Return Value
+
+Returns the MD5 value of multiple strings
+
+## Examples
 
 ```sql
-select md5sum("ab","cd");
+select md5("abcd"),md5sum("ab","cd");
 ```
 
-```
-+----------------------------------+
-| md5sum('ab', 'cd')               |
-+----------------------------------+
-| e2fc714c4727ee9395f324cd2e7f331f |
-+----------------------------------+
+```text
++----------------------------------+----------------------------------+
+| md5('abcd')                      | md5sum('ab', 'cd')               |
++----------------------------------+----------------------------------+
+| e2fc714c4727ee9395f324cd2e7f331f | e2fc714c4727ee9395f324cd2e7f331f |
++----------------------------------+----------------------------------+
 ```

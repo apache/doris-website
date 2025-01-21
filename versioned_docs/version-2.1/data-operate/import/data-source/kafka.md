@@ -191,7 +191,7 @@ The Doris Kafka Connector is a tool for loading Kafka data streams into the Dori
 2. Configure `config/connect-distributed.properties`:
 
 ```Bash
-# Modify broker address
+# Modify kafka server address
 bootstrap.servers=127.0.0.1:9092
 
 # Modify group.id, which needs to be consistent across the same cluster

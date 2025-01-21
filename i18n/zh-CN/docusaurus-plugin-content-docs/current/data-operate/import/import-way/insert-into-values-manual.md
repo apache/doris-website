@@ -44,7 +44,7 @@ INSERT INTO VALUES 通过 MySQL 协议提交和传输。下例以 MySQL 命令�
 
 ### 前置检查
 
-INSERT INTO VALUES 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
+INSERT INTO VALUES 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) 命令给用户授权。
 
 ### 创建导入作业
 

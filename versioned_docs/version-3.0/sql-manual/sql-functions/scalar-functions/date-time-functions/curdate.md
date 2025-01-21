@@ -24,31 +24,47 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## curdate,current_date
-### Description
-#### Syntax
+## Description
 
-`DATE CURDATE()`
+Retrieves the current date and returns it as a DATE type.
 
-Get the current date and return it in Date type
+## Alias
 
-### example
+- curdate
+- current_date
 
+## Syntax
+
+```sql
+CURDATE()
 ```
-mysql> SELECT CURDATE();
+
+## Return Value
+
+The current date.
+
+## Examples 
+
+```sql
+SELECT CURDATE();
+```
+
+```text
 +------------+
 | CURDATE()  |
 +------------+
 | 2019-12-20 |
 +------------+
+```
 
-mysql> SELECT CURDATE() + 0;
+```sql
+SELECT CURDATE() + 0;
+```
+
+```text
 +---------------+
 | CURDATE() + 0 |
 +---------------+
 |      20191220 |
 +---------------+
 ```
-### keywords
-
-    CURDATE,CURRENT_DATE

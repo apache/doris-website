@@ -81,39 +81,39 @@ Node resource division refers to setting tags for BE nodes in a Doris cluster, a
     The following figure shows the current node division and data distribution:
     
     ```
-     ┌────────────────────────────────────────────────────┐
+     ┌----------------------------------------------------┐
      │                                                    │
-     │         ┌──────────────────┐  ┌──────────────────┐ │
+     │         ┌------------------┐  ┌------------------┐ │
      │         │ host1            │  │ host2            │ │
-     │         │  ┌─────────────┐ │  │                  │ │
+     │         │  ┌-------------┐ │  │                  │ │
      │ group_a │  │   replica1  │ │  │                  │ │
-     │         │  └─────────────┘ │  │                  │ │
+     │         │  └-------------┘ │  │                  │ │
      │         │                  │  │                  │ │
-     │         └──────────────────┘  └──────────────────┘ │
+     │         └------------------┘  └------------------┘ │
      │                                                    │
-     ├────────────────────────────────────────────────────┤
-     ├────────────────────────────────────────────────────┤
+     ├----------------------------------------------------┤
+     ├----------------------------------------------------┤
      │                                                    │
-     │         ┌──────────────────┐  ┌──────────────────┐ │
+     │         ┌------------------┐  ┌------------------┐ │
      │         │ host3            │  │ host4            │ │
-     │         │                  │  │  ┌─────────────┐ │ │
+     │         │                  │  │  ┌-------------┐ │ │
      │ group_b │                  │  │  │   replica2  │ │ │
-     │         │                  │  │  └─────────────┘ │ │
+     │         │                  │  │  └-------------┘ │ │
      │         │                  │  │                  │ │
-     │         └──────────────────┘  └──────────────────┘ │
+     │         └------------------┘  └------------------┘ │
      │                                                    │
-     ├────────────────────────────────────────────────────┤
-     ├────────────────────────────────────────────────────┤
+     ├----------------------------------------------------┤
+     ├----------------------------------------------------┤
      │                                                    │
-     │         ┌──────────────────┐  ┌──────────────────┐ │
+     │         ┌------------------┐  ┌------------------┐ │
      │         │ host5            │  │ host6            │ │
-     │         │                  │  │  ┌─────────────┐ │ │
+     │         │                  │  │  ┌-------------┐ │ │
      │ group_c │                  │  │  │   replica3  │ │ │
-     │         │                  │  │  └─────────────┘ │ │
+     │         │                  │  │  └-------------┘ │ │
      │         │                  │  │                  │ │
-     │         └──────────────────┘  └──────────────────┘ │
+     │         └------------------┘  └------------------┘ │
      │                                                    │
-     └────────────────────────────────────────────────────┘
+     └----------------------------------------------------┘
     ```
     
 3. Use different resource groups for data query
@@ -129,7 +129,7 @@ Node resource division refers to setting tags for BE nodes in a Doris cluster, a
     ```
 
    :::tip
-   It should be noted that after each modification of the ```resource_tags.location``` property, the user needs to re-establish the connection for the changes to take effect.
+   It should be noted that after each modification of the `resource_tags.location` property, the user needs to re-establish the connection for the changes to take effect.
    :::
     
     After the setting is complete, when user1 initiates a query on the UserTable table, it will only access the data copy on the nodes in the `group_a` resource group, and the query will only use the node computing resources in the `group_a` resource group. The query of user3 can use copies and computing resources in any resource group.
