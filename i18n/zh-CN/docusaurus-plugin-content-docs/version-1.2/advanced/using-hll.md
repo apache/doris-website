@@ -172,7 +172,7 @@ HLL 列不允许直接查询原始值，只能通过 HLL 的聚合函数进行�
 
 1. 求总的PV
 
-   ```sql
+```sql
    mysql> select HLL_UNION_AGG(pv) from test_hll;
    +---------------------+
    | hll_union_agg(`pv`) |
@@ -180,11 +180,11 @@ HLL 列不允许直接查询原始值，只能通过 HLL 的聚合函数进行�
    |                   4 |
    +---------------------+
    1 row in set (0.00 sec)
-   ```
+```
 
    等价于：
 
-   ```sql
+```sql
    mysql> SELECT COUNT(DISTINCT pv) FROM test_hll;
    +----------------------+
    | count(DISTINCT `pv`) |
@@ -192,11 +192,11 @@ HLL 列不允许直接查询原始值，只能通过 HLL 的聚合函数进行�
    |                    4 |
    +----------------------+
    1 row in set (0.01 sec)
-   ```
+```
 
 2. 求每一天的PV
 
-   ```sql
+```sql
    mysql> select HLL_UNION_AGG(pv) from test_hll group by dt;
    +---------------------+
    | hll_union_agg(`pv`) |
@@ -205,4 +205,4 @@ HLL 列不允许直接查询原始值，只能通过 HLL 的聚合函数进行�
    |                   4 |
    +---------------------+
    2 rows in set (0.01 sec)
-   ```
+```

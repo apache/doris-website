@@ -73,7 +73,7 @@ PROPERTIES (
 );
 ```
 
-More parameter explanations and examples can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md).
+More parameter explanations and examples can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
 
 ## View Storage Vaults
 
@@ -131,7 +131,7 @@ HDFS Storage Vault forbidden properties:
 - `path_prefix`
 - `fs.defaultFS`
 
-Properties explanations can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md).
+Properties explanations can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
 
 **Example**
 

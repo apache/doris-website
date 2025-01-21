@@ -45,7 +45,7 @@ In most cases, you can directly choose Routine Load for loading data without the
 
 ### Operation Example
 
-In Doris, create a persistent Routine Load load task through the CREATE ROUTINE LOAD command, which can be divided into single-table load and multi-table load. For detailed syntax, please refer to [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD).
+In Doris, create a persistent Routine Load load task through the CREATE ROUTINE LOAD command, which can be divided into single-table load and multi-table load. For detailed syntax, please refer to [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD).
 
 #### Single Table Load
 
@@ -191,7 +191,7 @@ The Doris Kafka Connector is a tool for loading Kafka data streams into the Dori
 2. Configure `config/connect-distributed.properties`:
 
 ```Bash
-# Modify broker address
+# Modify kafka server address
 bootstrap.servers=127.0.0.1:9092
 
 # Modify group.id, which needs to be consistent across the same cluster

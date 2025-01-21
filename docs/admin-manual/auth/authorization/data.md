@@ -54,8 +54,8 @@ With column permissions in Doris, you can achieve fine-grained access control ov
 Currently, column permissions only support Select_priv.
 
 ### Related Commands
-- Grant: [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT.md)
-- Revoke: [REVOKE](../../../sql-manual/sql-statements/Account-Management-Statements/REVOKE.md)
+- Grant: [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO)
+- Revoke: [REVOKE](../../../sql-manual/sql-statements/account-management/REVOKE-FROM.md)
 
 ### Column Permission Example
 
