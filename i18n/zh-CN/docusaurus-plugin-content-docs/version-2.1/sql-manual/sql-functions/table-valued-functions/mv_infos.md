@@ -1,7 +1,7 @@
 ---
 {
-    "title": "MV_INFOS",
-    "language": "zh-CN"
+  "title": "MV_INFOS",
+  "language": "zh-CN"
 }
 ---
 
@@ -24,79 +24,64 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `mv_infos`
-
-### Name
-
-mv_infos
-
 ## 描述
 
 表函数，生成异步物化视图临时表，可以查看某个db中创建的异步物化视图信息。
 
-该函数用于 from 子句中。
-
-该函数自 2.1.0 版本支持。
 
 ## 语法
-
-`mv_infos("database"="")`
-
-mv_infos()表结构：
 ```sql
-mysql> desc function mv_infos("database"="tpch100");
-+--------------------+---------+------+-------+---------+-------+
-| Field              | Type    | Null | Key   | Default | Extra |
-+--------------------+---------+------+-------+---------+-------+
-| Id                 | BIGINT  | No   | false | NULL    | NONE  |
-| Name               | TEXT    | No   | false | NULL    | NONE  |
-| JobName            | TEXT    | No   | false | NULL    | NONE  |
-| State              | TEXT    | No   | false | NULL    | NONE  |
-| SchemaChangeDetail | TEXT    | No   | false | NULL    | NONE  |
-| RefreshState       | TEXT    | No   | false | NULL    | NONE  |
-| RefreshInfo        | TEXT    | No   | false | NULL    | NONE  |
-| QuerySql           | TEXT    | No   | false | NULL    | NONE  |
-| EnvInfo            | TEXT    | No   | false | NULL    | NONE  |
-| MvProperties       | TEXT    | No   | false | NULL    | NONE  |
-| MvPartitionInfo    | TEXT    | No   | false | NULL    | NONE  |
-| SyncWithBaseTables | BOOLEAN | No   | false | NULL    | NONE  |
-+--------------------+---------+------+-------+---------+-------+
-12 rows in set (0.01 sec)
+MV_INFOS("database"="<database>")
 ```
 
-* Id：物化视图id
-* Name：物化视图Name
-* JobName：物化视图对应的job名称
-* State：物化视图状态
-* SchemaChangeDetail：物化视图State变为SchemaChange的原因
-* RefreshState：物化视图刷新状态
-* RefreshInfo：物化视图定义的刷新策略信息
-* QuerySql：物化视图定义的查询语句
-* EnvInfo：物化视图创建时的环境信息
-* MvProperties：物化视属性
-* MvPartitionInfo：物化视图的分区信息
-* SyncWithBaseTables：是否和base表数据同步，如需查看哪个分区不同步，请使用[SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md)
+## 必填参数 (Required Parameters)
+**`<database>`**
+> 指定需要查询的集群数据库名
 
-## 举例
 
-1. 查看db1下的所有物化视图
+## 返回值
+| 字段名称                | 类型    | 说明                                                               |
+|-------------------------|---------|--------------------------------------------------------------------|
+| Id                      | BIGINT  | 物化视图id                                                         |
+| Name                    | TEXT    | 物化视图Name                                                       |
+| JobName                 | TEXT    | 物化视图对应的job名称                                               |
+| State                   | TEXT    | 物化视图状态                                                       |
+| SchemaChangeDetail      | TEXT    | 物化视图State变为SchemaChange的原因                                 |
+| RefreshState            | TEXT    | 物化视图刷新状态                                                   |
+| RefreshInfo             | TEXT    | 物化视图定义的刷新策略信息                                         |
+| QuerySql                | TEXT    | 物化视图定义的查询语句                                             |
+| EnvInfo                 | TEXT    | 物化视图创建时的环境信息                                           |
+| MvProperties            | TEXT    | 物化视属性                                                         |
+| MvPartitionInfo         | TEXT    | 物化视图的分区信息                                                 |
+| SyncWithBaseTables      | BOOLEAN | 是否和base表数据同步，如需查看哪个分区不同步，请使用[SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md) |
 
-```sql
-mysql> select * from mv_infos("database"="db1");
-```
 
-2. 查看db1下的物化视图名称为mv1的物化视图
+## 示例
 
-```sql
-mysql> select * from mv_infos("database"="db1") where Name = "mv1";
-```
-
-3. 查看db1下的物化视图名称为mv1的状态
+查看 test 下的所有物化视图
 
 ```sql
-mysql> select State from mv_infos("database"="db1") where Name = "mv1";
+select * from mv_infos("database"="test");
+```
+```text
++-------+--------------------------+------------------+--------+--------------------+--------------+---------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| Id    | Name                     | JobName          | State  | SchemaChangeDetail | RefreshState | RefreshInfo                           | QuerySql                                                                                                                                                         | MvProperties                                              | MvPartitionInfo                                                                                           | SyncWithBaseTables |
++-------+--------------------------+------------------+--------+--------------------+--------------+---------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| 19494 | mv1                      | inner_mtmv_19494 | NORMAL |                    | SUCCESS      | BUILD DEFERRED REFRESH AUTO ON MANUAL | SELECT `internal`.`test`.`user`.`k2`, `internal`.`test`.`user`.`k3` FROM `internal`.`test`.`user`                                                                      | {partition_sync_limit=100, partition_sync_time_unit=YEAR} | MTMVPartitionInfo{partitionType=FOLLOW_BASE_TABLE, relatedTable=user, relatedCol='k2', partitionCol='k2'} |                  1 |
+| 21788 | test_tablet_type_mtmv_mv | inner_mtmv_21788 | NORMAL |                    | SUCCESS      | BUILD DEFERRED REFRESH AUTO ON MANUAL | SELECT `internal`.`test`.`test_tablet_type_mtmv_table`.`k2`, `internal`.`test`.`test_tablet_type_mtmv_table`.`k3` from `internal`.`test`.`test_tablet_type_mtmv_table` | {}                                                        | MTMVPartitionInfo{partitionType=SELF_MANAGE}                                                              |                  0 |
++-------+--------------------------+------------------+--------+--------------------+--------------+---------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
 ```
 
-### keywords
+查看 test 下的物化视图名称为 mv1 的物化视图
 
-    mv, infos
+```sql
+select * from mv_infos("database"="test") where Name = "mv1";
+```
+```text
++-------+------+------------------+--------+--------------------+--------------+---------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| Id    | Name | JobName          | State  | SchemaChangeDetail | RefreshState | RefreshInfo                           | QuerySql                                                                                    | MvProperties                                              | MvPartitionInfo                                                                                           | SyncWithBaseTables |
++-------+------+------------------+--------+--------------------+--------------+---------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| 19494 | mv1  | inner_mtmv_19494 | NORMAL |                    | SUCCESS      | BUILD DEFERRED REFRESH AUTO ON MANUAL | SELECT `internal`.`test`.`user`.`k2`, `internal`.`test`.`user`.`k3` FROM `internal`.`test`.`user` | {partition_sync_limit=100, partition_sync_time_unit=YEAR} | MTMVPartitionInfo{partitionType=FOLLOW_BASE_TABLE, relatedTable=user, relatedCol='k2', partitionCol='k2'} |                  1 |
++-------+------+------------------+--------+--------------------+--------------+---------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+```
+    
