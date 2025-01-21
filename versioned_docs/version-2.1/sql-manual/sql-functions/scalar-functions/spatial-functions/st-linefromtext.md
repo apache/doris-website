@@ -24,24 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_LineFromText,ST_LineStringFromText
-### Description
-#### Syntax
+## Description
 
-`GEOMETRY ST LineFromText (VARCHAR wkt)`
+Converts a WKT (Well Known Text) to a memory representation in the form of a Line
 
+## Syntax
 
-Converting a WKT (Well Known Text) into a Line-style memory representation
-
-### example
-
+```sql
+ST_LineFromText( <wkt>)
 ```
-mysql> SELECT ST_AsText(ST_LineFromText("LINESTRING (1 1, 2 2)"));
+
+## Parameters
+
+| Parameters  | Instructions         |
+|-----|------------|
+| `<wkt>` | A line segment consisting of two coordinates |
+
+## Return Value
+
+The memory form of a line segment.
+
+## Examples
+
+```sql
+SELECT ST_AsText(ST_LineFromText("LINESTRING (1 1, 2 2)"));
+```
+
+```text
 +---------------------------------------------------------+
 | st_astext(st_geometryfromtext('LINESTRING (1 1, 2 2)')) |
 +---------------------------------------------------------+
 | LINESTRING (1 1, 2 2)                                   |
 +---------------------------------------------------------+
 ```
-### keywords
-ST_LINEFROMTEXT, ST_LINESTRINGFROMTEXT,ST,LINEFROMTEXT,LINESTRINGFROMTEXT

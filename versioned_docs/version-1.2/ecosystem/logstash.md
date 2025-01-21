@@ -87,8 +87,8 @@ Install successful
 
 The configuration for the Logstash Doris output plugin is as follows:
 
-Configuration | Description
---- | ---
+Configuration        | Description
+-------------------- | ---------------------------------------------------------
 `http_hosts` | Stream Load HTTP address, formatted as a string array, can have one or more elements, each element is host:port. For example: ["http://fe1:8030", "http://fe2:8030"]
 `user` | Doris username, this user needs to have import permissions for the corresponding Doris database and table
 `password` | Password for the Doris user
