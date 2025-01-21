@@ -24,47 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## 描述
 
-该语句用于删除 BACKEND 节点（仅管理员使用！）
+该语句用于将 BE 节点从 Doris 集群中删除。
 
-语法：
-
-- 通过 host 和 port 查找 backend
+## 语法
 
 ```sql
-ALTER SYSTEM DROP BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...]
+ALTER SYSTEM DROP BACKEND "<be_identifier>" [, "<be_identifier>" ... ]
 ```
 
-- 通过 backend_id 查找 backend
+其中：
 
 ```sql
-ALTER SYSTEM DROP BACKEND "id1","id2"...;
+be_identifier
+  : "<be_host>:<be_heartbeat_port>"
+  | "<backend_id>"
 ```
 
-说明：
+:::tip
+`<be_host>`、`<be_heartbeat_port>`及`<backend_id>`均可通过[SHOW BACKENDS](./SHOW-BACKENDS.md)语句查询获得。
+:::
 
-1. host 可以是主机名或者 ip 地址
-2. heartbeat_port 为该节点的心跳端口
-3. 增加和删除节点为同步操作。这两种操作不考虑节点上已有的数据，节点直接从元数据中删除，请谨慎使用。
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限        | 对象 | 说明 |
+|-----------|----|----|
+| NODE_PRIV |    |    |
+
+## 注意事项
+
+1. 不推荐使用该命令下线 BE，该命令会直接将 BE 直接从集群中删去，当前节点的数据并不会负载均衡到其他 BE 节点，如果集群存在单副本的表，那么就有可能出现数据丢失的情况。更好的做法是使用[DECOMMISSION BACKEND](./DECOMMISSION-BACKEND.md)命令优雅下线 BE。
+2. 由于此操作是高危操作，因此当直接运行此命令时：
+   ```sql
+   ALTER SYSTEM DROP BACKEND "127.0.0.1:9050";
+   ```
+   ```text
+   ERROR 1105 (HY000): errCode = 2, detailMessage = It is highly NOT RECOMMENDED to use DROP BACKEND stmt.It is not safe to directly drop a backend. All data on this backend will be discarded permanently. If you insist, use DROPP instead of DROP
+   ```
+   会出现以上提示信息，如果您明白您当前所做的事情，可将`DROP`关键字替换成`DROPP`，并继续下去：
+   ```sql
+   ALTER SYSTEM DROPP BACKEND "127.0.0.1:9050";
+   ```
 
 ## 示例
 
-1. 删除两个节点
-
+1. 根据 BE 的 Host 和 HeartbeatPort 从集群中删除两个节点
    ```sql
-   ALTER SYSTEM DROP BACKEND "host1:port", "host2:port";
+   ALTER SYSTEM DROPP BACKEND "192.168.0.1:9050", "192.168.0.2:9050";
    ```
-    
+
+2. 根据 BE 的 ID 从集群中删除一个节点
     ```sql
-    ALTER SYSTEM DROP BACKEND "id1", "id2";
+    ALTER SYSTEM DROPP BACKEND "10002";
     ```
-
-## 关键词
-
-    ALTER, SYSTEM, DROP, BACKEND, ALTER SYSTEM
-
-### 最佳实践
-
