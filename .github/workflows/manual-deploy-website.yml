@@ -60,6 +60,7 @@ jobs:
                   folder: build
                   onlyUpload: true
                   otherCacheControl: 0
+                  skipSetting: true
 
             - name: Deploy Website
               if: ${{ github.event.inputs.branch == 'master' }}

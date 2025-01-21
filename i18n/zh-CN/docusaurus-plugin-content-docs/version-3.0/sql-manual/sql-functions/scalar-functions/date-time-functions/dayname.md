@@ -24,27 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## dayname
 ## 描述
+
+计算日期表达式对应的日期名字。
+
 ## 语法
 
-`VARCHAR DAYNAME(DATE)`
+```sql
+DAYNAME(<dt>)
+```
 
+## 参数
 
-返回日期对应的日期名字
+| 参数 | 说明 |
+| -- | -- |
+| `<dt>` | 需要被计算的日期表达式 |
 
-参数为Date或者Datetime类型
+## 返回值
+
+返回日期表达式对应的日期名字。
 
 ## 举例
 
+```sql
+select dayname('2007-02-03 00:00:00');
 ```
-mysql> select dayname('2007-02-03 00:00:00');
+
+```text
 +--------------------------------+
 | dayname('2007-02-03 00:00:00') |
 +--------------------------------+
 | Saturday                       |
 +--------------------------------+
 ```
-
-### keywords
-    DAYNAME
