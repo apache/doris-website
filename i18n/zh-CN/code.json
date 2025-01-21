@@ -1,4 +1,12 @@
 {
+    "archive.layout.title": {
+        "message": "Apache Doris - 归档文档中心",
+        "description": "Apache Doris - Archive Document Center"
+    },
+    "archive.layout.description": {
+        "message": "收录Apache doris归档文档",
+        "description": "Collection of Apache doris archive documents"
+    },
     "archive.page.title": {
         "message": "归档文档中心",
         "description": "The label for archived docs page title"
@@ -29,17 +37,17 @@
     },
     "archive.page.version": {
         "message": "版本：1.2",
-        "description": "Archive Download Version"
+        "description": "Archive Version"
     },
-    "archive.download.v12": {
-        "message": "归档文档链接：{downloadLink}",
-        "description": "Archive download link"
+    "archive.preview.v12": {
+        "message": "归档文档链接：{previewLink}",
+        "description": "Archive preview link"
     },
-    "archive.download.link": {
+    "archive.preview.link": {
         "message": "Apache Doris v1.2 中文文档",
-        "description": "Archive download link"
+        "description": "Archive preview link"
     },
-    "archive.download.date": {
+    "archive.preview.date": {
         "message": "归档日期：{date}",
         "description": "Archive date"
     }
