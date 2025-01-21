@@ -30,15 +30,15 @@ Calculates the cosine distance between two vectors (vector values are coordinate
 ## Syntax
 
 ```sql
-DOUBLE cosine_distance(ARRAY<T> array1, ARRAY<T> array2)
+COSINE_DISTANCE(<array1>, <array2>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- |--|
-| `array1` | The first vector (the vector value is the coordinate). The subtypes of the input array are: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE. The number of elements must be consistent with array2. |
-| `array1` | The second vector (the vector value is the coordinate), the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array1 |
+| `<array1>` | The first vector (the vector value is the coordinate). The subtypes of the input array are: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE. The number of elements must be consistent with array2 |
+| `<array1>` | The second vector (the vector value is the coordinate), the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array1 |
 
 ## Return Value
 
@@ -47,7 +47,7 @@ Returns the cosine distance between two vectors (where the vector values are coo
 ## Example
 
 ```sql
-SELECT cosine_distance([1, 2], [2, 3]),cosine_distance([3, 6], [4, 7]);
+SELECT COSINE_DISTANCE([1, 2], [2, 3]),COSINE_DISTANCE([3, 6], [4, 7]);
 ```
 
 ```text

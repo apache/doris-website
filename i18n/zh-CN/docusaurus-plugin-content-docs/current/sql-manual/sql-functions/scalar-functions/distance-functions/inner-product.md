@@ -30,15 +30,15 @@ under the License.
 ## 语法
 
 ```sql
-DOUBLE inner_product(ARRAY<T> array1, ARRAY<T> array2)
+INNER_PRODUCT(<array1>, <array2>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- |--|
-| `array1` | 第一个向量，输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array2保持一致 |
-| `array1` | 第二个向量，输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array1保持一致 |
+| `<array1>` | 第一个向量，输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array2保持一致 |
+| `<array2>` | 第二个向量，输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array1保持一致 |
 
 ## 返回值
 
@@ -47,7 +47,7 @@ DOUBLE inner_product(ARRAY<T> array1, ARRAY<T> array2)
 ## 举例
 
 ```sql
-SELECT inner_product([1, 2], [2, 3]),inner_product([3, 6], [4, 7]);
+SELECT INNER_PRODUCT([1, 2], [2, 3]),INNER_PRODUCT([3, 6], [4, 7]);
 ```
 
 ```text

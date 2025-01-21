@@ -30,15 +30,15 @@ Computes the scalar product of two vectors of the same size
 ## Syntax
 
 ```sql
-DOUBLE inner_product(ARRAY<T> array1, ARRAY<T> array2)
+INNER_PRODUCT(<array1>, <array2>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- |--|
-| `array1` | The first vector, the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array2 |
-| `array1` | The second vector, the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array1 |
+| `<array1>` | The first vector, the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array2 |
+| `<array2>` | The second vector, the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array1 |
 
 ## Return Value
 
@@ -47,7 +47,7 @@ Returns the scalar product of two vectors of the same size. If the input array i
 ## Examples
 
 ```sql
-SELECT inner_product([1, 2], [2, 3]),inner_product([3, 6], [4, 7]);
+SELECT INNER_PRODUCT([1, 2], [2, 3]),INNER_PRODUCT([3, 6], [4, 7]);
 ```
 
 ```text

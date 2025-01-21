@@ -30,15 +30,15 @@ under the License.
 ## 语法
 
 ```sql
-DOUBLE l2_distance(ARRAY<T> array1, ARRAY<T> array2)
+L2_DISTANCE(<array1>, <array2>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- |--|
-| `array1` | 第一个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array2保持一致 |
-| `array1` | 第二个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array1保持一致 |
+| `<array1>` | 第一个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array2保持一致 |
+| `<array2>` | 第二个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array1保持一致 |
 
 ## 返回值
 
@@ -47,7 +47,7 @@ DOUBLE l2_distance(ARRAY<T> array1, ARRAY<T> array2)
 ## 举例
 
 ```sql
-SELECT l2_distance([4, 5], [6, 8]),l2_distance([3, 6], [4, 5]);
+SELECT L2_DISTANCE([4, 5], [6, 8]),L2_DISTANCE([3, 6], [4, 5]);
 ```
 
 ```text
