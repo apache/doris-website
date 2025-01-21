@@ -41,17 +41,6 @@ REPEAT( <str>, <count> )
 | `<str>`   | The string to be repeated.                                                                                                |
 | `<count>` | The number of times to repeat. It must be a non-negative integer. If it is less than 1, an empty string will be returned. |
 
-<!-- 3.0 has deleted
-
-:::tip
-The repeat function defaults to a maximum of 10,000 repetitions. If this number is exceeded, an error will be reported. The limit can be adjusted through a session variable:
-```sql
-set repeat_max_num = 20000
-```
-:::
-
--->
-
 ## Return Value
 
 Returns the string repeated the specified number of times. Special cases:

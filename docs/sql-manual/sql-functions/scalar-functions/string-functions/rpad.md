@@ -42,17 +42,6 @@ RPAD ( <str> , <len> , <pad>)
 | `<len>` | The total length of the final result string, which represents character length rather than the byte length. |
 | `<pad>` | The string used for padding.                                                                                |
 
-<!-- 3.0 又删除了这个变量
-
-:::tip
-The maximum value of the `<len>` parameter is 10000. If this limit is exceeded, an error will be occurred. You can adjust the limit by setting the session variable:
-```sql
-set repeat_max_num = 20000
-```
-:::
-
--->
-
 ## Return Value
 
 Returns the padded string. Special cases:
