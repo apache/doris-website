@@ -31,23 +31,36 @@ under the License.
 ## 语法
 
 ```sql
-SHOW CREATE [<GLOBAL>] FUNCTION <function_name>(<arg_type>) [FROM db_name]];
+SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type>) [ FROM db_name ];
 ```
 
-## 参数
+## 必选参数
 
-| 参数 | 说明 |
-| -- | -- |
-| `<function_name>` | 要展示的函数名称 |
-| `<arg_type>` | 要展示的函数的参数列表 |
+**1. `<function_name>`**
 
-## 返回值
+> 需要查询创建语句的自定义函数的名称。
 
-自定义函数的建表语句
+**2. `<arg_type>`**
 
-## 举例
+> 需要查询创建语句的自定义函数的参数列表。
+>
+> 参数列表对应位置需要填写对应位置参数的数据类型
 
-1. 展示默认 db 下指定函数的创建语句
+## 可选参数
+
+**1.`<GLOBAL>`**
+
+> GLOBAL 为选填项
+>
+> 若填写 GLOBAL 则为全局搜索该函数
+>
+> 若不填写 GLOABL 则只在当前数据库下搜索该函数
+
+**2.`<FROM db_name>`**
+
+> FROM db_name 表示从指定的数据库中查询该自定义函数
+
+## 示例
 
 ```sql
 SHOW CREATE FUNCTION add_one(INT)

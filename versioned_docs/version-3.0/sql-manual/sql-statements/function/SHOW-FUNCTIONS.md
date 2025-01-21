@@ -26,28 +26,56 @@ under the License.
 
 ## Description
 
-View all custom (system-provided) functions in the database.
-
-You need to have a 'SHOW' permission on this database
+View all custom and system provided functions under the database.
 
 ## Syntax
 
 ```sql
-SHOW [<FULL>] [<BUILTIN>] FUNCTIONS IN|FROM <db> [LIKE '<function_pattern>']
+SHOW [ FULL ] [ BUILTIN ] FUNCTIONS [ { IN | FROM } db ]  [LIKE '<function_pattern>']
+```
+## Varaint Syntax
+
+```sql
+SHOW GLOBAL [ FULL ] FUNCTIONS [LIKE '<function_pattern>']
 ```
 
-## Parameters
+## Required Parameters
 
-| Parameters | Instructions |
-| -- | -- |
-| `<FULL>` | indicates that detailed information about the function is displayed |
-| `<BUILTIN>` | Indicates a function provided by the display system |
-| `<db>` | Name of the database to be queried |
-| `<function_pattern>` | Parameters used to filter function names |
+**1. `<function_pattern>`**
+
+> Matching pattern rules used to filter function names
+
+## Optional Parameters
+
+**1. `<FULL>`**
+
+> FULL is an optional parameter.
+>
+> This parameter indicates the detailed information about the function.
+
+**2. `<BUILTIN>`**
+
+> BUILTIN is an optional parameter.
+>
+> This parameter indicates that the functions provided by the system need to be displayed
+
+**3. `<db>`**
+
+> db is an optional parameter.
+>
+> This parameter indicates the query under the specified database
 
 ## Return Value
 
-Specifies the result of a function that matches the function name filter under the database
+Query the result of the function that matches the function name filtering in the database where the current session resides.
+
+## Access Control Requirements
+
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege  | Object   | Notes       |
+|:--------------|:---------|:--------------|
+| SHOW    | Function | You need to have the show permission on this function |
 
 ## Examples
 
@@ -90,27 +118,6 @@ show builtin functions in testDb like 'year%';
 | years_sub     |
 +---------------+
 ```
-
-
-## Syntax
-
-```sql
-SHOW GLOBAL [<FULL>] FUNCTIONS [LIKE '<function_pattern>']
-```
-
-## Parameters
-
-| Parameters | Instructions |
-| -- | -- |
-| `<FULL>` | Displays detailed information about the function |
-| `<function_pattern>` | Parameters used to filter function names |
-
-
-## Return Value
-
-Query the result of the function that matches the function name filtering in the database where the current session resides
-
-## Examples
 
 ```sql
 show global full functions

@@ -31,19 +31,34 @@ This statement is used to show the creation statement of a user-defined function
 ## Syntax
 
 ```sql
-SHOW CREATE [<GLOBAL>] FUNCTION <function_name>(<arg_type>) [FROM db_name]];
+SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type>) [ FROM db_name ];
 ```
 
-## Parameters
+## Required Parameters
 
-| Parameters | Instructions |
-| -- | -- |
-| `<function_name>` | The name of the function to delete |
-| `<arg_type>` | To delete the argument list of the function |
+**1. `<function_name>`**
 
-## Return Value
+> The name of the custom function that you want to query for the creation statement.
 
-A custom function constructor clause
+**2. `<arg_type>`**
+
+> The parameter list of the custom function that needs to be queried for the creation statement.
+>
+> Parameter list location you need to enter the data type of the location parameter
+
+## Optional Parameters
+
+**1.`<GLOBAL>`**
+
+> GLOBAL is an optional parameter.
+>
+> If GLOBAL is set, the function is searched for globally and deleted.
+>
+> If GLOABL is not entered, the function is searched for in the current database and deleted.
+
+**2.`<FROM db_name>`**
+
+> FROM db_name indicates that the custom function is queried from the specified database
 
 ## Examples
 

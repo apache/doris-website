@@ -26,30 +26,58 @@ under the License.
 
 ## 描述
 
-查看数据库下所有的自定义 (系统提供) 的函数。
-
-需要对这个数据库拥有 `SHOW` 权限
+查看数据库下所有的自定义与系统提供的函数。
 
 ## 语法
 
 ```sql
-SHOW [<FULL>] [<BUILTIN>] FUNCTIONS IN|FROM <db> [LIKE '<function_pattern>']
+SHOW [ FULL ] [ BUILTIN ] FUNCTIONS [ { IN | FROM } db ]  [LIKE '<function_pattern>']
+```
+## 变种语法
+
+```sql
+SHOW GLOBAL [ FULL ] FUNCTIONS [LIKE '<function_pattern>']
 ```
 
-## 参数
+## 必选参数
 
-| 参数 | 说明 |
-| -- | -- |
-| `<FULL>` | 表示显示函数的详细信息 |
-| `<BUILTIN>` | 表示显示系统提供的函数 |
-| `<db>` | 要查询的数据库名字 |
-| `<function_pattern>` | 用来过滤函数名称的参数 |
+**1. `<function_pattern>`**
+
+> 用来过滤函数名称的匹配模式规则
+
+## 可选参数
+
+**1. `<FULL>`**
+
+> FULL 为选填项
+>
+> 若填写表示显示函数的详细信息。
+
+**2. `<BUILTIN>`**
+
+> BUILTIN 为选填项
+>
+> 若填写表示需要显示系统提供的函数
+
+**3. `<db>`**
+
+> db 为选填项
+>
+> 若填写表示在指定的数据库下查询
 
 ## 返回值
 
-指定数据库下符合函数名称过滤的函数结果
+查询当前会话所在数据库下符合函数名称过滤的函数结果
 
-## 举例
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）     |
+|:--------------|:-----------|:--------------|
+| SHOW    | 函数  | 需要对该函数有 show 权限 |
+
+## 示例
 
 ```sql
 show full functions in testDb
@@ -90,27 +118,6 @@ show builtin functions in testDb like 'year%';
 | years_sub     |
 +---------------+
 ```
-
-
-## 语法
-
-```sql
-SHOW GLOBAL [<FULL>] FUNCTIONS [LIKE '<function_pattern>']
-```
-
-## 参数
-
-| 参数 | 说明 |
-| -- | -- |
-| `<FULL>` | 表示显示函数的详细信息 |
-| `<function_pattern>` | 用来过滤函数名称的参数 |
-
-
-## 返回值
-
-查询当前会话所在数据库下符合函数名称过滤的函数结果
-
-## 举例
 
 ```sql
 show global full functions
