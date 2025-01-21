@@ -27,7 +27,7 @@ under the License.
 
 ## 语法
 ```sql
-IS_IP_ADDRESS_IN_RANGE(STRING ip_str, STRING cidr_prefix)
+IS_IP_ADDRESS_IN_RANGE(ip_str, cidr_prefix)
 ```
 
 ## 参数

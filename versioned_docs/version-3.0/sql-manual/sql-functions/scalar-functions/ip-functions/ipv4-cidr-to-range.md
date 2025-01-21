@@ -28,7 +28,7 @@ Receive an IPv4 and an Int16 value containing CIDR. Returns a struct that contai
 
 ## Syntax
 ```sql
-IPV4_CIDR_TO_RANGE(IPV4 <ip_v4>, INT16 <cidr>)
+IPV4_CIDR_TO_RANGE(<ip_v4>, <cidr>)
 ```
 
 ## Parameters

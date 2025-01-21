@@ -27,7 +27,7 @@ This function like ipv4_string_to_num that takes a string form of IPv4 address a
 
 ## Syntax
 ```sql
-TO_IPV4(STRING <ipv4_str>)
+TO_IPV4(<ipv4_str>)
 ```
 
 ## Parameters

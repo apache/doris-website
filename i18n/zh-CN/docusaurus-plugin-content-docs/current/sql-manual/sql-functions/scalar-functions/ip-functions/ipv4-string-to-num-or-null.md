@@ -26,11 +26,11 @@ under the License.
 获取包含 IPv4 地址的字符串，格式为 A.B.C.D（点分隔的十进制数字）。返回一个 BIGINT 数字，表示相应的大端 IPv4 地址。
 
 ## 别名
-INET_ATON
+- INET_ATON
 
 ## 语法
 ```sql
-IPV4_STRING_TO_NUM_OR_NULL(VARCHAR <ipv4_string>)
+IPV4_STRING_TO_NUM_OR_NULL(<ipv4_string>)
 ```
 
 ## 参数

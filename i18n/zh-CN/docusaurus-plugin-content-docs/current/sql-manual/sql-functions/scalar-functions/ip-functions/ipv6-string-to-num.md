@@ -27,7 +27,7 @@ IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二
 
 ## 语法
 ```sql
-IPV6_STRING_TO_NUM(VARCHAR <ipv6_string>)
+IPV6_STRING_TO_NUM(<ipv6_string>)
 ```
 
 ## 参数

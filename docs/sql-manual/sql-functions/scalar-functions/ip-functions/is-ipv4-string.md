@@ -27,7 +27,7 @@ Determine whether an IPv4-type address is a valid IPv4 address.
 
 ## Syntax
 ```sql
-IS_IPV4_STRING(STRING <ipv4_str>)
+IS_IPV4_STRING(<ipv4_str>)
 ```
 
 ## Parameters

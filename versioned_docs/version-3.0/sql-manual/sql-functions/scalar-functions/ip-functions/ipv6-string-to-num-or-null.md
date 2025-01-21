@@ -26,11 +26,11 @@ under the License.
 The reverse function of IPv6NumToString, it takes an IP address String and returns an IPv6 address in binary format.
 
 ## Alias
-INET6_ATON
+- INET6_ATON
 
 ## Syntax
 ```sql
-IPV6_STRING_TO_NUM_OR_NULL(VARCHAR <ipv6_string>)
+IPV6_STRING_TO_NUM_OR_NULL(<ipv6_string>)
 ```
 
 ## Parameters

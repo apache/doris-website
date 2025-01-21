@@ -28,7 +28,7 @@ This function takes an IPv6 address represented in numeric form as a binary stri
 
 ## Syntax
 ```sql
-IS_IPV4_MAPPED(INET6_ATON(VARCHAR <ipv4_addr>))
+IS_IPV4_MAPPED(INET6_ATON(<ipv4_addr>))
 ```
 
 ## Parameters

@@ -27,7 +27,7 @@ under the License.
 
 ## 语法
 ```sql
-IS_IPV4_STRING(STRING <ipv4_str>)
+IS_IPV4_STRING(<ipv4_str>)
 ```
 
 ## 参数

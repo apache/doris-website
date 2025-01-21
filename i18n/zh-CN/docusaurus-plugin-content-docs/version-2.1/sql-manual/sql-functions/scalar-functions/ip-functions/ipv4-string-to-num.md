@@ -27,7 +27,7 @@ under the License.
 
 ## 语法
 ```sql
-IPV4_STRING_TO_NUM(VARCHAR <ipv4_string>)
+IPV4_STRING_TO_NUM(<ipv4_string>)
 ```
 ## 参数
 | Parameter | Description                                      |

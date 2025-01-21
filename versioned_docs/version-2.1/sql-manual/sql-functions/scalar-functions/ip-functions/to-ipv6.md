@@ -27,7 +27,7 @@ Convert a string form of IPv6 address to IPv6 type, which is binary equal to val
 
 ## Syntax
 ```sql
-TO_IPV6(STRING <ipv6_str>)
+TO_IPV6(<ipv6_str>)
 ```
 
 ## Parameters
