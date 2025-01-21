@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Layout from '@site/src/theme/Layout';
 import Link from '@docusaurus/Link';
 import Translate, { translate } from '@docusaurus/Translate';
-import { downloadFile } from '../../theme/TOC/index';
 import './index.scss';
 
-const DOWNLOAD_LINK_ZH = 'https://cdn.selectdb.com/static/doris_1_2_2_18e810982b.pdf';
-const DOWNLOAD_LINK_EN = 'https://cdn.selectdb.com/static/doris_1_2_en_0d0a9b6a03.pdf';
+const PREVIEW_LINK_ZH = 'https://cdn.selectdb.com/static/doris_1_2_2_18e810982b.pdf';
+const PREVIEW_LINK_EN = 'https://cdn.selectdb.com/static/doris_1_2_en_0d0a9b6a03.pdf';
 
 const DATE_LINK = '2025-01-17';
 
@@ -21,15 +20,13 @@ export default function Archive() {
     return (
         <Layout
             title={translate({
-                id: 'download.title',
-                message: 'Apache Doris - Download | Easily deploy Doris anywhere',
+                id: 'archive.layout.title',
+                message: 'Apache Doris - Archive Document Center',
             })}
             description={translate({
-                id: 'homepage.banner.subTitle',
-                message:
-                    'Download and explore precompiled binaries of different verisons. Apache Doris connects any device, at any scale, anywhere.',
+                id:'archive.layout.description',
+                message:'Collection of Apache doris archive documents'
             })}
-            wrapperClassName="download"
         >
             <div className="archive-container">
                 <h1>
@@ -68,29 +65,23 @@ export default function Archive() {
                 <ul>
                     <li>
                         <Translate
-                            id="archive.download.v12"
+                            id="archive.preview.v12"
                             values={{
-                                downloadLink: (
-                                    <button
-                                        onClick={() =>
-                                            downloadFile(
-                                                isZH ? DOWNLOAD_LINK_ZH : DOWNLOAD_LINK_EN,
-                                                isZH ? 'Apache Doris v1.2 中文文档.pdf' : 'Apache Doris v1.2.pdf',
-                                            )
-                                        }
-                                        className="download-link"
+                                previewLink: (
+                                    <Link
+                                        to={isZH ? PREVIEW_LINK_ZH : PREVIEW_LINK_EN}
                                     >
-                                        <Translate id="archive.download.link">Apache Doris v1.2</Translate>
-                                    </button>
+                                        <Translate id="archive.preview.link">Apache Doris v1.2</Translate>
+                                    </Link>
                                 ),
                             }}
                         >
-                            {'Archived documentation: {downloadLink}'}
+                            {'Archived documentation: {previewLink}'}
                         </Translate>{' '}
                     </li>
                     <li>
                         <Translate
-                            id="archive.download.date"
+                            id="archive.preview.date"
                             values={{
                                 date: <span>{DATE_LINK}</span>,
                             }}
