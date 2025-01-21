@@ -121,13 +121,13 @@ Apache Doris 也支持比较丰富的索引结构，来减少数据的扫描：
 
 在存储模型方面，Apache Doris 支持多种存储模型，针对不同的场景做了针对性的优化：
 
-- 聚合模型（Aggregate Key Model）：相同 Key 的 Value 列合并，通过提前聚合大幅提升性能
-  
-- 主键模型（Unique Key Model）：Key 唯一，相同 Key 的数据覆盖，实现行级别数据更新
-  
 - 明细模型（Duplicate Key Model）：明细数据模型，满足事实表的明细存储
 
-Apache Doris 也支持强一致的物化视图，物化视图的更新和选择都在系统内自动进行，不需要用户手动选择，从而大幅减少了物化视图维护的代价。
+- 主键模型（Unique Key Model）：Key 唯一，相同 Key 的数据覆盖，实现行级别数据更新
+
+- 聚合模型（Aggregate Key Model）：相同 Key 的 Value 列合并，通过提前聚合大幅提升性能
+  
+Apache Doris 也支持强一致的单表物化视图，异步刷新的多表物化视图，单表物化视图在系统中自动刷新与维护，无序用户手动选择。多表物化视图可以借助集群内的调度或集群外的调度工具定时刷新，减少数据建模的复杂性。
 
 ### 查询引擎
 
@@ -141,7 +141,10 @@ Apache Doris 查询引擎是向量化的查询引擎，所有的内存结构能�
 
 Apache Doris 采用了自适应查询执行（Adaptive Query Execution）技术，可以根据 Runtime Statistics 来动态调整执行计划，比如通过 Runtime Filter 技术能够在运行时生成 Filter 推到 Probe 侧，并且能够将 Filter 自动穿透到 Probe 侧最底层的 Scan 节点，从而大幅减少 Probe 的数据量，加速 Join 性能。Apache Doris 的 Runtime Filter 支持 In/Min/Max/Bloom Filter。
 
+![pip_exec_3](/images/pip_exec_3.png)
 
-在优化器方面，Apache Doris 使用 CBO 和 RBO 结合的优化策略，RBO 支持常量折叠、子查询改写、谓词下推等，CBO 支持 Join Reorder。目前 CBO 还在持续优化中，主要集中在更加精准的统计信息收集和推导，更加精准的代价模型预估等方面。
+Doris 使用 Pipeline 执行引擎，将查询拆分成多个子任务并行执行，充分释放多核 CPU 能力，同时通过限制查询线程数目解决线程膨胀问题。Pipeline 执行引擎减少数据拷贝与共享，优化排序与聚合操作，从而显著提高查询效率和吞吐量。
+
+在优化器方面，Apache Doris 使用 CBO 、 RBO、HBO 结合的优化策略，RBO 支持常量折叠、子查询改写、谓词下推等，CBO 支持 Join Reorder 等优化，HBO 等够基于历史的 Query 信息推荐最优的执行计划。多种优化措施保证 Doris 能够在各类 Query 中都能够枚举出性能优异的查询计划。
 
 
