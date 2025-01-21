@@ -29,7 +29,7 @@ There are various ways to migrate data from other TP systems, such as MySQL/SqlS
 
 ## Multi-Catalog
 
-Use the Catalog to map as an external table, and then use the INSERT INTO or CREATE-TABLE-AS-SELECT statements to complete the data import.
+Use the Catalog to map as an external table, and then use the INSERT INTO or CREATE-TABLE-AS-SELECT statements to complete the data load.
 
 For example, with MySQL:
 ```sql
@@ -42,24 +42,24 @@ CREATE CATALOG mysql_catalog properties(
     'driver_class' = 'com.mysql.cj.jdbc.Driver'
 );
 
--- Import via INSERT
+-- Load via INSERT
 INSERT INTO internal.doris_db.tbl1
 SELECT * FROM iceberg_catalog.iceberg_db.table1;
 
--- Import via CTAS
+-- Load via CTAS
 CREATE TABLE internal.doris_db.tbl1
 PROPERTIES('replication_num' = '1')
 AS
 SELECT * FROM iceberg_catalog.iceberg_db.table1;
 ```
 
-For more details, refer to [Catalog Data Import](../../../lakehouse/catalog-overview.md#data-import)。
+For more details, refer to [Catalog Data Load](../../../lakehouse/catalog-overview.md#data-import)。
 
 ## Flink Doris Connector
 
 You can leverage Flink to achieve offline and real-time synchronization for TP systems.
 
-- Offline synchronization can be done using Flink's JDBC Source and Doris Sink to complete the data import. For example, using FlinkSQL:
+- Offline synchronization can be done using Flink's JDBC Source and Doris Sink to complete the data load. For example, using FlinkSQL:
 ```sql
 CREATE TABLE student_source (
     id INT,
