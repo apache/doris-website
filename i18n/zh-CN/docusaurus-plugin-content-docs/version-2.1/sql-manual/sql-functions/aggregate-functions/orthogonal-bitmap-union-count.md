@@ -43,7 +43,7 @@ ORTHOGONAL_BITMAP_INTERSECT(<bitmap_column>, <column_to_filter>, <filter_values>
 
 ## 返回值
 
-返回 BITMAP 类型的集合。
+返回 BIGINT 类型的值。
 
 ## 举例
 
