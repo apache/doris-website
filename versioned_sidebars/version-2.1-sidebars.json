@@ -1352,8 +1352,7 @@
                                         "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-hash64",
                                         "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-base64",
                                         "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-to-base64",
-                                        "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove",
-                                        "sql-manual/sql-functions/scalar-functions/bitmap-functions/to-bitmap-with-check"
+                                        "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove"
                                     ]
                                 },
                                 {
