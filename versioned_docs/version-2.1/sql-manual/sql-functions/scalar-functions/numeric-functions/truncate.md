@@ -22,46 +22,58 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## truncate
+## Description
 
-### description
-#### Syntax
-`DOUBLE truncate(DOUBLE x, INT d)`  
+Perform numerical truncation on x to the number of decimal places d
 
-Numerically truncate `x` according to the number of decimal places `d`.  
+## Syntax
 
-The rules are as follows:  
-
-If `d` is literal:  
-When `d > 0`: keep `d` decimal places of `x`  
-When `d = 0`: remove the fractional part of `x` and keep only the integer part  
-When `d < 0`: Remove the fractional part of `x`, and replace the integer part with the number `0` according to the number of digits specified by `d`  
-
-Else if `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
-
-### example
-
+```sql
+TRUNCATE(<x>, <d>)
 ```
-mysql> select truncate(124.3867, 2);
-+-----------------------+
-| truncate(124.3867, 2) |
-+-----------------------+
-|                124.38 |
-+-----------------------+
-mysql> select truncate(124.3867, 0);
-+-----------------------+
-| truncate(124.3867, 0) |
-+-----------------------+
-|                   124 |
-+-----------------------+
-mysql> select truncate(-124.3867, -2);
-+-------------------------+
-| truncate(-124.3867, -2) |
-+-------------------------+
-|                    -100 |
-+-------------------------+
-mysql> select cast("123.123456" as Decimal(9,6)), number, truncate(cast ("123.123456" as Decimal(9,6)), number) from numbers("number"="5");
---------------
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<x>` | The value that needs to be numerically truncated |
+| `<d>` | The number of decimal places to retain |
+
+## Return Value
+
+Perform numerical truncation on x to the number of decimal places d. Truncation rules:
+
+If d is a literal:
+
+- When d > 0: Keep d decimal places of x.
+- When d = 0: Remove the decimal part of x and retain only the integer part.
+- When d < 0: Remove the decimal part of x and replace the integer part with the number of digits specified by d, using the digit 0.
+
+If d is a column, and the first argument is of type Decimal, then the resulting Decimal will have the same number of decimal places as the input Decimal
+
+## Example
+
+ d is a litera
+
+```sql
+select truncate(124.3867, 2),truncate(124.3867, 0),truncate(124.3867, -2);
+```
+
+```text
++-----------------------+-----------------------+------------------------+
+| truncate(124.3867, 2) | truncate(124.3867, 0) | truncate(124.3867, -2) |
++-----------------------+-----------------------+------------------------+
+|                124.38 |                   124 |                    100 |
++-----------------------+-----------------------+------------------------+
+```
+
+ d is a column
+
+```sql
+select cast("123.123456" as Decimal(9,6)), number, truncate(cast ("123.123456" as Decimal(9,6)), number) from numbers("number"="5");
+```
+
+```text
 +---------------------------------------+--------+----------------------------------------------------------------------+
 | cast('123.123456' as DECIMALV3(9, 6)) | number | truncate(cast('123.123456' as DECIMALV3(9, 6)), cast(number as INT)) |
 +---------------------------------------+--------+----------------------------------------------------------------------+
@@ -72,6 +84,3 @@ mysql> select cast("123.123456" as Decimal(9,6)), number, truncate(cast ("123.12
 |                            123.123456 |      4 |                                                           123.123400 |
 +---------------------------------------+--------+----------------------------------------------------------------------+
 ```
-
-### keywords
-	TRUNCATE

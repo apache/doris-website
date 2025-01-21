@@ -1,6 +1,6 @@
 ---
 {
-    "title": "uuid_numeric",
+    "title": "UUID_NUMERIC",
     "language": "en"
 }
 ---
@@ -24,28 +24,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## uuid_numeric
-### description
-#### Syntax
+## Description
 
-`LARGEINT uuid_numeric()`
+Return a LARGEINT type uuid
 
-Return a uuid in type `LARGEINT`. 
+## Syntax
 
-Note that `LARGEINT` has type Int128, so we could get a negative number from `uuid_numeric()`.
-
-### example
-
+```sql
+UUID_NUMERIC()
 ```
 
-mysql> select uuid_numeric();
+## Return Value
+
+Return a LARGEINT type uuid. Note that LARGEINT is an Int128, so uuid_numeric() may produce negative values
+
+## Example
+
+```sql
+select uuid_numeric()
+```
+
+```text
 +----------------------------------------+
 | uuid_numeric()                         |
 +----------------------------------------+
 | 82218484683747862468445277894131281464 |
 +----------------------------------------+
 ```
-
-### keywords
-    
-    UUID UUID-NUMERIC 
