@@ -22,41 +22,62 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_sortby
+## Description
 
-array_sortby
-
-### description
-
-#### Syntax
-
-```sql
-ARRAY<T> array_sortby(ARRAY<T> src,Array<T> key)
-ARRAY<T> array_sortby(lambda,array....)
-```
 First, arrange the key column in ascending order, and then return the corresponding column of the src column sorted in this order as the result;
 Returns NULL if the input array src is NULL.
 If the input array key is NULL, the order in which src is returned remains unchanged.
 If the input array key element contains NULL, the output sorted array will place NULL first.
 
-### example
+## Syntax
 
+```sql
+ARRAY_SORTBY(<src>, <key>)
+ARRAY_SORTBY(<lambda>, <arr> [, ...])
 ```
-mysql [test]>select array_sortby(['a','b','c'],[3,2,1]);
+
+## Parameters
+
+| Parameter | Description | 
+| --- | --- |
+| `lambda` | A lambda expression where the input parameters must match the number of columns in the given array. The expression can execute valid scalar functions but does not support aggregate functions. |
+| `arr` | ARRAY array |
+
+## Return Value
+
+Returns a sorted ARRAY type result.
+
+## Example
+
+```sql
+select array_sortby(['a','b','c'],[3,2,1]);
+```
+
+```text
 +----------------------------------------------------+
 | array_sortby(ARRAY('a', 'b', 'c'), ARRAY(3, 2, 1)) |
 +----------------------------------------------------+
 | ['c', 'b', 'a']                                    |
 +----------------------------------------------------+
+```
 
-mysql [test]>select array_sortby([1,2,3,4,5],[10,5,1,20,80]);
+```sql
+select array_sortby([1,2,3,4,5],[10,5,1,20,80]);
+```
+
+```text
 +-------------------------------------------------------------+
 | array_sortby(ARRAY(1, 2, 3, 4, 5), ARRAY(10, 5, 1, 20, 80)) |
 +-------------------------------------------------------------+
 | [3, 2, 1, 4, 5]                                             |
 +-------------------------------------------------------------+
+```
 
-mysql [test]>select *,array_sortby(c_array1,c_array2) from test_array_sortby order by id;
+```sql
+select *,array_sortby(c_array1,c_array2) from test_array_sortby order by id;
+```
+
+```text
 +------+-----------------+-------------------------+--------------------------------------+
 | id   | c_array1        | c_array2                | array_sortby(`c_array1`, `c_array2`) |
 +------+-----------------+-------------------------+--------------------------------------+
@@ -70,8 +91,13 @@ mysql [test]>select *,array_sortby(c_array1,c_array2) from test_array_sortby ord
 |    7 | [NULL]          | [NULL]                  | [NULL]                               |
 |    8 | [1, 2, 3]       | [3, 2, 1]               | [3, 2, 1]                            |
 +------+-----------------+-------------------------+--------------------------------------+
+```
 
-mysql [test]>select *, array_map((x,y)->(y+x),c_array1,c_array2) as arr_sum,array_sortby((x,y)->(y+x),c_array1,c_array2) as arr_sort from array_test2;
+```sql
+select *, array_map((x,y)->(y+x),c_array1,c_array2) as arr_sum,array_sortby((x,y)->(y+x),c_array1,c_array2) as arr_sort from array_test2;
+```
+
+```text
 +------+-----------------+--------------+----------------+-----------------+
 | id   | c_array1        | c_array2     | arr_sum        | arr_sort        |
 +------+-----------------+--------------+----------------+-----------------+
@@ -80,8 +106,4 @@ mysql [test]>select *, array_map((x,y)->(y+x),c_array1,c_array2) as arr_sum,arra
 |    3 | [-40, 30, -100] | [30, 10, 20] | [-10, 40, -80] | [-100, -40, 30] |
 +------+-----------------+--------------+----------------+-----------------+
 ```
-
-### keywords
-
-ARRAY, SORT, ARRAY_SORTBY
 
