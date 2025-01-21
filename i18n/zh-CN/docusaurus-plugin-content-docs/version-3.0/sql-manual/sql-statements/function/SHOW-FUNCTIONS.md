@@ -31,12 +31,12 @@ under the License.
 ## 语法
 
 ```sql
-SHOW [ FULL ] [ BUILTIN ] FUNCTIONS [ { IN | FROM } db ]  [LIKE '<function_pattern>']
+SHOW [ FULL ] [ BUILTIN ] FUNCTIONS [ { IN | FROM } <db> ]  [ LIKE '<function_pattern>' ]
 ```
 ## 变种语法
 
 ```sql
-SHOW GLOBAL [ FULL ] FUNCTIONS [LIKE '<function_pattern>']
+SHOW GLOBAL [ FULL ] FUNCTIONS [ LIKE '<function_pattern>' ]
 ```
 
 ## 必选参数
@@ -47,13 +47,13 @@ SHOW GLOBAL [ FULL ] FUNCTIONS [LIKE '<function_pattern>']
 
 ## 可选参数
 
-**1. `<FULL>`**
+**1. `FULL`**
 
 > FULL 为选填项
 >
 > 若填写表示显示函数的详细信息。
 
-**2. `<BUILTIN>`**
+**2. `BUILTIN`**
 
 > BUILTIN 为选填项
 >

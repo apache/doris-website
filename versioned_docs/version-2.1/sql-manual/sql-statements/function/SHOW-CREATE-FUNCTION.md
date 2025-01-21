@@ -31,7 +31,7 @@ This statement is used to show the creation statement of a user-defined function
 ## Syntax
 
 ```sql
-SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type>) [ FROM db_name ];
+SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type> ) [ FROM <db_name> ];
 ```
 
 ## Required Parameters
@@ -48,7 +48,7 @@ SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type>) [ FROM db_name ];
 
 ## Optional Parameters
 
-**1.`<GLOBAL>`**
+**1.`GLOBAL`**
 
 > GLOBAL is an optional parameter.
 >
@@ -56,7 +56,7 @@ SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type>) [ FROM db_name ];
 >
 > If GLOABL is not entered, the function is searched for in the current database and deleted.
 
-**2.`<FROM db_name>`**
+**2.`<db_name>`**
 
 > FROM db_name indicates that the custom function is queried from the specified database
 

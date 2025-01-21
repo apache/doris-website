@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-DROP [ GLOBAL ] <function_name> ( <arg_type>)
+DROP [ GLOBAL ] <function_name> ( <arg_type> )
 ```
 
 ## 必选参数
@@ -50,12 +50,12 @@ DROP [ GLOBAL ] <function_name> ( <arg_type>)
 
 ## 可选参数
 
-**1.`<GLOBAL>`**
+**1.`GLOBAL`**
 
 > GLOBAL 为选填项
 >
 > 若填写 GLOBAL 则为全局搜索该函数并删除
-> 
+>
 > 若不填写 GLOABL 则只在当前数据库下搜索该函数并删除
 
 ## 权限控制

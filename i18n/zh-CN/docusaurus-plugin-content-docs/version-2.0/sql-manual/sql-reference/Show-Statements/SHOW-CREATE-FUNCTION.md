@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type>) [ FROM db_name ];
+SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type> ) [ FROM <db_name> ];
 ```
 
 ## 必选参数
@@ -48,7 +48,7 @@ SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type>) [ FROM db_name ];
 
 ## 可选参数
 
-**1.`<GLOBAL>`**
+**1.`GLOBAL`**
 
 > GLOBAL 为选填项
 >
@@ -56,7 +56,7 @@ SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type>) [ FROM db_name ];
 >
 > 若不填写 GLOABL 则只在当前数据库下搜索该函数
 
-**2.`<FROM db_name>`**
+**2.`<db_name>`**
 
 > FROM db_name 表示从指定的数据库中查询该自定义函数
 

@@ -31,12 +31,12 @@ View all custom and system provided functions under the database.
 ## Syntax
 
 ```sql
-SHOW [ FULL ] [ BUILTIN ] FUNCTIONS [ { IN | FROM } db ]  [LIKE '<function_pattern>']
+SHOW [ FULL ] [ BUILTIN ] FUNCTIONS [ { IN | FROM } <db> ]  [ LIKE '<function_pattern>' ]
 ```
 ## Varaint Syntax
 
 ```sql
-SHOW GLOBAL [ FULL ] FUNCTIONS [LIKE '<function_pattern>']
+SHOW GLOBAL [ FULL ] FUNCTIONS [ LIKE '<function_pattern>' ]
 ```
 
 ## Required Parameters
@@ -47,13 +47,13 @@ SHOW GLOBAL [ FULL ] FUNCTIONS [LIKE '<function_pattern>']
 
 ## Optional Parameters
 
-**1. `<FULL>`**
+**1. `FULL`**
 
 > FULL is an optional parameter.
 >
 > This parameter indicates the detailed information about the function.
 
-**2. `<BUILTIN>`**
+**2. `BUILTIN`**
 
 > BUILTIN is an optional parameter.
 >
