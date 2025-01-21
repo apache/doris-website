@@ -24,30 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ends_with
 ## 描述
+
+如果字符串以指定后缀结尾则返回true，否则返回false。特殊情况：
+
+- 两个参数任意一个参数为NULL，返回NULL。
+
 ## 语法
 
-`BOOLEAN ENDS_WITH(VARCHAR str, VARCHAR suffix)`
+```sql
+ENDS_WITH ( <str> ,  <suffix> )
+```
 
-如果字符串以指定后缀结尾，返回true。否则，返回false。任意参数为NULL，返回NULL。
+## 参数
+
+| 参数       | 说明           |
+|----------|--------------|
+| `str`    | 指定需要判断的原始字符串 |
+| `suffix` | 指定需要判断的结尾字符串 |
+
+## 返回值
+
+true 或者 false，类型为 `BOOLEAN`。特殊情况：
+
+- 两个参数任意一个参数为NULL，返回NULL。
 
 ## 举例
 
+```sql
+SELECT ENDS_WITH("Hello doris", "doris"),ENDS_WITH("Hello doris", "Hello")
 ```
-mysql> select ends_with("Hello doris", "doris");
-+-----------------------------------+
-| ends_with('Hello doris', 'doris') |
-+-----------------------------------+
-|                                 1 | 
-+-----------------------------------+
 
-mysql> select ends_with("Hello doris", "Hello");
-+-----------------------------------+
-| ends_with('Hello doris', 'Hello') |
-+-----------------------------------+
-|                                 0 | 
-+-----------------------------------+
+```text
++-----------------------------------+-----------------------------------+
+| ends_with('Hello doris', 'doris') | ends_with('Hello doris', 'Hello') |
++-----------------------------------+-----------------------------------+
+|                                 1 |                                 0 |
++-----------------------------------+-----------------------------------+
 ```
-### keywords
-    ENDS_WITH

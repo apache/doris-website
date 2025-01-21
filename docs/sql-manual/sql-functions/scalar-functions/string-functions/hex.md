@@ -24,62 +24,53 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hex
-### description
-#### Syntax
+## Description
 
-`VARCHAR hex(VARCHAR str)`
+If the input parameter is a number, return the string representation of the hexadecimal value.
 
-`VARCHAR hex(BIGINT num)`
+If the input parameter is a string, convert each character to two hexadecimal characters, concatenate all the converted characters into a string for output.
 
-If the input parameter is a number, the string representation of the hexadecimal value is returned;
+## Syntax
 
-If the input parameter is a string, each character will be converted into two hexadecimal characters, and all the characters after the conversion will be spliced into a string for output
-
-
-### example
-
-```
-input string
-
-mysql> select hex('1');
-+----------+
-| hex('1') |
-+----------+
-| 31       |
-+----------+
-
-mysql> select hex('@');
-+----------+
-| hex('@') |
-+----------+
-| 40       |
-+----------+
-
-mysql> select hex('12');
-+-----------+
-| hex('12') |
-+-----------+
-| 3132      |
-+-----------+
+```sql
+HEX ( <str> )
 ```
 
-```
-intput num
+## Parameters
 
-mysql> select hex(12);
-+---------+
-| hex(12) |
-+---------+
-| C       |
-+---------+
+| Parameter | Description |
+|-------|--------------|
+| `<str>` | Input parameter is a number or a string |
 
-mysql> select hex(-1);
-+------------------+
-| hex(-1)          |
-+------------------+
-| FFFFFFFFFFFFFFFF |
-+------------------+
+## Return value
+
+The hexadecimal result of parameter `<str>`.
+
+## Example
+
+The input parameter is a number
+```sql
+SELECT HEX(12),HEX(-1)
 ```
-### keywords
-    HEX
+
+```text
++---------+------------------+
+| hex(12) | hex(-1)          |
++---------+------------------+
+| C       | FFFFFFFFFFFFFFFF |
++---------+------------------+
+```
+
+The input parameter is a string
+
+```sql
+SELECT HEX('1'),HEX('@'),HEX('12')
+```
+
+```text
++----------+----------+-----------+
+| hex('1') | hex('@') | hex('12') |
++----------+----------+-----------+
+| 31       | 40       | 3132      |
++----------+----------+-----------+
+```
