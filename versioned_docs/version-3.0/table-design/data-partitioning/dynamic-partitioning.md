@@ -1,7 +1,7 @@
 ---
 {
     "title": "Dynamic Partitioning",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
