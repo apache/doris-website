@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-RESOURCES",
+    "title": "SHOW RESOURCES",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-workload-GROUPS",
+    "title": "SHOW WORKLOAD GROUPS",
     "language": "en"
 }
 ---

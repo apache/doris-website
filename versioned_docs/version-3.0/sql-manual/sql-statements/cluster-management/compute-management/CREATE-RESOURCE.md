@@ -38,12 +38,6 @@ PROPERTIES (
     ...);
 ```
 
-## Required 
-1. `<type>`
-The type of resource needs to be specified in PROPERTIES "type" = "[spark|odbc_catalog|s3|jdbc|hdfs|hms|es]".
-
-The other parameters vary depending on the resource type, and the PROPERTIES differ accordingly. Please refer to the example for details.
-
 ## Parameters
 
 1.`<type>`
