@@ -204,24 +204,24 @@ CREATE CATALOG hive PROPERTIES (
 
 适用于 Hive/Iceberge/Hudi
 
-| HMS Type | Doris Type | Comment |
-|---|---|---|
-| boolean| boolean | |
-| tinyint|tinyint | |
-| smallint| smallint| |
-| int| int | |
-| bigint| bigint | |
-| date| date| |
-| timestamp| datetime| |
-| float| float| |
-| double| double| |
-| char| char | |
-| varchar| varchar| |
-| decimal| decimal | |
-| `array<type>` | `array<type>`| 支持array嵌套，如 `array<array<int>>` |
-| `map<KeyType, ValueType>` | `map<KeyType, ValueType>` | 暂不支持嵌套，KeyType 和 ValueType 需要为基础类型 |
-| `struct<col1: Type1, col2: Type2, ...>` | `struct<col1: Type1, col2: Type2, ...>` | 暂不支持嵌套，Type1, Type2, ... 需要为基础类型 |
-| other | unsupported | |
+| HMS Type                                | Doris Type                              | Comment                                      |
+|-----------------------------------------|-----------------------------------------|----------------------------------------------|
+| boolean                                 | boolean                                 |                                              |
+| tinyint                                 | tinyint                                 |                                              |
+| smallint                                | smallint                                |                                              |
+| int                                     | int                                     |                                              |
+| bigint                                  | bigint                                  |                                              |
+| date                                    | date                                    |                                              |
+| timestamp                               | datetime                                |                                              |
+| float                                   | float                                   |                                              |
+| double                                  | double                                  |                                              |
+| char                                    | char                                    |                                              |
+| varchar                                 | varchar                                 |                                              |
+| decimal                                 | decimal                                 |                                              |
+| `array<type>`                           | `array<type>`                           | 支持array嵌套，如 `array<array<int>>`          |
+| `map<KeyType, ValueType>`               | `map<KeyType, ValueType>`               | 暂不支持嵌套，KeyType 和 ValueType 需要为基础类型 |
+| `struct<col1: Type1, col2: Type2, ...>` | `struct<col1: Type1, col2: Type2, ...>` | 暂不支持嵌套，Type1, Type2, ... 需要为基础类型    |
+| other                                   | unsupported                             |                                              |
 
 ## 使用Ranger进行权限校验
 
