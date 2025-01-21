@@ -27,7 +27,7 @@ Determine whether an IPv6-type address is a valid IPv6 address.
 
 ## Syntax
 ```sql
-IS_IPV6_STRING(STRING <ipv6_str>)
+IS_IPV6_STRING(<ipv6_str>)
 ```
 
 ## Parameters

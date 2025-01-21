@@ -27,7 +27,7 @@ under the License.
 
 ## 语法
 ```sql
-IPV4_CIDR_TO_RANGE(IPV4 <ip_v4>, INT16 <cidr>)
+IPV4_CIDR_TO_RANGE(<ip_v4>, <cidr>)
 ```
 
 ## 参数

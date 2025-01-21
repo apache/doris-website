@@ -27,7 +27,7 @@ under the License.
 
 ## 语法
 ```sql
-TO_IPV6(STRING <ipv6_str>)
+TO_IPV6(<ipv6_str>)
 ```
 
 ## 参数

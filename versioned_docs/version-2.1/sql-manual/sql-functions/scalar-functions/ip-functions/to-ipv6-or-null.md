@@ -27,7 +27,7 @@ Convert a string form of IPv6 address to IPv6 type.
 
 ## Syntax
 ```sql
-TO_IPV6_OR_NULL(STRING <ipv6_str>)
+TO_IPV6_OR_NULL(<ipv6_str>)
 ```
 
 ## Parameters

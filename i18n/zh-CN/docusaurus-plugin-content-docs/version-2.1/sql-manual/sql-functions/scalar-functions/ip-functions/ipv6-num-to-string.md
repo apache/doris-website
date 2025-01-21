@@ -31,7 +31,7 @@ INET6_NTOA
 
 ## 语法
 ```sql
-IPV6_NUM_TO_STRING(VARCHAR <ipv6_num>)
+IPV6_NUM_TO_STRING(<ipv6_num>)
 ```
 
 ## 参数

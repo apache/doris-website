@@ -27,7 +27,7 @@ Determine whether the IP (IPv4 or IPv6) address is included in the network repre
 
 ## Syntax
 ```sql
-IS_IP_ADDRESS_IN_RANGE(STRING ip_str, STRING cidr_prefix)
+IS_IP_ADDRESS_IN_RANGE(ip_str, cidr_prefix)
 ```
 
 ## Parameters

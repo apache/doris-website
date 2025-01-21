@@ -26,12 +26,12 @@ under the License.
 Takes a Int16、Int32、Int64 number. Interprets it as an IPv4 address in big endian. Returns a string containing the corresponding IPv4 address in the format A.B.C.D (dot-separated numbers in decimal form)
 
 ## Alias
-INET_NTOA
+- INET_NTOA
 
 ## Syntax
 
 ```sql
-IPV4_NUM_TO_STRING(BIGINT <ipv4_num>)
+IPV4_NUM_TO_STRING(<ipv4_num>)
 ```
 
 ## Parameters

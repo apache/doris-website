@@ -28,7 +28,7 @@ under the License.
 
 ## 语法
 ```sql
-TO_IPV4_OR_DEFAULT(STRING <ipv4_str>)
+TO_IPV4_OR_DEFAULT(<ipv4_str>)
 ```
 
 ## 参数

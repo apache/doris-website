@@ -28,11 +28,11 @@ Takes an IPv6 address in binary format of type String. Returns the string of thi
 - The IPv4 address mapped by IPv6 starts with ::ffff:111.222.33.
 
 ## Alias
-INET6_NTOA
+- INET6_NTOA
 
 ## Syntax
 ```sql
-IPV6_NUM_TO_STRING(VARCHAR <ipv6_num>)
+IPV6_NUM_TO_STRING(<ipv6_num>)
 ```
 
 ## Parameters

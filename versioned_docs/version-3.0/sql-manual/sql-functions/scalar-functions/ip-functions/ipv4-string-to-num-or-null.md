@@ -27,11 +27,11 @@ under the License.
 Takes a string containing an IPv4 address in the format A.B.C.D (dot-separated numbers in decimal form). Returns a BIGINT number representing the corresponding IPv4 address in big endian.
 
 ## Alias
-INET_ATON
+- INET_ATON
 
 ## Syntax
 ```sql
-IPV4_STRING_TO_NUM_OR_NULL(VARCHAR <ipv4_string>)
+IPV4_STRING_TO_NUM_OR_NULL(<ipv4_string>)
 ```
 
 ## Parameters

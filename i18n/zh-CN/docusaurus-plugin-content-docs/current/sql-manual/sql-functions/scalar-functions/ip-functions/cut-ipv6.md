@@ -27,7 +27,7 @@ under the License.
 
 ## 语法
 ```sql
-CUT_IPV6(ipv6 <ipv6>, TinyInt <cut_ipv6_bytes>, TinyInt <cut_ipv4_bytes>)
+CUT_IPV6(<ipv6>, <cut_ipv6_bytes>, <cut_ipv4_bytes>)
 ```
 
 ## 参数
@@ -45,9 +45,9 @@ CUT_IPV6(ipv6 <ipv6>, TinyInt <cut_ipv6_bytes>, TinyInt <cut_ipv4_bytes>)
 select cut_ipv6(to_ipv6('2001:0DB8:AC10:FE01:FEED:BABE:CAFE:F00D'), 10, 0);
 ```
 ```text
-+-------------------+
-| '2001:db8:ac10::' |
-+-------------------+
-| 2001:db8:ac10::   |
-+-------------------+
++---------------------------------------------------------------------+
+| cut_ipv6(to_ipv6('2001:0DB8:AC10:FE01:FEED:BABE:CAFE:F00D'), 10, 0) |
++---------------------------------------------------------------------+
+| 2001:db8:ac10::                                                     |
++---------------------------------------------------------------------+
 ```

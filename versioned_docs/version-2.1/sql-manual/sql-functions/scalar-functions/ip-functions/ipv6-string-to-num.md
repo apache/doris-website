@@ -28,7 +28,7 @@ The reverse function of IPv6NumToString, it takes an IP address String and retur
 
 ## Syntax
 ```sql
-IPV6_STRING_TO_NUM(VARCHAR <ipv6_string>)
+IPV6_STRING_TO_NUM(<ipv6_string>)
 ```
 
 ## Parameters
