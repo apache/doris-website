@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
- SHOW BACKENDS;
+ SHOW BACKENDS
 ```
 
 ## 返回值

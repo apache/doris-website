@@ -31,7 +31,7 @@ ADD BACKEND 命令用于向 Doris 集群中添加一个或多个 BE 节点。此
 ## 语法
 
 ```sql
-ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>"...] [PROPERTIES ("<key>"="<value>", ...)];
+ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>"...] [PROPERTIES ("<key>"="<value>", ...)]
 ```
 
 ## 必选参数

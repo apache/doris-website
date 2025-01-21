@@ -42,6 +42,20 @@ be_identifier
   | "<backend_id>"
 ```
 
+## 必选参数
+
+**<be_host>**
+
+> 可以是 BE 节点的主机名或 IP 地址
+
+**<heartbeat_port>**
+
+> BE 节点的心跳端口，默认为 9050
+
+**<backend_id>**
+
+> BE 节点的 ID
+
 :::tip
 `<be_host>`、`<be_heartbeat_port>`及`<backend_id>`均可通过[SHOW BACKENDS](./SHOW-BACKENDS.md)语句查询获得。
 :::
