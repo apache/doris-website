@@ -24,44 +24,61 @@ under the License.
 -->
 
 
-
-
-### Name
-
-ADMIN REBALANCE DISK
-
 ## Description
 
-This statement is used to try to rebalance disks of the specified backends first, no matter if the cluster is balanced
+The `REBALANCE DISK` statement is used to optimize the data distribution on Backend (BE) nodes. This statement has the following functionalities:
 
-Grammar:
+- It can perform data balancing for specified BE nodes.
+- It can balance data across all BE nodes in the entire cluster.
+- It prioritizes balancing the data of specified nodes, regardless of the overall balance state of the cluster.
 
+## Syntax
+
+```sql
+ADMIN REBALANCE DISK [ ON ( "host1:port1" [, "host2:port2" ... ] ) ];
 ```
-ADMIN REBALANCE DISK [ON ("BackendHost1:BackendHeartBeatPort1", "BackendHost2:BackendHeartBeatPort2", ...)];
+
+Where:
+
+```sql
+host:port
+  : Composed of the hostname (or IP address) and heartbeat port.
 ```
 
-Explain:
+## Optional Parameters
 
-1. This statement only means that the system attempts to rebalance disks of specified backends with high priority, no matter if the cluster is balanced.
-2. The default timeout is 24 hours. Timeout means that the system will no longer rebalance disks of specified backends with high priority. The command settings need to be reused.
+**1. `<ON ("host:port" [, ...])>`**
 
-## Example
+> Specifies the list of BE nodes that need to be balanced.
+>
+> Each node consists of a hostname (or IP address) and a heartbeat port.
+>
+> If this parameter is not specified, it will balance all BE nodes.
 
-1. Attempt to rebalance disks of all backends
+## Access Control Requirements
 
-```
+Users executing this SQL command must have at least the following permissions:
+
+| Privilege       | Object      | Notes                                         |
+| :-------------- | :---------- | :-------------------------------------------- |
+| ADMIN           | System      | The user must have ADMIN privileges to execute this command. |
+
+## Usage Notes
+
+- The default timeout for this command is 24 hours. After this period, the system will no longer prioritize balancing the disk data of specified BEs. To continue balancing, the command needs to be executed again.
+- Once the disk data balancing for a specified BE node is completed, the high-priority setting for that node will automatically become invalid.
+- This command can be executed even when the cluster is in an unbalanced state.
+
+## Examples
+
+- Balance data across all BE nodes in the cluster:
+
+```sql
 ADMIN REBALANCE DISK;
 ```
 
-2. Attempt to rebalance disks oof the specified backends
+- Balance data for two specified BE nodes:
 
-```
+```sql
 ADMIN REBALANCE DISK ON ("192.168.1.1:1234", "192.168.1.2:1234");
 ```
-
-## Keywords
-
-ADMIN,REBALANCE,DISK
-
-## Best Practice
-
