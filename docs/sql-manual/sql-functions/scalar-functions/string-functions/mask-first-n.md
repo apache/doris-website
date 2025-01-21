@@ -31,7 +31,7 @@ The MASK_FIRST_N function is mainly used to mask the first N bytes of data to pr
 ## Syntax
 
 ```sql
-mask_first_n( <str> [, <n> ])
+MASK_FIRST_N( <str> [, <n> ])
 ```
 
 ## Parameters

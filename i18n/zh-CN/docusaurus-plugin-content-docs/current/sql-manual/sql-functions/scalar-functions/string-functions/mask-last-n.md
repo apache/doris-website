@@ -31,7 +31,7 @@ MASK_LAST_N 函数主要作用是对数据的后 N 个字节进行屏蔽，以�
 ## 语法
 
 ```sql
-mask_last_n( <str> [, <n> ])
+MASK_LAST_N( <str> [, <n> ])
 ```
 
 ## 参数

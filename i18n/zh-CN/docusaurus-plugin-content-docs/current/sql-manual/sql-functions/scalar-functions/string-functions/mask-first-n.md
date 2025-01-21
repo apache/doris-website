@@ -31,7 +31,7 @@ MASK_FIRST_N 函数主要作用是对数据的前 N 个字节进行屏蔽，以�
 ## 语法
 
 ```sql
-mask_first_n( <str> [, <n> ])
+MASK_FIRST_N( <str> [, <n> ])
 ```
 
 ## 参数

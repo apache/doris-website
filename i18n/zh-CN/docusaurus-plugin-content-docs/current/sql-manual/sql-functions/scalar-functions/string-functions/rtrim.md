@@ -31,7 +31,7 @@ RTRIM 函数用于去除字符串右侧（结尾部分）连续出现空格或�
 ## 语法
 
 ```sql
-rtrim( <str> [, <trim_chars> ] )
+RTRIM( <str> [, <trim_chars> ] )
 ```
 
 ## 参数

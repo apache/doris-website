@@ -31,7 +31,7 @@ OVERLAY 函数用于将一个字符串替换另一个字符串中的一部分。
 ## 语法
 
 ```sql
-overlay(<str>, <pos>, <len>, <newstr>)
+OVERLAY(<str>, <pos>, <len>, <newstr>)
 ```
 
 ## 参数

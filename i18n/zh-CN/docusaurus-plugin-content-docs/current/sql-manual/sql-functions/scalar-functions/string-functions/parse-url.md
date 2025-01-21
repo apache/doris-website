@@ -31,7 +31,7 @@ PARSE_URL 函数主要用于解析 URL 字符串，并从中提取各种组成�
 ## 语法
 
 ```sql
-parse_url( <url>, <name> )
+PARSE_URL( <url>, <name> )
 ```
 
 ## 参数

@@ -31,7 +31,7 @@ The PARSE_URL function is mainly used to parse URL strings and extract various c
 ## Syntax
 
 ```sql
-parse_url( <url>, <name> )
+PARSE_URL( <url>, <name> )
 ```
 
 ## Parameters

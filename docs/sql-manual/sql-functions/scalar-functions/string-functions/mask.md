@@ -31,7 +31,7 @@ The MASK function is to shield data to protect sensitive information, and it is 
 ## Syntax
 
 ```sql
-mask(<str> [, <upper> [, <lower> [, <number> ]]])
+MASK(<str> [, <upper> [, <lower> [, <number> ]]])
 ```
 
 ## Parameters

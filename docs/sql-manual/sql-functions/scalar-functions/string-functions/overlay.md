@@ -31,7 +31,7 @@ The OVERLAY function is used to replace a part of a string with another string.
 ## Syntax
 
 ```sql
-overlay(<str>, <pos>, <len>, <newstr>)
+OVERLAY(<str>, <pos>, <len>, <newstr>)
 ```
 
 ## Parameters

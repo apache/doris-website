@@ -31,7 +31,7 @@ RANDOM_BYTES 函数用于生成指定长度的随机字节序列。
 ## 语法
 
 ```sql
-random_bytes( <len> )
+RANDOM_BYTES( <len> )
 ```
 
 ## 参数

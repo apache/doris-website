@@ -31,7 +31,7 @@ The RTRIM function is used to remove consecutive spaces or specified characters 
 ## Syntax
 
 ```sql
-rtrim( <str> [, <trim_chars> ] )
+RTRIM( <str> [, <trim_chars> ] )
 ```
 
 ## Parameters

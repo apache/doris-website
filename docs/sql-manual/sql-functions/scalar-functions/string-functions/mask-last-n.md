@@ -31,7 +31,7 @@ The MASK_LAST_N function is mainly used to mask the last N bytes of data to prot
 ## Syntax
 
 ```sql
-mask_last_n( <str> [, <n> ])
+MASK_LAST_N( <str> [, <n> ])
 ```
 
 ## Parameters

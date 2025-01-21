@@ -31,7 +31,7 @@ PROTOCOL 函数主要用于提取 URL 字符串中的协议部分。
 ## 语法
 
 ```sql
-protocol( <url> )
+PROTOCOL( <url> )
 ```
 
 ## 参数

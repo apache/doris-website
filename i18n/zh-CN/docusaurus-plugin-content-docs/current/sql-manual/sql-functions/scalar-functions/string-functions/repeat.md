@@ -31,7 +31,7 @@ REPEAT 函数用于将一个字符串重复指定的次数。
 ## 语法
 
 ```sql
-repeat( <str>, <count> )
+REPEAT( <str>, <count> )
 ```
 
 ## 参数

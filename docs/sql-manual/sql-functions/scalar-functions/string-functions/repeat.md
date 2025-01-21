@@ -31,7 +31,7 @@ The REPEAT function is used to repeat a string a specified number of times.
 ## Syntax
 
 ```sql
-repeat( <str>, <count> )
+REPEAT( <str>, <count> )
 ```
 
 ## Parameters

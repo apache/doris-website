@@ -31,7 +31,7 @@ The PROTOCOL function is mainly used to extract the protocol part from a URL str
 ## Syntax
 
 ```sql
-protocol( <url> )
+PROTOCOL( <url> )
 ```
 
 ## Parameters

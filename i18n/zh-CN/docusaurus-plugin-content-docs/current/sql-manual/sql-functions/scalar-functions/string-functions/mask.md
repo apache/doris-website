@@ -31,7 +31,7 @@ MASK 函数主要作用是对数据进行屏蔽，以保护敏感信息，常用
 ## 语法
 
 ```sql
-mask(<str> [, <upper> [, <lower> [, <number> ]]])
+MASK(<str> [, <upper> [, <lower> [, <number> ]]])
 ```
 
 ## 参数

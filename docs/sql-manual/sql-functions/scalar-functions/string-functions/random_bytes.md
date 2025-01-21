@@ -31,7 +31,7 @@ The RANDOM_BYTES function is used to generate a random byte sequence of the spec
 ## Syntax
 
 ```sql
-random_bytes( <len> )
+RANDOM_BYTES( <len> )
 ```
 
 ## Parameters
