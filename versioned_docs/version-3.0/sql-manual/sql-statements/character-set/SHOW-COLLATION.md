@@ -28,32 +28,42 @@ under the License.
 
 ## Description
 
-In Doris, the `SHOW COLLATION` command is used to display the character set collations available in the database. A collation is a set of rules that determine how data is sorted and compared. These rules affect the storage and retrieval of character data. Doris currently mainly supports the proofreading method utf8_general_ci.
+In Doris, the SHOW COLLATION command is used to display the character set collations available in the database. A collation is a set of rules that determine how data is sorted and compared. These rules affect the storage and retrieval of character data.
 
-The `SHOW COLLATION` command returns the following fields:
-
-* Collation: The collation name
-* Charset: The character set
-* Id: The collation's ID
-* Default: Whether this is the default collation for the character set
-* Compiled: Whether the collation is compiled
-* Sortlen: Sort length
-
-## Example
+## Syntax
 
 ```sql
-mysql> show collation;
-+-----------------+---------+------+---------+----------+---------+
-| Collation       | Charset | Id   | Default | Compiled | Sortlen |
-+-----------------+---------+------+---------+----------+---------+
-| utf8mb4_0900_bin | utf8mb4    |   33 | Yes     | Yes      |       1 |
-+-----------------+---------+------+---------+----------+---------+
+SHOW COLLATION
 ```
 
-## Keywords
+## Return Value
 
-SHOW, COLLATION
+| column name | description  |
+| -- |--------------|
+| Collation | The collation name         |
+| Charset | The character set          |
+| Id | The collation's ID        |
+| Default | Whether this is the default collation for the character set |
+| Compiled | Whether the collation is compiled        |
+| Sortlen | Sort length         |
 
-## Best Practice
 
-Use the `SHOW COLLATION` command to give you an idea of the collations available in the database and their properties. This information can help ensure that your character data is sorted and compared as expected. If you have problems comparing or sorting characters, it can be helpful to check your collation settings to make sure they are what you expect.
+
+## Usage Notes
+
+In Doris, although it is compatible with the MySQL collation setting command, it does not actually take effect. When executed, utf8mb4_0900_bin will always be used as the comparison rule.
+
+## Examples
+
+```sql
+SHOW COLLATION;
+```
+
+```text
++--------------------+---------+------+---------+----------+---------+
+| Collation          | Charset | Id   | Default | Compiled | Sortlen |
++--------------------+---------+------+---------+----------+---------+
+| utf8mb4_0900_bin   | utf8mb4 |  309 | Yes     | Yes      |       1 |
+| utf8mb3_general_ci | utf8mb3 |   33 | Yes     | Yes      |       1 |
++--------------------+---------+------+---------+----------+---------+
+```
