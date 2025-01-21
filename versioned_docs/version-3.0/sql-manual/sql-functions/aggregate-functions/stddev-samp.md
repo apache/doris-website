@@ -13,9 +13,7 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
-
   http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -24,23 +22,54 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## STDDEV_SAMP
-### Description
-#### Syntax
-
-`STDDEV SAMP (expr)`
-
+## Description
 
 Returns the sample standard deviation of the expr expression
 
-### example
+## Syntax
+
+```sql
+STDDEV_SAMP(<expr>)
 ```
-MySQL > select stddev_samp(scan_rows) from log_statis group by datetime;
-+--------------------------+
-| stddev_samp(`scan_rows`) |
-+--------------------------+
-|        2.372044195280762 |
-+--------------------------+
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<expr>` | The value to be calculated standard deviation |
+
+## Return Value
+
+Return the sample standard deviation of the expr expression
+
+### Examples
+```sql
+-- Create sample tables
+CREATE TABLE score_table (
+    student_id INT,
+    score DOUBLE
+) DISTRIBUTED BY HASH(student_id)
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+-- Insert test data
+INSERT INTO score_table VALUES
+(1, 85),
+(2, 90),
+(3, 82),
+(4, 88),
+(5, 95);
+
+-- Calculate the sample standard deviation of all students' scores
+SELECT STDDEV_SAMP(score) as score_stddev
+FROM score_table;
 ```
-### keywords
-STDDEV SAMP,STDDEV,SAMP
+
+```text
++-------------------+
+| score_stddev      |
++-------------------+
+| 4.949747468305831 |
++-------------------+
+```

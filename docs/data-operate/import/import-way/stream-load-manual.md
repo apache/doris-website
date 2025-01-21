@@ -70,7 +70,7 @@ For detailed syntax, please refer to [STREAM LOAD](../../../sql-manual/sql-state
 
 ### Prerequisite check
 
-Stream Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) command.
+Stream Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) command.
 
 ### Create load job
 

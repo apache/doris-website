@@ -24,30 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## VARIANCE,VAR_POP,VARIANCE_POP
-### Description
-#### Syntax
+## Description
 
-`VARIANCE(expr)`
+The VARIANCE function calculates the statistical variance of the specified expression. It measures how far a set of numbers are spread out from their arithmetic mean.
 
+## Alias
 
-Returns the variance of the expr expression
+- VAR_POP
+- VARIANCE_POP
 
-### example
+## Syntax
+
+```sql
+VARIANCE(<expr>)
 ```
-MySQL > select variance(scan_rows) from log_statis group by datetime;
-+-----------------------+
-| variance(`scan_rows`) |
-+-----------------------+
-|    5.6183332881176211 |
-+-----------------------+
 
-MySQL > select var_pop(scan_rows) from log_statis group by datetime;
-+----------------------+
-| var_pop(`scan_rows`) |
-+----------------------+
-|   5.6230744719006163 |
-+----------------------+
+## Parameters
+| Parameter | Description |
+| -- | -- |
+| `<expr>` | The column or expression to calculate variance for. Must be numeric type |
+
+## Return Value
+Returns a DOUBLE value representing the calculated variance.
+
+## Examples
+```sql
+-- Create sample table
+CREATE TABLE student_scores (
+    student_id INT,
+    score DECIMAL(4,1)
+) DISTRIBUTED BY HASH(student_id)
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+-- Insert test data
+INSERT INTO student_scores VALUES
+(1, 85.5),
+(2, 92.0),
+(3, 78.5),
+(4, 88.0),
+(5, 95.5),
+(6, 82.0),
+(7, 90.0),
+(8, 87.5);
+-- Calculate variance of student scores
+SELECT VARIANCE(score) as score_variance
+FROM student_scores;
 ```
-### keywords
-VARIANCE,VAR_POP,VARIANCE_POP,VAR,POP
+
+```text
++-------------------+
+| score_variance    |
++-------------------+
+| 25.73437499999998 |
++-------------------+
+```

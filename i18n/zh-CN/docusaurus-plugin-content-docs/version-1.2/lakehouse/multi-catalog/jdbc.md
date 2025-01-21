@@ -320,140 +320,140 @@ set enable_odbc_transcation = true;
 
 ### MySQL
 
-| MYSQL Type | Doris Type | Comment |
-|---|---|---|
-| BOOLEAN | BOOLEAN | |
-| TINYINT | TINYINT | |
-| SMALLINT | SMALLINT | |
-| MEDIUMINT | INT | |
-| INT | INT | |
-| BIGINT | BIGINT | |
-| UNSIGNED TINYINT | SMALLINT | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级|
-| UNSIGNED MEDIUMINT | INT | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级|
-| UNSIGNED INT | BIGINT |Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级 |
-| UNSIGNED BIGINT | LARGEINT | |
-| FLOAT | FLOAT | |
-| DOUBLE | DOUBLE | |
-| DECIMAL | DECIMAL | |
-| DATE | DATE | |
-| TIMESTAMP | DATETIME | |
-| DATETIME | DATETIME | |
-| YEAR | SMALLINT | |
-| TIME | STRING | |
-| CHAR | CHAR | |
-| VARCHAR | VARCHAR | |
-| TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT、TINYBLOB、BLOB、MEDIUMBLOB、LONGBLOB、TINYSTRING、STRING、MEDIUMSTRING、LONGSTRING、BINARY、VARBINARY、JSON、SET、BIT | STRING | |
-|Other| UNSUPPORTED |
+| MYSQL Type                                                                                                                                            | Doris Type  | Comment                                     |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------------------------------------------|
+| BOOLEAN                                                                                                                                               | BOOLEAN     |                                             |
+| TINYINT                                                                                                                                               | TINYINT     |                                             |
+| SMALLINT                                                                                                                                              | SMALLINT    |                                             |
+| MEDIUMINT                                                                                                                                             | INT         |                                             |
+| INT                                                                                                                                                   | INT         |                                             |
+| BIGINT                                                                                                                                                | BIGINT      |                                             |
+| UNSIGNED TINYINT                                                                                                                                      | SMALLINT    | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级 |
+| UNSIGNED MEDIUMINT                                                                                                                                    | INT         | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级 | 
+| UNSIGNED INT                                                                                                                                          | BIGINT      | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级 |
+| UNSIGNED BIGINT                                                                                                                                       | LARGEINT    |                                             |
+| FLOAT                                                                                                                                                 | FLOAT       |                                             |
+| DOUBLE                                                                                                                                                | DOUBLE      |                                             |
+| DECIMAL                                                                                                                                               | DECIMAL     |                                             |
+| DATE                                                                                                                                                  | DATE        |                                             |
+| TIMESTAMP                                                                                                                                             | DATETIME    |                                             |
+| DATETIME                                                                                                                                              | DATETIME    |                                             |
+| YEAR                                                                                                                                                  | SMALLINT    |                                             |
+| TIME                                                                                                                                                  | STRING      |                                             |
+| CHAR                                                                                                                                                  | CHAR        |                                             |
+| VARCHAR                                                                                                                                               | VARCHAR     |                                             |
+| TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT、TINYBLOB、BLOB、MEDIUMBLOB、LONGBLOB、TINYSTRING、STRING、MEDIUMSTRING、LONGSTRING、BINARY、VARBINARY、JSON、SET、BIT | STRING      |                                             |
+| Other                                                                                                                                                 | UNSUPPORTED |                                             |
 
 ### PostgreSQL
 
- POSTGRESQL Type | Doris Type | Comment |
-|---|---|---|
-| boolean | BOOLEAN | |
-| smallint/int2 | SMALLINT | |
-| integer/int4 | INT | |
-| bigint/int8 | BIGINT | |
-| decimal/numeric | DECIMAL | |
-| real/float4 | FLOAT | |
-| double precision | DOUBLE | |
-| smallserial | SMALLINT | |
-| serial | INT | |
-| bigserial | BIGINT | |
-| char | CHAR | |
-| varchar/text | STRING | |
-| timestamp | DATETIME | |
-| date | DATE | |
-| time | STRING | |
-| interval | STRING | |
-| point/line/lseg/box/path/polygon/circle | STRING | |
-| cidr/inet/macaddr | STRING | |
-| bit/bit(n)/bit varying(n) | STRING | `bit`类型映射为 doris 的`STRING`类型，读出的数据是`true/false`, 而不是`1/0` |
-| uuid/josnb | STRING | |
-|Other| UNSUPPORTED |
+ POSTGRESQL Type                          | Doris Type  | Comment                                                               |
+|-----------------------------------------|-------------|-----------------------------------------------------------------------|
+| boolean                                 | BOOLEAN     |                                                                       |
+| smallint/int2                           | SMALLINT    |                                                                       | 
+| integer/int4                            | INT         |                                                                       |
+| bigint/int8                             | BIGINT      |                                                                       |
+| decimal/numeric                         | DECIMAL     |                                                                       |
+| real/float4                             | FLOAT       |                                                                       |
+| double precision                        | DOUBLE      |                                                                       |
+| smallserial                             | SMALLINT    |                                                                       |
+| serial                                  | INT         |                                                                       |
+| bigserial                               | BIGINT      |                                                                       |
+| char                                    | CHAR        |                                                                       |
+| varchar/text                            | STRING      |                                                                       |
+| timestamp                               | DATETIME    |                                                                       |
+| date                                    | DATE        |                                                                       |
+| time                                    | STRING      |                                                                       |
+| interval                                | STRING      |                                                                       |
+| point/line/lseg/box/path/polygon/circle | STRING      |                                                                       |
+| cidr/inet/macaddr                       | STRING      |                                                                       |
+| bit/bit(n)/bit varying(n)               | STRING      | `bit`类型映射为 doris 的`STRING`类型，读出的数据是`true/false`, 而不是`1/0` |
+| uuid/josnb                              | STRING      |                                                                       |
+| Other                                   | UNSUPPORTED |                                                                       |
 
 ### Oracle
 
-| ORACLE Type | Doris Type | Comment |
-|---|---|---|
-| number(p) / number(p,0) | TINYINT/SMALLINT/INT/BIGINT/LARGEINT | Doris 会根据 p 的大小来选择对应的类型：`p < 3` -> `TINYINT`; `p < 5` -> `SMALLINT`; `p < 10` -> `INT`; `p < 19` -> `BIGINT`; `p > 19` -> `LARGEINT` |
-| number(p,s), [ if(s>0 && p>s) ] | DECIMAL(p,s) | |
-| number(p,s), [ if(s>0 && p < s) ] | DECIMAL(s,s) |  |
-| number(p,s), [ if(s<0) ] | TINYINT/SMALLINT/INT/BIGINT/LARGEINT | s<0 的情况下，Doris 会将 p 设置为 p+\|s\|，并进行和 number(p) / number(p,0) 一样的映射 |
-| number |  | Doris 目前不支持未指定 p 和 s 的 oracle 类型 |
-| decimal | DECIMAL | |
-| float/real | DOUBLE | |
-| DATE | DATETIME | |
-| TIMESTAMP | DATETIME | |
-| CHAR/NCHAR | STRING | |
-| VARCHAR2/NVARCHAR2 | STRING | |
-| LONG/ RAW/ LONG RAW/ INTERVAL | STRING | |
-|Other| UNSUPPORTED |
+| ORACLE Type                       | Doris Type                           | Comment                                                                                                                                        |
+|-----------------------------------|--------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------—｜
+| number(p) / number(p,0)           | TINYINT/SMALLINT/INT/BIGINT/LARGEINT | Doris 会根据 p 的大小来选择对应的类型：`p < 3` -> `TINYINT`; `p < 5` -> `SMALLINT`; `p < 10` -> `INT`; `p < 19` -> `BIGINT`; `p > 19` -> `LARGEINT` |
+| number(p,s), [ if(s>0 && p>s) ]   | DECIMAL(p,s)                         |                                                                                                                                                |
+| number(p,s), [ if(s>0 && p < s) ] | DECIMAL(s,s)                         |                                                                                                                                                |
+| number(p,s), [ if(s<0) ]          | TINYINT/SMALLINT/INT/BIGINT/LARGEINT | s<0 的情况下，Doris 会将 p 设置为 p+\|s\|，并进行和 number(p) / number(p,0) 一样的映射                                                                |
+| number                            |                                      | Doris 目前不支持未指定 p 和 s 的 oracle 类型                                                                                                       |
+| decimal                           | DECIMAL                              |                                                                                                                                                |
+| float/real                        | DOUBLE                               |                                                                                                                                                |
+| DATE                              | DATETIME                             |                                                                                                                                                |
+| TIMESTAMP                         | DATETIME                             |                                                                                                                                                |
+| CHAR/NCHAR                        | STRING                               |                                                                                                                                                |
+| VARCHAR2/NVARCHAR2                | STRING                               |                                                                                                                                                |
+| LONG/ RAW/ LONG RAW/ INTERVAL     | STRING                               |                                                                                                                                                |
+| Other                             | UNSUPPORTED                          |                                                                                                                                                |
 
 ### SQLServer
 
-| SQLServer Type | Doris Type | Comment |
-|---|---|---|
-| bit | BOOLEAN | |
-| tinyint | SMALLINT | SQLServer 的 tinyint 是无符号数，所以映射为 Doris 的 SMALLINT |
-| smallint | SMALLINT | |
-| int | INT | |
-| bigint | BIGINT | |
-| real | FLOAT | |
-| float | DOUBLE | |
-| money | DECIMAL(19,4) | |
-| smallmoney | DECIMAL(10,4) | |
-| decimal/numeric | DECIMAL | |
-| date | DATE | |
-| datetime/datetime2/smalldatetime | DATETIMEV2 | |
-| char/varchar/text/nchar/nvarchar/ntext | STRING | |
-| binary/varbinary | STRING | |
-| time/datetimeoffset | STRING | |
-|Other| UNSUPPORTED | |
+| SQLServer Type                         | Doris Type    | Comment                                                  |
+|----------------------------------------|---------------|----------------------------------------------------------|
+| bit                                    | BOOLEAN       |                                                          |
+| tinyint                                | SMALLINT      | SQLServer 的 tinyint 是无符号数，所以映射为 Doris 的 SMALLINT |
+| smallint                               | SMALLINT      |                                                          |
+| int                                    | INT           |                                                          |
+| bigint                                 | BIGINT        |                                                          |
+| real                                   | FLOAT         |                                                          |
+| float                                  | DOUBLE        |                                                          |
+| money                                  | DECIMAL(19,4) |                                                          |
+| smallmoney                             | DECIMAL(10,4) |                                                          |
+| decimal/numeric                        | DECIMAL       |                                                          |
+| date                                   | DATE          |                                                          |
+| datetime/datetime2/smalldatetime       | DATETIMEV2    |                                                          |
+| char/varchar/text/nchar/nvarchar/ntext | STRING        |                                                          |
+| binary/varbinary                       | STRING        |                                                          |
+| time/datetimeoffset                    | STRING        |                                                          |
+| Other                                  | UNSUPPORTED   |                                                          |
 
 
 ### Clickhouse
 
-| ClickHouse Type                                      | Doris Type               | Comment                                                                    |
-|------------------------------------------------------|--------------------------|----------------------------------------------------------------------------|
-| Bool                                                 | BOOLEAN                  |                                                                            |
-| String                                               | STRING                   |                                                                            |
-| Date/Date32                                          | DATEV2                   | Jdbc Catlog 连接 ClickHouse 时默认使用 DATEV2 类型                                       |
-| DateTime/DateTime64                                  | DATETIMEV2               | Jdbc Catlog 连接 ClickHouse 时默认使用 DATETIMEV2 类型                                        |
-| Float32                                              | FLOAT                    |                                                                            |
-| Float64                                              | DOUBLE                   |                                                                            |
-| Int8                                                 | TINYINT                  |                                                                            |
-| Int16/UInt8                                          | SMALLINT                 | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级                                              |
-| Int32/UInt16                                         | INT                      | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级                                              |
-| Int64/Uint32                                         | BIGINT                   | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级                                              |
-| Int128/UInt64                                        | LARGEINT                 | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级                                              |
-| Int256/UInt128/UInt256                               | STRING                   | Doris 没有这个数量级的数据类型，采用 STRING 处理                                               |
-| DECIMAL                                              | DECIMAL/DECIMALV3/STRING | 将根据 Doris DECIMAL 字段的（precision, scale）和`enable_decimal_conversion`开关选择用何种类型 |
-| Enum/IPv4/IPv6/UUID                                  | STRING                   | 在显示上 IPv4,IPv6 会额外在数据最前面显示一个`/`,需要自己用`split_part`函数处理                        |
-|   Array | ARRAY                    | Array 内部类型适配逻辑参考上述类型，不支持嵌套类型                                                |
-| Other                                                | UNSUPPORTED              |                                                                            |
+| ClickHouse Type                                      | Doris Type                  | Comment                                                                                  |
+|------------------------------------------------------|-----------------------------|------------------------------------------------------------------------------------------|
+| Bool                                                 | BOOLEAN                     |                                                                                          |
+| String                                               | STRING                      |                                                                                          |
+| Date/Date32                                          | DATEV2                      | Jdbc Catlog 连接 ClickHouse 时默认使用 DATEV2 类型                                          |
+| DateTime/DateTime64                                  | DATETIMEV2                  | Jdbc Catlog 连接 ClickHouse 时默认使用 DATETIMEV2 类型                                      |
+| Float32                                              | FLOAT                       |                                                                                          |
+| Float64                                              | DOUBLE                      |                                                                                          |
+| Int8                                                 | TINYINT                     |                                                                                          |
+| Int16/UInt8                                          | SMALLINT                    | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级                                              |
+| Int32/UInt16                                         | INT                         | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级                                              |
+| Int64/Uint32                                         | BIGINT                      | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级                                              |
+| Int128/UInt64                                        | LARGEINT                    | Doris 没有 UNSIGNED 数据类型，所以扩大一个数量级                                              |
+| Int256/UInt128/UInt256                               | STRING                      | Doris 没有这个数量级的数据类型，采用 STRING 处理                                               |
+| DECIMAL                                              | DECIMAL/DECIMALV3/STRING    | 将根据 Doris DECIMAL 字段的（precision, scale）和`enable_decimal_conversion`开关选择用何种类型  |
+| Enum/IPv4/IPv6/UUID                                  | STRING                      | 在显示上 IPv4,IPv6 会额外在数据最前面显示一个`/`,需要自己用`split_part`函数处理                   |
+|   Array                                              | ARRAY                       | Array 内部类型适配逻辑参考上述类型，不支持嵌套类型                                               |
+| Other                                                | UNSUPPORTED                 |                                                                                           |
 
 ### Doris
 
-| Doris Type | Jdbc Catlog Doris Type | Comment |
-|---|---|---|
-| BOOLEAN | BOOLEAN | |
-| TINYINT | TINYINT | |
-| SMALLINT | SMALLINT | |
-| INT | INT | |
-| BIGINT | BIGINT | |
-| LARGEINT | LARGEINT | |
-| FLOAT | FLOAT | |
-| DOUBLE | DOUBLE | |
-| DECIMAL / DECIMALV3 | DECIMAL/DECIMALV3/STRING | 将根据 Doris DECIMAL 字段的（precision, scale）和`enable_decimal_conversion`开关选择用何种类型 |
-| DATE | DATEV2 | Jdbc Catlog 连接 Doris 时默认使用 DATEV2 类型 |
-| DATEV2 | DATEV2 |  |
-| DATETIME | DATETIMEV2 | Jdbc Catlog 连接 Doris 时默认使用 DATETIMEV2 类型 |
-| DATETIMEV2 | DATETIMEV2 | |
-| CHAR | CHAR | |
-| VARCHAR | VARCHAR | |
-| STRING | STRING | |
-| TEXT | STRING | |
-|Other| UNSUPPORTED |
+| Doris Type            | Jdbc Catlog Doris Type    | Comment                                                                               |
+|-----------------------|---------------------------|-----------------------------------------------------------------------------------------|
+| BOOLEAN               | BOOLEAN                   | |
+| TINYINT               | TINYINT                   | |
+| SMALLINT              | SMALLINT                  | |
+| INT                   | INT                       | |
+| BIGINT                | BIGINT                    | |
+| LARGEINT              | LARGEINT                  | |
+| FLOAT                 | FLOAT                     | |
+| DOUBLE                | DOUBLE                    | |
+| DECIMAL / DECIMALV3   | DECIMAL/DECIMALV3/STRING | 将根据 Doris DECIMAL 字段的（precision, scale）和`enable_decimal_conversion`开关选择用何种类型 |
+| DATE                  | DATEV2                   | Jdbc Catlog 连接 Doris 时默认使用 DATEV2 类型                                                |
+| DATEV2                | DATEV2                    |  |
+| DATETIME              | DATETIMEV2                | Jdbc Catlog 连接 Doris 时默认使用 DATETIMEV2 类型                                            |
+| DATETIMEV2            | DATETIMEV2               | |
+| CHAR                  | CHAR                      | |
+| VARCHAR               | VARCHAR                   | |
+| STRING                | STRING                    | |
+| TEXT                  | STRING                    | |
+| Other                 | UNSUPPORTED               |
 
 ### SAP HANA
 
@@ -481,22 +481,22 @@ set enable_odbc_transcation = true;
 
 ### Trino
 
-| Trino Type                                           | Doris Type               | Comment                                                                   |
-|------------------------------------------------------|--------------------------|---------------------------------------------------------------------------|
-| boolean                                              | BOOLEAN                  |                                                                           |
-| tinyint                                              | TINYINT                  |                                                                           |
-| smallint                                             | SMALLINT                 |                                                                           |
-| integer                                              | INT                      |                                                                           |
-| bigint                                               | BIGINT                   |                                                                           |
-| decimal                                              | DECIMAL/DECIMALV3/STRING | 将根据 Doris DECIMAL 字段的（precision, scale）和`enable_decimal_conversion`开关选择用何种类型|
-| real                                                 | FLOAT                    |                                                                           |
-| double                                               | DOUBLE                   |                                                                           |
-| date                                                 | DATE/DATEV2              | Jdbc Catlog 连接 Trino 时默认使用 DATEV2 类型                                      |
-| timestamp                                            | DATETIME/DATETIMEV2      | Jdbc Catlog 连接 Trino 时默认使用 DATETIMEV2 类型                                  |
-| varchar                                              | TEXT                     |                                                                           |
-| char                                                 | CHAR                     |                                                                           |
-|   array  | ARRAY                    | Array 内部类型适配逻辑参考上述类型，不支持嵌套类型                                  |
-| others                                               | UNSUPPORTED              |                                                                           |
+| Trino Type                                           | Doris Type                     | Comment                                                                   |
+|------------------------------------------------------|-------------------------------|---------------------------------------------------------------------------|
+| boolean                                              | BOOLEAN                       |                                                                           |
+| tinyint                                              | TINYINT                       |                                                                           |
+| smallint                                             | SMALLINT                      |                                                                           |
+| integer                                              | INT                           |                                                                           |
+| bigint                                               | BIGINT                        |                                                                           |
+| decimal                                              | DECIMAL/DECIMALV3/STRING      | 将根据 Doris DECIMAL 字段的（precision, scale）和`enable_decimal_conversion`开关选择用何种类型|
+| real                                                 | FLOAT                         |                                                                           |
+| double                                               | DOUBLE                        |                                                                           |
+| date                                                 | DATE/DATEV2                   | Jdbc Catlog 连接 Trino 时默认使用 DATEV2 类型                                      |
+| timestamp                                            | DATETIME/DATETIMEV2           | Jdbc Catlog 连接 Trino 时默认使用 DATETIMEV2 类型                                  |
+| varchar                                              | TEXT                          |                                                                           |
+| char                                                 | CHAR                          |                                                                           |
+|   array                                              | ARRAY                         | Array 内部类型适配逻辑参考上述类型，不支持嵌套类型                                  |
+| others                                               | UNSUPPORTED                   |                                                                           |
 
 **Note:**
 目前仅针对 Trino 连接的 Hive 做了测试，其他的 Trino 连接的数据源暂时未测试。
@@ -518,7 +518,7 @@ Oracle 模式请参考 [Oracle 类型映射](#Oracle)
 
     可全局修改配置项
     
-    ```
+```
     修改 mysql 目录下的 my.ini 文件（linux 系统为 etc 目录下的 my.cnf 文件）
     [client]
     default-character-set=utf8mb4
@@ -537,7 +537,7 @@ Oracle 模式请参考 [Oracle 类型映射](#Oracle)
     ALTER TABLE table_name MODIFY  colum_name  VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
     ALTER TABLE table_name CHARSET=utf8mb4;
     SET NAMES utf8mb4
-    ```
+```
 
 3. 读 MySQL 外表时，DateTime="0000:00:00 00:00:00"异常报错："CAUSED BY: DataReadException: Zero date value prohibited"
 
@@ -551,9 +551,9 @@ Oracle 模式请参考 [Oracle 类型映射](#Oracle)
 
     如以下异常：
  
-    ```
+```
     failed to load driver class com.mysql.jdbc.driver in either of hikariconfig class loader
-    ```
+```
  
     这是因为在创建 resource 时，填写的 driver_class 不正确，需要正确填写，如上方例子为大小写问题，应填写为 `"driver_class" = "com.mysql.jdbc.Driver"`
 
@@ -561,7 +561,7 @@ Oracle 模式请参考 [Oracle 类型映射](#Oracle)
 
     如果出现如下报错：
 
-    ```
+```
     ERROR 1105 (HY000): errCode = 2, detailMessage = PoolInitializationException: Failed to initialize pool: Communications link failure
     
     The last packet successfully received from the server was 7 milliseconds ago.  The last packet sent successfully to the server was 4 milliseconds ago.
@@ -569,18 +569,18 @@ Oracle 模式请参考 [Oracle 类型映射](#Oracle)
         
     The last packet successfully received from the server was 7 milliseconds ago.  The last packet sent successfully to the server was 4 milliseconds ago.
     CAUSED BY: SSLHandshakeExcepti
-    ```
+```
     
     可查看 be 的 be.out 日志
     
     如果包含以下信息：
     
-    ```
+```
     WARN: Establishing SSL connection without server's identity verification is not recommended. 
     According to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set. 
     For compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'. 
     You need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.
-    ```
+```
 
     可在创建 Catalog 的 `jdbc_url` 把 JDBC 连接串最后增加 `?useSSL=false` ,如 `"jdbc_url" = "jdbc:mysql://127.0.0.1:3306/test?useSSL=false"`
 
@@ -595,11 +595,11 @@ Oracle 模式请参考 [Oracle 类型映射](#Oracle)
 
 8. 使用 JDBC 查询 MYSQL 大数据量时，如果查询偶尔能够成功，偶尔会报如下错误，且出现该错误时 MYSQL 的连接被全部断开，无法连接到 MYSQL SERVER，过段时间后 mysql 又恢复正常，但是之前的连接都没了：
 
-    ```
+```
     ERROR 1105 (HY000): errCode = 2, detailMessage = [INTERNAL_ERROR]UdfRuntimeException: JDBC executor sql has error:
     CAUSED BY: CommunicationsException: Communications link failure
     The last packet successfully received from the server was 4,446 milliseconds ago. The last packet sent successfully to the server was 4,446 milliseconds ago.
-    ```
+```
 
     出现上述现象时，可能是 Mysql Server 自身的内存或 CPU 资源被耗尽导致 Mysql 服务不可用，可以尝试增大 Mysql Server 的内存或 CPU 配置。
  

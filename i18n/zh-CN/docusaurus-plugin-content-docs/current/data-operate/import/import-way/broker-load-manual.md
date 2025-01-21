@@ -76,7 +76,7 @@ BE 在执行的过程中会从 Broker 拉取数据，在对数据 transform 之�
 
 ## 快速上手
 
-本节演示了一个 S3 Load 的例子。具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD)。
+本节演示了一个 S3 Load 的例子。具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD)。
 
 ### 前置检查
 
@@ -164,7 +164,7 @@ Doris 支持的 provider 列表：
 
 ### 查看导入作业
 
-Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) 命令查看
+Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) 命令查看
 
 ```sql
 mysql> show load order by createtime desc limit 1\G;
@@ -840,4 +840,4 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 ## 更多帮助
 
-关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP BROKER LOAD` 获取更多帮助信息。
+关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP BROKER LOAD` 获取更多帮助信息。
