@@ -31,7 +31,7 @@ Aggregation function, used to calculate the bitmap intersection after grouping. 
 ## Syntax
 
 ```sql
-BITMAP BITMAP_INTERSECT(BITMAP <value>)
+BITMAP_INTERSECT(BITMAP <value>)
 ```
 
 ## Parameters

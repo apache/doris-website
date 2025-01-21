@@ -31,7 +31,7 @@ Mainly used to merge the values of multiple bitmaps and perform bitwise xor calc
 ## Syntax
 
 ```sql
-BITMAP GROUP_BITMAP_XOR(<expr>)
+GROUP_BITMAP_XOR(<expr>)
 ```
 
 ## Parameters

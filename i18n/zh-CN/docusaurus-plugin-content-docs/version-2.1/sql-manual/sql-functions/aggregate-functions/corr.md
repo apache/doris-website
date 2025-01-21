@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-double corr(<expr1>, <expr2>)
+CORR(<expr1>, <expr2>)
 ```
 
 ## 参数
@@ -84,4 +84,3 @@ select id,corr(k1,k2) from test_corr group by id;
 |    2 | 0.4539206495016019 |
 +------+--------------------+
 ```
-

@@ -31,7 +31,7 @@ Treat the data in the column as enumeration values and count the number of each 
 ## Syntax
 
 ```sql
-count_by_enum(<expr1>, <expr2>, ... , <exprN>)
+COUNT_BY_ENUM(<expr1>, <expr2>, ... , <exprN>)
 ```
 
 ## Parameters

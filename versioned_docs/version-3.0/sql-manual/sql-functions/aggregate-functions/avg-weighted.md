@@ -31,7 +31,7 @@ Calculates the weighted arithmetic mean, i.e., the result is the sum of the prod
 ## Syntax
 
 ```sql
-double avg_weighted(<x>, <weight>)
+AVG_WEIGHTED(<x>, <weight>)
 ```
 
 ## Parameters

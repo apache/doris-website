@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-count_by_enum(<expr1>, <expr2>, ... , <exprN>)
+COUNT_BY_ENUM(<expr1>, <expr2>, ... , <exprN>)
 ```
 
 ## 参数

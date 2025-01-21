@@ -31,7 +31,7 @@ Calculate the Pearson coefficient of two random variables.
 ## Syntax
 
 ```sql
-double corr(<expr1>, <expr2>)
+CORR(<expr1>, <expr2>)
 ```
 
 ## Parameters

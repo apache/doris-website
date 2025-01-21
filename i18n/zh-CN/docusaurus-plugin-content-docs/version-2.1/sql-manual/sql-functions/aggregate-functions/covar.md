@@ -30,14 +30,12 @@ under the License.
 
 ## 别名
 
-```sql
-covar_pop
-```
+- COVAR_POP
 
 ## 语法
 
 ```sql
-double covar(<expr1>, <expr2>)
+COVAR(<expr1>, <expr2>)
 ```
 
 ## 参数

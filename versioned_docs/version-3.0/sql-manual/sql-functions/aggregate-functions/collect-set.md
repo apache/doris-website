@@ -30,14 +30,12 @@ Aggregation function aggregates all unique values of the specified column, remov
 
 ## Alias
 
-```sql
-group_uniq_array
-```
+- GROUP_UNIQ_ARRAY
 
 ## Syntax
 
 ```sql
-ARRAY<T> collect_set(<expr> [,<max_size>])
+COLLECT_SET(<expr> [,<max_size>])
 ```
 
 ## Parameters

@@ -30,14 +30,12 @@ Aggregation function, used to aggregate all values of a column into an array.
 
 ## Alias
 
-```sql
-group_array
-```
+- GROUP_ARRAY
 
 ## Syntax
 
 ```sql
-ARRAY<T> collect_list(<expr> [,<max_size>])
+COLLECT_LIST(<expr> [,<max_size>])
 ```
 
 ## Parameters

@@ -30,9 +30,7 @@ Returns any value from the expression or column in the group. If there is a non-
 
 ## Alias
 
-```sql
-ANY
-```
+- ANY
 
 ## Syntax
 

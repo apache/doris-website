@@ -30,14 +30,12 @@ under the License.
 
 ## 别名
 
-```sql
-group_uniq_array
-```
+- GROUP_UNIQ_ARRAY
 
 ## 语法
 
 ```sql
-ARRAY<T> collect_set(<expr> [,<max_size>])
+COLLECT_SET(<expr> [,<max_size>])
 ```
 
 ## 参数

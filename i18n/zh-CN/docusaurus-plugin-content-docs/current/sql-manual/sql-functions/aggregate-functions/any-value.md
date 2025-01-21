@@ -30,9 +30,7 @@ under the License.
 
 ## 别名
 
-```sql
-ANY
-```
+- ANY
 
 ## 语法
 

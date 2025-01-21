@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-BITMAP GROUP_BITMAP_XOR(<expr>)
+GROUP_BITMAP_XOR(<expr>)
 ```
 
 ## 参数

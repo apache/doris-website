@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-double avg_weighted(<x>, <weight>)
+AVG_WEIGHTED(<x>, <weight>)
 ```
 
 ## 参数

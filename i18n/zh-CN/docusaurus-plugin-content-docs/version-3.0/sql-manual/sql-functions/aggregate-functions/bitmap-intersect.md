@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-BITMAP BITMAP_INTERSECT(BITMAP <value>)
+BITMAP_INTERSECT(BITMAP <value>)
 ```
 
 ## 参数

@@ -30,14 +30,12 @@ Calculate the covariance between two numeric variables.
 
 ## Alias
 
-```sql
-covar_pop
-```
+- COVAR_POP
 
 ## Syntax
 
 ```sql
-double covar(<expr1>, <expr2>)
+COVAR(<expr1>, <expr2>)
 ```
 
 ## Parameters

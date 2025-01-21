@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-double corr(<expr1>, <expr2>)
+CORR(<expr1>, <expr2>)
 ```
 
 ## 参数

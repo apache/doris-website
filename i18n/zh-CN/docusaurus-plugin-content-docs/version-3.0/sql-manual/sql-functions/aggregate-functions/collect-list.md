@@ -30,14 +30,12 @@ under the License.
 
 ## 别名
 
-```sql
-group_array
-```
+- GROUP_ARRAY
 
 ## 语法
 
 ```text
-ARRAY<T> collect_list(<expr> [,<max_size>])
+COLLECT_LIST(<expr> [,<max_size>])
 ```
 
 ## 参数

@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-double covar_samp(<expr1>, <expr2>)
+COVAR_SAMP(<expr1>, <expr2>)
 ```
 
 ## 参数

@@ -31,7 +31,7 @@ Computes the sample covariance between two numeric variables.
 ## Syntax
 
 ```sql
-double covar_samp(<expr1>, <expr2>)
+COVAR_SAMP(<expr1>, <expr2>)
 ```
 
 ## Parameters
