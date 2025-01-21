@@ -30,15 +30,20 @@ under the License.
 
 ## 语法
 ```sql
-ALTER RESOURCE 'resource_name'
+ALTER RESOURCE '<resource_name>'
 PROPERTIES (
-  "<key>"="<value>", 
+  `<property>`, 
   ...
 );
 ```
-注意：
-- resource type 不支持修改。
-- 修改的 properties 参数可参考 [CREATE-RESOURCE](./CREATE-RESOURCE.md) 章节;
+
+## 参数
+
+1.`<property>`
+
+`<property>` 格式为 `<key>` = `<value>`，不支持修改`<key>`等于 type 的`<value>`。
+
+其他可修改的 properties 参数参考 [CREATE-RESOURCE](./CREATE-RESOURCE.md) 章节;
 
 
 ## 示例

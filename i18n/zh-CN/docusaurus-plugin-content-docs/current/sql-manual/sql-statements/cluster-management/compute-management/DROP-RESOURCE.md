@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-DROP RESOURCE 'resource_name'
+DROP RESOURCE '<resource_name>'
 ```
 
 ## 注意事项

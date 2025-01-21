@@ -32,17 +32,23 @@ under the License.
 ## 语法
 
 ```sql
-CREATE [EXTERNAL] RESOURCE "resource_name"
+CREATE [EXTERNAL] RESOURCE "<resource_name>"
 PROPERTIES (
-   "<key>"="<value>",
+   `<property>`
     ...);
 ```
 
-## 必选参数
-1. `<type>`
-指定资源的类型 "type" = "[spark|odbc_catalog|s3|jdbc|hdfs|hms|es]"。
+## 参数
 
-其他的参数，根据资源类型的不同 PROPERTIES 有所不同，具体见示例。
+1.`<property>`
+
+`<property>` 格式为 `<key>` = `<value>`，`<key>`的具体可选值如下：
+
+| 参数 | 说明 | 是否必填 |
+| -- | -- | -- |
+| `<type>` | 指定资源的类型，支持 spark/odbc_catalog/s3/jdbc/hdfs/hms/es。 | 是 |
+
+根据`<type>`的不同 PROPERTIES 的参数有所不同，具体见示例。
 
 ## 示例
 

@@ -34,11 +34,11 @@ This statement is used to display resources that the user has permission to use.
 SHOW RESOURCES
 [
   WHERE
-  [NAME [ = "your_resource_name" | LIKE "name_matcher"]]
+  [NAME [ = "<your_resource_name>" | LIKE "<name_matcher>"]]
   [RESOURCETYPE = "<type>"]
-] | [LIKE "pattern"]
-[ORDER BY...]
-[LIMIT limit][OFFSET offset];
+] | [LIKE "<pattern>"]
+[ORDER BY ...]
+[LIMIT <limit>][OFFSET <offset>];
 ```
 
 ## Usage Notes

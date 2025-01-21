@@ -32,18 +32,30 @@ In the future, other external resources may be added to Doris for use, such as S
 ## Syntax
 
 ```sql
-CREATE [EXTERNAL] RESOURCE "resource_name"
+CREATE [EXTERNAL] RESOURCE "<resource_name>"
 PROPERTIES (
-   "<key>"="<value>", 
-   ...
-);
+   `<property>`
+    ...);
 ```
 
-## Required Parameters
+## Required 
 1. `<type>`
 The type of resource needs to be specified in PROPERTIES "type" = "[spark|odbc_catalog|s3|jdbc|hdfs|hms|es]".
 
 The other parameters vary depending on the resource type, and the PROPERTIES differ accordingly. Please refer to the example for details.
+
+## Parameters
+
+1.`<type>`
+
+`<property>` format as `<key>` = `<value>`, and the specific available values for `<key>` are as follows:
+
+| Parameter | Description | Required |
+| -- | -- | -- |
+| `<type>` | Specify the type of resource, supported: spark/odbc_catalog/s3/jdbc/hdfs/hms/es. | Y |
+
+Depending on the `<type>`, the parameters of PROPERTIES vary. Please refer to the example for details.
+
 
 ## Examples
 

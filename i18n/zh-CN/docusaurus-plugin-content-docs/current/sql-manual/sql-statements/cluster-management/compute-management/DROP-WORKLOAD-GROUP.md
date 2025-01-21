@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-DROP WORKLOAD GROUP [IF EXISTS] 'rg_name'
+DROP WORKLOAD GROUP [IF EXISTS] '<rg_name>'
 ```
 
 ## 示例

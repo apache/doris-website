@@ -32,7 +32,7 @@ This statement is used to delete a workload group.
 ## Syntax
 
 ```sql
-DROP WORKLOAD GROUP [IF EXISTS] 'rg_name'
+DROP WORKLOAD GROUP [IF EXISTS] '<rg_name>'
 ```
 
 ## Examples

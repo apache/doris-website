@@ -32,16 +32,21 @@ This statement is used to modify an existing resource. Only the root or admin us
 ## Syntax
 
 ```sql
-ALTER RESOURCE 'resource_name'
+ALTER RESOURCE '<resource_name>'
 PROPERTIES (
-  "<key>"="<value>", 
+  `<property>`, 
   ...
 );
 ```
 
-Note: 
-- The resource type does not support modification.
-- The modified properties parameters can be referenced in the [CREATE-RESOURCE](./CREATE-RESOURCE.md) section.
+## Parameters
+
+1.`<property>`
+
+The `<property>` format is `<key>` = `<value>`, and modifying the `<value>` where `<key>` equals 'type' is not supported.
+
+The modified properties parameters can be referenced in the [CREATE-RESOURCE](./CREATE-RESOURCE.md) section.
+
 
 ## Examples
 
