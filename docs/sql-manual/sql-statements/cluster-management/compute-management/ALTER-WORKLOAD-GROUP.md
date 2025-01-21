@@ -34,7 +34,7 @@ This statement is used to modify the workload group.
 ALTER WORKLOAD GROUP  "<rg_name>"
 PROPERTIES (
   `<property>`
-    ...
+  [ , ... ]
 );
 ```
 

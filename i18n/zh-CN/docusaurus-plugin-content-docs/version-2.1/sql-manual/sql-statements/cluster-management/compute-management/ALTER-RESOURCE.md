@@ -33,7 +33,7 @@ under the License.
 ALTER RESOURCE '<resource_name>'
 PROPERTIES (
   `<property>`, 
-  ...
+  [ , ... ]
 );
 ```
 

@@ -35,7 +35,8 @@ under the License.
 CREATE [EXTERNAL] RESOURCE "<resource_name>"
 PROPERTIES (
    `<property>`
-    ...);
+    [ , ... ]
+);
 ```
 
 ## 参数

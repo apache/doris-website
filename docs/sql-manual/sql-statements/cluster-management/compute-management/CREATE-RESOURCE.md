@@ -35,7 +35,8 @@ In the future, other external resources may be added to Doris for use, such as S
 CREATE [EXTERNAL] RESOURCE "<resource_name>"
 PROPERTIES (
    `<property>`
-    ...);
+    [ , ... ]
+);
 ```
 
 ## Parameters

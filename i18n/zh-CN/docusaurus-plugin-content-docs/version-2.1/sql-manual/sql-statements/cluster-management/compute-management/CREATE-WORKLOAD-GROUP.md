@@ -34,7 +34,7 @@ under the License.
 CREATE WORKLOAD GROUP [IF NOT EXISTS] "<rg_name>"
 PROPERTIES (
     `<property>`
-    ...
+    [ , ... ]
 );
 ```
 

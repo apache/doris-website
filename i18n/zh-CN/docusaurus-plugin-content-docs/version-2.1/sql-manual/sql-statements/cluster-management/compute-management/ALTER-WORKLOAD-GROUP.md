@@ -34,7 +34,7 @@ under the License.
 ALTER WORKLOAD GROUP  "<rg_name>"
 PROPERTIES (
   `<property>`
-    ...
+  [ , ... ]
 );
 ```
 

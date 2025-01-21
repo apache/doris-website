@@ -35,7 +35,7 @@ This statement is used to modify an existing resource. Only the root or admin us
 ALTER RESOURCE '<resource_name>'
 PROPERTIES (
   `<property>`, 
-  ...
+  [ , ... ]
 );
 ```
 
