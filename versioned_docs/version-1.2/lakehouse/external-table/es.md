@@ -175,18 +175,18 @@ Operators will be converted into ES queries as follows:
 
 ##### Data Type Mapping
 
-| Doris\ES | byte    | short   | integer | long    | float   | double  | keyword | text    | date    |
-| -------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- |
-| tinyint  | &radic; |         |         |         |         |         |         |         |         |
-| smallint | &radic; | &radic; |         |         |         |         |         |         |         |
-| int      | &radic; | &radic; | &radic; |         |         |         |         |         |         |
-| bigint   | &radic; | &radic; | &radic; | &radic; |         |         |         |         |         |
-| float    |         |         |         |         | &radic; |         |         |         |         |
-| double   |         |         |         |         |         | &radic; |         |         |         |
-| char     |         |         |         |         |         |         | &radic; | &radic; |         |
-| varchar  |         |         |         |         |         |         | &radic; | &radic; |         |
-| date     |         |         |         |         |         |         |         |         | &radic; |
-| datetime |         |         |         |         |         |         |         |         | &radic; |
+| Doris vs ES | byte    | short   | integer | long    | float   | double  | keyword | text    | date    |
+| ----------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- |
+| tinyint     | &radic; |         |         |         |         |         |         |         |         |
+| smallint    | &radic; | &radic; |         |         |         |         |         |         |         |
+| int         | &radic; | &radic; | &radic; |         |         |         |         |         |         |
+| bigint      | &radic; | &radic; | &radic; | &radic; |         |         |         |         |         |
+| float       |         |         |         |         | &radic; |         |         |         |         |
+| double      |         |         |         |         |         | &radic; |         |         |         |
+| char        |         |         |         |         |         |         | &radic; | &radic; |         |
+| varchar     |         |         |         |         |         |         | &radic; | &radic; |         |
+| date        |         |         |         |         |         |         |         |         | &radic; |
+| datetime    |         |         |         |         |         |         |         |         | &radic; |
 
 
 ### Improve Query Speed by Enabling Columnar Scan (enable\_docvalue\_scan=true)

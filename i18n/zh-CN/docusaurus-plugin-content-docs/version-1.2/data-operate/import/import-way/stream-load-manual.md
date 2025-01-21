@@ -112,15 +112,15 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 
 - column_separator
 
-  用于指定导入文件中的列分隔符，默认为\t。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。
+  用于指定导入文件中的列分隔符，默认为`\t`。如果是不可见字符，则需要加`\x`作为前缀，使用十六进制来表示分隔符。
 
-  如 hive 文件的分隔符\x01，需要指定为-H "column_separator:\x01"。
+  如 hive 文件的分隔符`\x01`，需要指定为`-H "column_separator:\x01"`。
 
   可以使用多个字符的组合作为列分隔符。
 
 - line_delimiter
 
-  用于指定导入文件中的换行符，默认为\n。
+  用于指定导入文件中的换行符，默认为`\n`。
 
   可以使用做多个字符的组合作为换行符。
 
@@ -155,6 +155,7 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 - format
 
   指定导入数据格式，支持 csv、json，默认是 csv
+  
   <version since="1.2"> format </version> 1.2 支持 csv_with_names(支持 csv 文件行首过滤)、csv_with_names_and_types(支持 csv 文件前两行过滤)、parquet、orc
 
   ```text
@@ -192,6 +193,7 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
   Stream load 导入可以开启两阶段事务提交模式：在 Stream load 过程中，数据写入完成即会返回信息给用户，此时数据不可见，事务状态为`PRECOMMITTED`，用户手动触发 commit 操作之后，数据才可见。
 
 - enable_profile
+
   <version since="1.2.4">
   </version>
 

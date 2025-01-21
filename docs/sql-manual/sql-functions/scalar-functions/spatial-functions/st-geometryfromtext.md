@@ -24,24 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_GeometryFromText,ST_GeomFromText
-### Description
-#### Syntax
+## Description
 
-`GEOMETRY ST_GeometryFromText (VARCHAR wkt)`
+Convert a linear WKT (Well Known Text) to the corresponding memory geometry
 
+## Syntax
 
-Converting a WKT (Well Known Text) into a corresponding memory geometry
-
-### example
-
+```sql
+ST_GeometryFromText( <wkt>)
 ```
-mysql> SELECT ST_AsText(ST_GeometryFromText("LINESTRING (1 1, 2 2)"));
+## Parameters
+
+| Parameters | Instructions |
+|------------|---------|
+| `<wkt>`    | The memory form of the graph |
+
+## Return Value
+
+The corresponding geometric storage form of WKB
+
+## Examples
+
+```sql
+SELECT ST_AsText(ST_GeometryFromText("LINESTRING (1 1, 2 2)"));
+```
+
+```text
 +---------------------------------------------------------+
 | st_astext(st_geometryfromtext('LINESTRING (1 1, 2 2)')) |
 +---------------------------------------------------------+
 | LINESTRING (1 1, 2 2)                                   |
 +---------------------------------------------------------+
 ```
-### keywords
-ST_GEOMETRYFROMTEXT,ST_GEOMFROMTEXT,ST,GEOMETRYFROMTEXT,GEOMFROMTEXT

@@ -24,18 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MAX_BY
+
 ## 描述
+
+MAX_BY 函数用于根据指定列的最大值，返回对应的的关联值。
+
 ## 语法
 
-`MAX_BY(expr1, expr2)`
+```sql
+MAX_BY(<expr1>, <expr2>)
+```
 
+## 参数说明
 
-返回与 expr2 的最大值关联的 expr1 的值。
+| 参数 | 说明 |
+| -- | -- |
+| `<expr1>` | 用于指定对应关联的表达式。 |
+| `<expr2>` | 用于指定最大值统计的表达式。 |
+
+## 返回值
+
+返回与输入表达式 <expr1> 相同的数据类型。
 
 ## 举例
+
+```sql
+select * from tbl;
 ```
-MySQL > select * from tbl;
+
+```text
 +------+------+------+------+
 | k1   | k2   | k3   | k4   |
 +------+------+------+------+
@@ -44,13 +61,16 @@ MySQL > select * from tbl;
 |    4 | 3    | 2    |    1 |
 |    3 | 4    | 2    |    1 |
 +------+------+------+------+
+```
 
-MySQL > select max_by(k1, k4) from tbl;
+```sql
+select max_by(k1, k4) from tbl;
+```
+
+```text
 +--------------------+
 | max_by(`k1`, `k4`) |
 +--------------------+
 |                  0 |
 +--------------------+ 
 ```
-### keywords
-MAX_BY

@@ -250,8 +250,8 @@ kafkaSource.selectExpr("CAST(key AS STRING)", "CAST(value as STRING)")
 
 ### General
 
-| Key                              | Default Value     | Comment                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-|----------------------------------|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Key                              | Default Value           | Comment                                                                           |
+|----------------------------------|-------------------------|-----------------------------------------------------------------------------------|
 | doris.fenodes                    | --                | Doris FE http address, support multiple addresses, separated by commas                                                                                                                                                                                                                                                                                                                                                                                                          |
 | doris.table.identifier           | --                | Doris table identifier, eg, db1.tbl1                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | doris.request.retries            | 3                 | Number of retries to send requests to Doris                                                                                                                                                                                                                                                                                                                                                                                                                                     |
@@ -277,8 +277,8 @@ kafkaSource.selectExpr("CAST(key AS STRING)", "CAST(value as STRING)")
 
 ### SQL & Dataframe Configuration
 
-| Key                             | Default Value | Comment                                                                                                                                                                                        |
-|---------------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Key                             | Default Value          | Comment                                            |
+|---------------------------------|------------------------|----------------------------------------------------|
 | user                            | --            | Doris username                                                                                                                                                                                 |
 | password                        | --            | Doris password                                                                                                                                                                                 |
 | doris.filter.query.in.max.count | 100           | In the predicate pushdown, the maximum number of elements in the in expression value list. If this number is exceeded, the in-expression conditional filtering is processed on the Spark side. |
@@ -292,8 +292,8 @@ kafkaSource.selectExpr("CAST(key AS STRING)", "CAST(value as STRING)")
 
 ### RDD Configuration
 
-| Key                         | Default Value | Comment                                                                                                                                         |
-|-----------------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| Key                         | Default Value | Comment                                                     |
+|-----------------------------|---------------|-------------------------------------------------------------|
 | doris.request.auth.user     | --            | Doris username                                                                                                                                  |
 | doris.request.auth.password | --            | Doris password                                                                                                                                  |
 | doris.filter.query          | --            | Filter expression of the query, which is transparently transmitted to Doris. Doris uses this expression to complete source-side data filtering. |

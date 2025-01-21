@@ -24,46 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_days
-### Description
-#### Syntax
+## Description
 
-`DATE FROM_DAYS(INT N)`
+Given a number of days, returns a DATE.
 
+- Note: To maintain consistent behavior with MySQL, the date 0000-02-29 does not exist.
 
-Given a day number, returns a DATE. Note that to maintain consistent behavior with MySQL, the date 0000-02-29 does not exist.
+## Syntax
 
-### example
-
-```
-mysql > select from_days (730669);
-+-------------------+
-| from_days(730669) |
-+-------------------+
-| 2000-07-03        |
-+-------------------+
-
-mysql> select from_days (5);
-+--------------+
-| from_days(5) |
-+--------------+
-| 0000-01-05   |
-+--------------+
-
-mysql> select from_days (59);
-+---------------+
-| from_days(59) |
-+---------------+
-| 0000-02-28    |
-+---------------+
-
-mysql> select from_days (60);
-+---------------+
-| from_days(60) |
-+---------------+
-| 0000-03-01    |
-+---------------+
+```sql
+FROM_DAYS(<dt>)
 ```
 
-### keywords
-    FROM_DAYS,FROM,DAYS
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<dt>`| Days |
+
+## Return Value
+
+Returns the date corresponding to the given number of days.
+
+## Examples
+
+```sql
+select from_days(730669),from_days(5),from_days(59), from_days(60);
+```
+
+```text
++-------------------+--------------+---------------+---------------+
+| from_days(730669) | from_days(5) | from_days(59) | from_days(60) |
++-------------------+--------------+---------------+---------------+
+| 2000-07-03        | 0000-01-05   | 0000-02-28    | 0000-03-01    |
++-------------------+--------------+---------------+---------------+
+```
