@@ -31,7 +31,7 @@ This command is used to delete Spaces or specified characters at both ends of th
 ## Syntax
 
 ```sql
-RTIM( <str> [ , <rhs>])
+TRIM( <str> [ , <rhs>])
 ```
 
 ## Required Parameters

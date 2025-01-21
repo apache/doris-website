@@ -30,13 +30,20 @@ Parses and obtains the integer (BIGINT) content of the specified path within the
 
 ## Syntax
 
-` GET_JSON_BIGINT( <json_str>, <json_path>)`
+```sql
+GET_JSON_BIGINT( <json_str>, <json_path>)
+```
 
 ## Required Parameters
 | parameters| described|
 |------|------|
 | `<json_str>`| The JSON string from which to extract data is needed. |
 | `<json_path>`| JSON path, specifying the location of the field. Paths can be denoted in dot notation. |
+
+
+## Return Value
+- Returns the BIGINT value of the field pointed to by the path.
+- Returns NULL if no corresponding field is found in the specified path, or the field value cannot be converted to type BIGINT.
 
 ## Usage Notes
 
@@ -48,10 +55,6 @@ In addition, it is recommended to use the jsonb type and the jsonb_extract_XXX f
 Special circumstances will be handled as follows:
 - Returns <json_path>NULL if the specified field does not exist in JSON
 - If <json_path>the actual type of the specified field in JSON is inconsistent with the type specified by json_extract_t, the specified type t will be returned if it can be losslessly converted to the specified type, and NULL will be returned if it cannot.
- 
-## Return Value
-- Returns the BIGINT value of the field pointed to by the path.
-- Returns NULL if no corresponding field is found in the specified path, or the field value cannot be converted to type BIGINT.
 
 ## Examples
 
