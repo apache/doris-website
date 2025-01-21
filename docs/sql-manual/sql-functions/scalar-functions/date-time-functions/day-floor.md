@@ -1,6 +1,6 @@
 ---
 {
-    "title": "day_floor",
+    "title": "DAY_FLOOR",
     "language": "en"
 }
 ---
@@ -24,39 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## day_floor
-### Description
-**Syntax**
+## Description
+
+Rounds the date down to the nearest timestamp of the specified time interval period.
+
+## Syntax
 
 ```sql
-DATETIME DAY_FLOOR(DATETIME datetime)
-DATETIME DAY_FLOOR(DATETIME datetime, DATETIME origin)
-DATETIME DAY_FLOOR(DATETIME datetime, INT period)
-DATETIME DAY_FLOOR(DATETIME datetime, INT period, DATETIME origin)
+DAY_FLOOR(<datetime>)
+DAY_FLOOR(<datetime>, <origin>)
+DAY_FLOOR(<datetime>, <period>)
+DAY_FLOOR(<datetime>, <period>, <origin>)
 ```
 
-Convert the date to the nearest rounding down time of the specified time interval period.
+## Parameters
 
-- datetime: a valid date expression.
-- period: specifies how many days each cycle consists of.
-- origin: starting from 0001-01-01T00:00:00.
+| Parameter | Description |
+| -- | -- |
+| `<datetime>` | A valid date expression |
+| `<period>` | Specifies how many days make up each period |
+| `<origin>` | The starting point of time. If not provided, the default is 0001-01-01T00:00:00 |
 
-### Example
+## Return Value
 
+Returns the date of the nearest rounded-up timestamp.
+
+## Examples
+
+```sql
+select day_floor("2023-07-13 22:28:18", 5);
 ```
-mysql> select day_floor("2023-07-13 22:28:18", 5);
+
+```text
 +------------------------------------------------------------+
 | day_floor(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
 +------------------------------------------------------------+
 | 2023-07-12 00:00:00                                        |
 +------------------------------------------------------------+
-1 row in set (0.07 sec)
 ```
-
-### Keywords
-
-    DAY_FLOOR,DAY,FLOOR
-
-### Best Practices
-
-See also [date_floor](./date_floor)

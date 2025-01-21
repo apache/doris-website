@@ -142,12 +142,12 @@ PROPERTIES (
 
 参数说明：
 
-参数 | 说明
----|---
-**hosts** | ES集群地址，可以是一个或多个，也可以是ES前端的负载均衡地址
-**index** | 对应的ES的index名字，支持alias，如果使用doc_value，需要使用真实的名称
-**type** | index的type，ES 7.x及以后的版本不传此参数
-**user** | ES集群用户名
+参数          | 说明
+-------------|--------------------------------------------------------------
+**hosts**    | ES集群地址，可以是一个或多个，也可以是ES前端的负载均衡地址
+**index**    | 对应的ES的index名字，支持alias，如果使用doc_value，需要使用真实的名称
+**type**     | index的type，ES 7.x及以后的版本不传此参数
+**user**     | ES集群用户名
 **password** | 对应用户的密码信息
 
 * ES 7.x之前的集群请注意在建表的时候选择正确的**索引类型type**
@@ -160,22 +160,22 @@ PROPERTIES (
 
 下面的操作符(Operators)会被优化成如下ES Query:
 
-| SQL syntax  | ES 5.x+ syntax | 
-|-------|:---:|
-| =   | term query|
-| in  | terms query   |
-| > , < , >= , ⇐  | range query |
-| and  | bool.filter   |
-| or  | bool.should   |
-| not  | bool.must_not   |
-| not in  | bool.must_not + terms query |
-| is\_not\_null  | exists query |
-| is\_null  | bool.must_not + exists query |
-| esquery  | ES原生json形式的QueryDSL   |
+| SQL syntax     | ES 5.x+ syntax               | 
+|----------------|:----------------------------:|
+| =              | term query                   |
+| in             | terms query                  |
+| > , < , >= , ⇐ | range query                  |
+| and            | bool.filter                  |
+| or             | bool.should                  |
+| not            | bool.must_not                |
+| not in         | bool.must_not + terms query  |
+| is\_not\_null  | exists query                 |
+| is\_null       | bool.must_not + exists query |
+| esquery        | ES原生json形式的QueryDSL       |
 
 ##### 数据类型映射
 
-Doris\ES  |  byte | short | integer | long | float | double| keyword | text | date
+Doris vs ES  |  byte | short | integer | long | float | double| keyword | text | date
 ------------- | ------------- | ------  | ---- | ----- | ----  | ------ | ----| --- | --- |
 tinyint  | &radic; |  |  |  |   |   |   |   |
 smallint | &radic; | &radic; |  | |   |   |   |   |
@@ -249,8 +249,8 @@ PROPERTIES (
 
 参数说明：
 
-参数 | 说明
----|---
+参数                        | 说明
+---------------------------|------------------------------------------------------------------------------------------------------
 **enable\_keyword\_sniff** | 是否对ES中字符串类型分词类型(**text**) `fields` 进行探测，获取额外的未分词(**keyword**)字段名(multi-fields机制)
 
 在ES中可以不建立index直接进行数据导入，这时候ES会自动创建一个新的索引，针对字符串类型的字段ES会创建一个既有`text`类型的字段又有`keyword`类型的字段，这就是ES的multi fields特性，mapping如下：
