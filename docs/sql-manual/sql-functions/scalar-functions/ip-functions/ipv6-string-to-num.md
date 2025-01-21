@@ -1,7 +1,7 @@
 ---
 {
-"title": "IPV6_STRING_TO_NUM",
-"language": "en"
+    "title": "IPV6_STRING_TO_NUM",
+    "language": "en"
 }
 ---
 
@@ -22,48 +22,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV6_STRING_TO_NUM
+## Description
+The reverse function of IPv6NumToString, it takes an IP address String and returns an IPv6 address in binary format.
 
-IPV6_STRING_TO_NUM
-
-### Description
-
-#### Syntax
-
-`VARCHAR IPV6_STRING_TO_NUM(VARCHAR ipv6_string)`
-
-The reverse function of IPv6NumToString, it takes an IP address String and returns an IPv6 address in binary format. 
-If the input string contains a valid IPv4 address, returns its IPv6 equivalent.
-
-#### Notice
-
-Will return an error if the input string is not a valid IP address or `NULL`
-
-### Example
+## Syntax
 ```sql
-mysql> select hex(ipv6_string_to_num('1111::ffff'));
-+---------------------------------------+
-| hex(ipv6_string_to_num('1111::ffff')) |
-+---------------------------------------+
-| 1111000000000000000000000000FFFF      |
-+---------------------------------------+
-1 row in set (0.02 sec)
-
-mysql> select hex(ipv6_string_to_num('192.168.0.1'));
-+----------------------------------------+
-| hex(ipv6_string_to_num('192.168.0.1')) |
-+----------------------------------------+
-| 00000000000000000000FFFFC0A80001       |
-+----------------------------------------+
-1 row in set (0.02 sec)
-
-mysql> select hex(ipv6_string_to_num('notaaddress'));
-ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][E33] Invalid IPv6 value
-
-mysql> select addr_src, hex(ipv6_string_to_num(addr_src)) from ipv4_string_test where addr_src is null;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][E33] Null Input, you may consider convert it to a valid default IPv6 value like '::' first
+IPV6_STRING_TO_NUM(VARCHAR <ipv6_string>)
 ```
 
-### Keywords
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv6_string>`      | An IPv6 address of type String  |
 
-IPV6_STRING_TO_NUM, IP
+## Return Value
+Returns an IPv6 address in binary format.
+- Will return an error if the input string is not a valid IP address or `NULL`
+- If the input string contains a valid IPv4 address, returns its IPv6 equivalent.
+
+## Example
+```sql
+select hex(ipv6_string_to_num('1111::ffff')), hex(ipv6_string_to_num('192.168.0.1'));
+```
+```text
++---------------------------------------+----------------------------------------+
+| hex(ipv6_string_to_num('1111::ffff')) | hex(ipv6_string_to_num('192.168.0.1')) |
++---------------------------------------+----------------------------------------+
+| 1111000000000000000000000000FFFF      | 00000000000000000000FFFFC0A80001       |
++---------------------------------------+----------------------------------------+
+```
+
+```sql
+select hex(ipv6_string_to_num('notaaddress'));
+```
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][E33] Invalid IPv6 value
+```

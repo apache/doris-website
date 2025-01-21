@@ -1,7 +1,7 @@
 ---
 {
-"title": "IS_IP_ADDRESS_IN_RANGE",
-"language": "zh-CN"
+    "title": "IS_IP_ADDRESS_IN_RANGE",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,43 +22,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IS_IP_ADDRESS_IN_RANGE
-
-IS_IP_ADDRESS_IN_RANGE
-
 ## 描述
+判断IP（IPv4或IPv6）地址是否包含在以CIDR表示法表示的网络中。
 
 ## 语法
-
-`BOOLEAN IS_IP_ADDRESS_IN_RANGE(STRING ip_str, STRING cidr_prefix)`
-
-判断IP（IPv4或IPv6）地址是否包含在以CIDR表示法表示的网络中。如果是，则返回true，否则返回false。
-
-## 举例
-
 ```sql
-mysql> SELECT is_ip_address_in_range('127.0.0.1', '127.0.0.0/8');
-+----------------------------------------------------+
-| is_ip_address_in_range('127.0.0.1', '127.0.0.0/8') |
-+----------------------------------------------------+
-|                                                  1 |
-+----------------------------------------------------+
-
-mysql> SELECT is_ip_address_in_range('::ffff:192.168.0.1', '::ffff:192.168.0.4/128');
-+------------------------------------------------------------------------+
-| is_ip_address_in_range('::ffff:192.168.0.1', '::ffff:192.168.0.4/128') |
-+------------------------------------------------------------------------+
-|                                                                      0 |
-+------------------------------------------------------------------------+
-
-mysql> SELECT is_ip_address_in_range('127.0.0.1', NULL);
-+-------------------------------------------+
-| is_ip_address_in_range('127.0.0.1', NULL) |
-+-------------------------------------------+
-|                                      NULL |
-+-------------------------------------------+
+IS_IP_ADDRESS_IN_RANGE(STRING ip_str, STRING cidr_prefix)
 ```
 
-### Keywords
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ip_str>`      | 字符串类型的ipv4或者ipv6地址 |
+| `<cidr_prefix>`      | cidr前缀 |
 
-IS_IP_ADDRESS_IN_RANGE, IP
+## 返回值
+如果IP（IPv4或IPv6）地址是包含在以CIDR表示法表示的网络中，则返回true，否则返回false。
+- 如果输入值为NULL, 则返回NULL
+
+## 举例
+```sql
+SELECT is_ip_address_in_range('127.0.0.1', '127.0.0.0/8') as v4, is_ip_address_in_range('::ffff:192.168.0.1', '::ffff:192.168.0.4/128') as v6, is_ip_address_in_range('127.0.0.1', NULL) as nil;
+```
+```text
++------+------+------+
+| v4   | v6   | nil  |
++------+------+------+
+|    1 |    0 | NULL |
++------+------+------+
+```

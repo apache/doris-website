@@ -1,7 +1,7 @@
 ---
 {
-"title": "IS_IP_ADDRESS_IN_RANGE",
-"language": "en"
+    "title": "IS_IP_ADDRESS_IN_RANGE",
+    "language": "en"
 }
 ---
 
@@ -22,43 +22,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IS_IP_ADDRESS_IN_RANGE
 
-IS_IP_ADDRESS_IN_RANGE
+## Description
+Determine whether the IP (IPv4 or IPv6) address is included in the network represented by CIDR notation.
 
-### Description
-
-#### Syntax
-
-`BOOLEAN IS_IP_ADDRESS_IN_RANGE(STRING ip_str, STRING cidr_prefix)`
-
-Determine whether the IP (IPv4 or IPv6) address is included in the network represented by CIDR notation. If yes, return true; otherwise, return false.
-
-### Example
-
+## Syntax
 ```sql
-mysql> SELECT is_ip_address_in_range('127.0.0.1', '127.0.0.0/8');
-+----------------------------------------------------+
-| is_ip_address_in_range('127.0.0.1', '127.0.0.0/8') |
-+----------------------------------------------------+
-|                                                  1 |
-+----------------------------------------------------+
-
-mysql> SELECT is_ip_address_in_range('::ffff:192.168.0.1', '::ffff:192.168.0.4/128');
-+------------------------------------------------------------------------+
-| is_ip_address_in_range('::ffff:192.168.0.1', '::ffff:192.168.0.4/128') |
-+------------------------------------------------------------------------+
-|                                                                      0 |
-+------------------------------------------------------------------------+
-
-mysql> SELECT is_ip_address_in_range('127.0.0.1', NULL);
-+-------------------------------------------+
-| is_ip_address_in_range('127.0.0.1', NULL) |
-+-------------------------------------------+
-|                                      NULL |
-+-------------------------------------------+
+IS_IP_ADDRESS_IN_RANGE(STRING ip_str, STRING cidr_prefix)
 ```
 
-### Keywords
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ip_str>`      | An IPv4 or IPv6 address of type String |
+| `<cidr_prefix>`      | The cidr prefix |
 
-IS_IP_ADDRESS_IN_RANGE, IP
+
+## Return Value
+If the address is included in the network represented by CIDR notation, returns true; otherwise, return false.
+- If input is NULL, the function returns NULL.
+
+
+## Example
+```sql
+SELECT is_ip_address_in_range('127.0.0.1', '127.0.0.0/8') as v4, is_ip_address_in_range('::ffff:192.168.0.1', '::ffff:192.168.0.4/128') as v6, is_ip_address_in_range('127.0.0.1', NULL) as nil;
+```
+```text
++------+------+------+
+| v4   | v6   | nil  |
++------+------+------+
+|    1 |    0 | NULL |
++------+------+------+
+```
+

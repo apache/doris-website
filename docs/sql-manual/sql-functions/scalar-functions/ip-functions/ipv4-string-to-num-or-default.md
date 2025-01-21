@@ -1,7 +1,7 @@
 ---
 {
-"title": "IPV4_STRING_TO_NUM_OR_DEFAULT",
-"language": "en"
+    "title": "IPV4_STRING_TO_NUM_OR_DEFAULT",
+    "language": "en"
 }
 ---
 
@@ -22,34 +22,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV4_STRING_TO_NUM_OR_DEFAULT
-
-IPV4_STRING_TO_NUM_OR_DEFAULT
-
-### Description
-
-#### Syntax
-
-`BIGINT IPV4_STRING_TO_NUM_OR_DEFAULT(VARCHAR ipv4_string)`
-
+## Description
 Takes a string containing an IPv4 address in the format A.B.C.D (dot-separated numbers in decimal form). Returns a BIGINT number representing the corresponding IPv4 address in big endian.
 
-#### Notice
-
-If the input string is not a valid IPv4 address or `NULL`, `0` is returned.
-
-### Example
-
+## Syntax
 ```sql
-mysql> select ipv4_string_to_num_or_default('192.168.0.1'); 
+IPV4_STRING_TO_NUM_OR_DEFAULT(VARCHAR <ipv4_string>)
+```
+
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_string>`      | String type of ipv4, like 'A.B.C.D'  |
+
+
+## Return Value
+Returns a BIGINT number representing the corresponding IPv4 address in big endian.
+- If the input string is not a valid IPv4 address or `NULL`, `0` is returned.
+
+## Example
+```sql
+select ipv4_string_to_num_or_default('192.168.0.1');
+```
+```text
 +----------------------------------------------+ 
 | ipv4_string_to_num_or_default('192.168.0.1') | 
 +----------------------------------------------+ 
 | 3232235521                                   | 
 +----------------------------------------------+ 
-1 row in set (0.01 sec)
+```
 
-mysql> select str, ipv4_string_to_num_or_default(str) from ipv4_str; 
+```sql
+select str, ipv4_string_to_num_or_default(str) from ipv4_str; 
+```
+```text
 +-----------------+------------------------------------+ 
 |str              | ipv4_string_to_num_or_default(str) | 
 +-----------------+------------------------------------+ 
@@ -58,17 +64,4 @@ mysql> select str, ipv4_string_to_num_or_default(str) from ipv4_str;
 | 255.255.255.255 | 4294967295                         | 
 | invalid         | 0                                  | 
 +-----------------+------------------------------------+ 
-4 rows in set (0.01 sec)
-
-mysql> select addr_src, ipv4_string_to_num_or_default(addr_src) from ipv4_string_test where addr_src is null;
-+----------+-----------------------------------------+
-| addr_src | ipv4_string_to_num_or_default(addr_src) |
-+----------+-----------------------------------------+
-| NULL     |                                       0 |
-+----------+-----------------------------------------+
-1 row in set (0.09 sec)
 ```
-
-### Keywords
-
-IPV4_STRING_TO_NUM_OR_DEFAULT, IP

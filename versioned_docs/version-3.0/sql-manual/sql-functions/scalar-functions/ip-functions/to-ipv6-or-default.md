@@ -1,7 +1,7 @@
 ---
 {
-"title": "TO_IPV6_OR_DEFAULT",
-"language": "en"
+    "title": "TO_IPV6_OR_DEFAULT",
+    "language": "en"
 }
 ---
 
@@ -22,40 +22,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TO_IPV6_OR_DEFAULT
+## Description
+Convert a string form of IPv6 address to IPv6 type.
 
-TO_IPV6_OR_DEFAULT
-
-### Description
-
-#### Syntax
-
-`IPV6 TO_IPV6_OR_DEFAULT(STRING ipv6_str)`
-
-Same as to_ipv6, but if the IPv6 address has an invalid format, it returns :: (0 as IPv6).
-
-#### Notice
-
-`If input is NULL, return :: (0 as IPv6).`
-
-### Example
-
+## Syntax
 ```sql
-mysql> select to_ipv6_or_default('.');
-+-------------------------+
-| to_ipv6_or_default('.') |
-+-------------------------+
-| ::                      |
-+-------------------------+
-
-mysql> select to_ipv6_or_default(NULL);
-+--------------------------+
-| to_ipv6_or_default(NULL) |
-+--------------------------+
-| ::                       |
-+--------------------------+
+TO_IPV6_OR_DEFAULT(STRING <ipv6_str>)
 ```
 
-### Keywords
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv6_str>`      | An IPv6 address of type String |
 
-TO_IPV6_OR_DEFAULT, IP
+
+## Return Value
+Returns value of IPv6 type.
+- If the IPv6 address has an invalid format, returns :: (0 as IPv6).
+
+
+## Example
+```sql
+SELECT to_ipv6_or_default('.'), to_ipv6_or_default('2001:1b70:a1:610::b102:2');
+```
+```text
++-------------------------+------------------------------------------------+
+| to_ipv6_or_default('.') | to_ipv6_or_default('2001:1b70:a1:610::b102:2') |
++-------------------------+------------------------------------------------+
+| ::                      | 2001:1b70:a1:610::b102:2                       |
++-------------------------+------------------------------------------------+
+```
