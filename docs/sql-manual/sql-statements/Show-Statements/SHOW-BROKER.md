@@ -24,34 +24,45 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-BROKER
+## Description
 
-### Name
+This statement is used to view the status of the currently existing broker processes.
 
-SHOW BROKER
-
-### Description
-
-This statement is used to view the currently existing broker
-
-grammar:
+## Syntax：
 
 ```sql
 SHOW BROKER;
 ```
 
-illustrate:
+## Required Parameters
+No Required Parameters
 
-1. LastStartTime indicates the last BE start time.
-2. LastHeartbeat indicates the last heartbeat.
-3.  Alive indicates whether the node is alive or not.
-4.  ErrMsg is used to display the error message when the heartbeat fails.
+## Output
+| Column    | DateType | Note                            |
+ |-------|----|---------------------------------|
+| Name  | varchar | Broker Process Name             |
+| Host  | varchar | Broker Process Node IP          |
+| Port  | varchar | Broker Process Node Port        |
+| Alive | varchar | Broker Process Node Status      |
+| LastStartTime | varchar | Broker Process Last Start Time  |
+|LastUpdateTime | varchar | Broker Process Last Update Time |
+|ErrMsg | varchar | Error message of the last failed startup of the Broker process            |
 
-### Example
 
-### Keywords
+## Access Control Requirements
+The user executing this statement needs to have the `ADMIN/OPERATOR` permission.
 
-    SHOW, BROKER
+## Examples
 
-### Best Practice
+1. View the status of the currently existing broker processes
+```sql
+show broker;
+```
+```text
++-------------+------------+------+-------+---------------------+---------------------+--------+
+| Name        | Host       | Port | Alive | LastStartTime       | LastUpdateTime      | ErrMsg |
++-------------+------------+------+-------+---------------------+---------------------+--------+
+| broker_test | 10.10.10.1 | 8196 | true  | 2025-01-21 11:30:10 | 2025-01-21 11:31:40 |        |
++-------------+------------+------+-------+---------------------+---------------------+--------+
+```
 
