@@ -22,32 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## l2_distance
 
-### description
-#### Syntax
+## Description
+
+Calculate the distance between two points (vector values are coordinates) in Euclidean space
+
+## Syntax
 
 ```sql
 DOUBLE l2_distance(ARRAY<T> array1, ARRAY<T> array2)
 ```
 
-Calculates the distance between two points (the values of the vectors are the coordinates) in Euclidean space.
-Return NULL if input array is NULL or any element of array is NULL.
+## Parameters
 
-#### Notice
-* nested type of input array support: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE
-* input array1 and array2 should have the same element size
+| Parameter | Description |
+| -- |--|
+| `array1` | The first vector (the vector value is the coordinate),The subtypes of the input array are: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, The number of elements must be consistent with array2 |
+| `array1` | The second vector (the vector value is the coordinate), the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array1 |
 
-### example
+## Return Value
 
+Returns the distance between two points (vector values are coordinates) in Euclidean space. If the input array is NULL, or any element in the array is NULL, then NULL is returned.
+
+## Example
+
+```sql
+SELECT l2_distance([4, 5], [6, 8]),l2_distance([3, 6], [4, 5]);
 ```
-sql> SELECT l2_distance([1, 2], [2, 3]);
-+---------------------------------------+
-| l2_distance(ARRAY(1, 2), ARRAY(2, 3)) |
-+---------------------------------------+
-|                    1.4142135623730951 |
-+---------------------------------------+
-```
 
-### keywords
-	L2_DISTANCE,DISTANCE,L2,ARRAY
+```text
++-----------------------------+-----------------------------+
+| l2_distance([4, 5], [6, 8]) | l2_distance([3, 6], [4, 5]) |
++-----------------------------+-----------------------------+
+|           3.605551275463989 |          1.4142135623730951 |
++-----------------------------+-----------------------------+
+```
