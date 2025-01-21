@@ -22,50 +22,69 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hll_from_base64
+## HLL_FROM_BASE64
 
-### description
-#### Syntax
+### Description
+Converts a base64-encoded string (the result of the `hll_to_base64` function) into an HLL. If the input string is invalid, the function returns NULL.
 
-`HLL HLL_FROM_BASE64(VARCHAR input)`
+### Syntax
 
-Convert a base64 string(result of function `hll_to_base64`) into a hll. If input string is invalid, return NULL.
-
-### example
-
+```sql
+HLL HLL_FROM_BASE64(<input>)
 ```
-mysql> select hll_union_agg(hll_from_base64(hll_to_base64(pv))), hll_union_agg(pv) from test_hll;
+
+### Parameters
+
+| Parameter | Description                                                                 |
+| --------- | --------------------------------------------------------------------------- |
+| `<input>` | A base64-encoded string, usually the result of `hll_to_base64` function. If the input string is invalid, the function returns NULL. |
+
+### Examples
+
+```sql
+select hll_union_agg(hll_from_base64(hll_to_base64(pv))), hll_union_agg(pv) from test_hll;
+```
+
+```text
 +---------------------------------------------------+-------------------+
 | hll_union_agg(hll_from_base64(hll_to_base64(pv))) | hll_union_agg(pv) |
 +---------------------------------------------------+-------------------+
 |                                                 3 |                 3 |
 +---------------------------------------------------+-------------------+
-1 row in set (0.04 sec)
+```
 
-mysql>  select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash('abc'))));
+```sql
+select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash('abc'))));
+```
+
+```text
 +------------------------------------------------------------------+
 | hll_cardinality(hll_from_base64(hll_to_base64(hll_hash('abc')))) |
 +------------------------------------------------------------------+
 |                                                                1 |
 +------------------------------------------------------------------+
-1 row in set (0.04 sec)
+```
 
-mysql> select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash(''))));
+```sql
+select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash(''))));
+```
+
+```text
 +---------------------------------------------------------------+
 | hll_cardinality(hll_from_base64(hll_to_base64(hll_hash('')))) |
 +---------------------------------------------------------------+
 |                                                             1 |
 +---------------------------------------------------------------+
-1 row in set (0.02 sec)
+```
 
-mysql> select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash(NULL))));
+```sql
+select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash(NULL))));
+```
+
+```text
 +-----------------------------------------------------------------+
 | hll_cardinality(hll_from_base64(hll_to_base64(hll_hash(NULL)))) |
 +-----------------------------------------------------------------+
 |                                                               0 |
 +-----------------------------------------------------------------+
-1 row in set (0.02 sec)
 ```
-
-### keywords
-HLL_FROM_BASE64, HLL
