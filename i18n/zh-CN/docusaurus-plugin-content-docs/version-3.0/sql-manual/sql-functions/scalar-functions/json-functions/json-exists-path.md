@@ -36,9 +36,7 @@ JSON_EXISTS_PATH (<json_str>,  <path>)
 
 ## 别名
 
-```sql
-JSONB_EXISTS_PATH
-```
+* JSONB_EXISTS_PATH
 
 ## 参数
 | 参数           | 描述                                                     |
