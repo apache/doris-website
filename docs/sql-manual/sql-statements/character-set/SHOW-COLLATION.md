@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-COLLATION",
+    "title": "SHOW COLLATION",
     "language": "en"
 }
 ---

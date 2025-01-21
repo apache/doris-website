@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CHARSET",
+    "title": "SHOW CHARSET",
     "language": "en"
 }
 ---
