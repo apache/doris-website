@@ -26,42 +26,66 @@ under the License.
 
 ## Description
 
-Returns the [kurtosis](https://en.wikipedia.org/wiki/Kurtosis) of the expr expression.
-The forumula used for this function is `4-th centrol moment / ((variance)^2) - 3`, when variance is zero, `kurtosis` will return `NULL`.
+The KURTOSIS function returns the [kurtosis](https://en.wikipedia.org/wiki/Kurtosis) of the expr expression.
+The forumula used for this function is `4-th centrol moment / ((variance)^2) - 3`.
+
+## Alias
+
+KURT_POP,KURTOSIS
 
 ## Syntax
 
-`kurtosis(expr)`
+```sql
+KURTOSIS(<expr>)
+```
 
-## Arguments
+## Parameters
 
-TinyInt/SmallInt/Integer/BigInt/Float/Double, Decimal will be casted to a float number.
+| Parameters | Description |
+| -- | -- |
+| `<expr>` | The expression needs to be obtained |
 
-## Return value
+## Return Value
 
-`Double`
+Returns a value of type DOUBLE. Special cases:
+- Returns NULL when the variance is zero.
 
 ## Example
+
 ```sql
-create table statistic_test(tag int, val1 double not null, val2 double null) distributed by hash(tag) properties("replication_num"="1")
+select * from statistic_test;
+```
 
-insert into statistic_test values (1, -10, -10),(2, -20, NULL),(3, 100, NULL),(4, 100, NULL),(5, 1000,1000);
+```text
++-----+------+------+
+| tag | val1 | val2 |
++-----+------+------+
+|   1 |  -10 |   -10|
+|   2 |  -20 |  NULL|
+|   3 |  100 |  NULL|
+|   4 |  100 |  NULL|
+|   5 | 1000 |  1000|
++-----+------+------+
+```
 
-// NULL is ignored
-select kurt(val1), kurt(val2) from statistic_test
---------------
+```sql
+select kurt(val1), kurt(val2) from statistic_test;
+```
 
+```text
 +-------------------+--------------------+
 | kurt(val1)        | kurt(val2)         |
 +-------------------+--------------------+
 | 0.162124583734851 | -1.3330994719286338 |
 +-------------------+--------------------+
-1 row in set (0.02 sec)
+```
 
+```sql
 // Each group just has one row, result is NULL
-select kurt(val1), kurt(val2) from statistic_test group by tag
---------------
+select kurt(val1), kurt(val2) from statistic_test group by tag;
+```
 
+```text
 +------------+------------+
 | kurt(val1) | kurt(val2) |
 +------------+------------+
@@ -71,9 +95,5 @@ select kurt(val1), kurt(val2) from statistic_test group by tag
 |       NULL |       NULL |
 |       NULL |       NULL |
 +------------+------------+
-5 rows in set (0.02 sec)
 ```
 
-## Related Commands
-
-[skew](./skew.md)

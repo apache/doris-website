@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Batch Deletion",
+    "title": "Batch Deletion Based on Load",
     "language": "en"
 }
 ---
@@ -24,61 +24,124 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Why do we need to introduce import-based Batch Delete when we have the Delete operation?
+## Batch Deletion Based on Load
 
-- **Limitations of Delete operation**
+The delete operation is a special form of data update. In the primary key model (Unique Key) table, Doris supports deletion by adding a delete sign when loading data.
 
-When you delete by Delete statement, each execution of Delete generates an empty rowset to record the deletion conditions and a new version of the data. Each time you read, you have to filter the deletion conditions. If you delete too often or have too many deletion conditions, it will seriously affect the query performance.
+Compared to the `DELETE` statement, using delete signs offers better usability and performance in the following scenarios:
 
-- **Insert data interspersed with Delete data**
+1. **CDC Scenario**: When synchronizing data from an OLTP database to Doris, Insert and Delete operations in the binlog usually appear alternately. The `DELETE` statement cannot efficiently handle these operations. Using delete signs allows Insert and Delete operations to be processed uniformly, simplifying the CDC code for writing to Doris and improving data load and query performance.
+2. **Batch Deletion of Specified Primary Keys**: If a large number of primary keys need to be deleted, using the `DELETE` statement is inefficient. Each execution of `DELETE` generates an empty rowset to record the delete condition and produces a new data version. Frequent deletions or too many delete conditions can severely affect query performance.
 
-For scenarios like importing data from a transactional database via CDC, Insert and Delete are usually interspersed in the data. In this case, the current Delete operation cannot be implemented.
+## Working Principle of Delete Signs
 
-When importing data, there are several ways to merge it:
+### Principle Explanation
 
-1. APPEND: Append all data to existing data.
+- **Table Structure**: The delete sign is stored as a hidden column `__DORIS_DELETE_SIGN__` in the primary key table. When the value of this column is 1, it indicates that the delete sign is effective.
+- **Data Load**: Users can specify the mapping condition of the delete sign column in the load task. The usage varies for different load tasks, as detailed in the syntax explanation below.
+- **Query**: During the query, Doris FE automatically adds the filter condition `__DORIS_DELETE_SIGN__ != true` in the query plan to filter out data with a delete sign value of 1.
+- **Data Compaction**: Doris's background data compaction periodically cleans up data with a delete sign value of 1.
 
-2. DELETE: Delete all rows that have the same value as the key column of the imported data (when a `sequence` column exists in the table, it is necessary to satisfy the logic of having the same primary key as well as the size of the sequence column in order to delete it correctly, see Use Case 4 below for details).
+### Data Example
 
-3. MERGE: APPEND or DELETE according to DELETE ON decision
+#### Table Structure
 
-:::caution Warning
-Batch Delete only works on Unique models.
-:::
+Create an example table:
 
-## Fundamental
+```sql
+CREATE TABLE example_table (
+    id BIGINT NOT NULL,
+    value STRING
+)
+UNIQUE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 10
+PROPERTIES (
+    "replication_num" = "3"
+);
+```
 
-This is achieved by adding a hidden column `__DORIS_DELETE_SIGN__` to the Unique table.
+Use the session variable `show_hidden_columns` to view hidden columns:
 
-When FE parses the query, `__DORIS_DELETE_SIGN__` is removed when it encounters * and so on, and `__DORIS_DELETE_SIGN__ !` `= true`, BE will add a column for judgement when reading, and determine whether to delete by the condition.
+```sql
+mysql> set show_hidden_columns=true;
 
-- Import
+mysql> desc example_table;
++-----------------------+---------+------+-------+---------+-------+
+| Field                 | Type    | Null | Key   | Default | Extra |
++-----------------------+---------+------+-------+---------+-------+
+| id                    | bigint  | No   | true  | NULL    |       |
+| value                 | text    | Yes  | false | NULL    | NONE  |
+| __DORIS_DELETE_SIGN__ | tinyint | No   | false | 0       | NONE  |
+| __DORIS_VERSION_COL__ | bigint  | No   | false | 0       | NONE  |
++-----------------------+---------+------+-------+---------+-------+
+```
 
-    On import, the value of the hidden column is set to the value of the `DELETE ON` expression during the FE parsing stage.
+#### Data Load
 
-- Read
+The table has the following existing data:
 
-    The read adds `__DORIS_DELETE_SIGN__ !` `= true` condition, BE does not sense this process and executes normally.
+```sql
++------+-------+
+| id   | value |
++------+-------+
+|    1 | foo   |
+|    2 | bar   |
++------+-------+
+```
 
-- Cumulative Compaction
+Insert a delete sign for id 1 (this is only for principle demonstration, not introducing various methods of using delete signs in load):
 
-    In Cumulative Compaction, hidden columns are treated as normal columns and the Compaction logic remains unchanged.
+```sql
+mysql> insert into example_table (id, __DORIS_DELETE_SIGN__) values (1, 1);
+```
 
-- Base Compaction
+#### Query
 
-    When Base Compaction is performed, the rows marked for deletion are deleted to reduce the space occupied by the data.
+Directly view the data, and you can find that the record with id 1 has been deleted:
 
-## Syntax Description
+```sql
+mysql> select * from example_table;
++------+-------+
+| id   | value |
++------+-------+
+|    2 | bar   |
++------+-------+
+```
 
-The syntax design of the import is mainly to add a column mapping that specifies the field of the delete marker column, and it is necessary to add a column to the imported data. The syntax of various import methods is as follows:
+Use the session variable `show_hidden_columns` to view hidden columns, and you can see that the row with id 1 has not been actually deleted. Its hidden column `__DORIS_DELETE_SIGN__` value is 1 and is filtered out during the query:
+
+```sql
+mysql> set show_hidden_columns=true;
+mysql> select * from example_table;
++------+-------+-----------------------+-----------------------+
+| id   | value | __DORIS_DELETE_SIGN__ | __DORIS_VERSION_COL__ |
++------+-------+-----------------------+-----------------------+
+|    1 | NULL  |                     1 |                     3 |
+|    2 | bar   |                     0 |                     2 |
++------+-------+-----------------------+-----------------------+
+```
+
+## Syntax Explanation
+
+Different load types have different syntax for setting delete signs. Below are the usage syntax for delete signs in various load types.
+
+### Load Merge Type Selection
+
+There are several merge types when loading data:
+
+1. **APPEND**: All data is appended to the existing data.
+2. **DELETE**: Delete all rows with the same key column values as the loaded data.
+3. **MERGE**: Decide whether to APPEND or DELETE based on the DELETE ON condition.
 
 ### Stream Load
 
-The writing method of `Stream Load` adds a field to set the delete label column in the columns field in the header. Example: `-H "columns: k1, k2, label_c3" -H "merge_type: [MERGE|APPEND|DELETE]" -H "delete: label_c3=1"`
+The `Stream Load` syntax is to add a field for setting the delete sign column in the header's columns field, for example: `-H "columns: k1, k2, label_c3" -H "merge_type: [MERGE|APPEND|DELETE]" -H "delete: label_c3=1"`.
+
+For usage examples of Stream Load, please refer to the "Specify merge_type for Delete Operation" and "Specify merge_type for Merge Operation" sections in the [Stream Load Manual](../load/load-way/stream-load-manual.md).
 
 ### Broker Load
 
-The writing method of `Broker Load` sets the field of the delete marker column at `PROPERTIES`. The syntax is as follows:
+The `Broker Load` syntax is to set the delete sign column field in `PROPERTIES`, as follows:
 
 ```sql
 LOAD LABEL db1.label1
@@ -107,7 +170,7 @@ PROPERTIES
 
 ### Routine Load
 
-The writing method of `Routine Load` adds a mapping to the `columns` field. The mapping method is the same as above. The syntax is as follows:
+The `Routine Load` syntax is to add a mapping in the `columns` field, with the same mapping method as above, as follows:
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl 
@@ -131,50 +194,3 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
      "kafka_offsets" = "101,0,0,200"
  );
 ```
-
-## Note
-
-1. Since import operations other than stream load may be executed out of order inside doris, if it is not stream load when importing using the `MERGE` method, it needs to be used with load sequence. For the specific syntax, please refer to the `sequence` column related documents
-
-2. `DELETE ON` condition can only be used with MERGE.
-
-:::tip Tip
-if session variable `SET show_hidden_columns = true` was executed before running import task to show whether table support batch delete feature, then execute `select count(*) from xxx` statement in the same session after finishing `DELETE/MERGE` import task, it will result in a unexpected result that the statement result set will include the deleted results. To avoid this problem, you should execute `SET show_hidden_columns = false` before selecting statement or open a new session to run the select statement.
-:::
-
-## Usage Examples
-
-### Check if Batch Delete Support is Enabled
-
-```sql
-mysql> CREATE TABLE IF NOT EXISTS table1 (
-    ->     siteid INT,
-    ->     citycode INT,
-    ->     username VARCHAR(64),
-    ->     pv BIGINT
-    -> ) UNIQUE KEY (siteid, citycode, username)
-    -> DISTRIBUTED BY HASH(siteid) BUCKETS 10
-    -> PROPERTIES (
-    ->     "replication_num" = "3"
-    -> );
-Query OK, 0 rows affected (0.34 sec)
-
-mysql> SET show_hidden_columns=true;
-Query OK, 0 rows affected (0.00 sec)
-
-mysql> DESC table1;
-+-----------------------+-------------+------+-------+---------+-------+
-| Field                 | Type        | Null | Key   | Default | Extra |
-+-----------------------+-------------+------+-------+---------+-------+
-| siteid                | int         | Yes  | true  | NULL    |       |
-| citycode              | int         | Yes  | true  | NULL    |       |
-| username              | varchar(64) | Yes  | true  | NULL    |       |
-| pv                    | bigint      | Yes  | false | NULL    | NONE  |
-| __DORIS_DELETE_SIGN__ | tinyint     | No   | false | 0       | NONE  |
-| __DORIS_VERSION_COL__ | bigint      | No   | false | 0       | NONE  |
-+-----------------------+-------------+------+-------+---------+-------+
-6 rows in set (0.01 sec)
-```
-
-### Stream Load Usage Examples
-Please refer to the sections "Specifying merge_type for DELETE operations" and "Specifying merge_type for MERGE operations" in the [Stream Load Manual](../import/import-way/stream-load-manual.md)

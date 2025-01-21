@@ -24,26 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## microseconds_diff
+
 ## 描述
+
+计算两个日期时间值之间的微秒差值。结果为 `<end_date>` 减去 `<start_date>` 的微秒数。
+
 ## 语法
 
-`INT microseconds_diff(DATETIME enddate, DATETIME startdate)`
+```sql
+MICROSECONDS_DIFF(<end_date>, <start_date>)
+```
 
-开始时间到结束时间相差几微秒
+## 参数
+
+| 参数 | 说明 |
+| ---- | ---- |
+| `<end_date>` | 结束时间，类型为 DATETIMEV2 |
+| `<start_date>` | 开始时间，类型为 DATETIMEV2 |
+
+## 返回值
+
+返回类型为 INT，表示两个时间之间的微秒差值。
+- 如果 `<end_date>` 大于 `<start_date>`，返回正数
+- 如果 `<end_date>` 小于 `<start_date>`，返回负数
+- 1 秒 = 1,000,000 微秒
 
 ## 举例
 
+```sql
+SELECT MICROSECONDS_DIFF('2020-12-25 21:00:00.623000','2020-12-25 21:00:00.123000');
 ```
-mysql> select microseconds_diff('2020-12-25 21:00:00.623000','2020-12-25 21:00:00.123000');
+
+```text
 +-----------------------------------------------------------------------------------------------------------------------------+
-| microseconds_diff(cast('2020-12-25 21:00:00.623000' as DATETIMEV2(6)), cast('2020-12-25 21:00:00.123000' as DATETIMEV2(6))) |
+| microseconds_diff(cast('2020-12-25 21:00:00.623000' as DATETIMEV2(3)), cast('2020-12-25 21:00:00.123000' as DATETIMEV2(3))) |
 +-----------------------------------------------------------------------------------------------------------------------------+
 |                                                                                                                      500000 |
 +-----------------------------------------------------------------------------------------------------------------------------+
-1 row in set (0.12 sec)
 ```
-
-### keywords
-
-    microseconds_diff

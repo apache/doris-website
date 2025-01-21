@@ -245,7 +245,7 @@ Cluster situation: The average import speed of current user cluster is about 5M/
 
 - Step2: Create Import Tasks
 
-  Since users want to ETL data from a table and import it into the target table, they should use the Insert in query\stmt mode to import it.
+  Since users want to ETL data from a table and import it into the target table, they should use the Insert in query\_stmt mode to import it.
 
   ```text
   INSERT INTO bj_store_sales SELECT id, total, user_id, sale_timestamp FROM store_sales where region = "bj";

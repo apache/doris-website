@@ -1,7 +1,7 @@
 ---
 {
     "title": "Dynamic Partitioning",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -227,4 +227,6 @@ PROPERTIES (
     "dynamic_partition.reserved_history_periods"="[2020-06-01,2020-06-20],[2020-10-31,2020-11-15]"
 );
 ```
+
+
 
