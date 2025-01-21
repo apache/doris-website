@@ -31,7 +31,7 @@ The REVERSE function is used to reverse the order of characters in a string or t
 ## Syntax
 
 ```sql
-reverse( seq )
+REVERSE( <seq> )
 ```
 
 ## Parameters
