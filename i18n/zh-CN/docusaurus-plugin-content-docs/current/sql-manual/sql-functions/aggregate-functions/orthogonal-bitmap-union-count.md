@@ -1,6 +1,6 @@
 ---
 {
-    "title": "orthogonal_bitmap_union_count",
+    "title": "ORTHOGONAL_BITMAP_UNION_COUNT",
     "language": "zh-CN"
 }
 ---
@@ -23,3 +23,38 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+## 描述
+
+ORTHOGONAL_BITMAP_UNION_COUNT 函数返回对 Bitmap 表达式进行并集计算后集合中的元素数量
+
+## 语法
+
+```sql
+ORTHOGONAL_BITMAP_UNION_COUNT(<bitmap_column>, <column_to_filter>, <filter_values>)
+```
+
+## 参数说明
+
+| 参数 | 说明 |
+| -- | -- |
+| `bitmap_column` | 需要获取值的 Bitmap 类型表达式 |
+| `column_to_filter` | 可选。需要进行过滤的维度列 |
+| `filter_values` | 可选。变长参数，用于过滤维度列的不同取值 |
+
+## 返回值
+
+返回 BIGINT 类型的值。
+
+## 举例
+
+```sql
+select ORTHOGONAL_BITMAP_UNION_COUNT(members) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
+```
+
+```text
++------------------------------------------+
+| orthogonal_bitmap_union_count(`members`) |
++------------------------------------------+
+|                                286957811 |
++------------------------------------------+
+```

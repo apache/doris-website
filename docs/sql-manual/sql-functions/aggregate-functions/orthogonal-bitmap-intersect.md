@@ -23,3 +23,40 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## Description
+
+The ORTHOGONAL_BITMAP_INTERSECT function returns the intersection set of the Bitmap expression.
+
+## Syntax
+
+```sql
+ORTHOGONAL_BITMAP_INTERSECT(<bitmap_column>, <column_to_filter>, <filter_values>)
+```
+
+## Parameters
+
+| Parameters | Description |
+| -- | -- |
+| `<bitmap_column>` | The Bitmap type expression needs to be obtained |
+| `<column_to_filter>` | Optional. The dimension column that needs to be filtered |
+| `<filter_values>` | Optional. A variable-length parameter, used to filter different values of the dimension column |
+
+## Return Value
+
+Returns a set of BITMAP type.
+
+## Example
+
+```sql
+select orthogonal_bitmap_intersect(members, tag_group, 1150000, 1150001, 390006) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
+
+```
+
+```text
++-------------------------------------------------------------------------------+
+| orthogonal_bitmap_intersect(`members`, `tag_group`, 1150000, 1150001, 390006) |
++-------------------------------------------------------------------------------+
+| NULL                                                                          |
++-------------------------------------------------------------------------------+
+```

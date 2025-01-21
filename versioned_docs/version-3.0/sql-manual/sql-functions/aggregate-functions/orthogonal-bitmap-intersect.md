@@ -1,7 +1,7 @@
 ---
 {
-"title": "ORTHOGONAL_BITMAP_INTERSECT",
-"language": "en"
+    "title": "orthogonal_bitmap_intersect",
+    "language": "en"
 }
 ---
 
@@ -13,7 +13,9 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
+
   http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,26 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## orthogonal_bitmap_intersect
-### description
-#### Syntax
+## Description
 
-`BITMAP ORTHOGONAL_BITMAP_INTERSECT(bitmap_column, column_to_filter, filter_values)`
-The bitmap intersection function, the first parameter is the bitmap column, the second parameter is the dimension column for filtering, and the third parameter is the variable length parameter, which means different values of the filter dimension column
+The ORTHOGONAL_BITMAP_INTERSECT function returns the intersection set of the Bitmap expression.
 
-### example
+## Syntax
+
+```sql
+ORTHOGONAL_BITMAP_INTERSECT(<bitmap_column>, <column_to_filter>, <filter_values>)
+```
+
+## Parameters
+
+| Parameters | Description |
+| -- | -- |
+| `<bitmap_column>` | The Bitmap type expression needs to be obtained |
+| `<column_to_filter>` | Optional. The dimension column that needs to be filtered |
+| `<filter_values>` | Optional. A variable-length parameter, used to filter different values of the dimension column |
+
+## Return Value
+
+Returns a set of BITMAP type.
+
+## Example
+
+```sql
+select orthogonal_bitmap_intersect(members, tag_group, 1150000, 1150001, 390006) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
 
 ```
-mysql> select orthogonal_bitmap_intersect(members, tag_group, 1150000, 1150001, 390006) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
+
+```text
 +-------------------------------------------------------------------------------+
 | orthogonal_bitmap_intersect(`members`, `tag_group`, 1150000, 1150001, 390006) |
 +-------------------------------------------------------------------------------+
 | NULL                                                                          |
 +-------------------------------------------------------------------------------+
-1 row in set (3.505 sec)
-
 ```
-
-### keywords
-
-    ORTHOGONAL_BITMAP_INTERSECT,BITMAP
