@@ -57,9 +57,11 @@ mvn clean package -DskipTests
 ```
 ### Build a job
 Find Doris Stream Loader in the batch loading in Kettle and build a job
+
 ![create_zh.png](https://raw.githubusercontent.com/apache/doris/refs/heads/master/extension/kettle/images/create.png)
 
 Click Start Running the Job to complete data synchronization
+
 ![running_zh.png](https://raw.githubusercontent.com/apache/doris/refs/heads/master/extension/kettle/images/running.png)
 
 ### Parameter Description
