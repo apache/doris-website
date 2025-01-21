@@ -1,7 +1,7 @@
 ---
 {
-"title": "CUT_IPV6",
-"language": "en"
+    "title": "CUT_IPV6",
+    "language": "en"
 }
 ---
 
@@ -22,30 +22,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CUT_IPV6
+## Description
 
-CUT_IPV6
+Accept an IPv6 type address and return a string containing the address of the specified number of bytes removed in text format.
 
-### Description
 
-#### Syntax
+## Syntax
+```sql
+CUT_IPV6(ipv6 <ipv6>, TinyInt <cut_ipv6_bytes>, TinyInt <cut_ipv4_bytes>)
+```
 
-`STRING CUT_IPV6(IPV4 ipv4, TinyInt cut_ipv6_bytes, TinyInt cut_ipv4_bytes)`
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv6>`      | An IPv6 type address |
+| `<cut_ipv6_bytes>`     | The bytes you want to cut the ipv6         |
+| `<cut_ipv4_bytes>`     | If the fist parameter is ipv4, The bytes you want to cut the ipv4           |
 
-accept an IPv6 type address and return a string containing the address of the specified number of bytes removed in text format
+## Return Value
+Return a value of text, which cut the ipv6 by specified bytes.
 
-### Example
+## Example
 
 ```sql
-mysql [(none)]>select cut_ipv6(to_ipv6('2001:0DB8:AC10:FE01:FEED:BABE:CAFE:F00D'), 10, 0);
+select cut_ipv6(to_ipv6('2001:0DB8:AC10:FE01:FEED:BABE:CAFE:F00D'), 10, 0);
+```
+```text
 +-------------------+
 | '2001:db8:ac10::' |
 +-------------------+
 | 2001:db8:ac10::   |
 +-------------------+
-1 row in set (0.00 sec)
 ```
 
-### Keywords
-
-CUT_IPV6, IP

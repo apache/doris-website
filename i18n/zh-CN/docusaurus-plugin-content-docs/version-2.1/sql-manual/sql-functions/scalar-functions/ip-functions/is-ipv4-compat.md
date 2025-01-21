@@ -1,7 +1,7 @@
 ---
 {
-"title": "IS_IPV4_COMPAT",
-"language": "zh-CN"
+    "title": "IS_IPV4_COMPAT",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,40 +22,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IS_IPV4_COMPAT
-
-IS_IPV4_COMPAT
-
 ## 描述
+该函数采用以数字形式表示的二进制字符串形式的 IPv6 地址，由 INET6_ATON 返回。INET6_ATON是IPV6_STRING_TO_NUM_OR_NULL的别名
+- IPv4 兼容地址的格式为`::ipv4_address`
 
 ## 语法
-
-`VARCHAR IS_IPV4_COMPAT(INET6_ATON(VARCHAR ipv4_addr))`
-
-该函数采用以数字形式表示的二进制字符串形式的 IPv6 地址，由 INET6_ATON() 返回。
-如果参数是有效的 IPv4 兼容 IPv6 地址，则返回 1，否则返回 0（除非 expr 为 NULL，在这种情况下该函数返回 NULL）。
-IPv4 兼容地址的格式为::ipv4_address。
-
-## 举例
-
 ```sql
-mysql> SELECT IS_IPV4_COMPAT(INET6_ATON('::ffff:10.0.5.9')) AS is_result;
-+-----------+
-| is_result |
-+-----------+
-|         0 |
-+-----------+
-1 row in set (0.02 sec)
-
-mysql> SELECT IS_IPV4_COMPAT(INET6_ATON('::10.0.5.9')) AS is_result;
-+-----------+
-| is_result |
-+-----------+
-|         1 |
-+-----------+
-1 row in set (0.03 sec)
+IS_IPV4_COMPAT(INET6_ATON(VARCHAR <ipv4_addr>))
 ```
 
-### Keywords
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_addr>`      | 兼容ipv4的地址， 例如 '::ipv4_address'  |
 
-IS_IPV4_COMPAT, IP
+## 返回值
+如果参数是有效的 IPv4 兼容 IPv6 地址，则返回 1，否则返回 0
+- 如果输入为NULL, 则返回NULL
+
+## 举例
+```sql
+SELECT IS_IPV4_COMPAT(INET6_ATON('::ffff:10.0.5.9')) AS re1, IS_IPV4_COMPAT(INET6_ATON('::10.0.5.9')) AS re2;
+```
+```text
++------+------+
+| re1  | re2  |
++------+------+
+|    0 |    1 |
++------+------+
+```

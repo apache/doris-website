@@ -1,7 +1,7 @@
 ---
 {
-"title": "IS_IPV4_STRING",
-"language": "en"
+    "title": "IS_IPV4_STRING",
+    "language": "en"
 }
 ---
 
@@ -22,33 +22,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IS_IPV4_STRING
+## Description
+Determine whether an IPv4-type address is a valid IPv4 address.
 
-IS_IPV4_STRING
-
-### Description
-
-#### Syntax
-
-`BOOLEAN IS_IPV4_STRING(STRING ipv4_str)`
-
-Receive an IPv4 address in the form of a string as a parameter. If it is a correctly formatted and valid IPv4 address, return true; On the contrary, return false.
-
-#### Notice
-
-`If the input parameter is NULL, return NULL, indicating invalid input`
-
-### Example
-
+## Syntax
 ```sql
-mysql> select is_ipv4_string(NULL);
-+----------------------+
-| is_ipv4_string(NULL) |
-+----------------------+
-|                 NULL |
-+----------------------+
+IS_IPV4_STRING(STRING <ipv4_str>)
+```
 
-mysql> CREATE TABLE `test_is_ipv4_string` (
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_str>`      | An IPv4 address of type String |
+
+
+## Return Value
+If it is a correctly formatted and valid IPv4 address, return true; On the contrary, return false.
+- If input is NULL, the function returns NULL.
+
+
+## Example
+```sql
+CREATE TABLE `test_is_ipv4_string` (
       `id` int,
       `ip_v4` string
     ) ENGINE=OLAP
@@ -57,20 +52,18 @@ mysql> CREATE TABLE `test_is_ipv4_string` (
     "replication_allocation" = "tag.location.default: 1"
     );
     
-mysql> insert into test_is_ipv4_string values(0, NULL), (1, '0.0.0.'), (2, ''), (3, '.'), (4, '255.255.255.255');
+insert into test_is_ipv4_string values(0, NULL), (1, '0.0.0.'), (2, ''), (3, '.'), (4, '255.255.255.255');
 
-mysql> select id, is_ipv4_string(ip_v4) from test_is_ipv4_string order by id;
-+------+-----------------------+
-| id   | is_ipv4_string(ip_v4) |
-+------+-----------------------+
-|    0 |                  NULL |
-|    1 |                     0 |
-|    2 |                     0 |
-|    3 |                     0 |
-|    4 |                     1 |
-+------+-----------------------+
+select id, ip_v4, is_ipv4_string(ip_v4) from test_is_ipv4_string order by id;
 ```
-
-### Keywords
-
-IS_IPV4_STRING, IP
+```text
++------+-----------------+-----------------------+
+| id   | ip_v4           | is_ipv4_string(ip_v4) |
++------+-----------------+-----------------------+
+|    0 | NULL            |                  NULL |
+|    1 | 0.0.0.          |                     0 |
+|    2 |                 |                     0 |
+|    3 | .               |                     0 |
+|    4 | 255.255.255.255 |                     1 |
++------+-----------------+-----------------------+
+```

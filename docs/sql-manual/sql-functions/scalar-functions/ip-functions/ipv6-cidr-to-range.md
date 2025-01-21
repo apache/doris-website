@@ -1,7 +1,7 @@
 ---
 {
-"title": "IPV6_CIDR_TO_RANGE",
-"language": "en"
+    "title": "IPV6_CIDR_TO_RANGE",
+    "language": "en"
 }
 ---
 
@@ -22,43 +22,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV6_CIDR_TO_RANGE
 
-IPV6_CIDR_TO_RANGE
-
-### Description
-
-#### Syntax
-
-`STRUCT<IPV6, IPV6> IPV6_CIDR_TO_RANGE(IPV6 ip_v6, INT16 cidr)`
-
+## Description
 Receive an IPv6 and an Int16 value containing CIDR. Returns a struct that contains two IPv6 fields representing the lower range (min) and higher range (max) of the subnet, respectively.
 
-### Example
-
+## Syntax
 ```sql
-mysql> SELECT ipv6_cidr_to_range(ipv6_string_to_num('2001:0db8:0000:85a3:0000:0000:ac1f:8001'), 32);
-+---------------------------------------------------------------------------------------+
-| ipv6_cidr_to_range(ipv6_string_to_num('2001:0db8:0000:85a3:0000:0000:ac1f:8001'), 32) |
-+---------------------------------------------------------------------------------------+
-| {"min": "2001:db8::", "max": "2001:db8:ffff:ffff:ffff:ffff:ffff:ffff"}                |
-+---------------------------------------------------------------------------------------+
-
-mysql> SELECT ipv6_cidr_to_range(to_ipv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001'), 32);
-+----------------------------------------------------------------------------+
-| ipv6_cidr_to_range(to_ipv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001'), 32) |
-+----------------------------------------------------------------------------+
-| {"min": "2001:db8::", "max": "2001:db8:ffff:ffff:ffff:ffff:ffff:ffff"}     |
-+----------------------------------------------------------------------------+
-
-mysql> SELECT ipv6_cidr_to_range(NULL, NULL);
-+--------------------------------+
-| ipv6_cidr_to_range(NULL, NULL) |
-+--------------------------------+
-| NULL                           |
-+--------------------------------+
+IPV6_CIDR_TO_RANGE(IPV6 ip_v6, INT16 cidr)
 ```
 
-### Keywords
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ip_v6>`      | An IPv6 address of type String |
+| `<cidr>`      | The cidr value |
 
-IPV6_CIDR_TO_RANGE, IP
+
+## Return Value
+Returns a struct that contains two IPv6 fields representing the lower range (min) and higher range (max) of the subnet, respectively.
+- If input is NULL, the function returns NULL.
+
+
+## Example
+```sql
+SELECT ipv6_cidr_to_range(to_ipv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001'), 32), ipv6_cidr_to_range(NULL, NULL);
+```
+```text
++----------------------------------------------------------------------------+--------------------------------+
+| ipv6_cidr_to_range(to_ipv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001'), 32) | ipv6_cidr_to_range(NULL, NULL) |
++----------------------------------------------------------------------------+--------------------------------+
+| {"min":"2001:db8::", "max":"2001:db8:ffff:ffff:ffff:ffff:ffff:ffff"}       | NULL                           |
++----------------------------------------------------------------------------+--------------------------------+
+```
+
