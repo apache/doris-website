@@ -24,29 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_count
-### description
-#### Syntax
+## Description
+Used to return the number of 1 bits in the binary representation of an integer value. This function can be used to quickly count the number of "active" bits of an integer in the binary representation, and is usually used to analyze data distribution or perform certain bit operations
 
-`BIT_COUNT(Integer-type x)`
-
-Returns the exist count of one in 2's complement represent of integer x.
-
-Integer-type could be: TINYINT、SMALLINT、INT、BIGINT、LARGEINT
-
-### example
-
-```
-select "0b11111111", bit_count(-1)
---------------
-
-+--------------+---------------+
-| '0b11111111' | bit_count(-1) |
-+--------------+---------------+
-| 0b11111111   |             8 |
-+--------------+---------------+
+## Syntax
+```sql
+BIT_COUNT( <x>)
 ```
 
-### keywords
+## Parameters
+| parameter | description                                                     |
+|-----------|-----------------------------------------------------------------|
+| `<x>`     | Counts the number of 1s in the binary representation of integer x. Integer types can be: TINYINT, SMALLINT, INT, BIGINT, LARGEINT |
 
-    BITCOUNT, BIT_COUNT
+## Return Value
+
+Returns the number of 1s in the binary representation of `<x>`
+
+## Examples
+
+```sql
+select BIT_COUNT(8), BIT_COUNT(-1);
+```
+```text
++--------------+---------------+
+| bit_count(8) | bit_count(-1) |
++--------------+---------------+
+|            1 |             8 |
++--------------+---------------+
+```

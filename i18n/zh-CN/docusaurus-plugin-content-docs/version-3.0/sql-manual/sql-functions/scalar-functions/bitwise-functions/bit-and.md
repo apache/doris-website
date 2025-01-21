@@ -24,34 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitand
 ## 描述
-## 语法
-
-`BITAND(Integer-type lhs, Integer-type rhs)`
-
-返回两个整数与运算的结果.
+用于执行 按位与（bitwise AND）运算。按位与运算会对两个整数的每一位进行比较，当两个对应的二进制位都为 1 时，结果才为 1，否则为 0。
 
 整数范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
+## 语法
+```sql
+BITAND( <lhs>, <rhs>)
+```
+
+## 参数
+| 参数    | 说明           |
+|-------|--------------|
+| `<lhs>` | 参与按位与运算的第一个数 |
+| `<rhs>` | 参与按位与运算的第二个数 |
+
+## 返回值
+
+返回两个整数与运算的结果。
+
+
 ## 举例
 
-```
-mysql> select bitand(3,5) ans;
-+------+
-| ans  |
-+------+
-|    1 |
-+------+
-
-mysql> select bitand(4,7) ans;
-+------+
-| ans  |
-+------+
-|    4 |
-+------+
+```sql
+select BITAND(3,5), BITAND(4,7);
 ```
 
-### keywords
+```text
++---------+---------+
+| (3 & 5) | (4 & 7) |
++---------+---------+
+|       1 |       4 |
++---------+---------+
 
-    BITAND
+```
