@@ -31,7 +31,7 @@ LTRIM 函数用于去除字符串左侧（开头部分）连续出现空格或�
 ## 语法
 
 ```sql
-ltrim( <str> [, <trim_chars> ] )
+LTRIM( <str> [, <trim_chars> ] )
 ```
 
 ## 参数
