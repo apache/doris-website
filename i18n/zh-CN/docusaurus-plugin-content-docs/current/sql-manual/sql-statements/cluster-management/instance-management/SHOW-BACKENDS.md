@@ -57,7 +57,7 @@ under the License.
 | UsedPct                 | 当前 BE 所有磁盘总的已使用量百分比                                                                                              |
 | MaxDiskUsedPct          | 当前 BE 所有磁盘的已使用量百分比中最大的一个                                                                                         |
 | RemoteUsedCapacity      | 当前 BE 在使用了冷热分层功能后，上传到远端存储的数据占用空间                                                                                 |
-| Tag                     | 当前 BE 的标签信息，                                                                                                     |
+| Tag                     | 当前 BE 的标签信息，以 JSON 格式展示，不同部署模式下的保存的标签信息不同，存算一体模式下保存当前 BE 资源组名称，存算分离模式下保存一些额外的信息                                  |
 | ErrMsg                  | 当前 BE 心跳失败时的错误信息                                                                                                 |
 | Version                 | 当前 BE 的版本信息                                                                                                      |
 | Status                  | 当前 BE 的一些状态信息，以 JSON 格式展示，包括：上一次成功上报 tablet 的时间、上一次 StreamLoad 的时间、是否允许查询、是否允许导入等，需要注意的是，不同版本保存的信息会有些许差异         |
