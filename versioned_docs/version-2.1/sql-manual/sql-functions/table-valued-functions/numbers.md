@@ -1,7 +1,7 @@
 ---
 {
-    "title": "NUMBERS",
-    "language": "en"
+  "title": "NUMBERS",
+  "language": "en"
 }
 ---
 
@@ -24,27 +24,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `numbers`
 
-### description
+## Description
 
 Table function that generates a temporary table containing only one column with the column name `number` and all element values are `const_value` if `const_value` is specified, otherwise they are [0,`number`) incremented.
 
-#### syntax
+## Syntax
 ```sql
-numbers(
-  "number" = "n"
-  <, "const_value" = "x">
+NUMBERS(
+    "number" = "<number>"
+    [, "<const_value>" = "<const_value>" ]
   );
 ```
 
-parameter：
-- `number`: Line number.
-- `const_value`: the constant value.
+## Required Parameters
 
-### example
+| Field         | Description               |
+|---------------|---------------------------|
+| **number**    | The number of rows        |
+
+## Optional Parameters
+
+| Field             | Description                              |
+|-------------------|------------------------------------------|
+| **const_value**   | Specifies the constant value generated   |
+
+
+
+## Return Value
+| Field      | Type    | Description                     |
+|----------------|---------|---------------------------------|
+| **number**     | BIGINT  | The value returned for each row |
+
+
+## Examples
+```sql
+select * from numbers("number" = "5");
 ```
-mysql> select * from numbers("number" = "5");
+```text
 +--------+
 | number |
 +--------+
@@ -54,9 +71,12 @@ mysql> select * from numbers("number" = "5");
 |      3 |
 |      4 |
 +--------+
-5 rows in set (0.11 sec)
+```
 
-mysql> select * from numbers("number" = "5", "const_value" = "-123");
+```sql
+select * from numbers("number" = "5", "const_value" = "-123");
+```
+```text
 +--------+
 | number |
 +--------+
@@ -66,9 +86,4 @@ mysql> select * from numbers("number" = "5", "const_value" = "-123");
 |   -123 |
 |   -123 |
 +--------+
-5 rows in set (0.12 sec)
 ```
-
-### keywords
-
-    numbers, const_value

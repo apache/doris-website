@@ -1539,7 +1539,6 @@
                                 "sql-manual/sql-functions/table-functions/explode-bitmap-outer",
                                 "sql-manual/sql-functions/table-functions/explode-split",
                                 "sql-manual/sql-functions/table-functions/explode-split-outer",
-                                "sql-manual/sql-functions/table-functions/numbers",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
                                 "sql-manual/sql-functions/table-functions/explode-numbers-outer"
                             ]
