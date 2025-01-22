@@ -1,6 +1,6 @@
 ---
 {
-    "title": "current_user",
+    "title": "CURRENT_USER",
     "language": "en"
 }
 ---
@@ -21,3 +21,49 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+
+## Description
+
+Get the current username and its IP rule whitelist.
+
+## Syntax
+
+```sql
+CURRENT_USER()
+```
+
+## Return Value
+
+Returns the current username and its IP whitelist.
+
+Format:`<user_name>@<ip_white_list>`
+
+## Examples
+
+- root user, no IP restrictions
+```sql
+select current_user();
+```
+
+```text
++----------------+
+| current_user() |
++----------------+
+| 'root'@'%'     |
++----------------+
+```
+
+- doris user, IP whitelist is 192.168.*
+```sql
+select current_user();
+```
+
+```text
++---------------------+
+| current_user()      |
++---------------------+
+| 'doris'@'192.168.%' |
++---------------------+
+```
+

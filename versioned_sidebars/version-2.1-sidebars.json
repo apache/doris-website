@@ -1373,7 +1373,6 @@
                                         "sql-manual/sql-functions/scalar-functions/system-functions/current-catalog",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/current-user",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/database",
-                                        "sql-manual/sql-functions/scalar-functions/system-functions/password",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/session-user",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/user",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/version-function",
