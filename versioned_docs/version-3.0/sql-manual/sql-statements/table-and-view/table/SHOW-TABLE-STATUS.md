@@ -24,39 +24,87 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-This statement is used to view some information about the Table.
+This statement is used to display some information about a table or view.
 
-grammar:
+## Syntax
 
 ```sql
-SHOW TABLE STATUS
-[FROM db] [LIKE "pattern"]
+SHOW TABLE STATUS [ FROM [ <catalog_name>.]<db_name> ] [ LIKE <like_condition> ]
 ```
+## Optional parameters
 
-illustrate:
+**1. `FROM clause`**
+> The catalog name and database name to be queried can be specified in the FROM clause.
 
-1. This statement is mainly used to be compatible with MySQL syntax, currently only a small amount of information such as Comment is displayed
+**2. `LIKE clause`**
+> The LIKE clause can perform fuzzy queries based on the table name.
 
-## Example
+## Return value
 
-  1. View the information of all tables under the current database
+| Column name (Column) | Type (DataType) | Notes (Notes) |
+|:--------------------|:-------------|:----------------|
+| Name | String | Table name |
+| Engine | String | Table engine |
+| Version | String | |
+| Row_format | String | |
+| Rows | String | Number of rows in the table |
+| Avg_row_length | Integer | Average length of each row of data |
+| Data_length | Integer | Data size of the table |
+| Max_data_length | Integer | Maximum length of the data row |
+| Index_length | Integer | Length of the index |
+| Data_free | | |
+| Auto_increment | | |
+| Create_time | Datetime | Creation time |
+| Update_time | Datetime | Update time |
+| Check_time | Datetime | |
+| Collation | Character set | Character set, currently only supports utf-8 |
+| Checksum | String | |
+| Create_options | string | |
+| Comment | string | Table comment |
 
-     ```sql
-     SHOW TABLE STATUS;
-     ```
+## Access Control Requirements
 
-  2. View the information of the table whose name contains example under the specified database
+The user who executes this SQL command must have at least the following permissions:
 
-     ```sql
-     SHOW TABLE STATUS FROM db LIKE "%example%";
-     ```
+| Privilege | Object | Notes |
+|:--------------|:-----------|:------------------------|
+| ADMIN_PRIV | Table, View | Currently only supports **ADMIN** permissions to perform this operation |
 
-## Keywords
+## Usage Notes
 
-    SHOW, TABLE, STATUS
+- This statement is mainly used for compatibility with MySQL syntax. Currently, only a small amount of information such as Comment is displayed.
 
-## Best Practice
+## Examples
+
+- View information about all tables in the current database
+
+    ```sql
+    SHOW TABLE STATUS
+    ```
+
+    ```text
+    +------------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+-----------+----------+----------------+---------+
+    | Name       | Engine | Version | Row_format | Rows | Avg_row_length | Data_length | Max_data_length | Index_length | Data_free | Auto_increment | Create_time         | Update_time         | Check_time | Collation | Checksum | Create_options | Comment |
+    +------------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+-----------+----------+----------------+---------+
+    | test_table | Doris  |    NULL | NULL       |    0 |              0 |           0 |            NULL |         NULL |      NULL |           NULL | 2025-01-22 11:45:36 | 2025-01-22 11:45:36 | NULL       | utf-8     |     NULL | NULL           |         |
+    | test_view  | View   |    NULL | NULL       |    0 |              0 |           0 |            NULL |         NULL |      NULL |           NULL | 2025-01-22 11:46:32 | NULL                | NULL       | utf-8     |     NULL | NULL           |         |
+    +------------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+-----------+----------+----------------+---------+
+    ```
+
+- View information about tables whose names contain example under the specified database
+
+    ```sql
+    SHOW TABLE STATUS FROM db LIKE "%test%"
+    ```
+
+    ```text
+    +------------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+-----------+----------+----------------+---------+
+    | Name       | Engine | Version | Row_format | Rows | Avg_row_length | Data_length | Max_data_length | Index_length | Data_free | Auto_increment | Create_time         | Update_time         | Check_time | Collation | Checksum | Create_options | Comment |
+    +------------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+-----------+----------+----------------+---------+
+    | test_table | Doris  |    NULL | NULL       |    0 |              0 |           0 |            NULL |         NULL |      NULL |           NULL | 2025-01-22 11:45:36 | 2025-01-22 11:45:36 | NULL       | utf-8     |     NULL | NULL           |         |
+    | test_view  | View   |    NULL | NULL       |    0 |              0 |           0 |            NULL |         NULL |      NULL |           NULL | 2025-01-22 11:46:32 | NULL                | NULL       | utf-8     |     NULL | NULL           |         |
+    +------------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+-----------+----------+----------------+---------+
+    ```
 

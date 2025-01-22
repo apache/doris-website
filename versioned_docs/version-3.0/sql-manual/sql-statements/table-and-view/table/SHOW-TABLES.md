@@ -24,27 +24,57 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-This statement is used to display all tables under the current db
+This statement is used to display all tables and views under the current db.
 
-grammar:
+## Syntax
 
 ```sql
-SHOW [FULL] TABLES [LIKE]
+SHOW [ FULL ] TABLES [ FROM [ <catalog_name>.]<db_name> ][ LIKE <like_condition> ]
 ```
 
-illustrate:
+## Optional parameters
 
-1. LIKE: Fuzzy query can be performed according to the table name
+**1. `FULL`**
+> If this parameter is added to the statement, the returned result will have three more columns, namely Table_type (table type), Storage_format (storage format), and Inverted_index_storage_format (inverted index storage format).
 
-## Example
+**2. `FROM clause`**
+> In the FROM clause, you can specify the catalog name and database name to be queried.
 
-  1. View all tables under DB
+**2. `LIKE clause`**
+> In the LIKE clause, you can perform fuzzy queries based on table names.
+
+## Return value
+
+| Column name (Column) | Type (DataType) | Notes (Notes) |
+|:--------------------|:-------------|:----------------------------|
+| Tables_in_<db_name> | String | All tables and views under the database where `<db_name>` is located. |
+| Table_type | String | Table and view type. |
+| Storage_format | String | Table and view storage format. |
+| Inverted_index_storage_format | String | Table and view inverted index storage format. |
+
+## Access Control Requirements
+
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege (Privilege) | Object (Object) | Notes (Notes) |
+|:--------------|:-----------|:------------------|
+| SELECT_PRIV | Table (Table), View (View) | Only tables and views with query permissions can be displayed. |
+
+## Usage Notes
+
+- If the FROM clause is not specified in the statement, the corresponding database needs to be used for execution.
+
+## Examples
+
+- View all tables under DB
 
      ```sql
-     mysql> show tables;
+     SHOW TABLES;
+     ```
+
+     ```text
      +---------------------------------+
      | Tables_in_demo                  |
      +---------------------------------+
@@ -54,25 +84,35 @@ illustrate:
      | intern_theme                    |
      | left_table                      |
      +---------------------------------+
-     5 rows in set (0.00 sec)
      ```
 
-2. Fuzzy query by table name
+- Fuzzy query by table name
 
-    ```sql
-    mysql> show tables like '%cm%';
-    +----------------+
-    | Tables_in_demo |
-    +----------------+
-    | cmy1           |
-    | cmy2           |
-    +----------------+
-    2 rows in set (0.00 sec)
-    ```
+     ```sql
+     SHOW TABLES LIKE '%cm%'
+     ```
 
-## Keywords
+     ```text
+     +----------------+
+     | Tables_in_demo |
+     +----------------+
+     | cmy1           |
+     | cmy2           |
+     +----------------+
+     ```
 
-    SHOW, TABLES
+- Use FULL to query the tables and views under db
 
-## Best Practice
+     ```sql
+     SHOW FULL TABLES
+     ```
+
+     ```text
+     +----------------+------------+----------------+-------------------------------+
+     | Tables_in_demo | Table_type | Storage_format | Inverted_index_storage_format |
+     +----------------+------------+----------------+-------------------------------+
+     | test_table     | BASE TABLE | V2             | V1                            |
+     | test_view      | VIEW       | NONE           | NONE                          |
+     +----------------+------------+----------------+-------------------------------+
+     ```
 
