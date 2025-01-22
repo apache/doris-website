@@ -46,7 +46,7 @@ ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>"...
 
 ## Optional Parameters
 
-**PROPERTIES ("key"="value", ...)**
+**1. `PROPERTIES ("<key>"="<value>" [, ... ] )`**
 
 > A set of key-value pairs used to define additional properties of the BE node. These properties can be used to customize the configuration of the BE being added. Available properties include:
 > - `tag.location`: Used to specify the Resource Group to which the BE node belongs in the integrated storage and computing mode.
