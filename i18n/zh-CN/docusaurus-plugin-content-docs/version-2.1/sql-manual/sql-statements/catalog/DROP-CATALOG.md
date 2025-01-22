@@ -24,20 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
-
-
-
 ## 描述
 
 该语句用于删除外部数据目录（catalog）
 
-语法：
+## 语法
 
 ```sql
-DROP CATALOG [IF EXISTS] catalog_name;
+DROP CATALOG [IF EXISTS] <catalog_name>;
 ```
 
 ## 示例
@@ -47,10 +41,4 @@ DROP CATALOG [IF EXISTS] catalog_name;
    ```sql
    DROP CATALOG hive;
    ```
-
-## 关键词
-
-DROP, CATALOG
-
-## 最佳实践
 

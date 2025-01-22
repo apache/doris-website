@@ -24,56 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-### 描述
+## 描述
 
 该语句用于显示已存在是数据目录（catalog）
 
-语法：
+## 语法
 
 ```sql
-SHOW CATALOGS [LIKE]
+SHOW CATALOGS [LIKE <catalog_name>]
 ```
 
 说明：
 
 LIKE：可按照 CATALOG 名进行模糊查询
 
-返回结果说明：
+## 返回值
 
-* CatalogId：数据目录唯一 ID
-* CatalogName：数据目录名称。其中 internal 是默认内置的 catalog，不可修改。
-* Type：数据目录类型。
-* IsCurrent: 是否为当前正在使用的数据目录。
 
-### 示例
+| Column name  | Description |
+|---|---|
+| CatalogId | 数据目录唯一 ID |
+| CatalogName | 数据目录名称，其中 internal 是默认内置的 catalog，不可修改 |
+| Type | 数据目录类型 |
+| IsCurrent | 是否为当前正在使用的数据目录 |
+| CreateTime | 创建时间 |
+| LastUpdateTime | 最后更新时间 |
+| Comment | 备注 |
+
+
+## 示例
 
 1. 查看当前已创建的数据目录
 
    ```sql
    SHOW CATALOGS;
+   ```
+   ```sql
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
     | CatalogId | CatalogName | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
     |    130100 | hive        | hms      |           | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
     |         0 | internal    | internal | yes       | UNRECORDED              | NULL                | Doris internal catalog |
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-       ```
-   
+    ```
+
 2. 按照目录名进行模糊搜索
 
    ```sql
    SHOW CATALOGS LIKE 'hi%';
+   ```
+    ```sql
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
     | CatalogId | CatalogName | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
     |    130100 | hive        | hms      |           | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-       ```
-
-### 关键词
-
-SHOW, CATALOG, CATALOGS
-
-
+   ```

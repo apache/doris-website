@@ -24,26 +24,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
-
-
 ## 描述
 
 该语句用于刷新指定 Catalog/Database/Table 的元数据。
 
-语法：
+## 语法
 
 ```sql
-REFRESH CATALOG catalog_name;
-REFRESH DATABASE [catalog_name.]database_name;
-REFRESH TABLE [catalog_name.][database_name.]table_name;
+REFRESH CATALOG <catalog_name>;
+REFRESH DATABASE <[catalog_name.]database_name>;
+REFRESH TABLE <[catalog_name.][database_name.]table_name>;
 ```
 
-刷新 Catalog 的同时，会强制使对象相关的 Cache 失效。
-
-包括 Partition Cache、Schema Cache、File Cache 等。
+## 注意事项
+刷新 Catalog 的同时，会强制使对象相关的 Cache 失效。 包括 Partition Cache、Schema Cache、File Cache 等。
 
 ## 示例
 
@@ -68,9 +62,4 @@ REFRESH TABLE [catalog_name.][database_name.]table_name;
     REFRESH TABLE table1;
     ```
 
-## 关键词
-
-REFRESH, CATALOG, DATABASE, TABLE
-
-### 最佳实践
 

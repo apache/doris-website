@@ -24,18 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
-
 ## 描述
 
 该语句用于创建外部数据目录（catalog）
 
-语法：
+## 语法
 
 ```sql
-CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
+CREATE CATALOG [IF NOT EXISTS] <catalog_name> [comment]
 	PROPERTIES ("key"="value", ...);
 ```
 
@@ -168,10 +164,4 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
        "driver_class" = "com.oceanbase.jdbc.Driver"
 	);
     ```
-
-## 关键词
-
-CREATE, CATALOG
-
-### 最佳实践
 

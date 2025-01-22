@@ -30,10 +30,10 @@ under the License.
 
 This statement is used to create an external catalog
 
-Syntax:
+## Syntax
 
 ```sql
-CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
+CREATE CATALOG [IF NOT EXISTS] <catalog_name> [comment]
 	PROPERTIES ("key"="value", ...);
 ```
 
@@ -163,9 +163,4 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
 	);
     ```
 
-## Keywords
-
-CREATE, CATALOG
-
-## Best Practice
 

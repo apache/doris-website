@@ -24,16 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
 This statement is used for view created catalogs
 
-Syntax:
+## Syntax
 
 ```sql
-SHOW CATALOGS [LIKE]
+SHOW CATALOGS [LIKE <catalog_name>]
 ```
 
 illustrate:
@@ -41,41 +39,44 @@ illustrate:
 1. LIKE: Fuzzy query can be performed according to the catalog name
 
 
-Return result:
+## Return Value
 
-* CatalogId: Unique ID of the catalog
-* CatalogName: Catalog name. where "internal" is the default built-in catalog, which cannot be modified.
-* Type: Catalog type.
-* IsCurrent: Show yes on the line of current using catalog.
+| Column Name    | Description |
+|---|---|
+| CatalogId      | Unique ID of the data catalog |
+| CatalogName    | Name of the data catalog. The default built-in catalog is named "internal" and cannot be modified. |
+| Type           | Type of the data catalog |
+| IsCurrent      | Indicates whether it is the currently active data catalog |
+| CreateTime     | Creation time  |
+| LastUpdateTime | Last updated time |
+| Comment        | comments about the catalog |
 
-## Example
+
+## Examples
 
 1. View the data catalogs that have been created currently
 
    ```sql
    SHOW CATALOGS;
+   ```
+   ```sql
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
     | CatalogId | CatalogName | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
     |    130100 | hive        | hms      |           | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
     |         0 | internal    | internal | yes       | UNRECORDED              | NULL                | Doris internal catalog |
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-   	```
+    ```
 
 2. Fuzzy query by catalog name
 
    ```sql
    SHOW CATALOGS LIKE 'hi%';
+   ```
+    ```sql
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
     | CatalogId | CatalogName | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
     |    130100 | hive        | hms      |           | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
     +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-       ```
-   
-## Keywords
-
-SHOW, CATALOG, CATALOGS
-
-## Best Practice
-
+   ```

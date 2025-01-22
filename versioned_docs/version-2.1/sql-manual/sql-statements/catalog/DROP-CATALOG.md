@@ -25,29 +25,20 @@ under the License.
 -->
 
 
-
-
 ## Description
 
 This statement is used to delete the external catalog.
 
-Syntax:
+## Syntax
 
 ```sql
-DROP CATALOG [I EXISTS] catalog_name;
+DROP CATALOG [IF EXISTS] <catalog_name>;
 ```
 
-## Examples
+## Example
 
 1. Drop catalog hive
 
    ```sql
    DROP CATALOG hive;
    ```
-
-## Keywords
-
-DROP, CATALOG
-
-## Best Practice
-

@@ -32,10 +32,10 @@ under the License.
 
 This statement shows the creating statement of a doris catalog.
 
-grammar:
+## Syntax
 
 ```sql
-SHOW CREATE CATALOG catalog_name;
+SHOW CREATE CATALOG <catalog_name>;
 ```
 
 illustrate:
@@ -44,15 +44,25 @@ illustrate:
 
 ## Example
 
-1. View the creating statement of the hive catalog in doris
+1. View the creating statement of the oracle catalog in doris
 
    ```sql
-   SHOW CREATE CATALOG hive;
+   SHOW CREATE CATALOG oracle;
    ```
-
-## Keywords
-
-SHOW, CREATE, CATALOG
-
-## Best Practice
+   ```sql
+   +---------+----------------------------------------------------------------------------------------------------------------------+
+    | Catalog | CreateCatalog                                                                                                        |
+    +---------+----------------------------------------------------------------------------------------------------------------------+
+    | oracle  |
+    CREATE CATALOG `oracle` PROPERTIES (
+    "user" = "XXX",
+    "type" = "jdbc",
+    "password" = "*XXX",
+    "jdbc_url" = "XXX",
+    "driver_url" = "XXX",
+    "driver_class" = "oracle.jdbc.driver.OracleDriver",
+    "checksum" = "XXX"
+    ); |
+    +---------+----------------------------------------------------------------------------------------------------------------------+
+   ```
 
