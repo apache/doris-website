@@ -28,13 +28,13 @@ construct an array with variadic elements and return it, T could be column or li
 ## Syntax
 
 ```sql
-array(<T>)
+ARRAY([ <element> [, ...] ])
 ```
 
 ## Parameters
 | Parameter | Description |
 |---|---|
-| `<T>` | The parameter can be multiple columns or constants |
+| `<element>` | The parameter can be multiple columns or constants |
 
 ## Return Value
 Returns an array.
