@@ -31,44 +31,52 @@ under the License.
 
 This statement is used to restore Doris system variables. These system variables can be modified at global or session level.
 
-grammar:
+## Syntax
 
 ```sql
-UNSET [SESSION|GLOBAL] VARIABLE (variable_name | ALL)
+UNSET [<effective_scope>] VARIABLE (<variable_name>)
 ```
 
-illustrate:
+## Required Parameters
+**<variable_name>**
+> Specifies the variable name, or if you want to unset all variables, this parameter you can give a keyword `ALL`.
 
-1. (variable_name | ALL): statement must be ended with a variable name or keyword `ALL`.
+## Optional Parameters
+**<effective_scope>**
+> Effective scope is one of `GLOBAL` or `SESSION`. If there is no effective scope, default value is `SESSION`.
 
-> Note:
->
-> 1. Only ADMIN users can unset variables to take effect globally
-> 2. When restore a variable with `GLOBAL`,  it only affect your current using session and new open sessions. It does not affect other current open sessions.
+## Access Control Requirements
+Users executing this SQL command must have at least the following privileges:
+
+| Privilege  | Object | Notes                                        |
+| :--------- | :----- | :------------------------------------------- |
+| ADMIN_PRIV | Session  | unset global variables need admin privilege |
+
+## Usage Notes
+
+- Only ADMIN users can unset variables to take effect globally
+- When restore a variable with `GLOBAL`,  it only affects your current using session and new open sessions. It does not affect other current open sessions.
+
+
 
 ## Example
 
-1. Restore value of the time zone
+- Restore value of the time zone
 
    ```
    UNSET VARIABLE time_zone;
    ```
 
-2. Restore the global execution memory size
+
+- Restore the global execution memory size
 
    ```
    UNSET GLOBAL VARIABLE exec_mem_limit;
    ```
 
-3. Restore all variables globally
+
+- Restore all variables globally
 
    ```
    UNSET GLOBAL VARIABLE ALL;
    ```
-
-## Keywords
-
-    UNSET, VARIABLE
-
-## Best Practice
-

@@ -31,45 +31,55 @@ under the License.
 
 该语句主要是用来恢复 Doris 系统变量为默认值，可以是全局也可以是会话级别。
 
-语法：
+## 语法
 
 ```sql
-UNSET [SESSION|GLOBAL] VARIABLE (variable_name | ALL)
+UNSET [<effective_scope>] VARIABLE (<variable_name>)
 ```
 
-说明：
+## 必选参数
+**<1. variable_name>**
+> 指定变量名称，如果需要unset全部变量，可以写一个`ALL`关键字
 
-1. (variable_name | ALL) ：必须指定变量名或使用 ALL , ALL 会恢复所有变量的值。
 
-> 注意：
->
-> 1. 只有 ADMIN 用户可以全局得恢复变量的值。
-> 2. 使用 `GLOBAL` 恢复变量值时仅在执行命令的当前会话和之后打开的会话中生效，不会恢复当前已有的其它会话中的值。
+## 可选参数
+**<effective_scope>**
+> 生效范围的取值可以是`GLOBAL`或者`SESSION`之一，如果不指定该值，默认为`SESSION`。
+
+
+## 权限控制
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| Privilege  | Object | Notes                                        |
+| :--------- | :----- | :------------------------------------------- |
+| ADMIN_PRIV | Session  | unset global variables 需要 admin 权限 |
+
+
+## 注意事项
+
+- 只有 ADMIN 用户可以设置变量的全局生效
+- 使用 `GLOBAL` 恢复变量值时仅在执行命令的当前会话和之后打开的会话中生效，不会恢复当前已有的其它会话中的值。
 
 
 ## 示例
 
-1. 恢复时区为默认值东八区
+
+- 恢复时区为默认值东八区
 
    ```
    UNSET VARIABLE time_zone;
    ```
 
-2. 恢复全局的执行内存大小
+
+- 恢复全局的执行内存大小
 
    ```
    UNSET GLOBAL VARIABLE exec_mem_limit;
    ```
 
-3. 从全局范围恢复所有变量的值
+- 从全局范围恢复所有变量的值
 
    ```
    UNSET GLOBAL VARIABLE ALL;
    ```
-
-## 关键词
-
-    UNSET, VARIABLE
-
-### 最佳实践
 
