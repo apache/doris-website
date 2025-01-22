@@ -46,7 +46,7 @@ SHOW CREATE LOAD for load_name;
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
 | :---------------- | :------------- | :---------------------------- |
-| SELECT_PRIV        | 库（Database）    | 需要对数据库、表的只读权限。 |
+| ADMIN/OPERATOR        | 库（Database）    | 需要集群管理员权限 |
 
 ## 返回值
 

@@ -132,7 +132,7 @@ INTO TABLE `table_name`
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
 | :---------------- | :------------- | :---------------------------- |
-| LOAD_PRIV        | 表（Table）    | 对指定的库或表的导入权限 |
+| LOAD_PRIV        | 表（Table）    | 对指定的库表的导入权限 |
 
 ## 举例
 

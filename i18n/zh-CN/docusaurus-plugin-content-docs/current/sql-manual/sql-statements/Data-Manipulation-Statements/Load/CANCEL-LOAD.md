@@ -62,7 +62,7 @@ WHERE [LABEL = "load_label" | LABEL like "label_pattern" | STATE = "PENDING/ETL/
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
 | :---------------- | :------------- | :---------------------------- |
-| SELECT_PRIV        | 库（Database）    | CANCEL LOAD 需要对数据库有查询权限 |
+| LOAD_PRIV | 库（Database）    | 需要对库表的导入权限 |
 
 ## 注意事项
 

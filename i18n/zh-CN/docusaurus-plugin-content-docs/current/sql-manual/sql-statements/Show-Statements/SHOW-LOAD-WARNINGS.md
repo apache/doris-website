@@ -60,7 +60,7 @@ SHOW LOAD WARNINGS
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
 | :---------------- | :------------- | :---------------------------- |
-| SELECT_PRIV        | 库（Database）    | 需要对数据库、表的只读权限。 |
+| LOAD_PRIV        | 库（Database）    | 需要对库表的导入权限 |
 
 ## 返回值
 
