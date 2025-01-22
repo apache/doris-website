@@ -26,7 +26,7 @@ under the License.
 
 ## Description
 
-Used to view the conversion of non-light schema change olpa tables to light schema change tables.
+Used to view the conversion process of non-light schema change OLAP tables to light schema change tables.
 
 ## Syntax
 
@@ -36,7 +36,7 @@ SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [ FROM <db_name> ]
 
 ## Optional parameters
 
-**1. `FROM clause`**
+**1. `<db_name>`**
 > The name of the database to be queried can be specified in the FROM clause.
 
 ## Access Control Requirements

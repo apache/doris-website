@@ -27,7 +27,7 @@ under the License.
 
 ### 描述
 
-该语句用于根据 table id 查找对应的 database name, table name（仅管理员使用）。
+该语句用于根据 table id 查找对应的 database name, table name 。
 
 ## 语法
 
@@ -42,11 +42,11 @@ SHOW TABLE <table_id>
 
 ## 返回值
 
-| 列名（Column）          | 类型（DataType） | 说明（Notes） |
-|:--------------------|:-------------|:----------|
-| DbName | 字符串          | 数据库名称     |
-| TableName | 字符串          | 数据表名称     |
-| DbId | 字符串          | 数据库ID     |
+| 列名（Column）           | 类型（DataType） | 说明（Notes） |
+|:---------------------|:-------------|:----------|
+| DbName               | 字符串          | 数据库名称     |
+| TableName            | 字符串          | 数据表名称     |
+| DbId                 | 字符串          | 数据库ID     |
 
 ## 权限控制
 
@@ -58,7 +58,7 @@ SHOW TABLE <table_id>
 
 ## 示例
 
- - 根据 table id 查找对应的 database name, table name
+ 1. 根据 table id 查找对应的 database name, table name
      
     ```sql
     SHOW TABLE 2261121

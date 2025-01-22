@@ -35,34 +35,34 @@ SHOW TABLE STATUS [ FROM [ <catalog_name>.]<db_name> ] [ LIKE <like_condition> ]
 ```
 ## 可选参数
 
-**1. `FROM 子句`**
+**1. `FROM [ <catalog_name>.]<db_name>`**
 > FROM 子句中可以指定查询的 catalog 名称以及 database 的名称。
 
-**2. `LIKE 子句`**
+**2. `LIKE <like_condition>`**
 > LIKE 子句中可以按照表名进行模糊查询。
 
 ## 返回值
 
-| 列名（Column）          | 类型（DataType） | 说明（Notes）       |
-|:--------------------|:-------------|:----------------|
-| Name | 字符串          | 表名称             |
-| Engine | 字符串          | 表引擎             |
-| Version | 字符串          |                 |
-| Row_format | 字符串          |                 |
-| Rows | 字符串          | 表的行数            |
-| Avg_row_length | 整型           | 每行数据平均长度        |
-| Data_length | 整型           | 表的数据大小          |
-| Max_data_length | 整型           | 最大数据行的长度        |
-| Index_length | 整型           | 索引的长度           |
-| Data_free |              |                 |
-| Auto_increment |              |                 |
-| Create_time | Datetime     | 创建时间            |
-| Update_time | Datetime     | 更新时间            |
-| Check_time | Datetime     |                 |
-| Collation | 字符集          | 字符集，目前只支持 utf-8 |
-| Checksum | 字符串          |                 |
-| Create_options | 字符串          |                 |
-| Comment | 字符串          | 表注释             |
+| 列名（Column）           | 类型（DataType） | 说明（Notes）       |
+|:---------------------|:-------------|:----------------|
+| Name                 | 字符串          | 表名称             |
+| Engine               | 字符串          | 表引擎             |
+| Version              | 字符串          | 表版本             |
+| Row_format           | 字符串          | 表行的格式           |
+| Rows                 | 字符串          | 表的行数            |
+| Avg_row_length       | 整型           | 每行数据平均长度        |
+| Data_length          | 整型           | 表的数据大小          |
+| Max_data_length      | 整型           | 最大数据行的长度        |
+| Index_length         | 整型           | 索引的长度           |
+| Data_free            |              |                 |
+| Auto_increment       |              |                 |
+| Create_time          | Datetime     | 创建时间            |
+| Update_time          | Datetime     | 更新时间            |
+| Check_time           | Datetime     | 检查时间            |
+| Collation            | 字符集          | 字符集，目前只支持 utf-8 |
+| Checksum             | 字符串          | 校验和             |
+| Create_options       | 字符串          | 创建的选项           |
+| Comment              | 字符串          | 表注释             |
 
 ## 权限控制
 

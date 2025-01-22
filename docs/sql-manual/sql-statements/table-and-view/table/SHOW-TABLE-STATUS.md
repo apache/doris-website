@@ -35,34 +35,34 @@ SHOW TABLE STATUS [ FROM [ <catalog_name>.]<db_name> ] [ LIKE <like_condition> ]
 ```
 ## Optional parameters
 
-**1. `FROM clause`**
+**1. ` FROM [ <catalog_name>.]<db_name>`**
 > The catalog name and database name to be queried can be specified in the FROM clause.
 
-**2. `LIKE clause`**
+**2. `LIKE <like_condition>`**
 > The LIKE clause can perform fuzzy queries based on the table name.
 
 ## Return value
 
-| Column name (Column) | Type (DataType) | Notes (Notes) |
-|:--------------------|:-------------|:----------------|
-| Name | String | Table name |
-| Engine | String | Table engine |
-| Version | String | |
-| Row_format | String | |
-| Rows | String | Number of rows in the table |
-| Avg_row_length | Integer | Average length of each row of data |
-| Data_length | Integer | Data size of the table |
-| Max_data_length | Integer | Maximum length of the data row |
-| Index_length | Integer | Length of the index |
-| Data_free | | |
-| Auto_increment | | |
-| Create_time | Datetime | Creation time |
-| Update_time | Datetime | Update time |
-| Check_time | Datetime | |
-| Collation | Character set | Character set, currently only supports utf-8 |
-| Checksum | String | |
-| Create_options | string | |
-| Comment | string | Table comment |
+| Column          | Data Type     | Notes                                        |
+|:----------------|:--------------|:---------------------------------------------|
+| Name            | String        | Table name                                   |
+| Engine          | String        | Table engine                                 |
+| Version         | String        | Table version                                |
+| Row_format      | String        | table row's format                           |
+| Rows            | String        | Number of rows in the table                  |
+| Avg_row_length  | Integer       | Average length of each row of data           |
+| Data_length     | Integer       | Data size of the table                       |
+| Max_data_length | Integer       | Maximum length of the data row               |
+| Index_length    | Integer       | Length of the index                          |
+| Data_free       |               |                                              |
+| Auto_increment  |               |                                              |
+| Create_time     | Datetime      | Creation time                                |
+| Update_time     | Datetime      | Update time                                  |
+| Check_time      | Datetime      | Check time                                   |
+| Collation       | Character set | Character set, currently only supports utf-8 |
+| Checksum        | String        | Table Checksum                               |
+| Create_options  | string        | Table options                                |
+| Comment         | string        | Table comment                                |
 
 ## Access Control Requirements
 

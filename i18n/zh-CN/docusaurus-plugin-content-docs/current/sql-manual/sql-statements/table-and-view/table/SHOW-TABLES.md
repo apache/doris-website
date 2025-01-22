@@ -39,19 +39,19 @@ SHOW [ FULL ] TABLES [ FROM [ <catalog_name>.]<db_name> ][ LIKE <like_condition>
 **1. `FULL`**
 > 语句中加了此参数，返回结果会多三列值，分别为Table_type（表类型）、Storage_format（存储格式）、Inverted_index_storage_format（倒排索引存储格式）。
 
-**2. `FROM 子句`**
+**2. `FROM [ <catalog_name>.]<db_name>`**
 > FROM 子句中可以指定查询的 catalog 名称以及 database 的名称。
 
-**2. `LIKE 子句`**
+**2. `LIKE <like_condition>`**
 > LIKE 子句中可以按照表名进行模糊查询。
 
 ## 返回值
 
-| 列名（Column）          | 类型（DataType） | 说明（Notes）                   |
-|:--------------------|:-------------|:----------------------------|
-| Tables_in_<db_name> | 字符串          | `<db_name>`所在数据库下面所有的表以及视图。 |
-| Table_type | 字符串          | 表以及视图类型。                    |
-| Storage_format | 字符串          | 表以及视图存储格式。           |
+| 列名（Column）                    | 类型（DataType） | 说明（Notes）                   |
+|:------------------------------|:-------------|:----------------------------|
+| Tables_in_<db_name>           | 字符串          | `<db_name>`所在数据库下面所有的表以及视图。 |
+| Table_type                    | 字符串          | 表以及视图类型。                    |
+| Storage_format                | 字符串          | 表以及视图存储格式。           |
 | Inverted_index_storage_format | 字符串          | 表以及视图倒排索引存储格式。           |
 
 ## 权限控制

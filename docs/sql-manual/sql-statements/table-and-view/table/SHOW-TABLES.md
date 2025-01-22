@@ -39,10 +39,10 @@ SHOW [ FULL ] TABLES [ FROM [ <catalog_name>.]<db_name> ][ LIKE <like_condition>
 **1. `FULL`**
 > If this parameter is added to the statement, the returned result will have three more columns, namely Table_type (table type), Storage_format (storage format), and Inverted_index_storage_format (inverted index storage format).
 
-**2. `FROM clause`**
+**2. `FROM [ <catalog_name>.]<db_name>`**
 > In the FROM clause, you can specify the catalog name and database name to be queried.
 
-**2. `LIKE clause`**
+**2. `LIKE <like_condition>`**
 > In the LIKE clause, you can perform fuzzy queries based on table names.
 
 ## Return value

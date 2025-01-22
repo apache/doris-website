@@ -36,7 +36,7 @@ SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [ FROM <db_name> ]
 
 ## 可选参数
 
-**1. `FROM 子句`**
+**1. `FROM <db_name>`**
 > FROM 子句中可以指定查询的 database 的名称。
 
 ## 权限控制
