@@ -39,7 +39,6 @@ BIT_COUNT( <x>)
 |-------| -- |
 | `<x>` | 统计整型 x 的二进制表示中 1 的个数。整型可以是：TINYINT、SMALLINT、INT、BIGINT、LARGEINT |
 
-
 ## 返回值
 
 返回 `<x>` 的二进制表示中 1 的个数
