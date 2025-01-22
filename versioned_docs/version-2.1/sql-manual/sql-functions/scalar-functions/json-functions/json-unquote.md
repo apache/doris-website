@@ -24,13 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_unquote
-### Description
-#### Syntax
-
-`VARCHAR json_unquote(VARCHAR)`
-
+## Description
 This function unquotes a JSON value and returns the result as a utf8mb4 string. If the argument is NULL, it will return NULL.
+
+## Syntax
+```sql
+JSON_UNQUOTE (<a>)
+```
+## Parameters
+| Parameters | Description                                                    |
+|------|-------------------------------------------------------|
+| `<a>` | The element to be unquoted. |
+
+## Return Values
+
+Returns a utf8mb4 string. Special cases are as follows:
+* If the passed parameter is NULL, return NULL.
+* If the passed parameter is not a value with double quotes, the value itself will be returned.
+* If the passed parameter is not a string, it will be automatically converted to a string and then the value itself will be returned.
 
 Escape sequences within a string as shown in the following table will be recognized. Backslashes will be ignored for all other escape sequences.
 
@@ -46,38 +57,76 @@ Escape sequences within a string as shown in the following table will be recogni
 | \uxxxx          | UTF-8 bytes for Unicode value XXXX |
 
 
+### Examples
 
-### example
-
+```sql
+SELECT json_unquote('"doris"');
 ```
-mysql> SELECT json_unquote('"doris"');
+
+```text
 +-------------------------+
 | json_unquote('"doris"') |
 +-------------------------+
 | doris                   |
 +-------------------------+
-
-mysql> SELECT json_unquote('[1, 2, 3]');
+```
+```sql
+SELECT json_unquote('[1, 2, 3]');
+```
+```text
 +---------------------------+
 | json_unquote('[1, 2, 3]') |
 +---------------------------+
 | [1, 2, 3]                 |
 +---------------------------+
-
-
-mysql> SELECT json_unquote(null);
+```
+```sql
+SELECT json_unquote(null);
+```
+```text
 +--------------------+
 | json_unquote(NULL) |
 +--------------------+
 | NULL               |
 +--------------------+
-
-mysql> SELECT json_unquote('"\\ttest"');
+```
+```sql
+SELECT json_unquote('"\\ttest"');
+```
+```text
 +--------------------------+
 | json_unquote('"\ttest"') |
 +--------------------------+
 |       test                    |
 +--------------------------+
 ```
-### keywords
-json,unquote,json_unquote
+```sql
+select json_unquote('"doris');
+```
+```text
++------------------------+
+| json_unquote('"doris') |
++------------------------+
+| "doris                 |
++------------------------+
+```
+```sql
+select json_unquote('doris');
+```
+```text
++-----------------------+
+| json_unquote('doris') |
++-----------------------+
+| doris                 |
++-----------------------+
+```
+```sql
+select json_unquote(1);
+```
+```text
++-----------------------------------------+
+| json_unquote(cast(1 as VARCHAR(65533))) |
++-----------------------------------------+
+| 1                                       |
++-----------------------------------------+
+```

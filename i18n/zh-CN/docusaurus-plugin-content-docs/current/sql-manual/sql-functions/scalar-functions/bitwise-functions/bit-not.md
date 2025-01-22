@@ -24,34 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitnot
+
 ## 描述
+用于对整数进行按位取反操作。
+
+整数范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT。
+
 ## 语法
+```sql
+BITNOT( <x>)
+```
 
-`BITNOT(Integer-type value)`
+## 参数
+| 参数    | 说明     |
+|-------|--------|
+| `<x>` | 参与运算整数 |
 
-返回一个整数取反运算的结果.
-
-整数范围：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
+## 返回值
+返回一个整数取反运算的结果
 
 ## 举例
-
+```sql
+select BITNOT(7), BITNOT(-127);
 ```
-mysql> select bitnot(7) ans;
-+------+
-| ans  |
-+------+
-|   -8 |
-+------+
-
-mysql> select bitxor(-127) ans;
-+------+
-| ans  |
-+------+
-|  126 |
-+------+
+```text
++-------+----------+
+| (~ 7) | (~ -127) |
++-------+----------+
+|    -8 |      126 |
++-------+----------+
 ```
-
-### keywords
-
-    BITNOT

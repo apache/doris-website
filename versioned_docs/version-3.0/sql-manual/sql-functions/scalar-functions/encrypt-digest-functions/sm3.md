@@ -22,23 +22,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### description
+## Description
 
-Calculates an SM3 256-bit checksum for the string
+Calculation SM3 256-bit
 
-### Syntax
+## Syntax
 
 ```sql
-SM3(str)
+SM3( <str> )
 ```
 
-### example
+## Parameters
+
+
+| parameter | description |
+|-----------|-------------|
+| `<str>`   | The value of sm3 that needs to be calculated  |
+
+## Return Value
+Returns the sm3 value of the input string
+
+## Examples
 
 ```sql
 select sm3("abcd");
 ```
 
-```
+```text
 +------------------------------------------------------------------+
 | sm3('abcd')                                                      |
 +------------------------------------------------------------------+

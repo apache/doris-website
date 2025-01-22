@@ -24,30 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## 描述
 
-该语句用于创建仓库。仓库用于属于备份或恢复。仅 root 或 superuser 用户可以创建仓库。
+该语句用于创建仓库。仓库用于属于备份或恢复。
 
-语法：
+## 语法
 
 ```sql
-CREATE [READ ONLY] REPOSITORY `repo_name`
-WITH [S3|hdfs]
-ON LOCATION `repo_location`
-PROPERTIES ("key"="value", ...);
+CREATE [READ ONLY] REPOSITORY <repo_name>
+    WITH [ S3 | HDFS ]
+    ON LOCATION <repo_location>
+    PROPERTIES (
+              -- S3 or HDFS storage property
+              <storage_property>
+              [ , ... ]
+    )
 ```
 
-说明：
+## 必选参数
+**<repo_name>**
+> 仓库的唯一名称
 
+**<repo_location>**
+> 仓库的存储路径
+
+**<storage_property>**
+> 仓库的属性。此处需要根据选择的是 S3 存储还是 HDFS 存储介质来选择对应的参数
+
+**<storage_property>** 可选参数如下，并可根据实际环境情况添加
+
+| 参数                      | 说明                                 |
+|-------------------------|------------------------------------|
+| **s3.endpoint**         | S3 服务端点                            |
+| **s3.access_key**       | S3 访问密钥                            |
+| **s3.secret_key**       | S3 秘密密钥                            |
+| **s3.region**           | S3 区域                              |
+| **use_path_style**      | 是否使用路径样式访问 S3（适用于 MinIO）           |
+| **fs.defaultFS**        | Hadoop 默认文件系统 URI                  |
+| **hadoop.username**     | Hadoop 用户名                         |
+
+
+## 权限控制
+| 权限	          | 对象       | 说明                            |
+|:-------------|:---------|:------------------------------|
+| ADMIN_PRIV   | 整个集群管理权限 | 仅 root 或 superuser 用户可以创建仓库   |
+
+
+## 注意事项
 - 如果是只读仓库，则只能在仓库上进行恢复。如果不是，则可以进行备份和恢复操作。
 - 根据 S3、HDFS 的不同类型，PROPERTIES 有所不同，具体见示例。
-- ON LOCATION ,如果是 S3 , 这里后面跟的是 Bucket Name。
+- ON LOCATION ,如果是 S3 , 这里后面跟的是 S3 的 Bucket Name。
+- 在做数据迁移操作时，需要在源集群和目的集群创建完全相同的仓库，以便目的集群可以通过这个仓库，查看到源集群备份的数据快照。
+- 任何用户都可以通过 [SHOW REPOSITORIES](../../Show-Statements/SHOW-REPOSITORIES.md) 命令查看已经创建的仓库。
 
-## 示例
 
-1. 创建名为 s3_repo 的仓库。
+## 举例
+
+创建名为 s3_repo 的仓库
 
 ```sql
 CREATE REPOSITORY `s3_repo`
@@ -62,7 +95,7 @@ PROPERTIES
 );
 ```
 
-2. 创建名为 hdfs_repo 的仓库。
+创建名为 hdfs_repo 的仓库
 
 ```sql
 CREATE REPOSITORY `hdfs_repo`
@@ -75,7 +108,7 @@ PROPERTIES
 );
 ```
 
-3. 创建名为 minio_repo 的仓库。
+创建名为 minio_repo 的仓库。
 
 ```sql
 CREATE REPOSITORY `minio_repo`
@@ -91,7 +124,7 @@ PROPERTIES
 );
 ```
 
-4. 使用临时秘钥创建名为 minio_repo 的仓库
+使用临时秘钥创建名为 minio_repo 的仓库
 
 ```sql
 CREATE REPOSITORY `minio_repo`
@@ -107,7 +140,7 @@ PROPERTIES
 )
 ```
 
-5. 使用腾讯云 COS 创建仓库
+使用腾讯云 COS 创建仓库
 
 ```sql
 CREATE REPOSITORY `cos_repo`
@@ -121,13 +154,3 @@ PROPERTIES
     "s3.region" = "ap-beijing"
 );
 ```
-
-## 关键词
-
-    CREATE, REPOSITORY
-
-## 最佳实践
-
-1. 一个集群可以创建过多个仓库。只有拥有 ADMIN 权限的用户才能创建仓库。
-2. 任何用户都可以通过 [SHOW REPOSITORIES](../../../../sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-REPOSITORIES) 命令查看已经创建的仓库。
-3. 在做数据迁移操作时，需要在源集群和目的集群创建完全相同的仓库，以便目的集群可以通过这个仓库，查看到源集群备份的数据快照。

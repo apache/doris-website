@@ -24,23 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## initcap
 ## 描述
-## 语法
-
-`VARCHAR initcap(VARCHAR str)`
 
 将参数中包含的单词首字母大写，其余字母转为小写。单词是由非字母数字字符分隔的字母数字字符序列。
 
+## 语法
+
+```sql
+INITCAP ( <str> )
+```
+
+## 参数
+
+| 参数      | 说明        |
+|---------|-----------|
+| `<str>` | 需要被转化的字符串 |
+
+## 返回值
+
+参数 `<str>` 中单词首字母大写，其余字母小写的结果。
+
 ## 举例
 
+```sql
+SELECT INITCAP('hello hello.,HELLO123HELlo')
 ```
-mysql> select initcap('hello hello.,HELLO123HELlo');
+
+```text
 +---------------------------------------+
 | initcap('hello hello.,HELLO123HELlo') |
 +---------------------------------------+
-| Hello Hello.,Hello123hello            |
+| Hello Hello.,hello123hello            |
 +---------------------------------------+
 ```
-### keywords
-    INITCAP
