@@ -28,25 +28,42 @@ under the License.
 
 ## 描述
 
-该语句用于展示所有权限项。
+`SHOW PRIVILEGES` 语句用于显示数据库系统中当前可用的权限列表。它帮助用户了解系统支持的权限类型以及每种权限的详细信息。
 
-语法：
+## 语法
 
-```SQL
+```sql
 SHOW PRIVILEGES
 ```
 
+## 返回值
+
+返回当前数据库系统中可用的权限列表。
+
+## 权限控制
+
+执行此 SQL 命令的用户不需要具有特定的权限来执行此命令。
+
 ## 示例
 
-1. 查看所有权限项
+查看所有权限项
 
-   ```SQL
-   SHOW PRIVILEGES
-   ```
-
-## 关键词
-
-    SHOW, PRIVILEGES
-
-### 最佳实践
-
+```sql
+SHOW PRIVILEGES
+```
+  
+```text
++-------------+-------------------------------------------------------+-----------------------------------------------+
+| Privilege   | Context                                               | Comment                                       |
++-------------+-------------------------------------------------------+-----------------------------------------------+
+| Node_priv   | GLOBAL                                                | Privilege for cluster node operations         |
+| Admin_priv  | GLOBAL                                                | Privilege for admin user                      |
+| Grant_priv  | GLOBAL,CATALOG,DATABASE,TABLE,RESOURCE,WORKLOAD GROUP | Privilege for granting privilege              |
+| Select_priv | GLOBAL,CATALOG,DATABASE,TABLE                         | Privilege for select data in tables           |
+| Load_priv   | GLOBAL,CATALOG,DATABASE,TABLE                         | Privilege for loading data into tables        |
+| Alter_priv  | GLOBAL,CATALOG,DATABASE,TABLE                         | Privilege for alter database or table         |
+| Create_priv | GLOBAL,CATALOG,DATABASE,TABLE                         | Privilege for creating database or table      |
+| Drop_priv   | GLOBAL,CATALOG,DATABASE,TABLE                         | Privilege for dropping database or table      |
+| Usage_priv  | RESOURCE,WORKLOAD GROUP                               | Privilege for using resource or workloadGroup |
++-------------+-------------------------------------------------------+-----------------------------------------------+
+```

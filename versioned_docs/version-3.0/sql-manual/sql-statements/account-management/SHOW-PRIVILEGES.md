@@ -28,25 +28,42 @@ under the License.
 
 ## Description
 
-This statement is used to display all permission items.
+`SHOW PRIVILEGES` statement is used to display the list of currently available privileges in the database system. It helps users understand the types of privileges supported by the system and the details of each privilege.
 
-grammar:
+## Syntax
 
-```SQL
+```sql
 SHOW PRIVILEGES
 ```
 
-## Example
+## Return Value
 
-1. display all permission items
+Returns the list of available privileges in the current database system.
 
-   ```SQL
-   SHOW PRIVILEGES
-   ```
+## Access Control Requirements
 
-## Keywords
+The user executing this SQL command does not need to have specific privileges to execute this command.
 
-    SHOW, PRIVILEGES
+## Examples
 
-## Best Practice
+View all privileges
 
+```sql
+SHOW PRIVILEGES
+```
+  
+```text
++-------------+-------------------------------------------------------+-----------------------------------------------+
+| Privilege   | Context                                               | Comment                                       |
++-------------+-------------------------------------------------------+-----------------------------------------------+
+| Node_priv   | GLOBAL                                                | Privilege for cluster node operations         |
+| Admin_priv  | GLOBAL                                                | Privilege for admin user                      |
+| Grant_priv  | GLOBAL,CATALOG,DATABASE,TABLE,RESOURCE,WORKLOAD GROUP | Privilege for granting privilege              |
+| Select_priv | GLOBAL,CATALOG,DATABASE,TABLE                         | Privilege for select data in tables           |
+| Load_priv   | GLOBAL,CATALOG,DATABASE,TABLE                         | Privilege for loading data into tables        |
+| Alter_priv  | GLOBAL,CATALOG,DATABASE,TABLE                         | Privilege for alter database or table         |
+| Create_priv | GLOBAL,CATALOG,DATABASE,TABLE                         | Privilege for creating database or table      |
+| Drop_priv   | GLOBAL,CATALOG,DATABASE,TABLE                         | Privilege for dropping database or table      |
+| Usage_priv  | RESOURCE,WORKLOAD GROUP                               | Privilege for using resource or workloadGroup |
++-------------+-------------------------------------------------------+-----------------------------------------------+
+```
