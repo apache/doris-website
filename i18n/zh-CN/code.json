@@ -50,5 +50,17 @@
     "archive.preview.date": {
         "message": "归档日期：{date}",
         "description": "Archive date"
+    },
+    "archive-tips-1": {
+        "message":"本页将归档 Apache Doris 暂停维护版本的所有文档，并提供 PDF 格式供用户下载。",
+        "description": "Archive tips"
+    },
+    "archive-tips-2": {
+        "message":"请注意，归档文档将不再进行任何更新，建议用户使用最新版本。",
+        "description": "Archive tips"
+    },
+    "archive-download-text":{
+        "message":"下载 PDF",
+        "description":"archive download text"
     }
 }
