@@ -36,9 +36,13 @@ REFRESH LDAP [ALL | FOR <user_name>];
 
 ## Optional Parameters
 
-**`<user_name>`**
+**1. `[ALL]`**
 
-The user whose LDAP cache information needs to be refreshed.
+Whether to refresh the LDAP cache information of all users.
+
+**2. `<user_name>`**
+
+The user whose LDAP cache information needs to be refreshed
 
 ## Access Control Requirements
 

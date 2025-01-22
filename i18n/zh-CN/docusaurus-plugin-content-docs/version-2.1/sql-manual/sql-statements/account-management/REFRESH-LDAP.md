@@ -36,7 +36,11 @@ REFRESH LDAP [ALL | FOR <user_name>];
 
 ## 可选参数
 
-**`<user_name>`**
+**1. `[ALL]`**
+
+是否刷新所有用户的 LDAP 缓存信息。
+
+**2. `<user_name>`**
 
 指定要刷新 LDAP 缓存信息的用户。
 
