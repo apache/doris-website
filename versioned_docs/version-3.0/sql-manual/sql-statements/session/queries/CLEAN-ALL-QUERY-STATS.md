@@ -24,46 +24,64 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
 This statement is used to clear query statistics
 
-grammar：
+## Syntax
 
 ```sql
-CLEAN [ALL| DATABASE | TABLE] QUERY STATS [[FOR db_name]|[FROM|IN] table_name]];
+CLEAN [ { ALL| DATABASE | TABLE } ] QUERY STATS [ { [ FOR <db_name>] | [ { FROM | IN } ] <table_name>]];
 ```
 
-Remarks：
+## Required Parameters
 
-1. If ALL is specified, all query statistics are cleared, including database and table, admin privilege is needed
-2. If DATABASE is specified, the query statistics of the specified database are cleared, alter privilege for this database is needed
-3. If TABLE is specified, the query statistics of the specified table are cleared, alter privilege for this table is needed
+**1. `ALL`**
 
-## Example
+> ALL Clears all statistics
 
-1. Clear all statistics
-2. 
-    ```sql
-    clean all query stats;
-    ```
+**2. `DATABASE`**
 
-2. Clear the specified database statistics
+> DATABASE clears statistics of a database
 
-    ```sql
-    clean database query stats for test_query_db;
-    ```
-3. Clear the specified table statistics
+**3. `TABLE`**
 
-    ```sql
-    clean table query stats from test_query_db.baseall;
-    ```
+> TABLE Indicates that statistics of a table are cleared
 
-## Keywords
+## Optional Parameters
 
-    CLEAN, QUERY, STATS
+**1. `<db_name>`**
 
-## Best Practice
+> If this parameter is set, the statistics of the corresponding database are cleared
+
+**2. `<table_name>`**
+
+> If this parameter is set, the statistics of the corresponding table are cleared
+
+
+## Access Control Requirements
+
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege    | Object   | Notes                 |
+|:-------------|:---------|:--------------------------|
+| ADMIN        | ALL      | If ALL is specified, the ADMIN permission is required     |
+| ALTER        | DATABASE | If the database is specified, the ALTER permission for the corresponding database is required |
+| ADMIN        | TABLE    | If you specify a table, you need alter permission for that table     |
+
+
+## Examples
+
+```sql
+clean all query stats
+```
+
+```sql
+clean database query stats for test_query_db
+```
+
+```sql
+clean table query stats from test_query_db.baseall
+```
+
 

@@ -24,64 +24,65 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-Display the running threads of the user. It should be noted that except the root user who can see all running threads, other users can only see their own running threads, and cannot see the running threads of other users.
+Displays the thread that the user is running
 
-Only display current connected FE's connection list by default, you can set session variable ```set show_all_fe_connection = true``` to show all FE's connection.
-
-grammar:
+## Syntax
 
 ```sql
 SHOW [FULL] PROCESSLIST
 ```
 
-illustrate:
+## Optional Parameters
 
-- CurrentConnected: Indicates whether the connection is currently connected
-- Id: It is the unique identifier of this thread. When we find that there is a problem with this thread, we can use the kill command to add this Id value to kill this thread. 
-- User: refers to the user who started this thread.
-- Host: Records the IP and port number of the client sending the request. Through this information, when troubleshooting the problem, we can locate which client and which process sent the request.
-- LoginTime: Timestamp when the connection is make.
-- Catalog: Catalog name.
-- Db: which database the currently executed command is on. If no database is specified, the value is NULL .
-- Command: refers to the command that the thread is executing at the moment. 
-- Time: Indicates the time the thread is in the current state.
-- State: The state of the thread, corresponding to Command.
-- QueryId: The ID of the current query statement.
-- Info: Generally recorded is the statement executed by the thread. By default, only the first 100 characters are displayed, that is, the statement you see may be truncated. To see all the information, you need to use show full processlist.
+**1. `FULL`**
+
+> 表示是否查看其他用户的连接信息
+
+## Return Value
+
+| column           | Instructions                                   |
+|------------------|--------------------------------------|
+| CurrentConnected | Whether the connection is current                              |
+| Id               | The unique identification of this thread                            |
+| User             | The user who started this thread                            |
+| Host             | The IP address and port number of the client sending the request are recorded                |
+| LoginTime        | Time to establish a connection                              |
+| Catalog          | In which data directory is the command currently executed                    |
+| Db               | On which database is the command being executed? If no database is specified, the value is NULL |
+| Command          | The command that the thread is executing at this moment                         |
+| Time             | Time when the previous command is submitted to the current status, in seconds                 |
+| State            | State of thread                                |
+| QueryId          | ID of the current query statement                           |
+| Info             | Generally, the statement executed by the thread is recorded, and only the first 100 characters are displayed by default         |
 
 Common Command types are as follows:
 
-- Query: The thread is executing a statement
-- Sleep: is waiting for a client to send it an execute statement
-- Quit: the thread is exiting
-- Kill : The kill statement is being executed to kill the specified thread
+| column | Instructions |
+| -- | -- |
+| Query | The thread is executing a statement |
+| Sleep | Waiting for the client to send it an execution statement |
+| Quit | The thread is exiting |
+| Kill | Executing the kill statement |
 
-Other types can refer to [MySQL official website for explanation](https://dev.mysql.com/doc/refman/5.6/en/thread-commands.html)
+## Usage Notes
+
+In addition to the root user can see all running threads, other users can only see their own running threads and cannot see other users' running threads.
 
 ## Examples
 
-1. View the threads running by the current user
+```sql
+SHOW PROCESSLIST
+```
 
-   ```SQL
-   SHOW PROCESSLIST
-   ```
-   return
-   ```
-   MySQL [test]> show full processlist;
-   +------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+
-   | CurrentConnected | Id   | User | Host            | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info                  |
-   +------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+
-   | Yes              |    0 | root | 127.0.0.1:34650 | 2023-09-06 12:01:02 | internal | test | Query   |    0 | OK    | c84e397193a54fe7-bbe9bc219318b75e | select 1              |
-   |                  |    1 | root | 127.0.0.1:34776 | 2023-09-06 12:01:07 | internal |      | Sleep   |   29 | EOF   | 886ffe2894314f50-8dd73a6ca06699e4 | show full processlist |
-   +------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+
-   ```
+```text
++------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+
+| CurrentConnected | Id   | User | Host            | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info                  |
++------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+
+| Yes              |    0 | root | 127.0.0.1:34650 | 2025-01-21 12:01:02 | internal | test | Query   |    0 | OK    | c84e397193a54fe7-bbe9bc219318b75e | select 1              |
+|                  |    1 | root | 127.0.0.1:34776 | 2025-01-21 12:01:07 | internal |      | Sleep   |   29 | EOF   | 886ffe2894314f50-8dd73a6ca06699e4 | show full processlist |
++------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+
+```
 
-## Keywords
-
-    SHOW, PROCESSLIST
-
-## Best Practice
 

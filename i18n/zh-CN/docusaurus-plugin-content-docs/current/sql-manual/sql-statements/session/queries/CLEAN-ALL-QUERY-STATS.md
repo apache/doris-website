@@ -24,47 +24,64 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## 描述
 
-该语句用请空查询统计信息
+该语句用清空查询统计信息
 
-语法：
+## 语法
 
 ```sql
-CLEAN [ALL| DATABASE | TABLE] QUERY STATS [[FOR db_name]|[FROM|IN] table_name]];
+CLEAN [ { ALL| DATABASE | TABLE } ] QUERY STATS [ { [ FOR <db_name>] | [ { FROM | IN } ] <table_name>]];
 ```
 
-说明：
+## 必选参数
 
-1. 如果指定 ALL，则清空所有查询统计信息，包括数据库和表的统计信息，需要 admin 权限
-2. 如果指定 DATABASE，则清空指定数据库的查询统计信息，需要对应 database 的 alter 权限
-3. 如果指定 TABLE，则清空指定表的查询统计信息，需要对应表的 alter 权限
+**1. `ALL`**
+
+> ALL 可以清空所有统计信息
+
+**2. `DATABASE`**
+
+> DATABASE 表示清空某个数据库的统计信息
+
+**3. `TABLE`**
+
+> TABLE 表示清空某个表的统计信息
+
+## 可选参数
+
+**1. `<db_name>`**
+
+> 若填写表示清空对应数据库的统计信息
+
+**2. `<table_name>`**
+
+> 若填写表示清空对应表的统计信息
+
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
+|:--------------|:-----------|:--------------------------|
+| ADMIN         | ALL        | 如果指定 ALL 则需要 ADMIN 权限     |
+| ALTER         | 库          | 如果指定数据库则需要对应数据库的 ALTER 权限 |
+| ADMIN         | 表          | 如果指定表则需要对应表的 alter 权限     |
+
 
 ## 示例
 
-1. 清空所有统计信息
+```sql
+clean all query stats
+```
 
-    ```sql
-    clean all query stats;
-    ```
+```sql
+clean database query stats for test_query_db
+```
 
-2. 清空指定数据库的统计信息
+```sql
+clean table query stats from test_query_db.baseall
+```
 
-    ```sql
-    clean database query stats for test_query_db;
-    ```
-3. 清空指定表的统计信息
-
-    ```sql
-    clean table query stats from test_query_db.baseall;
-    ```
-
-## 关键词
-
-    CLEAN, QUERY, STATS
-
-### 最佳实践
 
