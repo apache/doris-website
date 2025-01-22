@@ -38,7 +38,7 @@ CLEAN [ { ALL| DATABASE | TABLE } ] QUERY STATS [ { [ FOR <db_name>] | [ { FROM 
 
 **1. `ALL`**
 
-> ALL Clears all statistics
+> Use ALL to clear all query statistics
 
 **2. `DATABASE`**
 
