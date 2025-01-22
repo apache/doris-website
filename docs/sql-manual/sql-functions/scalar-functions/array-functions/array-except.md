@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 Returns an array of the elements in array1 but not in array2, without duplicates. If the input parameter is null, null is returned.
 
 ## Syntax
@@ -43,7 +43,7 @@ Returns an array, Special cases：
 - If the input parameter is null, null is returned.
 
 
-## example
+## Example
 
 ```sql
 CREATE TABLE array_type_table (

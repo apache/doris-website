@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 Use an optional lambda expression as an input parameter to perform corresponding expression calculations on the internal data of other input ARRAY parameters. Returns 1 when the calculation returns something other than 0; otherwise returns 0.
 There are one or more parameters input in the lambda expression, which must be consistent with the number of input array columns later. Legal scalar functions can be executed in lambda, aggregate functions, etc. are not supported.
 
@@ -46,7 +46,7 @@ ARRAY_EXISTS([lambda,] <arr1> [, <arr2> , ...] )
 Returns an array. Special cases:
 - If the array contains `NULL` values or is itself `NULL`, the result is `NULL`.
 
-## example
+## Example
 
 ```sql
 CREATE TABLE array_test2 (

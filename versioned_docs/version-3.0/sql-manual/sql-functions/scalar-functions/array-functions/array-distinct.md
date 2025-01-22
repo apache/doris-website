@@ -23,7 +23,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-## description
+## Description
 Return the array which has been removed duplicate values.
 Return NULL for NULL input.
 
@@ -41,7 +41,7 @@ ARRAY_DISTINCT(<arr> )
 Returns an array. Special case:
 - If the input array is NULL, the result is NULL.
 
-## example
+## Example
 
 ```sql
 CREATE TABLE array_test (

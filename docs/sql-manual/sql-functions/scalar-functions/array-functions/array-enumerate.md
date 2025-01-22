@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 Returns array sub item indexes e.g. [1, 2, 3, …, length (arr) ]
 
 ## Syntax
@@ -40,7 +40,7 @@ ARRAY_ENUMERATE(ARRAY<T> arr)
 ## Return Value
 Returns an array.
 
-## example
+## Example
 ```sql
 create table array_type_table(
     k1 INT, 

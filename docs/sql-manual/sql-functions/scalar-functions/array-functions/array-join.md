@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 Combine all elements in the array into a new string based on the separator (sep) and the string to replace NULL values (null_replace).
 
 ## Syntax
@@ -46,7 +46,7 @@ Returns a new string with the following special cases:
 - If `<sep>` is an empty string, no separator is applied.
 - If `<null_replace>` is an empty string or not specified, `NULL` elements in the array are discarded directly.
 
-## example
+## Example
 
 ```sql
 CREATE TABLE array_test (

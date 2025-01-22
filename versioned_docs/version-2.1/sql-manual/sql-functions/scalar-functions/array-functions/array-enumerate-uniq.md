@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 Returns an array the same size as the source array, indicating for each element what its position is among elements with the same value. For example, array_enumerate_uniq([1, 2, 1, 4]) = [1, 1, 2, 1].
 The array_enumerate_uniq function can take multiple arrays of the same size as arguments. In this case, uniqueness is considered for tuples of elements in the same positions in all the arrays. For example, array_enumerate_uniq([1, 2, 1, 1, 2], [2, 1, 2, 2, 1]) = [1, 1, 2, 3, 2].
 
@@ -41,7 +41,7 @@ ARRAY_ENUMERATE_UNIQ(<arr1> [,<arr2> , ... ])
 ## Return Value
 Returns an array.
 
-## example
+## Example
 
 ```sql
 select array_enumerate_uniq([1, 2, 3, 1, 2, 3]);
