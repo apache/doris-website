@@ -40,8 +40,8 @@ JSON_PARSE_NULLABLE_ERROR_TO_VALUE( <str> , <default_value>)
 
 | parameters| described|
 |------|------|
-| '<str>' | The input string in JSON format to be parsed. |
-| '<default_value>' | The default value returned when parsing fails. |
+| `<str>` | The input string in JSON format to be parsed. |
+| `<default_value>` | The default value returned when parsing fails. |
 
 ## Return Value
 If the input string is a valid JSON, it returns the corresponding JSON object.
@@ -51,50 +51,40 @@ If the input string is invalid or NULL, it returns the default value specified b
 
 1. Valid JSON string:
 ```sql
-
 SELECT JSON_PARSE_NULLABLE_ERROR_TO_VALUE('{"name": "John", "age": 30}', 'default');
-
 ```
+
 ```sql
-
-+---------------------------------------------------------------+
++------------------------------------------------------------------------------+
 | JSON_PARSE_NULLABLE_ERROR_TO_VALUE('{"name": "John", "age": 30}', 'default') |
-+---------------------------------------------------------------+
-| {"name": "John", "age": 30}                                    |
-+---------------------------------------------------------------+
-
++------------------------------------------------------------------------------+
+| {"name": "John", "age": 30}                                                  |
++------------------------------------------------------------------------------+
 ```
+
 2. Invalid JSON string:
 ```sql
-
 SELECT JSON_PARSE_NULLABLE_ERROR_TO_VALUE('{"name": "John", "age": }', 'default');
-
 ```
 
 ```sql
-
-+---------------------------------------------------------------+
++----------------------------------------------------------------------------+
 | JSON_PARSE_NULLABLE_ERROR_TO_VALUE('{"name": "John", "age": }', 'default') |
-+---------------------------------------------------------------+
-| default                                                       |
-+---------------------------------------------------------------+
-
++----------------------------------------------------------------------------+
+| default                                                                    |
++----------------------------------------------------------------------------+
 ```
 
 3. Input is NULL:
 
 ```sql
-
 SELECT JSON_PARSE_NULLABLE_ERROR_TO_VALUE(NULL, 'default');
-
 ```
 
 ```sql
-
 +---------------------------------------------------------------+
 | JSON_PARSE_NULLABLE_ERROR_TO_VALUE(NULL, 'default')           |
 +---------------------------------------------------------------+
 | default                                                       |
 +---------------------------------------------------------------+
-
 ```

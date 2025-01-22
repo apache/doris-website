@@ -54,6 +54,7 @@ Returns an invalid JSON object (usually `{}`).
 SELECT JSON_PARSE_NOTNULL_ERROR_TO_INVALID('{"name": "Alice", "age": 30}') AS parsed_json;
 
 ```
+
 ```sql
 +---------------------------+
 | parsed_json               |

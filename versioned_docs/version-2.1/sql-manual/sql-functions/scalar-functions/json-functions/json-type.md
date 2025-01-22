@@ -41,7 +41,7 @@ Used to determine the type of the field specified by `json_path` in the JSONB da
 ## Syntax
 
 ```sql
-STRING JSON_TYPE( <JSON j> )
+JSON_TYPE( <json>, <json_path> )
 ```
 
 ## Alias
@@ -53,7 +53,8 @@ STRING JSON_TYPE( <JSON j> )
 
 | Parameter | Description |
 |------|------|
-| `<JSON j>` | The JSON string to check the type of. |
+| `<json>` | The JSON string to check the type of. |
+| `<json_path>` | JSON path, which specifies the location of the field in JSON. The path is usually given in $. At the beginning, use. to represent the hierarchical structure. |
 
 
 ## Return Value
@@ -73,37 +74,28 @@ JSON_TYPE returns the type of the outermost value in the JSON document. If the J
 1. JSON is of string type:
 
 ```sql
-SELECT JSON_TYPE('"Hello, World!"');
+SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.name');
 ```
 
 ```sql
-+------------------------------------------+
-| JSON_TYPE('"Hello, World!"')            |
-+------------------------------------------+
-| STRING                                   |
-+------------------------------------------+
++-------------------------------------------------------------------+
+| jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.name') |
++-------------------------------------------------------------------+
+| string                                                            |
++-------------------------------------------------------------------+
 ```
 
 2. JSON is of number type:
 
 ```sql
-SELECT JSON_TYPE('123');
+SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.age');
 ```
+
 ```sql
-+------------------------------------------+
-| JSON_TYPE('123')                        |
-+------------------------------------------+
-| NUMBER                                   |
-+------------------------------------------+
++------------------------------------------------------------------+
+| jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.age') |
++------------------------------------------------------------------+
+| int                                                              |
++------------------------------------------------------------------+
 ```
-3. JSON is of null type:
-```sql
-SELECT JSON_TYPE('null');
-```
-```sql
-+------------------------------------------+
-| JSON_TYPE('null')                        |
-+------------------------------------------+
-| NULL                                     |
-+------------------------------------------+
-```
+

@@ -30,7 +30,9 @@ This function is used to extract a field's value from a JSON document and conver
 
 ## Syntax
 
-` GET_JSON_STRING( <json_str>, <json_path>)`
+```sql
+GET_JSON_STRING( <json_str>, <json_path>)
+```
 
 ## Required Parameters
 

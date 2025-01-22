@@ -46,79 +46,39 @@ This function is used to check whether a JSON document contains a specified JSON
 | `<json_path>` | An optional JSON path to specify the subdocument to check. If not provided, the root document is used by default. |
 
 ## Return Value
-- If `json_elem` exists in `json_doc`, it returns 1.
-- If `json_elem` does not exist in `json_doc`, it returns 0.
+- If `<json_path>` exists in `json_doc`, it returns 1.
+- If `<json_path>` does not exist in `json_doc`, it returns 0.
 - If any parameter is invalid or the JSON document format is incorrect, it returns `NULL`.
 
 ## Examples
 
 ```sql
 
-SET @j = '{"a": 1, "b": 2, "c": {"d": 4}}';
-SET @j2 = '1';
-SELECT JSON_CONTAINS(@j, @j2, '$.a');
+SELECT JSON_CONTAINS('{"a": 1, "b": 2, "c": {"d": 4}}', '1', '$.a');
 
 ```
 
 ```sql
-
-+-------------------------------+
-| JSON_CONTAINS(@j, @j2, '$.a') |
-+-------------------------------+
-|                             1 |
-+-------------------------------+
-
-```
-```sql
-
-SELECT JSON_CONTAINS(@j, @j2, '$.b');
-+-------------------------------+
-| JSON_CONTAINS(@j, @j2, '$.b') |
-+-------------------------------+
-|                             0 |
-+-------------------------------+
-
-```
-```sql
-
-SET @j2 = '{"d": 4}';
-SELECT JSON_CONTAINS(@j, @j2, '$.a');
++------------------------------------------------------------------------------------------+
+| json_contains(cast('{"a": 1, "b": 2, "c": {"d": 4}}' as JSON), cast('1' as JSON), '$.a') |
++------------------------------------------------------------------------------------------+
+|                                                                                        1 |
++------------------------------------------------------------------------------------------+
 
 ```
 
-```sql
-
-+-------------------------------+
-| JSON_CONTAINS(@j, @j2, '$.a') |
-+-------------------------------+
-|                             0 |
-+-------------------------------+
-```
-
-```sql
-
-SELECT JSON_CONTAINS(@j, @j2, '$.c');
-
-```
-
-```sql
-
-+-------------------------------+
-| JSON_CONTAINS(@j, @j2, '$.c') |
-+-------------------------------+
-|                             1 |
-+-------------------------------+
-
-```
 
 ```sql
 
 SELECT json_contains('[1, 2, {"x": 3}]', '1');
-+----------------------------------------+
-| json_contains('[1, 2, {"x": 3}]', '1') |
-+----------------------------------------+
-|                                      1 |
-+----------------------------------------+
 
 ```
 
+```sql
++-------------------------------------------------------------------------+
+| json_contains(cast('[1, 2, {"x": 3}]' as JSON), cast('1' as JSON), '$') |
++-------------------------------------------------------------------------+
+|                                                                       1 |
++-------------------------------------------------------------------------+
+
+```

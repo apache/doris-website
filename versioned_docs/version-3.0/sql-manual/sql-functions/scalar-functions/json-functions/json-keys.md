@@ -50,8 +50,8 @@ Where json_doc is a JSON document, and path is an optional parameter used to det
 
 ## Return Value
 
-- Returns a list of key names (a JSON array) for the JSON document.
-- Returns NULL if str is not a valid JSON object.
+- Returns a list of key names (a array) for the JSON document.
+- Returns NULL if `<str>` is not a valid JSON object.
 - If the JSON object has no keys, an empty array is returned.
 
 ## Usage Notes

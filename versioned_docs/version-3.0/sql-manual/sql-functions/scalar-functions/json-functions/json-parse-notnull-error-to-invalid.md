@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_parse_notnull_error_to_invalid",
+    "title": "JSON_PARSE_NOTNULL_ERROR_TO_INVALID",
     "language": "en"
 }
 ---
@@ -54,6 +54,7 @@ Returns an invalid JSON object (usually `{}`).
 SELECT JSON_PARSE_NOTNULL_ERROR_TO_INVALID('{"name": "Alice", "age": 30}') AS parsed_json;
 
 ```
+
 ```sql
 +---------------------------+
 | parsed_json               |
@@ -62,3 +63,4 @@ SELECT JSON_PARSE_NOTNULL_ERROR_TO_INVALID('{"name": "Alice", "age": 30}') AS pa
 +---------------------------+
 
 ```
+

@@ -31,7 +31,7 @@ The JSON_VALID function returns 0 or 1 to indicate whether the input is a valid 
 ## Syntax
 
 ```sql
-JSONB JSON_VALID( <str> )
+JSON_VALID( <str> )
 
 ```
 
@@ -81,4 +81,3 @@ SELECT json_valid(NULL);
 +------------------+
 
 ```
-

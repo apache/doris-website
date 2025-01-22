@@ -31,7 +31,7 @@ Function is used to extract the value of a field from a JSON document and conver
 ## Syntax
 
 ```sql
-DOUBLE GET_JSON_DOUBLE( <json_str>, <json_path>)
+GET_JSON_DOUBLE( <json_str>, <json_path>)
 ```
 
 ## Required Parameters

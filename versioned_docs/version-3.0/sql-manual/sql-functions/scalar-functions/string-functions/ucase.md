@@ -29,7 +29,7 @@ under the License.
 Used to convert a string to uppercase letters
 ## Alias
 
-- upper
+- UPPER
 
 ## Syntax
 
@@ -58,4 +58,3 @@ SELECT ucase("aBc123");
 | ABC123          |
 +-----------------+
 ```
-

@@ -31,7 +31,7 @@ This function is used to extract a field's value from a JSON document and conver
 ## Syntax
 
 ```sql
- GET_JSON_STRING( <json_str>, <json_path>)
+GET_JSON_STRING( <json_str>, <json_path>)
 ```
 
 ## Required Parameters

@@ -28,7 +28,10 @@ under the License.
 The JSON_LENGTH function returns the length or number of elements of a given JSON document. If the JSON document is an array, the number of elements in the array is returned; if the JSON document is an object, the number of key-value pairs in the object is returned. Returns NULL if the JSON document is empty or invalid.
 
 ## Syntax
-`JSON_LENGTH(JSON <json_str>, <json_path>)`
+
+```sql
+JSON_LENGTH(<json_str> [ , <json_path> ])
+```
 
 ## Required Parameters
 
@@ -39,7 +42,7 @@ The JSON_LENGTH function returns the length or number of elements of a given JSO
 ## Optional Parameters
 | parameters| described|
 |------|------|
-| `<rhs>`| If a path is specified, the JSON_LENGTH() function returns the length of the data that matches the path in the JSON document, otherwise it returns the length of the JSON document|
+| `<json_path>`| If a path is specified, the JSON_LENGTH() function returns the length of the data that matches the path in the JSON document, otherwise it returns the length of the JSON document|
 
 ## Usage Notes
 This function calculates the length of a JSON document based on the following rules:
@@ -64,7 +67,7 @@ SELECT json_length('{"k1":"v31","k2":300}');
 +--------------------------------------+
 | json_length('{"k1":"v31","k2":300}') |
 +--------------------------------------+
-| 2 |
+| 2                                    |
 +--------------------------------------+
 ```
 ```sql
@@ -74,7 +77,7 @@ SELECT json_length('"abc"');
 +----------------------+
 | json_length('"abc"') |
 +----------------------+
-| 1 |
+| 1                    |
 +----------------------+
 ```
 ```sql
@@ -84,6 +87,6 @@ SELECT json_length('{"x": 1, "y": [1, 2]}', '$.y');
 +---------------------------------------------+
 | json_length('{"x": 1, "y": [1, 2]}', '$.y') |
 +---------------------------------------------+
-| 2 |
+| 2                                           |
 +---------------------------------------------+
 ```

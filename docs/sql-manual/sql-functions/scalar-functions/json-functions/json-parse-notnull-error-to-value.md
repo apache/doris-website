@@ -42,8 +42,8 @@ JSON_PARSE_NOTNULL_ERROR_TO_VALUE(< str >, <default_value>)
 
 | parameters| described|
 |------|------|
-| '<str>' | The JSON string to parse. This parameter should be a valid JSON string. If the JSON format is invalid, the function returns default_value. |
-| '<default_value>' | The default value returned when parsing the error. This parameter can be of any type and is used to replace invalid JSON-formatted data. |
+| `<str>` | The JSON string to parse. This parameter should be a valid JSON string. If the JSON format is invalid, the function returns default_value. |
+| `<default_value>` | The default value returned when parsing the error. This parameter can be of any type and is used to replace invalid JSON-formatted data. |
 
 
 ## Return Value
