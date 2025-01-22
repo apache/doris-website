@@ -24,17 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
 This statement is used to cancel an ongoing BACKUP task.
 
-grammar:
+## Syntax
 
 ```sql
-CANCEL BACKUP FROM db_name;
+CANCEL BACKUP FROM <db_name>;
 ```
+
+## Parameters
+
+`<db_name>`
+
+The name of the database to which the backup task belongs.
 
 ## Example
 
@@ -44,8 +48,3 @@ CANCEL BACKUP FROM db_name;
 CANCEL BACKUP FROM example_db;
 ```
 
-## Keywords
-
-     CANCEL, BACKUP
-
-## Best Practice

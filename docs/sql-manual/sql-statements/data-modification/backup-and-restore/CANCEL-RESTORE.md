@@ -30,13 +30,19 @@ under the License.
 
 This statement is used to cancel an ongoing RESTORE task.
 
-grammar:
+## Syntax
 
 ```sql
-CANCEL RESTORE FROM db_name;
+CANCEL RESTORE FROM <db_name>;
 ```
 
-Notice:
+## Parameters
+
+`<db_name>`
+
+The name of the database to which the recovery task belongs.
+
+## Usage Notes
 
 - When cancellation is around a COMMIT or later stage of recovery, the table being recovered may be rendered inaccessible. At this time, data recovery can only be performed by executing the recovery job again.
 
@@ -48,8 +54,3 @@ Notice:
 CANCEL RESTORE FROM example_db;
 ```
 
-## Keywords
-
-     CANCEL, RESTORE
-
-## Best Practice
