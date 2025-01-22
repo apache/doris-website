@@ -24,31 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## length
 ## 描述
+
+返回字符串的字节数。
+
 ## 语法
 
-`INT length(VARCHAR str)`
+```sql
+LENGTH ( <str> )
+```
 
+## 参数
 
-返回字符串的字节。
+| 参数      | 说明            |
+|---------|---------------|
+| `<str>` | 需要计算字节的字符串    |
+
+## 返回值
+
+字符串 `<str>` 的字节数。
 
 ## 举例
 
+```sql
+SELECT LENGTH("abc"),length("中国")
 ```
-mysql> select length("abc");
-+---------------+
-| length('abc') |
-+---------------+
-|             3 |
-+---------------+
 
-mysql> select length("中国");
-+------------------+
-| length('中国')   |
-+------------------+
-|                6 |
-+------------------+
+```text
++---------------+------------------+
+| length('abc') | length('中国')   |
++---------------+------------------+
+|             3 |                2 |
++---------------+------------------+
 ```
-### keywords
-    LENGTH
