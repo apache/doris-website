@@ -28,7 +28,9 @@ under the License.
 
 This statement is used to cancel the decommissioning operation of a BE node.
 
-> This statement is not supported in decoupling storage and computing mode.
+:::tip
+This statement is not supported in decoupling storage and computing mode.
+:::
 
 ## Syntax
 

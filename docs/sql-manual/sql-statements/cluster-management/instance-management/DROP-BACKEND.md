@@ -44,15 +44,15 @@ be_identifier
 
 ## Required Parameters
 
-**<be_host>**
+**1. <be_host>**
 
 > It can be the hostname or IP address of the BE node.
 
-**<heartbeat_port>**
+**2. <heartbeat_port>**
 
 > The heartbeat port of the BE node, the default is 9050.
 
-**<backend_id>**
+**3. <backend_id>**
 
 > The ID of the BE node.
 

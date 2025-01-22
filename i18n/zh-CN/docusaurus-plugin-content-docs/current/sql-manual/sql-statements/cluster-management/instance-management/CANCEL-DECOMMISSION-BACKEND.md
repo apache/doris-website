@@ -28,7 +28,9 @@ under the License.
 
 该语句用于撤销一个 BE 节点下线操作。
 
-> 存算分离模式下不支持此命令
+:::tip
+存算分离模式下不支持此命令
+:::
 
 ## 语法
 
@@ -46,15 +48,15 @@ be_identifier
 
 ## 必选参数
 
-**<be_host>**
+**1. <be_host>**
 
 > 可以是 BE 节点的主机名或 IP 地址
 
-**<heartbeat_port>**
+**2. <heartbeat_port>**
 
 > BE 节点的心跳端口，默认为 9050 
 
-**<backend_id>**
+**3. <backend_id>**
 
 > BE 节点的 ID
 

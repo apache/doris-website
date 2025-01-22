@@ -34,7 +34,9 @@ under the License.
 | `disable_query` | 是否禁用查询，默认为`false`。设置为`true`后，将不会再有新的查询请求规划到这台 BE 节点上。                                                                                                    |
 | `disable_load`  | 是否禁用导入，默认为`false`。设置为`true`后，将不会再有新的导入请求规划到这台 BE 节点上。                                                                                                    |
 
-> This statement is not supported in decoupling storage and computing mode.
+:::tip
+This statement is not supported in decoupling storage and computing mode.
+:::
 
 ## 语法
 
@@ -55,15 +57,15 @@ be_identifier
 
 ## 必选参数
 
-**<be_host>**
+**1. <be_host>**
 
 > 可以是 BE 节点的主机名或 IP 地址
 
-**<heartbeat_port>**
+**2. <heartbeat_port>**
 
 > BE 节点的心跳端口，默认为 9050
 
-**<backend_id>**
+**3. <backend_id>**
 
 > BE 节点的 ID
 

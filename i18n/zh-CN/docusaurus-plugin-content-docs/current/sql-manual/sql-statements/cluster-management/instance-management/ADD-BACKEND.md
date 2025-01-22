@@ -31,22 +31,22 @@ ADD BACKEND 命令用于向 Doris 集群中添加一个或多个 BE 节点。此
 ## 语法
 
 ```sql
-ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>"...] [PROPERTIES ("<key>"="<value>", ...)]
+ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>"...] [PROPERTIES ("<key>"="<value>" [, ...] )]
 ```
 
 ## 必选参数
 
-**<host>**
+**1. `<host>`**
 
 > 可以是 BE 节点的主机名或 IP 地址
 
-**<heartbeat_port>**
+**2. `<heartbeat_port>`**
 
 > BE 节点的心跳端口，默认为 9050
 
 ## 可选参数
 
-**PROPERTIES ("key"="value", ...)**
+**1. PROPERTIES ("key"="value", ...)**
 
 > 一组键值对，用于定义 BE 节点的附加属性。这些属性可用于自定义正在添加的 BE 的配置。可用属性包括：
 > - `tag.location`：存算一体模式下用于指定 BE 节点所属的资源组。

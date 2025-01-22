@@ -31,16 +31,16 @@ The ADD BACKEND is used to add one or more BE nodes to the Doris cluster. This c
 ## Syntax
 
 ```sql
-ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>"...] [PROPERTIES ("<key>"="<value>", ...)]
+ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>" [, ...]] [PROPERTIES ("<key>"="<value>" [, ...] )]
 ```
 
 ## Required Parameters
 
-**<host>**
+**1. <host>**
 
 > It can be the hostname or IP address of the BE node.
 
-**<heartbeat_port>**
+**2. <heartbeat_port>**
 
 > The heartbeat port of the BE node, the default is 9050.
 
