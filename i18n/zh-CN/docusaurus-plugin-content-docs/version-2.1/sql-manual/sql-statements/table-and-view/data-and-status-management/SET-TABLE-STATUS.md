@@ -46,16 +46,16 @@ under the License.
 ## 语法
 
 ```sql
-ADMIN SET TABLE <table_name> STATUS PROPERTIES ("key" = "value" [, ...]);
+ADMIN SET TABLE <table_name> STATUS PROPERTIES ("<key>" = "<value>" [, ...]);
 ```
 
 其中：
 
 ```sql
-key
+<key>
   : "state"
 
-value
+<value>
   : "NORMAL"
   | "ROLLUP"
   | "SCHEMA_CHANGE"

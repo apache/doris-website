@@ -35,19 +35,19 @@ The `CANCEL REBALANCE DISK` statement is used to cancel the high-priority disk d
 ## Syntax
 
 ```sql
-ADMIN CANCEL REBALANCE DISK [ ON ( "host1:port1" [, "host2:port2" ... ] ) ];
+ADMIN CANCEL REBALANCE DISK [ ON ( "<host>:<port>" [, ... ] ) ];
 ```
 
 Where:
 
 ```sql
-host:port
+<host>:<port>
   : Composed of the hostname (or IP address) and heartbeat port.
 ```
 
 ## Optional Parameters
 
-**1. `<ON ("host:port" [, ...])>`**
+**1. `"<host>:<port>"`**
 
 > Specifies the list of BE nodes for which the high-priority disk balancing needs to be canceled.
 >

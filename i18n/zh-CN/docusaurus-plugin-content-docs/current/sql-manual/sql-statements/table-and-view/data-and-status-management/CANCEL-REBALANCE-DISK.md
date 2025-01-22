@@ -33,19 +33,19 @@ under the License.
 ## 语法
 
 ```sql
-ADMIN CANCEL REBALANCE DISK [ ON ( "host1:port1" [, "host2:port2" ... ] ) ];
+ADMIN CANCEL REBALANCE DISK [ ON ( "<host>:<port>" [, ... ] ) ];
 ```
 
 其中：
 
 ```sql
-host:port
+<host>:<port>
   : 由主机名（或IP地址）和心跳端口组成
 ```
 
 ## 可选参数
 
-**1. `<ON ("host:port" [, ...])>`**
+**1. `"<host>:<port>"`**
 
 > 指定需要取消优先磁盘均衡的 BE 节点列表。
 >

@@ -46,16 +46,16 @@ The `SET TABLE STATUS` statement is used to manually set the status of an OLAP t
 ## Syntax
 
 ```sql
-ADMIN SET TABLE <table_name> STATUS PROPERTIES ("key" = "value" [, ...]);
+ADMIN SET TABLE <table_name> STATUS PROPERTIES ("<key>" = "<value>" [, ...]);
 ```
 
 Where:
 
 ```sql
-key
+<key>
   : "state"
 
-value
+<value>
   : "NORMAL"
   | "ROLLUP"
   | "SCHEMA_CHANGE"
