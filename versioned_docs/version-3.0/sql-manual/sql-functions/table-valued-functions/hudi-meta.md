@@ -1,7 +1,7 @@
 ---
 {
-"title": "HUDI_META",
-"language": "zh-CN"
+  "title": "HUDI_META",
+  "language": "en"
 }
 ---
 
@@ -25,11 +25,11 @@ under the License.
 -->
 
 
-## 描述
+## Description
 
-hudi_meta 表函数（table-valued-function,tvf），可以用于读取 hudi 表的各类元数据信息，如操作历史、表的时间线、文件元数据等。
+hudi_meta table-valued-function(tvf), using for read hudi metadata, operation history, timeline of table, instant state etc.
 
-## 语法
+## Syntax
 
 ```sql
 HUDI_META(
@@ -38,31 +38,30 @@ HUDI_META(
   );
 ```
 
-## 必填参数
-`hudi_meta` 表函数 tvf 中的每一个参数都是一个 `"key"="value"` 对
+## Required Parameters
+Each parameter in the `hudi_meta` table function (tvf) is a `"key"="value"` pair.
 
-| 字段             | 说明                                                      |
-|----------------|---------------------------------------------------------|
-| `<table>`      | 完整的表名，需要按照目录名。库名。表名的格式，填写需要查看的 Hudi 表名。                 |
-| `<query_type>` | 想要查看的元数据类型，目前仅支持 `timeline`。                            |
+| Field        | Description                                                                                                                        |
+|--------------|------------------------------------------------------------------------------------------------------------------------------------|
+| `<table>`    | The full table name, which must be specified in the format of `database_name.table_name` for the hudi table that you want to view. |
+| `<query_type>` | The type of metadata you want to view. Currently, only `timeline` is supported.                                                    |
 
 
-## 示例（Examples）
+## Examples
 
-- 读取并访问 hudi 表格式的 timeline 元数据。
+- Read and access the hudi tabular metadata for timeline.
 
     ```sql
     select * from hudi_meta("table" = "ctl.db.tbl", "query_type" = "timeline");
-    
     ```
 
-- 可以配合`desc function`使用
+- Can be used with `desc function` :
 
     ```sql
     desc function hudi_meta("table" = "ctl.db.tbl", "query_type" = "timeline");
     ```
 
-- 查看 hudi 表的 timeline
+- Inspect the hudi table timeline
 
     ```sql
     select * from hudi_meta("table" = "hudi_ctl.test_db.test_tbl", "query_type" = "timeline");
@@ -78,7 +77,7 @@ HUDI_META(
     +-------------------+--------+--------------------------+-----------+-----------------------+
     ```
 
-- 根据 timestamp 字段筛选
+- Filtered by timestamp
 
     ```sql
     select * from hudi_meta("table" = "hudi_ctl.test_db.test_tbl", "query_type" = "timeline") where timestamp = 20240724195843565;
