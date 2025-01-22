@@ -26,95 +26,92 @@ under the License.
 
 
 
+
 ## Description
 
-This statement is used to display the execution of the specified export task
+This statement is used to display the execution status of a specified export job.
 
-grammar:
+## Syntax
 
 ```sql
 SHOW EXPORT
 [FROM db_name]
   [
     WHERE
-      [ID=your_job_id]
+      [ID = your_job_id]
       [STATE = ["PENDING"|"EXPORTING"|"FINISHED"|"CANCELLED"]]
-      [LABEL=your_label]
+      [LABEL = your_label]
    ]
-[ORDER BY...]
+[ORDER BY ...]
 [LIMIT limit];
 ```
 
-illustrate:
-      1. If db_name is not specified, the current default db is used
-      2. If STATE is specified, matches EXPORT state
-      3. You can use ORDER BY to sort any combination of columns
-      4. If LIMIT is specified, limit matching records are displayed. Otherwise show all
+## Optional Parameters
 
-The meaning of each column in the result returned by the `show export` command is as follows:
+- `db_name`: Optional parameter. If not specified, the current default database will be used.
 
-- JobId: The unique ID of the job
-- Label: The label of the export job. If not specified in the export, the system will generate one by default.
-- State: Job status:
-  - PENDING: Job pending scheduling
-  - EXPORTING: Data export in progress
-  - FINISHED: Job successful
-  - CANCELLED: Job failed
-- Progress: Job progress. This progress is based on query plans. For example, if there are a total of 10 threads and 3 have been completed, the progress is 30%.
-- TaskInfo: Job information displayed in JSON format:
-  - db: Database name
-  - tbl: Table name
-  - partitions: Specified partitions for export. An empty list indicates all partitions.
-  - column\_separator: Column separator for the export file.
-  - line\_delimiter: Line delimiter for the export file.
-  - tablet num: Total number of tablets involved.
-  - broker: Name of the broker used.
-  - coord num: Number of query plans.
-  - max\_file\_size: Maximum size of an export file.
-  - delete\_existing\_files: Whether to delete existing files and directories in the export directory.
-  - columns: Specified column names to export, empty value represents exporting all columns.
-  - format: File format for export
-- Path: Export path on the remote storage.
-- `CreateTime/StartTime/FinishTime`: Job creation time, scheduling start time, and end time.
-- Timeout: Job timeout time in seconds. This time is calculated from CreateTime.
-- ErrorMsg: If there is an error in the job, the error reason will be displayed here.
-- OutfileInfo: If the job is successfully exported, specific `SELECT INTO OUTFILE` result information will be displayed here.
+- `WHERE`: Optional parameter. If a filtering logic is specified, the data will be filtered based on that logic.
 
-## Example
+- `ORDER BY`: Optional parameter. Allows sorting by any column or column combination.
 
-1. Show all export tasks of default db
+- `limit`: Optional parameter. If specified, only the specified number of matching records will be shown; if not specified, all records will be displayed.
 
-   ```sql
-   SHOW EXPORT;
-   ```
 
-2. Display the export tasks of the specified db, sorted by StartTime in descending order
+## Return Value
 
-   ```sql
-    SHOW EXPORT FROM example_db ORDER BY StartTime DESC;
-   ```
+| Column      | DataType    | Note                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|-------------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| JobId       | string      | Unique ID of the job                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Label       | string      | The label of the export job. If not specified, the system will generate one by default.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| State       | string      | Job status: <br> - `PENDING`: Job waiting for scheduling <br> - `EXPORTING`: Data exporting <br> - `FINISHED`: Job successful <br> - `CANCELLED`: Job failed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Progress    | string      | Job progress. This progress is measured in query plan units. For example, if there are 10 threads and 3 are completed, the progress is 30%.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| TaskInfo    | json        | Job information displayed in JSON format: <br> - db: Database name <br> - tbl: Table name <br> - partitions: Specified partitions for export, `empty` list means all partitions <br> - column_separator: Column delimiter for the exported file <br> - line_delimiter: Line delimiter for the exported file <br> - tablet num: Total number of involved tablets <br> - broker: Name of the broker used <br> - coord num: Number of query plans <br> - max_file_size: Maximum size of an exported file <br> - delete_existing_files: Whether to delete existing files and directories in the export directory <br> - columns: Columns to export, empty value means export all columns <br> - format: File format of the export |
+| Path        | string      | Export path on remote storage                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| CreateTime  | string      | Job creation time                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| StartTime   | string      | Job start time                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| FinishTime  | string      | Job finish time                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Timeout     | int         | Job timeout (in seconds). The time is calculated from CreateTime.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ErrorMsg    | string      | If the job encounters an error, the error reason will be displayed here.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| OutfileInfo | string      | If the export job is successful, the specific `SELECT INTO OUTFILE` result information will be displayed here.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
-3. Display the export tasks of the specified db, the state is "exporting", and sort by StartTime in descending order
+## Access Control Requirements
 
-   ```sql
-   SHOW EXPORT FROM example_db WHERE STATE = "exporting" ORDER BY StartTime DESC;
-   ```
+The user executing this SQL command must have at least the following privileges:
 
-4. Display the export task of the specified db and specified job_id
+| Privilege    | Object              | Notes                                           |
+|:-------------|:--------------------|:------------------------------------------------|
+| SELECT_PRIV  | Database (Database) | Requires read access to the database and table. |
 
-   ```sql
-     SHOW EXPORT FROM example_db WHERE ID = job_id;
-   ```
 
-5. Display the specified db and specify the export task of the label
+## Examples
 
-   ```sql
-    SHOW EXPORT FROM example_db WHERE LABEL = "mylabel";
-   ```
+- Display all export jobs for the default db
 
-## Keywords
+    ```sql
+    SHOW EXPORT;
+    ```
 
-    SHOW, EXPORT
+- Display export jobs for a specified db, ordered by StartTime in descending order
 
-## Best Practice
+    ```sql
+     SHOW EXPORT FROM example_db ORDER BY StartTime DESC;
+    ```
+
+- Display export jobs for a specified db where the state is "exporting", ordered by StartTime in descending order
+
+    ```sql
+    SHOW EXPORT FROM example_db WHERE STATE = "exporting" ORDER BY StartTime DESC;
+    ```
+
+- Display export job for a specified db and job_id
+
+    ```sql
+      SHOW EXPORT FROM example_db WHERE ID = job_id;
+    ```
+
+- Display export job for a specified db and label
+
+    ```sql
+     SHOW EXPORT FROM example_db WHERE LABEL = "mylabel";
+    ```
 
