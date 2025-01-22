@@ -39,7 +39,7 @@ under the License.
 | 列名                      | 说明                                                                                                               |
 |-------------------------|------------------------------------------------------------------------------------------------------------------|
 | BackendId               | 当前 BE 的 ID                                                                                                       |
-| Host                    | 当前 BE 的 IP 地址或域名                                                                                                 |
+| Host                    | 当前 BE 的 IP 地址或主机名                                                                                                |
 | HeartbeatPort           | 当前 BE 的心跳服务通信端口                                                                                                  |
 | BePort                  | 当前 BE 的 thrift RPC 通信端口                                                                                          |
 | HttpPort                | 当前 BE 的 http 通信端口                                                                                                |
@@ -61,7 +61,7 @@ under the License.
 | ErrMsg                  | 当前 BE 心跳失败时的错误信息                                                                                                 |
 | Version                 | 当前 BE 的版本信息                                                                                                      |
 | Status                  | 当前 BE 的一些状态信息，以 JSON 格式展示，包括：上一次成功上报 tablet 的时间、上一次 StreamLoad 的时间、是否允许查询、是否允许导入等，需要注意的是，不同版本保存的信息会有些许差异         |
-| HeartbeatFailureCounter | 当前 BE 连续失败的心跳次数，如果次数超过 FE Master 配置`max_backend_heartbeat_failure_tolerance_count`（默认值为 1），则 isAlive 字段会置为 false |
+| HeartbeatFailureCounter | 当前 BE 连续失败的心跳次数，如果次数超过 FE Master 配置`max_backend_heartbeat_failure_tolerance_count`（默认值为 1），则 `Alive` 字段会置为 false |
 | NodeRole                | 当前 BE 的角色，有两种：`mix`是默认的角色，`computation`表示当前节点只用于联邦分析查询                                                           |
 
 ## 权限控制

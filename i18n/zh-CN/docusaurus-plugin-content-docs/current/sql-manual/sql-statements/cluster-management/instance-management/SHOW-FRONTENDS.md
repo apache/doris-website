@@ -36,27 +36,27 @@ SHOW FRONTENDS
 
 ## 返回值
 
-| 列名                 | 说明                                       |
-|--------------------|------------------------------------------|
+| 列名                 | 说明                                         |
+|--------------------|--------------------------------------------|
 | Name               | 当前 FE 在此 Doris 中的名称，该名称通常是一个以`fe`为前缀的随机字符串 |
-| Host               | 当前 FE 的 IP 地址或域名                         |
-| EditLogPort        | 当前 FE 的 bdbje 通信端口                       |
-| HttpPort           | 当前 FE 的 http 通信端口                        |
-| QueryPort          | 当前 FE 的 MySQL 协议通信端口                     |
-| RpcPort            | 当前 FE 的 thrift RPC 通信端口                  |
-| ArrowFlightSqlPort | 当前 FE 的 ArrowFlight 协议通信端口               |
-| Role               | 当前 FE 的角色，可能的值有 FOLLOWER 和 OBSERVER      |
-| IsMaster           | 当前 FE 是否被选举为 Master                      |
-| ClusterId          | 当前 Doris 集群的 ID，通常为一个随机生成的数字             |
-| Join               | 用于表示当前 FE 节点是否成功加入当前 Doris 集群            |
-| Alive              | 当前 FE 是否存活                               |
-| ReplayedJournalId  | 当前 FE 已经回放的最大元数据日志 ID                    |
-| LastStartTime      | 当前 FE 启动的时间戳                             |
-| LastHeartbeat      | 当前 FE 上一次成功发送心跳的时间戳                      |
-| IsHelper           | 当前 FE 是否为 bdbje 中的 helper 节点             |
-| ErrMsg             | 当前 FE 心跳失败时的错误信息                         |
-| Version            | 当前 FE 的版本信息                              |
-| CurrentConnected   | 当前客户端链接是否连接了当前 FE 节点                     |
+| Host               | 当前 FE 的 IP 地址或主机名                          |
+| EditLogPort        | 当前 FE 的 bdbje 通信端口                         |
+| HttpPort           | 当前 FE 的 http 通信端口                          |
+| QueryPort          | 当前 FE 的 MySQL 协议通信端口                       |
+| RpcPort            | 当前 FE 的 thrift RPC 通信端口                    |
+| ArrowFlightSqlPort | 当前 FE 的 ArrowFlight 协议通信端口                 |
+| Role               | 当前 FE 的角色，可能的值有 FOLLOWER 和 OBSERVER        |
+| IsMaster           | 当前 FE 是否被选举为 Master                        |
+| ClusterId          | 当前 Doris 集群的 ID，通常为一个随机生成的数字               |
+| Join               | 用于表示当前 FE 节点是否成功加入当前 Doris 集群              |
+| Alive              | 当前 FE 是否存活                                 |
+| ReplayedJournalId  | 当前 FE 已经回放的最大元数据日志 ID                      |
+| LastStartTime      | 当前 FE 启动的时间戳                               |
+| LastHeartbeat      | 当前 FE 上一次成功发送心跳的时间戳                        |
+| IsHelper           | 当前 FE 是否为 bdbje 中的 helper 节点               |
+| ErrMsg             | 当前 FE 心跳失败时的错误信息                           |
+| Version            | 当前 FE 的版本信息                                |
+| CurrentConnected   | 当前客户端链接是否连接了当前 FE 节点                       |
 
 ## 权限控制
 

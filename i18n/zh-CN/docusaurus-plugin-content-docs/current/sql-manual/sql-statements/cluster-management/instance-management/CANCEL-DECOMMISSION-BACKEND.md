@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL ALTER SYSTEM",
+    "title": "CANCEL DECOMMISSION BACKEND",
     "language": "zh-CN"
 }
 ---
@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-该语句用于撤销一个节点下线操作。
+该语句用于撤销一个 BE 节点下线操作。
 
 ## 语法
 
@@ -81,6 +81,6 @@ be_identifier
    ```
 
 2. 根据 BE 的 ID 从集群中安全下线一个节点
-    ```sql
-    CANCEL DECOMMISSION BACKEND "10002";
-    ```
+   ```sql
+   CANCEL DECOMMISSION BACKEND "10002";
+   ```

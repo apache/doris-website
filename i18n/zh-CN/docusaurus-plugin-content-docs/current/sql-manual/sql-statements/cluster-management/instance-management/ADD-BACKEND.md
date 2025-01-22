@@ -48,7 +48,7 @@ ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>"...
 
 **PROPERTIES ("key"="value", ...)**
 
-> 一组键值对，用于定义 BE 节点的附加属性。这些属性可用于自定义正在添加的后端的配置。可用属性包括：
+> 一组键值对，用于定义 BE 节点的附加属性。这些属性可用于自定义正在添加的 BE 的配置。可用属性包括：
 > - `tag.location`：存算一体模式下用于指定 BE 节点所属的资源组。
 > - `tag.compute_group_name`：存算分离模式下用于指定 BE 节点所属的计算组。
 
