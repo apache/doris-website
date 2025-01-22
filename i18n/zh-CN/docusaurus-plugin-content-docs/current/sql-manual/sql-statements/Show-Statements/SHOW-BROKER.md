@@ -34,8 +34,6 @@ under the License.
 SHOW BROKER;
 ```
 
-## 必选参数
-无
 
 ## 输出字段
 | 列名    | 类型 | 说明 |
