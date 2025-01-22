@@ -25,36 +25,31 @@ under the License.
 -->
 
 
+
+
 ## Description
 
-This statement is used to display installed plug-ins
+This statement is used to display installed plugins
 
-## Syntax
+grammar:
 
-```sql
+```SQL
 SHOW PLUGINS
 ```
 
-## Return Value
+This command will display all user-installed and system built-in plugins
 
-|Description|Version|JavaVersion|ClassName|SoName|Sources|Status|Properties|
-|-----------|-------|-----------|---------|------|-------|------|----------|
-|builtin audit loader, to load audit log to internal table|2.1.0|1.8.31|org.apache.doris.plugin.audit.AuditLoader||Builtin|INSTALLED|{}|
-|builtin audit logger|0.12.0|1.8.31|org.apache.doris.plugin.audit.AuditLogBuilder||Builtin|INSTALLED|{}|
-|builtin sql dialect converter|2.1.0|1.8.31|org.apache.doris.plugin.dialect.HttpDialectConverterPlugin||Builtin|INSTALLED|{}|
+## Examples
 
-## Permission Control
-
-The user executing this SQL command must have at least the following permissions:
-
-| Permissions         | Object   | Notes            |
-|:-----------|:-----|:--------------|
-| Admin_priv | The entire cluster | Requires administrative privileges for the entire cluster |
-
-## Example
-
-- Show installed plugins:
+1. Show installed plugins:
 
     ```SQL
     SHOW PLUGINS;
     ```
+
+## Keywords
+
+    SHOW, PLUGINS
+
+## Best Practice
+
