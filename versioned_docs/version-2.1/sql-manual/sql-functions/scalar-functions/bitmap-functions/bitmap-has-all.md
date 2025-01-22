@@ -24,33 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_has_all
-### description
-#### Syntax
+## Description
 
-`BOOLEAN BITMAP_HAS_ALL(BITMAP lhs, BITMAP rhs)`
+Determines whether one Bitmap contains all the elements of another Bitmap.
 
-Returns true if the first bitmap contains all the elements of the second bitmap.
-Returns true if the second bitmap contains an empty element.
+## Syntax
 
-### example
-
+```sql
+BITMAP_HAS_ALL(<bitmap1>, <bitmap2>)
 ```
-mysql> select bitmap_has_all(bitmap_from_string("0, 1, 2"), bitmap_from_string("1, 2"));
+
+## Parameters
+
+| Parameter   | Description       |
+|-------------|-------------------|
+| `<bitmap1>` | The first Bitmap  |
+| `<bitmap2>` | The second Bitmap |
+
+## Return Value
+
+Returns `true` if `<bitmap1>` contains all the elements of `<bitmap2>`;  
+Returns `true` if `<bitmap2>` contains no elements;  
+Otherwise, returns `false`.
+
+## Examples
+
+To check if one Bitmap contains all elements of another Bitmap:
+
+```sql
+select bitmap_has_all(bitmap_from_string('0, 1, 2'), bitmap_from_string('1, 2'));
+```
+
+The result will be:
+
+```text
 +---------------------------------------------------------------------------+
 | bitmap_has_all(bitmap_from_string('0, 1, 2'), bitmap_from_string('1, 2')) |
 +---------------------------------------------------------------------------+
 |                                                                         1 |
 +---------------------------------------------------------------------------+
+```
 
-mysql> select bitmap_has_all(bitmap_empty(), bitmap_from_string("1, 2"));
+To check if an empty Bitmap contains all elements of another Bitmap:
+
+```sql
+select bitmap_has_all(bitmap_empty(), bitmap_from_string('1, 2'));
+```
+
+The result will be:
+
+```text
 +------------------------------------------------------------+
 | bitmap_has_all(bitmap_empty(), bitmap_from_string('1, 2')) |
 +------------------------------------------------------------+
 |                                                          0 |
 +------------------------------------------------------------+
 ```
-
-### keywords
-
-    BITMAP_HAS_ALL,BITMAP

@@ -24,32 +24,57 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_max
 ## 描述
+
+计算并返回 Bitmap 中的最大值。
+
 ## 语法
 
-`BIGINT BITMAP_MAX(BITMAP input)`
-
-计算并返回 bitmap 中的最大值.
-
-## 举例
-
+```sql
+bitmap_max(<bitmap>)
 ```
-mysql> select bitmap_max(bitmap_from_string('')) value;
+
+## 参数
+
+| 参数        | 描述             |
+|-----------|----------------|
+| `<bitmap>` | Bitmap 类型列或表达式 |
+
+## 返回值
+
+Bitmap 中的最大值。  
+若 Bitmap 为空则返回 `NULL`。
+
+## 示例
+
+计算一个空 Bitmap 的最大值：
+
+```sql
+select bitmap_max(bitmap_from_string('')) value;
+```
+
+结果如下：
+
+```text
 +-------+
 | value |
 +-------+
 |  NULL |
 +-------+
+```
 
-mysql> select bitmap_max(bitmap_from_string('1,9999999999')) value;
+计算包含多个元素的 Bitmap 的最大值：
+
+```sql
+select bitmap_max(bitmap_from_string('1,9999999999')) value;
+```
+
+结果如下：
+
+```text
 +------------+
 | value      |
 +------------+
 | 9999999999 |
 +------------+
 ```
-
-### keywords
-
-    BITMAP_MAX,BITMAP
