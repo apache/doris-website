@@ -987,8 +987,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ngram-search",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/parse-url",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/protocol",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/right",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/split-by-char",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/translate",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/tokenize",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain",
