@@ -40,8 +40,8 @@ ARRAY_SORTBY(<lambda>, <arr> [, ...])
 
 | Parameter | Description | 
 | --- | --- |
-| `lambda` | A lambda expression where the input parameters must match the number of columns in the given array. The expression can execute valid scalar functions but does not support aggregate functions. |
-| `arr` | ARRAY array |
+| `<lambda>` | A lambda expression where the input parameters must match the number of columns in the given array. The expression can execute valid scalar functions but does not support aggregate functions. |
+| `<arr>` | ARRAY array |
 
 ## Return Value
 
