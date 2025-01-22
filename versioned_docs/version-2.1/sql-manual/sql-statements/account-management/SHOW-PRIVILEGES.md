@@ -38,11 +38,15 @@ SHOW PRIVILEGES
 
 ## Return Value
 
-Returns the list of available privileges in the current database system.
+  | Column | Description |
+  | -- | -- |
+  | Privilege | Privilege name |
+  | Context | Applicable range |
+  | Comment | Description |
 
 ## Access Control Requirements
 
-The user executing this SQL command does not need to have specific privileges to execute this command.
+The user executing this SQL command does not need to have specific privileges.
 
 ## Examples
 
