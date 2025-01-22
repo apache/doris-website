@@ -36,13 +36,6 @@ under the License.
 ADMIN CANCEL REBALANCE DISK [ ON ( "<host>:<port>" [, ... ] ) ];
 ```
 
-其中：
-
-```sql
-<host>:<port>
-  : 由主机名（或IP地址）和心跳端口组成
-```
-
 ## 可选参数
 
 **1. `"<host>:<port>"`**

@@ -38,13 +38,6 @@ REBALANCE DISK 语句用于优化 BE（Backend）节点上的数据分布。该�
 ADMIN REBALANCE DISK [ ON ( "<host>:<port>" [, ... ] ) ];
 ```
 
-其中：
-
-```sql
-<host>:<port>
-  : 由主机名（或 IP 地址）和心跳端口组成
-```
-
 ## 可选参数
 
 **1. `"<host>:<port>"`**

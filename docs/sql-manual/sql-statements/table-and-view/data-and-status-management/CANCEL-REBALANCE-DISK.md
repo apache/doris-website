@@ -38,13 +38,6 @@ The `CANCEL REBALANCE DISK` statement is used to cancel the high-priority disk d
 ADMIN CANCEL REBALANCE DISK [ ON ( "<host>:<port>" [, ... ] ) ];
 ```
 
-Where:
-
-```sql
-<host>:<port>
-  : Composed of the hostname (or IP address) and heartbeat port.
-```
-
 ## Optional Parameters
 
 **1. `"<host>:<port>"`**

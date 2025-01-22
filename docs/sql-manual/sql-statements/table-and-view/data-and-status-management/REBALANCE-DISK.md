@@ -38,13 +38,6 @@ The `REBALANCE DISK` statement is used to optimize the data distribution on Back
 ADMIN REBALANCE DISK [ ON ( "<host>:<port>" [, ... ] ) ];
 ```
 
-Where:
-
-```sql
-<host>:<port>
-  : Composed of the hostname (or IP address) and heartbeat port.
-```
-
 ## Optional Parameters
 
 **1. `"<host>:<port>"`**
