@@ -34,8 +34,6 @@ This statement is used to modify the attributes of BE nodes. After modifying the
 | `disable_query` | Whether to disable queries, with the default value being `false`. After setting it to `true`, no new query requests will be scheduled to this BE node.                                                                                                                                                                                         |
 | `disable_load`  | Whether to disable load, with the default value being `false`. After setting it to `true`, no new import requests will be scheduled to this BE node.                                                                                                                                                                                           |
 
-> 
-
 ## Syntax
 
 ```sql
