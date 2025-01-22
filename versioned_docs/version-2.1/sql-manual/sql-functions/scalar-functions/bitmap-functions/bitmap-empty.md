@@ -24,29 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_empty
-### description
-#### Syntax
+## Description
 
-`BITMAP BITMAP_EMPTY()`
-
-Return an empty bitmap. Mainly be used to supply default value for bitmap column when loading, e.g.,
+Construct an empty BITMAP. Mainly used to fill default values during insert or stream load. For example:
 
 ```
-cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,v1,v2=bitmap_empty()"   http://host:8410/api/test/testDb/_stream_load
+cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,v1,v2=bitmap_empty()"   http://127.0.0.1:8040/api/test_database/test_table/_stream_load
 ```
 
-### example
+## Syntax
 
+```sql
+BITMAP_EMPTY()
 ```
-mysql> select bitmap_count(bitmap_empty());
-+------------------------------+
-| bitmap_count(bitmap_empty()) |
-+------------------------------+
-|                            0 |
-+------------------------------+
 
-mysql> select bitmap_to_string(bitmap_empty());
+## Return Value
+
+Returns an empty array with no elements
+
+## Examples
+
+```sql
+select bitmap_to_string(bitmap_empty());
+```
+
+```text
 +----------------------------------+
 | bitmap_to_string(bitmap_empty()) |
 +----------------------------------+
@@ -54,6 +56,14 @@ mysql> select bitmap_to_string(bitmap_empty());
 +----------------------------------+
 ```
 
-### keywords
+```sql
+select bitmap_count(bitmap_empty());
+```
 
-    BITMAP_EMPTY,BITMAP
+```text
++------------------------------+
+| bitmap_count(bitmap_empty()) |
++------------------------------+
+|                            0 |
++------------------------------+
+```
