@@ -54,7 +54,7 @@ PARSE_DATA_SIZE(<str>)
 
 | Parameter | Description |  
 | -- | -- |  
-| str | The value is to be calculated |  
+| `<str>` | The value is to be calculated |  
 
 ## Return Value  
 

@@ -38,9 +38,9 @@ INTERSECT_COUNT(<bitmap_column>, <column_to_filter>, <filter_values> [, ...])
 
 | 参数 | 说明 |
 | -- | -- |
-| `bitmap_column` | 输入的bitmap 参数列 |
-| `column_to_filter` | 是用来过滤的维度列 |
-| `filter_values` | 是过滤维度列的不同取值 |
+| `<bitmap_column>` | 输入的bitmap 参数列 |
+| `<column_to_filter>` | 是用来过滤的维度列 |
+| `<filter_values>` | 是过滤维度列的不同取值 |
 
 ## 返回值
 

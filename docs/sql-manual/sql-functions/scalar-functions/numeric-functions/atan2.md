@@ -36,7 +36,8 @@ ATAN2(<y>, <x>)
 
 | Parameter | Description |  
 | -- | -- |  
-| y/x | The value for which the atan2 value is to be calculated |  
+| `<x>` | The value representing the horizontal distance (coordinate) from the origin (0,0) along the x-axis. |  
+| `<y>` | The value representing the vertical distance (coordinate) from the origin (0,0) along the y-axis. |  
 
 ## Return Value  
 

@@ -38,8 +38,8 @@ FORMAT(<format>, <args> [, ...])
 
 | Parameter | Description |  
 | -- | -- |  
-| format | The value is to be format mode |  
-| args | The value is to be format within string | 
+| `<format>` | The value is to be format mode |  
+| `<args>` | The value is to be format within string | 
 
 ## Return Value  
 

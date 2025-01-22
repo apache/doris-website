@@ -36,7 +36,7 @@ ASIN(<x>)
 
 | Parameter | Description |  
 | -- | -- |  
-| x | The value for which the asin value is to be calculated |  
+| `<x>` | The value for which the asin value is to be calculated |  
 
 ## Return Value  
 

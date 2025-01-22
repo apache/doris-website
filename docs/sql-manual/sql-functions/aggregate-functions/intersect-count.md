@@ -39,9 +39,9 @@ INTERSECT_COUNT(<bitmap_column>, <column_to_filter>, <filter_values> [, ...])
 
 | Parameter         | Description                                      |
 |------------------|--------------------------------------------------|
-| `bitmap_column`  | The input bitmap parameter column               |
-| `column_to_filter` | The dimension column used for filtering       |
-| `filter_values`  | The different values used to filter the dimension column |
+| `<bitmap_column>`  | The input bitmap parameter column               |
+| `<column_to_filter>` | The dimension column used for filtering       |
+| `<filter_values>`  | The different values used to filter the dimension column |
 
 
 ## Return Value  

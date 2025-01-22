@@ -36,7 +36,7 @@ ACOS(<x>)
 
 | Parameter | Description |  
 | -- | -- |  
-| x | The value for which the acos value is to be calculated |  
+| `<x>` | The value for which the acos value is to be calculated |  
 
 ## Return Value  
 

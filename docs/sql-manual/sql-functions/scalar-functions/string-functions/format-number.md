@@ -38,7 +38,7 @@ FORMAT_NUMBER(<val>)
 
 | Parameter | Description |  
 | -- | -- |  
-| val | The value is to be calculated with unit |  
+| `<val>` | The value is to be calculated with unit |  
 
 ## Return Value  
 
