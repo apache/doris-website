@@ -36,7 +36,7 @@ under the License.
 
 ## 必选参数
 
-**`<plain_password>`**
+**1. `<plain_password>`**
 
 LDAP 管理员密码
 

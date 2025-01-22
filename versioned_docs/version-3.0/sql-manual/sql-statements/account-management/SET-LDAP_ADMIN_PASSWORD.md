@@ -36,7 +36,7 @@ under the License.
 
 ## Required Parameters
 
-**`<plain_password>`**
+**1. `<plain_password>`**
 
 LDAP administrator password
 
