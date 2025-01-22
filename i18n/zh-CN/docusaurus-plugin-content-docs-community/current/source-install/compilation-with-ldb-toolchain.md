@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-本文档主要介绍如何使用 LDB Toolchain 编译 Doris。该方式目前作为 Docker 编译方式的补充，方便没有 Docker 环境的开发者和用户编译 Doris 源码。Doris 目前推荐的 LDB Toolchain 版本为 0.17, 其中含有 clang-16 和 gcc-11。
+本文档主要介绍如何使用 LDB Toolchain 编译 Doris。该方式目前作为 Docker 编译方式的补充，方便没有 Docker 环境的开发者和用户编译 Doris 源码。Doris 目前推荐的 LDB Toolchain 版本为 Robin(0.19), 其中含有 clang-17 和 gcc-13。
 
 :::tip
 LDB Toolchain 全称 Linux Distribution Based Toolchain Generator，它有助于在几乎所有 Linux 发行版上编译现代 C++ 项目。
@@ -41,18 +41,18 @@ LDB Toolchain 全称 Linux Distribution Based Toolchain Generator，它有助于
 可以从[这里](https://github.com/amosbird/ldb_toolchain_gen/releases)下载最新的 `ldb_toolchain_gen.sh`。该脚本用于生成 LDB Toolchain
 
 :::tip
-更多信息，可访问 https://github.com/amosbird/ldb_toolchain_gen
+更多信息，可访问 <https://github.com/amosbird/ldb_toolchain_gen>
 :::
 
 **2. 执行以下命令生成 ldb toolchain**
 
-```Plain
+```bash
 sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 ```
 
 其中 `/path/to/ldb_toolchain/` 为安装 Toolchain 目录。执行成功后，会在 `/path/to/ldb_toolchain/` 下生成如下目录结构：
 
-```Plain
+```bash
 ├── bin
 ├── include
 ├── lib
@@ -63,17 +63,17 @@ sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 
 **3. 下载并安装其他编译组件**
 
--   下载 [Java8](https://doris-thirdparty-1308700295.cos.ap-beijing.myqcloud.com/tools/jdk-8u391-linux-x64.tar.gz)，安装到 /path/to/java
+- 下载 [Java8](https://doris-thirdparty-1308700295.cos.ap-beijing.myqcloud.com/tools/jdk-8u391-linux-x64.tar.gz)，安装到 /path/to/java
 
     > 3.0（含）之后的版本，或 master 分支，请使用 [Java 17](https://download.oracle.com/java/17/archive/jdk-17.0.10_linux-x64_bin.tar.gz)。
 
--   下载 [Apache Maven 3.6.3](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/apache-maven-3.6.3-bin.tar.gz)，安装到 /path/to/maven
+- 下载 [Apache Maven 3.6.3](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/apache-maven-3.6.3-bin.tar.gz)，安装到 /path/to/maven
 
--   下载 [Node v12.13.0](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz)，安装到 /path/to/node
+- 下载 [Node v12.13.0](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz)，安装到 /path/to/node
 
--   对于不同的 Linux 发行版，可能默认包含的组件不同。因此可能需要安装一些额外的组件。下面以 CentOS6 为例，其他发行版类似：
+- 对于不同的 Linux 发行版，可能默认包含的组件不同。因此可能需要安装一些额外的组件。下面以 CentOS6 为例，其他发行版类似：
 
-```Plain
+```bash
 install required system packages
 sudo yum install -y byacc patch automake libtool make which file ncurses-devel gettext-devel unzip bzip2 zip util-linux wget git python2
 
@@ -85,10 +85,10 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
     make && \
     make install
 
-install bison-3.0.4
-wget http://ftp.gnu.org/gnu/bison/bison-3.0.4.tar.gz && \
-    tar xzf bison-3.0.4.tar.gz && \
-    cd bison-3.0.4 && \
+install bison-3.8.2
+wget http://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.gz && \
+    tar xzf bison-3.8.2.tar.gz && \
+    cd bison-3.8.2 && \
     ./configure && \
     make && \
     make install
@@ -96,13 +96,13 @@ wget http://ftp.gnu.org/gnu/bison/bison-3.0.4.tar.gz && \
 
 **4. 下载 Doris 源码**
 
-```Plain
+```bash
 git clone https://github.com/apache/doris.git
 ```
 
 下载完成后，进入到 Doris 源码目录，创建 `custom_env.sh`文件，并设置 PATH 环境变量，如：
 
-```Plain
+```bash
 export JAVA_HOME=/path/to/java/
 export PATH=$JAVA_HOME/bin:$PATH
 export PATH=/path/to/maven/bin:$PATH
@@ -118,13 +118,13 @@ Doris 源码编译时首先会下载三方库进行编译，可以参考下文�
 
 **1.  进入 Doris 源码目录，执行如下命令查看编译机器是否支持 AVX2 指令集**
 
-```shell
-$ cat /proc/cpuinfo | grep avx2
+```bash
+cat /proc/cpuinfo | grep avx2
 ```
 
 **2.  执行编译**
 
-```Plain
+```bash
 # 默认编译出支持 AVX2 的
 $ sh build.sh
 
@@ -142,11 +142,10 @@ MS 模块是 doris 存算分离模式依赖的模块，详细说明请参考[此
 
 `build.sh` 脚本会先编译第三方库。你也可以直接下载预编译好的三方库：
 
-```
+```Plain
 https://github.com/apache/doris-thirdparty/releases
 ```
 
-这里我们提供了 Linux 和 MacOS 的预编译三方库。如果和你的编译运行环境一致，可以直接下载使用。
+这里我们提供了 Linux、MacOS 和 ARM 的预编译三方库。如果和你的编译运行环境一致，可以直接下载使用。
 
 下载好后，解压会得到一个 `installed/` 目录，将这个目录拷贝到 `thirdparty/` 目录下，之后运行 `build.sh` 即可。
-
