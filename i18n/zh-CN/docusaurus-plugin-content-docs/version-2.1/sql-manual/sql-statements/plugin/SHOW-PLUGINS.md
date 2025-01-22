@@ -29,25 +29,32 @@ under the License.
 
 该语句用于展示已安装的插件
 
-语法：
+## 语法
 
-```SQL
+```sql
 SHOW PLUGINS
 ```
 
-该命令会展示所有用户安装的和系统内置的插件
+## 返回值
+
+|描述|版本|Java 版本|类名|共享对象名称|来源|状态|属性|
+|-----------|-------|-----------|---------|------|-------|------|----------|
+|内置审计加载器，用于将审计日志加载到内部表中|2.1.0|1.8.31|org.apache.doris.plugin.audit.AuditLoader||内置|已安装|{}|
+|内置审计记录器|0.12.0|1.8.31|org.apache.doris.plugin.audit.AuditLogBuilder||内置|已安装|{}|
+|内置 SQL 方言转换器|2.1.0|1.8.31|org.apache.doris.plugin.dialect.HttpDialectConverterPlugin||内置|已安装|{}|
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限         | 对象   | 说明            |
+|:-----------|:-----|:--------------|
+| Admin_priv | 整个集群 | 需要对整个集群具有管理权限 |
 
 ## 示例
 
-1. 展示已安装的插件：
+- 展示已安装的插件：
 
     ```SQL
     SHOW PLUGINS;
     ```
-
-## 关键词
-
-    SHOW, PLUGINS
-
-## 最佳实践
-
