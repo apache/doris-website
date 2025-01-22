@@ -31,7 +31,7 @@ When a user pauses a job in the RUNNING state, the running task will be interrup
 ## Syntax
 
 ```sql
-PAUSE JOB WHERE jobname = <jobname> ;
+PAUSE JOB WHERE jobname = <job_name> ;
 ```
 
 ## Required parameters

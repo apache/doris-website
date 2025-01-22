@@ -31,13 +31,13 @@ The user deletes a JOB job. The job will be stopped and deleted immediately.
 ## Syntax
 
 ```sql
-DROP JOB where jobName = <jobname> ;
+DROP JOB where jobName = <job_name> ;
 ```
 
 ## Required parameters
 
 **1. `<job_name>`**
-> The job name of the task to be deleted.
+> The `<job_name>` of the task to be deleted.
 
 ## Access Control Requirements
 

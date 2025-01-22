@@ -31,21 +31,19 @@ Doris Job 是根据既定计划运行的任务，用于在特定时间或指定�
 定时任务（如：Linux 中的 cron、Windows 中的计划任务）。
 
 Job 有两种类型：`ONE_TIME` 和 `RECURRING`。其中 `ONE_TIME` 类型的 Job 会在指定的时间点触发，它主要用于一次性任务，而 `RECURRING` 类型的 Job 会在指定的时间间隔内循环触发，此方式主要用于周期性执行的任务。
-`RECURRING` 类型的 Job 可指定开始时间，结束时间，即 `STARTS\ENDS`, 如果不指定开始时间，则默认首次执行时间为当前时间 + 一次调度周期。如果指定结束时间，则 task 执行完成如果达到结束时间（或超过，或下次执行周期会超过结束时间）则更新为 FINISHED 状态，此时不会再产生 Task。
+`RECURRING` 类型的 Job 可指定开始时间，结束时间，即 `STARTS/ENDS`, 如果不指定开始时间，则默认首次执行时间为当前时间 加 一次调度周期。如果指定结束时间，则 task 执行完成如果达到结束时间（或超过，或下次执行周期会超过结束时间）则更新为 FINISHED 状态，此时不会再产生 Task。
 
 JOB 共 4 种状态（`RUNNING`,`STOPPED`,`PAUSED`,`FINISHED`），初始状态为 RUNNING，RUNNING 状态的 JOB 会根据既定的调度周期去生成 TASK 执行，Job 执行完成达到结束时间则状态变更为 `FINISHED`.
 
-RUNNING 状态的 JOB 可以被 pause，即暂停，此时不会再生成 Task。
+`PAUSED` 状态的 JOB 可以通过 RESUME 操作来恢复运行，更改为 `RUNNING` 状态。
 
-PAUSE 状态的 JOB 可以通过 RESUME 操作来恢复运行，更改为 RUNNING 状态。
+`STOPPED` 状态的 JOB 由用户主动触发，此时会 Cancel 正在运行中的作业，然后删除 JOB。
 
-STOP 状态的 JOB 由用户主动触发，此时会 Cancel 正在运行中的作业，然后删除 JOB。
+`Finished` 状态的 JOB 会保留在系统中 24 H，24H 后会被删除。
 
-Finished 状态的 JOB 会保留在系统中 24 H，24H 后会被删除。
-
-JOB 只描述作业信息，执行会生成 TASK，TASK 状态分为 PENDING，RUNNING，SUCCEESS,FAILED,CANCELED
-PENDING 表示到达触发时间了但是等待资源 RUN，分配到资源后状态变更为 RUNNING，执行成功/失败即变更为 SUCCESS/FAILED.
-CANCELED 即取消状态，TASK 持久化最终状态，即 SUCCESS/FAILED，其他状态运行中可以查到，但是如果重启则不可见。
+JOB 只描述作业信息，执行会生成 TASK，TASK 状态分为 `PENDING`，`RUNNING`，`SUCCEESS`,`FAILED`,`CANCELED`.
+`PENDING` 表示到达触发时间了但是等待资源 RUN，分配到资源后状态变更为 `RUNNING`，执行成功/失败即变更为 `SUCCESS`/`FAILED`.
+`CANCELED` 即取消状态，TASK 持久化最终状态，即 `SUCCESS`/`FAILED`，其他状态运行中可以查到，但是如果重启则不可见。
 
 ## 语法
 
@@ -91,9 +89,12 @@ interval:
 
 **2. `<EVERY>`**
 > 表示定期重复操作，它指定了作业的执行频率，关键字后面要指定一个时间间隔，该时间间隔可以是天、小时、分钟、秒、周。
->  * STARTS timestamp : 格式：'YYYY-MM-DD HH:MM:SS',用于指定作业的开始时间，如果没有指定，则从当前时间的下一个时间点开始执行。开始时间必须大于当前时间。
->  * ENDS timestamp : 格式：'YYYY-MM-DD HH:MM:SS', 用于指定作业的结束时间，如果没有指定，则表示永久执行。该日期必须大于当前时间，如果指定了开始时间，即 STARTS，则结束时间必须大于开始时间。
 
+**3. `<STARTS timestamp>`**
+> 格式：'YYYY-MM-DD HH:MM:SS',用于指定作业的开始时间，如果没有指定，则从当前时间的下一个时间点开始执行。开始时间必须大于当前时间。
+
+**3. `<ENDS timestamp >`**
+> 格式：'YYYY-MM-DD HH:MM:SS', 用于指定作业的结束时间，如果没有指定，则表示永久执行。该日期必须大于当前时间，如果指定了开始时间，即 STARTS，则结束时间必须大于开始时间。
 
 ## 权限控制
 
@@ -107,7 +108,7 @@ interval:
 
 - TASK 只保留最新的 100 条记录。
 
-- 目前仅支持 **INSERT 内表** 操作，后续我们会支持更多的操作。
+- 目前仅支持 **INSERT 内表** 操作，后续会支持更多的操作。
 
 - 当下一个计划任务时间到期，即需要调度任务执行时，如果当前 JOB 仍有历史任务正在执行，则会跳过当前任务调度。因此控制一个合理的执行间隔非常重要。
 

@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-DROP JOB where jobName = <jobname> ;
+DROP JOB where jobName = <job_name> ;
 ```
 
 ## 必选参数

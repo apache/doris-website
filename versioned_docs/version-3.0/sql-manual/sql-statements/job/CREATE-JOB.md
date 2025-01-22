@@ -30,21 +30,21 @@ under the License.
 Doris Job is a task that runs according to a set plan. It is used to trigger predefined operations at a specific time or a specified time interval, so as to help us automatically perform some tasks. Functionally, it is similar to the scheduled task on the operating system (such as cron in Linux and scheduled tasks in Windows).
 
 There are two types of jobs: `ONE_TIME` and `RECURRING`. Among them, the `ONE_TIME` type of job will be triggered at a specified time point. It is mainly used for one-time tasks, while the `RECURRING` type of job will be triggered cyclically within a specified time interval. This method is mainly used for periodic tasks.
-The `RECURRING` type of job can specify the start time and end time, that is, `STARTS\ENDS`. If the start time is not specified, the default first execution time is the current time + one scheduling cycle. If the end time is specified, the task execution is completed. If the end time is reached (or exceeded, or the next execution cycle will exceed the end time), it will be updated to the FINISHED state, and no more tasks will be generated at this time.
+The `RECURRING` type of job can specify the start time and end time, that is, `STARTS/ENDS`. If the start time is not specified, the default first execution time is the current time + one scheduling cycle. If the end time is specified, the task execution is completed. If the end time is reached (or exceeded, or the next execution cycle will exceed the end time), it will be updated to the FINISHED state, and no more tasks will be generated at this time.
 
-There are 4 states for a job (`RUNNING`, `STOPPED`, `PAUSED`, `FINISHED`). The initial state is RUNNING. A job in the RUNNING state will generate a TASK for execution according to the established scheduling cycle. When the job is completed and reaches the end time, the state changes to `FINISHED`.
+There are 4 states for a job (`RUNNING`, `STOPPED`, `PAUSED`, `FINISHED`). 
 
-A job in the RUNNING state can be paused, that is, it will be paused, and no more tasks will be generated.
+The initial state is `RUNNING`. A job in the `RUNNING` state will generate a TASK for execution according to the established scheduling cycle. When the job is completed and reaches the end time, the state changes to `FINISHED`.
 
-A job in the PAUSE state can be resumed through the RESUME operation and changed to the RUNNING state.
+A job in the `PAUSED` state can be resumed through the RESUME operation and changed to the RUNNING state.
 
-A job in the STOP state is actively triggered by the user, and the running job will be canceled and the job will be deleted.
+A job in the `STOPPED` state is actively triggered by the user, and the running job will be canceled and the job will be deleted.
 
-A job in the Finished state will be retained in the system for 24 hours and will be deleted after 24 hours.
+A job in the `FINISHED` state will be retained in the system for 24 hours and will be deleted after 24 hours.
 
-JOB only describes job information. Execution will generate TASK. TASK status is divided into PENDING, RUNNING, SUCCEESS, FAILED, CANCELED
-PENDING means that the trigger time has arrived but the resource RUN is waiting. After the resource is allocated, the status changes to RUNNING. Success/failure of execution changes to SUCCESS/FAILED.
-CANCELED means cancellation status. TASK persists the final status, i.e. SUCCESS/FAILED. Other statuses can be checked during operation, but will not be visible if restarted.
+JOB only describes job information. Execution will generate TASK. TASK status is divided into `PENDING`, `RUNNING`, `SUCCEESS`, `FAILED`, `CANCELED`
+`PENDING` means that the trigger time has arrived but the resource run is waiting. After the resource is allocated, the status changes to `RUNNING`. Success/failure of execution changes to `SUCCESS`/`FAILED`.
+`CANCELED` means cancellation status. TASK persists the final status, i.e. `SUCCESS`/`FAILED`. Other statuses can be checked during operation, but will not be visible if restarted.
 
 ## Syntax
 
@@ -90,8 +90,12 @@ quantity { WEEK | DAY | HOUR | MINUTE }
 
 **2. `<EVERY>`**
 > Indicates a regularly repeated operation, it specifies the execution frequency of the job, and a time interval must be specified after the keyword, which can be days, hours, minutes, seconds, or weeks.
-> * STARTS timestamp: Format: 'YYYY-MM-DD HH:MM:SS', used to specify the start time of the job. If not specified, it will be executed from the next time point after the current time. The start time must be greater than the current time.
-> * ENDS timestamp: Format: 'YYYY-MM-DD HH:MM:SS', used to specify the end time of the job. If not specified, it means permanent execution. The date must be greater than the current time. If the start time is specified, that is, STARTS, the end time must be greater than the start time.
+
+**3. `<STARTS timestamp>`**
+> Format: 'YYYY-MM-DD HH:MM:SS', used to specify the start time of the job. If not specified, it will be executed from the next time point after the current time. The start time must be greater than the current time.
+
+**4. `<ENDS timestamp>`**
+> Format: 'YYYY-MM-DD HH:MM:SS', used to specify the end time of the job. If not specified, it means permanent execution. The date must be greater than the current time. If the start time is specified, that is, STARTS, the end time must be greater than the start time.
 
 ## Access Control Requirements
 
@@ -105,7 +109,7 @@ The user who executes this SQL command must have at least the following permissi
 
 - TASK only retains the latest 100 records.
 
-- Currently only supports **INSERT internal table** operations, and we will support more operations in the future.
+- Currently only supports **INSERT internal table** operations, and will support more operations in the future.
 
 - When the next scheduled task time expires, that is, when the task needs to be scheduled for execution, if the current JOB still has historical tasks being executed, the current task scheduling will be skipped. Therefore, it is very important to control a reasonable execution interval.
 

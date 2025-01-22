@@ -31,12 +31,12 @@ Restore the PAUSED job to the RUNNING state. The RUNNING job will be executed ac
 ## Syntax
 
 ```sql
-RESUME JOB where jobName = <jobname> ;
+RESUME JOB where jobName = <job_name> ;
 ```
 ## Required parameters
 
 **1. `<job_name>`**
-> The job name of the recovery task.
+> The `<job_name>` of the recovery task.
 
 ## Access Control Requirements
 

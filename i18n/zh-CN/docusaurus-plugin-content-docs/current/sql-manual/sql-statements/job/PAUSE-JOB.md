@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-PAUSE JOB WHERE jobname = <jobname> ;
+PAUSE JOB WHERE jobname = <job_name> ;
 ```
 
 ## 必选参数

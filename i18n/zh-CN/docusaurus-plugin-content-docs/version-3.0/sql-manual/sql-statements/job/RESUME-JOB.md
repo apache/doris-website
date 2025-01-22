@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-RESUME JOB where jobName = <jobname> ;
+RESUME JOB where jobName = <job_name> ;
 ```
 ## 必选参数
 
