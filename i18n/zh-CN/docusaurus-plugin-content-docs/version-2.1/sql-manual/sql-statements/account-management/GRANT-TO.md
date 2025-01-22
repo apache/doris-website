@@ -33,6 +33,7 @@ GRANT 命令用于：
 
 **相关命令**
 
+- [REVOKE FROM](./REVOKE-FROM.md)
 - [SHOW GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
 - [CREATE ROLE](./CREATE-ROLE.md)
 - [CREATE WORKLOAD GROUP](../cluster-management/compute-management/CREATE-WORKLOAD-GROUP.md)

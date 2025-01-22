@@ -33,6 +33,7 @@ The GRANT command is used to:
 
 **Related Commands**
 
+- [REVOKE FROM](./REVOKE-FROM.md)
 - [SHOW GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
 - [CREATE ROLE](./CREATE-ROLE.md)
 - [CREATE WORKLOAD GROUP](../cluster-management/compute-management/CREATE-WORKLOAD-GROUP.md)
