@@ -66,9 +66,14 @@ Common Command types are as follows:
 | Quit | The thread is exiting |
 | Kill | Executing the kill statement |
 
-## Usage Notes
+## Access Control Requirements
 
-In addition to the root user can see all running threads, other users can only see their own running threads and cannot see other users' running threads.
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege    | Object    | Notes                      |
+|:-------------|:----------|:---------------------------|
+| ADMIN        | DATABASE  | If you want to view the connection information of other users, you need the ADMIN permission |
+
 
 ## Examples
 
