@@ -22,32 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_from_array
-
 ## 描述
+
+将一个 TINYINT/SMALLINT/INT/BIGINT 类型的数组转化为一个 BITMAP，当输入字段不合法时，结果返回 NULL
+
 ## 语法
 
-`BITMAP BITMAP_FROM_ARRAY(ARRAY input)`
+```sql
+BITMAP_FROM_ARRAY(<arr>)
+```
 
-将一个TINYINT/SMALLINT/INT/BIGINT类型的数组转化为一个BITMAP
-当输入字段不合法时，结果返回NULL
+## 参数
+
+| 参数      | 说明   |
+|---------|------|
+| `<arr>` | 整形数组 |
+
+## 返回值
+
+返回一个 BITMAP
+- 当输入字段不合法时，结果返回 NULL
 
 ## 举例
 
-```
-mysql> select *, bitmap_to_string(bitmap_from_array(c_array)) from array_test;
-+------+-----------------------+------------------------------------------------+
-| id   | c_array               | bitmap_to_string(bitmap_from_array(`c_array`)) |
-+------+-----------------------+------------------------------------------------+
-|    1 | [NULL]                | NULL                                           |
-|    2 | [1, 2, 3, NULL]       | NULL                                           |
-|    2 | [1, 2, 3, -10]        | NULL                                           |
-|    3 | [1, 2, 3, 4, 5, 6, 7] | 1,2,3,4,5,6,7                                  |
-|    4 | [100, 200, 300, 300]  | 100,200,300                                    |
-+------+-----------------------+------------------------------------------------+
-5 rows in set (0.02 sec)
+```sql
+SELECT bitmap_to_string(bitmap_from_array(array(1, 0, 1, 1, 0, 1, 0))) AS bs;
 ```
 
-### keywords
+```text
++------+
+| bs   |
++------+
+| 0,1  |
++------+
+```
 
-    BITMAP_FROM_ARRAY,BITMAP

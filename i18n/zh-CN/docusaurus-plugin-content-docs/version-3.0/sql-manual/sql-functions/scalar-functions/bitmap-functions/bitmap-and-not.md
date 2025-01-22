@@ -24,47 +24,78 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_and_not,bitmap_andnot
 ## 描述
+
+将两个 BITMAP 进行与非操作并返回计算结果，其中入参第一个叫 `基准 BITMAP`， 第二个叫 `排除 BITMAP`。
+
+## 别名
+
+- BITMAP_ANDNOT
+
 ## 语法
 
-`BITMAP BITMAP_AND_NOT(BITMAP lhs, BITMAP rhs)`
+```sql
+BITMAP_AND_NOT(<bitmap1>, <bitmap2>)
+```
 
-将两个bitmap进行与非操作并返回计算结果。
+## 参数
+
+| 参数          | 说明               |
+|-------------|------------------|
+| `<bitmap1>` | 被求与非的`基准 BITMAP` |
+| `<bitmap2>` | 被求与非的`排除 BITMAP` |
+
+## 返回值
+
+返回一个 BITMAP。
+- 当参数存在空值时，返回 NULL
 
 ## 举例
 
+```sql
+select bitmap_count(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5'))) cnt;
 ```
-mysql> select bitmap_count(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5'))) cnt;
+
+```text
 +------+
 | cnt  |
 +------+
 |    2 |
 +------+
+```
 
-mysql> select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5')));
+```sql
+select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5')));
+```
+
+```text
 +--------------------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'))) |
 +--------------------------------------------------------------------------------------------+
 | 1,2                                                                                        |
 +--------------------------------------------------------------------------------------------+
-1 row in set (0.01 sec)
+```
 
-mysql> select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_empty())) ;
+```sql
+select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_empty()));
+```
+
+```text
 +-------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'), bitmap_empty())) |
 +-------------------------------------------------------------------------------+
 | 1,2,3                                                                         |
 +-------------------------------------------------------------------------------+
+```
 
-mysql> select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),NULL));
+```sql
+select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),NULL));
+```
+
+```text
 +---------------------------------------------------------------------+
 | bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'), NULL)) |
 +---------------------------------------------------------------------+
 | NULL                                                                |
 +---------------------------------------------------------------------+
 ```
-
-### keywords
-
-    BITMAP_AND_NOT,BITMAP_ANDNOT,BITMAP

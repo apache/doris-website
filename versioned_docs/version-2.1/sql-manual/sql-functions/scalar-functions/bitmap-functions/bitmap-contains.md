@@ -24,32 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_contains
-### description
-#### Syntax
+## Description
 
-`BOOLEAN BITMAP_CONTAINS(BITMAP bitmap, BIGINT input)`
+Calculates whether the input value is in the BITMAP and returns a boolean value.
 
-Calculates whether the input value is in the Bitmap column and returns a Boolean value.
+## Syntax
 
-### example
-
-```
-mysql> select bitmap_contains(to_bitmap(1),2) cnt;
-+------+
-| cnt  |
-+------+
-|    0 |
-+------+
-
-mysql> select bitmap_contains(to_bitmap(1),1) cnt;
-+------+
-| cnt  |
-+------+
-|    1 |
-+------+
+```sql
+BITMAP_CONTAINS(<bitmap>, <bigint>)
 ```
 
-### keywords
+## Parameters
 
-    BITMAP_CONTAINS,BITMAP
+| Parameter  | Description                             |
+|------------|-----------------------------------------|
+| `<bitmap>` | BITMAP collection                       |
+| `<bitint>` | The integer to be checked for existence |
+
+## Return Value
+
+Returns a boolean
+- If the parameter is empty, returns NULL
+
+## Examples
+
+```sql
+select bitmap_contains(to_bitmap(1),2) cnt1, bitmap_contains(to_bitmap(1),1) cnt2;
+```
+
+```text
++------+------+
+| cnt1 | cnt2 |
++------+------+
+|    0 |    1 |
++------+------+
+```
+
