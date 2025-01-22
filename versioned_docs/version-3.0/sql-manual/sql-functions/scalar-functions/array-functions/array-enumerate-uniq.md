@@ -38,7 +38,7 @@ ARRAY_ENUMERATE_UNIQ(<arr1> [,<arr2> , ... ])
 | `<arr2>` | Needed be computed array arr2  |
 
 ## Return Value
-Returns an array.
+Returns an array the same size as the source array, indicating for each element what its position is among elements with the same value.
 
 ## Example
 

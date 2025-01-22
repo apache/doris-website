@@ -39,7 +39,7 @@ ARRAY_DISTINCT(<arr> )
 | `<arr>` | An array that might contain duplicate elements to be removed  |
 
 ## Return Value
-Returns an array. Special case:
+Return the array which has been removed duplicate values. Special case:
 - If the input array is NULL, the result is NULL.
 
 ## Example

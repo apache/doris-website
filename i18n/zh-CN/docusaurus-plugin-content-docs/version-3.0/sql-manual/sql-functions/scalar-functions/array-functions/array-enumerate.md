@@ -29,7 +29,7 @@ under the License.
 
 ## 语法
 ```sql
-ARRAY_ENUMERATE(ARRAY<T> arr)
+ARRAY_ENUMERATE(<arr>)
 ```
 
 ## 参数
@@ -38,7 +38,7 @@ ARRAY_ENUMERATE(ARRAY<T> arr)
 | `<arr>` | 需要返回数组下标的数组 |
 
 ## 返回值
-返回一个数组，特殊情况：
+返回包含数组下标的数组，特殊情况：
 - 如果参数是NULL，则返回NULL
 
 ## 举例

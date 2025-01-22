@@ -29,7 +29,7 @@ Returns array sub item indexes e.g. [1, 2, 3, …, length (arr) ]
 
 ## Syntax
 ```sql
-ARRAY_ENUMERATE(ARRAY<T> arr)
+ARRAY_ENUMERATE(<arr>)
 ```
 
 ## Parameters
@@ -38,7 +38,7 @@ ARRAY_ENUMERATE(ARRAY<T> arr)
 | `<arr>` | The array that returns array sub item indexes  |
 
 ## Return Value
-Returns an array.
+Returns an array containing the index of the array.
 
 ## Example
 ```sql

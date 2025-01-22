@@ -32,7 +32,7 @@ under the License.
 
 ## 语法
 ```sql
-ARRAY_EXISTS([lambda,] <arr1> [, <arr2> , ...] )
+ARRAY_EXISTS([ <lambda>, ] <arr1> [, <arr2> , ...] )
 ```
 
 ## 参数
@@ -43,7 +43,7 @@ ARRAY_EXISTS([lambda,] <arr1> [, <arr2> , ...] )
 | `<arr2>` | 需要计算的数组arr2  |
 
 ## 返回值
-返回一个数组，特殊情况：
+返回使用表达式计算后的数组，特殊情况：
 - 如果数组里面包含NULL或者本身为NULL，则返回NULL
 
 ## 举例

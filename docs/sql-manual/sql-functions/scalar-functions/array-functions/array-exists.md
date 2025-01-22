@@ -33,7 +33,7 @@ When lambda expression is not used as a parameter, array1 is used as the calcula
 
 ## Syntax
 ```sql
-ARRAY_EXISTS([lambda,] <arr1> [, <arr2> , ...] )
+ARRAY_EXISTS([ <lambda>, ] <arr1> [, <arr2> , ...] )
 ```
 ## Parameters
 | Parameter | Description |  
@@ -43,7 +43,7 @@ ARRAY_EXISTS([lambda,] <arr1> [, <arr2> , ...] )
 | `<arr2>` | Needed be computed array arr2 |  
 
 ## Return Value
-Returns an array. Special cases:
+Returns the array computed using the expression. Special cases:
 - If the array contains `NULL` values or is itself `NULL`, the result is `NULL`.
 
 ## Example

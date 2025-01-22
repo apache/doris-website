@@ -39,7 +39,7 @@ ARRAY_INTERSECT(<arr1> , <arr2> )
 | `<arr2>`  | Array of intersections with arr1 |
 
 ## Return Value
-Returns an array. Special cases:
+Returns an array containing all elements of the intersection of arr1 and arr2. Special cases:
 - If the input parameter is NULL, the function returns NULL.
 
 ## Notes
