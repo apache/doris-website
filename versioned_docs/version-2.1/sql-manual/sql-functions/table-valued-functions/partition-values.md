@@ -43,9 +43,9 @@ PARTITION_VALUES(
 ## Required Parameters
 | Field               | Description                                       |
 |------------------|------------------------------------------|
-| **`<catalog>`**  | Specifies the catalog name of the cluster to query.                     |
-| **`<database>`** | Specifies the database name of the cluster to query.                           |
-| **`<table>`**    | Specifies the table name of the cluster to query.                             |
+| `<catalog>`  | Specifies the catalog name of the cluster to query.                     |
+| `<database>` | Specifies the database name of the cluster to query.                           |
+| `<table>`    | Specifies the table name of the cluster to query.                             |
 
 ## Return Value
 
