@@ -45,7 +45,14 @@ GRANT 命令用于：
 **将指定的权限授予某用户或角色**
 
 ```sql
-GRANT <privilege_list> ON { <priv_level> | RESOURCE <resource_name> | WORKLOAD GROUP <workload_group_name> | COMPUTE GROUP <compute_group_name> | STORAGE VAULT <storage_vault_name> } TO { <user_identity> | ROLE <role_name> }
+GRANT <privilege_list> 
+ON { <priv_level> 
+    | RESOURCE <resource_name> 
+    | WORKLOAD GROUP <workload_group_name> 
+    | COMPUTE GROUP <compute_group_name> 
+    | STORAGE VAULT <storage_vault_name> 
+   } 
+TO { <user_identity> | ROLE <role_name> }
 ```
 
 **将指定角色授予某用户**

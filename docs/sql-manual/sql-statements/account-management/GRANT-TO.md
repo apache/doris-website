@@ -45,7 +45,14 @@ The GRANT command is used to:
 **Grant specified privileges to a user or role**
 
 ```sql
-GRANT <privilege_list> ON { <priv_level> | RESOURCE <resource_name> | WORKLOAD GROUP <workload_group_name> | COMPUTE GROUP <compute_group_name> | STORAGE VAULT <storage_vault_name> } TO { <user_identity> | ROLE <role_name> }
+GRANT <privilege_list> 
+ON { <priv_level> 
+    | RESOURCE <resource_name> 
+    | WORKLOAD GROUP <workload_group_name> 
+    | COMPUTE GROUP <compute_group_name> 
+    | STORAGE VAULT <storage_vault_name>
+   } 
+TO { <user_identity> | ROLE <role_name> }
 ```
 
 **Grant specified roles to a user**
