@@ -24,49 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_hash
-
-### Name
-
-BITMAP_HASH
-
 ## 描述
 
-对任意类型的输入，计算其 32 位的哈希值，并返回包含该哈希值的 bitmap。该函数使用的哈希算法为 MurMur3。MurMur3 算法是一种高性能的、低碰撞率的散列算法，其计算出来的值接近于随机分布，并且能通过卡方分布测试。需要注意的是，不同硬件平台、不同 Seed 值计算出来的散列值可能不同。关于此算法的性能可以参考 [Smhasher](http://rurban.github.io/smhasher/) 排行榜。
+对任意类型的输入，计算其 32 位的哈希值，并返回包含该哈希值的 Bitmap。
 
 ## 语法
 
-`BITMAP BITMAP_HASH(<any_value>)`
+```sql
+bitmap_hash(<expr>)
+```
 
 ## 参数
 
-`<any_value>`
-任何值或字段表达式。
+| 参数        | 描述          |
+|-----------|-------------|
+| `<expr>` | 任何值或字段表达式 |
 
-#### Return Type
+## 返回值
 
-BITMAP
+包含参数 `<expr>` 的 64 位 hash 值的 Bitmap。
 
-#### Remarks
+::: note
 
-一般来说，MurMur 32 位算法对于完全随机的、较短的字符串的散列效果较好，碰撞率能达到几十亿分之一，但对于较长的字符串，比如你的操作系统路径，碰撞率会比较高。如果你扫描你系统里的路径，就会发现碰撞率仅仅只能达到百万分之一甚至是十万分之一。
+该函数使用的哈希算法为 MurMur3。  
+MurMur3 算法是一种高性能的、低碰撞率的散列算法，其计算出来的值接近于随机分布，并且能通过卡方分布测试。需要注意的是，不同硬件平台、不同 Seed 值计算出来的散列值可能不同。  
+关于此算法的性能可以参考 [Smhasher](http://rurban.github.io/smhasher/) 排行榜。
 
-下面两个字符串的 MurMur3 散列值是一样的：
-
-```sql
-SELECT bitmap_to_string(bitmap_hash('/System/Volumes/Data/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/KernelManagement.framework/KernelManagement.tbd')) AS a ,
-       bitmap_to_string(bitmap_hash('/System/Library/PrivateFrameworks/Install.framework/Versions/Current/Resources/es_419.lproj/Architectures.strings')) AS b;
-```
-
-结果如下：
-
-```text
-+-----------+-----------+
-| a         | b         |
-+-----------+-----------+
-| 282251871 | 282251871 |
-+-----------+-----------+
-```
+:::
 
 ## 举例
 
@@ -101,12 +85,3 @@ select bitmap_count(bitmap_union(bitmap_hash(`word`))) from `words`;
 |                                        33263478 |
 +-------------------------------------------------+
 ```
-
-### Keywords
-
-    BITMAP_HASH,BITMAP
-
-### Best Practice
-
-还可参见
-- [BITMAP_HASH64](./bitmap_hash64.md)

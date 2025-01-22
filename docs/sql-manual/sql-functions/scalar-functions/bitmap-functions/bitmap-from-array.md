@@ -22,32 +22,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_from_array
+## Description
 
-### description
-#### Syntax
+Converts an array of TINYINT/SMALLINT/INT/BIGINT type to a BITMAP. When the input field is illegal, the result returns NULL.
 
-`BITMAP BITMAP_FROM_ARRAY(ARRAY input)`
+## Syntax
 
-Convert a TINYINT/SMALLINT/INT/BIGINT array to a BITMAP
-When the input field is illegal, the result returns NULL
-
-### example
-
-```
-mysql> select *, bitmap_to_string(bitmap_from_array(c_array)) from array_test;
-+------+-----------------------+------------------------------------------------+
-| id   | c_array               | bitmap_to_string(bitmap_from_array(`c_array`)) |
-+------+-----------------------+------------------------------------------------+
-|    1 | [NULL]                | NULL                                           |
-|    2 | [1, 2, 3, NULL]       | NULL                                           |
-|    2 | [1, 2, 3, -10]        | NULL                                           |
-|    3 | [1, 2, 3, 4, 5, 6, 7] | 1,2,3,4,5,6,7                                  |
-|    4 | [100, 200, 300, 300]  | 100,200,300                                    |
-+------+-----------------------+------------------------------------------------+
-5 rows in set (0.02 sec)
+```sql
+BITMAP_FROM_ARRAY(<arr>)
 ```
 
-### keywords
+## Parameters
 
-    BITMAP_FROM_ARRAY,BITMAP
+| Parameter | Description   |
+|-----------|---------------|
+| `<arr>`   | integer array |
+
+## Return Value
+
+Returns a BITMAP
+- When the input field is invalid, the result is NULL
+
+## Examples
+
+```sql
+SELECT bitmap_to_string(bitmap_from_array(array(1, 0, 1, 1, 0, 1, 0))) AS bs;
+```
+
+```text
++------+
+| bs   |
++------+
+| 0,1  |
++------+
+```

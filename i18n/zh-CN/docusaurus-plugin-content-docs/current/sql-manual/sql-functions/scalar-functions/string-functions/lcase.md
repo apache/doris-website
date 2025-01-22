@@ -24,14 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## lcase
 ## 描述
+
+将参数中所有的字符串都转换成小写。该函数的另一个别名为[lower](./lower.md)。
+
+## 别名
+
+- LOWER
+
 ## 语法
 
-`INT lcase(VARCHAR str)`
+```sql
+LCASE ( <str> )
+```
 
+## 参数
 
-将参数中所有的字符串都转换成小写，该函数的另一个别名为[lower](./lower.md)。
+| 参数      | 说明           |
+|---------|--------------|
+| `<str>` | 需要被转换成小写的字符串 |
 
-### keywords
-    LCASE
+## 返回值
+
+参数 `<str>`  转换成小写的字符串
+
+## 举例
+
+```sql
+SELECT LOWER("AbC123"),LCASE("AbC123")
+```
+
+```text
++-----------------+-----------------+
+| lower('AbC123') | lower('AbC123') |
++-----------------+-----------------+
+| abc123          | abc123          |
++-----------------+-----------------+
+```

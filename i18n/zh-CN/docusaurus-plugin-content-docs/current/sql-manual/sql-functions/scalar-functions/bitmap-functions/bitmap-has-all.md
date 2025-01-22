@@ -24,33 +24,60 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_has_all
 ## 描述
+
+判断一个 Bitmap 是否包含另一个 Bitmap 的全部元素。
+
 ## 语法
 
-`BOOLEAN BITMAP_HAS_ALL(BITMAP lhs, BITMAP rhs)`
-
-如果第一个bitmap包含第二个bitmap的全部元素，则返回true。
-如果第二个bitmap包含的元素为空，返回true。
-
-## 举例
-
+```sql
+bitmap_has_all(<bitmap1>, <bitmap2>)
 ```
-mysql> select bitmap_has_all(bitmap_from_string("0, 1, 2"), bitmap_from_string("1, 2"));
+
+## 参数
+
+| 参数        | 描述         |
+|-----------|------------|
+| `<bitmap1>` | 第一个 Bitmap |
+| `<bitmap2>` | 第二个 bitmap |
+
+
+## 返回值
+
+如果 `<bitmap1>` 包含 `<bitmap2>` 的全部元素，则返回 true；  
+如果 `<bitmap2>` 包含的元素为空，返回 true；  
+否则返回 false。
+
+## 示例
+
+检查一个 Bitmap 是否包含另一个 Bitmap 的全部元素：
+
+```sql
+select bitmap_has_all(bitmap_from_string('0, 1, 2'), bitmap_from_string('1, 2'));
+```
+
+结果如下：
+
+```text
 +---------------------------------------------------------------------------+
 | bitmap_has_all(bitmap_from_string('0, 1, 2'), bitmap_from_string('1, 2')) |
 +---------------------------------------------------------------------------+
 |                                                                         1 |
 +---------------------------------------------------------------------------+
+```
 
-mysql> select bitmap_has_all(bitmap_empty(), bitmap_from_string("1, 2"));
+检查一个空 Bitmap 是否包含另一个 Bitmap 的全部元素：
+
+```sql
+select bitmap_has_all(bitmap_empty(), bitmap_from_string('1, 2'));
+```
+
+结果如下：
+
+```text
 +------------------------------------------------------------+
 | bitmap_has_all(bitmap_empty(), bitmap_from_string('1, 2')) |
 +------------------------------------------------------------+
 |                                                          0 |
 +------------------------------------------------------------+
 ```
-
-### keywords
-
-    BITMAP_HAS_ALL,BITMAP

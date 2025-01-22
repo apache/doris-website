@@ -22,48 +22,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## named_struct
-
-named_struct
-
 ## 描述
+
+根据给定的字符串和值构造并返回 struct ,注意事项：
+
+- 参数个数必须为非 0 偶数，奇数位是 field 的名字，必须为常量字符串，偶数位是 field 的值，可以是多列或常量
 
 ## 语法
 
-`STRUCT<T1, T2, T3, ...> named_struct({VARCHAR, T1}, {VARCHAR, T2}, ...)`
+```sql
+NAMED_STRUCT( <field_name> , <filed_value> [ , <field_name> , <filed_value> ... ] )
+```
 
-根据给定的字符串和值构造并返回struct
+## 参数
 
-参数个数必须为非0偶数，奇数位是field的名字，必须为常量字符串，偶数位是field的值，可以是多列或常量
+| 参数 | 说明 |
+| -- | -- |
+| `<field_name>` | 构造 struct 的奇数位输入内容, field 的名字 |
+| `<filed_value>` | 构造 struct 的偶数位输入内容, field 的值，可以是多列或常量 |
+
+## 返回值
+
+根据给定的字符串和值构造并返回 struct
 
 ## 举例
 
-```
-mysql> select named_struct('f1', 1, 'f2', 'a', 'f3', "abc");
-+-----------------------------------------------+
-| named_struct('f1', 1, 'f2', 'a', 'f3', 'abc') |
-+-----------------------------------------------+
-| {1, 'a', 'abc'}                               |
-+-----------------------------------------------+
-1 row in set (0.01 sec)
-
-mysql> select named_struct('a', null, 'b', "v");
-+-----------------------------------+
-| named_struct('a', NULL, 'b', 'v') |
-+-----------------------------------+
-| {NULL, 'v'}                       |
-+-----------------------------------+
-1 row in set (0.01 sec)
-
-mysql> select named_struct('f1', k1, 'f2', k2, 'f3', null) from test_tb;
-+--------------------------------------------------+
-| named_struct('f1', `k1`, 'f2', `k2`, 'f3', NULL) |
-+--------------------------------------------------+
-| {1, 'a', NULL}                                   |
-+--------------------------------------------------+
-1 row in set (0.02 sec)
+```sql
+select named_struct('f1', 1, 'f2', 'a', 'f3', "abc"),named_struct('a', null, 'b', "v");
 ```
 
-### keywords
-
-NAMED, STRUCT, NAMED_STRUCT
+```text
++-----------------------------------------------+-----------------------------------+
+| named_struct('f1', 1, 'f2', 'a', 'f3', 'abc') | named_struct('a', NULL, 'b', 'v') |
++-----------------------------------------------+-----------------------------------+
+| {"f1":1, "f2":"a", "f3":"abc"}                | {"a":null, "b":"v"}               |
++-----------------------------------------------+-----------------------------------+
+```
