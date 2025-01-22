@@ -30,7 +30,7 @@ under the License.
 
 ## 别名
 
-- upper
+- UPPER
 
 ## 语法
 

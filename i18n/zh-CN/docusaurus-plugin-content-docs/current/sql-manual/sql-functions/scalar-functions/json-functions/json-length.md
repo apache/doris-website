@@ -30,7 +30,9 @@ under the License.
 
 ## 语法
 
-`JSON_LENGTH(JSON <json_str>,  <json_path>)`
+```sql
+JSON_LENGTH(JSON <json_str> [ , <json_path>])
+```
 
 
 ## 必选参数
@@ -44,7 +46,7 @@ under the License.
 
 | 参数 | 描述 |
 |------|------|
-| `<rhs>` | 如果指定path，该JSON_LENGTH()函数返回与 JSON 文档中的路径匹配的数据的长度，否则返回 JSON 文档的长度 |
+| `<json_path>` | 如果指定path，该JSON_LENGTH()函数返回与 JSON 文档中的路径匹配的数据的长度，否则返回 JSON 文档的长度 |
 
 ## 注意事项
 该函数根据以下规则计算 JSON 文档的长度：

@@ -31,7 +31,7 @@ JSON_VALID 函数返回0或1以表明是否为有效的JSON, 如果参数是NULL
 ## 语法
 
 ```sql
-JSONB JSON_VALID( <str> )
+JSON_VALID( <str> )
 ```
 
 ## 必选参数
