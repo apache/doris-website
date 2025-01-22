@@ -29,25 +29,25 @@ under the License.
 
 ## Description
 
-This statement is used to add one or more BROKER nodes. (For administrators only!)
+This statement is used to add one or more BROKER nodes.
 
 ## Syntax
 
 ```sql
-ALTER SYSTEM ADD BROKER <broker_name> "<host1>:<ipc_port>" [, "host2>:<ipc_port>" [, ... ] ];
+ALTER SYSTEM ADD BROKER <broker_name> "<host>:<ipc_port>" [, "host>:<ipc_port>" [, ... ] ];
 ```
 
 ## Required Parameters
 
-**1. <broker_name>**
+**1. \<broker_name\>**
 
 The name given to the added broker process. It is recommended to keep the broker_name consistent within the same cluster.
 
-**2. < host>**
+**2. \<host\>**
 
 The IP of the node where the broker process needs to be added. If FQDN is enabled, use the FQDN of the node.
 
-**3. <ipc_port>**
+**3. \<ipc_port\>**
 
 The PORT of the node where the broker process needs to be added, and the default value of this port is 8000.
 

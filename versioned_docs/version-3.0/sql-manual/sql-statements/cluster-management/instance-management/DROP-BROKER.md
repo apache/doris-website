@@ -30,7 +30,7 @@ under the License.
 
 ## Description
 
-This statement is used to delete BROKER nodes. (For administrators only)
+This statement is used to delete BROKER nodes. 
 
 ## Syntax
 
@@ -41,19 +41,19 @@ ALTER SYSTEM DROP ALL BROKER broker_name;
 
 2. Drop one or more Broker nodes
 ```sql
-ALTER SYSTEM DROP BROKER <broker_name> "<host1>:<ipc_port>"[, "<host2>:<ipc_port>" [, ...] ];
+ALTER SYSTEM DROP BROKER <broker_name> "<host>:<ipc_port>"[, "<host>:<ipc_port>" [, ...] ];
 ```
 ## Required Parameters
 
-**1. <broker_name>**
+**1. \<broker_name\>**
 
 The name of the broker process to be deleted.
 
-**2. < host>**
+**2. \<host\>**
 
 The IP of the node where the broker process to be deleted is located. If FQDN is enabled, use the FQDN of the node.
 
-**3. <ipc_port>**
+**3. \<ipc_port\>**
 The PORT of the node where the broker process to be deleted is located, and the default value of this port is 8000.
 
 

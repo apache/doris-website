@@ -30,7 +30,7 @@ under the License.
 
 ## Description
 
-This statement is used to delete BROKER nodes. (For administrators only)
+This statement is used to delete BROKER nodes. 
 
 ## Syntax
 
@@ -41,7 +41,7 @@ ALTER SYSTEM DROP ALL BROKER broker_name;
 
 2. Drop one or more Broker nodes
 ```sql
-ALTER SYSTEM DROP BROKER <broker_name> "<host1>:<ipc_port>"[, "<host2>:<ipc_port>" [, ...] ];
+ALTER SYSTEM DROP BROKER <broker_name> "<host>:<ipc_port>"[, "<host>:<ipc_port>" [, ...] ];
 ```
 ## Required Parameters
 

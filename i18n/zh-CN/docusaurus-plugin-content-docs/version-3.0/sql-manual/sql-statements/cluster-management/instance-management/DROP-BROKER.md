@@ -29,7 +29,7 @@ under the License.
 
 ## 描述
 
-该语句是删除 BROKER 节点，（仅限管理员使用）
+该语句是删除 BROKER 节点。
 
 ## 语法
 
@@ -40,19 +40,19 @@ ALTER SYSTEM DROP ALL BROKER <broker_name>;
 
 2. 删除某一个 Broker 节点
 ```sql
-ALTER SYSTEM DROP BROKER <broker_name> "<host1>:<ipc_port>"[, "<host2>:<ipc_port>" [, ...] ];
+ALTER SYSTEM DROP BROKER <broker_name> "<host>:<ipc_port>"[, "<host>:<ipc_port>" [, ...] ];
 ```
 ## 必选参数
 
-**1. <broker_name>**
+**1. \<broker_name\>**
 
 需要删除的 `broker` 进程的名字。
 
-**2. < host>**
+**2. \<host\>**
 
 需要删除的 `broker` 进程所在节点的 `IP` ，如果启用了 `FQDN`，则使用该节点的 `FQDN`。
 
-**3. <ipc_port>**
+**3. \<ipc_port\>**
 
 需要删除的 `broker` 进程所在节点的 `PORT` ，该端口默认值为 `8000`。
 
