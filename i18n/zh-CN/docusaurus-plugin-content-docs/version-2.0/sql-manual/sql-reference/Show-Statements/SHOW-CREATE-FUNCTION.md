@@ -60,6 +60,15 @@ SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type> ) [ FROM <db_name> ]
 
 > FROM db_name 表示从指定的数据库中查询该自定义函数
 
+## 返回值
+
+| 列名 | 说明          |
+| -- |-------------|
+| SYMBOL | 函数包名        |
+| FILE | jar 包路径     |
+| ALWAYS_NULLABLE | 结果是否可以为 NULL |
+| TYPE | 函数类型        |
+
 ## 示例
 
 ```sql

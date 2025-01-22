@@ -67,7 +67,13 @@ SHOW GLOBAL [ FULL ] FUNCTIONS [ LIKE '<function_pattern>' ]
 
 ## 返回值
 
-查询当前会话所在数据库下符合函数名称过滤的函数结果
+| 列名 | 说明         |
+| -- |------------|
+| Signature | 函数名与参数类型   |
+| Return Type | 函数返回值的数据类型 |
+| Function Type | 函数的类型      |
+| Intermediate Type | 中间结果类型     |
+| Properties | 函数的详细属性    |
 
 ## 权限控制
 

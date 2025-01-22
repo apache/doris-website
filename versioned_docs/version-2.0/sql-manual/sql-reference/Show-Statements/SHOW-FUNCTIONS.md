@@ -67,7 +67,13 @@ SHOW GLOBAL [ FULL ] FUNCTIONS [ LIKE '<function_pattern>' ]
 
 ## Return Value
 
-Query the result of the function that matches the function name filtering in the database where the current session resides.
+| 列名 | 说明         |
+| -- |------------|
+| Signature | Function name and parameter type   |
+| Return Type | The data type of the value returned by the function |
+| Function Type | Type of function      |
+| Intermediate Type | Intermediate result type     |
+| Properties | Detailed properties of a function    |
 
 ## Access Control Requirements
 

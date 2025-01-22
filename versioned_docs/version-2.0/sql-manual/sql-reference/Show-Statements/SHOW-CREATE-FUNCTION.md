@@ -60,6 +60,15 @@ SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type> ) [ FROM <db_name> ]
 
 > FROM db_name indicates that the custom function is queried from the specified database
 
+## Return Value
+
+| Column          | Instructions          |
+|-----------------|-------------|
+| SYMBOL          | Function package name        |
+| FILE            | jar package path     |
+| ALWAYS_NULLABLE | Whether the result can be NULL |
+| TYPE            | Function type        |
+
 ## Examples
 
 ```sql
