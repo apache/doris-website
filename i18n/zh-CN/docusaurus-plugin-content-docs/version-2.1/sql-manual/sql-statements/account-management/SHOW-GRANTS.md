@@ -36,9 +36,13 @@ SHOW [ALL] GRANTS [FOR <user_identity>];
 
 ## 可选参数
 
-**`<user_identity>`**
+**1. `[ALL]`**
 
-  指定要查看权限的用户。必须为通过 `CREATE USER` 命令创建的 `user_identity`。
+是否查看所有用户的权限。
+
+**2. `<user_identity>`**
+
+指定要查看权限的用户。必须为通过 `CREATE USER` 命令创建的 `user_identity`。
 
 ## 返回值
 

@@ -36,7 +36,11 @@ SHOW [ALL] GRANTS [FOR <user_identity>];
 
 ## Optional Parameters
 
-**`<user_identity>`**
+**1. `[ALL]`**
+
+Whether to view the permissions of all users.
+
+**2. `<user_identity>`**
 
   Specify the user whose permissions are to be viewed. The `user_identity` must be created by the `CREATE USER` command.
 
