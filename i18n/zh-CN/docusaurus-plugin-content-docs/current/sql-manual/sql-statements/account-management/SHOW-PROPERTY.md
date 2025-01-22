@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## 描述
 
 该语句用于查看用户的属性

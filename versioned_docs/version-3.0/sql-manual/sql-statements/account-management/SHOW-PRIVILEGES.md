@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
 `SHOW PRIVILEGES` statement is used to display the list of currently available privileges in the database system. It helps users understand the types of privileges supported by the system and the details of each privilege.

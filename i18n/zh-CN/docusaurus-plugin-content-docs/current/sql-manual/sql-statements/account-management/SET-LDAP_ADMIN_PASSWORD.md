@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## 描述
 
  `SET LDAP_ADMIN_PASSWORD` 命令用于设置 LDAP 管理员密码。使用 LDAP 认证时，doris 需使用管理员账户和密码来向 LDAP 服务查询登录用户的信息。

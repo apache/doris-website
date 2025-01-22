@@ -25,9 +25,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
 Set user attributes, including resources assigned to users, importing clusters, etc.

@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
 This statement is used to refresh the cache information of LDAP in Doris. When modifying user information in the LDAP service or modifying the role permissions corresponding to LDAP user groups in Doris, the changes may not take effect immediately due to caching, and the cache can be refreshed through this statement.

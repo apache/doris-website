@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
  The `SET LDAP_ADMIN_PASSWORD` command is used to set the LDAP administrator password. When using LDAP authentication, doris needs to use the administrator account and password to query the LDAP service for login user information.

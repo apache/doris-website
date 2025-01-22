@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
 This statement is used to view the attributes of the user.
