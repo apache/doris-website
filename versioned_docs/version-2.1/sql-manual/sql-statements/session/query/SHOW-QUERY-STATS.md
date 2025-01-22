@@ -52,6 +52,14 @@ SHOW QUERY STATS [ { [FOR <db_name>] | [FROM <table_name>] } ] [ALL] [VERBOSE]];
 
 > VERBOSE displays detailed matching information
 
+## Access Control Requirements
+
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege          | Object    | Notes              |
+|:-------------------|:----------|:-------------------|
+| SELECT_PRIV        | DATABASE  | You must have the SELECT permission on the queried database |
+
 ## Usage Notes
 
 - Query the historical query matching status of databases and tables. Data is reset after fe is restarted, and statistics are collected for each fe.

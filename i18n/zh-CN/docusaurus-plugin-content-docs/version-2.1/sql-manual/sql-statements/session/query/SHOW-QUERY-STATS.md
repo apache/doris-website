@@ -52,6 +52,14 @@ SHOW QUERY STATS [ { [FOR <db_name>] | [FROM <table_name>] } ] [ALL] [VERBOSE]];
 
 > VERBOSE 可以展示更详细的命中情况
 
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）          |
+|:--------------|:-----------|:-------------------|
+| SELECT_PRIV         | DATABASE   | 需要对查询的数据库有 SELECT 权限 |
+
 ## 注意事项
 
 - 支持查询数据库和表的历史查询命中情况，重启 fe 后数据会重置，每个 fe 单独统计。
