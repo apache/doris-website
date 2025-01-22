@@ -34,6 +34,8 @@ under the License.
 | `disable_query` | 是否禁用查询，默认为`false`。设置为`true`后，将不会再有新的查询请求规划到这台 BE 节点上。                                                                                                    |
 | `disable_load`  | 是否禁用导入，默认为`false`。设置为`true`后，将不会再有新的导入请求规划到这台 BE 节点上。                                                                                                    |
 
+> This statement is not supported in decoupling storage and computing mode.
+
 ## 语法
 
 ```sql
