@@ -34,8 +34,8 @@ ARRAY_CONCAT(<arr1> [,<arr2> , ...])
 ## Parameters
 | Parameter | Description    |
 |---|---|
-| `<arr1>` | ARRAY array     |
-| `<arr2>` | ARRAY array     |
+| `<arr1>` | The source array |
+| `<arr2>` | The array to be appended to arr1 |
 
 ## Return Value
 
