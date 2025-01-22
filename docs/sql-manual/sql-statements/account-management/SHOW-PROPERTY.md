@@ -35,11 +35,15 @@ SHOW {ALL PROPERTIES | PROPERTY [FOR <user_name>]} [LIKE <key>]
 ```
 
 ## Optional Parameters
-**1. `<user_name>`**
+**1. `[ALL PROPERTIES]`**
+
+   Whether to view all user attributes.
+
+**2. `<user_name>`**
 
    View the attributes of the specified user. If not specified, check the current user's.
 
-**2. `<key>`**
+**3. `<key>`**
 
    Fuzzy matching can be done by attribute name.
 
