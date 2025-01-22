@@ -3,7 +3,6 @@
     "title": "GRANT TO",
     "language": "en"
 }
-
 ---
 
 <!--
@@ -15,7 +14,7 @@ to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
 
-  http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
@@ -25,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
 The GRANT command is used to:
@@ -33,23 +31,31 @@ The GRANT command is used to:
 1. Grant specified privileges to a user or role.
 2. Grant specified roles to a user.
 
+**Related Commands**
+
+- [SHOW GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
+- [CREATE ROLE](./CREATE-ROLE.md)
+- [CREATE WORKLOAD GROUP](../cluster-management/compute-management/CREATE-WORKLOAD-GROUP.md)
+- [CREATE RESOURCE](../cluster-management/compute-management/CREATE-RESOURCE.md)
+- [CREATE STORAGE VAULT](../cluster-management/storage-management/CREATE-STORAGE-VAULT.md)
+
 ## Syntax
 
-GRANT privilege_list ON priv_level TO user_identity [ROLE role_name]
+**Grant specified privileges to a user or role**
 
-GRANT privilege_list ON RESOURCE resource_name TO user_identity [ROLE role_name]
+```sql
+GRANT <privilege_list> ON { <priv_level> | RESOURCE <resource_name> | WORKLOAD GROUP <workload_group_name> | COMPUTE GROUP <compute_group_name> | STORAGE VAULT <storage_vault_name> } TO { <user_identity> | ROLE <role_name> }
+```
 
-GRANT privilege_list ON WORKLOAD GROUP workload_group_name TO user_identity [ROLE role_name]
+**Grant specified roles to a user**
 
-GRANT privilege_list ON COMPUTE GROUP compute_group_name TO user_identity [ROLE role_name]
+```sql
+GRANT <role_list> TO <user_identity> 
+```
 
-GRANT privilege_list ON STORAGE VAULT storage_vault_name TO user_identity [ROLE role_name]
+## Required Parameters
 
-GRANT role_list TO user_identity
-
-## Parameters
-
-### privilege_list
+**1. `<privilege_list>`**
 
 A comma-separated list of privileges to be granted. Currently supported privileges include:
 
@@ -62,128 +68,158 @@ A comma-separated list of privileges to be granted. Currently supported privileg
 - CREATE_PRIV: Create permission on the specified database or table.
 - DROP_PRIV: Drop privilege on the specified database or table.
 - USAGE_PRIV: Access to the specified resource and Workload Group permissions.
-- SHOW_VIEW_PRIV: Permission to view `view` creation statements.
+- SHOW_VIEW_PRIV: Permission to view view creation statements.
 
 Legacy privilege conversion:
+
 - ALL and READ_WRITE will be converted to: SELECT_PRIV, LOAD_PRIV, ALTER_PRIV, CREATE_PRIV, DROP_PRIV.
 - READ_ONLY is converted to SELECT_PRIV.
 
-### priv_level
+**2. `<priv_level>`**
 
 Supports the following four forms:
 
-- *.*.*: Privileges can be applied to all catalogs and all databases and tables within them.
-- catalog_name.*.*: Privileges can be applied to all databases and tables in the specified catalog.
+- ..*: Privileges can be applied to all catalogs and all databases and tables within them.
+- catalog_name..: Privileges can be applied to all databases and tables in the specified catalog.
 - catalog_name.db.*: Privileges can be applied to all tables under the specified database.
 - catalog_name.db.tbl: Privileges can be applied to the specified table under the specified database.
 
-### resource_name
+**3. `<resource_name>`**
 
 Specifies the resource name, supporting `%` and `*` to match all resources, but does not support wildcards, such as res*.
 
-### workload_group_name
+**4. `<workload_group_name>`**
 
 Specifies the workload group name, supporting `%` and `*` to match all workload groups, but does not support wildcards.
 
-### compute_group_name
+**5. `<compute_group_name>`**
 
 Specifies the compute group name, supporting `%` and `*` to match all compute groups, but does not support wildcards.
 
-### storage_vault_name
+**6. `<storage_vault_name>`**
 
 Specifies the storage vault name, supporting `%` and `*` to match all storage vaults, but does not support wildcards.
 
-### user_identity
+**7. `<user_identity>`**
 
 Specifies the user to receive the privileges. Must be a user_identity created with CREATE USER. The host in user_identity can be a domain name. If it is a domain name, the effective time of the authority may be delayed by about 1 minute.
 
-### role_name
+**8. `<role_name>`**
 
 Specifies the role to receive the privileges. If the specified role does not exist, it will be created automatically.
 
-### role_list
+**9. `<role_list>`**
 
 A comma-separated list of roles to be assigned. The specified roles must exist.
 
+## Access Control Requirements
+
+Users executing this SQL command must have at least the following privileges:
+
+| Privilege | Object | Notes                |
+| :---------------- | :------------- | :---------------------------- |
+| GRANT_PRIV        | User or Role   | Only users or roles with the GRANT_PRIV privilege can perform the GRANT operation. |
+
 ## Examples
 
-1. Grant permissions to all catalogs and databases and tables to the user:
+- Grant permissions to all catalogs and databases and tables to the user:
 
-   GRANT SELECT_PRIV ON *.*.* TO 'jack'@'%';
+    ```sql
+    GRANT SELECT_PRIV ON *.*.* TO 'jack'@'%';
+    ```
 
-2. Grant permissions to the specified database table to the user:
+- Grant permissions to the specified database table to the user:
 
-   GRANT SELECT_PRIV,ALTER_PRIV,LOAD_PRIV ON ctl1.db1.tbl1 TO 'jack'@'192.8.%';
+    ```sql
+    GRANT SELECT_PRIV,ALTER_PRIV,LOAD_PRIV ON ctl1.db1.tbl1  TO 'jack'@'192.8.%';
+    ```
 
-3. Grant permissions to the specified database table to the role:
+- Grant permissions to the specified database table to the role:
 
-   GRANT LOAD_PRIV ON ctl1.db1.* TO ROLE 'my_role';
+    ```sql
+    GRANT LOAD_PRIV ON ctl1.db1.* TO ROLE 'my_role';
+    ```
 
-4. Grant access to all resources to users:
+- Grant access to all resources to users:
 
-   GRANT USAGE_PRIV ON RESOURCE * TO 'jack'@'%';
+    ```sql
+    GRANT USAGE_PRIV ON RESOURCE * TO 'jack'@'%';
+    ```
 
-5. Grant the user permission to use the specified resource:
+- Grant the user permission to use the specified resource:
 
-   GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO 'jack'@'%';
+    ```sql
+    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO 'jack'@'%';
+    ```
 
-6. Grant access to specified resources to roles:
+- Grant access to specified resources to roles:
 
-   GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO ROLE 'my_role';
+    ```sql
+    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO ROLE 'my_role';
+    ```
 
-7. Grant the specified role to a user:
+- Grant the specified role to a user:
 
-   GRANT 'role1','role2' TO 'jack'@'%';
+    ```sql
+    GRANT 'role1','role2' TO 'jack'@'%';
+    ```
 
-8. Grant the specified workload group 'g1' to user jack:
+- Grant the specified workload group 'g1' to user jack:
 
-   GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'jack'@'%';
+    ```sql
+    GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'jack'@'%';
+    ```
 
-9. Match all workload groups granted to user jack:
+- Match all workload groups granted to user jack:
 
-   GRANT USAGE_PRIV ON WORKLOAD GROUP '%' TO 'jack'@'%';
+    ```sql
+    GRANT USAGE_PRIV ON WORKLOAD GROUP '%' TO 'jack'@'%';
+    ```
 
-10. Grant the workload group 'g1' to the role my_role:
+- Grant the workload group 'g1' to the role my_role:
 
+    ```sql
     GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO ROLE 'my_role';
+    ```
 
-11. Allow jack to view the creation statement of view1 under db1:
+- Allow jack to view the creation statement of view1 under db1:
 
+    ```sql
     GRANT SHOW_VIEW_PRIV ON db1.view1 TO 'jack'@'%';
+    ```
 
-12. Grant user permission to use the specified compute group:
+- Grant user permission to use the specified compute group:
 
+    ```sql
     GRANT USAGE_PRIV ON COMPUTE GROUP 'group1' TO 'jack'@'%';
+    ```
 
-13. Grant role permission to use the specified compute group:
+- Grant role permission to use the specified compute group:
 
+    ```sql
     GRANT USAGE_PRIV ON COMPUTE GROUP 'group1' TO ROLE 'my_role';
+    ```
 
-14. Grant user permission to use all compute groups:
+- Grant user permission to use all compute groups:
 
+    ```sql
     GRANT USAGE_PRIV ON COMPUTE GROUP '*' TO 'jack'@'%';
+    ```
 
-15. Grant user permission to use the specified storage vault:
+- Grant user permission to use the specified storage vault:
 
+    ```sql
     GRANT USAGE_PRIV ON STORAGE VAULT 'vault1' TO 'jack'@'%';
+    ```
 
-16. Grant role permission to use the specified storage vault:
+- Grant role permission to use the specified storage vault:
 
+    ```sql
     GRANT USAGE_PRIV ON STORAGE VAULT 'vault1' TO ROLE 'my_role';
+    ```
 
-17. Grant user permission to use all storage vaults:
+- Grant user permission to use all storage vaults:
 
+    ```sql
     GRANT USAGE_PRIV ON STORAGE VAULT '*' TO 'jack'@'%';
-
-## Related Commands
-
-- [REVOKE](./REVOKE.md)
-- [SHOW GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
-- [CREATE ROLE](./CREATE-ROLE.md)
-- [CREATE WORKLOAD GROUP](../Administration-Statements/CREATE-WORKLOAD-GROUP.md)
-- [CREATE RESOURCE](../Administration-Statements/CREATE-RESOURCE.md)
-- [CREATE STORAGE VAULT](../Administration-Statements/CREATE-STORAGE-VAULT.md)
-
-## Keywords
-
-GRANT, WORKLOAD GROUP, COMPUTE GROUP, RESOURCE 
+    ```
