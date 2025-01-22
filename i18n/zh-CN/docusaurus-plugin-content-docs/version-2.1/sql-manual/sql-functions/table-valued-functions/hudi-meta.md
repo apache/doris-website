@@ -1,7 +1,7 @@
 ---
 {
-"title": "HUDI_META",
-"language": "zh-CN"
+  "title": "HUDI_META",
+  "language": "zh-CN"
 }
 ---
 
