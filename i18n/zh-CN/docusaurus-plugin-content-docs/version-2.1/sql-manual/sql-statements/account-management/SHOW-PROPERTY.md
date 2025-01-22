@@ -25,96 +25,117 @@ under the License.
 -->
 
 
-
 ## 描述
 
 该语句用于查看用户的属性
 
-语法：
+## 语法
 
 ```sql
-SHOW PROPERTY [FOR user] [LIKE key]
-SHOW ALL PROPERTIES [LIKE key]
+SHOW {ALL PROPERTIES | PROPERTY [FOR <user_name>]} [LIKE <key>]
 ```
 
-* `user`
+## 可选参数
+**1. `<user_name>`**
 
-   查看指定用户的属性。如果未指定，请检查当前用户的。
+   查看指定用户的属性。如果未指定，检查当前用户的。
 
-* `LIKE`
+**2. `<key>`**
 
    模糊匹配可以通过属性名来完成。
 
-* `ALL` 
+## 返回值
+- 若语句中使用的是`PROPERTY`
 
-   查看所有用户的属性 (从 2.0.3 版本开始支持)
-
-返回结果说明：
-
-```sql
-mysql> show property like'%connection%';
-+----------------------+-------+
-| Key                  | Value |
-+----------------------+-------+
-| max_user_connections | 100   |
-+----------------------+-------+
-1 row in set (0.01 sec)
-```
-
-* `Key`
-
-  属性名。
+   | 列名 | 说明 |
+   | -- | -- |
+   | Key | 属性名 |
+   | Value | 属性值 |
 
 
-* `Value`
+- 若语句中使用的是`PROPERTIES`
 
-  属性值。
+   | 列名 | 说明 |
+   | -- | -- |
+   | User | 用户名 |
+   | Properties | 对应用户各个 `property` 的 `key:value` |
 
+## 权限控制
 
+执行此 SQL 命令的用户必须至少具有以下权限：
 
-```sql
-mysql> show all properties like "%connection%";
-+-------------------+--------------------------------------+
-| User              | Properties                           |
-+-------------------+--------------------------------------+
-| root              | {"max_user_connections": "100"}      |
-| admin             | {"max_user_connections": "100"}      |
-| default_cluster:a | {"max_user_connections": "1000"}     |
-+-------------------+--------------------------------------+
-```
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
+| :---------------- | :------------- | :---------------------------- |
+| GRANT_PRIV        | 用户（User）或 角色（Role）    | 用户或者角色拥有 GRANT_PRIV 权限才能查看所有用户属性，`SHOW PROPERTY`查看当前用户属性不需要`GRANT_PRIV`权限 |
 
-* `User`
-
-  用户名。
-
-* `Properties`
-
-  对应用户各个 property 的 key:value. 用户名。
+## 注意事项
+-  `SHOW ALL PROPERTIES` 可以查看所有用户的属性。
+- 如果指定 `user_name`，则查看该指定用户的属性。
+- 如果不指定 `user_name`，则查看当前用户的属性。
+- `SHOW PROPERTY`查看当前用户属性不需要`GRANT_PRIV`权限。
 
 ## 示例
 
-1. 查看 jack 用户的属性
+- 查看 jack 用户的属性
 
    ```sql
-   SHOW PROPERTY FOR 'jack'
+   SHOW PROPERTY FOR 'jack';
+   ```
+   ```text
+   +-------------------------------------+--------+
+   | Key                                 | Value  |
+   +-------------------------------------+--------+
+   | cpu_resource_limit                  | -1     |
+   | default_load_cluster                |        |
+   | default_workload_group              | normal |
+   | exec_mem_limit                      | -1     |
+   | insert_timeout                      | -1     |
+   | max_query_instances                 | 3000   |
+   | max_user_connections                | 1000   |
+   | parallel_fragment_exec_instance_num | -1     |
+   | query_timeout                       | -1     |
+   | resource_tags                       |        |
+   | sql_block_rules                     |        |
+   +-------------------------------------+--------+
    ```
 
-
-2. 查看 jack 用户导入 cluster 相关属性
-
+- 查看 jack 用户 limit 相关属性
 
    ```sql
-   SHOW PROPERTY FOR 'jack' LIKE '%load_cluster%'
+   SHOW PROPERTY FOR 'jack' LIKE '%limit%';
    ```
 
-3. 查看所有用户导入 cluster 相关属性
+   ```text
+   +--------------------+-------+
+   | Key                | Value |
+   +--------------------+-------+
+   | cpu_resource_limit | -1    |
+   | exec_mem_limit     | -1    |
+   +--------------------+-------+
+   ```
+
+- 查看所有用户 limit 相关属性
 
    ```sql
-   SHOW ALL PROPERTIES LIKE '%load_cluster%'
+   SHOW ALL PROPERTIES LIKE '%limit%';
    ```
 
-## 关键词
+   ```text
+   +-------+------------------------------------------------------------+
+   | User  | Properties                                                 |
+   +-------+------------------------------------------------------------+
+   | root  | {
+     "cpu_resource_limit": "-1",
+     "exec_mem_limit": "-1"
+   } |
+   | admin | {
+     "cpu_resource_limit": "-1",
+     "exec_mem_limit": "-1"
+   } |
+   | jack  | {
+     "cpu_resource_limit": "-1",
+     "exec_mem_limit": "-1"
+   } |
+   +-------+------------------------------------------------------------+
+   ```
 
-    SHOW, PROPERTY, ALL
-
-## 最佳实践
