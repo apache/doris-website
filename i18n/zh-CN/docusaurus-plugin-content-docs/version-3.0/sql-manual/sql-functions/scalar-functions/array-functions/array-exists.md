@@ -38,7 +38,7 @@ ARRAY_EXISTS([ <lambda>, ] <arr1> [, <arr2> , ...] )
 ## 参数
 | Parameter | Description |
 |---|---|
-| `lambda` | lambda 表达式，可以执行合法的标量函数，不支持聚合函数等 |
+| `<lambda>` | lambda 表达式，可以执行合法的标量函数，不支持聚合函数等 |
 | `<arr1>` | 需要计算的数组arr1  |
 | `<arr2>` | 需要计算的数组arr2  |
 

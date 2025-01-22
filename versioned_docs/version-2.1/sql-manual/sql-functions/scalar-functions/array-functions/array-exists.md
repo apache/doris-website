@@ -38,7 +38,7 @@ ARRAY_EXISTS([ <lambda>, ] <arr1> [, <arr2> , ...] )
 ## Parameters
 | Parameter | Description |  
 |---|---|
-| `lambda` | A lambda expression that can execute valid scalar functions but does not support aggregate functions. |  
+| `<lambda>` | A lambda expression that can execute valid scalar functions but does not support aggregate functions. |  
 | `<arr1>` | Needed be computed array arr1 |  
 | `<arr2>` | Needed be computed array arr2 |  
 
