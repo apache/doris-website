@@ -35,7 +35,7 @@ under the License.
 | `disable_load`  | 是否禁用导入，默认为`false`。设置为`true`后，将不会再有新的导入请求规划到这台 BE 节点上。                                                                                                    |
 
 :::tip
-This statement is not supported in decoupling storage and computing mode.
+存算分离模式暂不支持此命令。
 :::
 
 ## 语法
@@ -84,8 +84,6 @@ be_identifier
 ## 注意事项
 
 由于此操作是针对整个 BE 级别的，影响面较广，如果操作不慎，可能会影响到整个集群的正常查询、导入甚至是建表操作。请谨慎操作。
-
-存算分离模式暂不支持此命令。
 
 ## 示例
 

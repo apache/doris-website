@@ -34,6 +34,10 @@ This statement is used to modify the attributes of BE nodes. After modifying the
 | `disable_query` | Whether to disable queries, with the default value being `false`. After setting it to `true`, no new query requests will be scheduled to this BE node.                                                                                                                                                                                         |
 | `disable_load`  | Whether to disable load, with the default value being `false`. After setting it to `true`, no new import requests will be scheduled to this BE node.                                                                                                                                                                                           |
 
+:::tip
+This command is not supported in the decoupling storage and computing mode.
+:::
+
 ## Syntax
 
 ```sql
@@ -80,8 +84,6 @@ The user who executes this SQL must have at least the following permissions:
 ## Usage Notes
 
 Since this operation is at the entire BE level and has a wide impact, it may affect the normal querying, loading, and even table creation operations of the entire cluster if not performed carefully. Please operate with caution.
-
-This command is not supported in the decoupling storage and computing mode.
 
 ## Examples
 
