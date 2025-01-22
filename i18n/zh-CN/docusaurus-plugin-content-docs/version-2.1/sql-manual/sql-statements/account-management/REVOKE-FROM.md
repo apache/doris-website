@@ -44,7 +44,12 @@ REVOKE 命令用于：
 **撤销某用户或某角色的指定权限**
 
 ```sql
-REVOKE <privilege_list> ON { <priv_level> | RESOURCE <resource_name> | WORKLOAD GROUP <workload_group_name> } FROM { <user_identity> | ROLE <role_name> }
+REVOKE <privilege_list> 
+ON { <priv_level> 
+   | RESOURCE <resource_name> 
+   | WORKLOAD GROUP <workload_group_name> 
+   }
+FROM { <user_identity> | ROLE <role_name> }
 ```
 
 **撤销先前授予某用户的指定角色**

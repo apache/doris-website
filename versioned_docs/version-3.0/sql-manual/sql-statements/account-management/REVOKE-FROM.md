@@ -45,7 +45,14 @@ The REVOKE command has the following functions:
 **Revoke the specified permission of a user or a role**
 
 ```sql
-REVOKE <privilege_list> ON { <priv_level> | RESOURCE <resource_name> | WORKLOAD GROUP <workload_group_name> | COMPUTE GROUP <compute_group_name> | STORAGE VAULT <storage_vault_name> } FROM { <user_identity> | ROLE <role_name> }
+REVOKE <privilege_list> 
+ON { <priv_level> 
+   | RESOURCE <resource_name> 
+   | WORKLOAD GROUP <workload_group_name> 
+   | COMPUTE GROUP <compute_group_name> 
+   | STORAGE VAULT <storage_vault_name> 
+   } 
+FROM { <user_identity> | ROLE <role_name> }
 ```
 
 **Revoke the specified role previously granted to a user**
