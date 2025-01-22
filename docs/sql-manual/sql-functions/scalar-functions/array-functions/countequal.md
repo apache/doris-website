@@ -24,54 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## countequal
 
-countequal
+## Description
 
-### description
+Determine the number of value elements in the array
 
-#### Syntax
+## Syntax
 
-`BIGINT countequal(ARRAY<T> arr, T value)`
-
-Returns a number of the `value` in the given array.
-
-```
-num      - how many the value number in array;
-0        - if value does not present in the array;
-NULL     - when array is NULL.
+```sql
+COUNTEQUAL(<arr>, <value>)
 ```
 
-### example
+## Parameters
 
-```
-mysql> select *, countEqual(c_array,5) from array_test;
-+------+-----------------+--------------------------+
-| id   | c_array         | countequal(`c_array`, 5) |
-+------+-----------------+--------------------------+
-|    1 | [1, 2, 3, 4, 5] |                        1 |
-|    2 | [6, 7, 8]       |                        0 |
-|    3 | []              |                        0 |
-|    4 | NULL            |                     NULL |
-+------+-----------------+--------------------------+
+| Parameter | Description |
+|--|--|
+| `<arr>` | The array to be judged |
+| `<value>` | Elements to be judged |
 
-mysql> select *,countEqual(c_array, 1),countEqual(c_array, 5),countEqual(c_array, NULL) from array_test;
-+------+-----------------------+--------------------------+--------------------------+-----------------------------+
-| id   | c_array               | countequal(`c_array`, 1) | countequal(`c_array`, 5) | countequal(`c_array`, NULL) |
-+------+-----------------------+--------------------------+--------------------------+-----------------------------+
-|    1 | [1, 2, 3, 4, 5]       |                        1 |                        1 |                           0 |
-|    2 | [6, 7, 8]             |                        0 |                        0 |                           0 |
-|    3 | []                    |                        0 |                        0 |                           0 |
-|    4 | NULL                  |                     NULL |                     NULL |                        NULL |
-|    5 | [66, 77]              |                        0 |                        0 |                           0 |
-|    5 | [66, 77]              |                        0 |                        0 |                           0 |
-|    6 | NULL                  |                     NULL |                     NULL |                        NULL |
-|    7 | [NULL, NULL, NULL]    |                        0 |                        0 |                           3 |
-|    8 | [1, 2, 3, 4, 5, 5, 5] |                        1 |                        3 |                           0 |
-+------+-----------------------+--------------------------+--------------------------+-----------------------------+
+## Return Value
+
+The returned judgment results are as follows: num: the number of value in array; 0: value does not exist in array arr; NULL: if the array is NULL.
+
+## Example
+
+```sql
+SELECT COUNTEQUAL(NULL,1),COUNTEQUAL([1, 2, 3, 'c'],2),COUNTEQUAL([],'b');
 ```
 
-### keywords
-
-ARRAY,COUNTEQUAL,
-
+```text
++---------------------+---------------------------------------------------+------------------------------------------+
+| countequal(NULL, 1) | countequal(['1', '2', '3', 'c'], cast(2 as TEXT)) | countequal(cast([] as ARRAY<TEXT>), 'b') |
++---------------------+---------------------------------------------------+------------------------------------------+
+|                NULL |                                                 1 |                                        0 |
++---------------------+---------------------------------------------------+------------------------------------------+
+```

@@ -22,58 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_with_constant
-
-array_with_constant
-array_repeat
 
 ## 描述
+
+生成一个包含 n 个重复元素 T 的数组
 
 ## 语法
 
 ```sql
-ARRAY<T> array_with_constant(n, T)
-ARRAY<T> array_repeat(T, n)
+ARRAY_WITH_CONSTANT(<n>, <T>)
 ```
-返回一个数组，包含 n 个重复的 T 常量。array_repeat 与 array_with_constant 功能相同，用来兼容 hive 语法格式。
+
+## 参数
+
+| 参数 | 说明   |
+|--|------|
+| `<n>` | 元数个数 |
+| `<T>` | 指定元素 |
+
+## 返回值
+
+返回一个数组，包含 n 个重复的 T 元素。array_repeat 与 array_with_constant 功能相同，用来兼容 hive 语法格式。
 
 ## 举例
 
-```
-mysql> select array_with_constant(2, "hello"), array_repeat("hello", 2);
-+---------------------------------+--------------------------+
-| array_with_constant(2, 'hello') | array_repeat('hello', 2) |
-+---------------------------------+--------------------------+
-| ['hello', 'hello']              | ['hello', 'hello']       |
-+---------------------------------+--------------------------+
-1 row in set (0.04 sec)
-
-mysql> select array_with_constant(3, 12345), array_repeat(12345, 3);
-+-------------------------------+------------------------+
-| array_with_constant(3, 12345) | array_repeat(12345, 3) | 
-+-------------------------------+------------------------+
-| [12345, 12345, 12345]         | [12345, 12345, 12345]  |
-+-------------------------------+------------------------+
-1 row in set (0.01 sec)
-
-mysql> select array_with_constant(3, null), array_repeat(null, 3);
-+------------------------------+-----------------------+
-| array_with_constant(3, NULL) | array_repeat(NULL, 3) |
-+------------------------------+-----------------------+
-| [NULL, NULL, NULL]           |  [NULL, NULL, NULL]   |
-+------------------------------+-----------------------+
-1 row in set (0.01 sec)
-
-mysql> select array_with_constant(null, 3), array_repeat(3, null);
-+------------------------------+-----------------------+
-| array_with_constant(NULL, 3) | array_repeat(3, NULL) |
-+------------------------------+-----------------------+
-| []                           | []                    |
-+------------------------------+-----------------------+
-1 row in set (0.01 sec)
-
+```sql
+SELECT ARRAY_WITH_CONSTANT(2, "hello"),ARRAY_WITH_CONSTANT(3, 12345);
 ```
 
-### keywords
-
-ARRAY,WITH_CONSTANT,ARRAY_WITH_CONSTANT,ARRAY_REPEAT
+```text
++---------------------------------+-------------------------------+
+| array_with_constant(2, 'hello') | array_with_constant(3, 12345) |
++---------------------------------+-------------------------------+
+| ["hello", "hello"]              | [12345, 12345, 12345]         |
++---------------------------------+-------------------------------+
+```

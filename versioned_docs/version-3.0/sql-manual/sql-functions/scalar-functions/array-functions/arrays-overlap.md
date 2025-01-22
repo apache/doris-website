@@ -25,39 +25,37 @@ under the License.
 -->
 
 
-## arrays_overlap
+## Description
 
-arrays_overlap
+Determine whether the left and right arrays contain common elements
 
-### description
+## Syntax
 
-#### Syntax
-
-`BOOLEAN arrays_overlap(ARRAY<T> left, ARRAY<T> right)`
-
-Check if there is any common element for left and right array. Return below values:
-
-```
-1    - if any common element inside left and right array;
-0    - if no common element inside left and right array;
-NULL - when left or right array is NULL; OR any element inside left and right array is NULL;
+```sql
+ARRAYS_OVERLAP(<left>, <right>)
 ```
 
-### example
+## Parameters
 
+| Parameter | Description |
+|--|--|
+| `<left>` | The array to be judged |
+| `<right>` | The array to be judged |
+
+## Return Value
+
+Returns the judgment result: 1: left and right arrays have common elements; 0: left and right arrays do not have common elements; NULL: left or right array is NULL; or any element in left and right array is NULL
+
+## Example
+
+```sql
+SELECT ARRAYS_OVERLAP(['a', 'b', 'c'], [1, 2, 'b']);
 ```
-mysql> select c_left,c_right,arrays_overlap(c_left,c_right) from array_test;
-+--------------+-----------+-------------------------------------+
-| c_left       | c_right   | arrays_overlap(`c_left`, `c_right`) |
-+--------------+-----------+-------------------------------------+
-| [1, 2, 3]    | [3, 4, 5] |                                   1 |
-| [1, 2, 3]    | [5, 6]    |                                   0 |
-| [1, 2, NULL] | [1]       |                                NULL |
-| NULL         | [1, 2]    |                                NULL |
-| [1, 2, 3]    | [1, 2]    |                                   1 |
-+--------------+-----------+-------------------------------------+
+
+```text
++--------------------------------------------------+
+| arrays_overlap(['a', 'b', 'c'], ['1', '2', 'b']) |
++--------------------------------------------------+
+|                                                1 |
++--------------------------------------------------+
 ```
-
-### keywords
-
-ARRAY,ARRAYS,OVERLAP,ARRAYS_OVERLAP
