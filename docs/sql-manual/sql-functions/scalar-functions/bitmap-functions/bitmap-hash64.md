@@ -24,29 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_hash64
-### description
-#### Syntax
+## Description
 
-`BITMAP BITMAP_HASH64(expr)`
+Computes the 64-bit hash value of any input type and returns a Bitmap containing that hash value.
 
-Compute the 64-bits hash value of a expr of any type, then return a bitmap containing that hash value. Mainly be used to load non-integer value into bitmap column, e.g.,
+## Syntax
 
-```
-cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,device_id, device_id=bitmap_hash64(device_id)"   http://host:8410/api/test/testDb/_stream_load
+```sql
+BITMAP_HASH64(<expr>)
 ```
 
-### example
+## Parameters
 
+| Parameter | Description           |
+|-----------|-----------------------|
+| `<expr>`  | Any value or field expression |
+
+## Return Value
+
+Returns a Bitmap containing the 64-bit hash value of the parameter `<expr>`.
+
+## Examples
+
+To compute the 64-bit hash of a value, you can use:
+
+```sql
+select bitmap_to_string(bitmap_hash64('hello'));
 ```
-mysql> select bitmap_to_string(bitmap_hash64('hello'));
+
+The result will be:
+
+```text
 +------------------------------------------+
 | bitmap_to_string(bitmap_hash64('hello')) |
 +------------------------------------------+
 | 15231136565543391023                     |
 +------------------------------------------+
 ```
-
-### keywords
-
-    BITMAP_HASH,BITMAP
