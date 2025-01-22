@@ -61,7 +61,7 @@ CREATE
 
 ```sql
 schedule:
-    {  AT timestamp | EVERY interval [STARTS timestamp ] [ENDS timestamp ] }
+    {  AT <at_timestamp> | EVERY <interval> [STARTS <start_timestamp> ] [ENDS <end_timestamp> ]  }
 ```
 
 其中：
@@ -84,16 +84,16 @@ interval:
 
 ## 可选参数
 
-**1. `<AT timestamp>`**
+**1. `AT <at_timestamp>`**
 > 格式：'YYYY-MM-DD HH:MM:SS', 用于**一次性事件**，它指定事件仅在 给定的日期和时间执行一次 timestamp，当执行完成后，JOB 状态会变更为 FINISHED。
 
-**2. `<EVERY>`**
+**2. `EVERY <interval>`**
 > 表示定期重复操作，它指定了作业的执行频率，关键字后面要指定一个时间间隔，该时间间隔可以是天、小时、分钟、秒、周。
 
-**3. `<STARTS timestamp>`**
+**3. `STARTS <start_timestamp>`**
 > 格式：'YYYY-MM-DD HH:MM:SS',用于指定作业的开始时间，如果没有指定，则从当前时间的下一个时间点开始执行。开始时间必须大于当前时间。
 
-**3. `<ENDS timestamp >`**
+**4. `ENDS <end_timestamp>`**
 > 格式：'YYYY-MM-DD HH:MM:SS', 用于指定作业的结束时间，如果没有指定，则表示永久执行。该日期必须大于当前时间，如果指定了开始时间，即 STARTS，则结束时间必须大于开始时间。
 
 ## 权限控制

@@ -49,27 +49,26 @@ JOB only describes job information. Execution will generate TASK. TASK status is
 ## Syntax
 
 ```sql
-
 CREATE
-JOB
-<job_name>
-ON SCHEDULE <schedule>
-[ COMMENT <string> ]
-DO <sql_body> ;
+    JOB  
+    <job_name>
+    ON SCHEDULE <schedule>
+    [ COMMENT <string> ]
+    DO <sql_body> 
 ```
 
 Where:
 
 ```sql
 schedule:
-{ AT timestamp | EVERY interval [STARTS timestamp ] [ENDS timestamp ] }
+  { AT <at_timestamp> | EVERY <interval> [STARTS <start_timestamp> ] [ENDS <end_timestamp> ] }
 ```
 
 Where:
 
 ```sql
 interval:
-quantity { WEEK | DAY | HOUR | MINUTE }
+  quantity { WEEK | DAY | HOUR | MINUTE }
 ```
 
 ## Required parameters
@@ -85,16 +84,16 @@ quantity { WEEK | DAY | HOUR | MINUTE }
 
 ## Optional parameters
 
-**1. `<AT timestamp>`**
+**1. `AT <at_timestamp>`**
 > Format: 'YYYY-MM-DD HH:MM:SS', used for **one-time events**, it specifies that the event is executed only once at a given date and time timestamp, and when the execution is completed, the job status will change to FINISHED.
 
-**2. `<EVERY>`**
+**2. `EVERY <interval>`**
 > Indicates a regularly repeated operation, it specifies the execution frequency of the job, and a time interval must be specified after the keyword, which can be days, hours, minutes, seconds, or weeks.
 
-**3. `<STARTS timestamp>`**
+**3. `STARTS <start_timestamp>`**
 > Format: 'YYYY-MM-DD HH:MM:SS', used to specify the start time of the job. If not specified, it will be executed from the next time point after the current time. The start time must be greater than the current time.
 
-**4. `<ENDS timestamp>`**
+**4. `ENDS <end_timestamp>`**
 > Format: 'YYYY-MM-DD HH:MM:SS', used to specify the end time of the job. If not specified, it means permanent execution. The date must be greater than the current time. If the start time is specified, that is, STARTS, the end time must be greater than the start time.
 
 ## Access Control Requirements
