@@ -45,7 +45,19 @@ SHOW [ALL] GRANTS [FOR <user_identity>];
 
 ## Return Value
 
-Returns the list of user permissions.
+  | Column | Description |
+  | -- | -- |
+  | UserIdentity | User identity |
+  | Comment | Comment |
+  | Password | Whether the password is set |
+  | Roles | Roles |
+  | GlobalPrivs | Global privileges |
+  | CatalogPrivs | Catalog privileges |
+  | DatabasePrivs | Database privileges |
+  | TablePrivs | Table privileges |
+  | ColPrivs | Column privileges |
+  | ResourcePrivs | Resource privileges |
+  | WorkloadGroupPrivs | WorkloadGroup privileges |
 
 ## Access Control Requirements
 

@@ -44,7 +44,20 @@ SHOW [ALL] GRANTS [FOR <user_identity>];
   指定要查看权限的用户。必须为通过 `CREATE USER` 命令创建的 `user_identity`。
 
 ## 返回值
-返回用户权限列表。
+
+  | 列名 | 说明 |
+  | -- | -- |
+  | UserIdentity | 用户标识 |
+  | Comment | 注释 |
+  | Password | 是否设置密码 |
+  | Roles | 拥有的角色 |
+  | GlobalPrivs | 拥有的全局权限 |
+  | CatalogPrivs | 拥有的catalog权限 |
+  | DatabasePrivs | 拥有的数据库权限 |
+  | TablePrivs | 拥有的表权限 |
+  | ColPrivs | 拥有的列权限 |
+  | ResourcePrivs | 拥有的资源权限 |
+  | WorkloadGroupPrivs | 拥有的WorkloadGroup权限 |
 
 ## 权限控制
 
