@@ -40,7 +40,7 @@ IS_IPV4_STRING(<ipv4_str>)
 - 如果输入为NULL, 则返回NULL
 
 ## 举例
-``sql
+```sql
 CREATE TABLE `test_is_ipv4_string` (
       `id` int,
       `ip_v4` string
