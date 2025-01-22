@@ -23,11 +23,11 @@ under the License.
 -->
 
 
-## description
+## Description
 
 Returns `x` raised to the base `e`.
 
-## alias
+## Alias
 
 - DEXP
 
@@ -48,7 +48,7 @@ EXP(<x>)
 Return a value of type double
 - If the parameter has a null value, it returns NULL
 
-## example
+## Example
 
 ```sql
 select exp(2);
