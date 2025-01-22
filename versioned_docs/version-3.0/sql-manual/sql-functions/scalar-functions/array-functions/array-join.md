@@ -35,7 +35,7 @@ ARRAY_JOIN(<arr> , <sep> [, <null_replace>])
 ## Parameters
 | Parameter      | Description |
 |---|---|
-| `<arr>`         | ARRAY |
+| `<arr>`         | An array to join |
 | `<sep>`         | Separator string |
 | `<null_replace>` | String to replace `NULL` values |
 

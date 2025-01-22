@@ -35,7 +35,7 @@ ARRAY_DISTINCT(<arr> )
 ## Parameters
 | Parameter | Description |
 |---|---|
-| `<arr>` | ARRAY  |
+| `<arr>` | An array that might contain duplicate elements to be removed  |
 
 ## Return Value
 Returns an array. Special case:

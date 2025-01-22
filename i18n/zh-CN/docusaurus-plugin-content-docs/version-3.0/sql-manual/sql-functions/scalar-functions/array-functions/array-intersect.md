@@ -33,9 +33,9 @@ ARRAY_INTERSECT(<arr1> , <arr2> )
 
 ## 参数
 | Parameter | Description |
-|-----------|---|
-| `<arr1>`  | ARRAY数组 |
-| `<arr2>`  | ARRAY数组 |
+|---|---|
+| `<arr1>` | 源数组 |
+| `<arr2>` | 与arr1求交集的数组 |
 
 ## 返回值
 返回一个数组，特殊情况：

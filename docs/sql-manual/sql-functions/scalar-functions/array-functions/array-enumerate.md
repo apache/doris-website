@@ -35,7 +35,7 @@ ARRAY_ENUMERATE(ARRAY<T> arr)
 ## Parameters
 | Parameter | Description |
 |---|---|
-| `<arr>` | ARRAY  |
+| `<arr>` | The array that returns array sub item indexes |
 
 ## Return Value
 Returns an array.

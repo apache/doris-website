@@ -36,8 +36,8 @@ ARRAY_EXCEPT(<arr1> , <arr2> )
 ## 参数
 | Parameter | Description |
 |---|---|
-| `<arr1>` | ARRAY数组    |
-| `<arr2>` | ARRAY数组    |
+| `<arr1>` | 源数组    |
+| `<arr2>` | 需要与arr1比较的元素数组    |
 
 ## 返回值
 返回一个数组，特殊情况：

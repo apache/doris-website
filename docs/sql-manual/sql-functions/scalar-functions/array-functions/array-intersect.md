@@ -35,8 +35,8 @@ ARRAY_INTERSECT(<arr1> , <arr2> )
 ## Parameters
 | Parameter | Description |
 |---|---|
-| `<arr1>`  | ARRAY |
-| `<arr2>`  | ARRAY |
+| `<arr1>`  | The source array arr1 |
+| `<arr2>`  | Array of intersections with arr1 |
 
 ## Return Value
 Returns an array. Special cases:

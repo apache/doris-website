@@ -34,8 +34,8 @@ ARRAY_ENUMERATE_UNIQ(<arr1> [,<arr2> , ... ])
 ## 参数
 | Parameter | Description |
 |---|---|
-| `<arr1>` | ARRAY数组 |
-| `<arr2>` | ARRAY数组 |
+| `<arr1>` | 需要计算的数组 arr1 |
+| `<arr2>` | 需要计算的数组 arr2 |
 
 ## 返回值
 返回一个数组

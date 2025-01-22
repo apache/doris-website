@@ -34,8 +34,8 @@ ARRAY_ENUMERATE_UNIQ(<arr1> [,<arr2> , ... ])
 ## Parameters
 | Parameter | Description |
 |---|---|
-| `<arr1>` | ARRAY  |
-| `<arr2>` | ARRAY  |
+| `<arr1>` | Needed be computed array arr1  |
+| `<arr2>` | Needed be computed array arr2  |
 
 ## Return Value
 Returns an array.

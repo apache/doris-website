@@ -36,7 +36,7 @@ ARRAY_JOIN(<arr> , <sep> [, <null_replace>])
 ## 参数
 | Parameter | Description |
 |---|---|
-| `<arr>`   | ARRAY数组 |
+| `<arr>`   | 需要join的数组 |
 | `<sep>`   | 分隔符 |
 | `<null_replace>`   | 替换NULL的字符串 |
 
