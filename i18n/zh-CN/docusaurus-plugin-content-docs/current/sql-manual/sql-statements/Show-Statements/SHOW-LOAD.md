@@ -32,14 +32,14 @@ under the License.
 
 ```sql
 SHOW LOAD
-[FROM db_name]
+[FROM <db_name>]
 [
    WHERE
-   [LABEL [ = "your_label" | LIKE "label_matcher"]]
-   [STATE = ["PENDING"|"ETL"|"LOADING"|"FINISHED"|"CANCELLED"|]]
+   [LABEL [ = "<your_label>" | LIKE "<label_matcher>"]]
+   [STATE = ["<PENDING>"|"<ETL>"|"<LOADING>"|"<FINISHED>"|"<CANCELLED>"|]]
 ]
-[ORDER BY ...]
-[LIMIT limit][OFFSET offset];
+[ORDER BY "<col_name>"|"<expr>"|"<position>"]
+[LIMIT <limit>][OFFSET <offset>];
 ```
 
 ## 可选参数
@@ -48,33 +48,29 @@ SHOW LOAD
 
 > 如果不指定 db_name，使用当前默认数据库。
 
-**2. `<LABEL LIKE>`**
+**2. `<label_matcher>`**
 
-> 如果使用 `LABEL LIKE`，则会匹配导入任务的 label 包含 label_matcher 的导入任务。
+> 如果使用 `LABEL LIKE = <label_matcher>`，则会匹配导入任务的 label 包含 label_matcher 的导入任务。
 
-**3. `<LABEL = >`**
+**3. `<your_label>`**
 
-> 如果使用 `LABEL =`，则精确匹配指定的 label。
+> 如果使用 `LABEL = <your_label>`，则精确匹配指定的 label。
 
 **4. `<STATE>`**
 
-> 如果指定了 `STATE`，则匹配 LOAD 状态。
+> 如果指定了 `STATE = <PENDING>|<ETL>|<LOADING>|<FINISHED>|<CANCELLED>`，则匹配 LOAD 状态。
 
 **5. `<ORDER BY>`**
 
 > 可以使用 `ORDER BY` 对任意列组合进行排序。
 
-**6. `<LIMIT>`**
+**6. `<limit>`**
 
 > 如果指定了 `LIMIT`，则显示 limit 条匹配记录。否则全部显示。
 
-**7. `<OFFSET>`**
+**7. `<offset>`**
 
-> 如果指定了 `OFFSET`，则从偏移量 offset 开始显示查询结果。默认情况下偏移量为 0。
-
-**8. `<broker/mini load>`**
-
-> 如果是使用 `broker/mini load`，则 URL 列中的连接可以使用以下命令查看：
+> 指定从偏移量 offset 开始显示查询结果。默认情况下偏移量为 0。
 
 ## 权限控制
 

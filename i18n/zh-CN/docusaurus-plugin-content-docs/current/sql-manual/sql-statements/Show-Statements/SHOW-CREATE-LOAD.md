@@ -38,7 +38,7 @@ SHOW CREATE LOAD for load_name;
 
 **`<load_name>`**
 
-> `load_name`: 例行导入作业名称
+> 例行导入作业名称
 
 ## 权限控制
 

@@ -32,11 +32,11 @@ under the License.
 
 ```sql
 SHOW LOAD WARNINGS
-[FROM db_name]
+[FROM <db_name>]
 [
    WHERE
-   [LABEL [ = "your_label" ]]
-   [LOAD_JOB_ID = ["job id"]]
+   [LABEL [ = "<your_label>" ]]
+   [LOAD_JOB_ID = ["<job_id>"]]
 ]
 ```
 
@@ -46,13 +46,13 @@ SHOW LOAD WARNINGS
 
 > 如果不指定 db_name，使用当前默认数据库。
 
-**2. `<LABEL = >`**
+**2. `<your_label>`**
 
-> 如果使用 `LABEL =`，则精确匹配指定的 label。
+> 如果使用 `LABEL = <your_label>`，则精确匹配指定的 label。
 
-**3. `<LOAD_JOB_ID>`**
+**3. `<job_id>`**
 
-> 如果指定了 LOAD_JOB_ID，则精确匹配指定的 JOB ID。
+> 如果指定了 `LOAD_JOB_ID = <job_id>`，则精确匹配指定的 JOB_ID。
 
 ## 权限控制
 

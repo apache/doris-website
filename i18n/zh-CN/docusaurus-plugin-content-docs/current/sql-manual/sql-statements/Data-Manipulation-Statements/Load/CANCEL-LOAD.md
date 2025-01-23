@@ -32,29 +32,29 @@ under the License.
 
 ```sql
 CANCEL LOAD
-[FROM db_name]
-WHERE [LABEL = "load_label" | LABEL like "label_pattern" | STATE = "PENDING/ETL/LOADING"]
+[FROM <db_name>]
+WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = "<PENDING>/<ETL>/<LOADING>"]
 ```
 
 ## 必选参数
 
 **1. `<db_name>`**
 
-> `db_name`: 撤销导入作业名称
+> 撤销导入作业名称
 
 ## 可选参数
 
-**1. `<LABEL = >`**
+**1. `<load_label>`**
 
-> 如果使用 `LABEL =`，则精确匹配指定的 label。
+> 如果使用 `LABEL = <load_label>`，则精确匹配指定的 label。
 
-**2. `<LABEL like >`**
+**2. `<label_pattern>`**
 
-> 如果使用 `LABEL LIKE`，则会匹配导入任务的 label 包含 label_matcher 的导入任务。
+> 如果使用 `LABEL LIKE <label_pattern>`，则会匹配导入任务的 label 包含 label_matcher 的导入任务。
 
-**3. `< STATE = >`**
+**3. `<PENDING/ETL/LOADING>`**
 
-> 如果指定了 `STATE`，则匹配 LOAD 状态。
+> 如果指定了 `STATE = <PENDING>/<ETL>/<LOADING> `，则匹配 LOAD 状态。
 
 ## 权限控制
 
