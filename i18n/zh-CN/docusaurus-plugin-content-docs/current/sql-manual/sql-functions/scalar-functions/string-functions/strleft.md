@@ -24,43 +24,81 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## strleft
 ## 描述
+
+STRLEFT 函数用于返回字符串左边指定长度的部分。长度的单位为 UTF8 字符。
+
+## 别名
+
+LEFT
+
 ## 语法
 
-`VARCHAR strleft(VARCHAR str, INT len)`
-
-
-它返回具有指定长度的字符串的左边部分，长度的单位为utf8字符，此函数的另一个别名为 `left`。
-如果函数参数含有NULL值那么函数将始终返回NULL，如果整型参数小于等于0，那么将返回空 “”。
-
-## 举例
-
+```sql
+STRLEFT(<str>, <len>)
 ```
-mysql> select strleft("Hello doris",5);
+
+## 参数
+| 参数 | 说明 |
+| ------- | ----------------------------------------- |
+| `<str>` | 需要截取的字符串。类型：VARCHAR |
+| `<len>` | 要返回的字符数量。类型：INT |
+
+## 返回值
+
+返回 VARCHAR 类型，表示截取的字符串。
+
+特殊情况：
+- 如果任意参数为 NULL，返回 NULL
+- 如果 len 小于等于 0，返回空字符串 ""
+- 如果 len 大于字符串长度，返回整个字符串
+
+## 示例
+
+1. 基本用法
+```sql
+SELECT strleft('Hello doris', 5);
+```
+```text
 +------------------------+
 | strleft('Hello doris', 5) |
 +------------------------+
 | Hello                  |
 +------------------------+
-mysql> select strleft("Hello doris",-5);
+```
+
+2. 负数长度处理
+```sql
+SELECT strleft('Hello doris', -5);
+```
+```text
 +----------------------------+
 | strleft('Hello doris', -5) |
 +----------------------------+
 |                            |
 +----------------------------+
-mysql> select strleft("Hello doris",NULL);
+```
+
+3. NULL 参数处理
+```sql
+SELECT strleft('Hello doris', NULL);
+```
+```text
 +------------------------------+
 | strleft('Hello doris', NULL) |
 +------------------------------+
 | NULL                         |
 +------------------------------+
-mysql> select strleft(NULL,3);
+```
+
+4. NULL 字符串处理
+```sql
+SELECT strleft(NULL, 3);
+```
+```text
 +------------------+
 | strleft(NULL, 3) |
 +------------------+
 | NULL             |
 +------------------+
 ```
-### keywords
-    STRLEFT, LEFT
