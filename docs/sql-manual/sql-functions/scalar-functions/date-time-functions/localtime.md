@@ -1,11 +1,11 @@
 ---
 {
-    "title": "CURRENT_TIMESTAMP",
+    "title": "LOCALTIME,LOCALTIMESTAMP",
     "language": "en"
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -32,7 +32,8 @@ can be specified to adjust the number of digits in the fractional seconds part o
 ## Syntax
 
 ```sql
-CURRENT_TIMESTAMP([<precision>])
+LOCALTIME([<precision>])
+LOCALTIMESTAMP([<precision>]))
 ```
 
 ## Parameters
@@ -49,13 +50,13 @@ CURRENT_TIMESTAMP([<precision>])
 ## Example
 
 ```sql
-select CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP(3),CURRENT_TIMESTAMP(6);
+select LOCALTIME(),LOCALTIME(3),LOCALTIME(6);
 ```
 
 ```text
 +---------------------+-------------------------+----------------------------+
 | now()               | now(3)                  | now(6)                     |
 +---------------------+-------------------------+----------------------------+
-| 2025-01-23 11:26:01 | 2025-01-23 11:26:01.771 | 2025-01-23 11:26:01.771000 |
+| 2025-01-23 11:50:18 | 2025-01-23 11:50:18.883 | 2025-01-23 11:50:18.883000 |
 +---------------------+-------------------------+----------------------------+
 ```
