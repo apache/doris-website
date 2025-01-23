@@ -1,8 +1,12 @@
+根据您提供的规范，我将重新整理文档：
+
 ---
+
 {
     "title": "HLL_TO_BASE64",
     "language": "en"
 }
+
 ---
 
 <!-- 
@@ -24,13 +28,19 @@ under the License.
 
 ## Description
 
-Converts an input HLL to a base64-encoded string. If the input is NULL, the function returns NULL.
+Converts an input HLL to a base64-encoded string. If the input is `<null>`, the function returns `<null>`.
 
 ## Syntax
 
 ```sql
-VARCHAR HLL_TO_BASE64(HLL input)
+HLL_TO_BASE64(<hll_input>)
 ```
+
+## Parameters
+
+| Parameter    | Description                                          |
+| ------------ | ---------------------------------------------------- |
+| `<hll_input>` | The HyperLogLog (HLL) data to be converted to a base64-encoded string. If the input is `<null>`, the function returns `<null>`. |
 
 ## Examples
 

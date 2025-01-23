@@ -29,8 +29,14 @@ under the License.
 ## 语法
 
 ```sql
-VARCHAR HLL_TO_BASE64(HLL input)
+HLL_TO_BASE64(<hll_input>)
 ```
+
+## 参数
+
+| 参数        | 说明                                     |
+| ----------- | ---------------------------------------- |
+| `<hll_input>` | HLL 类型数据，如果输入为 NULL，则返回 NULL。 |
 
 ## 示例
 
