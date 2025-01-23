@@ -30,7 +30,7 @@ under the License.
 ## 语法
 
 ```sql
-JSON_LENGTH(JSON <json_str> [ , <json_path>])
+JSON_LENGTH(<json_str> [ , <json_path>])
 ```
 
 

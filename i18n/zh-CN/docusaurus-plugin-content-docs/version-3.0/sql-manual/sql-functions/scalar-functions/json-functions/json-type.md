@@ -42,7 +42,7 @@ under the License.
 ## 语法
 
 ```sql
-STRING JSON_TYPE( <JSON> )
+STRING JSON_TYPE( <json> )
 ```
 
 ## 别名
@@ -53,7 +53,7 @@ STRING JSON_TYPE( <JSON> )
 
 | 参数 | 描述 |
 |------|------|
-| `<JSON>` | 需要检查类型的 JSON 字符串。 |
+| `<json>` | 需要检查类型的 JSON 字符串。 |
 
 
 ## 返回值
