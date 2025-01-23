@@ -24,38 +24,62 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## money_format
-### Description
-#### Syntax
-
-`VARCHAR money format (Number)`
-
+## Description
 
 The number is output in currency format, the integer part is separated by commas every three bits, and the decimal part is reserved for two bits.
 
-### example
+## Syntax
 
+```sql
+MONEY_FORMAT(<Number>)
 ```
-mysql> select money_format(17014116);
+
+## Parameters
+
+| Parameter | Description |
+|-----------|------------|
+| `<Number>`   | The numbers to be formatted |
+
+## Return value
+
+Returns a string in currency format. Special cases:
+
+- If the parameter is NULL, return NULL
+
+## Example
+
+```sql
+select money_format(17014116);
+```
+
+```text
 +------------------------+
 | money_format(17014116) |
 +------------------------+
 | 17,014,116.00          |
 +------------------------+
+```
 
-mysql> select money_format(1123.456);
+```sql
+select money_format(1123.456);
+```
+
+```text
 +------------------------+
 | money_format(1123.456) |
 +------------------------+
 | 1,123.46               |
 +------------------------+
+```
 
-mysql> select money_format(1123.4);
+```sql
+select money_format(1123.4);
+```
+
+```text
 +----------------------+
 | money_format(1123.4) |
 +----------------------+
 | 1,123.40             |
 +----------------------+
 ```
-### keywords
-    MONEY_FORMAT,MONEY,FORMAT
