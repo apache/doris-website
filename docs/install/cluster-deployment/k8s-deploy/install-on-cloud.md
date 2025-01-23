@@ -24,12 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris-operator is developed in accordance with standard K8s specifications and is compatible with all standard K8s platforms, including those provided by mainstream cloud vendors and self-built based on standards. This article mainly provides precautions and some usage suggestions for Doris-operator on the containerized service platforms of mainstream cloud vendors. More documents for cloud vendors and their products will be updated later.  
+Doris Operator is developed in accordance with standard K8s specifications and is compatible with all standard K8s platforms, including those provided by mainstream cloud vendors and self-built based on standards. This article mainly provides precautions and some usage suggestions for Doris Operator on the containerized service platforms of mainstream cloud vendors. More documents for cloud vendors and their products will be updated later.  
 
 ## Alibaba ACK
 
 Alibaba Cloud Container Service ACK is a managed containerized service after purchasing an ECS instance, so you can obtain full access control permissions to adjust related system parameters. Use the instance image: Alibaba Cloud Linux 3. The current system parameters fully meet the requirements for running Doris. Those that do not meet the requirements can also be corrected in the container through the K8s privileged mode to ensure stable operation.  
-**Alibaba Cloud ACK cluster, deployed using doris-operator, most environmental requirements can be met by the ECS default configuration. If not met, doris-operator can correct it by itself**. Users can also manually correct it, as follows:
+**Alibaba Cloud ACK cluster, deployed using Doris Operator, most environmental requirements can be met by the ECS default configuration. If not met, Doris Operator can correct it by itself**. Users can also manually correct it, as follows:
 
 ### Already exists cluster  
 
@@ -82,27 +82,27 @@ After configuring the ACR and image transfer environment, you need to migrate th
 
 If you use a private ACR to enable authentication, you can refer to the following steps:
 
-1. You need to set a `secret` of type `docker-registry` in advance to configure the authentication information for accessing the image warehouse.  
-```
-kubectl create secret docker-registry image-hub-secret --docker-server={your-server} --docker-username={your-username} --docker-password={your-pwd}
-```
+1. You need to set a `secret` of type `docker-registry` in advance to configure the authentication information for accessing the image warehouse.    
+  ```shell
+  kubectl create secret docker-registry image-hub-secret --docker-server={your-server} --docker-username={your-username} --docker-password={your-pwd}
+  ```
 2. Configure the secret using the above steps on DCR:  
 
-```yaml
-spec:
-  feSpec:
-    replicas: 1
-    image: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/doris.fe-ubuntu:3.0.3
-    imagePullSecrets:
-    - name: image-hub-secret
-  beSpec:
-    replicas: 3
-    image: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/doris.be-ubuntu:3.0.3
-    imagePullSecrets:
-    - name: image-hub-secret
-    systemInitialization:
-      initImage: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/alpine:latest
-```
+  ```yaml
+  spec:
+    feSpec:
+      replicas: 1
+      image: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/doris.fe-ubuntu:3.0.3
+      imagePullSecrets:
+      - name: image-hub-secret
+    beSpec:
+      replicas: 3
+      image: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/doris.be-ubuntu:3.0.3
+      imagePullSecrets:
+      - name: image-hub-secret
+      systemInitialization:
+        initImage: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/alpine:latest
+  ```
 
 ### Be systemInitialization  
 
@@ -143,7 +143,7 @@ Load balancing mode can be configured as follows:
   The steps are as follows:
   1. serviceType is ClusterIP (default policy)
   2. You can create a load balancing service through the Alibaba Cloud console interface: Container Compute Service ACS -> Cluster List -> Cluster -> Service, and use the `Create` button.
-  3. Select the newly created LB in the interface for creating `service`, which will be bound to `service` and will also be deregistered when the `service` is deregistered. However, this `service` is not controlled by Doris-operator.
+  3. Select the newly created LB in the interface for creating `service`, which will be bound to `service` and will also be deregistered when the `service` is deregistered. However, this `service` is not controlled by Doris Operator.
 
 ## AWS EKS
 
@@ -155,7 +155,7 @@ It is recommended not to use the autonomous mode here, because the computing res
 
 ### Already exists cluster  
 
-On an existing cluster (non-auto mode), you can run the Doris cluster through Doris-operator, unless the cluster is restricted to use the privileged mode of K8s.
+On an existing cluster (non-auto mode), you can run the Doris cluster through Doris Operator, unless the cluster is restricted to use the privileged mode of K8s.
 It is recommended that the existing cluster configure a new node group to deploy and maintain Doris cluster resources separately, which involves the system settings for Doris BE operation and may adjust the system parameters of the host machine.
 
 ### assess DockerHub  
@@ -166,7 +166,7 @@ If you need to access the DockerHub public image repository on EKS, you need to 
 
 Under EKS, EC2 instances completely belong to the current EKS user, and there is no situation where different user clusters affect each other in the resource pool and disable the K8s privileged mode.
 
-- If your EKS allows privileged mode (allowed by default), you don't need to care about system parameters. Doris-operator will adjust system parameters for Doris operation by default.
+- If your EKS allows privileged mode (allowed by default), you don't need to care about system parameters. Doris Operator will adjust system parameters for Doris operation by default.
 - If privileged mode is not allowed, you need to adjust the following system parameters on the host:
   - Modify the number of virtual memory areas: `sysctl -w vm.max_map_count=2000000` to adjust the maximum number of virtual memory mappings. View it through `sysctl vm.max_map_count`.
   - Turn off transparent huge pages: Transparent huge pages may have an adverse effect on performance, so you need to turn it off. Judge by whether cat /sys/kernel/mm/transparent_hugepage/enabled contains never.
@@ -174,7 +174,7 @@ Under EKS, EC2 instances completely belong to the current EKS user, and there is
   - Disable swap: `swapoff -a` is used to disable all swap partitions and files. Verify with `swapon --show`, no output if not enabled.
 
 ### Storage    
-Doris-operator must use persistent configuration in the production environment to save the node storage. [EBS](https://aws.amazon.com/ebs) is recommended.
+Doris Operator must use persistent configuration in the production environment to save the node storage. [EBS](https://aws.amazon.com/ebs) is recommended.
 
 There are the following points to note:
 - In the cluster configuration installation or management interface, add the EBS storage plug-in. If you use the EKS autonomous mode (not recommended), it is recommended to install EFS, and the storage plug-in needs to have the corresponding [role permissions](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html)
