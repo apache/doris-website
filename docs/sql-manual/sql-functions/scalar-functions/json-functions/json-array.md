@@ -24,47 +24,71 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_array
-### Description
-#### Syntax
-
-`VARCHAR json_array(VARCHAR,...)`
-
-
+## Description
 Generate a json array containing the specified values, return empty if no values
 
-### example
 
+## Syntax
+```sql
+JSON_ARRAY (<a>, ...)
 ```
-MySQL> select json_array();
+
+## Parameters
+| Parameter | Description                                                                                                   |
+|------|---------------------------------------------------------------------------------------------------------------|
+| `<a>, ...` | Elements to be included in the JSON array. It can be a single or multiple values of any type, including NULL. |
+
+
+## Return Values
+Returns a JSON array containing the specified values. If no values are specified, an empty JSON array is returned.
+
+
+## Examples
+
+```sql
+select json_array();
+```
+
+```text
 +--------------+
 | json_array() |
 +--------------+
 | []           |
 +--------------+
+```
 
-MySQL> select json_array(null);
+```sql
+select json_array(null);
+```
+
+```text
 +--------------------+
 | json_array('NULL') |
 +--------------------+
 | [NULL]             |
 +--------------------+
+```
+```sql
+SELECT json_array(1, "abc", NULL, TRUE, CURTIME());
+```
 
-
-MySQL> SELECT json_array(1, "abc", NULL, TRUE, CURTIME());
+```text
 +-----------------------------------------------+
 | json_array(1, 'abc', 'NULL', TRUE, curtime()) |
 +-----------------------------------------------+
 | [1, "abc", NULL, TRUE, "10:41:15"]            |
 +-----------------------------------------------+
+```
 
+```sql
+select json_array("a", null, "c");
+```
 
-MySQL> select json_array("a", null, "c");
+```text
 +------------------------------+
 | json_array('a', 'NULL', 'c') |
 +------------------------------+
 | ["a", NULL, "c"]             |
 +------------------------------+
 ```
-### keywords
-json,array,json_array
+

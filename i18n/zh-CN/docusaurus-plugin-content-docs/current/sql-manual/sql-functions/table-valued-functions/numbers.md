@@ -24,27 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `numbers`
-
 ## 描述
 
 表函数，生成一张只含有一列的临时表，列名为`number`，如果指定了`const_value`，则所有元素值均为`const_value`，否则为[0,`number`)递增。
 
 ## 语法
 ```sql
-numbers(
-  "number" = "n"
-  <, "const_value" = "x">
+NUMBERS(
+    "number" = "<number>"
+    [, "<const_value>" = "<const_value>" ]
   );
 ```
 
-参数：
-- `number`: 行数。
-- `const_value` : 常量值。
+## 必填参数
+
+| 字段        | 描述     |
+|--------------|----------|
+| **number**   | 行数     |
+
+## 选填参数
+
+| 字段             | 描述   |
+|----------------|------|
+| **const_value** | 常量值  |
+
+## 返回值
+| 字段名            | 类型      | 描述       |
+|----------------|---------|----------|
+| **number**     | BIGINT  | 指定每行返回的值 |
 
 ## 举例
+```sql
+select * from numbers("number" = "5");
 ```
-mysql> select * from numbers("number" = "5");
+```text
 +--------+
 | number |
 +--------+
@@ -54,9 +67,12 @@ mysql> select * from numbers("number" = "5");
 |      3 |
 |      4 |
 +--------+
-5 rows in set (0.11 sec)
+```
 
-mysql> select * from numbers("number" = "5", "const_value" = "-123");
+```sql
+select * from numbers("number" = "5", "const_value" = "-123");
+```
+```text
 +--------+
 | number |
 +--------+
@@ -66,11 +82,5 @@ mysql> select * from numbers("number" = "5", "const_value" = "-123");
 |   -123 |
 |   -123 |
 +--------+
-5 rows in set (0.12 sec)
 ```
-
-### keywords
-
-    numbers, const_value
-
 

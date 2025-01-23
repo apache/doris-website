@@ -24,34 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitnot
-### description
-#### Syntax
-
-`BITNOT(Integer-type value)`
-
-Returns the result of the NOT operation of one integer.
+## Description
+Used to perform a bitwise inversion operation on an integer.
 
 Integer range: TINYINT、SMALLINT、INT、BIGINT、LARGEINT
 
-### example
-
-```
-mysql> select bitnot(7) ans;
-+------+
-| ans  |
-+------+
-|   -8 |
-+------+
-
-mysql> select bitxor(-127) ans;
-+------+
-| ans  |
-+------+
-|  126 |
-+------+
+## Syntax
+```sql
+BITNOT( <x>)
 ```
 
-### keywords
+## Parameters
+| parameter | description |
+|-----------|-------------|
+| `<x>`     | Integer operations      |
 
-    BITNOT
+## Return Value
+Returns the result of the NOT operation of one integer.
+
+## Examples
+```sql
+select BITNOT(7), BITNOT(-127);
+```
+```text
++-------+----------+
+| (~ 7) | (~ -127) |
++-------+----------+
+|    -8 |      126 |
++-------+----------+
+```

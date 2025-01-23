@@ -350,7 +350,7 @@ const config = {
                         position: 'right',
                         dropdownItemsAfter: [
                             {
-                                label: 'Archived Docs',
+                                label: 'Archived',
                                 to: `/archive-docs`,
                             },
                         ],

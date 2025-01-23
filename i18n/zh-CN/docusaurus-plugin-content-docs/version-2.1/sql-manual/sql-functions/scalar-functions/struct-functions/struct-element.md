@@ -22,27 +22,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## struct_element
-
-struct_element
-
 ## 描述
 
 返回 struct 数据列内的某一 field
 
 ## 语法
 
-```
-struct_element(struct, n/s)
+```sql
+STRUCT_ELEMENT( <struct>, `<filed_location>/<filed_name>`)
 ```
 
 ## 参数
 
-```
-struct - 输入的struct列，如果是null，则返回null
-n - field的位置，起始位置从1开始，仅支持常量
-s - field的名字，仅支持常量
-```
+| 参数 | 说明 |
+| -- | -- |
+| `<struct>` | 输入的struct列，如果是null，则返回null |
+| `<filed_location>` | field的位置，起始位置从1开始，仅支持常量 |
+| `<filed_name>` | field的名字，仅支持常量 |
 
 ## 返回值
 
@@ -50,24 +46,23 @@ s - field的名字，仅支持常量
 
 ## 举例
 
+```sql
+select struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2'),struct_element(named_struct('f1', 1, 'f2', 'a'), 1);
 ```
-mysql> select struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2');
-+--------------------------------------------------------+
-| struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2') |
-+--------------------------------------------------------+
-| a                                                      |
-+--------------------------------------------------------+
-1 row in set (0.03 sec)
 
-mysql> select struct_element(named_struct('f1', 1, 'f2', 'a'), 1);
-+-----------------------------------------------------+
-| struct_element(named_struct('f1', 1, 'f2', 'a'), 1) |
-+-----------------------------------------------------+
-|                                                   1 |
-+-----------------------------------------------------+
-1 row in set (0.02 sec)
+```text
++--------------------------------------------------------+-----------------------------------------------------+
+| struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2') | struct_element(named_struct('f1', 1, 'f2', 'a'), 1) |
++--------------------------------------------------------+-----------------------------------------------------+
+| a                                                      |                                                   1 |
++--------------------------------------------------------+-----------------------------------------------------+
+```
 
-mysql> select struct_col, struct_element(struct_col, 'f1') from test_struct;
+```sql
+select struct_col, struct_element(struct_col, 'f1') from test_struct;
+```
+
+```text
 +-------------------------------------------------+-------------------------------------+
 | struct_col                                      | struct_element(`struct_col `, 'f1') |
 +-------------------------------------------------+-------------------------------------+
@@ -77,9 +72,4 @@ mysql> select struct_col, struct_element(struct_col, 'f1') from test_struct;
 | NULL                                            |                                NULL |
 | {1, NULL, 3, NULL, 5}                           |                                   1 |
 +-------------------------------------------------+-------------------------------------+
-9 rows in set (0.01 sec)
 ```
-
-### keywords
-
-STRUCT, ELEMENT, STRUCT_ELEMENT
