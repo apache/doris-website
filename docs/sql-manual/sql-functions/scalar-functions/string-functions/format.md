@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ACOS",
+    "title": "FORMAT",
     "language": "en"
 }
 ---
@@ -13,7 +13,9 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
+
   http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -24,58 +26,59 @@ under the License.
 
 ## Description
 
-Returns the arc cosine of `x`, or `NULL` if `x` is not in the range `-1` to `1`.
+Returns a formatted string using the specified [format](https://fmt.dev/11.1/syntax/#format-specification-mini-language) string and arguments:
 
 ## Syntax
 
 ```sql
-ACOS(<x>)
+FORMAT(<format>, <args> [, ...])
 ```
 
 ## Parameters  
 
 | Parameter | Description |  
 | -- | -- |  
-| `<x>` | The value for which the acos value is to be calculated |  
+| `<format>` | The value is to be format mode |  
+| `<args>` | The value is to be format within string | 
 
 ## Return Value  
 
-The acos value of parameter `x`. 
+The formatted string using a format mode. 
 
 ## Example
 
 ```sql
-select acos(1);
+select format("{:.5}",pi());
 ```
 
 ```text
-+-----------+
-| acos(1.0) |
-+-----------+
-|         0 |
-+-----------+
++-----------------------+
+| format('{:.5}', pi()) |
++-----------------------+
+| 3.1416                |
++-----------------------+
 ```
 
 ```sql
-select acos(0);
+select format("{:08.2}",pi());
 ```
 
 ```text
-+--------------------+
-| acos(0.0)          |
-+--------------------+
-| 1.5707963267948966 |
-+--------------------+
++-------------------------+
+| format('{:08.2}', pi()) |
++-------------------------+
+| 000003.1                |
++-------------------------+
 ```
 
 ```sql
-select acos(-2);
+select format("{0}-{1}","second","first");
 ```
 
 ```text
-+------------+
-| acos(-2.0) |
-+------------+
-|        nan |
-+------------+
++--------------------------------------+
+| format('{0}-{1}', 'second', 'first') |
++--------------------------------------+
+| second-first                         |
++--------------------------------------+
 ```

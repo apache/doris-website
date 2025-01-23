@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ACOS",
+    "title": "FORMAT",
     "language": "zh-CN"
 }
 ---
@@ -13,7 +13,9 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
+
   http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -24,58 +26,59 @@ under the License.
 
 ## 描述
 
-返回`x`的反余弦值，若 `x`不在`-1`到 `1`的范围之内，则返回 `nan`.
+返回一个使用指定格式字符串和参数格式化的字符串。[format格式](https://fmt.dev/11.1/syntax/#format-specification-mini-language)
 
 ## 语法
 
 ```sql
-ACOS(<x>)
+FORMAT(<format>, <args> [, ...])
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `<x>` | 需要被计算反余弦的值 |
+| `<format>` | 指定的格式化的具体样式 |
+| `<args>` | 需要被格式化的参数|
 
 ## 返回值
 
-参数 x 的反余弦值
+使用指定格式字符串和参数格式化的字符串
 
 ## 举例
 
 ```sql
-select acos(1);
+select format("{:.5}",pi());
 ```
 
 ```text
-+-----------+
-| acos(1.0) |
-+-----------+
-|         0 |
-+-----------+
++-----------------------+
+| format('{:.5}', pi()) |
++-----------------------+
+| 3.1416                |
++-----------------------+
 ```
 
 ```sql
-select acos(0);
+select format("{:08.2}",pi());
 ```
 
 ```text
-+--------------------+
-| acos(0.0)          |
-+--------------------+
-| 1.5707963267948966 |
-+--------------------+
++-------------------------+
+| format('{:08.2}', pi()) |
++-------------------------+
+| 000003.1                |
++-------------------------+
 ```
 
 ```sql
-select acos(-2);
+select format("{0}-{1}","second","first");
 ```
 
 ```text
-+------------+
-| acos(-2.0) |
-+------------+
-|        nan |
-+------------+
++--------------------------------------+
+| format('{0}-{1}', 'second', 'first') |
++--------------------------------------+
+| second-first                         |
++--------------------------------------+
 ```
