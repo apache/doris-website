@@ -86,7 +86,7 @@ Doris Operator 开发按照标准的 K8s 规范进行，兼容所有标准 K8s �
 
 ### 部署 Doris Operator
 
-在 Kubernetes 上部署 Doris Operator 前，需要先安装 Doris Operator CRD 和 Doris Operator 管理组件。
+在 Kubernetes 上部署 Doris Operator 前，需要先安装 Doris Operator CRD 。
 
 * 详细安装文档可参考：[Doris Operator 安装](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator.md)
 

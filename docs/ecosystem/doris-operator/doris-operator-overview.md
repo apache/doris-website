@@ -89,7 +89,7 @@ Before deployment, you need to check the host system. Refer to [Operating System
 
 ### Deploy Doris Operator
 
-Before deploying Doris Operator on Kubernetes, you need to install Doris Operator CRD and Doris Operator management components.
+Before deploying Doris Operator on Kubernetes, you need to install Doris Operator CRD.
 
 * For detailed installation documents, please refer to: [Doris Operator Installation](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator.md)
 
