@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL REPAIR",
+    "title": "CANCEL REPAIR TABLE",
     "language": "en"
 }
 ---
@@ -27,7 +27,7 @@ under the License.
 
 ## Description
 
-The `CANCEL REPAIR` statement is used to cancel high-priority repairs for a specified table or partition. This statement has the following functionalities:
+The `CANCEL REPAIR TABLE` statement is used to cancel high-priority repairs for a specified table or partition. This statement has the following functionalities:
 
 - It can cancel high-priority repairs for an entire table.
 - It can cancel high-priority repairs for specified partitions.

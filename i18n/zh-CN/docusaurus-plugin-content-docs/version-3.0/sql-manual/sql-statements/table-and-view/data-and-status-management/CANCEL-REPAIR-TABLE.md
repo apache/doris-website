@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL REPAIR",
+    "title": "CANCEL REPAIR TABLE",
     "language": "zh-CN"
 }
 ---
@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-CANCEL REPAIR 语句用于取消对指定表或分区的高优先级修复。该语句具有以下功能：
+`CANCEL REPAIR TABLE` 语句用于取消对指定表或分区的高优先级修复。该语句具有以下功能：
 
 - 可以取消整个表的高优先级修复
 - 可以取消指定分区的高优先级修复
