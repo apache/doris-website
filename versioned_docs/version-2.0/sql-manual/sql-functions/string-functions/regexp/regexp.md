@@ -89,6 +89,3 @@ mysql> select regexp('这是一段中文This is a passage in English 1234567', '
 |                                                                           1 |
 +-----------------------------------------------------------------------------+
 ```
-
-### keywords
-    REGEXP
