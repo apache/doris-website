@@ -37,11 +37,9 @@ SHOW PLUGINS
 
 ## 返回值
 
-|描述|版本|Java 版本|类名|共享对象名称|来源|状态|属性|
-|-----------|-------|-----------|---------|------|-------|------|----------|
-|内置审计加载器，用于将审计日志加载到内部表中|2.1.0|1.8.31|org.apache.doris.plugin.audit.AuditLoader||内置|已安装|{}|
-|内置审计记录器|0.12.0|1.8.31|org.apache.doris.plugin.audit.AuditLogBuilder||内置|已安装|{}|
-|内置 SQL 方言转换器|2.1.0|1.8.31|org.apache.doris.plugin.dialect.HttpDialectConverterPlugin||内置|已安装|{}|
+| Description | Version | JavaVersion | ClassName | SoName   | Sources | Status | Properties |
+|--------|---------|-------------|------|----------|------|------|-------|
+| 对应插件描述 | 插件对应版本号 | 对应 Java 版本号 | 程序类名 | 程序共享对象名称 | 插件来源 | 安装状态 | 插件属性  |
 
 ## 权限控制
 
@@ -49,7 +47,7 @@ SHOW PLUGINS
 
 | 权限         | 对象   | 说明            |
 |:-----------|:-----|:--------------|
-| Admin_priv | 整个集群 | 需要对整个集群具有管理权限 |
+| ADMIN_PRIV | 整个集群 | 需要对整个集群具有管理权限 |
 
 ## 示例
 
@@ -57,4 +55,12 @@ SHOW PLUGINS
 
     ```SQL
     SHOW PLUGINS;
+    ```
+
+    ```text
+    |Description|Version|JavaVersion|ClassName|SoName|Sources|Status|Properties|
+    |-----------|-------|-----------|---------|------|-------|------|----------|
+    |builtin audit loader, to load audit log to internal table|2.1.0|1.8.31|org.apache.doris.plugin.audit.AuditLoader||Builtin|INSTALLED|{}|
+    |builtin audit logger|0.12.0|1.8.31|org.apache.doris.plugin.audit.AuditLogBuilder||Builtin|INSTALLED|{}|
+    |builtin sql dialect converter|2.1.0|1.8.31|org.apache.doris.plugin.dialect.HttpDialectConverterPlugin||Builtin|INSTALLED|{}|
     ```

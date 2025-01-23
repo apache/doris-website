@@ -37,11 +37,9 @@ SHOW PLUGINS
 
 ## Return Value
 
-|Description|Version|JavaVersion|ClassName|SoName|Sources|Status|Properties|
-|-----------|-------|-----------|---------|------|-------|------|----------|
-|builtin audit loader, to load audit log to internal table|2.1.0|1.8.31|org.apache.doris.plugin.audit.AuditLoader||Builtin|INSTALLED|{}|
-|builtin audit logger|0.12.0|1.8.31|org.apache.doris.plugin.audit.AuditLogBuilder||Builtin|INSTALLED|{}|
-|builtin sql dialect converter|2.1.0|1.8.31|org.apache.doris.plugin.dialect.HttpDialectConverterPlugin||Builtin|INSTALLED|{}|
+|Description| Version | JavaVersion | ClassName | SoName   | Sources | Status | Properties |
+|-----------|---------|-------------|------|----------|------|------|-------|
+|Corresponding plug-in description| Plug-in corresponding version number | Corresponding Java version number | Program class name | Program shared object name | Plugin Source | Installation Status | Plugin Properties  |
 
 ## Permission Control
 
@@ -49,7 +47,7 @@ The user executing this SQL command must have at least the following permissions
 
 | Permissions         | Object   | Notes            |
 |:-----------|:-----|:--------------|
-| Admin_priv | The entire cluster | Requires administrative privileges for the entire cluster |
+| ADMIN_PRIV | The entire cluster | Requires administrative privileges for the entire cluster |
 
 ## Example
 
@@ -57,4 +55,12 @@ The user executing this SQL command must have at least the following permissions
 
     ```SQL
     SHOW PLUGINS;
+    ```
+
+    ```text
+    |Description|Version|JavaVersion|ClassName|SoName|Sources|Status|Properties|
+    |-----------|-------|-----------|---------|------|-------|------|----------|
+    |builtin audit loader, to load audit log to internal table|2.1.0|1.8.31|org.apache.doris.plugin.audit.AuditLoader||Builtin|INSTALLED|{}|
+    |builtin audit logger|0.12.0|1.8.31|org.apache.doris.plugin.audit.AuditLogBuilder||Builtin|INSTALLED|{}|
+    |builtin sql dialect converter|2.1.0|1.8.31|org.apache.doris.plugin.dialect.HttpDialectConverterPlugin||Builtin|INSTALLED|{}|
     ```

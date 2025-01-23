@@ -32,21 +32,21 @@ This statement is used to install a plug-in
 ## Syntax
 
 ```sql
-INSTALL PLUGIN FROM source [PROPERTIES ("key"="value", ...)]
+INSTALL PLUGIN FROM <source> [PROPERTIES ("<key>"="<value>", ...)]
 ```
 
 ## Required parameters
 
-- source
-  The plugin path to be installed, supports three types：
-   1. An absolute path to a zip file
-   2. An absolute path to a plugin directory
-   3. Points to a zip file download path with http or https protocol
+** 1. `<source>`**
+>  The plugin path to be installed, supports three types：
+>   1. An absolute path to a zip file
+>   2. An absolute path to a plugin directory
+>   3. Points to a zip file download path with http or https protocol
 
 ## Optional parameters
 
-- PROPERTIES
-  Used to specify properties or parameters when installing a plug-in
+** 1. `<PROPERTIES>`**
+>  Used to specify properties or parameters when installing a plug-in
 
 ## Permission Control
 
@@ -54,7 +54,7 @@ The user executing this SQL command must have at least the following permissions
 
 | Permissions         | Object   | Notes            |
 |:-----------|:-----|:--------------|
-| Admin_priv | The entire cluster | Requires administrative privileges for the entire cluster |
+| ADMIN_PRIV | The entire cluster | Requires administrative privileges for the entire cluster |
 
 ## Precautions
 

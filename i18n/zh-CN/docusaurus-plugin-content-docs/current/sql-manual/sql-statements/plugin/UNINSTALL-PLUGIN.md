@@ -32,13 +32,13 @@ under the License.
 ## 语法：
 
 ```sql
-UNINSTALL PLUGIN plugin_name;
+UNINSTALL PLUGIN <plugin_name>;
 ```
 
 ## 必选参数
 
-- plugin_name
- 卸载插件的名称
+** 1. `<plugin_name>`**
+> 卸载插件的名称
 
 ## 权限控制
 
@@ -46,7 +46,7 @@ UNINSTALL PLUGIN plugin_name;
 
 | 权限         | 对象   | 说明            |
 |:-----------|:-----|:--------------|
-| Admin_priv | 整个集群 | 需要对整个集群具有管理权限 |
+| ADMIN_PRIV | 整个集群 | 需要对整个集群具有管理权限 |
 
 ## 注意事项
 
