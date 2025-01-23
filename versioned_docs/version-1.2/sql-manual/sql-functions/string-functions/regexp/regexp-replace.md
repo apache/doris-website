@@ -24,27 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp_replace
-### description
-#### Syntax
+## Description
+
+Regular matching of STR strings, replacing the part hitting pattern with a new string.
+
+- Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
+
+## Syntax
 
 `VARCHAR regexp_replace(VARCHAR str, VARCHAR pattern, VARCHAR repl)`
 
-Regular matching of STR strings, replacing the part hitting pattern with repl
+## Parameters
 
-Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
+| Parameter | Description |
+| -- | -- |
+| `str` | The column need to do regular matching.|
+| `pattern` | Target pattern.|
+| `repl` | The string to replace the matched pattern.|
 
-### example
+## Example
 
 ```sql
-mysql> SELECT regexp_replace('a b c', " ", "-");
+mysql> SELECT regexp_replace('a b c', ' ', '-');
 +-----------------------------------+
 | regexp_replace('a b c', ' ', '-') |
 +-----------------------------------+
 | a-b-c                             |
 +-----------------------------------+
 
-mysql> SELECT regexp_replace('a b c','(b)','<\\1>');
+mysql> SELECT regexp_replace('a b c', '(b)', '<\\1>');
 +----------------------------------------+
 | regexp_replace('a b c', '(b)', '<\1>') |
 +----------------------------------------+
@@ -58,6 +66,3 @@ mysql> select regexp_replace('这是一段中文This is a passage in English 123
 | 123This is a passage in English 1234567                                                     |
 +---------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-    REGEXP_REPLACE,REGEXP,REPLACE
