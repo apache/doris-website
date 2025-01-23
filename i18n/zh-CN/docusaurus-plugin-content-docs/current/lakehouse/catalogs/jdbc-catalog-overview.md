@@ -63,37 +63,37 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * 必须属性
 
-    | 参数名称          | 说明                                | 示例                     |
-    | ------------- | --------------------------------- | ---------------------- |
-    | `user`          | 数据源用户名                            |                        |
-    | `password`      | 数据源密码                             |                        |
-    | `jdbc_url`     | 数据源连接 URL                         | `jdbc:mysql://host:3306` |
-    | `driver_url`   | 数据源 JDBC 驱动程序文件的路径。关于驱动包安全性，详见附录。 | 驱动程序支持三种方式，详见下面说明。           |
-    | `driver_class` | 数据源 JDBC 驱动程序的类名                  |                        |
+	    | 参数名称          | 说明                                | 示例                     |
+	    | ------------- | --------------------------------- | ---------------------- |
+	    | `user`          | 数据源用户名                            |                        |
+	    | `password`      | 数据源密码                             |                        |
+	    | `jdbc_url`     | 数据源连接 URL                         | `jdbc:mysql://host:3306` |
+	    | `driver_url`   | 数据源 JDBC 驱动程序文件的路径。关于驱动包安全性，详见附录。 | 驱动程序支持三种方式，详见下面说明。           |
+	    | `driver_class` | 数据源 JDBC 驱动程序的类名                  |                        |
 
-  `driver_url` 支持以下三种指定方式：
-
-  1. 文件名。如 `mysql-connector-j-8.3.0.jar`。需将 Jar 包预先存放在 FE 和 BE 部署目录下的 `jdbc_drivers/` 目录下。系统会自动在这个目录下寻找。该目录的位置，也可以由 `fe.conf` 和 `be.conf` 中的 `jdbc_drivers_dir` 配置修改。
-  
-  2. 本地绝对路径。如 `file:///path/to/mysql-connector-j-8.3.0.jar`。需将 Jar 包预先存放在所有 FE/BE 节点指定的路径下。
-  
-  3. Http 地址。如：`http://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar` 系统会从这个 Http 地址下载 Driver 文件。仅支持无认证的 Http 服务。  
+		  `driver_url` 支持以下三种指定方式：
+		
+		  1. 文件名。如 `mysql-connector-j-8.3.0.jar`。需将 Jar 包预先存放在 FE 和 BE 部署目录下的 `jdbc_drivers/` 目录下。系统会自动在这个目录下寻找。该目录的位置，也可以由 `fe.conf` 和 `be.conf` 中的 `jdbc_drivers_dir` 配置修改。
+		  
+		  2. 本地绝对路径。如 `file:///path/to/mysql-connector-j-8.3.0.jar`。需将 Jar 包预先存放在所有 FE/BE 节点指定的路径下。
+		  
+		  3. Http 地址。如：`http://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar` 系统会从这个 Http 地址下载 Driver 文件。仅支持无认证的 Http 服务。  
 
 
   * 可选属性
 
-    | 参数名称                              | 默认值     | 说明                                                                                                                |
-    | --------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
-    | `lower_case_meta_names`          | false   | 是否以小写的形式同步外部数据源的库名和表名以及列名                                                                                         |
-    | `meta_names_mapping`              |         | 当外部数据源存在名称相同只有大小写不同的情况，例如 `MY_TABLE` 和 `my_table`，Doris 由于歧义而在查询 Catalog 时报错，此时需要配置 `meta_names_mapping` 参数来解决冲突。 |
-    | `only_specified_database`         | false   | 是否只同步 `jdbc_url` 中指定的数据源的 Database（此处的 Database 为映射到 Doris 的 Database 层级）                                         |
-    | `connection_pool_min_size`       | 1       | 定义连接池的最小连接数，用于初始化连接池并保证在启用保活机制时至少有该数量的连接处于活跃状态。                                                                   |
-    | `connection_pool_max_size`       | 30      | 定义连接池的最大连接数，每个 Catalog 对应的每个 FE 或 BE 节点最多可持有此数量的连接。                                                               |
-    | `connection_pool_max_wait_time` | 5000    | 如果连接池中没有可用连接，定义客户端等待连接的最大毫秒数。                                                                                     |
-    | `connection_pool_max_life_time` | 1800000 | 设置连接在连接池中保持活跃的最大时长（毫秒）。超时的连接将被回收。同时，此值的一半将作为连接池的最小逐出空闲时间，达到该时间的连接将成为逐出候选对象。                                       |
-    | `connection_pool_keep_alive`     | false   | 仅在 BE 节点上有效，用于决定是否保持达到最小逐出空闲时间但未到最大生命周期的连接活跃。默认关闭，以减少不必要的资源使用。                                                    |
-
-* {CommonProperties}
+		| 参数名称                              | 默认值     | 说明                                                                                                                |
+		| --------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
+		| `lower_case_meta_names`          | false   | 是否以小写的形式同步外部数据源的库名和表名以及列名                                                                                         |
+		| `meta_names_mapping`              |         | 当外部数据源存在名称相同只有大小写不同的情况，例如 `MY_TABLE` 和 `my_table`，Doris 由于歧义而在查询 Catalog 时报错，此时需要配置 `meta_names_mapping` 参数来解决冲突。 |
+		| `only_specified_database`         | false   | 是否只同步 `jdbc_url` 中指定的数据源的 Database（此处的 Database 为映射到 Doris 的 Database 层级）                                         |
+		| `connection_pool_min_size`       | 1       | 定义连接池的最小连接数，用于初始化连接池并保证在启用保活机制时至少有该数量的连接处于活跃状态。                                                                   |
+		| `connection_pool_max_size`       | 30      | 定义连接池的最大连接数，每个 Catalog 对应的每个 FE 或 BE 节点最多可持有此数量的连接。                                                               |
+		| `connection_pool_max_wait_time` | 5000    | 如果连接池中没有可用连接，定义客户端等待连接的最大毫秒数。                                                                                     |
+		| `connection_pool_max_life_time` | 1800000 | 设置连接在连接池中保持活跃的最大时长（毫秒）。超时的连接将被回收。同时，此值的一半将作为连接池的最小逐出空闲时间，达到该时间的连接将成为逐出候选对象。                                       |
+		| `connection_pool_keep_alive`     | false   | 仅在 BE 节点上有效，用于决定是否保持达到最小逐出空闲时间但未到最大生命周期的连接活跃。默认关闭，以减少不必要的资源使用。                                                    |
+	
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
@@ -243,6 +243,103 @@ CALL EXECUTE_STMT("jdbc_catalog", "create table dbl1.tbl2 (k1 int)");
 ## 附录
 
 ### 大小写敏感设置
+
+默认情况下，Doris 的库名和表名是大小写敏感的，而列名是大小写不敏感的，并且可以通过参数配置就行修改。同时，一些 JDBC 数据源的库名、表名、列名的大小写敏感规则和 Doris 的规则不一致，这会导致在通过 JDBC Catalog 进行名称映射时，可能会出现名称冲突等问题。这里介绍下如何解决此类问题。
+
+#### 显示名称与查询名称
+
+在 Doris 中，一个对象名称（下面我们以表名称指代）可以分为【显示名称】和【使用名称】。比如对于表名，【显示名称】是指通过 `SHOW TABLES` 看到的名称。而【查询名称】是指通过可以在 `SELECT` 语句总使用的名称。
+
+比如，一个表的真实名称是 `MyTable`。通过修改 FE 的配置项 `lower_case_table_names`，这个表名的【显示名称】和【查询名称】会有所区别：
+
+| 配置项 | 说明 | 真实名称 | 显示名称 | 查询名称 |
+| --- | --- | --- | --- | ---|
+| `lower_case_table_names=0` | 默认配置。使用原始名称存储和显示，查询时大小写敏感 |  `MyTable` | `MyTable` | 查询时大小写敏感，必须使用：`MyTable` |
+| `lower_case_table_names=1` | 使用小写名称存储和显示，查询时大小写不敏感 | `MyTable` | `mytable` | 查询时大小写不敏感，比如可以使用 `MyTable` 或 `mytable` |
+| `lower_case_table_names=2`| 使用原始名称存储和显示，查询时大小写不敏感 | `MyTable` | `MyTable` | 查询时大小写不敏感，比如可以使用 `MyTable` 或 `mytable` |
+
+#### JDBC Catalog 名称大小写规则
+
+Doris 本身只可以配置【表名】大小写的规则。而 JDBC Catalog 需要额外处理【库名】和【列名】。因此，我们使用额外的 Catalog 属性 `lower_case_meta_names` 来配合 `lower_case_table_names` 一起使用。
+
+| 配置项 | 说明 | 
+| --- | --- | 
+| `lower_case_meta_names` | 创建 Catalog 时通过 `properties` 指定，作用于该 Catalog。默认为 `false`。当设置为 `true` 时，Doris 会将库、表、列名全部转换为小写存储并显示，查询时需使用 Doris 中的小写名称。|
+| `lower_case_table_names` | FE 配置项，在 fe.conf 中配置，作用范围为整个集群。默认为 `0`。|
+
+> 注：若 `lower_case_meta_names = true`，则此时不会参考 `lower_case_table_names`，一律将库名、表名、列名都转换为小写。
+
+根据 `lower_case_meta_names`（true/false） 和 `lower_case_table_names`（0/1/2）的不同组合，库名、表名、列名在 **存储时** 和 **查询时** 的表现方式如下表所示（“原始”表示保持外部数据源的大小写，“小写”表示自动转换为小写，“任意大小写”表示查询时可随意使用大小写）：
+
+| `lower_case_table_names` & `lower_case_meta_names` |  Database 显示名称 | Table 显示名称 | Column 显示名称 | Database 查询名称 | Table 查询名称 | Column 查询名称 |
+| -------------------------------------------------- | --------------- | ------------ | ------------- | --------------- | ------------ | ------------- |
+| `0 & false`     | 原始              | 原始           | 原始            | 原始              | 原始           | 任意大小写         |
+| `0 & true`      | 小写              | 小写           | 小写            | 小写              | 小写           | 任意大小写         |
+| `1 & false`      | 原始              | 小写           | 原始            | 原始              | 任意大小写        | 任意大小写         |
+| `1 & true`      | 小写              | 小写           | 小写            | 小写              | 任意大小写        | 任意大小写         |
+| `2 & false`     | 原始              | 原始           | 原始            | 原始              | 任意大小写        | 任意大小写         |
+| `2 & true`      | 小写              | 小写           | 小写            | 小写              | 任意大小写        | 任意大小写         |
+
+#### 大小写冲突检查
+
+在通过 JDBC Catalog 进行名称映射时，可能会出现名称冲突。比如源端列名称大小写敏感，存在 `ID` 和 `id` 两列。如果设置了   `lower_case_meta_names = true`，则这两个列在映射成小写后会产生冲突。Doris 会根据以下规则进行冲突检查：
+
+* 任意场景下，Doris 都会检查【列名】的大小写冲突（如 `id` 与 `ID` 是否同时存在）。
+
+* 当 `lower_case_meta_names = true` 时，Doris 会检查库名、表名、列名是否存在大小写冲突（如 `DORIS` 与 `doris` 同时存在）。
+
+* 当 `lower_case_meta_names = false` 且 `lower_case_table_names` 为 `1` 或 `2` 时，Doris 会检查【表名】是否冲突（如 `orders` 与 `ORDERS`）。
+
+* 当 `lower_case_table_names = 0` 时，库名、表名均大小写敏感，无需额外转换。
+
+#### 大小写冲突的解决方案
+
+当出现冲突时，Doris 会报错，须通过以下方式解决冲突。
+
+对于存在仅大小写不同而重复的库、表、列（例如 `DORIS` 与 `doris`）导致 Doris 无法正常区分的情况，可通过为 Catalog 设置 `meta_names_mapping` 来指定手动映射，从而解决冲突。
+
+**配置示例：**
+
+```json
+{
+  "databases": [
+    {
+      "remoteDatabase": "DORIS",
+      "mapping": "doris_1"
+    },
+    {
+      "remoteDatabase": "doris",
+      "mapping": "doris_2"
+    }
+  ],
+  "tables": [
+    {
+      "remoteDatabase": "DORIS",
+      "remoteTable": "DORIS",
+      "mapping": "doris_1"
+    },
+    {
+      "remoteDatabase": "DORIS",
+      "remoteTable": "doris",
+      "mapping": "doris_2"
+    }
+  ],
+  "columns": [
+    {
+      "remoteDatabase": "DORIS",
+      "remoteTable": "DORIS",
+      "remoteColumn": "DORIS",
+      "mapping": "doris_1"
+    },
+    {
+      "remoteDatabase": "DORIS",
+      "remoteTable": "DORIS",
+      "remoteColumn": "doris",
+      "mapping": "doris_2"
+    }
+  ]
+}
+```
 
 ### 驱动包安全性
 

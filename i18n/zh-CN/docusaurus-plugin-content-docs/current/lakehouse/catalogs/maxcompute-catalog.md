@@ -24,18 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-MaxCompute 是阿里云上的企业级 SaaS（Software as a Service）模式云数据仓库。通过 MaxCompute 提供的 API，Doris 可以获取到 Project 下面的表，并进行数据查询。
+[MaxCompute](https://help.aliyun.com/zh/maxcompute/) 是阿里云上的企业级 SaaS（Software as a Service）模式云数据仓库。通过 MaxCompute 提供的开放存储 SDK，Doris 可以获取 MaxCompute 的表信息并进行查询。
 
 ## 适用场景
 
-| 场景 | 说明 |
-| ---- | ------------------------------ |
+| 场景 | 说明                 |
+| ---- | ------------------------------------------------------ |
 | 数据集成 | 读取 MaxCompute 数据并写入到 Doris 内表。 |
 | 数据写回 | 不支持。                           |
 
 ## 使用须知
 
-1. 自 Doris 2.1.7 版本开始，MaxCompute Catalog 基于 [开放存储 SDK](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 开发，在这之前，基于 Tunnel API 进行开发。
+1. 自 2.1.7 版本开始，MaxCompute Catalog 基于 [开放存储 SDK](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 开发，在这之前，基于 Tunnel API 进行开发。
 
 2. 开放存储 SDK 的使用有一定的限制，请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 中 `使用限制` 的章节。
 
@@ -54,7 +54,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 );
 ```
 
-* {McRequiredProperties}
+* `{McRequiredProperties}`
 
   | 属性名                | 说明                                                                                                                 | 支持的 Doris 版本 |
   | ------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------ |
@@ -62,24 +62,24 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.access_key`     | AccessKey。可以在 [阿里云控制台](https://ram.console.aliyun.com/manage/ak) 中创建和管理。                                           |              |
   | `mc.secret_key`     | SecretKey。可以在 [阿里云控制台](https://ram.console.aliyun.com/manage/ak) 中创建和管理。                                           |              |
   | `mc.region`          | MaxCompute 开通的地域。可以从 Endpoint 中找到对应的 Region                                                                        | 2.1.7（不含）之前 |
-  | `mc.endpoint`        | MaxCompute 开通的地域。请参照下文的如何获取 Endpoint 和 Quota 来配置。                                                                    | 2.1.7（含）之后  |
+  | `mc.endpoint`       | MaxCompute 开通的地域。请参照下文的如何获取 Endpoint 和 Quota 来配置。                                                                    | 2.1.7（含）之后  |
 
-* {McOptionalProperties}
+* `{McOptionalProperties}`
 
   | 属性名                        | 默认值           | 说明                                                                         | 支持的 Doris 版本 |
   | -------------------------- | ------------- | -------------------------------------------------------------------------- | ------------ |
-  | `mc.tunnel\_endpoint`        | 无             | 参考附录中的`自定义服务地址 `。                                                          | 2.1.7（不含）之前 |
-  | `mc.odps\_endpoint`          | 无             | 参考附录中的`自定义服务地址 `。                                                          | 2.1.7（不含）之前 |
+  | `mc.tunnel_endpoint`        | 无             | 参考附录中的`自定义服务地址 `。                                                          | 2.1.7（不含）之前 |
+  | `mc.odps_endpoint`          | 无             | 参考附录中的`自定义服务地址 `。                                                          | 2.1.7（不含）之前 |
   | `mc.quota`                   | `pay-as-you-go` | Quota 名称。请参照下文的 如何获取 Endpoint 和 Quota 来配置                                    | 2.1.7（含）之后  |
-  | `mc.split\_strategy`         | `byte_size`    | 设置 split 的划分方式，可设置为按照字节大小划分 `byte_size` 和按照数据行数划分 row\_count                 | 2.1.7（含）之后  |
-  | `mc.split_byte_size`       | 268435456     | 每个 split 读取的文件大小，单位为字节，默认为 256MB，当且仅当 `'mc.split_strategy' = 'byte_size'` 时生效 | 2.1.7（含）之后  |
-  | `mc.split_row_count`       | 1048576       | 每个 split 读多少行，当且仅当 `'mc.split_strategy' = 'row_count'` 时生效                   | 2.1.7（含）之后  |
-  | `mc.split_cross_partition` | false         | 生成的 split 是否跨分区                                                             | 2.1.8（含）之后  |
-  | `mc.connect_timeout`        | 10s           | 连接 maxcompute 的超时时间                                                          | 2.1.8（含）之后  |
-  | `mc.read_timeout`           | 120s          | 读取 maxcompute 的超时时间                                                          | 2.1.8（含）之后  |
-  | `mc.retry_count`            | 4             | 超时后的重试次数                                                                   | 2.1.8（含）之后  |
+  | `mc.split_strategy`         | `byte_size`    | 设置 split 的划分方式，可设置为按照字节大小划分 `byte_size` 和按照数据行数划分 `row_count`                 | 2.1.7（含）之后  |
+  | `mc.split_byte_size`       | `268435456`     | 每个 split 读取的文件大小，单位为字节，默认为 256MB，当且仅当 `"mc.split_strategy" = "byte_size"` 时生效 | 2.1.7（含）之后  |
+  | `mc.split_row_count`       | `1048576`       | 每个 split 读多少行，当且仅当 `"mc.split_strategy" = "row_count"` 时生效                   | 2.1.7（含）之后  |
+  | `mc.split_cross_partition` | `false`         | 生成的 split 是否跨分区                                                             | 2.1.8（含）之后  |
+  | `mc.connect_timeout`        | `10s`           | 连接 maxcompute 的超时时间                                                          | 2.1.8（含）之后  |
+  | `mc.read_timeout`           | `120s`          | 读取 maxcompute 的超时时间                                                          | 2.1.8（含）之后  |
+  | `mc.retry_count`            | `4`             | 超时后的重试次数                                                                   | 2.1.8（含）之后  |
 
-* {CommonProperties}
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
@@ -110,8 +110,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | varchar(N)       | varchar(N)    |                                                                              |
 | string           | string        |                                                                              |
 | date             | date          |                                                                              |
-| datetime         | datetime(3)   | 固定映射到精度 3。可以通过 SET \[global] time\_zone = 'Asia/Shanghai'来指定时区                |
-| timestamp\_ntz   | datetime(6)   | MaxCompute 的 timestamp\_ntz 精度为 9, Doris 的 DATETIME 最大精度只有 6，故读取数据时会将多的部分直接截断。 |
+| datetime         | datetime(3)   | 固定映射到精度 3。可以通过 `SET [GLOBAL] time_zone = 'Asia/Shanghai'` 来指定时区                |
+| timestamp_ntz   | datetime(6)   | MaxCompute 的 `timestamp_ntz` 精度为 9, Doris 的 DATETIME 最大精度只有 6，故读取数据时会将多的部分直接截断。 |
 | array            | array         |                                                                              |
 | map              | map           |                                                                              |
 | struct           | struct        |                                                                              |
@@ -165,11 +165,11 @@ SELECT * FROM mc_ctl.mc_db.mc_tbl LIMIT 10;
 
 ### 如何获取 Endpoint 和 Quota(适用于 Doris 2.1.7 之后)
 
-1. 如果使用数据传输服务独享资源组，请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/purchase-and-use-exclusive-resource-groups-for-dts) 中 `使用独享数据服务资源组` 章节中的 `2.授权` 来开启相应的权限，并在 `配额（Quota）管理` 列表中，查看并复制对应的 QuotaName，指定 `"mc.quota" = "QuotaName"`。此时您可以选择 VPC / 公网来访问 MaxCompute，但是走 VPC 的带宽有保障，公网带宽资源小。
+1. 如果使用数据传输服务独享资源组，请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/purchase-and-use-exclusive-resource-groups-for-dts) 中【使用独享数据服务资源组】章节中的【2.授权】来开启相应的权限，并在【配额（Quota）管理】列表中，查看并复制对应的 `QuotaName`，指定 `"mc.quota" = "QuotaName"`。此时您可以选择 VPC 或公网来访问 MaxCompute，但是走 VPC 的带宽有保障，公网带宽资源小。
 
-2. 如果使用按量付费，请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 中 `使用开放存储（按量付费）` 的章节，来开启开放存储 (Storage API) 开关，并给 Ak,SK 对应的用户赋予权限。此时 `mc.quota` 为默认值 `pay-as-you-go`，不需要额外指定该值。按量付费情况下，只能使用 VPC 来访问 MaxCompute，无法通过公网访问。只有预付费用户才能通过公网访问 MaxCompute。
+2. 如果使用按量付费，请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 中【使用开放存储（按量付费）】的章节，来开启开放存储 (Storage API) 开关，并给 Ak,SK 对应的用户赋予权限。此时 `mc.quota` 为默认值 `pay-as-you-go`，不需要额外指定该值。按量付费情况下，只能使用 VPC 来访问 MaxCompute，无法通过公网访问。只有预付费用户才能通过公网访问 MaxCompute。
 
-3. 根据 [阿里云 Endpoints 文档](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints) 中的 `地域Endpoint对照表` 来配置 `mc.endpoint` 。使用 VPC 访问的用户，需要根据 `各地域Endpoint对照表（阿里云VPC网络连接方式）` 表中的 `VPC网络Endpoint` 列来配置 `mc.endpoint` 。使用公网访问的用户，可以选择 `各地域Endpoint对照表（阿里云经典网络连接方式）` 表中的 `经典网络Endpoint` 列、或者选择 `各地域Endpoint对照表（外网连接方式)` 表中的 `外网Endpoint` 列来配置 `mc.endpoint`。
+3. 根据 [阿里云 Endpoints 文档](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints) 中的【地域Endpoint对照表】来配置 `mc.endpoint` 。使用 VPC 访问的用户，需要根据【各地域Endpoint对照表（阿里云VPC网络连接方式）】表中的【VPC网络Endpoint】列来配置 `mc.endpoint` 。使用公网访问的用户，可以选择【各地域Endpoint对照表（阿里云经典网络连接方式）】表中的【经典网络Endpoint】列、或者选择【各地域Endpoint对照表（外网连接方式)】表中的【外网Endpoint列来配置 `mc.endpoint`。
 
 ### 自定义服务地址 (适用于 Doris 2.1.7 之前)
 
@@ -185,12 +185,12 @@ SELECT * FROM mc_ctl.mc_db.mc_tbl LIMIT 10;
 
 | `mc.public_access`  | `mc.odps_endpoint`                                       | `mc.tunnel_endpoint`                            |
 | ------------------- | -------------------------------------------------------- | ----------------------------------------------- |
-| false               | http://service.{mc.region}.maxcompute.aliyun-inc.com/api | http://dt.{mc.region}.maxcompute.aliyun-inc.com |
-| true                | http://service.{mc.region}.maxcompute.aliyun.com/api     | http://dt.{mc.region}.maxcompute.aliyun.com     |
+| false               | `http://service.{mc.region}.maxcompute.aliyun-inc.com/api` | `http://dt.{mc.region}.maxcompute.aliyun-inc.com` |
+| true                | `http://service.{mc.region}.maxcompute.aliyun.com/api`     | `http://dt.{mc.region}.maxcompute.aliyun.com`     |
 
-用户也可以单独指定 `mc.odps_endpoint` 和 `mc.tunnel_endpoint` 来自定义服务地址，适用于一些私有部署的 MaxCompute 环境。
+用户也可以单独指定`mc.odps_endpoint` 和 `mc.tunnel_endpoint` 来自定义服务地址，适用于一些私有部署的 MaxCompute 环境。
 
-MaxCompute Endpoint 和 Tunnel Endpoint 的配置请参见[各地域及不同网络连接方式下的 Endpoint](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints)
+MaxCompute Endpoint 和 Tunnel Endpoint 的配置请参见[各地域及不同网络连接方式下的 Endpoint](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints)。
 
 
 

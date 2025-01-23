@@ -26,7 +26,7 @@ under the License.
 
 Delta Lake Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) 兼容框架，使用 Delta Lake Connector 来访问 Delta Lake 表。
 
-:::caution
+:::notice
 该功能为实验功能，自 3.0.1 版本开始支持。
 :::
 
@@ -43,7 +43,7 @@ Delta Lake Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/commu
 
 > 需要 JDK 17 版本。
 
-```plain&#x20;text
+```shell
 $ git clone https://github.com/apache/Doris-thirdparty.git
 $ cd Doris-thirdparty
 $ git checkout trino-435
@@ -53,7 +53,7 @@ $ mvn clean install -DskipTest
 
 完成编译后，会在 `trino/plugin/trino-delta-lake/target/` 下得到 `trino-delta-lake-435` 目录。
 
-也可以直接下载预编译的 [trino-delta-lake-435-20240724.tar.gz](https://github.com/apache/Doris-thirdparty/releases/download/trino-435-20240724/trino-delta-lake-435-20240724.tar.gz) 并解压。
+也可以直接下载预编译的 [trino-delta-lake-435-20240724.tar.gz](https://github.com/apache/doris-thirdparty/releases/download/trino-435-20240724/trino-delta-lake-435-20240724.tar.gz) 并解压。
 
 ### 部署 Delta Lake Connector
 
@@ -83,11 +83,11 @@ PROPERTIES (
 );
 ```
 
-* {TrinoProperties}
+* `{TrinoProperties}`
 
   TrinoProperties 部分用于填写将传递给 Trino Connector 的属性，这些属性以`trino.`为前缀。理论上，Trino 支持的属性这里都支持，更多有关 Delta Lake 的信息可以参考 [Trino 文档](https://trino.io/docs/435/connector/delta-lake.html)。
 
-* {CommonProperties}
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
