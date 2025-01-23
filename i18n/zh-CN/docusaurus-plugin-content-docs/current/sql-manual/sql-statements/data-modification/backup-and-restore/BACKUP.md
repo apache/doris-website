@@ -31,9 +31,9 @@ under the License.
 ## 语法
 
 ```sql
-BACKUP SNAPSHOT <db_name>.{<snapshot_name>}
+BACKUP SNAPSHOT <db_name>.<snapshot_name>
 TO `<repository_name>`
-[ON|EXCLUDE] 
+[{ON|EXCLUDE]}
     ( <table_name> [ PARTITION ( <partition_name> [, ...] ) ]
     [, ...] ) ]
 
@@ -42,32 +42,32 @@ TO `<repository_name>`
 
 ## 必选参数
 
-`<db_name>`
+**1.`<db_name>`**
 
 需要备份的数据所属的数据库名
 
-`<snapshot_name>`
+**2.`<snapshot_name>`**
 
 指定数据快照名。快照名不可重复，全局唯一
 
-`<repository_name>`
+**3.`<repository_name>`**
 
 仓库名。您可以通过 [CREATE REPOSITORY](./CREATE-REPOSITORY.md) 创建仓库
 
 ## 可选参数
 
-`<table_name>`
+**1.`<table_name>`**
 
 需要备份的表名。如不指定则备份整个数据库。
 
 - ON 子句中标识需要备份的表和分区。如果不指定分区，则默认备份该表的所有分区
 - EXCLUDE 子句中标识不需要备份的表和分区。备份除了指定的表或分区之外这个数据库中所有表的所有分区数据。
 
-`<partition_name>`
+**2.`<partition_name>`**
 
 需要备份的分区名。如不指定则备份对应表的所有分区。
 
-`<PROPERTIES>`
+**3.`<PROPERTIES>`**
 
 数据快照属性，格式为 `<key>` = `<value>`，目前支持以下属性：
 

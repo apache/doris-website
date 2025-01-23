@@ -33,9 +33,9 @@ This statement is used to back up the data under the specified database. This co
 ## Syntax
 
 ```sql
-BACKUP SNAPSHOT <db_name>.{<snapshot_name>}
+BACKUP SNAPSHOT <db_name>.<snapshot_name>
 TO `<repository_name>`
-[ON|EXCLUDE] 
+[ {ON|EXCLUDE]} 
     ( <table_name> [ PARTITION ( <partition_name> [, ...] ) ]
     [, ...] ) ]
 
@@ -44,32 +44,32 @@ TO `<repository_name>`
 
 ## Required Parameters
 
-`<db_name>`
+**1.`<db_name>`**
 
 The name of the database to which the data to be backed up belongs.
 
-`<snapshot_name>`
+**2.`<snapshot_name>`**
 
 Specify the data snapshot name. The snapshot name cannot be repeated and is globally unique.
 
-`<repository_name>`
+**3.`<repository_name>`**
 
 Warehouse name. You can create a repository via [CREATE REPOSITORY](./CREATE-REPOSITORY.md).
 
 ## Optional Parameters
 
-`<table_name>`
+**1.`<table_name>`**
 
 The name of the table to be backed up. If not specified, the entire database will be backed up.
 
 - The ON clause identifies the tables and partitions that need to be backed up. If no partition is specified, all partitions of the table are backed up by default
 - Tables and partitions that do not require backup are identified in the EXCLUDE clause. Back up all partition data for all tables in this database except the specified table or partition.
 
-`<partition_name>`
+**2.`<partition_name>`**
 
 The name of the partition to be backed up. If not specified, all partitions of the corresponding table will be backed up.
 
-`<PROPERTIES>`
+**3.`<PROPERTIES>`**
 
 Data snapshot attributes, in the format: `<key>` = `<value>`，currently supports the following properties:
 

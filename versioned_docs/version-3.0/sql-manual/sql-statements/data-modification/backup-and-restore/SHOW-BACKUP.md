@@ -38,11 +38,11 @@ This statement is used to view BACKUP tasks
 
 ## Parameters
 
-`<db_name>`
+**1.`<db_name>`**
 
 The name of the database to which the backup task belongs.
 
-`<snapshot_name>`
+**2.`<snapshot_name>`**
 
 Backup name.
 

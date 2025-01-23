@@ -37,15 +37,15 @@ SHOW SNAPSHOT ON `<repo_name>`
 
 ##参数
 
-`<repo_name>`
+**1.`<repo_name>`**
 
 备份所选的仓库名称。
 
-`<snapshot_name>`
+**2.`<snapshot_name>`**
 
 备份名称。
 
-`<backup_timestamp>`
+**3.`<backup_timestamp>`**
 
 备份时间戳。
 

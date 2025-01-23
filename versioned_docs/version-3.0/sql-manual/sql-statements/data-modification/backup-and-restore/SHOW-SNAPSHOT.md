@@ -38,15 +38,15 @@ SHOW SNAPSHOT ON `<repo_name>`
 
 ## Parameters
 
-`<repo_name>`
+**1.`<repo_name>`**
 
 Back up the selected repository name.
 
-`<snapshot_name>`
+**2.`<snapshot_name>`**
 
 Backup name.
 
-`<backup_timestamp>`
+**3.`<backup_timestamp>`**
 
 Backup timestamp.
 

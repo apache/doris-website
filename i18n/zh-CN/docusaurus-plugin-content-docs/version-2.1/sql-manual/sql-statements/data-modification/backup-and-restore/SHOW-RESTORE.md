@@ -36,7 +36,7 @@ SHOW [BRIEF] RESTORE [FROM <db_name>]
 
 ## 参数
 
-`<db_name>`
+**1.`<db_name>`**
 
 恢复任务所属数据库名。
 

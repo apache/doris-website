@@ -38,7 +38,7 @@ CANCEL RESTORE FROM <db_name>;
 
 ## Parameters
 
-`<db_name>`
+**1.`<db_name>`**
 
 The name of the database to which the recovery task belongs.
 

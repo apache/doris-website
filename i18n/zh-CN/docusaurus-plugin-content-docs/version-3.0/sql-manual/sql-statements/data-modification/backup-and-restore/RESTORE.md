@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 ## 描述
 
 该语句用于将之前通过 BACKUP 命令备份的数据，恢复到指定数据库下。该命令为异步操作。提交成功后，需通过 [SHOW RESTORE](./SHOW-RESTORE.md)命令查看进度。
@@ -31,9 +32,9 @@ under the License.
 ## 语法
 
 ```sql
-RESTORE SNAPSHOT [<db_name>].{<snapshot_name>}
+RESTORE SNAPSHOT <db_name>.<snapshot_name>
 FROM `<repository_name>`
-[ON|EXCLUDE] (
+[{ON|EXCLUDE]} (
     `<table_name>` [PARTITION (`<partition_name>`, ...)] [AS `<table_alias>`]
     [, ...] ) ]
 )
@@ -42,34 +43,34 @@ FROM `<repository_name>`
 
 ## 参数
 
-`<db_name>`
+**1.`<db_name>`**
 
 需要恢复的数据所属的数据库名
 
-`<snapshot_name>`
+**2.`<snapshot_name>`**
 
 数据快照名
 
-`<repository_name>`
+**3.`<repository_name>`**
 
 仓库名。您可以通过 [CREATE REPOSITORY](./CREATE-REPOSITORY.md) 创建仓库
 
-`<table_name>`
+**4.`<table_name>`**
 
 需要恢复的表名。如不指定则恢复整个数据库
 
 - ON 子句中标识需要恢复的表和分区。如果不指定分区，则默认恢复该表的所有分区。所指定的表和分区必须已存在于仓库备份中
 - EXCLUDE 子句中标识不需要恢复的表和分区。除了所指定的表或分区之外仓库中所有其他表的所有分区将被恢复
 
-`<partition_name>`
+**5.`<partition_name>`**
 
 需要恢复的分区名。如不指定则恢复对应表的所有分区
 
-`<table_alias>`
+**6.`<table_alias>`**
 
 表别名
 
-`<PROPERTIES>`
+**7.`<PROPERTIES>`**
 
 恢复操作属性，格式为 `<key>` = `<value>`，目前支持以下属性：
 
@@ -131,3 +132,4 @@ PROPERTIES
     "backup_timestamp"="2018-05-04-18-12-18"
 );
 ```
+

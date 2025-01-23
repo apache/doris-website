@@ -36,7 +36,7 @@ CANCEL BACKUP FROM <db_name>;
 
 ## 参数
 
-`<db_name>`
+**1.`<db_name>`**
 
 备份任务所属数据库名。
 

@@ -25,9 +25,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
 This statement is used to restore the data backed up by the BACKUP command to the specified database. This command is an asynchronous operation. After the submission is successful, you need to check the progress through the [SHOW RESTORE](./SHOW-RESTORE.md) command. 
@@ -35,9 +32,9 @@ This statement is used to restore the data backed up by the BACKUP command to th
 ## Syntax
 
 ```sql
-RESTORE SNAPSHOT [<db_name>].{<snapshot_name>}
+RESTORE SNAPSHOT <db_name>.<snapshot_name>
 FROM `<repository_name>`
-[ON|EXCLUDE] (
+[{ON|EXCLUDE]} (
     `<table_name>` [PARTITION (`<partition_name>`, ...)] [AS `<table_alias>`]
     [, ...] ) ]
 )
@@ -46,34 +43,34 @@ FROM `<repository_name>`
 
 ## Parameters
 
-`<db_name>`
+**1.`<db_name>`**
 
 The name of the database to which the data to be restored belongs
 
-`<snapshot_name>`
+**2.`<snapshot_name>`**
 
 Data snapshot name
 
-`<repository_name>`
+**3.`<repository_name>`**
 
 Warehouse name. You can create a repository via [CREATE REPOSITORY](./CREATE-REPOSITORY.md)
 
-`<table_name>`
+**4.`<table_name>`**
 
 The name of the table to be restored. If not specified, the entire database will be restored.
 
 - The tables and partitions that need to be restored are identified in the ON clause. If no partition is specified, all partitions of the table are restored by default. The specified table and partition must already exist in the warehouse backup.
 - Tables and partitions that do not require recovery are identified in the EXCLUDE clause. All partitions of all other tables in the warehouse except the specified table or partition will be restored.
 
-`<partition_name>`
+**5.`<partition_name>`**
 
 The name of the partition to be restored. If not specified, all partitions of the corresponding table will be restored.
 
-`<table_alias>`
+**6.`<table_alias>`**
 
 table alias
 
-`<PROPERTIES>`
+**7.`<PROPERTIES>`**
 
 Restoration operation attributes, the format is `<key>` = `<value>`，currently supports the following properties:
 
