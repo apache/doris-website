@@ -31,21 +31,27 @@ under the License.
 ## 语法
 
 ```sql
-   SHOW CACHE HOTSPOT '/[compute_group_name/table_name]';
+   SHOW CACHE HOTSPOT '/[<compute_group_name>/<table_name>]';
 ```
 
 ## 参数
 
 | 参数名称                  | 描述                                                         |
 |---------------------------|--------------------------------------------------------------|
-| compute_group_name        | 计算组的名称。                                               |
-| table_name                | 表的名称。                                                   |
+| <compute_group_name>        | 计算组的名称。                                               |
+| <table_name>                | 表的名称。                                                   |
 ## 示例
 
-1. 查看文件缓存的热点信息
+1. 显示整个系统的缓存热点信息
 
 ```sql
-    SHOW CACHE HOTSPOT '/';
+SHOW CACHE HOTSPOT '/';
+```
+
+2. 显示特定计算组 my_compute_group 的缓存热点信息
+
+```sql
+SHOW CACHE HOTSPOT '/my_compute_group/';
 ```
 
 ## 参考
