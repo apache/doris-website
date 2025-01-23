@@ -29,7 +29,7 @@ After completing preliminary checks and planning, such as environment checks, cl
    
 2. Deploy FE Cluster: Deploy the FE cluster by adding Follower or Observer FE nodes;
    
-3. eploy BE Nodes: Register BE nodes to the FE cluster;
+3. Deploy BE Nodes: Register BE nodes to the FE cluster;
    
 4. Verify Cluster Correctness: After deployment, connect to and verify the cluster's correctness.
 
