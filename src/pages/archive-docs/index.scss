@@ -1,7 +1,7 @@
 .archive-container {
     padding: 0 1rem;
     width: 100%;
-    margin: 0 auto 5.5rem auto;
+    margin-bottom: 5.5rem;
     .archive-admonition {
         padding: 2rem;
         margin-top: 1.25rem;
@@ -20,6 +20,7 @@
         font-weight: 700;
         line-height: 45px;
         margin-top: 2.875rem;
+        margin-bottom: 1.5rem;
     }
     h2 {
         padding-top: 1.25rem;
@@ -35,15 +36,48 @@
         color: rgb(85, 95, 115);
     }
 
+    .preview-item-content {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #d6dfe6;
+    }
+
+    .preview-link {
+        display: flex;
+        align-items: center;
+    }
+
+    .preview-link > svg {
+        margin-left: 8px;
+    }
+
+    .preview-link:hover {
+        cursor: pointer;
+    }
+
     .download-link:hover {
         text-decoration: underline;
         color: #444fd9;
+    }
+
+    .archive-tips-content {
+        margin-bottom: 1.5rem;
+    }
+
+    .preview-item-version {
+        font-size: 1.125rem;
+        font-weight: 600;
+    }
+    .preview-link {
+        font-size: 1.125rem;
+        font-weight: 600;
     }
 }
 
 @media (min-width: 1280px) {
     .archive-container {
-        max-width: 1280px;
+        margin: 0 0 5.5rem 5rem;
+        width: 834px;
         .archive-admonition {
             max-width: 75%;
         }
