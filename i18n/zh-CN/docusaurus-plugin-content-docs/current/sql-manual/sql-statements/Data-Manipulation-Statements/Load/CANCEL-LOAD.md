@@ -26,14 +26,14 @@ under the License.
 
 ## 描述
 
-该语句用于撤销指定 label 的导入作业。或者通过模糊匹配批量撤销导入作业
+该语句用于撤销指定 `label` 的导入作业。或者通过模糊匹配批量撤销导入作业
 
 ## 语法
 
 ```sql
 CANCEL LOAD
 [FROM <db_name>]
-WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = "<PENDING>/<ETL>/<LOADING>"]
+WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = "<PENDING>" |" <ETL> "| "<LOADING>"]
 ```
 
 ## 必选参数
@@ -46,15 +46,15 @@ WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = "<PENDING
 
 **1. `<load_label>`**
 
-> 如果使用 `LABEL = <load_label>`，则精确匹配指定的 label。
+> 如果使用 `LABEL = "<load_label>"`，则精确匹配指定的 label。
 
 **2. `<label_pattern>`**
 
-> 如果使用 `LABEL LIKE <label_pattern>`，则会匹配导入任务的 label 包含 label_matcher 的导入任务。
+> 如果使用 `LABEL LIKE "<label_pattern>"`，则会匹配导入任务的 label 包含 label_matcher 的导入任务。
 
-**3. `<PENDING/ETL/LOADING>`**
+**3. `<PENDING>`**
 
-> 如果指定了 `STATE = <PENDING>/<ETL>/<LOADING> `，则匹配 LOAD 状态。
+> 指定了 `PENDING` 表示撤销 STATE = "PENDING" 状态的 job，其余状态同理。
 
 ## 权限控制
 
