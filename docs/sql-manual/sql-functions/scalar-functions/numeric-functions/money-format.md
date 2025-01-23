@@ -31,14 +31,14 @@ The number is output in currency format, the integer part is separated by commas
 ## Syntax
 
 ```sql
-MONEY_FORMAT(<Number>)
+MONEY_FORMAT(<number>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 |-----------|------------|
-| `<Number>`   | The numbers to be formatted |
+| `<number>`   | The numbers to be formatted |
 
 ## Return value
 
