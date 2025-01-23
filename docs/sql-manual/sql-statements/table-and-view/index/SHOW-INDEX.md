@@ -31,21 +31,21 @@ This statement is used to display information about indexes in a table. Currentl
 ## Syntax
 
 ```SQL
-SHOW INDEX[ES] FROM [db_name.]table_name [FROM db_name];
+SHOW INDEX[ES] FROM [<db_name>.]<table_name> [FROM <db_name>];
 ```
 
 ## Varaint Syntax
 
 ```SQL
-SHOW KEY[S] FROM [db_name.]table_name [FROM db_name];
+SHOW KEY[S] FROM [<db_name>.]<table_name> [FROM <db_name>];
 ```
 ## Required Parameters
 
-- `table_name`: The name of the table to which the index belongs.
+**1. `<table_name>`**: The name of the table to which the index belongs.
 
 ## Optional Parameters
 
-- `db_name`: The database name, optional. If not specified, the current database is used by default.
+**1. `<db_name>`**: The database name, optional. If not specified, the current database is used by default.
 
 ## Return Value
 

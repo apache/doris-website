@@ -34,21 +34,21 @@ This statement is used to undo an export job for the specified label. Or batch u
 
 ```sql
 CANCEL EXPORT
-[FROM db_name]
-WHERE [LABEL = "export_label" | LABEL like "label_pattern" | STATE = "PENDING/IN_QUEUE/EXPORTING"]
+[FROM <db_name>]
+WHERE [LABEL = "<export_label>" | LABEL like "<label_pattern>" | STATE = "PENDING/IN_QUEUE/EXPORTING"]
 ```
 
 ## Optional Parameters
 
-- `db_name`
+**1. `<db_name>`**
 
   The name of the database to which the exported data task belongs. If omitted, the default is the current database.
 
-- `export_label`
+**2. `<export_label>`**
 
   Each import needs to be assigned a unique Label. Stopping this task requires specifying the label.
 
-- `label_pattern`
+**3. `<label_pattern>`**
 
   A label expression for fuzzy matching. If you want to undo multiple EXPORT jobs, you can use `LIKE` for fuzzy matching.
 

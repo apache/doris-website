@@ -35,26 +35,28 @@ under the License.
 
 ```sql
 SHOW EXPORT
-[FROM db_name]
+[FROM <db_name>]
   [
     WHERE
-      [ID = your_job_id]
+      [ID = <job_id>]
       [STATE = ["PENDING"|"EXPORTING"|"FINISHED"|"CANCELLED"]]
-      [LABEL = your_label]
+      [LABEL = <label>]
    ]
-[ORDER BY ...]
-[LIMIT limit];
+[ORDER BY <column_name> [ASC|DESC] [, column_name [ASC|DESC] ... ]
+[LIMIT <limit>];
 ```
 
 ## 可选参数
 
-- `db_name`：可选参数，如果不指定，使用当前默认数据库。
+**1. `<db_name>`**：可选参数，如果不指定，使用当前默认数据库。
 
-- `WHERE`：可选参数，如果指定了筛选逻辑，则根据该逻辑筛选返回的数据。
+**2. `<job_id>`**：可选参数，用于指定要展示的导出作业 ID。
 
-- `ORDER BY`：可选参数，可以对任意列或列组合进行排序。
+**3. `<label>`**：可选参数，用于指定要展示的导出作业的标签。
 
-- `limit`：可选参数，如果指定了该参数，则仅显示指定条数的匹配记录；如果未指定，则显示全部记录。
+**4. `<column_name>`**：可选参数，用于指定排序的列名。
+
+**5. `<limit>`**：可选参数，如果指定了该参数，则仅显示指定条数的匹配记录；如果未指定，则显示全部记录。
 
 
 ## 返回值

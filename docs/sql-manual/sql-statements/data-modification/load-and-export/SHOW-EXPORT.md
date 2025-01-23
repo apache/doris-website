@@ -35,26 +35,28 @@ This statement is used to display the execution status of a specified export job
 
 ```sql
 SHOW EXPORT
-[FROM db_name]
+[FROM <db_name>]
   [
     WHERE
-      [ID = your_job_id]
+      [ID = <job_id>]
       [STATE = ["PENDING"|"EXPORTING"|"FINISHED"|"CANCELLED"]]
-      [LABEL = your_label]
+      [LABEL = <label>]
    ]
-[ORDER BY ...]
-[LIMIT limit];
+[ORDER BY <column_name> [ASC|DESC] [, column_name [ASC|DESC] ... ]
+[LIMIT <limit>];
 ```
 
 ## Optional Parameters
 
-- `db_name`: Optional parameter. If not specified, the current default database will be used.
+**1. `<db_name>`**: Optional parameter. If not specified, the current default database will be used.
 
-- `WHERE`: Optional parameter. If a filtering logic is specified, the data will be filtered based on that logic.
+**2. `<job_id>`**: Optional parameter. Used to specify the export job ID to display.
 
-- `ORDER BY`: Optional parameter. Allows sorting by any column or column combination.
+**3. `<label>`**: Optional parameter. Used to specify the label of the export job to display.
 
-- `limit`: Optional parameter. If specified, only the specified number of matching records will be shown; if not specified, all records will be displayed.
+**4. `<column_name>`**: Optional parameter. Used to specify the column name for sorting.
+
+**5. `<limit>`**: Optional parameter. If specified, only the specified number of matching records will be displayed; if not specified, all records will be displayed.
 
 
 ## Return Value

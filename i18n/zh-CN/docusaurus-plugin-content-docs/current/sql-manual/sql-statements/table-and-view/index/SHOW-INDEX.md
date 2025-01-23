@@ -31,22 +31,22 @@ under the License.
 ## 语法  
 
 ```SQL
-SHOW INDEX[ES] FROM [db_name.]table_name [FROM db_name];
+SHOW INDEX[ES] FROM [<db_name>.]<table_name> [FROM <db_name>];
 ```
 
 ## 变种语法
 
 ```SQL
-SHOW KEY[S] FROM [db_name.]table_name [FROM db_name];
+SHOW KEY[S] FROM [<db_name>.]<table_name> [FROM <db_name>];
 ```
 
 ## 必选参数
 
-- `table_name`：索引归属的表名。
+**1. `<table_name>`**：索引归属的表名。
 
 ## 可选参数
 
-- `db_name`：库名，选填，不填默认当前库。
+**1. `<db_name>`**：库名，选填，不填默认当前库。
 
 ## 返回值
 

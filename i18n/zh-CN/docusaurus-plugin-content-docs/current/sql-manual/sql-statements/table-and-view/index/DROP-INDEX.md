@@ -32,17 +32,18 @@ under the License.
 ## 语法
 
 ```sql
-DROP INDEX [IF EXISTS] index_name ON [db_name.]table_name;
+DROP INDEX [IF EXISTS] <index_name> ON [<db_name>.]<table_name>;
 ```
 
 ## 必选参数
 
-- `index_name`：索引名称。
-- `table_name`：索引归属的表名。
+**1. `<index_name>`**：索引名称。
+
+**2. `<table_name>`**：索引归属的表名。
 
 ## 可选参数  
 
-- `db_name`：库名，选填，不填默认当前库。
+**1. `<db_name>`**：库名，选填，不填默认当前库。
 
 ## 权限控制
 

@@ -33,17 +33,18 @@ This statement is used to delete an index with a specified name from a table. Cu
 ## Syntax
 
 ```sql
-DROP INDEX [IF EXISTS] index_name ON [db_name.]table_name;
+DROP INDEX [IF EXISTS] <index_name> ON [<db_name>.]<table_name>;
 ```
 
 ## Required Parameters
 
-- `index_name`: The name of the index.
-- `table_name`: The name of the table to which the index belongs.
+**1. `<index_name>`**: The name of the index.  
+
+**2. `<table_name>`**：The name of the table to which the index belongs.  
 
 ## Optional Parameters
 
-- `db_name`: The database name, optional. If not specified, the current database is used by default.
+**1. `<db_name>`**：The database name, optional. If not specified, the current database is used by default.  
 
 ## Access Control Requirements
 

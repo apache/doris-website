@@ -33,17 +33,17 @@ Before each import task is initiated, execute the statement to clean up the labe
 ## Syntax  
 
 ```sql
-CLEAN LABEL [label] FROM db;
+CLEAN LABEL [<label>] FROM <db_name>;
 ```
 
 ## Required Parameters
 
-- `db_name`  
+**1. `<db_name>`**  
   label The name of the library.
 
 ## Optional Parameters
 
-- `label`  
+**1. `<label>`**    
   The label to be cleaned. If omitted, the default is all labels in the current database.
 
 ## Access Control Requirements

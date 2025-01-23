@@ -36,32 +36,32 @@ The `EXPORT` command is used to export the data of a specified table to a design
 ## Syntax
 
   ```sql
-  EXPORT TABLE table_name
-  [PARTITION (p1[,p2])]
+  EXPORT TABLE <table_name>
+  [PARTITION (<partation_name>[,<partation_name>])]
   [WHERE]
-  TO export_path
-  [opt_properties]
+  TO <export_path>
+  [<properties>]
   WITH BROKER/S3/HDFS
-  [broker_properties];
+  [<broker_properties>];
   ```
 
 ## Required Parameters
 
-- `table_name`
+**1. `<table_name>`**
 
   The name of the table to be exported. Supports export of Doris local table, view, and catalog external table data.
 
-- `export_path`
+**2. `<export_path>`**
 
   The exported file path. It can be a directory or a file directory plus a file prefix, such as `hdfs://path/to/my_file_`
 
 ## Optional Parameters
 
-- `partition`
+**1. `<partation_name>`**
 
   It is possible to export only some specified partitions of the specified table.
 
-- `opt_properties`
+**2. `<properties>`**
 
   Used to specify some export parameters.
 
@@ -99,7 +99,7 @@ The `EXPORT` command is used to export the data of a specified table to a design
   Note that to use the `delete_existing_files` parameter, you also need to add the configuration `enable_delete_existing_files = true` to the fe.conf file and restart the FE. Only then will the `delete_existing_files` parameter take effect. Setting `delete_existing_files = true` is a dangerous operation and it is recommended to only use it in a testing environment. 
   :::
 
-- `WITH BROKER`
+**3. `WITH BROKER`**
 
   The export function needs to write data to the remote storage through the Broker process. Here you need to define the relevant connection information for the broker to use.
 
@@ -116,10 +116,9 @@ The `EXPORT` command is used to export the data of a specified table to a design
   - `kerberos_keytab`: specifies the path to the keytab file of kerberos. The file must be the absolute path to the file on the server where the broker process is located. and can be accessed by the Broker process
 
 
-- `WITH HDFS`
+**4. `WITH HDFS`**
 
   You can directly write data to the remote HDFS.
-
 
   ```sql
   WITH HDFS ("key"="value"[,...])
@@ -139,7 +138,7 @@ The `EXPORT` command is used to export the data of a specified table to a design
   - `hadoop.kerberos.keytab`: HDFS client keytab location.
 
 
-- `WITH S3`
+**5. `WITH S3`**
 
   You can directly write data to a remote S3 object store
 
@@ -153,6 +152,32 @@ The `EXPORT` command is used to export the data of a specified table to a design
   - `s3.secret_key`
   - `s3.access_key`
   - `use_path_style`: (optional) default false . The S3 SDK uses the virtual-hosted style by default. However, some object storage systems may not be enabled or support virtual-hosted style access. At this time, we can add the use_path_style parameter to force the use of path style access method.
+
+## Return Value
+
+| Column             | DataType       | Note                                                                         |
+|--------------------|----------------|------------------------------------------------------------------------------|
+| jobId              | long           | The unique identifier of the export job.                                     |
+| label              | string         | The label of the export job.                                                 |
+| dbId               | long           | The identifier of the database.                                              |
+| tableId            | long           | The identifier of the table.                                                 |
+| state              | ExportJobState | The current state of the export job.                                         |
+| path               | string         | The path of the export file.                                                 |
+| partitions         | string         | The list of partition names being exported, separated by commas.             |
+| progress           | int            | The current progress of the export job (in percentage).                      |
+| createTimeMs       | string         | The creation time of the job in milliseconds, formatted as a date/time.      |
+| exportStartTimeMs  | string         | The start time of the export job in milliseconds, formatted as a date/time.  |
+| exportFinishTimeMs | string         | The finish time of the export job in milliseconds, formatted as a date/time. |
+| failMsg            | ExportFailMsg  | The error message if the export job failed.                                  |
+
+## Access Control Requirements
+
+The user executing this SQL command must have at least the following privileges:
+
+| Privilege         | Object     | Notes                                           |
+|:------------------|:-----------|:------------------------------------------------|
+| SELECT_PRIV       | Database   | Requires read access to the database and table. |
+
 
 ## Usage Notes
 
@@ -190,32 +215,6 @@ However, in certain scenarios, such as a query plan that requires scanning too m
 - Currently, The `Export Job` is simply check whether the `Tablets version` is the same, it is recommended not to import data during the execution of the `Export Job`.
 
 - The maximum number of partitions that an `Export job` allows is 2000. You can add a parameter to the fe.conf `maximum_number_of_export_partitions` and restart FE to modify the setting.
-
-## Return Value
-
-| Column             | DataType       | Note                                                                         |
-|--------------------|----------------|------------------------------------------------------------------------------|
-| jobId              | long           | The unique identifier of the export job.                                     |
-| label              | string         | The label of the export job.                                                 |
-| dbId               | long           | The identifier of the database.                                              |
-| tableId            | long           | The identifier of the table.                                                 |
-| state              | ExportJobState | The current state of the export job.                                         |
-| path               | string         | The path of the export file.                                                 |
-| partitions         | string         | The list of partition names being exported, separated by commas.             |
-| progress           | int            | The current progress of the export job (in percentage).                      |
-| createTimeMs       | string         | The creation time of the job in milliseconds, formatted as a date/time.      |
-| exportStartTimeMs  | string         | The start time of the export job in milliseconds, formatted as a date/time.  |
-| exportFinishTimeMs | string         | The finish time of the export job in milliseconds, formatted as a date/time. |
-| failMsg            | ExportFailMsg  | The error message if the export job failed.                                  |
-
-## Access Control Requirements
-
-The user executing this SQL command must have at least the following privileges:
-
-| Privilege         | Object     | Notes                                           |
-|:------------------|:-----------|:------------------------------------------------|
-| SELECT_PRIV       | Database   | Requires read access to the database and table. |
-
 
 ## Examples
 

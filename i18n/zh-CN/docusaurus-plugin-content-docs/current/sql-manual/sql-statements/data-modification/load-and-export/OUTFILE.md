@@ -33,83 +33,84 @@ under the License.
 ## 语法：
 
 ```sql
-query_stmt
-INTO OUTFILE "file_path"
-[format_as]
-[properties]
+<query_stmt>
+INTO OUTFILE "<file_path>"
+[<format_as>]
+[<properties>]
 ```
 
 ## 必选参数
 
-- query_stmt  
-    查询语句，必须是是合法的 SQL ，参考 [query 语句文档](../../data-query/SELECT.md)。  
+**1. `<query_stmt>`**   
 
-- file_path
+查询语句，必须是是合法的 SQL ，参考 [query 语句文档](../../data-query/SELECT.md)。  
 
-    文件存储的路径及文件前缀。指向文件存储的路径以及文件前缀。如 `hdfs://path/to/my_file_`。  
-    
-    最终的文件名将由 `my_file_`、文件序号以及文件格式后缀组成。其中文件序号由 0 开始，数量为文件被分割的数量。如：  
-    - my_file_abcdefg_0.csv
-    - my_file_abcdefg_1.csv
-    - my_file_abcdegf_2.csv  
+**2. `<file_path>`**
 
-    也可以省略文件前缀，只指定文件目录，如`hdfs://path/to/`
+文件存储的路径及文件前缀。指向文件存储的路径以及文件前缀。如 `hdfs://path/to/my_file_`。  
+最终的文件名将由 `my_file_`、文件序号以及文件格式后缀组成。其中文件序号由 0 开始，数量为文件被分割的数量。如：  
+- my_file_abcdefg_0.csv
+- my_file_abcdefg_1.csv
+- my_file_abcdegf_2.csv  
+
+也可以省略文件前缀，只指定文件目录，如`hdfs://path/to/`
 
 ## 可选参数
 
-- format_as
+**1. `<format_as>`**
 
-    ```sql
-    FORMAT AS CSV
-    ```
+```sql
+FORMAT AS CSV
+```
 
    指定导出格式。支持 CSV、PARQUET、CSV_WITH_NAMES、CSV_WITH_NAMES_AND_TYPES、ORC。 默认为 CSV。
 
    > 注：PARQUET、CSV_WITH_NAMES、CSV_WITH_NAMES_AND_TYPES、ORC 在 1.2 版本开始支持。
 
-- properties    
-    ```sql
-    [PROPERTIES ("key"="value", ...)]
-    ```  
+**2. `<properties>`**  
 
-    目前支持通过 Broker 进程，或通过 S3/HDFS 协议进行导出。
+```sql
+[PROPERTIES ("<key>"="<value>", ...)]
+```  
 
-    **自身导出文件相关的属性**
-    - `column_separator`: 列分隔符，只用于 CSV 相关格式。在 1.2 版本开始支持多字节分隔符，如："\\x01", "abc"。
-    - `line_delimiter`: 行分隔符，只用于 CSV 相关格式。在 1.2 版本开始支持多字节分隔符，如："\\x01", "abc"。
-    - `max_file_size`: 单个文件大小限制，如果结果超过这个值，将切割成多个文件，`max_file_size` 取值范围是[5MB, 2GB], 默认为 `1GB`。（当指定导出为 OCR 文件格式时，实际切分文件的大小将是 64MB 的倍数，如：指定 `max_file_size = 5MB`, 实际将以 64 MB 为切分；指定 `max_file_size = 65MB`, 实际将以 128 MB 为切分）
-    - `delete_existing_files`: 默认为 `false`，若指定为 `true`，则会先删除 `file_path` 指定的目录下的所有文件，然后导出数据到该目录下。例如："file_path" = "/user/tmp", 则会删除"/user/"下所有文件及目录；"file_path" = "/user/tmp/", 则会删除"/user/tmp/"下所有文件及目录。
-    - `file_suffix`: 指定导出文件的后缀，若不指定该参数，将使用文件格式的默认后缀。
-    - `compress_type`：当指定导出的文件格式为 Parquet / ORC 文件时，可以指定 Parquet / ORC 文件使用的压缩方式。Parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4 及 PLAIN，默认值为 SNAPPY。ORC 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自 2.1.5 版本开始支持。（PLAIN 就是不采用压缩）
-    
-    **Broker 相关属性**  _（需加前缀 `broker.`）_  
-    - `broker.name: broker`: 名称
-    - `broker.hadoop.security.authentication`: 指定认证方式为 kerberos
-    - `broker.kerberos_principal`: 指定 kerberos 的 principal
-    - `broker.kerberos_keytab`: 指定 kerberos 的 keytab 文件路径。该文件必须为 Broker 进程所在服务器上的文件的绝对路径。并且可以被 Broker 进程访问
-    
-    **HDFS 相关属性**
-    - `fs.defaultFS`: namenode 地址和端口
-    - `hadoop.username`: hdfs 用户名
-    - `dfs.nameservices`: name service 名称，与 hdfs-site.xml 保持一致
-    - `dfs.ha.namenodes.[nameservice ID]`: namenode 的 id 列表，与 hdfs-site.xml 保持一致
-    - `dfs.namenode.rpc-address.[nameservice ID].[name node ID]`: Name node 的 rpc 地址，数量与 namenode 数量相同，与 hdfs-site.xml 保持一致
-    - `dfs.client.failover.proxy.provider.[nameservice ID]`: HDFS 客户端连接活跃 namenode 的 java 类，通常是"org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+目前支持通过 Broker 进程，或通过 S3/HDFS 协议进行导出。
 
-    **对于开启 kerberos 认证的 Hadoop 集群，还需要额外设置如下 PROPERTIES 属性：**
-    - `dfs.namenode.kerberos.principal`: HDFS namenode 服务的 principal 名称
-    - `hadoop.security.authentication`: 认证方式设置为 kerberos
-    - `hadoop.kerberos.principal`: 设置 Doris 连接 HDFS 时使用的 Kerberos 主体
-    - `hadoop.kerberos.keytab`: 设置 keytab 本地文件路径
+**自身导出文件相关的属性**
+- `column_separator`: 列分隔符，只用于 CSV 相关格式。在 1.2 版本开始支持多字节分隔符，如："\\x01", "abc"。
+- `line_delimiter`: 行分隔符，只用于 CSV 相关格式。在 1.2 版本开始支持多字节分隔符，如："\\x01", "abc"。
+- `max_file_size`: 单个文件大小限制，如果结果超过这个值，将切割成多个文件，`max_file_size` 取值范围是[5MB, 2GB], 默认为 `1GB`。（当指定导出为 OCR 文件格式时，实际切分文件的大小将是 64MB 的倍数，如：指定 `max_file_size = 5MB`, 实际将以 64 MB 为切分；指定 `max_file_size = 65MB`, 实际将以 128 MB 为切分）
+- `delete_existing_files`: 默认为 `false`，若指定为 `true`，则会先删除 `file_path` 指定的目录下的所有文件，然后导出数据到该目录下。例如："file_path" = "/user/tmp", 则会删除"/user/"下所有文件及目录；"file_path" = "/user/tmp/", 则会删除"/user/tmp/"下所有文件及目录。
+- `file_suffix`: 指定导出文件的后缀，若不指定该参数，将使用文件格式的默认后缀。
+- `compress_type`：当指定导出的文件格式为 Parquet / ORC 文件时，可以指定 Parquet / ORC 文件使用的压缩方式。Parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4 及 PLAIN，默认值为 SNAPPY。ORC 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自 2.1.5 版本开始支持。（PLAIN 就是不采用压缩）
 
-    S3 协议则直接执行 S3 协议配置即可：
-     - `s3.endpoint`
-     - `s3.access_key`
-     - `s3.secret_key`
-     - `s3.region`
-     - `use_path_style`: (选填) 默认为 `false` 。S3 SDK 默认使用 Virtual-hosted Style 方式。但某些对象存储系统可能没开启或不支持 Virtual-hosted Style 方式的访问，此时可以添加 `use_path_style` 参数来强制使用 Path Style 访问方式。
+**Broker 相关属性**  _（需加前缀 `broker.`）_  
+- `broker.name: broker`: 名称
+- `broker.hadoop.security.authentication`: 指定认证方式为 kerberos
+- `broker.kerberos_principal`: 指定 kerberos 的 principal
+- `broker.kerberos_keytab`: 指定 kerberos 的 keytab 文件路径。该文件必须为 Broker 进程所在服务器上的文件的绝对路径。并且可以被 Broker 进程访问
 
-    > 注意：若要使用 `delete_existing_files` 参数，还需要在 `fe.conf` 中添加配置`enable_delete_existing_files = true`并重启 fe，此时 delete_existing_files 才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。
+**HDFS 相关属性**
+- `fs.defaultFS`: namenode 地址和端口
+- `hadoop.username`: hdfs 用户名
+- `dfs.nameservices`: name service 名称，与 hdfs-site.xml 保持一致
+- `dfs.ha.namenodes.[nameservice ID]`: namenode 的 id 列表，与 hdfs-site.xml 保持一致
+- `dfs.namenode.rpc-address.[nameservice ID].[name node ID]`: Name node 的 rpc 地址，数量与 namenode 数量相同，与 hdfs-site.xml 保持一致
+- `dfs.client.failover.proxy.provider.[nameservice ID]`: HDFS 客户端连接活跃 namenode 的 java 类，通常是"org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+
+**对于开启 kerberos 认证的 Hadoop 集群，还需要额外设置如下 PROPERTIES 属性：**
+- `dfs.namenode.kerberos.principal`: HDFS namenode 服务的 principal 名称
+- `hadoop.security.authentication`: 认证方式设置为 kerberos
+- `hadoop.kerberos.principal`: 设置 Doris 连接 HDFS 时使用的 Kerberos 主体
+- `hadoop.kerberos.keytab`: 设置 keytab 本地文件路径
+
+S3 协议则直接执行 S3 协议配置即可：
+ - `s3.endpoint`
+ - `s3.access_key`
+ - `s3.secret_key`
+ - `s3.region`
+ - `use_path_style`: (选填) 默认为 `false` 。S3 SDK 默认使用 Virtual-hosted Style 方式。但某些对象存储系统可能没开启或不支持 Virtual-hosted Style 方式的访问，此时可以添加 `use_path_style` 参数来强制使用 Path Style 访问方式。
+
+> 注意：若要使用 `delete_existing_files` 参数，还需要在 `fe.conf` 中添加配置`enable_delete_existing_files = true`并重启 fe，此时 delete_existing_files 才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。
 
 ## 返回值
 

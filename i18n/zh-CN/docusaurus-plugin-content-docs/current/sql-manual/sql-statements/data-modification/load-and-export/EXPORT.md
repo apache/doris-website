@@ -37,37 +37,37 @@ under the License.
 ## 语法：
 
   ```sql
-  EXPORT TABLE table_name
-  [PARTITION (p1[,p2])]
+  EXPORT TABLE <table_name>
+  [PARTITION (<partation_name>[,<partation_name>])]
   [WHERE]
-  TO export_path
-  [opt_properties]
+  TO <export_path>
+  [<properties>]
   WITH BROKER/S3/HDFS
-  [broker_properties];
+  [<broker_properties>];
   ```
 
 ## 必选参数  
 
-- `table_name`
+**1. `<table_name>`**
 
   当前要导出的表的表名。支持 Doris 本地表、视图 View、Catalog 外表数据的导出。
 
-- `export_path`
+**2. `<export_path>`**
 
   导出的文件路径。可以是目录，也可以是文件目录加文件前缀，如`hdfs://path/to/my_file_`
 
 ## 可选参数  
 
-- `partition`
+**1. `<partation_name>`**
 
   可以只导出指定表的某些指定分区，只对 Doris 本地表有效。
 
-- `opt_properties`
+**2. `<properties>`**
 
   用于指定一些导出参数。
 
   ```sql
-  [PROPERTIES ("key"="value", ...)]
+  [PROPERTIES ("<key>"="<value>", ...)]
   ```
 
   可以指定如下参数：  
@@ -99,13 +99,13 @@ under the License.
   要使用 delete_existing_files 参数，还需要在 fe.conf 中添加配置`enable_delete_existing_files = true`并重启 fe，此时 delete_existing_files 才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。  
   :::  
 
-- `WITH BROKER`
+**3. `WITH BROKER`**
 
   可以通过 Broker 进程写数据到远端存储上。这里需要定义相关的连接信息供 Broker 使用。
 
   ```sql
   WITH BROKER "broker_name"
-  ("key"="value"[,...])
+  ("<key>"="<value>"[,...])
   ```  
 
   **Broker 相关属性：**  
@@ -115,13 +115,12 @@ under the License.
   - `kerberos_principal`: 指定 kerberos 的 principal
   - `kerberos_keytab`: 指定 kerberos 的 keytab 文件路径。该文件必须为 Broker 进程所在服务器上的文件的绝对路径。并且可以被 Broker 进程访问  
 
-
-- `WITH HDFS`
+**4. `WITH HDFS`**
 
   可以直接将数据写到远端 HDFS 上。
 
   ```sql
-  WITH HDFS ("key"="value"[,...])
+  WITH HDFS ("<key>"="<value>"[,...])
   ```  
 
   **HDFS 相关属性：**  
@@ -138,12 +137,12 @@ under the License.
   - `hadoop.kerberos.keytab`: 设置 keytab 本地文件路径  
 
 
-- `WITH S3`  
+**5. `WITH S3`**
 
   可以直接将数据写到远端 S3 对象存储上。
 
   ```sql
-  WITH S3 ("key"="value"[,...])
+  WITH S3 ("<key>"="<value>"[,...])
   ```  
 
   **S3 相关属性：**

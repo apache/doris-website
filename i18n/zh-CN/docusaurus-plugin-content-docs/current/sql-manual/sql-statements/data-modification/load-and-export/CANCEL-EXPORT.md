@@ -32,22 +32,21 @@ under the License.
 
 ```sql
 CANCEL EXPORT
-[FROM db_name]
-WHERE [LABEL = "export_label" | LABEL like "label_pattern" | STATE = "PENDING/IN_QUEUE/EXPORTING"]
+[FROM <db_name>]
+WHERE [LABEL = "<export_label>" | LABEL like "<label_pattern>" | STATE = "PENDING/IN_QUEUE/EXPORTING"]
 ```
 
 ## 可选参数
 
-- `db_name`
+**1. `<db_name>`**  
 
   导出的数据任务的归属库名。如果省略，默认为当前数据库。
 
-- `export_label`
+**2. `<export_label>`**
 
   每个导入需要指定一个唯一的 Label。停止这个任务需要指定该 label。  
 
-  
-- `label_pattern`
+**3. `<label_pattern>`**
 
   模糊匹配的 label 表达式。如果要撤销多个 EXPORT 作业，可以使用 `LIKE` 进行模糊匹配。
 

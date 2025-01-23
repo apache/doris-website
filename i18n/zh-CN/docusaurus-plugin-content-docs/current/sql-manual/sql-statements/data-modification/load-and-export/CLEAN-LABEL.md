@@ -33,17 +33,17 @@ under the License.
 ## 语法  
 
 ```sql
-CLEAN LABEL [label] FROM db;
+CLEAN LABEL [<label>] FROM <db_name>;
 ```
 
 ## 必选参数
 
-- `db_name`  
-	label 归属库名。
+**1. `<db_name>`**  
+  label 归属库名。
 
 ## 可选参数
 
-- `label`  
+**1. `<label>`**    
 	要清理的 label。如果省略，默认为当前数据库所有的 label。  
 
 ## 权限控制
