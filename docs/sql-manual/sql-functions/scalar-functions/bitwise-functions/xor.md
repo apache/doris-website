@@ -24,34 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitxor
-### description
-#### Syntax
+## Description
+Performs a bitwise exclusive OR operation on two BOOLEAN values.
 
-`BITXOR(Integer-type lhs, Integer-type rhs)`
-
-Returns the result of the XOR operation of two integers.
-
-Integer range: TINYINT, SMALLINT, INT, BIGINT, LARGEINT
-
-### example
-
-```
-mysql> select bitxor(3,5) ans;
-+------+
-| ans  |
-+------+
-|    7 |
-+------+
-
-mysql> select bitxor(1,7) ans;
-+------+
-| ans  |
-+------+
-|    6 |
-+------+
+## Syntax
+```sql
+ <lhs> XOR <rhs>
 ```
 
-### keywords
+## Parameters
+| parameter | description                                                             |
+|-----------|-------------------------------------------------------------------------|
+| `<lhs>`   | The first BOOLEAN value to be evaluated                                 |
+| `<rhs>`   | The second BOOLEAN value to be evaluated |
 
-    BITXOR
+## Return Value
+Returns the exclusive OR of two BOOLEAN values.
+
+## Examples
+```sql
+select true XOR false,true XOR true;
+```
+
+```text
++------------------+-----------------+
+| xor(TRUE, FALSE) | xor(TRUE, TRUE) |
++------------------+-----------------+
+|                1 |               0 |
++------------------+-----------------+
+```

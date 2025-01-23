@@ -227,5 +227,4 @@ WaitAndFetchResultTime: N/A
 
     SHOW, LOAD, PROFILE
 
-### Best Practice
 

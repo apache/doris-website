@@ -47,7 +47,7 @@ under the License.
 
 在 Doris 中主键模型有两种实现方式：
 
-* 写时合并（merge-on-write）：在 1.2 版本后，Doris 中的主键模型默认使用写时合并模式，数据在写入时立即进行相同 Key 的合并，确保每次写入后的数据存储状态是唯一键的最终合并结果，只存储最新结果。写实合并可以很好的兼顾查询与写入的性能，在查询时避免多个版本的数据合并，保证谓词下推到存储层。绝大部分的场景都推荐使用写时合并模型；
+* 写时合并（merge-on-write）：在 1.2 版本后，Doris 中的主键模型默认使用写时合并模式，数据在写入时立即进行相同 Key 的合并，确保每次写入后的数据存储状态是唯一键的最终合并结果，只存储最新结果。写时合并可以很好的兼顾查询与写入的性能，在查询时避免多个版本的数据合并，保证谓词下推到存储层。绝大部分的场景都推荐使用写时合并模型；
 
 * 读时合并（merge-on-read）：在 1.2 版本前，Doris 中的主键模型默认使用读时合并模式，数据在写入时并不进行合并，以增量的方式被追加存储，在 Doris 内保留多个版本。查询或 Compaction 时，会对数据进行相同 Key 的版本合并。读时合并适合写多读少的场景，在查询是需要进行多个版本合并，谓词无法下推，可能会影响到查询速度。
 
@@ -63,7 +63,7 @@ under the License.
 
 ### 创建写时合并表
 
-在建表时，使用 UNIQUE KEY 关键字可以指定主键表。通过显示开启 `enable_unique_key_merge_on_write` 属性可以指定写实合并模式。自 Doris 2.1 版本以后，默认开启读时合并：
+在建表时，使用 UNIQUE KEY 关键字可以指定主键表。通过显示开启 `enable_unique_key_merge_on_write` 属性可以指定写时合并模式。自 Doris 2.1 版本以后，默认开启写时合并：
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_unique
@@ -85,7 +85,7 @@ PROPERTIES (
 
 ### 创建读时合并表
 
-在建表时，使用 UNIQUE KEY 关键字可以指定主键表。通过显示关闭 `enable_unique_key_merge_on_write` 属性可以指定写实合并模式。在 Doris 2.1 版本之前，默认开启读时合并：
+在建表时，使用 UNIQUE KEY 关键字可以指定主键表。通过显示关闭 `enable_unique_key_merge_on_write` 属性可以指定读时合并模式。在 Doris 2.1 版本之前，默认开启读时合并：
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_unique

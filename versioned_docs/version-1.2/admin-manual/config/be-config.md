@@ -72,7 +72,9 @@ There are two ways to configure BE configuration items:
 
    By adding in the `be.conf` file:
 
-   ```max_base_compaction_threads=5```
+   ```
+   max_base_compaction_threads=5
+   ```
 
    Then restart the BE process to take effect the configuration.
 

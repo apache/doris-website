@@ -22,52 +22,47 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## struct_element
+## Description
 
-struct_element
+Return a specific field within a data column of a struct.
 
-### description
+## Syntax
 
-Function allows getting a field from a struct.
-
-#### Syntax
-
-```
-struct_element(struct, n/s)
+```sql
+STRUCT_ELEMENT( <struct>, `<filed_location>/<filed_name>`)
 ```
 
-#### Arguments
+## Parameters
 
+| Parameter | Description |
+| -- | -- |
+| `<struct>` | If the input struct column is null, return null |
+| `<filed_location>` | The position of the field starts from 1, and only constants are supported |
+| `<filed_name>` | The field name must be a constant |
+
+## Return Value
+
+Return the specified field column, with the type being any type
+
+## Example
+
+```sql
+select struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2'),struct_element(named_struct('f1', 1, 'f2', 'a'), 1);
 ```
-struct - The input struct column. If null, null will be returned.
-n - The position of field，starting from 1，only supports constants.
-s - The name of field，only supports constants.
+
+```text
++--------------------------------------------------------+-----------------------------------------------------+
+| struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2') | struct_element(named_struct('f1', 1, 'f2', 'a'), 1) |
++--------------------------------------------------------+-----------------------------------------------------+
+| a                                                      |                                                   1 |
++--------------------------------------------------------+-----------------------------------------------------+
 ```
 
-#### Returned value
-
-Returns the specified field column, of any type.
-
-### example
-
+```sql
+select struct_col, struct_element(struct_col, 'f1') from test_struct;
 ```
-mysql> select struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2');
-+--------------------------------------------------------+
-| struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2') |
-+--------------------------------------------------------+
-| a                                                      |
-+--------------------------------------------------------+
-1 row in set (0.03 sec)
 
-mysql> select struct_element(named_struct('f1', 1, 'f2', 'a'), 1);
-+-----------------------------------------------------+
-| struct_element(named_struct('f1', 1, 'f2', 'a'), 1) |
-+-----------------------------------------------------+
-|                                                   1 |
-+-----------------------------------------------------+
-1 row in set (0.02 sec)
-
-mysql> select struct_col, struct_element(struct_col, 'f1') from test_struct;
+```text
 +-------------------------------------------------+-------------------------------------+
 | struct_col                                      | struct_element(`struct_col `, 'f1') |
 +-------------------------------------------------+-------------------------------------+
@@ -77,9 +72,4 @@ mysql> select struct_col, struct_element(struct_col, 'f1') from test_struct;
 | NULL                                            |                                NULL |
 | {1, NULL, 3, NULL, 5}                           |                                   1 |
 +-------------------------------------------------+-------------------------------------+
-9 rows in set (0.01 sec)
 ```
-
-### keywords
-
-STRUCT, ELEMENT, STRUCT_ELEMENT
